@@ -1761,6 +1761,9 @@ void VerifyVertexFloats(const GLfloat *mapPtrFloat,
 // Tests that stopping XFB works as expected.
 TEST_P(TransformFeedbackTest, Overrun)
 {
+    // TODO(anglebug.com/4533) This fails after the upgrade to the 26.20.100.7870 driver.
+    ANGLE_SKIP_TEST_IF(IsWindows() && IsIntel() && IsVulkan());
+
     const std::vector<GLfloat> vertices = {
         -1.0f, 1.0f, 0.5f, 1.0f, -1.0f, -1.0f, 0.5f, 1.0f, 1.0f, -1.0f, 0.5f, 1.0f,
         -1.0f, 1.0f, 0.5f, 1.0f, 1.0f,  -1.0f, 0.5f, 1.0f, 1.0f, 1.0f,  0.5f, 1.0f,
@@ -1787,6 +1790,9 @@ TEST_P(TransformFeedbackTest, Overrun)
 // Similar to the overrun test but with Pause instead of End.
 TEST_P(TransformFeedbackTest, OverrunWithPause)
 {
+    // TODO(anglebug.com/4533) This fails after the upgrade to the 26.20.100.7870 driver.
+    ANGLE_SKIP_TEST_IF(IsWindows() && IsIntel() && IsVulkan());
+
     const std::vector<GLfloat> vertices = {
         -1.0f, 1.0f, 0.5f, 1.0f, -1.0f, -1.0f, 0.5f, 1.0f, 1.0f, -1.0f, 0.5f, 1.0f,
         -1.0f, 1.0f, 0.5f, 1.0f, 1.0f,  -1.0f, 0.5f, 1.0f, 1.0f, 1.0f,  0.5f, 1.0f,
@@ -1815,6 +1821,9 @@ TEST_P(TransformFeedbackTest, OverrunWithPause)
 // Similar to the overrun test but with Pause instead of End.
 TEST_P(TransformFeedbackTest, OverrunWithPauseAndResume)
 {
+    // TODO(anglebug.com/4533) This fails after the upgrade to the 26.20.100.7870 driver.
+    ANGLE_SKIP_TEST_IF(IsWindows() && IsIntel() && IsVulkan());
+
     // Fails on Adreno Pixel 2 GL drivers. Not a supported configuration.
     ANGLE_SKIP_TEST_IF(IsOpenGL() && IsAdreno() && IsAndroid());
 
@@ -1853,6 +1862,9 @@ TEST_P(TransformFeedbackTest, OverrunWithPauseAndResume)
 // Similar to the overrun Pause/Resume test but with more than one Pause and Resume.
 TEST_P(TransformFeedbackTest, OverrunWithMultiplePauseAndResume)
 {
+    // TODO(anglebug.com/4533) This fails after the upgrade to the 26.20.100.7870 driver.
+    ANGLE_SKIP_TEST_IF(IsWindows() && IsIntel() && IsVulkan());
+
     // Fails on Adreno Pixel 2 GL drivers. Not a supported configuration.
     ANGLE_SKIP_TEST_IF(IsOpenGL() && IsAdreno() && IsAndroid());
 
