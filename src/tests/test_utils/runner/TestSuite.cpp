@@ -33,9 +33,10 @@ namespace angle
 {
 namespace
 {
-constexpr char kTestTimeoutArg[] = "--test-timeout=";
-constexpr char kFilterFileArg[]  = "--filter-file=";
-constexpr char kResultFileArg[]  = "--results-file=";
+constexpr char kTestTimeoutArg[]       = "--test-timeout=";
+constexpr char kFilterFileArg[]        = "--filter-file=";
+constexpr char kResultFileArg[]        = "--results-file=";
+constexpr char kHistogramJsonFileArg[] = "--histogram-json-file=";
 #if defined(NDEBUG)
 constexpr int kDefaultTestTimeout = 20;
 #else
@@ -167,9 +168,30 @@ js::Value ResultTypeToJSString(TestResultType type, js::Document::AllocatorType 
     return jsName;
 }
 
+bool WriteJsonFile(const std::string &outputFile, js::Document *doc)
+{
+    FILE *fp = fopen(outputFile.c_str(), "w");
+    if (!fp)
+    {
+        return false;
+    }
+
+    constexpr size_t kBufferSize = 0xFFFF;
+    std::vector<char> writeBuffer(kBufferSize);
+    js::FileWriteStream os(fp, writeBuffer.data(), kBufferSize);
+    js::PrettyWriter<js::FileWriteStream> writer(os);
+    if (!doc->Accept(writer))
+    {
+        fclose(fp);
+        return false;
+    }
+    fclose(fp);
+    return true;
+}
+
 // Writes out a TestResults to the Chromium JSON Test Results format.
 // https://chromium.googlesource.com/chromium/src.git/+/master/docs/testing/json_test_results_format.md
-void WriteTestResults(bool interrupted,
+void WriteResultsFile(bool interrupted,
                       const TestResults &testResults,
                       const std::string &outputFile,
                       const char *testSuiteName)
@@ -245,15 +267,44 @@ void WriteTestResults(bool interrupted,
 
     printf("Writing test results to %s\n", outputFile.c_str());
 
-    FILE *fp = fopen(outputFile.c_str(), "w");
+    if (!WriteJsonFile(outputFile, &doc))
+    {
+        printf("Error writing test results file.\n");
+    }
+}
 
-    constexpr size_t kBufferSize = 0xFFFF;
-    std::vector<char> writeBuffer(kBufferSize);
-    js::FileWriteStream os(fp, writeBuffer.data(), kBufferSize);
-    js::PrettyWriter<js::FileWriteStream> writer(os);
-    doc.Accept(writer);
+void WriteHistogramJson(const TestResults &testResults,
+                        const std::string &outputFile,
+                        const char *testSuiteName)
+{
+    js::Document doc;
+    doc.SetArray();
 
-    fclose(fp);
+    // TODO: http://anglebug.com/4769 - Implement histogram output.
+
+    printf("Writing histogram json to %s\n", outputFile.c_str());
+
+    if (!WriteJsonFile(outputFile, &doc))
+    {
+        printf("Error writing histogram json file.\n");
+    }
+}
+
+void WriteOutputFiles(bool interrupted,
+                      const TestResults &testResults,
+                      const std::string &resultsFile,
+                      const std::string &histogramJsonOutputFile,
+                      const char *testSuiteName)
+{
+    if (!resultsFile.empty())
+    {
+        WriteResultsFile(interrupted, testResults, resultsFile, testSuiteName);
+    }
+
+    if (!histogramJsonOutputFile.empty())
+    {
+        WriteHistogramJson(testResults, histogramJsonOutputFile, testSuiteName);
+    }
 }
 
 void UpdateCurrentTestResult(const testing::TestResult &resultIn, TestResults *resultsOut)
@@ -286,10 +337,14 @@ class TestEventListener : public testing::EmptyTestEventListener
 {
   public:
     // Note: TestResults is owned by the TestSuite. It should outlive TestEventListener.
-    TestEventListener(const std::string &outputFile,
+    TestEventListener(const std::string &resultsFile,
+                      const std::string &histogramJsonFile,
                       const char *testSuiteName,
                       TestResults *testResults)
-        : mResultsFile(outputFile), mTestSuiteName(testSuiteName), mTestResults(testResults)
+        : mResultsFile(resultsFile),
+          mHistogramJsonFile(histogramJsonFile),
+          mTestSuiteName(testSuiteName),
+          mTestResults(testResults)
     {}
 
     void OnTestStart(const testing::TestInfo &testInfo) override
@@ -312,11 +367,12 @@ class TestEventListener : public testing::EmptyTestEventListener
     {
         std::lock_guard<std::mutex> guard(mTestResults->currentTestMutex);
         mTestResults->allDone = true;
-        WriteTestResults(false, *mTestResults, mResultsFile, mTestSuiteName);
+        WriteOutputFiles(false, *mTestResults, mResultsFile, mHistogramJsonFile, mTestSuiteName);
     }
 
   private:
     std::string mResultsFile;
+    std::string mHistogramJsonFile;
     const char *mTestSuiteName;
     TestResults *mTestResults;
 };
@@ -787,11 +843,11 @@ TestSuite::TestSuite(int *argc, char **argv)
         mResultsFile = resultFileName.str();
     }
 
-    if (!mResultsFile.empty())
+    if (!mResultsFile.empty() || !mHistogramJsonFile.empty())
     {
         testing::TestEventListeners &listeners = testing::UnitTest::GetInstance()->listeners();
-        listeners.Append(
-            new TestEventListener(mResultsFile, mTestSuiteName.c_str(), &mTestResults));
+        listeners.Append(new TestEventListener(mResultsFile, mHistogramJsonFile,
+                                               mTestSuiteName.c_str(), &mTestResults));
 
         std::vector<TestIdentifier> testList = GetFilteredTests(nullptr, alsoRunDisabledTests);
 
@@ -822,6 +878,7 @@ bool TestSuite::parseSingleArg(const char *argument)
             ParseStringArg("--results-directory=", argument, &mResultsDirectory) ||
             ParseStringArg(kResultFileArg, argument, &mResultsFile) ||
             ParseStringArg(kFilterFileArg, argument, &mFilterFile) ||
+            ParseStringArg(kHistogramJsonFileArg, argument, &mHistogramJsonFile) ||
             ParseFlag("--bot-mode", argument, &mBotMode));
 }
 
@@ -840,7 +897,7 @@ void TestSuite::onCrashOrTimeout(TestResultType crashOrTimeout)
         return;
     }
 
-    WriteTestResults(true, mTestResults, mResultsFile, mTestSuiteName.c_str());
+    WriteOutputFiles(true, mTestResults, mResultsFile, mHistogramJsonFile, mTestSuiteName.c_str());
 }
 
 bool TestSuite::launchChildTestProcess(const std::vector<TestIdentifier> &testsInBatch)
@@ -1092,7 +1149,7 @@ int TestSuite::run()
     }
 
     // Dump combined results.
-    WriteTestResults(true, mTestResults, mResultsFile, mTestSuiteName.c_str());
+    WriteOutputFiles(true, mTestResults, mResultsFile, mHistogramJsonFile, mTestSuiteName.c_str());
 
     return printFailuresAndReturnCount() == 0;
 }

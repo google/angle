@@ -132,6 +132,7 @@ class TestSuite
     std::string mFilterFile;
     std::string mResultsDirectory;
     std::string mResultsFile;
+    std::string mHistogramJsonFile;
     int mShardCount;
     int mShardIndex;
     angle::CrashCallback mCrashCallback;
