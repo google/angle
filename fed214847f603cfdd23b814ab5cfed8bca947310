@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0f88c7fc_22197ac7",
+        "filename": "src/tests/capture_replay_tests.py",
+        "patchSetId": 23
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-06-19T14:29:41Z",
+      "side": 1,
+      "message": "can you make it so you only show the stdout/stderr on a test failure?",
+      "range": {
+        "startLine": 119,
+        "startChar": 16,
+        "endLine": 119,
+        "endChar": 22
+      },
+      "revId": "fed214847f603cfdd23b814ab5cfed8bca947310",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "82d70797_e927cac0",
+        "filename": "src/tests/capture_replay_tests.py",
+        "patchSetId": 23
+      },
+      "lineNbr": 199,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-06-19T14:29:41Z",
+      "side": 1,
+      "message": "can you make a successful test only take one line?",
+      "range": {
+        "startLine": 198,
+        "startChar": 0,
+        "endLine": 199,
+        "endChar": 19
+      },
+      "revId": "fed214847f603cfdd23b814ab5cfed8bca947310",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1ed9ba02_71f39cd8",
+        "filename": "src/tests/capture_replay_tests.py",
+        "patchSetId": 23
+      },
+      "lineNbr": 223,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-06-19T14:29:41Z",
+      "side": 1,
+      "message": "you can define this out at global scope, I think that\u0027s where ALL_CAPS stuff lives. you can do the same for the default filter/test suite.",
+      "range": {
+        "startLine": 223,
+        "startChar": 4,
+        "endLine": 223,
+        "endChar": 22
+      },
+      "revId": "fed214847f603cfdd23b814ab5cfed8bca947310",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2cf02e75_b7cdb59c",
+        "filename": "src/tests/capture_replay_tests.py",
+        "patchSetId": 23
+      },
+      "lineNbr": 227,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-06-19T14:29:41Z",
+      "side": 1,
+      "message": "can you make the test suite itself (currently angle_end2end_tests) also an option? default to end2end.",
+      "range": {
+        "startLine": 227,
+        "startChar": 27,
+        "endLine": 227,
+        "endChar": 39
+      },
+      "revId": "fed214847f603cfdd23b814ab5cfed8bca947310",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
