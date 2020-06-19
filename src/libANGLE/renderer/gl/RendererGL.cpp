@@ -446,7 +446,7 @@ unsigned int RendererGL::getMaxWorkerContexts()
 bool RendererGL::hasNativeParallelCompile()
 {
 #ifdef THREAD_SANITIZER
-    if (mFeatures.disableNativeParallelCompile)
+    if (mFeatures.disableNativeParallelCompile.enabled)
     {
         return false;
     }
