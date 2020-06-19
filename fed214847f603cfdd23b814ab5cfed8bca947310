@@ -91,6 +91,29 @@
       "revId": "fed214847f603cfdd23b814ab5cfed8bca947310",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ffa0c011_1b656683",
+        "filename": "src/tests/capture_replay_tests/BUILD.gn",
+        "patchSetId": 23
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-06-19T14:30:05Z",
+      "side": 1,
+      "message": "nit: use http://anglebug.com/4758",
+      "range": {
+        "startLine": 15,
+        "startChar": 21,
+        "endLine": 15,
+        "endChar": 31
+      },
+      "revId": "fed214847f603cfdd23b814ab5cfed8bca947310",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
