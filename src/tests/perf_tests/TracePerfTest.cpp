@@ -36,8 +36,6 @@ struct TracePerfParams final : public RenderTestParams
     {
         majorVersion = 3;
         minorVersion = 0;
-        windowWidth  = 1920;
-        windowHeight = 1080;
         trackGpuTime = true;
 
         // Display the frame after every drawBenchmark invocation
@@ -361,6 +359,8 @@ TracePerfParams CombineTestID(const TracePerfParams &in, RestrictedTraceID id)
 {
     TracePerfParams out = in;
     out.testID          = id;
+    out.windowWidth     = kTraceInfos[id].drawSurfaceWidth;
+    out.windowHeight    = kTraceInfos[id].drawSurfaceHeight;
     return out;
 }
 
