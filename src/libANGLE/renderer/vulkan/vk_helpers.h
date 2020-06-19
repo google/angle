@@ -1386,6 +1386,8 @@ class ImageHelper final : public Resource, public angle::Subject
                                       GLuint *inputDepthPitch,
                                       GLuint *inputSkipBytes);
 
+    void onWrite() { mCurrentSingleClearValue.reset(); }
+
   private:
     enum class UpdateSource
     {
@@ -1393,14 +1395,20 @@ class ImageHelper final : public Resource, public angle::Subject
         Buffer,
         Image,
     };
+    ANGLE_ENABLE_STRUCT_PADDING_WARNINGS
     struct ClearUpdate
     {
+        bool operator==(const ClearUpdate &rhs)
+        {
+            return memcmp(this, &rhs, sizeof(ClearUpdate)) == 0;
+        }
         VkImageAspectFlags aspectFlags;
         VkClearValue value;
         uint32_t levelIndex;
         uint32_t layerIndex;
         uint32_t layerCount;
     };
+    ANGLE_DISABLE_STRUCT_PADDING_WARNINGS
     struct BufferUpdate
     {
         BufferHelper *bufferHelper;
@@ -1524,6 +1532,11 @@ class ImageHelper final : public Resource, public angle::Subject
     // Staging buffer
     DynamicBuffer mStagingBuffer;
     std::vector<SubresourceUpdate> mSubresourceUpdates;
+
+    // Optimization for repeated clear with the same value. If this pointer is not null, the entire
+    // image it has been cleared to the specified clear value. If another clear call is made with
+    // the exact same clear value, we will detect and skip the clear call.
+    Optional<ClearUpdate> mCurrentSingleClearValue;
 };
 
 // A vector of image views, such as one per level or one per layer.

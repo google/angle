@@ -4194,6 +4194,7 @@ angle::Result ContextVk::onImageWrite(VkImageAspectFlags aspectFlags,
 
     image->changeLayout(aspectFlags, imageLayout, commandBuffer);
     image->retain(&mResourceUseList);
+    image->onWrite();
 
     return angle::Result::Continue;
 }
