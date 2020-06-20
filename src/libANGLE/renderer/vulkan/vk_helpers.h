@@ -1243,6 +1243,10 @@ class ImageHelper final : public Resource, public angle::Subject
                                                      const vk::Format &format);
     void stageRobustResourceClear(const gl::ImageIndex &index);
 
+    // Stage the currently allocated image as an update to base level, making this !valid().  This
+    // is used for mipmap generation.
+    void stageSelfForBaseLevel();
+
     // This will use the underlying dynamic buffer to allocate some memory to be used as a src or
     // dst.
     angle::Result allocateStagingMemory(ContextVk *contextVk,

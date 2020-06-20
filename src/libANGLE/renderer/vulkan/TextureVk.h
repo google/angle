@@ -366,6 +366,9 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
                                              uint32_t levelCount,
                                              const vk::Format &format);
 
+    // Flush image's staged updates for all levels and layers.
+    angle::Result flushImageStagedUpdates(ContextVk *contextVk);
+
     const gl::InternalFormat &getImplementationSizedFormat(const gl::Context *context) const;
     const vk::Format &getBaseLevelFormat(RendererVk *renderer) const;
     // Queues a flush of any modified image attributes. The image will be reallocated with its new

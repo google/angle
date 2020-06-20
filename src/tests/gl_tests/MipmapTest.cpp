@@ -856,6 +856,9 @@ TEST_P(MipmapTest, TextureCubeGeneralLevelZero)
     // http://anglebug.com/2822
     ANGLE_SKIP_TEST_IF(IsWindows() && IsIntel() && IsVulkan());
 
+    // http://issuetracker.google.com/159666631
+    ANGLE_SKIP_TEST_IF(isSwiftshader());
+
     glBindTexture(GL_TEXTURE_CUBE_MAP, mTextureCube);
 
     // Draw. Since the negative-Y face's is blue, this should be blue.
@@ -1155,6 +1158,9 @@ TEST_P(MipmapTestES3, GenerateMipmapPreservesOutOfRangeMips)
     // http://anglebug.com/4782
     ANGLE_SKIP_TEST_IF(IsOpenGL() && IsWindows() && (IsAMD() || IsIntel()));
 
+    // http://anglebug.com/4784
+    ANGLE_SKIP_TEST_IF(IsOpenGL() && IsLinux() && IsIntel());
+
     // http://anglebug.com/4786
     ANGLE_SKIP_TEST_IF(IsOpenGLES() && IsNVIDIAShield());
 
@@ -1176,13 +1182,17 @@ TEST_P(MipmapTestES3, GenerateMipmapPreservesOutOfRangeMips)
 
     // Set base level to 1, and generate mipmaps.  Levels 1 through 5 will be green.
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 1);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    clearAndDrawQuad(m2DProgram, getWindowWidth(), getWindowHeight());
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 2, getWindowHeight() / 2, kLevel1Data[0]);
 
     glGenerateMipmap(GL_TEXTURE_2D);
     ASSERT_GL_NO_ERROR();
 
     // Verify that the mips are all green.
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
     for (int mip = 0; mip < 5; ++mip)
     {
         int scale = 1 << mip;

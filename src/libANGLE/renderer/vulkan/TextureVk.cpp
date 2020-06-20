@@ -1362,11 +1362,8 @@ angle::Result TextureVk::generateMipmapsWithCPU(const gl::Context *context)
             baseLevelExtents.depth, sourceRowPitch, sourceDepthPitch, imageData + bufferOffset));
     }
 
-    vk::CommandBuffer *commandBuffer = nullptr;
-    ANGLE_TRY(contextVk->endRenderPassAndGetCommandBuffer(&commandBuffer));
-    return mImage->flushStagedUpdates(contextVk, getNativeImageLevel(0), mImage->getLevelCount(),
-                                      getNativeImageLayer(0), mImage->getLayerCount(), {},
-                                      commandBuffer);
+    ASSERT(!mRedefinedLevels.any());
+    return flushImageStagedUpdates(contextVk);
 }
 
 angle::Result TextureVk::generateMipmap(const gl::Context *context)
@@ -1502,11 +1499,7 @@ angle::Result TextureVk::respecifyImageAttributesAndLevels(ContextVk *contextVk,
     // First, flush any pending updates so we have good data in the existing vkImage
     if (mImage->valid() && mImage->hasStagedUpdates())
     {
-        vk::CommandBuffer *commandBuffer = nullptr;
-        ANGLE_TRY(contextVk->endRenderPassAndGetCommandBuffer(&commandBuffer));
-        ANGLE_TRY(mImage->flushStagedUpdates(
-            contextVk, getNativeImageLevel(0), mImage->getLevelCount(), getNativeImageLayer(0),
-            mImage->getLayerCount(), mRedefinedLevels, commandBuffer));
+        ANGLE_TRY(flushImageStagedUpdates(contextVk));
     }
 
     // After flushing, track the new levels (they are used in the flush, hence the wait)
@@ -1646,6 +1639,13 @@ angle::Result TextureVk::ensureImageInitializedImpl(ContextVk *contextVk,
                             levelCount));
     }
 
+    return flushImageStagedUpdates(contextVk);
+}
+
+angle::Result TextureVk::flushImageStagedUpdates(ContextVk *contextVk)
+{
+    ASSERT(mImage->valid());
+
     vk::CommandBuffer *commandBuffer = nullptr;
     ANGLE_TRY(contextVk->endRenderPassAndGetCommandBuffer(&commandBuffer));
     return mImage->flushStagedUpdates(contextVk, getNativeImageLevel(0), mImage->getLevelCount(),
@@ -1744,18 +1744,16 @@ angle::Result TextureVk::syncState(const gl::Context *context,
     if (isGenerateMipmap && mImage->valid() &&
         mImage->getLevelCount() != getMipLevelCount(ImageMipLevels::FullMipChain))
     {
-        // Redefine the image with mipmaps.
-        const gl::ImageDesc &baseLevelDesc = mState.getBaseLevelDesc();
+        ASSERT(mOwnsImage);
 
-        // Copy image to the staging buffer and stage an update to the new one.
-        ANGLE_TRY(ensureImageInitialized(contextVk, ImageMipLevels::EnabledLevels));
-        ANGLE_TRY(copyAndStageImageSubresource(contextVk, baseLevelDesc, false,
-                                               getNativeImageLayer(0), 0, mImage->getBaseLevel()));
+        // Flush staged updates to the base level of the image.  Note that updates to the rest of
+        // the levels have already been discarded through the |removeStagedUpdates| call above.
+        ANGLE_TRY(flushImageStagedUpdates(contextVk));
 
-        // Release the original image so it can be recreated with the new mipmap counts.
+        mImage->stageSelfForBaseLevel();
+
+        // Release views and render targets created for the old image.
         releaseImage(contextVk);
-
-        mImage->retain(&contextVk->getResourceUseList());
     }
 
     // Initialize the image storage and flush the pixel buffer.

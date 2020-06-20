@@ -3944,6 +3944,41 @@ void ImageHelper::stageClearIfEmulatedFormat(Context *context)
     }
 }
 
+void ImageHelper::stageSelfForBaseLevel()
+{
+    std::unique_ptr<vk::ImageHelper> prevImage = std::make_unique<vk::ImageHelper>();
+
+    // Move the necessary information for staged update to work, and keep the rest as part of this
+    // object.
+
+    // Vulkan objects
+    prevImage->mImage        = std::move(mImage);
+    prevImage->mDeviceMemory = std::move(mDeviceMemory);
+
+    // Barrier information.  Note: mLevelCount is set to 1 so that only the base level is
+    // transitioned when flushing the update.
+    prevImage->mFormat                      = mFormat;
+    prevImage->mSerial                      = mSerial;
+    prevImage->mCurrentLayout               = mCurrentLayout;
+    prevImage->mCurrentQueueFamilyIndex     = mCurrentQueueFamilyIndex;
+    prevImage->mLastNonShaderReadOnlyLayout = mLastNonShaderReadOnlyLayout;
+    prevImage->mCurrentShaderReadStageMask  = mCurrentShaderReadStageMask;
+    prevImage->mLevelCount                  = 1;
+    prevImage->mLayerCount                  = mLayerCount;
+
+    // Reset barrier information for current (invalid) image.
+    mCurrentLayout               = ImageLayout::Undefined;
+    mCurrentQueueFamilyIndex     = std::numeric_limits<uint32_t>::max();
+    mLastNonShaderReadOnlyLayout = ImageLayout::Undefined;
+    mCurrentShaderReadStageMask  = 0;
+
+    // Stage an update from the previous image.
+    const gl::ImageIndex baseLevelIndex =
+        gl::ImageIndex::Make2DArrayRange(mBaseLevel, 0, mLayerCount);
+    stageSubresourceUpdateFromImage(prevImage.release(), baseLevelIndex, gl::kOffsetZero,
+                                    getLevelExtents(0), mImageType);
+}
+
 angle::Result ImageHelper::allocateStagingMemory(ContextVk *contextVk,
                                                  size_t sizeInBytes,
                                                  uint8_t **ptrOut,
