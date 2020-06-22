@@ -128,11 +128,15 @@ class Test():
             return (e.returncode, e.output)
 
     def BuildReplay(self, build_dir, replay_exec):
-        RunGnGen(build_dir, [("use_goma", self.use_goma),
-                             ("angle_with_capture_by_default", "true"),
-                             ("angle_build_capture_replay_tests", "true")])
-        RunAutoninja(build_dir, replay_exec)
-        Logger.log("Built replay of " + self.full_test_name)
+        try:
+            RunGnGen(build_dir, [("use_goma", self.use_goma),
+                                 ("angle_with_capture_by_default", "true"),
+                                 ("angle_build_capture_replay_tests", "true")])
+            RunAutoninja(build_dir, replay_exec)
+            Logger.log("Built replay of " + self.full_test_name)
+            return (0, "Built replay of " + self.full_test_name)
+        except subprocess.CalledProcessError as e:
+            return (e.returncode, e.output)
 
     def RunReplay(self, build_dir, replay_exec):
         try:
@@ -149,19 +153,27 @@ class Test():
 def ClearFolderContent(path):
     all_files = []
     for f in os.listdir(path):
-        if os.path.isfile(path + "/" + f) and f.startswith("angle_capture_context"):
-            os.remove(path + "/" + f)
+        if os.path.isfile(os.path.join(path, f)) and f.startswith("angle_capture_context"):
+            os.remove(os.path.join(path, f))
 
 
 def CanRunReplay(path):
-    files = [
+    required_trace_files = {
         "angle_capture_context1.h", "angle_capture_context1.cpp",
         "angle_capture_context1_files.txt", "angle_capture_context1_frame000.cpp"
-    ]
-    for file in files:
-        if not os.path.isfile(path + "/" + file):
+    }
+    binary_data_file = "angle_capture_context1.angledata.gz"
+    required_trace_files_count = 0
+    for f in os.listdir(path):
+        if f in required_trace_files:
+            required_trace_files_count += 1
+        elif os.path.isfile(os.path.join(path, f)) and f != binary_data_file and \
+            f.startswith("angle_capture_context"):
+            # if trace_files of another context exists, then the test creates multiple contexts
+            # or capture multiple frames
             return False
-    return True
+    # angle_capture_context1.angledata.gz can be missing
+    return required_trace_files_count == len(required_trace_files)
 
 
 def SetCWDToAngleFolder():
@@ -179,7 +191,8 @@ def main(build_dir, verbose, use_goma, gtest_filter, test_exec):
     if not os.path.isdir(capture_out_dir):
         os.mkdir(capture_out_dir)
     environment_vars = [("ANGLE_CAPTURE_FRAME_END", "0"),
-                        ("ANGLE_CAPTURE_OUT_DIR", capture_out_dir)]
+                        ("ANGLE_CAPTURE_OUT_DIR", capture_out_dir),
+                        ("ANGLE_CAPTURE_SERIALIZE_STATE", "1")]
     replay_exec = "capture_replay_tests"
     if platform == "win32":
         test_exec += ".exe"
@@ -197,29 +210,48 @@ def main(build_dir, verbose, use_goma, gtest_filter, test_exec):
     for environment_var in environment_vars:
         os.environ[environment_var[0]] = environment_var[1]
 
+    passed_count = 0
+    failed_count = 0
+    skipped_count = 0
+    failed_tests = []
     for test in all_tests:
         if verbose:
             print("*" * 30)
         ClearFolderContent(capture_out_dir)
         os.environ["ANGLE_CAPTURE_ENABLED"] = "1"
         run_output = test.Run(build_dir + "/" + test_exec)
-        if run_output[0] == 0 and CanRunReplay(capture_out_dir):
-            os.environ["ANGLE_CAPTURE_ENABLED"] = "0"
-            test.BuildReplay(build_dir, replay_exec)
-            replay_output = test.RunReplay(build_dir, replay_exec)
-            if replay_output[0] != 0:
-                print("Failed: " + test.full_test_name)
-                print(replay_output[1])
-            else:
-                print("Passed: " + test.full_test_name)
-        else:
+        if run_output[0] != 0 or not CanRunReplay(capture_out_dir):
             print("Skipped: " + test.full_test_name + ". Skipping replay since capture" + \
-                "didn't produce appropriate files or has crashed")
+                " didn't produce appropriate files or has crashed")
+            skipped_count += 1
+            continue
+        os.environ["ANGLE_CAPTURE_ENABLED"] = "0"
+        build_output = test.BuildReplay(build_dir, replay_exec)
+        if build_output[0] != 0:
+            print("Skipped: " + test.full_test_name + ". Skipping replay since failing to" + \
+                " build replay")
+            skipped_count += 1
+            continue
+        replay_output = test.RunReplay(build_dir, replay_exec)
+        if replay_output[0] != 0:
+            print("Failed: " + test.full_test_name)
+            print(replay_output[1])
+            failed_count += 1
+            failed_tests.append(test.full_test_name)
+        else:
+            print("Passed: " + test.full_test_name)
+            passed_count += 1
+
     for environment_var in environment_vars:
         del os.environ[environment_var[0]]
 
     if os.path.isdir(capture_out_dir):
         shutil.rmtree(capture_out_dir)
+    print("\n\n\n")
+    print("Passed:", passed_count, "Failed:", failed_count, "Skipped:", skipped_count)
+    print("Failed tests:")
+    for failed_test in failed_tests:
+        print("\t" + failed_test)
 
 
 if __name__ == "__main__":

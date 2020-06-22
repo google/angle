@@ -27,12 +27,15 @@ if (angle_build_capture_replay_tests) {
     sources =
         rebase_path(_trace_sources, ".", "traces") + [ "CaptureReplayTest.cpp" ]
     deps = [
+      "$angle_root:angle_common",
       "$angle_root:angle_compression",
-      "../../../:angle_common",
-      "../../../util:angle_util",
-      "../../../util:angle_util_loader_headers",
+      "$angle_root:libEGL_with_capture_static",
+      "$angle_root/util:angle_util_static",
     ]
-    configs += [ "../../../:library_name_config" ]
+    configs += [
+      "$angle_root:library_name_config",
+      "$angle_root:libANGLE_config",
+    ]
 
     suppressed_configs += [ "$angle_root:constructor_and_destructor_warnings" ]
 

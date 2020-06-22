@@ -8,11 +8,11 @@
 //
 
 #include "common/system_utils.h"
+#include "libANGLE/Context.h"
+#include "libANGLE/frame_capture_utils.h"
 #include "util/EGLPlatformParameters.h"
 #include "util/EGLWindow.h"
 #include "util/OSWindow.h"
-#include "util/egl_loader_autogen.h"
-#include "util/gles_loader_autogen.h"
 
 #include <stdint.h>
 #include <string.h>
@@ -38,6 +38,10 @@ std::function<void(int)> ReplayContextFrame = reinterpret_cast<void (*)(int)>(
 std::function<void()> ResetContextReplay = reinterpret_cast<void (*)()>(
     ANGLE_MACRO_CONCAT(ResetContext,
                        ANGLE_MACRO_CONCAT(ANGLE_CAPTURE_REPLAY_TEST_CONTEXT_ID, Replay)));
+std::function<std::vector<uint8_t>()> GetSerializedContextStateData =
+    reinterpret_cast<std::vector<uint8_t> (*)()>(
+        ANGLE_MACRO_CONCAT(GetSerializedContextState,
+                           ANGLE_MACRO_CONCAT(ANGLE_CAPTURE_REPLAY_TEST_CONTEXT_ID, Data)));
 
 class CaptureReplayTest
 {
@@ -113,8 +117,6 @@ class CaptureReplayTest
             return -1;
         }
 
-        angle::LoadGLES(eglGetProcAddress);
-
         int result = 0;
 
         if (!initialize())
@@ -123,6 +125,18 @@ class CaptureReplayTest
         }
 
         draw();
+
+        gl::Context *context = static_cast<gl::Context *>(mEGLWindow->getContext());
+        gl::BinaryOutputStream bos;
+        if (angle::SerializeContext(&bos, context) != angle::Result::Continue)
+        {
+            return -1;
+        }
+        bool isEqual = compareSerializedStates(bos);
+        if (!isEqual)
+        {
+            result = -1;
+        }
         swap();
 
         mEGLWindow->destroyGL();
@@ -132,6 +146,11 @@ class CaptureReplayTest
     }
 
   private:
+    bool compareSerializedStates(const gl::BinaryOutputStream &replaySerializedContextData)
+    {
+        return GetSerializedContextStateData() == replaySerializedContextData.getData();
+    }
+
     uint32_t mWidth;
     uint32_t mHeight;
     OSWindow *mOSWindow;

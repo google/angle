@@ -158,8 +158,6 @@ void Surface::postSwap(const gl::Context *context)
         mInitState = gl::InitState::MayNeedInit;
         onStateChange(angle::SubjectMessage::SubjectChanged);
     }
-
-    context->onPostSwap();
 }
 
 Error Surface::initialize(const Display *display)
@@ -278,6 +276,7 @@ EGLint Surface::getType() const
 Error Surface::swap(const gl::Context *context)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "egl::Surface::swap");
+    context->onPreSwap();
 
     context->getState().getOverlay()->onSwap();
 

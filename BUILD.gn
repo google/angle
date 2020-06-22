@@ -98,6 +98,12 @@ config("internal_config") {
     defines += [ "ANGLE_IS_32_BIT_CPU" ]
   }
 
+  if (is_win) {
+    defines += [ "ANGLE_IS_WIN" ]
+  } else if (is_linux) {
+    defines += [ "ANGLE_IS_LINUX" ]
+  }
+
   if (angle_enable_trace) {
     defines += [ "ANGLE_ENABLE_DEBUG_TRACE=1" ]
   }
@@ -907,6 +913,14 @@ angle_static_library("libGLESv2_static") {
   public_deps = [ ":libANGLE" ]
 }
 
+angle_static_library("libGLESv2_with_capture_static") {
+  sources = libglesv2_sources
+  configs += [ ":debug_annotations_config" ]
+  public_configs += [ ":angle_static" ]
+  deps = [ ":includes" ]
+  public_deps = [ ":libANGLE_with_capture" ]
+}
+
 angle_shared_library("libGLESv1_CM") {
   sources = libglesv1_cm_sources
   output_name = "libGLESv1_CM${angle_libs_suffix}"
@@ -987,6 +1001,19 @@ angle_shared_library("libEGL") {
 
 angle_static_library("libEGL_static") {
   sources = libegl_sources
+  configs += [
+    ":debug_annotations_config",
+    ":library_name_config",
+  ]
+  public_configs += [ ":angle_static" ]
+  deps = [
+    ":includes",
+    ":libGLESv2_static",
+  ]
+}
+
+angle_static_library("libEGL_with_capture_static") {
+  sources = libegl_sources
 
   configs += [
     ":debug_annotations_config",
@@ -997,7 +1024,7 @@ angle_static_library("libEGL_static") {
 
   deps = [
     ":includes",
-    ":libGLESv2_static",
+    ":libGLESv2_with_capture_static",
   ]
 }
 

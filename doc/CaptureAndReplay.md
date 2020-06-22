@@ -73,6 +73,8 @@ Some simple environment variables control frame capture:
            foo::ReplayContext1Frame(i);
        }
        ```
+ * `ANGLE_CAPTURE_SERIALIZE_STATE`:
+   * Set to `1` to enable GL state serialization. Default is `0`.
 
 A good way to test out the capture is to use environment variables in conjunction with the sample
 template. For example:

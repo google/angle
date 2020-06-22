@@ -357,7 +357,7 @@ FramebufferState::FramebufferState(const Caps &caps, FramebufferID id, ContextID
 
 FramebufferState::~FramebufferState() {}
 
-const std::string &FramebufferState::getLabel()
+const std::string &FramebufferState::getLabel() const
 {
     return mLabel;
 }

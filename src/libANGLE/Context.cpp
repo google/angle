@@ -8437,7 +8437,7 @@ egl::Error Context::unsetDefaultFramebuffer()
     return egl::NoError();
 }
 
-void Context::onPostSwap() const
+void Context::onPreSwap() const
 {
     // Dump frame capture if enabled.
     mFrameCapture->onEndFrame(this);
