@@ -883,9 +883,11 @@ struct hash<rx::vk::LayerLevel>
     size_t operator()(const rx::vk::LayerLevel &layerLevel) const
     {
         // The left-shift by 11 was found to produce unique hash values
-        // in a 256x256 space for layer/level
-        return std::hash<uint32_t>()(layerLevel.layer) ^
-               (std::hash<uint32_t>()(layerLevel.level) << 11);
+        // in a [0..1000][0..2048] space for layer/level
+        // Make sure that layer/level hash bits don't overlap or overflow
+        ASSERT((layerLevel.layer & 0x000007FF) == layerLevel.layer);
+        ASSERT((layerLevel.level & 0xFFE00000) == 0);
+        return layerLevel.layer | (layerLevel.level << 11);
     }
 };
 }  // namespace std
