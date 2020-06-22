@@ -1325,7 +1325,7 @@ TEST_P(Texture2DArrayCopy, SnormFormats)
 
     // TODO: Vulkan's CPU-path implementation doesn't handle 2DArray textures correctly yet.
     // http://anglebug.com/4744
-    ANGLE_SKIP_TEST_IF(IsVulkan() && (IsIntel() || isSwiftshader() || IsAndroid()));
+    ANGLE_SKIP_TEST_IF(IsVulkan() && (IsIntel() || IsARM() || isSwiftshader() || IsAndroid()));
 
     testSnormFormats(GL_TEXTURE_2D_ARRAY);
 }
