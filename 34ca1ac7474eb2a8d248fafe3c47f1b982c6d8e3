@@ -22,6 +22,30 @@
       "revId": "34ca1ac7474eb2a8d248fafe3c47f1b982c6d8e3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9857d14c_51095597",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 880,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-06-22T14:43:53Z",
+      "side": 1,
+      "message": "+1. Also, this would be a bit faster:\n\n    return std::hash\u003cuint32_t\u003e()(layerLevel.layer | layerLevel.level \u003c\u003c 11);\n\nThat said, why rely on \"current implementations\" giving a unique hash when we can actually make the hash unique? I\u0027d just do:\n\n    return layerLevel.layer | layerLevel.level \u003c\u003c 11;\n\n---\n\nIf it makes you feel any better, clang\u0027s `std::hash` (in bits/functional_hash) returns the exact value for integer types, so you aren\u0027t gaining anything by calling `std::hash` here.",
+      "parentUuid": "b87fd78b_acdcdef1",
+      "range": {
+        "startLine": 877,
+        "startChar": 5,
+        "endLine": 880,
+        "endChar": 63
+      },
+      "revId": "34ca1ac7474eb2a8d248fafe3c47f1b982c6d8e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
