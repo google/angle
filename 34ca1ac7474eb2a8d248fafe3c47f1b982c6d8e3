@@ -46,6 +46,30 @@
       "revId": "34ca1ac7474eb2a8d248fafe3c47f1b982c6d8e3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "59e2a88e_52566d47",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 880,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-06-22T14:50:53Z",
+      "side": 1,
+      "message": "Oh, right. I didn\u0027t notice we were calling hash twice. If we fit in 32 bits we should just return what you suggested shabi with a couple asserts that this won\u0027t overflow/overlap.",
+      "parentUuid": "9857d14c_51095597",
+      "range": {
+        "startLine": 877,
+        "startChar": 5,
+        "endLine": 880,
+        "endChar": 63
+      },
+      "revId": "34ca1ac7474eb2a8d248fafe3c47f1b982c6d8e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
