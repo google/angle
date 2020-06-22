@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b87fd78b_acdcdef1",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 880,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-06-22T14:25:33Z",
+      "side": 1,
+      "message": "a quick follow up to ASSERT that these two components of the hash don\u0027t overlap would be nice.",
+      "range": {
+        "startLine": 877,
+        "startChar": 5,
+        "endLine": 880,
+        "endChar": 63
+      },
+      "revId": "34ca1ac7474eb2a8d248fafe3c47f1b982c6d8e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
