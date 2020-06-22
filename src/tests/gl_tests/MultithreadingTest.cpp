@@ -204,8 +204,8 @@ TEST_P(MultithreadingTest, MultiContextDraw)
 
 TEST_P(MultithreadingTest, MultiCreateContext)
 {
-    // Supported by WGL and GLX (https://anglebug.com/4725)
-    ANGLE_SKIP_TEST_IF(!IsWindows() && !IsLinux());
+    // Supported by CGL, GLX, and WGL (https://anglebug.com/4725)
+    ANGLE_SKIP_TEST_IF(!IsWindows() && !IsLinux() && !IsOSX());
 
     EGLWindow *window  = getEGLWindow();
     EGLDisplay dpy     = window->getDisplay();

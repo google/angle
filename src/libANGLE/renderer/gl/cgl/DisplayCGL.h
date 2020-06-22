@@ -9,6 +9,8 @@
 #ifndef LIBANGLE_RENDERER_GL_CGL_DISPLAYCGL_H_
 #define LIBANGLE_RENDERER_GL_CGL_DISPLAYCGL_H_
 
+#include <thread>
+
 #include "libANGLE/renderer/gl/DisplayGL.h"
 
 struct _CGLContextObject;
@@ -101,6 +103,7 @@ class DisplayCGL : public DisplayGL
 
     egl::Display *mEGLDisplay;
     CGLContextObj mContext;
+    std::unordered_map<std::thread::id, CGLContextObj> mCurrentContexts;
     CGLPixelFormatObj mPixelFormat;
     bool mSupportsGPUSwitching;
     uint64_t mCurrentGPUID;
