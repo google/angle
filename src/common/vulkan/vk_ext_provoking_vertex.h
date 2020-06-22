@@ -12,7 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "common/vulkan/vk_headers.h"
+#ifndef CUSTOM_VK_EXT_PROVOKING_VERTEX_H_
+#define CUSTOM_VK_EXT_PROVOKING_VERTEX_H_
+
+#include "vk_headers.h"
 
 // THIS FILE SHOULD BE DELETED IF VK_EXT_provoking_vertex IS EVER ADDED TO THE VULKAN HEADERS
 #ifdef VK_EXT_provoking_vertex
@@ -63,3 +66,5 @@ typedef struct VkPipelineRasterizationProvokingVertexStateCreateInfoEXT
     const void *pNext;
     VkProvokingVertexModeEXT provokingVertexMode;
 } VkPipelineRasterizationProvokingVertexStateCreateInfoEXT;
+
+#endif  // CUSTOM_VK_EXT_PROVOKING_VERTEX_H_
