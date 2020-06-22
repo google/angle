@@ -14,10 +14,20 @@ deps=(
     "third_party/jsoncpp"
     "third_party/jsoncpp/source"
     "third_party/vulkan_memory_allocator"
+    "third_party/zlib"
+)
+
+# Only add the parts of NDK that are required by ANGLE. The entire dep is too large.
+delete_only_deps=(
+    "third_party/android_ndk"
+)
+
+add_only_deps=(
+    "third_party/android_ndk/sources/android/cpufeatures"
 )
 
 # Delete dep directories so that gclient can check them out
-for dep in ${deps[@]}; do
+for dep in ${deps[@]} ${delete_only_deps[@]}; do
     rm -rf $dep
 done
 
@@ -66,22 +76,27 @@ git add Android.bp
 
 # Delete the .git files in each dep so that it can be added to this repo. Some deps like jsoncpp
 # have multiple layers of deps so delete everything before adding them.
-for dep in ${deps[@]}; do
+for dep in ${deps[@]} ${delete_only_deps[@]}; do
     rm -rf $dep/.git
 done
 
 extra_removal_files=(
-    # The jsoncpp OWNERS and VulkanMemoryAllocator file contains users that have not logged into
-    # the Android gerrit so it fails to upload.
+    # Some third_party deps have OWNERS files which contains users that have not logged into
+    # the Android gerrit. Repo cannot upload with these files present.
     "third_party/jsoncpp/OWNERS"
     "third_party/vulkan_memory_allocator/OWNERS"
+    "third_party/zlib/OWNERS"
+    "third_party/zlib/google/OWNERS"
+    "third_party/zlib/contrib/tests/OWNERS"
+    "third_party/zlib/contrib/bench/OWNERS"
+    "third_party/zlib/contrib/tests/fuzzers/OWNERS"
 )
 
 for removal_file in ${extra_removal_files[@]}; do
     rm $removal_file
 done
 
-for dep in ${deps[@]}; do
+for dep in ${deps[@]} ${add_only_deps[@]}; do
     git add -f $dep
 done
 
