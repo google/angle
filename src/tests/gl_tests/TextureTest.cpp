@@ -6529,6 +6529,203 @@ TEST_P(Texture2DTestES3, GenerateMipmapAndBaseLevelLUMA)
     EXPECT_PIXEL_COLOR_EQ(0, 0, angle::GLColor::white);
 }
 
+// Incompatible levels with non-mipmap filtering should work.
+TEST_P(Texture2DTestES3, IncompatibleMipsButNoMipmapFiltering)
+{
+    // http://anglebug.com/4780
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
+    // http://anglebug.com/4782
+    ANGLE_SKIP_TEST_IF(IsOpenGL() && IsWindows() && (IsAMD() || IsIntel()));
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, mTexture2D);
+
+    constexpr const GLsizei kSize = 8;
+    const std::vector<GLColor> kLevel0Data(kSize * kSize, GLColor::blue);
+    const std::vector<GLColor> kLevel1Data(kSize * kSize, GLColor::red);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 kLevel0Data.data());
+    glTexImage2D(GL_TEXTURE_2D, 1, GL_RGBA, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 kLevel1Data.data());
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    EXPECT_GL_NO_ERROR();
+
+    // Draw with base level 0.  The GL_LINEAR filtering ensures the texture's image is not created
+    // with mipmap.
+    drawQuad(mProgram, "position", 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, kLevel0Data[0]);
+
+    // Verify draw with level 1.
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 1);
+    drawQuad(mProgram, "position", 0.5f);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, kLevel1Data[0]);
+
+    // Verify draw with level 0 again
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
+    drawQuad(mProgram, "position", 0.5f);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, kLevel0Data[0]);
+}
+
+// Enabling mipmap filtering after previously having used the texture without it should work.
+TEST_P(Texture2DTestES3, NoMipmapDrawThenMipmapDraw)
+{
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, mTexture2D);
+
+    constexpr const GLsizei kSize = 8;
+    const std::vector<GLColor> kLevel0Data(kSize * kSize, GLColor::blue);
+    const std::vector<GLColor> kLevelOtherData(kSize * kSize, GLColor::red);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 kLevel0Data.data());
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    EXPECT_GL_NO_ERROR();
+
+    // Draw so the texture's image is allocated.
+    drawQuad(mProgram, "position", 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, kLevel0Data[0]);
+
+    // Specify the rest of the image
+    for (GLint mip = 1; (kSize >> mip) >= 1; ++mip)
+    {
+        glTexImage2D(GL_TEXTURE_2D, mip, GL_RGBA, kSize >> mip, kSize >> mip, 0, GL_RGBA,
+                     GL_UNSIGNED_BYTE, kLevelOtherData.data());
+    }
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Texture2DLod(), essl3_shaders::fs::Texture2DLod());
+    glUseProgram(program);
+    GLint textureLoc = glGetUniformLocation(program, essl3_shaders::Texture2DUniform());
+    GLint lodLoc     = glGetUniformLocation(program, essl3_shaders::LodUniform());
+    ASSERT_NE(-1, textureLoc);
+    ASSERT_NE(-1, lodLoc);
+    glUniform1i(textureLoc, 0);
+
+    // Verify the mips
+    for (GLint mip = 0; (kSize >> mip) >= 1; ++mip)
+    {
+        glUniform1f(lodLoc, mip);
+        drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+        EXPECT_GL_NO_ERROR();
+        EXPECT_PIXEL_COLOR_EQ(0, 0, (mip == 0 ? kLevel0Data[0] : kLevelOtherData[0]));
+    }
+}
+
+// Disabling mipmap filtering after previously having used the texture with it should work.
+TEST_P(Texture2DTestES3, MipmapDrawThenNoMipmapDraw)
+{
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, mTexture2D);
+
+    constexpr const GLsizei kSize = 8;
+    const std::vector<GLColor> kLevel0Data(kSize * kSize, GLColor::blue);
+    const std::vector<GLColor> kLevelOtherData(kSize * kSize, GLColor::red);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 kLevel0Data.data());
+    for (GLint mip = 1; (kSize >> mip) >= 1; ++mip)
+    {
+        glTexImage2D(GL_TEXTURE_2D, mip, GL_RGBA, kSize >> mip, kSize >> mip, 0, GL_RGBA,
+                     GL_UNSIGNED_BYTE, kLevelOtherData.data());
+    }
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    EXPECT_GL_NO_ERROR();
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Texture2DLod(), essl3_shaders::fs::Texture2DLod());
+    glUseProgram(program);
+    GLint textureLoc = glGetUniformLocation(program, essl3_shaders::Texture2DUniform());
+    GLint lodLoc     = glGetUniformLocation(program, essl3_shaders::LodUniform());
+    ASSERT_NE(-1, textureLoc);
+    ASSERT_NE(-1, lodLoc);
+    glUniform1i(textureLoc, 0);
+
+    // Verify the mips.
+    for (GLint mip = 0; (kSize >> mip) >= 1; ++mip)
+    {
+        glUniform1f(lodLoc, mip);
+        drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+        EXPECT_GL_NO_ERROR();
+        EXPECT_PIXEL_COLOR_EQ(0, 0, (mip == 0 ? kLevel0Data[0] : kLevelOtherData[0]));
+    }
+
+    // Disable mipmapping and verify mips again.
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+    for (GLint mip = 0; (kSize >> mip) >= 1; ++mip)
+    {
+        glUniform1f(lodLoc, mip);
+        drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+        EXPECT_GL_NO_ERROR();
+        EXPECT_PIXEL_COLOR_EQ(0, 0, kLevel0Data[0]);
+    }
+}
+
+// Respecify texture with more mips.
+TEST_P(Texture2DTestES3, RespecifyWithMoreMips)
+{
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, mTexture2D);
+
+    constexpr const GLsizei kSize = 8;
+    const std::vector<GLColor> kLevelEvenData(kSize * kSize, GLColor::blue);
+    const std::vector<GLColor> kLevelOddData(kSize * kSize * 4, GLColor::red);
+
+    auto getLevelData = [&](GLint mip) {
+        return mip % 2 == 0 ? kLevelEvenData.data() : kLevelOddData.data();
+    };
+
+    for (GLint mip = 0; (kSize >> mip) >= 1; ++mip)
+    {
+        glTexImage2D(GL_TEXTURE_2D, mip, GL_RGBA, kSize >> mip, kSize >> mip, 0, GL_RGBA,
+                     GL_UNSIGNED_BYTE, getLevelData(mip));
+    }
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    EXPECT_GL_NO_ERROR();
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Texture2DLod(), essl3_shaders::fs::Texture2DLod());
+    glUseProgram(program);
+    GLint textureLoc = glGetUniformLocation(program, essl3_shaders::Texture2DUniform());
+    GLint lodLoc     = glGetUniformLocation(program, essl3_shaders::LodUniform());
+    ASSERT_NE(-1, textureLoc);
+    ASSERT_NE(-1, lodLoc);
+    glUniform1i(textureLoc, 0);
+
+    // Verify the mips.
+    for (GLint mip = 0; (kSize >> mip) >= 1; ++mip)
+    {
+        glUniform1f(lodLoc, mip);
+        drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+        EXPECT_GL_NO_ERROR();
+        EXPECT_PIXEL_COLOR_EQ(0, 0, getLevelData(mip)[0]);
+    }
+
+    // Respecify the texture with more mips, without changing any parameters.
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kSize * 2, kSize * 2, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 kLevelOddData.data());
+    for (GLint mip = 0; (kSize >> mip) >= 1; ++mip)
+    {
+        glTexImage2D(GL_TEXTURE_2D, mip + 1, GL_RGBA, kSize >> mip, kSize >> mip, 0, GL_RGBA,
+                     GL_UNSIGNED_BYTE, getLevelData(mip));
+    }
+
+    // Verify the mips.
+    for (GLint mip = 0; ((kSize * 2) >> mip) >= 1; ++mip)
+    {
+        glUniform1f(lodLoc, mip);
+        drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+        EXPECT_GL_NO_ERROR();
+        EXPECT_PIXEL_COLOR_EQ(0, 0, getLevelData(mip - 1)[0]);
+    }
+}
+
 // Covers a bug in the D3D11 backend: http://anglebug.com/2772
 // When using a sampler the texture was created as if it has mipmaps,
 // regardless what you specified in GL_TEXTURE_MIN_FILTER via

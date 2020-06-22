@@ -1685,13 +1685,23 @@ angle::Result TextureVk::syncState(const gl::Context *context,
                                       mState.getEffectiveMaxLevel()));
     }
 
+    // It is possible for the image to have a single level (because it doesn't use mipmapping),
+    // then have more levels defined in it and mipmapping enabled.  In that case, the image needs
+    // to be recreated.
+    bool isMipmapEnabledByMinFilter = false;
+    if (!isGenerateMipmap && mImage->valid() && dirtyBits.test(gl::Texture::DIRTY_BIT_MIN_FILTER))
+    {
+        isMipmapEnabledByMinFilter =
+            mImage->getLevelCount() < getMipLevelCount(ImageMipLevels::EnabledLevels);
+    }
+
     // Respecify the image if it's changed in usage, or if any of its levels are redefined and no
     // update to base/max levels were done (otherwise the above call would have already taken care
     // of this).  Note that if both base/max and image usage are changed, the image is recreated
     // twice, which incurs unncessary copies.  This is not expected to be happening in real
     // applications.
     if (oldUsageFlags != mImageUsageFlags || oldCreateFlags != mImageCreateFlags ||
-        mRedefinedLevels.any())
+        mRedefinedLevels.any() || isMipmapEnabledByMinFilter)
     {
         ANGLE_TRY(respecifyImageAttributes(contextVk));
     }
