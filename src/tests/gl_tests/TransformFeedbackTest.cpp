@@ -1871,6 +1871,9 @@ TEST_P(TransformFeedbackTest, OverrunWithMultiplePauseAndResume)
     // Fails on Windows Intel GL drivers. http://anglebug.com/4697
     ANGLE_SKIP_TEST_IF(IsOpenGL() && IsIntel() && IsWindows());
 
+    // Fails on Mac AMD GL drivers. http://anglebug.com/4775
+    ANGLE_SKIP_TEST_IF(IsOpenGL() && IsAMD() && IsOSX());
+
     const std::vector<GLfloat> vertices = {
         -1.0f, 1.0f, 0.5f, 1.0f, -1.0f, -1.0f, 0.5f, 1.0f, 1.0f, -1.0f, 0.5f, 1.0f,
         -1.0f, 1.0f, 0.5f, 1.0f, 1.0f,  -1.0f, 0.5f, 1.0f, 1.0f, 1.0f,  0.5f, 1.0f,
