@@ -166,6 +166,30 @@
       "revId": "d4241f8f20a2dd6d7ff8fc073bf4d7db66e50d4a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "268b7937_3bf28920",
+        "filename": "src/image_util/imageformats.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1835,
+      "author": {
+        "id": 1298773
+      },
+      "writtenOn": "2020-06-23T10:08:21Z",
+      "side": 1,
+      "message": "FYI, I probably won\u0027t get to adding these tests for quite a while, probably a month at least. I have so many potential driver bugs to look into at the moment.",
+      "parentUuid": "79267a4f_64d6e796",
+      "range": {
+        "startLine": 1835,
+        "startChar": 21,
+        "endLine": 1835,
+        "endChar": 38
+      },
+      "revId": "d4241f8f20a2dd6d7ff8fc073bf4d7db66e50d4a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
