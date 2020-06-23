@@ -114,6 +114,8 @@ class UtilsVk : angle::NonCopyable
         // flipped.
         int srcOffset[2];
         int destOffset[2];
+        // Amount to add to x and y axis for certain rotations
+        int rotatedOffsetFactor[2];
         // |stretch| is SourceDimension / DestDimension used to transfer dest coordinates to source.
         float stretch[2];
         // |srcExtents| is used to normalize source coordinates for sampling.
@@ -126,6 +128,7 @@ class UtilsVk : angle::NonCopyable
         bool linear;
         bool flipX;
         bool flipY;
+        SurfaceRotation rotation;
     };
 
     struct CopyImageParameters
@@ -344,6 +347,7 @@ class UtilsVk : angle::NonCopyable
         uint32_t outputMask      = 0;
         uint32_t flipX           = 0;
         uint32_t flipY           = 0;
+        uint32_t rotateXY        = 0;
     };
 
     struct BlitResolveStencilNoExportShaderParams

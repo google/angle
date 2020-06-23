@@ -109,6 +109,7 @@ layout(push_constant) uniform PushConstants {
     // Flip control.
     bool flipX;
     bool flipY;
+    bool rotateXY;
 } params;
 
 #if IsBlitColor
@@ -181,6 +182,8 @@ void main()
         srcImageCoords.x = -srcImageCoords.x;
     if (params.flipY)
         srcImageCoords.y = -srcImageCoords.y;
+    if (params.rotateXY)
+        srcImageCoords.xy = srcImageCoords.yx;
 
 #if IsBlitColor
 #if IsResolve

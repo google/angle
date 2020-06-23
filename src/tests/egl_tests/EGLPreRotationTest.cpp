@@ -1184,6 +1184,402 @@ TEST_P(EGLPreRotationBlitFramebufferTest, FboDestBlitFramebuffer)
     ASSERT_EGL_SUCCESS();
 }
 
+// Draw a predictable pattern (for testing pre-rotation) into a 256x256 portion of the 400x300
+// window, and then use glBlitFramebuffer to blit that pattern into an FBO, but with coordinates
+// that are partially out-of-bounds of the source
+TEST_P(EGLPreRotationBlitFramebufferTest, FboDestOutOfBoundsSourceBlitFramebuffer)
+{
+    // http://anglebug.com/4453
+    ANGLE_SKIP_TEST_IF(isVulkanRenderer() && IsLinux() && IsIntel());
+
+    // Flaky on Linux SwANGLE http://anglebug.com/4453
+    ANGLE_SKIP_TEST_IF(IsLinux() && isSwiftshader());
+
+    // To aid in debugging, we want this window visible
+    setWindowVisible(mOSWindow, true);
+
+    initializeDisplay();
+    initializeSurfaceWithRGBA8888Config();
+
+    eglMakeCurrent(mDisplay, mWindowSurface, mWindowSurface, mContext);
+    ASSERT_EGL_SUCCESS();
+
+    // Init program
+    GLuint program = createProgram();
+    ASSERT_NE(0u, program);
+    glUseProgram(program);
+
+    initializeGeometry(program);
+    ASSERT_GL_NO_ERROR();
+
+    // Create a texture-backed FBO and render the predictable pattern to it
+    GLuint fbo = createFBO();
+    ASSERT_GL_NO_ERROR();
+
+    glViewport(0, 0, mSize, mSize);
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
+    ASSERT_GL_NO_ERROR();
+
+    // Ensure the predictable pattern seems correct in the FBO
+    test256x256PredictablePattern(0, 0);
+    ASSERT_GL_NO_ERROR();
+
+    // Prepare to blit to the default framebuffer and read from the FBO
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, fbo);
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+
+    // Blit to the origin of the 400x300 window
+    GLint xOffset = 0;
+    GLint yOffset = 0;
+
+    //
+    // Test blitting a 256x256 part of the default framebuffer to the entire FBO (no scaling)
+    //
+
+    // To get the entire predictable pattern into the default framebuffer at the desired offset,
+    // blit it from the FBO
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, fbo);
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+    glViewport(xOffset, yOffset, mSize, mSize);
+    glClear(GL_COLOR_BUFFER_BIT);
+    glBlitFramebuffer(0, 0, mSize, mSize, xOffset, yOffset, xOffset + mSize, yOffset + mSize,
+                      GL_COLOR_BUFFER_BIT, GL_NEAREST);
+    // Swap buffers to put the image in the window (so the test can be visually checked)
+    eglSwapBuffers(mDisplay, mWindowSurface);
+    ASSERT_GL_NO_ERROR();
+    // Blit again to check the colors in the back buffer
+    glClear(GL_COLOR_BUFFER_BIT);
+    glBlitFramebuffer(0, 0, mSize, mSize, xOffset, yOffset, xOffset + mSize, yOffset + mSize,
+                      GL_COLOR_BUFFER_BIT, GL_NEAREST);
+
+    // Clear the FBO to black and blit from the window to the FBO, but give source coordinates that
+    // are partially outside of the window
+    xOffset = -10;
+    yOffset = -15;
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
+    glViewport(0, 0, mSize, mSize);
+    glClear(GL_COLOR_BUFFER_BIT);
+    glBlitFramebuffer(xOffset, yOffset, xOffset + mSize, yOffset + mSize, 0, 0, mSize, mSize,
+                      GL_COLOR_BUFFER_BIT, GL_LINEAR);
+
+    // Ensure the predictable pattern seems correct in the FBO
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, fbo);
+    // NOTE: There is a strip of black on the left and bottom edges of the PBO, corresponding to
+    // the source coordinates that were outside of the source.  The strip of black is xOffset
+    // pixels wide on the left side, and yOffset pixels tall on the bottom side.
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::black);
+    EXPECT_PIXEL_COLOR_EQ(0, 255, GLColor::black);
+    EXPECT_PIXEL_COLOR_EQ(-xOffset - 1, 0, GLColor::black);
+    EXPECT_PIXEL_COLOR_EQ(-xOffset - 1, 255, GLColor::black);
+    EXPECT_PIXEL_COLOR_EQ(0, -yOffset - 1, GLColor::black);
+    EXPECT_PIXEL_COLOR_EQ(255, -yOffset - 1, GLColor::black);
+    EXPECT_PIXEL_COLOR_EQ(255 + xOffset, 0, GLColor::black);
+    EXPECT_PIXEL_COLOR_EQ(255 + xOffset, -yOffset - 1, GLColor::black);
+    EXPECT_PIXEL_COLOR_EQ(0, 255 + yOffset, GLColor::black);
+    EXPECT_PIXEL_COLOR_EQ(-xOffset - 1, 255 + yOffset, GLColor::black);
+
+    // FBO coordinate (-xOffset, -yOffset) (or (10, 15)) has the values from the bottom-left corner
+    // of the source (which happens to be black).  Thus, the following two tests are equivalent:
+    EXPECT_PIXEL_COLOR_EQ(-xOffset, -yOffset, GLColor::black);
+    EXPECT_PIXEL_COLOR_EQ(10, 15, GLColor::black);
+
+    // Note: the following is equivalent to (0, 0):
+    EXPECT_PIXEL_COLOR_EQ(10 + xOffset, 15 + yOffset, GLColor::black);
+
+    EXPECT_PIXEL_COLOR_EQ(-xOffset + 1, -yOffset + 1, GLColor(1, 1, 0, 255));
+    EXPECT_PIXEL_COLOR_EQ(-xOffset + 10, -yOffset + 10, GLColor(10, 10, 0, 255));
+    EXPECT_PIXEL_COLOR_EQ(-xOffset + 20, -yOffset + 20, GLColor(20, 20, 0, 255));
+    EXPECT_PIXEL_COLOR_EQ(-xOffset + 100, -yOffset + 100, GLColor(100, 100, 0, 255));
+    EXPECT_PIXEL_COLOR_EQ(-xOffset + 200, -yOffset + 200, GLColor(200, 200, 0, 255));
+    EXPECT_PIXEL_COLOR_EQ(-xOffset + 230, -yOffset + 230, GLColor(230, 230, 0, 255));
+    // Note how the offset works differently when added to the same coordinate value as above.  The
+    // black strip causes the value to be 2X less the offset in each direction.  Thus, coordinate
+    // (230+xOffset, 230+yOffset) yields actual coordinate (220, 215) and red-green values
+    // (230+(2*xOffset), 230+(2*yOffset)) or (210, 200).  The following two tests are equivalent:
+    EXPECT_PIXEL_COLOR_EQ(230 + xOffset, 230 + yOffset,
+                          GLColor(230 + (2 * xOffset), 230 + (2 * yOffset), 0, 255));
+    EXPECT_PIXEL_COLOR_EQ(220, 215, GLColor(210, 200, 0, 255));
+    // FBO coordinate (245, 240) has the highest pixel values from the source.  The value of the
+    // FBO pixel at (245, 240) is smaller than the same coordinate in the source because of the
+    // blit's offsets.  That is, the value is (245-xOffset, 240-yOffset) or (235, 225).  Thus, the
+    // following two tests are the same:
+    EXPECT_PIXEL_COLOR_EQ(255 + xOffset, 255 + yOffset,
+                          GLColor(255 + (2 * xOffset), 255 + (2 * yOffset), 0, 255));
+    EXPECT_PIXEL_COLOR_EQ(245, 240, GLColor(235, 225, 0, 255));
+
+    // Again, the "mid-way" coordinates will get values that aren't truly mid-way:
+    EXPECT_PIXEL_COLOR_EQ(
+        xOffset + kCoordMidWayShort, yOffset + kCoordMidWayShort,
+        GLColor(kCoordMidWayShort + (2 * xOffset), kCoordMidWayShort + (2 * yOffset), 0, 255));
+    EXPECT_PIXEL_COLOR_EQ(
+        xOffset + kCoordMidWayShort, yOffset + kCoordMidWayLong,
+        GLColor(kCoordMidWayShort + (2 * xOffset), kCoordMidWayLong + (2 * yOffset), 0, 255));
+    EXPECT_PIXEL_COLOR_EQ(
+        xOffset + kCoordMidWayLong, yOffset + kCoordMidWayShort,
+        GLColor(kCoordMidWayLong + (2 * xOffset), kCoordMidWayShort + (2 * yOffset), 0, 255));
+    EXPECT_PIXEL_COLOR_EQ(
+        xOffset + kCoordMidWayLong, yOffset + kCoordMidWayLong,
+        GLColor(kCoordMidWayLong + (2 * xOffset), kCoordMidWayLong + (2 * yOffset), 0, 255));
+
+    // Almost Red
+    EXPECT_PIXEL_COLOR_EQ(255, -yOffset, GLColor(255 + xOffset, 0, 0, 255));
+    // Almost Green
+    EXPECT_PIXEL_COLOR_EQ(-xOffset, 255, GLColor(0, 255 + yOffset, 0, 255));
+    // Almost Yellow
+    EXPECT_PIXEL_COLOR_EQ(255, 255, GLColor(255 + xOffset, 255 + yOffset, 0, 255));
+
+    ASSERT_GL_NO_ERROR();
+
+    ASSERT_EGL_SUCCESS();
+}
+
+// Draw a predictable pattern (for testing pre-rotation) into a 256x256 portion of the 400x300
+// window, and then use glBlitFramebuffer to blit that pattern into an FBO, but with coordinates
+// that are partially out-of-bounds of the source, and cause a "stretch" to occur
+TEST_P(EGLPreRotationBlitFramebufferTest, FboDestOutOfBoundsSourceWithStretchBlitFramebuffer)
+{
+    // http://anglebug.com/4453
+    ANGLE_SKIP_TEST_IF(isVulkanRenderer() && IsLinux() && IsIntel());
+
+    // Flaky on Linux SwANGLE http://anglebug.com/4453
+    ANGLE_SKIP_TEST_IF(IsLinux() && isSwiftshader());
+
+    // To aid in debugging, we want this window visible
+    setWindowVisible(mOSWindow, true);
+
+    initializeDisplay();
+    initializeSurfaceWithRGBA8888Config();
+
+    eglMakeCurrent(mDisplay, mWindowSurface, mWindowSurface, mContext);
+    ASSERT_EGL_SUCCESS();
+
+    // Init program
+    GLuint program = createProgram();
+    ASSERT_NE(0u, program);
+    glUseProgram(program);
+
+    initializeGeometry(program);
+    ASSERT_GL_NO_ERROR();
+
+    // Create a texture-backed FBO and render the predictable pattern to it
+    GLuint fbo = createFBO();
+    ASSERT_GL_NO_ERROR();
+
+    glViewport(0, 0, mSize, mSize);
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
+    ASSERT_GL_NO_ERROR();
+
+    // Ensure the predictable pattern seems correct in the FBO
+    test256x256PredictablePattern(0, 0);
+    ASSERT_GL_NO_ERROR();
+
+    // Prepare to blit to the default framebuffer and read from the FBO
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, fbo);
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+
+    // Blit to the origin of the 400x300 window
+    GLint xOffset = 0;
+    GLint yOffset = 0;
+
+    //
+    // Test blitting a 256x256 part of the default framebuffer to the entire FBO (no scaling)
+    //
+
+    // To get the entire predictable pattern into the default framebuffer at the desired offset,
+    // blit it from the FBO
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, fbo);
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+    glViewport(xOffset, yOffset, mSize, mSize);
+    glClear(GL_COLOR_BUFFER_BIT);
+    glBlitFramebuffer(0, 0, mSize, mSize, xOffset, yOffset, xOffset + mSize, yOffset + mSize,
+                      GL_COLOR_BUFFER_BIT, GL_NEAREST);
+    // Swap buffers to put the image in the window (so the test can be visually checked)
+    eglSwapBuffers(mDisplay, mWindowSurface);
+    ASSERT_GL_NO_ERROR();
+    // Blit again to check the colors in the back buffer
+    glClear(GL_COLOR_BUFFER_BIT);
+    glBlitFramebuffer(0, 0, mSize, mSize, xOffset, yOffset, xOffset + mSize, yOffset + mSize,
+                      GL_COLOR_BUFFER_BIT, GL_NEAREST);
+
+    // Clear the FBO to black and blit from the window to the FBO, but give source coordinates that
+    // are partially outside of the window, but "stretch" the result by 0.5 (i.e. 2X shrink in x)
+    xOffset = -10;
+    yOffset = -15;
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
+    glViewport(0, 0, mSize, mSize);
+    glClear(GL_COLOR_BUFFER_BIT);
+    glBlitFramebuffer(xOffset, yOffset, xOffset + mSize, yOffset + mSize, 0, 0, mSize / 2, mSize,
+                      GL_COLOR_BUFFER_BIT, GL_LINEAR);
+
+    // Ensure the predictable pattern seems correct in the FBO
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, fbo);
+    // NOTE: There is a strip of black on the left and bottom edges of the PBO, corresponding to
+    // the source coordinates that were outside of the source.  The strip of black is xOffset/2
+    // pixels wide on the left side, and yOffset pixels tall on the bottom side.
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor::black, 1);
+    EXPECT_PIXEL_COLOR_NEAR(0, 255, GLColor::black, 1);
+    EXPECT_PIXEL_COLOR_NEAR((-xOffset / 2) - 1, 0, GLColor::black, 1);
+    EXPECT_PIXEL_COLOR_NEAR((-xOffset / 2) - 1, 255, GLColor::black, 1);
+    EXPECT_PIXEL_COLOR_NEAR(0, -yOffset - 1, GLColor::black, 1);
+    EXPECT_PIXEL_COLOR_NEAR(255 / 2, -yOffset - 1, GLColor::black, 1);
+    EXPECT_PIXEL_COLOR_NEAR((255 + xOffset) / 2, 0, GLColor::black, 1);
+    EXPECT_PIXEL_COLOR_NEAR((255 + xOffset) / 2, -yOffset - 1, GLColor::black, 1);
+    EXPECT_PIXEL_COLOR_NEAR(0, 255 + yOffset, GLColor::black, 1);
+    EXPECT_PIXEL_COLOR_NEAR((-xOffset / 2) - 1, 255 + yOffset, GLColor::black, 1);
+
+    // FBO coordinate (-xOffset, -yOffset) (or (10, 15)) has the values from the bottom-left corner
+    // of the source (which happens to be black).  Thus, the following two tests are equivalent:
+    EXPECT_PIXEL_COLOR_NEAR(-xOffset / 2, -yOffset, GLColor::black, 1);
+    EXPECT_PIXEL_COLOR_NEAR(10 + xOffset, 15 + yOffset, GLColor::black, 1);
+    EXPECT_PIXEL_COLOR_NEAR(220 / 2, 215, GLColor(210, 200, 0, 255), 1);
+
+    EXPECT_PIXEL_COLOR_NEAR((254 + xOffset) / 2, 255 + yOffset,
+                            GLColor(254 + (2 * xOffset), 255 + (2 * yOffset), 0, 255), 1);
+    EXPECT_PIXEL_COLOR_NEAR(254 / 2, 240, GLColor(244, 225, 0, 255), 1);
+
+    // Almost Red
+    EXPECT_PIXEL_COLOR_NEAR(254 / 2, -yOffset, GLColor(254 + xOffset, 0, 0, 255), 1);
+    // Almost Green
+    EXPECT_PIXEL_COLOR_NEAR(-xOffset / 2, 255, GLColor(0, 255 + yOffset, 0, 255), 1);
+    // Almost Yellow
+    EXPECT_PIXEL_COLOR_NEAR(254 / 2, 255, GLColor(254 + xOffset, 255 + yOffset, 0, 255), 1);
+
+    ASSERT_GL_NO_ERROR();
+
+    ASSERT_EGL_SUCCESS();
+}
+
+// Draw a predictable pattern (for testing pre-rotation) into a 256x256 portion of the 400x300
+// window, and then use glBlitFramebuffer to blit that pattern into an FBO, but with source and FBO
+// coordinates that are partially out-of-bounds of the source
+TEST_P(EGLPreRotationBlitFramebufferTest, FboDestOutOfBoundsSourceAndDestBlitFramebuffer)
+{
+    // http://anglebug.com/4453
+    ANGLE_SKIP_TEST_IF(isVulkanRenderer() && IsLinux() && IsIntel());
+
+    // Flaky on Linux SwANGLE http://anglebug.com/4453
+    ANGLE_SKIP_TEST_IF(IsLinux() && isSwiftshader());
+
+    // To aid in debugging, we want this window visible
+    setWindowVisible(mOSWindow, true);
+
+    initializeDisplay();
+    initializeSurfaceWithRGBA8888Config();
+
+    eglMakeCurrent(mDisplay, mWindowSurface, mWindowSurface, mContext);
+    ASSERT_EGL_SUCCESS();
+
+    // Init program
+    GLuint program = createProgram();
+    ASSERT_NE(0u, program);
+    glUseProgram(program);
+
+    initializeGeometry(program);
+    ASSERT_GL_NO_ERROR();
+
+    // Create a texture-backed FBO and render the predictable pattern to it
+    GLuint fbo = createFBO();
+    ASSERT_GL_NO_ERROR();
+
+    glViewport(0, 0, mSize, mSize);
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
+    ASSERT_GL_NO_ERROR();
+
+    // Ensure the predictable pattern seems correct in the FBO
+    test256x256PredictablePattern(0, 0);
+    ASSERT_GL_NO_ERROR();
+
+    // Prepare to blit to the default framebuffer and read from the FBO
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, fbo);
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+
+    // Blit to the origin of the 400x300 window
+    GLint xOffset = 0;
+    GLint yOffset = 0;
+
+    //
+    // Test blitting a 256x256 part of the default framebuffer to the entire FBO (no scaling)
+    //
+
+    // To get the entire predictable pattern into the default framebuffer at the desired offset,
+    // blit it from the FBO
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, fbo);
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+    glViewport(xOffset, yOffset, mSize, mSize);
+    glClear(GL_COLOR_BUFFER_BIT);
+    glBlitFramebuffer(0, 0, mSize, mSize, xOffset, yOffset, xOffset + mSize, yOffset + mSize,
+                      GL_COLOR_BUFFER_BIT, GL_NEAREST);
+    // Swap buffers to put the image in the window (so the test can be visually checked)
+    eglSwapBuffers(mDisplay, mWindowSurface);
+    ASSERT_GL_NO_ERROR();
+    // Blit again to check the colors in the back buffer
+    glClear(GL_COLOR_BUFFER_BIT);
+    glBlitFramebuffer(0, 0, mSize, mSize, xOffset, yOffset, xOffset + mSize, yOffset + mSize,
+                      GL_COLOR_BUFFER_BIT, GL_NEAREST);
+
+    // Clear the FBO to black and blit from the window to the FBO, but give source coordinates that
+    // are partially outside of the window, and give destination coordinates that are partially
+    // outside of the FBO
+    xOffset = -10;
+    yOffset = -15;
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
+    glViewport(0, 0, mSize, mSize);
+    glClear(GL_COLOR_BUFFER_BIT);
+    glBlitFramebuffer(xOffset, yOffset, (2 * xOffset) + mSize, (2 * yOffset) + mSize, -xOffset,
+                      -yOffset, mSize, mSize, GL_COLOR_BUFFER_BIT, GL_LINEAR);
+
+    // Ensure the predictable pattern seems correct in the FBO
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, fbo);
+    // NOTE: There is a strip of black on the left and bottom edges of the PBO, corresponding to
+    // the source coordinates that were outside of the source.  The strip of black is xOffset*2
+    // pixels wide on the left side, and yOffset*2 pixels tall on the bottom side.
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::black);
+    EXPECT_PIXEL_COLOR_EQ(0, 255, GLColor::black);
+    EXPECT_PIXEL_COLOR_EQ((-xOffset * 2) - 1, 0, GLColor::black);
+    EXPECT_PIXEL_COLOR_EQ((-xOffset * 2) - 1, 255, GLColor::black);
+    EXPECT_PIXEL_COLOR_EQ(0, (-yOffset * 2) - 1, GLColor::black);
+    EXPECT_PIXEL_COLOR_EQ(255, (-yOffset * 2) - 1, GLColor::black);
+    EXPECT_PIXEL_COLOR_EQ(255 + xOffset, 0, GLColor::black);
+    EXPECT_PIXEL_COLOR_EQ(255 + xOffset, (-yOffset * 2) - 1, GLColor::black);
+    EXPECT_PIXEL_COLOR_EQ(0, 255 + yOffset, GLColor::black);
+    EXPECT_PIXEL_COLOR_EQ((-xOffset * 2) - 1, 255 + yOffset, GLColor::black);
+
+    // FBO coordinate (-xOffset*2, -yOffset*2) (or (20, 30)) has the values from the bottom-left
+    // corner of the source (which happens to be black).  Thus, the following two tests are
+    // equivalent:
+    EXPECT_PIXEL_COLOR_EQ((-xOffset * 2), (-yOffset * 2), GLColor::black);
+    EXPECT_PIXEL_COLOR_EQ(20, 30, GLColor::black);
+
+    // Note: the following is equivalent to (0, 0):
+    EXPECT_PIXEL_COLOR_EQ(20 + (xOffset * 2), 30 + (yOffset * 2), GLColor::black);
+
+    EXPECT_PIXEL_COLOR_EQ((-xOffset * 2) + 1, (-yOffset * 2) + 1, GLColor(1, 1, 0, 255));
+    EXPECT_PIXEL_COLOR_EQ((-xOffset * 2) + 10, (-yOffset * 2) + 10, GLColor(10, 10, 0, 255));
+    EXPECT_PIXEL_COLOR_EQ((-xOffset * 2) + 20, (-yOffset * 2) + 20, GLColor(20, 20, 0, 255));
+    EXPECT_PIXEL_COLOR_EQ((-xOffset * 2) + 100, (-yOffset * 2) + 100, GLColor(100, 100, 0, 255));
+    EXPECT_PIXEL_COLOR_EQ((-xOffset * 2) + 200, (-yOffset * 2) + 200, GLColor(200, 200, 0, 255));
+    EXPECT_PIXEL_COLOR_EQ((-xOffset * 2) + 230, (-yOffset * 2) + 225, GLColor(230, 225, 0, 255));
+
+    // Almost Red
+    EXPECT_PIXEL_COLOR_EQ(255, -yOffset * 2, GLColor(255 + (xOffset * 2), 0, 0, 255));
+    // Almost Green
+    EXPECT_PIXEL_COLOR_EQ(-xOffset * 2, 255, GLColor(0, 255 + (yOffset * 2), 0, 255));
+    // Almost Yellow
+    EXPECT_PIXEL_COLOR_EQ(255, 255, GLColor(255 + (xOffset * 2), 255 + (yOffset * 2), 0, 255));
+
+    ASSERT_GL_NO_ERROR();
+
+    ASSERT_EGL_SUCCESS();
+}
 }  // anonymous namespace
 
 ANGLE_INSTANTIATE_TEST(EGLPreRotationSurfaceTest,

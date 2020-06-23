@@ -1299,6 +1299,8 @@ angle::Result UtilsVk::blitResolveImpl(ContextVk *contextVk,
     bool isResolve = src->getSamples() > 1;
 
     BlitResolveShaderParams shaderParams;
+    // Note: adjustments made for pre-rotatation in FramebufferVk::blit() affect these
+    // Calculate*Offset() functions.
     if (isResolve)
     {
         CalculateResolveOffset(params, shaderParams.offset.resolve);
@@ -1316,8 +1318,48 @@ angle::Result UtilsVk::blitResolveImpl(ContextVk *contextVk,
     shaderParams.invSamples      = 1.0f / shaderParams.samples;
     shaderParams.outputMask =
         static_cast<uint32_t>(framebuffer->getState().getEnabledDrawBuffers().to_ulong());
-    shaderParams.flipX = params.flipX;
-    shaderParams.flipY = params.flipY;
+    shaderParams.flipX    = params.flipX;
+    shaderParams.flipY    = params.flipY;
+    shaderParams.rotateXY = 0;
+
+    // Potentially make adjustments for pre-rotatation.  Depending on the angle some of the
+    // shaderParams need to be adjusted.
+    switch (params.rotation)
+    {
+        case SurfaceRotation::Identity:
+            break;
+        case SurfaceRotation::Rotated90Degrees:
+            shaderParams.rotateXY = 1;
+            break;
+        case SurfaceRotation::Rotated180Degrees:
+            if (isResolve)
+            {
+                shaderParams.offset.resolve[0] += params.rotatedOffsetFactor[0];
+                shaderParams.offset.resolve[1] += params.rotatedOffsetFactor[1];
+            }
+            else
+            {
+                shaderParams.offset.blit[0] += params.rotatedOffsetFactor[0];
+                shaderParams.offset.blit[1] += params.rotatedOffsetFactor[1];
+            }
+            break;
+        case SurfaceRotation::Rotated270Degrees:
+            if (isResolve)
+            {
+                shaderParams.offset.resolve[0] += params.rotatedOffsetFactor[0];
+                shaderParams.offset.resolve[1] += params.rotatedOffsetFactor[1];
+            }
+            else
+            {
+                shaderParams.offset.blit[0] += params.rotatedOffsetFactor[0];
+                shaderParams.offset.blit[1] += params.rotatedOffsetFactor[1];
+            }
+            shaderParams.rotateXY = 1;
+            break;
+        default:
+            UNREACHABLE();
+            break;
+    }
 
     bool blitColor   = srcColorView != nullptr;
     bool blitDepth   = srcDepthView != nullptr;
@@ -1379,6 +1421,11 @@ angle::Result UtilsVk::blitResolveImpl(ContextVk *contextVk,
 
     VkViewport viewport;
     gl::Rectangle completeRenderArea = framebuffer->getCompleteRenderArea();
+    if (contextVk->isRotatedAspectRatioForDrawFBO())
+    {
+        // The surface is rotated 90/270 degrees.  This changes the aspect ratio of the surface.
+        std::swap(completeRenderArea.width, completeRenderArea.height);
+    }
     gl_vk::GetViewport(completeRenderArea, 0.0f, 1.0f, false, completeRenderArea.height, &viewport);
     pipelineDesc.setViewport(viewport);
 
