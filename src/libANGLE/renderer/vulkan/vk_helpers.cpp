@@ -5019,11 +5019,6 @@ angle::Result SamplerHelper::init(Context *context, const VkSamplerCreateInfo &c
     return angle::Result::Continue;
 }
 
-// DispatchHelper implementation.
-DispatchHelper::DispatchHelper() = default;
-
-DispatchHelper::~DispatchHelper() = default;
-
 // ShaderProgramHelper implementation.
 ShaderProgramHelper::ShaderProgramHelper() = default;
 

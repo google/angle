@@ -847,9 +847,6 @@ class ContextVk : public ContextImpl, public vk::Context
     QueryVk *mActiveQueryAnySamples;
     QueryVk *mActiveQueryAnySamplesConservative;
 
-    // Graph resource used to record dispatch commands and hold resource dependencies.
-    vk::DispatchHelper mDispatcher;
-
     // The offset we had the last time we bound the index buffer.
     const GLvoid *mLastIndexBufferOffset;
     gl::DrawElementsType mCurrentDrawElementsType;
