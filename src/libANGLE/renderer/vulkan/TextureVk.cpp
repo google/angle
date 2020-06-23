@@ -626,8 +626,8 @@ angle::Result TextureVk::copySubTextureImpl(ContextVk *contextVk,
 
     // Read back the requested region of the source texture
     uint8_t *sourceData = nullptr;
-    ANGLE_TRY(source->copyImageDataToBufferAndGetData(contextVk, sourceLevelGL, 1, sourceBox,
-                                                      &sourceData));
+    ANGLE_TRY(source->copyImageDataToBufferAndGetData(contextVk, sourceLevelGL, sourceBox.depth,
+                                                      sourceBox, &sourceData));
 
     const angle::Format &sourceTextureFormat = sourceVkFormat.actualImageFormat();
     const angle::Format &destTextureFormat   = destVkFormat.actualImageFormat();
@@ -635,10 +635,31 @@ angle::Result TextureVk::copySubTextureImpl(ContextVk *contextVk,
         sourceBox.width * sourceBox.height * sourceBox.depth * destTextureFormat.pixelBytes;
 
     // Allocate memory in the destination texture for the copy/conversion
+    uint32_t stagingBaseLayer =
+        offsetImageIndex.hasLayer() ? offsetImageIndex.getLayerIndex() : destOffset.z;
+    uint32_t stagingLayerCount = sourceBox.depth;
+    gl::Offset stagingOffset   = destOffset;
+    gl::Extents stagingExtents(sourceBox.width, sourceBox.height, sourceBox.depth);
+    bool is3D = gl_vk::GetImageType(mState.getType()) == VK_IMAGE_TYPE_3D;
+
+    if (is3D)
+    {
+        stagingBaseLayer  = 0;
+        stagingLayerCount = 1;
+    }
+    else
+    {
+        stagingOffset.z      = 0;
+        stagingExtents.depth = 1;
+    }
+
+    const gl::ImageIndex stagingIndex = gl::ImageIndex::Make2DArrayRange(
+        offsetImageIndex.getLevelIndex(), stagingBaseLayer, stagingLayerCount);
+
     uint8_t *destData = nullptr;
-    ANGLE_TRY(mImage->stageSubresourceUpdateAndGetData(
-        contextVk, destinationAllocationSize, offsetImageIndex,
-        gl::Extents(sourceBox.width, sourceBox.height, sourceBox.depth), destOffset, &destData));
+    ANGLE_TRY(mImage->stageSubresourceUpdateAndGetData(contextVk, destinationAllocationSize,
+                                                       stagingIndex, stagingExtents, stagingOffset,
+                                                       &destData));
 
     // Source and dest data is tightly packed
     GLuint sourceDataRowPitch = sourceBox.width * sourceTextureFormat.pixelBytes;
@@ -1234,9 +1255,21 @@ angle::Result TextureVk::copyImageDataToBufferAndGetData(ContextVk *contextVk,
     vk::StagingBufferOffsetArray sourceCopyOffsets = {0, 0};
     size_t bufferSize                              = 0;
 
-    ANGLE_TRY(mImage->copyImageDataToBuffer(contextVk, sourceLevelGL, layerCount, 0, sourceArea,
-                                            &copyBuffer, &bufferSize, &sourceCopyOffsets,
-                                            outDataPtr));
+    gl::Box modifiedSourceArea = sourceArea;
+
+    bool is3D = mImage->getExtents().depth > 1;
+    if (is3D)
+    {
+        layerCount = 1;
+    }
+    else
+    {
+        modifiedSourceArea.depth = 1;
+    }
+
+    ANGLE_TRY(mImage->copyImageDataToBuffer(contextVk, sourceLevelGL, layerCount, 0,
+                                            modifiedSourceArea, &copyBuffer, &bufferSize,
+                                            &sourceCopyOffsets, outDataPtr));
 
     // Explicitly finish. If new use cases arise where we don't want to block we can change this.
     ANGLE_TRY(contextVk->finishImpl());
