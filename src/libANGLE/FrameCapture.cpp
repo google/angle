@@ -469,20 +469,34 @@ void WriteCppReplayForCall(const CallCapture &call,
         callOut << "gSyncMap[" << SyncIndexValue(sync) << "] = ";
     }
 
+    // Depending on how a buffer is mapped, we may need to track its location for readback
+    bool trackBufferPointer = false;
+
     if (call.entryPoint == gl::EntryPoint::MapBufferRange ||
         call.entryPoint == gl::EntryPoint::MapBufferRangeEXT)
     {
         GLbitfield access =
             call.params.getParam("access", ParamType::TGLbitfield, 3).value.GLbitfieldVal;
 
-        if (access & GL_MAP_WRITE_BIT)
-        {
-            // Track the returned pointer so we update its data when unmapped
-            gl::BufferID bufferID = call.params.getMappedBufferID();
-            callOut << "gMappedBufferData[";
-            WriteParamValueReplay<ParamType::TBufferID>(callOut, call, bufferID);
-            callOut << "] = ";
-        }
+        trackBufferPointer = access & GL_MAP_WRITE_BIT;
+    }
+
+    if (call.entryPoint == gl::EntryPoint::MapBuffer ||
+        call.entryPoint == gl::EntryPoint::MapBufferOES)
+    {
+        GLenum access = call.params.getParam("access", ParamType::TGLenum, 1).value.GLenumVal;
+
+        trackBufferPointer =
+            access == GL_WRITE_ONLY_OES || access == GL_WRITE_ONLY || access == GL_READ_WRITE;
+    }
+
+    if (trackBufferPointer)
+    {
+        // Track the returned pointer so we update its data when unmapped
+        gl::BufferID bufferID = call.params.getMappedBufferID();
+        callOut << "gMappedBufferData[";
+        WriteParamValueReplay<ParamType::TBufferID>(callOut, call, bufferID);
+        callOut << "] = ";
     }
 
     callOut << call.name() << "(";
@@ -2103,9 +2117,10 @@ void CaptureMidExecutionSetup(const gl::Context *context,
 
             frameCapture->getResouceTracker().setStartingBufferMapped(buffer->id(), true);
 
-            frameCapture->trackBufferMapping(
-                &setupCalls->back(), buffer->id(), static_cast<GLsizeiptr>(buffer->getMapOffset()),
-                static_cast<GLsizeiptr>(buffer->getMapLength()), buffer->getAccessFlags());
+            frameCapture->trackBufferMapping(&setupCalls->back(), buffer->id(),
+                                             static_cast<GLsizeiptr>(buffer->getMapOffset()),
+                                             static_cast<GLsizeiptr>(buffer->getMapLength()),
+                                             (buffer->getAccessFlags() & GL_MAP_WRITE_BIT) != 0);
         }
         else
         {
@@ -3485,14 +3500,14 @@ void FrameCapture::captureCompressedTextureData(const gl::Context *context, cons
             call.params.getParam("zoffset", ParamType::TGLint, zoffsetParamOffset).value.GLintVal;
     }
 
-    // Since we're dealing in 4x4 blocks, scale down the width/height pixel offsets.
-    ASSERT(format.compressedBlockWidth == 4);
-    ASSERT(format.compressedBlockHeight == 4);
+    // Scale down the width/height pixel offsets to reflect block size
+    int widthScale  = static_cast<int>(format.compressedBlockWidth);
+    int heightScale = static_cast<int>(format.compressedBlockHeight);
     ASSERT(format.compressedBlockDepth == 1);
-    pixelWidth >>= 2;
-    pixelHeight >>= 2;
-    xoffset >>= 2;
-    yoffset >>= 2;
+    pixelWidth /= widthScale;
+    pixelHeight /= heightScale;
+    xoffset /= widthScale;
+    yoffset /= heightScale;
 
     // Update pixel data.
     std::vector<uint8_t> &levelData = foundLevel->second;
@@ -3501,8 +3516,8 @@ void FrameCapture::captureCompressedTextureData(const gl::Context *context, cons
 
     GLint pixelRowPitch   = pixelWidth * pixelBytes;
     GLint pixelDepthPitch = pixelRowPitch * pixelHeight;
-    GLint levelRowPitch   = (levelExtents.width >> 2) * pixelBytes;
-    GLint levelDepthPitch = levelRowPitch * (levelExtents.height >> 2);
+    GLint levelRowPitch   = (levelExtents.width / widthScale) * pixelBytes;
+    GLint levelDepthPitch = levelRowPitch * (levelExtents.height / heightScale);
 
     for (GLint zindex = 0; zindex < pixelDepth; ++zindex)
     {
@@ -3528,12 +3543,12 @@ void FrameCapture::trackBufferMapping(CallCapture *call,
                                       gl::BufferID id,
                                       GLintptr offset,
                                       GLsizeiptr length,
-                                      GLbitfield accessFlags)
+                                      bool writable)
 {
     // Track that the buffer was mapped
     mResourceTracker.setBufferMapped(id);
 
-    if (accessFlags & GL_MAP_WRITE_BIT)
+    if (writable)
     {
         // If this buffer was mapped writable, we don't have any visibility into what
         // happens to it. Therefore, remember the details about it, and we'll read it back
@@ -3725,15 +3740,27 @@ void FrameCapture::maybeCaptureClientData(const gl::Context *context, CallCaptur
         }
 
         case gl::EntryPoint::MapBuffer:
-        {
-            UNIMPLEMENTED();
-            break;
-        }
         case gl::EntryPoint::MapBufferOES:
         {
-            UNIMPLEMENTED();
+            gl::BufferBinding target =
+                call.params.getParam("targetPacked", ParamType::TBufferBinding, 0)
+                    .value.BufferBindingVal;
+
+            GLbitfield access =
+                call.params.getParam("access", ParamType::TGLenum, 1).value.GLenumVal;
+
+            gl::Buffer *buffer = context->getState().getTargetBuffer(target);
+
+            GLintptr offset   = 0;
+            GLsizeiptr length = static_cast<GLsizeiptr>(buffer->getSize());
+
+            bool writable =
+                access == GL_WRITE_ONLY_OES || access == GL_WRITE_ONLY || access == GL_READ_WRITE;
+
+            trackBufferMapping(&call, buffer->id(), offset, length, writable);
             break;
         }
+
         case gl::EntryPoint::UnmapNamedBuffer:
         {
             UNIMPLEMENTED();
@@ -3755,7 +3782,7 @@ void FrameCapture::maybeCaptureClientData(const gl::Context *context, CallCaptur
                     .value.BufferBindingVal;
             gl::Buffer *buffer = context->getState().getTargetBuffer(target);
 
-            trackBufferMapping(&call, buffer->id(), offset, length, access);
+            trackBufferMapping(&call, buffer->id(), offset, length, access & GL_MAP_WRITE_BIT);
             break;
         }
 

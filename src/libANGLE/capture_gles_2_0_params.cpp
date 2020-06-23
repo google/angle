@@ -198,7 +198,7 @@ void CaptureGetActiveAttrib_length(const State &glState,
                                    GLchar *name,
                                    ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    paramCapture->readBufferSizeBytes = sizeof(GLsizei);
 }
 
 void CaptureGetActiveAttrib_size(const State &glState,
@@ -212,7 +212,7 @@ void CaptureGetActiveAttrib_size(const State &glState,
                                  GLchar *name,
                                  ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    paramCapture->readBufferSizeBytes = sizeof(GLint);
 }
 
 void CaptureGetActiveAttrib_type(const State &glState,
@@ -226,7 +226,7 @@ void CaptureGetActiveAttrib_type(const State &glState,
                                  GLchar *name,
                                  ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    paramCapture->readBufferSizeBytes = sizeof(GLenum);
 }
 
 void CaptureGetActiveAttrib_name(const State &glState,

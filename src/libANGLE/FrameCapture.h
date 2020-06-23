@@ -284,7 +284,7 @@ class FrameCapture final : angle::NonCopyable
                             gl::BufferID id,
                             GLintptr offset,
                             GLsizeiptr length,
-                            GLbitfield accessFlags);
+                            bool writable);
 
     ResourceTracker &getResouceTracker() { return mResourceTracker; }
 
@@ -388,6 +388,14 @@ void CaptureGetParameter(const gl::State &glState,
                          GLenum pname,
                          size_t typeSize,
                          ParamCapture *paramCapture);
+
+template <typename T>
+void CaptureClearBufferValue(GLenum buffer, const T *value, ParamCapture *paramCapture)
+{
+    // Per the spec, color buffers have a vec4, the rest a single value
+    uint32_t valueSize = (buffer == GL_COLOR) ? 4 : 1;
+    CaptureMemory(value, valueSize * sizeof(T), paramCapture);
+}
 
 void CaptureGenHandlesImpl(GLsizei n, GLuint *handles, ParamCapture *paramCapture);
 
