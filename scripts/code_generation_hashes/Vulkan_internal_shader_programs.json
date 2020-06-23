@@ -284,7 +284,7 @@
   "src/libANGLE/renderer/vulkan/vk_internal_shaders_autogen.h":
     "f2b4a6af004d1f0f06b01e370c202878",
   "tools/glslang/glslang_validator.exe.sha1":
-    "8127ba41e0d354b516f6ce1188d3c145",
+    "17e862cc6f462fecbf50b24ed6544a27",
   "tools/glslang/glslang_validator.sha1":
     "c9a8437b51fdf7c106bd19ecb4ab552f"
 }
