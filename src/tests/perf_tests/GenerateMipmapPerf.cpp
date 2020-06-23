@@ -32,6 +32,8 @@ struct GenerateMipmapParams final : public RenderTestParams
         textureWidth  = 1920;
         textureHeight = 1080;
 
+        internalFormat = GL_RGBA;
+
         webgl = false;
     }
 
@@ -39,6 +41,8 @@ struct GenerateMipmapParams final : public RenderTestParams
 
     GLsizei textureWidth;
     GLsizei textureHeight;
+
+    GLenum internalFormat;
 
     bool webgl;
 };
@@ -57,6 +61,11 @@ std::string GenerateMipmapParams::story() const
     if (webgl)
     {
         strstr << "_webgl";
+    }
+
+    if (internalFormat == GL_RGB)
+    {
+        strstr << "_rgb";
     }
 
     return strstr.str();
@@ -156,8 +165,8 @@ void GenerateMipmapBenchmarkBase::initializeBenchmark()
     mTextureData.resize(params.textureWidth * params.textureHeight * 4);
     FillWithRandomData(&mTextureData);
 
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, params.textureWidth, params.textureHeight, 0, GL_RGBA,
-                 GL_UNSIGNED_BYTE, mTextureData.data());
+    glTexImage2D(GL_TEXTURE_2D, 0, params.internalFormat, params.textureWidth, params.textureHeight,
+                 0, params.internalFormat, GL_UNSIGNED_BYTE, mTextureData.data());
 
     // Perform a draw so the image data is flushed.
     glDrawArrays(GL_TRIANGLES, 0, 3);
@@ -223,7 +232,8 @@ void GenerateMipmapBenchmark::drawBenchmark()
         std::array<uint8_t, 4> randomData;
         FillWithRandomData(&randomData);
 
-        glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, randomData.data());
+        glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, params.internalFormat, GL_UNSIGNED_BYTE,
+                        randomData.data());
 
         // Generate mipmaps
         glGenerateMipmap(GL_TEXTURE_2D);
@@ -250,8 +260,8 @@ void GenerateMipmapWithRedefineBenchmark::drawBenchmark()
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, params.textureWidth, params.textureHeight, 0, GL_RGBA,
-                 GL_UNSIGNED_BYTE, mTextureData.data());
+    glTexImage2D(GL_TEXTURE_2D, 0, params.internalFormat, params.textureWidth, params.textureHeight,
+                 0, params.internalFormat, GL_UNSIGNED_BYTE, mTextureData.data());
 
     // Perform a draw so the image data is flushed.
     glDrawArrays(GL_TRIANGLES, 0, 3);
@@ -303,13 +313,17 @@ GenerateMipmapParams OpenGLOrGLESParams(bool webglCompat, bool singleIteration)
     return params;
 }
 
-GenerateMipmapParams VulkanParams(bool webglCompat, bool singleIteration)
+GenerateMipmapParams VulkanParams(bool webglCompat, bool singleIteration, bool emulatedFormat)
 {
     GenerateMipmapParams params;
     params.eglParameters = egl_platform::VULKAN();
     params.majorVersion  = 3;
     params.minorVersion  = 0;
     params.webgl         = webglCompat;
+    if (emulatedFormat)
+    {
+        params.internalFormat = GL_RGB;
+    }
     if (singleIteration)
     {
         params.iterationsPerStep = 1;
@@ -336,13 +350,17 @@ ANGLE_INSTANTIATE_TEST(GenerateMipmapBenchmark,
                        D3D11Params(true, false),
                        OpenGLOrGLESParams(false, false),
                        OpenGLOrGLESParams(true, false),
-                       VulkanParams(false, false),
-                       VulkanParams(true, false));
+                       VulkanParams(false, false, false),
+                       VulkanParams(true, false, false),
+                       VulkanParams(false, false, true),
+                       VulkanParams(true, false, true));
 
 ANGLE_INSTANTIATE_TEST(GenerateMipmapWithRedefineBenchmark,
                        D3D11Params(false, true),
                        D3D11Params(true, true),
                        OpenGLOrGLESParams(false, true),
                        OpenGLOrGLESParams(true, true),
-                       VulkanParams(false, true),
-                       VulkanParams(true, true));
+                       VulkanParams(false, true, false),
+                       VulkanParams(true, true, false),
+                       VulkanParams(false, true, true),
+                       VulkanParams(true, true, true));
