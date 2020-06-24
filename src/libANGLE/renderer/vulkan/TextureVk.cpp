@@ -1612,18 +1612,6 @@ angle::Result TextureVk::getAttachmentRenderTarget(const gl::Context *context,
 
 angle::Result TextureVk::ensureImageInitialized(ContextVk *contextVk, ImageMipLevels mipLevels)
 {
-    const gl::ImageDesc &baseLevelDesc  = mState.getBaseLevelDesc();
-    const gl::Extents &baseLevelExtents = baseLevelDesc.size;
-    const uint32_t levelCount           = getMipLevelCount(mipLevels);
-    const vk::Format &format            = getBaseLevelFormat(contextVk->getRenderer());
-    return ensureImageInitializedImpl(contextVk, baseLevelExtents, levelCount, format);
-}
-
-angle::Result TextureVk::ensureImageInitializedImpl(ContextVk *contextVk,
-                                                    const gl::Extents &baseLevelExtents,
-                                                    uint32_t levelCount,
-                                                    const vk::Format &format)
-{
     if (mImage->valid() && !mImage->hasStagedUpdates())
     {
         return angle::Result::Continue;
@@ -1633,10 +1621,21 @@ angle::Result TextureVk::ensureImageInitializedImpl(ContextVk *contextVk,
     {
         ASSERT(!mRedefinedLevels.any());
 
-        const gl::ImageDesc &baseLevelDesc = mState.getBaseLevelDesc();
+        const gl::ImageDesc &baseLevelDesc  = mState.getBaseLevelDesc();
+        const gl::Extents &baseLevelExtents = baseLevelDesc.size;
+        const uint32_t levelCount           = getMipLevelCount(mipLevels);
+        const vk::Format &format            = getBaseLevelFormat(contextVk->getRenderer());
 
         ANGLE_TRY(initImage(contextVk, format, baseLevelDesc.format.info->sized, baseLevelExtents,
                             levelCount));
+
+        if (mipLevels == ImageMipLevels::FullMipChain)
+        {
+            // Remove staged updates to non-base mips when generating mipmaps.  These can only be
+            // emulated format init clears that are staged in initImage.
+            mImage->removeStagedUpdates(contextVk, mState.getEffectiveBaseLevel() + 1,
+                                        mState.getMipmapMaxLevel());
+        }
     }
 
     return flushImageStagedUpdates(contextVk);

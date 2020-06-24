@@ -361,11 +361,6 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
                                          size_t layer,
                                          const vk::ImageView **imageViewOut);
 
-    angle::Result ensureImageInitializedImpl(ContextVk *contextVk,
-                                             const gl::Extents &baseLevelExtents,
-                                             uint32_t levelCount,
-                                             const vk::Format &format);
-
     // Flush image's staged updates for all levels and layers.
     angle::Result flushImageStagedUpdates(ContextVk *contextVk);
 
