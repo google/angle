@@ -128,20 +128,16 @@ void DumpTraceEventsToJSONFile(const std::vector<TraceEvent> &traceEvents,
     {
         Json::Value value(Json::objectValue);
 
-        std::stringstream phaseName;
-        phaseName << traceEvent.phase;
-
-        const auto microseconds =
-            static_cast<Json::LargestInt>(traceEvent.timestamp * 1000.0 * 1000.0);
+        const auto microseconds = static_cast<Json::LargestInt>(traceEvent.timestamp) * 1000 * 1000;
 
         value["name"] = traceEvent.name;
         value["cat"]  = traceEvent.categoryName;
-        value["ph"]   = phaseName.str();
+        value["ph"]   = std::string(1, traceEvent.phase);
         value["ts"]   = microseconds;
         value["pid"]  = strcmp(traceEvent.categoryName, "gpu.angle.gpu") == 0 ? "GPU" : "ANGLE";
         value["tid"]  = 1;
 
-        eventsValue.append(value);
+        eventsValue.append(std::move(value));
     }
 
     Json::Value root(Json::objectValue);
@@ -150,8 +146,10 @@ void DumpTraceEventsToJSONFile(const std::vector<TraceEvent> &traceEvents,
     std::ofstream outFile;
     outFile.open(outputFileName);
 
-    Json::StyledWriter styledWrite;
-    outFile << styledWrite.write(root);
+    Json::StreamWriterBuilder factory;
+    std::unique_ptr<Json::StreamWriter> const writer(factory.newStreamWriter());
+    std::ostringstream stream;
+    writer->write(root, &outFile);
 
     outFile.close();
 }
