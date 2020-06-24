@@ -928,6 +928,7 @@ void WriteCppReplayIndexFiles(bool compression,
     header << "#pragma once\n";
     header << "\n";
     header << "#include \"util/gles_loader_autogen.h\"\n";
+    header << "#include \"util/egl_loader_autogen.h\"\n";
     header << "\n";
     header << "#include <cstdint>\n";
     header << "#include <cstdio>\n";
@@ -3902,6 +3903,9 @@ void FrameCapture::onEndFrame(const gl::Context *context)
 
 void FrameCapture::onMakeCurrent(const egl::Surface *drawSurface)
 {
+    if (!drawSurface)
+        return;
+
     // Track the width and height of the draw surface as provided to makeCurrent
     // TODO (b/159238311): Track this per context. Right now last one wins.
     mDrawSurfaceWidth  = drawSurface->getWidth();
