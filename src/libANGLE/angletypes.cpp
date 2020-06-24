@@ -586,6 +586,12 @@ Rectangle Box::toRect() const
     return Rectangle(x, y, width, height);
 }
 
+bool Box::coversSameExtent(const Extents &size) const
+{
+    return x == 0 && y == 0 && z == 0 && width == size.width && height == size.height &&
+           depth == size.depth;
+}
+
 bool operator==(const Offset &a, const Offset &b)
 {
     return a.x == b.x && a.y == b.y && a.z == b.z;

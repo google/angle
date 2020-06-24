@@ -1915,10 +1915,7 @@ bool Texture::doesSubImageNeedInit(const Context *context,
     }
 
     ASSERT(mState.mInitState == InitState::MayNeedInit);
-    bool coversWholeImage = area.x == 0 && area.y == 0 && area.z == 0 &&
-                            area.width == desc.size.width && area.height == desc.size.height &&
-                            area.depth == desc.size.depth;
-    return !coversWholeImage;
+    return !area.coversSameExtent(desc.size);
 }
 
 angle::Result Texture::ensureSubImageInitialized(const Context *context,

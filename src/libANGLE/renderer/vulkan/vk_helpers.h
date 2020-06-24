@@ -1423,14 +1423,12 @@ class ImageHelper final : public Resource, public angle::Subject
 
         void release(RendererVk *renderer);
 
-        const VkImageSubresourceLayers &dstSubresource() const
-        {
-            // Note: destination mip level includes base level.
-            ASSERT(updateSource == UpdateSource::Buffer || updateSource == UpdateSource::Image);
-            return updateSource == UpdateSource::Buffer ? buffer.copyRegion.imageSubresource
-                                                        : image.copyRegion.dstSubresource;
-        }
         bool isUpdateToLayerLevel(uint32_t layerIndex, uint32_t levelIndexGL) const;
+        void getDestSubresource(uint32_t imageLayerCount,
+                                uint32_t *levelIndexGLOut,
+                                uint32_t *baseLayerOut,
+                                uint32_t *layerCountOut) const;
+        VkImageAspectFlags getDestAspectFlags() const;
 
         UpdateSource updateSource;
         union
@@ -1440,6 +1438,11 @@ class ImageHelper final : public Resource, public angle::Subject
             ImageUpdate image;
         };
     };
+
+    // Called from flushStagedUpdates, removes updates that are later superseded by another.  This
+    // cannot be done at the time the updates were staged, as the image is not created (and thus the
+    // extents are not known).
+    void removeSupersededUpdates(gl::TexLevelMask skipLevelsMask);
 
     void initImageMemoryBarrierStruct(VkImageAspectFlags aspectMask,
                                       ImageLayout newLayout,
