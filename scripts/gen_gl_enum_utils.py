@@ -54,13 +54,24 @@ template_gl_enums_source = """// GENERATED FILE - DO NOT EDIT.
 
 namespace gl
 {{
+namespace
+{{
+const char *UnknownGLenumToString(unsigned int value)
+{{
+    constexpr size_t kBufferSize = 64;
+    static thread_local char sBuffer[kBufferSize];
+    snprintf(sBuffer, kBufferSize, "0x%04X", value);
+    return sBuffer;
+}}
+}}  // anonymous namespace
+
 const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
 {{
     switch (enumGroup)
     {{
         {gl_enums_value_to_string_table}
         default:
-            return kUnknownGLenumString;
+            return UnknownGLenumToString(value);
     }}
 }}
 }}  // namespace gl
@@ -71,7 +82,7 @@ template_enum_group_case = """case GLenumGroup::{group_name}: {{
     switch (value) {{
         {inner_group_cases}
         default:
-            return kUnknownGLenumString;
+            return UnknownGLenumToString(value);
     }}
 }}
 """
