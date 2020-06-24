@@ -326,8 +326,8 @@ std::shared_ptr<WorkerThreadPool> WorkerThreadPool::Create(bool multithreaded)
         pool = std::shared_ptr<WorkerThreadPool>(new DelegateWorkerPool());
     }
 #endif
-#if (!pool && ANGLE_STD_ASYNC_WORKERS == ANGLE_ENABLED)
-    if (multithreaded)
+#if (ANGLE_STD_ASYNC_WORKERS == ANGLE_ENABLED)
+    if (!pool && multithreaded)
     {
         pool = std::shared_ptr<WorkerThreadPool>(
             new AsyncWorkerPool(std::thread::hardware_concurrency()));
