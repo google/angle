@@ -6538,6 +6538,9 @@ TEST_P(Texture2DTestES3, IncompatibleMipsButNoMipmapFiltering)
     // http://anglebug.com/4782
     ANGLE_SKIP_TEST_IF(IsOpenGL() && IsWindows() && (IsAMD() || IsIntel()));
 
+    // http://anglebug.com/4786
+    ANGLE_SKIP_TEST_IF(IsOpenGLES() && IsNVIDIAShield());
+
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, mTexture2D);
 
