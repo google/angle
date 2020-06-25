@@ -613,11 +613,11 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     egl::Error reacquireHighPowerGPU();
     void onGPUSwitch();
 
+    bool noopDraw(PrimitiveMode mode, GLsizei count) const;
+    bool noopDrawInstanced(PrimitiveMode mode, GLsizei count, GLsizei instanceCount) const;
+
   private:
     void initialize();
-
-    bool noopDraw(PrimitiveMode mode, GLsizei count);
-    bool noopDrawInstanced(PrimitiveMode mode, GLsizei count, GLsizei instanceCount);
 
     angle::Result prepareForDraw(PrimitiveMode mode);
     angle::Result prepareForClear(GLbitfield mask);

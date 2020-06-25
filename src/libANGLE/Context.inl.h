@@ -64,7 +64,7 @@ ANGLE_INLINE void MarkShaderStorageBufferUsage(const Context *context)
 //  an error. ANGLE will treat this as a no-op.
 //  A no-op draw occurs if the count of vertices is less than the minimum required to
 //  have a valid primitive for this mode (0 for points, 0-1 for lines, 0-2 for tris).
-ANGLE_INLINE bool Context::noopDraw(PrimitiveMode mode, GLsizei count)
+ANGLE_INLINE bool Context::noopDraw(PrimitiveMode mode, GLsizei count) const
 {
     if (!mStateCache.getCanDraw())
     {
