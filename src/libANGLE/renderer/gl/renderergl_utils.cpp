@@ -1776,9 +1776,14 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
     }
     ANGLE_FEATURE_CONDITION(features, disableGPUSwitchingSupport, isDualGPUMacWithNVIDIA);
 
-    // Workaround issue in NVIDIA GL driver on Linux
+    // Workaround issue in NVIDIA GL driver on Linux when TSAN is enabled
     // http://crbug.com/1094869
-    ANGLE_FEATURE_CONDITION(features, disableNativeParallelCompile, IsLinux() && isNvidia);
+    bool isTSANBuild = false;
+#ifdef THREAD_SANITIZER
+    isTSANBuild = true;
+#endif
+    ANGLE_FEATURE_CONDITION(features, disableNativeParallelCompile,
+                            isTSANBuild && IsLinux() && isNvidia);
 }
 
 void InitializeFrontendFeatures(const FunctionsGL *functions, angle::FrontendFeatures *features)
