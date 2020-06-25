@@ -242,9 +242,29 @@ angle::Result GlslangGetShaderSpirvCode(ErrorHandler *context,
                                         const ShaderMapInterfaceVariableInfoMap &variableInfoMap,
                                         gl::ShaderMap<std::vector<uint32_t>> *shaderCodeOut)
 {
-    return rx::GlslangGetShaderSpirvCode(
+    gl::ShaderMap<SpirvBlob> initialSpirvBlobs;
+
+    ANGLE_TRY(rx::GlslangGetShaderSpirvCode(
         [context](GlslangError error) { return HandleError(context, error); }, linkedShaderStages,
-        glCaps, shaderSources, variableInfoMap, shaderCodeOut);
+        glCaps, shaderSources, variableInfoMap, &initialSpirvBlobs));
+
+    for (const gl::ShaderType shaderType : linkedShaderStages)
+    {
+        // we pass in false here to skip modifications related to  early fragment tests
+        // optimizations and line rasterization. These are done in the initProgram time since they
+        // are related to context state. We must keep original untouched spriv blobs here because we
+        // do not have ability to add back in at initProgram time.
+        angle::Result status = GlslangTransformSpirvCode(
+            [context](GlslangError error) { return HandleError(context, error); }, shaderType,
+            false, variableInfoMap[shaderType], initialSpirvBlobs[shaderType],
+            &(*shaderCodeOut)[shaderType]);
+        if (status != angle::Result::Continue)
+        {
+            return status;
+        }
+    }
+
+    return angle::Result::Continue;
 }
 
 angle::Result SpirvCodeToMsl(Context *context,

@@ -875,77 +875,6 @@ constexpr gl::ShaderMap<EShLanguage> kShLanguageMap = {
     {gl::ShaderType::Compute, EShLangCompute},
 };
 
-angle::Result GetShaderSpirvCode(GlslangErrorCallback callback,
-                                 const gl::Caps &glCaps,
-                                 const gl::ShaderMap<std::string> &shaderSources,
-                                 gl::ShaderMap<std::vector<uint32_t>> *spirvBlobsOut)
-{
-    // Enable SPIR-V and Vulkan rules when parsing GLSL
-    EShMessages messages = static_cast<EShMessages>(EShMsgSpvRules | EShMsgVulkanRules);
-
-    TBuiltInResource builtInResources(glslang::DefaultTBuiltInResource);
-    GetBuiltInResourcesFromCaps(glCaps, &builtInResources);
-
-    glslang::TShader vertexShader(EShLangVertex);
-    glslang::TShader fragmentShader(EShLangFragment);
-    glslang::TShader geometryShader(EShLangGeometry);
-    glslang::TShader computeShader(EShLangCompute);
-
-    gl::ShaderMap<glslang::TShader *> shaders = {
-        {gl::ShaderType::Vertex, &vertexShader},
-        {gl::ShaderType::Fragment, &fragmentShader},
-        {gl::ShaderType::Geometry, &geometryShader},
-        {gl::ShaderType::Compute, &computeShader},
-    };
-    glslang::TProgram program;
-
-    for (const gl::ShaderType shaderType : gl::AllShaderTypes())
-    {
-        if (shaderSources[shaderType].empty())
-        {
-            continue;
-        }
-
-        const char *shaderString = shaderSources[shaderType].c_str();
-        int shaderLength         = static_cast<int>(shaderSources[shaderType].size());
-
-        glslang::TShader *shader = shaders[shaderType];
-        shader->setStringsWithLengths(&shaderString, &shaderLength, 1);
-        shader->setEntryPoint("main");
-
-        bool result = shader->parse(&builtInResources, 450, ECoreProfile, false, false, messages);
-        if (!result)
-        {
-            ERR() << "Internal error parsing Vulkan shader corresponding to " << shaderType << ":\n"
-                  << shader->getInfoLog() << "\n"
-                  << shader->getInfoDebugLog() << "\n";
-            ANGLE_GLSLANG_CHECK(callback, false, GlslangError::InvalidShader);
-        }
-
-        program.addShader(shader);
-    }
-
-    bool linkResult = program.link(messages);
-    if (!linkResult)
-    {
-        ERR() << "Internal error linking Vulkan shaders:\n" << program.getInfoLog() << "\n";
-        ANGLE_GLSLANG_CHECK(callback, false, GlslangError::InvalidShader);
-    }
-
-    for (const gl::ShaderType shaderType : gl::AllShaderTypes())
-    {
-        if (shaderSources[shaderType].empty())
-        {
-            continue;
-        }
-
-        glslang::TIntermediate *intermediate = program.getIntermediate(kShLanguageMap[shaderType]);
-        glslang::GlslangToSpv(*intermediate, (*spirvBlobsOut)[shaderType]);
-    }
-
-    return angle::Result::Continue;
-}
-
 void ValidateSpirvMessage(spv_message_level_t level,
                           const char *source,
                           const spv_position_t &position,
@@ -1963,22 +1892,67 @@ angle::Result GlslangGetShaderSpirvCode(const GlslangErrorCallback &callback,
                                         const ShaderMapInterfaceVariableInfoMap &variableInfoMap,
                                         gl::ShaderMap<SpirvBlob> *spirvBlobsOut)
 {
-    gl::ShaderMap<SpirvBlob> initialSpirvBlobs;
-    ANGLE_TRY(GetShaderSpirvCode(callback, glCaps, shaderSources, &initialSpirvBlobs));
+    // Enable SPIR-V and Vulkan rules when parsing GLSL
+    EShMessages messages = static_cast<EShMessages>(EShMsgSpvRules | EShMsgVulkanRules);
 
-    for (const gl::ShaderType shaderType : linkedShaderStages)
+    TBuiltInResource builtInResources(glslang::DefaultTBuiltInResource);
+    GetBuiltInResourcesFromCaps(glCaps, &builtInResources);
+
+    glslang::TShader vertexShader(EShLangVertex);
+    glslang::TShader fragmentShader(EShLangFragment);
+    glslang::TShader geometryShader(EShLangGeometry);
+    glslang::TShader computeShader(EShLangCompute);
+
+    gl::ShaderMap<glslang::TShader *> shaders = {
+        {gl::ShaderType::Vertex, &vertexShader},
+        {gl::ShaderType::Fragment, &fragmentShader},
+        {gl::ShaderType::Geometry, &geometryShader},
+        {gl::ShaderType::Compute, &computeShader},
+    };
+    glslang::TProgram program;
+
+    for (const gl::ShaderType shaderType : gl::AllShaderTypes())
     {
-        // we pass in false here to skip modifications related to  early fragment tests
-        // optimizations and line rasterization. These are done in the initProgram time since they
-        // are related to context state. We must keep original untouched spriv blobs here because we
-        // do not have ability to add back in at initProgram time.
-        angle::Result status =
-            GlslangTransformSpirvCode(callback, shaderType, false, variableInfoMap[shaderType],
-                                      initialSpirvBlobs[shaderType], &(*spirvBlobsOut)[shaderType]);
-        if (status != angle::Result::Continue)
+        if (shaderSources[shaderType].empty())
         {
-            return status;
+            continue;
         }
+
+        const char *shaderString = shaderSources[shaderType].c_str();
+        int shaderLength         = static_cast<int>(shaderSources[shaderType].size());
+
+        glslang::TShader *shader = shaders[shaderType];
+        shader->setStringsWithLengths(&shaderString, &shaderLength, 1);
+        shader->setEntryPoint("main");
+
+        bool result = shader->parse(&builtInResources, 450, ECoreProfile, false, false, messages);
+        if (!result)
+        {
+            ERR() << "Internal error parsing Vulkan shader corresponding to " << shaderType << ":\n"
+                  << shader->getInfoLog() << "\n"
+                  << shader->getInfoDebugLog() << "\n";
+            ANGLE_GLSLANG_CHECK(callback, false, GlslangError::InvalidShader);
+        }
+
+        program.addShader(shader);
+    }
+
+    bool linkResult = program.link(messages);
+    if (!linkResult)
+    {
+        ERR() << "Internal error linking Vulkan shaders:\n" << program.getInfoLog() << "\n";
+        ANGLE_GLSLANG_CHECK(callback, false, GlslangError::InvalidShader);
+    }
+
+    for (const gl::ShaderType shaderType : gl::AllShaderTypes())
+    {
+        if (shaderSources[shaderType].empty())
+        {
+            continue;
+        }
+
+        glslang::TIntermediate *intermediate = program.getIntermediate(kShLanguageMap[shaderType]);
+        glslang::GlslangToSpv(*intermediate, (*spirvBlobsOut)[shaderType]);
     }
 
     return angle::Result::Continue;

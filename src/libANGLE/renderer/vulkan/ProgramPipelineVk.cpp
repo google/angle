@@ -89,37 +89,7 @@ angle::Result ProgramPipelineVk::link(const gl::Context *glContext)
         }
     }
 
-    ANGLE_TRY(transformShaderSpirV(glContext));
-
     return mExecutable.createPipelineLayout(glContext);
-}
-
-angle::Result ProgramPipelineVk::transformShaderSpirV(const gl::Context *glContext)
-{
-    ContextVk *contextVk                    = vk::GetImpl(glContext);
-    const gl::ProgramExecutable *executable = contextVk->getState().getProgramExecutable();
-    ASSERT(executable);
-
-    for (const gl::ShaderType shaderType : executable->getLinkedShaderStages())
-    {
-        ProgramVk *programVk = getShaderProgram(contextVk->getState(), shaderType);
-        if (programVk)
-        {
-            ShaderInterfaceVariableInfoMap &variableInfoMap =
-                mExecutable.mVariableInfoMap[shaderType];
-            SpirvBlob &transformedSpirvBlob =
-                mExecutable.getTransformedShaderInfo().getSpirvBlobs()[shaderType];
-            ASSERT(transformedSpirvBlob.empty());
-
-            // We skip early fragment tests optimization modification here since we need to keep
-            // original spriv blob here.
-            ANGLE_TRY(GlslangWrapperVk::TransformSpirV(
-                contextVk, shaderType, false, variableInfoMap,
-                programVk->getOriginalShaderInfo().getSpirvBlobs()[shaderType],
-                &transformedSpirvBlob));
-        }
-    }
-    return angle::Result::Continue;
 }
 
 angle::Result ProgramPipelineVk::updateUniforms(ContextVk *contextVk)

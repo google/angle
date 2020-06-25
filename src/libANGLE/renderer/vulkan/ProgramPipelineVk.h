@@ -47,8 +47,6 @@ class ProgramPipelineVk : public ProgramPipelineImpl
 
     angle::Result link(const gl::Context *context) override;
 
-    angle::Result transformShaderSpirV(const gl::Context *glContext);
-
     angle::Result updateUniforms(ContextVk *contextVk);
 
     bool dirtyUniforms(const gl::State &glState);
