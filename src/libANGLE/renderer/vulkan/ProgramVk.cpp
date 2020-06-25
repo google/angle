@@ -179,7 +179,7 @@ void ProgramVk::reset(ContextVk *contextVk)
 {
     RendererVk *renderer = contextVk->getRenderer();
 
-    mShaderInfo.release(contextVk);
+    mOriginalShaderInfo.release(contextVk);
 
     for (auto &uniformBlock : mDefaultUniformBlocks)
     {
@@ -189,6 +189,8 @@ void ProgramVk::reset(ContextVk *contextVk)
     GlslangWrapperVk::ResetGlslangProgramInterfaceInfo(&mGlslangProgramInterfaceInfo);
 
     mExecutable.reset(contextVk);
+    // Not done in ProgramExecutableVk::reset() since that's called more often.
+    mExecutable.getTransformedShaderInfo().release(contextVk);
 }
 
 std::unique_ptr<rx::LinkEvent> ProgramVk::load(const gl::Context *context,
@@ -201,7 +203,7 @@ std::unique_ptr<rx::LinkEvent> ProgramVk::load(const gl::Context *context,
 
     reset(contextVk);
 
-    mShaderInfo.load(stream);
+    mOriginalShaderInfo.load(stream);
     mExecutable.load(stream);
 
     // Deserializes the uniformLayout data of mDefaultUniformBlocks
@@ -235,7 +237,7 @@ std::unique_ptr<rx::LinkEvent> ProgramVk::load(const gl::Context *context,
 
 void ProgramVk::save(const gl::Context *context, gl::BinaryOutputStream *stream)
 {
-    mShaderInfo.save(stream);
+    mOriginalShaderInfo.save(stream);
     mExecutable.save(stream);
 
     // Serializes the uniformLayout data of mDefaultUniformBlocks
@@ -302,8 +304,8 @@ std::unique_ptr<LinkEvent> ProgramVk::link(const gl::Context *context,
 
     // Compile the shaders.
     angle::Result status =
-        mShaderInfo.initShaders(contextVk, mState.getExecutable().getLinkedShaderStages(),
-                                shaderSources, mExecutable.mVariableInfoMap);
+        mOriginalShaderInfo.initShaders(contextVk, mState.getExecutable().getLinkedShaderStages(),
+                                        shaderSources, mExecutable.mVariableInfoMap);
     if (status != angle::Result::Continue)
     {
         return std::make_unique<LinkEventDone>(status);

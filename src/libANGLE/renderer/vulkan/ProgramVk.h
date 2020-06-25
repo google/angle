@@ -127,18 +127,22 @@ class ProgramVk : public ProgramImpl
     ANGLE_INLINE angle::Result initGraphicsShaderProgram(ContextVk *contextVk,
                                                          const gl::ShaderType shaderType,
                                                          ProgramTransformOptionBits optionBits,
-                                                         ProgramInfo &programInfo)
+                                                         ProgramInfo *programInfo,
+                                                         ProgramExecutableVk *executableVk)
     {
-        return initProgram(contextVk, shaderType, optionBits, &programInfo);
+        return initProgram(contextVk, shaderType, optionBits, programInfo, executableVk);
     }
 
-    ANGLE_INLINE angle::Result initComputeProgram(ContextVk *contextVk, ProgramInfo &programInfo)
+    ANGLE_INLINE angle::Result initComputeProgram(ContextVk *contextVk,
+                                                  ProgramInfo *programInfo,
+                                                  ProgramExecutableVk *executableVk)
     {
         ProgramTransformOptionBits optionBits;
-        return initProgram(contextVk, gl::ShaderType::Compute, optionBits, &programInfo);
+        return initProgram(contextVk, gl::ShaderType::Compute, optionBits, programInfo,
+                           executableVk);
     }
 
-    ShaderInfo &getShaderInfo() { return mShaderInfo; }
+    ShaderInfo &getOriginalShaderInfo() { return mOriginalShaderInfo; }
 
     GlslangProgramInterfaceInfo &getGlslangProgramInterfaceInfo()
     {
@@ -171,16 +175,17 @@ class ProgramVk : public ProgramImpl
     ANGLE_INLINE angle::Result initProgram(ContextVk *contextVk,
                                            const gl::ShaderType shaderType,
                                            ProgramTransformOptionBits optionBits,
-                                           ProgramInfo *programInfo)
+                                           ProgramInfo *programInfo,
+                                           ProgramExecutableVk *executableVk)
     {
-        ASSERT(mShaderInfo.valid());
+        ASSERT(mOriginalShaderInfo.valid());
 
         // Create the program pipeline.  This is done lazily and once per combination of
         // specialization constants.
         if (!programInfo->valid(shaderType))
         {
-            ANGLE_TRY(programInfo->initProgram(contextVk, shaderType, mShaderInfo,
-                                               mExecutable.mVariableInfoMap, optionBits));
+            ANGLE_TRY(programInfo->initProgram(contextVk, shaderType, mOriginalShaderInfo,
+                                               optionBits, executableVk));
         }
         ASSERT(programInfo->valid(shaderType));
 
@@ -191,7 +196,7 @@ class ProgramVk : public ProgramImpl
     gl::ShaderBitSet mDefaultUniformBlocksDirty;
 
     // We keep the SPIR-V code to use for draw call pipeline creation.
-    ShaderInfo mShaderInfo;
+    ShaderInfo mOriginalShaderInfo;
 
     GlslangProgramInterfaceInfo mGlslangProgramInterfaceInfo;
 

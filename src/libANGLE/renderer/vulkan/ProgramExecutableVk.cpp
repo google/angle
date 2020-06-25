@@ -113,22 +113,35 @@ ProgramInfo::~ProgramInfo() = default;
 angle::Result ProgramInfo::initProgram(ContextVk *contextVk,
                                        const gl::ShaderType shaderType,
                                        const ShaderInfo &shaderInfo,
-                                       const ShaderMapInterfaceVariableInfoMap &variableInfoMap,
-                                       ProgramTransformOptionBits optionBits)
+                                       ProgramTransformOptionBits optionBits,
+                                       ProgramExecutableVk *executableVk)
 {
-    const gl::ShaderMap<SpirvBlob> &spirvBlobs = shaderInfo.getSpirvBlobs();
+    const ShaderMapInterfaceVariableInfoMap &variableInfoMap =
+        executableVk->getShaderInterfaceVariableInfoMap();
+    const gl::ShaderMap<SpirvBlob> &originalSpirvBlobs = shaderInfo.getSpirvBlobs();
+    const SpirvBlob &originalSpirvBlob                 = originalSpirvBlobs[shaderType];
+    const gl::ShaderMap<SpirvBlob> &transformedSpirvBlobs =
+        executableVk->getTransformedShaderInfo().getSpirvBlobs();
+    const SpirvBlob &transformedSpirvBlob = transformedSpirvBlobs[shaderType];
 
-    const SpirvBlob &spirvBlob = spirvBlobs[shaderType];
-
-    if (!spirvBlob.empty())
+    if (!transformedSpirvBlob.empty())
+    {
+        ANGLE_TRY(vk::InitShaderAndSerial(contextVk, &mShaders[shaderType].get(),
+                                          transformedSpirvBlob.data(),
+                                          transformedSpirvBlob.size() * sizeof(uint32_t)));
+    }
+    else
     {
         if (shaderType == gl::ShaderType::Fragment &&
             optionBits[ProgramTransformOption::RemoveEarlyFragmentTestsOptimization])
         {
-            SpirvBlob spirvBlobTransformed;
+            SpirvBlob &spirvBlobTransformed =
+                executableVk->getTransformedShaderInfo().getSpirvBlobs()[shaderType];
+
             ANGLE_TRY(GlslangWrapperVk::TransformSpirV(contextVk, shaderType, true,
-                                                       variableInfoMap[shaderType], spirvBlob,
-                                                       &spirvBlobTransformed));
+                                                       variableInfoMap[shaderType],
+                                                       originalSpirvBlob, &spirvBlobTransformed));
+
             ANGLE_TRY(vk::InitShaderAndSerial(contextVk, &mShaders[shaderType].get(),
                                               spirvBlobTransformed.data(),
                                               spirvBlobTransformed.size() * sizeof(uint32_t)));
@@ -136,12 +149,12 @@ angle::Result ProgramInfo::initProgram(ContextVk *contextVk,
         else
         {
             ANGLE_TRY(vk::InitShaderAndSerial(contextVk, &mShaders[shaderType].get(),
-                                              spirvBlob.data(),
-                                              spirvBlob.size() * sizeof(uint32_t)));
+                                              originalSpirvBlob.data(),
+                                              originalSpirvBlob.size() * sizeof(uint32_t)));
         }
-
-        mProgramHelper.setShader(shaderType, &mShaders[shaderType]);
     }
+
+    mProgramHelper.setShader(shaderType, &mShaders[shaderType]);
 
     if (optionBits[ProgramTransformOption::EnableLineRasterEmulation])
     {
@@ -166,6 +179,7 @@ ProgramExecutableVk::ProgramExecutableVk()
     : mEmptyDescriptorSets{},
       mNumDefaultUniformDescriptors(0),
       mDynamicBufferOffsets{},
+      mTransformedShaderInfoSaved(false),
       mProgram(nullptr),
       mProgramPipeline(nullptr)
 {}
@@ -234,6 +248,12 @@ std::unique_ptr<rx::LinkEvent> ProgramExecutableVk::load(gl::BinaryInputStream *
         }
     }
 
+    mTransformedShaderInfoSaved = stream->readInt<bool>();
+    if (mTransformedShaderInfoSaved)
+    {
+        mTransformedShaderInfo.load(stream);
+    }
+
     return std::make_unique<LinkEventDone>(angle::Result::Continue);
 }
 
@@ -255,6 +275,13 @@ void ProgramExecutableVk::save(gl::BinaryOutputStream *stream)
             stream->writeInt<uint32_t>(it.second.xfbOffset);
             stream->writeInt<uint32_t>(it.second.xfbStride);
         }
+    }
+
+    mTransformedShaderInfoSaved = mTransformedShaderInfo.valid();
+    stream->writeInt(mTransformedShaderInfoSaved);
+    if (mTransformedShaderInfoSaved)
+    {
+        mTransformedShaderInfo.save(stream);
     }
 }
 
@@ -587,8 +614,8 @@ angle::Result ProgramExecutableVk::getGraphicsPipeline(
         ProgramVk *programVk = getShaderProgram(glState, shaderType);
         if (programVk)
         {
-            ANGLE_TRY(programVk->initGraphicsShaderProgram(contextVk, shaderType,
-                                                           mTransformOptionBits, programInfo));
+            ANGLE_TRY(programVk->initGraphicsShaderProgram(
+                contextVk, shaderType, mTransformOptionBits, &programInfo, this));
         }
     }
 
@@ -611,7 +638,7 @@ angle::Result ProgramExecutableVk::getComputePipeline(ContextVk *contextVk,
     ProgramVk *programVk = getShaderProgram(glState, gl::ShaderType::Compute);
     ASSERT(programVk);
     ProgramInfo &programInfo = getComputeProgramInfo();
-    ANGLE_TRY(programVk->initComputeProgram(contextVk, programInfo));
+    ANGLE_TRY(programVk->initComputeProgram(contextVk, &programInfo, this));
 
     vk::ShaderProgramHelper *shaderProgram = programInfo.getShaderProgram();
     ASSERT(shaderProgram);

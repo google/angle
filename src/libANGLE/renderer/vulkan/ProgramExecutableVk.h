@@ -65,8 +65,8 @@ class ProgramInfo final : angle::NonCopyable
     angle::Result initProgram(ContextVk *contextVk,
                               const gl::ShaderType shaderType,
                               const ShaderInfo &shaderInfo,
-                              const ShaderMapInterfaceVariableInfoMap &variableInfoMap,
-                              ProgramTransformOptionBits optionBits);
+                              ProgramTransformOptionBits optionBits,
+                              ProgramExecutableVk *executableVk);
     void release(ContextVk *contextVk);
 
     ANGLE_INLINE bool valid(const gl::ShaderType shaderType) const
@@ -163,6 +163,8 @@ class ProgramExecutableVk
         mProgramPipeline = pipeline;
     }
 
+    ShaderInfo &getTransformedShaderInfo() { return mTransformedShaderInfo; }
+
   private:
     friend class ProgramVk;
     friend class ProgramPipelineVk;
@@ -245,6 +247,10 @@ class ProgramExecutableVk
     ProgramInfo mComputeProgramInfo;
 
     ProgramTransformOptionBits mTransformOptionBits;
+
+    // We keep the SPIR-V code to use for draw call pipeline creation.
+    bool mTransformedShaderInfoSaved;
+    ShaderInfo mTransformedShaderInfo;
 
     ProgramVk *mProgram;
     ProgramPipelineVk *mProgramPipeline;
