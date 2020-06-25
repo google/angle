@@ -258,6 +258,8 @@ class RendererVk : angle::NonCopyable
 
     vk::BufferHelper &getNullBuffer() { return mTheNullBuffer; }
 
+    bool getEnableValidationLayers() const { return mEnableValidationLayers; }
+
   private:
     angle::Result initializeDevice(DisplayVk *displayVk, uint32_t queueFamilyIndex);
     void ensureCapsInitialized() const;

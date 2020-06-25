@@ -256,7 +256,7 @@ angle::Result GlslangGetShaderSpirvCode(ErrorHandler *context,
         // do not have ability to add back in at initProgram time.
         angle::Result status = GlslangTransformSpirvCode(
             [context](GlslangError error) { return HandleError(context, error); }, shaderType,
-            false, variableInfoMap[shaderType], initialSpirvBlobs[shaderType],
+            false, false, variableInfoMap[shaderType], initialSpirvBlobs[shaderType],
             &(*shaderCodeOut)[shaderType]);
         if (status != angle::Result::Continue)
         {

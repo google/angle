@@ -907,6 +907,7 @@ class SpirvTransformer final : angle::NonCopyable
   public:
     SpirvTransformer(const std::vector<uint32_t> &spirvBlobIn,
                      bool removeEarlyFragmentTestsOptimization,
+                     bool removeDebugInfo,
                      const ShaderInterfaceVariableInfoMap &variableInfoMap,
                      gl::ShaderType shaderType,
                      SpirvBlob *spirvBlobOut)
@@ -919,6 +920,7 @@ class SpirvTransformer final : angle::NonCopyable
         gl::ShaderBitSet allStages;
         allStages.set();
         mRemoveEarlyFragmentTestsOptimization = removeEarlyFragmentTestsOptimization;
+        mRemoveDebugInfo                      = removeDebugInfo;
         mBuiltinVariableInfo.activeStages     = allStages;
     }
 
@@ -969,6 +971,7 @@ class SpirvTransformer final : angle::NonCopyable
     bool mHasTransformFeedbackOutput;
 
     bool mRemoveEarlyFragmentTestsOptimization;
+    bool mRemoveDebugInfo;
 
     // Input shader variable info map:
     const ShaderInterfaceVariableInfoMap &mVariableInfoMap;
@@ -1154,6 +1157,21 @@ void SpirvTransformer::transformInstruction()
         // Look at global declaration opcodes.
         switch (opCode)
         {
+            case spv::OpSourceContinued:
+            case spv::OpSource:
+            case spv::OpSourceExtension:
+            case spv::OpName:
+            case spv::OpMemberName:
+            case spv::OpString:
+            case spv::OpLine:
+            case spv::OpNoLine:
+            case spv::OpModuleProcessed:
+                if (mRemoveDebugInfo)
+                {
+                    // Strip debug info to reduce binary size.
+                    transformed = true;
+                }
+                break;
             case spv::OpCapability:
                 transformed = transformCapability(instruction, wordCount);
                 break;
@@ -1866,6 +1884,7 @@ void GlslangGetShaderSource(GlslangSourceOptions &options,
 angle::Result GlslangTransformSpirvCode(const GlslangErrorCallback &callback,
                                         const gl::ShaderType shaderType,
                                         bool removeEarlyFragmentTestsOptimization,
+                                        bool removeDebugInfo,
                                         const ShaderInterfaceVariableInfoMap &variableInfoMap,
                                         const SpirvBlob &initialSpirvBlob,
                                         SpirvBlob *spirvBlobOut)
@@ -1877,7 +1896,7 @@ angle::Result GlslangTransformSpirvCode(const GlslangErrorCallback &callback,
 
     // Transform the SPIR-V code by assigning location/set/binding values.
     SpirvTransformer transformer(initialSpirvBlob, removeEarlyFragmentTestsOptimization,
-                                 variableInfoMap, shaderType, spirvBlobOut);
+                                 removeDebugInfo, variableInfoMap, shaderType, spirvBlobOut);
     ANGLE_GLSLANG_CHECK(callback, transformer.transform(), GlslangError::InvalidSpirv);
 
     ASSERT(ValidateSpirv(*spirvBlobOut));
