@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "bc04fd84_b69e4c9c",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 2070,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2020-06-25T16:56:25Z",
+      "side": 1,
+      "message": "These variables are never used in this scope. Please move them into the if-statements.",
+      "range": {
+        "startLine": 2069,
+        "startChar": 0,
+        "endLine": 2070,
+        "endChar": 21
+      },
+      "revId": "3248e041e46ca448470644e12fdde2c1b3aeeee6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "df0b8a1e_c431c759",
         "filename": "src/libANGLE/Framebuffer.cpp",
         "patchSetId": 6
@@ -34,6 +57,75 @@
       "revId": "3248e041e46ca448470644e12fdde2c1b3aeeee6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "938efaec_5aaac72c",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 2073,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2020-06-25T16:56:25Z",
+      "side": 1,
+      "message": "It looks like these states (mState.mDepthBufferFeedbackLoop, mState.mStencilBufferFeedbackLoop, etc) can only ever go from true to false in this function. That seems either incorrect or prone to errors by being very stateful. At the very least it needs a comment.",
+      "range": {
+        "startLine": 2073,
+        "startChar": 4,
+        "endLine": 2073,
+        "endChar": 40
+      },
+      "revId": "3248e041e46ca448470644e12fdde2c1b3aeeee6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "21b52d9e_9ab473d2",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1599,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2020-06-25T16:56:25Z",
+      "side": 1,
+      "message": "A single texture can be bound to multiple binding points with different samplers. It cannot be generally correct to expect a 1:1 relationship here.",
+      "range": {
+        "startLine": 1597,
+        "startChar": 0,
+        "endLine": 1599,
+        "endChar": 92
+      },
+      "revId": "3248e041e46ca448470644e12fdde2c1b3aeeee6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "63ffa150_7e4020d5",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1803,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2020-06-25T16:56:25Z",
+      "side": 1,
+      "message": "I think this name can be improved, it doesn\u0027t accurately represent that it returns \"has cached sampler completeness\".\n\nAlso this function is exactly the same as the below one except the completeness check is swapped with return true/false. This can be refactored.",
+      "range": {
+        "startLine": 1803,
+        "startChar": 14,
+        "endLine": 1803,
+        "endChar": 28
+      },
+      "revId": "3248e041e46ca448470644e12fdde2c1b3aeeee6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
