@@ -1155,6 +1155,9 @@ TEST_P(MipmapTestES3, GenerateMipmapPreservesOutOfRangeMips)
     // http://anglebug.com/4782
     ANGLE_SKIP_TEST_IF(IsOpenGL() && IsWindows() && (IsAMD() || IsIntel()));
 
+    // http://anglebug.com/4786
+    ANGLE_SKIP_TEST_IF(IsOpenGLES() && IsNVIDIAShield());
+
     constexpr GLint kTextureSize = 16;
     const std::vector<GLColor> kLevel0Data(kTextureSize * kTextureSize, GLColor::red);
     const std::vector<GLColor> kLevel1Data(kTextureSize * kTextureSize, GLColor::green);
