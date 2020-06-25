@@ -1396,13 +1396,12 @@ angle::Result TextureVk::generateMipmap(const gl::Context *context)
 }
 
 angle::Result TextureVk::copyAndStageImageSubresource(ContextVk *contextVk,
-                                                      const gl::ImageDesc &desc,
                                                       bool ignoreLayerCount,
                                                       uint32_t currentLayer,
                                                       uint32_t srcLevelVk,
                                                       uint32_t dstLevelGL)
 {
-    const gl::Extents &baseLevelExtents = desc.size;
+    const gl::Extents &baseLevelExtents = mImage->getLevelExtents(srcLevelVk);
 
     VkExtent3D updatedExtents;
     VkOffset3D offset = {};
@@ -1429,13 +1428,15 @@ angle::Result TextureVk::copyAndStageImageSubresource(ContextVk *contextVk,
     ASSERT(stagingBuffer);
     uint32_t bufferRowLength   = updatedExtents.width;
     uint32_t bufferImageHeight = updatedExtents.height;
-    if (desc.format.info->compressed)
+    const gl::InternalFormat &formatInfo =
+        gl::GetSizedInternalFormatInfo(mImage->getFormat().internalFormat);
+    if (formatInfo.compressed)
     {
         // In the case of a compressed texture, bufferRowLength can never be smaller than the
         // compressed format's compressed block width, and bufferImageHeight can never be smaller
         // than the compressed block height.
-        bufferRowLength   = std::max(bufferRowLength, desc.format.info->compressedBlockWidth);
-        bufferImageHeight = std::max(bufferImageHeight, desc.format.info->compressedBlockHeight);
+        bufferRowLength   = std::max(bufferRowLength, formatInfo.compressedBlockWidth);
+        bufferImageHeight = std::max(bufferImageHeight, formatInfo.compressedBlockHeight);
     }
     ANGLE_TRY(mImage->stageSubresourceUpdateFromBuffer(
         contextVk, bufferSize, dstLevelGL, currentLayer, layerCount, bufferRowLength,
@@ -1531,10 +1532,7 @@ angle::Result TextureVk::respecifyImageAttributesAndLevels(ContextVk *contextVk,
             // Pull data from the current image and stage it as an update for the new image
 
             // First we populate the staging buffer with current level data
-            const gl::ImageDesc &desc =
-                mState.getImageDesc(gl::TextureTypeToTarget(mState.getType(), layer), levelGL);
-
-            ANGLE_TRY(copyAndStageImageSubresource(contextVk, desc, true, layer, levelVK, levelGL));
+            ANGLE_TRY(copyAndStageImageSubresource(contextVk, true, layer, levelVK, levelGL));
         }
     }
 
@@ -1705,8 +1703,33 @@ angle::Result TextureVk::syncState(const gl::Context *context,
     bool isGenerateMipmap = source == gl::TextureCommand::GenerateMipmap;
     if (isGenerateMipmap)
     {
-        mImage->removeStagedUpdates(contextVk, mState.getEffectiveBaseLevel() + 1,
-                                    mState.getMipmapMaxLevel());
+        // Remove staged updates to the range that's being respecified (which is all the mips except
+        // mip 0).
+        uint32_t baseLevel = mState.getEffectiveBaseLevel() + 1;
+        uint32_t maxLevel  = mState.getMipmapMaxLevel();
+
+        mImage->removeStagedUpdates(contextVk, baseLevel, maxLevel);
+
+        // These levels are no longer incompatibly defined if they previously were.  The
+        // corresponding bits in mRedefinedLevels should be cleared.  Note that the texture may be
+        // simultaneously rebased, so mImage->getBaseLevel() and getEffectiveBaseLevel() may be
+        // different.
+        static_assert(gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS < 32,
+                      "levels mask assumes 32-bits is enough");
+        gl::TexLevelMask::value_type levelsMask =
+            angle::Bit<uint32_t>(maxLevel + 1 - baseLevel) - 1;
+
+        uint32_t imageBaseLevel = mImage->getBaseLevel();
+        if (imageBaseLevel > baseLevel)
+        {
+            levelsMask >>= imageBaseLevel - baseLevel;
+        }
+        else
+        {
+            levelsMask <<= baseLevel - imageBaseLevel;
+        }
+
+        mRedefinedLevels &= gl::TexLevelMask(~levelsMask);
     }
 
     // Set base and max level before initializing the image
@@ -1735,7 +1758,16 @@ angle::Result TextureVk::syncState(const gl::Context *context,
     if (oldUsageFlags != mImageUsageFlags || oldCreateFlags != mImageCreateFlags ||
         mRedefinedLevels.any() || isMipmapEnabledByMinFilter)
     {
-        ANGLE_TRY(respecifyImageAttributes(contextVk));
+        // If generating mipmap and base level is incompatibly redefined, the image is going to be
+        // recreated.  Don't try to preserve the other mips.
+        if (isGenerateMipmap && mRedefinedLevels.test(0))
+        {
+            releaseImage(contextVk);
+        }
+        else
+        {
+            ANGLE_TRY(respecifyImageAttributes(contextVk));
+        }
     }
 
     // If generating mipmaps and the image is not full-mip already, make sure it's recreated to the

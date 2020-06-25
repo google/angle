@@ -345,7 +345,6 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
     // each subresource of the image and stage it for another subresource.  When all subresources
     // are taken care of, the image is recreated.
     angle::Result copyAndStageImageSubresource(ContextVk *contextVk,
-                                               const gl::ImageDesc &desc,
                                                bool ignoreLayerCount,
                                                uint32_t currentLayer,
                                                uint32_t srcLevelVk,

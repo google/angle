@@ -2794,6 +2794,191 @@ TEST_P(Texture2DBaseMaxTestES3, RedefineEveryLevelToAnotherFormat)
     }
 }
 
+// Test that generating mipmaps after incompatibly redefining a level works.
+TEST_P(Texture2DBaseMaxTestES3, GenerateMipmapAfterRedefine)
+{
+    initTest();
+
+    // Test that all mips have the expected data initially (this makes sure the texture image is
+    // created already).
+    for (uint32_t lod = 0; lod < kMipCount; ++lod)
+    {
+        setLodUniform(lod);
+        drawQuad(mProgram, essl3_shaders::PositionAttrib(), 0.5f);
+        EXPECT_PIXEL_COLOR_EQ(0, 0, kMipColors[lod]);
+    }
+
+    // Redefine level 1 (any level would do other than 0) to an incompatible size, say the same size
+    // as level 0.
+    const GLColor kNewMipColor = GLColor::yellow;
+    std::array<GLColor, getMipDataSize(kMip0Size, 0)> newMipData;
+    std::fill(newMipData.begin(), newMipData.end(), kNewMipColor);
+
+    glTexImage2D(GL_TEXTURE_2D, 1, GL_RGBA8, kMip0Size, kMip0Size, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 newMipData.data());
+
+    // Generate mipmaps.  This should redefine level 1 back to being compatible with level 0.
+    glGenerateMipmap(GL_TEXTURE_2D);
+
+    // Test that the texture looks as expected.
+    const int w = getWindowWidth() - 1;
+    const int h = getWindowHeight() - 1;
+    for (uint32_t lod = 0; lod < kMipCount; ++lod)
+    {
+        setLodUniform(lod);
+        drawQuad(mProgram, essl3_shaders::PositionAttrib(), 0.5f);
+        EXPECT_PIXEL_COLOR_EQ(0, 0, kMipColors[0]);
+        EXPECT_PIXEL_COLOR_EQ(w, 0, kMipColors[0]);
+        EXPECT_PIXEL_COLOR_EQ(0, h, kMipColors[0]);
+        EXPECT_PIXEL_COLOR_EQ(w, h, kMipColors[0]);
+    }
+}
+
+// Test that generating mipmaps after incompatibly redefining a level while simultaneously changing
+// the base level works.
+TEST_P(Texture2DBaseMaxTestES3, GenerateMipmapAfterRedefineAndRebase)
+{
+    ANGLE_SKIP_TEST_IF(IsWindows() && IsAMD() && IsOpenGL());
+
+    initTest();
+
+    // Test that all mips have the expected data initially (this makes sure the texture image is
+    // created already).
+    for (uint32_t lod = 0; lod < kMipCount; ++lod)
+    {
+        setLodUniform(lod);
+        drawQuad(mProgram, essl3_shaders::PositionAttrib(), 0.5f);
+        EXPECT_PIXEL_COLOR_EQ(0, 0, kMipColors[lod]);
+    }
+
+    // Redefine level 2 to an incompatible size, say the same size as level 0.
+    const GLColor kNewMipColor = GLColor::yellow;
+    std::array<GLColor, getMipDataSize(kMip0Size, 0)> newMipData;
+    std::fill(newMipData.begin(), newMipData.end(), kNewMipColor);
+
+    glTexImage2D(GL_TEXTURE_2D, 2, GL_RGBA8, kMip0Size, kMip0Size, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 newMipData.data());
+
+    // Set base level of the texture to 1 then generate mipmaps.  Level 2 that's redefined should
+    // go back to being compatibly defined.
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 1);
+    glGenerateMipmap(GL_TEXTURE_2D);
+
+    // Test that the texture looks as expected.
+    const int w = getWindowWidth() - 1;
+    const int h = getWindowHeight() - 1;
+    for (uint32_t lod = 0; lod < kMipCount; ++lod)
+    {
+        setLodUniform(lod);
+        drawQuad(mProgram, essl3_shaders::PositionAttrib(), 0.5f);
+        EXPECT_PIXEL_COLOR_EQ(0, 0, kMipColors[1]);
+        EXPECT_PIXEL_COLOR_EQ(w, 0, kMipColors[1]);
+        EXPECT_PIXEL_COLOR_EQ(0, h, kMipColors[1]);
+        EXPECT_PIXEL_COLOR_EQ(w, h, kMipColors[1]);
+    }
+
+    // Redefine level 1 (current base level) to an incompatible size.
+    glTexImage2D(GL_TEXTURE_2D, 1, GL_RGBA8, kMip0Size, kMip0Size, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 newMipData.data());
+
+    // Set base level of the texture back to 0 then generate mipmaps.  Level 1 should go back to
+    // being compatibly defined.
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
+    glGenerateMipmap(GL_TEXTURE_2D);
+
+    // Test that the texture looks as expected.
+    for (uint32_t lod = 0; lod < kMipCount; ++lod)
+    {
+        setLodUniform(lod);
+        drawQuad(mProgram, essl3_shaders::PositionAttrib(), 0.5f);
+        EXPECT_PIXEL_COLOR_EQ(0, 0, kMipColors[0]);
+        EXPECT_PIXEL_COLOR_EQ(w, 0, kMipColors[0]);
+        EXPECT_PIXEL_COLOR_EQ(0, h, kMipColors[0]);
+        EXPECT_PIXEL_COLOR_EQ(w, h, kMipColors[0]);
+    }
+}
+
+// Test that generating mipmaps after incompatibly redefining the base level of the texture works.
+TEST_P(Texture2DBaseMaxTestES3, GenerateMipmapAfterRedefiningBase)
+{
+    initTest();
+
+    // Test that all mips have the expected data initially (this makes sure the texture image is
+    // created already).
+    for (uint32_t lod = 0; lod < kMipCount; ++lod)
+    {
+        setLodUniform(lod);
+        drawQuad(mProgram, essl3_shaders::PositionAttrib(), 0.5f);
+        EXPECT_PIXEL_COLOR_EQ(0, 0, kMipColors[lod]);
+    }
+
+    // Redefine level 0 to an incompatible size.
+    const GLColor kNewMipColor = GLColor::yellow;
+    std::array<GLColor, getMipDataSize(kMip0Size * 2, 0)> newMipData;
+    std::fill(newMipData.begin(), newMipData.end(), kNewMipColor);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, kMip0Size * 2, kMip0Size * 2, 0, GL_RGBA,
+                 GL_UNSIGNED_BYTE, newMipData.data());
+
+    // Generate mipmaps.
+    glGenerateMipmap(GL_TEXTURE_2D);
+
+    // Test that the texture looks as expected.
+    const int w = getWindowWidth() - 1;
+    const int h = getWindowHeight() - 1;
+    for (uint32_t lod = 0; lod < kMipCount + 1; ++lod)
+    {
+        setLodUniform(lod);
+        drawQuad(mProgram, essl3_shaders::PositionAttrib(), 0.5f);
+        EXPECT_PIXEL_COLOR_EQ(0, 0, kNewMipColor);
+        EXPECT_PIXEL_COLOR_EQ(w, 0, kNewMipColor);
+        EXPECT_PIXEL_COLOR_EQ(0, h, kNewMipColor);
+        EXPECT_PIXEL_COLOR_EQ(w, h, kNewMipColor);
+    }
+}
+
+// Test that generating mipmaps after incompatibly redefining the base level while simultaneously
+// changing MAX_LEVEL works.
+TEST_P(Texture2DBaseMaxTestES3, GenerateMipmapAfterRedefiningBaseAndChangingMax)
+{
+    initTest();
+
+    // Test that all mips have the expected data initially (this makes sure the texture image is
+    // created already).
+    for (uint32_t lod = 0; lod < kMipCount; ++lod)
+    {
+        setLodUniform(lod);
+        drawQuad(mProgram, essl3_shaders::PositionAttrib(), 0.5f);
+        EXPECT_PIXEL_COLOR_EQ(0, 0, kMipColors[lod]);
+    }
+
+    // Redefine level 0 to an incompatible size.
+    const GLColor kNewMipColor = GLColor::yellow;
+    std::array<GLColor, getMipDataSize(kMip0Size * 2, 0)> newMipData;
+    std::fill(newMipData.begin(), newMipData.end(), kNewMipColor);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, kMip0Size * 2, kMip0Size * 2, 0, GL_RGBA,
+                 GL_UNSIGNED_BYTE, newMipData.data());
+
+    // Set max level of the texture to 2 then generate mipmaps.
+    constexpr uint32_t kMaxLevel = 2;
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, kMaxLevel);
+    glGenerateMipmap(GL_TEXTURE_2D);
+
+    // Test that the texture looks as expected.
+    const int w = getWindowWidth() - 1;
+    const int h = getWindowHeight() - 1;
+    for (uint32_t lod = 0; lod <= kMaxLevel; ++lod)
+    {
+        setLodUniform(lod);
+        drawQuad(mProgram, essl3_shaders::PositionAttrib(), 0.5f);
+        EXPECT_PIXEL_COLOR_EQ(0, 0, kNewMipColor);
+        EXPECT_PIXEL_COLOR_EQ(w, 0, kNewMipColor);
+        EXPECT_PIXEL_COLOR_EQ(0, h, kNewMipColor);
+        EXPECT_PIXEL_COLOR_EQ(w, h, kNewMipColor);
+    }
+}
+
 // Test to check that texture completeness is determined correctly when the texture base level is
 // greater than 0, and also that level 0 is not sampled when base level is greater than 0.
 TEST_P(Texture2DTestES3, DrawWithBaseLevel1)

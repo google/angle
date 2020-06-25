@@ -82,6 +82,8 @@ class BitSetT final
         std::size_t mCurrentBit;
     };
 
+    using value_type = BitsT;
+
     BitSetT();
     constexpr explicit BitSetT(BitsT value);
 
@@ -455,8 +457,8 @@ BitSetT<N, BitsT, ParamT>::Iterator::Iterator(const BitSetT &bits) : mBitsCopy(b
 }
 
 template <size_t N, typename BitsT, typename ParamT>
-ANGLE_INLINE typename BitSetT<N, BitsT, ParamT>::Iterator &BitSetT<N, BitsT, ParamT>::Iterator::
-operator++()
+ANGLE_INLINE typename BitSetT<N, BitsT, ParamT>::Iterator &
+BitSetT<N, BitsT, ParamT>::Iterator::operator++()
 {
     ASSERT(mBitsCopy.any());
     mBitsCopy.reset(static_cast<ParamT>(mCurrentBit));
