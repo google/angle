@@ -22,6 +22,30 @@
       "revId": "c70b8f8485e191818ef183747af563afa5a077ad",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fa5d328a_36d0d8ce",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1781,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2020-06-25T16:02:57Z",
+      "side": 1,
+      "message": "CL up here: https://chromium-review.googlesource.com/c/angle/angle/+/2267420",
+      "parentUuid": "c0b618cb_495a75d5",
+      "range": {
+        "startLine": 1781,
+        "startChar": 4,
+        "endLine": 1781,
+        "endChar": 27
+      },
+      "revId": "c70b8f8485e191818ef183747af563afa5a077ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
