@@ -113,6 +113,7 @@ DisplayEGL::DisplayEGL(const egl::DisplayState &state)
       mRenderer(nullptr),
       mEGL(nullptr),
       mConfig(EGL_NO_CONFIG_KHR),
+      mCurrentNativeContexts(),
       mHasEXTCreateContextRobustness(false),
       mHasNVRobustnessVideoMemoryPurge(false)
 {}
