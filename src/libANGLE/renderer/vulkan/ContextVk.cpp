@@ -619,6 +619,7 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
       mUseOldRewriteStructSamplers(false),
       mOutsideRenderPassCommands(nullptr),
       mRenderPassCommands(nullptr),
+      mRenderPassFramebuffer(VK_NULL_HANDLE),
       mHasPrimaryCommands(false),
       mGpuEventsEnabled(false),
       mGpuClockSync{std::numeric_limits<double>::max(), std::numeric_limits<double>::max()},
@@ -4213,6 +4214,7 @@ angle::Result ContextVk::flushAndBeginRenderPass(
 
     mRenderPassCommands->beginRenderPass(framebuffer, renderArea, renderPassDesc,
                                          renderPassAttachmentOps, clearValues, commandBufferOut);
+    mRenderPassFramebuffer = framebuffer.getHandle();
     return angle::Result::Continue;
 }
 

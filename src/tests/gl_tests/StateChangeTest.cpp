@@ -847,6 +847,47 @@ TEST_P(StateChangeRenderTest, DepthRangeUpdates)
                          GLColor::green);
 }
 
+class StateChangeRenderTestES3 : public StateChangeRenderTest
+{};
+
+TEST_P(StateChangeRenderTestES3, InvalidateNonCurrentFramebuffer)
+{
+    glBindTexture(GL_TEXTURE_2D, mTextures[0]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 16, 16, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mTextures[0], 0);
+    glBindTexture(GL_TEXTURE_2D, 0);
+    EXPECT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+    ASSERT_GL_NO_ERROR();
+
+    // Draw with red to the FBO.
+    GLColor red(255, 0, 0, 255);
+    setUniformColor(red);
+    drawQuad(mProgram, "position", 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, red);
+
+    // Go back to default framebuffer, draw green
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    GLColor green(0, 255, 0, 255);
+    setUniformColor(green);
+    drawQuad(mProgram, "position", 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, green);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
+
+    // Invalidate color buffer of FBO
+    GLenum attachments1[] = {GL_COLOR_ATTACHMENT0};
+    glInvalidateFramebuffer(GL_FRAMEBUFFER, 1, attachments1);
+    ASSERT_GL_NO_ERROR();
+
+    // Verify drawing blue gives blue.
+    GLColor blue(0, 0, 255, 255);
+    setUniformColor(blue);
+    drawQuad(mProgram, "position", 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, blue);
+}
+
 // Tests that D3D11 dirty bit updates don't forget about BufferSubData attrib updates.
 TEST_P(StateChangeTest, VertexBufferUpdatedAfterDraw)
 {
@@ -5134,6 +5175,7 @@ ANGLE_INSTANTIATE_TEST_ES2(StateChangeTest);
 ANGLE_INSTANTIATE_TEST_ES2(LineLoopStateChangeTest);
 ANGLE_INSTANTIATE_TEST_ES2(StateChangeRenderTest);
 ANGLE_INSTANTIATE_TEST_ES3(StateChangeTestES3);
+ANGLE_INSTANTIATE_TEST_ES3(StateChangeRenderTestES3);
 ANGLE_INSTANTIATE_TEST_ES2(SimpleStateChangeTest);
 ANGLE_INSTANTIATE_TEST_ES3(SimpleStateChangeTestES3);
 ANGLE_INSTANTIATE_TEST_ES3(ImageRespecificationTest);
