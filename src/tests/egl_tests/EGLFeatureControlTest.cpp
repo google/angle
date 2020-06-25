@@ -51,6 +51,9 @@ class EGLFeatureControlTest : public ANGLETest
 // Ensure eglQueryStringiANGLE generates EGL_BAD_DISPLAY if the display passed in is invalid.
 TEST_P(EGLFeatureControlTest, InvalidDisplay)
 {
+    // Test skipped on old AMD Linux Vulkan driver. See http://crbug.com/1097750
+    ANGLE_SKIP_TEST_IF(IsLinux() && IsAMD() && IsVulkan());
+
     ANGLE_SKIP_TEST_IF(!initTest());
     EXPECT_EQ(nullptr, eglQueryStringiANGLE(EGL_NO_DISPLAY, EGL_FEATURE_NAME_ANGLE, 0));
     EXPECT_EGL_ERROR(EGL_BAD_DISPLAY);
