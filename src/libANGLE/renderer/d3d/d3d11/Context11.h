@@ -260,7 +260,8 @@ class Context11 : public ContextD3D, public MultisampleTextureInitializer
                                    const void *indices,
                                    GLsizei instanceCount,
                                    GLint baseVertex,
-                                   GLuint baseInstance);
+                                   GLuint baseInstance,
+                                   bool promoteDynamic);
 
     Renderer11 *mRenderer;
     IncompleteTextureSet mIncompleteTextures;

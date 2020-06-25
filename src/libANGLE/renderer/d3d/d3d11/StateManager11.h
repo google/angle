@@ -240,7 +240,8 @@ class StateManager11 final : angle::NonCopyable
                               const void *indices,
                               GLsizei instanceCount,
                               GLint baseVertex,
-                              GLuint baseInstance);
+                              GLuint baseInstance,
+                              bool promoteDynamic);
 
     void setShaderResourceShared(gl::ShaderType shaderType,
                                  UINT resourceSlot,
