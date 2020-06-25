@@ -150,6 +150,8 @@ angle::Result FramebufferMtl::readPixels(const gl::Context *context,
                                          const gl::Rectangle &area,
                                          GLenum format,
                                          GLenum type,
+                                         const gl::PixelPackState &pack,
+                                         gl::Buffer *packBuffer,
                                          void *pixels)
 {
     // Clip read area to framebuffer.
@@ -164,27 +166,25 @@ angle::Result FramebufferMtl::readPixels(const gl::Context *context,
     }
     gl::Rectangle flippedArea = getReadPixelArea(clippedArea);
 
-    ContextMtl *contextMtl              = mtl::GetImpl(context);
-    const gl::State &glState            = context->getState();
-    const gl::PixelPackState &packState = glState.getPackState();
+    ContextMtl *contextMtl = mtl::GetImpl(context);
 
     const gl::InternalFormat &sizedFormatInfo = gl::GetInternalFormatInfo(format, type);
 
     GLuint outputPitch = 0;
     ANGLE_CHECK_GL_MATH(contextMtl,
-                        sizedFormatInfo.computeRowPitch(type, area.width, packState.alignment,
-                                                        packState.rowLength, &outputPitch));
+                        sizedFormatInfo.computeRowPitch(type, area.width, pack.alignment,
+                                                        pack.rowLength, &outputPitch));
     GLuint outputSkipBytes = 0;
-    ANGLE_CHECK_GL_MATH(contextMtl, sizedFormatInfo.computeSkipBytes(
-                                        type, outputPitch, 0, packState, false, &outputSkipBytes));
+    ANGLE_CHECK_GL_MATH(contextMtl, sizedFormatInfo.computeSkipBytes(type, outputPitch, 0, pack,
+                                                                     false, &outputSkipBytes));
 
     outputSkipBytes += (clippedArea.x - area.x) * sizedFormatInfo.pixelBytes +
                        (clippedArea.y - area.y) * outputPitch;
 
     const angle::Format &angleFormat = GetFormatFromFormatType(format, type);
 
-    PackPixelsParams params(flippedArea, angleFormat, outputPitch, packState.reverseRowOrder,
-                            glState.getTargetBuffer(gl::BufferBinding::PixelPack), 0);
+    PackPixelsParams params(flippedArea, angleFormat, outputPitch, pack.reverseRowOrder, packBuffer,
+                            0);
     if (mFlipY)
     {
         params.reverseRowOrder = !params.reverseRowOrder;

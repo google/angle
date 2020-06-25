@@ -200,6 +200,8 @@ angle::Result FramebufferD3D::readPixels(const gl::Context *context,
                                          const gl::Rectangle &area,
                                          GLenum format,
                                          GLenum type,
+                                         const gl::PixelPackState &pack,
+                                         gl::Buffer *packBuffer,
                                          void *pixels)
 {
     // Clip read area to framebuffer.
@@ -212,24 +214,22 @@ angle::Result FramebufferD3D::readPixels(const gl::Context *context,
         return angle::Result::Continue;
     }
 
-    const gl::PixelPackState &packState = context->getState().getPackState();
-
     const gl::InternalFormat &sizedFormatInfo = gl::GetInternalFormatInfo(format, type);
 
     ContextD3D *contextD3D = GetImplAs<ContextD3D>(context);
 
     GLuint outputPitch = 0;
     ANGLE_CHECK_GL_MATH(contextD3D,
-                        sizedFormatInfo.computeRowPitch(type, area.width, packState.alignment,
-                                                        packState.rowLength, &outputPitch));
+                        sizedFormatInfo.computeRowPitch(type, area.width, pack.alignment,
+                                                        pack.rowLength, &outputPitch));
 
     GLuint outputSkipBytes = 0;
-    ANGLE_CHECK_GL_MATH(contextD3D, sizedFormatInfo.computeSkipBytes(
-                                        type, outputPitch, 0, packState, false, &outputSkipBytes));
+    ANGLE_CHECK_GL_MATH(contextD3D, sizedFormatInfo.computeSkipBytes(type, outputPitch, 0, pack,
+                                                                     false, &outputSkipBytes));
     outputSkipBytes += (clippedArea.x - area.x) * sizedFormatInfo.pixelBytes +
                        (clippedArea.y - area.y) * outputPitch;
 
-    return readPixelsImpl(context, clippedArea, format, type, outputPitch, packState,
+    return readPixelsImpl(context, clippedArea, format, type, outputPitch, pack, packBuffer,
                           static_cast<uint8_t *>(pixels) + outputSkipBytes);
 }
 

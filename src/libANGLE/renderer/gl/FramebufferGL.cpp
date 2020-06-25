@@ -613,12 +613,15 @@ angle::Result FramebufferGL::readPixels(const gl::Context *context,
                                         const gl::Rectangle &area,
                                         GLenum format,
                                         GLenum type,
+                                        const gl::PixelPackState &pack,
+                                        gl::Buffer *packBuffer,
                                         void *pixels)
 {
     ContextGL *contextGL              = GetImplAs<ContextGL>(context);
     const FunctionsGL *functions      = GetFunctionsGL(context);
     StateManagerGL *stateManager      = GetStateManagerGL(context);
     const angle::FeaturesGL &features = GetFeaturesGL(context);
+    gl::PixelPackState packState      = pack;
 
     // Clip read area to framebuffer.
     const auto *readAttachment = mState.getReadPixelsAttachment(format);
@@ -630,10 +633,6 @@ angle::Result FramebufferGL::readPixels(const gl::Context *context,
         // nothing to read
         return angle::Result::Continue;
     }
-
-    PixelPackState packState = context->getState().getPackState();
-    const gl::Buffer *packBuffer =
-        context->getState().getTargetBuffer(gl::BufferBinding::PixelPack);
 
     GLenum attachmentReadFormat =
         readAttachment->getFormat().info->getReadPixelsFormat(context->getExtensions());
