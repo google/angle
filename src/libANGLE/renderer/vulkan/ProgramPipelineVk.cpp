@@ -32,8 +32,6 @@ void ProgramPipelineVk::destroy(const gl::Context *context)
 void ProgramPipelineVk::reset(ContextVk *contextVk)
 {
     mExecutable.reset(contextVk);
-    // Not done in ProgramExecutableVk::reset() since that's called more often.
-    mExecutable.getTransformedShaderInfo().release(contextVk);
 }
 
 // TODO: http://anglebug.com/3570: Move/Copy all of the necessary information into
@@ -64,7 +62,6 @@ angle::Result ProgramPipelineVk::link(const gl::Context *glContext)
     GlslangProgramInterfaceInfo glslangProgramInterfaceInfo;
     GlslangWrapperVk::ResetGlslangProgramInterfaceInfo(&glslangProgramInterfaceInfo);
 
-    reset(contextVk);
     mExecutable.clearVariableInfoMap();
 
     // Now that the program pipeline has all of the programs attached, the various descriptor

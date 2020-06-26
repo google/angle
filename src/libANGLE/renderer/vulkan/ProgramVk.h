@@ -169,7 +169,6 @@ class ProgramVk : public ProgramImpl
 
     template <typename T>
     void setUniformImpl(GLint location, GLsizei count, const T *v, GLenum entryPointType);
-    angle::Result linkImpl(const gl::Context *glContext, gl::InfoLog &infoLog);
     void linkResources(const gl::ProgramLinkedResources &resources);
 
     ANGLE_INLINE angle::Result initProgram(ContextVk *contextVk,

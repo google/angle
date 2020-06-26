@@ -36,7 +36,6 @@ class ShaderInfo final : angle::NonCopyable
     ANGLE_INLINE bool valid() const { return mIsInitialized; }
 
     const gl::ShaderMap<SpirvBlob> &getSpirvBlobs() const { return mSpirvBlobs; }
-    gl::ShaderMap<SpirvBlob> &getSpirvBlobs() { return mSpirvBlobs; }
 
     // Save and load implementation for GLES Program Binary support.
     void load(gl::BinaryInputStream *stream);
@@ -163,8 +162,6 @@ class ProgramExecutableVk
         mProgramPipeline = pipeline;
     }
 
-    ShaderInfo &getTransformedShaderInfo() { return mTransformedShaderInfo; }
-
   private:
     friend class ProgramVk;
     friend class ProgramPipelineVk;
@@ -247,10 +244,6 @@ class ProgramExecutableVk
     ProgramInfo mComputeProgramInfo;
 
     ProgramTransformOptionBits mTransformOptionBits;
-
-    // We keep the SPIR-V code to use for draw call pipeline creation.
-    bool mTransformedShaderInfoSaved;
-    ShaderInfo mTransformedShaderInfo;
 
     ProgramVk *mProgram;
     ProgramPipelineVk *mProgramPipeline;

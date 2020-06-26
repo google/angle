@@ -189,8 +189,6 @@ void ProgramVk::reset(ContextVk *contextVk)
     GlslangWrapperVk::ResetGlslangProgramInterfaceInfo(&mGlslangProgramInterfaceInfo);
 
     mExecutable.reset(contextVk);
-    // Not done in ProgramExecutableVk::reset() since that's called more often.
-    mExecutable.getTransformedShaderInfo().release(contextVk);
 }
 
 std::unique_ptr<rx::LinkEvent> ProgramVk::load(const gl::Context *context,
