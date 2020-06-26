@@ -536,6 +536,10 @@
 // Flat shading:
 3430 VULKAN : dEQP-GLES3.functional.rasterization.flatshading.* = FAIL
 
+// Vertex attribute aliasing generates invalid SPIRV
+4790 VULKAN : dEQP-GLES3.functional.attribute_location.bind_aliasing.cond* = FAIL
+4790 VULKAN : dEQP-GLES3.functional.attribute_location.bind_aliasing.max_cond* = FAIL
+
 // Misc unimplemented:
 
 // Failures on newer NVIDIA drivers (411.95) and passes on older drivers (388.16).  Passes on 418.12 on Linux.
