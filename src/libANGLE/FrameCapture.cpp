@@ -1577,7 +1577,8 @@ void CaptureUpdateUniformValues(const gl::State &replayState,
 
         gl::UniformLocation uniformLoc      = program->getUniformLocation(uniformName);
         const gl::UniformTypeInfo *typeInfo = uniform.typeInfo;
-        int uniformSize                     = uniformCount * typeInfo->componentCount;
+        int componentCount                  = typeInfo->componentCount;
+        int uniformSize                     = uniformCount * componentCount;
 
         // For arrayed uniforms, we'll need to increment a read location
         gl::UniformLocation readLoc = uniformLoc;
@@ -1589,9 +1590,8 @@ void CaptureUpdateUniformValues(const gl::State &replayState,
                 std::vector<GLfloat> uniformBuffer(uniformSize);
                 for (int index = 0; index < uniformCount; index++, readLoc.value++)
                 {
-                    program->getUniformfv(
-                        context, readLoc,
-                        static_cast<GLfloat *>(uniformBuffer.data() + index * sizeof(GLfloat)));
+                    program->getUniformfv(context, readLoc,
+                                          uniformBuffer.data() + index * componentCount);
                 }
                 switch (typeInfo->type)
                 {
@@ -1668,11 +1668,10 @@ void CaptureUpdateUniformValues(const gl::State &replayState,
                 std::vector<GLint> uniformBuffer(uniformSize);
                 for (int index = 0; index < uniformCount; index++, readLoc.value++)
                 {
-                    program->getUniformiv(
-                        context, readLoc,
-                        static_cast<GLint *>(uniformBuffer.data() + index * sizeof(GLint)));
+                    program->getUniformiv(context, readLoc,
+                                          uniformBuffer.data() + index * componentCount);
                 }
-                switch (typeInfo->componentCount)
+                switch (componentCount)
                 {
                     case 4:
                         Capture(callsOut, CaptureUniform4iv(replayState, true, uniformLoc,
@@ -1702,11 +1701,10 @@ void CaptureUpdateUniformValues(const gl::State &replayState,
                 std::vector<GLuint> uniformBuffer(uniformSize);
                 for (int index = 0; index < uniformCount; index++, readLoc.value++)
                 {
-                    program->getUniformuiv(
-                        context, readLoc,
-                        static_cast<GLuint *>(uniformBuffer.data() + index * sizeof(GLuint)));
+                    program->getUniformuiv(context, readLoc,
+                                           uniformBuffer.data() + index * componentCount);
                 }
-                switch (typeInfo->componentCount)
+                switch (componentCount)
                 {
                     case 4:
                         Capture(callsOut, CaptureUniform4uiv(replayState, true, uniformLoc,
