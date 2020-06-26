@@ -24,6 +24,9 @@ namespace angle
 template <typename BitsT, typename ParamT>
 constexpr static BitsT Bit(ParamT x)
 {
+    // It's undefined behavior if the shift size is equal to or larger than the width of the type.
+    ASSERT(static_cast<size_t>(x) < sizeof(BitsT) * 8);
+
     return (static_cast<BitsT>(1) << static_cast<size_t>(x));
 }
 
