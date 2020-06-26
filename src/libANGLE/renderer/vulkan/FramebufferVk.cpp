@@ -776,8 +776,10 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
     gl::Rectangle srcClippedDestArea;
     if (isResolve)
     {
-        // Source and dest areas are identical in resolve.
+        // Source and dest areas are identical in resolve (except rotate it, if appropriate).
         srcClippedDestArea = clippedSourceArea;
+        AdjustBlitAreaForPreRotation(destFramebufferRotation, clippedSourceArea,
+                                     destFramebufferDimensions, &srcClippedDestArea);
     }
     else if (clippedSourceArea == absSourceArea)
     {

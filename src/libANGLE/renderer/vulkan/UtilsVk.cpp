@@ -1537,6 +1537,8 @@ angle::Result UtilsVk::stencilBlitResolveNoShaderExport(ContextVk *contextVk,
     blitBuffer.get().retain(&contextVk->getResourceUseList());
 
     BlitResolveStencilNoExportShaderParams shaderParams;
+    // Note: adjustments made for pre-rotatation in FramebufferVk::blit() affect these
+    // Calculate*Offset() functions.
     if (isResolve)
     {
         CalculateResolveOffset(params, shaderParams.offset.resolve);
@@ -1558,6 +1560,46 @@ angle::Result UtilsVk::stencilBlitResolveNoShaderExport(ContextVk *contextVk,
     shaderParams.blitArea[3]     = params.blitArea.height;
     shaderParams.flipX           = params.flipX;
     shaderParams.flipY           = params.flipY;
+    shaderParams.rotateXY        = 0;
+
+    // Potentially make adjustments for pre-rotatation.  Depending on the angle some of the
+    // shaderParams need to be adjusted.
+    switch (params.rotation)
+    {
+        case SurfaceRotation::Identity:
+            break;
+        case SurfaceRotation::Rotated90Degrees:
+            shaderParams.rotateXY = 1;
+            break;
+        case SurfaceRotation::Rotated180Degrees:
+            if (isResolve)
+            {
+                shaderParams.offset.resolve[0] += params.rotatedOffsetFactor[0];
+                shaderParams.offset.resolve[1] += params.rotatedOffsetFactor[1];
+            }
+            else
+            {
+                shaderParams.offset.blit[0] += params.rotatedOffsetFactor[0];
+                shaderParams.offset.blit[1] += params.rotatedOffsetFactor[1];
+            }
+            break;
+        case SurfaceRotation::Rotated270Degrees:
+            if (isResolve)
+            {
+                shaderParams.offset.resolve[0] += params.rotatedOffsetFactor[0];
+                shaderParams.offset.resolve[1] += params.rotatedOffsetFactor[1];
+            }
+            else
+            {
+                shaderParams.offset.blit[0] += params.rotatedOffsetFactor[0];
+                shaderParams.offset.blit[1] += params.rotatedOffsetFactor[1];
+            }
+            shaderParams.rotateXY = 1;
+            break;
+        default:
+            UNREACHABLE();
+            break;
+    }
 
     // Linear sampling is only valid with color blitting.
     ASSERT(!params.linear);
@@ -1651,6 +1693,12 @@ angle::Result UtilsVk::stencilBlitResolveNoShaderExport(ContextVk *contextVk,
     region.imageExtent.width               = params.blitArea.width;
     region.imageExtent.height              = params.blitArea.height;
     region.imageExtent.depth               = 1;
+    if ((params.rotation == SurfaceRotation::Rotated270Degrees) && (params.blitArea.width > 32))
+    {
+        // TODO(ianelliott): Figure out why this adjustment is needed
+        // https://issuetracker.google.com/issues/159995959
+        region.imageOffset.x += 2;
+    }
 
     commandBuffer->copyBufferToImage(blitBuffer.get().getBuffer().getHandle(),
                                      depthStencilImage->getImage(),
