@@ -143,6 +143,7 @@ class UtilsVk : angle::NonCopyable
         bool srcUnmultiplyAlpha;
         bool srcFlipY;
         bool destFlipY;
+        SurfaceRotation srcRotation;
     };
 
     struct OverlayCullParameters
@@ -319,6 +320,7 @@ class UtilsVk : angle::NonCopyable
         int32_t destOffset[2]            = {};
         int32_t srcMip                   = 0;
         int32_t srcLayer                 = 0;
+        uint32_t flipX                   = 0;
         uint32_t flipY                   = 0;
         uint32_t premultiplyAlpha        = 0;
         uint32_t unmultiplyAlpha         = 0;
@@ -327,6 +329,7 @@ class UtilsVk : angle::NonCopyable
         uint32_t srcIsSRGB               = 0;
         uint32_t destIsSRGB              = 0;
         uint32_t destDefaultChannelsMask = 0;
+        uint32_t rotateXY                = 0;
     };
 
     union BlitResolveOffset

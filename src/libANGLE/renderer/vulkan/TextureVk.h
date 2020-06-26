@@ -330,7 +330,8 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
                                            bool unpackPremultiplyAlpha,
                                            bool unpackUnmultiplyAlpha,
                                            vk::ImageHelper *srcImage,
-                                           const vk::ImageView *srcView);
+                                           const vk::ImageView *srcView,
+                                           SurfaceRotation srcFramebufferRotation);
 
     angle::Result initImage(ContextVk *contextVk,
                             const vk::Format &format,

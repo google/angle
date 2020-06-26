@@ -560,10 +560,10 @@ angle::Result TextureVk::copySubImageImpl(const gl::Context *context,
         const vk::ImageView *copyImageView = nullptr;
         ANGLE_TRY(colorReadRT->getAndRetainCopyImageView(contextVk, &copyImageView));
 
-        return copySubImageImplWithDraw(contextVk, offsetImageIndex, modifiedDestOffset, destFormat,
-                                        colorReadRT->getLevelIndex(), clippedSourceBox,
-                                        isViewportFlipY, false, false, false,
-                                        &colorReadRT->getImage(), copyImageView);
+        return copySubImageImplWithDraw(
+            contextVk, offsetImageIndex, modifiedDestOffset, destFormat,
+            colorReadRT->getLevelIndex(), clippedSourceBox, isViewportFlipY, false, false, false,
+            &colorReadRT->getImage(), copyImageView, contextVk->getRotationReadFramebuffer());
     }
 
     // Do a CPU readback that does the conversion, and then stage the change to the pixel buffer.
@@ -615,7 +615,7 @@ angle::Result TextureVk::copySubTextureImpl(ContextVk *contextVk,
         return copySubImageImplWithDraw(
             contextVk, offsetImageIndex, destOffset, destVkFormat, sourceLevelGL, sourceBox, false,
             unpackFlipY, unpackPremultiplyAlpha, unpackUnmultiplyAlpha, &source->getImage(),
-            &source->getCopyImageViewAndRecordUse(contextVk));
+            &source->getCopyImageViewAndRecordUse(contextVk), SurfaceRotation::Identity);
     }
 
     if (sourceLevelGL != 0)
@@ -831,24 +831,66 @@ angle::Result TextureVk::copySubImageImplWithDraw(ContextVk *contextVk,
                                                   bool unpackPremultiplyAlpha,
                                                   bool unpackUnmultiplyAlpha,
                                                   vk::ImageHelper *srcImage,
-                                                  const vk::ImageView *srcView)
+                                                  const vk::ImageView *srcView,
+                                                  SurfaceRotation srcFramebufferRotation)
 {
     RendererVk *renderer = contextVk->getRenderer();
     UtilsVk &utilsVk     = contextVk->getUtils();
 
+    // Potentially make adjustments for pre-rotatation.
+    gl::Box rotatedSourceBox = sourceBox;
+    gl::Extents srcExtents   = srcImage->getLevelExtents2D(0);
+    switch (srcFramebufferRotation)
+    {
+        case SurfaceRotation::Identity:
+            // No adjustments needed
+            break;
+        case SurfaceRotation::Rotated90Degrees:
+            // Turn off y-flip for 90 degrees, as we don't want it affecting the
+            // shaderParams.srcOffset calculation done in UtilsVk::copyImage().
+            ASSERT(isSrcFlipY);
+            isSrcFlipY = false;
+            std::swap(rotatedSourceBox.x, rotatedSourceBox.y);
+            std::swap(rotatedSourceBox.width, rotatedSourceBox.height);
+            std::swap(srcExtents.width, srcExtents.height);
+            break;
+        case SurfaceRotation::Rotated180Degrees:
+            ASSERT(isSrcFlipY);
+            rotatedSourceBox.x = srcExtents.width - sourceBox.x - sourceBox.width;
+            rotatedSourceBox.y = srcExtents.height - sourceBox.y - sourceBox.height;
+            break;
+        case SurfaceRotation::Rotated270Degrees:
+            // Turn off y-flip for 270 degrees, as we don't want it affecting the
+            // shaderParams.srcOffset calculation done in UtilsVk::copyImage().  It is needed
+            // within the shader (when it will affect how the shader looks-up the source pixel),
+            // and so shaderParams.flipY is turned on at the right time within
+            // UtilsVk::copyImage().
+            ASSERT(isSrcFlipY);
+            isSrcFlipY         = false;
+            rotatedSourceBox.x = srcExtents.height - sourceBox.y - sourceBox.height;
+            rotatedSourceBox.y = srcExtents.width - sourceBox.x - sourceBox.width;
+            std::swap(rotatedSourceBox.width, rotatedSourceBox.height);
+            std::swap(srcExtents.width, srcExtents.height);
+            break;
+        default:
+            UNREACHABLE();
+            break;
+    }
+
     UtilsVk::CopyImageParameters params;
-    params.srcOffset[0]        = sourceBox.x;
-    params.srcOffset[1]        = sourceBox.y;
-    params.srcExtents[0]       = sourceBox.width;
-    params.srcExtents[1]       = sourceBox.height;
+    params.srcOffset[0]        = rotatedSourceBox.x;
+    params.srcOffset[1]        = rotatedSourceBox.y;
+    params.srcExtents[0]       = rotatedSourceBox.width;
+    params.srcExtents[1]       = rotatedSourceBox.height;
     params.destOffset[0]       = destOffset.x;
     params.destOffset[1]       = destOffset.y;
     params.srcMip              = static_cast<uint32_t>(sourceLevelGL) - srcImage->getBaseLevel();
-    params.srcHeight           = srcImage->getExtents().height;
+    params.srcHeight           = srcExtents.height;
     params.srcPremultiplyAlpha = unpackPremultiplyAlpha && !unpackUnmultiplyAlpha;
     params.srcUnmultiplyAlpha  = unpackUnmultiplyAlpha && !unpackPremultiplyAlpha;
     params.srcFlipY            = isSrcFlipY;
     params.destFlipY           = unpackFlipY;
+    params.srcRotation         = srcFramebufferRotation;
 
     uint32_t level      = index.getLevelIndex();
     uint32_t baseLayer  = index.hasLayer() ? index.getLayerIndex() : destOffset.z;
