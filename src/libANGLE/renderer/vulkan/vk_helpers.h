@@ -79,6 +79,11 @@ class DynamicBuffer : angle::NonCopyable
                        size_t initialSize,
                        VkMemoryPropertyFlags memoryProperty);
 
+    // This call will allocate a new region at the end of the current buffer. If it can't find
+    // enough space in the current buffer, it returns false. This gives caller a chance to deal with
+    // buffer switch that may occur with allocate call.
+    bool allocateFromCurrentBuffer(size_t sizeInBytes, uint8_t **ptrOut, VkDeviceSize *offsetOut);
+
     // This call will allocate a new region at the end of the buffer. It internally may trigger
     // a new buffer to be created (which is returned in the optional parameter
     // `newBufferAllocatedOut`).  The new region will be in the returned buffer at given offset. If
@@ -108,7 +113,7 @@ class DynamicBuffer : angle::NonCopyable
     // This frees resources immediately.
     void destroy(RendererVk *renderer);
 
-    BufferHelper *getCurrentBuffer() { return mBuffer; }
+    BufferHelper *getCurrentBuffer() const { return mBuffer; }
 
     // **Accumulate** an alignment requirement.  A dynamic buffer is used as the staging buffer for
     // image uploads, which can contain updates to unrelated mips, possibly with different formats.
@@ -702,7 +707,7 @@ class BufferHelper final : public Resource
     bool valid() const { return mBuffer.valid(); }
     const Buffer &getBuffer() const { return mBuffer; }
     VkDeviceSize getSize() const { return mSize; }
-    const uint8_t *getMappedMemory() const
+    uint8_t *getMappedMemory() const
     {
         ASSERT(isMapped());
         return mMappedMemory;

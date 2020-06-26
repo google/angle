@@ -972,6 +972,32 @@ angle::Result DynamicBuffer::allocateNewBuffer(ContextVk *contextVk)
     return angle::Result::Continue;
 }
 
+bool DynamicBuffer::allocateFromCurrentBuffer(size_t sizeInBytes,
+                                              uint8_t **ptrOut,
+                                              VkDeviceSize *offsetOut)
+{
+    ASSERT(ptrOut);
+    ASSERT(offsetOut);
+    size_t sizeToAllocate                                      = roundUp(sizeInBytes, mAlignment);
+    angle::base::CheckedNumeric<size_t> checkedNextWriteOffset = mNextAllocationOffset;
+    checkedNextWriteOffset += sizeToAllocate;
+
+    if (!checkedNextWriteOffset.IsValid() || checkedNextWriteOffset.ValueOrDie() >= mSize)
+    {
+        return false;
+    }
+
+    ASSERT(mBuffer != nullptr);
+    ASSERT(mHostVisible);
+    ASSERT(mBuffer->getMappedMemory());
+
+    *ptrOut    = mBuffer->getMappedMemory() + mNextAllocationOffset;
+    *offsetOut = static_cast<VkDeviceSize>(mNextAllocationOffset);
+
+    mNextAllocationOffset += static_cast<uint32_t>(sizeToAllocate);
+    return true;
+}
+
 angle::Result DynamicBuffer::allocate(ContextVk *contextVk,
                                       size_t sizeInBytes,
                                       uint8_t **ptrOut,

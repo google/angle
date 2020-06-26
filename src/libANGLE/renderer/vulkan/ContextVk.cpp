@@ -1472,7 +1472,8 @@ angle::Result ContextVk::handleDirtyGraphicsTransformFeedbackBuffersEmulation(
 
     // TODO(http://anglebug.com/3570): Need to update to handle Program Pipelines
     return mProgram->getExecutable().updateTransformFeedbackDescriptorSet(
-        mProgram->getState(), mProgram->getDefaultUniformBlocks(), this);
+        mProgram->getState(), mProgram->getDefaultUniformBlocks(),
+        mProgram->getDefaultUniformBuffer(), this);
 }
 
 angle::Result ContextVk::handleDirtyGraphicsTransformFeedbackBuffersExtension(

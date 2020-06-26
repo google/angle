@@ -475,6 +475,228 @@ TEST_P(VulkanUniformUpdatesTest, TextureStagingBufferRecycling)
     }
 }
 
+// This test tries to create a situation that VS and FS's uniform data might get placed in
+// different buffers and verify uniforms not getting stale data.
+TEST_P(VulkanUniformUpdatesTest, UpdateAfterNewBufferIsAllocated)
+{
+    ASSERT_TRUE(IsVulkan());
+
+    constexpr char kPositionUniformVertexShader[] = R"(attribute vec2 position;
+uniform float uniformVS;
+varying vec4 outVS;
+void main()
+{
+    outVS = vec4(uniformVS, uniformVS, uniformVS, uniformVS);
+    gl_Position = vec4(position, 0, 1);
+})";
+
+    constexpr char kColorUniformFragmentShader[] = R"(precision mediump float;
+varying vec4 outVS;
+uniform float uniformFS;
+void main()
+{
+    if(outVS[0] > uniformFS)
+        gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+    else
+        gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0);
+})";
+
+    ANGLE_GL_PROGRAM(program, kPositionUniformVertexShader, kColorUniformFragmentShader);
+    glUseProgram(program);
+
+    limitMaxSets(program);
+
+    rx::ProgramVk *programVk = hackProgram(program);
+
+    // Set a really small min size so that every uniform update actually allocates a new buffer.
+    programVk->setDefaultUniformBlocksMinSizeForTesting(128);
+
+    GLint uniformVSLocation = glGetUniformLocation(program, "uniformVS");
+    ASSERT_NE(uniformVSLocation, -1);
+    GLint uniformFSLocation = glGetUniformLocation(program, "uniformFS");
+    ASSERT_NE(uniformFSLocation, -1);
+
+    glUniform1f(uniformVSLocation, 10.0);
+    glUniform1f(uniformFSLocation, 11.0);
+    drawQuad(program, "position", 0.5f, 1.0f);
+    ASSERT_GL_NO_ERROR();
+
+    const GLsizei kHalfX  = getWindowWidth() / 2;
+    const GLsizei kHalfY  = getWindowHeight() / 2;
+    const GLsizei xoffset = kHalfX;
+    const GLsizei yoffset = kHalfY;
+    // 10.0f < 11.0f, should see green
+    EXPECT_PIXEL_RECT_EQ(xoffset, yoffset, kHalfX, kHalfY, GLColor::green);
+
+    // Now only update FS's uniform
+    for (int i = 0; i < 3; i++)
+    {
+        glUniform1f(uniformFSLocation, 1.0f + i / 10.0f);
+        drawQuad(program, "position", 0.5f, 1.0f);
+        ASSERT_GL_NO_ERROR();
+    }
+    // 10.0f > 9.0f, should see red
+    EXPECT_PIXEL_RECT_EQ(xoffset, yoffset, kHalfX, kHalfY, GLColor::red);
+
+    // 10.0f < 11.0f, should see green again
+    glUniform1f(uniformFSLocation, 11.0f);
+    drawQuad(program, "position", 0.5f, 1.0f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_RECT_EQ(xoffset, yoffset, kHalfX, kHalfY, GLColor::green);
+
+    // Now only update VS's uniform and flush the draw and readback and verify for every iteration.
+    // This will ensure the old buffers are finished and possibly recycled.
+    for (int i = 0; i < 100; i++)
+    {
+        // Make VS uniform value ping pong across FS uniform value
+        float vsUniformValue  = (i % 2) == 0 ? (11.0 + (i - 50)) : (11.0 - (i - 50));
+        GLColor expectedColor = vsUniformValue > 11.0f ? GLColor::red : GLColor::green;
+        glUniform1f(uniformVSLocation, vsUniformValue);
+        drawQuad(program, "position", 0.5f, 1.0f);
+        ASSERT_GL_NO_ERROR();
+        EXPECT_PIXEL_RECT_EQ(xoffset, yoffset, kHalfX, kHalfY, expectedColor);
+    }
+}
+
 ANGLE_INSTANTIATE_TEST(VulkanUniformUpdatesTest, ES2_VULKAN(), ES3_VULKAN());
+
+// This test tries to test uniform data update while switching between PPO and monolithic program.
+// The uniform data update occurred on one should carry over to the other. Also buffers are hacked
+// to smallest size to force updates occur in the new buffer so that any bug related to buffer
+// recycling will be exposed.
+class PipelineProgramUniformUpdatesTest : public VulkanUniformUpdatesTest
+{};
+TEST_P(PipelineProgramUniformUpdatesTest, ToggleBetweenPPOAndProgramVKWithUniformUpdate)
+{
+    ASSERT_TRUE(IsVulkan());
+    ANGLE_SKIP_TEST_IF(true && "Known bug. Expected to be fixed by http://b/161391337");
+
+    const GLchar *kPositionUniformVertexShader = R"(attribute vec2 position;
+uniform float uniformVS;
+varying vec4 outVS;
+void main()
+{
+    outVS = vec4(uniformVS, uniformVS, uniformVS, uniformVS);
+    gl_Position = vec4(position, 0, 1);
+})";
+
+    const GLchar *kColorUniformFragmentShader = R"(precision mediump float;
+varying vec4 outVS;
+uniform float uniformFS;
+void main()
+{
+    if(outVS[0] > uniformFS)
+        gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+    else
+        gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0);
+})";
+
+    // Compile and link a separable vertex shader
+    GLShader vertShader(GL_VERTEX_SHADER);
+    glShaderSource(vertShader, 1, &kPositionUniformVertexShader, nullptr);
+    glCompileShader(vertShader);
+    GLShader fragShader(GL_FRAGMENT_SHADER);
+    glShaderSource(fragShader, 1, &kColorUniformFragmentShader, nullptr);
+    glCompileShader(fragShader);
+    GLuint program = glCreateProgram();
+    glProgramParameteri(program, GL_PROGRAM_SEPARABLE, GL_TRUE);
+    glAttachShader(program, vertShader);
+    glAttachShader(program, fragShader);
+    glLinkProgram(program);
+    EXPECT_GL_NO_ERROR();
+
+    glUseProgram(program);
+    limitMaxSets(program);
+    // Set a really small min size so that every uniform update actually allocates a new buffer.
+    rx::ProgramVk *programVk = hackProgram(program);
+    programVk->setDefaultUniformBlocksMinSizeForTesting(128);
+
+    // Setup vertices
+    std::array<Vector3, 6> quadVertices = ANGLETestBase::GetQuadVertices();
+    GLint positionLocation              = glGetAttribLocation(program, "position");
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glVertexAttribPointer(positionLocation, 3, GL_FLOAT, GL_FALSE, 0, quadVertices.data());
+    glEnableVertexAttribArray(positionLocation);
+
+    GLint uniformVSLocation = glGetUniformLocation(program, "uniformVS");
+    ASSERT_NE(uniformVSLocation, -1);
+    GLint uniformFSLocation = glGetUniformLocation(program, "uniformFS");
+    ASSERT_NE(uniformFSLocation, -1);
+
+    glUseProgram(0);
+
+    // Generate a pipeline program out of the monolithic program
+    GLuint pipeline;
+    glGenProgramPipelines(1, &pipeline);
+    EXPECT_GL_NO_ERROR();
+    glUseProgramStages(pipeline, GL_VERTEX_SHADER_BIT | GL_FRAGMENT_SHADER_BIT, program);
+    EXPECT_GL_NO_ERROR();
+    glBindProgramPipeline(pipeline);
+    EXPECT_GL_NO_ERROR();
+
+    // First use monolithic program and update uniforms
+    glUseProgram(program);
+    glUniform1f(uniformVSLocation, 10.0);
+    glUniform1f(uniformFSLocation, 11.0);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    ASSERT_GL_NO_ERROR();
+    const GLsizei kHalfX  = getWindowWidth() / 2;
+    const GLsizei kHalfY  = getWindowHeight() / 2;
+    const GLsizei xoffset = kHalfX;
+    const GLsizei yoffset = kHalfY;
+    // 10.0f < 11.0f, should see green
+    EXPECT_PIXEL_RECT_EQ(xoffset, yoffset, kHalfX, kHalfY, GLColor::green);
+
+    // Now use PPO and only update FS's uniform
+    glUseProgram(0);
+    for (int i = 0; i < 3; i++)
+    {
+        glActiveShaderProgram(pipeline, program);
+        glUniform1f(uniformFSLocation, 1.0f + i / 10.0f);
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+        ASSERT_GL_NO_ERROR();
+    }
+    // 10.0f > 9.0f, should see red
+    EXPECT_PIXEL_RECT_EQ(xoffset, yoffset, kHalfX, kHalfY, GLColor::red);
+
+    // Now switch back to monolithic program and only update FS's uniform.
+    // 10.0f < 11.0f, should see green again
+    glUseProgram(program);
+    glUniform1f(uniformFSLocation, 11.0f);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_RECT_EQ(xoffset, yoffset, kHalfX, kHalfY, GLColor::green);
+
+    // Now only update VS's uniform and flush the draw and readback and verify for every iteration.
+    // This will ensure the old buffers are finished and possibly recycled.
+    for (int i = 0; i < 100; i++)
+    {
+        bool iteration_even = (i % 2) == 0 ? true : false;
+        float vsUniformValue;
+
+        // Make VS uniform value ping pong across FS uniform value and also pin pong between
+        // monolithic program and PPO
+        if (iteration_even)
+        {
+            vsUniformValue = 11.0 + (i - 50);
+            glUseProgram(program);
+            glUniform1f(uniformVSLocation, vsUniformValue);
+        }
+        else
+        {
+            vsUniformValue = 11.0 - (i - 50);
+            glUseProgram(0);
+            glActiveShaderProgram(pipeline, program);
+            glUniform1f(uniformVSLocation, vsUniformValue);
+        }
+
+        GLColor expectedColor = vsUniformValue > 11.0f ? GLColor::red : GLColor::green;
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+        ASSERT_GL_NO_ERROR();
+        EXPECT_PIXEL_RECT_EQ(xoffset, yoffset, kHalfX, kHalfY, expectedColor);
+    }
+}
+
+ANGLE_INSTANTIATE_TEST(PipelineProgramUniformUpdatesTest, ES31_VULKAN());
 
 }  // anonymous namespace
