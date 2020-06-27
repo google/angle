@@ -2459,6 +2459,7 @@ ImageHelper::ImageHelper(ImageHelper &&other)
       mDeviceMemory(std::move(other.mDeviceMemory)),
       mImageType(other.mImageType),
       mTilingMode(other.mTilingMode),
+      mUsage(other.mUsage),
       mExtents(other.mExtents),
       mFormat(other.mFormat),
       mSamples(other.mSamples),
@@ -2491,6 +2492,7 @@ void ImageHelper::resetCachedProperties()
     mSamples                     = 1;
     mSerial                      = rx::kZeroSerial;
     mTilingMode                  = VK_IMAGE_TILING_OPTIMAL;
+    mUsage                       = 0;
     mCurrentLayout               = ImageLayout::Undefined;
     mCurrentQueueFamilyIndex     = std::numeric_limits<uint32_t>::max();
     mLastNonShaderReadOnlyLayout = ImageLayout::Undefined;
@@ -2550,6 +2552,7 @@ angle::Result ImageHelper::initExternal(Context *context,
     mMaxLevel   = maxLevel;
     mLevelCount = mipLevels;
     mLayerCount = layerCount;
+    mUsage      = usage;
 
     // Validate that mLayerCount is compatible with the texture type
     ASSERT(textureType != gl::TextureType::_3D || mLayerCount == 1);
@@ -2569,7 +2572,7 @@ angle::Result ImageHelper::initExternal(Context *context,
     imageInfo.arrayLayers           = mLayerCount;
     imageInfo.samples               = gl_vk::GetSamples(samples);
     imageInfo.tiling                = mTilingMode;
-    imageInfo.usage                 = usage;
+    imageInfo.usage                 = mUsage;
     imageInfo.sharingMode           = VK_SHARING_MODE_EXCLUSIVE;
     imageInfo.queueFamilyIndexCount = 0;
     imageInfo.pQueueFamilyIndices   = nullptr;
