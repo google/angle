@@ -446,7 +446,7 @@ void CaptureGetShaderInfoLog_infoLog(const State &glState,
                                      ParamCapture *paramCapture)
 {
     gl::Shader *shaderObj = glState.getShaderProgramManagerForCapture().getShader(shader);
-    ASSERT(shaderObj && shaderObj->isCompiled());
+    ASSERT(shaderObj);
     paramCapture->readBufferSizeBytes = shaderObj->getInfoLogLength() + 1;
 }
 

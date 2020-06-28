@@ -3285,10 +3285,10 @@ void FrameCapture::captureCompressedTextureData(const gl::Context *context, cons
             dataParamOffset    = 10;
             break;
         case gl::EntryPoint::CompressedTexImage3D:
-            widthParamOffset  = 4;
-            heightParamOffset = 5;
-            depthParamOffset  = 6;
-            dataParamOffset   = 9;
+            widthParamOffset  = 3;
+            heightParamOffset = 4;
+            depthParamOffset  = 5;
+            dataParamOffset   = 8;
             break;
         case gl::EntryPoint::CompressedTexSubImage2D:
             xoffsetParamOffset = 2;
