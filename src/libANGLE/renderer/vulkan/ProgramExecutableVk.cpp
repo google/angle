@@ -193,6 +193,7 @@ void ProgramExecutableVk::reset(ContextVk *contextVk)
 
     mTextureDescriptorsCache.clear();
     mDescriptorBuffersCache.clear();
+    mUniformsAndXfbDescriptorSetCache.clear();
 
     for (ProgramInfo &programInfo : mGraphicsProgramInfos)
     {
@@ -334,6 +335,38 @@ uint32_t GetInterfaceBlockArraySize(const std::vector<gl::InterfaceBlock> &block
     }
 
     return arraySize;
+}
+
+angle::Result ProgramExecutableVk::allocUniformAndXfbDescriptorSet(
+    ContextVk *contextVk,
+    const vk::UniformsAndXfbDesc &xfbBufferDesc,
+    bool *newDescriptorSetAllocated)
+{
+    // Look up in the cache first
+    auto iter = mUniformsAndXfbDescriptorSetCache.find(xfbBufferDesc);
+    if (iter != mUniformsAndXfbDescriptorSetCache.end())
+    {
+        mDescriptorSets[kUniformsAndXfbDescriptorSetIndex] = iter->second;
+        *newDescriptorSetAllocated                         = false;
+        return angle::Result::Continue;
+    }
+
+    bool newPoolAllocated;
+    ANGLE_TRY(allocateDescriptorSetAndGetInfo(contextVk, kUniformsAndXfbDescriptorSetIndex,
+                                              &newPoolAllocated));
+
+    // Clear descriptor set cache. It may no longer be valid.
+    if (newPoolAllocated)
+    {
+        mUniformsAndXfbDescriptorSetCache.clear();
+    }
+
+    // Add the descriptor set into cache
+    mUniformsAndXfbDescriptorSetCache.emplace(xfbBufferDesc,
+                                              mDescriptorSets[kUniformsAndXfbDescriptorSetIndex]);
+    *newDescriptorSetAllocated = true;
+
+    return angle::Result::Continue;
 }
 
 angle::Result ProgramExecutableVk::allocateDescriptorSet(ContextVk *contextVk,
@@ -852,7 +885,7 @@ angle::Result ProgramExecutableVk::createPipelineLayout(const gl::Context *glCon
 
 void ProgramExecutableVk::updateDefaultUniformsDescriptorSet(
     const gl::ShaderType shaderType,
-    gl::ShaderMap<DefaultUniformBlock> &defaultUniformBlocks,
+    const DefaultUniformBlock &defaultUniformBlock,
     vk::BufferHelper *defaultUniformBuffer,
     ContextVk *contextVk)
 {
@@ -863,11 +896,10 @@ void ProgramExecutableVk::updateDefaultUniformsDescriptorSet(
         return;
     }
 
-    DefaultUniformBlock &uniformBlock  = defaultUniformBlocks[shaderType];
     VkWriteDescriptorSet &writeInfo    = contextVk->allocWriteInfo();
     VkDescriptorBufferInfo &bufferInfo = contextVk->allocBufferInfo();
 
-    if (!uniformBlock.uniformData.empty())
+    if (!defaultUniformBlock.uniformData.empty())
     {
         bufferInfo.buffer = defaultUniformBuffer->getBuffer().getHandle();
         mDescriptorBuffersCache.emplace_back(defaultUniformBuffer);
@@ -1187,21 +1219,26 @@ angle::Result ProgramExecutableVk::updateTransformFeedbackDescriptorSet(
     const gl::ProgramState &programState,
     gl::ShaderMap<DefaultUniformBlock> &defaultUniformBlocks,
     vk::BufferHelper *defaultUniformBuffer,
-    ContextVk *contextVk)
+    ContextVk *contextVk,
+    const vk::UniformsAndXfbDesc &xfbBufferDesc)
 {
     const gl::ProgramExecutable &executable = programState.getExecutable();
     ASSERT(executable.hasTransformFeedbackOutput());
 
-    ANGLE_TRY(allocateDescriptorSet(contextVk, kUniformsAndXfbDescriptorSetIndex));
+    bool newDescriptorSetAllocated;
+    ANGLE_TRY(
+        allocUniformAndXfbDescriptorSet(contextVk, xfbBufferDesc, &newDescriptorSetAllocated));
 
-    mDescriptorBuffersCache.clear();
-    for (const gl::ShaderType shaderType : executable.getLinkedShaderStages())
+    if (newDescriptorSetAllocated)
     {
-        updateDefaultUniformsDescriptorSet(shaderType, defaultUniformBlocks, defaultUniformBuffer,
-                                           contextVk);
+        mDescriptorBuffersCache.clear();
+        for (const gl::ShaderType shaderType : executable.getLinkedShaderStages())
+        {
+            updateDefaultUniformsDescriptorSet(shaderType, defaultUniformBlocks[shaderType],
+                                               defaultUniformBuffer, contextVk);
+        }
+        updateTransformFeedbackDescriptorSetImpl(programState, contextVk);
     }
-
-    updateTransformFeedbackDescriptorSetImpl(programState, contextVk);
 
     return angle::Result::Continue;
 }

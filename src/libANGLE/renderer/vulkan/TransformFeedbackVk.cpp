@@ -55,6 +55,7 @@ angle::Result TransformFeedbackVk::begin(const gl::Context *context,
     ASSERT(executable);
     size_t xfbBufferCount = executable->getTransformFeedbackBufferCount();
 
+    mXFBBuffersDesc.reset();
     for (size_t bufferIndex = 0; bufferIndex < xfbBufferCount; ++bufferIndex)
     {
         const gl::OffsetBindingPointer<gl::Buffer> &binding = mState.getIndexedBuffer(bufferIndex);
@@ -78,6 +79,8 @@ angle::Result TransformFeedbackVk::begin(const gl::Context *context,
         }
 
         mBufferHandles[bufferIndex] = mBufferHelpers[bufferIndex]->getBuffer().getHandle();
+        mXFBBuffersDesc.updateTransformFeedbackBuffer(
+            bufferIndex, mBufferHelpers[bufferIndex]->getBufferSerial());
 
         if (contextVk->getFeatures().supportsTransformFeedbackExtension.enabled)
         {

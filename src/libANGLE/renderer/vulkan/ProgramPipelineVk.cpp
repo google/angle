@@ -123,7 +123,7 @@ angle::Result ProgramPipelineVk::updateUniforms(ContextVk *contextVk)
             if (programVk)
             {
                 mExecutable.updateDefaultUniformsDescriptorSet(
-                    shaderType, programVk->getDefaultUniformBlocks(),
+                    shaderType, programVk->getDefaultUniformBlock(shaderType),
                     programVk->getDefaultUniformBuffer(), contextVk);
                 mExecutable.updateTransformFeedbackDescriptorSetImpl(programVk->getState(),
                                                                      contextVk);

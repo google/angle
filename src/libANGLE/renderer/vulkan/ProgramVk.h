@@ -123,6 +123,10 @@ class ProgramVk : public ProgramImpl
     ProgramExecutableVk &getExecutable() { return mExecutable; }
 
     gl::ShaderMap<DefaultUniformBlock> &getDefaultUniformBlocks() { return mDefaultUniformBlocks; }
+    const DefaultUniformBlock &getDefaultUniformBlock(const gl::ShaderType shaderType) const
+    {
+        return mDefaultUniformBlocks[shaderType];
+    }
     vk::BufferHelper *getDefaultUniformBuffer() const
     {
         return mDefaultUniformStorage.getCurrentBuffer();

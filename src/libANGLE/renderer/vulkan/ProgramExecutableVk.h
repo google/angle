@@ -146,7 +146,8 @@ class ProgramExecutableVk
         const gl::ProgramState &programState,
         gl::ShaderMap<DefaultUniformBlock> &defaultUniformBlocks,
         vk::BufferHelper *defaultUniformBuffer,
-        ContextVk *contextVk);
+        ContextVk *contextVk,
+        const vk::UniformsAndXfbDesc &xfbBufferDesc);
 
     angle::Result updateDescriptorSets(ContextVk *contextVk, vk::CommandBuffer *commandBuffer);
 
@@ -167,6 +168,10 @@ class ProgramExecutableVk
     friend class ProgramVk;
     friend class ProgramPipelineVk;
 
+    angle::Result allocUniformAndXfbDescriptorSet(ContextVk *contextVk,
+                                                  const vk::UniformsAndXfbDesc &xfbBufferDesc,
+                                                  bool *newDescriptorSetAllocated);
+
     angle::Result allocateDescriptorSet(ContextVk *contextVk, uint32_t descriptorSetIndex);
     angle::Result allocateDescriptorSetAndGetInfo(ContextVk *contextVk,
                                                   uint32_t descriptorSetIndex,
@@ -186,11 +191,10 @@ class ProgramExecutableVk
                                      const gl::ActiveTextureArray<vk::TextureUnit> *activeTextures,
                                      vk::DescriptorSetLayoutDesc *descOut);
 
-    void updateDefaultUniformsDescriptorSet(
-        const gl::ShaderType shaderType,
-        gl::ShaderMap<DefaultUniformBlock> &defaultUniformBlocks,
-        vk::BufferHelper *defaultUniformBuffer,
-        ContextVk *contextVk);
+    void updateDefaultUniformsDescriptorSet(const gl::ShaderType shaderType,
+                                            const DefaultUniformBlock &defaultUniformBlock,
+                                            vk::BufferHelper *defaultUniformBuffer,
+                                            ContextVk *contextVk);
     void updateTransformFeedbackDescriptorSetImpl(const gl::ProgramState &programState,
                                                   ContextVk *contextVk);
     void updateBuffersDescriptorSet(ContextVk *contextVk,
@@ -221,6 +225,7 @@ class ProgramExecutableVk
     std::vector<vk::BufferHelper *> mDescriptorBuffersCache;
     size_t mNumDefaultUniformDescriptors;
 
+    std::unordered_map<vk::UniformsAndXfbDesc, VkDescriptorSet> mUniformsAndXfbDescriptorSetCache;
     std::unordered_map<vk::TextureDescriptorDesc, VkDescriptorSet> mTextureDescriptorsCache;
 
     // We keep a reference to the pipeline and descriptor set layouts. This ensures they don't get

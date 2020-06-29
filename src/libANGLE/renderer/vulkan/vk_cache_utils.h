@@ -793,6 +793,39 @@ class TextureDescriptorDesc
     gl::ActiveTextureArray<TexUnitSerials> mSerials;
 };
 
+class UniformsAndXfbDesc
+{
+  public:
+    UniformsAndXfbDesc();
+    ~UniformsAndXfbDesc();
+
+    UniformsAndXfbDesc(const UniformsAndXfbDesc &other);
+    UniformsAndXfbDesc &operator=(const UniformsAndXfbDesc &other);
+
+    void updateDefaultUniformBuffer(BufferSerial bufferSerial)
+    {
+        mBufferSerials[kDefaultUniformBufferIndex] = bufferSerial;
+        mBufferCount = std::max(mBufferCount, static_cast<uint32_t>(1));
+    }
+    void updateTransformFeedbackBuffer(size_t xfbIndex, BufferSerial bufferSerial)
+    {
+        uint32_t bufferIndex        = static_cast<uint32_t>(xfbIndex) + 1;
+        mBufferSerials[bufferIndex] = bufferSerial;
+        mBufferCount                = std::max(mBufferCount, (bufferIndex + 1));
+    }
+    size_t hash() const;
+    void reset();
+
+    bool operator==(const UniformsAndXfbDesc &other) const;
+
+  private:
+    uint32_t mBufferCount;
+    // The array index 0 is used for default uniform buffer
+    static constexpr size_t kDefaultUniformBufferIndex = 0;
+    static constexpr size_t kMaxBufferCount = 1 + gl::IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_BUFFERS;
+    std::array<BufferSerial, kMaxBufferCount> mBufferSerials;
+};
+
 // This is IMPLEMENTATION_MAX_DRAW_BUFFERS + 1 for DS attachment
 constexpr size_t kMaxFramebufferAttachments = gl::IMPLEMENTATION_MAX_FRAMEBUFFER_ATTACHMENTS;
 // Color serials are at index [0:gl::IMPLEMENTATION_MAX_DRAW_BUFFERS-1]
@@ -874,6 +907,12 @@ struct hash<rx::vk::TextureDescriptorDesc>
 };
 
 template <>
+struct hash<rx::vk::UniformsAndXfbDesc>
+{
+    size_t operator()(const rx::vk::UniformsAndXfbDesc &key) const { return key.hash(); }
+};
+
+template <>
 struct hash<rx::vk::FramebufferDesc>
 {
     size_t operator()(const rx::vk::FramebufferDesc &key) const { return key.hash(); }
@@ -897,6 +936,12 @@ struct hash<rx::vk::LayerLevel>
         ASSERT((layerLevel.level & 0xFFE00000) == 0);
         return layerLevel.layer | (layerLevel.level << 11);
     }
+};
+
+template <>
+struct hash<rx::BufferSerial>
+{
+    size_t operator()(const rx::BufferSerial &key) const { return key.getValue(); }
 };
 }  // namespace std
 
