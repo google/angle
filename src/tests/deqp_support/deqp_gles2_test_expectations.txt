@@ -366,3 +366,6 @@
 2976 VULKAN NVIDIA : dEQP-GLES2.functional.shaders.invariance.* = FAIL
 // Fails on 431.02 NVIDIA driver
 3748 VULKAN WIN NVIDIA : dEQP-GLES2.functional.fbo.render.repeated_clear.* = FAIL
+
+// Vertex attribute aliasing generates invalid SPIRV
+4249 VULKAN : dEQP-GLES2.functional.attribute_location.bind* = SKIP

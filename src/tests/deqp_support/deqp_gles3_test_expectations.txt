@@ -537,8 +537,8 @@
 3430 VULKAN : dEQP-GLES3.functional.rasterization.flatshading.* = FAIL
 
 // Vertex attribute aliasing generates invalid SPIRV
-4790 VULKAN : dEQP-GLES3.functional.attribute_location.bind_aliasing.cond* = FAIL
-4790 VULKAN : dEQP-GLES3.functional.attribute_location.bind_aliasing.max_cond* = FAIL
+4249 VULKAN : dEQP-GLES3.functional.attribute_location.bind_aliasing.cond* = SKIP
+4249 VULKAN : dEQP-GLES3.functional.attribute_location.bind_aliasing.max_cond* = SKIP
 
 // Misc unimplemented:
 
