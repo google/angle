@@ -3,12 +3,12 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-// frame_capture_utils:
+// frame_capture_test_utils:
 //   Helper functions for capture and replay of traces.
 //
 
-#ifndef UTIL_FRAME_CAPTURE_UTILS_H_
-#define UTIL_FRAME_CAPTURE_UTILS_H_
+#ifndef UTIL_FRAME_CAPTURE_TEST_UTILS_H_
+#define UTIL_FRAME_CAPTURE_TEST_UTILS_H_
 
 #include <iostream>
 #include <memory>
@@ -49,4 +49,4 @@ inline uint8_t *DecompressBinaryData(const std::vector<uint8_t> &compressedData)
 
 }  // namespace angle
 
-#endif  // UTIL_FRAME_CAPTURE_UTILS_H_
+#endif  // UTIL_FRAME_CAPTURE_TEST_UTILS_H_

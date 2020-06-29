@@ -13,7 +13,7 @@
 #include "tests/perf_tests/ANGLEPerfTest.h"
 #include "tests/perf_tests/DrawCallPerfParams.h"
 #include "util/egl_loader_autogen.h"
-#include "util/frame_capture_utils.h"
+#include "util/frame_capture_test_utils.h"
 #include "util/png_utils.h"
 
 #include "restricted_traces/restricted_traces_autogen.h"
