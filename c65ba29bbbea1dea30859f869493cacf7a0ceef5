@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0adf9af4_d099ec9c",
+        "filename": "src/libANGLE/renderer/gl/egl/DisplayEGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 559,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2020-06-29T07:48:24Z",
+      "side": 1,
+      "message": "Doesn\u0027t access to the unordered_map need to be protected with a lock?",
+      "revId": "c65ba29bbbea1dea30859f869493cacf7a0ceef5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
