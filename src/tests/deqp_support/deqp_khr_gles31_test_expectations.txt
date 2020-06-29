@@ -42,10 +42,6 @@
 4194 VULKAN PIXEL2ORXL : KHR-GLES31.core.compute_shader.resource-ubo = FAIL
 4194 VULKAN PIXEL2ORXL : KHR-GLES31.core.compute_shader.built-in-variables = FAIL
 
-4675 VULKAN : KHR-GLES31.core.pixelstoragemodes.teximage*d.r*8i* = FAIL
-4675 VULKAN : KHR-GLES31.core.pixelstoragemodes.teximage*d.r*16i* = FAIL
-4675 VULKAN : KHR-GLES31.core.pixelstoragemodes.teximage*d.r*32i* = FAIL
-
 ////
 //// Desktop Vulkan expectations
 ////
