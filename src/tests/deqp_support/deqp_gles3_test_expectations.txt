@@ -568,11 +568,15 @@
 3816 VULKAN PIXEL2ORXL : dEQP-GLES3.functional.texture.specification.texstorage3d.format.rg32* = FAIL
 
 // Failing on the Pixel 2 due to Qualcomm Vulkan driver
-4344 VULKAN ANDROID : dEQP-GLES3.functional.fragment_ops.interaction.basic_shader.54 = FAIL
-4344 VULKAN ANDROID : dEQP-GLES3.functional.fragment_ops.random.35 = FAIL
 4344 VULKAN ANDROID : dEQP-GLES3.functional.fragment_ops.random.56 = FAIL
 4344 VULKAN ANDROID : dEQP-GLES3.functional.fragment_ops.random.62 = FAIL
 4344 VULKAN ANDROID : dEQP-GLES3.functional.fragment_ops.random.68 = FAIL
+// Pixel 4 XL update (6/30/20): The previous 3 tests pass on Pixel 4 XL.  The following only fail
+// when the device is rotated 90 or 270 degrees, due to the same Qualcomm driver bug.  As before,
+// the driver bug can be worked around by immediately ending a render pass that does a clear.
+4344 VULKAN ANDROID : dEQP-GLES3.functional.fragment_ops.interaction.basic_shader.54 = FAIL
+4344 VULKAN ANDROID : dEQP-GLES3.functional.fragment_ops.random.35 = FAIL
+4344 VULKAN ANDROID : dEQP-GLES3.functional.fragment_ops.random.73 = FAIL
 
 
 // Fails only with SwiftShader:
