@@ -2840,6 +2840,9 @@ TEST_P(Texture2DBaseMaxTestES3, GenerateMipmapAfterRedefineAndRebase)
 {
     ANGLE_SKIP_TEST_IF(IsWindows() && IsAMD() && IsOpenGL());
 
+    // http://crbug.com/1100613
+    ANGLE_SKIP_TEST_IF(IsNVIDIAShield());
+
     initTest();
 
     // Test that all mips have the expected data initially (this makes sure the texture image is
