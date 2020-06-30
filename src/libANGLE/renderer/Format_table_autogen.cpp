@@ -83,6 +83,7 @@ const Format gFormatInfoTable[] = {
     { FormatID::ASTC_8x6_UNORM_BLOCK, GL_COMPRESSED_RGBA_ASTC_8x6_KHR, GL_COMPRESSED_RGBA_ASTC_8x6_KHR, nullptr, NoCopyFunctions, nullptr, nullptr, GL_UNSIGNED_NORMALIZED, 0, 0, 0, 0, 0, 0, 0, 16, std::numeric_limits<GLuint>::max(), true, false, false, gl::VertexAttribType::InvalidEnum },
     { FormatID::ASTC_8x8_SRGB_BLOCK, GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x8_KHR, GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x8_KHR, nullptr, NoCopyFunctions, nullptr, nullptr, GL_UNSIGNED_NORMALIZED, 0, 0, 0, 0, 0, 0, 0, 16, std::numeric_limits<GLuint>::max(), true, false, false, gl::VertexAttribType::InvalidEnum },
     { FormatID::ASTC_8x8_UNORM_BLOCK, GL_COMPRESSED_RGBA_ASTC_8x8_KHR, GL_COMPRESSED_RGBA_ASTC_8x8_KHR, nullptr, NoCopyFunctions, nullptr, nullptr, GL_UNSIGNED_NORMALIZED, 0, 0, 0, 0, 0, 0, 0, 16, std::numeric_limits<GLuint>::max(), true, false, false, gl::VertexAttribType::InvalidEnum },
+    { FormatID::B10G10R10A2_UNORM, GL_BGR10_A2_ANGLEX, GL_BGR10_A2_ANGLEX, GenerateMip<B10G10R10A2>, NoCopyFunctions, ReadColor<B10G10R10A2, GLfloat>, WriteColor<B10G10R10A2, GLfloat>, GL_UNSIGNED_NORMALIZED, 10, 10, 10, 2, 0, 0, 0, 4, std::numeric_limits<GLuint>::max(), false, false, false, gl::VertexAttribType::UnsignedInt2101010 },
     { FormatID::B4G4R4A4_UNORM, GL_BGRA4_ANGLEX, GL_RGBA4, GenerateMip<A4R4G4B4>, NoCopyFunctions, ReadColor<A4R4G4B4, GLfloat>, WriteColor<A4R4G4B4, GLfloat>, GL_UNSIGNED_NORMALIZED, 4, 4, 4, 4, 0, 0, 0, 2, std::numeric_limits<GLuint>::max(), false, false, false, gl::VertexAttribType::InvalidEnum },
     { FormatID::B5G5R5A1_UNORM, GL_BGR5_A1_ANGLEX, GL_RGB5_A1, GenerateMip<A1R5G5B5>, NoCopyFunctions, ReadColor<A1R5G5B5, GLfloat>, WriteColor<A1R5G5B5, GLfloat>, GL_UNSIGNED_NORMALIZED, 5, 5, 5, 1, 0, 0, 0, 2, std::numeric_limits<GLuint>::max(), false, false, false, gl::VertexAttribType::InvalidEnum },
     { FormatID::B5G6R5_UNORM, GL_BGR565_ANGLEX, GL_RGB565, GenerateMip<B5G6R5>, NoCopyFunctions, ReadColor<B5G6R5, GLfloat>, WriteColor<B5G6R5, GLfloat>, GL_UNSIGNED_NORMALIZED, 5, 6, 5, 0, 0, 0, 0, 2, std::numeric_limits<GLuint>::max(), false, false, false, gl::VertexAttribType::InvalidEnum },
@@ -271,6 +272,8 @@ FormatID Format::InternalFormatToID(GLenum internalFormat)
             return FormatID::A32_FLOAT;
         case GL_ALPHA8_EXT:
             return FormatID::A8_UNORM;
+        case GL_BGR10_A2_ANGLEX:
+            return FormatID::B10G10R10A2_UNORM;
         case GL_BGR565_ANGLEX:
             return FormatID::B5G6R5_UNORM;
         case GL_BGR5_A1_ANGLEX:
