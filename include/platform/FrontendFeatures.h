@@ -54,6 +54,12 @@ struct FrontendFeatures : angle::FeatureSetBase
     angle::Feature disableProgramBinary = {
         "disable_program_binary", angle::FeatureCategory::FrontendFeatures,
         "Disable support for GL_OES_get_program_binary", &members, "http://anglebug.com/5007"};
+
+    // Allow disabling of GL_EXT_texture_filter_anisotropic through a runtime feature for
+    // performance comparisons.
+    angle::Feature disableAnisotropicFiltering = {
+        "disable_anisotropic_filtering", angle::FeatureCategory::FrontendWorkarounds,
+        "Disable support for anisotropic filtering", &members};
 };
 
 inline FrontendFeatures::FrontendFeatures()  = default;

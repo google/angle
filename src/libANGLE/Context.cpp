@@ -3209,6 +3209,11 @@ Extensions Context::generateSupportedExtensions() const
         supportedExtensions.colorBufferFloatRGBA = false;
     }
 
+    if (getFrontendFeatures().disableAnisotropicFiltering.enabled)
+    {
+        supportedExtensions.textureFilterAnisotropic = false;
+    }
+
     // Some extensions are always available because they are implemented in the GL layer.
     supportedExtensions.bindUniformLocation   = true;
     supportedExtensions.vertexArrayObjectOES  = true;
