@@ -623,7 +623,13 @@ TEST_P(CopyTexImageTestES3, 2DArraySubImage)
     glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, tex, 0, 0);
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
     glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, tex, 0, 1);
-    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+    for (int x = 0; x < kTexSize; x++)
+    {
+        for (int y = 0; y < kTexSize; y++)
+        {
+            EXPECT_PIXEL_COLOR_EQ(x, y, GLColor::green);
+        }
+    }
     ASSERT_GL_NO_ERROR();
 }
 

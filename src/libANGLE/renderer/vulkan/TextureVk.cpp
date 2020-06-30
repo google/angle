@@ -856,8 +856,8 @@ angle::Result TextureVk::copySubImageImplWithDraw(ContextVk *contextVk,
             break;
         case SurfaceRotation::Rotated180Degrees:
             ASSERT(isSrcFlipY);
-            rotatedSourceBox.x = srcExtents.width - sourceBox.x - sourceBox.width;
-            rotatedSourceBox.y = srcExtents.height - sourceBox.y - sourceBox.height;
+            rotatedSourceBox.x = srcExtents.width - sourceBox.x - sourceBox.width - 1;
+            rotatedSourceBox.y = srcExtents.height - sourceBox.y - sourceBox.height - 1;
             break;
         case SurfaceRotation::Rotated270Degrees:
             // Turn off y-flip for 270 degrees, as we don't want it affecting the
@@ -867,8 +867,8 @@ angle::Result TextureVk::copySubImageImplWithDraw(ContextVk *contextVk,
             // UtilsVk::copyImage().
             ASSERT(isSrcFlipY);
             isSrcFlipY         = false;
-            rotatedSourceBox.x = srcExtents.height - sourceBox.y - sourceBox.height;
-            rotatedSourceBox.y = srcExtents.width - sourceBox.x - sourceBox.width;
+            rotatedSourceBox.x = srcExtents.height - sourceBox.y - sourceBox.height - 1;
+            rotatedSourceBox.y = srcExtents.width - sourceBox.x - sourceBox.width - 1;
             std::swap(rotatedSourceBox.width, rotatedSourceBox.height);
             std::swap(srcExtents.width, srcExtents.height);
             break;
