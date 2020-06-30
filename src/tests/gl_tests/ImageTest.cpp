@@ -434,7 +434,6 @@ class ImageTest : public ANGLETest
         }
 
         EXPECT_EQ(0, AHardwareBuffer_unlock(aHardwareBuffer, nullptr));
-        AHardwareBuffer_acquire(aHardwareBuffer);
         return aHardwareBuffer;
 #else
         return nullptr;
@@ -1560,6 +1559,81 @@ void ImageTest::SourceAHBTargetExternalESSL3_helper(const EGLint *attribs)
     eglDestroyImageKHR(window->getDisplay(), image);
     destroyAndroidHardwareBuffer(source);
     glDeleteTextures(1, &target);
+}
+
+// Create a depth format AHB backed EGL image and verify that the image's aspect is honored
+TEST_P(ImageTest, SourceAHBTarget2DDepth)
+{
+    // TODO - Support for depth formats in AHB is missing (http://anglebug.com/4818)
+    ANGLE_SKIP_TEST_IF(true);
+
+    EGLWindow *window = getEGLWindow();
+
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3);
+    ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
+    ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
+
+    GLint level             = 0;
+    GLsizei width           = 1;
+    GLsizei height          = 1;
+    GLsizei depth           = 1;
+    GLint depthStencilValue = 0;
+
+    // Create the Image
+    AHardwareBuffer *source;
+    EGLImageKHR image;
+    createEGLImageAndroidHardwareBufferSource(
+        width, height, depth, GL_DEPTH_COMPONENT24, kDefaultAttribs,
+        reinterpret_cast<GLubyte *>(&depthStencilValue), 3, &source, &image);
+
+    // Create a texture target to bind the egl image
+    GLuint depthTextureTarget;
+    createEGLImageTargetTexture2D(image, &depthTextureTarget);
+
+    // Create a color texture and fill it with red
+    GLTexture colorTexture;
+    glBindTexture(GL_TEXTURE_2D, colorTexture);
+    glTexImage2D(GL_TEXTURE_2D, level, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 GLColor::red.data());
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glBindTexture(GL_TEXTURE_2D, 0);
+    EXPECT_GL_NO_ERROR();
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    EXPECT_GL_NO_ERROR();
+
+    // Attach the color and depth texture to the FBO
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorTexture, 0);
+    EXPECT_GL_NO_ERROR();
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthTextureTarget,
+                           0);
+    EXPECT_GL_NO_ERROR();
+
+    ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+
+    // Clear the color texture to red
+    glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    EXPECT_PIXEL_EQ(0, 0, 255, 0, 0, 255);
+
+    // Enable Depth test but disable depth writes. The depth function is set to ">".
+    glEnable(GL_DEPTH_TEST);
+    glDepthMask(GL_FALSE);
+    glDepthFunc(GL_GREATER);
+
+    // Fill any fragment of the color attachment with blue if it passes the depth test.
+    ANGLE_GL_PROGRAM(colorFillProgram, essl1_shaders::vs::Simple(), essl1_shaders::fs::Blue());
+    drawQuad(colorFillProgram, essl1_shaders::PositionAttrib(), 1.0f, 1.0f);
+
+    // Since 1.0f > 0.0f, all fragments of the color attachment should be blue.
+    EXPECT_PIXEL_EQ(0, 0, 0, 0, 255, 255);
+
+    // Clean up
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    eglDestroyImageKHR(window->getDisplay(), image);
+    destroyAndroidHardwareBuffer(source);
 }
 
 TEST_P(ImageTest, Source2DTargetRenderbuffer)
