@@ -52,6 +52,24 @@
       "revId": "c65ba29bbbea1dea30859f869493cacf7a0ceef5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9518a3ad_66b360f5",
+        "filename": "src/libANGLE/renderer/gl/egl/DisplayEGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 559,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2020-07-01T16:54:16Z",
+      "side": 1,
+      "message": "We\u0027re safe here, there is a global lock in EGL.",
+      "parentUuid": "0000d334_03770583",
+      "revId": "c65ba29bbbea1dea30859f869493cacf7a0ceef5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
