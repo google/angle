@@ -148,6 +148,7 @@ class DisplayGbm final : public DisplayEGL
                                 unsigned int tv_usec,
                                 void *data);
     void pageFlipHandler(unsigned int sequence, uint64_t tv);
+    bool validateEglConfig(const EGLint *configAttribs);
 
     gbm_device *mGBM;
     drmModeConnectorPtr mConnector;

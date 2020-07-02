@@ -922,26 +922,48 @@ egl::Error DisplayGbm::makeCurrent(egl::Surface *drawSurface,
     return DisplayGL::makeCurrent(drawSurface, readSurface, context);
 }
 
+bool DisplayGbm::validateEglConfig(const EGLint *configAttribs)
+{
+    EGLint numConfigs;
+    if (!mEGL->chooseConfig(configAttribs, NULL, 0, &numConfigs))
+    {
+        ERR() << "eglChooseConfig failed with error " << egl::Error(mEGL->getError());
+        return false;
+    }
+    if (numConfigs == 0)
+    {
+        return false;
+    }
+    return true;
+}
+
 egl::ConfigSet DisplayGbm::generateConfigs()
 {
-    egl::ConfigSet configs;
+    // clang-format off
+    std::vector<EGLint> configAttribs8888 =
+    {
+        EGL_COLOR_BUFFER_TYPE, EGL_RGB_BUFFER,
+        EGL_SURFACE_TYPE, EGL_DONT_CARE,
+        EGL_CONFIG_CAVEAT, EGL_NONE,
+        EGL_CONFORMANT, EGL_DONT_CARE,
+        EGL_RENDERABLE_TYPE, EGL_DONT_CARE,
+        EGL_RED_SIZE, 8,
+        EGL_GREEN_SIZE, 8,
+        EGL_BLUE_SIZE, 8,
+        EGL_ALPHA_SIZE, 8,
+        EGL_BUFFER_SIZE, 32,
+        EGL_DEPTH_SIZE, 24,
+        EGL_NONE
+    };
+    // clang-format on
 
-    egl::Config config;
-    config.bufferSize         = 32;
-    config.redSize            = 8;
-    config.greenSize          = 8;
-    config.blueSize           = 8;
-    config.alphaSize          = 8;
-    config.depthSize          = 24;
-    config.stencilSize        = 8;
-    config.bindToTextureRGBA  = EGL_TRUE;
-    config.renderableType     = EGL_OPENGL_ES2_BIT;
-    config.surfaceType        = EGL_WINDOW_BIT | EGL_PBUFFER_BIT;
-    config.renderTargetFormat = GL_RGBA8;
-    config.depthStencilFormat = GL_DEPTH24_STENCIL8;
-
-    configs.add(config);
-    return configs;
+    if (!validateEglConfig(configAttribs8888.data()))
+    {
+        ERR() << "No suitable EGL configs found.";
+        return egl::ConfigSet();
+    }
+    mConfigAttribList = configAttribs8888;
+    return DisplayEGL::generateConfigs();
 }
 
 bool DisplayGbm::isValidNativeWindow(EGLNativeWindowType window) const

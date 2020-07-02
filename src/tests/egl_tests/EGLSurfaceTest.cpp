@@ -180,6 +180,8 @@ class EGLSurfaceTest : public ANGLETest
                                            EGL_DONT_CARE,
                                            EGL_SAMPLE_BUFFERS,
                                            0,
+                                           EGL_SURFACE_TYPE,
+                                           EGL_DONT_CARE,
                                            EGL_NONE};
 
         EGLint configCount;
@@ -427,6 +429,7 @@ TEST_P(EGLSurfaceTest, ResizeWindow)
     initializeDisplay();
     initializeSurfaceWithDefaultConfig();
     initializeContext();
+    ANGLE_SKIP_TEST_IF(!mWindowSurface);
 
     eglMakeCurrent(mDisplay, mWindowSurface, mWindowSurface, mContext);
     eglSwapBuffers(mDisplay, mWindowSurface);
@@ -477,6 +480,7 @@ TEST_P(EGLSurfaceTest, ResizeWindowWithDraw)
     initializeDisplay();
     initializeSurfaceWithDefaultConfig();
     initializeContext();
+    ANGLE_SKIP_TEST_IF(!mWindowSurface);
 
     int size      = 64;
     EGLint height = 0;
@@ -566,6 +570,7 @@ TEST_P(EGLSurfaceTest, ResetNativeWindow)
 
     initializeSurfaceWithDefaultConfig();
     initializeContext();
+    ANGLE_SKIP_TEST_IF(!mWindowSurface);
 
     eglMakeCurrent(mDisplay, mWindowSurface, mWindowSurface, mContext);
 
