@@ -44,6 +44,22 @@ def _CheckCommitMessageFormatting(input_api, output_api):
     def _IsTagLine(line):
         return ":" in line
 
+    def _SplitIntoMultipleCommits(description_text):
+        paragraph_split_pattern = r"((?m)^\s*$\n)"
+        multiple_paragraphs = re.split(paragraph_split_pattern, description_text)
+        multiple_commits = [""]
+        change_id_pattern = re.compile(r"(?m)^Change-Id: [a-zA-Z0-9]*$")
+        for paragraph in multiple_paragraphs:
+            multiple_commits[-1] += paragraph
+            if change_id_pattern.search(paragraph):
+                multiple_commits.append("")
+        if multiple_commits[-1] == "":
+            multiple_commits.pop()
+        return multiple_commits
+
+    def _CheckTabInCommit(lines):
+        return all([line.find("\t") == -1 for line in lines])
+
     whitelist_strings = ['Revert "', 'Roll ', 'Reland ']
     summary_linelength_warning_lower_limit = 65
     summary_linelength_warning_upper_limit = 70
@@ -51,14 +67,13 @@ def _CheckCommitMessageFormatting(input_api, output_api):
 
     git_output = input_api.change.DescriptionText()
 
-    multiple_commits = re.split(r"Change-Id: [a-zA-Z0-9]*\n", git_output)
+    multiple_commits = _SplitIntoMultipleCommits(git_output)
     errors = []
 
     for k in range(len(multiple_commits)):
-        commit = multiple_commits[k]
+        commit_msg_lines = multiple_commits[k].splitlines()
         commit_number = len(multiple_commits) - k
         commit_tag = "Commit " + str(commit_number) + ":"
-        commit_msg_lines = commit.splitlines()
         commit_msg_line_numbers = {}
         for i in range(len(commit_msg_lines)):
             commit_msg_line_numbers[commit_msg_lines[i]] = i + 1
@@ -73,7 +88,7 @@ def _CheckCommitMessageFormatting(input_api, output_api):
         if whitelisted:
             continue
 
-        if commit.find("\t") != -1:
+        if not _CheckTabInCommit(commit_msg_lines):
             errors.append(
                 output_api.PresubmitError(commit_tag + "Tabs are not allowed in commit message."))
 
