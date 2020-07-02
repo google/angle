@@ -173,7 +173,7 @@ foreach(is_shared_library,
     }
 
     if (is_mac) {
-      libs += [
+      frameworks = [
         "AppKit.framework",
         "QuartzCore.framework",
       ]
