@@ -16,6 +16,7 @@
 
 #include <time.h>
 #include <fstream>
+#include <unordered_map>
 
 #include <gtest/gtest.h>
 #include <rapidjson/document.h>
@@ -423,12 +424,12 @@ std::vector<TestIdentifier> GetFilteredTests(std::map<TestIdentifier, FileLine> 
     return FilterTests(fileLinesOut, gtestIDFilter, alsoRunDisabledTests);
 }
 
-std::vector<TestIdentifier> GetShardTests(int shardIndex,
+std::vector<TestIdentifier> GetShardTests(const std::vector<TestIdentifier> &allTests,
+                                          int shardIndex,
                                           int shardCount,
                                           std::map<TestIdentifier, FileLine> *fileLinesOut,
                                           bool alsoRunDisabledTests)
 {
-    std::vector<TestIdentifier> allTests = GetFilteredTests(fileLinesOut, alsoRunDisabledTests);
     std::vector<TestIdentifier> shardTests;
 
     for (int testIndex = shardIndex; testIndex < static_cast<int>(allTests.size());
@@ -649,6 +650,60 @@ void PrintTestOutputSnippet(const TestIdentifier &id,
     }
     std::cout << "\n";
 }
+
+std::string GetConfigNameFromTestIdentifier(const TestIdentifier &id)
+{
+    size_t slashPos = id.testName.find('/');
+    if (slashPos == std::string::npos)
+    {
+        return "default";
+    }
+
+    size_t doubleUnderscorePos = id.testName.find("__");
+    if (doubleUnderscorePos == std::string::npos)
+    {
+        return id.testName.substr(slashPos + 1);
+    }
+    else
+    {
+        return id.testName.substr(slashPos + 1, doubleUnderscorePos - slashPos - 1);
+    }
+}
+
+TestQueue BatchTests(const std::vector<TestIdentifier> &tests, int batchSize)
+{
+    // First sort tests by configuration.
+    std::unordered_map<std::string, std::vector<TestIdentifier>> testsSortedByConfig;
+    for (const TestIdentifier &id : tests)
+    {
+        std::string config = GetConfigNameFromTestIdentifier(id);
+        testsSortedByConfig[config].push_back(id);
+    }
+
+    // Then group into batches by 'batchSize'.
+    TestQueue testQueue;
+    for (const auto &configAndIds : testsSortedByConfig)
+    {
+        const std::vector<TestIdentifier> &configTests = configAndIds.second;
+        std::vector<TestIdentifier> batchTests;
+        for (const TestIdentifier &id : configTests)
+        {
+            if (batchTests.size() >= static_cast<size_t>(batchSize))
+            {
+                testQueue.emplace(std::move(batchTests));
+                ASSERT(batchTests.empty());
+            }
+            batchTests.push_back(id);
+        }
+
+        if (!batchTests.empty())
+        {
+            testQueue.emplace(std::move(batchTests));
+        }
+    }
+
+    return testQueue;
+}
 }  // namespace
 
 TestIdentifier::TestIdentifier() = default;
@@ -709,6 +764,7 @@ TestSuite::TestSuite(int *argc, char **argv)
     : mShardCount(-1),
       mShardIndex(-1),
       mBotMode(false),
+      mDebugTestGroups(false),
       mBatchSize(kDefaultBatchSize),
       mCurrentResultCount(0),
       mTotalResultCount(0),
@@ -716,7 +772,7 @@ TestSuite::TestSuite(int *argc, char **argv)
       mTestTimeout(kDefaultTestTimeout),
       mBatchTimeout(kDefaultBatchTimeout)
 {
-    bool hasFilter            = false;
+    Optional<int> filterArgIndex;
     bool alsoRunDisabledTests = false;
 
 #if defined(ANGLE_PLATFORM_WINDOWS)
@@ -746,7 +802,7 @@ TestSuite::TestSuite(int *argc, char **argv)
 
         if (ParseFlagValue("--gtest_filter=", argv[argIndex]))
         {
-            hasFilter = true;
+            filterArgIndex = argIndex;
         }
         else
         {
@@ -769,7 +825,7 @@ TestSuite::TestSuite(int *argc, char **argv)
 
     if (!mFilterFile.empty())
     {
-        if (hasFilter)
+        if (filterArgIndex.valid())
         {
             printf("Cannot use gtest_filter in conjunction with a filter file.\n");
             exit(1);
@@ -801,34 +857,63 @@ TestSuite::TestSuite(int *argc, char **argv)
         AddArg(argc, argv, mFilterString.c_str());
     }
 
+    // Call into gtest internals to force parameterized test name registration.
+    testing::internal::UnitTestImpl *impl = testing::internal::GetUnitTestImpl();
+    impl->RegisterParameterizedTests();
+
+    // Initialize internal GoogleTest filter arguments so we can call "FilterMatchesTest".
+    testing::internal::ParseGoogleTestFlagsOnly(argc, argv);
+
+    std::vector<TestIdentifier> testSet = GetFilteredTests(&mTestFileLines, alsoRunDisabledTests);
+
     if (mShardCount > 0)
     {
-        // Call into gtest internals to force parameterized test name registration.
-        testing::internal::UnitTestImpl *impl = testing::internal::GetUnitTestImpl();
-        impl->RegisterParameterizedTests();
+        testSet =
+            GetShardTests(testSet, mShardIndex, mShardCount, &mTestFileLines, alsoRunDisabledTests);
 
-        // Initialize internal GoogleTest filter arguments so we can call "FilterMatchesTest".
-        testing::internal::ParseGoogleTestFlagsOnly(argc, argv);
+        if (!mBotMode)
+        {
+            mFilterString = GetTestFilter(testSet);
 
-        mTestQueue = GetShardTests(mShardIndex, mShardCount, &mTestFileLines, alsoRunDisabledTests);
-        mFilterString = GetTestFilter(mTestQueue);
+            if (filterArgIndex.valid())
+            {
+                argv[filterArgIndex.value()] = const_cast<char *>(mFilterString.c_str());
+            }
+            else
+            {
+                // Note that we only add a filter string if we previously deleted a shard
+                // index/count argument. So we will have space for the new filter string in argv.
+                AddArg(argc, argv, mFilterString.c_str());
+            }
 
-        // Note that we only add a filter string if we previously deleted a shader index/count
-        // argument. So we will have space for the new filter string in argv.
-        AddArg(argc, argv, mFilterString.c_str());
+            // Force-re-initialize GoogleTest flags to load the shard filter.
+            testing::internal::ParseGoogleTestFlagsOnly(argc, argv);
+        }
+    }
 
-        // Force-re-initialize GoogleTest flags to load the shard filter.
-        testing::internal::ParseGoogleTestFlagsOnly(argc, argv);
+    if (mBotMode)
+    {
+        // Split up test batches.
+        mTestQueue = BatchTests(testSet, mBatchSize);
+
+        if (mDebugTestGroups)
+        {
+            std::cout << "Test Groups:\n";
+
+            while (!mTestQueue.empty())
+            {
+                const std::vector<TestIdentifier> &tests = mTestQueue.front();
+                std::cout << tests[0] << " (" << static_cast<int>(tests.size()) << ")\n";
+                mTestQueue.pop();
+            }
+
+            exit(0);
+        }
     }
 
     testing::InitGoogleTest(argc, argv);
 
-    if (mShardCount <= 0)
-    {
-        mTestQueue = GetFilteredTests(&mTestFileLines, alsoRunDisabledTests);
-    }
-
-    mTotalResultCount = mTestQueue.size();
+    mTotalResultCount = testSet.size();
 
     if ((mBotMode || !mResultsDirectory.empty()) && mResultsFile.empty())
     {
@@ -879,7 +964,8 @@ bool TestSuite::parseSingleArg(const char *argument)
             ParseStringArg(kResultFileArg, argument, &mResultsFile) ||
             ParseStringArg(kFilterFileArg, argument, &mFilterFile) ||
             ParseStringArg(kHistogramJsonFileArg, argument, &mHistogramJsonFile) ||
-            ParseFlag("--bot-mode", argument, &mBotMode));
+            ParseFlag("--bot-mode", argument, &mBotMode) ||
+            ParseFlag("--debug-test-groups", argument, &mDebugTestGroups));
 }
 
 void TestSuite::onCrashOrTimeout(TestResultType crashOrTimeout)
@@ -1030,6 +1116,8 @@ bool TestSuite::finishProcess(ProcessInfo *processInfo)
     // On unexpected exit, re-queue any unfinished tests.
     if (processInfo->process->getExitCode() != 0)
     {
+        std::vector<TestIdentifier> unfinishedTests;
+
         for (const auto &resultIter : batchResults.results)
         {
             const TestIdentifier &id = resultIter.first;
@@ -1037,9 +1125,11 @@ bool TestSuite::finishProcess(ProcessInfo *processInfo)
 
             if (result.type == TestResultType::Skip)
             {
-                mTestQueue.emplace_back(id);
+                unfinishedTests.push_back(id);
             }
         }
+
+        mTestQueue.emplace(std::move(unfinishedTests));
     }
 
     // Clean up any dirty temporary files.
@@ -1078,11 +1168,8 @@ int TestSuite::run()
         // Spawn a process if needed and possible.
         while (static_cast<int>(mCurrentProcesses.size()) < mMaxProcesses && !mTestQueue.empty())
         {
-            int numTests = std::min<int>(mTestQueue.size(), mBatchSize);
-
-            std::vector<TestIdentifier> testsInBatch;
-            testsInBatch.assign(mTestQueue.begin(), mTestQueue.begin() + numTests);
-            mTestQueue.erase(mTestQueue.begin(), mTestQueue.begin() + numTests);
+            std::vector<TestIdentifier> testsInBatch = mTestQueue.front();
+            mTestQueue.pop();
 
             if (!launchChildTestProcess(testsInBatch))
             {
