@@ -157,6 +157,12 @@ std::string MaskedScissoredClearVariationsTestPrint(
     ParseMaskedScissoredClearVariationsTestParams(params, &clearColor, &clearDepth, &clearStencil,
                                                   &maskColor, &maskDepth, &maskStencil, &scissor);
 
+    if (scissor || clearColor || clearDepth || clearStencil || maskColor || maskDepth ||
+        maskStencil)
+    {
+        out << "_";
+    }
+
     if (scissor)
     {
         out << "_scissored";

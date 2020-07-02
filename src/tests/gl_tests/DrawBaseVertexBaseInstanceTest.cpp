@@ -78,12 +78,12 @@ struct PrintToStringParamName
         const ::testing::TestParamInfo<DrawBaseVertexBaseInstanceTestParams> &info) const
     {
         ::std::stringstream ss;
-        ss << (std::get<3>(info.param) == BufferDataUsageOption::StaticDraw ? "StaticDraw_"
-                                                                            : "DynamicDraw_")
-           << (std::get<2>(info.param) == BaseInstanceOption::UseBaseInstance ? "UseBaseInstance_"
+        ss << std::get<0>(info.param) << "_"
+           << (std::get<3>(info.param) == BufferDataUsageOption::StaticDraw ? "_StaticDraw"
+                                                                            : "_DynamicDraw")
+           << (std::get<2>(info.param) == BaseInstanceOption::UseBaseInstance ? "_UseBaseInstance"
                                                                               : "")
-           << (std::get<1>(info.param) == BaseVertexOption::UseBaseVertex ? "UseBaseVertex_" : "")
-           << std::get<0>(info.param);
+           << (std::get<1>(info.param) == BaseVertexOption::UseBaseVertex ? "_UseBaseVertex" : "");
         return ss.str();
     }
 };

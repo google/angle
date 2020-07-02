@@ -123,7 +123,7 @@ std::string CopyTextureVariationsTestPrint(
     const CopyTextureVariationsTestParams &params = paramsInfo.param;
     std::ostringstream out;
 
-    out << std::get<0>(params) << '_';
+    out << std::get<0>(params) << "__";
 
     switch (std::get<1>(params))
     {

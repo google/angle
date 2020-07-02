@@ -69,9 +69,9 @@ struct PrintToStringParamName
     std::string operator()(const ::testing::TestParamInfo<MultiDrawTestParams> &info) const
     {
         ::std::stringstream ss;
-        ss << (std::get<2>(info.param) == InstancingOption::UseInstancing ? "Instanced_" : "")
-           << (std::get<1>(info.param) == DrawIDOption::UseDrawID ? "DrawID_" : "")
-           << std::get<0>(info.param);
+        ss << std::get<0>(info.param)
+           << (std::get<2>(info.param) == InstancingOption::UseInstancing ? "__Instanced" : "")
+           << (std::get<1>(info.param) == DrawIDOption::UseDrawID ? "__DrawID" : "");
         return ss.str();
     }
 };
