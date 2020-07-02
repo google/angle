@@ -870,6 +870,10 @@ void RendererVk::queryDeviceExtensionFeatures(const ExtensionNameList &deviceExt
     mExternalMemoryHostProperties.sType =
         VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_MEMORY_HOST_PROPERTIES_EXT;
 
+    mShaderFloat16Int8Features = {};
+    mShaderFloat16Int8Features.sType =
+        VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_FLOAT16_INT8_FEATURES;
+
     mExternalFenceProperties       = {};
     mExternalFenceProperties.sType = VK_STRUCTURE_TYPE_EXTERNAL_FENCE_PROPERTIES;
 
@@ -935,6 +939,12 @@ void RendererVk::queryDeviceExtensionFeatures(const ExtensionNameList &deviceExt
         vk::AddToPNextChain(&deviceFeatures, &mSamplerYcbcrConversionFeatures);
     }
 
+    // Query float16/int8 features
+    if (ExtensionFound(VK_KHR_SHADER_FLOAT16_INT8_EXTENSION_NAME, deviceExtensionNames))
+    {
+        vk::AddToPNextChain(&deviceFeatures, &mShaderFloat16Int8Features);
+    }
+
     // Query subgroup properties
     vk::AddToPNextChain(&deviceProperties, &mSubgroupProperties);
 
@@ -979,6 +989,7 @@ void RendererVk::queryDeviceExtensionFeatures(const ExtensionNameList &deviceExt
     mTransformFeedbackFeatures.pNext        = nullptr;
     mIndexTypeUint8Features.pNext           = nullptr;
     mSamplerYcbcrConversionFeatures.pNext   = nullptr;
+    mShaderFloat16Int8Features.pNext        = nullptr;
 }
 
 angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueFamilyIndex)
@@ -1287,6 +1298,12 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
     {
         enabledDeviceExtensions.push_back(VK_KHR_SAMPLER_YCBCR_CONVERSION_EXTENSION_NAME);
         vk::AddToPNextChain(&createInfo, &mSamplerYcbcrConversionFeatures);
+    }
+
+    if (getFeatures().supportsShaderFloat16.enabled)
+    {
+        enabledDeviceExtensions.push_back(VK_KHR_SHADER_FLOAT16_INT8_EXTENSION_NAME);
+        vk::AddToPNextChain(&createInfo, &mShaderFloat16Int8Features);
     }
 
     createInfo.sType                 = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
@@ -1751,6 +1768,26 @@ void RendererVk::initFeatures(DisplayVk *displayVk, const ExtensionNameList &dev
 
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsYUVSamplerConversion,
                             mSamplerYcbcrConversionFeatures.samplerYcbcrConversion != VK_FALSE);
+
+    ANGLE_FEATURE_CONDITION(&mFeatures, supportsShaderFloat16,
+                            mShaderFloat16Int8Features.shaderFloat16 == VK_TRUE);
+
+    // The compute shader used to generate mipmaps uses a 256-wide workgroup.  This path is only
+    // enabled on devices that meet this minimum requirement.  Furthermore,
+    // VK_IMAGE_USAGE_STORAGE_BIT is detrimental to performance on many platforms, on which this
+    // path is not enabled.  Platforms that are known to have better performance with this path are:
+    //
+    // - Nvidia
+    // - AMD
+    //
+    // Additionally, this path is disabled on buggy drivers:
+    //
+    // - AMD/Windows: Unfortunately the trybots use ancient AMD cards and drivers.
+    const uint32_t maxComputeWorkGroupInvocations =
+        mPhysicalDeviceProperties.limits.maxComputeWorkGroupInvocations;
+    ANGLE_FEATURE_CONDITION(
+        &mFeatures, allowGenerateMipmapWithCompute,
+        maxComputeWorkGroupInvocations >= 256 && (isNvidia || (isAMD && !IsWindows())));
 
     angle::PlatformMethods *platform = ANGLEPlatformCurrent();
     platform->overrideFeaturesVk(platform, &mFeatures);

@@ -732,6 +732,8 @@ void InitExternalSemaphoreCapabilitiesFunctions(VkInstance instance);
 
 #endif  // !defined(ANGLE_SHARED_LIBVULKAN)
 
+GLenum CalculateGenerateMipmapFilter(ContextVk *contextVk, const vk::Format &format);
+
 namespace gl_vk
 {
 VkRect2D GetRect(const gl::Rectangle &source);

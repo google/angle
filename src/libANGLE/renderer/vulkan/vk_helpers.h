@@ -1184,6 +1184,7 @@ class ImageHelper final : public Resource, public angle::Subject
                      const VkImageSubresourceLayers &dstSubresources,
                      CommandBuffer *commandBuffer);
 
+    // Generate mipmap from level 0 into the rest of the levels with blit.
     angle::Result generateMipmapsWithBlit(ContextVk *contextVk, GLuint maxLevel);
 
     // Resolve this image into a destination image.  This image should be in the TransferSrc layout.

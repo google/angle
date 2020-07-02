@@ -25,6 +25,7 @@ namespace BlitResolveStencilNoExport_comp   = vk::InternalShader::BlitResolveSte
 namespace OverlayCull_comp                  = vk::InternalShader::OverlayCull_comp;
 namespace OverlayDraw_comp                  = vk::InternalShader::OverlayDraw_comp;
 namespace ConvertIndexIndirectLineLoop_comp = vk::InternalShader::ConvertIndexIndirectLineLoop_comp;
+namespace GenerateMipmap_comp               = vk::InternalShader::GenerateMipmap_comp;
 
 namespace
 {
@@ -48,6 +49,8 @@ constexpr uint32_t kOverlayDrawTextWidgetsBinding            = 1;
 constexpr uint32_t kOverlayDrawGraphWidgetsBinding           = 2;
 constexpr uint32_t kOverlayDrawCulledWidgetsBinding          = 3;
 constexpr uint32_t kOverlayDrawFontBinding                   = 4;
+constexpr uint32_t kGenerateMipmapDestinationBinding         = 0;
+constexpr uint32_t kGenerateMipmapSourceBinding              = 1;
 
 uint32_t GetConvertVertexFlags(const UtilsVk::ConvertVertexParameters &params)
 {
@@ -235,6 +238,39 @@ uint32_t GetConvertIndexIndirectLineLoopFlag(uint32_t indicesBitsWidth)
     }
 }
 
+uint32_t GetGenerateMipmapFlags(ContextVk *contextVk, const vk::Format &format)
+{
+    const angle::Format &actualFormat = format.actualImageFormat();
+
+    uint32_t flags = 0;
+
+    // Note: If bits-per-component is 8 or 16 and float16 is supported in the shader, use that for
+    // faster math.
+    const bool hasShaderFloat16 =
+        contextVk->getRenderer()->getFeatures().supportsShaderFloat16.enabled;
+
+    if (actualFormat.redBits <= 8)
+    {
+        flags = hasShaderFloat16 ? GenerateMipmap_comp::kIsRGBA8_UseHalf
+                                 : GenerateMipmap_comp::kIsRGBA8;
+    }
+    else if (actualFormat.redBits <= 16)
+    {
+        flags = hasShaderFloat16 ? GenerateMipmap_comp::kIsRGBA16_UseHalf
+                                 : GenerateMipmap_comp::kIsRGBA16;
+    }
+    else
+    {
+        flags = GenerateMipmap_comp::kIsRGBA32F;
+    }
+
+    flags |= UtilsVk::GetGenerateMipmapMaxLevels(contextVk) == UtilsVk::kGenerateMipmapMaxLevels
+                 ? GenerateMipmap_comp::kDestSize6
+                 : GenerateMipmap_comp::kDestSize4;
+
+    return flags;
+}
+
 uint32_t GetFormatDefaultChannelMask(const vk::Format &format)
 {
     uint32_t mask = 0;
@@ -274,16 +310,38 @@ void CalculateResolveOffset(const UtilsVk::BlitResolveParameters &params, int32_
 }
 }  // namespace
 
+const uint32_t UtilsVk::kGenerateMipmapMaxLevels;
+
 UtilsVk::ConvertVertexShaderParams::ConvertVertexShaderParams() = default;
 
 UtilsVk::ImageCopyShaderParams::ImageCopyShaderParams() = default;
+
+uint32_t UtilsVk::GetGenerateMipmapMaxLevels(ContextVk *contextVk)
+{
+    RendererVk *renderer = contextVk->getRenderer();
+
+    uint32_t maxPerStageDescriptorStorageImages =
+        renderer->getPhysicalDeviceProperties().limits.maxPerStageDescriptorStorageImages;
+
+    // Vulkan requires that there be support for at least 4 storage images per stage.
+    constexpr uint32_t kMinimumStorageImagesLimit = 4;
+    ASSERT(maxPerStageDescriptorStorageImages >= kMinimumStorageImagesLimit);
+
+    // If fewer than max-levels are supported, use 4 levels (which is the minimum required number
+    // of storage image bindings).
+    return maxPerStageDescriptorStorageImages < kGenerateMipmapMaxLevels
+               ? kMinimumStorageImagesLimit
+               : kGenerateMipmapMaxLevels;
+}
 
 UtilsVk::UtilsVk() = default;
 
 UtilsVk::~UtilsVk() = default;
 
-void UtilsVk::destroy(VkDevice device)
+void UtilsVk::destroy(RendererVk *renderer)
 {
+    VkDevice device = renderer->getDevice();
+
     for (Function f : angle::AllEnums<Function>())
     {
         for (auto &descriptorSetLayout : mDescriptorSetLayouts[f])
@@ -335,6 +393,10 @@ void UtilsVk::destroy(VkDevice device)
     {
         program.destroy(device);
     }
+    for (vk::ShaderProgramHelper &program : mGenerateMipmapPrograms)
+    {
+        program.destroy(device);
+    }
 
     mPointSampler.destroy(device);
     mLinearSampler.destroy(device);
@@ -358,7 +420,7 @@ angle::Result UtilsVk::ensureResourcesInitialized(ContextVk *contextVk,
     {
         descriptorSetDesc.update(currentBinding, setSizes[i].type, setSizes[i].descriptorCount,
                                  descStages, nullptr);
-        currentBinding += setSizes[i].descriptorCount;
+        ++currentBinding;
     }
 
     ANGLE_TRY(renderer->getDescriptorSetLayout(contextVk, descriptorSetDesc,
@@ -571,6 +633,22 @@ angle::Result UtilsVk::ensureOverlayDrawResourcesInitialized(ContextVk *contextV
     }
 
     return ensureSamplersInitialized(contextVk);
+}
+
+angle::Result UtilsVk::ensureGenerateMipmapResourcesInitialized(ContextVk *contextVk)
+{
+    if (mPipelineLayouts[Function::GenerateMipmap].valid())
+    {
+        return angle::Result::Continue;
+    }
+
+    VkDescriptorPoolSize setSizes[2] = {
+        {VK_DESCRIPTOR_TYPE_STORAGE_IMAGE, GetGenerateMipmapMaxLevels(contextVk)},
+        {VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1},
+    };
+
+    return ensureResourcesInitialized(contextVk, Function::GenerateMipmap, setSizes,
+                                      ArraySize(setSizes), sizeof(GenerateMipmapShaderParams));
 }
 
 angle::Result UtilsVk::ensureSamplersInitialized(ContextVk *contextVk)
@@ -1774,6 +1852,84 @@ angle::Result UtilsVk::copyImage(ContextVk *contextVk,
                            &mImageCopyPrograms[flags], &pipelineDesc, descriptorSet, &shaderParams,
                            sizeof(shaderParams), commandBuffer));
     commandBuffer->draw(6, 0);
+    descriptorPoolBinding.reset();
+
+    return angle::Result::Continue;
+}
+
+angle::Result UtilsVk::generateMipmap(ContextVk *contextVk,
+                                      vk::ImageHelper *src,
+                                      const vk::ImageView *srcLevelZeroView,
+                                      vk::ImageHelper *dest,
+                                      const GenerateMipmapDestLevelViews &destLevelViews,
+                                      const vk::Sampler &sampler,
+                                      const GenerateMipmapParameters &params)
+{
+    ANGLE_TRY(ensureGenerateMipmapResourcesInitialized(contextVk));
+
+    const gl::Extents &srcExtents = src->getLevelExtents(params.srcLevel);
+    ASSERT(srcExtents.depth == 1);
+
+    // Each workgroup processes a 64x64 tile of the image.
+    constexpr uint32_t kPixelWorkgroupRatio = 64;
+    const uint32_t workGroupX = UnsignedCeilDivide(srcExtents.width, kPixelWorkgroupRatio);
+    const uint32_t workGroupY = UnsignedCeilDivide(srcExtents.height, kPixelWorkgroupRatio);
+
+    GenerateMipmapShaderParams shaderParams;
+    shaderParams.levelCount      = params.destLevelCount;
+    shaderParams.numWorkGroups   = workGroupX * workGroupY;
+    shaderParams.invSrcExtent[0] = 1.0f / srcExtents.width;
+    shaderParams.invSrcExtent[1] = 1.0f / srcExtents.height;
+
+    uint32_t flags = GetGenerateMipmapFlags(contextVk, src->getFormat());
+
+    VkDescriptorSet descriptorSet;
+    vk::RefCountedDescriptorPoolBinding descriptorPoolBinding;
+    ANGLE_TRY(allocateDescriptorSet(contextVk, Function::GenerateMipmap, &descriptorPoolBinding,
+                                    &descriptorSet));
+
+    VkDescriptorImageInfo destImageInfos[kGenerateMipmapMaxLevels] = {};
+    for (uint32_t level = 0; level < kGenerateMipmapMaxLevels; ++level)
+    {
+        destImageInfos[level].imageView   = destLevelViews[level]->getHandle();
+        destImageInfos[level].imageLayout = dest->getCurrentLayout();
+    }
+
+    VkDescriptorImageInfo srcImageInfo = {};
+    srcImageInfo.imageView             = srcLevelZeroView->getHandle();
+    srcImageInfo.imageLayout           = src->getCurrentLayout();
+    srcImageInfo.sampler               = sampler.getHandle();
+
+    VkWriteDescriptorSet writeInfos[2] = {};
+    writeInfos[0].sType                = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+    writeInfos[0].dstSet               = descriptorSet;
+    writeInfos[0].dstBinding           = kGenerateMipmapDestinationBinding;
+    writeInfos[0].descriptorCount      = GetGenerateMipmapMaxLevels(contextVk);
+    writeInfos[0].descriptorType       = VK_DESCRIPTOR_TYPE_STORAGE_IMAGE;
+    writeInfos[0].pImageInfo           = destImageInfos;
+
+    writeInfos[1].sType           = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+    writeInfos[1].dstSet          = descriptorSet;
+    writeInfos[1].dstBinding      = kGenerateMipmapSourceBinding;
+    writeInfos[1].descriptorCount = 1;
+    writeInfos[1].descriptorType  = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+    writeInfos[1].pImageInfo      = &srcImageInfo;
+
+    vkUpdateDescriptorSets(contextVk->getDevice(), 2, writeInfos, 0, nullptr);
+
+    vk::RefCounted<vk::ShaderAndSerial> *shader = nullptr;
+    ANGLE_TRY(contextVk->getShaderLibrary().getGenerateMipmap_comp(contextVk, flags, &shader));
+
+    // Note: onImageRead/onImageWrite is expected to be called by the caller.  This avoids inserting
+    // barriers between calls for each layer of the image.
+    vk::CommandBuffer *commandBuffer;
+    ANGLE_TRY(contextVk->endRenderPassAndGetCommandBuffer(&commandBuffer));
+
+    ANGLE_TRY(setupProgram(contextVk, Function::GenerateMipmap, shader, nullptr,
+                           &mGenerateMipmapPrograms[flags], nullptr, descriptorSet, &shaderParams,
+                           sizeof(shaderParams), commandBuffer));
+
+    commandBuffer->dispatch(workGroupX, workGroupY, 1);
     descriptorPoolBinding.reset();
 
     return angle::Result::Continue;

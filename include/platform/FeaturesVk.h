@@ -344,6 +344,22 @@ struct FeaturesVk : FeatureSetBase
         "enable_command_processing_thread", FeatureCategory::VulkanFeatures,
         "Enable parallel processing and submission of Vulkan commands in worker thread", &members,
         "http://anglebug.com/4324"};
+
+    // Whether the VkDevice supports the VK_KHR_shader_float16_int8 extension and has the
+    // shaderFloat16 feature.
+    Feature supportsShaderFloat16 = {"supports_shader_float16", FeatureCategory::VulkanFeatures,
+                                     "VkDevice supports the VK_KHR_shader_float16_int8 extension "
+                                     "and has the shaderFloat16 feature",
+                                     &members, "http://anglebug.com/4551"};
+
+    // Some devices don't meet the limits required to perform mipmap generation using the built-in
+    // compute shader.  On some other devices, VK_IMAGE_USAGE_STORAGE_BIT is detrimental to
+    // performance, making this solution impractical.
+    Feature allowGenerateMipmapWithCompute = {
+        "allow_generate_mipmap_with_compute", FeatureCategory::VulkanFeatures,
+        "Use the compute path to generate mipmaps on devices that meet the minimum requirements, "
+        "and the performance is better.",
+        &members, "http://anglebug.com/4551"};
 };
 
 inline FeaturesVk::FeaturesVk()  = default;

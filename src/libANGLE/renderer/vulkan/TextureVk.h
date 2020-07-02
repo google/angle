@@ -278,6 +278,13 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
                                         const gl::Box &sourceArea,
                                         size_t offset);
 
+    // Called from syncState to prepare the image for mipmap generation.
+    void prepareForGenerateMipmap(ContextVk *contextVk);
+
+    // Generate mipmaps from level 0 into the rest of the mips.  This requires the image to have
+    // STORAGE usage.
+    angle::Result generateMipmapsWithCompute(ContextVk *contextVk);
+
     angle::Result generateMipmapsWithCPU(const gl::Context *context);
 
     angle::Result generateMipmapLevelsWithCPU(ContextVk *contextVk,

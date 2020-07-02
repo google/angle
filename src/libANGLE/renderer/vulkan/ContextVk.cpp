@@ -766,7 +766,7 @@ void ContextVk::onDestroy(const gl::Context *context)
 
     mResourceUseList.releaseResourceUses();
 
-    mUtils.destroy(device);
+    mUtils.destroy(mRenderer);
 
     mRenderPassCache.destroy(device);
     mSubmitFence.reset(device);
