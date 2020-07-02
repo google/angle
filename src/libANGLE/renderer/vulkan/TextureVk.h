@@ -391,6 +391,7 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
     }
 
     bool mOwnsImage;
+    bool mRequiresSRGBViews;
 
     gl::TextureType mImageNativeType;
 

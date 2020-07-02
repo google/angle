@@ -172,6 +172,7 @@ void Set3DBaseArrayLayerAndLayerCount(VkImageSubresourceLayers *Subresource)
 TextureVk::TextureVk(const gl::TextureState &state, RendererVk *renderer)
     : TextureImpl(state),
       mOwnsImage(false),
+      mRequiresSRGBViews(false),
       mImageNativeType(gl::TextureType::InvalidEnum),
       mImageLayerOffset(0),
       mImageLevelOffset(0),
@@ -1750,6 +1751,7 @@ angle::Result TextureVk::syncState(const gl::Context *context,
         if (mState.getSRGBOverride() != gl::SrgbOverride::Default)
         {
             mImageCreateFlags |= VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT;
+            mRequiresSRGBViews = true;
         }
     }
 
@@ -2046,8 +2048,9 @@ angle::Result TextureVk::initImageViews(ContextVk *contextVk,
     ANGLE_TRY(mImageViews.initReadViews(contextVk, mState.getType(), *mImage, format, formatSwizzle,
                                         readSwizzle, baseLevel, levelCount, baseLayer, layerCount));
 
-    if ((mImageCreateFlags & VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT) != 0)
+    if (mRequiresSRGBViews)
     {
+        ASSERT((mImageCreateFlags & VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT) != 0);
         ANGLE_TRY(mImageViews.initSRGBReadViews(
             contextVk, mState.getType(), *mImage, format, formatSwizzle, readSwizzle, baseLevel,
             levelCount, baseLayer, layerCount, mImageUsageFlags & ~VK_IMAGE_USAGE_STORAGE_BIT));
