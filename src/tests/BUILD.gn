@@ -367,6 +367,10 @@ if (is_win || is_linux || is_android || is_mac || is_fuchsia) {
       "${angle_root}:libGLESv2",
     ]
 
+    if (build_with_chromium) {
+      data_deps += [ "//testing:run_perf_test" ]
+    }
+
     if (is_win || is_linux) {
       data_deps += [ "${angle_root}/third_party/glmark2:glmark2_angle" ]
     }
