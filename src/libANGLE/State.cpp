@@ -1438,6 +1438,11 @@ void State::setGenerateMipmapHint(GLenum hint)
     mDirtyBits.set(DIRTY_BIT_EXTENDED);
 }
 
+GLenum State::getGenerateMipmapHint() const
+{
+    return mGenerateMipmapHint;
+}
+
 void State::setTextureFilteringHint(GLenum hint)
 {
     mTextureFilteringHint = hint;

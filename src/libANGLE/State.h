@@ -262,6 +262,7 @@ class State : angle::NonCopyable
 
     // Hint setters
     void setGenerateMipmapHint(GLenum hint);
+    GLenum getGenerateMipmapHint() const;
     void setTextureFilteringHint(GLenum hint);
     GLenum getTextureFilteringHint() const;
     void setFragmentShaderDerivativeHint(GLenum hint);

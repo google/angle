@@ -3272,6 +3272,12 @@ angle::Result ImageHelper::generateMipmapsWithBlit(ContextVk *contextVk, GLuint 
     barrier.subresourceRange.layerCount     = mLayerCount;
     barrier.subresourceRange.levelCount     = 1;
 
+    const bool formatSupportsLinearFiltering = contextVk->getRenderer()->hasImageFormatFeatureBits(
+        getFormat().vkImageFormat, VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT);
+    const bool hintFastest = contextVk->getState().getGenerateMipmapHint() == GL_FASTEST;
+    const VkFilter filter =
+        formatSupportsLinearFiltering && !hintFastest ? VK_FILTER_LINEAR : VK_FILTER_NEAREST;
+
     for (uint32_t mipLevel = 1; mipLevel <= maxLevel; mipLevel++)
     {
         int32_t nextMipWidth  = std::max<int32_t>(1, mipWidth >> 1);
@@ -3305,13 +3311,8 @@ angle::Result ImageHelper::generateMipmapsWithBlit(ContextVk *contextVk, GLuint 
         mipHeight = nextMipHeight;
         mipDepth  = nextMipDepth;
 
-        bool formatSupportsLinearFiltering = contextVk->getRenderer()->hasImageFormatFeatureBits(
-            getFormat().vkImageFormat, VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT);
-
-        commandBuffer->blitImage(
-            mImage, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, mImage,
-            VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &blit,
-            formatSupportsLinearFiltering ? VK_FILTER_LINEAR : VK_FILTER_NEAREST);
+        commandBuffer->blitImage(mImage, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, mImage,
+                                 VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &blit, filter);
     }
 
     // Transition the last mip level to the same layout as all the other ones, so we can declare
