@@ -286,6 +286,8 @@ std::unique_ptr<LinkEvent> ProgramVk::link(const gl::Context *context,
                                            const gl::ProgramLinkedResources &resources,
                                            gl::InfoLog &infoLog)
 {
+    ANGLE_TRACE_EVENT0("gpu.angle", "ProgramVk::link");
+
     ContextVk *contextVk = vk::GetImpl(context);
     // Link resources before calling GetShaderSource to make sure they are ready for the set/binding
     // assignment done in that function.

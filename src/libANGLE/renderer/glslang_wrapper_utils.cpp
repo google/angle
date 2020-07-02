@@ -36,6 +36,7 @@ ANGLE_REENABLE_EXTRA_SEMI_WARNING
 #include "common/utilities.h"
 #include "libANGLE/Caps.h"
 #include "libANGLE/ProgramLinkedResources.h"
+#include "libANGLE/trace.h"
 
 #define ANGLE_GLSLANG_CHECK(CALLBACK, TEST, ERR) \
     do                                           \
@@ -97,6 +98,29 @@ void GetBuiltInResourcesFromCaps(const gl::Caps &caps, TBuiltInResource *outBuil
     outBuiltInResources->maxVertexOutputComponents        = caps.maxVertexOutputComponents;
     outBuiltInResources->maxVertexUniformVectors          = caps.maxVertexUniformVectors;
     outBuiltInResources->maxClipDistances                 = caps.maxClipDistances;
+}
+
+// Run at startup to warm up glslang's internals to avoid hitches on first shader compile.
+void GlslangWarmup()
+{
+    ANGLE_TRACE_EVENT0("gpu.angle,startup", "GlslangWarmup");
+
+    EShMessages messages = static_cast<EShMessages>(EShMsgSpvRules | EShMsgVulkanRules);
+    // EShMessages messages = EShMsgDefault;
+
+    TBuiltInResource builtInResources(glslang::DefaultTBuiltInResource);
+    glslang::TShader dummyShader(EShLangVertex);
+
+    const char *kShaderString = R"(#version 450 core
+        void main(){}
+    )";
+    const int kShaderLength   = static_cast<int>(strlen(kShaderString));
+
+    dummyShader.setStringsWithLengths(&kShaderString, &kShaderLength, 1);
+    dummyShader.setEntryPoint("main");
+
+    bool result = dummyShader.parse(&builtInResources, 450, ECoreProfile, false, false, messages);
+    ASSERT(result);
 }
 
 // Test if there are non-zero indices in the uniform name, returning false in that case.  This
@@ -1704,6 +1728,7 @@ void GlslangInitialize()
 {
     int result = ShInitialize();
     ASSERT(result != 0);
+    GlslangWarmup();
 }
 
 void GlslangRelease()
@@ -1937,6 +1962,8 @@ angle::Result GlslangGetShaderSpirvCode(const GlslangErrorCallback &callback,
             continue;
         }
 
+        ANGLE_TRACE_EVENT0("gpu.angle", "GlslangGetShaderSpirvCode TShader::parse");
+
         const char *shaderString = shaderSources[shaderType].c_str();
         int shaderLength         = static_cast<int>(shaderSources[shaderType].size());
 
@@ -1976,4 +2003,5 @@ angle::Result GlslangGetShaderSpirvCode(const GlslangErrorCallback &callback,
 
     return angle::Result::Continue;
 }
+
 }  // namespace rx
