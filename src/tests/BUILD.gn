@@ -166,6 +166,10 @@ if (is_win || is_linux || is_mac || is_android || is_fuchsia) {
       "$angle_root:angle_image_util",
     ]
 
+    if (is_android) {
+      include_dirs += [ "${android_ndk_root}/sysroot/usr/includes" ]
+    }
+
     data_deps = [
       "$angle_root:libEGL",
       "$angle_root:libGLESv1_CM",
