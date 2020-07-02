@@ -427,8 +427,6 @@ RendererVk::RendererVk()
       mDebugUtilsMessenger(VK_NULL_HANDLE),
       mDebugReportCallback(VK_NULL_HANDLE),
       mPhysicalDevice(VK_NULL_HANDLE),
-      mExternalFenceProperties{},
-      mExternalSemaphoreProperties{},
       mCurrentQueueFamilyIndex(std::numeric_limits<uint32_t>::max()),
       mMaxVertexAttribDivisor(1),
       mMaxVertexAttribStride(0),
@@ -875,12 +873,18 @@ void RendererVk::queryDeviceExtensionFeatures(const ExtensionNameList &deviceExt
     mIndexTypeUint8Features       = {};
     mIndexTypeUint8Features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_INDEX_TYPE_UINT8_FEATURES_EXT;
 
-    mPhysicalDeviceSubgroupProperties       = {};
-    mPhysicalDeviceSubgroupProperties.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES;
+    mSubgroupProperties       = {};
+    mSubgroupProperties.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES;
 
-    mPhysicalDeviceExternalMemoryHostProperties = {};
-    mPhysicalDeviceExternalMemoryHostProperties.sType =
+    mExternalMemoryHostProperties = {};
+    mExternalMemoryHostProperties.sType =
         VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_MEMORY_HOST_PROPERTIES_EXT;
+
+    mExternalFenceProperties       = {};
+    mExternalFenceProperties.sType = VK_STRUCTURE_TYPE_EXTERNAL_FENCE_PROPERTIES;
+
+    mExternalSemaphoreProperties       = {};
+    mExternalSemaphoreProperties.sType = VK_STRUCTURE_TYPE_EXTERNAL_SEMAPHORE_PROPERTIES;
 
     if (!vkGetPhysicalDeviceProperties2KHR || !vkGetPhysicalDeviceFeatures2KHR)
     {
@@ -928,11 +932,11 @@ void RendererVk::queryDeviceExtensionFeatures(const ExtensionNameList &deviceExt
     // Query external memory host properties
     if (ExtensionFound(VK_EXT_EXTERNAL_MEMORY_HOST_EXTENSION_NAME, deviceExtensionNames))
     {
-        vk::AddToPNextChain(&deviceProperties, &mPhysicalDeviceExternalMemoryHostProperties);
+        vk::AddToPNextChain(&deviceProperties, &mExternalMemoryHostProperties);
     }
 
     // Query subgroup properties
-    vk::AddToPNextChain(&deviceProperties, &mPhysicalDeviceSubgroupProperties);
+    vk::AddToPNextChain(&deviceProperties, &mSubgroupProperties);
 
     vkGetPhysicalDeviceFeatures2KHR(mPhysicalDevice, &deviceFeatures);
     vkGetPhysicalDeviceProperties2KHR(mPhysicalDevice, &deviceProperties);
@@ -940,8 +944,6 @@ void RendererVk::queryDeviceExtensionFeatures(const ExtensionNameList &deviceExt
     // Fence properties
     if (mFeatures.supportsExternalFenceCapabilities.enabled)
     {
-        mExternalFenceProperties.sType = VK_STRUCTURE_TYPE_EXTERNAL_FENCE_PROPERTIES;
-
         VkPhysicalDeviceExternalFenceInfo externalFenceInfo = {};
         externalFenceInfo.sType      = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_FENCE_INFO;
         externalFenceInfo.handleType = VK_EXTERNAL_FENCE_HANDLE_TYPE_SYNC_FD_BIT_KHR;
@@ -953,8 +955,6 @@ void RendererVk::queryDeviceExtensionFeatures(const ExtensionNameList &deviceExt
     // Semaphore properties
     if (mFeatures.supportsExternalSemaphoreCapabilities.enabled)
     {
-        mExternalSemaphoreProperties.sType = VK_STRUCTURE_TYPE_EXTERNAL_SEMAPHORE_PROPERTIES;
-
         VkPhysicalDeviceExternalSemaphoreInfo externalSemaphoreInfo = {};
         externalSemaphoreInfo.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_SEMAPHORE_INFO;
         externalSemaphoreInfo.handleType = VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_SYNC_FD_BIT_KHR;
@@ -964,14 +964,14 @@ void RendererVk::queryDeviceExtensionFeatures(const ExtensionNameList &deviceExt
     }
 
     // Clean up pNext chains
-    mLineRasterizationFeatures.pNext                  = nullptr;
-    mProvokingVertexFeatures.pNext                    = nullptr;
-    mVertexAttributeDivisorFeatures.pNext             = nullptr;
-    mVertexAttributeDivisorProperties.pNext           = nullptr;
-    mTransformFeedbackFeatures.pNext                  = nullptr;
-    mIndexTypeUint8Features.pNext                     = nullptr;
-    mPhysicalDeviceSubgroupProperties.pNext           = nullptr;
-    mPhysicalDeviceExternalMemoryHostProperties.pNext = nullptr;
+    mLineRasterizationFeatures.pNext        = nullptr;
+    mProvokingVertexFeatures.pNext          = nullptr;
+    mVertexAttributeDivisorFeatures.pNext   = nullptr;
+    mVertexAttributeDivisorProperties.pNext = nullptr;
+    mTransformFeedbackFeatures.pNext        = nullptr;
+    mIndexTypeUint8Features.pNext           = nullptr;
+    mSubgroupProperties.pNext               = nullptr;
+    mExternalMemoryHostProperties.pNext     = nullptr;
 }
 
 angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueFamilyIndex)
@@ -1268,7 +1268,7 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
     {
         enabledDeviceExtensions.push_back(VK_EXT_EXTERNAL_MEMORY_HOST_EXTENSION_NAME);
         mMinImportedHostPointerAlignment =
-            mPhysicalDeviceExternalMemoryHostProperties.minImportedHostPointerAlignment;
+            mExternalMemoryHostProperties.minImportedHostPointerAlignment;
 #if !defined(ANGLE_SHARED_LIBVULKAN)
         InitExternalMemoryHostFunctions(mInstance);
 #endif  // !defined(ANGLE_SHARED_LIBVULKAN)
