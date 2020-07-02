@@ -184,19 +184,19 @@ class CopyTexture3DTest : public ANGLETest
         {
             uint32_t tolerance = 1;
             // The destination formats may be emulated, so the precision may be higher than
-            // required.  Increase the tolerance to 2^(8-width) / 2.  8 is for the 8-bit format
-            // used for emulation, and divide by 2 because the value is expected to round to
-            // nearest.
+            // required.  Increase the tolerance to 2^(8-width).  8 is for the 8-bit format used for
+            // emulation.  Even though Vulkan recommends round to nearest, it's not a requirement
+            // so the full-range of precision is used as tolerance.
             switch (destType)
             {
                 case GL_UNSIGNED_SHORT_5_6_5:
-                    tolerance = 4;
+                    tolerance = 8;
                     break;
                 case GL_UNSIGNED_SHORT_5_5_5_1:
-                    tolerance = 4;
+                    tolerance = 8;
                     break;
                 case GL_UNSIGNED_SHORT_4_4_4_4:
-                    tolerance = 8;
+                    tolerance = 16;
                     break;
                 default:
                     break;
@@ -204,13 +204,13 @@ class CopyTexture3DTest : public ANGLETest
             switch (destInternalFormat)
             {
                 case GL_RGB565:
-                    tolerance = 4;
+                    tolerance = 8;
                     break;
                 case GL_RGB5_A1:
-                    tolerance = 4;
+                    tolerance = 8;
                     break;
                 case GL_RGBA4:
-                    tolerance = 8;
+                    tolerance = 16;
                     break;
                 default:
                     break;
@@ -228,13 +228,6 @@ class CopyTexture3DTest : public ANGLETest
                     break;
                 default:
                     break;
-            }
-
-            if (tolerance != 1 && (IsNVIDIA() || IsAndroid()) && IsVulkan())
-            {
-                // Note: on Nvidia/Vulkan, the round is not done to nearest in all cases, so bring
-                // the tolerance to the full-range of precision.  http://anglebug.com/4742
-                tolerance *= 2;
             }
 
             GLColor actual;
