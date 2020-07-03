@@ -2596,9 +2596,6 @@ TEST_P(Texture2DBaseMaxTestES3, ExtendMipChainAfterRedefine)
     // http://anglebug.com/4704
     ANGLE_SKIP_TEST_IF(IsVulkan());
 
-    // Mip 0 data seems to have disappeared in this configuration! http://anglebug.com/4698
-    ANGLE_SKIP_TEST_IF(IsOpenGL() && IsNVIDIA() && IsLinux());
-
     EXPECT_PIXEL_COLOR_EQ(0, 0, kMipColors[0]);
 }
 
