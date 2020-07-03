@@ -15,12 +15,6 @@
 #include "libANGLE/Context.h"
 #include "libANGLE/Framebuffer.h"
 
-#define ANGLE_STATIC_ASSERT_SIZE(className, classSize) \
-    static_assert(                                                       \
-        sizeof(className) == classSize,                                  \
-        ANGLE_STRINGIFY(className) " class has changed. Please "         \
-            "update its serialize method in " __FILE__);
-
 namespace angle
 {
 
@@ -57,10 +51,6 @@ Result SerializeFramebuffer(gl::Context *context,
                             gl::BinaryOutputStream *bos,
                             gl::Framebuffer *framebuffer)
 {
-#if defined(ANGLE_IS_64_BIT_CPU) && (defined(ANGLE_IS_WIN) || defined(ANGLE_IS_LINUX))
-    constexpr size_t kSizeOfGlFramebuffer = 744;
-    ANGLE_STATIC_ASSERT_SIZE(gl::Framebuffer, kSizeOfGlFramebuffer)
-#endif
     return SerializeFramebufferState(context, bos, framebuffer, framebuffer->getState());
 }
 
@@ -69,10 +59,6 @@ Result SerializeFramebufferState(gl::Context *context,
                                  gl::Framebuffer *framebuffer,
                                  const gl::FramebufferState &framebufferState)
 {
-#if defined(ANGLE_IS_64_BIT_CPU) && (defined(ANGLE_IS_WIN) || defined(ANGLE_IS_LINUX))
-    constexpr size_t kSizeOfGlFramebufferState = 488;
-    ANGLE_STATIC_ASSERT_SIZE(gl::FramebufferState, kSizeOfGlFramebufferState)
-#endif
     bos->writeInt(framebufferState.id().value);
     bos->writeString(framebufferState.getLabel());
     bos->writeIntVector(framebufferState.getDrawBufferStates());
@@ -107,10 +93,6 @@ Result SerializeFramebufferAttachment(gl::Context *context,
                                       gl::Framebuffer *framebuffer,
                                       const gl::FramebufferAttachment &framebufferAttachment)
 {
-#if defined(ANGLE_IS_64_BIT_CPU) && (defined(ANGLE_IS_WIN) || defined(ANGLE_IS_LINUX))
-    constexpr size_t kSizeOfGlFramebufferAttachment = 48;
-    ANGLE_STATIC_ASSERT_SIZE(gl::FramebufferAttachment, kSizeOfGlFramebufferAttachment)
-#endif
     bos->writeInt(framebufferAttachment.type());
     // serialize target variable
     bos->writeInt(framebufferAttachment.getBinding());
@@ -134,10 +116,6 @@ Result SerializeFramebufferAttachment(gl::Context *context,
 
 void SerializeImageIndex(gl::BinaryOutputStream *bos, const gl::ImageIndex &imageIndex)
 {
-    // size of ImageIndex on 64-bit and 86-bit systems are the same
-    constexpr size_t kSizeOfGlImageIndex = 16;
-    ANGLE_STATIC_ASSERT_SIZE(gl::ImageIndex, kSizeOfGlImageIndex)
-
     bos->writeEnum(imageIndex.getType());
     bos->writeInt(imageIndex.getLevelIndex());
     bos->writeInt(imageIndex.getLayerIndex());
