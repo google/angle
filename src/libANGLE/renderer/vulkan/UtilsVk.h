@@ -7,7 +7,6 @@
 //    Defines the UtilsVk class, a helper for various internal draw/dispatch utilities such as
 //    buffer clear and copy, image clear and copy, texture mip map generation, etc.
 //
-//    - Buffer clear: Implemented, but no current users
 //    - Convert index buffer:
 //      * Used by VertexArrayVk::convertIndexBufferGPU() to convert a ubyte element array to ushort
 //    - Convert vertex buffer:
@@ -158,9 +157,6 @@ class UtilsVk : angle::NonCopyable
         uint32_t subgroupSize[2];
     };
 
-    angle::Result clearBuffer(ContextVk *contextVk,
-                              vk::BufferHelper *dest,
-                              const ClearParameters &params);
     angle::Result convertIndexBuffer(ContextVk *contextVk,
                                      vk::BufferHelper *dest,
                                      vk::BufferHelper *src,
@@ -241,16 +237,6 @@ class UtilsVk : angle::NonCopyable
 
   private:
     ANGLE_ENABLE_STRUCT_PADDING_WARNINGS
-
-    struct BufferUtilsShaderParams
-    {
-        // Structure matching PushConstants in BufferUtils.comp
-        uint32_t destOffset          = 0;
-        uint32_t size                = 0;
-        uint32_t srcOffset           = 0;
-        uint32_t padding             = 0;
-        VkClearColorValue clearValue = {};
-    };
 
     struct ConvertIndexShaderParams
     {
@@ -386,18 +372,17 @@ class UtilsVk : angle::NonCopyable
 
         // Functions implemented in compute
         ComputeStartIndex          = 3,  // Special value to separate draw and dispatch functions.
-        BufferClear                = 3,
-        ConvertIndexBuffer         = 4,
-        ConvertVertexBuffer        = 5,
-        BlitResolveStencilNoExport = 6,
-        OverlayCull                = 7,
-        OverlayDraw                = 8,
-        ConvertIndexIndirectBuffer = 9,
-        ConvertIndexIndirectLineLoopBuffer = 10,
-        ConvertIndirectLineLoopBuffer      = 11,
+        ConvertIndexBuffer         = 3,
+        ConvertVertexBuffer        = 4,
+        BlitResolveStencilNoExport = 5,
+        OverlayCull                = 6,
+        OverlayDraw                = 7,
+        ConvertIndexIndirectBuffer = 8,
+        ConvertIndexIndirectLineLoopBuffer = 9,
+        ConvertIndirectLineLoopBuffer      = 10,
 
-        InvalidEnum = 12,
-        EnumCount   = 12,
+        InvalidEnum = 11,
+        EnumCount   = 11,
     };
 
     // Common function that creates the pipeline for the specified function, binds it and prepares
@@ -429,7 +414,6 @@ class UtilsVk : angle::NonCopyable
 
     // Initializers corresponding to functions, calling into ensureResourcesInitialized with the
     // appropriate parameters.
-    angle::Result ensureBufferClearResourcesInitialized(ContextVk *contextVk);
     angle::Result ensureConvertIndexResourcesInitialized(ContextVk *contextVk);
     angle::Result ensureConvertIndexIndirectResourcesInitialized(ContextVk *contextVk);
     angle::Result ensureConvertIndexIndirectLineLoopResourcesInitialized(ContextVk *contextVk);
@@ -470,7 +454,6 @@ class UtilsVk : angle::NonCopyable
     angle::PackedEnumMap<Function, vk::BindingPointer<vk::PipelineLayout>> mPipelineLayouts;
     angle::PackedEnumMap<Function, vk::DynamicDescriptorPool> mDescriptorPools;
 
-    vk::ShaderProgramHelper mBufferUtilsPrograms[vk::InternalShader::BufferUtils_comp::kArrayLen];
     vk::ShaderProgramHelper mConvertIndexPrograms[vk::InternalShader::ConvertIndex_comp::kArrayLen];
     vk::ShaderProgramHelper mConvertIndexIndirectLineLoopPrograms
         [vk::InternalShader::ConvertIndexIndirectLineLoop_comp::kArrayLen];

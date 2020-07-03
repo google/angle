@@ -48,26 +48,6 @@ enum flags
 constexpr size_t kArrayLen = 0x00000004;
 }  // namespace BlitResolveStencilNoExport_comp
 
-namespace BufferUtils_comp
-{
-enum flags
-{
-    kIsAligned = 0x00000001,
-};
-enum Function
-{
-    kIsClear = 0x00000000,
-    kIsCopy  = 0x00000002,
-};
-enum Format
-{
-    kIsFloat = 0x00000000,
-    kIsSint  = 0x00000004,
-    kIsUint  = 0x00000008,
-};
-constexpr size_t kArrayLen = 0x0000000C;
-}  // namespace BufferUtils_comp
-
 namespace ConvertIndex_comp
 {
 enum flags
@@ -202,9 +182,6 @@ class ShaderLibrary final : angle::NonCopyable
     angle::Result getBlitResolveStencilNoExport_comp(Context *context,
                                                      uint32_t shaderFlags,
                                                      RefCounted<ShaderAndSerial> **shaderOut);
-    angle::Result getBufferUtils_comp(Context *context,
-                                      uint32_t shaderFlags,
-                                      RefCounted<ShaderAndSerial> **shaderOut);
     angle::Result getConvertIndex_comp(Context *context,
                                        uint32_t shaderFlags,
                                        RefCounted<ShaderAndSerial> **shaderOut);
@@ -238,8 +215,6 @@ class ShaderLibrary final : angle::NonCopyable
         mBlitResolve_frag_shaders[InternalShader::BlitResolve_frag::kArrayLen];
     RefCounted<ShaderAndSerial> mBlitResolveStencilNoExport_comp_shaders
         [InternalShader::BlitResolveStencilNoExport_comp::kArrayLen];
-    RefCounted<ShaderAndSerial>
-        mBufferUtils_comp_shaders[InternalShader::BufferUtils_comp::kArrayLen];
     RefCounted<ShaderAndSerial>
         mConvertIndex_comp_shaders[InternalShader::ConvertIndex_comp::kArrayLen];
     RefCounted<ShaderAndSerial> mConvertIndexIndirectLineLoop_comp_shaders

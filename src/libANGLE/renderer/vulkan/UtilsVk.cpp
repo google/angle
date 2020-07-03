@@ -17,7 +17,6 @@
 namespace rx
 {
 
-namespace BufferUtils_comp                  = vk::InternalShader::BufferUtils_comp;
 namespace ConvertVertex_comp                = vk::InternalShader::ConvertVertex_comp;
 namespace ImageClear_frag                   = vk::InternalShader::ImageClear_frag;
 namespace ImageCopy_frag                    = vk::InternalShader::ImageCopy_frag;
@@ -32,7 +31,6 @@ namespace
 // All internal shaders assume there is only one descriptor set, indexed at 0
 constexpr uint32_t kSetIndex = 0;
 
-constexpr uint32_t kBufferClearOutputBinding                 = 0;
 constexpr uint32_t kConvertIndexDestinationBinding           = 0;
 constexpr uint32_t kConvertVertexDestinationBinding          = 0;
 constexpr uint32_t kConvertVertexSourceBinding               = 1;
@@ -50,27 +48,6 @@ constexpr uint32_t kOverlayDrawTextWidgetsBinding            = 1;
 constexpr uint32_t kOverlayDrawGraphWidgetsBinding           = 2;
 constexpr uint32_t kOverlayDrawCulledWidgetsBinding          = 3;
 constexpr uint32_t kOverlayDrawFontBinding                   = 4;
-
-uint32_t GetBufferUtilsFlags(size_t dispatchSize, const vk::Format &format)
-{
-    uint32_t flags                    = dispatchSize % 64 == 0 ? BufferUtils_comp::kIsAligned : 0;
-    const angle::Format &bufferFormat = format.actualBufferFormat();
-
-    if (bufferFormat.isSint())
-    {
-        flags |= BufferUtils_comp::kIsSint;
-    }
-    else if (bufferFormat.isUint())
-    {
-        flags |= BufferUtils_comp::kIsUint;
-    }
-    else
-    {
-        flags |= BufferUtils_comp::kIsFloat;
-    }
-
-    return flags;
-}
 
 uint32_t GetConvertVertexFlags(const UtilsVk::ConvertVertexParameters &params)
 {
@@ -317,10 +294,6 @@ void UtilsVk::destroy(VkDevice device)
         mDescriptorPools[f].destroy(device);
     }
 
-    for (vk::ShaderProgramHelper &program : mBufferUtilsPrograms)
-    {
-        program.destroy(device);
-    }
     for (vk::ShaderProgramHelper &program : mConvertIndexPrograms)
     {
         program.destroy(device);
@@ -415,21 +388,6 @@ angle::Result UtilsVk::ensureResourcesInitialized(ContextVk *contextVk,
     }
 
     return angle::Result::Continue;
-}
-
-angle::Result UtilsVk::ensureBufferClearResourcesInitialized(ContextVk *contextVk)
-{
-    if (mPipelineLayouts[Function::BufferClear].valid())
-    {
-        return angle::Result::Continue;
-    }
-
-    VkDescriptorPoolSize setSizes[1] = {
-        {VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER, 1},
-    };
-
-    return ensureResourcesInitialized(contextVk, Function::BufferClear, setSizes,
-                                      ArraySize(setSizes), sizeof(BufferUtilsShaderParams));
 }
 
 angle::Result UtilsVk::ensureConvertIndexResourcesInitialized(ContextVk *contextVk)
@@ -727,56 +685,6 @@ angle::Result UtilsVk::setupProgram(ContextVk *contextVk,
         commandBuffer->pushConstants(pipelineLayout.get(), pushConstantsShaderStage, 0,
                                      static_cast<uint32_t>(pushConstantsSize), pushConstants);
     }
-
-    return angle::Result::Continue;
-}
-
-angle::Result UtilsVk::clearBuffer(ContextVk *contextVk,
-                                   vk::BufferHelper *dest,
-                                   const ClearParameters &params)
-{
-    ANGLE_TRY(ensureBufferClearResourcesInitialized(contextVk));
-
-    vk::CommandBuffer *commandBuffer;
-    // Tell the context dest that we are writing to dest.
-    ANGLE_TRY(contextVk->onBufferComputeShaderWrite(dest));
-    ANGLE_TRY(contextVk->endRenderPassAndGetCommandBuffer(&commandBuffer));
-
-    const vk::Format &destFormat = dest->getViewFormat();
-
-    uint32_t flags = BufferUtils_comp::kIsClear | GetBufferUtilsFlags(params.size, destFormat);
-
-    BufferUtilsShaderParams shaderParams;
-    shaderParams.destOffset = static_cast<uint32_t>(params.offset);
-    shaderParams.size       = static_cast<uint32_t>(params.size);
-    shaderParams.clearValue = params.clearValue;
-
-    VkDescriptorSet descriptorSet;
-    vk::RefCountedDescriptorPoolBinding descriptorPoolBinding;
-    ANGLE_TRY(allocateDescriptorSet(contextVk, Function::BufferClear, &descriptorPoolBinding,
-                                    &descriptorSet));
-
-    VkWriteDescriptorSet writeInfo = {};
-
-    writeInfo.sType            = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-    writeInfo.dstSet           = descriptorSet;
-    writeInfo.dstBinding       = kBufferClearOutputBinding;
-    writeInfo.descriptorCount  = 1;
-    writeInfo.descriptorType   = VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER;
-    writeInfo.pTexelBufferView = dest->getBufferView().ptr();
-
-    vkUpdateDescriptorSets(contextVk->getDevice(), 1, &writeInfo, 0, nullptr);
-
-    vk::RefCounted<vk::ShaderAndSerial> *shader = nullptr;
-    ANGLE_TRY(contextVk->getShaderLibrary().getBufferUtils_comp(contextVk, flags, &shader));
-
-    ANGLE_TRY(setupProgram(contextVk, Function::BufferClear, shader, nullptr,
-                           &mBufferUtilsPrograms[flags], nullptr, descriptorSet, &shaderParams,
-                           sizeof(shaderParams), commandBuffer));
-
-    commandBuffer->dispatch(UnsignedCeilDivide(static_cast<uint32_t>(params.size), 64), 1, 1);
-
-    descriptorPoolBinding.reset();
 
     return angle::Result::Continue;
 }
