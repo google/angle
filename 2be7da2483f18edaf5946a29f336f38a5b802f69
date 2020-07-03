@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "31e90f55_18e8bc91",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2053,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-07-03T01:19:41Z",
+      "side": 1,
+      "message": "Responding here. The issue is that if MUTABLE is added for reasons other than SrgbOverride, then `initSRGBReadViews` is called but it shouldn\u0027t.\n\nIf you want to see something fail, you can take the following change (without this change):\n\n- https://chromium-review.googlesource.com/c/angle/angle/+/2278713\n- Apply this patch:\n\n        if (!renderer-\u003egetFeatures().avoidStorageFlagAfterGenerateMipmap.enabled \u0026\u0026\n            CanGenerateMipmapWithCompute(renderer, imageType, format, levelCount, samples))\n        {\n            mImageUsageFlags |\u003d VK_IMAGE_USAGE_STORAGE_BIT;\n+           mImageCreateFlags |\u003d VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT;\n        }\n\n- Run Texture2DTestES3.GenerateMipmapAndBaseLevelLUMA/ES3_Vulkan on an Nvidia GPU. Otherwise try --gtest_filter\u003d*Mip*Vulkan and see if anything fails. The validation error I get is:\n\nDebugUtilsMessenger(310): [ VUID-VkImageViewCreateInfo-None-02273 ] Validation Error: [ VUID-VkImageViewCreateInfo-None-02273 ] Object 0: handle \u003d 0x280000000028, type \u003d VK_OBJECT_TYPE_IMAGE; | MessageID \u003d 0x3f948fd1 | vkCreateImageView(): pCreateInfo-\u003eformat VK_FORMAT_R8G8_SRGB with tiling VK_IMAGE_TILING_OPTIMAL has no supported format features on this physical device. The Vulkan spec states: The format features of the resultant image view must contain at least one bit (https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VUID-VkImageViewCreateInfo-None-02273)\n                            Object: 0x280000000028 (type \u003d Image(10))",
+      "revId": "2be7da2483f18edaf5946a29f336f38a5b802f69",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
