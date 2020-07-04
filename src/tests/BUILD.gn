@@ -276,7 +276,7 @@ if (is_win || is_linux || is_android || is_mac) {
     if (angle_enable_vulkan && !is_mac) {
       sources += angle_white_box_perf_tests_vulkan_sources
       deps += [
-        "$angle_glslang_dir:glslang_sources",
+        "$angle_glslang_dir:glslang_lib_sources",
         "$angle_root/src/common/vulkan:angle_vulkan_entry_points",
       ]
     }
@@ -1310,7 +1310,7 @@ if (build_angle_deqp_tests && !is_fuchsia) {
     public_deps = [
       ":angle_deqp_framework_egl",
       ":angle_deqp_glshared",
-      "${angle_glslang_dir}:glslang_sources",
+      "${angle_glslang_dir}:glslang_lib_sources",
       "${angle_spirv_tools_dir}:spvtools_val",
     ]
     public_configs = [ ":angle_deqp_khr_common_config" ]
