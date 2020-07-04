@@ -371,11 +371,6 @@ template("angle_test") {
     }
     data = invoker.data + [
              "$angle_root/scripts/run_gtest_angle_test.py",
-
-             # TODO(anglebug.com/3162): Remove the reference to the
-             # //testing/scripts copy of run_gtest_angle_test.py.
-             "//testing/scripts/run_gtest_angle_test.py",
-
              "//testing/scripts/common.py",
              "//testing/xvfb.py",
            ]
