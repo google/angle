@@ -9,10 +9,9 @@
 
 using namespace rx::mtl_shader;
 
-// function_constant(0-3) is already used by gen_indices.metal
-constant bool kPremultiplyAlpha [[function_constant(4)]];
-constant bool kUnmultiplyAlpha [[function_constant(5)]];
-constant int kSourceTextureType [[function_constant(6)]];   // Source texture type.
+constant bool kPremultiplyAlpha [[function_constant(1)]];
+constant bool kUnmultiplyAlpha [[function_constant(2)]];
+constant int kSourceTextureType [[function_constant(3)]];   // Source texture type.
 constant bool kSourceTextureType2D      = kSourceTextureType == kTextureType2D;
 constant bool kSourceTextureType2DArray = kSourceTextureType == kTextureType2DArray;
 constant bool kSourceTextureType2DMS    = kSourceTextureType == kTextureType2DMultisample;

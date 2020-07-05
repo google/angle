@@ -54,9 +54,8 @@ _metal_backend_sources = [
   "mtl_state_cache.mm",
   "mtl_utils.h",
   "mtl_utils.mm",
-  "shaders/compiled/mtl_default_shaders.inc",
+  "shaders/compiled/mtl_default_shaders_autogen.inc",
   "shaders/constants.h",
-  "shaders/mtl_default_shaders_src_autogen.inc",
 ]
 
 config("angle_metal_backend_config") {

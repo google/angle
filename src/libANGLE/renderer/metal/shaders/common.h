@@ -26,8 +26,4 @@ using namespace metal;
 // Full screen triangle's vertices
 constant float2 gCorners[3] = {float2(-1.0f, -1.0f), float2(3.0f, -1.0f), float2(-1.0f, 3.0f)};
 
-fragment float4 dummyFS()
-{
-    return float4(0, 0, 0, 0);
-}
 #endif /* LIBANGLE_RENDERER_METAL_SHADERS_COMMON_H_ */
