@@ -685,6 +685,8 @@ void OSXWindow::destroy()
     [mDelegate onOSXWindowDeleted];
     [mDelegate release];
     mDelegate = nil;
+    // NSWindow won't be completely released unless its content view is set to nil:
+    [mWindow setContentView:nil];
     [mWindow release];
     mWindow = nil;
 }
