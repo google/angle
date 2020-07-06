@@ -64,6 +64,10 @@ class SurfaceMtl : public SurfaceImpl
     EGLint isPostSubBufferSupported() const override;
     EGLint getSwapBehavior() const override;
 
+    const mtl::TextureRef &getColorTexture() { return mColorTexture; }
+    const mtl::Format &getColorFormat() const { return mColorFormat; }
+    int getSamples() const { return mSamples; }
+
     angle::Result getAttachmentRenderTarget(const gl::Context *context,
                                             GLenum binding,
                                             const gl::ImageIndex &imageIndex,
@@ -71,19 +75,28 @@ class SurfaceMtl : public SurfaceImpl
                                             FramebufferAttachmentRenderTarget **rtOut) override;
 
   protected:
-    // Ensure companion (depth, stencil) textures' size is correct w.r.t color texture.
-    angle::Result ensureDepthStencilSizeCorrect(const gl::Context *context,
-                                                gl::Framebuffer::DirtyBits *fboDirtyBits);
+    // Ensure companion (MS, depth, stencil) textures' size is correct w.r.t color texture.
+    angle::Result ensureCompanionTexturesSizeCorrect(const gl::Context *context,
+                                                     const gl::Extents &size);
+    angle::Result resolveColorTextureIfNeeded(const gl::Context *context);
 
+    // Normal textures
     mtl::TextureRef mColorTexture;
     mtl::TextureRef mDepthTexture;
     mtl::TextureRef mStencilTexture;
 
+    // Implicit multisample texture
+    mtl::TextureRef mMSColorTexture;
+
     bool mUsePackedDepthStencil = false;
+    // Auto resolve MS texture at the end of render pass or requires a separate blitting pass?
+    bool mAutoResolveMSColorTexture = false;
 
     mtl::Format mColorFormat;
     mtl::Format mDepthFormat;
     mtl::Format mStencilFormat;
+
+    int mSamples = 0;
 
     RenderTargetMtl mColorRenderTarget;
     RenderTargetMtl mDepthRenderTarget;
@@ -105,9 +118,9 @@ class WindowSurfaceMtl : public SurfaceMtl
     FramebufferImpl *createDefaultFramebuffer(const gl::Context *context,
                                               const gl::FramebufferState &state) override;
 
-    egl::Error makeCurrent(const gl::Context *context) override;
     egl::Error swap(const gl::Context *context) override;
 
+    void setSwapInterval(EGLint interval) override;
     EGLint getSwapBehavior() const override;
 
     // width and height can change with client window resizing
@@ -120,17 +133,29 @@ class WindowSurfaceMtl : public SurfaceMtl
                                             GLsizei samples,
                                             FramebufferAttachmentRenderTarget **rtOut) override;
 
+    angle::Result ensureCurrentDrawableObtained(const gl::Context *context);
+
+    // Ensure the the texture returned from getColorTexture() is ready for glReadPixels(). This
+    // implicitly calls ensureCurrentDrawableObtained().
+    angle::Result ensureColorTextureReadyForReadPixels(const gl::Context *context);
+
   private:
     angle::Result swapImpl(const gl::Context *context);
-    angle::Result ensureRenderTargetsCreated(const gl::Context *context);
     angle::Result obtainNextDrawable(const gl::Context *context);
+    angle::Result ensureCompanionTexturesSizeCorrect(const gl::Context *context);
 
+    CGSize calcExpectedDrawableSize() const;
     // Check if metal layer has been resized.
-    void checkIfLayerResized();
+    bool checkIfLayerResized(const gl::Context *context);
 
     mtl::AutoObjCObj<CAMetalLayer> mMetalLayer = nil;
     CALayer *mLayer;
     mtl::AutoObjCPtr<id<CAMetalDrawable>> mCurrentDrawable = nil;
+
+    // Cache last known drawable size that is used by GL context. Can be used to detect resize
+    // event. We don't use mMetalLayer.drawableSize directly since it might be changed internally by
+    // metal runtime.
+    CGSize mCurrentKnownDrawableSize;
 };
 
 }  // namespace rx

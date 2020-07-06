@@ -30,6 +30,7 @@ namespace
 {
 
 #define SHADER_ENTRY_NAME @"main0"
+constexpr char kSpirvCrossSpecConstSuffix[] = "_tmp";
 
 void InitDefaultUniformBlock(const std::vector<sh::Uniform> &uniforms,
                              gl::Shader *shader,
@@ -124,14 +125,59 @@ class Std140BlockLayoutEncoderFactory : public gl::CustomBlockLayoutEncoderFacto
     sh::BlockLayoutEncoder *makeEncoder() override { return new sh::Std140BlockEncoder(); }
 };
 
+angle::Result CreateMslShader(mtl::Context *context,
+                              id<MTLLibrary> shaderLib,
+                              MTLFunctionConstantValues *funcConstants,
+                              mtl::AutoObjCPtr<id<MTLFunction>> *shaderOut)
+{
+    NSError *nsErr = nil;
+
+    id<MTLFunction> mtlShader;
+
+    if (funcConstants)
+    {
+        mtlShader = [shaderLib newFunctionWithName:SHADER_ENTRY_NAME
+                                    constantValues:funcConstants
+                                             error:&nsErr];
+    }
+    else
+    {
+        mtlShader = [shaderLib newFunctionWithName:SHADER_ENTRY_NAME];
+    }
+
+    [mtlShader ANGLE_MTL_AUTORELEASE];
+    if (nsErr && !mtlShader)
+    {
+        std::ostringstream ss;
+        ss << "Internal error compiling Metal shader:\n"
+           << nsErr.localizedDescription.UTF8String << "\n";
+
+        ERR() << ss.str();
+
+        ANGLE_MTL_CHECK(context, false, GL_INVALID_OPERATION);
+    }
+
+    shaderOut->retainAssign(mtlShader);
+
+    return angle::Result::Continue;
+}
+
 }  // namespace
+
+// ProgramShaderVariantMtl implementation
+void ProgramShaderVariantMtl::reset(ContextMtl *contextMtl)
+{
+    metalShader = nil;
+}
 
 // ProgramMtl implementation
 ProgramMtl::DefaultUniformBlock::DefaultUniformBlock() {}
 
 ProgramMtl::DefaultUniformBlock::~DefaultUniformBlock() = default;
 
-ProgramMtl::ProgramMtl(const gl::ProgramState &state) : ProgramImpl(state) {}
+ProgramMtl::ProgramMtl(const gl::ProgramState &state)
+    : ProgramImpl(state), mMetalRenderPipelineCache(this)
+{}
 
 ProgramMtl::~ProgramMtl() {}
 
@@ -149,13 +195,24 @@ void ProgramMtl::reset(ContextMtl *context)
         block.uniformLayout.clear();
     }
 
-    for (gl::ShaderType shaderType : gl::AllGLES2ShaderTypes())
+    for (gl::ShaderType shaderType : gl::AllShaderTypes())
     {
+        mMslShaderLibrary[shaderType] = nil;
+
         for (mtl::SamplerBinding &binding :
              mMslShaderTranslateInfo[shaderType].actualSamplerBindings)
         {
             binding.textureBinding = mtl::kMaxShaderSamplers;
         }
+    }
+
+    for (ProgramShaderVariantMtl &var : mVertexShaderVariants)
+    {
+        var.reset(context);
+    }
+    for (ProgramShaderVariantMtl &var : mFragmentShaderVariants)
+    {
+        var.reset(context);
     }
 
     mMetalRenderPipelineCache.clear();
@@ -228,7 +285,7 @@ angle::Result ProgramMtl::linkImpl(const gl::Context *glContext,
     {
         // Create actual Metal shader
         ANGLE_TRY(
-            createMslShader(glContext, shaderType, infoLog, mTranslatedMslShader[shaderType]));
+            createMslShaderLib(glContext, shaderType, infoLog, mTranslatedMslShader[shaderType]));
     }
 
     return angle::Result::Continue;
@@ -325,10 +382,76 @@ angle::Result ProgramMtl::initDefaultUniformBlocks(const gl::Context *glContext)
     return angle::Result::Continue;
 }
 
-angle::Result ProgramMtl::createMslShader(const gl::Context *glContext,
-                                          gl::ShaderType shaderType,
-                                          gl::InfoLog &infoLog,
-                                          const std::string &translatedMsl)
+angle::Result ProgramMtl::getSpecializedShader(mtl::Context *context,
+                                               gl::ShaderType shaderType,
+                                               const mtl::RenderPipelineDesc &renderPipelineDesc,
+                                               id<MTLFunction> *shaderOut)
+{
+    static_assert(YES == 1, "YES should have value of 1");
+
+    mtl::AutoObjCPtr<id<MTLLibrary>> mtlShaderLib = mMslShaderLibrary[shaderType];
+
+    if (shaderType == gl::ShaderType::Vertex)
+    {
+        // NOTE(hqle): Only one vertex shader variant for now. In future, there should be a variant
+        // with rasterization discard enabled.
+        ProgramShaderVariantMtl &shaderVariant = mVertexShaderVariants[0];
+        if (shaderVariant.metalShader)
+        {
+            // Already created.
+            *shaderOut = shaderVariant.metalShader;
+            return angle::Result::Continue;
+        }
+
+        ANGLE_MTL_OBJC_SCOPE
+        {
+            ANGLE_TRY(CreateMslShader(context, mtlShaderLib, nil, &shaderVariant.metalShader));
+        }
+
+        *shaderOut = shaderVariant.metalShader;
+    }
+    else if (shaderType == gl::ShaderType::Fragment)
+    {
+        // For fragment shader, we need to create 2 variants, one with sample coverage mask
+        // disabled, one with the mask enabled.
+        BOOL emulateCoverageMask               = renderPipelineDesc.emulateCoverageMask;
+        ProgramShaderVariantMtl &shaderVariant = mFragmentShaderVariants[emulateCoverageMask];
+        if (shaderVariant.metalShader)
+        {
+            // Already created.
+            *shaderOut = shaderVariant.metalShader;
+            return angle::Result::Continue;
+        }
+
+        ANGLE_MTL_OBJC_SCOPE
+        {
+            NSString *coverageMaskEnabledStr =
+                [NSString stringWithFormat:@"%s%s", sh::mtl::kCoverageMaskEnabledConstName,
+                                           kSpirvCrossSpecConstSuffix];
+
+            auto funcConstants = [[[MTLFunctionConstantValues alloc] init] ANGLE_MTL_AUTORELEASE];
+            [funcConstants setConstantValue:&emulateCoverageMask
+                                       type:MTLDataTypeBool
+                                   withName:coverageMaskEnabledStr];
+
+            ANGLE_TRY(
+                CreateMslShader(context, mtlShaderLib, funcConstants, &shaderVariant.metalShader));
+        }
+
+        *shaderOut = shaderVariant.metalShader;
+    }  // gl::ShaderType::Fragment
+    return angle::Result::Continue;
+}
+bool ProgramMtl::hasSpecializedShader(gl::ShaderType shaderType,
+                                      const mtl::RenderPipelineDesc &renderPipelineDesc)
+{
+    return true;
+}
+
+angle::Result ProgramMtl::createMslShaderLib(const gl::Context *glContext,
+                                             gl::ShaderType shaderType,
+                                             gl::InfoLog &infoLog,
+                                             const std::string &translatedMsl)
 {
     ANGLE_MTL_OBJC_SCOPE
     {
@@ -338,9 +461,8 @@ angle::Result ProgramMtl::createMslShader(const gl::Context *glContext,
 
         // Convert to actual binary shader
         mtl::AutoObjCPtr<NSError *> err = nil;
-        mtl::AutoObjCPtr<id<MTLLibrary>> mtlShaderLib =
-            mtl::CreateShaderLibrary(mtlDevice, translatedMsl, &err);
-        if (err && !mtlShaderLib)
+        mMslShaderLibrary[shaderType]   = mtl::CreateShaderLibrary(mtlDevice, translatedMsl, &err);
+        if (err && !mMslShaderLibrary[shaderType])
         {
             std::ostringstream ss;
             ss << "Internal error compiling Metal shader:\n"
@@ -351,18 +473,6 @@ angle::Result ProgramMtl::createMslShader(const gl::Context *glContext,
             infoLog << ss.str();
 
             ANGLE_MTL_CHECK(contextMtl, false, GL_INVALID_OPERATION);
-        }
-
-        auto mtlShader = [mtlShaderLib.get() newFunctionWithName:SHADER_ENTRY_NAME];
-        [mtlShader ANGLE_MTL_AUTORELEASE];
-        ASSERT(mtlShader);
-        if (shaderType == gl::ShaderType::Vertex)
-        {
-            mMetalRenderPipelineCache.setVertexShader(contextMtl, mtlShader);
-        }
-        else if (shaderType == gl::ShaderType::Fragment)
-        {
-            mMetalRenderPipelineCache.setFragmentShader(contextMtl, mtlShader);
         }
 
         return angle::Result::Continue;

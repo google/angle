@@ -196,19 +196,6 @@ constexpr size_t kNumComputeDriverUniforms                                      
 constexpr std::array<const char *, kNumComputeDriverUniforms> kComputeDriverUniformNames = {
     {kAcbBufferOffsets}};
 
-size_t FindFieldIndex(const TFieldList &fieldList, const char *fieldName)
-{
-    for (size_t fieldIndex = 0; fieldIndex < fieldList.size(); ++fieldIndex)
-    {
-        if (strcmp(fieldList[fieldIndex]->name().data(), fieldName) == 0)
-        {
-            return fieldIndex;
-        }
-    }
-    UNREACHABLE();
-    return 0;
-}
-
 TIntermBinary *CreateDriverUniformRef(const TVariable *driverUniforms, const char *fieldName)
 {
     size_t fieldIndex =
@@ -389,7 +376,9 @@ ANGLE_NO_DISCARD bool AppendVertexShaderTransformFeedbackOutputToMain(TCompiler 
 // variable.
 //
 // There are Graphics and Compute variations as they require different uniforms.
-const TVariable *AddGraphicsDriverUniformsToShader(TIntermBlock *root, TSymbolTable *symbolTable)
+const TVariable *AddGraphicsDriverUniformsToShader(TIntermBlock *root,
+                                                   TSymbolTable *symbolTable,
+                                                   const std::vector<TField *> &additionalFields)
 {
     // Init the depth range type.
     TFieldList *depthRangeParamsFields = new TFieldList();
@@ -444,6 +433,10 @@ const TVariable *AddGraphicsDriverUniformsToShader(TIntermBlock *root, TSymbolTa
                        SymbolType::AngleInternal);
         driverFieldList->push_back(driverUniformField);
     }
+
+    // Back-end specific fields
+    driverFieldList->insert(driverFieldList->end(), additionalFields.begin(),
+                            additionalFields.end());
 
     // Define a driver uniform block "ANGLEUniformBlock" with instance name "ANGLEUniforms".
     return DeclareInterfaceBlock(
@@ -865,7 +858,10 @@ bool TranslatorVulkan::translateImpl(TIntermBlock *root,
     }
     else
     {
-        driverUniforms = AddGraphicsDriverUniformsToShader(root, &getSymbolTable());
+        std::vector<TField *> additionalFields;
+        createAdditionalGraphicsDriverUniformFields(&additionalFields);
+        driverUniforms =
+            AddGraphicsDriverUniformsToShader(root, &getSymbolTable(), additionalFields);
     }
 
     if (atomicCounterCount > 0)

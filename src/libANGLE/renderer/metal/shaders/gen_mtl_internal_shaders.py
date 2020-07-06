@@ -26,7 +26,8 @@ def main():
     # auto_script parameters.
     if len(sys.argv) > 1:
         inputs = [
-            'master_source.metal', 'blit.metal', 'clear.metal', 'gen_indices.metal', 'common.h'
+            'master_source.metal', 'blit.metal', 'clear.metal', 'gen_indices.metal', 'common.h',
+            'constants.h'
         ]
         outputs = ['compiled/mtl_default_shaders.inc', 'mtl_default_shaders_src_autogen.inc']
 

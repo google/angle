@@ -788,6 +788,24 @@ void RenderCommandEncoder::finalizeLoadStoreAction(
         return;
     }
 
+    if (objCRenderPassAttachment.resolveTexture)
+    {
+        if (objCRenderPassAttachment.storeAction == MTLStoreActionStore)
+        {
+            // NOTE(hqle): Currently if the store action with implicit MS texture is
+            // MTLStoreActionStore, it is automatically convert to store and resolve action. It
+            // might introduce unnecessary overhead. Consider an improvement such as only store the
+            // MS texture, and resolve only at the end of real render pass (not render pass the is
+            // interrupted by compute pass) or before glBlitFramebuffer operation starts.
+            objCRenderPassAttachment.storeAction = MTLStoreActionStoreAndMultisampleResolve;
+        }
+        else if (objCRenderPassAttachment.storeAction == MTLStoreActionDontCare)
+        {
+            // Ignore resolve texture if the store action is not a resolve action.
+            objCRenderPassAttachment.resolveTexture = nil;
+        }
+    }
+
     if (objCRenderPassAttachment.storeAction == MTLStoreActionUnknown)
     {
         // If storeAction hasn't been set for this attachment, we set to dontcare.

@@ -13,6 +13,8 @@
 #    include <metal_stdlib>
 #endif
 
+#include "constants.h"
+
 #define ANGLE_KERNEL_GUARD(IDX, MAX_COUNT) \
     if (IDX >= MAX_COUNT)                  \
     {                                      \

@@ -962,4 +962,17 @@ bool IsValidImplicitConversion(sh::ImplicitTypeConversion conversion, TOperator 
     return false;
 }
 
+size_t FindFieldIndex(const TFieldList &fieldList, const char *fieldName)
+{
+    for (size_t fieldIndex = 0; fieldIndex < fieldList.size(); ++fieldIndex)
+    {
+        if (strcmp(fieldList[fieldIndex]->name().data(), fieldName) == 0)
+        {
+            return fieldIndex;
+        }
+    }
+    UNREACHABLE();
+    return 0;
+}
+
 }  // namespace sh

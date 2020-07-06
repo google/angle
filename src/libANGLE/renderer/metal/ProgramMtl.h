@@ -27,7 +27,18 @@ namespace rx
 {
 class ContextMtl;
 
-class ProgramMtl : public ProgramImpl
+// Represents a specialized shader variant. For example, a shader variant with fragment coverage
+// mask enabled and a shader variant without.
+struct ProgramShaderVariantMtl
+{
+    void reset(ContextMtl *contextMtl);
+
+    mtl::AutoObjCPtr<id<MTLFunction>> metalShader;
+    // NOTE(hqle): might need additional info such as uniform buffer encoder, fragment coverage mask
+    // enabled or not, etc.
+};
+
+class ProgramMtl : public ProgramImpl, public mtl::RenderPipelineCacheSpecializeShaderFactory
 {
   public:
     ProgramMtl(const gl::ProgramState &state);
@@ -100,6 +111,14 @@ class ProgramMtl : public ProgramImpl
     void getUniformiv(const gl::Context *context, GLint location, GLint *params) const override;
     void getUniformuiv(const gl::Context *context, GLint location, GLuint *params) const override;
 
+    // Override mtl::RenderPipelineCacheSpecializeShaderFactory
+    angle::Result getSpecializedShader(mtl::Context *context,
+                                       gl::ShaderType shaderType,
+                                       const mtl::RenderPipelineDesc &renderPipelineDesc,
+                                       id<MTLFunction> *shaderOut) override;
+    bool hasSpecializedShader(gl::ShaderType shaderType,
+                              const mtl::RenderPipelineDesc &renderPipelineDesc) override;
+
     // Calls this before drawing, changedPipelineDesc is passed when vertex attributes desc and/or
     // shader program changed.
     angle::Result setupDraw(const gl::Context *glContext,
@@ -132,10 +151,10 @@ class ProgramMtl : public ProgramImpl
                            const gl::ProgramLinkedResources &resources,
                            gl::InfoLog &infoLog);
 
-    angle::Result createMslShader(const gl::Context *glContext,
-                                  gl::ShaderType shaderType,
-                                  gl::InfoLog &infoLog,
-                                  const std::string &translatedSource);
+    angle::Result createMslShaderLib(const gl::Context *glContext,
+                                     gl::ShaderType shaderType,
+                                     gl::InfoLog &infoLog,
+                                     const std::string &translatedSource);
 
     // State for the default uniform blocks.
     struct DefaultUniformBlock final : private angle::NonCopyable
@@ -158,6 +177,13 @@ class ProgramMtl : public ProgramImpl
     gl::ShaderMap<std::string> mTranslatedMslShader;
 
     gl::ShaderMap<mtl::TranslatedShaderInfo> mMslShaderTranslateInfo;
+    gl::ShaderMap<mtl::AutoObjCPtr<id<MTLLibrary>>> mMslShaderLibrary;
+
+    // Shader variants:
+    // - Vertex shader: One variant for now.
+    std::array<ProgramShaderVariantMtl, 1> mVertexShaderVariants;
+    // - Fragment shader: One with sample coverage mask enabled, one with it disabled.
+    std::array<ProgramShaderVariantMtl, 2> mFragmentShaderVariants;
 
     mtl::RenderPipelineCache mMetalRenderPipelineCache;
 };

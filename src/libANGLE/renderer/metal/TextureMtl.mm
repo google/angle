@@ -337,7 +337,7 @@ void TextureMtl::releaseTexture(bool releaseImages)
 
     for (RenderTargetMtl &rt : mLayeredRenderTargets)
     {
-        rt.set(nullptr);
+        rt.reset();
     }
 
     if (releaseImages)
@@ -1153,7 +1153,7 @@ angle::Result TextureMtl::copySubImageWithDraw(const gl::Context *context,
     DisplayMtl *displayMtl         = contextMtl->getDisplay();
     FramebufferMtl *framebufferMtl = mtl::GetImpl(source);
 
-    RenderTargetMtl *colorReadRT = framebufferMtl->getColorReadRenderTarget();
+    RenderTargetMtl *colorReadRT = framebufferMtl->getColorReadRenderTarget(context);
 
     if (!colorReadRT || !colorReadRT->getTexture())
     {
@@ -1192,7 +1192,7 @@ angle::Result TextureMtl::copySubImageCPU(const gl::Context *context,
 
     ContextMtl *contextMtl         = mtl::GetImpl(context);
     FramebufferMtl *framebufferMtl = mtl::GetImpl(source);
-    RenderTargetMtl *colorReadRT   = framebufferMtl->getColorReadRenderTarget();
+    RenderTargetMtl *colorReadRT   = framebufferMtl->getColorReadRenderTarget(context);
 
     if (!colorReadRT || !colorReadRT->getTexture())
     {
@@ -1216,10 +1216,10 @@ angle::Result TextureMtl::copySubImageCPU(const gl::Context *context,
         PackPixelsParams packParams(srcRowArea, dstFormat, dstRowPitch, false, nullptr, 0);
 
         // Read pixels from framebuffer to memory:
-        gl::Rectangle flippedSrcRowArea = framebufferMtl->getReadPixelArea(srcRowArea);
+        gl::Rectangle flippedSrcRowArea =
+            framebufferMtl->getCorrectFlippedReadArea(context, srcRowArea);
         ANGLE_TRY(framebufferMtl->readPixelsImpl(context, flippedSrcRowArea, packParams,
-                                                 framebufferMtl->getColorReadRenderTarget(),
-                                                 conversionRow.data()));
+                                                 colorReadRT, conversionRow.data()));
 
         // Upload to texture
         ANGLE_TRY(UploadTextureContents(context, image, dstFormat, mtlDstRowArea, 0, 0,

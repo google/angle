@@ -27,6 +27,7 @@ class DisplayMtl;
 class FramebufferMtl;
 class VertexArrayMtl;
 class ProgramMtl;
+class WindowSurfaceMtl;
 
 class ContextMtl : public ContextImpl, public mtl::Context
 {
@@ -266,6 +267,7 @@ class ContextMtl : public ContextImpl, public mtl::Context
 
     // Call this to notify ContextMtl whenever FramebufferMtl's state changed
     void onDrawFrameBufferChange(const gl::Context *context, FramebufferMtl *framebuffer);
+    void onBackbufferResized(const gl::Context *context, WindowSurfaceMtl *backbuffer);
 
     const MTLClearColor &getClearColorValue() const;
     MTLColorWriteMask getColorMask() const;
@@ -296,12 +298,9 @@ class ContextMtl : public ContextImpl, public mtl::Context
 
     // Check whether compatible render pass has been started.
     bool hasStartedRenderPass(const mtl::RenderPassDesc &desc);
-    bool hasStartedRenderPass(FramebufferMtl *framebuffer);
 
     // Get current render encoder. May be nullptr if no render pass has been started.
     mtl::RenderCommandEncoder *getRenderCommandEncoder();
-
-    mtl::RenderCommandEncoder *getCurrentFramebufferRenderCommandEncoder();
 
     // Will end current command encoder if it is valid, then start new encoder.
     // Unless hasStartedRenderPass(desc) returns true.
@@ -448,6 +447,10 @@ class ContextMtl : public ContextImpl, public mtl::Context
         // Used to pre-rotate gl_FragCoord for Vulkan swapchain images on Android (a mat2, which is
         // padded to the size of two vec4's).
         float fragRotation[8];
+
+        uint32_t coverageMask;
+
+        float padding2[3];
     };
 
     struct DefaultAttribute
@@ -465,12 +468,6 @@ class ContextMtl : public ContextImpl, public mtl::Context
     FramebufferMtl *mDrawFramebuffer = nullptr;
     VertexArrayMtl *mVertexArray     = nullptr;
     ProgramMtl *mProgram             = nullptr;
-
-    // Special flag to indicate current draw framebuffer is default framebuffer.
-    // We need this instead of calling mDrawFramebuffer->getState().isDefault() because
-    // mDrawFramebuffer might point to a deleted object, ContextMtl only knows about this very late,
-    // only during syncState() function call.
-    bool mDrawFramebufferIsDefault = true;
 
     using DirtyBits = angle::BitSet<DIRTY_BIT_MAX>;
 

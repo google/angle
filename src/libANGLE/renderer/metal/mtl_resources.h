@@ -111,6 +111,15 @@ class Texture final : public Resource,
                                          bool allowTextureView,
                                          TextureRef *refOut);
 
+    static angle::Result Make2DMSTexture(ContextMtl *context,
+                                         const Format &format,
+                                         uint32_t width,
+                                         uint32_t height,
+                                         uint32_t samples,
+                                         bool renderTargetOnly,
+                                         bool allowTextureView,
+                                         TextureRef *refOut);
+
     static TextureRef MakeFromMetal(id<MTLTexture> metalTexture);
 
     // Allow CPU to read & write data directly to this texture?
@@ -147,6 +156,8 @@ class Texture final : public Resource,
 
     gl::Extents size(uint32_t level = 0) const;
     gl::Extents size(const gl::ImageIndex &index) const;
+
+    uint32_t samples() const;
 
     // For render target
     MTLColorWriteMask getColorWritableMask() const { return *mColorWritableMask; }

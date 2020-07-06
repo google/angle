@@ -15,6 +15,7 @@
 #include "libANGLE/angletypes.h"
 #include "libANGLE/renderer/metal/mtl_command_buffer.h"
 #include "libANGLE/renderer/metal/mtl_state_cache.h"
+#include "libANGLE/renderer/metal/shaders/constants.h"
 
 namespace rx
 {
@@ -129,6 +130,7 @@ class ColorBlitUtils
     // Defer loading of render pipeline state cache.
     void ensureRenderPipelineStateCacheInitialized(ContextMtl *ctx,
                                                    int alphaPremultiplyType,
+                                                   int textureType,
                                                    RenderPipelineCache *cacheOut);
 
     void setupBlitWithDraw(const gl::Context *context,
@@ -139,9 +141,13 @@ class ColorBlitUtils
                                                           RenderCommandEncoder *cmdEncoder,
                                                           const BlitParams &params);
 
-    RenderPipelineCache mBlitRenderPipelineCache;
-    RenderPipelineCache mBlitPremultiplyAlphaRenderPipelineCache;
-    RenderPipelineCache mBlitUnmultiplyAlphaRenderPipelineCache;
+    // Blit with draw pipeline caches:
+    // - array dimension: source texture type (2d, ms, array, 3d, etc)
+    using ColorBlitRenderPipelineCacheArray =
+        std::array<RenderPipelineCache, mtl_shader::kTextureTypeCount>;
+    ColorBlitRenderPipelineCacheArray mBlitRenderPipelineCache;
+    ColorBlitRenderPipelineCacheArray mBlitPremultiplyAlphaRenderPipelineCache;
+    ColorBlitRenderPipelineCacheArray mBlitUnmultiplyAlphaRenderPipelineCache;
 };
 
 // util class for generating index buffer
@@ -231,6 +237,11 @@ class RenderUtils : public Context, angle::NonCopyable
     angle::Result blitWithDraw(const gl::Context *context,
                                RenderCommandEncoder *cmdEncoder,
                                const BlitParams &params);
+    // Same as above but blit the whole texture to the whole of current framebuffer.
+    // This function assumes the framebuffer and the source texture have same size.
+    angle::Result blitWithDraw(const gl::Context *context,
+                               RenderCommandEncoder *cmdEncoder,
+                               const TextureRef &srcTexture);
 
     // See IndexGeneratorUtils
     angle::Result convertIndexBufferGPU(ContextMtl *contextMtl,

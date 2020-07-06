@@ -148,6 +148,38 @@ angle::Result Texture::MakeCubeTexture(ContextMtl *context,
 }
 
 /** static */
+angle::Result Texture::Make2DMSTexture(ContextMtl *context,
+                                       const Format &format,
+                                       uint32_t width,
+                                       uint32_t height,
+                                       uint32_t samples,
+                                       bool renderTargetOnly,
+                                       bool allowTextureView,
+                                       TextureRef *refOut)
+{
+    ANGLE_MTL_OBJC_SCOPE
+    {
+        MTLTextureDescriptor *desc = [[MTLTextureDescriptor new] ANGLE_MTL_AUTORELEASE];
+        desc.textureType           = MTLTextureType2DMultisample;
+        desc.pixelFormat           = format.metalFormat;
+        desc.width                 = width;
+        desc.height                = height;
+        desc.mipmapLevelCount      = 1;
+        desc.sampleCount           = samples;
+
+        SetTextureSwizzle(context, format, desc);
+        refOut->reset(new Texture(context, desc, 1, renderTargetOnly, allowTextureView));
+    }  // ANGLE_MTL_OBJC_SCOPE
+
+    if (!refOut || !refOut->get())
+    {
+        ANGLE_MTL_CHECK(context, false, GL_OUT_OF_MEMORY);
+    }
+
+    return angle::Result::Continue;
+}
+
+/** static */
 TextureRef Texture::MakeFromMetal(id<MTLTexture> metalTexture)
 {
     ANGLE_MTL_OBJC_SCOPE { return TextureRef(new Texture(metalTexture)); }
@@ -183,7 +215,8 @@ Texture::Texture(ContextMtl *context,
             desc.usage |= MTLTextureUsageRenderTarget;
         }
 
-        if (!Format::FormatCPUReadable(desc.pixelFormat))
+        if (!Format::FormatCPUReadable(desc.pixelFormat) ||
+            desc.textureType == MTLTextureType2DMultisample)
         {
             desc.resourceOptions = MTLResourceStorageModePrivate;
         }
@@ -403,6 +436,11 @@ gl::Extents Texture::size(const gl::ImageIndex &index) const
     ASSERT(!get() || textureType() == MTLTextureType2D || textureType() == MTLTextureTypeCube);
 
     return size(index.getLevelIndex());
+}
+
+uint32_t Texture::samples() const
+{
+    return static_cast<uint32_t>(get().sampleCount);
 }
 
 void Texture::set(id<MTLTexture> metalTexture)

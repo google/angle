@@ -29,6 +29,9 @@ namespace
 #define SOURCE_IDX_IS_U8_CONSTANT_NAME @"kSourceIndexIsU8"
 #define SOURCE_IDX_IS_U16_CONSTANT_NAME @"kSourceIndexIsU16"
 #define SOURCE_IDX_IS_U32_CONSTANT_NAME @"kSourceIndexIsU32"
+#define PREMULTIPLY_ALPHA_CONSTANT_NAME @"kPremultiplyAlpha"
+#define UNMULTIPLY_ALPHA_CONSTANT_NAME @"kUnmultiplyAlpha"
+#define SOURCE_TEXTURE_TYPE_CONSTANT_NAME @"kSourceTextureType"
 
 // See libANGLE/renderer/metal/shaders/clear.metal
 struct ClearParamsUniform
@@ -44,10 +47,12 @@ struct BlitParamsUniform
     // 0: lower left, 1: lower right, 2: upper left
     float srcTexCoords[3][2];
     int srcLevel         = 0;
-    uint8_t srcLuminance = 0;  // source texture is luminance texture
+    int srcLayer         = 0;
+    uint8_t dstFlipX     = 0;
     uint8_t dstFlipY     = 0;
     uint8_t dstLuminance = 0;  // dest texture is luminace
-    uint8_t padding;
+    uint8_t padding1;
+    float padding2[3];
 };
 
 struct IndexConversionUniform
@@ -131,6 +136,31 @@ void GetFirstLastIndicesFromClientElements(GLsizei count,
     memcpy(lastOut, indices + count - 1, sizeof(indices[0]));
 }
 
+int GetShaderTextureType(const TextureRef &texture)
+{
+    if (!texture)
+    {
+        return -1;
+    }
+    switch (texture->textureType())
+    {
+        case MTLTextureType2D:
+            return mtl_shader::kTextureType2D;
+        case MTLTextureType2DArray:
+            return mtl_shader::kTextureType2DArray;
+        case MTLTextureType2DMultisample:
+            return mtl_shader::kTextureType2DMultisample;
+        case MTLTextureTypeCube:
+            return mtl_shader::kTextureTypeCube;
+        case MTLTextureType3D:
+            return mtl_shader::kTextureType3D;
+        default:
+            UNREACHABLE();
+    }
+
+    return 0;
+}
+
 ANGLE_INLINE
 void EnsureComputePipelineInitialized(DisplayMtl *display,
                                       NSString *functionName,
@@ -204,6 +234,15 @@ void EnsureSpecializedComputePipelineInitialized(
             ERR() << "Internal error: " << err.localizedDescription.UTF8String << "\n";
         }
         ASSERT(pipeline);
+    }
+}
+
+template <typename T>
+void ClearRenderPipelineCacheArray(T *pipelineCacheArray)
+{
+    for (RenderPipelineCache &pipelineCache : *pipelineCacheArray)
+    {
+        pipelineCache.clear();
     }
 }
 
@@ -351,6 +390,20 @@ angle::Result RenderUtils::blitWithDraw(const gl::Context *context,
                                         const BlitParams &params)
 {
     return mColorBlitUtils.blitWithDraw(context, cmdEncoder, params);
+}
+
+angle::Result RenderUtils::blitWithDraw(const gl::Context *context,
+                                        RenderCommandEncoder *cmdEncoder,
+                                        const TextureRef &srcTexture)
+{
+    if (!srcTexture)
+    {
+        return angle::Result::Continue;
+    }
+    BlitParams params;
+    params.src     = srcTexture;
+    params.srcRect = gl::Rectangle(0, 0, srcTexture->width(), srcTexture->height());
+    return blitWithDraw(context, cmdEncoder, params);
 }
 
 angle::Result RenderUtils::convertIndexBufferGPU(ContextMtl *contextMtl,
@@ -570,13 +623,14 @@ ColorBlitUtils::ColorBlitUtils() = default;
 
 void ColorBlitUtils::onDestroy()
 {
-    mBlitRenderPipelineCache.clear();
-    mBlitPremultiplyAlphaRenderPipelineCache.clear();
-    mBlitUnmultiplyAlphaRenderPipelineCache.clear();
+    ClearRenderPipelineCacheArray(&mBlitRenderPipelineCache);
+    ClearRenderPipelineCacheArray(&mBlitPremultiplyAlphaRenderPipelineCache);
+    ClearRenderPipelineCacheArray(&mBlitUnmultiplyAlphaRenderPipelineCache);
 }
 
 void ColorBlitUtils::ensureRenderPipelineStateCacheInitialized(ContextMtl *ctx,
                                                                int alphaPremultiplyType,
+                                                               int textureType,
                                                                RenderPipelineCache *cacheOut)
 {
     RenderPipelineCache &pipelineCache = *cacheOut;
@@ -588,24 +642,43 @@ void ColorBlitUtils::ensureRenderPipelineStateCacheInitialized(ContextMtl *ctx,
 
     ANGLE_MTL_OBJC_SCOPE
     {
-        NSString *const fragmentShaderNames[] = {// Normal blit
-                                                 @"blitFS",
-                                                 // Blit premultiply-alpha
-                                                 @"blitPremultiplyAlphaFS",
-                                                 // Blit unmultiply alpha
-                                                 @"blitUnmultiplyAlphaFS"};
-
+        NSError *err             = nil;
         id<MTLLibrary> shaderLib = ctx->getDisplay()->getDefaultShadersLib();
         id<MTLFunction> vertexShader =
             [[shaderLib newFunctionWithName:@"blitVS"] ANGLE_MTL_AUTORELEASE];
-        id<MTLFunction> fragmentShader = [[shaderLib
-            newFunctionWithName:fragmentShaderNames[alphaPremultiplyType]] ANGLE_MTL_AUTORELEASE];
+        MTLFunctionConstantValues *funcConstants =
+            [[[MTLFunctionConstantValues alloc] init] ANGLE_MTL_AUTORELEASE];
+
+        constexpr BOOL multiplyAlphaFlags[][2] = {// premultiply, unmultiply
+
+                                                  // Normal blit
+                                                  {NO, NO},
+                                                  // Blit premultiply-alpha
+                                                  {YES, NO},
+                                                  // Blit unmultiply alpha
+                                                  {NO, YES}};
+
+        // Set alpha multiply flags
+        [funcConstants setConstantValue:&multiplyAlphaFlags[alphaPremultiplyType][0]
+                                   type:MTLDataTypeBool
+                               withName:PREMULTIPLY_ALPHA_CONSTANT_NAME];
+        [funcConstants setConstantValue:&multiplyAlphaFlags[alphaPremultiplyType][1]
+                                   type:MTLDataTypeBool
+                               withName:UNMULTIPLY_ALPHA_CONSTANT_NAME];
+
+        // Set texture type constant
+        [funcConstants setConstantValue:&textureType
+                                   type:MTLDataTypeInt
+                               withName:SOURCE_TEXTURE_TYPE_CONSTANT_NAME];
+
+        id<MTLFunction> fragmentShader =
+            [[shaderLib newFunctionWithName:@"blitFS" constantValues:funcConstants
+                                      error:&err] ANGLE_MTL_AUTORELEASE];
 
         ASSERT(vertexShader);
         ASSERT(fragmentShader);
-
-        mBlitRenderPipelineCache.setVertexShader(ctx, vertexShader);
-        mBlitRenderPipelineCache.setFragmentShader(ctx, fragmentShader);
+        pipelineCache.setVertexShader(ctx, vertexShader);
+        pipelineCache.setFragmentShader(ctx, fragmentShader);
     }
 }
 
@@ -625,23 +698,25 @@ id<MTLRenderPipelineState> ColorBlitUtils::getBlitRenderPipelineState(
 
     RenderPipelineCache *pipelineCache;
     int alphaPremultiplyType;
+    int textureType = GetShaderTextureType(params.src);
     if (params.unpackPremultiplyAlpha == params.unpackUnmultiplyAlpha)
     {
         alphaPremultiplyType = 0;
-        pipelineCache        = &mBlitRenderPipelineCache;
+        pipelineCache        = &mBlitRenderPipelineCache[textureType];
     }
     else if (params.unpackPremultiplyAlpha)
     {
         alphaPremultiplyType = 1;
-        pipelineCache        = &mBlitPremultiplyAlphaRenderPipelineCache;
+        pipelineCache        = &mBlitPremultiplyAlphaRenderPipelineCache[textureType];
     }
     else
     {
         alphaPremultiplyType = 2;
-        pipelineCache        = &mBlitUnmultiplyAlphaRenderPipelineCache;
+        pipelineCache        = &mBlitUnmultiplyAlphaRenderPipelineCache[textureType];
     }
 
-    ensureRenderPipelineStateCacheInitialized(contextMtl, alphaPremultiplyType, pipelineCache);
+    ensureRenderPipelineStateCacheInitialized(contextMtl, alphaPremultiplyType, textureType,
+                                              pipelineCache);
 
     return pipelineCache->getRenderPipelineState(contextMtl, pipelineDesc);
 }
