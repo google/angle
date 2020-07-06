@@ -21,8 +21,6 @@ of tests. This list is parsed by this harness and sent down via the
 This script is intended to be the base command invoked by the isolate,
 followed by a subsequent non-python executable. For a similar script see
 run_performance_test.py.
-
-# TODO(jmadill): Move this into the ANGLE repo. http://anglebug.com/3162
 """
 
 import argparse
@@ -33,16 +31,21 @@ import sys
 import tempfile
 import traceback
 
-import common
+# Add //src/testing into sys.path for importing xvfb and test_env, and
+# //src/testing/scripts for importing common.
+d = os.path.dirname
+THIS_DIR = d(os.path.abspath(__file__))
+CHROMIUM_SRC_DIR = d(d(d(THIS_DIR)))
+sys.path.insert(0, os.path.join(CHROMIUM_SRC_DIR, 'testing'))
+sys.path.insert(0, os.path.join(CHROMIUM_SRC_DIR, 'testing', 'scripts'))
 
-# Add src/testing/ into sys.path for importing xvfb and test_env.
-sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+import common
 import xvfb
 import test_env
 
-# Unfortunately we need to copy these variables from ../test_env.py.
-# Importing it and using its get_sandbox_env breaks test runs on Linux
-# (it seems to unset DISPLAY).
+# Unfortunately we need to copy these variables from
+# //src/testing/scripts/test_env.py. Importing it and using its
+# get_sandbox_env breaks test runs on Linux (it seems to unset DISPLAY).
 CHROME_SANDBOX_ENV = 'CHROME_DEVEL_SANDBOX'
 CHROME_SANDBOX_PATH = '/opt/chromium/chrome_sandbox'
 
