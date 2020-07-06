@@ -31,6 +31,16 @@ namespace rx
 
 namespace
 {
+
+#define ANGLE_TO_EGL_TRY(EXPR)                                 \
+    do                                                         \
+    {                                                          \
+        if (ANGLE_UNLIKELY((EXPR) != angle::Result::Continue)) \
+        {                                                      \
+            return egl::EglBadSurface();                       \
+        }                                                      \
+    } while (0)
+
 constexpr angle::FormatID kDefaultFrameBufferDepthFormatId   = angle::FormatID::D32_FLOAT;
 constexpr angle::FormatID kDefaultFrameBufferStencilFormatId = angle::FormatID::S8_UINT;
 constexpr angle::FormatID kDefaultFrameBufferDepthStencilFormatId =
@@ -169,13 +179,12 @@ void StopFrameCapture()
 }
 }
 
+// SurfaceMtl implementation
 SurfaceMtl::SurfaceMtl(DisplayMtl *display,
                        const egl::SurfaceState &state,
-                       EGLNativeWindowType window,
                        const egl::AttributeMap &attribs)
-    : SurfaceImpl(state), mLayer((__bridge CALayer *)(window))
+    : SurfaceImpl(state)
 {
-    // NOTE(hqle): Width and height attributes is ignored for now.
 
     // https://developer.apple.com/metal/Metal-Feature-Set-Tables.pdf says that BGRA8Unorm is
     // only supported if depth24Stencil8PixelFormatSupported capabilitiy is YES. Yet
@@ -222,76 +231,30 @@ SurfaceMtl::~SurfaceMtl() {}
 
 void SurfaceMtl::destroy(const egl::Display *display)
 {
-    mDrawableTexture = nullptr;
-    mDepthTexture    = nullptr;
-    mStencilTexture  = nullptr;
-    mCurrentDrawable = nil;
-    if (mMetalLayer && mMetalLayer.get() != mLayer)
-    {
-        // If we created metal layer in SurfaceMtl::initialize(),
-        // we need to detach it from super layer now.
-        [mMetalLayer.get() removeFromSuperlayer];
-    }
-    mMetalLayer = nil;
+    mColorTexture   = nullptr;
+    mDepthTexture   = nullptr;
+    mStencilTexture = nullptr;
+
+    mColorRenderTarget.reset();
+    mDepthRenderTarget.reset();
+    mStencilRenderTarget.reset();
 }
 
 egl::Error SurfaceMtl::initialize(const egl::Display *display)
 {
-    DisplayMtl *displayMtl    = mtl::GetImpl(display);
-    id<MTLDevice> metalDevice = displayMtl->getMetalDevice();
-
-    StartFrameCapture(metalDevice, displayMtl->cmdQueue().get());
-
-    ANGLE_MTL_OBJC_SCOPE
-    {
-        if ([mLayer isKindOfClass:CAMetalLayer.class])
-        {
-            mMetalLayer.retainAssign(static_cast<CAMetalLayer *>(mLayer));
-        }
-        else
-        {
-            mMetalLayer             = [[[CAMetalLayer alloc] init] ANGLE_MTL_AUTORELEASE];
-            mMetalLayer.get().frame = mLayer.frame;
-        }
-
-        mMetalLayer.get().device          = metalDevice;
-        mMetalLayer.get().pixelFormat     = mColorFormat.metalFormat;
-        mMetalLayer.get().framebufferOnly = NO;  // This to allow readPixels
-
-#if TARGET_OS_OSX || TARGET_OS_MACCATALYST
-        // Autoresize with parent layer.
-        mMetalLayer.get().autoresizingMask = kCALayerWidthSizable | kCALayerHeightSizable;
-#endif
-
-        if (mMetalLayer.get() != mLayer)
-        {
-            mMetalLayer.get().contentsScale = mLayer.contentsScale;
-
-            [mLayer addSublayer:mMetalLayer.get()];
-        }
-
-        // ensure drawableSize is set to correct value:
-        checkIfLayerResized();
-    }
-
     return egl::NoError();
 }
 
 FramebufferImpl *SurfaceMtl::createDefaultFramebuffer(const gl::Context *context,
                                                       const gl::FramebufferState &state)
 {
-    auto fbo = new FramebufferMtl(state, /* flipY */ true);
+    auto fbo = new FramebufferMtl(state, /* flipY */ false);
 
     return fbo;
 }
 
 egl::Error SurfaceMtl::makeCurrent(const gl::Context *context)
 {
-    angle::Result result = obtainNextDrawable(context);
-    if (result != angle::Result::Continue)
-    {
-        return egl::EglBadCurrentSurface();
-    }
     return egl::NoError();
 }
 
@@ -302,13 +265,6 @@ egl::Error SurfaceMtl::unMakeCurrent(const gl::Context *context)
 
 egl::Error SurfaceMtl::swap(const gl::Context *context)
 {
-    angle::Result result = swapImpl(context);
-
-    if (result != angle::Result::Continue)
-    {
-        return egl::EglBadSurface();
-    }
-
     return egl::NoError();
 }
 
@@ -364,31 +320,20 @@ void SurfaceMtl::setFixedHeight(EGLint height)
     UNIMPLEMENTED();
 }
 
-// width and height can change with client window resizing
 EGLint SurfaceMtl::getWidth() const
 {
-    if (mDrawableTexture)
+    if (mColorTexture)
     {
-        return static_cast<EGLint>(mDrawableTexture->width());
-    }
-
-    if (mMetalLayer)
-    {
-        return static_cast<EGLint>(mMetalLayer.get().drawableSize.width);
+        return static_cast<EGLint>(mColorTexture->width());
     }
     return 0;
 }
 
 EGLint SurfaceMtl::getHeight() const
 {
-    if (mDrawableTexture)
+    if (mColorTexture)
     {
-        return static_cast<EGLint>(mDrawableTexture->height());
-    }
-
-    if (mMetalLayer)
-    {
-        return static_cast<EGLint>(mMetalLayer.get().drawableSize.height);
+        return static_cast<EGLint>(mColorTexture->height());
     }
     return 0;
 }
@@ -400,7 +345,7 @@ EGLint SurfaceMtl::isPostSubBufferSupported() const
 
 EGLint SurfaceMtl::getSwapBehavior() const
 {
-    return EGL_BUFFER_DESTROYED;
+    return EGL_BUFFER_PRESERVED;
 }
 
 angle::Result SurfaceMtl::getAttachmentRenderTarget(const gl::Context *context,
@@ -409,8 +354,7 @@ angle::Result SurfaceMtl::getAttachmentRenderTarget(const gl::Context *context,
                                                     GLsizei samples,
                                                     FramebufferAttachmentRenderTarget **rtOut)
 {
-    // NOTE(hqle): Support MSAA.
-    ANGLE_TRY(ensureRenderTargetsCreated(context));
+    ASSERT(mColorTexture);
 
     switch (binding)
     {
@@ -432,23 +376,13 @@ angle::Result SurfaceMtl::getAttachmentRenderTarget(const gl::Context *context,
     return angle::Result::Continue;
 }
 
-angle::Result SurfaceMtl::ensureRenderTargetsCreated(const gl::Context *context)
-{
-    if (!mDrawableTexture)
-    {
-        ANGLE_TRY(obtainNextDrawable(context));
-    }
-
-    return angle::Result::Continue;
-}
-
 angle::Result SurfaceMtl::ensureDepthStencilSizeCorrect(const gl::Context *context,
                                                         gl::Framebuffer::DirtyBits *fboDirtyBits)
 {
-    ASSERT(mDrawableTexture && mDrawableTexture->get());
+    ASSERT(mColorTexture && mColorTexture->get());
 
     ContextMtl *contextMtl = mtl::GetImpl(context);
-    auto size              = mDrawableTexture->size();
+    auto size              = mColorTexture->size();
 
     if (mDepthFormat.valid() && (!mDepthTexture || mDepthTexture->size() != size))
     {
@@ -478,7 +412,155 @@ angle::Result SurfaceMtl::ensureDepthStencilSizeCorrect(const gl::Context *conte
     return angle::Result::Continue;
 }
 
-void SurfaceMtl::checkIfLayerResized()
+// WindowSurfaceMtl implementation.
+WindowSurfaceMtl::WindowSurfaceMtl(DisplayMtl *display,
+                                   const egl::SurfaceState &state,
+                                   EGLNativeWindowType window,
+                                   const egl::AttributeMap &attribs)
+    : SurfaceMtl(display, state, attribs), mLayer((__bridge CALayer *)(window))
+{}
+
+WindowSurfaceMtl::~WindowSurfaceMtl() {}
+
+void WindowSurfaceMtl::destroy(const egl::Display *display)
+{
+    SurfaceMtl::destroy(display);
+
+    mCurrentDrawable = nil;
+    if (mMetalLayer && mMetalLayer.get() != mLayer)
+    {
+        // If we created metal layer in WindowSurfaceMtl::initialize(),
+        // we need to detach it from super layer now.
+        [mMetalLayer.get() removeFromSuperlayer];
+    }
+    mMetalLayer = nil;
+}
+
+egl::Error WindowSurfaceMtl::initialize(const egl::Display *display)
+{
+    egl::Error re = SurfaceMtl::initialize(display);
+    if (re.isError())
+    {
+        return re;
+    }
+
+    DisplayMtl *displayMtl    = mtl::GetImpl(display);
+    id<MTLDevice> metalDevice = displayMtl->getMetalDevice();
+
+    StartFrameCapture(metalDevice, displayMtl->cmdQueue().get());
+
+    ANGLE_MTL_OBJC_SCOPE
+    {
+        if ([mLayer isKindOfClass:CAMetalLayer.class])
+        {
+            mMetalLayer.retainAssign(static_cast<CAMetalLayer *>(mLayer));
+        }
+        else
+        {
+            mMetalLayer             = [[[CAMetalLayer alloc] init] ANGLE_MTL_AUTORELEASE];
+            mMetalLayer.get().frame = mLayer.frame;
+        }
+
+        mMetalLayer.get().device          = metalDevice;
+        mMetalLayer.get().pixelFormat     = mColorFormat.metalFormat;
+        mMetalLayer.get().framebufferOnly = NO;  // Support blitting and glReadPixels
+
+#if TARGET_OS_OSX || TARGET_OS_MACCATALYST
+        // Autoresize with parent layer.
+        mMetalLayer.get().autoresizingMask = kCALayerWidthSizable | kCALayerHeightSizable;
+#endif
+
+        if (mMetalLayer.get() != mLayer)
+        {
+            mMetalLayer.get().contentsScale = mLayer.contentsScale;
+
+            [mLayer addSublayer:mMetalLayer.get()];
+        }
+
+        // ensure drawableSize is set to correct value:
+        checkIfLayerResized();
+    }
+
+    return egl::NoError();
+}
+
+FramebufferImpl *WindowSurfaceMtl::createDefaultFramebuffer(const gl::Context *context,
+                                                            const gl::FramebufferState &state)
+{
+    auto fbo = new FramebufferMtl(state, /* flipY */ true);
+
+    return fbo;
+}
+
+egl::Error WindowSurfaceMtl::makeCurrent(const gl::Context *context)
+{
+    ANGLE_TO_EGL_TRY(obtainNextDrawable(context));
+
+    return egl::NoError();
+}
+
+egl::Error WindowSurfaceMtl::swap(const gl::Context *context)
+{
+    ANGLE_TO_EGL_TRY(swapImpl(context));
+
+    return egl::NoError();
+}
+
+// width and height can change with client window resizing
+EGLint WindowSurfaceMtl::getWidth() const
+{
+    if (mColorTexture)
+    {
+        return static_cast<EGLint>(mColorTexture->width());
+    }
+    if (mMetalLayer)
+    {
+        return static_cast<EGLint>(mMetalLayer.get().drawableSize.width);
+    }
+    return SurfaceMtl::getWidth();
+}
+
+EGLint WindowSurfaceMtl::getHeight() const
+{
+    if (mColorTexture)
+    {
+        return static_cast<EGLint>(mColorTexture->height());
+    }
+    if (mMetalLayer)
+    {
+        return static_cast<EGLint>(mMetalLayer.get().drawableSize.height);
+    }
+    return SurfaceMtl::getHeight();
+}
+
+EGLint WindowSurfaceMtl::getSwapBehavior() const
+{
+    return EGL_BUFFER_DESTROYED;
+}
+
+angle::Result WindowSurfaceMtl::getAttachmentRenderTarget(const gl::Context *context,
+                                                          GLenum binding,
+                                                          const gl::ImageIndex &imageIndex,
+                                                          GLsizei samples,
+                                                          FramebufferAttachmentRenderTarget **rtOut)
+{
+    // NOTE(hqle): Support MSAA.
+    ANGLE_TRY(ensureRenderTargetsCreated(context));
+
+    return SurfaceMtl::getAttachmentRenderTarget(context, binding, imageIndex, samples, rtOut);
+}
+
+angle::Result WindowSurfaceMtl::ensureRenderTargetsCreated(const gl::Context *context)
+{
+    if (!mColorTexture)
+    {
+        ANGLE_TRY(obtainNextDrawable(context));
+    }
+
+    return angle::Result::Continue;
+}
+
+void WindowSurfaceMtl::checkIfLayerResized()
 {
     CGSize currentDrawableSize        = mMetalLayer.get().drawableSize;
     CGSize currentLayerSize           = mMetalLayer.get().bounds.size;
@@ -493,7 +575,7 @@ void SurfaceMtl::checkIfLayerResized()
     }
 }
 
-angle::Result SurfaceMtl::obtainNextDrawable(const gl::Context *context)
+angle::Result WindowSurfaceMtl::obtainNextDrawable(const gl::Context *context)
 {
     checkIfLayerResized();
 
@@ -505,9 +587,9 @@ angle::Result SurfaceMtl::obtainNextDrawable(const gl::Context *context)
 
         ANGLE_MTL_TRY(contextMtl, mMetalLayer);
 
-        if (mDrawableTexture)
+        if (mColorTexture)
         {
-            mDrawableTexture->set(nil);
+            mColorTexture->set(nil);
         }
 
         mCurrentDrawable = nil;
@@ -522,18 +604,18 @@ angle::Result SurfaceMtl::obtainNextDrawable(const gl::Context *context)
             mMetalLayer.get().allowsNextDrawableTimeout = YES;
         }
 
-        if (!mDrawableTexture)
+        if (!mColorTexture)
         {
-            mDrawableTexture = mtl::Texture::MakeFromMetal(mCurrentDrawable.get().texture);
-            mColorRenderTarget.set(mDrawableTexture, 0, 0, mColorFormat);
+            mColorTexture = mtl::Texture::MakeFromMetal(mCurrentDrawable.get().texture);
+            mColorRenderTarget.set(mColorTexture, 0, 0, mColorFormat);
         }
         else
         {
-            mDrawableTexture->set(mCurrentDrawable.get().texture);
+            mColorTexture->set(mCurrentDrawable.get().texture);
         }
 
-        ANGLE_MTL_LOG("Current metal drawable size=%d,%d", mDrawableTexture->width(),
-                      mDrawableTexture->height());
+        ANGLE_MTL_LOG("Current metal drawable size=%d,%d", mColorTexture->width(),
+                      mColorTexture->height());
 
         gl::Framebuffer::DirtyBits fboDirtyBits;
         fboDirtyBits.set(gl::Framebuffer::DIRTY_BIT_COLOR_ATTACHMENT_0);
@@ -556,7 +638,7 @@ angle::Result SurfaceMtl::obtainNextDrawable(const gl::Context *context)
     }
 }
 
-angle::Result SurfaceMtl::swapImpl(const gl::Context *context)
+angle::Result WindowSurfaceMtl::swapImpl(const gl::Context *context)
 {
     ANGLE_TRY(ensureRenderTargetsCreated(context));
 

@@ -29,7 +29,6 @@ class SurfaceMtl : public SurfaceImpl
   public:
     SurfaceMtl(DisplayMtl *display,
                const egl::SurfaceState &state,
-               EGLNativeWindowType window,
                const egl::AttributeMap &attribs);
     ~SurfaceMtl() override;
 
@@ -59,7 +58,6 @@ class SurfaceMtl : public SurfaceImpl
     void setFixedWidth(EGLint width) override;
     void setFixedHeight(EGLint height) override;
 
-    // width and height can change with client window resizing
     EGLint getWidth() const override;
     EGLint getHeight() const override;
 
@@ -72,21 +70,15 @@ class SurfaceMtl : public SurfaceImpl
                                             GLsizei samples,
                                             FramebufferAttachmentRenderTarget **rtOut) override;
 
-  private:
-    angle::Result swapImpl(const gl::Context *context);
-    angle::Result ensureRenderTargetsCreated(const gl::Context *context);
-    angle::Result obtainNextDrawable(const gl::Context *context);
+  protected:
+    // Ensure companion (depth, stencil) textures' size is correct w.r.t color texture.
     angle::Result ensureDepthStencilSizeCorrect(const gl::Context *context,
                                                 gl::Framebuffer::DirtyBits *fboDirtyBits);
-    // Check if metal layer has been resized.
-    void checkIfLayerResized();
 
-    mtl::AutoObjCObj<CAMetalLayer> mMetalLayer = nil;
-    CALayer *mLayer;
-    mtl::AutoObjCPtr<id<CAMetalDrawable>> mCurrentDrawable = nil;
-    mtl::TextureRef mDrawableTexture;
+    mtl::TextureRef mColorTexture;
     mtl::TextureRef mDepthTexture;
     mtl::TextureRef mStencilTexture;
+
     bool mUsePackedDepthStencil = false;
 
     mtl::Format mColorFormat;
@@ -96,6 +88,49 @@ class SurfaceMtl : public SurfaceImpl
     RenderTargetMtl mColorRenderTarget;
     RenderTargetMtl mDepthRenderTarget;
     RenderTargetMtl mStencilRenderTarget;
+};
+
+class WindowSurfaceMtl : public SurfaceMtl
+{
+  public:
+    WindowSurfaceMtl(DisplayMtl *display,
+                     const egl::SurfaceState &state,
+                     EGLNativeWindowType window,
+                     const egl::AttributeMap &attribs);
+    ~WindowSurfaceMtl() override;
+
+    void destroy(const egl::Display *display) override;
+
+    egl::Error initialize(const egl::Display *display) override;
+    FramebufferImpl *createDefaultFramebuffer(const gl::Context *context,
+                                              const gl::FramebufferState &state) override;
+
+    egl::Error makeCurrent(const gl::Context *context) override;
+    egl::Error swap(const gl::Context *context) override;
+
+    EGLint getSwapBehavior() const override;
+
+    // width and height can change with client window resizing
+    EGLint getWidth() const override;
+    EGLint getHeight() const override;
+
+    angle::Result getAttachmentRenderTarget(const gl::Context *context,
+                                            GLenum binding,
+                                            const gl::ImageIndex &imageIndex,
+                                            GLsizei samples,
+                                            FramebufferAttachmentRenderTarget **rtOut) override;
+
+  private:
+    angle::Result swapImpl(const gl::Context *context);
+    angle::Result ensureRenderTargetsCreated(const gl::Context *context);
+    angle::Result obtainNextDrawable(const gl::Context *context);
+
+    // Check if metal layer has been resized.
+    void checkIfLayerResized();
+
+    mtl::AutoObjCObj<CAMetalLayer> mMetalLayer = nil;
+    CALayer *mLayer;
+    mtl::AutoObjCPtr<id<CAMetalDrawable>> mCurrentDrawable = nil;
 };
 
 }  // namespace rx

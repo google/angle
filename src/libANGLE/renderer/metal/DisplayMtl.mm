@@ -161,7 +161,7 @@ SurfaceImpl *DisplayMtl::createWindowSurface(const egl::SurfaceState &state,
                                              EGLNativeWindowType window,
                                              const egl::AttributeMap &attribs)
 {
-    return new SurfaceMtl(this, state, window, attribs);
+    return new WindowSurfaceMtl(this, state, window, attribs);
 }
 
 SurfaceImpl *DisplayMtl::createPbufferSurface(const egl::SurfaceState &state,
