@@ -20,6 +20,7 @@ class OzoneWindow : public OSWindow
     ~OzoneWindow() override;
 
     bool initialize(const std::string &name, int width, int height) override;
+    void disableErrorMessageDialog() override;
     void destroy() override;
 
     void resetNativeWindow() override;

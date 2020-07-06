@@ -114,6 +114,8 @@ bool ScenicWindow::initialize(const std::string &name, int width, int height)
     return true;
 }
 
+void ScenicWindow::disableErrorMessageDialog() {}
+
 void ScenicWindow::destroy()
 {
     while (mInFlightPresents != 0 && !mLostSession)

@@ -676,6 +676,8 @@ bool OSXWindow::initialize(const std::string &name, int width, int height)
     return true;
 }
 
+void OSXWindow::disableErrorMessageDialog() {}
+
 void OSXWindow::destroy()
 {
     AllWindows().erase(this);

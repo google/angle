@@ -31,6 +31,8 @@ bool AndroidWindow::initialize(const std::string &name, int width, int height)
 }
 void AndroidWindow::destroy() {}
 
+void AndroidWindow::disableErrorMessageDialog() {}
+
 void AndroidWindow::resetNativeWindow() {}
 
 EGLNativeWindowType AndroidWindow::getNativeWindow() const

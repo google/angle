@@ -23,6 +23,7 @@ class Win32Window : public OSWindow
 
     bool initialize(const std::string &name, int width, int height) override;
     void destroy() override;
+    void disableErrorMessageDialog() override;
 
     bool takeScreenshot(uint8_t *pixelData) override;
 

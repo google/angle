@@ -371,6 +371,8 @@ bool X11Window::initialize(const std::string &name, int width, int height)
     return true;
 }
 
+void X11Window::disableErrorMessageDialog() {}
+
 void X11Window::destroy()
 {
     if (mWindow)

@@ -38,16 +38,16 @@ std::function<void(int)> ReplayContextFrame = reinterpret_cast<void (*)(int)>(
 std::function<void()> ResetContextReplay = reinterpret_cast<void (*)()>(
     ANGLE_MACRO_CONCAT(ResetContext,
                        ANGLE_MACRO_CONCAT(ANGLE_CAPTURE_REPLAY_TEST_CONTEXT_ID, Replay)));
-std::function<std::vector<uint8_t>()> GetSerializedContextStateData =
-    reinterpret_cast<std::vector<uint8_t> (*)()>(
-        ANGLE_MACRO_CONCAT(GetSerializedContextState,
-                           ANGLE_MACRO_CONCAT(ANGLE_CAPTURE_REPLAY_TEST_CONTEXT_ID, Data)));
+std::function<std::vector<uint8_t>(uint32_t)> GetSerializedContextStateData =
+    reinterpret_cast<std::vector<uint8_t> (*)(uint32_t)>(
+        ANGLE_MACRO_CONCAT(GetSerializedContext,
+                           ANGLE_MACRO_CONCAT(ANGLE_CAPTURE_REPLAY_TEST_CONTEXT_ID, StateData)));
 
 class CaptureReplayTest
 {
   public:
-    CaptureReplayTest(int width, int height, EGLint glesMajorVersion, EGLint glesMinorVersion)
-        : mWidth(width), mHeight(height), mOSWindow(nullptr), mEGLWindow(nullptr)
+    CaptureReplayTest(EGLint glesMajorVersion, EGLint glesMinorVersion)
+        : mOSWindow(nullptr), mEGLWindow(nullptr)
 
     {
         mPlatformParams.renderer   = EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE;
@@ -59,6 +59,7 @@ class CaptureReplayTest
 
         mEGLWindow = EGLWindow::New(glesMajorVersion, glesMinorVersion);
         mOSWindow  = OSWindow::New();
+        mOSWindow->disableErrorMessageDialog();
     }
 
     ~CaptureReplayTest()
@@ -83,13 +84,12 @@ class CaptureReplayTest
         return true;
     }
 
-    void draw() { ReplayContextFrame(0); }
-
     void swap() { mEGLWindow->swap(); }
 
     int run()
     {
-        if (!mOSWindow->initialize("Capture Replay Test", mWidth, mHeight))
+        if (!mOSWindow->initialize("Capture Replay Test", kReplayDrawSurfaceWidth,
+                                   kReplayDrawSurfaceHeight))
         {
             return -1;
         }
@@ -97,12 +97,12 @@ class CaptureReplayTest
         mOSWindow->setVisible(true);
 
         ConfigParameters configParams;
-        configParams.redBits     = 8;
-        configParams.greenBits   = 8;
-        configParams.blueBits    = 8;
-        configParams.alphaBits   = 8;
-        configParams.depthBits   = 24;
-        configParams.stencilBits = 8;
+        configParams.redBits     = kDefaultFramebufferRedBits;
+        configParams.greenBits   = kDefaultFramebufferGreenBits;
+        configParams.blueBits    = kDefaultFramebufferBlueBits;
+        configParams.alphaBits   = kDefaultFramebufferAlphaBits;
+        configParams.depthBits   = kDefaultFramebufferDepthBits;
+        configParams.stencilBits = kDefaultFramebufferStencilBits;
 
         if (!mEGLWindow->initializeGL(mOSWindow, mEntryPointsLib.get(),
                                       angle::GLESDriverType::AngleEGL, mPlatformParams,
@@ -124,20 +124,23 @@ class CaptureReplayTest
             result = -1;
         }
 
-        draw();
-
-        gl::Context *context = static_cast<gl::Context *>(mEGLWindow->getContext());
-        gl::BinaryOutputStream bos;
-        if (angle::SerializeContext(&bos, context) != angle::Result::Continue)
+        for (uint32_t frame = kReplayFrameStart; frame <= kReplayFrameEnd; frame++)
         {
-            return -1;
+            ReplayContextFrame(frame);
+            gl::Context *context = static_cast<gl::Context *>(mEGLWindow->getContext());
+            gl::BinaryOutputStream bos;
+            // If swapBuffers is not called, then default framebuffer should not be serialized
+            if (angle::SerializeContext(&bos, context) != angle::Result::Continue)
+            {
+                return -1;
+            }
+            bool isEqual = compareSerializedStates(frame, bos);
+            if (!isEqual)
+            {
+                return -1;
+            }
+            swap();
         }
-        bool isEqual = compareSerializedStates(bos);
-        if (!isEqual)
-        {
-            result = -1;
-        }
-        swap();
 
         mEGLWindow->destroyGL();
         mOSWindow->destroy();
@@ -146,13 +149,12 @@ class CaptureReplayTest
     }
 
   private:
-    bool compareSerializedStates(const gl::BinaryOutputStream &replaySerializedContextData)
+    bool compareSerializedStates(uint32_t frame,
+                                 const gl::BinaryOutputStream &replaySerializedContextData)
     {
-        return GetSerializedContextStateData() == replaySerializedContextData.getData();
+        return GetSerializedContextStateData(frame) == replaySerializedContextData.getData();
     }
 
-    uint32_t mWidth;
-    uint32_t mHeight;
     OSWindow *mOSWindow;
     EGLWindow *mEGLWindow;
 
@@ -165,10 +167,8 @@ class CaptureReplayTest
 int main(int argc, char **argv)
 {
     // TODO (nguyenmh): http://anglebug.com/4759: initialize app with arguments taken from cmdline
-    const int width               = 128;
-    const int height              = 128;
     const EGLint glesMajorVersion = 2;
     const GLint glesMinorVersion  = 0;
-    CaptureReplayTest app(width, height, glesMajorVersion, glesMinorVersion);
+    CaptureReplayTest app(glesMajorVersion, glesMinorVersion);
     return app.run();
 }

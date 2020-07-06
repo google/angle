@@ -27,6 +27,8 @@ bool OzoneWindow::initialize(const std::string &name, int width, int height)
     return true;
 }
 
+void OzoneWindow::disableErrorMessageDialog() {}
+
 void OzoneWindow::destroy() {}
 
 void OzoneWindow::resetNativeWindow() {}

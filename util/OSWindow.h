@@ -27,6 +27,7 @@ class ANGLE_UTIL_EXPORT OSWindow
 
     virtual bool initialize(const std::string &name, int width, int height) = 0;
     virtual void destroy()                                                  = 0;
+    virtual void disableErrorMessageDialog()                                = 0;
 
     int getX() const;
     int getY() const;

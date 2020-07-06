@@ -42,6 +42,7 @@ class ANGLE_UTIL_EXPORT ScenicWindow : public OSWindow
 
     // OSWindow:
     bool initialize(const std::string &name, int width, int height) override;
+    void disableErrorMessageDialog() override;
     void destroy() override;
     void resetNativeWindow() override;
     EGLNativeWindowType getNativeWindow() const override;
