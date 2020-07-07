@@ -14,28 +14,41 @@
 #include "libANGLE/BinaryStream.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/Framebuffer.h"
+#include "libANGLE/renderer/FramebufferImpl.h"
 
 namespace angle
 {
 
-Result ReadPixelsFromAttachment(gl::Context *context,
+bool IsValidColorAttachmentBinding(GLenum binding, size_t colorAttachmentsCount)
+{
+    return binding == GL_BACK || (binding >= GL_COLOR_ATTACHMENT0 &&
+                                  (binding - GL_COLOR_ATTACHMENT0) < colorAttachmentsCount);
+}
+
+Result ReadPixelsFromAttachment(const gl::Context *context,
                                 gl::Framebuffer *framebuffer,
                                 const gl::FramebufferAttachment &framebufferAttachment,
                                 ScratchBuffer *scratchBuffer,
                                 MemoryBuffer **pixels)
 {
-    gl::Extents extents = framebufferAttachment.getSize();
-    gl::Format format   = framebufferAttachment.getFormat();
-    ANGLE_CHECK_GL_ALLOC(
-        context,
-        scratchBuffer->get(format.info->pixelBytes * extents.width * extents.height, pixels));
+    gl::Extents extents       = framebufferAttachment.getSize();
+    GLenum binding            = framebufferAttachment.getBinding();
+    gl::InternalFormat format = *framebufferAttachment.getFormat().info;
+    if (IsValidColorAttachmentBinding(binding,
+                                      framebuffer->getState().getColorAttachments().size()))
+    {
+        format = framebuffer->getImplementation()->getImplementationColorReadFormat(context);
+    }
+    ANGLE_CHECK_GL_ALLOC(const_cast<gl::Context *>(context),
+                         scratchBuffer->getInitialized(
+                             format.pixelBytes * extents.width * extents.height, pixels, 0));
     ANGLE_TRY(framebuffer->readPixels(context, gl::Rectangle{0, 0, extents.width, extents.height},
-                                      format.info->format, format.info->type, gl::PixelPackState{},
-                                      nullptr, (*pixels)->data()));
+                                      format.format, format.type, gl::PixelPackState{}, nullptr,
+                                      (*pixels)->data()));
     return Result::Continue;
 }
 
-Result SerializeContext(gl::BinaryOutputStream *bos, gl::Context *context)
+Result SerializeContext(gl::BinaryOutputStream *bos, const gl::Context *context)
 {
     const gl::FramebufferManager &framebufferManager =
         context->getState().getFramebufferManagerForCapture();
@@ -47,14 +60,14 @@ Result SerializeContext(gl::BinaryOutputStream *bos, gl::Context *context)
     return Result::Continue;
 }
 
-Result SerializeFramebuffer(gl::Context *context,
+Result SerializeFramebuffer(const gl::Context *context,
                             gl::BinaryOutputStream *bos,
                             gl::Framebuffer *framebuffer)
 {
     return SerializeFramebufferState(context, bos, framebuffer, framebuffer->getState());
 }
 
-Result SerializeFramebufferState(gl::Context *context,
+Result SerializeFramebufferState(const gl::Context *context,
                                  gl::BinaryOutputStream *bos,
                                  gl::Framebuffer *framebuffer,
                                  const gl::FramebufferState &framebufferState)
@@ -69,9 +82,6 @@ Result SerializeFramebufferState(gl::Context *context,
     bos->writeInt(framebufferState.getDefaultFixedSampleLocations());
     bos->writeInt(framebufferState.getDefaultLayers());
 
-    context->bindFramebuffer(GL_FRAMEBUFFER, framebufferState.id());
-    ANGLE_TRY(framebuffer->syncState(context, GL_FRAMEBUFFER));
-
     const std::vector<gl::FramebufferAttachment> &colorAttachments =
         framebufferState.getColorAttachments();
     ScratchBuffer scratchBuffer(1);
@@ -83,11 +93,29 @@ Result SerializeFramebufferState(gl::Context *context,
                                                      colorAttachment));
         }
     }
+    if (framebuffer->getDepthStencilAttachment())
+    {
+        ANGLE_TRY(SerializeFramebufferAttachment(context, bos, &scratchBuffer, framebuffer,
+                                                 *framebuffer->getDepthStencilAttachment()));
+    }
+    else
+    {
+        if (framebuffer->getDepthAttachment())
+        {
+            ANGLE_TRY(SerializeFramebufferAttachment(context, bos, &scratchBuffer, framebuffer,
+                                                     *framebuffer->getDepthAttachment()));
+        }
+        if (framebuffer->getStencilAttachment())
+        {
+            ANGLE_TRY(SerializeFramebufferAttachment(context, bos, &scratchBuffer, framebuffer,
+                                                     *framebuffer->getStencilAttachment()));
+        }
+    }
     scratchBuffer.clear();
     return Result::Continue;
 }
 
-Result SerializeFramebufferAttachment(gl::Context *context,
+Result SerializeFramebufferAttachment(const gl::Context *context,
                                       gl::BinaryOutputStream *bos,
                                       ScratchBuffer *scratchBuffer,
                                       gl::Framebuffer *framebuffer,
@@ -100,17 +128,25 @@ Result SerializeFramebufferAttachment(gl::Context *context,
     {
         SerializeImageIndex(bos, framebufferAttachment.getTextureImageIndex());
     }
-
     bos->writeInt(framebufferAttachment.getNumViews());
     bos->writeInt(framebufferAttachment.isMultiview());
     bos->writeInt(framebufferAttachment.getBaseViewIndex());
     bos->writeInt(framebufferAttachment.getRenderToTextureSamples());
+
+    GLenum prevReadBufferState = framebuffer->getReadBufferState();
+    GLenum binding             = framebufferAttachment.getBinding();
+    if (IsValidColorAttachmentBinding(binding,
+                                      framebuffer->getState().getColorAttachments().size()))
+    {
+        framebuffer->setReadBuffer(framebufferAttachment.getBinding());
+        ANGLE_TRY(framebuffer->syncState(context, GL_FRAMEBUFFER));
+    }
     MemoryBuffer *pixelsPtr = nullptr;
-    context->readBuffer(framebufferAttachment.getBinding());
-    ANGLE_TRY(framebuffer->syncState(context, GL_FRAMEBUFFER));
     ANGLE_TRY(ReadPixelsFromAttachment(context, framebuffer, framebufferAttachment, scratchBuffer,
                                        &pixelsPtr));
     bos->writeBytes(pixelsPtr->data(), pixelsPtr->size());
+    // Reset framebuffer state
+    framebuffer->setReadBuffer(prevReadBufferState);
     return Result::Continue;
 }
 

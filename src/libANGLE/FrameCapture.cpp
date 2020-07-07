@@ -930,8 +930,7 @@ void WriteCppReplayIndexFiles(bool compression,
     if (serializeStateEnabled)
     {
         gl::BinaryOutputStream serializedContextData{};
-        if (SerializeContext(&serializedContextData, const_cast<gl::Context *>(context)) !=
-            Result::Continue)
+        if (SerializeContext(&serializedContextData, context) != Result::Continue)
         {
             return;
         }
