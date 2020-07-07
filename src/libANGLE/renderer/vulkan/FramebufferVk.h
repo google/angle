@@ -184,6 +184,13 @@ class FramebufferVk : public FramebufferImpl
                                bool clearStencil,
                                const VkClearColorValue &clearColorValue,
                                const VkClearDepthStencilValue &clearDepthStencilValue);
+    void clearWithClearAttachment(vk::CommandBuffer *renderPassCommandBuffer,
+                                  const gl::Rectangle &scissoredRenderArea,
+                                  gl::DrawBufferMask clearColorBuffers,
+                                  bool clearDepth,
+                                  bool clearStencil,
+                                  const VkClearColorValue &clearColorValue,
+                                  const VkClearDepthStencilValue &clearDepthStencilValue);
     void updateActiveColorMasks(size_t colorIndex, bool r, bool g, bool b, bool a);
     void updateRenderPassDesc();
     angle::Result updateColorAttachment(const gl::Context *context,
