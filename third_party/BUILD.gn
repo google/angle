@@ -10,11 +10,6 @@ import("//third_party/libjpeg.gni")
 
 assert(!is_ios, "This is not used on iOS, don't drag it in unintentionally")
 
-# TODO(jiajie.hu@intel.com): Define the override in Chromium and remove this.
-if (!defined(angle_libjpeg_turbo_dir)) {
-  angle_libjpeg_turbo_dir = "//third_party/libjpeg_turbo"
-}
-
 config("system_libjpeg_config") {
   libs = [ "jpeg" ]
   defines = [ "USE_SYSTEM_LIBJPEG" ]
