@@ -18,7 +18,12 @@
 #include "common/utilities.h"
 #include "compiler/translator/OutputVulkanGLSLForMetal.h"
 #include "compiler/translator/StaticType.h"
+#include "compiler/translator/tree_ops/InitializeVariables.h"
 #include "compiler/translator/tree_util/BuiltIn.h"
+#include "compiler/translator/tree_util/FindMain.h"
+#include "compiler/translator/tree_util/FindSymbolNode.h"
+#include "compiler/translator/tree_util/IntermNode_util.h"
+#include "compiler/translator/tree_util/ReplaceVariable.h"
 #include "compiler/translator/tree_util/RunAtTheEndOfShader.h"
 #include "compiler/translator/util.h"
 
@@ -79,6 +84,41 @@ ANGLE_NO_DISCARD bool AppendVertexShaderPositionYCorrectionToMain(TCompiler *com
     return RunAtTheEndOfShader(compiler, root, assignment, symbolTable);
 }
 
+// Initialize unused varying outputs.
+ANGLE_NO_DISCARD bool InitializeUnusedOutputs(TIntermBlock *root,
+                                              TSymbolTable *symbolTable,
+                                              const InitVariableList &unusedVars)
+{
+    if (unusedVars.empty())
+    {
+        return true;
+    }
+
+    TIntermSequence *insertSequence = new TIntermSequence;
+
+    for (const sh::ShaderVariable &var : unusedVars)
+    {
+        ASSERT(!var.active);
+        const TIntermSymbol *symbol = FindSymbolNode(root, var.name);
+        ASSERT(symbol);
+
+        TIntermSequence *initCode = CreateInitCode(symbol, false, false, symbolTable);
+
+        insertSequence->insert(insertSequence->end(), initCode->begin(), initCode->end());
+    }
+
+    if (insertSequence)
+    {
+        TIntermFunctionDefinition *main = FindMain(root);
+        TIntermSequence *mainSequence   = main->getBody()->getSequence();
+
+        // Insert init code at the start of main()
+        mainSequence->insert(mainSequence->begin(), insertSequence->begin(), insertSequence->end());
+    }
+
+    return true;
+}
+
 }  // anonymous namespace
 
 TranslatorMetal::TranslatorMetal(sh::GLenum type, ShShaderSpec spec) : TranslatorVulkan(type, spec)
@@ -114,6 +154,26 @@ bool TranslatorMetal::translate(TIntermBlock *root,
     else if (getShaderType() == GL_FRAGMENT_SHADER)
     {
         if (!insertSampleMaskWritingLogic(root, driverUniforms))
+        {
+            return false;
+        }
+    }
+
+    // Initialize unused varying outputs to avoid spirv-cross dead-code removing them in later
+    // stage. Only do this if SH_INIT_OUTPUT_VARIABLES is not specified.
+    if ((getShaderType() == GL_VERTEX_SHADER || getShaderType() == GL_GEOMETRY_SHADER_EXT) &&
+        !(compileOptions & SH_INIT_OUTPUT_VARIABLES))
+    {
+        InitVariableList list;
+        for (const sh::ShaderVariable &var : mOutputVaryings)
+        {
+            if (!var.active)
+            {
+                list.push_back(var);
+            }
+        }
+
+        if (!InitializeUnusedOutputs(root, &getSymbolTable(), list))
         {
             return false;
         }

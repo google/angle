@@ -4624,6 +4624,34 @@ TEST_P(GLSLTest, StructsWithSameMembersDisambiguatedByName)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
+// Test that an inactive varying in vertex shader but used in fragment shader can be linked
+// successfully.
+TEST_P(GLSLTest, InactiveVaryingInVertexActiveInFragment)
+{
+    // http://anglebug.com/4820
+    ANGLE_SKIP_TEST_IF(IsOSX() && IsOpenGL());
+
+    constexpr char kVS[] =
+        "attribute vec4 inputAttribute;\n"
+        "varying vec4 varColor;\n"
+        "void main()\n"
+        "{\n"
+        "    gl_Position = inputAttribute;\n"
+        "}\n";
+
+    constexpr char kFS[] =
+        "precision mediump float;\n"
+        "varying vec4 varColor;\n"
+        "void main()\n"
+        "{\n"
+        "    gl_FragColor = varColor;\n"
+        "}\n";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    drawQuad(program.get(), "inputAttribute", 0.5f);
+    ASSERT_GL_NO_ERROR();
+}
+
 // Test that a varying struct that's not statically used in the fragment shader works.
 // GLSL ES 3.00.6 section 4.3.10.
 TEST_P(GLSLTest_ES3, VaryingStructNotStaticallyUsedInFragmentShader)
