@@ -697,13 +697,18 @@ class BufferHelper final : public Resource
     BufferHelper();
     ~BufferHelper() override;
 
+    angle::Result init(ContextVk *contextVk,
+                       const VkBufferCreateInfo &createInfo,
+                       VkMemoryPropertyFlags memoryPropertyFlags);
     angle::Result init(Context *context,
+                       BufferSerial serial,
                        const VkBufferCreateInfo &createInfo,
                        VkMemoryPropertyFlags memoryPropertyFlags);
     void destroy(RendererVk *renderer);
 
     void release(RendererVk *renderer);
 
+    BufferSerial getBufferSerial() const { return mSerial; }
     bool valid() const { return mBuffer.valid(); }
     const Buffer &getBuffer() const { return mBuffer; }
     VkDeviceSize getSize() const { return mSize; }
@@ -830,6 +835,8 @@ class BufferHelper final : public Resource
     VkFlags mCurrentReadAccess;
     VkPipelineStageFlags mCurrentWriteStages;
     VkPipelineStageFlags mCurrentReadStages;
+
+    BufferSerial mSerial;
 };
 
 // CommandBufferHelper (CBH) class wraps ANGLE's custom command buffer
@@ -1652,7 +1659,7 @@ class ImageViewHelper : angle::NonCopyable
                                              const ImageView **imageViewOut);
 
     // Return unique Serial for this imageView, first assigning it if it hasn't yet been set
-    Serial getAssignSerial(ContextVk *contextVk, uint32_t level, uint32_t layer);
+    ImageViewSerial getAssignSerial(ContextVk *contextVk, uint32_t level, uint32_t layer);
 
   private:
     ImageView &getReadImageView()
@@ -1687,7 +1694,7 @@ class ImageViewHelper : angle::NonCopyable
     LayerLevelImageViewVector mLayerLevelDrawImageViews;
 
     // Store Serials per layer/level of imageView
-    std::unordered_map<LayerLevel, Serial> mSerialCache;
+    std::unordered_map<LayerLevel, ImageViewSerial> mSerialCache;
 };
 
 // The SamplerHelper allows a Sampler to be coupled with a resource lifetime.

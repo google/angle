@@ -13,6 +13,7 @@
 #include "common/debug.h"
 #include "common/utilities.h"
 #include "libANGLE/Context.h"
+#include "libANGLE/Display.h"
 #include "libANGLE/Program.h"
 #include "libANGLE/Semaphore.h"
 #include "libANGLE/Surface.h"
@@ -20,6 +21,7 @@
 #include "libANGLE/renderer/renderer_utils.h"
 #include "libANGLE/renderer/vulkan/BufferVk.h"
 #include "libANGLE/renderer/vulkan/CompilerVk.h"
+#include "libANGLE/renderer/vulkan/DisplayVk.h"
 #include "libANGLE/renderer/vulkan/FenceNVVk.h"
 #include "libANGLE/renderer/vulkan/FramebufferVk.h"
 #include "libANGLE/renderer/vulkan/MemoryObjectVk.h"
@@ -630,7 +632,8 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
       mCurrentIndirectBuffer(nullptr),
       mBufferInfos(),
       mImageInfos(),
-      mWriteInfos()
+      mWriteInfos(),
+      mShareGroupVk(vk::GetImpl(state.getShareGroup()))
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "ContextVk::ContextVk");
     memset(&mClearColorValue, 0, sizeof(mClearColorValue));
@@ -3769,11 +3772,11 @@ angle::Result ContextVk::updateActiveTextures(const gl::Context *context)
         TextureVk *textureVk = vk::GetImpl(texture);
 
         SamplerVk *samplerVk;
-        Serial samplerSerial;
+        SamplerSerial samplerSerial;
         if (sampler == nullptr)
         {
             samplerVk     = nullptr;
-            samplerSerial = rx::kZeroSerial;
+            samplerSerial = rx::kInvalidSamplerSerial;
         }
         else
         {
@@ -4671,6 +4674,23 @@ ANGLE_INLINE ContextVk::ScopedDescriptorSetUpdates::~ScopedDescriptorSetUpdates(
     mContextVk->mWriteInfos.clear();
     mContextVk->mBufferInfos.clear();
     mContextVk->mImageInfos.clear();
+}
+
+BufferSerial ContextVk::generateBufferSerial()
+{
+    return mShareGroupVk->generateBufferSerial();
+}
+TextureSerial ContextVk::generateTextureSerial()
+{
+    return mShareGroupVk->generateTextureSerial();
+}
+SamplerSerial ContextVk::generateSamplerSerial()
+{
+    return mShareGroupVk->generateSamplerSerial();
+}
+ImageViewSerial ContextVk::generateAttachmentImageViewSerial()
+{
+    return mShareGroupVk->generateImageViewSerial();
 }
 
 }  // namespace rx

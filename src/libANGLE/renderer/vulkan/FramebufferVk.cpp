@@ -1336,7 +1336,7 @@ angle::Result FramebufferVk::updateColorAttachment(const gl::Context *context,
     }
     else
     {
-        mCurrentFramebufferDesc.update(colorIndexGL, kZeroSerial);
+        mCurrentFramebufferDesc.update(colorIndexGL, kInvalidImageViewSerial);
     }
 
     return angle::Result::Continue;
@@ -1378,7 +1378,8 @@ void FramebufferVk::updateDepthStencilAttachmentSerial(ContextVk *contextVk)
     }
     else
     {
-        mCurrentFramebufferDesc.update(vk::kFramebufferDescDepthStencilIndex, kZeroSerial);
+        mCurrentFramebufferDesc.update(vk::kFramebufferDescDepthStencilIndex,
+                                       kInvalidImageViewSerial);
     }
 }
 

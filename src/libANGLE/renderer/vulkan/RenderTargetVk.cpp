@@ -58,13 +58,14 @@ void RenderTargetVk::reset()
     mContentDefined = false;
 }
 
-Serial RenderTargetVk::getAssignImageViewSerial(ContextVk *contextVk)
+ImageViewSerial RenderTargetVk::getAssignImageViewSerial(ContextVk *contextVk)
 {
     ASSERT(mImageViews);
     ASSERT(mLayerIndex < std::numeric_limits<uint16_t>::max());
     ASSERT(mLevelIndex < std::numeric_limits<uint16_t>::max());
 
-    Serial imageViewSerial = mImageViews->getAssignSerial(contextVk, mLevelIndex, mLayerIndex);
+    ImageViewSerial imageViewSerial =
+        mImageViews->getAssignSerial(contextVk, mLevelIndex, mLayerIndex);
     ASSERT(imageViewSerial.getValue() < std::numeric_limits<uint32_t>::max());
     return imageViewSerial;
 }

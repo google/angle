@@ -20,7 +20,16 @@ class RendererVk;
 
 class ShareGroupVk : public ShareGroupImpl
 {
+  public:
+    ShareGroupVk() : mCurrentUniqueSerial(1) {}
+
+    BufferSerial generateBufferSerial() { return ++mCurrentUniqueSerial; }
+    TextureSerial generateTextureSerial() { return ++mCurrentUniqueSerial; }
+    SamplerSerial generateSamplerSerial() { return ++mCurrentUniqueSerial; }
+    ImageViewSerial generateImageViewSerial() { return ++mCurrentUniqueSerial; }
+
   private:
+    uint32_t mCurrentUniqueSerial;
 };
 
 class DisplayVk : public DisplayImpl, public vk::Context

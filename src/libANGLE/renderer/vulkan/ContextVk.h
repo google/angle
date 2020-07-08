@@ -31,6 +31,7 @@ namespace rx
 class ProgramExecutableVk;
 class RendererVk;
 class WindowSurfaceVk;
+class ShareGroupVk;
 
 struct CommandBatch final : angle::NonCopyable
 {
@@ -462,16 +463,15 @@ class ContextVk : public ContextImpl, public vk::Context
     vk::DescriptorSetLayoutDesc getDriverUniformsDescriptorSetDesc(
         VkShaderStageFlags shaderStages) const;
 
-    // We use texture serials to optimize texture binding updates. Each permutation of a
-    // {VkImage/VkSampler} generates a unique serial. These serials are combined to form a unique
+    // We use textureSerial to optimize texture binding updates. Each permutation of a
+    // {VkImage/VkSampler} generates a unique serial. These object ids are combined to form a unique
     // signature for each descriptor set. This allows us to keep a cache of descriptor sets and
     // avoid calling vkAllocateDesctiporSets each texture update.
-    Serial generateTextureSerial() { return mTextureSerialFactory.generate(); }
     const vk::TextureDescriptorDesc &getActiveTexturesDesc() const { return mActiveTexturesDesc; }
-    Serial generateAttachmentImageViewSerial()
-    {
-        return mAttachmentImageViewSerialFactory.generate();
-    }
+    ImageViewSerial generateAttachmentImageViewSerial();
+    BufferSerial generateBufferSerial();
+    TextureSerial generateTextureSerial();
+    SamplerSerial generateSamplerSerial();
 
     angle::Result updateScissor(const gl::State &glState);
 
@@ -1036,10 +1036,6 @@ class ContextVk : public ContextImpl, public vk::Context
     uint32_t mPrimaryBufferCounter;
     uint32_t mRenderPassCounter;
 
-    // Generators for texture & framebuffer serials.
-    SerialFactory mTextureSerialFactory;
-    SerialFactory mAttachmentImageViewSerialFactory;
-
     gl::State::DirtyBits mPipelineDirtyBitsMask;
 
     // List of all resources currently being used by this ContextVk's recorded commands.
@@ -1062,6 +1058,8 @@ class ContextVk : public ContextImpl, public vk::Context
       private:
         ContextVk *mContextVk;
     };
+
+    ShareGroupVk *mShareGroupVk;
 
     std::vector<std::string> mCommandBufferDiagnostics;
 };

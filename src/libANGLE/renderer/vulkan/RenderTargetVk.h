@@ -48,7 +48,7 @@ class RenderTargetVk final : public FramebufferAttachmentRenderTarget
               uint32_t layerIndex);
     void reset();
     // This returns the serial from underlying ImageViewHelper, first assigning one if required
-    Serial getAssignImageViewSerial(ContextVk *contextVk);
+    ImageViewSerial getAssignImageViewSerial(ContextVk *contextVk);
 
     // Note: RenderTargets should be called in order, with the depth/stencil onRender last.
     angle::Result onColorDraw(ContextVk *contextVk);

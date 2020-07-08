@@ -2183,18 +2183,21 @@ BufferHelper::BufferHelper()
       mCurrentWriteAccess(0),
       mCurrentReadAccess(0),
       mCurrentWriteStages(0),
-      mCurrentReadStages(0)
+      mCurrentReadStages(0),
+      mSerial()
 {}
 
 BufferHelper::~BufferHelper() = default;
 
 angle::Result BufferHelper::init(Context *context,
+                                 BufferSerial serial,
                                  const VkBufferCreateInfo &requestedCreateInfo,
                                  VkMemoryPropertyFlags memoryPropertyFlags)
 {
     RendererVk *renderer = context->getRenderer();
 
-    mSize = requestedCreateInfo.size;
+    mSerial = serial;
+    mSize   = requestedCreateInfo.size;
 
     VkBufferCreateInfo modifiedCreateInfo;
     const VkBufferCreateInfo *createInfo = &requestedCreateInfo;
@@ -2255,6 +2258,14 @@ angle::Result BufferHelper::init(Context *context,
     }
 
     return angle::Result::Continue;
+}
+
+angle::Result BufferHelper::init(ContextVk *contextVk,
+                                 const VkBufferCreateInfo &createInfo,
+                                 VkMemoryPropertyFlags memoryPropertyFlags)
+{
+    BufferSerial serial = contextVk->generateBufferSerial();
+    return init(contextVk, serial, createInfo, memoryPropertyFlags);
 }
 
 angle::Result BufferHelper::initializeNonZeroMemory(Context *context, VkDeviceSize size)
@@ -5242,7 +5253,9 @@ angle::Result ImageViewHelper::getLevelLayerDrawImageView(ContextVk *contextVk,
                                     imageView, level, 1, layer, 1);
 }
 
-Serial ImageViewHelper::getAssignSerial(ContextVk *contextVk, uint32_t level, uint32_t layer)
+ImageViewSerial ImageViewHelper::getAssignSerial(ContextVk *contextVk,
+                                                 uint32_t level,
+                                                 uint32_t layer)
 {
     LayerLevel layerLevelPair = {layer, level};
     if (mSerialCache.find(layerLevelPair) == mSerialCache.end())

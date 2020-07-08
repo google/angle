@@ -46,6 +46,7 @@ namespace egl
 {
 class Display;
 class Image;
+class ShareGroup;
 }  // namespace egl
 
 namespace gl
@@ -67,12 +68,12 @@ ANGLE_GL_OBJECTS_X(ANGLE_PRE_DECLARE_OBJECT)
 
 namespace rx
 {
-class CommandGraphResource;
 class DisplayVk;
 class ImageVk;
 class RenderTargetVk;
 class RendererVk;
 class RenderPassCache;
+class ShareGroupVk;
 }  // namespace rx
 
 namespace angle
@@ -180,6 +181,12 @@ template <>
 struct ImplTypeHelper<egl::Image>
 {
     using ImplType = ImageVk;
+};
+
+template <>
+struct ImplTypeHelper<egl::ShareGroup>
+{
+    using ImplType = ShareGroupVk;
 };
 
 template <typename T>

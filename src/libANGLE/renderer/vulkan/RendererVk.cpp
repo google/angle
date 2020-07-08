@@ -827,8 +827,8 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
         bufferCreateInfo.sType              = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
         bufferCreateInfo.size               = 16;
         bufferCreateInfo.usage              = VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
-        ANGLE_TRY(
-            mTheNullBuffer.init(displayVk, bufferCreateInfo, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
+        ANGLE_TRY(mTheNullBuffer.init(displayVk, kInvalidBufferSerial, bufferCreateInfo,
+                                      VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
     }
 
     if (!mGlslangInitialized)
