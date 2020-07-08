@@ -164,6 +164,9 @@ void RendererVk::ensureCapsInitialized() const
     // Vulkan natively supports standard derivatives
     mNativeExtensions.standardDerivativesOES = true;
 
+    // Vulkan natively supports texture LOD
+    mNativeExtensions.shaderTextureLOD = true;
+
     // Vulkan natively supports noperspective interpolation
     mNativeExtensions.noperspectiveInterpolationNV = true;
 
