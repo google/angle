@@ -225,7 +225,7 @@ O           [0-7]
 "usamplerCube"         { return ES3_keyword(context, USAMPLERCUBE); }
 "usampler2DArray"      { return ES3_keyword(context, USAMPLER2DARRAY); }
 "usampler2DMS"         { return ES3_reserved_ES3_extension_ES3_1_keyword(context, TExtension::ANGLE_texture_multisample, USAMPLER2DMS); }
-"sampler2DShadow"      { return ES2_reserved_ES3_keyword(context, SAMPLER2DSHADOW); }
+"sampler2DShadow"      { return ES2_reserved_ES2_extension_ES3_keyword(context, TExtension::EXT_shadow_samplers, SAMPLER2DSHADOW); }
 "samplerCubeShadow"    { return ES3_keyword(context, SAMPLERCUBESHADOW); }
 "sampler2DArrayShadow" { return ES3_keyword(context, SAMPLER2DARRAYSHADOW); }
 "__samplerExternal2DY2YEXT"   { return ES3_extension(context, TExtension::EXT_YUV_target, SAMPLEREXTERNAL2DY2YEXT); }

@@ -1555,7 +1555,11 @@ YY_DECL
                     }
                     YY_BREAK
                 case 80:
-                    YY_RULE_SETUP { return ES2_reserved_ES3_keyword(context, SAMPLER2DSHADOW); }
+                    YY_RULE_SETUP
+                    {
+                        return ES2_reserved_ES2_extension_ES3_keyword(
+                            context, TExtension::EXT_shadow_samplers, SAMPLER2DSHADOW);
+                    }
                     YY_BREAK
                 case 81:
                     YY_RULE_SETUP { return ES3_keyword(context, SAMPLERCUBESHADOW); }

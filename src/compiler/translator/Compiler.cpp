@@ -1089,6 +1089,7 @@ void TCompiler::setResourceString()
         << ":APPLE_clip_distance:" << mResources.APPLE_clip_distance
         << ":OES_texture_cube_map_array:" << mResources.OES_texture_cube_map_array
         << ":EXT_texture_cube_map_array:" << mResources.EXT_texture_cube_map_array
+        << ":EXT_shadow_samplers:" << mResources.EXT_shadow_samplers
         << ":MinProgramTextureGatherOffset:" << mResources.MinProgramTextureGatherOffset
         << ":MaxProgramTextureGatherOffset:" << mResources.MaxProgramTextureGatherOffset
         << ":MaxImageUnits:" << mResources.MaxImageUnits

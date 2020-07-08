@@ -462,6 +462,9 @@ GROUP BEGIN TextureFirstVersionsFSExt {"shader_type": "FRAGMENT"}
     vec4 texture2DProjLodEXT(sampler2D, vec3, float);
     vec4 texture2DProjLodEXT(sampler2D, vec4, float);
     vec4 textureCubeLodEXT(samplerCube, vec3, float);
+  DEFAULT METADATA {"essl_level": "ESSL1_BUILTINS", "op": "CallBuiltInFunction", "essl_extension": "EXT_shadow_samplers"}
+    float shadow2DEXT(sampler2DShadow, vec3);
+    float shadow2DProjEXT(sampler2DShadow, vec4);
   DEFAULT METADATA {"essl_level": "ESSL1_BUILTINS", "op": "CallBuiltInFunction", "essl_extension": "OES_texture_3D"}
     vec4 texture3D(sampler3D, vec3);
     vec4 texture3DProj(sampler3D, vec4);

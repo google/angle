@@ -128,6 +128,9 @@ Compiler::Compiler(rx::GLImplFactory *implFactory, const State &state)
     mResources.OES_texture_cube_map_array = extensions.textureCubeMapArrayOES;
     mResources.EXT_texture_cube_map_array = extensions.textureCubeMapArrayEXT;
 
+    // EXT_shadow_samplers
+    mResources.EXT_shadow_samplers = extensions.shadowSamplersEXT;
+
     // GLSL ES 3.0 constants
     mResources.MaxVertexOutputVectors  = caps.maxVertexOutputComponents / 4;
     mResources.MaxFragmentInputVectors = caps.maxFragmentInputComponents / 4;

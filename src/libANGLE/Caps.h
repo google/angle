@@ -641,6 +641,9 @@ struct Extensions
     {
         return (textureCubeMapArrayOES || textureCubeMapArrayEXT);
     }
+
+    // GL_EXT_shadow_samplers
+    bool shadowSamplersEXT = false;
 };
 
 // Pointer to a boolean memeber of the Extensions struct

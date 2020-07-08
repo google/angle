@@ -1537,6 +1537,10 @@ void GenerateCaps(const FunctionsGL *functions,
                                 functions->hasGLExtension("GL_ARB_gpu_shader5") ||
                                 functions->hasGLESExtension("GL_EXT_gpu_shader5");
 
+    extensions->shadowSamplersEXT = functions->isAtLeastGL(gl::Version(2, 0)) ||
+                                    functions->isAtLeastGLES(gl::Version(3, 0)) ||
+                                    functions->hasGLESExtension("GL_EXT_shadow_samplers");
+
     // GL_APPLE_clip_distance
     extensions->clipDistanceAPPLE = functions->isAtLeastGL(gl::Version(3, 0));
     if (extensions->clipDistanceAPPLE)

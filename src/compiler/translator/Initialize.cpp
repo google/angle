@@ -125,6 +125,10 @@ void InitExtensionBehavior(const ShBuiltInResources &resources, TExtensionBehavi
     {
         extBehavior[TExtension::EXT_texture_cube_map_array] = EBhUndefined;
     }
+    if (resources.EXT_shadow_samplers)
+    {
+        extBehavior[TExtension::EXT_shadow_samplers] = EBhUndefined;
+    }
 }
 
 void ResetExtensionBehavior(const ShBuiltInResources &resources,

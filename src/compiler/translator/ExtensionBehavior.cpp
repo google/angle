@@ -40,7 +40,8 @@
     OP(WEBGL_video_texture)                         \
     OP(APPLE_clip_distance)                         \
     OP(OES_texture_cube_map_array)                  \
-    OP(EXT_texture_cube_map_array)
+    OP(EXT_texture_cube_map_array)                  \
+    OP(EXT_shadow_samplers)
 
 namespace sh
 {

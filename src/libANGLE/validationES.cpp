@@ -5492,11 +5492,18 @@ bool ValidateGetTexParameterBase(const Context *context,
         case GL_TEXTURE_MAX_LEVEL:
         case GL_TEXTURE_MIN_LOD:
         case GL_TEXTURE_MAX_LOD:
-        case GL_TEXTURE_COMPARE_MODE:
-        case GL_TEXTURE_COMPARE_FUNC:
             if (context->getClientMajorVersion() < 3)
             {
                 context->validationError(GL_INVALID_ENUM, kEnumRequiresGLES30);
+                return false;
+            }
+            break;
+
+        case GL_TEXTURE_COMPARE_MODE:
+        case GL_TEXTURE_COMPARE_FUNC:
+            if (context->getClientMajorVersion() < 3 && !context->getExtensions().shadowSamplersEXT)
+            {
+                context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
                 return false;
             }
             break;
