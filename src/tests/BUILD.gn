@@ -94,7 +94,7 @@ template("angle_common_test_utils") {
       ]
     }
     data_deps = []
-    if (angle_enable_vulkan) {
+    if (angle_enable_vulkan_validation_layers) {
       data_deps += [ "$angle_root/src/common/vulkan:vulkan_validation_layers" ]
     }
   }

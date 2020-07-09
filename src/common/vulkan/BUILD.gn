@@ -96,14 +96,16 @@ angle_source_set("vulkan") {
   }
 }
 
-group("vulkan_validation_layers") {
-  data_deps = []
-  if (is_fuchsia) {
-    data_deps += [ "//third_party/fuchsia-sdk:vulkan_validation" ]
-  } else {
-    data_deps += [ "$angle_root/third_party/vulkan-validation-layers/src:vulkan_validation_layers" ]
-    if (!is_android) {
-      data_deps += [ "$angle_root/third_party/vulkan-validation-layers/src:vulkan_gen_json_files" ]
+if (angle_enable_vulkan_validation_layers) {
+  group("vulkan_validation_layers") {
+    data_deps = []
+    if (is_fuchsia) {
+      data_deps += [ "//third_party/fuchsia-sdk:vulkan_validation" ]
+    } else {
+      data_deps += [ "$angle_root/third_party/vulkan-validation-layers/src:vulkan_validation_layers" ]
+      if (!is_android) {
+        data_deps += [ "$angle_root/third_party/vulkan-validation-layers/src:vulkan_gen_json_files" ]
+      }
     }
   }
 }
