@@ -567,6 +567,58 @@ class ImageTest : public ANGLETest
         glDeleteFramebuffers(1, &framebuffer);
     }
 
+    void verifyResultAHB(AHardwareBuffer *source,
+                         GLubyte *referenceData,
+                         size_t dataSize,
+                         size_t bytesPerPixel)
+    {
+#if defined(ANGLE_AHARDWARE_BUFFER_SUPPORT)
+        void *mappedMemory = nullptr;
+        GLubyte externalMemoryData[dataSize];
+        AHardwareBuffer_Desc aHardwareBufferDescription = {};
+
+        ASSERT_EQ(0, AHardwareBuffer_lock(source, AHARDWAREBUFFER_USAGE_CPU_WRITE_RARELY, -1,
+                                          nullptr, &mappedMemory));
+
+        AHardwareBuffer_describe(source, &aHardwareBufferDescription);
+        const uint32_t width    = aHardwareBufferDescription.width;
+        const uint32_t height   = aHardwareBufferDescription.height;
+        const uint32_t stride   = aHardwareBufferDescription.stride;
+        const uint32_t rowSize  = bytesPerPixel * width;
+        const size_t bufferSize = rowSize * height;
+
+        EXPECT_EQ(dataSize, bufferSize);
+
+        for (uint32_t i = 0; i < height; i++)
+        {
+            uint32_t srcPtrOffset = stride * i * bytesPerPixel;
+            uint32_t dstPtrOffset = width * i * bytesPerPixel;
+            size_t copySize       = rowSize;
+
+            if (dstPtrOffset > dataSize)
+            {
+                // Current destination ptr offset is out of range
+                break;
+            }
+            else if (dstPtrOffset + copySize > dataSize)
+            {
+                // Copy data only until the end of the buffer
+                copySize = dataSize - dstPtrOffset;
+            }
+
+            void *src = reinterpret_cast<uint8_t *>(mappedMemory) + srcPtrOffset;
+            memcpy(externalMemoryData + dstPtrOffset, src, copySize);
+        }
+
+        ASSERT_EQ(0, AHardwareBuffer_unlock(source, nullptr));
+
+        for (uint32_t i = 0; i < dataSize; i++)
+        {
+            EXPECT_EQ(externalMemoryData[i], referenceData[i]);
+        }
+#endif
+    }
+
     template <typename destType, typename sourcetype>
     destType reinterpretHelper(sourcetype source)
     {
@@ -2692,6 +2744,73 @@ TEST_P(ImageTest, UpdatedData)
     eglDestroyImageKHR(window->getDisplay(), image);
     glDeleteTextures(1, &targetTexture);
     glDeleteRenderbuffers(1, &targetRenderbuffer);
+}
+
+// Check that the external texture is successfully updated when only glTexSubImage2D is called.
+TEST_P(ImageTest, UpdatedExternalTexture)
+{
+    EGLWindow *window = getEGLWindow();
+
+    ANGLE_SKIP_TEST_IF(!IsAndroid());
+    ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
+    ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
+
+    GLubyte originalData[4]      = {255, 0, 255, 255};
+    GLubyte updateData[4]        = {0, 255, 0, 255};
+    const uint32_t bytesPerPixel = 4;
+
+    // Create the Image
+    AHardwareBuffer *source;
+    EGLImageKHR image;
+    createEGLImageAndroidHardwareBufferSource(1, 1, 1, GL_RGBA8, kDefaultAttribs, originalData,
+                                              bytesPerPixel, &source, &image);
+
+    // Create target
+    GLuint targetTexture;
+    createEGLImageTargetTexture2D(image, &targetTexture);
+
+    // Expect that both the target have the original data
+    verifyResults2D(targetTexture, originalData);
+
+    // Update the data of the source
+    glBindTexture(GL_TEXTURE_2D, targetTexture);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, updateData);
+
+    // Set sync object and flush the GL commands
+    EGLSyncKHR fence = eglCreateSyncKHR(window->getDisplay(), EGL_SYNC_FENCE_KHR, NULL);
+    ASSERT_NE(fence, EGL_NO_SYNC_KHR);
+    glFlush();
+
+    // Delete the target texture
+    glDeleteTextures(1, &targetTexture);
+
+    // Wait that the flush command is finished
+    EGLint result = eglClientWaitSyncKHR(window->getDisplay(), fence, 0, 1000000000);
+    ASSERT_EQ(result, EGL_CONDITION_SATISFIED_KHR);
+    ASSERT_EGL_TRUE(eglDestroySyncKHR(window->getDisplay(), fence));
+
+    // Delete the EGL image
+    eglDestroyImageKHR(window->getDisplay(), image);
+
+    // Access the android hardware buffer directly to check the data is updated
+    verifyResultAHB(source, updateData, 4, bytesPerPixel);
+
+    // Create the EGL image again
+    image =
+        eglCreateImageKHR(window->getDisplay(), EGL_NO_CONTEXT, EGL_NATIVE_BUFFER_ANDROID,
+                          angle::android::AHardwareBufferToClientBuffer(source), kDefaultAttribs);
+    ASSERT_EGL_SUCCESS();
+
+    // Create the target texture again
+    createEGLImageTargetTexture2D(image, &targetTexture);
+
+    // Expect that the target have the update data
+    verifyResults2D(targetTexture, updateData);
+
+    // Clean up
+    eglDestroyImageKHR(window->getDisplay(), image);
+    destroyAndroidHardwareBuffer(source);
+    glDeleteTextures(1, &targetTexture);
 }
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these

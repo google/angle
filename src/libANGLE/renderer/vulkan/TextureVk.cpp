@@ -394,6 +394,11 @@ angle::Result TextureVk::setSubImageImpl(const gl::Context *context,
             gl::Offset(area.x, area.y, area.z), formatInfo, unpack, type, pixels, vkFormat));
     }
 
+    if (!mOwnsImage)
+    {
+        ANGLE_TRY(mImage->flushAllStagedUpdates(contextVk));
+    }
+
     return angle::Result::Continue;
 }
 
