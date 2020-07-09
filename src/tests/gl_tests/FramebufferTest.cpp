@@ -928,9 +928,6 @@ class FramebufferTest_ES31 : public ANGLETest
 // FRAMEBUFFER_DEFAULT_HEIGHT parameters is zero, the framebuffer is incomplete.
 TEST_P(FramebufferTest_ES31, IncompleteMissingAttachmentDefaultParam)
 {
-    // anglebug.com/3565
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-
     GLFramebuffer mFramebuffer;
     glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer.get());
 
@@ -959,9 +956,6 @@ TEST_P(FramebufferTest_ES31, IncompleteMissingAttachmentDefaultParam)
 // Test that the sample count of a mix of texture and renderbuffer should be same.
 TEST_P(FramebufferTest_ES31, IncompleteMultisampleSampleCountMix)
 {
-    // anglebug.com/3565
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-
     GLFramebuffer mFramebuffer;
     glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer.get());
 
@@ -998,9 +992,6 @@ TEST_P(FramebufferTest_ES31, IncompleteMultisampleSampleCountMix)
 // Test that the sample count of texture attachments should be same.
 TEST_P(FramebufferTest_ES31, IncompleteMultisampleSampleCountTex)
 {
-    // anglebug.com/3565
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-
     GLFramebuffer mFramebuffer;
     glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer.get());
 
@@ -1035,9 +1026,6 @@ TEST_P(FramebufferTest_ES31, IncompleteMultisampleSampleCountTex)
 // TEXTURE_FIXED_SAMPLE_LOCATIONS must be TRUE for all attached textures.
 TEST_P(FramebufferTest_ES31, IncompleteMultisampleFixedSampleLocationsMix)
 {
-    // anglebug.com/3565
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-
     GLFramebuffer mFramebuffer;
     glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer.get());
 
@@ -1061,9 +1049,6 @@ TEST_P(FramebufferTest_ES31, IncompleteMultisampleFixedSampleLocationsMix)
 // Test that the value of TEXTURE_FIXED_SAMPLE_LOCATIONS is the same for all attached textures.
 TEST_P(FramebufferTest_ES31, IncompleteMultisampleFixedSampleLocationsTex)
 {
-    // anglebug.com/3565
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-
     GLFramebuffer mFramebuffer;
     glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer.get());
 

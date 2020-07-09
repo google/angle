@@ -187,12 +187,12 @@ void main()
 
 #if IsBlitColor
 #if IsResolve
-    ColorType colorValue = ColorType(0, 0, 0, 1);
+    ColorType colorValue = ColorType(0, 0, 0, 0);
     for (int i = 0; i < params.samples; ++i)
     {
         colorValue += COLOR_TEXEL_FETCH(color, srcImageCoords, i);
     }
-#if IsFloat
+#if BlitColorFloat
     colorValue *= params.invSamples;
 #else
     colorValue = ColorType(round(colorValue * params.invSamples));

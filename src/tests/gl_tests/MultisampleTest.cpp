@@ -125,6 +125,9 @@ class MultisampleTest : public ANGLETest
     bool mMultisampledConfigExists = false;
 };
 
+class MultisampleTestES3 : public MultisampleTest
+{};
+
 // Test point rendering on a multisampled surface.  GLES2 section 3.3.1.
 TEST_P(MultisampleTest, Point)
 {
@@ -264,6 +267,44 @@ TEST_P(MultisampleTest, Triangle)
     }
 }
 
+// Test that resolve from multisample default framebuffer works.
+TEST_P(MultisampleTestES3, ResolveToFBO)
+{
+    ANGLE_SKIP_TEST_IF(!mMultisampledConfigExists);
+
+    GLTexture resolveTexture;
+    glBindTexture(GL_TEXTURE_2D, resolveTexture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kWindowSize, kWindowSize, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 nullptr);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    GLFramebuffer resolveFBO;
+    glBindFramebuffer(GL_FRAMEBUFFER, resolveFBO);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, resolveTexture, 0);
+
+    // Clear the default framebuffer
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glClearColor(0.25, 0.5, 0.75, 0.25);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    // Resolve into FBO
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, resolveFBO);
+    glClearColor(1, 0, 0, 1);
+    glClear(GL_COLOR_BUFFER_BIT);
+    glBlitFramebuffer(0, 0, kWindowSize, kWindowSize, 0, 0, kWindowSize, kWindowSize,
+                      GL_COLOR_BUFFER_BIT, GL_NEAREST);
+    ASSERT_GL_NO_ERROR();
+
+    const GLColor kResult = GLColor(63, 127, 191, 63);
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, resolveFBO);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, kResult, 1);
+    EXPECT_PIXEL_COLOR_NEAR(kWindowSize - 1, 0, kResult, 1);
+    EXPECT_PIXEL_COLOR_NEAR(0, kWindowSize - 1, kResult, 1);
+    EXPECT_PIXEL_COLOR_NEAR(kWindowSize - 1, kWindowSize - 1, kResult, 1);
+    EXPECT_PIXEL_COLOR_NEAR(kWindowSize / 2, kWindowSize / 2, kResult, 1);
+}
+
 ANGLE_INSTANTIATE_TEST(MultisampleTest,
                        WithNoFixture(ES2_D3D11()),
                        WithNoFixture(ES3_D3D11()),
@@ -275,5 +316,15 @@ ANGLE_INSTANTIATE_TEST(MultisampleTest,
                        WithNoFixture(ES3_OPENGLES()),
                        WithNoFixture(ES31_OPENGLES()),
                        WithNoFixture(ES2_VULKAN()),
-                       WithNoFixture(ES3_VULKAN()));
+                       WithNoFixture(ES3_VULKAN()),
+                       WithNoFixture(ES31_VULKAN()));
+ANGLE_INSTANTIATE_TEST(MultisampleTestES3,
+                       WithNoFixture(ES3_D3D11()),
+                       WithNoFixture(ES31_D3D11()),
+                       WithNoFixture(ES3_OPENGL()),
+                       WithNoFixture(ES31_OPENGL()),
+                       WithNoFixture(ES3_OPENGLES()),
+                       WithNoFixture(ES31_OPENGLES()),
+                       WithNoFixture(ES3_VULKAN()),
+                       WithNoFixture(ES31_VULKAN()));
 }  // anonymous namespace

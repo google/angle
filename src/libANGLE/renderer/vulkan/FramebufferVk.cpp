@@ -898,6 +898,37 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
     bool disableFlippingBlitWithCommand =
         contextVk->getRenderer()->getFeatures().disableFlippingBlitWithCommand.enabled;
 
+    // When blitting, the source and destination areas are viewed like UVs.  For example, a 64x64
+    // texture if flipped should have an offset of 64 in either X or Y which corresponds to U or V
+    // of 1.  On the other hand, when resolving, the source and destination areas are used as
+    // fragment coordinates to fetch from.  In that case, when flipped, the texture in the above
+    // example must have an offset of 63.
+    //
+    // Now that all flipping is done, adjust the offsets for resolve.
+    if (isResolve)
+    {
+        if (sourceArea.isReversedX())
+        {
+            ASSERT(sourceArea.x > 0);
+            --sourceArea.x;
+        }
+        if (sourceArea.isReversedY())
+        {
+            ASSERT(sourceArea.y > 0);
+            --sourceArea.y;
+        }
+        if (destArea.isReversedX())
+        {
+            ASSERT(destArea.x > 0);
+            --destArea.x;
+        }
+        if (destArea.isReversedY())
+        {
+            ASSERT(destArea.y > 0);
+            --destArea.y;
+        }
+    }
+
     UtilsVk::BlitResolveParameters params;
     params.srcOffset[0]           = sourceArea.x;
     params.srcOffset[1]           = sourceArea.y;
