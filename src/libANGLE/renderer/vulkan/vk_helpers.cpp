@@ -1121,6 +1121,26 @@ void DynamicBuffer::release(RendererVk *renderer)
     }
 }
 
+void DynamicBuffer::releaseInFlightBuffersToResourceUseList(ContextVk *contextVk)
+{
+    ResourceUseList *resourceUseList = &contextVk->getResourceUseList();
+    for (BufferHelper *bufferHelper : mInFlightBuffers)
+    {
+        bufferHelper->retain(resourceUseList);
+
+        // If the dynamic buffer was resized we cannot reuse the retained buffer.
+        if (bufferHelper->getSize() < mSize)
+        {
+            bufferHelper->release(contextVk->getRenderer());
+        }
+        else
+        {
+            mBufferFreeList.push_back(bufferHelper);
+        }
+    }
+    mInFlightBuffers.clear();
+}
+
 void DynamicBuffer::releaseInFlightBuffers(ContextVk *contextVk)
 {
     for (BufferHelper *toRelease : mInFlightBuffers)
