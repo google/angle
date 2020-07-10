@@ -743,6 +743,12 @@ void Win32Window::setMousePosition(int x, int y)
     SetCursorPos(topLeft.x + x, topLeft.y + y);
 }
 
+bool Win32Window::setOrientation(int width, int height)
+{
+    UNIMPLEMENTED();
+    return false;
+}
+
 bool Win32Window::setPosition(int x, int y)
 {
     if (mX == x && mY == y)

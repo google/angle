@@ -8,6 +8,8 @@
 
 #include "util/ozone/OzoneWindow.h"
 
+#include "common/debug.h"
+
 int OzoneWindow::sLastDepth = 0;
 
 OzoneWindow::OzoneWindow() {}
@@ -46,6 +48,12 @@ EGLNativeDisplayType OzoneWindow::getNativeDisplay() const
 void OzoneWindow::messageLoop() {}
 
 void OzoneWindow::setMousePosition(int x, int y) {}
+
+bool OzoneWindow::setOrientation(int width, int height)
+{
+    UNIMPLEMENTED();
+    return false;
+}
 
 bool OzoneWindow::setPosition(int x, int y)
 {

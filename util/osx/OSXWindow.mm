@@ -743,6 +743,12 @@ void OSXWindow::setMousePosition(int x, int y)
     CGWarpMouseCursorPosition(CGPointMake(screenspace.x, YCoordToFromCG(screenspace.y)));
 }
 
+bool OSXWindow::setOrientation(int width, int height)
+{
+    UNIMPLEMENTED();
+    return false;
+}
+
 bool OSXWindow::setPosition(int x, int y)
 {
     // Given CG and NS's coordinate system, the "Y" position of a window is the Y coordinate

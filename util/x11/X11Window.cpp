@@ -417,6 +417,12 @@ void X11Window::setMousePosition(int x, int y)
     XWarpPointer(mDisplay, None, mWindow, 0, 0, 0, 0, x, y);
 }
 
+bool X11Window::setOrientation(int width, int height)
+{
+    UNIMPLEMENTED();
+    return false;
+}
+
 bool X11Window::setPosition(int x, int y)
 {
     XMoveWindow(mDisplay, mWindow, x, y);

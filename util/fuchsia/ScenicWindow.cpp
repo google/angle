@@ -165,6 +165,12 @@ void ScenicWindow::setMousePosition(int x, int y)
     UNIMPLEMENTED();
 }
 
+bool ScenicWindow::setOrientation(int width, int height)
+{
+    UNIMPLEMENTED();
+    return false;
+}
+
 bool ScenicWindow::setPosition(int x, int y)
 {
     UNIMPLEMENTED();

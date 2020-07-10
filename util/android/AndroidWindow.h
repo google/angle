@@ -28,6 +28,7 @@ class AndroidWindow : public OSWindow
     void messageLoop() override;
 
     void setMousePosition(int x, int y) override;
+    bool setOrientation(int width, int height) override;
     bool setPosition(int x, int y) override;
     bool resize(int width, int height) override;
     void setVisible(bool isVisible) override;

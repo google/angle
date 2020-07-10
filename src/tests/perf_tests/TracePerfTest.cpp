@@ -145,6 +145,12 @@ void TracePerfTest::initializeBenchmark()
     std::string testDataDir = testDataDirStr.str();
     SetBinaryDataDir(params.testID, testDataDir.c_str());
 
+    if (IsAndroid())
+    {
+        // On Android, set the orientation used by the app, based on width/height
+        getWindow()->setOrientation(mTestParams.windowWidth, mTestParams.windowHeight);
+    }
+
     // Potentially slow. Can load a lot of resources.
     SetupReplay(params.testID);
     glFinish();
