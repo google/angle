@@ -64,6 +64,12 @@ std::shared_ptr<WaitableCompileEvent> ShaderVk::compile(const gl::Context *conte
     // context state does not allow it
     compileOptions |= SH_EARLY_FRAGMENT_TESTS_OPTIMIZATION;
 
+    if (contextVk->getFeatures().enablePreRotateSurfaces.enabled)
+    {
+        // Let compiler inserts pre-rotation code.
+        compileOptions |= SH_ADD_PRE_ROTATION;
+    }
+
     return compileImpl(context, compilerInstance, mData.getSource(), compileOptions | options);
 }
 
