@@ -22,7 +22,7 @@ vars = {
   'chromium_revision': 'b0410bba028cf153be2d02e36b6e99b59fdcb000',
 
   # Current revision of VK-GL-CTS (a.k.a dEQP).
-  'vk_gl_cts_revision': '44ef9e08c4592207c0f3d81ed385bac078f1925a',
+  'vk_gl_cts_revision': '8726fda3f86561757fc94332cd628e79fb503586',
 
   # Current revision of glslang, the Khronos SPIRV compiler.
   'glslang_revision': '4e13c90944e9dfdc6b429054092b94666f06fcb2',
