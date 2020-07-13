@@ -166,3 +166,14 @@ as the GLES driver for your application.
     $ autoninja -C out/Release capture_replay_sample
     $ out/Release/capture_replay_sample
     ```
+
+## Testing
+
+### Regression Testing Architecture
+The python script uses the job queue pattern. There are n processes running asynchronously and independently, one on each CPU core. Whenever a process (except for the main process) finishes a job and becomes available, it grabs the next job from a shared job queue and runs that job on its CPU core. They keep doing this until there is no more job in the shared job queue. The main process, after filling up the shared job queue and spawning the (n-1) subprocesses that run on the remaining (n-1) CPU cores, waits until all the subprocesses are finished. It then reports the results and cleans up.
+
+![Point-in-time snapshot of the job queue](https://screenshot.googleplex.com/w2QY5ui5FMg.png)
+
+### Job unit
+A job unit is a test batch. Each test has to go through 3 stages: capture run, replay build, and replay run. The test batch batches the replay build stage of multiple tests together, and the replay run stage of multiple tests together.
+![A test batch as a job unit](https://screenshot.googleplex.com/A4w8ogsnfLw.png)
