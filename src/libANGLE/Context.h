@@ -202,6 +202,7 @@ class StateCache final : angle::NonCopyable
     // 1. onActiveTransformFeedbackChange.
     // 2. onVertexArrayBufferStateChange.
     // 3. onBufferBindingChange.
+    // 4. onVertexArrayStateChange.
     intptr_t getBasicDrawElementsError(const Context *context) const
     {
         if (mCachedBasicDrawElementsError != kInvalidPointer)
