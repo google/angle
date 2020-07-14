@@ -412,6 +412,7 @@ libangle_sources = [
   "src/libANGLE/formatutils.cpp",
   "src/libANGLE/queryconversions.cpp",
   "src/libANGLE/queryutils.cpp",
+  "src/libANGLE/renderer/BufferImpl.cpp",
   "src/libANGLE/renderer/ContextImpl.cpp",
   "src/libANGLE/renderer/DeviceImpl.cpp",
   "src/libANGLE/renderer/DisplayImpl.cpp",

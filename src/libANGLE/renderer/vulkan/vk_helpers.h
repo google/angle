@@ -702,6 +702,11 @@ class BufferHelper final : public Resource
     bool valid() const { return mBuffer.valid(); }
     const Buffer &getBuffer() const { return mBuffer; }
     VkDeviceSize getSize() const { return mSize; }
+    const uint8_t *getMappedMemory() const
+    {
+        ASSERT(isMapped());
+        return mMappedMemory;
+    }
     bool isHostVisible() const
     {
         return (mMemoryPropertyFlags & VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT) != 0;
@@ -710,6 +715,8 @@ class BufferHelper final : public Resource
     {
         return (mMemoryPropertyFlags & VK_MEMORY_PROPERTY_HOST_COHERENT_BIT) != 0;
     }
+
+    bool isMapped() const { return mMappedMemory != nullptr; }
 
     // Set write access mask when the buffer is modified externally, e.g. by host.  There is no
     // graph resource to create a dependency to.

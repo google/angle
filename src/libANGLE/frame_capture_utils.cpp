@@ -12,6 +12,7 @@
 #include "common/MemoryBuffer.h"
 #include "common/angleutils.h"
 #include "libANGLE/BinaryStream.h"
+#include "libANGLE/Buffer.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/Framebuffer.h"
 #include "libANGLE/renderer/FramebufferImpl.h"
@@ -50,25 +51,36 @@ Result ReadPixelsFromAttachment(const gl::Context *context,
 
 Result SerializeContext(gl::BinaryOutputStream *bos, const gl::Context *context)
 {
+    ScratchBuffer scratchBuffer(1);
     const gl::FramebufferManager &framebufferManager =
         context->getState().getFramebufferManagerForCapture();
     for (const auto &framebuffer : framebufferManager)
     {
         gl::Framebuffer *framebufferPtr = framebuffer.second;
-        ANGLE_TRY(SerializeFramebuffer(context, bos, framebufferPtr));
+        ANGLE_TRY(SerializeFramebuffer(context, bos, &scratchBuffer, framebufferPtr));
     }
+    const gl::BufferManager &bufferManager = context->getState().getBufferManagerForCapture();
+    for (const auto &buffer : bufferManager)
+    {
+        gl::Buffer *bufferPtr = buffer.second;
+        ANGLE_TRY(SerializeBuffer(context, bos, &scratchBuffer, bufferPtr));
+    }
+    scratchBuffer.clear();
     return Result::Continue;
 }
 
 Result SerializeFramebuffer(const gl::Context *context,
                             gl::BinaryOutputStream *bos,
+                            ScratchBuffer *scratchBuffer,
                             gl::Framebuffer *framebuffer)
 {
-    return SerializeFramebufferState(context, bos, framebuffer, framebuffer->getState());
+    return SerializeFramebufferState(context, bos, scratchBuffer, framebuffer,
+                                     framebuffer->getState());
 }
 
 Result SerializeFramebufferState(const gl::Context *context,
                                  gl::BinaryOutputStream *bos,
+                                 ScratchBuffer *scratchBuffer,
                                  gl::Framebuffer *framebuffer,
                                  const gl::FramebufferState &framebufferState)
 {
@@ -84,34 +96,32 @@ Result SerializeFramebufferState(const gl::Context *context,
 
     const std::vector<gl::FramebufferAttachment> &colorAttachments =
         framebufferState.getColorAttachments();
-    ScratchBuffer scratchBuffer(1);
     for (const gl::FramebufferAttachment &colorAttachment : colorAttachments)
     {
         if (colorAttachment.isAttached())
         {
-            ANGLE_TRY(SerializeFramebufferAttachment(context, bos, &scratchBuffer, framebuffer,
+            ANGLE_TRY(SerializeFramebufferAttachment(context, bos, scratchBuffer, framebuffer,
                                                      colorAttachment));
         }
     }
     if (framebuffer->getDepthStencilAttachment())
     {
-        ANGLE_TRY(SerializeFramebufferAttachment(context, bos, &scratchBuffer, framebuffer,
+        ANGLE_TRY(SerializeFramebufferAttachment(context, bos, scratchBuffer, framebuffer,
                                                  *framebuffer->getDepthStencilAttachment()));
     }
     else
     {
         if (framebuffer->getDepthAttachment())
         {
-            ANGLE_TRY(SerializeFramebufferAttachment(context, bos, &scratchBuffer, framebuffer,
+            ANGLE_TRY(SerializeFramebufferAttachment(context, bos, scratchBuffer, framebuffer,
                                                      *framebuffer->getDepthAttachment()));
         }
         if (framebuffer->getStencilAttachment())
         {
-            ANGLE_TRY(SerializeFramebufferAttachment(context, bos, &scratchBuffer, framebuffer,
+            ANGLE_TRY(SerializeFramebufferAttachment(context, bos, scratchBuffer, framebuffer,
                                                      *framebuffer->getStencilAttachment()));
         }
     }
-    scratchBuffer.clear();
     return Result::Continue;
 }
 
@@ -156,6 +166,33 @@ void SerializeImageIndex(gl::BinaryOutputStream *bos, const gl::ImageIndex &imag
     bos->writeInt(imageIndex.getLevelIndex());
     bos->writeInt(imageIndex.getLayerIndex());
     bos->writeInt(imageIndex.getLayerCount());
+}
+
+Result SerializeBuffer(const gl::Context *context,
+                       gl::BinaryOutputStream *bos,
+                       ScratchBuffer *scratchBuffer,
+                       gl::Buffer *buffer)
+{
+    SerializeBufferState(bos, buffer->getState());
+    MemoryBuffer *dataPtr = nullptr;
+    ANGLE_CHECK_GL_ALLOC(
+        const_cast<gl::Context *>(context),
+        scratchBuffer->getInitialized(static_cast<size_t>(buffer->getSize()), &dataPtr, 0));
+    ANGLE_TRY(buffer->getSubData(context, 0, dataPtr->size(), dataPtr->data()));
+    bos->writeBytes(dataPtr->data(), dataPtr->size());
+    return Result::Continue;
+}
+
+void SerializeBufferState(gl::BinaryOutputStream *bos, const gl::BufferState &bufferState)
+{
+    bos->writeString(bufferState.getLabel());
+    bos->writeEnum(bufferState.getUsage());
+    bos->writeInt(bufferState.getSize());
+    bos->writeInt(bufferState.getAccessFlags());
+    bos->writeInt(bufferState.getAccess());
+    bos->writeInt(bufferState.isMapped());
+    bos->writeInt(bufferState.getMapOffset());
+    bos->writeInt(bufferState.getMapLength());
 }
 
 }  // namespace angle
