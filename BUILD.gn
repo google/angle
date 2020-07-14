@@ -657,6 +657,14 @@ angle_source_set("libANGLE_base") {
     sources += libangle_d3d11_blit_shaders
   }
 
+  if (!angle_is_winuwp && (angle_enable_d3d11 || angle_enable_d3d9)) {
+    sources += libangle_d3d_win32_sources
+  }
+
+  if (is_win && (angle_enable_gl || angle_enable_d3d11)) {
+    sources += libangle_gl_wgl_d3d11_common_sources
+  }
+
   if (angle_enable_gl) {
     sources += libangle_gl_sources
     include_dirs += [ "src/third_party/khronos" ]

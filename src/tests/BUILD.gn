@@ -199,7 +199,7 @@ if (is_win || is_linux || is_mac || is_android) {
     sources = angle_white_box_tests_sources
     main = "angle_end2end_tests_main"
 
-    if (is_win) {
+    if (is_win && angle_enable_d3d11) {
       sources += angle_white_box_tests_win_sources
     }
 
