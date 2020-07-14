@@ -5169,6 +5169,26 @@ TEST_P(ImageRespecificationTest, ImageTarget2DOESSwitch)
     eglDestroyImageKHR(window->getDisplay(), firstEGLImage);
     eglDestroyImageKHR(window->getDisplay(), secondEGLImage);
 }
+
+TEST_P(WebGL2ValidationStateChangeTest, DeleteElementArrayBufferValidation)
+{
+    GLushort indexData[] = {0, 1, 2, 3};
+
+    GLBuffer elementArrayBuffer;
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementArrayBuffer);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indexData), indexData, GL_STATIC_DRAW);
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Zero(), essl1_shaders::fs::Red());
+    glUseProgram(program);
+
+    glDrawElements(GL_POINTS, 4, GL_UNSIGNED_SHORT, 0);
+
+    elementArrayBuffer.reset();
+
+    // Must use a non-0 offset and a multiple of the type size.
+    glDrawElements(GL_POINTS, 4, GL_UNSIGNED_SHORT, reinterpret_cast<const void *>(0x4));
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+}
 }  // anonymous namespace
 
 ANGLE_INSTANTIATE_TEST_ES2(StateChangeTest);
