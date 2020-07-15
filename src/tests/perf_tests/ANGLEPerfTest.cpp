@@ -188,7 +188,7 @@ ANGLEPerfTest::ANGLEPerfTest(const std::string &name,
       mStory(story),
       mGPUTimeNs(0),
       mSkipTest(false),
-      mStepsToRun(std::numeric_limits<unsigned int>::max()),
+      mStepsToRun(gStepsToRunOverride),
       mNumStepsPerformed(0),
       mIterationsPerStep(iterationsPerStep),
       mRunning(true)
@@ -217,24 +217,9 @@ void ANGLEPerfTest::run()
     }
 
     // Calibrate to a fixed number of steps during an initial set time.
-    if (gStepsToRunOverride <= 0)
+    if (mStepsToRun <= 0)
     {
-        doRunLoop(kCalibrationRunTimeSeconds);
-
-        // Scale steps down according to the time that exeeded one second.
-        double scale = kCalibrationRunTimeSeconds / mTimer.getElapsedTime();
-        mStepsToRun  = static_cast<unsigned int>(static_cast<double>(mNumStepsPerformed) * scale);
-
-        // Calibration allows the perf test runner script to save some time.
-        if (gCalibration)
-        {
-            mReporter->AddResult(".steps", static_cast<size_t>(mStepsToRun));
-            return;
-        }
-    }
-    else
-    {
-        mStepsToRun = gStepsToRunOverride;
+        calibrateStepsToRun();
     }
 
     // Check again for early exit.
@@ -246,11 +231,14 @@ void ANGLEPerfTest::run()
     // Do another warmup run. Seems to consistently improve results.
     doRunLoop(kMaximumRunTimeSeconds);
 
-    double totalTime = 0.0;
     for (unsigned int trial = 0; trial < kNumTrials; ++trial)
     {
         doRunLoop(kMaximumRunTimeSeconds);
-        totalTime += printResults();
+        printResults();
+        if (gVerboseLogging)
+        {
+            printf("Trial %d time: %.2lf seconds.\n", trial + 1, mTimer.getElapsedTime());
+        }
     }
 }
 
@@ -336,6 +324,45 @@ double ANGLEPerfTest::printResults()
 double ANGLEPerfTest::normalizedTime(size_t value) const
 {
     return static_cast<double>(value) / static_cast<double>(mNumStepsPerformed);
+}
+
+void ANGLEPerfTest::calibrateStepsToRun()
+{
+    // First do two warmup loops. There's no science to this. Two loops was experimentally helpful
+    // on a Windows NVIDIA setup when testing with Vulkan and native trace tests.
+    for (int i = 0; i < 2; ++i)
+    {
+        doRunLoop(kCalibrationRunTimeSeconds);
+        if (gVerboseLogging)
+        {
+            printf("Pre-calibration warm-up took %.2lf seconds.\n", mTimer.getElapsedTime());
+        }
+    }
+
+    // Now the real computation.
+    doRunLoop(kCalibrationRunTimeSeconds);
+
+    double elapsedTime = mTimer.getElapsedTime();
+
+    // Scale steps down according to the time that exeeded one second.
+    double scale = kCalibrationRunTimeSeconds / elapsedTime;
+    mStepsToRun  = static_cast<unsigned int>(static_cast<double>(mNumStepsPerformed) * scale);
+
+    if (gVerboseLogging)
+    {
+        printf(
+            "Running %d steps (calibration took %.2lf seconds). Expecting trial time of %.2lf "
+            "seconds.\n",
+            mStepsToRun, elapsedTime,
+            mStepsToRun * (elapsedTime / static_cast<double>(mNumStepsPerformed)));
+    }
+
+    // Calibration allows the perf test runner script to save some time.
+    if (gCalibration)
+    {
+        mReporter->AddResult(".steps", static_cast<size_t>(mStepsToRun));
+        return;
+    }
 }
 
 std::string RenderTestParams::backend() const
@@ -578,6 +605,11 @@ void ANGLERenderTest::SetUp()
                           << mStory << ".png";
         std::string screenshotName = screenshotNameStr.str();
         saveScreenshot(screenshotName);
+    }
+
+    if (mStepsToRun <= 0)
+    {
+        calibrateStepsToRun();
     }
 }
 

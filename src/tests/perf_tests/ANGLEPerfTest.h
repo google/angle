@@ -88,6 +88,9 @@ class ANGLEPerfTest : public testing::Test, angle::NonCopyable
     // Overriden in trace perf tests.
     virtual void saveScreenshot(const std::string &screenshotName) {}
 
+    double printResults();
+    void calibrateStepsToRun();
+
     std::string mName;
     std::string mBackend;
     std::string mStory;
@@ -95,13 +98,9 @@ class ANGLEPerfTest : public testing::Test, angle::NonCopyable
     uint64_t mGPUTimeNs;
     bool mSkipTest;
     std::unique_ptr<perf_test::PerfResultReporter> mReporter;
-
-  private:
-    double printResults();
-
-    unsigned int mStepsToRun;
-    unsigned int mNumStepsPerformed;
-    unsigned int mIterationsPerStep;
+    int mStepsToRun;
+    int mNumStepsPerformed;
+    int mIterationsPerStep;
     bool mRunning;
 };
 
