@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "f7b9929d_81097c73",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-07-15T14:47:11Z",
+      "side": 1,
+      "message": "Thanks for the fix by the way",
+      "revId": "cdc388b0d4b448b0a7759ec43fa038c8da9e7377",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6a963469_0cfdbfac",
         "filename": "BUILD.gn",
         "patchSetId": 1
@@ -125,6 +142,24 @@
       "side": 1,
       "message": "I actually tried the previous description, and it ended up using D3D11 anyway, because the symbol is defined in BUILD.gn. I added the new description as suggested.",
       "parentUuid": "ed7682f6_f3fd6f83",
+      "revId": "cdc388b0d4b448b0a7759ec43fa038c8da9e7377",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "252a5684_b639ce50",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-07-15T14:47:11Z",
+      "side": 1,
+      "message": "I see, then those instructions must be out of date. If you can fix the instructions such that the backend could be chosen even when both d3d9 and d3d11 are built, that would be great!",
+      "parentUuid": "47dac303_bb8972f0",
       "revId": "cdc388b0d4b448b0a7759ec43fa038c8da9e7377",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
