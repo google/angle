@@ -984,6 +984,9 @@ class CommandBufferHelper : angle::NonCopyable
     void onDepthAccess(ResourceAccess access) { UpdateAccess(&mDepthStartAccess, access); }
     void onStencilAccess(ResourceAccess access) { UpdateAccess(&mStencilStartAccess, access); }
 
+    void updateRenderPassForResolve(vk::Framebuffer *newFramebuffer,
+                                    const vk::RenderPassDesc &renderPassDesc);
+
   private:
     void addCommandDiagnostics(ContextVk *contextVk);
     // Allocator used by this class. Using a pool allocator per CBH to avoid threading issues

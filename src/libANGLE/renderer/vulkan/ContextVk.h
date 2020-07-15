@@ -574,6 +574,9 @@ class ContextVk : public ContextImpl, public vk::Context
         return *mRenderPassCommands;
     }
 
+    // TODO(https://anglebug.com/4968): Support multiple open render passes.
+    void restoreFinishedRenderPass(vk::Framebuffer *framebuffer);
+
     egl::ContextPriority getContextPriority() const override { return mContextPriority; }
     angle::Result startRenderPass(gl::Rectangle renderArea, vk::CommandBuffer **commandBufferOut);
     angle::Result flushCommandsAndEndRenderPass();
@@ -628,6 +631,7 @@ class ContextVk : public ContextImpl, public vk::Context
     vk::DynamicBuffer *getStagingBufferStorage() { return &mStagingBufferStorage; }
 
     const vk::PerfCounters &getPerfCounters() const { return mPerfCounters; }
+    vk::PerfCounters &getPerfCounters() { return mPerfCounters; }
 
   private:
     // Dirty bits.

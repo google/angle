@@ -32,15 +32,6 @@ namespace vk
 namespace
 {
 
-// In the FramebufferDesc object:
-//  - Depth/stencil serial is at index 0
-//  - Color serials are at indices [1:gl::IMPLEMENTATION_MAX_DRAW_BUFFERS]
-//  - Resolve attachments are at indices [gl::IMPLEMENTATION_MAX_DRAW_BUFFERS+1,
-//                                        gl::IMPLEMENTATION_MAX_DRAW_BUFFERS*2]
-constexpr size_t kFramebufferDescDepthStencilIndex  = 0;
-constexpr size_t kFramebufferDescColorIndexOffset   = 1;
-constexpr size_t kFramebufferDescResolveIndexOffset = gl::IMPLEMENTATION_MAX_DRAW_BUFFERS + 1;
-
 uint8_t PackGLBlendOp(GLenum blendOp)
 {
     switch (blendOp)

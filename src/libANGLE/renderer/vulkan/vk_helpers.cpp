@@ -899,6 +899,14 @@ angle::Result CommandBufferHelper::flushToPrimary(ContextVk *contextVk,
     return angle::Result::Continue;
 }
 
+void CommandBufferHelper::updateRenderPassForResolve(vk::Framebuffer *newFramebuffer,
+                                                     const vk::RenderPassDesc &renderPassDesc)
+{
+    ASSERT(newFramebuffer);
+    mFramebuffer.setHandle(newFramebuffer->getHandle());
+    mRenderPassDesc = renderPassDesc;
+}
+
 // Helper functions used below
 char GetLoadOpShorthand(uint32_t loadOp)
 {

@@ -4071,6 +4071,7 @@ angle::Result ContextVk::flushImpl(const vk::Semaphore *signalSemaphore)
     mPerfCounters.renderPasses                           = 0;
     mPerfCounters.writeDescriptorSets                    = 0;
     mPerfCounters.flushedOutsideRenderPassCommandBuffers = 0;
+    mPerfCounters.resolveImageCommands                   = 0;
 
     mWaitSemaphores.clear();
     mWaitSemaphoreStageMasks.clear();
@@ -4482,6 +4483,27 @@ angle::Result ContextVk::startRenderPass(gl::Rectangle renderArea,
     mPerfCounters.renderPasses++;
 
     return angle::Result::Continue;
+}
+
+void ContextVk::restoreFinishedRenderPass(vk::Framebuffer *framebuffer)
+{
+    if (mRenderPassCommandBuffer != nullptr)
+    {
+        // The render pass isn't finished yet, so nothing to restore.
+        return;
+    }
+
+    if (mRenderPassCommands->started() &&
+        mRenderPassCommands->getFramebufferHandle() == framebuffer->getHandle())
+    {
+        // There is already a render pass open for this framebuffer, so just restore the
+        // pointer rather than starting a whole new render pass. One possible path here
+        // is if the draw framebuffer binding has changed from FBO A -> B -> A, without
+        // any commands that started a new render pass for FBO B (such as a clear being
+        // issued that was deferred).
+        mRenderPassCommandBuffer = &mRenderPassCommands->getCommandBuffer();
+        ASSERT(hasStartedRenderPass());
+    }
 }
 
 angle::Result ContextVk::flushCommandsAndEndRenderPass()

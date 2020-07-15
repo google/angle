@@ -246,6 +246,20 @@ void AdjustBlitResolveParametersForPreRotation(SurfaceRotation framebufferAngle,
             break;
     }
 }
+
+bool HasResolveAttachment(const gl::AttachmentArray<RenderTargetVk *> &colorRenderTargets,
+                          const gl::DrawBufferMask &getEnabledDrawBuffers)
+{
+    for (size_t colorIndexGL : getEnabledDrawBuffers)
+    {
+        RenderTargetVk *colorRenderTarget = colorRenderTargets[colorIndexGL];
+        if (colorRenderTarget->hasResolveAttachment())
+        {
+            return true;
+        }
+    }
+    return false;
+}
 }  // anonymous namespace
 
 // static
@@ -461,7 +475,7 @@ angle::Result FramebufferVk::clearImpl(const gl::Context *context,
     if (clearAnyWithRenderPassLoadOp)
     {
         vk::Framebuffer *currentFramebuffer = nullptr;
-        ANGLE_TRY(getFramebuffer(contextVk, &currentFramebuffer));
+        ANGLE_TRY(getFramebuffer(contextVk, &currentFramebuffer, nullptr));
 
         gl::DrawBufferMask clearColorDrawBuffersMask;
         if (clearColorWithRenderPassLoadOp)
@@ -1082,8 +1096,40 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
         else if (isColorResolve && !flipX && !flipY && areChannelsBlitCompatible &&
                  (rotation == SurfaceRotation::Identity))
         {
-            ANGLE_TRY(
-                resolveColorWithCommand(contextVk, params, &readRenderTarget->getImageForCopy()));
+            // Resolving with a subpass resolve attachment has a few restrictions:
+            // 1.) glBlitFramebuffer() needs to copy the read color attachment to all enabled
+            // attachments in the draw framebuffer, but Vulkan requires a 1:1 relationship for
+            // multisample attachments to resolve attachments in the render pass subpass.
+            // Due to this, we currently only support using resolve attachments when there is a
+            // single draw attachment enabled.
+            // 2.) Using a subpass resolve attachment relies on using the render pass that performs
+            // the draw to still be open, so it can be updated to use the resolve attachment to draw
+            // into. If there's no render pass with commands, then the multisampled render pass is
+            // already done and whose data is already flushed from the tile (in a tile-based
+            // renderer), so there's no chance for the resolve attachment to take advantage of the
+            // data already being present in the tile.
+            vk::Framebuffer *srcVkFramebuffer = nullptr;
+            ANGLE_TRY(srcFramebufferVk->getFramebuffer(contextVk, &srcVkFramebuffer, nullptr));
+
+            // TODO(https://anglebug.com/4968): Support multiple open render passes so we can remove
+            //  this hack to 'restore' the finished render pass.
+            contextVk->restoreFinishedRenderPass(srcVkFramebuffer);
+
+            if ((mState.getEnabledDrawBuffers().count() == 1) &&
+                contextVk->hasStartedRenderPassWithFramebuffer(srcVkFramebuffer))
+            {
+                // glBlitFramebuffer() needs to copy the read color attachment to all enabled
+                // attachments in the draw framebuffer, but Vulkan requires a 1:1 relationship for
+                // multisample attachments to resolve attachments in the render pass subpass.
+                // Due to this, we currently only support using resolve attachments when there is a
+                // single draw attachment enabled.
+                ANGLE_TRY(resolveColorWithSubpass(contextVk, params));
+            }
+            else
+            {
+                ANGLE_TRY(resolveColorWithCommand(contextVk, params,
+                                                  &readRenderTarget->getImageForCopy()));
+            }
         }
         // Otherwise use a shader to do blit or resolve.
         else
@@ -1186,6 +1232,62 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
     return angle::Result::Continue;
 }  // namespace rx
 
+void FramebufferVk::updateColorResolveAttachment(
+    uint32_t colorIndexGL,
+    vk::ImageViewSubresourceSerial resolveImageViewSerial)
+{
+    mCurrentFramebufferDesc.updateColorResolve(colorIndexGL, resolveImageViewSerial);
+    mFramebuffer = nullptr;
+    mRenderPassDesc.packColorResolveAttachment(colorIndexGL);
+}
+
+angle::Result FramebufferVk::resolveColorWithSubpass(ContextVk *contextVk,
+                                                     const UtilsVk::BlitResolveParameters &params)
+{
+    // Vulkan requires a 1:1 relationship for multisample attachments to resolve attachments in the
+    // render pass subpass. Due to this, we currently only support using resolve attachments when
+    // there is a single draw attachment enabled.
+    ASSERT(mState.getEnabledDrawBuffers().count() == 1);
+    uint32_t colorIndexGL = static_cast<uint32_t>(*mState.getEnabledDrawBuffers().begin());
+
+    const gl::State &glState              = contextVk->getState();
+    const gl::Framebuffer *srcFramebuffer = glState.getReadFramebuffer();
+    FramebufferVk *srcFramebufferVk       = vk::GetImpl(srcFramebuffer);
+
+    // Use the draw FBO's color attachments as resolve attachments in the read FBO.
+    // - Assign the draw FBO's color attachment Serial to the read FBO's resolve attachment
+    // - Deactivate the source Framebuffer, since the description changed
+    // - Update the renderpass description to indicate there's a resolve attachment
+    vk::ImageViewSubresourceSerial resolveImageViewSerial =
+        mCurrentFramebufferDesc.getColorImageViewSerial(colorIndexGL);
+    ASSERT(resolveImageViewSerial.imageViewSerial.valid());
+    srcFramebufferVk->updateColorResolveAttachment(colorIndexGL, resolveImageViewSerial);
+
+    // Since tha source FBO was updated with a resolve attachment it didn't have when the render
+    // pass was started, we need to:
+    // 1. Get the new framebuffer
+    //   - The draw framebuffer's ImageView will be used as the resolve attachment, so pass it along
+    //   in case vkCreateFramebuffer() needs to be called to create a new vkFramebuffer with the new
+    //   resolve attachment.
+    RenderTargetVk *drawRenderTarget      = mRenderTargetCache.getColors()[colorIndexGL];
+    const vk::ImageView *resolveImageView = nullptr;
+    ANGLE_TRY(drawRenderTarget->getImageView(contextVk, &resolveImageView));
+    vk::Framebuffer *newSrcFramebuffer = nullptr;
+    ANGLE_TRY(srcFramebufferVk->getFramebuffer(contextVk, &newSrcFramebuffer, resolveImageView));
+    // 2. Update the CommandBufferHelper with the new framebuffer and render pass
+    vk::CommandBufferHelper &commandBufferHelper = contextVk->getStartedRenderPassCommands();
+    commandBufferHelper.updateRenderPassForResolve(newSrcFramebuffer,
+                                                   srcFramebufferVk->getRenderPassDesc());
+
+    // End the render pass now since we don't (yet) support subpass dependencies.
+    RenderTargetVk *readRenderTarget = getColorReadRenderTarget();
+    contextVk->onImageRenderPassWrite(VK_IMAGE_ASPECT_COLOR_BIT, vk::ImageLayout::ColorAttachment,
+                                      &readRenderTarget->getImageForRenderPass());
+    ANGLE_TRY(contextVk->flushCommandsAndEndRenderPass());
+
+    return angle::Result::Continue;
+}
+
 angle::Result FramebufferVk::resolveColorWithCommand(ContextVk *contextVk,
                                                      const UtilsVk::BlitResolveParameters &params,
                                                      vk::ImageHelper *srcImage)
@@ -1209,6 +1311,7 @@ angle::Result FramebufferVk::resolveColorWithCommand(ContextVk *contextVk,
     resolveRegion.extent.height                 = params.srcExtents[1];
     resolveRegion.extent.depth                  = 1;
 
+    vk::PerfCounters &perfCounters = contextVk->getPerfCounters();
     for (size_t colorIndexGL : mState.getEnabledDrawBuffers())
     {
         RenderTargetVk *drawRenderTarget = mRenderTargetCache.getColors()[colorIndexGL];
@@ -1223,6 +1326,8 @@ angle::Result FramebufferVk::resolveColorWithCommand(ContextVk *contextVk,
         resolveRegion.dstSubresource.baseArrayLayer = drawRenderTarget->getLayerIndex();
 
         srcImage->resolve(&dstImage, resolveRegion, &commandBuffer);
+
+        perfCounters.resolveImageCommands++;
     }
 
     return angle::Result::Continue;
@@ -1350,7 +1455,7 @@ angle::Result FramebufferVk::invalidateImpl(ContextVk *contextVk,
     //- Bind FBO 1, invalidate D/S
     // to invalidate the D/S of FBO 2 since it would be the currently active renderpass.
     vk::Framebuffer *currentFramebuffer = nullptr;
-    ANGLE_TRY(getFramebuffer(contextVk, &currentFramebuffer));
+    ANGLE_TRY(getFramebuffer(contextVk, &currentFramebuffer, nullptr));
 
     if (contextVk->hasStartedRenderPassWithFramebuffer(currentFramebuffer))
     {
@@ -1644,7 +1749,16 @@ angle::Result FramebufferVk::syncState(const gl::Context *context,
         mActiveColorComponentMasksForClear[0].any(), mActiveColorComponentMasksForClear[1].any(),
         mActiveColorComponentMasksForClear[2].any(), mActiveColorComponentMasksForClear[3].any());
 
-    ANGLE_TRY(contextVk->flushCommandsAndEndRenderPass());
+    if (command != gl::Command::Blit)
+    {
+        // Don't end the render pass when handling a blit to resolve, since we may be able to
+        // optimize that path which requires modifying the current render pass.
+        // We're deferring the resolve check to FramebufferVk::blit(), since if the read buffer is
+        // multisampled-render-to-texture, then srcFramebuffer->getSamples(context) gives > 1, but
+        // there's no resolve happening as the read buffer's singlesampled image will be used as
+        // blit src. FramebufferVk::blit() will handle those details for us.
+        ANGLE_TRY(contextVk->flushCommandsAndEndRenderPass());
+    }
 
     // Notify the ContextVk to update the pipeline desc.
     updateRenderPassDesc();
@@ -1700,7 +1814,9 @@ void FramebufferVk::updateRenderPassDesc()
     }
 }
 
-angle::Result FramebufferVk::getFramebuffer(ContextVk *contextVk, vk::Framebuffer **framebufferOut)
+angle::Result FramebufferVk::getFramebuffer(ContextVk *contextVk,
+                                            vk::Framebuffer **framebufferOut,
+                                            const vk::ImageView *resolveImageViewIn)
 {
     // First return a presently valid Framebuffer
     if (mFramebuffer != nullptr)
@@ -1723,6 +1839,7 @@ angle::Result FramebufferVk::getFramebuffer(ContextVk *contextVk, vk::Framebuffe
             iter->second.release(contextVk);
         }
     }
+
     vk::RenderPass *compatibleRenderPass = nullptr;
     ANGLE_TRY(contextVk->getCompatibleRenderPass(mRenderPassDesc, &compatibleRenderPass));
 
@@ -1767,19 +1884,31 @@ angle::Result FramebufferVk::getFramebuffer(ContextVk *contextVk, vk::Framebuffe
     }
 
     // Color resolve attachments.
-    for (size_t colorIndexGL : mState.getEnabledDrawBuffers())
+    if (resolveImageViewIn)
     {
-        RenderTargetVk *colorRenderTarget = colorRenderTargets[colorIndexGL];
-        ASSERT(colorRenderTarget);
+        ASSERT(!HasResolveAttachment(colorRenderTargets, mState.getEnabledDrawBuffers()));
 
-        if (colorRenderTarget->hasResolveAttachment())
+        // Need to use the passed in ImageView for the resolve attachment, since it came from
+        // another Framebuffer.
+        attachments.push_back(resolveImageViewIn->getHandle());
+    }
+    else
+    {
+        // This Framebuffer owns all of the ImageViews, including its own resolve ImageViews.
+        for (size_t colorIndexGL : mState.getEnabledDrawBuffers())
         {
-            const vk::ImageView *resolveImageView = nullptr;
-            ANGLE_TRY(colorRenderTarget->getResolveImageView(contextVk, &resolveImageView));
+            RenderTargetVk *colorRenderTarget = colorRenderTargets[colorIndexGL];
+            ASSERT(colorRenderTarget);
 
-            attachments.push_back(resolveImageView->getHandle());
+            if (colorRenderTarget->hasResolveAttachment())
+            {
+                const vk::ImageView *resolveImageView = nullptr;
+                ANGLE_TRY(colorRenderTarget->getResolveImageView(contextVk, &resolveImageView));
 
-            ASSERT(!attachmentsSize.empty());
+                attachments.push_back(resolveImageView->getHandle());
+
+                ASSERT(!attachmentsSize.empty());
+            }
         }
     }
 
@@ -2073,7 +2202,7 @@ angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
                                                 vk::CommandBuffer **commandBufferOut)
 {
     vk::Framebuffer *framebuffer = nullptr;
-    ANGLE_TRY(getFramebuffer(contextVk, &framebuffer));
+    ANGLE_TRY(getFramebuffer(contextVk, &framebuffer, nullptr));
 
     ANGLE_TRY(contextVk->flushCommandsAndEndRenderPass());
 

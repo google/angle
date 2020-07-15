@@ -911,6 +911,15 @@ constexpr size_t kMaxFramebufferAttachments = gl::IMPLEMENTATION_MAX_DRAW_BUFFER
 template <typename T>
 using FramebufferAttachmentArray = std::array<T, kMaxFramebufferAttachments>;
 
+// In the FramebufferDesc object:
+//  - Depth/stencil serial is at index 0
+//  - Color serials are at indices [1:gl::IMPLEMENTATION_MAX_DRAW_BUFFERS]
+//  - Resolve attachments are at indices [gl::IMPLEMENTATION_MAX_DRAW_BUFFERS+1,
+//                                        gl::IMPLEMENTATION_MAX_DRAW_BUFFERS*2]
+constexpr size_t kFramebufferDescDepthStencilIndex  = 0;
+constexpr size_t kFramebufferDescColorIndexOffset   = 1;
+constexpr size_t kFramebufferDescResolveIndexOffset = gl::IMPLEMENTATION_MAX_DRAW_BUFFERS + 1;
+
 class FramebufferDesc
 {
   public:
@@ -930,6 +939,12 @@ class FramebufferDesc
     bool operator==(const FramebufferDesc &other) const;
 
     uint32_t attachmentCount() const;
+
+    ImageViewSubresourceSerial getColorImageViewSerial(uint32_t index)
+    {
+        ASSERT(kFramebufferDescColorIndexOffset + index < mSerials.size());
+        return mSerials[kFramebufferDescColorIndexOffset + index];
+    }
 
   private:
     void update(uint32_t index, ImageViewSubresourceSerial serial);
