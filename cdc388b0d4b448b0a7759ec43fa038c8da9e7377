@@ -163,6 +163,24 @@
       "revId": "cdc388b0d4b448b0a7759ec43fa038c8da9e7377",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0be9cc62_f1ff0feb",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1438550
+      },
+      "writtenOn": "2020-07-15T18:01:26Z",
+      "side": 1,
+      "message": "Ok, done!",
+      "parentUuid": "252a5684_b639ce50",
+      "revId": "cdc388b0d4b448b0a7759ec43fa038c8da9e7377",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
