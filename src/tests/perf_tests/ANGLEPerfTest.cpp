@@ -416,7 +416,7 @@ std::string RenderTestParams::backend() const
 
 std::string RenderTestParams::story() const
 {
-    return "";
+    return (surfaceType == SurfaceType::Offscreen ? "_offscreen" : "");
 }
 
 std::string RenderTestParams::backendAndStory() const

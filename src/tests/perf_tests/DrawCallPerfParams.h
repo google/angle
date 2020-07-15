@@ -25,7 +25,6 @@ struct DrawCallPerfParams : public RenderTestParams
 
     double runTimeSeconds;
     int numTris;
-    bool offscreen;
 };
 
 namespace params

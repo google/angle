@@ -104,6 +104,12 @@ class ANGLEPerfTest : public testing::Test, angle::NonCopyable
     bool mRunning;
 };
 
+enum class SurfaceType
+{
+    Window,
+    Offscreen,
+};
+
 struct RenderTestParams : public angle::PlatformParameters
 {
     virtual ~RenderTestParams() {}
@@ -116,6 +122,7 @@ struct RenderTestParams : public angle::PlatformParameters
     EGLint windowHeight            = 64;
     unsigned int iterationsPerStep = 0;
     bool trackGpuTime              = false;
+    SurfaceType surfaceType        = SurfaceType::Window;
 };
 
 class ANGLERenderTest : public ANGLEPerfTest
@@ -190,8 +197,8 @@ namespace params
 template <typename ParamsT>
 ParamsT Offscreen(const ParamsT &input)
 {
-    ParamsT output   = input;
-    output.offscreen = true;
+    ParamsT output     = input;
+    output.surfaceType = SurfaceType::Offscreen;
     return output;
 }
 
