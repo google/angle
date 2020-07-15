@@ -28,7 +28,7 @@ RenderTargetVk::~RenderTargetVk() {}
 RenderTargetVk::RenderTargetVk(RenderTargetVk &&other)
     : mImage(other.mImage),
       mImageViews(other.mImageViews),
-      mLevelIndex(other.mLevelIndex),
+      mLevelIndexGL(other.mLevelIndexGL),
       mLayerIndex(other.mLayerIndex),
       mContentDefined(other.mContentDefined)
 {
@@ -37,13 +37,13 @@ RenderTargetVk::RenderTargetVk(RenderTargetVk &&other)
 
 void RenderTargetVk::init(vk::ImageHelper *image,
                           vk::ImageViewHelper *imageViews,
-                          uint32_t levelIndex,
+                          uint32_t levelIndexGL,
                           uint32_t layerIndex)
 {
-    mImage      = image;
-    mImageViews = imageViews;
-    mLevelIndex = levelIndex;
-    mLayerIndex = layerIndex;
+    mImage        = image;
+    mImageViews   = imageViews;
+    mLevelIndexGL = levelIndexGL;
+    mLayerIndex   = layerIndex;
     // We are being conservative here since our targeted optimization is to skip surfaceVK's depth
     // buffer load after swap call.
     mContentDefined = true;
@@ -53,7 +53,7 @@ void RenderTargetVk::reset()
 {
     mImage          = nullptr;
     mImageViews     = nullptr;
-    mLevelIndex     = 0;
+    mLevelIndexGL   = 0;
     mLayerIndex     = 0;
     mContentDefined = false;
 }
@@ -62,10 +62,10 @@ ImageViewSerial RenderTargetVk::getAssignImageViewSerial(ContextVk *contextVk)
 {
     ASSERT(mImageViews);
     ASSERT(mLayerIndex < std::numeric_limits<uint16_t>::max());
-    ASSERT(mLevelIndex < std::numeric_limits<uint16_t>::max());
+    ASSERT(mLevelIndexGL < std::numeric_limits<uint16_t>::max());
 
     ImageViewSerial imageViewSerial =
-        mImageViews->getAssignSerial(contextVk, mLevelIndex, mLayerIndex);
+        mImageViews->getAssignSerial(contextVk, mLevelIndexGL, mLayerIndex);
     ASSERT(imageViewSerial.getValue() < std::numeric_limits<uint32_t>::max());
     return imageViewSerial;
 }
@@ -112,7 +112,8 @@ angle::Result RenderTargetVk::getImageView(ContextVk *contextVk,
                                            const vk::ImageView **imageViewOut) const
 {
     ASSERT(mImage && mImage->valid() && mImageViews);
-    return mImageViews->getLevelLayerDrawImageView(contextVk, *mImage, mLevelIndex, mLayerIndex,
+    int32_t levelVK = mLevelIndexGL - mImage->getBaseLevel();
+    return mImageViews->getLevelLayerDrawImageView(contextVk, *mImage, levelVK, mLayerIndex,
                                                    imageViewOut);
 }
 
@@ -146,7 +147,8 @@ const vk::Format &RenderTargetVk::getImageFormat() const
 gl::Extents RenderTargetVk::getExtents() const
 {
     ASSERT(mImage && mImage->valid());
-    return mImage->getLevelExtents2D(static_cast<uint32_t>(mLevelIndex));
+    uint32_t levelVK = mLevelIndexGL - mImage->getBaseLevel();
+    return mImage->getLevelExtents2D(levelVK);
 }
 
 void RenderTargetVk::updateSwapchainImage(vk::ImageHelper *image, vk::ImageViewHelper *imageViews)
@@ -175,13 +177,13 @@ angle::Result RenderTargetVk::flushStagedUpdates(ContextVk *contextVk,
     }
 
     ASSERT(mImage->valid());
-    if (!mImage->isUpdateStaged(mLevelIndex, layerIndex))
+    if (!mImage->isUpdateStaged(mLevelIndexGL, layerIndex))
         return angle::Result::Continue;
 
     vk::CommandBuffer *commandBuffer;
     ANGLE_TRY(contextVk->endRenderPassAndGetCommandBuffer(&commandBuffer));
     return mImage->flushSingleSubresourceStagedUpdates(
-        contextVk, mLevelIndex, layerIndex, commandBuffer, deferredClears, deferredClearIndex);
+        contextVk, mLevelIndexGL, layerIndex, commandBuffer, deferredClears, deferredClearIndex);
 }
 
 void RenderTargetVk::retainImageViews(ContextVk *contextVk) const
@@ -194,16 +196,16 @@ gl::ImageIndex RenderTargetVk::getImageIndex() const
     // Determine the GL type from the Vk Image properties.
     if (mImage->getType() == VK_IMAGE_TYPE_3D)
     {
-        return gl::ImageIndex::Make3D(mLevelIndex, mLayerIndex);
+        return gl::ImageIndex::Make3D(mLevelIndexGL, mLayerIndex);
     }
 
     // We don't need to distinguish 2D array and cube.
     if (mImage->getLayerCount() > 1)
     {
-        return gl::ImageIndex::Make2DArray(mLevelIndex, mLayerIndex);
+        return gl::ImageIndex::Make2DArray(mLevelIndexGL, mLayerIndex);
     }
 
     ASSERT(mLayerIndex == 0);
-    return gl::ImageIndex::Make2D(mLevelIndex);
+    return gl::ImageIndex::Make2D(mLevelIndexGL);
 }
 }  // namespace rx

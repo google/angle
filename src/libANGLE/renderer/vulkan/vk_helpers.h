@@ -1645,7 +1645,7 @@ class ImageViewHelper : angle::NonCopyable
     angle::Result getLevelDrawImageView(ContextVk *contextVk,
                                         gl::TextureType viewType,
                                         const ImageHelper &image,
-                                        uint32_t level,
+                                        uint32_t levelVK,
                                         uint32_t layer,
                                         VkImageUsageFlags imageUsageFlags,
                                         VkFormat vkImageFormat,
@@ -1654,12 +1654,12 @@ class ImageViewHelper : angle::NonCopyable
     // Creates a view with a single layer of the level.
     angle::Result getLevelLayerDrawImageView(ContextVk *contextVk,
                                              const ImageHelper &image,
-                                             uint32_t level,
+                                             uint32_t levelVK,
                                              uint32_t layer,
                                              const ImageView **imageViewOut);
 
     // Return unique Serial for this imageView, first assigning it if it hasn't yet been set
-    ImageViewSerial getAssignSerial(ContextVk *contextVk, uint32_t level, uint32_t layer);
+    ImageViewSerial getAssignSerial(ContextVk *contextVk, uint32_t levelGL, uint32_t layer);
 
   private:
     ImageView &getReadImageView()

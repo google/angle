@@ -1981,10 +1981,11 @@ angle::Result TextureVk::getLevelLayerImageView(ContextVk *contextVk,
 {
     ASSERT(mImage && mImage->valid());
 
-    uint32_t nativeLevel = getNativeImageLevel(static_cast<uint32_t>(level));
+    uint32_t levelGL     = getNativeImageLevel(static_cast<uint32_t>(level));
     uint32_t nativeLayer = getNativeImageLayer(static_cast<uint32_t>(layer));
 
-    return mImageViews.getLevelLayerDrawImageView(contextVk, *mImage, nativeLevel, nativeLayer,
+    uint32_t levelVK = levelGL - mImage->getBaseLevel();
+    return mImageViews.getLevelLayerDrawImageView(contextVk, *mImage, levelVK, nativeLayer,
                                                   imageViewOut);
 }
 

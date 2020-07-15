@@ -44,7 +44,7 @@ class RenderTargetVk final : public FramebufferAttachmentRenderTarget
 
     void init(vk::ImageHelper *image,
               vk::ImageViewHelper *imageViews,
-              uint32_t levelIndex,
+              uint32_t levelIndexGL,
               uint32_t layerIndex);
     void reset();
     // This returns the serial from underlying ImageViewHelper, first assigning one if required
@@ -69,7 +69,7 @@ class RenderTargetVk final : public FramebufferAttachmentRenderTarget
 
     const vk::Format &getImageFormat() const;
     gl::Extents getExtents() const;
-    uint32_t getLevelIndex() const { return mLevelIndex; }
+    uint32_t getLevelIndex() const { return mLevelIndexGL; }
     uint32_t getLayerIndex() const { return mLayerIndex; }
 
     gl::ImageIndex getImageIndex() const;
@@ -91,7 +91,7 @@ class RenderTargetVk final : public FramebufferAttachmentRenderTarget
   private:
     vk::ImageHelper *mImage;
     vk::ImageViewHelper *mImageViews;
-    uint32_t mLevelIndex;
+    uint32_t mLevelIndexGL;
     uint32_t mLayerIndex;
     // Right now we are only tracking depth/stencil buffer. We could expand it to cover color
     // buffers if needed in future.
