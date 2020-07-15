@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "a28d4d48_2d112f28",
+        "filename": "BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 664,
+      "author": {
+        "id": 1438550
+      },
+      "writtenOn": "2020-07-15T14:43:03Z",
+      "side": 1,
+      "message": "I moved all dxgi file for a matter of consistency. Should I only move the cpp files?",
+      "parentUuid": "6a963469_0cfdbfac",
+      "range": {
+        "startLine": 664,
+        "startChar": 17,
+        "endLine": 664,
+        "endChar": 32
+      },
+      "revId": "cdc388b0d4b448b0a7759ec43fa038c8da9e7377",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "5bb36363_f840b66f",
         "filename": "doc/DevSetup.md",
         "patchSetId": 1
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "6f6be03f_47a3cc93",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1438550
+      },
+      "writtenOn": "2020-07-15T14:43:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5bb36363_f840b66f",
+      "range": {
+        "startLine": 111,
+        "startChar": 9,
+        "endLine": 111,
+        "endChar": 12
+      },
+      "revId": "cdc388b0d4b448b0a7759ec43fa038c8da9e7377",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ed7682f6_f3fd6f83",
         "filename": "doc/DevSetup.md",
         "patchSetId": 1
@@ -59,6 +107,24 @@
       "writtenOn": "2020-07-15T14:02:04Z",
       "side": 1,
       "message": "Please include the previous instructions alongside the new ones. They are unrelated.\n\nAlso, I would phrase this like this:\n\n\u003e To remove any backend entirely:\n\u003e \n\u003e 1. Run `gn args \u003cpath/to/build/dir\u003e`\n\u003e 2. Set the appropriate variable to `false`. Options are:\n\u003e \n\u003e    - `angle_enable_d3d9`\n\u003e    - `angle_enable_d3d11`\n\u003e    - `angle_enable_gl`\n\u003e    - `angle_enable_metal`\n\u003e    - `angle_enable_null`\n\u003e    - `angle_enable_vulkan`\n\u003e    - `angle_enable_essl`\n\u003e    - `angle_enable_glsl`",
+      "revId": "cdc388b0d4b448b0a7759ec43fa038c8da9e7377",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "47dac303_bb8972f0",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1438550
+      },
+      "writtenOn": "2020-07-15T14:43:03Z",
+      "side": 1,
+      "message": "I actually tried the previous description, and it ended up using D3D11 anyway, because the symbol is defined in BUILD.gn. I added the new description as suggested.",
+      "parentUuid": "ed7682f6_f3fd6f83",
       "revId": "cdc388b0d4b448b0a7759ec43fa038c8da9e7377",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
