@@ -49,7 +49,6 @@ class TransformFeedbackVk : public TransformFeedbackImpl
                                    vk::DescriptorSetLayoutDesc *descSetLayoutOut) const;
     void initDescriptorSet(ContextVk *contextVk,
                            size_t xfbBufferCount,
-                           vk::BufferHelper *emptyBuffer,
                            VkDescriptorSet descSet) const;
     void updateDescriptorSet(ContextVk *contextVk,
                              const gl::ProgramState &programState,

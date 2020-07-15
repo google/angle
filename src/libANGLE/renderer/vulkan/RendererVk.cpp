@@ -493,7 +493,6 @@ void RendererVk::onDestroy()
     mPipelineCache.destroy(mDevice);
     mSamplerCache.destroy(this);
     mYuvConversionCache.destroy(this);
-    mTheNullBuffer.destroy(this);
 
     mAllocator.destroy();
 
@@ -820,16 +819,6 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
 
     // Store the physical device memory properties so we can find the right memory pools.
     mMemoryProperties.init(mPhysicalDevice);
-
-    // Must be initialized after the allocator and memory properties.
-    {
-        VkBufferCreateInfo bufferCreateInfo = {};
-        bufferCreateInfo.sType              = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-        bufferCreateInfo.size               = 16;
-        bufferCreateInfo.usage              = VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
-        ANGLE_TRY(mTheNullBuffer.init(displayVk, kInvalidBufferSerial, bufferCreateInfo,
-                                      VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
-    }
 
     if (!mGlslangInitialized)
     {

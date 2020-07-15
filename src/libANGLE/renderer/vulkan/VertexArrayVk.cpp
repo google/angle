@@ -121,14 +121,13 @@ VertexArrayVk::VertexArrayVk(ContextVk *contextVk, const gl::VertexArrayState &s
       mLineLoopHelper(contextVk->getRenderer()),
       mDirtyLineLoopTranslation(true)
 {
-    RendererVk *renderer = contextVk->getRenderer();
+    RendererVk *renderer          = contextVk->getRenderer();
+    vk::BufferHelper &emptyBuffer = contextVk->getEmptyBuffer();
 
-    vk::BufferHelper &nullBuffer = renderer->getNullBuffer();
-
-    mCurrentArrayBufferHandles.fill(nullBuffer.getBuffer().getHandle());
+    mCurrentArrayBufferHandles.fill(emptyBuffer.getBuffer().getHandle());
     mCurrentArrayBufferOffsets.fill(0);
     mCurrentArrayBufferRelativeOffsets.fill(0);
-    mCurrentArrayBuffers.fill(&nullBuffer);
+    mCurrentArrayBuffers.fill(&emptyBuffer);
 
     mDynamicVertexData.init(renderer, vk::kVertexBufferUsageFlags, vk::kVertexBufferAlignment,
                             kDynamicVertexDataSize, true);
@@ -619,10 +618,10 @@ angle::Result VertexArrayVk::syncDirtyAttrib(ContextVk *contextVk,
             {
                 if (bufferVk->getSize() == 0)
                 {
-                    vk::BufferHelper &nullBuffer = renderer->getNullBuffer();
+                    vk::BufferHelper &emptyBuffer = contextVk->getEmptyBuffer();
 
-                    mCurrentArrayBuffers[attribIndex]       = &nullBuffer;
-                    mCurrentArrayBufferHandles[attribIndex] = nullBuffer.getBuffer().getHandle();
+                    mCurrentArrayBuffers[attribIndex]       = &emptyBuffer;
+                    mCurrentArrayBufferHandles[attribIndex] = emptyBuffer.getBuffer().getHandle();
                     mCurrentArrayBufferOffsets[attribIndex] = 0;
                     stride                                  = 0;
                 }
@@ -643,9 +642,9 @@ angle::Result VertexArrayVk::syncDirtyAttrib(ContextVk *contextVk,
         }
         else
         {
-            vk::BufferHelper &nullBuffer            = renderer->getNullBuffer();
-            mCurrentArrayBuffers[attribIndex]       = &nullBuffer;
-            mCurrentArrayBufferHandles[attribIndex] = nullBuffer.getBuffer().getHandle();
+            vk::BufferHelper &emptyBuffer           = contextVk->getEmptyBuffer();
+            mCurrentArrayBuffers[attribIndex]       = &emptyBuffer;
+            mCurrentArrayBufferHandles[attribIndex] = emptyBuffer.getBuffer().getHandle();
             mCurrentArrayBufferOffsets[attribIndex] = 0;
             // Client side buffer will be transfered to a tightly packed buffer later
             stride = vertexFormat.actualBufferFormat().pixelBytes;
@@ -676,9 +675,9 @@ angle::Result VertexArrayVk::syncDirtyAttrib(ContextVk *contextVk,
         contextVk->invalidateDefaultAttribute(attribIndex);
 
         // These will be filled out by the ContextVk.
-        vk::BufferHelper &nullBuffer                    = renderer->getNullBuffer();
-        mCurrentArrayBuffers[attribIndex]               = &nullBuffer;
-        mCurrentArrayBufferHandles[attribIndex]         = nullBuffer.getBuffer().getHandle();
+        vk::BufferHelper &emptyBuffer                   = contextVk->getEmptyBuffer();
+        mCurrentArrayBuffers[attribIndex]               = &emptyBuffer;
+        mCurrentArrayBufferHandles[attribIndex]         = emptyBuffer.getBuffer().getHandle();
         mCurrentArrayBufferOffsets[attribIndex]         = 0;
         mCurrentArrayBufferStrides[attribIndex]         = 0;
         mCurrentArrayBufferRelativeOffsets[attribIndex] = 0;

@@ -166,15 +166,11 @@ ProgramExecutableVk::~ProgramExecutableVk() = default;
 
 void ProgramExecutableVk::reset(ContextVk *contextVk)
 {
-    RendererVk *renderer = contextVk->getRenderer();
-
     for (auto &descriptorSetLayout : mDescriptorSetLayouts)
     {
         descriptorSetLayout.reset();
     }
     mPipelineLayout.reset();
-
-    mEmptyBuffer.release(renderer);
 
     mDescriptorSets.clear();
     mEmptyDescriptorSets.fill(VK_NULL_HANDLE);
@@ -863,24 +859,7 @@ angle::Result ProgramExecutableVk::createPipelineLayout(const gl::Context *glCon
 
     mDynamicBufferOffsets.resize(glExecutable.getLinkedShaderStageCount());
 
-    // Initialize an "empty" buffer for use with default uniform blocks where there are no uniforms,
-    // or atomic counter buffer array indices that are unused.
-    constexpr VkBufferUsageFlags kEmptyBufferUsage =
-        VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT | VK_BUFFER_USAGE_STORAGE_BUFFER_BIT;
-
-    VkBufferCreateInfo emptyBufferInfo    = {};
-    emptyBufferInfo.sType                 = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-    emptyBufferInfo.flags                 = 0;
-    emptyBufferInfo.size                  = 4;
-    emptyBufferInfo.usage                 = kEmptyBufferUsage;
-    emptyBufferInfo.sharingMode           = VK_SHARING_MODE_EXCLUSIVE;
-    emptyBufferInfo.queueFamilyIndexCount = 0;
-    emptyBufferInfo.pQueueFamilyIndices   = nullptr;
-
-    constexpr VkMemoryPropertyFlags kMemoryType = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
-    angle::Result status = mEmptyBuffer.init(contextVk, emptyBufferInfo, kMemoryType);
-
-    return status;
+    return angle::Result::Continue;
 }
 
 void ProgramExecutableVk::updateDefaultUniformsDescriptorSet(
@@ -906,9 +885,10 @@ void ProgramExecutableVk::updateDefaultUniformsDescriptorSet(
     }
     else
     {
-        mEmptyBuffer.retain(&contextVk->getResourceUseList());
-        bufferInfo.buffer = mEmptyBuffer.getBuffer().getHandle();
-        mDescriptorBuffersCache.emplace_back(&mEmptyBuffer);
+        vk::BufferHelper &emptyBuffer = contextVk->getEmptyBuffer();
+        emptyBuffer.retain(&contextVk->getResourceUseList());
+        bufferInfo.buffer = emptyBuffer.getBuffer().getHandle();
+        mDescriptorBuffersCache.emplace_back(&emptyBuffer);
     }
 
     bufferInfo.offset = 0;
@@ -1078,14 +1058,15 @@ void ProgramExecutableVk::updateAtomicCounterBuffersDescriptorSet(
     }
 
     // Bind the empty buffer to every array slot that's unused.
-    mEmptyBuffer.retain(&contextVk->getResourceUseList());
+    vk::BufferHelper &emptyBuffer = contextVk->getEmptyBuffer();
+    emptyBuffer.retain(&contextVk->getResourceUseList());
     size_t count                        = (~writtenBindings).count();
     VkDescriptorBufferInfo *bufferInfos = &contextVk->allocBufferInfos(count);
     VkWriteDescriptorSet *writeInfos    = &contextVk->allocWriteInfos(count);
     size_t writeCount                   = 0;
     for (size_t binding : ~writtenBindings)
     {
-        bufferInfos[writeCount].buffer = mEmptyBuffer.getBuffer().getHandle();
+        bufferInfos[writeCount].buffer = emptyBuffer.getBuffer().getHandle();
         bufferInfos[writeCount].offset = 0;
         bufferInfos[writeCount].range  = VK_WHOLE_SIZE;
 
@@ -1265,7 +1246,7 @@ void ProgramExecutableVk::updateTransformFeedbackDescriptorSetImpl(
         {
             TransformFeedbackVk *transformFeedbackVk = vk::GetImpl(transformFeedback);
             transformFeedbackVk->initDescriptorSet(
-                contextVk, executable.getTransformFeedbackBufferCount(), &mEmptyBuffer,
+                contextVk, executable.getTransformFeedbackBufferCount(),
                 mDescriptorSets[kUniformsAndXfbDescriptorSetIndex]);
         }
         return;

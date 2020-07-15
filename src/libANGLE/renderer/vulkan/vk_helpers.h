@@ -700,10 +700,6 @@ class BufferHelper final : public Resource
     angle::Result init(ContextVk *contextVk,
                        const VkBufferCreateInfo &createInfo,
                        VkMemoryPropertyFlags memoryPropertyFlags);
-    angle::Result init(Context *context,
-                       BufferSerial serial,
-                       const VkBufferCreateInfo &createInfo,
-                       VkMemoryPropertyFlags memoryPropertyFlags);
     void destroy(RendererVk *renderer);
 
     void release(RendererVk *renderer);

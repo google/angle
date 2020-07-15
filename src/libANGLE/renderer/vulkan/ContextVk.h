@@ -586,6 +586,8 @@ class ContextVk : public ContextImpl, public vk::Context
         return mWriteInfos[oldSize];
     }
 
+    vk::BufferHelper &getEmptyBuffer() { return mEmptyBuffer; }
+
   private:
     // Dirty bits.
     enum DirtyBitType : size_t
@@ -1060,6 +1062,12 @@ class ContextVk : public ContextImpl, public vk::Context
     };
 
     ShareGroupVk *mShareGroupVk;
+
+    // This is a special "empty" placeholder buffer for use when we just need a dummy buffer but not
+    // the data. Examples are shader that has no uniform or doesn't use all slots in the atomic
+    // counter buffer array, or places where there is no vertex buffer since Vulkan does not allow
+    // binding a null vertex buffer.
+    vk::BufferHelper mEmptyBuffer;
 
     std::vector<std::string> mCommandBufferDiagnostics;
 };

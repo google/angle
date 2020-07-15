@@ -72,7 +72,7 @@ angle::Result TransformFeedbackVk::begin(const gl::Context *context,
         else
         {
             // This can happen in error conditions.
-            vk::BufferHelper &nullBuffer = contextVk->getRenderer()->getNullBuffer();
+            vk::BufferHelper &nullBuffer = contextVk->getEmptyBuffer();
             mBufferHelpers[bufferIndex]  = &nullBuffer;
             mBufferOffsets[bufferIndex]  = 0;
             mBufferSizes[bufferIndex]    = nullBuffer.getSize();
@@ -190,13 +190,13 @@ void TransformFeedbackVk::updateDescriptorSetLayout(
 
 void TransformFeedbackVk::initDescriptorSet(ContextVk *contextVk,
                                             size_t xfbBufferCount,
-                                            vk::BufferHelper *emptyBuffer,
                                             VkDescriptorSet descSet) const
 {
     if (!contextVk->getFeatures().emulateTransformFeedback.enabled)
         return;
 
     VkDescriptorBufferInfo *descriptorBufferInfo = &contextVk->allocBufferInfos(xfbBufferCount);
+    vk::BufferHelper *emptyBuffer                = &contextVk->getEmptyBuffer();
 
     for (size_t bufferIndex = 0; bufferIndex < xfbBufferCount; ++bufferIndex)
     {
