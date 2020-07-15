@@ -954,6 +954,7 @@ TestSuite::~TestSuite()
 
 bool TestSuite::parseSingleArg(const char *argument)
 {
+    // Note: Flags should be documented in README.md.
     return (ParseIntArg("--shard-count=", argument, &mShardCount) ||
             ParseIntArg("--shard-index=", argument, &mShardIndex) ||
             ParseIntArg("--batch-size=", argument, &mBatchSize) ||
@@ -962,8 +963,10 @@ bool TestSuite::parseSingleArg(const char *argument)
             ParseIntArg("--batch-timeout=", argument, &mBatchTimeout) ||
             ParseStringArg("--results-directory=", argument, &mResultsDirectory) ||
             ParseStringArg(kResultFileArg, argument, &mResultsFile) ||
+            ParseStringArg("--isolated-script-test-output", argument, &mResultsFile) ||
             ParseStringArg(kFilterFileArg, argument, &mFilterFile) ||
             ParseStringArg(kHistogramJsonFileArg, argument, &mHistogramJsonFile) ||
+            ParseStringArg("--isolated-script-perf-test-output", argument, &mHistogramJsonFile) ||
             ParseFlag("--bot-mode", argument, &mBotMode) ||
             ParseFlag("--debug-test-groups", argument, &mDebugTestGroups));
 }
