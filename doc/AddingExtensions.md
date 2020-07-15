@@ -10,28 +10,37 @@ of these steps.
 
 For extensions requiring new entry points:
 
-* Add the extension xml to this file:
-  https://source.chromium.org/chromium/chromium/src/+/master:third_party/angle/scripts/egl_angle_ext.xml
+* Add the extension xml to
+  [scripts/egl_angle_ext.xml](../scripts/egl_angle_ext.xml) .
 
 * Note the prototypes for the new entry points must be added to the
   top of the file, and the functions themselves grouped under the
   extension name to the bottom of the file.
 
-* Modify `scripts/registry_xml.py` to add the new extension as needed.
+* Modify [scripts/registry_xml.py](../scripts/registry_xml.py) to add
+  the new extension as needed.
 
-* run
-  [scripts/run_code_generation.py](https://source.chromium.org/chromium/chromium/src/+/master:third_party/angle/scripts/run_code_generation.py)
+* Run
+  [scripts/run_code_generation.py](../scripts/run_code_generation.py)
+  .
 
-* The entry point itself goes in the
-  [entry_points_egl_ext.h](https://source.chromium.org/chromium/chromium/src/+/master:third_party/angle/src/libGLESv2/entry_points_egl_ext.h)
-  and cpp files.
+* The entry point itself goes in
+  [entry_points_egl_ext.h](../src/libGLESv2/entry_points_egl_ext.h)
+  and
+  [entry_points_egl_ext.cpp](../src/libGLESv2/entry_points_egl_ext.cpp)
+  .
 
-* Update
-  [eglext_angle.h](https://source.chromium.org/chromium/chromium/src/+/master:third_party/angle/include/EGL/eglext_angle.h)
-  with the new entry points and/or enums.
+* Add the new function to [libEGL.cpp](../src/libEGL/libEGL.cpp) and
+  [libEGL.def](../src/libEGL/libEGL.def) .
+
+* Update [eglext_angle.h](../include/EGL/eglext_angle.h) with the new
+  entry points and/or enums.
 
 * Add members to the appropriate Extensions struct in
-  [Caps.h](https://source.chromium.org/chromium/chromium/src/+/master:third_party/angle/src/libANGLE/Caps.h)
+  [Caps.h](../src/libANGLE/Caps.h) and
+  [Caps.cpp](../src/libANGLE/Caps.cpp) .
 
 * Initialize extension availability in the `Display` subclass's
-  `generateExtensions` method for displays that can support the extension.
+  `generateExtensions` method for displays that can support the
+  extension; for example,
+  [DisplayCGL](../src/libANGLE/renderer/gl/cgl/DisplayCGL.mm).
