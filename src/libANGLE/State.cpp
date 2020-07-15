@@ -3409,25 +3409,6 @@ void State::setImageUnit(const Context *context,
     onImageStateChange(context, unit);
 }
 
-void State::updatePPOActiveTextures()
-{
-    // TODO(http://anglebug.com/4559): Use the Subject/Observer pattern for
-    // Programs in PPOs so we can remove this.
-    if (!mProgram)
-    {
-        // There is no Program bound, so we are updating the textures for a separable Program.
-        // Only that Program's Executable has been updated so far, so we need to update the
-        // Executable for each of the PPO's in case the Program is in there as well.
-        for (ResourceMap<ProgramPipeline, ProgramPipelineID>::Iterator ppoIterator =
-                 mProgramPipelineManager->begin();
-             ppoIterator != mProgramPipelineManager->end(); ++ppoIterator)
-        {
-            ProgramPipeline *pipeline = ppoIterator->second;
-            pipeline->updateExecutableTextures();
-        }
-    }
-}
-
 // Handle a dirty texture event.
 void State::onActiveTextureChange(const Context *context, size_t textureUnit)
 {
@@ -3439,7 +3420,7 @@ void State::onActiveTextureChange(const Context *context, size_t textureUnit)
                                      : nullptr;
         updateActiveTexture(context, textureUnit, activeTexture);
 
-        updatePPOActiveTextures();
+        mExecutable->onStateChange(angle::SubjectMessage::SubjectChanged);
     }
 }
 
@@ -3477,7 +3458,7 @@ void State::onImageStateChange(const Context *context, size_t unit)
             mDirtyObjects.set(DIRTY_OBJECT_IMAGES_INIT);
         }
 
-        updatePPOActiveTextures();
+        mExecutable->onStateChange(angle::SubjectMessage::SubjectChanged);
     }
 }
 

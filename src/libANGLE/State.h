@@ -685,6 +685,11 @@ class State : angle::NonCopyable
         mDirtyObjects.set(DIRTY_OBJECT_DRAW_ATTACHMENTS);
     }
 
+    ANGLE_INLINE void setProgramPipelineDirty()
+    {
+        mDirtyObjects.set(DIRTY_OBJECT_PROGRAM_PIPELINE);
+    }
+
     // This actually clears the current value dirty bits.
     // TODO(jmadill): Pass mutable dirty bits into Impl.
     AttributesMask getAndResetDirtyCurrentValues() const;
@@ -820,8 +825,6 @@ class State : angle::NonCopyable
     angle::Result syncSamplers(const Context *context);
     angle::Result syncProgram(const Context *context);
     angle::Result syncProgramPipeline(const Context *context);
-
-    void updatePPOActiveTextures();
 
     using DirtyObjectHandler = angle::Result (State::*)(const Context *context);
     static constexpr DirtyObjectHandler kDirtyObjectHandlers[DIRTY_OBJECT_MAX] = {

@@ -50,7 +50,10 @@ class ProgramPipelineState final : angle::NonCopyable
     }
 
     void activeShaderProgram(Program *shaderProgram);
-    void useProgramStages(const Context *context, GLbitfield stages, Program *shaderProgram);
+    void useProgramStages(const Context *context,
+                          GLbitfield stages,
+                          Program *shaderProgram,
+                          std::vector<angle::ObserverBinding> *programObserverBindings);
 
     Program *getActiveShaderProgram() { return mActiveShaderProgram; }
 
@@ -60,8 +63,13 @@ class ProgramPipelineState final : angle::NonCopyable
 
     bool usesShaderProgram(ShaderProgramID program) const;
 
+    void updateExecutableTextures();
+
   private:
-    void useProgramStage(const Context *context, ShaderType shaderType, Program *shaderProgram);
+    void useProgramStage(const Context *context,
+                         ShaderType shaderType,
+                         Program *shaderProgram,
+                         angle::ObserverBinding *programObserverBindings);
 
     friend class ProgramPipeline;
 
@@ -77,7 +85,10 @@ class ProgramPipelineState final : angle::NonCopyable
     ProgramExecutable *mExecutable;
 };
 
-class ProgramPipeline final : public RefCountObject<ProgramPipelineID>, public LabeledObject
+class ProgramPipeline final : public RefCountObject<ProgramPipelineID>,
+                              public LabeledObject,
+                              public angle::ObserverInterface,
+                              public angle::Subject
 {
   public:
     ProgramPipeline(rx::GLImplFactory *factory, ProgramPipelineID handle);
@@ -141,7 +152,8 @@ class ProgramPipeline final : public RefCountObject<ProgramPipelineID>, public L
     angle::Result syncState(const Context *context);
     void setDirtyBit(DirtyBitType dirtyBitType) { mDirtyBits.set(dirtyBitType); }
 
-    void updateExecutableTextures();
+    // ObserverInterface implementation.
+    void onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMessage message) override;
 
     void fillProgramStateMap(gl::ShaderMap<const gl::ProgramState *> *programStatesOut);
 
@@ -157,6 +169,9 @@ class ProgramPipeline final : public RefCountObject<ProgramPipelineID>, public L
     ProgramPipelineState mState;
 
     DirtyBits mDirtyBits;
+
+    std::vector<angle::ObserverBinding> mProgramObserverBindings;
+    angle::ObserverBinding mExecutableObserverBinding;
 };
 }  // namespace gl
 

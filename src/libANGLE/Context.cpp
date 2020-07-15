@@ -256,7 +256,8 @@ enum SubjectIndexes : angle::SubjectIndex
     kSamplerMaxSubjectIndex  = kSampler0SubjectIndex + IMPLEMENTATION_MAX_ACTIVE_TEXTURES,
     kVertexArraySubjectIndex = kSamplerMaxSubjectIndex,
     kReadFramebufferSubjectIndex,
-    kDrawFramebufferSubjectIndex
+    kDrawFramebufferSubjectIndex,
+    kProgramPipelineSubjectIndex
 };
 }  // anonymous namespace
 
@@ -308,6 +309,7 @@ Context::Context(egl::Display *display,
       mVertexArrayObserverBinding(this, kVertexArraySubjectIndex),
       mDrawFramebufferObserverBinding(this, kDrawFramebufferSubjectIndex),
       mReadFramebufferObserverBinding(this, kReadFramebufferSubjectIndex),
+      mProgramPipelineObserverBinding(this, kProgramPipelineSubjectIndex),
       mThreadPool(nullptr),
       mFrameCapture(new angle::FrameCapture),
       mOverlay(mImplementation.get())
@@ -1153,6 +1155,7 @@ void Context::bindProgramPipeline(ProgramPipelineID pipelineHandle)
         mImplementation.get(), pipelineHandle);
     ANGLE_CONTEXT_TRY(mState.setProgramPipelineBinding(this, pipeline));
     mStateCache.onProgramExecutableChange(this);
+    mProgramPipelineObserverBinding.bind(pipeline);
 }
 
 void Context::beginQuery(QueryType target, QueryID query)
@@ -2716,6 +2719,7 @@ void Context::detachSampler(SamplerID sampler)
 void Context::detachProgramPipeline(ProgramPipelineID pipeline)
 {
     mState.detachProgramPipeline(this, pipeline);
+    mProgramPipelineObserverBinding.bind(nullptr);
 }
 
 void Context::vertexAttribDivisor(GLuint index, GLuint divisor)
@@ -8005,6 +8009,11 @@ void Context::onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMess
             mStateCache.onDrawFramebufferChange(this);
             break;
 
+        case kProgramPipelineSubjectIndex:
+            ASSERT(message == angle::SubjectMessage::DirtyBitsFlagged);
+            mState.setProgramPipelineDirty();
+            break;
+
         default:
             if (index < kTextureMaxSubjectIndex)
             {
@@ -8055,25 +8064,6 @@ angle::Result Context::onProgramLink(Program *programObject)
             ANGLE_TRY(mState.onProgramExecutableChange(this, programObject));
         }
         mStateCache.onProgramExecutableChange(this);
-    }
-
-    // TODO(http://anglebug.com/4559): Use the Subject/Observer pattern for
-    // Programs in PPOs so we can remove this.
-    // Need to mark any PPOs that this Program is bound to as dirty
-    bool foundPipeline = false;
-    for (ResourceMap<ProgramPipeline, ProgramPipelineID>::Iterator ppoIterator =
-             mState.mProgramPipelineManager->begin();
-         ppoIterator != mState.mProgramPipelineManager->end(); ++ppoIterator)
-    {
-        ProgramPipeline *pipeline = ppoIterator->second;
-        pipeline->setDirtyBit(ProgramPipeline::DirtyBitType::DIRTY_BIT_PROGRAM_STAGE);
-        foundPipeline = true;
-    }
-    // Also need to make sure the PPO dirty bits get handled by marking the PPO
-    // objects dirty.
-    if (foundPipeline)
-    {
-        mState.mDirtyObjects.set(State::DIRTY_OBJECT_PROGRAM_PIPELINE);
     }
 
     return angle::Result::Continue;

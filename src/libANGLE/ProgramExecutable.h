@@ -98,12 +98,12 @@ struct TransformFeedbackVarying : public sh::ShaderVariable
 class ProgramState;
 class ProgramPipelineState;
 
-class ProgramExecutable
+class ProgramExecutable final : public angle::Subject
 {
   public:
     ProgramExecutable();
     ProgramExecutable(const ProgramExecutable &other);
-    virtual ~ProgramExecutable();
+    ~ProgramExecutable() override;
 
     void reset();
 
@@ -167,6 +167,7 @@ class ProgramExecutable
     AttributesMask getAttributesMask() const;
 
     const ActiveTextureMask &getActiveSamplersMask() const { return mActiveSamplersMask; }
+    void setActiveTextureMask(ActiveTextureMask mask) { mActiveSamplersMask = mask; }
     SamplerFormat getSamplerFormatForTextureUnitIndex(size_t textureUnitIndex) const
     {
         return mActiveSamplerFormats[textureUnitIndex];
@@ -176,6 +177,7 @@ class ProgramExecutable
         return mActiveSamplerShaderBits[textureUnitIndex];
     }
     const ActiveTextureMask &getActiveImagesMask() const { return mActiveImagesMask; }
+    void setActiveImagesMask(ActiveTextureMask mask) { mActiveImagesMask = mask; }
     const ActiveTextureArray<ShaderBitSet> &getActiveImageShaderBits() const
     {
         return mActiveImageShaderBits;
@@ -185,6 +187,8 @@ class ProgramExecutable
     {
         return mActiveSamplerTypes;
     }
+
+    void updateActiveSamplers(const ProgramState &programState);
 
     bool hasDefaultUniforms() const;
     bool hasTextures() const;
@@ -290,7 +294,6 @@ class ProgramExecutable
     friend class ProgramPipeline;
     friend class ProgramState;
 
-    void updateActiveSamplers(const ProgramState &programState);
     void updateActiveImages(const ProgramExecutable &executable);
 
     // Scans the sampler bindings for type conflicts with sampler 'textureUnitIndex'.
