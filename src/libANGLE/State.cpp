@@ -1894,7 +1894,6 @@ angle::Result State::setProgramPipelineBinding(const Context *context, ProgramPi
 
     if (mProgramPipeline.get())
     {
-        mProgramPipeline->bind();
         ANGLE_TRY(onProgramPipelineExecutableChange(context, mProgramPipeline.get()));
 
         if (mProgramPipeline->hasAnyDirtyBit())

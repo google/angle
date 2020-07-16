@@ -74,8 +74,6 @@ class ProgramPipelineState final : angle::NonCopyable
 
     GLboolean mValid;
 
-    GLboolean mHasBeenBound;
-
     ProgramExecutable *mExecutable;
 };
 
@@ -127,9 +125,6 @@ class ProgramPipeline final : public RefCountObject<ProgramPipelineID>, public L
     bool hasAnyDirtyBit() const { return mDirtyBits.any(); }
 
     GLboolean isValid() const { return mState.isValid(); }
-
-    void bind() { mState.mHasBeenBound = true; }
-    GLboolean hasBeenBound() const { return mState.mHasBeenBound; }
 
     // Program pipeline dirty bits.
     enum DirtyBitType

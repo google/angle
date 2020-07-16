@@ -23,11 +23,7 @@ namespace gl
 {
 
 ProgramPipelineState::ProgramPipelineState()
-    : mLabel(),
-      mActiveShaderProgram(nullptr),
-      mValid(false),
-      mHasBeenBound(false),
-      mExecutable(new ProgramExecutable())
+    : mLabel(), mActiveShaderProgram(nullptr), mValid(false), mExecutable(new ProgramExecutable())
 {
     for (const ShaderType shaderType : gl::AllShaderTypes())
     {
