@@ -748,6 +748,7 @@ void ContextVk::onDestroy(const gl::Context *context)
 
     mDriverUniformsDescriptorPool.destroy(device);
 
+    mDefaultUniformStorage.release(mRenderer);
     mEmptyBuffer.release(mRenderer);
 
     for (vk::DynamicBuffer &defaultBuffer : mDefaultAttribBuffers)
@@ -881,6 +882,14 @@ angle::Result ContextVk::initialize()
         ANGLE_TRY(traceGpuEvent(&mOutsideRenderPassCommands->getCommandBuffer(),
                                 TRACE_EVENT_PHASE_BEGIN, eventName));
     }
+
+    size_t minAlignment = static_cast<size_t>(
+        mRenderer->getPhysicalDeviceProperties().limits.minUniformBufferOffsetAlignment);
+    // This size is picked based on experience, may needs more tuning.
+    size_t uniformBufferSize =
+        std::min(16 * 1024u, mRenderer->getPhysicalDeviceProperties().limits.maxUniformBufferRange);
+    mDefaultUniformStorage.init(mRenderer, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, minAlignment,
+                                uniformBufferSize, true);
 
     // Initialize an "empty" buffer for use with default uniform blocks where there are no uniforms,
     // or atomic counter buffer array indices that are unused.
@@ -1486,7 +1495,7 @@ angle::Result ContextVk::handleDirtyGraphicsTransformFeedbackBuffersEmulation(
     }
 
     // TODO(http://anglebug.com/3570): Need to update to handle Program Pipelines
-    vk::BufferHelper *uniformBuffer      = mProgram->getDefaultUniformBuffer();
+    vk::BufferHelper *uniformBuffer      = mDefaultUniformStorage.getCurrentBuffer();
     vk::UniformsAndXfbDesc xfbBufferDesc = transformFeedbackVk->getTransformFeedbackDesc();
     xfbBufferDesc.updateDefaultUniformBuffer(uniformBuffer ? uniformBuffer->getBufferSerial()
                                                            : kInvalidBufferSerial);
@@ -2683,6 +2692,15 @@ void ContextVk::invalidateProgramBindingHelper(const gl::State &glState)
             // A bound program always overrides a program pipeline
             mExecutable = &mProgramPipeline->getExecutable();
         }
+    }
+
+    if (mProgram)
+    {
+        mProgram->onProgramBind();
+    }
+    else if (mProgramPipeline)
+    {
+        mProgramPipeline->onProgramBind(this);
     }
 }
 
@@ -3947,6 +3965,7 @@ angle::Result ContextVk::flushImpl(const vk::Semaphore *signalSemaphore)
     {
         driverUniform.dynamicBuffer.releaseInFlightBuffersToResourceUseList(this);
     }
+    mDefaultUniformStorage.releaseInFlightBuffersToResourceUseList(this);
 
     if (mRenderer->getFeatures().enableCommandProcessingThread.enabled)
     {
@@ -4699,6 +4718,11 @@ SamplerSerial ContextVk::generateSamplerSerial()
 ImageViewSerial ContextVk::generateAttachmentImageViewSerial()
 {
     return mShareGroupVk->generateImageViewSerial();
+}
+
+void ContextVk::setDefaultUniformBlocksMinSizeForTesting(size_t minSize)
+{
+    mDefaultUniformStorage.setMinimumSizeForTesting(minSize);
 }
 
 }  // namespace rx

@@ -586,6 +586,10 @@ class ContextVk : public ContextImpl, public vk::Context
         return mWriteInfos[oldSize];
     }
 
+    vk::DynamicBuffer *getDefaultUniformStorage() { return &mDefaultUniformStorage; }
+    // For testing only.
+    void setDefaultUniformBlocksMinSizeForTesting(size_t minSize);
+
     vk::BufferHelper &getEmptyBuffer() { return mEmptyBuffer; }
 
   private:
@@ -1061,6 +1065,9 @@ class ContextVk : public ContextImpl, public vk::Context
     };
 
     ShareGroupVk *mShareGroupVk;
+
+    // Storage for default uniforms of ProgramVks and ProgramPipelineVks.
+    vk::DynamicBuffer mDefaultUniformStorage;
 
     // This is a special "empty" placeholder buffer for use when we just need a dummy buffer but not
     // the data. Examples are shader that has no uniform or doesn't use all slots in the atomic

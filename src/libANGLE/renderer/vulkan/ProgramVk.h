@@ -102,16 +102,25 @@ class ProgramVk : public ProgramImpl
     void getUniformiv(const gl::Context *context, GLint location, GLint *params) const override;
     void getUniformuiv(const gl::Context *context, GLint location, GLuint *params) const override;
 
-    angle::Result updateShaderUniforms(ContextVk *contextVk,
-                                       gl::ShaderType shaderType,
-                                       uint32_t *outOffset,
-                                       bool *anyNewBufferAllocated);
     angle::Result updateUniforms(ContextVk *contextVk);
 
-    // For testing only.
-    void setDefaultUniformBlocksMinSizeForTesting(size_t minSize);
-
     bool dirtyUniforms() const { return mDefaultUniformBlocksDirty.any(); }
+    bool isShaderUniformDirty(gl::ShaderType shaderType) const
+    {
+        return mDefaultUniformBlocksDirty[shaderType];
+    }
+    void setShaderUniformDirtyBit(gl::ShaderType shaderType)
+    {
+        if (!mDefaultUniformBlocks[shaderType].uniformData.empty())
+        {
+            mDefaultUniformBlocksDirty.set(shaderType);
+        }
+    }
+    void clearShaderUniformDirtyBit(gl::ShaderType shaderType)
+    {
+        mDefaultUniformBlocksDirty.reset(shaderType);
+    }
+    void onProgramBind();
 
     // Used in testing only.
     vk::DynamicDescriptorPool *getDynamicDescriptorPool(uint32_t poolIndex)
@@ -123,14 +132,6 @@ class ProgramVk : public ProgramImpl
     ProgramExecutableVk &getExecutable() { return mExecutable; }
 
     gl::ShaderMap<DefaultUniformBlock> &getDefaultUniformBlocks() { return mDefaultUniformBlocks; }
-    const DefaultUniformBlock &getDefaultUniformBlock(const gl::ShaderType shaderType) const
-    {
-        return mDefaultUniformBlocks[shaderType];
-    }
-    vk::BufferHelper *getDefaultUniformBuffer() const
-    {
-        return mDefaultUniformStorage.getCurrentBuffer();
-    }
     size_t getDefaultUniformAlignedSize(ContextVk *contextVk, const gl::ShaderType shaderType) const
     {
         RendererVk *renderer = contextVk->getRenderer();
@@ -160,8 +161,6 @@ class ProgramVk : public ProgramImpl
         return initProgram(contextVk, gl::ShaderType::Compute, optionBits, programInfo,
                            executableVk);
     }
-
-    ShaderInfo &getOriginalShaderInfo() { return mOriginalShaderInfo; }
 
     GlslangProgramInterfaceInfo &getGlslangProgramInterfaceInfo()
     {
@@ -210,9 +209,10 @@ class ProgramVk : public ProgramImpl
         return angle::Result::Continue;
     }
 
+    void setAllDefaultUniformsDirty();
+
     gl::ShaderMap<DefaultUniformBlock> mDefaultUniformBlocks;
     gl::ShaderBitSet mDefaultUniformBlocksDirty;
-    vk::DynamicBuffer mDefaultUniformStorage;
 
     // We keep the SPIR-V code to use for draw call pipeline creation.
     ShaderInfo mOriginalShaderInfo;

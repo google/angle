@@ -188,8 +188,9 @@ void ProgramExecutableVk::reset(ContextVk *contextVk)
     }
 
     mTextureDescriptorsCache.clear();
-    mDescriptorBuffersCache.clear();
     mUniformsAndXfbDescriptorSetCache.clear();
+    // Initialize with a unique BufferSerial
+    mCurrentDefaultUniformBufferSerial = contextVk->generateBufferSerial();
 
     for (ProgramInfo &programInfo : mGraphicsProgramInfos)
     {
@@ -338,6 +339,8 @@ angle::Result ProgramExecutableVk::allocUniformAndXfbDescriptorSet(
     const vk::UniformsAndXfbDesc &xfbBufferDesc,
     bool *newDescriptorSetAllocated)
 {
+    mCurrentDefaultUniformBufferSerial = xfbBufferDesc.getDefaultUniformBufferSerial();
+
     // Look up in the cache first
     auto iter = mUniformsAndXfbDescriptorSetCache.find(xfbBufferDesc);
     if (iter != mUniformsAndXfbDescriptorSetCache.end())
@@ -881,14 +884,12 @@ void ProgramExecutableVk::updateDefaultUniformsDescriptorSet(
     if (!defaultUniformBlock.uniformData.empty())
     {
         bufferInfo.buffer = defaultUniformBuffer->getBuffer().getHandle();
-        mDescriptorBuffersCache.emplace_back(defaultUniformBuffer);
     }
     else
     {
         vk::BufferHelper &emptyBuffer = contextVk->getEmptyBuffer();
         emptyBuffer.retain(&contextVk->getResourceUseList());
         bufferInfo.buffer = emptyBuffer.getBuffer().getHandle();
-        mDescriptorBuffersCache.emplace_back(&emptyBuffer);
     }
 
     bufferInfo.offset = 0;
@@ -1212,7 +1213,6 @@ angle::Result ProgramExecutableVk::updateTransformFeedbackDescriptorSet(
 
     if (newDescriptorSetAllocated)
     {
-        mDescriptorBuffersCache.clear();
         for (const gl::ShaderType shaderType : executable.getLinkedShaderStages())
         {
             updateDefaultUniformsDescriptorSet(shaderType, defaultUniformBlocks[shaderType],
@@ -1454,11 +1454,6 @@ angle::Result ProgramExecutableVk::updateDescriptorSets(ContextVk *contextVk,
         commandBuffer->bindDescriptorSets(getPipelineLayout(), pipelineBindPoint,
                                           descriptorSetIndex, 1, &descSet, uniformBlockOffsetCount,
                                           mDynamicBufferOffsets.data());
-    }
-
-    for (vk::BufferHelper *buffer : mDescriptorBuffersCache)
-    {
-        buffer->retain(&contextVk->getResourceUseList());
     }
 
     return angle::Result::Continue;

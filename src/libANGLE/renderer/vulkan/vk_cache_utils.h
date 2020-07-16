@@ -809,6 +809,10 @@ class UniformsAndXfbDesc
     UniformsAndXfbDesc(const UniformsAndXfbDesc &other);
     UniformsAndXfbDesc &operator=(const UniformsAndXfbDesc &other);
 
+    BufferSerial getDefaultUniformBufferSerial() const
+    {
+        return mBufferSerials[kDefaultUniformBufferIndex];
+    }
     void updateDefaultUniformBuffer(BufferSerial bufferSerial)
     {
         mBufferSerials[kDefaultUniformBufferIndex] = bufferSerial;

@@ -24,9 +24,6 @@ namespace rx
 
 namespace
 {
-// This size is picked according to the required maxUniformBufferRange in the Vulkan spec.
-constexpr size_t kUniformBlockDynamicBufferMinSize = 16384u;
-
 // Identical to Std140 encoder in all aspects, except it ignores opaque uniform types.
 class VulkanDefaultBlockEncoder : public sh::Std140BlockEncoder
 {
@@ -133,26 +130,6 @@ void ReadFromDefaultUniformBlock(int componentCount,
     }
 }
 
-angle::Result SyncDefaultUniformBlock(ContextVk *contextVk,
-                                      vk::DynamicBuffer *dynamicBuffer,
-                                      const angle::MemoryBuffer &bufferData,
-                                      uint32_t *outOffset,
-                                      bool *outBufferModified)
-{
-    dynamicBuffer->releaseInFlightBuffers(contextVk);
-
-    ASSERT(!bufferData.empty());
-    uint8_t *data       = nullptr;
-    VkBuffer *outBuffer = nullptr;
-    VkDeviceSize offset = 0;
-    ANGLE_TRY(dynamicBuffer->allocate(contextVk, bufferData.size(), &data, outBuffer, &offset,
-                                      outBufferModified));
-    *outOffset = static_cast<uint32_t>(offset);
-    memcpy(data, bufferData.data(), bufferData.size());
-    ANGLE_TRY(dynamicBuffer->flush(contextVk));
-    return angle::Result::Continue;
-}
-
 class Std140BlockLayoutEncoderFactory : public gl::CustomBlockLayoutEncoderFactory
 {
   public:
@@ -177,11 +154,7 @@ void ProgramVk::destroy(const gl::Context *context)
 
 void ProgramVk::reset(ContextVk *contextVk)
 {
-    RendererVk *renderer = contextVk->getRenderer();
-
     mOriginalShaderInfo.release(contextVk);
-
-    mDefaultUniformStorage.release(renderer);
 
     GlslangWrapperVk::ResetGlslangProgramInterfaceInfo(&mGlslangProgramInterfaceInfo);
 
@@ -411,7 +384,6 @@ void ProgramVk::initDefaultUniformLayoutMapping(gl::ShaderMap<sh::BlockLayoutMap
 angle::Result ProgramVk::resizeUniformBlockMemory(ContextVk *contextVk,
                                                   gl::ShaderMap<size_t> &requiredBufferSize)
 {
-    RendererVk *renderer                      = contextVk->getRenderer();
     const gl::ProgramExecutable &glExecutable = mState.getExecutable();
 
     for (const gl::ShaderType shaderType : glExecutable.getLinkedShaderStages())
@@ -429,12 +401,6 @@ angle::Result ProgramVk::resizeUniformBlockMemory(ContextVk *contextVk,
             mDefaultUniformBlocksDirty.set(shaderType);
         }
     }
-
-    size_t minAlignment = static_cast<size_t>(
-        renderer->getPhysicalDeviceProperties().limits.minUniformBufferOffsetAlignment);
-    mDefaultUniformStorage.init(
-        renderer, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
-        minAlignment, kUniformBlockDynamicBufferMinSize, true);
 
     return angle::Result::Continue;
 }
@@ -725,30 +691,6 @@ void ProgramVk::getUniformuiv(const gl::Context *context, GLint location, GLuint
     getUniformImpl(location, params, GL_UNSIGNED_INT);
 }
 
-angle::Result ProgramVk::updateShaderUniforms(ContextVk *contextVk,
-                                              gl::ShaderType shaderType,
-                                              uint32_t *outOffset,
-                                              bool *anyNewBufferAllocated)
-{
-    // Update buffer memory by immediate mapping. This immediate update only works once.
-    DefaultUniformBlock &uniformBlock = mDefaultUniformBlocks[shaderType];
-
-    if (mDefaultUniformBlocksDirty[shaderType])
-    {
-        bool bufferModified = false;
-        ANGLE_TRY(SyncDefaultUniformBlock(contextVk, &mDefaultUniformStorage,
-                                          uniformBlock.uniformData, outOffset, &bufferModified));
-        mDefaultUniformBlocksDirty.reset(shaderType);
-
-        if (bufferModified)
-        {
-            *anyNewBufferAllocated = true;
-        }
-    }
-
-    return angle::Result::Continue;
-}
-
 size_t ProgramVk::calcUniformUpdateRequiredSpace(ContextVk *contextVk,
                                                  const gl::ProgramExecutable &glExecutable,
                                                  gl::ShaderMap<VkDeviceSize> &uniformOffsets) const
@@ -774,7 +716,7 @@ angle::Result ProgramVk::updateUniforms(ContextVk *contextVk)
     VkDeviceSize bufferOffset                 = 0;
     uint32_t offsetIndex                      = 0;
     const gl::ProgramExecutable &glExecutable = mState.getExecutable();
-    gl::ShaderMap<VkDeviceSize> offsets;
+    gl::ShaderMap<VkDeviceSize> offsets;  // offset to the beginning of bufferData
     size_t requiredSpace;
 
     // We usually only update uniform data for shader stages that are actually dirty. But when the
@@ -786,7 +728,8 @@ angle::Result ProgramVk::updateUniforms(ContextVk *contextVk)
 
     // Allocate space from dynamicBuffer. Always try to allocate from the current buffer first.
     // If that failed, we deal with fall out and try again.
-    if (!mDefaultUniformStorage.allocateFromCurrentBuffer(requiredSpace, &bufferData,
+    vk::DynamicBuffer *defaultUniformStorage = contextVk->getDefaultUniformStorage();
+    if (!defaultUniformStorage->allocateFromCurrentBuffer(requiredSpace, &bufferData,
                                                           &bufferOffset))
     {
         for (const gl::ShaderType shaderType : glExecutable.getLinkedShaderStages())
@@ -797,10 +740,8 @@ angle::Result ProgramVk::updateUniforms(ContextVk *contextVk)
             }
         }
 
-        mDefaultUniformStorage.releaseInFlightBuffersToResourceUseList(contextVk);
-
         requiredSpace = calcUniformUpdateRequiredSpace(contextVk, glExecutable, offsets);
-        ANGLE_TRY(mDefaultUniformStorage.allocate(contextVk, requiredSpace, &bufferData, nullptr,
+        ANGLE_TRY(defaultUniformStorage->allocate(contextVk, requiredSpace, &bufferData, nullptr,
                                                   &bufferOffset, &anyNewBufferAllocated));
     }
 
@@ -817,14 +758,14 @@ angle::Result ProgramVk::updateUniforms(ContextVk *contextVk)
         }
         ++offsetIndex;
     }
-    ANGLE_TRY(mDefaultUniformStorage.flush(contextVk));
+    ANGLE_TRY(defaultUniformStorage->flush(contextVk));
 
-    if (anyNewBufferAllocated)
+    vk::BufferHelper *defaultUniformBuffer = defaultUniformStorage->getCurrentBuffer();
+    if (mExecutable.getCurrentDefaultUniformBufferSerial() !=
+        defaultUniformBuffer->getBufferSerial())
     {
         // We need to reinitialize the descriptor sets if we newly allocated buffers since we can't
         // modify the descriptor sets once initialized.
-        mExecutable.mDescriptorBuffersCache.clear();
-        vk::BufferHelper *defaultUniformBuffer = mDefaultUniformStorage.getCurrentBuffer();
         vk::UniformsAndXfbDesc defaultUniformsDesc;
         vk::UniformsAndXfbDesc *uniformsAndXfbBufferDesc;
 
@@ -856,18 +797,27 @@ angle::Result ProgramVk::updateUniforms(ContextVk *contextVk)
             }
             mExecutable.updateTransformFeedbackDescriptorSetImpl(mState, contextVk);
         }
-        else
-        {
-            mExecutable.mDescriptorBuffersCache.emplace_back(defaultUniformBuffer);
-        }
     }
 
     return angle::Result::Continue;
 }
 
-void ProgramVk::setDefaultUniformBlocksMinSizeForTesting(size_t minSize)
+void ProgramVk::setAllDefaultUniformsDirty()
 {
-    mDefaultUniformStorage.setMinimumSizeForTesting(minSize);
+    const gl::ProgramExecutable &glExecutable = mState.getExecutable();
+    for (const gl::ShaderType shaderType : glExecutable.getLinkedShaderStages())
+    {
+        setShaderUniformDirtyBit(shaderType);
+    }
 }
 
+void ProgramVk::onProgramBind()
+{
+    // Because all programs share default uniform buffers, when we switch programs, we have to
+    // re-update all uniform data. We could do more tracking to avoid update if the context's
+    // current uniform buffer is still the same buffer we last time used and buffer has not been
+    // recycled. But statistics gathered on gfxbench shows that app always update uniform data on
+    // program bind anyway, so not really worth it to add more tracking logic here.
+    setAllDefaultUniformsDirty();
+}
 }  // namespace rx

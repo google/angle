@@ -31,6 +31,16 @@ namespace
 class VulkanUniformUpdatesTest : public ANGLETest
 {
   protected:
+    VulkanUniformUpdatesTest() : mLastContext(nullptr) {}
+
+    virtual void testSetUp() override
+    {
+        // Some of the tests bellow forces uniform buffer size to 128 bytes which may affect other
+        // tests. This is to ensure that the assumption that each TEST_P will recreate context.
+        ASSERT(mLastContext != getEGLWindow()->getContext());
+        mLastContext = getEGLWindow()->getContext();
+    }
+
     rx::ContextVk *hackANGLE() const
     {
         // Hack the angle!
@@ -90,6 +100,9 @@ class VulkanUniformUpdatesTest : public ANGLETest
         rx::TextureVk *textureVk = hackTexture(texture);
         textureVk->overrideStagingBufferSizeForTesting(kTextureStagingBufferSizeForTesting);
     }
+
+  private:
+    EGLContext mLastContext;
 };
 
 // This test updates a uniform until a new buffer is allocated and then make sure the uniform
@@ -117,10 +130,9 @@ void main()
 
     limitMaxSets(program);
 
-    rx::ProgramVk *programVk = hackProgram(program);
-
     // Set a really small min size so that uniform updates often allocates a new buffer.
-    programVk->setDefaultUniformBlocksMinSizeForTesting(128);
+    rx::ContextVk *contextVk = hackANGLE();
+    contextVk->setDefaultUniformBlocksMinSizeForTesting(128);
 
     GLint posUniformLocation = glGetUniformLocation(program, "uniPosModifier");
     ASSERT_NE(posUniformLocation, -1);
@@ -360,12 +372,9 @@ void main()
     limitMaxSets(program1);
     limitMaxSets(program2);
 
-    rx::ProgramVk *program1Vk = hackProgram(program1);
-    rx::ProgramVk *program2Vk = hackProgram(program2);
-
     // Set a really small min size so that uniform updates often allocates a new buffer.
-    program1Vk->setDefaultUniformBlocksMinSizeForTesting(128);
-    program2Vk->setDefaultUniformBlocksMinSizeForTesting(128);
+    rx::ContextVk *contextVk = hackANGLE();
+    contextVk->setDefaultUniformBlocksMinSizeForTesting(128);
 
     // Get uniform locations.
     GLint colorMaskLoc1 = glGetUniformLocation(program1, "colorMask");
@@ -506,10 +515,9 @@ void main()
 
     limitMaxSets(program);
 
-    rx::ProgramVk *programVk = hackProgram(program);
-
     // Set a really small min size so that every uniform update actually allocates a new buffer.
-    programVk->setDefaultUniformBlocksMinSizeForTesting(128);
+    rx::ContextVk *contextVk = hackANGLE();
+    contextVk->setDefaultUniformBlocksMinSizeForTesting(128);
 
     GLint uniformVSLocation = glGetUniformLocation(program, "uniformVS");
     ASSERT_NE(uniformVSLocation, -1);
@@ -569,7 +577,6 @@ class PipelineProgramUniformUpdatesTest : public VulkanUniformUpdatesTest
 TEST_P(PipelineProgramUniformUpdatesTest, ToggleBetweenPPOAndProgramVKWithUniformUpdate)
 {
     ASSERT_TRUE(IsVulkan());
-    ANGLE_SKIP_TEST_IF(true && "Known bug. Expected to be fixed by http://b/161391337");
 
     const GLchar *kPositionUniformVertexShader = R"(attribute vec2 position;
 uniform float uniformVS;
@@ -608,8 +615,8 @@ void main()
     glUseProgram(program);
     limitMaxSets(program);
     // Set a really small min size so that every uniform update actually allocates a new buffer.
-    rx::ProgramVk *programVk = hackProgram(program);
-    programVk->setDefaultUniformBlocksMinSizeForTesting(128);
+    rx::ContextVk *contextVk = hackANGLE();
+    contextVk->setDefaultUniformBlocksMinSizeForTesting(128);
 
     // Setup vertices
     std::array<Vector3, 6> quadVertices = ANGLETestBase::GetQuadVertices();
