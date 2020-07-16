@@ -114,6 +114,30 @@
     },
     {
       "key": {
+        "uuid": "e0ec1023_84767018",
+        "filename": "BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 664,
+      "author": {
+        "id": 1438550
+      },
+      "writtenOn": "2020-07-16T18:02:46Z",
+      "side": 1,
+      "message": "I got linker errors because of unresolved symbol that are defined in dxgi files. iirc, only one of the sources were needed, but I added all three for consistency.",
+      "parentUuid": "0c86e27c_a38bba41",
+      "range": {
+        "startLine": 664,
+        "startChar": 17,
+        "endLine": 664,
+        "endChar": 32
+      },
+      "revId": "cdc388b0d4b448b0a7759ec43fa038c8da9e7377",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5bb36363_f840b66f",
         "filename": "doc/DevSetup.md",
         "patchSetId": 1
