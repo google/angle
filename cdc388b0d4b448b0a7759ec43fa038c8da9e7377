@@ -181,6 +181,24 @@
       "revId": "cdc388b0d4b448b0a7759ec43fa038c8da9e7377",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f22123ff_a79f6867",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-07-16T02:32:49Z",
+      "side": 1,
+      "message": "Excellent, thank you!",
+      "parentUuid": "0be9cc62_f1ff0feb",
+      "revId": "cdc388b0d4b448b0a7759ec43fa038c8da9e7377",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
