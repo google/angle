@@ -617,7 +617,6 @@ class ContextVk : public ContextImpl, public vk::Context
         vk::DynamicBuffer dynamicBuffer;
         VkDescriptorSet descriptorSet;
         uint32_t dynamicOffset;
-        bool referenced;  // True if it has been used by current submission
         vk::BindingPointer<vk::DescriptorSetLayout> descriptorSetLayout;
         vk::RefCountedDescriptorPoolBinding descriptorPoolBinding;
 

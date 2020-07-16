@@ -286,7 +286,7 @@ EventName GetTraceEventName(const char *title, uint32_t counter)
 }  // anonymous namespace
 
 ContextVk::DriverUniformsDescriptorSet::DriverUniformsDescriptorSet()
-    : descriptorSet(VK_NULL_HANDLE), dynamicOffset(0), referenced(false)
+    : descriptorSet(VK_NULL_HANDLE), dynamicOffset(0)
 {}
 
 ContextVk::DriverUniformsDescriptorSet::~DriverUniformsDescriptorSet() = default;
@@ -935,9 +935,6 @@ angle::Result ContextVk::setupDraw(const gl::Context *context,
                                    DirtyBits dirtyBitMask,
                                    vk::CommandBuffer **commandBufferOut)
 {
-    // Mark it as been used so that we will add current buffer to mResourceUseList
-    mDriverUniforms[PipelineType::Graphics].referenced = true;
-
     // Set any dirty bits that depend on draw call parameters or other objects.
     if (mode != mCurrentDrawMode)
     {
@@ -1199,9 +1196,6 @@ angle::Result ContextVk::setupLineLoopDraw(const gl::Context *context,
 angle::Result ContextVk::setupDispatch(const gl::Context *context,
                                        vk::CommandBuffer **commandBufferOut)
 {
-    // Mark it as been used so that we will add current buffer to mResourceUseList
-    mDriverUniforms[PipelineType::Compute].referenced = true;
-
     // |setupDispatch| and |setupDraw| are special in that they flush dirty bits. Therefore they
     // don't use the same APIs to record commands as the functions outside ContextVk.
     // The following ensures prior commands are flushed before we start processing dirty bits.
@@ -3693,7 +3687,10 @@ angle::Result ContextVk::allocateDriverUniforms(size_t driverUniformsSize,
                                                 uint8_t **ptrOut,
                                                 bool *newBufferOut)
 {
-    // Allocate a new region in the dynamic buffer.
+    // Allocate a new region in the dynamic buffer. The allocate call may put buffer into dynamic
+    // buffer's mInflightBuffers. During command submission time, these inflight buffers are added
+    // into context's mResourceUseList which will ensure they get tagged with queue serial number
+    // before moving them into the free list.
     VkDeviceSize offset;
     ANGLE_TRY(driverUniforms->dynamicBuffer.allocate(this, driverUniformsSize, ptrOut, bufferOut,
                                                      &offset, newBufferOut));
@@ -3943,23 +3940,12 @@ angle::Result ContextVk::flushImpl(const vk::Semaphore *signalSemaphore)
     ANGLE_TRY(flushOutsideRenderPassCommands());
 
     // We must add the per context dynamic buffers into mResourceUseList before submission so that
-    // they get retained properly until GPU completes
+    // they get retained properly until GPU completes. We do not add current buffer into
+    // mResourceUseList since they never get reused or freed until context gets destroyed, at which
+    // time we always wait for GPU to finish before destroying the dynamic buffers.
     for (DriverUniformsDescriptorSet &driverUniform : mDriverUniforms)
     {
         driverUniform.dynamicBuffer.releaseInFlightBuffersToResourceUseList(this);
-
-        if (driverUniform.referenced)
-        {
-            // We always have to retain the current buffer. Even if data has not changed, current
-            // buffer may still be referenced by this command buffer.
-            vk::BufferHelper *currentBuffer = driverUniform.dynamicBuffer.getCurrentBuffer();
-            if (currentBuffer)
-            {
-                currentBuffer->retain(&mResourceUseList);
-            }
-
-            driverUniform.referenced = false;
-        }
     }
 
     if (mRenderer->getFeatures().enableCommandProcessingThread.enabled)
