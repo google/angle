@@ -90,6 +90,30 @@
     },
     {
       "key": {
+        "uuid": "0c86e27c_a38bba41",
+        "filename": "BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 664,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-07-16T14:26:14Z",
+      "side": 1,
+      "message": "That _is_ what I meant, though I suspect somehow these files are used (wgl is under gl/, and removing this condition makes these effectively belong to d3d11_sources, which is how the code was before). I\u0027m sure @Wander included these with wgl for a reason, I just want to understand how they are used.\n\n@Wander, it\u0027s fine either way. Keeping the header with the cpp files is cleaner IMO.",
+      "parentUuid": "e1b0336c_2dd1057e",
+      "range": {
+        "startLine": 664,
+        "startChar": 17,
+        "endLine": 664,
+        "endChar": 32
+      },
+      "revId": "cdc388b0d4b448b0a7759ec43fa038c8da9e7377",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "5bb36363_f840b66f",
         "filename": "doc/DevSetup.md",
         "patchSetId": 1
