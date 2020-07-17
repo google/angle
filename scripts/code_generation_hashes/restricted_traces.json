@@ -6,15 +6,17 @@
   "src/tests/perf_tests/restricted_traces/egypt_1500.tar.gz.sha1":
     "e675648c5b16fc52077998621e6300ba",
   "src/tests/perf_tests/restricted_traces/gen_restricted_traces.py":
-    "aa5043eaa7ba7d620ff2a3b40d67bae2",
+    "015c2f50f94cd1ff295b2320d0b1c644",
   "src/tests/perf_tests/restricted_traces/manhattan_10.tar.gz.sha1":
     "7f5e3e8b4d7ec07232c54d41964006ea",
   "src/tests/perf_tests/restricted_traces/restricted_traces.json":
     "de1d1c2086bd4f5249f5bdbdf0d2a854",
+  "src/tests/perf_tests/restricted_traces/restricted_traces_autogen.cpp":
+    "17e146f0d8a17a002587d5c26a0db008",
   "src/tests/perf_tests/restricted_traces/restricted_traces_autogen.gni":
     "25de059705d29d797e246aae027498ec",
   "src/tests/perf_tests/restricted_traces/restricted_traces_autogen.h":
-    "68a11667d674549018cf06e1a759c383",
+    "78cd1e872ef05e05330eb481f800739d",
   "src/tests/perf_tests/restricted_traces/subway_surfer_500.tar.gz.sha1":
     "a47a797dd227f5025439b47cee80dbc9",
   "src/tests/perf_tests/restricted_traces/temple_run_300.tar.gz.sha1":

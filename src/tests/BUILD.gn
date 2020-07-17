@@ -293,6 +293,7 @@ if (is_win || is_linux || is_android || is_mac || is_fuchsia) {
       import("perf_tests/restricted_traces/restricted_traces_autogen.gni")
       sources = [
         "perf_tests/TracePerfTest.cpp",
+        "perf_tests/restricted_traces/restricted_traces_autogen.cpp",
         "perf_tests/restricted_traces/restricted_traces_autogen.h",
       ]
 

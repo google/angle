@@ -45,7 +45,7 @@ struct TracePerfParams final : public RenderTestParams
     std::string story() const override
     {
         std::stringstream strstr;
-        strstr << RenderTestParams::story() << "_" << kTraceInfos[testID].name;
+        strstr << RenderTestParams::story() << "_" << GetTraceInfo(testID).name;
         return strstr.str();
     }
 
@@ -135,7 +135,7 @@ void TracePerfTest::initializeBenchmark()
         angle::SetCWD(exeDir.c_str());
     }
 
-    const TraceInfo &traceInfo = kTraceInfos[params.testID];
+    const TraceInfo &traceInfo = GetTraceInfo(params.testID);
     mStartFrame                = traceInfo.startFrame;
     mEndFrame                  = traceInfo.endFrame;
     SetBinaryDataDecompressCallback(params.testID, DecompressBinaryData);
@@ -316,7 +316,7 @@ void TracePerfTest::saveScreenshot(const std::string &screenshotName)
 {
     // Render a single frame.
     RestrictedTraceID testID   = GetParam().testID;
-    const TraceInfo &traceInfo = kTraceInfos[testID];
+    const TraceInfo &traceInfo = GetTraceInfo(testID);
     ReplayFrame(testID, traceInfo.startFrame);
 
     // RGBA 4-byte data.
@@ -363,10 +363,12 @@ TEST_P(TracePerfTest, Run)
 
 TracePerfParams CombineTestID(const TracePerfParams &in, RestrictedTraceID id)
 {
+    const TraceInfo &traceInfo = GetTraceInfo(id);
+
     TracePerfParams out = in;
     out.testID          = id;
-    out.windowWidth     = kTraceInfos[id].drawSurfaceWidth;
-    out.windowHeight    = kTraceInfos[id].drawSurfaceHeight;
+    out.windowWidth     = traceInfo.drawSurfaceWidth;
+    out.windowHeight    = traceInfo.drawSurfaceHeight;
     return out;
 }
 
