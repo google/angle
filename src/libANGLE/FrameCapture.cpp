@@ -55,7 +55,8 @@ constexpr char kCaptureLabel[]                 = "ANGLE_CAPTURE_LABEL";
 constexpr char kCompression[]                  = "ANGLE_CAPTURE_COMPRESSION";
 constexpr char kSerializeStateEnabledVarName[] = "ANGLE_CAPTURE_SERIALIZE_STATE";
 
-constexpr size_t kBinaryAlignment = 16;
+constexpr size_t kBinaryAlignment   = 16;
+constexpr size_t kFunctionSizeLimit = 50000;
 
 #if defined(ANGLE_PLATFORM_ANDROID)
 
@@ -868,22 +869,65 @@ void WriteCppReplay(bool compression,
 
     if (frameIndex == frameStart)
     {
-        out << "void SetupContext" << Str(static_cast<int>(context->id())) << "Replay()\n";
-        out << "{\n";
-
         std::stringstream setupCallStream;
+        std::stringstream setupCallStreamParts;
+
+        setupCallStream << "void SetupContext" << Str(static_cast<int>(context->id()))
+                        << "Replay()\n";
+        setupCallStream << "{\n";
 
         WriteLoadBinaryDataCall(compression, setupCallStream, context->id(), captureLabel);
 
+        int callCount = 0;
+        int partCount = 0;
+
+        // Setup can get quite large. If over a certain size, break up the function to avoid
+        // overflowing the stack
+        if (setupCalls.size() > kFunctionSizeLimit)
+        {
+            setupCallStreamParts << "void SetupContext" << Str(static_cast<int>(context->id()))
+                                 << "ReplayPart" << ++partCount << "()\n";
+            setupCallStreamParts << "{\n";
+        }
+
         for (const CallCapture &call : setupCalls)
         {
-            setupCallStream << "    ";
-            WriteCppReplayForCall(call, &counters, setupCallStream, header, binaryData);
-            setupCallStream << ";\n";
+            setupCallStreamParts << "    ";
+            WriteCppReplayForCall(call, &counters, setupCallStreamParts, header, binaryData);
+            setupCallStreamParts << ";\n";
+
+            if (partCount > 0 && ++callCount % kFunctionSizeLimit == 0)
+            {
+                setupCallStreamParts << "}\n";
+                setupCallStreamParts << "\n";
+                setupCallStreamParts << "void SetupContext" << Str(static_cast<int>(context->id()))
+                                     << "ReplayPart" << ++partCount << "()\n";
+                setupCallStreamParts << "{\n";
+            }
+        }
+
+        if (partCount > 0)
+        {
+            setupCallStreamParts << "}\n";
+            setupCallStreamParts << "\n";
+
+            // Write out the parts
+            out << setupCallStreamParts.str();
+
+            // Write out the calls to the parts
+            for (int i = 1; i <= partCount; i++)
+            {
+                setupCallStream << "    SetupContext" << Str(static_cast<int>(context->id()))
+                                << "ReplayPart" << i << "();\n";
+            }
+        }
+        else
+        {
+            // If we didn't chunk it up, write all the calls directly to SetupContext
+            setupCallStream << setupCallStreamParts.str();
         }
 
         out << setupCallStream.str();
-
         out << "}\n";
         out << "\n";
     }
