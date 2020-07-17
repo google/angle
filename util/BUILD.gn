@@ -158,7 +158,6 @@ foreach(is_shared_library,
   target(library_type, library_name) {
     testonly = true
     sources = _util_sources
-    deps = [ "$angle_root:angle_common" ]
     public_deps = [
       ":angle_test_utils",
       ":angle_util_loader_headers",
@@ -270,7 +269,8 @@ config("angle_test_util_config") {
 
 angle_source_set("angle_test_utils") {
   public_configs = [ ":angle_test_util_config" ]
-  deps = [ "$angle_root:angle_common" ]
+  public_deps = [ "$angle_root:angle_common" ]
+  deps = []
   sources = [
     "Timer.cpp",
     "Timer.h",

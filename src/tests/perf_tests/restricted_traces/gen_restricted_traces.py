@@ -41,6 +41,21 @@ header_template = """// GENERATED FILE - DO NOT EDIT.
 
 {includes}
 
+// See util/util_export.h for details on import/export labels.
+#if !defined(ANGLE_TRACE_EXPORT)
+#    if defined(_WIN32)
+#        if defined(ANGLE_TRACE_IMPLEMENTATION)
+#            define ANGLE_TRACE_EXPORT __declspec(dllexport)
+#        else
+#            define ANGLE_TRACE_EXPORT __declspec(dllimport)
+#        endif
+#    elif defined(__GNUC__)
+#        define ANGLE_TRACE_EXPORT __attribute__((visibility("default")))
+#    else
+#        define ANGLE_TRACE_EXPORT
+#    endif
+#endif  // !defined(ANGLE_TRACE_EXPORT)
+
 namespace angle
 {{
 enum class RestrictedTraceID
@@ -68,13 +83,13 @@ struct TraceInfo
 using DecompressCallback = uint8_t *(*)(const std::vector<uint8_t> &);
 using FramebufferChangeCallback = void(*)(void *userData, GLenum target, GLuint framebuffer);
 
-const TraceInfo &GetTraceInfo(RestrictedTraceID traceID);
-void ReplayFrame(RestrictedTraceID traceID, uint32_t frameIndex);
-void ResetReplay(RestrictedTraceID traceID);
-void SetupReplay(RestrictedTraceID traceID);
-void SetBinaryDataDir(RestrictedTraceID traceID, const char *dataDir);
-void SetBinaryDataDecompressCallback(RestrictedTraceID traceID, DecompressCallback callback);
-void SetFramebufferChangeCallback(RestrictedTraceID traceID, void *userData, FramebufferChangeCallback callback);
+ANGLE_TRACE_EXPORT const TraceInfo &GetTraceInfo(RestrictedTraceID traceID);
+ANGLE_TRACE_EXPORT void ReplayFrame(RestrictedTraceID traceID, uint32_t frameIndex);
+ANGLE_TRACE_EXPORT void ResetReplay(RestrictedTraceID traceID);
+ANGLE_TRACE_EXPORT void SetupReplay(RestrictedTraceID traceID);
+ANGLE_TRACE_EXPORT void SetBinaryDataDir(RestrictedTraceID traceID, const char *dataDir);
+ANGLE_TRACE_EXPORT void SetBinaryDataDecompressCallback(RestrictedTraceID traceID, DecompressCallback callback);
+ANGLE_TRACE_EXPORT void SetFramebufferChangeCallback(RestrictedTraceID traceID, void *userData, FramebufferChangeCallback callback);
 }}  // namespace angle
 
 #endif  // ANGLE_RESTRICTED_TRACES_H_
