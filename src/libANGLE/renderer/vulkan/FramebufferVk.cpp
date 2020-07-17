@@ -318,7 +318,14 @@ angle::Result FramebufferVk::clearImpl(const gl::Context *context,
     // The front-end should ensure we don't attempt to clear stencil if all bits are masked.
     ASSERT(!clearStencil || stencilMask != 0);
 
-    bool scissoredClear = scissoredRenderArea != getCompleteRenderArea();
+    gl::Rectangle completeRenderArea = getCompleteRenderArea();
+    if (contextVk->isRotatedAspectRatioForDrawFBO())
+    {
+        // The surface is rotated 90/270 degrees.  This changes the aspect ratio of the surface.
+        std::swap(completeRenderArea.x, completeRenderArea.y);
+        std::swap(completeRenderArea.width, completeRenderArea.height);
+    }
+    bool scissoredClear = scissoredRenderArea != completeRenderArea;
 
     // Special case for rendering feedback loops: clears are always valid in GL since they don't
     // sample from any textures.
