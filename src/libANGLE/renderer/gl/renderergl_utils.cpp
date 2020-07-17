@@ -1784,6 +1784,13 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
 #endif
     ANGLE_FEATURE_CONDITION(features, disableNativeParallelCompile,
                             isTSANBuild && IsLinux() && isNvidia);
+
+    // anglebug.com/4849
+    // This workaround is definitely needed on Intel and AMD GPUs. To
+    // determine whether it's needed on iOS and Apple Silicon, the
+    // workaround's being restricted to existing desktop GPUs.
+    ANGLE_FEATURE_CONDITION(features, emulatePackSkipRowsAndPackSkipPixels,
+                            IsApple() && (isAMD || isIntel || isNvidia));
 }
 
 void InitializeFrontendFeatures(const FunctionsGL *functions, angle::FrontendFeatures *features)

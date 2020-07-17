@@ -464,6 +464,11 @@ struct FeaturesGL : FeatureSetBase
         "disable_native_parallel_compile", FeatureCategory::OpenGLWorkarounds,
         "Do not use native KHR_parallel_shader_compile even when available.", &members,
         "http://crbug.com/1094869"};
+
+    Feature emulatePackSkipRowsAndPackSkipPixels = {
+        "emulate_pack_skip_rows_and_pack_skip_pixels", FeatureCategory::OpenGLWorkarounds,
+        "GL_PACK_SKIP_ROWS and GL_PACK_SKIP_PIXELS are ignored in Apple's OpenGL driver.", &members,
+        "https://anglebug.com/4849"};
 };
 
 inline FeaturesGL::FeaturesGL()  = default;
