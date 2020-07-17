@@ -342,15 +342,6 @@ if (is_win || is_linux || is_android || is_mac || is_fuchsia) {
         suppressed_configs += [ "//build/config/compiler:default_optimization" ]
         configs += [ "//build/config/compiler:no_optimize" ]
       }
-
-      # TODO(jmadill/cnorthrop): Lift after traces updated. http://anglebug.com/3630
-      if (is_win && current_cpu == "x86") {
-        if (is_clang) {
-          cflags_cc = [ "-Wno-shorten-64-to-32" ]
-        } else {
-          cflags_cc = [ "/wd4244" ]
-        }
-      }
     }
   }
 
