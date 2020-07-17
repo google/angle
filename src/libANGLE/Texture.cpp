@@ -97,7 +97,7 @@ TextureState::TextureState(TextureType type)
       mSamplerState(SamplerState::CreateDefaultForTarget(type)),
       mSrgbOverride(SrgbOverride::Default),
       mBaseLevel(0),
-      mMaxLevel(1000),
+      mMaxLevel(kInitialMaxLevel),
       mDepthStencilTextureMode(GL_DEPTH_COMPONENT),
       mImmutableFormat(false),
       mImmutableLevels(0),

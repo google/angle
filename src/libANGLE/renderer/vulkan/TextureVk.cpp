@@ -1523,9 +1523,11 @@ angle::Result TextureVk::updateBaseMaxLevels(ContextVk *contextVk,
 
     // Track the previous levels for use in update loop below
     uint32_t previousBaseLevel = mImage->getBaseLevel();
+    uint32_t previousMaxLevel  = mImage->getMaxLevel();
 
+    ASSERT(baseLevel <= maxLevel);
     bool baseLevelChanged = baseLevel != previousBaseLevel;
-    bool maxLevelChanged  = (mImage->getLevelCount() + previousBaseLevel) != (maxLevel + 1);
+    bool maxLevelChanged  = (previousMaxLevel != maxLevel);
 
     if (!(baseLevelChanged || maxLevelChanged))
     {
@@ -1541,6 +1543,33 @@ angle::Result TextureVk::updateBaseMaxLevels(ContextVk *contextVk,
 
         // No further work to do, let staged updates handle the new levels
         return angle::Result::Continue;
+    }
+
+    // With a valid image, check if only changing the maxLevel to a subset of the texture's actual
+    // number of mip levels
+    if (!baseLevelChanged && (maxLevel < baseLevel + mImage->getLevelCount()))
+    {
+        // Don't need to respecify the texture; just redo the texture's vkImageViews
+        ASSERT(maxLevelChanged);
+
+        // Release the current vkImageViews
+        RendererVk *renderer = contextVk->getRenderer();
+        mImageViews.release(renderer);
+
+        // Track the levels in our ImageHelper
+        mImage->setBaseAndMaxLevels(baseLevel, maxLevel);
+
+        // Update the texture's serial so that the descriptor set is updated correctly
+        mSerial = contextVk->generateTextureSerial();
+
+        // Change the vkImageViews
+        const gl::ImageDesc &baseLevelDesc = mState.getBaseLevelDesc();
+        // We use a special layer count here to handle EGLImages. They might only be
+        // looking at one layer of a cube or 2D array texture.
+        uint32_t layerCount =
+            mState.getType() == gl::TextureType::_2D ? 1 : mImage->getLayerCount();
+        return initImageViews(contextVk, mImage->getFormat(), baseLevelDesc.format.info->sized,
+                              maxLevel - baseLevel + 1, layerCount);
     }
 
     return respecifyImageAttributesAndLevels(contextVk, previousBaseLevel, baseLevel, maxLevel);

@@ -48,6 +48,8 @@ class Sampler;
 class State;
 class Texture;
 
+constexpr GLuint kInitialMaxLevel = 1000;
+
 bool IsMipmapFiltered(const SamplerState &samplerState);
 
 struct ImageDesc final

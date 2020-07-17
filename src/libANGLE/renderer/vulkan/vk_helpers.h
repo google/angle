@@ -1361,6 +1361,7 @@ class ImageHelper final : public Resource, public angle::Subject
 
     uint32_t getBaseLevel() const { return mBaseLevel; }
     void setBaseAndMaxLevels(uint32_t baseLevel, uint32_t maxLevel);
+    uint32_t getMaxLevel() const { return mMaxLevel; }
 
     angle::Result copyImageDataToBuffer(ContextVk *contextVk,
                                         size_t sourceLevelGL,
