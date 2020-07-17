@@ -17,6 +17,7 @@
 #include "sys/stat.h"
 
 #include "common/mathutil.h"
+#include "common/string_utils.h"
 #include "common/system_utils.h"
 #include "libANGLE/Config.h"
 #include "libANGLE/Context.h"
@@ -1835,15 +1836,17 @@ void CaptureVertexArrayData(std::vector<CallCapture> *setupCalls,
             binding.getStride() != defaultBinding.getStride() ||
             binding.getBuffer().get() != nullptr)
         {
+            // Each attribute can pull from a separate buffer, so check the binding
             gl::Buffer *buffer = binding.getBuffer().get();
-
             if (buffer != replayState->getArrayBuffer())
             {
                 replayState->setBufferBinding(context, gl::BufferBinding::Array, buffer);
+
                 Capture(setupCalls, CaptureBindBuffer(*replayState, true, gl::BufferBinding::Array,
                                                       buffer->id()));
             }
 
+            // Establish the relationship between currently bound buffer and the VAO
             Capture(setupCalls, CaptureVertexAttribPointer(
                                     *replayState, true, attribIndex, attrib.format->channelCount,
                                     attrib.format->vertexAttribType, attrib.format->isNorm(),
@@ -1855,6 +1858,14 @@ void CaptureVertexArrayData(std::vector<CallCapture> *setupCalls,
             Capture(setupCalls, CaptureVertexAttribDivisor(*replayState, true, attribIndex,
                                                            binding.getDivisor()));
         }
+    }
+
+    // The element array buffer is not per attribute, but per VAO
+    gl::Buffer *elementArrayBuffer = vertexArray->getElementArrayBuffer();
+    if (elementArrayBuffer)
+    {
+        Capture(setupCalls, CaptureBindBuffer(*replayState, true, gl::BufferBinding::ElementArray,
+                                              elementArrayBuffer->id()));
     }
 }
 
@@ -2162,8 +2173,11 @@ void CaptureMidExecutionSetup(const gl::Context *context,
     for (const auto &vertexArrayIter : vertexArrayMap)
     {
         gl::VertexArrayID vertexArrayID = {vertexArrayIter.first};
-        cap(CaptureGenVertexArrays(replayState, true, 1, &vertexArrayID));
-        MaybeCaptureUpdateResourceIDs(setupCalls);
+        if (vertexArrayID.value != 0)
+        {
+            cap(CaptureGenVertexArrays(replayState, true, 1, &vertexArrayID));
+            MaybeCaptureUpdateResourceIDs(setupCalls);
+        }
 
         if (vertexArrayIter.second)
         {
@@ -2633,6 +2647,13 @@ void CaptureMidExecutionSetup(const gl::Context *context,
         for (const sh::ShaderVariable &attrib : program->getState().getProgramInputs())
         {
             ASSERT(attrib.location != -1);
+
+            if (angle::BeginsWith(attrib.name, "gl_"))
+            {
+                // Don't try to bind built-in attributes
+                continue;
+            }
+
             cap(CaptureBindAttribLocation(
                 replayState, true, id, static_cast<GLuint>(attrib.location), attrib.name.c_str()));
         }
