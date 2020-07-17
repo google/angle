@@ -1212,9 +1212,6 @@ TEST_P(Texture2DArrayCopy, OffsetSubCopy)
     int width  = getWindowWidth() - 1;
     int height = getWindowHeight() - 1;
 
-    // http://issuetracker.google.com/159712754
-    ANGLE_SKIP_TEST_IF(isSwiftshader());
-
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
     EXPECT_PIXEL_COLOR_EQ(width, 0, GLColor::green);
     EXPECT_PIXEL_COLOR_EQ(0, height, GLColor::green);
@@ -1282,9 +1279,6 @@ TEST_P(Texture2DArrayCopy, FlipY)
     glBindTexture(GL_TEXTURE_2D_ARRAY, destTexture.get());
     EXPECT_GL_NO_ERROR();
     drawQuad(mProgram, "position", 1.0f);
-
-    // http://issuetracker.google.com/159712754
-    ANGLE_SKIP_TEST_IF(isSwiftshader());
 
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
     EXPECT_PIXEL_COLOR_EQ(0, height, GLColor::green);
