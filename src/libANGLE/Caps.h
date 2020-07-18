@@ -1244,6 +1244,9 @@ struct DeviceExtensions
 
     // EGL_ANGLE_device_eagl
     bool deviceEAGL = false;
+
+    // EGL_ANGLE_device_metal
+    bool deviceMetal = false;
 };
 
 struct ClientExtensions

@@ -5642,6 +5642,13 @@ bool ValidateQueryDeviceAttribEXT(const ValidationContext *val,
                 return false;
             }
             break;
+        case EGL_METAL_DEVICE_ANGLE:
+            if (!device->getExtensions().deviceMetal)
+            {
+                val->setError(EGL_BAD_ATTRIBUTE);
+                return false;
+            }
+            break;
         case EGL_CGL_CONTEXT_ANGLE:
         case EGL_CGL_PIXEL_FORMAT_ANGLE:
             if (!device->getExtensions().deviceCGL)

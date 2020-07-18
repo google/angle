@@ -1491,6 +1491,7 @@ std::vector<std::string> DeviceExtensions::getStrings() const
     InsertExtensionString("EGL_ANGLE_device_d3d",                          deviceD3D,                      &extensionStrings);
     InsertExtensionString("EGL_ANGLE_device_cgl",                          deviceCGL,                      &extensionStrings);
     InsertExtensionString("EGL_ANGLE_device_eagl",                         deviceEAGL,                     &extensionStrings);
+    InsertExtensionString("EGL_ANGLE_device_metal",                        deviceMetal,                    &extensionStrings);
 
     // clang-format on
 
