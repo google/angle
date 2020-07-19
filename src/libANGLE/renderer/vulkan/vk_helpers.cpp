@@ -2600,7 +2600,7 @@ angle::Result ImageHelper::initExternal(Context *context,
     mImageType  = gl_vk::GetImageType(textureType);
     mExtents    = extents;
     mFormat     = &format;
-    mSamples    = samples;
+    mSamples    = std::max(samples, 1);
     mBaseLevel  = baseLevel;
     mMaxLevel   = maxLevel;
     mLevelCount = mipLevels;
@@ -2623,7 +2623,7 @@ angle::Result ImageHelper::initExternal(Context *context,
     imageInfo.extent                = mExtents;
     imageInfo.mipLevels             = mipLevels;
     imageInfo.arrayLayers           = mLayerCount;
-    imageInfo.samples               = gl_vk::GetSamples(samples);
+    imageInfo.samples               = gl_vk::GetSamples(mSamples);
     imageInfo.tiling                = mTilingMode;
     imageInfo.usage                 = mUsage;
     imageInfo.sharingMode           = VK_SHARING_MODE_EXCLUSIVE;
@@ -2949,7 +2949,7 @@ void ImageHelper::init2DWeakReference(Context *context,
 
     gl_vk::GetExtent(glExtents, &mExtents);
     mFormat        = &format;
-    mSamples       = samples;
+    mSamples       = std::max(samples, 1);
     mCurrentLayout = ImageLayout::Undefined;
     mLayerCount    = 1;
     mLevelCount    = 1;

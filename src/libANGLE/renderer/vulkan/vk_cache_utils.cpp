@@ -212,15 +212,17 @@ angle::Result InitializeRenderPassFromDesc(vk::Context *context,
                                            const AttachmentOpsArray &ops,
                                            RenderPass *renderPass)
 {
+    constexpr VkAttachmentReference kUnusedAttachment = {VK_ATTACHMENT_UNUSED,
+                                                         VK_IMAGE_LAYOUT_UNDEFINED};
+
     // Unpack the packed and split representation into the format required by Vulkan.
     gl::DrawBuffersVector<VkAttachmentReference> colorAttachmentRefs;
-    VkAttachmentReference depthStencilAttachmentRef = {VK_ATTACHMENT_UNUSED,
-                                                       VK_IMAGE_LAYOUT_UNDEFINED};
+    VkAttachmentReference depthStencilAttachmentRef = kUnusedAttachment;
     gl::AttachmentArray<VkAttachmentDescription> attachmentDescs;
 
     uint32_t colorAttachmentCount = 0;
     uint32_t attachmentCount      = 0;
-    for (uint32_t colorIndexGL = 0; colorIndexGL < desc.colorAttachmentRange(); ++colorIndexGL)
+    for (uint32_t colorIndexGL = 0; colorIndexGL <= desc.colorAttachmentRange(); ++colorIndexGL)
     {
         // Vulkan says:
         //
@@ -233,11 +235,7 @@ angle::Result InitializeRenderPassFromDesc(vk::Context *context,
 
         if (!desc.isColorAttachmentEnabled(colorIndexGL))
         {
-            VkAttachmentReference colorRef;
-            colorRef.attachment = VK_ATTACHMENT_UNUSED;
-            colorRef.layout     = VK_IMAGE_LAYOUT_UNDEFINED;
-            colorAttachmentRefs.push_back(colorRef);
-
+            colorAttachmentRefs.push_back(kUnusedAttachment);
             continue;
         }
 
@@ -406,7 +404,8 @@ RenderPassDesc::RenderPassDesc(const RenderPassDesc &other)
 void RenderPassDesc::setSamples(GLint samples)
 {
     ASSERT(samples < std::numeric_limits<uint8_t>::max());
-    mSamples = static_cast<uint8_t>(samples);
+    ASSERT(gl::isPow2(samples));
+    SetBitField(mLogSamples, gl::ScanForward(static_cast<uint8_t>(samples)));
 }
 
 void RenderPassDesc::packColorAttachment(size_t colorIndexGL, angle::FormatID formatID)
@@ -416,16 +415,15 @@ void RenderPassDesc::packColorAttachment(size_t colorIndexGL, angle::FormatID fo
                   "Too many ANGLE formats to fit in uint8_t");
     // Force the user to pack the depth/stencil attachment last.
     ASSERT(mHasDepthStencilAttachment == false);
-    // This function should only be called for enabled GL color attachments.`
+    // This function should only be called for enabled GL color attachments.
     ASSERT(formatID != angle::FormatID::NONE);
 
     uint8_t &packedFormat = mAttachmentFormats[colorIndexGL];
     SetBitField(packedFormat, formatID);
 
     // Set color attachment range such that it covers the range from index 0 through last
-    // active index.  This is the reason why we need depth/stencil to be packed last.
-    mColorAttachmentRange =
-        std::max<uint8_t>(mColorAttachmentRange, static_cast<uint8_t>(colorIndexGL) + 1);
+    // active index inclusive.  This is the reason why we need depth/stencil to be packed last.
+    SetBitField(mColorAttachmentRange, std::max<size_t>(mColorAttachmentRange, colorIndexGL));
 }
 
 void RenderPassDesc::packColorAttachmentGap(size_t colorIndexGL)
@@ -475,7 +473,7 @@ bool RenderPassDesc::isColorAttachmentEnabled(size_t colorIndexGL) const
 size_t RenderPassDesc::attachmentCount() const
 {
     size_t colorAttachmentCount = 0;
-    for (size_t i = 0; i < mColorAttachmentRange; ++i)
+    for (size_t i = 0; i <= mColorAttachmentRange; ++i)
     {
         colorAttachmentCount += isColorAttachmentEnabled(i);
     }
@@ -898,7 +896,7 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
     blendState.flags           = 0;
     blendState.logicOpEnable   = static_cast<VkBool32>(inputAndBlend.logic.opEnable);
     blendState.logicOp         = static_cast<VkLogicOp>(inputAndBlend.logic.op);
-    blendState.attachmentCount = static_cast<uint32_t>(mRenderPassDesc.colorAttachmentRange());
+    blendState.attachmentCount = static_cast<uint32_t>(mRenderPassDesc.colorAttachmentRange() + 1);
     blendState.pAttachments    = blendAttachmentState.data();
 
     for (int i = 0; i < 4; i++)
@@ -1981,7 +1979,7 @@ angle::Result RenderPassCache::addRenderPass(ContextVk *contextVk,
     vk::AttachmentOpsArray ops;
 
     uint32_t colorAttachmentCount = 0;
-    for (uint32_t colorIndexGL = 0; colorIndexGL < desc.colorAttachmentRange(); ++colorIndexGL)
+    for (uint32_t colorIndexGL = 0; colorIndexGL <= desc.colorAttachmentRange(); ++colorIndexGL)
     {
         if (!desc.isColorAttachmentEnabled(colorIndexGL))
         {
