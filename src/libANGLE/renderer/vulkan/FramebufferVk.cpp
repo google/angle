@@ -1338,12 +1338,12 @@ angle::Result FramebufferVk::updateColorAttachment(const gl::Context *context,
 
     if (renderTarget && mState.getEnabledDrawBuffers()[colorIndexGL])
     {
-        mCurrentFramebufferDesc.update(colorIndexGL,
-                                       renderTarget->getAssignImageViewSerial(contextVk));
+        mCurrentFramebufferDesc.updateColor(colorIndexGL,
+                                            renderTarget->getAssignImageViewSerial(contextVk));
     }
     else
     {
-        mCurrentFramebufferDesc.update(colorIndexGL, kInvalidImageViewSerial);
+        mCurrentFramebufferDesc.updateColor(colorIndexGL, kInvalidImageViewSerial);
     }
 
     return angle::Result::Continue;
@@ -1380,13 +1380,12 @@ void FramebufferVk::updateDepthStencilAttachmentSerial(ContextVk *contextVk)
 
     if (depthStencilRT != nullptr)
     {
-        mCurrentFramebufferDesc.update(vk::kFramebufferDescDepthStencilIndex,
-                                       depthStencilRT->getAssignImageViewSerial(contextVk));
+        mCurrentFramebufferDesc.updateDepthStencil(
+            depthStencilRT->getAssignImageViewSerial(contextVk));
     }
     else
     {
-        mCurrentFramebufferDesc.update(vk::kFramebufferDescDepthStencilIndex,
-                                       kInvalidImageViewSerial);
+        mCurrentFramebufferDesc.updateDepthStencil(kInvalidImageViewSerial);
     }
 }
 
@@ -1424,10 +1423,10 @@ angle::Result FramebufferVk::syncState(const gl::Context *context,
                 mCurrentFramebufferDesc.reset();
                 for (size_t colorIndexGL : mState.getEnabledDrawBuffers())
                 {
-                    mCurrentFramebufferDesc.update(
+                    RenderTargetVk *renderTarget = mRenderTargetCache.getColors()[colorIndexGL];
+                    mCurrentFramebufferDesc.updateColor(
                         static_cast<uint32_t>(colorIndexGL),
-                        mRenderTargetCache.getColors()[colorIndexGL]->getAssignImageViewSerial(
-                            contextVk));
+                        renderTarget->getAssignImageViewSerial(contextVk));
                 }
                 updateDepthStencilAttachmentSerial(contextVk);
                 break;

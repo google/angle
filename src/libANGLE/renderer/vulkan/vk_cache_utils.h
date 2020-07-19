@@ -828,9 +828,6 @@ class UniformsAndXfbDesc
 
 // This is IMPLEMENTATION_MAX_DRAW_BUFFERS + 1 for DS attachment
 constexpr size_t kMaxFramebufferAttachments = gl::IMPLEMENTATION_MAX_FRAMEBUFFER_ATTACHMENTS;
-// Color serials are at index [0:gl::IMPLEMENTATION_MAX_DRAW_BUFFERS-1]
-// Depth/stencil index is at gl::IMPLEMENTATION_MAX_DRAW_BUFFERS
-constexpr size_t kFramebufferDescDepthStencilIndex = gl::IMPLEMENTATION_MAX_DRAW_BUFFERS;
 
 class FramebufferDesc
 {
@@ -841,7 +838,8 @@ class FramebufferDesc
     FramebufferDesc(const FramebufferDesc &other);
     FramebufferDesc &operator=(const FramebufferDesc &other);
 
-    void update(uint32_t index, ImageViewSerial serial);
+    void updateColor(uint32_t index, ImageViewSerial serial);
+    void updateDepthStencil(ImageViewSerial serial);
     size_t hash() const;
     void reset();
 
@@ -850,7 +848,10 @@ class FramebufferDesc
     uint32_t attachmentCount() const;
 
   private:
+    void update(uint32_t index, ImageViewSerial serial);
+
     gl::AttachmentArray<ImageViewSerial> mSerials;
+    uint32_t mMaxValidSerialIndex;
 };
 
 // Layer/level pair type used to index into Serial Cache in ImageViewHelper
@@ -867,7 +868,7 @@ struct LayerLevel
 }  // namespace vk
 }  // namespace rx
 
-// Introduce a std::hash for a RenderPassDesc
+// Introduce std::hash for the above classes.
 namespace std
 {
 template <>

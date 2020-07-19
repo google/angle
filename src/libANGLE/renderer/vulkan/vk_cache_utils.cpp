@@ -32,6 +32,12 @@ namespace vk
 namespace
 {
 
+// In the FramebufferDesc object:
+//  - Depth/stencil serial is at index 0
+//  - Color serials are at indices [1:gl::IMPLEMENTATION_MAX_DRAW_BUFFERS]
+constexpr size_t kFramebufferDescDepthStencilIndex = 0;
+constexpr size_t kFramebufferDescColorIndexOffset  = 1;
+
 uint8_t PackGLBlendOp(GLenum blendOp)
 {
     switch (blendOp)
@@ -1733,23 +1739,42 @@ void FramebufferDesc::update(uint32_t index, ImageViewSerial serial)
 {
     ASSERT(index < kMaxFramebufferAttachments);
     mSerials[index] = serial;
+    if (serial.valid())
+    {
+        mMaxValidSerialIndex = std::max(mMaxValidSerialIndex, index);
+    }
+}
+
+void FramebufferDesc::updateColor(uint32_t index, ImageViewSerial serial)
+{
+    update(kFramebufferDescColorIndexOffset + index, serial);
+}
+
+void FramebufferDesc::updateDepthStencil(ImageViewSerial serial)
+{
+    update(kFramebufferDescDepthStencilIndex, serial);
 }
 
 size_t FramebufferDesc::hash() const
 {
-    return angle::ComputeGenericHash(&mSerials,
-                                     sizeof(ImageViewSerial) * kMaxFramebufferAttachments);
+    return angle::ComputeGenericHash(&mSerials, sizeof(mSerials[0]) * (mMaxValidSerialIndex + 1));
 }
 
 void FramebufferDesc::reset()
 {
-    memset(&mSerials, 0, sizeof(ImageViewSerial) * kMaxFramebufferAttachments);
+    memset(&mSerials, 0, sizeof(mSerials));
+    mMaxValidSerialIndex = 0;
 }
 
 bool FramebufferDesc::operator==(const FramebufferDesc &other) const
 {
-    return memcmp(&mSerials, &other.mSerials,
-                  sizeof(ImageViewSerial) * kMaxFramebufferAttachments) == 0;
+    if (mMaxValidSerialIndex != other.mMaxValidSerialIndex)
+    {
+        return false;
+    }
+
+    return memcmp(&mSerials, &other.mSerials, sizeof(mSerials[0]) * (mMaxValidSerialIndex + 1)) ==
+           0;
 }
 
 uint32_t FramebufferDesc::attachmentCount() const
