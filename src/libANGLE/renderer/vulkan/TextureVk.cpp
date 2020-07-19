@@ -535,7 +535,7 @@ angle::Result TextureVk::copySubImageImpl(const gl::Context *context,
     RenderTargetVk *colorReadRT = framebufferVk->getColorReadRenderTarget();
 
     const vk::Format &srcFormat  = colorReadRT->getImageFormat();
-    VkImageTiling srcTilingMode  = colorReadRT->getImage().getTilingMode();
+    VkImageTiling srcTilingMode  = colorReadRT->getImageForCopy().getTilingMode();
     const vk::Format &destFormat = renderer->getFormat(internalFormat.sizedInternalFormat);
     VkImageTiling destTilingMode = getTilingMode();
 
@@ -551,7 +551,7 @@ angle::Result TextureVk::copySubImageImpl(const gl::Context *context,
         return copySubImageImplWithTransfer(contextVk, offsetImageIndex, modifiedDestOffset,
                                             destFormat, colorReadRT->getLevelIndex(),
                                             colorReadRT->getLayerIndex(), clippedSourceBox,
-                                            &colorReadRT->getImage());
+                                            &colorReadRT->getImageForCopy());
     }
 
     bool forceCPUPath = ForceCPUPathForCopy(renderer, *mImage);
@@ -566,10 +566,11 @@ angle::Result TextureVk::copySubImageImpl(const gl::Context *context,
         const vk::ImageView *copyImageView = nullptr;
         ANGLE_TRY(colorReadRT->getAndRetainCopyImageView(contextVk, &copyImageView));
 
-        return copySubImageImplWithDraw(
-            contextVk, offsetImageIndex, modifiedDestOffset, destFormat,
-            colorReadRT->getLevelIndex(), clippedSourceBox, isViewportFlipY, false, false, false,
-            &colorReadRT->getImage(), copyImageView, contextVk->getRotationReadFramebuffer());
+        return copySubImageImplWithDraw(contextVk, offsetImageIndex, modifiedDestOffset, destFormat,
+                                        colorReadRT->getLevelIndex(), clippedSourceBox,
+                                        isViewportFlipY, false, false, false,
+                                        &colorReadRT->getImageForCopy(), copyImageView,
+                                        contextVk->getRotationReadFramebuffer());
     }
 
     // Do a CPU readback that does the conversion, and then stage the change to the pixel buffer.
@@ -1752,7 +1753,9 @@ angle::Result TextureVk::initRenderTargets(ContextVk *contextVk,
 
     // Lazy init. Check if already initialized.
     if (!mRenderTargets[levelIndex].empty())
+    {
         return angle::Result::Continue;
+    }
 
     mRenderTargets[levelIndex].resize(layerCount);
 

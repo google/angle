@@ -44,8 +44,8 @@ void RenderTargetVk::init(vk::ImageHelper *image,
     mImageViews   = imageViews;
     mLevelIndexGL = levelIndexGL;
     mLayerIndex   = layerIndex;
-    // We are being conservative here since our targeted optimization is to skip surfaceVK's depth
-    // buffer load after swap call.
+
+    // Conservatively assume the content is defined.
     mContentDefined = true;
 }
 
@@ -58,7 +58,7 @@ void RenderTargetVk::reset()
     mContentDefined = false;
 }
 
-ImageViewSerial RenderTargetVk::getAssignImageViewSerial(ContextVk *contextVk)
+ImageViewSerial RenderTargetVk::getAssignImageViewSerial(ContextVk *contextVk) const
 {
     ASSERT(mImageViews);
     ASSERT(mLayerIndex < std::numeric_limits<uint16_t>::max());
@@ -96,13 +96,13 @@ angle::Result RenderTargetVk::onDepthStencilDraw(ContextVk *contextVk)
     return angle::Result::Continue;
 }
 
-vk::ImageHelper &RenderTargetVk::getImage()
+vk::ImageHelper &RenderTargetVk::getImageForRenderPass()
 {
     ASSERT(mImage && mImage->valid());
     return *mImage;
 }
 
-const vk::ImageHelper &RenderTargetVk::getImage() const
+const vk::ImageHelper &RenderTargetVk::getImageForRenderPass() const
 {
     ASSERT(mImage && mImage->valid());
     return *mImage;
@@ -125,8 +125,8 @@ angle::Result RenderTargetVk::getAndRetainCopyImageView(ContextVk *contextVk,
     const vk::ImageViewHelper *imageViews = mImageViews;
     const vk::ImageView &copyView         = imageViews->getCopyImageView();
 
-    // If the source of render target is the texture, this will always be valid.  This is also where
-    // 3D or 2DArray images could be the source of the render target.
+    // If the source of render target is a texture or renderbuffer, this will always be valid.  This
+    // is also where 3D or 2DArray images could be the source of the render target.
     if (copyView.valid())
     {
         *imageViewOut = &copyView;
@@ -158,11 +158,16 @@ void RenderTargetVk::updateSwapchainImage(vk::ImageHelper *image, vk::ImageViewH
     mImageViews = imageViews;
 }
 
-vk::ImageHelper *RenderTargetVk::getImageForWrite(ContextVk *contextVk) const
+vk::ImageHelper &RenderTargetVk::getImageForCopy() const
 {
     ASSERT(mImage && mImage->valid());
-    retainImageViews(contextVk);
-    return mImage;
+    return *mImage;
+}
+
+vk::ImageHelper &RenderTargetVk::getImageForWrite() const
+{
+    ASSERT(mImage && mImage->valid());
+    return *mImage;
 }
 
 angle::Result RenderTargetVk::flushStagedUpdates(ContextVk *contextVk,

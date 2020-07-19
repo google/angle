@@ -2397,7 +2397,7 @@ void ContextVk::optimizeRenderPassForPresent(VkFramebuffer framebufferHandle)
     }
 
     // Use finalLayout instead of extra barrier for layout change to present
-    vk::ImageHelper &image = color0RenderTarget->getImage();
+    vk::ImageHelper &image = color0RenderTarget->getImageForWrite();
     image.setCurrentImageLayout(vk::ImageLayout::Present);
     mRenderPassCommands->updateRenderPassAttachmentFinalLayout(0, image.getCurrentImageLayout());
 }

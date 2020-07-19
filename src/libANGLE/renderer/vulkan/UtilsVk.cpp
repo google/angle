@@ -1507,7 +1507,7 @@ angle::Result UtilsVk::stencilBlitResolveNoShaderExport(ContextVk *contextVk,
 
     RenderTargetVk *depthStencilRenderTarget = framebuffer->getDepthStencilRenderTarget();
     ASSERT(depthStencilRenderTarget != nullptr);
-    vk::ImageHelper *depthStencilImage = &depthStencilRenderTarget->getImage();
+    vk::ImageHelper *depthStencilImage = &depthStencilRenderTarget->getImageForWrite();
 
     vk::CommandBuffer *commandBuffer;
     // Change source layout prior to computation.

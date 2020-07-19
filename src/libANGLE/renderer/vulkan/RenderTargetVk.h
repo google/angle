@@ -48,16 +48,17 @@ class RenderTargetVk final : public FramebufferAttachmentRenderTarget
               uint32_t layerIndex);
     void reset();
     // This returns the serial from underlying ImageViewHelper, first assigning one if required
-    ImageViewSerial getAssignImageViewSerial(ContextVk *contextVk);
+    ImageViewSerial getAssignImageViewSerial(ContextVk *contextVk) const;
 
     // Note: RenderTargets should be called in order, with the depth/stencil onRender last.
     angle::Result onColorDraw(ContextVk *contextVk);
     angle::Result onDepthStencilDraw(ContextVk *contextVk);
 
-    vk::ImageHelper &getImage();
-    const vk::ImageHelper &getImage() const;
+    vk::ImageHelper &getImageForRenderPass();
+    const vk::ImageHelper &getImageForRenderPass() const;
 
-    vk::ImageHelper *getImageForWrite(ContextVk *contextVk) const;
+    vk::ImageHelper &getImageForCopy() const;
+    vk::ImageHelper &getImageForWrite() const;
 
     // For cube maps we use single-level single-layer 2D array views.
     angle::Result getImageView(ContextVk *contextVk, const vk::ImageView **imageViewOut) const;
@@ -85,7 +86,8 @@ class RenderTargetVk final : public FramebufferAttachmentRenderTarget
     void retainImageViews(ContextVk *contextVk) const;
 
     bool hasDefinedContent() const { return mContentDefined; }
-    // mark content as undefined so that certain optimizations are possible
+    // mark content as undefined so that certain optimizations are possible such as using DONT_CARE
+    // as loadOp of the render target in the next renderpass.
     void invalidateContent() { mContentDefined = false; }
 
   private:
@@ -93,8 +95,9 @@ class RenderTargetVk final : public FramebufferAttachmentRenderTarget
     vk::ImageViewHelper *mImageViews;
     uint32_t mLevelIndexGL;
     uint32_t mLayerIndex;
-    // Right now we are only tracking depth/stencil buffer. We could expand it to cover color
-    // buffers if needed in future.
+
+    // Whether the render target has been invalidated.  If so, DONT_CARE is used instead of LOAD for
+    // loadOp of this attachment.
     bool mContentDefined;
 };
 
