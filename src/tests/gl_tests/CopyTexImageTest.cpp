@@ -25,34 +25,15 @@ class CopyTexImageTest : public ANGLETest
 
     void testSetUp() override
     {
-        constexpr char kVS[] =
-            "precision highp float;\n"
-            "attribute vec4 position;\n"
-            "varying vec2 texcoord;\n"
-            "\n"
-            "void main()\n"
-            "{\n"
-            "    gl_Position = position;\n"
-            "    texcoord = (position.xy * 0.5) + 0.5;\n"
-            "}\n";
-
-        constexpr char kFS[] =
-            "precision highp float;\n"
-            "uniform sampler2D tex;\n"
-            "varying vec2 texcoord;\n"
-            "\n"
-            "void main()\n"
-            "{\n"
-            "    gl_FragColor = texture2D(tex, texcoord);\n"
-            "}\n";
-
-        mTextureProgram = CompileProgram(kVS, kFS);
+        mTextureProgram =
+            CompileProgram(essl1_shaders::vs::Texture2D(), essl1_shaders::fs::Texture2D());
         if (mTextureProgram == 0)
         {
             FAIL() << "shader compilation failed.";
         }
 
-        mTextureUniformLocation = glGetUniformLocation(mTextureProgram, "tex");
+        mTextureUniformLocation =
+            glGetUniformLocation(mTextureProgram, essl1_shaders::Texture2DUniform());
 
         ASSERT_GL_NO_ERROR();
     }
@@ -99,7 +80,7 @@ class CopyTexImageTest : public ANGLETest
         glBindTexture(GL_TEXTURE_2D, texture);
         glUniform1i(mTextureUniformLocation, 0);
 
-        drawQuad(mTextureProgram, "position", 0.5f);
+        drawQuad(mTextureProgram, essl1_shaders::PositionAttrib(), 0.5f);
 
         // Expect that the rendered quad has the same color as the source texture
         EXPECT_PIXEL_NEAR(xs, ys, data[0], data[1], data[2], data[3], 1.0);
@@ -891,13 +872,8 @@ TEST_P(CopyTexImageTestES3, 3DSubImageDrawMismatchedTextureTypes)
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against.
 ANGLE_INSTANTIATE_TEST(CopyTexImageTest,
-                       ES2_D3D9(),
-                       ES2_D3D11(),
+                       ANGLE_ALL_TEST_PLATFORMS_ES2,
                        ES2_D3D11_PRESENT_PATH_FAST(),
-                       ES2_METAL(),
-                       ES2_OPENGL(),
-                       ES2_OPENGLES(),
-                       ES2_VULKAN(),
                        ES3_VULKAN(),
                        WithEmulateCopyTexImage2DFromRenderbuffers(ES2_OPENGL()),
                        WithEmulateCopyTexImage2DFromRenderbuffers(ES2_OPENGLES()));

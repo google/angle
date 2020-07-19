@@ -1201,6 +1201,46 @@ angle::Result FramebufferVk::resolveColorWithCommand(ContextVk *contextVk,
     return angle::Result::Continue;
 }
 
+angle::Result FramebufferVk::copyResolveToMultisampedAttachment(ContextVk *contextVk,
+                                                                RenderTargetVk *colorRenderTarget)
+{
+    ASSERT(colorRenderTarget->hasResolveAttachment());
+    ASSERT(colorRenderTarget->isImageTransient());
+
+    vk::ImageHelper *src  = &colorRenderTarget->getResolveImageForRenderPass();
+    vk::ImageHelper *dest = &colorRenderTarget->getImageForRenderPass();
+
+    const vk::ImageView *srcView;
+    const vk::ImageView *destView;
+    ANGLE_TRY(colorRenderTarget->getAndRetainCopyImageView(contextVk, &srcView));
+    ANGLE_TRY(colorRenderTarget->getImageView(contextVk, &destView));
+
+    // Note: neither vkCmdCopyImage nor vkCmdBlitImage allow the destination to be multisampled.
+    // There's no choice but to use a draw-based path to perform this copy.
+
+    gl::Extents extents = colorRenderTarget->getExtents();
+    uint32_t levelVK    = colorRenderTarget->getLevelIndex() - src->getBaseLevel();
+    uint32_t layer      = colorRenderTarget->getLayerIndex();
+
+    UtilsVk::CopyImageParameters params;
+    params.srcOffset[0]        = 0;
+    params.srcOffset[1]        = 0;
+    params.srcExtents[0]       = extents.width;
+    params.srcExtents[1]       = extents.height;
+    params.destOffset[0]       = 0;
+    params.destOffset[1]       = 0;
+    params.srcMip              = levelVK;
+    params.srcLayer            = layer;
+    params.srcHeight           = extents.height;
+    params.srcPremultiplyAlpha = false;
+    params.srcUnmultiplyAlpha  = false;
+    params.srcFlipY            = false;
+    params.destFlipY           = false;
+    params.srcRotation         = SurfaceRotation::Identity;
+
+    return contextVk->getUtils().copyImage(contextVk, dest, destView, src, srcView, params);
+}
+
 bool FramebufferVk::checkStatus(const gl::Context *context) const
 {
     // if we have both a depth and stencil buffer, they must refer to the same object
@@ -1392,7 +1432,10 @@ angle::Result FramebufferVk::updateColorAttachment(const gl::Context *context,
         updateActiveColorMasks(colorIndexGL, false, false, false, false);
     }
 
-    if (renderTarget && mState.getEnabledDrawBuffers()[colorIndexGL])
+    const bool enabledColor   = renderTarget && mState.getEnabledDrawBuffers()[colorIndexGL];
+    const bool enabledResolve = enabledColor && renderTarget->hasResolveAttachment();
+
+    if (enabledColor)
     {
         mCurrentFramebufferDesc.updateColor(colorIndexGL,
                                             renderTarget->getAssignImageViewSerial(contextVk));
@@ -1400,6 +1443,16 @@ angle::Result FramebufferVk::updateColorAttachment(const gl::Context *context,
     else
     {
         mCurrentFramebufferDesc.updateColor(colorIndexGL, kInvalidImageViewSerial);
+    }
+
+    if (enabledResolve)
+    {
+        mCurrentFramebufferDesc.updateColorResolve(
+            colorIndexGL, renderTarget->getAssignResolveImageViewSerial(contextVk));
+    }
+    else
+    {
+        mCurrentFramebufferDesc.updateColorResolve(colorIndexGL, kInvalidImageViewSerial);
     }
 
     return angle::Result::Continue;
@@ -1492,6 +1545,12 @@ angle::Result FramebufferVk::syncState(const gl::Context *context,
                     mCurrentFramebufferDesc.updateColor(
                         static_cast<uint32_t>(colorIndexGL),
                         renderTarget->getAssignImageViewSerial(contextVk));
+                    if (renderTarget->hasResolveAttachment())
+                    {
+                        mCurrentFramebufferDesc.updateColorResolve(
+                            static_cast<uint32_t>(colorIndexGL),
+                            renderTarget->getAssignResolveImageViewSerial(contextVk));
+                    }
                 }
                 updateDepthStencilAttachmentSerial(contextVk);
                 break;
@@ -1580,6 +1639,7 @@ void FramebufferVk::updateRenderPassDesc()
     mRenderPassDesc = {};
     mRenderPassDesc.setSamples(getSamples());
 
+    // Color attachments.
     const auto &colorRenderTargets              = mRenderTargetCache.getColors();
     const gl::DrawBufferMask enabledDrawBuffers = mState.getEnabledDrawBuffers();
     for (size_t colorIndexGL = 0; colorIndexGL < enabledDrawBuffers.size(); ++colorIndexGL)
@@ -1591,6 +1651,12 @@ void FramebufferVk::updateRenderPassDesc()
             mRenderPassDesc.packColorAttachment(
                 colorIndexGL,
                 colorRenderTarget->getImageForRenderPass().getFormat().intendedFormatID);
+
+            // Add the resolve attachment, if any.
+            if (colorRenderTarget->hasResolveAttachment())
+            {
+                mRenderPassDesc.packColorResolveAttachment(colorIndexGL);
+            }
         }
         else
         {
@@ -1598,6 +1664,7 @@ void FramebufferVk::updateRenderPassDesc()
         }
     }
 
+    // Depth/stencil attachment.
     RenderTargetVk *depthStencilRenderTarget = getDepthStencilRenderTarget();
     if (depthStencilRenderTarget)
     {
@@ -1642,6 +1709,7 @@ angle::Result FramebufferVk::getFramebuffer(ContextVk *contextVk, vk::Framebuffe
     std::vector<VkImageView> attachments;
     gl::Extents attachmentsSize;
 
+    // Color attachments.
     const auto &colorRenderTargets = mRenderTargetCache.getColors();
     for (size_t colorIndexGL : mState.getEnabledDrawBuffers())
     {
@@ -1657,6 +1725,7 @@ angle::Result FramebufferVk::getFramebuffer(ContextVk *contextVk, vk::Framebuffe
         attachmentsSize = colorRenderTarget->getExtents();
     }
 
+    // Depth/stencil attachment.
     RenderTargetVk *depthStencilRenderTarget = getDepthStencilRenderTarget();
     if (depthStencilRenderTarget)
     {
@@ -1668,6 +1737,23 @@ angle::Result FramebufferVk::getFramebuffer(ContextVk *contextVk, vk::Framebuffe
         ASSERT(attachmentsSize.empty() ||
                attachmentsSize == depthStencilRenderTarget->getExtents());
         attachmentsSize = depthStencilRenderTarget->getExtents();
+    }
+
+    // Color resolve attachments.
+    for (size_t colorIndexGL : mState.getEnabledDrawBuffers())
+    {
+        RenderTargetVk *colorRenderTarget = colorRenderTargets[colorIndexGL];
+        ASSERT(colorRenderTarget);
+
+        if (colorRenderTarget->hasResolveAttachment())
+        {
+            const vk::ImageView *resolveImageView = nullptr;
+            ANGLE_TRY(colorRenderTarget->getResolveImageView(contextVk, &resolveImageView));
+
+            attachments.push_back(resolveImageView->getHandle());
+
+            ASSERT(!attachmentsSize.empty());
+        }
     }
 
     if (attachmentsSize.empty())
@@ -1932,12 +2018,13 @@ angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
     vk::Framebuffer *framebuffer = nullptr;
     ANGLE_TRY(getFramebuffer(contextVk, &framebuffer));
 
-    vk::AttachmentOpsArray renderPassAttachmentOps;
-    vk::ClearValuesArray packedClearValues;
-
     ANGLE_TRY(contextVk->endRenderPass());
 
     // Initialize RenderPass info.
+    vk::AttachmentOpsArray renderPassAttachmentOps;
+    vk::ClearValuesArray packedClearValues;
+
+    // Color attachments.
     const auto &colorRenderTargets  = mRenderTargetCache.getColors();
     uint32_t currentAttachmentCount = 0;
     for (size_t colorIndexGL : mState.getEnabledDrawBuffers())
@@ -1948,10 +2035,14 @@ angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
         renderPassAttachmentOps.setLayouts(currentAttachmentCount, vk::ImageLayout::ColorAttachment,
                                            vk::ImageLayout::ColorAttachment);
 
+        const VkAttachmentStoreOp storeOp = colorRenderTarget->isImageTransient()
+                                                ? VK_ATTACHMENT_STORE_OP_DONT_CARE
+                                                : VK_ATTACHMENT_STORE_OP_STORE;
+
         if (mDeferredClears.test(colorIndexGL))
         {
             renderPassAttachmentOps.setOps(currentAttachmentCount, VK_ATTACHMENT_LOAD_OP_CLEAR,
-                                           VK_ATTACHMENT_STORE_OP_STORE);
+                                           storeOp);
             packedClearValues.store(currentAttachmentCount, VK_IMAGE_ASPECT_COLOR_BIT,
                                     mDeferredClears[colorIndexGL]);
             mDeferredClears.reset(colorIndexGL);
@@ -1962,7 +2053,7 @@ angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
                                            colorRenderTarget->hasDefinedContent()
                                                ? VK_ATTACHMENT_LOAD_OP_LOAD
                                                : VK_ATTACHMENT_LOAD_OP_DONT_CARE,
-                                           VK_ATTACHMENT_STORE_OP_STORE);
+                                           storeOp);
             packedClearValues.store(currentAttachmentCount, VK_IMAGE_ASPECT_COLOR_BIT,
                                     kUninitializedClearValue);
         }
@@ -1970,11 +2061,37 @@ angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
                                               VK_ATTACHMENT_LOAD_OP_DONT_CARE,
                                               VK_ATTACHMENT_STORE_OP_DONT_CARE);
 
-        ANGLE_TRY(colorRenderTarget->onColorDraw(contextVk));
+        // If there's a resolve attachment, and loadOp needs to be LOAD, the multisampled attachment
+        // needs to take its value from the resolve attachment.  In this case, there's no choice
+        // but to blit from the resolve image into the multisampled one.  It's expected that
+        // application code results in a clear of the framebuffer at the start of the renderpass, so
+        // the multisampled image is truely transient.
+        //
+        // Note that this only needs to be done if the multisampled image and the resolve attachment
+        // come from the same source.  When optimizing glBlitFramebuffer for example, this is not
+        // the case.  isImageTransient() indicates whether this should happen.
+        //
+        // TODO: In an ideal world, this could be done in a subpass so that the multisampled data
+        // always ever stays on a tiled renderer's tile and no memory backing is allocated for it.
+        // http://anglebug.com/4881
+        if (colorRenderTarget->hasResolveAttachment() && colorRenderTarget->isImageTransient() &&
+            renderPassAttachmentOps[currentAttachmentCount].loadOp == VK_ATTACHMENT_LOAD_OP_LOAD)
+        {
+            ANGLE_TRY(copyResolveToMultisampedAttachment(contextVk, colorRenderTarget));
+        }
 
         currentAttachmentCount++;
     }
 
+    // Transition the images to the correct layout (through onColorDraw) after the
+    // resolve-to-multisampled copies are done.
+    for (size_t colorIndexGL : mState.getEnabledDrawBuffers())
+    {
+        RenderTargetVk *colorRenderTarget = colorRenderTargets[colorIndexGL];
+        ANGLE_TRY(colorRenderTarget->onColorDraw(contextVk));
+    }
+
+    // Depth/stencil attachment.
     RenderTargetVk *depthStencilRenderTarget = getDepthStencilRenderTarget();
     if (depthStencilRenderTarget)
     {
@@ -1987,6 +2104,12 @@ angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
         {
             depthLoadOp   = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
             stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+        }
+
+        if (depthStencilRenderTarget->isImageTransient())
+        {
+            depthStoreOp   = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+            stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
         }
 
         renderPassAttachmentOps.setLayouts(currentAttachmentCount,

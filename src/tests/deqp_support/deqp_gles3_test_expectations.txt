@@ -639,3 +639,7 @@
 
 // Fails on SwANGLE bots
 4418 SWIFTSHADER : dEQP-GLES3.functional.negative_api.buffer.framebuffer_texture_layer = FAIL
+
+// Bug in gl.xml, aliasing glRenderbufferStorageMultisampleEXT and glRenderbufferStorageMultisample
+// for GLES.  See https://github.com/KhronosGroup/OpenGL-Registry/issues/413
+4836 VULKAN : dEQP-GLES3.functional.negative_api.buffer.renderbuffer_storage_multisample = FAIL

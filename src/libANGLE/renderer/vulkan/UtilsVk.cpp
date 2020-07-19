@@ -1790,13 +1790,14 @@ angle::Result UtilsVk::copyImage(ContextVk *contextVk,
     renderPassDesc.setSamples(dest->getSamples());
     renderPassDesc.packColorAttachment(0, dstFormat.intendedFormatID);
 
-    // Multisampled copy is not yet supported.
-    ASSERT(src->getSamples() == 1 && dest->getSamples() == 1);
+    // Copy from multisampled image is not supported.
+    ASSERT(src->getSamples() == 1);
 
     vk::GraphicsPipelineDesc pipelineDesc;
     pipelineDesc.initDefaults();
     pipelineDesc.setCullMode(VK_CULL_MODE_NONE);
     pipelineDesc.setRenderPassDesc(renderPassDesc);
+    pipelineDesc.setRasterizationSamples(dest->getSamples());
 
     gl::Rectangle renderArea;
     renderArea.x      = params.destOffset[0];
@@ -1853,6 +1854,9 @@ angle::Result UtilsVk::copyImage(ContextVk *contextVk,
                            sizeof(shaderParams), commandBuffer));
     commandBuffer->draw(6, 0);
     descriptorPoolBinding.reset();
+
+    // Close the render pass for this temporary framebuffer.
+    ANGLE_TRY(contextVk->endRenderPass());
 
     return angle::Result::Continue;
 }

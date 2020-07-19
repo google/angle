@@ -2415,6 +2415,9 @@ void ContextVk::optimizeRenderPassForPresent(VkFramebuffer framebufferHandle)
     // Use finalLayout instead of extra barrier for layout change to present
     vk::ImageHelper &image = color0RenderTarget->getImageForWrite();
     image.setCurrentImageLayout(vk::ImageLayout::Present);
+    // TODO(syoussefi):  We currently don't store the layout of the resolve attachments, so once
+    // multisampled backbuffers are optimized to use resolve attachments, this information needs to
+    // be stored somewhere.  http://anglebug.com/4836
     mRenderPassCommands->updateRenderPassAttachmentFinalLayout(0, image.getCurrentImageLayout());
 }
 

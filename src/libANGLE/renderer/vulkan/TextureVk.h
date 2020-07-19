@@ -420,6 +420,11 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
     // reallocated independently of |mImage| on state changes.
     vk::ImageViewHelper mImageViews;
 
+    // If multisampled rendering to texture, an intermediate multisampled image is created for use
+    // as renderpass color or depth/stencil attachment.
+    vk::ImageHelper mMultisampledImage;
+    vk::ImageViewHelper mMultisampledImageViews;
+
     // |mSampler| contains the relevant Vulkan sampler states representing the OpenGL Texture
     // sampling states for the Texture.
     vk::BindingPointer<vk::Sampler> mSampler;

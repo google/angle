@@ -13,46 +13,6 @@ using namespace angle;
 
 namespace
 {
-constexpr char kBasicVertexShader[] =
-    R"(attribute vec3 position;
-void main()
-{
-    gl_Position = vec4(position, 1);
-})";
-
-constexpr char kGreenFragmentShader[] =
-    R"(void main()
-{
-    gl_FragColor = vec4(0, 1, 0, 1);
-})";
-
-constexpr char kRedFragmentShader[] =
-    R"(void main()
-{
-    gl_FragColor = vec4(1, 0, 0, 1);
-})";
-
-constexpr char kVS[] =
-    "precision highp float;\n"
-    "attribute vec4 position;\n"
-    "varying vec2 texcoord;\n"
-    "\n"
-    "void main()\n"
-    "{\n"
-    "    gl_Position = position;\n"
-    "    texcoord = (position.xy * 0.5) + 0.5;\n"
-    "}\n";
-
-constexpr char kFS[] =
-    "precision highp float;\n"
-    "uniform sampler2D tex;\n"
-    "varying vec2 texcoord;\n"
-    "\n"
-    "void main()\n"
-    "{\n"
-    "    gl_FragColor = texture2D(tex, texcoord);\n"
-    "}\n";
-
 class MultisampledRenderToTextureTest : public ANGLETest
 {
   protected:
@@ -72,16 +32,18 @@ class MultisampledRenderToTextureTest : public ANGLETest
 
     void setupCopyTexProgram()
     {
-        mCopyTextureProgram.makeRaster(kVS, kFS);
+        mCopyTextureProgram.makeRaster(essl1_shaders::vs::Texture2D(),
+                                       essl1_shaders::fs::Texture2D());
         ASSERT_GL_TRUE(mCopyTextureProgram.valid());
 
-        mCopyTextureUniformLocation = glGetUniformLocation(mCopyTextureProgram, "tex");
+        mCopyTextureUniformLocation =
+            glGetUniformLocation(mCopyTextureProgram, essl1_shaders::Texture2DUniform());
 
         ASSERT_GL_NO_ERROR();
     }
 
     void verifyResults(GLuint texture,
-                       GLubyte data[4],
+                       const GLColor expected,
                        GLint fboSize,
                        GLint xs,
                        GLint ys,
@@ -97,14 +59,14 @@ class MultisampledRenderToTextureTest : public ANGLETest
         glBindTexture(GL_TEXTURE_2D, texture);
         glUniform1i(mCopyTextureUniformLocation, 0);
 
-        drawQuad(mCopyTextureProgram, "position", 0.5f);
+        drawQuad(mCopyTextureProgram, essl1_shaders::PositionAttrib(), 0.5f);
 
         // Expect that the rendered quad has the same color as the source texture
-        EXPECT_PIXEL_NEAR(xs, ys, data[0], data[1], data[2], data[3], 1.0);
-        EXPECT_PIXEL_NEAR(xs, ye - 1, data[0], data[1], data[2], data[3], 1.0);
-        EXPECT_PIXEL_NEAR(xe - 1, ys, data[0], data[1], data[2], data[3], 1.0);
-        EXPECT_PIXEL_NEAR(xe - 1, ye - 1, data[0], data[1], data[2], data[3], 1.0);
-        EXPECT_PIXEL_NEAR((xs + xe) / 2, (ys + ye) / 2, data[0], data[1], data[2], data[3], 1.0);
+        EXPECT_PIXEL_COLOR_NEAR(xs, ys, expected, 1.0);
+        EXPECT_PIXEL_COLOR_NEAR(xs, ye - 1, expected, 1.0);
+        EXPECT_PIXEL_COLOR_NEAR(xe - 1, ys, expected, 1.0);
+        EXPECT_PIXEL_COLOR_NEAR(xe - 1, ye - 1, expected, 1.0);
+        EXPECT_PIXEL_COLOR_NEAR((xs + xe) / 2, (ys + ye) / 2, expected, 1.0);
     }
 
     void clearAndDrawQuad(GLuint program, GLsizei viewportWidth, GLsizei viewportHeight)
@@ -114,7 +76,8 @@ class MultisampledRenderToTextureTest : public ANGLETest
         glViewport(0, 0, viewportWidth, viewportHeight);
         ASSERT_GL_NO_ERROR();
 
-        drawQuad(program, "position", 0.0f);
+        drawQuad(program, essl1_shaders::PositionAttrib(), 0.0f);
+        ASSERT_GL_NO_ERROR();
     }
 
     GLProgram mCopyTextureProgram;
@@ -290,13 +253,24 @@ TEST_P(MultisampledRenderToTextureTest, FramebufferCompleteness)
                                          texture, 0, 4);
     EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
 
+    GLsizei maxSamples = 0;
+    glGetIntegerv(GL_MAX_SAMPLES, &maxSamples);
+
     GLRenderbuffer renderbuffer;
     glBindRenderbuffer(GL_RENDERBUFFER, renderbuffer);
-    glRenderbufferStorageMultisampleEXT(GL_RENDERBUFFER, 8, GL_DEPTH_COMPONENT16, 64, 64);
+    glRenderbufferStorageMultisampleEXT(GL_RENDERBUFFER, maxSamples, GL_DEPTH_COMPONENT16, 64, 64);
     ASSERT_GL_NO_ERROR();
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, renderbuffer);
-    EXPECT_GLENUM_EQ(GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE,
-                     glCheckFramebufferStatus(GL_FRAMEBUFFER));
+
+    if (maxSamples > 4)
+    {
+        EXPECT_GLENUM_EQ(GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE,
+                         glCheckFramebufferStatus(GL_FRAMEBUFFER));
+    }
+    else
+    {
+        EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    }
 }
 
 // Draw test with color attachment only.
@@ -304,10 +278,10 @@ TEST_P(MultisampledRenderToTextureTest, 2DColorAttachmentMultisampleDrawTest)
 {
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_multisampled_render_to_texture"));
     // Set up texture and bind to FBO
-    GLsizei size = 6;
+    constexpr GLsizei kSize = 6;
     GLTexture texture;
     glBindTexture(GL_TEXTURE_2D, texture);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, size, size, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
     ASSERT_GL_NO_ERROR();
 
     GLFramebuffer FBO;
@@ -317,14 +291,14 @@ TEST_P(MultisampledRenderToTextureTest, 2DColorAttachmentMultisampleDrawTest)
     EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
 
     // Set viewport and clear to black
-    glViewport(0, 0, size, size);
+    glViewport(0, 0, kSize, kSize);
     glClearColor(0.0, 0.0, 0.0, 1.0);
     glClear(GL_COLOR_BUFFER_BIT);
 
     // Set up Green square program
-    ANGLE_GL_PROGRAM(program, kBasicVertexShader, kGreenFragmentShader);
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Green());
     glUseProgram(program);
-    GLint positionLocation = glGetAttribLocation(program, "position");
+    GLint positionLocation = glGetAttribLocation(program, essl1_shaders::PositionAttrib());
     ASSERT_NE(-1, positionLocation);
 
     setupQuadVertexBuffer(0.5f, 0.5f);
@@ -336,12 +310,12 @@ TEST_P(MultisampledRenderToTextureTest, 2DColorAttachmentMultisampleDrawTest)
     ASSERT_GL_NO_ERROR();
 
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::black);
-    EXPECT_PIXEL_COLOR_EQ(size / 2, size / 2, GLColor::green);
+    EXPECT_PIXEL_COLOR_EQ(kSize / 2, kSize / 2, GLColor::green);
 
     // Set up Red square program
-    ANGLE_GL_PROGRAM(program2, kBasicVertexShader, kRedFragmentShader);
+    ANGLE_GL_PROGRAM(program2, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
     glUseProgram(program2);
-    GLint positionLocation2 = glGetAttribLocation(program2, "position");
+    GLint positionLocation2 = glGetAttribLocation(program2, essl1_shaders::PositionAttrib());
     ASSERT_NE(-1, positionLocation2);
 
     setupQuadVertexBuffer(0.5f, 0.75f);
@@ -352,7 +326,7 @@ TEST_P(MultisampledRenderToTextureTest, 2DColorAttachmentMultisampleDrawTest)
     ASSERT_GL_NO_ERROR();
 
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::black);
-    EXPECT_PIXEL_COLOR_EQ(size / 2, size / 2, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(kSize / 2, kSize / 2, GLColor::red);
 
     glDisableVertexAttribArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -362,11 +336,11 @@ TEST_P(MultisampledRenderToTextureTest, 2DColorAttachmentMultisampleDrawTest)
 TEST_P(MultisampledRenderToTextureTest, 2DColorDepthMultisampleDrawTest)
 {
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_multisampled_render_to_texture"));
-    GLsizei size = 6;
+    constexpr GLsizei kSize = 6;
     // create complete framebuffer with depth buffer
     GLTexture texture;
     glBindTexture(GL_TEXTURE_2D, texture);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, size, size, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
     ASSERT_GL_NO_ERROR();
 
     GLFramebuffer FBO;
@@ -376,23 +350,23 @@ TEST_P(MultisampledRenderToTextureTest, 2DColorDepthMultisampleDrawTest)
 
     GLRenderbuffer renderbuffer;
     glBindRenderbuffer(GL_RENDERBUFFER, renderbuffer);
-    glRenderbufferStorageMultisampleEXT(GL_RENDERBUFFER, 4, GL_DEPTH_COMPONENT16, size, size);
+    glRenderbufferStorageMultisampleEXT(GL_RENDERBUFFER, 4, GL_DEPTH_COMPONENT16, kSize, kSize);
     ASSERT_GL_NO_ERROR();
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, renderbuffer);
     EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
 
     // Set viewport and clear framebuffer
-    glViewport(0, 0, size, size);
+    glViewport(0, 0, kSize, kSize);
     glClearColor(0.0, 0.0, 0.0, 1.0);
     glClearDepthf(0.5f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // Draw first green square
-    ANGLE_GL_PROGRAM(program, kBasicVertexShader, kGreenFragmentShader);
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Green());
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_GREATER);
     glUseProgram(program);
-    GLint positionLocation = glGetAttribLocation(program, "position");
+    GLint positionLocation = glGetAttribLocation(program, essl1_shaders::PositionAttrib());
     ASSERT_NE(-1, positionLocation);
 
     setupQuadVertexBuffer(0.8f, 0.5f);
@@ -404,12 +378,12 @@ TEST_P(MultisampledRenderToTextureTest, 2DColorDepthMultisampleDrawTest)
     ASSERT_GL_NO_ERROR();
 
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::black);
-    EXPECT_PIXEL_COLOR_EQ(size / 2, size / 2, GLColor::green);
+    EXPECT_PIXEL_COLOR_EQ(kSize / 2, kSize / 2, GLColor::green);
 
     // Draw red square behind green square
-    ANGLE_GL_PROGRAM(program2, kBasicVertexShader, kRedFragmentShader);
+    ANGLE_GL_PROGRAM(program2, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
     glUseProgram(program2);
-    GLint positionLocation2 = glGetAttribLocation(program2, "position");
+    GLint positionLocation2 = glGetAttribLocation(program2, essl1_shaders::PositionAttrib());
     ASSERT_NE(-1, positionLocation2);
 
     setupQuadVertexBuffer(0.7f, 1.0f);
@@ -420,23 +394,21 @@ TEST_P(MultisampledRenderToTextureTest, 2DColorDepthMultisampleDrawTest)
     glDisable(GL_DEPTH_TEST);
 
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
-    EXPECT_PIXEL_COLOR_EQ(size / 2, size / 2, GLColor::green);
+    EXPECT_PIXEL_COLOR_EQ(kSize / 2, kSize / 2, GLColor::green);
 
     glDisableVertexAttribArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 // Read pixels with pack buffer. ES3+.
-TEST_P(MultisampledRenderToTextureES3Test, MultisampleReadPixelsTest)
+TEST_P(MultisampledRenderToTextureES3Test, ReadPixelsTest)
 {
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_multisampled_render_to_texture"));
 
-    // PBO only available ES3 and above
-    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3);
-    GLsizei size = 6;
+    constexpr GLsizei kSize = 6;
     GLTexture texture;
     glBindTexture(GL_TEXTURE_2D, texture);
-    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, size, size);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, kSize, kSize);
     ASSERT_GL_NO_ERROR();
 
     GLFramebuffer FBO;
@@ -446,7 +418,7 @@ TEST_P(MultisampledRenderToTextureES3Test, MultisampleReadPixelsTest)
     EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
 
     // Set viewport and clear to red
-    glViewport(0, 0, size, size);
+    glViewport(0, 0, kSize, kSize);
     glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
     ASSERT_GL_NO_ERROR();
@@ -454,8 +426,8 @@ TEST_P(MultisampledRenderToTextureES3Test, MultisampleReadPixelsTest)
     // Bind Pack Pixel Buffer and read to it
     GLBuffer PBO;
     glBindBuffer(GL_PIXEL_PACK_BUFFER, PBO);
-    glBufferData(GL_PIXEL_PACK_BUFFER, 4 * size * size, nullptr, GL_STATIC_DRAW);
-    glReadPixels(0, 0, size, size, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+    glBufferData(GL_PIXEL_PACK_BUFFER, 4 * kSize * kSize, nullptr, GL_STATIC_DRAW);
+    glReadPixels(0, 0, kSize, kSize, GL_RGBA, GL_UNSIGNED_BYTE, 0);
     ASSERT_GL_NO_ERROR();
 
     // Retrieving pixel color
@@ -470,15 +442,15 @@ TEST_P(MultisampledRenderToTextureES3Test, MultisampleReadPixelsTest)
 }
 
 // CopyTexImage from a multisampled texture functionality test.
-TEST_P(MultisampledRenderToTextureTest, MultisampleCopyTexImageTest)
+TEST_P(MultisampledRenderToTextureTest, CopyTexImageTest)
 {
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_multisampled_render_to_texture"));
-    GLsizei size = 16;
+    constexpr GLsizei kSize = 16;
 
     setupCopyTexProgram();
     GLTexture texture;
     glBindTexture(GL_TEXTURE_2D, texture);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, size, size, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
 
     // Disable mipmapping
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -501,25 +473,27 @@ TEST_P(MultisampledRenderToTextureTest, MultisampleCopyTexImageTest)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-    glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 0, 0, size, size, 0);
+    glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 0, 0, kSize, kSize, 0);
     ASSERT_GL_NO_ERROR();
 
-    GLubyte expected[4] = {64, 255, 191, 255};
-    verifyResults(copyToTex, expected, size, 0, 0, size, size);
+    verifyResults(copyToTex, {64, 255, 191, 255}, kSize, 0, 0, kSize, kSize);
 }
 
 // CopyTexSubImage from a multisampled texture functionality test.
-TEST_P(MultisampledRenderToTextureTest, MultisampleCopyTexSubImageTest)
+TEST_P(MultisampledRenderToTextureTest, CopyTexSubImageTest)
 {
+    // Fails on Pixel 2. http://anglebug.com/4906
+    ANGLE_SKIP_TEST_IF(IsAndroid());
+
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_multisampled_render_to_texture"));
-    GLsizei size = 16;
+    constexpr GLsizei kSize = 16;
 
     setupCopyTexProgram();
 
     GLTexture texture;
     // Create texture in copyFBO0 with color (.25, 1, .75, .5)
     glBindTexture(GL_TEXTURE_2D, texture);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, size, size, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
 
     // Disable mipmapping
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -538,7 +512,7 @@ TEST_P(MultisampledRenderToTextureTest, MultisampleCopyTexSubImageTest)
     // Create texture in copyFBO[1] with color (1, .75, .5, .25)
     GLTexture texture1;
     glBindTexture(GL_TEXTURE_2D, texture1);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, size, size, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
 
     // Disable mipmapping
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -564,50 +538,48 @@ TEST_P(MultisampledRenderToTextureTest, MultisampleCopyTexSubImageTest)
     // copyFBO0 -> copyToTex
     // copyToTex should hold what was originally in copyFBO0 : (.25, 1, .75, .5)
     glBindFramebuffer(GL_FRAMEBUFFER, copyFBO0);
-    glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 0, 0, size, size, 0);
+    glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 0, 0, kSize, kSize, 0);
     ASSERT_GL_NO_ERROR();
 
-    GLubyte expected0[4] = {64, 255, 191, 255};
-    verifyResults(copyToTex, expected0, size, 0, 0, size, size);
+    const GLColor expected0(64, 255, 191, 255);
+    verifyResults(copyToTex, expected0, kSize, 0, 0, kSize, kSize);
 
     // copyFBO[1] - copySubImage -> copyToTex
     // copyToTex should have subportion what was in copyFBO[1] : (1, .75, .5, .25)
     // The rest should still be untouched: (.25, 1, .75, .5)
-    GLint half = size / 2;
+    GLint half = kSize / 2;
     glBindFramebuffer(GL_FRAMEBUFFER, copyFBO1);
     glCopyTexSubImage2D(GL_TEXTURE_2D, 0, half, half, half, half, half, half);
     ASSERT_GL_NO_ERROR();
 
-    GLubyte expected1[4] = {255, 191, 127, 255};
-    verifyResults(copyToTex, expected1, size, half, half, size, size);
+    const GLColor expected1(255, 191, 127, 255);
+    verifyResults(copyToTex, expected1, kSize, half, half, kSize, kSize);
 
     // Verify rest is untouched
-    verifyResults(copyToTex, expected0, size, 0, 0, half, half);
-    verifyResults(copyToTex, expected0, size, 0, half, half, size);
-    verifyResults(copyToTex, expected0, size, half, 0, size, half);
+    verifyResults(copyToTex, expected0, kSize, 0, 0, half, half);
+    verifyResults(copyToTex, expected0, kSize, 0, half, half, kSize);
+    verifyResults(copyToTex, expected0, kSize, half, 0, kSize, half);
 }
 
 // BlitFramebuffer functionality test. ES3+.
-TEST_P(MultisampledRenderToTextureES3Test, MultisampleBlitFramebufferTest)
+TEST_P(MultisampledRenderToTextureES3Test, BlitFramebufferTest)
 {
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_multisampled_render_to_texture"));
-    // blitFramebuffer only available ES3 and above
-    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3);
 
-    GLsizei size = 16;
+    constexpr GLsizei kSize = 16;
 
     // Create multisampled framebuffer to use as source.
     GLRenderbuffer depthMS;
-    glBindRenderbuffer(GL_RENDERBUFFER, depthMS.get());
-    glRenderbufferStorageMultisampleEXT(GL_RENDERBUFFER, 4, GL_DEPTH_COMPONENT24, size, size);
+    glBindRenderbuffer(GL_RENDERBUFFER, depthMS);
+    glRenderbufferStorageMultisampleEXT(GL_RENDERBUFFER, 4, GL_DEPTH_COMPONENT24, kSize, kSize);
 
     GLTexture colorMS;
     glBindTexture(GL_TEXTURE_2D, colorMS);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, size, size, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
 
     GLFramebuffer fboMS;
     glBindFramebuffer(GL_FRAMEBUFFER, fboMS);
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthMS.get());
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthMS);
     glFramebufferTexture2DMultisampleEXT(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
                                          colorMS, 0, 4);
     ASSERT_GL_NO_ERROR();
@@ -623,7 +595,7 @@ TEST_P(MultisampledRenderToTextureES3Test, MultisampleBlitFramebufferTest)
     ANGLE_GL_PROGRAM(drawRed, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_EQUAL);
-    drawQuad(drawRed.get(), essl1_shaders::PositionAttrib(), 0.0f);
+    drawQuad(drawRed, essl1_shaders::PositionAttrib(), 0.0f);
     ASSERT_GL_NO_ERROR();
 
     // Create single sampled framebuffer to use as dest.
@@ -631,61 +603,42 @@ TEST_P(MultisampledRenderToTextureES3Test, MultisampleBlitFramebufferTest)
     glBindFramebuffer(GL_FRAMEBUFFER, fboSS);
     GLTexture colorSS;
     glBindTexture(GL_TEXTURE_2D, colorSS);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, size, size, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorSS, 0);
     ASSERT_GL_NO_ERROR();
 
     // Bind MS to READ as SS is already bound to DRAW.
-    glBindFramebuffer(GL_READ_FRAMEBUFFER, fboMS.get());
-    glBlitFramebuffer(0, 0, size, size, 0, 0, size, size, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, fboMS);
+    glBlitFramebuffer(0, 0, kSize, kSize, 0, 0, kSize, kSize, GL_COLOR_BUFFER_BIT, GL_NEAREST);
     ASSERT_GL_NO_ERROR();
 
     // Bind SS to READ so we can readPixels from it
-    glBindFramebuffer(GL_FRAMEBUFFER, fboSS.get());
+    glBindFramebuffer(GL_FRAMEBUFFER, fboSS);
 
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
-    EXPECT_PIXEL_COLOR_EQ(size - 1, 0, GLColor::red);
-    EXPECT_PIXEL_COLOR_EQ(0, size - 1, GLColor::red);
-    EXPECT_PIXEL_COLOR_EQ(size - 1, size - 1, GLColor::red);
-    EXPECT_PIXEL_COLOR_EQ(size / 2, size / 2, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(kSize - 1, 0, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(0, kSize - 1, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(kSize - 1, kSize - 1, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(kSize / 2, kSize / 2, GLColor::red);
     ASSERT_GL_NO_ERROR();
 }
 
 // GenerateMipmap functionality test
-TEST_P(MultisampledRenderToTextureTest, MultisampleGenerateMipmapTest)
+TEST_P(MultisampledRenderToTextureTest, GenerateMipmapTest)
 {
+    // Fails on Pixel 2. http://anglebug.com/4906
+    ANGLE_SKIP_TEST_IF(IsAndroid());
+
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_multisampled_render_to_texture"));
-    GLsizei size = 64;
-    // Vertex Shader source
-    constexpr char kVS[] = R"(attribute vec4 position;
-varying vec2 vTexCoord;
+    constexpr GLsizei kSize = 64;
 
-void main()
-{
-    gl_Position = position;
-    vTexCoord   = (position.xy * 0.5) + 0.5;
-})";
-
-    // Fragment Shader source
-    constexpr char kFS[] = R"(precision mediump float;
-uniform sampler2D uTexture;
-varying vec2 vTexCoord;
-
-void main()
-{
-    gl_FragColor = texture2D(uTexture, vTexCoord);
-})";
-
-    GLProgram m2DProgram;
-    m2DProgram.makeRaster(kVS, kFS);
-    ASSERT_GL_TRUE(m2DProgram.valid());
-
-    ASSERT_GL_NO_ERROR();
+    setupCopyTexProgram();
+    glUseProgram(mCopyTextureProgram);
 
     // Initialize texture with blue
     GLTexture texture;
     glBindTexture(GL_TEXTURE_2D, texture);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, size, size, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, kSize, kSize, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
@@ -696,7 +649,7 @@ void main()
     ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
     glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
-    glViewport(0, 0, size, size);
+    glViewport(0, 0, kSize, kSize);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     ASSERT_GL_NO_ERROR();
 
@@ -707,32 +660,83 @@ void main()
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
 
     // Now draw the texture to various different sized areas.
-    clearAndDrawQuad(m2DProgram, size, size);
-    EXPECT_PIXEL_COLOR_EQ(size / 2, size / 2, GLColor::blue);
+    clearAndDrawQuad(mCopyTextureProgram, kSize, kSize);
+    EXPECT_PIXEL_COLOR_EQ(kSize / 2, kSize / 2, GLColor::blue);
 
     // Use mip level 1
-    clearAndDrawQuad(m2DProgram, size / 2, size / 2);
-    EXPECT_PIXEL_COLOR_EQ(size / 4, size / 4, GLColor::blue);
+    clearAndDrawQuad(mCopyTextureProgram, kSize / 2, kSize / 2);
+    EXPECT_PIXEL_COLOR_EQ(kSize / 4, kSize / 4, GLColor::blue);
 
     // Use mip level 2
-    clearAndDrawQuad(m2DProgram, size / 4, size / 4);
-    EXPECT_PIXEL_COLOR_EQ(size / 8, size / 8, GLColor::blue);
+    clearAndDrawQuad(mCopyTextureProgram, kSize / 4, kSize / 4);
+    EXPECT_PIXEL_COLOR_EQ(kSize / 8, kSize / 8, GLColor::blue);
 
     ASSERT_GL_NO_ERROR();
 }
-ANGLE_INSTANTIATE_TEST(MultisampledRenderToTextureTest,
-                       ES2_D3D9(),
-                       ES2_D3D11(),
-                       ES3_D3D11(),
-                       ES2_OPENGL(),
-                       ES3_OPENGL(),
-                       ES2_OPENGLES(),
-                       ES3_OPENGLES(),
-                       ES2_VULKAN(),
-                       ES3_VULKAN());
-ANGLE_INSTANTIATE_TEST(MultisampledRenderToTextureES3Test,
-                       ES3_D3D11(),
-                       ES3_OPENGL(),
-                       ES3_OPENGLES(),
-                       ES3_VULKAN());
+
+// Draw, copy, then blend.  The copy will make sure an implicit resolve happens.  Regardless, the
+// following draw should retain the data written by the first draw command.
+TEST_P(MultisampledRenderToTextureTest, DrawCopyThenBlend)
+{
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_multisampled_render_to_texture"));
+    constexpr GLsizei kSize = 64;
+
+    setupCopyTexProgram();
+
+    // Create multisampled framebuffer to draw into
+    GLTexture colorMS;
+    glBindTexture(GL_TEXTURE_2D, colorMS);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    GLFramebuffer fboMS;
+    glBindFramebuffer(GL_FRAMEBUFFER, fboMS);
+    glFramebufferTexture2DMultisampleEXT(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
+                                         colorMS, 0, 4);
+    ASSERT_GL_NO_ERROR();
+
+    // Draw red into the multisampled color buffer.
+    ANGLE_GL_PROGRAM(drawColor, essl1_shaders::vs::Simple(), essl1_shaders::fs::UniformColor());
+    glUseProgram(drawColor);
+    GLint colorUniformLocation =
+        glGetUniformLocation(drawColor, angle::essl1_shaders::ColorUniform());
+    ASSERT_NE(colorUniformLocation, -1);
+
+    glUniform4f(colorUniformLocation, 1.0f, 0.0f, 0.0f, 1.0f);
+    drawQuad(drawColor, essl1_shaders::PositionAttrib(), 0.5f);
+    ASSERT_GL_NO_ERROR();
+
+    // Create a texture and copy into it.
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 0, 0, kSize, kSize, 0);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    // Draw again into the framebuffer, this time blending.  This tests that the framebuffer's data,
+    // residing in the single-sampled texture, is available to the multisampled intermediate image
+    // for blending.
+
+    // Blend half-transparent green into the multisampled color buffer.
+    glUniform4f(colorUniformLocation, 0.0f, 1.0f, 0.0f, 0.5f);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    drawQuad(drawColor, essl1_shaders::PositionAttrib(), 0.5f);
+    ASSERT_GL_NO_ERROR();
+
+    // Verify that the texture is now yellow
+    const GLColor kExpected(127, 127, 0, 191);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, kExpected, 1);
+    EXPECT_PIXEL_COLOR_NEAR(kSize - 1, 0, kExpected, 1);
+    EXPECT_PIXEL_COLOR_NEAR(0, kSize - 1, kExpected, 1);
+    EXPECT_PIXEL_COLOR_NEAR(kSize - 1, kSize - 1, kExpected, 1);
+
+    // For completeness, verify that the texture used as copy target is red.
+    const GLColor expectedCopyResult(255, 0, 0, 255);
+    verifyResults(texture, expectedCopyResult, kSize, 0, 0, kSize, kSize);
+
+    ASSERT_GL_NO_ERROR();
+}
+
+ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(MultisampledRenderToTextureTest);
+ANGLE_INSTANTIATE_TEST_ES3(MultisampledRenderToTextureES3Test);
 }  // namespace

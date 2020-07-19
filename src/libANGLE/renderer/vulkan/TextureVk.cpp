@@ -1828,6 +1828,54 @@ angle::Result TextureVk::getAttachmentRenderTarget(const gl::Context *context,
                             levelCount));
     }
 
+    // If samples > 1 here, we have a singlesampled texture that's being multisampled rendered to.
+    // In this case, create a multisampled image that is otherwise identical to the single sampled
+    // image.  That multisampled image is used as color or depth/stencil attachment, while the
+    // original image is used as the resolve attachment.
+    if (samples > 1 && !mMultisampledImage.valid())
+    {
+        ASSERT(mState.getBaseLevelDesc().samples <= 1);
+
+        // The image is used as either color or depth/stencil attachment.  Additionally, its memory
+        // is lazily allocated as the contents are discarded at the end of the renderpass and with
+        // tiling GPUs no actual backing memory is required.
+        //
+        // Note that the Vulkan image is created with or without
+        // VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT based on whether the memory that will be used to
+        // create the image would have VK_MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT.  TRANSIENT is
+        // provided if there is any memory that supports LAZILY_ALLOCATED.  However, based on actual
+        // image requirements, such a memory may not be suitable for the image.  We don't support
+        // such a case, which will result in the |initMemory| call below failing.
+        const vk::MemoryProperties &memoryProperties =
+            contextVk->getRenderer()->getMemoryProperties();
+        const bool hasLazilyAllocatedMemory = memoryProperties.hasLazilyAllocatedMemory();
+
+        const VkImageUsageFlags kMultisampledUsageFlags =
+            (hasLazilyAllocatedMemory ? VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT : 0) |
+            (mImage->getAspectFlags() == VK_IMAGE_ASPECT_COLOR_BIT
+                 ? VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT
+                 : VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT);
+        constexpr VkImageCreateFlags kMultisampledCreateFlags = 0;
+
+        ANGLE_TRY(mMultisampledImage.initExternal(
+            contextVk, mState.getType(), mImage->getExtents(), mImage->getFormat(), samples,
+            kMultisampledUsageFlags, kMultisampledCreateFlags, rx::vk::ImageLayout::Undefined,
+            nullptr, mImage->getBaseLevel(), mImage->getMaxLevel(), mImage->getLevelCount(),
+            mImage->getLayerCount()));
+
+        const VkMemoryPropertyFlags kMultisampledMemoryFlags =
+            VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT |
+            (hasLazilyAllocatedMemory ? VK_MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT : 0);
+
+        ANGLE_TRY(mMultisampledImage.initMemory(
+            contextVk, contextVk->getRenderer()->getMemoryProperties(), kMultisampledMemoryFlags));
+
+        // Remove the emulated format clear from the multisampled image if any.  There is one
+        // already staged on the resolve image if needed.
+        mMultisampledImage.removeStagedUpdates(contextVk, mMultisampledImage.getBaseLevel(),
+                                               mMultisampledImage.getMaxLevel());
+    }
+
     // Don't flush staged updates here. We'll handle that in FramebufferVk so it can defer clears.
 
     GLuint layerIndex = 0, layerCount = 0;
@@ -1902,8 +1950,35 @@ angle::Result TextureVk::initRenderTargets(ContextVk *contextVk,
 
     for (uint32_t layerIndex = 0; layerIndex < layerCount; ++layerIndex)
     {
+        vk::ImageHelper *drawImage             = mImage;
+        vk::ImageViewHelper *drawImageViews    = &mImageViews;
+        vk::ImageHelper *resolveImage          = nullptr;
+        vk::ImageViewHelper *resolveImageViews = nullptr;
+
+        // If multisampled render to texture, use the multisampled image as draw image instead, and
+        // resolve into the texture's image automatically.
+        if (mMultisampledImage.valid())
+        {
+            drawImage         = &mMultisampledImage;
+            drawImageViews    = &mMultisampledImageViews;
+            resolveImage      = mImage;
+            resolveImageViews = &mImageViews;
+
+            // If the texture is depth/stencil, GL_EXT_multisampled_render_to_texture2 explicitly
+            // indicates that there is no need for the image to be resolved.  In that case, don't
+            // specify the resolve image.  Note that the multisampled image's data is discarded
+            // nevertheless per this spec.
+            if (mImage->getAspectFlags() != VK_IMAGE_ASPECT_COLOR_BIT)
+            {
+                resolveImage      = nullptr;
+                resolveImageViews = nullptr;
+            }
+        }
+
         mRenderTargets[levelIndex][layerIndex].init(
-            mImage, &mImageViews, getNativeImageLevel(levelIndex), getNativeImageLayer(layerIndex));
+            drawImage, drawImageViews, resolveImage, resolveImageViews,
+            getNativeImageLevel(levelIndex), getNativeImageLayer(layerIndex),
+            mMultisampledImage.valid());
     }
     return angle::Result::Continue;
 }
@@ -2263,8 +2338,13 @@ void TextureVk::releaseImage(ContextVk *contextVk)
             mImage = nullptr;
         }
     }
+    if (mMultisampledImage.valid())
+    {
+        mMultisampledImage.releaseImage(renderer);
+    }
 
     mImageViews.release(renderer);
+    mMultisampledImageViews.release(renderer);
 
     for (RenderTargetVector &renderTargetLevels : mRenderTargets)
     {

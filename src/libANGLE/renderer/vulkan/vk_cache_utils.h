@@ -75,6 +75,8 @@ class alignas(4) RenderPassDesc final
     // The caller must pack the depth/stencil attachment last, which is packed right after the color
     // attachments (including gaps), i.e. with an index starting from |colorAttachmentRange()|.
     void packDepthStencilAttachment(angle::FormatID angleFormatID);
+    // Indicate that a color attachment should have a corresponding resolve attachment.
+    void packColorResolveAttachment(size_t colorIndexGL);
 
     size_t hash() const;
 
@@ -84,6 +86,10 @@ class alignas(4) RenderPassDesc final
 
     bool isColorAttachmentEnabled(size_t colorIndexGL) const;
     bool hasDepthStencilAttachment() const { return mHasDepthStencilAttachment; }
+    bool hasColorResolveAttachment(size_t colorIndexGL) const
+    {
+        return mColorResolveAttachmentMask.test(colorIndexGL);
+    }
 
     // Get the number of attachments in the Vulkan render pass, i.e. after removing disabled
     // color attachments.
@@ -104,8 +110,15 @@ class alignas(4) RenderPassDesc final
     uint8_t mLogSamples : 3;
     uint8_t mColorAttachmentRange : 4;
     uint8_t mHasDepthStencilAttachment : 1;
-    // Temporary padding for upcoming support for resolve attachments.
-    ANGLE_MAYBE_UNUSED uint8_t pad;
+    // Whether each color attachment has a corresponding resolve attachment.  Color resolve
+    // attachments can be used to optimize resolve through glBlitFramebuffer() as well as support
+    // GL_EXT_multisampled_render_to_texture and GL_EXT_multisampled_render_to_texture2.
+    //
+    // Note that depth/stencil resolve attachments require VK_KHR_depth_stencil_resolve which is
+    // currently not well supported, so ANGLE always takes a fallback path for them.  When a resolve
+    // path is implemented for depth/stencil attachments, another bit must be made free
+    // (mAttachmentFormats is one element too large, so there are 8 bits there to take).
+    angle::BitSet8<gl::IMPLEMENTATION_MAX_DRAW_BUFFERS> mColorResolveAttachmentMask;
     // Color attachment formats are stored with their GL attachment indices.  The depth/stencil
     // attachment formats follow the last enabled color attachment.  When creating a render pass,
     // the disabled attachments are removed and the resulting attachments are packed.
@@ -126,6 +139,8 @@ class alignas(4) RenderPassDesc final
     //  - Subpass attachment 2 -> VK_ATTACHMENT_UNUSED
     //  - Subpass attachment 3 -> Renderpass attachment 1
     //
+    // The resolve attachments are packed after the non-resolve attachments.  They use the same
+    // formats, so they are not specified in this array.
     gl::AttachmentArray<uint8_t> mAttachmentFormats;
 };
 
@@ -837,8 +852,11 @@ class UniformsAndXfbDesc
     std::array<BufferSerial, kMaxBufferCount> mBufferSerials;
 };
 
-// This is IMPLEMENTATION_MAX_DRAW_BUFFERS + 1 for DS attachment
-constexpr size_t kMaxFramebufferAttachments = gl::IMPLEMENTATION_MAX_FRAMEBUFFER_ATTACHMENTS;
+// There can be a maximum of IMPLEMENTATION_MAX_DRAW_BUFFERS color and resolve attachments, plus one
+// depth/stencil attachment.
+constexpr size_t kMaxFramebufferAttachments = gl::IMPLEMENTATION_MAX_DRAW_BUFFERS * 2 + 1;
+template <typename T>
+using FramebufferAttachmentArray = std::array<T, kMaxFramebufferAttachments>;
 
 class FramebufferDesc
 {
@@ -850,6 +868,7 @@ class FramebufferDesc
     FramebufferDesc &operator=(const FramebufferDesc &other);
 
     void updateColor(uint32_t index, ImageViewSerial serial);
+    void updateColorResolve(uint32_t index, ImageViewSerial serial);
     void updateDepthStencil(ImageViewSerial serial);
     size_t hash() const;
     void reset();
@@ -861,7 +880,7 @@ class FramebufferDesc
   private:
     void update(uint32_t index, ImageViewSerial serial);
 
-    gl::AttachmentArray<ImageViewSerial> mSerials;
+    FramebufferAttachmentArray<ImageViewSerial> mSerials;
     uint32_t mMaxValidSerialIndex;
 };
 
