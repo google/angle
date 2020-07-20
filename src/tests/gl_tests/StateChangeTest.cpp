@@ -1430,9 +1430,31 @@ class SimpleStateChangeTest : public ANGLETest
 };
 
 class SimpleStateChangeTestES3 : public SimpleStateChangeTest
-{};
+{
+  protected:
+    void blendAndVerifyColor(const GLColor32F blendColor, const GLColor expectedColor)
+    {
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        EXPECT_GL_NO_ERROR();
 
-class SimpleStateChangeTestES31 : public SimpleStateChangeTest
+        ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::UniformColor());
+        glUseProgram(program);
+
+        GLint colorUniformLocation =
+            glGetUniformLocation(program, angle::essl1_shaders::ColorUniform());
+        ASSERT_NE(colorUniformLocation, -1);
+
+        glUniform4f(colorUniformLocation, blendColor.R, blendColor.G, blendColor.B, blendColor.A);
+        EXPECT_GL_NO_ERROR();
+
+        drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+        EXPECT_GL_NO_ERROR();
+        EXPECT_PIXEL_COLOR_NEAR(0, 0, expectedColor, 1);
+    }
+};
+
+class SimpleStateChangeTestES31 : public SimpleStateChangeTestES3
 {};
 
 class SimpleStateChangeTestComputeES31 : public SimpleStateChangeTest
@@ -2527,6 +2549,258 @@ TEST_P(SimpleStateChangeTestES3, ReadFramebufferDrawFramebufferDifferentAttachme
 
     glBindFramebuffer(GL_READ_FRAMEBUFFER, drawFBO);
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
+}
+
+// Tests that invalidate then copy then blend works.
+TEST_P(SimpleStateChangeTestES3, InvalidateThenCopyThenBlend)
+{
+    // Create a framebuffer as the source of copy
+    const GLColor kSrcData = GLColor::cyan;
+    GLTexture copySrc;
+    glBindTexture(GL_TEXTURE_2D, copySrc);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, &kSrcData);
+
+    GLFramebuffer readFBO;
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, readFBO);
+    glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, copySrc, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_READ_FRAMEBUFFER);
+
+    // Create the framebuffer that will be invalidated
+    GLTexture renderTarget;
+    glBindTexture(GL_TEXTURE_2D, renderTarget);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    GLFramebuffer drawFBO;
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, drawFBO);
+    glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, renderTarget,
+                           0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_DRAW_FRAMEBUFFER);
+
+    EXPECT_GL_NO_ERROR();
+
+    // Clear the framebuffer and invalidate it.
+    glClearColor(1.0f, 1.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    GLenum invalidateAttachment = GL_COLOR_ATTACHMENT0;
+    glInvalidateFramebuffer(GL_DRAW_FRAMEBUFFER, 1, &invalidateAttachment);
+    EXPECT_GL_NO_ERROR();
+
+    // Copy into the framebuffer's texture.  The framebuffer should now be cyan.
+    glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, 1, 1);
+    EXPECT_GL_NO_ERROR();
+
+    // Blend into the framebuffer, then verify that the framebuffer should have had cyan.
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, drawFBO);
+    blendAndVerifyColor(GLColor32F(1.0f, 0.0f, 0.0f, 0.5f), GLColor(127, 127, 127, 191));
+}
+
+// Tests that invalidate then blit then blend works.
+TEST_P(SimpleStateChangeTestES3, InvalidateThenBlitThenBlend)
+{
+    // Create a framebuffer as the source of blit
+    const GLColor kSrcData = GLColor::cyan;
+    GLTexture blitSrc;
+    glBindTexture(GL_TEXTURE_2D, blitSrc);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, &kSrcData);
+
+    GLFramebuffer readFBO;
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, readFBO);
+    glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, blitSrc, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_READ_FRAMEBUFFER);
+
+    // Create the framebuffer that will be invalidated
+    GLTexture renderTarget;
+    glBindTexture(GL_TEXTURE_2D, renderTarget);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    GLFramebuffer drawFBO;
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, drawFBO);
+    glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, renderTarget,
+                           0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_DRAW_FRAMEBUFFER);
+
+    EXPECT_GL_NO_ERROR();
+
+    // Clear the framebuffer and invalidate it.
+    glClearColor(1.0f, 1.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    GLenum invalidateAttachment = GL_COLOR_ATTACHMENT0;
+    glInvalidateFramebuffer(GL_DRAW_FRAMEBUFFER, 1, &invalidateAttachment);
+    EXPECT_GL_NO_ERROR();
+
+    // Blit into the framebuffer.  The framebuffer should now be cyan.
+    glBlitFramebuffer(0, 0, 1, 1, 0, 0, 1, 1, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+    EXPECT_GL_NO_ERROR();
+
+    // Blend into the framebuffer, then verify that the framebuffer should have had cyan.
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, drawFBO);
+    blendAndVerifyColor(GLColor32F(1.0f, 0.0f, 0.0f, 0.5f), GLColor(127, 127, 127, 191));
+}
+
+// Tests that invalidate then generate mipmaps works
+TEST_P(SimpleStateChangeTestES3, InvalidateThenGenerateMipmapsThenBlend)
+{
+    // Create a texture on which generate mipmaps would be called
+    const GLColor kMip0Data[4] = {GLColor::cyan, GLColor::cyan, GLColor::cyan, GLColor::cyan};
+    const GLColor kMip1Data    = GLColor::blue;
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, kMip0Data);
+    glTexImage2D(GL_TEXTURE_2D, 1, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, &kMip1Data);
+
+    // Create the framebuffer that will be invalidated
+    GLFramebuffer drawFBO;
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, drawFBO);
+    glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 1);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_DRAW_FRAMEBUFFER);
+
+    EXPECT_GL_NO_ERROR();
+
+    // Clear the framebuffer and invalidate it.
+    glClearColor(1.0f, 1.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    GLenum invalidateAttachment = GL_COLOR_ATTACHMENT0;
+    glInvalidateFramebuffer(GL_DRAW_FRAMEBUFFER, 1, &invalidateAttachment);
+    EXPECT_GL_NO_ERROR();
+
+    // Generate mipmaps
+    glGenerateMipmap(GL_TEXTURE_2D);
+
+    // Blend into the framebuffer, then verify that the framebuffer should have had cyan.
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, drawFBO);
+    blendAndVerifyColor(GLColor32F(1.0f, 0.0f, 0.0f, 0.5f), GLColor(127, 127, 127, 191));
+}
+
+// Tests that invalidate then upload works
+TEST_P(SimpleStateChangeTestES3, InvalidateThenUploadThenBlend)
+{
+    // http://anglebug.com/4870
+    ANGLE_SKIP_TEST_IF(IsAndroid() && IsOpenGLES());
+
+    // Create the framebuffer that will be invalidated
+    GLTexture renderTarget;
+    glBindTexture(GL_TEXTURE_2D, renderTarget);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    GLFramebuffer drawFBO;
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, drawFBO);
+    glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, renderTarget,
+                           0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_DRAW_FRAMEBUFFER);
+
+    EXPECT_GL_NO_ERROR();
+
+    // Clear the framebuffer and invalidate it.
+    glClearColor(1.0f, 1.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    GLenum invalidateAttachment = GL_COLOR_ATTACHMENT0;
+    glInvalidateFramebuffer(GL_DRAW_FRAMEBUFFER, 1, &invalidateAttachment);
+    EXPECT_GL_NO_ERROR();
+
+    // Upload data to it
+    const GLColor kUploadColor = GLColor::cyan;
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, &kUploadColor);
+
+    // Blend into the framebuffer, then verify that the framebuffer should have had cyan.
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, drawFBO);
+    blendAndVerifyColor(GLColor32F(1.0f, 0.0f, 0.0f, 0.5f), GLColor(127, 127, 127, 191));
+}
+
+// Tests that invalidate then sub upload works
+TEST_P(SimpleStateChangeTestES3, InvalidateThenSubUploadThenBlend)
+{
+    // http://anglebug.com/4870
+    ANGLE_SKIP_TEST_IF(IsAndroid() && IsOpenGLES());
+
+    // Create the framebuffer that will be invalidated
+    GLTexture renderTarget;
+    glBindTexture(GL_TEXTURE_2D, renderTarget);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    GLFramebuffer drawFBO;
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, drawFBO);
+    glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, renderTarget,
+                           0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_DRAW_FRAMEBUFFER);
+
+    EXPECT_GL_NO_ERROR();
+
+    // Clear the framebuffer and invalidate it.
+    glClearColor(1.0f, 1.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    GLenum invalidateAttachment = GL_COLOR_ATTACHMENT0;
+    glInvalidateFramebuffer(GL_DRAW_FRAMEBUFFER, 1, &invalidateAttachment);
+    EXPECT_GL_NO_ERROR();
+
+    // Upload data to it
+    const GLColor kUploadColor = GLColor::cyan;
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, &kUploadColor);
+
+    // Blend into the framebuffer, then verify that the framebuffer should have had cyan.
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, drawFBO);
+    blendAndVerifyColor(GLColor32F(1.0f, 0.0f, 0.0f, 0.5f), GLColor(127, 127, 127, 191));
+}
+
+// Tests that invalidate then compute write works
+TEST_P(SimpleStateChangeTestES31, InvalidateThenStorageWriteThenBlend)
+{
+    // Fails on AMD OpenGL Windows. This configuration isn't maintained.
+    ANGLE_SKIP_TEST_IF(IsWindows() && IsAMD() && IsOpenGL());
+
+    constexpr char kCS[] = R"(#version 310 es
+layout(local_size_x=1, local_size_y=1) in;
+layout (rgba8, binding = 1) writeonly uniform highp image2D dstImage;
+void main()
+{
+    imageStore(dstImage, ivec2(gl_GlobalInvocationID.xy), vec4(0.0f, 1.0f, 1.0f, 1.0f));
+})";
+
+    ANGLE_GL_COMPUTE_PROGRAM(program, kCS);
+    glUseProgram(program);
+    EXPECT_GL_NO_ERROR();
+
+    // Create the framebuffer texture
+    GLTexture renderTarget;
+    glBindTexture(GL_TEXTURE_2D, renderTarget);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, 1, 1);
+    glBindImageTexture(1, renderTarget, 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_RGBA8);
+
+    // Write to the texture with compute once.  In the Vulkan backend, this will make sure the image
+    // is already created with STORAGE usage and avoids recreate later.
+    glDispatchCompute(1, 1, 1);
+    EXPECT_GL_NO_ERROR();
+
+    // Create the framebuffer that will be invalidated
+    GLFramebuffer drawFBO;
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, drawFBO);
+    glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, renderTarget,
+                           0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_DRAW_FRAMEBUFFER);
+
+    EXPECT_GL_NO_ERROR();
+
+    // Clear the framebuffer and invalidate it.
+    glClearColor(1.0f, 1.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    GLenum invalidateAttachment = GL_COLOR_ATTACHMENT0;
+    glInvalidateFramebuffer(GL_DRAW_FRAMEBUFFER, 1, &invalidateAttachment);
+    EXPECT_GL_NO_ERROR();
+
+    // Write to it with a compute shader
+    glDispatchCompute(1, 1, 1);
+    EXPECT_GL_NO_ERROR();
+
+    glMemoryBarrier(GL_FRAMEBUFFER_BARRIER_BIT);
+
+    // Blend into the framebuffer, then verify that the framebuffer should have had cyan.
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, drawFBO);
+    blendAndVerifyColor(GLColor32F(1.0f, 0.0f, 0.0f, 0.5f), GLColor(127, 127, 127, 191));
 }
 
 // Tests deleting a Framebuffer that is in use.

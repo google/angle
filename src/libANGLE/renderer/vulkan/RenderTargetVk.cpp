@@ -172,8 +172,12 @@ vk::ImageHelper &RenderTargetVk::getImageForWrite() const
 
 angle::Result RenderTargetVk::flushStagedUpdates(ContextVk *contextVk,
                                                  vk::ClearValuesArray *deferredClears,
-                                                 uint32_t deferredClearIndex) const
+                                                 uint32_t deferredClearIndex)
 {
+    // This function is called when the framebuffer is notified of an update to the attachment's
+    // contents.  Therefore, set mContentDefined so that the next render pass will have loadOp=LOAD.
+    mContentDefined = true;
+
     // Note that the layer index for 3D textures is always zero according to Vulkan.
     uint32_t layerIndex = mLayerIndex;
     if (mImage->getType() == VK_IMAGE_TYPE_3D)

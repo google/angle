@@ -81,7 +81,7 @@ class RenderTargetVk final : public FramebufferAttachmentRenderTarget
 
     angle::Result flushStagedUpdates(ContextVk *contextVk,
                                      vk::ClearValuesArray *deferredClears,
-                                     uint32_t deferredClearIndex) const;
+                                     uint32_t deferredClearIndex);
 
     void retainImageViews(ContextVk *contextVk) const;
 

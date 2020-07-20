@@ -968,7 +968,7 @@ void GetSamplePosition(GLsizei sampleCount, size_t index, GLfloat *xy)
         ANGLE_SET_BASE_INSTANCE_UNIFORM(hasBaseInstance)(baseInstances[drawID]);               \
         ANGLE_TRY(DRAW_CALL(drawType, instanced, bvbi));                                       \
         ANGLE_MARK_TRANSFORM_FEEDBACK_USAGE(instanced);                                        \
-        gl::MarkShaderStorageBufferUsage(context);                                             \
+        gl::MarkShaderStorageUsage(context);                                                   \
     }
 
 angle::Result MultiDrawArraysGeneral(ContextImpl *contextImpl,

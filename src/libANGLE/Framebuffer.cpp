@@ -1551,7 +1551,27 @@ angle::Result Framebuffer::blit(const Context *context,
 {
     ASSERT(mask != 0);
 
-    return mImpl->blit(context, sourceArea, destArea, mask, filter);
+    ANGLE_TRY(mImpl->blit(context, sourceArea, destArea, mask, filter));
+
+    // Mark the contents of the attachments dirty
+    if ((mask & GL_COLOR_BUFFER_BIT) != 0)
+    {
+        for (size_t colorIndex : mState.mEnabledDrawBuffers)
+        {
+            mDirtyBits.set(DIRTY_BIT_COLOR_BUFFER_CONTENTS_0 + colorIndex);
+        }
+    }
+    if ((mask & GL_DEPTH_BUFFER_BIT) != 0)
+    {
+        mDirtyBits.set(DIRTY_BIT_DEPTH_BUFFER_CONTENTS);
+    }
+    if ((mask & GL_STENCIL_BUFFER_BIT) != 0)
+    {
+        mDirtyBits.set(DIRTY_BIT_STENCIL_BUFFER_CONTENTS);
+    }
+    onStateChange(angle::SubjectMessage::DirtyBitsFlagged);
+
+    return angle::Result::Continue;
 }
 
 int Framebuffer::getSamples(const Context *context) const

@@ -526,7 +526,7 @@ angle::Result Context11::drawElementsIndirect(const gl::Context *context,
         ASSERT(counts[drawID] > 0);                                                            \
         DRAW_CALL(drawType, instanced, bvbi);                                                  \
         ANGLE_MARK_TRANSFORM_FEEDBACK_USAGE(instanced);                                        \
-        gl::MarkShaderStorageBufferUsage(context);                                             \
+        gl::MarkShaderStorageUsage(context);                                                   \
     }
 
 angle::Result Context11::multiDrawArrays(const gl::Context *context,

@@ -46,14 +46,24 @@ ANGLE_INLINE void MarkTransformFeedbackBufferUsage(const Context *context,
     }
 }
 
-ANGLE_INLINE void MarkShaderStorageBufferUsage(const Context *context)
+ANGLE_INLINE void MarkShaderStorageUsage(const Context *context)
 {
     for (size_t index : context->getStateCache().getActiveShaderStorageBufferIndices())
     {
-        gl::Buffer *buffer = context->getState().getIndexedShaderStorageBuffer(index).get();
+        Buffer *buffer = context->getState().getIndexedShaderStorageBuffer(index).get();
         if (buffer)
         {
             buffer->onDataChanged();
+        }
+    }
+
+    for (size_t index : context->getStateCache().getActiveImageUnitIndices())
+    {
+        const ImageUnit &imageUnit = context->getState().getImageUnit(index);
+        const Texture *texture     = imageUnit.texture.get();
+        if (texture)
+        {
+            texture->onStateChange(angle::SubjectMessage::ContentsChanged);
         }
     }
 }
