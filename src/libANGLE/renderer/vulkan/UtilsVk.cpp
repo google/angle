@@ -1100,13 +1100,8 @@ angle::Result UtilsVk::clearFramebuffer(ContextVk *contextVk,
     }
 
     VkViewport viewport;
-    gl::Rectangle completeRenderArea = framebuffer->getCompleteRenderArea();
+    gl::Rectangle completeRenderArea = framebuffer->getRotatedCompleteRenderArea(contextVk);
     bool invertViewport              = contextVk->isViewportFlipEnabledForDrawFBO();
-    if (contextVk->isRotatedAspectRatioForDrawFBO())
-    {
-        // The surface is rotated 90/270 degrees.  This changes the aspect ratio of the surface.
-        std::swap(completeRenderArea.width, completeRenderArea.height);
-    }
     gl_vk::GetViewport(completeRenderArea, 0.0f, 1.0f, invertViewport, completeRenderArea.height,
                        &viewport);
     pipelineDesc.setViewport(viewport);
@@ -1322,12 +1317,7 @@ angle::Result UtilsVk::blitResolveImpl(ContextVk *contextVk,
     }
 
     VkViewport viewport;
-    gl::Rectangle completeRenderArea = framebuffer->getCompleteRenderArea();
-    if (contextVk->isRotatedAspectRatioForDrawFBO())
-    {
-        // The surface is rotated 90/270 degrees.  This changes the aspect ratio of the surface.
-        std::swap(completeRenderArea.width, completeRenderArea.height);
-    }
+    gl::Rectangle completeRenderArea = framebuffer->getRotatedCompleteRenderArea(contextVk);
     gl_vk::GetViewport(completeRenderArea, 0.0f, 1.0f, false, completeRenderArea.height, &viewport);
     pipelineDesc.setViewport(viewport);
 

@@ -960,7 +960,7 @@ angle::Result ContextVk::setupDraw(const gl::Context *context,
     // TODO(jmadill): Use dirty bit. http://anglebug.com/3014
     if (!mRenderPassCommandBuffer)
     {
-        gl::Rectangle scissoredRenderArea = mDrawFramebuffer->getScissoredRenderArea(this);
+        gl::Rectangle scissoredRenderArea = mDrawFramebuffer->getRotatedScissoredRenderArea(this);
         ANGLE_TRY(startRenderPass(scissoredRenderArea, nullptr));
     }
 
@@ -2626,7 +2626,7 @@ void ContextVk::updateDepthRange(float nearPlane, float farPlane)
 angle::Result ContextVk::updateScissor(const gl::State &glState)
 {
     FramebufferVk *framebufferVk = vk::GetImpl(glState.getDrawFramebuffer());
-    gl::Rectangle renderArea     = framebufferVk->getCompleteRenderArea();
+    gl::Rectangle renderArea     = framebufferVk->getNonRotatedCompleteRenderArea();
 
     // Clip the render area to the viewport.
     gl::Rectangle viewportClippedRenderArea;
@@ -2651,7 +2651,7 @@ angle::Result ContextVk::updateScissor(const gl::State &glState)
     // is too small, we need to start a new one.  The latter can happen if a scissored clear starts
     // a render pass, the scissor is disabled and a draw call is issued to affect the whole
     // framebuffer.
-    gl::Rectangle scissoredRenderArea = framebufferVk->getScissoredRenderArea(this);
+    gl::Rectangle scissoredRenderArea = framebufferVk->getRotatedScissoredRenderArea(this);
     if (!mRenderPassCommands->empty())
     {
         if (!mRenderPassCommands->getRenderArea().encloses(scissoredRenderArea))

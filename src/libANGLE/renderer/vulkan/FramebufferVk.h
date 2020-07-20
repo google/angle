@@ -105,8 +105,9 @@ class FramebufferVk : public FramebufferImpl
                                  void *pixels);
 
     gl::Extents getReadImageExtents() const;
-    gl::Rectangle getCompleteRenderArea() const;
-    gl::Rectangle getScissoredRenderArea(ContextVk *contextVk) const;
+    gl::Rectangle getNonRotatedCompleteRenderArea() const;
+    gl::Rectangle getRotatedCompleteRenderArea(ContextVk *contextVk) const;
+    gl::Rectangle getRotatedScissoredRenderArea(ContextVk *contextVk) const;
 
     const gl::DrawBufferMask &getEmulatedAlphaAttachmentMask() const;
     RenderTargetVk *getColorDrawRenderTarget(size_t colorIndex) const;

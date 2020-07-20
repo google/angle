@@ -277,7 +277,7 @@ angle::Result FramebufferVk::clearImpl(const gl::Context *context,
 {
     ContextVk *contextVk = vk::GetImpl(context);
 
-    const gl::Rectangle scissoredRenderArea = getScissoredRenderArea(contextVk);
+    const gl::Rectangle scissoredRenderArea = getRotatedScissoredRenderArea(contextVk);
 
     // Discard clear altogether if scissor has 0 width or height.
     if (scissoredRenderArea.width == 0 || scissoredRenderArea.height == 0)
@@ -318,14 +318,7 @@ angle::Result FramebufferVk::clearImpl(const gl::Context *context,
     // The front-end should ensure we don't attempt to clear stencil if all bits are masked.
     ASSERT(!clearStencil || stencilMask != 0);
 
-    gl::Rectangle completeRenderArea = getCompleteRenderArea();
-    if (contextVk->isRotatedAspectRatioForDrawFBO())
-    {
-        // The surface is rotated 90/270 degrees.  This changes the aspect ratio of the surface.
-        std::swap(completeRenderArea.x, completeRenderArea.y);
-        std::swap(completeRenderArea.width, completeRenderArea.height);
-    }
-    bool scissoredClear = scissoredRenderArea != completeRenderArea;
+    bool scissoredClear = scissoredRenderArea != getRotatedCompleteRenderArea(contextVk);
 
     // Special case for rendering feedback loops: clears are always valid in GL since they don't
     // sample from any textures.
@@ -553,7 +546,14 @@ angle::Result FramebufferVk::readPixels(const gl::Context *context,
     }
 
     // Flush any deferred clears.
-    ANGLE_TRY(flushDeferredClears(contextVk, fbRect));
+    gl::Rectangle rotatedFbRect = fbRect;
+    if (contextVk->isRotatedAspectRatioForReadFBO())
+    {
+        // The surface is rotated 90/270 degrees.  This changes the aspect ratio of the surface.
+        // Since fbRect.{x|y} are both 0, there's no need to swap them.
+        std::swap(rotatedFbRect.width, rotatedFbRect.height);
+    }
+    ANGLE_TRY(flushDeferredClears(contextVk, rotatedFbRect));
 
     GLuint outputSkipBytes = 0;
     PackPixelsParams params;
@@ -723,7 +723,7 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
 
     // We can sometimes end up in a blit with some clear commands saved. Ensure all clear commands
     // are issued before we issue the blit command.
-    ANGLE_TRY(flushDeferredClears(contextVk, getCompleteRenderArea()));
+    ANGLE_TRY(flushDeferredClears(contextVk, getRotatedCompleteRenderArea(contextVk)));
 
     const gl::State &glState              = contextVk->getState();
     const gl::Framebuffer *srcFramebuffer = glState.getReadFramebuffer();
@@ -895,7 +895,7 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
     // about the source area anymore.  The offset translation is done based on the original source
     // and destination rectangles.  The stretch factor is already calculated as well.
     gl::Rectangle blitArea;
-    if (!gl::ClipRectangle(getScissoredRenderArea(contextVk), srcClippedDestArea, &blitArea))
+    if (!gl::ClipRectangle(getRotatedScissoredRenderArea(contextVk), srcClippedDestArea, &blitArea))
     {
         return angle::Result::Continue;
     }
@@ -1399,7 +1399,10 @@ angle::Result FramebufferVk::syncState(const gl::Context *context,
 
     // Only defer clears for whole draw framebuffer ops. If the scissor test is on and the scissor
     // rect doesn't match the draw rect, forget it.
-    gl::Rectangle renderArea          = getCompleteRenderArea();
+    //
+    // NOTE: Neither renderArea nor scissoredRenderArea are rotated, since scissoredRenderArea did
+    // not come from FramebufferVk::getRotatedScissoredRenderArea().
+    gl::Rectangle renderArea          = getNonRotatedCompleteRenderArea();
     gl::Rectangle scissoredRenderArea = ClipRectToScissor(context->getState(), renderArea, false);
     bool deferClears = binding == GL_DRAW_FRAMEBUFFER && renderArea == scissoredRenderArea;
 
@@ -1466,7 +1469,16 @@ angle::Result FramebufferVk::syncState(const gl::Context *context,
     // channels.
     if (binding == GL_READ_FRAMEBUFFER && !mDeferredClears.empty())
     {
-        ANGLE_TRY(flushDeferredClears(contextVk, scissoredRenderArea));
+        // Rotate scissoredRenderArea based on the read FBO's rotation (different than
+        // FramebufferVk::getRotatedScissoredRenderArea(), which is based on the draw FBO's
+        // rotation).  Since the rectangle is scissored, it must be fully rotated, and not just
+        // have the width and height swapped.
+        bool invertViewport = contextVk->isViewportFlipEnabledForReadFBO();
+        gl::Rectangle rotatedScissoredRenderArea;
+        RotateRectangle(contextVk->getRotationReadFramebuffer(), invertViewport, renderArea.width,
+                        renderArea.height, scissoredRenderArea, &rotatedScissoredRenderArea);
+
+        ANGLE_TRY(flushDeferredClears(contextVk, rotatedScissoredRenderArea));
     }
 
     // No-op redundant changes to prevent closing the RenderPass.
@@ -1964,15 +1976,39 @@ gl::Extents FramebufferVk::getReadImageExtents() const
     return readRenderTarget->getExtents();
 }
 
-gl::Rectangle FramebufferVk::getCompleteRenderArea() const
+// Return the framebuffer's non-rotated render area.  This is a gl::Rectangle that is based on the
+// dimensions of the framebuffer, IS NOT rotated, and IS NOT y-flipped
+gl::Rectangle FramebufferVk::getNonRotatedCompleteRenderArea() const
 {
     const gl::Box &dimensions = mState.getDimensions();
     return gl::Rectangle(0, 0, dimensions.width, dimensions.height);
 }
 
-gl::Rectangle FramebufferVk::getScissoredRenderArea(ContextVk *contextVk) const
+// Return the framebuffer's rotated render area.  This is a gl::Rectangle that is based on the
+// dimensions of the framebuffer, IS ROTATED for the draw FBO, and IS NOT y-flipped
+//
+// Note: Since the rectangle is not scissored (i.e. x and y are guaranteed to be zero), only the
+// width and height must be swapped if the rotation is 90 or 270 degrees.
+gl::Rectangle FramebufferVk::getRotatedCompleteRenderArea(ContextVk *contextVk) const
 {
-    const gl::Rectangle renderArea = getCompleteRenderArea();
+    gl::Rectangle renderArea = getNonRotatedCompleteRenderArea();
+    if (contextVk->isRotatedAspectRatioForDrawFBO())
+    {
+        // The surface is rotated 90/270 degrees.  This changes the aspect ratio of the surface.
+        std::swap(renderArea.width, renderArea.height);
+    }
+    return renderArea;
+}
+
+// Return the framebuffer's scissored and rotated render area.  This is a gl::Rectangle that is
+// based on the dimensions of the framebuffer, is clipped to the scissor, IS ROTATED and IS
+// Y-FLIPPED for the draw FBO.
+//
+// Note: Since the rectangle is scissored, it must be fully rotated, and not just have the width
+// and height swapped.
+gl::Rectangle FramebufferVk::getRotatedScissoredRenderArea(ContextVk *contextVk) const
+{
+    const gl::Rectangle renderArea = getNonRotatedCompleteRenderArea();
     bool invertViewport            = contextVk->isViewportFlipEnabledForDrawFBO();
     gl::Rectangle scissoredArea    = ClipRectToScissor(contextVk->getState(), renderArea, false);
     gl::Rectangle rotatedScissoredArea;
