@@ -293,12 +293,15 @@ if (is_win || is_linux || is_android || is_mac || is_fuchsia) {
       # Imports "angle_restricted_traces"
       import("perf_tests/restricted_traces/restricted_traces_autogen.gni")
       sources = [
+        "perf_tests/restricted_traces/angle_trace_gl.h",
         "perf_tests/restricted_traces/restricted_traces_autogen.cpp",
         "perf_tests/restricted_traces/restricted_traces_autogen.h",
       ]
 
       data = []
       defines = [ "ANGLE_TRACE_IMPLEMENTATION" ]
+
+      include_dirs = [ "perf_tests/restricted_traces" ]
 
       foreach(_test_info, angle_restricted_traces) {
         _test_and_ctx = []

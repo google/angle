@@ -27,8 +27,6 @@ using namespace egl_platform;
 
 namespace
 {
-void FramebufferChangeCallback(void *userData, GLenum target, GLuint framebuffer);
-
 struct TracePerfParams final : public RenderTestParams
 {
     // Common default options
@@ -67,7 +65,7 @@ class TracePerfTest : public ANGLERenderTest, public ::testing::WithParamInterfa
     void destroyBenchmark() override;
     void drawBenchmark() override;
 
-    void onFramebufferChange(GLenum target, GLuint framebuffer);
+    void onReplayFramebufferChange(GLenum target, GLuint framebuffer);
 
     uint32_t mStartFrame;
     uint32_t mEndFrame;
@@ -286,8 +284,8 @@ double TracePerfTest::getHostTimeFromGLTime(GLint64 glTime)
     return mTimeline[firstSampleIndex].hostTime + hostRange * t;
 }
 
-// Callback from the perf tests.
-void TracePerfTest::onFramebufferChange(GLenum target, GLuint framebuffer)
+// Triggered when the replay calls glBindFramebuffer.
+void TracePerfTest::onReplayFramebufferChange(GLenum target, GLuint framebuffer)
 {
     if (!mIsTimestampQueryAvailable)
         return;
@@ -349,11 +347,6 @@ void TracePerfTest::saveScreenshot(const std::string &screenshotName)
     }
     getGLWindow()->swap();
     glFinish();
-}
-
-ANGLE_MAYBE_UNUSED void FramebufferChangeCallback(void *userData, GLenum target, GLuint framebuffer)
-{
-    reinterpret_cast<TracePerfTest *>(userData)->onFramebufferChange(target, framebuffer);
 }
 
 TEST_P(TracePerfTest, Run)
