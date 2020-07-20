@@ -1715,6 +1715,14 @@ bool Texture::isRenderable(const Context *context,
     {
         return ImageSibling::isRenderable(context, binding, imageIndex);
     }
+
+    // Surfaces bound to textures are always renderable. This avoids issues with surfaces with ES3+
+    // formats not being renderable when bound to textures in ES2 contexts.
+    if (mBoundSurface)
+    {
+        return true;
+    }
+
     return getAttachmentFormat(binding, imageIndex)
         .info->textureAttachmentSupport(context->getClientVersion(), context->getExtensions());
 }
