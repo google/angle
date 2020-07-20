@@ -227,7 +227,7 @@ angle::Result FramebufferVk::invalidate(const gl::Context *context,
 {
     ContextVk *contextVk = vk::GetImpl(context);
 
-    ANGLE_TRY(invalidateImpl(contextVk, count, attachments));
+    ANGLE_TRY(invalidateImpl(contextVk, count, attachments, false));
     return angle::Result::Continue;
 }
 
@@ -246,7 +246,7 @@ angle::Result FramebufferVk::invalidateSub(const gl::Context *context,
 
     if (area.encloses(contextVk->getStartedRenderPassCommands().getRenderArea()))
     {
-        ANGLE_TRY(invalidateImpl(contextVk, count, attachments));
+        ANGLE_TRY(invalidateImpl(contextVk, count, attachments, true));
     }
 
     return angle::Result::Continue;
@@ -1215,7 +1215,8 @@ bool FramebufferVk::checkStatus(const gl::Context *context) const
 
 angle::Result FramebufferVk::invalidateImpl(ContextVk *contextVk,
                                             size_t count,
-                                            const GLenum *attachments)
+                                            const GLenum *attachments,
+                                            bool isSubInvalidate)
 {
     gl::DrawBufferMask invalidateColorBuffers;
     bool invalidateDepthBuffer   = false;
@@ -1248,6 +1249,9 @@ angle::Result FramebufferVk::invalidateImpl(ContextVk *contextVk,
                     attachment == GL_COLOR ? 0u : (attachment - GL_COLOR_ATTACHMENT0));
         }
     }
+
+    // Shouldn't try to issue deferred clears if invalidating sub framebuffer.
+    ASSERT(mDeferredClears.empty() || !isSubInvalidate);
 
     // Remove deferred clears for the invalidated attachments.
     if (invalidateDepthBuffer)
@@ -1327,21 +1331,26 @@ angle::Result FramebufferVk::invalidateImpl(ContextVk *contextVk,
         ANGLE_TRY(contextVk->endRenderPass());
     }
 
-    for (size_t colorIndexGL : mState.getEnabledDrawBuffers())
+    // If not a partial invalidate, mark the contents of the invalidated attachments as undefined,
+    // so their loadOp can be set to DONT_CARE in the following render pass.
+    if (!isSubInvalidate)
     {
-        if (invalidateColorBuffers.test(colorIndexGL))
+        for (size_t colorIndexGL : mState.getEnabledDrawBuffers())
         {
-            RenderTargetVk *colorRenderTarget = colorRenderTargets[colorIndexGL];
-            ASSERT(colorRenderTarget);
-            colorRenderTarget->invalidateContent();
+            if (invalidateColorBuffers.test(colorIndexGL))
+            {
+                RenderTargetVk *colorRenderTarget = colorRenderTargets[colorIndexGL];
+                ASSERT(colorRenderTarget);
+                colorRenderTarget->invalidateEntireContent();
+            }
         }
-    }
 
-    // If we have a depth / stencil render target AND we invalidate both we'll mark it as
-    // invalid. Maybe in the future add separate depth & stencil invalid flags.
-    if (depthStencilRenderTarget && invalidateDepthBuffer && invalidateStencilBuffer)
-    {
-        depthStencilRenderTarget->invalidateContent();
+        // If we have a depth / stencil render target AND we invalidate both we'll mark it as
+        // invalid. Maybe in the future add separate depth & stencil invalid flags.
+        if (depthStencilRenderTarget && invalidateDepthBuffer && invalidateStencilBuffer)
+        {
+            depthStencilRenderTarget->invalidateEntireContent();
+        }
     }
 
     return angle::Result::Continue;

@@ -2803,6 +2803,47 @@ void main()
     blendAndVerifyColor(GLColor32F(1.0f, 0.0f, 0.0f, 0.5f), GLColor(127, 127, 127, 191));
 }
 
+// Tests that sub-invalidate then draw works.
+TEST_P(SimpleStateChangeTestES3, SubInvalidateThenDraw)
+{
+    // Fails on AMD OpenGL Windows. This configuration isn't maintained.
+    ANGLE_SKIP_TEST_IF(IsWindows() && IsAMD() && IsOpenGL());
+
+    // Create the framebuffer that will be invalidated
+    GLTexture renderTarget;
+    glBindTexture(GL_TEXTURE_2D, renderTarget);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    GLFramebuffer drawFBO;
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, drawFBO);
+    glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, renderTarget,
+                           0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_DRAW_FRAMEBUFFER);
+
+    EXPECT_GL_NO_ERROR();
+
+    // Clear the framebuffer.
+    glClearColor(1.0f, 1.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    // Draw into a quarter of the framebuffer, then invalidate that same region.
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
+    glEnable(GL_SCISSOR_TEST);
+    glScissor(1, 1, 1, 1);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+
+    // Only invalidate a quarter of the framebuffer.
+    GLenum invalidateAttachment = GL_COLOR_ATTACHMENT0;
+    glInvalidateSubFramebuffer(GL_DRAW_FRAMEBUFFER, 1, &invalidateAttachment, 1, 1, 1, 1);
+    EXPECT_GL_NO_ERROR();
+
+    glDisable(GL_SCISSOR_TEST);
+
+    // Blend into the framebuffer, then verify that the framebuffer should have had cyan.
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, drawFBO);
+    blendAndVerifyColor(GLColor32F(0.0f, 0.0f, 1.0f, 0.5f), GLColor(127, 127, 127, 191));
+}
+
 // Tests deleting a Framebuffer that is in use.
 TEST_P(SimpleStateChangeTest, DeleteFramebufferInUse)
 {

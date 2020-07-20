@@ -196,7 +196,10 @@ class FramebufferVk : public FramebufferImpl
     angle::Result updateColorAttachment(const gl::Context *context,
                                         bool deferClears,
                                         uint32_t colorIndex);
-    angle::Result invalidateImpl(ContextVk *contextVk, size_t count, const GLenum *attachments);
+    angle::Result invalidateImpl(ContextVk *contextVk,
+                                 size_t count,
+                                 const GLenum *attachments,
+                                 bool isSubInvalidate);
     // Release all FramebufferVk objects in the cache and clear cache
     void clearCache(ContextVk *contextVk);
     angle::Result updateDepthStencilAttachment(const gl::Context *context, bool deferClears);

@@ -2409,7 +2409,7 @@ void ContextVk::optimizeRenderPassForPresent(VkFramebuffer framebufferHandle)
         mRenderPassCommands->invalidateRenderPassStencilAttachment(depthStencilAttachmentIndexVk);
         mRenderPassCommands->invalidateRenderPassDepthAttachment(depthStencilAttachmentIndexVk);
         // Mark content as invalid so that we will not load them in next renderpass
-        depthStencilRenderTarget->invalidateContent();
+        depthStencilRenderTarget->invalidateEntireContent();
     }
 
     // Use finalLayout instead of extra barrier for layout change to present

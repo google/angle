@@ -86,9 +86,9 @@ class RenderTargetVk final : public FramebufferAttachmentRenderTarget
     void retainImageViews(ContextVk *contextVk) const;
 
     bool hasDefinedContent() const { return mContentDefined; }
-    // mark content as undefined so that certain optimizations are possible such as using DONT_CARE
+    // Mark content as undefined so that certain optimizations are possible such as using DONT_CARE
     // as loadOp of the render target in the next renderpass.
-    void invalidateContent() { mContentDefined = false; }
+    void invalidateEntireContent() { mContentDefined = false; }
 
   private:
     vk::ImageHelper *mImage;
