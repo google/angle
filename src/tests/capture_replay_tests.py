@@ -230,6 +230,8 @@ def SetCWDToAngleFolder():
     return cwd
 
 
+# RunTest gets run on each spawned subprocess.
+# See https://chromium.googlesource.com/angle/angle/+/refs/heads/master/doc/CaptureAndReplay.md#testing for architecture
 def RunTest(job_queue, gn_path, autoninja_path, capture_build_dir, replay_build_dir, test_exec,
             replay_exec, trace_dir, result_list):
     trace_folder_path = os.path.join(REPLAY_SAMPLE_FOLDER, trace_dir)
@@ -243,12 +245,14 @@ def RunTest(job_queue, gn_path, autoninja_path, capture_build_dir, replay_build_
             test = job_queue.get()
             print("Running " + test.full_test_name)
             sys.stdout.flush()
+            # stage 1 from the diagram linked above: capture run
             returncode, output = test.Run(test_exec_path, trace_folder_path)
             if returncode != 0 or not CanRunReplay(trace_folder_path):
                 result_list.append((test.full_test_name, "Skipped",
                 "Skipping replay since capture didn't produce appropriate files or has crashed. " \
                 + "Error message: " + output))
                 continue
+            # stage 2 from the diagram linked above: replay build
             returncode, output = test.BuildReplay(gn_path, autoninja_path, replay_build_dir,
                                                   trace_dir, replay_exec)
             if returncode != 0:
@@ -256,6 +260,7 @@ def RunTest(job_queue, gn_path, autoninja_path, capture_build_dir, replay_build_
                     (test.full_test_name, "Skipped",
                      "Skipping replay since failing to build replay. Error message: " + output))
                 continue
+            # stage 2 from the diagram linked above: replay run
             returncode, output = test.RunReplay(replay_exec_path)
             if returncode != 0:
                 result_list.append((test.full_test_name, "Failed", output))
