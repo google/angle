@@ -1416,6 +1416,16 @@ bool ValidateES2TexImageParametersBase(const Context *context,
                         return false;
                 }
                 break;
+            case GL_STENCIL_INDEX:
+                switch (type)
+                {
+                    case GL_UNSIGNED_BYTE:
+                        break;
+                    default:
+                        context->validationError(GL_INVALID_OPERATION, kMismatchedTypeAndFormat);
+                        return false;
+                }
+                break;
             default:
                 context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
                 return false;
@@ -1543,6 +1553,35 @@ bool ValidateES2TexImageParametersBase(const Context *context,
                     }
                 }
                 break;
+            case GL_STENCIL_INDEX:
+                if (!context->getExtensions().stencilIndex8)
+                {
+                    context->validationError(GL_INVALID_OPERATION, kInvalidFormat);
+                    return false;
+                }
+
+                switch (target)
+                {
+                    case TextureTarget::_2D:
+                    case TextureTarget::_2DArray:
+                    case TextureTarget::CubeMapNegativeX:
+                    case TextureTarget::CubeMapNegativeY:
+                    case TextureTarget::CubeMapNegativeZ:
+                    case TextureTarget::CubeMapPositiveX:
+                    case TextureTarget::CubeMapPositiveY:
+                    case TextureTarget::CubeMapPositiveZ:
+                        break;
+                    default:
+                        context->validationError(GL_INVALID_OPERATION, kMismatchedTargetAndFormat);
+                        return false;
+                }
+
+                if (internalformat != GL_STENCIL_INDEX8)
+                {
+                    context->validationError(GL_INVALID_OPERATION, kMismatchedTargetAndFormat);
+                    return false;
+                }
+                break;
             default:
                 break;
         }
@@ -1621,6 +1660,14 @@ bool ValidateES2TexImageParametersBase(const Context *context,
                     if (!(context->getExtensions().depthTextureANGLE ||
                           context->getExtensions().packedDepthStencilOES ||
                           context->getExtensions().depthTextureCubeMapOES))
+                    {
+                        context->validationError(GL_INVALID_ENUM, kInvalidFormat);
+                        return false;
+                    }
+                    break;
+
+                case GL_STENCIL_INDEX8:
+                    if (!context->getExtensions().stencilIndex8)
                     {
                         context->validationError(GL_INVALID_ENUM, kInvalidFormat);
                         return false;
