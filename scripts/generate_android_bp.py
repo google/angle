@@ -160,7 +160,7 @@ def gn_sources_to_blueprint_sources(sources):
 
 target_blackist = [
     '//build/config:shared_library_deps',
-    '//third_party/angle/third_party/vulkan-validation-layers/src:vulkan_clean_old_validation_layer_objects',
+    '//third_party/vulkan-validation-layers/src:vulkan_clean_old_validation_layer_objects',
 ]
 
 include_blacklist = [
@@ -382,7 +382,7 @@ blueprint_gen_types = {
 
 
 inputs_blacklist = [
-    '//third_party/angle/.git/HEAD',
+    '//.git/HEAD',
 ]
 
 outputs_remap = {
