@@ -39,6 +39,30 @@
       "revId": "63acc409f7fc4b04d18aed6e54ef7feb2f9633ba",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "53eaaeb3_f21d6f3c",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 3693,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-07-21T15:46:30Z",
+      "side": 1,
+      "message": "I split the change.\n\nI did check that this is not the case for clear/blit, but I understand your point. With deferred clears, it\u0027s better to actually call the backend so it will flush them then no op (or ASSERT) on itself.",
+      "parentUuid": "8527b78b_2dbd4a77",
+      "range": {
+        "startLine": 3670,
+        "startChar": 0,
+        "endLine": 3693,
+        "endChar": 0
+      },
+      "revId": "63acc409f7fc4b04d18aed6e54ef7feb2f9633ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
