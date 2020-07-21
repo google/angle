@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c5d4cb01_bf56ec91",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-07-21T04:33:43Z",
+      "side": 1,
+      "message": "In the future, if you encountered anything else in FramebufferVk that early outs, remember that it\u0027s probably a bug and a similar fix should be applied",
+      "revId": "63acc409f7fc4b04d18aed6e54ef7feb2f9633ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
