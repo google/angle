@@ -104,6 +104,16 @@ DepthStencilState::DepthStencilState(const DepthStencilState &other)
     memcpy(this, &other, sizeof(DepthStencilState));
 }
 
+bool DepthStencilState::isDepthMaskedOut() const
+{
+    return !depthMask;
+}
+
+bool DepthStencilState::isStencilMaskedOut() const
+{
+    return (stencilMask & stencilWritemask) == 0;
+}
+
 bool operator==(const DepthStencilState &a, const DepthStencilState &b)
 {
     return memcmp(&a, &b, sizeof(DepthStencilState)) == 0;
