@@ -73,14 +73,14 @@ class alignas(4) RenderPassDesc final
     // Mark a GL color attachment index as disabled.
     void packColorAttachmentGap(size_t colorIndexGL);
     // The caller must pack the depth/stencil attachment last, which is packed right after the color
-    // attachments (including gaps), i.e. with an index starting from |colorAttachmentRange() + 1|.
+    // attachments (including gaps), i.e. with an index starting from |colorAttachmentRange()|.
     void packDepthStencilAttachment(angle::FormatID angleFormatID);
 
     size_t hash() const;
 
-    // Color attachments are in [0, colorAttachmentRange()], with possible gaps.
+    // Color attachments are in [0, colorAttachmentRange()), with possible gaps.
     size_t colorAttachmentRange() const { return mColorAttachmentRange; }
-    size_t depthStencilAttachmentIndex() const { return colorAttachmentRange() + 1; }
+    size_t depthStencilAttachmentIndex() const { return colorAttachmentRange(); }
 
     bool isColorAttachmentEnabled(size_t colorIndexGL) const;
     bool hasDepthStencilAttachment() const { return mHasDepthStencilAttachment; }
@@ -102,11 +102,10 @@ class alignas(4) RenderPassDesc final
   private:
     // Store log(samples), to be able to store it in 3 bits.
     uint8_t mLogSamples : 3;
-    uint8_t mColorAttachmentRange : 3;
+    uint8_t mColorAttachmentRange : 4;
     uint8_t mHasDepthStencilAttachment : 1;
     // Temporary padding for upcoming support for resolve attachments.
-    ANGLE_MAYBE_UNUSED uint8_t pad : 1;
-    ANGLE_MAYBE_UNUSED uint8_t pad2;
+    ANGLE_MAYBE_UNUSED uint8_t pad;
     // Color attachment formats are stored with their GL attachment indices.  The depth/stencil
     // attachment formats follow the last enabled color attachment.  When creating a render pass,
     // the disabled attachments are removed and the resulting attachments are packed.

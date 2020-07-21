@@ -222,7 +222,7 @@ angle::Result InitializeRenderPassFromDesc(vk::Context *context,
 
     uint32_t colorAttachmentCount = 0;
     uint32_t attachmentCount      = 0;
-    for (uint32_t colorIndexGL = 0; colorIndexGL <= desc.colorAttachmentRange(); ++colorIndexGL)
+    for (uint32_t colorIndexGL = 0; colorIndexGL < desc.colorAttachmentRange(); ++colorIndexGL)
     {
         // Vulkan says:
         //
@@ -422,8 +422,8 @@ void RenderPassDesc::packColorAttachment(size_t colorIndexGL, angle::FormatID fo
     SetBitField(packedFormat, formatID);
 
     // Set color attachment range such that it covers the range from index 0 through last
-    // active index inclusive.  This is the reason why we need depth/stencil to be packed last.
-    SetBitField(mColorAttachmentRange, std::max<size_t>(mColorAttachmentRange, colorIndexGL));
+    // active index.  This is the reason why we need depth/stencil to be packed last.
+    SetBitField(mColorAttachmentRange, std::max<size_t>(mColorAttachmentRange, colorIndexGL + 1));
 }
 
 void RenderPassDesc::packColorAttachmentGap(size_t colorIndexGL)
@@ -473,7 +473,7 @@ bool RenderPassDesc::isColorAttachmentEnabled(size_t colorIndexGL) const
 size_t RenderPassDesc::attachmentCount() const
 {
     size_t colorAttachmentCount = 0;
-    for (size_t i = 0; i <= mColorAttachmentRange; ++i)
+    for (size_t i = 0; i < mColorAttachmentRange; ++i)
     {
         colorAttachmentCount += isColorAttachmentEnabled(i);
     }
@@ -896,7 +896,7 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
     blendState.flags           = 0;
     blendState.logicOpEnable   = static_cast<VkBool32>(inputAndBlend.logic.opEnable);
     blendState.logicOp         = static_cast<VkLogicOp>(inputAndBlend.logic.op);
-    blendState.attachmentCount = static_cast<uint32_t>(mRenderPassDesc.colorAttachmentRange() + 1);
+    blendState.attachmentCount = static_cast<uint32_t>(mRenderPassDesc.colorAttachmentRange());
     blendState.pAttachments    = blendAttachmentState.data();
 
     for (int i = 0; i < 4; i++)
@@ -1979,7 +1979,7 @@ angle::Result RenderPassCache::addRenderPass(ContextVk *contextVk,
     vk::AttachmentOpsArray ops;
 
     uint32_t colorAttachmentCount = 0;
-    for (uint32_t colorIndexGL = 0; colorIndexGL <= desc.colorAttachmentRange(); ++colorIndexGL)
+    for (uint32_t colorIndexGL = 0; colorIndexGL < desc.colorAttachmentRange(); ++colorIndexGL)
     {
         if (!desc.isColorAttachmentEnabled(colorIndexGL))
         {
