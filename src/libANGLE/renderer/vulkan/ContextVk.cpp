@@ -297,6 +297,7 @@ void ContextVk::DriverUniformsDescriptorSet::init(RendererVk *rendererVk)
         rendererVk->getPhysicalDeviceProperties().limits.minUniformBufferOffsetAlignment);
     dynamicBuffer.init(rendererVk, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, minAlignment,
                        kDriverUniformsAllocatorPageSize, true);
+    descriptorSetCache.clear();
 }
 
 void ContextVk::DriverUniformsDescriptorSet::destroy(RendererVk *renderer)
@@ -304,6 +305,7 @@ void ContextVk::DriverUniformsDescriptorSet::destroy(RendererVk *renderer)
     descriptorSetLayout.reset();
     descriptorPoolBinding.reset();
     dynamicBuffer.destroy(renderer);
+    descriptorSetCache.clear();
 }
 
 // CommandBatch implementation.
@@ -3550,11 +3552,9 @@ angle::Result ContextVk::handleDirtyGraphicsDriverUniforms(const gl::Context *co
 {
     // Allocate a new region in the dynamic buffer.
     uint8_t *ptr;
-    VkBuffer buffer;
     bool newBuffer;
     ANGLE_TRY(allocateDriverUniforms(sizeof(GraphicsDriverUniforms),
-                                     &mDriverUniforms[PipelineType::Graphics], &buffer, &ptr,
-                                     &newBuffer));
+                                     &mDriverUniforms[PipelineType::Graphics], &ptr, &newBuffer));
 
     gl::Rectangle glViewport = mState.getViewport();
     float halfRenderAreaWidth =
@@ -3642,7 +3642,7 @@ angle::Result ContextVk::handleDirtyGraphicsDriverUniforms(const gl::Context *co
     writeAtomicCounterBufferDriverUniformOffsets(driverUniforms->acbBufferOffsets.data(),
                                                  driverUniforms->acbBufferOffsets.size());
 
-    return updateDriverUniformsDescriptorSet(buffer, newBuffer, sizeof(GraphicsDriverUniforms),
+    return updateDriverUniformsDescriptorSet(newBuffer, sizeof(GraphicsDriverUniforms),
                                              &mDriverUniforms[PipelineType::Graphics]);
 }
 
@@ -3651,11 +3651,9 @@ angle::Result ContextVk::handleDirtyComputeDriverUniforms(const gl::Context *con
 {
     // Allocate a new region in the dynamic buffer.
     uint8_t *ptr;
-    VkBuffer buffer;
     bool newBuffer;
     ANGLE_TRY(allocateDriverUniforms(sizeof(ComputeDriverUniforms),
-                                     &mDriverUniforms[PipelineType::Compute], &buffer, &ptr,
-                                     &newBuffer));
+                                     &mDriverUniforms[PipelineType::Compute], &ptr, &newBuffer));
 
     // Copy and flush to the device.
     ComputeDriverUniforms *driverUniforms = reinterpret_cast<ComputeDriverUniforms *>(ptr);
@@ -3664,7 +3662,7 @@ angle::Result ContextVk::handleDirtyComputeDriverUniforms(const gl::Context *con
     writeAtomicCounterBufferDriverUniformOffsets(driverUniforms->acbBufferOffsets.data(),
                                                  driverUniforms->acbBufferOffsets.size());
 
-    return updateDriverUniformsDescriptorSet(buffer, newBuffer, sizeof(ComputeDriverUniforms),
+    return updateDriverUniformsDescriptorSet(newBuffer, sizeof(ComputeDriverUniforms),
                                              &mDriverUniforms[PipelineType::Compute]);
 }
 
@@ -3698,7 +3696,6 @@ angle::Result ContextVk::handleDirtyComputeDriverUniformsBinding(const gl::Conte
 
 angle::Result ContextVk::allocateDriverUniforms(size_t driverUniformsSize,
                                                 DriverUniformsDescriptorSet *driverUniforms,
-                                                VkBuffer *bufferOut,
                                                 uint8_t **ptrOut,
                                                 bool *newBufferOut)
 {
@@ -3707,7 +3704,7 @@ angle::Result ContextVk::allocateDriverUniforms(size_t driverUniformsSize,
     // into context's mResourceUseList which will ensure they get tagged with queue serial number
     // before moving them into the free list.
     VkDeviceSize offset;
-    ANGLE_TRY(driverUniforms->dynamicBuffer.allocate(this, driverUniformsSize, ptrOut, bufferOut,
+    ANGLE_TRY(driverUniforms->dynamicBuffer.allocate(this, driverUniformsSize, ptrOut, nullptr,
                                                      &offset, newBufferOut));
 
     driverUniforms->dynamicOffset = static_cast<uint32_t>(offset);
@@ -3716,7 +3713,6 @@ angle::Result ContextVk::allocateDriverUniforms(size_t driverUniformsSize,
 }
 
 angle::Result ContextVk::updateDriverUniformsDescriptorSet(
-    VkBuffer buffer,
     bool newBuffer,
     size_t driverUniformsSize,
     DriverUniformsDescriptorSet *driverUniforms)
@@ -3728,6 +3724,16 @@ angle::Result ContextVk::updateDriverUniformsDescriptorSet(
         return angle::Result::Continue;
     }
 
+    const vk::BufferHelper *buffer = driverUniforms->dynamicBuffer.getCurrentBuffer();
+    BufferSerial bufferSerial      = buffer->getBufferSerial();
+    // Look up in the cache first
+    auto iter = driverUniforms->descriptorSetCache.find(bufferSerial);
+    if (iter != driverUniforms->descriptorSetCache.end())
+    {
+        driverUniforms->descriptorSet = iter->second;
+        return angle::Result::Continue;
+    }
+
     // Allocate a new descriptor set.
     ANGLE_TRY(mDriverUniformsDescriptorPool.allocateSets(
         this, driverUniforms->descriptorSetLayout.get().ptr(), 1,
@@ -3735,7 +3741,7 @@ angle::Result ContextVk::updateDriverUniformsDescriptorSet(
 
     // Update the driver uniform descriptor set.
     VkDescriptorBufferInfo &bufferInfo = allocBufferInfo();
-    bufferInfo.buffer                  = buffer;
+    bufferInfo.buffer                  = buffer->getBuffer().getHandle();
     bufferInfo.offset                  = 0;
     bufferInfo.range                   = driverUniformsSize;
 
@@ -3749,6 +3755,9 @@ angle::Result ContextVk::updateDriverUniformsDescriptorSet(
     writeInfo.pImageInfo            = nullptr;
     writeInfo.pTexelBufferView      = nullptr;
     writeInfo.pBufferInfo           = &bufferInfo;
+
+    // Add into descriptor set cache
+    driverUniforms->descriptorSetCache.emplace(bufferSerial, driverUniforms->descriptorSet);
 
     return angle::Result::Continue;
 }
