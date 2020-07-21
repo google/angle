@@ -16,6 +16,29 @@
       "revId": "63acc409f7fc4b04d18aed6e54ef7feb2f9633ba",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8527b78b_2dbd4a77",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 3693,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-07-21T13:39:33Z",
+      "side": 1,
+      "message": "The downside of putting the no-op stuff here is that we don\u0027t get access to it if we ever call methods on the object directly instead of context. We call objects directly in a few (rare) cases like for workarounds or frame capture. In any case it can be a split CL from the vulkan fix.",
+      "range": {
+        "startLine": 3670,
+        "startChar": 0,
+        "endLine": 3693,
+        "endChar": 0
+      },
+      "revId": "63acc409f7fc4b04d18aed6e54ef7feb2f9633ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
