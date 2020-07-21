@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6d3eb343_3242c062",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 241,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-07-21T15:13:48Z",
+      "side": 1,
+      "message": "deferred",
+      "range": {
+        "startLine": 241,
+        "startChar": 81,
+        "endLine": 241,
+        "endChar": 89
+      },
+      "revId": "6c42a7e4ba238475f95fcdfa2feeaf784bf846d6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
