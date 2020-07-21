@@ -24,7 +24,7 @@ void CommandProcessor::queueCommands(const vk::CommandProcessorTask &commands)
     mWorkAvailableCondition.notify_one();
 }
 
-angle::Result CommandProcessor::processCommandProcessorTasks()
+void CommandProcessor::processCommandProcessorTasks()
 {
     while (true)
     {
@@ -48,11 +48,10 @@ angle::Result CommandProcessor::processCommandProcessorTasks()
 
         ASSERT(!task.commandBuffer->empty());
         // TODO: Will need some way to synchronize error reporting between threads
-        ANGLE_TRY(task.commandBuffer->flushToPrimary(task.contextVk, task.primaryCB));
+        (void)(task.commandBuffer->flushToPrimary(task.contextVk, task.primaryCB));
         ASSERT(task.commandBuffer->empty());
         task.commandBuffer->releaseToContextQueue(task.contextVk);
     }
-    return angle::Result::Continue;
 }
 
 void CommandProcessor::waitForWorkComplete()

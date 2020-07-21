@@ -6,6 +6,8 @@
 use_relative_paths = True
 use_relative_hooks = True
 
+gclient_gn_args_file = 'build/config/gclient_args.gni'
+
 vars = {
   'android_git': 'https://android.googlesource.com',
   'chromium_git': 'https://chromium.googlesource.com',
@@ -19,7 +21,7 @@ vars = {
   'checkout_angle_internal': False,
 
   # Version of Chromium our Chromium-based DEPS are mirrored from.
-  'chromium_revision': 'b0410bba028cf153be2d02e36b6e99b59fdcb000',
+  'chromium_revision': 'fb6cbaf6e55fc6aba0a0d7c163526789bbceb808',
 
   # Current revision of VK-GL-CTS (a.k.a dEQP).
   'vk_gl_cts_revision': '4b40207be32deac1c567dacc70cde031bea005aa',
@@ -80,18 +82,28 @@ vars = {
 deps = {
 
   'build': {
-    'url': '{chromium_git}/chromium/src/build.git@45ab3c89af6fc3126b0ca5a7836f0db85ad1ba0e',
+    'url': '{chromium_git}/chromium/src/build.git@1ee11394cfbea8e22ab5e9192266da38f059ec67',
     'condition': 'not build_with_chromium',
   },
 
   'buildtools': {
-    'url': '{chromium_git}/chromium/src/buildtools.git@204a35a2a64f7179f8b76d7a0385653690839e21',
+    'url': '{chromium_git}/chromium/src/buildtools.git@9e121212d42be62a7cce38072f925f8398d11e49',
     'condition': 'not build_with_chromium',
   },
 
   'testing': {
-    'url': '{chromium_git}/chromium/src/testing@3993ef1f527b206d8d3bf3f9824f4fe0e4bbdb0e',
+    'url': '{chromium_git}/chromium/src/testing@f126fc6578039eb81449c7eeb8a95855bb9b1a42',
     'condition': 'not build_with_chromium',
+  },
+
+  'third_party/android_ndk': {
+    'url': '{chromium_git}/android_ndk.git@27c0a8d090c666a50e40fceb4ee5b40b1a2d3f87',
+    'condition': 'checkout_android and not build_with_chromium',
+  },
+
+  'third_party/catapult': {
+    'url': '{chromium_git}/catapult.git@{catapult_revision}',
+    'condition': 'checkout_android and not build_with_chromium',
   },
 
   # Cherry is a dEQP/VK-GL-CTS management GUI written in Go. We use it for viewing test results.
@@ -131,7 +143,7 @@ deps = {
   },
 
   'third_party/googletest': {
-    'url': '{chromium_git}/chromium/src/third_party/googletest@217407c4787f361aa5814ec609379bfc9b21d307',
+    'url': '{chromium_git}/chromium/src/third_party/googletest@defbf92951658959ecb0e06d344fa65eedfc6e7a',
     'condition': 'not build_with_chromium',
   },
 
@@ -152,12 +164,12 @@ deps = {
    },
 
   'third_party/nasm': {
-    'url': '{chromium_git}/chromium/deps/nasm@4fa54ca5f7fc3a15a8c78ac94688e64d3e4e4fa1',
+    'url': '{chromium_git}/chromium/deps/nasm.git@19f3fad68da99277b2882939d3b2fa4c4b8d51d9',
     'condition': 'not build_with_chromium',
   },
 
   'third_party/Python-Markdown': {
-    'url': '{chromium_git}/chromium/src/third_party/Python-Markdown@36657c103ce5964733bbbb29377085e9cc1a9472',
+    'url': '{chromium_git}/chromium/src/third_party/Python-Markdown@9c8566e04768e32834ac87e0ae78d8793c749a34',
     'condition': 'not build_with_chromium',
   },
 
@@ -224,12 +236,12 @@ deps = {
   },
 
   'third_party/zlib': {
-    'url': '{chromium_git}/chromium/src/third_party/zlib@ae385786edb15f57e992c5e9dd9464e376d69399',
+    'url': '{chromium_git}/chromium/src/third_party/zlib@89bddfee9cf8fde3ab1212ed63bf03d76baf8914',
     'condition': 'not build_with_chromium',
   },
 
   'tools/clang': {
-    'url': '{chromium_git}/chromium/src/tools/clang.git@04b99e7bf9160d551c3a5562f583014b6afc90f9',
+    'url': '{chromium_git}/chromium/src/tools/clang.git@6412135b3979b680c20cf007ab242d968025fc3e',
     'condition': 'not build_with_chromium',
   },
 
@@ -245,23 +257,13 @@ deps = {
   },
 
   'tools/md_browser': {
-    'url': '{chromium_git}/chromium/src/tools/md_browser@aae45d8d82400e90483d4fee2ca3e648f2313cb2',
+    'url': '{chromium_git}/chromium/src/tools/md_browser@be8cf5a17d73c14170dff2ec9600310483361356',
     'condition': 'not build_with_chromium',
   },
 
   'tools/memory': {
     'url': '{chromium_git}/chromium/src/tools/memory@89552acb6e60f528fe3c98eac7b445d4c34183ee',
     'condition': 'not build_with_chromium',
-  },
-
-  'third_party/catapult': {
-    'url': '{chromium_git}/catapult.git@{catapult_revision}',
-    'condition': 'checkout_android and not build_with_chromium',
-  },
-
-  'third_party/android_ndk': {
-    'url': '{chromium_git}/android_ndk.git@27c0a8d090c666a50e40fceb4ee5b40b1a2d3f87',
-    'condition': 'checkout_android and not build_with_chromium',
   },
 }
 
