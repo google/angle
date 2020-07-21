@@ -158,6 +158,7 @@ class RendererVk : angle::NonCopyable
     {
         return mMinImportedHostPointerAlignment;
     }
+    uint32_t getDefaultUniformBufferSize() const { return mDefaultUniformBufferSize; }
 
     bool isMockICDEnabled() const { return mEnabledICD == angle::vk::ICD::Mock; }
 
@@ -318,6 +319,7 @@ class RendererVk : angle::NonCopyable
     uint32_t mMaxVertexAttribDivisor;
     VkDeviceSize mMaxVertexAttribStride;
     VkDeviceSize mMinImportedHostPointerAlignment;
+    uint32_t mDefaultUniformBufferSize;
     VkDevice mDevice;
     AtomicSerialFactory mQueueSerialFactory;
     AtomicSerialFactory mShaderSerialFactory;

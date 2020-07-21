@@ -360,6 +360,15 @@ struct FeaturesVk : FeatureSetBase
         "Use the compute path to generate mipmaps on devices that meet the minimum requirements, "
         "and the performance is better.",
         &members, "http://anglebug.com/4551"};
+
+    // Force maxUniformBufferSize to 16K on Qualcomm's Adreno 540. Pixel2's Adreno540 reports
+    // maxUniformBufferSize 64k but various tests failed with that size. For that specific
+    // device, we set to 16k for now which is known to pass all tests.
+    // https://issuetracker.google.com/161903006
+    Feature forceMaxUniformBufferSize16KB = {
+        "force_max_uniform_buffer_size_16K", FeatureCategory::VulkanWorkarounds,
+        "Force max uniform buffer size to 16K on some device due to bug", &members,
+        "https://issuetracker.google.com/161903006"};
 };
 
 inline FeaturesVk::FeaturesVk()  = default;
