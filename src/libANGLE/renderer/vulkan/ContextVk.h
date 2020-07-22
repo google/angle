@@ -591,6 +591,7 @@ class ContextVk : public ContextImpl, public vk::Context
     void setDefaultUniformBlocksMinSizeForTesting(size_t minSize);
 
     vk::BufferHelper &getEmptyBuffer() { return mEmptyBuffer; }
+    vk::DynamicBuffer *getStagingBufferStorage() { return &mStagingBufferStorage; }
 
   private:
     // Dirty bits.
@@ -1065,14 +1066,17 @@ class ContextVk : public ContextImpl, public vk::Context
 
     ShareGroupVk *mShareGroupVk;
 
-    // Storage for default uniforms of ProgramVks and ProgramPipelineVks.
-    vk::DynamicBuffer mDefaultUniformStorage;
-
     // This is a special "empty" placeholder buffer for use when we just need a dummy buffer but not
     // the data. Examples are shader that has no uniform or doesn't use all slots in the atomic
     // counter buffer array, or places where there is no vertex buffer since Vulkan does not allow
     // binding a null vertex buffer.
     vk::BufferHelper mEmptyBuffer;
+
+    // Storage for default uniforms of ProgramVks and ProgramPipelineVks.
+    vk::DynamicBuffer mDefaultUniformStorage;
+
+    // All staging buffer support is provided by a DynamicBuffer.
+    vk::DynamicBuffer mStagingBufferStorage;
 
     std::vector<std::string> mCommandBufferDiagnostics;
 };

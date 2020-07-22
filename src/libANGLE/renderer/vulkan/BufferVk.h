@@ -121,7 +121,6 @@ class BufferVk : public BufferImpl
                                                 bool hostVisible);
 
   private:
-    void initializeStagingBuffer(ContextVk *contextVk, gl::BufferBinding target, size_t size);
     angle::Result initializeShadowBuffer(ContextVk *contextVk,
                                          gl::BufferBinding target,
                                          size_t size);
@@ -181,9 +180,6 @@ class BufferVk : public BufferImpl
 
     // Pool of BufferHelpers for mBuffer to acquire from
     vk::DynamicBuffer mBufferPool;
-
-    // All staging buffer support is provided by a DynamicBuffer.
-    vk::DynamicBuffer mStagingBuffer;
 
     // For GPU-read only buffers glMap* latency is reduced by maintaining a copy
     // of the buffer which is writeable only by the CPU. The contents are updated on all

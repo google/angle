@@ -752,6 +752,7 @@ void ContextVk::onDestroy(const gl::Context *context)
 
     mDefaultUniformStorage.release(mRenderer);
     mEmptyBuffer.release(mRenderer);
+    mStagingBufferStorage.release(mRenderer);
 
     for (vk::DynamicBuffer &defaultBuffer : mDefaultAttribBuffers)
     {
@@ -905,6 +906,13 @@ angle::Result ContextVk::initialize()
     emptyBufferInfo.pQueueFamilyIndices         = nullptr;
     constexpr VkMemoryPropertyFlags kMemoryType = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
     ANGLE_TRY(mEmptyBuffer.init(this, emptyBufferInfo, kMemoryType));
+
+    constexpr VkImageUsageFlags kStagingBufferUsageFlags = VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
+    size_t stagingBufferAlignment =
+        static_cast<size_t>(mRenderer->getPhysicalDeviceProperties().limits.minMemoryMapAlignment);
+    constexpr size_t kStagingBufferSize = 1024u * 1024u;  // 1M
+    mStagingBufferStorage.init(mRenderer, kStagingBufferUsageFlags, stagingBufferAlignment,
+                               kStagingBufferSize, true);
 
     return angle::Result::Continue;
 }
@@ -3972,6 +3980,7 @@ angle::Result ContextVk::flushImpl(const vk::Semaphore *signalSemaphore)
         driverUniform.dynamicBuffer.releaseInFlightBuffersToResourceUseList(this);
     }
     mDefaultUniformStorage.releaseInFlightBuffersToResourceUseList(this);
+    mStagingBufferStorage.releaseInFlightBuffersToResourceUseList(this);
 
     if (mRenderer->getFeatures().enableCommandProcessingThread.enabled)
     {
