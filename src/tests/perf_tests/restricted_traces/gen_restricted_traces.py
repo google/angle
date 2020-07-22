@@ -39,7 +39,8 @@ header_template = """// GENERATED FILE - DO NOT EDIT.
 #ifndef ANGLE_RESTRICTED_TRACES_H_
 #define ANGLE_RESTRICTED_TRACES_H_
 
-{includes}
+#include <cstdint>
+#include <vector>
 
 // See util/util_export.h for details on import/export labels.
 #if !defined(ANGLE_TRACE_EXPORT)
@@ -81,7 +82,6 @@ struct TraceInfo
 }};
 
 using DecompressCallback = uint8_t *(*)(const std::vector<uint8_t> &);
-using FramebufferChangeCallback = void(*)(void *userData, GLenum target, GLuint framebuffer);
 
 ANGLE_TRACE_EXPORT const TraceInfo &GetTraceInfo(RestrictedTraceID traceID);
 ANGLE_TRACE_EXPORT void ReplayFrame(RestrictedTraceID traceID, uint32_t frameIndex);
@@ -89,7 +89,6 @@ ANGLE_TRACE_EXPORT void ResetReplay(RestrictedTraceID traceID);
 ANGLE_TRACE_EXPORT void SetupReplay(RestrictedTraceID traceID);
 ANGLE_TRACE_EXPORT void SetBinaryDataDir(RestrictedTraceID traceID, const char *dataDir);
 ANGLE_TRACE_EXPORT void SetBinaryDataDecompressCallback(RestrictedTraceID traceID, DecompressCallback callback);
-ANGLE_TRACE_EXPORT void SetFramebufferChangeCallback(RestrictedTraceID traceID, void *userData, FramebufferChangeCallback callback);
 }}  // namespace angle
 
 #endif  // ANGLE_RESTRICTED_TRACES_H_
@@ -107,6 +106,8 @@ source_template = """// GENERATED FILE - DO NOT EDIT.
 #include "{filename}.h"
 
 #include "common/PackedEnums.h"
+
+{trace_includes}
 
 namespace angle
 {{
@@ -175,18 +176,6 @@ void SetBinaryDataDecompressCallback(RestrictedTraceID traceID, DecompressCallba
     switch (traceID)
     {{
 {decompress_callback_cases}
-        default:
-            fprintf(stderr, "Error in switch.\\n");
-            assert(0);
-            break;
-    }}
-}}
-
-void SetFramebufferChangeCallback(RestrictedTraceID traceID, void *userData, FramebufferChangeCallback callback)
-{{
-    switch (traceID)
-    {{
-{on_fb_change_callback_cases}
         default:
             fprintf(stderr, "Error in switch.\\n");
             assert(0);
@@ -323,8 +312,8 @@ def main():
     ]
 
     format_args["filename"] = "restricted_traces_autogen"
-    format_args["includes"] = "\n".join(includes)
     format_args["trace_ids"] = ",\n".join(traces)
+    format_args["trace_includes"] = "\n".join(includes)
     format_args["trace_infos"] = ",\n".join(trace_infos)
     format_args["replay_func_cases"] = get_cases_with_context(traces, "ReplayContext", "Frame",
                                                               "frameIndex")
@@ -333,8 +322,6 @@ def main():
     format_args["set_binary_data_dir_cases"] = get_cases(traces, "SetBinaryDataDir", "dataDir")
     format_args["decompress_callback_cases"] = get_cases(traces, "SetBinaryDataDecompressCallback",
                                                          "callback")
-    format_args["on_fb_change_callback_cases"] = get_cases(traces, "SetFramebufferChangeCallback",
-                                                           "userData, callback")
     if not gen_header(header_file, format_args):
         print('.h file generation failed.')
         return 1

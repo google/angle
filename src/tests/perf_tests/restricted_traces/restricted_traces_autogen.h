@@ -10,13 +10,8 @@
 #ifndef ANGLE_RESTRICTED_TRACES_H_
 #define ANGLE_RESTRICTED_TRACES_H_
 
-#include "angry_birds_2_1500/angry_birds_2_1500_capture_context3.h"
-#include "candy_crush_500/candy_crush_500_capture_context2.h"
-#include "egypt_1500/egypt_1500_capture_context1.h"
-#include "manhattan_10/manhattan_10_capture_context1.h"
-#include "subway_surfer_500/subway_surfer_500_capture_context4.h"
-#include "temple_run_300/temple_run_300_capture_context3.h"
-#include "trex_200/trex_200_capture_context1.h"
+#include <cstdint>
+#include <vector>
 
 // See util/util_export.h for details on import/export labels.
 #if !defined(ANGLE_TRACE_EXPORT)
@@ -65,8 +60,7 @@ struct TraceInfo
     char name[kTraceInfoMaxNameLen];
 };
 
-using DecompressCallback        = uint8_t *(*)(const std::vector<uint8_t> &);
-using FramebufferChangeCallback = void (*)(void *userData, GLenum target, GLuint framebuffer);
+using DecompressCallback = uint8_t *(*)(const std::vector<uint8_t> &);
 
 ANGLE_TRACE_EXPORT const TraceInfo &GetTraceInfo(RestrictedTraceID traceID);
 ANGLE_TRACE_EXPORT void ReplayFrame(RestrictedTraceID traceID, uint32_t frameIndex);
@@ -75,9 +69,6 @@ ANGLE_TRACE_EXPORT void SetupReplay(RestrictedTraceID traceID);
 ANGLE_TRACE_EXPORT void SetBinaryDataDir(RestrictedTraceID traceID, const char *dataDir);
 ANGLE_TRACE_EXPORT void SetBinaryDataDecompressCallback(RestrictedTraceID traceID,
                                                         DecompressCallback callback);
-ANGLE_TRACE_EXPORT void SetFramebufferChangeCallback(RestrictedTraceID traceID,
-                                                     void *userData,
-                                                     FramebufferChangeCallback callback);
 }  // namespace angle
 
 #endif  // ANGLE_RESTRICTED_TRACES_H_

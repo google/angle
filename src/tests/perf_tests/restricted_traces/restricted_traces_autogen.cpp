@@ -11,6 +11,14 @@
 
 #include "common/PackedEnums.h"
 
+#include "angry_birds_2_1500/angry_birds_2_1500_capture_context3.h"
+#include "candy_crush_500/candy_crush_500_capture_context2.h"
+#include "egypt_1500/egypt_1500_capture_context1.h"
+#include "manhattan_10/manhattan_10_capture_context1.h"
+#include "subway_surfer_500/subway_surfer_500_capture_context4.h"
+#include "temple_run_300/temple_run_300_capture_context3.h"
+#include "trex_200/trex_200_capture_context1.h"
+
 namespace angle
 {
 namespace
@@ -201,40 +209,6 @@ void SetBinaryDataDecompressCallback(RestrictedTraceID traceID, DecompressCallba
             break;
         case RestrictedTraceID::trex_200:
             trex_200::SetBinaryDataDecompressCallback(callback);
-            break;
-        default:
-            fprintf(stderr, "Error in switch.\n");
-            assert(0);
-            break;
-    }
-}
-
-void SetFramebufferChangeCallback(RestrictedTraceID traceID,
-                                  void *userData,
-                                  FramebufferChangeCallback callback)
-{
-    switch (traceID)
-    {
-        case RestrictedTraceID::angry_birds_2_1500:
-            angry_birds_2_1500::SetFramebufferChangeCallback(userData, callback);
-            break;
-        case RestrictedTraceID::candy_crush_500:
-            candy_crush_500::SetFramebufferChangeCallback(userData, callback);
-            break;
-        case RestrictedTraceID::egypt_1500:
-            egypt_1500::SetFramebufferChangeCallback(userData, callback);
-            break;
-        case RestrictedTraceID::manhattan_10:
-            manhattan_10::SetFramebufferChangeCallback(userData, callback);
-            break;
-        case RestrictedTraceID::subway_surfer_500:
-            subway_surfer_500::SetFramebufferChangeCallback(userData, callback);
-            break;
-        case RestrictedTraceID::temple_run_300:
-            temple_run_300::SetFramebufferChangeCallback(userData, callback);
-            break;
-        case RestrictedTraceID::trex_200:
-            trex_200::SetFramebufferChangeCallback(userData, callback);
             break;
         default:
             fprintf(stderr, "Error in switch.\n");
