@@ -1371,30 +1371,43 @@ void CaptureUpdateUniformLocations(const gl::Program *program, std::vector<CallC
     for (GLint location = 0; location < static_cast<GLint>(locations.size()); ++location)
     {
         const gl::VariableLocation &locationVar = locations[location];
-        const gl::LinkedUniform &uniform        = uniforms[locationVar.index];
 
+        // This handles the case where the application calls glBindUniformLocationCHROMIUM
+        // on an unused uniform. We must still store a -1 into gUniformLocations in case the
+        // application attempts to call a glUniform* call. To do this we'll pass in a blank name to
+        // force glGetUniformLocation to return -1.
+        std::string name;
         ParamBuffer params;
         params.addValueParam("program", ParamType::TShaderProgramID, program->id());
 
-        std::string name = uniform.name;
-
-        if (uniform.isArray())
+        if (locationVar.index >= uniforms.size())
         {
-            if (locationVar.arrayIndex > 0)
-            {
-                // Non-sequential array uniform locations are not currently handled.
-                // In practice array locations shouldn't ever be non-sequential.
-                ASSERT(uniform.location == -1 ||
-                       location == uniform.location + static_cast<int>(locationVar.arrayIndex));
-                continue;
-            }
+            name = "";
+        }
+        else
+        {
+            const gl::LinkedUniform &uniform = uniforms[locationVar.index];
 
-            if (uniform.isArrayOfArrays())
-            {
-                UNIMPLEMENTED();
-            }
+            name = uniform.name;
 
-            name = gl::StripLastArrayIndex(name);
+            if (uniform.isArray())
+            {
+                if (locationVar.arrayIndex > 0)
+                {
+                    // Non-sequential array uniform locations are not currently handled.
+                    // In practice array locations shouldn't ever be non-sequential.
+                    ASSERT(uniform.location == -1 ||
+                           location == uniform.location + static_cast<int>(locationVar.arrayIndex));
+                    continue;
+                }
+
+                if (uniform.isArrayOfArrays())
+                {
+                    UNIMPLEMENTED();
+                }
+
+                name = gl::StripLastArrayIndex(name);
+            }
         }
 
         ParamCapture nameParam("name", ParamType::TGLcharConstPointer);
@@ -4223,19 +4236,43 @@ gl::Program *GetProgramForCapture(const gl::State &glState, gl::ShaderProgramID 
     return program;
 }
 
+void CaptureGetActiveUniformBlockivParameters(const gl::State &glState,
+                                              gl::ShaderProgramID handle,
+                                              GLuint uniformBlockIndex,
+                                              GLenum pname,
+                                              ParamCapture *paramCapture)
+{
+    int numParams = 1;
+
+    // From the OpenGL ES 3.0 spec:
+    // If pname is UNIFORM_BLOCK_ACTIVE_UNIFORM_INDICES, then a list of the
+    // active uniform indices for the uniform block identified by uniformBlockIndex is
+    // returned. The number of elements that will be written to params is the value of
+    // UNIFORM_BLOCK_ACTIVE_UNIFORMS for uniformBlockIndex
+    if (pname == GL_UNIFORM_BLOCK_ACTIVE_UNIFORM_INDICES)
+    {
+        gl::Program *program = GetProgramForCapture(glState, handle);
+        if (program)
+        {
+            gl::QueryActiveUniformBlockiv(program, uniformBlockIndex,
+                                          GL_UNIFORM_BLOCK_ACTIVE_UNIFORMS, &numParams);
+        }
+    }
+
+    paramCapture->readBufferSizeBytes = sizeof(GLint) * numParams;
+}
+
 void CaptureGetParameter(const gl::State &glState,
                          GLenum pname,
                          size_t typeSize,
                          ParamCapture *paramCapture)
 {
-    GLenum nativeType;
-    unsigned int numParams;
-    if (!gl::GetQueryParameterInfo(glState, pname, &nativeType, &numParams))
-    {
-        numParams = 1;
-    }
-
-    paramCapture->readBufferSizeBytes = typeSize * numParams;
+    // kMaxReportedCapabilities is the biggest array we'll need to hold data from glGet calls.
+    // This value needs to be updated if any new extensions are introduced that would allow for
+    // more compressed texture formats. The current value is taken from:
+    // http://opengles.gpuinfo.org/displaycapability.php?name=GL_NUM_COMPRESSED_TEXTURE_FORMATS&esversion=2
+    constexpr unsigned int kMaxReportedCapabilities = 69;
+    paramCapture->readBufferSizeBytes               = typeSize * kMaxReportedCapabilities;
 }
 
 void CaptureGenHandlesImpl(GLsizei n, GLuint *handles, ParamCapture *paramCapture)

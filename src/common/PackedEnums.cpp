@@ -396,7 +396,7 @@ std::ostream &operator<<(std::ostream &os, VertexAttribType value)
             os << "GL_UNSIGNED_INT";
             break;
         case VertexAttribType::UnsignedInt2101010:
-            os << "GL_UNSIGNED_INT_10_10_10_2";
+            os << "GL_UNSIGNED_INT_2_10_10_10_REV";
             break;
         case VertexAttribType::UnsignedInt1010102:
             os << "GL_UNSIGNED_INT_10_10_10_2_OES";

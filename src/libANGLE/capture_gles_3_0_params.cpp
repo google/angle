@@ -205,7 +205,13 @@ void CaptureGetActiveUniformBlockName_length(const State &glState,
                                              GLchar *uniformBlockName,
                                              ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    // From the OpenGL ES 3.0 spec:
+    // The actual number of characters written into uniformBlockName, excluding the null terminator,
+    // is returned in length. If length is NULL, no length is returned.
+    if (length)
+    {
+        paramCapture->readBufferSizeBytes = sizeof(GLsizei);
+    }
 }
 
 void CaptureGetActiveUniformBlockName_uniformBlockName(const State &glState,
@@ -217,7 +223,10 @@ void CaptureGetActiveUniformBlockName_uniformBlockName(const State &glState,
                                                        GLchar *uniformBlockName,
                                                        ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    // From the OpenGL ES 3.0 spec:
+    // bufSize contains the maximum number of characters (including the null terminator) that will
+    // be written back to uniformBlockName.
+    CaptureStringLimit(uniformBlockName, bufSize, paramCapture);
 }
 
 void CaptureGetActiveUniformBlockiv_params(const State &glState,
@@ -228,7 +237,8 @@ void CaptureGetActiveUniformBlockiv_params(const State &glState,
                                            GLint *params,
                                            ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureGetActiveUniformBlockivParameters(glState, program, uniformBlockIndex, pname,
+                                             paramCapture);
 }
 
 void CaptureGetActiveUniformsiv_uniformIndices(const State &glState,
@@ -240,7 +250,11 @@ void CaptureGetActiveUniformsiv_uniformIndices(const State &glState,
                                                GLint *params,
                                                ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    // From the OpenGL ES 3.0 spec:
+    // For GetActiveUniformsiv, uniformCountindicates both the number of
+    // elements in the array of indices uniformIndices and the number of
+    // parameters written to params upon successful return.
+    CaptureMemory(uniformIndices, sizeof(GLuint) * uniformCount, paramCapture);
 }
 
 void CaptureGetActiveUniformsiv_params(const State &glState,
@@ -252,7 +266,11 @@ void CaptureGetActiveUniformsiv_params(const State &glState,
                                        GLint *params,
                                        ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    // From the OpenGL ES 3.0 spec:
+    // For GetActiveUniformsiv, uniformCountindicates both the number of
+    // elements in the array of indices uniformIndices and the number of
+    // parameters written to params upon successful return.
+    paramCapture->readBufferSizeBytes = sizeof(GLint) * uniformCount;
 }
 
 void CaptureGetBufferParameteri64v_params(const State &glState,

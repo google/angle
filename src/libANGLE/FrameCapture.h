@@ -389,6 +389,12 @@ void CaptureGetParameter(const gl::State &glState,
                          size_t typeSize,
                          ParamCapture *paramCapture);
 
+void CaptureGetActiveUniformBlockivParameters(const gl::State &glState,
+                                              gl::ShaderProgramID handle,
+                                              GLuint uniformBlockIndex,
+                                              GLenum pname,
+                                              ParamCapture *paramCapture);
+
 template <typename T>
 void CaptureClearBufferValue(GLenum buffer, const T *value, ParamCapture *paramCapture)
 {
