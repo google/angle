@@ -16,6 +16,23 @@
       "revId": "d05e6f51b1679f947eef5aa13fb8007d8e203a32",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ac71f7af_a89bf9b3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1438550
+      },
+      "writtenOn": "2020-07-22T13:16:05Z",
+      "side": 1,
+      "message": "It feels like a build failed, but I couldn\u0027t figure out how it is related to my patch. Any clue?",
+      "revId": "d05e6f51b1679f947eef5aa13fb8007d8e203a32",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
