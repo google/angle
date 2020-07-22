@@ -4045,6 +4045,19 @@ class WebGLComputeValidationStateChangeTest : public ANGLETest
     WebGLComputeValidationStateChangeTest() { setWebGLCompatibilityEnabled(true); }
 };
 
+class RobustBufferAccessWebGL2ValidationStateChangeTest : public WebGL2ValidationStateChangeTest
+{
+  protected:
+    RobustBufferAccessWebGL2ValidationStateChangeTest()
+    {
+        // SwS/OSX GL do not support robustness.
+        if (!isSwiftshader() && !IsOSX())
+        {
+            setRobustAccess(true);
+        }
+    }
+};
+
 // Tests that mapping and unmapping an array buffer in various ways causes rendering to fail.
 // This isn't guaranteed to produce an error by GL. But we assume ANGLE always errors.
 TEST_P(ValidationStateChangeTest, MapBufferAndDraw)
@@ -5600,6 +5613,7 @@ TEST_P(ImageRespecificationTest, ImageTarget2DOESSwitch)
     eglDestroyImageKHR(window->getDisplay(), secondEGLImage);
 }
 
+// Covers a bug where sometimes we wouldn't catch invalid element buffer sizes.
 TEST_P(WebGL2ValidationStateChangeTest, DeleteElementArrayBufferValidation)
 {
     GLushort indexData[] = {0, 1, 2, 3};
@@ -5619,6 +5633,50 @@ TEST_P(WebGL2ValidationStateChangeTest, DeleteElementArrayBufferValidation)
     glDrawElements(GL_POINTS, 4, GL_UNSIGNED_SHORT, reinterpret_cast<const void *>(0x4));
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 }
+
+// Covers a bug in the D3D11 back-end related to how buffers are translated.
+TEST_P(RobustBufferAccessWebGL2ValidationStateChangeTest, BindZeroSizeBufferThenDeleteBufferBug)
+{
+    // SwiftShader does not currently support robustness.
+    ANGLE_SKIP_TEST_IF(isSwiftshader());
+
+    // http://anglebug.com/4872
+    ANGLE_SKIP_TEST_IF(IsAndroid() && IsVulkan());
+
+    // no intent to follow up on this failure.
+    ANGLE_SKIP_TEST_IF(IsAndroid() && IsOpenGL());
+
+    // no intent to follow up on this failure.
+    ANGLE_SKIP_TEST_IF(IsAMD() && IsOpenGL());
+
+    // no intent to follow up on this failure.
+    ANGLE_SKIP_TEST_IF(IsOSX());
+
+    std::vector<GLubyte> data(48, 1);
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Passthrough(), essl1_shaders::fs::Red());
+    glUseProgram(program);
+
+    // First bind and draw with a buffer with a format we know to be "Direct" in D3D11.
+    GLBuffer arrayBuffer;
+    glBindBuffer(GL_ARRAY_BUFFER, arrayBuffer);
+    glBufferData(GL_ARRAY_BUFFER, 48, data.data(), GL_STATIC_DRAW);
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
+    glEnableVertexAttribArray(0);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    // Then bind a zero size buffer and draw.
+    GLBuffer secondBuffer;
+    glBindBuffer(GL_ARRAY_BUFFER, secondBuffer);
+    glVertexAttribPointer(0, 4, GL_UNSIGNED_BYTE, GL_FALSE, 1, 0);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    // Finally delete the original buffer. This triggers the bug.
+    arrayBuffer.reset();
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+    ASSERT_GL_NO_ERROR();
+}
+
 }  // anonymous namespace
 
 ANGLE_INSTANTIATE_TEST_ES2(StateChangeTest);
@@ -5634,5 +5692,6 @@ ANGLE_INSTANTIATE_TEST_ES31(SimpleStateChangeTestComputeES31);
 ANGLE_INSTANTIATE_TEST_ES31(SimpleStateChangeTestComputeES31PPO);
 ANGLE_INSTANTIATE_TEST_ES3(ValidationStateChangeTest);
 ANGLE_INSTANTIATE_TEST_ES3(WebGL2ValidationStateChangeTest);
+ANGLE_INSTANTIATE_TEST_ES3(RobustBufferAccessWebGL2ValidationStateChangeTest);
 ANGLE_INSTANTIATE_TEST_ES31(ValidationStateChangeTestES31);
 ANGLE_INSTANTIATE_TEST_ES31(WebGLComputeValidationStateChangeTest);
