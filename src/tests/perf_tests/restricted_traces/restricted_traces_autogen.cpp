@@ -13,11 +13,11 @@
 
 #include "angry_birds_2_1500/angry_birds_2_1500_capture_context3.h"
 #include "candy_crush_500/candy_crush_500_capture_context2.h"
-#include "egypt_1500/egypt_1500_capture_context1.h"
-#include "manhattan_10/manhattan_10_capture_context1.h"
+#include "egypt_1500/egypt_1500_capture_context6.h"
+#include "manhattan_10/manhattan_10_capture_context6.h"
 #include "subway_surfer_500/subway_surfer_500_capture_context4.h"
 #include "temple_run_300/temple_run_300_capture_context3.h"
-#include "trex_200/trex_200_capture_context1.h"
+#include "trex_200/trex_200_capture_context6.h"
 
 namespace angle
 {
@@ -68,10 +68,10 @@ void ReplayFrame(RestrictedTraceID traceID, uint32_t frameIndex)
             candy_crush_500::ReplayContext2Frame(frameIndex);
             break;
         case RestrictedTraceID::egypt_1500:
-            egypt_1500::ReplayContext1Frame(frameIndex);
+            egypt_1500::ReplayContext6Frame(frameIndex);
             break;
         case RestrictedTraceID::manhattan_10:
-            manhattan_10::ReplayContext1Frame(frameIndex);
+            manhattan_10::ReplayContext6Frame(frameIndex);
             break;
         case RestrictedTraceID::subway_surfer_500:
             subway_surfer_500::ReplayContext4Frame(frameIndex);
@@ -80,7 +80,7 @@ void ReplayFrame(RestrictedTraceID traceID, uint32_t frameIndex)
             temple_run_300::ReplayContext3Frame(frameIndex);
             break;
         case RestrictedTraceID::trex_200:
-            trex_200::ReplayContext1Frame(frameIndex);
+            trex_200::ReplayContext6Frame(frameIndex);
             break;
         default:
             fprintf(stderr, "Error in switch.\n");
@@ -100,10 +100,10 @@ void ResetReplay(RestrictedTraceID traceID)
             candy_crush_500::ResetContext2Replay();
             break;
         case RestrictedTraceID::egypt_1500:
-            egypt_1500::ResetContext1Replay();
+            egypt_1500::ResetContext6Replay();
             break;
         case RestrictedTraceID::manhattan_10:
-            manhattan_10::ResetContext1Replay();
+            manhattan_10::ResetContext6Replay();
             break;
         case RestrictedTraceID::subway_surfer_500:
             subway_surfer_500::ResetContext4Replay();
@@ -112,7 +112,7 @@ void ResetReplay(RestrictedTraceID traceID)
             temple_run_300::ResetContext3Replay();
             break;
         case RestrictedTraceID::trex_200:
-            trex_200::ResetContext1Replay();
+            trex_200::ResetContext6Replay();
             break;
         default:
             fprintf(stderr, "Error in switch.\n");
@@ -132,10 +132,10 @@ void SetupReplay(RestrictedTraceID traceID)
             candy_crush_500::SetupContext2Replay();
             break;
         case RestrictedTraceID::egypt_1500:
-            egypt_1500::SetupContext1Replay();
+            egypt_1500::SetupContext6Replay();
             break;
         case RestrictedTraceID::manhattan_10:
-            manhattan_10::SetupContext1Replay();
+            manhattan_10::SetupContext6Replay();
             break;
         case RestrictedTraceID::subway_surfer_500:
             subway_surfer_500::SetupContext4Replay();
@@ -144,7 +144,7 @@ void SetupReplay(RestrictedTraceID traceID)
             temple_run_300::SetupContext3Replay();
             break;
         case RestrictedTraceID::trex_200:
-            trex_200::SetupContext1Replay();
+            trex_200::SetupContext6Replay();
             break;
         default:
             fprintf(stderr, "Error in switch.\n");
