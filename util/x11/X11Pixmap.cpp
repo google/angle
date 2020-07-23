@@ -23,7 +23,7 @@ bool X11Pixmap::initialize(EGLNativeDisplayType display,
                            size_t height,
                            int nativeVisual)
 {
-    mDisplay = display;
+    mDisplay = reinterpret_cast<Display *>(display);
 
     int screen  = DefaultScreen(mDisplay);
     Window root = RootWindow(mDisplay, screen);
