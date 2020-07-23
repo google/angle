@@ -53,7 +53,6 @@ int SetScreenOrientation(struct android_app *app, int orientation)
 
     return 0;
 }
-
 }  // namespace
 
 AndroidWindow::AndroidWindow() {}
@@ -188,6 +187,92 @@ void android_main(struct android_app *app)
             source->process(app, source);
         }
     }
+}
+
+// static
+std::string AndroidWindow::GetExternalStorageDirectory()
+{
+    // Use reverse JNI.
+    JNIEnv *jni = GetJniEnv();
+    if (!jni)
+    {
+        WARN() << "GetExternalStorageDirectory:: Failed to get JNI env";
+        return "";
+    }
+
+    // https://stackoverflow.com/questions/12841240/android-pass-parameter-to-native-activity
+    jclass clazz = jni->GetObjectClass(sApp->activity->clazz);
+    if (clazz == 0)
+    {
+        WARN() << "GetExternalStorageDirectory: Bad activity";
+        return "";
+    }
+
+    jmethodID giid = jni->GetMethodID(clazz, "getIntent", "()Landroid/content/Intent;");
+    if (giid == 0)
+    {
+        WARN() << "GetExternalStorageDirectory: Could not find getIntent";
+        return "";
+    }
+
+    jobject intent = jni->CallObjectMethod(sApp->activity->clazz, giid);
+    if (intent == 0)
+    {
+        WARN() << "GetExternalStorageDirectory: Error calling getIntent";
+        return "";
+    }
+
+    jclass icl = jni->GetObjectClass(intent);
+    if (icl == 0)
+    {
+        WARN() << "GetExternalStorageDirectory: Error getting getIntent class";
+        return "";
+    }
+
+    jmethodID gseid =
+        jni->GetMethodID(icl, "getStringExtra", "(Ljava/lang/String;)Ljava/lang/String;");
+    if (gseid == 0)
+    {
+        WARN() << "GetExternalStorageDirectory: Could not find getStringExtra";
+        return "";
+    }
+
+    jstring stringPath = static_cast<jstring>(jni->CallObjectMethod(
+        intent, gseid, jni->NewStringUTF("org.chromium.base.test.util.UrlUtils.RootDirectory")));
+    if (stringPath != 0)
+    {
+        const char *path = jni->GetStringUTFChars(stringPath, nullptr);
+        return std::string(path) + "/chromium_tests_root";
+    }
+
+    jclass environment = jni->FindClass("org/chromium/base/test/util/UrlUtils");
+    if (environment == 0)
+    {
+        WARN() << "GetExternalStorageDirectory: Failed to find Environment";
+        return "";
+    }
+
+    jmethodID getDir =
+        jni->GetStaticMethodID(environment, "getIsolatedTestRoot", "()Ljava/lang/String;");
+    if (getDir == 0)
+    {
+        WARN() << "GetExternalStorageDirectory: Failed to get static method";
+        return "";
+    }
+
+    stringPath = static_cast<jstring>(jni->CallStaticObjectMethod(environment, getDir));
+
+    jthrowable exception = jni->ExceptionOccurred();
+    if (exception != 0)
+    {
+        jni->ExceptionDescribe();
+        jni->ExceptionClear();
+        WARN() << "GetExternalStorageDirectory: Failed because of exception";
+        return "";
+    }
+
+    const char *path = jni->GetStringUTFChars(stringPath, nullptr);
+    return std::string(path);
 }
 
 // static

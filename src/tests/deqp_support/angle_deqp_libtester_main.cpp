@@ -21,6 +21,7 @@
 #include "tcuRandomOrderExecutor.h"
 #include "tcuResource.hpp"
 #include "tcuTestLog.hpp"
+#include "util/OSWindow.h"
 
 tcu::Platform *CreateANGLEPlatform(angle::LogErrorFunc logErrorFunc, uint32_t preRotation);
 
@@ -34,34 +35,6 @@ tcu::TestLog *g_log                  = nullptr;
 tcu::TestContext *g_testCtx          = nullptr;
 tcu::TestPackageRoot *g_root         = nullptr;
 tcu::RandomOrderExecutor *g_executor = nullptr;
-
-const char *kDataPaths[] = {
-    ".",
-    "../../sdcard/chromium_tests_root",
-    "../../sdcard/chromium_tests_root/third_party/angle/third_party/VK-GL-CTS/src",
-    "../../third_party/angle/third_party/VK-GL-CTS/src",
-    "../../third_party/VK-GL-CTS/src",
-    "third_party/VK-GL-CTS/src",
-};
-
-bool FindDataDir(std::string *dataDirOut)
-{
-    for (const char *dataPath : kDataPaths)
-    {
-        std::stringstream dirStream;
-        dirStream << angle::GetExecutableDirectory() << "/" << dataPath << "/"
-                  << ANGLE_DEQP_DATA_DIR;
-        std::string candidateDataDir = dirStream.str();
-
-        if (angle::IsDirectory(candidateDataDir.c_str()))
-        {
-            *dataDirOut = candidateDataDir;
-            return true;
-        }
-    }
-
-    return false;
-}
 
 std::string GetLogFileName(std::string deqpDataDir)
 {
@@ -95,15 +68,16 @@ ANGLE_LIBTESTER_EXPORT bool deqp_libtester_init_platform(int argc,
             return false;
         }
 
-        std::string deqpDataDir;
-        if (!FindDataDir(&deqpDataDir))
+        constexpr size_t kMaxDataDirLen = 1000;
+        char deqpDataDir[kMaxDataDirLen];
+        if (!angle::FindTestDataPath(ANGLE_DEQP_DATA_DIR, deqpDataDir, kMaxDataDirLen))
         {
             std::cout << "Failed to find dEQP data directory." << std::endl;
             return false;
         }
 
         g_cmdLine = new tcu::CommandLine(argc, argv);
-        g_archive = new tcu::DirArchive(deqpDataDir.c_str());
+        g_archive = new tcu::DirArchive(deqpDataDir);
         g_log     = new tcu::TestLog(GetLogFileName(deqpDataDir).c_str(), g_cmdLine->getLogFlags());
         g_testCtx = new tcu::TestContext(*g_platform, *g_archive, *g_log, *g_cmdLine, DE_NULL);
         g_root    = new tcu::TestPackageRoot(*g_testCtx, tcu::TestPackageRegistry::getSingleton());
@@ -168,7 +142,7 @@ ANGLE_LIBTESTER_EXPORT void deqp_libtester_shutdown_platform()
 ANGLE_LIBTESTER_EXPORT TestResult deqp_libtester_run(const char *caseName)
 {
     const char *emptyString = "";
-    if (g_platform == nullptr && !deqp_libtester_init_platform(1, &emptyString, nullptr, 0))
+    if (g_platform == nullptr)
     {
         tcu::die("Failed to initialize platform.");
     }
