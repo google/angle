@@ -68,6 +68,7 @@ using SamplerBindingVector = std::vector<BindingPointer<Sampler>>;
 using TextureBindingVector = std::vector<BindingPointer<Texture>>;
 using TextureBindingMap    = angle::PackedEnumMap<TextureType, TextureBindingVector>;
 using ActiveQueryMap       = angle::PackedEnumMap<QueryType, BindingPointer<Query>>;
+using BufferVector         = std::vector<OffsetBindingPointer<Buffer>>;
 
 class ActiveTexturesCache final : angle::NonCopyable
 {
@@ -232,6 +233,10 @@ class State : angle::NonCopyable
         ASSERT(maskNumber < mMaxSampleMaskWords);
         return mSampleMaskValues[maskNumber];
     }
+    std::array<GLbitfield, MAX_SAMPLE_MASK_WORDS> getSampleMaskValues() const
+    {
+        return mSampleMaskValues;
+    }
     GLuint getMaxSampleMaskWords() const { return mMaxSampleMaskWords; }
 
     // Multisampling/alpha to one manipulation.
@@ -265,6 +270,7 @@ class State : angle::NonCopyable
     GLenum getGenerateMipmapHint() const;
     void setTextureFilteringHint(GLenum hint);
     GLenum getTextureFilteringHint() const;
+    GLenum getFragmentShaderDerivativeHint() const { return mFragmentShaderDerivativeHint; }
     void setFragmentShaderDerivativeHint(GLenum hint);
 
     // GL_CHROMIUM_bind_generates_resource
@@ -796,6 +802,39 @@ class State : angle::NonCopyable
 
     bool isEarlyFragmentTestsOptimizationAllowed() const { return isSampleCoverageEnabled(); }
 
+    const BufferVector &getOffsetBindingPointerUniformBuffers() const { return mUniformBuffers; }
+
+    const BufferVector &getOffsetBindingPointerAtomicCounterBuffers() const
+    {
+        return mAtomicCounterBuffers;
+    }
+
+    const BufferVector &getOffsetBindingPointerShaderStorageBuffers() const
+    {
+        return mShaderStorageBuffers;
+    }
+
+    ActiveTextureMask getTexturesIncompatibleWithSamplers() const
+    {
+        return mTexturesIncompatibleWithSamplers;
+    }
+
+    bool isProgramBinaryCacheEnabled() const { return mProgramBinaryCacheEnabled; }
+
+    bool isTextureRectangleEnabled() const { return mTextureRectangleEnabled; }
+
+    DrawBufferMask getBlendFuncConstantAlphaDrawBuffers() const
+    {
+        return mBlendFuncConstantAlphaDrawBuffers;
+    }
+
+    DrawBufferMask getBlendFuncConstantColorDrawBuffers() const
+    {
+        return mBlendFuncConstantColorDrawBuffers;
+    }
+
+    const std::vector<ImageUnit> getImageUnits() const { return mImageUnits; }
+
     const BlendStateExt &getBlendStateExt() const { return mBlendStateExt; }
 
   private:
@@ -973,7 +1012,6 @@ class State : angle::NonCopyable
     // vertex array object.
     BoundBufferMap mBoundBuffers;
 
-    using BufferVector = std::vector<OffsetBindingPointer<Buffer>>;
     BufferVector mUniformBuffers;
     BufferVector mAtomicCounterBuffers;
     BufferVector mShaderStorageBuffers;
