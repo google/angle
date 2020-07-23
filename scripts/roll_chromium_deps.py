@@ -34,6 +34,7 @@ ANGLE_CHROMIUM_DEPS = [
     'build',
     'buildtools',
     'testing',
+    'third_party/abseil-cpp',
     'third_party/libjpeg_turbo',
     'third_party/nasm',
     'third_party/Python-Markdown',
