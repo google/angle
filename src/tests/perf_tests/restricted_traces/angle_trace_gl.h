@@ -8,7 +8,7 @@
 #ifndef ANGLE_TRACE_GL_H_
 #define ANGLE_TRACE_GL_H_
 
-// TODO(jmadill): Bind to trace GL loader. http://anglebug.com/4845
-#include "util/util_gl.h"
+#include "trace_egl_loader_autogen.h"
+#include "trace_gles_loader_autogen.h"
 
 #endif  // ANGLE_TRACE_GL_H_

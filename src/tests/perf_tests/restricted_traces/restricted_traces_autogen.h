@@ -10,6 +10,7 @@
 #ifndef ANGLE_RESTRICTED_TRACES_H_
 #define ANGLE_RESTRICTED_TRACES_H_
 
+#include <KHR/khrplatform.h>
 #include <cstdint>
 #include <vector>
 
@@ -27,6 +28,13 @@
 #        define ANGLE_TRACE_EXPORT
 #    endif
 #endif  // !defined(ANGLE_TRACE_EXPORT)
+
+namespace trace_angle
+{
+using GenericProc = void (*)();
+using LoadProc    = GenericProc(KHRONOS_APIENTRY *)(const char *);
+ANGLE_TRACE_EXPORT void LoadGLES(LoadProc loadProc);
+}  // namespace trace_angle
 
 namespace angle
 {

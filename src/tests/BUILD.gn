@@ -296,6 +296,10 @@ if (is_win || is_linux || is_android || is_mac || is_fuchsia) {
         "perf_tests/restricted_traces/angle_trace_gl.h",
         "perf_tests/restricted_traces/restricted_traces_autogen.cpp",
         "perf_tests/restricted_traces/restricted_traces_autogen.h",
+        "perf_tests/restricted_traces/trace_egl_loader_autogen.cpp",
+        "perf_tests/restricted_traces/trace_egl_loader_autogen.h",
+        "perf_tests/restricted_traces/trace_gles_loader_autogen.cpp",
+        "perf_tests/restricted_traces/trace_gles_loader_autogen.h",
       ]
 
       data = []

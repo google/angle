@@ -41,6 +41,7 @@ header_template = """// GENERATED FILE - DO NOT EDIT.
 
 #include <cstdint>
 #include <vector>
+#include <KHR/khrplatform.h>
 
 // See util/util_export.h for details on import/export labels.
 #if !defined(ANGLE_TRACE_EXPORT)
@@ -56,6 +57,13 @@ header_template = """// GENERATED FILE - DO NOT EDIT.
 #        define ANGLE_TRACE_EXPORT
 #    endif
 #endif  // !defined(ANGLE_TRACE_EXPORT)
+
+namespace trace_angle
+{{
+using GenericProc = void (*)();
+using LoadProc    = GenericProc(KHRONOS_APIENTRY *)(const char *);
+ANGLE_TRACE_EXPORT void LoadGLES(LoadProc loadProc);
+}}  // namespace trace_angle
 
 namespace angle
 {{
