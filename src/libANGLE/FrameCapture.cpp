@@ -992,7 +992,8 @@ void WriteCppReplayIndexFiles(bool compression,
 
     header << "#pragma once\n";
     header << "\n";
-    header << "#include \"angle_trace_gl.h\"\n";
+    header << "#include <EGL/egl.h>\n";
+    header << "#include \"angle_gl.h\"\n";
     header << "\n";
     header << "#include <cstdint>\n";
     header << "#include <cstdio>\n";
@@ -1071,6 +1072,7 @@ void WriteCppReplayIndexFiles(bool compression,
     header << "extern uint8_t *gBinaryData;\n";
 
     source << "#include \"" << FmtCapturePrefix(contextId, captureLabel) << ".h\"\n";
+    source << "#include \"angle_trace_gl.h\"\n";
     source << "\n";
 
     if (!captureLabel.empty())
