@@ -172,12 +172,12 @@ class ProgramBindings final : angle::NonCopyable
     int getBindingByName(const std::string &name) const;
     int getBinding(const sh::ShaderVariable &variable) const;
 
-    using const_iterator = std::unordered_map<std::string, GLuint>::const_iterator;
+    using const_iterator = angle::HashMap<std::string, GLuint>::const_iterator;
     const_iterator begin() const;
     const_iterator end() const;
 
   private:
-    std::unordered_map<std::string, GLuint> mBindings;
+    angle::HashMap<std::string, GLuint> mBindings;
 };
 
 // Uniforms and Fragment Outputs require special treatment due to array notation (e.g., "[0]")

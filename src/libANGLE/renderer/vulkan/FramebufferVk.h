@@ -10,6 +10,7 @@
 #ifndef LIBANGLE_RENDERER_VULKAN_FRAMEBUFFERVK_H_
 #define LIBANGLE_RENDERER_VULKAN_FRAMEBUFFERVK_H_
 
+#include "libANGLE/angletypes.h"
 #include "libANGLE/renderer/FramebufferImpl.h"
 #include "libANGLE/renderer/RenderTargetCache.h"
 #include "libANGLE/renderer/vulkan/BufferVk.h"
@@ -244,7 +245,7 @@ class FramebufferVk : public FramebufferImpl
     gl::DrawBufferMask mEmulatedAlphaAttachmentMask;
 
     vk::FramebufferDesc mCurrentFramebufferDesc;
-    std::unordered_map<vk::FramebufferDesc, vk::FramebufferHelper> mFramebufferCache;
+    angle::HashMap<vk::FramebufferDesc, vk::FramebufferHelper> mFramebufferCache;
 
     vk::ClearValuesArray mDeferredClears;
 };

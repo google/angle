@@ -36,6 +36,10 @@ declare_args() {
 
   # Enable generating current commit information using git
   angle_enable_commit_id = true
+
+  # Abseil has trouble supporting MSVC, particularly regarding component builds.
+  # http://crbug.com/1126524
+  angle_enable_abseil = angle_has_build && is_clang
 }
 
 if (angle_build_all) {
@@ -298,6 +302,7 @@ angle_static_library("angle_common") {
   deps = [ ":xxhash" ]
 
   public_deps = [
+    ":angle_abseil",
     ":angle_system_utils",
     ":angle_version",
     ":includes",
@@ -737,6 +742,31 @@ angle_source_set("angle_gl_enum_utils") {
     "src/libANGLE/gl_enum_utils.cpp",
     "src/libANGLE/gl_enum_utils_autogen.cpp",
   ]
+}
+
+if (!defined(angle_abseil_cpp_dir)) {
+  angle_abseil_cpp_dir = "//third_party/abseil-cpp"
+}
+
+config("angle_abseil_config") {
+  defines = [ "ANGLE_USE_ABSEIL" ]
+
+  configs = [
+    "$angle_abseil_cpp_dir:absl_define_config",
+    "$angle_abseil_cpp_dir:absl_include_config",
+  ]
+}
+
+group("angle_abseil") {
+  # When build_with_chromium=true we need to include "//third_party/abseil-cpp:absl" while
+  # we can be more specific when building standalone ANGLE.
+  if (build_with_chromium) {
+    public_deps = [ "$angle_abseil_cpp_dir:absl" ]
+  } else {
+    public_deps = [ "$angle_abseil_cpp_dir/absl/container:flat_hash_map" ]
+  }
+
+  public_configs = [ ":angle_abseil_config" ]
 }
 
 config("angle_compression_config") {

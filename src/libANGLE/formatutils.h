@@ -287,8 +287,7 @@ void MaybeOverrideLuminance(GLenum &format, GLenum &type, GLenum actualFormat, G
 typedef std::set<GLenum> FormatSet;
 const FormatSet &GetAllSizedInternalFormats();
 
-typedef std::unordered_map<GLenum, std::unordered_map<GLenum, InternalFormat>>
-    InternalFormatInfoMap;
+typedef angle::HashMap<GLenum, angle::HashMap<GLenum, InternalFormat>> InternalFormatInfoMap;
 const InternalFormatInfoMap &GetInternalFormatMap();
 
 int GetAndroidHardwareBufferFormatFromChannelSizes(const egl::AttributeMap &attribMap);
