@@ -450,10 +450,13 @@ void RendererVk::ensureCapsInitialized() const
     // There is no additional limit to the combined number of components.  We can have up to a
     // maximum number of uniform buffers, each having the maximum number of components.  Note that
     // this limit includes both components in and out of uniform buffers.
+    //
+    // This value is limited to INT_MAX to avoid overflow when queried from glGetIntegerv().
     const uint64_t maxCombinedUniformComponents =
-        static_cast<uint64_t>(maxPerStageUniformBuffers +
-                              kReservedPerStageDefaultUniformBindingCount) *
-        maxUniformComponents;
+        std::min<uint64_t>(static_cast<uint64_t>(maxPerStageUniformBuffers +
+                                                 kReservedPerStageDefaultUniformBindingCount) *
+                               maxUniformComponents,
+                           std::numeric_limits<GLint>::max());
     for (gl::ShaderType shaderType : gl::AllShaderTypes())
     {
         mNativeCaps.maxCombinedShaderUniformComponents[shaderType] = maxCombinedUniformComponents;
