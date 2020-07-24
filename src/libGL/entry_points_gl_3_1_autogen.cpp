@@ -321,15 +321,16 @@ void GL_APIENTRY TexBuffer(GLenum target, GLenum internalformat, GLuint buffer)
 
     if (context)
     {
+        TextureType targetPacked                              = FromGL<TextureType>(target);
         BufferID bufferPacked                                 = FromGL<BufferID>(buffer);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateTexBuffer(context, target, internalformat, bufferPacked));
+                            ValidateTexBuffer(context, targetPacked, internalformat, bufferPacked));
         if (isCallValid)
         {
-            context->texBuffer(target, internalformat, bufferPacked);
+            context->texBuffer(targetPacked, internalformat, bufferPacked);
         }
-        ANGLE_CAPTURE(TexBuffer, isCallValid, context, target, internalformat, bufferPacked);
+        ANGLE_CAPTURE(TexBuffer, isCallValid, context, targetPacked, internalformat, bufferPacked);
     }
 }
 

@@ -842,13 +842,13 @@ CallCapture CaptureSamplerParameterIuiv(const State &glState,
 
 CallCapture CaptureTexBuffer(const State &glState,
                              bool isCallValid,
-                             GLenum target,
+                             TextureType targetPacked,
                              GLenum internalformat,
                              BufferID bufferPacked)
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addEnumParam("target", GLenumGroup::TextureTarget, ParamType::TGLenum, target);
+    paramBuffer.addValueParam("targetPacked", ParamType::TTextureType, targetPacked);
     paramBuffer.addEnumParam("internalformat", GLenumGroup::InternalFormat, ParamType::TGLenum,
                              internalformat);
     paramBuffer.addValueParam("bufferPacked", ParamType::TBufferID, bufferPacked);
@@ -858,7 +858,7 @@ CallCapture CaptureTexBuffer(const State &glState,
 
 CallCapture CaptureTexBufferRange(const State &glState,
                                   bool isCallValid,
-                                  GLenum target,
+                                  TextureType targetPacked,
                                   GLenum internalformat,
                                   BufferID bufferPacked,
                                   GLintptr offset,
@@ -866,7 +866,7 @@ CallCapture CaptureTexBufferRange(const State &glState,
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addEnumParam("target", GLenumGroup::TextureTarget, ParamType::TGLenum, target);
+    paramBuffer.addValueParam("targetPacked", ParamType::TTextureType, targetPacked);
     paramBuffer.addEnumParam("internalformat", GLenumGroup::InternalFormat, ParamType::TGLenum,
                              internalformat);
     paramBuffer.addValueParam("bufferPacked", ParamType::TBufferID, bufferPacked);

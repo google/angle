@@ -266,6 +266,10 @@ typedef void (GL_APIENTRYP PFNGLSEMAPHOREPARAMETERUI64VEXTCONTEXTANGLEPROC)(GLeg
 typedef void (GL_APIENTRYP PFNGLSETFENCENVCONTEXTANGLEPROC)(GLeglContext ctx, GLuint fence, GLenum condition);
 typedef void (GL_APIENTRYP PFNGLSIGNALSEMAPHOREEXTCONTEXTANGLEPROC)(GLeglContext ctx, GLuint semaphore, GLuint numBufferBarriers, const GLuint *buffers, GLuint numTextureBarriers, const GLuint *textures, const GLenum *dstLayouts);
 typedef GLboolean (GL_APIENTRYP PFNGLTESTFENCENVCONTEXTANGLEPROC)(GLeglContext ctx, GLuint fence);
+typedef void (GL_APIENTRYP PFNGLTEXBUFFEREXTCONTEXTANGLEPROC)(GLeglContext ctx, GLenum target, GLenum internalformat, GLuint buffer);
+typedef void (GL_APIENTRYP PFNGLTEXBUFFEROESCONTEXTANGLEPROC)(GLeglContext ctx, GLenum target, GLenum internalformat, GLuint buffer);
+typedef void (GL_APIENTRYP PFNGLTEXBUFFERRANGEEXTCONTEXTANGLEPROC)(GLeglContext ctx, GLenum target, GLenum internalformat, GLuint buffer, GLintptr offset, GLsizeiptr size);
+typedef void (GL_APIENTRYP PFNGLTEXBUFFERRANGEOESCONTEXTANGLEPROC)(GLeglContext ctx, GLenum target, GLenum internalformat, GLuint buffer, GLintptr offset, GLsizeiptr size);
 typedef void (GL_APIENTRYP PFNGLTEXIMAGE3DOESCONTEXTANGLEPROC)(GLeglContext ctx, GLenum target, GLint level, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth, GLint border, GLenum format, GLenum type, const void *pixels);
 typedef void (GL_APIENTRYP PFNGLTEXPARAMETERIIVOESCONTEXTANGLEPROC)(GLeglContext ctx, GLenum target, GLenum pname, const GLint *params);
 typedef void (GL_APIENTRYP PFNGLTEXPARAMETERIUIVOESCONTEXTANGLEPROC)(GLeglContext ctx, GLenum target, GLenum pname, const GLuint *params);
@@ -635,6 +639,10 @@ GL_APICALL void GL_APIENTRY glSemaphoreParameterui64vEXTContextANGLE(GLeglContex
 GL_APICALL void GL_APIENTRY glSetFenceNVContextANGLE(GLeglContext ctx, GLuint fence, GLenum condition);
 GL_APICALL void GL_APIENTRY glSignalSemaphoreEXTContextANGLE(GLeglContext ctx, GLuint semaphore, GLuint numBufferBarriers, const GLuint *buffers, GLuint numTextureBarriers, const GLuint *textures, const GLenum *dstLayouts);
 GL_APICALL GLboolean GL_APIENTRY glTestFenceNVContextANGLE(GLeglContext ctx, GLuint fence);
+GL_APICALL void GL_APIENTRY glTexBufferEXTContextANGLE(GLeglContext ctx, GLenum target, GLenum internalformat, GLuint buffer);
+GL_APICALL void GL_APIENTRY glTexBufferOESContextANGLE(GLeglContext ctx, GLenum target, GLenum internalformat, GLuint buffer);
+GL_APICALL void GL_APIENTRY glTexBufferRangeEXTContextANGLE(GLeglContext ctx, GLenum target, GLenum internalformat, GLuint buffer, GLintptr offset, GLsizeiptr size);
+GL_APICALL void GL_APIENTRY glTexBufferRangeOESContextANGLE(GLeglContext ctx, GLenum target, GLenum internalformat, GLuint buffer, GLintptr offset, GLsizeiptr size);
 GL_APICALL void GL_APIENTRY glTexImage3DOESContextANGLE(GLeglContext ctx, GLenum target, GLint level, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth, GLint border, GLenum format, GLenum type, const void *pixels);
 GL_APICALL void GL_APIENTRY glTexParameterIivOESContextANGLE(GLeglContext ctx, GLenum target, GLenum pname, const GLint *params);
 GL_APICALL void GL_APIENTRY glTexParameterIuivOESContextANGLE(GLeglContext ctx, GLenum target, GLenum pname, const GLuint *params);

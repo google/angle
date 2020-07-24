@@ -355,6 +355,7 @@
                        const TextureID *texturesPacked, const GLenum *srcLayouts);                 \
     /* GL_EXT_semaphore_fd */                                                                      \
     void importSemaphoreFd(SemaphoreID semaphorePacked, HandleType handleTypePacked, GLint fd);    \
+    /* GL_EXT_texture_buffer */                                                                    \
     /* GL_EXT_texture_compression_bptc */                                                          \
     /* GL_EXT_texture_compression_dxt1 */                                                          \
     /* GL_EXT_texture_compression_rgtc */                                                          \
@@ -391,6 +392,7 @@
     void framebufferTexture3D(GLenum target, GLenum attachment, TextureTarget textargetPacked,     \
                               TextureID texturePacked, GLint level, GLint zoffset);                \
     /* GL_OES_texture_border_clamp */                                                              \
+    /* GL_OES_texture_buffer */                                                                    \
     /* GL_OES_texture_cube_map_array */                                                            \
     /* GL_OES_texture_half_float */                                                                \
     /* GL_OES_texture_storage_multisample_2d_array */                                              \

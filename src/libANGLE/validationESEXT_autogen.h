@@ -999,6 +999,18 @@ bool ValidateImportSemaphoreFdEXT(const Context *context,
                                   HandleType handleTypePacked,
                                   GLint fd);
 
+// GL_EXT_texture_buffer
+bool ValidateTexBufferEXT(const Context *context,
+                          TextureType targetPacked,
+                          GLenum internalformat,
+                          BufferID bufferPacked);
+bool ValidateTexBufferRangeEXT(const Context *context,
+                               TextureType targetPacked,
+                               GLenum internalformat,
+                               BufferID bufferPacked,
+                               GLintptr offset,
+                               GLsizeiptr size);
+
 // GL_EXT_texture_compression_bptc
 
 // GL_EXT_texture_compression_dxt1
@@ -1387,6 +1399,18 @@ bool ValidateTexParameterIuivOES(const Context *context,
                                  TextureType targetPacked,
                                  GLenum pname,
                                  const GLuint *params);
+
+// GL_OES_texture_buffer
+bool ValidateTexBufferOES(const Context *context,
+                          TextureType targetPacked,
+                          GLenum internalformat,
+                          BufferID bufferPacked);
+bool ValidateTexBufferRangeOES(const Context *context,
+                               TextureType targetPacked,
+                               GLenum internalformat,
+                               BufferID bufferPacked,
+                               GLintptr offset,
+                               GLsizeiptr size);
 
 // GL_OES_texture_cube_map
 bool ValidateGetTexGenfvOES(const Context *context,

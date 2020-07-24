@@ -4173,6 +4173,21 @@ void GL_APIENTRY glImportSemaphoreFdEXT(GLuint semaphore, GLenum handleType, GLi
     return gl::ImportSemaphoreFdEXT(semaphore, handleType, fd);
 }
 
+// GL_EXT_texture_buffer
+void GL_APIENTRY glTexBufferEXT(GLenum target, GLenum internalformat, GLuint buffer)
+{
+    return gl::TexBufferEXT(target, internalformat, buffer);
+}
+
+void GL_APIENTRY glTexBufferRangeEXT(GLenum target,
+                                     GLenum internalformat,
+                                     GLuint buffer,
+                                     GLintptr offset,
+                                     GLsizeiptr size)
+{
+    return gl::TexBufferRangeEXT(target, internalformat, buffer, offset, size);
+}
+
 // GL_EXT_texture_compression_bptc
 
 // GL_EXT_texture_compression_dxt1
@@ -4758,6 +4773,21 @@ void GL_APIENTRY glTexParameterIivOES(GLenum target, GLenum pname, const GLint *
 void GL_APIENTRY glTexParameterIuivOES(GLenum target, GLenum pname, const GLuint *params)
 {
     return gl::TexParameterIuivOES(target, pname, params);
+}
+
+// GL_OES_texture_buffer
+void GL_APIENTRY glTexBufferOES(GLenum target, GLenum internalformat, GLuint buffer)
+{
+    return gl::TexBufferOES(target, internalformat, buffer);
+}
+
+void GL_APIENTRY glTexBufferRangeOES(GLenum target,
+                                     GLenum internalformat,
+                                     GLuint buffer,
+                                     GLintptr offset,
+                                     GLsizeiptr size)
+{
+    return gl::TexBufferRangeOES(target, internalformat, buffer, offset, size);
 }
 
 // GL_OES_texture_cube_map
@@ -8662,6 +8692,22 @@ void GL_APIENTRY glTexBufferContextANGLE(GLeglContext ctx,
     return gl::TexBufferContextANGLE(ctx, target, internalformat, buffer);
 }
 
+void GL_APIENTRY glTexBufferEXTContextANGLE(GLeglContext ctx,
+                                            GLenum target,
+                                            GLenum internalformat,
+                                            GLuint buffer)
+{
+    return gl::TexBufferEXTContextANGLE(ctx, target, internalformat, buffer);
+}
+
+void GL_APIENTRY glTexBufferOESContextANGLE(GLeglContext ctx,
+                                            GLenum target,
+                                            GLenum internalformat,
+                                            GLuint buffer)
+{
+    return gl::TexBufferOESContextANGLE(ctx, target, internalformat, buffer);
+}
+
 void GL_APIENTRY glTexBufferRangeContextANGLE(GLeglContext ctx,
                                               GLenum target,
                                               GLenum internalformat,
@@ -8670,6 +8716,26 @@ void GL_APIENTRY glTexBufferRangeContextANGLE(GLeglContext ctx,
                                               GLsizeiptr size)
 {
     return gl::TexBufferRangeContextANGLE(ctx, target, internalformat, buffer, offset, size);
+}
+
+void GL_APIENTRY glTexBufferRangeEXTContextANGLE(GLeglContext ctx,
+                                                 GLenum target,
+                                                 GLenum internalformat,
+                                                 GLuint buffer,
+                                                 GLintptr offset,
+                                                 GLsizeiptr size)
+{
+    return gl::TexBufferRangeEXTContextANGLE(ctx, target, internalformat, buffer, offset, size);
+}
+
+void GL_APIENTRY glTexBufferRangeOESContextANGLE(GLeglContext ctx,
+                                                 GLenum target,
+                                                 GLenum internalformat,
+                                                 GLuint buffer,
+                                                 GLintptr offset,
+                                                 GLsizeiptr size)
+{
+    return gl::TexBufferRangeOESContextANGLE(ctx, target, internalformat, buffer, offset, size);
 }
 
 void GL_APIENTRY glTexCoordPointerContextANGLE(GLeglContext ctx,

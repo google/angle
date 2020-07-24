@@ -2646,13 +2646,13 @@ void FrameCapture::ReplayCall(gl::Context *context,
             break;
         case gl::EntryPoint::TexBuffer:
             context->texBuffer(
-                params.getParam("target", ParamType::TGLenum, 0).value.GLenumVal,
+                params.getParam("targetPacked", ParamType::TTextureType, 0).value.TextureTypeVal,
                 params.getParam("internalformat", ParamType::TGLenum, 1).value.GLenumVal,
                 params.getParam("bufferPacked", ParamType::TBufferID, 2).value.BufferIDVal);
             break;
         case gl::EntryPoint::TexBufferRange:
             context->texBufferRange(
-                params.getParam("target", ParamType::TGLenum, 0).value.GLenumVal,
+                params.getParam("targetPacked", ParamType::TTextureType, 0).value.TextureTypeVal,
                 params.getParam("internalformat", ParamType::TGLenum, 1).value.GLenumVal,
                 params.getParam("bufferPacked", ParamType::TBufferID, 2).value.BufferIDVal,
                 params.getParam("offset", ParamType::TGLintptr, 3).value.GLintptrVal,

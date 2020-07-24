@@ -1220,6 +1220,20 @@ angle::CallCapture CaptureImportSemaphoreFdEXT(const State &glState,
                                                HandleType handleTypePacked,
                                                GLint fd);
 
+// GL_EXT_texture_buffer
+angle::CallCapture CaptureTexBufferEXT(const State &glState,
+                                       bool isCallValid,
+                                       TextureType targetPacked,
+                                       GLenum internalformat,
+                                       BufferID bufferPacked);
+angle::CallCapture CaptureTexBufferRangeEXT(const State &glState,
+                                            bool isCallValid,
+                                            TextureType targetPacked,
+                                            GLenum internalformat,
+                                            BufferID bufferPacked,
+                                            GLintptr offset,
+                                            GLsizeiptr size);
+
 // GL_EXT_texture_compression_bptc
 
 // GL_EXT_texture_compression_dxt1
@@ -1732,6 +1746,20 @@ angle::CallCapture CaptureTexParameterIuivOES(const State &glState,
                                               TextureType targetPacked,
                                               GLenum pname,
                                               const GLuint *params);
+
+// GL_OES_texture_buffer
+angle::CallCapture CaptureTexBufferOES(const State &glState,
+                                       bool isCallValid,
+                                       TextureType targetPacked,
+                                       GLenum internalformat,
+                                       BufferID bufferPacked);
+angle::CallCapture CaptureTexBufferRangeOES(const State &glState,
+                                            bool isCallValid,
+                                            TextureType targetPacked,
+                                            GLenum internalformat,
+                                            BufferID bufferPacked,
+                                            GLintptr offset,
+                                            GLsizeiptr size);
 
 // GL_OES_texture_cube_map
 angle::CallCapture CaptureGetTexGenfvOES(const State &glState,

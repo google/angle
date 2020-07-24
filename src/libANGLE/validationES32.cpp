@@ -520,7 +520,7 @@ bool ValidateSamplerParameterIuiv(const Context *context,
 }
 
 bool ValidateTexBuffer(const Context *context,
-                       GLenum target,
+                       TextureType target,
                        GLenum internalformat,
                        BufferID buffer)
 {
@@ -528,7 +528,7 @@ bool ValidateTexBuffer(const Context *context,
 }
 
 bool ValidateTexBufferRange(const Context *context,
-                            GLenum target,
+                            TextureType target,
                             GLenum internalformat,
                             BufferID buffer,
                             GLintptr offset,

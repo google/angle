@@ -2056,12 +2056,12 @@ void Context::getRenderbufferParameterivRobust(GLenum target,
     getRenderbufferParameteriv(target, pname, params);
 }
 
-void Context::texBuffer(GLenum target, GLenum internalformat, BufferID buffer)
+void Context::texBuffer(TextureType target, GLenum internalformat, BufferID buffer)
 {
     UNIMPLEMENTED();
 }
 
-void Context::texBufferRange(GLenum target,
+void Context::texBufferRange(TextureType target,
                              GLenum internalformat,
                              BufferID buffer,
                              GLintptr offset,

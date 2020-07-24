@@ -990,17 +990,18 @@ void GL_APIENTRY TexBufferRange(GLenum target,
 
     if (context)
     {
+        TextureType targetPacked                              = FromGL<TextureType>(target);
         BufferID bufferPacked                                 = FromGL<BufferID>(buffer);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateTexBufferRange(context, target, internalformat, bufferPacked, offset, size));
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateTexBufferRange(context, targetPacked, internalformat,
+                                                   bufferPacked, offset, size));
         if (isCallValid)
         {
-            context->texBufferRange(target, internalformat, bufferPacked, offset, size);
+            context->texBufferRange(targetPacked, internalformat, bufferPacked, offset, size);
         }
-        ANGLE_CAPTURE(TexBufferRange, isCallValid, context, target, internalformat, bufferPacked,
-                      offset, size);
+        ANGLE_CAPTURE(TexBufferRange, isCallValid, context, targetPacked, internalformat,
+                      bufferPacked, offset, size);
     }
 }
 
