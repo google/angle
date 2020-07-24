@@ -660,6 +660,11 @@ bool EGLWindow::hasError() const
     return eglGetError() != EGL_SUCCESS;
 }
 
+angle::GenericProc EGLWindow::getProcAddress(const char *name)
+{
+    return eglGetProcAddress(name);
+}
+
 // static
 void GLWindowBase::Delete(GLWindowBase **window)
 {

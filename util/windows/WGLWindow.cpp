@@ -240,6 +240,11 @@ bool WGLWindow::hasError() const
     return GetLastError() != S_OK;
 }
 
+angle::GenericProc WGLWindow::getProcAddress(const char *name)
+{
+    return GetProcAddressWithFallback(name);
+}
+
 // static
 WGLWindow *WGLWindow::New(int glesMajorVersion, int glesMinorVersion)
 {
