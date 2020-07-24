@@ -544,7 +544,10 @@ CommandBufferHelper::CommandBufferHelper()
       mValidTransformFeedbackBufferCount(0),
       mRebindTransformFeedbackBuffers(false),
       mIsRenderPassCommandBuffer(false),
-      mMergeBarriers(false)
+      mMergeBarriers(false),
+      mDepthTestEverEnabled(false),
+      mStencilTestEverEnabled(false),
+      mDepthStencilAttachmentIndex(kInvalidAttachmentIndex)
 {}
 
 CommandBufferHelper::~CommandBufferHelper()
@@ -657,22 +660,49 @@ void CommandBufferHelper::beginRenderPass(const vk::Framebuffer &framebuffer,
                                           const gl::Rectangle &renderArea,
                                           const vk::RenderPassDesc &renderPassDesc,
                                           const vk::AttachmentOpsArray &renderPassAttachmentOps,
+                                          const uint32_t depthStencilAttachmentIndex,
                                           const vk::ClearValuesArray &clearValues,
                                           vk::CommandBuffer **commandBufferOut)
 {
     ASSERT(mIsRenderPassCommandBuffer);
     ASSERT(empty());
 
-    mRenderPassDesc = renderPassDesc;
-    mAttachmentOps  = renderPassAttachmentOps;
+    mRenderPassDesc              = renderPassDesc;
+    mAttachmentOps               = renderPassAttachmentOps;
+    mDepthStencilAttachmentIndex = depthStencilAttachmentIndex;
     mFramebuffer.setHandle(framebuffer.getHandle());
-    mRenderArea  = renderArea;
-    mClearValues = clearValues;
-
+    mRenderArea       = renderArea;
+    mClearValues      = clearValues;
     *commandBufferOut = &mCommandBuffer;
 
     mRenderPassStarted = true;
     mCounter++;
+}
+
+void CommandBufferHelper::endRenderPass()
+{
+    pauseTransformFeedbackIfStarted();
+
+    if (mDepthStencilAttachmentIndex == kInvalidAttachmentIndex)
+    {
+        return;
+    }
+
+    // Depth/Stencil buffer optimization: if we are loading or clearing the buffer, but the
+    // buffer has not been used, and the data has also not been stored back into buffer, then
+    // just skip the load/clear op.
+    if (!mDepthTestEverEnabled &&
+        mAttachmentOps[mDepthStencilAttachmentIndex].storeOp == VK_ATTACHMENT_STORE_OP_DONT_CARE)
+    {
+        mAttachmentOps[mDepthStencilAttachmentIndex].loadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+    }
+
+    if (!mStencilTestEverEnabled && mAttachmentOps[mDepthStencilAttachmentIndex].stencilStoreOp ==
+                                        VK_ATTACHMENT_STORE_OP_DONT_CARE)
+    {
+        mAttachmentOps[mDepthStencilAttachmentIndex].stencilLoadOp =
+            VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+    }
 }
 
 void CommandBufferHelper::beginTransformFeedback(size_t validBufferCount,
@@ -859,6 +889,9 @@ void CommandBufferHelper::reset()
         mRenderPassStarted                 = false;
         mValidTransformFeedbackBufferCount = 0;
         mRebindTransformFeedbackBuffers    = false;
+        mDepthTestEverEnabled              = false;
+        mStencilTestEverEnabled            = false;
+        mDepthStencilAttachmentIndex       = kInvalidAttachmentIndex;
     }
     // This state should never change for non-renderPass command buffer
     ASSERT(mRenderPassStarted == false);

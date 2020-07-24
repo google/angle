@@ -2838,6 +2838,10 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 mGraphicsPipelineDesc->updateDepthTestEnabled(&mGraphicsPipelineTransition,
                                                               glState.getDepthStencilState(),
                                                               glState.getDrawFramebuffer());
+                if (mState.isDepthTestEnabled() && mRenderPassCommands->started())
+                {
+                    mRenderPassCommands->setDepthTestEnabled();
+                }
                 break;
             case gl::State::DIRTY_BIT_DEPTH_FUNC:
                 mGraphicsPipelineDesc->updateDepthFunc(&mGraphicsPipelineTransition,
@@ -2852,6 +2856,10 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 mGraphicsPipelineDesc->updateStencilTestEnabled(&mGraphicsPipelineTransition,
                                                                 glState.getDepthStencilState(),
                                                                 glState.getDrawFramebuffer());
+                if (mState.isStencilTestEnabled() && mRenderPassCommands->started())
+                {
+                    mRenderPassCommands->setStencilTestEnabled();
+                }
                 break;
             case gl::State::DIRTY_BIT_STENCIL_FUNCS_FRONT:
                 mGraphicsPipelineDesc->updateStencilFrontFuncs(&mGraphicsPipelineTransition,
@@ -4378,6 +4386,7 @@ angle::Result ContextVk::flushAndBeginRenderPass(
     const gl::Rectangle &renderArea,
     const vk::RenderPassDesc &renderPassDesc,
     const vk::AttachmentOpsArray &renderPassAttachmentOps,
+    const uint32_t depthStencilAttachmentIndex,
     const vk::ClearValuesArray &clearValues,
     vk::CommandBuffer **commandBufferOut)
 {
@@ -4388,7 +4397,8 @@ angle::Result ContextVk::flushAndBeginRenderPass(
     ANGLE_TRY(endRenderPassAndGetCommandBuffer(&outsideRenderPassCommandBuffer));
 
     mRenderPassCommands->beginRenderPass(framebuffer, renderArea, renderPassDesc,
-                                         renderPassAttachmentOps, clearValues, commandBufferOut);
+                                         renderPassAttachmentOps, depthStencilAttachmentIndex,
+                                         clearValues, commandBufferOut);
     mRenderPassFramebuffer = framebuffer.getHandle();
     return angle::Result::Continue;
 }
@@ -4407,6 +4417,15 @@ angle::Result ContextVk::startRenderPass(gl::Rectangle renderArea,
     {
         mActiveQueryAnySamplesConservative->getQueryHelper()->beginOcclusionQuery(
             this, mRenderPassCommandBuffer);
+    }
+
+    if (mState.isDepthTestEnabled())
+    {
+        mRenderPassCommands->setDepthTestEnabled();
+    }
+    if (mState.isStencilTestEnabled())
+    {
+        mRenderPassCommands->setStencilTestEnabled();
     }
 
     if (commandBufferOut)
@@ -4466,7 +4485,7 @@ angle::Result ContextVk::endRenderPass()
         ANGLE_TRY(flushOutsideRenderPassCommands());
     }
 
-    mRenderPassCommands->pauseTransformFeedbackIfStarted();
+    mRenderPassCommands->endRenderPass();
 
     if (mRenderer->getFeatures().enableCommandProcessingThread.enabled)
     {
