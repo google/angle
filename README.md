@@ -17,15 +17,16 @@ Metal and MacOS, Chrome OS, and Fuchsia support.
 
 ### Platform support via backing renderers
 
-|             |    Direct3D 9  |   Direct3D 11  |   Desktop GL  |    GL ES    |   Vulkan    |    Metal    |
-|------------:|:--------------:|:--------------:|:-------------:|:-----------:|:-----------:|:-----------:|
-| Windows     |    complete    |    complete    |   complete    |   complete  |   complete  |             |
-| Linux       |                |                |   complete    |             |   complete  |             |
-| Mac OS X    |                |                |   complete    |             |             | in progress |
-| iOS         |                |                |               |             |             |   planned   |
-| Chrome OS   |                |                |               |   complete  |   planned   |             |
-| Android     |                |                |               |   complete  |   complete  |             |
-| Fuchsia     |                |                |               |             | in progress |             |
+|              |    Direct3D 9  |   Direct3D 11  |   Desktop GL  |    GL ES    |   Vulkan    |    Metal    |
+|-------------:|:--------------:|:--------------:|:-------------:|:-----------:|:-----------:|:-----------:|
+| Windows      |    complete    |    complete    |   complete    |   complete  |   complete  |             |
+| Linux        |                |                |   complete    |             |   complete  |             |
+| Mac OS X     |                |                |   complete    |             |             | in progress |
+| iOS          |                |                |               |             |             |   planned   |
+| Chrome OS    |                |                |               |   complete  |   planned   |             |
+| Android      |                |                |               |   complete  |   complete  |             |
+| GGP (Stadia) |                |                |               |             |   complete  |             |
+| Fuchsia      |                |                |               |             | in progress |             |
 
 ANGLE v1.0.772 was certified compliant by passing the OpenGL ES 2.0.3 conformance tests in October 2011.
 
