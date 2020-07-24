@@ -13,6 +13,8 @@
 #include <cstddef>
 #include <ostream>
 
+#include "absl/container/flat_hash_map.h"
+
 #include "angle_gl.h"
 #include "common/android_util.h"
 #include "libANGLE/Caps.h"
@@ -273,7 +275,7 @@ void MaybeOverrideLuminance(GLenum &format, GLenum &type, GLenum actualFormat, G
 typedef std::set<GLenum> FormatSet;
 const FormatSet &GetAllSizedInternalFormats();
 
-typedef std::unordered_map<GLenum, std::unordered_map<GLenum, InternalFormat>>
+typedef absl::flat_hash_map<GLenum, absl::flat_hash_map<GLenum, InternalFormat>>
     InternalFormatInfoMap;
 const InternalFormatInfoMap &GetInternalFormatMap();
 

@@ -10,6 +10,8 @@
 #ifndef LIBANGLE_RENDERER_VULKAN_PROGRAMEXECUTABLEVK_H_
 #define LIBANGLE_RENDERER_VULKAN_PROGRAMEXECUTABLEVK_H_
 
+#include "absl/container/flat_hash_map.h"
+
 #include "common/bitset_utils.h"
 #include "common/utilities.h"
 #include "libANGLE/Context.h"
@@ -224,8 +226,8 @@ class ProgramExecutableVk
     size_t mNumDefaultUniformDescriptors;
     vk::BufferSerial mCurrentDefaultUniformBufferSerial;
 
-    std::unordered_map<vk::UniformsAndXfbDesc, VkDescriptorSet> mUniformsAndXfbDescriptorSetCache;
-    std::unordered_map<vk::TextureDescriptorDesc, VkDescriptorSet> mTextureDescriptorsCache;
+    absl::flat_hash_map<vk::UniformsAndXfbDesc, VkDescriptorSet> mUniformsAndXfbDescriptorSetCache;
+    absl::flat_hash_map<vk::TextureDescriptorDesc, VkDescriptorSet> mTextureDescriptorsCache;
 
     // We keep a reference to the pipeline and descriptor set layouts. This ensures they don't get
     // deleted while this program is in use.
