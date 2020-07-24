@@ -35,21 +35,14 @@ GLint TextureTargetToLayer(TextureTarget target)
         case TextureTarget::CubeMapNegativeZ:
             return 5;
         case TextureTarget::External:
-            return ImageIndex::kEntireLevel;
         case TextureTarget::Rectangle:
-            return ImageIndex::kEntireLevel;
         case TextureTarget::_2D:
-            return ImageIndex::kEntireLevel;
         case TextureTarget::VideoImage:
-            return ImageIndex::kEntireLevel;
         case TextureTarget::_2DArray:
-            return ImageIndex::kEntireLevel;
         case TextureTarget::_2DMultisample:
-            return ImageIndex::kEntireLevel;
         case TextureTarget::_2DMultisampleArray:
-            return ImageIndex::kEntireLevel;
         case TextureTarget::_3D:
-            return ImageIndex::kEntireLevel;
+        case TextureTarget::Buffer:
         case TextureTarget::CubeMapArray:
             return ImageIndex::kEntireLevel;
         default:

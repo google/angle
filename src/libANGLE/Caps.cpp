@@ -1041,6 +1041,8 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["GL_NV_robustness_video_memory_purge"] = esOnlyExtension(&Extensions::robustnessVideoMemoryPurgeNV);
         map["GL_ANGLE_get_tex_level_parameter"] = enableableExtension(&Extensions::getTexLevelParameterANGLE);
         map["GL_EXT_copy_image"] = enableableExtension(&Extensions::copyImageEXT);
+        map["GL_OES_texture_buffer"] = enableableExtension(&Extensions::textureBufferOES);
+        map["GL_EXT_texture_buffer"] = enableableExtension(&Extensions::textureBufferEXT);
         // GLES1 extensions
         map["GL_OES_point_size_array"] = enableableExtension(&Extensions::pointSizeArrayOES);
         map["GL_OES_texture_cube_map"] = enableableExtension(&Extensions::textureCubeMapOES);

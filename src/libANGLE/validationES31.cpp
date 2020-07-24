@@ -15,6 +15,7 @@
 #include "libANGLE/VertexArray.h"
 #include "libANGLE/validationES.h"
 #include "libANGLE/validationES2_autogen.h"
+#include "libANGLE/validationES31.h"
 #include "libANGLE/validationES3_autogen.h"
 
 #include "common/utilities.h"
@@ -2168,7 +2169,13 @@ bool ValidateTexBufferOES(const Context *context,
                           GLenum internalformat,
                           BufferID bufferPacked)
 {
-    return true;
+    if (!context->getExtensions().textureBufferOES)
+    {
+        context->validationError(GL_INVALID_OPERATION, kTextureBufferExtensionNotAvailable);
+        return false;
+    }
+
+    return ValidateTexBufferBase(context, target, internalformat, bufferPacked);
 }
 
 bool ValidateTexBufferRangeOES(const Context *context,
@@ -2178,7 +2185,13 @@ bool ValidateTexBufferRangeOES(const Context *context,
                                GLintptr offset,
                                GLsizeiptr size)
 {
-    return true;
+    if (!context->getExtensions().textureBufferOES)
+    {
+        context->validationError(GL_INVALID_OPERATION, kTextureBufferExtensionNotAvailable);
+        return false;
+    }
+
+    return ValidateTexBufferRangeBase(context, target, internalformat, bufferPacked, offset, size);
 }
 
 // GL_EXT_texture_buffer
@@ -2187,7 +2200,13 @@ bool ValidateTexBufferEXT(const Context *context,
                           GLenum internalformat,
                           BufferID bufferPacked)
 {
-    return true;
+    if (!context->getExtensions().textureBufferEXT)
+    {
+        context->validationError(GL_INVALID_OPERATION, kTextureBufferExtensionNotAvailable);
+        return false;
+    }
+
+    return ValidateTexBufferBase(context, target, internalformat, bufferPacked);
 }
 
 bool ValidateTexBufferRangeEXT(const Context *context,
@@ -2197,7 +2216,104 @@ bool ValidateTexBufferRangeEXT(const Context *context,
                                GLintptr offset,
                                GLsizeiptr size)
 {
+    if (!context->getExtensions().textureBufferEXT)
+    {
+        context->validationError(GL_INVALID_OPERATION, kTextureBufferExtensionNotAvailable);
+        return false;
+    }
+
+    return ValidateTexBufferRangeBase(context, target, internalformat, bufferPacked, offset, size);
+}
+
+bool ValidateTexBufferBase(const Context *context,
+                           TextureType target,
+                           GLenum internalformat,
+                           BufferID bufferPacked)
+{
+    if (target != TextureType::Buffer)
+    {
+        context->validationError(GL_INVALID_ENUM, kTextureBufferTarget);
+        return false;
+    }
+
+    switch (internalformat)
+    {
+        case GL_R8:
+        case GL_R16F:
+        case GL_R32F:
+        case GL_R8I:
+        case GL_R16I:
+        case GL_R32I:
+        case GL_R8UI:
+        case GL_R16UI:
+        case GL_R32UI:
+        case GL_RG8:
+        case GL_RG16F:
+        case GL_RG32F:
+        case GL_RG8I:
+        case GL_RG16I:
+        case GL_RG32I:
+        case GL_RG8UI:
+        case GL_RG16UI:
+        case GL_RG32UI:
+        case GL_RGB32F:
+        case GL_RGB32I:
+        case GL_RGB32UI:
+        case GL_RGBA8:
+        case GL_RGBA16F:
+        case GL_RGBA32F:
+        case GL_RGBA8I:
+        case GL_RGBA16I:
+        case GL_RGBA32I:
+        case GL_RGBA8UI:
+        case GL_RGBA16UI:
+        case GL_RGBA32UI:
+            break;
+
+        default:
+            context->validationError(GL_INVALID_ENUM, kTextureBufferInternalFormat);
+            return false;
+    }
+
+    if (bufferPacked.value != 0)
+    {
+        if (!context->isBufferGenerated(bufferPacked))
+        {
+            context->validationError(GL_INVALID_OPERATION, kTextureBufferInvalidBuffer);
+            return false;
+        }
+    }
+
     return true;
+}
+
+bool ValidateTexBufferRangeBase(const Context *context,
+                                TextureType target,
+                                GLenum internalformat,
+                                BufferID bufferPacked,
+                                GLintptr offset,
+                                GLsizeiptr size)
+{
+    const Caps &caps = context->getCaps();
+
+    if (offset < 0 || (offset % caps.textureBufferOffsetAlignment) != 0)
+    {
+        context->validationError(GL_INVALID_VALUE, kTextureBufferOffsetAlignment);
+        return false;
+    }
+    if (size <= 0)
+    {
+        context->validationError(GL_INVALID_VALUE, kTextureBufferSize);
+        return false;
+    }
+    const Buffer *buffer = context->getBuffer(bufferPacked);
+    if (offset + size > buffer->getSize())
+    {
+        context->validationError(GL_INVALID_VALUE, kTextureBufferSizeOffset);
+        return false;
+    }
+
+    return ValidateTexBufferBase(context, target, internalformat, bufferPacked);
 }
 
 }  // namespace gl

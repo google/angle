@@ -234,6 +234,7 @@ const angle::PackedEnumMap<BufferBinding, State::BufferBindingSetter> State::kBu
     GetBufferBindingSetter<BufferBinding::PixelPack>(),
     GetBufferBindingSetter<BufferBinding::PixelUnpack>(),
     GetBufferBindingSetter<BufferBinding::ShaderStorage>(),
+    GetBufferBindingSetter<BufferBinding::Texture>(),
     GetBufferBindingSetter<BufferBinding::TransformFeedback>(),
     GetBufferBindingSetter<BufferBinding::Uniform>(),
 }};
@@ -449,9 +450,13 @@ void State::initialize(Context *context)
         mShaderStorageBuffers.resize(caps.maxShaderStorageBufferBindings);
         mImageUnits.resize(caps.maxImageUnits);
     }
-    if (extensions.textureCubeMapArrayAny())
+    if (clientVersion >= Version(3, 2) || extensions.textureCubeMapArrayAny())
     {
         mSamplerTextures[TextureType::CubeMapArray].resize(caps.maxCombinedTextureImageUnits);
+    }
+    if (clientVersion >= Version(3, 2) || extensions.textureBufferAny())
+    {
+        mSamplerTextures[TextureType::Buffer].resize(caps.maxCombinedTextureImageUnits);
     }
     if (nativeExtensions.textureRectangle)
     {
@@ -2747,6 +2752,18 @@ angle::Result State::getIntegerv(const Context *context, GLenum pname, GLint *pa
                                           TextureType::External)
                           .value;
             break;
+
+        // GL_OES_texture_buffer
+        case GL_TEXTURE_BINDING_BUFFER:
+            ASSERT(mActiveSampler < mMaxCombinedTextureImageUnits);
+            *params =
+                getSamplerTextureId(static_cast<unsigned int>(mActiveSampler), TextureType::Buffer)
+                    .value;
+            break;
+        case GL_TEXTURE_BUFFER_BINDING:
+            *params = mBoundBuffers[BufferBinding::Texture].id().value;
+            break;
+
         case GL_UNIFORM_BUFFER_BINDING:
             *params = mBoundBuffers[BufferBinding::Uniform].id().value;
             break;
@@ -2768,6 +2785,7 @@ angle::Result State::getIntegerv(const Context *context, GLenum pname, GLint *pa
         case GL_PIXEL_UNPACK_BUFFER_BINDING:
             *params = mBoundBuffers[BufferBinding::PixelUnpack].id().value;
             break;
+
         case GL_READ_BUFFER:
             *params = mReadFramebuffer->getReadBufferState();
             break;

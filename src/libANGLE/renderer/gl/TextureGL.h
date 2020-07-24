@@ -207,6 +207,8 @@ class TextureGL : public TextureImpl
 
     angle::Result setSwizzle(const gl::Context *context, GLint swizzle[4]);
 
+    angle::Result setBuffer(const gl::Context *context, GLenum internalFormat) override;
+
     GLenum getNativeInternalFormat(const gl::ImageIndex &index) const;
     bool hasEmulatedAlphaChannel(const gl::ImageIndex &index) const;
 

@@ -230,6 +230,9 @@ class TextureState final : private angle::NonCopyable
     // GLES1 emulation: Generate-mipmap hint per texture
     GLenum mGenerateMipmapHint;
 
+    // GL_OES_texture_buffer / GLES3.2
+    OffsetBindingPointer<Buffer> mBuffer;
+
     InitState mInitState;
 
     mutable SamplerFormat mCachedSamplerFormat;
@@ -325,6 +328,13 @@ class Texture final : public RefCountObject<TextureID>,
 
     void setBorderColor(const Context *context, const ColorGeneric &color);
     const ColorGeneric &getBorderColor() const;
+
+    angle::Result setBuffer(const Context *context,
+                            gl::Buffer *buffer,
+                            GLenum internalFormat,
+                            GLintptr offset,
+                            GLsizeiptr size);
+    const OffsetBindingPointer<Buffer> &getBuffer() const;
 
     const TextureState &getTextureState() const;
 

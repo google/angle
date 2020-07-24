@@ -1564,6 +1564,22 @@ void GenerateCaps(const FunctionsGL *functions,
     {
         caps->maxClipDistances = 0;
     }
+
+    // GL_OES_texture_buffer
+    if (functions->isAtLeastGL(gl::Version(4, 3)) || functions->isAtLeastGLES(gl::Version(3, 2)) ||
+        functions->hasGLESExtension("GL_OES_texture_buffer") ||
+        functions->hasGLESExtension("GL_EXT_texture_buffer") ||
+        functions->hasGLExtension("GL_ARB_texture_buffer_object"))
+    {
+        caps->maxTextureBufferSize = QuerySingleGLInt(functions, GL_MAX_TEXTURE_BUFFER_SIZE);
+        caps->textureBufferOffsetAlignment =
+            QuerySingleGLInt(functions, GL_TEXTURE_BUFFER_OFFSET_ALIGNMENT);
+    }
+    else
+    {
+        // Can't support ES3.2 without texture buffer objects
+        LimitVersion(maxSupportedESVersion, gl::Version(3, 1));
+    }
 }
 
 void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *features)
@@ -1962,6 +1978,8 @@ GLenum GetTextureBindingQuery(gl::TextureType textureType)
             return GL_TEXTURE_BINDING_CUBE_MAP;
         case gl::TextureType::CubeMapArray:
             return GL_TEXTURE_BINDING_CUBE_MAP_ARRAY_OES;
+        case gl::TextureType::Buffer:
+            return GL_TEXTURE_BINDING_BUFFER;
         default:
             UNREACHABLE();
             return 0;

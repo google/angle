@@ -1722,6 +1722,17 @@ angle::Result TextureGL::setSwizzle(const gl::Context *context, GLint swizzle[4]
     return angle::Result::Continue;
 }
 
+angle::Result TextureGL::setBuffer(const gl::Context *context, GLenum internalFormat)
+{
+    const FunctionsGL *functions = GetFunctionsGL(context);
+    const BufferGL *bufferGL     = GetImplAs<BufferGL>(mState.mBuffer.get());
+    ANGLE_GL_TRY(context, functions->texBufferRange(
+                              GL_TEXTURE_BUFFER, internalFormat, bufferGL->getBufferID(),
+                              mState.mBuffer.getOffset(), mState.mBuffer.getSize()));
+
+    return angle::Result::Continue;
+}
+
 GLenum TextureGL::getNativeInternalFormat(const gl::ImageIndex &index) const
 {
     return getLevelInfo(index.getTarget(), index.getLevelIndex()).nativeInternalFormat;

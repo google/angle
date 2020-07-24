@@ -432,6 +432,12 @@ void Context::initialize()
         mZeroTextures[TextureType::CubeMapArray].set(this, zeroTextureCubeMapArray);
     }
 
+    if (getClientVersion() >= Version(3, 2) || mSupportedExtensions.textureBufferAny())
+    {
+        Texture *zeroTextureBuffer = new Texture(mImplementation.get(), {0}, TextureType::Buffer);
+        mZeroTextures[TextureType::Buffer].set(this, zeroTextureBuffer);
+    }
+
     if (mSupportedExtensions.textureRectangle)
     {
         Texture *zeroTextureRectangle =
@@ -1868,10 +1874,20 @@ void Context::getIntegervImpl(GLenum pname, GLint *params) const
         case GL_MAX_DUAL_SOURCE_DRAW_BUFFERS_EXT:
             *params = mState.mExtensions.maxDualSourceDrawBuffers;
             break;
+
         // OES_shader_multisample_interpolation
         case GL_FRAGMENT_INTERPOLATION_OFFSET_BITS_OES:
             *params = mState.mCaps.subPixelInterpolationOffsetBits;
             break;
+
+        // GL_OES_texture_buffer
+        case GL_MAX_TEXTURE_BUFFER_SIZE:
+            *params = mState.mCaps.maxTextureBufferSize;
+            break;
+        case GL_TEXTURE_BUFFER_OFFSET_ALIGNMENT:
+            *params = mState.mCaps.textureBufferOffsetAlignment;
+            break;
+
         default:
             ANGLE_CONTEXT_TRY(mState.getIntegerv(this, pname, params));
             break;
@@ -2083,7 +2099,8 @@ void Context::getRenderbufferParameterivRobust(GLenum target,
 
 void Context::texBuffer(TextureType target, GLenum internalformat, BufferID buffer)
 {
-    UNIMPLEMENTED();
+    Buffer *bufferObj = mState.mBufferManager->getBuffer(buffer);
+    texBufferRange(target, internalformat, buffer, 0, clampCast<GLintptr>(bufferObj->getSize()));
 }
 
 void Context::texBufferRange(TextureType target,
@@ -2092,7 +2109,11 @@ void Context::texBufferRange(TextureType target,
                              GLintptr offset,
                              GLsizeiptr size)
 {
-    UNIMPLEMENTED();
+    ASSERT(target == TextureType::Buffer);
+
+    Texture *texture  = getTextureByType(target);
+    Buffer *bufferObj = mState.mBufferManager->getBuffer(buffer);
+    ANGLE_CONTEXT_TRY(texture->setBuffer(this, bufferObj, internalformat, offset, size));
 }
 
 void Context::getTexParameterfv(TextureType target, GLenum pname, GLfloat *params)
@@ -3649,6 +3670,11 @@ void Context::updateCaps()
         mValidBufferBindings.set(BufferBinding::ShaderStorage);
         mValidBufferBindings.set(BufferBinding::DrawIndirect);
         mValidBufferBindings.set(BufferBinding::DispatchIndirect);
+    }
+
+    if (getClientVersion() >= ES_3_2 || mState.mExtensions.textureBufferAny())
+    {
+        mValidBufferBindings.set(BufferBinding::Texture);
     }
 
     mThreadPool = angle::WorkerThreadPool::Create(mState.mExtensions.parallelShaderCompile);
@@ -9011,6 +9037,7 @@ void StateCache::updateValidBindTextureTypes(Context *context)
         {TextureType::CubeMap, true},
         {TextureType::CubeMapArray, exts.textureCubeMapArrayAny()},
         {TextureType::VideoImage, exts.webglVideoTexture},
+        {TextureType::Buffer, exts.textureBufferAny()},
     }};
 }
 

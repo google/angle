@@ -203,6 +203,8 @@ class TextureImpl : public FramebufferAttachmentObjectImpl
                                            egl::Stream *stream,
                                            const egl::Stream::GLTextureDescription &desc) = 0;
 
+    virtual angle::Result setBuffer(const gl::Context *context, GLenum internalFormat);
+
     virtual angle::Result generateMipmap(const gl::Context *context) = 0;
 
     virtual angle::Result setBaseLevel(const gl::Context *context, GLuint baseLevel) = 0;

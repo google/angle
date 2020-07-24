@@ -128,6 +128,12 @@ angle::Result TextureImpl::setImageExternal(const gl::Context *context,
     return angle::Result::Stop;
 }
 
+angle::Result TextureImpl::setBuffer(const gl::Context *context, GLenum internalFormat)
+{
+    UNREACHABLE();
+    return angle::Result::Stop;
+}
+
 GLint TextureImpl::getMemorySize() const
 {
     return 0;

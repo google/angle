@@ -127,6 +127,8 @@ BufferBinding FromGLenum<BufferBinding>(GLenum from)
             return BufferBinding::PixelUnpack;
         case GL_SHADER_STORAGE_BUFFER:
             return BufferBinding::ShaderStorage;
+        case GL_TEXTURE_BUFFER:
+            return BufferBinding::Texture;
         case GL_TRANSFORM_FEEDBACK_BUFFER:
             return BufferBinding::TransformFeedback;
         case GL_UNIFORM_BUFFER:
@@ -160,6 +162,8 @@ GLenum ToGLenum(BufferBinding from)
             return GL_PIXEL_UNPACK_BUFFER;
         case BufferBinding::ShaderStorage:
             return GL_SHADER_STORAGE_BUFFER;
+        case BufferBinding::Texture:
+            return GL_TEXTURE_BUFFER;
         case BufferBinding::TransformFeedback:
             return GL_TRANSFORM_FEEDBACK_BUFFER;
         case BufferBinding::Uniform:
@@ -203,6 +207,9 @@ std::ostream &operator<<(std::ostream &os, BufferBinding value)
             break;
         case BufferBinding::ShaderStorage:
             os << "GL_SHADER_STORAGE_BUFFER";
+            break;
+        case BufferBinding::Texture:
+            os << "GL_TEXTURE_BUFFER";
             break;
         case BufferBinding::TransformFeedback:
             os << "GL_TRANSFORM_FEEDBACK_BUFFER";
@@ -2004,6 +2011,8 @@ TextureTarget FromGLenum<TextureTarget>(GLenum from)
             return TextureTarget::CubeMapArray;
         case GL_TEXTURE_VIDEO_IMAGE_WEBGL:
             return TextureTarget::VideoImage;
+        case GL_TEXTURE_BUFFER:
+            return TextureTarget::Buffer;
         default:
             return TextureTarget::InvalidEnum;
     }
@@ -2043,6 +2052,8 @@ GLenum ToGLenum(TextureTarget from)
             return GL_TEXTURE_CUBE_MAP_ARRAY;
         case TextureTarget::VideoImage:
             return GL_TEXTURE_VIDEO_IMAGE_WEBGL;
+        case TextureTarget::Buffer:
+            return GL_TEXTURE_BUFFER;
         default:
             UNREACHABLE();
             return 0;
@@ -2098,6 +2109,9 @@ std::ostream &operator<<(std::ostream &os, TextureTarget value)
         case TextureTarget::VideoImage:
             os << "GL_TEXTURE_VIDEO_IMAGE_WEBGL";
             break;
+        case TextureTarget::Buffer:
+            os << "GL_TEXTURE_BUFFER";
+            break;
         default:
             os << "GL_INVALID_ENUM";
             break;
@@ -2130,6 +2144,8 @@ TextureType FromGLenum<TextureType>(GLenum from)
             return TextureType::CubeMapArray;
         case GL_TEXTURE_VIDEO_IMAGE_WEBGL:
             return TextureType::VideoImage;
+        case GL_TEXTURE_BUFFER:
+            return TextureType::Buffer;
         default:
             return TextureType::InvalidEnum;
     }
@@ -2159,6 +2175,8 @@ GLenum ToGLenum(TextureType from)
             return GL_TEXTURE_CUBE_MAP_ARRAY;
         case TextureType::VideoImage:
             return GL_TEXTURE_VIDEO_IMAGE_WEBGL;
+        case TextureType::Buffer:
+            return GL_TEXTURE_BUFFER;
         default:
             UNREACHABLE();
             return 0;
@@ -2198,6 +2216,9 @@ std::ostream &operator<<(std::ostream &os, TextureType value)
             break;
         case TextureType::VideoImage:
             os << "GL_TEXTURE_VIDEO_IMAGE_WEBGL";
+            break;
+        case TextureType::Buffer:
+            os << "GL_TEXTURE_BUFFER";
             break;
         default:
             os << "GL_INVALID_ENUM";
