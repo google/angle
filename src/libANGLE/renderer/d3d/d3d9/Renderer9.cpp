@@ -591,8 +591,9 @@ void Renderer9::generateDisplayExtensions(egl::DisplayExtensions *outExtensions)
 
     outExtensions->flexibleSurfaceCompatibility = true;
 
-    // Contexts are virtualized so textures can be shared globally
-    outExtensions->displayTextureShareGroup = true;
+    // Contexts are virtualized so textures and semaphores can be shared globally
+    outExtensions->displayTextureShareGroup   = true;
+    outExtensions->displaySemaphoreShareGroup = true;
 
     // D3D9 can be used without an output surface
     outExtensions->surfacelessContext = true;

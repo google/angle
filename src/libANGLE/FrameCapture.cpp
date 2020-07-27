@@ -2088,7 +2088,7 @@ void CaptureMidExecutionSetup(const gl::Context *context,
                               FrameCapture *frameCapture)
 {
     const gl::State &apiState = context->getState();
-    gl::State replayState(nullptr, nullptr, nullptr, nullptr, EGL_OPENGL_ES_API,
+    gl::State replayState(nullptr, nullptr, nullptr, nullptr, nullptr, EGL_OPENGL_ES_API,
                           apiState.getClientVersion(), false, true, true, true, false,
                           EGL_CONTEXT_PRIORITY_MEDIUM_IMG);
 

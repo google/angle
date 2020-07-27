@@ -1278,6 +1278,27 @@ Error ValidateCreateContext(Display *display,
                 }
                 break;
 
+            case EGL_DISPLAY_SEMAPHORE_SHARE_GROUP_ANGLE:
+                if (!display->getExtensions().displayTextureShareGroup)
+                {
+                    return EglBadAttribute() << "Attribute "
+                                                "EGL_DISPLAY_SEMAPHORE_SHARE_GROUP_ANGLE requires "
+                                                "EGL_ANGLE_display_semaphore_share_group.";
+                }
+                if (value != EGL_TRUE && value != EGL_FALSE)
+                {
+                    return EglBadAttribute() << "EGL_DISPLAY_SEMAPHORE_SHARE_GROUP_ANGLE must be "
+                                                "EGL_TRUE or EGL_FALSE.";
+                }
+                if (shareContext &&
+                    (shareContext->usingDisplaySemaphoreShareGroup() != (value == EGL_TRUE)))
+                {
+                    return EglBadAttribute() << "All contexts within a share group must be "
+                                                "created with the same value of "
+                                                "EGL_DISPLAY_SEMAPHORE_SHARE_GROUP_ANGLE.";
+                }
+                break;
+
             case EGL_CONTEXT_CLIENT_ARRAYS_ENABLED_ANGLE:
                 if (!display->getExtensions().createContextClientArrays)
                 {

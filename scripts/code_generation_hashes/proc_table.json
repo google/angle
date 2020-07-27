@@ -1,6 +1,6 @@
 {
   "scripts/egl.xml":
-    "842e24514c4cfe09fba703c17a0fd292",
+    "4e5911cfe91274cc5112ff2f70092376",
   "scripts/egl_angle_ext.xml":
     "087d6a3996a91fbb0b664cac57c50c4c",
   "scripts/gen_proc_table.py":
@@ -10,7 +10,7 @@
   "scripts/gl_angle_ext.xml":
     "079cc4829de7ce638faf7bbf66e141ad",
   "scripts/registry_xml.py":
-    "f45ffbc8a3c8a7144c2e98e19d1127a0",
+    "5d9874e9e53bde1f644808dbab945578",
   "scripts/wgl.xml":
     "aa96419c582af2f6673430e2847693f4",
   "src/libGL/proc_table_wgl_autogen.cpp":

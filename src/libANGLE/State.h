@@ -93,6 +93,7 @@ class State : angle::NonCopyable
     State(const State *shareContextState,
           egl::ShareGroup *shareGroup,
           TextureManager *shareTextures,
+          SemaphoreManager *shareSemaphores,
           const OverlayType *overlay,
           const EGLenum clientType,
           const Version &clientVersion,

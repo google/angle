@@ -996,6 +996,9 @@ struct DisplayExtensions
     // EGL_ANGLE_display_texture_share_group
     bool displayTextureShareGroup = false;
 
+    // EGL_ANGLE_display_semaphore_share_group
+    bool displaySemaphoreShareGroup = false;
+
     // EGL_ANGLE_create_context_client_arrays
     bool createContextClientArrays = false;
 

@@ -1371,6 +1371,7 @@ std::vector<std::string> DisplayExtensions::getStrings() const
     InsertExtensionString("EGL_EXT_pixel_format_float",                          pixelFormatFloat,                   &extensionStrings);
     InsertExtensionString("EGL_KHR_surfaceless_context",                         surfacelessContext,                 &extensionStrings);
     InsertExtensionString("EGL_ANGLE_display_texture_share_group",               displayTextureShareGroup,           &extensionStrings);
+    InsertExtensionString("EGL_ANGLE_display_semaphore_share_group",             displaySemaphoreShareGroup,         &extensionStrings);
     InsertExtensionString("EGL_ANGLE_create_context_client_arrays",              createContextClientArrays,          &extensionStrings);
     InsertExtensionString("EGL_ANGLE_program_cache_control",                     programCacheControl,                &extensionStrings);
     InsertExtensionString("EGL_ANGLE_robust_resource_initialization",            robustResourceInitialization,       &extensionStrings);

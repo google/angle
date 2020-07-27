@@ -651,9 +651,11 @@ Display::Display(EGLenum platform, EGLNativeDisplayType displayId, Device *eglDe
       mSurface(nullptr),
       mPlatform(platform),
       mTextureManager(nullptr),
+      mSemaphoreManager(nullptr),
       mBlobCache(gl::kDefaultMaxProgramCacheMemoryBytes),
       mMemoryProgramCache(mBlobCache),
-      mGlobalTextureShareGroupUsers(0)
+      mGlobalTextureShareGroupUsers(0),
+      mGlobalSemaphoreShareGroupUsers(0)
 {}
 
 Display::~Display()
@@ -877,8 +879,10 @@ Error Display::terminate(const Thread *thread)
 
     ANGLE_TRY(makeCurrent(thread, nullptr, nullptr, nullptr));
 
-    // The global texture manager should be deleted with the last context that uses it.
+    // The global texture and semaphore managers should be deleted with the last context that uses
+    // it.
     ASSERT(mGlobalTextureShareGroupUsers == 0 && mTextureManager == nullptr);
+    ASSERT(mGlobalSemaphoreShareGroupUsers == 0 && mSemaphoreManager == nullptr);
 
     while (!mImageSet.empty())
     {
@@ -1143,6 +1147,23 @@ Error Display::createContext(const Config *configuration,
         shareTextures = mTextureManager;
     }
 
+    // This display semaphore sharing will allow the first context to create the semaphore share
+    // group.
+    bool usingDisplaySemaphoreShareGroup =
+        attribs.get(EGL_DISPLAY_SEMAPHORE_SHARE_GROUP_ANGLE, EGL_FALSE) == EGL_TRUE;
+    gl::SemaphoreManager *shareSemaphores = nullptr;
+    if (usingDisplaySemaphoreShareGroup)
+    {
+        ASSERT((mSemaphoreManager == nullptr) == (mGlobalSemaphoreShareGroupUsers == 0));
+        if (mSemaphoreManager == nullptr)
+        {
+            mSemaphoreManager = new gl::SemaphoreManager();
+        }
+
+        mGlobalSemaphoreShareGroupUsers++;
+        shareSemaphores = mSemaphoreManager;
+    }
+
     gl::MemoryProgramCache *cachePointer = &mMemoryProgramCache;
 
     // Check context creation attributes to see if we are using EGL_ANGLE_program_cache_control.
@@ -1162,9 +1183,9 @@ Error Display::createContext(const Config *configuration,
         }
     }
 
-    gl::Context *context =
-        new gl::Context(this, configuration, shareContext, shareTextures, cachePointer, clientType,
-                        attribs, mDisplayExtensions, GetClientExtensions());
+    gl::Context *context = new gl::Context(this, configuration, shareContext, shareTextures,
+                                           shareSemaphores, cachePointer, clientType, attribs,
+                                           mDisplayExtensions, GetClientExtensions());
     if (shareContext != nullptr)
     {
         shareContext->setShared();
@@ -1327,6 +1348,20 @@ Error Display::destroyContext(const Thread *thread, gl::Context *context)
             mTextureManager = nullptr;
         }
         mGlobalTextureShareGroupUsers--;
+    }
+
+    if (context->usingDisplaySemaphoreShareGroup())
+    {
+        ASSERT(mGlobalSemaphoreShareGroupUsers >= 1 && mSemaphoreManager != nullptr);
+        if (mGlobalSemaphoreShareGroupUsers == 1)
+        {
+            // If this is the last context using the global share group, destroy the global
+            // semaphore manager so that the semaphores can be destroyed while a context still
+            // exists
+            mSemaphoreManager->release(context);
+            mSemaphoreManager = nullptr;
+        }
+        mGlobalSemaphoreShareGroupUsers--;
     }
 
     ANGLE_TRY(context->onDestroy(this));

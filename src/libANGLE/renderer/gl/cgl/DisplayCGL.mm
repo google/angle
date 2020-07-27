@@ -435,8 +435,9 @@ void DisplayCGL::generateExtensions(egl::DisplayExtensions *outExtensions) const
     outExtensions->surfacelessContext    = true;
     outExtensions->deviceQuery           = true;
 
-    // Contexts are virtualized so textures can be shared globally
-    outExtensions->displayTextureShareGroup = true;
+    // Contexts are virtualized so textures and semaphores can be shared globally
+    outExtensions->displayTextureShareGroup   = true;
+    outExtensions->displaySemaphoreShareGroup = true;
 
     if (mSupportsGPUSwitching)
     {

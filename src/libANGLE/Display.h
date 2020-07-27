@@ -32,6 +32,7 @@ namespace gl
 {
 class Context;
 class TextureManager;
+class SemaphoreManager;
 }  // namespace gl
 
 namespace rx
@@ -302,9 +303,11 @@ class Display final : public LabeledObject,
     angle::LoggingAnnotator mAnnotator;
 
     gl::TextureManager *mTextureManager;
+    gl::SemaphoreManager *mSemaphoreManager;
     BlobCache mBlobCache;
     gl::MemoryProgramCache mMemoryProgramCache;
     size_t mGlobalTextureShareGroupUsers;
+    size_t mGlobalSemaphoreShareGroupUsers;
 
     angle::FrontendFeatures mFrontendFeatures;
 

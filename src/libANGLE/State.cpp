@@ -72,40 +72,25 @@ template <typename T>
 using ContextStateMember = T *(State::*);
 
 template <typename T>
-T *AllocateOrGetSharedResourceManager(const State *shareContextState, ContextStateMember<T> member)
+T *AllocateOrGetSharedResourceManager(const State *shareContextState,
+                                      ContextStateMember<T> member,
+                                      T *shareResources = nullptr)
 {
     if (shareContextState)
     {
         T *resourceManager = (*shareContextState).*member;
+        ASSERT(!resourceManager || resourceManager == shareResources || !shareResources);
         resourceManager->addRef();
         return resourceManager;
+    }
+    else if (shareResources)
+    {
+        shareResources->addRef();
+        return shareResources;
     }
     else
     {
         return new T();
-    }
-}
-
-TextureManager *AllocateOrGetSharedTextureManager(const State *shareContextState,
-                                                  TextureManager *shareTextures,
-                                                  ContextStateMember<TextureManager> member)
-{
-    if (shareContextState)
-    {
-        TextureManager *textureManager = (*shareContextState).*member;
-        ASSERT(shareTextures == nullptr || textureManager == shareTextures);
-        textureManager->addRef();
-        return textureManager;
-    }
-    else if (shareTextures)
-    {
-        TextureManager *textureManager = shareTextures;
-        textureManager->addRef();
-        return textureManager;
-    }
-    else
-    {
-        return new TextureManager();
     }
 }
 
@@ -308,6 +293,7 @@ ANGLE_INLINE void ActiveTexturesCache::set(ContextID contextID,
 State::State(const State *shareContextState,
              egl::ShareGroup *shareGroup,
              TextureManager *shareTextures,
+             SemaphoreManager *shareSemaphores,
              const OverlayType *overlay,
              const EGLenum clientType,
              const Version &clientVersion,
@@ -325,9 +311,9 @@ State::State(const State *shareContextState,
       mBufferManager(AllocateOrGetSharedResourceManager(shareContextState, &State::mBufferManager)),
       mShaderProgramManager(
           AllocateOrGetSharedResourceManager(shareContextState, &State::mShaderProgramManager)),
-      mTextureManager(AllocateOrGetSharedTextureManager(shareContextState,
-                                                        shareTextures,
-                                                        &State::mTextureManager)),
+      mTextureManager(AllocateOrGetSharedResourceManager(shareContextState,
+                                                         &State::mTextureManager,
+                                                         shareTextures)),
       mRenderbufferManager(
           AllocateOrGetSharedResourceManager(shareContextState, &State::mRenderbufferManager)),
       mSamplerManager(
@@ -337,8 +323,9 @@ State::State(const State *shareContextState,
       mProgramPipelineManager(new ProgramPipelineManager()),
       mMemoryObjectManager(
           AllocateOrGetSharedResourceManager(shareContextState, &State::mMemoryObjectManager)),
-      mSemaphoreManager(
-          AllocateOrGetSharedResourceManager(shareContextState, &State::mSemaphoreManager)),
+      mSemaphoreManager(AllocateOrGetSharedResourceManager(shareContextState,
+                                                           &State::mSemaphoreManager,
+                                                           shareSemaphores)),
       mMaxDrawBuffers(0),
       mMaxCombinedTextureImageUnits(0),
       mDepthClearValue(0),

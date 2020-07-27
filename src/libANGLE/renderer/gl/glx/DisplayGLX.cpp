@@ -880,8 +880,9 @@ void DisplayGLX::generateExtensions(egl::DisplayExtensions *outExtensions) const
 {
     outExtensions->createContextRobustness = mHasARBCreateContextRobustness;
 
-    // Contexts are virtualized so textures can be shared globally
-    outExtensions->displayTextureShareGroup = true;
+    // Contexts are virtualized so textures ans semaphores can be shared globally
+    outExtensions->displayTextureShareGroup   = true;
+    outExtensions->displaySemaphoreShareGroup = true;
 
     outExtensions->surfacelessContext = true;
 

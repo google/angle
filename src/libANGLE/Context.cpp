@@ -276,6 +276,7 @@ Context::Context(egl::Display *display,
                  const egl::Config *config,
                  const Context *shareContext,
                  TextureManager *shareTextures,
+                 SemaphoreManager *shareSemaphores,
                  MemoryProgramCache *memoryProgramCache,
                  const EGLenum clientType,
                  const egl::AttributeMap &attribs,
@@ -284,6 +285,7 @@ Context::Context(egl::Display *display,
     : mState(shareContext ? &shareContext->mState : nullptr,
              AllocateOrGetShareGroup(display, shareContext),
              shareTextures,
+             shareSemaphores,
              &mOverlay,
              clientType,
              GetClientVersion(display, attribs),
@@ -296,6 +298,7 @@ Context::Context(egl::Display *display,
       mShared(shareContext != nullptr),
       mSkipValidation(GetNoError(attribs)),
       mDisplayTextureShareGroup(shareTextures != nullptr),
+      mDisplaySemaphoreShareGroup(shareSemaphores != nullptr),
       mErrors(this),
       mImplementation(display->getImplementation()
                           ->createContext(mState, &mErrors, config, shareContext, attribs)),
@@ -8057,6 +8060,11 @@ bool Context::isProgramPipelineGenerated(ProgramPipelineID pipeline) const
 bool Context::usingDisplayTextureShareGroup() const
 {
     return mDisplayTextureShareGroup;
+}
+
+bool Context::usingDisplaySemaphoreShareGroup() const
+{
+    return mDisplaySemaphoreShareGroup;
 }
 
 GLenum Context::getConvertedRenderbufferFormat(GLenum internalformat) const

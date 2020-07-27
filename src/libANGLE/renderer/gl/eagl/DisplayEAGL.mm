@@ -279,8 +279,9 @@ void DisplayEAGL::generateExtensions(egl::DisplayExtensions *outExtensions) cons
     outExtensions->surfacelessContext    = true;
     outExtensions->deviceQuery           = true;
 
-    // Contexts are virtualized so textures can be shared globally
-    outExtensions->displayTextureShareGroup = true;
+    // Contexts are virtualized so textures ans semaphores can be shared globally
+    outExtensions->displayTextureShareGroup   = true;
+    outExtensions->displaySemaphoreShareGroup = true;
 
     outExtensions->powerPreference = false;
 

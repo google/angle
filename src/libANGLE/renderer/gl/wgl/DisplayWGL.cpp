@@ -645,8 +645,9 @@ void DisplayWGL::generateExtensions(egl::DisplayExtensions *outExtensions) const
     outExtensions->querySurfacePointer            = true;
     outExtensions->keyedMutex                     = true;
 
-    // Contexts are virtualized so textures can be shared globally
-    outExtensions->displayTextureShareGroup = true;
+    // Contexts are virtualized so textures and semaphores can be shared globally
+    outExtensions->displayTextureShareGroup   = true;
+    outExtensions->displaySemaphoreShareGroup = true;
 
     outExtensions->surfacelessContext = true;
 
