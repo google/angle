@@ -145,10 +145,9 @@ egl::Error DisplayCGL::initialize(egl::Display *display)
     mEGLDisplay = display;
 
     angle::SystemInfo info;
-    if (!angle::GetSystemInfo(&info))
-    {
-        return egl::EglNotInitialized() << "Unable to query ANGLE's SystemInfo.";
-    }
+    // It's legal for GetSystemInfo to return false and thereby
+    // contain incomplete information.
+    (void)angle::GetSystemInfo(&info);
 
     // This code implements the effect of the
     // disableGPUSwitchingSupport workaround in FeaturesGL.
