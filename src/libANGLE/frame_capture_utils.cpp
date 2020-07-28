@@ -331,7 +331,6 @@ void SerializeImageUnit(gl::BinaryOutputStream *bos, const gl::ImageUnit &imageU
 
 void SerializeGLContextStates(gl::BinaryOutputStream *bos, const gl::State &state)
 {
-    bos->writeInt(state.getContextID());
     bos->writeInt(state.getClientType());
     bos->writeInt(state.getContextPriority());
     bos->writeInt(state.getClientMajorVersion());
