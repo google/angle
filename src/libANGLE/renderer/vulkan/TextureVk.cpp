@@ -2423,6 +2423,10 @@ angle::Result TextureVk::getTexImage(const gl::Context *context,
 
     size_t layer =
         gl::IsCubeMapFaceTarget(target) ? gl::CubeMapTextureTargetToFaceIndex(target) : 0;
+
+    gl::MaybeOverrideLuminance(format, type, getColorReadFormat(context),
+                               getColorReadType(context));
+
     return mImage->readPixelsForGetImage(contextVk, packState, packBuffer, level,
                                          static_cast<uint32_t>(layer), format, type, pixels);
 }

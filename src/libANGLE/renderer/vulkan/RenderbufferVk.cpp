@@ -234,6 +234,10 @@ angle::Result RenderbufferVk::getRenderbufferImage(const gl::Context *context,
 
     ContextVk *contextVk = vk::GetImpl(context);
     ANGLE_TRY(mImage->flushAllStagedUpdates(contextVk));
+
+    gl::MaybeOverrideLuminance(format, type, getColorReadFormat(context),
+                               getColorReadType(context));
+
     return mImage->readPixelsForGetImage(contextVk, packState, packBuffer, 0, 0, format, type,
                                          pixels);
 }

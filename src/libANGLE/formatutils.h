@@ -267,6 +267,9 @@ GLenum GetUnsizedFormat(GLenum internalFormat);
 // Return whether the compressed format requires whole image/mip level to be uploaded to texture.
 bool CompressedFormatRequiresWholeImage(GLenum internalFormat);
 
+// In support of GetImage, check for LUMA formats and override with real format
+void MaybeOverrideLuminance(GLenum &format, GLenum &type, GLenum actualFormat, GLenum actualType);
+
 typedef std::set<GLenum> FormatSet;
 const FormatSet &GetAllSizedInternalFormats();
 

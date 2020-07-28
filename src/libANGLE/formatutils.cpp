@@ -1468,6 +1468,22 @@ bool CompressedFormatRequiresWholeImage(GLenum internalFormat)
     }
 }
 
+void MaybeOverrideLuminance(GLenum &format, GLenum &type, GLenum actualFormat, GLenum actualType)
+{
+    gl::InternalFormat internalFormat = gl::GetInternalFormatInfo(format, type);
+    if (internalFormat.isLUMA())
+    {
+        // Ensure the format and type are compatible
+        ASSERT(internalFormat.pixelBytes ==
+               gl::GetInternalFormatInfo(actualFormat, actualType).pixelBytes);
+
+        // For Luminance formats, override with the internal format. Since this is not
+        // renderable, our pixel pack routines don't handle it correctly.
+        format = actualFormat;
+        type   = actualType;
+    }
+}
+
 const FormatSet &GetAllSizedInternalFormats()
 {
     static angle::base::NoDestructor<FormatSet> formatSet(BuildAllSizedInternalFormatSet());
