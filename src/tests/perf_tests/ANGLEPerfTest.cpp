@@ -246,6 +246,7 @@ void ANGLEPerfTest::doRunLoop(double maxRunTime)
 {
     mNumStepsPerformed = 0;
     mRunning           = true;
+    mGPUTimeNs         = 0;
     mTimer.start();
     startTest();
 
@@ -267,6 +268,7 @@ void ANGLEPerfTest::doRunLoop(double maxRunTime)
     }
     finishTest();
     mTimer.stop();
+    computeGPUTime();
 }
 
 void ANGLEPerfTest::SetUp() {}
@@ -723,7 +725,8 @@ void ANGLERenderTest::startGpuTimer()
 {
     if (mTestParams.trackGpuTime && mIsTimestampQueryAvailable)
     {
-        glBeginQueryEXT(GL_TIME_ELAPSED_EXT, mTimestampQuery);
+        glGenQueriesEXT(1, &mCurrentTimestampBeginQuery);
+        glQueryCounterEXT(mCurrentTimestampBeginQuery, GL_TIMESTAMP_EXT);
     }
 }
 
@@ -731,29 +734,36 @@ void ANGLERenderTest::stopGpuTimer()
 {
     if (mTestParams.trackGpuTime && mIsTimestampQueryAvailable)
     {
-        glEndQueryEXT(GL_TIME_ELAPSED_EXT);
-        uint64_t gpuTimeNs = 0;
-        glGetQueryObjectui64vEXT(mTimestampQuery, GL_QUERY_RESULT_EXT, &gpuTimeNs);
-
-        mGPUTimeNs += gpuTimeNs;
+        GLuint endQuery = 0;
+        glGenQueriesEXT(1, &endQuery);
+        glQueryCounterEXT(endQuery, GL_TIMESTAMP_EXT);
+        mTimestampQueries.push_back({mCurrentTimestampBeginQuery, endQuery});
     }
 }
 
-void ANGLERenderTest::startTest()
+void ANGLERenderTest::computeGPUTime()
 {
-    if (mTestParams.trackGpuTime)
+    if (mTestParams.trackGpuTime && mIsTimestampQueryAvailable)
     {
-        glGenQueriesEXT(1, &mTimestampQuery);
-        mGPUTimeNs = 0;
+        for (const TimestampSample &sample : mTimestampQueries)
+        {
+            uint64_t beginGLTimeNs = 0;
+            uint64_t endGLTimeNs   = 0;
+            glGetQueryObjectui64vEXT(sample.beginQuery, GL_QUERY_RESULT_EXT, &beginGLTimeNs);
+            glGetQueryObjectui64vEXT(sample.endQuery, GL_QUERY_RESULT_EXT, &endGLTimeNs);
+            glDeleteQueriesEXT(1, &sample.beginQuery);
+            glDeleteQueriesEXT(1, &sample.endQuery);
+            mGPUTimeNs += endGLTimeNs - beginGLTimeNs;
+        }
+
+        mTimestampQueries.clear();
     }
 }
+
+void ANGLERenderTest::startTest() {}
 
 void ANGLERenderTest::finishTest()
 {
-    if (mTestParams.trackGpuTime)
-    {
-        glDeleteQueriesEXT(1, &mTimestampQuery);
-    }
     if (mTestParams.eglParameters.deviceType != EGL_PLATFORM_ANGLE_DEVICE_TYPE_NULL_ANGLE)
     {
         glFinish();

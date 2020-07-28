@@ -87,6 +87,7 @@ class ANGLEPerfTest : public testing::Test, angle::NonCopyable
 
     // Overriden in trace perf tests.
     virtual void saveScreenshot(const std::string &screenshotName) {}
+    virtual void computeGPUTime() {}
 
     double printResults();
     void calibrateStepsToRun();
@@ -155,6 +156,7 @@ class ANGLERenderTest : public ANGLEPerfTest
 
     void startGpuTimer();
     void stopGpuTimer();
+    void getGpuTimers();
 
     void beginInternalTraceEvent(const char *name);
     void endInternalTraceEvent(const char *name);
@@ -172,6 +174,7 @@ class ANGLERenderTest : public ANGLEPerfTest
     void step() override;
     void startTest() override;
     void finishTest() override;
+    void computeGPUTime() override;
 
     bool areExtensionPrerequisitesFulfilled() const;
 
@@ -182,7 +185,14 @@ class ANGLERenderTest : public ANGLEPerfTest
     ConfigParameters mConfigParams;
     bool mSwapEnabled;
 
-    GLuint mTimestampQuery;
+    struct TimestampSample
+    {
+        GLuint beginQuery;
+        GLuint endQuery;
+    };
+
+    GLuint mCurrentTimestampBeginQuery = 0;
+    std::vector<TimestampSample> mTimestampQueries;
 
     // Trace event record that can be output.
     std::vector<TraceEvent> mTraceEventBuffer;
