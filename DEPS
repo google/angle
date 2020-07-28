@@ -4,7 +4,6 @@
 
 # Avoids the need for a custom root variable.
 use_relative_paths = True
-use_relative_hooks = True
 
 gclient_gn_args_file = 'build/config/gclient_args.gni'
 gclient_gn_args = [
