@@ -4317,8 +4317,6 @@ angle::Result ContextVk::onImageRead(VkImageAspectFlags aspectFlags,
 {
     ASSERT(!image->isReleasedToExternal());
 
-    ANGLE_TRY(endRenderPass());
-
     if (image->isLayoutChangeNecessary(imageLayout))
     {
         vk::CommandBuffer *commandBuffer;
@@ -4334,8 +4332,6 @@ angle::Result ContextVk::onImageWrite(VkImageAspectFlags aspectFlags,
                                       vk::ImageHelper *image)
 {
     ASSERT(!image->isReleasedToExternal());
-
-    ANGLE_TRY(endRenderPass());
 
     // Barriers are always required for image writes.
     ASSERT(image->isLayoutChangeNecessary(imageLayout));
