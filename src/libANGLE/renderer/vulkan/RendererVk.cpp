@@ -121,6 +121,8 @@ VkResult VerifyExtensionsPresent(const RendererVk::ExtensionNameList &haystack,
 constexpr const char *kSkippedMessages[] = {
     // http://anglebug.com/2866
     "UNASSIGNED-CoreValidation-Shader-OutputNotConsumed",
+    // http://anglebug.com/4883
+    "UNASSIGNED-CoreValidation-Shader-InputNotProduced",
     // http://anglebug.com/2796
     "UNASSIGNED-CoreValidation-Shader-PointSizeMissing",
     // http://anglebug.com/3832
@@ -147,6 +149,7 @@ constexpr const char *kSkippedMessages[] = {
     "UNASSIGNED-BestPractices-vkCreateRenderPass-image-requires-memory",
     "UNASSIGNED-BestPractices-vkCreateGraphicsPipelines-too-many-instanced-vertex-buffers",
     "UNASSIGNED-BestPractices-DrawState-ClearCmdBeforeDraw",
+    "UNASSIGNED-BestPractices-vkCmdClearAttachments-clear-after-load",
 };
 
 // Suppress validation errors that are known
