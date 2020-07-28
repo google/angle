@@ -77,40 +77,64 @@ bool GetEntryProperty(io_registry_entry_t entry, CFStringRef name, uint32_t *val
     return true;
 }
 
-// Gathers the vendor and device IDs for the PCI GPUs
-bool GetPCIDevices(std::vector<GPUDeviceInfo> *devices)
+// Gathers the vendor and device IDs for GPUs listed in the IORegistry.
+void GetIORegistryDevices(std::vector<GPUDeviceInfo> *devices)
 {
-    // matchDictionary will be consumed by IOServiceGetMatchingServices, no need to release it.
-    CFMutableDictionaryRef matchDictionary = IOServiceMatching("IOPCIDevice");
-
-    io_iterator_t entryIterator;
-    if (IOServiceGetMatchingServices(kIOMasterPortDefault, matchDictionary, &entryIterator) !=
-        kIOReturnSuccess)
+    constexpr uint32_t kNumServices         = 2;
+    const char *kServiceNames[kNumServices] = {"IOPCIDevice", "AGXAccelerator"};
+    const bool kServiceIsVGA[kNumServices]  = {true, false};
+    for (uint32_t i = 0; i < kNumServices; ++i)
     {
-        return false;
-    }
+        // matchDictionary will be consumed by IOServiceGetMatchingServices, no need to release it.
+        CFMutableDictionaryRef matchDictionary = IOServiceMatching(kServiceNames[i]);
 
-    io_registry_entry_t entry = IO_OBJECT_NULL;
-
-    while ((entry = IOIteratorNext(entryIterator)) != IO_OBJECT_NULL)
-    {
-        constexpr uint32_t kClassCodeDisplayVGA = 0x30000;
-        uint32_t classCode;
-        GPUDeviceInfo info;
-
-        if (GetEntryProperty(entry, CFSTR("class-code"), &classCode) &&
-            classCode == kClassCodeDisplayVGA &&
-            GetEntryProperty(entry, CFSTR("vendor-id"), &info.vendorId) &&
-            GetEntryProperty(entry, CFSTR("device-id"), &info.deviceId))
+        io_iterator_t entryIterator;
+        if (IOServiceGetMatchingServices(kIOMasterPortDefault, matchDictionary, &entryIterator) !=
+            kIOReturnSuccess)
         {
-            devices->push_back(info);
+            continue;
         }
 
-        IOObjectRelease(entry);
-    }
-    IOObjectRelease(entryIterator);
+        io_registry_entry_t entry = IO_OBJECT_NULL;
+        while ((entry = IOIteratorNext(entryIterator)) != IO_OBJECT_NULL)
+        {
+            constexpr uint32_t kClassCodeDisplayVGA = 0x30000;
+            uint32_t classCode;
+            GPUDeviceInfo info;
 
-    return true;
+            // AGXAccelerator entries only provide a vendor ID.
+            if (!GetEntryProperty(entry, CFSTR("vendor-id"), &info.vendorId))
+            {
+                continue;
+            }
+
+            if (kServiceIsVGA[i])
+            {
+                if (!GetEntryProperty(entry, CFSTR("class-code"), &classCode))
+                {
+                    continue;
+                }
+                if (classCode != kClassCodeDisplayVGA)
+                {
+                    continue;
+                }
+                if (!GetEntryProperty(entry, CFSTR("device-id"), &info.deviceId))
+                {
+                    continue;
+                }
+            }
+
+            devices->push_back(info);
+            IOObjectRelease(entry);
+        }
+        IOObjectRelease(entryIterator);
+
+        // If any devices have been populated by IOPCIDevice, do not continue to AGXAccelerator.
+        if (!devices->empty())
+        {
+            break;
+        }
+    }
 }
 
 void SetActiveGPUIndex(SystemInfo *info)
@@ -217,11 +241,7 @@ bool GetSystemInfo(SystemInfo *info)
         info->machineModelVersion = std::to_string(major) + "." + std::to_string(minor);
     }
 
-    if (!GetPCIDevices(&(info->gpus)))
-    {
-        return false;
-    }
-
+    GetIORegistryDevices(&info->gpus);
     if (info->gpus.empty())
     {
         return false;
