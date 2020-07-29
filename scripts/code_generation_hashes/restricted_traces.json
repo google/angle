@@ -4,11 +4,11 @@
   "src/tests/perf_tests/restricted_traces/candy_crush_500.tar.gz.sha1":
     "ef00d8872fe818250df07f761d440bfb",
   "src/tests/perf_tests/restricted_traces/egypt_1500.tar.gz.sha1":
-    "1785a6043e7aa5d618609900df32a1cf",
+    "1d80caa37b937f83c95cd053b1bdd4ac",
   "src/tests/perf_tests/restricted_traces/gen_restricted_traces.py":
     "8f72f02cfb21ad18c3558d38b77320cc",
   "src/tests/perf_tests/restricted_traces/manhattan_10.tar.gz.sha1":
-    "be9db683aedcd2bac224c0abf3ab1e88",
+    "752781119592a190cc02b773adf38fc3",
   "src/tests/perf_tests/restricted_traces/restricted_traces.json":
     "de1d1c2086bd4f5249f5bdbdf0d2a854",
   "src/tests/perf_tests/restricted_traces/restricted_traces_autogen.cpp":
@@ -22,5 +22,5 @@
   "src/tests/perf_tests/restricted_traces/temple_run_300.tar.gz.sha1":
     "e912c0a0e93efe73088211d63b4a30af",
   "src/tests/perf_tests/restricted_traces/trex_200.tar.gz.sha1":
-    "959db438978654acb2dfc4a0a8fcdf09"
+    "ca2d91a527f4a4317f944afc96c35268"
 }
