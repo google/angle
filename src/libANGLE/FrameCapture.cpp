@@ -58,6 +58,9 @@ constexpr char kSerializeStateEnabledVarName[] = "ANGLE_CAPTURE_SERIALIZE_STATE"
 constexpr size_t kBinaryAlignment   = 16;
 constexpr size_t kFunctionSizeLimit = 50000;
 
+// Limit based on MSVC Compiler Error C2026
+constexpr size_t kStringLengthLimit = 16380;
+
 #if defined(ANGLE_PLATFORM_ANDROID)
 
 constexpr char kAndroidCaptureEnabled[] = "debug.angle.capture.enabled";
@@ -355,7 +358,15 @@ void WriteStringPointerParamReplay(DataCounters *counters,
         // null terminate C style string
         ASSERT(data.size() > 0 && data.back() == '\0');
         std::string str(data.begin(), data.end() - 1);
-        header << "    R\"(" << str << ")\",\n";
+
+        // Break up long strings for MSVC
+        for (size_t i = 0; i < str.length(); i += kStringLengthLimit)
+        {
+            size_t copyLength = ((str.length() - i) >= kStringLengthLimit) ? kStringLengthLimit
+                                                                           : (str.length() - i);
+            header << "    R\"(" << str.substr(i, copyLength) << ")\"\n";
+        }
+        header << ",";
     }
 
     header << " };\n";
