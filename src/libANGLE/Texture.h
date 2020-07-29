@@ -125,7 +125,9 @@ class TextureState final : private angle::NonCopyable
 
     // Returns true if base level changed.
     bool setBaseLevel(GLuint baseLevel);
+    GLuint getBaseLevel() const { return mBaseLevel; }
     bool setMaxLevel(GLuint maxLevel);
+    GLuint getMaxLevel() const { return mMaxLevel; }
 
     bool isCubeComplete() const;
 
@@ -176,6 +178,15 @@ class TextureState final : private angle::NonCopyable
 
     // Return the enabled mipmap level count.
     GLuint getEnabledLevelCount() const;
+
+    const std::vector<ContextBindingCount> &getBindingCounts() const { return mBindingCounts; }
+
+    bool getImmutableFormat() const { return mImmutableFormat; }
+    GLuint getImmutableLevels() const { return mImmutableLevels; }
+
+    const std::vector<ImageDesc> &getImageDescs() const { return mImageDescs; }
+
+    InitState getInitState() const { return mInitState; }
 
   private:
     // Texture needs access to the ImageDesc functions.
@@ -342,6 +353,8 @@ class Texture final : public RefCountObject<TextureID>,
 
     void setUsage(const Context *context, GLenum usage);
     GLenum getUsage() const;
+
+    const TextureState &getState() const { return mState; }
 
     void setBorderColor(const Context *context, const ColorGeneric &color);
     const ColorGeneric &getBorderColor() const;
