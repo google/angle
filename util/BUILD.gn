@@ -56,7 +56,12 @@ if (is_fuchsia) {
     "fuchsia/ScenicWindow.cpp",
     "fuchsia/ScenicWindow.h",
   ]
-} else if (use_ozone) {
+} else if (use_ozone && !angle_use_x11) {
+  # Use X11 impl by default otherwise switch to fake Ozone impl that does not
+  # seem to do anything real.
+  # TODO(msisov): probably, we need to have a proper support for different
+  # Ozone backends, and be able to switch between them for proper tests.
+  # For example, Wayland, X11, etc.
   _util_sources += [
     "ozone/OzonePixmap.cpp",
     "ozone/OzoneWindow.cpp",

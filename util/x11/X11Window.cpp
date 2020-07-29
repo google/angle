@@ -398,7 +398,7 @@ EGLNativeWindowType X11Window::getNativeWindow() const
 
 EGLNativeDisplayType X11Window::getNativeDisplay() const
 {
-    return mDisplay;
+    return reinterpret_cast<EGLNativeDisplayType>(mDisplay);
 }
 
 void X11Window::messageLoop()

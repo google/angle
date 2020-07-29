@@ -45,6 +45,10 @@
 #endif
 // clang-format on
 
+#if defined(ANGLE_USE_X11)
+#    include <X11/Xlib.h>
+#endif
+
 namespace tcu
 {
 namespace
@@ -366,7 +370,7 @@ ANGLENativeDisplayFactory::ANGLENativeDisplayFactory(
       mNativeDisplay(bitCast<eglw::EGLNativeDisplayType>(EGL_DEFAULT_DISPLAY)),
       mPlatformAttributes(std::move(platformAttributes))
 {
-#if (DE_OS == DE_OS_UNIX)
+#if (DE_OS == DE_OS_UNIX) && defined(ANGLE_USE_X11)
     // Make sure to only open the X display once so that it can be used by the EGL display as well
     // as pixmaps
     mNativeDisplay = bitCast<eglw::EGLNativeDisplayType>(XOpenDisplay(nullptr));
