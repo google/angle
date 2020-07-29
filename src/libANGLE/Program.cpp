@@ -1464,7 +1464,7 @@ angle::Result Program::linkImpl(const Context *context)
     {
         mState.mExecutable->mResources.reset(new ProgramLinkedResources(
             0, PackMode::ANGLE_RELAXED, &mState.mExecutable->mUniformBlocks,
-            &mState.mExecutable->mUniforms, &mState.mExecutable->mShaderStorageBlocks,
+            &mState.mExecutable->mUniforms, &mState.mExecutable->mComputeShaderStorageBlocks,
             &mState.mBufferVariables, &mState.mExecutable->mAtomicCounterBuffers));
 
         GLuint combinedImageUniforms = 0u;
@@ -1521,7 +1521,7 @@ angle::Result Program::linkImpl(const Context *context)
         mState.mExecutable->mResources.reset(new ProgramLinkedResources(
             static_cast<GLuint>(data.getCaps().maxVaryingVectors), packMode,
             &mState.mExecutable->mUniformBlocks, &mState.mExecutable->mUniforms,
-            &mState.mExecutable->mShaderStorageBlocks, &mState.mBufferVariables,
+            &mState.mExecutable->mGraphicsShaderStorageBlocks, &mState.mBufferVariables,
             &mState.mExecutable->mAtomicCounterBuffers));
 
         if (!linkAttributes(context, infoLog))
@@ -1649,9 +1649,9 @@ void Program::resolveLinkImpl(const Context *context)
     ASSERT(mLinked);
 
     // Mark implementation-specific unreferenced uniforms as ignored.
+    std::vector<ImageBinding> *imageBindings = getExecutable().getImageBindings();
     mProgram->markUnusedUniformLocations(&mState.mUniformLocations,
-                                         &mState.mExecutable->mSamplerBindings,
-                                         &mState.mExecutable->mImageBindings);
+                                         &mState.mExecutable->mSamplerBindings, imageBindings);
 
     // Must be called after markUnusedUniformLocations.
     postResolveLink(context);
@@ -2908,8 +2908,9 @@ GLuint Program::getImageUniformBinding(const VariableLocation &uniformLocation) 
 {
     ASSERT(!mLinkingState);
     GLuint imageIndex = mState.getImageIndexFromUniformIndex(uniformLocation.index);
-    const std::vector<GLuint> &boundImageUnits =
-        mState.mExecutable->mImageBindings[imageIndex].boundImageUnits;
+
+    const std::vector<ImageBinding> &imageBindings = getExecutable().getImageBindings();
+    const std::vector<GLuint> &boundImageUnits     = imageBindings[imageIndex].boundImageUnits;
     return boundImageUnits[uniformLocation.arrayIndex];
 }
 
@@ -3698,6 +3699,11 @@ void Program::linkSamplerAndImageBindings(GLuint *combinedImageUniforms)
 
     mState.mExecutable->mImageUniformRange = RangeUI(low, high);
     *combinedImageUniforms                 = 0u;
+    // The Program is still linking, so getExecutable().isCompute() isn't accurate yet.
+    bool hasComputeShader = mState.mAttachedShaders[ShaderType::Compute] != nullptr;
+    std::vector<ImageBinding> &imageBindings = hasComputeShader
+                                                   ? mState.mExecutable->mComputeImageBindings
+                                                   : mState.mExecutable->mGraphicsImageBindings;
     // If uniform is a image type, insert it into the mImageBindings array.
     for (unsigned int imageIndex : mState.mExecutable->getImageUniformRange())
     {
@@ -3708,12 +3714,11 @@ void Program::linkSamplerAndImageBindings(GLuint *combinedImageUniforms)
         auto &imageUniform = mState.mExecutable->getUniforms()[imageIndex];
         if (imageUniform.binding == -1)
         {
-            mState.mExecutable->mImageBindings.emplace_back(
-                ImageBinding(imageUniform.getBasicTypeElementCount()));
+            imageBindings.emplace_back(ImageBinding(imageUniform.getBasicTypeElementCount()));
         }
         else
         {
-            mState.mExecutable->mImageBindings.emplace_back(
+            imageBindings.emplace_back(
                 ImageBinding(imageUniform.binding, imageUniform.getBasicTypeElementCount(), false));
         }
 
@@ -5110,6 +5115,8 @@ angle::Result Program::serialize(const Context *context, angle::MemoryBuffer *bi
         stream.writeInt(0);
     }
 
+    mState.mExecutable->save(&stream);
+
     const auto &computeLocalSize = mState.getComputeShaderLocalSize();
 
     stream.writeInt(computeLocalSize[0]);
@@ -5270,8 +5277,6 @@ angle::Result Program::serialize(const Context *context, angle::MemoryBuffer *bi
     stream.writeInt(mState.getAtomicCounterUniformRange().low());
     stream.writeInt(mState.getAtomicCounterUniformRange().high());
 
-    mState.mExecutable->save(&stream);
-
     mProgram->save(context, &stream);
 
     ASSERT(binaryOut);
@@ -5306,6 +5311,8 @@ angle::Result Program::deserialize(const Context *context,
         infoLog << "Cannot load program binaries across different ES context versions.";
         return angle::Result::Incomplete;
     }
+
+    mState.mExecutable->load(&stream);
 
     mState.mComputeShaderLocalSize[0] = stream.readInt<int>();
     mState.mComputeShaderLocalSize[1] = stream.readInt<int>();
@@ -5393,7 +5400,14 @@ angle::Result Program::deserialize(const Context *context,
     {
         InterfaceBlock shaderStorageBlock;
         LoadInterfaceBlock(&stream, &shaderStorageBlock);
-        mState.mExecutable->mShaderStorageBlocks.push_back(shaderStorageBlock);
+        if (getExecutable().isCompute())
+        {
+            mState.mExecutable->mComputeShaderStorageBlocks.push_back(shaderStorageBlock);
+        }
+        else
+        {
+            mState.mExecutable->mGraphicsShaderStorageBlocks.push_back(shaderStorageBlock);
+        }
     }
 
     unsigned int atomicCounterBufferCount = stream.readInt<unsigned int>();
@@ -5509,7 +5523,14 @@ angle::Result Program::deserialize(const Context *context,
         {
             imageBinding.boundImageUnits[i] = stream.readInt<unsigned int>();
         }
-        mState.mExecutable->mImageBindings.emplace_back(imageBinding);
+        if (getExecutable().isCompute())
+        {
+            mState.mExecutable->mComputeImageBindings.emplace_back(imageBinding);
+        }
+        else
+        {
+            mState.mExecutable->mGraphicsImageBindings.emplace_back(imageBinding);
+        }
     }
 
     unsigned int atomicCounterRangeLow  = stream.readInt<unsigned int>();
@@ -5523,8 +5544,6 @@ angle::Result Program::deserialize(const Context *context,
     {
         mState.updateTransformFeedbackStrides();
     }
-
-    mState.mExecutable->load(&stream);
 
     postResolveLink(context);
     mState.mExecutable->updateCanDrawWith();

@@ -264,7 +264,7 @@ class ProgramState final : angle::NonCopyable
     }
     const std::vector<ImageBinding> &getImageBindings() const
     {
-        return mExecutable->getImageBindings();
+        return getExecutable().getImageBindings();
     }
     const sh::WorkGroupSize &getComputeShaderLocalSize() const { return mComputeShaderLocalSize; }
     const RangeUI &getDefaultUniformRange() const { return mExecutable->getDefaultUniformRange(); }
@@ -740,7 +740,7 @@ class Program final : public LabeledObject, public angle::Subject
     const std::vector<ImageBinding> &getImageBindings() const
     {
         ASSERT(!mLinkingState);
-        return mState.mExecutable->getImageBindings();
+        return getExecutable().getImageBindings();
     }
     const sh::WorkGroupSize &getComputeShaderLocalSize() const;
     PrimitiveMode getGeometryShaderInputPrimitiveType() const;

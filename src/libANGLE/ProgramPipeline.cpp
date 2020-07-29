@@ -263,6 +263,75 @@ void ProgramPipeline::updateTransformFeedbackMembers()
         vertexExecutable.mLinkedTransformFeedbackVaryings;
 }
 
+void ProgramPipeline::updateShaderStorageBlocks()
+{
+    mState.mExecutable->mComputeShaderStorageBlocks.clear();
+    mState.mExecutable->mGraphicsShaderStorageBlocks.clear();
+
+    // Only copy the storage blocks from each Program in the PPO once, since each Program could
+    // contain multiple shader stages.
+    ShaderBitSet handledStages;
+
+    for (const gl::ShaderType shaderType : kAllGraphicsShaderTypes)
+    {
+        const Program *shaderProgram = getShaderProgram(shaderType);
+        if (shaderProgram && !handledStages.test(shaderType))
+        {
+            // Only add each Program's blocks once.
+            handledStages |= shaderProgram->getExecutable().getLinkedShaderStages();
+
+            for (const InterfaceBlock &block :
+                 shaderProgram->getExecutable().getShaderStorageBlocks())
+            {
+                mState.mExecutable->mGraphicsShaderStorageBlocks.emplace_back(block);
+            }
+        }
+    }
+
+    const Program *computeProgram = getShaderProgram(ShaderType::Compute);
+    if (computeProgram)
+    {
+        for (const InterfaceBlock &block : computeProgram->getExecutable().getShaderStorageBlocks())
+        {
+            mState.mExecutable->mComputeShaderStorageBlocks.emplace_back(block);
+        }
+    }
+}
+
+void ProgramPipeline::updateImageBindings()
+{
+    mState.mExecutable->mComputeImageBindings.clear();
+    mState.mExecutable->mGraphicsImageBindings.clear();
+
+    // Only copy the storage blocks from each Program in the PPO once, since each Program could
+    // contain multiple shader stages.
+    ShaderBitSet handledStages;
+
+    for (const gl::ShaderType shaderType : kAllGraphicsShaderTypes)
+    {
+        const Program *shaderProgram = getShaderProgram(shaderType);
+        if (shaderProgram && !handledStages.test(shaderType))
+        {
+            // Only add each Program's blocks once.
+            handledStages |= shaderProgram->getExecutable().getLinkedShaderStages();
+
+            for (const ImageBinding &imageBinding : shaderProgram->getState().getImageBindings())
+            {
+                mState.mExecutable->mGraphicsImageBindings.emplace_back(imageBinding);
+            }
+        }
+    }
+
+    const Program *computeProgram = getShaderProgram(ShaderType::Compute);
+    if (computeProgram)
+    {
+        for (const ImageBinding &imageBinding : computeProgram->getState().getImageBindings())
+        {
+            mState.mExecutable->mComputeImageBindings.emplace_back(imageBinding);
+        }
+    }
+}
+
 void ProgramPipeline::updateHasBooleans()
 {
     // Need to check all of the shader stages, not just linked, so we handle Compute correctly.
@@ -277,7 +346,7 @@ void ProgramPipeline::updateHasBooleans()
             {
                 mState.mExecutable->mPipelineHasGraphicsUniformBuffers = true;
             }
-            if (executable.hasStorageBuffers())
+            if (executable.hasGraphicsStorageBuffers())
             {
                 mState.mExecutable->mPipelineHasGraphicsStorageBuffers = true;
             }
@@ -293,7 +362,7 @@ void ProgramPipeline::updateHasBooleans()
             {
                 mState.mExecutable->mPipelineHasGraphicsTextures = true;
             }
-            if (executable.hasImages())
+            if (executable.hasGraphicsImages())
             {
                 mState.mExecutable->mPipelineHasGraphicsImages = true;
             }
@@ -309,7 +378,7 @@ void ProgramPipeline::updateHasBooleans()
         {
             mState.mExecutable->mPipelineHasComputeUniformBuffers = true;
         }
-        if (executable.hasStorageBuffers())
+        if (executable.hasComputeStorageBuffers())
         {
             mState.mExecutable->mPipelineHasComputeStorageBuffers = true;
         }
@@ -325,7 +394,7 @@ void ProgramPipeline::updateHasBooleans()
         {
             mState.mExecutable->mPipelineHasComputeTextures = true;
         }
-        if (executable.hasImages())
+        if (executable.hasComputeImages())
         {
             mState.mExecutable->mPipelineHasComputeImages = true;
         }
@@ -339,9 +408,13 @@ void ProgramPipeline::updateExecutable()
     // Vertex Shader ProgramExecutable properties
     updateExecutableAttributes();
     updateTransformFeedbackMembers();
+    updateShaderStorageBlocks();
+    updateImageBindings();
 
     // All Shader ProgramExecutable properties
     mState.updateExecutableTextures();
+
+    // Must be last, since it queries things updated by earlier functions
     updateHasBooleans();
 }
 

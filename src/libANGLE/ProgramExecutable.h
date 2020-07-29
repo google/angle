@@ -194,8 +194,12 @@ class ProgramExecutable final : public angle::Subject
     bool hasTextures() const;
     bool hasUniformBuffers() const;
     bool hasStorageBuffers() const;
+    bool hasGraphicsStorageBuffers() const;
+    bool hasComputeStorageBuffers() const;
     bool hasAtomicCounterBuffers() const;
     bool hasImages() const;
+    bool hasGraphicsImages() const;
+    bool hasComputeImages() const;
     bool hasTransformFeedbackOutput() const
     {
         return !getLinkedTransformFeedbackVaryings().empty();
@@ -216,7 +220,14 @@ class ProgramExecutable final : public angle::Subject
     const std::vector<LinkedUniform> &getUniforms() const { return mUniforms; }
     const std::vector<InterfaceBlock> &getUniformBlocks() const { return mUniformBlocks; }
     const std::vector<SamplerBinding> &getSamplerBindings() const { return mSamplerBindings; }
-    const std::vector<ImageBinding> &getImageBindings() const { return mImageBindings; }
+    const std::vector<ImageBinding> &getImageBindings() const
+    {
+        return isCompute() ? mComputeImageBindings : mGraphicsImageBindings;
+    }
+    std::vector<ImageBinding> *getImageBindings()
+    {
+        return isCompute() ? &mComputeImageBindings : &mGraphicsImageBindings;
+    }
     const RangeUI &getDefaultUniformRange() const { return mDefaultUniformRange; }
     const RangeUI &getSamplerUniformRange() const { return mSamplerUniformRange; }
     const RangeUI &getImageUniformRange() const { return mImageUniformRange; }
@@ -232,8 +243,10 @@ class ProgramExecutable final : public angle::Subject
     }
     GLuint getShaderStorageBlockBinding(GLuint blockIndex) const
     {
-        ASSERT(blockIndex < mShaderStorageBlocks.size());
-        return mShaderStorageBlocks[blockIndex].binding;
+        ASSERT((isCompute() && (blockIndex < mComputeShaderStorageBlocks.size())) ||
+               (!isCompute() && (blockIndex < mGraphicsShaderStorageBlocks.size())));
+        return isCompute() ? mComputeShaderStorageBlocks[blockIndex].binding
+                           : mGraphicsShaderStorageBlocks[blockIndex].binding;
     }
     const std::vector<GLsizei> &getTransformFeedbackStrides() const
     {
@@ -245,7 +258,7 @@ class ProgramExecutable final : public angle::Subject
     }
     const std::vector<InterfaceBlock> &getShaderStorageBlocks() const
     {
-        return mShaderStorageBlocks;
+        return isCompute() ? mComputeShaderStorageBlocks : mGraphicsShaderStorageBlocks;
     }
     const LinkedUniform &getUniformByIndex(GLuint index) const
     {
@@ -265,7 +278,9 @@ class ProgramExecutable final : public angle::Subject
 
     ANGLE_INLINE GLuint getActiveShaderStorageBlockCount() const
     {
-        return static_cast<GLuint>(mShaderStorageBlocks.size());
+        size_t shaderStorageBlocksSize =
+            isCompute() ? mComputeShaderStorageBlocks.size() : mGraphicsShaderStorageBlocks.size();
+        return static_cast<GLuint>(shaderStorageBlocksSize);
     }
 
     GLuint getUniformIndexFromImageIndex(GLuint imageIndex) const;
@@ -351,13 +366,15 @@ class ProgramExecutable final : public angle::Subject
     std::vector<InterfaceBlock> mUniformBlocks;
     std::vector<AtomicCounterBuffer> mAtomicCounterBuffers;
     RangeUI mImageUniformRange;
-    std::vector<InterfaceBlock> mShaderStorageBlocks;
+    std::vector<InterfaceBlock> mComputeShaderStorageBlocks;
+    std::vector<InterfaceBlock> mGraphicsShaderStorageBlocks;
 
     // An array of the samplers that are used by the program
     std::vector<SamplerBinding> mSamplerBindings;
 
     // An array of the images that are used by the program
-    std::vector<ImageBinding> mImageBindings;
+    std::vector<ImageBinding> mComputeImageBindings;
+    std::vector<ImageBinding> mGraphicsImageBindings;
 
     // TODO: http://anglebug.com/3570: Remove mPipelineHas*UniformBuffers once PPO's have valid data
     // in mUniformBlocks

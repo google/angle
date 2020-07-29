@@ -161,6 +161,8 @@ class ProgramPipeline final : public RefCountObject<ProgramPipelineID>,
     void updateLinkedShaderStages();
     void updateExecutableAttributes();
     void updateTransformFeedbackMembers();
+    void updateShaderStorageBlocks();
+    void updateImageBindings();
     void updateHasBooleans();
     void updateExecutable();
 
