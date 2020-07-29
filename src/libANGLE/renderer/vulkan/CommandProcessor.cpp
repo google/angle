@@ -17,7 +17,7 @@ CommandProcessor::CommandProcessor() : mWorkerThreadIdle(true) {}
 
 void CommandProcessor::queueCommands(const vk::CommandProcessorTask &commands)
 {
-    ANGLE_TRACE_EVENT0("gpu.angle", "RendererVk::queueCommands");
+    ANGLE_TRACE_EVENT0("gpu.angle", "CommandProcessor::queueCommands");
     std::lock_guard<std::mutex> queueLock(mWorkerMutex);
     ASSERT(commands.commandBuffer == nullptr || !commands.commandBuffer->empty());
     mCommandsQueue.push(commands);
