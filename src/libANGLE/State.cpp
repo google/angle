@@ -3054,7 +3054,7 @@ Texture *State::getTextureForActiveSampler(TextureType type, size_t index)
     return mSamplerTextures[type][index].get();
 }
 
-angle::Result State::syncTexturesInit(const Context *context)
+angle::Result State::syncTexturesInit(const Context *context, Command command)
 {
     ASSERT(mRobustResourceInit);
 
@@ -3072,7 +3072,7 @@ angle::Result State::syncTexturesInit(const Context *context)
     return angle::Result::Continue;
 }
 
-angle::Result State::syncImagesInit(const Context *context)
+angle::Result State::syncImagesInit(const Context *context, Command command)
 {
     ASSERT(mRobustResourceInit);
     ASSERT(mProgram);
@@ -3087,33 +3087,33 @@ angle::Result State::syncImagesInit(const Context *context)
     return angle::Result::Continue;
 }
 
-angle::Result State::syncReadAttachments(const Context *context)
+angle::Result State::syncReadAttachments(const Context *context, Command command)
 {
     ASSERT(mReadFramebuffer);
     ASSERT(mRobustResourceInit);
     return mReadFramebuffer->ensureReadAttachmentsInitialized(context);
 }
 
-angle::Result State::syncDrawAttachments(const Context *context)
+angle::Result State::syncDrawAttachments(const Context *context, Command command)
 {
     ASSERT(mDrawFramebuffer);
     ASSERT(mRobustResourceInit);
     return mDrawFramebuffer->ensureDrawAttachmentsInitialized(context);
 }
 
-angle::Result State::syncReadFramebuffer(const Context *context)
+angle::Result State::syncReadFramebuffer(const Context *context, Command command)
 {
     ASSERT(mReadFramebuffer);
-    return mReadFramebuffer->syncState(context, GL_READ_FRAMEBUFFER);
+    return mReadFramebuffer->syncState(context, GL_READ_FRAMEBUFFER, command);
 }
 
-angle::Result State::syncDrawFramebuffer(const Context *context)
+angle::Result State::syncDrawFramebuffer(const Context *context, Command command)
 {
     ASSERT(mDrawFramebuffer);
-    return mDrawFramebuffer->syncState(context, GL_DRAW_FRAMEBUFFER);
+    return mDrawFramebuffer->syncState(context, GL_DRAW_FRAMEBUFFER, command);
 }
 
-angle::Result State::syncTextures(const Context *context)
+angle::Result State::syncTextures(const Context *context, Command command)
 {
     if (mDirtyTextures.none())
         return angle::Result::Continue;
@@ -3131,7 +3131,7 @@ angle::Result State::syncTextures(const Context *context)
     return angle::Result::Continue;
 }
 
-angle::Result State::syncImages(const Context *context)
+angle::Result State::syncImages(const Context *context, Command command)
 {
     if (mDirtyImages.none())
         return angle::Result::Continue;
@@ -3149,7 +3149,7 @@ angle::Result State::syncImages(const Context *context)
     return angle::Result::Continue;
 }
 
-angle::Result State::syncSamplers(const Context *context)
+angle::Result State::syncSamplers(const Context *context, Command command)
 {
     if (mDirtySamplers.none())
         return angle::Result::Continue;
@@ -3168,13 +3168,13 @@ angle::Result State::syncSamplers(const Context *context)
     return angle::Result::Continue;
 }
 
-angle::Result State::syncVertexArray(const Context *context)
+angle::Result State::syncVertexArray(const Context *context, Command command)
 {
     ASSERT(mVertexArray);
     return mVertexArray->syncState(context);
 }
 
-angle::Result State::syncProgram(const Context *context)
+angle::Result State::syncProgram(const Context *context, Command command)
 {
     // There may not be a program if the calling application only uses program pipelines.
     if (mProgram)
@@ -3184,7 +3184,7 @@ angle::Result State::syncProgram(const Context *context)
     return angle::Result::Continue;
 }
 
-angle::Result State::syncProgramPipeline(const Context *context)
+angle::Result State::syncProgramPipeline(const Context *context, Command command)
 {
     // There may not be a program pipeline if the calling application only uses programs.
     if (mProgramPipeline.get())
@@ -3224,7 +3224,7 @@ angle::Result State::syncDirtyObject(const Context *context, GLenum target)
             break;
     }
 
-    return syncDirtyObjects(context, localSet);
+    return syncDirtyObjects(context, localSet, Command::Other);
 }
 
 void State::setObjectDirty(GLenum target)

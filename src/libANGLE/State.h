@@ -70,6 +70,17 @@ using TextureBindingMap    = angle::PackedEnumMap<TextureType, TextureBindingVec
 using ActiveQueryMap       = angle::PackedEnumMap<QueryType, BindingPointer<Query>>;
 using BufferVector         = std::vector<OffsetBindingPointer<Buffer>>;
 
+enum class Command
+{
+    Other,
+    Blit,
+    CopyImage,
+    Dispatch,
+    Draw,
+    ReadPixels,
+    TexImage
+};
+
 class ActiveTexturesCache final : angle::NonCopyable
 {
   public:
@@ -674,7 +685,9 @@ class State : angle::NonCopyable
     using DirtyObjects = angle::BitSet<DIRTY_OBJECT_MAX>;
     void clearDirtyObjects() { mDirtyObjects.reset(); }
     void setAllDirtyObjects() { mDirtyObjects.set(); }
-    angle::Result syncDirtyObjects(const Context *context, const DirtyObjects &bitset);
+    angle::Result syncDirtyObjects(const Context *context,
+                                   const DirtyObjects &bitset,
+                                   Command command);
     angle::Result syncDirtyObject(const Context *context, GLenum target);
     void setObjectDirty(GLenum target);
     void setTextureDirty(size_t textureUnitIndex);
@@ -853,20 +866,20 @@ class State : angle::NonCopyable
     bool hasConstantAlpha(GLenum sourceRGB, GLenum destRGB) const;
 
     // Functions to synchronize dirty states
-    angle::Result syncTexturesInit(const Context *context);
-    angle::Result syncImagesInit(const Context *context);
-    angle::Result syncReadAttachments(const Context *context);
-    angle::Result syncDrawAttachments(const Context *context);
-    angle::Result syncReadFramebuffer(const Context *context);
-    angle::Result syncDrawFramebuffer(const Context *context);
-    angle::Result syncVertexArray(const Context *context);
-    angle::Result syncTextures(const Context *context);
-    angle::Result syncImages(const Context *context);
-    angle::Result syncSamplers(const Context *context);
-    angle::Result syncProgram(const Context *context);
-    angle::Result syncProgramPipeline(const Context *context);
+    angle::Result syncTexturesInit(const Context *context, Command command);
+    angle::Result syncImagesInit(const Context *context, Command command);
+    angle::Result syncReadAttachments(const Context *context, Command command);
+    angle::Result syncDrawAttachments(const Context *context, Command command);
+    angle::Result syncReadFramebuffer(const Context *context, Command command);
+    angle::Result syncDrawFramebuffer(const Context *context, Command command);
+    angle::Result syncVertexArray(const Context *context, Command command);
+    angle::Result syncTextures(const Context *context, Command command);
+    angle::Result syncImages(const Context *context, Command command);
+    angle::Result syncSamplers(const Context *context, Command command);
+    angle::Result syncProgram(const Context *context, Command command);
+    angle::Result syncProgramPipeline(const Context *context, Command command);
 
-    using DirtyObjectHandler = angle::Result (State::*)(const Context *context);
+    using DirtyObjectHandler = angle::Result (State::*)(const Context *context, Command command);
     static constexpr DirtyObjectHandler kDirtyObjectHandlers[DIRTY_OBJECT_MAX] = {
         &State::syncTexturesInit,    &State::syncImagesInit,      &State::syncReadAttachments,
         &State::syncDrawAttachments, &State::syncReadFramebuffer, &State::syncDrawFramebuffer,
@@ -1069,13 +1082,14 @@ class State : angle::NonCopyable
 };
 
 ANGLE_INLINE angle::Result State::syncDirtyObjects(const Context *context,
-                                                   const DirtyObjects &bitset)
+                                                   const DirtyObjects &bitset,
+                                                   Command command)
 {
     const DirtyObjects &dirtyObjects = mDirtyObjects & bitset;
 
     for (size_t dirtyObject : dirtyObjects)
     {
-        ANGLE_TRY((this->*kDirtyObjectHandlers[dirtyObject])(context));
+        ANGLE_TRY((this->*kDirtyObjectHandlers[dirtyObject])(context, command));
     }
 
     mDirtyObjects &= ~dirtyObjects;

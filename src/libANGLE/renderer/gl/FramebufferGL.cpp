@@ -1198,7 +1198,8 @@ bool FramebufferGL::checkStatus(const gl::Context *context) const
 
 angle::Result FramebufferGL::syncState(const gl::Context *context,
                                        GLenum binding,
-                                       const gl::Framebuffer::DirtyBits &dirtyBits)
+                                       const gl::Framebuffer::DirtyBits &dirtyBits,
+                                       gl::Command command)
 {
     // Don't need to sync state for the default FBO.
     if (mIsDefault)

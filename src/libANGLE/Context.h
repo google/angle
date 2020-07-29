@@ -638,10 +638,12 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     angle::Result prepareForDraw(PrimitiveMode mode);
     angle::Result prepareForClear(GLbitfield mask);
     angle::Result prepareForClearBuffer(GLenum buffer, GLint drawbuffer);
-    angle::Result syncState(const State::DirtyBits &bitMask, const State::DirtyObjects &objectMask);
+    angle::Result syncState(const State::DirtyBits &bitMask,
+                            const State::DirtyObjects &objectMask,
+                            Command command);
     angle::Result syncDirtyBits();
     angle::Result syncDirtyBits(const State::DirtyBits &bitMask);
-    angle::Result syncDirtyObjects(const State::DirtyObjects &objectMask);
+    angle::Result syncDirtyObjects(const State::DirtyObjects &objectMask, Command command);
     angle::Result syncStateForReadPixels();
     angle::Result syncStateForTexImage();
     angle::Result syncStateForBlit();

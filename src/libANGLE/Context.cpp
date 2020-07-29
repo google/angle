@@ -3622,7 +3622,7 @@ angle::Result Context::prepareForClearBuffer(GLenum buffer, GLint drawbuffer)
 
 ANGLE_INLINE angle::Result Context::prepareForCopyImage()
 {
-    ANGLE_TRY(syncDirtyObjects(mCopyImageDirtyObjects));
+    ANGLE_TRY(syncDirtyObjects(mCopyImageDirtyObjects, Command::CopyImage));
     return syncDirtyBits(mCopyImageDirtyBits);
 }
 
@@ -3632,14 +3632,15 @@ ANGLE_INLINE angle::Result Context::prepareForDispatch()
     // with a PPO, we need to convert it from a "draw"-type to "dispatch"-type.
     convertPpoToComputeOrDraw(true);
 
-    ANGLE_TRY(syncDirtyObjects(mComputeDirtyObjects));
+    ANGLE_TRY(syncDirtyObjects(mComputeDirtyObjects, Command::Dispatch));
     return syncDirtyBits(mComputeDirtyBits);
 }
 
 angle::Result Context::syncState(const State::DirtyBits &bitMask,
-                                 const State::DirtyObjects &objectMask)
+                                 const State::DirtyObjects &objectMask,
+                                 Command command)
 {
-    ANGLE_TRY(syncDirtyObjects(objectMask));
+    ANGLE_TRY(syncDirtyObjects(objectMask, command));
     ANGLE_TRY(syncDirtyBits(bitMask));
     return angle::Result::Continue;
 }
@@ -4733,17 +4734,17 @@ void Context::flushMappedBufferRange(BufferBinding /*target*/,
 
 angle::Result Context::syncStateForReadPixels()
 {
-    return syncState(mReadPixelsDirtyBits, mReadPixelsDirtyObjects);
+    return syncState(mReadPixelsDirtyBits, mReadPixelsDirtyObjects, Command::ReadPixels);
 }
 
 angle::Result Context::syncStateForTexImage()
 {
-    return syncState(mTexImageDirtyBits, mTexImageDirtyObjects);
+    return syncState(mTexImageDirtyBits, mTexImageDirtyObjects, Command::TexImage);
 }
 
 angle::Result Context::syncStateForBlit()
 {
-    return syncState(mBlitDirtyBits, mBlitDirtyObjects);
+    return syncState(mBlitDirtyBits, mBlitDirtyObjects, Command::Blit);
 }
 
 void Context::activeShaderProgram(ProgramPipelineID pipeline, ShaderProgramID program)

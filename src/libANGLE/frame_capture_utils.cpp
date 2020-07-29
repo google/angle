@@ -144,7 +144,7 @@ Result SerializeFramebufferAttachment(const gl::Context *context,
                                           framebuffer->getState().getColorAttachments().size()))
         {
             framebuffer->setReadBuffer(framebufferAttachment.getBinding());
-            ANGLE_TRY(framebuffer->syncState(context, GL_FRAMEBUFFER));
+            ANGLE_TRY(framebuffer->syncState(context, GL_FRAMEBUFFER, gl::Command::Other));
         }
         MemoryBuffer *pixelsPtr = nullptr;
         ANGLE_TRY(ReadPixelsFromAttachment(context, framebuffer, framebufferAttachment,
