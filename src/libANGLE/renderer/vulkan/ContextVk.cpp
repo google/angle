@@ -2678,7 +2678,7 @@ void ContextVk::updateDepthRange(float nearPlane, float farPlane)
     mGraphicsPipelineDesc->updateDepthRange(&mGraphicsPipelineTransition, nearPlane, farPlane);
 }
 
-angle::Result ContextVk::updateScissor(const gl::State &glState)
+angle::Result ContextVk::updateScissorImpl(const gl::State &glState, bool shouldEndRenderPass)
 {
     FramebufferVk *framebufferVk = vk::GetImpl(glState.getDrawFramebuffer());
     gl::Rectangle renderArea     = framebufferVk->getNonRotatedCompleteRenderArea();
@@ -2707,7 +2707,7 @@ angle::Result ContextVk::updateScissor(const gl::State &glState)
     // a render pass, the scissor is disabled and a draw call is issued to affect the whole
     // framebuffer.
     gl::Rectangle scissoredRenderArea = framebufferVk->getRotatedScissoredRenderArea(this);
-    if (mRenderPassCommands->started())
+    if (shouldEndRenderPass && mRenderPassCommands->started())
     {
         if (!mRenderPassCommands->getRenderArea().encloses(scissoredRenderArea))
         {
@@ -2794,7 +2794,7 @@ angle::Result ContextVk::syncState(const gl::Context *context,
         {
             case gl::State::DIRTY_BIT_SCISSOR_TEST_ENABLED:
             case gl::State::DIRTY_BIT_SCISSOR:
-                ANGLE_TRY(updateScissor(glState));
+                ANGLE_TRY(updateScissorAndEndRenderPass(glState));
                 break;
             case gl::State::DIRTY_BIT_VIEWPORT:
             {
@@ -2802,7 +2802,7 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 updateViewport(framebufferVk, glState.getViewport(), glState.getNearPlane(),
                                glState.getFarPlane(), isViewportFlipEnabledForDrawFBO());
                 // Update the scissor, which will be constrained to the viewport
-                ANGLE_TRY(updateScissor(glState));
+                ANGLE_TRY(updateScissorAndEndRenderPass(glState));
                 break;
             }
             case gl::State::DIRTY_BIT_DEPTH_RANGE:

@@ -469,7 +469,14 @@ class ContextVk : public ContextImpl, public vk::Context
     // avoid calling vkAllocateDesctiporSets each texture update.
     const vk::TextureDescriptorDesc &getActiveTexturesDesc() const { return mActiveTexturesDesc; }
 
-    angle::Result updateScissor(const gl::State &glState);
+    angle::Result updateScissor(const gl::State &glState)
+    {
+        return updateScissorImpl(glState, false);
+    }
+    angle::Result updateScissorAndEndRenderPass(const gl::State &glState)
+    {
+        return updateScissorImpl(glState, true);
+    }
 
     bool emulateSeamfulCubeMapSampling() const { return mEmulateSeamfulCubeMapSampling; }
 
@@ -878,6 +885,8 @@ class ContextVk : public ContextImpl, public vk::Context
     T *allocDescriptorInfos(std::vector<T> *descriptorVector, size_t count);
     template <typename T, const T *VkWriteDescriptorSet::*pInfo>
     void growDesciptorCapacity(std::vector<T> *descriptorVector, size_t newSize);
+
+    angle::Result updateScissorImpl(const gl::State &glState, bool shouldEndRenderPass);
 
     std::array<DirtyBitHandler, DIRTY_BIT_MAX> mGraphicsDirtyBitHandlers;
     std::array<DirtyBitHandler, DIRTY_BIT_MAX> mComputeDirtyBitHandlers;
