@@ -1688,12 +1688,9 @@ angle::Result TextureVk::updateBaseMaxLevels(ContextVk *contextVk,
     // number of mip levels
     if (!baseLevelChanged && (maxLevel < baseLevel + mImage->getLevelCount()))
     {
-        // Don't need to respecify the texture; just redo the texture's vkImageViews
+        // Don't need to respecify the texture; but do need to update which vkImageView's are
+        // served up by ImageViewHelper
         ASSERT(maxLevelChanged);
-
-        // Release the current vkImageViews
-        RendererVk *renderer = contextVk->getRenderer();
-        mImageViews.release(renderer);
 
         // Track the levels in our ImageHelper
         mImage->setBaseAndMaxLevels(baseLevel, maxLevel);
@@ -1701,7 +1698,7 @@ angle::Result TextureVk::updateBaseMaxLevels(ContextVk *contextVk,
         // Update the texture's serial so that the descriptor set is updated correctly
         mSerial = contextVk->generateTextureSerial();
 
-        // Change the vkImageViews
+        // Update the current max level in ImageViewHelper
         const gl::ImageDesc &baseLevelDesc = mState.getBaseLevelDesc();
         // We use a special layer count here to handle EGLImages. They might only be
         // looking at one layer of a cube or 2D array texture.
@@ -2243,15 +2240,9 @@ angle::Result TextureVk::initImageViews(ContextVk *contextVk,
     gl::SwizzleState readSwizzle   = ApplySwizzle(formatSwizzle, mState.getSwizzleState());
 
     ANGLE_TRY(mImageViews.initReadViews(contextVk, mState.getType(), *mImage, format, formatSwizzle,
-                                        readSwizzle, baseLevel, levelCount, baseLayer, layerCount));
-
-    if (mRequiresSRGBViews)
-    {
-        ASSERT((mImageCreateFlags & VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT) != 0);
-        ANGLE_TRY(mImageViews.initSRGBReadViews(
-            contextVk, mState.getType(), *mImage, format, formatSwizzle, readSwizzle, baseLevel,
-            levelCount, baseLayer, layerCount, mImageUsageFlags & ~VK_IMAGE_USAGE_STORAGE_BIT));
-    }
+                                        readSwizzle, baseLevel, levelCount, baseLayer, layerCount,
+                                        mRequiresSRGBViews,
+                                        mImageUsageFlags & ~VK_IMAGE_USAGE_STORAGE_BIT));
 
     return angle::Result::Continue;
 }

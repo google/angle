@@ -123,13 +123,11 @@ angle::Result RenderTargetVk::getAndRetainCopyImageView(ContextVk *contextVk,
     retainImageViews(contextVk);
 
     const vk::ImageViewHelper *imageViews = mImageViews;
-    const vk::ImageView &copyView         = imageViews->getCopyImageView();
-
     // If the source of render target is a texture or renderbuffer, this will always be valid.  This
     // is also where 3D or 2DArray images could be the source of the render target.
-    if (copyView.valid())
+    if (imageViews->hasCopyImageView())
     {
-        *imageViewOut = &copyView;
+        *imageViewOut = &imageViews->getCopyImageView();
         return angle::Result::Continue;
     }
 

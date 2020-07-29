@@ -1583,38 +1583,93 @@ class ImageViewHelper : angle::NonCopyable
     void release(RendererVk *renderer);
     void destroy(VkDevice device);
 
-    const ImageView &getLinearReadImageView() const { return mLinearReadImageView; }
-    const ImageView &getNonLinearReadImageView() const { return mNonLinearReadImageView; }
-    const ImageView &getLinearFetchImageView() const { return mLinearFetchImageView; }
-    const ImageView &getNonLinearFetchImageView() const { return mNonLinearFetchImageView; }
-    const ImageView &getLinearCopyImageView() const { return mLinearCopyImageView; }
-    const ImageView &getNonLinearCopyImageView() const { return mNonLinearCopyImageView; }
-    const ImageView &getStencilReadImageView() const { return mStencilReadImageView; }
+    const ImageView &getLinearReadImageView() const
+    {
+        return getValidReadViewImpl(mPerLevelLinearReadImageViews);
+    }
+    const ImageView &getNonLinearReadImageView() const
+    {
+        return getValidReadViewImpl(mPerLevelNonLinearReadImageViews);
+    }
+    const ImageView &getLinearFetchImageView() const
+    {
+        return getValidReadViewImpl(mPerLevelLinearFetchImageViews);
+    }
+    const ImageView &getNonLinearFetchImageView() const
+    {
+        return getValidReadViewImpl(mPerLevelNonLinearFetchImageViews);
+    }
+    const ImageView &getLinearCopyImageView() const
+    {
+        return getValidReadViewImpl(mPerLevelLinearCopyImageViews);
+    }
+    const ImageView &getNonLinearCopyImageView() const
+    {
+        return getValidReadViewImpl(mPerLevelNonLinearCopyImageViews);
+    }
+    const ImageView &getStencilReadImageView() const
+    {
+        return getValidReadViewImpl(mPerLevelStencilReadImageViews);
+    }
 
     const ImageView &getReadImageView() const
     {
-        return mLinearColorspace ? mLinearReadImageView : mNonLinearReadImageView;
+        return mLinearColorspace ? getReadViewImpl(mPerLevelLinearReadImageViews)
+                                 : getReadViewImpl(mPerLevelNonLinearReadImageViews);
     }
 
     const ImageView &getFetchImageView() const
     {
-        return mLinearColorspace ? mLinearFetchImageView : mNonLinearFetchImageView;
+        return mLinearColorspace ? getReadViewImpl(mPerLevelLinearFetchImageViews)
+                                 : getReadViewImpl(mPerLevelNonLinearFetchImageViews);
     }
 
     const ImageView &getCopyImageView() const
     {
-        return mLinearColorspace ? mLinearCopyImageView : mNonLinearCopyImageView;
+        return mLinearColorspace ? getReadViewImpl(mPerLevelLinearCopyImageViews)
+                                 : getReadViewImpl(mPerLevelNonLinearCopyImageViews);
     }
 
     // Used when initialized RenderTargets.
-    bool hasStencilReadImageView() const { return mStencilReadImageView.valid(); }
+    bool hasStencilReadImageView() const
+    {
+        return (mCurrentMaxLevel < mPerLevelStencilReadImageViews.size())
+                   ? mPerLevelStencilReadImageViews[mCurrentMaxLevel].valid()
+                   : false;
+    }
 
-    bool hasFetchImageView() const { return getFetchImageView().valid(); }
+    bool hasFetchImageView() const
+    {
+        if ((mLinearColorspace && (mCurrentMaxLevel < mPerLevelLinearFetchImageViews.size())) ||
+            (!mLinearColorspace && (mCurrentMaxLevel < mPerLevelNonLinearFetchImageViews.size())))
+        {
+            return getFetchImageView().valid();
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    bool hasCopyImageView() const
+    {
+        if ((mLinearColorspace && (mCurrentMaxLevel < mPerLevelLinearCopyImageViews.size())) ||
+            (!mLinearColorspace && (mCurrentMaxLevel < mPerLevelNonLinearCopyImageViews.size())))
+        {
+            return getFetchImageView().valid();
+        }
+        else
+        {
+            return false;
+        }
+    }
 
     // Store reference to usage in graph.
     void retain(ResourceUseList *resourceUseList) const { resourceUseList->add(mUse); }
 
-    // Creates views with multiple layers and levels.
+    // For applications that frequently switch a texture's max level, and make no other changes to
+    // the texture, change the currently-used max level, and potentially create new "read views"
+    // for the new max-level
     angle::Result initReadViews(ContextVk *contextVk,
                                 gl::TextureType viewType,
                                 const ImageHelper &image,
@@ -1624,20 +1679,9 @@ class ImageViewHelper : angle::NonCopyable
                                 uint32_t baseLevel,
                                 uint32_t levelCount,
                                 uint32_t baseLayer,
-                                uint32_t layerCount);
-
-    // Create SRGB-reinterpreted read views
-    angle::Result initSRGBReadViews(ContextVk *contextVk,
-                                    gl::TextureType viewType,
-                                    const ImageHelper &image,
-                                    const Format &format,
-                                    const gl::SwizzleState &formatSwizzle,
-                                    const gl::SwizzleState &readSwizzle,
-                                    uint32_t baseLevel,
-                                    uint32_t levelCount,
-                                    uint32_t baseLayer,
-                                    uint32_t layerCount,
-                                    VkImageUsageFlags imageUsageFlags);
+                                uint32_t layerCount,
+                                bool requiresSRGBViews,
+                                VkImageUsageFlags imageUsageFlags);
 
     // Creates a view with all layers of the level.
     angle::Result getLevelDrawImageView(ContextVk *contextVk,
@@ -1662,28 +1706,83 @@ class ImageViewHelper : angle::NonCopyable
   private:
     ImageView &getReadImageView()
     {
-        return mLinearColorspace ? mLinearReadImageView : mNonLinearReadImageView;
+        return mLinearColorspace ? getReadViewImpl(mPerLevelLinearReadImageViews)
+                                 : getReadViewImpl(mPerLevelNonLinearReadImageViews);
     }
     ImageView &getFetchImageView()
     {
-        return mLinearColorspace ? mLinearFetchImageView : mNonLinearFetchImageView;
+        return mLinearColorspace ? getReadViewImpl(mPerLevelLinearFetchImageViews)
+                                 : getReadViewImpl(mPerLevelNonLinearFetchImageViews);
     }
     ImageView &getCopyImageView()
     {
-        return mLinearColorspace ? mLinearCopyImageView : mNonLinearCopyImageView;
+        return mLinearColorspace ? getReadViewImpl(mPerLevelLinearCopyImageViews)
+                                 : getReadViewImpl(mPerLevelNonLinearCopyImageViews);
     }
+
+    // Used by public get*ImageView() methods to do proper assert based on vector size and validity
+    inline const ImageView &getValidReadViewImpl(const ImageViewVector &imageViewVector) const
+    {
+        ASSERT(mCurrentMaxLevel < imageViewVector.size() &&
+               imageViewVector[mCurrentMaxLevel].valid());
+        return imageViewVector[mCurrentMaxLevel];
+    }
+
+    // Used by public get*ImageView() methods to do proper assert based on vector size
+    inline const ImageView &getReadViewImpl(const ImageViewVector &imageViewVector) const
+    {
+        ASSERT(mCurrentMaxLevel < imageViewVector.size());
+        return imageViewVector[mCurrentMaxLevel];
+    }
+
+    // Used by private get*ImageView() methods to do proper assert based on vector size
+    inline ImageView &getReadViewImpl(ImageViewVector &imageViewVector)
+    {
+        ASSERT(mCurrentMaxLevel < imageViewVector.size());
+        return imageViewVector[mCurrentMaxLevel];
+    }
+
+    // Creates views with multiple layers and levels.
+    angle::Result initReadViewsImpl(ContextVk *contextVk,
+                                    gl::TextureType viewType,
+                                    const ImageHelper &image,
+                                    const Format &format,
+                                    const gl::SwizzleState &formatSwizzle,
+                                    const gl::SwizzleState &readSwizzle,
+                                    uint32_t baseLevel,
+                                    uint32_t levelCount,
+                                    uint32_t baseLayer,
+                                    uint32_t layerCount);
+
+    // Create SRGB-reinterpreted read views
+    angle::Result initSRGBReadViewsImpl(ContextVk *contextVk,
+                                        gl::TextureType viewType,
+                                        const ImageHelper &image,
+                                        const Format &format,
+                                        const gl::SwizzleState &formatSwizzle,
+                                        const gl::SwizzleState &readSwizzle,
+                                        uint32_t baseLevel,
+                                        uint32_t levelCount,
+                                        uint32_t baseLayer,
+                                        uint32_t layerCount,
+                                        VkImageUsageFlags imageUsageFlags);
 
     // Lifetime.
     SharedResourceUse mUse;
 
-    // Read views
-    ImageView mLinearReadImageView;
-    ImageView mNonLinearReadImageView;
-    ImageView mLinearFetchImageView;
-    ImageView mNonLinearFetchImageView;
-    ImageView mLinearCopyImageView;
-    ImageView mNonLinearCopyImageView;
-    ImageView mStencilReadImageView;
+    // For applications that frequently switch a texture's max level, and make no other changes to
+    // the texture, keep track of the currently-used max level, and keep one "read view" per
+    // max-level
+    uint32_t mCurrentMaxLevel;
+
+    // Read views (one per max-level)
+    ImageViewVector mPerLevelLinearReadImageViews;
+    ImageViewVector mPerLevelNonLinearReadImageViews;
+    ImageViewVector mPerLevelLinearFetchImageViews;
+    ImageViewVector mPerLevelNonLinearFetchImageViews;
+    ImageViewVector mPerLevelLinearCopyImageViews;
+    ImageViewVector mPerLevelNonLinearCopyImageViews;
+    ImageViewVector mPerLevelStencilReadImageViews;
 
     bool mLinearColorspace;
 
