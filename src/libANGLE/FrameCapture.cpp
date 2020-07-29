@@ -856,6 +856,7 @@ void WriteCppReplay(bool compression,
     std::stringstream header;
 
     header << "#include \"" << FmtCapturePrefix(context->id(), captureLabel) << ".h\"\n";
+    header << "#include \"angle_trace_gl.h\"\n";
     header << "";
     header << "\n";
     header << "namespace\n";
