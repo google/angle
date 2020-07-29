@@ -54,6 +54,11 @@ GLsizei RenderbufferState::getSamples() const
     return mSamples;
 }
 
+InitState RenderbufferState::getInitState() const
+{
+    return mInitState;
+}
+
 void RenderbufferState::update(GLsizei width,
                                GLsizei height,
                                const Format &format,
@@ -205,6 +210,11 @@ GLuint Renderbuffer::getDepthSize() const
 GLuint Renderbuffer::getStencilSize() const
 {
     return mState.mFormat.info->stencilBits;
+}
+
+const RenderbufferState &Renderbuffer::getState() const
+{
+    return mState;
 }
 
 GLint Renderbuffer::getMemorySize() const

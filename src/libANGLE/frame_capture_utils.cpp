@@ -27,6 +27,7 @@
 #include "libANGLE/VertexAttribute.h"
 #include "libANGLE/angletypes.h"
 #include "libANGLE/renderer/FramebufferImpl.h"
+#include "libANGLE/renderer/RenderbufferImpl.h"
 
 namespace angle
 {
@@ -514,6 +515,46 @@ void SerializeSampler(gl::BinaryOutputStream *bos, gl::Sampler *sampler)
     SerializeSamplerState(bos, sampler->getSamplerState());
 }
 
+void SerializeInternalFormat(gl::BinaryOutputStream *bos, const gl::InternalFormat *internalFormat)
+{
+    bos->writeInt(internalFormat->internalFormat);
+}
+
+void SerializeFormat(gl::BinaryOutputStream *bos, const gl::Format &format)
+{
+    SerializeInternalFormat(bos, format.info);
+}
+
+void SerializeRenderbufferState(gl::BinaryOutputStream *bos,
+                                const gl::RenderbufferState &renderbufferState)
+{
+    bos->writeInt(renderbufferState.getWidth());
+    bos->writeInt(renderbufferState.getHeight());
+    SerializeFormat(bos, renderbufferState.getFormat());
+    bos->writeInt(renderbufferState.getSamples());
+    bos->writeEnum(renderbufferState.getInitState());
+}
+
+Result SerializeRenderbuffer(const gl::Context *context,
+                             gl::BinaryOutputStream *bos,
+                             ScratchBuffer *scratchBuffer,
+                             gl::Renderbuffer *renderbuffer)
+{
+    SerializeRenderbufferState(bos, renderbuffer->getState());
+    bos->writeString(renderbuffer->getLabel());
+    MemoryBuffer *pixelsPtr = nullptr;
+    ANGLE_CHECK_GL_ALLOC(
+        const_cast<gl::Context *>(context),
+        scratchBuffer->getInitialized(renderbuffer->getMemorySize(), &pixelsPtr, 0));
+    gl::PixelPackState packState;
+    packState.alignment = 1;
+    ANGLE_TRY(renderbuffer->getImplementation()->getRenderbufferImage(
+        context, packState, nullptr, renderbuffer->getImplementationColorReadFormat(context),
+        renderbuffer->getImplementationColorReadType(context), pixelsPtr->data()));
+    bos->writeBytes(pixelsPtr->data(), pixelsPtr->size());
+    return Result::Continue;
+}
+
 }  // namespace
 
 Result SerializeContext(gl::BinaryOutputStream *bos, const gl::Context *context)
@@ -538,6 +579,13 @@ Result SerializeContext(gl::BinaryOutputStream *bos, const gl::Context *context)
     {
         gl::Sampler *samplerPtr = sampler.second;
         SerializeSampler(bos, samplerPtr);
+    }
+    const gl::RenderbufferManager &renderbufferManager =
+        context->getState().getRenderbufferManagerForCapture();
+    for (const auto &renderbuffer : renderbufferManager)
+    {
+        gl::Renderbuffer *renderbufferPtr = renderbuffer.second;
+        ANGLE_TRY(SerializeRenderbuffer(context, bos, &scratchBuffer, renderbufferPtr));
     }
     scratchBuffer.clear();
     return Result::Continue;

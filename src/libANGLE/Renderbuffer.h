@@ -42,6 +42,7 @@ class RenderbufferState final : angle::NonCopyable
     GLsizei getHeight() const;
     const Format &getFormat() const;
     GLsizei getSamples() const;
+    InitState getInitState() const;
 
   private:
     friend class Renderbuffer;
@@ -97,6 +98,7 @@ class Renderbuffer final : public RefCountObject<RenderbufferID>,
     GLuint getAlphaSize() const;
     GLuint getDepthSize() const;
     GLuint getStencilSize() const;
+    const RenderbufferState &getState() const;
 
     GLint getMemorySize() const;
 
