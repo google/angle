@@ -36,6 +36,7 @@ enum class RestrictedTraceID
     candy_crush_500,
     egypt_1500,
     manhattan_10,
+    nba2k20_800,
     subway_surfer_500,
     temple_run_300,
     trex_200,
