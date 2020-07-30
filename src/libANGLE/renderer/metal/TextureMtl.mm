@@ -797,10 +797,12 @@ angle::Result TextureMtl::bindToShader(const gl::Context *context,
 {
     ASSERT(mNativeTexture);
 
-    float maxLodClamp = FLT_MAX;
+    float minLodClamp = std::max(0.f, mState.getSamplerState().getMinLod());
+    float maxLodClamp = mState.getSamplerState().getMaxLod();
 
     cmdEncoder->setTexture(shaderType, mNativeTexture, textureSlotIndex);
-    cmdEncoder->setSamplerState(shaderType, mMetalSamplerState, 0, maxLodClamp, samplerSlotIndex);
+    cmdEncoder->setSamplerState(shaderType, mMetalSamplerState, minLodClamp, maxLodClamp,
+                                samplerSlotIndex);
 
     return angle::Result::Continue;
 }

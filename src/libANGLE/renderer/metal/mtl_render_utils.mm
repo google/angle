@@ -756,6 +756,16 @@ void ColorBlitUtils::setupBlitWithDraw(const gl::Context *context,
 
     cmdEncoder->setFragmentTexture(params.src, 0);
 
+    // Set default sampler state with linear filtering.
+    // NOTE(hqle): Support configurable filtering (required by glBitFramebuffer).
+    SamplerDesc samplerDesc;
+    samplerDesc.reset();
+    samplerDesc.minFilter = samplerDesc.magFilter = MTLSamplerMinMagFilterLinear;
+
+    cmdEncoder->setFragmentSamplerState(contextMtl->getDisplay()->getStateCache().getSamplerState(
+                                            contextMtl->getMetalDevice(), samplerDesc),
+                                        0, FLT_MAX, 0);
+
     // Uniform
     SetupBlitWithDrawUniformData(cmdEncoder, params);
 }
