@@ -384,8 +384,9 @@ angle::Result FramebufferVk::clearImpl(const gl::Context *context,
         ANGLE_TRY(getFramebuffer(contextVk, &currentFramebuffer));
         bool framebufferIsCurrent = contextVk->isCurrentRenderPassOfFramebuffer(currentFramebuffer);
 
-        // If we are in an active renderpass and the framebuffer hasn't changed, inline the clear
-        if (contextVk->hasStartedRenderPass() && framebufferIsCurrent)
+        // If we are in an active renderpass that has recorded commands and the framebuffer hasn't
+        // changed, inline the clear
+        if (contextVk->hasStartedRenderPassWithCommands() && framebufferIsCurrent)
         {
             // Have active renderpass, add inline clear
             gl::DrawBufferMask clearBuffersWithInlineClear;
