@@ -46,6 +46,40 @@ constexpr angle::FormatID kDefaultFrameBufferStencilFormatId = angle::FormatID::
 constexpr angle::FormatID kDefaultFrameBufferDepthStencilFormatId =
     angle::FormatID::D24_UNORM_S8_UINT;
 
+struct IOSurfaceFormatInfo
+{
+    GLenum internalFormat;
+    GLenum type;
+    size_t componentBytes;
+
+    angle::FormatID nativeAngleFormatId;
+};
+
+// clang-format off
+// NOTE(hqle): Support R16_UINT once GLES3 is complete.
+constexpr std::array<IOSurfaceFormatInfo, 6> kIOSurfaceFormats = {{
+    {GL_RED,      GL_UNSIGNED_BYTE,               1, angle::FormatID::R8_UNORM},
+    {GL_RG,       GL_UNSIGNED_BYTE,               2, angle::FormatID::R8G8_UNORM},
+    {GL_RGB,      GL_UNSIGNED_BYTE,               4, angle::FormatID::B8G8R8A8_UNORM},
+    {GL_BGRA_EXT, GL_UNSIGNED_BYTE,               4, angle::FormatID::B8G8R8A8_UNORM},
+    {GL_RGBA,     GL_HALF_FLOAT,                  8, angle::FormatID::R16G16B16A16_FLOAT},
+    {GL_RGB10_A2, GL_UNSIGNED_INT_2_10_10_10_REV, 4, angle::FormatID::B10G10R10A2_UNORM},
+}};
+// clang-format on
+
+int FindIOSurfaceFormatIndex(GLenum internalFormat, GLenum type)
+{
+    for (int i = 0; i < static_cast<int>(kIOSurfaceFormats.size()); ++i)
+    {
+        const auto &formatInfo = kIOSurfaceFormats[i];
+        if (formatInfo.internalFormat == internalFormat && formatInfo.type == type)
+        {
+            return i;
+        }
+    }
+    return -1;
+}
+
 angle::Result CreateTexture(const gl::Context *context,
                             const mtl::Format &format,
                             uint32_t width,
@@ -209,14 +243,7 @@ SurfaceMtl::SurfaceMtl(DisplayMtl *display,
                        const egl::AttributeMap &attribs)
     : SurfaceImpl(state)
 {
-
-    // https://developer.apple.com/metal/Metal-Feature-Set-Tables.pdf says that BGRA8Unorm is
-    // only supported if depth24Stencil8PixelFormatSupported capabilitiy is YES. Yet
-    // CAMetalLayer can be created with pixelFormat MTLPixelFormatBGRA8Unorm. So the mtl::Format
-    // used for SurfaceMtl is initialized a bit differently from normal TextureMtl's mtl::Format.
-    // It won't use format table, instead we initialize its values here to use BGRA8Unorm directly:
-    mColorFormat.intendedFormatId = mColorFormat.actualFormatId = angle::FormatID::B8G8R8A8_UNORM;
-    mColorFormat.metalFormat                                    = MTLPixelFormatBGRA8Unorm;
+    mColorFormat = display->getPixelFormat(angle::FormatID::B8G8R8A8_UNORM);
 
     mSamples = state.config->samples;
 
@@ -747,4 +774,248 @@ angle::Result WindowSurfaceMtl::swapImpl(const gl::Context *context)
 
     return angle::Result::Continue;
 }
+
+// OffscreenSurfaceMtl implementation
+OffscreenSurfaceMtl::OffscreenSurfaceMtl(DisplayMtl *display,
+                                         const egl::SurfaceState &state,
+                                         const egl::AttributeMap &attribs)
+    : SurfaceMtl(display, state, attribs)
+{
+    mSize = gl::Extents(attribs.getAsInt(EGL_WIDTH, 1), attribs.getAsInt(EGL_HEIGHT, 1), 1);
+}
+
+OffscreenSurfaceMtl::~OffscreenSurfaceMtl() {}
+
+void OffscreenSurfaceMtl::destroy(const egl::Display *display)
+{
+    SurfaceMtl::destroy(display);
+}
+
+egl::Error OffscreenSurfaceMtl::swap(const gl::Context *context)
+{
+    // Check for surface resize.
+    ANGLE_TO_EGL_TRY(ensureTexturesSizeCorrect(context));
+
+    return egl::NoError();
+}
+
+egl::Error OffscreenSurfaceMtl::bindTexImage(const gl::Context *context,
+                                             gl::Texture *texture,
+                                             EGLint buffer)
+{
+    ContextMtl *contextMtl = mtl::GetImpl(context);
+    contextMtl->flushCommandBufer();
+
+    // Initialize offscreen textures if needed:
+    ANGLE_TO_EGL_TRY(ensureTexturesSizeCorrect(context));
+
+    return egl::NoError();
+}
+
+egl::Error OffscreenSurfaceMtl::releaseTexImage(const gl::Context *context, EGLint buffer)
+{
+    ContextMtl *contextMtl = mtl::GetImpl(context);
+
+    if (mMSColorTexture)
+    {
+        ANGLE_TO_EGL_TRY(resolveColorTextureIfNeeded(context));
+    }
+
+    // NOTE(hqle): Should we finishCommandBuffer or flush is enough?
+    contextMtl->flushCommandBufer();
+    return egl::NoError();
+}
+
+angle::Result OffscreenSurfaceMtl::getAttachmentRenderTarget(
+    const gl::Context *context,
+    GLenum binding,
+    const gl::ImageIndex &imageIndex,
+    GLsizei samples,
+    FramebufferAttachmentRenderTarget **rtOut)
+{
+    // Initialize offscreen textures if needed:
+    ANGLE_TRY(ensureTexturesSizeCorrect(context));
+
+    return SurfaceMtl::getAttachmentRenderTarget(context, binding, imageIndex, samples, rtOut);
+}
+
+angle::Result OffscreenSurfaceMtl::ensureTexturesSizeCorrect(const gl::Context *context)
+{
+    if (!mColorTexture || mColorTexture->size() != mSize)
+    {
+        ANGLE_TRY(CreateTexture(context, mColorFormat, mSize.width, mSize.height, 1,
+                                /** renderTargetOnly */ false, &mColorTexture));
+
+        mColorRenderTarget.set(mColorTexture, 0, 0, mColorFormat);
+    }
+
+    return ensureCompanionTexturesSizeCorrect(context, mSize);
+}
+
+// PBufferSurfaceMtl implementation
+PBufferSurfaceMtl::PBufferSurfaceMtl(DisplayMtl *display,
+                                     const egl::SurfaceState &state,
+                                     const egl::AttributeMap &attribs)
+    : OffscreenSurfaceMtl(display, state, attribs)
+{}
+
+void PBufferSurfaceMtl::setFixedWidth(EGLint width)
+{
+    mSize.width = width;
+}
+
+void PBufferSurfaceMtl::setFixedHeight(EGLint height)
+{
+    mSize.height = height;
+}
+
+// IOSurfaceSurfaceMtl implementation.
+IOSurfaceSurfaceMtl::IOSurfaceSurfaceMtl(DisplayMtl *display,
+                                         const egl::SurfaceState &state,
+                                         EGLClientBuffer buffer,
+                                         const egl::AttributeMap &attribs)
+    : OffscreenSurfaceMtl(display, state, attribs), mIOSurface((__bridge IOSurfaceRef)(buffer))
+{
+    CFRetain(mIOSurface);
+
+    mIOSurfacePlane = static_cast<int>(attribs.get(EGL_IOSURFACE_PLANE_ANGLE));
+
+    EGLAttrib internalFormat = attribs.get(EGL_TEXTURE_INTERNAL_FORMAT_ANGLE);
+    EGLAttrib type           = attribs.get(EGL_TEXTURE_TYPE_ANGLE);
+    mIOSurfaceFormatIdx =
+        FindIOSurfaceFormatIndex(static_cast<GLenum>(internalFormat), static_cast<GLenum>(type));
+    ASSERT(mIOSurfaceFormatIdx >= 0);
+
+    mColorFormat =
+        display->getPixelFormat(kIOSurfaceFormats[mIOSurfaceFormatIdx].nativeAngleFormatId);
+}
+IOSurfaceSurfaceMtl::~IOSurfaceSurfaceMtl()
+{
+    if (mIOSurface != nullptr)
+    {
+        CFRelease(mIOSurface);
+        mIOSurface = nullptr;
+    }
+}
+
+egl::Error IOSurfaceSurfaceMtl::bindTexImage(const gl::Context *context,
+                                             gl::Texture *texture,
+                                             EGLint buffer)
+{
+    ContextMtl *contextMtl = mtl::GetImpl(context);
+    StartFrameCapture(contextMtl);
+
+    // Initialize offscreen texture if needed:
+    ANGLE_TO_EGL_TRY(ensureColorTextureCreated(context));
+
+    return OffscreenSurfaceMtl::bindTexImage(context, texture, buffer);
+}
+
+egl::Error IOSurfaceSurfaceMtl::releaseTexImage(const gl::Context *context, EGLint buffer)
+{
+    egl::Error re = OffscreenSurfaceMtl::releaseTexImage(context, buffer);
+    StopFrameCapture();
+    return re;
+}
+
+angle::Result IOSurfaceSurfaceMtl::getAttachmentRenderTarget(
+    const gl::Context *context,
+    GLenum binding,
+    const gl::ImageIndex &imageIndex,
+    GLsizei samples,
+    FramebufferAttachmentRenderTarget **rtOut)
+{
+    // Initialize offscreen texture if needed:
+    ANGLE_TRY(ensureColorTextureCreated(context));
+
+    return OffscreenSurfaceMtl::getAttachmentRenderTarget(context, binding, imageIndex, samples,
+                                                          rtOut);
+}
+
+angle::Result IOSurfaceSurfaceMtl::ensureColorTextureCreated(const gl::Context *context)
+{
+    if (mColorTexture)
+    {
+        return angle::Result::Continue;
+    }
+    ContextMtl *contextMtl = mtl::GetImpl(context);
+    ANGLE_MTL_OBJC_SCOPE
+    {
+        auto texDesc =
+            [MTLTextureDescriptor texture2DDescriptorWithPixelFormat:mColorFormat.metalFormat
+                                                               width:mSize.width
+                                                              height:mSize.height
+                                                           mipmapped:NO];
+
+        texDesc.usage = MTLTextureUsageShaderRead | MTLTextureUsageRenderTarget;
+
+        id<MTLTexture> texture =
+            [contextMtl->getMetalDevice() newTextureWithDescriptor:texDesc
+                                                         iosurface:mIOSurface
+                                                             plane:mIOSurfacePlane];
+
+        mColorTexture = mtl::Texture::MakeFromMetal([texture ANGLE_MTL_AUTORELEASE]);
+    }
+
+    mColorRenderTarget.set(mColorTexture, 0, 0, mColorFormat);
+
+    if (kIOSurfaceFormats[mIOSurfaceFormatIdx].internalFormat == GL_RGB)
+    {
+        // This format has emulated alpha channel. Initialize texture's alpha channel to 1.0.
+        ANGLE_TRY(mtl::InitializeTextureContentsGPU(
+            context, mColorTexture, gl::ImageIndex::Make2D(0), MTLColorWriteMaskAlpha));
+
+        // Disable subsequent rendering to alpha channel.
+        mColorTexture->setColorWritableMask(MTLColorWriteMaskAll & (~MTLColorWriteMaskAlpha));
+    }
+
+    return angle::Result::Continue;
+}
+
+// static
+bool IOSurfaceSurfaceMtl::ValidateAttributes(EGLClientBuffer buffer,
+                                             const egl::AttributeMap &attribs)
+{
+    IOSurfaceRef ioSurface = (__bridge IOSurfaceRef)(buffer);
+
+    // The plane must exist for this IOSurface. IOSurfaceGetPlaneCount can return 0 for non-planar
+    // ioSurfaces but we will treat non-planar like it is a single plane.
+    size_t surfacePlaneCount = std::max(size_t(1), IOSurfaceGetPlaneCount(ioSurface));
+    EGLAttrib plane          = attribs.get(EGL_IOSURFACE_PLANE_ANGLE);
+    if (plane < 0 || static_cast<size_t>(plane) >= surfacePlaneCount)
+    {
+        return false;
+    }
+
+    // The width height specified must be at least (1, 1) and at most the plane size
+    EGLAttrib width  = attribs.get(EGL_WIDTH);
+    EGLAttrib height = attribs.get(EGL_HEIGHT);
+    if (width <= 0 || static_cast<size_t>(width) > IOSurfaceGetWidthOfPlane(ioSurface, plane) ||
+        height <= 0 || static_cast<size_t>(height) > IOSurfaceGetHeightOfPlane(ioSurface, plane))
+    {
+        return false;
+    }
+
+    // Find this IOSurface format
+    EGLAttrib internalFormat = attribs.get(EGL_TEXTURE_INTERNAL_FORMAT_ANGLE);
+    EGLAttrib type           = attribs.get(EGL_TEXTURE_TYPE_ANGLE);
+
+    int formatIndex =
+        FindIOSurfaceFormatIndex(static_cast<GLenum>(internalFormat), static_cast<GLenum>(type));
+
+    if (formatIndex < 0)
+    {
+        return false;
+    }
+
+    // Check that the format matches this IOSurface plane
+    if (IOSurfaceGetBytesPerElementOfPlane(ioSurface, plane) !=
+        kIOSurfaceFormats[formatIndex].componentBytes)
+    {
+        return false;
+    }
+
+    return true;
+}
+
 }

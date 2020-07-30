@@ -14,9 +14,11 @@
 #include "common/MemoryBuffer.h"
 #include "common/debug.h"
 #include "common/mathutil.h"
+#include "libANGLE/Surface.h"
 #include "libANGLE/renderer/metal/ContextMtl.h"
 #include "libANGLE/renderer/metal/DisplayMtl.h"
 #include "libANGLE/renderer/metal/FrameBufferMtl.h"
+#include "libANGLE/renderer/metal/SurfaceMtl.h"
 #include "libANGLE/renderer/metal/mtl_common.h"
 #include "libANGLE/renderer/metal/mtl_format_utils.h"
 #include "libANGLE/renderer/metal/mtl_utils.h"
@@ -732,16 +734,32 @@ angle::Result TextureMtl::setBaseLevel(const gl::Context *context, GLuint baseLe
 
 angle::Result TextureMtl::bindTexImage(const gl::Context *context, egl::Surface *surface)
 {
-    UNIMPLEMENTED();
+    releaseTexture(true);
 
-    return angle::Result::Stop;
+    auto pBuffer     = GetImplAs<OffscreenSurfaceMtl>(surface);
+    mNativeTexture   = pBuffer->getColorTexture();
+    mFormat          = pBuffer->getColorFormat();
+    gl::Extents size = mNativeTexture->size();
+    mIsPow2          = gl::isPow2(size.width) && gl::isPow2(size.height) && gl::isPow2(size.depth);
+    ANGLE_TRY(ensureSamplerStateCreated(context));
+
+    ASSERT(mState.getType() == gl::TextureType::_2D);
+    mLayeredRenderTargets.resize(1);
+    mLayeredRenderTargets[0].set(mNativeTexture, 0, 0, mFormat);
+    mLayeredTextureViews.resize(1);
+    mLayeredTextureViews[0] = mNativeTexture;
+
+    // Tell context to rebind textures
+    ContextMtl *contextMtl = mtl::GetImpl(context);
+    contextMtl->invalidateCurrentTextures();
+
+    return angle::Result::Continue;
 }
 
 angle::Result TextureMtl::releaseTexImage(const gl::Context *context)
 {
-    UNIMPLEMENTED();
-
-    return angle::Result::Stop;
+    releaseTexture(true);
+    return angle::Result::Continue;
 }
 
 angle::Result TextureMtl::getAttachmentRenderTarget(const gl::Context *context,

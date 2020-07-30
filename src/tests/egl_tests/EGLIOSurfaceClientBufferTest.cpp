@@ -211,6 +211,10 @@ class IOSurfaceClientBufferTest : public ANGLETest
         EXPECT_EGL_TRUE(result);
         EXPECT_EGL_SUCCESS();
 
+        // IOSurface client buffer's rendering doesn't automatically finish after
+        // eglReleaseTexImage(). Need to explicitly call glFinish().
+        glFinish();
+
         IOSurfaceLock(ioSurface.get(), kIOSurfaceLockReadOnly, nullptr);
         std::array<T, dataSize> iosurfaceData;
         memcpy(iosurfaceData.data(), IOSurfaceGetBaseAddress(ioSurface.get()),
@@ -294,6 +298,11 @@ class IOSurfaceClientBufferTest : public ANGLETest
 
     void doBlitTest(bool ioSurfaceIsSource, int width, int height)
     {
+        if (!hasBlitExt())
+        {
+            return;
+        }
+
         // Create IOSurface and bind it to a texture.
         ScopedIOSurfaceRef ioSurface = CreateSinglePlaneIOSurface(width, height, 'BGRA', 4);
         EGLSurface pbuffer;
@@ -361,6 +370,10 @@ class IOSurfaceClientBufferTest : public ANGLETest
     }
 
     bool hasIOSurfaceExt() const { return IsEGLDisplayExtensionEnabled(mDisplay, kIOSurfaceExt); }
+    bool hasBlitExt() const
+    {
+        return IsEGLDisplayExtensionEnabled(mDisplay, "ANGLE_framebuffer_blit");
+    }
 
     EGLConfig mConfig;
     EGLDisplay mDisplay;
@@ -464,6 +477,9 @@ TEST_P(IOSurfaceClientBufferTest, ReadFromR8IOSurface)
 TEST_P(IOSurfaceClientBufferTest, RenderToR16IOSurface)
 {
     ANGLE_SKIP_TEST_IF(!hasIOSurfaceExt());
+
+    // This test only works on ES3 since it requires an integer texture.
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3);
 
     // TODO(http://anglebug.com/4369)
     ANGLE_SKIP_TEST_IF(isSwiftshader());
@@ -990,4 +1006,5 @@ ANGLE_INSTANTIATE_TEST(IOSurfaceClientBufferTest,
                        ES2_OPENGL(),
                        ES3_OPENGL(),
                        ES2_VULKAN_SWIFTSHADER(),
-                       ES3_VULKAN_SWIFTSHADER());
+                       ES3_VULKAN_SWIFTSHADER(),
+                       ES2_METAL());

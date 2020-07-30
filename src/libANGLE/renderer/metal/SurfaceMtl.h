@@ -158,6 +158,79 @@ class WindowSurfaceMtl : public SurfaceMtl
     CGSize mCurrentKnownDrawableSize;
 };
 
+// Offscreen surface, base class of PBuffer, IOSurface.
+class OffscreenSurfaceMtl : public SurfaceMtl
+{
+  public:
+    OffscreenSurfaceMtl(DisplayMtl *display,
+                        const egl::SurfaceState &state,
+                        const egl::AttributeMap &attribs);
+    ~OffscreenSurfaceMtl() override;
+
+    void destroy(const egl::Display *display) override;
+
+    egl::Error swap(const gl::Context *context) override;
+
+    egl::Error bindTexImage(const gl::Context *context,
+                            gl::Texture *texture,
+                            EGLint buffer) override;
+    egl::Error releaseTexImage(const gl::Context *context, EGLint buffer) override;
+
+    angle::Result getAttachmentRenderTarget(const gl::Context *context,
+                                            GLenum binding,
+                                            const gl::ImageIndex &imageIndex,
+                                            GLsizei samples,
+                                            FramebufferAttachmentRenderTarget **rtOut) override;
+
+  protected:
+    angle::Result ensureTexturesSizeCorrect(const gl::Context *context);
+
+    gl::Extents mSize;
+};
+
+// PBuffer surface
+class PBufferSurfaceMtl : public OffscreenSurfaceMtl
+{
+  public:
+    PBufferSurfaceMtl(DisplayMtl *display,
+                      const egl::SurfaceState &state,
+                      const egl::AttributeMap &attribs);
+
+    void setFixedWidth(EGLint width) override;
+    void setFixedHeight(EGLint height) override;
+};
+
+// Offscreen created from IOSurface
+class IOSurfaceSurfaceMtl : public OffscreenSurfaceMtl
+{
+  public:
+    IOSurfaceSurfaceMtl(DisplayMtl *display,
+                        const egl::SurfaceState &state,
+                        EGLClientBuffer buffer,
+                        const egl::AttributeMap &attribs);
+    ~IOSurfaceSurfaceMtl() override;
+
+    egl::Error bindTexImage(const gl::Context *context,
+                            gl::Texture *texture,
+                            EGLint buffer) override;
+    egl::Error releaseTexImage(const gl::Context *context, EGLint buffer) override;
+
+    angle::Result getAttachmentRenderTarget(const gl::Context *context,
+                                            GLenum binding,
+                                            const gl::ImageIndex &imageIndex,
+                                            GLsizei samples,
+                                            FramebufferAttachmentRenderTarget **rtOut) override;
+
+    static bool ValidateAttributes(EGLClientBuffer buffer, const egl::AttributeMap &attribs);
+
+  private:
+    angle::Result ensureColorTextureCreated(const gl::Context *context);
+
+    IOSurfaceRef mIOSurface;
+    NSUInteger mIOSurfacePlane;
+    int mIOSurfaceFormatIdx;
+};
+
 }  // namespace rx
 
 #endif /* LIBANGLE_RENDERER_METAL_SURFACEMTL_H_ */

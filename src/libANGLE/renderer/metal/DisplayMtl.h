@@ -93,6 +93,11 @@ class DisplayMtl : public DisplayImpl
 
     bool isValidNativeWindow(EGLNativeWindowType window) const override;
 
+    egl::Error validateClientBuffer(const egl::Config *configuration,
+                                    EGLenum buftype,
+                                    EGLClientBuffer clientBuffer,
+                                    const egl::AttributeMap &attribs) const override;
+
     egl::ConfigSet generateConfigs() override;
 
     std::string getRendererDescription() const;

@@ -14,6 +14,8 @@
 
 #include "common/MemoryBuffer.h"
 #include "libANGLE/renderer/metal/ContextMtl.h"
+#include "libANGLE/renderer/metal/DisplayMtl.h"
+#include "libANGLE/renderer/metal/mtl_render_utils.h"
 
 namespace rx
 {
@@ -73,6 +75,47 @@ angle::Result InitializeTextureContents(const gl::Context *context,
                                index.hasLayer() ? index.cubeMapFaceIndex() : 0,
                                conversionRow.data(), dstRowPitch);
     }
+
+    return angle::Result::Continue;
+}
+
+angle::Result InitializeTextureContentsGPU(const gl::Context *context,
+                                           const TextureRef &texture,
+                                           const gl::ImageIndex &index,
+                                           MTLColorWriteMask channelsToInit)
+{
+    ContextMtl *contextMtl = mtl::GetImpl(context);
+    // Use clear render command
+
+    // temporarily enable color channels requested via channelsToInit. Some emulated format has some
+    // channels write mask disabled when the texture is created.
+    MTLColorWriteMask oldMask = texture->getColorWritableMask();
+    texture->setColorWritableMask(channelsToInit);
+
+    RenderCommandEncoder *encoder;
+    if (channelsToInit == MTLColorWriteMaskAll)
+    {
+        // If all channels will be initialized, use clear loadOp.
+        Optional<MTLClearColor> blackColor = MTLClearColorMake(0, 0, 0, 1);
+        encoder = contextMtl->getRenderCommandEncoder(texture, index, blackColor);
+    }
+    else
+    {
+        // If there are some channels don't need to be initialized, we must use clearWithDraw.
+        encoder = contextMtl->getRenderCommandEncoder(texture, index);
+
+        ClearRectParams clearParams;
+        clearParams.clearColor = {.alpha = 1};
+        clearParams.clearArea  = gl::Rectangle(0, 0, texture->width(), texture->height());
+
+        ANGLE_TRY(
+            contextMtl->getDisplay()->getUtils().clearWithDraw(context, encoder, clearParams));
+    }
+    ANGLE_UNUSED_VARIABLE(encoder);
+    contextMtl->endEncoding(true);
+
+    // Restore texture's intended write mask
+    texture->setColorWritableMask(oldMask);
 
     return angle::Result::Continue;
 }

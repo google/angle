@@ -28,10 +28,17 @@ namespace mtl
 
 NS_ASSUME_NONNULL_BEGIN
 
+// Initialize texture content to (0, 0, 0, 1)
 angle::Result InitializeTextureContents(const gl::Context *context,
                                         const TextureRef &texture,
                                         const Format &textureObjFormat,
                                         const gl::ImageIndex &index);
+// Same as above but using GPU clear operation instead of CPU.
+// - channelsToInit parameter controls which channels will get their content initialized.
+angle::Result InitializeTextureContentsGPU(const gl::Context *context,
+                                           const TextureRef &texture,
+                                           const gl::ImageIndex &index,
+                                           MTLColorWriteMask channelsToInit);
 
 MTLViewport GetViewport(const gl::Rectangle &rect, double znear = 0, double zfar = 1);
 MTLViewport GetViewportFlipY(const gl::Rectangle &rect,

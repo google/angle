@@ -34,27 +34,16 @@ void Format::init(const DisplayMtl *display, angle::FormatID intendedFormatId_)
             this->actualFormatId = angle::FormatID::A8_UNORM;
             break;
 
-#if TARGET_OS_OSX || TARGET_OS_MACCATALYST
-        case angle::FormatID::B8G8R8A8_UNORM:
-            if (metalDevice.depth24Stencil8PixelFormatSupported)
-            {
-                this->metalFormat    = MTLPixelFormatBGRA8Unorm;
-                this->actualFormatId = angle::FormatID::B8G8R8A8_UNORM;
-            }
-            else
-            {
-                this->metalFormat    = MTLPixelFormatRGBA8Unorm;
-                this->actualFormatId = angle::FormatID::R8G8B8A8_UNORM;
-            }
+        case angle::FormatID::B10G10R10A2_UNORM:
+            this->metalFormat    = MTLPixelFormatBGR10A2Unorm;
+            this->actualFormatId = angle::FormatID::B10G10R10A2_UNORM;
             break;
 
-#else  // TARGET_OS_OSX || TARGET_OS_MACCATALYST
         case angle::FormatID::B8G8R8A8_UNORM:
             this->metalFormat    = MTLPixelFormatBGRA8Unorm;
             this->actualFormatId = angle::FormatID::B8G8R8A8_UNORM;
             break;
 
-#endif  // TARGET_OS_OSX || TARGET_OS_MACCATALYST
         case angle::FormatID::B8G8R8A8_UNORM_SRGB:
             this->metalFormat    = MTLPixelFormatBGRA8Unorm_sRGB;
             this->actualFormatId = angle::FormatID::B8G8R8A8_UNORM_SRGB;
@@ -75,105 +64,41 @@ void Format::init(const DisplayMtl *display, angle::FormatID intendedFormatId_)
             this->actualFormatId = angle::FormatID::NONE;
             break;
 
-#if TARGET_OS_OSX || TARGET_OS_MACCATALYST
-        case angle::FormatID::R16G16B16A16_FLOAT:
-            if (metalDevice.depth24Stencil8PixelFormatSupported)
-            {
-                this->metalFormat    = MTLPixelFormatRGBA16Float;
-                this->actualFormatId = angle::FormatID::R16G16B16A16_FLOAT;
-            }
-            else
-            {
-                this->metalFormat    = MTLPixelFormatInvalid;
-                this->actualFormatId = angle::FormatID::NONE;
-            }
-            break;
-
-#else  // TARGET_OS_OSX || TARGET_OS_MACCATALYST
         case angle::FormatID::R16G16B16A16_FLOAT:
             this->metalFormat    = MTLPixelFormatRGBA16Float;
             this->actualFormatId = angle::FormatID::R16G16B16A16_FLOAT;
             break;
 
-#endif  // TARGET_OS_OSX || TARGET_OS_MACCATALYST
         case angle::FormatID::R16G16_FLOAT:
             this->metalFormat    = MTLPixelFormatRG16Float;
             this->actualFormatId = angle::FormatID::R16G16_FLOAT;
             break;
 
-#if TARGET_OS_OSX || TARGET_OS_MACCATALYST
-        case angle::FormatID::R16_FLOAT:
-            if (metalDevice.depth24Stencil8PixelFormatSupported)
-            {
-                this->metalFormat    = MTLPixelFormatR16Float;
-                this->actualFormatId = angle::FormatID::R16_FLOAT;
-            }
-            else
-            {
-                this->metalFormat    = MTLPixelFormatInvalid;
-                this->actualFormatId = angle::FormatID::NONE;
-            }
-            break;
-
-#else  // TARGET_OS_OSX || TARGET_OS_MACCATALYST
         case angle::FormatID::R16_FLOAT:
             this->metalFormat    = MTLPixelFormatR16Float;
             this->actualFormatId = angle::FormatID::R16_FLOAT;
             break;
 
-#endif  // TARGET_OS_OSX || TARGET_OS_MACCATALYST
         case angle::FormatID::R16_UNORM:
             this->metalFormat    = MTLPixelFormatR16Unorm;
             this->actualFormatId = angle::FormatID::R16_UNORM;
             break;
 
-#if TARGET_OS_OSX || TARGET_OS_MACCATALYST
-        case angle::FormatID::R32G32B32A32_FLOAT:
-            if (metalDevice.depth24Stencil8PixelFormatSupported)
-            {
-                this->metalFormat    = MTLPixelFormatRGBA32Float;
-                this->actualFormatId = angle::FormatID::R32G32B32A32_FLOAT;
-            }
-            else
-            {
-                this->metalFormat    = MTLPixelFormatInvalid;
-                this->actualFormatId = angle::FormatID::NONE;
-            }
-            break;
-
-#else  // TARGET_OS_OSX || TARGET_OS_MACCATALYST
         case angle::FormatID::R32G32B32A32_FLOAT:
             this->metalFormat    = MTLPixelFormatRGBA32Float;
             this->actualFormatId = angle::FormatID::R32G32B32A32_FLOAT;
             break;
 
-#endif  // TARGET_OS_OSX || TARGET_OS_MACCATALYST
         case angle::FormatID::R32G32_FLOAT:
             this->metalFormat    = MTLPixelFormatRG32Float;
             this->actualFormatId = angle::FormatID::R32G32_FLOAT;
             break;
 
-#if TARGET_OS_OSX || TARGET_OS_MACCATALYST
-        case angle::FormatID::R32_FLOAT:
-            if (metalDevice.depth24Stencil8PixelFormatSupported)
-            {
-                this->metalFormat    = MTLPixelFormatR32Float;
-                this->actualFormatId = angle::FormatID::R32_FLOAT;
-            }
-            else
-            {
-                this->metalFormat    = MTLPixelFormatInvalid;
-                this->actualFormatId = angle::FormatID::NONE;
-            }
-            break;
-
-#else  // TARGET_OS_OSX || TARGET_OS_MACCATALYST
         case angle::FormatID::R32_FLOAT:
             this->metalFormat    = MTLPixelFormatR32Float;
             this->actualFormatId = angle::FormatID::R32_FLOAT;
             break;
 
-#endif  // TARGET_OS_OSX || TARGET_OS_MACCATALYST
         case angle::FormatID::R8G8B8A8_UNORM:
             this->metalFormat    = MTLPixelFormatRGBA8Unorm;
             this->actualFormatId = angle::FormatID::R8G8B8A8_UNORM;
@@ -189,74 +114,26 @@ void Format::init(const DisplayMtl *display, angle::FormatID intendedFormatId_)
             this->actualFormatId = angle::FormatID::R8G8_UNORM;
             break;
 
-#if TARGET_OS_OSX || TARGET_OS_MACCATALYST
-        case angle::FormatID::R8_UNORM:
-            if (metalDevice.depth24Stencil8PixelFormatSupported)
-            {
-                this->metalFormat    = MTLPixelFormatR8Unorm;
-                this->actualFormatId = angle::FormatID::R8_UNORM;
-            }
-            else
-            {
-                this->metalFormat    = MTLPixelFormatInvalid;
-                this->actualFormatId = angle::FormatID::NONE;
-            }
-            break;
-
-#else  // TARGET_OS_OSX || TARGET_OS_MACCATALYST
         case angle::FormatID::R8_UNORM:
             this->metalFormat    = MTLPixelFormatR8Unorm;
             this->actualFormatId = angle::FormatID::R8_UNORM;
             break;
 
-#endif  // TARGET_OS_OSX || TARGET_OS_MACCATALYST
         case angle::FormatID::S8_UINT:
             this->metalFormat    = MTLPixelFormatStencil8;
             this->actualFormatId = angle::FormatID::S8_UINT;
             break;
 
-#if TARGET_OS_OSX || TARGET_OS_MACCATALYST
-        case angle::FormatID::A16_FLOAT:
-            if (metalDevice.depth24Stencil8PixelFormatSupported)
-            {
-                this->metalFormat    = MTLPixelFormatRGBA16Float;
-                this->actualFormatId = angle::FormatID::R16G16B16A16_FLOAT;
-            }
-            else
-            {
-                this->metalFormat    = MTLPixelFormatInvalid;
-                this->actualFormatId = angle::FormatID::NONE;
-            }
-            break;
-
-#else  // TARGET_OS_OSX || TARGET_OS_MACCATALYST
         case angle::FormatID::A16_FLOAT:
             this->metalFormat    = MTLPixelFormatRGBA16Float;
             this->actualFormatId = angle::FormatID::R16G16B16A16_FLOAT;
             break;
 
-#endif  // TARGET_OS_OSX || TARGET_OS_MACCATALYST
-#if TARGET_OS_OSX || TARGET_OS_MACCATALYST
-        case angle::FormatID::A32_FLOAT:
-            if (metalDevice.depth24Stencil8PixelFormatSupported)
-            {
-                this->metalFormat    = MTLPixelFormatRGBA32Float;
-                this->actualFormatId = angle::FormatID::R32G32B32A32_FLOAT;
-            }
-            else
-            {
-                this->metalFormat    = MTLPixelFormatInvalid;
-                this->actualFormatId = angle::FormatID::NONE;
-            }
-            break;
-
-#else  // TARGET_OS_OSX || TARGET_OS_MACCATALYST
         case angle::FormatID::A32_FLOAT:
             this->metalFormat    = MTLPixelFormatRGBA32Float;
             this->actualFormatId = angle::FormatID::R32G32B32A32_FLOAT;
             break;
 
-#endif  // TARGET_OS_OSX || TARGET_OS_MACCATALYST
         case angle::FormatID::D24_UNORM_X8_UINT:
             this->metalFormat    = MTLPixelFormatDepth32Float;
             this->actualFormatId = angle::FormatID::D32_FLOAT;
@@ -267,90 +144,26 @@ void Format::init(const DisplayMtl *display, angle::FormatID intendedFormatId_)
             this->actualFormatId = angle::FormatID::D32_FLOAT;
             break;
 
-#if TARGET_OS_OSX || TARGET_OS_MACCATALYST
-        case angle::FormatID::L16A16_FLOAT:
-            if (metalDevice.depth24Stencil8PixelFormatSupported)
-            {
-                this->metalFormat    = MTLPixelFormatRGBA16Float;
-                this->actualFormatId = angle::FormatID::R16G16B16A16_FLOAT;
-            }
-            else
-            {
-                this->metalFormat    = MTLPixelFormatInvalid;
-                this->actualFormatId = angle::FormatID::NONE;
-            }
-            break;
-
-#else  // TARGET_OS_OSX || TARGET_OS_MACCATALYST
         case angle::FormatID::L16A16_FLOAT:
             this->metalFormat    = MTLPixelFormatRGBA16Float;
             this->actualFormatId = angle::FormatID::R16G16B16A16_FLOAT;
             break;
 
-#endif  // TARGET_OS_OSX || TARGET_OS_MACCATALYST
-#if TARGET_OS_OSX || TARGET_OS_MACCATALYST
-        case angle::FormatID::L16_FLOAT:
-            if (metalDevice.depth24Stencil8PixelFormatSupported)
-            {
-                this->metalFormat    = MTLPixelFormatRGBA16Float;
-                this->actualFormatId = angle::FormatID::R16G16B16A16_FLOAT;
-            }
-            else
-            {
-                this->metalFormat    = MTLPixelFormatInvalid;
-                this->actualFormatId = angle::FormatID::NONE;
-            }
-            break;
-
-#else  // TARGET_OS_OSX || TARGET_OS_MACCATALYST
         case angle::FormatID::L16_FLOAT:
             this->metalFormat    = MTLPixelFormatRGBA16Float;
             this->actualFormatId = angle::FormatID::R16G16B16A16_FLOAT;
             break;
 
-#endif  // TARGET_OS_OSX || TARGET_OS_MACCATALYST
-#if TARGET_OS_OSX || TARGET_OS_MACCATALYST
-        case angle::FormatID::L32A32_FLOAT:
-            if (metalDevice.depth24Stencil8PixelFormatSupported)
-            {
-                this->metalFormat    = MTLPixelFormatRGBA32Float;
-                this->actualFormatId = angle::FormatID::R32G32B32A32_FLOAT;
-            }
-            else
-            {
-                this->metalFormat    = MTLPixelFormatInvalid;
-                this->actualFormatId = angle::FormatID::NONE;
-            }
-            break;
-
-#else  // TARGET_OS_OSX || TARGET_OS_MACCATALYST
         case angle::FormatID::L32A32_FLOAT:
             this->metalFormat    = MTLPixelFormatRGBA32Float;
             this->actualFormatId = angle::FormatID::R32G32B32A32_FLOAT;
             break;
 
-#endif  // TARGET_OS_OSX || TARGET_OS_MACCATALYST
-#if TARGET_OS_OSX || TARGET_OS_MACCATALYST
-        case angle::FormatID::L32_FLOAT:
-            if (metalDevice.depth24Stencil8PixelFormatSupported)
-            {
-                this->metalFormat    = MTLPixelFormatRGBA32Float;
-                this->actualFormatId = angle::FormatID::R32G32B32A32_FLOAT;
-            }
-            else
-            {
-                this->metalFormat    = MTLPixelFormatInvalid;
-                this->actualFormatId = angle::FormatID::NONE;
-            }
-            break;
-
-#else  // TARGET_OS_OSX || TARGET_OS_MACCATALYST
         case angle::FormatID::L32_FLOAT:
             this->metalFormat    = MTLPixelFormatRGBA32Float;
             this->actualFormatId = angle::FormatID::R32G32B32A32_FLOAT;
             break;
 
-#endif  // TARGET_OS_OSX || TARGET_OS_MACCATALYST
         case angle::FormatID::L8A8_UNORM:
             this->metalFormat    = MTLPixelFormatRGBA8Unorm;
             this->actualFormatId = angle::FormatID::R8G8B8A8_UNORM;
@@ -361,48 +174,16 @@ void Format::init(const DisplayMtl *display, angle::FormatID intendedFormatId_)
             this->actualFormatId = angle::FormatID::R8G8B8A8_UNORM;
             break;
 
-#if TARGET_OS_OSX || TARGET_OS_MACCATALYST
-        case angle::FormatID::R16G16B16_FLOAT:
-            if (metalDevice.depth24Stencil8PixelFormatSupported)
-            {
-                this->metalFormat    = MTLPixelFormatRGBA16Float;
-                this->actualFormatId = angle::FormatID::R16G16B16A16_FLOAT;
-            }
-            else
-            {
-                this->metalFormat    = MTLPixelFormatInvalid;
-                this->actualFormatId = angle::FormatID::NONE;
-            }
-            break;
-
-#else  // TARGET_OS_OSX || TARGET_OS_MACCATALYST
         case angle::FormatID::R16G16B16_FLOAT:
             this->metalFormat    = MTLPixelFormatRGBA16Float;
             this->actualFormatId = angle::FormatID::R16G16B16A16_FLOAT;
             break;
 
-#endif  // TARGET_OS_OSX || TARGET_OS_MACCATALYST
-#if TARGET_OS_OSX || TARGET_OS_MACCATALYST
-        case angle::FormatID::R32G32B32_FLOAT:
-            if (metalDevice.depth24Stencil8PixelFormatSupported)
-            {
-                this->metalFormat    = MTLPixelFormatRGBA32Float;
-                this->actualFormatId = angle::FormatID::R32G32B32A32_FLOAT;
-            }
-            else
-            {
-                this->metalFormat    = MTLPixelFormatInvalid;
-                this->actualFormatId = angle::FormatID::NONE;
-            }
-            break;
-
-#else  // TARGET_OS_OSX || TARGET_OS_MACCATALYST
         case angle::FormatID::R32G32B32_FLOAT:
             this->metalFormat    = MTLPixelFormatRGBA32Float;
             this->actualFormatId = angle::FormatID::R32G32B32A32_FLOAT;
             break;
 
-#endif  // TARGET_OS_OSX || TARGET_OS_MACCATALYST
         case angle::FormatID::R8G8B8_UNORM:
             this->metalFormat    = MTLPixelFormatRGBA8Unorm;
             this->actualFormatId = angle::FormatID::R8G8B8A8_UNORM;

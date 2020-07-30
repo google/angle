@@ -160,7 +160,7 @@ def gen_image_map_switch_string(image_table):
     angle_override = image_table["override"]
     mac_override = image_table["override_mac"]
     ios_override = image_table["override_ios"]
-    mac_fallbacks = image_table["fallbacks_mac"]
+    mac_fallbacks = image_table["d24s8_fallbacks_mac"]
     angle_to_mtl = image_table["map"]
     mac_specific_map = image_table["map_mac"]
     ios_specific_map = image_table["map_ios"]

@@ -34,6 +34,7 @@ bool OverrideTextureCaps(const DisplayMtl *display, angle::FormatID formatId, gl
         case angle::FormatID::R8G8B8A8_UNORM_SRGB:
         case angle::FormatID::B8G8R8A8_UNORM:
         case angle::FormatID::B8G8R8A8_UNORM_SRGB:
+        case angle::FormatID::B10G10R10A2_UNORM:
         // NOTE: even though iOS devices don't support filtering depth textures, we still report as
         // supported here in order for the OES_depth_texture extension to be enabled.
         // During draw call, the filter modes will be converted to nearest.
@@ -214,6 +215,7 @@ bool Format::FormatRenderable(MTLPixelFormat format)
         case MTLPixelFormatDepth32Float:
         case MTLPixelFormatStencil8:
         case MTLPixelFormatDepth32Float_Stencil8:
+        case MTLPixelFormatBGR10A2Unorm:
 #if TARGET_OS_OSX || TARGET_OS_MACCATALYST
         case MTLPixelFormatDepth16Unorm:
         case MTLPixelFormatDepth24Unorm_Stencil8:
