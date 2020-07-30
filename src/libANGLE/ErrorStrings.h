@@ -76,6 +76,7 @@ MSG kCubemapIncomplete = "Texture is not cubemap complete. All cubemaps faces mu
 MSG kCubemapInvalidDepth = "The cubemap depth must be a multiple of 6.";
 MSG kDataTypeNotAligned = "Data is not evenly divisible into the number of bytes needed to store in memory a datum indicated by type.";
 MSG kDefaultFramebuffer = "Default framebuffer is bound.";
+MSG kDefaultFramebufferAttachmentOnUserFBO = "Invalid attachment when a user framebuffer is bound.";
 MSG kDefaultFramebufferInvalidAttachment = "Invalid attachment when the default framebuffer is bound.";
 MSG kDefaultFramebufferInvalidDrawBuffer = "Only NONE or BACK are valid draw buffers for the default framebuffer";
 MSG kDefaultFramebufferTarget = "It is invalid to change default FBO's attachments";

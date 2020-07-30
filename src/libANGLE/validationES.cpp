@@ -3541,7 +3541,7 @@ bool ValidateDiscardFramebufferBase(const Context *context,
                     if (!defaultFramebuffer)
                     {
                         context->validationError(GL_INVALID_ENUM,
-                                                 kDefaultFramebufferInvalidAttachment);
+                                                 kDefaultFramebufferAttachmentOnUserFBO);
                         return false;
                     }
                     break;
