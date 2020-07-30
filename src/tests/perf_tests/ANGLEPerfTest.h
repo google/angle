@@ -151,6 +151,7 @@ class ANGLERenderTest : public ANGLEPerfTest
     std::vector<TraceEvent> &getTraceEventBuffer();
 
     virtual void overrideWorkaroundsD3D(angle::FeaturesD3D *featuresD3D) {}
+    void onErrorMessage(const char *errorMessage);
 
   protected:
     const RenderTestParams &mTestParams;

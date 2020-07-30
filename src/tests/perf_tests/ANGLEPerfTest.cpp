@@ -55,6 +55,12 @@ constexpr TraceCategory gTraceCategories[2] = {
 
 void EmptyPlatformMethod(angle::PlatformMethods *, const char *) {}
 
+void CustomLogError(angle::PlatformMethods *platform, const char *errorMessage)
+{
+    auto *angleRenderTest = static_cast<ANGLERenderTest *>(platform->context);
+    angleRenderTest->onErrorMessage(errorMessage);
+}
+
 void OverrideWorkaroundsD3D(angle::PlatformMethods *platform, angle::FeaturesD3D *featuresD3D)
 {
     auto *angleRenderTest = static_cast<ANGLERenderTest *>(platform->context);
@@ -519,7 +525,7 @@ void ANGLERenderTest::SetUp()
     }
 
     mPlatformMethods.overrideWorkaroundsD3D      = OverrideWorkaroundsD3D;
-    mPlatformMethods.logError                    = EmptyPlatformMethod;
+    mPlatformMethods.logError                    = CustomLogError;
     mPlatformMethods.logWarning                  = EmptyPlatformMethod;
     mPlatformMethods.logInfo                     = EmptyPlatformMethod;
     mPlatformMethods.addTraceEvent               = AddPerfTraceEvent;
@@ -819,6 +825,11 @@ void ANGLERenderTest::setRobustResourceInit(bool enabled)
 std::vector<TraceEvent> &ANGLERenderTest::getTraceEventBuffer()
 {
     return mTraceEventBuffer;
+}
+
+void ANGLERenderTest::onErrorMessage(const char *errorMessage)
+{
+    FAIL() << "Failing test because of unexpected internal ANGLE error:\n" << errorMessage << "\n";
 }
 
 namespace angle
