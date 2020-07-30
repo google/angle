@@ -21,6 +21,7 @@
 #include "libANGLE/Framebuffer.h"
 #include "libANGLE/Query.h"
 #include "libANGLE/RefCountObject.h"
+#include "libANGLE/ResourceMap.h"
 #include "libANGLE/Sampler.h"
 #include "libANGLE/State.h"
 #include "libANGLE/TransformFeedback.h"
@@ -44,8 +45,6 @@ void SerializeColor(gl::BinaryOutputStream *bos, const Color<T> &color)
     bos->writeInt(color.alpha);
 }
 
-template void SerializeColor<float>(gl::BinaryOutputStream *bos, const Color<float> &color);
-
 template <class ObjectType>
 void SerializeOffsetBindingPointerVector(
     gl::BinaryOutputStream *bos,
@@ -59,10 +58,6 @@ void SerializeOffsetBindingPointerVector(
     }
 }
 
-template void SerializeOffsetBindingPointerVector<gl::Buffer>(
-    gl::BinaryOutputStream *bos,
-    const std::vector<gl::OffsetBindingPointer<gl::Buffer>> &offsetBindingPointerVector);
-
 template <class ObjectType>
 void SerializeBindingPointerVector(
     gl::BinaryOutputStream *bos,
@@ -74,13 +69,12 @@ void SerializeBindingPointerVector(
     }
 }
 
-template void SerializeBindingPointerVector<gl::Texture>(
-    gl::BinaryOutputStream *bos,
-    const std::vector<gl::BindingPointer<gl::Texture>> &bindingPointerVector);
-
-template void SerializeBindingPointerVector<gl::Sampler>(
-    gl::BinaryOutputStream *bos,
-    const std::vector<gl::BindingPointer<gl::Sampler>> &bindingPointerVector);
+template <class T>
+void SerializeRange(gl::BinaryOutputStream *bos, const gl::Range<T> &range)
+{
+    bos->writeInt(range.low());
+    bos->writeInt(range.high());
+}
 
 bool IsValidColorAttachmentBinding(GLenum binding, size_t colorAttachmentsCount)
 {
@@ -555,6 +549,235 @@ Result SerializeRenderbuffer(const gl::Context *context,
     return Result::Continue;
 }
 
+void SerializeWorkGroupSize(gl::BinaryOutputStream *bos, const sh::WorkGroupSize &workGroupSize)
+{
+    bos->writeInt(workGroupSize[0]);
+    bos->writeInt(workGroupSize[1]);
+    bos->writeInt(workGroupSize[2]);
+}
+
+void SerializeShaderVariable(gl::BinaryOutputStream *bos, const sh::ShaderVariable &shaderVariable)
+{
+    bos->writeInt(shaderVariable.type);
+    bos->writeInt(shaderVariable.precision);
+    bos->writeString(shaderVariable.name);
+    bos->writeString(shaderVariable.mappedName);
+    bos->writeIntVector(shaderVariable.arraySizes);
+    bos->writeInt(shaderVariable.staticUse);
+    bos->writeInt(shaderVariable.active);
+    for (const sh::ShaderVariable &field : shaderVariable.fields)
+    {
+        SerializeShaderVariable(bos, field);
+    }
+    bos->writeString(shaderVariable.structName);
+    bos->writeInt(shaderVariable.isRowMajorLayout);
+    bos->writeInt(shaderVariable.location);
+    bos->writeInt(shaderVariable.binding);
+    bos->writeInt(shaderVariable.imageUnitFormat);
+    bos->writeInt(shaderVariable.offset);
+    bos->writeInt(shaderVariable.readonly);
+    bos->writeInt(shaderVariable.writeonly);
+    bos->writeInt(shaderVariable.index);
+    bos->writeEnum(shaderVariable.interpolation);
+    bos->writeInt(shaderVariable.isInvariant);
+}
+
+void SerializeShaderVariablesVector(gl::BinaryOutputStream *bos,
+                                    const std::vector<sh::ShaderVariable> &shaderVariables)
+{
+    for (const sh::ShaderVariable &shaderVariable : shaderVariables)
+    {
+        SerializeShaderVariable(bos, shaderVariable);
+    }
+}
+
+void SerializeInterfaceBlocksVector(gl::BinaryOutputStream *bos,
+                                    const std::vector<sh::InterfaceBlock> &interfaceBlocks)
+{
+    for (const sh::InterfaceBlock &interfaceBlock : interfaceBlocks)
+    {
+        bos->writeString(interfaceBlock.name);
+        bos->writeString(interfaceBlock.mappedName);
+        bos->writeString(interfaceBlock.instanceName);
+        bos->writeInt(interfaceBlock.arraySize);
+        bos->writeEnum(interfaceBlock.layout);
+        bos->writeInt(interfaceBlock.binding);
+        bos->writeInt(interfaceBlock.staticUse);
+        bos->writeInt(interfaceBlock.active);
+        bos->writeEnum(interfaceBlock.blockType);
+        SerializeShaderVariablesVector(bos, interfaceBlock.fields);
+    }
+}
+
+void SerializeShaderState(gl::BinaryOutputStream *bos, const gl::ShaderState &shaderState)
+{
+    bos->writeString(shaderState.getLabel());
+    bos->writeEnum(shaderState.getShaderType());
+    bos->writeInt(shaderState.getShaderVersion());
+    bos->writeString(shaderState.getTranslatedSource());
+    bos->writeString(shaderState.getSource());
+    SerializeWorkGroupSize(bos, shaderState.getLocalSize());
+    SerializeShaderVariablesVector(bos, shaderState.getInputVaryings());
+    SerializeShaderVariablesVector(bos, shaderState.getOutputVaryings());
+    SerializeShaderVariablesVector(bos, shaderState.getUniforms());
+    SerializeInterfaceBlocksVector(bos, shaderState.getUniformBlocks());
+    SerializeInterfaceBlocksVector(bos, shaderState.getShaderStorageBlocks());
+    SerializeShaderVariablesVector(bos, shaderState.getAllAttributes());
+    SerializeShaderVariablesVector(bos, shaderState.getActiveAttributes());
+    SerializeShaderVariablesVector(bos, shaderState.getActiveOutputVariables());
+    bos->writeInt(shaderState.getEarlyFragmentTestsOptimization());
+    bos->writeInt(shaderState.getNumViews());
+    if (shaderState.getGeometryShaderInputPrimitiveType().valid())
+    {
+        bos->writeEnum(shaderState.getGeometryShaderInputPrimitiveType().value());
+    }
+    if (shaderState.getGeometryShaderOutputPrimitiveType().valid())
+    {
+        bos->writeEnum(shaderState.getGeometryShaderOutputPrimitiveType().value());
+    }
+    if (shaderState.getGeometryShaderInvocations().valid())
+    {
+        bos->writeInt(shaderState.getGeometryShaderInvocations().value());
+    }
+    bos->writeEnum(shaderState.getCompileStatus());
+}
+
+void SerializeShader(gl::BinaryOutputStream *bos, gl::Shader *shader)
+{
+    SerializeShaderState(bos, shader->getState());
+    bos->writeInt(shader->getHandle().value);
+    bos->writeInt(shader->getRefCount());
+    bos->writeInt(shader->isFlaggedForDeletion());
+    // does not serialize mType because it is already serialized in SerializeShaderState
+    bos->writeString(shader->getInfoLogString());
+    bos->writeString(shader->getCompilerResourcesString());
+    bos->writeInt(shader->getCurrentMaxComputeWorkGroupInvocations());
+    bos->writeInt(shader->getMaxComputeSharedMemory());
+}
+
+void SerializeVariableLocationsVector(gl::BinaryOutputStream *bos,
+                                      const std::vector<gl::VariableLocation> &variableLocations)
+{
+    for (const gl::VariableLocation &variableLocation : variableLocations)
+    {
+        bos->writeInt(variableLocation.arrayIndex);
+        bos->writeInt(variableLocation.index);
+        bos->writeInt(variableLocation.ignored);
+    }
+}
+
+void SerializeBlockMemberInfo(gl::BinaryOutputStream *bos,
+                              const sh::BlockMemberInfo &blockMemberInfo)
+{
+    bos->writeInt(blockMemberInfo.offset);
+    bos->writeInt(blockMemberInfo.arrayStride);
+    bos->writeInt(blockMemberInfo.matrixStride);
+    bos->writeInt(blockMemberInfo.isRowMajorMatrix);
+    bos->writeInt(blockMemberInfo.topLevelArrayStride);
+}
+
+void SerializeActiveVariable(gl::BinaryOutputStream *bos, const gl::ActiveVariable &activeVariable)
+{
+    bos->writeInt(activeVariable.activeShaders().to_ulong());
+}
+
+void SerializeBufferVariablesVector(gl::BinaryOutputStream *bos,
+                                    const std::vector<gl::BufferVariable> &bufferVariables)
+{
+    for (const gl::BufferVariable &bufferVariable : bufferVariables)
+    {
+        bos->writeInt(bufferVariable.bufferIndex);
+        SerializeBlockMemberInfo(bos, bufferVariable.blockInfo);
+        bos->writeInt(bufferVariable.topLevelArraySize);
+        SerializeActiveVariable(bos, bufferVariable);
+        SerializeShaderVariable(bos, bufferVariable);
+    }
+}
+
+void SerializeProgramAliasedBindings(gl::BinaryOutputStream *bos,
+                                     const gl::ProgramAliasedBindings &programAliasedBindings)
+{
+    for (const auto &programAliasedBinding : programAliasedBindings)
+    {
+        bos->writeString(programAliasedBinding.first);
+        bos->writeInt(programAliasedBinding.second.location);
+        bos->writeInt(programAliasedBinding.second.aliased);
+    }
+}
+
+void SerializeProgramState(gl::BinaryOutputStream *bos, const gl::ProgramState &programState)
+{
+    bos->writeString(programState.getLabel());
+    SerializeWorkGroupSize(bos, programState.getComputeShaderLocalSize());
+    for (gl::Shader *shader : programState.getAttachedShaders())
+    {
+        if (shader)
+        {
+            bos->writeInt(shader->getHandle().value);
+        }
+        else
+        {
+            bos->writeInt(0);
+        }
+    }
+    for (bool isAttached : programState.getAttachedShadersMarkedForDetach())
+    {
+        bos->writeInt(isAttached);
+    }
+    bos->writeInt(programState.getLocationsUsedForXfbExtension());
+    for (const std::string &transformFeedbackVaryingName :
+         programState.getTransformFeedbackVaryingNames())
+    {
+        bos->writeString(transformFeedbackVaryingName);
+    }
+    bos->writeInt(programState.getActiveUniformBlockBindingsMask().to_ulong());
+    SerializeVariableLocationsVector(bos, programState.getUniformLocations());
+    SerializeBufferVariablesVector(bos, programState.getBufferVariables());
+    SerializeRange(bos, programState.getAtomicCounterUniformRange());
+    SerializeVariableLocationsVector(bos, programState.getSecondaryOutputLocations());
+    bos->writeInt(programState.getActiveOutputVariables().to_ulong());
+    for (GLenum outputVariableType : programState.getOutputVariableTypes())
+    {
+        bos->writeInt(outputVariableType);
+    }
+    bos->writeInt(programState.getDrawBufferTypeMask().to_ulong());
+    bos->writeInt(programState.hasBinaryRetrieveableHint());
+    bos->writeInt(programState.isSeparable());
+    bos->writeInt(programState.hasEarlyFragmentTestsOptimization());
+    bos->writeInt(programState.getNumViews());
+    bos->writeEnum(programState.getGeometryShaderInputPrimitiveType());
+    bos->writeEnum(programState.getGeometryShaderOutputPrimitiveType());
+    bos->writeInt(programState.getGeometryShaderInvocations());
+    bos->writeInt(programState.getGeometryShaderMaxVertices());
+    bos->writeInt(programState.getDrawIDLocation());
+    bos->writeInt(programState.getBaseVertexLocation());
+    bos->writeInt(programState.getBaseInstanceLocation());
+    SerializeProgramAliasedBindings(bos, programState.getUniformLocationBindings());
+}
+
+void SerializeProgramBindings(gl::BinaryOutputStream *bos,
+                              const gl::ProgramBindings &programBindings)
+{
+    for (const auto &programBinding : programBindings)
+    {
+        bos->writeString(programBinding.first);
+        bos->writeInt(programBinding.second);
+    }
+}
+
+void SerializeProgram(gl::BinaryOutputStream *bos, gl::Program *program)
+{
+    SerializeProgramState(bos, program->getState());
+    bos->writeInt(program->isValidated());
+    SerializeProgramBindings(bos, program->getAttributeBindings());
+    SerializeProgramAliasedBindings(bos, program->getFragmentOutputLocations());
+    SerializeProgramAliasedBindings(bos, program->getFragmentOutputIndexes());
+    bos->writeInt(program->isLinked());
+    bos->writeInt(program->isFlaggedForDeletion());
+    bos->writeInt(program->getRefCount());
+    bos->writeInt(program->id().value);
+}
+
 }  // namespace
 
 Result SerializeContext(gl::BinaryOutputStream *bos, const gl::Context *context)
@@ -587,6 +810,23 @@ Result SerializeContext(gl::BinaryOutputStream *bos, const gl::Context *context)
         gl::Renderbuffer *renderbufferPtr = renderbuffer.second;
         ANGLE_TRY(SerializeRenderbuffer(context, bos, &scratchBuffer, renderbufferPtr));
     }
+    const gl::ShaderProgramManager &shaderProgramManager =
+        context->getState().getShaderProgramManagerForCapture();
+    const gl::ResourceMap<gl::Shader, gl::ShaderProgramID> &shaderManager =
+        shaderProgramManager.getShadersForCapture();
+    for (const auto &shader : shaderManager)
+    {
+        gl::Shader *shaderPtr = shader.second;
+        SerializeShader(bos, shaderPtr);
+    }
+    const gl::ResourceMap<gl::Program, gl::ShaderProgramID> &programManager =
+        shaderProgramManager.getProgramsForCapture();
+    for (const auto &program : programManager)
+    {
+        gl::Program *programPtr = program.second;
+        SerializeProgram(bos, programPtr);
+    }
+
     scratchBuffer.clear();
     return Result::Continue;
 }

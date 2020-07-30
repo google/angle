@@ -333,6 +333,42 @@ class ProgramState final : angle::NonCopyable
     // can answer isCompute() based on which shaders it has.
     bool isCompute() const { return mExecutable->hasLinkedShaderStage(ShaderType::Compute); }
 
+    const std::string &getLabel() const { return mLabel; }
+    const ShaderMap<bool> &getAttachedShadersMarkedForDetach() const
+    {
+        return mAttachedShadersMarkedForDetach;
+    }
+
+    uint32_t getLocationsUsedForXfbExtension() const { return mLocationsUsedForXfbExtension; }
+
+    const std::vector<GLenum> &getOutputVariableTypes() const { return mOutputVariableTypes; }
+
+    ComponentTypeMask getDrawBufferTypeMask() const { return mDrawBufferTypeMask; }
+
+    bool hasBinaryRetrieveableHint() const { return mBinaryRetrieveableHint; }
+
+    bool isSeparable() const { return mSeparable; }
+
+    PrimitiveMode getGeometryShaderInputPrimitiveType() const
+    {
+        return mGeometryShaderInputPrimitiveType;
+    }
+
+    PrimitiveMode getGeometryShaderOutputPrimitiveType() const
+    {
+        return mGeometryShaderOutputPrimitiveType;
+    }
+
+    int getGeometryShaderInvocations() const { return mGeometryShaderInvocations; }
+
+    int getGeometryShaderMaxVertices() const { return mGeometryShaderMaxVertices; }
+
+    int getDrawIDLocation() const { return mDrawIDLocation; }
+
+    int getBaseVertexLocation() const { return mBaseVertexLocation; }
+
+    int getBaseInstanceLocation() const { return mBaseInstanceLocation; }
+
   private:
     friend class MemoryProgramCache;
     friend class Program;

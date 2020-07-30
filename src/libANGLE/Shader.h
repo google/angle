@@ -89,6 +89,28 @@ class ShaderState final : angle::NonCopyable
 
     bool compilePending() const { return mCompileStatus == CompileStatus::COMPILE_REQUESTED; }
 
+    const sh::WorkGroupSize &getLocalSize() const { return mLocalSize; }
+
+    bool getEarlyFragmentTestsOptimization() const { return mEarlyFragmentTestsOptimization; }
+
+    int getNumViews() const { return mNumViews; }
+
+    Optional<PrimitiveMode> getGeometryShaderInputPrimitiveType() const
+    {
+        return mGeometryShaderInputPrimitiveType;
+    }
+
+    Optional<PrimitiveMode> getGeometryShaderOutputPrimitiveType() const
+    {
+        return mGeometryShaderOutputPrimitiveType;
+    }
+
+    Optional<GLint> geoGeometryShaderMaxVertices() const { return mGeometryShaderMaxVertices; }
+
+    Optional<GLint> getGeometryShaderInvocations() const { return mGeometryShaderInvocations; }
+
+    CompileStatus getCompileStatus() const { return mCompileStatus; }
+
   private:
     friend class Shader;
 
@@ -197,6 +219,15 @@ class Shader final : angle::NonCopyable, public LabeledObject
     Optional<GLint> getGeometryShaderMaxVertices();
 
     const std::string &getCompilerResourcesString() const;
+
+    const ShaderState &getState() const { return mState; }
+
+    GLuint getCurrentMaxComputeWorkGroupInvocations() const
+    {
+        return mCurrentMaxComputeWorkGroupInvocations;
+    }
+
+    unsigned int getMaxComputeSharedMemory() const { return mMaxComputeSharedMemory; }
 
   private:
     struct CompilingState;
