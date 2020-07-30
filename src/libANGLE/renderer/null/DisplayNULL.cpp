@@ -211,6 +211,7 @@ void DisplayNULL::generateExtensions(egl::DisplayExtensions *outExtensions) cons
     outExtensions->pixelFormatFloat                   = true;
     outExtensions->surfacelessContext                 = true;
     outExtensions->displayTextureShareGroup           = true;
+    outExtensions->displaySemaphoreShareGroup         = true;
     outExtensions->createContextClientArrays          = true;
     outExtensions->programCacheControl                = true;
     outExtensions->robustResourceInitialization       = true;
