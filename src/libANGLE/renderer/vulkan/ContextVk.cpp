@@ -2671,7 +2671,7 @@ angle::Result ContextVk::updateScissor(const gl::State &glState)
     // a render pass, the scissor is disabled and a draw call is issued to affect the whole
     // framebuffer.
     gl::Rectangle scissoredRenderArea = framebufferVk->getRotatedScissoredRenderArea(this);
-    if (!mRenderPassCommands->empty())
+    if (mRenderPassCommands->started())
     {
         if (!mRenderPassCommands->getRenderArea().encloses(scissoredRenderArea))
         {
@@ -3934,7 +3934,7 @@ angle::Result ContextVk::updateActiveImages(const gl::Context *context,
 bool ContextVk::hasRecordedCommands()
 {
     ASSERT(mOutsideRenderPassCommands && mRenderPassCommands);
-    return !mOutsideRenderPassCommands->empty() || !mRenderPassCommands->empty() ||
+    return !mOutsideRenderPassCommands->empty() || mRenderPassCommands->started() ||
            mHasPrimaryCommands;
 }
 
@@ -4395,7 +4395,7 @@ angle::Result ContextVk::startRenderPass(gl::Rectangle renderArea,
 
 angle::Result ContextVk::endRenderPass()
 {
-    if (mRenderPassCommands->empty())
+    if (!mRenderPassCommands->started())
     {
         onRenderPassFinished();
         return angle::Result::Continue;

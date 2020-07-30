@@ -528,7 +528,7 @@ class ContextVk : public ContextImpl, public vk::Context
                                           const vk::ClearValuesArray &clearValues,
                                           vk::CommandBuffer **commandBufferOut);
 
-    bool hasStartedRenderPass() const { return !mRenderPassCommands->empty(); }
+    bool hasStartedRenderPass() const { return mRenderPassCommands->started(); }
 
     vk::CommandBufferHelper &getStartedRenderPassCommands()
     {
