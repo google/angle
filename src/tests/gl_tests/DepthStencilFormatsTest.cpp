@@ -873,6 +873,9 @@ TEST_P(DepthStencilFormatsTest, VerifyDepthStencilUploadData)
     // http://anglebug.com/3689
     ANGLE_SKIP_TEST_IF(IsWindows() && IsVulkan() && IsAMD());
 
+    // http://anglebug.com/4908
+    ANGLE_SKIP_TEST_IF(IsIntel() && IsMetal());
+
     bool shouldHaveTextureSupport = (IsGLExtensionEnabled("GL_OES_packed_depth_stencil") &&
                                      IsGLExtensionEnabled("GL_OES_depth_texture")) ||
                                     (getClientMajorVersion() >= 3);

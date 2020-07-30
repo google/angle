@@ -6299,6 +6299,9 @@ TEST_P(Texture2DDepthTest, DepthTextureES2Compatibility)
     ANGLE_SKIP_TEST_IF(IsOpenGL() || IsOpenGLES());
     ANGLE_SKIP_TEST_IF(IsARM64() && IsWindows() && IsD3D());
 
+    // http://anglebug.com/4908
+    ANGLE_SKIP_TEST_IF(IsIntel() && IsMetal());
+
     // When the depth texture is specified with unsized internalformat implementations follow
     // OES_depth_texture behavior. Otherwise they follow GLES 3.0 behavior.
     testBehavior(false);
