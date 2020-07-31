@@ -195,8 +195,9 @@ void TransformFeedbackVk::initDescriptorSet(ContextVk *contextVk,
     if (!contextVk->getFeatures().emulateTransformFeedback.enabled)
         return;
 
-    VkDescriptorBufferInfo *descriptorBufferInfo = &contextVk->allocBufferInfos(xfbBufferCount);
-    vk::BufferHelper *emptyBuffer                = &contextVk->getEmptyBuffer();
+    VkDescriptorBufferInfo *descriptorBufferInfo =
+        contextVk->allocDescriptorBufferInfos(xfbBufferCount);
+    vk::BufferHelper *emptyBuffer = &contextVk->getEmptyBuffer();
 
     for (size_t bufferIndex = 0; bufferIndex < xfbBufferCount; ++bufferIndex)
     {
@@ -224,7 +225,8 @@ void TransformFeedbackVk::updateDescriptorSet(ContextVk *contextVk,
     ASSERT(programState.getTransformFeedbackBufferMode() != GL_INTERLEAVED_ATTRIBS ||
            xfbBufferCount == 1);
 
-    VkDescriptorBufferInfo *descriptorBufferInfo = &contextVk->allocBufferInfos(xfbBufferCount);
+    VkDescriptorBufferInfo *descriptorBufferInfo =
+        contextVk->allocDescriptorBufferInfos(xfbBufferCount);
 
     // Update buffer descriptor binding info for output buffers
     for (size_t bufferIndex = 0; bufferIndex < xfbBufferCount; ++bufferIndex)
@@ -290,7 +292,7 @@ void TransformFeedbackVk::writeDescriptorSet(ContextVk *contextVk,
     const std::string bufferName      = GetXfbBufferName(0);
     ShaderInterfaceVariableInfo &info = variableInfoMap[gl::ShaderType::Vertex][bufferName];
 
-    VkWriteDescriptorSet &writeDescriptorInfo = contextVk->allocWriteInfo();
+    VkWriteDescriptorSet &writeDescriptorInfo = contextVk->allocWriteDescriptorSet();
     writeDescriptorInfo.sType                 = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
     writeDescriptorInfo.dstSet                = descSet;
     writeDescriptorInfo.dstBinding            = info.binding;

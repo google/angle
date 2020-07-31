@@ -577,18 +577,13 @@ class ContextVk : public ContextImpl, public vk::Context
     void recycleCommandBuffer(vk::CommandBufferHelper *commandBuffer);
 
     // DescriptorSet writes
-    VkDescriptorBufferInfo &allocBufferInfo() { return allocBufferInfos(1); }
-    VkDescriptorBufferInfo &allocBufferInfos(size_t count);
-    VkDescriptorImageInfo &allocImageInfo() { return allocImageInfos(1); }
-    VkDescriptorImageInfo &allocImageInfos(size_t count);
-    VkWriteDescriptorSet &allocWriteInfo() { return allocWriteInfos(1); }
-    VkWriteDescriptorSet &allocWriteInfos(size_t count)
-    {
-        size_t oldSize = mWriteInfos.size();
-        size_t newSize = oldSize + count;
-        mWriteInfos.resize(newSize);
-        return mWriteInfos[oldSize];
-    }
+    VkDescriptorBufferInfo *allocDescriptorBufferInfos(size_t count);
+    VkDescriptorImageInfo *allocDescriptorImageInfos(size_t count);
+    VkWriteDescriptorSet *allocWriteDescriptorSets(size_t count);
+
+    VkDescriptorBufferInfo &allocDescriptorBufferInfo() { return *allocDescriptorBufferInfos(1); }
+    VkDescriptorImageInfo &allocDescriptorImageInfo() { return *allocDescriptorImageInfos(1); }
+    VkWriteDescriptorSet &allocWriteDescriptorSet() { return *allocWriteDescriptorSets(1); }
 
     vk::DynamicBuffer *getDefaultUniformStorage() { return &mDefaultUniformStorage; }
     // For testing only.
@@ -680,6 +675,8 @@ class ContextVk : public ContextImpl, public vk::Context
         double gpuTimestampS;
         double cpuTimestampS;
     };
+
+    class ScopedDescriptorSetUpdates;
 
     angle::Result setupDraw(const gl::Context *context,
                             gl::PrimitiveMode mode,
@@ -852,6 +849,7 @@ class ContextVk : public ContextImpl, public vk::Context
     bool hasRecordedCommands();
     void dumpCommandStreamDiagnostics();
     angle::Result flushOutsideRenderPassCommands();
+    void flushDescriptorSetUpdates();
 
     ANGLE_INLINE void onRenderPassFinished()
     {
@@ -879,9 +877,9 @@ class ContextVk : public ContextImpl, public vk::Context
 
     // DescriptorSet writes
     template <typename T, const T *VkWriteDescriptorSet::*pInfo>
-    T &allocInfos(std::vector<T> *mInfos, size_t count);
+    T *allocDescriptorInfos(std::vector<T> *descriptorVector, size_t count);
     template <typename T, const T *VkWriteDescriptorSet::*pInfo>
-    void growCapacity(std::vector<T> *mInfos, size_t newSize);
+    void growDesciptorCapacity(std::vector<T> *descriptorVector, size_t newSize);
 
     std::array<DirtyBitHandler, DIRTY_BIT_MAX> mGraphicsDirtyBitHandlers;
     std::array<DirtyBitHandler, DIRTY_BIT_MAX> mComputeDirtyBitHandlers;
@@ -1057,18 +1055,9 @@ class ContextVk : public ContextImpl, public vk::Context
     const vk::BufferHelper *mCurrentIndirectBuffer;
 
     // Storage for vkUpdateDescriptorSets
-    std::vector<VkDescriptorBufferInfo> mBufferInfos;
-    std::vector<VkDescriptorImageInfo> mImageInfos;
-    std::vector<VkWriteDescriptorSet> mWriteInfos;
-    class ScopedDescriptorSetUpdates final : angle::NonCopyable
-    {
-      public:
-        ScopedDescriptorSetUpdates(ContextVk *contextVk);
-        ~ScopedDescriptorSetUpdates();
-
-      private:
-        ContextVk *mContextVk;
-    };
+    std::vector<VkDescriptorBufferInfo> mDescriptorBufferInfos;
+    std::vector<VkDescriptorImageInfo> mDescriptorImageInfos;
+    std::vector<VkWriteDescriptorSet> mWriteDescriptorSets;
 
     ShareGroupVk *mShareGroupVk;
 
