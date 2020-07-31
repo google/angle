@@ -16,7 +16,7 @@
 namespace rx
 {
 
-SamplerVk::SamplerVk(const gl::SamplerState &state) : SamplerImpl(state), mSerial{} {}
+SamplerVk::SamplerVk(const gl::SamplerState &state) : SamplerImpl(state) {}
 
 SamplerVk::~SamplerVk() = default;
 
@@ -43,7 +43,7 @@ angle::Result SamplerVk::syncState(const gl::Context *context, const bool dirty)
     ANGLE_TRY(renderer->getSamplerCache().getSampler(contextVk, desc, &mSampler));
 
     // Regenerate the serial on a sampler change.
-    mSerial = contextVk->generateSamplerSerial();
+    mSamplerSerial = renderer->getResourceSerialFactory().generateSamplerSerial();
     return angle::Result::Continue;
 }
 

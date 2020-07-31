@@ -123,7 +123,7 @@ class ProgramExecutableVk
         return mGraphicsProgramInfos[optionBits.to_ulong()];
     }
     ProgramInfo &getComputeProgramInfo() { return mComputeProgramInfo; }
-    BufferSerial getCurrentDefaultUniformBufferSerial() const
+    vk::BufferSerial getCurrentDefaultUniformBufferSerial() const
     {
         return mCurrentDefaultUniformBufferSerial;
     }
@@ -220,7 +220,7 @@ class ProgramExecutableVk
     std::vector<VkDescriptorSet> mDescriptorSets;
     vk::DescriptorSetLayoutArray<VkDescriptorSet> mEmptyDescriptorSets;
     size_t mNumDefaultUniformDescriptors;
-    BufferSerial mCurrentDefaultUniformBufferSerial;
+    vk::BufferSerial mCurrentDefaultUniformBufferSerial;
 
     std::unordered_map<vk::UniformsAndXfbDesc, VkDescriptorSet> mUniformsAndXfbDescriptorSetCache;
     std::unordered_map<vk::TextureDescriptorDesc, VkDescriptorSet> mTextureDescriptorsCache;

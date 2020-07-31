@@ -1247,7 +1247,7 @@ void TextureVk::setImageHelper(ContextVk *contextVk,
     }
     mRenderTargets.clear();
 
-    mSerial = contextVk->generateTextureSerial();
+    updateSerial(contextVk);
 }
 
 void TextureVk::updateImageHelper(ContextVk *contextVk, size_t imageCopyBufferAlignment)
@@ -1695,8 +1695,7 @@ angle::Result TextureVk::updateBaseMaxLevels(ContextVk *contextVk,
         // Track the levels in our ImageHelper
         mImage->setBaseAndMaxLevels(baseLevel, maxLevel);
 
-        // Update the texture's serial so that the descriptor set is updated correctly
-        mSerial = contextVk->generateTextureSerial();
+        updateSerial(contextVk);
 
         // Update the current max level in ImageViewHelper
         const gl::ImageDesc &baseLevelDesc = mState.getBaseLevelDesc();
@@ -2155,8 +2154,7 @@ angle::Result TextureVk::syncState(const gl::Context *context,
                                 mImage->getExternalFormat());
     ANGLE_TRY(renderer->getSamplerCache().getSampler(contextVk, samplerDesc, &mSampler));
 
-    // Regenerate the serial on a sampler change.
-    mSerial = contextVk->generateTextureSerial();
+    updateSerial(contextVk);
 
     return angle::Result::Continue;
 }
@@ -2295,7 +2293,7 @@ angle::Result TextureVk::initImage(ContextVk *contextVk,
 
     ANGLE_TRY(initImageViews(contextVk, format, sized, levelCount, layerCount));
 
-    mSerial = contextVk->generateTextureSerial();
+    updateSerial(contextVk);
 
     return angle::Result::Continue;
 }
@@ -2514,5 +2512,11 @@ void TextureVk::onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMe
 
     // Forward the notification to the parent that the staging buffer changed.
     onStateChange(angle::SubjectMessage::SubjectChanged);
+}
+
+void TextureVk::updateSerial(ContextVk *contextVk)
+{
+    vk::ResourceSerialFactory &factory = contextVk->getRenderer()->getResourceSerialFactory();
+    mSerial                            = factory.generateTextureSerial();
 }
 }  // namespace rx

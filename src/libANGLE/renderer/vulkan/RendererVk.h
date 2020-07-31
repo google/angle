@@ -260,6 +260,8 @@ class RendererVk : angle::NonCopyable
 
     bool getEnableValidationLayers() const { return mEnableValidationLayers; }
 
+    vk::ResourceSerialFactory &getResourceSerialFactory() { return mResourceSerialFactory; }
+
   private:
     angle::Result initializeDevice(DisplayVk *displayVk, uint32_t queueFamilyIndex);
     void ensureCapsInitialized() const;
@@ -387,6 +389,9 @@ class RendererVk : angle::NonCopyable
     SamplerCache mSamplerCache;
     SamplerYcbcrConversionCache mYuvConversionCache;
     vk::ActiveHandleCounter mActiveHandleCounts;
+
+    // Tracks resource serials.
+    vk::ResourceSerialFactory mResourceSerialFactory;
 };
 
 }  // namespace rx

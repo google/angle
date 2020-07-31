@@ -189,8 +189,10 @@ void ProgramExecutableVk::reset(ContextVk *contextVk)
 
     mTextureDescriptorsCache.clear();
     mUniformsAndXfbDescriptorSetCache.clear();
+
     // Initialize with a unique BufferSerial
-    mCurrentDefaultUniformBufferSerial = contextVk->generateBufferSerial();
+    vk::ResourceSerialFactory &factory = contextVk->getRenderer()->getResourceSerialFactory();
+    mCurrentDefaultUniformBufferSerial = factory.generateBufferSerial();
 
     for (ProgramInfo &programInfo : mGraphicsProgramInfos)
     {

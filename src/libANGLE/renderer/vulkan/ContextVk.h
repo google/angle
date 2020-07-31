@@ -468,10 +468,6 @@ class ContextVk : public ContextImpl, public vk::Context
     // signature for each descriptor set. This allows us to keep a cache of descriptor sets and
     // avoid calling vkAllocateDesctiporSets each texture update.
     const vk::TextureDescriptorDesc &getActiveTexturesDesc() const { return mActiveTexturesDesc; }
-    ImageViewSerial generateAttachmentImageViewSerial();
-    BufferSerial generateBufferSerial();
-    TextureSerial generateTextureSerial();
-    SamplerSerial generateSamplerSerial();
 
     angle::Result updateScissor(const gl::State &glState);
 
@@ -626,7 +622,7 @@ class ContextVk : public ContextImpl, public vk::Context
         uint32_t dynamicOffset;
         vk::BindingPointer<vk::DescriptorSetLayout> descriptorSetLayout;
         vk::RefCountedDescriptorPoolBinding descriptorPoolBinding;
-        std::unordered_map<BufferSerial, VkDescriptorSet> descriptorSetCache;
+        std::unordered_map<vk::BufferSerial, VkDescriptorSet> descriptorSetCache;
 
         DriverUniformsDescriptorSet();
         ~DriverUniformsDescriptorSet();

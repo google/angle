@@ -751,6 +751,26 @@ void ClearValuesArray::store(uint32_t index,
         mEnabled.set(index);
     }
 }
+
+// ResourceSerialFactory implementation.
+ResourceSerialFactory::ResourceSerialFactory() : mCurrentUniqueSerial(1) {}
+
+ResourceSerialFactory::~ResourceSerialFactory() {}
+
+uint32_t ResourceSerialFactory::issueSerial()
+{
+    ASSERT(mCurrentUniqueSerial + 1 > mCurrentUniqueSerial);
+    return mCurrentUniqueSerial++;
+}
+
+#define ANGLE_DEFINE_GEN_VK_SERIAL(Type)                         \
+    Type##Serial ResourceSerialFactory::generate##Type##Serial() \
+    {                                                            \
+        return Type##Serial(issueSerial());                      \
+    }
+
+ANGLE_VK_SERIAL_OP(ANGLE_DEFINE_GEN_VK_SERIAL)
+
 }  // namespace vk
 
 #if !defined(ANGLE_SHARED_LIBVULKAN)

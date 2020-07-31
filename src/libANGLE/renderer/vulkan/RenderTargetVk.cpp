@@ -69,25 +69,25 @@ void RenderTargetVk::reset()
     mContentDefined    = false;
 }
 
-ImageViewSerial RenderTargetVk::getAssignViewSerialImpl(ContextVk *contextVk,
-                                                        vk::ImageViewHelper *imageViews) const
+vk::ImageViewSerial RenderTargetVk::getAssignViewSerialImpl(ContextVk *contextVk,
+                                                            vk::ImageViewHelper *imageViews) const
 {
     ASSERT(imageViews);
     ASSERT(mLayerIndex < std::numeric_limits<uint16_t>::max());
     ASSERT(mLevelIndexGL < std::numeric_limits<uint16_t>::max());
 
-    ImageViewSerial imageViewSerial =
+    vk::ImageViewSerial imageViewSerial =
         imageViews->getAssignSerial(contextVk, mLevelIndexGL, mLayerIndex);
     ASSERT(imageViewSerial.getValue() < std::numeric_limits<uint32_t>::max());
     return imageViewSerial;
 }
 
-ImageViewSerial RenderTargetVk::getAssignImageViewSerial(ContextVk *contextVk) const
+vk::ImageViewSerial RenderTargetVk::getAssignImageViewSerial(ContextVk *contextVk) const
 {
     return getAssignViewSerialImpl(contextVk, mImageViews);
 }
 
-ImageViewSerial RenderTargetVk::getAssignResolveImageViewSerial(ContextVk *contextVk) const
+vk::ImageViewSerial RenderTargetVk::getAssignResolveImageViewSerial(ContextVk *contextVk) const
 {
     return getAssignViewSerialImpl(contextVk, mResolveImageViews);
 }
