@@ -102,7 +102,8 @@ class TracePerfTest : public ANGLERenderTest, public ::testing::WithParamInterfa
 class TracePerfTest;
 TracePerfTest *gCurrentTracePerfTest = nullptr;
 
-void BindFramebufferProc(GLenum target, GLuint framebuffer)
+// Don't forget to include KHRONOS_APIENTRY in override methods. Neccessary on Win/x86.
+void KHRONOS_APIENTRY BindFramebufferProc(GLenum target, GLuint framebuffer)
 {
     glBindFramebuffer(target, framebuffer);
     gCurrentTracePerfTest->onReplayFramebufferChange(target, framebuffer);
