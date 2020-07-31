@@ -256,6 +256,7 @@ void DisplayMtl::generateExtensions(egl::DisplayExtensions *outExtensions) const
 {
     outExtensions->flexibleSurfaceCompatibility = true;
     outExtensions->iosurfaceClientBuffer        = true;
+    outExtensions->surfacelessContext           = true;
 }
 
 void DisplayMtl::generateCaps(egl::Caps *outCaps) const {}
