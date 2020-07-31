@@ -337,7 +337,12 @@ if (is_win || is_linux || is_android || is_mac || is_fuchsia) {
 
       # Disable optimization in the trace perf tests to avoid optimizing huge files.
       if (!is_debug) {
-        suppressed_configs += [ "//build/config/compiler:default_optimization" ]
+        suppressed_configs += [
+          "//build/config/compiler:afdo",
+          "//build/config/compiler:afdo_optimize_size",
+          "//build/config/compiler:default_optimization",
+          "//build/config/compiler/pgo:default_pgo_flags",
+        ]
         configs += [ "//build/config/compiler:no_optimize" ]
       }
     }
