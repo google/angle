@@ -415,6 +415,10 @@
         "textarget": "TextureTarget",
         "texture": "TextureID"
     },
+    "glFramebufferTexture2DMultisample": {
+        "textarget": "TextureTarget",
+        "texture": "TextureID"
+    },
     "glFramebufferTexture3D": {
         "textarget": "TextureTarget",
         "texture": "TextureID"

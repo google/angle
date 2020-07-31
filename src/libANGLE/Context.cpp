@@ -5577,20 +5577,18 @@ void Context::renderbufferStorageMultisample(GLenum target,
 
 void Context::framebufferTexture2DMultisample(GLenum target,
                                               GLenum attachment,
-                                              GLenum textarget,
-                                              GLuint texture,
+                                              TextureTarget textarget,
+                                              TextureID texture,
                                               GLint level,
                                               GLsizei samples)
 {
     Framebuffer *framebuffer = mState.getTargetFramebuffer(target);
     ASSERT(framebuffer);
 
-    if (texture != 0)
+    if (texture.value != 0)
     {
-        TextureTarget textargetPacked = FromGLenum<TextureTarget>(textarget);
-        TextureID texturePacked       = FromGL<TextureID>(texture);
-        Texture *textureObj           = getTexture(texturePacked);
-        ImageIndex index              = ImageIndex::MakeFromTarget(textargetPacked, level, 1);
+        Texture *textureObj = getTexture(texture);
+        ImageIndex index    = ImageIndex::MakeFromTarget(textarget, level, 1);
         framebuffer->setAttachmentMultisample(this, GL_TEXTURE, attachment, index, textureObj,
                                               samples);
     }

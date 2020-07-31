@@ -3811,8 +3811,8 @@ CallCapture CaptureFramebufferTexture2DMultisampleEXT(const State &glState,
                                                       bool isCallValid,
                                                       GLenum target,
                                                       GLenum attachment,
-                                                      GLenum textarget,
-                                                      GLuint texture,
+                                                      TextureTarget textargetPacked,
+                                                      TextureID texturePacked,
                                                       GLint level,
                                                       GLsizei samples)
 {
@@ -3821,9 +3821,8 @@ CallCapture CaptureFramebufferTexture2DMultisampleEXT(const State &glState,
     paramBuffer.addEnumParam("target", GLenumGroup::FramebufferTarget, ParamType::TGLenum, target);
     paramBuffer.addEnumParam("attachment", GLenumGroup::FramebufferAttachment, ParamType::TGLenum,
                              attachment);
-    paramBuffer.addEnumParam("textarget", GLenumGroup::TextureTarget, ParamType::TGLenum,
-                             textarget);
-    paramBuffer.addValueParam("texture", ParamType::TGLuint, texture);
+    paramBuffer.addValueParam("textargetPacked", ParamType::TTextureTarget, textargetPacked);
+    paramBuffer.addValueParam("texturePacked", ParamType::TTextureID, texturePacked);
     paramBuffer.addValueParam("level", ParamType::TGLint, level);
     paramBuffer.addValueParam("samples", ParamType::TGLsizei, samples);
 

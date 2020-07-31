@@ -6668,8 +6668,8 @@ bool ValidateProvokingVertexANGLE(const Context *context, ProvokingVertexConvent
 bool ValidateFramebufferTexture2DMultisampleEXT(const Context *context,
                                                 GLenum target,
                                                 GLenum attachment,
-                                                GLenum textarget,
-                                                GLuint texture,
+                                                TextureTarget textarget,
+                                                TextureID texture,
                                                 GLint level,
                                                 GLsizei samples)
 {
@@ -6693,9 +6693,23 @@ bool ValidateFramebufferTexture2DMultisampleEXT(const Context *context,
         return false;
     }
 
-    if (!ValidFramebufferTarget(context, target))
+    // EXT_multisampled_render_to_texture returns INVALID_OPERATION when a sample number higher than
+    // the maximum sample number supported by this format is passed.
+    // The TextureCaps::getMaxSamples method is only guarenteed to be valid when the context is ES3.
+    if (texture.value != 0 && context->getClientMajorVersion() >= 3)
     {
-        context->validationError(GL_INVALID_ENUM, kInvalidFramebufferTarget);
+        Texture *tex                  = context->getTexture(texture);
+        GLenum internalformat         = tex->getFormat(textarget, level).info->internalFormat;
+        const TextureCaps &formatCaps = context->getTextureCaps().get(internalformat);
+        if (static_cast<GLuint>(samples) > formatCaps.getMaxSamples())
+        {
+            context->validationError(GL_INVALID_OPERATION, kSamplesOutOfRange);
+            return false;
+        }
+    }
+
+    if (!ValidateFramebufferTextureBase(context, target, attachment, texture, level))
+    {
         return false;
     }
 
@@ -6705,44 +6719,10 @@ bool ValidateFramebufferTexture2DMultisampleEXT(const Context *context,
         return false;
     }
 
-    TextureTarget textargetPacked = FromGLenum<TextureTarget>(textarget);
-    if (!ValidTexture2DDestinationTarget(context, textargetPacked))
+    if (!ValidTexture2DDestinationTarget(context, textarget))
     {
         context->validationError(GL_INVALID_ENUM, kInvalidTextureTarget);
         return false;
-    }
-
-    if (texture != 0)
-    {
-        TextureID texturePacked = FromGL<TextureID>(texture);
-        Texture *tex            = context->getTexture(texturePacked);
-
-        if (tex == nullptr)
-        {
-            context->validationError(GL_INVALID_OPERATION, kMissingTexture);
-            return false;
-        }
-
-        if (level < 0)
-        {
-            context->validationError(GL_INVALID_VALUE, kInvalidMipLevel);
-            return false;
-        }
-
-        // EXT_multisampled_render_to_texture returns INVALID_OPERATION when a sample number higher
-        // than the maximum sample number supported by this format is passed.
-        // The TextureCaps::getMaxSamples method is only guarenteed to be valid when the context is
-        // ES3.
-        if (context->getClientMajorVersion() >= 3)
-        {
-            GLenum internalformat = tex->getFormat(textargetPacked, level).info->internalFormat;
-            const TextureCaps &formatCaps = context->getTextureCaps().get(internalformat);
-            if (static_cast<GLuint>(samples) > formatCaps.getMaxSamples())
-            {
-                context->validationError(GL_INVALID_OPERATION, kSamplesOutOfRange);
-                return false;
-            }
-        }
     }
 
     return true;

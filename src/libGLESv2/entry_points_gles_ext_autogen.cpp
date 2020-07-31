@@ -4420,17 +4420,20 @@ void GL_APIENTRY FramebufferTexture2DMultisampleEXT(GLenum target,
 
     if (context)
     {
+        TextureTarget textargetPacked                         = FromGL<TextureTarget>(textarget);
+        TextureID texturePacked                               = FromGL<TextureID>(texture);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
-        bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateFramebufferTexture2DMultisampleEXT(
-                                context, target, attachment, textarget, texture, level, samples));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateFramebufferTexture2DMultisampleEXT(
+                 context, target, attachment, textargetPacked, texturePacked, level, samples));
         if (isCallValid)
         {
-            context->framebufferTexture2DMultisample(target, attachment, textarget, texture, level,
-                                                     samples);
+            context->framebufferTexture2DMultisample(target, attachment, textargetPacked,
+                                                     texturePacked, level, samples);
         }
         ANGLE_CAPTURE(FramebufferTexture2DMultisampleEXT, isCallValid, context, target, attachment,
-                      textarget, texture, level, samples);
+                      textargetPacked, texturePacked, level, samples);
     }
 }
 
@@ -12061,17 +12064,20 @@ void GL_APIENTRY FramebufferTexture2DMultisampleEXTContextANGLE(GLeglContext ctx
     if (context)
     {
         ASSERT(context == GetValidGlobalContext());
+        TextureTarget textargetPacked                         = FromGL<TextureTarget>(textarget);
+        TextureID texturePacked                               = FromGL<TextureID>(texture);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
-        bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateFramebufferTexture2DMultisampleEXT(
-                                context, target, attachment, textarget, texture, level, samples));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateFramebufferTexture2DMultisampleEXT(
+                 context, target, attachment, textargetPacked, texturePacked, level, samples));
         if (isCallValid)
         {
-            context->framebufferTexture2DMultisample(target, attachment, textarget, texture, level,
-                                                     samples);
+            context->framebufferTexture2DMultisample(target, attachment, textargetPacked,
+                                                     texturePacked, level, samples);
         }
         ANGLE_CAPTURE(FramebufferTexture2DMultisampleEXT, isCallValid, context, target, attachment,
-                      textarget, texture, level, samples);
+                      textargetPacked, texturePacked, level, samples);
     }
 }
 

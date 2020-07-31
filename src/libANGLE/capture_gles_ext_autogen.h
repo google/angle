@@ -1128,8 +1128,8 @@ angle::CallCapture CaptureFramebufferTexture2DMultisampleEXT(const State &glStat
                                                              bool isCallValid,
                                                              GLenum target,
                                                              GLenum attachment,
-                                                             GLenum textarget,
-                                                             GLuint texture,
+                                                             TextureTarget textargetPacked,
+                                                             TextureID texturePacked,
                                                              GLint level,
                                                              GLsizei samples);
 angle::CallCapture CaptureRenderbufferStorageMultisampleEXT(const State &glState,
