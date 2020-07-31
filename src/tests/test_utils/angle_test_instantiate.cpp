@@ -147,7 +147,8 @@ constexpr size_t kMaxConfigNameLen = 100;
 std::array<char, kMaxConfigNameLen> gSelectedConfig;
 }  // namespace
 
-bool gSeparateProcessPerConfig = false;
+bool gSeparateProcessPerConfig       = false;
+bool gEnableANGLEPerTestCaptureLabel = false;
 
 bool IsConfigSelected()
 {

@@ -248,6 +248,7 @@ bool IsConfigSelected();
 // driver flakiness when using multiple APIs/windows/etc in the same
 // process.
 extern bool gSeparateProcessPerConfig;
+extern bool gEnableANGLEPerTestCaptureLabel;
 
 // For use with ANGLE_INSTANTIATE_TEST_ARRAY
 template <typename ParamsT>

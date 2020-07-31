@@ -29,22 +29,6 @@
 // This will expand to "angle_capture_context<#>.h"
 #include ANGLE_MACRO_STRINGIZE(ANGLE_CAPTURE_REPLAY_COMPOSITE_TESTS_HEADER)
 
-// Assign the context numbered functions based on GN arg selecting replay ID
-std::function<void(uint32_t)> SetupContextReplay = reinterpret_cast<void (*)(uint32_t)>(
-    ANGLE_MACRO_CONCAT(SetupContext,
-                       ANGLE_MACRO_CONCAT(ANGLE_CAPTURE_REPLAY_TEST_CONTEXT_ID, Replay)));
-std::function<void(uint32_t, uint32_t)> ReplayContextFrame =
-    reinterpret_cast<void (*)(uint32_t, uint32_t)>(
-        ANGLE_MACRO_CONCAT(ReplayContext,
-                           ANGLE_MACRO_CONCAT(ANGLE_CAPTURE_REPLAY_TEST_CONTEXT_ID, Frame)));
-std::function<void(uint32_t)> ResetContextReplay = reinterpret_cast<void (*)(uint32_t)>(
-    ANGLE_MACRO_CONCAT(ResetContext,
-                       ANGLE_MACRO_CONCAT(ANGLE_CAPTURE_REPLAY_TEST_CONTEXT_ID, Replay)));
-std::function<std::vector<uint8_t>(uint32_t, uint32_t)> GetSerializedContextStateData =
-    reinterpret_cast<std::vector<uint8_t> (*)(uint32_t, uint32_t)>(
-        ANGLE_MACRO_CONCAT(GetSerializedContext,
-                           ANGLE_MACRO_CONCAT(ANGLE_CAPTURE_REPLAY_TEST_CONTEXT_ID, StateData)));
-
 const std::string resultTag = "*RESULT";
 
 class CaptureReplayTests

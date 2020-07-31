@@ -9,6 +9,9 @@
 
 #include "ANGLETest.h"
 
+#include <algorithm>
+#include <cstdlib>
+
 #include "common/platform.h"
 #include "gpu_info_util/SystemInfo.h"
 #include "util/EGLWindow.h"
@@ -303,8 +306,9 @@ TestPlatformContext gPlatformContext;
 // After a fixed number of iterations we reset the test window. This works around some driver bugs.
 constexpr uint32_t kWindowReuseLimit = 50;
 
-constexpr char kUseConfig[]                = "--use-config=";
-constexpr char kSeparateProcessPerConfig[] = "--separate-process-per-config";
+constexpr char kUseConfig[]                      = "--use-config=";
+constexpr char kSeparateProcessPerConfig[]       = "--separate-process-per-config";
+constexpr char kEnableANGLEPerTestCaptureLabel[] = "--angle-per-test-capture-label";
 
 bool RunSeparateProcessesForEachConfig(int *argc, char *argv[])
 {
@@ -350,6 +354,16 @@ bool RunSeparateProcessesForEachConfig(int *argc, char *argv[])
         }
     }
     return success;
+}
+
+void SetupEnvironmentVarsForCaptureReplay()
+{
+    const ::testing::TestInfo *const testInfo =
+        ::testing::UnitTest::GetInstance()->current_test_info();
+    std::string testName = std::string{testInfo->name()};
+    std::replace(testName.begin(), testName.end(), '/', '_');
+    SetEnvironmentVar("ANGLE_CAPTURE_LABEL",
+                      (std::string{testInfo->test_case_name()} + "_" + testName).c_str());
 }
 }  // anonymous namespace
 
@@ -553,7 +567,10 @@ void ANGLETestBase::ANGLETestSetUp()
         }
         needSwap = true;
     }
-
+    if (gEnableANGLEPerTestCaptureLabel)
+    {
+        SetupEnvironmentVarsForCaptureReplay();
+    }
     // WGL tests are currently disabled.
     if (mFixture->wglWindow)
     {
@@ -1371,6 +1388,11 @@ void ANGLEProcessTestArgs(int *argc, char *argv[])
             0)
         {
             gSeparateProcessPerConfig = true;
+        }
+        if (strncmp(argv[argIndex], kEnableANGLEPerTestCaptureLabel,
+                    strlen(kEnableANGLEPerTestCaptureLabel)) == 0)
+        {
+            gEnableANGLEPerTestCaptureLabel = true;
         }
     }
 
