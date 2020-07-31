@@ -1092,6 +1092,8 @@ void TCompiler::setResourceString()
         << ":EXT_shadow_samplers:" << mResources.EXT_shadow_samplers
         << ":OES_shader_multisample_interpolation:" << mResources.OES_shader_multisample_interpolation
         << ":OES_shader_image_atomic:" << mResources.OES_shader_image_atomic
+        << ":OES_texture_buffer:" << mResources.OES_texture_buffer
+        << ":EXT_texture_buffer:" << mResources.EXT_texture_buffer
         << ":MinProgramTextureGatherOffset:" << mResources.MinProgramTextureGatherOffset
         << ":MaxProgramTextureGatherOffset:" << mResources.MaxProgramTextureGatherOffset
         << ":MaxImageUnits:" << mResources.MaxImageUnits

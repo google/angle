@@ -1427,6 +1427,9 @@ TEST(ImmutableStringTest, ScriptGeneratedHashesMatch)
     ASSERT_EQ(0x000003bdu, ImmutableString("imageSize(01a").mangledNameHash());
     ASSERT_EQ(0x000005f2u, ImmutableString("imageSize(01b").mangledNameHash());
     ASSERT_EQ(0x000003bbu, ImmutableString("imageSize(01c").mangledNameHash());
+    ASSERT_EQ(0x000005fcu, ImmutableString("imageSize(01g").mangledNameHash());
+    ASSERT_EQ(0x000003b6u, ImmutableString("imageSize(01h").mangledNameHash());
+    ASSERT_EQ(0x000003b7u, ImmutableString("imageSize(01i").mangledNameHash());
     ASSERT_EQ(0x000003a1u, ImmutableString("imageSize(01L").mangledNameHash());
     ASSERT_EQ(0x000003a2u, ImmutableString("imageSize(01M").mangledNameHash());
     ASSERT_EQ(0x00000560u, ImmutableString("imageSize(01N").mangledNameHash());
@@ -1436,9 +1439,6 @@ TEST(ImmutableStringTest, ScriptGeneratedHashesMatch)
     ASSERT_EQ(0x000005b1u, ImmutableString("imageSize(01O").mangledNameHash());
     ASSERT_EQ(0x000003b0u, ImmutableString("imageSize(01P").mangledNameHash());
     ASSERT_EQ(0x000003b1u, ImmutableString("imageSize(01Q").mangledNameHash());
-    ASSERT_EQ(0x000005fcu, ImmutableString("imageSize(01g").mangledNameHash());
-    ASSERT_EQ(0x000003b6u, ImmutableString("imageSize(01h").mangledNameHash());
-    ASSERT_EQ(0x000003b7u, ImmutableString("imageSize(01i").mangledNameHash());
     ASSERT_EQ(0x000003aeu, ImmutableString("imageSize(01R").mangledNameHash());
     ASSERT_EQ(0x000003afu, ImmutableString("imageSize(01S").mangledNameHash());
     ASSERT_EQ(0x000003b4u, ImmutableString("imageSize(01T").mangledNameHash());

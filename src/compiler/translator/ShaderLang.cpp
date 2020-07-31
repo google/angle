@@ -182,6 +182,8 @@ void InitBuiltInResources(ShBuiltInResources *resources)
     resources->OES_shader_multisample_interpolation        = 0;
     resources->NV_draw_buffers                             = 0;
     resources->OES_shader_image_atomic                     = 0;
+    resources->OES_texture_buffer                          = 0;
+    resources->EXT_texture_buffer                          = 0;
 
     resources->MaxClipDistances = 0;
 

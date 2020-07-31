@@ -381,6 +381,8 @@ GLenum GLVariableType(const TType &type)
             return GL_SAMPLER_2D_MULTISAMPLE_ARRAY;
         case EbtSamplerCubeArray:
             return GL_SAMPLER_CUBE_MAP_ARRAY;
+        case EbtSamplerBuffer:
+            return GL_SAMPLER_BUFFER;
         case EbtISampler2D:
             return GL_INT_SAMPLER_2D;
         case EbtISampler3D:
@@ -395,6 +397,8 @@ GLenum GLVariableType(const TType &type)
             return GL_INT_SAMPLER_2D_MULTISAMPLE_ARRAY;
         case EbtISamplerCubeArray:
             return GL_INT_SAMPLER_CUBE_MAP_ARRAY;
+        case EbtISamplerBuffer:
+            return GL_INT_SAMPLER_BUFFER;
         case EbtUSampler2D:
             return GL_UNSIGNED_INT_SAMPLER_2D;
         case EbtUSampler3D:
@@ -409,6 +413,8 @@ GLenum GLVariableType(const TType &type)
             return GL_UNSIGNED_INT_SAMPLER_2D_MULTISAMPLE_ARRAY;
         case EbtUSamplerCubeArray:
             return GL_UNSIGNED_INT_SAMPLER_CUBE_MAP_ARRAY;
+        case EbtUSamplerBuffer:
+            return GL_UNSIGNED_INT_SAMPLER_BUFFER;
         case EbtSampler2DShadow:
             return GL_SAMPLER_2D_SHADOW;
         case EbtSamplerCubeShadow:
@@ -447,6 +453,12 @@ GLenum GLVariableType(const TType &type)
             return GL_INT_IMAGE_CUBE_MAP_ARRAY;
         case EbtUImageCubeArray:
             return GL_UNSIGNED_INT_IMAGE_CUBE_MAP_ARRAY;
+        case EbtImageBuffer:
+            return GL_IMAGE_BUFFER;
+        case EbtIImageBuffer:
+            return GL_INT_IMAGE_BUFFER;
+        case EbtUImageBuffer:
+            return GL_UNSIGNED_INT_IMAGE_BUFFER;
         case EbtAtomicCounter:
             return GL_UNSIGNED_INT_ATOMIC_COUNTER;
         case EbtSamplerVideoWEBGL:

@@ -1579,6 +1579,8 @@ void GenerateCaps(const FunctionsGL *functions,
         caps->maxTextureBufferSize = QuerySingleGLInt(functions, GL_MAX_TEXTURE_BUFFER_SIZE);
         caps->textureBufferOffsetAlignment =
             QuerySingleGLInt(functions, GL_TEXTURE_BUFFER_OFFSET_ALIGNMENT);
+        extensions->textureBufferOES = true;
+        extensions->textureBufferEXT = true;
     }
     else
     {

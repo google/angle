@@ -137,6 +137,14 @@ void InitExtensionBehavior(const ShBuiltInResources &resources, TExtensionBehavi
     {
         extBehavior[TExtension::OES_shader_image_atomic] = EBhUndefined;
     }
+    if (resources.OES_texture_buffer)
+    {
+        extBehavior[TExtension::OES_texture_buffer] = EBhUndefined;
+    }
+    if (resources.EXT_texture_buffer)
+    {
+        extBehavior[TExtension::EXT_texture_buffer] = EBhUndefined;
+    }
 }
 
 void ResetExtensionBehavior(const ShBuiltInResources &resources,

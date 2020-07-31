@@ -28,6 +28,7 @@
     OP(EXT_shader_non_constant_global_initializers) \
     OP(EXT_shader_texture_lod)                      \
     OP(EXT_shadow_samplers)                         \
+    OP(EXT_texture_buffer)                          \
     OP(EXT_texture_cube_map_array)                  \
     OP(EXT_YUV_target)                              \
     OP(NV_EGL_stream_consumer_external)             \
@@ -39,6 +40,7 @@
     OP(OES_shader_image_atomic)                     \
     OP(OES_standard_derivatives)                    \
     OP(OES_texture_3D)                              \
+    OP(OES_texture_buffer)                          \
     OP(OES_texture_cube_map_array)                  \
     OP(OES_texture_storage_multisample_2d_array)    \
     OP(OVR_multiview)                               \
