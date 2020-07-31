@@ -118,8 +118,3 @@
 
 // New failures with latest dEQP roll (2020-04-28)
 4593 SWIFTSHADER : KHR-GLES31.core.nearest_edge.offset_left = FAIL
-
-// Bug in gl.xml, aliasing glRenderbufferStorageMultisampleEXT and glRenderbufferStorageMultisample
-// for GLES.  See https://github.com/KhronosGroup/OpenGL-Registry/issues/413
-4836 VULKAN : KHR-GLES31.core.texture_storage_multisample.APIDependencies.renderbuffer_storage_multisample_invalid_samples_argument_for_integer_internalformats = FAIL
-4836 VULKAN : KHR-GLES31.core.texture_storage_multisample.APIDependencies.renderbuffer_storage_multisample_invalid_samples_argument_for_noninteger_internalformats = FAIL
