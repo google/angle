@@ -597,6 +597,8 @@ class ContextVk : public ContextImpl, public vk::Context
     vk::BufferHelper &getEmptyBuffer() { return mEmptyBuffer; }
     vk::DynamicBuffer *getStagingBufferStorage() { return &mStagingBufferStorage; }
 
+    uint32_t getRenderPassCounter() const { return mRenderPassCounter; }
+
   private:
     // Dirty bits.
     enum DirtyBitType : size_t

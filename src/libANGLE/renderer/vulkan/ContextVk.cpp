@@ -4432,10 +4432,10 @@ angle::Result ContextVk::endRenderPass()
 
     onRenderPassFinished();
 
+    mRenderPassCounter++;
+
     if (mGpuEventsEnabled)
     {
-        mRenderPassCounter++;
-
         EventName eventName = GetTraceEventName("RP", mRenderPassCounter);
         ANGLE_TRY(traceGpuEvent(&mOutsideRenderPassCommands->getCommandBuffer(),
                                 TRACE_EVENT_PHASE_BEGIN, eventName));
