@@ -351,6 +351,9 @@ struct Extensions
     // GL_EXT_multisampled_render_to_texture
     bool multisampledRenderToTexture = false;
 
+    // GL_EXT_multisampled_render_to_texture2
+    bool multisampledRenderToTexture2 = false;
+
     // GL_ANGLE_instanced_arrays
     bool instancedArraysANGLE = false;
     // GL_EXT_instanced_arrays

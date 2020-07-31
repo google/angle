@@ -117,8 +117,9 @@ Compiler::Compiler(rx::GLImplFactory *implFactory, const State &state)
     mResources.OVR_multiview2 = extensions.multiview2;
     mResources.MaxViewsOVR    = extensions.maxViews;
 
-    // EXT_multisampled_render_to_texture
-    mResources.EXT_multisampled_render_to_texture = extensions.multisampledRenderToTexture;
+    // EXT_multisampled_render_to_texture and EXT_multisampled_render_to_texture2
+    mResources.EXT_multisampled_render_to_texture  = extensions.multisampledRenderToTexture;
+    mResources.EXT_multisampled_render_to_texture2 = extensions.multisampledRenderToTexture2;
 
     // WEBGL_video_texture
     mResources.WEBGL_video_texture = extensions.webglVideoTexture;

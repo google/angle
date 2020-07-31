@@ -10,7 +10,7 @@
   "scripts/gl_angle_ext.xml":
     "079cc4829de7ce638faf7bbf66e141ad",
   "scripts/registry_xml.py":
-    "5d9874e9e53bde1f644808dbab945578",
+    "a31e4ceb03a70104b76a33da6ba204a0",
   "scripts/wgl.xml":
     "aa96419c582af2f6673430e2847693f4",
   "src/libGL/proc_table_wgl_autogen.cpp":
