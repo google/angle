@@ -4050,8 +4050,8 @@ class RobustBufferAccessWebGL2ValidationStateChangeTest : public WebGL2Validatio
   protected:
     RobustBufferAccessWebGL2ValidationStateChangeTest()
     {
-        // SwS/OSX GL do not support robustness.
-        if (!isSwiftshader() && !IsOSX())
+        // SwS/OSX GL do not support robustness. Mali does not support it.
+        if (!isSwiftshader() && !IsOSX() && !IsARM())
         {
             setRobustAccess(true);
         }
@@ -5651,6 +5651,9 @@ TEST_P(RobustBufferAccessWebGL2ValidationStateChangeTest, BindZeroSizeBufferThen
 
     // no intent to follow up on this failure.
     ANGLE_SKIP_TEST_IF(IsOSX());
+
+    // Mali does not support robustness now.
+    ANGLE_SKIP_TEST_IF(IsARM());
 
     std::vector<GLubyte> data(48, 1);
 
