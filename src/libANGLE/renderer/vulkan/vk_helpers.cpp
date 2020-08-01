@@ -2533,7 +2533,6 @@ ImageHelper::ImageHelper(ImageHelper &&other)
       mExtents(other.mExtents),
       mFormat(other.mFormat),
       mSamples(other.mSamples),
-      mSerial(other.mSerial),
       mCurrentLayout(other.mCurrentLayout),
       mCurrentQueueFamilyIndex(other.mCurrentQueueFamilyIndex),
       mLastNonShaderReadOnlyLayout(other.mLastNonShaderReadOnlyLayout),
@@ -2562,7 +2561,6 @@ void ImageHelper::resetCachedProperties()
     mExtents                     = {};
     mFormat                      = nullptr;
     mSamples                     = 1;
-    mSerial                      = rx::kZeroSerial;
     mTilingMode                  = VK_IMAGE_TILING_OPTIMAL;
     mUsage                       = 0;
     mCurrentLayout               = ImageLayout::Undefined;
@@ -2596,7 +2594,6 @@ angle::Result ImageHelper::init(Context *context,
                                 uint32_t mipLevels,
                                 uint32_t layerCount)
 {
-    mSerial = rx::kZeroSerial;
     return initExternal(context, textureType, extents, format, samples, usage,
                         kVkImageCreateFlagsNone, ImageLayout::Undefined, nullptr, baseLevel,
                         maxLevel, mipLevels, layerCount);
@@ -2666,7 +2663,6 @@ angle::Result ImageHelper::initExternal(Context *context,
 
 void ImageHelper::releaseImage(RendererVk *renderer)
 {
-    mSerial = rx::kZeroSerial;
     renderer->collectGarbageAndReinit(&mUse, &mImage, &mDeviceMemory);
 }
 
@@ -2957,7 +2953,6 @@ void ImageHelper::destroy(RendererVk *renderer)
     mImageType     = VK_IMAGE_TYPE_2D;
     mLayerCount    = 0;
     mLevelCount    = 0;
-    mSerial        = rx::kZeroSerial;
 }
 
 void ImageHelper::init2DWeakReference(Context *context,
@@ -4060,7 +4055,6 @@ void ImageHelper::stageSelfForBaseLevel()
     // Barrier information.  Note: mLevelCount is set to 1 so that only the base level is
     // transitioned when flushing the update.
     prevImage->mFormat                      = mFormat;
-    prevImage->mSerial                      = mSerial;
     prevImage->mCurrentLayout               = mCurrentLayout;
     prevImage->mCurrentQueueFamilyIndex     = mCurrentQueueFamilyIndex;
     prevImage->mLastNonShaderReadOnlyLayout = mLastNonShaderReadOnlyLayout;

@@ -1180,8 +1180,6 @@ class ImageHelper final : public Resource, public angle::Subject
                uint32_t layerCount,
                CommandBuffer *commandBuffer);
 
-    void resetSerial() { mSerial = rx::kZeroSerial; }
-
     static void Copy(ImageHelper *srcImage,
                      ImageHelper *dstImage,
                      const gl::Offset &srcOffset,
@@ -1545,7 +1543,6 @@ class ImageHelper final : public Resource, public angle::Subject
     VkExtent3D mExtents;
     const Format *mFormat;
     GLint mSamples;
-    Serial mSerial;
 
     // Current state.
     ImageLayout mCurrentLayout;
