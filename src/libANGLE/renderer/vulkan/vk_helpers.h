@@ -1595,6 +1595,7 @@ class ImageViewHelper : angle::NonCopyable
     ImageViewHelper(ImageViewHelper &&other);
     ~ImageViewHelper();
 
+    void init(RendererVk *renderer);
     void release(RendererVk *renderer);
     void destroy(VkDevice device);
 
@@ -1715,8 +1716,8 @@ class ImageViewHelper : angle::NonCopyable
                                              uint32_t layer,
                                              const ImageView **imageViewOut);
 
-    // Return unique Serial for this imageView, first assigning it if it hasn't yet been set
-    ImageViewSerial getAssignSerial(ContextVk *contextVk, uint32_t levelGL, uint32_t layer);
+    // Return unique Serial for an imageView.
+    ImageViewSubresourceSerial getSubresourceSerial(uint32_t levelGL, uint32_t layer);
 
   private:
     ImageView &getReadImageView()
@@ -1805,8 +1806,8 @@ class ImageViewHelper : angle::NonCopyable
     ImageViewVector mLevelDrawImageViews;
     LayerLevelImageViewVector mLayerLevelDrawImageViews;
 
-    // Store Serials per layer/level of imageView
-    std::unordered_map<LayerLevel, ImageViewSerial> mSerialCache;
+    // Serial for the image view set. getSubresourceSerial combines it with subresource info.
+    ImageViewSerial mImageViewSerial;
 };
 
 // The SamplerHelper allows a Sampler to be coupled with a resource lifetime.

@@ -787,6 +787,18 @@ class PipelineHelper final : angle::NonCopyable
 
 ANGLE_INLINE PipelineHelper::PipelineHelper(Pipeline &&pipeline) : mPipeline(std::move(pipeline)) {}
 
+struct ImageViewSubresourceSerial
+{
+    ImageViewSerial imageViewSerial;
+    uint16_t level;
+    uint16_t layer;
+};
+
+static_assert(sizeof(ImageViewSubresourceSerial) == sizeof(uint64_t), "Size mismatch");
+
+constexpr ImageViewSubresourceSerial kInvalidImageViewSubresourceSerial = {kInvalidImageViewSerial,
+                                                                           0, 0};
+
 class TextureDescriptorDesc
 {
   public:
@@ -867,9 +879,9 @@ class FramebufferDesc
     FramebufferDesc(const FramebufferDesc &other);
     FramebufferDesc &operator=(const FramebufferDesc &other);
 
-    void updateColor(uint32_t index, ImageViewSerial serial);
-    void updateColorResolve(uint32_t index, ImageViewSerial serial);
-    void updateDepthStencil(ImageViewSerial serial);
+    void updateColor(uint32_t index, ImageViewSubresourceSerial serial);
+    void updateColorResolve(uint32_t index, ImageViewSubresourceSerial serial);
+    void updateDepthStencil(ImageViewSubresourceSerial serial);
     size_t hash() const;
     void reset();
 
@@ -878,22 +890,11 @@ class FramebufferDesc
     uint32_t attachmentCount() const;
 
   private:
-    void update(uint32_t index, ImageViewSerial serial);
+    void update(uint32_t index, ImageViewSubresourceSerial serial);
 
-    FramebufferAttachmentArray<ImageViewSerial> mSerials;
-    uint32_t mMaxValidSerialIndex;
-};
-
-// Layer/level pair type used to index into Serial Cache in ImageViewHelper
-struct LayerLevel
-{
-    uint32_t layer;
-    uint32_t level;
-
-    bool operator==(const LayerLevel &other) const
-    {
-        return layer == other.layer && level == other.level;
-    }
+    // Note: this is an exclusive index. If there is one index it will be "1".
+    uint32_t mMaxIndex;
+    FramebufferAttachmentArray<ImageViewSubresourceSerial> mSerials;
 };
 }  // namespace vk
 }  // namespace rx
@@ -953,20 +954,6 @@ template <>
 struct hash<rx::vk::SamplerDesc>
 {
     size_t operator()(const rx::vk::SamplerDesc &key) const { return key.hash(); }
-};
-
-template <>
-struct hash<rx::vk::LayerLevel>
-{
-    size_t operator()(const rx::vk::LayerLevel &layerLevel) const
-    {
-        // The left-shift by 11 was found to produce unique hash values
-        // in a [0..1000][0..2048] space for layer/level
-        // Make sure that layer/level hash bits don't overlap or overflow
-        ASSERT((layerLevel.layer & 0x000007FF) == layerLevel.layer);
-        ASSERT((layerLevel.level & 0xFFE00000) == 0);
-        return layerLevel.layer | (layerLevel.level << 11);
-    }
 };
 
 // See Resource Serial types defined in vk_utils.h.

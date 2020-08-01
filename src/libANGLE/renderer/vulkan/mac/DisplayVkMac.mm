@@ -43,7 +43,7 @@ SurfaceImpl *DisplayVkMac::createPbufferFromClientBuffer(const egl::SurfaceState
 {
     ASSERT(buftype == EGL_IOSURFACE_ANGLE);
 
-    return new IOSurfaceSurfaceVkMac(state, clientBuffer, attribs);
+    return new IOSurfaceSurfaceVkMac(state, clientBuffer, attribs, mRenderer);
 }
 
 egl::ConfigSet DisplayVkMac::generateConfigs()

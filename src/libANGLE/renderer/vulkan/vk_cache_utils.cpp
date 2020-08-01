@@ -1800,59 +1800,59 @@ FramebufferDesc::~FramebufferDesc()                            = default;
 FramebufferDesc::FramebufferDesc(const FramebufferDesc &other) = default;
 FramebufferDesc &FramebufferDesc::operator=(const FramebufferDesc &other) = default;
 
-void FramebufferDesc::update(uint32_t index, ImageViewSerial serial)
+void FramebufferDesc::update(uint32_t index, ImageViewSubresourceSerial serial)
 {
     ASSERT(index < kMaxFramebufferAttachments);
     mSerials[index] = serial;
-    if (serial.valid())
+    if (serial.imageViewSerial.valid())
     {
-        mMaxValidSerialIndex = std::max(mMaxValidSerialIndex, index);
+        mMaxIndex = std::max(mMaxIndex, index + 1);
     }
 }
 
-void FramebufferDesc::updateColor(uint32_t index, ImageViewSerial serial)
+void FramebufferDesc::updateColor(uint32_t index, ImageViewSubresourceSerial serial)
 {
     update(kFramebufferDescColorIndexOffset + index, serial);
 }
 
-void FramebufferDesc::updateColorResolve(uint32_t index, ImageViewSerial serial)
+void FramebufferDesc::updateColorResolve(uint32_t index, ImageViewSubresourceSerial serial)
 {
     update(kFramebufferDescResolveIndexOffset + index, serial);
 }
 
-void FramebufferDesc::updateDepthStencil(ImageViewSerial serial)
+void FramebufferDesc::updateDepthStencil(ImageViewSubresourceSerial serial)
 {
     update(kFramebufferDescDepthStencilIndex, serial);
 }
 
 size_t FramebufferDesc::hash() const
 {
-    return angle::ComputeGenericHash(&mSerials, sizeof(mSerials[0]) * (mMaxValidSerialIndex + 1));
+    return angle::ComputeGenericHash(&mSerials, sizeof(mSerials[0]) * (mMaxIndex + 1));
 }
 
 void FramebufferDesc::reset()
 {
+    mMaxIndex = 0;
     memset(&mSerials, 0, sizeof(mSerials));
-    mMaxValidSerialIndex = 0;
 }
 
 bool FramebufferDesc::operator==(const FramebufferDesc &other) const
 {
-    if (mMaxValidSerialIndex != other.mMaxValidSerialIndex)
+    if (mMaxIndex != other.mMaxIndex)
     {
         return false;
     }
 
-    return memcmp(&mSerials, &other.mSerials, sizeof(mSerials[0]) * (mMaxValidSerialIndex + 1)) ==
-           0;
+    size_t validRegionSize = sizeof(mSerials[0]) * mMaxIndex;
+    return memcmp(&mSerials, &other.mSerials, validRegionSize) == 0;
 }
 
 uint32_t FramebufferDesc::attachmentCount() const
 {
     uint32_t count = 0;
-    for (const ImageViewSerial &serial : mSerials)
+    for (const ImageViewSubresourceSerial &serial : mSerials)
     {
-        if (serial.valid())
+        if (serial.imageViewSerial.valid())
         {
             count++;
         }

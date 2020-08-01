@@ -125,7 +125,7 @@ SurfaceImpl *DisplayVk::createPbufferSurface(const egl::SurfaceState &state,
     }
 
     ASSERT(mRenderer);
-    return new OffscreenSurfaceVk(state);
+    return new OffscreenSurfaceVk(state, mRenderer);
 }
 
 SurfaceImpl *DisplayVk::createPbufferFromClientBuffer(const egl::SurfaceState &state,

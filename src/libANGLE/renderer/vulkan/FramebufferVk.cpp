@@ -1476,22 +1476,22 @@ angle::Result FramebufferVk::updateColorAttachment(const gl::Context *context,
 
     if (enabledColor)
     {
-        mCurrentFramebufferDesc.updateColor(colorIndexGL,
-                                            renderTarget->getAssignImageViewSerial(contextVk));
+        mCurrentFramebufferDesc.updateColor(colorIndexGL, renderTarget->getDrawSubresourceSerial());
     }
     else
     {
-        mCurrentFramebufferDesc.updateColor(colorIndexGL, vk::kInvalidImageViewSerial);
+        mCurrentFramebufferDesc.updateColor(colorIndexGL, vk::kInvalidImageViewSubresourceSerial);
     }
 
     if (enabledResolve)
     {
-        mCurrentFramebufferDesc.updateColorResolve(
-            colorIndexGL, renderTarget->getAssignResolveImageViewSerial(contextVk));
+        mCurrentFramebufferDesc.updateColorResolve(colorIndexGL,
+                                                   renderTarget->getResolveSubresourceSerial());
     }
     else
     {
-        mCurrentFramebufferDesc.updateColorResolve(colorIndexGL, vk::kInvalidImageViewSerial);
+        mCurrentFramebufferDesc.updateColorResolve(colorIndexGL,
+                                                   vk::kInvalidImageViewSubresourceSerial);
     }
 
     return angle::Result::Continue;
@@ -1528,12 +1528,11 @@ void FramebufferVk::updateDepthStencilAttachmentSerial(ContextVk *contextVk)
 
     if (depthStencilRT != nullptr)
     {
-        mCurrentFramebufferDesc.updateDepthStencil(
-            depthStencilRT->getAssignImageViewSerial(contextVk));
+        mCurrentFramebufferDesc.updateDepthStencil(depthStencilRT->getDrawSubresourceSerial());
     }
     else
     {
-        mCurrentFramebufferDesc.updateDepthStencil(vk::kInvalidImageViewSerial);
+        mCurrentFramebufferDesc.updateDepthStencil(vk::kInvalidImageViewSubresourceSerial);
     }
 }
 
@@ -1580,15 +1579,15 @@ angle::Result FramebufferVk::syncState(const gl::Context *context,
                 mCurrentFramebufferDesc.reset();
                 for (size_t colorIndexGL : mState.getEnabledDrawBuffers())
                 {
+                    uint32_t colorIndex32 = static_cast<uint32_t>(colorIndexGL);
+
                     RenderTargetVk *renderTarget = mRenderTargetCache.getColors()[colorIndexGL];
-                    mCurrentFramebufferDesc.updateColor(
-                        static_cast<uint32_t>(colorIndexGL),
-                        renderTarget->getAssignImageViewSerial(contextVk));
+                    mCurrentFramebufferDesc.updateColor(colorIndex32,
+                                                        renderTarget->getDrawSubresourceSerial());
                     if (renderTarget->hasResolveAttachment())
                     {
                         mCurrentFramebufferDesc.updateColorResolve(
-                            static_cast<uint32_t>(colorIndexGL),
-                            renderTarget->getAssignResolveImageViewSerial(contextVk));
+                            colorIndex32, renderTarget->getResolveSubresourceSerial());
                     }
                 }
                 updateDepthStencilAttachmentSerial(contextVk);

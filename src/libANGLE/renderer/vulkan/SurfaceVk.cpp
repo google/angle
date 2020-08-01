@@ -176,6 +176,8 @@ angle::Result OffscreenSurfaceVk::AttachmentImage::initialize(DisplayVk *display
     VkMemoryPropertyFlags flags = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
     ANGLE_TRY(image.initMemory(displayVk, renderer->getMemoryProperties(), flags));
 
+    imageViews.init(renderer);
+
     return angle::Result::Continue;
 }
 
@@ -216,6 +218,8 @@ angle::Result OffscreenSurfaceVk::AttachmentImage::initializeWithExternalMemory(
         displayVk, renderer->getMemoryProperties(), externalMemoryRequirements, nullptr,
         &importMemoryHostPointerInfo, VK_QUEUE_FAMILY_EXTERNAL, flags));
 
+    imageViews.init(renderer);
+
     return angle::Result::Continue;
 }
 
@@ -228,7 +232,7 @@ void OffscreenSurfaceVk::AttachmentImage::destroy(const egl::Display *display)
     imageViews.release(renderer);
 }
 
-OffscreenSurfaceVk::OffscreenSurfaceVk(const egl::SurfaceState &surfaceState)
+OffscreenSurfaceVk::OffscreenSurfaceVk(const egl::SurfaceState &surfaceState, RendererVk *renderer)
     : SurfaceVk(surfaceState),
       mWidth(mState.attributes.getAsInt(EGL_WIDTH, 0)),
       mHeight(mState.attributes.getAsInt(EGL_HEIGHT, 0)),
@@ -546,6 +550,9 @@ egl::Error WindowSurfaceVk::initialize(const egl::Display *display)
 angle::Result WindowSurfaceVk::initializeImpl(DisplayVk *displayVk)
 {
     RendererVk *renderer = displayVk->getRenderer();
+
+    mColorImageMSViews.init(renderer);
+    mDepthStencilImageViews.init(renderer);
 
     renderer->reloadVolkIfNeeded();
 
@@ -946,6 +953,7 @@ angle::Result WindowSurfaceVk::createSwapChain(vk::Context *context,
     {
         SwapchainImage &member = mSwapchainImages[imageIndex];
         member.image.init2DWeakReference(context, swapchainImages[imageIndex], extents, format, 1);
+        member.imageViews.init(renderer);
     }
 
     // Initialize depth/stencil if requested.

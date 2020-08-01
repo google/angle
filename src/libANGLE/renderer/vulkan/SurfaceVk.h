@@ -42,7 +42,7 @@ class SurfaceVk : public SurfaceImpl, public angle::ObserverInterface
 class OffscreenSurfaceVk : public SurfaceVk
 {
   public:
-    OffscreenSurfaceVk(const egl::SurfaceState &surfaceState);
+    OffscreenSurfaceVk(const egl::SurfaceState &surfaceState, RendererVk *renderer);
     ~OffscreenSurfaceVk() override;
 
     egl::Error initialize(const egl::Display *display) override;

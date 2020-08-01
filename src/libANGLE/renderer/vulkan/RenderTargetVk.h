@@ -50,9 +50,9 @@ class RenderTargetVk final : public FramebufferAttachmentRenderTarget
               uint32_t layerIndex,
               bool isImageTransient);
     void reset();
-    // This returns the serial from underlying ImageViewHelper, first assigning one if required
-    vk::ImageViewSerial getAssignImageViewSerial(ContextVk *contextVk) const;
-    vk::ImageViewSerial getAssignResolveImageViewSerial(ContextVk *contextVk) const;
+
+    vk::ImageViewSubresourceSerial getDrawSubresourceSerial() const;
+    vk::ImageViewSubresourceSerial getResolveSubresourceSerial() const;
 
     // Note: RenderTargets should be called in order, with the depth/stencil onRender last.
     angle::Result onColorDraw(ContextVk *contextVk);
@@ -113,8 +113,7 @@ class RenderTargetVk final : public FramebufferAttachmentRenderTarget
                                    vk::ImageViewHelper *imageViews,
                                    const vk::ImageView **imageViewOut) const;
 
-    vk::ImageViewSerial getAssignViewSerialImpl(ContextVk *contextVk,
-                                                vk::ImageViewHelper *imageViews) const;
+    vk::ImageViewSubresourceSerial getSubresourceSerialImpl(vk::ImageViewHelper *imageViews) const;
 
     bool isResolveImageOwnerOfData() const;
 

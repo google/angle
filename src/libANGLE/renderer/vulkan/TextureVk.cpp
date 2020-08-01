@@ -1247,14 +1247,18 @@ void TextureVk::setImageHelper(ContextVk *contextVk,
     }
     mRenderTargets.clear();
 
+    RendererVk *renderer = contextVk->getRenderer();
+
     updateSerial(contextVk);
+    mImageViews.init(renderer);
 }
 
 void TextureVk::updateImageHelper(ContextVk *contextVk, size_t imageCopyBufferAlignment)
 {
+    RendererVk *renderer = contextVk->getRenderer();
     ASSERT(mImage != nullptr);
-    mImage->initStagingBuffer(contextVk->getRenderer(), imageCopyBufferAlignment,
-                              vk::kStagingBufferFlags, mStagingBufferInitialSize);
+    mImage->initStagingBuffer(renderer, imageCopyBufferAlignment, vk::kStagingBufferFlags,
+                              mStagingBufferInitialSize);
 }
 
 angle::Result TextureVk::redefineLevel(const gl::Context *context,
@@ -1835,6 +1839,10 @@ angle::Result TextureVk::getAttachmentRenderTarget(const gl::Context *context,
     {
         ASSERT(mState.getBaseLevelDesc().samples <= 1);
 
+        // Ensure the view serial is valid.
+        RendererVk *renderer = contextVk->getRenderer();
+        mMultisampledImageViews.init(renderer);
+
         // The image is used as either color or depth/stencil attachment.  Additionally, its memory
         // is lazily allocated as the contents are discarded at the end of the renderpass and with
         // tiling GPUs no actual backing memory is required.
@@ -1866,8 +1874,8 @@ angle::Result TextureVk::getAttachmentRenderTarget(const gl::Context *context,
             VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT |
             (hasLazilyAllocatedMemory ? VK_MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT : 0);
 
-        ANGLE_TRY(mMultisampledImage.initMemory(
-            contextVk, contextVk->getRenderer()->getMemoryProperties(), kMultisampledMemoryFlags));
+        ANGLE_TRY(mMultisampledImage.initMemory(contextVk, renderer->getMemoryProperties(),
+                                                kMultisampledMemoryFlags));
 
         // Remove the emulated format clear from the multisampled image if any.  There is one
         // already staged on the resolve image if needed.

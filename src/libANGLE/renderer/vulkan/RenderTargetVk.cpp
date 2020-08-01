@@ -69,27 +69,26 @@ void RenderTargetVk::reset()
     mContentDefined    = false;
 }
 
-vk::ImageViewSerial RenderTargetVk::getAssignViewSerialImpl(ContextVk *contextVk,
-                                                            vk::ImageViewHelper *imageViews) const
+vk::ImageViewSubresourceSerial RenderTargetVk::getSubresourceSerialImpl(
+    vk::ImageViewHelper *imageViews) const
 {
     ASSERT(imageViews);
     ASSERT(mLayerIndex < std::numeric_limits<uint16_t>::max());
     ASSERT(mLevelIndexGL < std::numeric_limits<uint16_t>::max());
 
-    vk::ImageViewSerial imageViewSerial =
-        imageViews->getAssignSerial(contextVk, mLevelIndexGL, mLayerIndex);
-    ASSERT(imageViewSerial.getValue() < std::numeric_limits<uint32_t>::max());
+    vk::ImageViewSubresourceSerial imageViewSerial =
+        imageViews->getSubresourceSerial(mLevelIndexGL, mLayerIndex);
     return imageViewSerial;
 }
 
-vk::ImageViewSerial RenderTargetVk::getAssignImageViewSerial(ContextVk *contextVk) const
+vk::ImageViewSubresourceSerial RenderTargetVk::getDrawSubresourceSerial() const
 {
-    return getAssignViewSerialImpl(contextVk, mImageViews);
+    return getSubresourceSerialImpl(mImageViews);
 }
 
-vk::ImageViewSerial RenderTargetVk::getAssignResolveImageViewSerial(ContextVk *contextVk) const
+vk::ImageViewSubresourceSerial RenderTargetVk::getResolveSubresourceSerial() const
 {
-    return getAssignViewSerialImpl(contextVk, mResolveImageViews);
+    return getSubresourceSerialImpl(mResolveImageViews);
 }
 
 angle::Result RenderTargetVk::onColorDraw(ContextVk *contextVk)

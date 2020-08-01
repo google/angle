@@ -63,8 +63,9 @@ int FindIOSurfaceFormatIndex(GLenum internalFormat, GLenum type)
 
 IOSurfaceSurfaceVkMac::IOSurfaceSurfaceVkMac(const egl::SurfaceState &state,
                                              EGLClientBuffer buffer,
-                                             const egl::AttributeMap &attribs)
-    : OffscreenSurfaceVk(state), mIOSurface(nullptr), mPlane(0), mFormatIndex(-1)
+                                             const egl::AttributeMap &attribs,
+                                             RendererVk *renderer)
+    : OffscreenSurfaceVk(state, renderer), mIOSurface(nullptr), mPlane(0), mFormatIndex(-1)
 {
     // Keep reference to the IOSurface so it doesn't get deleted while the pbuffer exists.
     mIOSurface = reinterpret_cast<IOSurfaceRef>(buffer);

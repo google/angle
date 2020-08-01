@@ -75,6 +75,7 @@ angle::Result RenderbufferVk::setStorageImpl(const gl::Context *context,
             mImage     = new vk::ImageHelper();
             mOwnsImage = true;
             mImageObserverBinding.bind(mImage);
+            mImageViews.init(renderer);
         }
 
         const angle::Format &textureFormat = vkFormat.actualImageFormat();
@@ -127,6 +128,7 @@ angle::Result RenderbufferVk::setStorageEGLImageTarget(const gl::Context *contex
     mImage           = imageVk->getImage();
     mOwnsImage       = false;
     mImageObserverBinding.bind(mImage);
+    mImageViews.init(renderer);
 
     const vk::Format &vkFormat = renderer->getFormat(image->getFormat().info->sizedInternalFormat);
     const angle::Format &textureFormat = vkFormat.actualImageFormat();
