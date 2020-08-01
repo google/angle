@@ -696,8 +696,7 @@ class ClearValuesArray final
 #define ANGLE_VK_SERIAL_OP(X) \
     X(Buffer)                 \
     X(ImageView)              \
-    X(Sampler)                \
-    X(Texture)
+    X(Sampler)
 
 #define ANGLE_DEFINE_VK_SERIAL_TYPE(Type)                                     \
     class Type##Serial                                                        \

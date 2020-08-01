@@ -1711,7 +1711,7 @@ void PipelineHelper::addTransition(GraphicsPipelineTransitionBits bits,
 
 TextureDescriptorDesc::TextureDescriptorDesc() : mMaxIndex(0)
 {
-    mSerials.fill({0, 0});
+    mSerials.fill({kInvalidImageViewSubresourceSerial, kInvalidSamplerSerial});
 }
 
 TextureDescriptorDesc::~TextureDescriptorDesc()                                  = default;
@@ -1720,7 +1720,7 @@ TextureDescriptorDesc &TextureDescriptorDesc::operator=(const TextureDescriptorD
     default;
 
 void TextureDescriptorDesc::update(size_t index,
-                                   TextureSerial textureSerial,
+                                   ImageViewSubresourceSerial imageViewSerial,
                                    SamplerSerial samplerSerial)
 {
     if (index >= mMaxIndex)
@@ -1728,12 +1728,8 @@ void TextureDescriptorDesc::update(size_t index,
         mMaxIndex = static_cast<uint32_t>(index + 1);
     }
 
-    // If the serial number overflows we should defragment and regenerate all serials.
-    // There should never be more than UINT_MAX textures alive at a time.
-    ASSERT(textureSerial.getValue() < std::numeric_limits<uint32_t>::max());
-    ASSERT(samplerSerial.getValue() < std::numeric_limits<uint32_t>::max());
-    mSerials[index].texture = static_cast<uint32_t>(textureSerial.getValue());
-    mSerials[index].sampler = static_cast<uint32_t>(samplerSerial.getValue());
+    mSerials[index].imageView = imageViewSerial;
+    mSerials[index].sampler   = samplerSerial;
 }
 
 size_t TextureDescriptorDesc::hash() const

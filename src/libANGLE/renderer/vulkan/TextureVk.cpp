@@ -1249,7 +1249,6 @@ void TextureVk::setImageHelper(ContextVk *contextVk,
 
     RendererVk *renderer = contextVk->getRenderer();
 
-    updateSerial(contextVk);
     mImageViews.init(renderer);
 }
 
@@ -1698,8 +1697,6 @@ angle::Result TextureVk::updateBaseMaxLevels(ContextVk *contextVk,
 
         // Track the levels in our ImageHelper
         mImage->setBaseAndMaxLevels(baseLevel, maxLevel);
-
-        updateSerial(contextVk);
 
         // Update the current max level in ImageViewHelper
         const gl::ImageDesc &baseLevelDesc = mState.getBaseLevelDesc();
@@ -2162,8 +2159,6 @@ angle::Result TextureVk::syncState(const gl::Context *context,
                                 mImage->getExternalFormat());
     ANGLE_TRY(renderer->getSamplerCache().getSampler(contextVk, samplerDesc, &mSampler));
 
-    updateSerial(contextVk);
-
     return angle::Result::Continue;
 }
 
@@ -2300,8 +2295,6 @@ angle::Result TextureVk::initImage(ContextVk *contextVk,
     ANGLE_TRY(mImage->initMemory(contextVk, renderer->getMemoryProperties(), flags));
 
     ANGLE_TRY(initImageViews(contextVk, format, sized, levelCount, layerCount));
-
-    updateSerial(contextVk);
 
     return angle::Result::Continue;
 }
@@ -2522,9 +2515,11 @@ void TextureVk::onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMe
     onStateChange(angle::SubjectMessage::SubjectChanged);
 }
 
-void TextureVk::updateSerial(ContextVk *contextVk)
+vk::ImageViewSubresourceSerial TextureVk::getImageViewSubresourceSerial() const
 {
-    vk::ResourceSerialFactory &factory = contextVk->getRenderer()->getResourceSerialFactory();
-    mSerial                            = factory.generateTextureSerial();
+    uint32_t baseLevel = mState.getEffectiveBaseLevel();
+    // getMipmapMaxLevel will clamp to the max level if it is smaller than the number of mips.
+    uint32_t levelCount = mState.getMipmapMaxLevel() - baseLevel + 1;
+    return mImageViews.getSubresourceSerial(baseLevel, levelCount, 0, vk::LayerMode::All);
 }
 }  // namespace rx

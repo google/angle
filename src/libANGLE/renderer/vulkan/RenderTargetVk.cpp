@@ -77,7 +77,7 @@ vk::ImageViewSubresourceSerial RenderTargetVk::getSubresourceSerialImpl(
     ASSERT(mLevelIndexGL < std::numeric_limits<uint16_t>::max());
 
     vk::ImageViewSubresourceSerial imageViewSerial =
-        imageViews->getSubresourceSerial(mLevelIndexGL, mLayerIndex);
+        imageViews->getSubresourceSerial(mLevelIndexGL, 1, mLayerIndex, vk::LayerMode::Single);
     return imageViewSerial;
 }
 

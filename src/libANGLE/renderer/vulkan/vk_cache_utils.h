@@ -789,14 +789,16 @@ ANGLE_INLINE PipelineHelper::PipelineHelper(Pipeline &&pipeline) : mPipeline(std
 struct ImageViewSubresourceSerial
 {
     ImageViewSerial imageViewSerial;
-    uint16_t level;
-    uint16_t layer;
+    uint16_t level : 10;       // GL max is 1000 (fits in 10 bits).
+    uint16_t levelCount : 6;   // Max 63 levels (2 ** 6 - 1). If we need more, take from layer.
+    uint16_t layer : 15;       // Implementation max is 2048 (11 bits).
+    uint16_t singleLayer : 1;  // true/false only. Not possible to use sub-slices of levels.
 };
 
 static_assert(sizeof(ImageViewSubresourceSerial) == sizeof(uint64_t), "Size mismatch");
 
 constexpr ImageViewSubresourceSerial kInvalidImageViewSubresourceSerial = {kInvalidImageViewSerial,
-                                                                           0, 0};
+                                                                           0, 0, 0, 0};
 
 class TextureDescriptorDesc
 {
@@ -807,7 +809,9 @@ class TextureDescriptorDesc
     TextureDescriptorDesc(const TextureDescriptorDesc &other);
     TextureDescriptorDesc &operator=(const TextureDescriptorDesc &other);
 
-    void update(size_t index, TextureSerial textureSerial, SamplerSerial samplerSerial);
+    void update(size_t index,
+                ImageViewSubresourceSerial imageViewSerial,
+                SamplerSerial samplerSerial);
     size_t hash() const;
     void reset();
 
@@ -818,12 +822,15 @@ class TextureDescriptorDesc
 
   private:
     uint32_t mMaxIndex;
+
+    ANGLE_ENABLE_STRUCT_PADDING_WARNINGS
     struct TexUnitSerials
     {
-        uint32_t texture;
-        uint32_t sampler;
+        ImageViewSubresourceSerial imageView;
+        SamplerSerial sampler;
     };
     gl::ActiveTextureArray<TexUnitSerials> mSerials;
+    ANGLE_DISABLE_STRUCT_PADDING_WARNINGS
 };
 
 class UniformsAndXfbDesc

@@ -88,6 +88,58 @@ TEST_P(VulkanPerformanceCounterTest, NewTextureDoesNotBreakRenderPass)
     EXPECT_EQ(expectedRenderPassCount, actualRenderPassCount);
 }
 
-ANGLE_INSTANTIATE_TEST(VulkanPerformanceCounterTest, ES2_VULKAN(), ES3_VULKAN());
+// Tests that changing a Texture's max level hits the descriptor set cache.
+TEST_P(VulkanPerformanceCounterTest, ChangingMaxLevelHitsDescriptorCache)
+{
+    rx::ContextVk *contextVk = hackANGLE();
+
+    GLColor kInitialData[4] = {GLColor::red, GLColor::blue, GLColor::green, GLColor::yellow};
+
+    // Step 1: Set up a simple mipped 2D Texture rendering loop.
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, kInitialData);
+    glTexImage2D(GL_TEXTURE_2D, 1, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, kInitialData);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 1);
+
+    auto quadVerts = GetQuadVertices();
+
+    GLBuffer vertexBuffer;
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+    glBufferData(GL_ARRAY_BUFFER, quadVerts.size() * sizeof(quadVerts[0]), quadVerts.data(),
+                 GL_STATIC_DRAW);
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Texture2D(), essl1_shaders::fs::Texture2D());
+    glUseProgram(program);
+
+    GLint posLoc = glGetAttribLocation(program, essl1_shaders::PositionAttrib());
+    ASSERT_NE(-1, posLoc);
+
+    glVertexAttribPointer(posLoc, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+    glEnableVertexAttribArray(posLoc);
+    ASSERT_GL_NO_ERROR();
+
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    ASSERT_GL_NO_ERROR();
+
+    // Step 2: Change max level and draw.
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 0);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    ASSERT_GL_NO_ERROR();
+
+    uint32_t expectedWriteDescriptorSetCount = contextVk->getWriteDescriptorSetCounter();
+
+    // Step 3: Change max level back to original value and verify we hit the cache.
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 1);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    ASSERT_GL_NO_ERROR();
+
+    uint32_t actualWriteDescriptorSetCount = contextVk->getWriteDescriptorSetCounter();
+    EXPECT_EQ(expectedWriteDescriptorSetCount, actualWriteDescriptorSetCount);
+}
+
+ANGLE_INSTANTIATE_TEST(VulkanPerformanceCounterTest, ES3_VULKAN());
 
 }  // anonymous namespace

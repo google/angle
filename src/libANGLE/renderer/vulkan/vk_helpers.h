@@ -1588,6 +1588,13 @@ using ImageViewVector = std::vector<ImageView>;
 // A vector of vector of image views.  Primary index is layer, secondary index is level.
 using LayerLevelImageViewVector = std::vector<ImageViewVector>;
 
+// Address mode for layers: only possible to access either 1 layer or all layers.
+enum LayerMode
+{
+    Single,
+    All
+};
+
 class ImageViewHelper : angle::NonCopyable
 {
   public:
@@ -1717,7 +1724,12 @@ class ImageViewHelper : angle::NonCopyable
                                              const ImageView **imageViewOut);
 
     // Return unique Serial for an imageView.
-    ImageViewSubresourceSerial getSubresourceSerial(uint32_t levelGL, uint32_t layer);
+    ImageViewSubresourceSerial getSubresourceSerial(uint32_t levelGL,
+                                                    uint32_t levelCount,
+                                                    uint32_t layer,
+                                                    LayerMode layerMode) const;
+
+    uint32_t getCurrentMaxLevel() const { return mCurrentMaxLevel; }
 
   private:
     ImageView &getReadImageView()
