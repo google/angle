@@ -80,6 +80,20 @@
                 "font": "small",
                 "length": 40
             }
+        },
+        {
+            "name": "VulkanWriteDescriptorSetCount",
+            "type": "RunningGraph(60)",
+            "color": [75, 200, 0, 200],
+            "coords": [10, 220],
+            "bar_width": 5,
+            "height": 100,
+            "description": {
+                "color": [75, 200, 0, 255],
+                "coords": ["VulkanWriteDescriptorSetCount.left.align", "VulkanWriteDescriptorSetCount.top.adjacent"],
+                "font": "small",
+                "length": 40
+            }
         }
     ]
 }

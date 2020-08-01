@@ -20,7 +20,7 @@ class OverlayState;
 namespace overlay_impl
 {
 class AppendWidgetDataHelper;
-}
+}  // namespace overlay_impl
 
 enum class WidgetType
 {
@@ -61,6 +61,8 @@ enum class WidgetId
     VulkanRenderPassCount,
     // Secondary Command Buffer pool memory waste (RunningHistogram).
     VulkanSecondaryCommandBufferPoolWaste,
+    // Number of Descriptor Set writes in a frame (RunningGraph).
+    VulkanWriteDescriptorSetCount,
 
     InvalidEnum,
     EnumCount = InvalidEnum,

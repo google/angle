@@ -215,6 +215,11 @@ class AppendWidgetDataHelper
                                                             TextWidgetData *textWidget,
                                                             GraphWidgetData *graphWidget,
                                                             OverlayWidgetCounts *widgetCounts);
+    static void AppendVulkanWriteDescriptorSetCount(const overlay::Widget *widget,
+                                                    const gl::Extents &imageExtent,
+                                                    TextWidgetData *textWidget,
+                                                    GraphWidgetData *graphWidget,
+                                                    OverlayWidgetCounts *widgetCounts);
 
   private:
     static std::ostream &OutputPerSecond(std::ostream &out, const overlay::PerSecond *perSecond);
@@ -398,6 +403,34 @@ void AppendWidgetDataHelper::AppendVulkanSecondaryCommandBufferPoolWaste(
     }
 }
 
+void AppendWidgetDataHelper::AppendVulkanWriteDescriptorSetCount(const overlay::Widget *widget,
+                                                                 const gl::Extents &imageExtent,
+                                                                 TextWidgetData *textWidget,
+                                                                 GraphWidgetData *graphWidget,
+                                                                 OverlayWidgetCounts *widgetCounts)
+{
+    const overlay::RunningGraph *writeDescriptorSetCount =
+        static_cast<const overlay::RunningGraph *>(widget);
+
+    const size_t maxValue     = *std::max_element(writeDescriptorSetCount->runningValues.begin(),
+                                              writeDescriptorSetCount->runningValues.end());
+    const int32_t graphHeight = std::abs(widget->coords[3] - widget->coords[1]);
+    const float graphScale    = static_cast<float>(graphHeight) / maxValue;
+
+    AppendGraphCommon(widget, imageExtent, writeDescriptorSetCount->runningValues,
+                      writeDescriptorSetCount->lastValueIndex + 1, graphScale, graphWidget,
+                      widgetCounts);
+
+    if ((*widgetCounts)[WidgetInternalType::Text] <
+        kWidgetInternalTypeMaxWidgets[WidgetInternalType::Text])
+    {
+        std::ostringstream text;
+        text << "WriteDescriptorSet Count (Max: " << maxValue << ")";
+        AppendTextCommon(&writeDescriptorSetCount->description, imageExtent, text.str(), textWidget,
+                         widgetCounts);
+    }
+}
+
 std::ostream &AppendWidgetDataHelper::OutputPerSecond(std::ostream &out,
                                                       const overlay::PerSecond *perSecond)
 {
@@ -427,6 +460,8 @@ constexpr angle::PackedEnumMap<WidgetId, AppendWidgetDataFunc> kWidgetIdToAppend
      overlay_impl::AppendWidgetDataHelper::AppendVulkanRenderPassCount},
     {WidgetId::VulkanSecondaryCommandBufferPoolWaste,
      overlay_impl::AppendWidgetDataHelper::AppendVulkanSecondaryCommandBufferPoolWaste},
+    {WidgetId::VulkanWriteDescriptorSetCount,
+     overlay_impl::AppendWidgetDataHelper::AppendVulkanWriteDescriptorSetCount},
 };
 }
 

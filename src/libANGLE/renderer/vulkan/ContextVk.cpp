@@ -657,6 +657,7 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
       mGpuEventTimestampOrigin(0),
       mPrimaryBufferCounter(0),
       mRenderPassCounter(0),
+      mWriteDescriptorSetCounter(0),
       mContextPriority(renderer->getDriverPriority(GetContextPriority(state))),
       mCurrentIndirectBuffer(nullptr),
       mShareGroupVk(vk::GetImpl(state.getShareGroup()))
@@ -1620,10 +1621,21 @@ angle::Result ContextVk::handleDirtyDescriptorSets(const gl::Context *context,
 void ContextVk::updateOverlayOnPresent()
 {
     // Update overlay if active.
-    gl::RunningGraphWidget *renderPassCount =
-        mState.getOverlay()->getRunningGraphWidget(gl::WidgetId::VulkanRenderPassCount);
-    renderPassCount->add(mRenderPassCommands->getAndResetCounter());
-    renderPassCount->next();
+    {
+        gl::RunningGraphWidget *renderPassCount =
+            mState.getOverlay()->getRunningGraphWidget(gl::WidgetId::VulkanRenderPassCount);
+        renderPassCount->add(mRenderPassCommands->getAndResetCounter());
+        renderPassCount->next();
+    }
+
+    {
+        gl::RunningGraphWidget *writeDescriptorSetCount =
+            mState.getOverlay()->getRunningGraphWidget(gl::WidgetId::VulkanWriteDescriptorSetCount);
+        writeDescriptorSetCount->add(mWriteDescriptorSetCounter);
+        writeDescriptorSetCount->next();
+
+        mWriteDescriptorSetCounter = 0;
+    }
 }
 
 angle::Result ContextVk::submitFrame(const VkSubmitInfo &submitInfo,
@@ -4039,7 +4051,9 @@ angle::Result ContextVk::flushImpl(const vk::Semaphore *signalSemaphore)
 
     ANGLE_TRY(startPrimaryCommandBuffer());
 
-    mRenderPassCounter = 0;
+    mRenderPassCounter         = 0;
+    mWriteDescriptorSetCounter = 0;
+
     mWaitSemaphores.clear();
     mWaitSemaphoreStageMasks.clear();
 
@@ -4742,6 +4756,8 @@ VkDescriptorImageInfo *ContextVk::allocDescriptorImageInfos(size_t count)
 
 VkWriteDescriptorSet *ContextVk::allocWriteDescriptorSets(size_t count)
 {
+    mWriteDescriptorSetCounter += count;
+
     size_t oldSize = mWriteDescriptorSets.size();
     size_t newSize = oldSize + count;
     mWriteDescriptorSets.resize(newSize);
