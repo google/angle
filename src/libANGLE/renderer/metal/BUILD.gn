@@ -54,6 +54,12 @@ _metal_backend_sources = [
   "mtl_state_cache.mm",
   "mtl_utils.h",
   "mtl_utils.mm",
+  "shaders/compiled/compiled_default_metallib_debug_ios_autogen.inc",
+  "shaders/compiled/compiled_default_metallib_debug_ios_sim_autogen.inc",
+  "shaders/compiled/compiled_default_metallib_debug_mac_autogen.inc",
+  "shaders/compiled/compiled_default_metallib_ios_autogen.inc",
+  "shaders/compiled/compiled_default_metallib_ios_sim_autogen.inc",
+  "shaders/compiled/compiled_default_metallib_mac_autogen.inc",
   "shaders/compiled/mtl_default_shaders_autogen.inc",
   "shaders/constants.h",
 ]
