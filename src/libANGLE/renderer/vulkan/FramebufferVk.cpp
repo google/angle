@@ -2142,7 +2142,13 @@ angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
         VkAttachmentStoreOp depthStoreOp   = VK_ATTACHMENT_STORE_OP_STORE;
         VkAttachmentStoreOp stencilStoreOp = VK_ATTACHMENT_STORE_OP_STORE;
 
-        if (!depthStencilRenderTarget->hasDefinedContent())
+        // If the image data was previously discarded (with no update in between), don't attempt to
+        // load the image.  Additionally, if the multisampled image data is transient and there is
+        // no resolve attachment, there's no data to load.  The latter is the case with
+        // depth/stencil texture attachments per GL_EXT_multisampled_render_to_texture2.
+        if (!depthStencilRenderTarget->hasDefinedContent() ||
+            (depthStencilRenderTarget->isImageTransient() &&
+             !depthStencilRenderTarget->hasResolveAttachment()))
         {
             depthLoadOp   = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
             stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;

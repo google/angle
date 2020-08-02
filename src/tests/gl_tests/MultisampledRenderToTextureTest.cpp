@@ -30,6 +30,18 @@ class MultisampledRenderToTextureTest : public ANGLETest
 
     void testTearDown() override {}
 
+    void assertErrorIfNotMSRTT2(GLenum error)
+    {
+        if (EnsureGLExtensionEnabled("GL_EXT_multisampled_render_to_texture2"))
+        {
+            ASSERT_GL_NO_ERROR();
+        }
+        else
+        {
+            ASSERT_GL_ERROR(error);
+        }
+    }
+
     void setupCopyTexProgram()
     {
         mCopyTextureProgram.makeRaster(essl1_shaders::vs::Texture2D(),
@@ -40,6 +52,33 @@ class MultisampledRenderToTextureTest : public ANGLETest
             glGetUniformLocation(mCopyTextureProgram, essl1_shaders::Texture2DUniform());
 
         ASSERT_GL_NO_ERROR();
+    }
+
+    void setupUniformColorProgramMultiRenderTarget(const bool bufferEnabled[8], GLuint *programOut)
+    {
+        std::stringstream fs;
+
+        fs << "#extension GL_EXT_draw_buffers : enable\n"
+              "precision highp float;\n"
+              "uniform mediump vec4 "
+           << essl1_shaders::ColorUniform()
+           << ";\n"
+              "void main()\n"
+              "{\n";
+
+        for (unsigned int index = 0; index < 8; index++)
+        {
+            if (bufferEnabled[index])
+            {
+                fs << "    gl_FragData[" << index << "] = " << essl1_shaders::ColorUniform()
+                   << ";\n";
+            }
+        }
+
+        fs << "}\n";
+
+        *programOut = CompileProgram(essl1_shaders::vs::Simple(), fs.str().c_str());
+        ASSERT_NE(*programOut, 0u);
     }
 
     void verifyResults(GLuint texture,
@@ -87,6 +126,9 @@ class MultisampledRenderToTextureTest : public ANGLETest
 class MultisampledRenderToTextureES3Test : public MultisampledRenderToTextureTest
 {};
 
+class MultisampledRenderToTextureES31Test : public MultisampledRenderToTextureTest
+{};
+
 // Checking against invalid parameters for RenderbufferStorageMultisampleEXT.
 TEST_P(MultisampledRenderToTextureTest, RenderbufferParameterCheck)
 {
@@ -132,11 +174,20 @@ TEST_P(MultisampledRenderToTextureTest, RenderbufferParameterCheck)
 TEST_P(MultisampledRenderToTextureTest, Texture2DParameterCheck)
 {
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_multisampled_render_to_texture"));
+    bool isES3 = getClientMajorVersion() >= 3;
 
     GLTexture texture;
     glBindTexture(GL_TEXTURE_2D, texture);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 64, 64, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
     ASSERT_GL_NO_ERROR();
+
+    GLTexture depthTexture;
+    if (isES3)
+    {
+        glBindTexture(GL_TEXTURE_2D, depthTexture);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH24_STENCIL8, 64, 64, 0, GL_DEPTH_STENCIL,
+                     GL_UNSIGNED_INT_24_8_OES, nullptr);
+    }
 
     GLFramebuffer fbo;
     glBindFramebuffer(GL_FRAMEBUFFER, fbo);
@@ -144,11 +195,32 @@ TEST_P(MultisampledRenderToTextureTest, Texture2DParameterCheck)
     glFramebufferTexture2DMultisampleEXT(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
                                          texture, 0, 4);
     ASSERT_GL_NO_ERROR();
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
 
-    // Attachment not COLOR_ATTACHMENT0
+    // Attachment not COLOR_ATTACHMENT0.  Allowed only in EXT_multisampled_render_to_texture2
     glFramebufferTexture2DMultisampleEXT(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D,
                                          texture, 0, 4);
-    ASSERT_GL_ERROR(GL_INVALID_ENUM);
+    assertErrorIfNotMSRTT2(GL_INVALID_ENUM);
+
+    // Depth/stencil attachment.  Allowed only in EXT_multisampled_render_to_texture2
+    if (isES3)
+    {
+        glFramebufferTexture2DMultisampleEXT(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D,
+                                             depthTexture, 0, 4);
+        assertErrorIfNotMSRTT2(GL_INVALID_ENUM);
+
+        glFramebufferTexture2DMultisampleEXT(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_TEXTURE_2D,
+                                             depthTexture, 0, 4);
+        assertErrorIfNotMSRTT2(GL_INVALID_ENUM);
+
+        glFramebufferTexture2DMultisampleEXT(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT,
+                                             GL_TEXTURE_2D, depthTexture, 0, 4);
+        assertErrorIfNotMSRTT2(GL_INVALID_ENUM);
+
+        glFramebufferTexture2DMultisampleEXT(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D,
+                                             depthTexture, 0, 4);
+        assertErrorIfNotMSRTT2(GL_INVALID_ENUM);
+    }
 
     // Target not framebuffer
     glFramebufferTexture2DMultisampleEXT(GL_RENDERBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
@@ -204,11 +276,12 @@ TEST_P(MultisampledRenderToTextureTest, TextureCubeMapParameterCheck)
         glFramebufferTexture2DMultisampleEXT(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
                                              GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, texture, 0, 4);
         ASSERT_GL_NO_ERROR();
+        EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
 
-        // Attachment not COLOR_ATTACHMENT0
+        // Attachment not COLOR_ATTACHMENT0.  Allowed only in EXT_multisampled_render_to_texture2
         glFramebufferTexture2DMultisampleEXT(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1,
                                              GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, texture, 0, 4);
-        ASSERT_GL_ERROR(GL_INVALID_ENUM);
+        assertErrorIfNotMSRTT2(GL_INVALID_ENUM);
 
         // Target not framebuffer
         glFramebufferTexture2DMultisampleEXT(GL_RENDERBUFFER, GL_COLOR_ATTACHMENT0,
@@ -731,12 +804,411 @@ TEST_P(MultisampledRenderToTextureTest, DrawCopyThenBlend)
     EXPECT_PIXEL_COLOR_NEAR(kSize - 1, kSize - 1, kExpected, 1);
 
     // For completeness, verify that the texture used as copy target is red.
+    ASSERT_GL_NO_ERROR();
+    const GLColor expectedCopyResult(255, 0, 0, 255);
+    verifyResults(texture, expectedCopyResult, kSize, 0, 0, kSize, kSize);
+
+    ASSERT_GL_NO_ERROR();
+}
+
+// Draw, copy, then blend.  The copy will make sure an implicit resolve happens.  Regardless, the
+// following draw should retain the data written by the first draw command.
+// Uses color attachment 1.
+TEST_P(MultisampledRenderToTextureES3Test, ColorAttachment1)
+{
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_multisampled_render_to_texture"));
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_multisampled_render_to_texture2"));
+
+    // Qualcomm driver crashes in the presence of VK_ATTACHMENT_UNUSED.
+    // http://anglebug.com/3423
+    ANGLE_SKIP_TEST_IF(IsVulkan() && IsAndroid());
+
+    // Fails on Intel Ubuntu 19.04 Mesa 19.0.2 Vulkan. http://anglebug.com/3616
+    ANGLE_SKIP_TEST_IF(IsLinux() && IsIntel() && IsVulkan());
+
+    constexpr GLsizei kSize = 64;
+
+    setupCopyTexProgram();
+
+    // Create multisampled framebuffer to draw into, use color attachment 1
+    GLTexture colorMS;
+    glBindTexture(GL_TEXTURE_2D, colorMS);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    GLFramebuffer fboMS;
+    glBindFramebuffer(GL_FRAMEBUFFER, fboMS);
+    glFramebufferTexture2DMultisampleEXT(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D,
+                                         colorMS, 0, 4);
+    ASSERT_GL_NO_ERROR();
+
+    // Setup program to render into attachment 1.
+    constexpr bool kBuffersEnabled[8] = {false, true};
+
+    GLuint drawColor;
+    setupUniformColorProgramMultiRenderTarget(kBuffersEnabled, &drawColor);
+    glUseProgram(drawColor);
+    GLint colorUniformLocation =
+        glGetUniformLocation(drawColor, angle::essl1_shaders::ColorUniform());
+    ASSERT_NE(colorUniformLocation, -1);
+
+    constexpr GLenum kDrawBuffers[] = {GL_NONE, GL_COLOR_ATTACHMENT1};
+    glDrawBuffers(2, kDrawBuffers);
+    glReadBuffer(GL_COLOR_ATTACHMENT1);
+    ASSERT_GL_NO_ERROR();
+
+    // Draw red into the multisampled color buffer.
+    glUniform4f(colorUniformLocation, 1.0f, 0.0f, 0.0f, 1.0f);
+    drawQuad(drawColor, essl1_shaders::PositionAttrib(), 0.5f);
+    ASSERT_GL_NO_ERROR();
+
+    // Create a texture and copy into it.
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 0, 0, kSize, kSize, 0);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    ASSERT_GL_NO_ERROR();
+
+    // Blend half-transparent green into the multisampled color buffer.
+    glUniform4f(colorUniformLocation, 0.0f, 1.0f, 0.0f, 0.5f);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    drawQuad(drawColor, essl1_shaders::PositionAttrib(), 0.5f);
+    ASSERT_GL_NO_ERROR();
+
+    // Verify that the texture is now yellow
+    const GLColor kExpected(127, 127, 0, 191);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, kExpected, 1);
+    EXPECT_PIXEL_COLOR_NEAR(kSize - 1, 0, kExpected, 1);
+    EXPECT_PIXEL_COLOR_NEAR(0, kSize - 1, kExpected, 1);
+    EXPECT_PIXEL_COLOR_NEAR(kSize - 1, kSize - 1, kExpected, 1);
+
+    // For completeness, verify that the texture used as copy target is red.
     const GLColor expectedCopyResult(255, 0, 0, 255);
     verifyResults(texture, expectedCopyResult, kSize, 0, 0, kSize, kSize);
 
     ASSERT_GL_NO_ERROR();
 
     glDeleteProgram(drawColor);
+}
+
+// Draw, copy, then blend.  The copy will make sure an implicit resolve happens.  Regardless, the
+// following draw should retain the data written by the first draw command.
+// Uses color attachments 0 and 3.
+TEST_P(MultisampledRenderToTextureES3Test, ColorAttachments0And3)
+{
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_multisampled_render_to_texture"));
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_multisampled_render_to_texture2"));
+
+    // Qualcomm driver crashes in the presence of VK_ATTACHMENT_UNUSED.
+    // http://anglebug.com/3423
+    ANGLE_SKIP_TEST_IF(IsVulkan() && IsAndroid());
+
+    constexpr GLsizei kSize = 64;
+
+    setupCopyTexProgram();
+
+    // Create multisampled framebuffer to draw into, use color attachment 1
+    GLTexture colorMS0;
+    glBindTexture(GL_TEXTURE_2D, colorMS0);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    GLTexture colorMS3;
+    glBindTexture(GL_TEXTURE_2D, colorMS3);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    GLFramebuffer fboMS;
+    glBindFramebuffer(GL_FRAMEBUFFER, fboMS);
+    glFramebufferTexture2DMultisampleEXT(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
+                                         colorMS0, 0, 4);
+    glFramebufferTexture2DMultisampleEXT(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT3, GL_TEXTURE_2D,
+                                         colorMS3, 0, 4);
+    ASSERT_GL_NO_ERROR();
+
+    // Setup program to render into attachments 0 and 3.
+    constexpr bool kBuffersEnabled[8] = {true, false, false, true};
+
+    GLuint drawColor;
+    setupUniformColorProgramMultiRenderTarget(kBuffersEnabled, &drawColor);
+    glUseProgram(drawColor);
+    GLint colorUniformLocation =
+        glGetUniformLocation(drawColor, angle::essl1_shaders::ColorUniform());
+    ASSERT_NE(colorUniformLocation, -1);
+
+    constexpr GLenum kDrawBuffers[] = {GL_COLOR_ATTACHMENT0, GL_NONE, GL_NONE,
+                                       GL_COLOR_ATTACHMENT3};
+    glDrawBuffers(4, kDrawBuffers);
+    glReadBuffer(GL_COLOR_ATTACHMENT3);
+    ASSERT_GL_NO_ERROR();
+
+    // Draw red into the multisampled color buffers.
+    glUniform4f(colorUniformLocation, 1.0f, 0.0f, 0.0f, 1.0f);
+    drawQuad(drawColor, essl1_shaders::PositionAttrib(), 0.5f);
+    ASSERT_GL_NO_ERROR();
+
+    // Create a texture and copy from one of them.
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 0, 0, kSize, kSize, 0);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    ASSERT_GL_NO_ERROR();
+
+    // Blend half-transparent green into the multisampled color buffers.
+    glUniform4f(colorUniformLocation, 0.0f, 1.0f, 0.0f, 0.5f);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    drawQuad(drawColor, essl1_shaders::PositionAttrib(), 0.5f);
+    ASSERT_GL_NO_ERROR();
+
+    // Verify that the textures are now yellow
+    const GLColor kExpected(127, 127, 0, 191);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, kExpected, 1);
+    EXPECT_PIXEL_COLOR_NEAR(kSize - 1, 0, kExpected, 1);
+    EXPECT_PIXEL_COLOR_NEAR(0, kSize - 1, kExpected, 1);
+    EXPECT_PIXEL_COLOR_NEAR(kSize - 1, kSize - 1, kExpected, 1);
+
+    glReadBuffer(GL_COLOR_ATTACHMENT0);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, kExpected, 1);
+    EXPECT_PIXEL_COLOR_NEAR(kSize - 1, 0, kExpected, 1);
+    EXPECT_PIXEL_COLOR_NEAR(0, kSize - 1, kExpected, 1);
+    EXPECT_PIXEL_COLOR_NEAR(kSize - 1, kSize - 1, kExpected, 1);
+
+    // For completeness, verify that the texture used as copy target is red.
+    const GLColor expectedCopyResult(255, 0, 0, 255);
+    verifyResults(texture, expectedCopyResult, kSize, 0, 0, kSize, kSize);
+
+    ASSERT_GL_NO_ERROR();
+
+    glDeleteProgram(drawColor);
+}
+
+// Draw with depth buffer.  Uses EXT_multisampled_render_to_texture2.
+// The test works with a 64x1 texture.  The first draw call will render geometry whose depth is
+// different between top and bottom.  The second draw call will enable depth test and draw with the
+// average of the two depths.  Only half of the samples will take the new color.  Once resolved, the
+// expected color would be the average of the two draw colors.
+TEST_P(MultisampledRenderToTextureES3Test, DepthStencilAttachment)
+{
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_multisampled_render_to_texture"));
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_multisampled_render_to_texture2"));
+
+    constexpr GLsizei kWidth = 64;
+
+    // Create multisampled framebuffer to draw into, with both color and depth attachments.
+    GLTexture colorMS;
+    glBindTexture(GL_TEXTURE_2D, colorMS);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kWidth, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    GLTexture depthMS;
+    glBindTexture(GL_TEXTURE_2D, depthMS);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH24_STENCIL8, kWidth, 1, 0, GL_DEPTH_STENCIL,
+                 GL_UNSIGNED_INT_24_8_OES, nullptr);
+
+    GLFramebuffer fboMS;
+    glBindFramebuffer(GL_FRAMEBUFFER, fboMS);
+    glFramebufferTexture2DMultisampleEXT(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
+                                         colorMS, 0, 4);
+    glFramebufferTexture2DMultisampleEXT(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D,
+                                         depthMS, 0, 4);
+    ASSERT_GL_NO_ERROR();
+
+    // Setup draw program
+    ANGLE_GL_PROGRAM(drawColor, essl1_shaders::vs::Simple(), essl1_shaders::fs::UniformColor());
+    glUseProgram(drawColor);
+    GLint colorUniformLocation =
+        glGetUniformLocation(drawColor, angle::essl1_shaders::ColorUniform());
+    ASSERT_NE(colorUniformLocation, -1);
+    GLint positionLocation = glGetAttribLocation(drawColor, essl1_shaders::PositionAttrib());
+    ASSERT_NE(-1, positionLocation);
+
+    // Setup vertices such that depth is varied from top to bottom.
+    std::array<Vector3, 6> quadVertices = {
+        Vector3(-1.0f, 1.0f, 0.8f), Vector3(-1.0f, -1.0f, 0.2f), Vector3(1.0f, -1.0f, 0.2f),
+        Vector3(-1.0f, 1.0f, 0.8f), Vector3(1.0f, -1.0f, 0.2f),  Vector3(1.0f, 1.0f, 0.8f),
+    };
+    GLBuffer quadVertexBuffer;
+    glBindBuffer(GL_ARRAY_BUFFER, quadVertexBuffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 3 * 6, quadVertices.data(), GL_STATIC_DRAW);
+    glVertexAttribPointer(positionLocation, 3, GL_FLOAT, GL_FALSE, 0, 0);
+    glEnableVertexAttribArray(positionLocation);
+
+    // Draw red into the framebuffer.
+    glViewport(0, 0, kWidth, 1);
+    glUniform4f(colorUniformLocation, 1.0f, 0.0f, 0.0f, 1.0f);
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_ALWAYS);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    ASSERT_GL_NO_ERROR();
+
+    // Draw green such that half the samples of each pixel pass the depth test.
+    glUniform4f(colorUniformLocation, 0.0f, 1.0f, 0.0f, 1.0f);
+    glDepthFunc(GL_GREATER);
+    drawQuad(drawColor, essl1_shaders::PositionAttrib(), 0.5f);
+    ASSERT_GL_NO_ERROR();
+
+    const GLColor kExpected(127, 127, 0, 255);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, kExpected, 1);
+    EXPECT_PIXEL_COLOR_NEAR(kWidth - 1, 0, kExpected, 1);
+    EXPECT_PIXEL_COLOR_NEAR(kWidth / 2, 0, kExpected, 1);
+
+    glDisableVertexAttribArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
+// Draw, copy, then blend.  The copy will make sure an implicit resolve happens.  Regardless, the
+// following draw should retain the data written by the first draw command.
+// Uses color attachments 0 and 1.  Attachment 0 is a normal multisampled texture, while attachment
+// 1 is a multisampled-render-to-texture texture.
+TEST_P(MultisampledRenderToTextureES31Test, MixedMultisampledAndMultisampledRenderToTexture)
+{
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_multisampled_render_to_texture"));
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_multisampled_render_to_texture2"));
+
+    constexpr GLsizei kSize = 64;
+
+    setupCopyTexProgram();
+
+    // Create multisampled framebuffer to draw into, use color attachment 1
+    GLTexture colorMS0;
+    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, colorMS0);
+    glTexStorage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_RGBA8, kSize, kSize, true);
+
+    GLTexture colorMS1;
+    glBindTexture(GL_TEXTURE_2D, colorMS1);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    GLFramebuffer fboMS;
+    glBindFramebuffer(GL_FRAMEBUFFER, fboMS);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE,
+                           colorMS0, 0);
+    glFramebufferTexture2DMultisampleEXT(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D,
+                                         colorMS1, 0, 4);
+    ASSERT_GL_NO_ERROR();
+
+    // Setup program to render into attachments 0 and 1.
+    constexpr bool kBuffersEnabled[8] = {true, true};
+
+    GLuint drawColor;
+    setupUniformColorProgramMultiRenderTarget(kBuffersEnabled, &drawColor);
+    glUseProgram(drawColor);
+    GLint colorUniformLocation =
+        glGetUniformLocation(drawColor, angle::essl1_shaders::ColorUniform());
+    ASSERT_NE(colorUniformLocation, -1);
+
+    constexpr GLenum kDrawBuffers[] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1};
+    glDrawBuffers(2, kDrawBuffers);
+    glReadBuffer(GL_COLOR_ATTACHMENT1);
+    ASSERT_GL_NO_ERROR();
+
+    // Draw red into the multisampled color buffers.
+    glUniform4f(colorUniformLocation, 1.0f, 0.0f, 0.0f, 1.0f);
+    drawQuad(drawColor, essl1_shaders::PositionAttrib(), 0.5f);
+    ASSERT_GL_NO_ERROR();
+
+    // Create a texture and copy from one of them.
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 0, 0, kSize, kSize, 0);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    ASSERT_GL_NO_ERROR();
+
+    // Blend half-transparent green into the multisampled color buffers.
+    glUniform4f(colorUniformLocation, 0.0f, 1.0f, 0.0f, 0.5f);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    drawQuad(drawColor, essl1_shaders::PositionAttrib(), 0.5f);
+    ASSERT_GL_NO_ERROR();
+
+    // Verify that the textures are now yellow
+    const GLColor kExpected(127, 127, 0, 191);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, kExpected, 1);
+    EXPECT_PIXEL_COLOR_NEAR(kSize - 1, 0, kExpected, 1);
+    EXPECT_PIXEL_COLOR_NEAR(0, kSize - 1, kExpected, 1);
+    EXPECT_PIXEL_COLOR_NEAR(kSize - 1, kSize - 1, kExpected, 1);
+
+    // For completeness, verify that the texture used as copy target is red.
+    const GLColor expectedCopyResult(255, 0, 0, 255);
+    verifyResults(texture, expectedCopyResult, kSize, 0, 0, kSize, kSize);
+
+    ASSERT_GL_NO_ERROR();
+
+    glDeleteProgram(drawColor);
+}
+
+// BlitFramebuffer functionality test with mixed color attachments where multisampled render to
+// texture as attachment 1 and is the read buffer.  This test makes sure the fact that attachment 0
+// is a true multisampled texture doesn't cause issues.
+// Uses EXT_multisampled_render_to_texture2.
+TEST_P(MultisampledRenderToTextureES31Test, BlitFramebufferAttachment1)
+{
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_multisampled_render_to_texture"));
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_multisampled_render_to_texture2"));
+
+    constexpr GLsizei kSize = 16;
+
+    // Create multisampled framebuffer to draw into, use color attachment 1
+    GLTexture colorMS0;
+    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, colorMS0);
+    glTexStorage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_RGBA8, kSize, kSize, true);
+
+    GLTexture colorMS1;
+    glBindTexture(GL_TEXTURE_2D, colorMS1);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    GLFramebuffer fboMS;
+    glBindFramebuffer(GL_FRAMEBUFFER, fboMS);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE,
+                           colorMS0, 0);
+    glFramebufferTexture2DMultisampleEXT(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D,
+                                         colorMS1, 0, 4);
+    ASSERT_GL_NO_ERROR();
+
+    // Setup program to render into attachments 0 and 1.
+    constexpr bool kBuffersEnabled[8] = {true, true};
+
+    GLuint drawColor;
+    setupUniformColorProgramMultiRenderTarget(kBuffersEnabled, &drawColor);
+    glUseProgram(drawColor);
+    GLint colorUniformLocation =
+        glGetUniformLocation(drawColor, angle::essl1_shaders::ColorUniform());
+    ASSERT_NE(colorUniformLocation, -1);
+
+    constexpr GLenum kDrawBuffers[] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1};
+    glDrawBuffers(2, kDrawBuffers);
+    glReadBuffer(GL_COLOR_ATTACHMENT1);
+    ASSERT_GL_NO_ERROR();
+
+    // Draw red into the multisampled color buffers.
+    glUniform4f(colorUniformLocation, 1.0f, 0.0f, 0.0f, 1.0f);
+    drawQuad(drawColor, essl1_shaders::PositionAttrib(), 0.5f);
+    ASSERT_GL_NO_ERROR();
+
+    // Create single sampled framebuffer to use as dest.
+    GLFramebuffer fboSS;
+    glBindFramebuffer(GL_FRAMEBUFFER, fboSS);
+    GLTexture colorSS;
+    glBindTexture(GL_TEXTURE_2D, colorSS);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorSS, 0);
+    ASSERT_GL_NO_ERROR();
+
+    // Bind MS to READ as SS is already bound to DRAW.
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, fboMS);
+    glReadBuffer(GL_COLOR_ATTACHMENT1);
+    glBlitFramebuffer(0, 0, kSize, kSize, 0, 0, kSize, kSize, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+    ASSERT_GL_NO_ERROR();
+
+    // Bind SS to READ so we can readPixels from it
+    glBindFramebuffer(GL_FRAMEBUFFER, fboSS);
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(kSize - 1, 0, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(0, kSize - 1, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(kSize - 1, kSize - 1, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(kSize / 2, kSize / 2, GLColor::red);
+    ASSERT_GL_NO_ERROR();
 }
 
 // BlitFramebuffer functionality test with mixed multisampled-render-to-texture color attachment and
@@ -822,4 +1294,5 @@ TEST_P(MultisampledRenderToTextureES3Test, BlitFramebufferMixedColorAndDepth)
 
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(MultisampledRenderToTextureTest);
 ANGLE_INSTANTIATE_TEST_ES3(MultisampledRenderToTextureES3Test);
+ANGLE_INSTANTIATE_TEST_ES31(MultisampledRenderToTextureES31Test);
 }  // namespace

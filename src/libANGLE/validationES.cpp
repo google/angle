@@ -1414,7 +1414,7 @@ bool ValidateBlitFramebufferParameters(const Context *context,
     }
 
     // Not allow blitting to MS buffers, therefore if renderToTextureSamples exist,
-    // consider it MS. needResourceSamples = false
+    // consider it MS. checkReadBufferResourceSamples = false
     if (!ValidateFramebufferNotMultisampled(context, drawFramebuffer, false))
     {
         return false;
@@ -2596,8 +2596,8 @@ bool ValidateCopyTexImageParametersBase(const Context *context,
         return false;
     }
 
-    // needResourceSamples = true. Treat renderToTexture textures as single sample since they will
-    // be resolved before copying
+    // checkReadBufferResourceSamples = true. Treat renderToTexture textures as single sample since
+    // they will be resolved before copying.
     if (!readFramebuffer->isDefault() &&
         !ValidateFramebufferNotMultisampled(context, readFramebuffer, true))
     {
@@ -6632,10 +6632,11 @@ bool ValidateGetInternalFormativBase(const Context *context,
 
 bool ValidateFramebufferNotMultisampled(const Context *context,
                                         const Framebuffer *framebuffer,
-                                        bool needResourceSamples)
+                                        bool checkReadBufferResourceSamples)
 {
-    int samples = needResourceSamples ? framebuffer->getResourceSamples(context)
-                                      : framebuffer->getSamples(context);
+    int samples = checkReadBufferResourceSamples
+                      ? framebuffer->getReadBufferResourceSamples(context)
+                      : framebuffer->getSamples(context);
     if (samples != 0)
     {
         context->validationError(GL_INVALID_OPERATION, kInvalidMultisampledFramebufferOperation);

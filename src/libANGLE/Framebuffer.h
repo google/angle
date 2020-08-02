@@ -49,15 +49,6 @@ class State;
 class Texture;
 class TextureCapsMap;
 
-enum class AttachmentSampleType
-{
-    // The sample count of the actual resource
-    Resource,
-    // If render_to_texture is used, this is the sample count of the multisampled
-    // texture that is created behind the scenes.
-    Emulated
-};
-
 class FramebufferState final : angle::NonCopyable
 {
   public:
@@ -278,7 +269,7 @@ class Framebuffer final : public angle::ObserverInterface,
 
     // This method calls checkStatus.
     int getSamples(const Context *context) const;
-    int getResourceSamples(const Context *context) const;
+    int getReadBufferResourceSamples(const Context *context) const;
 
     angle::Result getSamplePosition(const Context *context, size_t index, GLfloat *xy) const;
 
@@ -308,9 +299,6 @@ class Framebuffer final : public angle::ObserverInterface,
 
         return checkStatusImpl(context);
     }
-
-    // For when we don't want to check completeness in getSamples().
-    int getCachedSamples(const Context *context, AttachmentSampleType sampleType) const;
 
     // Helper for checkStatus == GL_FRAMEBUFFER_COMPLETE.
     ANGLE_INLINE bool isComplete(const Context *context) const

@@ -650,7 +650,7 @@ bool ValidateGetInternalFormativBase(const Context *context,
 
 bool ValidateFramebufferNotMultisampled(const Context *context,
                                         const Framebuffer *framebuffer,
-                                        bool needResourceSamples);
+                                        bool checkReadBufferResourceSamples);
 
 bool ValidateMultitextureUnit(const Context *context, GLenum texture);
 

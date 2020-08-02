@@ -6713,7 +6713,9 @@ bool ValidateFramebufferTexture2DMultisampleEXT(const Context *context,
         return false;
     }
 
-    if (attachment != GL_COLOR_ATTACHMENT0)
+    // Unless EXT_multisampled_render_to_texture2 is enabled, only color attachment 0 can be used.
+    if (!context->getExtensions().multisampledRenderToTexture2 &&
+        attachment != GL_COLOR_ATTACHMENT0)
     {
         context->validationError(GL_INVALID_ENUM, kInvalidAttachment);
         return false;
