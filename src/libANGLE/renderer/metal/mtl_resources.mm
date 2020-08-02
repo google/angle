@@ -18,6 +18,7 @@
 #include "libANGLE/renderer/metal/DisplayMtl.h"
 #include "libANGLE/renderer/metal/mtl_command_buffer.h"
 #include "libANGLE/renderer/metal/mtl_format_utils.h"
+#include "libANGLE/renderer/metal/mtl_utils.h"
 
 namespace rx
 {
@@ -35,21 +36,12 @@ void SetTextureSwizzle(ContextMtl *context,
                        MTLTextureDescriptor *textureDescOut)
 {
 // Texture swizzle functions's declarations are only available if macos 10.15 sdk is present
-#if defined(__MAC_10_15)
-    if (context->getDisplay()->getFeatures().hasTextureSwizzle.enabled)
+#if defined(__IPHONE_13_0) || defined(__MAC_10_15)
+    if (context->getDisplay()->getFeatures().hasTextureSwizzle.enabled && format.swizzled)
     {
-        // Work around Metal doesn't have native support for DXT1 without alpha.
-        switch (format.intendedFormatId)
-        {
-            case angle::FormatID::BC1_RGB_UNORM_BLOCK:
-            case angle::FormatID::BC1_RGB_UNORM_SRGB_BLOCK:
-                textureDescOut.swizzle =
-                    MTLTextureSwizzleChannelsMake(MTLTextureSwizzleRed, MTLTextureSwizzleGreen,
-                                                  MTLTextureSwizzleBlue, MTLTextureSwizzleOne);
-                break;
-            default:
-                break;
-        }
+        textureDescOut.swizzle = MTLTextureSwizzleChannelsMake(
+            GetTextureSwizzle(format.swizzle[0]), GetTextureSwizzle(format.swizzle[1]),
+            GetTextureSwizzle(format.swizzle[2]), GetTextureSwizzle(format.swizzle[3]));
     }
 #endif
 }
@@ -97,7 +89,7 @@ angle::Result Texture::Make2DTexture(ContextMtl *context,
                                      uint32_t height,
                                      uint32_t mips,
                                      bool renderTargetOnly,
-                                     bool allowTextureView,
+                                     bool allowFormatView,
                                      TextureRef *refOut)
 {
     ANGLE_MTL_OBJC_SCOPE
@@ -108,16 +100,8 @@ angle::Result Texture::Make2DTexture(ContextMtl *context,
                                                               height:height
                                                            mipmapped:mips == 0 || mips > 1];
 
-        SetTextureSwizzle(context, format, desc);
-        refOut->reset(new Texture(context, desc, mips, renderTargetOnly, allowTextureView));
+        return MakeTexture(context, format, desc, mips, renderTargetOnly, allowFormatView, refOut);
     }  // ANGLE_MTL_OBJC_SCOPE
-
-    if (!refOut || !refOut->get())
-    {
-        ANGLE_MTL_CHECK(context, false, GL_OUT_OF_MEMORY);
-    }
-
-    return angle::Result::Continue;
 }
 
 /** static */
@@ -126,7 +110,7 @@ angle::Result Texture::MakeCubeTexture(ContextMtl *context,
                                        uint32_t size,
                                        uint32_t mips,
                                        bool renderTargetOnly,
-                                       bool allowTextureView,
+                                       bool allowFormatView,
                                        TextureRef *refOut)
 {
     ANGLE_MTL_OBJC_SCOPE
@@ -135,16 +119,9 @@ angle::Result Texture::MakeCubeTexture(ContextMtl *context,
             [MTLTextureDescriptor textureCubeDescriptorWithPixelFormat:format.metalFormat
                                                                   size:size
                                                              mipmapped:mips == 0 || mips > 1];
-        SetTextureSwizzle(context, format, desc);
-        refOut->reset(new Texture(context, desc, mips, renderTargetOnly, allowTextureView));
+
+        return MakeTexture(context, format, desc, mips, renderTargetOnly, allowFormatView, refOut);
     }  // ANGLE_MTL_OBJC_SCOPE
-
-    if (!refOut || !refOut->get())
-    {
-        ANGLE_MTL_CHECK(context, false, GL_OUT_OF_MEMORY);
-    }
-
-    return angle::Result::Continue;
 }
 
 /** static */
@@ -154,7 +131,7 @@ angle::Result Texture::Make2DMSTexture(ContextMtl *context,
                                        uint32_t height,
                                        uint32_t samples,
                                        bool renderTargetOnly,
-                                       bool allowTextureView,
+                                       bool allowFormatView,
                                        TextureRef *refOut)
 {
     ANGLE_MTL_OBJC_SCOPE
@@ -167,13 +144,30 @@ angle::Result Texture::Make2DMSTexture(ContextMtl *context,
         desc.mipmapLevelCount      = 1;
         desc.sampleCount           = samples;
 
-        SetTextureSwizzle(context, format, desc);
-        refOut->reset(new Texture(context, desc, 1, renderTargetOnly, allowTextureView));
+        return MakeTexture(context, format, desc, 1, renderTargetOnly, allowFormatView, refOut);
     }  // ANGLE_MTL_OBJC_SCOPE
+}
+
+/** static */
+angle::Result Texture::MakeTexture(ContextMtl *context,
+                                   const Format &mtlFormat,
+                                   MTLTextureDescriptor *desc,
+                                   uint32_t mips,
+                                   bool renderTargetOnly,
+                                   bool allowFormatView,
+                                   TextureRef *refOut)
+{
+    SetTextureSwizzle(context, mtlFormat, desc);
+
+    refOut->reset(new Texture(context, desc, mips, renderTargetOnly, allowFormatView));
 
     if (!refOut || !refOut->get())
     {
         ANGLE_MTL_CHECK(context, false, GL_OUT_OF_MEMORY);
+    }
+    if (!mtlFormat.hasDepthAndStencilBits())
+    {
+        refOut->get()->setColorWritableMask(GetEmulatedColorWriteMask(mtlFormat));
     }
 
     return angle::Result::Continue;
@@ -195,7 +189,7 @@ Texture::Texture(ContextMtl *context,
                  MTLTextureDescriptor *desc,
                  uint32_t mips,
                  bool renderTargetOnly,
-                 bool supportTextureView)
+                 bool allowFormatView)
     : mColorWritableMask(std::make_shared<MTLColorWriteMask>(MTLColorWriteMaskAll))
 {
     ANGLE_MTL_OBJC_SCOPE
@@ -210,14 +204,15 @@ Texture::Texture(ContextMtl *context,
         // Every texture will support being rendered for now
         desc.usage = 0;
 
-        if (Format::FormatRenderable(desc.pixelFormat))
+        if (context->getNativeFormatCaps(desc.pixelFormat).isRenderable())
         {
             desc.usage |= MTLTextureUsageRenderTarget;
         }
 
-        if (!Format::FormatCPUReadable(desc.pixelFormat) ||
+        if (context->getNativeFormatCaps(desc.pixelFormat).depthRenderable ||
             desc.textureType == MTLTextureType2DMultisample)
         {
+            // Metal doesn't support host access to depth stencil texture's data
             desc.resourceOptions = MTLResourceStorageModePrivate;
         }
 
@@ -226,7 +221,7 @@ Texture::Texture(ContextMtl *context,
             desc.usage = desc.usage | MTLTextureUsageShaderRead;
         }
 
-        if (supportTextureView)
+        if (allowFormatView)
         {
             desc.usage = desc.usage | MTLTextureUsagePixelFormatView;
         }
@@ -297,6 +292,11 @@ bool Texture::isCPUAccessible() const
     }
 #endif
     return get().storageMode == MTLStorageModeShared;
+}
+
+bool Texture::supportFormatView() const
+{
+    return get().usage & MTLTextureUsagePixelFormatView;
 }
 
 void Texture::replaceRegion(ContextMtl *context,
@@ -391,6 +391,12 @@ TextureRef Texture::createSliceMipView(uint32_t slice, uint32_t level)
 
 TextureRef Texture::createViewWithDifferentFormat(MTLPixelFormat format)
 {
+    ASSERT(supportFormatView());
+    return TextureRef(new Texture(this, format));
+}
+TextureRef Texture::createViewWithCompatibleFormat(MTLPixelFormat format)
+{
+    // No need for ASSERT(supportFormatView());
     return TextureRef(new Texture(this, format));
 }
 
@@ -453,10 +459,10 @@ TextureRef Texture::getLinearColorView()
     switch (pixelFormat())
     {
         case MTLPixelFormatRGBA8Unorm_sRGB:
-            mLinearColorView = createViewWithDifferentFormat(MTLPixelFormatRGBA8Unorm);
+            mLinearColorView = createViewWithCompatibleFormat(MTLPixelFormatRGBA8Unorm);
             break;
         case MTLPixelFormatBGRA8Unorm_sRGB:
-            mLinearColorView = createViewWithDifferentFormat(MTLPixelFormatBGRA8Unorm);
+            mLinearColorView = createViewWithCompatibleFormat(MTLPixelFormatBGRA8Unorm);
             break;
         default:
             // NOTE(hqle): Not all sRGB formats are supported yet.

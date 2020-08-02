@@ -255,6 +255,7 @@ class TextureMtl : public TextureImpl
                                         const gl::ImageIndex &index,
                                         const MTLRegion &mtlArea,
                                         const gl::InternalFormat &internalFormat,
+                                        GLenum type,
                                         const angle::Format &pixelsFormat,
                                         size_t pixelsRowPitch,
                                         const uint8_t *pixels);

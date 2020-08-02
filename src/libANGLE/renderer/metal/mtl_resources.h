@@ -100,7 +100,7 @@ class Texture final : public Resource,
                                        uint32_t height,
                                        uint32_t mips /** use zero to create full mipmaps chain */,
                                        bool renderTargetOnly,
-                                       bool allowTextureView,
+                                       bool allowFormatView,
                                        TextureRef *refOut);
 
     static angle::Result MakeCubeTexture(ContextMtl *context,
@@ -108,7 +108,7 @@ class Texture final : public Resource,
                                          uint32_t size,
                                          uint32_t mips /** use zero to create full mipmaps chain */,
                                          bool renderTargetOnly,
-                                         bool allowTextureView,
+                                         bool allowFormatView,
                                          TextureRef *refOut);
 
     static angle::Result Make2DMSTexture(ContextMtl *context,
@@ -117,13 +117,15 @@ class Texture final : public Resource,
                                          uint32_t height,
                                          uint32_t samples,
                                          bool renderTargetOnly,
-                                         bool allowTextureView,
+                                         bool allowFormatView,
                                          TextureRef *refOut);
 
     static TextureRef MakeFromMetal(id<MTLTexture> metalTexture);
 
     // Allow CPU to read & write data directly to this texture?
     bool isCPUAccessible() const;
+
+    bool supportFormatView() const;
 
     void replaceRegion(ContextMtl *context,
                        MTLRegion region,
@@ -145,6 +147,9 @@ class Texture final : public Resource,
     TextureRef createSliceMipView(uint32_t slice, uint32_t level);
     // Create a view with different format
     TextureRef createViewWithDifferentFormat(MTLPixelFormat format);
+    // Same as above but the target format must be compatible, for example sRGB to linear. In this
+    // case texture doesn't need format view usage flag.
+    TextureRef createViewWithCompatibleFormat(MTLPixelFormat format);
 
     MTLTextureType textureType() const;
     MTLPixelFormat pixelFormat() const;
@@ -175,12 +180,20 @@ class Texture final : public Resource,
   private:
     using ParentClass = WrappedObject<id<MTLTexture>>;
 
+    static angle::Result MakeTexture(ContextMtl *context,
+                                     const Format &mtlFormat,
+                                     MTLTextureDescriptor *desc,
+                                     uint32_t mips,
+                                     bool renderTargetOnly,
+                                     bool allowFormatView,
+                                     TextureRef *refOut);
+
     Texture(id<MTLTexture> metalTexture);
     Texture(ContextMtl *context,
             MTLTextureDescriptor *desc,
             uint32_t mips,
             bool renderTargetOnly,
-            bool supportTextureView);
+            bool allowFormatView);
 
     // Create a texture view
     Texture(Texture *original, MTLPixelFormat format);

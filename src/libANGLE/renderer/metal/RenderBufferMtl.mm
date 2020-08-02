@@ -67,8 +67,7 @@ angle::Result RenderbufferMtl::setStorageImpl(const gl::Context *context,
 
         // For emulated channels that GL texture intends to not have,
         // we need to initialize their content.
-        bool emulatedChannels;
-        mTexture->setColorWritableMask(mtl::GetEmulatedColorWriteMask(mFormat, &emulatedChannels));
+        bool emulatedChannels = mtl::IsFormatEmulated(mFormat);
         if (emulatedChannels)
         {
             gl::ImageIndex index;

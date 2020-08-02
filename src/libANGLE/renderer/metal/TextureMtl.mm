@@ -1007,9 +1007,9 @@ angle::Result TextureMtl::setSubImageImpl(const gl::Context *context,
         angle::Format::Get(angle::Format::InternalFormatToID(formatInfo.sizedInternalFormat));
 
     // If source pixels are luminance or RGB8, we need to convert them to RGBA
-    if (mFormat.actualFormatId != srcAngleFormat.id)
+    if (mFormat.needConversion(srcAngleFormat.id))
     {
-        return convertAndSetSubImage(context, index, mtlRegion, formatInfo, srcAngleFormat,
+        return convertAndSetSubImage(context, index, mtlRegion, formatInfo, type, srcAngleFormat,
                                      sourceRowPitch, pixels);
     }
 
@@ -1024,6 +1024,7 @@ angle::Result TextureMtl::convertAndSetSubImage(const gl::Context *context,
                                                 const gl::ImageIndex &index,
                                                 const MTLRegion &mtlArea,
                                                 const gl::InternalFormat &internalFormat,
+                                                GLenum type,
                                                 const angle::Format &pixelsFormat,
                                                 size_t pixelsRowPitch,
                                                 const uint8_t *pixels)
@@ -1034,29 +1035,63 @@ angle::Result TextureMtl::convertAndSetSubImage(const gl::Context *context,
 
     ContextMtl *contextMtl = mtl::GetImpl(context);
 
-    // Create scratch buffer
+    LoadImageFunctionInfo loadFunctionInfo =
+        mFormat.textureLoadFunctions ? mFormat.textureLoadFunctions(type) : LoadImageFunctionInfo();
+
     const angle::Format &dstFormat = angle::Format::Get(mFormat.actualFormatId);
-    angle::MemoryBuffer conversionRow;
-    const size_t dstRowPitch = dstFormat.pixelBytes * mtlArea.size.width;
-    ANGLE_CHECK_GL_ALLOC(contextMtl, conversionRow.resize(dstRowPitch));
+    const size_t dstRowPitch       = dstFormat.pixelBytes * mtlArea.size.width;
 
-    MTLRegion mtlRow    = mtlArea;
-    mtlRow.size.height  = 1;
-    const uint8_t *psrc = pixels;
-    for (NSUInteger r = 0; r < mtlArea.size.height; ++r, psrc += pixelsRowPitch)
+    // Check if original image data is compressed:
+    if (mFormat.intendedAngleFormat().isBlock)
     {
-        mtlRow.origin.y = mtlArea.origin.y + r;
+        ASSERT(loadFunctionInfo.loadFunction);
 
-        // Convert pixels
-        CopyImageCHROMIUM(psrc, pixelsRowPitch, pixelsFormat.pixelBytes, 0,
-                          pixelsFormat.pixelReadFunction, conversionRow.data(), dstRowPitch,
-                          dstFormat.pixelBytes, 0, dstFormat.pixelWriteFunction,
-                          internalFormat.format, dstFormat.componentType, mtlRow.size.width, 1, 1,
-                          false, false, false);
+        // Need to create a buffer to hold entire decompressed image.
+        const size_t dstDepthPitch = dstRowPitch * mtlArea.size.height;
+        angle::MemoryBuffer decompressBuf;
+        ANGLE_CHECK_GL_ALLOC(contextMtl, decompressBuf.resize(dstDepthPitch * mtlArea.size.depth));
+
+        // Decompress
+        loadFunctionInfo.loadFunction(mtlArea.size.width, mtlArea.size.height, mtlArea.size.depth,
+                                      pixels, pixelsRowPitch, 0, decompressBuf.data(), dstRowPitch,
+                                      dstDepthPitch);
 
         // Upload to texture
-        ANGLE_TRY(UploadTextureContents(context, image, dstFormat, mtlRow, 0, 0,
-                                        conversionRow.data(), dstRowPitch));
+        ANGLE_TRY(UploadTextureContents(context, image, dstFormat, mtlArea, 0, 0,
+                                        decompressBuf.data(), dstRowPitch));
+    }  // if (mFormat.intendedAngleFormat().isBlock)
+    else
+    {
+        // Create scratch buffer
+        angle::MemoryBuffer conversionRow;
+        ANGLE_CHECK_GL_ALLOC(contextMtl, conversionRow.resize(dstRowPitch));
+
+        MTLRegion mtlRow    = mtlArea;
+        mtlRow.size.height  = 1;
+        const uint8_t *psrc = pixels;
+        for (NSUInteger r = 0; r < mtlArea.size.height; ++r, psrc += pixelsRowPitch)
+        {
+            mtlRow.origin.y = mtlArea.origin.y + r;
+
+            // Convert pixels
+            if (loadFunctionInfo.loadFunction)
+            {
+                loadFunctionInfo.loadFunction(mtlRow.size.width, 1, 1, psrc, pixelsRowPitch, 0,
+                                              conversionRow.data(), dstRowPitch, 0);
+            }
+            else
+            {
+                CopyImageCHROMIUM(psrc, pixelsRowPitch, pixelsFormat.pixelBytes, 0,
+                                  pixelsFormat.pixelReadFunction, conversionRow.data(), dstRowPitch,
+                                  dstFormat.pixelBytes, 0, dstFormat.pixelWriteFunction,
+                                  internalFormat.format, dstFormat.componentType, mtlRow.size.width,
+                                  1, 1, false, false, false);
+            }
+
+            // Upload to texture
+            ANGLE_TRY(UploadTextureContents(context, image, dstFormat, mtlRow, 0, 0,
+                                            conversionRow.data(), dstRowPitch));
+        }
     }
 
     return angle::Result::Continue;
@@ -1066,10 +1101,7 @@ angle::Result TextureMtl::checkForEmulatedChannels(const gl::Context *context,
                                                    const mtl::Format &mtlFormat,
                                                    const mtl::TextureRef &texture)
 {
-    bool emulatedChannels = false;
-    MTLColorWriteMask colorWritableMask =
-        mtl::GetEmulatedColorWriteMask(mtlFormat, &emulatedChannels);
-    texture->setColorWritableMask(colorWritableMask);
+    bool emulatedChannels = mtl::IsFormatEmulated(mtlFormat);
 
     // For emulated channels that GL texture intends to not have,
     // we need to initialize their content.
@@ -1135,7 +1167,7 @@ angle::Result TextureMtl::copySubImageImpl(const gl::Context *context,
 
     ANGLE_TRY(ensureImageCreated(context, index));
 
-    if (!mtl::Format::FormatRenderable(mFormat.metalFormat))
+    if (!mFormat.getCaps().isRenderable())
     {
         return copySubImageCPU(context, index, modifiedDestOffset, clippedSourceArea,
                                internalFormat, source);
@@ -1265,7 +1297,7 @@ angle::Result TextureMtl::copySubTextureImpl(const gl::Context *context,
     const mtl::Format &dstFormat = contextMtl->getPixelFormat(
         angle::Format::InternalFormatToID(internalFormat.sizedInternalFormat));
 
-    if (!mtl::Format::FormatRenderable(dstFormat.metalFormat))
+    if (!dstFormat.getCaps().isRenderable())
     {
         return copySubTextureCPU(context, index, destOffset, internalFormat, 0, sourceBox,
                                  srcAngleFormat, unpackFlipY, unpackPremultiplyAlpha,

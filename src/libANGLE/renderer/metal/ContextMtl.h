@@ -278,6 +278,7 @@ class ContextMtl : public ContextImpl, public mtl::Context
     bool getDepthMask() const;
 
     const mtl::Format &getPixelFormat(angle::FormatID angleFormatId) const;
+    const mtl::FormatCaps &getNativeFormatCaps(MTLPixelFormat mtlFormat) const;
     // See mtl::FormatTable::getVertexFormat()
     const mtl::VertexFormat &getVertexFormat(angle::FormatID angleFormatId,
                                              bool tightlyPacked) const;
