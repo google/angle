@@ -539,7 +539,7 @@ void ProgramExecutableVk::addTextureDescriptorSetDesc(
                 // Always take the texture's sampler, that's only way to get to yuv conversion for
                 // externalFormat
                 const vk::Sampler &immutableSampler =
-                    (*activeTextures)[textureUnit].texture->getSampler();
+                    (*activeTextures)[textureUnit].texture->getSampler().get();
                 descOut->update(info.binding, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, arraySize,
                                 activeStages, &immutableSampler);
             }
@@ -1335,17 +1335,13 @@ angle::Result ProgramExecutableVk::updateTexturesDescriptorSet(ContextVk *contex
             VkWriteDescriptorSet *writeInfos  = contextVk->allocWriteDescriptorSets(arraySize);
             for (uint32_t arrayElement = 0; arrayElement < arraySize; ++arrayElement)
             {
-                GLuint textureUnit   = samplerBinding.boundTextureUnits[arrayElement];
-                TextureVk *textureVk = activeTextures[textureUnit].texture;
-                SamplerVk *samplerVk = activeTextures[textureUnit].sampler;
+                GLuint textureUnit                 = samplerBinding.boundTextureUnits[arrayElement];
+                TextureVk *textureVk               = activeTextures[textureUnit].texture;
+                const vk::SamplerHelper &samplerVk = *activeTextures[textureUnit].sampler;
 
                 vk::ImageHelper &image = textureVk->getImage();
 
-                // Use bound sampler object if one present, otherwise use texture's sampler
-                const vk::Sampler &sampler =
-                    (samplerVk != nullptr) ? samplerVk->getSampler() : textureVk->getSampler();
-
-                imageInfos[arrayElement].sampler     = sampler.getHandle();
+                imageInfos[arrayElement].sampler     = samplerVk.get().getHandle();
                 imageInfos[arrayElement].imageLayout = image.getCurrentLayout();
 
                 if (emulateSeamfulCubeMapSampling)
@@ -1364,7 +1360,7 @@ angle::Result ProgramExecutableVk::updateTexturesDescriptorSet(ContextVk *contex
 
                 if (textureVk->getImage().hasImmutableSampler())
                 {
-                    imageInfos[arrayElement].sampler = textureVk->getSampler().getHandle();
+                    imageInfos[arrayElement].sampler = textureVk->getSampler().get().getHandle();
                 }
                 ShaderInterfaceVariableInfoMap &variableInfoMap = mVariableInfoMap[shaderType];
                 const std::string samplerName =

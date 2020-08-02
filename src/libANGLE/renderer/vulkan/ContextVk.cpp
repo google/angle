@@ -3868,30 +3868,20 @@ angle::Result ContextVk::updateActiveTextures(const gl::Context *context)
         }
 
         TextureVk *textureVk = vk::GetImpl(texture);
+        ASSERT(textureVk != nullptr);
 
-        SamplerVk *samplerVk;
-        vk::SamplerSerial samplerSerial;
-        if (sampler == nullptr)
-        {
-            samplerVk     = nullptr;
-            samplerSerial = vk::kInvalidSamplerSerial;
-        }
-        else
-        {
-            samplerVk     = vk::GetImpl(sampler);
-            samplerSerial = samplerVk->getSamplerSerial();
-        }
+        const vk::SamplerHelper &samplerVk =
+            sampler ? vk::GetImpl(sampler)->getSampler() : textureVk->getSampler();
+
+        mActiveTextures[textureUnit].texture = textureVk;
+        mActiveTextures[textureUnit].sampler = &samplerVk;
+        mActiveTexturesDesc.update(textureUnit, textureVk->getSerial(),
+                                   samplerVk.getSamplerSerial());
 
         if (textureVk->getImage().hasImmutableSampler())
         {
             haveImmutableSampler = true;
         }
-
-        mActiveTextures[textureUnit].texture = textureVk;
-        mActiveTextures[textureUnit].sampler = samplerVk;
-        // Cache serials from sampler and texture, but re-use texture if no sampler bound
-        ASSERT(textureVk != nullptr);
-        mActiveTexturesDesc.update(textureUnit, textureVk->getSerial(), samplerSerial);
     }
 
     if (haveImmutableSampler)

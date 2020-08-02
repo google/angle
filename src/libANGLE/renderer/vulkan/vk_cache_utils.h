@@ -28,7 +28,6 @@ using PipelineAndSerial   = ObjectAndSerial<Pipeline>;
 
 using RefCountedDescriptorSetLayout    = RefCounted<DescriptorSetLayout>;
 using RefCountedPipelineLayout         = RefCounted<PipelineLayout>;
-using RefCountedSampler                = RefCounted<Sampler>;
 using RefCountedSamplerYcbcrConversion = RefCounted<SamplerYcbcrConversion>;
 
 // Helper macro that casts to a bitfield type then verifies no bits were dropped.
@@ -896,6 +895,30 @@ class FramebufferDesc
     uint32_t mMaxIndex;
     FramebufferAttachmentArray<ImageViewSubresourceSerial> mSerials;
 };
+
+// The SamplerHelper allows a Sampler to be coupled with a serial.
+// Must be included before we declare SamplerCache.
+class SamplerHelper final : angle::NonCopyable
+{
+  public:
+    SamplerHelper(ContextVk *contextVk);
+    ~SamplerHelper();
+
+    explicit SamplerHelper(SamplerHelper &&samplerHelper);
+    SamplerHelper &operator=(SamplerHelper &&rhs);
+
+    bool valid() const { return mSampler.valid(); }
+    const Sampler &get() const { return mSampler; }
+    Sampler &get() { return mSampler; }
+    SamplerSerial getSamplerSerial() const { return mSamplerSerial; }
+
+  private:
+    Sampler mSampler;
+    SamplerSerial mSamplerSerial;
+};
+
+using RefCountedSampler = RefCounted<SamplerHelper>;
+using SamplerBinding    = BindingPointer<SamplerHelper>;
 }  // namespace vk
 }  // namespace rx
 
@@ -1121,7 +1144,7 @@ class SamplerCache final : angle::NonCopyable
 
     angle::Result getSampler(ContextVk *contextVk,
                              const vk::SamplerDesc &desc,
-                             vk::BindingPointer<vk::Sampler> *samplerOut);
+                             vk::SamplerBinding *samplerOut);
 
   private:
     std::unordered_map<vk::SamplerDesc, vk::RefCountedSampler> mPayload;

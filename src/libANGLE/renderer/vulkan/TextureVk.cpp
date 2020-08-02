@@ -1463,7 +1463,7 @@ angle::Result TextureVk::generateMipmapsWithCompute(ContextVk *contextVk)
     samplerState.setWrapT(GL_CLAMP_TO_EDGE);
     samplerState.setWrapR(GL_CLAMP_TO_EDGE);
 
-    vk::BindingPointer<vk::Sampler> sampler;
+    vk::BindingPointer<vk::SamplerHelper> sampler;
     vk::SamplerDesc samplerDesc(samplerState, false, 0);
     ANGLE_TRY(renderer->getSamplerCache().getSampler(contextVk, samplerDesc, &sampler));
 
@@ -1516,8 +1516,8 @@ angle::Result TextureVk::generateMipmapsWithCompute(ContextVk *contextVk)
             params.srcLevel                          = srcLevel;
             params.destLevelCount                    = destLevelCount;
 
-            ANGLE_TRY(contextVk->getUtils().generateMipmap(contextVk, mImage, srcView, mImage,
-                                                           destLevelViews, sampler.get(), params));
+            ANGLE_TRY(contextVk->getUtils().generateMipmap(
+                contextVk, mImage, srcView, mImage, destLevelViews, sampler.get().get(), params));
         }
     }
 

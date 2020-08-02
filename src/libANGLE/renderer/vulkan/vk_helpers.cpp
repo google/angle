@@ -5342,30 +5342,6 @@ ImageViewSubresourceSerial ImageViewHelper::getSubresourceSerial(uint32_t levelG
     return serial;
 }
 
-// SamplerHelper implementation.
-SamplerHelper::SamplerHelper()
-{
-    mUse.init();
-}
-
-SamplerHelper::~SamplerHelper()
-{
-    mUse.release();
-}
-
-void SamplerHelper::release(RendererVk *renderer)
-{
-    renderer->collectGarbageAndReinit(&mUse, &mSampler);
-}
-
-angle::Result SamplerHelper::init(Context *context, const VkSamplerCreateInfo &createInfo)
-{
-    RendererVk *renderer = context->getRenderer();
-    ANGLE_VK_TRY(context, mSampler.init(renderer->getDevice(), createInfo));
-    renderer->getActiveHandleCounts().onAllocate(HandleType::Sampler);
-    return angle::Result::Continue;
-}
-
 // ShaderProgramHelper implementation.
 ShaderProgramHelper::ShaderProgramHelper() = default;
 

@@ -43,7 +43,7 @@ using StagingBufferOffsetArray = std::array<VkDeviceSize, 2>;
 struct TextureUnit final
 {
     TextureVk *texture;
-    SamplerVk *sampler;
+    const vk::SamplerHelper *sampler;
 };
 
 // A dynamic buffer is conceptually an infinitely long buffer. Each time you write to the buffer,
@@ -1808,26 +1808,6 @@ class ImageViewHelper : angle::NonCopyable
 
     // Serial for the image view set. getSubresourceSerial combines it with subresource info.
     ImageViewSerial mImageViewSerial;
-};
-
-// The SamplerHelper allows a Sampler to be coupled with a resource lifetime.
-class SamplerHelper final : angle::NonCopyable
-{
-  public:
-    SamplerHelper();
-    ~SamplerHelper();
-
-    angle::Result init(Context *context, const VkSamplerCreateInfo &createInfo);
-    void release(RendererVk *renderer);
-
-    bool valid() const { return mSampler.valid(); }
-    const Sampler &get() const { return mSampler; }
-
-    void retain(ResourceUseList *resourceUseList) { resourceUseList->add(mUse); }
-
-  private:
-    SharedResourceUse mUse;
-    Sampler mSampler;
 };
 
 class FramebufferHelper : public Resource
