@@ -2580,6 +2580,7 @@ ImageHelper::ImageHelper(ImageHelper &&other)
       mExtents(other.mExtents),
       mFormat(other.mFormat),
       mSamples(other.mSamples),
+      mImageSerial(other.mImageSerial),
       mCurrentLayout(other.mCurrentLayout),
       mCurrentQueueFamilyIndex(other.mCurrentQueueFamilyIndex),
       mLastNonShaderReadOnlyLayout(other.mLastNonShaderReadOnlyLayout),
@@ -2606,11 +2607,12 @@ ImageHelper::~ImageHelper()
 void ImageHelper::resetCachedProperties()
 {
     mImageType                   = VK_IMAGE_TYPE_2D;
+    mTilingMode                  = VK_IMAGE_TILING_OPTIMAL;
+    mUsage                       = 0;
     mExtents                     = {};
     mFormat                      = nullptr;
     mSamples                     = 1;
-    mTilingMode                  = VK_IMAGE_TILING_OPTIMAL;
-    mUsage                       = 0;
+    mImageSerial                 = kInvalidImageSerial;
     mCurrentLayout               = ImageLayout::Undefined;
     mCurrentQueueFamilyIndex     = std::numeric_limits<uint32_t>::max();
     mLastNonShaderReadOnlyLayout = ImageLayout::Undefined;
@@ -2619,8 +2621,8 @@ void ImageHelper::resetCachedProperties()
     mMaxLevel                    = 0;
     mLayerCount                  = 0;
     mLevelCount                  = 0;
+    mExternalFormat              = 0;
     mCurrentSingleClearValue.reset();
-    mExternalFormat = 0;
 }
 
 void ImageHelper::initStagingBuffer(RendererVk *renderer,
@@ -2663,15 +2665,16 @@ angle::Result ImageHelper::initExternal(Context *context,
 {
     ASSERT(!valid());
 
-    mImageType  = gl_vk::GetImageType(textureType);
-    mExtents    = extents;
-    mFormat     = &format;
-    mSamples    = std::max(samples, 1);
-    mBaseLevel  = baseLevel;
-    mMaxLevel   = maxLevel;
-    mLevelCount = mipLevels;
-    mLayerCount = layerCount;
-    mUsage      = usage;
+    mImageType   = gl_vk::GetImageType(textureType);
+    mExtents     = extents;
+    mFormat      = &format;
+    mSamples     = std::max(samples, 1);
+    mImageSerial = context->getRenderer()->getResourceSerialFactory().generateImageSerial();
+    mBaseLevel   = baseLevel;
+    mMaxLevel    = maxLevel;
+    mLevelCount  = mipLevels;
+    mLayerCount  = layerCount;
+    mUsage       = usage;
 
     // Validate that mLayerCount is compatible with the texture type
     ASSERT(textureType != gl::TextureType::_3D || mLayerCount == 1);
@@ -2712,6 +2715,7 @@ angle::Result ImageHelper::initExternal(Context *context,
 void ImageHelper::releaseImage(RendererVk *renderer)
 {
     renderer->collectGarbageAndReinit(&mUse, &mImage, &mDeviceMemory);
+    mImageSerial = kInvalidImageSerial;
 }
 
 void ImageHelper::releaseStagingBuffer(RendererVk *renderer)
@@ -2729,6 +2733,7 @@ void ImageHelper::releaseStagingBuffer(RendererVk *renderer)
 void ImageHelper::resetImageWeakReference()
 {
     mImage.reset();
+    mImageSerial = kInvalidImageSerial;
 }
 
 angle::Result ImageHelper::initializeNonZeroMemory(Context *context, VkDeviceSize size)
@@ -3014,6 +3019,7 @@ void ImageHelper::init2DWeakReference(Context *context,
     gl_vk::GetExtent(glExtents, &mExtents);
     mFormat        = &format;
     mSamples       = std::max(samples, 1);
+    mImageSerial   = context->getRenderer()->getResourceSerialFactory().generateImageSerial();
     mCurrentLayout = ImageLayout::Undefined;
     mLayerCount    = 1;
     mLevelCount    = 1;
@@ -3033,11 +3039,12 @@ angle::Result ImageHelper::init2DStaging(Context *context,
     ASSERT(!valid());
 
     gl_vk::GetExtent(glExtents, &mExtents);
-    mImageType  = VK_IMAGE_TYPE_2D;
-    mFormat     = &format;
-    mSamples    = 1;
-    mLayerCount = layerCount;
-    mLevelCount = 1;
+    mImageType   = VK_IMAGE_TYPE_2D;
+    mFormat      = &format;
+    mSamples     = 1;
+    mImageSerial = context->getRenderer()->getResourceSerialFactory().generateImageSerial();
+    mLayerCount  = layerCount;
+    mLevelCount  = 1;
 
     mCurrentLayout = ImageLayout::Undefined;
 
@@ -4109,12 +4116,14 @@ void ImageHelper::stageSelfForBaseLevel()
     prevImage->mCurrentShaderReadStageMask  = mCurrentShaderReadStageMask;
     prevImage->mLevelCount                  = 1;
     prevImage->mLayerCount                  = mLayerCount;
+    prevImage->mImageSerial                 = mImageSerial;
 
-    // Reset barrier information for current (invalid) image.
+    // Reset information for current (invalid) image.
     mCurrentLayout               = ImageLayout::Undefined;
     mCurrentQueueFamilyIndex     = std::numeric_limits<uint32_t>::max();
     mLastNonShaderReadOnlyLayout = ImageLayout::Undefined;
     mCurrentShaderReadStageMask  = 0;
+    mImageSerial                 = kInvalidImageSerial;
 
     // Stage an update from the previous image.
     const gl::ImageIndex baseLevelIndex =

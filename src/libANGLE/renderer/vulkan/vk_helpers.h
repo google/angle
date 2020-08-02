@@ -1190,6 +1190,12 @@ class ImageHelper final : public Resource, public angle::Subject
     const Format &getFormat() const { return *mFormat; }
     GLint getSamples() const { return mSamples; }
 
+    ImageSerial getImageSerial() const
+    {
+        ASSERT(valid() && mImageSerial.valid());
+        return mImageSerial;
+    }
+
     void setCurrentImageLayout(ImageLayout newLayout) { mCurrentLayout = newLayout; }
     ImageLayout getCurrentImageLayout() const { return mCurrentLayout; }
     VkImageLayout getCurrentLayout() const;
@@ -1570,6 +1576,7 @@ class ImageHelper final : public Resource, public angle::Subject
     VkExtent3D mExtents;
     const Format *mFormat;
     GLint mSamples;
+    ImageSerial mImageSerial;
 
     // Current state.
     ImageLayout mCurrentLayout;

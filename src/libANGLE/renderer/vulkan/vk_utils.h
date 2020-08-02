@@ -694,6 +694,7 @@ class ClearValuesArray final
 // Defines Serials for Vulkan objects.
 #define ANGLE_VK_SERIAL_OP(X) \
     X(Buffer)                 \
+    X(Image)                  \
     X(ImageView)              \
     X(Sampler)
 
