@@ -735,6 +735,89 @@ TEST_P(MultisampledRenderToTextureTest, DrawCopyThenBlend)
     verifyResults(texture, expectedCopyResult, kSize, 0, 0, kSize, kSize);
 
     ASSERT_GL_NO_ERROR();
+
+    glDeleteProgram(drawColor);
+}
+
+// BlitFramebuffer functionality test with mixed multisampled-render-to-texture color attachment and
+// multisampled depth buffer.  This test makes sure that the color attachment is blitted, while
+// the depth/stencil attachment is resolved.
+TEST_P(MultisampledRenderToTextureES3Test, BlitFramebufferMixedColorAndDepth)
+{
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_multisampled_render_to_texture"));
+
+    constexpr GLsizei kSize = 16;
+
+    // Create multisampled framebuffer to use as source.
+    GLRenderbuffer depthMS;
+    glBindRenderbuffer(GL_RENDERBUFFER, depthMS);
+    glRenderbufferStorageMultisample(GL_RENDERBUFFER, 4, GL_DEPTH_COMPONENT24, kSize, kSize);
+
+    GLTexture colorMS;
+    glBindTexture(GL_TEXTURE_2D, colorMS);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    GLFramebuffer fboMS;
+    glBindFramebuffer(GL_FRAMEBUFFER, fboMS);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthMS);
+    glFramebufferTexture2DMultisampleEXT(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
+                                         colorMS, 0, 4);
+    ASSERT_GL_NO_ERROR();
+
+    // Clear depth to 0.5 and color to red.
+    glClearDepthf(0.5f);
+    glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+    glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+    ASSERT_GL_NO_ERROR();
+
+    // Create single sampled framebuffer to use as dest.
+    GLRenderbuffer depthSS;
+    glBindRenderbuffer(GL_RENDERBUFFER, depthSS);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, kSize, kSize);
+
+    GLTexture colorSS;
+    glBindTexture(GL_TEXTURE_2D, colorSS);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    GLFramebuffer fboSS;
+    glBindFramebuffer(GL_FRAMEBUFFER, fboSS);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthSS);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorSS, 0);
+    ASSERT_GL_NO_ERROR();
+
+    // Bind MS to READ as SS is already bound to DRAW.
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, fboMS);
+    glBlitFramebuffer(0, 0, kSize, kSize, 0, 0, kSize, kSize,
+                      GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT, GL_NEAREST);
+    ASSERT_GL_NO_ERROR();
+
+    // Bind SS to READ so we can readPixels from it
+    glBindFramebuffer(GL_FRAMEBUFFER, fboSS);
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(kSize - 1, 0, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(0, kSize - 1, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(kSize - 1, kSize - 1, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(kSize / 2, kSize / 2, GLColor::red);
+    ASSERT_GL_NO_ERROR();
+
+    // Use a small shader to verify depth.
+    ANGLE_GL_PROGRAM(depthTestProgram, essl1_shaders::vs::Passthrough(), essl1_shaders::fs::Blue());
+    ANGLE_GL_PROGRAM(depthTestProgramFail, essl1_shaders::vs::Passthrough(),
+                     essl1_shaders::fs::Green());
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
+    drawQuad(depthTestProgram, essl1_shaders::PositionAttrib(), -0.01f);
+    drawQuad(depthTestProgramFail, essl1_shaders::PositionAttrib(), 0.01f);
+    glDisable(GL_DEPTH_TEST);
+    ASSERT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
+    EXPECT_PIXEL_COLOR_EQ(kSize - 1, 0, GLColor::blue);
+    EXPECT_PIXEL_COLOR_EQ(0, kSize - 1, GLColor::blue);
+    EXPECT_PIXEL_COLOR_EQ(kSize - 1, kSize - 1, GLColor::blue);
+    EXPECT_PIXEL_COLOR_EQ(kSize / 2, kSize / 2, GLColor::blue);
+    ASSERT_GL_NO_ERROR();
 }
 
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(MultisampledRenderToTextureTest);

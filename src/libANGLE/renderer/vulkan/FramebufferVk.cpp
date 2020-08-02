@@ -114,6 +114,7 @@ void EarlyAdjustFlipYForPreRotation(SurfaceRotation blitAngleIn,
             break;
     }
 }
+
 void AdjustBlitAreaForPreRotation(SurfaceRotation framebufferAngle,
                                   const gl::Rectangle &blitAreaIn,
                                   gl::Rectangle framebufferDimensions,
@@ -143,6 +144,7 @@ void AdjustBlitAreaForPreRotation(SurfaceRotation framebufferAngle,
             break;
     }
 }
+
 void AdjustFramebufferDimensionsForPreRotation(SurfaceRotation framebufferAngle,
                                                gl::Rectangle *framebufferDimensions)
 {
@@ -158,6 +160,86 @@ void AdjustFramebufferDimensionsForPreRotation(SurfaceRotation framebufferAngle,
             break;
         case SurfaceRotation::Rotated270Degrees:
             std::swap(framebufferDimensions->width, framebufferDimensions->height);
+            break;
+        default:
+            UNREACHABLE();
+            break;
+    }
+}
+
+// When blitting, the source and destination areas are viewed like UVs.  For example, a 64x64
+// texture if flipped should have an offset of 64 in either X or Y which corresponds to U or V of 1.
+// On the other hand, when resolving, the source and destination areas are used as fragment
+// coordinates to fetch from.  In that case, when flipped, the texture in the above example must
+// have an offset of 63.
+void AdjustBlitResolveParametersForResolve(const gl::Rectangle &sourceArea,
+                                           const gl::Rectangle &destArea,
+                                           UtilsVk::BlitResolveParameters *params)
+{
+    params->srcOffset[0]  = sourceArea.x;
+    params->srcOffset[1]  = sourceArea.y;
+    params->destOffset[0] = destArea.x;
+    params->destOffset[1] = destArea.y;
+
+    if (sourceArea.isReversedX())
+    {
+        ASSERT(sourceArea.x > 0);
+        --params->srcOffset[0];
+    }
+    if (sourceArea.isReversedY())
+    {
+        ASSERT(sourceArea.y > 0);
+        --params->srcOffset[1];
+    }
+    if (destArea.isReversedX())
+    {
+        ASSERT(destArea.x > 0);
+        --params->destOffset[0];
+    }
+    if (destArea.isReversedY())
+    {
+        ASSERT(destArea.y > 0);
+        --params->destOffset[1];
+    }
+}
+
+// Potentially make adjustments for pre-rotatation.  Depending on the angle some of the params need
+// to be swapped and/or changes made to which axis are flipped.
+void AdjustBlitResolveParametersForPreRotation(SurfaceRotation framebufferAngle,
+                                               SurfaceRotation srcFramebufferAngle,
+                                               UtilsVk::BlitResolveParameters *params)
+{
+    switch (framebufferAngle)
+    {
+        case SurfaceRotation::Identity:
+            break;
+        case SurfaceRotation::Rotated90Degrees:
+            std::swap(params->stretch[0], params->stretch[1]);
+            std::swap(params->srcOffset[0], params->srcOffset[1]);
+            std::swap(params->rotatedOffsetFactor[0], params->rotatedOffsetFactor[1]);
+            if (srcFramebufferAngle == framebufferAngle)
+            {
+                std::swap(params->destOffset[0], params->destOffset[1]);
+                std::swap(params->stretch[0], params->stretch[1]);
+                std::swap(params->flipX, params->flipY);
+            }
+            break;
+        case SurfaceRotation::Rotated180Degrees:
+            ASSERT(!params->flipX && params->flipY);
+            params->flipX = true;
+            params->flipY = false;
+            break;
+        case SurfaceRotation::Rotated270Degrees:
+            std::swap(params->stretch[0], params->stretch[1]);
+            std::swap(params->srcOffset[0], params->srcOffset[1]);
+            std::swap(params->rotatedOffsetFactor[0], params->rotatedOffsetFactor[1]);
+            if (srcFramebufferAngle == framebufferAngle)
+            {
+                std::swap(params->stretch[0], params->stretch[1]);
+            }
+            ASSERT(!params->flipX && !params->flipY);
+            params->flipX = true;
+            params->flipY = true;
             break;
         default:
             UNREACHABLE();
@@ -755,17 +837,27 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
 
     const gl::State &glState              = contextVk->getState();
     const gl::Framebuffer *srcFramebuffer = glState.getReadFramebuffer();
+    FramebufferVk *srcFramebufferVk       = vk::GetImpl(srcFramebuffer);
 
     const bool blitColorBuffer   = (mask & GL_COLOR_BUFFER_BIT) != 0;
     const bool blitDepthBuffer   = (mask & GL_DEPTH_BUFFER_BIT) != 0;
     const bool blitStencilBuffer = (mask & GL_STENCIL_BUFFER_BIT) != 0;
 
-    const bool isResolve =
-        srcFramebuffer->getCachedSamples(context, gl::AttachmentSampleType::Resource) > 1;
+    // If a framebuffer contains a mixture of multisampled and multisampled-render-to-texture
+    // attachments, this function could be simultaneously doing a blit on one attachment and resolve
+    // on another.  For the most part, this means resolve semantics apply.  However, as the resolve
+    // path cannot be taken for multisampled-render-to-texture attachments, the distinction of
+    // whether resolve is done for each attachment or blit is made.
+    const bool isColorResolve =
+        blitColorBuffer &&
+        srcFramebufferVk->getColorReadRenderTarget()->getImageForCopy().getSamples() > 1;
+    const bool isDepthStencilResolve =
+        (blitDepthBuffer || blitStencilBuffer) &&
+        srcFramebufferVk->getDepthStencilRenderTarget()->getImageForCopy().getSamples() > 1;
+    const bool isResolve = isColorResolve || isDepthStencilResolve;
 
-    FramebufferVk *srcFramebufferVk = vk::GetImpl(srcFramebuffer);
-    bool srcFramebufferFlippedY     = contextVk->isViewportFlipEnabledForReadFBO();
-    bool destFramebufferFlippedY    = contextVk->isViewportFlipEnabledForDrawFBO();
+    bool srcFramebufferFlippedY  = contextVk->isViewportFlipEnabledForReadFBO();
+    bool destFramebufferFlippedY = contextVk->isViewportFlipEnabledForDrawFBO();
 
     gl::Rectangle sourceArea = sourceAreaIn;
     gl::Rectangle destArea   = destAreaIn;
@@ -933,100 +1025,31 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
     bool disableFlippingBlitWithCommand =
         contextVk->getRenderer()->getFeatures().disableFlippingBlitWithCommand.enabled;
 
-    // When blitting, the source and destination areas are viewed like UVs.  For example, a 64x64
-    // texture if flipped should have an offset of 64 in either X or Y which corresponds to U or V
-    // of 1.  On the other hand, when resolving, the source and destination areas are used as
-    // fragment coordinates to fetch from.  In that case, when flipped, the texture in the above
-    // example must have an offset of 63.
-    //
-    // Now that all flipping is done, adjust the offsets for resolve.
-    if (isResolve)
-    {
-        if (sourceArea.isReversedX())
-        {
-            ASSERT(sourceArea.x > 0);
-            --sourceArea.x;
-        }
-        if (sourceArea.isReversedY())
-        {
-            ASSERT(sourceArea.y > 0);
-            --sourceArea.y;
-        }
-        if (destArea.isReversedX())
-        {
-            ASSERT(destArea.x > 0);
-            --destArea.x;
-        }
-        if (destArea.isReversedY())
-        {
-            ASSERT(destArea.y > 0);
-            --destArea.y;
-        }
-    }
-
-    UtilsVk::BlitResolveParameters params;
-    params.srcOffset[0]           = sourceArea.x;
-    params.srcOffset[1]           = sourceArea.y;
-    params.destOffset[0]          = destArea.x;
-    params.destOffset[1]          = destArea.y;
-    params.rotatedOffsetFactor[0] = std::abs(sourceArea.width);
-    params.rotatedOffsetFactor[1] = std::abs(sourceArea.height);
-    params.stretch[0]             = stretch[0];
-    params.stretch[1]             = stretch[1];
-    params.srcExtents[0]          = srcFramebufferDimensions.width;
-    params.srcExtents[1]          = srcFramebufferDimensions.height;
-    params.blitArea               = blitArea;
-    params.linear                 = filter == GL_LINEAR;
-    params.flipX                  = flipX;
-    params.flipY                  = flipY;
-    params.rotation               = rotation;
-
-    // Potentially make adjustments for pre-rotatation.  Depending on the angle some of the params
-    // need to be swapped and/or changes made to which axis are flipped.
-    switch (rotation)
-    {
-        case SurfaceRotation::Identity:
-            break;
-        case SurfaceRotation::Rotated90Degrees:
-            std::swap(params.stretch[0], params.stretch[1]);
-            std::swap(params.srcOffset[0], params.srcOffset[1]);
-            std::swap(params.rotatedOffsetFactor[0], params.rotatedOffsetFactor[1]);
-            if (srcFramebufferRotation == rotation)
-            {
-                std::swap(params.destOffset[0], params.destOffset[1]);
-                std::swap(params.stretch[0], params.stretch[1]);
-                std::swap(params.flipX, params.flipY);
-            }
-            break;
-        case SurfaceRotation::Rotated180Degrees:
-            ASSERT(!params.flipX && params.flipY);
-            params.flipX = true;
-            params.flipY = false;
-            break;
-        case SurfaceRotation::Rotated270Degrees:
-            std::swap(params.stretch[0], params.stretch[1]);
-            std::swap(params.srcOffset[0], params.srcOffset[1]);
-            std::swap(params.rotatedOffsetFactor[0], params.rotatedOffsetFactor[1]);
-            if (srcFramebufferRotation == rotation)
-            {
-                std::swap(params.stretch[0], params.stretch[1]);
-            }
-            ASSERT(!params.flipX && !params.flipY);
-            params.flipX = true;
-            params.flipY = true;
-            break;
-        default:
-            UNREACHABLE();
-            break;
-    }
+    UtilsVk::BlitResolveParameters commonParams;
+    commonParams.srcOffset[0]           = sourceArea.x;
+    commonParams.srcOffset[1]           = sourceArea.y;
+    commonParams.destOffset[0]          = destArea.x;
+    commonParams.destOffset[1]          = destArea.y;
+    commonParams.rotatedOffsetFactor[0] = std::abs(sourceArea.width);
+    commonParams.rotatedOffsetFactor[1] = std::abs(sourceArea.height);
+    commonParams.stretch[0]             = stretch[0];
+    commonParams.stretch[1]             = stretch[1];
+    commonParams.srcExtents[0]          = srcFramebufferDimensions.width;
+    commonParams.srcExtents[1]          = srcFramebufferDimensions.height;
+    commonParams.blitArea               = blitArea;
+    commonParams.linear                 = filter == GL_LINEAR;
+    commonParams.flipX                  = flipX;
+    commonParams.flipY                  = flipY;
+    commonParams.rotation               = rotation;
 
     if (blitColorBuffer)
     {
-        RenderTargetVk *readRenderTarget = srcFramebufferVk->getColorReadRenderTarget();
-        params.srcLayer                  = readRenderTarget->getLayerIndex();
+        RenderTargetVk *readRenderTarget      = srcFramebufferVk->getColorReadRenderTarget();
+        UtilsVk::BlitResolveParameters params = commonParams;
+        params.srcLayer                       = readRenderTarget->getLayerIndex();
 
         // Multisampled images are not allowed to have mips.
-        ASSERT(!isResolve || readRenderTarget->getLevelIndex() == 0);
+        ASSERT(!isColorResolve || readRenderTarget->getLevelIndex() == 0);
 
         // If there was no clipping and the format capabilities allow us, use Vulkan's builtin blit.
         // The reason clipping is prohibited in this path is that due to rounding errors, it would
@@ -1036,7 +1059,7 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
         // Non-identity pre-rotation cases do not use Vulkan's builtin blit.
         //
         // For simplicity, we either blit all render targets with a Vulkan command, or none.
-        bool canBlitWithCommand = !isResolve && noClip &&
+        bool canBlitWithCommand = !isColorResolve && noClip &&
                                   (noFlip || !disableFlippingBlitWithCommand) &&
                                   HasSrcBlitFeature(renderer, readRenderTarget) &&
                                   (rotation == SurfaceRotation::Identity);
@@ -1051,6 +1074,13 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
                 AreSrcAndDstColorChannelsBlitCompatible(readRenderTarget, drawRenderTarget);
         }
 
+        // Now that all flipping is done, adjust the offsets for resolve and prerotation
+        if (isColorResolve)
+        {
+            AdjustBlitResolveParametersForResolve(sourceArea, destArea, &params);
+        }
+        AdjustBlitResolveParametersForPreRotation(rotation, srcFramebufferRotation, &params);
+
         if (canBlitWithCommand && areChannelsBlitCompatible)
         {
             for (size_t colorIndexGL : mState.getEnabledDrawBuffers())
@@ -1062,7 +1092,7 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
             }
         }
         // If we're not flipping or rotating, use Vulkan's builtin resolve.
-        else if (isResolve && !flipX && !flipY && areChannelsBlitCompatible &&
+        else if (isColorResolve && !flipX && !flipY && areChannelsBlitCompatible &&
                  (rotation == SurfaceRotation::Identity))
         {
             ANGLE_TRY(
@@ -1080,15 +1110,16 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
 
     if (blitDepthBuffer || blitStencilBuffer)
     {
-        RenderTargetVk *readRenderTarget = srcFramebufferVk->getDepthStencilRenderTarget();
-        RenderTargetVk *drawRenderTarget = mRenderTargetCache.getDepthStencil(true);
-        params.srcLayer                  = readRenderTarget->getLayerIndex();
+        RenderTargetVk *readRenderTarget      = srcFramebufferVk->getDepthStencilRenderTarget();
+        RenderTargetVk *drawRenderTarget      = mRenderTargetCache.getDepthStencil(true);
+        UtilsVk::BlitResolveParameters params = commonParams;
+        params.srcLayer                       = readRenderTarget->getLayerIndex();
 
         // Multisampled images are not allowed to have mips.
-        ASSERT(!isResolve || readRenderTarget->getLevelIndex() == 0);
+        ASSERT(!isDepthStencilResolve || readRenderTarget->getLevelIndex() == 0);
 
         // Similarly, only blit if there's been no clipping or rotating.
-        bool canBlitWithCommand = !isResolve && noClip &&
+        bool canBlitWithCommand = !isDepthStencilResolve && noClip &&
                                   (noFlip || !disableFlippingBlitWithCommand) &&
                                   HasSrcBlitFeature(renderer, readRenderTarget) &&
                                   HasDstBlitFeature(renderer, drawRenderTarget) &&
@@ -1104,6 +1135,13 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
         }
         else
         {
+            // Now that all flipping is done, adjust the offsets for resolve and prerotation
+            if (isDepthStencilResolve)
+            {
+                AdjustBlitResolveParametersForResolve(sourceArea, destArea, &params);
+            }
+            AdjustBlitResolveParametersForPreRotation(rotation, srcFramebufferRotation, &params);
+
             // Create depth- and stencil-only views for reading.
             vk::DeviceScoped<vk::ImageView> depthView(contextVk->getDevice());
             vk::DeviceScoped<vk::ImageView> stencilView(contextVk->getDevice());
