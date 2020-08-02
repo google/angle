@@ -655,9 +655,7 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
       mGpuEventsEnabled(false),
       mGpuClockSync{std::numeric_limits<double>::max(), std::numeric_limits<double>::max()},
       mGpuEventTimestampOrigin(0),
-      mPrimaryBufferCounter(0),
-      mRenderPassCounter(0),
-      mWriteDescriptorSetCounter(0),
+      mPerfCounters{},
       mContextPriority(renderer->getDriverPriority(GetContextPriority(state))),
       mCurrentIndirectBuffer(nullptr),
       mShareGroupVk(vk::GetImpl(state.getShareGroup()))
@@ -904,9 +902,9 @@ angle::Result ContextVk::initialize()
                                           vk::kDefaultTimestampQueryPoolSize));
         ANGLE_TRY(synchronizeCpuGpuTime());
 
-        mPrimaryBufferCounter++;
+        mPerfCounters.primaryBuffers++;
 
-        EventName eventName = GetTraceEventName("Primary", mPrimaryBufferCounter);
+        EventName eventName = GetTraceEventName("Primary", mPerfCounters.primaryBuffers);
         ANGLE_TRY(traceGpuEvent(&mOutsideRenderPassCommands->getCommandBuffer(),
                                 TRACE_EVENT_PHASE_BEGIN, eventName));
     }
@@ -1631,10 +1629,10 @@ void ContextVk::updateOverlayOnPresent()
     {
         gl::RunningGraphWidget *writeDescriptorSetCount =
             mState.getOverlay()->getRunningGraphWidget(gl::WidgetId::VulkanWriteDescriptorSetCount);
-        writeDescriptorSetCount->add(mWriteDescriptorSetCounter);
+        writeDescriptorSetCount->add(mPerfCounters.writeDescriptorSets);
         writeDescriptorSetCount->next();
 
-        mWriteDescriptorSetCounter = 0;
+        mPerfCounters.writeDescriptorSets = 0;
     }
 }
 
@@ -4003,7 +4001,7 @@ angle::Result ContextVk::flushImpl(const vk::Semaphore *signalSemaphore)
 
     if (mGpuEventsEnabled)
     {
-        EventName eventName = GetTraceEventName("Primary", mPrimaryBufferCounter);
+        EventName eventName = GetTraceEventName("Primary", mPerfCounters.primaryBuffers);
         ANGLE_TRY(traceGpuEvent(&mOutsideRenderPassCommands->getCommandBuffer(),
                                 TRACE_EVENT_PHASE_END, eventName));
     }
@@ -4042,17 +4040,18 @@ angle::Result ContextVk::flushImpl(const vk::Semaphore *signalSemaphore)
 
     ANGLE_TRY(startPrimaryCommandBuffer());
 
-    mRenderPassCounter         = 0;
-    mWriteDescriptorSetCounter = 0;
+    mPerfCounters.renderPasses                           = 0;
+    mPerfCounters.writeDescriptorSets                    = 0;
+    mPerfCounters.flushedOutsideRenderPassCommandBuffers = 0;
 
     mWaitSemaphores.clear();
     mWaitSemaphoreStageMasks.clear();
 
-    mPrimaryBufferCounter++;
+    mPerfCounters.primaryBuffers++;
 
     if (mGpuEventsEnabled)
     {
-        EventName eventName = GetTraceEventName("Primary", mPrimaryBufferCounter);
+        EventName eventName = GetTraceEventName("Primary", mPerfCounters.primaryBuffers);
         ANGLE_TRY(traceGpuEvent(&mOutsideRenderPassCommands->getCommandBuffer(),
                                 TRACE_EVENT_PHASE_BEGIN, eventName));
     }
@@ -4480,11 +4479,11 @@ angle::Result ContextVk::endRenderPass()
 
     onRenderPassFinished();
 
-    mRenderPassCounter++;
+    mPerfCounters.renderPasses++;
 
     if (mGpuEventsEnabled)
     {
-        EventName eventName = GetTraceEventName("RP", mRenderPassCounter);
+        EventName eventName = GetTraceEventName("RP", mPerfCounters.renderPasses);
         ANGLE_TRY(traceGpuEvent(&mOutsideRenderPassCommands->getCommandBuffer(),
                                 TRACE_EVENT_PHASE_BEGIN, eventName));
         ANGLE_TRY(flushOutsideRenderPassCommands());
@@ -4508,7 +4507,7 @@ angle::Result ContextVk::endRenderPass()
 
     if (mGpuEventsEnabled)
     {
-        EventName eventName = GetTraceEventName("RP", mRenderPassCounter);
+        EventName eventName = GetTraceEventName("RP", mPerfCounters.renderPasses);
         ANGLE_TRY(traceGpuEvent(&mOutsideRenderPassCommands->getCommandBuffer(),
                                 TRACE_EVENT_PHASE_END, eventName));
         ANGLE_TRY(flushOutsideRenderPassCommands());
@@ -4642,6 +4641,7 @@ angle::Result ContextVk::flushOutsideRenderPassCommands()
             ANGLE_TRY(mOutsideRenderPassCommands->flushToPrimary(this, &mPrimaryCommands));
         }
         mHasPrimaryCommands = true;
+        mPerfCounters.flushedOutsideRenderPassCommandBuffers++;
     }
     return angle::Result::Continue;
 }
@@ -4747,7 +4747,7 @@ VkDescriptorImageInfo *ContextVk::allocDescriptorImageInfos(size_t count)
 
 VkWriteDescriptorSet *ContextVk::allocWriteDescriptorSets(size_t count)
 {
-    mWriteDescriptorSetCounter += count;
+    mPerfCounters.writeDescriptorSets += count;
 
     size_t oldSize = mWriteDescriptorSets.size();
     size_t newSize = oldSize + count;

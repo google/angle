@@ -743,6 +743,15 @@ class ResourceSerialFactory final : angle::NonCopyable
     // Kept atomic so it can be accessed from multiple Context threads at once.
     std::atomic<uint32_t> mCurrentUniqueSerial;
 };
+
+// Performance and resource counters.
+struct PerfCounters
+{
+    uint32_t primaryBuffers;
+    uint32_t renderPasses;
+    uint32_t writeDescriptorSets;
+    uint32_t flushedOutsideRenderPassCommandBuffers;
+};
 }  // namespace vk
 
 #if !defined(ANGLE_SHARED_LIBVULKAN)

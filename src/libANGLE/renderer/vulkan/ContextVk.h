@@ -596,8 +596,7 @@ class ContextVk : public ContextImpl, public vk::Context
     vk::BufferHelper &getEmptyBuffer() { return mEmptyBuffer; }
     vk::DynamicBuffer *getStagingBufferStorage() { return &mStagingBufferStorage; }
 
-    uint32_t getRenderPassCounter() const { return mRenderPassCounter; }
-    uint32_t getWriteDescriptorSetCounter() const { return mWriteDescriptorSetCounter; }
+    const vk::PerfCounters &getPerfCounters() const { return mPerfCounters; }
 
   private:
     // Dirty bits.
@@ -1048,10 +1047,8 @@ class ContextVk : public ContextImpl, public vk::Context
     // double.
     uint64_t mGpuEventTimestampOrigin;
 
-    // Used to count events for tracing.
-    uint32_t mPrimaryBufferCounter;
-    uint32_t mRenderPassCounter;
-    uint32_t mWriteDescriptorSetCounter;
+    // A mix of per-frame and per-run counters.
+    vk::PerfCounters mPerfCounters;
 
     gl::State::DirtyBits mPipelineDirtyBitsMask;
 

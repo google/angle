@@ -28,11 +28,11 @@ namespace
 class VulkanPerformanceCounterTest : public ANGLETest
 {
   protected:
-    rx::ContextVk *hackANGLE() const
+    const rx::vk::PerfCounters &hackANGLE() const
     {
         // Hack the angle!
         const gl::Context *context = static_cast<gl::Context *>(getEGLWindow()->getContext());
-        return rx::GetImplAs<rx::ContextVk>(context);
+        return rx::GetImplAs<rx::ContextVk>(context)->getPerfCounters();
     }
 };
 
@@ -42,7 +42,7 @@ TEST_P(VulkanPerformanceCounterTest, NewTextureDoesNotBreakRenderPass)
     // TODO(jmadill): Fix test. http://anglebug.com/4911
     ANGLE_SKIP_TEST_IF(IsVulkan());
 
-    rx::ContextVk *contextVk = hackANGLE();
+    const rx::vk::PerfCounters &counters = hackANGLE();
 
     GLColor kInitialData[4] = {GLColor::red, GLColor::blue, GLColor::green, GLColor::yellow};
 
@@ -72,7 +72,7 @@ TEST_P(VulkanPerformanceCounterTest, NewTextureDoesNotBreakRenderPass)
 
     glDrawArrays(GL_TRIANGLES, 0, 6);
     ASSERT_GL_NO_ERROR();
-    uint32_t expectedRenderPassCount = contextVk->getRenderPassCounter();
+    uint32_t expectedRenderPassCount = counters.renderPasses;
 
     // Step 2: Introduce a new 2D Texture with the same Program and Framebuffer.
     GLTexture newTexture;
@@ -84,14 +84,14 @@ TEST_P(VulkanPerformanceCounterTest, NewTextureDoesNotBreakRenderPass)
     glDrawArrays(GL_TRIANGLES, 0, 6);
     ASSERT_GL_NO_ERROR();
 
-    uint32_t actualRenderPassCount = contextVk->getRenderPassCounter();
+    uint32_t actualRenderPassCount = counters.renderPasses;
     EXPECT_EQ(expectedRenderPassCount, actualRenderPassCount);
 }
 
 // Tests that changing a Texture's max level hits the descriptor set cache.
 TEST_P(VulkanPerformanceCounterTest, ChangingMaxLevelHitsDescriptorCache)
 {
-    rx::ContextVk *contextVk = hackANGLE();
+    const rx::vk::PerfCounters &counters = hackANGLE();
 
     GLColor kInitialData[4] = {GLColor::red, GLColor::blue, GLColor::green, GLColor::yellow};
 
@@ -129,14 +129,14 @@ TEST_P(VulkanPerformanceCounterTest, ChangingMaxLevelHitsDescriptorCache)
     glDrawArrays(GL_TRIANGLES, 0, 6);
     ASSERT_GL_NO_ERROR();
 
-    uint32_t expectedWriteDescriptorSetCount = contextVk->getWriteDescriptorSetCounter();
+    uint32_t expectedWriteDescriptorSetCount = counters.writeDescriptorSets;
 
     // Step 3: Change max level back to original value and verify we hit the cache.
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 1);
     glDrawArrays(GL_TRIANGLES, 0, 6);
     ASSERT_GL_NO_ERROR();
 
-    uint32_t actualWriteDescriptorSetCount = contextVk->getWriteDescriptorSetCounter();
+    uint32_t actualWriteDescriptorSetCount = counters.writeDescriptorSets;
     EXPECT_EQ(expectedWriteDescriptorSetCount, actualWriteDescriptorSetCount);
 }
 
