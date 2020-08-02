@@ -3,8 +3,11 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-// VulkanRenderPassCountTest:
-//   Validates that specific GL calls don't break RenderPasses.
+// VulkanPerformanceCounterTest:
+//   Validates specific GL call patterns with ANGLE performance counters.
+//   For example we can verify a certain call set doesn't break the RenderPass.
+//
+// TODO(jmadill): Move to a GL extension. http://anglebug.com/4918
 
 #include "test_utils/ANGLETest.h"
 #include "test_utils/angle_test_instantiate.h"
@@ -22,7 +25,7 @@ using namespace angle;
 
 namespace
 {
-class VulkanRenderPassCountTest : public ANGLETest
+class VulkanPerformanceCounterTest : public ANGLETest
 {
   protected:
     rx::ContextVk *hackANGLE() const
@@ -34,7 +37,7 @@ class VulkanRenderPassCountTest : public ANGLETest
 };
 
 // Tests that texture updates to unused textures don't break the RP.
-TEST_P(VulkanRenderPassCountTest, NewTextureDoesNotBreakRenderPass)
+TEST_P(VulkanPerformanceCounterTest, NewTextureDoesNotBreakRenderPass)
 {
     // TODO(jmadill): Fix test. http://anglebug.com/4911
     ANGLE_SKIP_TEST_IF(IsVulkan());
@@ -85,6 +88,6 @@ TEST_P(VulkanRenderPassCountTest, NewTextureDoesNotBreakRenderPass)
     EXPECT_EQ(expectedRenderPassCount, actualRenderPassCount);
 }
 
-ANGLE_INSTANTIATE_TEST(VulkanRenderPassCountTest, ES2_VULKAN(), ES3_VULKAN());
+ANGLE_INSTANTIATE_TEST(VulkanPerformanceCounterTest, ES2_VULKAN(), ES3_VULKAN());
 
 }  // anonymous namespace
