@@ -163,6 +163,8 @@ void TracePerfTest::initializeBenchmark()
     mEndFrame                  = traceInfo.endFrame;
     SetBinaryDataDecompressCallback(params.testID, DecompressBinaryData);
 
+    setStepsPerRunLoopStep(mEndFrame - mStartFrame + 1);
+
     std::stringstream testDataDirStr;
     testDataDirStr << ANGLE_TRACE_DATA_DIR << "/" << traceInfo.name;
     std::string testDataDir = testDataDirStr.str();
