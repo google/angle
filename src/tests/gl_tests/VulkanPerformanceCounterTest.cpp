@@ -140,6 +140,50 @@ TEST_P(VulkanPerformanceCounterTest, ChangingMaxLevelHitsDescriptorCache)
     EXPECT_EQ(expectedWriteDescriptorSetCount, actualWriteDescriptorSetCount);
 }
 
+// Tests that two glCopyBufferSubData commands can share a barrier.
+TEST_P(VulkanPerformanceCounterTest, IndependentBufferCopiesShareSingleBarrier)
+{
+    constexpr GLint srcDataA[] = {1, 2, 3, 4};
+    constexpr GLint srcDataB[] = {5, 6, 7, 8};
+
+    // Step 1: Set up four buffers for two copies.
+    GLBuffer srcA;
+    glBindBuffer(GL_COPY_READ_BUFFER, srcA);
+    glBufferData(GL_COPY_READ_BUFFER, sizeof(srcDataA), srcDataA, GL_STATIC_COPY);
+
+    GLBuffer dstA;
+    glBindBuffer(GL_COPY_WRITE_BUFFER, dstA);
+    glBufferData(GL_COPY_WRITE_BUFFER, sizeof(srcDataA[0]) * 2, nullptr, GL_STATIC_COPY);
+
+    GLBuffer srcB;
+    glBindBuffer(GL_COPY_READ_BUFFER, srcB);
+    glBufferData(GL_COPY_READ_BUFFER, sizeof(srcDataB), srcDataB, GL_STATIC_COPY);
+
+    GLBuffer dstB;
+    glBindBuffer(GL_COPY_WRITE_BUFFER, dstB);
+    glBufferData(GL_COPY_WRITE_BUFFER, sizeof(srcDataB[0]) * 2, nullptr, GL_STATIC_COPY);
+
+    // We expect that ANGLE generate zero additional command buffers.
+    const rx::vk::PerfCounters &counters = hackANGLE();
+    uint32_t expectedFlushCount          = counters.flushedOutsideRenderPassCommandBuffers;
+
+    // Step 2: Do the two copies.
+    glBindBuffer(GL_COPY_READ_BUFFER, srcA);
+    glBindBuffer(GL_COPY_WRITE_BUFFER, dstA);
+    glCopyBufferSubData(GL_COPY_READ_BUFFER, GL_COPY_WRITE_BUFFER, sizeof(srcDataB[0]), 0,
+                        sizeof(srcDataA[0]) * 2);
+
+    glBindBuffer(GL_COPY_READ_BUFFER, srcB);
+    glBindBuffer(GL_COPY_WRITE_BUFFER, dstB);
+    glCopyBufferSubData(GL_COPY_READ_BUFFER, GL_COPY_WRITE_BUFFER, sizeof(srcDataB[0]), 0,
+                        sizeof(srcDataB[0]) * 2);
+
+    ASSERT_GL_NO_ERROR();
+
+    uint32_t actualFlushCount = counters.flushedOutsideRenderPassCommandBuffers;
+    EXPECT_EQ(expectedFlushCount, actualFlushCount);
+}
+
 ANGLE_INSTANTIATE_TEST(VulkanPerformanceCounterTest, ES3_VULKAN());
 
 }  // anonymous namespace

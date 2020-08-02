@@ -1521,7 +1521,8 @@ angle::Result ContextVk::handleDirtyGraphicsTransformFeedbackBuffersEmulation(
         vk::BufferHelper *bufferHelper = bufferHelpers[bufferIndex];
         ASSERT(bufferHelper);
         mRenderPassCommands->bufferWrite(&mResourceUseList, VK_ACCESS_SHADER_WRITE_BIT,
-                                         vk::PipelineStage::VertexShader, bufferHelper);
+                                         vk::PipelineStage::VertexShader,
+                                         vk::BufferAliasingMode::Disallowed, bufferHelper);
     }
 
     // TODO(http://anglebug.com/3570): Need to update to handle Program Pipelines
@@ -1556,9 +1557,9 @@ angle::Result ContextVk::handleDirtyGraphicsTransformFeedbackBuffersExtension(
     {
         vk::BufferHelper *bufferHelper = bufferHelpers[bufferIndex];
         ASSERT(bufferHelper);
-        mRenderPassCommands->bufferWrite(&mResourceUseList,
-                                         VK_ACCESS_TRANSFORM_FEEDBACK_WRITE_BIT_EXT,
-                                         vk::PipelineStage::TransformFeedback, bufferHelper);
+        mRenderPassCommands->bufferWrite(
+            &mResourceUseList, VK_ACCESS_TRANSFORM_FEEDBACK_WRITE_BIT_EXT,
+            vk::PipelineStage::TransformFeedback, vk::BufferAliasingMode::Disallowed, bufferHelper);
     }
 
     const gl::TransformFeedbackBuffersArray<VkBuffer> &bufferHandles =
@@ -3385,7 +3386,9 @@ angle::Result ContextVk::onBeginTransformFeedback(
 
     for (size_t bufferIndex = 0; bufferIndex < bufferCount; ++bufferIndex)
     {
-        if (mCurrentTransformFeedbackBuffers.count(buffers[bufferIndex]) != 0)
+        const vk::BufferHelper *buffer = buffers[bufferIndex];
+        if (mCurrentTransformFeedbackBuffers.count(buffer) != 0 ||
+            mRenderPassCommands->usesBuffer(*buffer))
         {
             ANGLE_TRY(endRenderPass());
             break;
@@ -4322,7 +4325,8 @@ angle::Result ContextVk::onBufferRead(VkAccessFlags readAccessType,
 
     ANGLE_TRY(endRenderPass());
 
-    if (!buffer->canAccumulateRead(this, readAccessType))
+    // A current write access means we need to start a new command buffer.
+    if (mOutsideRenderPassCommands->usesBufferForWrite(*buffer))
     {
         ANGLE_TRY(flushOutsideRenderPassCommands());
     }
@@ -4340,12 +4344,14 @@ angle::Result ContextVk::onBufferWrite(VkAccessFlags writeAccessType,
 
     ANGLE_TRY(endRenderPass());
 
-    if (!buffer->canAccumulateWrite(this, writeAccessType))
+    // Any current access means we need to start a new command buffer.
+    if (mOutsideRenderPassCommands->usesBuffer(*buffer))
     {
         ANGLE_TRY(flushOutsideRenderPassCommands());
     }
 
-    mOutsideRenderPassCommands->bufferWrite(&mResourceUseList, writeAccessType, writeStage, buffer);
+    mOutsideRenderPassCommands->bufferWrite(&mResourceUseList, writeAccessType, writeStage,
+                                            vk::BufferAliasingMode::Disallowed, buffer);
 
     return angle::Result::Continue;
 }

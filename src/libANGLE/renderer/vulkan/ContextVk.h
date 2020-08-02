@@ -494,6 +494,11 @@ class ContextVk : public ContextImpl, public vk::Context
     {
         return onBufferWrite(VK_ACCESS_TRANSFER_WRITE_BIT, vk::PipelineStage::Transfer, buffer);
     }
+    angle::Result onBufferSelfCopy(vk::BufferHelper *buffer)
+    {
+        return onBufferWrite(VK_ACCESS_TRANSFER_READ_BIT | VK_ACCESS_TRANSFER_WRITE_BIT,
+                             vk::PipelineStage::Transfer, buffer);
+    }
     angle::Result onBufferComputeShaderRead(vk::BufferHelper *buffer)
     {
         return onBufferRead(VK_ACCESS_SHADER_READ_BIT, vk::PipelineStage::ComputeShader, buffer);

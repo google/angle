@@ -252,31 +252,40 @@ angle::Result BufferVk::copySubData(const gl::Context *context,
 {
     ASSERT(mBuffer && mBuffer->valid());
 
-    ContextVk *contextVk = vk::GetImpl(context);
-    auto *sourceBuffer   = GetAs<BufferVk>(source);
-    ASSERT(sourceBuffer->getBuffer().valid());
+    ContextVk *contextVk           = vk::GetImpl(context);
+    BufferVk *sourceVk             = GetAs<BufferVk>(source);
+    vk::BufferHelper &sourceBuffer = sourceVk->getBuffer();
+    ASSERT(sourceBuffer.valid());
 
     // If the shadow buffer is enabled for the destination buffer then
     // we need to update that as well. This will require us to complete
     // all recorded and in-flight commands involving the source buffer.
     if (mShadowBuffer.valid())
     {
-        ANGLE_TRY(sourceBuffer->getBuffer().waitForIdle(contextVk));
+        ANGLE_TRY(sourceBuffer.waitForIdle(contextVk));
 
         // Update the shadow buffer
         uint8_t *srcPtr;
-        ANGLE_TRY(sourceBuffer->getBuffer().mapWithOffset(contextVk, &srcPtr, sourceOffset));
+        ANGLE_TRY(sourceBuffer.mapWithOffset(contextVk, &srcPtr, sourceOffset));
 
         updateShadowBuffer(srcPtr, size, destOffset);
 
         // Unmap the source buffer
-        sourceBuffer->getBuffer().unmap(contextVk->getRenderer());
+        sourceBuffer.unmap(contextVk->getRenderer());
     }
 
     vk::CommandBuffer *commandBuffer = nullptr;
 
-    ANGLE_TRY(contextVk->onBufferTransferRead(&sourceBuffer->getBuffer()));
-    ANGLE_TRY(contextVk->onBufferTransferWrite(mBuffer));
+    // Check for self-dependency.
+    if (sourceBuffer.getBufferSerial() == mBuffer->getBufferSerial())
+    {
+        ANGLE_TRY(contextVk->onBufferSelfCopy(mBuffer));
+    }
+    else
+    {
+        ANGLE_TRY(contextVk->onBufferTransferRead(&sourceBuffer));
+        ANGLE_TRY(contextVk->onBufferTransferWrite(mBuffer));
+    }
     ANGLE_TRY(contextVk->endRenderPassAndGetCommandBuffer(&commandBuffer));
 
     // Enqueue a copy command on the GPU.
@@ -284,8 +293,7 @@ angle::Result BufferVk::copySubData(const gl::Context *context,
                                      static_cast<VkDeviceSize>(destOffset),
                                      static_cast<VkDeviceSize>(size)};
 
-    commandBuffer->copyBuffer(sourceBuffer->getBuffer().getBuffer(), mBuffer->getBuffer(), 1,
-                              &copyRegion);
+    commandBuffer->copyBuffer(sourceBuffer.getBuffer(), mBuffer->getBuffer(), 1, &copyRegion);
 
     // The new destination buffer data may require a conversion for the next draw, so mark it dirty.
     onDataChanged();
