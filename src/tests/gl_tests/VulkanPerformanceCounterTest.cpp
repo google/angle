@@ -39,9 +39,6 @@ class VulkanPerformanceCounterTest : public ANGLETest
 // Tests that texture updates to unused textures don't break the RP.
 TEST_P(VulkanPerformanceCounterTest, NewTextureDoesNotBreakRenderPass)
 {
-    // TODO(jmadill): Fix test. http://anglebug.com/4911
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-
     const rx::vk::PerfCounters &counters = hackANGLE();
 
     GLColor kInitialData[4] = {GLColor::red, GLColor::blue, GLColor::green, GLColor::yellow};

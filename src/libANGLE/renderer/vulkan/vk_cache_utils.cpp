@@ -1549,6 +1549,18 @@ void AttachmentOpsArray::setStencilOps(size_t index,
     SetBitField(ops.stencilStoreOp, storeOp);
 }
 
+void AttachmentOpsArray::setClearOp(size_t index)
+{
+    PackedAttachmentOpsDesc &ops = mOps[index];
+    SetBitField(ops.loadOp, VK_ATTACHMENT_LOAD_OP_CLEAR);
+}
+
+void AttachmentOpsArray::setClearStencilOp(size_t index)
+{
+    PackedAttachmentOpsDesc &ops = mOps[index];
+    SetBitField(ops.stencilLoadOp, VK_ATTACHMENT_LOAD_OP_CLEAR);
+}
+
 size_t AttachmentOpsArray::hash() const
 {
     return angle::ComputeGenericHash(mOps);

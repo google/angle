@@ -264,4 +264,29 @@ TEST(FastUnorderedMap, BasicUsage)
         EXPECT_FALSE(value);
     }
 }
+
+// Basic functionality for FastUnorderedSet
+TEST(FastUnorderedSet, BasicUsage)
+{
+    FastUnorderedSet<int, 3> testMap;
+    EXPECT_TRUE(testMap.empty());
+
+    testMap.insert(5);
+    EXPECT_TRUE(testMap.contains(5));
+    EXPECT_FALSE(testMap.contains(6));
+    EXPECT_FALSE(testMap.empty());
+
+    testMap.clear();
+    EXPECT_TRUE(testMap.empty());
+
+    for (int i = 0; i < 10; ++i)
+    {
+        testMap.insert(i);
+    }
+
+    for (int i = 0; i < 10; ++i)
+    {
+        EXPECT_TRUE(testMap.contains(i));
+    }
+}
 }  // namespace angle

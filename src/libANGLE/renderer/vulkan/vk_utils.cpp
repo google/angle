@@ -741,15 +741,20 @@ void ClearValuesArray::store(uint32_t index,
         // Ensure for packed DS we're writing to the depth index.
         ASSERT(index == kClearValueDepthIndex ||
                (index == kClearValueStencilIndex && aspectFlags == VK_IMAGE_ASPECT_STENCIL_BIT));
-        mValues[kClearValueStencilIndex] = clearValue;
-        mEnabled.set(kClearValueStencilIndex);
+
+        storeNoDepthStencil(kClearValueStencilIndex, clearValue);
     }
 
     if (aspectFlags != VK_IMAGE_ASPECT_STENCIL_BIT)
     {
-        mValues[index] = clearValue;
-        mEnabled.set(index);
+        storeNoDepthStencil(index, clearValue);
     }
+}
+
+void ClearValuesArray::storeNoDepthStencil(uint32_t index, const VkClearValue &clearValue)
+{
+    mValues[index] = clearValue;
+    mEnabled.set(index);
 }
 
 // ResourceSerialFactory implementation.

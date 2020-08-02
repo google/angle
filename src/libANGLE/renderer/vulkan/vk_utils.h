@@ -659,6 +659,7 @@ class ClearValuesArray final
     ClearValuesArray &operator=(const ClearValuesArray &rhs);
 
     void store(uint32_t index, VkImageAspectFlags aspectFlags, const VkClearValue &clearValue);
+    void storeNoDepthStencil(uint32_t index, const VkClearValue &clearValue);
 
     void reset(size_t index)
     {

@@ -185,18 +185,19 @@ class FramebufferVk : public FramebufferImpl
                                 uint8_t stencilMask,
                                 const VkClearColorValue &clearColorValue,
                                 const VkClearDepthStencilValue &clearDepthStencilValue);
-    void clearWithRenderPassOp(gl::DrawBufferMask clearColorBuffers,
-                               bool clearDepth,
-                               bool clearStencil,
-                               const VkClearColorValue &clearColorValue,
-                               const VkClearDepthStencilValue &clearDepthStencilValue);
-    void clearWithClearAttachment(vk::CommandBuffer *renderPassCommandBuffer,
-                                  const gl::Rectangle &scissoredRenderArea,
-                                  gl::DrawBufferMask clearColorBuffers,
-                                  bool clearDepth,
-                                  bool clearStencil,
-                                  const VkClearColorValue &clearColorValue,
-                                  const VkClearDepthStencilValue &clearDepthStencilValue);
+    void clearWithLoadOp(ContextVk *contextVk,
+                         gl::DrawBufferMask clearColorBuffers,
+                         bool clearDepth,
+                         bool clearStencil,
+                         const VkClearColorValue &clearColorValue,
+                         const VkClearDepthStencilValue &clearDepthStencilValue);
+    void clearWithCommand(vk::CommandBuffer *renderPassCommandBuffer,
+                          const gl::Rectangle &scissoredRenderArea,
+                          gl::DrawBufferMask clearColorBuffers,
+                          bool clearDepth,
+                          bool clearStencil,
+                          const VkClearColorValue &clearColorValue,
+                          const VkClearDepthStencilValue &clearDepthStencilValue);
     void updateActiveColorMasks(size_t colorIndex, bool r, bool g, bool b, bool a);
     void updateRenderPassDesc();
     angle::Result updateColorAttachment(const gl::Context *context,

@@ -182,6 +182,9 @@ class AttachmentOpsArray final
     void setOps(size_t index, VkAttachmentLoadOp loadOp, VkAttachmentStoreOp storeOp);
     void setStencilOps(size_t index, VkAttachmentLoadOp loadOp, VkAttachmentStoreOp storeOp);
 
+    void setClearOp(size_t index);
+    void setClearStencilOp(size_t index);
+
     size_t hash() const;
 
   private:
@@ -786,19 +789,28 @@ class PipelineHelper final : angle::NonCopyable
 
 ANGLE_INLINE PipelineHelper::PipelineHelper(Pipeline &&pipeline) : mPipeline(std::move(pipeline)) {}
 
-struct ImageViewSubresourceSerial
+struct ImageSubresourceRange
 {
-    ImageViewSerial imageViewSerial;
     uint16_t level : 10;       // GL max is 1000 (fits in 10 bits).
     uint16_t levelCount : 6;   // Max 63 levels (2 ** 6 - 1). If we need more, take from layer.
     uint16_t layer : 15;       // Implementation max is 2048 (11 bits).
     uint16_t singleLayer : 1;  // true/false only. Not possible to use sub-slices of levels.
 };
 
+static_assert(sizeof(ImageSubresourceRange) == sizeof(uint32_t), "Size mismatch");
+
+constexpr ImageSubresourceRange kInvalidImageSubresourceRange = {0, 0, 0, 0};
+
+struct ImageViewSubresourceSerial
+{
+    ImageViewSerial imageViewSerial;
+    ImageSubresourceRange subresource;
+};
+
 static_assert(sizeof(ImageViewSubresourceSerial) == sizeof(uint64_t), "Size mismatch");
 
-constexpr ImageViewSubresourceSerial kInvalidImageViewSubresourceSerial = {kInvalidImageViewSerial,
-                                                                           0, 0, 0, 0};
+constexpr ImageViewSubresourceSerial kInvalidImageViewSubresourceSerial = {
+    kInvalidImageViewSerial, kInvalidImageSubresourceRange};
 
 class TextureDescriptorDesc
 {

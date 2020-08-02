@@ -1382,7 +1382,7 @@ TEST_P(VertexAttributeTest, DisabledAttribArrays)
         drawQuad(program, "a_position", 0.5f);
         ASSERT_GL_NO_ERROR();
 
-        EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+        EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green) << "color index " << colorIndex;
 
         glDeleteProgram(program);
     }
