@@ -93,14 +93,16 @@ class MockTextureImpl : public TextureImpl
     MOCK_METHOD5(
         setStorage,
         angle::Result(const gl::Context *, gl::TextureType, size_t, GLenum, const gl::Extents &));
-    MOCK_METHOD7(setStorageExternalMemory,
+    MOCK_METHOD9(setStorageExternalMemory,
                  angle::Result(const gl::Context *,
                                gl::TextureType,
                                size_t,
                                GLenum,
                                const gl::Extents &,
                                gl::MemoryObject *,
-                               GLuint64));
+                               GLuint64,
+                               GLbitfield,
+                               GLbitfield));
     MOCK_METHOD4(setImageExternal,
                  angle::Result(const gl::Context *,
                                gl::TextureType,

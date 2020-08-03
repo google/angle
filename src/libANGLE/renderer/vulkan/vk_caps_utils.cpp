@@ -116,6 +116,7 @@ void RendererVk::ensureCapsInitialized() const
     mNativeExtensions.eglImageArray                = true;
     mNativeExtensions.memoryObject                 = true;
     mNativeExtensions.memoryObjectFd               = getFeatures().supportsExternalMemoryFd.enabled;
+    mNativeExtensions.memoryObjectFlagsANGLE       = true;
     mNativeExtensions.memoryObjectFuchsiaANGLE =
         getFeatures().supportsExternalMemoryFuchsia.enabled;
 

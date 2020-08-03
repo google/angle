@@ -1452,7 +1452,9 @@ angle::Result Texture::setStorageExternalMemory(Context *context,
                                                 GLenum internalFormat,
                                                 const Extents &size,
                                                 MemoryObject *memoryObject,
-                                                GLuint64 offset)
+                                                GLuint64 offset,
+                                                GLbitfield createFlags,
+                                                GLbitfield usageFlags)
 {
     ASSERT(type == mState.mType);
 
@@ -1461,7 +1463,7 @@ angle::Result Texture::setStorageExternalMemory(Context *context,
     ANGLE_TRY(orphanImages(context));
 
     ANGLE_TRY(mTexture->setStorageExternalMemory(context, type, levels, internalFormat, size,
-                                                 memoryObject, offset));
+                                                 memoryObject, offset, createFlags, usageFlags));
 
     mState.mImmutableFormat = true;
     mState.mImmutableLevels = static_cast<GLuint>(levels);

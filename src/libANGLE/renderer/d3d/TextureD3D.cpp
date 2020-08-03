@@ -191,7 +191,9 @@ angle::Result TextureD3D::setStorageExternalMemory(const gl::Context *context,
                                                    GLenum internalFormat,
                                                    const gl::Extents &size,
                                                    gl::MemoryObject *memoryObject,
-                                                   GLuint64 offset)
+                                                   GLuint64 offset,
+                                                   GLbitfield createFlags,
+                                                   GLbitfield usageFlags)
 {
     ANGLE_HR_UNREACHABLE(GetImplAs<ContextD3D>(context));
     return angle::Result::Continue;

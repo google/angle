@@ -21,11 +21,6 @@ namespace angle
 namespace
 {
 
-constexpr VkImageUsageFlags kRequiredImageUsageFlags =
-    VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT |
-    VK_IMAGE_USAGE_STORAGE_BIT | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT |
-    VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT;
-
 std::vector<VkExtensionProperties> EnumerateInstanceExtensionProperties(const char *layerName)
 {
     uint32_t instanceExtensionCount;
@@ -375,6 +370,8 @@ bool VulkanExternalHelper::canCreateImageExternal(
     VkFormat format,
     VkImageType type,
     VkImageTiling tiling,
+    VkImageCreateFlags createFlags,
+    VkImageUsageFlags usageFlags,
     VkExternalMemoryHandleTypeFlagBits handleType) const
 {
     VkPhysicalDeviceExternalImageFormatInfo externalImageFormatInfo = {
@@ -389,8 +386,8 @@ bool VulkanExternalHelper::canCreateImageExternal(
         /* .format = */ format,
         /* .type = */ type,
         /* .tiling = */ tiling,
-        /* .usage = */ kRequiredImageUsageFlags,
-        /* .flags = */ 0,
+        /* .usage = */ usageFlags,
+        /* .flags = */ createFlags,
     };
 
     VkExternalImageFormatProperties externalImageFormatProperties = {
@@ -423,6 +420,8 @@ bool VulkanExternalHelper::canCreateImageExternal(
 }
 
 VkResult VulkanExternalHelper::createImage2DExternal(VkFormat format,
+                                                     VkImageCreateFlags createFlags,
+                                                     VkImageUsageFlags usageFlags,
                                                      VkExtent3D extent,
                                                      VkExternalMemoryHandleTypeFlags handleTypes,
                                                      VkImage *imageOut,
@@ -438,7 +437,7 @@ VkResult VulkanExternalHelper::createImage2DExternal(VkFormat format,
     VkImageCreateInfo imageCreateInfo = {
         /* .sType = */ VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO,
         /* .pNext = */ &externalMemoryImageCreateInfo,
-        /* .flags = */ 0,
+        /* .flags = */ createFlags,
         /* .imageType = */ VK_IMAGE_TYPE_2D,
         /* .format = */ format,
         /* .extent = */ extent,
@@ -446,7 +445,7 @@ VkResult VulkanExternalHelper::createImage2DExternal(VkFormat format,
         /* .arrayLayers = */ 1,
         /* .samples = */ VK_SAMPLE_COUNT_1_BIT,
         /* .tiling = */ VK_IMAGE_TILING_OPTIMAL,
-        /* .usage = */ kRequiredImageUsageFlags,
+        /* .usage = */ usageFlags,
         /* .sharingMode = */ VK_SHARING_MODE_EXCLUSIVE,
         /* .queueFamilyIndexCount = */ 0,
         /* .pQueueFamilyIndices = */ nullptr,
@@ -511,25 +510,30 @@ VkResult VulkanExternalHelper::createImage2DExternal(VkFormat format,
 
 bool VulkanExternalHelper::canCreateImageOpaqueFd(VkFormat format,
                                                   VkImageType type,
-                                                  VkImageTiling tiling) const
+                                                  VkImageTiling tiling,
+                                                  VkImageCreateFlags createFlags,
+                                                  VkImageUsageFlags usageFlags) const
 {
     if (!mHasExternalMemoryFd)
     {
         return false;
     }
 
-    return canCreateImageExternal(format, type, tiling,
+    return canCreateImageExternal(format, type, tiling, createFlags, usageFlags,
                                   VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT);
 }
 
 VkResult VulkanExternalHelper::createImage2DOpaqueFd(VkFormat format,
+                                                     VkImageCreateFlags createFlags,
+                                                     VkImageUsageFlags usageFlags,
                                                      VkExtent3D extent,
                                                      VkImage *imageOut,
                                                      VkDeviceMemory *deviceMemoryOut,
                                                      VkDeviceSize *deviceMemorySizeOut)
 {
-    return createImage2DExternal(format, extent, VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT,
-                                 imageOut, deviceMemoryOut, deviceMemorySizeOut);
+    return createImage2DExternal(format, createFlags, usageFlags, extent,
+                                 VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT, imageOut,
+                                 deviceMemoryOut, deviceMemorySizeOut);
 }
 
 VkResult VulkanExternalHelper::exportMemoryOpaqueFd(VkDeviceMemory deviceMemory, int *fd)
@@ -546,24 +550,28 @@ VkResult VulkanExternalHelper::exportMemoryOpaqueFd(VkDeviceMemory deviceMemory,
 
 bool VulkanExternalHelper::canCreateImageZirconVmo(VkFormat format,
                                                    VkImageType type,
-                                                   VkImageTiling tiling) const
+                                                   VkImageTiling tiling,
+                                                   VkImageCreateFlags createFlags,
+                                                   VkImageUsageFlags usageFlags) const
 {
     if (!mHasExternalMemoryFuchsia)
     {
         return false;
     }
 
-    return canCreateImageExternal(format, type, tiling,
+    return canCreateImageExternal(format, type, tiling, createFlags, usageFlags,
                                   VK_EXTERNAL_MEMORY_HANDLE_TYPE_TEMP_ZIRCON_VMO_BIT_FUCHSIA);
 }
 
 VkResult VulkanExternalHelper::createImage2DZirconVmo(VkFormat format,
+                                                      VkImageCreateFlags createFlags,
+                                                      VkImageUsageFlags usageFlags,
                                                       VkExtent3D extent,
                                                       VkImage *imageOut,
                                                       VkDeviceMemory *deviceMemoryOut,
                                                       VkDeviceSize *deviceMemorySizeOut)
 {
-    return createImage2DExternal(format, extent,
+    return createImage2DExternal(format, createFlags, usageFlags, extent,
                                  VK_EXTERNAL_MEMORY_HANDLE_TYPE_TEMP_ZIRCON_VMO_BIT_FUCHSIA,
                                  imageOut, deviceMemoryOut, deviceMemorySizeOut);
 }

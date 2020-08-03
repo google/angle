@@ -596,7 +596,9 @@ angle::Result TextureMtl::setStorageExternalMemory(const gl::Context *context,
                                                    GLenum internalFormat,
                                                    const gl::Extents &size,
                                                    gl::MemoryObject *memoryObject,
-                                                   GLuint64 offset)
+                                                   GLuint64 offset,
+                                                   GLbitfield createFlags,
+                                                   GLbitfield usageFlags)
 {
     UNIMPLEMENTED();
 

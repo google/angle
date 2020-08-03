@@ -7728,12 +7728,8 @@ void Context::texStorageMem2D(TextureType target,
                               MemoryObjectID memory,
                               GLuint64 offset)
 {
-    MemoryObject *memoryObject = getMemoryObject(memory);
-    ASSERT(memoryObject);
-    Extents size(width, height, 1);
-    Texture *texture = getTextureByType(target);
-    ANGLE_CONTEXT_TRY(texture->setStorageExternalMemory(this, target, levels, internalFormat, size,
-                                                        memoryObject, offset));
+    texStorageMemFlags2D(target, levels, internalFormat, width, height, memory, offset, 0,
+                         std::numeric_limits<uint32_t>::max());
 }
 
 void Context::texStorageMem2DMultisample(TextureType target,
@@ -7798,7 +7794,12 @@ void Context::texStorageMemFlags2D(TextureType target,
                                    GLbitfield createFlags,
                                    GLbitfield usageFlags)
 {
-    UNIMPLEMENTED();
+    MemoryObject *memoryObject = getMemoryObject(memory);
+    ASSERT(memoryObject);
+    Extents size(width, height, 1);
+    Texture *texture = getTextureByType(target);
+    ANGLE_CONTEXT_TRY(texture->setStorageExternalMemory(
+        this, target, levels, internalFormat, size, memoryObject, offset, createFlags, usageFlags));
 }
 
 void Context::texStorageMemFlags2DMultisample(TextureType target,

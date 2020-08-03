@@ -1217,8 +1217,14 @@ angle::Result TextureGL::setStorageExternalMemory(const gl::Context *context,
                                                   GLenum internalFormat,
                                                   const gl::Extents &size,
                                                   gl::MemoryObject *memoryObject,
-                                                  GLuint64 offset)
+                                                  GLuint64 offset,
+                                                  GLbitfield createFlags,
+                                                  GLbitfield usageFlags)
 {
+    // GL_ANGLE_external_objects_flags not supported.
+    ASSERT(createFlags == 0);
+    ASSERT(usageFlags == std::numeric_limits<uint32_t>::max());
+
     const FunctionsGL *functions      = GetFunctionsGL(context);
     StateManagerGL *stateManager      = GetStateManagerGL(context);
     const angle::FeaturesGL &features = GetFeaturesGL(context);

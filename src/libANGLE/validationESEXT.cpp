@@ -515,4 +515,109 @@ bool ValidateGetInteger64vEXT(const Context *context, GLenum pname, const GLint6
 
     return true;
 }
+
+bool ValidateTexStorageMemFlags2DANGLE(const Context *context,
+                                       TextureType targetPacked,
+                                       GLsizei levels,
+                                       GLenum internalFormat,
+                                       GLsizei width,
+                                       GLsizei height,
+                                       MemoryObjectID memoryPacked,
+                                       GLuint64 offset,
+                                       GLbitfield createFlags,
+                                       GLbitfield usageFlags)
+{
+    if (!context->getExtensions().memoryObjectFlagsANGLE)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    if (!ValidateTexStorageMem2DEXT(context, targetPacked, levels, internalFormat, width, height,
+                                    memoryPacked, offset))
+    {
+        return false;
+    }
+
+    // |createFlags| and |usageFlags| must only have bits specified by the extension.
+    constexpr GLbitfield kAllCreateFlags =
+        GL_CREATE_SPARSE_BINDING_BIT_ANGLE | GL_CREATE_SPARSE_RESIDENCY_BIT_ANGLE |
+        GL_CREATE_SPARSE_ALIASED_BIT_ANGLE | GL_CREATE_MUTABLE_FORMAT_BIT_ANGLE |
+        GL_CREATE_CUBE_COMPATIBLE_BIT_ANGLE | GL_CREATE_ALIAS_BIT_ANGLE |
+        GL_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT_ANGLE | GL_CREATE_2D_ARRAY_COMPATIBLE_BIT_ANGLE |
+        GL_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT_ANGLE | GL_CREATE_EXTENDED_USAGE_BIT_ANGLE |
+        GL_CREATE_PROTECTED_BIT_ANGLE | GL_CREATE_DISJOINT_BIT_ANGLE |
+        GL_CREATE_CORNER_SAMPLED_BIT_ANGLE | GL_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_ANGLE |
+        GL_CREATE_SUBSAMPLED_BIT_ANGLE;
+
+    if ((createFlags & ~kAllCreateFlags) != 0)
+    {
+        context->validationError(GL_INVALID_VALUE, kInvalidExternalCreateFlags);
+        return false;
+    }
+
+    constexpr GLbitfield kAllUsageFlags =
+        GL_USAGE_TRANSFER_SRC_BIT_ANGLE | GL_USAGE_TRANSFER_DST_BIT_ANGLE |
+        GL_USAGE_SAMPLED_BIT_ANGLE | GL_USAGE_STORAGE_BIT_ANGLE |
+        GL_USAGE_COLOR_ATTACHMENT_BIT_ANGLE | GL_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT_ANGLE |
+        GL_USAGE_TRANSIENT_ATTACHMENT_BIT_ANGLE | GL_USAGE_INPUT_ATTACHMENT_BIT_ANGLE |
+        GL_USAGE_SHADING_RATE_IMAGE_BIT_ANGLE | GL_USAGE_FRAGMENT_DENSITY_MAP_BIT_ANGLE;
+
+    if ((usageFlags & ~kAllUsageFlags) != 0)
+    {
+        context->validationError(GL_INVALID_VALUE, kInvalidExternalUsageFlags);
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateTexStorageMemFlags2DMultisampleANGLE(const Context *context,
+                                                  TextureType targetPacked,
+                                                  GLsizei samples,
+                                                  GLenum internalFormat,
+                                                  GLsizei width,
+                                                  GLsizei height,
+                                                  GLboolean fixedSampleLocations,
+                                                  MemoryObjectID memoryPacked,
+                                                  GLuint64 offset,
+                                                  GLbitfield createFlags,
+                                                  GLbitfield usageFlags)
+{
+    UNIMPLEMENTED();
+    return false;
+}
+
+bool ValidateTexStorageMemFlags3DANGLE(const Context *context,
+                                       TextureType targetPacked,
+                                       GLsizei levels,
+                                       GLenum internalFormat,
+                                       GLsizei width,
+                                       GLsizei height,
+                                       GLsizei depth,
+                                       MemoryObjectID memoryPacked,
+                                       GLuint64 offset,
+                                       GLbitfield createFlags,
+                                       GLbitfield usageFlags)
+{
+    UNIMPLEMENTED();
+    return false;
+}
+
+bool ValidateTexStorageMemFlags3DMultisampleANGLE(const Context *context,
+                                                  TextureType targetPacked,
+                                                  GLsizei samples,
+                                                  GLenum internalFormat,
+                                                  GLsizei width,
+                                                  GLsizei height,
+                                                  GLsizei depth,
+                                                  GLboolean fixedSampleLocations,
+                                                  MemoryObjectID memoryPacked,
+                                                  GLuint64 offset,
+                                                  GLbitfield createFlags,
+                                                  GLbitfield usageFlags)
+{
+    UNIMPLEMENTED();
+    return false;
+}
 }  // namespace gl

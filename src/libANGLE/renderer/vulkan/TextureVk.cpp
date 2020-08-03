@@ -1066,7 +1066,9 @@ angle::Result TextureVk::setStorageExternalMemory(const gl::Context *context,
                                                   GLenum internalFormat,
                                                   const gl::Extents &size,
                                                   gl::MemoryObject *memoryObject,
-                                                  GLuint64 offset)
+                                                  GLuint64 offset,
+                                                  GLbitfield createFlags,
+                                                  GLbitfield usageFlags)
 {
     ContextVk *contextVk           = vk::GetImpl(context);
     RendererVk *renderer           = contextVk->getRenderer();
@@ -1078,8 +1080,8 @@ angle::Result TextureVk::setStorageExternalMemory(const gl::Context *context,
 
     setImageHelper(contextVk, new vk::ImageHelper(), mState.getType(), format, 0, 0, 0, true);
 
-    ANGLE_TRY(
-        memoryObjectVk->createImage(contextVk, type, levels, internalFormat, size, offset, mImage));
+    ANGLE_TRY(memoryObjectVk->createImage(contextVk, type, levels, internalFormat, size, offset,
+                                          mImage, createFlags, usageFlags));
 
     gl::Format glFormat(internalFormat);
     ANGLE_TRY(initImageViews(contextVk, format, glFormat.info->sized, static_cast<uint32_t>(levels),
