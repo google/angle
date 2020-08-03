@@ -55,6 +55,7 @@ gles_extensions = [
     "GL_ANGLE_framebuffer_blit",
     "GL_ANGLE_framebuffer_multisample",
     "GL_ANGLE_instanced_arrays",
+    "GL_ANGLE_memory_object_flags",
     "GL_ANGLE_memory_object_fuchsia",
     "GL_ANGLE_multi_draw",
     "GL_ANGLE_provoking_vertex",

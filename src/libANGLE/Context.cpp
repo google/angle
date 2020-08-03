@@ -7788,6 +7788,62 @@ void Context::importMemoryFd(MemoryObjectID memory, GLuint64 size, HandleType ha
     ANGLE_CONTEXT_TRY(memoryObject->importFd(this, size, handleType, fd));
 }
 
+void Context::texStorageMemFlags2D(TextureType target,
+                                   GLsizei levels,
+                                   GLenum internalFormat,
+                                   GLsizei width,
+                                   GLsizei height,
+                                   MemoryObjectID memory,
+                                   GLuint64 offset,
+                                   GLbitfield createFlags,
+                                   GLbitfield usageFlags)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::texStorageMemFlags2DMultisample(TextureType target,
+                                              GLsizei samples,
+                                              GLenum internalFormat,
+                                              GLsizei width,
+                                              GLsizei height,
+                                              GLboolean fixedSampleLocations,
+                                              MemoryObjectID memory,
+                                              GLuint64 offset,
+                                              GLbitfield createFlags,
+                                              GLbitfield usageFlags)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::texStorageMemFlags3D(TextureType target,
+                                   GLsizei levels,
+                                   GLenum internalFormat,
+                                   GLsizei width,
+                                   GLsizei height,
+                                   GLsizei depth,
+                                   MemoryObjectID memory,
+                                   GLuint64 offset,
+                                   GLbitfield createFlags,
+                                   GLbitfield usageFlags)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::texStorageMemFlags3DMultisample(TextureType target,
+                                              GLsizei samples,
+                                              GLenum internalFormat,
+                                              GLsizei width,
+                                              GLsizei height,
+                                              GLsizei depth,
+                                              GLboolean fixedSampleLocations,
+                                              MemoryObjectID memory,
+                                              GLuint64 offset,
+                                              GLbitfield createFlags,
+                                              GLbitfield usageFlags)
+{
+    UNIMPLEMENTED();
+}
+
 void Context::importMemoryZirconHandle(MemoryObjectID memory,
                                        GLuint64 size,
                                        HandleType handleType,

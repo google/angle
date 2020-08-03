@@ -249,6 +249,23 @@
     /* GL_ANGLE_framebuffer_blit */                                                                \
     /* GL_ANGLE_framebuffer_multisample */                                                         \
     /* GL_ANGLE_instanced_arrays */                                                                \
+    /* GL_ANGLE_memory_object_flags */                                                             \
+    void texStorageMemFlags2D(TextureType targetPacked, GLsizei levels, GLenum internalFormat,     \
+                              GLsizei width, GLsizei height, MemoryObjectID memoryPacked,          \
+                              GLuint64 offset, GLbitfield createFlags, GLbitfield usageFlags);     \
+    void texStorageMemFlags2DMultisample(                                                          \
+        TextureType targetPacked, GLsizei samples, GLenum internalFormat, GLsizei width,           \
+        GLsizei height, GLboolean fixedSampleLocations, MemoryObjectID memoryPacked,               \
+        GLuint64 offset, GLbitfield createFlags, GLbitfield usageFlags);                           \
+    void texStorageMemFlags3D(TextureType targetPacked, GLsizei levels, GLenum internalFormat,     \
+                              GLsizei width, GLsizei height, GLsizei depth,                        \
+                              MemoryObjectID memoryPacked, GLuint64 offset,                        \
+                              GLbitfield createFlags, GLbitfield usageFlags);                      \
+    void texStorageMemFlags3DMultisample(TextureType targetPacked, GLsizei samples,                \
+                                         GLenum internalFormat, GLsizei width, GLsizei height,     \
+                                         GLsizei depth, GLboolean fixedSampleLocations,            \
+                                         MemoryObjectID memoryPacked, GLuint64 offset,             \
+                                         GLbitfield createFlags, GLbitfield usageFlags);           \
     /* GL_ANGLE_memory_object_fuchsia */                                                           \
     void importMemoryZirconHandle(MemoryObjectID memoryPacked, GLuint64 size,                      \
                                   HandleType handleTypePacked, GLuint handle);                     \

@@ -2866,6 +2866,69 @@ void GL_APIENTRY glVertexAttribDivisorANGLE(GLuint index, GLuint divisor)
     return gl::VertexAttribDivisorANGLE(index, divisor);
 }
 
+// GL_ANGLE_memory_object_flags
+void GL_APIENTRY glTexStorageMemFlags2DANGLE(GLenum target,
+                                             GLsizei levels,
+                                             GLenum internalFormat,
+                                             GLsizei width,
+                                             GLsizei height,
+                                             GLuint memory,
+                                             GLuint64 offset,
+                                             GLbitfield createFlags,
+                                             GLbitfield usageFlags)
+{
+    return gl::TexStorageMemFlags2DANGLE(target, levels, internalFormat, width, height, memory,
+                                         offset, createFlags, usageFlags);
+}
+
+void GL_APIENTRY glTexStorageMemFlags2DMultisampleANGLE(GLenum target,
+                                                        GLsizei samples,
+                                                        GLenum internalFormat,
+                                                        GLsizei width,
+                                                        GLsizei height,
+                                                        GLboolean fixedSampleLocations,
+                                                        GLuint memory,
+                                                        GLuint64 offset,
+                                                        GLbitfield createFlags,
+                                                        GLbitfield usageFlags)
+{
+    return gl::TexStorageMemFlags2DMultisampleANGLE(target, samples, internalFormat, width, height,
+                                                    fixedSampleLocations, memory, offset,
+                                                    createFlags, usageFlags);
+}
+
+void GL_APIENTRY glTexStorageMemFlags3DANGLE(GLenum target,
+                                             GLsizei levels,
+                                             GLenum internalFormat,
+                                             GLsizei width,
+                                             GLsizei height,
+                                             GLsizei depth,
+                                             GLuint memory,
+                                             GLuint64 offset,
+                                             GLbitfield createFlags,
+                                             GLbitfield usageFlags)
+{
+    return gl::TexStorageMemFlags3DANGLE(target, levels, internalFormat, width, height, depth,
+                                         memory, offset, createFlags, usageFlags);
+}
+
+void GL_APIENTRY glTexStorageMemFlags3DMultisampleANGLE(GLenum target,
+                                                        GLsizei samples,
+                                                        GLenum internalFormat,
+                                                        GLsizei width,
+                                                        GLsizei height,
+                                                        GLsizei depth,
+                                                        GLboolean fixedSampleLocations,
+                                                        GLuint memory,
+                                                        GLuint64 offset,
+                                                        GLbitfield createFlags,
+                                                        GLbitfield usageFlags)
+{
+    return gl::TexStorageMemFlags3DMultisampleANGLE(target, samples, internalFormat, width, height,
+                                                    depth, fixedSampleLocations, memory, offset,
+                                                    createFlags, usageFlags);
+}
+
 // GL_ANGLE_memory_object_fuchsia
 void GL_APIENTRY glImportMemoryZirconHandleANGLE(GLuint memory,
                                                  GLuint64 size,
@@ -10679,6 +10742,74 @@ void GL_APIENTRY glGetRenderbufferImageANGLEContextANGLE(GLeglContext ctx,
                                                          void *pixels)
 {
     return gl::GetRenderbufferImageANGLEContextANGLE(ctx, target, format, type, pixels);
+}
+
+void GL_APIENTRY glTexStorageMemFlags2DANGLEContextANGLE(GLeglContext ctx,
+                                                         GLenum target,
+                                                         GLsizei levels,
+                                                         GLenum internalFormat,
+                                                         GLsizei width,
+                                                         GLsizei height,
+                                                         GLuint memory,
+                                                         GLuint64 offset,
+                                                         GLbitfield createFlags,
+                                                         GLbitfield usageFlags)
+{
+    return gl::TexStorageMemFlags2DANGLEContextANGLE(ctx, target, levels, internalFormat, width,
+                                                     height, memory, offset, createFlags,
+                                                     usageFlags);
+}
+
+void GL_APIENTRY glTexStorageMemFlags2DMultisampleANGLEContextANGLE(GLeglContext ctx,
+                                                                    GLenum target,
+                                                                    GLsizei samples,
+                                                                    GLenum internalFormat,
+                                                                    GLsizei width,
+                                                                    GLsizei height,
+                                                                    GLboolean fixedSampleLocations,
+                                                                    GLuint memory,
+                                                                    GLuint64 offset,
+                                                                    GLbitfield createFlags,
+                                                                    GLbitfield usageFlags)
+{
+    return gl::TexStorageMemFlags2DMultisampleANGLEContextANGLE(
+        ctx, target, samples, internalFormat, width, height, fixedSampleLocations, memory, offset,
+        createFlags, usageFlags);
+}
+
+void GL_APIENTRY glTexStorageMemFlags3DANGLEContextANGLE(GLeglContext ctx,
+                                                         GLenum target,
+                                                         GLsizei levels,
+                                                         GLenum internalFormat,
+                                                         GLsizei width,
+                                                         GLsizei height,
+                                                         GLsizei depth,
+                                                         GLuint memory,
+                                                         GLuint64 offset,
+                                                         GLbitfield createFlags,
+                                                         GLbitfield usageFlags)
+{
+    return gl::TexStorageMemFlags3DANGLEContextANGLE(ctx, target, levels, internalFormat, width,
+                                                     height, depth, memory, offset, createFlags,
+                                                     usageFlags);
+}
+
+void GL_APIENTRY glTexStorageMemFlags3DMultisampleANGLEContextANGLE(GLeglContext ctx,
+                                                                    GLenum target,
+                                                                    GLsizei samples,
+                                                                    GLenum internalFormat,
+                                                                    GLsizei width,
+                                                                    GLsizei height,
+                                                                    GLsizei depth,
+                                                                    GLboolean fixedSampleLocations,
+                                                                    GLuint memory,
+                                                                    GLuint64 offset,
+                                                                    GLbitfield createFlags,
+                                                                    GLbitfield usageFlags)
+{
+    return gl::TexStorageMemFlags3DMultisampleANGLEContextANGLE(
+        ctx, target, samples, internalFormat, width, height, depth, fixedSampleLocations, memory,
+        offset, createFlags, usageFlags);
 }
 
 void GL_APIENTRY glImportMemoryZirconHandleANGLEContextANGLE(GLeglContext ctx,

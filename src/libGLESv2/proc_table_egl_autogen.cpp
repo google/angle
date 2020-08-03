@@ -1467,6 +1467,16 @@ const ProcEntry g_procTable[] = {
     {"glTexStorageMem3DMultisampleEXT", P(gl::TexStorageMem3DMultisampleEXT)},
     {"glTexStorageMem3DMultisampleEXTContextANGLE",
      P(gl::TexStorageMem3DMultisampleEXTContextANGLE)},
+    {"glTexStorageMemFlags2DANGLE", P(gl::TexStorageMemFlags2DANGLE)},
+    {"glTexStorageMemFlags2DANGLEContextANGLE", P(gl::TexStorageMemFlags2DANGLEContextANGLE)},
+    {"glTexStorageMemFlags2DMultisampleANGLE", P(gl::TexStorageMemFlags2DMultisampleANGLE)},
+    {"glTexStorageMemFlags2DMultisampleANGLEContextANGLE",
+     P(gl::TexStorageMemFlags2DMultisampleANGLEContextANGLE)},
+    {"glTexStorageMemFlags3DANGLE", P(gl::TexStorageMemFlags3DANGLE)},
+    {"glTexStorageMemFlags3DANGLEContextANGLE", P(gl::TexStorageMemFlags3DANGLEContextANGLE)},
+    {"glTexStorageMemFlags3DMultisampleANGLE", P(gl::TexStorageMemFlags3DMultisampleANGLE)},
+    {"glTexStorageMemFlags3DMultisampleANGLEContextANGLE",
+     P(gl::TexStorageMemFlags3DMultisampleANGLEContextANGLE)},
     {"glTexSubImage2D", P(gl::TexSubImage2D)},
     {"glTexSubImage2DContextANGLE", P(gl::TexSubImage2DContextANGLE)},
     {"glTexSubImage2DRobustANGLE", P(gl::TexSubImage2DRobustANGLE)},
@@ -1616,5 +1626,5 @@ const ProcEntry g_procTable[] = {
     {"glWeightPointerOES", P(gl::WeightPointerOES)},
     {"glWeightPointerOESContextANGLE", P(gl::WeightPointerOESContextANGLE)}};
 
-const size_t g_numProcs = 1521;
+const size_t g_numProcs = 1529;
 }  // namespace egl

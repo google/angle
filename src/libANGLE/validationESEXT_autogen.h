@@ -128,6 +128,52 @@ bool ValidateDrawElementsInstancedANGLE(const Context *context,
                                         GLsizei primcount);
 bool ValidateVertexAttribDivisorANGLE(const Context *context, GLuint index, GLuint divisor);
 
+// GL_ANGLE_memory_object_flags
+bool ValidateTexStorageMemFlags2DANGLE(const Context *context,
+                                       TextureType targetPacked,
+                                       GLsizei levels,
+                                       GLenum internalFormat,
+                                       GLsizei width,
+                                       GLsizei height,
+                                       MemoryObjectID memoryPacked,
+                                       GLuint64 offset,
+                                       GLbitfield createFlags,
+                                       GLbitfield usageFlags);
+bool ValidateTexStorageMemFlags2DMultisampleANGLE(const Context *context,
+                                                  TextureType targetPacked,
+                                                  GLsizei samples,
+                                                  GLenum internalFormat,
+                                                  GLsizei width,
+                                                  GLsizei height,
+                                                  GLboolean fixedSampleLocations,
+                                                  MemoryObjectID memoryPacked,
+                                                  GLuint64 offset,
+                                                  GLbitfield createFlags,
+                                                  GLbitfield usageFlags);
+bool ValidateTexStorageMemFlags3DANGLE(const Context *context,
+                                       TextureType targetPacked,
+                                       GLsizei levels,
+                                       GLenum internalFormat,
+                                       GLsizei width,
+                                       GLsizei height,
+                                       GLsizei depth,
+                                       MemoryObjectID memoryPacked,
+                                       GLuint64 offset,
+                                       GLbitfield createFlags,
+                                       GLbitfield usageFlags);
+bool ValidateTexStorageMemFlags3DMultisampleANGLE(const Context *context,
+                                                  TextureType targetPacked,
+                                                  GLsizei samples,
+                                                  GLenum internalFormat,
+                                                  GLsizei width,
+                                                  GLsizei height,
+                                                  GLsizei depth,
+                                                  GLboolean fixedSampleLocations,
+                                                  MemoryObjectID memoryPacked,
+                                                  GLuint64 offset,
+                                                  GLbitfield createFlags,
+                                                  GLbitfield usageFlags);
+
 // GL_ANGLE_memory_object_fuchsia
 bool ValidateImportMemoryZirconHandleANGLE(const Context *context,
                                            MemoryObjectID memoryPacked,

@@ -404,6 +404,136 @@ CallCapture CaptureVertexAttribDivisorANGLE(const State &glState,
     return CallCapture(gl::EntryPoint::VertexAttribDivisorANGLE, std::move(paramBuffer));
 }
 
+CallCapture CaptureTexStorageMemFlags2DANGLE(const State &glState,
+                                             bool isCallValid,
+                                             TextureType targetPacked,
+                                             GLsizei levels,
+                                             GLenum internalFormat,
+                                             GLsizei width,
+                                             GLsizei height,
+                                             MemoryObjectID memoryPacked,
+                                             GLuint64 offset,
+                                             GLbitfield createFlags,
+                                             GLbitfield usageFlags)
+{
+    ParamBuffer paramBuffer;
+
+    paramBuffer.addValueParam("targetPacked", ParamType::TTextureType, targetPacked);
+    paramBuffer.addValueParam("levels", ParamType::TGLsizei, levels);
+    paramBuffer.addEnumParam("internalFormat", GLenumGroup::DefaultGroup, ParamType::TGLenum,
+                             internalFormat);
+    paramBuffer.addValueParam("width", ParamType::TGLsizei, width);
+    paramBuffer.addValueParam("height", ParamType::TGLsizei, height);
+    paramBuffer.addValueParam("memoryPacked", ParamType::TMemoryObjectID, memoryPacked);
+    paramBuffer.addValueParam("offset", ParamType::TGLuint64, offset);
+    paramBuffer.addEnumParam("createFlags", GLenumGroup::DefaultGroup, ParamType::TGLbitfield,
+                             createFlags);
+    paramBuffer.addEnumParam("usageFlags", GLenumGroup::DefaultGroup, ParamType::TGLbitfield,
+                             usageFlags);
+
+    return CallCapture(gl::EntryPoint::TexStorageMemFlags2DANGLE, std::move(paramBuffer));
+}
+
+CallCapture CaptureTexStorageMemFlags2DMultisampleANGLE(const State &glState,
+                                                        bool isCallValid,
+                                                        TextureType targetPacked,
+                                                        GLsizei samples,
+                                                        GLenum internalFormat,
+                                                        GLsizei width,
+                                                        GLsizei height,
+                                                        GLboolean fixedSampleLocations,
+                                                        MemoryObjectID memoryPacked,
+                                                        GLuint64 offset,
+                                                        GLbitfield createFlags,
+                                                        GLbitfield usageFlags)
+{
+    ParamBuffer paramBuffer;
+
+    paramBuffer.addValueParam("targetPacked", ParamType::TTextureType, targetPacked);
+    paramBuffer.addValueParam("samples", ParamType::TGLsizei, samples);
+    paramBuffer.addEnumParam("internalFormat", GLenumGroup::DefaultGroup, ParamType::TGLenum,
+                             internalFormat);
+    paramBuffer.addValueParam("width", ParamType::TGLsizei, width);
+    paramBuffer.addValueParam("height", ParamType::TGLsizei, height);
+    paramBuffer.addValueParam("fixedSampleLocations", ParamType::TGLboolean, fixedSampleLocations);
+    paramBuffer.addValueParam("memoryPacked", ParamType::TMemoryObjectID, memoryPacked);
+    paramBuffer.addValueParam("offset", ParamType::TGLuint64, offset);
+    paramBuffer.addEnumParam("createFlags", GLenumGroup::DefaultGroup, ParamType::TGLbitfield,
+                             createFlags);
+    paramBuffer.addEnumParam("usageFlags", GLenumGroup::DefaultGroup, ParamType::TGLbitfield,
+                             usageFlags);
+
+    return CallCapture(gl::EntryPoint::TexStorageMemFlags2DMultisampleANGLE,
+                       std::move(paramBuffer));
+}
+
+CallCapture CaptureTexStorageMemFlags3DANGLE(const State &glState,
+                                             bool isCallValid,
+                                             TextureType targetPacked,
+                                             GLsizei levels,
+                                             GLenum internalFormat,
+                                             GLsizei width,
+                                             GLsizei height,
+                                             GLsizei depth,
+                                             MemoryObjectID memoryPacked,
+                                             GLuint64 offset,
+                                             GLbitfield createFlags,
+                                             GLbitfield usageFlags)
+{
+    ParamBuffer paramBuffer;
+
+    paramBuffer.addValueParam("targetPacked", ParamType::TTextureType, targetPacked);
+    paramBuffer.addValueParam("levels", ParamType::TGLsizei, levels);
+    paramBuffer.addEnumParam("internalFormat", GLenumGroup::DefaultGroup, ParamType::TGLenum,
+                             internalFormat);
+    paramBuffer.addValueParam("width", ParamType::TGLsizei, width);
+    paramBuffer.addValueParam("height", ParamType::TGLsizei, height);
+    paramBuffer.addValueParam("depth", ParamType::TGLsizei, depth);
+    paramBuffer.addValueParam("memoryPacked", ParamType::TMemoryObjectID, memoryPacked);
+    paramBuffer.addValueParam("offset", ParamType::TGLuint64, offset);
+    paramBuffer.addEnumParam("createFlags", GLenumGroup::DefaultGroup, ParamType::TGLbitfield,
+                             createFlags);
+    paramBuffer.addEnumParam("usageFlags", GLenumGroup::DefaultGroup, ParamType::TGLbitfield,
+                             usageFlags);
+
+    return CallCapture(gl::EntryPoint::TexStorageMemFlags3DANGLE, std::move(paramBuffer));
+}
+
+CallCapture CaptureTexStorageMemFlags3DMultisampleANGLE(const State &glState,
+                                                        bool isCallValid,
+                                                        TextureType targetPacked,
+                                                        GLsizei samples,
+                                                        GLenum internalFormat,
+                                                        GLsizei width,
+                                                        GLsizei height,
+                                                        GLsizei depth,
+                                                        GLboolean fixedSampleLocations,
+                                                        MemoryObjectID memoryPacked,
+                                                        GLuint64 offset,
+                                                        GLbitfield createFlags,
+                                                        GLbitfield usageFlags)
+{
+    ParamBuffer paramBuffer;
+
+    paramBuffer.addValueParam("targetPacked", ParamType::TTextureType, targetPacked);
+    paramBuffer.addValueParam("samples", ParamType::TGLsizei, samples);
+    paramBuffer.addEnumParam("internalFormat", GLenumGroup::DefaultGroup, ParamType::TGLenum,
+                             internalFormat);
+    paramBuffer.addValueParam("width", ParamType::TGLsizei, width);
+    paramBuffer.addValueParam("height", ParamType::TGLsizei, height);
+    paramBuffer.addValueParam("depth", ParamType::TGLsizei, depth);
+    paramBuffer.addValueParam("fixedSampleLocations", ParamType::TGLboolean, fixedSampleLocations);
+    paramBuffer.addValueParam("memoryPacked", ParamType::TMemoryObjectID, memoryPacked);
+    paramBuffer.addValueParam("offset", ParamType::TGLuint64, offset);
+    paramBuffer.addEnumParam("createFlags", GLenumGroup::DefaultGroup, ParamType::TGLbitfield,
+                             createFlags);
+    paramBuffer.addEnumParam("usageFlags", GLenumGroup::DefaultGroup, ParamType::TGLbitfield,
+                             usageFlags);
+
+    return CallCapture(gl::EntryPoint::TexStorageMemFlags3DMultisampleANGLE,
+                       std::move(paramBuffer));
+}
+
 CallCapture CaptureImportMemoryZirconHandleANGLE(const State &glState,
                                                  bool isCallValid,
                                                  MemoryObjectID memoryPacked,

@@ -485,6 +485,12 @@ EXPORTS
     glDrawElementsInstancedANGLE
     glVertexAttribDivisorANGLE
 
+    ; GL_ANGLE_memory_object_flags
+    glTexStorageMemFlags2DANGLE
+    glTexStorageMemFlags2DMultisampleANGLE
+    glTexStorageMemFlags3DANGLE
+    glTexStorageMemFlags3DMultisampleANGLE
+
     ; GL_ANGLE_memory_object_fuchsia
     glImportMemoryZirconHandleANGLE
 
@@ -1520,6 +1526,10 @@ EXPORTS
     glTexStorageMem2DMultisampleEXTContextANGLE
     glTexStorageMem3DEXTContextANGLE
     glTexStorageMem3DMultisampleEXTContextANGLE
+    glTexStorageMemFlags2DANGLEContextANGLE
+    glTexStorageMemFlags2DMultisampleANGLEContextANGLE
+    glTexStorageMemFlags3DANGLEContextANGLE
+    glTexStorageMemFlags3DMultisampleANGLEContextANGLE
     glTexSubImage2DContextANGLE
     glTexSubImage2DRobustANGLEContextANGLE
     glTexSubImage3DContextANGLE

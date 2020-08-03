@@ -1577,6 +1577,22 @@
         "memory": "MemoryObjectID",
         "target": "TextureType"
     },
+    "glTexStorageMemFlags2D": {
+        "memory": "MemoryObjectID",
+        "target": "TextureType"
+    },
+    "glTexStorageMemFlags2DMultisample": {
+        "memory": "MemoryObjectID",
+        "target": "TextureType"
+    },
+    "glTexStorageMemFlags3D": {
+        "memory": "MemoryObjectID",
+        "target": "TextureType"
+    },
+    "glTexStorageMemFlags3DMultisample": {
+        "memory": "MemoryObjectID",
+        "target": "TextureType"
+    },
     "glTexSubImage2D": {
         "target": "TextureTarget"
     },

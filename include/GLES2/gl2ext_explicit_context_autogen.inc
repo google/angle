@@ -378,6 +378,10 @@ typedef void (GL_APIENTRYP PFNGLTEXIMAGE2DEXTERNALANGLECONTEXTANGLEPROC)(GLeglCo
 typedef void (GL_APIENTRYP PFNGLINVALIDATETEXTUREANGLECONTEXTANGLEPROC)(GLeglContext ctx, GLenum target);
 typedef void (GL_APIENTRYP PFNGLGETTEXIMAGEANGLECONTEXTANGLEPROC)(GLeglContext ctx, GLenum target, GLint level, GLenum format, GLenum type, void *pixels);
 typedef void (GL_APIENTRYP PFNGLGETRENDERBUFFERIMAGEANGLECONTEXTANGLEPROC)(GLeglContext ctx, GLenum target, GLenum format, GLenum type, void *pixels);
+typedef void (GL_APIENTRYP PFNGLTEXSTORAGEMEMFLAGS2DANGLECONTEXTANGLEPROC)(GLeglContext ctx, GLenum target, GLsizei levels, GLenum internalFormat, GLsizei width, GLsizei height, GLuint memory, GLuint64 offset, GLbitfield createFlags, GLbitfield usageFlags);
+typedef void (GL_APIENTRYP PFNGLTEXSTORAGEMEMFLAGS2DMULTISAMPLEANGLECONTEXTANGLEPROC)(GLeglContext ctx, GLenum target, GLsizei samples, GLenum internalFormat, GLsizei width, GLsizei height, GLboolean fixedSampleLocations, GLuint memory, GLuint64 offset, GLbitfield createFlags, GLbitfield usageFlags);
+typedef void (GL_APIENTRYP PFNGLTEXSTORAGEMEMFLAGS3DANGLECONTEXTANGLEPROC)(GLeglContext ctx, GLenum target, GLsizei levels, GLenum internalFormat, GLsizei width, GLsizei height, GLsizei depth, GLuint memory, GLuint64 offset, GLbitfield createFlags, GLbitfield usageFlags);
+typedef void (GL_APIENTRYP PFNGLTEXSTORAGEMEMFLAGS3DMULTISAMPLEANGLECONTEXTANGLEPROC)(GLeglContext ctx, GLenum target, GLsizei samples, GLenum internalFormat, GLsizei width, GLsizei height, GLsizei depth, GLboolean fixedSampleLocations, GLuint memory, GLuint64 offset, GLbitfield createFlags, GLbitfield usageFlags);
 typedef void (GL_APIENTRYP PFNGLIMPORTMEMORYZIRCONHANDLEANGLECONTEXTANGLEPROC)(GLeglContext ctx, GLuint memory, GLuint64 size, GLenum handleType, GLuint handle);
 typedef void (GL_APIENTRYP PFNGLIMPORTSEMAPHOREZIRCONHANDLEANGLECONTEXTANGLEPROC)(GLeglContext ctx, GLuint semaphore, GLenum handleType, GLuint handle);
 #ifdef GL_GLEXT_PROTOTYPES
@@ -751,6 +755,10 @@ GL_APICALL void GL_APIENTRY glTexImage2DExternalANGLEContextANGLE(GLeglContext c
 GL_APICALL void GL_APIENTRY glInvalidateTextureANGLEContextANGLE(GLeglContext ctx, GLenum target);
 GL_APICALL void GL_APIENTRY glGetTexImageANGLEContextANGLE(GLeglContext ctx, GLenum target, GLint level, GLenum format, GLenum type, void *pixels);
 GL_APICALL void GL_APIENTRY glGetRenderbufferImageANGLEContextANGLE(GLeglContext ctx, GLenum target, GLenum format, GLenum type, void *pixels);
+GL_APICALL void GL_APIENTRY glTexStorageMemFlags2DANGLEContextANGLE(GLeglContext ctx, GLenum target, GLsizei levels, GLenum internalFormat, GLsizei width, GLsizei height, GLuint memory, GLuint64 offset, GLbitfield createFlags, GLbitfield usageFlags);
+GL_APICALL void GL_APIENTRY glTexStorageMemFlags2DMultisampleANGLEContextANGLE(GLeglContext ctx, GLenum target, GLsizei samples, GLenum internalFormat, GLsizei width, GLsizei height, GLboolean fixedSampleLocations, GLuint memory, GLuint64 offset, GLbitfield createFlags, GLbitfield usageFlags);
+GL_APICALL void GL_APIENTRY glTexStorageMemFlags3DANGLEContextANGLE(GLeglContext ctx, GLenum target, GLsizei levels, GLenum internalFormat, GLsizei width, GLsizei height, GLsizei depth, GLuint memory, GLuint64 offset, GLbitfield createFlags, GLbitfield usageFlags);
+GL_APICALL void GL_APIENTRY glTexStorageMemFlags3DMultisampleANGLEContextANGLE(GLeglContext ctx, GLenum target, GLsizei samples, GLenum internalFormat, GLsizei width, GLsizei height, GLsizei depth, GLboolean fixedSampleLocations, GLuint memory, GLuint64 offset, GLbitfield createFlags, GLbitfield usageFlags);
 GL_APICALL void GL_APIENTRY glImportMemoryZirconHandleANGLEContextANGLE(GLeglContext ctx, GLuint memory, GLuint64 size, GLenum handleType, GLuint handle);
 GL_APICALL void GL_APIENTRY glImportSemaphoreZirconHandleANGLEContextANGLE(GLeglContext ctx, GLuint semaphore, GLenum handleType, GLuint handle);
 #endif
