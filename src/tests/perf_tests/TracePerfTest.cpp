@@ -97,6 +97,7 @@ class TracePerfTest : public ANGLERenderTest, public ::testing::WithParamInterfa
     std::vector<TimeSample> mTimeline;
 
     std::string mStartingDirectory;
+    bool mUseTimestampQueries = false;
 };
 
 class TracePerfTest;
@@ -195,7 +196,7 @@ void TracePerfTest::destroyBenchmark()
 
 void TracePerfTest::sampleTime()
 {
-    if (mIsTimestampQueryAvailable)
+    if (mUseTimestampQueries)
     {
         GLint64 glTime;
         // glGetInteger64vEXT is exported by newer versions of the timer query extensions.
@@ -314,10 +315,10 @@ double TracePerfTest::getHostTimeFromGLTime(GLint64 glTime)
 // Triggered when the replay calls glBindFramebuffer.
 void TracePerfTest::onReplayFramebufferChange(GLenum target, GLuint framebuffer)
 {
-    if (!mIsTimestampQueryAvailable)
+    if (target != GL_FRAMEBUFFER && target != GL_DRAW_FRAMEBUFFER)
         return;
 
-    if (target != GL_FRAMEBUFFER && target != GL_DRAW_FRAMEBUFFER)
+    if (!mUseTimestampQueries)
         return;
 
     // We have at most one active timestamp query at a time. This code will end the current
