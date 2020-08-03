@@ -97,6 +97,30 @@
     },
     {
       "key": {
+        "uuid": "33f93aeb_a6b2de5d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2020-08-03T16:34:00Z",
+      "side": 1,
+      "message": "Great diagnosis. It\u0027ll be great to file a bug with Apple about that. BTW, it\u0027s fine to submit this CL as is.",
+      "parentUuid": "40334318_9152cb4d",
+      "range": {
+        "startLine": 8,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 53
+      },
+      "revId": "0136e225f3f9303547a7a90156422f2ff86e6a6f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "2cad31e0_5eaf51a2",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 2
