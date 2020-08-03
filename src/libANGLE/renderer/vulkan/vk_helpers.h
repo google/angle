@@ -43,7 +43,7 @@ using StagingBufferOffsetArray = std::array<VkDeviceSize, 2>;
 struct TextureUnit final
 {
     TextureVk *texture;
-    const vk::SamplerHelper *sampler;
+    const SamplerHelper *sampler;
 };
 
 // A dynamic buffer is conceptually an infinitely long buffer. Each time you write to the buffer,
@@ -860,31 +860,31 @@ struct CommandBufferHelper : angle::NonCopyable
     // General Functions (non-renderPass specific)
     void initialize(bool isRenderPassCommandBuffer, bool mergeBarriers);
 
-    void bufferRead(vk::ResourceUseList *resourceUseList,
+    void bufferRead(ResourceUseList *resourceUseList,
                     VkAccessFlags readAccessType,
-                    vk::PipelineStage readStage,
-                    vk::BufferHelper *buffer);
-    void bufferWrite(vk::ResourceUseList *resourceUseList,
+                    PipelineStage readStage,
+                    BufferHelper *buffer);
+    void bufferWrite(ResourceUseList *resourceUseList,
                      VkAccessFlags writeAccessType,
-                     vk::PipelineStage writeStage,
+                     PipelineStage writeStage,
                      BufferAliasingMode aliasingMode,
-                     vk::BufferHelper *buffer);
+                     BufferHelper *buffer);
 
-    void imageRead(vk::ResourceUseList *resourceUseList,
+    void imageRead(ResourceUseList *resourceUseList,
                    VkImageAspectFlags aspectFlags,
-                   vk::ImageLayout imageLayout,
-                   vk::ImageHelper *image);
+                   ImageLayout imageLayout,
+                   ImageHelper *image);
 
-    void imageWrite(vk::ResourceUseList *resourceUseList,
+    void imageWrite(ResourceUseList *resourceUseList,
                     VkImageAspectFlags aspectFlags,
-                    vk::ImageLayout imageLayout,
-                    vk::ImageHelper *image);
+                    ImageLayout imageLayout,
+                    ImageHelper *image);
 
-    vk::CommandBuffer &getCommandBuffer() { return mCommandBuffer; }
+    CommandBuffer &getCommandBuffer() { return mCommandBuffer; }
 
-    angle::Result flushToPrimary(ContextVk *contextVk, vk::PrimaryCommandBuffer *primary);
+    angle::Result flushToPrimary(ContextVk *contextVk, PrimaryCommandBuffer *primary);
 
-    void executeBarriers(vk::PrimaryCommandBuffer *primary);
+    void executeBarriers(PrimaryCommandBuffer *primary);
 
     void setHasRenderPass(bool hasRenderPass) { mIsRenderPassCommandBuffer = hasRenderPass; }
     void reset();
@@ -905,13 +905,13 @@ struct CommandBufferHelper : angle::NonCopyable
         return mRenderPassStarted;
     }
 
-    void beginRenderPass(const vk::Framebuffer &framebuffer,
+    void beginRenderPass(const Framebuffer &framebuffer,
                          const gl::Rectangle &renderArea,
-                         const vk::RenderPassDesc &renderPassDesc,
-                         const vk::AttachmentOpsArray &renderPassAttachmentOps,
+                         const RenderPassDesc &renderPassDesc,
+                         const AttachmentOpsArray &renderPassAttachmentOps,
                          const uint32_t depthStencilAttachmentIndex,
-                         const vk::ClearValuesArray &clearValues,
-                         vk::CommandBuffer **commandBufferOut);
+                         const ClearValuesArray &clearValues,
+                         CommandBuffer **commandBufferOut);
 
     void endRenderPass();
 
@@ -940,7 +940,7 @@ struct CommandBufferHelper : angle::NonCopyable
                     VK_ATTACHMENT_STORE_OP_DONT_CARE);
     }
 
-    void updateRenderPassAttachmentFinalLayout(size_t attachmentIndex, vk::ImageLayout finalLayout)
+    void updateRenderPassAttachmentFinalLayout(size_t attachmentIndex, ImageLayout finalLayout)
     {
         ASSERT(mIsRenderPassCommandBuffer);
         SetBitField(mAttachmentOps[attachmentIndex].finalLayout, finalLayout);
@@ -987,15 +987,15 @@ struct CommandBufferHelper : angle::NonCopyable
     // General state (non-renderPass related)
     PipelineBarrierArray mPipelineBarriers;
     PipelineStagesMask mPipelineBarrierMask;
-    vk::CommandBuffer mCommandBuffer;
+    CommandBuffer mCommandBuffer;
 
     // RenderPass state
     uint32_t mCounter;
-    vk::RenderPassDesc mRenderPassDesc;
-    vk::AttachmentOpsArray mAttachmentOps;
-    vk::Framebuffer mFramebuffer;
+    RenderPassDesc mRenderPassDesc;
+    AttachmentOpsArray mAttachmentOps;
+    Framebuffer mFramebuffer;
     gl::Rectangle mRenderArea;
-    vk::ClearValuesArray mClearValues;
+    ClearValuesArray mClearValues;
     bool mRenderPassStarted;
 
     // Transform feedback state
@@ -1300,7 +1300,7 @@ class ImageHelper final : public Resource, public angle::Subject
     angle::Result stageRobustResourceClearWithFormat(ContextVk *contextVk,
                                                      const gl::ImageIndex &index,
                                                      const gl::Extents &glExtents,
-                                                     const vk::Format &format);
+                                                     const Format &format);
     void stageRobustResourceClear(const gl::ImageIndex &index);
 
     // Stage the currently allocated image as an update to base level, making this !valid().  This
@@ -1586,7 +1586,7 @@ class ImageHelper final : public Resource, public angle::Subject
     VkPipelineStageFlags mCurrentShaderReadStageMask;
 
     // For imported images
-    vk::BindingPointer<vk::SamplerYcbcrConversion> mYuvConversionSampler;
+    BindingPointer<SamplerYcbcrConversion> mYuvConversionSampler;
     uint64_t mExternalFormat;
 
     // Cached properties.
@@ -1936,7 +1936,7 @@ class ShaderProgramHelper : angle::NonCopyable
     PipelineAndSerial mComputePipeline;
 
     // Specialization constants, currently only used by the graphics queue.
-    vk::SpecializationConstantBitSet mSpecializationConstants;
+    SpecializationConstantBitSet mSpecializationConstants;
 };
 
 // Tracks current handle allocation counts in the back-end. Useful for debugging and profiling.
