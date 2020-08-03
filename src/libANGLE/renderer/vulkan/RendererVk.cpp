@@ -721,15 +721,16 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
     instanceInfo.enabledLayerCount   = static_cast<uint32_t>(enabledInstanceLayerNames.size());
     instanceInfo.ppEnabledLayerNames = enabledInstanceLayerNames.data();
 
+    VkValidationFeatureEnableEXT enabledFeatures[] = {
+        VK_VALIDATION_FEATURE_ENABLE_BEST_PRACTICES_EXT};
+    VkValidationFeaturesEXT validationFeatures       = {};
+    validationFeatures.sType                         = VK_STRUCTURE_TYPE_VALIDATION_FEATURES_EXT;
+    validationFeatures.enabledValidationFeatureCount = 1;
+    validationFeatures.pEnabledValidationFeatures    = enabledFeatures;
+
     if (mEnableValidationLayers)
     {
         // Enable best practices output which includes perfdoc layer
-        VkValidationFeatureEnableEXT enabledFeatures[] = {
-            VK_VALIDATION_FEATURE_ENABLE_BEST_PRACTICES_EXT};
-        VkValidationFeaturesEXT validationFeatures = {};
-        validationFeatures.sType                   = VK_STRUCTURE_TYPE_VALIDATION_FEATURES_EXT;
-        validationFeatures.enabledValidationFeatureCount = 1;
-        validationFeatures.pEnabledValidationFeatures    = enabledFeatures;
         vk::AddToPNextChain(&instanceInfo, &validationFeatures);
     }
 
