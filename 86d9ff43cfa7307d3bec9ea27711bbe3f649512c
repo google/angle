@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b54cb79c_4959a613",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-08-03T18:38:05Z",
+      "side": 1,
+      "message": "LGTM",
+      "revId": "86d9ff43cfa7307d3bec9ea27711bbe3f649512c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b0598148_c03c2847",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 217,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-08-03T18:38:05Z",
+      "side": 1,
+      "message": "ref1",
+      "revId": "86d9ff43cfa7307d3bec9ea27711bbe3f649512c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c5a630d9_a085a27d",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 223,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-08-03T18:38:05Z",
+      "side": 1,
+      "message": "These were just swapped by ref1 above.   Can it be moved into an else block and only done once?",
+      "revId": "86d9ff43cfa7307d3bec9ea27711bbe3f649512c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1d550d1d_3932e63d",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 238,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-08-03T18:38:05Z",
+      "side": 1,
+      "message": "Same as above, can this be done only once?\n            if (srcFramebufferAngle !\u003d framebufferAngle)\n            {\n                std::swap(params-\u003estretch[0], params-\u003estretch[1]);\n            }",
+      "revId": "86d9ff43cfa7307d3bec9ea27711bbe3f649512c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
