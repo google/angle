@@ -1634,15 +1634,16 @@ void GenerateCaps(ID3D11Device *device,
     extensions->copyTexture                         = true;
     extensions->copyCompressedTexture               = true;
     extensions->textureStorageMultisample2DArrayOES = true;
-    extensions->multiviewMultisample      = ((extensions->multiview || extensions->multiview2) &&
+    extensions->multiviewMultisample     = ((extensions->multiview || extensions->multiview2) &&
                                         extensions->textureStorageMultisample2DArrayOES);
-    extensions->copyTexture3d             = true;
-    extensions->textureBorderClampOES     = true;
-    extensions->textureMultisample        = true;
-    extensions->provokingVertex           = true;
-    extensions->blendFuncExtended         = true;
-    extensions->maxDualSourceDrawBuffers  = 1;
-    extensions->texture3DOES              = true;
+    extensions->copyTexture3d            = true;
+    extensions->textureBorderClampOES    = true;
+    extensions->textureMultisample       = true;
+    extensions->provokingVertex          = true;
+    extensions->blendFuncExtended        = true;
+    extensions->maxDualSourceDrawBuffers = 1;
+    // http://anglebug.com/4926
+    extensions->texture3DOES              = false;
     extensions->baseVertexBaseInstance    = true;
     extensions->drawElementsBaseVertexOES = true;
     extensions->drawElementsBaseVertexEXT = true;
