@@ -39,4 +39,30 @@
 #include "compiled_default_metallib_debug_ios_autogen.inc"
 #endif  // TARGET_OS_OSX || TARGET_OS_MACCATALYST
 
+#if TARGET_OS_OSX || TARGET_OS_MACCATALYST
+
+#include "compiled_default_metallib_2_1_mac_autogen.inc"
+
+#elif TARGET_OS_IOS && TARGET_OS_SIMULATOR  // TARGET_OS_OSX || TARGET_OS_MACCATALYST
+
+#include "compiled_default_metallib_2_1_ios_sim_autogen.inc"
+
+#elif TARGET_OS_IOS  // TARGET_OS_OSX || TARGET_OS_MACCATALYST
+
+#include "compiled_default_metallib_2_1_ios_autogen.inc"
+#endif  // TARGET_OS_OSX || TARGET_OS_MACCATALYST
+
+#if TARGET_OS_OSX || TARGET_OS_MACCATALYST
+
+#include "compiled_default_metallib_2_1_debug_mac_autogen.inc"
+
+#elif TARGET_OS_IOS && TARGET_OS_SIMULATOR  // TARGET_OS_OSX || TARGET_OS_MACCATALYST
+
+#include "compiled_default_metallib_2_1_debug_ios_sim_autogen.inc"
+
+#elif TARGET_OS_IOS  // TARGET_OS_OSX || TARGET_OS_MACCATALYST
+
+#include "compiled_default_metallib_2_1_debug_ios_autogen.inc"
+#endif  // TARGET_OS_OSX || TARGET_OS_MACCATALYST
+
 // clang-format on

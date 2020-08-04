@@ -6,10 +6,13 @@
 
 #include "common.h"
 
-constant bool kSourceBufferAligned[[function_constant(0)]];
-constant bool kSourceIndexIsU8[[function_constant(1)]];
-constant bool kSourceIndexIsU16[[function_constant(2)]];
-constant bool kSourceIndexIsU32[[function_constant(3)]];
+using namespace rx::mtl_shader;
+
+// function_constant(0) is already used by common.h
+constant bool kSourceBufferAligned[[function_constant(1)]];
+constant bool kSourceIndexIsU8[[function_constant(2)]];
+constant bool kSourceIndexIsU16[[function_constant(3)]];
+constant bool kSourceIndexIsU32[[function_constant(4)]];
 constant bool kSourceBufferUnaligned = !kSourceBufferAligned;
 constant bool kUseSourceBufferU8     = kSourceIndexIsU8 || kSourceBufferUnaligned;
 constant bool kUseSourceBufferU16    = kSourceIndexIsU16 && kSourceBufferAligned;

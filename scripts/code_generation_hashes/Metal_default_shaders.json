@@ -1,28 +1,40 @@
 {
   "src/libANGLE/renderer/metal/shaders/blit.metal":
-    "8a00929424273e07e4b63d4ab062f005",
+    "f02720a0f3d9624b67bdb808cbc94c7f",
   "src/libANGLE/renderer/metal/shaders/clear.metal":
-    "1c231afc6100433a79fce49046aa5965",
+    "67da9886363c530132e5bc2199bab2db",
   "src/libANGLE/renderer/metal/shaders/common.h":
-    "7f4fe9c0ee3fa9bee84ea6627df44e04",
+    "5888cfe052e6e6332e8c7c8949e888fb",
+  "src/libANGLE/renderer/metal/shaders/compiled/compiled_default_metallib_2_1_debug_ios_autogen.inc":
+    "39f2302c254c8490b0f5b4782355a9e4",
+  "src/libANGLE/renderer/metal/shaders/compiled/compiled_default_metallib_2_1_debug_ios_sim_autogen.inc":
+    "ab9be1624a4f15fc12647771727302b0",
+  "src/libANGLE/renderer/metal/shaders/compiled/compiled_default_metallib_2_1_debug_mac_autogen.inc":
+    "35f17267fa21f1f96d8a781d45485e1a",
+  "src/libANGLE/renderer/metal/shaders/compiled/compiled_default_metallib_2_1_ios_autogen.inc":
+    "81c4b4d1012dbcb7aa738f49bbed1645",
+  "src/libANGLE/renderer/metal/shaders/compiled/compiled_default_metallib_2_1_ios_sim_autogen.inc":
+    "3446979c2d6504cb421e1f0004f5f15f",
+  "src/libANGLE/renderer/metal/shaders/compiled/compiled_default_metallib_2_1_mac_autogen.inc":
+    "7839cf16e8e45e6dffa9454dd5d7d3dc",
   "src/libANGLE/renderer/metal/shaders/compiled/compiled_default_metallib_debug_ios_autogen.inc":
-    "10478c8a544f5a79decd6707d7c222e1",
+    "82ccf14797364f2c3c5dee14227b2c24",
   "src/libANGLE/renderer/metal/shaders/compiled/compiled_default_metallib_debug_ios_sim_autogen.inc":
-    "781104f2c328281b8e12509bf24e2e3a",
+    "28f453c423b4029ab876668e4f1e8b21",
   "src/libANGLE/renderer/metal/shaders/compiled/compiled_default_metallib_debug_mac_autogen.inc":
-    "e3c377c317b4219623068780b03441cd",
+    "3f402a605d97be11664ee0bb642e616a",
   "src/libANGLE/renderer/metal/shaders/compiled/compiled_default_metallib_ios_autogen.inc":
-    "1fc59139de5353ac94a58f2dfe70d1e7",
+    "52c9275b8582f9e7c4a6b0b77c857a72",
   "src/libANGLE/renderer/metal/shaders/compiled/compiled_default_metallib_ios_sim_autogen.inc":
-    "32d664590f0a28063ea9e04d54126216",
+    "259bdeb1bc17ab5098e2be4032f5d608",
   "src/libANGLE/renderer/metal/shaders/compiled/compiled_default_metallib_mac_autogen.inc":
-    "1bdfb6157311f1e462d2d11b7868fd57",
+    "e16bd5da4f614789be9e2545f2af4237",
   "src/libANGLE/renderer/metal/shaders/compiled/mtl_default_shaders_autogen.inc":
-    "1614e50c13ceab6e72a5bc2c2dc32056",
+    "634a127f4e94f6bc3123e89850d010ee",
   "src/libANGLE/renderer/metal/shaders/constants.h":
     "9bb6e63bf2b48a7a56978c787bde4850",
   "src/libANGLE/renderer/metal/shaders/gen_indices.metal":
-    "002511e2b980a7fca7e80cbda6a82712",
+    "87a76d5e12825111c0595f69e79f5d20",
   "src/libANGLE/renderer/metal/shaders/gen_mtl_internal_shaders.py":
-    "43375642abef54e634e4c803b53de7d0"
+    "962d0f3229d91ab71ad555f9fa3fe0c3"
 }

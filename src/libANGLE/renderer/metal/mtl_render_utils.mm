@@ -25,6 +25,7 @@ namespace mtl
 namespace
 {
 
+#define NUM_COLOR_OUTPUTS_CONSTANT_NAME @"kNumColorOutputs"
 #define SOURCE_BUFFER_ALIGNED_CONSTANT_NAME @"kSourceBufferAligned"
 #define SOURCE_IDX_IS_U8_CONSTANT_NAME @"kSourceIndexIsU8"
 #define SOURCE_IDX_IS_U16_CONSTANT_NAME @"kSourceIndexIsU16"
@@ -451,12 +452,26 @@ void ClearUtils::ensureRenderPipelineStateCacheInitialized(ContextMtl *ctx)
 {
     ANGLE_MTL_OBJC_SCOPE
     {
+        NSError *err             = nil;
         id<MTLLibrary> shaderLib = ctx->getDisplay()->getDefaultShadersLib();
+        id<MTLFunction> vertexShader =
+            [[shaderLib newFunctionWithName:@"clearVS"] ANGLE_MTL_AUTORELEASE];
+        MTLFunctionConstantValues *funcConstants =
+            [[[MTLFunctionConstantValues alloc] init] ANGLE_MTL_AUTORELEASE];
 
-        mClearRenderPipelineCache.setVertexShader(
-            ctx, [[shaderLib newFunctionWithName:@"clearVS"] ANGLE_MTL_AUTORELEASE]);
-        mClearRenderPipelineCache.setFragmentShader(
-            ctx, [[shaderLib newFunctionWithName:@"clearFS"] ANGLE_MTL_AUTORELEASE]);
+        // Use 1 color outputs for now.
+        uint32_t numOutputs = 1;
+        [funcConstants setConstantValue:&numOutputs
+                                   type:MTLDataTypeUInt
+                               withName:NUM_COLOR_OUTPUTS_CONSTANT_NAME];
+
+        id<MTLFunction> fragmentShader =
+            [[shaderLib newFunctionWithName:@"clearFS" constantValues:funcConstants
+                                      error:&err] ANGLE_MTL_AUTORELEASE];
+        ASSERT(fragmentShader);
+
+        mClearRenderPipelineCache.setVertexShader(ctx, vertexShader);
+        mClearRenderPipelineCache.setFragmentShader(ctx, fragmentShader);
     }
 }
 
@@ -665,6 +680,12 @@ void ColorBlitUtils::ensureRenderPipelineStateCacheInitialized(ContextMtl *ctx,
         [funcConstants setConstantValue:&multiplyAlphaFlags[alphaPremultiplyType][1]
                                    type:MTLDataTypeBool
                                withName:UNMULTIPLY_ALPHA_CONSTANT_NAME];
+
+        // Use 1 color outputs for now.
+        uint32_t numOutputs = 1;
+        [funcConstants setConstantValue:&numOutputs
+                                   type:MTLDataTypeUInt
+                               withName:NUM_COLOR_OUTPUTS_CONSTANT_NAME];
 
         // Set texture type constant
         [funcConstants setConstantValue:&textureType

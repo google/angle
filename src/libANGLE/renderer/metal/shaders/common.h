@@ -23,7 +23,91 @@
 
 using namespace metal;
 
+// Common constant defined number of color outputs
+constant uint32_t kNumColorOutputs [[function_constant(0)]];
+constant bool kColorOutputAvailable0 = kNumColorOutputs > 0;
+constant bool kColorOutputAvailable1 = kNumColorOutputs > 1;
+constant bool kColorOutputAvailable2 = kNumColorOutputs > 2;
+constant bool kColorOutputAvailable3 = kNumColorOutputs > 3;
+
+namespace rx
+{
+namespace mtl_shader
+{
+
 // Full screen triangle's vertices
 constant float2 gCorners[3] = {float2(-1.0f, -1.0f), float2(3.0f, -1.0f), float2(-1.0f, 3.0f)};
+
+template <typename T>
+struct MultipleColorOutputs
+{
+    vec<T, 4> color0 [[color(0), function_constant(kColorOutputAvailable0)]];
+    vec<T, 4> color1 [[color(1), function_constant(kColorOutputAvailable1)]];
+    vec<T, 4> color2 [[color(2), function_constant(kColorOutputAvailable2)]];
+    vec<T, 4> color3 [[color(3), function_constant(kColorOutputAvailable3)]];
+};
+
+#define ANGLE_ASSIGN_COLOR_OUPUT(STRUCT_VARIABLE, COLOR_INDEX, VALUE) \
+    do                                                                \
+    {                                                                 \
+        if (kColorOutputAvailable##COLOR_INDEX)                       \
+        {                                                             \
+            STRUCT_VARIABLE.color##COLOR_INDEX = VALUE;               \
+        }                                                             \
+    } while (0)
+
+template <typename T>
+static inline MultipleColorOutputs<T> toMultipleColorOutputs(vec<T, 4> color)
+{
+    MultipleColorOutputs<T> re;
+
+    ANGLE_ASSIGN_COLOR_OUPUT(re, 0, color);
+    ANGLE_ASSIGN_COLOR_OUPUT(re, 1, color);
+    ANGLE_ASSIGN_COLOR_OUPUT(re, 2, color);
+    ANGLE_ASSIGN_COLOR_OUPUT(re, 3, color);
+
+    return re;
+}
+
+static inline float3 cubeTexcoords(float2 texcoords, int face)
+{
+    texcoords = 2.0 * texcoords - 1.0;
+    switch (face)
+    {
+        case 0:
+            return float3(1.0, -texcoords.y, -texcoords.x);
+        case 1:
+            return float3(-1.0, -texcoords.y, texcoords.x);
+        case 2:
+            return float3(texcoords.x, 1.0, texcoords.y);
+        case 3:
+            return float3(texcoords.x, -1.0, -texcoords.y);
+        case 4:
+            return float3(texcoords.x, -texcoords.y, 1.0);
+        case 5:
+            return float3(-texcoords.x, -texcoords.y, -1.0);
+    }
+    return float3(texcoords, 0);
+}
+
+template <typename T>
+static inline vec<T, 4> resolveTextureMS(texture2d_ms<T> srcTexture, uint2 coords)
+{
+    uint samples = srcTexture.get_num_samples();
+
+    vec<T, 4> output(0);
+
+    for (uint sample = 0; sample < samples; ++sample)
+    {
+        output += srcTexture.read(coords, sample);
+    }
+
+    output = output / samples;
+
+    return output;
+}
+
+}  // namespace mtl_shader
+}  // namespace rx
 
 #endif /* LIBANGLE_RENDERER_METAL_SHADERS_COMMON_H_ */
