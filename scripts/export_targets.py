@@ -218,7 +218,6 @@ IGNORED_INCLUDE_PREFIXES = {
 }
 
 IGNORED_DIRECTORIES = {
-    '//third_party/glslang',
     '//third_party/SwiftShader',
     '//third_party/vulkan-headers',
     '//third_party/vulkan-loader',
