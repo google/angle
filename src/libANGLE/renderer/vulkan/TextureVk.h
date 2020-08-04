@@ -169,7 +169,7 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
 
     void retainImageViews(vk::ResourceUseList *resourceUseList)
     {
-        mImageViews.retain(resourceUseList);
+        getImageViews().retain(resourceUseList);
     }
 
     void releaseOwnershipOfImage(const gl::Context *context);
@@ -235,6 +235,14 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
                         uint32_t imageBaseLevel,
                         bool selfOwned);
     void updateImageHelper(ContextVk *contextVk, size_t imageCopyBufferAlignment);
+    vk::ImageViewHelper &getImageViews()
+    {
+        return mMultisampledImageViews[gl::RenderToTextureImageIndex::Default];
+    }
+    const vk::ImageViewHelper &getImageViews() const
+    {
+        return mMultisampledImageViews[gl::RenderToTextureImageIndex::Default];
+    }
 
     // Redefine a mip level of the texture.  If the new size and format don't match the allocated
     // image, the image may be released.  When redefining a mip of a multi-level image, updates are
@@ -364,7 +372,10 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
                                  const bool sized,
                                  uint32_t levelCount,
                                  uint32_t layerCount);
-    angle::Result initRenderTargets(ContextVk *contextVk, GLuint layerCount, GLuint levelIndex);
+    angle::Result initRenderTargets(ContextVk *contextVk,
+                                    GLuint layerCount,
+                                    GLuint levelIndex,
+                                    gl::RenderToTextureImageIndex renderToTextureIndex);
     angle::Result getLevelLayerImageView(ContextVk *contextVk,
                                          size_t level,
                                          size_t layer,
@@ -412,28 +423,41 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
     // mImage.
     uint32_t mImageLevelOffset;
 
+    // If multisampled rendering to texture, an intermediate multisampled image is created for use
+    // as renderpass color attachment.  An array of images and image views are used based on the
+    // number of samples used with multisampled rendering to texture.  Index 0 corresponds to the
+    // non-multisampled-render-to-texture usage of the texture.
+
+    // - index 0: Unused.  See description of |mImage|.
+    // - index N: intermediate multisampled image used for multisampled rendering to texture with
+    //   1 << N samples
+    gl::RenderToTextureImageMap<vk::ImageHelper> mMultisampledImages;
+
+    // |ImageViewHelper| contains all the current views for the Texture. The views are always owned
+    // by the Texture and are not shared like |mImage|. They also have different lifetimes and can
+    // be reallocated independently of |mImage| on state changes.
+    //
+    // - index 0: views for the texture's image (regardless of |mOwnsImage|).
+    // - index N: views for mMultisampledImages[N]
+    gl::RenderToTextureImageMap<vk::ImageViewHelper> mMultisampledImageViews;
+
+    // Render targets stored as array of vector of vectors
+    //
+    // - First dimension: index N contains render targets with views from mMultisampledImageViews[N]
+    // - Second dimension: level
+    // - Third dimension: layer
+    gl::RenderToTextureImageMap<std::vector<RenderTargetVector>> mRenderTargets;
+
     // |mImage| wraps a VkImage and VkDeviceMemory that represents the gl::Texture. |mOwnsImage|
     // indicates that |TextureVk| owns the image. Otherwise it is a weak pointer shared with another
-    // class.
+    // class. Due to this sharing, for example through EGL images, the image must always be
+    // dynamically allocated as the texture can release ownership for example and it can be
+    // transferred to another |TextureVk|.
     vk::ImageHelper *mImage;
-
-    // |mImageViews| contains all the current views for the Texture. The views are always owned by
-    // the Texture and are not shared like |mImage|. They also have different lifetimes and can be
-    // reallocated independently of |mImage| on state changes.
-    vk::ImageViewHelper mImageViews;
-
-    // If multisampled rendering to texture, an intermediate multisampled image is created for use
-    // as renderpass color or depth/stencil attachment.
-    vk::ImageHelper mMultisampledImage;
-    vk::ImageViewHelper mMultisampledImageViews;
 
     // |mSampler| contains the relevant Vulkan sampler states representing the OpenGL Texture
     // sampling states for the Texture.
     vk::SamplerBinding mSampler;
-
-    // Render targets stored as vector of vectors
-    // Level is first dimension, layer is second
-    std::vector<RenderTargetVector> mRenderTargets;
 
     // Overridden in some tests.
     size_t mStagingBufferInitialSize;

@@ -710,6 +710,26 @@ bool ValidateComponentTypeMasks(unsigned long outputTypes,
                                 unsigned long outputMask,
                                 unsigned long inputMask);
 
+enum class RenderToTextureImageIndex
+{
+    // The default image of the texture, where data is expected to be.
+    Default = 0,
+
+    // Intermediate multisampled images for EXT_multisampled_render_to_texture.
+    // These values must match log2(SampleCount).
+    IntermediateImage2xMultisampled  = 1,
+    IntermediateImage4xMultisampled  = 2,
+    IntermediateImage8xMultisampled  = 3,
+    IntermediateImage16xMultisampled = 4,
+
+    // We currently only support up to 16xMSAA in backends that use this enum.
+    InvalidEnum = 5,
+    EnumCount   = 5,
+};
+
+template <typename T>
+using RenderToTextureImageMap = angle::PackedEnumMap<RenderToTextureImageIndex, T>;
+
 using ContextID = uintptr_t;
 
 constexpr size_t kCubeFaceCount = 6;

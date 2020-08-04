@@ -463,9 +463,7 @@ RenderPassDesc::RenderPassDesc(const RenderPassDesc &other)
 
 void RenderPassDesc::setSamples(GLint samples)
 {
-    ASSERT(samples < std::numeric_limits<uint8_t>::max());
-    ASSERT(gl::isPow2(samples));
-    SetBitField(mLogSamples, gl::ScanForward(static_cast<uint8_t>(samples)));
+    SetBitField(mLogSamples, PackSampleCount(samples));
 }
 
 void RenderPassDesc::packColorAttachment(size_t colorIndexGL, angle::FormatID formatID)

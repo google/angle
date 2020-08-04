@@ -796,6 +796,7 @@ void InitExternalSemaphoreCapabilitiesFunctions(VkInstance instance);
 #endif  // !defined(ANGLE_SHARED_LIBVULKAN)
 
 GLenum CalculateGenerateMipmapFilter(ContextVk *contextVk, const vk::Format &format);
+size_t PackSampleCount(GLint sampleCount);
 
 namespace gl_vk
 {
