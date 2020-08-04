@@ -185,5 +185,24 @@ replay run stage of multiple tests together.
 
 ![A test batch as a job unit](img/JobUnit.png)
 
-[link_to_python_script]:https://chromium.googlesource.com/angle/angle/+/refs/heads/master/src/tests/capture_replay_tests.py
+### Running tests
+From the command line, navigate to the ANGLE root folder [angle][angle_folder] then run the
+command below:
+```
+python3 src/tests/capture_replay_tests.py --use-goma --gtest_filter=*/ES2_Vulkan --keep-temp-files --output-to-file --batch-count=8
+```
+
+* `--use-goma` to turn on/off building with goma
+* `--gtest_filter` to run only specific tests
+* `--keep-temp-files` to keep the trace files
+* `--output-to-file` to write the log to results.txt at
+ [src/tests/capture_replay_tests][capture_replay_test_folder] folder.
+* `--batch-count` to set the number of tests in a batch. More tests in a batch means that
+the tests will finish faster, but also means a lower level of granularity.
+All command line arguments can be found at the top of the [python script][link_to_python_script].
+
+[angle_folder]: ../
+[capture_replay_test_folder]: ../src/tests/capture_replay_tests/
+[link_to_python_script]: ../src/tests/capture_replay_tests.py
+
 
