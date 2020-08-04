@@ -326,6 +326,7 @@ Context::Context(egl::Display *display,
       mProgramPipelineObserverBinding(this, kProgramPipelineSubjectIndex),
       mThreadPool(nullptr),
       mFrameCapture(new angle::FrameCapture),
+      mRefCount(0),
       mOverlay(mImplementation.get())
 {
     for (angle::SubjectIndex uboIndex = kUniformBuffer0SubjectIndex;
@@ -691,9 +692,9 @@ egl::Error Context::makeCurrent(egl::Display *display,
 
 egl::Error Context::unMakeCurrent(const egl::Display *display)
 {
-    ANGLE_TRY(unsetDefaultFramebuffer());
-
     ANGLE_TRY(angle::ResultToEGL(mImplementation->onUnMakeCurrent(this)));
+
+    ANGLE_TRY(unsetDefaultFramebuffer());
 
     // Return the scratch buffers to the display so they can be shared with other contexts while
     // this one is not current.

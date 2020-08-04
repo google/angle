@@ -151,7 +151,7 @@ class Display final : public LabeledObject,
                      const AttributeMap &attribs,
                      Sync **outSync);
 
-    Error makeCurrent(const Thread *thread,
+    Error makeCurrent(gl::Context *previousContext,
                       Surface *drawSurface,
                       Surface *readSurface,
                       gl::Context *context);
@@ -259,6 +259,7 @@ class Display final : public LabeledObject,
     void updateAttribsFromEnvironment(const AttributeMap &attribMap);
 
     Error restoreLostDevice();
+    Error releaseContext(gl::Context *context);
 
     void initDisplayExtensions();
     void initVendorString();

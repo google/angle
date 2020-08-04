@@ -22,6 +22,7 @@
 
 #include "common/Optional.h"
 #include "common/angleutils.h"
+#include "libANGLE/Caps.h"
 #include "libANGLE/Compiler.h"
 #include "libANGLE/Debug.h"
 #include "libANGLE/angletypes.h"
@@ -44,7 +45,6 @@ namespace gl
 {
 class CompileTask;
 class Context;
-struct Limitations;
 class ShaderProgramManager;
 class State;
 
@@ -242,7 +242,7 @@ class Shader final : angle::NonCopyable, public LabeledObject
 
     ShaderState mState;
     std::unique_ptr<rx::ShaderImpl> mImplementation;
-    const gl::Limitations &mRendererLimitations;
+    const gl::Limitations mRendererLimitations;
     const ShaderProgramID mHandle;
     const ShaderType mType;
     unsigned int mRefCount;  // Number of program objects this shader is attached to
