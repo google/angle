@@ -72,6 +72,7 @@ _metal_backend_sources = [
   "shaders/compiled/compiled_default_metallib_mac_autogen.inc",
   "shaders/compiled/mtl_default_shaders_autogen.inc",
   "shaders/constants.h",
+  "shaders/format_autogen.h",
 ]
 
 config("angle_metal_backend_config") {

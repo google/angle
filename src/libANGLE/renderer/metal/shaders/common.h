@@ -134,6 +134,128 @@ static inline float4 linearToSRGB(float4 color)
     return float4(linearToSRGB(color.r), linearToSRGB(color.g), linearToSRGB(color.b), color.a);
 }
 
+template <typename Short>
+static inline Short bytesToShort(constant uchar *input, uint offset)
+{
+    Short inputLo = input[offset];
+    Short inputHi = input[offset + 1];
+    // Little endian conversion:
+    return inputLo | (inputHi << 8);
+}
+
+template <typename Int>
+static inline Int bytesToInt(constant uchar *input, uint offset)
+{
+    Int input0 = input[offset];
+    Int input1 = input[offset + 1];
+    Int input2 = input[offset + 2];
+    Int input3 = input[offset + 3];
+    // Little endian conversion:
+    return input0 | (input1 << 8) | (input2 << 16) | (input3 << 24);
+}
+
+template <typename Short>
+static inline void shortToBytes(Short val, uint offset, device uchar *output)
+{
+    ushort valUnsigned = as_type<ushort>(val);
+    output[offset]     = valUnsigned & 0xff;
+    output[offset + 1] = (valUnsigned >> 8) & 0xff;
+}
+
+template <typename Int>
+static inline void intToBytes(Int val, uint offset, device uchar *output)
+{
+    uint valUnsigned   = as_type<uint>(val);
+    output[offset]     = valUnsigned & 0xff;
+    output[offset + 1] = (valUnsigned >> 8) & 0xff;
+    output[offset + 2] = (valUnsigned >> 16) & 0xff;
+    output[offset + 3] = (valUnsigned >> 24) & 0xff;
+}
+
+static inline void floatToBytes(float val, uint offset, device uchar *output)
+{
+    intToBytes(as_type<uint>(val), offset, output);
+}
+
+static inline void int24bitToBytes(uint val, uint offset, device uchar *output)
+{
+    output[offset]     = val & 0xff;
+    output[offset + 1] = (val >> 8) & 0xff;
+    output[offset + 2] = (val >> 16) & 0xff;
+}
+
+template <unsigned int inputBitCount, unsigned int inputBitStart, typename T>
+static inline T getShiftedData(T input)
+{
+    static_assert(inputBitCount + inputBitStart <= (sizeof(T) * 8),
+                  "T must have at least as many bits as inputBitCount + inputBitStart.");
+    const T mask = (1 << inputBitCount) - 1;
+    return (input >> inputBitStart) & mask;
+}
+
+template <unsigned int inputBitCount, unsigned int inputBitStart, typename T>
+static inline T shiftData(T input)
+{
+    static_assert(inputBitCount + inputBitStart <= (sizeof(T) * 8),
+                  "T must have at least as many bits as inputBitCount + inputBitStart.");
+    const T mask = (1 << inputBitCount) - 1;
+    return (input & mask) << inputBitStart;
+}
+
+template <unsigned int inputBitCount, typename T>
+static inline float normalizedToFloat(T input)
+{
+    static_assert(inputBitCount <= (sizeof(T) * 8),
+                  "T must have more bits than or same bits as inputBitCount.");
+    static_assert(inputBitCount <= 23, "Only single precision is supported");
+
+    constexpr float inverseMax = 1.0f / ((1 << inputBitCount) - 1);
+    return input * inverseMax;
+}
+
+template <typename T>
+static inline float normalizedToFloat(T input)
+{
+    return normalizedToFloat<sizeof(T) * 8, T>(input);
+}
+
+template <>
+inline float normalizedToFloat(short input)
+{
+    constexpr float inverseMax = 1.0f / 0x7fff;
+    return static_cast<float>(input) * inverseMax;
+}
+
+template <>
+inline float normalizedToFloat(int input)
+{
+    constexpr float inverseMax = 1.0f / 0x7fffffff;
+    return static_cast<float>(input) * inverseMax;
+}
+
+template <>
+inline float normalizedToFloat(uint input)
+{
+    constexpr float inverseMax = 1.0f / 0xffffffff;
+    return static_cast<float>(input) * inverseMax;
+}
+
+template <unsigned int outputBitCount, typename T>
+static inline T floatToNormalized(float input)
+{
+    static_assert(outputBitCount <= (sizeof(T) * 8),
+                  "T must have more bits than or same bits as inputBitCount.");
+    static_assert(outputBitCount <= 23, "Only single precision is supported");
+
+    return static_cast<T>(((1 << outputBitCount) - 1) * input + 0.5f);
+}
+
+template <typename T>
+static inline T floatToNormalized(float input)
+{
+    return floatToNormalized<sizeof(T) * 8, T>(input);
+}
+
 }  // namespace mtl_shader
 }  // namespace rx
 
