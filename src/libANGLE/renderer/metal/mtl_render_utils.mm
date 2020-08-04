@@ -35,6 +35,8 @@ namespace
 #define UNMULTIPLY_ALPHA_CONSTANT_NAME @"kUnmultiplyAlpha"
 #define SOURCE_TEXTURE_TYPE_CONSTANT_NAME @"kSourceTextureType"
 #define SOURCE_TEXTURE2_TYPE_CONSTANT_NAME @"kSourceTexture2Type"
+#define COPY_FORMAT_TYPE_CONSTANT_NAME @"kCopyFormatType"
+#define PIXEL_COPY_TEXTURE_TYPE_CONSTANT_NAME @"kCopyTextureType"
 #define VISIBILITY_RESULT_KEEP_OLD_VAL_CONSTANT_NAME @"kCombineWithExistingResult"
 
 // See libANGLE/renderer/metal/shaders/clear.metal
@@ -94,6 +96,34 @@ struct GenerateMipmapUniform
     uint32_t numMipmapsToGenerate;
     uint8_t sRGB;
     uint8_t padding[7];
+};
+
+// See libANGLE/renderer/metal/shaders/copy_buffer.metal
+struct CopyPixelFromBufferUniforms
+{
+    uint32_t copySize[3];
+    uint32_t padding1;
+    uint32_t textureOffset[3];
+    uint32_t padding2;
+    uint32_t bufferStartOffset;
+    uint32_t pixelSize;
+    uint32_t bufferRowPitch;
+    uint32_t bufferDepthPitch;
+};
+struct WritePixelToBufferUniforms
+{
+    uint32_t copySize[2];
+    uint32_t textureOffset[2];
+
+    uint32_t bufferStartOffset;
+    uint32_t pixelSize;
+    uint32_t bufferRowPitch;
+
+    uint32_t textureLevel;
+    uint32_t textureLayer;
+    uint8_t reverseTextureRowOrder;
+
+    uint8_t padding[11];
 };
 
 // Class to automatically disable occlusion query upon entering block and re-able it upon
@@ -220,6 +250,22 @@ int GetShaderTextureType(const TextureRef &texture)
     }
 
     return 0;
+}
+
+int GetPixelTypeIndex(const angle::Format &angleFormat)
+{
+    if (angleFormat.isSint())
+    {
+        return static_cast<int>(PixelType::Int);
+    }
+    else if (angleFormat.isUint())
+    {
+        return static_cast<int>(PixelType::UInt);
+    }
+    else
+    {
+        return static_cast<int>(PixelType::Float);
+    }
 }
 
 ANGLE_INLINE
@@ -487,7 +533,13 @@ StencilBlitViaBufferParams::StencilBlitViaBufferParams(const DepthStencilBlitPar
 }
 
 // RenderUtils implementation
-RenderUtils::RenderUtils(DisplayMtl *display) : Context(display) {}
+RenderUtils::RenderUtils(DisplayMtl *display)
+    : Context(display),
+      mCopyPixelsUtils(
+          {CopyPixelsUtils("readFromBufferToIntTexture", "writeFromIntTextureToBuffer"),
+           CopyPixelsUtils("readFromBufferToUIntTexture", "writeFromUIntTextureToBuffer"),
+           CopyPixelsUtils("readFromBufferToFloatTexture", "writeFromFloatTextureToBuffer")})
+{}
 
 RenderUtils::~RenderUtils() {}
 
@@ -502,6 +554,11 @@ void RenderUtils::onDestroy()
     mClearUtils.onDestroy();
     mColorBlitUtils.onDestroy();
     mDepthStencilBlitUtils.onDestroy();
+
+    for (CopyPixelsUtils &util : mCopyPixelsUtils)
+    {
+        util.onDestroy();
+    }
 }
 
 // override ErrorHandler
@@ -628,6 +685,23 @@ angle::Result RenderUtils::generateMipmapCS(ContextMtl *contextMtl,
                                             gl::TexLevelArray<mtl::TextureRef> *mipmapOutputViews)
 {
     return mMipmapUtils.generateMipmapCS(contextMtl, srcTexture, sRGBMipmap, mipmapOutputViews);
+}
+
+angle::Result RenderUtils::unpackPixelsFromBufferToTexture(ContextMtl *contextMtl,
+                                                           const angle::Format &srcAngleFormat,
+                                                           const CopyPixelsFromBufferParams &params)
+{
+    int index = GetPixelTypeIndex(srcAngleFormat);
+    return mCopyPixelsUtils[index].unpackPixelsFromBufferToTexture(contextMtl, srcAngleFormat,
+                                                                   params);
+}
+angle::Result RenderUtils::packPixelsFromTextureToBuffer(ContextMtl *contextMtl,
+                                                         const angle::Format &dstAngleFormat,
+                                                         const CopyPixelsToBufferParams &params)
+{
+    int index = GetPixelTypeIndex(dstAngleFormat);
+    return mCopyPixelsUtils[index].packPixelsFromTextureToBuffer(contextMtl, dstAngleFormat,
+                                                                 params);
 }
 
 // ClearUtils implementation
@@ -1600,7 +1674,8 @@ angle::Result IndexGeneratorUtils::generateLineLoopLastSegmentFromElementsArray(
 
         BufferMtl *bufferMtl = GetImpl(elementBuffer);
         std::pair<uint32_t, uint32_t> firstLast;
-        ANGLE_TRY(bufferMtl->getFirstLastIndices(params.srcType, static_cast<uint32_t>(srcOffset),
+        ANGLE_TRY(bufferMtl->getFirstLastIndices(contextMtl, params.srcType,
+                                                 static_cast<uint32_t>(srcOffset),
                                                  params.indexCount, &firstLast));
 
         return generateLineLoopLastSegment(contextMtl, firstLast.first, firstLast.second,
@@ -1812,6 +1887,143 @@ angle::Result MipmapUtils::generateMipmapCS(ContextMtl *contextMtl,
         remainMips -= options.numMipmapsToGenerate;
         options.srcLevel += options.numMipmapsToGenerate;
     }
+
+    return angle::Result::Continue;
+}
+
+// CopyPixelsUtils implementation
+CopyPixelsUtils::CopyPixelsUtils(const std::string &readShaderName,
+                                 const std::string &writeShaderName)
+    : mReadShaderName(readShaderName), mWriteShaderName(writeShaderName)
+{}
+CopyPixelsUtils::CopyPixelsUtils(const CopyPixelsUtils &src)
+    : CopyPixelsUtils(src.mReadShaderName, src.mWriteShaderName)
+{}
+
+void CopyPixelsUtils::onDestroy()
+{
+    ClearPipelineState2DArray(&mPixelsCopyPipelineCaches);
+}
+
+AutoObjCPtr<id<MTLComputePipelineState>> CopyPixelsUtils::getPixelsCopyPipeline(
+    ContextMtl *contextMtl,
+    const angle::Format &angleFormat,
+    const TextureRef &texture,
+    bool bufferWrite)
+{
+    int formatIDValue     = static_cast<int>(angleFormat.id);
+    int shaderTextureType = GetShaderTextureType(texture);
+    int index2 = mtl_shader::kTextureTypeCount * (bufferWrite ? 1 : 0) + shaderTextureType;
+
+    AutoObjCPtr<id<MTLComputePipelineState>> &cache =
+        mPixelsCopyPipelineCaches[formatIDValue][index2];
+
+    if (!cache)
+    {
+        // Pipeline not cached, create it now:
+        ANGLE_MTL_OBJC_SCOPE
+        {
+            auto funcConstants = [[[MTLFunctionConstantValues alloc] init] ANGLE_MTL_AUTORELEASE];
+
+            [funcConstants setConstantValue:&formatIDValue
+                                       type:MTLDataTypeInt
+                                   withName:COPY_FORMAT_TYPE_CONSTANT_NAME];
+            [funcConstants setConstantValue:&shaderTextureType
+                                       type:MTLDataTypeInt
+                                   withName:PIXEL_COPY_TEXTURE_TYPE_CONSTANT_NAME];
+
+            NSString *shaderName = nil;
+            if (bufferWrite)
+            {
+                shaderName = [NSString stringWithUTF8String:mWriteShaderName.c_str()];
+            }
+            else
+            {
+                shaderName = [NSString stringWithUTF8String:mReadShaderName.c_str()];
+            }
+
+            EnsureSpecializedComputePipelineInitialized(contextMtl->getDisplay(), shaderName,
+                                                        funcConstants, &cache);
+        }
+    }
+
+    return cache;
+}
+
+angle::Result CopyPixelsUtils::unpackPixelsFromBufferToTexture(
+    ContextMtl *contextMtl,
+    const angle::Format &srcAngleFormat,
+    const CopyPixelsFromBufferParams &params)
+{
+    ComputeCommandEncoder *cmdEncoder = contextMtl->getComputeCommandEncoder();
+    ASSERT(cmdEncoder);
+
+    AutoObjCPtr<id<MTLComputePipelineState>> pipeline =
+        getPixelsCopyPipeline(contextMtl, srcAngleFormat, params.texture, false);
+
+    cmdEncoder->setComputePipelineState(pipeline);
+    cmdEncoder->setBuffer(params.buffer, 0, 1);
+    cmdEncoder->setTextureForWrite(params.texture, 0);
+
+    CopyPixelFromBufferUniforms options;
+    options.copySize[0]       = params.textureArea.width;
+    options.copySize[1]       = params.textureArea.height;
+    options.copySize[2]       = params.textureArea.depth;
+    options.bufferStartOffset = params.bufferStartOffset;
+    options.pixelSize         = srcAngleFormat.pixelBytes;
+    options.bufferRowPitch    = params.bufferRowPitch;
+    options.bufferDepthPitch  = params.bufferDepthPitch;
+    options.textureOffset[0]  = params.textureArea.x;
+    options.textureOffset[1]  = params.textureArea.y;
+    options.textureOffset[2]  = params.textureArea.z;
+    cmdEncoder->setData(options, 0);
+
+    NSUInteger w                  = pipeline.get().threadExecutionWidth;
+    MTLSize threadsPerThreadgroup = MTLSizeMake(w, 1, 1);
+
+    MTLSize threads =
+        MTLSizeMake(params.textureArea.width, params.textureArea.height, params.textureArea.depth);
+
+    DispatchCompute(contextMtl, cmdEncoder,
+                    /** allowNonUniform */ true, threads, threadsPerThreadgroup);
+
+    return angle::Result::Continue;
+}
+
+angle::Result CopyPixelsUtils::packPixelsFromTextureToBuffer(ContextMtl *contextMtl,
+                                                             const angle::Format &dstAngleFormat,
+                                                             const CopyPixelsToBufferParams &params)
+{
+    ComputeCommandEncoder *cmdEncoder = contextMtl->getComputeCommandEncoder();
+    ASSERT(cmdEncoder);
+
+    AutoObjCPtr<id<MTLComputePipelineState>> pipeline =
+        getPixelsCopyPipeline(contextMtl, dstAngleFormat, params.texture, true);
+
+    cmdEncoder->setComputePipelineState(pipeline);
+    cmdEncoder->setTexture(params.texture, 0);
+    cmdEncoder->setBufferForWrite(params.buffer, 0, 1);
+
+    WritePixelToBufferUniforms options;
+    options.copySize[0]            = params.textureArea.width;
+    options.copySize[1]            = params.textureArea.height;
+    options.bufferStartOffset      = params.bufferStartOffset;
+    options.pixelSize              = dstAngleFormat.pixelBytes;
+    options.bufferRowPitch         = params.bufferRowPitch;
+    options.textureOffset[0]       = params.textureArea.x;
+    options.textureOffset[1]       = params.textureArea.y;
+    options.textureLevel           = params.textureLevel;
+    options.textureLayer           = params.textureSliceOrDeph;
+    options.reverseTextureRowOrder = params.reverseTextureRowOrder;
+    cmdEncoder->setData(options, 0);
+
+    NSUInteger w                  = pipeline.get().threadExecutionWidth;
+    MTLSize threadsPerThreadgroup = MTLSizeMake(w, 1, 1);
+
+    MTLSize threads = MTLSizeMake(params.textureArea.width, params.textureArea.height, 1);
+
+    DispatchCompute(contextMtl, cmdEncoder,
+                    /** allowNonUniform */ true, threads, threadsPerThreadgroup);
 
     return angle::Result::Continue;
 }

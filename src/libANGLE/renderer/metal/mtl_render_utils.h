@@ -128,6 +128,33 @@ struct IndexGenerationParams
     uint32_t dstOffset;
 };
 
+struct CopyPixelsCommonParams
+{
+    BufferRef buffer;
+    uint32_t bufferStartOffset = 0;
+    uint32_t bufferRowPitch    = 0;
+
+    TextureRef texture;
+};
+
+struct CopyPixelsFromBufferParams : CopyPixelsCommonParams
+{
+    uint32_t bufferDepthPitch = 0;
+
+    // z offset is:
+    //  - slice index if texture is array.
+    //  - depth if texture is 3d.
+    gl::Box textureArea;
+};
+
+struct CopyPixelsToBufferParams : CopyPixelsCommonParams
+{
+    gl::Rectangle textureArea;
+    uint32_t textureLevel       = 0;
+    uint32_t textureSliceOrDeph = 0;
+    bool reverseTextureRowOrder;
+};
+
 // Utils class for clear & blitting
 class ClearUtils final : angle::NonCopyable
 {
@@ -353,6 +380,40 @@ class MipmapUtils final : angle::NonCopyable
     AutoObjCPtr<id<MTLComputePipelineState>> m3DMipGeneratorPipeline;
 };
 
+// Util class for handling pixels copy between buffers and textures
+class CopyPixelsUtils
+{
+  public:
+    CopyPixelsUtils() = default;
+    CopyPixelsUtils(const std::string &readShaderName, const std::string &writeShaderName);
+    CopyPixelsUtils(const CopyPixelsUtils &src);
+
+    void onDestroy();
+
+    angle::Result unpackPixelsFromBufferToTexture(ContextMtl *contextMtl,
+                                                  const angle::Format &srcAngleFormat,
+                                                  const CopyPixelsFromBufferParams &params);
+    angle::Result packPixelsFromTextureToBuffer(ContextMtl *contextMtl,
+                                                const angle::Format &dstAngleFormat,
+                                                const CopyPixelsToBufferParams &params);
+
+  private:
+    AutoObjCPtr<id<MTLComputePipelineState>> getPixelsCopyPipeline(ContextMtl *contextMtl,
+                                                                   const angle::Format &angleFormat,
+                                                                   const TextureRef &texture,
+                                                                   bool bufferWrite);
+    // Copy pixels between buffer and texture compute pipelines:
+    // - First dimension: pixel format.
+    // - Second dimension: texture type * (buffer read/write flag)
+    using PixelsCopyPipelineArray = std::array<
+        std::array<AutoObjCPtr<id<MTLComputePipelineState>>, mtl_shader::kTextureTypeCount * 2>,
+        angle::kNumANGLEFormats>;
+    PixelsCopyPipelineArray mPixelsCopyPipelineCaches;
+
+    const std::string mReadShaderName;
+    const std::string mWriteShaderName;
+};
+
 // RenderUtils: container class of various util classes above
 class RenderUtils : public Context, angle::NonCopyable
 {
@@ -411,6 +472,13 @@ class RenderUtils : public Context, angle::NonCopyable
                                    bool sRGBMipmap,
                                    gl::TexLevelArray<mtl::TextureRef> *mipmapOutputViews);
 
+    angle::Result unpackPixelsFromBufferToTexture(ContextMtl *contextMtl,
+                                                  const angle::Format &srcAngleFormat,
+                                                  const CopyPixelsFromBufferParams &params);
+    angle::Result packPixelsFromTextureToBuffer(ContextMtl *contextMtl,
+                                                const angle::Format &dstAngleFormat,
+                                                const CopyPixelsToBufferParams &params);
+
   private:
     // override ErrorHandler
     void handleError(GLenum error,
@@ -428,6 +496,7 @@ class RenderUtils : public Context, angle::NonCopyable
     IndexGeneratorUtils mIndexUtils;
     VisibilityResultUtils mVisibilityResultUtils;
     MipmapUtils mMipmapUtils;
+    std::array<CopyPixelsUtils, angle::EnumSize<PixelType>()> mCopyPixelsUtils;
 };
 
 }  // namespace mtl

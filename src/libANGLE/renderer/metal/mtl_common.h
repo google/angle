@@ -114,7 +114,8 @@ constexpr uint32_t kUniformBufferSettingOffsetMinAlignment = 256;
 #else
 constexpr uint32_t kUniformBufferSettingOffsetMinAlignment = 4;
 #endif
-constexpr uint32_t kIndexBufferOffsetAlignment = 4;
+constexpr uint32_t kIndexBufferOffsetAlignment       = 4;
+constexpr uint32_t kTextureToBufferBlittingAlignment = 256;
 
 // Front end binding limits
 constexpr uint32_t kMaxGLSamplerBindings = 2 * kMaxShaderSamplers;
@@ -137,6 +138,21 @@ constexpr size_t kOcclusionQueryResultSize = sizeof(uint64_t);
 
 // NOTE(hqle): Support ES 3.0.
 constexpr gl::Version kMaxSupportedGLVersion = gl::Version(2, 0);
+
+// Work-around the enum is not available on macOS
+#if TARGET_OS_OSX || TARGET_OS_MACCATALYST
+constexpr MTLBlitOption kBlitOptionRowLinearPVRTC = MTLBlitOptionNone;
+#else
+constexpr MTLBlitOption kBlitOptionRowLinearPVRTC          = MTLBlitOptionRowLinearPVRTC;
+#endif
+
+enum class PixelType
+{
+    Int,
+    UInt,
+    Float,
+    EnumCount,
+};
 
 template <typename T>
 struct ImplTypeHelper;

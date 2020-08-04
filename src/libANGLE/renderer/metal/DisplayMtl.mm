@@ -588,7 +588,7 @@ void DisplayMtl::initializeExtensions() const
     // Enable this for simple buffer readback testing, but some functionality is missing.
     // NOTE(hqle): Support full mapBufferRange extension.
     mNativeExtensions.mapBufferOES           = true;
-    mNativeExtensions.mapBufferRange         = false;
+    mNativeExtensions.mapBufferRange         = true;
     mNativeExtensions.textureStorage         = true;
     mNativeExtensions.drawBuffers            = true;
     mNativeExtensions.fragDepth              = true;
@@ -646,6 +646,9 @@ void DisplayMtl::initializeExtensions() const
 
     // GL_APPLE_clip_distance
     mNativeExtensions.clipDistanceAPPLE = true;
+
+    // GL_NV_pixel_buffer_object
+    mNativeExtensions.pixelBufferObjectNV = true;
 }
 
 void DisplayMtl::initializeTextureCaps() const

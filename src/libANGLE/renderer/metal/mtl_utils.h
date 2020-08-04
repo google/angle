@@ -56,6 +56,15 @@ angle::Result ReadTexturePerSliceBytes(const gl::Context *context,
                                        uint32_t sliceOrDepth,
                                        uint8_t *dataOut);
 
+angle::Result ReadTexturePerSliceBytesToBuffer(const gl::Context *context,
+                                               const TextureRef &texture,
+                                               size_t bytesPerRow,
+                                               const gl::Rectangle &fromRegion,
+                                               uint32_t mipLevel,
+                                               uint32_t sliceOrDepth,
+                                               uint32_t dstOffset,
+                                               const BufferRef &dstBuffer);
+
 MTLViewport GetViewport(const gl::Rectangle &rect, double znear = 0, double zfar = 1);
 MTLViewport GetViewportFlipY(const gl::Rectangle &rect,
                              NSUInteger screenHeight,
@@ -131,6 +140,8 @@ bool IsFormatEmulated(const mtl::Format &mtlFormat);
 // Useful to set clear color for texture originally having no alpha in GL, but backend's format
 // has alpha channel.
 MTLClearColor EmulatedAlphaClearColor(MTLClearColor color, MTLColorWriteMask colorMask);
+
+gl::Box MTLRegionToGLBox(const MTLRegion &mtlRegion);
 
 NS_ASSUME_NONNULL_END
 }  // namespace mtl

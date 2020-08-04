@@ -1068,14 +1068,14 @@ angle::Result FramebufferMtl::readPixelsImpl(const gl::Context *context,
                                              uint8_t *pixels)
 {
     ContextMtl *contextMtl = mtl::GetImpl(context);
-    if (packPixelsParams.packBuffer)
-    {
-        // NOTE(hqle): PBO is not supported atm
-        ANGLE_MTL_CHECK(contextMtl, false, GL_INVALID_OPERATION);
-    }
     if (!renderTarget)
     {
         return angle::Result::Continue;
+    }
+
+    if (packPixelsParams.packBuffer)
+    {
+        return readPixelsToPBO(context, area, packPixelsParams, renderTarget);
     }
 
     mtl::TextureRef texture;
@@ -1127,4 +1127,114 @@ angle::Result FramebufferMtl::readPixelsImpl(const gl::Context *context,
 
     return angle::Result::Continue;
 }
+
+angle::Result FramebufferMtl::readPixelsToPBO(const gl::Context *context,
+                                              const gl::Rectangle &area,
+                                              const PackPixelsParams &packPixelsParams,
+                                              RenderTargetMtl *renderTarget)
+{
+    ASSERT(packPixelsParams.packBuffer);
+    ASSERT(renderTarget);
+
+    ContextMtl *contextMtl = mtl::GetImpl(context);
+
+    ANGLE_MTL_CHECK(contextMtl, packPixelsParams.offset <= std::numeric_limits<uint32_t>::max(),
+                    GL_INVALID_OPERATION);
+    const uint32_t dstBufferOffset      = static_cast<uint32_t>(packPixelsParams.offset);
+    const uint32_t dstBufferRowPitch    = packPixelsParams.outputPitch;
+    const angle::Format &dstAngleFormat = *packPixelsParams.destFormat;
+    const bool reverseRowOrder          = packPixelsParams.reverseRowOrder;
+
+    BufferMtl *packBufferMtl = mtl::GetImpl(packPixelsParams.packBuffer);
+    mtl::BufferRef dstBuffer = packBufferMtl->getCurrentBuffer();
+
+    const mtl::Format &readFormat        = *renderTarget->getFormat();
+    const angle::Format &readAngleFormat = readFormat.actualAngleFormat();
+
+    mtl::TextureRef texture = renderTarget->getTexture();
+
+    if (dstAngleFormat.id != readAngleFormat.id || texture->samples() > 1 ||
+        (dstBufferOffset % dstAngleFormat.pixelBytes) ||
+        (dstBufferOffset % mtl::kTextureToBufferBlittingAlignment))
+    {
+        const angle::Format *actualDstAngleFormat;
+
+        // SRGB is special case: We need to write sRGB values to buffer, not linear values.
+        switch (readAngleFormat.id)
+        {
+            case angle::FormatID::B8G8R8A8_UNORM_SRGB:
+            case angle::FormatID::R8G8B8_UNORM_SRGB:
+            case angle::FormatID::R8G8B8A8_UNORM_SRGB:
+                if (dstAngleFormat.id != readAngleFormat.id)
+                {
+                    switch (dstAngleFormat.id)
+                    {
+                        case angle::FormatID::B8G8R8A8_UNORM:
+                            actualDstAngleFormat =
+                                &angle::Format::Get(angle::FormatID::B8G8R8A8_UNORM_SRGB);
+                            break;
+                        case angle::FormatID::R8G8B8A8_UNORM:
+                            actualDstAngleFormat =
+                                &angle::Format::Get(angle::FormatID::R8G8B8A8_UNORM_SRGB);
+                            break;
+                        default:
+                            // Unsupported format.
+                            ANGLE_MTL_CHECK(contextMtl, false, GL_INVALID_ENUM);
+                    }
+                    break;
+                }
+                OS_FALLTHROUGH;
+            default:
+                actualDstAngleFormat = &dstAngleFormat;
+        }
+
+        // Use compute shader
+        mtl::CopyPixelsToBufferParams params;
+        params.buffer            = dstBuffer;
+        params.bufferStartOffset = dstBufferOffset;
+        params.bufferRowPitch    = dstBufferRowPitch;
+
+        params.texture                = texture;
+        params.textureArea            = area;
+        params.textureLevel           = renderTarget->getLevelIndex();
+        params.textureSliceOrDeph     = renderTarget->getLayerIndex();
+        params.reverseTextureRowOrder = reverseRowOrder;
+
+        ANGLE_TRY(contextMtl->getDisplay()->getUtils().packPixelsFromTextureToBuffer(
+            contextMtl, *actualDstAngleFormat, params));
+    }
+    else
+    {
+        // Use blit command encoder
+        if (!reverseRowOrder)
+        {
+            ANGLE_TRY(mtl::ReadTexturePerSliceBytesToBuffer(
+                context, texture, dstBufferRowPitch, area, renderTarget->getLevelIndex(),
+                renderTarget->getLayerIndex(), dstBufferOffset, dstBuffer));
+        }
+        else
+        {
+            gl::Rectangle srcRowRegion(area.x, area.y, area.width, 1);
+
+            int startRow = area.y1() - 1;
+
+            uint32_t bufferRowOffset = dstBufferOffset;
+            // Copy pixels row by row
+            for (int r = startRow, copiedRows = 0; copiedRows < area.height;
+                 ++copiedRows, --r, bufferRowOffset += dstBufferRowPitch)
+            {
+                srcRowRegion.y = r;
+
+                // Read the pixels data to the buffer's row
+                ANGLE_TRY(mtl::ReadTexturePerSliceBytesToBuffer(
+                    context, texture, dstBufferRowPitch, srcRowRegion,
+                    renderTarget->getLevelIndex(), renderTarget->getLayerIndex(), bufferRowOffset,
+                    dstBuffer));
+            }
+        }
+    }
+
+    return angle::Result::Continue;
+}
+
 }

@@ -172,6 +172,11 @@ class FramebufferMtl : public FramebufferImpl
                                            const gl::FramebufferAttachment *attachment,
                                            RenderTargetMtl **cachedRenderTarget);
 
+    angle::Result readPixelsToPBO(const gl::Context *context,
+                                  const gl::Rectangle &area,
+                                  const PackPixelsParams &packPixelsParams,
+                                  RenderTargetMtl *renderTarget);
+
     // NOTE: we cannot use RenderTargetCache here because it doesn't support separate
     // depth & stencil attachments as of now. Separate depth & stencil could be useful to
     // save spaces on iOS devices. See doc/PackedDepthStencilSupport.md.
