@@ -257,6 +257,13 @@ void DisplayMtl::generateExtensions(egl::DisplayExtensions *outExtensions) const
     outExtensions->flexibleSurfaceCompatibility = true;
     outExtensions->iosurfaceClientBuffer        = true;
     outExtensions->surfacelessContext           = true;
+    outExtensions->displayTextureShareGroup     = true;
+    outExtensions->displaySemaphoreShareGroup   = true;
+
+    // Note that robust resource initialization is not yet implemented. We only expose
+    // this extension so that ANGLE can be initialized in Chrome. WebGL will fail to use
+    // this extension (anglebug.com/4929)
+    outExtensions->robustResourceInitialization = true;
 }
 
 void DisplayMtl::generateCaps(egl::Caps *outCaps) const {}
@@ -584,7 +591,11 @@ void DisplayMtl::initializeExtensions() const
     mNativeExtensions.framebufferMultisample = false;
     mNativeExtensions.copyTexture            = true;
     mNativeExtensions.copyCompressedTexture  = false;
-    mNativeExtensions.debugMarker            = false;
+
+    // EXT_debug_marker is not implemented yet, but the entry points must be exposed for the Metal
+    // backend to be used in Chrome (http://anglebug.com/4946)
+    mNativeExtensions.debugMarker = true;
+
     mNativeExtensions.robustness             = true;
     mNativeExtensions.textureBorderClampOES  = false;  // not implemented yet
     mNativeExtensions.translatedShaderSource = true;

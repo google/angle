@@ -211,11 +211,23 @@ class RobustResourceInitTest : public ANGLETest
 
     bool hasGLExtension()
     {
+        // The extension is exposed in metal, but not actually implemented yet
+        // (http://anglebug.com/4929)
+        if (IsMetal())
+        {
+            return false;
+        }
         return IsGLExtensionEnabled("GL_ANGLE_robust_resource_initialization");
     }
 
     bool hasEGLExtension()
     {
+        // The extension is exposed in metal, but not actually implemented yet
+        // (http://anglebug.com/4929)
+        if (IsMetal())
+        {
+            return false;
+        }
         return IsEGLDisplayExtensionEnabled(getEGLWindow()->getDisplay(),
                                             "EGL_ANGLE_robust_resource_initialization");
     }
