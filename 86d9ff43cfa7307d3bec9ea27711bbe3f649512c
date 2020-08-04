@@ -36,6 +36,41 @@
     },
     {
       "key": {
+        "uuid": "145b1d54_c670378a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-08-04T14:18:41Z",
+      "side": 1,
+      "message": "It\u0027s an unfortunate side effect of blit sampling with a sampler and resolve fetching fragments directly. It\u0027s not new code by the way, just moved.",
+      "parentUuid": "f0055bb5_e87bf0a0",
+      "revId": "86d9ff43cfa7307d3bec9ea27711bbe3f649512c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "861bb37a_74fe5f9f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-08-04T14:18:41Z",
+      "side": 1,
+      "message": "CC Ian. There\u0027s some clean up suggestions in rotation code for blit that I wouldn\u0027t be able to test if I did.",
+      "revId": "86d9ff43cfa7307d3bec9ea27711bbe3f649512c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b0598148_c03c2847",
         "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
         "patchSetId": 3
@@ -50,6 +85,24 @@
       "revId": "86d9ff43cfa7307d3bec9ea27711bbe3f649512c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c4aa42bd_7728a8c5",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 217,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-08-04T14:18:41Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "b0598148_c03c2847",
+      "revId": "86d9ff43cfa7307d3bec9ea27711bbe3f649512c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -70,6 +123,24 @@
     },
     {
       "key": {
+        "uuid": "f705b5dc_b7cbb3b9",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 223,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-08-04T14:18:41Z",
+      "side": 1,
+      "message": "Will defer to Ian (original author of this) so he can test it. Otherwise my fix would be blind.",
+      "parentUuid": "c5a630d9_a085a27d",
+      "revId": "86d9ff43cfa7307d3bec9ea27711bbe3f649512c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1d550d1d_3932e63d",
         "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
         "patchSetId": 3
@@ -84,6 +155,24 @@
       "revId": "86d9ff43cfa7307d3bec9ea27711bbe3f649512c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3e0a9c08_3f81670e",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 238,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-08-04T14:18:41Z",
+      "side": 1,
+      "message": "Same. @Ian.",
+      "parentUuid": "1d550d1d_3932e63d",
+      "revId": "86d9ff43cfa7307d3bec9ea27711bbe3f649512c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
