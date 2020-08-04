@@ -686,6 +686,7 @@ void DisplayMtl::initializeFeatures()
     mFeatures.hasStencilOutput.enabled                  = false;
     mFeatures.hasTextureSwizzle.enabled                 = false;
     mFeatures.allowSeparatedDepthStencilBuffers.enabled = false;
+    mFeatures.allowGenMultipleMipsPerPass.enabled       = true;
 
     ANGLE_FEATURE_CONDITION((&mFeatures), hasDepthTextureFiltering,
                             TARGET_OS_OSX || TARGET_OS_MACCATALYST);

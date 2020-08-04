@@ -77,6 +77,15 @@ struct IndexConversionUniform
     uint32_t padding[2];
 };
 
+// See libANGLE/renderer/metal/shaders/gen_mipmap.metal
+struct GenerateMipmapUniform
+{
+    uint32_t srcLevel;
+    uint32_t numMipmapsToGenerate;
+    uint8_t sRGB;
+    uint8_t padding[7];
+};
+
 void GetBlitTexCoords(uint32_t srcWidth,
                       uint32_t srcHeight,
                       const gl::Rectangle &srcRect,
@@ -568,6 +577,15 @@ angle::Result RenderUtils::generateLineLoopLastSegmentFromElementsArray(
     const IndexGenerationParams &params)
 {
     return mIndexUtils.generateLineLoopLastSegmentFromElementsArray(contextMtl, params);
+}
+
+// Compute based mipmap generation
+angle::Result RenderUtils::generateMipmapCS(ContextMtl *contextMtl,
+                                            const TextureRef &srcTexture,
+                                            bool sRGBMipmap,
+                                            gl::TexLevelArray<mtl::TextureRef> *mipmapOutputViews)
+{
+    return mMipmapUtils.generateMipmapCS(contextMtl, srcTexture, sRGBMipmap, mipmapOutputViews);
 }
 
 // ClearUtils implementation
@@ -1564,6 +1582,111 @@ angle::Result IndexGeneratorUtils::generateLineLoopLastSegmentFromElementsArrayC
     }
 
     return generateLineLoopLastSegment(contextMtl, first, last, params.dstBuffer, params.dstOffset);
+}
+
+// MipmapUtils implementation
+void MipmapUtils::onDestroy()
+{
+    m3DMipGeneratorPipeline = nil;
+}
+
+void MipmapUtils::ensure3DMipGeneratorPipelineInitialized(ContextMtl *contextMtl)
+{
+    EnsureComputePipelineInitialized(contextMtl->getDisplay(), @"generate3DMipmaps",
+                                     &m3DMipGeneratorPipeline);
+}
+
+angle::Result MipmapUtils::generateMipmapCS(ContextMtl *contextMtl,
+                                            const TextureRef &srcTexture,
+                                            bool sRGBMipmap,
+                                            gl::TexLevelArray<mtl::TextureRef> *mipmapOutputViews)
+{
+    // Only support 3D texture for now.
+    ASSERT(srcTexture->textureType() == MTLTextureType3D);
+
+    MTLSize threadGroupSize;
+    uint32_t slices                             = 1;
+    id<MTLComputePipelineState> computePipeline = nil;
+
+    ensure3DMipGeneratorPipelineInitialized(contextMtl);
+    computePipeline = m3DMipGeneratorPipeline;
+    threadGroupSize =
+        MTLSizeMake(kGenerateMipThreadGroupSizePerDim, kGenerateMipThreadGroupSizePerDim,
+                    kGenerateMipThreadGroupSizePerDim);
+
+    // The compute shader supports up to 4 mipmaps generated per pass.
+    // See shaders/gen_mipmap.metal
+    uint32_t maxMipsPerBatch = 4;
+
+    if (threadGroupSize.width * threadGroupSize.height * threadGroupSize.depth >
+            computePipeline.maxTotalThreadsPerThreadgroup ||
+        ANGLE_UNLIKELY(
+            !contextMtl->getDisplay()->getFeatures().allowGenMultipleMipsPerPass.enabled))
+    {
+        // Multiple mipmaps generation is not supported due to hardware's thread group size limits.
+        // Fallback to generate one mip per pass and reduce thread group size.
+        if (ANGLE_UNLIKELY(threadGroupSize.width * threadGroupSize.height >
+                           computePipeline.maxTotalThreadsPerThreadgroup))
+        {
+            // Even with reduced thread group size, we cannot proceed.
+            // HACK: use blit command encoder to generate mipmaps if it is not possible
+            // to use compute shader due to hardware limits.
+            BlitCommandEncoder *blitEncoder = contextMtl->getBlitCommandEncoder();
+            blitEncoder->generateMipmapsForTexture(srcTexture);
+            return angle::Result::Continue;
+        }
+
+        threadGroupSize.depth = 1;
+        maxMipsPerBatch       = 1;
+    }
+
+    ComputeCommandEncoder *cmdEncoder = contextMtl->getComputeCommandEncoder();
+    ASSERT(cmdEncoder);
+    cmdEncoder->setComputePipelineState(computePipeline);
+
+    GenerateMipmapUniform options;
+
+    uint32_t remainMips = srcTexture->mipmapLevels() - 1;
+    options.srcLevel    = 0;
+    options.sRGB        = sRGBMipmap;
+
+    cmdEncoder->setTexture(srcTexture, 0);
+    cmdEncoder->markResourceBeingWrittenByGPU(srcTexture);
+    while (remainMips)
+    {
+        const TextureRef &firstMipView = mipmapOutputViews->at(options.srcLevel + 1);
+        gl::Extents size               = firstMipView->size();
+        bool isPow2 = gl::isPow2(size.width) && gl::isPow2(size.height) && gl::isPow2(size.depth);
+
+        // Currently multiple mipmaps generation is only supported for power of two base level.
+        if (isPow2)
+        {
+            options.numMipmapsToGenerate = std::min(remainMips, maxMipsPerBatch);
+        }
+        else
+        {
+            options.numMipmapsToGenerate = 1;
+        }
+
+        cmdEncoder->setData(options, 0);
+
+        for (uint32_t i = 1; i <= options.numMipmapsToGenerate; ++i)
+        {
+            cmdEncoder->setTexture(mipmapOutputViews->at(options.srcLevel + i), i);
+        }
+
+        uint32_t threadsPerZ = std::max(slices, firstMipView->depth());
+
+        DispatchCompute(contextMtl, cmdEncoder,
+                        /** allowNonUniform */ false,
+                        MTLSizeMake(firstMipView->width(), firstMipView->height(), threadsPerZ),
+                        threadGroupSize);
+
+        remainMips -= options.numMipmapsToGenerate;
+        options.srcLevel += options.numMipmapsToGenerate;
+    }
+
+    return angle::Result::Continue;
 }
 
 }  // namespace mtl

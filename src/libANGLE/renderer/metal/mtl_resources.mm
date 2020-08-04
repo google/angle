@@ -250,6 +250,10 @@ Texture::Texture(ContextMtl *context,
         if (!renderTargetOnly)
         {
             desc.usage = desc.usage | MTLTextureUsageShaderRead;
+            if (context->getNativeFormatCaps(desc.pixelFormat).writable)
+            {
+                desc.usage = desc.usage | MTLTextureUsageShaderWrite;
+            }
         }
 
         if (allowFormatView)

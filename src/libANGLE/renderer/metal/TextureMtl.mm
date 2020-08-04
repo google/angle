@@ -430,6 +430,11 @@ void TextureMtl::releaseTexture(bool releaseImages, bool releaseTextureObjectsOn
         }
     }
 
+    for (mtl::TextureRef &view : mNativeLevelViews)
+    {
+        view.reset();
+    }
+
     if (!releaseTextureObjectsOnly)
     {
         mMetalSamplerState = nil;
@@ -575,6 +580,31 @@ angle::Result TextureMtl::ensureImageCreated(const gl::Context *context,
     return angle::Result::Continue;
 }
 
+angle::Result TextureMtl::ensureNativeLevelViewsCreated()
+{
+    ASSERT(mNativeTexture);
+    const GLuint baseLevel = mState.getEffectiveBaseLevel();
+    for (uint32_t mip = 0; mip < mNativeTexture->mipmapLevels(); ++mip)
+    {
+        if (mNativeLevelViews[mip])
+        {
+            continue;
+        }
+
+        if (mNativeTexture->textureType() != MTLTextureTypeCube &&
+            mTexImageDefs[0][mip + baseLevel].image)
+        {
+            // Reuse texture image view.
+            mNativeLevelViews[mip] = mTexImageDefs[0][mip + baseLevel].image;
+        }
+        else
+        {
+            mNativeLevelViews[mip] = mNativeTexture->createMipView(mip);
+        }
+    }
+    return angle::Result::Continue;
+}
+
 mtl::TextureRef TextureMtl::createImageViewFromNativeTexture(GLuint cubeFaceOrZero,
                                                              GLuint nativeLevel)
 {
@@ -586,7 +616,15 @@ mtl::TextureRef TextureMtl::createImageViewFromNativeTexture(GLuint cubeFaceOrZe
     }
     else
     {
-        image = mNativeTexture->createMipView(nativeLevel);
+        if (mNativeLevelViews[nativeLevel])
+        {
+            // Reuse the native level view
+            image = mNativeLevelViews[nativeLevel];
+        }
+        else
+        {
+            image = mNativeTexture->createMipView(nativeLevel);
+        }
     }
 
     return image;
@@ -927,7 +965,17 @@ angle::Result TextureMtl::generateMipmap(const gl::Context *context)
 
     const mtl::FormatCaps &caps = mFormat.getCaps();
 
-    if (caps.filterable && caps.colorRenderable)
+    if (caps.writable && mState.getType() == gl::TextureType::_3D)
+    {
+        // http://anglebug.com/4921.
+        // Use compute for 3D mipmap generation.
+        ANGLE_TRY(ensureNativeLevelViewsCreated());
+        bool sRGB = mFormat.metalFormat == MTLPixelFormatRGBA8Unorm_sRGB ||
+                    mFormat.metalFormat == MTLPixelFormatBGRA8Unorm_sRGB;
+        ANGLE_TRY(contextMtl->getDisplay()->getUtils().generateMipmapCS(contextMtl, mNativeTexture,
+                                                                        sRGB, &mNativeLevelViews));
+    }
+    else if (caps.filterable && caps.colorRenderable)
     {
         mtl::BlitCommandEncoder *blitEncoder = contextMtl->getBlitCommandEncoder();
         blitEncoder->generateMipmapsForTexture(mNativeTexture);

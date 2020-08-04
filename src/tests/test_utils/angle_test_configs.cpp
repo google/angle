@@ -214,6 +214,11 @@ std::ostream &operator<<(std::ostream &stream, const PlatformParameters &pp)
         stream << "_NoStencilOutput";
     }
 
+    if (pp.eglParameters.genMultipleMipsPerPassFeature == EGL_FALSE)
+    {
+        stream << "_NoGenMultipleMipsPerPass";
+    }
+
     return stream;
 }
 

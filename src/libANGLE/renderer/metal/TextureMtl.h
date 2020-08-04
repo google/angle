@@ -180,6 +180,7 @@ class TextureMtl : public TextureImpl
     // Ensure all image views at all faces/levels are retained.
     void retainImageDefinitions();
     mtl::TextureRef createImageViewFromNativeTexture(GLuint cubeFaceOrZero, GLuint nativeLevel);
+    angle::Result ensureNativeLevelViewsCreated();
     angle::Result checkForEmulatedChannels(const gl::Context *context,
                                            const mtl::Format &mtlFormat,
                                            const mtl::TextureRef &texture);
@@ -314,6 +315,7 @@ class TextureMtl : public TextureImpl
     // Stored images array defined by glTexImage/glCopy*.
     // Once the images array is complete, they will be transferred to real texture object.
     // NOTE:
+    //  - The second dimension is indexed by configured base level + actual native level
     //  - For Cube map, there will be at most 6 entries in the mTexImageDefs table, one for each
     //  face. This is because the Cube map's image is defined per face & per level.
     //  - For other texture types, there will be only one entry in the map table. All other textures
@@ -324,7 +326,11 @@ class TextureMtl : public TextureImpl
     // - For 2D texture: There will be one key entry in the map.
     // - For Cube map: There will be at most 6 key entries.
     // - For array/3D texture: There will be at most slices/depths number of key entries.
+    // - The second dimension is indexed by configured base level + actual native level
     std::map<int, gl::TexLevelArray<RenderTargetMtl>> mPerLayerRenderTargets;
+
+    // Mipmap views are indexed by native level (ignored base level):
+    gl::TexLevelArray<mtl::TextureRef> mNativeLevelViews;
 
     bool mIsPow2 = false;
 };

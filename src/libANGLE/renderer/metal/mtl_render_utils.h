@@ -126,7 +126,7 @@ struct IndexGenerationParams
 };
 
 // Utils class for clear & blitting
-class ClearUtils
+class ClearUtils final : angle::NonCopyable
 {
   public:
     ClearUtils();
@@ -154,7 +154,7 @@ class ClearUtils
     std::array<RenderPipelineCache, kMaxRenderTargets + 1> mClearRenderPipelineCache;
 };
 
-class ColorBlitUtils
+class ColorBlitUtils final : angle::NonCopyable
 {
   public:
     ColorBlitUtils();
@@ -192,7 +192,7 @@ class ColorBlitUtils
     ColorBlitRenderPipelineCacheArray mBlitUnmultiplyAlphaRenderPipelineCache;
 };
 
-class DepthStencilBlitUtils
+class DepthStencilBlitUtils final : angle::NonCopyable
 {
   public:
     void onDestroy();
@@ -242,7 +242,7 @@ class DepthStencilBlitUtils
 };
 
 // util class for generating index buffer
-class IndexGeneratorUtils
+class IndexGeneratorUtils final : angle::NonCopyable
 {
   public:
     void onDestroy();
@@ -310,6 +310,25 @@ class IndexGeneratorUtils
     AutoObjCPtr<id<MTLComputePipelineState>> mTriFanFromArraysGeneratorPipeline;
 };
 
+// Util class for handling mipmap generation
+class MipmapUtils final : angle::NonCopyable
+{
+  public:
+    void onDestroy();
+
+    // Compute based mipmap generation. Only possible for 3D texture for now.
+    angle::Result generateMipmapCS(ContextMtl *contextMtl,
+                                   const TextureRef &srcTexture,
+                                   bool sRGBMipmap,
+                                   gl::TexLevelArray<mtl::TextureRef> *mipmapOutputViews);
+
+  private:
+    void ensure3DMipGeneratorPipelineInitialized(ContextMtl *contextMtl);
+
+    // Mipmaps generating compute pipeline:
+    AutoObjCPtr<id<MTLComputePipelineState>> m3DMipGeneratorPipeline;
+};
+
 // RenderUtils: container class of various util classes above
 class RenderUtils : public Context, angle::NonCopyable
 {
@@ -356,6 +375,12 @@ class RenderUtils : public Context, angle::NonCopyable
     angle::Result generateLineLoopLastSegmentFromElementsArray(ContextMtl *contextMtl,
                                                                const IndexGenerationParams &params);
 
+    // Compute based mipmap generation. Only possible for 3D texture for now.
+    angle::Result generateMipmapCS(ContextMtl *contextMtl,
+                                   const TextureRef &srcTexture,
+                                   bool sRGBMipmap,
+                                   gl::TexLevelArray<mtl::TextureRef> *mipmapOutputViews);
+
   private:
     // override ErrorHandler
     void handleError(GLenum error,
@@ -371,6 +396,7 @@ class RenderUtils : public Context, angle::NonCopyable
     ColorBlitUtils mColorBlitUtils;
     DepthStencilBlitUtils mDepthStencilBlitUtils;
     IndexGeneratorUtils mIndexUtils;
+    MipmapUtils mMipmapUtils;
 };
 
 }  // namespace mtl

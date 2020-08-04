@@ -234,6 +234,13 @@ inline PlatformParameters WithNoShaderStencilOutput(const PlatformParameters &pa
     return re;
 }
 
+inline PlatformParameters WithNoGenMultipleMipsPerPass(const PlatformParameters &params)
+{
+    PlatformParameters re                          = params;
+    re.eglParameters.genMultipleMipsPerPassFeature = EGL_FALSE;
+    return re;
+}
+
 inline PlatformParameters WithRobustness(const PlatformParameters &params)
 {
     PlatformParameters withRobustness       = params;

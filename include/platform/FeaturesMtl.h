@@ -59,6 +59,10 @@ struct FeaturesMtl : FeatureSetBase
     Feature allowMultisampleStoreAndResolve = {
         "allow_msaa_store_and_resolve", FeatureCategory::MetalFeatures,
         "The renderer supports MSAA store and resolve in the same pass", &members};
+
+    Feature allowGenMultipleMipsPerPass = {
+        "gen_multiple_mips_per_pass", FeatureCategory::MetalFeatures,
+        "The renderer supports generating multiple mipmaps per pass", &members};
 };
 
 }  // namespace angle
