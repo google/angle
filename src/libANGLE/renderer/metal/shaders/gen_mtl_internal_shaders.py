@@ -162,7 +162,7 @@ def gen_precompiled_shaders(mac_version, ios_version, variable_name, additional_
 
 
 def main():
-    src_files = ['blit.metal', 'clear.metal', 'gen_indices.metal']
+    src_files = ['blit.metal', 'clear.metal', 'gen_indices.metal', 'gen_mipmap.metal']
 
     # yapf: disable
     os_specific_autogen_files = [
