@@ -45,6 +45,37 @@ void SetTextureSwizzle(ContextMtl *context,
     }
 #endif
 }
+
+// Asynchronously synchronize the content of a resource between GPU memory and its CPU cache.
+// NOTE: This operation doesn't finish immediately upon function's return.
+template <class T>
+void InvokeCPUMemSync(ContextMtl *context, mtl::BlitCommandEncoder *blitEncoder, T *resource)
+{
+#if TARGET_OS_OSX || TARGET_OS_MACCATALYST
+    if (blitEncoder)
+    {
+        blitEncoder->synchronizeResource(resource);
+        resource->resetCPUReadMemNeedSync();
+    }
+#endif
+}
+// Ensure that a resource's CPU cache will be synchronized after GPU finishes its modifications on
+// the resource.
+template <class T>
+void EnsureCPUMemWillBeSynced(ContextMtl *context, T *resource)
+{
+#if TARGET_OS_OSX || TARGET_OS_MACCATALYST
+    // Make sure GPU & CPU contents are synchronized.
+    // NOTE: Only MacOS has separated storage for resource on CPU and GPU and needs explicit
+    // synchronization
+    if (resource->get().storageMode == MTLStorageModeManaged && resource->isCPUReadMemNeedSync())
+    {
+        mtl::BlitCommandEncoder *blitEncoder = context->getBlitCommandEncoder();
+        InvokeCPUMemSync(context, blitEncoder, resource);
+    }
+#endif
+}
+
 }  // namespace
 // Resource implementation
 Resource::Resource() : mUsageRef(std::make_shared<UsageRef>()) {}
@@ -58,6 +89,7 @@ Resource::Resource(Resource *other) : mUsageRef(other->mUsageRef)
 void Resource::reset()
 {
     mUsageRef->cmdBufferQueueSerial = 0;
+    resetCPUReadMemDirty();
     resetCPUReadMemNeedSync();
 }
 
@@ -76,6 +108,7 @@ void Resource::setUsedByCommandBufferWithQueueSerial(uint64_t serial, bool writi
     if (writing)
     {
         mUsageRef->cpuReadMemNeedSync = true;
+        mUsageRef->cpuReadMemDirty    = true;
     }
 
     mUsageRef->cmdBufferQueueSerial = std::max(mUsageRef->cmdBufferQueueSerial, serial);
@@ -296,28 +329,12 @@ Texture::Texture(Texture *original, MTLTextureType type, NSRange mipmapLevelRang
 
 void Texture::syncContent(ContextMtl *context, mtl::BlitCommandEncoder *blitEncoder)
 {
-#if TARGET_OS_OSX || TARGET_OS_MACCATALYST
-    if (blitEncoder)
-    {
-        blitEncoder->synchronizeResource(shared_from_this());
-
-        this->resetCPUReadMemNeedSync();
-    }
-#endif
+    InvokeCPUMemSync(context, blitEncoder, this);
 }
 
-void Texture::syncContent(ContextMtl *context)
+void Texture::syncContentIfNeeded(ContextMtl *context)
 {
-#if TARGET_OS_OSX || TARGET_OS_MACCATALYST
-    // Make sure GPU & CPU contents are synchronized.
-    // NOTE: Only MacOS has separated storage for resource on CPU and GPU and needs explicit
-    // synchronization
-    if (this->isCPUReadMemNeedSync())
-    {
-        mtl::BlitCommandEncoder *blitEncoder = context->getBlitCommandEncoder();
-        syncContent(context, blitEncoder);
-    }
-#endif
+    EnsureCPUMemWillBeSynced(context, this);
 }
 
 bool Texture::isCPUAccessible() const
@@ -364,7 +381,7 @@ void Texture::replaceRegion(ContextMtl *context,
 
     CommandQueue &cmdQueue = context->cmdQueue();
 
-    syncContent(context);
+    syncContentIfNeeded(context);
 
     // NOTE(hqle): what if multiple contexts on multiple threads are using this texture?
     if (this->isBeingUsedByGPU(context))
@@ -399,7 +416,7 @@ void Texture::getBytes(ContextMtl *context,
 
     CommandQueue &cmdQueue = context->cmdQueue();
 
-    syncContent(context);
+    syncContentIfNeeded(context);
 
     // NOTE(hqle): what if multiple contexts on multiple threads are using this texture?
     if (this->isBeingUsedByGPU(context))
@@ -647,24 +664,53 @@ angle::Result Buffer::MakeBuffer(ContextMtl *context,
     return angle::Result::Continue;
 }
 
+angle::Result Buffer::MakeBufferWithResOpt(ContextMtl *context,
+                                           MTLResourceOptions options,
+                                           size_t size,
+                                           const uint8_t *data,
+                                           BufferRef *bufferOut)
+{
+    bufferOut->reset(new Buffer(context, options, size, data));
+
+    if (!bufferOut || !bufferOut->get())
+    {
+        ANGLE_MTL_CHECK(context, false, GL_OUT_OF_MEMORY);
+    }
+
+    return angle::Result::Continue;
+}
+
 Buffer::Buffer(ContextMtl *context, size_t size, const uint8_t *data)
 {
     (void)reset(context, size, data);
 }
 
+Buffer::Buffer(ContextMtl *context, MTLResourceOptions options, size_t size, const uint8_t *data)
+{
+    (void)resetWithResOpt(context, options, size, data);
+}
+
 angle::Result Buffer::reset(ContextMtl *context, size_t size, const uint8_t *data)
+{
+    MTLResourceOptions options;
+
+    options = 0;
+#if TARGET_OS_OSX || TARGET_OS_MACCATALYST
+    options |= MTLResourceStorageModeManaged;
+#endif
+
+    return resetWithResOpt(context, options, size, data);
+}
+
+angle::Result Buffer::resetWithResOpt(ContextMtl *context,
+                                      MTLResourceOptions options,
+                                      size_t size,
+                                      const uint8_t *data)
 {
     ANGLE_MTL_OBJC_SCOPE
     {
-        MTLResourceOptions options;
-
         id<MTLBuffer> newBuffer;
         id<MTLDevice> metalDevice = context->getMetalDevice();
-
-        options = 0;
-#if TARGET_OS_OSX || TARGET_OS_MACCATALYST
-        options |= MTLResourceStorageModeManaged;
-#endif
 
         if (data)
         {
@@ -677,21 +723,41 @@ angle::Result Buffer::reset(ContextMtl *context, size_t size, const uint8_t *dat
 
         set([newBuffer ANGLE_MTL_AUTORELEASE]);
 
+        // Reset command buffer's reference serial
+        Resource::reset();
+
         return angle::Result::Continue;
     }
 }
 
+void Buffer::syncContent(ContextMtl *context, mtl::BlitCommandEncoder *blitEncoder)
+{
+    InvokeCPUMemSync(context, blitEncoder, this);
+}
+
+const uint8_t *Buffer::mapReadOnly(ContextMtl *context)
+{
+    return mapWithOpt(context, true);
+}
+
 uint8_t *Buffer::map(ContextMtl *context)
 {
+    return mapWithOpt(context, false);
+}
+
+uint8_t *Buffer::mapWithOpt(ContextMtl *context, bool readonly)
+{
+    mMapReadOnly = readonly;
+
     CommandQueue &cmdQueue = context->cmdQueue();
 
-    // NOTE(hqle): what if multiple contexts on multiple threads are using this buffer?
+    EnsureCPUMemWillBeSynced(context, this);
+
     if (this->isBeingUsedByGPU(context))
     {
         context->flushCommandBufer();
     }
 
-    // NOTE(hqle): currently not support reading data written by GPU
     cmdQueue.ensureResourceReadyForCPU(this);
 
     return reinterpret_cast<uint8_t *>([get() contents]);
@@ -700,8 +766,15 @@ uint8_t *Buffer::map(ContextMtl *context)
 void Buffer::unmap(ContextMtl *context)
 {
 #if TARGET_OS_OSX || TARGET_OS_MACCATALYST
-    [get() didModifyRange:NSMakeRange(0, size())];
+    if (!mMapReadOnly)
+    {
+        if (get().storageMode == MTLStorageModeManaged)
+        {
+            [get() didModifyRange:NSMakeRange(0, size())];
+        }
+    }
 #endif
+    mMapReadOnly = true;
 }
 
 size_t Buffer::size() const

@@ -49,7 +49,8 @@ class Resource : angle::NonCopyable
   public:
     virtual ~Resource() {}
 
-    // Check whether the resource still being used by GPU
+    // Check whether the resource still being used by GPU including the pending (uncommitted)
+    // command buffer.
     bool isBeingUsedByGPU(Context *context) const;
     // Checks whether the last command buffer that uses the given resource has been committed or not
     bool hasPendingWorks(Context *context) const;
@@ -62,6 +63,10 @@ class Resource : angle::NonCopyable
     // resource's content.
     bool isCPUReadMemNeedSync() const { return mUsageRef->cpuReadMemNeedSync; }
     void resetCPUReadMemNeedSync() { mUsageRef->cpuReadMemNeedSync = false; }
+
+    // These functions are useful for BufferMtl to know whether it should update the shadow copy
+    bool isCPUReadMemDirty() const { return mUsageRef->cpuReadMemDirty; }
+    void resetCPUReadMemDirty() { mUsageRef->cpuReadMemDirty = false; }
 
   protected:
     Resource();
@@ -79,6 +84,9 @@ class Resource : angle::NonCopyable
         // This flag means the resource was issued to be modified by GPU, if CPU wants to read
         // its content, explicit synchronization call must be invoked.
         bool cpuReadMemNeedSync = false;
+
+        // This flag is useful for BufferMtl to know whether it should update the shadow copy
+        bool cpuReadMemDirty = false;
     };
 
     // One resource object might just be a view of another resource. For example, a texture 2d
@@ -228,7 +236,7 @@ class Texture final : public Resource,
     Texture(Texture *original, MTLPixelFormat format);
     Texture(Texture *original, MTLTextureType type, NSRange mipmapLevelRange, NSRange slices);
 
-    void syncContent(ContextMtl *context);
+    void syncContentIfNeeded(ContextMtl *context);
 
     AutoObjCObj<MTLTextureDescriptor> mCreationDesc;
 
@@ -249,15 +257,36 @@ class Buffer final : public Resource, public WrappedObject<id<MTLBuffer>>
                                     const uint8_t *data,
                                     BufferRef *bufferOut);
 
-    angle::Result reset(ContextMtl *context, size_t size, const uint8_t *data);
+    static angle::Result MakeBufferWithResOpt(ContextMtl *context,
+                                              MTLResourceOptions resourceOptions,
+                                              size_t size,
+                                              const uint8_t *data,
+                                              BufferRef *bufferOut);
 
+    angle::Result reset(ContextMtl *context, size_t size, const uint8_t *data);
+    angle::Result resetWithResOpt(ContextMtl *context,
+                                  MTLResourceOptions resourceOptions,
+                                  size_t size,
+                                  const uint8_t *data);
+
+    const uint8_t *mapReadOnly(ContextMtl *context);
+    uint8_t *mapWithOpt(ContextMtl *context, bool readonly);
     uint8_t *map(ContextMtl *context);
     void unmap(ContextMtl *context);
 
     size_t size() const;
 
+    // Explicitly sync content between CPU and GPU
+    void syncContent(ContextMtl *context, mtl::BlitCommandEncoder *encoder);
+
   private:
     Buffer(ContextMtl *context, size_t size, const uint8_t *data);
+    Buffer(ContextMtl *context,
+           MTLResourceOptions resourceOptions,
+           size_t size,
+           const uint8_t *data);
+
+    bool mMapReadOnly = true;
 };
 
 }  // namespace mtl

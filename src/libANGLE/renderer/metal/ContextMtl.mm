@@ -17,6 +17,7 @@
 #include "libANGLE/renderer/metal/DisplayMtl.h"
 #include "libANGLE/renderer/metal/FrameBufferMtl.h"
 #include "libANGLE/renderer/metal/ProgramMtl.h"
+#include "libANGLE/renderer/metal/QueryMtl.h"
 #include "libANGLE/renderer/metal/RenderBufferMtl.h"
 #include "libANGLE/renderer/metal/RenderTargetMtl.h"
 #include "libANGLE/renderer/metal/ShaderMtl.h"
@@ -97,7 +98,7 @@ ContextMtl::ContextMtl(const gl::State &state, gl::ErrorSet *errorSet, DisplayMt
     : ContextImpl(state, errorSet),
       mtl::Context(display),
       mCmdBuffer(&display->cmdQueue()),
-      mRenderEncoder(&mCmdBuffer),
+      mRenderEncoder(&mCmdBuffer, mOcclusionQueryPool),
       mBlitEncoder(&mCmdBuffer),
       mComputeEncoder(&mCmdBuffer)
 {}
@@ -122,6 +123,7 @@ void ContextMtl::onDestroy(const gl::Context *context)
 {
     mTriFanIndexBuffer.destroy(this);
     mLineLoopIndexBuffer.destroy(this);
+    mOcclusionQueryPool.destroy(this);
 
     mIncompleteTextures.onDestroy(context);
     mIncompleteTexturesInitialized = false;
@@ -927,9 +929,7 @@ VertexArrayImpl *ContextMtl::createVertexArray(const gl::VertexArrayState &state
 // Query and Fence creation
 QueryImpl *ContextMtl::createQuery(gl::QueryType type)
 {
-    // NOTE(hqle): ES 3.0
-    UNIMPLEMENTED();
-    return nullptr;
+    return new QueryMtl(type);
 }
 FenceNVImpl *ContextMtl::createFenceNV()
 {
@@ -1131,9 +1131,18 @@ angle::Result ContextMtl::getIncompleteTexture(const gl::Context *context,
     return mIncompleteTextures.getIncompleteTexture(context, type, nullptr, textureOut);
 }
 
-void ContextMtl::endEncoding(mtl::RenderCommandEncoder *encoder)
+void ContextMtl::endRenderEncoding(mtl::RenderCommandEncoder *encoder)
 {
+    // End any pending visibility query in the render pass
+    if (mOcclusionQuery)
+    {
+        disableActiveOcclusionQueryInRenderPass();
+    }
+
     encoder->endEncoding();
+
+    // Resolve visibility results
+    mOcclusionQueryPool.resolveVisibilityResults(this);
 }
 
 void ContextMtl::endEncoding(bool forceSaveRenderPassContent)
@@ -1146,7 +1155,7 @@ void ContextMtl::endEncoding(bool forceSaveRenderPassContent)
             mRenderEncoder.setStoreAction(MTLStoreActionStore);
         }
 
-        mRenderEncoder.endEncoding();
+        endRenderEncoding(&mRenderEncoder);
     }
 
     if (mBlitEncoder.valid())
@@ -1461,6 +1470,87 @@ void ContextMtl::onBackbufferResized(const gl::Context *context, WindowSurfaceMt
     onDrawFrameBufferChangedState(context, framebuffer, true);
 }
 
+angle::Result ContextMtl::onOcclusionQueryBegin(const gl::Context *context, QueryMtl *query)
+{
+    ASSERT(mOcclusionQuery == nullptr);
+    mOcclusionQuery = query;
+
+    if (mRenderEncoder.valid())
+    {
+        // if render pass has started, start the query in the encoder
+        return startOcclusionQueryInRenderPass(query, true);
+    }
+    else
+    {
+        query->resetVisibilityResult(this);
+    }
+
+    return angle::Result::Continue;
+}
+void ContextMtl::onOcclusionQueryEnd(const gl::Context *context, QueryMtl *query)
+{
+    ASSERT(mOcclusionQuery == query);
+
+    if (mRenderEncoder.valid())
+    {
+        // if render pass has started, end the query in the encoder
+        disableActiveOcclusionQueryInRenderPass();
+    }
+
+    mOcclusionQuery = nullptr;
+}
+void ContextMtl::onOcclusionQueryDestroy(const gl::Context *context, QueryMtl *query)
+{
+    if (query->getAllocatedVisibilityOffsets().empty())
+    {
+        return;
+    }
+    if (mOcclusionQuery == query)
+    {
+        onOcclusionQueryEnd(context, query);
+    }
+    mOcclusionQueryPool.deallocateQueryOffset(this, query);
+}
+
+void ContextMtl::disableActiveOcclusionQueryInRenderPass()
+{
+    if (!mOcclusionQuery || mOcclusionQuery->getAllocatedVisibilityOffsets().empty())
+    {
+        return;
+    }
+
+    ASSERT(mRenderEncoder.valid());
+    mRenderEncoder.setVisibilityResultMode(MTLVisibilityResultModeDisabled,
+                                           mOcclusionQuery->getAllocatedVisibilityOffsets().back());
+}
+
+angle::Result ContextMtl::restartActiveOcclusionQueryInRenderPass()
+{
+    if (!mOcclusionQuery || mOcclusionQuery->getAllocatedVisibilityOffsets().empty())
+    {
+        return angle::Result::Continue;
+    }
+
+    return startOcclusionQueryInRenderPass(mOcclusionQuery, false);
+}
+
+angle::Result ContextMtl::startOcclusionQueryInRenderPass(QueryMtl *query, bool clearOldValue)
+{
+    ASSERT(mRenderEncoder.valid());
+
+    ANGLE_TRY(mOcclusionQueryPool.allocateQueryOffset(this, query, clearOldValue));
+
+    mRenderEncoder.setVisibilityResultMode(MTLVisibilityResultModeBoolean,
+                                           query->getAllocatedVisibilityOffsets().back());
+
+    // We need to mark the query's buffer as being written in this command buffer now. Since the
+    // actual writing is deferred until the render pass ends and user could try to read the query
+    // result before the render pass ends.
+    mCmdBuffer.setWriteDependency(query->getVisibilityResultBuffer());
+
+    return angle::Result::Continue;
+}
+
 void ContextMtl::updateProgramExecutable(const gl::Context *context)
 {
     // Need to rebind textures
@@ -1545,6 +1635,13 @@ angle::Result ContextMtl::setupDraw(const gl::Context *context,
 
         // re-apply everything
         invalidateState(context);
+    }
+
+    if (mOcclusionQuery && mOcclusionQueryPool.getNumRenderPassAllocatedQueries() == 0)
+    {
+        // The occlusion query is still active, and a new render pass has started.
+        // We need to continue the querying process in the new render encoder.
+        ANGLE_TRY(startOcclusionQueryInRenderPass(mOcclusionQuery, false));
     }
 
     Optional<mtl::RenderPipelineDesc> changedPipelineDesc;

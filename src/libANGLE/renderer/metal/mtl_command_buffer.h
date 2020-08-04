@@ -35,6 +35,7 @@ namespace mtl
 class CommandBuffer;
 class CommandEncoder;
 class RenderCommandEncoder;
+class OcclusionQueryPool;
 
 class CommandQueue final : public WrappedObject<id<MTLCommandQueue>>, angle::NonCopyable
 {
@@ -110,6 +111,7 @@ class CommandBuffer final : public WrappedObject<id<MTLCommandBuffer>>, angle::N
 
     void setWriteDependency(const ResourceRef &resource);
     void setReadDependency(const ResourceRef &resource);
+    void setReadDependency(Resource *resourcePtr);
 
     CommandQueue &cmdQueue() { return mCmdQueue; }
 
@@ -274,13 +276,16 @@ struct RenderCommandEncoderStates
     std::array<float, 4> blendColor;
 
     gl::ShaderMap<RenderCommandEncoderShaderStates> perShaderStates;
+
+    MTLVisibilityResultMode visibilityResultMode;
+    size_t visibilityResultBufferOffset;
 };
 
 // Encoder for encoding render commands
 class RenderCommandEncoder final : public CommandEncoder
 {
   public:
-    RenderCommandEncoder(CommandBuffer *cmdBuffer);
+    RenderCommandEncoder(CommandBuffer *cmdBuffer, const OcclusionQueryPool &queryPool);
     ~RenderCommandEncoder() override;
 
     // override CommandEncoder
@@ -411,6 +416,8 @@ class RenderCommandEncoder final : public CommandEncoder
                                                          uint32_t instances,
                                                          uint32_t baseVertex);
 
+    RenderCommandEncoder &setVisibilityResultMode(MTLVisibilityResultMode mode, size_t offset);
+
     RenderCommandEncoder &setColorStoreAction(MTLStoreAction action, uint32_t colorAttachmentIndex);
     // Set store action for every color attachment.
     RenderCommandEncoder &setColorStoreAction(MTLStoreAction action);
@@ -457,6 +464,7 @@ class RenderCommandEncoder final : public CommandEncoder
     mtl::AutoObjCObj<MTLRenderPassDescriptor> mCachedRenderPassDescObjC;
     MTLScissorRect mRenderPassMaxScissorRect;
 
+    const OcclusionQueryPool &mOcclusionQueryPool;
     bool mRecording    = false;
     bool mHasDrawCalls = false;
     IntermediateCommandStream mCommands;
@@ -480,6 +488,12 @@ class BlitCommandEncoder final : public CommandEncoder
     // NOTE: parent CommandBuffer's restart() must be called before this.
     BlitCommandEncoder &restart();
 
+    BlitCommandEncoder &copyBuffer(const BufferRef &src,
+                                   size_t srcOffset,
+                                   const BufferRef &dst,
+                                   size_t dstOffset,
+                                   size_t size);
+
     BlitCommandEncoder &copyBufferToTexture(const BufferRef &src,
                                             size_t srcOffset,
                                             size_t srcBytesPerRow,
@@ -500,8 +514,11 @@ class BlitCommandEncoder final : public CommandEncoder
                                     uint32_t sliceCount,
                                     uint32_t levelCount);
 
+    BlitCommandEncoder &fillBuffer(const BufferRef &buffer, NSRange range, uint8_t value);
+
     BlitCommandEncoder &generateMipmapsForTexture(const TextureRef &texture);
-    BlitCommandEncoder &synchronizeResource(const TextureRef &texture);
+    BlitCommandEncoder &synchronizeResource(Buffer *bufferPtr);
+    BlitCommandEncoder &synchronizeResource(Texture *texturePtr);
 
   private:
     id<MTLBlitCommandEncoder> get()

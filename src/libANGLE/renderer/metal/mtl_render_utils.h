@@ -25,6 +25,7 @@ namespace rx
 class BufferMtl;
 class ContextMtl;
 class DisplayMtl;
+class VisibilityBufferOffsetsMtl;
 
 namespace mtl
 {
@@ -312,6 +313,27 @@ class IndexGeneratorUtils final : angle::NonCopyable
     AutoObjCPtr<id<MTLComputePipelineState>> mTriFanFromArraysGeneratorPipeline;
 };
 
+// Util class for handling visibility query result
+class VisibilityResultUtils
+{
+  public:
+    void onDestroy();
+
+    void combineVisibilityResult(ContextMtl *contextMtl,
+                                 bool keepOldValue,
+                                 const VisibilityBufferOffsetsMtl &renderPassResultBufOffsets,
+                                 const BufferRef &renderPassResultBuf,
+                                 const BufferRef &finalResultBuf);
+
+  private:
+    AutoObjCPtr<id<MTLComputePipelineState>> getVisibilityResultCombPipeline(ContextMtl *contextMtl,
+                                                                             bool keepOldValue);
+    // Visibility combination compute pipeline:
+    // - 0: This compute pipeline only combine the new values and discard old value.
+    // - 1: This compute pipeline keep the old value and combine with new values.
+    std::array<AutoObjCPtr<id<MTLComputePipelineState>>, 2> mVisibilityResultCombPipelines;
+};
+
 // Util class for handling mipmap generation
 class MipmapUtils final : angle::NonCopyable
 {
@@ -377,6 +399,12 @@ class RenderUtils : public Context, angle::NonCopyable
     angle::Result generateLineLoopLastSegmentFromElementsArray(ContextMtl *contextMtl,
                                                                const IndexGenerationParams &params);
 
+    void combineVisibilityResult(ContextMtl *contextMtl,
+                                 bool keepOldValue,
+                                 const VisibilityBufferOffsetsMtl &renderPassResultBufOffsets,
+                                 const BufferRef &renderPassResultBuf,
+                                 const BufferRef &finalResultBuf);
+
     // Compute based mipmap generation. Only possible for 3D texture for now.
     angle::Result generateMipmapCS(ContextMtl *contextMtl,
                                    const TextureRef &srcTexture,
@@ -398,6 +426,7 @@ class RenderUtils : public Context, angle::NonCopyable
     ColorBlitUtils mColorBlitUtils;
     DepthStencilBlitUtils mDepthStencilBlitUtils;
     IndexGeneratorUtils mIndexUtils;
+    VisibilityResultUtils mVisibilityResultUtils;
     MipmapUtils mMipmapUtils;
 };
 

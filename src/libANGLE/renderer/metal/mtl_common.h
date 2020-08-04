@@ -133,6 +133,8 @@ constexpr uint32_t kStencilMaskAll = 0xff;  // Only 8 bits stencil is supported
 
 constexpr float kEmulatedAlphaValue = 1.0f;
 
+constexpr size_t kOcclusionQueryResultSize = sizeof(uint64_t);
+
 // NOTE(hqle): Support ES 3.0.
 constexpr gl::Version kMaxSupportedGLVersion = gl::Version(2, 0);
 

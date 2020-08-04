@@ -15,6 +15,7 @@
 #include "libANGLE/renderer/metal/BufferMtl.h"
 #include "libANGLE/renderer/metal/ContextMtl.h"
 #include "libANGLE/renderer/metal/DisplayMtl.h"
+#include "libANGLE/renderer/metal/QueryMtl.h"
 #include "libANGLE/renderer/metal/mtl_common.h"
 #include "libANGLE/renderer/metal/mtl_utils.h"
 
@@ -34,6 +35,7 @@ namespace
 #define UNMULTIPLY_ALPHA_CONSTANT_NAME @"kUnmultiplyAlpha"
 #define SOURCE_TEXTURE_TYPE_CONSTANT_NAME @"kSourceTextureType"
 #define SOURCE_TEXTURE2_TYPE_CONSTANT_NAME @"kSourceTexture2Type"
+#define VISIBILITY_RESULT_KEEP_OLD_VAL_CONSTANT_NAME @"kCombineWithExistingResult"
 
 // See libANGLE/renderer/metal/shaders/clear.metal
 struct ClearParamsUniform
@@ -77,6 +79,14 @@ struct IndexConversionUniform
     uint32_t padding[2];
 };
 
+// See libANGLE/renderer/metal/shaders/visibility.metal
+struct CombineVisibilityResultUniform
+{
+    uint32_t startOffset;
+    uint32_t numOffsets;
+    uint32_t padding[2];
+};
+
 // See libANGLE/renderer/metal/shaders/gen_mipmap.metal
 struct GenerateMipmapUniform
 {
@@ -84,6 +94,27 @@ struct GenerateMipmapUniform
     uint32_t numMipmapsToGenerate;
     uint8_t sRGB;
     uint8_t padding[7];
+};
+
+// Class to automatically disable occlusion query upon entering block and re-able it upon
+// exiting block.
+struct ScopedDisableOcclusionQuery
+{
+    ScopedDisableOcclusionQuery(ContextMtl *contextMtl, angle::Result *resultOut)
+        : mContextMtl(contextMtl), mResultOut(resultOut)
+    {
+        // temporarily disable occlusion query
+        contextMtl->disableActiveOcclusionQueryInRenderPass();
+    }
+    ~ScopedDisableOcclusionQuery()
+    {
+        *mResultOut = mContextMtl->restartActiveOcclusionQueryInRenderPass();
+    }
+
+  private:
+    ContextMtl *mContextMtl;
+
+    angle::Result *mResultOut;
 };
 
 void GetBlitTexCoords(uint32_t srcWidth,
@@ -579,6 +610,17 @@ angle::Result RenderUtils::generateLineLoopLastSegmentFromElementsArray(
     return mIndexUtils.generateLineLoopLastSegmentFromElementsArray(contextMtl, params);
 }
 
+void RenderUtils::combineVisibilityResult(
+    ContextMtl *contextMtl,
+    bool keepOldValue,
+    const VisibilityBufferOffsetsMtl &renderPassResultBufOffsets,
+    const BufferRef &renderPassResultBuf,
+    const BufferRef &finalResultBuf)
+{
+    return mVisibilityResultUtils.combineVisibilityResult(
+        contextMtl, keepOldValue, renderPassResultBufOffsets, renderPassResultBuf, finalResultBuf);
+}
+
 // Compute based mipmap generation
 angle::Result RenderUtils::generateMipmapCS(ContextMtl *contextMtl,
                                             const TextureRef &srcTexture,
@@ -759,17 +801,21 @@ angle::Result ClearUtils::clearWithDraw(const gl::Context *context,
     {
         return angle::Result::Continue;
     }
-
+    ContextMtl *contextMtl = GetImpl(context);
     setupClearWithDraw(context, cmdEncoder, overridedParams);
 
-    // Draw the screen aligned triangle
-    cmdEncoder->draw(MTLPrimitiveTypeTriangle, 0, 3);
+    angle::Result result;
+    {
+        // Need to disable occlusion query, otherwise clearing will affect the occlusion counting
+        ScopedDisableOcclusionQuery disableOcclusionQuery(contextMtl, &result);
+        // Draw the screen aligned triangle
+        cmdEncoder->draw(MTLPrimitiveTypeTriangle, 0, 3);
+    }
 
     // Invalidate current context's state
-    ContextMtl *contextMtl = GetImpl(context);
     contextMtl->invalidateState(context);
 
-    return angle::Result::Continue;
+    return result;
 }
 
 // ColorBlitUtils implementation
@@ -926,13 +972,18 @@ angle::Result ColorBlitUtils::blitColorWithDraw(const gl::Context *context,
     ContextMtl *contextMtl = GetImpl(context);
     setupColorBlitWithDraw(context, cmdEncoder, params);
 
-    // Draw the screen aligned triangle
-    cmdEncoder->draw(MTLPrimitiveTypeTriangle, 0, 3);
+    angle::Result result;
+    {
+        // Need to disable occlusion query, otherwise blitting will affect the occlusion counting
+        ScopedDisableOcclusionQuery disableOcclusionQuery(contextMtl, &result);
+        // Draw the screen aligned triangle
+        cmdEncoder->draw(MTLPrimitiveTypeTriangle, 0, 3);
+    }
 
     // Invalidate current context's state
     contextMtl->invalidateState(context);
 
-    return angle::Result::Continue;
+    return result;
 }
 
 // DepthStencilBlitUtils implementation
@@ -1143,13 +1194,18 @@ angle::Result DepthStencilBlitUtils::blitDepthStencilWithDraw(const gl::Context 
 
     setupDepthStencilBlitWithDraw(context, cmdEncoder, params);
 
-    // Draw the screen aligned triangle
-    cmdEncoder->draw(MTLPrimitiveTypeTriangle, 0, 3);
+    angle::Result result;
+    {
+        // Need to disable occlusion query, otherwise blitting will affect the occlusion counting
+        ScopedDisableOcclusionQuery disableOcclusionQuery(contextMtl, &result);
+        // Draw the screen aligned triangle
+        cmdEncoder->draw(MTLPrimitiveTypeTriangle, 0, 3);
+    }
 
     // Invalidate current context's state
     contextMtl->invalidateState(context);
 
-    return angle::Result::Continue;
+    return result;
 }
 
 angle::Result DepthStencilBlitUtils::blitStencilViaCopyBuffer(
@@ -1582,6 +1638,77 @@ angle::Result IndexGeneratorUtils::generateLineLoopLastSegmentFromElementsArrayC
     }
 
     return generateLineLoopLastSegment(contextMtl, first, last, params.dstBuffer, params.dstOffset);
+}
+
+// VisibilityResultUtils implementation
+void VisibilityResultUtils::onDestroy()
+{
+    ClearPipelineStateArray(&mVisibilityResultCombPipelines);
+}
+
+AutoObjCPtr<id<MTLComputePipelineState>> VisibilityResultUtils::getVisibilityResultCombPipeline(
+    ContextMtl *contextMtl,
+    bool keepOldValue)
+{
+    // There is no guarantee Objective-C's BOOL is equal to bool, so casting just in case.
+    BOOL keepOldValueVal = keepOldValue;
+    AutoObjCPtr<id<MTLComputePipelineState>> &cache =
+        mVisibilityResultCombPipelines[keepOldValueVal];
+    if (cache)
+    {
+        return cache;
+    }
+    ANGLE_MTL_OBJC_SCOPE
+    {
+        auto funcConstants = [[[MTLFunctionConstantValues alloc] init] ANGLE_MTL_AUTORELEASE];
+
+        [funcConstants setConstantValue:&keepOldValueVal
+                                   type:MTLDataTypeBool
+                               withName:VISIBILITY_RESULT_KEEP_OLD_VAL_CONSTANT_NAME];
+
+        EnsureSpecializedComputePipelineInitialized(
+            contextMtl->getDisplay(), @"combineVisibilityResult", funcConstants, &cache);
+    }
+
+    return cache;
+}
+
+void VisibilityResultUtils::combineVisibilityResult(
+    ContextMtl *contextMtl,
+    bool keepOldValue,
+    const VisibilityBufferOffsetsMtl &renderPassResultBufOffsets,
+    const BufferRef &renderPassResultBuf,
+    const BufferRef &finalResultBuf)
+{
+    ASSERT(!renderPassResultBufOffsets.empty());
+
+    if (renderPassResultBufOffsets.size() == 1 && !keepOldValue)
+    {
+        // Use blit command to copy directly
+        BlitCommandEncoder *blitEncoder = contextMtl->getBlitCommandEncoder();
+
+        blitEncoder->copyBuffer(renderPassResultBuf, renderPassResultBufOffsets.front(),
+                                finalResultBuf, 0, kOcclusionQueryResultSize);
+        return;
+    }
+
+    ComputeCommandEncoder *cmdEncoder = contextMtl->getComputeCommandEncoder();
+    ASSERT(cmdEncoder);
+
+    id<MTLComputePipelineState> pipeline =
+        getVisibilityResultCombPipeline(contextMtl, keepOldValue);
+    cmdEncoder->setComputePipelineState(pipeline);
+
+    CombineVisibilityResultUniform options;
+    // Offset is viewed as 64 bit unit in compute shader.
+    options.startOffset = renderPassResultBufOffsets.front() / kOcclusionQueryResultSize;
+    options.numOffsets  = renderPassResultBufOffsets.size();
+
+    cmdEncoder->setData(options, 0);
+    cmdEncoder->setBuffer(renderPassResultBuf, 0, 1);
+    cmdEncoder->setBufferForWrite(finalResultBuf, 0, 2);
+
+    DispatchCompute(contextMtl, cmdEncoder, pipeline, 1);
 }
 
 // MipmapUtils implementation
