@@ -34,6 +34,24 @@
       "revId": "7c6f64976e5ea6b2c8be64051dc5813f25c2fa87",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f22fa308_93ae6346",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-08-05T16:44:54Z",
+      "side": 1,
+      "message": "Yes, please go ahead and abandon. We can let the Intel team follow-up and supress the failure.",
+      "parentUuid": "a0be7e08_89af0338",
+      "revId": "7c6f64976e5ea6b2c8be64051dc5813f25c2fa87",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
