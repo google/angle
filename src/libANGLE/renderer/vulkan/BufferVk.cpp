@@ -274,8 +274,6 @@ angle::Result BufferVk::copySubData(const gl::Context *context,
         sourceBuffer.unmap(contextVk->getRenderer());
     }
 
-    vk::CommandBuffer *commandBuffer = nullptr;
-
     // Check for self-dependency.
     if (sourceBuffer.getBufferSerial() == mBuffer->getBufferSerial())
     {
@@ -286,14 +284,15 @@ angle::Result BufferVk::copySubData(const gl::Context *context,
         ANGLE_TRY(contextVk->onBufferTransferRead(&sourceBuffer));
         ANGLE_TRY(contextVk->onBufferTransferWrite(mBuffer));
     }
-    ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(&commandBuffer));
+
+    vk::CommandBuffer &commandBuffer = contextVk->getOutsideRenderPassCommandBuffer();
 
     // Enqueue a copy command on the GPU.
     const VkBufferCopy copyRegion = {static_cast<VkDeviceSize>(sourceOffset),
                                      static_cast<VkDeviceSize>(destOffset),
                                      static_cast<VkDeviceSize>(size)};
 
-    commandBuffer->copyBuffer(sourceBuffer.getBuffer(), mBuffer->getBuffer(), 1, &copyRegion);
+    commandBuffer.copyBuffer(sourceBuffer.getBuffer(), mBuffer->getBuffer(), 1, &copyRegion);
 
     // The new destination buffer data may require a conversion for the next draw, so mark it dirty.
     onDataChanged();
@@ -598,12 +597,13 @@ angle::Result BufferVk::copyToBufferImpl(ContextVk *contextVk,
                                          uint32_t copyCount,
                                          const VkBufferCopy *copies)
 {
-    vk::CommandBuffer *commandBuffer;
+
     ANGLE_TRY(contextVk->onBufferTransferWrite(destBuffer));
     ANGLE_TRY(contextVk->onBufferTransferRead(mBuffer));
-    ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(&commandBuffer));
 
-    commandBuffer->copyBuffer(mBuffer->getBuffer(), destBuffer->getBuffer(), copyCount, copies);
+    vk::CommandBuffer &commandBuffer = contextVk->getOutsideRenderPassCommandBuffer();
+
+    commandBuffer.copyBuffer(mBuffer->getBuffer(), destBuffer->getBuffer(), copyCount, copies);
 
     return angle::Result::Continue;
 }

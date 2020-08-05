@@ -52,10 +52,8 @@ angle::Result SyncHelper::initialize(ContextVk *contextVk)
 
     mEvent = event.release();
 
-    vk::CommandBuffer *outsideRenderPassCommandBuffer;
-    ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(&outsideRenderPassCommandBuffer));
-    outsideRenderPassCommandBuffer->setEvent(mEvent.getHandle(),
-                                             VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT);
+    vk::CommandBuffer &commandBuffer = contextVk->getOutsideRenderPassCommandBuffer();
+    commandBuffer.setEvent(mEvent.getHandle(), VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT);
     retain(&contextVk->getResourceUseList());
 
     return angle::Result::Continue;
@@ -107,11 +105,10 @@ angle::Result SyncHelper::clientWait(Context *context,
 
 angle::Result SyncHelper::serverWait(ContextVk *contextVk)
 {
-    vk::CommandBuffer *outsideRenderPassCommandBuffer;
-    ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(&outsideRenderPassCommandBuffer));
-    outsideRenderPassCommandBuffer->waitEvents(
-        1, mEvent.ptr(), VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT,
-        0, nullptr, 0, nullptr, 0, nullptr);
+    vk::CommandBuffer &commandBuffer = contextVk->getOutsideRenderPassCommandBuffer();
+    commandBuffer.waitEvents(1, mEvent.ptr(), VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT,
+                             VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, 0, nullptr, 0, nullptr, 0,
+                             nullptr);
     retain(&contextVk->getResourceUseList());
     return angle::Result::Continue;
 }

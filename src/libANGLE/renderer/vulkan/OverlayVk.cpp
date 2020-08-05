@@ -121,10 +121,9 @@ angle::Result OverlayVk::createFont(ContextVk *contextVk)
                                        &mFontImageView, 0, 1));
 
     // Copy font data from staging buffer.
-    vk::CommandBuffer *fontDataUpload;
     ANGLE_TRY(contextVk->onBufferTransferRead(&fontDataBuffer.get()));
     ANGLE_TRY(contextVk->onImageTransferWrite(VK_IMAGE_ASPECT_COLOR_BIT, &mFontImage));
-    ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(&fontDataUpload));
+    vk::CommandBuffer &fontDataUpload = contextVk->getOutsideRenderPassCommandBuffer();
 
     VkBufferImageCopy copy           = {};
     copy.bufferRowLength             = gl::overlay::kFontImageWidth;
@@ -135,9 +134,9 @@ angle::Result OverlayVk::createFont(ContextVk *contextVk)
     copy.imageExtent.height          = gl::overlay::kFontImageHeight;
     copy.imageExtent.depth           = 1;
 
-    fontDataUpload->copyBufferToImage(fontDataBuffer.get().getBuffer().getHandle(),
-                                      mFontImage.getImage(), VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
-                                      1, &copy);
+    fontDataUpload.copyBufferToImage(fontDataBuffer.get().getBuffer().getHandle(),
+                                     mFontImage.getImage(), VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1,
+                                     &copy);
 
     return angle::Result::Continue;
 }

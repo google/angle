@@ -2481,12 +2481,9 @@ angle::Result ContextVk::insertEventMarker(GLsizei length, const char *marker)
     if (!mRenderer->enableDebugUtils())
         return angle::Result::Continue;
 
-    vk::CommandBuffer *outsideRenderPassCommandBuffer;
-    ANGLE_TRY(getOutsideRenderPassCommandBuffer(&outsideRenderPassCommandBuffer));
-
     VkDebugUtilsLabelEXT label;
     vk::MakeDebugUtilsLabel(GL_DEBUG_SOURCE_APPLICATION, marker, &label);
-    outsideRenderPassCommandBuffer->insertDebugUtilsLabelEXT(label);
+    mOutsideRenderPassCommands->getCommandBuffer().insertDebugUtilsLabelEXT(label);
 
     return angle::Result::Continue;
 }
@@ -2496,12 +2493,9 @@ angle::Result ContextVk::pushGroupMarker(GLsizei length, const char *marker)
     if (!mRenderer->enableDebugUtils())
         return angle::Result::Continue;
 
-    vk::CommandBuffer *outsideRenderPassCommandBuffer;
-    ANGLE_TRY(getOutsideRenderPassCommandBuffer(&outsideRenderPassCommandBuffer));
-
     VkDebugUtilsLabelEXT label;
     vk::MakeDebugUtilsLabel(GL_DEBUG_SOURCE_APPLICATION, marker, &label);
-    outsideRenderPassCommandBuffer->beginDebugUtilsLabelEXT(label);
+    mOutsideRenderPassCommands->getCommandBuffer().beginDebugUtilsLabelEXT(label);
 
     return angle::Result::Continue;
 }
@@ -2511,9 +2505,7 @@ angle::Result ContextVk::popGroupMarker()
     if (!mRenderer->enableDebugUtils())
         return angle::Result::Continue;
 
-    vk::CommandBuffer *outsideRenderPassCommandBuffer;
-    ANGLE_TRY(getOutsideRenderPassCommandBuffer(&outsideRenderPassCommandBuffer));
-    outsideRenderPassCommandBuffer->endDebugUtilsLabelEXT();
+    mOutsideRenderPassCommands->getCommandBuffer().endDebugUtilsLabelEXT();
 
     return angle::Result::Continue;
 }
@@ -2526,12 +2518,9 @@ angle::Result ContextVk::pushDebugGroup(const gl::Context *context,
     if (!mRenderer->enableDebugUtils())
         return angle::Result::Continue;
 
-    vk::CommandBuffer *outsideRenderPassCommandBuffer;
-    ANGLE_TRY(getOutsideRenderPassCommandBuffer(&outsideRenderPassCommandBuffer));
-
     VkDebugUtilsLabelEXT label;
     vk::MakeDebugUtilsLabel(source, message.c_str(), &label);
-    outsideRenderPassCommandBuffer->beginDebugUtilsLabelEXT(label);
+    mOutsideRenderPassCommands->getCommandBuffer().beginDebugUtilsLabelEXT(label);
 
     return angle::Result::Continue;
 }
@@ -2541,9 +2530,7 @@ angle::Result ContextVk::popDebugGroup(const gl::Context *context)
     if (!mRenderer->enableDebugUtils())
         return angle::Result::Continue;
 
-    vk::CommandBuffer *outsideRenderPassCommandBuffer;
-    ANGLE_TRY(getOutsideRenderPassCommandBuffer(&outsideRenderPassCommandBuffer));
-    outsideRenderPassCommandBuffer->endDebugUtilsLabelEXT();
+    mOutsideRenderPassCommands->getCommandBuffer().endDebugUtilsLabelEXT();
 
     return angle::Result::Continue;
 }
@@ -4379,9 +4366,8 @@ angle::Result ContextVk::onImageRead(VkImageAspectFlags aspectFlags,
 
     if (image->isLayoutChangeNecessary(imageLayout))
     {
-        vk::CommandBuffer *commandBuffer;
-        ANGLE_TRY(getOutsideRenderPassCommandBuffer(&commandBuffer));
-        image->changeLayout(aspectFlags, imageLayout, commandBuffer);
+        image->changeLayout(aspectFlags, imageLayout,
+                            &mOutsideRenderPassCommands->getCommandBuffer());
     }
     image->retain(&mResourceUseList);
     return angle::Result::Continue;
@@ -4399,10 +4385,7 @@ angle::Result ContextVk::onImageWrite(VkImageAspectFlags aspectFlags,
 
     ANGLE_TRY(endRenderPassIfImageUsed(*image));
 
-    vk::CommandBuffer *commandBuffer;
-    ANGLE_TRY(getOutsideRenderPassCommandBuffer(&commandBuffer));
-
-    image->changeLayout(aspectFlags, imageLayout, commandBuffer);
+    image->changeLayout(aspectFlags, imageLayout, &mOutsideRenderPassCommands->getCommandBuffer());
     image->retain(&mResourceUseList);
     image->onWrite();
 
@@ -4564,16 +4547,13 @@ void ContextVk::recycleCommandBuffer(vk::CommandBufferHelper *commandBuffer)
 
 angle::Result ContextVk::syncExternalMemory()
 {
-    vk::CommandBuffer *commandBuffer;
-    ANGLE_TRY(getOutsideRenderPassCommandBuffer(&commandBuffer));
-
     VkMemoryBarrier memoryBarrier = {};
     memoryBarrier.sType           = VK_STRUCTURE_TYPE_MEMORY_BARRIER;
     memoryBarrier.srcAccessMask   = VK_ACCESS_MEMORY_WRITE_BIT;
     memoryBarrier.dstAccessMask   = VK_ACCESS_MEMORY_READ_BIT | VK_ACCESS_MEMORY_WRITE_BIT;
 
-    commandBuffer->memoryBarrier(VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
-                                 VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, &memoryBarrier);
+    mOutsideRenderPassCommands->getCommandBuffer().memoryBarrier(
+        VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, &memoryBarrier);
     return angle::Result::Continue;
 }
 

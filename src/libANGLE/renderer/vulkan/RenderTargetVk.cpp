@@ -277,10 +277,9 @@ angle::Result RenderTargetVk::flushStagedUpdates(ContextVk *contextVk,
         return angle::Result::Continue;
     }
 
-    vk::CommandBuffer *commandBuffer;
-    ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(&commandBuffer));
+    vk::CommandBuffer &commandBuffer = contextVk->getOutsideRenderPassCommandBuffer();
     return image->flushSingleSubresourceStagedUpdates(
-        contextVk, mLevelIndexGL, layerIndex, commandBuffer, deferredClears, deferredClearIndex);
+        contextVk, mLevelIndexGL, layerIndex, &commandBuffer, deferredClears, deferredClearIndex);
 }
 
 void RenderTargetVk::retainImageViews(ContextVk *contextVk) const
