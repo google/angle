@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "75aced76_b3079a30",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-08-05T11:32:28Z",
+      "side": 1,
+      "message": "The linked bug says the test is suppressed as it\u0027s likely a driver bug and that there have been many similar issues like this before. We probably don\u0027t need this workaround.",
+      "revId": "7c6f64976e5ea6b2c8be64051dc5813f25c2fa87",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
