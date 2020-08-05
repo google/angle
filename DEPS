@@ -28,7 +28,7 @@ vars = {
   'checkout_angle_internal': False,
 
   # Version of Chromium our Chromium-based DEPS are mirrored from.
-  'chromium_revision': 'fb6cbaf6e55fc6aba0a0d7c163526789bbceb808',
+  'chromium_revision': 'ed7912a248d52ab5aae92fdef67734ef628c440e',
 
   # Current revision of VK-GL-CTS (a.k.a dEQP).
   'vk_gl_cts_revision': '4b40207be32deac1c567dacc70cde031bea005aa',
@@ -89,17 +89,17 @@ vars = {
 deps = {
 
   'build': {
-    'url': '{chromium_git}/chromium/src/build.git@1ee11394cfbea8e22ab5e9192266da38f059ec67',
+    'url': '{chromium_git}/chromium/src/build.git@0eaf1510a921b1d7db062cc2d035c855c882f693',
     'condition': 'not build_with_chromium',
   },
 
   'buildtools': {
-    'url': '{chromium_git}/chromium/src/buildtools.git@9e121212d42be62a7cce38072f925f8398d11e49',
+    'url': '{chromium_git}/chromium/src/buildtools.git@1ecfe3ce669a34f8c76ffe5895d95b3ea3b549fd',
     'condition': 'not build_with_chromium',
   },
 
   'testing': {
-    'url': '{chromium_git}/chromium/src/testing@f126fc6578039eb81449c7eeb8a95855bb9b1a42',
+    'url': '{chromium_git}/chromium/src/testing@165367ff940af902e2505d538ffb82b90c5295e3',
     'condition': 'not build_with_chromium',
   },
 
@@ -150,13 +150,13 @@ deps = {
   },
 
   'third_party/googletest': {
-    'url': '{chromium_git}/chromium/src/third_party/googletest@defbf92951658959ecb0e06d344fa65eedfc6e7a',
+    'url': '{chromium_git}/chromium/src/third_party/googletest@e3c3f879eee34ec81b1e562d8fecd207716d8945',
     'condition': 'not build_with_chromium',
   },
 
   # libjpeg_turbo is used by glmark2.
   'third_party/libjpeg_turbo': {
-    'url': '{chromium_git}/chromium/deps/libjpeg_turbo.git@7e3ad79800a7945fb37173149842b494ab8982b2',
+    'url': '{chromium_git}/chromium/deps/libjpeg_turbo.git@0241a1304fd183ee24fbdfe6891f18fdedea38f9',
     'condition': 'not build_with_chromium',
   },
 
@@ -176,7 +176,7 @@ deps = {
   },
 
   'third_party/Python-Markdown': {
-    'url': '{chromium_git}/chromium/src/third_party/Python-Markdown@9c8566e04768e32834ac87e0ae78d8793c749a34',
+    'url': '{chromium_git}/chromium/src/third_party/Python-Markdown@31ac00b010877151f9440d5ffc7f1437e74169ef',
     'condition': 'not build_with_chromium',
   },
 
@@ -243,12 +243,12 @@ deps = {
   },
 
   'third_party/zlib': {
-    'url': '{chromium_git}/chromium/src/third_party/zlib@89bddfee9cf8fde3ab1212ed63bf03d76baf8914',
+    'url': '{chromium_git}/chromium/src/third_party/zlib@7492de9a52f656b070f41968e39a6efa603590d5',
     'condition': 'not build_with_chromium',
   },
 
   'tools/clang': {
-    'url': '{chromium_git}/chromium/src/tools/clang.git@6412135b3979b680c20cf007ab242d968025fc3e',
+    'url': '{chromium_git}/chromium/src/tools/clang.git@1078c4141a00d7174786d9d0fae2e7804c2a54e3',
     'condition': 'not build_with_chromium',
   },
 
@@ -264,7 +264,7 @@ deps = {
   },
 
   'tools/md_browser': {
-    'url': '{chromium_git}/chromium/src/tools/md_browser@be8cf5a17d73c14170dff2ec9600310483361356',
+    'url': '{chromium_git}/chromium/src/tools/md_browser@7e75775447051d4ecb6ab0ca597eda6d809a2963',
     'condition': 'not build_with_chromium',
   },
 
