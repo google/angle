@@ -2464,7 +2464,7 @@ void CaptureGetnUniformfvEXT_params(const State &glState,
                                     GLfloat *params,
                                     ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    paramCapture->readBufferSizeBytes = bufSize;
 }
 
 void CaptureGetnUniformivEXT_params(const State &glState,
@@ -2475,7 +2475,7 @@ void CaptureGetnUniformivEXT_params(const State &glState,
                                     GLint *params,
                                     ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    paramCapture->readBufferSizeBytes = bufSize;
 }
 
 void CaptureReadnPixelsEXT_data(const State &glState,
