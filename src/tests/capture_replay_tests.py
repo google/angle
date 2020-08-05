@@ -862,15 +862,13 @@ def main(capture_build_dir, replay_build_dir, use_goma, gtest_filter, test_exec,
         # put the test batchs into the job queue
         for batch_index in range(test_batch_num):
             batch = TestBatch(use_goma, batch_count, keep_temp_files, goma_dir)
-            for test_in_batch_index in range(batch.batch_count):
-                test_index = batch_index * batch.batch_count + test_in_batch_index
-                if test_index >= len(test_names_and_params):
-                    break
+            test_index = batch_index
+            while test_index < len(test_names_and_params):
                 batch.AddTest(
                     Test(test_names_and_params[test_index][0],
                          test_names_and_params[test_index][1]))
+                test_index += test_batch_num
             job_queue.put(batch)
-
         # set the static environment variables that do not change throughout the script run
         environment_vars = [("ANGLE_CAPTURE_FRAME_END", "100"),
                             ("ANGLE_CAPTURE_SERIALIZE_STATE", "1")]
