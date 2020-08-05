@@ -392,8 +392,8 @@ def GenerateCommitMessage(
             if isinstance(c, ChangedCipdPackage):
                 commit_msg.append('* %s: %s..%s' % (c.path, c.current_version, c.new_version))
             else:
-                commit_msg.append(
-                    '* %s: %s/+log/%s..%s' % (c.path, c.url, c.current_rev[0:10], c.new_rev[0:10]))
+                commit_msg.append('* %s: %s/+log/%s..%s' %
+                                  (c.path, c.url, c.current_rev[0:10], c.new_rev[0:10]))
 
     if changed_deps_list:
         change_url = CHROMIUM_FILE_TEMPLATE % (rev_interval, 'DEPS')
@@ -402,8 +402,8 @@ def GenerateCommitMessage(
         commit_msg.append('No dependencies changed.')
 
     if clang_change and clang_change.current_rev != clang_change.new_rev:
-        commit_msg.append(
-            'Clang version changed %s:%s' % (clang_change.current_rev, clang_change.new_rev))
+        commit_msg.append('Clang version changed %s:%s' %
+                          (clang_change.current_rev, clang_change.new_rev))
         change_url = CHROMIUM_FILE_TEMPLATE % (rev_interval, CLANG_UPDATE_SCRIPT_URL_PATH)
         commit_msg.append('Details: %s\n' % change_url)
     else:
