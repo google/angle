@@ -16,6 +16,24 @@
       "revId": "7c6f64976e5ea6b2c8be64051dc5813f25c2fa87",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a0be7e08_89af0338",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-08-05T16:21:00Z",
+      "side": 1,
+      "message": "I would love to abandon this CL if the failure has been taken care of.",
+      "parentUuid": "75aced76_b3079a30",
+      "revId": "7c6f64976e5ea6b2c8be64051dc5813f25c2fa87",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
