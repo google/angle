@@ -2558,7 +2558,8 @@ ImageHelper::ImageHelper()
 }
 
 ImageHelper::ImageHelper(ImageHelper &&other)
-    : mImage(std::move(other.mImage)),
+    : Resource(std::move(other)),
+      mImage(std::move(other.mImage)),
       mDeviceMemory(std::move(other.mDeviceMemory)),
       mImageType(other.mImageType),
       mTilingMode(other.mTilingMode),
@@ -2577,7 +2578,8 @@ ImageHelper::ImageHelper(ImageHelper &&other)
       mLayerCount(other.mLayerCount),
       mLevelCount(other.mLevelCount),
       mStagingBuffer(std::move(other.mStagingBuffer)),
-      mSubresourceUpdates(std::move(other.mSubresourceUpdates))
+      mSubresourceUpdates(std::move(other.mSubresourceUpdates)),
+      mCurrentSingleClearValue(std::move(other.mCurrentSingleClearValue))
 {
     ASSERT(this != &other);
     other.resetCachedProperties();

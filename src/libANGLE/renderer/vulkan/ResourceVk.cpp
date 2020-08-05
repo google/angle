@@ -21,6 +21,11 @@ Resource::Resource()
     mUse.init();
 }
 
+Resource::Resource(Resource &&other) : Resource()
+{
+    mUse = std::move(other.mUse);
+}
+
 Resource::~Resource()
 {
     mUse.release();

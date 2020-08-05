@@ -486,8 +486,7 @@ template <typename T>
 class BindingPointer final : angle::NonCopyable
 {
   public:
-    BindingPointer() : mRefCounted(nullptr) {}
-
+    BindingPointer() = default;
     ~BindingPointer() { reset(); }
 
     BindingPointer(BindingPointer &&other)
@@ -519,7 +518,7 @@ class BindingPointer final : angle::NonCopyable
     bool valid() const { return mRefCounted != nullptr; }
 
   private:
-    RefCounted<T> *mRefCounted;
+    RefCounted<T> *mRefCounted = nullptr;
 };
 
 // Helper class to share ref-counted Vulkan objects.  Requires that T have a destroy method

@@ -187,6 +187,7 @@ class Resource : angle::NonCopyable
 
   protected:
     Resource();
+    Resource(Resource &&other);
 
     // Current resource lifetime.
     SharedResourceUse mUse;
