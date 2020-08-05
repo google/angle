@@ -150,6 +150,8 @@ constexpr const char *kSkippedMessages[] = {
     "UNASSIGNED-BestPractices-vkCreateGraphicsPipelines-too-many-instanced-vertex-buffers",
     "UNASSIGNED-BestPractices-DrawState-ClearCmdBeforeDraw",
     "UNASSIGNED-BestPractices-vkCmdClearAttachments-clear-after-load",
+    // http://anglebug.com/4928
+    "VUID-vkMapMemory-memory-00683",
 };
 
 // Suppress validation errors that are known
