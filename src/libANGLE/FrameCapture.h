@@ -23,6 +23,8 @@ enum class GLenumGroup;
 
 namespace angle
 {
+
+using ParamData = std::vector<std::vector<uint8_t>>;
 struct ParamCapture : angle::NonCopyable
 {
     ParamCapture();
@@ -36,7 +38,7 @@ struct ParamCapture : angle::NonCopyable
     ParamType type;
     ParamValue value;
     gl::GLenumGroup enumGroup;  // only used for param type GLenum, GLboolean and GLbitfield
-    std::vector<std::vector<uint8_t>> data;
+    ParamData data;
     int arrayClientPointerIndex = -1;
     size_t readBufferSizeBytes  = 0;
 };
@@ -175,6 +177,34 @@ class DataCounters final : angle::NonCopyable
     // <CallName, ParamName>
     using Counter = std::pair<gl::EntryPoint, std::string>;
     std::map<Counter, int> mData;
+};
+
+constexpr int kStringNotFound = -1;
+class StringCounters final : angle::NonCopyable
+{
+  public:
+    StringCounters();
+    ~StringCounters();
+
+    int getStringCounter(std::string &str);
+    void setStringCounter(std::string &str, int &counter);
+
+  private:
+    std::map<std::string, int> mStringCounterMap;
+};
+
+class DataTracker final : angle::NonCopyable
+{
+  public:
+    DataTracker();
+    ~DataTracker();
+
+    DataCounters &getCounters() { return mCounters; }
+    StringCounters &getStringCounters() { return mStringCounters; }
+
+  private:
+    DataCounters mCounters;
+    StringCounters mStringCounters;
 };
 
 using BufferSet   = std::set<gl::BufferID>;

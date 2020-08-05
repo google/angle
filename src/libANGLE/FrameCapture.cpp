@@ -341,23 +341,32 @@ void WriteStringParamReplay(std::ostream &out, const ParamCapture &param)
     out << "\"" << str << "\"";
 }
 
-void WriteStringPointerParamReplay(DataCounters *counters,
+void WriteStringPointerParamReplay(DataTracker *dataTracker,
                                    std::ostream &out,
                                    std::ostream &header,
                                    const CallCapture &call,
                                    const ParamCapture &param)
 {
-    int counter = counters->getAndIncrement(call.entryPoint, param.name);
-
-    header << "const char *";
-    WriteParamStaticVarName(call, param, counter, header);
-    header << "[] = { \n";
-
+    // Concatenate the strings to ensure we get an accurate counter
+    // TODO (anglebug.com/4941): Explore a way to avoid lumping the strings together
+    std::string str;
     for (const std::vector<uint8_t> &data : param.data)
     {
         // null terminate C style string
         ASSERT(data.size() > 0 && data.back() == '\0');
-        std::string str(data.begin(), data.end() - 1);
+        str += std::string(data.begin(), data.end() - 1);
+    }
+
+    int counter = dataTracker->getStringCounters().getStringCounter(str);
+    if (counter == kStringNotFound)
+    {
+        // This is a unique string, so set up its declaration and update its counter
+        counter = dataTracker->getCounters().getAndIncrement(call.entryPoint, param.name);
+        dataTracker->getStringCounters().setStringCounter(str, counter);
+
+        header << "const char *";
+        WriteParamStaticVarName(call, param, counter, header);
+        header << "[] = { \n";
 
         // Break up long strings for MSVC
         for (size_t i = 0; i < str.length(); i += kStringLengthLimit)
@@ -366,21 +375,21 @@ void WriteStringPointerParamReplay(DataCounters *counters,
                                                                            : (str.length() - i);
             header << "    R\"(" << str.substr(i, copyLength) << ")\"\n";
         }
-        header << ",";
+        header << " };\n";
     }
 
-    header << " };\n";
+    ASSERT(counter >= 0);
     WriteParamStaticVarName(call, param, counter, out);
 }
 
 template <typename ParamT>
-void WriteResourceIDPointerParamReplay(DataCounters *counters,
+void WriteResourceIDPointerParamReplay(DataTracker *dataTracker,
                                        std::ostream &out,
                                        std::ostream &header,
                                        const CallCapture &call,
                                        const ParamCapture &param)
 {
-    int counter = counters->getAndIncrement(call.entryPoint, param.name);
+    int counter = dataTracker->getCounters().getAndIncrement(call.entryPoint, param.name);
 
     header << "const GLuint ";
     WriteParamStaticVarName(call, param, counter, header);
@@ -408,14 +417,14 @@ void WriteResourceIDPointerParamReplay(DataCounters *counters,
     WriteParamStaticVarName(call, param, counter, out);
 }
 
-void WriteBinaryParamReplay(DataCounters *counters,
+void WriteBinaryParamReplay(DataTracker *dataTracker,
                             std::ostream &out,
                             std::ostream &header,
                             const CallCapture &call,
                             const ParamCapture &param,
                             std::vector<uint8_t> *binaryData)
 {
-    int counter = counters->getAndIncrement(call.entryPoint, param.name);
+    int counter = dataTracker->getCounters().getAndIncrement(call.entryPoint, param.name);
 
     ASSERT(param.data.size() == 1);
     const std::vector<uint8_t> &data = param.data[0];
@@ -462,7 +471,7 @@ uintptr_t SyncIndexValue(GLsync sync)
 }
 
 void WriteCppReplayForCall(const CallCapture &call,
-                           DataCounters *counters,
+                           DataTracker *dataTracker,
                            std::ostream &out,
                            std::ostream &header,
                            std::vector<uint8_t> *binaryData)
@@ -572,58 +581,58 @@ void WriteCppReplayForCall(const CallCapture &call,
                     WriteStringParamReplay(callOut, param);
                     break;
                 case ParamType::TGLcharConstPointerPointer:
-                    WriteStringPointerParamReplay(counters, callOut, header, call, param);
+                    WriteStringPointerParamReplay(dataTracker, callOut, header, call, param);
                     break;
                 case ParamType::TBufferIDConstPointer:
-                    WriteResourceIDPointerParamReplay<gl::BufferID>(counters, callOut, out, call,
+                    WriteResourceIDPointerParamReplay<gl::BufferID>(dataTracker, callOut, out, call,
                                                                     param);
                     break;
                 case ParamType::TFenceNVIDConstPointer:
-                    WriteResourceIDPointerParamReplay<gl::FenceNVID>(counters, callOut, out, call,
-                                                                     param);
+                    WriteResourceIDPointerParamReplay<gl::FenceNVID>(dataTracker, callOut, out,
+                                                                     call, param);
                     break;
                 case ParamType::TFramebufferIDConstPointer:
-                    WriteResourceIDPointerParamReplay<gl::FramebufferID>(counters, callOut, out,
+                    WriteResourceIDPointerParamReplay<gl::FramebufferID>(dataTracker, callOut, out,
                                                                          call, param);
                     break;
                 case ParamType::TMemoryObjectIDConstPointer:
-                    WriteResourceIDPointerParamReplay<gl::MemoryObjectID>(counters, callOut, out,
+                    WriteResourceIDPointerParamReplay<gl::MemoryObjectID>(dataTracker, callOut, out,
                                                                           call, param);
                     break;
                 case ParamType::TProgramPipelineIDConstPointer:
-                    WriteResourceIDPointerParamReplay<gl::ProgramPipelineID>(counters, callOut, out,
-                                                                             call, param);
+                    WriteResourceIDPointerParamReplay<gl::ProgramPipelineID>(dataTracker, callOut,
+                                                                             out, call, param);
                     break;
                 case ParamType::TQueryIDConstPointer:
-                    WriteResourceIDPointerParamReplay<gl::QueryID>(counters, callOut, out, call,
+                    WriteResourceIDPointerParamReplay<gl::QueryID>(dataTracker, callOut, out, call,
                                                                    param);
                     break;
                 case ParamType::TRenderbufferIDConstPointer:
-                    WriteResourceIDPointerParamReplay<gl::RenderbufferID>(counters, callOut, out,
+                    WriteResourceIDPointerParamReplay<gl::RenderbufferID>(dataTracker, callOut, out,
                                                                           call, param);
                     break;
                 case ParamType::TSamplerIDConstPointer:
-                    WriteResourceIDPointerParamReplay<gl::SamplerID>(counters, callOut, out, call,
-                                                                     param);
+                    WriteResourceIDPointerParamReplay<gl::SamplerID>(dataTracker, callOut, out,
+                                                                     call, param);
                     break;
                 case ParamType::TSemaphoreIDConstPointer:
-                    WriteResourceIDPointerParamReplay<gl::SemaphoreID>(counters, callOut, out, call,
-                                                                       param);
+                    WriteResourceIDPointerParamReplay<gl::SemaphoreID>(dataTracker, callOut, out,
+                                                                       call, param);
                     break;
                 case ParamType::TTextureIDConstPointer:
-                    WriteResourceIDPointerParamReplay<gl::TextureID>(counters, callOut, out, call,
-                                                                     param);
+                    WriteResourceIDPointerParamReplay<gl::TextureID>(dataTracker, callOut, out,
+                                                                     call, param);
                     break;
                 case ParamType::TTransformFeedbackIDConstPointer:
-                    WriteResourceIDPointerParamReplay<gl::TransformFeedbackID>(counters, callOut,
+                    WriteResourceIDPointerParamReplay<gl::TransformFeedbackID>(dataTracker, callOut,
                                                                                out, call, param);
                     break;
                 case ParamType::TVertexArrayIDConstPointer:
-                    WriteResourceIDPointerParamReplay<gl::VertexArrayID>(counters, callOut, out,
+                    WriteResourceIDPointerParamReplay<gl::VertexArrayID>(dataTracker, callOut, out,
                                                                          call, param);
                     break;
                 default:
-                    WriteBinaryParamReplay(counters, callOut, header, call, param, binaryData);
+                    WriteBinaryParamReplay(dataTracker, callOut, header, call, param, binaryData);
                     break;
             }
         }
@@ -745,7 +754,7 @@ void WriteLoadBinaryDataCall(bool compression,
 
 void MaybeResetResources(std::stringstream &out,
                          ResourceIDType resourceIDType,
-                         DataCounters *counters,
+                         DataTracker *dataTracker,
                          std::stringstream &header,
                          ResourceTracker *resourceTracker,
                          std::vector<uint8_t> *binaryData)
@@ -789,7 +798,7 @@ void MaybeResetResources(std::stringstream &out,
                 for (CallCapture &call : bufferRegenCalls[id])
                 {
                     out << "    ";
-                    WriteCppReplayForCall(call, counters, out, header, binaryData);
+                    WriteCppReplayForCall(call, dataTracker, out, header, binaryData);
                     out << ";\n";
                 }
             }
@@ -802,7 +811,7 @@ void MaybeResetResources(std::stringstream &out,
                 for (CallCapture &call : bufferRestoreCalls[id])
                 {
                     out << "    ";
-                    WriteCppReplayForCall(call, counters, out, header, binaryData);
+                    WriteCppReplayForCall(call, dataTracker, out, header, binaryData);
                     out << ";\n";
 
                     // Also note that this buffer has been implicitly unmapped by this call
@@ -822,7 +831,7 @@ void MaybeResetResources(std::stringstream &out,
                     for (CallCapture &call : bufferMapCalls[id])
                     {
                         out << "    ";
-                        WriteCppReplayForCall(call, counters, out, header, binaryData);
+                        WriteCppReplayForCall(call, dataTracker, out, header, binaryData);
                         out << ";\n";
                     }
                 }
@@ -834,7 +843,7 @@ void MaybeResetResources(std::stringstream &out,
                     for (CallCapture &call : bufferUnmapCalls[id])
                     {
                         out << "    ";
-                        WriteCppReplayForCall(call, counters, out, header, binaryData);
+                        WriteCppReplayForCall(call, dataTracker, out, header, binaryData);
                         out << ";\n";
                     }
                 }
@@ -861,7 +870,7 @@ void WriteCppReplay(bool compression,
                     std::vector<uint8_t> *binaryData,
                     bool serializeStateEnabled)
 {
-    DataCounters counters;
+    DataTracker dataTracker;
 
     std::stringstream out;
     std::stringstream header;
@@ -905,7 +914,7 @@ void WriteCppReplay(bool compression,
         for (const CallCapture &call : setupCalls)
         {
             setupCallStreamParts << "    ";
-            WriteCppReplayForCall(call, &counters, setupCallStreamParts, header, binaryData);
+            WriteCppReplayForCall(call, &dataTracker, setupCallStreamParts, header, binaryData);
             setupCallStreamParts << ";\n";
 
             if (partCount > 0 && ++callCount % kFunctionSizeLimit == 0)
@@ -956,8 +965,8 @@ void WriteCppReplay(bool compression,
         // TODO (http://anglebug.com/4599): Reset more state on frame loop
         for (ResourceIDType resourceType : AllEnums<ResourceIDType>())
         {
-            MaybeResetResources(restoreCallStream, resourceType, &counters, header, resourceTracker,
-                                binaryData);
+            MaybeResetResources(restoreCallStream, resourceType, &dataTracker, header,
+                                resourceTracker, binaryData);
         }
 
         out << restoreCallStream.str();
@@ -974,7 +983,7 @@ void WriteCppReplay(bool compression,
     for (const CallCapture &call : frameCalls)
     {
         callStream << "    ";
-        WriteCppReplayForCall(call, &counters, callStream, header, binaryData);
+        WriteCppReplayForCall(call, &dataTracker, callStream, header, binaryData);
         callStream << ";\n";
     }
 
@@ -4156,6 +4165,33 @@ int DataCounters::getAndIncrement(gl::EntryPoint entryPoint, const std::string &
 {
     Counter counterKey = {entryPoint, paramName};
     return mData[counterKey]++;
+}
+
+DataTracker::DataTracker() = default;
+
+DataTracker::~DataTracker() = default;
+
+StringCounters::StringCounters() = default;
+
+StringCounters::~StringCounters() = default;
+
+int StringCounters::getStringCounter(std::string &str)
+{
+    const auto &id = mStringCounterMap.find(str);
+    if (id == mStringCounterMap.end())
+    {
+        return kStringNotFound;
+    }
+    else
+    {
+        return mStringCounterMap[str];
+    }
+}
+
+void StringCounters::setStringCounter(std::string &str, int &counter)
+{
+    ASSERT(counter >= 0);
+    mStringCounterMap[str] = counter;
 }
 
 ResourceTracker::ResourceTracker() = default;
