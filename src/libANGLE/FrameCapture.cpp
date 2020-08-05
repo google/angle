@@ -56,7 +56,7 @@ constexpr char kCompression[]                  = "ANGLE_CAPTURE_COMPRESSION";
 constexpr char kSerializeStateEnabledVarName[] = "ANGLE_CAPTURE_SERIALIZE_STATE";
 
 constexpr size_t kBinaryAlignment   = 16;
-constexpr size_t kFunctionSizeLimit = 50000;
+constexpr size_t kFunctionSizeLimit = 5000;
 
 // Limit based on MSVC Compiler Error C2026
 constexpr size_t kStringLengthLimit = 16380;
