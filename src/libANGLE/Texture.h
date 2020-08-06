@@ -101,14 +101,6 @@ struct ContextBindingCount
     uint32_t imageBindingCount;
 };
 
-// The source of the syncState call.  Knowing why syncState is being called can help the back-end
-// make more-informed decisions.
-enum class TextureCommand
-{
-    GenerateMipmap,
-    Other,
-};
-
 // State from Table 6.9 (state per texture object) in the OpenGL ES 3.0.2 spec.
 class TextureState final : private angle::NonCopyable
 {
@@ -605,7 +597,7 @@ class Texture final : public RefCountObject<TextureID>,
     };
     using DirtyBits = angle::BitSet<DIRTY_BIT_COUNT>;
 
-    angle::Result syncState(const Context *context, TextureCommand source);
+    angle::Result syncState(const Context *context, Command source);
     bool hasAnyDirtyBit() const { return mDirtyBits.any(); }
 
     // ObserverInterface implementation.

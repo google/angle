@@ -143,7 +143,7 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
 
     angle::Result syncState(const gl::Context *context,
                             const gl::Texture::DirtyBits &dirtyBits,
-                            gl::TextureCommand source) override;
+                            gl::Command source) override;
 
     angle::Result setStorageMultisample(const gl::Context *context,
                                         gl::TextureType type,

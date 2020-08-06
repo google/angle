@@ -795,7 +795,7 @@ angle::Result TextureMtl::getAttachmentRenderTarget(const gl::Context *context,
 
 angle::Result TextureMtl::syncState(const gl::Context *context,
                                     const gl::Texture::DirtyBits &dirtyBits,
-                                    gl::TextureCommand source)
+                                    gl::Command source)
 {
     if (dirtyBits.any())
     {

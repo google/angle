@@ -3123,7 +3123,7 @@ angle::Result State::syncTextures(const Context *context, Command command)
         Texture *texture = mActiveTexturesCache[textureIndex];
         if (texture && texture->hasAnyDirtyBit())
         {
-            ANGLE_TRY(texture->syncState(context, TextureCommand::Other));
+            ANGLE_TRY(texture->syncState(context, Command::Other));
         }
     }
 
@@ -3141,7 +3141,7 @@ angle::Result State::syncImages(const Context *context, Command command)
         Texture *texture = mImageUnits[imageUnitIndex].texture.get();
         if (texture && texture->hasAnyDirtyBit())
         {
-            ANGLE_TRY(texture->syncState(context, TextureCommand::Other));
+            ANGLE_TRY(texture->syncState(context, Command::Other));
         }
     }
 
@@ -3297,7 +3297,7 @@ angle::Result State::onProgramExecutableChange(const Context *context, Program *
 
         if (image->hasAnyDirtyBit())
         {
-            ANGLE_TRY(image->syncState(context, TextureCommand::Other));
+            ANGLE_TRY(image->syncState(context, Command::Other));
         }
 
         if (mRobustResourceInit && image->initState() == InitState::MayNeedInit)
@@ -3342,7 +3342,7 @@ angle::Result State::onProgramPipelineExecutableChange(const Context *context,
 
         if (image->hasAnyDirtyBit())
         {
-            ANGLE_TRY(image->syncState(context, TextureCommand::Other));
+            ANGLE_TRY(image->syncState(context, Command::Other));
         }
 
         if (mRobustResourceInit && image->initState() == InitState::MayNeedInit)

@@ -1503,7 +1503,7 @@ angle::Result Texture::generateMipmap(Context *context)
         return angle::Result::Continue;
     }
 
-    ANGLE_TRY(syncState(context, TextureCommand::GenerateMipmap));
+    ANGLE_TRY(syncState(context, Command::GenerateMipmap));
 
     // Clear the base image(s) immediately if needed
     if (context->isRobustResourceInitEnabled())
@@ -1794,9 +1794,9 @@ GLuint Texture::getNativeID() const
     return mTexture->getNativeID();
 }
 
-angle::Result Texture::syncState(const Context *context, TextureCommand source)
+angle::Result Texture::syncState(const Context *context, Command source)
 {
-    ASSERT(hasAnyDirtyBit() || source == TextureCommand::GenerateMipmap);
+    ASSERT(hasAnyDirtyBit() || source == Command::GenerateMipmap);
     ANGLE_TRY(mTexture->syncState(context, mDirtyBits, source));
     mDirtyBits.reset();
     return angle::Result::Continue;
@@ -2010,7 +2010,7 @@ angle::Result Texture::getTexImage(const Context *context,
 {
     if (hasAnyDirtyBit())
     {
-        ANGLE_TRY(syncState(context, TextureCommand::Other));
+        ANGLE_TRY(syncState(context, Command::Other));
     }
 
     return mTexture->getTexImage(context, packState, packBuffer, target, level, format, type,

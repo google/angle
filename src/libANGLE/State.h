@@ -70,17 +70,6 @@ using TextureBindingMap    = angle::PackedEnumMap<TextureType, TextureBindingVec
 using ActiveQueryMap       = angle::PackedEnumMap<QueryType, BindingPointer<Query>>;
 using BufferVector         = std::vector<OffsetBindingPointer<Buffer>>;
 
-enum class Command
-{
-    Other,
-    Blit,
-    CopyImage,
-    Dispatch,
-    Draw,
-    ReadPixels,
-    TexImage
-};
-
 class ActiveTexturesCache final : angle::NonCopyable
 {
   public:

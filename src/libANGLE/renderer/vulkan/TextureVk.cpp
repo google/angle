@@ -2055,7 +2055,7 @@ void TextureVk::prepareForGenerateMipmap(ContextVk *contextVk)
 
 angle::Result TextureVk::syncState(const gl::Context *context,
                                    const gl::Texture::DirtyBits &dirtyBits,
-                                   gl::TextureCommand source)
+                                   gl::Command source)
 {
     ContextVk *contextVk = vk::GetImpl(context);
     RendererVk *renderer = contextVk->getRenderer();
@@ -2082,7 +2082,7 @@ angle::Result TextureVk::syncState(const gl::Context *context,
     // Before redefining the image for any reason, check to see if it's about to go through mipmap
     // generation.  In that case, drop every staged change for the subsequent mips after base, and
     // make sure the image is created with the complete mipchain.
-    bool isGenerateMipmap = source == gl::TextureCommand::GenerateMipmap;
+    bool isGenerateMipmap = source == gl::Command::GenerateMipmap;
     if (isGenerateMipmap)
     {
         prepareForGenerateMipmap(contextVk);
