@@ -1760,7 +1760,7 @@ void QueryHelper::resetQueryPool(ContextVk *contextVk,
 angle::Result QueryHelper::beginQuery(ContextVk *contextVk)
 {
     CommandBuffer *outsideRenderPassCommandBuffer;
-    ANGLE_TRY(contextVk->endRenderPassAndGetCommandBuffer(&outsideRenderPassCommandBuffer));
+    ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(&outsideRenderPassCommandBuffer));
     const QueryPool &queryPool = getQueryPool();
     outsideRenderPassCommandBuffer->resetQueryPool(queryPool.getHandle(), mQuery, 1);
     outsideRenderPassCommandBuffer->beginQuery(queryPool.getHandle(), mQuery, 0);
@@ -1771,7 +1771,7 @@ angle::Result QueryHelper::beginQuery(ContextVk *contextVk)
 angle::Result QueryHelper::endQuery(ContextVk *contextVk)
 {
     CommandBuffer *outsideRenderPassCommandBuffer;
-    ANGLE_TRY(contextVk->endRenderPassAndGetCommandBuffer(&outsideRenderPassCommandBuffer));
+    ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(&outsideRenderPassCommandBuffer));
     outsideRenderPassCommandBuffer->endQuery(getQueryPool().getHandle(), mQuery);
     mMostRecentSerial = contextVk->getCurrentQueueSerial();
     return angle::Result::Continue;
@@ -1794,7 +1794,7 @@ void QueryHelper::endOcclusionQuery(ContextVk *contextVk, CommandBuffer *renderP
 angle::Result QueryHelper::flushAndWriteTimestamp(ContextVk *contextVk)
 {
     CommandBuffer *outsideRenderPassCommandBuffer;
-    ANGLE_TRY(contextVk->endRenderPassAndGetCommandBuffer(&outsideRenderPassCommandBuffer));
+    ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(&outsideRenderPassCommandBuffer));
     writeTimestamp(contextVk, outsideRenderPassCommandBuffer);
     return angle::Result::Continue;
 }
@@ -2402,7 +2402,7 @@ angle::Result BufferHelper::copyFromBuffer(ContextVk *contextVk,
     CommandBuffer *commandBuffer = nullptr;
     ANGLE_TRY(contextVk->onBufferTransferRead(srcBuffer));
     ANGLE_TRY(contextVk->onBufferTransferWrite(this));
-    ANGLE_TRY(contextVk->endRenderPassAndGetCommandBuffer(&commandBuffer));
+    ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(&commandBuffer));
 
     commandBuffer->copyBuffer(srcBuffer->getBuffer(), mBuffer, regionCount, copyRegions);
 
@@ -3401,7 +3401,7 @@ angle::Result ImageHelper::generateMipmapsWithBlit(ContextVk *contextVk, GLuint 
 {
     CommandBuffer *commandBuffer = nullptr;
     ANGLE_TRY(contextVk->onImageWrite(VK_IMAGE_ASPECT_COLOR_BIT, ImageLayout::TransferDst, this));
-    ANGLE_TRY(contextVk->endRenderPassAndGetCommandBuffer(&commandBuffer));
+    ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(&commandBuffer));
 
     // We are able to use blitImage since the image format we are using supports it.
     int32_t mipWidth  = mExtents.width;
@@ -4369,7 +4369,7 @@ angle::Result ImageHelper::flushAllStagedUpdates(ContextVk *contextVk)
 {
     // Clear the image.
     CommandBuffer *commandBuffer = nullptr;
-    ANGLE_TRY(contextVk->endRenderPassAndGetCommandBuffer(&commandBuffer));
+    ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(&commandBuffer));
     return flushStagedUpdates(contextVk, 0, mLevelCount, 0, mLayerCount, {}, commandBuffer);
 }
 
@@ -4547,7 +4547,7 @@ angle::Result ImageHelper::copyImageDataToBuffer(ContextVk *contextVk,
     CommandBuffer *commandBuffer = nullptr;
     ANGLE_TRY(contextVk->onImageRead(aspectFlags, ImageLayout::TransferSrc, this));
     ANGLE_TRY(contextVk->onBufferTransferWrite(*bufferOut));
-    ANGLE_TRY(contextVk->endRenderPassAndGetCommandBuffer(&commandBuffer));
+    ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(&commandBuffer));
 
     uint32_t sourceLevelVk = static_cast<uint32_t>(sourceLevelGL) - mBaseLevel;
 
@@ -4753,7 +4753,7 @@ angle::Result ImageHelper::readPixels(ContextVk *contextVk,
                                           &resolvedImage.get()));
     }
     ANGLE_TRY(contextVk->onImageRead(layoutChangeAspectFlags, ImageLayout::TransferSrc, this));
-    ANGLE_TRY(contextVk->endRenderPassAndGetCommandBuffer(&commandBuffer));
+    ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(&commandBuffer));
 
     const angle::Format *readFormat = &mFormat->actualImageFormat();
 

@@ -520,9 +520,10 @@ class ContextVk : public ContextImpl, public vk::Context
                                 vk::ImageLayout imageLayout,
                                 vk::ImageHelper *image);
 
-    angle::Result endRenderPassAndGetCommandBuffer(vk::CommandBuffer **commandBufferOut)
+    angle::Result getOutsideRenderPassCommandBuffer(vk::CommandBuffer **commandBufferOut)
     {
         // Only one command buffer should be active at a time
+        // TODO(jmadill): Do not end RenderPass. http://anglebug.com/4911
         ASSERT(mOutsideRenderPassCommands->empty() || mRenderPassCommands->empty());
         ANGLE_TRY(endRenderPass());
         *commandBufferOut = &mOutsideRenderPassCommands->getCommandBuffer();
