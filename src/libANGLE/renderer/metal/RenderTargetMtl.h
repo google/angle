@@ -45,8 +45,8 @@ class RenderTargetMtl final : public FramebufferAttachmentRenderTarget
     void setImplicitMSTexture(const mtl::TextureRef &implicitMSTexture);
     void reset();
 
-    mtl::TextureRef getTexture() const { return mTexture; }
-    mtl::TextureRef getImplicitMSTexture() const { return mImplicitMSTexture; }
+    mtl::TextureRef getTexture() const { return mTexture.lock(); }
+    mtl::TextureRef getImplicitMSTexture() const { return mImplicitMSTexture.lock(); }
     uint32_t getLevelIndex() const { return mLevelIndex; }
     uint32_t getLayerIndex() const { return mLayerIndex; }
     uint32_t getRenderSamples() const;
@@ -55,8 +55,8 @@ class RenderTargetMtl final : public FramebufferAttachmentRenderTarget
     void toRenderPassAttachmentDesc(mtl::RenderPassAttachmentDesc *rpaDescOut) const;
 
   private:
-    mtl::TextureRef mTexture;
-    mtl::TextureRef mImplicitMSTexture;
+    mtl::TextureWeakRef mTexture;
+    mtl::TextureWeakRef mImplicitMSTexture;
     uint32_t mLevelIndex       = 0;
     uint32_t mLayerIndex       = 0;
     const mtl::Format *mFormat = nullptr;

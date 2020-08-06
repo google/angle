@@ -443,9 +443,34 @@ uint32_t Texture::samples() const
     return static_cast<uint32_t>(get().sampleCount);
 }
 
+TextureRef Texture::getLinearColorView()
+{
+    if (mLinearColorView)
+    {
+        return mLinearColorView;
+    }
+
+    switch (pixelFormat())
+    {
+        case MTLPixelFormatRGBA8Unorm_sRGB:
+            mLinearColorView = createViewWithDifferentFormat(MTLPixelFormatRGBA8Unorm);
+            break;
+        case MTLPixelFormatBGRA8Unorm_sRGB:
+            mLinearColorView = createViewWithDifferentFormat(MTLPixelFormatBGRA8Unorm);
+            break;
+        default:
+            // NOTE(hqle): Not all sRGB formats are supported yet.
+            UNREACHABLE();
+    }
+
+    return mLinearColorView;
+}
+
 void Texture::set(id<MTLTexture> metalTexture)
 {
     ParentClass::set(metalTexture);
+
+    mLinearColorView = nullptr;
 }
 
 // Buffer implementation

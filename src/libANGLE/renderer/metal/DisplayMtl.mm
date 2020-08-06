@@ -582,7 +582,7 @@ void DisplayMtl::initializeExtensions() const
     mNativeExtensions.fragDepth              = true;
     mNativeExtensions.framebufferBlit        = false;
     mNativeExtensions.framebufferMultisample = false;
-    mNativeExtensions.copyTexture            = false;
+    mNativeExtensions.copyTexture            = true;
     mNativeExtensions.copyCompressedTexture  = false;
     mNativeExtensions.debugMarker            = false;
     mNativeExtensions.robustness             = true;

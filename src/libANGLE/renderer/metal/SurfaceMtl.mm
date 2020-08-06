@@ -410,6 +410,13 @@ EGLint SurfaceMtl::getSwapBehavior() const
     return EGL_BUFFER_PRESERVED;
 }
 
+angle::Result SurfaceMtl::initializeContents(const gl::Context *context,
+                                             const gl::ImageIndex &imageIndex)
+{
+    UNIMPLEMENTED();
+    return angle::Result::Continue;
+}
+
 angle::Result SurfaceMtl::getAttachmentRenderTarget(const gl::Context *context,
                                                     GLenum binding,
                                                     const gl::ImageIndex &imageIndex,

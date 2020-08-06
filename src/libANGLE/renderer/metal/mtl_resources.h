@@ -163,6 +163,9 @@ class Texture final : public Resource,
     MTLColorWriteMask getColorWritableMask() const { return *mColorWritableMask; }
     void setColorWritableMask(MTLColorWriteMask mask) { *mColorWritableMask = mask; }
 
+    // Get linear color space view. Only usable for sRGB textures.
+    TextureRef getLinearColorView();
+
     // Change the wrapped metal object. Special case for swapchain image
     void set(id<MTLTexture> metalTexture);
 
@@ -187,6 +190,9 @@ class Texture final : public Resource,
 
     // This property is shared between this object and its views:
     std::shared_ptr<MTLColorWriteMask> mColorWritableMask;
+
+    // Linear view of sRGB texture
+    TextureRef mLinearColorView;
 };
 
 class Buffer final : public Resource, public WrappedObject<id<MTLBuffer>>

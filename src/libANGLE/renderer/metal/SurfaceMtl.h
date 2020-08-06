@@ -64,6 +64,9 @@ class SurfaceMtl : public SurfaceImpl
     EGLint isPostSubBufferSupported() const override;
     EGLint getSwapBehavior() const override;
 
+    angle::Result initializeContents(const gl::Context *context,
+                                     const gl::ImageIndex &imageIndex) override;
+
     const mtl::TextureRef &getColorTexture() { return mColorTexture; }
     const mtl::Format &getColorFormat() const { return mColorFormat; }
     int getSamples() const { return mSamples; }

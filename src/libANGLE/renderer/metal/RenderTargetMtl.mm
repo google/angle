@@ -67,13 +67,14 @@ void RenderTargetMtl::reset()
 
 uint32_t RenderTargetMtl::getRenderSamples() const
 {
-    return mImplicitMSTexture ? mImplicitMSTexture->samples()
-                              : (mTexture ? mTexture->samples() : 1);
+    mtl::TextureRef implicitMSTex = getImplicitMSTexture();
+    mtl::TextureRef tex           = getTexture();
+    return implicitMSTex ? implicitMSTex->samples() : (tex ? tex->samples() : 1);
 }
 void RenderTargetMtl::toRenderPassAttachmentDesc(mtl::RenderPassAttachmentDesc *rpaDescOut) const
 {
-    rpaDescOut->texture           = mTexture;
-    rpaDescOut->implicitMSTexture = mImplicitMSTexture;
+    rpaDescOut->texture           = mTexture.lock();
+    rpaDescOut->implicitMSTexture = mImplicitMSTexture.lock();
     rpaDescOut->level             = mLevelIndex;
     rpaDescOut->sliceOrDepth      = mLayerIndex;
 }
