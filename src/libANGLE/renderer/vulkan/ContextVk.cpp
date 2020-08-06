@@ -650,7 +650,6 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
       mUseOldRewriteStructSamplers(false),
       mOutsideRenderPassCommands(nullptr),
       mRenderPassCommands(nullptr),
-      mRenderPassFramebuffer(VK_NULL_HANDLE),
       mHasPrimaryCommands(false),
       mGpuEventsEnabled(false),
       mGpuClockSync{std::numeric_limits<double>::max(), std::numeric_limits<double>::max()},
@@ -1649,8 +1648,6 @@ angle::Result ContextVk::submitFrame(const VkSubmitInfo &submitInfo,
     ANGLE_TRY(mCommandQueue.submitFrame(this, mContextPriority, submitInfo, mSubmitFence,
                                         &mCurrentGarbage, &mCommandPool, std::move(commandBuffer)));
 
-    // we need to explicitly notify every other Context using this VkQueue that their current
-    // command buffer is no longer valid.
     onRenderPassFinished();
     mComputeDirtyBits |= mNewComputeCommandBufferDirtyBits;
 
@@ -4411,7 +4408,6 @@ angle::Result ContextVk::flushAndBeginRenderPass(
     mRenderPassCommands->beginRenderPass(framebuffer, renderArea, renderPassDesc,
                                          renderPassAttachmentOps, depthStencilAttachmentIndex,
                                          clearValues, commandBufferOut);
-    mRenderPassFramebuffer = framebuffer.getHandle();
     return angle::Result::Continue;
 }
 

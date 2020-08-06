@@ -454,11 +454,6 @@ class ContextVk : public ContextImpl, public vk::Context
     }
 
     RenderPassCache &getRenderPassCache() { return mRenderPassCache; }
-    bool isCurrentRenderPassOfFramebuffer(vk::Framebuffer *framebuffer)
-    {
-        return mRenderPassFramebuffer != VK_NULL_HANDLE && framebuffer != nullptr &&
-               mRenderPassFramebuffer == framebuffer->getHandle();
-    }
 
     vk::DescriptorSetLayoutDesc getDriverUniformsDescriptorSetDesc(
         VkShaderStageFlags shaderStages) const;
@@ -538,10 +533,22 @@ class ContextVk : public ContextImpl, public vk::Context
                                           const vk::ClearValuesArray &clearValues,
                                           vk::CommandBuffer **commandBufferOut);
 
-    bool hasStartedRenderPass() const { return mRenderPassCommands->started(); }
+    // Only returns true if we have a started RP and we've run setupDraw.
+    bool hasStartedRenderPass() const
+    {
+        // Checking mRenderPassCommandBuffer ensures we've called setupDraw.
+        return mRenderPassCommandBuffer && mRenderPassCommands->started();
+    }
+
+    bool hasStartedRenderPassWithFramebuffer(vk::Framebuffer *framebuffer)
+    {
+        return hasStartedRenderPass() &&
+               mRenderPassCommands->getFramebufferHandle() == framebuffer->getHandle();
+    }
+
     bool hasStartedRenderPassWithCommands() const
     {
-        return mRenderPassCommands->started() && !mRenderPassCommands->getCommandBuffer().empty();
+        return hasStartedRenderPass() && !mRenderPassCommands->getCommandBuffer().empty();
     }
 
     vk::CommandBufferHelper &getStartedRenderPassCommands()
@@ -861,11 +868,7 @@ class ContextVk : public ContextImpl, public vk::Context
     angle::Result flushOutsideRenderPassCommands();
     void flushDescriptorSetUpdates();
 
-    ANGLE_INLINE void onRenderPassFinished()
-    {
-        mRenderPassCommandBuffer = nullptr;
-        mRenderPassFramebuffer   = VK_NULL_HANDLE;
-    }
+    ANGLE_INLINE void onRenderPassFinished() { mRenderPassCommandBuffer = nullptr; }
 
     angle::Result onBufferRead(VkAccessFlags readAccessType,
                                vk::PipelineStage readStage,
@@ -1021,7 +1024,6 @@ class ContextVk : public ContextImpl, public vk::Context
 
     vk::CommandBufferHelper *mOutsideRenderPassCommands;
     vk::CommandBufferHelper *mRenderPassCommands;
-    VkFramebuffer mRenderPassFramebuffer;
     vk::PrimaryCommandBuffer mPrimaryCommands;
     // Function recycleCommandBuffer() is public above
     bool mHasPrimaryCommands;

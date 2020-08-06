@@ -464,11 +464,11 @@ angle::Result FramebufferVk::clearImpl(const gl::Context *context,
     {
         vk::Framebuffer *currentFramebuffer = nullptr;
         ANGLE_TRY(getFramebuffer(contextVk, &currentFramebuffer));
-        bool framebufferIsCurrent = contextVk->isCurrentRenderPassOfFramebuffer(currentFramebuffer);
 
         // If we are in an active renderpass that has recorded commands and the framebuffer hasn't
         // changed, inline the clear
-        if (contextVk->hasStartedRenderPassWithCommands() && framebufferIsCurrent)
+        if (contextVk->hasStartedRenderPassWithCommands() &&
+            contextVk->hasStartedRenderPassWithFramebuffer(currentFramebuffer))
         {
             // Have active renderpass, add inline clear
             gl::DrawBufferMask clearBuffersWithInlineClear;
@@ -1364,8 +1364,7 @@ angle::Result FramebufferVk::invalidateImpl(ContextVk *contextVk,
     vk::Framebuffer *currentFramebuffer = nullptr;
     ANGLE_TRY(getFramebuffer(contextVk, &currentFramebuffer));
 
-    if (contextVk->hasStartedRenderPass() &&
-        contextVk->isCurrentRenderPassOfFramebuffer(currentFramebuffer))
+    if (contextVk->hasStartedRenderPassWithFramebuffer(currentFramebuffer))
     {
         // Set the appropriate storeOp for attachments.
         size_t attachmentIndexVk = 0;
