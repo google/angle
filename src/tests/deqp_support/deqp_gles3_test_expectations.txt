@@ -235,15 +235,6 @@
 
 // Linux only failures
 
-// UBO tests trigger crashes when getting the program info log, skip them until this is fixed.
-1323 LINUX OPENGL : dEQP-GLES3.functional.ubo.* = SKIP
-
-1323 LINUX OPENGL : dEQP-GLES3.functional.fbo.depth.depth_test_clamp.depth_component32f = FAIL
-1323 LINUX OPENGL : dEQP-GLES3.functional.fbo.depth.depth_test_clamp.depth32f_stencil8 = FAIL
-1323 LINUX OPENGL : dEQP-GLES3.functional.fbo.depth.depth_write_clamp.depth_component32f = FAIL
-1323 LINUX OPENGL : dEQP-GLES3.functional.fbo.depth.depth_write_clamp.depth32f_stencil8 = FAIL
-1323 LINUX OPENGL : dEQP-GLES3.functional.rasterization.fbo.rbo_multisample_max.primitives.points = FAIL
-
 // While loops with 'continue' seem flaky on Linux. (Possibly all GL renderers)
 1324 LINUX OPENGL : dEQP-GLES3.functional.shaders.loops.while_constant_iterations.conditional_continue_vertex = FAIL
 1324 LINUX OPENGL : dEQP-GLES3.functional.shaders.loops.while_constant_iterations.conditional_continue_fragment = FAIL
