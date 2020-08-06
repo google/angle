@@ -2888,6 +2888,16 @@ bool ValidateCreateImage(const ValidationContext *val,
                 }
                 break;
 
+            case EGL_D3D11_TEXTURE_PLANE_ANGLE:
+                if (!displayExtensions.imageD3D11Texture)
+                {
+                    val->setError(EGL_BAD_ATTRIBUTE,
+                                  "EGL_D3D11_TEXTURE_PLANE_ANGLE cannot be used without "
+                                  "EGL_ANGLE_image_d3d11_texture support.");
+                    return false;
+                }
+                break;
+
             case EGL_WIDTH:
             case EGL_HEIGHT:
                 if (target != EGL_LINUX_DMA_BUF_EXT)

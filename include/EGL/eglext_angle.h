@@ -27,6 +27,7 @@
 #define EGL_D3D_TEXTURE_ANGLE             0x33A3
 #define EGL_TEXTURE_OFFSET_X_ANGLE        0x3490
 #define EGL_TEXTURE_OFFSET_Y_ANGLE        0x3491
+#define EGL_D3D11_TEXTURE_PLANE_ANGLE    0x3492
 #endif /* EGL_ANGLE_d3d_texture_client_buffer */
 
 #ifndef EGL_ANGLE_software_display

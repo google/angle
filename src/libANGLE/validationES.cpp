@@ -4442,6 +4442,13 @@ bool ValidateEGLImageTargetTexture2DOES(const Context *context,
         return false;
     }
 
+    if (imageObject->isYUV() && type != TextureType::External)
+    {
+        context->validationError(GL_INVALID_OPERATION,
+                                 "Image is YUV, target must be TEXTURE_EXTERNAL_OES");
+        return false;
+    }
+
     return true;
 }
 
