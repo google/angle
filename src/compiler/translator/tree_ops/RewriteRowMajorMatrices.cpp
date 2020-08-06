@@ -261,7 +261,10 @@ class TransformArrayHelper
         // The last value is unused, and is not present.
         TVector<unsigned int> accumulatedArraySizes(arraySizes.size() - 1);
 
-        accumulatedArraySizes[0] = arraySizes[0];
+        if (accumulatedArraySizes.size() > 0)
+        {
+            accumulatedArraySizes[0] = arraySizes[0];
+        }
         for (size_t index = 1; index + 1 < arraySizes.size(); ++index)
         {
             accumulatedArraySizes[index] = accumulatedArraySizes[index - 1] * arraySizes[index];
