@@ -76,19 +76,21 @@ void RendererVk::ensureCapsInitialized() const
 
     // Enable this for simple buffer readback testing, but some functionality is missing.
     // TODO(jmadill): Support full mapBufferRange extension.
-    mNativeExtensions.mapBufferOES                 = true;
-    mNativeExtensions.mapBufferRange               = true;
-    mNativeExtensions.textureStorage               = true;
-    mNativeExtensions.drawBuffers                  = true;
-    mNativeExtensions.fragDepth                    = true;
-    mNativeExtensions.framebufferBlit              = true;
-    mNativeExtensions.framebufferMultisample       = true;
-    mNativeExtensions.multisampledRenderToTexture  = true;
-    mNativeExtensions.multisampledRenderToTexture2 = true;
-    mNativeExtensions.copyTexture                  = true;
-    mNativeExtensions.copyTexture3d                = true;
-    mNativeExtensions.copyCompressedTexture        = true;
-    mNativeExtensions.debugMarker                  = true;
+    mNativeExtensions.mapBufferOES           = true;
+    mNativeExtensions.mapBufferRange         = true;
+    mNativeExtensions.textureStorage         = true;
+    mNativeExtensions.drawBuffers            = true;
+    mNativeExtensions.fragDepth              = true;
+    mNativeExtensions.framebufferBlit        = true;
+    mNativeExtensions.framebufferMultisample = true;
+    mNativeExtensions.multisampledRenderToTexture =
+        getFeatures().enableMultisampledRenderToTexture.enabled;
+    mNativeExtensions.multisampledRenderToTexture2 =
+        getFeatures().enableMultisampledRenderToTexture.enabled;
+    mNativeExtensions.copyTexture           = true;
+    mNativeExtensions.copyTexture3d         = true;
+    mNativeExtensions.copyCompressedTexture = true;
+    mNativeExtensions.debugMarker           = true;
     mNativeExtensions.robustness =
         !IsSwiftshader(mPhysicalDeviceProperties.vendorID, mPhysicalDeviceProperties.deviceID) &&
         !IsARM(mPhysicalDeviceProperties.vendorID);

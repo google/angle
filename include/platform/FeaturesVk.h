@@ -369,6 +369,13 @@ struct FeaturesVk : FeatureSetBase
         "force_max_uniform_buffer_size_16K", FeatureCategory::VulkanWorkarounds,
         "Force max uniform buffer size to 16K on some device due to bug", &members,
         "https://issuetracker.google.com/161903006"};
+
+    // Swiftshader on mac fails to initialize WebGL context when EXT_multisampled_render_to_texture
+    // is used by Chromium.
+    // http://anglebug.com/4937
+    Feature enableMultisampledRenderToTexture = {
+        "enable_multisampled_render_to_texture", FeatureCategory::VulkanWorkarounds,
+        "Expose EXT_multisampled_render_to_texture", &members, "http://anglebug.com/4937"};
 };
 
 inline FeaturesVk::FeaturesVk()  = default;
