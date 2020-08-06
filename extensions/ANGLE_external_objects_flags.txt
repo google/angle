@@ -223,9 +223,9 @@ Samplers)
         storage of the texture based on <createFlags> and <usageFlags> as the
         corresonding VK_IMAGE_CREATE_* and VK_IMAGE_USAGE_* flags would have on
         a Vulkan image respectively.  See tables 8.17 and 8.18 for the mapping
-	between the GL and Vulkan flags.  It is undefined behavior if the
-	application provides create and usage flags that are not identical to
-	those used to create the Vulkan image."
+        between the GL and Vulkan flags.  It is undefined behavior if the
+        application provides create and usage flags that are not identical to
+        those used to create the Vulkan image."
 
         Table 8.17: Create flags and corresponding Vulkan Image Create Flags
 
@@ -298,7 +298,7 @@ Issues
 
         RESOLVED: No.  The application has already created an image with these
         flags in Vulkan, so the GL implementation can assume they are valid.
-	Validating this is expensive and unnecessary in almost all applications.
+        Validating this is expensive and unnecessary in almost all applications.
 
 Revision History
 

@@ -9,7 +9,9 @@
 
 #include "libANGLE/Context.h"
 #include "libANGLE/ErrorStrings.h"
+#include "libANGLE/MemoryObject.h"
 #include "libANGLE/validationES.h"
+#include "libANGLE/validationES2.h"
 #include "libANGLE/validationES32.h"
 
 namespace gl
@@ -38,6 +40,39 @@ bool ValidateGetImageFormatAndType(const Context *context, ObjectT *obj, GLenum 
     // Format/type combinations are not yet validated.
 
     return true;
+}
+
+bool IsValidImageLayout(ImageLayout layout)
+{
+    switch (layout)
+    {
+        case ImageLayout::Undefined:
+        case ImageLayout::General:
+        case ImageLayout::ColorAttachment:
+        case ImageLayout::DepthStencilAttachment:
+        case ImageLayout::DepthStencilReadOnlyAttachment:
+        case ImageLayout::ShaderReadOnly:
+        case ImageLayout::TransferSrc:
+        case ImageLayout::TransferDst:
+        case ImageLayout::DepthReadOnlyStencilAttachment:
+        case ImageLayout::DepthAttachmentStencilReadOnly:
+            return true;
+
+        default:
+            return false;
+    }
+}
+
+bool IsValidMemoryObjectParamater(const Context *context, GLenum pname)
+{
+    switch (pname)
+    {
+        case GL_DEDICATED_MEMORY_OBJECT_EXT:
+            return true;
+
+        default:
+            return false;
+    }
 }
 
 }  // namespace
@@ -511,6 +546,400 @@ bool ValidateGetInteger64vEXT(const Context *context, GLenum pname, const GLint6
     if (!ValidateStateQuery(context, pname, &nativeType, &numParams))
     {
         return false;
+    }
+
+    return true;
+}
+
+bool ValidateBufferStorageMemEXT(const Context *context,
+                                 TextureType target,
+                                 GLsizeiptr size,
+                                 MemoryObjectID memory,
+                                 GLuint64 offset)
+{
+    if (!context->getExtensions().memoryObject)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    UNIMPLEMENTED();
+    return false;
+}
+
+bool ValidateCreateMemoryObjectsEXT(const Context *context,
+                                    GLsizei n,
+                                    const MemoryObjectID *memoryObjects)
+{
+    if (!context->getExtensions().memoryObject)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    return ValidateGenOrDelete(context, n);
+}
+
+bool ValidateDeleteMemoryObjectsEXT(const Context *context,
+                                    GLsizei n,
+                                    const MemoryObjectID *memoryObjects)
+{
+    if (!context->getExtensions().memoryObject)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    return ValidateGenOrDelete(context, n);
+}
+
+bool ValidateGetMemoryObjectParameterivEXT(const Context *context,
+                                           MemoryObjectID memoryObject,
+                                           GLenum pname,
+                                           const GLint *params)
+{
+    if (!context->getExtensions().memoryObject)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    const MemoryObject *memory = context->getMemoryObject(memoryObject);
+    if (memory == nullptr)
+    {
+        context->validationError(GL_INVALID_VALUE, kInvalidMemoryObject);
+    }
+
+    if (!IsValidMemoryObjectParamater(context, pname))
+    {
+        context->validationError(GL_INVALID_ENUM, kInvalidMemoryObjectParameter);
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateGetUnsignedBytevEXT(const Context *context, GLenum pname, const GLubyte *data)
+{
+    if (!context->getExtensions().memoryObject && !context->getExtensions().semaphore)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    UNIMPLEMENTED();
+    return false;
+}
+
+bool ValidateGetUnsignedBytei_vEXT(const Context *context,
+                                   GLenum target,
+                                   GLuint index,
+                                   const GLubyte *data)
+{
+    if (!context->getExtensions().memoryObject && !context->getExtensions().semaphore)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    UNIMPLEMENTED();
+    return false;
+}
+
+bool ValidateIsMemoryObjectEXT(const Context *context, MemoryObjectID memoryObject)
+{
+    if (!context->getExtensions().memoryObject)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateMemoryObjectParameterivEXT(const Context *context,
+                                        MemoryObjectID memoryObject,
+                                        GLenum pname,
+                                        const GLint *params)
+{
+    if (!context->getExtensions().memoryObject)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    const MemoryObject *memory = context->getMemoryObject(memoryObject);
+    if (memory == nullptr)
+    {
+        context->validationError(GL_INVALID_VALUE, kInvalidMemoryObject);
+        return false;
+    }
+
+    if (memory->isImmutable())
+    {
+        context->validationError(GL_INVALID_OPERATION, kImmutableMemoryObject);
+        return false;
+    }
+
+    if (!IsValidMemoryObjectParamater(context, pname))
+    {
+        context->validationError(GL_INVALID_ENUM, kInvalidMemoryObjectParameter);
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateTexStorageMem2DEXT(const Context *context,
+                                TextureType target,
+                                GLsizei levels,
+                                GLenum internalFormat,
+                                GLsizei width,
+                                GLsizei height,
+                                MemoryObjectID memory,
+                                GLuint64 offset)
+{
+    if (!context->getExtensions().memoryObject)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    if (context->getClientMajorVersion() < 3)
+    {
+        return ValidateES2TexStorageParametersBase(context, target, levels, internalFormat, width,
+                                                   height);
+    }
+
+    ASSERT(context->getClientMajorVersion() >= 3);
+    return ValidateES3TexStorage2DParameters(context, target, levels, internalFormat, width, height,
+                                             1);
+}
+
+bool ValidateTexStorageMem3DEXT(const Context *context,
+                                TextureType target,
+                                GLsizei levels,
+                                GLenum internalFormat,
+                                GLsizei width,
+                                GLsizei height,
+                                GLsizei depth,
+                                MemoryObjectID memory,
+                                GLuint64 offset)
+{
+    if (!context->getExtensions().memoryObject)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    UNIMPLEMENTED();
+    return false;
+}
+
+bool ValidateImportMemoryFdEXT(const Context *context,
+                               MemoryObjectID memory,
+                               GLuint64 size,
+                               HandleType handleType,
+                               GLint fd)
+{
+    if (!context->getExtensions().memoryObjectFd)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    switch (handleType)
+    {
+        case HandleType::OpaqueFd:
+            break;
+        default:
+            context->validationError(GL_INVALID_ENUM, kInvalidHandleType);
+            return false;
+    }
+
+    return true;
+}
+
+bool ValidateImportMemoryZirconHandleANGLE(const Context *context,
+                                           MemoryObjectID memory,
+                                           GLuint64 size,
+                                           HandleType handleType,
+                                           GLuint handle)
+{
+    if (!context->getExtensions().memoryObjectFuchsiaANGLE)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    switch (handleType)
+    {
+        case HandleType::ZirconVmo:
+            break;
+        default:
+            context->validationError(GL_INVALID_ENUM, kInvalidHandleType);
+            return false;
+    }
+
+    return true;
+}
+
+bool ValidateDeleteSemaphoresEXT(const Context *context, GLsizei n, const SemaphoreID *semaphores)
+{
+    if (!context->getExtensions().semaphore)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    return ValidateGenOrDelete(context, n);
+}
+
+bool ValidateGenSemaphoresEXT(const Context *context, GLsizei n, const SemaphoreID *semaphores)
+{
+    if (!context->getExtensions().semaphore)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    return ValidateGenOrDelete(context, n);
+}
+
+bool ValidateGetSemaphoreParameterui64vEXT(const Context *context,
+                                           SemaphoreID semaphore,
+                                           GLenum pname,
+                                           const GLuint64 *params)
+{
+    if (!context->getExtensions().semaphore)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    UNIMPLEMENTED();
+    return false;
+}
+
+bool ValidateIsSemaphoreEXT(const Context *context, SemaphoreID semaphore)
+{
+    if (!context->getExtensions().semaphore)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateSemaphoreParameterui64vEXT(const Context *context,
+                                        SemaphoreID semaphore,
+                                        GLenum pname,
+                                        const GLuint64 *params)
+{
+    if (!context->getExtensions().semaphore)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    UNIMPLEMENTED();
+    return false;
+}
+
+bool ValidateSignalSemaphoreEXT(const Context *context,
+                                SemaphoreID semaphore,
+                                GLuint numBufferBarriers,
+                                const BufferID *buffers,
+                                GLuint numTextureBarriers,
+                                const TextureID *textures,
+                                const GLenum *dstLayouts)
+{
+    if (!context->getExtensions().semaphore)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    for (GLuint i = 0; i < numTextureBarriers; ++i)
+    {
+        if (!IsValidImageLayout(FromGLenum<ImageLayout>(dstLayouts[i])))
+        {
+            context->validationError(GL_INVALID_ENUM, kInvalidImageLayout);
+            return false;
+        }
+    }
+
+    return true;
+}
+
+bool ValidateWaitSemaphoreEXT(const Context *context,
+                              SemaphoreID semaphore,
+                              GLuint numBufferBarriers,
+                              const BufferID *buffers,
+                              GLuint numTextureBarriers,
+                              const TextureID *textures,
+                              const GLenum *srcLayouts)
+{
+    if (!context->getExtensions().semaphore)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    for (GLuint i = 0; i < numTextureBarriers; ++i)
+    {
+        if (!IsValidImageLayout(FromGLenum<ImageLayout>(srcLayouts[i])))
+        {
+            context->validationError(GL_INVALID_ENUM, kInvalidImageLayout);
+            return false;
+        }
+    }
+
+    return true;
+}
+
+bool ValidateImportSemaphoreFdEXT(const Context *context,
+                                  SemaphoreID semaphore,
+                                  HandleType handleType,
+                                  GLint fd)
+{
+    if (!context->getExtensions().semaphoreFd)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    switch (handleType)
+    {
+        case HandleType::OpaqueFd:
+            break;
+        default:
+            context->validationError(GL_INVALID_ENUM, kInvalidHandleType);
+            return false;
+    }
+
+    return true;
+}
+
+bool ValidateImportSemaphoreZirconHandleANGLE(const Context *context,
+                                              SemaphoreID semaphore,
+                                              HandleType handleType,
+                                              GLuint handle)
+{
+    if (!context->getExtensions().semaphoreFuchsiaANGLE)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    switch (handleType)
+    {
+        case HandleType::ZirconEvent:
+            break;
+        default:
+            context->validationError(GL_INVALID_ENUM, kInvalidHandleType);
+            return false;
     }
 
     return true;
