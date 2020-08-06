@@ -503,17 +503,38 @@ class ContextVk : public ContextImpl, public vk::Context
         return onBufferWrite(VK_ACCESS_SHADER_WRITE_BIT, vk::PipelineStage::ComputeShader, buffer);
     }
 
-    angle::Result onImageRead(VkImageAspectFlags aspectFlags,
-                              vk::ImageLayout imageLayout,
-                              vk::ImageHelper *image);
+    angle::Result onImageTransferRead(VkImageAspectFlags aspectFlags, vk::ImageHelper *image)
+    {
+        return onImageRead(aspectFlags, vk::ImageLayout::TransferSrc, image);
+    }
+    angle::Result onImageTransferWrite(VkImageAspectFlags aspectFlags, vk::ImageHelper *image)
+    {
+        return onImageWrite(aspectFlags, vk::ImageLayout::TransferDst, image);
+    }
+    angle::Result onImageComputeShaderRead(VkImageAspectFlags aspectFlags, vk::ImageHelper *image)
+    {
+        return onImageRead(aspectFlags, vk::ImageLayout::ComputeShaderReadOnly, image);
+    }
+    angle::Result onImageComputeShaderWrite(VkImageAspectFlags aspectFlags, vk::ImageHelper *image)
+    {
+        return onImageWrite(aspectFlags, vk::ImageLayout::ComputeShaderWrite, image);
+    }
 
-    angle::Result onImageWrite(VkImageAspectFlags aspectFlags,
+    void onImageRenderPassRead(VkImageAspectFlags aspectFlags,
                                vk::ImageLayout imageLayout,
-                               vk::ImageHelper *image);
+                               vk::ImageHelper *image)
+    {
+        ASSERT(mRenderPassCommands->started());
+        mRenderPassCommands->imageRead(&mResourceUseList, aspectFlags, imageLayout, image);
+    }
 
-    void onRenderPassImageWrite(VkImageAspectFlags aspectFlags,
+    void onImageRenderPassWrite(VkImageAspectFlags aspectFlags,
                                 vk::ImageLayout imageLayout,
-                                vk::ImageHelper *image);
+                                vk::ImageHelper *image)
+    {
+        ASSERT(mRenderPassCommands->started());
+        mRenderPassCommands->imageWrite(&mResourceUseList, aspectFlags, imageLayout, image);
+    }
 
     angle::Result getOutsideRenderPassCommandBuffer(vk::CommandBuffer **commandBufferOut)
     {
@@ -876,6 +897,13 @@ class ContextVk : public ContextImpl, public vk::Context
     angle::Result onBufferWrite(VkAccessFlags writeAccessType,
                                 vk::PipelineStage writeStage,
                                 vk::BufferHelper *buffer);
+
+    angle::Result onImageRead(VkImageAspectFlags aspectFlags,
+                              vk::ImageLayout imageLayout,
+                              vk::ImageHelper *image);
+    angle::Result onImageWrite(VkImageAspectFlags aspectFlags,
+                               vk::ImageLayout imageLayout,
+                               vk::ImageHelper *image);
 
     void initIndexTypeMap();
 

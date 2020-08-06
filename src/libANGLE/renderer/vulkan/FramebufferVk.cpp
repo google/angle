@@ -419,8 +419,7 @@ angle::Result FramebufferVk::clearImpl(const gl::Context *context,
         vk::ImageHelper *image         = &depthStencilRT->getImageForWrite();
 
         vk::CommandBuffer *commandBuffer;
-        ANGLE_TRY(
-            contextVk->onImageWrite(image->getAspectFlags(), vk::ImageLayout::TransferDst, image));
+        ANGLE_TRY(contextVk->onImageTransferWrite(image->getAspectFlags(), image));
         ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(&commandBuffer));
 
         VkImageSubresourceRange range;
@@ -796,8 +795,8 @@ angle::Result FramebufferVk::blitWithCommand(ContextVk *contextVk,
     }
 
     vk::CommandBuffer *commandBuffer = nullptr;
-    ANGLE_TRY(contextVk->onImageRead(imageAspectMask, vk::ImageLayout::TransferSrc, srcImage));
-    ANGLE_TRY(contextVk->onImageWrite(imageAspectMask, vk::ImageLayout::TransferDst, dstImage));
+    ANGLE_TRY(contextVk->onImageTransferRead(imageAspectMask, srcImage));
+    ANGLE_TRY(contextVk->onImageTransferWrite(imageAspectMask, dstImage));
     ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(&commandBuffer));
 
     VkImageBlit blit                   = {};
@@ -1204,8 +1203,7 @@ angle::Result FramebufferVk::resolveColorWithCommand(ContextVk *contextVk,
                                                      vk::ImageHelper *srcImage)
 {
     vk::CommandBuffer *commandBuffer = nullptr;
-    ANGLE_TRY(
-        contextVk->onImageRead(VK_IMAGE_ASPECT_COLOR_BIT, vk::ImageLayout::TransferSrc, srcImage));
+    ANGLE_TRY(contextVk->onImageTransferRead(VK_IMAGE_ASPECT_COLOR_BIT, srcImage));
 
     VkImageResolve resolveRegion                = {};
     resolveRegion.srcSubresource.aspectMask     = VK_IMAGE_ASPECT_COLOR_BIT;
@@ -1227,8 +1225,8 @@ angle::Result FramebufferVk::resolveColorWithCommand(ContextVk *contextVk,
     for (size_t colorIndexGL : mState.getEnabledDrawBuffers())
     {
         RenderTargetVk *drawRenderTarget = mRenderTargetCache.getColors()[colorIndexGL];
-        ANGLE_TRY(contextVk->onImageWrite(VK_IMAGE_ASPECT_COLOR_BIT, vk::ImageLayout::TransferDst,
-                                          &drawRenderTarget->getImageForWrite()));
+        ANGLE_TRY(contextVk->onImageTransferWrite(VK_IMAGE_ASPECT_COLOR_BIT,
+                                                  &drawRenderTarget->getImageForWrite()));
         ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(&commandBuffer));
 
         resolveRegion.dstSubresource.mipLevel       = drawRenderTarget->getLevelIndex();
@@ -2120,14 +2118,6 @@ angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
         colorAttachmentCount++;
     }
 
-    // Transition the images to the correct layout (through onColorDraw) after the
-    // resolve-to-multisampled copies are done.
-    for (size_t colorIndexGL : mState.getEnabledDrawBuffers())
-    {
-        RenderTargetVk *colorRenderTarget = colorRenderTargets[colorIndexGL];
-        ANGLE_TRY(colorRenderTarget->onColorDraw(contextVk));
-    }
-
     // Depth/stencil attachment.
     uint32_t depthStencilAttachmentIndex     = vk::kInvalidAttachmentIndex;
     RenderTargetVk *depthStencilRenderTarget = getDepthStencilRenderTarget();
@@ -2208,17 +2198,30 @@ angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
         renderPassAttachmentOps.setOps(depthStencilAttachmentIndex, depthLoadOp, depthStoreOp);
         renderPassAttachmentOps.setStencilOps(depthStencilAttachmentIndex, stencilLoadOp,
                                               stencilStoreOp);
+    }
 
+    ANGLE_TRY(contextVk->flushAndBeginRenderPass(
+        *framebuffer, renderArea, mRenderPassDesc, renderPassAttachmentOps,
+        depthStencilAttachmentIndex, packedClearValues, commandBufferOut));
+
+    // Transition the images to the correct layout (through onColorDraw) after the
+    // resolve-to-multisampled copies are done.
+    for (size_t colorIndexGL : mState.getEnabledDrawBuffers())
+    {
+        RenderTargetVk *colorRenderTarget = colorRenderTargets[colorIndexGL];
+        colorRenderTarget->onColorDraw(contextVk);
+    }
+
+    if (depthStencilRenderTarget)
+    {
         // This must be called after hasDefinedContent() since it will set content to valid. We are
         // tracking content valid very loosely here that as long as it is attached, it assumes will
         // have valid content. The only time it has undefined content is between swap and
         // startNewRenderPass
-        ANGLE_TRY(depthStencilRenderTarget->onDepthStencilDraw(contextVk));
+        depthStencilRenderTarget->onDepthStencilDraw(contextVk);
     }
 
-    return contextVk->flushAndBeginRenderPass(*framebuffer, renderArea, mRenderPassDesc,
-                                              renderPassAttachmentOps, depthStencilAttachmentIndex,
-                                              packedClearValues, commandBufferOut);
+    return angle::Result::Continue;
 }
 
 void FramebufferVk::updateActiveColorMasks(size_t colorIndexGL, bool r, bool g, bool b, bool a)

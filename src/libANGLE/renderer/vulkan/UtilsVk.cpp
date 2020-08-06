@@ -1401,12 +1401,10 @@ angle::Result UtilsVk::blitResolveImpl(ContextVk *contextVk,
 
     pipelineDesc.setScissor(gl_vk::GetRect(params.blitArea));
 
-    // Change source layout outside render pass
-    ANGLE_TRY(contextVk->onImageRead(src->getAspectFlags(), vk::ImageLayout::FragmentShaderReadOnly,
-                                     src));
-
     vk::CommandBuffer *commandBuffer;
     ANGLE_TRY(framebuffer->startNewRenderPass(contextVk, params.blitArea, &commandBuffer));
+    contextVk->onImageRenderPassRead(src->getAspectFlags(), vk::ImageLayout::FragmentShaderReadOnly,
+                                     src);
 
     VkDescriptorImageInfo imageInfos[2] = {};
 
@@ -1589,10 +1587,9 @@ angle::Result UtilsVk::stencilBlitResolveNoShaderExport(ContextVk *contextVk,
 
     vk::CommandBuffer *commandBuffer;
     // Change source layout prior to computation.
+    ANGLE_TRY(contextVk->onImageComputeShaderRead(src->getAspectFlags(), src));
     ANGLE_TRY(
-        contextVk->onImageRead(src->getAspectFlags(), vk::ImageLayout::ComputeShaderReadOnly, src));
-    ANGLE_TRY(contextVk->onImageWrite(depthStencilImage->getAspectFlags(),
-                                      vk::ImageLayout::TransferDst, depthStencilImage));
+        contextVk->onImageTransferWrite(depthStencilImage->getAspectFlags(), depthStencilImage));
     ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(&commandBuffer));
 
     // Blit/resolve stencil into the buffer.
@@ -1819,15 +1816,15 @@ angle::Result UtilsVk::copyImage(ContextVk *contextVk,
     VkRect2D scissor = gl_vk::GetRect(renderArea);
     pipelineDesc.setScissor(scissor);
 
-    // Change source layout outside render pass
-    ANGLE_TRY(contextVk->onImageRead(VK_IMAGE_ASPECT_COLOR_BIT,
-                                     vk::ImageLayout::FragmentShaderReadOnly, src));
-    ANGLE_TRY(
-        contextVk->onImageWrite(VK_IMAGE_ASPECT_COLOR_BIT, vk::ImageLayout::ColorAttachment, dest));
-
     vk::CommandBuffer *commandBuffer;
     ANGLE_TRY(
         startRenderPass(contextVk, dest, destView, renderPassDesc, renderArea, &commandBuffer));
+
+    // Change source layout inside render pass.
+    contextVk->onImageRenderPassRead(VK_IMAGE_ASPECT_COLOR_BIT,
+                                     vk::ImageLayout::FragmentShaderReadOnly, src);
+    contextVk->onImageRenderPassWrite(VK_IMAGE_ASPECT_COLOR_BIT, vk::ImageLayout::ColorAttachment,
+                                      dest);
 
     VkDescriptorImageInfo imageInfo = {};
     imageInfo.imageView             = srcView->getHandle();
@@ -1971,8 +1968,7 @@ angle::Result UtilsVk::cullOverlayWidgets(ContextVk *contextVk,
 
     vk::CommandBuffer *commandBuffer;
     ANGLE_TRY(contextVk->onBufferComputeShaderRead(enabledWidgetsBuffer));
-    ANGLE_TRY(contextVk->onImageWrite(VK_IMAGE_ASPECT_COLOR_BIT,
-                                      vk::ImageLayout::ComputeShaderWrite, dest));
+    ANGLE_TRY(contextVk->onImageComputeShaderWrite(VK_IMAGE_ASPECT_COLOR_BIT, dest));
     ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(&commandBuffer));
 
     VkDescriptorImageInfo imageInfo = {};
@@ -2041,12 +2037,9 @@ angle::Result UtilsVk::drawOverlay(ContextVk *contextVk,
                                     &descriptorSet));
 
     vk::CommandBuffer *commandBuffer;
-    ANGLE_TRY(contextVk->onImageWrite(VK_IMAGE_ASPECT_COLOR_BIT,
-                                      vk::ImageLayout::ComputeShaderWrite, dest));
-    ANGLE_TRY(contextVk->onImageRead(VK_IMAGE_ASPECT_COLOR_BIT,
-                                     vk::ImageLayout::ComputeShaderReadOnly, culledWidgets));
-    ANGLE_TRY(contextVk->onImageRead(VK_IMAGE_ASPECT_COLOR_BIT,
-                                     vk::ImageLayout::ComputeShaderReadOnly, font));
+    ANGLE_TRY(contextVk->onImageComputeShaderWrite(VK_IMAGE_ASPECT_COLOR_BIT, dest));
+    ANGLE_TRY(contextVk->onImageComputeShaderRead(VK_IMAGE_ASPECT_COLOR_BIT, culledWidgets));
+    ANGLE_TRY(contextVk->onImageComputeShaderRead(VK_IMAGE_ASPECT_COLOR_BIT, font));
     ANGLE_TRY(contextVk->onBufferComputeShaderRead(textWidgetsBuffer));
     ANGLE_TRY(contextVk->onBufferComputeShaderRead(graphWidgetsBuffer));
 

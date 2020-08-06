@@ -91,42 +91,38 @@ vk::ImageViewSubresourceSerial RenderTargetVk::getResolveSubresourceSerial() con
     return getSubresourceSerialImpl(mResolveImageViews);
 }
 
-angle::Result RenderTargetVk::onColorDraw(ContextVk *contextVk)
+void RenderTargetVk::onColorDraw(ContextVk *contextVk)
 {
     ASSERT(!mImage->getFormat().actualImageFormat().hasDepthOrStencilBits());
 
-    contextVk->onRenderPassImageWrite(VK_IMAGE_ASPECT_COLOR_BIT, vk::ImageLayout::ColorAttachment,
+    contextVk->onImageRenderPassWrite(VK_IMAGE_ASPECT_COLOR_BIT, vk::ImageLayout::ColorAttachment,
                                       mImage);
     if (mResolveImage)
     {
-        contextVk->onRenderPassImageWrite(VK_IMAGE_ASPECT_COLOR_BIT,
+        contextVk->onImageRenderPassWrite(VK_IMAGE_ASPECT_COLOR_BIT,
                                           vk::ImageLayout::ColorAttachment, mResolveImage);
     }
     retainImageViews(contextVk);
 
     mContentDefined = true;
-
-    return angle::Result::Continue;
 }
 
-angle::Result RenderTargetVk::onDepthStencilDraw(ContextVk *contextVk)
+void RenderTargetVk::onDepthStencilDraw(ContextVk *contextVk)
 {
     ASSERT(mImage->getFormat().actualImageFormat().hasDepthOrStencilBits());
 
     const angle::Format &format    = mImage->getFormat().actualImageFormat();
     VkImageAspectFlags aspectFlags = vk::GetDepthStencilAspectFlags(format);
 
-    contextVk->onRenderPassImageWrite(aspectFlags, vk::ImageLayout::DepthStencilAttachment, mImage);
+    contextVk->onImageRenderPassWrite(aspectFlags, vk::ImageLayout::DepthStencilAttachment, mImage);
     if (mResolveImage)
     {
-        contextVk->onRenderPassImageWrite(aspectFlags, vk::ImageLayout::DepthStencilAttachment,
+        contextVk->onImageRenderPassWrite(aspectFlags, vk::ImageLayout::DepthStencilAttachment,
                                           mResolveImage);
     }
     retainImageViews(contextVk);
 
     mContentDefined = true;
-
-    return angle::Result::Continue;
 }
 
 vk::ImageHelper &RenderTargetVk::getImageForRenderPass()

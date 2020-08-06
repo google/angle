@@ -3400,7 +3400,7 @@ void ImageHelper::Copy(ImageHelper *srcImage,
 angle::Result ImageHelper::generateMipmapsWithBlit(ContextVk *contextVk, GLuint maxLevel)
 {
     CommandBuffer *commandBuffer = nullptr;
-    ANGLE_TRY(contextVk->onImageWrite(VK_IMAGE_ASPECT_COLOR_BIT, ImageLayout::TransferDst, this));
+    ANGLE_TRY(contextVk->onImageTransferWrite(VK_IMAGE_ASPECT_COLOR_BIT, this));
     ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(&commandBuffer));
 
     // We are able to use blitImage since the image format we are using supports it.
@@ -4244,7 +4244,7 @@ angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
     uint64_t subresourceUploadsInProgress            = 0;
 
     // Start in TransferDst.
-    ANGLE_TRY(contextVk->onImageWrite(aspectFlags, ImageLayout::TransferDst, this));
+    ANGLE_TRY(contextVk->onImageTransferWrite(aspectFlags, this));
 
     for (SubresourceUpdate &update : mSubresourceUpdates)
     {
@@ -4342,8 +4342,7 @@ angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
         }
         else
         {
-            ANGLE_TRY(
-                contextVk->onImageRead(aspectFlags, ImageLayout::TransferSrc, update.image.image));
+            ANGLE_TRY(contextVk->onImageTransferRead(aspectFlags, update.image.image));
 
             commandBuffer->copyImage(update.image.image->getImage(),
                                      update.image.image->getCurrentLayout(), mImage,
@@ -4545,7 +4544,7 @@ angle::Result ImageHelper::copyImageDataToBuffer(ContextVk *contextVk,
                                     nullptr));
 
     CommandBuffer *commandBuffer = nullptr;
-    ANGLE_TRY(contextVk->onImageRead(aspectFlags, ImageLayout::TransferSrc, this));
+    ANGLE_TRY(contextVk->onImageTransferRead(aspectFlags, this));
     ANGLE_TRY(contextVk->onBufferTransferWrite(*bufferOut));
     ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(&commandBuffer));
 
@@ -4749,10 +4748,9 @@ angle::Result ImageHelper::readPixels(ContextVk *contextVk,
     CommandBuffer *commandBuffer;
     if (isMultisampled)
     {
-        ANGLE_TRY(contextVk->onImageWrite(layoutChangeAspectFlags, ImageLayout::TransferDst,
-                                          &resolvedImage.get()));
+        ANGLE_TRY(contextVk->onImageTransferWrite(layoutChangeAspectFlags, &resolvedImage.get()));
     }
-    ANGLE_TRY(contextVk->onImageRead(layoutChangeAspectFlags, ImageLayout::TransferSrc, this));
+    ANGLE_TRY(contextVk->onImageTransferRead(layoutChangeAspectFlags, this));
     ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(&commandBuffer));
 
     const angle::Format *readFormat = &mFormat->actualImageFormat();
@@ -4800,8 +4798,7 @@ angle::Result ImageHelper::readPixels(ContextVk *contextVk,
 
         resolve(&resolvedImage.get(), resolveRegion, commandBuffer);
 
-        ANGLE_TRY(contextVk->onImageRead(layoutChangeAspectFlags, ImageLayout::TransferSrc,
-                                         &resolvedImage.get()));
+        ANGLE_TRY(contextVk->onImageTransferRead(layoutChangeAspectFlags, &resolvedImage.get()));
 
         // Make the resolved image the target of buffer copy.
         src                           = &resolvedImage.get();

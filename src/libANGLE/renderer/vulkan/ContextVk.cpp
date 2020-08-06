@@ -4520,13 +4520,6 @@ angle::Result ContextVk::endRenderPass()
     return angle::Result::Continue;
 }
 
-void ContextVk::onRenderPassImageWrite(VkImageAspectFlags aspectFlags,
-                                       vk::ImageLayout imageLayout,
-                                       vk::ImageHelper *image)
-{
-    mRenderPassCommands->imageWrite(&mResourceUseList, aspectFlags, imageLayout, image);
-}
-
 void ContextVk::getNextAvailableCommandBuffer(vk::CommandBufferHelper **commandBuffer,
                                               bool hasRenderPass)
 {
