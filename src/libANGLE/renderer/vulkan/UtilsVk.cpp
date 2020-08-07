@@ -67,14 +67,13 @@ uint32_t GetConvertVertexFlags(const UtilsVk::ConvertVertexParameters &params)
 
     // Assert on the types to make sure the shader supports its.  These are based on
     // ConvertVertex_comp::Conversion values.
-    ASSERT(!destIsSint || srcIsSint);           // If destination is sint, src must be sint too
-    ASSERT(!destIsUint || srcIsUint);           // If destination is uint, src must be uint too
-    ASSERT(!srcIsFixed || destIsFloat);         // If source is fixed, dest must be float
-    ASSERT(srcIsHalfFloat == destIsHalfFloat);  // Both src and dest are half float or neither
+    ASSERT(!destIsSint || srcIsSint);    // If destination is sint, src must be sint too
+    ASSERT(!destIsUint || srcIsUint);    // If destination is uint, src must be uint too
+    ASSERT(!srcIsFixed || destIsFloat);  // If source is fixed, dest must be float
 
     // One of each bool set must be true
     ASSERT(srcIsSint || srcIsUint || srcIsSnorm || srcIsUnorm || srcIsFixed || srcIsFloat);
-    ASSERT(destIsSint || destIsUint || destIsFloat);
+    ASSERT(destIsSint || destIsUint || destIsFloat || destIsHalfFloat);
 
     // We currently don't have any big-endian devices in the list of supported platforms.  The
     // shader is capable of supporting big-endian architectures, but the relevant flag (IsBigEndian)
@@ -89,6 +88,10 @@ uint32_t GetConvertVertexFlags(const UtilsVk::ConvertVertexParameters &params)
     {
         // Note that HalfFloat conversion uses the same shader as Uint.
         flags |= ConvertVertex_comp::kUintToUint;
+    }
+    else if (srcIsFloat && destIsHalfFloat)
+    {
+        flags |= ConvertVertex_comp::kFloatToHalf;
     }
     else if (srcIsSint && destIsSint)
     {

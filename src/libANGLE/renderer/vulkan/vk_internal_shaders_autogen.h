@@ -86,8 +86,9 @@ enum Conversion
     kUnormToFloat = 0x00000005,
     kFixedToFloat = 0x00000006,
     kFloatToFloat = 0x00000007,
+    kFloatToHalf  = 0x00000008,
 };
-constexpr size_t kArrayLen = 0x00000008;
+constexpr size_t kArrayLen = 0x00000009;
 }  // namespace ConvertVertex_comp
 
 namespace FullScreenQuad_vert

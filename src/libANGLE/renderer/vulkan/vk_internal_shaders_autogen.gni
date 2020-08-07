@@ -53,6 +53,7 @@ angle_vulkan_internal_shaders = [
   "shaders/gen/ConvertVertex.comp.00000005.inc",
   "shaders/gen/ConvertVertex.comp.00000006.inc",
   "shaders/gen/ConvertVertex.comp.00000007.inc",
+  "shaders/gen/ConvertVertex.comp.00000008.inc",
   "shaders/gen/FullScreenQuad.vert.00000000.inc",
   "shaders/gen/GenerateMipmap.comp.00000000.inc",
   "shaders/gen/GenerateMipmap.comp.00000001.inc",

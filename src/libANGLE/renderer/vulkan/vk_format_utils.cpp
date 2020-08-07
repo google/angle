@@ -110,9 +110,14 @@ Format::Format()
       vkImageFormat(VK_FORMAT_UNDEFINED),
       actualBufferFormatID(angle::FormatID::NONE),
       vkBufferFormat(VK_FORMAT_UNDEFINED),
+      actualCompressedBufferFormatID(angle::FormatID::NONE),
+      vkCompressedBufferFormat(VK_FORMAT_UNDEFINED),
       imageInitializerFunction(nullptr),
       textureLoadFunctions(),
+      vertexLoadFunction(nullptr),
+      compressedVertexLoadFunction(nullptr),
       vertexLoadRequiresConversion(false),
+      compressedVertexLoadRequiresConversion(false),
       vkBufferFormatIsPacked(false),
       vkFormatIsInt(false),
       vkFormatIsUnsigned(false)
@@ -145,17 +150,34 @@ void Format::initImageFallback(RendererVk *renderer, const ImageFormatInitInfo *
     imageInitializerFunction = info[i].initializer;
 }
 
-void Format::initBufferFallback(RendererVk *renderer, const BufferFormatInitInfo *info, int numInfo)
+void Format::initBufferFallback(RendererVk *renderer,
+                                const BufferFormatInitInfo *info,
+                                int numInfo,
+                                int compressedStartIndex)
 {
-    size_t skip = renderer->getFeatures().forceFallbackFormat.enabled ? 1 : 0;
-    int i       = FindSupportedFormat(renderer, info, skip, static_cast<uint32_t>(numInfo),
-                                HasFullBufferFormatSupport);
+    {
+        size_t skip = renderer->getFeatures().forceFallbackFormat.enabled ? 1 : 0;
+        int i       = FindSupportedFormat(renderer, info, skip, compressedStartIndex,
+                                    HasFullBufferFormatSupport);
 
-    actualBufferFormatID         = info[i].format;
-    vkBufferFormat               = info[i].vkFormat;
-    vkBufferFormatIsPacked       = info[i].vkFormatIsPacked;
-    vertexLoadFunction           = info[i].vertexLoadFunction;
-    vertexLoadRequiresConversion = info[i].vertexLoadRequiresConversion;
+        actualBufferFormatID         = info[i].format;
+        vkBufferFormat               = info[i].vkFormat;
+        vkBufferFormatIsPacked       = info[i].vkFormatIsPacked;
+        vertexLoadFunction           = info[i].vertexLoadFunction;
+        vertexLoadRequiresConversion = info[i].vertexLoadRequiresConversion;
+    }
+
+    if (renderer->getFeatures().compressVertexData.enabled && compressedStartIndex < numInfo)
+    {
+        int i = FindSupportedFormat(renderer, info, compressedStartIndex, numInfo,
+                                    HasFullBufferFormatSupport);
+
+        actualCompressedBufferFormatID         = info[i].format;
+        vkCompressedBufferFormat               = info[i].vkFormat;
+        vkCompressedBufferFormatIsPacked       = info[i].vkFormatIsPacked;
+        compressedVertexLoadFunction           = info[i].vertexLoadFunction;
+        compressedVertexLoadRequiresConversion = info[i].vertexLoadRequiresConversion;
+    }
 }
 
 size_t Format::getImageCopyBufferAlignment() const
@@ -332,9 +354,9 @@ bool HasNonRenderableTextureFormatSupport(RendererVk *renderer, VkFormat vkForma
            renderer->hasImageFormatFeatureBits(vkFormat, kBitsDepth);
 }
 
-size_t GetVertexInputAlignment(const vk::Format &format)
+size_t GetVertexInputAlignment(const vk::Format &format, bool compressed)
 {
-    const angle::Format &bufferFormat = format.actualBufferFormat();
+    const angle::Format &bufferFormat = format.actualBufferFormat(compressed);
     size_t pixelBytes                 = bufferFormat.pixelBytes;
     return format.vkBufferFormatIsPacked ? pixelBytes : (pixelBytes / bufferFormat.channelCount);
 }

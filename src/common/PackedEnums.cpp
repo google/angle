@@ -200,6 +200,19 @@ bool IsArrayTextureType(TextureType type)
     }
 }
 
+bool IsStaticBufferUsage(BufferUsage useage)
+{
+    switch (useage)
+    {
+        case BufferUsage::StaticCopy:
+        case BufferUsage::StaticDraw:
+        case BufferUsage::StaticRead:
+            return true;
+        default:
+            return false;
+    }
+}
+
 std::ostream &operator<<(std::ostream &os, PrimitiveMode value)
 {
     switch (value)

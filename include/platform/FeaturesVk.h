@@ -408,6 +408,14 @@ struct FeaturesVk : FeatureSetBase
     Feature forceNearestMipFiltering = {"force_nearest_mip_filtering",
                                         FeatureCategory::VulkanWorkarounds,
                                         "Force nearest mip filtering when sampling.", &members};
+
+    // Compress float32 vertices in static buffers to float16 at draw time. ANGLE is non-conformant
+    // if this feature is enabled.
+    angle::Feature compressVertexData = {"compress_vertex_data",
+                                         angle::FeatureCategory::VulkanWorkarounds,
+                                         "Compress vertex data to smaller data types when "
+                                         "possible. Using this feature makes ANGLE non-conformant.",
+                                         &members};
 };
 
 inline FeaturesVk::FeaturesVk()  = default;

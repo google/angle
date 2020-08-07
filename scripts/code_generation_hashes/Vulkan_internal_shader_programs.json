@@ -89,6 +89,8 @@
     "df913989b39699e549ba9089190d358c",
   "src/libANGLE/renderer/vulkan/shaders/gen/ConvertVertex.comp.00000007.inc":
     "c9e0fad17170e97662b0fa0d37919ea3",
+  "src/libANGLE/renderer/vulkan/shaders/gen/ConvertVertex.comp.00000008.inc":
+    "680d2865d4350c8f36fbbdaec1b43682",
   "src/libANGLE/renderer/vulkan/shaders/gen/FullScreenQuad.vert.00000000.inc":
     "3a4ab796f02d3f1c306c92f7da2c68ee",
   "src/libANGLE/renderer/vulkan/shaders/gen/GenerateMipmap.comp.00000000.inc":
@@ -250,9 +252,9 @@
   "src/libANGLE/renderer/vulkan/shaders/src/ConvertIndirectLineLoop.comp.json":
     "c2c79c40b0fbcb4876637aa06e8aa919",
   "src/libANGLE/renderer/vulkan/shaders/src/ConvertVertex.comp":
-    "f63e7c4f738c11f1a1b19023d4515dc4",
+    "537e6cff8f9a0b6acdf1c9be5fdcef7c",
   "src/libANGLE/renderer/vulkan/shaders/src/ConvertVertex.comp.json":
-    "e4a95aae7f216780946e7332d22aa74e",
+    "f2abd98463e46c0af45e8a1a5e5af88f",
   "src/libANGLE/renderer/vulkan/shaders/src/FullScreenQuad.vert":
     "805ec8b2f87d4bd4242dc5b1c58ba3b4",
   "src/libANGLE/renderer/vulkan/shaders/src/GenerateMipmap.comp":
@@ -276,9 +278,9 @@
   "src/libANGLE/renderer/vulkan/shaders/src/OverlayDraw.comp.json":
     "af79e5153c99cdb1e6b551b11bbf7f6b",
   "src/libANGLE/renderer/vulkan/vk_internal_shaders_autogen.cpp":
-    "df9efda2dee207bea8e346f2c9fa824f",
+    "a62caa10b2ec5dc17cc8cbf9094d38f4",
   "src/libANGLE/renderer/vulkan/vk_internal_shaders_autogen.h":
-    "96c6f4b7a06a3b21f3b0ceea661014ef",
+    "a18cac1ffca9735480a2b9dea67b73c0",
   "tools/glslang/glslang_validator.exe.sha1":
     "17e862cc6f462fecbf50b24ed6544a27",
   "tools/glslang/glslang_validator.sha1":
