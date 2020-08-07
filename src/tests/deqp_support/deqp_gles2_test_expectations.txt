@@ -495,3 +495,12 @@
 // Globally disable Metal testing on Intel & NVIDIA for now
 4235 METAL INTEL : dEQP-GLES2.* = SKIP
 4235 METAL NVIDIA : dEQP-GLES2.* = SKIP
+
+4944 VULKAN ANDROID : dEQP-GLES2.functional.fbo.render.recreate_colorbuffer.rebind_rbo_rgba4 = FAIL
+4944 VULKAN ANDROID : dEQP-GLES2.functional.fbo.render.recreate_colorbuffer.rebind_rbo_rgba4_stencil_index8 = FAIL
+4944 VULKAN ANDROID : dEQP-GLES2.functional.fbo.render.recreate_colorbuffer.no_rebind_rbo_rgba4 = FAIL
+4944 VULKAN ANDROID : dEQP-GLES2.functional.fbo.render.recreate_colorbuffer.no_rebind_rbo_rgba4_stencil_index8 = FAIL
+4944 VULKAN ANDROID : dEQP-GLES2.functional.fbo.render.recreate_depthbuffer.rebind_rbo_rgba4_depth_component16 = FAIL
+4944 VULKAN ANDROID : dEQP-GLES2.functional.fbo.render.recreate_depthbuffer.no_rebind_rbo_rgba4_depth_component16 = FAIL
+4944 VULKAN ANDROID : dEQP-GLES2.functional.fbo.render.recreate_stencilbuffer.rebind_rbo_rgba4_stencil_index8 = FAIL
+4944 VULKAN ANDROID : dEQP-GLES2.functional.fbo.render.recreate_stencilbuffer.no_rebind_rbo_rgba4_stencil_index8 = FAIL
