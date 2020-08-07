@@ -10,7 +10,7 @@
   "src/tests/perf_tests/restricted_traces/manhattan_10.tar.gz.sha1":
     "752781119592a190cc02b773adf38fc3",
   "src/tests/perf_tests/restricted_traces/nba2k20_800.tar.gz.sha1":
-    "8116f333229108515aa4824d1c922d0b",
+    "03df0dcf41c18bc59edfc0b088ca4a87",
   "src/tests/perf_tests/restricted_traces/restricted_traces.json":
     "aefeb34167e491c2b869b7fe8c51e3ca",
   "src/tests/perf_tests/restricted_traces/restricted_traces_autogen.cpp":
