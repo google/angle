@@ -1916,6 +1916,13 @@ void Framebuffer::onSubjectStateChange(angle::SubjectIndex index, angle::Subject
             return;
         }
 
+        // This can be triggered by external changes to the default framebuffer.
+        if (message == angle::SubjectMessage::SurfaceChanged)
+        {
+            onStateChange(angle::SubjectMessage::SurfaceChanged);
+            return;
+        }
+
         // This can be triggered by the GL back-end TextureGL class.
         ASSERT(message == angle::SubjectMessage::DirtyBitsFlagged);
         return;

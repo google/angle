@@ -621,8 +621,19 @@ Error Surface::getFrameTimestamps(EGLuint64KHR frameId,
 
 void Surface::onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMessage message)
 {
-    ASSERT(message == angle::SubjectMessage::SubjectChanged && index == kSurfaceImplSubjectIndex);
-    onStateChange(angle::SubjectMessage::ContentsChanged);
+    ASSERT(index == kSurfaceImplSubjectIndex);
+    switch (message)
+    {
+        case angle::SubjectMessage::SubjectChanged:
+            onStateChange(angle::SubjectMessage::ContentsChanged);
+            break;
+        case angle::SubjectMessage::SurfaceChanged:
+            onStateChange(angle::SubjectMessage::SurfaceChanged);
+            break;
+        default:
+            UNREACHABLE();
+            break;
+    }
 }
 
 WindowSurface::WindowSurface(rx::EGLImplFactory *implFactory,

@@ -8184,14 +8184,34 @@ void Context::onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMess
             break;
 
         case kReadFramebufferSubjectIndex:
-            ASSERT(message == angle::SubjectMessage::DirtyBitsFlagged);
-            mState.setReadFramebufferDirty();
+            switch (message)
+            {
+                case angle::SubjectMessage::DirtyBitsFlagged:
+                    mState.setReadFramebufferDirty();
+                    break;
+                case angle::SubjectMessage::SurfaceChanged:
+                    mState.setReadFramebufferBindingDirty();
+                    break;
+                default:
+                    UNREACHABLE();
+                    break;
+            }
             break;
 
         case kDrawFramebufferSubjectIndex:
-            ASSERT(message == angle::SubjectMessage::DirtyBitsFlagged);
-            mState.setDrawFramebufferDirty();
-            mStateCache.onDrawFramebufferChange(this);
+            switch (message)
+            {
+                case angle::SubjectMessage::DirtyBitsFlagged:
+                    mState.setDrawFramebufferDirty();
+                    mStateCache.onDrawFramebufferChange(this);
+                    break;
+                case angle::SubjectMessage::SurfaceChanged:
+                    mState.setDrawFramebufferBindingDirty();
+                    break;
+                default:
+                    UNREACHABLE();
+                    break;
+            }
             break;
 
         case kProgramPipelineSubjectIndex:

@@ -758,6 +758,16 @@ class State : angle::NonCopyable
         mProvokingVertex = val;
     }
 
+    ANGLE_INLINE void setReadFramebufferBindingDirty()
+    {
+        mDirtyBits.set(State::DIRTY_BIT_READ_FRAMEBUFFER_BINDING);
+    }
+
+    ANGLE_INLINE void setDrawFramebufferBindingDirty()
+    {
+        mDirtyBits.set(State::DIRTY_BIT_DRAW_FRAMEBUFFER_BINDING);
+    }
+
     using ClipDistanceEnableBits = angle::BitSet32<IMPLEMENTATION_MAX_CLIP_DISTANCES>;
     const ClipDistanceEnableBits &getEnabledClipDistances() const { return mClipDistancesEnabled; }
     void setClipDistanceEnable(int idx, bool enable);

@@ -765,6 +765,9 @@ angle::Result WindowSurfaceVk::recreateSwapchain(ContextVk *contextVk,
 
     angle::Result result = createSwapChain(contextVk, extents, lastSwapchain);
 
+    // Notify the parent classes of the surface's new state.
+    onStateChange(angle::SubjectMessage::SurfaceChanged);
+
     // If the most recent swapchain was never used, destroy it right now.
     if (swapchainToDestroy)
     {

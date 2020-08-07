@@ -17,6 +17,7 @@
 #include "util/EGLWindow.h"
 #include "util/OSWindow.h"
 #include "util/Timer.h"
+#include "util/test_utils.h"
 
 using namespace angle;
 
@@ -479,6 +480,137 @@ TEST_P(EGLPreRotationSurfaceTest, OrientedWindowWithDerivativeDraw)
     EXPECT_PIXEL_COLOR_EQ((mSize / 2), (mSize / 2) - 1, expectedPixelLowerRight);
     EXPECT_PIXEL_COLOR_EQ((mSize / 2), (mSize / 2), expectedPixelUpperRight);
     ASSERT_GL_NO_ERROR();
+}
+
+// Android-specific test that changes a window's rotation, which requires ContextVk::syncState() to
+// handle the new rotation
+TEST_P(EGLPreRotationSurfaceTest, ChangeRotationWithDraw)
+{
+    // This test uses functionality that is only available on Android
+    ANGLE_SKIP_TEST_IF(isVulkanRenderer() && !IsAndroid());
+
+    // To aid in debugging, we want this window visible
+    setWindowVisible(mOSWindow, true);
+
+    initializeDisplay();
+    initializeSurfaceWithRGBA8888Config();
+
+    eglMakeCurrent(mDisplay, mWindowSurface, mWindowSurface, mContext);
+    ASSERT_EGL_SUCCESS();
+
+    // Init program
+    constexpr char kVS[] =
+        "attribute vec2 position;\n"
+        "attribute vec2 redGreen;\n"
+        "varying vec2 v_data;\n"
+        "void main() {\n"
+        "  gl_Position = vec4(position, 0, 1);\n"
+        "  v_data = redGreen;\n"
+        "}";
+
+    constexpr char kFS[] =
+        "varying highp vec2 v_data;\n"
+        "void main() {\n"
+        "  gl_FragColor = vec4(v_data, 0, 1);\n"
+        "}";
+
+    GLuint program = CompileProgram(kVS, kFS);
+    ASSERT_NE(0u, program);
+    glUseProgram(program);
+
+    GLint positionLocation = glGetAttribLocation(program, "position");
+    ASSERT_NE(-1, positionLocation);
+
+    GLint redGreenLocation = glGetAttribLocation(program, "redGreen");
+    ASSERT_NE(-1, redGreenLocation);
+
+    GLuint indexBuffer;
+    glGenBuffers(1, &indexBuffer);
+
+    GLuint vertexArray;
+    glGenVertexArrays(1, &vertexArray);
+
+    std::vector<GLuint> vertexBuffers(2);
+    glGenBuffers(2, &vertexBuffers[0]);
+
+    glBindVertexArray(vertexArray);
+
+    std::vector<GLushort> indices = {0, 1, 2, 2, 3, 0};
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLushort) * indices.size(), &indices[0],
+                 GL_STATIC_DRAW);
+
+    std::vector<GLfloat> positionData = {// quad vertices
+                                         -1.0f, 1.0f, -1.0f, -1.0f, 1.0f, -1.0f, 1.0f, 1.0f};
+
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffers[0]);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * positionData.size(), &positionData[0],
+                 GL_STATIC_DRAW);
+    glVertexAttribPointer(positionLocation, 2, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 2, nullptr);
+    glEnableVertexAttribArray(positionLocation);
+
+    std::vector<GLfloat> redGreenData = {// green(0,1), black(0,0), red(1,0), yellow(1,1)
+                                         0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f};
+
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffers[1]);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * redGreenData.size(), &redGreenData[0],
+                 GL_STATIC_DRAW);
+    glVertexAttribPointer(redGreenLocation, 2, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 2, nullptr);
+    glEnableVertexAttribArray(redGreenLocation);
+
+    ASSERT_GL_NO_ERROR();
+
+    // Change the rotation back and forth between landscape and portrait, and make sure that the
+    // drawing and reading happen consistently with the desired rotation.
+    for (int i = 0; i < 3; i++)
+    {
+        bool landscape;
+        EGLint actualWidth   = 0;
+        EGLint actualHeight  = 0;
+        EGLint desiredWidth  = 0;
+        EGLint desiredHeight = 0;
+        if ((i % 2) == 0)
+        {
+            landscape     = true;
+            desiredWidth  = 300;
+            desiredHeight = 200;
+        }
+        else
+        {
+            landscape     = false;
+            desiredWidth  = 200;
+            desiredHeight = 300;
+        }
+        mOSWindow->resize(desiredWidth, desiredHeight);
+        // setOrientation() uses a reverse-JNI call, which sends data to other parts of Android.
+        // Sometime later (i.e. asynchronously), the window is updated.  Sleep a little here, and
+        // then allow for multiple eglSwapBuffers calls to eventually see the new rotation.
+        mOSWindow->setOrientation(desiredWidth, desiredHeight);
+        angle::Sleep(1000);
+        eglSwapBuffers(mDisplay, mWindowSurface);
+        ASSERT_EGL_SUCCESS();
+
+        while ((actualWidth != desiredWidth) && (actualHeight != desiredHeight))
+        {
+            glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
+            EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::black);
+            if (landscape)
+            {
+                EXPECT_PIXEL_COLOR_EQ(mSize - 1, 0, GLColor::red);
+            }
+            else
+            {
+                EXPECT_PIXEL_COLOR_EQ(0, mSize - 1, GLColor::green);
+            }
+            ASSERT_GL_NO_ERROR();
+
+            eglSwapBuffers(mDisplay, mWindowSurface);
+            ASSERT_EGL_SUCCESS();
+
+            eglQuerySurface(mDisplay, mWindowSurface, EGL_HEIGHT, &actualHeight);
+            eglQuerySurface(mDisplay, mWindowSurface, EGL_WIDTH, &actualWidth);
+        }
+    }
 }
 
 // A slight variation of EGLPreRotationSurfaceTest, where the initial window size is 400x300, yet
