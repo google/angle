@@ -914,10 +914,9 @@ bool ValidImageSizeParameters(const Context *context,
     return true;
 }
 
-bool ValidCompressedDimension(GLsizei size, GLuint blockSize, bool smallerThanBlockSizeAllowed)
+bool ValidCompressedDimension(GLsizei size, GLuint blockSize, GLint level)
 {
-    return (smallerThanBlockSizeAllowed && (size > 0) && (blockSize % size == 0)) ||
-           (size % blockSize == 0);
+    return (level > 0) || (size % blockSize == 0);
 }
 
 bool ValidCompressedImageSize(const Context *context,
@@ -940,17 +939,9 @@ bool ValidCompressedImageSize(const Context *context,
 
     if (CompressedTextureFormatRequiresExactSize(internalFormat))
     {
-        // The ANGLE extensions allow specifying compressed textures with sizes smaller than the
-        // block size for level 0 but WebGL disallows this.
-        bool smallerThanBlockSizeAllowed =
-            level > 0 || !context->getExtensions().webglCompatibility;
-
-        if (!ValidCompressedDimension(width, formatInfo.compressedBlockWidth,
-                                      smallerThanBlockSizeAllowed) ||
-            !ValidCompressedDimension(height, formatInfo.compressedBlockHeight,
-                                      smallerThanBlockSizeAllowed) ||
-            !ValidCompressedDimension(depth, formatInfo.compressedBlockDepth,
-                                      smallerThanBlockSizeAllowed))
+        if (!ValidCompressedDimension(width, formatInfo.compressedBlockWidth, level) ||
+            !ValidCompressedDimension(height, formatInfo.compressedBlockHeight, level) ||
+            !ValidCompressedDimension(depth, formatInfo.compressedBlockDepth, level))
         {
             return false;
         }

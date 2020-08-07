@@ -110,6 +110,7 @@ angle_end2end_tests_sources = [
   "gl_tests/RobustBufferAccessBehaviorTest.cpp",
   "gl_tests/RobustClientMemoryTest.cpp",
   "gl_tests/RobustResourceInitTest.cpp",
+  "gl_tests/S3TCTextureSizesTest.cpp",
   "gl_tests/SRGBFramebufferTest.cpp",
   "gl_tests/SRGBTextureTest.cpp",
   "gl_tests/SamplersTest.cpp",
