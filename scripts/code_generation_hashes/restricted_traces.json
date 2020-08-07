@@ -1,6 +1,6 @@
 {
   "src/tests/perf_tests/restricted_traces/angry_birds_2_1500.tar.gz.sha1":
-    "f289d1836514a3ced7c166186df43204",
+    "44fc5437c4a84012e338b3da4b6fc28a",
   "src/tests/perf_tests/restricted_traces/candy_crush_500.tar.gz.sha1":
     "ef00d8872fe818250df07f761d440bfb",
   "src/tests/perf_tests/restricted_traces/egypt_1500.tar.gz.sha1":
@@ -14,9 +14,9 @@
   "src/tests/perf_tests/restricted_traces/restricted_traces.json":
     "aefeb34167e491c2b869b7fe8c51e3ca",
   "src/tests/perf_tests/restricted_traces/restricted_traces_autogen.cpp":
-    "f2f54a682b7d793e0d3a380a00d278e2",
+    "5f6fe67928fca1e6cb17f1b30e067500",
   "src/tests/perf_tests/restricted_traces/restricted_traces_autogen.gni":
-    "7edfef5f418500f6092127065e3e894f",
+    "d950b3d89e1d80fc47a611863a76c18e",
   "src/tests/perf_tests/restricted_traces/restricted_traces_autogen.h":
     "961c4192564a6198c8114969baa32bb7",
   "src/tests/perf_tests/restricted_traces/subway_surfer_500.tar.gz.sha1":

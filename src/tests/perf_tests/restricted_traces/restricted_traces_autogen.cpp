@@ -11,7 +11,7 @@
 
 #include "common/PackedEnums.h"
 
-#include "angry_birds_2_1500/angry_birds_2_1500_capture_context3.h"
+#include "angry_birds_2_1500/angry_birds_2_1500_capture_context2.h"
 #include "candy_crush_500/candy_crush_500_capture_context2.h"
 #include "egypt_1500/egypt_1500_capture_context6.h"
 #include "manhattan_10/manhattan_10_capture_context6.h"
@@ -66,7 +66,7 @@ void ReplayFrame(RestrictedTraceID traceID, uint32_t frameIndex)
     switch (traceID)
     {
         case RestrictedTraceID::angry_birds_2_1500:
-            angry_birds_2_1500::ReplayContext3Frame(frameIndex);
+            angry_birds_2_1500::ReplayContext2Frame(frameIndex);
             break;
         case RestrictedTraceID::candy_crush_500:
             candy_crush_500::ReplayContext2Frame(frameIndex);
@@ -101,7 +101,7 @@ void ResetReplay(RestrictedTraceID traceID)
     switch (traceID)
     {
         case RestrictedTraceID::angry_birds_2_1500:
-            angry_birds_2_1500::ResetContext3Replay();
+            angry_birds_2_1500::ResetContext2Replay();
             break;
         case RestrictedTraceID::candy_crush_500:
             candy_crush_500::ResetContext2Replay();
@@ -136,7 +136,7 @@ void SetupReplay(RestrictedTraceID traceID)
     switch (traceID)
     {
         case RestrictedTraceID::angry_birds_2_1500:
-            angry_birds_2_1500::SetupContext3Replay();
+            angry_birds_2_1500::SetupContext2Replay();
             break;
         case RestrictedTraceID::candy_crush_500:
             candy_crush_500::SetupContext2Replay();
