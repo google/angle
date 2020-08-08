@@ -206,6 +206,15 @@ class DrawBuffersTest : public ANGLETest
         verifyAttachment2DColor(index, texture, target, level, getColorForIndex(index));
     }
 
+    void verifyAttachment3DOES(unsigned int index, GLuint texture, GLint level, GLint layer)
+    {
+        ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_texture_3D"));
+
+        glFramebufferTexture3DOES(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_3D, texture,
+                                  level, layer);
+        EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 2, getWindowHeight() / 2, getColorForIndex(index));
+    }
+
     void verifyAttachmentLayer(unsigned int index, GLuint texture, GLint level, GLint layer)
     {
         glFramebufferTextureLayer(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texture, level, layer);
@@ -591,6 +600,53 @@ TEST_P(DrawBuffersTest, BroadcastGLFragColor)
 
     verifyAttachment2D(0, mTextures[0], GL_TEXTURE_2D, 0);
     verifyAttachment2D(0, mTextures[1], GL_TEXTURE_2D, 0);
+
+    EXPECT_GL_NO_ERROR();
+
+    glDeleteProgram(program);
+}
+
+// Test that binding multiple layers of a 3D texture works correctly.
+// This is the same as DrawBuffersTestES3.3DTextures but is used for GL_OES_texture_3D extension
+// on GLES 2.0 instead.
+TEST_P(DrawBuffersTest, 3DTexturesOES)
+{
+    ANGLE_SKIP_TEST_IF(!setupTest());
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_texture_3D"));
+
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_3D, texture.get());
+    glTexImage3DOES(GL_TEXTURE_3D, 0, GL_RGBA, getWindowWidth(), getWindowHeight(),
+                    getWindowWidth(), 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    glFramebufferTexture3DOES(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_3D, texture.get(), 0,
+                              0);
+    glFramebufferTexture3DOES(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_3D, texture.get(), 0,
+                              1);
+    glFramebufferTexture3DOES(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_3D, texture.get(), 0,
+                              2);
+    glFramebufferTexture3DOES(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT3, GL_TEXTURE_3D, texture.get(), 0,
+                              3);
+
+    bool flags[8] = {true, true, true, true, false};
+
+    GLuint program;
+    setupMRTProgram(flags, &program);
+
+    const GLenum bufs[] = {
+        GL_COLOR_ATTACHMENT0,
+        GL_COLOR_ATTACHMENT1,
+        GL_COLOR_ATTACHMENT2,
+        GL_COLOR_ATTACHMENT3,
+    };
+
+    setDrawBuffers(4, bufs);
+    drawQuad(program, positionAttrib(), 0.5);
+
+    verifyAttachment3DOES(0, texture.get(), 0, 0);
+    verifyAttachment3DOES(1, texture.get(), 0, 1);
+    verifyAttachment3DOES(2, texture.get(), 0, 2);
+    verifyAttachment3DOES(3, texture.get(), 0, 3);
 
     EXPECT_GL_NO_ERROR();
 

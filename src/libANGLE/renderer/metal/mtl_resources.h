@@ -120,6 +120,16 @@ class Texture final : public Resource,
                                          bool allowFormatView,
                                          TextureRef *refOut);
 
+    static angle::Result Make3DTexture(ContextMtl *context,
+                                       const Format &format,
+                                       uint32_t width,
+                                       uint32_t height,
+                                       uint32_t depth,
+                                       uint32_t mips,
+                                       bool renderTargetOnly,
+                                       bool allowFormatView,
+                                       TextureRef *refOut);
+
     static TextureRef MakeFromMetal(id<MTLTexture> metalTexture);
 
     // Allow CPU to read & write data directly to this texture?
@@ -127,24 +137,35 @@ class Texture final : public Resource,
 
     bool supportFormatView() const;
 
+    void replace2DRegion(ContextMtl *context,
+                         const MTLRegion &region,
+                         uint32_t mipmapLevel,
+                         uint32_t slice,
+                         const uint8_t *data,
+                         size_t bytesPerRow);
+
     void replaceRegion(ContextMtl *context,
-                       MTLRegion region,
+                       const MTLRegion &region,
                        uint32_t mipmapLevel,
                        uint32_t slice,
                        const uint8_t *data,
-                       size_t bytesPerRow);
+                       size_t bytesPerRow,
+                       size_t bytesPer2DImage);
 
-    // read pixel data from slice 0
     void getBytes(ContextMtl *context,
                   size_t bytesPerRow,
-                  MTLRegion region,
+                  size_t bytesPer2DInage,
+                  const MTLRegion &region,
                   uint32_t mipmapLevel,
+                  uint32_t slice,
                   uint8_t *dataOut);
 
     // Create 2d view of a cube face which full range of mip levels.
     TextureRef createCubeFaceView(uint32_t face);
     // Create a view of one slice at a level.
     TextureRef createSliceMipView(uint32_t slice, uint32_t level);
+    // Create a view of a level.
+    TextureRef createMipView(uint32_t level);
     // Create a view with different format
     TextureRef createViewWithDifferentFormat(MTLPixelFormat format);
     // Same as above but the target format must be compatible, for example sRGB to linear. In this
@@ -155,6 +176,8 @@ class Texture final : public Resource,
     MTLPixelFormat pixelFormat() const;
 
     uint32_t mipmapLevels() const;
+    uint32_t arrayLength() const;
+    uint32_t cubeFacesOrArrayLength() const;
 
     uint32_t width(uint32_t level = 0) const;
     uint32_t height(uint32_t level = 0) const;
@@ -201,7 +224,7 @@ class Texture final : public Resource,
 
     // Create a texture view
     Texture(Texture *original, MTLPixelFormat format);
-    Texture(Texture *original, MTLTextureType type, NSRange mipmapLevelRange, uint32_t slice);
+    Texture(Texture *original, MTLTextureType type, NSRange mipmapLevelRange, NSRange slices);
 
     void syncContent(ContextMtl *context);
 

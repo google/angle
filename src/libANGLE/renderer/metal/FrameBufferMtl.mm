@@ -1069,17 +1069,17 @@ angle::Result FramebufferMtl::readPixelsImpl(const gl::Context *context,
         return angle::Result::Continue;
     }
 
-    mtl::Texture *texture;
+    mtl::TextureRef texture;
     if (mBackbuffer)
     {
         // Backbuffer might have MSAA texture as render target, needs to obtain the
         // resolved texture to be able to read pixels.
         ANGLE_TRY(mBackbuffer->ensureColorTextureReadyForReadPixels(context));
-        texture = mBackbuffer->getColorTexture().get();
+        texture = mBackbuffer->getColorTexture();
     }
     else
     {
-        texture = renderTarget->getTexture().get();
+        texture = renderTarget->getTexture();
         // For non-default framebuffer, MSAA read pixels is disallowed.
         ANGLE_MTL_CHECK(contextMtl, texture->samples() == 1, GL_INVALID_OPERATION);
     }
@@ -1087,13 +1087,12 @@ angle::Result FramebufferMtl::readPixelsImpl(const gl::Context *context,
     const mtl::Format &readFormat        = *renderTarget->getFormat();
     const angle::Format &readAngleFormat = readFormat.actualAngleFormat();
 
-    // NOTE(hqle): resolve MSAA texture before readback
-    int srcRowPitch = area.width * readAngleFormat.pixelBytes;
+    int bufferRowPitch = area.width * readAngleFormat.pixelBytes;
     angle::MemoryBuffer readPixelRowBuffer;
-    ANGLE_CHECK_GL_ALLOC(contextMtl, readPixelRowBuffer.resize(srcRowPitch));
+    ANGLE_CHECK_GL_ALLOC(contextMtl, readPixelRowBuffer.resize(bufferRowPitch));
 
-    auto packPixelsRowParams  = packPixelsParams;
-    MTLRegion mtlSrcRowRegion = MTLRegionMake2D(area.x, area.y, area.width, 1);
+    auto packPixelsRowParams = packPixelsParams;
+    gl::Rectangle srcRowRegion(area.x, area.y, area.width, 1);
 
     int rowOffset = packPixelsParams.reverseRowOrder ? -1 : 1;
     int startRow  = packPixelsParams.reverseRowOrder ? (area.y1() - 1) : area.y;
@@ -1104,16 +1103,16 @@ angle::Result FramebufferMtl::readPixelsImpl(const gl::Context *context,
     for (int r = startRow, i = 0; i < area.height;
          ++i, r += rowOffset, pixels += packPixelsRowParams.outputPitch)
     {
-        mtlSrcRowRegion.origin.y   = r;
+        srcRowRegion.y             = r;
         packPixelsRowParams.area.y = packPixelsParams.area.y + i;
 
         // Read the pixels data to the row buffer
-        texture->getBytes(contextMtl, srcRowPitch, mtlSrcRowRegion,
-                          static_cast<uint32_t>(renderTarget->getLevelIndex()),
-                          readPixelRowBuffer.data());
+        ANGLE_TRY(mtl::ReadTexturePerSliceBytes(
+            context, texture, bufferRowPitch, srcRowRegion, renderTarget->getLevelIndex(),
+            renderTarget->getLayerIndex(), readPixelRowBuffer.data()));
 
         // Convert to destination format
-        PackPixels(packPixelsRowParams, readAngleFormat, srcRowPitch, readPixelRowBuffer.data(),
+        PackPixels(packPixelsRowParams, readAngleFormat, bufferRowPitch, readPixelRowBuffer.data(),
                    pixels);
     }
 

@@ -41,6 +41,15 @@ angle::Result InitializeTextureContentsGPU(const gl::Context *context,
                                            const gl::ImageIndex &index,
                                            MTLColorWriteMask channelsToInit);
 
+// Unified texture's per slice/depth texel reading function
+angle::Result ReadTexturePerSliceBytes(const gl::Context *context,
+                                       const TextureRef &texture,
+                                       size_t bytesPerRow,
+                                       const gl::Rectangle &fromRegion,
+                                       uint32_t mipLevel,
+                                       uint32_t sliceOrDepth,
+                                       uint8_t *dataOut);
+
 MTLViewport GetViewport(const gl::Rectangle &rect, double znear = 0, double zfar = 1);
 MTLViewport GetViewportFlipY(const gl::Rectangle &rect,
                              NSUInteger screenHeight,

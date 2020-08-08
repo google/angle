@@ -506,6 +506,65 @@ TEST_P(CopyTexImageTest, DeleteAfterCopyingToTextures)
     // Crashes on Intel GPUs on macOS.
     texture2.reset();
 }
+// Test if glCopyTexImage2D() implementation performs conversions well from GL_TEXTURE_3D to
+// GL_TEXTURE_2D.
+// This is similar to CopyTexImageTestES3.CopyTexSubImageFromTexture3D but for GL_OES_texture_3D
+// extension.
+TEST_P(CopyTexImageTest, CopyTexSubImageFrom3DTexureOES)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_texture_3D"));
+    // TODO(anglebug.com/3801)
+    // Seems to fail on D3D11 Windows.
+    ANGLE_SKIP_TEST_IF(IsD3D11() & IsWindows());
+
+    // http://anglebug.com/4927
+    ANGLE_SKIP_TEST_IF(IsPixel2() || IsOpenGLES());
+
+    constexpr GLsizei kDepth = 6;
+
+    // The framebuffer will be a slice of a 3d texture with a different colors for each slice.  Each
+    // glCopyTexSubImage2D will take one face of this image to copy over a pixel in a 1x6
+    // framebuffer.
+    GLColor fboPixels[kDepth]   = {GLColor::red,  GLColor::yellow, GLColor::green,
+                                 GLColor::cyan, GLColor::blue,   GLColor::magenta};
+    GLColor whitePixels[kDepth] = {GLColor::white, GLColor::white, GLColor::white,
+                                   GLColor::white, GLColor::white, GLColor::white};
+
+    GLTexture fboTex;
+    glBindTexture(GL_TEXTURE_3D, fboTex);
+    glTexImage3DOES(GL_TEXTURE_3D, 0, GL_RGBA, 1, 1, kDepth, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                    fboPixels);
+
+    GLTexture dstTex;
+    glBindTexture(GL_TEXTURE_2D, dstTex);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kDepth, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, whitePixels);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+    for (GLsizei slice = 0; slice < kDepth; ++slice)
+    {
+        glFramebufferTexture3DOES(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_3D, fboTex, 0,
+                                  slice);
+
+        ASSERT_GL_NO_ERROR();
+        ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+
+        // Copy the fbo (a 3d slice) into a pixel of the destination texture.
+        glCopyTexSubImage2D(GL_TEXTURE_2D, 0, slice, 0, 0, 0, 1, 1);
+    }
+
+    // Make sure all the copies are done correctly.
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, dstTex, 0);
+
+    ASSERT_GL_NO_ERROR();
+    ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+
+    for (GLsizei slice = 0; slice < kDepth; ++slice)
+    {
+        EXPECT_PIXEL_COLOR_EQ(slice, 0, fboPixels[slice]);
+    }
+}
 
 // specialization of CopyTexImageTest is added so that some tests can be explicitly run with an ES3
 // context

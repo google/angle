@@ -64,6 +64,38 @@ uint32_t GetDeviceVendorIdFromIOKit(id<MTLDevice> device)
 }
 #endif
 
+void GetSliceAndDepth(const gl::ImageIndex &index, GLint *layer, GLint *startDepth)
+{
+    *layer = *startDepth = 0;
+    if (!index.hasLayer())
+    {
+        return;
+    }
+
+    switch (index.getType())
+    {
+        case gl::TextureType::CubeMap:
+            *layer = index.cubeMapFaceIndex();
+            break;
+        case gl::TextureType::_2DArray:
+            *layer = index.getLayerIndex();
+            break;
+        case gl::TextureType::_3D:
+            *startDepth = index.getLayerIndex();
+            break;
+        default:
+            UNREACHABLE();
+            break;
+    }
+}
+GLint GetSliceOrDepth(const gl::ImageIndex &index)
+{
+    GLint layer, startDepth;
+    GetSliceAndDepth(index, &layer, &startDepth);
+
+    return std::max(layer, startDepth);
+}
+
 }
 
 angle::Result InitializeTextureContents(const gl::Context *context,
@@ -72,8 +104,6 @@ angle::Result InitializeTextureContents(const gl::Context *context,
                                         const gl::ImageIndex &index)
 {
     ASSERT(texture && texture->valid());
-    ASSERT(texture->textureType() == MTLTextureType2D ||
-           texture->textureType() == MTLTextureTypeCube);
     ContextMtl *contextMtl = mtl::GetImpl(context);
 
     const gl::InternalFormat &intendedInternalFormat = textureObjFormat.intendedInternalFormat();
@@ -88,11 +118,13 @@ angle::Result InitializeTextureContents(const gl::Context *context,
 
     gl::Extents size = texture->size(index);
 
-    // Initialize the content to black
+    // Intiialize the content to black
+    GLint layer, startDepth;
+    GetSliceAndDepth(index, &layer, &startDepth);
+
     if (texture->isCPUAccessible() && index.getType() != gl::TextureType::_2DMultisample &&
         index.getType() != gl::TextureType::_2DMultisampleArray)
     {
-
         const angle::Format &dstFormat = angle::Format::Get(textureObjFormat.actualFormatId);
         const size_t dstRowPitch       = dstFormat.pixelBytes * size.width;
         angle::MemoryBuffer conversionRow;
@@ -121,14 +153,17 @@ angle::Result InitializeTextureContents(const gl::Context *context,
 
         auto mtlRowRegion = MTLRegionMake2D(0, 0, size.width, 1);
 
-        for (NSUInteger r = 0; r < static_cast<NSUInteger>(size.height); ++r)
+        for (NSUInteger d = 0; d < static_cast<NSUInteger>(size.depth); ++d)
         {
-            mtlRowRegion.origin.y = r;
+            mtlRowRegion.origin.z = d + startDepth;
+            for (NSUInteger r = 0; r < static_cast<NSUInteger>(size.height); ++r)
+            {
+                mtlRowRegion.origin.y = r;
 
-            // Upload to texture
-            texture->replaceRegion(contextMtl, mtlRowRegion, index.getLevelIndex(),
-                                   index.hasLayer() ? index.cubeMapFaceIndex() : 0,
-                                   conversionRow.data(), dstRowPitch);
+                // Upload to texture
+                texture->replace2DRegion(contextMtl, mtlRowRegion, index.getLevelIndex(), layer,
+                                         conversionRow.data(), dstRowPitch);
+            }
         }
     }
     else
@@ -147,12 +182,11 @@ angle::Result InitializeTextureContentsGPU(const gl::Context *context,
                                            MTLColorWriteMask channelsToInit)
 {
     ContextMtl *contextMtl = mtl::GetImpl(context);
-    // NOTE(hqle): Support layered textures
-    ASSERT(!index.hasLayer());
+    GLint sliceOrDepth     = GetSliceOrDepth(index);
 
     // Use clear render command
     RenderTargetMtl tempRtt;
-    tempRtt.set(texture, index.getLevelIndex(), 0, textureObjFormat);
+    tempRtt.set(texture, index.getLevelIndex(), sliceOrDepth, textureObjFormat);
 
     // temporarily enable color channels requested via channelsToInit. Some emulated format has some
     // channels write mask disabled when the texture is created.
@@ -185,6 +219,39 @@ angle::Result InitializeTextureContentsGPU(const gl::Context *context,
 
     // Restore texture's intended write mask
     texture->setColorWritableMask(oldMask);
+
+    return angle::Result::Continue;
+}
+
+angle::Result ReadTexturePerSliceBytes(const gl::Context *context,
+                                       const TextureRef &texture,
+                                       size_t bytesPerRow,
+                                       const gl::Rectangle &fromRegion,
+                                       uint32_t mipLevel,
+                                       uint32_t sliceOrDepth,
+                                       uint8_t *dataOut)
+{
+    ASSERT(texture && texture->valid());
+    ContextMtl *contextMtl = mtl::GetImpl(context);
+    GLint layer            = 0;
+    GLint startDepth       = 0;
+    switch (texture->textureType())
+    {
+        case MTLTextureTypeCube:
+        case MTLTextureType2DArray:
+            layer = sliceOrDepth;
+            break;
+        case MTLTextureType3D:
+            startDepth = sliceOrDepth;
+            break;
+        default:
+            break;
+    }
+
+    MTLRegion mtlRegion = MTLRegionMake3D(fromRegion.x, fromRegion.y, startDepth, fromRegion.width,
+                                          fromRegion.height, 1);
+
+    texture->getBytes(contextMtl, bytesPerRow, 0, mtlRegion, mipLevel, layer, dataOut);
 
     return angle::Result::Continue;
 }
