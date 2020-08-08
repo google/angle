@@ -1195,7 +1195,8 @@ angle::Result WindowSurfaceVk::present(ContextVk *contextVk,
     }
 
     // This does nothing if it already in the requested layout
-    image.image.changeLayout(VK_IMAGE_ASPECT_COLOR_BIT, vk::ImageLayout::Present, commandBuffer);
+    image.image.recordReadBarrier(VK_IMAGE_ASPECT_COLOR_BIT, vk::ImageLayout::Present,
+                                  commandBuffer);
 
     // Knowing that the kSwapHistorySize'th submission ago has finished, we can know that the
     // (kSwapHistorySize+1)'th present ago of this image is definitely finished and so its wait
