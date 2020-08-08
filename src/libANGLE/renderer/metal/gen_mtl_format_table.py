@@ -69,6 +69,21 @@ void VertexFormat::init(angle::FormatID angleFormatId, bool tightlyPacked)
     }}
 }}
 
+void FormatTable::initNativeFormatCapsAutogen(const DisplayMtl *display)
+{{
+    const angle::FeaturesMtl &featuresMtl = display->getFeatures();
+    // Skip auto resolve if either hasDepth/StencilAutoResolve or allowMultisampleStoreAndResolve
+    // feature are disabled.
+    bool supportDepthAutoResolve = featuresMtl.hasDepthAutoResolve.enabled &&
+                                   featuresMtl.allowMultisampleStoreAndResolve.enabled;
+    bool supportStencilAutoResolve = featuresMtl.hasStencilAutoResolve.enabled &&
+                                     featuresMtl.allowMultisampleStoreAndResolve.enabled;
+    bool supportDepthStencilAutoResolve = supportDepthAutoResolve && supportStencilAutoResolve;
+
+    // Source: https://developer.apple.com/metal/Metal-Feature-Set-Tables.pdf
+    {metal_format_caps}
+}}
+
 }}  // namespace mtl
 }}  // namespace rx
 """
@@ -408,6 +423,46 @@ def gen_vertex_map_switch_string(vertex_table):
     return switch_data
 
 
+def gen_mtl_format_caps_init_string(map_image):
+    caps = map_image['caps']
+    mac_caps = map_image['caps_mac']
+    ios_caps = map_image['caps_ios']
+    caps_init_str = ''
+
+    def cap_to_param(caps, key):
+        return '/** ' + key + '*/ ' + caps.get(key, 'false')
+
+    def caps_to_cpp(caps_table):
+        init_str = ''
+        for mtl_format in sorted(caps_table.keys()):
+            caps = caps_table[mtl_format]
+            filterable = cap_to_param(caps, 'filterable')
+            writable = cap_to_param(caps, 'writable')
+            colorRenderable = cap_to_param(caps, 'colorRenderable')
+            depthRenderable = cap_to_param(caps, 'depthRenderable')
+            blendable = cap_to_param(caps, 'blendable')
+            multisample = cap_to_param(caps, 'multisample')
+            resolve = cap_to_param(caps, 'resolve')
+
+            init_str += "    setFormatCaps({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7});\n\n".format(
+                mtl_format, filterable, writable, blendable, multisample, resolve, colorRenderable,
+                depthRenderable)
+
+        return init_str
+
+    caps_init_str += caps_to_cpp(caps)
+
+    caps_init_str += "#if TARGET_OS_OSX || TARGET_OS_MACCATALYST\n"
+    caps_init_str += caps_to_cpp(mac_caps)
+
+    caps_init_str += "#elif TARGET_OS_IOS || TARGET_OS_TV  // TARGET_OS_OSX || TARGET_OS_MACCATALYST\n"
+    caps_init_str += caps_to_cpp(ios_caps)
+
+    caps_init_str += "#endif  // TARGET_OS_OSX || TARGET_OS_MACCATALYST\n"
+
+    return caps_init_str
+
+
 def main():
     data_source_name = 'mtl_format_map.json'
     # auto_script parameters.
@@ -434,12 +489,15 @@ def main():
 
     vertex_switch_data = gen_vertex_map_switch_string(map_vertex)
 
+    caps_init_str = gen_mtl_format_caps_init_string(map_image)
+
     output_cpp = template_autogen_inl.format(
         script_name=sys.argv[0],
         copyright_year=date.today().year,
         data_source_name=data_source_name,
         angle_image_format_switch=image_switch_data,
-        angle_vertex_format_switch=vertex_switch_data)
+        angle_vertex_format_switch=vertex_switch_data,
+        metal_format_caps=caps_init_str)
     with open('mtl_format_table_autogen.mm', 'wt') as out_file:
         out_file.write(output_cpp)
         out_file.close()

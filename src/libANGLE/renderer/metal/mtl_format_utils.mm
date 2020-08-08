@@ -262,93 +262,9 @@ void FormatTable::setCompressedFormatCaps(MTLPixelFormat formatId, bool filterab
 
 void FormatTable::initNativeFormatCaps(const DisplayMtl *display)
 {
-    const angle::FeaturesMtl &featuresMtl = display->getFeatures();
-    // Skip auto resolve if either hasDepth/StencilAutoResolve or allowMultisampleStoreAndResolve
-    // feature are disabled.
-    bool supportDepthAutoResolve = featuresMtl.hasDepthAutoResolve.enabled &&
-                                   featuresMtl.allowMultisampleStoreAndResolve.enabled;
-    bool supportStencilAutoResolve = featuresMtl.hasStencilAutoResolve.enabled &&
-                                     featuresMtl.allowMultisampleStoreAndResolve.enabled;
-    bool supportDepthStencilAutoResolve = supportDepthAutoResolve && supportStencilAutoResolve;
+    initNativeFormatCapsAutogen(display);
 
-    // Source: https://developer.apple.com/metal/Metal-Feature-Set-Tables.pdf
-    // clang-format off
-
-    //            |  formatId                  | filterable    |  writable  |  blendable |  multisample |  resolve                              | colorRenderable |
-    setFormatCaps(MTLPixelFormatA8Unorm,        true,            false,       false,          false,       false,                                false);
-    setFormatCaps(MTLPixelFormatR8Unorm,        true,            true,        true,           true,        true,                                 true);
-    setFormatCaps(MTLPixelFormatR8Snorm,        true,            true,        true,           true,      display->supportsEitherGPUFamily(2, 1), true);
-    setFormatCaps(MTLPixelFormatR16Unorm,       true,            true,        true,           true,      display->supportsMacGPUFamily(1),       true);
-    setFormatCaps(MTLPixelFormatR16Snorm,       true,            true,        true,           true,      display->supportsMacGPUFamily(1),       true);
-    setFormatCaps(MTLPixelFormatRG8Unorm,       true,            true,        true,           true,        true,                                 true);
-    setFormatCaps(MTLPixelFormatRG8Snorm,       true,            true,        true,           true,      display->supportsEitherGPUFamily(2, 1), true);
-    setFormatCaps(MTLPixelFormatRG16Unorm,      true,            true,        true,           true,      display->supportsMacGPUFamily(1),       true);
-    setFormatCaps(MTLPixelFormatRG16Snorm,      true,            true,        true,           true,      display->supportsMacGPUFamily(1),       true);
-    setFormatCaps(MTLPixelFormatRGBA16Unorm,    true,            true,        true,           true,      display->supportsMacGPUFamily(1),       true);
-    setFormatCaps(MTLPixelFormatRGBA16Snorm,    true,            true,        true,           true,      display->supportsMacGPUFamily(1),       true);
-    setFormatCaps(MTLPixelFormatRGBA16Float,    true,            true,        true,           true,        true,                                 true);
-
-    //            |  formatId                      | filterable    |  writable                         |  blendable |  multisample |  resolve                              | colorRenderable |
-    setFormatCaps(MTLPixelFormatRGBA8Unorm,          true,            true,                               true,           true,        true,                                    true);
-    setFormatCaps(MTLPixelFormatRGBA8Unorm_sRGB,     true,          display->supportsIOSGPUFamily(2),     true,           true,        true,                                    true);
-    setFormatCaps(MTLPixelFormatRGBA8Snorm,          true,            true,                               true,           true,     display->supportsEitherGPUFamily(2, 1),     true);
-    setFormatCaps(MTLPixelFormatBGRA8Unorm,          true,            true,                               true,           true,        true,                                    true);
-    setFormatCaps(MTLPixelFormatBGRA8Unorm_sRGB,     true,          display->supportsIOSGPUFamily(2),     true,           true,        true,                                    true);
-
-    //            |  formatId              | filterable                    |  writable  |  blendable |  multisample |  resolve                              | colorRenderable |
-    setFormatCaps(MTLPixelFormatR16Float,       true,                          true,        true,           true,        true,                                 true);
-    setFormatCaps(MTLPixelFormatRG16Float,      true,                          true,        true,           true,        true,                                 true);
-    setFormatCaps(MTLPixelFormatR32Float,   display->supportsMacGPUFamily(1),  true,        true,           true,      display->supportsMacGPUFamily(1),       true);
-
-#if TARGET_OS_IOS && !TARGET_OS_MACCATALYST
-    //            |  formatId                  | filterable    |  writable  |  blendable |  multisample |  resolve   | colorRenderable |
-    setFormatCaps(MTLPixelFormatB5G6R5Unorm,      true,            false,        true,           true,        true,      true);
-    setFormatCaps(MTLPixelFormatABGR4Unorm,       true,            false,        true,           true,        true,      true);
-    setFormatCaps(MTLPixelFormatBGR5A1Unorm,      true,            false,        true,           true,        true,      true);
-    setFormatCaps(MTLPixelFormatA1BGR5Unorm,      true,            false,        true,           true,        true,      true);
-#endif
-
-    //            |  formatId                  | filterable    |  writable                                 |  blendable |  multisample |  resolve   | colorRenderable |
-    setFormatCaps(MTLPixelFormatBGR10A2Unorm,     true,         display->supportsEitherGPUFamily(3, 1),       true,           true,        true,      true);
-    setFormatCaps(MTLPixelFormatRGB10A2Unorm,     true,         display->supportsEitherGPUFamily(3, 1),       true,           true,        true,      true);
-    setFormatCaps(MTLPixelFormatRGB10A2Uint,      false,        display->supportsEitherGPUFamily(3, 1),       false,          true,        false,     true);
-    setFormatCaps(MTLPixelFormatRG11B10Float,     true,         display->supportsEitherGPUFamily(3, 1),       true,           true,        true,      true);
-
-    //            |  formatId                  | filterable    |  writable                         |  blendable                      |  multisample                    |  resolve                       | colorRenderable                 |
-    setFormatCaps(MTLPixelFormatRGB9E5Float,       true,         display->supportsIOSGPUFamily(3),  display->supportsIOSGPUFamily(1), display->supportsIOSGPUFamily(1), display->supportsIOSGPUFamily(1), display->supportsIOSGPUFamily(1));
-
-    //            |  formatId               | filterable    |  writable  |  blendable  |  multisample                        |  resolve      | colorRenderable |
-    setFormatCaps(MTLPixelFormatR8Uint,        false,           true,        false,          true,                             false,         true);
-    setFormatCaps(MTLPixelFormatR8Sint,        false,           true,        false,          true,                             false,         true);
-    setFormatCaps(MTLPixelFormatR16Uint,       false,           true,        false,          true,                             false,         true);
-    setFormatCaps(MTLPixelFormatR16Sint,       false,           true,        false,          true,                             false,         true);
-    setFormatCaps(MTLPixelFormatRG8Uint,       false,           true,        false,          true,                             false,         true);
-    setFormatCaps(MTLPixelFormatRG8Sint,       false,           true,        false,          true,                             false,         true);
-    setFormatCaps(MTLPixelFormatR32Uint,       false,           true,        false,          display->supportsMacGPUFamily(1), false,         true);
-    setFormatCaps(MTLPixelFormatR32Sint,       false,           true,        false,          display->supportsMacGPUFamily(1), false,         true);
-    setFormatCaps(MTLPixelFormatRG16Uint,      false,           true,        false,          true,                             false,         true);
-    setFormatCaps(MTLPixelFormatRG16Sint,      false,           true,        false,          true,                             false,         true);
-    setFormatCaps(MTLPixelFormatRGBA8Uint,     false,           true,        false,          true,                             false,         true);
-    setFormatCaps(MTLPixelFormatRGBA8Sint,     false,           true,        false,          true,                             false,         true);
-    setFormatCaps(MTLPixelFormatRG32Uint,      false,           true,        false,          display->supportsMacGPUFamily(1), false,         true);
-    setFormatCaps(MTLPixelFormatRG32Sint,      false,           true,        false,          display->supportsMacGPUFamily(1), false,         true);
-    setFormatCaps(MTLPixelFormatRGBA16Uint,    false,           true,        false,          true,                             false,         true);
-    setFormatCaps(MTLPixelFormatRGBA16Sint,    false,           true,        false,          true,                             false,         true);
-    setFormatCaps(MTLPixelFormatRGBA32Uint,    false,           true,        false,          display->supportsMacGPUFamily(1), false,         true);
-    setFormatCaps(MTLPixelFormatRGBA32Sint,    false,           true,        false,          display->supportsMacGPUFamily(1), false,         true);
-
-    //            |  formatId                   | filterable                      |  writable  |  blendable                     |  multisample                     |  resolve                         | colorRenderable |
-    setFormatCaps(MTLPixelFormatRG32Float,       display->supportsMacGPUFamily(1),   true,       true,                            display->supportsMacGPUFamily(1),  display->supportsMacGPUFamily(1),         true);
-    setFormatCaps(MTLPixelFormatRGBA32Float,     display->supportsMacGPUFamily(1),   true,      display->supportsMacGPUFamily(1), display->supportsMacGPUFamily(1),  display->supportsMacGPUFamily(1),         true);
-
-    //            |  formatId                           | filterable                       |  writable  |  blendable |  multisample |  resolve                                | colorRenderable | depthRenderable                    |
-    setFormatCaps(MTLPixelFormatDepth32Float,              display->supportsMacGPUFamily(1),   false,        false,           true,    supportDepthAutoResolve,                    false,            true);
-    setFormatCaps(MTLPixelFormatStencil8,                   false,                             false,        false,           true,    false,                                      false,            true);
-    setFormatCaps(MTLPixelFormatDepth32Float_Stencil8,     display->supportsMacGPUFamily(1),   false,        false,           true,    supportDepthStencilAutoResolve,             false,            true);
 #if TARGET_OS_OSX || TARGET_OS_MACCATALYST
-    setFormatCaps(MTLPixelFormatDepth16Unorm,               true,                              false,        false,           true,    supportDepthAutoResolve,                    false,            true);
-    setFormatCaps(MTLPixelFormatDepth24Unorm_Stencil8,     display->supportsMacGPUFamily(1),   false,        false,           true,    supportDepthStencilAutoResolve,             false,            display->supportsMacGPUFamily(1));
-
     setCompressedFormatCaps(MTLPixelFormatBC1_RGBA, true);
     setCompressedFormatCaps(MTLPixelFormatBC1_RGBA_sRGB, true);
     setCompressedFormatCaps(MTLPixelFormatBC2_RGBA, true);

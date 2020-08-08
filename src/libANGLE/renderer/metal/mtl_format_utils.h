@@ -140,6 +140,7 @@ class FormatTable final : angle::NonCopyable
     uint32_t getMaxSamples() const { return mMaxSamples; }
 
   private:
+    void initNativeFormatCapsAutogen(const DisplayMtl *display);
     void initNativeFormatCaps(const DisplayMtl *display);
     void setFormatCaps(MTLPixelFormat formatId,
                        bool filterable,
