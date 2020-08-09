@@ -214,8 +214,8 @@ void WriteResultsFile(bool interrupted,
     doc.AddMember("version", 3, allocator);
     doc.AddMember("seconds_since_epoch", secondsSinceEpoch, allocator);
 
-    js::Value testSuite;
-    testSuite.SetObject();
+    js::Value tests;
+    tests.SetObject();
 
     std::map<TestResultType, uint32_t> counts;
 
@@ -232,6 +232,11 @@ void WriteResultsFile(bool interrupted,
         jsResult.AddMember("expected", "PASS", allocator);
         jsResult.AddMember("actual", ResultTypeToJSString(result.type, &allocator), allocator);
 
+        if (result.type != TestResultType::Pass)
+        {
+            jsResult.AddMember("is_unexpected", true, allocator);
+        }
+
         js::Value times;
         times.SetArray();
         times.PushBack(result.elapsedTimeSeconds, allocator);
@@ -243,7 +248,7 @@ void WriteResultsFile(bool interrupted,
         js::Value jsName;
         jsName.SetString(testName, allocator);
 
-        testSuite.AddMember(jsName, jsResult, allocator);
+        tests.AddMember(jsName, jsResult, allocator);
     }
 
     js::Value numFailuresByType;
@@ -259,10 +264,6 @@ void WriteResultsFile(bool interrupted,
     }
 
     doc.AddMember("num_failures_by_type", numFailuresByType, allocator);
-
-    js::Value tests;
-    tests.SetObject();
-    tests.AddMember(js::StringRef(testSuiteName), testSuite, allocator);
 
     doc.AddMember("tests", tests, allocator);
 
@@ -495,20 +496,7 @@ bool GetTestResultsFromJSON(const js::Document &document, TestResults *resultsOu
     }
 
     const js::Value::ConstObject &tests = document["tests"].GetObject();
-    if (tests.MemberCount() != 1)
-    {
-        return false;
-    }
-
-    const js::Value::Member &suite = *tests.MemberBegin();
-    if (!suite.value.IsObject())
-    {
-        return false;
-    }
-
-    const js::Value::ConstObject &actual = suite.value.GetObject();
-
-    for (auto iter = actual.MemberBegin(); iter != actual.MemberEnd(); ++iter)
+    for (auto iter = tests.MemberBegin(); iter != tests.MemberEnd(); ++iter)
     {
         // Get test identifier.
         const js::Value &name = iter->name;
