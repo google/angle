@@ -82,12 +82,14 @@ TYPED_TEST(BitSetTest, Basic)
     EXPECT_TRUE(mBits.any());
     EXPECT_FALSE(mBits.none());
     EXPECT_EQ(mBits.count(), mBits.size() / 2);
+    EXPECT_EQ(mBits.first(), 1u);
 
     mBits.set();
     EXPECT_TRUE(mBits.all());
     EXPECT_TRUE(mBits.any());
     EXPECT_FALSE(mBits.none());
     EXPECT_EQ(mBits.count(), mBits.size());
+    EXPECT_EQ(mBits.first(), 0u);
 
     mBits.reset();
     EXPECT_FALSE(mBits.all());

@@ -1369,27 +1369,20 @@ ANGLE_INLINE angle::Result ContextVk::handleDirtyTexturesImpl(
         }
         else
         {
-            gl::ShaderBitSet shaderBits =
+            gl::ShaderBitSet remainingShaderBits =
                 executable->getSamplerShaderBitsForTextureUnitIndex(textureUnit);
-            if (shaderBits.any())
+            ASSERT(remainingShaderBits.any());
+            gl::ShaderType firstShader = remainingShaderBits.first();
+            remainingShaderBits.reset(firstShader);
+            // If we have multiple shader accessing it, we barrier against all shader stage read
+            // given that we only support vertex/frag shaders
+            if (remainingShaderBits.any())
             {
-                gl::ShaderType shader =
-                    static_cast<gl::ShaderType>(gl::ScanForward(shaderBits.bits()));
-                shaderBits.reset(shader);
-                // If we have multiple shader accessing it, we barrier against all shader stage read
-                // given that we only support vertex/frag shaders
-                if (shaderBits.any())
-                {
-                    textureLayout = vk::ImageLayout::AllGraphicsShadersReadOnly;
-                }
-                else
-                {
-                    textureLayout = kShaderReadOnlyImageLayouts[shader];
-                }
+                textureLayout = vk::ImageLayout::AllGraphicsShadersReadOnly;
             }
             else
             {
-                textureLayout = vk::ImageLayout::AllGraphicsShadersReadOnly;
+                textureLayout = kShaderReadOnlyImageLayouts[firstShader];
             }
         }
         // Ensure the image is in read-only layout
