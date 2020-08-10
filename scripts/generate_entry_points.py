@@ -338,10 +338,19 @@ template_parameter_capture_value = """paramBuffer.addValueParam("{name}", ParamT
 template_parameter_capture_gl_enum = """paramBuffer.addEnumParam("{name}", GLenumGroup::{group}, ParamType::T{type}, {name});"""
 
 template_parameter_capture_pointer = """
-    ParamCapture {name}Param("{name}", ParamType::T{type});
-    InitParamValue(ParamType::T{type}, {name}, &{name}Param.value);
-    {capture_name}({params}, &{name}Param);
-    paramBuffer.addParam(std::move({name}Param));
+    if (isCallValid) 
+    {{
+        ParamCapture {name}Param("{name}", ParamType::T{type});
+        InitParamValue(ParamType::T{type}, {name}, &{name}Param.value);
+        {capture_name}({params}, &{name}Param);
+        paramBuffer.addParam(std::move({name}Param));
+    }}
+    else 
+    {{
+        ParamCapture {name}Param("{name}", ParamType::T{type});
+        InitParamValue(ParamType::T{type}, static_cast<{cast_type}>(nullptr), &{name}Param.value);
+        paramBuffer.addParam(std::move({name}Param));
+    }}
 """
 
 template_parameter_capture_pointer_func = """void {name}({params});"""
@@ -674,7 +683,6 @@ template_param_type_to_resource_id_type_case = """        case ParamType::T{enum
 template_resource_id_type_name_case = """        case ResourceIDType::{resource_id_type}:
             return "{resource_id_type}";"""
 
-
 def script_relative(path):
     return os.path.join(os.path.dirname(sys.argv[0]), path)
 
@@ -909,27 +917,31 @@ def format_capture_method(command, cmd_name, proto, params, all_param_types, cap
 
         param_name = just_the_name_packed(param, packed_gl_enums)
         param_type = just_the_type_packed(param, packed_gl_enums).strip()
-
         pointer_count = param_type.count("*")
-        param_type = get_capture_param_type_name(param_type)
+        capture_param_type = get_capture_param_type_name(param_type)
 
         if pointer_count > 0:
             params = params_just_name
             capture_name = "Capture%s_%s" % (cmd_name[2:], param_name)
             capture = template_parameter_capture_pointer.format(
-                name=param_name, type=param_type, capture_name=capture_name, params=params)
+                name=param_name,
+                type=capture_param_type,
+                capture_name=capture_name,
+                params=params,
+                cast_type=param_type)
 
             capture_pointer_func = template_parameter_capture_pointer_func.format(
                 name=capture_name, params=params_with_type + ", angle::ParamCapture *paramCapture")
             capture_pointer_funcs += [capture_pointer_func]
-        elif param_type in ('GLenum', 'GLbitfield'):
+        elif capture_param_type in ('GLenum', 'GLbitfield'):
             gl_enum_group = find_gl_enum_group_in_command(command, param_name)
             capture = template_parameter_capture_gl_enum.format(
-                name=param_name, type=param_type, group=gl_enum_group)
+                name=param_name, type=capture_param_type, group=gl_enum_group)
         else:
-            capture = template_parameter_capture_value.format(name=param_name, type=param_type)
+            capture = template_parameter_capture_value.format(
+                name=param_name, type=capture_param_type)
 
-        all_param_types.add(param_type)
+        all_param_types.add(capture_param_type)
 
         parameter_captures += [capture]
 
