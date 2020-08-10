@@ -167,6 +167,25 @@ as the GLES driver for your application.
     $ out/Release/capture_replay_sample
     ```
 
+### Starting capture at an arbitrary frame
+In some scenarios, you don't know which frame you want to start on. You'll only know when target
+content is being rendered.  For that we've added a trigger that can allow starting the capture at
+any time.
+
+To use it, set the following environment variable, in addition to all the setup steps above. Set
+the trigger value equal to the number of frames you'd like to capture.
+```
+adb shell setprop debug.angle.capture.trigger 20
+```
+When this value is set, `ANGLE_CAPTURE_FRAME_START` and `ANGLE_CAPTURE_FRAME_END` will be ignored.
+
+While your content is rendering, wait until you arrive at the scene you'd like to capture. Then
+set the value back to zero:
+```
+adb shell setprop debug.angle.capture.trigger 0
+```
+ANGLE will detect this change and start recording the requested number of frames.
+
 ## Testing
 
 ### Regression Testing Architecture

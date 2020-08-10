@@ -302,6 +302,7 @@ class FrameCapture final : angle::NonCopyable
     ~FrameCapture();
 
     void captureCall(const gl::Context *context, CallCapture &&call);
+    void checkForCaptureTrigger();
     void onEndFrame(const gl::Context *context);
     void onDestroyContext(const gl::Context *context);
     void onMakeCurrent(const egl::Surface *drawSurface);
@@ -368,6 +369,11 @@ class FrameCapture final : angle::NonCopyable
     // Cache a shadow copy of texture level data
     TextureLevels mCachedTextureLevels;
     TextureLevelDataMap mCachedTextureLevelData;
+
+    // If you don't know which frame you want to start capturing at, use the capture trigger.
+    // Initialize it to the number of frames you want to capture, and then clear the value to 0 when
+    // you reach the content you want to capture. Currently only available on Android.
+    uint32_t mCaptureTrigger;
 };
 
 template <typename CaptureFuncT, typename... ArgsT>
