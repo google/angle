@@ -1229,10 +1229,12 @@ angle::Result FramebufferVk::resolveColorWithCommand(ContextVk *contextVk,
                                                   &drawRenderTarget->getImageForWrite()));
         ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(&commandBuffer));
 
-        resolveRegion.dstSubresource.mipLevel       = drawRenderTarget->getLevelIndex();
+        vk::ImageHelper &dstImage = drawRenderTarget->getImageForWrite();
+        uint32_t levelVK          = drawRenderTarget->getLevelIndex() - dstImage.getBaseLevel();
+        resolveRegion.dstSubresource.mipLevel       = levelVK;
         resolveRegion.dstSubresource.baseArrayLayer = drawRenderTarget->getLayerIndex();
 
-        srcImage->resolve(&drawRenderTarget->getImageForWrite(), resolveRegion, commandBuffer);
+        srcImage->resolve(&dstImage, resolveRegion, commandBuffer);
     }
 
     return angle::Result::Continue;
