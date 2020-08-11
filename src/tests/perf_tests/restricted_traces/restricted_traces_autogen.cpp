@@ -15,6 +15,7 @@
 #include "candy_crush_500/candy_crush_500_capture_context2.h"
 #include "egypt_1500/egypt_1500_capture_context6.h"
 #include "manhattan_10/manhattan_10_capture_context6.h"
+#include "mobile_legends/mobile_legends_capture_context3.h"
 #include "nba2k20_800/nba2k20_800_capture_context1.h"
 #include "subway_surfer_500/subway_surfer_500_capture_context4.h"
 #include "temple_run_300/temple_run_300_capture_context3.h"
@@ -40,6 +41,10 @@ constexpr angle::PackedEnumMap<RestrictedTraceID, TraceInfo> kTraceInfos = {
      {manhattan_10::kReplayFrameStart, manhattan_10::kReplayFrameEnd,
       manhattan_10::kReplayDrawSurfaceWidth, manhattan_10::kReplayDrawSurfaceHeight,
       "manhattan_10"}},
+    {RestrictedTraceID::mobile_legends,
+     {mobile_legends::kReplayFrameStart, mobile_legends::kReplayFrameEnd,
+      mobile_legends::kReplayDrawSurfaceWidth, mobile_legends::kReplayDrawSurfaceHeight,
+      "mobile_legends"}},
     {RestrictedTraceID::nba2k20_800,
      {nba2k20_800::kReplayFrameStart, nba2k20_800::kReplayFrameEnd,
       nba2k20_800::kReplayDrawSurfaceWidth, nba2k20_800::kReplayDrawSurfaceHeight, "nba2k20_800"}},
@@ -77,6 +82,9 @@ void ReplayFrame(RestrictedTraceID traceID, uint32_t frameIndex)
         case RestrictedTraceID::manhattan_10:
             manhattan_10::ReplayContext6Frame(frameIndex);
             break;
+        case RestrictedTraceID::mobile_legends:
+            mobile_legends::ReplayContext3Frame(frameIndex);
+            break;
         case RestrictedTraceID::nba2k20_800:
             nba2k20_800::ReplayContext1Frame(frameIndex);
             break;
@@ -111,6 +119,9 @@ void ResetReplay(RestrictedTraceID traceID)
             break;
         case RestrictedTraceID::manhattan_10:
             manhattan_10::ResetContext6Replay();
+            break;
+        case RestrictedTraceID::mobile_legends:
+            mobile_legends::ResetContext3Replay();
             break;
         case RestrictedTraceID::nba2k20_800:
             nba2k20_800::ResetContext1Replay();
@@ -147,6 +158,9 @@ void SetupReplay(RestrictedTraceID traceID)
         case RestrictedTraceID::manhattan_10:
             manhattan_10::SetupContext6Replay();
             break;
+        case RestrictedTraceID::mobile_legends:
+            mobile_legends::SetupContext3Replay();
+            break;
         case RestrictedTraceID::nba2k20_800:
             nba2k20_800::SetupContext1Replay();
             break;
@@ -182,6 +196,9 @@ void SetBinaryDataDir(RestrictedTraceID traceID, const char *dataDir)
         case RestrictedTraceID::manhattan_10:
             manhattan_10::SetBinaryDataDir(dataDir);
             break;
+        case RestrictedTraceID::mobile_legends:
+            mobile_legends::SetBinaryDataDir(dataDir);
+            break;
         case RestrictedTraceID::nba2k20_800:
             nba2k20_800::SetBinaryDataDir(dataDir);
             break;
@@ -216,6 +233,9 @@ void SetBinaryDataDecompressCallback(RestrictedTraceID traceID, DecompressCallba
             break;
         case RestrictedTraceID::manhattan_10:
             manhattan_10::SetBinaryDataDecompressCallback(callback);
+            break;
+        case RestrictedTraceID::mobile_legends:
+            mobile_legends::SetBinaryDataDecompressCallback(callback);
             break;
         case RestrictedTraceID::nba2k20_800:
             nba2k20_800::SetBinaryDataDecompressCallback(callback);

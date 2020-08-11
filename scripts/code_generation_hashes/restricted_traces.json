@@ -9,16 +9,18 @@
     "79d6e6bcdcea1bf7236091183d34dd9e",
   "src/tests/perf_tests/restricted_traces/manhattan_10.tar.gz.sha1":
     "752781119592a190cc02b773adf38fc3",
+  "src/tests/perf_tests/restricted_traces/mobile_legends.tar.gz.sha1":
+    "a3fe48a3acc2165a7fb3eb6cf01b441f",
   "src/tests/perf_tests/restricted_traces/nba2k20_800.tar.gz.sha1":
     "03df0dcf41c18bc59edfc0b088ca4a87",
   "src/tests/perf_tests/restricted_traces/restricted_traces.json":
-    "aefeb34167e491c2b869b7fe8c51e3ca",
+    "3d86078bb5432589b43ab6c7cd5b23d9",
   "src/tests/perf_tests/restricted_traces/restricted_traces_autogen.cpp":
-    "5f6fe67928fca1e6cb17f1b30e067500",
+    "578f3bdda73da6474e71e9685142cacd",
   "src/tests/perf_tests/restricted_traces/restricted_traces_autogen.gni":
-    "d950b3d89e1d80fc47a611863a76c18e",
+    "da6ac463c74450b162738e7d25a649ef",
   "src/tests/perf_tests/restricted_traces/restricted_traces_autogen.h":
-    "961c4192564a6198c8114969baa32bb7",
+    "9f7247aa84c1850adab8fa67e652267e",
   "src/tests/perf_tests/restricted_traces/subway_surfer_500.tar.gz.sha1":
     "a47a797dd227f5025439b47cee80dbc9",
   "src/tests/perf_tests/restricted_traces/temple_run_300.tar.gz.sha1":
