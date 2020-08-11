@@ -43,6 +43,7 @@ ANGLE_CHROMIUM_DEPS = [
     'third_party/qemu-mac-x64',
     'third_party/zlib',
     'tools/clang',
+    'tools/clang/dsymutil',
     'tools/md_browser',
     'tools/memory',
 ]
