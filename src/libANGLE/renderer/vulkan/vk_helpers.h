@@ -1011,7 +1011,8 @@ struct CommandBufferHelper : angle::NonCopyable
     uint32_t mDepthStencilAttachmentIndex;
 
     // Tracks resources used in the command buffer.
-    std::unordered_map<BufferSerial, BufferAccess> mUsedBuffers;
+    static constexpr uint32_t kFastMapSize = 8;
+    angle::FastUnorderedMap<BufferSerial, BufferAccess, kFastMapSize> mUsedBuffers;
 };
 
 static constexpr uint32_t kInvalidAttachmentIndex = -1;

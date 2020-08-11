@@ -569,13 +569,17 @@ void CommandBufferHelper::initialize(bool isRenderPassCommandBuffer, bool mergeB
 
 bool CommandBufferHelper::usesBuffer(const BufferHelper &buffer) const
 {
-    return mUsedBuffers.count(buffer.getBufferSerial()) > 0;
+    return mUsedBuffers.contains(buffer.getBufferSerial());
 }
 
 bool CommandBufferHelper::usesBufferForWrite(const BufferHelper &buffer) const
 {
-    auto iter = mUsedBuffers.find(buffer.getBufferSerial());
-    return iter != mUsedBuffers.end() && iter->second == BufferAccess::Write;
+    BufferAccess access;
+    if (!mUsedBuffers.get(buffer.getBufferSerial(), &access))
+    {
+        return false;
+    }
+    return access == BufferAccess::Write;
 }
 
 void CommandBufferHelper::bufferRead(ResourceUseList *resourceUseList,
@@ -591,7 +595,10 @@ void CommandBufferHelper::bufferRead(ResourceUseList *resourceUseList,
     }
 
     ASSERT(!usesBufferForWrite(*buffer));
-    mUsedBuffers[buffer->getBufferSerial()] = BufferAccess::Read;
+    if (!mUsedBuffers.contains(buffer->getBufferSerial()))
+    {
+        mUsedBuffers.insert(buffer->getBufferSerial(), BufferAccess::Read);
+    }
 }
 
 void CommandBufferHelper::bufferWrite(ResourceUseList *resourceUseList,
@@ -614,7 +621,7 @@ void CommandBufferHelper::bufferWrite(ResourceUseList *resourceUseList,
     if (aliasingMode == BufferAliasingMode::Disallowed)
     {
         ASSERT(!usesBuffer(*buffer));
-        mUsedBuffers[buffer->getBufferSerial()] = BufferAccess::Write;
+        mUsedBuffers.insert(buffer->getBufferSerial(), BufferAccess::Write);
     }
 }
 
