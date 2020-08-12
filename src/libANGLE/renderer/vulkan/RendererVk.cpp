@@ -684,7 +684,7 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
 
     VkApplicationInfo applicationInfo  = {};
     applicationInfo.sType              = VK_STRUCTURE_TYPE_APPLICATION_INFO;
-    applicationInfo.pApplicationName   = "ANGLE";
+    applicationInfo.pApplicationName   = angle::GetExecutableName().c_str();
     applicationInfo.applicationVersion = 1;
     applicationInfo.pEngineName        = "ANGLE";
     applicationInfo.engineVersion      = 1;

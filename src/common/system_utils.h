@@ -16,6 +16,7 @@
 
 namespace angle
 {
+std::string GetExecutableName();
 std::string GetExecutablePath();
 std::string GetExecutableDirectory();
 std::string GetHelperExecutableDir();
