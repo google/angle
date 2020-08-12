@@ -36,6 +36,7 @@ Script testing capture_replay with angle_end2end_tests
 
 import argparse
 import distutils.util
+import fnmatch
 import math
 import multiprocessing
 import os
@@ -338,16 +339,30 @@ def GetTestNamesAndParamsCommand(test_exec_path, filter="*"):
 
 
 def ProcessGetTestNamesAndParamsCommandOutput(output):
+
+    def SkipTest(skipped_test_patterns, full_test_name):
+        for skipped_test_pattern in skipped_test_patterns:
+            if fnmatch.fnmatch(full_test_name, skipped_test_pattern):
+                return True
+        return False
+
     output_lines = output.splitlines()
     tests = []
     last_testcase_name = ""
     test_name_splitter = "# GetParam() ="
+    test_expectations_filename = "capture_replay_expectations.txt"
+    skipped_test_patterns = [
+        line.rstrip() for line in \
+        open(os.path.join(REPLAY_SAMPLE_FOLDER, test_expectations_filename), "r") \
+        if (not line.startswith("#") and not line.isspace())
+    ]
     for line in output_lines:
         if test_name_splitter in line:
             # must be a test name line
             test_name_and_params = line.split(test_name_splitter)
-            tests.append((last_testcase_name + test_name_and_params[0].strip(), \
-                test_name_and_params[1].strip()))
+            full_test_name = last_testcase_name + test_name_and_params[0].strip()
+            if not SkipTest(skipped_test_patterns, full_test_name):
+                tests.append((full_test_name, test_name_and_params[1].strip()))
         else:
             # gtest_list_tests returns the test in this format
             # test case
@@ -495,29 +510,33 @@ class Test():
         return self.full_test_name.replace(".", "_").replace("/", "_")
 
     def CanRunReplay(self, trace_folder_path):
+        test_files = []
         label = self.GetLabel()
-        assert (self.context_id > 0)
-        trace_file_suffix = TRACE_FILE_SUFFIX + str(self.context_id)
-        required_trace_files = {
-            label + trace_file_suffix + ".h", label + trace_file_suffix + ".cpp",
-            label + trace_file_suffix + "_files.txt"
-        }
-        required_trace_files_count = 0
-        frame_files_count = 0
+        assert (self.context_id == 0)
         for f in os.listdir(trace_folder_path):
-            if not os.path.isfile(os.path.join(trace_folder_path, f)):
-                continue
-            if f in required_trace_files:
-                required_trace_files_count += 1
-            elif f.startswith(label + trace_file_suffix + "_frame"):
+            if os.path.isfile(os.path.join(trace_folder_path, f)) and f.startswith(label):
+                test_files.append(f)
+        frame_files_count = 0
+        context_header_count = 0
+        context_source_count = 0
+        source_txt_count = 0
+        context_id = 0
+        for f in test_files:
+            if "_frame" in f:
                 frame_files_count += 1
-            elif f.startswith(label +
-                              trace_file_suffix[:-1]) and not f.startswith(label +
-                                                                           trace_file_suffix):
-                # if trace_files of another context exists, then the test creates multiple contexts
-                return False
-        # angle_capture_context1.angledata.gz can be missing
-        return required_trace_files_count == len(required_trace_files) and frame_files_count >= 1
+            elif f.endswith(".txt"):
+                source_txt_count += 1
+            elif f.endswith(".h"):
+                context_header_count += 1
+                context_id = int(f.split("capture_context")[1][:-2])
+            elif f.endswith(".cpp"):
+                context_source_count += 1
+        can_run_replay = frame_files_count >= 1 and context_header_count == 1 \
+            and context_source_count == 1 and source_txt_count == 1
+        if not can_run_replay:
+            return False
+        self.context_id = context_id
+        return True
 
 
 class TestBatch():
@@ -642,7 +661,6 @@ class TestBatch():
         assert len(self.tests) <= self.batch_count
         test.index = len(self.tests)
         self.tests.append(test)
-        test.context_id = len(self.tests)
 
     # gni file, which holds all the sources for a replay application
     def CreateGNIFile(self, trace_folder_path, composite_file_id, tests):
