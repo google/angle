@@ -281,14 +281,6 @@ TexturesParams D3D11Params(bool webglCompat)
     return params;
 }
 
-TexturesParams D3D9Params(bool webglCompat)
-{
-    TexturesParams params;
-    params.eglParameters = egl_platform::D3D9_NULL();
-    params.webgl         = webglCompat;
-    return params;
-}
-
 TexturesParams OpenGLOrGLESParams(bool webglCompat)
 {
     TexturesParams params;
@@ -313,7 +305,6 @@ TEST_P(TexturesBenchmark, Run)
 ANGLE_INSTANTIATE_TEST(TexturesBenchmark,
                        D3D11Params(false),
                        D3D11Params(true),
-                       D3D9Params(true),
                        OpenGLOrGLESParams(false),
                        OpenGLOrGLESParams(true),
                        VulkanParams(false),

@@ -311,13 +311,6 @@ TextureSamplingParams D3D11Params()
     return params;
 }
 
-TextureSamplingParams D3D9Params()
-{
-    TextureSamplingParams params;
-    params.eglParameters = egl_platform::D3D9();
-    return params;
-}
-
 TextureSamplingParams OpenGLOrGLESParams()
 {
     TextureSamplingParams params;
@@ -346,7 +339,6 @@ TEST_P(TextureSamplingMutableFormatBenchmark, Run)
 
 ANGLE_INSTANTIATE_TEST(TextureSamplingBenchmark,
                        D3D11Params(),
-                       D3D9Params(),
                        OpenGLOrGLESParams(),
                        VulkanParams());
 
