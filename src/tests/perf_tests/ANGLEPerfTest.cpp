@@ -596,9 +596,9 @@ void ANGLERenderTest::SetUp()
                                  GL_FALSE);
         glDebugMessageControlKHR(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_NOTIFICATION, 0,
                                  nullptr, GL_FALSE);
-        // Disable medium priority performance messages to reduce spam.
-        glDebugMessageControlKHR(GL_DONT_CARE, GL_DEBUG_TYPE_PERFORMANCE, GL_DEBUG_SEVERITY_MEDIUM,
-                                 0, nullptr, GL_FALSE);
+        // Disable performance messages to reduce spam.
+        glDebugMessageControlKHR(GL_DONT_CARE, GL_DEBUG_TYPE_PERFORMANCE, GL_DONT_CARE, 0, nullptr,
+                                 GL_FALSE);
         glDebugMessageCallbackKHR(DebugMessageCallback, this);
     }
 #endif
