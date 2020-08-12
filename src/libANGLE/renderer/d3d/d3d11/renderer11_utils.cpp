@@ -2482,9 +2482,10 @@ void InitializeFeatures(const Renderer11DeviceCaps &deviceCaps,
     // Intel, they've been blocklisted to the DX9 runtime.
     ANGLE_FEATURE_CONDITION(features, allowClearForRobustResourceInit, true);
 
-    // There is an issue(crbug.com/1112112) when translating uniform block to StructuredBuffer,
-    // so disable this feature temporarily.
-    ANGLE_FEATURE_CONDITION(features, dontTranslateUniformBlockToStructuredBuffer, true);
+    // Allow translating uniform block to StructuredBuffer on Windows 10. This is targeted
+    // to work around a slow fxc compile performance issue with dynamic uniform indexing.
+    ANGLE_FEATURE_CONDITION(features, allowTranslateUniformBlockToStructuredBuffer,
+                            IsWin10OrGreater());
 
     // Call platform hooks for testing overrides.
     auto *platform = ANGLEPlatformCurrent();

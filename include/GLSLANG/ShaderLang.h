@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 236
+#define ANGLE_SH_VERSION 237
 
 enum ShShaderSpec
 {
@@ -315,9 +315,8 @@ const ShCompileOptions SH_ADD_BASE_VERTEX_TO_VERTEX_ID = UINT64_C(1) << 48;
 // This works around the dynamic lvalue indexing of swizzled vectors on various platforms.
 const ShCompileOptions SH_REMOVE_DYNAMIC_INDEXING_OF_SWIZZLED_VECTOR = UINT64_C(1) << 49;
 
-// This flag works a driver bug that fails to allocate ShaderResourceView for StructuredBuffer
-// on Windows 7 and earlier.
-const ShCompileOptions SH_DONT_TRANSLATE_UNIFORM_BLOCK_TO_STRUCTUREDBUFFER = UINT64_C(1) << 50;
+// This flag works around a slow fxc compile performance issue with dynamic uniform indexing.
+const ShCompileOptions SH_ALLOW_TRANSLATE_UNIFORM_BLOCK_TO_STRUCTUREDBUFFER = UINT64_C(1) << 50;
 
 // This flag indicates whether Bresenham line raster emulation code should be generated.  This
 // emulation is necessary if the backend uses a differnet algorithm to draw lines.  Currently only

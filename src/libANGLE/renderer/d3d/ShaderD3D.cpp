@@ -125,9 +125,9 @@ ShaderD3D::ShaderD3D(const gl::ShaderState &state,
     {
         mAdditionalOptions |= SH_FORCE_ATOMIC_VALUE_RESOLUTION;
     }
-    if (features.dontTranslateUniformBlockToStructuredBuffer.enabled)
+    if (features.allowTranslateUniformBlockToStructuredBuffer.enabled)
     {
-        mAdditionalOptions |= SH_DONT_TRANSLATE_UNIFORM_BLOCK_TO_STRUCTUREDBUFFER;
+        mAdditionalOptions |= SH_ALLOW_TRANSLATE_UNIFORM_BLOCK_TO_STRUCTUREDBUFFER;
     }
     if (extensions.multiview || extensions.multiview2)
     {

@@ -207,11 +207,13 @@ struct FeaturesD3D : FeatureSetBase
         "Some drivers corrupt texture data when clearing for robust resource initialization.",
         &members, "http://crbug.com/941620"};
 
-    // Don't translate uniform block to StructuredBuffer on Windows 7 and earlier. This is targeted
-    // to work around a bug that fails to allocate ShaderResourceView for StructuredBuffer.
-    Feature dontTranslateUniformBlockToStructuredBuffer = {
-        "dont_translate_uniform_block_to_structured_buffer", FeatureCategory::D3DWorkarounds,
-        "Fails to allocate ShaderResourceView for StructuredBuffer on some drivers", &members};
+    // Allow translating uniform block to StructuredBuffer. This is targeted to work around a slow
+    // fxc compile performance issue with dynamic uniform indexing. http://anglebug.com/3682
+    Feature allowTranslateUniformBlockToStructuredBuffer = {
+        "allow_translate_uniform_block_to_structured_buffer", FeatureCategory::D3DWorkarounds,
+        "There is a slow fxc compile performance issue with dynamic uniform indexing if "
+        "translating a uniform block with a large array member to cbuffer.",
+        &members, "http://anglebug.com/3682"};
 };
 
 inline FeaturesD3D::FeaturesD3D()  = default;

@@ -231,9 +231,14 @@ class TType
     bool isInterfaceBlock() const { return type == EbtInterfaceBlock; }
 
     bool isVector() const { return primarySize > 1 && secondarySize == 1; }
+    bool isVectorArray() const { return primarySize > 1 && secondarySize == 1 && isArray(); }
     bool isScalar() const
     {
         return primarySize == 1 && secondarySize == 1 && !mStructure && !isArray();
+    }
+    bool isScalarArray() const
+    {
+        return primarySize == 1 && secondarySize == 1 && !mStructure && isArray();
     }
     bool isScalarFloat() const { return isScalar() && type == EbtFloat; }
     bool isScalarInt() const { return isScalar() && (type == EbtInt || type == EbtUInt); }

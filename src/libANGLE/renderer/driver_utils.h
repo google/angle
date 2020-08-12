@@ -186,6 +186,7 @@ inline bool IsIOS()
 }
 
 bool IsWayland();
+bool IsWin10OrGreater();
 
 struct OSVersion
 {
