@@ -1108,7 +1108,7 @@ angle::Result TextureVk::setEGLImageTarget(const gl::Context *context,
     uint32_t rendererQueueFamilyIndex = renderer->getQueueFamilyIndex();
     if (mImage->isQueueChangeNeccesary(rendererQueueFamilyIndex))
     {
-        vk::ImageLayout newLayout = vk::ImageLayout::AllGraphicsShadersReadWrite;
+        vk::ImageLayout newLayout = vk::ImageLayout::AllGraphicsShadersWrite;
         if (mImage->getUsage() & VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT)
         {
             newLayout = vk::ImageLayout::ColorAttachment;

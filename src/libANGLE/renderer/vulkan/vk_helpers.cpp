@@ -315,7 +315,7 @@ constexpr angle::PackedEnumMap<ImageLayout, ImageMemoryBarrierData> kImageMemory
         },
     },
     {
-        ImageLayout::AllGraphicsShadersReadWrite,
+        ImageLayout::AllGraphicsShadersWrite,
         {
             VK_IMAGE_LAYOUT_GENERAL,
             kAllShadersPipelineStageFlags,

@@ -1365,7 +1365,7 @@ ANGLE_INLINE angle::Result ContextVk::handleDirtyTexturesImpl(
         if (textureVk->isBoundAsImageTexture(mState.getContextID()))
         {
             textureLayout = executable->isCompute() ? vk::ImageLayout::ComputeShaderWrite
-                                                    : vk::ImageLayout::AllGraphicsShadersReadWrite;
+                                                    : vk::ImageLayout::AllGraphicsShadersWrite;
         }
         else
         {
@@ -3924,7 +3924,7 @@ angle::Result ContextVk::updateActiveImages(const gl::Context *context,
             // This is accessed by multiple shaders
             if (shaderBits.any())
             {
-                imageLayout = vk::ImageLayout::AllGraphicsShadersReadWrite;
+                imageLayout = vk::ImageLayout::AllGraphicsShadersWrite;
             }
             else
             {
@@ -3933,7 +3933,7 @@ angle::Result ContextVk::updateActiveImages(const gl::Context *context,
         }
         else
         {
-            imageLayout = vk::ImageLayout::AllGraphicsShadersReadWrite;
+            imageLayout = vk::ImageLayout::AllGraphicsShadersWrite;
         }
         VkImageAspectFlags aspectFlags = image->getAspectFlags();
 
