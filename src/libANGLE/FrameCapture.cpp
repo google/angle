@@ -3680,6 +3680,29 @@ void FrameCapture::trackBufferMapping(CallCapture *call,
     }
 }
 
+void FrameCapture::maybeOverrideEntryPoint(const gl::Context *context, CallCapture &call)
+{
+    switch (call.entryPoint)
+    {
+        case gl::EntryPoint::EGLImageTargetTexture2DOES:
+        {
+            // We don't support reading EGLImages. Instead, just pull from a tiny null texture.
+            // TODO (anglebug.com/4964): Read back the image data and populate the texture.
+            std::vector<uint8_t> pixelData = {0, 0, 0, 0};
+            call = CaptureTexSubImage2D(context->getState(), true, gl::TextureTarget::_2D, 0, 0, 0,
+                                        1, 1, GL_RGBA, GL_UNSIGNED_BYTE, pixelData.data());
+            break;
+        }
+        case gl::EntryPoint::EGLImageTargetRenderbufferStorageOES:
+        {
+            UNIMPLEMENTED();
+            break;
+        }
+        default:
+            break;
+    }
+}
+
 void FrameCapture::maybeCaptureClientData(const gl::Context *context, CallCapture &call)
 {
     switch (call.entryPoint)
@@ -3948,6 +3971,8 @@ void FrameCapture::maybeCaptureClientData(const gl::Context *context, CallCaptur
 
 void FrameCapture::captureCall(const gl::Context *context, CallCapture &&call)
 {
+    maybeOverrideEntryPoint(context, call);
+
     // Process client data snapshots.
     maybeCaptureClientData(context, call);
 

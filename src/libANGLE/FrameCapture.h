@@ -328,6 +328,7 @@ class FrameCapture final : angle::NonCopyable
     void captureCompressedTextureData(const gl::Context *context, const CallCapture &call);
 
     void reset();
+    void maybeOverrideEntryPoint(const gl::Context *context, CallCapture &call);
     void maybeCaptureClientData(const gl::Context *context, CallCapture &call);
     void maybeCapturePostCallUpdates(const gl::Context *context);
 
