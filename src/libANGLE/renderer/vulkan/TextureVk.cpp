@@ -369,6 +369,14 @@ angle::Result TextureVk::setSubImageImpl(const gl::Context *context,
 {
     ContextVk *contextVk = vk::GetImpl(context);
 
+    // Use context's staging buffer for immutable textures and flush out updates
+    // immediately.
+    vk::DynamicBuffer *stagingBuffer = nullptr;
+    if (!mOwnsImage || mState.getImmutableFormat())
+    {
+        stagingBuffer = contextVk->getStagingBufferStorage();
+    }
+
     if (unpackBuffer)
     {
         BufferVk *unpackBufferVk       = vk::GetImpl(unpackBuffer);
@@ -416,22 +424,24 @@ angle::Result TextureVk::setSubImageImpl(const gl::Context *context,
             ANGLE_TRY(mImage->stageSubresourceUpdateImpl(
                 contextVk, getNativeImageIndex(index),
                 gl::Extents(area.width, area.height, area.depth),
-                gl::Offset(area.x, area.y, area.z), formatInfo, unpack, type, source, vkFormat,
-                inputRowPitch, inputDepthPitch, inputSkipBytes));
+                gl::Offset(area.x, area.y, area.z), formatInfo, unpack, stagingBuffer, type, source,
+                vkFormat, inputRowPitch, inputDepthPitch, inputSkipBytes));
 
             ANGLE_TRY(unpackBufferVk->unmapImpl(contextVk));
         }
     }
     else if (pixels)
     {
-        ANGLE_TRY(mImage->stageSubresourceUpdate(
-            contextVk, getNativeImageIndex(index), gl::Extents(area.width, area.height, area.depth),
-            gl::Offset(area.x, area.y, area.z), formatInfo, unpack, type, pixels, vkFormat));
+        ANGLE_TRY(mImage->stageSubresourceUpdate(contextVk, getNativeImageIndex(index),
+                                                 gl::Extents(area.width, area.height, area.depth),
+                                                 gl::Offset(area.x, area.y, area.z), formatInfo,
+                                                 unpack, stagingBuffer, type, pixels, vkFormat));
     }
 
-    if (!mOwnsImage)
+    // If we used context's staging buffer, flush out the updates
+    if (stagingBuffer)
     {
-        ANGLE_TRY(mImage->flushAllStagedUpdates(contextVk));
+        ANGLE_TRY(ensureImageInitialized(contextVk, ImageMipLevels::EnabledLevels));
     }
 
     return angle::Result::Continue;
