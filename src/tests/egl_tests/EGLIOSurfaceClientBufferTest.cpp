@@ -256,6 +256,11 @@ class IOSurfaceClientBufferTest : public ANGLETest
         EGLSurface pbuffer;
         bindIOSurfaceToTexture(ioSurface, 1, 1, 0, internalFormat, type, &pbuffer, &texture);
 
+        doSampleTestWithTexture(texture, mask);
+    }
+
+    void doSampleTestWithTexture(const GLTexture &texture, int mask)
+    {
         constexpr char kVS[] =
             "attribute vec4 position;\n"
             "void main()\n"
@@ -569,6 +574,35 @@ TEST_P(IOSurfaceClientBufferTest, BlitToIOSurface)
     ANGLE_SKIP_TEST_IF(!hasIOSurfaceExt());
 
     doBlitTest(false, 2, 2);
+}
+
+// Test using glCopyTexSubImage to copy to BGRX8888 IOSurfaces works.
+TEST_P(IOSurfaceClientBufferTest, CopySubImageToBGRX8888IOSurface)
+{
+    ANGLE_SKIP_TEST_IF(!hasIOSurfaceExt());
+
+    ScopedIOSurfaceRef ioSurface = CreateSinglePlaneIOSurface(1, 1, 'BGRA', 4);
+
+    GLTexture texture;
+    glBindTexture(getGLTextureTarget(), texture);
+    glTexParameteri(getGLTextureTarget(), GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(getGLTextureTarget(), GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    // Bind the IOSurface to a texture and clear it.
+    EGLSurface pbuffer;
+    bindIOSurfaceToTexture(ioSurface, 1, 1, 0, GL_RGB, GL_UNSIGNED_BYTE, &pbuffer, &texture);
+
+    // 1. Clear default framebuffer with desired color.
+    GLColor color(1, 2, 3, 4);
+    glClearColor(color.R / 255.f, color.G / 255.f, color.B / 255.f, color.A / 255.f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    // 2. Copy color from default framebuffer to iosurface's bound texture.
+    glCopyTexSubImage2D(getGLTextureTarget(), 0, 0, 0, 0, 0, 1, 1);
+    EXPECT_GL_NO_ERROR();
+
+    // 3. Do texture sampling verification.
+    doSampleTestWithTexture(texture, R | G | B);
 }
 
 // Test the validation errors for missing attributes for eglCreatePbufferFromClientBuffer with

@@ -767,6 +767,10 @@ angle::Result TextureMtl::bindTexImage(const gl::Context *context, egl::Surface 
     mLayeredTextureViews.resize(1);
     mLayeredTextureViews[0] = mNativeTexture;
 
+    // Create image view for glTexSubImage* and glCopySubTexture*
+    ASSERT(mNativeTexture->mipmapLevels() == 1);
+    mTexImages[0][0] = mNativeTexture;
+
     // Tell context to rebind textures
     ContextMtl *contextMtl = mtl::GetImpl(context);
     contextMtl->invalidateCurrentTextures();
