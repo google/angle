@@ -381,7 +381,7 @@ std::ostream &operator<<(std::ostream &os, VertexAttribType value)
             os << "GL_INT";
             break;
         case VertexAttribType::Int2101010:
-            os << "GL_INT_10_10_10_2";
+            os << "GL_INT_2_10_10_10_REV";
             break;
         case VertexAttribType::Int1010102:
             os << "GL_INT_10_10_10_2_OES";
