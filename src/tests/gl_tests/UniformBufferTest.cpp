@@ -3148,6 +3148,38 @@ TEST_P(UniformBufferTest, Std140UniformBlockWithDynamicallyIndexedRowMajorArray)
     EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(0, 255, 0, 255), 5);
 }
 
+// Test to transfer an uniform block large array member as an actual parameter to a function.
+TEST_P(UniformBufferTest, UniformBlocklargeArrayMemberAsActualParameter)
+{
+    constexpr char kVS[] = R"(#version 300 es
+layout(location=0) in vec3 a_position;
+
+uniform UBO{
+    mat4x4[90] buf;
+} instance;
+
+vec4 test( mat4x4[90] para, vec3 pos ){
+    return para[ 0 ] * vec4( pos, 1.0 );
+}
+
+void main(void){
+    gl_Position = test( instance.buf, a_position );
+})";
+
+    constexpr char kFS[] = R"(#version 300 es
+precision mediump float;
+
+uniform vec3 u_color;
+out vec4 oFragColor;
+
+void main(void){
+    oFragColor = vec4( u_color, 1.0);
+})";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    EXPECT_GL_NO_ERROR();
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against.
 ANGLE_INSTANTIATE_TEST_ES3(UniformBufferTest);
