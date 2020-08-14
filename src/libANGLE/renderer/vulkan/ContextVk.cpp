@@ -4306,7 +4306,7 @@ angle::Result ContextVk::onBufferRead(VkAccessFlags readAccessType,
 {
     ASSERT(!buffer->isReleasedToExternal());
 
-    if (mRenderPassCommands->usesBuffer(*buffer))
+    if (mRenderPassCommands->usesBufferForWrite(*buffer))
     {
         ANGLE_TRY(flushCommandsAndEndRenderPass());
     }
