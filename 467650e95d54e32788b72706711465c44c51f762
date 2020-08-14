@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "5922df80_205617da",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2020-08-14T16:19:55Z",
+      "side": 1,
+      "message": "OK",
+      "parentUuid": "5900616d_33cb28b9",
+      "revId": "467650e95d54e32788b72706711465c44c51f762",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f0baaafe_d7d9a6c3",
         "filename": "DEPS",
         "patchSetId": 2
