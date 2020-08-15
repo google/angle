@@ -1655,9 +1655,8 @@ TEST_P(FramebufferTest_ES3, AttachmentStateChange)
 }
 
 // Tests that we can support a feedback loop between a depth textures and the depth buffer.
-// Does not totally mirror the case used in Manhattan. The Manhattan case seems to handle
-// "clear" specially instead of rendering to depth in the same RP.
-TEST_P(FramebufferTest_ES3, DepthFeedbackLoopSupported)
+// The test emulates the read-only feedback loop in Manhattan.
+TEST_P(FramebufferTest_ES3, ReadOnlyDepthFeedbackLoopSupported)
 {
     // Feedback loops not supported on D3D11 and may not ever be.
     ANGLE_SKIP_TEST_IF(IsD3D11());
@@ -1711,9 +1710,10 @@ void main()
     glClearDepthf(0.5f);
     glClear(GL_DEPTH_BUFFER_BIT);
 
-    // Disable the depth mask. Although this does not remove the feedback loop as defined by the
+    // Disable depth. Although this does not remove the feedback loop as defined by the
     // spec it mimics what gfxbench does in its rendering tests.
     glDepthMask(false);
+    glDisable(GL_DEPTH_TEST);
 
     // Verify we can sample the depth texture and get 0.5.
     drawQuad(program, essl1_shaders::PositionAttrib(), 0.5);

@@ -107,19 +107,29 @@ void RenderTargetVk::onColorDraw(ContextVk *contextVk)
     mContentDefined = true;
 }
 
-void RenderTargetVk::onDepthStencilDraw(ContextVk *contextVk)
+void RenderTargetVk::onDepthStencilDraw(ContextVk *contextVk, bool isReadOnly)
 {
-    ASSERT(mImage->getFormat().actualImageFormat().hasDepthOrStencilBits());
-
-    const angle::Format &format    = mImage->getFormat().actualImageFormat();
+    const angle::Format &format = mImage->getFormat().actualImageFormat();
+    ASSERT(format.hasDepthOrStencilBits());
     VkImageAspectFlags aspectFlags = vk::GetDepthStencilAspectFlags(format);
 
-    contextVk->onImageRenderPassWrite(aspectFlags, vk::ImageLayout::DepthStencilAttachment, mImage);
-    if (mResolveImage)
+    if (isReadOnly)
+    {
+        ASSERT(!mResolveImage);
+        contextVk->onImageRenderPassRead(aspectFlags, vk::ImageLayout::DepthStencilReadOnly,
+                                         mImage);
+    }
+    else
     {
         contextVk->onImageRenderPassWrite(aspectFlags, vk::ImageLayout::DepthStencilAttachment,
-                                          mResolveImage);
+                                          mImage);
+        if (mResolveImage)
+        {
+            contextVk->onImageRenderPassWrite(aspectFlags, vk::ImageLayout::DepthStencilAttachment,
+                                              mResolveImage);
+        }
     }
+
     retainImageViews(contextVk);
 
     mContentDefined = true;

@@ -926,6 +926,8 @@ class ContextVk : public ContextImpl, public vk::Context
     void growDesciptorCapacity(std::vector<T> *descriptorVector, size_t newSize);
 
     angle::Result updateScissorImpl(const gl::State &glState, bool shouldEndRenderPass);
+    angle::Result updateRenderPassDepthAccess();
+    bool shouldSwitchToDepthReadOnlyMode(const gl::Context *context, gl::Texture *texture) const;
 
     std::array<DirtyBitHandler, DIRTY_BIT_MAX> mGraphicsDirtyBitHandlers;
     std::array<DirtyBitHandler, DIRTY_BIT_MAX> mComputeDirtyBitHandlers;

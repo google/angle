@@ -134,6 +134,12 @@ class FramebufferVk : public FramebufferImpl
                                  vk::Framebuffer **framebufferOut,
                                  const vk::ImageView *resolveImageViewIn);
 
+    bool isReadOnlyDepthMode() const { return mCurrentFramebufferDesc.isReadOnlyDepth(); }
+
+    bool hasDeferredClears() const { return !mDeferredClears.empty(); }
+    angle::Result flushDeferredClears(ContextVk *contextVk, const gl::Rectangle &renderArea);
+    void setReadOnlyDepthMode(bool readOnlyDepthEnabled);
+
   private:
     FramebufferVk(RendererVk *renderer,
                   const gl::FramebufferState &state,
@@ -221,7 +227,6 @@ class FramebufferVk : public FramebufferImpl
     RenderTargetVk *getReadPixelsRenderTarget(GLenum format) const;
     VkImageAspectFlagBits getReadPixelsAspectFlags(GLenum format) const;
 
-    angle::Result flushDeferredClears(ContextVk *contextVk, const gl::Rectangle &renderArea);
     VkClearValue getCorrectedColorClearValue(size_t colorIndexGL,
                                              const VkClearColorValue &clearColor) const;
 

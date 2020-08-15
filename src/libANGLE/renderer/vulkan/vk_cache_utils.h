@@ -939,6 +939,7 @@ class FramebufferDesc
     bool operator==(const FramebufferDesc &other) const;
 
     uint32_t attachmentCount() const;
+    bool isReadOnlyDepth() const { return mReadOnlyDepth != 0; }
 
     ImageViewSubresourceSerial getColorImageViewSerial(uint32_t index)
     {

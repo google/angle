@@ -138,6 +138,9 @@ constexpr const char *kSkippedMessages[] = {
     // https://issuetracker.google.com/issues/159493191
     "VUID-vkCmdDraw-None-02690",
     "VUID-vkCmdDrawIndexed-None-02690",
+    // http://anglebug.com/4975
+    "VUID-vkCmdDraw-None-02687",
+    "VUID-vkCmdDrawIndexed-None-02687",
     // Best Practices Skips issuetracker.google.com/156661359
     "UNASSIGNED-BestPractices-vkCreateCommandPool-command-buffer-reset",
     "UNASSIGNED-BestPractices-pipeline-stage-flags",
@@ -1819,7 +1822,7 @@ void RendererVk::initFeatures(DisplayVk *displayVk, const ExtensionNameList &dev
     // Currently disabled by default: http://anglebug.com/3078
     ANGLE_FEATURE_CONDITION(&mFeatures, enablePrecisionQualifiers, false);
 
-    ANGLE_FEATURE_CONDITION(&mFeatures, supportDepthStencilRenderingFeedbackLoops, true);
+    ANGLE_FEATURE_CONDITION(&mFeatures, supportDepthStencilRenderingFeedbackLoops, false);
 
     ANGLE_FEATURE_CONDITION(&mFeatures, preferAggregateBarrierCalls, isNvidia || isAMD || isIntel);
 

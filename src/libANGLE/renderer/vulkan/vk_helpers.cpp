@@ -3236,6 +3236,11 @@ gl::Extents ImageHelper::getLevelExtents2D(uint32_t levelVK) const
     return extents;
 }
 
+bool ImageHelper::isDepthOrStencil() const
+{
+    return mFormat->actualImageFormat().hasDepthOrStencilBits();
+}
+
 bool ImageHelper::isReadBarrierNecessary(ImageLayout newLayout) const
 {
     // If transitioning to a different layout, we need always need a barrier.

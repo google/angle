@@ -981,7 +981,13 @@ class CommandBufferHelper : angle::NonCopyable
     // Dumping the command stream is disabled by default.
     static constexpr bool kEnableCommandStreamDiagnostics = false;
 
-    void onDepthAccess(ResourceAccess access) { UpdateAccess(&mDepthStartAccess, access); }
+    void onDepthAccess(ResourceAccess access)
+    {
+        UpdateAccess(&mDepthStartAccess, access);
+        ASSERT((mRenderPassDesc.getDepthStencilAccess() != ResourceAccess::ReadOnly) ||
+               mDepthStartAccess != ResourceAccess::Write);
+    }
+
     void onStencilAccess(ResourceAccess access) { UpdateAccess(&mStencilStartAccess, access); }
 
     void updateRenderPassForResolve(vk::Framebuffer *newFramebuffer,
@@ -1218,6 +1224,7 @@ class ImageHelper final : public Resource, public angle::Subject
     // Helper function to calculate the extents of a render target created for a certain mip of the
     // image.
     gl::Extents getLevelExtents2D(uint32_t level) const;
+    bool isDepthOrStencil() const;
 
     // Clear either color or depth/stencil based on image format.
     void clear(VkImageAspectFlags aspectFlags,

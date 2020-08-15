@@ -681,6 +681,7 @@ class ClearValuesArray final
 
     const VkClearValue *data() const { return mValues.data(); }
     bool empty() const { return mEnabled.none(); }
+    bool any() const { return mEnabled.any(); }
 
     gl::DrawBufferMask getEnabledColorAttachmentsMask() const
     {
