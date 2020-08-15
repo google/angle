@@ -582,6 +582,7 @@ CommandBufferHelper::CommandBufferHelper()
       mCounter(0),
       mClearValues{},
       mRenderPassStarted(false),
+      mForceIndividualBarriers(false),
       mTransformFeedbackCounterBuffers{},
       mValidTransformFeedbackBufferCount(0),
       mRebindTransformFeedbackBuffers(false),
@@ -734,7 +735,20 @@ void CommandBufferHelper::executeBarriers(ContextVk *contextVk, PrimaryCommandBu
         return;
     }
 
-    if (contextVk->getFeatures().preferAggregateBarrierCalls.enabled)
+    if (mForceIndividualBarriers)
+    {
+        // Note: ideally we could merge double barriers into a single barrier (or even completely
+        // eliminate them in some cases). This is a bit trickier to manage than splitting barriers
+        // into single calls. It should only affect Framebuffer transitions.
+        // TODO: Investigate merging barriers. http://anglebug.com/4976
+        for (PipelineStage pipelineStage : mask)
+        {
+            PipelineBarrier &barrier = mPipelineBarriers[pipelineStage];
+            barrier.executeIndividually(primary);
+        }
+        mForceIndividualBarriers = false;
+    }
+    else if (contextVk->getFeatures().preferAggregateBarrierCalls.enabled)
     {
         PipelineStagesMask::Iterator iter = mask.begin();
         PipelineBarrier &barrier          = mPipelineBarriers[*iter];
@@ -770,12 +784,43 @@ void CommandBufferHelper::beginRenderPass(const Framebuffer &framebuffer,
     mAttachmentOps               = renderPassAttachmentOps;
     mDepthStencilAttachmentIndex = depthStencilAttachmentIndex;
     mFramebuffer.setHandle(framebuffer.getHandle());
-    mRenderArea       = renderArea;
-    mClearValues      = clearValues;
-    *commandBufferOut = &mCommandBuffer;
+    mRenderArea              = renderArea;
+    mClearValues             = clearValues;
+    *commandBufferOut        = &mCommandBuffer;
+    mForceIndividualBarriers = false;
+
+    if (mDepthStencilAttachmentIndex != vk::kInvalidAttachmentIndex)
+    {
+        if (renderPassAttachmentOps[mDepthStencilAttachmentIndex].loadOp ==
+            VK_ATTACHMENT_LOAD_OP_CLEAR)
+        {
+            mDepthStartAccess = ResourceAccess::Write;
+        }
+
+        if (renderPassAttachmentOps[mDepthStencilAttachmentIndex].stencilLoadOp ==
+            VK_ATTACHMENT_LOAD_OP_CLEAR)
+        {
+            mStencilStartAccess = ResourceAccess::Write;
+        }
+    }
 
     mRenderPassStarted = true;
     mCounter++;
+}
+
+void CommandBufferHelper::restartRenderPassWithReadOnlyDepth(const Framebuffer &framebuffer,
+                                                             const RenderPassDesc &renderPassDesc)
+{
+    ASSERT(mIsRenderPassCommandBuffer);
+    ASSERT(mRenderPassStarted);
+
+    mRenderPassDesc = renderPassDesc;
+    mAttachmentOps.setLayouts(mDepthStencilAttachmentIndex, ImageLayout::DepthStencilReadOnly,
+                              ImageLayout::DepthStencilReadOnly);
+    mFramebuffer.setHandle(framebuffer.getHandle());
+
+    // Barrier aggregation messes up with RenderPass restarting.
+    mForceIndividualBarriers = true;
 }
 
 void CommandBufferHelper::endRenderPass()

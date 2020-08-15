@@ -361,8 +361,7 @@ TEST_P(VulkanPerformanceCounterTest, ReadOnlyDepthStencilFeedbackLoopUsesSingleR
     glDrawArrays(GL_TRIANGLES, 0, 6);
     ASSERT_GL_NO_ERROR();
 
-    // TODO(jmadill): Remove extra RenderPass. http://anglebug.com/4959
-    uint32_t expectedRenderPassCount = counters.renderPasses + 2;
+    uint32_t expectedRenderPassCount = counters.renderPasses + 1;
 
     // Start new RenderPass with depth write disabled and no loop.
     glBindFramebuffer(GL_FRAMEBUFFER, depthAndColorFBO);

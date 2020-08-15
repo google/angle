@@ -2503,4 +2503,19 @@ void FramebufferVk::setReadOnlyDepthMode(bool readOnlyDepthEnabled)
         updateRenderPassDesc();
     }
 }
+
+angle::Result FramebufferVk::restartRenderPassInReadOnlyDepthMode(
+    ContextVk *contextVk,
+    vk::CommandBufferHelper *renderPass)
+{
+    ASSERT(!isReadOnlyDepthMode());
+    setReadOnlyDepthMode(true);
+
+    vk::Framebuffer *currentFramebuffer = nullptr;
+    ANGLE_TRY(getFramebuffer(contextVk, &currentFramebuffer, nullptr));
+
+    renderPass->restartRenderPassWithReadOnlyDepth(*currentFramebuffer, mRenderPassDesc);
+
+    return angle::Result::Continue;
+}
 }  // namespace rx

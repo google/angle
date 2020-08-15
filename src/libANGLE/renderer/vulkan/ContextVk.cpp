@@ -2999,6 +2999,7 @@ angle::Result ContextVk::syncState(const gl::Context *context,
 
                 gl::Framebuffer *drawFramebuffer = glState.getDrawFramebuffer();
                 mDrawFramebuffer                 = vk::GetImpl(drawFramebuffer);
+                mDrawFramebuffer->setReadOnlyDepthMode(false);
                 updateFlipViewportDrawFramebuffer(glState);
                 updateSurfaceRotationDrawFramebuffer(glState);
                 updateViewport(mDrawFramebuffer, glState.getViewport(), glState.getNearPlane(),
@@ -3896,6 +3897,11 @@ angle::Result ContextVk::updateActiveTextures(const gl::Context *context)
         }
         else if (shouldSwitchToDepthReadOnlyMode(context, texture))
         {
+            // The "readOnlyDepthMode" feature enables read-only depth-stencil feedback loops. We
+            // only switch to "read-only" mode when there's loop. We track the depth-stencil access
+            // mode in the RenderPass. The tracking tells us when we can retroactively go back and
+            // change the RenderPass to read-only. If there are any writes we need to break and
+            // finish the current RP before starting the read-only one.
             ASSERT(!mState.isDepthWriteEnabled());
 
             // Special handling for deferred clears.
@@ -3906,11 +3912,19 @@ angle::Result ContextVk::updateActiveTextures(const gl::Context *context)
                 ANGLE_TRY(mDrawFramebuffer->flushDeferredClears(this, scissoredRenderArea));
             }
 
-            // TODO(jmadill): Don't end RenderPass. http://anglebug.com/4959
             if (hasStartedRenderPass())
             {
-                ANGLE_TRY(flushCommandsAndEndRenderPass());
+                if (mRenderPassCommands->getDepthStartAccess() == vk::ResourceAccess::Write)
+                {
+                    ANGLE_TRY(flushCommandsAndEndRenderPass());
+                }
+                else
+                {
+                    ANGLE_TRY(mDrawFramebuffer->restartRenderPassInReadOnlyDepthMode(
+                        this, mRenderPassCommands));
+                }
             }
+
             mDrawFramebuffer->setReadOnlyDepthMode(true);
         }
 
@@ -4846,7 +4860,7 @@ void ContextVk::setDefaultUniformBlocksMinSizeForTesting(size_t minSize)
 
 angle::Result ContextVk::updateRenderPassDepthAccess()
 {
-    if (mState.isDepthTestEnabled() && mRenderPassCommands->started())
+    if (mState.isDepthTestEnabled() && hasStartedRenderPass())
     {
         vk::ResourceAccess access = GetDepthAccess(mState.getDepthStencilState());
 
