@@ -234,12 +234,12 @@ GLint Renderbuffer::getMemorySize() const
     return size.ValueOrDefault(std::numeric_limits<GLint>::max());
 }
 
-void Renderbuffer::onAttach(const Context *context)
+void Renderbuffer::onAttach(const Context *context, rx::Serial framebufferSerial)
 {
     addRef();
 }
 
-void Renderbuffer::onDetach(const Context *context)
+void Renderbuffer::onDetach(const Context *context, rx::Serial framebufferSerial)
 {
     release(context);
 }

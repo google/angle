@@ -5070,6 +5070,13 @@ TEST_P(WebGL2CompatibilityTest, UniformVariablesReturnTypes)
     EXPECT_GL_ERROR(GL_INVALID_ENUM);
 }
 
+// Tests an error case to ensure we don't crash.
+TEST_P(WebGLCompatibilityTest, DrawWithNoProgram)
+{
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against.
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(WebGLCompatibilityTest);

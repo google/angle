@@ -110,8 +110,8 @@ class Renderbuffer final : public RefCountObject<RenderbufferID>,
                       GLenum binding,
                       const ImageIndex &imageIndex) const override;
 
-    void onAttach(const Context *context) override;
-    void onDetach(const Context *context) override;
+    void onAttach(const Context *context, rx::Serial framebufferSerial) override;
+    void onDetach(const Context *context, rx::Serial framebufferSerial) override;
     GLuint getId() const override;
 
     InitState initState(const ImageIndex &imageIndex) const override;
