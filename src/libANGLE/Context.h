@@ -632,6 +632,8 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     void release() const { mRefCount--; }
     size_t getRefCount() const { return mRefCount; }
 
+    egl::ShareGroup *getShareGroup() const { return mState.getShareGroup(); }
+
   private:
     void initialize();
 

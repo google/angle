@@ -351,11 +351,12 @@ Sync *SyncManager::getSync(GLuint handle) const
 Framebuffer *FramebufferManager::AllocateNewObject(rx::GLImplFactory *factory,
                                                    FramebufferID handle,
                                                    const Caps &caps,
-                                                   ContextID owningContextID)
+                                                   ContextID owningContextID,
+                                                   egl::ShareGroup *shareGroup)
 {
     // Make sure the caller isn't using a reserved handle.
     ASSERT(handle != Framebuffer::kDefaultDrawFramebufferHandle);
-    return new Framebuffer(caps, factory, handle, owningContextID);
+    return new Framebuffer(caps, factory, handle, owningContextID, shareGroup);
 }
 
 // static

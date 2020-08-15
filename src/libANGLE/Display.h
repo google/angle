@@ -77,12 +77,15 @@ class ShareGroup final : angle::NonCopyable
 
     rx::ShareGroupImpl *getImplementation() const { return mImplementation; }
 
+    rx::Serial generateFramebufferSerial() { return mFramebufferSerialFactory.generate(); }
+
   protected:
     ~ShareGroup();
 
   private:
     size_t mRefCount;
     rx::ShareGroupImpl *mImplementation;
+    rx::SerialFactory mFramebufferSerialFactory;
 };
 
 // Constant coded here as a sanity limit.

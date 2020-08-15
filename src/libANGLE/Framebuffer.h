@@ -53,8 +53,11 @@ class TextureCapsMap;
 class FramebufferState final : angle::NonCopyable
 {
   public:
-    explicit FramebufferState(ContextID owningContextID);
-    FramebufferState(const Caps &caps, FramebufferID id, ContextID owningContextID);
+    explicit FramebufferState(ContextID owningContextID, rx::Serial serial);
+    FramebufferState(const Caps &caps,
+                     FramebufferID id,
+                     ContextID owningContextID,
+                     rx::Serial serial);
     ~FramebufferState();
 
     const std::string &getLabel() const;
@@ -123,6 +126,8 @@ class FramebufferState final : angle::NonCopyable
 
     const gl::Offset &getSurfaceTextureOffset() const { return mSurfaceTextureOffset; }
 
+    rx::Serial getFramebufferSerial() const { return mFramebufferSerial; }
+
   private:
     const FramebufferAttachment *getWebGLDepthStencilAttachment() const;
     const FramebufferAttachment *getWebGLDepthAttachment() const;
@@ -134,7 +139,12 @@ class FramebufferState final : angle::NonCopyable
 
     friend class Framebuffer;
 
+    // The Framebuffer ID is unique to a Context.
+    // The Framebuffer Serial is unique to a Share Group.
     FramebufferID mId;
+    rx::Serial mFramebufferSerial;
+
+    // TODO(jmadill): Remove the owning context ID. http://anglebug.com/4500
     ContextID mOwningContextID;
     std::string mLabel;
 
@@ -184,7 +194,8 @@ class Framebuffer final : public angle::ObserverInterface,
     Framebuffer(const Caps &caps,
                 rx::GLImplFactory *factory,
                 FramebufferID id,
-                ContextID owningContextID);
+                ContextID owningContextID,
+                egl::ShareGroup *shareGroup);
     // Constructor to build default framebuffers for a surface and context pair
     Framebuffer(const Context *context, egl::Surface *surface, egl::Surface *readSurface);
     // Constructor to build a fake default framebuffer when surfaceless
@@ -415,8 +426,6 @@ class Framebuffer final : public angle::ObserverInterface,
 
     static const FramebufferID kDefaultDrawFramebufferHandle;
 
-    rx::Serial serial() const { return mSerial; }
-
   private:
     bool detachResourceById(const Context *context, GLenum resourceType, GLuint resourceId);
     bool detachMatchingAttachment(const Context *context,
@@ -482,7 +491,6 @@ class Framebuffer final : public angle::ObserverInterface,
         mFloat32ColorAttachmentBits.set(index, format->type == GL_FLOAT);
     }
 
-    rx::Serial mSerial;
     FramebufferState mState;
     rx::FramebufferImpl *mImpl;
 

@@ -265,8 +265,9 @@ angle::Result InitAttachment(const Context *context, FramebufferAttachment *atta
 }  // anonymous namespace
 
 // This constructor is only used for default framebuffers.
-FramebufferState::FramebufferState(ContextID owningContextID)
+FramebufferState::FramebufferState(ContextID owningContextID, rx::Serial serial)
     : mId(Framebuffer::kDefaultDrawFramebufferHandle),
+      mFramebufferSerial(serial),
       mOwningContextID(owningContextID),
       mLabel(),
       mColorAttachments(1),
@@ -288,8 +289,12 @@ FramebufferState::FramebufferState(ContextID owningContextID)
     mEnabledDrawBuffers.set(0);
 }
 
-FramebufferState::FramebufferState(const Caps &caps, FramebufferID id, ContextID owningContextID)
+FramebufferState::FramebufferState(const Caps &caps,
+                                   FramebufferID id,
+                                   ContextID owningContextID,
+                                   rx::Serial serial)
     : mId(id),
+      mFramebufferSerial(serial),
       mOwningContextID(owningContextID),
       mLabel(),
       mColorAttachments(caps.maxColorAttachments),
@@ -708,9 +713,9 @@ const FramebufferID Framebuffer::kDefaultDrawFramebufferHandle = {0};
 Framebuffer::Framebuffer(const Caps &caps,
                          rx::GLImplFactory *factory,
                          FramebufferID id,
-                         ContextID owningContextID)
-    : mSerial(factory->generateSerial()),
-      mState(caps, id, owningContextID),
+                         ContextID owningContextID,
+                         egl::ShareGroup *shareGroup)
+    : mState(caps, id, owningContextID, shareGroup->generateFramebufferSerial()),
       mImpl(factory->createFramebuffer(mState)),
       mCachedStatus(),
       mDirtyDepthAttachmentBinding(this, DIRTY_BIT_DEPTH_ATTACHMENT),
@@ -728,8 +733,7 @@ Framebuffer::Framebuffer(const Caps &caps,
 }
 
 Framebuffer::Framebuffer(const Context *context, egl::Surface *surface, egl::Surface *readSurface)
-    : mSerial(context->getImplementation()->generateSerial()),
-      mState(context->id()),
+    : mState(context->id(), context->getShareGroup()->generateFramebufferSerial()),
       mImpl(surface->getImplementation()->createDefaultFramebuffer(context, mState)),
       mCachedStatus(GL_FRAMEBUFFER_COMPLETE),
       mDirtyDepthAttachmentBinding(this, DIRTY_BIT_DEPTH_ATTACHMENT),
@@ -771,7 +775,7 @@ Framebuffer::Framebuffer(const Context *context, egl::Surface *surface, egl::Sur
 Framebuffer::Framebuffer(const Context *context,
                          rx::GLImplFactory *factory,
                          egl::Surface *readSurface)
-    : mState(context->id()),
+    : mState(context->id(), context->getShareGroup()->generateFramebufferSerial()),
       mImpl(factory->createFramebuffer(mState)),
       mCachedStatus(GL_FRAMEBUFFER_UNDEFINED_OES),
       mDirtyDepthAttachmentBinding(this, DIRTY_BIT_DEPTH_ATTACHMENT),
