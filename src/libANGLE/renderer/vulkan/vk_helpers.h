@@ -1074,6 +1074,7 @@ enum class ImageLayout
     AllGraphicsShadersReadOnly,
     AllGraphicsShadersWrite,
     ColorAttachment,
+    DepthStencilReadOnly,
     DepthStencilAttachment,
     Present,
 

@@ -1695,7 +1695,8 @@ void FramebufferVk::updateRenderPassDesc()
     if (depthStencilRenderTarget)
     {
         mRenderPassDesc.packDepthStencilAttachment(
-            depthStencilRenderTarget->getImageForRenderPass().getFormat().intendedFormatID);
+            depthStencilRenderTarget->getImageForRenderPass().getFormat().intendedFormatID,
+            vk::ResourceAccess::Write);
     }
 }
 

@@ -59,6 +59,13 @@ using RefCountedSamplerYcbcrConversion = RefCounted<SamplerYcbcrConversion>;
 // Enable struct padding warnings for the code below since it is used in caches.
 ANGLE_ENABLE_STRUCT_PADDING_WARNINGS
 
+enum ResourceAccess
+{
+    Unused,
+    ReadOnly,
+    Write,
+};
+
 class alignas(4) RenderPassDesc final
 {
   public:
@@ -73,18 +80,22 @@ class alignas(4) RenderPassDesc final
     void packColorAttachmentGap(size_t colorIndexGL);
     // The caller must pack the depth/stencil attachment last, which is packed right after the color
     // attachments (including gaps), i.e. with an index starting from |colorAttachmentRange()|.
-    void packDepthStencilAttachment(angle::FormatID angleFormatID);
+    void packDepthStencilAttachment(angle::FormatID angleFormatID, ResourceAccess access);
     // Indicate that a color attachment should have a corresponding resolve attachment.
     void packColorResolveAttachment(size_t colorIndexGL);
 
     size_t hash() const;
 
     // Color attachments are in [0, colorAttachmentRange()), with possible gaps.
-    size_t colorAttachmentRange() const { return mColorAttachmentRange; }
+    size_t colorAttachmentRange() const;
     size_t depthStencilAttachmentIndex() const { return colorAttachmentRange(); }
 
     bool isColorAttachmentEnabled(size_t colorIndexGL) const;
-    bool hasDepthStencilAttachment() const { return mHasDepthStencilAttachment; }
+    bool hasDepthStencilAttachment() const
+    {
+        return getDepthStencilAccess() != ResourceAccess::Unused;
+    }
+    ResourceAccess getDepthStencilAccess() const;
     bool hasColorResolveAttachment(size_t colorIndexGL) const
     {
         return mColorResolveAttachmentMask.test(colorIndexGL);
@@ -107,8 +118,12 @@ class alignas(4) RenderPassDesc final
   private:
     // Store log(samples), to be able to store it in 3 bits.
     uint8_t mLogSamples : 3;
-    uint8_t mColorAttachmentRange : 4;
-    uint8_t mHasDepthStencilAttachment : 1;
+
+    // Color attachment count has 9 values: from 0-8 valid attachments. The depths/stencil
+    // attachment can have 3 values: no depth stencil, read only, and writable depth/stencil.
+    // We can pack these 9*3 = 27 possible values in 5 bits.
+    uint8_t mPackedColorAttachmentRangeAndDSAccess : 5;
+
     // Whether each color attachment has a corresponding resolve attachment.  Color resolve
     // attachments can be used to optimize resolve through glBlitFramebuffer() as well as support
     // GL_EXT_multisampled_render_to_texture and GL_EXT_multisampled_render_to_texture2.
@@ -900,6 +915,7 @@ class FramebufferDesc
     void updateColor(uint32_t index, ImageViewSubresourceSerial serial);
     void updateColorResolve(uint32_t index, ImageViewSubresourceSerial serial);
     void updateDepthStencil(ImageViewSubresourceSerial serial);
+    void updateReadOnlyDepth(bool readOnlyDepth);
     size_t hash() const;
     void reset();
 
@@ -911,7 +927,8 @@ class FramebufferDesc
     void update(uint32_t index, ImageViewSubresourceSerial serial);
 
     // Note: this is an exclusive index. If there is one index it will be "1".
-    uint32_t mMaxIndex;
+    uint16_t mMaxIndex;
+    uint16_t mReadOnlyDepth;
     FramebufferAttachmentArray<ImageViewSubresourceSerial> mSerials;
 };
 
