@@ -796,19 +796,19 @@ void Framebuffer::onDestroy(const Context *context)
 {
     if (isDefault())
     {
-        mState.mDefaultFramebufferReadAttachment.detach(context);
+        mState.mDefaultFramebufferReadAttachment.detach(context, mState.mFramebufferSerial);
         mState.mDefaultFramebufferReadAttachmentInitialized = false;
     }
 
     for (auto &attachment : mState.mColorAttachments)
     {
-        attachment.detach(context);
+        attachment.detach(context, mState.mFramebufferSerial);
     }
-    mState.mDepthAttachment.detach(context);
-    mState.mStencilAttachment.detach(context);
-    mState.mWebGLDepthAttachment.detach(context);
-    mState.mWebGLStencilAttachment.detach(context);
-    mState.mWebGLDepthStencilAttachment.detach(context);
+    mState.mDepthAttachment.detach(context, mState.mFramebufferSerial);
+    mState.mStencilAttachment.detach(context, mState.mFramebufferSerial);
+    mState.mWebGLDepthAttachment.detach(context, mState.mFramebufferSerial);
+    mState.mWebGLStencilAttachment.detach(context, mState.mFramebufferSerial);
+    mState.mWebGLDepthStencilAttachment.detach(context, mState.mFramebufferSerial);
 
     mImpl->destroy(context);
 }
@@ -819,7 +819,7 @@ void Framebuffer::setReadSurface(const Context *context, egl::Surface *readSurfa
     mState.mDefaultFramebufferReadAttachment.attach(
         context, GL_FRAMEBUFFER_DEFAULT, GL_BACK, ImageIndex(), readSurface,
         FramebufferAttachment::kDefaultNumViews, FramebufferAttachment::kDefaultBaseViewIndex,
-        false, FramebufferAttachment::kDefaultRenderToTextureSamples);
+        false, FramebufferAttachment::kDefaultRenderToTextureSamples, mState.mFramebufferSerial);
     mDirtyBits.set(DIRTY_BIT_READ_BUFFER);
 }
 
@@ -1674,19 +1674,21 @@ void Framebuffer::setAttachment(const Context *context,
     {
         case GL_DEPTH_STENCIL:
         case GL_DEPTH_STENCIL_ATTACHMENT:
-            mState.mWebGLDepthStencilAttachment.attach(context, type, binding, textureIndex,
-                                                       resource, numViews, baseViewIndex,
-                                                       isMultiview, samples);
+            mState.mWebGLDepthStencilAttachment.attach(
+                context, type, binding, textureIndex, resource, numViews, baseViewIndex,
+                isMultiview, samples, mState.mFramebufferSerial);
             break;
         case GL_DEPTH:
         case GL_DEPTH_ATTACHMENT:
             mState.mWebGLDepthAttachment.attach(context, type, binding, textureIndex, resource,
-                                                numViews, baseViewIndex, isMultiview, samples);
+                                                numViews, baseViewIndex, isMultiview, samples,
+                                                mState.mFramebufferSerial);
             break;
         case GL_STENCIL:
         case GL_STENCIL_ATTACHMENT:
             mState.mWebGLStencilAttachment.attach(context, type, binding, textureIndex, resource,
-                                                  numViews, baseViewIndex, isMultiview, samples);
+                                                  numViews, baseViewIndex, isMultiview, samples,
+                                                  mState.mFramebufferSerial);
             break;
         default:
             setAttachmentImpl(context, type, binding, textureIndex, resource, numViews,
@@ -1869,7 +1871,7 @@ void Framebuffer::updateAttachment(const Context *context,
                                    GLsizei samples)
 {
     attachment->attach(context, type, binding, textureIndex, resource, numViews, baseViewIndex,
-                       isMultiview, samples);
+                       isMultiview, samples, mState.mFramebufferSerial);
     mDirtyBits.set(dirtyBit);
     mState.mResourceNeedsInit.set(dirtyBit, attachment->initState() == InitState::MayNeedInit);
     onDirtyBinding->bind(resource);
@@ -1965,6 +1967,31 @@ FramebufferAttachment *Framebuffer::getAttachmentFromSubjectIndex(angle::Subject
             ASSERT(colorIndex < mState.mColorAttachments.size());
             return &mState.mColorAttachments[colorIndex];
     }
+}
+
+bool Framebuffer::formsRenderingFeedbackLoopWith(const Context *context) const
+{
+    const State &glState                = context->getState();
+    const ProgramExecutable *executable = glState.getProgramExecutable();
+    ASSERT(executable);
+
+    const ActiveTextureMask &activeTextures    = executable->getActiveSamplersMask();
+    const ActiveTextureTypeArray &textureTypes = executable->getActiveSamplerTypes();
+
+    for (size_t textureIndex : activeTextures)
+    {
+        unsigned int uintIndex = static_cast<unsigned int>(textureIndex);
+        Texture *texture       = glState.getSamplerTexture(uintIndex, textureTypes[textureIndex]);
+        const Sampler *sampler = glState.getSampler(uintIndex);
+        if (texture && texture->isSamplerComplete(context, sampler) &&
+            texture->isBoundToFramebuffer(mState.mFramebufferSerial))
+        {
+            // TODO(jmadill): Subresource check. http://anglebug.com/4500
+            return true;
+        }
+    }
+
+    return false;
 }
 
 bool Framebuffer::formsCopyingFeedbackLoopWith(TextureID copyTextureID,

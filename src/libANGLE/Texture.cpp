@@ -1774,13 +1774,20 @@ GLenum Texture::getGenerateMipmapHint() const
     return mState.getGenerateMipmapHint();
 }
 
-void Texture::onAttach(const Context *context)
+void Texture::onAttach(const Context *context, rx::Serial framebufferSerial)
 {
     addRef();
+
+    // Duplicates allowed for multiple attachment points. See the comment in the header.
+    mBoundFramebufferSerials.push_back(framebufferSerial);
 }
 
-void Texture::onDetach(const Context *context)
+void Texture::onDetach(const Context *context, rx::Serial framebufferSerial)
 {
+    // Erase first instance. If there are multiple bindings, leave the others.
+    ASSERT(isBoundToFramebuffer(framebufferSerial));
+    mBoundFramebufferSerials.remove_and_permute(framebufferSerial);
+
     release(context);
 }
 

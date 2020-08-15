@@ -60,11 +60,12 @@ FramebufferAttachment::FramebufferAttachment(const Context *context,
                                              GLenum type,
                                              GLenum binding,
                                              const ImageIndex &textureIndex,
-                                             FramebufferAttachmentObject *resource)
+                                             FramebufferAttachmentObject *resource,
+                                             rx::Serial framebufferSerial)
     : mResource(nullptr)
 {
     attach(context, type, binding, textureIndex, resource, kDefaultNumViews, kDefaultBaseViewIndex,
-           false, kDefaultRenderToTextureSamples);
+           false, kDefaultRenderToTextureSamples, framebufferSerial);
 }
 
 FramebufferAttachment::FramebufferAttachment(FramebufferAttachment &&other)
@@ -90,12 +91,12 @@ FramebufferAttachment::~FramebufferAttachment()
     ASSERT(!isAttached());
 }
 
-void FramebufferAttachment::detach(const Context *context)
+void FramebufferAttachment::detach(const Context *context, rx::Serial framebufferSerial)
 {
     mType = GL_NONE;
     if (mResource != nullptr)
     {
-        mResource->onDetach(context);
+        mResource->onDetach(context, framebufferSerial);
         mResource = nullptr;
     }
     mNumViews      = kDefaultNumViews;
@@ -114,11 +115,12 @@ void FramebufferAttachment::attach(const Context *context,
                                    GLsizei numViews,
                                    GLuint baseViewIndex,
                                    bool isMultiview,
-                                   GLsizei samples)
+                                   GLsizei samples,
+                                   rx::Serial framebufferSerial)
 {
     if (resource == nullptr)
     {
-        detach(context);
+        detach(context, framebufferSerial);
         return;
     }
 
@@ -128,11 +130,11 @@ void FramebufferAttachment::attach(const Context *context,
     mBaseViewIndex          = baseViewIndex;
     mIsMultiview            = isMultiview;
     mRenderToTextureSamples = samples;
-    resource->onAttach(context);
+    resource->onAttach(context, framebufferSerial);
 
     if (mResource != nullptr)
     {
-        mResource->onDetach(context);
+        mResource->onDetach(context, framebufferSerial);
     }
 
     mResource = resource;
