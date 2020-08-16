@@ -11,6 +11,7 @@
 #define LIBANGLE_OVERLAYWIDGETS_H_
 
 #include "common/angleutils.h"
+#include "libANGLE/Overlay_autogen.h"
 
 namespace gl
 {
@@ -39,30 +40,6 @@ enum class WidgetType
     RunningGraph,
     // A histogram of the last N values (values between 0 and 1).
     RunningHistogram,
-
-    InvalidEnum,
-    EnumCount = InvalidEnum,
-};
-
-enum class WidgetId
-{
-    // Front-end widgets:
-
-    // Frames per second (PerSecond).
-    FPS,
-
-    // Vulkan backend:
-
-    // Last validation error (Text).
-    VulkanLastValidationMessage,
-    // Number of validation errors and warnings (Count).
-    VulkanValidationMessageCount,
-    // Number of RenderPasses in a frame (RunningGraph).
-    VulkanRenderPassCount,
-    // Secondary Command Buffer pool memory waste (RunningHistogram).
-    VulkanSecondaryCommandBufferPoolWaste,
-    // Number of Descriptor Set writes in a frame (RunningGraph).
-    VulkanWriteDescriptorSetCount,
 
     InvalidEnum,
     EnumCount = InvalidEnum,

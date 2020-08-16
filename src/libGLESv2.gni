@@ -243,6 +243,7 @@ libangle_headers = [
   "src/libANGLE/OverlayWidgets.cpp",
   "src/libANGLE/OverlayWidgets.h",
   "src/libANGLE/Overlay_autogen.cpp",
+  "src/libANGLE/Overlay_autogen.h",
   "src/libANGLE/Overlay_font_autogen.cpp",
   "src/libANGLE/Overlay_font_autogen.h",
   "src/libANGLE/Program.h",

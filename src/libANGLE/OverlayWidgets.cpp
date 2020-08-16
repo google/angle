@@ -181,47 +181,18 @@ using AppendWidgetDataFunc = void (*)(const overlay::Widget *widget,
 
 namespace overlay_impl
 {
+#define ANGLE_DECLARE_APPEND_WIDGET_PROC(WIDGET_ID)                                              \
+    static void Append##WIDGET_ID(const overlay::Widget *widget, const gl::Extents &imageExtent, \
+                                  TextWidgetData *textWidget, GraphWidgetData *graphWidget,      \
+                                  OverlayWidgetCounts *widgetCounts);
+
 // This class interprets the generic data collected in every element into a human-understandable
 // widget.  This often means generating text specific to this item and scaling graph data to
 // something sensible.
 class AppendWidgetDataHelper
 {
   public:
-    static void AppendFPS(const overlay::Widget *widget,
-                          const gl::Extents &imageExtent,
-                          TextWidgetData *textWidget,
-                          GraphWidgetData *graphWidget,
-                          OverlayWidgetCounts *widgetCounts);
-    static void AppendVulkanLastValidationMessage(const overlay::Widget *widget,
-                                                  const gl::Extents &imageExtent,
-                                                  TextWidgetData *textWidget,
-                                                  GraphWidgetData *graphWidget,
-                                                  OverlayWidgetCounts *widgetCounts);
-    static void AppendVulkanValidationMessageCount(const overlay::Widget *widget,
-                                                   const gl::Extents &imageExtent,
-                                                   TextWidgetData *textWidget,
-                                                   GraphWidgetData *graphWidget,
-                                                   OverlayWidgetCounts *widgetCounts);
-    static void AppendVulkanCommandGraphSize(const overlay::Widget *widget,
-                                             const gl::Extents &imageExtent,
-                                             TextWidgetData *textWidget,
-                                             GraphWidgetData *graphWidget,
-                                             OverlayWidgetCounts *widgetCounts);
-    static void AppendVulkanRenderPassCount(const overlay::Widget *widget,
-                                            const gl::Extents &imageExtent,
-                                            TextWidgetData *textWidget,
-                                            GraphWidgetData *graphWidget,
-                                            OverlayWidgetCounts *widgetCounts);
-    static void AppendVulkanSecondaryCommandBufferPoolWaste(const overlay::Widget *widget,
-                                                            const gl::Extents &imageExtent,
-                                                            TextWidgetData *textWidget,
-                                                            GraphWidgetData *graphWidget,
-                                                            OverlayWidgetCounts *widgetCounts);
-    static void AppendVulkanWriteDescriptorSetCount(const overlay::Widget *widget,
-                                                    const gl::Extents &imageExtent,
-                                                    TextWidgetData *textWidget,
-                                                    GraphWidgetData *graphWidget,
-                                                    OverlayWidgetCounts *widgetCounts);
+    ANGLE_WIDGET_ID_X(ANGLE_DECLARE_APPEND_WIDGET_PROC)
 
   private:
     static std::ostream &OutputPerSecond(std::ostream &out, const overlay::PerSecond *perSecond);
@@ -396,21 +367,6 @@ void AppendWidgetDataHelper::AppendVulkanValidationMessageCount(const overlay::W
     AppendTextCommon(widget, imageExtent, text.str(), textWidget, widgetCounts);
 }
 
-void AppendWidgetDataHelper::AppendVulkanCommandGraphSize(const overlay::Widget *widget,
-                                                          const gl::Extents &imageExtent,
-                                                          TextWidgetData *textWidget,
-                                                          GraphWidgetData *graphWidget,
-                                                          OverlayWidgetCounts *widgetCounts)
-{
-    auto format = [](size_t maxValue) {
-        std::ostringstream text;
-        text << "Command Graph Size (Max: " << maxValue << ")";
-        return text.str();
-    };
-
-    AppendRunningGraphCommon(widget, imageExtent, textWidget, graphWidget, widgetCounts, format);
-}
-
 void AppendWidgetDataHelper::AppendVulkanRenderPassCount(const overlay::Widget *widget,
                                                          const gl::Extents &imageExtent,
                                                          TextWidgetData *textWidget,
@@ -478,20 +434,12 @@ std::ostream &AppendWidgetDataHelper::OutputCount(std::ostream &out, const overl
 
 namespace
 {
+#define ANGLE_APPEND_WIDGET_MAP_PROC(WIDGET_ID) \
+    {WidgetId::WIDGET_ID, overlay_impl::AppendWidgetDataHelper::Append##WIDGET_ID},
+
 constexpr angle::PackedEnumMap<WidgetId, AppendWidgetDataFunc> kWidgetIdToAppendDataFuncMap = {
-    {WidgetId::FPS, overlay_impl::AppendWidgetDataHelper::AppendFPS},
-    {WidgetId::VulkanLastValidationMessage,
-     overlay_impl::AppendWidgetDataHelper::AppendVulkanLastValidationMessage},
-    {WidgetId::VulkanValidationMessageCount,
-     overlay_impl::AppendWidgetDataHelper::AppendVulkanValidationMessageCount},
-    {WidgetId::VulkanRenderPassCount,
-     overlay_impl::AppendWidgetDataHelper::AppendVulkanRenderPassCount},
-    {WidgetId::VulkanSecondaryCommandBufferPoolWaste,
-     overlay_impl::AppendWidgetDataHelper::AppendVulkanSecondaryCommandBufferPoolWaste},
-    {WidgetId::VulkanWriteDescriptorSetCount,
-     overlay_impl::AppendWidgetDataHelper::AppendVulkanWriteDescriptorSetCount},
-};
-}
+    ANGLE_WIDGET_ID_X(ANGLE_APPEND_WIDGET_MAP_PROC)};
+}  // namespace
 
 namespace overlay
 {

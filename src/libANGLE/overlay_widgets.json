@@ -30,6 +30,7 @@
     "widgets": [
         {
             "name": "FPS",
+            "comment": "Frames per second (Count/Second).",
             "type": "PerSecond",
             "color": [127, 191, 255, 255],
             "coords": [10, 10],
@@ -38,6 +39,7 @@
         },
         {
             "name": "VulkanLastValidationMessage",
+            "comment": "Last validation error (Text).",
             "type": "Text",
             "color": [255, 0, 0, 255],
             "coords": [10, -10],
@@ -46,6 +48,7 @@
         },
         {
             "name": "VulkanValidationMessageCount",
+            "comment": "Number of validation errors and warnings (Count).",
             "type": "Count",
             "color": [255, 0, 0, 255],
             "coords": [10, "VulkanLastValidationMessage.top.adjacent"],
@@ -54,6 +57,7 @@
         },
         {
             "name": "VulkanRenderPassCount",
+            "comment": "Number of RenderPasses in a frame (Count).",
             "type": "RunningGraph(60)",
             "color": [75, 200, 0, 200],
             "coords": [10, 100],
@@ -68,6 +72,7 @@
         },
         {
             "name": "VulkanSecondaryCommandBufferPoolWaste",
+            "comment": "Secondary Command Buffer pool memory waste (Bytes).",
             "type": "RunningHistogram(50)",
             "color": [255, 200, 75, 200],
             "coords": [-50, 100],
@@ -83,6 +88,7 @@
         },
         {
             "name": "VulkanWriteDescriptorSetCount",
+            "comment": "Number of Descriptor Set writes in a frame (Count).",
             "type": "RunningGraph(60)",
             "color": [75, 200, 0, 200],
             "coords": [10, 220],

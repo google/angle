@@ -22,14 +22,10 @@ namespace gl
 {
 namespace
 {
+#define ANGLE_WIDGET_NAME_PROC(WIDGET_ID) {ANGLE_STRINGIFY(WIDGET_ID), WidgetId::WIDGET_ID},
+
 constexpr std::pair<const char *, WidgetId> kWidgetNames[] = {
-    {"FPS", WidgetId::FPS},
-    {"VulkanLastValidationMessage", WidgetId::VulkanLastValidationMessage},
-    {"VulkanValidationMessageCount", WidgetId::VulkanValidationMessageCount},
-    {"VulkanRenderPassCount", WidgetId::VulkanRenderPassCount},
-    {"VulkanSecondaryCommandBufferPoolWaste", WidgetId::VulkanSecondaryCommandBufferPoolWaste},
-    {"VulkanWriteDescriptorSetCount", WidgetId::VulkanWriteDescriptorSetCount},
-};
+    ANGLE_WIDGET_ID_X(ANGLE_WIDGET_NAME_PROC)};
 }  // namespace
 
 OverlayState::OverlayState() : mEnabledWidgetCount(0), mOverlayWidgets{} {}
