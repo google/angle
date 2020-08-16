@@ -34,6 +34,7 @@ extern PFN_vkDestroyDebugReportCallbackEXT vkDestroyDebugReportCallbackEXT;
 // VK_KHR_get_physical_device_properties2
 extern PFN_vkGetPhysicalDeviceProperties2KHR vkGetPhysicalDeviceProperties2KHR;
 extern PFN_vkGetPhysicalDeviceFeatures2KHR vkGetPhysicalDeviceFeatures2KHR;
+extern PFN_vkGetPhysicalDeviceMemoryProperties2KHR vkGetPhysicalDeviceMemoryProperties2KHR;
 
 // VK_KHR_external_semaphore_fd
 extern PFN_vkImportSemaphoreFdKHR vkImportSemaphoreFdKHR;
@@ -49,8 +50,13 @@ extern PFN_vkCmdBeginQueryIndexedEXT vkCmdBeginQueryIndexedEXT;
 extern PFN_vkCmdEndQueryIndexedEXT vkCmdEndQueryIndexedEXT;
 extern PFN_vkCmdDrawIndirectByteCountEXT vkCmdDrawIndirectByteCountEXT;
 
+// VK_KHR_get_memory_requirements2
 extern PFN_vkGetBufferMemoryRequirements2KHR vkGetBufferMemoryRequirements2KHR;
 extern PFN_vkGetImageMemoryRequirements2KHR vkGetImageMemoryRequirements2KHR;
+
+// VK_KHR_bind_memory2
+extern PFN_vkBindBufferMemory2KHR vkBindBufferMemory2KHR;
+extern PFN_vkBindImageMemory2KHR vkBindImageMemory2KHR;
 
 // VK_KHR_external_fence_capabilities
 extern PFN_vkGetPhysicalDeviceExternalFencePropertiesKHR
