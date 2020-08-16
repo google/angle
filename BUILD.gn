@@ -477,6 +477,11 @@ action("commit_id") {
       exec_script("src/commit_id.py", [ "check" ], "value") == 1) {
     # commit id should depend on angle's HEAD revision
     inputs = [ ".git/HEAD" ]
+    branch = read_file(".git/HEAD", "string")
+    result = string_split(branch)
+    if (result[0] == "ref:") {
+      inputs += [ ".git/" + result[1] ]
+    }
   }
 
   args = [
