@@ -800,6 +800,7 @@ std::vector<TraceEvent> &ANGLERenderTest::getTraceEventBuffer()
 
 void ANGLERenderTest::onErrorMessage(const char *errorMessage)
 {
+    abortTest();
     FAIL() << "Failing test because of unexpected internal ANGLE error:\n" << errorMessage << "\n";
 }
 

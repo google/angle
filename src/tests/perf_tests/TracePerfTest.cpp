@@ -244,6 +244,12 @@ void TracePerfTest::drawBenchmark()
         getGLWindow()->swap();
 
         endInternalTraceEvent(frameName);
+
+        // Check for abnormal exit.
+        if (!mRunning)
+        {
+            return;
+        }
     }
 
     ResetReplay(GetParam().testID);
@@ -412,7 +418,8 @@ using P = TracePerfParams;
 
 std::vector<P> gTestsWithID =
     CombineWithValues({P()}, AllEnums<RestrictedTraceID>(), CombineTestID);
-std::vector<P> gTestsWithRenderer = CombineWithFuncs(gTestsWithID, {Vulkan<P>, Native<P>});
+std::vector<P> gTestsWithRenderer =
+    CombineWithFuncs(gTestsWithID, {Vulkan<P>, VulkanMockICD<P>, Native<P>});
 ANGLE_INSTANTIATE_TEST_ARRAY(TracePerfTest, gTestsWithRenderer);
 
 }  // anonymous namespace

@@ -62,6 +62,14 @@ ParamsT Vulkan(const ParamsT &in)
 }
 
 template <typename ParamsT>
+ParamsT VulkanMockICD(const ParamsT &in)
+{
+    ParamsT out       = in;
+    out.eglParameters = angle::egl_platform::VULKAN_NULL();
+    return out;
+}
+
+template <typename ParamsT>
 ParamsT WGL(const ParamsT &in)
 {
     ParamsT out = in;

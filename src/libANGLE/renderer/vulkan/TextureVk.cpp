@@ -1252,13 +1252,19 @@ angle::Result TextureVk::ensureImageAllocated(ContextVk *contextVk, const vk::Fo
                        VK_IMAGE_USAGE_SAMPLED_BIT;
 
     // If the image has depth/stencil support, add those as possible usage.
-    if (contextVk->getRenderer()->hasImageFormatFeatureBits(
-            format.vkImageFormat, VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT))
+    RendererVk *renderer = contextVk->getRenderer();
+    if (format.actualImageFormat().hasDepthOrStencilBits())
     {
-        mImageUsageFlags |= VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
+        // Work around a bug in the Mock ICD:
+        // https://github.com/KhronosGroup/Vulkan-Tools/issues/445
+        if (renderer->hasImageFormatFeatureBits(format.vkImageFormat,
+                                                VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT))
+        {
+            mImageUsageFlags |= VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
+        }
     }
-    else if (contextVk->getRenderer()->hasImageFormatFeatureBits(
-                 format.vkImageFormat, VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT))
+    else if (renderer->hasImageFormatFeatureBits(format.vkImageFormat,
+                                                 VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT))
     {
         mImageUsageFlags |= VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
     }
