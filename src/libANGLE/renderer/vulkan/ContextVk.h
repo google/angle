@@ -601,6 +601,7 @@ class ContextVk : public ContextImpl, public vk::Context
     void endOcclusionQuery(QueryVk *queryVk);
 
     void updateOverlayOnPresent();
+    void addOverlayUsedBuffersCount(vk::CommandBufferHelper *commandBuffer);
 
     // Submit commands to worker thread for processing
     ANGLE_INLINE void queueCommandsToWorker(const vk::CommandProcessorTask &commands)

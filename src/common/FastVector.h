@@ -469,6 +469,7 @@ class FastUnorderedMap final
     }
 
     bool empty() const { return mData.empty(); }
+    size_t size() const { return mData.size(); }
 
   private:
     FastVector<Pair, N> mData;

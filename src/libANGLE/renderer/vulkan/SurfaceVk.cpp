@@ -1637,19 +1637,18 @@ angle::Result WindowSurfaceVk::initializeContents(const gl::Context *context,
 void WindowSurfaceVk::updateOverlay(ContextVk *contextVk) const
 {
     const gl::OverlayType *overlay = contextVk->getOverlay();
-    OverlayVk *overlayVk           = vk::GetImpl(overlay);
 
     // If overlay is disabled, nothing to do.
-    if (overlayVk == nullptr)
+    if (!overlay->isEnabled())
     {
         return;
     }
 
-    RendererVk *rendererVk = contextVk->getRenderer();
+    RendererVk *renderer = contextVk->getRenderer();
 
     uint32_t validationMessageCount = 0;
     std::string lastValidationMessage =
-        rendererVk->getAndClearLastValidationMessage(&validationMessageCount);
+        renderer->getAndClearLastValidationMessage(&validationMessageCount);
     if (validationMessageCount)
     {
         overlay->getTextWidget(gl::WidgetId::VulkanLastValidationMessage)

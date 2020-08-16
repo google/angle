@@ -1610,21 +1610,42 @@ angle::Result ContextVk::handleDirtyDescriptorSets(const gl::Context *context,
 
 void ContextVk::updateOverlayOnPresent()
 {
+    const gl::OverlayType *overlay = mState.getOverlay();
+    ASSERT(overlay->isEnabled());
+
     // Update overlay if active.
     {
         gl::RunningGraphWidget *renderPassCount =
-            mState.getOverlay()->getRunningGraphWidget(gl::WidgetId::VulkanRenderPassCount);
+            overlay->getRunningGraphWidget(gl::WidgetId::VulkanRenderPassCount);
         renderPassCount->add(mRenderPassCommands->getAndResetCounter());
         renderPassCount->next();
     }
 
     {
         gl::RunningGraphWidget *writeDescriptorSetCount =
-            mState.getOverlay()->getRunningGraphWidget(gl::WidgetId::VulkanWriteDescriptorSetCount);
+            overlay->getRunningGraphWidget(gl::WidgetId::VulkanWriteDescriptorSetCount);
         writeDescriptorSetCount->add(mPerfCounters.writeDescriptorSets);
         writeDescriptorSetCount->next();
 
         mPerfCounters.writeDescriptorSets = 0;
+    }
+}
+
+void ContextVk::addOverlayUsedBuffersCount(vk::CommandBufferHelper *commandBuffer)
+{
+    const gl::OverlayType *overlay = mState.getOverlay();
+    if (!overlay->isEnabled())
+    {
+        return;
+    }
+
+    gl::RunningHistogramWidget *widget =
+        overlay->getRunningHistogramWidget(gl::WidgetId::VulkanRenderPassBufferCount);
+    size_t buffersCount = commandBuffer->getUsedBuffersCount();
+    if (buffersCount > 0)
+    {
+        widget->add(buffersCount);
+        widget->next();
     }
 }
 
@@ -4483,6 +4504,8 @@ angle::Result ContextVk::flushCommandsAndEndRenderPass()
         ANGLE_TRY(flushOutsideRenderPassCommands());
     }
 
+    addOverlayUsedBuffersCount(mRenderPassCommands);
+
     mRenderPassCommands->endRenderPass();
 
     if (mRenderer->getFeatures().enableCommandProcessingThread.enabled)
@@ -4615,6 +4638,8 @@ angle::Result ContextVk::flushOutsideRenderPassCommands()
     {
         return angle::Result::Continue;
     }
+
+    addOverlayUsedBuffersCount(mOutsideRenderPassCommands);
 
     if (mRenderer->getFeatures().enableCommandProcessingThread.enabled)
     {

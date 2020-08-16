@@ -87,6 +87,8 @@ class Overlay : angle::NonCopyable
 
     rx::OverlayImpl *getImplementation() const { return mImplementation.get(); }
 
+    bool isEnabled() const { return mImplementation != nullptr; }
+
   private:
     template <typename Widget, WidgetType Type>
     Widget *getWidgetAs(WidgetId id) const
@@ -121,6 +123,8 @@ class DummyOverlay
     const overlay::Dummy *getPerSecondWidget(WidgetId id) const { return &mDummy; }
     const overlay::Dummy *getRunningGraphWidget(WidgetId id) const { return &mDummy; }
     const overlay::Dummy *getRunningHistogramWidget(WidgetId id) const { return &mDummy; }
+
+    bool isEnabled() const { return false; }
 
   private:
     overlay::Dummy mDummy;

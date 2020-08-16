@@ -239,9 +239,11 @@ TEST(FastUnorderedMap, BasicUsage)
 {
     FastUnorderedMap<int, bool, 3> testMap;
     EXPECT_TRUE(testMap.empty());
+    EXPECT_EQ(testMap.size(), 0u);
 
     testMap.insert(5, true);
     EXPECT_TRUE(testMap.contains(5));
+    EXPECT_EQ(testMap.size(), 1u);
 
     bool value = false;
     EXPECT_TRUE(testMap.get(5, &value));
@@ -251,11 +253,15 @@ TEST(FastUnorderedMap, BasicUsage)
     EXPECT_FALSE(testMap.empty());
     testMap.clear();
     EXPECT_TRUE(testMap.empty());
+    EXPECT_EQ(testMap.size(), 0u);
 
     for (int i = 0; i < 10; ++i)
     {
         testMap.insert(i, false);
     }
+
+    EXPECT_FALSE(testMap.empty());
+    EXPECT_EQ(testMap.size(), 10u);
 
     for (int i = 0; i < 10; ++i)
     {

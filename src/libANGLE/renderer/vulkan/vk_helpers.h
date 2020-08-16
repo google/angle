@@ -976,6 +976,7 @@ class CommandBufferHelper : angle::NonCopyable
     bool usesBuffer(const BufferHelper &buffer) const;
     bool usesBufferForWrite(const BufferHelper &buffer) const;
     bool usesImageInRenderPass(const ImageHelper &image) const;
+    size_t getUsedBuffersCount() const { return mUsedBuffers.size(); }
 
     // Dumping the command stream is disabled by default.
     static constexpr bool kEnableCommandStreamDiagnostics = false;
