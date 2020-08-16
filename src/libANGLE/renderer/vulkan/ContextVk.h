@@ -664,7 +664,7 @@ class ContextVk : public ContextImpl, public vk::Context
         uint32_t dynamicOffset;
         vk::BindingPointer<vk::DescriptorSetLayout> descriptorSetLayout;
         vk::RefCountedDescriptorPoolBinding descriptorPoolBinding;
-        std::unordered_map<vk::BufferSerial, VkDescriptorSet> descriptorSetCache;
+        angle::FastIntegerMap<VkDescriptorSet> descriptorSetCache;
 
         DriverUniformsDescriptorSet();
         ~DriverUniformsDescriptorSet();

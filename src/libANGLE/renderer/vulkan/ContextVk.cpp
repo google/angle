@@ -3816,10 +3816,9 @@ angle::Result ContextVk::updateDriverUniformsDescriptorSet(
     const vk::BufferHelper *buffer = driverUniforms->dynamicBuffer.getCurrentBuffer();
     vk::BufferSerial bufferSerial  = buffer->getBufferSerial();
     // Look up in the cache first
-    auto iter = driverUniforms->descriptorSetCache.find(bufferSerial);
-    if (iter != driverUniforms->descriptorSetCache.end())
+    if (driverUniforms->descriptorSetCache.get(bufferSerial.getValue(),
+                                               &driverUniforms->descriptorSet))
     {
-        driverUniforms->descriptorSet = iter->second;
         return angle::Result::Continue;
     }
 
@@ -3846,7 +3845,8 @@ angle::Result ContextVk::updateDriverUniformsDescriptorSet(
     writeInfo.pBufferInfo           = &bufferInfo;
 
     // Add into descriptor set cache
-    driverUniforms->descriptorSetCache.emplace(bufferSerial, driverUniforms->descriptorSet);
+    driverUniforms->descriptorSetCache.insert(bufferSerial.getValue(),
+                                              driverUniforms->descriptorSet);
 
     return angle::Result::Continue;
 }

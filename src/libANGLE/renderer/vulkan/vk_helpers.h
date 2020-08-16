@@ -1095,9 +1095,8 @@ class CommandBufferHelper : angle::NonCopyable
     // Tracks resources used in the command buffer.
     // For Buffers, we track the read/write access type so we can enable simuntaneous reads.
     // Images have unique layouts unlike buffers therefore we don't support multi-read.
-    static constexpr uint32_t kFastMapSize = 16;
-    angle::FastUnorderedMap<BufferSerial, BufferAccess, kFastMapSize> mUsedBuffers;
-    angle::FastUnorderedSet<ImageSerial, kFastMapSize> mRenderPassUsedImages;
+    angle::FastIntegerMap<BufferAccess> mUsedBuffers;
+    angle::FastIntegerSet mRenderPassUsedImages;
 };
 
 static constexpr uint32_t kInvalidAttachmentIndex = -1;
@@ -2051,7 +2050,7 @@ class ActiveHandleCounter final : angle::NonCopyable
 ANGLE_INLINE bool CommandBufferHelper::usesImageInRenderPass(const ImageHelper &image) const
 {
     ASSERT(mIsRenderPassCommandBuffer);
-    return mRenderPassUsedImages.contains(image.getImageSerial());
+    return mRenderPassUsedImages.contains(image.getImageSerial().getValue());
 }
 }  // namespace vk
 }  // namespace rx
