@@ -23,8 +23,11 @@ enum class StateChange
     ManyVertexBuffers,
     Texture,
     Program,
+    VertexBufferCycle,
     InvalidEnum,
 };
+
+constexpr size_t kCycleVBOPoolSize = 200;
 
 struct DrawArraysPerfParams : public DrawCallPerfParams
 {
@@ -58,6 +61,9 @@ std::string DrawArraysPerfParams::story() const
             break;
         case StateChange::Program:
             strstr << "_prog_change";
+            break;
+        case StateChange::VertexBufferCycle:
+            strstr << "_vbo_cycle";
             break;
         default:
             break;
@@ -122,6 +128,8 @@ class DrawCallPerfBenchmark : public ANGLERenderTest,
     GLuint mTexture1   = 0;
     GLuint mTexture2   = 0;
     int mNumTris       = GetParam().numTris;
+    std::vector<GLuint> mVBOPool;
+    size_t mCurrentVBO = 0;
 };
 
 DrawCallPerfBenchmark::DrawCallPerfBenchmark() : ANGLERenderTest("DrawCallPerf", GetParam()) {}
@@ -175,6 +183,16 @@ void main()
         glEnableVertexAttribArray(2);
         glEnableVertexAttribArray(3);
         glEnableVertexAttribArray(4);
+    }
+    else if (params.stateChange == StateChange::VertexBufferCycle)
+    {
+        mProgram1 = SetupSimpleDrawProgram();
+
+        for (size_t bufferIndex = 0; bufferIndex < kCycleVBOPoolSize; ++bufferIndex)
+        {
+            GLuint buffer = Create2DTriangleBuffer(mNumTris, GL_STATIC_DRAW);
+            mVBOPool.push_back(buffer);
+        }
     }
     else
     {
@@ -247,6 +265,11 @@ void DrawCallPerfBenchmark::destroyBenchmark()
     glDeleteTextures(1, &mTexture1);
     glDeleteTextures(1, &mTexture2);
     glDeleteFramebuffers(1, &mFBO);
+
+    if (!mVBOPool.empty())
+    {
+        glDeleteBuffers(mVBOPool.size(), mVBOPool.data());
+    }
 }
 
 void ClearThenDraw(unsigned int iterations, GLsizei numElements)
@@ -340,6 +363,21 @@ void ChangeProgramThenDraw(unsigned int iterations,
     }
 }
 
+void CycleVertexBufferThenDraw(unsigned int iterations,
+                               GLsizei numElements,
+                               const std::vector<GLuint> &vbos,
+                               size_t *currentVBO)
+{
+    for (unsigned int it = 0; it < iterations; it++)
+    {
+        GLuint vbo = vbos[*currentVBO];
+        glBindBuffer(GL_ARRAY_BUFFER, vbo);
+        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
+        glDrawArrays(GL_TRIANGLES, 0, numElements);
+        *currentVBO = (*currentVBO + 1) % vbos.size();
+    }
+}
+
 void DrawCallPerfBenchmark::drawBenchmark()
 {
     // This workaround fixes a huge queue of graphics commands accumulating on the GL
@@ -380,6 +418,10 @@ void DrawCallPerfBenchmark::drawBenchmark()
                 JustDraw(params.iterationsPerStep, numElements);
             }
             break;
+        case StateChange::VertexBufferCycle:
+            CycleVertexBufferThenDraw(params.iterationsPerStep, numElements, mVBOPool,
+                                      &mCurrentVBO);
+            break;
         case StateChange::InvalidEnum:
             FAIL() << "Invalid state change.";
             break;
@@ -399,6 +441,13 @@ DrawArraysPerfParams CombineStateChange(const DrawArraysPerfParams &in, StateCha
 {
     DrawArraysPerfParams out = in;
     out.stateChange          = stateChange;
+
+    // Crank up iteration count to ensure we cycle through all VBs before a swap.
+    if (stateChange == StateChange::VertexBufferCycle)
+    {
+        out.iterationsPerStep = kCycleVBOPoolSize * 2;
+    }
+
     return out;
 }
 
