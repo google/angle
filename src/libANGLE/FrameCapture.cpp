@@ -1741,6 +1741,10 @@ void CaptureUpdateUniformValues(const gl::State &replayState,
         // For arrayed uniforms, we'll need to increment a read location
         gl::UniformLocation readLoc = uniformLoc;
 
+        // If the uniform is unused, just continue
+        if (readLoc.value == -1)
+            continue;
+
         switch (typeInfo->componentType)
         {
             case GL_FLOAT:
