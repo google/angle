@@ -25,14 +25,22 @@ std::shared_ptr<WaitableCompileEvent> ShaderVk::compile(const gl::Context *conte
                                                         gl::ShCompilerInstance *compilerInstance,
                                                         ShCompileOptions options)
 {
-    ShCompileOptions compileOptions = SH_INITIALIZE_UNINITIALIZED_LOCALS;
+    ShCompileOptions compileOptions = 0;
 
     ContextVk *contextVk = vk::GetImpl(context);
 
     bool isWebGL = context->getExtensions().webglCompatibility;
-    if (isWebGL && mData.getShaderType() != gl::ShaderType::Compute)
+
+    if (isWebGL)
     {
-        compileOptions |= SH_INIT_OUTPUT_VARIABLES;
+        // Only webgl requires initialization of local variables, others don't.
+        // Extra initialization in spirv shader may affect performance.
+        compileOptions |= SH_INITIALIZE_UNINITIALIZED_LOCALS;
+
+        if (mData.getShaderType() != gl::ShaderType::Compute)
+        {
+            compileOptions |= SH_INIT_OUTPUT_VARIABLES;
+        }
     }
 
     if (contextVk->getFeatures().clampPointSize.enabled)

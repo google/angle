@@ -2960,6 +2960,12 @@ class WebGLGLSLTest : public GLSLTest
     WebGLGLSLTest() { setWebGLCompatibilityEnabled(true); }
 };
 
+class WebGL2GLSLTest : public GLSLTest
+{
+  protected:
+    WebGL2GLSLTest() { setWebGLCompatibilityEnabled(true); }
+};
+
 TEST_P(WebGLGLSLTest, MaxVaryingVec4PlusFragCoord)
 {
     GLint maxVaryings = 0;
@@ -4248,7 +4254,7 @@ TEST_P(GLSLTest_ES3, ConstantStatementAsLoopInit)
 }
 
 // Test that uninitialized local variables are initialized to 0.
-TEST_P(GLSLTest_ES3, InitUninitializedLocals)
+TEST_P(WebGL2GLSLTest, InitUninitializedLocals)
 {
     // Test skipped on Android GLES because local variable initialization is disabled.
     // http://anglebug.com/2046
@@ -4279,13 +4285,18 @@ TEST_P(GLSLTest_ES3, InitUninitializedLocals)
         "}\n";
 
     ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
-    drawQuad(program.get(), essl3_shaders::PositionAttrib(), 0.5f);
+
+    // [WebGL 1.0]
+    // DrawArrays or drawElements will generate an INVALID_OPERATION error
+    // if a vertex attribute is enabled as an array via enableVertexAttribArray
+    // but no buffer is bound to that attribute.
+    drawQuad(program.get(), essl3_shaders::PositionAttrib(), 0.5f, 1.0f, true);
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
 // Test that uninitialized structs containing arrays of structs are initialized to 0. This
 // specifically tests with two different struct variables declared in the same block.
-TEST_P(GLSLTest, InitUninitializedStructContainingArrays)
+TEST_P(WebGL2GLSLTest, InitUninitializedStructContainingArrays)
 {
     // Test skipped on Android GLES because local variable initialization is disabled.
     // http://anglebug.com/2046
@@ -4316,7 +4327,7 @@ TEST_P(GLSLTest, InitUninitializedStructContainingArrays)
         "}\n";
 
     ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), kFS);
-    drawQuad(program.get(), essl1_shaders::PositionAttrib(), 0.5f);
+    drawQuad(program.get(), essl1_shaders::PositionAttrib(), 0.5f, 1.0f, true);
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
@@ -4369,7 +4380,7 @@ TEST_P(GLSLTest, StructureNameMatchingTest)
 }
 
 // Test that an uninitialized nameless struct inside a for loop init statement works.
-TEST_P(GLSLTest_ES3, UninitializedNamelessStructInForInitStatement)
+TEST_P(WebGL2GLSLTest, UninitializedNamelessStructInForInitStatement)
 {
     // Test skipped on Android GLES because local variable initialization is disabled.
     // http://anglebug.com/2046
@@ -4388,7 +4399,7 @@ TEST_P(GLSLTest_ES3, UninitializedNamelessStructInForInitStatement)
         "}\n";
 
     ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
-    drawQuad(program.get(), essl3_shaders::PositionAttrib(), 0.5f);
+    drawQuad(program.get(), essl3_shaders::PositionAttrib(), 0.5f, 1.0f, true);
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
@@ -4750,7 +4761,7 @@ TEST_P(GLSLTest_ES3, VaryingStructNotDeclaredInVertexShader)
 }
 
 // Test that a varying struct that's not initialized in the vertex shader links successfully.
-TEST_P(GLSLTest_ES3, VaryingStructNotInitializedInVertexShader)
+TEST_P(WebGL2GLSLTest, VaryingStructNotInitializedInVertexShader)
 {
     // GLSL ES allows the vertex shader to declare but not initialize a varying (with a
     // specification that the varying values are undefined in the fragment stage).  See section 9.1
@@ -8249,5 +8260,7 @@ ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(GLSLTestNoValidation);
 ANGLE_INSTANTIATE_TEST_ES3(GLSLTest_ES3);
 
 ANGLE_INSTANTIATE_TEST_ES2(WebGLGLSLTest);
+
+ANGLE_INSTANTIATE_TEST_ES3(WebGL2GLSLTest);
 
 ANGLE_INSTANTIATE_TEST_ES31(GLSLTest_ES31);
