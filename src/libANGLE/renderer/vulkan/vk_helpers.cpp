@@ -565,8 +565,8 @@ CommandBufferHelper::CommandBufferHelper()
       mRebindTransformFeedbackBuffers(false),
       mIsRenderPassCommandBuffer(false),
       mMergeBarriers(false),
-      mDepthTestEverEnabled(false),
-      mStencilTestEverEnabled(false),
+      mDepthStartAccess(ResourceAccess::Unused),
+      mStencilStartAccess(ResourceAccess::Unused),
       mDepthStencilAttachmentIndex(kInvalidAttachmentIndex)
 {}
 
@@ -770,18 +770,23 @@ void CommandBufferHelper::endRenderPass()
     // Depth/Stencil buffer optimization: if we are loading or clearing the buffer, but the
     // buffer has not been used, and the data has also not been stored back into buffer, then
     // just skip the load/clear op.
-    if (!mDepthTestEverEnabled &&
+    if (mDepthStartAccess == ResourceAccess::Unused &&
         mAttachmentOps[mDepthStencilAttachmentIndex].storeOp == VK_ATTACHMENT_STORE_OP_DONT_CARE)
     {
         mAttachmentOps[mDepthStencilAttachmentIndex].loadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
     }
 
-    if (!mStencilTestEverEnabled && mAttachmentOps[mDepthStencilAttachmentIndex].stencilStoreOp ==
-                                        VK_ATTACHMENT_STORE_OP_DONT_CARE)
+    if (mStencilStartAccess == ResourceAccess::Unused &&
+        mAttachmentOps[mDepthStencilAttachmentIndex].stencilStoreOp ==
+            VK_ATTACHMENT_STORE_OP_DONT_CARE)
     {
         mAttachmentOps[mDepthStencilAttachmentIndex].stencilLoadOp =
             VK_ATTACHMENT_LOAD_OP_DONT_CARE;
     }
+
+    // Ensure we don't write to a read-only RenderPass. (ReadOnly -> !Write)
+    ASSERT((mRenderPassDesc.getDepthStencilAccess() != ResourceAccess::ReadOnly) ||
+           mDepthStartAccess != ResourceAccess::Write);
 }
 
 void CommandBufferHelper::beginTransformFeedback(size_t validBufferCount,
@@ -970,8 +975,8 @@ void CommandBufferHelper::reset()
         mRenderPassStarted                 = false;
         mValidTransformFeedbackBufferCount = 0;
         mRebindTransformFeedbackBuffers    = false;
-        mDepthTestEverEnabled              = false;
-        mStencilTestEverEnabled            = false;
+        mDepthStartAccess                  = ResourceAccess::Unused;
+        mStencilStartAccess                = ResourceAccess::Unused;
         mDepthStencilAttachmentIndex       = kInvalidAttachmentIndex;
         mRenderPassUsedImages.clear();
     }

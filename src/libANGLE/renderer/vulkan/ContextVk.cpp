@@ -283,6 +283,25 @@ EventName GetTraceEventName(const char *title, uint32_t counter)
     snprintf(buf.data(), kMaxGpuEventNameLen - 1, "%s %u", title, counter);
     return buf;
 }
+
+vk::ResourceAccess GetDepthAccess(const gl::DepthStencilState &dsState)
+{
+    if (!dsState.depthTest)
+    {
+        return vk::ResourceAccess::Unused;
+    }
+    return dsState.depthMask ? vk::ResourceAccess::Write : vk::ResourceAccess::ReadOnly;
+}
+
+vk::ResourceAccess GetStencilAccess(const gl::DepthStencilState &dsState)
+{
+    if (!dsState.stencilTest)
+    {
+        return vk::ResourceAccess::Unused;
+    }
+    // Simplify this check by returning write instead of checking the mask.
+    return vk::ResourceAccess::Write;
+}
 }  // anonymous namespace
 
 ANGLE_INLINE void ContextVk::flushDescriptorSetUpdates()
@@ -2843,30 +2862,41 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 updateSampleMask(glState);
                 break;
             case gl::State::DIRTY_BIT_DEPTH_TEST_ENABLED:
+            {
                 mGraphicsPipelineDesc->updateDepthTestEnabled(&mGraphicsPipelineTransition,
                                                               glState.getDepthStencilState(),
                                                               glState.getDrawFramebuffer());
                 if (mState.isDepthTestEnabled() && mRenderPassCommands->started())
                 {
-                    mRenderPassCommands->setDepthTestEnabled();
+                    vk::ResourceAccess access = GetDepthAccess(mState.getDepthStencilState());
+                    mRenderPassCommands->onDepthAccess(access);
                 }
                 break;
+            }
             case gl::State::DIRTY_BIT_DEPTH_FUNC:
                 mGraphicsPipelineDesc->updateDepthFunc(&mGraphicsPipelineTransition,
                                                        glState.getDepthStencilState());
                 break;
             case gl::State::DIRTY_BIT_DEPTH_MASK:
+            {
                 mGraphicsPipelineDesc->updateDepthWriteEnabled(&mGraphicsPipelineTransition,
                                                                glState.getDepthStencilState(),
                                                                glState.getDrawFramebuffer());
+                if (mState.isDepthTestEnabled() && mRenderPassCommands->started())
+                {
+                    vk::ResourceAccess access = GetDepthAccess(mState.getDepthStencilState());
+                    mRenderPassCommands->onDepthAccess(access);
+                }
                 break;
+            }
             case gl::State::DIRTY_BIT_STENCIL_TEST_ENABLED:
                 mGraphicsPipelineDesc->updateStencilTestEnabled(&mGraphicsPipelineTransition,
                                                                 glState.getDepthStencilState(),
                                                                 glState.getDrawFramebuffer());
                 if (mState.isStencilTestEnabled() && mRenderPassCommands->started())
                 {
-                    mRenderPassCommands->setStencilTestEnabled();
+                    vk::ResourceAccess access = GetStencilAccess(mState.getDepthStencilState());
+                    mRenderPassCommands->onStencilAccess(access);
                 }
                 break;
             case gl::State::DIRTY_BIT_STENCIL_FUNCS_FRONT:
@@ -4437,11 +4467,13 @@ angle::Result ContextVk::startRenderPass(gl::Rectangle renderArea,
 
     if (mState.isDepthTestEnabled())
     {
-        mRenderPassCommands->setDepthTestEnabled();
+        vk::ResourceAccess access = GetDepthAccess(mState.getDepthStencilState());
+        mRenderPassCommands->onDepthAccess(access);
     }
     if (mState.isStencilTestEnabled())
     {
-        mRenderPassCommands->setStencilTestEnabled();
+        vk::ResourceAccess access = GetStencilAccess(mState.getDepthStencilState());
+        mRenderPassCommands->onStencilAccess(access);
     }
 
     if (commandBufferOut)

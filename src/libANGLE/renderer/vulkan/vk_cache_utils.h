@@ -66,6 +66,14 @@ enum ResourceAccess
     Write,
 };
 
+inline void UpdateAccess(ResourceAccess *oldAccess, ResourceAccess newAccess)
+{
+    if (newAccess > *oldAccess)
+    {
+        *oldAccess = newAccess;
+    }
+}
+
 class alignas(4) RenderPassDesc final
 {
   public:
