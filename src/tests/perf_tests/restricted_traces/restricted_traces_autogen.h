@@ -42,6 +42,7 @@ enum class RestrictedTraceID
 {
     angry_birds_2_1500,
     candy_crush_500,
+    cod_mobile,
     egypt_1500,
     manhattan_10,
     mobile_legends,

@@ -13,6 +13,7 @@
 
 #include "angry_birds_2_1500/angry_birds_2_1500_capture_context2.h"
 #include "candy_crush_500/candy_crush_500_capture_context2.h"
+#include "cod_mobile/cod_mobile_capture_context4.h"
 #include "egypt_1500/egypt_1500_capture_context6.h"
 #include "manhattan_10/manhattan_10_capture_context6.h"
 #include "mobile_legends/mobile_legends_capture_context3.h"
@@ -34,6 +35,9 @@ constexpr angle::PackedEnumMap<RestrictedTraceID, TraceInfo> kTraceInfos = {
      {candy_crush_500::kReplayFrameStart, candy_crush_500::kReplayFrameEnd,
       candy_crush_500::kReplayDrawSurfaceWidth, candy_crush_500::kReplayDrawSurfaceHeight,
       "candy_crush_500"}},
+    {RestrictedTraceID::cod_mobile,
+     {cod_mobile::kReplayFrameStart, cod_mobile::kReplayFrameEnd,
+      cod_mobile::kReplayDrawSurfaceWidth, cod_mobile::kReplayDrawSurfaceHeight, "cod_mobile"}},
     {RestrictedTraceID::egypt_1500,
      {egypt_1500::kReplayFrameStart, egypt_1500::kReplayFrameEnd,
       egypt_1500::kReplayDrawSurfaceWidth, egypt_1500::kReplayDrawSurfaceHeight, "egypt_1500"}},
@@ -76,6 +80,9 @@ void ReplayFrame(RestrictedTraceID traceID, uint32_t frameIndex)
         case RestrictedTraceID::candy_crush_500:
             candy_crush_500::ReplayContext2Frame(frameIndex);
             break;
+        case RestrictedTraceID::cod_mobile:
+            cod_mobile::ReplayContext4Frame(frameIndex);
+            break;
         case RestrictedTraceID::egypt_1500:
             egypt_1500::ReplayContext6Frame(frameIndex);
             break;
@@ -113,6 +120,9 @@ void ResetReplay(RestrictedTraceID traceID)
             break;
         case RestrictedTraceID::candy_crush_500:
             candy_crush_500::ResetContext2Replay();
+            break;
+        case RestrictedTraceID::cod_mobile:
+            cod_mobile::ResetContext4Replay();
             break;
         case RestrictedTraceID::egypt_1500:
             egypt_1500::ResetContext6Replay();
@@ -152,6 +162,9 @@ void SetupReplay(RestrictedTraceID traceID)
         case RestrictedTraceID::candy_crush_500:
             candy_crush_500::SetupContext2Replay();
             break;
+        case RestrictedTraceID::cod_mobile:
+            cod_mobile::SetupContext4Replay();
+            break;
         case RestrictedTraceID::egypt_1500:
             egypt_1500::SetupContext6Replay();
             break;
@@ -190,6 +203,9 @@ void SetBinaryDataDir(RestrictedTraceID traceID, const char *dataDir)
         case RestrictedTraceID::candy_crush_500:
             candy_crush_500::SetBinaryDataDir(dataDir);
             break;
+        case RestrictedTraceID::cod_mobile:
+            cod_mobile::SetBinaryDataDir(dataDir);
+            break;
         case RestrictedTraceID::egypt_1500:
             egypt_1500::SetBinaryDataDir(dataDir);
             break;
@@ -227,6 +243,9 @@ void SetBinaryDataDecompressCallback(RestrictedTraceID traceID, DecompressCallba
             break;
         case RestrictedTraceID::candy_crush_500:
             candy_crush_500::SetBinaryDataDecompressCallback(callback);
+            break;
+        case RestrictedTraceID::cod_mobile:
+            cod_mobile::SetBinaryDataDecompressCallback(callback);
             break;
         case RestrictedTraceID::egypt_1500:
             egypt_1500::SetBinaryDataDecompressCallback(callback);

@@ -3,6 +3,8 @@
     "44fc5437c4a84012e338b3da4b6fc28a",
   "src/tests/perf_tests/restricted_traces/candy_crush_500.tar.gz.sha1":
     "ef00d8872fe818250df07f761d440bfb",
+  "src/tests/perf_tests/restricted_traces/cod_mobile.tar.gz.sha1":
+    "dffd3bed0d0e53481f43b414309bf152",
   "src/tests/perf_tests/restricted_traces/egypt_1500.tar.gz.sha1":
     "1d80caa37b937f83c95cd053b1bdd4ac",
   "src/tests/perf_tests/restricted_traces/gen_restricted_traces.py":
@@ -14,13 +16,13 @@
   "src/tests/perf_tests/restricted_traces/nba2k20_800.tar.gz.sha1":
     "03df0dcf41c18bc59edfc0b088ca4a87",
   "src/tests/perf_tests/restricted_traces/restricted_traces.json":
-    "3d86078bb5432589b43ab6c7cd5b23d9",
+    "60be7da4acc21fd21e715f941fe9ba78",
   "src/tests/perf_tests/restricted_traces/restricted_traces_autogen.cpp":
-    "578f3bdda73da6474e71e9685142cacd",
+    "a82eccc731512d0db843799b0190dd72",
   "src/tests/perf_tests/restricted_traces/restricted_traces_autogen.gni":
-    "da6ac463c74450b162738e7d25a649ef",
+    "58f17776b329492ba094e809cffbcf2a",
   "src/tests/perf_tests/restricted_traces/restricted_traces_autogen.h":
-    "9f7247aa84c1850adab8fa67e652267e",
+    "cf1a5ee60842ea8367225facc10c1ae3",
   "src/tests/perf_tests/restricted_traces/subway_surfer_500.tar.gz.sha1":
     "a47a797dd227f5025439b47cee80dbc9",
   "src/tests/perf_tests/restricted_traces/temple_run_300.tar.gz.sha1":
