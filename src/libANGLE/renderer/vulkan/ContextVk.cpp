@@ -900,9 +900,7 @@ angle::Result ContextVk::initialize()
     //  2. Put a pointer to each command buffer into queue
     for (vk::CommandBufferHelper &commandBuffer : mCommandBuffers)
     {
-        // TODO: b/157508684 Don't cache feature in class like this, just check when needed
-        commandBuffer.initialize(false,
-                                 mRenderer->getFeatures().preferAggregateBarrierCalls.enabled);
+        commandBuffer.initialize(false);
         recycleCommandBuffer(&commandBuffer);
     }
     // Now assign initial command buffers from queue

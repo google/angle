@@ -586,7 +586,6 @@ CommandBufferHelper::CommandBufferHelper()
       mValidTransformFeedbackBufferCount(0),
       mRebindTransformFeedbackBuffers(false),
       mIsRenderPassCommandBuffer(false),
-      mMergeBarriers(false),
       mDepthStartAccess(ResourceAccess::Unused),
       mStencilStartAccess(ResourceAccess::Unused),
       mDepthStencilAttachmentIndex(kInvalidAttachmentIndex)
@@ -597,7 +596,7 @@ CommandBufferHelper::~CommandBufferHelper()
     mFramebuffer.setHandle(VK_NULL_HANDLE);
 }
 
-void CommandBufferHelper::initialize(bool isRenderPassCommandBuffer, bool mergeBarriers)
+void CommandBufferHelper::initialize(bool isRenderPassCommandBuffer)
 {
     ASSERT(mUsedBuffers.empty());
 
@@ -606,7 +605,6 @@ void CommandBufferHelper::initialize(bool isRenderPassCommandBuffer, bool mergeB
     mAllocator.push();
     mCommandBuffer.initialize(&mAllocator);
     mIsRenderPassCommandBuffer = isRenderPassCommandBuffer;
-    mMergeBarriers             = mergeBarriers;
 }
 
 bool CommandBufferHelper::usesBuffer(const BufferHelper &buffer) const
@@ -727,7 +725,7 @@ void CommandBufferHelper::imageWrite(ResourceUseList *resourceUseList,
     }
 }
 
-void CommandBufferHelper::executeBarriers(PrimaryCommandBuffer *primary)
+void CommandBufferHelper::executeBarriers(ContextVk *contextVk, PrimaryCommandBuffer *primary)
 {
     // make a local copy for faster access
     PipelineStagesMask mask = mPipelineBarrierMask;
@@ -736,7 +734,7 @@ void CommandBufferHelper::executeBarriers(PrimaryCommandBuffer *primary)
         return;
     }
 
-    if (mMergeBarriers)
+    if (contextVk->getFeatures().preferAggregateBarrierCalls.enabled)
     {
         PipelineStagesMask::Iterator iter = mask.begin();
         PipelineBarrier &barrier          = mPipelineBarriers[*iter];
@@ -842,7 +840,7 @@ angle::Result CommandBufferHelper::flushToPrimary(ContextVk *contextVk,
         addCommandDiagnostics(contextVk);
     }
     // Commands that are added to primary before beginRenderPass command
-    executeBarriers(primary);
+    executeBarriers(contextVk, primary);
 
     if (mIsRenderPassCommandBuffer)
     {
