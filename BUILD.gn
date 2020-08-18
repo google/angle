@@ -250,6 +250,20 @@ config("angle_common_config") {
   }
 }
 
+# Silences the "indirect call of a function with wrong dynamic type" cfi error
+config("angle_no_cfi_icall") {
+  if (is_cfi && use_cfi_icall && current_toolchain == default_toolchain) {
+    cflags = [ "-fno-sanitize=cfi-icall" ]
+  }
+}
+
+# Silences the "cast from void* or another unrelated type to the wrong dynamic type" cfi error
+config("angle_no_cfi_unrelated_cast") {
+  if (is_cfi && use_cfi_cast && current_toolchain == default_toolchain) {
+    cflags = [ "-fno-sanitize=cfi-unrelated-cast" ]
+  }
+}
+
 angle_source_set("angle_system_utils") {
   sources = angle_system_utils_sources
 }
