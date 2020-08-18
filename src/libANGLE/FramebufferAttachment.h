@@ -94,8 +94,6 @@ class FramebufferAttachment final
     GLenum getComponentType() const;
     GLenum getColorEncoding() const;
 
-    bool isBoundAsSamplerOrImage(ContextID contextID) const;
-
     bool isTextureWithId(TextureID textureId) const
     {
         return mType == GL_TEXTURE && id() == textureId.value;

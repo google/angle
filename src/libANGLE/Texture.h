@@ -94,13 +94,6 @@ struct SwizzleState final
     GLenum swizzleAlpha;
 };
 
-struct ContextBindingCount
-{
-    ContextID contextID;
-    uint32_t samplerBindingCount;
-    uint32_t imageBindingCount;
-};
-
 // State from Table 6.9 (state per texture object) in the OpenGL ES 3.0.2 spec.
 class TextureState final : private angle::NonCopyable
 {
@@ -147,15 +140,7 @@ class TextureState final : private angle::NonCopyable
     GLenum getDepthStencilTextureMode() const { return mDepthStencilTextureMode; }
     bool isStencilMode() const { return mDepthStencilTextureMode == GL_STENCIL_INDEX; }
 
-    // TODO(jmadill): Remove. http://anglebug.com/4500
-    bool isBoundAsSamplerTexture(ContextID contextID) const
-    {
-        return getBindingCount(contextID).samplerBindingCount > 0;
-    }
-    bool isBoundAsImageTexture(ContextID contextID) const
-    {
-        return getBindingCount(contextID).imageBindingCount > 0;
-    }
+    bool hasBeenBoundAsImage() const { return mHasBeenBoundAsImage; }
 
     gl::SrgbOverride getSRGBOverride() const { return mSrgbOverride; }
 
@@ -172,8 +157,6 @@ class TextureState final : private angle::NonCopyable
 
     // Return the enabled mipmap level count.
     GLuint getEnabledLevelCount() const;
-
-    const std::vector<ContextBindingCount> &getBindingCounts() const { return mBindingCounts; }
 
     bool getImmutableFormat() const { return mImmutableFormat; }
     GLuint getImmutableLevels() const { return mImmutableLevels; }
@@ -211,22 +194,6 @@ class TextureState final : private angle::NonCopyable
     void clearImageDesc(TextureTarget target, size_t level);
     void clearImageDescs();
 
-    ContextBindingCount &getBindingCount(ContextID contextID)
-    {
-        for (ContextBindingCount &bindingCount : mBindingCounts)
-        {
-            if (bindingCount.contextID == contextID)
-                return bindingCount;
-        }
-        mBindingCounts.push_back({contextID, 0, 0});
-        return mBindingCounts.back();
-    }
-
-    const ContextBindingCount &getBindingCount(ContextID contextID) const
-    {
-        return const_cast<TextureState *>(this)->getBindingCount(contextID);
-    }
-
     const TextureType mType;
 
     SwizzleState mSwizzleState;
@@ -240,7 +207,7 @@ class TextureState final : private angle::NonCopyable
 
     GLenum mDepthStencilTextureMode;
 
-    std::vector<ContextBindingCount> mBindingCounts;
+    bool mHasBeenBoundAsImage;
 
     bool mImmutableFormat;
     GLuint mImmutableLevels;
@@ -474,37 +441,7 @@ class Texture final : public RefCountObject<TextureID>,
 
     angle::Result generateMipmap(Context *context);
 
-    void onBindAsImageTexture(ContextID contextID);
-
-    ANGLE_INLINE void onUnbindAsImageTexture(ContextID contextID)
-    {
-        ASSERT(mState.isBoundAsImageTexture(contextID));
-        mState.getBindingCount(contextID).imageBindingCount--;
-    }
-
-    ANGLE_INLINE void onBindAsSamplerTexture(ContextID contextID)
-    {
-        ContextBindingCount &bindingCount = mState.getBindingCount(contextID);
-
-        ASSERT(bindingCount.samplerBindingCount < std::numeric_limits<uint32_t>::max());
-        bindingCount.samplerBindingCount++;
-        if (bindingCount.samplerBindingCount == 1)
-        {
-            onStateChange(angle::SubjectMessage::BindingChanged);
-        }
-    }
-
-    ANGLE_INLINE void onUnbindAsSamplerTexture(ContextID contextID)
-    {
-        ContextBindingCount &bindingCount = mState.getBindingCount(contextID);
-
-        ASSERT(mState.isBoundAsSamplerTexture(contextID));
-        bindingCount.samplerBindingCount--;
-        if (bindingCount.samplerBindingCount == 0)
-        {
-            onStateChange(angle::SubjectMessage::BindingChanged);
-        }
-    }
+    void onBindAsImageTexture();
 
     egl::Surface *getBoundSurface() const;
     egl::Stream *getBoundStream() const;

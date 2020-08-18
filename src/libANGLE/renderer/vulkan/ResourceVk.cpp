@@ -81,12 +81,12 @@ bool SharedGarbage::destroyIfComplete(RendererVk *renderer, Serial completedSeri
     if (mLifetime.isCurrentlyInUse(completedSerial))
         return false;
 
-    mLifetime.release();
-
     for (GarbageObject &object : mGarbage)
     {
         object.destroy(renderer);
     }
+
+    mLifetime.release();
 
     return true;
 }

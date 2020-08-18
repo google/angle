@@ -2172,6 +2172,9 @@ angle::Result TextureVk::syncState(const gl::Context *context,
 
         ANGLE_TRY(initImageViews(contextVk, mImage->getFormat(), baseLevelDesc.format.info->sized,
                                  mImage->getLevelCount(), layerCount));
+
+        // Let any Framebuffers know we need to refresh the RenderTarget cache.
+        onStateChange(angle::SubjectMessage::SubjectChanged);
     }
 
     vk::SamplerDesc samplerDesc(mState.getSamplerState(), mState.isStencilMode(),

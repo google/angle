@@ -99,6 +99,7 @@ TextureState::TextureState(TextureType type)
       mBaseLevel(0),
       mMaxLevel(kInitialMaxLevel),
       mDepthStencilTextureMode(GL_DEPTH_COMPONENT),
+      mHasBeenBoundAsImage(false),
       mImmutableFormat(false),
       mImmutableLevels(0),
       mUsage(GL_NONE),
@@ -2024,15 +2025,12 @@ angle::Result Texture::getTexImage(const Context *context,
                                  pixels);
 }
 
-void Texture::onBindAsImageTexture(ContextID contextID)
+void Texture::onBindAsImageTexture()
 {
-    ContextBindingCount &bindingCount = mState.getBindingCount(contextID);
-
-    ASSERT(bindingCount.imageBindingCount < std::numeric_limits<uint32_t>::max());
-    mState.getBindingCount(contextID).imageBindingCount++;
-    if (bindingCount.imageBindingCount == 1)
+    if (!mState.mHasBeenBoundAsImage)
     {
         mDirtyBits.set(DIRTY_BIT_BOUND_AS_IMAGE);
+        mState.mHasBeenBoundAsImage = true;
     }
 }
 

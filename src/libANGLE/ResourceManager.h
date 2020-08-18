@@ -281,17 +281,14 @@ class FramebufferManager
     Framebuffer *checkFramebufferAllocation(rx::GLImplFactory *factory,
                                             const Caps &caps,
                                             FramebufferID handle,
-                                            ContextID owningContextID,
                                             egl::ShareGroup *shareGroup)
     {
-        return checkObjectAllocation<const Caps &>(factory, handle, caps, owningContextID,
-                                                   shareGroup);
+        return checkObjectAllocation<const Caps &>(factory, handle, caps, shareGroup);
     }
 
     static Framebuffer *AllocateNewObject(rx::GLImplFactory *factory,
                                           FramebufferID handle,
                                           const Caps &caps,
-                                          ContextID owningContextID,
                                           egl::ShareGroup *shareGroup);
     static void DeleteObject(const Context *context, Framebuffer *framebuffer);
 
