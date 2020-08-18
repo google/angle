@@ -255,7 +255,6 @@ class FramebufferVk : public FramebufferImpl
 
     vk::FramebufferDesc mCurrentFramebufferDesc;
     std::unordered_map<vk::FramebufferDesc, vk::FramebufferHelper> mFramebufferCache;
-    bool mSupportDepthStencilFeedbackLoops;
 
     vk::ClearValuesArray mDeferredClears;
 };

@@ -282,9 +282,7 @@ FramebufferVk::FramebufferVk(RendererVk *renderer,
     : FramebufferImpl(state),
       mBackbuffer(backbuffer),
       mFramebuffer(nullptr),
-      mActiveColorComponents(0),
-      mSupportDepthStencilFeedbackLoops(
-          renderer->getFeatures().supportDepthStencilRenderingFeedbackLoops.enabled)
+      mActiveColorComponents(0)
 {
     mReadPixelBuffer.init(renderer, VK_BUFFER_USAGE_TRANSFER_DST_BIT, kReadPixelsBufferAlignment,
                           kMinReadPixelsBufferSize, true);
@@ -421,33 +419,6 @@ angle::Result FramebufferVk::clearImpl(const gl::Context *context,
     ASSERT(!clearStencil || stencilMask != 0);
 
     bool scissoredClear = scissoredRenderArea != getRotatedCompleteRenderArea(contextVk);
-
-    // Special case for rendering feedback loops: clears are always valid in GL since they don't
-    // sample from any textures.
-    if ((clearDepth || clearStencil) && mState.hasDepthStencilFeedbackLoop())
-    {
-        // We currently don't handle scissored clears with rendering feedback loops.
-        ANGLE_VK_CHECK(contextVk, !scissoredClear, VK_ERROR_INCOMPATIBLE_DRIVER);
-
-        RenderTargetVk *depthStencilRT = mRenderTargetCache.getDepthStencil(true);
-        vk::ImageHelper *image         = &depthStencilRT->getImageForWrite();
-
-        ANGLE_TRY(contextVk->onImageTransferWrite(image->getAspectFlags(), image));
-        vk::CommandBuffer &commandBuffer = contextVk->getOutsideRenderPassCommandBuffer();
-
-        VkImageSubresourceRange range;
-        range.aspectMask     = image->getAspectFlags();
-        range.baseMipLevel   = depthStencilRT->getLevelIndex();
-        range.levelCount     = 1;
-        range.baseArrayLayer = depthStencilRT->getLayerIndex();
-        range.layerCount     = 1;
-
-        commandBuffer.clearDepthStencilImage(image->getImage(),
-                                             VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
-                                             clearDepthStencilValue, 1, &range);
-        clearDepth   = false;
-        clearStencil = false;
-    }
 
     // If there is nothing to clear, return right away (for example, if asked to clear depth, but
     // there is no depth attachment).
@@ -720,9 +691,7 @@ angle::Result FramebufferVk::readPixels(const gl::Context *context,
 
 RenderTargetVk *FramebufferVk::getDepthStencilRenderTarget() const
 {
-    // If we mask out depth/stencil feedback loops, do not allow the user to access the looped DS
-    // render target. Passing "false" to getDepthStencil forces a return of "nullptr" for loops.
-    return mRenderTargetCache.getDepthStencil(!mSupportDepthStencilFeedbackLoops);
+    return mRenderTargetCache.getDepthStencil();
 }
 
 RenderTargetVk *FramebufferVk::getColorDrawRenderTarget(size_t colorIndex) const
@@ -1144,7 +1113,7 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
     if (blitDepthBuffer || blitStencilBuffer)
     {
         RenderTargetVk *readRenderTarget      = srcFramebufferVk->getDepthStencilRenderTarget();
-        RenderTargetVk *drawRenderTarget      = mRenderTargetCache.getDepthStencil(true);
+        RenderTargetVk *drawRenderTarget      = mRenderTargetCache.getDepthStencil();
         UtilsVk::BlitResolveParameters params = commonParams;
         params.srcLayer                       = readRenderTarget->getLayerIndex();
 
@@ -1446,7 +1415,7 @@ angle::Result FramebufferVk::invalidateImpl(ContextVk *contextVk,
     ANGLE_TRY(flushDeferredClears(contextVk, getRotatedCompleteRenderArea(contextVk)));
 
     const auto &colorRenderTargets           = mRenderTargetCache.getColors();
-    RenderTargetVk *depthStencilRenderTarget = mRenderTargetCache.getDepthStencil(true);
+    RenderTargetVk *depthStencilRenderTarget = mRenderTargetCache.getDepthStencil();
 
     // To ensure we invalidate the right renderpass we require that the current framebuffer be the
     // same as the current renderpass' framebuffer. E.g. prevent sequence like:

@@ -1658,11 +1658,9 @@ TEST_P(FramebufferTest_ES3, AttachmentStateChange)
 // The test emulates the read-only feedback loop in Manhattan.
 TEST_P(FramebufferTest_ES3, ReadOnlyDepthFeedbackLoopSupported)
 {
-    // Feedback loops not supported on D3D11 and may not ever be.
-    ANGLE_SKIP_TEST_IF(IsD3D11());
-
-    // Also this particular test doesn't work on Android despite similar support in Manhattan.
-    ANGLE_SKIP_TEST_IF(IsAndroid() && IsOpenGLES());
+    // Feedback loops are only supported on Vulkan.
+    // TODO(jmadill): Make GL extension. http://anglebug.com/4969
+    ANGLE_SKIP_TEST_IF(!IsVulkan());
 
     constexpr GLuint kSize = 2;
     glViewport(0, 0, kSize, kSize);
@@ -1725,11 +1723,9 @@ void main()
 // Tests corner cases with read-only depth-stencil feedback loops.
 TEST_P(FramebufferTest_ES3, ReadOnlyDepthFeedbackLoopStateChanges)
 {
-    // Feedback loops not supported on D3D11 and may not ever be.
-    ANGLE_SKIP_TEST_IF(IsD3D11());
-
-    // Also this particular test doesn't work on Android despite similar support in Manhattan.
-    ANGLE_SKIP_TEST_IF(IsAndroid() && IsOpenGLES());
+    // Feedback loops are only supported on Vulkan.
+    // TODO(jmadill): Make GL extension. http://anglebug.com/4969
+    ANGLE_SKIP_TEST_IF(!IsVulkan());
 
     constexpr GLuint kSize = 2;
     glViewport(0, 0, kSize, kSize);
