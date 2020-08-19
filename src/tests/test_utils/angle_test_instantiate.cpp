@@ -9,6 +9,7 @@
 
 #include "test_utils/angle_test_instantiate.h"
 
+#include <algorithm>
 #include <array>
 #include <iostream>
 #include <map>
