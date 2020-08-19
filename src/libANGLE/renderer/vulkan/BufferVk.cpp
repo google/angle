@@ -497,7 +497,7 @@ angle::Result BufferVk::stagedUpdate(ContextVk *contextVk,
     uint8_t *mapPointer              = nullptr;
     VkDeviceSize stagingBufferOffset = 0;
 
-    vk::DynamicBuffer *stagingBuffer = contextVk->getStagingBufferStorage();
+    vk::DynamicBuffer *stagingBuffer = contextVk->getStagingBuffer();
     ANGLE_TRY(stagingBuffer->allocate(contextVk, size, &mapPointer, nullptr, &stagingBufferOffset,
                                       nullptr));
     ASSERT(mapPointer);
