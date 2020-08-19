@@ -71,10 +71,12 @@ ANDROID_DEPS_PATH = 'src/third_party/android_deps/'
 # TODO(jmadill): Update this with ANGLE wrangler. http://anglebug.com/4059
 NOTIFY_EMAIL = 'jmadill@chromium.org'
 
-sys.path.append(os.path.join(CHECKOUT_SRC_DIR, 'build'))
-import find_depot_tools
 
-find_depot_tools.add_depot_tools_to_path()
+def add_depot_tools_to_path():
+    sys.path.append(os.path.join(CHECKOUT_SRC_DIR, 'build'))
+    import find_depot_tools
+    find_depot_tools.add_depot_tools_to_path()
+
 
 CLANG_UPDATE_SCRIPT_URL_PATH = 'tools/clang/scripts/update.py'
 CLANG_UPDATE_SCRIPT_LOCAL_PATH = os.path.join(CHECKOUT_SRC_DIR, 'tools', 'clang', 'scripts',
@@ -345,7 +347,7 @@ def CalculateChangedDeps(angle_deps, new_cr_deps):
     return sorted(result)
 
 
-def CalculateChangedClang(new_cr_rev):
+def CalculateChangedClang(cur_cr_rev, new_cr_rev, autoroll):
 
     def GetClangRev(lines):
         for line in lines:
@@ -354,9 +356,15 @@ def CalculateChangedClang(new_cr_rev):
                 return match.group(1)
         raise RollError('Could not parse Clang revision!')
 
-    with open(CLANG_UPDATE_SCRIPT_LOCAL_PATH, 'rb') as f:
-        current_lines = f.readlines()
-    current_rev = GetClangRev(current_lines)
+    # We don't have locally sync'ed deps on autoroller
+    if not autoroll:
+        with open(CLANG_UPDATE_SCRIPT_LOCAL_PATH, 'rb') as f:
+            current_lines = f.readlines()
+        current_rev = GetClangRev(current_lines)
+    else:
+        cur_clang_update_py = ReadRemoteCrFile(CLANG_UPDATE_SCRIPT_URL_PATH,
+                                               cur_cr_rev).splitlines()
+        current_rev = GetClangRev(cur_clang_update_py)
 
     new_clang_update_py = ReadRemoteCrFile(CLANG_UPDATE_SCRIPT_URL_PATH, new_cr_rev).splitlines()
     new_rev = GetClangRev(new_clang_update_py)
@@ -368,6 +376,7 @@ def GenerateCommitMessage(
         current_commit_pos,
         new_commit_pos,
         changed_deps_list,
+        autoroll,
         clang_change=None,
 ):
     current_cr_rev = rev_update.current_chromium_rev[0:10]
@@ -375,11 +384,14 @@ def GenerateCommitMessage(
     rev_interval = '%s..%s' % (current_cr_rev, new_cr_rev)
     git_number_interval = '%s:%s' % (current_commit_pos, new_commit_pos)
 
-    commit_msg = [
-        'Roll chromium_revision %s (%s)\n' % (rev_interval, git_number_interval),
-        'Change log: %s' % (CHROMIUM_LOG_TEMPLATE % rev_interval),
-        'Full diff: %s\n' % (CHROMIUM_COMMIT_TEMPLATE % rev_interval)
-    ]
+    commit_msg = []
+    # Autoroll already adds chromium_revision changes to commit message
+    if not autoroll:
+        commit_msg.append([
+            'Roll chromium_revision %s (%s)\n' % (rev_interval, git_number_interval),
+            'Change log: %s' % (CHROMIUM_LOG_TEMPLATE % rev_interval),
+            'Full diff: %s\n' % (CHROMIUM_COMMIT_TEMPLATE % rev_interval)
+        ])
 
     def Section(adjective, deps):
         noun = 'dependency' if len(deps) == 1 else 'dependencies'
@@ -397,8 +409,11 @@ def GenerateCommitMessage(
                                   (c.path, c.url, c.current_rev[0:10], c.new_rev[0:10]))
 
     if changed_deps_list:
-        change_url = CHROMIUM_FILE_TEMPLATE % (rev_interval, 'DEPS')
-        commit_msg.append('DEPS diff: %s\n' % change_url)
+        # rev_interval is empty for autoroll, since we are starting from a state
+        # in which chromium_revision is already modified in DEPS
+        if not autoroll:
+            change_url = CHROMIUM_FILE_TEMPLATE % (rev_interval, 'DEPS')
+            commit_msg.append('DEPS diff: %s\n' % change_url)
     else:
         commit_msg.append('No dependencies changed.')
 
@@ -410,39 +425,46 @@ def GenerateCommitMessage(
     else:
         commit_msg.append('No update to Clang.\n')
 
-    # TBR needs to be non-empty for Gerrit to process it.
-    git_author = _RunCommand(['git', 'config', 'user.email'],
-                             working_dir=CHECKOUT_SRC_DIR)[0].splitlines()[0]
-    tbr_authors = git_author + ',' + tbr_authors
+    # Autoroll takes care of BUG and TBR in commit message
+    if not autoroll:
+        # TBR needs to be non-empty for Gerrit to process it.
+        git_author = _RunCommand(['git', 'config', 'user.email'],
+                                 working_dir=CHECKOUT_SRC_DIR)[0].splitlines()[0]
+        tbr_authors = git_author + ',' + tbr_authors
 
-    commit_msg.append('TBR=%s' % tbr_authors)
-    commit_msg.append('BUG=None')
+        commit_msg.append('TBR=%s' % tbr_authors)
+        commit_msg.append('BUG=None')
+
     return '\n'.join(commit_msg)
 
 
-def UpdateDepsFile(deps_filename, rev_update, changed_deps, new_cr_content):
+def UpdateDepsFile(deps_filename, rev_update, changed_deps, new_cr_content, autoroll):
     """Update the DEPS file with the new revision."""
 
-    with open(deps_filename, 'rb') as deps_file:
-        deps_content = deps_file.read()
+    # Autoroll take care of updating chromium_revision
+    if not autoroll:
+        with open(deps_filename, 'rb') as deps_file:
+            deps_content = deps_file.read()
 
-    # Update the chromium_revision variable.
-    deps_content = deps_content.replace(rev_update.current_chromium_rev,
-                                        rev_update.new_chromium_rev)
+        # Update the chromium_revision variable.
+        deps_content = deps_content.replace(rev_update.current_chromium_rev,
+                                            rev_update.new_chromium_rev)
 
-    with open(deps_filename, 'wb') as deps_file:
-        deps_file.write(deps_content)
+        with open(deps_filename, 'wb') as deps_file:
+            deps_file.write(deps_content)
 
     # Update each individual DEPS entry.
     for dep in changed_deps:
-        local_dep_dir = os.path.join(CHECKOUT_ROOT_DIR, dep.path)
-        if not os.path.isdir(local_dep_dir):
-            raise RollError('Cannot find local directory %s. Either run\n'
-                            'gclient sync --deps=all\n'
-                            'or make sure the .gclient file for your solution contains all '
-                            'platforms in the target_os list, i.e.\n'
-                            'target_os = ["android", "unix", "mac", "ios", "win"];\n'
-                            'Then run "gclient sync" again.' % local_dep_dir)
+        # We don't sync deps on autoroller, so ignore missing local deps
+        if not autoroll:
+            local_dep_dir = os.path.join(CHECKOUT_ROOT_DIR, dep.path)
+            if not os.path.isdir(local_dep_dir):
+                raise RollError('Cannot find local directory %s. Either run\n'
+                                'gclient sync --deps=all\n'
+                                'or make sure the .gclient file for your solution contains all '
+                                'platforms in the target_os list, i.e.\n'
+                                'target_os = ["android", "unix", "mac", "ios", "win"];\n'
+                                'Then run "gclient sync" again.' % local_dep_dir)
         if isinstance(dep, ChangedCipdPackage):
             package = dep.package.format()  # Eliminate double curly brackets
             update = '%s:%s@%s' % (dep.path, package, dep.new_version)
@@ -496,6 +518,22 @@ def _LocalCommit(commit_msg, dry_run):
     if not dry_run:
         _RunCommand(['git', 'add', '--update', '.'])
         _RunCommand(['git', 'commit', '-m', commit_msg])
+
+
+def _LocalCommitAmend(commit_msg, dry_run):
+    logging.info('Amending changes to local commit.')
+    if not dry_run:
+        old_commit_msg = _RunCommand(['git', 'log', '-1', '--pretty=%B'])[0].strip()
+        logging.debug('Existing commit message:\n%s\n', old_commit_msg)
+
+        bug_index = old_commit_msg.rfind('Bug:')
+        if bug_index == -1:
+            logging.error('"Bug:" not found in commit message.')
+            if not dry_run:
+                sys.exit(-1)
+        new_commit_msg = old_commit_msg[:bug_index] + commit_msg + '\n' + old_commit_msg[bug_index:]
+
+        _RunCommand(['git', 'commit', '-a', '--amend', '-m', new_commit_msg])
 
 
 def ChooseCQMode(skip_cq, cq_over, current_commit_pos, new_commit_pos):
@@ -580,6 +618,12 @@ def main():
         default=1,
         help=('Commit queue dry run if the revision difference '
               'is below this number (default: %(default)s)'))
+    grp.add_argument(
+        '--autoroll',
+        action='store_true',
+        default=False,
+        help='Autoroller mode - amend existing commit, '
+        'do not create nor upload a CL (default: %(default)s)')
     p.add_argument(
         '-v',
         '--verbose',
@@ -592,6 +636,11 @@ def main():
         logging.basicConfig(level=logging.DEBUG)
     else:
         logging.basicConfig(level=logging.INFO)
+
+    # We don't have locally sync'ed deps on autoroller,
+    # so trust it to have depot_tools in path
+    if not opts.autoroll:
+        add_depot_tools_to_path()
 
     if not opts.ignore_unclean_workdir and not _IsTreeClean():
         logging.error('Please clean your local checkout first.')
@@ -614,23 +663,36 @@ def main():
     new_cr_content = ReadRemoteCrFile('DEPS', rev_update.new_chromium_rev)
     new_cr_deps = ParseDepsDict(new_cr_content)
     changed_deps = CalculateChangedDeps(angle_deps, new_cr_deps)
-    clang_change = CalculateChangedClang(rev_update.new_chromium_rev)
+    clang_change = CalculateChangedClang(rev_update.current_chromium_rev,
+                                         rev_update.new_chromium_rev, opts.autoroll)
     commit_msg = GenerateCommitMessage(
-        rev_update, current_commit_pos, new_commit_pos, changed_deps, clang_change=clang_change)
+        rev_update,
+        current_commit_pos,
+        new_commit_pos,
+        changed_deps,
+        opts.autoroll,
+        clang_change=clang_change)
     logging.debug('Commit message:\n%s', commit_msg)
 
-    _CreateRollBranch(opts.dry_run)
+    # We are updating a commit that autoroll has created, using existing branch
+    if not opts.autoroll:
+        _CreateRollBranch(opts.dry_run)
+
     if not opts.dry_run:
-        UpdateDepsFile(deps_filename, rev_update, changed_deps, new_cr_content)
-    if _IsTreeClean():
-        logging.info("No DEPS changes detected, skipping CL creation.")
+        UpdateDepsFile(deps_filename, rev_update, changed_deps, new_cr_content, opts.autoroll)
+
+    if opts.autoroll:
+        _LocalCommitAmend(commit_msg, opts.dry_run)
     else:
-        _LocalCommit(commit_msg, opts.dry_run)
-        commit_queue_mode = ChooseCQMode(opts.skip_cq, opts.cq_over, current_commit_pos,
-                                         new_commit_pos)
-        logging.info('Uploading CL...')
-        if not opts.dry_run:
-            _UploadCL(commit_queue_mode)
+        if _IsTreeClean():
+            logging.info("No DEPS changes detected, skipping CL creation.")
+        else:
+            _LocalCommit(commit_msg, opts.dry_run)
+            commit_queue_mode = ChooseCQMode(opts.skip_cq, opts.cq_over, current_commit_pos,
+                                             new_commit_pos)
+            logging.info('Uploading CL...')
+            if not opts.dry_run:
+                _UploadCL(commit_queue_mode)
     return 0
 
 
