@@ -17,7 +17,7 @@ following additional command-line arguments:
  * `--batch-timeout` limits the amount of time spent in each batch
  * `--bot-mode` enables multi-process execution and test batching
  * `--debug-test-groups` dumps the test config categories when using `bot-mode`
- * `--filter-file` allows passing a larget `gtest_filter` via a file
+ * `--filter-file` allows passing a larger `gtest_filter` via a file
  * `--histogram-json-file` outputs a [formatted JSON file][HistogramSet] for perf dashboards
  * `--max-processes` limits the number of simuntaneous processes
  * `--results-directory` specifies a directory to write test results to
