@@ -112,7 +112,7 @@ bool IsFrameCaptureEnabled()
 #else
     // We only support frame capture programmatically if the ANGLE_METAL_FRAME_CAPTURE
     // environment flag is set. Otherwise, it will slow down the rendering. This allows user to
-    // finely control whether he wants to capture the frame for particular application or not.
+    // finely control whether they want to capture the frame for particular application or not.
     auto var                  = std::getenv("ANGLE_METAL_FRAME_CAPTURE");
     static const bool enabled = var ? (strcmp(var, "1") == 0) : false;
 
