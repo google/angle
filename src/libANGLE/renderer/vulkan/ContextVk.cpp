@@ -946,7 +946,8 @@ angle::Result ContextVk::initialize()
     constexpr VkMemoryPropertyFlags kMemoryType = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
     ANGLE_TRY(mEmptyBuffer.init(this, emptyBufferInfo, kMemoryType));
 
-    constexpr VkImageUsageFlags kStagingBufferUsageFlags = VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
+    constexpr VkImageUsageFlags kStagingBufferUsageFlags =
+        VK_BUFFER_USAGE_TRANSFER_SRC_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT;
     size_t stagingBufferAlignment =
         static_cast<size_t>(mRenderer->getPhysicalDeviceProperties().limits.minMemoryMapAlignment);
     constexpr size_t kStagingBufferSize = 1024u * 1024u;  // 1M

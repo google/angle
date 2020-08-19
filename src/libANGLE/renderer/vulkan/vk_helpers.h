@@ -1397,15 +1397,6 @@ class ImageHelper final : public Resource, public angle::Subject
     // is used for mipmap generation.
     void stageSelfForBaseLevel();
 
-    // This will use the underlying dynamic buffer to allocate some memory to be used as a src or
-    // dst.
-    angle::Result allocateStagingMemory(ContextVk *contextVk,
-                                        size_t sizeInBytes,
-                                        uint8_t **ptrOut,
-                                        BufferHelper **bufferOut,
-                                        StagingBufferOffsetArray *offsetOut,
-                                        bool *newBufferAllocatedOut);
-
     // Flush staged updates for a single subresource. Can optionally take a parameter to defer
     // clears to a subsequent RenderPass load op.
     angle::Result flushSingleSubresourceStagedUpdates(ContextVk *contextVk,
