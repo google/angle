@@ -146,8 +146,6 @@ class TextureState final : private angle::NonCopyable
     GLenum getUsage() const { return mUsage; }
     GLenum getDepthStencilTextureMode() const { return mDepthStencilTextureMode; }
     bool isStencilMode() const { return mDepthStencilTextureMode == GL_STENCIL_INDEX; }
-
-    // TODO(jmadill): Remove. http://anglebug.com/4500
     bool isBoundAsSamplerTexture(ContextID contextID) const
     {
         return getBindingCount(contextID).samplerBindingCount > 0;
@@ -547,8 +545,8 @@ class Texture final : public RefCountObject<TextureID>,
     void setGenerateMipmapHint(GLenum generate);
     GLenum getGenerateMipmapHint() const;
 
-    void onAttach(const Context *context, rx::Serial framebufferSerial) override;
-    void onDetach(const Context *context, rx::Serial framebufferSerial) override;
+    void onAttach(const Context *context) override;
+    void onDetach(const Context *context) override;
 
     // Used specifically for FramebufferAttachmentObject.
     GLuint getId() const override;
@@ -560,17 +558,6 @@ class Texture final : public RefCountObject<TextureID>,
     InitState initState(const ImageIndex &imageIndex) const override;
     InitState initState() const { return mState.mInitState; }
     void setInitState(const ImageIndex &imageIndex, InitState initState) override;
-
-    bool isBoundToFramebuffer(rx::Serial framebufferSerial) const
-    {
-        for (size_t index = 0; index < mBoundFramebufferSerials.size(); ++index)
-        {
-            if (mBoundFramebufferSerials[index] == framebufferSerial)
-                return true;
-        }
-
-        return false;
-    }
 
     enum DirtyBitType
     {
@@ -655,14 +642,6 @@ class Texture final : public RefCountObject<TextureID>,
 
     egl::Surface *mBoundSurface;
     egl::Stream *mBoundStream;
-
-    // We track all the serials of the Framebuffers this texture is attached to. Note that this
-    // allows duplicates because different ranges of a Texture can be bound to the same Framebuffer.
-    // For the purposes of depth-stencil loops, a simple "isBound" check works fine. For color
-    // attachment Feedback Loop checks we then need to check further to see when a Texture is bound
-    // to mulitple bindings that the bindings don't overlap.
-    static constexpr uint32_t kFastFramebufferSerialCount = 8;
-    angle::FastVector<rx::Serial, kFastFramebufferSerialCount> mBoundFramebufferSerials;
 
     struct SamplerCompletenessCache
     {

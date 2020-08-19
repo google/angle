@@ -64,15 +64,14 @@ class FramebufferAttachment final
                           GLenum type,
                           GLenum binding,
                           const ImageIndex &textureIndex,
-                          FramebufferAttachmentObject *resource,
-                          rx::Serial framebufferSerial);
+                          FramebufferAttachmentObject *resource);
 
     FramebufferAttachment(FramebufferAttachment &&other);
     FramebufferAttachment &operator=(FramebufferAttachment &&other);
 
     ~FramebufferAttachment();
 
-    void detach(const Context *context, rx::Serial framebufferSerial);
+    void detach(const Context *context);
     void attach(const Context *context,
                 GLenum type,
                 GLenum binding,
@@ -81,8 +80,7 @@ class FramebufferAttachment final
                 GLsizei numViews,
                 GLuint baseViewIndex,
                 bool isMultiview,
-                GLsizei samples,
-                rx::Serial framebufferSerial);
+                GLsizei samples);
 
     // Helper methods
     GLuint getRedSize() const;
@@ -210,9 +208,9 @@ class FramebufferAttachmentObject : public angle::Subject, public angle::Observe
                               GLenum binding,
                               const ImageIndex &imageIndex) const                          = 0;
 
-    virtual void onAttach(const Context *context, rx::Serial framebufferSerial) = 0;
-    virtual void onDetach(const Context *context, rx::Serial framebufferSerial) = 0;
-    virtual GLuint getId() const                                                = 0;
+    virtual void onAttach(const Context *context) = 0;
+    virtual void onDetach(const Context *context) = 0;
+    virtual GLuint getId() const                  = 0;
 
     // These are used for robust resource initialization.
     virtual InitState initState(const ImageIndex &imageIndex) const              = 0;

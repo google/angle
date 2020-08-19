@@ -362,18 +362,19 @@ const gl::AttachmentList &FramebufferD3D::getColorAttachmentsForRender(const gl:
             // it to be attached to a new binding point.
             if (mDummyAttachment.isAttached())
             {
-                mDummyAttachment.detach(context, Serial());
+                mDummyAttachment.detach(context);
             }
 
             gl::Texture *dummyTex = nullptr;
-            // TODO(jmadill): Handle error if dummy texture can't be created.
+            // TODO(Jamie): Handle error if dummy texture can't be created.
             (void)mRenderer->getIncompleteTexture(context, gl::TextureType::_2D, &dummyTex);
             if (dummyTex)
             {
+
                 gl::ImageIndex index = gl::ImageIndex::Make2D(0);
                 mDummyAttachment     = gl::FramebufferAttachment(
                     context, GL_TEXTURE, GL_COLOR_ATTACHMENT0_EXT + activeProgramLocation, index,
-                    dummyTex, Serial());
+                    dummyTex);
                 colorAttachmentsForRender.push_back(&mDummyAttachment);
             }
         }
@@ -389,7 +390,7 @@ void FramebufferD3D::destroy(const gl::Context *context)
 {
     if (mDummyAttachment.isAttached())
     {
-        mDummyAttachment.detach(context, Serial());
+        mDummyAttachment.detach(context);
     }
 }
 

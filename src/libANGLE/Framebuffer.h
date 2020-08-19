@@ -171,7 +171,6 @@ class FramebufferState final : angle::NonCopyable
     bool mWebGLDepthStencilConsistent;
 
     // Tracks rendering feedback loops.
-    // TODO(jmadill): Remove. http://anglebug.com/4500
     DrawBufferMask mDrawBufferFeedbackLoops;
     bool mDepthBufferFeedbackLoop;
     bool mStencilBufferFeedbackLoop;
@@ -410,10 +409,7 @@ class Framebuffer final : public angle::ObserverInterface,
     // Observer implementation
     void onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMessage message) override;
 
-    // TODO(jmadill): Remove. http://anglebug.com/4500
     bool hasRenderingFeedbackLoop() const { return mState.mHasRenderingFeedbackLoop; }
-
-    bool formsRenderingFeedbackLoopWith(const Context *context) const;
     bool formsCopyingFeedbackLoopWith(TextureID copyTextureID,
                                       GLint copyTextureLevel,
                                       GLint copyTextureLayer) const;
