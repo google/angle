@@ -3215,6 +3215,39 @@ void CaptureMidExecutionSetup(const gl::Context *context,
     // Allow the replayState object to be destroyed conveniently.
     replayState.setBufferBinding(context, gl::BufferBinding::Array, nullptr);
 }
+
+bool SkipCall(gl::EntryPoint entryPoint)
+{
+    switch (entryPoint)
+    {
+        case gl::EntryPoint::DebugMessageCallback:
+        case gl::EntryPoint::DebugMessageCallbackKHR:
+        case gl::EntryPoint::DebugMessageControl:
+        case gl::EntryPoint::DebugMessageControlKHR:
+        case gl::EntryPoint::DebugMessageInsert:
+        case gl::EntryPoint::DebugMessageInsertKHR:
+        case gl::EntryPoint::GetDebugMessageLog:
+        case gl::EntryPoint::GetDebugMessageLogKHR:
+        case gl::EntryPoint::GetObjectLabelKHR:
+        case gl::EntryPoint::GetObjectPtrLabelKHR:
+        case gl::EntryPoint::GetPointervKHR:
+        case gl::EntryPoint::InsertEventMarkerEXT:
+        case gl::EntryPoint::ObjectLabelKHR:
+        case gl::EntryPoint::ObjectPtrLabelKHR:
+        case gl::EntryPoint::PopDebugGroupKHR:
+        case gl::EntryPoint::PopGroupMarkerEXT:
+        case gl::EntryPoint::PushDebugGroupKHR:
+        case gl::EntryPoint::PushGroupMarkerEXT:
+            // Purposefully skip KHR_debug and EXT_debug_marker entry points
+            // There is no need to capture these for replaying a trace in our harness
+            return true;
+
+        default:
+            break;
+    }
+
+    return false;
+}
 }  // namespace
 
 ParamCapture::ParamCapture() : type(ParamType::TGLenum), enumGroup(gl::GLenumGroup::DefaultGroup) {}
@@ -3975,6 +4008,9 @@ void FrameCapture::maybeCaptureClientData(const gl::Context *context, CallCaptur
 
 void FrameCapture::captureCall(const gl::Context *context, CallCapture &&call)
 {
+    if (SkipCall(call.entryPoint))
+        return;
+
     maybeOverrideEntryPoint(context, call);
 
     // Process client data snapshots.
@@ -4306,7 +4342,7 @@ void ResourceTracker::setDeletedBuffer(gl::BufferID id)
 
     // Ensure this buffer was in our starting set
     // It's possible this could fire if the app deletes buffers that were never generated
-    ASSERT(mStartingBuffers.find(id) != mStartingBuffers.end());
+    ASSERT(mStartingBuffers.empty() || (mStartingBuffers.find(id) != mStartingBuffers.end()));
 
     // In this case, the app is deleting a buffer we started with, we need to regen on loop
     mBuffersToRegen.insert(id);
