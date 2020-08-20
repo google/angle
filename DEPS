@@ -28,7 +28,7 @@ vars = {
   'checkout_angle_internal': False,
 
   # Version of Chromium our Chromium-based DEPS are mirrored from.
-  'chromium_revision': 'c8c2c646295cebc116b8b8f3f4cdfa48821f22fb',
+  'chromium_revision': '84714fcf811ee8112eae8b4e1a558d388dc98903',
   # We never want to checkout chromium,
   # but need a dummy DEPS entry for the autoroller
   'dummy_checkout_chromium': False,
@@ -103,7 +103,7 @@ vars = {
 deps = {
 
   'build': {
-    'url': '{chromium_git}/chromium/src/build.git@113076662015f18c72ca5cb5b03517fdf2e7d2a6',
+    'url': '{chromium_git}/chromium/src/build.git@7076d3be06d6b4749d6b7afd53d31a51b926447e',
     'condition': 'not build_with_chromium',
   },
 
@@ -113,7 +113,7 @@ deps = {
   },
 
   'testing': {
-    'url': '{chromium_git}/chromium/src/testing@e227df9cd519af4dcd720c3fb8341060408fdbf4',
+    'url': '{chromium_git}/chromium/src/testing@855f6eb5b64bbc59b236e1fd06a198827e7c2489',
     'condition': 'not build_with_chromium',
   },
 
@@ -177,7 +177,7 @@ deps = {
 
   # libjpeg_turbo is used by glmark2.
   'third_party/libjpeg_turbo': {
-    'url': '{chromium_git}/chromium/deps/libjpeg_turbo.git@0241a1304fd183ee24fbdfe6891f18fdedea38f9',
+    'url': '{chromium_git}/chromium/deps/libjpeg_turbo.git@9d4f8005bc6c888e66b00fd00188531ee9bd3344',
     'condition': 'not build_with_chromium',
   },
 
@@ -197,7 +197,7 @@ deps = {
   },
 
   'third_party/Python-Markdown': {
-    'url': '{chromium_git}/chromium/src/third_party/Python-Markdown@31ac00b010877151f9440d5ffc7f1437e74169ef',
+    'url': '{chromium_git}/chromium/src/third_party/Python-Markdown@ad4fc19d612de0a3f6ea19441af703ff5a5223f3',
     'condition': 'not build_with_chromium',
   },
 
@@ -264,12 +264,12 @@ deps = {
   },
 
   'third_party/zlib': {
-    'url': '{chromium_git}/chromium/src/third_party/zlib@7492de9a52f656b070f41968e39a6efa603590d5',
+    'url': '{chromium_git}/chromium/src/third_party/zlib@d53accfbd0382a98ad7378045631866449b5f92e',
     'condition': 'not build_with_chromium',
   },
 
   'tools/clang': {
-    'url': '{chromium_git}/chromium/src/tools/clang.git@faabb9a8ea407bb38928800b04a529971d228473',
+    'url': '{chromium_git}/chromium/src/tools/clang.git@299e8a233942b1978a4c0dbc301f363a6729c4e2',
     'condition': 'not build_with_chromium',
   },
 
@@ -285,12 +285,12 @@ deps = {
   },
 
   'tools/md_browser': {
-    'url': '{chromium_git}/chromium/src/tools/md_browser@7e75775447051d4ecb6ab0ca597eda6d809a2963',
+    'url': '{chromium_git}/chromium/src/tools/md_browser@60141af3603925d99bf3fb22fdfca138416339b1',
     'condition': 'not build_with_chromium',
   },
 
   'tools/memory': {
-    'url': '{chromium_git}/chromium/src/tools/memory@89552acb6e60f528fe3c98eac7b445d4c34183ee',
+    'url': '{chromium_git}/chromium/src/tools/memory@ee1e2448132431e7519c2a72ff612e079f13a9d6',
     'condition': 'not build_with_chromium',
   },
 }
