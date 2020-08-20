@@ -262,6 +262,28 @@ angle::Result InitAttachment(const Context *context, FramebufferAttachment *atta
     }
     return angle::Result::Continue;
 }
+
+bool AttachmentOverlapsWithTexture(const FramebufferAttachment &attachment,
+                                   const Texture *texture,
+                                   const Sampler *sampler)
+{
+    if (!attachment.isTextureWithId(texture->id()))
+    {
+        return false;
+    }
+
+    const gl::ImageIndex &index = attachment.getTextureImageIndex();
+    GLuint attachmentLevel      = static_cast<GLuint>(index.getLevelIndex());
+    GLuint textureBaseLevel     = texture->getBaseLevel();
+    GLuint textureMaxLevel      = textureBaseLevel;
+    if ((sampler && IsMipmapFiltered(sampler->getSamplerState())) ||
+        IsMipmapFiltered(texture->getSamplerState()))
+    {
+        textureMaxLevel = texture->getMipmapMaxLevel();
+    }
+
+    return attachmentLevel >= textureBaseLevel && attachmentLevel <= textureMaxLevel;
+}
 }  // anonymous namespace
 
 // This constructor is only used for default framebuffers.
@@ -1920,8 +1942,24 @@ bool Framebuffer::formsRenderingFeedbackLoopWith(const Context *context) const
         if (texture && texture->isSamplerComplete(context, sampler) &&
             texture->isBoundToFramebuffer(mState.mFramebufferSerial))
         {
-            // TODO(jmadill): Subresource check. http://anglebug.com/4500
-            return true;
+            // Check for level overlap.
+            for (const FramebufferAttachment &attachment : mState.mColorAttachments)
+            {
+                if (AttachmentOverlapsWithTexture(attachment, texture, sampler))
+                {
+                    return true;
+                }
+            }
+
+            if (AttachmentOverlapsWithTexture(mState.mDepthAttachment, texture, sampler))
+            {
+                return true;
+            }
+
+            if (AttachmentOverlapsWithTexture(mState.mStencilAttachment, texture, sampler))
+            {
+                return true;
+            }
         }
     }
 
