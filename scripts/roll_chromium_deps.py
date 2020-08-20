@@ -385,7 +385,7 @@ def GenerateCommitMessage(
     commit_msg = []
     # Autoroll already adds chromium_revision changes to commit message
     if not autoroll:
-        commit_msg.append([
+        commit_msg.extend([
             'Roll chromium_revision %s (%s)\n' % (rev_interval, git_number_interval),
             'Change log: %s' % (CHROMIUM_LOG_TEMPLATE % rev_interval),
             'Full diff: %s\n' % (CHROMIUM_COMMIT_TEMPLATE % rev_interval)
