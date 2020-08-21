@@ -2358,7 +2358,7 @@ void FramebufferVk::restoreDepthStencilDefinedContents()
     // If the depthStencilRenderTarget does not have "defined content" (i.e. meaning that a future
     // render pass should use a loadOp of DONT_CARE), we should restore it (i.e. so that a future
     // render pass uses a loadOp of LOAD).
-    RenderTargetVk *depthStencilRenderTarget = mRenderTargetCache.getDepthStencil(true);
+    RenderTargetVk *depthStencilRenderTarget = mRenderTargetCache.getDepthStencil();
     if (depthStencilRenderTarget)
     {
         depthStencilRenderTarget->restoreEntireContent();
