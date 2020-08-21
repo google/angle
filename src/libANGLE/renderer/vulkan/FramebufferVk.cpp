@@ -1456,12 +1456,14 @@ angle::Result FramebufferVk::invalidateImpl(ContextVk *contextVk,
         {
             if (invalidateDepthBuffer)
             {
-                contextVk->getStartedRenderPassCommands().invalidateRenderPassDepthAttachment();
+                contextVk->getStartedRenderPassCommands().invalidateRenderPassDepthAttachment(
+                    depthStencilRenderTarget);
             }
 
             if (invalidateStencilBuffer)
             {
-                contextVk->getStartedRenderPassCommands().invalidateRenderPassStencilAttachment();
+                contextVk->getStartedRenderPassCommands().invalidateRenderPassStencilAttachment(
+                    depthStencilRenderTarget);
             }
         }
         if (invalidateColorBuffers.any())
@@ -2360,18 +2362,6 @@ angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
     }
 
     return angle::Result::Continue;
-}
-
-void FramebufferVk::restoreDepthStencilDefinedContents()
-{
-    // If the depthStencilRenderTarget does not have "defined content" (i.e. meaning that a future
-    // render pass should use a loadOp of DONT_CARE), we should restore it (i.e. so that a future
-    // render pass uses a loadOp of LOAD).
-    RenderTargetVk *depthStencilRenderTarget = mRenderTargetCache.getDepthStencil();
-    if (depthStencilRenderTarget)
-    {
-        depthStencilRenderTarget->restoreEntireContent();
-    }
 }
 
 void FramebufferVk::updateActiveColorMasks(size_t colorIndexGL, bool r, bool g, bool b, bool a)
