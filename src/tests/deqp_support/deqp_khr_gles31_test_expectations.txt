@@ -129,3 +129,6 @@
 
 // New failures with latest dEQP roll (2020-04-28)
 4593 SWIFTSHADER : KHR-GLES31.core.nearest_edge.offset_left = FAIL
+
+// Test timeout due to it loops so many glTexStorageMultisample calls
+5806 VULKAN NVIDIA : KHR-GLES31.core.texture_storage_multisample.APIDependencies.fbo_with_renderbuffer_and_multisample_texture_attachments_with_different_number_of_samples = SKIP

@@ -263,6 +263,12 @@ const ImageDesc &TextureState::getBaseLevelDesc() const
     return getImageDesc(getBaseImageTarget(), getEffectiveBaseLevel());
 }
 
+const ImageDesc &TextureState::getLevelZeroDesc() const
+{
+    ASSERT(mType != TextureType::CubeMap || isCubeComplete());
+    return getImageDesc(getBaseImageTarget(), 0);
+}
+
 void TextureState::setCrop(const Rectangle &rect)
 {
     mCropRect = rect;
@@ -1517,12 +1523,11 @@ angle::Result Texture::setStorage(Context *context,
 
     mState.mImmutableFormat = true;
     mState.mImmutableLevels = static_cast<GLuint>(levels);
-
-    ANGLE_TRY(mTexture->setStorage(context, type, levels, internalFormat, size));
-
     mState.clearImageDescs();
     mState.setImageDescChain(0, static_cast<GLuint>(levels - 1), size, Format(internalFormat),
                              InitState::MayNeedInit);
+
+    ANGLE_TRY(mTexture->setStorage(context, type, levels, internalFormat, size));
 
     // Changing the texture to immutable can trigger a change in the base and max levels:
     // GLES 3.0.4 section 3.8.10 pg 158:
@@ -1581,14 +1586,14 @@ angle::Result Texture::setStorageMultisample(Context *context,
     const TextureCaps &formatCaps = context->getTextureCaps().get(internalFormat);
     samples                       = formatCaps.getNearestSamples(samples);
 
-    ANGLE_TRY(mTexture->setStorageMultisample(context, type, samples, internalFormat, size,
-                                              fixedSampleLocations));
-
     mState.mImmutableFormat = true;
     mState.mImmutableLevels = static_cast<GLuint>(1);
     mState.clearImageDescs();
     mState.setImageDescChainMultisample(size, Format(internalFormat), samples, fixedSampleLocations,
                                         InitState::MayNeedInit);
+
+    ANGLE_TRY(mTexture->setStorageMultisample(context, type, samples, internalFormat, size,
+                                              fixedSampleLocations));
 
     signalDirtyStorage(InitState::MayNeedInit);
 

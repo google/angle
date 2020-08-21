@@ -1449,6 +1449,7 @@ class ImageHelper final : public Resource, public angle::Subject
                                uint32_t mipLevels,
                                uint32_t layerCount,
                                bool isRobustResourceInitEnabled,
+                               bool immutable,
                                bool *imageFormatListEnabledOut);
     angle::Result initMemory(Context *context,
                              const MemoryProperties &memoryProperties,
@@ -1790,6 +1791,7 @@ class ImageHelper final : public Resource, public angle::Subject
     // Returns true if the image is owned by an external API or instance.
     bool isReleasedToExternal() const;
 
+    gl::LevelIndex getFirstAllocatedLevel() const { return mFirstAllocatedLevel; }
     gl::LevelIndex getBaseLevel() const { return mBaseLevel; }
     void setBaseAndMaxLevels(gl::LevelIndex baseLevel, gl::LevelIndex maxLevel);
     gl::LevelIndex getMaxLevel() const { return mMaxLevel; }
@@ -2040,6 +2042,9 @@ class ImageHelper final : public Resource, public angle::Subject
     // different between the rotated and non-rotated extents.
     VkExtent3D mExtents;
     bool mRotatedAspectRatio;
+    // True if this is created by an immutable texture glTexStorage. For immutable texture, the
+    // underlying VkImage object is always created from level 0 to mLevelCount-1.
+    bool mImmutable;
     const Format *mFormat;
     GLint mSamples;
     ImageSerial mImageSerial;
@@ -2056,6 +2061,11 @@ class ImageHelper final : public Resource, public angle::Subject
     // For imported images
     BindingPointer<SamplerYcbcrConversion> mYuvConversionSampler;
     uint64_t mExternalFormat;
+
+    // The first level that has been allocated. For mutable textures, this should be same as
+    // mBaseLevel since we always reallocate VkImage based on mBaseLevel change. But for immutable
+    // textures, we always allocate from level 0 regardless of mBaseLevel change.
+    gl::LevelIndex mFirstAllocatedLevel;
 
     // Cached properties.
     gl::LevelIndex mBaseLevel;
