@@ -1987,6 +1987,82 @@ TEST_P(TransformFeedbackTest, OverrunWithMultiplePauseAndResume)
     VerifyVertexFloats(mapPtrFloat, vertices, 3, numFloats);
 }
 
+// Tests begin/draw/end/*bindBuffer*/begin/draw/end.
+TEST_P(TransformFeedbackTest, EndThenBindNewBufferAndRestart)
+{
+    // TODO(anglebug.com/4533) This fails after the upgrade to the 26.20.100.7870 driver.
+    ANGLE_SKIP_TEST_IF(IsWindows() && IsIntel() && IsVulkan());
+
+    // Set the program's transform feedback varyings (just gl_Position)
+    std::vector<std::string> tfVaryings;
+    tfVaryings.push_back("gl_Position");
+    compileDefaultProgram(tfVaryings, GL_INTERLEAVED_ATTRIBS);
+
+    glUseProgram(mProgram);
+
+    GLint positionLocation = glGetAttribLocation(mProgram, essl1_shaders::PositionAttrib());
+    ASSERT_NE(-1, positionLocation);
+    glEnableVertexAttribArray(positionLocation);
+
+    GLBuffer secondBuffer;
+    glBindBuffer(GL_TRANSFORM_FEEDBACK_BUFFER, secondBuffer);
+    glBufferData(GL_TRANSFORM_FEEDBACK_BUFFER, mTransformFeedbackBufferSize, nullptr,
+                 GL_STATIC_DRAW);
+
+    std::vector<GLfloat> posData1 = {0.1f, 0.0f, 0.0f, 1.0f, 0.2f, 0.0f, 0.0f, 1.0f, 0.3f, 0.0f,
+                                     0.0f, 1.0f, 0.4f, 0.0f, 0.0f, 1.0f, 0.5f, 0.0f, 0.0f, 1.0f};
+    std::vector<GLfloat> posData2 = {0.6f, 0.0f, 0.0f, 1.0f, 0.7f, 0.0f, 0.0f, 1.0f, 0.8f, 0.0f,
+                                     0.0f, 1.0f, 0.9f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f};
+
+    size_t posBytes = posData1.size() * sizeof(posData1[0]);
+    ASSERT_EQ(posBytes, posData2.size() * sizeof(posData2[0]));
+
+    GLBuffer posBuffer1;
+    glBindBuffer(GL_ARRAY_BUFFER, posBuffer1);
+    glBufferData(GL_ARRAY_BUFFER, posBytes, posData1.data(), GL_STATIC_DRAW);
+
+    GLBuffer posBuffer2;
+    glBindBuffer(GL_ARRAY_BUFFER, posBuffer2);
+    glBufferData(GL_ARRAY_BUFFER, posBytes, posData2.data(), GL_STATIC_DRAW);
+
+    // Draw a first time with first buffer.
+    glBindBuffer(GL_ARRAY_BUFFER, posBuffer1);
+    glVertexAttribPointer(positionLocation, 4, GL_FLOAT, GL_FALSE, 0, 0);
+    glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, mTransformFeedbackBuffer);
+    glBeginTransformFeedback(GL_POINTS);
+    glDrawArrays(GL_POINTS, 0, 5);
+    glEndTransformFeedback();
+    ASSERT_GL_NO_ERROR();
+
+    // Bind second buffer and draw with new data.
+    glBindBuffer(GL_ARRAY_BUFFER, posBuffer2);
+    glVertexAttribPointer(positionLocation, 4, GL_FLOAT, GL_FALSE, 0, 0);
+    glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, secondBuffer);
+    glBeginTransformFeedback(GL_POINTS);
+    glDrawArrays(GL_POINTS, 0, 5);
+    glEndTransformFeedback();
+    ASSERT_GL_NO_ERROR();
+
+    // Read back buffer datas.
+    glBindBuffer(GL_TRANSFORM_FEEDBACK_BUFFER, mTransformFeedbackBuffer);
+    void *posMap1 = glMapBufferRange(GL_TRANSFORM_FEEDBACK_BUFFER, 0, posBytes, GL_MAP_READ_BIT);
+    ASSERT_NE(posMap1, nullptr);
+
+    std::vector<GLfloat> actualData1(posData1.size());
+    memcpy(actualData1.data(), posMap1, posBytes);
+
+    EXPECT_EQ(posData1, actualData1);
+
+    glBindBuffer(GL_TRANSFORM_FEEDBACK_BUFFER, secondBuffer);
+    void *posMap2 = glMapBufferRange(GL_TRANSFORM_FEEDBACK_BUFFER, 0, posBytes, GL_MAP_READ_BIT);
+    ASSERT_NE(posMap2, nullptr);
+
+    std::vector<GLfloat> actualData2(posData2.size());
+    memcpy(actualData2.data(), posMap2, posBytes);
+
+    EXPECT_EQ(posData2, actualData2);
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against.
 ANGLE_INSTANTIATE_TEST_ES3(TransformFeedbackTest);

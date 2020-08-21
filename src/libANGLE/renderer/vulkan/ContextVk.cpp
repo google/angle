@@ -1535,16 +1535,20 @@ angle::Result ContextVk::handleDirtyGraphicsTransformFeedbackBuffersEmulation(
 
     TransformFeedbackVk *transformFeedbackVk = vk::GetImpl(mState.getCurrentTransformFeedback());
     size_t bufferCount                       = executable->getTransformFeedbackBufferCount();
-    const gl::TransformFeedbackBuffersArray<vk::BufferHelper *> &bufferHelpers =
-        transformFeedbackVk->getBufferHelpers();
 
-    for (size_t bufferIndex = 0; bufferIndex < bufferCount; ++bufferIndex)
+    if (mState.isTransformFeedbackActiveUnpaused())
     {
-        vk::BufferHelper *bufferHelper = bufferHelpers[bufferIndex];
-        ASSERT(bufferHelper);
-        mRenderPassCommands->bufferWrite(&mResourceUseList, VK_ACCESS_SHADER_WRITE_BIT,
-                                         vk::PipelineStage::VertexShader,
-                                         vk::AliasingMode::Disallowed, bufferHelper);
+        const gl::TransformFeedbackBuffersArray<vk::BufferHelper *> &bufferHelpers =
+            transformFeedbackVk->getBufferHelpers();
+
+        for (size_t bufferIndex = 0; bufferIndex < bufferCount; ++bufferIndex)
+        {
+            vk::BufferHelper *bufferHelper = bufferHelpers[bufferIndex];
+            ASSERT(bufferHelper);
+            mRenderPassCommands->bufferWrite(&mResourceUseList, VK_ACCESS_SHADER_WRITE_BIT,
+                                             vk::PipelineStage::VertexShader,
+                                             vk::AliasingMode::Disallowed, bufferHelper);
+        }
     }
 
     // TODO(http://anglebug.com/3570): Need to update to handle Program Pipelines
@@ -3408,6 +3412,7 @@ void ContextVk::invalidateCurrentTransformFeedbackBuffers()
     }
     else if (getFeatures().emulateTransformFeedback.enabled)
     {
+        mGraphicsDirtyBits.set(DIRTY_BIT_TRANSFORM_FEEDBACK_BUFFERS);
         mGraphicsDirtyBits.set(DIRTY_BIT_DESCRIPTOR_SETS);
     }
 }
@@ -3422,6 +3427,7 @@ void ContextVk::onTransformFeedbackStateChanged()
     else if (getFeatures().emulateTransformFeedback.enabled)
     {
         invalidateGraphicsDriverUniforms();
+        invalidateCurrentTransformFeedbackBuffers();
     }
 }
 
@@ -3482,7 +3488,7 @@ angle::Result ContextVk::onPauseTransformFeedback()
     }
     else if (getFeatures().emulateTransformFeedback.enabled)
     {
-        onTransformFeedbackStateChanged();
+        return flushCommandsAndEndRenderPass();
     }
     return angle::Result::Continue;
 }

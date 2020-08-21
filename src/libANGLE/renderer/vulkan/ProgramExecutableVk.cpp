@@ -1242,7 +1242,7 @@ void ProgramExecutableVk::updateTransformFeedbackDescriptorSetImpl(
         // If xfb has no output there is no need to update descriptor set.
         return;
     }
-    if (!glState.isTransformFeedbackActive())
+    if (!glState.isTransformFeedbackActiveUnpaused())
     {
         // We set empty Buffer to xfb descriptor set because xfb descriptor set
         // requires valid buffer bindings, even if they are empty buffer,
