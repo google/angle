@@ -870,6 +870,27 @@ enum class AliasingMode
     Disallowed,
 };
 
+enum InvalidatedState
+{
+    // The attachment has been invalidated and is currently still invalid.
+    Invalidated,
+    // The attachment was previously invalidated, but has since been used while enabled for
+    // drawing, meaning that it has valid contents (and therefore this render pass should STORE it,
+    // and a future render pass should LOAD it).
+    NoLongerInvalidated,
+    // The attachment has never been invalidated.  Since this is the highest value, it should never
+    // be given to UpdateInvalidatedState().  Instead, it should only be set starting a render pass.
+    NeverInvalidated,
+};
+
+inline void UpdateInvalidatedState(InvalidatedState *oldState, InvalidatedState newState)
+{
+    if (newState > *oldState)
+    {
+        *oldState = newState;
+    }
+}
+
 // CommandBufferHelper (CBH) class wraps ANGLE's custom command buffer
 //  class, SecondaryCommandBuffer. This provides a way to temporarily
 //  store Vulkan commands that be can submitted in-line to a primary
@@ -957,17 +978,29 @@ class CommandBufferHelper : angle::NonCopyable
         SetBitField(mAttachmentOps[attachmentIndex].storeOp, VK_ATTACHMENT_STORE_OP_DONT_CARE);
     }
 
-    void invalidateRenderPassDepthAttachment(size_t attachmentIndex)
+    void invalidateRenderPassDepthAttachment()
     {
         ASSERT(mIsRenderPassCommandBuffer);
-        SetBitField(mAttachmentOps[attachmentIndex].storeOp, VK_ATTACHMENT_STORE_OP_DONT_CARE);
+        mDepthInvalidatedState = Invalidated;
     }
 
-    void invalidateRenderPassStencilAttachment(size_t attachmentIndex)
+    void invalidateRenderPassStencilAttachment()
     {
         ASSERT(mIsRenderPassCommandBuffer);
-        SetBitField(mAttachmentOps[attachmentIndex].stencilStoreOp,
-                    VK_ATTACHMENT_STORE_OP_DONT_CARE);
+        mStencilInvalidatedState = Invalidated;
+    }
+
+    bool shouldRestoreDepthStencilAttachment()
+    {
+        ASSERT(mIsRenderPassCommandBuffer);
+        // Return true when both depth and stencil attachments were previously-invalidated, and at
+        // least one of those attachments are no longer invalidated.  When invalidated,
+        // RenderTargetVk::mContentDefined is set to false, which will result in the loadOp and
+        // stencilLoadOp of a future render pass being set to DONT_CARE.  ContextVk::syncState()
+        // will call this method to determine if RenderTargetVk::mContentDefined should be set back
+        // to true (i.e. use LOAD).
+        return mDepthInvalidatedState == NoLongerInvalidated ||
+               mStencilInvalidatedState == NoLongerInvalidated;
     }
 
     void updateRenderPassAttachmentFinalLayout(size_t attachmentIndex, ImageLayout finalLayout)
@@ -1011,14 +1044,8 @@ class CommandBufferHelper : angle::NonCopyable
     // Dumping the command stream is disabled by default.
     static constexpr bool kEnableCommandStreamDiagnostics = false;
 
-    void onDepthAccess(ResourceAccess access)
-    {
-        UpdateAccess(&mDepthStartAccess, access);
-        ASSERT((mRenderPassDesc.getDepthStencilAccess() != ResourceAccess::ReadOnly) ||
-               mDepthStartAccess != ResourceAccess::Write);
-    }
-
-    void onStencilAccess(ResourceAccess access) { UpdateAccess(&mStencilStartAccess, access); }
+    void onDepthAccess(ResourceAccess access);
+    void onStencilAccess(ResourceAccess access);
 
     void updateRenderPassForResolve(vk::Framebuffer *newFramebuffer,
                                     const vk::RenderPassDesc &renderPassDesc);
@@ -1052,9 +1079,17 @@ class CommandBufferHelper : angle::NonCopyable
 
     bool mIsRenderPassCommandBuffer;
 
+    // State tracking for whether to optimize the loadOp to DONT_CARE
     ResourceAccess mDepthStartAccess;
     ResourceAccess mStencilStartAccess;
 
+    // State tracking for whether to optimize the storeOp to DONT_CARE
+    bool mDepthEnabled;
+    InvalidatedState mDepthInvalidatedState;
+    bool mStencilEnabled;
+    InvalidatedState mStencilInvalidatedState;
+
+    // Keep track of the depth/stencil attachment index
     uint32_t mDepthStencilAttachmentIndex;
 
     // Tracks resources used in the command buffer.

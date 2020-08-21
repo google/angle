@@ -2475,10 +2475,9 @@ void ContextVk::optimizeRenderPassForPresent(VkFramebuffer framebufferHandle)
     RenderTargetVk *depthStencilRenderTarget = mDrawFramebuffer->getDepthStencilRenderTarget();
     if (depthStencilRenderTarget)
     {
-        size_t depthStencilAttachmentIndexVk = mDrawFramebuffer->getDepthStencilAttachmentIndexVk();
         // Change depthstencil attachment storeOp to DONT_CARE
-        mRenderPassCommands->invalidateRenderPassStencilAttachment(depthStencilAttachmentIndexVk);
-        mRenderPassCommands->invalidateRenderPassDepthAttachment(depthStencilAttachmentIndexVk);
+        mRenderPassCommands->invalidateRenderPassStencilAttachment();
+        mRenderPassCommands->invalidateRenderPassDepthAttachment();
         // Mark content as invalid so that we will not load them in next renderpass
         depthStencilRenderTarget->invalidateEntireContent();
     }
@@ -2892,10 +2891,16 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 mGraphicsPipelineDesc->updateStencilTestEnabled(&mGraphicsPipelineTransition,
                                                                 glState.getDepthStencilState(),
                                                                 glState.getDrawFramebuffer());
-                if (mState.isStencilTestEnabled() && mRenderPassCommands->started())
+                if (mRenderPassCommands->started())
                 {
                     vk::ResourceAccess access = GetStencilAccess(mState.getDepthStencilState());
                     mRenderPassCommands->onStencilAccess(access);
+                    // Did this depth-state change undo a previous invalidation of the depth-stencil
+                    // attachment?
+                    if (mRenderPassCommands->shouldRestoreDepthStencilAttachment())
+                    {
+                        mDrawFramebuffer->restoreDepthStencilDefinedContents();
+                    }
                 }
                 break;
             case gl::State::DIRTY_BIT_STENCIL_FUNCS_FRONT:
@@ -4499,16 +4504,9 @@ angle::Result ContextVk::startRenderPass(gl::Rectangle renderArea,
             this, mRenderPassCommandBuffer);
     }
 
-    if (mState.isDepthTestEnabled())
-    {
-        vk::ResourceAccess access = GetDepthAccess(mState.getDepthStencilState());
-        mRenderPassCommands->onDepthAccess(access);
-    }
-    if (mState.isStencilTestEnabled())
-    {
-        vk::ResourceAccess access = GetStencilAccess(mState.getDepthStencilState());
-        mRenderPassCommands->onStencilAccess(access);
-    }
+    const gl::DepthStencilState &dsState = mState.getDepthStencilState();
+    mRenderPassCommands->onDepthAccess(GetDepthAccess(dsState));
+    mRenderPassCommands->onStencilAccess(GetStencilAccess(dsState));
 
     if (commandBufferOut)
     {
@@ -4860,7 +4858,7 @@ void ContextVk::setDefaultUniformBlocksMinSizeForTesting(size_t minSize)
 
 angle::Result ContextVk::updateRenderPassDepthAccess()
 {
-    if (mState.isDepthTestEnabled() && hasStartedRenderPass())
+    if (hasStartedRenderPass())
     {
         vk::ResourceAccess access = GetDepthAccess(mState.getDepthStencilState());
 
@@ -4874,6 +4872,12 @@ angle::Result ContextVk::updateRenderPassDepthAccess()
         else
         {
             mRenderPassCommands->onDepthAccess(access);
+            // Did this depth-state change undo a previous invalidation of the depth-stencil
+            // attachment?
+            if (mRenderPassCommands->shouldRestoreDepthStencilAttachment())
+            {
+                mDrawFramebuffer->restoreDepthStencilDefinedContents();
+            }
         }
     }
 

@@ -340,6 +340,9 @@ angle::Result FramebufferVk::invalidateSub(const gl::Context *context,
 
     if (area.encloses(contextVk->getStartedRenderPassCommands().getRenderArea()))
     {
+        // Because the render pass's render area is within the invalidated area, it is fine for
+        // invalidateImpl() to use a storeOp of DONT_CARE (i.e. fine to not store the contents of
+        // the invalidated area).
         ANGLE_TRY(invalidateImpl(contextVk, count, attachments, true));
     }
 
@@ -1444,31 +1447,25 @@ angle::Result FramebufferVk::invalidateImpl(ContextVk *contextVk,
         {
             if (invalidateDepthBuffer)
             {
-                contextVk->getStartedRenderPassCommands().invalidateRenderPassDepthAttachment(
-                    attachmentIndexVk);
+                contextVk->getStartedRenderPassCommands().invalidateRenderPassDepthAttachment();
             }
 
             if (invalidateStencilBuffer)
             {
-                contextVk->getStartedRenderPassCommands().invalidateRenderPassStencilAttachment(
-                    attachmentIndexVk);
+                contextVk->getStartedRenderPassCommands().invalidateRenderPassStencilAttachment();
             }
         }
-
-        // NOTE: Possible future optimization is to delay setting the storeOp and only do so if the
-        // render pass is closed by itself before another draw call.  Otherwise, in a situation like
-        // this:
-        //
-        //     draw()
-        //     invalidate()
-        //     draw()
-        //
-        // We would be discarding the attachments only to load them for the next draw (which is less
-        // efficient than keeping the render pass open and not do the discard at all).  While dEQP
-        // tests this pattern, this optimization may not be necessary if no application does this.
-        // It is expected that an application would invalidate() when it's done with the
-        // framebuffer, so the render pass would have closed either way.
-        ANGLE_TRY(contextVk->flushCommandsAndEndRenderPass());
+        if (invalidateColorBuffers.any())
+        {
+            // Only end the render pass if invalidating at least one color buffer.  Do not end the
+            // render pass if only the depth and/or stencil buffer is invalidated.  At least one
+            // application invalidates those every frame, disables depth, and then continues to
+            // draw only to the color buffer.
+            //
+            // Since we are not aware of any application that invalidates a color buffer and
+            // continues to draw to it, we leave that unoptimized.
+            ANGLE_TRY(contextVk->flushCommandsAndEndRenderPass());
+        }
     }
 
     // If not a partial invalidate, mark the contents of the invalidated attachments as undefined,
@@ -2354,6 +2351,18 @@ angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
     }
 
     return angle::Result::Continue;
+}
+
+void FramebufferVk::restoreDepthStencilDefinedContents()
+{
+    // If the depthStencilRenderTarget does not have "defined content" (i.e. meaning that a future
+    // render pass should use a loadOp of DONT_CARE), we should restore it (i.e. so that a future
+    // render pass uses a loadOp of LOAD).
+    RenderTargetVk *depthStencilRenderTarget = mRenderTargetCache.getDepthStencil(true);
+    if (depthStencilRenderTarget)
+    {
+        depthStencilRenderTarget->restoreEntireContent();
+    }
 }
 
 void FramebufferVk::updateActiveColorMasks(size_t colorIndexGL, bool r, bool g, bool b, bool a)

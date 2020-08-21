@@ -101,6 +101,7 @@ class RenderTargetVk final : public FramebufferAttachmentRenderTarget
     // Mark content as undefined so that certain optimizations are possible such as using DONT_CARE
     // as loadOp of the render target in the next renderpass.
     void invalidateEntireContent() { mContentDefined = false; }
+    void restoreEntireContent() { mContentDefined = true; }
 
     // See the description of mIsImageTransient for details of how the following two can
     // interact.
