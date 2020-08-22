@@ -308,6 +308,7 @@ template("angle_test") {
                            [
                              "deps",
                              "manifest",
+                             "use_xvfb",
                            ])
 
     if (is_android) {
@@ -331,8 +332,9 @@ template("angle_test") {
     ]
   }
 
-  # To use the Chromium test infrastructure we must currently use the //base test launcher.
-  # Eventually we could switch to using standalone testing. See http://crbug.com/837741
+  # To use the Chromium test infrastructure we must currently use the
+  # //base test launcher. Eventually we could switch to using standalone
+  # testing. See http://crbug.com/837741.
   # TODO(jmadill): Clean up duplication as part of http://anglebug.com/3152
 
   _standalone_harness_test_name = target_name
@@ -340,6 +342,11 @@ template("angle_test") {
   if (build_with_chromium) {
     _standalone_harness_test_name = "standalone_" + target_name
     test(target_name) {
+      if ((is_linux && !is_chromeos) ||
+          (build_with_chromium && chromeos_is_browser_only)) {
+        use_xvfb = true
+      }
+
       public_deps = [ ":${_lib}" ]
       if (invoker.main != "") {
         sources = [ "//gpu/${invoker.main}.cc" ]
@@ -365,6 +372,11 @@ template("angle_test") {
   }
 
   test(_standalone_harness_test_name) {
+    if ((is_linux && !is_chromeos) ||
+        (build_with_chromium && chromeos_is_browser_only)) {
+      use_xvfb = true
+    }
+
     public_deps = [ ":${_lib}" ]
     if (invoker.main != "") {
       sources = [ "${invoker.main}.cpp" ]
