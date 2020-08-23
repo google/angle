@@ -102,6 +102,7 @@ class SurfaceMtl : public SurfaceImpl
     int mSamples = 0;
 
     RenderTargetMtl mColorRenderTarget;
+    RenderTargetMtl mColorManualResolveRenderTarget;
     RenderTargetMtl mDepthRenderTarget;
     RenderTargetMtl mStencilRenderTarget;
 };

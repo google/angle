@@ -13,14 +13,58 @@
 #include <TargetConditionals.h>
 
 #include "common/MemoryBuffer.h"
+#include "gpu_info_util/SystemInfo.h"
 #include "libANGLE/renderer/metal/ContextMtl.h"
 #include "libANGLE/renderer/metal/DisplayMtl.h"
+#include "libANGLE/renderer/metal/RenderTargetMtl.h"
 #include "libANGLE/renderer/metal/mtl_render_utils.h"
 
 namespace rx
 {
 namespace mtl
 {
+
+namespace
+{
+
+uint32_t GetDeviceVendorIdFromName(id<MTLDevice> metalDevice)
+{
+    struct Vendor
+    {
+        NSString *const trademark;
+        uint32_t vendorId;
+    };
+
+    constexpr Vendor kVendors[] = {{@"AMD", angle::kVendorID_AMD},
+                                   {@"Radeon", angle::kVendorID_AMD},
+                                   {@"Intel", angle::kVendorID_Intel},
+                                   {@"Geforce", angle::kVendorID_NVIDIA},
+                                   {@"Quadro", angle::kVendorID_NVIDIA}};
+    ANGLE_MTL_OBJC_SCOPE
+    {
+        if (metalDevice)
+        {
+            for (const Vendor &it : kVendors)
+            {
+                if ([metalDevice.name rangeOfString:it.trademark].location != NSNotFound)
+                {
+                    return it.vendorId;
+                }
+            }
+        }
+
+        return 0;
+    }
+}
+
+#if TARGET_OS_OSX || TARGET_OS_MACCATALYST
+uint32_t GetDeviceVendorIdFromIOKit(id<MTLDevice> device)
+{
+    return angle::GetVendorIDFromMetalDeviceRegistryID(device.registryID);
+}
+#endif
+
+}
 
 angle::Result InitializeTextureContents(const gl::Context *context,
                                         const TextureRef &texture,
@@ -89,7 +133,8 @@ angle::Result InitializeTextureContents(const gl::Context *context,
     }
     else
     {
-        ANGLE_TRY(InitializeTextureContentsGPU(context, texture, index, MTLColorWriteMaskAll));
+        ANGLE_TRY(InitializeTextureContentsGPU(context, texture, textureObjFormat, index,
+                                               MTLColorWriteMaskAll));
     }
 
     return angle::Result::Continue;
@@ -97,11 +142,17 @@ angle::Result InitializeTextureContents(const gl::Context *context,
 
 angle::Result InitializeTextureContentsGPU(const gl::Context *context,
                                            const TextureRef &texture,
+                                           const Format &textureObjFormat,
                                            const gl::ImageIndex &index,
                                            MTLColorWriteMask channelsToInit)
 {
     ContextMtl *contextMtl = mtl::GetImpl(context);
+    // NOTE(hqle): Support layered textures
+    ASSERT(!index.hasLayer());
+
     // Use clear render command
+    RenderTargetMtl tempRtt;
+    tempRtt.set(texture, index.getLevelIndex(), 0, textureObjFormat);
 
     // temporarily enable color channels requested via channelsToInit. Some emulated format has some
     // channels write mask disabled when the texture is created.
@@ -113,16 +164,18 @@ angle::Result InitializeTextureContentsGPU(const gl::Context *context,
     {
         // If all channels will be initialized, use clear loadOp.
         Optional<MTLClearColor> blackColor = MTLClearColorMake(0, 0, 0, 1);
-        encoder = contextMtl->getRenderCommandEncoder(texture, index, blackColor);
+        encoder = contextMtl->getRenderTargetCommandEncoderWithClear(tempRtt, blackColor);
     }
     else
     {
         // If there are some channels don't need to be initialized, we must use clearWithDraw.
-        encoder = contextMtl->getRenderCommandEncoder(texture, index);
+        encoder = contextMtl->getRenderTargetCommandEncoder(tempRtt);
 
         ClearRectParams clearParams;
-        clearParams.clearColor = {.alpha = 1};
-        clearParams.clearArea  = gl::Rectangle(0, 0, texture->width(), texture->height());
+        clearParams.clearColor     = {.alpha = 1};
+        clearParams.dstTextureSize = texture->size();
+        clearParams.enabledBuffers.set(0);
+        clearParams.clearArea = gl::Rectangle(0, 0, texture->width(), texture->height());
 
         ANGLE_TRY(
             contextMtl->getDisplay()->getUtils().clearWithDraw(context, encoder, clearParams));
@@ -191,6 +244,23 @@ MTLScissorRect GetScissorRect(const gl::Rectangle &rect, NSUInteger screenHeight
     re.height = rect.height;
 
     return re;
+}
+
+uint32_t GetDeviceVendorId(id<MTLDevice> metalDevice)
+{
+    uint32_t vendorId = 0;
+#if TARGET_OS_OSX || TARGET_OS_MACCATALYST
+    if (ANGLE_APPLE_AVAILABLE_XC(10.13, 13.0))
+    {
+        vendorId = GetDeviceVendorIdFromIOKit(metalDevice);
+    }
+#endif
+    if (!vendorId)
+    {
+        vendorId = GetDeviceVendorIdFromName(metalDevice);
+    }
+
+    return vendorId;
 }
 
 AutoObjCPtr<id<MTLLibrary>> CreateShaderLibrary(id<MTLDevice> metalDevice,

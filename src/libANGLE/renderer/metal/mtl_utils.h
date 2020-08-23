@@ -37,6 +37,7 @@ angle::Result InitializeTextureContents(const gl::Context *context,
 // - channelsToInit parameter controls which channels will get their content initialized.
 angle::Result InitializeTextureContentsGPU(const gl::Context *context,
                                            const TextureRef &texture,
+                                           const Format &textureObjFormat,
                                            const gl::ImageIndex &index,
                                            MTLColorWriteMask channelsToInit);
 
@@ -53,6 +54,8 @@ MTLViewport GetViewport(const gl::Rectangle &rect,
 MTLScissorRect GetScissorRect(const gl::Rectangle &rect,
                               NSUInteger screenHeight = 0,
                               bool flipY              = false);
+
+uint32_t GetDeviceVendorId(id<MTLDevice> metalDevice);
 
 AutoObjCPtr<id<MTLLibrary>> CreateShaderLibrary(id<MTLDevice> metalDevice,
                                                 const std::string &source,

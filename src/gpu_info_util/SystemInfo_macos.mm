@@ -232,6 +232,55 @@ uint64_t GetGpuIDFromOpenGLDisplayMask(uint32_t displayMask)
     return 0;
 }
 
+// Get VendorID from metal device's registry ID
+VendorID GetVendorIDFromMetalDeviceRegistryID(uint64_t registryID)
+{
+#    if defined(ANGLE_PLATFORM_MACOS)
+    // On macOS, the following code is only supported since 10.13.
+    if (@available(macOS 10.13, *))
+#    endif
+    {
+        // Get a matching dictionary for the IOGraphicsAccelerator2
+        CFMutableDictionaryRef matchingDict = IORegistryEntryIDMatching(registryID);
+        if (matchingDict == nullptr)
+        {
+            return 0;
+        }
+
+        // IOServiceGetMatchingService will consume the reference on the matching dictionary,
+        // so we don't need to release the dictionary.
+        io_registry_entry_t acceleratorEntry =
+            IOServiceGetMatchingService(kIOMasterPortDefault, matchingDict);
+        if (acceleratorEntry == IO_OBJECT_NULL)
+        {
+            return 0;
+        }
+
+        // Get the parent entry that will be the IOPCIDevice
+        io_registry_entry_t deviceEntry = IO_OBJECT_NULL;
+        if (IORegistryEntryGetParentEntry(acceleratorEntry, kIOServicePlane, &deviceEntry) !=
+                kIOReturnSuccess ||
+            deviceEntry == IO_OBJECT_NULL)
+        {
+            IOObjectRelease(acceleratorEntry);
+            return 0;
+        }
+
+        IOObjectRelease(acceleratorEntry);
+
+        uint32_t vendorId;
+        if (!GetEntryProperty(deviceEntry, CFSTR("vendor-id"), &vendorId))
+        {
+            vendorId = 0;
+        }
+
+        IOObjectRelease(deviceEntry);
+
+        return vendorId;
+    }
+    return 0;
+}
+
 bool GetSystemInfo(SystemInfo *info)
 {
     {

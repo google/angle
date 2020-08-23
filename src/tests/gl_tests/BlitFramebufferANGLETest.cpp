@@ -834,6 +834,9 @@ TEST_P(BlitFramebufferANGLETest, BlitStencil)
     // http://anglebug.com/2205
     ANGLE_SKIP_TEST_IF(IsIntel() && IsD3D9());
 
+    // http://anglebug.com/4919
+    ANGLE_SKIP_TEST_IF(IsIntel() && IsMetal());
+
     glBindFramebuffer(GL_FRAMEBUFFER, mUserFBO);
 
     glClearColor(0.0, 1.0, 0.0, 1.0);
@@ -2006,6 +2009,8 @@ ANGLE_INSTANTIATE_TEST(BlitFramebufferANGLETest,
                        ES2_OPENGL(),
                        ES3_OPENGL(),
                        ES2_VULKAN(),
-                       ES3_VULKAN());
+                       ES3_VULKAN(),
+                       ES2_METAL(),
+                       WithNoShaderStencilOutput(ES2_METAL()));
 
 ANGLE_INSTANTIATE_TEST_ES3(BlitFramebufferTest);

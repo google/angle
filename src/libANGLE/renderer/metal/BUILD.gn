@@ -54,6 +54,12 @@ _metal_backend_sources = [
   "mtl_state_cache.mm",
   "mtl_utils.h",
   "mtl_utils.mm",
+  "shaders/compiled/compiled_default_metallib_2_1_debug_ios_autogen.inc",
+  "shaders/compiled/compiled_default_metallib_2_1_debug_ios_sim_autogen.inc",
+  "shaders/compiled/compiled_default_metallib_2_1_debug_mac_autogen.inc",
+  "shaders/compiled/compiled_default_metallib_2_1_ios_autogen.inc",
+  "shaders/compiled/compiled_default_metallib_2_1_ios_sim_autogen.inc",
+  "shaders/compiled/compiled_default_metallib_2_1_mac_autogen.inc",
   "shaders/compiled/compiled_default_metallib_debug_ios_autogen.inc",
   "shaders/compiled/compiled_default_metallib_debug_ios_sim_autogen.inc",
   "shaders/compiled/compiled_default_metallib_debug_mac_autogen.inc",
@@ -86,6 +92,7 @@ angle_source_set("angle_metal_backend") {
 
   public_deps = [
     "${angle_root}:angle_glslang_wrapper",
+    "${angle_root}:angle_gpu_info_util",
     "${angle_root}:angle_image_util",
     "${angle_root}:libANGLE_headers",
   ]

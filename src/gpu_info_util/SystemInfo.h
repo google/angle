@@ -134,6 +134,9 @@ uint64_t GetGpuIDFromDisplayID(uint32_t displayID);
 
 // Helper to get the active GPU ID from an OpenGL display mask.
 uint64_t GetGpuIDFromOpenGLDisplayMask(uint32_t displayMask);
+
+// Get VendorID from metal device's registry ID
+VendorID GetVendorIDFromMetalDeviceRegistryID(uint64_t registryID);
 #endif
 
 }  // namespace angle

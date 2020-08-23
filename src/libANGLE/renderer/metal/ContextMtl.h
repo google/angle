@@ -27,6 +27,7 @@ class DisplayMtl;
 class FramebufferMtl;
 class VertexArrayMtl;
 class ProgramMtl;
+class RenderTargetMtl;
 class WindowSurfaceMtl;
 
 class ContextMtl : public ContextImpl, public mtl::Context
@@ -266,7 +267,9 @@ class ContextMtl : public ContextImpl, public mtl::Context
     void invalidateRenderPipeline();
 
     // Call this to notify ContextMtl whenever FramebufferMtl's state changed
-    void onDrawFrameBufferChange(const gl::Context *context, FramebufferMtl *framebuffer);
+    void onDrawFrameBufferChangedState(const gl::Context *context,
+                                       FramebufferMtl *framebuffer,
+                                       bool renderPassChanged);
     void onBackbufferResized(const gl::Context *context, WindowSurfaceMtl *backbuffer);
 
     const MTLClearColor &getClearColorValue() const;
@@ -297,7 +300,8 @@ class ContextMtl : public ContextImpl, public mtl::Context
     void present(const gl::Context *context, id<CAMetalDrawable> presentationDrawable);
     angle::Result finishCommandBuffer();
 
-    // Check whether compatible render pass has been started.
+    // Check whether compatible render pass has been started. Compatible render pass is a render
+    // pass having the same attachments, and possibly having different load/store options.
     bool hasStartedRenderPass(const mtl::RenderPassDesc &desc);
 
     // Get current render encoder. May be nullptr if no render pass has been started.
@@ -305,16 +309,20 @@ class ContextMtl : public ContextImpl, public mtl::Context
 
     // Will end current command encoder if it is valid, then start new encoder.
     // Unless hasStartedRenderPass(desc) returns true.
-    mtl::RenderCommandEncoder *getRenderCommandEncoder(const mtl::RenderPassDesc &desc);
+    // Note: passing a compatible render pass with different load/store options won't end the
+    // current render pass. If a new render pass is desired, call endEncoding() prior to this.
+    mtl::RenderCommandEncoder *getRenderPassCommandEncoder(const mtl::RenderPassDesc &desc);
 
-    // Utilities to quickly create render command enconder to a specific texture:
-    // The previous content of texture will be loaded if clearColor is not provided
-    mtl::RenderCommandEncoder *getRenderCommandEncoder(const mtl::TextureRef &textureTarget,
-                                                       const gl::ImageIndex &index,
-                                                       const Optional<MTLClearColor> &clearColor);
+    // Utilities to quickly create render command encoder to a specific texture:
     // The previous content of texture will be loaded
-    mtl::RenderCommandEncoder *getRenderCommandEncoder(const mtl::TextureRef &textureTarget,
-                                                       const gl::ImageIndex &index);
+    mtl::RenderCommandEncoder *getTextureRenderCommandEncoder(const mtl::TextureRef &textureTarget,
+                                                              const gl::ImageIndex &index);
+    // The previous content of texture will be loaded if clearColor is not provided
+    mtl::RenderCommandEncoder *getRenderTargetCommandEncoderWithClear(
+        const RenderTargetMtl &renderTarget,
+        const Optional<MTLClearColor> &clearColor);
+    // The previous content of texture will be loaded
+    mtl::RenderCommandEncoder *getRenderTargetCommandEncoder(const RenderTargetMtl &renderTarget);
 
     // Will end current command encoder and start new blit command encoder. Unless a blit comamnd
     // encoder is already started.

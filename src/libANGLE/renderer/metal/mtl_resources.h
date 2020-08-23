@@ -158,6 +158,7 @@ class Texture final : public Resource,
 
     uint32_t width(uint32_t level = 0) const;
     uint32_t height(uint32_t level = 0) const;
+    uint32_t depth(uint32_t level = 0) const;
 
     gl::Extents size(uint32_t level = 0) const;
     gl::Extents size(const gl::ImageIndex &index) const;
@@ -170,6 +171,9 @@ class Texture final : public Resource,
 
     // Get linear color space view. Only usable for sRGB textures.
     TextureRef getLinearColorView();
+
+    // Get stencil view
+    TextureRef getStencilView();
 
     // Change the wrapped metal object. Special case for swapchain image
     void set(id<MTLTexture> metalTexture);
@@ -206,6 +210,8 @@ class Texture final : public Resource,
 
     // Linear view of sRGB texture
     TextureRef mLinearColorView;
+
+    TextureRef mStencilView;
 };
 
 class Buffer final : public Resource, public WrappedObject<id<MTLBuffer>>

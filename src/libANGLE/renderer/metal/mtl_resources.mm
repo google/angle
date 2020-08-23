@@ -425,13 +425,18 @@ uint32_t Texture::height(uint32_t level) const
     return static_cast<uint32_t>(GetMipSize(get().height, level));
 }
 
+uint32_t Texture::depth(uint32_t level) const
+{
+    return static_cast<uint32_t>(GetMipSize(get().depth, level));
+}
+
 gl::Extents Texture::size(uint32_t level) const
 {
     gl::Extents re;
 
     re.width  = width(level);
     re.height = height(level);
-    re.depth  = static_cast<uint32_t>(GetMipSize(get().depth, level));
+    re.depth  = depth(level);
 
     return re;
 }
@@ -472,10 +477,41 @@ TextureRef Texture::getLinearColorView()
     return mLinearColorView;
 }
 
+TextureRef Texture::getStencilView()
+{
+    if (mStencilView)
+    {
+        return mStencilView;
+    }
+
+    switch (pixelFormat())
+    {
+        case MTLPixelFormatStencil8:
+        case MTLPixelFormatX32_Stencil8:
+#if TARGET_OS_OSX || TARGET_OS_MACCATALYST
+        case MTLPixelFormatX24_Stencil8:
+#endif
+            return mStencilView = shared_from_this();
+#if TARGET_OS_OSX || TARGET_OS_MACCATALYST
+        case MTLPixelFormatDepth24Unorm_Stencil8:
+            mStencilView = createViewWithDifferentFormat(MTLPixelFormatX24_Stencil8);
+            break;
+#endif
+        case MTLPixelFormatDepth32Float_Stencil8:
+            mStencilView = createViewWithDifferentFormat(MTLPixelFormatX32_Stencil8);
+            break;
+        default:
+            UNREACHABLE();
+    }
+
+    return mStencilView;
+}
+
 void Texture::set(id<MTLTexture> metalTexture)
 {
     ParentClass::set(metalTexture);
-
+    // Reset stencil view
+    mStencilView     = nullptr;
     mLinearColorView = nullptr;
 }
 

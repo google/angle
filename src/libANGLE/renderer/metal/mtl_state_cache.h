@@ -206,6 +206,8 @@ struct RenderPipelineOutputDesc
 {
     bool operator==(const RenderPipelineOutputDesc &rhs) const;
 
+    void updateEnabledDrawBuffers(gl::DrawBufferMask enabledBuffers);
+
     RenderPipelineColorAttachmentDesc colorAttachments[kMaxRenderTargets];
 
     // Use uint16_t instead of MTLPixelFormat to compact space

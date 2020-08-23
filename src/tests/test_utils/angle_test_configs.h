@@ -227,6 +227,13 @@ inline PlatformParameters WithEmulateCopyTexImage2DFromRenderbuffers(
     return p;
 }
 
+inline PlatformParameters WithNoShaderStencilOutput(const PlatformParameters &params)
+{
+    PlatformParameters re                       = params;
+    re.eglParameters.shaderStencilOutputFeature = EGL_FALSE;
+    return re;
+}
+
 inline PlatformParameters WithRobustness(const PlatformParameters &params)
 {
     PlatformParameters withRobustness       = params;

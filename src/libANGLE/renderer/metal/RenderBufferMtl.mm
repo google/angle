@@ -60,8 +60,8 @@ angle::Result RenderbufferMtl::setStorageImpl(const gl::Context *context,
     if ((mTexture == nullptr || !mTexture->valid()) && (width != 0 && height != 0))
     {
         ANGLE_TRY(mtl::Texture::Make2DTexture(contextMtl, mFormat, static_cast<uint32_t>(width),
-                                              static_cast<uint32_t>(height), 1, false, false,
-                                              &mTexture));
+                                              static_cast<uint32_t>(height), 1, false,
+                                              mFormat.hasDepthAndStencilBits(), &mTexture));
 
         mRenderTarget.set(mTexture, 0, 0, mFormat);
 

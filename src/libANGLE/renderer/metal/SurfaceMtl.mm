@@ -89,17 +89,19 @@ angle::Result CreateTexture(const gl::Context *context,
                             mtl::TextureRef *textureOut)
 {
     ContextMtl *contextMtl = mtl::GetImpl(context);
+    bool allowFormatView   = format.hasDepthAndStencilBits();
     if (samples > 1)
     {
         ANGLE_TRY(mtl::Texture::Make2DMSTexture(contextMtl, format, width, height, samples,
                                                 /** renderTargetOnly */ renderTargetOnly,
-                                                /** allowFormatView */ false, textureOut));
+                                                /** allowFormatView */ allowFormatView,
+                                                textureOut));
     }
     else
     {
         ANGLE_TRY(mtl::Texture::Make2DTexture(contextMtl, format, width, height, 1,
                                               /** renderTargetOnly */ renderTargetOnly,
-                                              /** allowFormatView */ false, textureOut));
+                                              /** allowFormatView */ allowFormatView, textureOut));
     }
     return angle::Result::Continue;
 }
@@ -291,6 +293,7 @@ void SurfaceMtl::destroy(const egl::Display *display)
     mMSColorTexture = nullptr;
 
     mColorRenderTarget.reset();
+    mColorManualResolveRenderTarget.reset();
     mDepthRenderTarget.reset();
     mStencilRenderTarget.reset();
 }
@@ -474,7 +477,7 @@ angle::Result SurfaceMtl::ensureCompanionTexturesSizeCorrect(const gl::Context *
     if (mDepthFormat.valid() && (!mDepthTexture || mDepthTexture->size() != size))
     {
         ANGLE_TRY(CreateTexture(context, mDepthFormat, size.width, size.height, mSamples,
-                                /** renderTargetOnly */ true, &mDepthTexture));
+                                /** renderTargetOnly */ false, &mDepthTexture));
 
         mDepthRenderTarget.set(mDepthTexture, 0, 0, mDepthFormat);
     }
@@ -488,7 +491,7 @@ angle::Result SurfaceMtl::ensureCompanionTexturesSizeCorrect(const gl::Context *
         else
         {
             ANGLE_TRY(CreateTexture(context, mStencilFormat, size.width, size.height, mSamples,
-                                    /** renderTargetOnly */ true, &mStencilTexture));
+                                    /** renderTargetOnly */ false, &mStencilTexture));
         }
 
         mStencilRenderTarget.set(mStencilTexture, 0, 0, mStencilFormat);
@@ -505,11 +508,13 @@ angle::Result SurfaceMtl::resolveColorTextureIfNeeded(const gl::Context *context
         // Manually resolve texture
         ContextMtl *contextMtl = mtl::GetImpl(context);
 
+        mColorManualResolveRenderTarget.set(mColorTexture, 0, 0, mColorFormat);
         mtl::RenderCommandEncoder *encoder =
-            contextMtl->getRenderCommandEncoder(mColorTexture, gl::ImageIndex::Make2D(0));
-        ANGLE_TRY(
-            contextMtl->getDisplay()->getUtils().blitWithDraw(context, encoder, mMSColorTexture));
+            contextMtl->getRenderTargetCommandEncoder(mColorManualResolveRenderTarget);
+        ANGLE_TRY(contextMtl->getDisplay()->getUtils().blitColorWithDraw(context, encoder,
+                                                                         mMSColorTexture));
         contextMtl->endEncoding(true);
+        mColorManualResolveRenderTarget.reset();
     }
     return angle::Result::Continue;
 }
@@ -969,8 +974,9 @@ angle::Result IOSurfaceSurfaceMtl::ensureColorTextureCreated(const gl::Context *
     if (kIOSurfaceFormats[mIOSurfaceFormatIdx].internalFormat == GL_RGB)
     {
         // This format has emulated alpha channel. Initialize texture's alpha channel to 1.0.
-        ANGLE_TRY(mtl::InitializeTextureContentsGPU(
-            context, mColorTexture, gl::ImageIndex::Make2D(0), MTLColorWriteMaskAlpha));
+        ANGLE_TRY(mtl::InitializeTextureContentsGPU(context, mColorTexture, mColorFormat,
+                                                    gl::ImageIndex::Make2D(0),
+                                                    MTLColorWriteMaskAlpha));
 
         // Disable subsequent rendering to alpha channel.
         mColorTexture->setColorWritableMask(MTLColorWriteMaskAll & (~MTLColorWriteMaskAlpha));

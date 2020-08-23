@@ -196,6 +196,11 @@ bool EGLWindow::initializeDisplay(OSWindow *osWindow,
         enabledFeatureOverrides.push_back("emulate_copyteximage2d_from_renderbuffers");
     }
 
+    if (params.shaderStencilOutputFeature == EGL_FALSE)
+    {
+        disabledFeatureOverrides.push_back("has_shader_stencil_output");
+    }
+
     if (!disabledFeatureOverrides.empty())
     {
         if (strstr(extensionString, "EGL_ANGLE_feature_control") == nullptr)

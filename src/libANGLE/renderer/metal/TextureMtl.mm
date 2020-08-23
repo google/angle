@@ -333,9 +333,9 @@ angle::Result TextureMtl::ensureTextureCreated(const gl::Context *context)
     {
         case gl::TextureType::_2D:
             layers = 1;
-            ANGLE_TRY(mtl::Texture::Make2DTexture(contextMtl, mFormat, desc.size.width,
-                                                  desc.size.height, mips, false, true,
-                                                  &mNativeTexture));
+            ANGLE_TRY(mtl::Texture::Make2DTexture(
+                contextMtl, mFormat, desc.size.width, desc.size.height, mips, false,
+                mFormat.hasDepthAndStencilBits(), &mNativeTexture));
             mLayeredRenderTargets.resize(1);
             mLayeredRenderTargets[0].set(mNativeTexture, 0, 0, mFormat);
             mLayeredTextureViews.resize(1);
@@ -344,7 +344,8 @@ angle::Result TextureMtl::ensureTextureCreated(const gl::Context *context)
         case gl::TextureType::CubeMap:
             layers = 6;
             ANGLE_TRY(mtl::Texture::MakeCubeTexture(contextMtl, mFormat, desc.size.width, mips,
-                                                    false, true, &mNativeTexture));
+                                                    false, mFormat.hasDepthAndStencilBits(),
+                                                    &mNativeTexture));
             mLayeredRenderTargets.resize(gl::kCubeFaceCount);
             mLayeredTextureViews.resize(gl::kCubeFaceCount);
             for (uint32_t f = 0; f < gl::kCubeFaceCount; ++f)
@@ -894,7 +895,8 @@ angle::Result TextureMtl::redefineImage(const gl::Context *context,
             case gl::TextureType::_2D:
             case gl::TextureType::CubeMap:
                 ANGLE_TRY(mtl::Texture::Make2DTexture(contextMtl, mtlFormat, size.width,
-                                                      size.height, 1, false, false, &image));
+                                                      size.height, 1, false,
+                                                      mFormat.hasDepthAndStencilBits(), &image));
                 break;
             default:
                 UNREACHABLE();
@@ -1204,20 +1206,26 @@ angle::Result TextureMtl::copySubImageWithDraw(const gl::Context *context,
     mtl::TextureRef &image = mTexImages[GetImageLayerIndex(index)][index.getLevelIndex()];
     ASSERT(image && image->valid());
 
-    mtl::RenderCommandEncoder *cmdEncoder =
-        contextMtl->getRenderCommandEncoder(image, GetImageBaseLevelIndex(image));
-    mtl::BlitParams blitParams;
+    RenderTargetMtl writeRtt;
+    writeRtt.set(image, 0, 0, mFormat);
+    mtl::RenderCommandEncoder *cmdEncoder = contextMtl->getRenderTargetCommandEncoder(writeRtt);
+    mtl::ColorBlitParams blitParams;
 
-    blitParams.dstOffset    = modifiedDestOffset;
-    blitParams.dstColorMask = image->getColorWritableMask();
+    blitParams.dstTextureSize = image->size(0);
+    blitParams.dstRect        = gl::Rectangle(modifiedDestOffset.x, modifiedDestOffset.y,
+                                       clippedSourceArea.width, clippedSourceArea.height);
+    blitParams.dstScissorRect = blitParams.dstRect;
+
+    blitParams.enabledBuffers.set(0);
 
     blitParams.src          = colorReadRT->getTexture();
-    blitParams.srcLevel     = static_cast<uint32_t>(colorReadRT->getLevelIndex());
+    blitParams.srcLevel     = colorReadRT->getLevelIndex();
+    blitParams.srcLayer     = colorReadRT->getLayerIndex();
     blitParams.srcRect      = clippedSourceArea;
     blitParams.srcYFlipped  = framebufferMtl->flipY();
     blitParams.dstLuminance = internalFormat.isLUMA();
 
-    return displayMtl->getUtils().blitWithDraw(context, cmdEncoder, blitParams);
+    return displayMtl->getUtils().blitColorWithDraw(context, cmdEncoder, blitParams);
 }
 
 angle::Result TextureMtl::copySubImageCPU(const gl::Context *context,
@@ -1336,14 +1344,19 @@ angle::Result TextureMtl::copySubTextureWithDraw(const gl::Context *context,
     }
 
     mtl::RenderCommandEncoder *cmdEncoder =
-        contextMtl->getRenderCommandEncoder(image, GetImageBaseLevelIndex(image));
-    mtl::BlitParams blitParams;
+        contextMtl->getTextureRenderCommandEncoder(image, GetImageBaseLevelIndex(image));
+    mtl::ColorBlitParams blitParams;
 
-    blitParams.dstOffset    = destOffset;
-    blitParams.dstColorMask = image->getColorWritableMask();
+    blitParams.dstTextureSize = image->size();
+    blitParams.dstRect =
+        gl::Rectangle(destOffset.x, destOffset.y, sourceBox.width, sourceBox.height);
+    blitParams.dstScissorRect = blitParams.dstRect;
+
+    blitParams.enabledBuffers.set(0);
 
     blitParams.src      = sourceTexture;
     blitParams.srcLevel = sourceNativeLevel;
+    blitParams.srcLayer = 0;
     blitParams.srcRect = gl::Rectangle(sourceBox.x, sourceBox.y, sourceBox.width, sourceBox.height);
     blitParams.srcYFlipped            = false;
     blitParams.dstLuminance           = internalFormat.isLUMA();
@@ -1351,7 +1364,7 @@ angle::Result TextureMtl::copySubTextureWithDraw(const gl::Context *context,
     blitParams.unpackPremultiplyAlpha = unpackPremultiplyAlpha;
     blitParams.unpackUnmultiplyAlpha  = unpackUnmultiplyAlpha;
 
-    return displayMtl->getUtils().blitWithDraw(context, cmdEncoder, blitParams);
+    return displayMtl->getUtils().blitColorWithDraw(context, cmdEncoder, blitParams);
 }
 
 angle::Result TextureMtl::copySubTextureCPU(const gl::Context *context,

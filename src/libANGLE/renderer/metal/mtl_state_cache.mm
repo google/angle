@@ -618,6 +618,17 @@ bool RenderPipelineOutputDesc::operator==(const RenderPipelineOutputDesc &rhs) c
            ANGLE_PROP_EQ(*this, rhs, stencilAttachmentPixelFormat);
 }
 
+void RenderPipelineOutputDesc::updateEnabledDrawBuffers(gl::DrawBufferMask enabledBuffers)
+{
+    for (uint32_t colorIndex = 0; colorIndex < this->numColorAttachments; ++colorIndex)
+    {
+        if (!enabledBuffers.test(colorIndex))
+        {
+            this->colorAttachments[colorIndex].writeMask = MTLColorWriteMaskNone;
+        }
+    }
+}
+
 // RenderPipelineDesc implementation
 RenderPipelineDesc::RenderPipelineDesc()
 {
@@ -716,11 +727,10 @@ void RenderPassDesc::populateRenderPipelineOutputDesc(const BlendDesc &blendStat
         auto &renderPassColorAttachment = this->colorAttachments[i];
         auto texture                    = renderPassColorAttachment.texture;
 
-        // Copy parameters from blend state
-        outputDescriptor.colorAttachments[i].update(blendState);
-
         if (texture)
         {
+            // Copy parameters from blend state
+            outputDescriptor.colorAttachments[i].update(blendState);
 
             outputDescriptor.colorAttachments[i].pixelFormat = texture->pixelFormat();
 
@@ -731,7 +741,9 @@ void RenderPassDesc::populateRenderPipelineOutputDesc(const BlendDesc &blendStat
         }
         else
         {
-            outputDescriptor.colorAttachments[i].pixelFormat = MTLPixelFormatInvalid;
+
+            outputDescriptor.colorAttachments[i].blendingEnabled = false;
+            outputDescriptor.colorAttachments[i].pixelFormat     = MTLPixelFormatInvalid;
         }
     }
 

@@ -111,6 +111,9 @@ class DisplayMtl : public DisplayImpl
     bool supportsEitherGPUFamily(uint8_t iOSFamily, uint8_t macFamily) const;
     bool supportsIOSGPUFamily(uint8_t iOSFamily) const;
     bool supportsMacGPUFamily(uint8_t macFamily) const;
+    bool isAMD() const;
+    bool isIntel() const;
+    bool isNVIDIA() const;
 
     id<MTLDevice> getMetalDevice() const { return mMetalDevice; }
 
@@ -160,6 +163,7 @@ class DisplayMtl : public DisplayImpl
     angle::Result initializeShaderLibrary();
 
     mtl::AutoObjCPtr<id<MTLDevice>> mMetalDevice = nil;
+    uint32_t mMetalDeviceVendorId                = 0;
 
     mtl::CommandQueue mCmdQueue;
 
