@@ -692,7 +692,7 @@ void CommandBufferHelper::imageRead(ResourceUseList *resourceUseList,
 
     if (mIsRenderPassCommandBuffer)
     {
-        // As noted in the header we don't support multiple layouts reads for Images.
+        // As noted in the header we don't support multiple read layouts for Images.
         // We allow duplicate uses in the RP to accomodate for normal GL sampler usage.
         if (!usesImageInRenderPass(*image))
         {
@@ -720,7 +720,7 @@ void CommandBufferHelper::imageWrite(ResourceUseList *resourceUseList,
 
     if (mIsRenderPassCommandBuffer)
     {
-        // When used as a storage buffer we allow for aliased writes.
+        // When used as a storage image we allow for aliased writes.
         if (aliasingMode == AliasingMode::Disallowed)
         {
             ASSERT(!usesImageInRenderPass(*image));
@@ -3371,19 +3371,6 @@ gl::Extents ImageHelper::getLevelExtents2D(uint32_t levelVK) const
 bool ImageHelper::isDepthOrStencil() const
 {
     return mFormat->actualImageFormat().hasDepthOrStencilBits();
-}
-
-bool ImageHelper::isReadBarrierNecessary(ImageLayout newLayout) const
-{
-    // If transitioning to a different layout, we need always need a barrier.
-    if (mCurrentLayout != newLayout)
-    {
-        return true;
-    }
-
-    // RAW (read-after-write) hazards always requires a memory barrier.
-    const ImageMemoryBarrierData &layoutData = kImageMemoryBarrierData[mCurrentLayout];
-    return layoutData.type == BarrierType::Write;
 }
 
 void ImageHelper::changeLayoutAndQueue(VkImageAspectFlags aspectMask,

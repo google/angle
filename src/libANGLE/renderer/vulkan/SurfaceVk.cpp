@@ -1194,7 +1194,7 @@ angle::Result WindowSurfaceVk::present(ContextVk *contextVk,
         ANGLE_TRY(drawOverlay(contextVk, &image));
     }
 
-    // This does nothing if it already in the requested layout
+    // This does nothing if it's already in the requested layout
     image.image.recordReadBarrier(VK_IMAGE_ASPECT_COLOR_BIT, vk::ImageLayout::Present,
                                   commandBuffer);
 

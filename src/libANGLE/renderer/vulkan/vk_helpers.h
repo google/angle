@@ -1432,7 +1432,12 @@ class ImageHelper final : public Resource, public angle::Subject
     }
 
     // This function can be used to prevent issuing redundant layout transition commands.
-    bool isReadBarrierNecessary(ImageLayout newLayout) const;
+    bool isReadBarrierNecessary(ImageLayout newLayout) const
+    {
+        // If transitioning to a different layout, we always need a barrier.  Otherwise RAR
+        // (read-after-read) is not a hazard and doesn't require a barrier.
+        return mCurrentLayout != newLayout;
+    }
 
     void recordReadBarrier(VkImageAspectFlags aspectMask,
                            ImageLayout newLayout,

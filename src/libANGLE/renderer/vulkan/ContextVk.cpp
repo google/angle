@@ -4444,8 +4444,17 @@ angle::Result ContextVk::onImageRead(VkImageAspectFlags aspectFlags,
     ASSERT(!image->isReleasedToExternal());
     ASSERT(image->getImageSerial().valid());
 
+    // Layout transitions for images used in the render pass are handled especially.  This function
+    // is only called when the image is used outside the render pass.  As such, if the image is used
+    // inside the render pass, its layout is necessarily different from imageLayout, and thus a
+    // layout transition is necessary (and the render pass has to break).
+    ASSERT(image->isReadBarrierNecessary(imageLayout) ||
+           !(mRenderPassCommands->started() && mRenderPassCommands->usesImageInRenderPass(*image)));
+
     // Note that different read methods are not compatible. A shader read uses a different layout
     // than a transfer read. So we cannot support simultaneous read usage as easily as for Buffers.
+    // TODO: Don't close the render pass if the image was only used read-only in the render pass.
+    // http://anglebug.com/4984
     ANGLE_TRY(endRenderPassIfImageUsed(*image));
 
     image->recordReadBarrier(aspectFlags, imageLayout,
