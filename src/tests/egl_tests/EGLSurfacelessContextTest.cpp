@@ -111,7 +111,7 @@ class EGLSurfacelessContextTest : public ANGLETest
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 500, 500, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
 
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex->get(), 0);
-        EXPECT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+        ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
     }
 
     bool checkExtension(bool verbose = true) const
@@ -197,7 +197,7 @@ TEST_P(EGLSurfacelessContextTest, CheckFramebufferStatus)
     GLTexture tex;
     createFramebuffer(&fbo, &tex);
     glBindFramebuffer(GL_FRAMEBUFFER, fbo.get());
-    ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
 }
 
 // Test that clearing and readpixels work when done in an FBO.

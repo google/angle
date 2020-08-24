@@ -14,6 +14,7 @@
 #include "common/Color.h"
 #include "common/platform.h"
 #include "test_utils/ANGLETest.h"
+#include "test_utils/gl_raii.h"
 #include "util/EGLWindow.h"
 #include "util/OSWindow.h"
 #include "util/Timer.h"
@@ -997,14 +998,12 @@ TEST_P(EGLSurfaceTestD3D11, CreateSurfaceWithTextureOffset)
     EXPECT_GL_NO_ERROR();
 
     // Blit framebuffer should also blit to the same subrect despite the dstX/Y arguments.
-    GLuint renderBuffer = 0;
-    glGenRenderbuffers(1u, &renderBuffer);
+    GLRenderbuffer renderBuffer;
     glBindRenderbuffer(GL_RENDERBUFFER, renderBuffer);
     glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, 50, 50);
     EXPECT_GL_NO_ERROR();
 
-    GLuint framebuffer = 0;
-    glGenFramebuffers(1u, &framebuffer);
+    GLFramebuffer framebuffer;
     glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, renderBuffer);
     EXPECT_GL_NO_ERROR();
@@ -1022,10 +1021,6 @@ TEST_P(EGLSurfaceTestD3D11, CreateSurfaceWithTextureOffset)
     glBindFramebuffer(GL_READ_FRAMEBUFFER, 0u);
     EXPECT_PIXEL_EQ(25, 25, 0, 0, 0, 255);
     EXPECT_PIXEL_EQ(75, 75, 0, 255, 0, 255);
-    EXPECT_GL_NO_ERROR();
-
-    glDeleteFramebuffers(1u, &framebuffer);
-    glDeleteRenderbuffers(1u, &renderBuffer);
     EXPECT_GL_NO_ERROR();
 }
 
