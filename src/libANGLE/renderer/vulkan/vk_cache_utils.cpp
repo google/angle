@@ -1718,11 +1718,11 @@ bool PipelineLayoutDesc::operator==(const PipelineLayoutDesc &other) const
     return memcmp(this, &other, sizeof(PipelineLayoutDesc)) == 0;
 }
 
-void PipelineLayoutDesc::updateDescriptorSetLayout(uint32_t setIndex,
+void PipelineLayoutDesc::updateDescriptorSetLayout(DescriptorSetIndex setIndex,
                                                    const DescriptorSetLayoutDesc &desc)
 {
-    ASSERT(setIndex < mDescriptorSetLayouts.size());
-    mDescriptorSetLayouts[setIndex] = desc;
+    ASSERT(ToUnderlying(setIndex) < mDescriptorSetLayouts.size());
+    mDescriptorSetLayouts[ToUnderlying(setIndex)] = desc;
 }
 
 void PipelineLayoutDesc::updatePushConstantRange(gl::ShaderType shaderType,

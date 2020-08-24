@@ -29,9 +29,6 @@ namespace GenerateMipmap_comp               = vk::InternalShader::GenerateMipmap
 
 namespace
 {
-// All internal shaders assume there is only one descriptor set, indexed at 0
-constexpr uint32_t kSetIndex = 0;
-
 constexpr uint32_t kConvertIndexDestinationBinding           = 0;
 constexpr uint32_t kConvertVertexDestinationBinding          = 0;
 constexpr uint32_t kConvertVertexSourceBinding               = 1;
@@ -423,8 +420,9 @@ angle::Result UtilsVk::ensureResourcesInitialized(ContextVk *contextVk,
         ++currentBinding;
     }
 
-    ANGLE_TRY(renderer->getDescriptorSetLayout(contextVk, descriptorSetDesc,
-                                               &mDescriptorSetLayouts[function][kSetIndex]));
+    ANGLE_TRY(renderer->getDescriptorSetLayout(
+        contextVk, descriptorSetDesc,
+        &mDescriptorSetLayouts[function][ToUnderlying(DescriptorSetIndex::InternalShader)]));
 
     gl::ShaderType pushConstantsShaderStage =
         isCompute ? gl::ShaderType::Compute : gl::ShaderType::Fragment;
@@ -432,7 +430,8 @@ angle::Result UtilsVk::ensureResourcesInitialized(ContextVk *contextVk,
     // Corresponding pipeline layouts:
     vk::PipelineLayoutDesc pipelineLayoutDesc;
 
-    pipelineLayoutDesc.updateDescriptorSetLayout(kSetIndex, descriptorSetDesc);
+    pipelineLayoutDesc.updateDescriptorSetLayout(DescriptorSetIndex::InternalShader,
+                                                 descriptorSetDesc);
     if (pushConstantsSize)
     {
         pipelineLayoutDesc.updatePushConstantRange(pushConstantsShaderStage, 0,
@@ -746,15 +745,16 @@ angle::Result UtilsVk::setupProgram(ContextVk *contextVk,
 
     if (descriptorSet != VK_NULL_HANDLE)
     {
-        commandBuffer->bindDescriptorSets(pipelineLayout.get(), pipelineBindPoint, 0, 1,
-                                          &descriptorSet, 0, nullptr);
+        commandBuffer->bindDescriptorSets(pipelineLayout.get(), pipelineBindPoint,
+                                          DescriptorSetIndex::InternalShader, 1, &descriptorSet, 0,
+                                          nullptr);
         if (isCompute)
         {
-            contextVk->invalidateComputeDescriptorSet(0);
+            contextVk->invalidateComputeDescriptorSet(DescriptorSetIndex::InternalShader);
         }
         else
         {
-            contextVk->invalidateGraphicsDescriptorSet(0);
+            contextVk->invalidateGraphicsDescriptorSet(DescriptorSetIndex::InternalShader);
         }
     }
 
@@ -2119,8 +2119,11 @@ angle::Result UtilsVk::allocateDescriptorSet(ContextVk *contextVk,
                                              VkDescriptorSet *descriptorSetOut)
 {
     ANGLE_TRY(mDescriptorPools[function].allocateSets(
-        contextVk, mDescriptorSetLayouts[function][kSetIndex].get().ptr(), 1, bindingOut,
-        descriptorSetOut));
+        contextVk,
+        mDescriptorSetLayouts[function][ToUnderlying(DescriptorSetIndex::InternalShader)]
+            .get()
+            .ptr(),
+        1, bindingOut, descriptorSetOut));
     bindingOut->get().updateSerial(contextVk->getCurrentQueueSerial());
     return angle::Result::Continue;
 }

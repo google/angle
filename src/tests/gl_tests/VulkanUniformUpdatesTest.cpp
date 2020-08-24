@@ -72,8 +72,8 @@ class VulkanUniformUpdatesTest : public ANGLETest
         rx::ProgramVk *programVk = hackProgram(program);
 
         // Force a small limit on the max sets per pool to more easily trigger a new allocation.
-        rx::vk::DynamicDescriptorPool *uniformPool =
-            programVk->getDynamicDescriptorPool(rx::kUniformsAndXfbDescriptorSetIndex);
+        rx::vk::DynamicDescriptorPool *uniformPool = programVk->getDynamicDescriptorPool(
+            ToUnderlying(rx::DescriptorSetIndex::UniformsAndXfb));
         uniformPool->setMaxSetsPerPoolForTesting(kMaxSetsForTesting);
         VkDescriptorPoolSize uniformSetSize = {VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC,
                                                rx::kReservedDefaultUniformBindingCount};
@@ -86,7 +86,7 @@ class VulkanUniformUpdatesTest : public ANGLETest
         textureCount = std::max(textureCount, 1u);
 
         rx::vk::DynamicDescriptorPool *texturePool =
-            programVk->getDynamicDescriptorPool(rx::kTextureDescriptorSetIndex);
+            programVk->getDynamicDescriptorPool(ToUnderlying(rx::DescriptorSetIndex::Texture));
         texturePool->setMaxSetsPerPoolForTesting(kMaxSetsForTesting);
         VkDescriptorPoolSize textureSetSize = {VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
                                                textureCount};

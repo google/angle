@@ -18,11 +18,14 @@
 namespace rx
 {
 
+enum DescriptorSetIndex : uint32_t;
+
 namespace vk
 {
 
 namespace priv
 {
+
 // NOTE: Please keep command-related enums, stucts, functions
 //  and other code dealing with commands in alphabetical order
 //  This simplifies searching and updating commands.
@@ -468,7 +471,7 @@ class SecondaryCommandBuffer final : angle::NonCopyable
 
     void bindDescriptorSets(const PipelineLayout &layout,
                             VkPipelineBindPoint pipelineBindPoint,
-                            uint32_t firstSet,
+                            DescriptorSetIndex firstSet,
                             uint32_t descriptorSetCount,
                             const VkDescriptorSet *descriptorSets,
                             uint32_t dynamicOffsetCount,
@@ -846,7 +849,7 @@ ANGLE_INLINE void SecondaryCommandBuffer::bindComputePipeline(const Pipeline &pi
 
 ANGLE_INLINE void SecondaryCommandBuffer::bindDescriptorSets(const PipelineLayout &layout,
                                                              VkPipelineBindPoint pipelineBindPoint,
-                                                             uint32_t firstSet,
+                                                             DescriptorSetIndex firstSet,
                                                              uint32_t descriptorSetCount,
                                                              const VkDescriptorSet *descriptorSets,
                                                              uint32_t dynamicOffsetCount,
@@ -860,7 +863,7 @@ ANGLE_INLINE void SecondaryCommandBuffer::bindDescriptorSets(const PipelineLayou
     // Copy params into memory
     paramStruct->layout             = layout.getHandle();
     paramStruct->pipelineBindPoint  = pipelineBindPoint;
-    paramStruct->firstSet           = firstSet;
+    paramStruct->firstSet           = ToUnderlying(firstSet);
     paramStruct->descriptorSetCount = descriptorSetCount;
     paramStruct->dynamicOffsetCount = dynamicOffsetCount;
     // Copy variable sized data

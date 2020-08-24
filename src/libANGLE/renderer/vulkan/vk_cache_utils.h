@@ -18,6 +18,38 @@
 namespace rx
 {
 
+// Some descriptor set and pipeline layout constants.
+//
+// The set/binding assignment is done as following:
+//
+// - Set 0 contains the ANGLE driver uniforms at binding 0.  Note that driver uniforms are updated
+//   only under rare circumstances, such as viewport or depth range change.  However, there is only
+//   one binding in this set.  This set is placed before Set 1 containing transform feedback
+//   buffers, so that switching between xfb and non-xfb programs doesn't require rebinding this set.
+//   Otherwise, as the layout of Set 1 changes (due to addition and removal of xfb buffers), and all
+//   subsequent sets need to be rebound (due to Vulkan pipeline layout validation rules), we would
+//   have needed to invalidateGraphicsDriverUniforms().
+// - Set 1 contains uniform blocks created to encompass default uniforms.  1 binding is used per
+//   pipeline stage.  Additionally, transform feedback buffers are bound from binding 2 and up.
+// - Set 2 contains all textures.
+// - Set 3 contains all other shader resources, such as uniform and storage blocks, atomic counter
+//   buffers and images.
+
+// ANGLE driver uniforms set index (binding is always 0):
+enum DescriptorSetIndex : uint32_t
+{
+    // All internal shaders assume there is only one descriptor set, indexed at 0
+    InternalShader = 0,
+
+    DriverUniforms = 0,  // ANGLE driver uniforms set index
+    UniformsAndXfb,      // Uniforms set index
+    Texture,             // Textures set index
+    ShaderResource,      // Other shader resources set index
+
+    InvalidEnum,
+    EnumCount = InvalidEnum,
+};
+
 namespace vk
 {
 class ImageHelper;
@@ -611,7 +643,7 @@ struct PackedPushConstantRange
 };
 
 template <typename T>
-using DescriptorSetLayoutArray = std::array<T, kMaxDescriptorSetLayouts>;
+using DescriptorSetLayoutArray = std::array<T, static_cast<size_t>(DescriptorSetIndex::EnumCount)>;
 using DescriptorSetLayoutPointerArray =
     DescriptorSetLayoutArray<BindingPointer<DescriptorSetLayout>>;
 template <typename T>
@@ -628,7 +660,8 @@ class PipelineLayoutDesc final
     size_t hash() const;
     bool operator==(const PipelineLayoutDesc &other) const;
 
-    void updateDescriptorSetLayout(uint32_t setIndex, const DescriptorSetLayoutDesc &desc);
+    void updateDescriptorSetLayout(DescriptorSetIndex setIndex,
+                                   const DescriptorSetLayoutDesc &desc);
     void updatePushConstantRange(gl::ShaderType shaderType, uint32_t offset, uint32_t size);
 
     const PushConstantRangeArray<PackedPushConstantRange> &getPushConstantRanges() const;
@@ -1229,32 +1262,6 @@ class SamplerYcbcrConversionCache final : angle::NonCopyable
   private:
     std::unordered_map<uint64_t, vk::RefCountedSamplerYcbcrConversion> mPayload;
 };
-
-// Some descriptor set and pipeline layout constants.
-//
-// The set/binding assignment is done as following:
-//
-// - Set 0 contains the ANGLE driver uniforms at binding 0.  Note that driver uniforms are updated
-//   only under rare circumstances, such as viewport or depth range change.  However, there is only
-//   one binding in this set.  This set is placed before Set 1 containing transform feedback
-//   buffers, so that switching between xfb and non-xfb programs doesn't require rebinding this set.
-//   Otherwise, as the layout of Set 1 changes (due to addition and removal of xfb buffers), and all
-//   subsequent sets need to be rebound (due to Vulkan pipeline layout validation rules), we would
-//   have needed to invalidateGraphicsDriverUniforms().
-// - Set 1 contains uniform blocks created to encompass default uniforms.  1 binding is used per
-//   pipeline stage.  Additionally, transform feedback buffers are bound from binding 2 and up.
-// - Set 2 contains all textures.
-// - Set 3 contains all other shader resources, such as uniform and storage blocks, atomic counter
-//   buffers and images.
-
-// ANGLE driver uniforms set index (binding is always 0):
-constexpr uint32_t kDriverUniformsDescriptorSetIndex = 0;
-// Uniforms set index:
-constexpr uint32_t kUniformsAndXfbDescriptorSetIndex = 1;
-// Textures set index:
-constexpr uint32_t kTextureDescriptorSetIndex = 2;
-// Other shader resources set index:
-constexpr uint32_t kShaderResourceDescriptorSetIndex = 3;
 
 // Only 1 driver uniform binding is used.
 constexpr uint32_t kReservedDriverUniformBindingCount = 1;

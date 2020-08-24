@@ -267,4 +267,13 @@ void writeFile(const char *path, const void *data, size_t size);
 void ScheduleYield();
 #endif
 
+// Get the underlying type. Useful for indexing into arrays with enum values by avoiding the clutter
+// of the extraneous static_cast<>() calls.
+// https://stackoverflow.com/a/8357462
+template <typename E>
+constexpr typename std::underlying_type<E>::type ToUnderlying(E e) noexcept
+{
+    return static_cast<typename std::underlying_type<E>::type>(e);
+}
+
 #endif  // COMMON_UTILITIES_H_

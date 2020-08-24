@@ -16,6 +16,7 @@
 #include "libANGLE/InfoLog.h"
 #include "libANGLE/renderer/glslang_wrapper_utils.h"
 #include "libANGLE/renderer/vulkan/ContextVk.h"
+#include "libANGLE/renderer/vulkan/vk_cache_utils.h"
 #include "libANGLE/renderer/vulkan/vk_helpers.h"
 
 namespace rx
@@ -176,9 +177,10 @@ class ProgramExecutableVk
                                                   const vk::UniformsAndXfbDesc &xfbBufferDesc,
                                                   bool *newDescriptorSetAllocated);
 
-    angle::Result allocateDescriptorSet(ContextVk *contextVk, uint32_t descriptorSetIndex);
+    angle::Result allocateDescriptorSet(ContextVk *contextVk,
+                                        DescriptorSetIndex descriptorSetIndex);
     angle::Result allocateDescriptorSetAndGetInfo(ContextVk *contextVk,
-                                                  uint32_t descriptorSetIndex,
+                                                  DescriptorSetIndex descriptorSetIndex,
                                                   bool *newPoolAllocatedOut);
     void addInterfaceBlockDescriptorSetDesc(const std::vector<gl::InterfaceBlock> &blocks,
                                             const gl::ShaderType shaderType,
@@ -217,7 +219,7 @@ class ProgramExecutableVk
                                             ContextVk *contextVk);
 
     // Descriptor sets for uniform blocks and textures for this program.
-    std::vector<VkDescriptorSet> mDescriptorSets;
+    vk::DescriptorSetLayoutArray<VkDescriptorSet> mDescriptorSets;
     vk::DescriptorSetLayoutArray<VkDescriptorSet> mEmptyDescriptorSets;
     size_t mNumDefaultUniformDescriptors;
     vk::BufferSerial mCurrentDefaultUniformBufferSerial;

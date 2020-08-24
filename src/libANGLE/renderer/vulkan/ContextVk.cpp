@@ -3487,20 +3487,20 @@ angle::Result ContextVk::onPauseTransformFeedback()
     return angle::Result::Continue;
 }
 
-void ContextVk::invalidateGraphicsDescriptorSet(uint32_t usedDescriptorSet)
+void ContextVk::invalidateGraphicsDescriptorSet(DescriptorSetIndex usedDescriptorSet)
 {
     // UtilsVk currently only uses set 0
-    ASSERT(usedDescriptorSet == kDriverUniformsDescriptorSetIndex);
+    ASSERT(usedDescriptorSet == DescriptorSetIndex::DriverUniforms);
     if (mDriverUniforms[PipelineType::Graphics].descriptorSet != VK_NULL_HANDLE)
     {
         mGraphicsDirtyBits.set(DIRTY_BIT_DRIVER_UNIFORMS_BINDING);
     }
 }
 
-void ContextVk::invalidateComputeDescriptorSet(uint32_t usedDescriptorSet)
+void ContextVk::invalidateComputeDescriptorSet(DescriptorSetIndex usedDescriptorSet)
 {
     // UtilsVk currently only uses set 0
-    ASSERT(usedDescriptorSet == kDriverUniformsDescriptorSetIndex);
+    ASSERT(usedDescriptorSet == DescriptorSetIndex::DriverUniforms);
     if (mDriverUniforms[PipelineType::Compute].descriptorSet != VK_NULL_HANDLE)
     {
         mComputeDirtyBits.set(DIRTY_BIT_DRIVER_UNIFORMS_BINDING);
@@ -3775,7 +3775,7 @@ void ContextVk::handleDirtyDriverUniformsBindingImpl(
     const DriverUniformsDescriptorSet &driverUniforms)
 {
     commandBuffer->bindDescriptorSets(
-        mExecutable->getPipelineLayout(), bindPoint, kDriverUniformsDescriptorSetIndex, 1,
+        mExecutable->getPipelineLayout(), bindPoint, DescriptorSetIndex::DriverUniforms, 1,
         &driverUniforms.descriptorSet, 1, &driverUniforms.dynamicOffset);
 }
 
