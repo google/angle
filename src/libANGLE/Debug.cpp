@@ -338,6 +338,24 @@ size_t Debug::getGroupStackDepth() const
     return mGroups.size();
 }
 
+void Debug::insertPerfWarning(GLenum severity, const char *message, uint32_t *repeatCount) const
+{
+    constexpr uint32_t kMaxRepeat = 4;
+    if (*repeatCount >= kMaxRepeat)
+    {
+        return;
+    }
+
+    ++*repeatCount;
+    std::string msg = message;
+    if (*repeatCount == kMaxRepeat)
+    {
+        msg += " (this message will no longer repeat)";
+    }
+    insertMessage(GL_DEBUG_SOURCE_API, GL_DEBUG_TYPE_PERFORMANCE, 0, severity, std::move(msg),
+                  gl::LOG_INFO);
+}
+
 bool Debug::isMessageEnabled(GLenum source, GLenum type, GLuint id, GLenum severity) const
 {
     if (!mOutputEnabled)

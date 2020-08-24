@@ -4432,14 +4432,16 @@ angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
 
     removeSupersededUpdates(skipLevelsMask);
 
-    // If a clear is requested and we know it just has been cleared with the same value, we drop the
-    // clear
+    // If a clear is requested and we know it has just been cleared with the same value, we drop the
+    // clear.
     if (mSubresourceUpdates.size() == 1)
     {
         SubresourceUpdate &update = mSubresourceUpdates[0];
         if (update.updateSource == UpdateSource::Clear && mCurrentSingleClearValue.valid() &&
             mCurrentSingleClearValue.value() == update.clear)
         {
+            ANGLE_PERF_WARNING(contextVk->getDebug(), GL_DEBUG_SEVERITY_LOW,
+                               "Repeated Clear on framebuffer attachment dropped");
             update.release(contextVk->getRenderer());
             mSubresourceUpdates.clear();
             return angle::Result::Continue;

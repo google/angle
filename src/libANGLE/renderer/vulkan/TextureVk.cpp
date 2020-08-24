@@ -618,6 +618,9 @@ angle::Result TextureVk::copySubImageImpl(const gl::Context *context,
                                         contextVk->getRotationReadFramebuffer());
     }
 
+    ANGLE_PERF_WARNING(contextVk->getDebug(), GL_DEBUG_SEVERITY_HIGH,
+                       "Texture copied on CPU due to format restrictions");
+
     // Do a CPU readback that does the conversion, and then stage the change to the pixel buffer.
     ANGLE_TRY(mImage->stageSubresourceUpdateFromFramebuffer(
         context, offsetImageIndex, clippedSourceArea, modifiedDestOffset,
@@ -669,6 +672,9 @@ angle::Result TextureVk::copySubTextureImpl(ContextVk *contextVk,
             unpackFlipY, unpackPremultiplyAlpha, unpackUnmultiplyAlpha, &source->getImage(),
             &source->getCopyImageViewAndRecordUse(contextVk), SurfaceRotation::Identity);
     }
+
+    ANGLE_PERF_WARNING(contextVk->getDebug(), GL_DEBUG_SEVERITY_HIGH,
+                       "Texture copied on CPU due to format restrictions");
 
     if (sourceLevelGL != 0)
     {
@@ -1601,6 +1607,9 @@ angle::Result TextureVk::generateMipmap(const gl::Context *context)
         // Otherwise, use blit if possible.
         return mImage->generateMipmapsWithBlit(contextVk, maxLevel);
     }
+
+    ANGLE_PERF_WARNING(contextVk->getDebug(), GL_DEBUG_SEVERITY_HIGH,
+                       "Mipmap generated on CPU due to format restrictions");
 
     // If not possible to generate mipmaps on the GPU, do it on the CPU for conformance.
     return generateMipmapsWithCPU(context);

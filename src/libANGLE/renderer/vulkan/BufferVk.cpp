@@ -157,6 +157,7 @@ angle::Result BufferVk::initializeShadowBuffer(ContextVk *contextVk,
 
     // For now, enable shadow buffers only for pixel unpack buffers.
     // If usecases present themselves, we can enable them for other buffer types.
+    // Note: If changed, update the waitForIdle message in BufferVk::copySubData to reflect it.
     if (target == gl::BufferBinding::PixelUnpack)
     {
         // Initialize the shadow buffer
@@ -262,7 +263,9 @@ angle::Result BufferVk::copySubData(const gl::Context *context,
     // all recorded and in-flight commands involving the source buffer.
     if (mShadowBuffer.valid())
     {
-        ANGLE_TRY(sourceBuffer.waitForIdle(contextVk));
+        ANGLE_TRY(sourceBuffer.waitForIdle(
+            contextVk,
+            "GPU stall due to copy from buffer in use by the GPU to a pixel unpack buffer"));
 
         // Update the shadow buffer
         uint8_t *srcPtr;
@@ -334,7 +337,8 @@ angle::Result BufferVk::mapRangeImpl(ContextVk *contextVk,
 
         if ((access & GL_MAP_UNSYNCHRONIZED_BIT) == 0)
         {
-            ANGLE_TRY(mBuffer->waitForIdle(contextVk));
+            ANGLE_TRY(mBuffer->waitForIdle(contextVk,
+                                           "GPU stall due to mapping buffer in use by the GPU"));
         }
 
         ANGLE_TRY(mBuffer->mapWithOffset(contextVk, reinterpret_cast<uint8_t **>(mapPtr),
@@ -406,7 +410,9 @@ angle::Result BufferVk::getSubData(const gl::Context *context,
     {
         ASSERT(mBuffer && mBuffer->valid());
         ContextVk *contextVk = vk::GetImpl(context);
-        ANGLE_TRY(mBuffer->waitForIdle(contextVk));
+        // Note: This function is used for ANGLE's capture/replay tool, so no performance warnings
+        // is generated.
+        ANGLE_TRY(mBuffer->waitForIdle(contextVk, nullptr));
         if (mBuffer->isMapped())
         {
             memcpy(outData, mBuffer->getMappedMemory() + offset, size);
@@ -451,6 +457,9 @@ angle::Result BufferVk::getIndexRange(const gl::Context *context,
 
     if (!mShadowBuffer.valid())
     {
+        ANGLE_PERF_WARNING(contextVk->getDebug(), GL_DEBUG_SEVERITY_HIGH,
+                           "GPU stall due to index range validation");
+
         // Needed before reading buffer or we could get stale data.
         ANGLE_TRY(mBuffer->finishRunningCommands(contextVk));
 

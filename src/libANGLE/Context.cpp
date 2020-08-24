@@ -3689,6 +3689,8 @@ void Context::blitFramebuffer(GLint srcX0,
     // Early out if none of the specified attachments exist or are enabled.
     if (mask == 0)
     {
+        ANGLE_PERF_WARNING(mState.getDebug(), GL_DEBUG_SEVERITY_LOW,
+                           "BlitFramebuffer called for non-existing buffers");
         return;
     }
 
@@ -3735,6 +3737,8 @@ void Context::clear(GLbitfield mask)
 
     if (mask == 0)
     {
+        ANGLE_PERF_WARNING(mState.getDebug(), GL_DEBUG_SEVERITY_LOW,
+                           "Clear called for non-existing buffers");
         return;
     }
 

@@ -198,6 +198,8 @@ angle::Result QueryVk::getResult(const gl::Context *context, bool wait)
         {
             return angle::Result::Continue;
         }
+        ANGLE_PERF_WARNING(contextVk->getDebug(), GL_DEBUG_SEVERITY_HIGH,
+                           "GPU stall due to waiting on uncompleted query");
         ANGLE_TRY(contextVk->finishToSerial(mQueryHelper.getStoredQueueSerial()));
     }
 

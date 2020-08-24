@@ -477,6 +477,7 @@ class ContextVk : public ContextImpl, public vk::Context
 
     bool useOldRewriteStructSamplers() const { return mUseOldRewriteStructSamplers; }
 
+    const gl::Debug &getDebug() const { return mState.getDebug(); }
     const gl::OverlayType *getOverlay() const { return mState.getOverlay(); }
 
     vk::ResourceUseList &getResourceUseList() { return mResourceUseList; }

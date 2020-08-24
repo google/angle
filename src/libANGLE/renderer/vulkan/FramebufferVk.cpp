@@ -345,6 +345,12 @@ angle::Result FramebufferVk::invalidateSub(const gl::Context *context,
         // the invalidated area).
         ANGLE_TRY(invalidateImpl(contextVk, count, attachments, true));
     }
+    else
+    {
+        ANGLE_PERF_WARNING(
+            contextVk->getDebug(), GL_DEBUG_SEVERITY_LOW,
+            "InvalidateSubFramebuffer ignored due to area not covering the render area");
+    }
 
     return angle::Result::Continue;
 }
@@ -1189,6 +1195,9 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
             // If shader stencil export is not present, blit stencil through a different path.
             if (blitStencilBuffer && !hasShaderStencilExport)
             {
+                ANGLE_PERF_WARNING(contextVk->getDebug(), GL_DEBUG_SEVERITY_LOW,
+                                   "Inefficient BlitFramebuffer operation on the stencil aspect "
+                                   "due to lack of shader stencil export support");
                 ANGLE_TRY(utilsVk.stencilBlitResolveNoShaderExport(
                     contextVk, this, depthStencilImage, &stencilView.get(), params));
             }

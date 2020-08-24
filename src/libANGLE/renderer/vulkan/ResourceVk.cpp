@@ -36,7 +36,7 @@ angle::Result Resource::finishRunningCommands(ContextVk *contextVk)
     return contextVk->finishToSerial(mUse.getSerial());
 }
 
-angle::Result Resource::waitForIdle(ContextVk *contextVk)
+angle::Result Resource::waitForIdle(ContextVk *contextVk, const char *debugMessage)
 {
     // If there are pending commands for the resource, flush them.
     if (usedInRecordedCommands())
@@ -47,6 +47,10 @@ angle::Result Resource::waitForIdle(ContextVk *contextVk)
     // Make sure the driver is done with the resource.
     if (usedInRunningCommands(contextVk->getLastCompletedQueueSerial()))
     {
+        if (debugMessage)
+        {
+            ANGLE_PERF_WARNING(contextVk->getDebug(), GL_DEBUG_SEVERITY_HIGH, debugMessage);
+        }
         ANGLE_TRY(finishRunningCommands(contextVk));
     }
 
