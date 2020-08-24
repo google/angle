@@ -1400,7 +1400,7 @@ angle::Result UtilsVk::clearFramebuffer(ContextVk *contextVk,
 
     // Make sure this draw call doesn't count towards occlusion query results.
     ANGLE_TRY(contextVk->pauseOcclusionQueryIfActive());
-    commandBuffer->draw(6, 0);
+    commandBuffer->draw(3, 0);
     return contextVk->resumeOcclusionQueryIfActive();
 }
 
@@ -1669,7 +1669,7 @@ angle::Result UtilsVk::blitResolveImpl(ContextVk *contextVk,
 
     // Note: this utility starts the render pass directly, thus bypassing
     // ContextVk::startRenderPass. As such, occlusion queries are not enabled.
-    commandBuffer->draw(6, 0);
+    commandBuffer->draw(3, 0);
 
     descriptorPoolBinding.reset();
 
@@ -2053,7 +2053,7 @@ angle::Result UtilsVk::copyImage(ContextVk *contextVk,
 
     // Note: this utility creates its own framebuffer, thus bypassing ContextVk::startRenderPass.
     // As such, occlusion queries are not enabled.
-    commandBuffer->draw(6, 0);
+    commandBuffer->draw(3, 0);
 
     descriptorPoolBinding.reset();
 
@@ -2228,7 +2228,7 @@ angle::Result UtilsVk::unresolve(ContextVk *contextVk,
 
     // This draw call is made before ContextVk gets a chance to start the occlusion query.  As such,
     // occlusion queries are not enabled.
-    commandBuffer->draw(6, 0);
+    commandBuffer->draw(3, 0);
     return angle::Result::Continue;
 }
 
