@@ -41,22 +41,6 @@ struct FeaturesVk : FeatureSetBase
                                "Enable provoking vertex mode via VK_EXT_provoking_vertex extension",
                                &members};
 
-    // Flips the viewport to render upside-down. This has the effect to render the same way as
-    // OpenGL. If this feature gets enabled, we enable the KHR_MAINTENANCE_1 extension to allow
-    // negative viewports. We inverse rendering to the backbuffer by reversing the height of the
-    // viewport and increasing Y by the height. So if the viewport was (0,0,width,height), it
-    // becomes (0, height, width, -height). Unfortunately, when we start doing this, we also need
-    // to adjust a lot of places since the rendering now happens upside-down. Affected places so
-    // far:
-    // -readPixels
-    // -copyTexImage
-    // -framebuffer blit
-    // -generating mipmaps
-    // -Point sprites tests
-    // -texStorage
-    Feature flipViewportY = {"flip_viewport_y", FeatureCategory::VulkanFeatures,
-                             "Flips the viewport to render upside-down", &members};
-
     // Add an extra copy region when using vkCmdCopyBuffer as the Windows Intel driver seems
     // to have a bug where the last region is ignored.
     Feature extraCopyBufferRegion = {
