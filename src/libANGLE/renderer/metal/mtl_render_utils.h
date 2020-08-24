@@ -30,6 +30,8 @@ namespace mtl
 {
 struct ClearRectParams : public ClearOptions
 {
+    MTLColorWriteMask clearColorMask = MTLColorWriteMaskAll;
+
     gl::Extents dstTextureSize;
 
     // Only clear enabled buffers

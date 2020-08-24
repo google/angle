@@ -420,6 +420,9 @@ class RenderCommandEncoder final : public CommandEncoder
     RenderCommandEncoder &setDepthStoreAction(MTLStoreAction action);
     RenderCommandEncoder &setStencilStoreAction(MTLStoreAction action);
 
+    // Set storeaction for every color & depth & stencil attachment.
+    RenderCommandEncoder &setStoreAction(MTLStoreAction action);
+
     // Change the render pass's loadAction. Note that this operation is only allowed when there
     // is no draw call recorded yet.
     RenderCommandEncoder &setColorLoadAction(MTLLoadAction action,

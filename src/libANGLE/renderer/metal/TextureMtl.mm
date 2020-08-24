@@ -820,7 +820,9 @@ angle::Result TextureMtl::copyImage(const gl::Context *context,
 
     ANGLE_TRY(redefineImage(context, index, mtlFormat, newImageSize));
 
-    if (context->isWebGL())
+    gl::Extents fbSize = source->getReadColorAttachment()->getSize();
+    gl::Rectangle fbRect(0, 0, fbSize.width, fbSize.height);
+    if (context->isWebGL() && !fbRect.encloses(sourceArea))
     {
         ANGLE_TRY(initializeContents(context, index));
     }
@@ -1258,11 +1260,6 @@ angle::Result TextureMtl::setImageImpl(const gl::Context *context,
         return angle::Result::Continue;
     }
 
-    if (context->isWebGL() && !pixels)
-    {
-        ANGLE_TRY(initializeContents(context, index));
-    }
-
     // Format of the supplied pixels.
     const gl::InternalFormat *srcFormatInfo;
     if (srcFormat != dstFormatInfo.format || srcType != dstFormatInfo.type)
@@ -1478,7 +1475,7 @@ angle::Result TextureMtl::checkForEmulatedChannels(const gl::Context *context,
             {
                 gl::ImageIndex index = GetSliceMipIndex(texture, layer, mip);
 
-                ANGLE_TRY(mtl::InitializeTextureContents(context, texture, mFormat, index));
+                ANGLE_TRY(mtl::InitializeTextureContents(context, texture, mtlFormat, index));
             }
         }
     }
@@ -1488,9 +1485,47 @@ angle::Result TextureMtl::checkForEmulatedChannels(const gl::Context *context,
 angle::Result TextureMtl::initializeContents(const gl::Context *context,
                                              const gl::ImageIndex &index)
 {
+    if (index.isLayered())
+    {
+        // InitializeTextureContents is only able to initialize one layer at a time.
+        const gl::ImageDesc &desc = mState.getImageDesc(index);
+        uint32_t layerCount;
+        if (index.isEntireLevelCubeMap())
+        {
+            layerCount = 6;
+        }
+        else
+        {
+            layerCount = desc.size.depth;
+        }
+
+        gl::ImageIndexIterator ite = index.getLayerIterator(layerCount);
+        while (ite.hasNext())
+        {
+            gl::ImageIndex layerIndex = ite.next();
+            ANGLE_TRY(initializeContents(context, layerIndex));
+        }
+        return angle::Result::Continue;
+    }
+    else if (index.getLayerCount() > 1)
+    {
+        for (int layer = 0; layer < index.getLayerCount(); ++layer)
+        {
+            int layerIdx = layer + index.getLayerIndex();
+            gl::ImageIndex layerIndex =
+                gl::ImageIndex::MakeFromType(index.getType(), index.getLevelIndex(), layerIdx);
+            ANGLE_TRY(initializeContents(context, layerIndex));
+        }
+        return angle::Result::Continue;
+    }
+
+    ASSERT(index.getLayerCount() == 1 && !index.isLayered());
     ANGLE_TRY(ensureImageCreated(context, index));
-    mtl::TextureRef &image = getImage(index);
-    return mtl::InitializeTextureContents(context, image, mFormat, GetZeroLevelIndex(image));
+    ContextMtl *contextMtl       = mtl::GetImpl(context);
+    ImageDefinitionMtl &imageDef = getImageDefinition(index);
+    const mtl::TextureRef &image = imageDef.image;
+    const mtl::Format &format    = contextMtl->getPixelFormat(imageDef.formatID);
+    return mtl::InitializeTextureContents(context, image, format, GetZeroLevelIndex(image));
 }
 
 angle::Result TextureMtl::copySubImageImpl(const gl::Context *context,

@@ -1143,8 +1143,7 @@ void ContextMtl::endEncoding(bool forceSaveRenderPassContent)
         if (forceSaveRenderPassContent)
         {
             // Save the work in progress.
-            mRenderEncoder.setColorStoreAction(MTLStoreActionStore);
-            mRenderEncoder.setDepthStencilStoreAction(MTLStoreActionStore, MTLStoreActionStore);
+            mRenderEncoder.setStoreAction(MTLStoreActionStore);
         }
 
         mRenderEncoder.endEncoding();
@@ -1459,9 +1458,7 @@ void ContextMtl::onBackbufferResized(const gl::Context *context, WindowSurfaceMt
         return;
     }
 
-    updateViewport(framebuffer, glState.getViewport(), glState.getNearPlane(),
-                   glState.getFarPlane());
-    updateScissor(glState);
+    onDrawFrameBufferChangedState(context, framebuffer, true);
 }
 
 void ContextMtl::updateProgramExecutable(const gl::Context *context)

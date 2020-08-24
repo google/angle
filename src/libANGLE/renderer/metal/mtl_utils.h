@@ -28,7 +28,7 @@ namespace mtl
 
 NS_ASSUME_NONNULL_BEGIN
 
-// Initialize texture content to (0, 0, 0, 1)
+// Initialize texture content to black.
 angle::Result InitializeTextureContents(const gl::Context *context,
                                         const TextureRef &texture,
                                         const Format &textureObjFormat,
@@ -40,6 +40,12 @@ angle::Result InitializeTextureContentsGPU(const gl::Context *context,
                                            const Format &textureObjFormat,
                                            const gl::ImageIndex &index,
                                            MTLColorWriteMask channelsToInit);
+
+// Same as above but for a depth/stencil texture.
+angle::Result InitializeDepthStencilTextureContentsGPU(const gl::Context *context,
+                                                       const TextureRef &texture,
+                                                       const Format &textureObjFormat,
+                                                       const gl::ImageIndex &index);
 
 // Unified texture's per slice/depth texel reading function
 angle::Result ReadTexturePerSliceBytes(const gl::Context *context,

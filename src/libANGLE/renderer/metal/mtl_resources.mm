@@ -262,6 +262,8 @@ Texture::Texture(ContextMtl *context,
         }
 
         set([[metalDevice newTextureWithDescriptor:desc] ANGLE_MTL_AUTORELEASE]);
+
+        mCreationDesc.retainAssign(desc);
     }
 }
 
@@ -540,6 +542,32 @@ gl::Extents Texture::size(const gl::ImageIndex &index) const
 uint32_t Texture::samples() const
 {
     return static_cast<uint32_t>(get().sampleCount);
+}
+
+angle::Result Texture::resize(ContextMtl *context, uint32_t width, uint32_t height)
+{
+    // Resizing texture view is not supported.
+    ASSERT(mCreationDesc);
+
+    ANGLE_MTL_OBJC_SCOPE
+    {
+        MTLTextureDescriptor *newDesc = [[mCreationDesc.get() copy] ANGLE_MTL_AUTORELEASE];
+        newDesc.width                 = width;
+        newDesc.height                = height;
+        id<MTLTexture> newTexture =
+            [[get().device newTextureWithDescriptor:newDesc] ANGLE_MTL_AUTORELEASE];
+
+        ANGLE_CHECK_GL_ALLOC(context, newTexture);
+
+        mCreationDesc.retainAssign(newDesc);
+
+        set(newTexture);
+
+        // Reset reference counter
+        Resource::reset();
+    }
+
+    return angle::Result::Continue;
 }
 
 TextureRef Texture::getLinearColorView()

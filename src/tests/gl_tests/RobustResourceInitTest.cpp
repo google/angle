@@ -211,23 +211,11 @@ class RobustResourceInitTest : public ANGLETest
 
     bool hasGLExtension()
     {
-        // The extension is exposed in metal, but not actually implemented yet
-        // (http://anglebug.com/4929)
-        if (IsMetal())
-        {
-            return false;
-        }
         return IsGLExtensionEnabled("GL_ANGLE_robust_resource_initialization");
     }
 
     bool hasEGLExtension()
     {
-        // The extension is exposed in metal, but not actually implemented yet
-        // (http://anglebug.com/4929)
-        if (IsMetal())
-        {
-            return false;
-        }
         return IsEGLDisplayExtensionEnabled(getEGLWindow()->getDisplay(),
                                             "EGL_ANGLE_robust_resource_initialization");
     }
@@ -324,8 +312,8 @@ class RobustResourceInitTestES31 : public RobustResourceInitTest
 // it only works on the implemented renderers
 TEST_P(RobustResourceInitTest, ExpectedRendererSupport)
 {
-    bool shouldHaveSupport =
-        IsD3D11() || IsD3D11_FL93() || IsD3D9() || IsOpenGL() || IsOpenGLES() || IsVulkan();
+    bool shouldHaveSupport = IsD3D11() || IsD3D11_FL93() || IsD3D9() || IsOpenGL() ||
+                             IsOpenGLES() || IsVulkan() || IsMetal();
     EXPECT_EQ(shouldHaveSupport, hasGLExtension());
     EXPECT_EQ(shouldHaveSupport, hasEGLExtension());
     EXPECT_EQ(shouldHaveSupport, hasRobustSurfaceInit());
@@ -1681,16 +1669,14 @@ void RobustResourceInitTest::copyTexSubImage2DCustomFBOTest(int offsetX, int off
 // Test CopyTexSubImage2D clipped to size of custom FBO, zero x/y source offset.
 TEST_P(RobustResourceInitTest, CopyTexSubImage2DCustomFBOZeroOffsets)
 {
-    // TODO(anglebug.com/4507): pass this test on the Metal backend.
-    ANGLE_SKIP_TEST_IF(IsMetal());
+    ANGLE_SKIP_TEST_IF(!hasGLExtension());
     copyTexSubImage2DCustomFBOTest(0, 0);
 }
 
 // Test CopyTexSubImage2D clipped to size of custom FBO, negative x/y source offset.
 TEST_P(RobustResourceInitTest, CopyTexSubImage2DCustomFBONegativeOffsets)
 {
-    // TODO(anglebug.com/4507): pass this test on the Metal backend.
-    ANGLE_SKIP_TEST_IF(IsMetal());
+    ANGLE_SKIP_TEST_IF(!hasGLExtension());
     copyTexSubImage2DCustomFBOTest(-8, -8);
 }
 
@@ -1920,21 +1906,33 @@ TEST_P(RobustResourceInitTest, SurfaceInitializedAfterSwap)
         GLColor::red,
         GLColor::yellow,
     }};
+
+    if (swapBehaviour != EGL_BUFFER_PRESERVED)
+    {
+        checkFramebufferNonZeroPixels(0, 0, 0, 0, GLColor::black);
+    }
+
+    glEnable(GL_SCISSOR_TEST);
+    glScissor(0, 0, 1, 1);
+
     for (size_t i = 0; i < clearColors.size(); i++)
     {
         if (swapBehaviour == EGL_BUFFER_PRESERVED && i > 0)
         {
             EXPECT_PIXEL_COLOR_EQ(0, 0, clearColors[i - 1]);
         }
-        else
-        {
-            checkFramebufferNonZeroPixels(0, 0, 0, 0, GLColor::black);
-        }
 
         angle::Vector4 clearColor = clearColors[i].toNormalizedVector();
         glClearColor(clearColor[0], clearColor[1], clearColor[2], clearColor[3]);
         glClear(GL_COLOR_BUFFER_BIT);
         EXPECT_GL_NO_ERROR();
+
+        if (swapBehaviour != EGL_BUFFER_PRESERVED)
+        {
+            // Only scissored area (0, 0, 1, 1) has clear color.
+            // The rest should be robust initialized.
+            checkFramebufferNonZeroPixels(0, 0, 1, 1, clearColors[i]);
+        }
 
         swapBuffers();
     }
@@ -2106,8 +2104,7 @@ TEST_P(RobustResourceInitTestES3, InitializeMultisampledDepthRenderbufferAfterCo
 // Corner case for robust resource init: CopyTexImage to a cube map.
 TEST_P(RobustResourceInitTest, CopyTexImageToOffsetCubeMap)
 {
-    // http://anglebug.com/4549
-    ANGLE_SKIP_TEST_IF(IsMetal());
+    ANGLE_SKIP_TEST_IF(!hasGLExtension());
 
     constexpr GLuint kSize = 2;
 

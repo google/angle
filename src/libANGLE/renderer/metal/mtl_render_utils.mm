@@ -673,7 +673,7 @@ id<MTLRenderPipelineState> ClearUtils::getClearRenderPipelineState(const gl::Con
 {
     ContextMtl *contextMtl = GetImpl(context);
     // The color mask to be applied to every color attachment:
-    MTLColorWriteMask globalColorMask = contextMtl->getColorMask();
+    MTLColorWriteMask globalColorMask = params.clearColorMask;
     if (!params.clearColor.valid())
     {
         globalColorMask = MTLColorWriteMaskNone;

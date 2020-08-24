@@ -188,6 +188,8 @@ class Texture final : public Resource,
 
     uint32_t samples() const;
 
+    angle::Result resize(ContextMtl *context, uint32_t width, uint32_t height);
+
     // For render target
     MTLColorWriteMask getColorWritableMask() const { return *mColorWritableMask; }
     void setColorWritableMask(MTLColorWriteMask mask) { *mColorWritableMask = mask; }
@@ -227,6 +229,8 @@ class Texture final : public Resource,
     Texture(Texture *original, MTLTextureType type, NSRange mipmapLevelRange, NSRange slices);
 
     void syncContent(ContextMtl *context);
+
+    AutoObjCObj<MTLTextureDescriptor> mCreationDesc;
 
     // This property is shared between this object and its views:
     std::shared_ptr<MTLColorWriteMask> mColorWritableMask;
