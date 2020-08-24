@@ -751,15 +751,6 @@ class BufferHelper final : public Resource
 
     bool isMapped() const { return mMappedMemory != nullptr; }
 
-    // Set write access mask when the buffer is modified externally, e.g. by host.  There is no
-    // graph resource to create a dependency to.
-    void onExternalWrite(VkAccessFlags writeAccessType)
-    {
-        ASSERT(writeAccessType == VK_ACCESS_HOST_WRITE_BIT);
-        mCurrentWriteAccess |= writeAccessType;
-        mCurrentWriteStages |= VK_PIPELINE_STAGE_HOST_BIT;
-    }
-
     // Also implicitly sets up the correct barriers.
     angle::Result copyFromBuffer(ContextVk *contextVk,
                                  BufferHelper *srcBuffer,

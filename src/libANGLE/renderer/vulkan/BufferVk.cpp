@@ -372,7 +372,6 @@ angle::Result BufferVk::unmapImpl(ContextVk *contextVk)
     if (!mShadowBuffer.valid())
     {
         mBuffer->unmap(contextVk->getRenderer());
-        mBuffer->onExternalWrite(VK_ACCESS_HOST_WRITE_BIT);
     }
     else
     {
@@ -483,7 +482,6 @@ angle::Result BufferVk::directUpdate(ContextVk *contextVk,
     memcpy(mapPointer, data, size);
     mBuffer->unmap(contextVk->getRenderer());
     ASSERT(mBuffer->isCoherent());
-    mBuffer->onExternalWrite(VK_ACCESS_HOST_WRITE_BIT);
 
     return angle::Result::Continue;
 }
@@ -505,7 +503,6 @@ angle::Result BufferVk::stagedUpdate(ContextVk *contextVk,
     memcpy(mapPointer, data, size);
     ASSERT(!stagingBuffer->isCoherent());
     ANGLE_TRY(stagingBuffer->flush(contextVk));
-    stagingBuffer->getCurrentBuffer()->onExternalWrite(VK_ACCESS_HOST_WRITE_BIT);
 
     // Enqueue a copy command on the GPU.
     VkBufferCopy copyRegion = {stagingBufferOffset, offset, size};
