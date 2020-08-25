@@ -96,7 +96,11 @@ bool SharedGarbage::destroyIfComplete(RendererVk *renderer, Serial completedSeri
 }
 
 // ResourceUseList implementation.
-ResourceUseList::ResourceUseList() = default;
+ResourceUseList::ResourceUseList()
+{
+    constexpr size_t kDefaultResourceUseCount = 4096;
+    mResourceUses.reserve(kDefaultResourceUseCount);
+}
 
 ResourceUseList::~ResourceUseList()
 {
