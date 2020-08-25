@@ -2801,6 +2801,120 @@ void main(void)
     ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), kFS);
 }
 
+// Test that using a varying matrix array is supported.
+TEST_P(GLSLTest, VaryingMatrixArray)
+{
+    constexpr char kVS[] =
+        "uniform vec2 u_a1;\n"
+        "uniform vec2 u_a2;\n"
+        "attribute vec4 a_position;\n"
+        "varying mat2 v_mat[2];\n"
+        "void main() {\n"
+        "    v_mat[0] = mat2(u_a1, u_a2);\n"
+        "    v_mat[1] = mat2(1.0 - u_a2, 1.0 - u_a1);\n"
+        "    gl_Position = a_position;\n"
+        "}";
+
+    constexpr char kFS[] =
+        "precision mediump float;\n"
+        "varying mat2 v_mat[2];\n"
+        "void main(void)\n"
+        "{\n"
+        "    gl_FragColor = vec4(v_mat[0][0].x, v_mat[0][0].y, v_mat[1][0].x, 1.0);\n"
+        "}";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+
+    GLint oneIndex = glGetUniformLocation(program, "u_a1");
+    ASSERT_NE(-1, oneIndex);
+    GLint twoIndex = glGetUniformLocation(program, "u_a2");
+    ASSERT_NE(-1, twoIndex);
+    glUseProgram(program);
+    glUniform2f(oneIndex, 1, 0.5f);
+    glUniform2f(twoIndex, 0.25f, 0.125f);
+
+    drawQuad(program, "a_position", 0.5f);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(255, 127, 255 - 63, 255), 1.0);
+}
+
+// Test that using a centroid varying matrix array is supported.
+TEST_P(GLSLTest_ES3, CentroidVaryingMatrixArray)
+{
+    constexpr char kVS[] =
+        "#version 300 es\n"
+        "uniform vec2 u_a1;\n"
+        "uniform vec2 u_a2;\n"
+        "in vec4 a_position;\n"
+        "centroid out mat3x2 v_mat[2];\n"
+        "void main() {\n"
+        "    v_mat[0] = mat3x2(u_a1, u_a2, vec2(0.0));\n"
+        "    v_mat[1] = mat3x2(vec2(0.0), 1.0 - u_a2, 1.0 - u_a1);\n"
+        "    gl_Position = a_position;\n"
+        "}";
+
+    constexpr char kFS[] =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "centroid in mat3x2 v_mat[2];\n"
+        "layout(location = 0) out vec4 out_color;\n"
+        "void main(void)\n"
+        "{\n"
+        "    out_color = vec4(v_mat[0][0].x, v_mat[0][0].y, v_mat[1][1].x, 1.0);\n"
+        "}";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+
+    GLint oneIndex = glGetUniformLocation(program, "u_a1");
+    ASSERT_NE(-1, oneIndex);
+    GLint twoIndex = glGetUniformLocation(program, "u_a2");
+    ASSERT_NE(-1, twoIndex);
+    glUseProgram(program);
+    glUniform2f(oneIndex, 1, 0.5f);
+    glUniform2f(twoIndex, 0.25f, 0.125f);
+
+    drawQuad(program, "a_position", 0.5f);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(255, 127, 255 - 63, 255), 1.0);
+}
+
+// Test that using a flat varying matrix array is supported.
+TEST_P(GLSLTest_ES3, FlatVaryingMatrixArray)
+{
+    constexpr char kVS[] =
+        "#version 300 es\n"
+        "uniform vec2 u_a1;\n"
+        "uniform vec2 u_a2;\n"
+        "in vec4 a_position;\n"
+        "flat out mat2 v_mat[2];\n"
+        "void main() {\n"
+        "    v_mat[0] = mat2(u_a1, u_a2);\n"
+        "    v_mat[1] = mat2(u_a2, u_a1);\n"
+        "    gl_Position = a_position;\n"
+        "}";
+
+    constexpr char kFS[] =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "flat in mat2 v_mat[2];\n"
+        "layout(location = 0) out vec4 out_color;\n"
+        "void main(void)\n"
+        "{\n"
+        "    out_color = vec4(v_mat[0][0].x, v_mat[0][0].y, v_mat[1][0].x, 1.0);\n"
+        "}";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+
+    GLint oneIndex = glGetUniformLocation(program, "u_a1");
+    ASSERT_NE(-1, oneIndex);
+    GLint twoIndex = glGetUniformLocation(program, "u_a2");
+    ASSERT_NE(-1, twoIndex);
+    glUseProgram(program);
+    glUniform2f(oneIndex, 1, 0.5f);
+    glUniform2f(twoIndex, 0.25f, 0.125f);
+
+    drawQuad(program, "a_position", 0.5f);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(255, 127, 63, 255), 1.0);
+}
+
 // Test that literal infinity can be written out from the shader translator.
 // A similar test can't be made for NaNs, since ESSL 3.00.6 requirements for NaNs are very loose.
 TEST_P(GLSLTest_ES3, LiteralInfinityOutput)

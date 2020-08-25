@@ -23,6 +23,7 @@
 #include "compiler/translator/tree_util/FindMain.h"
 #include "compiler/translator/tree_util/FindSymbolNode.h"
 #include "compiler/translator/tree_util/IntermNode_util.h"
+#include "compiler/translator/tree_util/ReplaceArrayOfMatrixVarying.h"
 #include "compiler/translator/tree_util/ReplaceVariable.h"
 #include "compiler/translator/tree_util/RunAtTheEndOfShader.h"
 #include "compiler/translator/util.h"
@@ -137,6 +138,12 @@ bool TranslatorMetal::translate(TIntermBlock *root,
     const TVariable *driverUniforms = nullptr;
     if (!TranslatorVulkan::translateImpl(root, compileOptions, perfDiagnostics, &driverUniforms,
                                          &outputGLSL))
+    {
+        return false;
+    }
+
+    // Replace array of matrix varyings
+    if (!ReplaceArrayOfMatrixVaryings(this, root, &getSymbolTable()))
     {
         return false;
     }
