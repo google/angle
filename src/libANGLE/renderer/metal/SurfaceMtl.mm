@@ -57,9 +57,11 @@ struct IOSurfaceFormatInfo
 
 // clang-format off
 // NOTE(hqle): Support R16_UINT once GLES3 is complete.
-constexpr std::array<IOSurfaceFormatInfo, 6> kIOSurfaceFormats = {{
+constexpr std::array<IOSurfaceFormatInfo, 8> kIOSurfaceFormats = {{
     {GL_RED,      GL_UNSIGNED_BYTE,               1, angle::FormatID::R8_UNORM},
+    {GL_RED,      GL_UNSIGNED_SHORT,              2, angle::FormatID::R16_UNORM},
     {GL_RG,       GL_UNSIGNED_BYTE,               2, angle::FormatID::R8G8_UNORM},
+    {GL_RG,       GL_UNSIGNED_SHORT,              4, angle::FormatID::R16G16_UNORM},
     {GL_RGB,      GL_UNSIGNED_BYTE,               4, angle::FormatID::B8G8R8A8_UNORM},
     {GL_BGRA_EXT, GL_UNSIGNED_BYTE,               4, angle::FormatID::B8G8R8A8_UNORM},
     {GL_RGBA,     GL_HALF_FLOAT,                  8, angle::FormatID::R16G16B16A16_FLOAT},
