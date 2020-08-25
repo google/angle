@@ -421,6 +421,8 @@ angle::Result VertexArrayMtl::syncDirtyAttrib(const gl::Context *glContext,
             bool needConversion =
                 format.actualFormatId != format.intendedFormatId ||
                 (binding.getOffset() % format.actualAngleFormat().pixelBytes) != 0 ||
+                (binding.getOffset() % mtl::kVertexAttribBufferStrideAlignment) != 0 ||
+                (binding.getStride() < format.actualAngleFormat().pixelBytes) ||
                 (binding.getStride() % mtl::kVertexAttribBufferStrideAlignment) != 0;
 
             if (needConversion)
