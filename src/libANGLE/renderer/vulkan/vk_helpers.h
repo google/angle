@@ -88,12 +88,25 @@ class DynamicBuffer : angle::NonCopyable
     // a new buffer to be created (which is returned in the optional parameter
     // `newBufferAllocatedOut`).  The new region will be in the returned buffer at given offset. If
     // a memory pointer is given, the buffer will be automatically map()ed.
+    angle::Result allocateWithAlignment(ContextVk *contextVk,
+                                        size_t sizeInBytes,
+                                        size_t alignment,
+                                        uint8_t **ptrOut,
+                                        VkBuffer *bufferOut,
+                                        VkDeviceSize *offsetOut,
+                                        bool *newBufferAllocatedOut);
+
+    // Allocate with default alignment
     angle::Result allocate(ContextVk *contextVk,
                            size_t sizeInBytes,
                            uint8_t **ptrOut,
                            VkBuffer *bufferOut,
                            VkDeviceSize *offsetOut,
-                           bool *newBufferAllocatedOut);
+                           bool *newBufferAllocatedOut)
+    {
+        return allocateWithAlignment(contextVk, sizeInBytes, mAlignment, ptrOut, bufferOut,
+                                     offsetOut, newBufferAllocatedOut);
+    }
 
     // After a sequence of writes, call flush to ensure the data is visible to the device.
     angle::Result flush(ContextVk *contextVk);
@@ -120,6 +133,7 @@ class DynamicBuffer : angle::NonCopyable
     // The staging buffer should have an alignment that can satisfy all those formats, i.e. it's the
     // lcm of all alignments set in its lifetime.
     void requireAlignment(RendererVk *renderer, size_t alignment);
+    size_t getAlignment() const { return mAlignment; }
 
     // For testing only!
     void setMinimumSizeForTesting(size_t minSize);
