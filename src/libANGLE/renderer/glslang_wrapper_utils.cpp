@@ -902,6 +902,7 @@ constexpr gl::ShaderMap<EShLanguage> kShLanguageMap = {
     {gl::ShaderType::Compute, EShLangCompute},
 };
 
+#if defined(ANGLE_ENABLE_ASSERTS)
 void ValidateSpirvMessage(spv_message_level_t level,
                           const char *source,
                           const spv_position_t &position,
@@ -926,6 +927,14 @@ bool ValidateSpirv(const std::vector<uint32_t> &spirvBlob)
 
     return result;
 }
+#else   // ANGLE_ENABLE_ASSERTS
+bool ValidateSpirv(const std::vector<uint32_t> &spirvBlob)
+{
+    // Placeholder implementation since this is only used inside an ASSERT().
+    // Return false to indicate an error in case this is ever accidentally used somewhere else.
+    return false;
+}
+#endif  // ANGLE_ENABLE_ASSERTS
 
 // A SPIR-V transformer.  It walks the instructions and modifies them as necessary, for example to
 // assign bindings or locations.

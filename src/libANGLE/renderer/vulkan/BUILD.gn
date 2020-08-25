@@ -4,6 +4,7 @@
 #
 # This file houses the build configuration for the ANGLE Vulkan back-end.
 
+import("//build/config/dcheck_always_on.gni")
 import("//build_overrides/swiftshader.gni")
 import("../../../../gni/angle.gni")
 
@@ -198,8 +199,12 @@ angle_source_set("angle_vulkan_backend") {
     "$angle_root:angle_compression",
     "$angle_root:angle_gpu_info_util",
     "$angle_root:angle_image_util",
-    "$angle_spirv_tools_dir:spvtools_val",
   ]
+
+  if (dcheck_always_on || is_debug) {
+    deps += [ "$angle_spirv_tools_dir:spvtools_val" ]
+  }
+
   public_deps = [
     "$angle_root:angle_glslang_wrapper",
     "$angle_root:libANGLE_headers",
