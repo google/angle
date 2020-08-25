@@ -1528,16 +1528,16 @@ angle::Result ContextVk::handleDirtyGraphicsTransformFeedbackBuffersEmulation(
     const gl::ProgramExecutable *executable = mState.getProgramExecutable();
     ASSERT(executable);
 
-    if (!executable->hasTransformFeedbackOutput() || !mState.isTransformFeedbackActive())
+    if (!executable->hasTransformFeedbackOutput())
     {
         return angle::Result::Continue;
     }
 
     TransformFeedbackVk *transformFeedbackVk = vk::GetImpl(mState.getCurrentTransformFeedback());
-    size_t bufferCount                       = executable->getTransformFeedbackBufferCount();
 
     if (mState.isTransformFeedbackActiveUnpaused())
     {
+        size_t bufferCount = executable->getTransformFeedbackBufferCount();
         const gl::TransformFeedbackBuffersArray<vk::BufferHelper *> &bufferHelpers =
             transformFeedbackVk->getBufferHelpers();
 
@@ -1556,6 +1556,7 @@ angle::Result ContextVk::handleDirtyGraphicsTransformFeedbackBuffersEmulation(
     vk::UniformsAndXfbDesc xfbBufferDesc = transformFeedbackVk->getTransformFeedbackDesc();
     xfbBufferDesc.updateDefaultUniformBuffer(uniformBuffer ? uniformBuffer->getBufferSerial()
                                                            : vk::kInvalidBufferSerial);
+
     return mProgram->getExecutable().updateTransformFeedbackDescriptorSet(
         mProgram->getState(), mProgram->getDefaultUniformBlocks(), uniformBuffer, this,
         xfbBufferDesc);

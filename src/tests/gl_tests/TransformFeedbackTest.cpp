@@ -2070,6 +2070,104 @@ TEST_P(TransformFeedbackTest, EndThenBindNewBufferAndRestart)
     EXPECT_EQ(posData2, actualData2);
 }
 
+// Draw without transform feedback, then with it.  In this test, there are no uniforms.  Regression
+// test based on conformance2/transform_feedback/simultaneous_binding.html for the transform
+// feedback emulation path in Vulkan that bundles default uniforms and transform feedback buffers
+// in the same descriptor set.  A previous bug was that the first non-transform-feedback draw call
+// didn't allocate this descriptor set as there were neither uniforms nor transform feedback to be
+// updated.  A second bug was that the second draw call didn't attempt to update the transform
+// feedback buffers, as they were not "dirty".
+TEST_P(TransformFeedbackTest, DrawWithoutTransformFeedbackThenWith)
+{
+    // Fails on Mac Intel GL drivers. http://anglebug.com/4992
+    ANGLE_SKIP_TEST_IF(IsOpenGL() && IsIntel() && IsOSX());
+
+    constexpr char kVS[] =
+        R"(#version 300 es
+in float in_value;
+out float out_value;
+
+void main() {
+   out_value = in_value * 2.;
+})";
+
+    constexpr char kFS[] =
+        R"(#version 300 es
+precision mediump float;
+out vec4 dummy;
+void main() {
+  dummy = vec4(0.5);
+})";
+
+    std::vector<std::string> tfVaryings;
+    tfVaryings.push_back("out_value");
+
+    mProgram = CompileProgramWithTransformFeedback(kVS, kFS, tfVaryings, GL_SEPARATE_ATTRIBS);
+    ASSERT_NE(0u, mProgram);
+
+    glUseProgram(mProgram);
+
+    GLBuffer vertexBuffer, indexBuffer, xfbBuffer;
+    GLVertexArray vao;
+
+    constexpr std::array<float, 4> kAttribInitData = {1, 2, 3, 4};
+    constexpr std::array<float, 4> kIndexInitData  = {0, 1, 2, 3};
+    constexpr std::array<float, 4> kXfbInitData    = {0, 0, 0, 0};
+
+    // Initialize buffers.
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+    glBufferData(GL_ARRAY_BUFFER, kAttribInitData.size() * sizeof(float), kAttribInitData.data(),
+                 GL_STATIC_DRAW);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, kIndexInitData.size() * sizeof(float),
+                 kIndexInitData.data(), GL_STATIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, xfbBuffer);
+    glBufferData(GL_ARRAY_BUFFER, kXfbInitData.size() * sizeof(float), kXfbInitData.data(),
+                 GL_STATIC_DRAW);
+
+    // This tests that having a transform feedback buffer bound in an unbound VAO
+    // does not affect anything.
+    GLVertexArray unboundVao;
+    glBindVertexArray(unboundVao);
+    glBindBuffer(GL_ARRAY_BUFFER, xfbBuffer);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 1, GL_FLOAT, false, 0, nullptr);
+    glBindVertexArray(0);
+
+    // Create the real VAO used for the test.
+    glBindVertexArray(vao);
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 1, GL_FLOAT, false, 0, nullptr);
+
+    glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, mTransformFeedback);
+    glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, xfbBuffer);
+
+    // First, issue an indexed draw call without transform feedback.
+    glDrawElements(GL_POINTS, 4, GL_UNSIGNED_SHORT, 0);
+
+    // Then issue a draw call with transform feedback.
+    glBeginTransformFeedback(GL_POINTS);
+    glDrawArrays(GL_POINTS, 0, 4);
+    glEndTransformFeedback();
+
+    // Verify transform feedback buffer.
+    void *mappedBuffer = glMapBufferRange(GL_TRANSFORM_FEEDBACK_BUFFER, 0,
+                                          kXfbInitData.size() * sizeof(float), GL_MAP_READ_BIT);
+    ASSERT_NE(nullptr, mappedBuffer);
+
+    float *xfbOutput = static_cast<float *>(mappedBuffer);
+    for (size_t index = 0; index < kXfbInitData.size(); ++index)
+    {
+        EXPECT_EQ(xfbOutput[index], kAttribInitData[index] * 2);
+    }
+    glUnmapBuffer(GL_TRANSFORM_FEEDBACK_BUFFER);
+
+    EXPECT_GL_NO_ERROR();
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against.
 ANGLE_INSTANTIATE_TEST_ES3(TransformFeedbackTest);
