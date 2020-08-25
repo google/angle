@@ -755,6 +755,12 @@ struct PerfCounters
     uint32_t writeDescriptorSets;
     uint32_t flushedOutsideRenderPassCommandBuffers;
     uint32_t resolveImageCommands;
+    uint32_t depthClears;
+    uint32_t depthLoads;
+    uint32_t depthStores;
+    uint32_t stencilClears;
+    uint32_t stencilLoads;
+    uint32_t stencilStores;
 };
 }  // namespace vk
 

@@ -28,6 +28,17 @@ namespace
 class VulkanPerformanceCounterTest : public ANGLETest
 {
   protected:
+    VulkanPerformanceCounterTest()
+    {
+        // Depth required for SwapShouldInvalidateDepthAfterClear.
+        // Also RGBA8 is required to avoid the clear for emulated alpha.
+        setConfigRedBits(8);
+        setConfigGreenBits(8);
+        setConfigBlueBits(8);
+        setConfigAlphaBits(8);
+        setConfigDepthBits(24);
+    }
+
     const rx::vk::PerfCounters &hackANGLE() const
     {
         // Hack the angle!
@@ -456,6 +467,31 @@ TEST_P(VulkanPerformanceCounterTest, InvalidatingAndUsingDepthDoesNotBreakRender
 
     uint32_t actualRenderPassCount = counters.renderPasses;
     EXPECT_EQ(expectedRenderPassCount, actualRenderPassCount);
+}
+
+// Tests that even if the app clears depth, it should be invalidated if there is no read.
+TEST_P(VulkanPerformanceCounterTest, SwapShouldInvalidateDepthAfterClear)
+{
+    const rx::vk::PerfCounters &counters = hackANGLE();
+
+    ANGLE_GL_PROGRAM(redProgram, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
+
+    // Clear depth.
+    glClear(GL_DEPTH_BUFFER_BIT);
+
+    // Ensure we never read from depth.
+    glDisable(GL_DEPTH_TEST);
+
+    // Do one draw, then swap.
+    drawQuad(redProgram, essl1_shaders::PositionAttrib(), 0.5f);
+    ASSERT_GL_NO_ERROR();
+
+    uint32_t expectedDepthClears = counters.depthClears;
+
+    swapBuffers();
+
+    uint32_t actualDepthClears = counters.depthClears;
+    EXPECT_EQ(expectedDepthClears, actualDepthClears);
 }
 
 ANGLE_INSTANTIATE_TEST(VulkanPerformanceCounterTest, ES3_VULKAN());

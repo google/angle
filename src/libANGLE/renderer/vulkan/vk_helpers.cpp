@@ -834,21 +834,6 @@ void CommandBufferHelper::beginRenderPass(const Framebuffer &framebuffer,
     *commandBufferOut        = &mCommandBuffer;
     mForceIndividualBarriers = false;
 
-    if (mDepthStencilAttachmentIndex != vk::kInvalidAttachmentIndex)
-    {
-        if (renderPassAttachmentOps[mDepthStencilAttachmentIndex].loadOp ==
-            VK_ATTACHMENT_LOAD_OP_CLEAR)
-        {
-            mDepthStartAccess = ResourceAccess::Write;
-        }
-
-        if (renderPassAttachmentOps[mDepthStencilAttachmentIndex].stencilLoadOp ==
-            VK_ATTACHMENT_LOAD_OP_CLEAR)
-        {
-            mStencilStartAccess = ResourceAccess::Write;
-        }
-    }
-
     mRenderPassStarted = true;
     mCounter++;
 }
@@ -868,7 +853,7 @@ void CommandBufferHelper::restartRenderPassWithReadOnlyDepth(const Framebuffer &
     mForceIndividualBarriers = true;
 }
 
-void CommandBufferHelper::endRenderPass()
+void CommandBufferHelper::endRenderPass(ContextVk *contextVk)
 {
     pauseTransformFeedbackIfStarted();
 
@@ -877,17 +862,18 @@ void CommandBufferHelper::endRenderPass()
         return;
     }
 
+    PackedAttachmentOpsDesc &dsOps = mAttachmentOps[mDepthStencilAttachmentIndex];
+
     // Address invalidated depth/stencil attachments
     if (mDepthInvalidatedState == Invalidated && !mDepthEnabled)
     {
         // The depth attachment is invalid, so don't store it
-        mAttachmentOps[mDepthStencilAttachmentIndex].storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+        dsOps.storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
     }
     if (mStencilInvalidatedState == Invalidated && !mStencilEnabled)
     {
         // The stencil attachment is invalid, so don't store it
-        mAttachmentOps[mDepthStencilAttachmentIndex].stencilStoreOp =
-            VK_ATTACHMENT_STORE_OP_DONT_CARE;
+        dsOps.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
     }
     if (mDepthInvalidatedState == NoLongerInvalidated ||
         mStencilInvalidatedState == NoLongerInvalidated)
@@ -905,22 +891,30 @@ void CommandBufferHelper::endRenderPass()
     // buffer has not been used, and the data has also not been stored back into buffer, then
     // just skip the load/clear op.
     if (mDepthStartAccess == ResourceAccess::Unused &&
-        mAttachmentOps[mDepthStencilAttachmentIndex].storeOp == VK_ATTACHMENT_STORE_OP_DONT_CARE)
+        dsOps.storeOp == VK_ATTACHMENT_STORE_OP_DONT_CARE)
     {
-        mAttachmentOps[mDepthStencilAttachmentIndex].loadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+        dsOps.loadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
     }
 
     if (mStencilStartAccess == ResourceAccess::Unused &&
-        mAttachmentOps[mDepthStencilAttachmentIndex].stencilStoreOp ==
-            VK_ATTACHMENT_STORE_OP_DONT_CARE)
+        dsOps.stencilStoreOp == VK_ATTACHMENT_STORE_OP_DONT_CARE)
     {
-        mAttachmentOps[mDepthStencilAttachmentIndex].stencilLoadOp =
-            VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+        dsOps.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
     }
 
     // Ensure we don't write to a read-only RenderPass. (ReadOnly -> !Write)
     ASSERT((mRenderPassDesc.getDepthStencilAccess() != ResourceAccess::ReadOnly) ||
            mDepthStartAccess != ResourceAccess::Write);
+
+    // Fill out perf counters
+    PerfCounters &counters = contextVk->getPerfCounters();
+
+    counters.depthClears += dsOps.loadOp == VK_ATTACHMENT_LOAD_OP_CLEAR ? 1 : 0;
+    counters.depthLoads += dsOps.loadOp == VK_ATTACHMENT_LOAD_OP_LOAD ? 1 : 0;
+    counters.depthStores += dsOps.storeOp == VK_ATTACHMENT_STORE_OP_STORE ? 1 : 0;
+    counters.stencilClears += dsOps.stencilLoadOp == VK_ATTACHMENT_LOAD_OP_CLEAR ? 1 : 0;
+    counters.stencilLoads += dsOps.stencilLoadOp == VK_ATTACHMENT_LOAD_OP_LOAD ? 1 : 0;
+    counters.stencilStores += dsOps.stencilStoreOp == VK_ATTACHMENT_STORE_OP_STORE ? 1 : 0;
 }
 
 void CommandBufferHelper::beginTransformFeedback(size_t validBufferCount,
