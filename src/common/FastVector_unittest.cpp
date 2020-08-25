@@ -334,7 +334,7 @@ TEST(FastIntegerMap, BasicUsage)
     std::string str;
     testMap.insert(entries.begin()->first, entries.begin()->second);
     EXPECT_TRUE(testMap.contains(entries.begin()->first));
-    EXPECT_FALSE(testMap.contains(entries.end()->first));
+    EXPECT_FALSE(testMap.contains(entries.rbegin()->first));
     EXPECT_FALSE(testMap.empty());
     EXPECT_EQ(testMap.size(), 1u);
     EXPECT_TRUE(testMap.get(entries.begin()->first, &str));
