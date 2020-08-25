@@ -406,6 +406,25 @@ TEST_P(FramebufferTest_ES3, InvalidateIncomplete)
     EXPECT_GL_NO_ERROR();
 }
 
+// Covers sub-invalidating an incomplete framebuffer. This should be a no-op, but should not error.
+TEST_P(FramebufferTest_ES3, SubInvalidateIncomplete)
+{
+    GLFramebuffer framebuffer;
+    GLRenderbuffer renderbuffer;
+
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+    glBindRenderbuffer(GL_RENDERBUFFER, renderbuffer);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, renderbuffer);
+    EXPECT_GLENUM_EQ(GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT,
+                     glCheckFramebufferStatus(GL_FRAMEBUFFER));
+
+    std::vector<GLenum> attachments;
+    attachments.push_back(GL_COLOR_ATTACHMENT0);
+
+    glInvalidateSubFramebuffer(GL_FRAMEBUFFER, 1, attachments.data(), 5, 5, 10, 10);
+    EXPECT_GL_NO_ERROR();
+}
+
 // Test that the framebuffer state tracking robustly handles a depth-only attachment being set
 // as a depth-stencil attachment. It is equivalent to detaching the depth-stencil attachment.
 TEST_P(FramebufferTest_ES3, DepthOnlyAsDepthStencil)

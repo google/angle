@@ -4222,9 +4222,6 @@ void Context::invalidateSubFramebuffer(GLenum target,
                                        GLsizei width,
                                        GLsizei height)
 {
-    // Only sync the FBO
-    ANGLE_CONTEXT_TRY(mState.syncDirtyObject(this, target));
-
     Framebuffer *framebuffer = mState.getTargetFramebuffer(target);
     ASSERT(framebuffer);
 
@@ -4234,6 +4231,8 @@ void Context::invalidateSubFramebuffer(GLenum target,
     }
 
     Rectangle area(x, y, width, height);
+    // Only sync the FBO
+    ANGLE_CONTEXT_TRY(mState.syncDirtyObject(this, target));
     ANGLE_CONTEXT_TRY(framebuffer->invalidateSub(this, numAttachments, attachments, area));
 }
 
