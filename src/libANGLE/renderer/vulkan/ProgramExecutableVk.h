@@ -139,8 +139,7 @@ class ProgramExecutableVk
     angle::Result getComputePipeline(ContextVk *contextVk, vk::PipelineAndSerial **pipelineOut);
 
     const vk::PipelineLayout &getPipelineLayout() const { return mPipelineLayout.get(); }
-    angle::Result createPipelineLayout(const gl::Context *glContext);
-    angle::Result updatePipelineLayout(const gl::Context *glContext,
+    angle::Result createPipelineLayout(const gl::Context *glContext,
                                        gl::ActiveTextureArray<vk::TextureUnit> *activeTextures);
 
     angle::Result updateTexturesDescriptorSet(ContextVk *contextVk);
@@ -205,20 +204,24 @@ class ProgramExecutableVk
                                             ContextVk *contextVk);
     void updateTransformFeedbackDescriptorSetImpl(const gl::ProgramState &programState,
                                                   ContextVk *contextVk);
-    void updateBuffersDescriptorSet(ContextVk *contextVk,
-                                    const gl::ShaderType shaderType,
-                                    vk::ResourceUseList *resourceUseList,
-                                    vk::CommandBufferHelper *commandBufferHelper,
-                                    const std::vector<gl::InterfaceBlock> &blocks,
-                                    VkDescriptorType descriptorType);
-    void updateAtomicCounterBuffersDescriptorSet(const gl::ProgramState &programState,
-                                                 const gl::ShaderType shaderType,
-                                                 ContextVk *contextVk,
-                                                 vk::ResourceUseList *resourceUseList,
-                                                 vk::CommandBufferHelper *commandBufferHelper);
+    angle::Result updateBuffersDescriptorSet(ContextVk *contextVk,
+                                             const gl::ShaderType shaderType,
+                                             vk::ResourceUseList *resourceUseList,
+                                             vk::CommandBufferHelper *commandBufferHelper,
+                                             const std::vector<gl::InterfaceBlock> &blocks,
+                                             VkDescriptorType descriptorType);
+    angle::Result updateAtomicCounterBuffersDescriptorSet(
+        const gl::ProgramState &programState,
+        const gl::ShaderType shaderType,
+        ContextVk *contextVk,
+        vk::ResourceUseList *resourceUseList,
+        vk::CommandBufferHelper *commandBufferHelper);
     angle::Result updateImagesDescriptorSet(const gl::ProgramExecutable &executable,
                                             const gl::ShaderType shaderType,
                                             ContextVk *contextVk);
+    angle::Result initDynamicDescriptorPools(ContextVk *contextVk,
+                                             vk::DescriptorSetLayoutDesc &descriptorSetLayoutDesc,
+                                             DescriptorSetIndex descriptorSetIndex);
 
     // Descriptor sets for uniform blocks and textures for this program.
     vk::DescriptorSetLayoutArray<VkDescriptorSet> mDescriptorSets;

@@ -199,7 +199,7 @@ std::unique_ptr<rx::LinkEvent> ProgramVk::load(const gl::Context *context,
         return std::make_unique<LinkEventDone>(status);
     }
 
-    status = mExecutable.createPipelineLayout(context);
+    status = mExecutable.createPipelineLayout(context, nullptr);
     return std::make_unique<LinkEventDone>(status);
 }
 
@@ -295,7 +295,7 @@ std::unique_ptr<LinkEvent> ProgramVk::link(const gl::Context *context,
 
     // TODO(jie.a.chen@intel.com): Parallelize linking.
     // http://crbug.com/849576
-    status = mExecutable.createPipelineLayout(context);
+    status = mExecutable.createPipelineLayout(context, nullptr);
     return std::make_unique<LinkEventDone>(status);
 }
 

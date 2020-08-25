@@ -3869,9 +3869,16 @@ angle::Result ContextVk::updateDriverUniformsDescriptorSet(
     }
 
     // Allocate a new descriptor set.
-    ANGLE_TRY(mDriverUniformsDescriptorPool.allocateSets(
+    bool newPoolAllocated;
+    ANGLE_TRY(mDriverUniformsDescriptorPool.allocateSetsAndGetInfo(
         this, driverUniforms->descriptorSetLayout.get().ptr(), 1,
-        &driverUniforms->descriptorPoolBinding, &driverUniforms->descriptorSet));
+        &driverUniforms->descriptorPoolBinding, &driverUniforms->descriptorSet, &newPoolAllocated));
+
+    // Clear descriptor set cache. It may no longer be valid.
+    if (newPoolAllocated)
+    {
+        driverUniforms->descriptorSetCache.clear();
+    }
 
     // Update the driver uniform descriptor set.
     VkDescriptorBufferInfo &bufferInfo = allocDescriptorBufferInfo();
@@ -4000,7 +4007,9 @@ angle::Result ContextVk::updateActiveTextures(const gl::Context *context)
 
     if (haveImmutableSampler)
     {
-        ANGLE_TRY(mExecutable->updatePipelineLayout(context, &mActiveTextures));
+        // TODO(http://anglebug.com/5033): This will recreate the descriptor pools each time, which
+        // will likely affect performance negatively.
+        ANGLE_TRY(mExecutable->createPipelineLayout(context, &mActiveTextures));
         invalidateCurrentGraphicsPipeline();
     }
 
