@@ -205,7 +205,7 @@ IterableBitSet<N>::Iterator::Iterator(const std::bitset<N> &bitset)
     }
     else
     {
-        mOffset = static_cast<unsigned long>(rx::roundUp(N, BitsPerWord));
+        mOffset = static_cast<unsigned long>(rx::roundUpPow2(N, BitsPerWord));
     }
 }
 

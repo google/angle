@@ -739,7 +739,7 @@ class SecondaryCommandBuffer final : angle::NonCopyable
             else
             {
                 // Make sure allocation is 4-byte aligned
-                const size_t alignedSize = roundUp<size_t>(requiredSize, 4);
+                const size_t alignedSize = roundUpPow2<size_t>(requiredSize, 4);
                 ASSERT((alignedSize % 4) == 0);
                 allocateNewBlock(alignedSize);
             }
@@ -804,7 +804,7 @@ ANGLE_INLINE void SecondaryCommandBuffer::commonDebugUtilsLabel(CommandID cmd,
 {
     uint8_t *writePtr;
     const size_t stringSize        = strlen(label.pLabelName) + 1;
-    const size_t alignedStringSize = roundUp<size_t>(stringSize, 4);
+    const size_t alignedStringSize = roundUpPow2<size_t>(stringSize, 4);
     DebugUtilsLabelParams *paramStruct =
         initCommand<DebugUtilsLabelParams>(cmd, alignedStringSize, &writePtr);
     paramStruct->color[0] = label.color[0];

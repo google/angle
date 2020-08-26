@@ -580,7 +580,7 @@ class FastIntegerSet final
 
     ANGLE_INLINE void reserve(size_t newSize)
     {
-        size_t alignedSize = rx::roundUp(newSize, kWindowSize);
+        size_t alignedSize = rx::roundUpPow2(newSize, kWindowSize);
         size_t count       = alignedSize >> kShiftForDivision;
 
         mKeyData.resize(count, KeyBitSet::Zero());
@@ -656,7 +656,7 @@ class FastIntegerMap final
 
     ANGLE_INLINE void reserve(size_t newSize)
     {
-        size_t alignedSize = rx::roundUp(newSize, FastIntegerSet::kWindowSize);
+        size_t alignedSize = rx::roundUpPow2(newSize, FastIntegerSet::kWindowSize);
         mValueData.resize(alignedSize);
     }
 

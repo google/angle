@@ -475,7 +475,7 @@ void WriteBinaryParamReplay(DataTracker *dataTracker,
     {
         // Store in binary file if data are not of type string or enum
         // Round up to 16-byte boundary for cross ABI safety
-        size_t offset = rx::roundUp(binaryData->size(), kBinaryAlignment);
+        size_t offset = rx::roundUpPow2(binaryData->size(), kBinaryAlignment);
         binaryData->resize(offset + data.size());
         memcpy(binaryData->data() + offset, data.data(), data.size());
         out << "reinterpret_cast<" << ParamTypeToString(overrideType) << ">(&gBinaryData[" << offset
@@ -1015,7 +1015,7 @@ void WriteCppReplay(bool compression,
             Result::Continue)
         {
             size_t serializedContextLength = serializedContextData.length();
-            size_t serializedContextOffset = rx::roundUp(binaryData->size(), kBinaryAlignment);
+            size_t serializedContextOffset = rx::roundUpPow2(binaryData->size(), kBinaryAlignment);
             binaryData->resize(serializedContextOffset + serializedContextLength);
             memcpy(binaryData->data() + serializedContextOffset, serializedContextData.data(),
                    serializedContextLength);
