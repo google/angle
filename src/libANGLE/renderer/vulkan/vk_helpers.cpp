@@ -865,12 +865,12 @@ void CommandBufferHelper::endRenderPass(ContextVk *contextVk)
     PackedAttachmentOpsDesc &dsOps = mAttachmentOps[mDepthStencilAttachmentIndex];
 
     // Address invalidated depth/stencil attachments
-    if (mDepthInvalidatedState == Invalidated && !mDepthEnabled)
+    if (mDepthInvalidatedState == Invalidated)
     {
         // The depth attachment is invalid, so don't store it
         dsOps.storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
     }
-    if (mStencilInvalidatedState == Invalidated && !mStencilEnabled)
+    if (mStencilInvalidatedState == Invalidated)
     {
         // The stencil attachment is invalid, so don't store it
         dsOps.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
