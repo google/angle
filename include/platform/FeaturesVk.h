@@ -376,6 +376,13 @@ struct FeaturesVk : FeatureSetBase
     Feature enableMultisampledRenderToTexture = {
         "enable_multisampled_render_to_texture", FeatureCategory::VulkanWorkarounds,
         "Expose EXT_multisampled_render_to_texture", &members, "http://anglebug.com/4937"};
+
+    // Qualcomm fails some tests when reducing the preferred block size to 4M.
+    // http://anglebug.com/4995
+    Feature preferredLargeHeapBlockSize4MB = {
+        "preferred_large_heap_block_size_4M", FeatureCategory::VulkanWorkarounds,
+        "Use 4 MB preferred large heap block size with AMD allocator", &members,
+        "http://anglebug.com/4995"};
 };
 
 inline FeaturesVk::FeaturesVk()  = default;

@@ -852,9 +852,19 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
         ANGLE_TRY(initializeDevice(displayVk, firstGraphicsQueueFamily));
     }
 
+    VkDeviceSize preferredLargeHeapBlockSize = 0;
+    if (mFeatures.preferredLargeHeapBlockSize4MB.enabled)
+    {
+        // This number matches Chromium and was picked by looking at memory usage of
+        // Android apps. The allocator will start making blocks at 1/8 the max size
+        // and builds up block size as needed before capping at the max set here.
+        preferredLargeHeapBlockSize = 4 * 1024 * 1024;
+    }
+
     // Create VMA allocator
     ANGLE_VK_TRY(displayVk,
-                 mAllocator.init(mPhysicalDevice, mDevice, mInstance, applicationInfo.apiVersion));
+                 mAllocator.init(mPhysicalDevice, mDevice, mInstance, applicationInfo.apiVersion,
+                                 preferredLargeHeapBlockSize));
 
     // Store the physical device memory properties so we can find the right memory pools.
     mMemoryProperties.init(mPhysicalDevice);
@@ -1854,6 +1864,8 @@ void RendererVk::initFeatures(DisplayVk *displayVk, const ExtensionNameList &dev
 
     ANGLE_FEATURE_CONDITION(&mFeatures, enableMultisampledRenderToTexture,
                             !(IsApple() && isSwiftShader));
+
+    ANGLE_FEATURE_CONDITION(&mFeatures, preferredLargeHeapBlockSize4MB, !isQualcomm);
 
     angle::PlatformMethods *platform = ANGLEPlatformCurrent();
     platform->overrideFeaturesVk(platform, &mFeatures);

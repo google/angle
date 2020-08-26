@@ -17,6 +17,7 @@ VkResult InitAllocator(VkPhysicalDevice physicalDevice,
                        VkDevice device,
                        VkInstance instance,
                        uint32_t apiVersion,
+                       VkDeviceSize preferredLargeHeapBlockSize,
                        VmaAllocator *pAllocator)
 {
     VmaVulkanFunctions funcs                  = {};
@@ -55,12 +56,13 @@ VkResult InitAllocator(VkPhysicalDevice physicalDevice,
         funcs.vkGetPhysicalDeviceMemoryProperties2KHR = vkGetPhysicalDeviceMemoryProperties2KHR;
     }
 
-    VmaAllocatorCreateInfo allocatorInfo = {};
-    allocatorInfo.physicalDevice         = physicalDevice;
-    allocatorInfo.device                 = device;
-    allocatorInfo.instance               = instance;
-    allocatorInfo.pVulkanFunctions       = &funcs;
-    allocatorInfo.vulkanApiVersion       = apiVersion;
+    VmaAllocatorCreateInfo allocatorInfo      = {};
+    allocatorInfo.physicalDevice              = physicalDevice;
+    allocatorInfo.device                      = device;
+    allocatorInfo.instance                    = instance;
+    allocatorInfo.pVulkanFunctions            = &funcs;
+    allocatorInfo.vulkanApiVersion            = apiVersion;
+    allocatorInfo.preferredLargeHeapBlockSize = preferredLargeHeapBlockSize;
 
     return vmaCreateAllocator(&allocatorInfo, pAllocator);
 }
