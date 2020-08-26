@@ -579,10 +579,12 @@ class Texture final : public RefCountObject<TextureID>,
 
     bool doesSubImageNeedInit(const Context *context,
                               const ImageIndex &imageIndex,
-                              const Box &area) const;
+                              const Box &area,
+                              bool sourceAreaIsOutOfBounds) const;
     angle::Result ensureSubImageInitialized(const Context *context,
                                             const ImageIndex &imageIndex,
-                                            const Box &area);
+                                            const Box &area,
+                                            bool sourceAreaIsOutOfBounds);
 
     angle::Result handleMipmapGenerationHint(Context *context, int level);
 
