@@ -1054,7 +1054,6 @@ libglesv2_sources = [
 
 libglesv1_cm_sources = [
   "src/libGLESv1_CM/libGLESv1_CM.cpp",
-  "src/libGLESv1_CM/libGLESv1_CM.def",
   "src/libGLESv1_CM/libGLESv1_CM.rc",
   "src/libGLESv1_CM/resource.h",
 ]

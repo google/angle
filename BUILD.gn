@@ -20,7 +20,7 @@ if (angle_has_build) {
 declare_args() {
   # Use the PCI lib to collect GPU information on Linux.
   use_libpci = is_linux && (!is_chromecast || is_cast_desktop_build) &&
-               (angle_use_x11 || use_ozone)
+               (angle_use_x11 || use_ozone) && angle_has_build
 
   # Link in system libGL, to work with apitrace.  See doc/DebuggingTips.md.
   angle_link_glx = false
@@ -266,6 +266,9 @@ config("angle_no_cfi_unrelated_cast") {
 
 angle_source_set("angle_system_utils") {
   sources = angle_system_utils_sources
+  if (is_linux) {
+    libs = [ "dl" ]
+  }
 }
 
 angle_source_set("xxhash") {
@@ -375,7 +378,7 @@ angle_static_library("angle_gpu_info_util") {
   if (is_linux) {
     sources += libangle_gpu_info_util_linux_sources
 
-    if (angle_use_x11) {
+    if (angle_use_x11 && angle_has_build) {
       sources += libangle_gpu_info_util_x11_sources
       deps += [ "src/third_party/libXNVCtrl:libXNVCtrl" ]
       defines += [ "GPU_INFO_USE_X11" ]
@@ -696,7 +699,6 @@ angle_source_set("libANGLE_base") {
     }
     if (angle_use_x11) {
       sources += libangle_gl_glx_sources
-      deps += [ "src/third_party/libXNVCtrl:libXNVCtrl" ]
       libs += [
         "X11",
         "Xi",
@@ -965,6 +967,10 @@ angle_shared_library("libGLESv1_CM") {
     ":includes",
     ":libGLESv2",
   ]
+
+  if (is_win) {
+    sources += [ "src/libGLESv1_CM/libGLESv1_CM.def" ]
+  }
 }
 
 angle_static_library("libGLESv1_CM_static") {
