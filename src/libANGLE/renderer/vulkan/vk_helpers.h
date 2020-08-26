@@ -1363,7 +1363,8 @@ class ImageHelper final : public Resource, public angle::Subject
                                                    const gl::ImageIndex &imageIndex,
                                                    const gl::Extents &glExtents,
                                                    const gl::Offset &offset,
-                                                   uint8_t **destData);
+                                                   uint8_t **destData,
+                                                   DynamicBuffer *stagingBufferOverride);
 
     angle::Result stageSubresourceUpdateFromBuffer(ContextVk *contextVk,
                                                    size_t allocationSize,
