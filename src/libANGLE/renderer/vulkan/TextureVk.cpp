@@ -373,7 +373,8 @@ angle::Result TextureVk::setSubImageImpl(const gl::Context *context,
     // Use context's staging buffer for immutable textures and flush out updates
     // immediately.
     vk::DynamicBuffer *stagingBuffer = nullptr;
-    if (!mOwnsImage || mState.getImmutableFormat())
+    if (!mOwnsImage || mState.getImmutableFormat() ||
+        (mImage->valid() && !shouldUpdateBeStaged(gl::LevelIndex(index.getLevelIndex()))))
     {
         stagingBuffer = contextVk->getStagingBuffer();
     }
