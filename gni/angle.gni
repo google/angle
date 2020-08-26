@@ -140,6 +140,10 @@ declare_args() {
   angle_enable_overlay = false
 }
 
+if (!defined(angle_zlib_compression_utils_dir)) {
+  angle_zlib_compression_utils_dir = "//third_party/zlib/google"
+}
+
 angle_common_configs = [
   angle_root + ":angle_release_asserts_config",
   angle_root + ":better_linux_stack_traces",
