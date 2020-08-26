@@ -1384,7 +1384,8 @@ class ImageHelper final : public Resource, public angle::Subject
                                                         const gl::Offset &dstOffset,
                                                         const gl::Extents &dstExtent,
                                                         const gl::InternalFormat &formatInfo,
-                                                        FramebufferVk *framebufferVk);
+                                                        FramebufferVk *framebufferVk,
+                                                        DynamicBuffer *stagingBufferOverride);
 
     void stageSubresourceUpdateFromImage(ImageHelper *image,
                                          const gl::ImageIndex &index,

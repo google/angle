@@ -625,11 +625,23 @@ angle::Result TextureVk::copySubImageImpl(const gl::Context *context,
     ANGLE_PERF_WARNING(contextVk->getDebug(), GL_DEBUG_SEVERITY_HIGH,
                        "Texture copied on CPU due to format restrictions");
 
+    // Use context's staging buffer if possible
+    vk::DynamicBuffer *contextStagingBuffer = nullptr;
+    if (mImage->valid() && !shouldUpdateBeStaged(index.getLevelIndex()))
+    {
+        contextStagingBuffer = contextVk->getStagingBuffer();
+    }
+
     // Do a CPU readback that does the conversion, and then stage the change to the pixel buffer.
     ANGLE_TRY(mImage->stageSubresourceUpdateFromFramebuffer(
         context, offsetImageIndex, clippedSourceArea, modifiedDestOffset,
         gl::Extents(clippedSourceArea.width, clippedSourceArea.height, 1), internalFormat,
-        framebufferVk));
+        framebufferVk, contextStagingBuffer));
+
+    if (contextStagingBuffer)
+    {
+        ANGLE_TRY(flushImageStagedUpdates(contextVk));
+    }
 
     return angle::Result::Continue;
 }
