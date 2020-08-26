@@ -114,7 +114,12 @@ MTLVertexDescriptor *ToObjC(const VertexDesc &desc)
 
     for (uint8_t i = 0; i < desc.numBufferLayouts; ++i)
     {
-        [objCDesc.layouts setObject:ToObjC(desc.layouts[i]) atIndexedSubscript:i];
+        // Ignore if stepFunction is kVertexStepFunctionInvalid.
+        // If we don't set this slot, it will apparently be disabled by metal runtime.
+        if (desc.layouts[i].stepFunction != kVertexStepFunctionInvalid)
+        {
+            [objCDesc.layouts setObject:ToObjC(desc.layouts[i]) atIndexedSubscript:i];
+        }
     }
 
     return [objCDesc ANGLE_MTL_AUTORELEASE];

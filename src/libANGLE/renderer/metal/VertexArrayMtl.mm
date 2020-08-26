@@ -139,7 +139,7 @@ inline size_t GetIndexCount(BufferMtl *srcBuffer, size_t offset, gl::DrawElement
 
 inline void SetDefaultVertexBufferLayout(mtl::VertexBufferLayoutDesc *layout)
 {
-    layout->stepFunction = MTLVertexStepFunctionConstant;
+    layout->stepFunction = mtl::kVertexStepFunctionInvalid;
     layout->stepRate     = 0;
     layout->stride       = 0;
 }
@@ -264,6 +264,9 @@ angle::Result VertexArrayMtl::setupDraw(const gl::Context *glContext,
     {
         mVertexArrayDirty = false;
 
+        const gl::AttributesMask &programActiveAttribsMask =
+            glContext->getState().getProgram()->getExecutable().getActiveAttribLocationsMask();
+
         const std::vector<gl::VertexAttribute> &attribs = mState.getVertexAttributes();
         const std::vector<gl::VertexBinding> &bindings  = mState.getVertexBindings();
 
@@ -280,6 +283,14 @@ angle::Result VertexArrayMtl::setupDraw(const gl::Context *glContext,
 
         for (uint32_t v = 0; v < mtl::kMaxVertexAttribs; ++v)
         {
+            if (!programActiveAttribsMask.test(v))
+            {
+                desc.attributes[v].format      = MTLVertexFormatInvalid;
+                desc.attributes[v].bufferIndex = 0;
+                desc.attributes[v].offset      = 0;
+                continue;
+            }
+
             const auto &attrib               = attribs[v];
             const gl::VertexBinding &binding = bindings[attrib.bindingIndex];
 
@@ -287,7 +298,8 @@ angle::Result VertexArrayMtl::setupDraw(const gl::Context *glContext,
             desc.attributes[v].format        = mCurrentArrayBufferFormats[v]->metalFormat;
 
             bool attribEnabled = attrib.enabled;
-            if (attribEnabled && !mCurrentArrayBuffers[v])
+            if (attribEnabled &&
+                (!mCurrentArrayBuffers[v] || !mCurrentArrayBuffers[v]->getCurrentBuffer()))
             {
                 // Disable it to avoid crash.
                 attribEnabled = false;

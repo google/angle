@@ -132,6 +132,11 @@ constexpr uint32_t kDefaultUniformsBindingIndex = kDefaultAttribsBindingIndex + 
 
 constexpr uint32_t kStencilMaskAll = 0xff;  // Only 8 bits stencil is supported
 
+// This special constant is used to indicate that a particular vertex descriptor's buffer layout
+// index is unused.
+constexpr MTLVertexStepFunction kVertexStepFunctionInvalid =
+    static_cast<MTLVertexStepFunction>(0xff);
+
 constexpr float kEmulatedAlphaValue = 1.0f;
 
 constexpr size_t kOcclusionQueryResultSize = sizeof(uint64_t);
