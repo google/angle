@@ -5051,6 +5051,9 @@ angle::Result ImageHelper::readPixels(ContextVk *contextVk,
     commandBuffer.copyImageToBuffer(src->getImage(), src->getCurrentLayout(), bufferHandle, 1,
                                     &region);
 
+    ANGLE_PERF_WARNING(contextVk->getDebug(), GL_DEBUG_SEVERITY_HIGH,
+                       "GPU stall due to ReadPixels");
+
     // Triggers a full finish.
     // TODO(jmadill): Don't block on asynchronous readback.
     ANGLE_TRY(contextVk->finishImpl());

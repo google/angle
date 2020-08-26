@@ -414,6 +414,10 @@ angle::Result TextureVk::setSubImageImpl(const gl::Context *context,
         }
         else
         {
+            ANGLE_PERF_WARNING(contextVk->getDebug(), GL_DEBUG_SEVERITY_HIGH,
+                               "TexSubImage with unpack buffer copied on CPU due to store, format "
+                               "or offset restrictions");
+
             void *mapPtr = nullptr;
 
             ANGLE_TRY(unpackBufferVk->mapImpl(contextVk, &mapPtr));
