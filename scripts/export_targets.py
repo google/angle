@@ -154,7 +154,13 @@ def flattened_target(target_name: str, descs: dict, stop_at_lib: bool =True) -> 
             assert dep_type in EXPECTED_TYPES, (k, dep_type)
             for (k,v) in dep.items():
                 if type(v) in (list, tuple, set):
-                    flattened[k] = sortedi(set(flattened.get(k, []) + v))
+                    # This is a workaround for
+                    # https://bugs.chromium.org/p/gn/issues/detail?id=196, where
+                    # the value of "public" can be a string instead of a list.
+                    existing = flattened.get(k, [])
+                    if isinstance(existing, str):
+                      existing = [existing]
+                    flattened[k] = sortedi(set(existing + v))
                 else:
                     #flattened.setdefault(k, v)
                     pass
