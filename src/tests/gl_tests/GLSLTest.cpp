@@ -3421,6 +3421,86 @@ TEST_P(GLSLTest_ES31, ArraysOfArraysSampler)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
+// Test that arrays of arrays of images work as expected.
+TEST_P(GLSLTest_ES31, ArraysOfArraysImage)
+{
+    // anglebug.com/2703 - QC doesn't support arrays of image as parameters,
+    // so image array of array handling is disabled
+    ANGLE_SKIP_TEST_IF(IsAndroid() && IsVulkan());
+
+    // Fails on D3D due to mistranslation.
+    ANGLE_SKIP_TEST_IF(IsD3D());
+
+    // Fails on Android on GLES.
+    ANGLE_SKIP_TEST_IF(IsAndroid() && IsOpenGLES());
+
+    GLint maxTextures, maxComputeImageUniforms;
+    glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &maxTextures);
+    glGetIntegerv(GL_MAX_COMPUTE_IMAGE_UNIFORMS, &maxComputeImageUniforms);
+    ANGLE_SKIP_TEST_IF(maxTextures < 1 * 2 * 3);
+    ANGLE_SKIP_TEST_IF(maxComputeImageUniforms < 1 * 2 * 3);
+
+    constexpr char kComputeShader[] = R"(#version 310 es
+        layout(local_size_x = 1, local_size_y = 1, local_size_z = 1) in;
+        layout(binding = 0, r32ui) uniform highp readonly uimage2D image[1][2][3];
+        layout(binding = 1, std430) buffer Output {
+            uint image_value;
+        } outbuf;
+
+        void main(void)
+        {
+            outbuf.image_value = uint(0.0);
+            outbuf.image_value += imageLoad(image[0][0][0], ivec2(0, 0)).x;
+            outbuf.image_value += imageLoad(image[0][0][1], ivec2(0, 0)).x;
+            outbuf.image_value += imageLoad(image[0][0][2], ivec2(0, 0)).x;
+            outbuf.image_value += imageLoad(image[0][1][0], ivec2(0, 0)).x;
+            outbuf.image_value += imageLoad(image[0][1][1], ivec2(0, 0)).x;
+            outbuf.image_value += imageLoad(image[0][1][2], ivec2(0, 0)).x;
+        })";
+    ANGLE_GL_COMPUTE_PROGRAM(program, kComputeShader);
+    EXPECT_GL_NO_ERROR();
+
+    glUseProgram(program);
+
+    GLuint outputInitData[1] = {10};
+    GLBuffer outputBuffer;
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, outputBuffer);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(outputInitData), outputInitData, GL_STATIC_DRAW);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, outputBuffer);
+    EXPECT_GL_NO_ERROR();
+
+    GLuint imageData = 200u;
+    GLTexture images[1][2][3];
+    for (int i = 0; i < 1; i++)
+    {
+        for (int j = 0; j < 2; j++)
+        {
+            for (int k = 0; k < 3; k++)
+            {
+                glBindTexture(GL_TEXTURE_2D, images[i][j][k]);
+                glTexStorage2D(GL_TEXTURE_2D, 1, GL_R32UI, 1, 1);
+                glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RED_INTEGER, GL_UNSIGNED_INT,
+                                &imageData);
+                glBindImageTexture(i * 6 + j * 3 + k, images[i][j][k], 0, GL_FALSE, 0, GL_READ_ONLY,
+                                   GL_R32UI);
+                EXPECT_GL_NO_ERROR();
+            }
+        }
+    }
+
+    glDispatchCompute(1, 1, 1);
+    EXPECT_GL_NO_ERROR();
+
+    glMemoryBarrier(GL_BUFFER_UPDATE_BARRIER_BIT);
+
+    // read back
+    const GLuint *ptr = reinterpret_cast<const GLuint *>(
+        glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, sizeof(outputInitData), GL_MAP_READ_BIT));
+    memcpy(outputInitData, ptr, sizeof(outputInitData));
+    EXPECT_EQ(outputInitData[0], imageData * 1 * 2 * 3);
+    glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
+}
+
 // Test that structs containing arrays of samplers work as expected.
 TEST_P(GLSLTest_ES31, StructArraySampler)
 {

@@ -191,6 +191,7 @@ class ProgramExecutableVk
         const gl::ShaderType shaderType,
         vk::DescriptorSetLayoutDesc *descOut);
     void addImageDescriptorSetDesc(const gl::ProgramExecutable &executable,
+                                   bool useOldRewriteStructSamplers,
                                    vk::DescriptorSetLayoutDesc *descOut);
     void addTextureDescriptorSetDesc(const gl::ProgramState &programState,
                                      bool useOldRewriteStructSamplers,

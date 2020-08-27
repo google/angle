@@ -397,10 +397,10 @@ class FlattenUniformVisitor : public sh::VariableNameVisitor
           mUnusedUniforms(unusedUniforms)
     {}
 
-    void visitNamedSampler(const sh::ShaderVariable &sampler,
-                           const std::string &name,
-                           const std::string &mappedName,
-                           const std::vector<unsigned int> &arraySizes) override
+    void visitNamedSamplerOrImage(const sh::ShaderVariable &sampler,
+                                  const std::string &name,
+                                  const std::string &mappedName,
+                                  const std::vector<unsigned int> &arraySizes) override
     {
         visitNamedVariable(sampler, false, name, mappedName, arraySizes);
     }

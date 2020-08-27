@@ -343,6 +343,7 @@ class TType
     bool isSamplerCube() const { return type == EbtSamplerCube; }
     bool isAtomicCounter() const { return IsAtomicCounter(type); }
     bool isSamplerVideoWEBGL() const { return type == EbtSamplerVideoWEBGL; }
+    bool isImage() const { return IsImage(type); }
 
   private:
     constexpr void invalidateMangledName() { mMangledName = nullptr; }
