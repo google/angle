@@ -41,7 +41,7 @@ void RenderTargetVk::init(vk::ImageHelper *image,
                           vk::ImageViewHelper *imageViews,
                           vk::ImageHelper *resolveImage,
                           vk::ImageViewHelper *resolveImageViews,
-                          uint32_t levelIndexGL,
+                          gl::LevelIndex levelIndexGL,
                           uint32_t layerIndex,
                           bool isImageTransient)
 {
@@ -64,7 +64,7 @@ void RenderTargetVk::reset()
     mImageViews        = nullptr;
     mResolveImage      = nullptr;
     mResolveImageViews = nullptr;
-    mLevelIndexGL      = 0;
+    mLevelIndexGL      = gl::LevelIndex(0);
     mLayerIndex        = 0;
     mContentDefined    = false;
 }
@@ -74,7 +74,7 @@ vk::ImageViewSubresourceSerial RenderTargetVk::getSubresourceSerialImpl(
 {
     ASSERT(imageViews);
     ASSERT(mLayerIndex < std::numeric_limits<uint16_t>::max());
-    ASSERT(mLevelIndexGL < std::numeric_limits<uint16_t>::max());
+    ASSERT(mLevelIndexGL.get() < std::numeric_limits<uint16_t>::max());
 
     vk::ImageViewSubresourceSerial imageViewSerial =
         imageViews->getSubresourceSerial(mLevelIndexGL, 1, mLayerIndex, vk::LayerMode::Single);
@@ -165,7 +165,7 @@ angle::Result RenderTargetVk::getImageViewImpl(ContextVk *contextVk,
                                                const vk::ImageView **imageViewOut) const
 {
     ASSERT(image.valid() && imageViews);
-    int32_t levelVK = mLevelIndexGL - mImage->getBaseLevel();
+    vk::LevelIndex levelVK = mImage->toVKLevel(mLevelIndexGL);
     return imageViews->getLevelLayerDrawImageView(contextVk, image, levelVK, mLayerIndex,
                                                   imageViewOut);
 }
@@ -224,7 +224,7 @@ const vk::Format &RenderTargetVk::getImageFormat() const
 gl::Extents RenderTargetVk::getExtents() const
 {
     ASSERT(mImage && mImage->valid());
-    uint32_t levelVK = mLevelIndexGL - mImage->getBaseLevel();
+    vk::LevelIndex levelVK = mImage->toVKLevel(mLevelIndexGL);
     return mImage->getLevelExtents2D(levelVK);
 }
 
@@ -306,16 +306,16 @@ gl::ImageIndex RenderTargetVk::getImageIndex() const
     // Determine the GL type from the Vk Image properties.
     if (mImage->getType() == VK_IMAGE_TYPE_3D)
     {
-        return gl::ImageIndex::Make3D(mLevelIndexGL, mLayerIndex);
+        return gl::ImageIndex::Make3D(mLevelIndexGL.get(), mLayerIndex);
     }
 
     // We don't need to distinguish 2D array and cube.
     if (mImage->getLayerCount() > 1)
     {
-        return gl::ImageIndex::Make2DArray(mLevelIndexGL, mLayerIndex);
+        return gl::ImageIndex::Make2DArray(mLevelIndexGL.get(), mLayerIndex);
     }
 
     ASSERT(mLayerIndex == 0);
-    return gl::ImageIndex::Make2D(mLevelIndexGL);
+    return gl::ImageIndex::Make2D(mLevelIndexGL.get());
 }
 }  // namespace rx

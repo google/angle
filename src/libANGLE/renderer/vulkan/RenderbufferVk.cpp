@@ -88,12 +88,13 @@ angle::Result RenderbufferVk::setStorageImpl(const gl::Context *context,
 
         VkExtent3D extents = {static_cast<uint32_t>(width), static_cast<uint32_t>(height), 1u};
         ANGLE_TRY(mImage->init(contextVk, gl::TextureType::_2D, extents, vkFormat,
-                               static_cast<uint32_t>(samples), usage, 0, 0, 1, 1));
+                               static_cast<uint32_t>(samples), usage, gl::LevelIndex(0),
+                               gl::LevelIndex(0), 1, 1));
 
         VkMemoryPropertyFlags flags = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
         ANGLE_TRY(mImage->initMemory(contextVk, renderer->getMemoryProperties(), flags));
 
-        mRenderTarget.init(mImage, &mImageViews, nullptr, nullptr, 0, 0, false);
+        mRenderTarget.init(mImage, &mImageViews, nullptr, nullptr, gl::LevelIndex(0), 0, false);
     }
 
     return angle::Result::Continue;
@@ -245,8 +246,8 @@ angle::Result RenderbufferVk::getRenderbufferImage(const gl::Context *context,
     gl::MaybeOverrideLuminance(format, type, getColorReadFormat(context),
                                getColorReadType(context));
 
-    return mImage->readPixelsForGetImage(contextVk, packState, packBuffer, 0, 0, format, type,
-                                         pixels);
+    return mImage->readPixelsForGetImage(contextVk, packState, packBuffer, gl::LevelIndex(0), 0,
+                                         format, type, pixels);
 }
 
 void RenderbufferVk::onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMessage message)

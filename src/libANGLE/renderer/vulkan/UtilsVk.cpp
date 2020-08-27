@@ -1652,12 +1652,14 @@ angle::Result UtilsVk::stencilBlitResolveNoShaderExport(ContextVk *contextVk,
                                   0, nullptr);
 
     // Copy the resulting buffer into dest.
-    VkBufferImageCopy region               = {};
-    region.bufferOffset                    = 0;
-    region.bufferRowLength                 = bufferRowLengthInUints * sizeof(uint32_t);
-    region.bufferImageHeight               = params.blitArea.height;
-    region.imageSubresource.aspectMask     = VK_IMAGE_ASPECT_STENCIL_BIT;
-    region.imageSubresource.mipLevel       = depthStencilRenderTarget->getLevelIndex();
+    VkBufferImageCopy region           = {};
+    region.bufferOffset                = 0;
+    region.bufferRowLength             = bufferRowLengthInUints * sizeof(uint32_t);
+    region.bufferImageHeight           = params.blitArea.height;
+    region.imageSubresource.aspectMask = VK_IMAGE_ASPECT_STENCIL_BIT;
+    region.imageSubresource.mipLevel =
+        depthStencilImage->toVKLevel(gl::LevelIndex(depthStencilRenderTarget->getLevelIndex()))
+            .get();
     region.imageSubresource.baseArrayLayer = depthStencilRenderTarget->getLayerIndex();
     region.imageSubresource.layerCount     = 1;
     region.imageOffset.x                   = params.blitArea.x;
@@ -1868,7 +1870,7 @@ angle::Result UtilsVk::generateMipmap(ContextVk *contextVk,
 {
     ANGLE_TRY(ensureGenerateMipmapResourcesInitialized(contextVk));
 
-    const gl::Extents &srcExtents = src->getLevelExtents(params.srcLevel);
+    const gl::Extents &srcExtents = src->getLevelExtents(vk::LevelIndex(params.srcLevel));
     ASSERT(srcExtents.depth == 1);
 
     // Each workgroup processes a 64x64 tile of the image.

@@ -779,15 +779,15 @@ angle::Result FramebufferVk::blitWithCommand(ContextVk *contextVk,
     ANGLE_TRY(contextVk->onImageTransferWrite(imageAspectMask, dstImage));
     vk::CommandBuffer &commandBuffer = contextVk->getOutsideRenderPassCommandBuffer();
 
-    VkImageBlit blit                   = {};
-    blit.srcSubresource.aspectMask     = blitAspectMask;
-    blit.srcSubresource.mipLevel       = readRenderTarget->getLevelIndex();
+    VkImageBlit blit               = {};
+    blit.srcSubresource.aspectMask = blitAspectMask;
+    blit.srcSubresource.mipLevel   = srcImage->toVKLevel(readRenderTarget->getLevelIndex()).get();
     blit.srcSubresource.baseArrayLayer = readRenderTarget->getLayerIndex();
     blit.srcSubresource.layerCount     = 1;
     blit.srcOffsets[0]                 = {sourceArea.x0(), sourceArea.y0(), 0};
     blit.srcOffsets[1]                 = {sourceArea.x1(), sourceArea.y1(), 1};
     blit.dstSubresource.aspectMask     = blitAspectMask;
-    blit.dstSubresource.mipLevel       = drawRenderTarget->getLevelIndex();
+    blit.dstSubresource.mipLevel = dstImage->toVKLevel(drawRenderTarget->getLevelIndex()).get();
     blit.dstSubresource.baseArrayLayer = drawRenderTarget->getLayerIndex();
     blit.dstSubresource.layerCount     = 1;
     blit.dstOffsets[0]                 = {destArea.x0(), destArea.y0(), 0};
@@ -1028,7 +1028,7 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
         params.srcLayer                       = readRenderTarget->getLayerIndex();
 
         // Multisampled images are not allowed to have mips.
-        ASSERT(!isColorResolve || readRenderTarget->getLevelIndex() == 0);
+        ASSERT(!isColorResolve || readRenderTarget->getLevelIndex() == gl::LevelIndex(0));
 
         // If there was no clipping and the format capabilities allow us, use Vulkan's builtin blit.
         // The reason clipping is prohibited in this path is that due to rounding errors, it would
@@ -1127,7 +1127,7 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
         params.srcLayer                       = readRenderTarget->getLayerIndex();
 
         // Multisampled images are not allowed to have mips.
-        ASSERT(!isDepthStencilResolve || readRenderTarget->getLevelIndex() == 0);
+        ASSERT(!isDepthStencilResolve || readRenderTarget->getLevelIndex() == gl::LevelIndex(0));
 
         // Similarly, only blit if there's been no clipping or rotating.
         bool canBlitWithCommand = !isDepthStencilResolve && noClip &&
@@ -1158,8 +1158,9 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
             vk::DeviceScoped<vk::ImageView> stencilView(contextVk->getDevice());
 
             vk::ImageHelper *depthStencilImage = &readRenderTarget->getImageForCopy();
-            uint32_t levelIndex                = readRenderTarget->getLevelIndex();
-            uint32_t layerIndex                = readRenderTarget->getLayerIndex();
+            vk::LevelIndex levelIndex =
+                depthStencilImage->toVKLevel(readRenderTarget->getLevelIndex());
+            uint32_t layerIndex         = readRenderTarget->getLayerIndex();
             gl::TextureType textureType = vk::Get2DTextureType(depthStencilImage->getLayerCount(),
                                                                depthStencilImage->getSamples());
 
@@ -1302,8 +1303,8 @@ angle::Result FramebufferVk::resolveColorWithCommand(ContextVk *contextVk,
         vk::CommandBuffer &commandBuffer = contextVk->getOutsideRenderPassCommandBuffer();
 
         vk::ImageHelper &dstImage = drawRenderTarget->getImageForWrite();
-        uint32_t levelVK          = drawRenderTarget->getLevelIndex() - dstImage.getBaseLevel();
-        resolveRegion.dstSubresource.mipLevel       = levelVK;
+        vk::LevelIndex levelVK    = dstImage.toVKLevel(drawRenderTarget->getLevelIndex());
+        resolveRegion.dstSubresource.mipLevel       = levelVK.get();
         resolveRegion.dstSubresource.baseArrayLayer = drawRenderTarget->getLayerIndex();
 
         srcImage->resolve(&dstImage, resolveRegion, &commandBuffer);
@@ -1331,9 +1332,9 @@ angle::Result FramebufferVk::copyResolveToMultisampedAttachment(ContextVk *conte
     // Note: neither vkCmdCopyImage nor vkCmdBlitImage allow the destination to be multisampled.
     // There's no choice but to use a draw-based path to perform this copy.
 
-    gl::Extents extents = colorRenderTarget->getExtents();
-    uint32_t levelVK    = colorRenderTarget->getLevelIndex() - src->getBaseLevel();
-    uint32_t layer      = colorRenderTarget->getLayerIndex();
+    gl::Extents extents    = colorRenderTarget->getExtents();
+    vk::LevelIndex levelVK = src->toVKLevel(colorRenderTarget->getLevelIndex());
+    uint32_t layer         = colorRenderTarget->getLayerIndex();
 
     UtilsVk::CopyImageParameters params;
     params.srcOffset[0]        = 0;
@@ -1342,7 +1343,7 @@ angle::Result FramebufferVk::copyResolveToMultisampedAttachment(ContextVk *conte
     params.srcExtents[1]       = extents.height;
     params.destOffset[0]       = 0;
     params.destOffset[1]       = 0;
-    params.srcMip              = levelVK;
+    params.srcMip              = levelVK.get();
     params.srcLayer            = layer;
     params.srcHeight           = extents.height;
     params.srcPremultiplyAlpha = false;
@@ -2395,8 +2396,8 @@ angle::Result FramebufferVk::readPixelsImpl(ContextVk *contextVk,
                                             void *pixels)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "FramebufferVk::readPixelsImpl");
-    uint32_t levelGL = renderTarget->getLevelIndex();
-    uint32_t layer   = renderTarget->getLayerIndex();
+    gl::LevelIndex levelGL = renderTarget->getLevelIndex();
+    uint32_t layer         = renderTarget->getLayerIndex();
     return renderTarget->getImageForCopy().readPixels(contextVk, area, packPixelsParams,
                                                       copyAspectFlags, levelGL, layer, pixels,
                                                       &mReadPixelBuffer);

@@ -762,6 +762,9 @@ struct PerfCounters
     uint32_t stencilLoads;
     uint32_t stencilStores;
 };
+
+// A Vulkan image level index.
+using LevelIndex = gl::LevelIndexWrapper<uint32_t>;
 }  // namespace vk
 
 #if !defined(ANGLE_SHARED_LIBVULKAN)
@@ -845,6 +848,8 @@ void GetExtentsAndLayerCount(gl::TextureType textureType,
                              const gl::Extents &extents,
                              VkExtent3D *extentsOut,
                              uint32_t *layerCountOut);
+
+vk::LevelIndex GetLevelIndex(gl::LevelIndex levelGL, gl::LevelIndex baseLevel);
 }  // namespace gl_vk
 
 namespace vk_gl
@@ -869,6 +874,8 @@ void AddSampleCounts(VkSampleCountFlags sampleCounts, gl::SupportedSampleSet *ou
 GLuint GetMaxSampleCount(VkSampleCountFlags sampleCounts);
 // Return a supported sample count that's at least as large as the requested one.
 GLuint GetSampleCount(VkSampleCountFlags supportedCounts, GLuint requestedCount);
+
+gl::LevelIndex GetLevelIndex(vk::LevelIndex levelVK, gl::LevelIndex baseLevel);
 }  // namespace vk_gl
 
 }  // namespace rx

@@ -1189,8 +1189,8 @@ class ImageHelper final : public Resource, public angle::Subject
                        const Format &format,
                        GLint samples,
                        VkImageUsageFlags usage,
-                       uint32_t baseLevel,
-                       uint32_t maxLevel,
+                       gl::LevelIndex baseLevel,
+                       gl::LevelIndex maxLevel,
                        uint32_t mipLevels,
                        uint32_t layerCount);
     angle::Result initExternal(Context *context,
@@ -1202,8 +1202,8 @@ class ImageHelper final : public Resource, public angle::Subject
                                VkImageCreateFlags additionalCreateFlags,
                                ImageLayout initialLayout,
                                const void *externalImageCreateInfo,
-                               uint32_t baseLevel,
-                               uint32_t maxLevel,
+                               gl::LevelIndex baseLevel,
+                               gl::LevelIndex maxLevel,
                                uint32_t mipLevels,
                                uint32_t layerCount);
     angle::Result initMemory(Context *context,
@@ -1222,7 +1222,7 @@ class ImageHelper final : public Resource, public angle::Subject
                                      VkImageAspectFlags aspectMask,
                                      const gl::SwizzleState &swizzleMap,
                                      ImageView *imageViewOut,
-                                     uint32_t baseMipLevel,
+                                     LevelIndex baseMipLevelVK,
                                      uint32_t levelCount,
                                      uint32_t baseArrayLayer,
                                      uint32_t layerCount) const;
@@ -1231,7 +1231,7 @@ class ImageHelper final : public Resource, public angle::Subject
                                             VkImageAspectFlags aspectMask,
                                             const gl::SwizzleState &swizzleMap,
                                             ImageView *imageViewOut,
-                                            uint32_t baseMipLevel,
+                                            LevelIndex baseMipLevelVK,
                                             uint32_t levelCount,
                                             uint32_t baseArrayLayer,
                                             uint32_t layerCount,
@@ -1242,7 +1242,7 @@ class ImageHelper final : public Resource, public angle::Subject
                                 VkImageAspectFlags aspectMask,
                                 const gl::SwizzleState &swizzleMap,
                                 ImageView *imageViewOut,
-                                uint32_t baseMipLevel,
+                                LevelIndex baseMipLevelVK,
                                 uint32_t levelCount);
     // Create a 2D[Array] for staging purposes.  Used by:
     //
@@ -1297,16 +1297,16 @@ class ImageHelper final : public Resource, public angle::Subject
     ImageLayout getCurrentImageLayout() const { return mCurrentLayout; }
     VkImageLayout getCurrentLayout() const;
 
-    gl::Extents getLevelExtents(uint32_t level) const;
+    gl::Extents getLevelExtents(LevelIndex levelVK) const;
     // Helper function to calculate the extents of a render target created for a certain mip of the
     // image.
-    gl::Extents getLevelExtents2D(uint32_t level) const;
+    gl::Extents getLevelExtents2D(LevelIndex levelVK) const;
     bool isDepthOrStencil() const;
 
     // Clear either color or depth/stencil based on image format.
     void clear(VkImageAspectFlags aspectFlags,
                const VkClearValue &value,
-               uint32_t mipLevel,
+               LevelIndex mipLevel,
                uint32_t baseArrayLayer,
                uint32_t layerCount,
                CommandBuffer *commandBuffer);
@@ -1321,7 +1321,7 @@ class ImageHelper final : public Resource, public angle::Subject
                      CommandBuffer *commandBuffer);
 
     // Generate mipmap from level 0 into the rest of the levels with blit.
-    angle::Result generateMipmapsWithBlit(ContextVk *contextVk, GLuint maxLevel);
+    angle::Result generateMipmapsWithBlit(ContextVk *contextVk, LevelIndex maxLevel);
 
     // Resolve this image into a destination image.  This image should be in the TransferSrc layout.
     // The destination image is automatically transitioned into TransferDst.
@@ -1329,9 +1329,11 @@ class ImageHelper final : public Resource, public angle::Subject
 
     // Data staging
     void removeSingleSubresourceStagedUpdates(ContextVk *contextVk,
-                                              uint32_t levelIndexGL,
+                                              gl::LevelIndex levelIndexGL,
                                               uint32_t layerIndex);
-    void removeStagedUpdates(ContextVk *contextVk, uint32_t levelGLStart, uint32_t levelGLEnd);
+    void removeStagedUpdates(ContextVk *contextVk,
+                             gl::LevelIndex levelGLStart,
+                             gl::LevelIndex levelGLEnd);
 
     angle::Result stageSubresourceUpdateImpl(ContextVk *contextVk,
                                              const gl::ImageIndex &index,
@@ -1368,7 +1370,7 @@ class ImageHelper final : public Resource, public angle::Subject
 
     angle::Result stageSubresourceUpdateFromBuffer(ContextVk *contextVk,
                                                    size_t allocationSize,
-                                                   uint32_t mipLevelGL,
+                                                   gl::LevelIndex mipLevelGL,
                                                    uint32_t baseArrayLayer,
                                                    uint32_t layerCount,
                                                    uint32_t bufferRowLength,
@@ -1412,7 +1414,7 @@ class ImageHelper final : public Resource, public angle::Subject
     // Flush staged updates for a single subresource. Can optionally take a parameter to defer
     // clears to a subsequent RenderPass load op.
     angle::Result flushSingleSubresourceStagedUpdates(ContextVk *contextVk,
-                                                      uint32_t levelGL,
+                                                      gl::LevelIndex levelGL,
                                                       uint32_t layer,
                                                       CommandBuffer *commandBuffer,
                                                       ClearValuesArray *deferredClears,
@@ -1422,8 +1424,8 @@ class ImageHelper final : public Resource, public angle::Subject
     // Due to the nature of updates (done wholly to a VkImageSubresourceLayers), some unsolicited
     // layers may also be updated.
     angle::Result flushStagedUpdates(ContextVk *contextVk,
-                                     uint32_t levelStart,
-                                     uint32_t levelEnd,
+                                     LevelIndex levelStart,
+                                     LevelIndex levelEnd,
                                      uint32_t layerStart,
                                      uint32_t layerEnd,
                                      gl::TexLevelMask skipLevelsMask,
@@ -1434,7 +1436,7 @@ class ImageHelper final : public Resource, public angle::Subject
     // as with renderbuffers or surface images.
     angle::Result flushAllStagedUpdates(ContextVk *contextVk);
 
-    bool isUpdateStaged(uint32_t levelGL, uint32_t layer);
+    bool isUpdateStaged(gl::LevelIndex levelGL, uint32_t layer);
     bool hasStagedUpdates() const { return !mSubresourceUpdates.empty(); }
 
     void recordWriteBarrier(VkImageAspectFlags aspectMask,
@@ -1496,12 +1498,14 @@ class ImageHelper final : public Resource, public angle::Subject
     // Returns true if the image is owned by an external API or instance.
     bool isReleasedToExternal() const;
 
-    uint32_t getBaseLevel() const { return mBaseLevel; }
-    void setBaseAndMaxLevels(uint32_t baseLevel, uint32_t maxLevel);
-    uint32_t getMaxLevel() const { return mMaxLevel; }
+    gl::LevelIndex getBaseLevel() const { return mBaseLevel; }
+    void setBaseAndMaxLevels(gl::LevelIndex baseLevel, gl::LevelIndex maxLevel);
+    gl::LevelIndex getMaxLevel() const { return mMaxLevel; }
+    LevelIndex toVKLevel(gl::LevelIndex levelIndexGL) const;
+    gl::LevelIndex toGLLevel(LevelIndex levelIndexVK) const;
 
     angle::Result copyImageDataToBuffer(ContextVk *contextVk,
-                                        size_t sourceLevelGL,
+                                        gl::LevelIndex sourceLevelGL,
                                         uint32_t layerCount,
                                         uint32_t baseLayer,
                                         const gl::Box &sourceArea,
@@ -1523,7 +1527,7 @@ class ImageHelper final : public Resource, public angle::Subject
     angle::Result readPixelsForGetImage(ContextVk *contextVk,
                                         const gl::PixelPackState &packState,
                                         gl::Buffer *packBuffer,
-                                        uint32_t levelGL,
+                                        gl::LevelIndex levelGL,
                                         uint32_t layer,
                                         GLenum format,
                                         GLenum type,
@@ -1533,7 +1537,7 @@ class ImageHelper final : public Resource, public angle::Subject
                              const gl::Rectangle &area,
                              const PackPixelsParams &packPixelsParams,
                              VkImageAspectFlagBits copyAspectFlags,
-                             uint32_t levelGL,
+                             gl::LevelIndex levelGL,
                              uint32_t layer,
                              void *pixels,
                              DynamicBuffer *stagingBuffer);
@@ -1598,9 +1602,9 @@ class ImageHelper final : public Resource, public angle::Subject
 
         void release(RendererVk *renderer);
 
-        bool isUpdateToLayerLevel(uint32_t layerIndex, uint32_t levelIndexGL) const;
+        bool isUpdateToLayerLevel(uint32_t layerIndex, gl::LevelIndex levelIndexGL) const;
         void getDestSubresource(uint32_t imageLayerCount,
-                                uint32_t *levelIndexGLOut,
+                                gl::LevelIndex *levelIndexGLOut,
                                 uint32_t *baseLayerOut,
                                 uint32_t *layerCountOut) const;
         VkImageAspectFlags getDestAspectFlags() const;
@@ -1636,7 +1640,7 @@ class ImageHelper final : public Resource, public angle::Subject
     void stageClearIfEmulatedFormat(Context *context);
 
     void clearColor(const VkClearColorValue &color,
-                    uint32_t baseMipLevel,
+                    LevelIndex baseMipLevelVK,
                     uint32_t levelCount,
                     uint32_t baseArrayLayer,
                     uint32_t layerCount,
@@ -1644,7 +1648,7 @@ class ImageHelper final : public Resource, public angle::Subject
 
     void clearDepthStencil(VkImageAspectFlags clearAspectFlags,
                            const VkClearDepthStencilValue &depthStencil,
-                           uint32_t baseMipLevel,
+                           LevelIndex baseMipLevelVK,
                            uint32_t levelCount,
                            uint32_t baseArrayLayer,
                            uint32_t layerCount,
@@ -1662,7 +1666,7 @@ class ImageHelper final : public Resource, public angle::Subject
         VkImageAspectFlags aspectMask,
         const gl::SwizzleState &swizzleMap,
         ImageView *imageViewOut,
-        uint32_t baseMipLevel,
+        LevelIndex baseMipLevelVK,
         uint32_t levelCount,
         uint32_t baseArrayLayer,
         uint32_t layerCount,
@@ -1694,8 +1698,8 @@ class ImageHelper final : public Resource, public angle::Subject
     uint64_t mExternalFormat;
 
     // Cached properties.
-    uint32_t mBaseLevel;
-    uint32_t mMaxLevel;
+    gl::LevelIndex mBaseLevel;
+    gl::LevelIndex mMaxLevel;
     uint32_t mLayerCount;
     uint32_t mLevelCount;
 
@@ -1783,15 +1787,16 @@ class ImageViewHelper : angle::NonCopyable
     // Used when initialized RenderTargets.
     bool hasStencilReadImageView() const
     {
-        return (mCurrentMaxLevel < mPerLevelStencilReadImageViews.size())
-                   ? mPerLevelStencilReadImageViews[mCurrentMaxLevel].valid()
+        return mCurrentMaxLevel.get() < mPerLevelStencilReadImageViews.size()
+                   ? mPerLevelStencilReadImageViews[mCurrentMaxLevel.get()].valid()
                    : false;
     }
 
     bool hasFetchImageView() const
     {
-        if ((mLinearColorspace && (mCurrentMaxLevel < mPerLevelLinearFetchImageViews.size())) ||
-            (!mLinearColorspace && (mCurrentMaxLevel < mPerLevelNonLinearFetchImageViews.size())))
+        if ((mLinearColorspace && mCurrentMaxLevel.get() < mPerLevelLinearFetchImageViews.size()) ||
+            (!mLinearColorspace &&
+             mCurrentMaxLevel.get() < mPerLevelNonLinearFetchImageViews.size()))
         {
             return getFetchImageView().valid();
         }
@@ -1803,8 +1808,9 @@ class ImageViewHelper : angle::NonCopyable
 
     bool hasCopyImageView() const
     {
-        if ((mLinearColorspace && (mCurrentMaxLevel < mPerLevelLinearCopyImageViews.size())) ||
-            (!mLinearColorspace && (mCurrentMaxLevel < mPerLevelNonLinearCopyImageViews.size())))
+        if ((mLinearColorspace && mCurrentMaxLevel.get() < mPerLevelLinearCopyImageViews.size()) ||
+            (!mLinearColorspace &&
+             mCurrentMaxLevel.get() < mPerLevelNonLinearCopyImageViews.size()))
         {
             return getFetchImageView().valid();
         }
@@ -1826,7 +1832,7 @@ class ImageViewHelper : angle::NonCopyable
                                 const Format &format,
                                 const gl::SwizzleState &formatSwizzle,
                                 const gl::SwizzleState &readSwizzle,
-                                uint32_t baseLevel,
+                                LevelIndex baseLevel,
                                 uint32_t levelCount,
                                 uint32_t baseLayer,
                                 uint32_t layerCount,
@@ -1837,7 +1843,7 @@ class ImageViewHelper : angle::NonCopyable
     angle::Result getLevelDrawImageView(ContextVk *contextVk,
                                         gl::TextureType viewType,
                                         const ImageHelper &image,
-                                        uint32_t levelVK,
+                                        LevelIndex levelVK,
                                         uint32_t layer,
                                         VkImageUsageFlags imageUsageFlags,
                                         VkFormat vkImageFormat,
@@ -1846,17 +1852,15 @@ class ImageViewHelper : angle::NonCopyable
     // Creates a view with a single layer of the level.
     angle::Result getLevelLayerDrawImageView(ContextVk *contextVk,
                                              const ImageHelper &image,
-                                             uint32_t levelVK,
+                                             LevelIndex levelVK,
                                              uint32_t layer,
                                              const ImageView **imageViewOut);
 
     // Return unique Serial for an imageView.
-    ImageViewSubresourceSerial getSubresourceSerial(uint32_t levelGL,
+    ImageViewSubresourceSerial getSubresourceSerial(gl::LevelIndex levelGL,
                                                     uint32_t levelCount,
                                                     uint32_t layer,
                                                     LayerMode layerMode) const;
-
-    uint32_t getCurrentMaxLevel() const { return mCurrentMaxLevel; }
 
   private:
     ImageView &getReadImageView()
@@ -1878,23 +1882,23 @@ class ImageViewHelper : angle::NonCopyable
     // Used by public get*ImageView() methods to do proper assert based on vector size and validity
     inline const ImageView &getValidReadViewImpl(const ImageViewVector &imageViewVector) const
     {
-        ASSERT(mCurrentMaxLevel < imageViewVector.size() &&
-               imageViewVector[mCurrentMaxLevel].valid());
-        return imageViewVector[mCurrentMaxLevel];
+        ASSERT(mCurrentMaxLevel.get() < imageViewVector.size() &&
+               imageViewVector[mCurrentMaxLevel.get()].valid());
+        return imageViewVector[mCurrentMaxLevel.get()];
     }
 
     // Used by public get*ImageView() methods to do proper assert based on vector size
     inline const ImageView &getReadViewImpl(const ImageViewVector &imageViewVector) const
     {
-        ASSERT(mCurrentMaxLevel < imageViewVector.size());
-        return imageViewVector[mCurrentMaxLevel];
+        ASSERT(mCurrentMaxLevel.get() < imageViewVector.size());
+        return imageViewVector[mCurrentMaxLevel.get()];
     }
 
     // Used by private get*ImageView() methods to do proper assert based on vector size
     inline ImageView &getReadViewImpl(ImageViewVector &imageViewVector)
     {
-        ASSERT(mCurrentMaxLevel < imageViewVector.size());
-        return imageViewVector[mCurrentMaxLevel];
+        ASSERT(mCurrentMaxLevel.get() < imageViewVector.size());
+        return imageViewVector[mCurrentMaxLevel.get()];
     }
 
     // Creates views with multiple layers and levels.
@@ -1904,7 +1908,7 @@ class ImageViewHelper : angle::NonCopyable
                                     const Format &format,
                                     const gl::SwizzleState &formatSwizzle,
                                     const gl::SwizzleState &readSwizzle,
-                                    uint32_t baseLevel,
+                                    LevelIndex baseLevel,
                                     uint32_t levelCount,
                                     uint32_t baseLayer,
                                     uint32_t layerCount);
@@ -1916,7 +1920,7 @@ class ImageViewHelper : angle::NonCopyable
                                         const Format &format,
                                         const gl::SwizzleState &formatSwizzle,
                                         const gl::SwizzleState &readSwizzle,
-                                        uint32_t baseLevel,
+                                        LevelIndex baseLevel,
                                         uint32_t levelCount,
                                         uint32_t baseLayer,
                                         uint32_t layerCount,
@@ -1928,7 +1932,7 @@ class ImageViewHelper : angle::NonCopyable
     // For applications that frequently switch a texture's max level, and make no other changes to
     // the texture, keep track of the currently-used max level, and keep one "read view" per
     // max-level
-    uint32_t mCurrentMaxLevel;
+    LevelIndex mCurrentMaxLevel;
 
     // Read views (one per max-level)
     ImageViewVector mPerLevelLinearReadImageViews;

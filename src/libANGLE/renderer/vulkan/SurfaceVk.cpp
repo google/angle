@@ -170,8 +170,8 @@ angle::Result OffscreenSurfaceVk::AttachmentImage::initialize(DisplayVk *display
 
     VkExtent3D extents = {std::max(static_cast<uint32_t>(width), 1u),
                           std::max(static_cast<uint32_t>(height), 1u), 1u};
-    ANGLE_TRY(
-        image.init(displayVk, gl::TextureType::_2D, extents, vkFormat, samples, usage, 0, 0, 1, 1));
+    ANGLE_TRY(image.init(displayVk, gl::TextureType::_2D, extents, vkFormat, samples, usage,
+                         gl::LevelIndex(0), gl::LevelIndex(0), 1, 1));
 
     VkMemoryPropertyFlags flags = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
     ANGLE_TRY(image.initMemory(displayVk, renderer->getMemoryProperties(), flags));
@@ -200,8 +200,8 @@ angle::Result OffscreenSurfaceVk::AttachmentImage::initializeWithExternalMemory(
 
     VkExtent3D extents = {std::max(static_cast<uint32_t>(width), 1u),
                           std::max(static_cast<uint32_t>(height), 1u), 1u};
-    ANGLE_TRY(
-        image.init(displayVk, gl::TextureType::_2D, extents, vkFormat, samples, usage, 0, 0, 1, 1));
+    ANGLE_TRY(image.init(displayVk, gl::TextureType::_2D, extents, vkFormat, samples, usage,
+                         gl::LevelIndex(0), gl::LevelIndex(0), 1, 1));
 
     VkImportMemoryHostPointerInfoEXT importMemoryHostPointerInfo = {};
     importMemoryHostPointerInfo.sType = VK_STRUCTURE_TYPE_IMPORT_MEMORY_HOST_POINTER_INFO_EXT;
@@ -240,10 +240,10 @@ OffscreenSurfaceVk::OffscreenSurfaceVk(const egl::SurfaceState &surfaceState, Re
       mDepthStencilAttachment(this)
 {
     mColorRenderTarget.init(&mColorAttachment.image, &mColorAttachment.imageViews, nullptr, nullptr,
-                            0, 0, false);
+                            gl::LevelIndex(0), 0, false);
     mDepthStencilRenderTarget.init(&mDepthStencilAttachment.image,
-                                   &mDepthStencilAttachment.imageViews, nullptr, nullptr, 0, 0,
-                                   false);
+                                   &mDepthStencilAttachment.imageViews, nullptr, nullptr,
+                                   gl::LevelIndex(0), 0, false);
 }
 
 OffscreenSurfaceVk::~OffscreenSurfaceVk() {}
@@ -270,7 +270,7 @@ angle::Result OffscreenSurfaceVk::initializeImpl(DisplayVk *displayVk)
         ANGLE_TRY(mColorAttachment.initialize(
             displayVk, mWidth, mHeight, renderer->getFormat(config->renderTargetFormat), samples));
         mColorRenderTarget.init(&mColorAttachment.image, &mColorAttachment.imageViews, nullptr,
-                                nullptr, 0, 0, false);
+                                nullptr, gl::LevelIndex(0), 0, false);
     }
 
     if (config->depthStencilFormat != GL_NONE)
@@ -278,8 +278,8 @@ angle::Result OffscreenSurfaceVk::initializeImpl(DisplayVk *displayVk)
         ANGLE_TRY(mDepthStencilAttachment.initialize(
             displayVk, mWidth, mHeight, renderer->getFormat(config->depthStencilFormat), samples));
         mDepthStencilRenderTarget.init(&mDepthStencilAttachment.image,
-                                       &mDepthStencilAttachment.imageViews, nullptr, nullptr, 0, 0,
-                                       false);
+                                       &mDepthStencilAttachment.imageViews, nullptr, nullptr,
+                                       gl::LevelIndex(0), 0, false);
     }
 
     return angle::Result::Continue;
@@ -481,9 +481,10 @@ WindowSurfaceVk::WindowSurfaceVk(const egl::SurfaceState &surfaceState, EGLNativ
 {
     // Initialize the color render target with the multisampled targets.  If not multisampled, the
     // render target will be updated to refer to a swapchain image on every acquire.
-    mColorRenderTarget.init(&mColorImageMS, &mColorImageMSViews, nullptr, nullptr, 0, 0, false);
+    mColorRenderTarget.init(&mColorImageMS, &mColorImageMSViews, nullptr, nullptr,
+                            gl::LevelIndex(0), 0, false);
     mDepthStencilRenderTarget.init(&mDepthStencilImage, &mDepthStencilImageViews, nullptr, nullptr,
-                                   0, 0, false);
+                                   gl::LevelIndex(0), 0, false);
     mDepthStencilImageBinding.bind(&mDepthStencilImage);
     mColorImageMSBinding.bind(&mColorImageMS);
 }
@@ -941,13 +942,14 @@ angle::Result WindowSurfaceVk::createSwapChain(vk::Context *context,
         const VkImageUsageFlags usage = kSurfaceVKColorImageUsageFlags;
 
         ANGLE_TRY(mColorImageMS.init(context, gl::TextureType::_2D, vkExtents, format, samples,
-                                     usage, 0, 0, 1, 1));
+                                     usage, gl::LevelIndex(0), gl::LevelIndex(0), 1, 1));
         ANGLE_TRY(mColorImageMS.initMemory(context, renderer->getMemoryProperties(),
                                            VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
 
         // Initialize the color render target with the multisampled targets.  If not multisampled,
         // the render target will be updated to refer to a swapchain image on every acquire.
-        mColorRenderTarget.init(&mColorImageMS, &mColorImageMSViews, nullptr, nullptr, 0, 0, false);
+        mColorRenderTarget.init(&mColorImageMS, &mColorImageMSViews, nullptr, nullptr,
+                                gl::LevelIndex(0), 0, false);
     }
 
     ANGLE_TRY(resizeSwapchainImages(context, imageCount));
@@ -967,12 +969,13 @@ angle::Result WindowSurfaceVk::createSwapChain(vk::Context *context,
         const VkImageUsageFlags dsUsage = kSurfaceVKDepthStencilImageUsageFlags;
 
         ANGLE_TRY(mDepthStencilImage.init(context, gl::TextureType::_2D, vkExtents, dsFormat,
-                                          samples, dsUsage, 0, 0, 1, 1));
+                                          samples, dsUsage, gl::LevelIndex(0), gl::LevelIndex(0), 1,
+                                          1));
         ANGLE_TRY(mDepthStencilImage.initMemory(context, renderer->getMemoryProperties(),
                                                 VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
 
         mDepthStencilRenderTarget.init(&mDepthStencilImage, &mDepthStencilImageViews, nullptr,
-                                       nullptr, 0, 0, false);
+                                       nullptr, gl::LevelIndex(0), 0, false);
 
         // We will need to pass depth/stencil image views to the RenderTargetVk in the future.
     }
@@ -1594,7 +1597,7 @@ angle::Result WindowSurfaceVk::getCurrentFramebuffer(ContextVk *contextVk,
         {
             const vk::ImageView *imageView = nullptr;
             ANGLE_TRY(swapchainImage.imageViews.getLevelLayerDrawImageView(
-                contextVk, swapchainImage.image, 0, 0, &imageView));
+                contextVk, swapchainImage.image, vk::LevelIndex(0), 0, &imageView));
 
             imageViews[0] = imageView->getHandle();
             ANGLE_VK_TRY(contextVk,
@@ -1674,8 +1677,8 @@ angle::Result WindowSurfaceVk::drawOverlay(ContextVk *contextVk, SwapchainImage 
 
     // Draw overlay
     const vk::ImageView *imageView = nullptr;
-    ANGLE_TRY(
-        image->imageViews.getLevelLayerDrawImageView(contextVk, image->image, 0, 0, &imageView));
+    ANGLE_TRY(image->imageViews.getLevelLayerDrawImageView(contextVk, image->image,
+                                                           vk::LevelIndex(0), 0, &imageView));
     ANGLE_TRY(overlayVk->onPresent(contextVk, &image->image, imageView));
 
     return angle::Result::Continue;

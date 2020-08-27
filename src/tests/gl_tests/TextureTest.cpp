@@ -7166,6 +7166,29 @@ TEST_P(Texture2DTestES3, MinificationWithSamplerNoMipmapping)
     EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 2, getWindowHeight() / 2, angle::GLColor::white);
 }
 
+// Test that clears due to emulated formats are to the correct level given non-zero base level.
+TEST_P(Texture2DTestES3, NonZeroBaseEmulatedClear)
+{
+    // Tests behavior of the Vulkan backend with emulated formats.
+    ANGLE_SKIP_TEST_IF(!IsVulkan());
+
+    setUpProgram();
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, mTexture2D);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 16, 16, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
+    glTexImage2D(GL_TEXTURE_2D, 1, GL_RGB, 8, 8, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
+    glTexImage2D(GL_TEXTURE_2D, 2, GL_RGB, 4, 4, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
+    glTexImage2D(GL_TEXTURE_2D, 3, GL_RGB, 2, 2, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
+    glTexImage2D(GL_TEXTURE_2D, 4, GL_RGB, 1, 1, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 4);
+    EXPECT_GL_NO_ERROR();
+
+    drawQuad(mProgram, "position", 0.5f);
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::black);
+}
+
 // Draw a quad with an integer texture with a non-zero base level, and test that the color of the
 // texture is output.
 TEST_P(Texture2DIntegerTestES3, IntegerTextureNonZeroBaseLevel)
@@ -7533,7 +7556,7 @@ ANGLE_INSTANTIATE_TEST_ES2(Texture2DTestWithDrawScale);
 ANGLE_INSTANTIATE_TEST_ES2(Sampler2DAsFunctionParameterTest);
 ANGLE_INSTANTIATE_TEST_ES2(SamplerArrayTest);
 ANGLE_INSTANTIATE_TEST_ES2(SamplerArrayAsFunctionParameterTest);
-ANGLE_INSTANTIATE_TEST_ES3(Texture2DTestES3);
+ANGLE_INSTANTIATE_TEST_ES3_AND(Texture2DTestES3, WithAllocateNonZeroMemory(ES3_VULKAN()));
 ANGLE_INSTANTIATE_TEST_ES31(Texture2DTestES31PPO);
 ANGLE_INSTANTIATE_TEST_ES3(Texture2DBaseMaxTestES3);
 ANGLE_INSTANTIATE_TEST_ES2(Texture3DTestES2);

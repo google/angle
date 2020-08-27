@@ -46,7 +46,7 @@ class RenderTargetVk final : public FramebufferAttachmentRenderTarget
               vk::ImageViewHelper *imageViews,
               vk::ImageHelper *resolveImage,
               vk::ImageViewHelper *resolveImageViews,
-              uint32_t levelIndexGL,
+              gl::LevelIndex levelIndexGL,
               uint32_t layerIndex,
               bool isImageTransient);
     void reset();
@@ -79,7 +79,7 @@ class RenderTargetVk final : public FramebufferAttachmentRenderTarget
 
     const vk::Format &getImageFormat() const;
     gl::Extents getExtents() const;
-    uint32_t getLevelIndex() const { return mLevelIndexGL; }
+    gl::LevelIndex getLevelIndex() const { return mLevelIndexGL; }
     uint32_t getLayerIndex() const { return mLayerIndex; }
 
     gl::ImageIndex getImageIndex() const;
@@ -133,7 +133,7 @@ class RenderTargetVk final : public FramebufferAttachmentRenderTarget
     vk::ImageViewHelper *mResolveImageViews;
 
     // Which subresource of the image is used as render target.
-    uint32_t mLevelIndexGL;
+    gl::LevelIndex mLevelIndexGL;
     uint32_t mLayerIndex;
 
     // Whether the render target has been invalidated.  If so, DONT_CARE is used instead of LOAD for

@@ -67,7 +67,7 @@ egl::Error ImageVk::initialize(const egl::Display *display)
         mOwnsImage = false;
 
         mImageTextureType = mState.imageIndex.getType();
-        mImageLevel       = mState.imageIndex.getLevelIndex();
+        mImageLevel       = gl::LevelIndex(mState.imageIndex.getLevelIndex());
         mImageLayer       = mState.imageIndex.hasLayer() ? mState.imageIndex.getLayerIndex() : 0;
     }
     else
@@ -108,7 +108,7 @@ egl::Error ImageVk::initialize(const egl::Display *display)
         mOwnsImage = false;
 
         mImageTextureType = gl::TextureType::_2D;
-        mImageLevel       = 0;
+        mImageLevel       = gl::LevelIndex(0);
         mImageLayer       = 0;
     }
 

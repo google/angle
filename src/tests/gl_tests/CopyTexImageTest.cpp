@@ -64,7 +64,7 @@ class CopyTexImageTest : public ANGLETest
     }
 
     void verifyResults(GLuint texture,
-                       GLubyte data[4],
+                       const GLubyte data[4],
                        GLint fboSize,
                        GLint xs,
                        GLint ys,
@@ -708,6 +708,114 @@ TEST_P(CopyTexImageTestES3, CopyTexSubImageFromTexture3D)
                            0);
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
     ASSERT_GL_NO_ERROR();
+}
+
+// Test that copying from a non-zero base texture works.
+TEST_P(CopyTexImageTestES3, CopyTexSubImageFromNonZeroBase)
+{
+    // http://anglebug.com/5000
+    ANGLE_SKIP_TEST_IF(IsOpenGL() && IsIntel() && IsWindows());
+
+    constexpr GLsizei kTexSize = 4;
+    std::vector<GLColor> red(kTexSize * kTexSize, GLColor::red);
+    std::vector<GLColor> green(kTexSize * kTexSize, GLColor::green);
+
+    // Create a framebuffer attached to a non-zero base texture
+    GLTexture srcColor;
+    glBindTexture(GL_TEXTURE_2D, srcColor);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, kTexSize, kTexSize, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 red.data());
+    glTexImage2D(GL_TEXTURE_2D, 1, GL_RGBA8, kTexSize, kTexSize, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 green.data());
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 1);
+    ASSERT_GL_NO_ERROR();
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, srcColor, 1);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    // Create a texture with an identical format
+    GLTexture dstColor;
+    glBindTexture(GL_TEXTURE_2D, dstColor);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, kTexSize, kTexSize, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 nullptr);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    ASSERT_GL_NO_ERROR();
+
+    // Copy into a part of this texture.
+    glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, kTexSize / 2, kTexSize / 2);
+    ASSERT_GL_NO_ERROR();
+
+    // Verify it.
+    constexpr std::array<GLubyte, 4> kExpected = {0, 255, 0, 255};
+    verifyResults(dstColor, kExpected.data(), kTexSize, 0, 0, kTexSize / 2, kTexSize / 2);
+
+    // Copy into another part of the texture.  The previous verification ensures that the texture's
+    // internal image is allocated, so this should be a direct copy.
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glCopyTexSubImage2D(GL_TEXTURE_2D, 0, kTexSize / 2, kTexSize / 2, 0, 0, kTexSize / 2,
+                        kTexSize / 2);
+    ASSERT_GL_NO_ERROR();
+
+    // Verify it.
+    verifyResults(dstColor, kExpected.data(), kTexSize, kTexSize / 2, kTexSize / 2, kTexSize,
+                  kTexSize);
+}
+
+// Test that copying into a non-zero base texture works.
+TEST_P(CopyTexImageTestES3, CopyTexSubImageToNonZeroBase)
+{
+    // http://anglebug.com/5000
+    ANGLE_SKIP_TEST_IF(IsOpenGL() && IsIntel() && IsWindows());
+
+    constexpr GLsizei kTexSize = 4;
+    std::vector<GLColor> green(kTexSize * kTexSize, GLColor::green);
+
+    // Create a framebuffer attached to a non-zero base texture
+    GLTexture srcColor;
+    glBindTexture(GL_TEXTURE_2D, srcColor);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, kTexSize, kTexSize, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 green.data());
+    ASSERT_GL_NO_ERROR();
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, srcColor, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    // Create a texture with an identical format
+    GLTexture dstColor;
+    glBindTexture(GL_TEXTURE_2D, dstColor);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, kTexSize, kTexSize, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 nullptr);
+    glTexImage2D(GL_TEXTURE_2D, 1, GL_RGBA8, kTexSize, kTexSize, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 nullptr);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 1);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 1);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    ASSERT_GL_NO_ERROR();
+
+    // Copy into a part of this texture.
+    glCopyTexSubImage2D(GL_TEXTURE_2D, 1, 0, 0, 0, 0, kTexSize / 2, kTexSize / 2);
+    ASSERT_GL_NO_ERROR();
+
+    // Verify it.
+    constexpr std::array<GLubyte, 4> kExpected = {0, 255, 0, 255};
+    verifyResults(dstColor, kExpected.data(), kTexSize, 0, 0, kTexSize / 2, kTexSize / 2);
+
+    // Copy into another part of the texture.  The previous verification ensures that the texture's
+    // internal image is allocated, so this should be a direct copy.
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glCopyTexSubImage2D(GL_TEXTURE_2D, 1, kTexSize / 2, kTexSize / 2, 0, 0, kTexSize / 2,
+                        kTexSize / 2);
+    ASSERT_GL_NO_ERROR();
+
+    // Verify it.
+    verifyResults(dstColor, kExpected.data(), kTexSize, kTexSize / 2, kTexSize / 2, kTexSize,
+                  kTexSize);
 }
 
 // Initialize the 3D texture we will copy the subImage data into

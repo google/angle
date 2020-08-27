@@ -746,8 +746,9 @@ TEST_P(ClearTestES3, ClearMultipleAttachmentsFollowedBySpecificOne)
 // done in a single render pass.
 TEST_P(ClearTestES3, ClearMultipleAttachmentsIndividually)
 {
-    // https://issuetracker.google.com/issues/161553839
-    ANGLE_SKIP_TEST_IF(IsIntel() && IsVulkan());
+    // http://anglebug.com/4855
+    ANGLE_SKIP_TEST_IF(IsWindows() && IsIntel() && IsVulkan());
+
     constexpr uint32_t kSize             = 16;
     constexpr uint32_t kAttachmentCount  = 2;
     constexpr float kDepthClearValue     = 0.125f;
@@ -986,8 +987,8 @@ TEST_P(ClearTestES3, MaskedIndexedClearMultipleAttachments)
 // and the relevant internal shaders.
 TEST_P(ClearTestES3, MaskedClearHeterogeneousAttachments)
 {
-    // https://issuetracker.google.com/issues/161553839
-    ANGLE_SKIP_TEST_IF(IsIntel() && IsVulkan());
+    // http://anglebug.com/4855
+    ANGLE_SKIP_TEST_IF(IsWindows() && IsIntel() && IsVulkan());
 
     constexpr uint32_t kSize                              = 16;
     constexpr uint32_t kAttachmentCount                   = 3;

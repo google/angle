@@ -815,6 +815,63 @@ using TextureBarrierVector = BarrierVector<TextureAndLayout>;
 // necessary. Returns 0 if no buffer is bound or if integer overflow occurs.
 GLsizeiptr GetBoundBufferAvailableSize(const OffsetBindingPointer<Buffer> &binding);
 
+// A texture level index.
+template <typename T>
+class LevelIndexWrapper
+{
+  public:
+    LevelIndexWrapper() = default;
+    explicit constexpr LevelIndexWrapper(T levelIndex) : mLevelIndex(levelIndex) {}
+    constexpr LevelIndexWrapper(const LevelIndexWrapper &other) = default;
+    constexpr LevelIndexWrapper &operator=(const LevelIndexWrapper &other) = default;
+
+    constexpr T get() const { return mLevelIndex; }
+
+    LevelIndexWrapper &operator++()
+    {
+        ++mLevelIndex;
+        return *this;
+    }
+    constexpr bool operator<(const LevelIndexWrapper &other) const
+    {
+        return mLevelIndex < other.mLevelIndex;
+    }
+    constexpr bool operator<=(const LevelIndexWrapper &other) const
+    {
+        return mLevelIndex <= other.mLevelIndex;
+    }
+    constexpr bool operator>(const LevelIndexWrapper &other) const
+    {
+        return mLevelIndex > other.mLevelIndex;
+    }
+    constexpr bool operator>=(const LevelIndexWrapper &other) const
+    {
+        return mLevelIndex >= other.mLevelIndex;
+    }
+    constexpr bool operator==(const LevelIndexWrapper &other) const
+    {
+        return mLevelIndex == other.mLevelIndex;
+    }
+    constexpr bool operator!=(const LevelIndexWrapper &other) const
+    {
+        return mLevelIndex != other.mLevelIndex;
+    }
+    constexpr LevelIndexWrapper operator+(T other) const
+    {
+        return LevelIndexWrapper(mLevelIndex + other);
+    }
+    constexpr LevelIndexWrapper operator-(T other) const
+    {
+        return LevelIndexWrapper(mLevelIndex - other);
+    }
+    constexpr T operator-(LevelIndexWrapper other) const { return mLevelIndex - other.mLevelIndex; }
+
+  private:
+    T mLevelIndex;
+};
+
+// A GL texture level index.
+using LevelIndex = LevelIndexWrapper<GLint>;
 }  // namespace gl
 
 namespace rx

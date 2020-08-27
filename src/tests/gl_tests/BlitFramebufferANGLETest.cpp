@@ -1449,6 +1449,296 @@ TEST_P(BlitFramebufferTest, ScissoredMultisampleStencil)
     ASSERT_GL_NO_ERROR();
 }
 
+// Test blitting from a texture with non-zero base.  The blit is non-stretching and between
+// identical formats so that the path that uses vkCmdBlitImage is taken.
+TEST_P(BlitFramebufferTest, NonZeroBaseSource)
+{
+    // http://anglebug.com/5001
+    ANGLE_SKIP_TEST_IF(IsOpenGL() && IsIntel() && IsOSX());
+
+    ANGLE_GL_PROGRAM(drawRed, essl3_shaders::vs::Simple(), essl3_shaders::fs::Red());
+
+    // Create a framebuffer for source data.  It usea a non-zero base.
+    GLTexture srcColor;
+    glBindTexture(GL_TEXTURE_2D, srcColor);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 256, 256, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glTexImage2D(GL_TEXTURE_2D, 1, GL_RGBA8, 256, 256, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 1);
+
+    GLFramebuffer srcFramebuffer;
+    glBindFramebuffer(GL_FRAMEBUFFER, srcFramebuffer);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, srcColor, 1);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    // fill the color buffer with red.
+    drawQuad(drawRed.get(), essl3_shaders::PositionAttrib(), 0.5f);
+
+    // Create a framebuffer for blit destination.
+    GLTexture dstColor;
+    glBindTexture(GL_TEXTURE_2D, dstColor);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 256, 256, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    GLFramebuffer dstFramebuffer;
+    glBindFramebuffer(GL_FRAMEBUFFER, dstFramebuffer);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, dstColor, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    // Blit.  Note: no stretching is done so that vkCmdBlitImage can be used.
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, srcFramebuffer);
+    glBlitFramebuffer(0, 0, 256, 256, 0, 0, 256, 256, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, dstFramebuffer);
+
+    ASSERT_GL_NO_ERROR();
+
+    // Make sure the blit is done.
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    ASSERT_GL_NO_ERROR();
+}
+
+// Test blitting to a texture with non-zero base.  The blit is non-stretching and between
+// identical formats so that the path that uses vkCmdBlitImage is taken.
+TEST_P(BlitFramebufferTest, NonZeroBaseDestination)
+{
+    ANGLE_GL_PROGRAM(drawRed, essl3_shaders::vs::Simple(), essl3_shaders::fs::Red());
+
+    // Create a framebuffer for source data.  It usea a non-zero base.
+    GLTexture srcColor;
+    glBindTexture(GL_TEXTURE_2D, srcColor);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 256, 256, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    GLFramebuffer srcFramebuffer;
+    glBindFramebuffer(GL_FRAMEBUFFER, srcFramebuffer);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, srcColor, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    // fill the color buffer with red.
+    drawQuad(drawRed.get(), essl3_shaders::PositionAttrib(), 0.5f);
+
+    // Create a framebuffer for blit destination.
+    GLTexture dstColor;
+    glBindTexture(GL_TEXTURE_2D, dstColor);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 256, 256, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glTexImage2D(GL_TEXTURE_2D, 1, GL_RGBA8, 256, 256, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 1);
+
+    GLFramebuffer dstFramebuffer;
+    glBindFramebuffer(GL_FRAMEBUFFER, dstFramebuffer);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, dstColor, 1);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    // Blit.  Note: no stretching is done so that vkCmdBlitImage can be used.
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, srcFramebuffer);
+    glBlitFramebuffer(0, 0, 256, 256, 0, 0, 256, 256, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, dstFramebuffer);
+
+    ASSERT_GL_NO_ERROR();
+
+    // Make sure the blit is done.
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    ASSERT_GL_NO_ERROR();
+}
+
+// Test blitting from a stencil buffer with non-zero base.
+TEST_P(BlitFramebufferTest, NonZeroBaseSourceStencil)
+{
+    // http://anglebug.com/5001
+    ANGLE_SKIP_TEST_IF(IsOpenGL() && IsIntel() && IsOSX());
+
+    ANGLE_GL_PROGRAM(drawRed, essl3_shaders::vs::Simple(), essl3_shaders::fs::Red());
+
+    // Create a framebuffer with an attachment that has non-zero base
+    GLTexture stencilTexture;
+    glBindTexture(GL_TEXTURE_2D, stencilTexture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH24_STENCIL8, 256, 256, 0, GL_DEPTH_STENCIL,
+                 GL_UNSIGNED_INT_24_8, nullptr);
+    glTexImage2D(GL_TEXTURE_2D, 1, GL_DEPTH24_STENCIL8, 256, 256, 0, GL_DEPTH_STENCIL,
+                 GL_UNSIGNED_INT_24_8, nullptr);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 1);
+
+    GLFramebuffer srcFramebuffer;
+    glBindFramebuffer(GL_FRAMEBUFFER, srcFramebuffer);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_TEXTURE_2D, stencilTexture, 1);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    // fill the stencil buffer with 0x1
+    glStencilFunc(GL_ALWAYS, 0x1, 0xFF);
+    glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);
+    glEnable(GL_STENCIL_TEST);
+    drawQuad(drawRed.get(), essl3_shaders::PositionAttrib(), 0.5f);
+
+    // Create a framebuffer with an attachment that has non-zero base
+    GLTexture colorTexture;
+    glBindTexture(GL_TEXTURE_2D, colorTexture);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, 256, 256);
+
+    GLRenderbuffer renderbuf;
+    glBindRenderbuffer(GL_RENDERBUFFER, renderbuf);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, 256, 256);
+
+    GLFramebuffer dstFramebuffer;
+    glBindFramebuffer(GL_FRAMEBUFFER, dstFramebuffer);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorTexture, 0);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER, renderbuf);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    // Blit stencil.
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, srcFramebuffer);
+    glBlitFramebuffer(0, 0, 256, 256, 0, 0, 256, 256, GL_STENCIL_BUFFER_BIT, GL_NEAREST);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, dstFramebuffer);
+
+    ASSERT_GL_NO_ERROR();
+
+    // Clear to green
+    glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+    // Draw red if the stencil is 0x1, which should be true after the blit.
+    glStencilFunc(GL_EQUAL, 0x1, 0xFF);
+    drawQuad(drawRed.get(), essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    ASSERT_GL_NO_ERROR();
+}
+
+// Test blitting to a stencil buffer with non-zero base.
+TEST_P(BlitFramebufferTest, NonZeroBaseDestinationStencil)
+{
+    // http://anglebug.com/5001
+    ANGLE_SKIP_TEST_IF(IsOpenGL() && IsIntel() && IsOSX());
+
+    ANGLE_GL_PROGRAM(drawRed, essl3_shaders::vs::Simple(), essl3_shaders::fs::Red());
+
+    // Create a framebuffer for source data.
+    GLRenderbuffer renderbuf;
+    glBindRenderbuffer(GL_RENDERBUFFER, renderbuf);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, 256, 256);
+
+    GLFramebuffer srcFramebuffer;
+    glBindFramebuffer(GL_FRAMEBUFFER, srcFramebuffer);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER, renderbuf);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    // fill the stencil buffer with 0x1
+    glStencilFunc(GL_ALWAYS, 0x1, 0xFF);
+    glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);
+    glEnable(GL_STENCIL_TEST);
+    drawQuad(drawRed.get(), essl3_shaders::PositionAttrib(), 0.5f);
+
+    // Create a framebuffer with an attachment that has non-zero base
+    GLTexture colorTexture;
+    glBindTexture(GL_TEXTURE_2D, colorTexture);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, 256, 256);
+
+    GLTexture stencilTexture;
+    glBindTexture(GL_TEXTURE_2D, stencilTexture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH24_STENCIL8, 256, 256, 0, GL_DEPTH_STENCIL,
+                 GL_UNSIGNED_INT_24_8, nullptr);
+    glTexImage2D(GL_TEXTURE_2D, 1, GL_DEPTH24_STENCIL8, 256, 256, 0, GL_DEPTH_STENCIL,
+                 GL_UNSIGNED_INT_24_8, nullptr);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 1);
+
+    GLFramebuffer dstFramebuffer;
+    glBindFramebuffer(GL_FRAMEBUFFER, dstFramebuffer);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorTexture, 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_TEXTURE_2D, stencilTexture, 1);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    // Blit stencil.
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, srcFramebuffer);
+    glBlitFramebuffer(0, 0, 256, 256, 0, 0, 256, 256, GL_STENCIL_BUFFER_BIT, GL_NEAREST);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, dstFramebuffer);
+
+    ASSERT_GL_NO_ERROR();
+
+    // Clear to green
+    glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+    // Draw red if the stencil is 0x1, which should be true after the blit.
+    glStencilFunc(GL_EQUAL, 0x1, 0xFF);
+    drawQuad(drawRed.get(), essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    ASSERT_GL_NO_ERROR();
+}
+
+// Test blitting to a stencil buffer with non-zero base.  Exercises the compute path in the Vulkan
+// backend if stencil export is not supported.  The blit is not 1-to-1 for this path to be taken.
+TEST_P(BlitFramebufferTest, NonZeroBaseDestinationStencilStretch)
+{
+    // http://anglebug.com/5000
+    ANGLE_SKIP_TEST_IF(IsOpenGL() && IsIntel() && IsWindows());
+
+    // http://anglebug.com/5001
+    ANGLE_SKIP_TEST_IF(IsOpenGL() && IsIntel() && IsOSX());
+
+    ANGLE_GL_PROGRAM(drawRed, essl3_shaders::vs::Simple(), essl3_shaders::fs::Red());
+
+    // Create a framebuffer for source data.
+    GLRenderbuffer renderbuf;
+    glBindRenderbuffer(GL_RENDERBUFFER, renderbuf);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, 256, 256);
+
+    GLFramebuffer srcFramebuffer;
+    glBindFramebuffer(GL_FRAMEBUFFER, srcFramebuffer);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER, renderbuf);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    // fill the stencil buffer with 0x1
+    glStencilFunc(GL_ALWAYS, 0x1, 0xFF);
+    glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);
+    glEnable(GL_STENCIL_TEST);
+    drawQuad(drawRed.get(), essl3_shaders::PositionAttrib(), 0.5f);
+
+    // Create a framebuffer with an attachment that has non-zero base
+    GLTexture colorTexture;
+    glBindTexture(GL_TEXTURE_2D, colorTexture);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, 256, 256);
+
+    GLTexture stencilTexture;
+    glBindTexture(GL_TEXTURE_2D, stencilTexture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH24_STENCIL8, 256, 256, 0, GL_DEPTH_STENCIL,
+                 GL_UNSIGNED_INT_24_8, nullptr);
+    glTexImage2D(GL_TEXTURE_2D, 1, GL_DEPTH24_STENCIL8, 256, 256, 0, GL_DEPTH_STENCIL,
+                 GL_UNSIGNED_INT_24_8, nullptr);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 1);
+
+    GLFramebuffer dstFramebuffer;
+    glBindFramebuffer(GL_FRAMEBUFFER, dstFramebuffer);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorTexture, 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_TEXTURE_2D, stencilTexture, 1);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    // Blit stencil.  Note: stretch is intentional so vkCmdBlitImage cannot be used in the Vulkan
+    // backend.
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, srcFramebuffer);
+    glBlitFramebuffer(0, 0, 256, 256, -256, -256, 512, 512, GL_STENCIL_BUFFER_BIT, GL_NEAREST);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, dstFramebuffer);
+
+    ASSERT_GL_NO_ERROR();
+
+    // Clear to green
+    glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+    // Draw red if the stencil is 0x1, which should be true after the blit.
+    glStencilFunc(GL_EQUAL, 0x1, 0xFF);
+    drawQuad(drawRed.get(), essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    ASSERT_GL_NO_ERROR();
+}
+
 // Blit an SRGB framebuffer and scale it.
 TEST_P(BlitFramebufferTest, BlitSRGBToRGBAndScale)
 {
