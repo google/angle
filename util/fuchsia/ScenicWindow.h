@@ -43,7 +43,6 @@ class ANGLE_UTIL_EXPORT ScenicWindow : public OSWindow
     ~ScenicWindow() override;
 
     // OSWindow:
-    bool initialize(const std::string &name, int width, int height) override;
     void disableErrorMessageDialog() override;
     void destroy() override;
     void resetNativeWindow() override;
@@ -71,6 +70,7 @@ class ANGLE_UTIL_EXPORT ScenicWindow : public OSWindow
     void onViewProperties(const fuchsia::ui::gfx::ViewProperties &properties);
 
   private:
+    bool initializeImpl(const std::string &name, int width, int height) override;
     void updateViewSize();
 
     // ScenicWindow async loop.

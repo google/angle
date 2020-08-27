@@ -279,6 +279,8 @@ bool EGLWindow::initializeSurface(OSWindow *osWindow,
     const char *displayExtensions = eglQueryString(mDisplay, EGL_EXTENSIONS);
 
     std::vector<EGLint> configAttributes = {
+        EGL_SURFACE_TYPE,
+        EGL_WINDOW_BIT,
         EGL_RED_SIZE,
         (mConfigParams.redBits >= 0) ? mConfigParams.redBits : EGL_DONT_CARE,
         EGL_GREEN_SIZE,
@@ -605,7 +607,9 @@ bool EGLWindow::isGLInitialized() const
 }
 
 // Find an EGLConfig that is an exact match for the specified attributes. EGL_FALSE is returned if
-// the EGLConfig is found.  This indicates that the EGLConfig is not supported.
+// the EGLConfig is found.  This indicates that the EGLConfig is not supported.  Surface type is
+// special-cased as it's possible for a config to return support for both EGL_WINDOW_BIT and
+// EGL_PBUFFER_BIT even though only one of them is requested.
 EGLBoolean EGLWindow::FindEGLConfig(EGLDisplay dpy, const EGLint *attrib_list, EGLConfig *config)
 {
     EGLint numConfigs = 0;
@@ -625,7 +629,9 @@ EGLBoolean EGLWindow::FindEGLConfig(EGLDisplay dpy, const EGLint *attrib_list, E
 
             EGLint actualValue = EGL_DONT_CARE;
             eglGetConfigAttrib(dpy, allConfigs[i], curAttrib[0], &actualValue);
-            if (curAttrib[1] != actualValue)
+            if ((curAttrib[0] == EGL_SURFACE_TYPE &&
+                 (curAttrib[1] & actualValue) != curAttrib[1]) ||
+                (curAttrib[0] != EGL_SURFACE_TYPE && curAttrib[1] != actualValue))
             {
                 matchFound = false;
                 break;

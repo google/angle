@@ -80,7 +80,7 @@ ScenicWindow::~ScenicWindow()
     destroy();
 }
 
-bool ScenicWindow::initialize(const std::string &name, int width, int height)
+bool ScenicWindow::initializeImpl(const std::string &name, int width, int height)
 {
     // Set up scenic resources.
     mShape.SetEventMask(fuchsia::ui::gfx::kMetricsEventMask);

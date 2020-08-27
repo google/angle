@@ -453,7 +453,7 @@ void ANGLETestBase::initOSWindow()
         mFixture->osWindow->disableErrorMessageDialog();
         if (!mFixture->osWindow->initialize(windowName.c_str(), 128, 128))
         {
-            std::cerr << "Failed to initialize OS Window.";
+            std::cerr << "Failed to initialize OS Window.\n";
         }
 
         if (IsAndroid())
@@ -461,6 +461,11 @@ void ANGLETestBase::initOSWindow()
             // Initialize the single window on Andoird only once
             mOSWindowSingleton = mFixture->osWindow;
         }
+    }
+
+    if (!mFixture->osWindow->valid())
+    {
+        return;
     }
 
     // On Linux we must keep the test windows visible. On Windows it doesn't seem to need it.
@@ -556,6 +561,16 @@ void ANGLETestBase::ANGLETestSetUp()
         mLastLoadedDriver = mCurrentParams->driver;
     }
 
+    if (gEnableANGLEPerTestCaptureLabel)
+    {
+        SetupEnvironmentVarsForCaptureReplay();
+    }
+
+    if (!mFixture->osWindow->valid())
+    {
+        return;
+    }
+
     // Resize the window before creating the context so that the first make current
     // sets the viewport and scissor box to the right size.
     bool needSwap = false;
@@ -566,10 +581,6 @@ void ANGLETestBase::ANGLETestSetUp()
             FAIL() << "Failed to resize ANGLE test window.";
         }
         needSwap = true;
-    }
-    if (gEnableANGLEPerTestCaptureLabel)
-    {
-        SetupEnvironmentVarsForCaptureReplay();
     }
     // WGL tests are currently disabled.
     if (mFixture->wglWindow)
@@ -632,7 +643,7 @@ void ANGLETestBase::ANGLETestTearDown()
         WriteDebugMessage("Exiting %s.%s\n", info->test_case_name(), info->name());
     }
 
-    if (mCurrentParams->noFixture)
+    if (mCurrentParams->noFixture || !mFixture->osWindow->valid())
     {
         return;
     }

@@ -58,10 +58,25 @@ class MultisampleTest : public ANGLETestWithParam<MultisampleTestParams>
         ANGLE_SKIP_TEST_IF(IsNexus5X() || IsNexus6P());
 
         // Find a config that uses RGBA8 and allows 4x multisampling.
-        const EGLint configAttributes[] = {
-            EGL_RED_SIZE,       8, EGL_GREEN_SIZE, 8,  EGL_BLUE_SIZE,    8,
-            EGL_ALPHA_SIZE,     8, EGL_DEPTH_SIZE, 24, EGL_STENCIL_SIZE, 8,
-            EGL_SAMPLE_BUFFERS, 1, EGL_SAMPLES,    4,  EGL_NONE};
+        const EGLint configAttributes[] = {EGL_SURFACE_TYPE,
+                                           EGL_WINDOW_BIT,
+                                           EGL_RED_SIZE,
+                                           8,
+                                           EGL_GREEN_SIZE,
+                                           8,
+                                           EGL_BLUE_SIZE,
+                                           8,
+                                           EGL_ALPHA_SIZE,
+                                           8,
+                                           EGL_DEPTH_SIZE,
+                                           24,
+                                           EGL_STENCIL_SIZE,
+                                           8,
+                                           EGL_SAMPLE_BUFFERS,
+                                           1,
+                                           EGL_SAMPLES,
+                                           4,
+                                           EGL_NONE};
 
         EGLint configCount;
         EGLConfig multisampledConfig;
