@@ -807,18 +807,14 @@ angle::Result ProgramExecutableVk::createPipelineLayout(const gl::Context *glCon
     {
         const gl::ProgramState *programState = programStates[shaderType];
         ASSERT(programState);
+        // TODO(timvp): http://anglebug.com/3570: These counts will be too high for monolithic
+        // programs, since it's the same ProgramState for each shader type.
         uniformBlockCount += static_cast<uint32_t>(programState->getUniformBlocks().size());
         storageBlockCount += static_cast<uint32_t>(programState->getShaderStorageBlocks().size());
         atomicCounterBufferCount +=
             static_cast<uint32_t>(programState->getAtomicCounterBuffers().size());
         imageCount += static_cast<uint32_t>(programState->getImageBindings().size());
         textureCount += static_cast<uint32_t>(programState->getSamplerBindings().size());
-
-        if (!programState->isSeparable())
-        {
-            // Monolithic programs already have all of the counts combined for all shader stages.
-            break;
-        }
     }
 
     if (renderer->getFeatures().bindEmptyForUnusedDescriptorSets.enabled)
