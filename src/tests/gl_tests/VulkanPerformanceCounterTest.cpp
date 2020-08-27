@@ -467,6 +467,11 @@ TEST_P(VulkanPerformanceCounterTest, InvalidatingAndUsingDepthDoesNotBreakRender
 
     uint32_t actualRenderPassCount = counters.renderPasses;
     EXPECT_EQ(expectedRenderPassCount, actualRenderPassCount);
+
+    // Make sure the render pass is ended by reading back a pixel.  Otherwise, the render pass will
+    // end when the test infrastructure calls eglSwapBuffers(), after the RAII-based GLRenderbuffer
+    // has been deleted.
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
 }
 
 // Tests that even if the app clears depth, it should be invalidated if there is no read.
