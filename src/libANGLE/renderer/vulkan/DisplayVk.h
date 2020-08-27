@@ -83,9 +83,10 @@ class DisplayVk : public DisplayImpl, public vk::Context
     virtual const char *getWSILayer() const;
 
     // Determine if a config with given formats and sample counts is supported.  This callback may
-    // modify the config to add or remove platform specific attributes such as nativeVisualID before
-    // returning a bool to indicate if the config should be supported.
-    virtual bool checkConfigSupport(egl::Config *config) = 0;
+    // modify the config to add or remove platform specific attributes such as nativeVisualID.  If
+    // the config is not supported by the window system, it removes the EGL_WINDOW_BIT from
+    // surfaceType, which would still allow the config to be used for pbuffers.
+    virtual void checkConfigSupport(egl::Config *config) = 0;
 
     ANGLE_NO_DISCARD bool getScratchBuffer(size_t requestedSizeBytes,
                                            angle::MemoryBuffer **scratchBufferOut) const;

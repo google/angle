@@ -55,11 +55,10 @@ egl::ConfigSet DisplayVkAndroid::generateConfigs()
     return egl_vk::GenerateConfigs(kColorFormats, egl_vk::kConfigDepthStencilFormats, this);
 }
 
-bool DisplayVkAndroid::checkConfigSupport(egl::Config *config)
+void DisplayVkAndroid::checkConfigSupport(egl::Config *config)
 {
     // TODO(geofflang): Test for native support and modify the config accordingly.
     // anglebug.com/2692
-    return true;
 }
 
 egl::Error DisplayVkAndroid::validateImageClientBuffer(const gl::Context *context,

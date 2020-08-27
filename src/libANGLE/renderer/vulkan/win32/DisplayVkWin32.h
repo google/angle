@@ -29,7 +29,7 @@ class DisplayVkWin32 : public DisplayVk
                                        EGLNativeWindowType window) override;
 
     egl::ConfigSet generateConfigs() override;
-    bool checkConfigSupport(egl::Config *config) override;
+    void checkConfigSupport(egl::Config *config) override;
 
     const char *getWSIExtension() const override;
 
