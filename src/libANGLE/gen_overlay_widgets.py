@@ -99,10 +99,10 @@ widget->{subwidget}coords[0] = {coord0};
 widget->{subwidget}coords[1] = {coord1};
 widget->{subwidget}coords[2] = {coord2};
 widget->{subwidget}coords[3] = {coord3};
-widget->{subwidget}color[0]  = {color_r};
-widget->{subwidget}color[1]  = {color_g};
-widget->{subwidget}color[2]  = {color_b};
-widget->{subwidget}color[3]  = {color_a};
+widget->{subwidget}color[0]  = {color_r}f;
+widget->{subwidget}color[1]  = {color_g}f;
+widget->{subwidget}color[2]  = {color_b}f;
+widget->{subwidget}color[3]  = {color_a}f;
 }}
 """
 

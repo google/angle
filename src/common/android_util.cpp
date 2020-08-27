@@ -18,7 +18,19 @@ typedef struct native_handle
     int version; /* sizeof(native_handle_t) */
     int numFds;  /* number of file-descriptors at &data[0] */
     int numInts; /* number of ints at &data[numFds] */
+#if defined(__clang__)
+#    pragma clang diagnostic push
+#    pragma clang diagnostic ignored "-Wzero-length-array"
+#elif defined(_MSC_VER)
+#    pragma warning(push)
+#    pragma warning(disable : 4200)
+#endif
     int data[0]; /* numFds + numInts ints */
+#if defined(__clang__)
+#    pragma clang diagnostic pop
+#elif defined(_MSC_VER)
+#    pragma warning(pop)
+#endif
 } native_handle_t;
 
 // Taken from nativebase/nativebase.h
