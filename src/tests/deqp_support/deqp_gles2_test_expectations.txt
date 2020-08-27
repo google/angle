@@ -485,6 +485,7 @@
 4235 METAL AMD : dEQP-GLES2.functional.clipping.point.wide_point_clip_viewport_corner = FAIL
 4235 METAL AMD : dEQP-GLES2.functional.polygon_offset.default_render_with_units = FAIL
 4235 METAL AMD : dEQP-GLES2.functional.polygon_offset.fixed16_render_with_units = FAIL
+4996 METAL AMD: dEQP-GLES2.functional.shaders.indexing.tmp_array.*_const_* = FAIL
 
 // Line loop emulation bug, suspected to be caused by wrong segment order
 4853 METAL AMD : dEQP-GLES2.functional.draw.draw_arrays.line_loop.multiple_attributes = FAIL
