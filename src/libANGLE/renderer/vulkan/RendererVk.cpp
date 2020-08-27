@@ -141,8 +141,7 @@ constexpr const char *kSkippedMessages[] = {
     // http://anglebug.com/4975
     "VUID-vkCmdDraw-None-02687",
     "VUID-vkCmdDrawIndexed-None-02687",
-    // Best Practices Skips issuetracker.google.com/156661359
-    "UNASSIGNED-BestPractices-vkCreateCommandPool-command-buffer-reset",
+    // Best Practices Skips issuetracker.google.com/166641492
     "UNASSIGNED-BestPractices-pipeline-stage-flags",
     "UNASSIGNED-BestPractices-Error-Result",
     "UNASSIGNED-BestPractices-vkAllocateMemory-small-allocation",
