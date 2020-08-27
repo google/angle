@@ -1457,13 +1457,15 @@ TEST_P(TransformFeedbackTestES31, CaptureArray)
     GLint varB2 = glGetAttribLocation(mProgram, "a_varB2");
     ASSERT_NE(-1, varB2);
 
-    std::array<float, 3> data = {24.0f, 48.0f, 128.0f};
+    std::array<float, 6> data1 = {24.0f, 25.0f, 30.0f, 33.0f, 37.5f, 44.0f};
+    std::array<float, 6> data2 = {48.0f, 5.0f, 55.0f, 3.1415f, 87.0f, 42.0f};
+    std::array<float, 6> data3 = {128.0f, 1.0f, 0.0f, -1.0f, 16.0f, 1024.0f};
 
-    glVertexAttribPointer(varA, 1, GL_FLOAT, GL_FALSE, 0, &data[0]);
+    glVertexAttribPointer(varA, 1, GL_FLOAT, GL_FALSE, 0, data1.data());
     glEnableVertexAttribArray(varA);
-    glVertexAttribPointer(varB1, 1, GL_FLOAT, GL_FALSE, 0, &data[1]);
+    glVertexAttribPointer(varB1, 1, GL_FLOAT, GL_FALSE, 0, data2.data());
     glEnableVertexAttribArray(varB1);
-    glVertexAttribPointer(varB2, 1, GL_FLOAT, GL_FALSE, 0, &data[2]);
+    glVertexAttribPointer(varB2, 1, GL_FLOAT, GL_FALSE, 0, data3.data());
     glEnableVertexAttribArray(varB2);
 
     glUseProgram(mProgram);
@@ -1477,9 +1479,14 @@ TEST_P(TransformFeedbackTestES31, CaptureArray)
         glMapBufferRange(GL_TRANSFORM_FEEDBACK_BUFFER, 0, sizeof(float) * 3 * 6, GL_MAP_READ_BIT);
     ASSERT_NE(nullptr, mappedBuffer);
 
-    float *mappedFloats             = static_cast<float *>(mappedBuffer);
-    std::array<float, 3> mappedData = {mappedFloats[0], mappedFloats[1], mappedFloats[2]};
-    EXPECT_EQ(data, mappedData);
+    float *mappedFloats = static_cast<float *>(mappedBuffer);
+    for (int i = 0; i < 6; i++)
+    {
+        std::array<float, 3> mappedData = {mappedFloats[i * 3], mappedFloats[i * 3 + 1],
+                                           mappedFloats[i * 3 + 2]};
+        std::array<float, 3> data       = {data1[i], data2[i], data3[i]};
+        EXPECT_EQ(data, mappedData) << "iteration #" << i;
+    }
 
     glUnmapBuffer(GL_TRANSFORM_FEEDBACK_BUFFER);
 
