@@ -366,33 +366,47 @@ void WriteStringPointerParamReplay(DataTracker *dataTracker,
                                    const ParamCapture &param)
 {
     // Concatenate the strings to ensure we get an accurate counter
-    // TODO (anglebug.com/4941): Explore a way to avoid lumping the strings together
-    std::string str;
+    std::vector<std::string> strings;
     for (const std::vector<uint8_t> &data : param.data)
     {
         // null terminate C style string
         ASSERT(data.size() > 0 && data.back() == '\0');
-        str += std::string(data.begin(), data.end() - 1);
+        strings.push_back(std::string(data.begin(), data.end() - 1));
     }
 
-    int counter = dataTracker->getStringCounters().getStringCounter(str);
-    if (counter == kStringNotFound)
+    int counter = dataTracker->getStringCounters().getStringCounter(strings);
+    if (counter == kStringsNotFound)
     {
-        // This is a unique string, so set up its declaration and update its counter
+        // This is a unique set of strings, so set up their declaration and update the counter
         counter = dataTracker->getCounters().getAndIncrement(call.entryPoint, param.name);
-        dataTracker->getStringCounters().setStringCounter(str, counter);
+        dataTracker->getStringCounters().setStringCounter(strings, counter);
 
         header << "const char *";
         WriteParamStaticVarName(call, param, counter, header);
         header << "[] = { \n";
 
-        // Break up long strings for MSVC
-        for (size_t i = 0; i < str.length(); i += kStringLengthLimit)
+        for (const std::string &str : strings)
         {
-            size_t copyLength = ((str.length() - i) >= kStringLengthLimit) ? kStringLengthLimit
-                                                                           : (str.length() - i);
-            header << "    R\"(" << str.substr(i, copyLength) << ")\"\n";
+            // Break up long strings for MSVC
+            size_t copyLength = 0;
+            std::string separator;
+            for (size_t i = 0; i < str.length(); i += kStringLengthLimit)
+            {
+                if ((str.length() - i) <= kStringLengthLimit)
+                {
+                    copyLength = str.length() - i;
+                    separator  = ",";
+                }
+                else
+                {
+                    copyLength = kStringLengthLimit;
+                    separator  = "";
+                }
+
+                header << "    R\"(" << str.substr(i, copyLength) << ")\"" << separator << "\n";
+            }
         }
+
         header << " };\n";
     }
 
@@ -4307,23 +4321,23 @@ StringCounters::StringCounters() = default;
 
 StringCounters::~StringCounters() = default;
 
-int StringCounters::getStringCounter(std::string &str)
+int StringCounters::getStringCounter(std::vector<std::string> &strings)
 {
-    const auto &id = mStringCounterMap.find(str);
+    const auto &id = mStringCounterMap.find(strings);
     if (id == mStringCounterMap.end())
     {
-        return kStringNotFound;
+        return kStringsNotFound;
     }
     else
     {
-        return mStringCounterMap[str];
+        return mStringCounterMap[strings];
     }
 }
 
-void StringCounters::setStringCounter(std::string &str, int &counter)
+void StringCounters::setStringCounter(std::vector<std::string> &strings, int &counter)
 {
     ASSERT(counter >= 0);
-    mStringCounterMap[str] = counter;
+    mStringCounterMap[strings] = counter;
 }
 
 ResourceTracker::ResourceTracker() = default;
