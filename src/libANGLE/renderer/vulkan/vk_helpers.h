@@ -969,18 +969,29 @@ class CommandBufferHelper : angle::NonCopyable
         SetBitField(mAttachmentOps[attachmentIndex].storeOp, VK_ATTACHMENT_STORE_OP_DONT_CARE);
     }
 
-    void invalidateRenderPassDepthAttachment(RenderTargetVk *depthStencilRenderTarget)
+    void invalidateRenderPassDepthAttachment()
     {
         ASSERT(mIsRenderPassCommandBuffer);
-        mDepthInvalidatedState    = Invalidated;
-        mDepthStencilRenderTarget = depthStencilRenderTarget;
+        mDepthInvalidatedState = Invalidated;
     }
 
-    void invalidateRenderPassStencilAttachment(RenderTargetVk *depthStencilRenderTarget)
+    void invalidateRenderPassStencilAttachment()
     {
         ASSERT(mIsRenderPassCommandBuffer);
-        mStencilInvalidatedState  = Invalidated;
-        mDepthStencilRenderTarget = depthStencilRenderTarget;
+        mStencilInvalidatedState = Invalidated;
+    }
+
+    bool shouldRestoreDepthStencilAttachment()
+    {
+        ASSERT(mIsRenderPassCommandBuffer);
+        // Return true when both depth and stencil attachments were previously-invalidated, and at
+        // least one of those attachments are no longer invalidated.  When invalidated,
+        // RenderTargetVk::mContentDefined is set to false, which will result in the loadOp and
+        // stencilLoadOp of a future render pass being set to DONT_CARE.  ContextVk::syncState()
+        // will call this method to determine if RenderTargetVk::mContentDefined should be set back
+        // to true (i.e. use LOAD).
+        return mDepthInvalidatedState == NoLongerInvalidated ||
+               mStencilInvalidatedState == NoLongerInvalidated;
     }
 
     void updateRenderPassAttachmentFinalLayout(size_t attachmentIndex, ImageLayout finalLayout)
@@ -1074,8 +1085,6 @@ class CommandBufferHelper : angle::NonCopyable
     InvalidatedState mDepthInvalidatedState;
     bool mStencilEnabled;
     InvalidatedState mStencilInvalidatedState;
-    // Used the update RenderTargetVk::mContentDefined at the end of the render pass
-    RenderTargetVk *mDepthStencilRenderTarget;
 
     // Keep track of the depth/stencil attachment index
     uint32_t mDepthStencilAttachmentIndex;
