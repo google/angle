@@ -85,7 +85,7 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
                               const gl::ImageIndex &index,
                               GLenum internalFormat,
                               GLenum type,
-                              size_t sourceLevelGL,
+                              GLint sourceLevelGL,
                               bool unpackFlipY,
                               bool unpackPremultiplyAlpha,
                               bool unpackUnmultiplyAlpha,
@@ -93,7 +93,7 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
     angle::Result copySubTexture(const gl::Context *context,
                                  const gl::ImageIndex &index,
                                  const gl::Offset &destOffset,
-                                 size_t sourceLevelGL,
+                                 GLint sourceLevelGL,
                                  const gl::Box &sourceBox,
                                  bool unpackFlipY,
                                  bool unpackPremultiplyAlpha,
@@ -272,7 +272,7 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
                                   const vk::Format &vkFormat);
 
     angle::Result copyImageDataToBufferAndGetData(ContextVk *contextVk,
-                                                  size_t sourceLevelGL,
+                                                  GLint sourceLevelGL,
                                                   uint32_t layerCount,
                                                   const gl::Box &sourceArea,
                                                   uint8_t **outDataPtr);
@@ -317,7 +317,7 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
                                      const gl::ImageIndex &index,
                                      const gl::Offset &destOffset,
                                      const gl::InternalFormat &destFormat,
-                                     size_t sourceLevelGL,
+                                     GLint sourceLevelGL,
                                      const gl::Box &sourceBox,
                                      bool unpackFlipY,
                                      bool unpackPremultiplyAlpha,
@@ -328,7 +328,7 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
                                                const gl::ImageIndex &index,
                                                const gl::Offset &destOffset,
                                                const vk::Format &destFormat,
-                                               size_t sourceLevelGL,
+                                               GLint sourceLevelGL,
                                                size_t sourceLayer,
                                                const gl::Box &sourceBox,
                                                vk::ImageHelper *srcImage);
@@ -337,7 +337,7 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
                                            const gl::ImageIndex &index,
                                            const gl::Offset &destOffset,
                                            const vk::Format &destFormat,
-                                           size_t sourceLevelGL,
+                                           GLint sourceLevelGL,
                                            const gl::Box &sourceBox,
                                            bool isSrcFlipY,
                                            bool unpackFlipY,
