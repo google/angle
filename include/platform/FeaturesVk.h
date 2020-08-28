@@ -361,6 +361,15 @@ struct FeaturesVk : FeatureSetBase
         "preferred_large_heap_block_size_4M", FeatureCategory::VulkanWorkarounds,
         "Use 4 MB preferred large heap block size with AMD allocator", &members,
         "http://anglebug.com/4995"};
+
+    // Manhattan is calling glFlush in the middle of renderpass which breaks renderpass and hurts
+    // performance on tile based GPU. When this is enabled, we will defer the glFlush call made in
+    // the middle of renderpass to the end of renderpass.
+    // https://issuetracker.google.com/issues/166475273
+    Feature deferFlushUntilEndRenderPass = {
+        "defer_flush_until_endrenderpass", FeatureCategory::VulkanWorkarounds,
+        "Allow glFlush to be deferred until renderpass ends", &members,
+        "https://issuetracker.google.com/issues/166475273"};
 };
 
 inline FeaturesVk::FeaturesVk()  = default;

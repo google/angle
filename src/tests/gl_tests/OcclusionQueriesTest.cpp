@@ -225,8 +225,9 @@ TEST_P(OcclusionQueriesTest, MultiQueries)
 
     EXPECT_GL_NO_ERROR();
 
-    // A flush shound't clear the query result
-    glFlush();
+    // Due to implementation might skip in-renderpass flush, we are using glFinish here to force a
+    // flush. A flush shound't clear the query result.
+    glFinish();
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
     drawQuad(mProgram, essl1_shaders::PositionAttrib(), -2, 0.25f);  // this quad should be occluded
@@ -248,7 +249,7 @@ TEST_P(OcclusionQueriesTest, MultiQueries)
              0.5f);  // this quad should not be occluded
     glEndQueryEXT(GL_ANY_SAMPLES_PASSED_EXT);
     // ------------
-    glFlush();
+    glFinish();
 
     glViewport(0, 0, getWindowWidth() / 2, getWindowHeight());
     glScissor(0, 0, getWindowWidth() / 2, getWindowHeight());

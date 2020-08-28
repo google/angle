@@ -56,6 +56,8 @@ angle::Result SyncHelper::initialize(ContextVk *contextVk)
     commandBuffer.setEvent(mEvent.getHandle(), VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT);
     retain(&contextVk->getResourceUseList());
 
+    contextVk->onSyncHelperInitialize();
+
     return angle::Result::Continue;
 }
 

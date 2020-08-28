@@ -1242,6 +1242,33 @@ TEST_P(VulkanPerformanceCounterTest, DrawbufferChangeWithAllColorMaskDisabled)
     EXPECT_EQ(expectedRenderPassCount, actualRenderPassCount);
 }
 
+// Tests the optimization that a glFlush call issued inside a renderpass will be skipped.
+TEST_P(VulkanPerformanceCounterTest, InRenderpassFlushShouldBotBreakRenderpass)
+{
+    const rx::vk::PerfCounters &counters = hackANGLE();
+    uint32_t expectedRenderPassCount     = counters.renderPasses + 1;
+
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 256, 256, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    GLFramebuffer framebuffer;
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    ASSERT_GL_NO_ERROR();
+
+    ANGLE_GL_PROGRAM(redProgram, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
+    drawQuad(redProgram, essl1_shaders::PositionAttrib(), 0.5f);
+    glFlush();
+    ANGLE_GL_PROGRAM(greenProgram, essl1_shaders::vs::Simple(), essl1_shaders::fs::Green());
+    drawQuad(greenProgram, essl1_shaders::PositionAttrib(), 0.5f);
+    ASSERT_GL_NO_ERROR();
+
+    uint32_t actualRenderPassCount = counters.renderPasses;
+    EXPECT_EQ(expectedRenderPassCount, actualRenderPassCount);
+}
+
 ANGLE_INSTANTIATE_TEST(VulkanPerformanceCounterTest, ES3_VULKAN());
 ANGLE_INSTANTIATE_TEST(VulkanPerformanceCounterTest_ES31, ES31_VULKAN());
 
