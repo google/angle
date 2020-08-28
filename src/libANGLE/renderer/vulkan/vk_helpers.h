@@ -1594,6 +1594,8 @@ class ImageHelper final : public Resource, public angle::Subject
                           const gl::ImageIndex &imageIndex);
         SubresourceUpdate(const SubresourceUpdate &other);
 
+        SubresourceUpdate &operator=(const SubresourceUpdate &other);
+
         void release(RendererVk *renderer);
 
         bool isUpdateToLayerLevel(uint32_t layerIndex, uint32_t levelIndexGL) const;

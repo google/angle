@@ -251,6 +251,8 @@ class SamplerState final
     SamplerState();
     SamplerState(const SamplerState &other);
 
+    SamplerState &operator=(const SamplerState &other);
+
     static SamplerState CreateDefaultForTarget(TextureType type);
 
     GLenum getMinFilter() const { return mMinFilter; }

@@ -137,6 +137,8 @@ Extensions::Extensions() = default;
 
 Extensions::Extensions(const Extensions &other) = default;
 
+Extensions &Extensions::operator=(const Extensions &other) = default;
+
 std::vector<std::string> Extensions::getStrings() const
 {
     std::vector<std::string> extensionStrings;
@@ -1047,6 +1049,8 @@ const ExtensionInfoMap &GetExtensionInfoMap()
 TypePrecision::TypePrecision() = default;
 
 TypePrecision::TypePrecision(const TypePrecision &other) = default;
+
+TypePrecision &TypePrecision::operator=(const TypePrecision &other) = default;
 
 void TypePrecision::setIEEEFloat()
 {

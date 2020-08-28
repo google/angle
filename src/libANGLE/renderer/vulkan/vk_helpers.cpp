@@ -5127,6 +5127,25 @@ ImageHelper::SubresourceUpdate::SubresourceUpdate(const SubresourceUpdate &other
     }
 }
 
+ImageHelper::SubresourceUpdate &ImageHelper::SubresourceUpdate::operator=(
+    const SubresourceUpdate &other)
+{
+    updateSource = other.updateSource;
+    if (updateSource == UpdateSource::Clear)
+    {
+        clear = other.clear;
+    }
+    else if (updateSource == UpdateSource::Buffer)
+    {
+        buffer = other.buffer;
+    }
+    else
+    {
+        image = other.image;
+    }
+    return *this;
+}
+
 void ImageHelper::SubresourceUpdate::release(RendererVk *renderer)
 {
     if (updateSource == UpdateSource::Image)

@@ -95,6 +95,8 @@ struct Extensions
     Extensions();
     Extensions(const Extensions &other);
 
+    Extensions &operator=(const Extensions &other);
+
     // Generate a vector of supported extension strings
     std::vector<std::string> getStrings() const;
 
@@ -695,6 +697,8 @@ struct TypePrecision
 {
     TypePrecision();
     TypePrecision(const TypePrecision &other);
+
+    TypePrecision &operator=(const TypePrecision &other);
 
     void setIEEEFloat();
     void setTwosComplementInt(unsigned int bits);

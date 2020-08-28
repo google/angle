@@ -145,6 +145,7 @@ config("extra_warnings") {
     cflags += [
       "-Wbad-function-cast",
       "-Wconditional-uninitialized",
+      "-Wdeprecated-copy",
       "-Wextra-semi-stmt",
       "-Wfloat-conversion",
       "-Winconsistent-missing-destructor-override",

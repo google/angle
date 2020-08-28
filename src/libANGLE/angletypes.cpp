@@ -143,6 +143,8 @@ SamplerState::SamplerState()
 
 SamplerState::SamplerState(const SamplerState &other) = default;
 
+SamplerState &SamplerState::operator=(const SamplerState &other) = default;
+
 // static
 SamplerState SamplerState::CreateDefaultForTarget(TextureType type)
 {
