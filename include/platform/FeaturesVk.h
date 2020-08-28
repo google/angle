@@ -429,6 +429,14 @@ struct FeaturesVk : FeatureSetBase
                                          "Compress vertex data to smaller data types when "
                                          "possible. Using this feature makes ANGLE non-conformant.",
                                          &members};
+
+    // Qualcomm missynchronizes vkCmdClearAttachments in the middle of render pass.
+    // https://issuetracker.google.com/166809097
+    Feature preferDrawClearOverVkCmdClearAttachments = {
+        "prefer_draw_clear_over_vkCmdClearAttachments", FeatureCategory::VulkanWorkarounds,
+        "On some hardware, clear using a draw call instead of vkCmdClearAttachments in the middle "
+        "of render pass due to bugs",
+        &members, "https://issuetracker.google.com/166809097"};
 };
 
 inline FeaturesVk::FeaturesVk()  = default;
