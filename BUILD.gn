@@ -142,6 +142,7 @@ config("extra_warnings") {
   }
   if (is_clang) {
     cflags += [
+      "-Wbad-function-cast",
       "-Wconditional-uninitialized",
       "-Wextra-semi-stmt",
       "-Wfloat-conversion",
