@@ -184,6 +184,8 @@ angle_source_set("angle_vk_mem_alloc_wrapper") {
     cflags_cc = [
       "-Wno-extra-semi-stmt",
       "-Wno-missing-field-initializers",
+      "-Wno-suggest-destructor-override",
+      "-Wno-suggest-override",
     ]
   }
 }

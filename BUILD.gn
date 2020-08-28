@@ -151,6 +151,8 @@ config("extra_warnings") {
       "-Wnon-virtual-dtor",
       "-Wredundant-parens",
       "-Wshadow-field",
+      "-Wsuggest-destructor-override",
+      "-Wsuggest-override",
       "-Wtautological-type-limit-compare",
       "-Wundefined-reinterpret-cast",
       "-Wunneeded-internal-declaration",

@@ -20,8 +20,6 @@
 #include <lib/zx/channel.h>
 #include <zircon/status.h>
 
-#include "common/debug.h"
-
 namespace
 {
 
