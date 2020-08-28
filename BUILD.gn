@@ -133,6 +133,7 @@ config("extra_warnings") {
   if (is_win) {
     cflags += [
       "/we4244",  # Conversion: possible loss of data.
+      "/we4312",  # Conversion: greater size.
       "/we4456",  # Variable shadowing.
       "/we4458",  # declaration hides class member.
       "/we4715",  # not all control paths return a value
