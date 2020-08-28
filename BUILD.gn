@@ -151,6 +151,7 @@ config("extra_warnings") {
       "-Wnewline-eof",
       "-Wnon-virtual-dtor",
       "-Wredundant-parens",
+      "-Wreturn-std-move-in-c++11",
       "-Wshadow-field",
       "-Wsuggest-destructor-override",
       "-Wsuggest-override",
