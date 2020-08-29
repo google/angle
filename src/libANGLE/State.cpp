@@ -443,6 +443,7 @@ void State::initialize(Context *context)
             caps.maxCombinedTextureImageUnits);
 
         mAtomicCounterBuffers.resize(caps.maxAtomicCounterBufferBindings);
+        mValidAtomicCounterBufferCount = 0;
         mShaderStorageBuffers.resize(caps.maxShaderStorageBufferBindings);
         mImageUnits.resize(caps.maxImageUnits);
     }
@@ -565,6 +566,7 @@ void State::reset(const Context *context)
     {
         UpdateIndexedBufferBinding(context, &buf, nullptr, BufferBinding::AtomicCounter, 0, 0);
     }
+    mValidAtomicCounterBufferCount = 0;
 
     for (OffsetBindingPointer<Buffer> &buf : mShaderStorageBuffers)
     {
@@ -1973,6 +1975,10 @@ angle::Result State::setIndexedBufferBinding(const Context *context,
         case BufferBinding::AtomicCounter:
             UpdateIndexedBufferBinding(context, &mAtomicCounterBuffers[index], buffer, target,
                                        offset, size);
+            if (buffer)
+            {
+                mValidAtomicCounterBufferCount++;
+            }
             break;
         case BufferBinding::ShaderStorage:
             UpdateIndexedBufferBinding(context, &mShaderStorageBuffers[index], buffer, target,
@@ -2044,6 +2050,7 @@ angle::Result State::detachBuffer(Context *context, const Buffer *buffer)
         if (buf.id() == bufferID)
         {
             UpdateIndexedBufferBinding(context, &buf, nullptr, BufferBinding::AtomicCounter, 0, 0);
+            mValidAtomicCounterBufferCount--;
         }
     }
 

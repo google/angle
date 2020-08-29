@@ -431,6 +431,11 @@ class State : angle::NonCopyable
 
     size_t getAtomicCounterBufferCount() const { return mAtomicCounterBuffers.size(); }
 
+    ANGLE_INLINE bool hasValidAtomicCounterBuffer() const
+    {
+        return mValidAtomicCounterBufferCount > 0;
+    }
+
     const OffsetBindingPointer<Buffer> &getIndexedUniformBuffer(size_t index) const;
     const OffsetBindingPointer<Buffer> &getIndexedAtomicCounterBuffer(size_t index) const;
     const OffsetBindingPointer<Buffer> &getIndexedShaderStorageBuffer(size_t index) const;
@@ -1029,6 +1034,7 @@ class State : angle::NonCopyable
 
     BufferVector mUniformBuffers;
     BufferVector mAtomicCounterBuffers;
+    size_t mValidAtomicCounterBufferCount;
     BufferVector mShaderStorageBuffers;
 
     BindingPointer<TransformFeedback> mTransformFeedback;

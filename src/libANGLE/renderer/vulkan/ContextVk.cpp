@@ -3755,8 +3755,11 @@ angle::Result ContextVk::handleDirtyGraphicsDriverUniforms(const gl::Context *co
                                               driverUniforms->xfbBufferOffsets.size());
     }
 
-    writeAtomicCounterBufferDriverUniformOffsets(driverUniforms->acbBufferOffsets.data(),
-                                                 driverUniforms->acbBufferOffsets.size());
+    if (mState.hasValidAtomicCounterBuffer())
+    {
+        writeAtomicCounterBufferDriverUniformOffsets(driverUniforms->acbBufferOffsets.data(),
+                                                     driverUniforms->acbBufferOffsets.size());
+    }
 
     return updateDriverUniformsDescriptorSet(newBuffer, sizeof(GraphicsDriverUniforms),
                                              &mDriverUniforms[PipelineType::Graphics]);
@@ -3775,8 +3778,11 @@ angle::Result ContextVk::handleDirtyComputeDriverUniforms(const gl::Context *con
     ComputeDriverUniforms *driverUniforms = reinterpret_cast<ComputeDriverUniforms *>(ptr);
     *driverUniforms                       = {};
 
-    writeAtomicCounterBufferDriverUniformOffsets(driverUniforms->acbBufferOffsets.data(),
-                                                 driverUniforms->acbBufferOffsets.size());
+    if (mState.hasValidAtomicCounterBuffer())
+    {
+        writeAtomicCounterBufferDriverUniformOffsets(driverUniforms->acbBufferOffsets.data(),
+                                                     driverUniforms->acbBufferOffsets.size());
+    }
 
     return updateDriverUniformsDescriptorSet(newBuffer, sizeof(ComputeDriverUniforms),
                                              &mDriverUniforms[PipelineType::Compute]);
