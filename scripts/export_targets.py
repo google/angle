@@ -185,6 +185,7 @@ IGNORED_INCLUDES = {
     b'compiler/translator/TranslatorHLSL.h',
     b'compiler/translator/TranslatorMetal.h',
     b'compiler/translator/TranslatorVulkan.h',
+    b'contrib/optimizations/slide_hash_neon.h',
     b'dirent_on_windows.h',
     b'kernel/image.h',
     b'libANGLE/renderer/d3d/d3d11/winrt/NativeWindow11WinRT.h',
@@ -244,7 +245,6 @@ IGNORED_INCLUDE_PREFIXES = {
 IGNORED_DIRECTORIES = {
     '//buildtools/third_party/libc++',
     '//third_party/SwiftShader',
-    '//third_party/zlib',
 }
 
 def has_all_includes(target_name: str, descs: dict) -> bool:
