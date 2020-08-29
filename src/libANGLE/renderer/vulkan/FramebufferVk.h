@@ -10,8 +10,6 @@
 #ifndef LIBANGLE_RENDERER_VULKAN_FRAMEBUFFERVK_H_
 #define LIBANGLE_RENDERER_VULKAN_FRAMEBUFFERVK_H_
 
-#include "absl/container/flat_hash_map.h"
-
 #include "libANGLE/renderer/FramebufferImpl.h"
 #include "libANGLE/renderer/RenderTargetCache.h"
 #include "libANGLE/renderer/vulkan/BufferVk.h"
@@ -257,7 +255,7 @@ class FramebufferVk : public FramebufferImpl
     gl::DrawBufferMask mEmulatedAlphaAttachmentMask;
 
     vk::FramebufferDesc mCurrentFramebufferDesc;
-    absl::flat_hash_map<vk::FramebufferDesc, vk::FramebufferHelper> mFramebufferCache;
+    std::unordered_map<vk::FramebufferDesc, vk::FramebufferHelper> mFramebufferCache;
 
     vk::ClearValuesArray mDeferredClears;
 };

@@ -20,8 +20,6 @@
 #include <string>
 #include <vector>
 
-#include "absl/container/flat_hash_map.h"
-
 #include "common/Optional.h"
 #include "common/angleutils.h"
 #include "common/mathutil.h"
@@ -174,12 +172,12 @@ class ProgramBindings final : angle::NonCopyable
     int getBindingByName(const std::string &name) const;
     int getBinding(const sh::ShaderVariable &variable) const;
 
-    using const_iterator = absl::flat_hash_map<std::string, GLuint>::const_iterator;
+    using const_iterator = std::unordered_map<std::string, GLuint>::const_iterator;
     const_iterator begin() const;
     const_iterator end() const;
 
   private:
-    absl::flat_hash_map<std::string, GLuint> mBindings;
+    std::unordered_map<std::string, GLuint> mBindings;
 };
 
 // Uniforms and Fragment Outputs require special treatment due to array notation (e.g., "[0]")

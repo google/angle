@@ -180,7 +180,6 @@ assert INCLUDE_REGEX.match(b'\n#include "foo"')
 # #includes in #ifdefs properly, so they will erroneously be marked as being
 # included, but not part of the source list.
 IGNORED_INCLUDES = {
-    b'absl/container/flat_hash_map.h',
     b'compiler/translator/TranslatorESSL.h',
     b'compiler/translator/TranslatorGLSL.h',
     b'compiler/translator/TranslatorHLSL.h',
@@ -225,7 +224,6 @@ IGNORED_INCLUDE_PREFIXES = {
 }
 
 IGNORED_DIRECTORIES = {
-    '//third_party/abseil-cpp',
     '//third_party/SwiftShader',
     '//third_party/vulkan-headers',
     '//third_party/vulkan-loader',

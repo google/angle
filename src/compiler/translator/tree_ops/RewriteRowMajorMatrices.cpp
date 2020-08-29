@@ -8,8 +8,6 @@
 
 #include "compiler/translator/tree_ops/RewriteRowMajorMatrices.h"
 
-#include "absl/container/flat_hash_map.h"
-
 #include "compiler/translator/Compiler.h"
 #include "compiler/translator/ImmutableStringBuilder.h"
 #include "compiler/translator/StaticType.h"
@@ -187,7 +185,7 @@ TOperator GetIndexOp(TIntermNode *node)
 }
 
 bool IsConvertedField(TIntermTyped *indexNode,
-                      const absl::flat_hash_map<const TField *, bool> &convertedFields)
+                      const std::unordered_map<const TField *, bool> &convertedFields)
 {
     TIntermBinary *asBinary = indexNode->getAsBinaryNode();
     if (asBinary == nullptr)
@@ -534,9 +532,9 @@ class RewriteRowMajorMatricesTraverser : public TIntermTraverser
     TIntermSequence *getStructCopyFunctions() { return &mOuterPass.copyFunctionDefinitions; }
 
   private:
-    using StructMap         = absl::flat_hash_map<const TStructure *, StructConversionData>;
-    using InterfaceBlockMap = absl::flat_hash_map<const TVariable *, TVariable *>;
-    using InterfaceBlockFieldConverted = absl::flat_hash_map<const TField *, bool>;
+    typedef std::unordered_map<const TStructure *, StructConversionData> StructMap;
+    typedef std::unordered_map<const TVariable *, TVariable *> InterfaceBlockMap;
+    typedef std::unordered_map<const TField *, bool> InterfaceBlockFieldConverted;
 
     RewriteRowMajorMatricesTraverser(
         TSymbolTable *symbolTable,

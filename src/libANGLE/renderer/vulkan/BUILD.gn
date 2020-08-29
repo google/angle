@@ -195,7 +195,6 @@ angle_source_set("angle_vulkan_backend") {
   libs = []
   deps = [
     ":angle_vk_mem_alloc_wrapper",
-    "$angle_root:angle_abseil",
     "$angle_root:angle_compression",
     "$angle_root:angle_gpu_info_util",
     "$angle_root:angle_image_util",
