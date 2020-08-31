@@ -34,6 +34,23 @@
       "revId": "996f2f64f073b941619d0e21327162192566b5c5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4d75943c_b95df1c7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 33
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-08-31T15:49:59Z",
+      "side": 1,
+      "message": "Removing myself from reviewers - left feedback on the last patch set.",
+      "revId": "996f2f64f073b941619d0e21327162192566b5c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
