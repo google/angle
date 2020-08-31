@@ -3435,6 +3435,13 @@ void Context::initCaps()
         }
     }
 
+    // Disable support for OES_get_program_binary
+    if (mDisplay->getFrontendFeatures().disableProgramBinary.enabled)
+    {
+        mState.mExtensions.getProgramBinaryOES = false;
+        mState.mCaps.programBinaryFormats.clear();
+    }
+
     // Generate texture caps
     updateCaps();
 }

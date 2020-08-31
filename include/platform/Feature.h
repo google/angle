@@ -26,6 +26,7 @@ namespace angle
 enum class FeatureCategory
 {
     FrontendWorkarounds,
+    FrontendFeatures,
     OpenGLWorkarounds,
     D3DWorkarounds,
     D3DCompilerWorkarounds,
@@ -35,6 +36,7 @@ enum class FeatureCategory
 };
 
 constexpr char kFeatureCategoryFrontendWorkarounds[]    = "Frontend workarounds";
+constexpr char kFeatureCategoryFrontendFeatures[]       = "Frontend features";
 constexpr char kFeatureCategoryOpenGLWorkarounds[]      = "OpenGL workarounds";
 constexpr char kFeatureCategoryD3DWorkarounds[]         = "D3D workarounds";
 constexpr char kFeatureCategoryD3DCompilerWorkarounds[] = "D3D compiler workarounds";
@@ -49,6 +51,10 @@ inline const char *FeatureCategoryToString(const FeatureCategory &fc)
     {
         case FeatureCategory::FrontendWorkarounds:
             return kFeatureCategoryFrontendWorkarounds;
+            break;
+
+        case FeatureCategory::FrontendFeatures:
+            return kFeatureCategoryFrontendFeatures;
             break;
 
         case FeatureCategory::OpenGLWorkarounds:
