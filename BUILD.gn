@@ -1160,7 +1160,7 @@ if (build_with_chromium && !is_component_build && is_android &&
     current_toolchain == default_toolchain) {
   # Package ANGLE libraries
   angle_apk("angle_chromium_apk") {
-    package_name = "com.chromium.angle"
+    package_name = "org.chromium.angle"
     apk_name = "AngleLibraries"
   }
 
