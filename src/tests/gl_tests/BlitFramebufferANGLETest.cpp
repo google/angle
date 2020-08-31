@@ -1611,6 +1611,8 @@ TEST_P(BlitFramebufferTest, NonZeroBaseDestinationStencil)
 {
     // http://anglebug.com/5001
     ANGLE_SKIP_TEST_IF(IsOpenGL() && IsIntel() && IsOSX());
+    // http://anglebug.com/5003
+    ANGLE_SKIP_TEST_IF(IsOpenGL() && IsIntel() && IsWindows());
 
     ANGLE_GL_PROGRAM(drawRed, essl3_shaders::vs::Simple(), essl3_shaders::fs::Red());
 
