@@ -53,7 +53,8 @@ VendorID GetVendorID(const FunctionsGL *functions)
         return VENDOR_ID_NVIDIA;
     }
     else if (nativeVendorString.find("ATI") != std::string::npos ||
-             nativeVendorString.find("AMD") != std::string::npos)
+             nativeVendorString.find("AMD") != std::string::npos ||
+             nativeVendorString.find("Radeon") != std::string::npos)
     {
         return VENDOR_ID_AMD;
     }
