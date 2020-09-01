@@ -1183,6 +1183,65 @@ TEST_P(VulkanPerformanceCounterTest, MaskedClearDoesNotBreakRenderPass)
     EXPECT_PIXEL_NEAR(0, 0, 63, 127, 255, 191, 1);
 }
 
+// Tests that draw buffer change with all color channel mask off should not break renderpass
+TEST_P(VulkanPerformanceCounterTest, DrawbufferChangeWithAllColorMaskDisabled)
+{
+    const rx::vk::PerfCounters &counters = hackANGLE();
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Passthrough(), essl1_shaders::fs::UniformColor());
+    glUseProgram(program);
+    GLint colorUniformLocation =
+        glGetUniformLocation(program, angle::essl1_shaders::ColorUniform());
+    ASSERT_NE(-1, colorUniformLocation);
+    ASSERT_GL_NO_ERROR();
+
+    GLTexture textureRGBA;
+    glBindTexture(GL_TEXTURE_2D, textureRGBA);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 64, 64, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    GLTexture textureDepth;
+    glBindTexture(GL_TEXTURE_2D, textureDepth);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, 64, 64, 0, GL_DEPTH_COMPONENT,
+                 GL_UNSIGNED_INT, nullptr);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    GLFramebuffer framebuffer;
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureRGBA, 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, textureDepth, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    ASSERT_GL_NO_ERROR();
+
+    uint32_t expectedRenderPassCount = counters.renderPasses + 1;
+
+    // Draw into FBO
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+    glClearColor(0.0f, 1.0f, 0.0f, 1.0f);  // clear to green
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glViewport(0, 0, 256, 256);
+    glUniform4fv(colorUniformLocation, 1, GLColor::blue.toNormalizedVector().data());
+    GLenum glDrawBuffers_bufs_1[] = {GL_COLOR_ATTACHMENT0};
+    glDrawBuffers(1, glDrawBuffers_bufs_1);
+    glEnable(GL_DEPTH_TEST);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+    // Change draw buffer state and color mask
+    GLenum glDrawBuffers_bufs_0[] = {GL_NONE};
+    glDrawBuffers(1, glDrawBuffers_bufs_0);
+    glColorMask(false, false, false, false);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.6f);
+    // Change back draw buffer state and color mask
+    glDrawBuffers(1, glDrawBuffers_bufs_1);
+    glColorMask(true, true, true, true);
+    glUniform4fv(colorUniformLocation, 1, GLColor::red.toNormalizedVector().data());
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.7f);
+
+    uint32_t actualRenderPassCount = counters.renderPasses;
+    EXPECT_EQ(expectedRenderPassCount, actualRenderPassCount);
+}
+
 ANGLE_INSTANTIATE_TEST(VulkanPerformanceCounterTest, ES3_VULKAN());
 ANGLE_INSTANTIATE_TEST(VulkanPerformanceCounterTest_ES31, ES31_VULKAN());
 

@@ -526,6 +526,50 @@ TEST_P(DrawBuffersWebGL2Test, TwoProgramsWithDifferentOutputsAndClear)
     glDeleteProgram(program);
 }
 
+// Test clear with gaps in draw buffers, originally show up as
+// webgl_conformance_vulkan_passthrough_tests conformance/extensions/webgl-draw-buffers.html
+// failure. This is added for ease of debugging.
+TEST_P(DrawBuffersWebGL2Test, Clear)
+{
+    ANGLE_SKIP_TEST_IF(!setupTest());
+
+    constexpr GLint kMaxBuffers = 4;
+
+    glGetIntegerv(GL_MAX_DRAW_BUFFERS, &mMaxDrawBuffers);
+    ASSERT_GE(mMaxDrawBuffers, kMaxBuffers);
+
+    GLenum drawBufs[kMaxBuffers] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1,
+                                    GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3};
+
+    // Enable all draw buffers.
+    for (GLuint texIndex = 0; texIndex < kMaxBuffers; texIndex++)
+    {
+        glBindTexture(GL_TEXTURE_2D, mTextures[texIndex]);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + texIndex, GL_TEXTURE_2D,
+                               mTextures[texIndex], 0);
+    }
+
+    // Clear with all draw buffers.
+    setDrawBuffers(kMaxBuffers, drawBufs);
+    glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    // Clear with first half none draw buffers.
+    drawBufs[0] = GL_NONE;
+    drawBufs[1] = GL_NONE;
+    setDrawBuffers(kMaxBuffers, drawBufs);
+    glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    ASSERT_GL_NO_ERROR();
+
+    // Verify first is drawn red, second is untouched, and last two are cleared green.
+    verifyAttachment2DColor(0, mTextures[0], GL_TEXTURE_2D, 0, GLColor::red);
+    verifyAttachment2DColor(1, mTextures[1], GL_TEXTURE_2D, 0, GLColor::red);
+    verifyAttachment2DColor(2, mTextures[2], GL_TEXTURE_2D, 0, GLColor::green);
+    verifyAttachment2DColor(3, mTextures[3], GL_TEXTURE_2D, 0, GLColor::green);
+}
+
 TEST_P(DrawBuffersTest, UnwrittenOutputVariablesShouldNotCrash)
 {
     ANGLE_SKIP_TEST_IF(!setupTest());
@@ -736,6 +780,188 @@ TEST_P(DrawBuffersTestES3, 2DArrayTextures)
     glDeleteProgram(program);
 }
 
+// Vulkan backend is setting per buffer color mask to false for draw buffers that set to GL_NONE.
+// These set of tests are to test draw buffer change followed by draw/clear/blit and followed by
+// draw buffer change are behaving correctly.
+class ColorMaskForDrawBuffersTest : public DrawBuffersTest
+{
+  protected:
+    void setupColorMaskForDrawBuffersTest()
+    {
+        glBindTexture(GL_TEXTURE_2D, mTextures[0]);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mTextures[0],
+                               0);
+        glBindTexture(GL_TEXTURE_2D, mTextures[1]);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, mTextures[1],
+                               0);
+        glBindTexture(GL_TEXTURE_2D, mTextures[2]);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, mTextures[2],
+                               0);
+
+        constexpr char kFS_ESSL3[] =
+            "#version 300 es\n"
+            "precision highp float;\n"
+            "uniform mediump vec4 u_color0;\n"
+            "uniform mediump vec4 u_color1;\n"
+            "uniform mediump vec4 u_color2;\n"
+            "layout(location = 0) out vec4 out_color0;\n"
+            "layout(location = 1) out vec4 out_color1;\n"
+            "layout(location = 2) out vec4 out_color2;\n"
+            "void main()\n"
+            "{\n"
+            "    out_color0 = u_color0;\n"
+            "    out_color1 = u_color1;\n"
+            "    out_color2 = u_color2;\n"
+            "}\n";
+        program = CompileProgram(essl3_shaders::vs::Simple(), kFS_ESSL3);
+        glUseProgram(program);
+
+        positionLocation = glGetAttribLocation(program, positionAttrib());
+        ASSERT_NE(-1, positionLocation);
+        color0UniformLocation = glGetUniformLocation(program, "u_color0");
+        ASSERT_NE(color0UniformLocation, -1);
+        color1UniformLocation = glGetUniformLocation(program, "u_color1");
+        ASSERT_NE(color1UniformLocation, -1);
+        color2UniformLocation = glGetUniformLocation(program, "u_color2");
+        ASSERT_NE(color2UniformLocation, -1);
+
+        glUniform4fv(color0UniformLocation, 1, GLColor::red.toNormalizedVector().data());
+        glUniform4fv(color1UniformLocation, 1, GLColor::green.toNormalizedVector().data());
+        glUniform4fv(color2UniformLocation, 1, GLColor::yellow.toNormalizedVector().data());
+
+        // First draw into both buffers so that buffer0 is red and buffer1 is green
+        resetDrawBuffers();
+        drawQuad(program, positionAttrib(), 0.5);
+        EXPECT_GL_NO_ERROR();
+
+        for (int i = 0; i < 4; i++)
+        {
+            drawBuffers[i] = GL_NONE;
+        }
+    }
+
+    void resetDrawBuffers()
+    {
+        drawBuffers[0] = GL_COLOR_ATTACHMENT0;
+        drawBuffers[1] = GL_COLOR_ATTACHMENT1;
+        drawBuffers[2] = GL_COLOR_ATTACHMENT2;
+        drawBuffers[3] = GL_NONE;
+        setDrawBuffers(4, drawBuffers);
+    }
+
+    GLenum drawBuffers[4];
+    GLuint program;
+    GLint positionLocation;
+    GLint color0UniformLocation;
+    GLint color1UniformLocation;
+    GLint color2UniformLocation;
+};
+
+// Test draw buffer state change followed draw call
+TEST_P(ColorMaskForDrawBuffersTest, DrawQuad)
+{
+    ANGLE_SKIP_TEST_IF(!setupTest());
+    setupColorMaskForDrawBuffersTest();
+
+    // Draw blue into attachment0. Buffer0 should be blue and buffer1 should remain green
+    drawBuffers[0] = GL_COLOR_ATTACHMENT0;
+    setDrawBuffers(4, drawBuffers);
+    glUniform4fv(color0UniformLocation, 1, GLColor::blue.toNormalizedVector().data());
+    glUniform4fv(color1UniformLocation, 1, GLColor::cyan.toNormalizedVector().data());
+    glViewport(0, 0, getWindowWidth() / 2, getWindowHeight() / 2);
+    drawQuad(program, positionAttrib(), 0.5);
+
+    resetDrawBuffers();
+    glUniform4fv(color0UniformLocation, 1, GLColor::magenta.toNormalizedVector().data());
+    glUniform4fv(color1UniformLocation, 1, GLColor::white.toNormalizedVector().data());
+    glViewport(getWindowWidth() / 2, 0, getWindowWidth() / 2, getWindowHeight() / 2);
+    drawQuad(program, positionAttrib(), 0.5);
+    EXPECT_GL_NO_ERROR();
+
+    glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mTextures[0],
+                           0);
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 4, getWindowHeight() / 4, GLColor::blue);
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() * 3 / 4, getWindowHeight() / 4, GLColor::magenta);
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 4, getWindowHeight() * 3 / 4, GLColor::red);
+    glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mTextures[1],
+                           0);
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 4, getWindowHeight() / 4, GLColor::green);
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() * 3 / 4, getWindowHeight() / 4, GLColor::white);
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 4, getWindowHeight() * 3 / 4, GLColor::green);
+    EXPECT_GL_NO_ERROR();
+}
+
+// Test draw buffer state change followed clear
+TEST_P(ColorMaskForDrawBuffersTest, Clear)
+{
+    ANGLE_SKIP_TEST_IF(!setupTest());
+    setupColorMaskForDrawBuffersTest();
+
+    // Clear attachment1. Buffer0 should retain red and buffer1 should be blue
+    drawBuffers[1] = GL_COLOR_ATTACHMENT1;
+    setDrawBuffers(4, drawBuffers);
+    GLfloat *clearColor = GLColor::blue.toNormalizedVector().data();
+    glClearColor(clearColor[0], clearColor[1], clearColor[2], clearColor[3]);
+    glClear(GL_COLOR_BUFFER_BIT);
+    verifyAttachment2DColor(0, mTextures[0], GL_TEXTURE_2D, 0, GLColor::red);
+    verifyAttachment2DColor(1, mTextures[1], GL_TEXTURE_2D, 0, GLColor::blue);
+    EXPECT_GL_NO_ERROR();
+}
+
+// Test draw buffer state change followed scissored clear
+TEST_P(ColorMaskForDrawBuffersTest, ScissoredClear)
+{
+    ANGLE_SKIP_TEST_IF(!setupTest());
+    setupColorMaskForDrawBuffersTest();
+
+    // Clear attachment1. Buffer0 should retain red and buffer1 should be blue
+    drawBuffers[1] = GL_COLOR_ATTACHMENT1;
+    setDrawBuffers(4, drawBuffers);
+    GLfloat *clearColor = GLColor::blue.toNormalizedVector().data();
+    glClearColor(clearColor[0], clearColor[1], clearColor[2], clearColor[3]);
+    glScissor(0, 0, getWindowWidth() / 2, getWindowHeight() / 2);
+    glEnable(GL_SCISSOR_TEST);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    resetDrawBuffers();
+    clearColor = GLColor::magenta.toNormalizedVector().data();
+    glClearColor(clearColor[0], clearColor[1], clearColor[2], clearColor[3]);
+    glScissor(getWindowWidth() / 2, 0, getWindowWidth() / 2, getWindowHeight() / 2);
+    glClear(GL_COLOR_BUFFER_BIT);
+    EXPECT_GL_NO_ERROR();
+
+    glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mTextures[0],
+                           0);
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 4, getWindowHeight() / 4, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() * 3 / 4, getWindowHeight() / 4, GLColor::magenta);
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 4, getWindowHeight() * 3 / 4, GLColor::red);
+    glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mTextures[1],
+                           0);
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 4, getWindowHeight() / 4, GLColor::blue);
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() * 3 / 4, getWindowHeight() / 4, GLColor::magenta);
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 4, getWindowHeight() * 3 / 4, GLColor::green);
+    EXPECT_GL_NO_ERROR();
+}
+
+// Test draw buffer state change followed FBO blit
+TEST_P(ColorMaskForDrawBuffersTest, Blit)
+{
+    ANGLE_SKIP_TEST_IF(!setupTest());
+    setupColorMaskForDrawBuffersTest();
+
+    glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mTextures[2],
+                           0);
+
+    // BLIT mTexture[2] to attachment0. Buffer0 should remain red and buffer1 should be yellow
+    drawBuffers[0] = GL_COLOR_ATTACHMENT0;
+    setDrawBuffers(4, drawBuffers);
+    glBlitFramebuffer(0, 0, getWindowWidth(), getWindowHeight(), 0, 0, getWindowWidth(),
+                      getWindowHeight(), GL_COLOR_BUFFER_BIT, GL_NEAREST);
+    verifyAttachment2DColor(0, mTextures[0], GL_TEXTURE_2D, 0, GLColor::yellow);
+    verifyAttachment2DColor(1, mTextures[1], GL_TEXTURE_2D, 0, GLColor::green);
+    EXPECT_GL_NO_ERROR();
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against.
 ANGLE_INSTANTIATE_TEST(DrawBuffersTest,
@@ -745,3 +971,5 @@ ANGLE_INSTANTIATE_TEST(DrawBuffersTest,
 ANGLE_INSTANTIATE_TEST_ES3(DrawBuffersWebGL2Test);
 
 ANGLE_INSTANTIATE_TEST_ES3(DrawBuffersTestES3);
+
+ANGLE_INSTANTIATE_TEST_ES3(ColorMaskForDrawBuffersTest);

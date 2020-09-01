@@ -124,13 +124,6 @@ class FramebufferVk : public FramebufferImpl
 
     const vk::RenderPassDesc &getRenderPassDesc() const { return mRenderPassDesc; }
 
-    // We only support depth/stencil packed format and depthstencil attachment always follow all
-    // color attachments
-    size_t getDepthStencilAttachmentIndexVk() const
-    {
-        return getState().getEnabledDrawBuffers().count();
-    }
-
     angle::Result getFramebuffer(ContextVk *contextVk,
                                  vk::Framebuffer **framebufferOut,
                                  const vk::ImageView *resolveImageViewIn);
@@ -257,6 +250,8 @@ class FramebufferVk : public FramebufferImpl
 
     vk::FramebufferDesc mCurrentFramebufferDesc;
     std::unordered_map<vk::FramebufferDesc, vk::FramebufferHelper> mFramebufferCache;
+    // Tracks all the color buffers attached to this FramebufferDesc
+    gl::DrawBufferMask mAttachedColorBufferMask;
 
     vk::ClearValuesArray mDeferredClears;
 };

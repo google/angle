@@ -1477,9 +1477,10 @@ angle::Result FramebufferVk::invalidateImpl(ContextVk *contextVk,
     {
         // Set the appropriate storeOp for attachments.
         size_t attachmentIndexVk = 0;
-        for (size_t colorIndexGL : mState.getEnabledDrawBuffers())
+        for (size_t colorIndexGL : mAttachedColorBufferMask)
         {
-            if (invalidateColorBuffers.test(colorIndexGL))
+            if (mState.getEnabledDrawBuffers()[colorIndexGL] &&
+                invalidateColorBuffers.test(colorIndexGL))
             {
                 contextVk->getStartedRenderPassCommands().invalidateRenderPassColorAttachment(
                     attachmentIndexVk);
@@ -1576,16 +1577,19 @@ angle::Result FramebufferVk::updateColorAttachment(const gl::Context *context,
         updateActiveColorMasks(colorIndexGL, false, false, false, false);
     }
 
-    const bool enabledColor   = renderTarget && mState.getEnabledDrawBuffers()[colorIndexGL];
+    const bool enabledColor =
+        renderTarget && mState.getColorAttachments()[colorIndexGL].isAttached();
     const bool enabledResolve = enabledColor && renderTarget->hasResolveAttachment();
 
     if (enabledColor)
     {
         mCurrentFramebufferDesc.updateColor(colorIndexGL, renderTarget->getDrawSubresourceSerial());
+        mAttachedColorBufferMask.set(colorIndexGL);
     }
     else
     {
         mCurrentFramebufferDesc.updateColor(colorIndexGL, vk::kInvalidImageViewSubresourceSerial);
+        mAttachedColorBufferMask.reset(colorIndexGL);
     }
 
     if (enabledResolve)
@@ -1662,6 +1666,7 @@ angle::Result FramebufferVk::syncState(const gl::Context *context,
     // If we are notified that any attachment is dirty, but we have deferred clears for them, a
     // flushDeferredClears() call is missing somewhere.  ASSERT this to catch these bugs.
     vk::ClearValuesArray previousDeferredClears = mDeferredClears;
+    bool shouldUpdateColorMask                  = false;
 
     // For any updated attachments we'll update their Serials below
     ASSERT(dirtyBits.any());
@@ -1681,22 +1686,7 @@ angle::Result FramebufferVk::syncState(const gl::Context *context,
                 ANGLE_TRY(mRenderTargetCache.update(context, mState, dirtyBits));
                 break;
             case gl::Framebuffer::DIRTY_BIT_DRAW_BUFFERS:
-                // Force update of serial for enabled draw buffers
-                mCurrentFramebufferDesc.reset();
-                for (size_t colorIndexGL : mState.getEnabledDrawBuffers())
-                {
-                    uint32_t colorIndex32 = static_cast<uint32_t>(colorIndexGL);
-
-                    RenderTargetVk *renderTarget = mRenderTargetCache.getColors()[colorIndexGL];
-                    mCurrentFramebufferDesc.updateColor(colorIndex32,
-                                                        renderTarget->getDrawSubresourceSerial());
-                    if (renderTarget->hasResolveAttachment())
-                    {
-                        mCurrentFramebufferDesc.updateColorResolve(
-                            colorIndex32, renderTarget->getResolveSubresourceSerial());
-                    }
-                }
-                updateDepthStencilAttachmentSerial(contextVk);
+                shouldUpdateColorMask = true;
                 break;
             case gl::Framebuffer::DIRTY_BIT_DEFAULT_WIDTH:
             case gl::Framebuffer::DIRTY_BIT_DEFAULT_HEIGHT:
@@ -1724,11 +1714,16 @@ angle::Result FramebufferVk::syncState(const gl::Context *context,
                 }
 
                 ASSERT(!previousDeferredClears.test(colorIndexGL));
-
                 ANGLE_TRY(updateColorAttachment(context, deferClears, colorIndexGL));
+                shouldUpdateColorMask = true;
                 break;
             }
         }
+    }
+
+    if (shouldUpdateColorMask)
+    {
+        contextVk->updateColorMask(context->getState().getBlendState());
     }
 
     // In some cases we'll need to force a flush of deferred clears. When we're syncing the read
@@ -1802,11 +1797,10 @@ void FramebufferVk::updateRenderPassDesc()
     mRenderPassDesc.setSamples(getSamples());
 
     // Color attachments.
-    const auto &colorRenderTargets              = mRenderTargetCache.getColors();
-    const gl::DrawBufferMask enabledDrawBuffers = mState.getEnabledDrawBuffers();
-    for (size_t colorIndexGL = 0; colorIndexGL < enabledDrawBuffers.size(); ++colorIndexGL)
+    const auto &colorRenderTargets = mRenderTargetCache.getColors();
+    for (size_t colorIndexGL = 0; colorIndexGL < mAttachedColorBufferMask.size(); ++colorIndexGL)
     {
-        if (enabledDrawBuffers[colorIndexGL])
+        if (mAttachedColorBufferMask[colorIndexGL])
         {
             RenderTargetVk *colorRenderTarget = colorRenderTargets[colorIndexGL];
             ASSERT(colorRenderTarget);
@@ -1880,7 +1874,7 @@ angle::Result FramebufferVk::getFramebuffer(ContextVk *contextVk,
 
     // Color attachments.
     const auto &colorRenderTargets = mRenderTargetCache.getColors();
-    for (size_t colorIndexGL : mState.getEnabledDrawBuffers())
+    for (size_t colorIndexGL : mAttachedColorBufferMask)
     {
         RenderTargetVk *colorRenderTarget = colorRenderTargets[colorIndexGL];
         ASSERT(colorRenderTarget);
@@ -1920,7 +1914,7 @@ angle::Result FramebufferVk::getFramebuffer(ContextVk *contextVk,
     else
     {
         // This Framebuffer owns all of the ImageViews, including its own resolve ImageViews.
-        for (size_t colorIndexGL : mState.getEnabledDrawBuffers())
+        for (size_t colorIndexGL : mAttachedColorBufferMask)
         {
             RenderTargetVk *colorRenderTarget = colorRenderTargets[colorIndexGL];
             ASSERT(colorRenderTarget);
@@ -2124,18 +2118,16 @@ void FramebufferVk::clearWithLoadOp(ContextVk *contextVk,
 
         ASSERT(commands.getCommandBuffer().empty());
 
-        // The clear colors are packed with no gaps. The draw buffers mask is unpacked
-        // and can have gaps. Thus we need to count the packed index explicitly in this loop.
-        size_t colorCount = 0;
-        for (size_t colorIndexGL : mState.getEnabledDrawBuffers())
+        uint32_t colorIndexVk = 0;
+        for (size_t colorIndexGL : mAttachedColorBufferMask)
         {
-            if (clearColorBuffers[colorIndexGL])
+            if (mState.getEnabledDrawBuffers()[colorIndexGL] && clearColorBuffers[colorIndexGL])
             {
                 VkClearValue clearValue =
                     getCorrectedColorClearValue(colorIndexGL, clearColorValue);
-                commands.updateRenderPassColorClear(colorCount, clearValue);
+                commands.updateRenderPassColorClear(colorIndexVk, clearValue);
             }
-            colorCount++;
+            ++colorIndexVk;
         }
 
         if (dsAspectFlags)
@@ -2242,7 +2234,7 @@ angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
     // Color attachments.
     const auto &colorRenderTargets = mRenderTargetCache.getColors();
     uint32_t colorAttachmentCount  = 0;
-    for (size_t colorIndexGL : mState.getEnabledDrawBuffers())
+    for (size_t colorIndexGL : mAttachedColorBufferMask)
     {
         RenderTargetVk *colorRenderTarget = colorRenderTargets[colorIndexGL];
         ASSERT(colorRenderTarget);
@@ -2386,7 +2378,7 @@ angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
 
     // Transition the images to the correct layout (through onColorDraw) after the
     // resolve-to-multisampled copies are done.
-    for (size_t colorIndexGL : mState.getEnabledDrawBuffers())
+    for (size_t colorIndexGL : mAttachedColorBufferMask)
     {
         RenderTargetVk *colorRenderTarget = colorRenderTargets[colorIndexGL];
         colorRenderTarget->onColorDraw(contextVk);
