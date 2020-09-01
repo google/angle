@@ -1034,7 +1034,7 @@ class State : angle::NonCopyable
 
     BufferVector mUniformBuffers;
     BufferVector mAtomicCounterBuffers;
-    size_t mValidAtomicCounterBufferCount;
+    uint32_t mValidAtomicCounterBufferCount;
     BufferVector mShaderStorageBuffers;
 
     BindingPointer<TransformFeedback> mTransformFeedback;

@@ -345,6 +345,7 @@ State::State(const State *shareContextState,
       mVertexArray(nullptr),
       mActiveSampler(0),
       mTexturesIncompatibleWithSamplers(0),
+      mValidAtomicCounterBufferCount(0),
       mPrimitiveRestart(false),
       mDebug(debug),
       mMultiSampling(false),
@@ -443,7 +444,6 @@ void State::initialize(Context *context)
             caps.maxCombinedTextureImageUnits);
 
         mAtomicCounterBuffers.resize(caps.maxAtomicCounterBufferBindings);
-        mValidAtomicCounterBufferCount = 0;
         mShaderStorageBuffers.resize(caps.maxShaderStorageBufferBindings);
         mImageUnits.resize(caps.maxImageUnits);
     }
@@ -1973,12 +1973,21 @@ angle::Result State::setIndexedBufferBinding(const Context *context,
                                        size);
             break;
         case BufferBinding::AtomicCounter:
+            if (!mAtomicCounterBuffers[index].get() && buffer)
+            {
+                // going from an invalid binding to a valid one, increment the count
+                mValidAtomicCounterBufferCount++;
+                ASSERT(mValidAtomicCounterBufferCount <=
+                       static_cast<uint32_t>(getCaps().maxAtomicCounterBufferBindings));
+            }
+            else if (mAtomicCounterBuffers[index].get() && !buffer)
+            {
+                // going from a valid binding to an invalid one, decrement the count
+                mValidAtomicCounterBufferCount--;
+                ASSERT(mValidAtomicCounterBufferCount >= 0);
+            }
             UpdateIndexedBufferBinding(context, &mAtomicCounterBuffers[index], buffer, target,
                                        offset, size);
-            if (buffer)
-            {
-                mValidAtomicCounterBufferCount++;
-            }
             break;
         case BufferBinding::ShaderStorage:
             UpdateIndexedBufferBinding(context, &mShaderStorageBuffers[index], buffer, target,
@@ -2051,6 +2060,7 @@ angle::Result State::detachBuffer(Context *context, const Buffer *buffer)
         {
             UpdateIndexedBufferBinding(context, &buf, nullptr, BufferBinding::AtomicCounter, 0, 0);
             mValidAtomicCounterBufferCount--;
+            ASSERT(mValidAtomicCounterBufferCount >= 0);
         }
     }
 
