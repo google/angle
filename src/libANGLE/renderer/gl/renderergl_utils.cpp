@@ -1796,6 +1796,12 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
     // workaround's being restricted to existing desktop GPUs.
     ANGLE_FEATURE_CONDITION(features, emulatePackSkipRowsAndPackSkipPixels,
                             IsApple() && (isAMD || isIntel || isNvidia));
+
+    // http://crbug.com/1042393
+    // XWayland defaults to a 1hz refresh rate when the "surface is not visible", which sometimes
+    // causes issues in Chrome. To get around this, default to a 30Hz refresh rate if we see bogus
+    // from the driver.
+    ANGLE_FEATURE_CONDITION(features, clampMscRate, IsLinux() && IsWayland());
 }
 
 void InitializeFrontendFeatures(const FunctionsGL *functions, angle::FrontendFeatures *features)

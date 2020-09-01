@@ -11,6 +11,7 @@
 #include "libANGLE/renderer/driver_utils.h"
 
 #include "common/platform.h"
+#include "common/system_utils.h"
 
 #if defined(ANGLE_PLATFORM_ANDROID)
 #    include <sys/system_properties.h>
@@ -250,6 +251,35 @@ OSVersion GetLinuxOSVersion()
 #endif
 
     return OSVersion(0, 0, 0);
+}
+
+// There are multiple environment variables that may or may not be set during Wayland
+// sessions, including WAYLAND_DISPLAY, XDG_SESSION_TYPE, and DESKTOP_SESSION
+bool IsWayland()
+{
+    static bool checked   = false;
+    static bool isWayland = false;
+    if (!checked)
+    {
+        if (IsLinux())
+        {
+            if (!angle::GetEnvironmentVar("WAYLAND_DISPLAY").empty())
+            {
+                isWayland = true;
+            }
+            else if (angle::GetEnvironmentVar("XDG_SESSION_TYPE") == "wayland")
+            {
+                isWayland = true;
+            }
+            else if (angle::GetEnvironmentVar("DESKTOP_SESSION").find("wayland") !=
+                     std::string::npos)
+            {
+                isWayland = true;
+            }
+        }
+        checked = true;
+    }
+    return isWayland;
 }
 
 }  // namespace rx

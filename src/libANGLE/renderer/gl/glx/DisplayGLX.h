@@ -15,6 +15,7 @@
 
 #include "common/Optional.h"
 #include "libANGLE/renderer/gl/DisplayGL.h"
+#include "libANGLE/renderer/gl/RendererGL.h"
 #include "libANGLE/renderer/gl/glx/FunctionsGLX.h"
 
 namespace rx
@@ -96,6 +97,8 @@ class DisplayGLX : public DisplayGL
     void initializeFrontendFeatures(angle::FrontendFeatures *features) const override;
 
     void populateFeatureList(angle::FeatureList *features) override;
+
+    RendererGL *getRenderer() const { return mRenderer.get(); }
 
   private:
     egl::Error initializeContext(glx::FBConfig config,
