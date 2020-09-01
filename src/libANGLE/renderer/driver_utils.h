@@ -164,6 +164,8 @@ inline bool IsFuchsia()
 #endif
 }
 
+bool IsWayland();
+
 struct OSVersion
 {
     OSVersion();

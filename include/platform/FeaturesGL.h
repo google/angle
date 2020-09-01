@@ -469,6 +469,12 @@ struct FeaturesGL : FeatureSetBase
         "emulate_pack_skip_rows_and_pack_skip_pixels", FeatureCategory::OpenGLWorkarounds,
         "GL_PACK_SKIP_ROWS and GL_PACK_SKIP_PIXELS are ignored in Apple's OpenGL driver.", &members,
         "https://anglebug.com/4849"};
+
+    // Some drivers return bogus/1hz values for GetMscRate, which we may want to clamp
+    Feature clampMscRate = {
+        "clamp_msc_rate", FeatureCategory::OpenGLWorkarounds,
+        "Some drivers return bogus values for GetMscRate, so we clamp it to 30Hz", &members,
+        "https://crbug.com/1042393"};
 };
 
 inline FeaturesGL::FeaturesGL()  = default;
