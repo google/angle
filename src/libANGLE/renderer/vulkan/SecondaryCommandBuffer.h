@@ -693,6 +693,14 @@ class SecondaryCommandBuffer final : angle::NonCopyable
 
     static bool CanKnowIfEmpty() { return true; }
     bool empty() const { return mCommands.size() == 0 || mCommands[0]->id == CommandID::Invalid; }
+    // The following is used to give the size of the command buffer in bytes
+    uint32_t getCommandBufferSize() const
+    {
+        ASSERT(mCommands.size() > 0 || mCurrentBytesRemaining == 0);
+        uint32_t rtn =
+            static_cast<uint32_t>((mCommands.size() * kBlockSize) - mCurrentBytesRemaining);
+        return rtn;
+    }
 
   private:
     void commonDebugUtilsLabel(CommandID cmd, const VkDebugUtilsLabelEXT &label);

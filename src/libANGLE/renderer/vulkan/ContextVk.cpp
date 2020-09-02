@@ -2490,8 +2490,9 @@ void ContextVk::optimizeRenderPassForPresent(VkFramebuffer framebufferHandle)
     if (depthStencilRenderTarget)
     {
         // Change depthstencil attachment storeOp to DONT_CARE
-        mRenderPassCommands->invalidateRenderPassStencilAttachment();
-        mRenderPassCommands->invalidateRenderPassDepthAttachment();
+        const gl::DepthStencilState &dsState = mState.getDepthStencilState();
+        mRenderPassCommands->invalidateRenderPassStencilAttachment(dsState);
+        mRenderPassCommands->invalidateRenderPassDepthAttachment(dsState);
         // Mark content as invalid so that we will not load them in next renderpass
         depthStencilRenderTarget->invalidateEntireContent();
     }
@@ -2908,11 +2909,9 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 if (mRenderPassCommands->started())
                 {
                     vk::ResourceAccess access = GetStencilAccess(mState.getDepthStencilState());
-                    mRenderPassCommands->onStencilAccess(access);
-                    // Did this depth-state change undo a previous invalidation of the depth-stencil
-                    // attachment?
-                    if (mRenderPassCommands->shouldRestoreDepthStencilAttachment())
+                    if (mRenderPassCommands->onStencilAccess(access))
                     {
+                        // The attachment is no longer invalidated, so set mContentDefined to true
                         mDrawFramebuffer->restoreDepthStencilDefinedContents();
                     }
                 }
@@ -4914,11 +4913,9 @@ angle::Result ContextVk::updateRenderPassDepthAccess()
         }
         else
         {
-            mRenderPassCommands->onDepthAccess(access);
-            // Did this depth-state change undo a previous invalidation of the depth-stencil
-            // attachment?
-            if (mRenderPassCommands->shouldRestoreDepthStencilAttachment())
+            if (mRenderPassCommands->onDepthAccess(access))
             {
+                // The attachment is no longer invalidated, so set mContentDefined to true
                 mDrawFramebuffer->restoreDepthStencilDefinedContents();
             }
         }

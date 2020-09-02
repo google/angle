@@ -1483,14 +1483,17 @@ angle::Result FramebufferVk::invalidateImpl(ContextVk *contextVk,
 
         if (depthStencilRenderTarget)
         {
+            const gl::DepthStencilState &dsState = contextVk->getState().getDepthStencilState();
             if (invalidateDepthBuffer)
             {
-                contextVk->getStartedRenderPassCommands().invalidateRenderPassDepthAttachment();
+                contextVk->getStartedRenderPassCommands().invalidateRenderPassDepthAttachment(
+                    dsState);
             }
 
             if (invalidateStencilBuffer)
             {
-                contextVk->getStartedRenderPassCommands().invalidateRenderPassStencilAttachment();
+                contextVk->getStartedRenderPassCommands().invalidateRenderPassStencilAttachment(
+                    dsState);
             }
         }
         if (invalidateColorBuffers.any())
