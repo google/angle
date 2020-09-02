@@ -1101,7 +1101,7 @@ angle::Result Texture::setSubImage(Context *context,
     ASSERT(TextureTargetToType(target) == mState.mType);
 
     ImageIndex index = ImageIndex::MakeFromTarget(target, level, area.depth);
-    ANGLE_TRY(ensureSubImageInitialized(context, index, area, false));
+    ANGLE_TRY(ensureSubImageInitialized(context, index, area));
 
     ANGLE_TRY(mTexture->setSubImage(context, index, area, format, type, unpackState, unpackBuffer,
                                     pixels));
@@ -1154,7 +1154,7 @@ angle::Result Texture::setCompressedSubImage(const Context *context,
     ASSERT(TextureTargetToType(target) == mState.mType);
 
     ImageIndex index = ImageIndex::MakeFromTarget(target, level, area.depth);
-    ANGLE_TRY(ensureSubImageInitialized(context, index, area, false));
+    ANGLE_TRY(ensureSubImageInitialized(context, index, area));
 
     ANGLE_TRY(mTexture->setCompressedSubImage(context, index, area, format, unpackState, imageSize,
                                               pixels));
@@ -1188,13 +1188,9 @@ angle::Result Texture::copyImage(Context *context,
     // the copy lies entirely off the source framebuffer, initialize as though a zero-size box is
     // going to be set during the copy operation.
     Box destBox;
-    bool sourceAreaIsOutOfBounds = false;
     if (context->isRobustResourceInitEnabled())
     {
-        Extents fbSize          = source->getReadColorAttachment()->getSize();
-        sourceAreaIsOutOfBounds = (sourceArea.x < 0) || (sourceArea.y < 0) ||
-                                  ((sourceArea.x + sourceArea.width) > fbSize.width) ||
-                                  ((sourceArea.y + sourceArea.height) > fbSize.height);
+        Extents fbSize = source->getReadColorAttachment()->getSize();
         Rectangle clippedArea;
         if (ClipRectangle(sourceArea, Rectangle(0, 0, fbSize.width, fbSize.height), &clippedArea))
         {
@@ -1209,14 +1205,14 @@ angle::Result Texture::copyImage(Context *context,
     // an initializeContents call, and then a copySubImage call. This ensures the destination
     // texture exists before we try to clear it.
     Extents size(sourceArea.width, sourceArea.height, 1);
-    if (doesSubImageNeedInit(context, index, destBox, sourceAreaIsOutOfBounds))
+    if (doesSubImageNeedInit(context, index, destBox))
     {
         ANGLE_TRY(mTexture->setImage(context, index, internalFormat, size,
                                      internalFormatInfo.format, internalFormatInfo.type,
                                      PixelUnpackState(), nullptr, nullptr));
         mState.setImageDesc(target, level,
                             ImageDesc(size, Format(internalFormatInfo), InitState::MayNeedInit));
-        ANGLE_TRY(ensureSubImageInitialized(context, index, destBox, sourceAreaIsOutOfBounds));
+        ANGLE_TRY(ensureSubImageInitialized(context, index, destBox));
         ANGLE_TRY(mTexture->copySubImage(context, index, Offset(), sourceArea, source));
     }
     else
@@ -1251,13 +1247,9 @@ angle::Result Texture::copySubImage(Context *context,
     // ensureSubImageInitialized ensures initialization of the entire destination texture, and not
     // just a sub-region.
     Box destBox;
-    bool sourceAreaIsOutOfBounds = false;
     if (context->isRobustResourceInitEnabled())
     {
-        Extents fbSize          = source->getReadColorAttachment()->getSize();
-        sourceAreaIsOutOfBounds = (sourceArea.x < 0) || (sourceArea.y < 0) ||
-                                  ((sourceArea.x + sourceArea.width) > fbSize.width) ||
-                                  ((sourceArea.y + sourceArea.height) > fbSize.height);
+        Extents fbSize = source->getReadColorAttachment()->getSize();
         Rectangle clippedArea;
         if (ClipRectangle(sourceArea, Rectangle(0, 0, fbSize.width, fbSize.height), &clippedArea))
         {
@@ -1268,7 +1260,7 @@ angle::Result Texture::copySubImage(Context *context,
         }
     }
 
-    ANGLE_TRY(ensureSubImageInitialized(context, index, destBox, sourceAreaIsOutOfBounds));
+    ANGLE_TRY(ensureSubImageInitialized(context, index, destBox));
 
     ANGLE_TRY(mTexture->copySubImage(context, index, destOffset, sourceArea, source));
     ANGLE_TRY(handleMipmapGenerationHint(context, index.getLevelIndex()));
@@ -1336,7 +1328,7 @@ angle::Result Texture::copySubTexture(const Context *context,
     Box destBox(destOffset.x, destOffset.y, destOffset.z, sourceBox.width, sourceBox.height,
                 sourceBox.depth);
     ImageIndex index = ImageIndex::MakeFromTarget(target, level, sourceBox.depth);
-    ANGLE_TRY(ensureSubImageInitialized(context, index, destBox, false));
+    ANGLE_TRY(ensureSubImageInitialized(context, index, destBox));
 
     ANGLE_TRY(mTexture->copySubTexture(context, index, destOffset, sourceLevel, sourceBox,
                                        unpackFlipY, unpackPremultiplyAlpha, unpackUnmultiplyAlpha,
@@ -1926,8 +1918,7 @@ void Texture::setInitState(const ImageIndex &imageIndex, InitState initState)
 
 bool Texture::doesSubImageNeedInit(const Context *context,
                                    const ImageIndex &imageIndex,
-                                   const Box &area,
-                                   bool sourceAreaIsOutOfBounds) const
+                                   const Box &area) const
 {
     if (!context->isRobustResourceInitEnabled() || mState.mInitState == InitState::Initialized)
     {
@@ -1942,15 +1933,14 @@ bool Texture::doesSubImageNeedInit(const Context *context,
     }
 
     ASSERT(mState.mInitState == InitState::MayNeedInit);
-    return sourceAreaIsOutOfBounds || !area.coversSameExtent(desc.size);
+    return !area.coversSameExtent(desc.size);
 }
 
 angle::Result Texture::ensureSubImageInitialized(const Context *context,
                                                  const ImageIndex &imageIndex,
-                                                 const Box &area,
-                                                 bool sourceAreaIsOutOfBounds)
+                                                 const Box &area)
 {
-    if (doesSubImageNeedInit(context, imageIndex, area, sourceAreaIsOutOfBounds))
+    if (doesSubImageNeedInit(context, imageIndex, area))
     {
         // NOTE: do not optimize this to only initialize the passed area of the texture, or the
         // initialization logic in copySubImage will be incorrect.
