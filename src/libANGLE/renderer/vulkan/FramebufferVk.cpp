@@ -1999,6 +1999,10 @@ angle::Result FramebufferVk::clearWithDraw(ContextVk *contextVk,
 
         // Scissored-only clears are handled in clearImmediatelyWithRenderPassOp.
         ASSERT(clearColorBuffers.any() || clearStencil);
+
+        // Force start a new render pass for the depth clear to take effect.
+        // UtilsVk::clearFramebuffer may not start a new render pass if there's one already started.
+        ANGLE_TRY(flushDeferredClears(contextVk, clearArea));
     }
 
     UtilsVk::ClearFramebufferParameters params = {};
