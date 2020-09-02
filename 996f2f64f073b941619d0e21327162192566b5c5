@@ -51,6 +51,40 @@
       "revId": "996f2f64f073b941619d0e21327162192566b5c5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "84239b6b_904b98a8",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 33
+      },
+      "lineNbr": 1807,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-09-02T16:36:18Z",
+      "side": 1,
+      "message": "remove comment, incorrect.",
+      "revId": "996f2f64f073b941619d0e21327162192566b5c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "58c3d500_5b04a1f0",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 33
+      },
+      "lineNbr": 1851,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-09-02T16:36:18Z",
+      "side": 1,
+      "message": "Do we need to add an access chain for the new varying?\nNo, we don\u0027t access sub pieces of the fixedVarying so do not need access chain instructions.",
+      "revId": "996f2f64f073b941619d0e21327162192566b5c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }

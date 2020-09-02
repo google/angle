@@ -136,6 +136,24 @@
     },
     {
       "key": {
+        "uuid": "11b0903d_a6b171f2",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 32
+      },
+      "lineNbr": 1472,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-09-02T16:36:18Z",
+      "side": 1,
+      "message": "We set the new decoration value (if it\u0027s changed) at line 1493.\nIf it\u0027s a location decoration and it requires cast behavior we change it\u0027s ID at 1506.",
+      "parentUuid": "359384be_17838f21",
+      "revId": "fdb325582b534c55ae5288f736e770502cde96e6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "482630ce_bf83e771",
         "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
         "patchSetId": 32
