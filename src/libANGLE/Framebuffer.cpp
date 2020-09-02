@@ -387,13 +387,11 @@ const FramebufferAttachment *FramebufferState::getAttachment(const Context *cont
     }
 }
 
-size_t FramebufferState::getReadIndex() const
+uint32_t FramebufferState::getReadIndex() const
 {
     ASSERT(mReadBufferState == GL_BACK ||
            (mReadBufferState >= GL_COLOR_ATTACHMENT0 && mReadBufferState <= GL_COLOR_ATTACHMENT15));
-    size_t readIndex = (mReadBufferState == GL_BACK
-                            ? 0
-                            : static_cast<size_t>(mReadBufferState - GL_COLOR_ATTACHMENT0));
+    uint32_t readIndex = mReadBufferState == GL_BACK ? 0 : mReadBufferState - GL_COLOR_ATTACHMENT0;
     ASSERT(readIndex < mColorAttachments.size());
     return readIndex;
 }
@@ -405,7 +403,7 @@ const FramebufferAttachment *FramebufferState::getReadAttachment() const
         return nullptr;
     }
 
-    size_t readIndex = getReadIndex();
+    uint32_t readIndex = getReadIndex();
     const gl::FramebufferAttachment &framebufferAttachment =
         isDefault() ? mDefaultFramebufferReadAttachment : mColorAttachments[readIndex];
 

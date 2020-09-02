@@ -1230,28 +1230,29 @@ angle::Result FramebufferVk::resolveColorWithSubpass(ContextVk *contextVk,
     // render pass subpass. Due to this, we currently only support using resolve attachments when
     // there is a single draw attachment enabled.
     ASSERT(mState.getEnabledDrawBuffers().count() == 1);
-    uint32_t colorIndexGL = static_cast<uint32_t>(*mState.getEnabledDrawBuffers().begin());
+    uint32_t drawColorIndexGL = static_cast<uint32_t>(*mState.getEnabledDrawBuffers().begin());
 
     const gl::State &glState              = contextVk->getState();
     const gl::Framebuffer *srcFramebuffer = glState.getReadFramebuffer();
     FramebufferVk *srcFramebufferVk       = vk::GetImpl(srcFramebuffer);
+    uint32_t readColorIndexGL             = srcFramebuffer->getState().getReadIndex();
 
     // Use the draw FBO's color attachments as resolve attachments in the read FBO.
     // - Assign the draw FBO's color attachment Serial to the read FBO's resolve attachment
     // - Deactivate the source Framebuffer, since the description changed
     // - Update the renderpass description to indicate there's a resolve attachment
     vk::ImageViewSubresourceSerial resolveImageViewSerial =
-        mCurrentFramebufferDesc.getColorImageViewSerial(colorIndexGL);
+        mCurrentFramebufferDesc.getColorImageViewSerial(drawColorIndexGL);
     ASSERT(resolveImageViewSerial.imageViewSerial.valid());
-    srcFramebufferVk->updateColorResolveAttachment(colorIndexGL, resolveImageViewSerial);
+    srcFramebufferVk->updateColorResolveAttachment(readColorIndexGL, resolveImageViewSerial);
 
-    // Since tha source FBO was updated with a resolve attachment it didn't have when the render
+    // Since the source FBO was updated with a resolve attachment it didn't have when the render
     // pass was started, we need to:
     // 1. Get the new framebuffer
     //   - The draw framebuffer's ImageView will be used as the resolve attachment, so pass it along
     //   in case vkCreateFramebuffer() needs to be called to create a new vkFramebuffer with the new
     //   resolve attachment.
-    RenderTargetVk *drawRenderTarget      = mRenderTargetCache.getColors()[colorIndexGL];
+    RenderTargetVk *drawRenderTarget      = mRenderTargetCache.getColors()[drawColorIndexGL];
     const vk::ImageView *resolveImageView = nullptr;
     ANGLE_TRY(drawRenderTarget->getImageView(contextVk, &resolveImageView));
     vk::Framebuffer *newSrcFramebuffer = nullptr;

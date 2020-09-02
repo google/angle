@@ -58,7 +58,7 @@ class FramebufferState final : angle::NonCopyable
     ~FramebufferState();
 
     const std::string &getLabel() const;
-    size_t getReadIndex() const;
+    uint32_t getReadIndex() const;
 
     const FramebufferAttachment *getAttachment(const Context *context, GLenum attachment) const;
     const FramebufferAttachment *getReadAttachment() const;
