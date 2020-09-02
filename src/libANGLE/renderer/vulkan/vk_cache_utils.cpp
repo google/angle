@@ -552,8 +552,15 @@ void RenderPassDesc::packDepthStencilAttachment(angle::FormatID formatID, Resour
 void RenderPassDesc::packColorResolveAttachment(size_t colorIndexGL)
 {
     ASSERT(isColorAttachmentEnabled(colorIndexGL));
+    ASSERT(!mColorResolveAttachmentMask.test(colorIndexGL));
     ASSERT(mLogSamples > 0);
     mColorResolveAttachmentMask.set(colorIndexGL);
+}
+
+void RenderPassDesc::removeColorResolveAttachment(size_t colorIndexGL)
+{
+    ASSERT(mColorResolveAttachmentMask.test(colorIndexGL));
+    mColorResolveAttachmentMask.reset(colorIndexGL);
 }
 
 RenderPassDesc &RenderPassDesc::operator=(const RenderPassDesc &other)

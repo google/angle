@@ -123,6 +123,9 @@ class alignas(4) RenderPassDesc final
     void packDepthStencilAttachment(angle::FormatID angleFormatID, ResourceAccess access);
     // Indicate that a color attachment should have a corresponding resolve attachment.
     void packColorResolveAttachment(size_t colorIndexGL);
+    // Remove the resolve attachment.  Used when optimizing blit through resolve attachment to
+    // temporarily pack a resolve attachment and then remove it.
+    void removeColorResolveAttachment(size_t colorIndexGL);
 
     size_t hash() const;
 

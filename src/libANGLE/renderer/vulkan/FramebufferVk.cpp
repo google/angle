@@ -1239,6 +1239,14 @@ void FramebufferVk::updateColorResolveAttachment(
     mRenderPassDesc.packColorResolveAttachment(colorIndexGL);
 }
 
+void FramebufferVk::removeColorResolveAttachment(uint32_t colorIndexGL)
+{
+    mCurrentFramebufferDesc.updateColorResolve(colorIndexGL,
+                                               vk::kInvalidImageViewSubresourceSerial);
+    mFramebuffer = nullptr;
+    mRenderPassDesc.removeColorResolveAttachment(colorIndexGL);
+}
+
 angle::Result FramebufferVk::resolveColorWithSubpass(ContextVk *contextVk,
                                                      const UtilsVk::BlitResolveParameters &params)
 {
@@ -1283,6 +1291,9 @@ angle::Result FramebufferVk::resolveColorWithSubpass(ContextVk *contextVk,
     contextVk->onImageRenderPassWrite(VK_IMAGE_ASPECT_COLOR_BIT, vk::ImageLayout::ColorAttachment,
                                       &readRenderTarget->getImageForRenderPass());
     ANGLE_TRY(contextVk->flushCommandsAndEndRenderPass());
+
+    // Remove the resolve attachment from the source framebuffer.
+    srcFramebufferVk->removeColorResolveAttachment(readColorIndexGL);
 
     return angle::Result::Continue;
 }

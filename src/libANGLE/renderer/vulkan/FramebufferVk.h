@@ -235,6 +235,7 @@ class FramebufferVk : public FramebufferImpl
 
     void updateColorResolveAttachment(uint32_t colorIndexGL,
                                       vk::ImageViewSubresourceSerial resolveImageViewSerial);
+    void removeColorResolveAttachment(uint32_t colorIndexGL);
 
     WindowSurfaceVk *mBackbuffer;
 
