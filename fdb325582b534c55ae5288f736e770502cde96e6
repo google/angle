@@ -154,6 +154,24 @@
     },
     {
       "key": {
+        "uuid": "87d99b80_a155e6f8",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 32
+      },
+      "lineNbr": 1472,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-09-02T16:47:05Z",
+      "side": 1,
+      "message": "Oh, I missed the change at line 1506! Could you change the comment there to say something like this?\n\n    // Change the id of the location decoration to replacement variable",
+      "parentUuid": "11b0903d_a6b171f2",
+      "revId": "fdb325582b534c55ae5288f736e770502cde96e6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "482630ce_bf83e771",
         "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
         "patchSetId": 32

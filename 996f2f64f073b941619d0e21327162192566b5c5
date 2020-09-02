@@ -85,6 +85,24 @@
       "revId": "996f2f64f073b941619d0e21327162192566b5c5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bbfd8de1_b14cbd29",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 33
+      },
+      "lineNbr": 1851,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-09-02T16:47:05Z",
+      "side": 1,
+      "message": "Is it possible to have precision declarations on struct-typed varyings somehow? Could be good to have a test with a struct varying where the precision differs between VS and FS to make sure it doesn\u0027t trigger anything.",
+      "parentUuid": "58c3d500_5b04a1f0",
+      "revId": "996f2f64f073b941619d0e21327162192566b5c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
