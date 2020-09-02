@@ -79,6 +79,17 @@ bool AreSrcAndDstColorChannelsBlitCompatible(RenderTargetVk *srcRenderTarget,
            (dstFormat.alphaBits > 0 || srcFormat.alphaBits == 0);
 }
 
+// Returns false if formats are not identical.  vkCmdResolveImage and resolve attachments both
+// require identical formats between source and destination.  vkCmdBlitImage additionally requires
+// the same for depth/stencil formats.
+bool AreSrcAndDstFormatsIdentical(RenderTargetVk *srcRenderTarget, RenderTargetVk *dstRenderTarget)
+{
+    const vk::Format &srcFormat = srcRenderTarget->getImageFormat();
+    const vk::Format &dstFormat = dstRenderTarget->getImageFormat();
+
+    return srcFormat.vkImageFormat == dstFormat.vkImageFormat;
+}
+
 bool AreSrcAndDstDepthStencilChannelsBlitCompatible(RenderTargetVk *srcRenderTarget,
                                                     RenderTargetVk *dstRenderTarget)
 {
@@ -1043,6 +1054,7 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
                                   HasSrcBlitFeature(renderer, readRenderTarget) &&
                                   (rotation == SurfaceRotation::Identity);
         bool areChannelsBlitCompatible = true;
+        bool areFormatsIdentical       = true;
         for (size_t colorIndexGL : mState.getEnabledDrawBuffers())
         {
             RenderTargetVk *drawRenderTarget = mRenderTargetCache.getColors()[colorIndexGL];
@@ -1051,6 +1063,7 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
             areChannelsBlitCompatible =
                 areChannelsBlitCompatible &&
                 AreSrcAndDstColorChannelsBlitCompatible(readRenderTarget, drawRenderTarget);
+            areFormatsIdentical = AreSrcAndDstFormatsIdentical(readRenderTarget, drawRenderTarget);
         }
 
         // Now that all flipping is done, adjust the offsets for resolve and prerotation
@@ -1072,7 +1085,7 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
         }
         // If we're not flipping or rotating, use Vulkan's builtin resolve.
         else if (isColorResolve && !flipX && !flipY && areChannelsBlitCompatible &&
-                 (rotation == SurfaceRotation::Identity))
+                 areFormatsIdentical && rotation == SurfaceRotation::Identity)
         {
             // Resolving with a subpass resolve attachment has a few restrictions:
             // 1.) glBlitFramebuffer() needs to copy the read color attachment to all enabled
@@ -1137,6 +1150,9 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
                                   (rotation == SurfaceRotation::Identity);
         bool areChannelsBlitCompatible =
             AreSrcAndDstDepthStencilChannelsBlitCompatible(readRenderTarget, drawRenderTarget);
+
+        // glBlitFramebuffer requires that depth/stencil blits have matching formats.
+        ASSERT(AreSrcAndDstFormatsIdentical(readRenderTarget, drawRenderTarget));
 
         if (canBlitWithCommand && areChannelsBlitCompatible)
         {
