@@ -1188,9 +1188,17 @@ angle::Result Texture::copyImage(Context *context,
     // the copy lies entirely off the source framebuffer, initialize as though a zero-size box is
     // going to be set during the copy operation.
     Box destBox;
+    bool forceCopySubImage = false;
     if (context->isRobustResourceInitEnabled())
     {
-        Extents fbSize = source->getReadColorAttachment()->getSize();
+        const FramebufferAttachment *sourceReadAttachment = source->getReadColorAttachment();
+        Extents fbSize                                    = sourceReadAttachment->getSize();
+        // Force using copySubImage when the source area is out of bounds AND
+        // we're not copying to and from the same texture
+        forceCopySubImage = ((sourceArea.x < 0) || (sourceArea.y < 0) ||
+                             ((sourceArea.x + sourceArea.width) > fbSize.width) ||
+                             ((sourceArea.y + sourceArea.height) > fbSize.height)) &&
+                            (sourceReadAttachment->getTexture() != this);
         Rectangle clippedArea;
         if (ClipRectangle(sourceArea, Rectangle(0, 0, fbSize.width, fbSize.height), &clippedArea))
         {
@@ -1205,7 +1213,7 @@ angle::Result Texture::copyImage(Context *context,
     // an initializeContents call, and then a copySubImage call. This ensures the destination
     // texture exists before we try to clear it.
     Extents size(sourceArea.width, sourceArea.height, 1);
-    if (doesSubImageNeedInit(context, index, destBox))
+    if (forceCopySubImage || doesSubImageNeedInit(context, index, destBox))
     {
         ANGLE_TRY(mTexture->setImage(context, index, internalFormat, size,
                                      internalFormatInfo.format, internalFormatInfo.type,
