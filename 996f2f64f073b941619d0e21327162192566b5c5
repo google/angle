@@ -103,6 +103,24 @@
       "revId": "996f2f64f073b941619d0e21327162192566b5c5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d759533c_477f01bb",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 33
+      },
+      "lineNbr": 1851,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-09-02T21:21:30Z",
+      "side": 1,
+      "message": "Did some experiments and it appears that we do not find precision mismatch on structure members.\nAlso appears that the validation layers don\u0027t check for this as well.\nLogged bug to followup on this: b/167606390",
+      "parentUuid": "bbfd8de1_b14cbd29",
+      "revId": "996f2f64f073b941619d0e21327162192566b5c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
