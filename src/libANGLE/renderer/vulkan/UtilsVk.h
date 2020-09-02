@@ -384,9 +384,8 @@ class UtilsVk : angle::NonCopyable
     struct GenerateMipmapShaderParams
     {
         // Structure matching PushConstants in GenerateMipmap.comp
-        uint32_t levelCount    = 0;
-        uint32_t numWorkGroups = 0;
-        float invSrcExtent[2]  = {};
+        float invSrcExtent[2] = {};
+        uint32_t levelCount   = 0;
     };
 
     ANGLE_DISABLE_STRUCT_PADDING_WARNINGS

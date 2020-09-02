@@ -1889,10 +1889,9 @@ angle::Result UtilsVk::generateMipmap(ContextVk *contextVk,
     const uint32_t workGroupY = UnsignedCeilDivide(srcExtents.height, kPixelWorkgroupRatio);
 
     GenerateMipmapShaderParams shaderParams;
-    shaderParams.levelCount      = params.destLevelCount;
-    shaderParams.numWorkGroups   = workGroupX * workGroupY;
     shaderParams.invSrcExtent[0] = 1.0f / srcExtents.width;
     shaderParams.invSrcExtent[1] = 1.0f / srcExtents.height;
+    shaderParams.levelCount      = params.destLevelCount;
 
     uint32_t flags = GetGenerateMipmapFlags(contextVk, src->getFormat());
 
