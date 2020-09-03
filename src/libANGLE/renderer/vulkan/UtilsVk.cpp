@@ -1678,12 +1678,6 @@ angle::Result UtilsVk::stencilBlitResolveNoShaderExport(ContextVk *contextVk,
     region.imageExtent.width               = params.blitArea.width;
     region.imageExtent.height              = params.blitArea.height;
     region.imageExtent.depth               = 1;
-    if ((params.rotation == SurfaceRotation::Rotated270Degrees) && (params.blitArea.width > 32))
-    {
-        // TODO(ianelliott): Figure out why this adjustment is needed
-        // https://issuetracker.google.com/issues/159995959
-        region.imageOffset.x += 2;
-    }
 
     commandBuffer.copyBufferToImage(blitBuffer.get().getBuffer().getHandle(),
                                     depthStencilImage->getImage(),
