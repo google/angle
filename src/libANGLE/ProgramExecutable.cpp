@@ -284,9 +284,6 @@ void ProgramExecutable::updateActiveSamplers(const ProgramState &programState)
     for (uint32_t samplerIndex = 0; samplerIndex < samplerBindings.size(); ++samplerIndex)
     {
         const SamplerBinding &samplerBinding = samplerBindings[samplerIndex];
-        if (samplerBinding.unreferenced)
-            continue;
-
         uint32_t uniformIndex = programState.getUniformIndexFromSamplerIndex(samplerIndex);
         const gl::LinkedUniform &samplerUniform = programState.getUniforms()[uniformIndex];
 
@@ -320,10 +317,6 @@ void ProgramExecutable::updateActiveImages(const ProgramExecutable &executable)
     for (uint32_t imageIndex = 0; imageIndex < imageBindings->size(); ++imageIndex)
     {
         const gl::ImageBinding &imageBinding = imageBindings->at(imageIndex);
-        if (imageBinding.unreferenced)
-        {
-            continue;
-        }
 
         uint32_t uniformIndex = executable.getUniformIndexFromImageIndex(imageIndex);
         const gl::LinkedUniform &imageUniform = executable.getUniforms()[uniformIndex];
@@ -353,9 +346,6 @@ void ProgramExecutable::setSamplerUniformTextureTypeAndFormat(
 
     for (const SamplerBinding &binding : samplerBindings)
     {
-        if (binding.unreferenced)
-            continue;
-
         // A conflict exists if samplers of different types are sourced by the same texture unit.
         // We need to check all bound textures to detect this error case.
         for (GLuint textureUnit : binding.boundTextureUnits)

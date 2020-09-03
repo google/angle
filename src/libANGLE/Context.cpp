@@ -9025,10 +9025,6 @@ void StateCache::updateActiveImageUnitIndices(Context *context)
     {
         for (const ImageBinding &imageBinding : executable->getImageBindings())
         {
-            if (imageBinding.unreferenced)
-            {
-                continue;
-            }
             for (GLuint binding : imageBinding.boundImageUnits)
             {
                 mCachedActiveImageUnitIndices.set(binding);

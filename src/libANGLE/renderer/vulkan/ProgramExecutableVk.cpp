@@ -1225,8 +1225,6 @@ angle::Result ProgramExecutableVk::updateImagesDescriptorSet(
 
         GetImageNameWithoutIndices(&mappedImageName);
 
-        ASSERT(!imageBinding.unreferenced);
-
         uint32_t arrayOffset = 0;
         uint32_t arraySize   = static_cast<uint32_t>(imageBinding.boundImageUnits.size());
 
@@ -1429,9 +1427,6 @@ angle::Result ProgramExecutableVk::updateTexturesDescriptorSet(ContextVk *contex
         {
             const gl::SamplerBinding &samplerBinding =
                 programState->getSamplerBindings()[textureIndex];
-
-            ASSERT(!samplerBinding.unreferenced);
-
             uint32_t uniformIndex = programState->getUniformIndexFromSamplerIndex(textureIndex);
             const gl::LinkedUniform &samplerUniform = programState->getUniforms()[uniformIndex];
             std::string mappedSamplerName = GlslangGetMappedSamplerName(samplerUniform.name);
