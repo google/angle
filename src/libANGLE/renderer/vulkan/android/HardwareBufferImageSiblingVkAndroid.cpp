@@ -21,14 +21,54 @@ namespace rx
 
 namespace
 {
-
 VkImageTiling AhbDescUsageToVkImageTiling(const AHardwareBuffer_Desc &ahbDescription)
 {
-    if ((ahbDescription.usage & AHARDWAREBUFFER_USAGE_CPU_READ_MASK) != 0 ||
-        (ahbDescription.usage & AHARDWAREBUFFER_USAGE_CPU_WRITE_MASK) != 0)
-    {
-        return VK_IMAGE_TILING_LINEAR;
-    }
+    // A note about the choice of OPTIMAL here.
+
+    // When running Android on certain GPUs, there are problems creating Vulkan
+    // image siblings of AHardwareBuffers because it's currently assumed that
+    // the underlying driver can create linear tiling images that have input
+    // attachment usage, which isn't supported on NVIDIA for example, resulting
+    // in failure to create the image siblings. Yet, we don't currently take
+    // advantage of linear elsewhere in ANGLE. To maintain maximum
+    // compatibility on Android for such drivers, use optimal tiling for image
+    // siblings.
+    //
+    // Note that while we have switched to optimal unconditionally in this path
+    // versus linear, it's possible that previously compatible linear usages
+    // might become uncompatible after switching to optimal. However, from what
+    // we've seen on Samsung/NVIDIA/Intel/AMD GPUs so far, formats generally
+    // have more possible usages in optimal tiling versus linear tiling:
+    //
+    // http://vulkan.gpuinfo.org/displayreport.php?id=10804#formats_linear
+    // http://vulkan.gpuinfo.org/displayreport.php?id=10804#formats_optimal
+    //
+    // http://vulkan.gpuinfo.org/displayreport.php?id=10807#formats_linear
+    // http://vulkan.gpuinfo.org/displayreport.php?id=10807#formats_optimal
+    //
+    // http://vulkan.gpuinfo.org/displayreport.php?id=10809#formats_linear
+    // http://vulkan.gpuinfo.org/displayreport.php?id=10809#formats_optimal
+    //
+    // http://vulkan.gpuinfo.org/displayreport.php?id=10787#formats_linear
+    // http://vulkan.gpuinfo.org/displayreport.php?id=10787#formats_optimal
+    //
+    // Also, as an aside, in terms of what's generally expected from the Vulkan
+    // ICD in Android when determining AHB compatibility, if the vendor wants
+    // to declare a particular combinatino of format/tiling/usage/etc as not
+    // supported AHB-wise, it's up to the ICD vendor to zero out bits in
+    // supportedHandleTypes in the vkGetPhysicalDeviceImageFormatProperties2
+    // query:
+    //
+    // ``` *
+    // [VUID-VkImageCreateInfo-pNext-00990](https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VUID-VkImageCreateInfo-pNext-00990)
+    // If the pNext chain includes a VkExternalMemoryImageCreateInfo structure,
+    // its handleTypes member must only contain bits that are also in
+    // VkExternalImageFormatProperties::externalMemoryProperties.compatibleHandleTypes,
+    // as returned by vkGetPhysicalDeviceImageFormatProperties2 with format,
+    // imageType, tiling, usage, and flags equal to those in this structure,
+    // and with a VkPhysicalDeviceExternalImageFormatInfo structure included in
+    // the pNext chain, with a handleType equal to any one of the handle types
+    // specified in VkExternalMemoryImageCreateInfo::handleTypes ```
 
     return VK_IMAGE_TILING_OPTIMAL;
 }
