@@ -71,6 +71,24 @@
     },
     {
       "key": {
+        "uuid": "d4fe5345_61663f84",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 35
+      },
+      "lineNbr": 923,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-09-03T23:18:13Z",
+      "side": 1,
+      "message": "Oops, I did that for debugging. As Shabi says it\u0027s harder to read the disassembly with the friendly names turned on.",
+      "parentUuid": "41475842_c9890f3f",
+      "revId": "1bba816288ddc38cf31f0e7a5e03bd424053f1fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "28f00617_eaac938f",
         "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
         "patchSetId": 35
@@ -82,6 +100,30 @@
       "writtenOn": "2020-09-03T21:17:07Z",
       "side": 1,
       "message": "This came up before, but re-reading it I still don\u0027t understand this block.\n\nLooking below:\n\n    if (info-\u003ecastPrecision)\n    {\n    ...\n        // The replacement variable is always reduced precision so add that decoration to\n        // fixedVaryingId\n\nThis matches an earlier statement you made:\n\n\u003e When there is a mismatch we always transfer mediump.\n\u003e We only set castPrecision to true for varyings that are highp that need to output/input mediump.\n\nWhy does castPrecision increase precision here?",
+      "range": {
+        "startLine": 1284,
+        "startChar": 0,
+        "endLine": 1297,
+        "endChar": 9
+      },
+      "revId": "1bba816288ddc38cf31f0e7a5e03bd424053f1fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3d812c77_7256cb93",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 35
+      },
+      "lineNbr": 1297,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-09-03T23:18:13Z",
+      "side": 1,
+      "message": "In this case the previous stage naturally output a mediump, but this stage wants to use it as a highp value. We modify that shader to turn the previous highp input variable into a highp global variable and define a new mediump input variable. This piece of code then loads the mediump input and stores it into the highp global for the rest of the shader to work with \"up casting\" in the process. That way this shader does all it\u0027s work in highp as the source specified but we\u0027ve made the varying part be mediump to satisfy Vulkan. This \"up casting\" happened implicitly with GL.",
+      "parentUuid": "28f00617_eaac938f",
       "range": {
         "startLine": 1284,
         "startChar": 0,
@@ -129,6 +171,24 @@
     },
     {
       "key": {
+        "uuid": "a5643f1e_24ec68ef",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.h",
+        "patchSetId": 35
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-09-03T23:18:13Z",
+      "side": 1,
+      "message": "I believe it was in our discussion with ARM I asked about preference for what\u0027s transferred and they indicated it\u0027s better to transfer smaller data (e.g. mediump vs. highp).\nSo, if VS is outputting highp but FS takes mediump we cast the varying to mediump just before it\u0027s transferred. That \"drops\" precision but it doesn\u0027t matter since the FS wasn\u0027t using it.\nIf VS is outputting mediump but FS takes highp, we let the transfer happen with mediump and then read the mediump varying and cast it to highp for the FS to do it\u0027s processing. There was no loss in the transfer and the varying now matches.\nThat way each stage does whatever processing at the precision they declared and we transfer the smaller amount of data when there is a mismatch.\nI have a doc that tries to explain this as well, sent Tim a link, looks like Shabi already has access.",
+      "parentUuid": "b8a5ed70_33bd8d7b",
+      "revId": "1bba816288ddc38cf31f0e7a5e03bd424053f1fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "c7be652a_243b63ba",
         "filename": "src/libANGLE/renderer/glslang_wrapper_utils.h",
         "patchSetId": 35
@@ -149,6 +209,30 @@
       "revId": "1bba816288ddc38cf31f0e7a5e03bd424053f1fe",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f73397e2_db54e4fe",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.h",
+        "patchSetId": 35
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-09-03T23:18:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c7be652a_243b63ba",
+      "range": {
+        "startLine": 85,
+        "startChar": 9,
+        "endLine": 85,
+        "endChar": 22
+      },
+      "revId": "1bba816288ddc38cf31f0e7a5e03bd424053f1fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -175,6 +259,30 @@
     },
     {
       "key": {
+        "uuid": "de42bdd8_1c8c75be",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramExecutableVk.cpp",
+        "patchSetId": 35
+      },
+      "lineNbr": 227,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-09-03T23:18:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8c4a909f_43d9c347",
+      "range": {
+        "startLine": 227,
+        "startChar": 44,
+        "endLine": 227,
+        "endChar": 62
+      },
+      "revId": "1bba816288ddc38cf31f0e7a5e03bd424053f1fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "57dbdc05_94ac6c96",
         "filename": "src/libANGLE/renderer/vulkan/ProgramExecutableVk.cpp",
         "patchSetId": 35
@@ -198,6 +306,30 @@
     },
     {
       "key": {
+        "uuid": "ae93696e_02499293",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramExecutableVk.cpp",
+        "patchSetId": 35
+      },
+      "lineNbr": 891,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-09-03T23:18:13Z",
+      "side": 1,
+      "message": "Will update.",
+      "parentUuid": "57dbdc05_94ac6c96",
+      "range": {
+        "startLine": 890,
+        "startChar": 0,
+        "endLine": 891,
+        "endChar": 38
+      },
+      "revId": "1bba816288ddc38cf31f0e7a5e03bd424053f1fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d18b21f0_e1512a97",
         "filename": "src/libANGLE/renderer/vulkan/ProgramExecutableVk.cpp",
         "patchSetId": 35
@@ -212,6 +344,24 @@
       "revId": "1bba816288ddc38cf31f0e7a5e03bd424053f1fe",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2f7272b3_8713f7b2",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramExecutableVk.cpp",
+        "patchSetId": 35
+      },
+      "lineNbr": 904,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-09-03T23:18:13Z",
+      "side": 1,
+      "message": "I\u0027m going to have a follow-up CL to pass down the mergedVaryings a different way. Jamie said there is a potential issue with things being out of date this way and asked for a follow-up CL to fix that. That would also cause things to get cleaned up automatically since it would be a scoped variable then.",
+      "parentUuid": "d18b21f0_e1512a97",
+      "revId": "1bba816288ddc38cf31f0e7a5e03bd424053f1fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
