@@ -438,6 +438,24 @@
       "revId": "fdb325582b534c55ae5288f736e770502cde96e6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2517ff4a_41f2231b",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 32
+      },
+      "lineNbr": 6092,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-09-03T14:22:42Z",
+      "side": 1,
+      "message": "lowp \u0026 mediump are the same to Vulkan.",
+      "parentUuid": "2f640d66_943f05b0",
+      "revId": "fdb325582b534c55ae5288f736e770502cde96e6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
