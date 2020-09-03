@@ -28,7 +28,7 @@ vars = {
   'checkout_angle_internal': False,
 
   # Version of Chromium our Chromium-based DEPS are mirrored from.
-  'chromium_revision': '09df13c25e1b30200b3d08531cc741be1df1ea49',
+  'chromium_revision': '5881c1ad646516f43e470d8dc35af0d9a260d1cd',
   # We never want to checkout chromium,
   # but need a dummy DEPS entry for the autoroller
   'dummy_checkout_chromium': False,
@@ -103,7 +103,7 @@ vars = {
 deps = {
 
   'build': {
-    'url': '{chromium_git}/chromium/src/build.git@c12a68d90b44722f3dcb433cbf837fd3f85e2c11',
+    'url': '{chromium_git}/chromium/src/build.git@62caf80991cce8c86e5297e5f91f95fea004f791',
     'condition': 'not build_with_chromium',
   },
 
@@ -113,12 +113,12 @@ deps = {
   },
 
   'testing': {
-    'url': '{chromium_git}/chromium/src/testing@c1a7e4af8e92265e54d2da1781330abc62726f92',
+    'url': '{chromium_git}/chromium/src/testing@4fb4ca5040e74049a060472732f4f77e43a8f392',
     'condition': 'not build_with_chromium',
   },
 
   'third_party/abseil-cpp': {
-    'url': '{chromium_git}/chromium/src/third_party/abseil-cpp@18c972d96731013383fc55d19c6ff7c816b71390',
+    'url': '{chromium_git}/chromium/src/third_party/abseil-cpp@df62febd329e753f4cde5d1a8950940508b76b31',
     'condition': 'not build_with_chromium',
   },
 
