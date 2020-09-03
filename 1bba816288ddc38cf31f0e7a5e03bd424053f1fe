@@ -53,6 +53,24 @@
     },
     {
       "key": {
+        "uuid": "41475842_c9890f3f",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 35
+      },
+      "lineNbr": 923,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-09-03T21:23:09Z",
+      "side": 1,
+      "message": "My suggestion. The disassembly is actually harder to compare/understand with friendly names. Especially in debugging, you could log the ids you are dealing with, then the disassembly would go and hide them :|",
+      "parentUuid": "a6bfe806_7aa6557c",
+      "revId": "1bba816288ddc38cf31f0e7a5e03bd424053f1fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "28f00617_eaac938f",
         "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
         "patchSetId": 35
@@ -87,6 +105,24 @@
       "writtenOn": "2020-09-03T21:17:07Z",
       "side": 1,
       "message": "Can you clarify what \"fixed\" means and what true/false means in each combination:\n\n1. output: high, input: high\n2. output: high, input: medium\n3. output: medium, input: high\n4. output: medium, input: medium\n\nAs I note below, there are some contradictory comments and implementations regarding (3) and whether that\u0027s actually supported or not.   Some places state we always reduce precision, but SpirvTransformer::writeInputPreamble() only increases it.\n\nOr maybe I\u0027m getting confused.",
+      "revId": "1bba816288ddc38cf31f0e7a5e03bd424053f1fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b8a5ed70_33bd8d7b",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.h",
+        "patchSetId": 35
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-09-03T21:23:09Z",
+      "side": 1,
+      "message": "My impression was that it\u0027s not about downgrade vs upgrade, but rather making the VS cast to the prevision FS wants.\n\nIf VS outputs mediump and FS inputs highp, I don\u0027t think we should downgrade FS to mediump. That would affect the interpolation of the varying.",
+      "parentUuid": "073f8a04_72defc59",
       "revId": "1bba816288ddc38cf31f0e7a5e03bd424053f1fe",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
