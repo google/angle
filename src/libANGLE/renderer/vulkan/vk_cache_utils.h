@@ -106,6 +106,16 @@ inline void UpdateAccess(ResourceAccess *oldAccess, ResourceAccess newAccess)
     }
 }
 
+// There can be a maximum of IMPLEMENTATION_MAX_DRAW_BUFFERS color and resolve attachments, plus one
+// depth/stencil attachment.
+constexpr size_t kMaxFramebufferAttachments = gl::IMPLEMENTATION_MAX_DRAW_BUFFERS * 2 + 1;
+template <typename T>
+using FramebufferAttachmentArray = std::array<T, kMaxFramebufferAttachments>;
+
+constexpr size_t kMaxFramebufferNonResolveAttachments = gl::IMPLEMENTATION_MAX_DRAW_BUFFERS + 1;
+template <typename T>
+using FramebufferNonResolveAttachmentArray = std::array<T, kMaxFramebufferNonResolveAttachments>;
+
 class alignas(4) RenderPassDesc final
 {
   public:
@@ -176,6 +186,11 @@ class alignas(4) RenderPassDesc final
     // path is implemented for depth/stencil attachments, another bit must be made free
     // (mAttachmentFormats is one element too large, so there are 8 bits there to take).
     angle::BitSet8<gl::IMPLEMENTATION_MAX_DRAW_BUFFERS> mColorResolveAttachmentMask;
+
+    // TODO(syoussefi): to be used to determine which attachments are multisampled-render-to-texture
+    // that need load.  http://anglebug.com/4881
+    ANGLE_MAYBE_UNUSED uint8_t padding;
+
     // Color attachment formats are stored with their GL attachment indices.  The depth/stencil
     // attachment formats follow the last enabled color attachment.  When creating a render pass,
     // the disabled attachments are removed and the resulting attachments are packed.
@@ -198,7 +213,7 @@ class alignas(4) RenderPassDesc final
     //
     // The resolve attachments are packed after the non-resolve attachments.  They use the same
     // formats, so they are not specified in this array.
-    gl::AttachmentArray<uint8_t> mAttachmentFormats;
+    FramebufferNonResolveAttachmentArray<uint8_t> mAttachmentFormats;
 };
 
 bool operator==(const RenderPassDesc &lhs, const RenderPassDesc &rhs);
@@ -940,12 +955,6 @@ class UniformsAndXfbDesc
     static constexpr size_t kMaxBufferCount = 1 + gl::IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_BUFFERS;
     std::array<BufferSerial, kMaxBufferCount> mBufferSerials;
 };
-
-// There can be a maximum of IMPLEMENTATION_MAX_DRAW_BUFFERS color and resolve attachments, plus one
-// depth/stencil attachment.
-constexpr size_t kMaxFramebufferAttachments = gl::IMPLEMENTATION_MAX_DRAW_BUFFERS * 2 + 1;
-template <typename T>
-using FramebufferAttachmentArray = std::array<T, kMaxFramebufferAttachments>;
 
 // In the FramebufferDesc object:
 //  - Depth/stencil serial is at index 0
