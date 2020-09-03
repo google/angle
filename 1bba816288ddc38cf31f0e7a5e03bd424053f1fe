@@ -33,6 +33,149 @@
       "revId": "1bba816288ddc38cf31f0e7a5e03bd424053f1fe",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a6bfe806_7aa6557c",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 35
+      },
+      "lineNbr": 923,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-09-03T21:17:07Z",
+      "side": 1,
+      "message": "Why is this change being made?",
+      "revId": "1bba816288ddc38cf31f0e7a5e03bd424053f1fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "28f00617_eaac938f",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 35
+      },
+      "lineNbr": 1297,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-09-03T21:17:07Z",
+      "side": 1,
+      "message": "This came up before, but re-reading it I still don\u0027t understand this block.\n\nLooking below:\n\n    if (info-\u003ecastPrecision)\n    {\n    ...\n        // The replacement variable is always reduced precision so add that decoration to\n        // fixedVaryingId\n\nThis matches an earlier statement you made:\n\n\u003e When there is a mismatch we always transfer mediump.\n\u003e We only set castPrecision to true for varyings that are highp that need to output/input mediump.\n\nWhy does castPrecision increase precision here?",
+      "range": {
+        "startLine": 1284,
+        "startChar": 0,
+        "endLine": 1297,
+        "endChar": 9
+      },
+      "revId": "1bba816288ddc38cf31f0e7a5e03bd424053f1fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "073f8a04_72defc59",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.h",
+        "patchSetId": 35
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-09-03T21:17:07Z",
+      "side": 1,
+      "message": "Can you clarify what \"fixed\" means and what true/false means in each combination:\n\n1. output: high, input: high\n2. output: high, input: medium\n3. output: medium, input: high\n4. output: medium, input: medium\n\nAs I note below, there are some contradictory comments and implementations regarding (3) and whether that\u0027s actually supported or not.   Some places state we always reduce precision, but SpirvTransformer::writeInputPreamble() only increases it.\n\nOr maybe I\u0027m getting confused.",
+      "revId": "1bba816288ddc38cf31f0e7a5e03bd424053f1fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c7be652a_243b63ba",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.h",
+        "patchSetId": 35
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-09-03T21:17:07Z",
+      "side": 1,
+      "message": "I think something like \"useRelaxedPrecision\" would be better, since that\u0027s the decoration that\u0027s being used in the SPIR-V.",
+      "range": {
+        "startLine": 85,
+        "startChar": 9,
+        "endLine": 85,
+        "endChar": 22
+      },
+      "revId": "1bba816288ddc38cf31f0e7a5e03bd424053f1fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8c4a909f_43d9c347",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramExecutableVk.cpp",
+        "patchSetId": 35
+      },
+      "lineNbr": 227,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-09-03T21:17:07Z",
+      "side": 1,
+      "message": "For both of these:\n\n  readBool()",
+      "range": {
+        "startLine": 227,
+        "startChar": 44,
+        "endLine": 227,
+        "endChar": 62
+      },
+      "revId": "1bba816288ddc38cf31f0e7a5e03bd424053f1fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "57dbdc05_94ac6c96",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramExecutableVk.cpp",
+        "patchSetId": 35
+      },
+      "lineNbr": 891,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-09-03T21:17:07Z",
+      "side": 1,
+      "message": "Is this still true?\n\nIf so, why do we need an \u0027else\u0027 case here that casts low-\u003ehigh?",
+      "range": {
+        "startLine": 890,
+        "startChar": 0,
+        "endLine": 891,
+        "endChar": 38
+      },
+      "revId": "1bba816288ddc38cf31f0e7a5e03bd424053f1fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d18b21f0_e1512a97",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramExecutableVk.cpp",
+        "patchSetId": 35
+      },
+      "lineNbr": 904,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-09-03T21:17:07Z",
+      "side": 1,
+      "message": "Can you clear the mergedVaryings vector once this function completes to try and reclaim the memory?   It should be safe, since any changes to the varyings would require re-linking which would rebuild the executable\u0027s mergedVaryings before getting here.\n\nThe clear() doesn\u0027t necessarily need to happen here, but would be easier.",
+      "revId": "1bba816288ddc38cf31f0e7a5e03bd424053f1fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
