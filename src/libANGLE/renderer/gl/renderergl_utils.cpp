@@ -1555,8 +1555,22 @@ void GenerateCaps(const FunctionsGL *functions,
 
 void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *features)
 {
-    VendorID vendor = GetVendorID(functions);
-    uint32_t device = GetDeviceID(functions);
+    angle::VendorID vendor;
+    angle::DeviceID device;
+
+    angle::SystemInfo systemInfo;
+    bool isGetSystemInfoSuccess = angle::GetSystemInfo(&systemInfo);
+    if (isGetSystemInfoSuccess)
+    {
+        vendor = systemInfo.gpus[systemInfo.activeGPUIndex].vendorId;
+        device = systemInfo.gpus[systemInfo.activeGPUIndex].deviceId;
+    }
+    else
+    {
+        vendor = GetVendorID(functions);
+        device = GetDeviceID(functions);
+    }
+
     bool isAMD      = IsAMD(vendor);
     bool isIntel    = IsIntel(vendor);
     bool isNvidia   = IsNvidia(vendor);
@@ -1770,13 +1784,12 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
     bool isDualGPUMacWithNVIDIA = false;
     if (IsApple() && functions->standard == STANDARD_GL_DESKTOP)
     {
-        angle::SystemInfo info;
-        if (angle::GetSystemInfo(&info))
+        if (isGetSystemInfoSuccess)
         {
             // The full system information must be queried to see whether it's a dual-GPU
             // NVIDIA MacBook Pro since it's likely that the integrated GPU will be active
             // when these features are initialized.
-            isDualGPUMacWithNVIDIA = info.isMacSwitchable && info.hasNVIDIAGPU();
+            isDualGPUMacWithNVIDIA = systemInfo.isMacSwitchable && systemInfo.hasNVIDIAGPU();
         }
     }
     ANGLE_FEATURE_CONDITION(features, disableGPUSwitchingSupport, isDualGPUMacWithNVIDIA);
