@@ -104,7 +104,7 @@
   "third_party/VK-GL-CTS/src/external/vulkancts/modules/vulkan/sparse_resources/CMakeLists.txt":
     "bfaf070093d563e4dc92ec72d3e20d97",
   "third_party/VK-GL-CTS/src/external/vulkancts/modules/vulkan/spirv_assembly/CMakeLists.txt":
-    "4c8be094d14fc14497edbc8b467cc903",
+    "ba8d820619e582889ca3e601f4c7f1bd",
   "third_party/VK-GL-CTS/src/external/vulkancts/modules/vulkan/ssbo/CMakeLists.txt":
     "957b7c45d94d652607833aeb007132c5",
   "third_party/VK-GL-CTS/src/external/vulkancts/modules/vulkan/subgroups/CMakeLists.txt":
