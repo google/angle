@@ -299,7 +299,7 @@ class ShaderStorageBlockVisitor : public sh::BlockEncoderVisitor
                               std::vector<BufferVariable> *bufferVariablesOut,
                               ShaderType shaderType,
                               int blockIndex)
-        : sh::BlockEncoderVisitor(namePrefix, mappedNamePrefix, &mDummyEncoder),
+        : sh::BlockEncoderVisitor(namePrefix, mappedNamePrefix, &mStubEncoder),
           mGetMemberInfo(getMemberInfo),
           mBufferVariablesOut(bufferVariablesOut),
           mShaderType(shaderType),
@@ -350,7 +350,7 @@ class ShaderStorageBlockVisitor : public sh::BlockEncoderVisitor
     std::vector<BufferVariable> *mBufferVariablesOut;
     const ShaderType mShaderType;
     const int mBlockIndex;
-    sh::DummyBlockEncoder mDummyEncoder;
+    sh::StubBlockEncoder mStubEncoder;
 };
 
 struct ShaderUniformCount

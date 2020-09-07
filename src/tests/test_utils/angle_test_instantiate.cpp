@@ -341,7 +341,7 @@ bool IsARM64()
 #endif
 }
 
-bool IsConfigWhitelisted(const SystemInfo &systemInfo, const PlatformParameters &param)
+bool IsConfigAllowlisted(const SystemInfo &systemInfo, const PlatformParameters &param)
 {
     VendorID vendorID =
         systemInfo.gpus.empty() ? 0 : systemInfo.gpus[systemInfo.activeGPUIndex].vendorId;
@@ -655,7 +655,7 @@ bool IsPlatformAvailable(const PlatformParameters &param)
 
             if (systemInfo)
             {
-                result = IsConfigWhitelisted(*systemInfo, param);
+                result = IsConfigAllowlisted(*systemInfo, param);
             }
             else
             {

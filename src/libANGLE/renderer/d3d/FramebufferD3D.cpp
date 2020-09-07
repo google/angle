@@ -98,7 +98,7 @@ ClearParameters::ClearParameters() = default;
 ClearParameters::ClearParameters(const ClearParameters &other) = default;
 
 FramebufferD3D::FramebufferD3D(const gl::FramebufferState &data, RendererD3D *renderer)
-    : FramebufferImpl(data), mRenderer(renderer), mDummyAttachment()
+    : FramebufferImpl(data), mRenderer(renderer), mMockAttachment()
 {}
 
 FramebufferD3D::~FramebufferD3D() {}
@@ -342,8 +342,8 @@ const gl::AttachmentList &FramebufferD3D::getColorAttachmentsForRender(const gl:
 
     // When rendering with no render target on D3D, two bugs lead to incorrect behavior on Intel
     // drivers < 4815. The rendering samples always pass neglecting discard statements in pixel
-    // shader. We add a dummy texture as render target in such case.
-    if (mRenderer->getFeatures().addDummyTextureNoRenderTarget.enabled &&
+    // shader. We add a mock texture as render target in such case.
+    if (mRenderer->getFeatures().addMockTextureNoRenderTarget.enabled &&
         colorAttachmentsForRender.empty() && activeProgramOutputs.any())
     {
         static_assert(static_cast<size_t>(activeProgramOutputs.size()) <= 32,
@@ -351,30 +351,30 @@ const gl::AttachmentList &FramebufferD3D::getColorAttachmentsForRender(const gl:
         const GLuint activeProgramLocation = static_cast<GLuint>(
             gl::ScanForward(static_cast<uint32_t>(activeProgramOutputs.bits())));
 
-        if (mDummyAttachment.isAttached() &&
-            (mDummyAttachment.getBinding() - GL_COLOR_ATTACHMENT0) == activeProgramLocation)
+        if (mMockAttachment.isAttached() &&
+            (mMockAttachment.getBinding() - GL_COLOR_ATTACHMENT0) == activeProgramLocation)
         {
-            colorAttachmentsForRender.push_back(&mDummyAttachment);
+            colorAttachmentsForRender.push_back(&mMockAttachment);
         }
         else
         {
-            // Remove dummy attachment to prevents us from leaking it, and the program may require
+            // Remove mock attachment to prevents us from leaking it, and the program may require
             // it to be attached to a new binding point.
-            if (mDummyAttachment.isAttached())
+            if (mMockAttachment.isAttached())
             {
-                mDummyAttachment.detach(context, Serial());
+                mMockAttachment.detach(context, Serial());
             }
 
-            gl::Texture *dummyTex = nullptr;
-            // TODO(jmadill): Handle error if dummy texture can't be created.
-            (void)mRenderer->getIncompleteTexture(context, gl::TextureType::_2D, &dummyTex);
-            if (dummyTex)
+            gl::Texture *mockTex = nullptr;
+            // TODO(jmadill): Handle error if mock texture can't be created.
+            (void)mRenderer->getIncompleteTexture(context, gl::TextureType::_2D, &mockTex);
+            if (mockTex)
             {
                 gl::ImageIndex index = gl::ImageIndex::Make2D(0);
-                mDummyAttachment     = gl::FramebufferAttachment(
+                mMockAttachment      = gl::FramebufferAttachment(
                     context, GL_TEXTURE, GL_COLOR_ATTACHMENT0_EXT + activeProgramLocation, index,
-                    dummyTex, Serial());
-                colorAttachmentsForRender.push_back(&mDummyAttachment);
+                    mockTex, Serial());
+                colorAttachmentsForRender.push_back(&mMockAttachment);
             }
         }
     }
@@ -387,9 +387,9 @@ const gl::AttachmentList &FramebufferD3D::getColorAttachmentsForRender(const gl:
 
 void FramebufferD3D::destroy(const gl::Context *context)
 {
-    if (mDummyAttachment.isAttached())
+    if (mMockAttachment.isAttached())
     {
-        mDummyAttachment.detach(context, Serial());
+        mMockAttachment.detach(context, Serial());
     }
 }
 

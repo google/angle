@@ -4,7 +4,7 @@
 // found in the LICENSE file.
 //
 
-// EGLSanityCheckTest.cpp:
+// EGLReadinessCheckTest.cpp:
 //      Tests used to check environment in which other tests are run.
 
 #include <gtest/gtest.h>
@@ -15,11 +15,11 @@
 
 using namespace angle;
 
-class EGLSanityCheckTest : public ANGLETest
+class EGLReadinessCheckTest : public ANGLETest
 {};
 
 // Checks the tests are running against ANGLE
-TEST_P(EGLSanityCheckTest, IsRunningOnANGLE)
+TEST_P(EGLReadinessCheckTest, IsRunningOnANGLE)
 {
     const char *extensionString =
         static_cast<const char *>(eglQueryString(EGL_NO_DISPLAY, EGL_EXTENSIONS));
@@ -27,23 +27,23 @@ TEST_P(EGLSanityCheckTest, IsRunningOnANGLE)
 }
 
 // Checks that getting function pointer works
-TEST_P(EGLSanityCheckTest, HasGetPlatformDisplayEXT)
+TEST_P(EGLReadinessCheckTest, HasGetPlatformDisplayEXT)
 {
     ASSERT_NE(eglGetPlatformDisplayEXT, nullptr);
 }
 
 // Checks that calling GetProcAddress for a non-existant function fails.
-TEST_P(EGLSanityCheckTest, GetProcAddressNegativeTest)
+TEST_P(EGLReadinessCheckTest, GetProcAddressNegativeTest)
 {
     auto check = eglGetProcAddress("WigglyWombats");
     EXPECT_EQ(nullptr, check);
 }
 
-// Tests that our whitelist function generally maps to our support function.
+// Tests that our allowlist function generally maps to our support function.
 // We can add specific exceptions here if needed.
 // Disabled because it was creating a large number of configs. This could even result
 // in a BDOD on Windows.
-TEST_P(EGLSanityCheckTest, DISABLED_WhitelistMatchesSupport)
+TEST_P(EGLReadinessCheckTest, DISABLED_AllowlistMatchesSupport)
 {
     // Has issues with Vulkan support detection on Android.
     ANGLE_SKIP_TEST_IF(IsAndroid());
@@ -53,7 +53,7 @@ TEST_P(EGLSanityCheckTest, DISABLED_WhitelistMatchesSupport)
     ANGLE_SKIP_TEST_IF(!GetSystemInfo(&systemInfo));
 
     auto check = [&systemInfo](const PlatformParameters &params) {
-        EXPECT_EQ(IsConfigWhitelisted(systemInfo, params), IsConfigSupported(params)) << params;
+        EXPECT_EQ(IsConfigAllowlisted(systemInfo, params), IsConfigSupported(params)) << params;
     };
 
     check(ES1_OPENGL());
@@ -88,4 +88,4 @@ TEST_P(EGLSanityCheckTest, DISABLED_WhitelistMatchesSupport)
     check(ES31_NULL());
 }
 
-ANGLE_INSTANTIATE_TEST(EGLSanityCheckTest, WithNoFixture(PlatformParameters()));
+ANGLE_INSTANTIATE_TEST(EGLReadinessCheckTest, WithNoFixture(PlatformParameters()));

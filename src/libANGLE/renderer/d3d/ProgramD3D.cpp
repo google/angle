@@ -494,7 +494,7 @@ bool ProgramD3DMetadata::addsPointCoordToVertexShader() const
     // PointSprite emulation requiress that gl_PointCoord is present in the vertex shader
     // VS_OUTPUT structure to ensure compatibility with the generated PS_INPUT of the pixel shader.
     // Even with a geometry shader, the app can render triangles or lines and reference
-    // gl_PointCoord in the fragment shader, requiring us to provide a dummy value. For
+    // gl_PointCoord in the fragment shader, requiring us to provide a placeholder value. For
     // simplicity, we always add this to the vertex shader when the fragment shader
     // references gl_PointCoord, even if we could skip it in the geometry shader.
     return (mUsesInstancedPointSpriteEmulation && usesPointCoord()) ||
@@ -2567,14 +2567,14 @@ void ProgramD3D::defineUniformBase(const gl::Shader *shader,
                                    const sh::ShaderVariable &uniform,
                                    D3DUniformMap *uniformMap)
 {
-    sh::DummyBlockEncoder dummyEncoder;
+    sh::StubBlockEncoder stubEncoder;
 
     // Samplers get their registers assigned in assignAllSamplerRegisters, and images get their
     // registers assigned in assignAllImageRegisters.
     if (gl::IsSamplerType(uniform.type))
     {
         UniformEncodingVisitorD3D visitor(shader->getType(), HLSLRegisterType::Texture,
-                                          &dummyEncoder, uniformMap);
+                                          &stubEncoder, uniformMap);
         sh::TraverseShaderVariable(uniform, false, &visitor);
         return;
     }
@@ -2584,14 +2584,13 @@ void ProgramD3D::defineUniformBase(const gl::Shader *shader,
         if (uniform.readonly)
         {
             UniformEncodingVisitorD3D visitor(shader->getType(), HLSLRegisterType::Texture,
-                                              &dummyEncoder, uniformMap);
+                                              &stubEncoder, uniformMap);
             sh::TraverseShaderVariable(uniform, false, &visitor);
         }
         else
         {
-            UniformEncodingVisitorD3D visitor(shader->getType(),
-                                              HLSLRegisterType::UnorderedAccessView, &dummyEncoder,
-                                              uniformMap);
+            UniformEncodingVisitorD3D visitor(
+                shader->getType(), HLSLRegisterType::UnorderedAccessView, &stubEncoder, uniformMap);
             sh::TraverseShaderVariable(uniform, false, &visitor);
         }
         mImageBindingMap[uniform.name] = uniform.binding;
@@ -2600,7 +2599,7 @@ void ProgramD3D::defineUniformBase(const gl::Shader *shader,
 
     if (uniform.isBuiltIn() && !uniform.isEmulatedBuiltIn())
     {
-        UniformEncodingVisitorD3D visitor(shader->getType(), HLSLRegisterType::None, &dummyEncoder,
+        UniformEncodingVisitorD3D visitor(shader->getType(), HLSLRegisterType::None, &stubEncoder,
                                           uniformMap);
         sh::TraverseShaderVariable(uniform, false, &visitor);
         return;
@@ -2608,7 +2607,7 @@ void ProgramD3D::defineUniformBase(const gl::Shader *shader,
     else if (gl::IsAtomicCounterType(uniform.type))
     {
         UniformEncodingVisitorD3D visitor(shader->getType(), HLSLRegisterType::UnorderedAccessView,
-                                          &dummyEncoder, uniformMap);
+                                          &stubEncoder, uniformMap);
         sh::TraverseShaderVariable(uniform, false, &visitor);
         mAtomicBindingMap[uniform.name] = uniform.binding;
         return;

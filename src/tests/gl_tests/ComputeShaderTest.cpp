@@ -20,7 +20,7 @@ class ComputeShaderTest : public ANGLETest
   protected:
     ComputeShaderTest() {}
 
-    void createDummyOutputImage(GLuint texture, GLenum internalFormat, GLint width, GLint height)
+    void createMockOutputImage(GLuint texture, GLenum internalFormat, GLint width, GLint height)
     {
         glBindTexture(GL_TEXTURE_2D, texture);
         glTexStorage2D(GL_TEXTURE_2D, 1, internalFormat, width, height);
@@ -387,7 +387,7 @@ void main()
     ANGLE_GL_COMPUTE_PROGRAM(program, kCS);
 
     GLTexture texture;
-    createDummyOutputImage(texture, GL_RGBA32UI, 4, 3);
+    createMockOutputImage(texture, GL_RGBA32UI, 4, 3);
 
     glUseProgram(program.get());
     glDispatchCompute(8, 4, 2);
@@ -449,7 +449,7 @@ void main()
     ANGLE_GL_COMPUTE_PROGRAM(program1, kCS1);
 
     GLTexture texture;
-    createDummyOutputImage(texture, GL_RGBA32UI, 4, 3);
+    createMockOutputImage(texture, GL_RGBA32UI, 4, 3);
 
     glUseProgram(program1);
     glDispatchCompute(8, 4, 2);

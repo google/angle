@@ -96,7 +96,7 @@ void Overlay::onSwap() const
     }
 }
 
-DummyOverlay::DummyOverlay(rx::GLImplFactory *implFactory) {}
-DummyOverlay::~DummyOverlay() = default;
+MockOverlay::MockOverlay(rx::GLImplFactory *implFactory) {}
+MockOverlay::~MockOverlay() = default;
 
 }  // namespace gl

@@ -111,10 +111,10 @@ class BlockLayoutEncoder
 };
 
 // Will return default values for everything.
-class DummyBlockEncoder : public BlockLayoutEncoder
+class StubBlockEncoder : public BlockLayoutEncoder
 {
   public:
-    DummyBlockEncoder() = default;
+    StubBlockEncoder() = default;
 
     void enterAggregateType(const ShaderVariable &structVar) override {}
     void exitAggregateType(const ShaderVariable &structVar) override {}

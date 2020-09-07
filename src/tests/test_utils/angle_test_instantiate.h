@@ -235,8 +235,8 @@ struct CombinedPrintToStringParamName
                                               combine1, combine2, combine3, combine4, combine5),  \
                              print)
 
-// Checks if a config is expected to be supported by checking a system-based white list.
-bool IsConfigWhitelisted(const SystemInfo &systemInfo, const PlatformParameters &param);
+// Checks if a config is expected to be supported by checking a system-based allow list.
+bool IsConfigAllowlisted(const SystemInfo &systemInfo, const PlatformParameters &param);
 
 // Determines if a config is supported by trying to initialize it. Does
 // not require SystemInfo.

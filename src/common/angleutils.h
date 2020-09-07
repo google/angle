@@ -218,7 +218,7 @@ inline bool IsLittleEndian()
 #define GL_BGRA8_SRGB_ANGLEX 0x6AC0
 #define GL_BGR10_A2_ANGLEX 0x6AF9
 
-// These are dummy formats used to fit typeless D3D textures that can be bound to EGL pbuffers into
+// These are fake formats used to fit typeless D3D textures that can be bound to EGL pbuffers into
 // the format system (for extension EGL_ANGLE_d3d_texture_client_buffer):
 #define GL_RGBA8_TYPELESS_ANGLEX 0x6AC1
 #define GL_RGBA8_TYPELESS_SRGB_ANGLEX 0x6AC2
@@ -274,7 +274,7 @@ inline bool IsLittleEndian()
 // EXT_texture_type_2_10_10_10_REV
 #define GL_RGB10_UNORM_ANGLEX 0x6AEE
 
-// These are dummy formats for OES_vertex_type_10_10_10_2
+// These are fake formats for OES_vertex_type_10_10_10_2
 #define GL_A2_RGB10_UNORM_ANGLEX 0x6AEF
 #define GL_A2_RGB10_SNORM_ANGLEX 0x6AF0
 #define GL_A2_RGB10_USCALED_ANGLEX 0x6AF1

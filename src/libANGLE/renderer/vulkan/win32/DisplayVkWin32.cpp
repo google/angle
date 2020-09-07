@@ -21,17 +21,17 @@ namespace rx
 {
 
 DisplayVkWin32::DisplayVkWin32(const egl::DisplayState &state)
-    : DisplayVk(state), mWindowClass(NULL), mDummyWindow(nullptr)
+    : DisplayVk(state), mWindowClass(NULL), mMockWindow(nullptr)
 {}
 
 DisplayVkWin32::~DisplayVkWin32() {}
 
 void DisplayVkWin32::terminate()
 {
-    if (mDummyWindow)
+    if (mMockWindow)
     {
-        DestroyWindow(mDummyWindow);
-        mDummyWindow = nullptr;
+        DestroyWindow(mMockWindow);
+        mMockWindow = nullptr;
     }
     if (mWindowClass)
     {
@@ -91,18 +91,18 @@ egl::Error DisplayVkWin32::initialize(egl::Display *display)
         }
     }
 
-    mDummyWindow =
-        CreateWindowExA(0, reinterpret_cast<const char *>(mWindowClass), "ANGLE Dummy Window",
+    mMockWindow =
+        CreateWindowExA(0, reinterpret_cast<const char *>(mWindowClass), "ANGLE Mock Window",
                         WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
                         CW_USEDEFAULT, nullptr, nullptr, nullptr, nullptr);
-    if (!mDummyWindow)
+    if (!mMockWindow)
     {
-        return egl::EglNotInitialized() << "Failed to create dummy OpenGL window.";
+        return egl::EglNotInitialized() << "Failed to create mock OpenGL window.";
     }
 
     VkSurfaceKHR surfaceVk;
     VkWin32SurfaceCreateInfoKHR info = {VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR, nullptr, 0,
-                                        GetModuleHandle(nullptr), mDummyWindow};
+                                        GetModuleHandle(nullptr), mMockWindow};
 
     VkInstance instance         = mRenderer->getInstance();
     VkPhysicalDevice physDevice = mRenderer->getPhysicalDevice();
@@ -126,8 +126,8 @@ egl::Error DisplayVkWin32::initialize(egl::Display *display)
     }
     vkDestroySurfaceKHR(instance, surfaceVk, nullptr);
 
-    DestroyWindow(mDummyWindow);
-    mDummyWindow = nullptr;
+    DestroyWindow(mMockWindow);
+    mMockWindow = nullptr;
 
     return egl::NoError();
 }

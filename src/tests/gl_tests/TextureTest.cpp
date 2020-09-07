@@ -4568,7 +4568,7 @@ TEST_P(Texture2DTestES31PPO, SingleTextureMultipleSamplers)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-    // Simple sanity check.
+    // Simple confidence check.
     bind2DTexturedQuadProgramPipeline();
     ppoDrawQuad(quadVertices, "position", 0.5f, 1.0f);
     ASSERT_GL_NO_ERROR();
@@ -7020,7 +7020,7 @@ TEST_P(Texture2DTestES3, SingleTextureMultipleSamplers)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-    // Simple sanity check.
+    // Simple confidence check.
     draw2DTexturedQuad(0.5f, 1.0f, true);
     ASSERT_GL_NO_ERROR();
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);

@@ -136,7 +136,7 @@ class FramebufferD3D : public FramebufferImpl
     gl::DrawBufferMask mCurrentActiveProgramOutputs;
     gl::DrawBufferMask mColorAttachmentsForRenderMask;
 
-    gl::FramebufferAttachment mDummyAttachment;
+    gl::FramebufferAttachment mMockAttachment;
 };
 }  // namespace rx
 

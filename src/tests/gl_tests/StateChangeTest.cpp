@@ -1150,10 +1150,10 @@ void main()
 })";
 
     constexpr char kFragmentShader[] = R"(#version 300 es
-out mediump float dummy;
+out mediump float unused;
 void main()
 {
-    dummy = 1.0;
+    unused = 1.0;
 })";
 
     std::vector<std::string> tfVaryings = {"valueOut"};
@@ -3725,7 +3725,7 @@ void main()
     glUseProgram(program);
     glUniform1i(s1loc, 0);
     glUniform1i(s2loc, 1);
-    // Draw. This first draw is a sanitycheck and not really necessary for the test
+    // Draw. This first draw is a confidence check and not really necessary for the test
     drawQuad(program, std::string(essl1_shaders::PositionAttrib()), 0.5f);
     ASSERT_GL_NO_ERROR();
 

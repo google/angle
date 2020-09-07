@@ -175,9 +175,9 @@ struct FeaturesD3D : FeatureSetBase
     // if they should be discard by 'discard' statements.
     // 2. If ID3D11BlendState.RenderTarget[].RenderTargetWriteMask is 0 and rendertarget is not set,
     // then rendering samples also pass neglecting discard statements in pixel shader.
-    // So we add a dummy texture as render target in such case. See http://anglebug.com/2152
-    Feature addDummyTextureNoRenderTarget = {
-        "add_dummy_texture_no_render_target", FeatureCategory::D3DWorkarounds,
+    // So we add a mock texture as render target in such case. See http://anglebug.com/2152
+    Feature addMockTextureNoRenderTarget = {
+        "add_mock_texture_no_render_target", FeatureCategory::D3DWorkarounds,
         "On some drivers when rendering with no render target, two bugs lead to incorrect behavior",
         &members, "http://anglebug.com/2152"};
 

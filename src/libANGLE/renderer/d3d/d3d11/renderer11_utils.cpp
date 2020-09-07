@@ -2454,7 +2454,7 @@ void InitializeFeatures(const Renderer11DeviceCaps &deviceCaps,
         features, rewriteUnaryMinusOperator,
         isIntel && (isBroadwell || isHaswell) && capsVersion < IntelDriverVersion(4624));
 
-    ANGLE_FEATURE_CONDITION(features, addDummyTextureNoRenderTarget,
+    ANGLE_FEATURE_CONDITION(features, addMockTextureNoRenderTarget,
                             isIntel && capsVersion < IntelDriverVersion(4815));
 
     // Haswell/Ivybridge drivers occasionally corrupt (small?) (vertex?) texture data uploads.

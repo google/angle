@@ -163,9 +163,9 @@ class RunningHistogram : public RunningGraph
     }
 };
 
-// If overlay is disabled, all the above classes would be replaced with Dummy, turning them into
+// If overlay is disabled, all the above classes would be replaced with Mock, turning them into
 // noop.
-class Dummy
+class Mock
 {
   public:
     void reset() const {}

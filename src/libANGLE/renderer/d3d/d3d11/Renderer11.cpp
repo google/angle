@@ -2067,7 +2067,7 @@ bool Renderer11::testDeviceLost()
 
 bool Renderer11::testDeviceResettable()
 {
-    // determine if the device is resettable by creating a dummy device
+    // determine if the device is resettable by creating a mock device
     PFN_D3D11_CREATE_DEVICE D3D11CreateDevice =
         (PFN_D3D11_CREATE_DEVICE)GetProcAddress(mD3d11Module, "D3D11CreateDevice");
 
@@ -2076,24 +2076,24 @@ bool Renderer11::testDeviceResettable()
         return false;
     }
 
-    ID3D11Device *dummyDevice;
-    D3D_FEATURE_LEVEL dummyFeatureLevel;
-    ID3D11DeviceContext *dummyContext;
+    ID3D11Device *mockDevice;
+    D3D_FEATURE_LEVEL mockFeatureLevel;
+    ID3D11DeviceContext *mockContext;
     UINT flags = (mCreateDebugDevice ? D3D11_CREATE_DEVICE_DEBUG : 0);
 
     ASSERT(mRequestedDriverType != D3D_DRIVER_TYPE_UNKNOWN);
     HRESULT result = D3D11CreateDevice(
         nullptr, mRequestedDriverType, nullptr, flags, mAvailableFeatureLevels.data(),
-        static_cast<unsigned int>(mAvailableFeatureLevels.size()), D3D11_SDK_VERSION, &dummyDevice,
-        &dummyFeatureLevel, &dummyContext);
+        static_cast<unsigned int>(mAvailableFeatureLevels.size()), D3D11_SDK_VERSION, &mockDevice,
+        &mockFeatureLevel, &mockContext);
 
     if (!mDevice || FAILED(result))
     {
         return false;
     }
 
-    SafeRelease(dummyContext);
-    SafeRelease(dummyDevice);
+    SafeRelease(mockContext);
+    SafeRelease(mockDevice);
 
     return true;
 }

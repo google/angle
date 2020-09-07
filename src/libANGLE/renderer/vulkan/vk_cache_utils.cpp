@@ -2882,7 +2882,7 @@ angle::Result RenderPassCache::addRenderPass(ContextVk *contextVk,
                                              const vk::RenderPassDesc &desc,
                                              vk::RenderPass **renderPassOut)
 {
-    // Insert some dummy attachment ops.  Note that render passes with different ops are still
+    // Insert some placeholder attachment ops.  Note that render passes with different ops are still
     // compatible. The load/store values are not important as they are aren't used for real RPs.
     //
     // It would be nice to pre-populate the cache in the Renderer so we rarely miss here.

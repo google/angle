@@ -293,7 +293,7 @@ const char *GetConditionName(uint32_t condition)
 
 GPUTestExpectationsParser::GPUTestExpectationsParser()
 {
-    // Some sanity check.
+    // Some initial checks.
     ASSERT((static_cast<unsigned int>(kNumberOfTokens)) ==
            (sizeof(kTokenData) / sizeof(kTokenData[0])));
     ASSERT((static_cast<unsigned int>(kNumberOfErrors)) ==

@@ -67,7 +67,7 @@ class DisplayAndroid : public DisplayEGL
 
     bool mSupportsSurfaceless;
 
-    EGLSurface mDummyPbuffer;
+    EGLSurface mMockPbuffer;
 };
 
 }  // namespace rx

@@ -228,12 +228,12 @@ void BlockLayoutEncoder::align(size_t baseAlignment)
     mCurrentOffset = rx::roundUp<size_t>(mCurrentOffset, baseAlignment);
 }
 
-// DummyBlockEncoder implementation.
-void DummyBlockEncoder::getBlockLayoutInfo(GLenum type,
-                                           const std::vector<unsigned int> &arraySizes,
-                                           bool isRowMajorMatrix,
-                                           int *arrayStrideOut,
-                                           int *matrixStrideOut)
+// StubBlockEncoder implementation.
+void StubBlockEncoder::getBlockLayoutInfo(GLenum type,
+                                          const std::vector<unsigned int> &arraySizes,
+                                          bool isRowMajorMatrix,
+                                          int *arrayStrideOut,
+                                          int *matrixStrideOut)
 {
     *arrayStrideOut  = 0;
     *matrixStrideOut = 0;

@@ -88,7 +88,7 @@ class ShareGroup final : angle::NonCopyable
     rx::SerialFactory mFramebufferSerialFactory;
 };
 
-// Constant coded here as a sanity limit.
+// Constant coded here as a reasonable limit.
 constexpr EGLAttrib kProgramCacheSizeAbsoluteMax = 0x4000000;
 
 class Display final : public LabeledObject,

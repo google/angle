@@ -1087,14 +1087,14 @@ def get_parsed_functions(functions_txt_filename, essl_only):
 def mangledNameHash(str, hashfn, script_generated_hash_tests, unmangled, save_test=True):
     hash = hashfn.hash(str)
     if save_test:
-        sanity_check = ''
+        confidence_check = ''
         if unmangled:
-            sanity_check = '    ASSERT_EQ(0x{hash}u, ImmutableString("{str}").unmangledNameHash());'.format(
+            confidence_check = '    ASSERT_EQ(0x{hash}u, ImmutableString("{str}").unmangledNameHash());'.format(
                 hash=('%08x' % hash), str=str)
         else:
-            sanity_check = '    ASSERT_EQ(0x{hash}u, ImmutableString("{str}").mangledNameHash());'.format(
+            confidence_check = '    ASSERT_EQ(0x{hash}u, ImmutableString("{str}").mangledNameHash());'.format(
                 hash=('%08x' % hash), str=str)
-        script_generated_hash_tests.update({sanity_check: None})
+        script_generated_hash_tests.update({confidence_check: None})
     return hash
 
 

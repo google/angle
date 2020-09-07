@@ -111,17 +111,17 @@ void GlslangWarmup()
     // EShMessages messages = EShMsgDefault;
 
     const TBuiltInResource builtInResources(glslang::DefaultTBuiltInResource);
-    glslang::TShader dummyShader(EShLangVertex);
+    glslang::TShader warmUpShader(EShLangVertex);
 
     const char *kShaderString = R"(#version 450 core
         void main(){}
     )";
     const int kShaderLength   = static_cast<int>(strlen(kShaderString));
 
-    dummyShader.setStringsWithLengths(&kShaderString, &kShaderLength, 1);
-    dummyShader.setEntryPoint("main");
+    warmUpShader.setStringsWithLengths(&kShaderString, &kShaderLength, 1);
+    warmUpShader.setEntryPoint("main");
 
-    bool result = dummyShader.parse(&builtInResources, 450, ECoreProfile, false, false, messages);
+    bool result = warmUpShader.parse(&builtInResources, 450, ECoreProfile, false, false, messages);
     ASSERT(result);
 }
 

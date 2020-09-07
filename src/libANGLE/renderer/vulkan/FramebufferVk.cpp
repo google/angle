@@ -1970,7 +1970,7 @@ angle::Result FramebufferVk::getFramebuffer(ContextVk *contextVk,
     vk::FramebufferHelper newFramebuffer;
     ANGLE_TRY(newFramebuffer.init(contextVk, framebufferInfo));
 
-    // Sanity check that our description matches our attachments. Can catch implementation bugs.
+    // Check that our description matches our attachments. Can catch implementation bugs.
     ASSERT(static_cast<uint32_t>(attachments.size()) == mCurrentFramebufferDesc.attachmentCount());
 
     mFramebufferCache[mCurrentFramebufferDesc] = std::move(newFramebuffer);

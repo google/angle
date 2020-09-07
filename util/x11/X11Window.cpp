@@ -465,8 +465,9 @@ void X11Window::setVisible(bool isVisible)
         // code calling setVisible can assume the window is visible.
         // This is important when creating a framebuffer as the framebuffer content
         // is undefined when the window is not visible.
-        XEvent dummyEvent;
-        XIfEvent(mDisplay, &dummyEvent, WaitForMapNotify, reinterpret_cast<XPointer>(mWindow));
+        XEvent placeholderEvent;
+        XIfEvent(mDisplay, &placeholderEvent, WaitForMapNotify,
+                 reinterpret_cast<XPointer>(mWindow));
     }
     else
     {

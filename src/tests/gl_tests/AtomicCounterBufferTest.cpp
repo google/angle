@@ -112,7 +112,7 @@ TEST_P(AtomicCounterBufferTest31, OffsetNotAllSpecifiedWithSameValue)
     EXPECT_EQ(0u, program);
 }
 
-// Tests atomic counter reads using compute shaders. Used as a sanity check for the translator.
+// Tests atomic counter reads using compute shaders. Used as a confidence check for the translator.
 TEST_P(AtomicCounterBufferTest31, AtomicCounterReadCompute)
 {
     // Skipping due to a bug on the Qualcomm Vulkan Android driver.

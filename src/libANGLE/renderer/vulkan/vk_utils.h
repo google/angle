@@ -52,7 +52,7 @@ class ShareGroup;
 namespace gl
 {
 struct Box;
-class DummyOverlay;
+class MockOverlay;
 struct Extents;
 struct RasterizerState;
 struct Rectangle;
@@ -199,7 +199,7 @@ struct ImplTypeHelper<gl::OBJ>         \
 ANGLE_GL_OBJECTS_X(ANGLE_IMPL_TYPE_HELPER_GL)
 
 template <>
-struct ImplTypeHelper<gl::DummyOverlay>
+struct ImplTypeHelper<gl::MockOverlay>
 {
     using ImplType = OverlayVk;
 };
@@ -232,7 +232,7 @@ GetImplType<T> *GetImpl(const T *glObject)
 }
 
 template <>
-inline OverlayVk *GetImpl(const gl::DummyOverlay *glObject)
+inline OverlayVk *GetImpl(const gl::MockOverlay *glObject)
 {
     return nullptr;
 }

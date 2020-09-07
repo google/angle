@@ -225,7 +225,7 @@ Change-Id: I443c36aaa8956c20da1abddf7aea613659e2cd5b"""
             errors[0],
             self.output_api.PresubmitError("Commit 1:Tabs are not allowed in commit message."))
 
-    def test_whitelist_revert(self):
+    def test_allowlist_revert(self):
         commit_msg = """Revert "sssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssa
 
 bbbbbbbbbbbbbbbbbbbb
@@ -234,7 +234,7 @@ Change-Id: I443c36aaa8956c20da1abddf7aea613659e2cd5b"""
         errors = self.run_check_commit_message_formatting(commit_msg)
         self.assertEqual(len(errors), 0)
 
-    def test_whitelist_roll(self):
+    def test_allowlist_roll(self):
         commit_msg = """Roll sssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssadd
 
 bbbbbbbbbbbbbbbbbbbb
@@ -243,7 +243,7 @@ Change-Id: I443c36aaa8956c20da1abddf7aea613659e2cd5b"""
         errors = self.run_check_commit_message_formatting(commit_msg)
         self.assertEqual(len(errors), 0)
 
-    def test_whitelist_reland(self):
+    def test_allowlist_reland(self):
         commit_msg = """Reland sssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssadd
 
 bbbbbbbbbbbbbbbbbbbb

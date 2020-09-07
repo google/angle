@@ -1558,7 +1558,7 @@ angle::Result TextureVk::generateMipmapsWithCompute(ContextVk *contextVk)
                     contextVk, *mImage, destLevelVk, layer, &destLevelViews[levelVk.get()]));
             }
 
-            // If the image has fewer than maximum levels, fill the last views with a dummy view.
+            // If the image has fewer than maximum levels, fill the last views with a unused view.
             ASSERT(destLevelCount > vk::LevelIndex(0));
             for (vk::LevelIndex levelVk = destLevelCount;
                  levelVk < vk::LevelIndex(UtilsVk::kGenerateMipmapMaxLevels); ++levelVk)

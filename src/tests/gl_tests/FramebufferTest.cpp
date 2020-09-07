@@ -1961,10 +1961,10 @@ void main()
     ASSERT_GL_NO_ERROR();
 }
 
-class AddDummyTextureNoRenderTargetTest : public ANGLETest
+class AddMockTextureNoRenderTargetTest : public ANGLETest
 {
   public:
-    AddDummyTextureNoRenderTargetTest()
+    AddMockTextureNoRenderTargetTest()
     {
         setWindowWidth(512);
         setWindowHeight(512);
@@ -1976,12 +1976,12 @@ class AddDummyTextureNoRenderTargetTest : public ANGLETest
 
     void overrideWorkaroundsD3D(FeaturesD3D *features) override
     {
-        features->overrideFeatures({"add_dummy_texture_no_render_target"}, true);
+        features->overrideFeatures({"add_mock_texture_no_render_target"}, true);
     }
 };
 
 // Test to verify workaround succeeds when no program outputs exist http://anglebug.com/2283
-TEST_P(AddDummyTextureNoRenderTargetTest, NoProgramOutputWorkaround)
+TEST_P(AddMockTextureNoRenderTargetTest, NoProgramOutputWorkaround)
 {
     constexpr char kVS[] = "void main() {}";
     constexpr char kFS[] = "void main() {}";
@@ -2443,7 +2443,7 @@ TEST_P(FramebufferTest, BindAndDrawDifferentSizedFBOs)
     EXPECT_PIXEL_RECT_EQ(0, 0, kLargeWidth, kLargeHeight, GLColor::blue);
 }
 
-ANGLE_INSTANTIATE_TEST_ES2(AddDummyTextureNoRenderTargetTest);
+ANGLE_INSTANTIATE_TEST_ES2(AddMockTextureNoRenderTargetTest);
 ANGLE_INSTANTIATE_TEST_ES2(FramebufferTest);
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(FramebufferFormatsTest);
 ANGLE_INSTANTIATE_TEST_ES3(FramebufferTest_ES3);

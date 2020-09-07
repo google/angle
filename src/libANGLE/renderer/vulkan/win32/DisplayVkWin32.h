@@ -35,7 +35,7 @@ class DisplayVkWin32 : public DisplayVk
 
   private:
     ATOM mWindowClass;
-    HWND mDummyWindow;
+    HWND mMockWindow;
     std::vector<VkSurfaceFormatKHR> mSurfaceFormats;
 };
 
