@@ -1198,7 +1198,7 @@ angle::Result Texture::copyImage(Context *context,
         forceCopySubImage = ((sourceArea.x < 0) || (sourceArea.y < 0) ||
                              ((sourceArea.x + sourceArea.width) > fbSize.width) ||
                              ((sourceArea.y + sourceArea.height) > fbSize.height)) &&
-                            (sourceReadAttachment->getTexture() != this);
+                            (sourceReadAttachment->getResource() != this);
         Rectangle clippedArea;
         if (ClipRectangle(sourceArea, Rectangle(0, 0, fbSize.width, fbSize.height), &clippedArea))
         {
