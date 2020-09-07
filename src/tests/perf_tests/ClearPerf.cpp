@@ -69,12 +69,9 @@ class ClearBenchmark : public ANGLERenderTest, public ::testing::WithParamInterf
     std::vector<GLuint> mTextures;
 
     GLuint mProgram;
-    GLuint mPositionLoc;
-    GLuint mSamplerLoc;
 };
 
-ClearBenchmark::ClearBenchmark()
-    : ANGLERenderTest("Clear", GetParam()), mProgram(0u), mPositionLoc(-1), mSamplerLoc(-1)
+ClearBenchmark::ClearBenchmark() : ANGLERenderTest("Clear", GetParam()), mProgram(0u)
 {
     // Crashes on nvidia+d3d11. http://crbug.com/945415
     if (GetParam().getRenderer() == EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE)
@@ -94,24 +91,20 @@ void ClearBenchmark::initializeBenchmark()
 
 void ClearBenchmark::initShaders()
 {
-    constexpr char kVS[] = R"(attribute vec4 a_position;
-void main()
+    constexpr char kVS[] = R"(void main()
 {
-    gl_Position = a_position;
+    gl_Position = vec4(0, 0, 0, 1);
 })";
 
     constexpr char kFS[] = R"(precision mediump float;
-uniform sampler2D s_texture;
 void main()
 {
-    gl_FragColor = texture2D(s_texture, vec2(0, 0));
+    gl_FragColor = vec4(0);
 })";
 
     mProgram = CompileProgram(kVS, kFS);
     ASSERT_NE(0u, mProgram);
 
-    mPositionLoc = glGetAttribLocation(mProgram, "a_position");
-    mSamplerLoc  = glGetUniformLocation(mProgram, "s_texture");
     glUseProgram(mProgram);
 
     glDisable(GL_DEPTH_TEST);
@@ -129,21 +122,6 @@ void ClearBenchmark::drawBenchmark()
     const auto &params = GetParam();
 
     std::vector<float> textureData(params.textureSize * params.textureSize * 4, 0.5);
-
-    GLTexture tex;
-
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, tex);
-
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, params.textureSize, params.textureSize, 0, GL_RGBA,
-                 GL_UNSIGNED_BYTE, textureData.data());
-
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
-    glUniform1i(mSamplerLoc, 0);
 
     GLRenderbuffer colorRbo;
     glBindRenderbuffer(GL_RENDERBUFFER, colorRbo);
