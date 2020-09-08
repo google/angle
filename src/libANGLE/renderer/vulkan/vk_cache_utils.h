@@ -185,7 +185,7 @@ class alignas(4) RenderPassDesc final
     // currently not well supported, so ANGLE always takes a fallback path for them.  When a resolve
     // path is implemented for depth/stencil attachments, another bit must be made free
     // (mAttachmentFormats is one element too large, so there are 8 bits there to take).
-    angle::BitSet8<gl::IMPLEMENTATION_MAX_DRAW_BUFFERS> mColorResolveAttachmentMask;
+    gl::DrawBufferMask mColorResolveAttachmentMask;
 
     // TODO(syoussefi): to be used to determine which attachments are multisampled-render-to-texture
     // that need load.  http://anglebug.com/4881

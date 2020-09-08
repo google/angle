@@ -5489,8 +5489,9 @@ angle::Result Program::deserialize(const Context *context,
     static_assert(IMPLEMENTATION_MAX_DRAW_BUFFERS * 2 <= 8 * sizeof(uint32_t),
                   "All bits of mDrawBufferTypeMask and mActiveOutputVariables types and mask fit "
                   "into 32 bits each");
-    mState.mDrawBufferTypeMask    = gl::ComponentTypeMask(stream.readInt<uint32_t>());
-    mState.mActiveOutputVariables = stream.readInt<gl::DrawBufferMask>();
+    mState.mDrawBufferTypeMask = gl::ComponentTypeMask(stream.readInt<uint32_t>());
+    mState.mActiveOutputVariables =
+        gl::DrawBufferMask(stream.readInt<gl::DrawBufferMask::value_type>());
 
     unsigned int defaultUniformRangeLow  = stream.readInt<unsigned int>();
     unsigned int defaultUniformRangeHigh = stream.readInt<unsigned int>();

@@ -685,7 +685,7 @@ class ClearValuesArray final
 
     gl::DrawBufferMask getEnabledColorAttachmentsMask() const
     {
-        return gl::DrawBufferMask(mEnabled.to_ulong());
+        return gl::DrawBufferMask(static_cast<gl::DrawBufferMask::value_type>(mEnabled.to_ulong()));
     }
 
   private:
