@@ -102,6 +102,8 @@ const char *GetCommandString(CommandID id)
             return "InsertDebugUtilsLabel";
         case CommandID::MemoryBarrier:
             return "MemoryBarrier";
+        case CommandID::NextSubpass:
+            return "NextSubpass";
         case CommandID::PipelineBarrier:
             return "PipelineBarrier";
         case CommandID::PushConstants:
@@ -481,6 +483,13 @@ void SecondaryCommandBuffer::executeCommands(VkCommandBuffer cmdBuffer)
                         getParamPtr<MemoryBarrierParams>(currentCommand);
                     vkCmdPipelineBarrier(cmdBuffer, params->srcStageMask, params->dstStageMask, 0,
                                          1, &params->memoryBarrier, 0, nullptr, 0, nullptr);
+                    break;
+                }
+                case CommandID::NextSubpass:
+                {
+                    const NextSubpassParams *params =
+                        getParamPtr<NextSubpassParams>(currentCommand);
+                    vkCmdNextSubpass(cmdBuffer, params->subpassContents);
                     break;
                 }
                 case CommandID::PipelineBarrier:

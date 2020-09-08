@@ -71,6 +71,7 @@ enum class CommandID : uint16_t
     ImageBarrier,
     InsertDebugUtilsLabel,
     MemoryBarrier,
+    NextSubpass,
     PipelineBarrier,
     PushConstants,
     ResetEvent,
@@ -359,6 +360,12 @@ struct MemoryBarrierParams
 };
 VERIFY_4_BYTE_ALIGNMENT(MemoryBarrierParams)
 
+struct NextSubpassParams
+{
+    VkSubpassContents subpassContents;
+};
+VERIFY_4_BYTE_ALIGNMENT(NextSubpassParams)
+
 struct PipelineBarrierParams
 {
     VkPipelineStageFlags srcStageMask;
@@ -599,6 +606,8 @@ class SecondaryCommandBuffer final : angle::NonCopyable
     void memoryBarrier(VkPipelineStageFlags srcStageMask,
                        VkPipelineStageFlags dstStageMask,
                        const VkMemoryBarrier *memoryBarrier);
+
+    void nextSubpass(VkSubpassContents subpassContents);
 
     void pipelineBarrier(VkPipelineStageFlags srcStageMask,
                          VkPipelineStageFlags dstStageMask,
@@ -1269,6 +1278,12 @@ ANGLE_INLINE void SecondaryCommandBuffer::memoryBarrier(VkPipelineStageFlags src
     paramStruct->srcStageMask        = srcStageMask;
     paramStruct->dstStageMask        = dstStageMask;
     paramStruct->memoryBarrier       = *memoryBarrier;
+}
+
+ANGLE_INLINE void SecondaryCommandBuffer::nextSubpass(VkSubpassContents subpassContents)
+{
+    NextSubpassParams *paramStruct = initCommand<NextSubpassParams>(CommandID::NextSubpass);
+    paramStruct->subpassContents   = subpassContents;
 }
 
 ANGLE_INLINE void SecondaryCommandBuffer::pipelineBarrier(
