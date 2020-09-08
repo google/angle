@@ -156,6 +156,8 @@ constexpr const char *kSkippedMessages[] = {
     "UNASSIGNED-BestPractices-vkCmdClearAttachments-clear-after-load",
     // http://anglebug.com/4928
     "VUID-vkMapMemory-memory-00683",
+    // http://anglebug.com/5027
+    "UNASSIGNED-CoreValidation-Shader-PushConstantOutOfRange",
 };
 
 // Suppress validation errors that are known
