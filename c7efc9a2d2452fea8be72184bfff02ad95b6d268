@@ -46,6 +46,30 @@
       "revId": "c7efc9a2d2452fea8be72184bfff02ad95b6d268",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7bd867f9_a636f97a",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 36
+      },
+      "lineNbr": 1514,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-09-08T23:57:46Z",
+      "side": 1,
+      "message": "I see, so this is handling marking the new output varying and the new input varying?\n\n1. Output: mediump, Input: highp\n- New input mediump varying in the FS whose value is cast to highp and written to the original varying, so the rest of the shader remains unchanged.\n\n2. Output: high, Input: medium\n- New output mediump varying in the VS that passes along the casted original highp value.",
+      "parentUuid": "1f25b4b0_c0634714",
+      "range": {
+        "startLine": 1513,
+        "startChar": 0,
+        "endLine": 1514,
+        "endChar": 25
+      },
+      "revId": "c7efc9a2d2452fea8be72184bfff02ad95b6d268",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }

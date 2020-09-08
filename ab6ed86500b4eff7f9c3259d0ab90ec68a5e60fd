@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a0bdc93_f2a5d2ee",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 37
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-09-08T23:57:46Z",
+      "side": 1,
+      "message": "LGTM.   We should probably wait to enable this with your next CL until Tobin can verify if the rendering issues are repeatable or not.",
+      "revId": "ab6ed86500b4eff7f9c3259d0ab90ec68a5e60fd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
