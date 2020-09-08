@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d2239ffb_206cc841",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 36
+      },
+      "lineNbr": 1514,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-09-08T17:02:59Z",
+      "side": 1,
+      "message": "Does the conditional need to check info-\u003evaryingIsOutput also?   Or is this being restricted to output varyings somewhere else, since input varyings will be upcast from medium-\u003ehigh.",
+      "range": {
+        "startLine": 1513,
+        "startChar": 0,
+        "endLine": 1514,
+        "endChar": 25
+      },
+      "revId": "c7efc9a2d2452fea8be72184bfff02ad95b6d268",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
