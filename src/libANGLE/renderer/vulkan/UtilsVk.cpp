@@ -11,6 +11,7 @@
 
 #include "libANGLE/renderer/vulkan/ContextVk.h"
 #include "libANGLE/renderer/vulkan/FramebufferVk.h"
+#include "libANGLE/renderer/vulkan/GlslangWrapperVk.h"
 #include "libANGLE/renderer/vulkan/RenderTargetVk.h"
 #include "libANGLE/renderer/vulkan/RendererVk.h"
 
@@ -268,6 +269,44 @@ uint32_t GetGenerateMipmapFlags(ContextVk *contextVk, const vk::Format &format)
     return flags;
 }
 
+enum UnresolveAttachmentType
+{
+    kUnresolveTypeUnused = 0,
+    kUnresolveTypeFloat  = 1,
+    kUnresolveTypeSint   = 2,
+    kUnresolveTypeUint   = 3,
+};
+
+uint32_t GetUnresolveFlags(uint32_t attachmentCount,
+                           const gl::DrawBuffersArray<vk::ImageHelper *> &src,
+                           gl::DrawBuffersArray<UnresolveAttachmentType> *attachmentTypesOut)
+{
+    uint32_t flags = 0;
+
+    for (uint32_t attachmentIndex = 0; attachmentIndex < attachmentCount; ++attachmentIndex)
+    {
+        const angle::Format &format = src[attachmentIndex]->getFormat().intendedFormat();
+
+        UnresolveAttachmentType type = kUnresolveTypeFloat;
+        if (format.isSint())
+        {
+            type = kUnresolveTypeSint;
+        }
+        else if (format.isUint())
+        {
+            type = kUnresolveTypeUint;
+        }
+
+        (*attachmentTypesOut)[attachmentIndex] = type;
+
+        // |flags| is comprised of |attachmentCount| values from |UnresolveAttachmentType|, each
+        // taking up 2 bits.
+        flags |= type << (2 * attachmentIndex);
+    }
+
+    return flags;
+}
+
 uint32_t GetFormatDefaultChannelMask(const vk::Format &format)
 {
     uint32_t mask = 0;
@@ -304,6 +343,81 @@ void CalculateResolveOffset(const UtilsVk::BlitResolveParameters &params, int32_
     // There's no stretching in resolve.
     offset[0] = params.destOffset[0] - params.srcOffset[0] * srcOffsetFactorX;
     offset[1] = params.destOffset[1] - params.srcOffset[1] * srcOffsetFactorY;
+}
+
+// Creates a shader that looks like the following, based on the number and types of unresolve
+// attachments.
+//
+//     #version 450 core
+//
+//     layout(location = 0) out vec4 colorOut0;
+//     layout(location = 1) out ivec4 colorOut1;
+//     layout(location = 2) out uvec4 colorOut2;
+//     layout(input_attachment_index = 0, set = 0, binding = 0) uniform subpassInput colorIn0;
+//     layout(input_attachment_index = 1, set = 0, binding = 1) uniform isubpassInput colorIn1;
+//     layout(input_attachment_index = 2, set = 0, binding = 2) uniform usubpassInput colorIn2;
+//
+//     void main()
+//     {
+//         colorOut0 = subpassLoad(colorIn0);
+//         colorOut1 = subpassLoad(colorIn1);
+//         colorOut2 = subpassLoad(colorIn2);
+//     }
+angle::Result MakeUnresolveFragShader(
+    vk::Context *context,
+    uint32_t attachmentCount,
+    gl::DrawBuffersArray<UnresolveAttachmentType> &attachmentTypes,
+    SpirvBlob *spirvBlobOut)
+{
+    std::ostringstream source;
+
+    source << "#version 450 core\n";
+
+    for (uint32_t attachmentIndex = 0; attachmentIndex < attachmentCount; ++attachmentIndex)
+    {
+        const UnresolveAttachmentType type = attachmentTypes[attachmentIndex];
+        ASSERT(type != kUnresolveTypeUnused);
+
+        const char *prefix =
+            type == kUnresolveTypeUint ? "u" : type == kUnresolveTypeSint ? "i" : "";
+
+        source << "layout(location=" << attachmentIndex << ") out " << prefix << "vec4 colorOut"
+               << attachmentIndex << ";\n";
+        source << "layout(input_attachment_index=" << attachmentIndex
+               << ", set=0, binding=" << attachmentIndex << ") uniform " << prefix
+               << "subpassInput colorIn" << attachmentIndex << ";\n";
+    }
+
+    source << "void main(){\n";
+
+    for (uint32_t attachmentIndex = 0; attachmentIndex < attachmentCount; ++attachmentIndex)
+    {
+        source << "colorOut" << attachmentIndex << " = subpassLoad(colorIn" << attachmentIndex
+               << ");\n";
+    }
+
+    source << "}\n";
+
+    return GlslangWrapperVk::CompileShaderOneOff(context, gl::ShaderType::Fragment, source.str(),
+                                                 spirvBlobOut);
+}
+
+angle::Result GetUnresolveFrag(vk::Context *context,
+                               uint32_t attachmentCount,
+                               gl::DrawBuffersArray<UnresolveAttachmentType> &attachmentTypes,
+                               vk::RefCounted<vk::ShaderAndSerial> *shader)
+{
+    if (shader->get().valid())
+    {
+        return angle::Result::Continue;
+    }
+
+    SpirvBlob shaderCode;
+    ANGLE_TRY(MakeUnresolveFragShader(context, attachmentCount, attachmentTypes, &shaderCode));
+
+    // Create shader lazily. Access will need to be locked for multi-threading.
+    return vk::InitShaderAndSerial(context, &shader->get(), shaderCode.data(),
+                                   shaderCode.size() * 4);
 }
 }  // namespace
 
@@ -394,6 +508,20 @@ void UtilsVk::destroy(RendererVk *renderer)
     {
         program.destroy(device);
     }
+
+    for (auto &programIter : mUnresolvePrograms)
+    {
+        vk::ShaderProgramHelper &program = programIter.second;
+        program.destroy(device);
+    }
+    mUnresolvePrograms.clear();
+
+    for (auto &shaderIter : mUnresolveFragShaders)
+    {
+        vk::RefCounted<vk::ShaderAndSerial> &shader = shaderIter.second;
+        shader.get().destroy(device);
+    }
+    mUnresolveFragShaders.clear();
 
     mPointSampler.destroy(device);
     mLinearSampler.destroy(device);
@@ -648,6 +776,26 @@ angle::Result UtilsVk::ensureGenerateMipmapResourcesInitialized(ContextVk *conte
 
     return ensureResourcesInitialized(contextVk, Function::GenerateMipmap, setSizes,
                                       ArraySize(setSizes), sizeof(GenerateMipmapShaderParams));
+}
+
+angle::Result UtilsVk::ensureUnresolveResourcesInitialized(ContextVk *contextVk,
+                                                           Function function,
+                                                           uint32_t attachmentCount)
+{
+    ASSERT(static_cast<uint32_t>(function) -
+               static_cast<uint32_t>(Function::Unresolve1Attachment) ==
+           attachmentCount - 1);
+
+    if (mPipelineLayouts[function].valid())
+    {
+        return angle::Result::Continue;
+    }
+
+    gl::DrawBuffersArray<VkDescriptorPoolSize> setSizes;
+    std::fill(setSizes.begin(), setSizes.end(),
+              VkDescriptorPoolSize{VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT, 1});
+
+    return ensureResourcesInitialized(contextVk, function, setSizes.data(), attachmentCount, 0);
 }
 
 angle::Result UtilsVk::ensureSamplersInitialized(ContextVk *contextVk)
@@ -1942,6 +2090,96 @@ angle::Result UtilsVk::generateMipmap(ContextVk *contextVk,
     commandBuffer.dispatch(workGroupX, workGroupY, 1);
     descriptorPoolBinding.reset();
 
+    return angle::Result::Continue;
+}
+
+angle::Result UtilsVk::unresolve(ContextVk *contextVk,
+                                 const FramebufferVk *framebuffer,
+                                 const UnresolveParameters &params)
+{
+    // Get attachment count and pointers to resolve images and views.
+    gl::DrawBuffersArray<vk::ImageHelper *> src;
+    gl::DrawBuffersArray<const vk::ImageView *> srcView;
+
+    ASSERT(params.unresolveMask.any());
+
+    // The subpass that initializes the multisampled-render-to-texture attachments packs the
+    // attachments that need to be unresolved, so the attachment indices of this subpass are not the
+    // same.  See InitializeUnresolveSubpass for details.
+    vk::PackedAttachmentIndex colorIndexVk(0);
+    for (size_t colorIndexGL : params.unresolveMask)
+    {
+        RenderTargetVk *colorRenderTarget = framebuffer->getColorDrawRenderTarget(colorIndexGL);
+
+        ASSERT(colorRenderTarget->hasResolveAttachment());
+        ASSERT(colorRenderTarget->isImageTransient());
+
+        src[colorIndexVk.get()] = &colorRenderTarget->getResolveImageForRenderPass();
+        ANGLE_TRY(colorRenderTarget->getResolveImageView(contextVk, &srcView[colorIndexVk.get()]));
+
+        ++colorIndexVk;
+    }
+
+    const uint32_t attachmentCount = colorIndexVk.get();
+    const Function function        = static_cast<Function>(
+        static_cast<uint32_t>(Function::Unresolve1Attachment) + attachmentCount - 1);
+    ANGLE_TRY(ensureUnresolveResourcesInitialized(contextVk, function, attachmentCount));
+
+    vk::GraphicsPipelineDesc pipelineDesc;
+    pipelineDesc.initDefaults();
+    pipelineDesc.setCullMode(VK_CULL_MODE_NONE);
+    pipelineDesc.setRasterizationSamples(framebuffer->getSamples());
+    pipelineDesc.setRenderPassDesc(framebuffer->getRenderPassDesc());
+    // Note: depth test is disabled by default so this should be unnecessary, but works around an
+    // Intel bug on windows.  http://anglebug.com/3348
+    pipelineDesc.setDepthWriteEnabled(false);
+
+    VkViewport viewport;
+    gl::Rectangle completeRenderArea = framebuffer->getRotatedCompleteRenderArea(contextVk);
+    bool invertViewport              = contextVk->isViewportFlipEnabledForDrawFBO();
+    gl_vk::GetViewport(completeRenderArea, 0.0f, 1.0f, invertViewport, completeRenderArea.height,
+                       &viewport);
+    pipelineDesc.setViewport(viewport);
+
+    pipelineDesc.setScissor(gl_vk::GetRect(completeRenderArea));
+
+    VkDescriptorSet descriptorSet;
+    vk::RefCountedDescriptorPoolBinding descriptorPoolBinding;
+    ANGLE_TRY(allocateDescriptorSet(contextVk, function, &descriptorPoolBinding, &descriptorSet));
+
+    gl::DrawBuffersArray<VkDescriptorImageInfo> inputImageInfo = {};
+    for (uint32_t attachmentIndex = 0; attachmentIndex < attachmentCount; ++attachmentIndex)
+    {
+        inputImageInfo[attachmentIndex].imageView   = srcView[attachmentIndex]->getHandle();
+        inputImageInfo[attachmentIndex].imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+    }
+
+    VkWriteDescriptorSet writeInfo = {};
+    writeInfo.sType                = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+    writeInfo.dstSet               = descriptorSet;
+    writeInfo.dstBinding           = 0;
+    writeInfo.descriptorCount      = attachmentCount;
+    writeInfo.descriptorType       = VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT;
+    writeInfo.pImageInfo           = inputImageInfo.data();
+
+    vkUpdateDescriptorSets(contextVk->getDevice(), 1, &writeInfo, 0, nullptr);
+
+    gl::DrawBuffersArray<UnresolveAttachmentType> attachmentTypes;
+    uint32_t flags = GetUnresolveFlags(attachmentCount, src, &attachmentTypes);
+
+    vk::ShaderLibrary &shaderLibrary                    = contextVk->getShaderLibrary();
+    vk::RefCounted<vk::ShaderAndSerial> *vertexShader   = nullptr;
+    vk::RefCounted<vk::ShaderAndSerial> *fragmentShader = &mUnresolveFragShaders[flags];
+    ANGLE_TRY(shaderLibrary.getFullScreenQuad_vert(contextVk, 0, &vertexShader));
+    ANGLE_TRY(GetUnresolveFrag(contextVk, attachmentCount, attachmentTypes, fragmentShader));
+
+    vk::CommandBuffer *commandBuffer =
+        &contextVk->getStartedRenderPassCommands().getCommandBuffer();
+
+    ANGLE_TRY(setupProgram(contextVk, function, fragmentShader, vertexShader,
+                           &mUnresolvePrograms[flags], &pipelineDesc, descriptorSet, nullptr, 0,
+                           commandBuffer));
+    commandBuffer->draw(6, 0);
     return angle::Result::Continue;
 }
 

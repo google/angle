@@ -358,6 +358,7 @@ class ContextVk : public ContextImpl, public vk::Context
     void invalidateDefaultAttribute(size_t attribIndex);
     void invalidateDefaultAttributes(const gl::AttributesMask &dirtyMask);
     void onDrawFramebufferChange(FramebufferVk *framebufferVk);
+    void onDrawFramebufferRenderPassDescChange(FramebufferVk *framebufferVk);
     void onHostVisibleBufferWrite() { mIsAnyHostVisibleBufferWritten = true; }
 
     void invalidateCurrentTransformFeedbackBuffers();
@@ -586,6 +587,7 @@ class ContextVk : public ContextImpl, public vk::Context
 
     egl::ContextPriority getContextPriority() const override { return mContextPriority; }
     angle::Result startRenderPass(gl::Rectangle renderArea, vk::CommandBuffer **commandBufferOut);
+    void startNextSubpass();
     angle::Result flushCommandsAndEndRenderPass();
 
     angle::Result syncExternalMemory();

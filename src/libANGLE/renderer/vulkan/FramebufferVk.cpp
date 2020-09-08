@@ -1348,46 +1348,6 @@ angle::Result FramebufferVk::resolveColorWithCommand(ContextVk *contextVk,
     return angle::Result::Continue;
 }
 
-angle::Result FramebufferVk::copyResolveToMultisampedAttachment(ContextVk *contextVk,
-                                                                RenderTargetVk *colorRenderTarget)
-{
-    ASSERT(colorRenderTarget->hasResolveAttachment());
-    ASSERT(colorRenderTarget->isImageTransient());
-
-    vk::ImageHelper *src  = &colorRenderTarget->getResolveImageForRenderPass();
-    vk::ImageHelper *dest = &colorRenderTarget->getImageForRenderPass();
-
-    const vk::ImageView *srcView;
-    const vk::ImageView *destView;
-    ANGLE_TRY(colorRenderTarget->getAndRetainCopyImageView(contextVk, &srcView));
-    ANGLE_TRY(colorRenderTarget->getImageView(contextVk, &destView));
-
-    // Note: neither vkCmdCopyImage nor vkCmdBlitImage allow the destination to be multisampled.
-    // There's no choice but to use a draw-based path to perform this copy.
-
-    gl::Extents extents    = colorRenderTarget->getExtents();
-    vk::LevelIndex levelVk = src->toVkLevel(colorRenderTarget->getLevelIndex());
-    uint32_t layer         = colorRenderTarget->getLayerIndex();
-
-    UtilsVk::CopyImageParameters params;
-    params.srcOffset[0]        = 0;
-    params.srcOffset[1]        = 0;
-    params.srcExtents[0]       = extents.width;
-    params.srcExtents[1]       = extents.height;
-    params.destOffset[0]       = 0;
-    params.destOffset[1]       = 0;
-    params.srcMip              = levelVk.get();
-    params.srcLayer            = layer;
-    params.srcHeight           = extents.height;
-    params.srcPremultiplyAlpha = false;
-    params.srcUnmultiplyAlpha  = false;
-    params.srcFlipY            = false;
-    params.destFlipY           = false;
-    params.srcRotation         = SurfaceRotation::Identity;
-
-    return contextVk->getUtils().copyImage(contextVk, dest, destView, src, srcView, params);
-}
-
 bool FramebufferVk::checkStatus(const gl::Context *context) const
 {
     // if we have both a depth and stencil buffer, they must refer to the same object
@@ -1779,9 +1739,9 @@ angle::Result FramebufferVk::syncState(const gl::Context *context,
         ANGLE_TRY(contextVk->flushCommandsAndEndRenderPass());
     }
 
-    // Notify the ContextVk to update the pipeline desc.
     updateRenderPassDesc();
 
+    // Notify the ContextVk to update the pipeline desc.
     FramebufferVk *currentDrawFramebuffer = vk::GetImpl(context->getState().getDrawFramebuffer());
     if (currentDrawFramebuffer == this)
     {
@@ -2225,14 +2185,12 @@ angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
                                                 const gl::Rectangle &renderArea,
                                                 vk::CommandBuffer **commandBufferOut)
 {
-    vk::Framebuffer *framebuffer = nullptr;
-    ANGLE_TRY(getFramebuffer(contextVk, &framebuffer, nullptr));
-
     ANGLE_TRY(contextVk->flushCommandsAndEndRenderPass());
 
     // Initialize RenderPass info.
     vk::AttachmentOpsArray renderPassAttachmentOps;
     vk::PackedClearValuesArray packedClearValues;
+    gl::DrawBufferMask previousUnresolveMask = mRenderPassDesc.getColorUnresolveAttachmentMask();
 
     // Color attachments.
     const auto &colorRenderTargets = mRenderTargetCache.getColors();
@@ -2274,22 +2232,29 @@ angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
                                               VK_ATTACHMENT_STORE_OP_DONT_CARE);
 
         // If there's a resolve attachment, and loadOp needs to be LOAD, the multisampled attachment
-        // needs to take its value from the resolve attachment.  In this case, there's no choice
-        // but to blit from the resolve image into the multisampled one.  It's expected that
-        // application code results in a clear of the framebuffer at the start of the renderpass, so
-        // the multisampled image is truely transient.
+        // needs to take its value from the resolve attachment.  In this case, an initial subpass is
+        // added for this very purpose which uses the resolve attachment as input attachment.  As a
+        // result, loadOp of the multisampled attachment can remain DONT_CARE.
         //
         // Note that this only needs to be done if the multisampled image and the resolve attachment
-        // come from the same source.  When optimizing glBlitFramebuffer for example, this is not
-        // the case.  isImageTransient() indicates whether this should happen.
-        //
-        // TODO: In an ideal world, this could be done in a subpass so that the multisampled data
-        // always ever stays on a tiled renderer's tile and no memory backing is allocated for it.
-        // http://anglebug.com/4881
-        if (colorRenderTarget->hasResolveAttachment() && colorRenderTarget->isImageTransient() &&
-            renderPassAttachmentOps[colorIndexVk].loadOp == VK_ATTACHMENT_LOAD_OP_LOAD)
+        // come from the same source.  isImageTransient() indicates whether this should happen.
+        if (colorRenderTarget->hasResolveAttachment() && colorRenderTarget->isImageTransient())
         {
-            ANGLE_TRY(copyResolveToMultisampedAttachment(contextVk, colorRenderTarget));
+            if (renderPassAttachmentOps[colorIndexVk].loadOp == VK_ATTACHMENT_LOAD_OP_LOAD)
+            {
+                renderPassAttachmentOps[colorIndexVk].loadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+
+                // Update the render pass desc to specify that this attachment should be unresolved.
+                mRenderPassDesc.packColorUnresolveAttachment(colorIndexGL);
+            }
+            else
+            {
+                mRenderPassDesc.removeColorUnresolveAttachment(colorIndexGL);
+            }
+        }
+        else
+        {
+            ASSERT(!mRenderPassDesc.getColorUnresolveAttachmentMask().test(colorIndexGL));
         }
 
         ++colorIndexVk;
@@ -2377,12 +2342,29 @@ angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
                                               stencilStoreOp);
     }
 
+    // If render pass description is changed, the previous render pass desc is no longer compatible.
+    // Tell the context so that the graphics pipelines can be recreated.
+    //
+    // Note that render passes are compatible only if the differences are in loadOp/storeOp values,
+    // or the existence of resolve attachments in single subpass render passes.  The modification
+    // here can add/remove a subpass, or modify its input attachments.
+    gl::DrawBufferMask unresolveMask = mRenderPassDesc.getColorUnresolveAttachmentMask();
+    if (previousUnresolveMask != unresolveMask)
+    {
+        contextVk->onDrawFramebufferRenderPassDescChange(this);
+        // Make sure framebuffer is recreated.
+        mFramebuffer = nullptr;
+        mCurrentFramebufferDesc.updateColorUnresolveMask(unresolveMask);
+    }
+
+    vk::Framebuffer *framebuffer = nullptr;
+    ANGLE_TRY(getFramebuffer(contextVk, &framebuffer, nullptr));
+
     ANGLE_TRY(contextVk->beginNewRenderPass(*framebuffer, renderArea, mRenderPassDesc,
                                             renderPassAttachmentOps, depthStencilAttachmentIndex,
                                             packedClearValues, commandBufferOut));
 
-    // Transition the images to the correct layout (through onColorDraw) after the
-    // resolve-to-multisampled copies are done.
+    // Transition the images to the correct layout (through onColorDraw).
     for (size_t colorIndexGL : mState.getColorAttachmentsMask())
     {
         RenderTargetVk *colorRenderTarget = colorRenderTargets[colorIndexGL];
@@ -2396,6 +2378,18 @@ angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
         // have valid content. The only time it has undefined content is between swap and
         // startNewRenderPass
         depthStencilRenderTarget->onDepthStencilDraw(contextVk, isReadOnlyDepthMode());
+    }
+
+    if (unresolveMask.any())
+    {
+        // Unresolve attachments if any.
+        UtilsVk::UnresolveParameters params;
+        params.unresolveMask = unresolveMask;
+
+        ANGLE_TRY(contextVk->getUtils().unresolve(contextVk, this, params));
+
+        // The unresolve subpass has only one draw call.
+        contextVk->startNextSubpass();
     }
 
     return angle::Result::Continue;

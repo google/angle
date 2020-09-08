@@ -163,7 +163,9 @@ void UnpackAttachmentDesc(VkAttachmentDescription *desc,
         ConvertImageLayoutToVkImageLayout(static_cast<ImageLayout>(ops.finalLayout));
 }
 
-void UnpackResolveAttachmentDesc(VkAttachmentDescription *desc, const vk::Format &format)
+void UnpackResolveAttachmentDesc(VkAttachmentDescription *desc,
+                                 const vk::Format &format,
+                                 bool usedAsInputAttachment)
 {
     // We would only need this flag for duplicated attachments. Apply it conservatively.  In
     // practice it's unlikely any application would use the same image as multiple resolve
@@ -179,8 +181,12 @@ void UnpackResolveAttachmentDesc(VkAttachmentDescription *desc, const vk::Format
     // Resolve attachments always have a sample count of 1.  For simplicity, unlikely cases where
     // the resolve framebuffer is immediately invalidated or cleared are ignored.  Therefore, loadOp
     // and storeOp can be fixed to DONT_CARE and STORE respectively.
-    desc->samples        = VK_SAMPLE_COUNT_1_BIT;
-    desc->loadOp         = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+    //
+    // That said, if the corresponding color attachment needs to take its initial value from the
+    // resolve attachment (i.e. needs to be unresolved), loadOp needs to be set to LOAD.
+    desc->samples = VK_SAMPLE_COUNT_1_BIT;
+    desc->loadOp =
+        usedAsInputAttachment ? VK_ATTACHMENT_LOAD_OP_LOAD : VK_ATTACHMENT_LOAD_OP_DONT_CARE;
     desc->storeOp        = VK_ATTACHMENT_STORE_OP_STORE;
     desc->stencilLoadOp  = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
     desc->stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
@@ -224,6 +230,213 @@ void SetPipelineShaderStageInfo(const VkStructureType type,
     shaderStage->module              = module;
     shaderStage->pName               = "main";
     shaderStage->pSpecializationInfo = &specializationInfo;
+}
+
+// Defines a subpass that uses the resolve attachments as input attachments to initialize color
+// attachments that need to be "unresolved" at the start of the render pass.  The subpass will
+// only contain color attachments that need to be unresolved to simplify the shader that performs
+// the operations.
+void InitializeUnresolveSubpass(
+    const RenderPassDesc &desc,
+    const gl::DrawBuffersVector<VkAttachmentReference> &drawSubpassColorAttachmentRefs,
+    const gl::DrawBuffersVector<VkAttachmentReference> &drawSubpassResolveAttachmentRefs,
+    const VkAttachmentReference &depthStencilAttachmentRef,
+    gl::DrawBuffersVector<VkAttachmentReference> *unresolveColorAttachmentRefs,
+    gl::DrawBuffersVector<VkAttachmentReference> *unresolveInputAttachmentRefs,
+    gl::DrawBuffersVector<uint32_t> *unresolvePreserveAttachmentRefs,
+    VkSubpassDescription *subpassDesc)
+{
+    for (uint32_t colorIndexGL = 0; colorIndexGL < desc.colorAttachmentRange(); ++colorIndexGL)
+    {
+        // Assume the GL Framebuffer has the following attachments enabled:
+        //
+        //     GL Color 0
+        //     GL Color 3
+        //     GL Color 4
+        //     GL Color 6
+        //     GL Color 7
+        //     GL Depth/Stencil
+        //
+        // Additionally, assume Color 0, 4 and 6 are multisampled-render-to-texture (or for any
+        // other reason) have corresponding resolve attachments.  Furthermore, say Color 4 and 6
+        // require an initial unresolve operation.
+        //
+        // In the above example, the render pass is created with the following attachments:
+        //
+        //     RP Attachment[0] <- corresponding to GL Color 0
+        //     RP Attachment[1] <- corresponding to GL Color 3
+        //     RP Attachment[2] <- corresponding to GL Color 4
+        //     RP Attachment[3] <- corresponding to GL Color 6
+        //     RP Attachment[4] <- corresponding to GL Color 7
+        //     RP Attachment[5] <- corresponding to GL Depth/Stencil
+        //     RP Attachment[6] <- corresponding to resolve attachment of GL Color 0
+        //     RP Attachment[7] <- corresponding to resolve attachment of GL Color 4
+        //     RP Attachment[8] <- corresponding to resolve attachment of GL Color 6
+        //
+        // The subpass that takes the application draw calls has the following attachments, creating
+        // the mapping from the Vulkan attachment indices (i.e. RP attachment indices) to GL indices
+        // as indicated by the GL shaders:
+        //
+        //     Subpass[1] Color[0] -> RP Attachment[0]
+        //     Subpass[1] Color[1] -> VK_ATTACHMENT_UNUSED
+        //     Subpass[1] Color[2] -> VK_ATTACHMENT_UNUSED
+        //     Subpass[1] Color[3] -> RP Attachment[1]
+        //     Subpass[1] Color[4] -> RP Attachment[2]
+        //     Subpass[1] Color[5] -> VK_ATTACHMENT_UNUSED
+        //     Subpass[1] Color[6] -> RP Attachment[3]
+        //     Subpass[1] Color[7] -> RP Attachment[4]
+        //     Subpass[1] Depth/Stencil -> RP Attachment[5]
+        //     Subpass[1] Resolve[0] -> RP Attachment[6]
+        //     Subpass[1] Resolve[1] -> VK_ATTACHMENT_UNUSED
+        //     Subpass[1] Resolve[2] -> VK_ATTACHMENT_UNUSED
+        //     Subpass[1] Resolve[3] -> VK_ATTACHMENT_UNUSED
+        //     Subpass[1] Resolve[4] -> RP Attachment[7]
+        //     Subpass[1] Resolve[5] -> VK_ATTACHMENT_UNUSED
+        //     Subpass[1] Resolve[6] -> RP Attachment[8]
+        //     Subpass[1] Resolve[7] -> VK_ATTACHMENT_UNUSED
+        //
+        // The initial subpass that's created here is (remember that in the above example Color 4
+        // and 6 need to be unresolved):
+        //
+        //     Subpass[0] Input[0] -> RP Attachment[7] = Subpass[1] Resolve[4]
+        //     Subpass[0] Input[1] -> RP Attachment[8] = Subpass[1] Resolve[6]
+        //     Subpass[0] Color[0] -> RP Attachment[2] = Subpass[1] Color[4]
+        //     Subpass[0] Color[1] -> RP Attachment[3] = Subpass[1] Color[6]
+        //
+        // The trick here therefore is to use the color attachment refs already created for the
+        // application draw subpass indexed with colorIndexGL.
+        //
+        // As an additional note, the attachments that are not used in the unresolve subpass must be
+        // preserved.  That is color attachments and the depth/stencil attachment if any.  Resolve
+        // attachments are rewritten by the next subpass, so they don't need to be preserved.  Note
+        // that there's no need to preserve a color attachment whose loadOp is DONT_CARE.  For
+        // simplicity, we preserve those as well.  The driver would ideally avoid preserving
+        // attachments with loadOp=DONT_CARE.
+        //
+        // With the above example:
+        //
+        //     Subpass[0] Preserve[0] -> RP Attachment[0] = Subpass[1] Color[0]
+        //     Subpass[0] Preserve[1] -> RP Attachment[1] = Subpass[1] Color[3]
+        //     Subpass[0] Preserve[2] -> RP Attachment[4] = Subpass[1] Color[7]
+        //     Subpass[0] Preserve[3] -> RP Attachment[5] = Subpass[1] Depth/Stencil
+        //
+        // Again, the color attachment refs already created for the application draw subpass can be
+        // used indexed with colorIndexGL.
+
+        if (!desc.hasColorUnresolveAttachment(colorIndexGL))
+        {
+            if (desc.isColorAttachmentEnabled(colorIndexGL))
+            {
+                unresolvePreserveAttachmentRefs->push_back(
+                    drawSubpassColorAttachmentRefs[colorIndexGL].attachment);
+            }
+            continue;
+        }
+        ASSERT(desc.isColorAttachmentEnabled(colorIndexGL));
+        ASSERT(desc.hasColorResolveAttachment(colorIndexGL));
+        ASSERT(drawSubpassColorAttachmentRefs[colorIndexGL].attachment != VK_ATTACHMENT_UNUSED);
+        ASSERT(drawSubpassResolveAttachmentRefs[colorIndexGL].attachment != VK_ATTACHMENT_UNUSED);
+
+        unresolveColorAttachmentRefs->push_back(drawSubpassColorAttachmentRefs[colorIndexGL]);
+        unresolveInputAttachmentRefs->push_back(drawSubpassResolveAttachmentRefs[colorIndexGL]);
+
+        // Note the input attachment layout should be shader read-only.  The subpass dependency
+        // will take care of transitioning the layout of the resolve attachment to color attachment
+        // automatically.
+        unresolveInputAttachmentRefs->back().layout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+    }
+
+    if (depthStencilAttachmentRef.attachment != VK_ATTACHMENT_UNUSED)
+    {
+        // There's no need to preserve the depth attachment if loadOp=DONT_CARE, but we do for
+        // simplicity.
+        unresolvePreserveAttachmentRefs->push_back(depthStencilAttachmentRef.attachment);
+    }
+
+    ASSERT(!unresolveColorAttachmentRefs->empty());
+    ASSERT(unresolveColorAttachmentRefs->size() == unresolveInputAttachmentRefs->size());
+
+    const uint32_t attachmentCount = static_cast<uint32_t>(unresolveColorAttachmentRefs->size());
+
+    subpassDesc->flags                   = 0;
+    subpassDesc->pipelineBindPoint       = VK_PIPELINE_BIND_POINT_GRAPHICS;
+    subpassDesc->inputAttachmentCount    = attachmentCount;
+    subpassDesc->pInputAttachments       = unresolveInputAttachmentRefs->data();
+    subpassDesc->colorAttachmentCount    = attachmentCount;
+    subpassDesc->pColorAttachments       = unresolveColorAttachmentRefs->data();
+    subpassDesc->pResolveAttachments     = nullptr;
+    subpassDesc->pDepthStencilAttachment = nullptr;
+    subpassDesc->preserveAttachmentCount =
+        static_cast<uint32_t>(unresolvePreserveAttachmentRefs->size());
+    subpassDesc->pPreserveAttachments = unresolvePreserveAttachmentRefs->data();
+}
+
+// There is normally one subpass, and occasionally another for the unresolve operation.
+constexpr size_t kSubpassFastVectorSize = 2;
+using SubpassList = angle::FastVector<VkSubpassDescription, kSubpassFastVectorSize>;
+
+void InitializeUnresolveSubpassDependencies(const SubpassList &subpassDesc,
+                                            std::vector<VkSubpassDependency> *subpassDependencies)
+{
+    ASSERT(subpassDesc.size() >= 2);
+
+    // The unresolve subpass is the first subpass.  The application draw subpass is the last
+    // subpass.
+    const uint32_t srcSubpass = 0;
+    const uint32_t dstSubpass = static_cast<uint32_t>(subpassDesc.size() - 1);
+
+    // A subpass dependency is needed between the unresolve and draw subpasses.  There are two
+    // hazards here:
+    //
+    // - Subpass 0 writes to color attachments, subpass 1 writes to the same color attachments.
+    //   This is a WaW hazard (color write -> color write) similar to when two subsequent render
+    //   passes write to the same images.
+    // - Subpass 0 reads from resolve attachments, subpass 1 writes to the same resolve attachments.
+    //   This is a WaR hazard (fragment shader read -> color write) which only requires an execution
+    //   barrier.
+    //
+    // Note: the DEPENDENCY_BY_REGION flag is necessary to create a "framebuffer-local" dependency,
+    // as opposed to "framebuffer-global".  The latter is effectively a render pass break.  The
+    // former creates a dependency per framebuffer region.  If dependency scopes correspond to
+    // attachments with:
+    //
+    // - Same sample count: dependency is at sample granularity
+    // - Different sample count: dependency is at pixel granularity
+    //
+    // The latter is clarified by the spec as such:
+    //
+    // > Practically, the pixel vs sample granularity dependency means that if an input attachment
+    // > has a different number of samples than the pipeline's rasterizationSamples, then a fragment
+    // > can access any sample in the input attachment's pixel even if it only uses
+    // > framebuffer-local dependencies.
+    //
+    // The dependency for the first hazard above (color write -> color write) is on same-sample
+    // attachments, so it will not allow the use of input attachments as required by the unresolve
+    // subpass.  As a result, even though the second hazard seems to be subsumed by the first (its
+    // src stage is earlier and its dst stage is the same), a separate dependency is created for it
+    // just to obtain a pixel granularity dependency.
+
+    subpassDependencies->emplace_back();
+    VkSubpassDependency *dependency = &subpassDependencies->back();
+
+    dependency->srcSubpass      = srcSubpass;
+    dependency->dstSubpass      = dstSubpass;
+    dependency->srcStageMask    = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+    dependency->dstStageMask    = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+    dependency->srcAccessMask   = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+    dependency->dstAccessMask   = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+    dependency->dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
+
+    subpassDependencies->emplace_back();
+    dependency = &subpassDependencies->back();
+
+    dependency->srcSubpass      = srcSubpass;
+    dependency->dstSubpass      = dstSubpass;
+    dependency->srcStageMask    = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
+    dependency->dstStageMask    = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+    dependency->srcAccessMask   = VK_ACCESS_INPUT_ATTACHMENT_READ_BIT;
+    dependency->dstAccessMask   = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+    dependency->dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
 }
 
 angle::Result InitializeRenderPassFromDesc(vk::Context *context,
@@ -327,37 +540,69 @@ angle::Result InitializeRenderPassFromDesc(vk::Context *context,
 
         colorResolveAttachmentRefs.push_back(colorRef);
 
-        UnpackResolveAttachmentDesc(&attachmentDescs[attachmentCount.get()], format);
+        UnpackResolveAttachmentDesc(&attachmentDescs[attachmentCount.get()], format,
+                                    desc.hasColorUnresolveAttachment(colorIndexGL));
 
         ++attachmentCount;
     }
 
-    VkSubpassDescription subpassDesc = {};
+    SubpassList subpassDesc;
 
-    subpassDesc.flags                = 0;
-    subpassDesc.pipelineBindPoint    = VK_PIPELINE_BIND_POINT_GRAPHICS;
-    subpassDesc.inputAttachmentCount = 0;
-    subpassDesc.pInputAttachments    = nullptr;
-    subpassDesc.colorAttachmentCount = static_cast<uint32_t>(colorAttachmentRefs.size());
-    subpassDesc.pColorAttachments    = colorAttachmentRefs.data();
-    subpassDesc.pResolveAttachments  = attachmentCount.get() > nonResolveAttachmentCount
-                                          ? colorResolveAttachmentRefs.data()
-                                          : nullptr;
-    subpassDesc.pDepthStencilAttachment =
+    // If any attachment needs to be unresolved, create an initial subpass for this purpose.  Note
+    // that the following arrays are used in initializing a VkSubpassDescription in subpassDesc,
+    // which is in turn used in VkRenderPassCreateInfo below.  That is why they are declared in the
+    // same scope.
+    gl::DrawBuffersVector<VkAttachmentReference> unresolveColorAttachmentRefs;
+    gl::DrawBuffersVector<VkAttachmentReference> unresolveInputAttachmentRefs;
+    gl::DrawBuffersVector<uint32_t> unresolvePreserveAttachmentRefs;
+    if (desc.getColorUnresolveAttachmentMask().any())
+    {
+        subpassDesc.push_back({});
+        InitializeUnresolveSubpass(desc, colorAttachmentRefs, colorResolveAttachmentRefs,
+                                   depthStencilAttachmentRef, &unresolveColorAttachmentRefs,
+                                   &unresolveInputAttachmentRefs, &unresolvePreserveAttachmentRefs,
+                                   &subpassDesc.back());
+    }
+
+    subpassDesc.push_back({});
+    VkSubpassDescription *applicationSubpass = &subpassDesc.back();
+
+    applicationSubpass->flags                = 0;
+    applicationSubpass->pipelineBindPoint    = VK_PIPELINE_BIND_POINT_GRAPHICS;
+    applicationSubpass->inputAttachmentCount = 0;
+    applicationSubpass->pInputAttachments    = nullptr;
+    applicationSubpass->colorAttachmentCount = static_cast<uint32_t>(colorAttachmentRefs.size());
+    applicationSubpass->pColorAttachments    = colorAttachmentRefs.data();
+    applicationSubpass->pResolveAttachments  = attachmentCount.get() > nonResolveAttachmentCount
+                                                  ? colorResolveAttachmentRefs.data()
+                                                  : nullptr;
+    applicationSubpass->pDepthStencilAttachment =
         (depthStencilAttachmentRef.attachment != VK_ATTACHMENT_UNUSED ? &depthStencilAttachmentRef
                                                                       : nullptr);
-    subpassDesc.preserveAttachmentCount = 0;
-    subpassDesc.pPreserveAttachments    = nullptr;
+    applicationSubpass->preserveAttachmentCount = 0;
+    applicationSubpass->pPreserveAttachments    = nullptr;
+
+    std::vector<VkSubpassDependency> subpassDependencies;
+    if (desc.getColorUnresolveAttachmentMask().any())
+    {
+        InitializeUnresolveSubpassDependencies(subpassDesc, &subpassDependencies);
+    }
 
     VkRenderPassCreateInfo createInfo = {};
     createInfo.sType                  = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
     createInfo.flags                  = 0;
     createInfo.attachmentCount        = attachmentCount.get();
     createInfo.pAttachments           = attachmentDescs.data();
-    createInfo.subpassCount           = 1;
-    createInfo.pSubpasses             = &subpassDesc;
+    createInfo.subpassCount           = static_cast<uint32_t>(subpassDesc.size());
+    createInfo.pSubpasses             = subpassDesc.data();
     createInfo.dependencyCount        = 0;
     createInfo.pDependencies          = nullptr;
+
+    if (!subpassDependencies.empty())
+    {
+        createInfo.dependencyCount = static_cast<uint32_t>(subpassDependencies.size());
+        createInfo.pDependencies   = subpassDependencies.data();
+    }
 
     ANGLE_VK_TRY(context, renderPass->init(context->getDevice(), createInfo));
     return angle::Result::Continue;
@@ -566,6 +811,16 @@ void RenderPassDesc::removeColorResolveAttachment(size_t colorIndexGL)
     mColorResolveAttachmentMask.reset(colorIndexGL);
 }
 
+void RenderPassDesc::packColorUnresolveAttachment(size_t colorIndexGL)
+{
+    mColorUnresolveAttachmentMask.set(colorIndexGL);
+}
+
+void RenderPassDesc::removeColorUnresolveAttachment(size_t colorIndexGL)
+{
+    mColorUnresolveAttachmentMask.reset(colorIndexGL);
+}
+
 RenderPassDesc &RenderPassDesc::operator=(const RenderPassDesc &other)
 {
     memcpy(this, &other, sizeof(RenderPassDesc));
@@ -658,6 +913,7 @@ void GraphicsPipelineDesc::initDefaults()
         SetBitField(packedAttrib.offset, 0);
     }
 
+    mRasterizationAndMultisampleStateInfo.bits.subpass                    = 0;
     mRasterizationAndMultisampleStateInfo.bits.depthClampEnable           = 0;
     mRasterizationAndMultisampleStateInfo.bits.rasterizationDiscardEnable = 0;
     SetBitField(mRasterizationAndMultisampleStateInfo.bits.polygonMode, VK_POLYGON_MODE_FILL);
@@ -1014,6 +1270,15 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
     blendState.attachmentCount = static_cast<uint32_t>(mRenderPassDesc.colorAttachmentRange());
     blendState.pAttachments    = blendAttachmentState.data();
 
+    // If this graphics pipeline is for the unresolve operation, correct the color attachment count
+    // for that subpass.
+    if (mRenderPassDesc.getColorUnresolveAttachmentMask().any() &&
+        mRasterizationAndMultisampleStateInfo.bits.subpass == 0)
+    {
+        blendState.attachmentCount =
+            static_cast<uint32_t>(mRenderPassDesc.getColorUnresolveAttachmentMask().count());
+    }
+
     for (int i = 0; i < 4; i++)
     {
         blendState.blendConstants[i] = inputAndBlend.blendConstants[i];
@@ -1064,7 +1329,7 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
     createInfo.pDynamicState       = nullptr;
     createInfo.layout              = pipelineLayout.getHandle();
     createInfo.renderPass          = compatibleRenderPass.getHandle();
-    createInfo.subpass             = 0;
+    createInfo.subpass             = mRasterizationAndMultisampleStateInfo.bits.subpass;
     createInfo.basePipelineHandle  = VK_NULL_HANDLE;
     createInfo.basePipelineIndex   = 0;
 
@@ -1540,6 +1805,26 @@ void GraphicsPipelineDesc::updateScissor(GraphicsPipelineTransitionBits *transit
     transition->set(ANGLE_GET_TRANSITION_BIT(mScissor, extent.height));
 }
 
+void GraphicsPipelineDesc::updateSubpass(GraphicsPipelineTransitionBits *transition,
+                                         uint32_t subpass)
+{
+    if (mRasterizationAndMultisampleStateInfo.bits.subpass != subpass)
+    {
+        SetBitField(mRasterizationAndMultisampleStateInfo.bits.subpass, subpass);
+        transition->set(ANGLE_GET_TRANSITION_BIT(mRasterizationAndMultisampleStateInfo, bits));
+    }
+}
+
+void GraphicsPipelineDesc::resetSubpass(GraphicsPipelineTransitionBits *transition)
+{
+    updateSubpass(transition, 0);
+}
+
+void GraphicsPipelineDesc::nextSubpass(GraphicsPipelineTransitionBits *transition)
+{
+    updateSubpass(transition, mRasterizationAndMultisampleStateInfo.bits.subpass + 1);
+}
+
 void GraphicsPipelineDesc::updateRenderPassDesc(GraphicsPipelineTransitionBits *transition,
                                                 const RenderPassDesc &renderPassDesc)
 {
@@ -1897,6 +2182,11 @@ void FramebufferDesc::updateColorResolve(uint32_t index, ImageViewSubresourceSer
     update(kFramebufferDescResolveIndexOffset + index, serial);
 }
 
+void FramebufferDesc::updateColorUnresolveMask(gl::DrawBufferMask colorUnresolveMask)
+{
+    mColorUnresolveAttachmentMask = colorUnresolveMask;
+}
+
 void FramebufferDesc::updateDepthStencil(ImageViewSubresourceSerial serial)
 {
     update(kFramebufferDescDepthStencilIndex, serial);
@@ -1909,24 +2199,22 @@ void FramebufferDesc::updateReadOnlyDepth(bool readOnlyDepth)
 
 size_t FramebufferDesc::hash() const
 {
-    return angle::ComputeGenericHash(&mSerials, sizeof(mSerials[0]) * (mMaxIndex + 1));
+    return angle::ComputeGenericHash(&mSerials, sizeof(mSerials[0]) * mMaxIndex) ^
+           mColorUnresolveAttachmentMask.bits();
 }
 
 void FramebufferDesc::reset()
 {
     mMaxIndex      = 0;
     mReadOnlyDepth = false;
+    mColorUnresolveAttachmentMask.reset();
     memset(&mSerials, 0, sizeof(mSerials));
 }
 
 bool FramebufferDesc::operator==(const FramebufferDesc &other) const
 {
-    if (mMaxIndex != other.mMaxIndex)
-    {
-        return false;
-    }
-
-    if (mReadOnlyDepth != other.mReadOnlyDepth)
+    if (mMaxIndex != other.mMaxIndex || mReadOnlyDepth != other.mReadOnlyDepth ||
+        mColorUnresolveAttachmentMask != other.mColorUnresolveAttachmentMask)
     {
         return false;
     }

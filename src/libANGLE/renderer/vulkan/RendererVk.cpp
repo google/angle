@@ -1870,8 +1870,12 @@ void RendererVk::initFeatures(DisplayVk *displayVk, const ExtensionNameList &dev
     bool isAdreno540 = mPhysicalDeviceProperties.deviceID == angle::kDeviceID_Adreno540;
     ANGLE_FEATURE_CONDITION(&mFeatures, forceMaxUniformBufferSize16KB, isQualcomm && isAdreno540);
 
+    // Feature disabled due to driver bugs:
+    //
+    // - Swiftshader on mac: http://anglebug.com/4937
+    // - Intel on windows: http://anglebug.com/5032
     ANGLE_FEATURE_CONDITION(&mFeatures, enableMultisampledRenderToTexture,
-                            !(IsApple() && isSwiftShader));
+                            !(IsApple() && isSwiftShader) && !(isIntel && IsWindows()));
 
     ANGLE_FEATURE_CONDITION(&mFeatures, preferredLargeHeapBlockSize4MB, !isQualcomm);
 

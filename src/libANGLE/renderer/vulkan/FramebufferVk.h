@@ -163,11 +163,6 @@ class FramebufferVk : public FramebufferImpl
                                           const UtilsVk::BlitResolveParameters &params,
                                           vk::ImageHelper *srcImage);
 
-    // If resolve attachments are used, some use cases require that the multisampled image (whose
-    // data is normally discarded) take its data from the resolve attachment.
-    angle::Result copyResolveToMultisampedAttachment(ContextVk *contextVk,
-                                                     RenderTargetVk *colorRenderTarget);
-
     angle::Result clearImpl(const gl::Context *context,
                             gl::DrawBufferMask clearColorBuffers,
                             bool clearDepth,

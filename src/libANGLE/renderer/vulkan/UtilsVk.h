@@ -164,6 +164,11 @@ class UtilsVk : angle::NonCopyable
         uint32_t destLevelCount;
     };
 
+    struct UnresolveParameters
+    {
+        gl::DrawBufferMask unresolveMask;
+    };
+
     // Based on the maximum number of levels in GenerateMipmap.comp.
     static constexpr uint32_t kGenerateMipmapMaxLevels = 6;
     static uint32_t GetGenerateMipmapMaxLevels(ContextVk *contextVk);
@@ -237,6 +242,10 @@ class UtilsVk : angle::NonCopyable
                                  const GenerateMipmapDestLevelViews &destLevelViews,
                                  const vk::Sampler &sampler,
                                  const GenerateMipmapParameters &params);
+
+    angle::Result unresolve(ContextVk *contextVk,
+                            const FramebufferVk *framebuffer,
+                            const UnresolveParameters &params);
 
     // Overlay utilities.
     angle::Result cullOverlayWidgets(ContextVk *contextVk,
@@ -397,21 +406,30 @@ class UtilsVk : angle::NonCopyable
         ImageClear  = 0,
         ImageCopy   = 1,
         BlitResolve = 2,
+        // Note: unresolve is special as it has a different layout per attachment
+        Unresolve1Attachment  = 3,
+        Unresolve2Attachments = 4,
+        Unresolve3Attachments = 5,
+        Unresolve4Attachments = 6,
+        Unresolve5Attachments = 7,
+        Unresolve6Attachments = 8,
+        Unresolve7Attachments = 9,
+        Unresolve8Attachments = 10,
 
         // Functions implemented in compute
-        ComputeStartIndex          = 3,  // Special value to separate draw and dispatch functions.
-        ConvertIndexBuffer         = 3,
-        ConvertVertexBuffer        = 4,
-        BlitResolveStencilNoExport = 5,
-        OverlayCull                = 6,
-        OverlayDraw                = 7,
-        ConvertIndexIndirectBuffer = 8,
-        ConvertIndexIndirectLineLoopBuffer = 9,
-        ConvertIndirectLineLoopBuffer      = 10,
-        GenerateMipmap                     = 11,
+        ComputeStartIndex          = 11,  // Special value to separate draw and dispatch functions.
+        ConvertIndexBuffer         = 11,
+        ConvertVertexBuffer        = 12,
+        BlitResolveStencilNoExport = 13,
+        OverlayCull                = 14,
+        OverlayDraw                = 15,
+        ConvertIndexIndirectBuffer = 16,
+        ConvertIndexIndirectLineLoopBuffer = 17,
+        ConvertIndirectLineLoopBuffer      = 18,
+        GenerateMipmap                     = 19,
 
-        InvalidEnum = 12,
-        EnumCount   = 12,
+        InvalidEnum = 20,
+        EnumCount   = 20,
     };
 
     // Common function that creates the pipeline for the specified function, binds it and prepares
@@ -455,6 +473,9 @@ class UtilsVk : angle::NonCopyable
     angle::Result ensureOverlayCullResourcesInitialized(ContextVk *contextVk);
     angle::Result ensureOverlayDrawResourcesInitialized(ContextVk *contextVk);
     angle::Result ensureGenerateMipmapResourcesInitialized(ContextVk *contextVk);
+    angle::Result ensureUnresolveResourcesInitialized(ContextVk *contextVk,
+                                                      Function function,
+                                                      uint32_t attachmentIndex);
 
     angle::Result ensureSamplersInitialized(ContextVk *context);
 
@@ -501,6 +522,11 @@ class UtilsVk : angle::NonCopyable
     vk::ShaderProgramHelper mOverlayDrawPrograms[vk::InternalShader::OverlayDraw_comp::kArrayLen];
     vk::ShaderProgramHelper
         mGenerateMipmapPrograms[vk::InternalShader::GenerateMipmap_comp::kArrayLen];
+
+    // Unresolve shaders are special as they are generated on the fly due to the large number of
+    // combinations.
+    std::unordered_map<uint32_t, vk::RefCounted<vk::ShaderAndSerial>> mUnresolveFragShaders;
+    std::unordered_map<uint32_t, vk::ShaderProgramHelper> mUnresolvePrograms;
 
     vk::Sampler mPointSampler;
     vk::Sampler mLinearSampler;

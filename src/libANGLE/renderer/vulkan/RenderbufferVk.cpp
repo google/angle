@@ -81,17 +81,19 @@ angle::Result RenderbufferVk::setStorageImpl(const gl::Context *context,
     const bool isDepthStencilFormat    = textureFormat.hasDepthOrStencilBits();
     ASSERT(textureFormat.redBits > 0 || isDepthStencilFormat);
 
-    const VkImageUsageFlags usage =
-        VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_TRANSFER_SRC_BIT |
-        VK_IMAGE_USAGE_SAMPLED_BIT |
-        (isDepthStencilFormat ? VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT
-                              : VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT);
-
     // TODO(syoussefi): Currently not supported for depth/stencil images. Tests (and Chromium) only
     // use this for depth/stencil buffers and don't attempt to read from it.  This needs to be fixed
     // and tests added.  http://anglebug.com/4836
     const bool isRenderToTexture =
         mode == gl::MultisamplingMode::MultisampledRenderToTexture && !isDepthStencilFormat;
+
+    const VkImageUsageFlags usage =
+        VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_TRANSFER_SRC_BIT |
+        VK_IMAGE_USAGE_SAMPLED_BIT |
+        (isDepthStencilFormat ? VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT
+                              : VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT) |
+        (isRenderToTexture ? VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT : 0);
+
     const uint32_t imageSamples = isRenderToTexture ? 1 : samples;
 
     VkExtent3D extents = {static_cast<uint32_t>(width), static_cast<uint32_t>(height), 1u};

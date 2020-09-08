@@ -1521,6 +1521,9 @@ TEST_P(VulkanPerformanceCounterTest, DepthStencilTextureClearAndLoad)
 // Tests that multisampled-render-to-texture depth/stencil textures don't ever load data.
 TEST_P(VulkanPerformanceCounterTest, RenderToTextureDepthStencilTextureShouldNotLoad)
 {
+    // http://anglebug.com/5083
+    ANGLE_SKIP_TEST_IF(IsWindows() && IsAMD() && IsVulkan());
+
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_multisampled_render_to_texture2"));
 
     const rx::vk::PerfCounters &counters = hackANGLE();
