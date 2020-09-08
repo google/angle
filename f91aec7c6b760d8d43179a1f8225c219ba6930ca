@@ -50,6 +50,41 @@
       "revId": "f91aec7c6b760d8d43179a1f8225c219ba6930ca",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c5d15b3c_1a5fca3c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2020-09-08T17:26:25Z",
+      "side": 1,
+      "message": "I think it should work, we use GetSystemInfo for test expectations that are specific to a device. (ie https://source.chromium.org/chromium/chromium/src/+/master:third_party/angle/src/tests/deqp_support/deqp_gles3_test_expectations.txt;l\u003d483?q\u003ddeqp%20test%20expectations\u0026ss\u003dchromium)",
+      "parentUuid": "8ede9639_5e9548fa",
+      "revId": "f91aec7c6b760d8d43179a1f8225c219ba6930ca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "89a5ec9d_83eab965",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2020-09-08T17:26:25Z",
+      "side": 1,
+      "message": "Thanks a bunch!\n\nWe could also probably do this in InitializeFrontendFeatures, as well as switching DisplayWGL/GLX code over to using SystemInfo, that way we can get rid of GetVendorID and GetDeviceID. I recently ran into a bug with these functions and I\u0027d prefer to use SystemInfo in the long run.\n\nThat doesn\u0027t have to be done in this CL, we can follow up.",
+      "revId": "f91aec7c6b760d8d43179a1f8225c219ba6930ca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
