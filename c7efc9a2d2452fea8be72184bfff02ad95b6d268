@@ -22,6 +22,30 @@
       "revId": "c7efc9a2d2452fea8be72184bfff02ad95b6d268",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1f25b4b0_c0634714",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 36
+      },
+      "lineNbr": 1514,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-09-08T20:47:49Z",
+      "side": 1,
+      "message": "No need to check whether input or output, in both cases we will add a new relaxedprecision variable.",
+      "parentUuid": "d2239ffb_206cc841",
+      "range": {
+        "startLine": 1513,
+        "startChar": 0,
+        "endLine": 1514,
+        "endChar": 25
+      },
+      "revId": "c7efc9a2d2452fea8be72184bfff02ad95b6d268",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
