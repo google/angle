@@ -85,6 +85,24 @@
       "revId": "f91aec7c6b760d8d43179a1f8225c219ba6930ca",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fb454f1d_d459ec83",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2020-09-09T07:24:25Z",
+      "side": 1,
+      "message": "Oh I just tried removing GetDeviceID() in patch set 2 but I got test failures on the Android try bot, so I am afraid we still need to use GetDeviceID() here.\n\nNow I have restored this CL to the same one in patch set 1 and there is no try bot failure.",
+      "parentUuid": "c5d15b3c_1a5fca3c",
+      "revId": "f91aec7c6b760d8d43179a1f8225c219ba6930ca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
