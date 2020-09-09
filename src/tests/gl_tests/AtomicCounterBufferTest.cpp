@@ -193,6 +193,9 @@ TEST_P(AtomicCounterBufferTest31, AtomicCounterBufferRangeRead)
     // http://anglebug.com/3726
     ANGLE_SKIP_TEST_IF(IsNexus5X());
 
+    // http://anglebug.com/3726
+    ANGLE_SKIP_TEST_IF(IsNexus6P());
+
     // Skipping due to a bug on the Qualcomm Vulkan Android driver.
     // http://anglebug.com/3726
     ANGLE_SKIP_TEST_IF(IsAndroid() && IsVulkan());
