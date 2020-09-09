@@ -97,7 +97,7 @@ constexpr VkPipelineStageFlags kAllShadersPipelineStageFlags =
 constexpr angle::PackedEnumMap<ImageLayout, ImageMemoryBarrierData> kImageMemoryBarrierData = {
     {
         ImageLayout::Undefined,
-        {
+        ImageMemoryBarrierData{
             "Undefined",
             VK_IMAGE_LAYOUT_UNDEFINED,
             VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT,
@@ -111,7 +111,7 @@ constexpr angle::PackedEnumMap<ImageLayout, ImageMemoryBarrierData> kImageMemory
     },
     {
         ImageLayout::ExternalPreInitialized,
-        {
+        ImageMemoryBarrierData{
             "ExternalPreInitialized",
             VK_IMAGE_LAYOUT_PREINITIALIZED,
             VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT,
@@ -125,7 +125,7 @@ constexpr angle::PackedEnumMap<ImageLayout, ImageMemoryBarrierData> kImageMemory
     },
     {
         ImageLayout::ExternalShadersReadOnly,
-        {
+        ImageMemoryBarrierData{
             "ExternalShadersReadOnly",
             VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
             VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
@@ -140,7 +140,7 @@ constexpr angle::PackedEnumMap<ImageLayout, ImageMemoryBarrierData> kImageMemory
     },
     {
         ImageLayout::ExternalShadersWrite,
-        {
+        ImageMemoryBarrierData{
             "ExternalShadersWrite",
             VK_IMAGE_LAYOUT_GENERAL,
             VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
@@ -155,7 +155,7 @@ constexpr angle::PackedEnumMap<ImageLayout, ImageMemoryBarrierData> kImageMemory
     },
     {
         ImageLayout::TransferSrc,
-        {
+        ImageMemoryBarrierData{
             "TransferSrc",
             VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
             VK_PIPELINE_STAGE_TRANSFER_BIT,
@@ -169,7 +169,7 @@ constexpr angle::PackedEnumMap<ImageLayout, ImageMemoryBarrierData> kImageMemory
     },
     {
         ImageLayout::TransferDst,
-        {
+        ImageMemoryBarrierData{
             "TransferDst",
             VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
             VK_PIPELINE_STAGE_TRANSFER_BIT,
@@ -183,7 +183,7 @@ constexpr angle::PackedEnumMap<ImageLayout, ImageMemoryBarrierData> kImageMemory
     },
     {
         ImageLayout::VertexShaderReadOnly,
-        {
+        ImageMemoryBarrierData{
             "VertexShaderReadOnly",
             VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
             VK_PIPELINE_STAGE_VERTEX_SHADER_BIT,
@@ -197,7 +197,7 @@ constexpr angle::PackedEnumMap<ImageLayout, ImageMemoryBarrierData> kImageMemory
     },
     {
         ImageLayout::VertexShaderWrite,
-        {
+        ImageMemoryBarrierData{
             "VertexShaderWrite",
             VK_IMAGE_LAYOUT_GENERAL,
             VK_PIPELINE_STAGE_VERTEX_SHADER_BIT,
@@ -211,7 +211,7 @@ constexpr angle::PackedEnumMap<ImageLayout, ImageMemoryBarrierData> kImageMemory
     },
     {
         ImageLayout::GeometryShaderReadOnly,
-        {
+        ImageMemoryBarrierData{
             "GeometryShaderReadOnly",
             VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
             VK_PIPELINE_STAGE_GEOMETRY_SHADER_BIT,
@@ -225,7 +225,7 @@ constexpr angle::PackedEnumMap<ImageLayout, ImageMemoryBarrierData> kImageMemory
     },
     {
         ImageLayout::GeometryShaderWrite,
-        {
+        ImageMemoryBarrierData{
             "GeometryShaderWrite",
             VK_IMAGE_LAYOUT_GENERAL,
             VK_PIPELINE_STAGE_GEOMETRY_SHADER_BIT,
@@ -239,7 +239,7 @@ constexpr angle::PackedEnumMap<ImageLayout, ImageMemoryBarrierData> kImageMemory
     },
     {
         ImageLayout::FragmentShaderReadOnly,
-        {
+        ImageMemoryBarrierData{
             "FragmentShaderReadOnly",
             VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
             VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
@@ -253,7 +253,7 @@ constexpr angle::PackedEnumMap<ImageLayout, ImageMemoryBarrierData> kImageMemory
     },
     {
         ImageLayout::FragmentShaderWrite,
-        {
+        ImageMemoryBarrierData{
             "FragmentShaderWrite",
             VK_IMAGE_LAYOUT_GENERAL,
             VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
@@ -267,7 +267,7 @@ constexpr angle::PackedEnumMap<ImageLayout, ImageMemoryBarrierData> kImageMemory
     },
     {
         ImageLayout::ComputeShaderReadOnly,
-        {
+        ImageMemoryBarrierData{
             "ComputeShaderReadOnly",
             VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
             VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT,
@@ -281,7 +281,7 @@ constexpr angle::PackedEnumMap<ImageLayout, ImageMemoryBarrierData> kImageMemory
     },
     {
         ImageLayout::ComputeShaderWrite,
-        {
+        ImageMemoryBarrierData{
             "ComputeShaderWrite",
             VK_IMAGE_LAYOUT_GENERAL,
             VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT,
@@ -295,7 +295,7 @@ constexpr angle::PackedEnumMap<ImageLayout, ImageMemoryBarrierData> kImageMemory
     },
     {
         ImageLayout::AllGraphicsShadersReadOnly,
-        {
+        ImageMemoryBarrierData{
             "AllGraphicsShadersReadOnly",
             VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
             kAllShadersPipelineStageFlags,
@@ -310,7 +310,7 @@ constexpr angle::PackedEnumMap<ImageLayout, ImageMemoryBarrierData> kImageMemory
     },
     {
         ImageLayout::AllGraphicsShadersWrite,
-        {
+        ImageMemoryBarrierData{
             "AllGraphicsShadersWrite",
             VK_IMAGE_LAYOUT_GENERAL,
             kAllShadersPipelineStageFlags,
@@ -325,7 +325,7 @@ constexpr angle::PackedEnumMap<ImageLayout, ImageMemoryBarrierData> kImageMemory
     },
     {
         ImageLayout::ColorAttachment,
-        {
+        ImageMemoryBarrierData{
             "ColorAttachment",
             VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
             VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
@@ -339,7 +339,7 @@ constexpr angle::PackedEnumMap<ImageLayout, ImageMemoryBarrierData> kImageMemory
     },
     {
         ImageLayout::DepthStencilReadOnly,
-        {
+        ImageMemoryBarrierData{
             "DepthStencilReadOnly",
             VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL,
             kAllShadersPipelineStageFlags | VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT,
@@ -353,7 +353,7 @@ constexpr angle::PackedEnumMap<ImageLayout, ImageMemoryBarrierData> kImageMemory
     },
     {
         ImageLayout::DepthStencilAttachment,
-        {
+        ImageMemoryBarrierData{
             "DepthStencilAttachment",
             VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
             VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT,
@@ -367,7 +367,7 @@ constexpr angle::PackedEnumMap<ImageLayout, ImageMemoryBarrierData> kImageMemory
     },
     {
         ImageLayout::Present,
-        {
+        ImageMemoryBarrierData{
             "Present",
             VK_IMAGE_LAYOUT_PRESENT_SRC_KHR,
             VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT,
