@@ -142,7 +142,7 @@ class BufferManager : public TypedResourceManager<Buffer, BufferManager, BufferI
     static void DeleteObject(const Context *context, Buffer *buffer);
 
   protected:
-    ~BufferManager() override {}
+    ~BufferManager() override;
 };
 
 class ShaderProgramManager : public ResourceManagerBase
@@ -210,7 +210,7 @@ class TextureManager : public TypedResourceManager<Texture, TextureManager, Text
     void enableHandleAllocatorLogging();
 
   protected:
-    ~TextureManager() override {}
+    ~TextureManager() override;
 };
 
 class RenderbufferManager
@@ -229,7 +229,7 @@ class RenderbufferManager
     static void DeleteObject(const Context *context, Renderbuffer *renderbuffer);
 
   protected:
-    ~RenderbufferManager() override {}
+    ~RenderbufferManager() override;
 };
 
 class SamplerManager : public TypedResourceManager<Sampler, SamplerManager, SamplerID>
@@ -248,7 +248,7 @@ class SamplerManager : public TypedResourceManager<Sampler, SamplerManager, Samp
     static void DeleteObject(const Context *context, Sampler *sampler);
 
   protected:
-    ~SamplerManager() override {}
+    ~SamplerManager() override;
 };
 
 class SyncManager : public TypedResourceManager<Sync, SyncManager, GLuint>
@@ -260,7 +260,7 @@ class SyncManager : public TypedResourceManager<Sync, SyncManager, GLuint>
     static void DeleteObject(const Context *context, Sync *sync);
 
   protected:
-    ~SyncManager() override {}
+    ~SyncManager() override;
 };
 
 class FramebufferManager
@@ -288,7 +288,7 @@ class FramebufferManager
     static void DeleteObject(const Context *context, Framebuffer *framebuffer);
 
   protected:
-    ~FramebufferManager() override {}
+    ~FramebufferManager() override;
 };
 
 class ProgramPipelineManager
@@ -308,7 +308,7 @@ class ProgramPipelineManager
     static void DeleteObject(const Context *context, ProgramPipeline *pipeline);
 
   protected:
-    ~ProgramPipelineManager() override {}
+    ~ProgramPipelineManager() override;
 };
 
 class MemoryObjectManager : public ResourceManagerBase

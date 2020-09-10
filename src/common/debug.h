@@ -398,4 +398,14 @@ std::ostream &FmtHex(std::ostream &os, T value)
 #    define ANGLE_REENABLE_DESTRUCTOR_OVERRIDE_WARNING
 #endif
 
+#if defined(__clang__)
+#    define ANGLE_DISABLE_WEAK_TEMPLATE_VTABLES_WARNING \
+        _Pragma("clang diagnostic push")                \
+            _Pragma("clang diagnostic ignored \"-Wweak-template-vtables\"")
+#    define ANGLE_REENABLE_WEAK_TEMPLATE_VTABLES_WARNING _Pragma("clang diagnostic pop")
+#else
+#    define ANGLE_DISABLE_WEAK_TEMPLATE_VTABLES_WARNING
+#    define ANGLE_REENABLE_WEAK_TEMPLATE_VTABLES_WARNING
+#endif
+
 #endif  // COMMON_DEBUG_H_
