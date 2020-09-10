@@ -1871,6 +1871,11 @@ EGLint Display::programCacheResize(EGLint limit, EGLenum mode)
     }
 }
 
+void Display::overrideFrontendFeatures(const std::vector<std::string> &featureNames, bool enabled)
+{
+    mFrontendFeatures.overrideFeatures(featureNames, enabled);
+}
+
 const char *Display::queryStringi(const EGLint name, const EGLint index)
 {
     const char *result = nullptr;

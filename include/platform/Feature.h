@@ -170,9 +170,9 @@ struct FeatureSetBase
     FeatureMap members = FeatureMap();
 
   public:
-    void overrideFeatures(const std::vector<std::string> &feature_names, const bool enabled)
+    void overrideFeatures(const std::vector<std::string> &featureNames, bool enabled)
     {
-        for (const std::string &name : feature_names)
+        for (const std::string &name : featureNames)
         {
             if (members.find(name) != members.end())
             {

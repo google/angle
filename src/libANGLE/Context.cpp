@@ -3314,16 +3314,6 @@ void Context::initCaps()
         mState.mCaps.maxSmoothLineWidth            = 1.0f;
     }
 
-    // If we're capturing application calls for replay, don't expose any binary formats to prevent
-    // traces from trying to use cached results
-    if (getFrameCapture()->enabled())
-    {
-        INFO() << "Limiting binary format support count to zero while FrameCapture enabled"
-               << std::endl;
-        mState.mCaps.shaderBinaryFormats.clear();
-        mState.mCaps.programBinaryFormats.clear();
-    }
-
 #if 0
 // This logging can generate a lot of spam in test suites that create many contexts
 #    define ANGLE_LOG_LIMITED_CAP(cap, limit)                                               \
@@ -3440,10 +3430,20 @@ void Context::initCaps()
         }
     }
 
+    // If we're capturing application calls for replay, don't expose any binary formats to prevent
+    // traces from trying to use cached results
+    if (getFrameCapture()->enabled())
+    {
+        INFO() << "Limiting binary format support count to zero while FrameCapture enabled"
+               << std::endl;
+        mDisplay->overrideFrontendFeatures({"disable_program_binary"}, true);
+    }
+
     // Disable support for OES_get_program_binary
     if (mDisplay->getFrontendFeatures().disableProgramBinary.enabled)
     {
         mState.mExtensions.getProgramBinaryOES = false;
+        mState.mCaps.shaderBinaryFormats.clear();
         mState.mCaps.programBinaryFormats.clear();
     }
 
