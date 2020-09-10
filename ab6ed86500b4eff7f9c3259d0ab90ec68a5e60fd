@@ -75,6 +75,30 @@
       "revId": "ab6ed86500b4eff7f9c3259d0ab90ec68a5e60fd",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "50c0246b_79b8547c",
+        "filename": "src/libANGLE/ProgramExecutable.h",
+        "patchSetId": 37
+      },
+      "lineNbr": 398,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-09-10T17:53:21Z",
+      "side": 1,
+      "message": "Fixed as discussed.",
+      "parentUuid": "7b79bc1e_a002d52f",
+      "range": {
+        "startLine": 398,
+        "startChar": 30,
+        "endLine": 398,
+        "endChar": 45
+      },
+      "revId": "ab6ed86500b4eff7f9c3259d0ab90ec68a5e60fd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
