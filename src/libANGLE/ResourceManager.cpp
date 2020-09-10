@@ -40,18 +40,16 @@ IDType AllocateEmptyObject(HandleAllocator *handleAllocator,
 
 }  // anonymous namespace
 
-template <typename HandleAllocatorType>
-ResourceManagerBase<HandleAllocatorType>::ResourceManagerBase() : mRefCount(1)
-{}
+ResourceManagerBase::ResourceManagerBase() : mRefCount(1) {}
 
-template <typename HandleAllocatorType>
-void ResourceManagerBase<HandleAllocatorType>::addRef()
+ResourceManagerBase::~ResourceManagerBase() = default;
+
+void ResourceManagerBase::addRef()
 {
     mRefCount++;
 }
 
-template <typename HandleAllocatorType>
-void ResourceManagerBase<HandleAllocatorType>::release(const Context *context)
+void ResourceManagerBase::release(const Context *context)
 {
     if (--mRefCount == 0)
     {
@@ -60,15 +58,14 @@ void ResourceManagerBase<HandleAllocatorType>::release(const Context *context)
     }
 }
 
-template <typename ResourceType, typename HandleAllocatorType, typename ImplT, typename IDType>
-TypedResourceManager<ResourceType, HandleAllocatorType, ImplT, IDType>::~TypedResourceManager()
+template <typename ResourceType, typename ImplT, typename IDType>
+TypedResourceManager<ResourceType, ImplT, IDType>::~TypedResourceManager()
 {
     ASSERT(mObjectMap.empty());
 }
 
-template <typename ResourceType, typename HandleAllocatorType, typename ImplT, typename IDType>
-void TypedResourceManager<ResourceType, HandleAllocatorType, ImplT, IDType>::reset(
-    const Context *context)
+template <typename ResourceType, typename ImplT, typename IDType>
+void TypedResourceManager<ResourceType, ImplT, IDType>::reset(const Context *context)
 {
     this->mHandleAllocator.reset();
     for (const auto &resource : mObjectMap)
@@ -81,10 +78,9 @@ void TypedResourceManager<ResourceType, HandleAllocatorType, ImplT, IDType>::res
     mObjectMap.clear();
 }
 
-template <typename ResourceType, typename HandleAllocatorType, typename ImplT, typename IDType>
-void TypedResourceManager<ResourceType, HandleAllocatorType, ImplT, IDType>::deleteObject(
-    const Context *context,
-    IDType handle)
+template <typename ResourceType, typename ImplT, typename IDType>
+void TypedResourceManager<ResourceType, ImplT, IDType>::deleteObject(const Context *context,
+                                                                     IDType handle)
 {
     ResourceType *resource = nullptr;
     if (!mObjectMap.erase(handle, &resource))
@@ -101,23 +97,13 @@ void TypedResourceManager<ResourceType, HandleAllocatorType, ImplT, IDType>::del
     }
 }
 
-template class ResourceManagerBase<HandleAllocator>;
-template class TypedResourceManager<Buffer, HandleAllocator, BufferManager, BufferID>;
-template class TypedResourceManager<Texture, HandleAllocator, TextureManager, TextureID>;
-template class TypedResourceManager<Renderbuffer,
-                                    HandleAllocator,
-                                    RenderbufferManager,
-                                    RenderbufferID>;
-template class TypedResourceManager<Sampler, HandleAllocator, SamplerManager, SamplerID>;
-template class TypedResourceManager<Sync, HandleAllocator, SyncManager, GLuint>;
-template class TypedResourceManager<Framebuffer,
-                                    HandleAllocator,
-                                    FramebufferManager,
-                                    FramebufferID>;
-template class TypedResourceManager<ProgramPipeline,
-                                    HandleAllocator,
-                                    ProgramPipelineManager,
-                                    ProgramPipelineID>;
+template class TypedResourceManager<Buffer, BufferManager, BufferID>;
+template class TypedResourceManager<Texture, TextureManager, TextureID>;
+template class TypedResourceManager<Renderbuffer, RenderbufferManager, RenderbufferID>;
+template class TypedResourceManager<Sampler, SamplerManager, SamplerID>;
+template class TypedResourceManager<Sync, SyncManager, GLuint>;
+template class TypedResourceManager<Framebuffer, FramebufferManager, FramebufferID>;
+template class TypedResourceManager<ProgramPipeline, ProgramPipelineManager, ProgramPipelineID>;
 
 // BufferManager Implementation.
 

@@ -44,7 +44,6 @@ class Shader;
 class Sync;
 class Texture;
 
-template <typename HandleAllocatorType>
 class ResourceManagerBase : angle::NonCopyable
 {
   public:
@@ -55,16 +54,16 @@ class ResourceManagerBase : angle::NonCopyable
 
   protected:
     virtual void reset(const Context *context) = 0;
-    virtual ~ResourceManagerBase() {}
+    virtual ~ResourceManagerBase();
 
-    HandleAllocatorType mHandleAllocator;
+    HandleAllocator mHandleAllocator;
 
   private:
     size_t mRefCount;
 };
 
-template <typename ResourceType, typename HandleAllocatorType, typename ImplT, typename IDType>
-class TypedResourceManager : public ResourceManagerBase<HandleAllocatorType>
+template <typename ResourceType, typename ImplT, typename IDType>
+class TypedResourceManager : public ResourceManagerBase
 {
   public:
     TypedResourceManager() {}
@@ -127,7 +126,7 @@ class TypedResourceManager : public ResourceManagerBase<HandleAllocatorType>
     }
 };
 
-class BufferManager : public TypedResourceManager<Buffer, HandleAllocator, BufferManager, BufferID>
+class BufferManager : public TypedResourceManager<Buffer, BufferManager, BufferID>
 {
   public:
     BufferID createBuffer();
@@ -146,7 +145,7 @@ class BufferManager : public TypedResourceManager<Buffer, HandleAllocator, Buffe
     ~BufferManager() override {}
 };
 
-class ShaderProgramManager : public ResourceManagerBase<HandleAllocator>
+class ShaderProgramManager : public ResourceManagerBase
 {
   public:
     ShaderProgramManager();
@@ -184,8 +183,7 @@ class ShaderProgramManager : public ResourceManagerBase<HandleAllocator>
     ResourceMap<Program, ShaderProgramID> mPrograms;
 };
 
-class TextureManager
-    : public TypedResourceManager<Texture, HandleAllocator, TextureManager, TextureID>
+class TextureManager : public TypedResourceManager<Texture, TextureManager, TextureID>
 {
   public:
     TextureID createTexture();
@@ -215,10 +213,8 @@ class TextureManager
     ~TextureManager() override {}
 };
 
-class RenderbufferManager : public TypedResourceManager<Renderbuffer,
-                                                        HandleAllocator,
-                                                        RenderbufferManager,
-                                                        RenderbufferID>
+class RenderbufferManager
+    : public TypedResourceManager<Renderbuffer, RenderbufferManager, RenderbufferID>
 {
   public:
     RenderbufferID createRenderbuffer();
@@ -236,8 +232,7 @@ class RenderbufferManager : public TypedResourceManager<Renderbuffer,
     ~RenderbufferManager() override {}
 };
 
-class SamplerManager
-    : public TypedResourceManager<Sampler, HandleAllocator, SamplerManager, SamplerID>
+class SamplerManager : public TypedResourceManager<Sampler, SamplerManager, SamplerID>
 {
   public:
     SamplerID createSampler();
@@ -256,7 +251,7 @@ class SamplerManager
     ~SamplerManager() override {}
 };
 
-class SyncManager : public TypedResourceManager<Sync, HandleAllocator, SyncManager, GLuint>
+class SyncManager : public TypedResourceManager<Sync, SyncManager, GLuint>
 {
   public:
     GLuint createSync(rx::GLImplFactory *factory);
@@ -269,7 +264,7 @@ class SyncManager : public TypedResourceManager<Sync, HandleAllocator, SyncManag
 };
 
 class FramebufferManager
-    : public TypedResourceManager<Framebuffer, HandleAllocator, FramebufferManager, FramebufferID>
+    : public TypedResourceManager<Framebuffer, FramebufferManager, FramebufferID>
 {
   public:
     FramebufferID createFramebuffer();
@@ -296,10 +291,8 @@ class FramebufferManager
     ~FramebufferManager() override {}
 };
 
-class ProgramPipelineManager : public TypedResourceManager<ProgramPipeline,
-                                                           HandleAllocator,
-                                                           ProgramPipelineManager,
-                                                           ProgramPipelineID>
+class ProgramPipelineManager
+    : public TypedResourceManager<ProgramPipeline, ProgramPipelineManager, ProgramPipelineID>
 {
   public:
     ProgramPipelineID createProgramPipeline();
@@ -318,7 +311,7 @@ class ProgramPipelineManager : public TypedResourceManager<ProgramPipeline,
     ~ProgramPipelineManager() override {}
 };
 
-class MemoryObjectManager : public ResourceManagerBase<HandleAllocator>
+class MemoryObjectManager : public ResourceManagerBase
 {
   public:
     MemoryObjectManager();
@@ -336,7 +329,7 @@ class MemoryObjectManager : public ResourceManagerBase<HandleAllocator>
     ResourceMap<MemoryObject, MemoryObjectID> mMemoryObjects;
 };
 
-class SemaphoreManager : public ResourceManagerBase<HandleAllocator>
+class SemaphoreManager : public ResourceManagerBase
 {
   public:
     SemaphoreManager();
