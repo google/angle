@@ -957,6 +957,18 @@ class CommandBufferHelper : angle::NonCopyable
     void executeBarriers(ContextVk *contextVk, PrimaryCommandBuffer *primary);
 
     void setHasRenderPass(bool hasRenderPass) { mIsRenderPassCommandBuffer = hasRenderPass; }
+
+    // The markOpen and markClosed functions are to aid in proper use of the CommandBufferHelper.
+    // saw invalid use due to threading issues that can be easily caught by marking when it's safe
+    // (open) to write to the commandbuffer.
+#if defined(ANGLE_ENABLE_ASSERTS)
+    void markOpen() { mCommandBuffer.open(); }
+    void markClosed() { mCommandBuffer.close(); }
+#else
+    void markOpen() {}
+    void markClosed() {}
+#endif
+
     void reset();
     void releaseToContextQueue(ContextVk *contextVk);
 
