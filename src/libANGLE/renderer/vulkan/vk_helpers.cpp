@@ -4383,7 +4383,6 @@ void ImageHelper::stageSelfForBaseLevel()
 angle::Result ImageHelper::flushSingleSubresourceStagedUpdates(ContextVk *contextVk,
                                                                gl::LevelIndex levelGL,
                                                                uint32_t layer,
-                                                               CommandBuffer *commandBuffer,
                                                                ClearValuesArray *deferredClears,
                                                                uint32_t deferredClearIndex)
 {
@@ -4430,7 +4429,7 @@ angle::Result ImageHelper::flushSingleSubresourceStagedUpdates(ContextVk *contex
     }
 
     LevelIndex levelVK = toVKLevel(levelGL);
-    return flushStagedUpdates(contextVk, levelVK, levelVK + 1, layer, layer + 1, {}, commandBuffer);
+    return flushStagedUpdates(contextVk, levelVK, levelVK + 1, layer, layer + 1, {});
 }
 
 angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
@@ -4438,8 +4437,7 @@ angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
                                               LevelIndex levelVKEnd,
                                               uint32_t layerStart,
                                               uint32_t layerEnd,
-                                              gl::TexLevelMask skipLevelsMask,
-                                              CommandBuffer *commandBuffer)
+                                              gl::TexLevelMask skipLevelsMask)
 {
     if (mSubresourceUpdates.empty())
     {
@@ -4481,6 +4479,7 @@ angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
 
     // Start in TransferDst.
     ANGLE_TRY(contextVk->onImageTransferWrite(aspectFlags, this));
+    CommandBuffer *commandBuffer = &contextVk->getOutsideRenderPassCommandBuffer();
 
     for (SubresourceUpdate &update : mSubresourceUpdates)
     {
@@ -4572,6 +4571,7 @@ angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
             ASSERT(currentBuffer && currentBuffer->valid());
 
             ANGLE_TRY(contextVk->onBufferTransferRead(currentBuffer));
+            commandBuffer = &contextVk->getOutsideRenderPassCommandBuffer();
 
             commandBuffer->copyBufferToImage(currentBuffer->getBuffer().getHandle(), mImage,
                                              getCurrentLayout(), 1, &update.buffer.copyRegion);
@@ -4580,6 +4580,7 @@ angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
         else
         {
             ANGLE_TRY(contextVk->onImageTransferRead(aspectFlags, update.image.image));
+            commandBuffer = &contextVk->getOutsideRenderPassCommandBuffer();
 
             commandBuffer->copyImage(update.image.image->getImage(),
                                      update.image.image->getCurrentLayout(), mImage,
@@ -4605,9 +4606,8 @@ angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
 angle::Result ImageHelper::flushAllStagedUpdates(ContextVk *contextVk)
 {
     // Clear the image.
-    CommandBuffer &commandBuffer = contextVk->getOutsideRenderPassCommandBuffer();
-    return flushStagedUpdates(contextVk, LevelIndex(0), LevelIndex(mLevelCount), 0, mLayerCount, {},
-                              &commandBuffer);
+    return flushStagedUpdates(contextVk, LevelIndex(0), LevelIndex(mLevelCount), 0, mLayerCount,
+                              {});
 }
 
 bool ImageHelper::isUpdateStaged(gl::LevelIndex levelGL, uint32_t layer)

@@ -1418,7 +1418,6 @@ class ImageHelper final : public Resource, public angle::Subject
     angle::Result flushSingleSubresourceStagedUpdates(ContextVk *contextVk,
                                                       gl::LevelIndex levelGL,
                                                       uint32_t layer,
-                                                      CommandBuffer *commandBuffer,
                                                       ClearValuesArray *deferredClears,
                                                       uint32_t deferredClearIndex);
 
@@ -1430,8 +1429,7 @@ class ImageHelper final : public Resource, public angle::Subject
                                      LevelIndex levelEnd,
                                      uint32_t layerStart,
                                      uint32_t layerEnd,
-                                     gl::TexLevelMask skipLevelsMask,
-                                     CommandBuffer *commandBuffer);
+                                     gl::TexLevelMask skipLevelsMask);
 
     // Creates a command buffer and flushes all staged updates.  This is used for one-time
     // initialization of resources that we don't expect to accumulate further staged updates, such

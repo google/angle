@@ -1993,10 +1993,9 @@ angle::Result TextureVk::flushImageStagedUpdates(ContextVk *contextVk)
     gl::LevelIndex baseLevelGL = getNativeImageLevel(mImage->getBaseLevel());
     vk::LevelIndex baseLevelVK = mImage->toVKLevel(baseLevelGL);
 
-    vk::CommandBuffer &commandBuffer = contextVk->getOutsideRenderPassCommandBuffer();
     return mImage->flushStagedUpdates(
         contextVk, baseLevelVK, vk::LevelIndex(mImage->getLevelCount()), getNativeImageLayer(0),
-        mImage->getLayerCount(), mRedefinedLevels, &commandBuffer);
+        mImage->getLayerCount(), mRedefinedLevels);
 }
 
 angle::Result TextureVk::initRenderTargets(ContextVk *contextVk,

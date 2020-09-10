@@ -1195,6 +1195,7 @@ angle::Result WindowSurfaceVk::present(ContextVk *contextVk,
     if (overlayHasWidget)
     {
         ANGLE_TRY(drawOverlay(contextVk, &image));
+        commandBuffer = &contextVk->getOutsideRenderPassCommandBuffer();
     }
 
     // This does nothing if it's already in the requested layout

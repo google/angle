@@ -287,9 +287,8 @@ angle::Result RenderTargetVk::flushStagedUpdates(ContextVk *contextVk,
         return angle::Result::Continue;
     }
 
-    vk::CommandBuffer &commandBuffer = contextVk->getOutsideRenderPassCommandBuffer();
-    return image->flushSingleSubresourceStagedUpdates(
-        contextVk, mLevelIndexGL, layerIndex, &commandBuffer, deferredClears, deferredClearIndex);
+    return image->flushSingleSubresourceStagedUpdates(contextVk, mLevelIndexGL, layerIndex,
+                                                      deferredClears, deferredClearIndex);
 }
 
 void RenderTargetVk::retainImageViews(ContextVk *contextVk) const
