@@ -558,13 +558,39 @@ bool Rectangle::encloses(const gl::Rectangle &inside) const
 
 bool ClipRectangle(const Rectangle &source, const Rectangle &clip, Rectangle *intersection)
 {
+    angle::CheckedNumeric<int> sourceX2(source.x);
+    sourceX2 += source.width;
+    if (!sourceX2.IsValid())
+    {
+        return false;
+    }
+    angle::CheckedNumeric<int> sourceY2(source.y);
+    sourceY2 += source.height;
+    if (!sourceY2.IsValid())
+    {
+        return false;
+    }
+
     int minSourceX, maxSourceX, minSourceY, maxSourceY;
-    MinMax(source.x, source.x + source.width, &minSourceX, &maxSourceX);
-    MinMax(source.y, source.y + source.height, &minSourceY, &maxSourceY);
+    MinMax(source.x, sourceX2.ValueOrDie(), &minSourceX, &maxSourceX);
+    MinMax(source.y, sourceY2.ValueOrDie(), &minSourceY, &maxSourceY);
+
+    angle::CheckedNumeric<int> clipX2(clip.x);
+    clipX2 += clip.width;
+    if (!clipX2.IsValid())
+    {
+        return false;
+    }
+    angle::CheckedNumeric<int> clipY2(clip.y);
+    clipY2 += clip.height;
+    if (!clipY2.IsValid())
+    {
+        return false;
+    }
 
     int minClipX, maxClipX, minClipY, maxClipY;
-    MinMax(clip.x, clip.x + clip.width, &minClipX, &maxClipX);
-    MinMax(clip.y, clip.y + clip.height, &minClipY, &maxClipY);
+    MinMax(clip.x, clipX2.ValueOrDie(), &minClipX, &maxClipX);
+    MinMax(clip.y, clipY2.ValueOrDie(), &minClipY, &maxClipY);
 
     if (minSourceX >= maxClipX || maxSourceX <= minClipX || minSourceY >= maxClipY ||
         maxSourceY <= minClipY)
