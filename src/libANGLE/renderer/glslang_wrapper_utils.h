@@ -81,6 +81,13 @@ struct ShaderInterfaceVariableInfo
     uint32_t xfbBuffer = kInvalid;
     uint32_t xfbOffset = kInvalid;
     uint32_t xfbStride = kInvalid;
+    // Indicates that the precision needs to be modified in the generated SPIR-V
+    // to support only transferring medium precision data when there's a precision
+    // mismatch between the shaders. For example, either the VS casts highp->mediump
+    // or the FS casts mediump->highp.
+    bool useRelaxedPrecision = false;
+    // Indicate if varying is input or output
+    bool varyingIsOutput = false;
 };
 
 // TODO: http://anglebug.com/4524: Need a different hash key than a string, since

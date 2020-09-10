@@ -5932,6 +5932,220 @@ void main()
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
+// Test mismatched precision in varying is handled correctly.
+TEST_P(GLSLTest_ES3, MismatchPrecisionFloat)
+{
+    constexpr char kVS[] = R"(#version 300 es
+in vec4 position;
+uniform highp float inVal;
+out highp float myVarying;
+
+void main()
+{
+    myVarying = inVal;
+    gl_Position = position;
+})";
+
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+out vec4 my_FragColor;
+in mediump float myVarying;
+
+void main()
+{
+    my_FragColor = vec4(1, 0, 0, 1);
+    if (myVarying > 1.0)
+    {
+        my_FragColor = vec4(0, 1, 0, 1);
+    }
+})";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+
+    glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    glUseProgram(program.get());
+    GLint positionLocation              = glGetAttribLocation(program.get(), "position");
+    std::array<Vector3, 6> quadVertices = GetQuadVertices();
+    for (Vector3 &vertex : quadVertices)
+    {
+        vertex.z() = 0.5f;
+    }
+    glVertexAttribPointer(positionLocation, 3, GL_FLOAT, GL_FALSE, 0, quadVertices.data());
+    glEnableVertexAttribArray(positionLocation);
+
+    GLint inValLoc = glGetUniformLocation(program, "inVal");
+    ASSERT_NE(-1, inValLoc);
+    glUniform1f(inValLoc, static_cast<GLfloat>(1.003));
+
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
+// Test mismatched precision in varying is handled correctly.
+TEST_P(GLSLTest_ES3, MismatchPrecisionlowpFloat)
+{
+    // Note: SPIRV only has relaxed precision so both lowp and mediump turn into "relaxed
+    // precision", thus this is the same test as MismatchPrecisionFloat but including it for
+    // completeness in case something changes.
+    constexpr char kVS[] = R"(#version 300 es
+in vec4 position;
+uniform highp float inVal;
+out highp float myVarying;
+
+void main()
+{
+    myVarying = inVal;
+    gl_Position = position;
+})";
+
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+out vec4 my_FragColor;
+in lowp float myVarying;
+
+void main()
+{
+    my_FragColor = vec4(1, 0, 0, 1);
+    if (myVarying > 1.0)
+    {
+        my_FragColor = vec4(0, 1, 0, 1);
+    }
+})";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+
+    glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    glUseProgram(program.get());
+    GLint positionLocation              = glGetAttribLocation(program.get(), "position");
+    std::array<Vector3, 6> quadVertices = GetQuadVertices();
+    for (Vector3 &vertex : quadVertices)
+    {
+        vertex.z() = 0.5f;
+    }
+    glVertexAttribPointer(positionLocation, 3, GL_FLOAT, GL_FALSE, 0, quadVertices.data());
+    glEnableVertexAttribArray(positionLocation);
+
+    GLint inValLoc = glGetUniformLocation(program, "inVal");
+    ASSERT_NE(-1, inValLoc);
+    glUniform1f(inValLoc, static_cast<GLfloat>(1.003));
+
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
+// Test mismatched precision in varying is handled correctly.
+TEST_P(GLSLTest_ES3, MismatchPrecisionVec2UnusedVarying)
+{
+    constexpr char kVS[] = R"(#version 300 es
+in vec2 position;
+uniform highp float inVal;
+out highp float myVarying;
+out highp vec2 texCoord;
+
+void main()
+{
+    myVarying = inVal;
+    gl_Position = vec4(position, 0, 1);
+    texCoord = position * 0.5 + vec2(0.5);
+})";
+
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+out vec4 my_FragColor;
+in mediump float myVarying;
+in mediump vec2 texCoord;
+
+void main()
+{
+    my_FragColor = vec4(1, 0, 0, 1);
+    if (myVarying > 1.0)
+    {
+        my_FragColor = vec4(0, 1, 0, 1);
+    }
+})";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+
+    glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    glUseProgram(program.get());
+    GLint positionLocation              = glGetAttribLocation(program.get(), "position");
+    std::array<Vector3, 6> quadVertices = GetQuadVertices();
+    for (Vector3 &vertex : quadVertices)
+    {
+        vertex.z() = 0.5f;
+    }
+    glVertexAttribPointer(positionLocation, 3, GL_FLOAT, GL_FALSE, 0, quadVertices.data());
+    glEnableVertexAttribArray(positionLocation);
+
+    GLint inValLoc = glGetUniformLocation(program, "inVal");
+    ASSERT_NE(-1, inValLoc);
+    glUniform1f(inValLoc, static_cast<GLfloat>(1.003));
+
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
+// Test mismatched precision in varying is handled correctly.
+TEST_P(GLSLTest_ES3, MismatchPrecisionMedToHigh)
+{
+    constexpr char kVS[] = R"(#version 300 es
+in vec2 position;
+uniform highp float inVal;
+out mediump float myVarying;
+
+void main()
+{
+    myVarying = inVal;
+    gl_Position = vec4(position, 0, 1);
+})";
+
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+out vec4 my_FragColor;
+in highp float myVarying;
+
+void main()
+{
+    my_FragColor = vec4(1, 0, 0, 1);
+    if (myVarying > 1.0)
+    {
+        my_FragColor = vec4(0, 1, 0, 1);
+    }
+})";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+
+    glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    glUseProgram(program.get());
+    GLint positionLocation              = glGetAttribLocation(program.get(), "position");
+    std::array<Vector3, 6> quadVertices = GetQuadVertices();
+    for (Vector3 &vertex : quadVertices)
+    {
+        vertex.z() = 0.5f;
+    }
+    glVertexAttribPointer(positionLocation, 3, GL_FLOAT, GL_FALSE, 0, quadVertices.data());
+    glEnableVertexAttribArray(positionLocation);
+
+    GLint inValLoc = glGetUniformLocation(program, "inVal");
+    ASSERT_NE(-1, inValLoc);
+    glUniform1f(inValLoc, static_cast<GLfloat>(1.003));
+
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
 // Test vector/scalar arithmetic (in this case multiplication and addition). Meant to reproduce a
 // bug that appeared in NVIDIA OpenGL drivers and that is worked around by
 // VectorizeVectorScalarArithmetic AST transform.

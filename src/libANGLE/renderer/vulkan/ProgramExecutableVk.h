@@ -197,6 +197,7 @@ class ProgramExecutableVk
                                      const gl::ActiveTextureArray<vk::TextureUnit> *activeTextures,
                                      vk::DescriptorSetLayoutDesc *descOut);
 
+    void resolvePrecisionMismatch(const gl::ProgramMergedVaryings &mergedVaryings);
     void updateDefaultUniformsDescriptorSet(const gl::ShaderType shaderType,
                                             const DefaultUniformBlock &defaultUniformBlock,
                                             vk::BufferHelper *defaultUniformBuffer,

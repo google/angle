@@ -53,7 +53,7 @@ void ProgramPipelineVk::fillProgramStateMap(
 }
 
 angle::Result ProgramPipelineVk::link(const gl::Context *glContext,
-                                      const gl::ProgramMergedVaryings & /*mergedVaryings*/)
+                                      const gl::ProgramMergedVaryings &mergedVaryings)
 {
     ContextVk *contextVk                  = vk::GetImpl(glContext);
     const gl::State &glState              = glContext->getState();
@@ -85,6 +85,11 @@ angle::Result ProgramPipelineVk::link(const gl::Context *glContext,
                                    &glslangProgramInterfaceInfo,
                                    &mExecutable.getShaderInterfaceVariableInfoMap());
         }
+    }
+
+    if (contextVk->getFeatures().enablePrecisionQualifiers.enabled)
+    {
+        mExecutable.resolvePrecisionMismatch(mergedVaryings);
     }
 
     return mExecutable.createPipelineLayout(glContext);

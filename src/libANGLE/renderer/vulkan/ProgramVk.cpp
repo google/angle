@@ -255,7 +255,7 @@ void ProgramVk::fillProgramStateMap(gl::ShaderMap<const gl::ProgramState *> *pro
 std::unique_ptr<LinkEvent> ProgramVk::link(const gl::Context *context,
                                            const gl::ProgramLinkedResources &resources,
                                            gl::InfoLog &infoLog,
-                                           const gl::ProgramMergedVaryings & /*mergedVaryings*/)
+                                           const gl::ProgramMergedVaryings &mergedVaryings)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "ProgramVk::link");
 
@@ -286,6 +286,11 @@ std::unique_ptr<LinkEvent> ProgramVk::link(const gl::Context *context,
     if (status != angle::Result::Continue)
     {
         return std::make_unique<LinkEventDone>(status);
+    }
+
+    if (contextVk->getFeatures().enablePrecisionQualifiers.enabled)
+    {
+        mExecutable.resolvePrecisionMismatch(mergedVaryings);
     }
 
     // TODO(jie.a.chen@intel.com): Parallelize linking.
