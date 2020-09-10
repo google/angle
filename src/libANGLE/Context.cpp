@@ -264,10 +264,10 @@ bool IsClearBufferEnabled(const FramebufferState &mState, GLenum buffer, GLint d
     return buffer != GL_COLOR || mState.getEnabledDrawBuffers()[drawbuffer];
 }
 
-bool IsColorMaskedOut(const BlendState &blend)
+bool IsColorMaskedOut(const BlendStateExt &blendStateExt, const GLint drawbuffer)
 {
-    return (!blend.colorMaskRed && !blend.colorMaskGreen && !blend.colorMaskBlue &&
-            !blend.colorMaskAlpha);
+    ASSERT(static_cast<size_t>(drawbuffer) < blendStateExt.mMaxDrawBuffers);
+    return blendStateExt.getColorMaskIndexed(static_cast<size_t>(drawbuffer)) == 0;
 }
 }  // anonymous namespace
 
@@ -3816,8 +3816,7 @@ bool Context::isClearBufferMaskedOut(GLenum buffer, GLint drawbuffer) const
     switch (buffer)
     {
         case GL_COLOR:
-            ASSERT(static_cast<size_t>(drawbuffer) < mState.getBlendStateArray().size());
-            return IsColorMaskedOut(mState.getBlendStateArray()[drawbuffer]);
+            return IsColorMaskedOut(mState.getBlendStateExt(), drawbuffer);
         case GL_DEPTH:
             return mState.getDepthStencilState().isDepthMaskedOut();
         case GL_STENCIL:

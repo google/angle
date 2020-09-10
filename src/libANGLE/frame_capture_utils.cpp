@@ -235,19 +235,16 @@ void SerializeRectangle(gl::BinaryOutputStream *bos, const gl::Rectangle &rectan
     bos->writeInt(rectangle.height);
 }
 
-void SerializeBlendState(gl::BinaryOutputStream *bos, const gl::BlendState &blendState)
+void SerializeBlendStateExt(gl::BinaryOutputStream *bos, const gl::BlendStateExt &blendStateExt)
 {
-    bos->writeInt(blendState.blend);
-    bos->writeInt(blendState.sourceBlendRGB);
-    bos->writeInt(blendState.destBlendRGB);
-    bos->writeInt(blendState.sourceBlendAlpha);
-    bos->writeInt(blendState.destBlendAlpha);
-    bos->writeInt(blendState.blendEquationRGB);
-    bos->writeInt(blendState.blendEquationAlpha);
-    bos->writeInt(blendState.colorMaskRed);
-    bos->writeInt(blendState.colorMaskGreen);
-    bos->writeInt(blendState.colorMaskBlue);
-    bos->writeInt(blendState.colorMaskAlpha);
+    bos->writeInt(blendStateExt.mEnabledMask.bits());
+    bos->writeInt(blendStateExt.mDstColor);
+    bos->writeInt(blendStateExt.mDstAlpha);
+    bos->writeInt(blendStateExt.mSrcColor);
+    bos->writeInt(blendStateExt.mSrcAlpha);
+    bos->writeInt(blendStateExt.mEquationColor);
+    bos->writeInt(blendStateExt.mEquationAlpha);
+    bos->writeInt(blendStateExt.mColorMask);
 }
 
 void SerializeDepthStencilState(gl::BinaryOutputStream *bos,
@@ -346,11 +343,7 @@ void SerializeGLContextStates(gl::BinaryOutputStream *bos, const gl::State &stat
     SerializeRasterizerState(bos, state.getRasterizerState());
     bos->writeInt(state.isScissorTestEnabled());
     SerializeRectangle(bos, state.getScissor());
-    const gl::BlendStateArray &blendStateArray = state.getBlendStateArray();
-    for (size_t i = 0; i < blendStateArray.size(); i++)
-    {
-        SerializeBlendState(bos, blendStateArray[i]);
-    }
+    SerializeBlendStateExt(bos, state.getBlendStateExt());
     SerializeColor(bos, state.getBlendColor());
     bos->writeInt(state.isSampleAlphaToCoverageEnabled());
     bos->writeInt(state.isSampleCoverageEnabled());

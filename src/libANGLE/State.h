@@ -134,8 +134,8 @@ class State : angle::NonCopyable
     bool allActiveDrawBufferChannelsMasked() const;
     bool anyActiveDrawBufferChannelMasked() const;
     const RasterizerState &getRasterizerState() const;
-    const BlendState &getBlendState() const { return mBlendStateArray[0]; }
-    const BlendStateArray &getBlendStateArray() const { return mBlendStateArray; }
+    const BlendState &getBlendState() const { return mBlendState; }
+    const BlendStateExt &getBlendStateExt() const { return mBlendStateExt; }
     const DepthStencilState &getDepthStencilState() const;
 
     // Clear behavior setters & state parameter block generation function
@@ -176,11 +176,11 @@ class State : angle::NonCopyable
     float getFarPlane() const { return mFarZ; }
 
     // Blend state manipulation
-    bool isBlendEnabled() const { return mBlendStateArray[0].blend; }
+    bool isBlendEnabled() const { return mBlendStateExt.mEnabledMask.test(0); }
     bool isBlendEnabledIndexed(GLuint index) const
     {
-        ASSERT(index < mBlendStateArray.size());
-        return mBlendStateArray[index].blend;
+        ASSERT(static_cast<size_t>(index) < mBlendStateExt.mMaxDrawBuffers);
+        return mBlendStateExt.mEnabledMask.test(index);
     }
     DrawBufferMask getBlendEnabledDrawBufferMask() const { return mBlendStateExt.mEnabledMask; }
     void setBlend(bool enabled);
@@ -858,8 +858,6 @@ class State : angle::NonCopyable
 
     const std::vector<ImageUnit> getImageUnits() const { return mImageUnits; }
 
-    const BlendStateExt &getBlendStateExt() const { return mBlendStateExt; }
-
   private:
     friend class Context;
 
@@ -957,7 +955,7 @@ class State : angle::NonCopyable
     bool mScissorTest;
     Rectangle mScissor;
 
-    BlendStateArray mBlendStateArray;
+    BlendState mBlendState;  // Buffer zero blend state legacy struct
     BlendStateExt mBlendStateExt;
     ColorF mBlendColor;
     bool mSampleAlphaToCoverage;
