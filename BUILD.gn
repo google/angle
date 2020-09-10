@@ -19,8 +19,9 @@ if (angle_has_build) {
 
 declare_args() {
   # Use the PCI lib to collect GPU information on Linux.
-  use_libpci = is_linux && (!is_chromecast || is_cast_desktop_build) &&
-               (angle_use_x11 || use_ozone) && angle_has_build
+  use_libpci =
+      (is_linux || is_chromeos) && (!is_chromecast || is_cast_desktop_build) &&
+      (angle_use_x11 || use_ozone) && angle_has_build
 
   # Link in system libGL, to work with apitrace.  See doc/DebuggingTips.md.
   angle_link_glx = false
@@ -100,7 +101,7 @@ config("internal_config") {
 
   if (is_win) {
     defines += [ "ANGLE_IS_WIN" ]
-  } else if (is_linux) {
+  } else if (is_linux || is_chromeos) {
     defines += [ "ANGLE_IS_LINUX" ]
   }
 
@@ -272,7 +273,7 @@ config("angle_no_cfi_unrelated_cast") {
 
 angle_source_set("angle_system_utils") {
   sources = angle_system_utils_sources
-  if (is_linux) {
+  if (is_linux || is_chromeos) {
     libs = [ "dl" ]
   }
 }
@@ -384,7 +385,7 @@ angle_static_library("angle_gpu_info_util") {
     libs += [ "dxgi.lib" ]
   }
 
-  if (is_linux) {
+  if (is_linux || is_chromeos) {
     sources += libangle_gpu_info_util_linux_sources
 
     if (angle_use_x11 && angle_has_build) {
@@ -728,7 +729,7 @@ angle_source_set("libANGLE_base") {
       sources += libangle_gl_egl_dl_sources
       sources += libangle_gl_egl_android_sources
     }
-    if (is_linux) {
+    if (is_linux || is_chromeos) {
       sources += libangle_gl_egl_sources
       sources += libangle_gl_egl_dl_sources
     }

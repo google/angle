@@ -74,7 +74,7 @@ angle_system_utils_sources = [
   "src/common/system_utils.h",
 ]
 
-if (is_linux || is_android || is_fuchsia) {
+if (is_linux || is_chromeos || is_android || is_fuchsia) {
   angle_system_utils_sources += [
     "src/common/system_utils_linux.cpp",
     "src/common/system_utils_posix.cpp",

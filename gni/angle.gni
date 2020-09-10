@@ -33,7 +33,7 @@ if (angle_has_build) {
     is_asan = false
     build_with_chromium = false
     dcheck_always_on = false
-    angle_use_x11 = is_linux && !is_ggp
+    angle_use_x11 = (is_linux || is_chromeos) && !is_ggp
     use_ozone = false
     use_fuzzing_engine = false
   }
@@ -99,9 +99,9 @@ declare_args() {
 
   angle_enable_d3d9 = is_win && !angle_is_winuwp
   angle_enable_d3d11 = is_win
-  angle_enable_gl =
-      (ozone_platform_gbm || !is_linux || (angle_use_x11 && !is_chromeos)) &&
-      !is_fuchsia && !angle_is_winuwp && !is_ggp && !is_win_arm64
+  angle_enable_gl = (ozone_platform_gbm || (!is_linux && !is_chromeos) ||
+                     (angle_use_x11 && !is_chromeos)) && !is_fuchsia &&
+                    !angle_is_winuwp && !is_ggp && !is_win_arm64
 
   # ANGLE Vulkan backend on Android requires API level 26, i.e. Oreo, due to
   # Vulkan Validation Layers compatibility issues, see http://crrev/c/1405714.
@@ -157,8 +157,8 @@ angle_remove_configs = []
 if (angle_has_build) {
   angle_remove_configs += [ "//build/config/compiler:default_include_dirs" ]
 }
-angle_better_stack_traces =
-    (is_debug || dcheck_always_on) && is_linux && !is_asan && !is_cfi
+angle_better_stack_traces = (is_debug || dcheck_always_on) &&
+                            (is_linux || is_chromeos) && !is_asan && !is_cfi
 
 if (angle_has_build && is_clang) {
   angle_remove_configs += [ "//build/config/clang:find_bad_constructs" ]
@@ -360,7 +360,7 @@ template("angle_test") {
         configs -= [ "//build/config/android:hide_all_but_jni" ]
       }
 
-      if (is_linux && !is_component_build) {
+      if ((is_linux || is_chromeos) && !is_component_build) {
         # Set rpath to find shared libs in a non-component build.
         configs += [ "//build/config/gcc:rpath_for_built_shared_libraries" ]
       }
@@ -391,7 +391,7 @@ template("angle_test") {
              "//testing/xvfb.py",
            ]
 
-    if (is_linux && !is_component_build) {
+    if ((is_linux || is_chromeos) && !is_component_build) {
       # Set rpath to find shared libs in a non-component build.
       configs += [ "//build/config/gcc:rpath_for_built_shared_libraries" ]
     }

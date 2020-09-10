@@ -140,7 +140,7 @@ angle_source_set("angle_util_loader") {
 config("angle_util_config") {
   # Force users to include "util/header.h" instead of just "header.h".
   include_dirs = [ ".." ]
-  if (is_linux && angle_use_x11) {
+  if ((is_linux || is_chromeos) && angle_use_x11) {
     libs = [ "X11" ]
   }
 }
@@ -169,7 +169,7 @@ foreach(is_shared_library,
     ]
     libs = []
 
-    if (is_linux) {
+    if (is_linux || is_chromeos) {
       libs += [
         "rt",
         "dl",

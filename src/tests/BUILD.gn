@@ -134,7 +134,7 @@ angle_test("angle_unittests") {
   }
 }
 
-if (is_win || is_linux || is_mac || is_android || is_fuchsia) {
+if (is_win || is_linux || is_chromeos || is_mac || is_android || is_fuchsia) {
   import("angle_end2end_tests.gni")
 
   angle_test("angle_end2end_tests") {
@@ -191,7 +191,7 @@ if (is_win || is_linux || is_mac || is_android || is_fuchsia) {
   }
 }
 
-if (is_win || is_linux || is_mac || is_android) {
+if (is_win || is_linux || is_chromeos || is_mac || is_android) {
   import("angle_white_box_tests.gni")
 
   angle_test("angle_white_box_tests") {
@@ -255,7 +255,7 @@ angle_perftests_common("angle_perftests_static") {
   test_utils = ":angle_common_test_utils_static"
 }
 
-if (is_win || is_linux || is_android || is_mac) {
+if (is_win || is_linux || is_chromeos || is_android || is_mac) {
   import("angle_perftests.gni")
 
   # This test suite is for perf tests that use ANGLE's internals in some direct way.
@@ -283,7 +283,7 @@ if (is_win || is_linux || is_android || is_mac) {
   }
 }
 
-if (is_win || is_linux || is_android || is_mac || is_fuchsia) {
+if (is_win || is_linux || is_chromeos || is_android || is_mac || is_fuchsia) {
   import("angle_perftests.gni")
 
   if (build_angle_trace_perf_tests) {
@@ -393,13 +393,13 @@ if (is_win || is_linux || is_android || is_mac || is_fuchsia) {
       data_deps += [ "//testing:run_perf_test" ]
     }
 
-    if (is_win || is_linux) {
+    if (is_win || is_linux || is_chromeos) {
       data_deps += [ "${angle_root}/third_party/glmark2:glmark2_angle" ]
     }
     if (is_win && target_cpu != "arm64") {
       data_deps += [ "${angle_root}/third_party/glmark2:glmark2_wgl" ]
     }
-    if (is_linux) {
+    if (is_linux || is_chromeos) {
       data_deps += [ "${angle_root}/third_party/glmark2:glmark2_glx" ]
     }
 
@@ -819,7 +819,7 @@ if (build_angle_gles1_conform_tests) {
 
     sources += angle_gles1_conform_common_source
 
-    if (!is_win && !is_linux) {
+    if (!is_win && !is_linux && !is_chromeos) {
       defines = [ "NULLWS" ]
     }
   }
@@ -833,7 +833,7 @@ if (build_angle_gles1_conform_tests) {
 
     if (is_win) {
       sources += [ "$gles1_conform_root/conform/covegl/native_w32.c" ]
-    } else if (is_linux) {
+    } else if (is_linux || is_chromeos) {
       sources += [ "$gles1_conform_root/conform/covegl/native.c" ]
     } else {
       sources += [ "$gles1_conform_root/conform/covegl/native_nws.c" ]
@@ -936,7 +936,7 @@ if (build_angle_deqp_tests && !is_fuchsia) {
     # Ask the system headers to expose all the regular function otherwise
     # dEQP doesn't compile and produces warnings about implicitly defined
     # functions.
-    if (is_linux) {
+    if (is_linux || is_chromeos) {
       # This has to be GNU_SOURCE as on Linux dEQP uses syscall()
       defines += [ "_GNU_SOURCE" ]
     }
@@ -1071,7 +1071,7 @@ if (build_angle_deqp_tests && !is_fuchsia) {
     if (is_win) {
       sources += deqp_framework_delibs_sources_win
     }
-    if (is_linux || is_android || is_mac) {
+    if (is_linux || is_chromeos || is_android || is_mac) {
       sources += deqp_framework_delibs_sources_unix
     }
 
