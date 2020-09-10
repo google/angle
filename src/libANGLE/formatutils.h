@@ -138,6 +138,9 @@ struct InternalFormat
 
     GLuint computePixelBytes(GLenum formatType) const;
 
+    ANGLE_NO_DISCARD bool computeBufferRowLength(uint32_t width, uint32_t *resultOut) const;
+    ANGLE_NO_DISCARD bool computeBufferImageHeight(uint32_t height, uint32_t *resultOut) const;
+
     ANGLE_NO_DISCARD bool computeRowPitch(GLenum formatType,
                                           GLsizei width,
                                           GLint alignment,

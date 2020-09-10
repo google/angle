@@ -7806,6 +7806,56 @@ TEST_P(ETC1CompressedTextureTest, ETC1CompressedSubImage)
     ASSERT_GL_NO_ERROR();
 }
 
+// Fully-define a NPOT compressed texture and draw; set MAX_LEVEL and draw; then increase
+// MAX_LEVEL and draw.  This used to cause Vulkan validation errors.
+TEST_P(ETC1CompressedTextureTest, ETC1CompressedImageNPOT)
+{
+    // ETC texture formats are not supported on Mac OpenGL. http://anglebug.com/3853
+    ANGLE_SKIP_TEST_IF(IsOSX() && IsDesktopOpenGL());
+
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3);
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_compressed_ETC1_RGB8_sub_texture"));
+
+    const GLuint width  = 5u;
+    const GLuint height = 5u;
+    // round up to the nearest block size
+    const GLsizei imageSize = 8 * 8 / 2;
+    // smallest block size
+    const GLsizei minImageSize = 4 * 4 / 2;
+
+    uint8_t data[imageSize] = {0};
+
+    setWindowWidth(width);
+    setWindowHeight(height);
+
+    // Setup primary Texture
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    glCompressedTexImage2D(GL_TEXTURE_2D, 0, GL_ETC1_RGB8_OES, width, height, 0, imageSize, data);
+    ASSERT_GL_NO_ERROR();
+
+    glCompressedTexImage2D(GL_TEXTURE_2D, 1, GL_ETC1_RGB8_OES, width / 2, height / 2, 0,
+                           minImageSize, data);
+    ASSERT_GL_NO_ERROR();
+
+    glCompressedTexImage2D(GL_TEXTURE_2D, 2, GL_ETC1_RGB8_OES, width / 4, height / 4, 0,
+                           minImageSize, data);
+    ASSERT_GL_NO_ERROR();
+
+    glUseProgram(mProgram);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 0);
+    drawQuad(mProgram, "position", 0.5f);
+    ASSERT_GL_NO_ERROR();
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 2);
+    drawQuad(mProgram, "position", 0.5f);
+    ASSERT_GL_NO_ERROR();
+}
+
 // Fully-define a compressed texture and draw; then decrease MAX_LEVEL and draw; then increase
 // MAX_LEVEL and draw.  This used to cause Vulkan validation errors.
 TEST_P(ETC1CompressedTextureTest, ETC1ShrinkThenGrowMaxLevels)

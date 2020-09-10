@@ -1274,6 +1274,36 @@ GLuint InternalFormat::computePixelBytes(GLenum formatType) const
     return components * typeInfo.bytes;
 }
 
+bool InternalFormat::computeBufferRowLength(uint32_t width, uint32_t *resultOut) const
+{
+    CheckedNumeric<GLuint> checkedWidth(width);
+
+    if (compressed)
+    {
+        angle::CheckedNumeric<uint32_t> checkedRowLength =
+            rx::CheckedRoundUp<uint32_t>(width, compressedBlockWidth);
+
+        return CheckedMathResult(checkedRowLength, resultOut);
+    }
+
+    return CheckedMathResult(checkedWidth, resultOut);
+}
+
+bool InternalFormat::computeBufferImageHeight(uint32_t height, uint32_t *resultOut) const
+{
+    CheckedNumeric<GLuint> checkedHeight(height);
+
+    if (compressed)
+    {
+        angle::CheckedNumeric<uint32_t> checkedImageHeight =
+            rx::CheckedRoundUp<uint32_t>(height, compressedBlockHeight);
+
+        return CheckedMathResult(checkedImageHeight, resultOut);
+    }
+
+    return CheckedMathResult(checkedHeight, resultOut);
+}
+
 bool InternalFormat::computeRowPitch(GLenum formatType,
                                      GLsizei width,
                                      GLint alignment,
