@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "56ea569c_d164e8cf",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 41
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-09-10T23:27:50Z",
+      "side": 1,
+      "message": "LGTM thanks.",
+      "revId": "c11b44aac557e0abf39c6610f53c8f4e465c5706",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a90a286_283b1889",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramExecutableVk.cpp",
+        "patchSetId": 41
+      },
+      "lineNbr": 875,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-09-10T23:27:50Z",
+      "side": 1,
+      "message": "nit: can you remove auto and use a const \u0026?",
+      "range": {
+        "startLine": 875,
+        "startChar": 9,
+        "endLine": 875,
+        "endChar": 14
+      },
+      "revId": "c11b44aac557e0abf39c6610f53c8f4e465c5706",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
