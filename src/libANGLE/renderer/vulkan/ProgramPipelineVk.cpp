@@ -52,7 +52,8 @@ void ProgramPipelineVk::fillProgramStateMap(
     }
 }
 
-angle::Result ProgramPipelineVk::link(const gl::Context *glContext)
+angle::Result ProgramPipelineVk::link(const gl::Context *glContext,
+                                      const gl::ProgramMergedVaryings & /*mergedVaryings*/)
 {
     ContextVk *contextVk                  = vk::GetImpl(glContext);
     const gl::State &glState              = glContext->getState();

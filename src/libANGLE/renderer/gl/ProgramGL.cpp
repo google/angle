@@ -221,7 +221,8 @@ class ProgramGL::LinkEventGL final : public LinkEvent
 
 std::unique_ptr<LinkEvent> ProgramGL::link(const gl::Context *context,
                                            const gl::ProgramLinkedResources &resources,
-                                           gl::InfoLog &infoLog)
+                                           gl::InfoLog &infoLog,
+                                           const gl::ProgramMergedVaryings & /*mergedVaryings*/)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "ProgramGL::link");
 

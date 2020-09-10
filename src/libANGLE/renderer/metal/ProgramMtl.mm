@@ -245,7 +245,8 @@ void ProgramMtl::setSeparable(bool separable)
 
 std::unique_ptr<LinkEvent> ProgramMtl::link(const gl::Context *context,
                                             const gl::ProgramLinkedResources &resources,
-                                            gl::InfoLog &infoLog)
+                                            gl::InfoLog &infoLog,
+                                            const gl::ProgramMergedVaryings & /* mergedVaryings */)
 {
     // Link resources before calling GetShaderSource to make sure they are ready for the set/binding
     // assignment done in that function.

@@ -254,7 +254,8 @@ void ProgramVk::fillProgramStateMap(gl::ShaderMap<const gl::ProgramState *> *pro
 
 std::unique_ptr<LinkEvent> ProgramVk::link(const gl::Context *context,
                                            const gl::ProgramLinkedResources &resources,
-                                           gl::InfoLog &infoLog)
+                                           gl::InfoLog &infoLog,
+                                           const gl::ProgramMergedVaryings & /*mergedVaryings*/)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "ProgramVk::link");
 

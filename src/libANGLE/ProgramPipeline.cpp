@@ -540,6 +540,8 @@ ProgramMergedVaryings ProgramPipeline::getMergedVaryings() const
 // The code gets compiled into binaries.
 angle::Result ProgramPipeline::link(const Context *context)
 {
+    ProgramMergedVaryings mergedVaryings;
+
     if (!getExecutable().isCompute())
     {
         InfoLog &infoLog = mState.mExecutable->getInfoLog();
@@ -575,7 +577,7 @@ angle::Result ProgramPipeline::link(const Context *context)
             static_cast<GLuint>(context->getState().getCaps().maxVaryingVectors);
         VaryingPacking varyingPacking(maxVaryingVectors, packMode);
 
-        const ProgramMergedVaryings &mergedVaryings = getMergedVaryings();
+        mergedVaryings = getMergedVaryings();
         for (ShaderType shaderType : getExecutable().getLinkedShaderStages())
         {
             Program *program = mState.mPrograms[shaderType];
@@ -586,7 +588,7 @@ angle::Result ProgramPipeline::link(const Context *context)
         }
     }
 
-    ANGLE_TRY(getImplementation()->link(context));
+    ANGLE_TRY(getImplementation()->link(context, mergedVaryings));
 
     return angle::Result::Continue;
 }

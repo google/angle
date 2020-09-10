@@ -1460,6 +1460,8 @@ angle::Result Program::linkImpl(const Context *context)
     bool result = linkValidateShaders(infoLog);
     ASSERT(result);
 
+    ProgramMergedVaryings mergedVaryings;
+
     if (mState.mAttachedShaders[ShaderType::Compute])
     {
         mState.mExecutable->mResources.reset(new ProgramLinkedResources(
@@ -1584,15 +1586,13 @@ angle::Result Program::linkImpl(const Context *context)
         ProgramPipeline *programPipeline = context->getState().getProgramPipeline();
         if (programPipeline && programPipeline->usesShaderProgram(id()))
         {
-            const ProgramMergedVaryings &mergedVaryings =
-                context->getState().getProgramPipeline()->getMergedVaryings();
-            ANGLE_TRY(linkMergedVaryings(context, *mState.mExecutable, mergedVaryings));
+            mergedVaryings = context->getState().getProgramPipeline()->getMergedVaryings();
         }
         else
         {
-            const ProgramMergedVaryings &mergedVaryings = getMergedVaryings();
-            ANGLE_TRY(linkMergedVaryings(context, *mState.mExecutable, mergedVaryings));
+            mergedVaryings = getMergedVaryings();
         }
+        ANGLE_TRY(linkMergedVaryings(context, *mState.mExecutable, mergedVaryings));
     }
 
     updateLinkedShaderStages();
@@ -1600,7 +1600,8 @@ angle::Result Program::linkImpl(const Context *context)
     mLinkingState.reset(new LinkingState());
     mLinkingState->linkingFromBinary = false;
     mLinkingState->programHash       = programHash;
-    mLinkingState->linkEvent = mProgram->link(context, mState.mExecutable->getResources(), infoLog);
+    mLinkingState->linkEvent =
+        mProgram->link(context, mState.mExecutable->getResources(), infoLog, mergedVaryings);
 
     // Must be after mProgram->link() to avoid misleading the linker about output variables.
     mState.updateProgramInterfaceInputs();
