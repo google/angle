@@ -87,6 +87,30 @@
       "revId": "8439012a9c0770558b3a745b515cc54f0ce7f8f2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8d95a6b8_7dde685c",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.h",
+        "patchSetId": 39
+      },
+      "lineNbr": 237,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-09-10T23:05:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "57c7b886_6741fac3",
+      "range": {
+        "startLine": 237,
+        "startChar": 40,
+        "endLine": 237,
+        "endChar": 61
+      },
+      "revId": "8439012a9c0770558b3a745b515cc54f0ce7f8f2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
