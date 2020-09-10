@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "762a555c_e8f26fe9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 39
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-09-10T18:39:50Z",
+      "side": 1,
+      "message": "Thanks Courtney.",
+      "revId": "8439012a9c0770558b3a745b515cc54f0ce7f8f2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c6b2b518_1459c209",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.h",
+        "patchSetId": 39
+      },
+      "lineNbr": 237,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-09-10T18:39:50Z",
+      "side": 1,
+      "message": "nit: need to be const\u0026 or *. We make an exception for infoLog and std::ostream which is why you probably got confused by infoLog. Also very minor request but if you could please the infoLog as the last parameter to group the in/out params.\n\nCan you please pull these changes into a split refactor CL and we can land this ASAP?",
+      "range": {
+        "startLine": 237,
+        "startChar": 40,
+        "endLine": 237,
+        "endChar": 61
+      },
+      "revId": "8439012a9c0770558b3a745b515cc54f0ce7f8f2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
