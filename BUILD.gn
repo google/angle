@@ -540,14 +540,15 @@ config("angle_backend_config") {
       defines += [ "ANGLE_ENABLE_OPENGL_NULL" ]
     }
   }
-  if (angle_enable_null) {
-    defines += [ "ANGLE_ENABLE_NULL" ]
-  }
   if (angle_delegate_workers) {
     defines += [ "ANGLE_DELEGATE_WORKERS" ]
   }
 
   configs = []
+
+  if (angle_enable_null) {
+    configs += [ "src/libANGLE/renderer/null:angle_null_backend_config" ]
+  }
 
   if (angle_enable_metal) {
     configs += [ "src/libANGLE/renderer/metal:angle_metal_backend_config" ]
@@ -651,6 +652,10 @@ angle_source_set("libANGLE_base") {
     ]
   }
 
+  if (angle_enable_null) {
+    public_deps += [ "src/libANGLE/renderer/null:angle_null_backend" ]
+  }
+
   if (angle_enable_vulkan) {
     public_deps += [ "src/libANGLE/renderer/vulkan:angle_vulkan_backend" ]
   }
@@ -740,10 +745,6 @@ angle_source_set("libANGLE_base") {
       deps += [ "//third_party/minigbm" ]
       sources += libangle_gl_gbm_sources
     }
-  }
-
-  if (angle_enable_null) {
-    sources += libangle_null_sources
   }
 
   if (is_mac) {
