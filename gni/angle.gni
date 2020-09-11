@@ -126,7 +126,6 @@ declare_args() {
   angle_enable_swiftshader =
       angle_enable_vulkan && !is_android && !is_fuchsia && !is_ggp
 
-  angle_enable_gl_null = angle_enable_gl
   angle_enable_hlsl = angle_enable_d3d9 || angle_enable_d3d11
   angle_enable_trace = false
 

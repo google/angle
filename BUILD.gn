@@ -52,12 +52,6 @@ if (angle_build_all) {
   }
 }
 
-if (ozone_platform_gbm) {
-  pkg_config("libdrm") {
-    packages = [ "libdrm" ]
-  }
-}
-
 import("src/compiler.gni")
 import("src/libGLESv2.gni")
 
@@ -534,17 +528,15 @@ config("angle_backend_config") {
   if (angle_enable_d3d11) {
     defines += [ "ANGLE_ENABLE_D3D11" ]
   }
-  if (angle_enable_gl) {
-    defines += [ "ANGLE_ENABLE_OPENGL" ]
-    if (angle_enable_gl_null) {
-      defines += [ "ANGLE_ENABLE_OPENGL_NULL" ]
-    }
-  }
   if (angle_delegate_workers) {
     defines += [ "ANGLE_DELEGATE_WORKERS" ]
   }
 
   configs = []
+
+  if (angle_enable_gl) {
+    configs += [ "src/libANGLE/renderer/gl:angle_gl_backend_config" ]
+  }
 
   if (angle_enable_null) {
     configs += [ "src/libANGLE/renderer/null:angle_null_backend_config" ]
@@ -673,6 +665,10 @@ angle_source_set("libANGLE_base") {
     ]
   }
 
+  if (angle_enable_gl) {
+    public_deps += [ "src/libANGLE/renderer/gl:angle_gl_backend" ]
+  }
+
   if (angle_enable_null) {
     public_deps += [ "src/libANGLE/renderer/null:angle_null_backend" ]
   }
@@ -714,58 +710,12 @@ angle_source_set("libANGLE_base") {
     libs += [ "dxguid.lib" ]
     import("src/libANGLE/renderer/d3d/d3d11/d3d11_blit_shaders_autogen.gni")
     sources += libangle_d3d11_blit_shaders
+
+    public_deps += [ ":angle_d3d_format_tables" ]
   }
 
   if (!angle_is_winuwp && (angle_enable_d3d11 || angle_enable_d3d9)) {
     sources += libangle_d3d_win32_sources
-  }
-
-  if (is_win && (angle_enable_gl || angle_enable_d3d11)) {
-    public_deps += [ ":angle_d3d_format_tables" ]
-  }
-
-  if (angle_enable_gl) {
-    sources += libangle_gl_sources
-    include_dirs += [ "src/third_party/khronos" ]
-
-    if (angle_enable_gl_null) {
-      sources += libangle_gl_null_sources
-    }
-    if (is_win) {
-      sources += libangle_gl_wgl_sources
-    }
-    if (angle_use_x11) {
-      sources += libangle_gl_glx_sources
-      libs += [
-        "X11",
-        "Xi",
-        "Xext",
-      ]
-    }
-    if (is_mac) {
-      sources += libangle_gl_cgl_sources
-      frameworks = [
-        "Cocoa.framework",
-        "IOSurface.framework",
-        "OpenGL.framework",
-        "QuartzCore.framework",
-      ]
-    }
-    if (is_android) {
-      sources += libangle_gl_egl_sources
-      sources += libangle_gl_egl_dl_sources
-      sources += libangle_gl_egl_android_sources
-    }
-    if (is_linux || is_chromeos) {
-      sources += libangle_gl_egl_sources
-      sources += libangle_gl_egl_dl_sources
-    }
-    if (ozone_platform_gbm) {
-      configs += [ ":libdrm" ]
-      defines += [ "ANGLE_USE_GBM" ]
-      deps += [ "//third_party/minigbm" ]
-      sources += libangle_gl_gbm_sources
-    }
   }
 
   if (is_mac) {
