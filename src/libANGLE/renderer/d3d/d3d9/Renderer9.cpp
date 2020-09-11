@@ -27,6 +27,7 @@
 #include "libANGLE/formatutils.h"
 #include "libANGLE/renderer/d3d/CompilerD3D.h"
 #include "libANGLE/renderer/d3d/DeviceD3D.h"
+#include "libANGLE/renderer/d3d/DisplayD3D.h"
 #include "libANGLE/renderer/d3d/FramebufferD3D.h"
 #include "libANGLE/renderer/d3d/IndexDataManager.h"
 #include "libANGLE/renderer/d3d/ProgramD3D.h"
@@ -3262,5 +3263,10 @@ angle::Result Renderer9::ensureVertexDataManagerInitialized(const gl::Context *c
     }
 
     return angle::Result::Continue;
+}
+
+RendererD3D *CreateRenderer9(egl::Display *display)
+{
+    return new Renderer9(display);
 }
 }  // namespace rx

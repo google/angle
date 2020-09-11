@@ -4218,4 +4218,9 @@ angle::Result Renderer11::getIncompleteTexture(const gl::Context *context,
 {
     return GetImplAs<Context11>(context)->getIncompleteTexture(context, type, textureOut);
 }
+
+RendererD3D *CreateRenderer11(egl::Display *display)
+{
+    return new Renderer11(display);
+}
 }  // namespace rx
