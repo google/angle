@@ -93,7 +93,8 @@ angle::Result RenderbufferMtl::setStorageMultisample(const gl::Context *context,
                                                      size_t samples,
                                                      GLenum internalformat,
                                                      size_t width,
-                                                     size_t height)
+                                                     size_t height,
+                                                     gl::MultisamplingMode mode)
 {
     // NOTE(hqle): Support MSAA
     UNIMPLEMENTED();

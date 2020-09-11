@@ -30,7 +30,8 @@ angle::Result RenderbufferNULL::setStorageMultisample(const gl::Context *context
                                                       size_t samples,
                                                       GLenum internalformat,
                                                       size_t width,
-                                                      size_t height)
+                                                      size_t height,
+                                                      gl::MultisamplingMode mode)
 {
     return angle::Result::Continue;
 }

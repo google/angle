@@ -37,15 +37,22 @@ angle::Result RenderbufferD3D::setStorage(const gl::Context *context,
                                           size_t width,
                                           size_t height)
 {
-    return setStorageMultisample(context, 0, internalformat, width, height);
+    return setStorageMultisample(context, 0, internalformat, width, height,
+                                 gl::MultisamplingMode::Regular);
 }
 
 angle::Result RenderbufferD3D::setStorageMultisample(const gl::Context *context,
                                                      size_t samples,
                                                      GLenum internalformat,
                                                      size_t width,
-                                                     size_t height)
+                                                     size_t height,
+                                                     gl::MultisamplingMode mode)
 {
+    // TODO: Correctly differentiate between normal multisampling and render to texture.  In the
+    // latter case, the renderbuffer must be automatically resolved when rendering is broken and
+    // operations performed on it (such as blit, copy etc) should use the resolved image.
+    // http://anglebug.com/3107.
+
     // If the renderbuffer parameters are queried, the calling function
     // will expect one of the valid renderbuffer formats for use in
     // glRenderbufferStorage, but we should create depth and stencil buffers

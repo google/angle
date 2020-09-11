@@ -5586,12 +5586,8 @@ void Context::renderbufferStorageMultisample(GLenum target,
                                              GLsizei width,
                                              GLsizei height)
 {
-    // Hack for the special WebGL 1 "DEPTH_STENCIL" internal format.
-    GLenum convertedInternalFormat = getConvertedRenderbufferFormat(internalformat);
-
-    Renderbuffer *renderbuffer = mState.getCurrentRenderbuffer();
-    ANGLE_CONTEXT_TRY(
-        renderbuffer->setStorageMultisample(this, samples, convertedInternalFormat, width, height));
+    renderbufferStorageMultisampleImpl(target, samples, internalformat, width, height,
+                                       MultisamplingMode::Regular);
 }
 
 void Context::renderbufferStorageMultisampleEXT(GLenum target,
@@ -5600,9 +5596,23 @@ void Context::renderbufferStorageMultisampleEXT(GLenum target,
                                                 GLsizei width,
                                                 GLsizei height)
 {
-    // TODO(syoussefi): distinguish between renderbufferStorageMultisampleEXT and
-    // renderbufferStorageMultisample.  http://anglebug.com/4881
-    renderbufferStorageMultisample(target, samples, internalformat, width, height);
+    renderbufferStorageMultisampleImpl(target, samples, internalformat, width, height,
+                                       MultisamplingMode::MultisampledRenderToTexture);
+}
+
+void Context::renderbufferStorageMultisampleImpl(GLenum target,
+                                                 GLsizei samples,
+                                                 GLenum internalformat,
+                                                 GLsizei width,
+                                                 GLsizei height,
+                                                 MultisamplingMode mode)
+{
+    // Hack for the special WebGL 1 "DEPTH_STENCIL" internal format.
+    GLenum convertedInternalFormat = getConvertedRenderbufferFormat(internalformat);
+
+    Renderbuffer *renderbuffer = mState.getCurrentRenderbuffer();
+    ANGLE_CONTEXT_TRY(renderbuffer->setStorageMultisample(this, samples, convertedInternalFormat,
+                                                          width, height, mode));
 }
 
 void Context::framebufferTexture2DMultisample(GLenum target,

@@ -872,6 +872,15 @@ class LevelIndexWrapper
 
 // A GL texture level index.
 using LevelIndex = LevelIndexWrapper<GLint>;
+
+enum class MultisamplingMode
+{
+    // Regular multisampling
+    Regular = 0,
+    // GL_EXT_multisampled_render_to_texture renderbuffer/texture attachments which perform implicit
+    // resolve of multisampled data.
+    MultisampledRenderToTexture,
+};
 }  // namespace gl
 
 namespace rx

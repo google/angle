@@ -33,7 +33,8 @@ class RenderbufferVk : public RenderbufferImpl, public angle::ObserverInterface
                                         size_t samples,
                                         GLenum internalformat,
                                         size_t width,
-                                        size_t height) override;
+                                        size_t height,
+                                        gl::MultisamplingMode mode) override;
     angle::Result setStorageEGLImageTarget(const gl::Context *context, egl::Image *image) override;
 
     angle::Result getAttachmentRenderTarget(const gl::Context *context,
@@ -66,7 +67,8 @@ class RenderbufferVk : public RenderbufferImpl, public angle::ObserverInterface
                                  size_t samples,
                                  GLenum internalformat,
                                  size_t width,
-                                 size_t height);
+                                 size_t height,
+                                 gl::MultisamplingMode mode);
 
     const gl::InternalFormat &getImplementationSizedFormat() const;
 

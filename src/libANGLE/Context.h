@@ -682,6 +682,12 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
                           UniformLocation location,
                           GLsizei count,
                           const GLint *v);
+    void renderbufferStorageMultisampleImpl(GLenum target,
+                                            GLsizei samples,
+                                            GLenum internalformat,
+                                            GLsizei width,
+                                            GLsizei height,
+                                            MultisamplingMode mode);
 
     void convertPpoToComputeOrDraw(bool isCompute);
 

@@ -29,7 +29,8 @@ class RenderbufferNULL : public RenderbufferImpl
                                         size_t samples,
                                         GLenum internalformat,
                                         size_t width,
-                                        size_t height) override;
+                                        size_t height,
+                                        gl::MultisamplingMode mode) override;
 
     angle::Result setStorageEGLImageTarget(const gl::Context *context, egl::Image *image) override;
 

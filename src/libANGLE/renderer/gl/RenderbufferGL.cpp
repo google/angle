@@ -25,8 +25,7 @@ namespace rx
 {
 RenderbufferGL::RenderbufferGL(const gl::RenderbufferState &state, GLuint id)
     : RenderbufferImpl(state), mRenderbufferID(id)
-{
-}
+{}
 
 RenderbufferGL::~RenderbufferGL()
 {
@@ -67,8 +66,13 @@ angle::Result RenderbufferGL::setStorageMultisample(const gl::Context *context,
                                                     size_t samples,
                                                     GLenum internalformat,
                                                     size_t width,
-                                                    size_t height)
+                                                    size_t height,
+                                                    gl::MultisamplingMode mode)
 {
+    // Note: GL_EXT_multisampled_render_to_texture is not supported in the GL backend.
+    // http://anglebug.com/2894
+    ASSERT(mode == gl::MultisamplingMode::Regular);
+
     const FunctionsGL *functions      = GetFunctionsGL(context);
     StateManagerGL *stateManager      = GetStateManagerGL(context);
     const angle::FeaturesGL &features = GetFeaturesGL(context);
