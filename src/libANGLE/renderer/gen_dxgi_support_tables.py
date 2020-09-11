@@ -35,7 +35,7 @@ template = """// GENERATED FILE - DO NOT EDIT. See dxgi_support_data.json.
 //   version, D3D feature level, and is sometimes guaranteed or optional.
 //
 
-#include "libANGLE/renderer/d3d/d3d11/dxgi_support_table.h"
+#include "libANGLE/renderer/dxgi_support_table.h"
 
 #include "common/debug.h"
 

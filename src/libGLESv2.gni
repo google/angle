@@ -802,12 +802,6 @@ libangle_gl_wgl_sources = [
   "src/third_party/khronos/GL/wglext.h",
 ]
 
-libangle_gl_wgl_d3d11_common_sources = [
-  "src/libANGLE/renderer/d3d/d3d11/dxgi_format_map_autogen.cpp",
-  "src/libANGLE/renderer/d3d/d3d11/dxgi_support_table.h",
-  "src/libANGLE/renderer/d3d/d3d11/dxgi_support_table_autogen.cpp",
-]
-
 libangle_gl_glx_sources = [
   "src/libANGLE/renderer/gl/glx/DisplayGLX.cpp",
   "src/libANGLE/renderer/gl/glx/DisplayGLX.h",

@@ -82,9 +82,9 @@ generators = {
     'D3D11 format':
         'src/libANGLE/renderer/d3d/d3d11/gen_texture_format_table.py',
     'DXGI format':
-        'src/libANGLE/renderer/d3d/d3d11/gen_dxgi_format_table.py',
+        'src/libANGLE/renderer/gen_dxgi_format_table.py',
     'DXGI format support':
-        'src/libANGLE/renderer/d3d/d3d11/gen_dxgi_support_tables.py',
+        'src/libANGLE/renderer/gen_dxgi_support_tables.py',
     'Emulated HLSL functions':
         'src/compiler/translator/gen_emulated_builtin_function_tables.py',
     'GL copy conversion table':

@@ -9,8 +9,6 @@
 
 from datetime import date
 import sys
-
-sys.path.append('../..')
 import angle_format
 
 template_cpp = """// GENERATED FILE - DO NOT EDIT.
@@ -89,8 +87,8 @@ def main():
     # auto_script parameters.
     if len(sys.argv) > 1:
         inputs = [
-            '../../angle_format.py',
-            '../../angle_format_map.json',
+            'angle_format.py',
+            'angle_format_map.json',
             'dxgi_format_data.json',
         ]
         outputs = ['dxgi_format_map_autogen.cpp']
