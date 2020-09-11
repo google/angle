@@ -352,6 +352,8 @@
     void framebufferTexture2DMultisample(GLenum target, GLenum attachment,                         \
                                          TextureTarget textargetPacked, TextureID texturePacked,   \
                                          GLint level, GLsizei samples);                            \
+    void renderbufferStorageMultisampleEXT(GLenum target, GLsizei samples, GLenum internalformat,  \
+                                           GLsizei width, GLsizei height);                         \
     /* GL_EXT_multisampled_render_to_texture2 */                                                   \
     /* GL_EXT_occlusion_query_boolean */                                                           \
     /* GL_EXT_read_format_bgra */                                                                  \

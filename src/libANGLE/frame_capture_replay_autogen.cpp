@@ -2493,6 +2493,14 @@ void FrameCapture::ReplayCall(gl::Context *context,
                 params.getParam("width", ParamType::TGLsizei, 3).value.GLsizeiVal,
                 params.getParam("height", ParamType::TGLsizei, 4).value.GLsizeiVal);
             break;
+        case gl::EntryPoint::RenderbufferStorageMultisampleEXT:
+            context->renderbufferStorageMultisampleEXT(
+                params.getParam("target", ParamType::TGLenum, 0).value.GLenumVal,
+                params.getParam("samples", ParamType::TGLsizei, 1).value.GLsizeiVal,
+                params.getParam("internalformat", ParamType::TGLenum, 2).value.GLenumVal,
+                params.getParam("width", ParamType::TGLsizei, 3).value.GLsizeiVal,
+                params.getParam("height", ParamType::TGLsizei, 4).value.GLsizeiVal);
+            break;
         case gl::EntryPoint::ResumeTransformFeedback:
             context->resumeTransformFeedback();
             break;

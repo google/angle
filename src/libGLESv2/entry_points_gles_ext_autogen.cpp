@@ -4632,7 +4632,8 @@ void GL_APIENTRY RenderbufferStorageMultisampleEXT(GLenum target,
                                 context, target, samples, internalformat, width, height));
         if (isCallValid)
         {
-            context->renderbufferStorageMultisample(target, samples, internalformat, width, height);
+            context->renderbufferStorageMultisampleEXT(target, samples, internalformat, width,
+                                                       height);
         }
         ANGLE_CAPTURE(RenderbufferStorageMultisampleEXT, isCallValid, context, target, samples,
                       internalformat, width, height);
@@ -19962,7 +19963,8 @@ void GL_APIENTRY RenderbufferStorageMultisampleEXTContextANGLE(GLeglContext ctx,
                                 context, target, samples, internalformat, width, height));
         if (isCallValid)
         {
-            context->renderbufferStorageMultisample(target, samples, internalformat, width, height);
+            context->renderbufferStorageMultisampleEXT(target, samples, internalformat, width,
+                                                       height);
         }
         ANGLE_CAPTURE(RenderbufferStorageMultisampleEXT, isCallValid, context, target, samples,
                       internalformat, width, height);

@@ -25,6 +25,18 @@ no_event_marker_exceptions_list = sorted([
     "glInsertEventMarkerEXT",
 ])
 
+# glRenderbufferStorageMultisampleEXT aliases glRenderbufferStorageMultisample on desktop GL, and is
+# marked as such in the registry.  However, that is not correct for GLES where this entry point
+# comes from GL_EXT_multisampled_render_to_texture which is never promoted to core GLES.
+aliasing_exceptions = [
+    'glRenderbufferStorageMultisampleEXT',
+    'renderbufferStorageMultisampleEXT',
+]
+
+
+def is_aliasing_excepted(cmd_name, is_gles):
+    return is_gles and cmd_name in aliasing_exceptions
+
 # Strip these suffixes from Context entry point names. NV is excluded (for now).
 strip_suffixes = ["ANGLE", "EXT", "KHR", "OES", "CHROMIUM", "OVR"]
 
@@ -797,7 +809,11 @@ def get_context_getter_function(cmd_name, is_explicit_context):
     return "GetValidGlobalContext()"
 
 
-def strip_suffix(name):
+def strip_suffix(name, is_gles):
+    # For commands where aliasing is excepted, keep the suffix
+    if is_aliasing_excepted(name, is_gles):
+        return name
+
     for suffix in strip_suffixes:
         if name.endswith(suffix):
             name = name[0:-len(suffix)]
@@ -817,14 +833,14 @@ def find_gl_enum_group_in_command(command_node, param_name):
     return group_name
 
 
-def get_packed_enums(cmd_packed_gl_enums, cmd_name):
+def get_packed_enums(cmd_packed_gl_enums, cmd_name, is_gles):
     # Always strip the suffix when querying packed enums.
-    return cmd_packed_gl_enums.get(strip_suffix(cmd_name), {})
+    return cmd_packed_gl_enums.get(strip_suffix(cmd_name, is_gles), {})
 
 
 def format_entry_point_def(command_node, cmd_name, proto, params, is_explicit_context,
-                           cmd_packed_gl_enums):
-    packed_gl_enums = get_packed_enums(cmd_packed_gl_enums, cmd_name)
+                           cmd_packed_gl_enums, is_gles):
+    packed_gl_enums = get_packed_enums(cmd_packed_gl_enums, cmd_name, is_gles)
     internal_params = [just_the_name_packed(param, packed_gl_enums) for param in params]
     packed_gl_enum_conversions = []
     for param in params:
@@ -842,7 +858,7 @@ def format_entry_point_def(command_node, cmd_name, proto, params, is_explicit_co
     return_type = proto[:-len(cmd_name)]
     default_return = default_return_value(cmd_name, return_type.strip())
     event_comment = template_event_comment if cmd_name in no_event_marker_exceptions_list else ""
-    name_lower_no_suffix = strip_suffix(cmd_name[2:3].lower() + cmd_name[3:])
+    name_lower_no_suffix = strip_suffix(cmd_name[2:3].lower() + cmd_name[3:], is_gles)
 
     format_params = {
         "name":
@@ -902,12 +918,13 @@ def get_capture_param_type_name(param_type):
 
 
 def format_capture_method(command, cmd_name, proto, params, all_param_types, capture_pointer_funcs,
-                          cmd_packed_gl_enums):
+                          cmd_packed_gl_enums, is_gles):
 
-    packed_gl_enums = get_packed_enums(cmd_packed_gl_enums, cmd_name)
+    packed_gl_enums = get_packed_enums(cmd_packed_gl_enums, cmd_name, is_gles)
 
-    params_with_type = get_internal_params(
-        cmd_name, ["const State &glState", "bool isCallValid"] + params, cmd_packed_gl_enums)
+    params_with_type = get_internal_params(cmd_name,
+                                           ["const State &glState", "bool isCallValid"] + params,
+                                           cmd_packed_gl_enums, is_gles)
     params_just_name = ", ".join(
         ["glState", "isCallValid"] +
         [just_the_name_packed(param, packed_gl_enums) for param in params])
@@ -973,8 +990,8 @@ def const_pointer_type(param, packed_gl_enums):
         return type
 
 
-def get_internal_params(cmd_name, params, cmd_packed_gl_enums):
-    packed_gl_enums = get_packed_enums(cmd_packed_gl_enums, cmd_name)
+def get_internal_params(cmd_name, params, cmd_packed_gl_enums, is_gles):
+    packed_gl_enums = get_packed_enums(cmd_packed_gl_enums, cmd_name, is_gles)
     return ", ".join([
         make_param(
             just_the_type_packed(param, packed_gl_enums),
@@ -982,8 +999,8 @@ def get_internal_params(cmd_name, params, cmd_packed_gl_enums):
     ])
 
 
-def get_validation_params(cmd_name, params, cmd_packed_gl_enums):
-    packed_gl_enums = get_packed_enums(cmd_packed_gl_enums, cmd_name)
+def get_validation_params(cmd_name, params, cmd_packed_gl_enums, is_gles):
+    packed_gl_enums = get_packed_enums(cmd_packed_gl_enums, cmd_name, is_gles)
     return ", ".join([
         make_param(
             const_pointer_type(param, packed_gl_enums), just_the_name_packed(
@@ -991,12 +1008,12 @@ def get_validation_params(cmd_name, params, cmd_packed_gl_enums):
     ])
 
 
-def format_context_decl(cmd_name, proto, params, template, cmd_packed_gl_enums):
-    internal_params = get_internal_params(cmd_name, params, cmd_packed_gl_enums)
+def format_context_decl(cmd_name, proto, params, template, cmd_packed_gl_enums, is_gles):
+    internal_params = get_internal_params(cmd_name, params, cmd_packed_gl_enums, is_gles)
 
     return_type = proto[:-len(cmd_name)]
     name_lower_no_suffix = cmd_name[2:3].lower() + cmd_name[3:]
-    name_lower_no_suffix = strip_suffix(name_lower_no_suffix)
+    name_lower_no_suffix = strip_suffix(name_lower_no_suffix, is_gles)
     maybe_const = " const" if name_lower_no_suffix.startswith(
         "is") and name_lower_no_suffix[2].isupper() else ""
 
@@ -1022,15 +1039,16 @@ def format_libgles_entry_point_def(cmd_name, proto, params, is_explicit_context)
         explicit_context_internal_param="ctx" if is_explicit_context else "")
 
 
-def format_validation_proto(cmd_name, params, cmd_packed_gl_enums):
+def format_validation_proto(cmd_name, params, cmd_packed_gl_enums, is_gles):
     internal_params = get_validation_params(cmd_name, ["Context *context"] + params,
-                                            cmd_packed_gl_enums)
+                                            cmd_packed_gl_enums, is_gles)
     return template_validation_proto % (cmd_name[2:], internal_params)
 
 
-def format_capture_proto(cmd_name, proto, params, cmd_packed_gl_enums):
-    internal_params = get_internal_params(
-        cmd_name, ["const State &glState", "bool isCallValid"] + params, cmd_packed_gl_enums)
+def format_capture_proto(cmd_name, proto, params, cmd_packed_gl_enums, is_gles):
+    internal_params = get_internal_params(cmd_name,
+                                          ["const State &glState", "bool isCallValid"] + params,
+                                          cmd_packed_gl_enums, is_gles)
     return_type = proto[:-len(cmd_name)].strip()
     if return_type != "void":
         internal_params += ", %s returnValue" % return_type
@@ -1042,7 +1060,7 @@ def path_to(folder, file):
 
 
 def get_entry_points(all_commands, commands, is_explicit_context, is_wgl, all_param_types,
-                     cmd_packed_gl_enums):
+                     cmd_packed_gl_enums, is_gles):
     decls = []
     defs = []
     export_defs = []
@@ -1067,23 +1085,24 @@ def get_entry_points(all_commands, commands, is_explicit_context, is_wgl, all_pa
             format_entry_point_decl(cmd_name, proto_text, param_text, is_explicit_context))
         defs.append(
             format_entry_point_def(command, cmd_name, proto_text, param_text, is_explicit_context,
-                                   cmd_packed_gl_enums))
+                                   cmd_packed_gl_enums, is_gles))
 
         export_defs.append(
             format_libgles_entry_point_def(cmd_name, proto_text, param_text, is_explicit_context))
 
         validation_protos.append(
-            format_validation_proto(cmd_name, param_text, cmd_packed_gl_enums))
+            format_validation_proto(cmd_name, param_text, cmd_packed_gl_enums, is_gles))
         capture_protos.append(
-            format_capture_proto(cmd_name, proto_text, param_text, cmd_packed_gl_enums))
+            format_capture_proto(cmd_name, proto_text, param_text, cmd_packed_gl_enums, is_gles))
         capture_methods.append(
             format_capture_method(command, cmd_name, proto_text, param_text, all_param_types,
-                                  capture_pointer_funcs, cmd_packed_gl_enums))
+                                  capture_pointer_funcs, cmd_packed_gl_enums, is_gles))
 
     return decls, defs, export_defs, validation_protos, capture_protos, capture_methods, capture_pointer_funcs
 
 
-def get_decls(formatter, all_commands, gles_commands, already_included, cmd_packed_gl_enums):
+def get_decls(formatter, all_commands, gles_commands, already_included, cmd_packed_gl_enums,
+              is_gles):
     decls = []
     for command in all_commands:
         proto = command.find('proto')
@@ -1092,14 +1111,15 @@ def get_decls(formatter, all_commands, gles_commands, already_included, cmd_pack
         if cmd_name not in gles_commands:
             continue
 
-        name_no_suffix = strip_suffix(cmd_name)
+        name_no_suffix = strip_suffix(cmd_name, is_gles)
         if name_no_suffix in already_included:
             continue
 
         param_text = ["".join(param.itertext()) for param in command.findall('param')]
         proto_text = "".join(proto.itertext())
         decls.append(
-            format_context_decl(cmd_name, proto_text, param_text, formatter, cmd_packed_gl_enums))
+            format_context_decl(cmd_name, proto_text, param_text, formatter, cmd_packed_gl_enums,
+                                is_gles))
 
     return decls
 
@@ -1144,6 +1164,7 @@ def get_glext_decls(all_commands, gles_commands, version, is_explicit_context):
 
 
 def write_file(annotation, comment, template, entry_points, suffix, includes, lib, file):
+
     content = template.format(
         script_name=os.path.basename(sys.argv[0]),
         data_source_name=file,
@@ -1490,9 +1511,10 @@ def is_get_pointer_command(command_name):
     return command_name.endswith('Pointerv') and command_name.startswith('glGet')
 
 
-def format_capture_replay_param_access(command_name, param_text_list, cmd_packed_gl_enums):
+def format_capture_replay_param_access(command_name, param_text_list, cmd_packed_gl_enums,
+                                       is_gles):
     param_access_strs = list()
-    cmd_packed_enums = get_packed_enums(cmd_packed_gl_enums, command_name)
+    cmd_packed_enums = get_packed_enums(cmd_packed_gl_enums, command_name, is_gles)
     for i, param_text in enumerate(param_text_list):
         param_type = just_the_type_packed(param_text, cmd_packed_enums)
         param_name = just_the_name_packed(param_text, cmd_packed_enums)
@@ -1519,7 +1541,7 @@ def format_capture_replay_param_access(command_name, param_text_list, cmd_packed
     return ",".join(param_access_strs)
 
 
-def format_capture_replay_call_case(command_to_param_types_mapping, cmd_packed_gl_enums):
+def format_capture_replay_call_case(command_to_param_types_mapping, cmd_packed_gl_enums, is_gles):
     call_str_list = list()
     for command_name, cmd_param_texts in sorted(command_to_param_types_mapping.items()):
         entry_point_name = command_name[2:]  # strip the 'gl' prefix
@@ -1528,14 +1550,15 @@ def format_capture_replay_call_case(command_to_param_types_mapping, cmd_packed_g
             template_capture_replay_call_case.format(
                 entry_point=entry_point_name,
                 param_value_access=format_capture_replay_param_access(
-                    command_name, cmd_param_texts, cmd_packed_gl_enums),
+                    command_name, cmd_param_texts, cmd_packed_gl_enums, is_gles),
                 context_call=entry_point_name[0].lower() + entry_point_name[1:],
             ))
 
     return '\n'.join(call_str_list)
 
 
-def write_capture_replay_source(all_commands_nodes, gles_command_names, cmd_packed_gl_enums):
+def write_capture_replay_source(all_commands_nodes, gles_command_names, cmd_packed_gl_enums,
+                                is_gles):
     all_commands_names = set(gles_command_names)
 
     command_to_param_types_mapping = dict()
@@ -1548,7 +1571,7 @@ def write_capture_replay_source(all_commands_nodes, gles_command_names, cmd_pack
             command_node, command_name)
 
     call_replay_cases = format_capture_replay_call_case(command_to_param_types_mapping,
-                                                        cmd_packed_gl_enums)
+                                                        cmd_packed_gl_enums, is_gles)
 
     source_content = template_capture_replay_source.format(
         script_name=os.path.basename(sys.argv[0]),
@@ -1805,7 +1828,8 @@ def main():
         all_commands_with_suffix.extend(xml.commands[version])
 
         decls, defs, libgles_defs, validation_protos, capture_protos, capture_methods, capture_pointer_funcs = get_entry_points(
-            all_commands, gles_commands, False, False, all_gles_param_types, cmd_packed_gl_enums)
+            all_commands, gles_commands, False, False, all_gles_param_types, cmd_packed_gl_enums,
+            True)
 
         # Write the version as a comment before the first EP.
         libgles_defs.insert(0, "\n// OpenGL ES %s" % comment)
@@ -1833,8 +1857,10 @@ def main():
         write_file(annotation, "GLES " + comment, template_entry_point_source, "\n".join(defs),
                    "cpp", source_includes, "libGLESv2", "gl.xml")
 
-        glesdecls['core'][(major_version, minor_version)] = get_decls(
-            context_decl_format, all_commands, gles_commands, [], cmd_packed_gl_enums)
+        glesdecls['core'][(major_version,
+                           minor_version)] = get_decls(context_decl_format, all_commands,
+                                                       gles_commands, [], cmd_packed_gl_enums,
+                                                       True)
 
         validation_annotation = "ES%s%s" % (major_version, minor_if_not_zero)
         write_validation_header(validation_annotation, "ES %s" % comment, validation_protos,
@@ -1869,7 +1895,7 @@ def main():
         # Detect and filter duplicate extensions.
         decls, defs, libgles_defs, validation_protos, capture_protos, capture_methods, capture_param_funcs = get_entry_points(
             xml.all_commands, ext_cmd_names, False, False, all_gles_param_types,
-            cmd_packed_gl_enums)
+            cmd_packed_gl_enums, True)
 
         # Avoid writing out entry points defined by a prior extension.
         for dupe in xml.ext_dupes[extension_name]:
@@ -1898,19 +1924,19 @@ def main():
                 extension_name not in gles1_no_context_decl_extensions):
             glesdecls['exts']['GLES1 Extensions'][extension_name] = get_decls(
                 context_decl_format, all_commands, ext_cmd_names, all_commands_no_suffix,
-                cmd_packed_gl_enums)
+                cmd_packed_gl_enums, True)
         if extension_name in registry_xml.gles_extensions:
             glesdecls['exts']['GLES2+ Extensions'][extension_name] = get_decls(
                 context_decl_format, all_commands, ext_cmd_names, all_commands_no_suffix,
-                cmd_packed_gl_enums)
+                cmd_packed_gl_enums, True)
         if extension_name in registry_xml.angle_extensions:
             glesdecls['exts']['ANGLE Extensions'][extension_name] = get_decls(
                 context_decl_format, all_commands, ext_cmd_names, all_commands_no_suffix,
-                cmd_packed_gl_enums)
+                cmd_packed_gl_enums, True)
 
     for name in extension_commands:
         all_commands_with_suffix.append(name)
-        all_commands_no_suffix.append(strip_suffix(name))
+        all_commands_no_suffix.append(strip_suffix(name, True))
 
     # Special handling for EGL_ANGLE_explicit_context extension
     if registry_xml.support_EGL_ANGLE_explicit_context:
@@ -1923,7 +1949,7 @@ def main():
 
         # Get the explicit context entry points
         decls, defs, libgles_defs, validation_protos, capture_protos, capture_methods, capture_param_funcs = get_entry_points(
-            xml.all_commands, cmds, True, False, all_gles_param_types, cmd_packed_gl_enums)
+            xml.all_commands, cmds, True, False, all_gles_param_types, cmd_packed_gl_enums, True)
 
         # Append the explicit context entry points
         extension_decls += decls
@@ -1998,12 +2024,14 @@ def main():
         all_commands32 = glxml.all_commands
 
         # Validation duplicates handled with suffix
-        _, _, _, validation_protos32, _, _, _ = get_entry_points(
-            all_commands32, just_libgl_commands_suffix, False, False, all_gles_param_types,
-            cmd_packed_gl_enums)
-        decls_gl, defs_gl, libgl_defs, _, _, _, _ = get_entry_points(
-            all_commands32, all_libgl_commands, False, False, all_gles_param_types,
-            cmd_packed_gl_enums)
+        _, _, _, validation_protos32, _, _, _ = get_entry_points(all_commands32,
+                                                                 just_libgl_commands_suffix, False,
+                                                                 False, all_gles_param_types,
+                                                                 cmd_packed_gl_enums, False)
+        decls_gl, defs_gl, libgl_defs, _, _, _, _ = get_entry_points(all_commands32,
+                                                                     all_libgl_commands, False,
+                                                                     False, all_gles_param_types,
+                                                                     cmd_packed_gl_enums, False)
 
         # Write the version as a comment before the first EP.
         libgl_defs.insert(0, "\n// GL %s" % comment)
@@ -2024,9 +2052,10 @@ def main():
         write_file(annotation, "GL " + comment, template_entry_point_source, "\n".join(defs_gl),
                    "cpp", source_includes, "libGL", "gl.xml")
 
-        gldecls['core'][(major_version, minor_version)] = get_decls(
-            context_decl_format, all_commands32, just_libgl_commands, all_commands_no_suffix,
-            cmd_packed_gl_enums)
+        gldecls['core'][(major_version,
+                         minor_version)] = get_decls(context_decl_format, all_commands32,
+                                                     just_libgl_commands, all_commands_no_suffix,
+                                                     cmd_packed_gl_enums, False)
 
         # Validation files
         validation_annotation = "GL%s%s" % (major_version, minor_if_not_zero)
@@ -2048,7 +2077,7 @@ def main():
 
     wgl_param_types = set()
     decls_wgl, defs_wgl, wgl_defs, validation_protos_wgl, _, _, _ = get_entry_points(
-        all_commands32, wgl_commands, False, True, wgl_param_types, {})
+        all_commands32, wgl_commands, False, True, wgl_param_types, {}, False)
 
     # Write the version as a comment before the first EP.
     libgl_ep_exports.append("\n    ; WGL %s" % comment)
@@ -2186,7 +2215,8 @@ def main():
     all_gles_param_types = sorted(all_gles_param_types)
     write_capture_helper_header(all_gles_param_types)
     write_capture_helper_source(all_gles_param_types)
-    write_capture_replay_source(xml.all_commands, all_commands_no_suffix, cmd_packed_gl_enums)
+    write_capture_replay_source(xml.all_commands, all_commands_no_suffix, cmd_packed_gl_enums,
+                                True)
 
 
 if __name__ == '__main__':

@@ -5594,6 +5594,17 @@ void Context::renderbufferStorageMultisample(GLenum target,
         renderbuffer->setStorageMultisample(this, samples, convertedInternalFormat, width, height));
 }
 
+void Context::renderbufferStorageMultisampleEXT(GLenum target,
+                                                GLsizei samples,
+                                                GLenum internalformat,
+                                                GLsizei width,
+                                                GLsizei height)
+{
+    // TODO(syoussefi): distinguish between renderbufferStorageMultisampleEXT and
+    // renderbufferStorageMultisample.  http://anglebug.com/4881
+    renderbufferStorageMultisample(target, samples, internalformat, width, height);
+}
+
 void Context::framebufferTexture2DMultisample(GLenum target,
                                               GLenum attachment,
                                               TextureTarget textarget,
