@@ -244,10 +244,6 @@ std::vector<std::string> GetAvailableTestPlatformNames();
 void SetSelectedConfig(const char *selectedConfig);
 bool IsConfigSelected();
 
-// Use a separate isolated process per test config. This works around
-// driver flakiness when using multiple APIs/windows/etc in the same
-// process.
-extern bool gSeparateProcessPerConfig;
 extern bool gEnableANGLEPerTestCaptureLabel;
 
 // For use with ANGLE_INSTANTIATE_TEST_ARRAY

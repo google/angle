@@ -169,8 +169,14 @@ const char *GetColorName(GLColor color)
     return nullptr;
 }
 
+// Always re-use displays when using --bot-mode in the test runner.
+bool gBotModeEnabled = false;
+
 bool ShouldAlwaysForceNewDisplay()
 {
+    if (gBotModeEnabled)
+        return false;
+
     // We prefer to reuse config displays. This is faster and solves a driver issue where creating
     // many displays causes crashes. However this exposes other driver bugs on many other platforms.
     // Conservatively enable the feature only on Windows Intel and NVIDIA for now.
@@ -307,54 +313,8 @@ TestPlatformContext gPlatformContext;
 constexpr uint32_t kWindowReuseLimit = 50;
 
 constexpr char kUseConfig[]                      = "--use-config=";
-constexpr char kSeparateProcessPerConfig[]       = "--separate-process-per-config";
+constexpr char kBotMode[]                        = "--bot-mode";
 constexpr char kEnableANGLEPerTestCaptureLabel[] = "--angle-per-test-capture-label";
-
-bool RunSeparateProcessesForEachConfig(int *argc, char *argv[])
-{
-    std::vector<const char *> commonArgs;
-    for (int argIndex = 0; argIndex < *argc; ++argIndex)
-    {
-        if (strncmp(argv[argIndex], kSeparateProcessPerConfig, strlen(kSeparateProcessPerConfig)) !=
-            0)
-        {
-            commonArgs.push_back(argv[argIndex]);
-        }
-    }
-
-    // Force GoogleTest init now so that we hit the test config init in angle_test_instantiate.cpp.
-    // After instantiation is finished we can gather a full list of enabled configs. Then we can
-    // iterate the list of configs to spawn a child process for each enabled config.
-    testing::InitGoogleTest(argc, argv);
-
-    std::vector<std::string> configNames = GetAvailableTestPlatformNames();
-
-    bool success = true;
-
-    for (const std::string &config : configNames)
-    {
-        std::stringstream strstr;
-        strstr << kUseConfig << config;
-
-        std::string configStr = strstr.str();
-
-        std::vector<const char *> childArgs = commonArgs;
-        childArgs.push_back(configStr.c_str());
-
-        ProcessHandle process(childArgs, false, false);
-        if (!process->started() || !process->finish())
-        {
-            std::cerr << "Launching child config " << config << " failed.\n";
-        }
-        else if (process->getExitCode() != 0)
-        {
-            std::cerr << "Child config " << config << " failed with exit code "
-                      << process->getExitCode() << ".\n";
-            success = false;
-        }
-    }
-    return success;
-}
 
 void SetupEnvironmentVarsForCaptureReplay()
 {
@@ -1395,34 +1355,14 @@ void ANGLEProcessTestArgs(int *argc, char *argv[])
         {
             SetSelectedConfig(argv[argIndex] + strlen(kUseConfig));
         }
-        if (strncmp(argv[argIndex], kSeparateProcessPerConfig, strlen(kSeparateProcessPerConfig)) ==
-            0)
+        if (strncmp(argv[argIndex], kBotMode, strlen(kBotMode)) == 0)
         {
-            gSeparateProcessPerConfig = true;
+            gBotModeEnabled = true;
         }
         if (strncmp(argv[argIndex], kEnableANGLEPerTestCaptureLabel,
                     strlen(kEnableANGLEPerTestCaptureLabel)) == 0)
         {
             gEnableANGLEPerTestCaptureLabel = true;
-        }
-    }
-
-    if (gSeparateProcessPerConfig)
-    {
-        if (IsConfigSelected())
-        {
-            std::cout << "Cannot use both a single test config and separate processes.\n";
-            exit(1);
-        }
-
-        if (RunSeparateProcessesForEachConfig(argc, argv))
-        {
-            exit(0);
-        }
-        else
-        {
-            std::cout << "Some subprocesses failed.\n";
-            exit(1);
         }
     }
 }

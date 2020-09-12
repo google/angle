@@ -148,7 +148,6 @@ constexpr size_t kMaxConfigNameLen = 100;
 std::array<char, kMaxConfigNameLen> gSelectedConfig;
 }  // namespace
 
-bool gSeparateProcessPerConfig       = false;
 bool gEnableANGLEPerTestCaptureLabel = false;
 
 bool IsConfigSelected()
@@ -676,12 +675,6 @@ bool IsPlatformAvailable(const PlatformParameters &param)
             std::cout << "Skipping tests using configuration " << param
                       << " because it is not available.\n";
         }
-    }
-
-    // Disable all tests in the parent process when running child processes.
-    if (gSeparateProcessPerConfig)
-    {
-        return false;
     }
     return result;
 }
