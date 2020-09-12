@@ -552,6 +552,31 @@ angle::Result UtilsVk::ensureResourcesInitialized(ContextVk *contextVk,
         contextVk, descriptorSetDesc,
         &mDescriptorSetLayouts[function][ToUnderlying(DescriptorSetIndex::InternalShader)]));
 
+    vk::DescriptorSetLayoutBindingVector bindingVector;
+    std::vector<VkSampler> immutableSamplers;
+    descriptorSetDesc.unpackBindings(&bindingVector, &immutableSamplers);
+    std::vector<VkDescriptorPoolSize> descriptorPoolSizes;
+
+    for (const VkDescriptorSetLayoutBinding &binding : bindingVector)
+    {
+        if (binding.descriptorCount > 0)
+        {
+            VkDescriptorPoolSize poolSize = {};
+
+            poolSize.type            = binding.descriptorType;
+            poolSize.descriptorCount = binding.descriptorCount;
+            descriptorPoolSizes.emplace_back(poolSize);
+        }
+    }
+    if (!descriptorPoolSizes.empty())
+    {
+        ANGLE_TRY(mDescriptorPools[function].init(
+            contextVk, descriptorPoolSizes.data(), descriptorPoolSizes.size(),
+            mDescriptorSetLayouts[function][ToUnderlying(DescriptorSetIndex::InternalShader)]
+                .get()
+                .getHandle()));
+    }
+
     gl::ShaderType pushConstantsShaderStage =
         isCompute ? gl::ShaderType::Compute : gl::ShaderType::Fragment;
 
@@ -569,12 +594,6 @@ angle::Result UtilsVk::ensureResourcesInitialized(ContextVk *contextVk,
     ANGLE_TRY(renderer->getPipelineLayout(contextVk, pipelineLayoutDesc,
                                           mDescriptorSetLayouts[function],
                                           &mPipelineLayouts[function]));
-
-    if (setSizesCount > 0)
-    {
-        ANGLE_TRY(mDescriptorPools[function].init(contextVk, setSizes,
-                                                  static_cast<uint32_t>(setSizesCount)));
-    }
 
     return angle::Result::Continue;
 }

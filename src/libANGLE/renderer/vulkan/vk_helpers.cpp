@@ -1726,13 +1726,16 @@ angle::Result DescriptorPoolHelper::allocateSets(ContextVk *contextVk,
 }
 
 // DynamicDescriptorPool implementation.
-DynamicDescriptorPool::DynamicDescriptorPool() : mCurrentPoolIndex(0) {}
+DynamicDescriptorPool::DynamicDescriptorPool()
+    : mCurrentPoolIndex(0), mCachedDescriptorSetLayout(VK_NULL_HANDLE)
+{}
 
 DynamicDescriptorPool::~DynamicDescriptorPool() = default;
 
 angle::Result DynamicDescriptorPool::init(ContextVk *contextVk,
                                           const VkDescriptorPoolSize *setSizes,
-                                          size_t setSizeCount)
+                                          size_t setSizeCount,
+                                          VkDescriptorSetLayout descriptorSetLayout)
 {
     ASSERT(setSizes);
     ASSERT(setSizeCount);
@@ -1740,12 +1743,15 @@ angle::Result DynamicDescriptorPool::init(ContextVk *contextVk,
     ASSERT(mDescriptorPools.empty() ||
            (mDescriptorPools.size() == 1 &&
             mDescriptorPools[mCurrentPoolIndex]->get().hasCapacity(mMaxSetsPerPool)));
+    ASSERT(mCachedDescriptorSetLayout == VK_NULL_HANDLE);
 
     mPoolSizes.assign(setSizes, setSizes + setSizeCount);
     for (uint32_t i = 0; i < setSizeCount; ++i)
     {
         mPoolSizes[i].descriptorCount *= mMaxSetsPerPool;
     }
+
+    mCachedDescriptorSetLayout = descriptorSetLayout;
 
     mDescriptorPools.push_back(new RefCountedDescriptorPoolHelper());
     mCurrentPoolIndex = mDescriptorPools.size() - 1;
@@ -1762,6 +1768,7 @@ void DynamicDescriptorPool::destroy(VkDevice device)
     }
 
     mDescriptorPools.clear();
+    mCachedDescriptorSetLayout = VK_NULL_HANDLE;
 }
 
 void DynamicDescriptorPool::release(ContextVk *contextVk)
@@ -1774,6 +1781,7 @@ void DynamicDescriptorPool::release(ContextVk *contextVk)
     }
 
     mDescriptorPools.clear();
+    mCachedDescriptorSetLayout = VK_NULL_HANDLE;
 }
 
 angle::Result DynamicDescriptorPool::allocateSetsAndGetInfo(
@@ -1785,6 +1793,7 @@ angle::Result DynamicDescriptorPool::allocateSetsAndGetInfo(
     bool *newPoolAllocatedOut)
 {
     ASSERT(!mDescriptorPools.empty());
+    ASSERT(*descriptorSetLayout == mCachedDescriptorSetLayout);
 
     *newPoolAllocatedOut = false;
 

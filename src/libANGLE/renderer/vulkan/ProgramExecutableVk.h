@@ -220,7 +220,8 @@ class ProgramExecutableVk
                                             ContextVk *contextVk);
     angle::Result initDynamicDescriptorPools(ContextVk *contextVk,
                                              vk::DescriptorSetLayoutDesc &descriptorSetLayoutDesc,
-                                             DescriptorSetIndex descriptorSetIndex);
+                                             DescriptorSetIndex descriptorSetIndex,
+                                             VkDescriptorSetLayout descriptorSetLayout);
 
     // Descriptor sets for uniform blocks and textures for this program.
     vk::DescriptorSetLayoutArray<VkDescriptorSet> mDescriptorSets;

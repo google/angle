@@ -52,6 +52,7 @@ enum DescriptorSetIndex : uint32_t
 
 namespace vk
 {
+class DynamicDescriptorPool;
 class ImageHelper;
 enum class ImageLayout;
 

@@ -963,7 +963,7 @@ class ContextVk : public ContextImpl, public vk::Context
     // threads simultaneously. Hence, we keep them in the ContextVk instead of the RendererVk.
     // Note that this implementation would need to change in shared resource scenarios. Likely
     // we'd instead share a single set of pools between the share groups.
-    vk::DynamicDescriptorPool mDriverUniformsDescriptorPool;
+    angle::PackedEnumMap<PipelineType, vk::DynamicDescriptorPool> mDriverUniformsDescriptorPools;
     angle::PackedEnumMap<gl::QueryType, vk::DynamicQueryPool> mQueryPools;
 
     // Dirty bits.

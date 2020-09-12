@@ -287,7 +287,8 @@ class DynamicDescriptorPool final : angle::NonCopyable
     // an individual set.  The pool size will be calculated accordingly.
     angle::Result init(ContextVk *contextVk,
                        const VkDescriptorPoolSize *setSizes,
-                       size_t setSizeCount);
+                       size_t setSizeCount,
+                       VkDescriptorSetLayout descriptorSetLayout);
     void destroy(VkDevice device);
     void release(ContextVk *contextVk);
 
@@ -324,6 +325,10 @@ class DynamicDescriptorPool final : angle::NonCopyable
     size_t mCurrentPoolIndex;
     std::vector<RefCountedDescriptorPoolHelper *> mDescriptorPools;
     std::vector<VkDescriptorPoolSize> mPoolSizes;
+    // This cached handle is used for verifying the layout being used to allocate descriptor sets
+    // from the pool matches the layout that the pool was created for, to ensure that the free
+    // descriptor count is accurate and new pools are created appropriately.
+    VkDescriptorSetLayout mCachedDescriptorSetLayout;
 };
 
 template <typename Pool>

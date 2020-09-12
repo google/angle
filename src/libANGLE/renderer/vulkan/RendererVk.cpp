@@ -1986,7 +1986,7 @@ const gl::Limitations &RendererVk::getNativeLimitations() const
 }
 
 angle::Result RendererVk::getDescriptorSetLayout(
-    vk::Context *context,
+    ContextVk *context,
     const vk::DescriptorSetLayoutDesc &desc,
     vk::BindingPointer<vk::DescriptorSetLayout> *descriptorSetLayoutOut)
 {
