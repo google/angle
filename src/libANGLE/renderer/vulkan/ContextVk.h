@@ -547,8 +547,8 @@ class ContextVk : public ContextImpl, public vk::Context
                                      const gl::Rectangle &renderArea,
                                      const vk::RenderPassDesc &renderPassDesc,
                                      const vk::AttachmentOpsArray &renderPassAttachmentOps,
-                                     const uint32_t depthStencilAttachmentIndex,
-                                     const vk::ClearValuesArray &clearValues,
+                                     const vk::PackedAttachmentIndex depthStencilAttachmentIndex,
+                                     const vk::PackedClearValuesArray &clearValues,
                                      vk::CommandBuffer **commandBufferOut);
 
     // Only returns true if we have a started RP and we've run setupDraw.

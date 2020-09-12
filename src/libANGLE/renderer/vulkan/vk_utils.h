@@ -107,6 +107,35 @@ namespace vk
 {
 struct Format;
 
+// A packed attachment index interface with vulkan API
+class PackedAttachmentIndex final
+{
+  public:
+    explicit constexpr PackedAttachmentIndex(uint32_t index) : mAttachmentIndex(index) {}
+    constexpr PackedAttachmentIndex(const PackedAttachmentIndex &other) = default;
+    constexpr PackedAttachmentIndex &operator=(const PackedAttachmentIndex &other) = default;
+
+    constexpr uint32_t get() const { return mAttachmentIndex; }
+    PackedAttachmentIndex &operator++()
+    {
+        ++mAttachmentIndex;
+        return *this;
+    }
+    constexpr bool operator==(const PackedAttachmentIndex &other) const
+    {
+        return mAttachmentIndex == other.mAttachmentIndex;
+    }
+    constexpr bool operator!=(const PackedAttachmentIndex &other) const
+    {
+        return mAttachmentIndex != other.mAttachmentIndex;
+    }
+
+  private:
+    uint32_t mAttachmentIndex;
+};
+static constexpr PackedAttachmentIndex kAttachmentIndexInvalid = PackedAttachmentIndex(-1);
+static constexpr PackedAttachmentIndex kAttachmentIndexZero    = PackedAttachmentIndex(0);
+
 // Prepend ptr to the pNext chain at chainStart
 template <typename VulkanStruct1, typename VulkanStruct2>
 void AddToPNextChain(VulkanStruct1 *chainStart, VulkanStruct2 *ptr)
@@ -682,11 +711,6 @@ class ClearValuesArray final
     const VkClearValue *data() const { return mValues.data(); }
     bool empty() const { return mEnabled.none(); }
     bool any() const { return mEnabled.any(); }
-
-    gl::DrawBufferMask getEnabledColorAttachmentsMask() const
-    {
-        return gl::DrawBufferMask(static_cast<gl::DrawBufferMask::value_type>(mEnabled.to_ulong()));
-    }
 
   private:
     gl::AttachmentArray<VkClearValue> mValues;

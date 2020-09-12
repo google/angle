@@ -1476,16 +1476,16 @@ angle::Result FramebufferVk::invalidateImpl(ContextVk *contextVk,
     if (contextVk->hasStartedRenderPassWithFramebuffer(currentFramebuffer))
     {
         // Set the appropriate storeOp for attachments.
-        size_t attachmentIndexVk = 0;
+        vk::PackedAttachmentIndex colorIndexVk(0);
         for (size_t colorIndexGL : mAttachedColorBufferMask)
         {
             if (mState.getEnabledDrawBuffers()[colorIndexGL] &&
                 invalidateColorBuffers.test(colorIndexGL))
             {
                 contextVk->getStartedRenderPassCommands().invalidateRenderPassColorAttachment(
-                    attachmentIndexVk);
+                    colorIndexVk);
             }
-            ++attachmentIndexVk;
+            ++colorIndexVk;
         }
 
         if (depthStencilRenderTarget)
@@ -2118,7 +2118,7 @@ void FramebufferVk::clearWithLoadOp(ContextVk *contextVk,
 
         ASSERT(commands.getCommandBuffer().empty());
 
-        uint32_t colorIndexVk = 0;
+        vk::PackedAttachmentIndex colorIndexVk(0);
         for (size_t colorIndexGL : mAttachedColorBufferMask)
         {
             if (mState.getEnabledDrawBuffers()[colorIndexGL] && clearColorBuffers[colorIndexGL])
@@ -2229,17 +2229,17 @@ angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
 
     // Initialize RenderPass info.
     vk::AttachmentOpsArray renderPassAttachmentOps;
-    vk::ClearValuesArray packedClearValues;
+    vk::PackedClearValuesArray packedClearValues;
 
     // Color attachments.
     const auto &colorRenderTargets = mRenderTargetCache.getColors();
-    uint32_t colorAttachmentCount  = 0;
+    vk::PackedAttachmentIndex colorIndexVk(0);
     for (size_t colorIndexGL : mAttachedColorBufferMask)
     {
         RenderTargetVk *colorRenderTarget = colorRenderTargets[colorIndexGL];
         ASSERT(colorRenderTarget);
 
-        renderPassAttachmentOps.setLayouts(colorAttachmentCount, vk::ImageLayout::ColorAttachment,
+        renderPassAttachmentOps.setLayouts(colorIndexVk, vk::ImageLayout::ColorAttachment,
                                            vk::ImageLayout::ColorAttachment);
 
         const VkAttachmentStoreOp storeOp = colorRenderTarget->isImageTransient()
@@ -2248,23 +2248,22 @@ angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
 
         if (mDeferredClears.test(colorIndexGL))
         {
-            renderPassAttachmentOps.setOps(colorAttachmentCount, VK_ATTACHMENT_LOAD_OP_CLEAR,
-                                           storeOp);
-            packedClearValues.store(colorAttachmentCount, VK_IMAGE_ASPECT_COLOR_BIT,
+            renderPassAttachmentOps.setOps(colorIndexVk, VK_ATTACHMENT_LOAD_OP_CLEAR, storeOp);
+            packedClearValues.store(colorIndexVk, VK_IMAGE_ASPECT_COLOR_BIT,
                                     mDeferredClears[colorIndexGL]);
             mDeferredClears.reset(colorIndexGL);
         }
         else
         {
-            renderPassAttachmentOps.setOps(colorAttachmentCount,
+            renderPassAttachmentOps.setOps(colorIndexVk,
                                            colorRenderTarget->hasDefinedContent()
                                                ? VK_ATTACHMENT_LOAD_OP_LOAD
                                                : VK_ATTACHMENT_LOAD_OP_DONT_CARE,
                                            storeOp);
-            packedClearValues.store(colorAttachmentCount, VK_IMAGE_ASPECT_COLOR_BIT,
+            packedClearValues.store(colorIndexVk, VK_IMAGE_ASPECT_COLOR_BIT,
                                     kUninitializedClearValue);
         }
-        renderPassAttachmentOps.setStencilOps(colorAttachmentCount, VK_ATTACHMENT_LOAD_OP_DONT_CARE,
+        renderPassAttachmentOps.setStencilOps(colorIndexVk, VK_ATTACHMENT_LOAD_OP_DONT_CARE,
                                               VK_ATTACHMENT_STORE_OP_DONT_CARE);
 
         // If there's a resolve attachment, and loadOp needs to be LOAD, the multisampled attachment
@@ -2281,21 +2280,21 @@ angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
         // always ever stays on a tiled renderer's tile and no memory backing is allocated for it.
         // http://anglebug.com/4881
         if (colorRenderTarget->hasResolveAttachment() && colorRenderTarget->isImageTransient() &&
-            renderPassAttachmentOps[colorAttachmentCount].loadOp == VK_ATTACHMENT_LOAD_OP_LOAD)
+            renderPassAttachmentOps[colorIndexVk].loadOp == VK_ATTACHMENT_LOAD_OP_LOAD)
         {
             ANGLE_TRY(copyResolveToMultisampedAttachment(contextVk, colorRenderTarget));
         }
 
-        colorAttachmentCount++;
+        ++colorIndexVk;
     }
 
     // Depth/stencil attachment.
-    uint32_t depthStencilAttachmentIndex     = vk::kInvalidAttachmentIndex;
-    RenderTargetVk *depthStencilRenderTarget = getDepthStencilRenderTarget();
+    vk::PackedAttachmentIndex depthStencilAttachmentIndex = vk::kAttachmentIndexInvalid;
+    RenderTargetVk *depthStencilRenderTarget              = getDepthStencilRenderTarget();
     if (depthStencilRenderTarget)
     {
         // depth stencil attachment always immediately follow color attachment
-        depthStencilAttachmentIndex = colorAttachmentCount;
+        depthStencilAttachmentIndex = colorIndexVk;
 
         VkAttachmentLoadOp depthLoadOp     = VK_ATTACHMENT_LOAD_OP_LOAD;
         VkAttachmentLoadOp stencilLoadOp   = VK_ATTACHMENT_LOAD_OP_LOAD;

@@ -237,6 +237,8 @@ struct PackedAttachmentOpsDesc final
 
 static_assert(sizeof(PackedAttachmentOpsDesc) == 2, "Size check failed");
 
+class PackedAttachmentIndex;
+
 class AttachmentOpsArray final
 {
   public:
@@ -245,18 +247,26 @@ class AttachmentOpsArray final
     AttachmentOpsArray(const AttachmentOpsArray &other);
     AttachmentOpsArray &operator=(const AttachmentOpsArray &other);
 
-    const PackedAttachmentOpsDesc &operator[](size_t index) const;
-    PackedAttachmentOpsDesc &operator[](size_t index);
+    const PackedAttachmentOpsDesc &operator[](PackedAttachmentIndex index) const;
+    PackedAttachmentOpsDesc &operator[](PackedAttachmentIndex index);
 
     // Initialize an attachment op with all load and store operations.
-    void initWithLoadStore(size_t index, ImageLayout initialLayout, ImageLayout finalLayout);
+    void initWithLoadStore(PackedAttachmentIndex index,
+                           ImageLayout initialLayout,
+                           ImageLayout finalLayout);
 
-    void setLayouts(size_t index, ImageLayout initialLayout, ImageLayout finalLayout);
-    void setOps(size_t index, VkAttachmentLoadOp loadOp, VkAttachmentStoreOp storeOp);
-    void setStencilOps(size_t index, VkAttachmentLoadOp loadOp, VkAttachmentStoreOp storeOp);
+    void setLayouts(PackedAttachmentIndex index,
+                    ImageLayout initialLayout,
+                    ImageLayout finalLayout);
+    void setOps(PackedAttachmentIndex index,
+                VkAttachmentLoadOp loadOp,
+                VkAttachmentStoreOp storeOp);
+    void setStencilOps(PackedAttachmentIndex index,
+                       VkAttachmentLoadOp loadOp,
+                       VkAttachmentStoreOp storeOp);
 
-    void setClearOp(size_t index);
-    void setClearStencilOp(size_t index);
+    void setClearOp(PackedAttachmentIndex index);
+    void setClearStencilOp(PackedAttachmentIndex index);
 
     size_t hash() const;
 

@@ -875,6 +875,29 @@ enum class AliasingMode
     Disallowed,
 };
 
+// Stores clear value In packed attachment index
+class PackedClearValuesArray final
+{
+  public:
+    PackedClearValuesArray();
+    ~PackedClearValuesArray();
+
+    PackedClearValuesArray(const PackedClearValuesArray &other);
+    PackedClearValuesArray &operator=(const PackedClearValuesArray &rhs);
+    void store(PackedAttachmentIndex index,
+               VkImageAspectFlags aspectFlags,
+               const VkClearValue &clearValue);
+    void storeNoDepthStencil(PackedAttachmentIndex index, const VkClearValue &clearValue);
+    const VkClearValue &operator[](PackedAttachmentIndex index) const
+    {
+        return mValues[index.get()];
+    }
+    const VkClearValue *data() const { return mValues.data(); }
+
+  private:
+    gl::AttachmentArray<VkClearValue> mValues;
+};
+
 // The following are used to help track the state of an invalidated attachment.
 
 // This value indicates an "infinite" CmdSize that is not valid for comparing
@@ -946,8 +969,8 @@ class CommandBufferHelper : angle::NonCopyable
                          const gl::Rectangle &renderArea,
                          const RenderPassDesc &renderPassDesc,
                          const AttachmentOpsArray &renderPassAttachmentOps,
-                         const uint32_t depthStencilAttachmentIndex,
-                         const ClearValuesArray &clearValues,
+                         const PackedAttachmentIndex depthStencilAttachmentIndex,
+                         const PackedClearValuesArray &clearValues,
                          CommandBuffer **commandBufferOut);
 
     void endRenderPass(ContextVk *contextVk);
@@ -961,7 +984,7 @@ class CommandBufferHelper : angle::NonCopyable
 
     void endTransformFeedback();
 
-    void invalidateRenderPassColorAttachment(size_t attachmentIndex)
+    void invalidateRenderPassColorAttachment(PackedAttachmentIndex attachmentIndex)
     {
         ASSERT(mIsRenderPassCommandBuffer);
         SetBitField(mAttachmentOps[attachmentIndex].storeOp, VK_ATTACHMENT_STORE_OP_DONT_CARE);
@@ -1005,13 +1028,15 @@ class CommandBufferHelper : angle::NonCopyable
                    cmdCountInvalidated;
     }
 
-    void updateRenderPassAttachmentFinalLayout(size_t attachmentIndex, ImageLayout finalLayout)
+    void updateRenderPassAttachmentFinalLayout(PackedAttachmentIndex attachmentIndex,
+                                               ImageLayout finalLayout)
     {
         ASSERT(mIsRenderPassCommandBuffer);
         SetBitField(mAttachmentOps[attachmentIndex].finalLayout, finalLayout);
     }
 
-    void updateRenderPassColorClear(size_t colorIndex, const VkClearValue &colorClearValue);
+    void updateRenderPassColorClear(PackedAttachmentIndex colorIndex,
+                                    const VkClearValue &colorClearValue);
     void updateRenderPassDepthStencilClear(VkImageAspectFlags aspectFlags,
                                            const VkClearValue &clearValue);
 
@@ -1081,7 +1106,7 @@ class CommandBufferHelper : angle::NonCopyable
     AttachmentOpsArray mAttachmentOps;
     Framebuffer mFramebuffer;
     gl::Rectangle mRenderArea;
-    ClearValuesArray mClearValues;
+    PackedClearValuesArray mClearValues;
     bool mRenderPassStarted;
     bool mForceIndividualBarriers;
 
@@ -1103,7 +1128,7 @@ class CommandBufferHelper : angle::NonCopyable
     uint32_t mStencilCmdSizeDisabled;
 
     // Keep track of the depth/stencil attachment index
-    uint32_t mDepthStencilAttachmentIndex;
+    PackedAttachmentIndex mDepthStencilAttachmentIndex;
 
     // Tracks resources used in the command buffer.
     // For Buffers, we track the read/write access type so we can enable simuntaneous reads.
@@ -1111,8 +1136,6 @@ class CommandBufferHelper : angle::NonCopyable
     angle::FastIntegerMap<BufferAccess> mUsedBuffers;
     angle::FastIntegerSet mRenderPassUsedImages;
 };
-
-static constexpr uint32_t kInvalidAttachmentIndex = -1;
 
 // Imagine an image going through a few layout transitions:
 //

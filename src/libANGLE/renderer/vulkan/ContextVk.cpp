@@ -2516,7 +2516,8 @@ void ContextVk::optimizeRenderPassForPresent(VkFramebuffer framebufferHandle)
     // TODO(syoussefi):  We currently don't store the layout of the resolve attachments, so once
     // multisampled backbuffers are optimized to use resolve attachments, this information needs to
     // be stored somewhere.  http://anglebug.com/4836
-    mRenderPassCommands->updateRenderPassAttachmentFinalLayout(0, image.getCurrentImageLayout());
+    mRenderPassCommands->updateRenderPassAttachmentFinalLayout(vk::kAttachmentIndexZero,
+                                                               image.getCurrentImageLayout());
 }
 
 gl::GraphicsResetStatus ContextVk::getResetStatus()
@@ -4532,13 +4533,14 @@ angle::Result ContextVk::onImageWrite(VkImageAspectFlags aspectFlags,
     return angle::Result::Continue;
 }
 
-angle::Result ContextVk::beginNewRenderPass(const vk::Framebuffer &framebuffer,
-                                            const gl::Rectangle &renderArea,
-                                            const vk::RenderPassDesc &renderPassDesc,
-                                            const vk::AttachmentOpsArray &renderPassAttachmentOps,
-                                            const uint32_t depthStencilAttachmentIndex,
-                                            const vk::ClearValuesArray &clearValues,
-                                            vk::CommandBuffer **commandBufferOut)
+angle::Result ContextVk::beginNewRenderPass(
+    const vk::Framebuffer &framebuffer,
+    const gl::Rectangle &renderArea,
+    const vk::RenderPassDesc &renderPassDesc,
+    const vk::AttachmentOpsArray &renderPassAttachmentOps,
+    const vk::PackedAttachmentIndex depthStencilAttachmentIndex,
+    const vk::PackedClearValuesArray &clearValues,
+    vk::CommandBuffer **commandBufferOut)
 {
     // Next end any currently outstanding renderPass
     ANGLE_TRY(flushCommandsAndEndRenderPass());
