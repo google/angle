@@ -29,6 +29,28 @@ uint32_t MakeLengthOp(size_t length, spv::Op op)
 }
 }  // anonymous namespace
 
+void WriteSpirvHeader(std::vector<uint32_t> *blob, uint32_t idCount)
+{
+    // Header:
+    //
+    //  - Magic number
+    //  - Version (1.0)
+    //  - ANGLE's Generator number:
+    //     * 24 for tool id (higher 16 bits)
+    //     * 0 for tool version (lower 16 bits))
+    //  - Bound (idCount)
+    //  - 0 (reserved)
+    constexpr uint32_t kANGLEGeneratorId = 24;
+
+    ASSERT(blob->empty());
+
+    blob->push_back(spv::MagicNumber);
+    blob->push_back(0x00010000);
+    blob->push_back(kANGLEGeneratorId << 16 | 0);
+    blob->push_back(idCount);
+    blob->push_back(0x00000000);
+}
+
 void WriteNop(std::vector<uint32_t> *blob)
 {
     const size_t startSize = blob->size();

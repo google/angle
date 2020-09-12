@@ -212,11 +212,6 @@ angle::Result GlslangGetShaderSpirvCode(const GlslangErrorCallback &callback,
                                         const gl::ShaderMap<std::string> &shaderSources,
                                         gl::ShaderMap<SpirvBlob> *spirvBlobsOut);
 
-angle::Result GlslangCompileShaderOneOff(const GlslangErrorCallback &callback,
-                                         gl::ShaderType shaderType,
-                                         const std::string &shaderSource,
-                                         SpirvBlob *spirvBlobOut);
-
 }  // namespace rx
 
 #endif  // LIBANGLE_RENDERER_GLSLANG_WRAPPER_UTILS_H_

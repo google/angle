@@ -48,11 +48,6 @@ class GlslangWrapperVk
                                         const ShaderInterfaceVariableInfoMap &variableInfoMap,
                                         const SpirvBlob &initialSpirvBlob,
                                         SpirvBlob *shaderCodeOut);
-
-    static angle::Result CompileShaderOneOff(vk::Context *context,
-                                             gl::ShaderType shaderType,
-                                             const std::string &shaderSource,
-                                             SpirvBlob *spirvBlobOut);
 };
 }  // namespace rx
 

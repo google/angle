@@ -5130,23 +5130,4 @@ angle::Result GlslangGetShaderSpirvCode(const GlslangErrorCallback &callback,
     return angle::Result::Continue;
 }
 
-angle::Result GlslangCompileShaderOneOff(const GlslangErrorCallback &callback,
-                                         gl::ShaderType shaderType,
-                                         const std::string &shaderSource,
-                                         SpirvBlob *spirvBlobOut)
-{
-    const TBuiltInResource builtInResources(glslang::DefaultTBuiltInResource);
-
-    glslang::TShader shader(kShLanguageMap[shaderType]);
-    glslang::TProgram program;
-
-    ANGLE_TRY(
-        CompileShader(callback, builtInResources, shaderType, shaderSource, &shader, &program));
-    ANGLE_TRY(LinkProgram(callback, &program));
-
-    glslang::TIntermediate *intermediate = program.getIntermediate(kShLanguageMap[shaderType]);
-    glslang::GlslangToSpv(*intermediate, *spirvBlobOut);
-
-    return angle::Result::Continue;
-}
 }  // namespace rx

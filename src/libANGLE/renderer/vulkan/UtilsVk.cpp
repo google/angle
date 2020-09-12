@@ -9,10 +9,12 @@
 
 #include "libANGLE/renderer/vulkan/UtilsVk.h"
 
+#include "common/spirv/spirv_instruction_builder_autogen.h"
+
+#include "libANGLE/renderer/glslang_wrapper_utils.h"
 #include "libANGLE/renderer/vulkan/ContextVk.h"
 #include "libANGLE/renderer/vulkan/DisplayVk.h"
 #include "libANGLE/renderer/vulkan/FramebufferVk.h"
-#include "libANGLE/renderer/vulkan/GlslangWrapperVk.h"
 #include "libANGLE/renderer/vulkan/RenderTargetVk.h"
 #include "libANGLE/renderer/vulkan/RendererVk.h"
 #include "libANGLE/renderer/vulkan/vk_utils.h"
@@ -29,6 +31,8 @@ namespace OverlayCull_comp                  = vk::InternalShader::OverlayCull_co
 namespace OverlayDraw_comp                  = vk::InternalShader::OverlayDraw_comp;
 namespace ConvertIndexIndirectLineLoop_comp = vk::InternalShader::ConvertIndexIndirectLineLoop_comp;
 namespace GenerateMipmap_comp               = vk::InternalShader::GenerateMipmap_comp;
+
+namespace spirv = angle::spirv;
 
 namespace
 {
@@ -408,7 +412,9 @@ void SetStencilForShaderExport(ContextVk *contextVk, vk::GraphicsPipelineDesc *d
     desc->setStencilBackWriteMask(completeMask);
 }
 
-// Creates a shader that looks like the following, based on the number and types of unresolve
+namespace unresolve
+{
+// The unresolve shader looks like the following, based on the number and types of unresolve
 // attachments.
 //
 //     #version 450 core
@@ -431,78 +437,542 @@ void SetStencilForShaderExport(ContextVk *contextVk, vk::GraphicsPipelineDesc *d
 //         gl_FragDepth = subpassLoad(depthIn).x;
 //         gl_FragStencilRefARB = int(subpassLoad(stencilIn).x);
 //     }
-angle::Result MakeUnresolveFragShader(
-    vk::Context *context,
-    uint32_t colorAttachmentCount,
-    gl::DrawBuffersArray<UnresolveColorAttachmentType> &colorAttachmentTypes,
-    bool unresolveDepth,
-    bool unresolveStencil,
-    SpirvBlob *spirvBlobOut)
+//
+// This shader compiles to the following SPIR-V:
+//
+//           OpCapability Shader                              \
+//           OpCapability InputAttachment                      \
+//           OpCapability StencilExportEXT                      \   Preamble.  Mostly fixed, except
+//           OpExtension "SPV_EXT_shader_stencil_export"         \  OpEntryPoint should enumerate
+//      %1 = OpExtInstImport "GLSL.std.450"                       \ out variables, stencil export
+//           OpMemoryModel Logical GLSL450                        / is conditional to stencil
+//           OpEntryPoint Fragment %4 "main" %26 %27 %28 %29 %30 /  unresolve, and depth replacing
+//           OpExecutionMode %4 OriginUpperLeft                 /   conditional to depth unresolve.
+//           OpExecutionMode %4 DepthReplacing                 /
+//           OpSource GLSL 450                                /
+//
+//           OpName %4 "main"              \
+//           OpName %26 "colorOut0"         \
+//           OpName %27 "colorOut1"          \
+//           OpName %28 "colorOut2"           \
+//           OpName %29 "gl_FragDepth"         \ Debug information.  Not generated here.
+//           OpName %30 "gl_FragStencilRefARB" /
+//           OpName %31 "colorIn0"            /
+//           OpName %32 "colorIn1"           /
+//           OpName %33 "colorIn2"          /
+//           OpName %34 "depthIn"          /
+//           OpName %35 "stencilIn"       /
+//
+//           OpDecorate %26 Location 0      \
+//           OpDecorate %27 Location 1       \ Location decoration of out variables.
+//           OpDecorate %28 Location 2       /
+//
+//           OpDecorate %29 BuiltIn FragDepth          \ Builtin outputs, conditional to depth
+//           OpDecorate %30 BuiltIn FragStencilRefEXT  / and stencil unresolve.
+//
+//           OpDecorate %31 DescriptorSet 0        \
+//           OpDecorate %31 Binding 0               \
+//           OpDecorate %31 InputAttachmentIndex 0   \
+//           OpDecorate %32 DescriptorSet 0           \
+//           OpDecorate %32 Binding 1                  \
+//           OpDecorate %32 InputAttachmentIndex 1      \
+//           OpDecorate %33 DescriptorSet 0              \  set, binding and input_attachment
+//           OpDecorate %33 Binding 2                     \ decorations of the subpassInput
+//           OpDecorate %33 InputAttachmentIndex 2        / variables.
+//           OpDecorate %34 DescriptorSet 0              /
+//           OpDecorate %34 Binding 3                   /
+//           OpDecorate %34 InputAttachmentIndex 3     /
+//           OpDecorate %35 DescriptorSet 0           /
+//           OpDecorate %35 Binding 4                /
+//           OpDecorate %35 InputAttachmentIndex 3  /
+//
+//      %2 = OpTypeVoid         \ Type of main().  Fixed.
+//      %3 = OpTypeFunction %2  /
+//
+//      %6 = OpTypeFloat 32                             \
+//      %7 = OpTypeVector %6 4                           \
+//      %8 = OpTypePointer Output %7                      \ Type declaration for "out vec4"
+//      %9 = OpTypeImage %6 SubpassData 0 0 0 2 Unknown   / and "subpassInput".  Fixed.
+//     %10 = OpTypePointer UniformConstant %9            /
+//
+//     %11 = OpTypeInt 32 1                              \
+//     %12 = OpTypeVector %11 4                           \
+//     %13 = OpTypePointer Output %12                      \ Type declaration for "out ivec4"
+//     %14 = OpTypeImage %11 SubpassData 0 0 0 2 Unknown   / and "isubpassInput".  Fixed.
+//     %15 = OpTypePointer UniformConstant %14            /
+//
+//     %16 = OpTypeInt 32 0                              \
+//     %17 = OpTypeVector %16 4                           \
+//     %18 = OpTypePointer Output %17                      \ Type declaration for "out uvec4"
+//     %19 = OpTypeImage %16 SubpassData 0 0 0 2 Unknown   / and "usubpassInput".  Fixed.
+//     %20 = OpTypePointer UniformConstant %19            /
+//
+//     %21 = OpTypePointer Output %6         \ Type declaraions for depth and stencil. Fixed.
+//     %22 = OpTypePointer Output %11        /
+//
+//     %23 = OpConstant %11 0                \
+//     %24 = OpTypeVector %11 2               \ ivec2(0) for OpImageRead.  subpassLoad
+//     %25 = OpConstantComposite %22 %21 %21  / doesn't require coordinates.  Fixed.
+//
+//     %26 = OpVariable %8 Output            \
+//     %27 = OpVariable %13 Output            \
+//     %28 = OpVariable %18 Output             \
+//     %29 = OpVariable %21 Output              \
+//     %30 = OpVariable %22 Output               \ Actual "out" and "*subpassInput"
+//     %31 = OpVariable %10 UniformConstant      / variable declarations.
+//     %32 = OpVariable %15 UniformConstant     /
+//     %33 = OpVariable %20 UniformConstant    /
+//     %34 = OpVariable %10 UniformConstant   /
+//     %35 = OpVariable %20 UniformConstant  /
+//
+//      %4 = OpFunction %2 None %3   \ Top of main().  Fixed.
+//      %5 = OpLabel                 /
+//
+//     %36 = OpLoad %9 %31           \
+//     %37 = OpImageRead %7 %36 %23   \ colorOut0 = subpassLoad(colorIn0);
+//           OpStore %26 %37          /
+//
+//     %38 = OpLoad %14 %32          \
+//     %39 = OpImageRead %12 %38 %23  \ colorOut1 = subpassLoad(colorIn1);
+//           OpStore %27 %39          /
+//
+//     %40 = OpLoad %19 %33          \
+//     %41 = OpImageRead %17 %40 %23  \ colorOut2 = subpassLoad(colorIn2);
+//           OpStore %28 %41          /
+//
+//     %42 = OpLoad %9 %34              \
+//     %43 = OpImageRead %7 %42 %23      \ gl_FragDepth = subpassLoad(depthIn).x;
+//     %44 = OpCompositeExtract %6 %43 0 /
+//           OpStore %29 %44            /
+//
+//     %45 = OpLoad %19 %35              \
+//     %46 = OpImageRead %17 %45 %23      \
+//     %47 = OpCompositeExtract %16 %46 0  \ gl_FragStencilRefARB = int(subpassLoad(stencilIn).x);
+//     %48 = OpBitcast %11 %47             /
+//           OpStore %30 %48              /
+//
+//           OpReturn           \ Bottom of main().  Fixed.
+//           OpFunctionEnd      /
+//
+// What makes the generation of this shader manageable is that the majority of it is constant
+// between the different variations of the shader.  The rest are repeating patterns with different
+// ids or indices.
+
+enum
 {
-    std::ostringstream source;
+    // main() ids
+    kIdExtInstImport = 1,
+    kIdVoid,
+    kIdMainType,
+    kIdMain,
+    kIdMainLabel,
 
-    source << "#version 450 core\n";
+    // Types for "out vec4" and "subpassInput"
+    kIdFloatType,
+    kIdFloat4Type,
+    kIdFloat4OutType,
+    kIdFloatSubpassImageType,
+    kIdFloatSubpassInputType,
 
+    // Types for "out ivec4" and "isubpassInput"
+    kIdSIntType,
+    kIdSInt4Type,
+    kIdSInt4OutType,
+    kIdSIntSubpassImageType,
+    kIdSIntSubpassInputType,
+
+    // Types for "out uvec4" and "usubpassInput"
+    kIdUIntType,
+    kIdUInt4Type,
+    kIdUInt4OutType,
+    kIdUIntSubpassImageType,
+    kIdUIntSubpassInputType,
+
+    // Types for gl_FragDepth && gl_FragStencilRefARB
+    kIdFloatOutType,
+    kIdSIntOutType,
+
+    // ivec2(0) constant
+    kIdSIntZero,
+    kIdSInt2Type,
+    kIdSInt2Zero,
+
+    // Output variable ids
+    kIdColor0Out,
+    kIdDepthOut = kIdColor0Out + gl::IMPLEMENTATION_MAX_DRAW_BUFFERS,
+    kIdStencilOut,
+
+    // Input variable ids
+    kIdColor0In,
+    kIdDepthIn = kIdColor0In + gl::IMPLEMENTATION_MAX_DRAW_BUFFERS,
+    kIdStencilIn,
+
+    // Ids for temp variables
+    kIdColor0Load,
+    // 2 temp ids per color unresolve
+    kIdDepthLoad = kIdColor0Load + gl::IMPLEMENTATION_MAX_DRAW_BUFFERS * 2,
+    // 3 temp ids for depth unresolve
+    kIdStencilLoad = kIdDepthLoad + 3,
+    // Total number of ids used
+    // 4 temp ids for stencil unresolve
+    kIdCount = kIdStencilLoad + 4,
+};
+
+void InsertPreamble(uint32_t colorAttachmentCount,
+                    bool unresolveDepth,
+                    bool unresolveStencil,
+                    SpirvBlob *blobOut)
+{
+    spirv::WriteCapability(blobOut, spv::CapabilityShader);
+    spirv::WriteCapability(blobOut, spv::CapabilityInputAttachment);
     if (unresolveStencil)
     {
-        source << "#extension GL_ARB_shader_stencil_export : require\n";
+        spirv::WriteCapability(blobOut, spv::CapabilityStencilExportEXT);
+        spirv::WriteExtension(blobOut, "SPV_EXT_shader_stencil_export");
     }
+    // OpExtInstImport is actually not needed by this shader.  We don't use any instructions from
+    // GLSL.std.450.
+    spirv::WriteMemoryModel(blobOut, spv::AddressingModelLogical, spv::MemoryModelGLSL450);
 
-    for (uint32_t attachmentIndex = 0; attachmentIndex < colorAttachmentCount; ++attachmentIndex)
+    // Create the list of entry point ids, including only the out variables.
+    spirv::IdRefList entryPointIds;
+    for (uint32_t colorIndex = 0; colorIndex < colorAttachmentCount; ++colorIndex)
     {
-        const UnresolveColorAttachmentType type = colorAttachmentTypes[attachmentIndex];
-        ASSERT(type != kUnresolveTypeUnused);
-
-        const char *prefix =
-            type == kUnresolveTypeUint ? "u" : type == kUnresolveTypeSint ? "i" : "";
-
-        source << "layout(location=" << attachmentIndex << ") out " << prefix << "vec4 colorOut"
-               << attachmentIndex << ";\n";
-        source << "layout(input_attachment_index=" << attachmentIndex
-               << ", set=" << DescriptorSetIndex::InternalShader << ", binding=" << attachmentIndex
-               << ") uniform " << prefix << "subpassInput colorIn" << attachmentIndex << ";\n";
+        entryPointIds.push_back(spirv::IdRef(kIdColor0Out + colorIndex));
     }
-
-    const uint32_t depthStencilInputIndex = colorAttachmentCount;
-    uint32_t depthStencilBindingIndex     = colorAttachmentCount;
     if (unresolveDepth)
     {
-        source << "layout(input_attachment_index=" << depthStencilInputIndex
-               << ", set=" << DescriptorSetIndex::InternalShader
-               << ", binding=" << depthStencilBindingIndex << ") uniform subpassInput depthIn;\n";
+        entryPointIds.push_back(spirv::IdRef(kIdDepthOut));
+    }
+    if (unresolveStencil)
+    {
+        entryPointIds.push_back(spirv::IdRef(kIdStencilOut));
+    }
+    spirv::WriteEntryPoint(blobOut, spv::ExecutionModelFragment, spirv::IdRef(kIdMain), "main",
+                           entryPointIds);
+
+    spirv::WriteExecutionMode(blobOut, spirv::IdRef(kIdMain), spv::ExecutionModeOriginUpperLeft);
+    if (unresolveDepth)
+    {
+        spirv::WriteExecutionMode(blobOut, spirv::IdRef(kIdMain), spv::ExecutionModeDepthReplacing);
+    }
+    spirv::WriteSource(blobOut, spv::SourceLanguageGLSL, spirv::LiteralInteger(450), nullptr,
+                       nullptr);
+}
+
+void InsertInputDecorations(spirv::IdRef id,
+                            uint32_t attachmentIndex,
+                            uint32_t binding,
+                            SpirvBlob *blobOut)
+{
+    spirv::WriteDecorate(blobOut, id, spv::DecorationDescriptorSet,
+                         {spirv::LiteralInteger(DescriptorSetIndex::InternalShader)});
+    spirv::WriteDecorate(blobOut, id, spv::DecorationBinding, {spirv::LiteralInteger(binding)});
+    spirv::WriteDecorate(blobOut, id, spv::DecorationInputAttachmentIndex,
+                         {spirv::LiteralInteger(attachmentIndex)});
+}
+
+void InsertColorDecorations(uint32_t colorIndex, SpirvBlob *blobOut)
+{
+    // Decorate the output color attachment with Location
+    spirv::WriteDecorate(blobOut, spirv::IdRef(kIdColor0Out + colorIndex), spv::DecorationLocation,
+                         {spirv::LiteralInteger(colorIndex)});
+    // Decorate the subpasss input color attachment with Set/Binding/InputAttachmentIndex.
+    InsertInputDecorations(spirv::IdRef(kIdColor0In + colorIndex), colorIndex, colorIndex, blobOut);
+}
+
+void InsertDepthStencilDecorations(uint32_t depthStencilInputIndex,
+                                   uint32_t depthStencilBindingIndex,
+                                   bool unresolveDepth,
+                                   bool unresolveStencil,
+                                   SpirvBlob *blobOut)
+{
+    if (unresolveDepth)
+    {
+        // Decorate the output depth attachment with Location
+        spirv::WriteDecorate(blobOut, spirv::IdRef(kIdDepthOut), spv::DecorationBuiltIn,
+                             {spirv::LiteralInteger(spv::BuiltInFragDepth)});
+        // Decorate the subpasss input depth attachment with Set/Binding/InputAttachmentIndex.
+        InsertInputDecorations(spirv::IdRef(kIdDepthIn), depthStencilInputIndex,
+                               depthStencilBindingIndex, blobOut);
+        // Advance the binding.  Note that the depth/stencil attachment has the same input
+        // attachment index (it's the same attachment in the subpass), but different bindings (one
+        // aspect per image view).
         ++depthStencilBindingIndex;
     }
     if (unresolveStencil)
     {
-        source << "layout(input_attachment_index=" << depthStencilInputIndex
-               << ", set=" << DescriptorSetIndex::InternalShader
-               << ", binding=" << depthStencilBindingIndex
-               << ") uniform usubpassInput stencilIn;\n";
+        // Decorate the output stencil attachment with Location
+        spirv::WriteDecorate(blobOut, spirv::IdRef(kIdStencilOut), spv::DecorationBuiltIn,
+                             {spirv::LiteralInteger(spv::BuiltInFragStencilRefEXT)});
+        // Decorate the subpasss input stencil attachment with Set/Binding/InputAttachmentIndex.
+        InsertInputDecorations(spirv::IdRef(kIdStencilIn), depthStencilInputIndex,
+                               depthStencilBindingIndex, blobOut);
     }
+}
 
-    source << "void main(){\n";
+void InsertDerivativeTypes(spirv::IdRef baseId,
+                           spirv::IdRef vec4Id,
+                           spirv::IdRef vec4OutId,
+                           spirv::IdRef imageTypeId,
+                           spirv::IdRef inputTypeId,
+                           SpirvBlob *blobOut)
+{
+    spirv::WriteTypeVector(blobOut, vec4Id, baseId, spirv::LiteralInteger(4));
+    spirv::WriteTypePointer(blobOut, vec4OutId, spv::StorageClassOutput, vec4Id);
+    spirv::WriteTypeImage(blobOut, imageTypeId, baseId, spv::DimSubpassData,
+                          // Unused with subpass inputs
+                          spirv::LiteralInteger(0),
+                          // Not arrayed
+                          spirv::LiteralInteger(0),
+                          // Not multisampled
+                          spirv::LiteralInteger(0),
+                          // Used without a sampler
+                          spirv::LiteralInteger(2), spv::ImageFormatUnknown, nullptr);
+    spirv::WriteTypePointer(blobOut, inputTypeId, spv::StorageClassUniformConstant, imageTypeId);
+}
 
-    for (uint32_t attachmentIndex = 0; attachmentIndex < colorAttachmentCount; ++attachmentIndex)
+void InsertCommonTypes(SpirvBlob *blobOut)
+{
+    // Types to support main().
+    spirv::WriteTypeVoid(blobOut, spirv::IdRef(kIdVoid));
+    spirv::WriteTypeFunction(blobOut, spirv::IdRef(kIdMainType), spirv::IdRef(kIdVoid), {});
+
+    // Float types
+    spirv::WriteTypeFloat(blobOut, spirv::IdRef(kIdFloatType), spirv::LiteralInteger(32));
+    InsertDerivativeTypes(spirv::IdRef(kIdFloatType), spirv::IdRef(kIdFloat4Type),
+                          spirv::IdRef(kIdFloat4OutType), spirv::IdRef(kIdFloatSubpassImageType),
+                          spirv::IdRef(kIdFloatSubpassInputType), blobOut);
+
+    // Int types
+    spirv::WriteTypeInt(blobOut, spirv::IdRef(kIdSIntType), spirv::LiteralInteger(32),
+                        spirv::LiteralInteger(1));
+    InsertDerivativeTypes(spirv::IdRef(kIdSIntType), spirv::IdRef(kIdSInt4Type),
+                          spirv::IdRef(kIdSInt4OutType), spirv::IdRef(kIdSIntSubpassImageType),
+                          spirv::IdRef(kIdSIntSubpassInputType), blobOut);
+
+    // Unsigned int types
+    spirv::WriteTypeInt(blobOut, spirv::IdRef(kIdUIntType), spirv::LiteralInteger(32),
+                        spirv::LiteralInteger(0));
+    InsertDerivativeTypes(spirv::IdRef(kIdUIntType), spirv::IdRef(kIdUInt4Type),
+                          spirv::IdRef(kIdUInt4OutType), spirv::IdRef(kIdUIntSubpassImageType),
+                          spirv::IdRef(kIdUIntSubpassInputType), blobOut);
+
+    // Types to support depth/stencil
+    spirv::WriteTypePointer(blobOut, spirv::IdRef(kIdFloatOutType), spv::StorageClassOutput,
+                            spirv::IdRef(kIdFloatType));
+    spirv::WriteTypePointer(blobOut, spirv::IdRef(kIdSIntOutType), spv::StorageClassOutput,
+                            spirv::IdRef(kIdSIntType));
+
+    // Constants used to load from subpass inputs
+    spirv::WriteConstant(blobOut, spirv::IdRef(kIdSIntType), spirv::IdRef(kIdSIntZero),
+                         spirv::LiteralInteger(0));
+    spirv::WriteTypeVector(blobOut, spirv::IdRef(kIdSInt2Type), spirv::IdRef(kIdSIntType),
+                           spirv::LiteralInteger(2));
+    spirv::WriteConstantComposite(blobOut, spirv::IdRef(kIdSInt2Type), spirv::IdRef(kIdSInt2Zero),
+                                  {spirv::IdRef(kIdSIntZero), spirv::IdRef(kIdSIntZero)});
+}
+
+void InsertVariableDecl(spirv::IdRef outType,
+                        spirv::IdRef outId,
+                        spirv::IdRef inType,
+                        spirv::IdRef inId,
+                        SpirvBlob *blobOut)
+{
+    // Declare both the output and subpass input variables.
+    spirv::WriteVariable(blobOut, outType, outId, spv::StorageClassOutput, nullptr);
+    spirv::WriteVariable(blobOut, inType, inId, spv::StorageClassUniformConstant, nullptr);
+}
+
+void InsertColorVariableDecl(uint32_t colorIndex,
+                             UnresolveColorAttachmentType type,
+                             SpirvBlob *blobOut)
+{
+    // Find the correct types for color variable declarations.
+    spirv::IdRef outType(kIdFloat4OutType);
+    spirv::IdRef outId(kIdColor0Out + colorIndex);
+    spirv::IdRef inType(kIdFloatSubpassInputType);
+    spirv::IdRef inId(kIdColor0In + colorIndex);
+    switch (type)
     {
-        source << "colorOut" << attachmentIndex << " = subpassLoad(colorIn" << attachmentIndex
-               << ");\n";
+        case kUnresolveTypeSint:
+            outType = spirv::IdRef(kIdSInt4OutType);
+            inType  = spirv::IdRef(kIdSIntSubpassInputType);
+            break;
+        case kUnresolveTypeUint:
+            outType = spirv::IdRef(kIdUInt4OutType);
+            inType  = spirv::IdRef(kIdUIntSubpassInputType);
+            break;
+        default:
+            break;
     }
+    InsertVariableDecl(outType, outId, inType, inId, blobOut);
+}
 
+void InsertDepthStencilVariableDecl(bool unresolveDepth, bool unresolveStencil, SpirvBlob *blobOut)
+{
     if (unresolveDepth)
     {
-        source << "gl_FragDepth = subpassLoad(depthIn).x;\n";
+        InsertVariableDecl(spirv::IdRef(kIdFloatOutType), spirv::IdRef(kIdDepthOut),
+                           spirv::IdRef(kIdFloatSubpassInputType), spirv::IdRef(kIdDepthIn),
+                           blobOut);
     }
-
     if (unresolveStencil)
     {
-        source << "gl_FragStencilRefARB = int(subpassLoad(stencilIn).x);\n";
+        InsertVariableDecl(spirv::IdRef(kIdSIntOutType), spirv::IdRef(kIdStencilOut),
+                           spirv::IdRef(kIdUIntSubpassInputType), spirv::IdRef(kIdStencilIn),
+                           blobOut);
+    }
+}
+
+void InsertTopOfMain(SpirvBlob *blobOut)
+{
+    spirv::WriteFunction(blobOut, spirv::IdRef(kIdVoid), spirv::IdRef(kIdMain),
+                         spv::FunctionControlMaskNone, spirv::IdRef(kIdMainType));
+    spirv::WriteLabel(blobOut, spirv::IdRef(kIdMainLabel));
+}
+
+void InsertColorUnresolveLoadStore(uint32_t colorIndex,
+                                   UnresolveColorAttachmentType type,
+                                   SpirvBlob *blobOut)
+{
+    spirv::IdRef loadResult(kIdColor0Load + colorIndex * 2);
+    spirv::IdRef imageReadResult(loadResult + 1);
+
+    // Find the correct types for load/store.
+    spirv::IdRef loadType(kIdFloatSubpassImageType);
+    spirv::IdRef readType(kIdFloat4Type);
+    spirv::IdRef inId(kIdColor0In + colorIndex);
+    spirv::IdRef outId(kIdColor0Out + colorIndex);
+    switch (type)
+    {
+        case kUnresolveTypeSint:
+            loadType = spirv::IdRef(kIdSIntSubpassImageType);
+            readType = spirv::IdRef(kIdSInt4Type);
+            break;
+        case kUnresolveTypeUint:
+            loadType = spirv::IdRef(kIdUIntSubpassImageType);
+            readType = spirv::IdRef(kIdUInt4Type);
+            break;
+        default:
+            break;
     }
 
-    source << "}\n";
-
-    return GlslangWrapperVk::CompileShaderOneOff(context, gl::ShaderType::Fragment, source.str(),
-                                                 spirvBlobOut);
+    // Load the subpass input image, read from it, and store in output.
+    spirv::WriteLoad(blobOut, loadType, loadResult, inId, nullptr);
+    spirv::WriteImageRead(blobOut, readType, imageReadResult, loadResult,
+                          spirv::IdRef(kIdSInt2Zero), nullptr, {});
+    spirv::WriteStore(blobOut, outId, imageReadResult, nullptr);
 }
+
+void InsertDepthStencilUnresolveLoadStore(bool unresolveDepth,
+                                          bool unresolveStencil,
+                                          SpirvBlob *blobOut)
+{
+    if (unresolveDepth)
+    {
+        spirv::IdRef loadResult(kIdDepthLoad);
+        spirv::IdRef imageReadResult(loadResult + 1);
+        spirv::IdRef extractResult(imageReadResult + 1);
+
+        spirv::IdRef loadType(kIdFloatSubpassImageType);
+        spirv::IdRef readType(kIdFloat4Type);
+        spirv::IdRef inId(kIdDepthIn);
+        spirv::IdRef outId(kIdDepthOut);
+
+        // Load the subpass input image, read from it, select .x, and store in output.
+        spirv::WriteLoad(blobOut, loadType, loadResult, inId, nullptr);
+        spirv::WriteImageRead(blobOut, readType, imageReadResult, loadResult,
+                              spirv::IdRef(kIdSInt2Zero), nullptr, {});
+        spirv::WriteCompositeExtract(blobOut, spirv::IdRef(kIdFloatType), extractResult,
+                                     imageReadResult, {spirv::LiteralInteger(0)});
+        spirv::WriteStore(blobOut, outId, extractResult, nullptr);
+    }
+    if (unresolveStencil)
+    {
+        spirv::IdRef loadResult(kIdStencilLoad);
+        spirv::IdRef imageReadResult(loadResult + 1);
+        spirv::IdRef extractResult(imageReadResult + 1);
+        spirv::IdRef bitcastResult(extractResult + 1);
+
+        spirv::IdRef loadType(kIdUIntSubpassImageType);
+        spirv::IdRef readType(kIdUInt4Type);
+        spirv::IdRef inId(kIdStencilIn);
+        spirv::IdRef outId(kIdStencilOut);
+
+        // Load the subpass input image, read from it, select .x, and store in output.  There's a
+        // bitcast involved since the stencil subpass input has unsigned type, while
+        // gl_FragStencilRefARB is signed!
+        spirv::WriteLoad(blobOut, loadType, loadResult, inId, nullptr);
+        spirv::WriteImageRead(blobOut, readType, imageReadResult, loadResult,
+                              spirv::IdRef(kIdSInt2Zero), nullptr, {});
+        spirv::WriteCompositeExtract(blobOut, spirv::IdRef(kIdUIntType), extractResult,
+                                     imageReadResult, {spirv::LiteralInteger(0)});
+        spirv::WriteBitcast(blobOut, spirv::IdRef(kIdSIntType), bitcastResult, extractResult);
+        spirv::WriteStore(blobOut, outId, bitcastResult, nullptr);
+    }
+}
+
+void InsertBottomOfMain(SpirvBlob *blobOut)
+{
+    spirv::WriteReturn(blobOut);
+    spirv::WriteFunctionEnd(blobOut);
+}
+
+std::vector<uint32_t> MakeFragShader(
+    uint32_t colorAttachmentCount,
+    gl::DrawBuffersArray<UnresolveColorAttachmentType> &colorAttachmentTypes,
+    bool unresolveDepth,
+    bool unresolveStencil)
+{
+    SpirvBlob code;
+
+    // Reserve a sensible amount of memory.  A single-attachment shader is 169 words.
+    code.reserve(169);
+
+    // Header
+    spirv::WriteSpirvHeader(&code, kIdCount);
+
+    // The preamble
+    InsertPreamble(colorAttachmentCount, unresolveDepth, unresolveStencil, &code);
+
+    // Color attachment decorations
+    for (uint32_t colorIndex = 0; colorIndex < colorAttachmentCount; ++colorIndex)
+    {
+        InsertColorDecorations(colorIndex, &code);
+    }
+
+    const uint32_t depthStencilInputIndex = colorAttachmentCount;
+    uint32_t depthStencilBindingIndex     = colorAttachmentCount;
+    InsertDepthStencilDecorations(depthStencilInputIndex, depthStencilBindingIndex, unresolveDepth,
+                                  unresolveStencil, &code);
+
+    // Common types
+    InsertCommonTypes(&code);
+
+    // Attachment declarations
+    for (uint32_t colorIndex = 0; colorIndex < colorAttachmentCount; ++colorIndex)
+    {
+        InsertColorVariableDecl(colorIndex, colorAttachmentTypes[colorIndex], &code);
+    }
+    InsertDepthStencilVariableDecl(unresolveDepth, unresolveStencil, &code);
+
+    // Top of main
+    InsertTopOfMain(&code);
+
+    // Load and store for each attachment
+    for (uint32_t colorIndex = 0; colorIndex < colorAttachmentCount; ++colorIndex)
+    {
+        InsertColorUnresolveLoadStore(colorIndex, colorAttachmentTypes[colorIndex], &code);
+    }
+    InsertDepthStencilUnresolveLoadStore(unresolveDepth, unresolveStencil, &code);
+
+    // Bottom of main
+    InsertBottomOfMain(&code);
+
+    return code;
+}
+}  // namespace unresolve
 
 angle::Result GetUnresolveFrag(
     vk::Context *context,
@@ -517,9 +987,10 @@ angle::Result GetUnresolveFrag(
         return angle::Result::Continue;
     }
 
-    SpirvBlob shaderCode;
-    ANGLE_TRY(MakeUnresolveFragShader(context, colorAttachmentCount, colorAttachmentTypes,
-                                      unresolveDepth, unresolveStencil, &shaderCode));
+    std::vector<uint32_t> shaderCode = unresolve::MakeFragShader(
+        colorAttachmentCount, colorAttachmentTypes, unresolveDepth, unresolveStencil);
+
+    ASSERT(spirv::Validate(shaderCode));
 
     // Create shader lazily. Access will need to be locked for multi-threading.
     return vk::InitShaderAndSerial(context, &shader->get(), shaderCode.data(),

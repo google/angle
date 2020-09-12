@@ -93,15 +93,4 @@ angle::Result GlslangWrapperVk::TransformSpirV(
         [context](GlslangError error) { return ErrorHandler(context, error); }, options,
         variableInfoMap, initialSpirvBlob, shaderCodeOut);
 }
-
-// static
-angle::Result GlslangWrapperVk::CompileShaderOneOff(vk::Context *context,
-                                                    gl::ShaderType shaderType,
-                                                    const std::string &shaderSource,
-                                                    SpirvBlob *spirvBlobOut)
-{
-    return GlslangCompileShaderOneOff(
-        [context](GlslangError error) { return ErrorHandler(context, error); }, shaderType,
-        shaderSource, spirvBlobOut);
-}
 }  // namespace rx
