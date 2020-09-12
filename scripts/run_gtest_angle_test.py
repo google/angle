@@ -82,10 +82,12 @@ def main():
     try:
         # Consider adding stdio control flags.
         if args.isolated_script_test_output:
-            extra_flags.append('--results-file=%s' % args.isolated_script_test_output)
+            extra_flags.append('--isolated-script-test-output=%s' %
+                               args.isolated_script_test_output)
 
         if args.isolated_script_test_perf_output:
-            extra_flags.append('--histogram-json-file=%s' % args.isolated_script_test_perf_output)
+            extra_flags.append('--isolated-script-test-perf-output=%s' %
+                               args.isolated_script_test_perf_output)
 
         if args.isolated_script_test_filter:
             filter_list = common.extract_filter_list(args.isolated_script_test_filter)
