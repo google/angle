@@ -1075,6 +1075,13 @@ bool TestSuite::finishProcess(ProcessInfo *processInfo)
         return false;
     }
 
+    if (!batchResults.results.empty())
+    {
+        const TestIdentifier &id = batchResults.results.begin()->first;
+        std::string config       = GetConfigNameFromTestIdentifier(id);
+        printf("Completed batch with config: %s\n", config.c_str());
+    }
+
     // Process results and print unexpected errors.
     for (const auto &resultIter : batchResults.results)
     {
@@ -1147,6 +1154,9 @@ int TestSuite::run()
         return RUN_ALL_TESTS();
     }
 
+    Timer totalRunTime;
+    totalRunTime.start();
+
     constexpr double kIdleMessageTimeout = 5.0;
 
     Timer messageTimer;
@@ -1157,7 +1167,7 @@ int TestSuite::run()
         bool progress = false;
 
         // Spawn a process if needed and possible.
-        while (static_cast<int>(mCurrentProcesses.size()) < mMaxProcesses && !mTestQueue.empty())
+        if (static_cast<int>(mCurrentProcesses.size()) < mMaxProcesses && !mTestQueue.empty())
         {
             std::vector<TestIdentifier> testsInBatch = mTestQueue.front();
             mTestQueue.pop();
@@ -1223,11 +1233,14 @@ int TestSuite::run()
         }
 
         // Sleep briefly and continue.
-        angle::Sleep(10);
+        angle::Sleep(100);
     }
 
     // Dump combined results.
     WriteOutputFiles(true, mTestResults, mResultsFile, mHistogramJsonFile, mTestSuiteName.c_str());
+
+    totalRunTime.stop();
+    printf("Tests completed in %lf seconds\n", totalRunTime.getElapsedTime());
 
     return printFailuresAndReturnCount() == 0;
 }
