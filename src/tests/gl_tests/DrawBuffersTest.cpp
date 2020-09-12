@@ -289,6 +289,51 @@ TEST_P(DrawBuffersTest, Gaps)
     glDeleteProgram(program);
 }
 
+// Test that blend works with gaps
+TEST_P(DrawBuffersTest, BlendWithGaps)
+{
+    ANGLE_SKIP_TEST_IF(!setupTest());
+
+    // Qualcomm driver crashes in the presence of VK_ATTACHMENT_UNUSED.
+    // http://anglebug.com/3423
+    ANGLE_SKIP_TEST_IF(IsVulkan() && IsAndroid());
+
+    // Fails on Intel Ubuntu 19.04 Mesa 19.0.2 Vulkan. http://anglebug.com/3616
+    ANGLE_SKIP_TEST_IF(IsLinux() && IsIntel() && IsVulkan());
+
+    glBindTexture(GL_TEXTURE_2D, mTextures[0]);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, mTextures[0], 0);
+
+    ASSERT_GL_NO_ERROR();
+
+    bool flags[8] = {false, true};
+
+    GLuint program;
+    setupMRTProgram(flags, &program);
+
+    const GLenum bufs[] = {GL_NONE, GL_COLOR_ATTACHMENT1};
+    setDrawBuffers(2, bufs);
+
+    // Draws green into attachment 1
+    drawQuad(program, positionAttrib(), 0.5);
+    verifyAttachment2D(1, mTextures[0], GL_TEXTURE_2D, 0);
+    ASSERT_GL_NO_ERROR();
+
+    // Clear with red
+    glClearColor(1.0, 0.0, 0.0, 1.0);
+    glClear(GL_COLOR_BUFFER_BIT);
+    verifyAttachment2DColor(1, mTextures[0], GL_TEXTURE_2D, 0, GLColor(255u, 0, 0, 255u));
+
+    // Draw green into attachment 1 again but with blending, expecting yellow
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_ONE, GL_ONE);
+    drawQuad(program, positionAttrib(), 0.5);
+    verifyAttachment2DColor(1, mTextures[0], GL_TEXTURE_2D, 0, GLColor(255u, 255u, 0, 255u));
+    ASSERT_GL_NO_ERROR();
+
+    glDeleteProgram(program);
+}
+
 // Test that clear works with gaps
 TEST_P(DrawBuffersTest, ClearWithGaps)
 {

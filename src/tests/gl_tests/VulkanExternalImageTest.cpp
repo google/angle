@@ -471,6 +471,12 @@ void RunTextureFormatCompatChromiumTest(bool useMemoryObjectFlags,
     helper.initialize(isSwiftshader, enableDebugLayers);
     for (const ImageFormatPair &format : kChromeFormats)
     {
+        // https://crbug.com/angleproject/5046
+        if (format.vkFormat == VK_FORMAT_R4G4B4A4_UNORM_PACK16 && IsIntel())
+        {
+            continue;
+        }
+
         if (!Traits::CanCreateImage(helper, format.vkFormat, VK_IMAGE_TYPE_2D,
                                     VK_IMAGE_TILING_OPTIMAL, createFlags, usageFlags))
         {

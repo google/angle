@@ -131,8 +131,6 @@ constexpr const char *kSkippedMessages[] = {
     "VUID-VkDeviceCreateInfo-pNext-pNext",
     "VUID-VkPipelineRasterizationStateCreateInfo-pNext-pNext",
     "VUID_Undefined",
-    // http://anglebug.com/4583
-    "VUID-VkGraphicsPipelineCreateInfo-blendEnable-02023",
     // https://issuetracker.google.com/issues/159493191
     "VUID-vkCmdDraw-None-02690",
     "VUID-vkCmdDrawIndexed-None-02690",

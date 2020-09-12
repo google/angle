@@ -291,9 +291,24 @@ bool HasFullTextureFormatSupport(RendererVk *renderer, VkFormat vkFormat)
     constexpr uint32_t kBitsColor = VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT |
                                     VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT |
                                     VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT;
+
+    // In OpenGL ES, all renderable formats except 32-bit floating-point support blending.
+    // 32-bit floating-point case validation is handled by ANGLE's frontend.
+    uint32_t kBitsColorFull = kBitsColor;
+    switch (vkFormat)
+    {
+        case VK_FORMAT_R32_SFLOAT:
+        case VK_FORMAT_R32G32_SFLOAT:
+        case VK_FORMAT_R32G32B32A32_SFLOAT:
+            break;
+        default:
+            kBitsColorFull |= VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BLEND_BIT;
+            break;
+    }
+
     constexpr uint32_t kBitsDepth = VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT;
 
-    return renderer->hasImageFormatFeatureBits(vkFormat, kBitsColor) ||
+    return renderer->hasImageFormatFeatureBits(vkFormat, kBitsColorFull) ||
            renderer->hasImageFormatFeatureBits(vkFormat, kBitsDepth);
 }
 
