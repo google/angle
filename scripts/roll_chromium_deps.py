@@ -43,6 +43,8 @@ ANGLE_CHROMIUM_DEPS = [
     'third_party/zlib',
     'tools/clang',
     'tools/clang/dsymutil',
+    'tools/luci-go',
+    'tools/mb',
     'tools/md_browser',
     'tools/memory',
 ]

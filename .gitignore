@@ -67,6 +67,8 @@
 /tools/flex-bison/windows/msys*.dll
 /tools/glslang/glslang_validator
 /tools/glslang/glslang_validator.exe
+/tools/luci-go
+/tools/mb
 /tools/md_browser
 /tools/memory
 angle_debug.txt

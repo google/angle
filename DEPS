@@ -98,6 +98,11 @@ vars = {
   # the commit queue can handle CLs rolling catapult
   # and whatever else without interference from each other.
   'catapult_revision': '1b3fb455bf1849f1e6187e1eaeaef32b9f30d3c5',
+
+  # Three lines of non-changing comments so that
+  # the commit queue can handle CLs rolling luci-go
+  # and whatever else without interference from each other.
+  'luci_go': 'git_revision:b022173f8069cf8001d4cf2a87ce7c5f0eae220f',
 }
 
 deps = {
@@ -287,6 +292,30 @@ deps = {
     ],
     'condition': 'checkout_mac and not build_with_chromium',
     'dep_type': 'cipd',
+  },
+
+  'tools/luci-go': {
+    'packages': [
+      {
+        'package': 'infra/tools/luci/isolate/${{platform}}',
+        'version': Var('luci_go'),
+      },
+      {
+        'package': 'infra/tools/luci/isolated/${{platform}}',
+        'version': Var('luci_go'),
+      },
+      {
+        'package': 'infra/tools/luci/swarming/${{platform}}',
+        'version': Var('luci_go'),
+      },
+    ],
+    'condition': 'not build_with_chromium',
+    'dep_type': 'cipd',
+  },
+
+  'tools/mb': {
+    'url': '{chromium_git}/chromium/src/tools/mb@8d1fa6cbe849040109a857557d1dec6915d4fabe',
+    'condition': 'not build_with_chromium',
   },
 
   'tools/md_browser': {
