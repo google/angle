@@ -62,7 +62,8 @@ namespace
     PROC(DrawIndexed)                    \
     PROC(DrawIndexedInstanced)           \
     PROC(DrawIndexedInstancedBaseVertex) \
-    PROC(SetVisibilityResultMode)
+    PROC(SetVisibilityResultMode)        \
+    PROC(UseResource)
 
 #define ANGLE_MTL_TYPE_DECL(CMD) CMD,
 
@@ -323,6 +324,25 @@ void SetVisibilityResultModeCmd(id<MTLRenderCommandEncoder> encoder,
     MTLVisibilityResultMode mode = stream->fetch<MTLVisibilityResultMode>();
     size_t offset                = stream->fetch<size_t>();
     [encoder setVisibilityResultMode:mode offset:offset];
+}
+
+void UseResourceCmd(id<MTLRenderCommandEncoder> encoder, IntermediateCommandStream *stream)
+{
+    id<MTLResource> resource = stream->fetch<id<MTLResource>>();
+    MTLResourceUsage usage   = stream->fetch<MTLResourceUsage>();
+    mtl::RenderStages stages = stream->fetch<mtl::RenderStages>();
+    ANGLE_UNUSED_VARIABLE(stages);
+#if defined(__IPHONE_13_0) || defined(__MAC_10_15)
+    if (ANGLE_APPLE_AVAILABLE_XCI(10.15, 13.0, 13.0))
+    {
+        [encoder useResource:resource usage:usage stages:stages];
+    }
+    else
+#endif
+    {
+        [encoder useResource:resource usage:usage];
+    }
+    [resource ANGLE_MTL_RELEASE];
 }
 
 // Command encoder mapping
@@ -1419,6 +1439,25 @@ RenderCommandEncoder &RenderCommandEncoder::setVisibilityResultMode(MTLVisibilit
     mStateCache.visibilityResultBufferOffset = offset;
 
     mCommands.push(CmdType::SetVisibilityResultMode).push(mode).push(offset);
+    return *this;
+}
+
+RenderCommandEncoder &RenderCommandEncoder::useResource(const BufferRef &resource,
+                                                        MTLResourceUsage usage,
+                                                        mtl::RenderStages states)
+{
+    if (!resource)
+    {
+        return *this;
+    }
+
+    cmdBuffer().setReadDependency(resource);
+
+    mCommands.push(CmdType::UseResource)
+        .push([resource->get() ANGLE_MTL_RETAIN])
+        .push(usage)
+        .push(states);
+
     return *this;
 }
 

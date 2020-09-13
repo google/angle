@@ -521,21 +521,20 @@ void DisplayMtl::ensureCapsInitialized() const
     mNativeCaps.fragmentMediumpInt.setTwosComplementInt(32);
     mNativeCaps.fragmentLowpInt.setTwosComplementInt(32);
 
-    GLuint maxUniformVectors = mtl::kDefaultUniformsMaxSize / (sizeof(GLfloat) * 4);
+    GLuint maxDefaultUniformVectors = mtl::kDefaultUniformsMaxSize / (sizeof(GLfloat) * 4);
 
-    const GLuint maxUniformComponents = maxUniformVectors * 4;
+    const GLuint maxDefaultUniformComponents = maxDefaultUniformVectors * 4;
 
     // Uniforms are implemented using a uniform buffer, so the max number of uniforms we can
     // support is the max buffer range divided by the size of a single uniform (4X float).
-    mNativeCaps.maxVertexUniformVectors                              = maxUniformVectors;
-    mNativeCaps.maxShaderUniformComponents[gl::ShaderType::Vertex]   = maxUniformComponents;
-    mNativeCaps.maxFragmentUniformVectors                            = maxUniformVectors;
-    mNativeCaps.maxShaderUniformComponents[gl::ShaderType::Fragment] = maxUniformComponents;
+    mNativeCaps.maxVertexUniformVectors                              = maxDefaultUniformVectors;
+    mNativeCaps.maxShaderUniformComponents[gl::ShaderType::Vertex]   = maxDefaultUniformComponents;
+    mNativeCaps.maxFragmentUniformVectors                            = maxDefaultUniformVectors;
+    mNativeCaps.maxShaderUniformComponents[gl::ShaderType::Fragment] = maxDefaultUniformComponents;
 
-    // NOTE(hqle): support UBO (ES 3.0 feature)
-    mNativeCaps.maxShaderUniformBlocks[gl::ShaderType::Vertex]   = 0;
-    mNativeCaps.maxShaderUniformBlocks[gl::ShaderType::Fragment] = 0;
-    mNativeCaps.maxCombinedUniformBlocks                         = 0;
+    mNativeCaps.maxShaderUniformBlocks[gl::ShaderType::Vertex]   = mtl::kMaxShaderUBOs;
+    mNativeCaps.maxShaderUniformBlocks[gl::ShaderType::Fragment] = mtl::kMaxShaderUBOs;
+    mNativeCaps.maxCombinedUniformBlocks                         = mtl::kMaxGLUBOBindings;
 
     // Note that we currently implement textures as combined image+samplers, so the limit is
     // the minimum of supported samplers and sampled images.
@@ -550,18 +549,20 @@ void DisplayMtl::ensureCapsInitialized() const
     mNativeCaps.maxCombinedShaderStorageBlocks                   = maxPerStageStorageBuffers;
 
     // Fill in additional limits for UBOs and SSBOs.
-    mNativeCaps.maxUniformBufferBindings     = 0;
-    mNativeCaps.maxUniformBlockSize          = 0;
-    mNativeCaps.uniformBufferOffsetAlignment = 0;
+    mNativeCaps.maxUniformBufferBindings = mNativeCaps.maxCombinedUniformBlocks;
+    mNativeCaps.maxUniformBlockSize      = mtl::kMaxUBOSize;  // Default according to GLES 3.0 spec.
+    mNativeCaps.uniformBufferOffsetAlignment = 1;
 
     mNativeCaps.maxShaderStorageBufferBindings     = 0;
     mNativeCaps.maxShaderStorageBlockSize          = 0;
     mNativeCaps.shaderStorageBufferOffsetAlignment = 0;
 
     // NOTE(hqle): support UBO
+    const uint32_t maxCombinedUniformComponents =
+        maxDefaultUniformComponents + mtl::kMaxUBOSize * mtl::kMaxShaderUBOs / 4;
     for (gl::ShaderType shaderType : gl::kAllGraphicsShaderTypes)
     {
-        mNativeCaps.maxCombinedShaderUniformComponents[shaderType] = maxUniformComponents;
+        mNativeCaps.maxCombinedShaderUniformComponents[shaderType] = maxCombinedUniformComponents;
     }
 
     mNativeCaps.maxCombinedShaderOutputResources = 0;

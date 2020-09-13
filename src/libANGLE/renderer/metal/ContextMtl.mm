@@ -22,6 +22,7 @@
 #include "libANGLE/renderer/metal/RenderTargetMtl.h"
 #include "libANGLE/renderer/metal/ShaderMtl.h"
 #include "libANGLE/renderer/metal/TextureMtl.h"
+#include "libANGLE/renderer/metal/TransformFeedbackMtl.h"
 #include "libANGLE/renderer/metal/VertexArrayMtl.h"
 #include "libANGLE/renderer/metal/mtl_command_buffer.h"
 #include "libANGLE/renderer/metal/mtl_format_utils.h"
@@ -795,7 +796,7 @@ angle::Result ContextMtl::syncState(const gl::Context *context,
                 // NOTE(hqle): ES 3.0 feature.
                 break;
             case gl::State::DIRTY_BIT_UNIFORM_BUFFER_BINDINGS:
-                // NOTE(hqle): ES 3.0 feature.
+                mDirtyBits.set(DIRTY_BIT_UNIFORM_BUFFERS_BINDING);
                 break;
             case gl::State::DIRTY_BIT_ATOMIC_COUNTER_BUFFER_BINDING:
                 break;
@@ -946,8 +947,7 @@ SyncImpl *ContextMtl::createSync()
 TransformFeedbackImpl *ContextMtl::createTransformFeedback(const gl::TransformFeedbackState &state)
 {
     // NOTE(hqle): ES 3.0
-    UNIMPLEMENTED();
-    return nullptr;
+    return new TransformFeedbackMtl(state);
 }
 
 // Sampler object creation
@@ -1644,8 +1644,10 @@ angle::Result ContextMtl::setupDraw(const gl::Context *context,
         ANGLE_TRY(startOcclusionQueryInRenderPass(mOcclusionQuery, false));
     }
 
-    Optional<mtl::RenderPipelineDesc> changedPipelineDesc;
-    ANGLE_TRY(checkIfPipelineChanged(context, mode, &changedPipelineDesc));
+    bool isPipelineDescChanged;
+    ANGLE_TRY(checkIfPipelineChanged(context, mode, &isPipelineDescChanged));
+
+    bool uniformBuffersDirty = false;
 
     for (size_t bit : mDirtyBits)
     {
@@ -1692,6 +1694,9 @@ angle::Result ContextMtl::setupDraw(const gl::Context *context,
             case DIRTY_BIT_RENDER_PIPELINE:
                 // Already handled. See checkIfPipelineChanged().
                 break;
+            case DIRTY_BIT_UNIFORM_BUFFERS_BINDING:
+                uniformBuffersDirty = true;
+                break;
             default:
                 UNREACHABLE();
                 break;
@@ -1700,7 +1705,8 @@ angle::Result ContextMtl::setupDraw(const gl::Context *context,
 
     mDirtyBits.reset();
 
-    ANGLE_TRY(mProgram->setupDraw(context, &mRenderEncoder, changedPipelineDesc, textureChanged));
+    ANGLE_TRY(mProgram->setupDraw(context, &mRenderEncoder, mRenderPipelineDesc,
+                                  isPipelineDescChanged, textureChanged, uniformBuffersDirty));
 
     if (mode == gl::PrimitiveMode::LineLoop)
     {
@@ -1892,10 +1898,9 @@ angle::Result ContextMtl::handleDirtyDepthBias(const gl::Context *context)
     return angle::Result::Continue;
 }
 
-angle::Result ContextMtl::checkIfPipelineChanged(
-    const gl::Context *context,
-    gl::PrimitiveMode primitiveMode,
-    Optional<mtl::RenderPipelineDesc> *changedPipelineDesc)
+angle::Result ContextMtl::checkIfPipelineChanged(const gl::Context *context,
+                                                 gl::PrimitiveMode primitiveMode,
+                                                 bool *isPipelineDescChanged)
 {
     ASSERT(mRenderEncoder.valid());
     mtl::PrimitiveTopologyClass topologyClass = mtl::GetPrimitiveTopologyClass(primitiveMode);
@@ -1920,9 +1925,9 @@ angle::Result ContextMtl::checkIfPipelineChanged(
 
         mRenderPipelineDesc.outputDescriptor.updateEnabledDrawBuffers(
             mDrawFramebuffer->getState().getEnabledDrawBuffers());
-
-        *changedPipelineDesc = mRenderPipelineDesc;
     }
+
+    *isPipelineDescChanged = rppChange;
 
     return angle::Result::Continue;
 }

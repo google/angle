@@ -78,9 +78,21 @@ spv::ExecutionModel ShaderTypeToSpvExecutionModel(gl::ShaderType shaderType)
 
 void BindBuffers(spirv_cross::CompilerMSL *compiler,
                  const spirv_cross::SmallVector<spirv_cross::Resource> &resources,
-                 gl::ShaderType shaderType)
+                 gl::ShaderType shaderType,
+                 const std::unordered_map<std::string, uint32_t> &uboOriginalBindings,
+                 std::array<uint32_t, kMaxGLUBOBindings> *uboBindingsRemapOut,
+                 bool *uboArgumentBufferUsed)
 {
     auto &compilerMsl = *compiler;
+
+    uint32_t totalUniformBufferSlots = 0;
+    struct UniformBufferVar
+    {
+        const char *name = nullptr;
+        spirv_cross::MSLResourceBinding resBinding;
+        uint32_t arraySize;
+    };
+    std::vector<UniformBufferVar> uniformBufferBindings;
 
     for (const spirv_cross::Resource &resource : resources)
     {
@@ -113,16 +125,33 @@ void BindBuffers(spirv_cross::CompilerMSL *compiler,
                 bindingPoint = mtl::kDriverUniformsBindingIndex;
                 break;
             case kGlslangDefaultUniformDescSet:
-                // NOTE(hqle): Properly handle transform feedbacks binding.
                 if (shaderType != gl::ShaderType::Vertex || resBinding.binding == 0)
                 {
                     bindingPoint = mtl::kDefaultUniformsBindingIndex;
                 }
                 else
                 {
-                    continue;
+                    // NOTE(hqle): support XFB buffer
                 }
                 break;
+            case kGlslangShaderResourceDescSet:
+            {
+                UniformBufferVar uboVar;
+                uboVar.name                       = resource.name.c_str();
+                uboVar.resBinding                 = resBinding;
+                const spirv_cross::SPIRType &type = compilerMsl.get_type_from_variable(resource.id);
+                if (!type.array.empty())
+                {
+                    uboVar.arraySize = type.array[0];
+                }
+                else
+                {
+                    uboVar.arraySize = 1;
+                }
+                totalUniformBufferSlots += uboVar.arraySize;
+                uniformBufferBindings.push_back(uboVar);
+            }
+                continue;
             default:
                 // We don't support this descriptor set.
                 continue;
@@ -132,6 +161,47 @@ void BindBuffers(spirv_cross::CompilerMSL *compiler,
 
         compilerMsl.add_msl_resource_binding(resBinding);
     }  // for (resources)
+
+    if (totalUniformBufferSlots == 0)
+    {
+        return;
+    }
+
+    // Remap the uniform buffers bindings. glslang allows uniform buffers array to use exactly
+    // one slot in the descriptor set. However, metal enforces that the uniform buffers array
+    // use (n) slots where n=array size.
+    uint32_t currentSlot         = 0;
+    uint32_t maxUBODiscreteSlots = kMaxShaderBuffers - kUBOArgumentBufferBindingIndex;
+
+    if (totalUniformBufferSlots > maxUBODiscreteSlots)
+    {
+        // If shader uses more than maxUBODiscreteSlots number of UBOs, encode them all into
+        // an argument buffer. Each buffer will be assigned [[id(n)]] attribute.
+        *uboArgumentBufferUsed = true;
+    }
+    else
+    {
+        // Use discrete buffer binding slot for UBOs which translates each slot to [[buffer(n)]]
+        *uboArgumentBufferUsed = false;
+        // Discrete buffer binding slot starts at kUBOArgumentBufferBindingIndex
+        currentSlot += kUBOArgumentBufferBindingIndex;
+    }
+
+    for (UniformBufferVar &uboVar : uniformBufferBindings)
+    {
+        spirv_cross::MSLResourceBinding &resBinding = uboVar.resBinding;
+        resBinding.msl_buffer                       = currentSlot;
+
+        uint32_t originalBinding = uboOriginalBindings.at(uboVar.name);
+
+        for (uint32_t i = 0; i < uboVar.arraySize; ++i, ++currentSlot)
+        {
+            // Use consecutive slot for member in array
+            uboBindingsRemapOut->at(originalBinding + i) = currentSlot;
+        }
+
+        compilerMsl.add_msl_resource_binding(resBinding);
+    }
 }
 
 void GetAssignedSamplerBindings(const spirv_cross::CompilerMSL &compilerMsl,
@@ -192,9 +262,10 @@ class SpirvToMslCompiler : public spirv_cross::CompilerMSL
   public:
     SpirvToMslCompiler(std::vector<uint32_t> &&spriv) : spirv_cross::CompilerMSL(spriv) {}
 
-    std::string compileEx(gl::ShaderType shaderType,
-                          const OriginalSamplerBindingMap &originalSamplerBindings,
-                          TranslatedShaderInfo *mslShaderInfoOut)
+    void compileEx(gl::ShaderType shaderType,
+                   const std::unordered_map<std::string, uint32_t> &uboOriginalBindings,
+                   const OriginalSamplerBindingMap &originalSamplerBindings,
+                   TranslatedShaderInfo *mslShaderInfoOut)
     {
         spirv_cross::CompilerMSL::Options compOpt;
 
@@ -220,22 +291,64 @@ class SpirvToMslCompiler : public spirv_cross::CompilerMSL
         // Tell spirv-cross to map default & driver uniform blocks as we want
         spirv_cross::ShaderResources mslRes = spirv_cross::CompilerMSL::get_shader_resources();
 
-        BindBuffers(this, mslRes.uniform_buffers, shaderType);
+        BindBuffers(this, mslRes.uniform_buffers, shaderType, uboOriginalBindings,
+                    &mslShaderInfoOut->actualUBOBindings, &mslShaderInfoOut->hasUBOArgumentBuffer);
+
+        if (mslShaderInfoOut->hasUBOArgumentBuffer)
+        {
+            // Enable argument buffer.
+            compOpt.argument_buffers = true;
+
+            // Force UBO argument buffer binding to start at kUBOArgumentBufferBindingIndex.
+            spirv_cross::MSLResourceBinding argBufferBinding = {};
+            argBufferBinding.stage    = ShaderTypeToSpvExecutionModel(shaderType);
+            argBufferBinding.desc_set = kGlslangShaderResourceDescSet;
+            argBufferBinding.binding =
+                spirv_cross::kArgumentBufferBinding;  // spirv-cross built-in binding.
+            argBufferBinding.msl_buffer = kUBOArgumentBufferBindingIndex;  // Actual binding.
+            spirv_cross::CompilerMSL::add_msl_resource_binding(argBufferBinding);
+
+            // Force discrete slot bindings for textures, default uniforms & driver uniforms
+            // instead of using argument buffer.
+            spirv_cross::CompilerMSL::add_discrete_descriptor_set(kGlslangTextureDescSet);
+            spirv_cross::CompilerMSL::add_discrete_descriptor_set(kGlslangDefaultUniformDescSet);
+            spirv_cross::CompilerMSL::add_discrete_descriptor_set(kGlslangDriverUniformsDescSet);
+        }
+        else
+        {
+            // Disable argument buffer generation for uniform buffers
+            compOpt.argument_buffers = false;
+        }
 
         spirv_cross::CompilerMSL::set_msl_options(compOpt);
 
         // Actual compilation
-        std::string translatedMsl = PostProcessTranslatedMsl(spirv_cross::CompilerMSL::compile());
+        mslShaderInfoOut->metalShaderSource =
+            PostProcessTranslatedMsl(spirv_cross::CompilerMSL::compile());
 
         // Retrieve automatic texture slot assignments
         GetAssignedSamplerBindings(*this, originalSamplerBindings,
                                    &mslShaderInfoOut->actualSamplerBindings);
-
-        return translatedMsl;
     }
 };
 
 }  // namespace
+
+void TranslatedShaderInfo::reset()
+{
+    metalShaderSource.clear();
+    metalLibrary         = nil;
+    hasUBOArgumentBuffer = false;
+    for (mtl::SamplerBinding &binding : actualSamplerBindings)
+    {
+        binding.textureBinding = mtl::kMaxShaderSamplers;
+    }
+
+    for (uint32_t &binding : actualUBOBindings)
+    {
+        binding = mtl::kMaxShaderBuffers;
+    }
+}
 
 void GlslangGetShaderSource(const gl::ProgramState &programState,
                             const gl::ProgramLinkedResources &resources,
@@ -285,9 +398,19 @@ angle::Result GlslangGetShaderSpirvCode(ErrorHandler *context,
 angle::Result SpirvCodeToMsl(Context *context,
                              const gl::ProgramState &programState,
                              gl::ShaderMap<std::vector<uint32_t>> *sprivShaderCode,
-                             gl::ShaderMap<TranslatedShaderInfo> *mslShaderInfoOut,
-                             gl::ShaderMap<std::string> *mslCodeOut)
+                             gl::ShaderMap<TranslatedShaderInfo> *mslShaderInfoOut)
 {
+    // Retrieve original uniform buffer bindings generated by front end. We will need to do a remap.
+    std::unordered_map<std::string, uint32_t> uboOriginalBindings;
+    const std::vector<gl::InterfaceBlock> &blocks = programState.getUniformBlocks();
+    for (uint32_t bufferIdx = 0; bufferIdx < blocks.size(); ++bufferIdx)
+    {
+        const gl::InterfaceBlock &block = blocks[bufferIdx];
+        if (!uboOriginalBindings.count(block.mappedName))
+        {
+            uboOriginalBindings[block.mappedName] = bufferIdx;
+        }
+    }
     // Retrieve original sampler bindings produced by front end.
     OriginalSamplerBindingMap originalSamplerBindings;
     const std::vector<gl::SamplerBinding> &samplerBindings = programState.getSamplerBindings();
@@ -311,14 +434,12 @@ angle::Result SpirvCodeToMsl(Context *context,
 
         // NOTE(hqle): spirv-cross uses exceptions to report error, what should we do here
         // in case of error?
-        std::string translatedMsl = compilerMsl.compileEx(shaderType, originalSamplerBindings,
-                                                          &mslShaderInfoOut->at(shaderType));
-        if (translatedMsl.size() == 0)
+        compilerMsl.compileEx(shaderType, uboOriginalBindings, originalSamplerBindings,
+                              &mslShaderInfoOut->at(shaderType));
+        if (mslShaderInfoOut->at(shaderType).metalShaderSource.empty())
         {
             ANGLE_MTL_CHECK(context, false, GL_INVALID_OPERATION);
         }
-
-        mslCodeOut->at(shaderType) = std::move(translatedMsl);
     }  // for (gl::ShaderType shaderType
 
     return angle::Result::Continue;

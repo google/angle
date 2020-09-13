@@ -63,6 +63,12 @@ IndexConversionBufferMtl::IndexConversionBufferMtl(ContextMtl *context,
       offset(offsetIn)
 {}
 
+// UniformConversionBufferMtl implementation
+UniformConversionBufferMtl::UniformConversionBufferMtl(ContextMtl *context, size_t offsetIn)
+    : ConversionBufferMtl(context, 0, mtl::kUniformBufferSettingOffsetMinAlignment),
+      offset(offsetIn)
+{}
+
 // VertexConversionBufferMtl implementation.
 VertexConversionBufferMtl::VertexConversionBufferMtl(ContextMtl *context,
                                                      angle::FormatID formatIDIn,
@@ -339,6 +345,20 @@ IndexConversionBufferMtl *BufferMtl::getIndexConversionBuffer(ContextMtl *contex
     return &mIndexConversionBuffers.back();
 }
 
+ConversionBufferMtl *BufferMtl::getUniformConversionBuffer(ContextMtl *context, size_t offset)
+{
+    for (UniformConversionBufferMtl &buffer : mUniformConversionBuffers)
+    {
+        if (buffer.offset == offset)
+        {
+            return &buffer;
+        }
+    }
+
+    mUniformConversionBuffers.emplace_back(context, offset);
+    return &mUniformConversionBuffers.back();
+}
+
 void BufferMtl::markConversionBuffersDirty()
 {
     for (VertexConversionBufferMtl &buffer : mVertexConversionBuffers)
@@ -354,12 +374,20 @@ void BufferMtl::markConversionBuffersDirty()
         buffer.convertedBuffer = nullptr;
         buffer.convertedOffset = 0;
     }
+
+    for (UniformConversionBufferMtl &buffer : mUniformConversionBuffers)
+    {
+        buffer.dirty           = true;
+        buffer.convertedBuffer = nullptr;
+        buffer.convertedOffset = 0;
+    }
 }
 
 void BufferMtl::clearConversionBuffers()
 {
     mVertexConversionBuffers.clear();
     mIndexConversionBuffers.clear();
+    mUniformConversionBuffers.clear();
 }
 
 angle::Result BufferMtl::setDataImpl(const gl::Context *context,

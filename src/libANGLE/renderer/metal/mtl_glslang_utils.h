@@ -28,8 +28,16 @@ struct SamplerBinding
 
 struct TranslatedShaderInfo
 {
+    void reset();
+
+    // Translated Metal source code
+    std::string metalShaderSource;
+    // Metal library compiled from source code above. Used by ProgramMtl.
+    AutoObjCPtr<id<MTLLibrary>> metalLibrary;
+
     std::array<SamplerBinding, kMaxGLSamplerBindings> actualSamplerBindings;
-    // NOTE(hqle): UBO, XFB bindings.
+    std::array<uint32_t, kMaxGLUBOBindings> actualUBOBindings;
+    bool hasUBOArgumentBuffer;
 };
 
 void GlslangGetShaderSource(const gl::ProgramState &programState,
@@ -48,8 +56,7 @@ angle::Result GlslangGetShaderSpirvCode(ErrorHandler *context,
 angle::Result SpirvCodeToMsl(Context *context,
                              const gl::ProgramState &programState,
                              gl::ShaderMap<std::vector<uint32_t>> *sprivShaderCode,
-                             gl::ShaderMap<TranslatedShaderInfo> *mslShaderInfoOut,
-                             gl::ShaderMap<std::string> *mslCodeOut);
+                             gl::ShaderMap<TranslatedShaderInfo> *mslShaderInfoOut);
 
 }  // namespace mtl
 }  // namespace rx

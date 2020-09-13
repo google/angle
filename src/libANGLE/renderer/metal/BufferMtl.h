@@ -63,6 +63,13 @@ struct IndexConversionBufferMtl : public ConversionBufferMtl
     const size_t offset;
 };
 
+struct UniformConversionBufferMtl : public ConversionBufferMtl
+{
+    UniformConversionBufferMtl(ContextMtl *context, size_t offsetIn);
+
+    const size_t offset;
+};
+
 class BufferHolderMtl
 {
   public:
@@ -138,6 +145,8 @@ class BufferMtl : public BufferImpl, public BufferHolderMtl
                                                        gl::DrawElementsType elemType,
                                                        size_t offset);
 
+    ConversionBufferMtl *getUniformConversionBuffer(ContextMtl *context, size_t offset);
+
     size_t size() const { return static_cast<size_t>(mState.getSize()); }
 
   private:
@@ -166,10 +175,12 @@ class BufferMtl : public BufferImpl, public BufferHolderMtl
     // GPU side buffers pool
     mtl::BufferPool mBufferPool;
 
-    // A cache of converted vertex data.
+    // A cache of converted buffer data.
     std::vector<VertexConversionBufferMtl> mVertexConversionBuffers;
 
     std::vector<IndexConversionBufferMtl> mIndexConversionBuffers;
+
+    std::vector<UniformConversionBufferMtl> mUniformConversionBuffers;
 };
 
 class SimpleWeakBufferHolderMtl : public BufferHolderMtl

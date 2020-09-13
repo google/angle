@@ -35,6 +35,8 @@ _metal_backend_sources = [
   "SurfaceMtl.mm",
   "TextureMtl.h",
   "TextureMtl.mm",
+  "TransformFeedbackMtl.h",
+  "TransformFeedbackMtl.mm",
   "VertexArrayMtl.h",
   "VertexArrayMtl.mm",
   "mtl_buffer_pool.h",

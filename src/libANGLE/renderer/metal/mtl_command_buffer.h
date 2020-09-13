@@ -418,6 +418,10 @@ class RenderCommandEncoder final : public CommandEncoder
 
     RenderCommandEncoder &setVisibilityResultMode(MTLVisibilityResultMode mode, size_t offset);
 
+    RenderCommandEncoder &useResource(const BufferRef &resource,
+                                      MTLResourceUsage usage,
+                                      mtl::RenderStages states);
+
     RenderCommandEncoder &setColorStoreAction(MTLStoreAction action, uint32_t colorAttachmentIndex);
     // Set store action for every color attachment.
     RenderCommandEncoder &setColorStoreAction(MTLStoreAction action);

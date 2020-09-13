@@ -99,6 +99,9 @@ constexpr uint32_t kMaxVertexAttribs = gl::MAX_VERTEX_ATTRIBS;
 // NOTE(hqle): support variable max number of render targets
 constexpr uint32_t kMaxRenderTargets = 4;
 
+constexpr uint32_t kMaxShaderUBOs = 12;
+constexpr uint32_t kMaxUBOSize    = 16384;
+
 // The max size of a buffer that will be allocated in shared memory.
 // NOTE(hqle): This is just a hint. There is no official document on what is the max allowed size
 // for shared memory.
@@ -120,10 +123,12 @@ constexpr uint32_t kUniformBufferSettingOffsetMinAlignment = 256;
 constexpr uint32_t kUniformBufferSettingOffsetMinAlignment = 4;
 #endif
 constexpr uint32_t kIndexBufferOffsetAlignment       = 4;
+constexpr uint32_t kArgumentBufferOffsetAlignment    = kUniformBufferSettingOffsetMinAlignment;
 constexpr uint32_t kTextureToBufferBlittingAlignment = 256;
 
 // Front end binding limits
 constexpr uint32_t kMaxGLSamplerBindings = 2 * kMaxShaderSamplers;
+constexpr uint32_t kMaxGLUBOBindings     = 2 * kMaxShaderUBOs;
 
 // Binding index start for vertex data buffers:
 constexpr uint32_t kVboBindingIndexStart = 0;
@@ -134,6 +139,8 @@ constexpr uint32_t kDefaultAttribsBindingIndex = kVboBindingIndexStart + kMaxVer
 constexpr uint32_t kDriverUniformsBindingIndex = kDefaultAttribsBindingIndex + 1;
 // Binding index for default uniforms:
 constexpr uint32_t kDefaultUniformsBindingIndex = kDefaultAttribsBindingIndex + 3;
+// Binding index for UBO's argument buffer or starting discrete slot
+constexpr uint32_t kUBOArgumentBufferBindingIndex = kDefaultUniformsBindingIndex + 1;
 
 constexpr uint32_t kStencilMaskAll = 0xff;  // Only 8 bits stencil is supported
 
@@ -146,14 +153,23 @@ constexpr float kEmulatedAlphaValue = 1.0f;
 
 constexpr size_t kOcclusionQueryResultSize = sizeof(uint64_t);
 
-// NOTE(hqle): Support ES 3.0.
-constexpr gl::Version kMaxSupportedGLVersion = gl::Version(2, 0);
+constexpr gl::Version kMaxSupportedGLVersion = gl::Version(3, 0);
 
 // Work-around the enum is not available on macOS
 #if TARGET_OS_OSX || TARGET_OS_MACCATALYST
 constexpr MTLBlitOption kBlitOptionRowLinearPVRTC = MTLBlitOptionNone;
 #else
 constexpr MTLBlitOption kBlitOptionRowLinearPVRTC          = MTLBlitOptionRowLinearPVRTC;
+#endif
+
+#if defined(__IPHONE_13_0) || defined(__MAC_10_15)
+using RenderStages                             = MTLRenderStages;
+constexpr MTLRenderStages kRenderStageVertex   = MTLRenderStageVertex;
+constexpr MTLRenderStages kRenderStageFragment = MTLRenderStageFragment;
+#else
+using RenderStages                                         = int;
+constexpr RenderStages kRenderStageVertex                  = 1;
+constexpr RenderStages kRenderStageFragment                = 2;
 #endif
 
 enum class PixelType
