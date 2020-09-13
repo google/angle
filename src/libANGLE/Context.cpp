@@ -3295,7 +3295,43 @@ void Context::initCaps()
     mState.mCaps = mImplementation->getNativeCaps();
 
     mSupportedExtensions = generateSupportedExtensions();
-    mState.mExtensions   = mSupportedExtensions;
+
+    if (!mDisplay->getFrontendFeatures().allowCompressedFormats.enabled)
+    {
+        INFO() << "Limiting compressed format support.\n";
+
+        mSupportedExtensions.compressedEACR11SignedTextureOES                = false;
+        mSupportedExtensions.compressedEACR11UnsignedTextureOES              = false;
+        mSupportedExtensions.compressedEACRG11SignedTextureOES               = false;
+        mSupportedExtensions.compressedEACRG11UnsignedTextureOES             = false;
+        mSupportedExtensions.compressedETC1RGB8SubTexture                    = false;
+        mSupportedExtensions.compressedETC1RGB8TextureOES                    = false;
+        mSupportedExtensions.compressedETC2PunchthroughARGB8TextureOES       = false;
+        mSupportedExtensions.compressedETC2PunchthroughAsRGB8AlphaTextureOES = false;
+        mSupportedExtensions.compressedETC2RGB8TextureOES                    = false;
+        mSupportedExtensions.compressedETC2RGBA8TextureOES                   = false;
+        mSupportedExtensions.compressedETC2sRGB8Alpha8TextureOES             = false;
+        mSupportedExtensions.compressedETC2sRGB8TextureOES                   = false;
+        mSupportedExtensions.compressedTextureETC                            = false;
+        mSupportedExtensions.compressedTexturePVRTC                          = false;
+        mSupportedExtensions.compressedTexturePVRTCsRGB                      = false;
+        mSupportedExtensions.copyCompressedTexture                           = false;
+        mSupportedExtensions.textureCompressionASTCHDRKHR                    = false;
+        mSupportedExtensions.textureCompressionASTCLDRKHR                    = false;
+        mSupportedExtensions.textureCompressionASTCOES                       = false;
+        mSupportedExtensions.textureCompressionBPTC                          = false;
+        mSupportedExtensions.textureCompressionDXT1                          = false;
+        mSupportedExtensions.textureCompressionDXT3                          = false;
+        mSupportedExtensions.textureCompressionDXT5                          = false;
+        mSupportedExtensions.textureCompressionRGTC                          = false;
+        mSupportedExtensions.textureCompressionS3TCsRGB                      = false;
+        mSupportedExtensions.textureCompressionSliced3dASTCKHR               = false;
+        mSupportedExtensions.textureFilteringCHROMIUM                        = false;
+
+        mState.mCaps.compressedTextureFormats.clear();
+    }
+
+    mState.mExtensions = mSupportedExtensions;
 
     mState.mLimitations = mImplementation->getNativeLimitations();
 

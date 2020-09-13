@@ -60,6 +60,11 @@ struct FrontendFeatures : angle::FeatureSetBase
     angle::Feature disableAnisotropicFiltering = {
         "disable_anisotropic_filtering", angle::FeatureCategory::FrontendWorkarounds,
         "Disable support for anisotropic filtering", &members};
+
+    // We can use this feature to override compressed format support for portability.
+    angle::Feature allowCompressedFormats = {"allow_compressed_formats",
+                                             angle::FeatureCategory::FrontendWorkarounds,
+                                             "Allow compressed formats", &members};
 };
 
 inline FrontendFeatures::FrontendFeatures()  = default;
