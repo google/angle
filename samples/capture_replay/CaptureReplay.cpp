@@ -45,8 +45,6 @@ class CaptureReplaySample : public SampleApplication
         }
         SetBinaryDataDir(ANGLE_CAPTURE_REPLAY_SAMPLE_DATA_DIR);
         SetupContextReplay();
-
-        eglSwapInterval(getDisplay(), 1);
         return true;
     }
 
