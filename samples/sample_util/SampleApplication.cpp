@@ -85,6 +85,7 @@ SampleApplication::SampleApplication(std::string name,
       mWidth(width),
       mHeight(height),
       mRunning(false),
+      mFrameCount(0),
       mGLWindow(nullptr),
       mEGLWindow(nullptr),
       mOSWindow(nullptr),
@@ -270,6 +271,14 @@ int SampleApplication::run()
         mOSWindow->messageLoop();
 
         prevTime = elapsedTime;
+
+        mFrameCount++;
+
+        if (mFrameCount % 100 == 0)
+        {
+            printf("Rate: %0.2lf frames / second\n",
+                   static_cast<double>(mFrameCount) / mTimer.getElapsedTime());
+        }
     }
 
     destroy();
