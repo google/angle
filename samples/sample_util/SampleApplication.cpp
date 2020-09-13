@@ -10,7 +10,9 @@
 #include "util/EGLWindow.h"
 #include "util/gles_loader_autogen.h"
 #include "util/random_utils.h"
+#include "util/shader_utils.h"
 #include "util/test_utils.h"
+#include "util/util_gl.h"
 
 #include <string.h>
 #include <iostream>
@@ -63,6 +65,12 @@ EGLint GetDeviceTypeFromArg(const char *displayTypeArg)
     {
         return EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE;
     }
+}
+
+ANGLE_MAYBE_UNUSED bool IsGLExtensionEnabled(const std::string &extName)
+{
+    return angle::CheckExtensionExists(reinterpret_cast<const char *>(glGetString(GL_EXTENSIONS)),
+                                       extName);
 }
 }  // anonymous namespace
 
@@ -206,6 +214,13 @@ int SampleApplication::run()
 
     mRunning   = true;
     int result = 0;
+
+#if defined(ANGLE_ENABLE_ASSERTS)
+    if (IsGLExtensionEnabled("GL_KHR_debug"))
+    {
+        EnableDebugCallback(this);
+    }
+#endif
 
     if (!initialize())
     {
