@@ -654,7 +654,17 @@ angle::Result Buffer::MakeBuffer(ContextMtl *context,
                                  const uint8_t *data,
                                  BufferRef *bufferOut)
 {
-    bufferOut->reset(new Buffer(context, size, data));
+
+    return MakeBufferWithSharedMemOpt(context, false, size, data, bufferOut);
+}
+
+angle::Result Buffer::MakeBufferWithSharedMemOpt(ContextMtl *context,
+                                                 bool forceUseSharedMem,
+                                                 size_t size,
+                                                 const uint8_t *data,
+                                                 BufferRef *bufferOut)
+{
+    bufferOut->reset(new Buffer(context, forceUseSharedMem, size, data));
 
     if (!bufferOut || !bufferOut->get())
     {
@@ -680,9 +690,9 @@ angle::Result Buffer::MakeBufferWithResOpt(ContextMtl *context,
     return angle::Result::Continue;
 }
 
-Buffer::Buffer(ContextMtl *context, size_t size, const uint8_t *data)
+Buffer::Buffer(ContextMtl *context, bool forceUseSharedMem, size_t size, const uint8_t *data)
 {
-    (void)reset(context, size, data);
+    (void)resetWithSharedMemOpt(context, forceUseSharedMem, size, data);
 }
 
 Buffer::Buffer(ContextMtl *context, MTLResourceOptions options, size_t size, const uint8_t *data)
@@ -692,12 +702,27 @@ Buffer::Buffer(ContextMtl *context, MTLResourceOptions options, size_t size, con
 
 angle::Result Buffer::reset(ContextMtl *context, size_t size, const uint8_t *data)
 {
+    return resetWithSharedMemOpt(context, false, size, data);
+}
+
+angle::Result Buffer::resetWithSharedMemOpt(ContextMtl *context,
+                                            bool forceUseSharedMem,
+                                            size_t size,
+                                            const uint8_t *data)
+{
     MTLResourceOptions options;
 
     options = 0;
 #if TARGET_OS_OSX || TARGET_OS_MACCATALYST
-    options |= MTLResourceStorageModeManaged;
+    if (!forceUseSharedMem)
+    {
+        options |= MTLResourceStorageModeManaged;
+    }
+    else
 #endif
+    {
+        options |= MTLResourceStorageModeShared;
+    }
 
     return resetWithResOpt(context, options, size, data);
 }
@@ -737,49 +762,77 @@ void Buffer::syncContent(ContextMtl *context, mtl::BlitCommandEncoder *blitEncod
 
 const uint8_t *Buffer::mapReadOnly(ContextMtl *context)
 {
-    return mapWithOpt(context, true);
+    return mapWithOpt(context, true, false);
 }
 
 uint8_t *Buffer::map(ContextMtl *context)
 {
-    return mapWithOpt(context, false);
+    return mapWithOpt(context, false, false);
 }
 
-uint8_t *Buffer::mapWithOpt(ContextMtl *context, bool readonly)
+uint8_t *Buffer::mapWithOpt(ContextMtl *context, bool readonly, bool noSync)
 {
     mMapReadOnly = readonly;
 
-    CommandQueue &cmdQueue = context->cmdQueue();
-
-    EnsureCPUMemWillBeSynced(context, this);
-
-    if (this->isBeingUsedByGPU(context))
+    if (!noSync)
     {
-        context->flushCommandBufer();
-    }
+        CommandQueue &cmdQueue = context->cmdQueue();
 
-    cmdQueue.ensureResourceReadyForCPU(this);
+        EnsureCPUMemWillBeSynced(context, this);
+
+        if (this->isBeingUsedByGPU(context))
+        {
+            context->flushCommandBufer();
+        }
+
+        cmdQueue.ensureResourceReadyForCPU(this);
+    }
 
     return reinterpret_cast<uint8_t *>([get() contents]);
 }
 
 void Buffer::unmap(ContextMtl *context)
 {
+    flush(context, 0, size());
+
+    // Reset read only flag
+    mMapReadOnly = true;
+}
+
+void Buffer::unmapNoFlush(ContextMtl *context)
+{
+    mMapReadOnly = true;
+}
+
+void Buffer::unmapAndFlushSubset(ContextMtl *context, size_t offsetWritten, size_t sizeWritten)
+{
+#if TARGET_OS_OSX || TARGET_OS_MACCATALYST
+    flush(context, offsetWritten, sizeWritten);
+#endif
+    mMapReadOnly = true;
+}
+
+void Buffer::flush(ContextMtl *context, size_t offsetWritten, size_t sizeWritten)
+{
 #if TARGET_OS_OSX || TARGET_OS_MACCATALYST
     if (!mMapReadOnly)
     {
         if (get().storageMode == MTLStorageModeManaged)
         {
-            [get() didModifyRange:NSMakeRange(0, size())];
+            [get() didModifyRange:NSMakeRange(offsetWritten, sizeWritten)];
         }
     }
 #endif
-    mMapReadOnly = true;
 }
 
 size_t Buffer::size() const
 {
     return get().length;
+}
+
+bool Buffer::useSharedMem() const
+{
+    return get().storageMode == MTLStorageModeShared;
 }
 }
 }

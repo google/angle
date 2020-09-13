@@ -99,6 +99,11 @@ constexpr uint32_t kMaxVertexAttribs = gl::MAX_VERTEX_ATTRIBS;
 // NOTE(hqle): support variable max number of render targets
 constexpr uint32_t kMaxRenderTargets = 4;
 
+// The max size of a buffer that will be allocated in shared memory.
+// NOTE(hqle): This is just a hint. There is no official document on what is the max allowed size
+// for shared memory.
+constexpr size_t kSharedMemBufferMaxBufSizeHint = 128 * 1024;
+
 constexpr size_t kDefaultAttributeSize = 4 * sizeof(float);
 
 // Metal limits

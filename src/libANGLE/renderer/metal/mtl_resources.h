@@ -257,6 +257,12 @@ class Buffer final : public Resource, public WrappedObject<id<MTLBuffer>>
                                     const uint8_t *data,
                                     BufferRef *bufferOut);
 
+    static angle::Result MakeBufferWithSharedMemOpt(ContextMtl *context,
+                                                    bool forceUseSharedMem,
+                                                    size_t size,
+                                                    const uint8_t *data,
+                                                    BufferRef *bufferOut);
+
     static angle::Result MakeBufferWithResOpt(ContextMtl *context,
                                               MTLResourceOptions resourceOptions,
                                               size_t size,
@@ -264,23 +270,33 @@ class Buffer final : public Resource, public WrappedObject<id<MTLBuffer>>
                                               BufferRef *bufferOut);
 
     angle::Result reset(ContextMtl *context, size_t size, const uint8_t *data);
+    angle::Result resetWithSharedMemOpt(ContextMtl *context,
+                                        bool forceUseSharedMem,
+                                        size_t size,
+                                        const uint8_t *data);
     angle::Result resetWithResOpt(ContextMtl *context,
                                   MTLResourceOptions resourceOptions,
                                   size_t size,
                                   const uint8_t *data);
 
     const uint8_t *mapReadOnly(ContextMtl *context);
-    uint8_t *mapWithOpt(ContextMtl *context, bool readonly);
     uint8_t *map(ContextMtl *context);
+    uint8_t *mapWithOpt(ContextMtl *context, bool readonly, bool noSync);
+
     void unmap(ContextMtl *context);
+    // Same as unmap but do not do implicit flush()
+    void unmapNoFlush(ContextMtl *context);
+    void unmapAndFlushSubset(ContextMtl *context, size_t offsetWritten, size_t sizeWritten);
+    void flush(ContextMtl *context, size_t offsetWritten, size_t sizeWritten);
 
     size_t size() const;
+    bool useSharedMem() const;
 
     // Explicitly sync content between CPU and GPU
     void syncContent(ContextMtl *context, mtl::BlitCommandEncoder *encoder);
 
   private:
-    Buffer(ContextMtl *context, size_t size, const uint8_t *data);
+    Buffer(ContextMtl *context, bool forceUseSharedMem, size_t size, const uint8_t *data);
     Buffer(ContextMtl *context,
            MTLResourceOptions resourceOptions,
            size_t size,
