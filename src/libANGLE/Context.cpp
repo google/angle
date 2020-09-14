@@ -621,11 +621,14 @@ egl::Error Context::onDestroy(const egl::Display *display)
     mState.mFramebufferManager->release(this);
     mState.mMemoryObjectManager->release(this);
     mState.mSemaphoreManager->release(this);
-    mState.mShareGroup->release(this);
 
     mThreadPool.reset();
 
     mImplementation->onDestroy(this);
+
+    // Some ShareGroup implementations contain resource pools that implementation contexts
+    // can leverage thus enforcing an ordering during destroy.
+    mState.mShareGroup->release(this);
 
     mOverlay.destroy(this);
 

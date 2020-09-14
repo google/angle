@@ -16,6 +16,7 @@
 #include "common/vulkan/vk_headers.h"
 #include "libANGLE/renderer/ContextImpl.h"
 #include "libANGLE/renderer/renderer_utils.h"
+#include "libANGLE/renderer/vulkan/DisplayVk.h"
 #include "libANGLE/renderer/vulkan/OverlayVk.h"
 #include "libANGLE/renderer/vulkan/PersistentCommandPool.h"
 #include "libANGLE/renderer/vulkan/RendererVk.h"
@@ -482,6 +483,11 @@ class ContextVk : public ContextImpl, public vk::Context
 
     vk::ResourceUseList &getResourceUseList() { return mResourceUseList; }
 
+    ANGLE_INLINE vk::SharedResourceUsePool *getSharedResourceUsePool()
+    {
+        return mShareGroupVk->getSharedResourceUsePool();
+    }
+
     angle::Result onBufferTransferRead(vk::BufferHelper *buffer)
     {
         return onBufferRead(VK_ACCESS_TRANSFER_READ_BIT, vk::PipelineStage::Transfer, buffer);
@@ -526,7 +532,7 @@ class ContextVk : public ContextImpl, public vk::Context
                                vk::ImageHelper *image)
     {
         ASSERT(mRenderPassCommands->started());
-        mRenderPassCommands->imageRead(&mResourceUseList, aspectFlags, imageLayout, image);
+        mRenderPassCommands->imageRead(this, aspectFlags, imageLayout, image);
     }
 
     void onImageRenderPassWrite(VkImageAspectFlags aspectFlags,
@@ -534,8 +540,8 @@ class ContextVk : public ContextImpl, public vk::Context
                                 vk::ImageHelper *image)
     {
         ASSERT(mRenderPassCommands->started());
-        mRenderPassCommands->imageWrite(&mResourceUseList, aspectFlags, imageLayout,
-                                        vk::AliasingMode::Allowed, image);
+        mRenderPassCommands->imageWrite(this, aspectFlags, imageLayout, vk::AliasingMode::Allowed,
+                                        image);
     }
 
     vk::CommandBuffer &getOutsideRenderPassCommandBuffer()

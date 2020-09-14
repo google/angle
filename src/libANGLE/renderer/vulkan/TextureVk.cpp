@@ -1640,8 +1640,9 @@ angle::Result TextureVk::generateMipmap(const gl::Context *context)
     {
         ASSERT((mImageUsageFlags & VK_IMAGE_USAGE_STORAGE_BIT) != 0);
 
-        mImage->retain(&contextVk->getResourceUseList());
-        getImageViews().retain(&contextVk->getResourceUseList());
+        mImage->retain(&contextVk->getResourceUseList(), contextVk->getSharedResourceUsePool());
+        getImageViews().retain(&contextVk->getResourceUseList(),
+                               contextVk->getSharedResourceUsePool());
 
         return generateMipmapsWithCompute(contextVk);
     }
@@ -1834,7 +1835,7 @@ angle::Result TextureVk::respecifyImageAttributesAndLevels(ContextVk *contextVk,
     // recreated with the correct number of mip levels, base level, and max level.
     releaseImage(contextVk);
 
-    mImage->retain(&contextVk->getResourceUseList());
+    mImage->retain(&contextVk->getResourceUseList(), contextVk->getSharedResourceUsePool());
 
     return angle::Result::Continue;
 }
@@ -2236,7 +2237,7 @@ const vk::ImageView &TextureVk::getReadImageViewAndRecordUse(ContextVk *contextV
     ASSERT(mImage->valid());
 
     const vk::ImageViewHelper &imageViews = getImageViews();
-    imageViews.retain(&contextVk->getResourceUseList());
+    imageViews.retain(&contextVk->getResourceUseList(), contextVk->getSharedResourceUsePool());
 
     if (mState.isStencilMode() && imageViews.hasStencilReadImageView())
     {
@@ -2257,7 +2258,7 @@ const vk::ImageView &TextureVk::getFetchImageViewAndRecordUse(ContextVk *context
     ASSERT(mImage->valid());
 
     const vk::ImageViewHelper &imageViews = getImageViews();
-    imageViews.retain(&contextVk->getResourceUseList());
+    imageViews.retain(&contextVk->getResourceUseList(), contextVk->getSharedResourceUsePool());
 
     // We don't currently support fetch for depth/stencil cube map textures.
     ASSERT(!imageViews.hasStencilReadImageView() || !imageViews.hasFetchImageView());
@@ -2277,7 +2278,7 @@ const vk::ImageView &TextureVk::getCopyImageViewAndRecordUse(ContextVk *contextV
     ASSERT(mImage->valid());
 
     const vk::ImageViewHelper &imageViews = getImageViews();
-    imageViews.retain(&contextVk->getResourceUseList());
+    imageViews.retain(&contextVk->getResourceUseList(), contextVk->getSharedResourceUsePool());
 
     if (mState.getSRGBOverride() == gl::SrgbOverride::Enabled)
     {
