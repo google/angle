@@ -796,10 +796,8 @@ class ContextVk : public ContextImpl, public vk::Context
     ANGLE_INLINE void invalidateCurrentGraphicsPipeline()
     {
         mGraphicsDirtyBits |= mNewGraphicsPipelineDirtyBits;
-        // The draw mode may have changed, toggling whether line rasterization is
-        // enabled or not, which means we need to recreate the graphics pipeline.
-        mCurrentGraphicsPipeline = nullptr;
     }
+
     ANGLE_INLINE void invalidateCurrentComputePipeline()
     {
         mComputeDirtyBits.set(DIRTY_BIT_PIPELINE);
