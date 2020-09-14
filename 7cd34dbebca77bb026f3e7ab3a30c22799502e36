@@ -36,6 +36,24 @@
     },
     {
       "key": {
+        "uuid": "e1eb5295_0ba598cb",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 14
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-09-14T21:24:10Z",
+      "side": 1,
+      "message": "In my limited testing, desktop GPUs (NVidia at least) seem to be impervious to render pass breaks.",
+      "parentUuid": "0c35bd84_0f8717e6",
+      "revId": "7cd34dbebca77bb026f3e7ab3a30c22799502e36",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bb27736b_f1080443",
         "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.h",
         "patchSetId": 14
