@@ -28,7 +28,7 @@ vars = {
   'checkout_angle_internal': False,
 
   # Version of Chromium our Chromium-based DEPS are mirrored from.
-  'chromium_revision': 'fe51fcb522ccfd37e2b2c92b09d72973f9031d5d',
+  'chromium_revision': '1960f3b234087ce7fcd793b3ca8a54384304b3c0',
   # We never want to checkout chromium,
   # but need a dummy DEPS entry for the autoroller
   'dummy_checkout_chromium': False,
@@ -103,7 +103,7 @@ vars = {
 deps = {
 
   'build': {
-    'url': '{chromium_git}/chromium/src/build.git@41b95e3b549ea17726b067ef1b2d151d51ca0ee9',
+    'url': '{chromium_git}/chromium/src/build.git@dc90e7d1033825253a760d5a18d4a4bc1077e30a',
     'condition': 'not build_with_chromium',
   },
 
@@ -113,7 +113,7 @@ deps = {
   },
 
   'testing': {
-    'url': '{chromium_git}/chromium/src/testing@64f2e1cf551845e19e7c204d4f957519920b26f3',
+    'url': '{chromium_git}/chromium/src/testing@598b9bd5a4e314c0fbd73ffb6aa92a67458e1697',
     'condition': 'not build_with_chromium',
   },
 
@@ -173,7 +173,7 @@ deps = {
 
   # libjpeg_turbo is used by glmark2.
   'third_party/libjpeg_turbo': {
-    'url': '{chromium_git}/chromium/deps/libjpeg_turbo.git@9d4f8005bc6c888e66b00fd00188531ee9bd3344',
+    'url': '{chromium_git}/chromium/deps/libjpeg_turbo.git@8ca19625de302b0af290e3e0cdeff24a1c272d39',
     'condition': 'not build_with_chromium',
   },
 
@@ -274,7 +274,7 @@ deps = {
   },
 
   'tools/clang': {
-    'url': '{chromium_git}/chromium/src/tools/clang.git@97d6ab3da35a8b5abfa2b78cc6aac9dff3122b07',
+    'url': '{chromium_git}/chromium/src/tools/clang.git@bf815f1a74094cb38287f86952bde4f861582735',
     'condition': 'not build_with_chromium',
   },
 
