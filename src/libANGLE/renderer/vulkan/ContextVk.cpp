@@ -3460,7 +3460,7 @@ angle::Result ContextVk::onBeginTransformFeedback(
     for (size_t bufferIndex = 0; bufferIndex < bufferCount; ++bufferIndex)
     {
         const vk::BufferHelper *buffer = buffers[bufferIndex];
-        if (mCurrentTransformFeedbackBuffers.count(buffer) != 0 ||
+        if (mCurrentTransformFeedbackBuffers.contains(buffer) ||
             mRenderPassCommands->usesBuffer(*buffer))
         {
             ANGLE_TRY(flushCommandsAndEndRenderPass());
@@ -3484,7 +3484,11 @@ void ContextVk::populateTransformFeedbackBufferSet(
 {
     for (size_t bufferIndex = 0; bufferIndex < bufferCount; ++bufferIndex)
     {
-        mCurrentTransformFeedbackBuffers.insert(buffers[bufferIndex]);
+        vk::BufferHelper *buffer = buffers[bufferIndex];
+        if (!mCurrentTransformFeedbackBuffers.contains(buffer))
+        {
+            mCurrentTransformFeedbackBuffers.insert(buffer);
+        }
     }
 }
 
