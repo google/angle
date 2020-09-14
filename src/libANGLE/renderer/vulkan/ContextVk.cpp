@@ -1306,7 +1306,6 @@ angle::Result ContextVk::handleDirtyGraphicsPipeline(const gl::Context *context,
                                                      vk::CommandBuffer *commandBuffer)
 {
     ASSERT(mExecutable);
-    mExecutable->updateEarlyFragmentTestsOptimization(this);
 
     if (!mCurrentGraphicsPipeline)
     {
@@ -2790,7 +2789,8 @@ void ContextVk::invalidateProgramBindingHelper(const gl::State &glState)
 
 angle::Result ContextVk::invalidateProgramExecutableHelper(const gl::Context *context)
 {
-    const gl::State &glState = context->getState();
+    const gl::State &glState                = context->getState();
+    const gl::ProgramExecutable *executable = glState.getProgramExecutable();
 
     if (glState.getProgramExecutable()->isCompute())
     {
@@ -2802,11 +2802,14 @@ angle::Result ContextVk::invalidateProgramExecutableHelper(const gl::Context *co
         // later.
         invalidateDefaultAttributes(context->getStateCache().getActiveDefaultAttribsMask());
         invalidateVertexAndIndexBuffers();
-        bool useVertexBuffer = (glState.getProgramExecutable()->getMaxActiveAttribLocation() > 0);
+        bool useVertexBuffer = (executable->getMaxActiveAttribLocation() > 0);
         mNonIndexedDirtyBitsMask.set(DIRTY_BIT_VERTEX_BUFFERS, useVertexBuffer);
         mIndexedDirtyBitsMask.set(DIRTY_BIT_VERTEX_BUFFERS, useVertexBuffer);
         mCurrentGraphicsPipeline = nullptr;
         mGraphicsPipelineTransition.reset();
+
+        ASSERT(mExecutable);
+        mExecutable->updateEarlyFragmentTestsOptimization(this);
     }
 
     return angle::Result::Continue;
