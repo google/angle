@@ -250,8 +250,6 @@ class FramebufferVk : public FramebufferImpl
 
     vk::FramebufferDesc mCurrentFramebufferDesc;
     std::unordered_map<vk::FramebufferDesc, vk::FramebufferHelper> mFramebufferCache;
-    // Tracks all the color buffers attached to this FramebufferDesc
-    gl::DrawBufferMask mAttachedColorBufferMask;
 
     vk::ClearValuesArray mDeferredClears;
 };

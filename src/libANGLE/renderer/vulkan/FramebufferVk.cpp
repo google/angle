@@ -1477,7 +1477,7 @@ angle::Result FramebufferVk::invalidateImpl(ContextVk *contextVk,
     {
         // Set the appropriate storeOp for attachments.
         vk::PackedAttachmentIndex colorIndexVk(0);
-        for (size_t colorIndexGL : mAttachedColorBufferMask)
+        for (size_t colorIndexGL : mState.getColorAttachmentsMask())
         {
             if (mState.getEnabledDrawBuffers()[colorIndexGL] &&
                 invalidateColorBuffers.test(colorIndexGL))
@@ -1584,12 +1584,10 @@ angle::Result FramebufferVk::updateColorAttachment(const gl::Context *context,
     if (enabledColor)
     {
         mCurrentFramebufferDesc.updateColor(colorIndexGL, renderTarget->getDrawSubresourceSerial());
-        mAttachedColorBufferMask.set(colorIndexGL);
     }
     else
     {
         mCurrentFramebufferDesc.updateColor(colorIndexGL, vk::kInvalidImageViewSubresourceSerial);
-        mAttachedColorBufferMask.reset(colorIndexGL);
     }
 
     if (enabledResolve)
@@ -1797,10 +1795,11 @@ void FramebufferVk::updateRenderPassDesc()
     mRenderPassDesc.setSamples(getSamples());
 
     // Color attachments.
-    const auto &colorRenderTargets = mRenderTargetCache.getColors();
-    for (size_t colorIndexGL = 0; colorIndexGL < mAttachedColorBufferMask.size(); ++colorIndexGL)
+    const auto &colorRenderTargets               = mRenderTargetCache.getColors();
+    const gl::DrawBufferMask colorAttachmentMask = mState.getColorAttachmentsMask();
+    for (size_t colorIndexGL = 0; colorIndexGL < colorAttachmentMask.size(); ++colorIndexGL)
     {
-        if (mAttachedColorBufferMask[colorIndexGL])
+        if (colorAttachmentMask[colorIndexGL])
         {
             RenderTargetVk *colorRenderTarget = colorRenderTargets[colorIndexGL];
             ASSERT(colorRenderTarget);
@@ -1874,7 +1873,7 @@ angle::Result FramebufferVk::getFramebuffer(ContextVk *contextVk,
 
     // Color attachments.
     const auto &colorRenderTargets = mRenderTargetCache.getColors();
-    for (size_t colorIndexGL : mAttachedColorBufferMask)
+    for (size_t colorIndexGL : mState.getColorAttachmentsMask())
     {
         RenderTargetVk *colorRenderTarget = colorRenderTargets[colorIndexGL];
         ASSERT(colorRenderTarget);
@@ -1914,7 +1913,7 @@ angle::Result FramebufferVk::getFramebuffer(ContextVk *contextVk,
     else
     {
         // This Framebuffer owns all of the ImageViews, including its own resolve ImageViews.
-        for (size_t colorIndexGL : mAttachedColorBufferMask)
+        for (size_t colorIndexGL : mState.getColorAttachmentsMask())
         {
             RenderTargetVk *colorRenderTarget = colorRenderTargets[colorIndexGL];
             ASSERT(colorRenderTarget);
@@ -2119,7 +2118,7 @@ void FramebufferVk::clearWithLoadOp(ContextVk *contextVk,
         ASSERT(commands.getCommandBuffer().empty());
 
         vk::PackedAttachmentIndex colorIndexVk(0);
-        for (size_t colorIndexGL : mAttachedColorBufferMask)
+        for (size_t colorIndexGL : mState.getColorAttachmentsMask())
         {
             if (mState.getEnabledDrawBuffers()[colorIndexGL] && clearColorBuffers[colorIndexGL])
             {
@@ -2234,7 +2233,7 @@ angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
     // Color attachments.
     const auto &colorRenderTargets = mRenderTargetCache.getColors();
     vk::PackedAttachmentIndex colorIndexVk(0);
-    for (size_t colorIndexGL : mAttachedColorBufferMask)
+    for (size_t colorIndexGL : mState.getColorAttachmentsMask())
     {
         RenderTargetVk *colorRenderTarget = colorRenderTargets[colorIndexGL];
         ASSERT(colorRenderTarget);
@@ -2377,7 +2376,7 @@ angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
 
     // Transition the images to the correct layout (through onColorDraw) after the
     // resolve-to-multisampled copies are done.
-    for (size_t colorIndexGL : mAttachedColorBufferMask)
+    for (size_t colorIndexGL : mState.getColorAttachmentsMask())
     {
         RenderTargetVk *colorRenderTarget = colorRenderTargets[colorIndexGL];
         colorRenderTarget->onColorDraw(contextVk);

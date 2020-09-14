@@ -79,6 +79,7 @@ class FramebufferState final : angle::NonCopyable
     {
         return mColorAttachments;
     }
+    const DrawBufferMask getColorAttachmentsMask() const { return mColorAttachmentsMask; }
 
     bool attachmentsHaveSameDimensions() const;
     bool hasSeparateDepthAndStencilAttachments() const;
@@ -136,6 +137,9 @@ class FramebufferState final : angle::NonCopyable
     std::vector<FramebufferAttachment> mColorAttachments;
     FramebufferAttachment mDepthAttachment;
     FramebufferAttachment mStencilAttachment;
+
+    // Tracks all the color buffers attached to this FramebufferDesc
+    gl::DrawBufferMask mColorAttachmentsMask;
 
     std::vector<GLenum> mDrawBufferStates;
     GLenum mReadBufferState;
