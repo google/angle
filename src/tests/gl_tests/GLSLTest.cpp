@@ -2605,6 +2605,9 @@ TEST_P(GLSLTest, RenderTrisWithPointCoord)
 // Convers a bug with the integer pow statement workaround.
 TEST_P(GLSLTest, NestedPowStatements)
 {
+    // https://crbug.com/1127866 - possible NVIDIA driver issue
+    ANGLE_SKIP_TEST_IF(IsNVIDIA() && IsVulkan() && IsWindows());
+
     constexpr char kFS[] =
         "precision mediump float;\n"
         "float func(float v)\n"
