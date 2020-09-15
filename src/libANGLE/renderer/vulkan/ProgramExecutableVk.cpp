@@ -56,13 +56,12 @@ ShaderInfo::~ShaderInfo() = default;
 
 angle::Result ShaderInfo::initShaders(ContextVk *contextVk,
                                       const gl::ShaderBitSet &linkedShaderStages,
-                                      const gl::ShaderMap<std::string> &shaderSources,
-                                      const ShaderMapInterfaceVariableInfoMap &variableInfoMap)
+                                      const gl::ShaderMap<std::string> &shaderSources)
 {
     ASSERT(!valid());
 
     ANGLE_TRY(GlslangWrapperVk::GetShaderCode(contextVk, linkedShaderStages, contextVk->getCaps(),
-                                              shaderSources, variableInfoMap, &mSpirvBlobs));
+                                              shaderSources, &mSpirvBlobs));
 
     mIsInitialized = true;
     return angle::Result::Continue;

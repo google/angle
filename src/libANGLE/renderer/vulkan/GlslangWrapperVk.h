@@ -41,7 +41,6 @@ class GlslangWrapperVk
                                        const gl::ShaderBitSet &linkedShaderStages,
                                        const gl::Caps &glCaps,
                                        const gl::ShaderMap<std::string> &shaderSources,
-                                       const ShaderMapInterfaceVariableInfoMap &variableInfoMap,
                                        gl::ShaderMap<std::vector<uint32_t>> *shaderCodesOut);
 
     static angle::Result TransformSpirV(vk::Context *context,

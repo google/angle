@@ -261,7 +261,7 @@ angle::Result GlslangGetShaderSpirvCode(ErrorHandler *context,
 
     ANGLE_TRY(rx::GlslangGetShaderSpirvCode(
         [context](GlslangError error) { return HandleError(context, error); }, linkedShaderStages,
-        glCaps, shaderSources, variableInfoMap, &initialSpirvBlobs));
+        glCaps, shaderSources, &initialSpirvBlobs));
 
     for (const gl::ShaderType shaderType : linkedShaderStages)
     {

@@ -30,8 +30,7 @@ class ShaderInfo final : angle::NonCopyable
 
     angle::Result initShaders(ContextVk *contextVk,
                               const gl::ShaderBitSet &linkedShaderStages,
-                              const gl::ShaderMap<std::string> &shaderSources,
-                              const ShaderMapInterfaceVariableInfoMap &variableInfoMap);
+                              const gl::ShaderMap<std::string> &shaderSources);
     void release(ContextVk *contextVk);
 
     ANGLE_INLINE bool valid() const { return mIsInitialized; }
