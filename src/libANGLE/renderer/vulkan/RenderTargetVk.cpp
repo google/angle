@@ -43,7 +43,7 @@ void RenderTargetVk::init(vk::ImageHelper *image,
                           vk::ImageViewHelper *resolveImageViews,
                           gl::LevelIndex levelIndexGL,
                           uint32_t layerIndex,
-                          bool isImageTransient)
+                          RenderTargetTransience transience)
 {
     mImage             = image;
     mImageViews        = imageViews;
@@ -55,7 +55,7 @@ void RenderTargetVk::init(vk::ImageHelper *image,
     // Conservatively assume the content is defined.
     mContentDefined = true;
 
-    mIsImageTransient = isImageTransient;
+    mTransience = transience;
 }
 
 void RenderTargetVk::reset()
@@ -189,7 +189,7 @@ bool RenderTargetVk::isResolveImageOwnerOfData() const
     // If there's a resolve attachment and the image itself is transient, it's the resolve
     // attachment that owns the data, so all non-render-pass accesses to the render target data
     // should go through the resolve attachment.
-    return hasResolveAttachment() && isImageTransient();
+    return isImageTransient();
 }
 
 angle::Result RenderTargetVk::getAndRetainCopyImageView(ContextVk *contextVk,

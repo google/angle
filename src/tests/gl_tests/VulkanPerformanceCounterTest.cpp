@@ -1380,7 +1380,7 @@ TEST_P(VulkanPerformanceCounterTest, DrawbufferChangeWithAllColorMaskDisabled)
 }
 
 // Tests the optimization that a glFlush call issued inside a renderpass will be skipped.
-TEST_P(VulkanPerformanceCounterTest, InRenderpassFlushShouldBotBreakRenderpass)
+TEST_P(VulkanPerformanceCounterTest, InRenderpassFlushShouldNotBreakRenderpass)
 {
     const rx::vk::PerfCounters &counters = hackANGLE();
     uint32_t expectedRenderPassCount     = counters.renderPasses + 1;
@@ -1404,6 +1404,235 @@ TEST_P(VulkanPerformanceCounterTest, InRenderpassFlushShouldBotBreakRenderpass)
 
     uint32_t actualRenderPassCount = counters.renderPasses;
     EXPECT_EQ(expectedRenderPassCount, actualRenderPassCount);
+}
+
+// Tests that depth/stencil texture clear/load works correctly.
+TEST_P(VulkanPerformanceCounterTest, DepthStencilTextureClearAndLoad)
+{
+    const rx::vk::PerfCounters &counters = hackANGLE();
+    uint32_t expectedDepthClearCount     = counters.depthClears + 1;
+    uint32_t expectedDepthLoadCount      = counters.depthLoads + 3;
+    uint32_t expectedStencilClearCount   = counters.stencilClears + 1;
+    uint32_t expectedStencilLoadCount    = counters.stencilLoads + 3;
+
+    GLFramebuffer FBO;
+    glBindFramebuffer(GL_FRAMEBUFFER, FBO);
+
+    constexpr GLsizei kSize = 6;
+
+    // Create framebuffer to draw into, with both color and depth attachments.
+    GLTexture color;
+    glBindTexture(GL_TEXTURE_2D, color);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    GLTexture depth;
+    glBindTexture(GL_TEXTURE_2D, depth);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH24_STENCIL8, kSize, kSize, 0, GL_DEPTH_STENCIL,
+                 GL_UNSIGNED_INT_24_8_OES, nullptr);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color, 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, depth, 0);
+    ASSERT_GL_NO_ERROR();
+
+    // Set up texture for copy operation that breaks the render pass
+    GLTexture copyTex;
+    glBindTexture(GL_TEXTURE_2D, copyTex);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    // Set viewport and clear depth/stencil
+    glViewport(0, 0, kSize, kSize);
+    glClearDepthf(1);
+    glClearStencil(0x55);
+    glClear(GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
+    // If depth is not cleared to 1, rendering would fail.
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
+    glDepthMask(GL_FALSE);
+
+    // If stencil is not clear to 0x55, rendering would fail.
+    glEnable(GL_STENCIL_TEST);
+    glStencilFunc(GL_EQUAL, 0x55, 0xFF);
+    glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+    glStencilMask(0xFF);
+
+    // Set up program
+    ANGLE_GL_PROGRAM(drawColor, essl1_shaders::vs::Simple(), essl1_shaders::fs::UniformColor());
+    glUseProgram(drawColor);
+    GLint colorUniformLocation =
+        glGetUniformLocation(drawColor, angle::essl1_shaders::ColorUniform());
+    ASSERT_NE(colorUniformLocation, -1);
+
+    // Draw red
+    glUniform4f(colorUniformLocation, 1.0f, 0.0f, 0.0f, 1.0f);
+    drawQuad(drawColor, essl1_shaders::PositionAttrib(), 0.0f);
+    ASSERT_GL_NO_ERROR();
+
+    // Break the render pass
+    glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, kSize / 2, kSize / 2);
+    ASSERT_GL_NO_ERROR();
+
+    // Draw green
+    glUniform4f(colorUniformLocation, 0.0f, 1.0f, 0.0f, 1.0f);
+    drawQuad(drawColor, essl1_shaders::PositionAttrib(), 0.0f);
+    ASSERT_GL_NO_ERROR();
+
+    // Break the render pass
+    glCopyTexSubImage2D(GL_TEXTURE_2D, 0, kSize / 2, 0, 0, 0, kSize / 2, kSize / 2);
+    ASSERT_GL_NO_ERROR();
+
+    // Draw blue
+    glUniform4f(colorUniformLocation, 0.0f, 0.0f, 1.0f, 1.0f);
+    drawQuad(drawColor, essl1_shaders::PositionAttrib(), 0.0f);
+    ASSERT_GL_NO_ERROR();
+
+    // Break the render pass
+    glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, kSize / 2, 0, 0, kSize / 2, kSize / 2);
+    ASSERT_GL_NO_ERROR();
+
+    // Draw yellow
+    glUniform4f(colorUniformLocation, 1.0f, 1.0f, 0.0f, 1.0f);
+    drawQuad(drawColor, essl1_shaders::PositionAttrib(), 0.0f);
+    ASSERT_GL_NO_ERROR();
+
+    // Break the render pass
+    glCopyTexSubImage2D(GL_TEXTURE_2D, 0, kSize / 2, kSize / 2, 0, 0, kSize / 2, kSize / 2);
+    ASSERT_GL_NO_ERROR();
+
+    // Verify the counters
+    EXPECT_EQ(counters.depthClears, expectedDepthClearCount);
+    EXPECT_EQ(counters.depthLoads, expectedDepthLoadCount);
+    EXPECT_EQ(counters.stencilClears, expectedStencilClearCount);
+    EXPECT_EQ(counters.stencilLoads, expectedStencilLoadCount);
+
+    // Verify that copies were done correctly.
+    GLFramebuffer verifyFBO;
+    glBindFramebuffer(GL_FRAMEBUFFER, verifyFBO);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, copyTex, 0);
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(kSize / 2, 0, GLColor::green);
+    EXPECT_PIXEL_COLOR_EQ(0, kSize / 2, GLColor::blue);
+    EXPECT_PIXEL_COLOR_EQ(kSize / 2, kSize / 2, GLColor::yellow);
+}
+
+// Tests that multisampled-render-to-texture depth/stencil textures don't ever load data.
+TEST_P(VulkanPerformanceCounterTest, RenderToTextureDepthStencilTextureShouldNotLoad)
+{
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_multisampled_render_to_texture2"));
+
+    const rx::vk::PerfCounters &counters = hackANGLE();
+    uint32_t expectedDepthClearCount     = counters.depthClears + 1;
+    uint32_t expectedDepthLoadCount      = counters.depthLoads;
+    uint32_t expectedStencilClearCount   = counters.stencilClears + 1;
+    uint32_t expectedStencilLoadCount    = counters.stencilLoads;
+
+    GLFramebuffer FBO;
+    glBindFramebuffer(GL_FRAMEBUFFER, FBO);
+
+    constexpr GLsizei kSize = 6;
+
+    // Create multisampled framebuffer to draw into, with both color and depth attachments.
+    GLTexture colorMS;
+    glBindTexture(GL_TEXTURE_2D, colorMS);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    GLTexture depthMS;
+    glBindTexture(GL_TEXTURE_2D, depthMS);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH24_STENCIL8, kSize, kSize, 0, GL_DEPTH_STENCIL,
+                 GL_UNSIGNED_INT_24_8_OES, nullptr);
+
+    GLFramebuffer fboMS;
+    glBindFramebuffer(GL_FRAMEBUFFER, fboMS);
+    glFramebufferTexture2DMultisampleEXT(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
+                                         colorMS, 0, 4);
+    glFramebufferTexture2DMultisampleEXT(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D,
+                                         depthMS, 0, 4);
+    ASSERT_GL_NO_ERROR();
+
+    // Set up texture for copy operation that breaks the render pass
+    GLTexture copyTex;
+    glBindTexture(GL_TEXTURE_2D, copyTex);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    // Set viewport and clear depth
+    glViewport(0, 0, kSize, kSize);
+    glClearDepthf(1);
+    glClearStencil(0x55);
+    glClear(GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
+    // If depth is not cleared to 1, rendering would fail.
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
+
+    // If stencil is not clear to 0x55, rendering would fail.
+    glEnable(GL_STENCIL_TEST);
+    glStencilFunc(GL_EQUAL, 0x55, 0xFF);
+    glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+    glStencilMask(0xFF);
+
+    // Set up program
+    ANGLE_GL_PROGRAM(drawColor, essl1_shaders::vs::Simple(), essl1_shaders::fs::UniformColor());
+    glUseProgram(drawColor);
+    GLint colorUniformLocation =
+        glGetUniformLocation(drawColor, angle::essl1_shaders::ColorUniform());
+    ASSERT_NE(colorUniformLocation, -1);
+
+    // Draw red
+    glUniform4f(colorUniformLocation, 1.0f, 0.0f, 0.0f, 1.0f);
+    drawQuad(drawColor, essl1_shaders::PositionAttrib(), 0.0f);
+    ASSERT_GL_NO_ERROR();
+
+    // Break the render pass
+    glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, kSize / 2, kSize / 2);
+    ASSERT_GL_NO_ERROR();
+
+    // Draw green
+    glUniform4f(colorUniformLocation, 0.0f, 1.0f, 0.0f, 1.0f);
+    drawQuad(drawColor, essl1_shaders::PositionAttrib(), 0.0f);
+    ASSERT_GL_NO_ERROR();
+
+    // Break the render pass
+    glCopyTexSubImage2D(GL_TEXTURE_2D, 0, kSize / 2, 0, 0, 0, kSize / 2, kSize / 2);
+    ASSERT_GL_NO_ERROR();
+
+    // Draw blue
+    glUniform4f(colorUniformLocation, 0.0f, 0.0f, 1.0f, 1.0f);
+    drawQuad(drawColor, essl1_shaders::PositionAttrib(), 0.0f);
+    ASSERT_GL_NO_ERROR();
+
+    // Break the render pass
+    glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, kSize / 2, 0, 0, kSize / 2, kSize / 2);
+    ASSERT_GL_NO_ERROR();
+
+    // Draw yellow
+    glUniform4f(colorUniformLocation, 1.0f, 1.0f, 0.0f, 1.0f);
+    drawQuad(drawColor, essl1_shaders::PositionAttrib(), 0.0f);
+    ASSERT_GL_NO_ERROR();
+
+    // Break the render pass
+    glCopyTexSubImage2D(GL_TEXTURE_2D, 0, kSize / 2, kSize / 2, 0, 0, kSize / 2, kSize / 2);
+    ASSERT_GL_NO_ERROR();
+
+    // Verify the counters
+    EXPECT_EQ(counters.depthClears, expectedDepthClearCount);
+    EXPECT_EQ(counters.depthLoads, expectedDepthLoadCount);
+    EXPECT_EQ(counters.stencilClears, expectedStencilClearCount);
+    EXPECT_EQ(counters.stencilLoads, expectedStencilLoadCount);
+
+    // Verify that copies were done correctly.  Only the first copy can be verified because the
+    // contents of the depth/stencil buffer is undefined after the first render pass break, meaning
+    // it is unknown whether the three subsequent draw calls passed the depth or stencil tests.
+    GLFramebuffer verifyFBO;
+    glBindFramebuffer(GL_FRAMEBUFFER, verifyFBO);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, copyTex, 0);
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(kSize / 2 - 1, 0, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(0, kSize / 2 - 1, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(kSize / 2 - 1, kSize / 2 - 1, GLColor::red);
 }
 
 ANGLE_INSTANTIATE_TEST(VulkanPerformanceCounterTest, ES3_VULKAN());

@@ -2001,6 +2001,9 @@ angle::Result TextureVk::initRenderTargets(ContextVk *contextVk,
 
         const bool isMultisampledRenderToTexture =
             renderToTextureIndex != gl::RenderToTextureImageIndex::Default;
+        RenderTargetTransience transience = isMultisampledRenderToTexture
+                                                ? RenderTargetTransience::MultisampledTransient
+                                                : RenderTargetTransience::Default;
 
         // If multisampled render to texture, use the multisampled image as draw image instead, and
         // resolve into the texture's image automatically.
@@ -2014,20 +2017,17 @@ angle::Result TextureVk::initRenderTargets(ContextVk *contextVk,
             drawImageViews    = &mMultisampledImageViews[renderToTextureIndex];
 
             // If the texture is depth/stencil, GL_EXT_multisampled_render_to_texture2 explicitly
-            // indicates that there is no need for the image to be resolved.  In that case, don't
-            // specify the resolve image.  Note that the multisampled image's data is discarded
-            // nevertheless per this spec.
+            // indicates that there is no need for the image to be resolved.  In that case, mark the
+            // render target as entirely transient.
             if (mImage->getAspectFlags() != VK_IMAGE_ASPECT_COLOR_BIT)
             {
-                resolveImage      = nullptr;
-                resolveImageViews = nullptr;
+                transience = RenderTargetTransience::EntirelyTransient;
             }
         }
 
         renderTargets[layerIndex].init(drawImage, drawImageViews, resolveImage, resolveImageViews,
                                        getNativeImageLevel(levelIndex),
-                                       getNativeImageLayer(layerIndex),
-                                       isMultisampledRenderToTexture);
+                                       getNativeImageLayer(layerIndex), transience);
     }
     return angle::Result::Continue;
 }
