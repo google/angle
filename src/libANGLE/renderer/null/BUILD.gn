@@ -4,7 +4,6 @@
 #
 # This file houses the build configuration for the ANGLE NULL back-end.
 
-import("//build/config/dcheck_always_on.gni")
 import("../../../../gni/angle.gni")
 
 assert(angle_enable_null)
