@@ -29,7 +29,12 @@ angle::SubjectIndex kRenderbufferImplSubjectIndex = 0;
 
 // RenderbufferState implementation.
 RenderbufferState::RenderbufferState()
-    : mWidth(0), mHeight(0), mFormat(GL_RGBA4), mSamples(0), mInitState(InitState::MayNeedInit)
+    : mWidth(0),
+      mHeight(0),
+      mFormat(GL_RGBA4),
+      mSamples(0),
+      mMultisamplingMode(MultisamplingMode::Regular),
+      mInitState(InitState::MayNeedInit)
 {}
 
 RenderbufferState::~RenderbufferState() {}
@@ -54,6 +59,11 @@ GLsizei RenderbufferState::getSamples() const
     return mSamples;
 }
 
+MultisamplingMode RenderbufferState::getMultisamplingMode() const
+{
+    return mMultisamplingMode;
+}
+
 InitState RenderbufferState::getInitState() const
 {
     return mInitState;
@@ -63,13 +73,15 @@ void RenderbufferState::update(GLsizei width,
                                GLsizei height,
                                const Format &format,
                                GLsizei samples,
+                               MultisamplingMode multisamplingMode,
                                InitState initState)
 {
-    mWidth     = width;
-    mHeight    = height;
-    mFormat    = format;
-    mSamples   = samples;
-    mInitState = InitState::MayNeedInit;
+    mWidth             = width;
+    mHeight            = height;
+    mFormat            = format;
+    mSamples           = samples;
+    mMultisamplingMode = multisamplingMode;
+    mInitState         = InitState::MayNeedInit;
 }
 
 // Renderbuffer implementation.
@@ -113,7 +125,8 @@ angle::Result Renderbuffer::setStorage(const Context *context,
     ANGLE_TRY(orphanImages(context));
     ANGLE_TRY(mImplementation->setStorage(context, internalformat, width, height));
 
-    mState.update(width, height, Format(internalformat), 0, InitState::MayNeedInit);
+    mState.update(width, height, Format(internalformat), 0, MultisamplingMode::Regular,
+                  InitState::MayNeedInit);
     onStateChange(angle::SubjectMessage::SubjectChanged);
 
     return angle::Result::Continue;
@@ -135,7 +148,7 @@ angle::Result Renderbuffer::setStorageMultisample(const Context *context,
     ANGLE_TRY(mImplementation->setStorageMultisample(context, samples, internalformat, width,
                                                      height, mode));
 
-    mState.update(width, height, Format(internalformat), samples, InitState::MayNeedInit);
+    mState.update(width, height, Format(internalformat), samples, mode, InitState::MayNeedInit);
     onStateChange(angle::SubjectMessage::SubjectChanged);
 
     return angle::Result::Continue;
@@ -149,7 +162,8 @@ angle::Result Renderbuffer::setStorageEGLImageTarget(const Context *context, egl
     setTargetImage(context, image);
 
     mState.update(static_cast<GLsizei>(image->getWidth()), static_cast<GLsizei>(image->getHeight()),
-                  Format(image->getFormat()), 0, image->sourceInitState());
+                  Format(image->getFormat()), 0, MultisamplingMode::Regular,
+                  image->sourceInitState());
     onStateChange(angle::SubjectMessage::SubjectChanged);
 
     return angle::Result::Continue;
@@ -178,7 +192,12 @@ const Format &Renderbuffer::getFormat() const
 
 GLsizei Renderbuffer::getSamples() const
 {
-    return mState.mSamples;
+    return mState.mMultisamplingMode == MultisamplingMode::Regular ? mState.mSamples : 0;
+}
+
+MultisamplingMode Renderbuffer::getMultisamplingMode() const
+{
+    return mState.mMultisamplingMode;
 }
 
 GLuint Renderbuffer::getRedSize() const

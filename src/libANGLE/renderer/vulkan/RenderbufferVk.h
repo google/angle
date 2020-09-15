@@ -76,8 +76,21 @@ class RenderbufferVk : public RenderbufferImpl, public angle::ObserverInterface
     void onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMessage message) override;
 
     bool mOwnsImage;
+
+    // |mOwnsImage| indicates that |RenderbufferVk| owns the image.  Otherwise, this is a weak
+    // pointer shared with another class.  Due to this sharing, for example through EGL images, the
+    // image must always be dynamically allocated as the renderbuffer can release ownership for
+    // example and it can be transferred to another |RenderbufferVk|.
     vk::ImageHelper *mImage;
     vk::ImageViewHelper mImageViews;
+
+    // If renderbuffer is created through the EXT_multisampled_render_to_texture API, it is expected
+    // that all rendering is done multisampled during the renderpass, and is automatically resolved
+    // (into |mImage|) and discarded afterwards.  |mMultisampledImage| is the implicit image that
+    // contains the multisampled data.
+    vk::ImageHelper mMultisampledImage;
+    vk::ImageViewHelper mMultisampledImageViews;
+
     RenderTargetVk mRenderTarget;
 
     angle::ObserverBinding mImageObserverBinding;

@@ -1493,7 +1493,7 @@ bool ValidateBlitFramebufferParameters(const Context *context,
                         return false;
                     }
 
-                    if (readColorBuffer->getSamples() > 0 &&
+                    if (readColorBuffer->getResourceSamples() > 0 &&
                         (!Format::EquivalentForBlit(readFormat, drawFormat) || !sameBounds))
                     {
                         context->validationError(GL_INVALID_OPERATION,
@@ -1547,7 +1547,7 @@ bool ValidateBlitFramebufferParameters(const Context *context,
                     return false;
                 }
 
-                if (readBuffer->getSamples() > 0 && !sameBounds)
+                if (readBuffer->getResourceSamples() > 0 && !sameBounds)
                 {
                     context->validationError(GL_INVALID_OPERATION, kBlitMultisampledBoundsMismatch);
                     return false;

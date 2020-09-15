@@ -4126,7 +4126,7 @@ void Context::framebufferRenderbuffer(GLenum target,
     if (renderbuffer.value != 0)
     {
         Renderbuffer *renderbufferObject = getRenderbuffer(renderbuffer);
-        GLsizei rbSamples                = renderbufferObject->getSamples();
+        GLsizei rbSamples                = renderbufferObject->getState().getSamples();
 
         framebuffer->setAttachmentMultisample(this, GL_RENDERBUFFER, attachment, gl::ImageIndex(),
                                               renderbufferObject, rbSamples);

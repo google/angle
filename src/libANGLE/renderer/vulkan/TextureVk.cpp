@@ -1905,44 +1905,9 @@ angle::Result TextureVk::getAttachmentRenderTarget(const gl::Context *context,
         RendererVk *renderer = contextVk->getRenderer();
         mMultisampledImageViews[renderToTextureIndex].init(renderer);
 
-        // The image is used as either color or depth/stencil attachment.  Additionally, its memory
-        // is lazily allocated as the contents are discarded at the end of the renderpass and with
-        // tiling GPUs no actual backing memory is required.
-        //
-        // Note that the Vulkan image is created with or without
-        // VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT based on whether the memory that will be used to
-        // create the image would have VK_MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT.  TRANSIENT is
-        // provided if there is any memory that supports LAZILY_ALLOCATED.  However, based on actual
-        // image requirements, such a memory may not be suitable for the image.  We don't support
-        // such a case, which will result in the |initMemory| call below failing.
-        const vk::MemoryProperties &memoryProperties =
-            contextVk->getRenderer()->getMemoryProperties();
-        const bool hasLazilyAllocatedMemory = memoryProperties.hasLazilyAllocatedMemory();
-
-        const VkImageUsageFlags kMultisampledUsageFlags =
-            (hasLazilyAllocatedMemory ? VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT : 0) |
-            (mImage->getAspectFlags() == VK_IMAGE_ASPECT_COLOR_BIT
-                 ? VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT
-                 : VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT);
-        constexpr VkImageCreateFlags kMultisampledCreateFlags = 0;
-
-        ANGLE_TRY(multisampledImage->initExternal(
-            contextVk, mState.getType(), mImage->getExtents(), mImage->getFormat(), samples,
-            kMultisampledUsageFlags, kMultisampledCreateFlags, rx::vk::ImageLayout::Undefined,
-            nullptr, mImage->getBaseLevel(), mImage->getMaxLevel(), mImage->getLevelCount(),
-            mImage->getLayerCount()));
-
-        const VkMemoryPropertyFlags kMultisampledMemoryFlags =
-            VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT |
-            (hasLazilyAllocatedMemory ? VK_MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT : 0);
-
-        ANGLE_TRY(multisampledImage->initMemory(contextVk, renderer->getMemoryProperties(),
-                                                kMultisampledMemoryFlags));
-
-        // Remove the emulated format clear from the multisampled image if any.  There is one
-        // already staged on the resolve image if needed.
-        multisampledImage->removeStagedUpdates(contextVk, multisampledImage->getBaseLevel(),
-                                               multisampledImage->getMaxLevel());
+        // Create the implicit multisampled image.
+        ANGLE_TRY(multisampledImage->initImplicitMultisampledRenderToTexture(
+            contextVk, renderer->getMemoryProperties(), mState.getType(), samples, *mImage));
     }
 
     // Don't flush staged updates here. We'll handle that in FramebufferVk so it can defer clears.
@@ -2376,7 +2341,7 @@ angle::Result TextureVk::initImage(ContextVk *contextVk,
 
     ANGLE_TRY(mImage->initExternal(
         contextVk, mState.getType(), vkExtent, format, samples, mImageUsageFlags, mImageCreateFlags,
-        rx::vk::ImageLayout::Undefined, nullptr, gl::LevelIndex(mState.getEffectiveBaseLevel()),
+        vk::ImageLayout::Undefined, nullptr, gl::LevelIndex(mState.getEffectiveBaseLevel()),
         gl::LevelIndex(mState.getEffectiveMaxLevel()), levelCount, layerCount));
 
     const VkMemoryPropertyFlags flags = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;

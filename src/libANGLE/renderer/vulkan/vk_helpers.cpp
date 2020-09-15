@@ -3360,6 +3360,56 @@ angle::Result ImageHelper::init2DStaging(Context *context,
     return angle::Result::Continue;
 }
 
+angle::Result ImageHelper::initImplicitMultisampledRenderToTexture(
+    Context *context,
+    const MemoryProperties &memoryProperties,
+    gl::TextureType textureType,
+    GLint samples,
+    const ImageHelper &resolveImage)
+{
+    ASSERT(!valid());
+    ASSERT(samples > 1);
+
+    // The image is used as either color or depth/stencil attachment.  Additionally, its memory is
+    // lazily allocated as the contents are discarded at the end of the renderpass and with tiling
+    // GPUs no actual backing memory is required.
+    //
+    // Note that the Vulkan image is created with or without VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT
+    // based on whether the memory that will be used to create the image would have
+    // VK_MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT.  TRANSIENT is provided if there is any memory that
+    // supports LAZILY_ALLOCATED.  However, based on actual image requirements, such a memory may
+    // not be suitable for the image.  We don't support such a case, which will result in the
+    // |initMemory| call below failing.
+    const bool hasLazilyAllocatedMemory = memoryProperties.hasLazilyAllocatedMemory();
+
+    const VkImageUsageFlags kMultisampledUsageFlags =
+        (hasLazilyAllocatedMemory ? VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT : 0) |
+        (resolveImage.getAspectFlags() == VK_IMAGE_ASPECT_COLOR_BIT
+             ? VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT
+             : VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT);
+    constexpr VkImageCreateFlags kMultisampledCreateFlags = 0;
+
+    ANGLE_TRY(initExternal(context, textureType, resolveImage.getExtents(),
+                           resolveImage.getFormat(), samples, kMultisampledUsageFlags,
+                           kMultisampledCreateFlags, ImageLayout::Undefined, nullptr,
+                           resolveImage.getBaseLevel(), resolveImage.getMaxLevel(),
+                           resolveImage.getLevelCount(), resolveImage.getLayerCount()));
+
+    const VkMemoryPropertyFlags kMultisampledMemoryFlags =
+        VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT |
+        (hasLazilyAllocatedMemory ? VK_MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT : 0);
+
+    // If this ever fails, this code should be modified to retry creating the image without the
+    // TRANSIENT flag.
+    ANGLE_TRY(initMemory(context, memoryProperties, kMultisampledMemoryFlags));
+
+    // Remove the emulated format clear from the multisampled image if any.  There is one already
+    // staged on the resolve image if needed.
+    removeStagedUpdates(context, getBaseLevel(), getMaxLevel());
+
+    return angle::Result::Continue;
+}
+
 VkImageAspectFlags ImageHelper::getAspectFlags() const
 {
     return GetFormatAspectFlags(mFormat->actualImageFormat());
@@ -3812,7 +3862,7 @@ void ImageHelper::removeSingleSubresourceStagedUpdates(ContextVk *contextVk,
     mCurrentSingleClearValue.reset();
 }
 
-void ImageHelper::removeStagedUpdates(ContextVk *contextVk,
+void ImageHelper::removeStagedUpdates(Context *context,
                                       gl::LevelIndex levelGLStart,
                                       gl::LevelIndex levelGLEnd)
 {
@@ -3827,7 +3877,7 @@ void ImageHelper::removeStagedUpdates(ContextVk *contextVk,
 
         if (updateMipLevelGL >= levelGLStart && updateMipLevelGL <= levelGLEnd)
         {
-            update->release(contextVk->getRenderer());
+            update->release(context->getRenderer());
             mSubresourceUpdates.erase(update);
         }
         else

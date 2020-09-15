@@ -42,6 +42,7 @@ class RenderbufferState final : angle::NonCopyable
     GLsizei getHeight() const;
     const Format &getFormat() const;
     GLsizei getSamples() const;
+    MultisamplingMode getMultisamplingMode() const;
     InitState getInitState() const;
 
   private:
@@ -51,12 +52,14 @@ class RenderbufferState final : angle::NonCopyable
                 GLsizei height,
                 const Format &format,
                 GLsizei samples,
+                MultisamplingMode multisamplingMode,
                 InitState initState);
 
     GLsizei mWidth;
     GLsizei mHeight;
     Format mFormat;
     GLsizei mSamples;
+    MultisamplingMode mMultisamplingMode;
 
     // For robust resource init.
     InitState mInitState;
@@ -93,6 +96,7 @@ class Renderbuffer final : public RefCountObject<RenderbufferID>,
     GLsizei getHeight() const;
     const Format &getFormat() const;
     GLsizei getSamples() const;
+    MultisamplingMode getMultisamplingMode() const;
     GLuint getRedSize() const;
     GLuint getGreenSize() const;
     GLuint getBlueSize() const;

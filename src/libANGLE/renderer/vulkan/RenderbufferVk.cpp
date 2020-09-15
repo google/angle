@@ -57,42 +57,65 @@ angle::Result RenderbufferVk::setStorageImpl(const gl::Context *context,
     {
         // Check against the state if we need to recreate the storage.
         if (internalformat != mState.getFormat().info->internalFormat ||
-            width != mState.getWidth() || height != mState.getHeight())
+            width != mState.getWidth() || height != mState.getHeight() ||
+            samples != mState.getSamples() || mode != mState.getMultisamplingMode())
         {
             releaseImage(contextVk);
         }
     }
 
-    // TODO(syoussefi): if glRenderbufferStorageMultisampleEXT, need to create the image as
-    // single-sampled and have a multisampled image for intermediate results.  Currently, tests
-    // seem to only use this for depth/stencil buffers and don't attempt to read from it.  This
-    // needs to be fixed and tests added.  http://anglebug.com/4836
-
-    if ((mImage == nullptr || !mImage->valid()) && (width != 0 && height != 0))
+    if ((mImage != nullptr && mImage->valid()) || width == 0 || height == 0)
     {
-        if (mImage == nullptr)
-        {
-            mImage     = new vk::ImageHelper();
-            mOwnsImage = true;
-            mImageObserverBinding.bind(mImage);
-            mImageViews.init(renderer);
-        }
+        return angle::Result::Continue;
+    }
 
-        const angle::Format &textureFormat = vkFormat.actualImageFormat();
-        bool isDepthOrStencilFormat = textureFormat.depthBits > 0 || textureFormat.stencilBits > 0;
-        const VkImageUsageFlags usage =
-            VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_TRANSFER_SRC_BIT |
-            VK_IMAGE_USAGE_SAMPLED_BIT |
-            (textureFormat.redBits > 0 ? VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT : 0) |
-            (isDepthOrStencilFormat ? VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT : 0);
+    if (mImage == nullptr)
+    {
+        mImage     = new vk::ImageHelper();
+        mOwnsImage = true;
+        mImageObserverBinding.bind(mImage);
+        mImageViews.init(renderer);
+    }
 
-        VkExtent3D extents = {static_cast<uint32_t>(width), static_cast<uint32_t>(height), 1u};
-        ANGLE_TRY(mImage->init(contextVk, gl::TextureType::_2D, extents, vkFormat, samples, usage,
-                               gl::LevelIndex(0), gl::LevelIndex(0), 1, 1));
+    const angle::Format &textureFormat = vkFormat.actualImageFormat();
+    const bool isDepthStencilFormat    = textureFormat.hasDepthOrStencilBits();
+    ASSERT(textureFormat.redBits > 0 || isDepthStencilFormat);
 
-        VkMemoryPropertyFlags flags = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
-        ANGLE_TRY(mImage->initMemory(contextVk, renderer->getMemoryProperties(), flags));
+    const VkImageUsageFlags usage =
+        VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_TRANSFER_SRC_BIT |
+        VK_IMAGE_USAGE_SAMPLED_BIT |
+        (isDepthStencilFormat ? VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT
+                              : VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT);
 
+    // TODO(syoussefi): Currently not supported for depth/stencil images. Tests (and Chromium) only
+    // use this for depth/stencil buffers and don't attempt to read from it.  This needs to be fixed
+    // and tests added.  http://anglebug.com/4836
+    const bool isRenderToTexture =
+        mode == gl::MultisamplingMode::MultisampledRenderToTexture && !isDepthStencilFormat;
+    const uint32_t imageSamples = isRenderToTexture ? 1 : samples;
+
+    VkExtent3D extents = {static_cast<uint32_t>(width), static_cast<uint32_t>(height), 1u};
+    ANGLE_TRY(mImage->init(contextVk, gl::TextureType::_2D, extents, vkFormat, imageSamples, usage,
+                           gl::LevelIndex(0), gl::LevelIndex(0), 1, 1));
+
+    VkMemoryPropertyFlags flags = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
+    ANGLE_TRY(mImage->initMemory(contextVk, renderer->getMemoryProperties(), flags));
+
+    // If multisampled render to texture, an implicit multisampled image is created which is used as
+    // the color or depth/stencil attachment.  At the end of the render pass, this image is
+    // automatically resolved into |mImage| and its contents are discarded.
+    if (isRenderToTexture)
+    {
+        mMultisampledImageViews.init(renderer);
+
+        ANGLE_TRY(mMultisampledImage.initImplicitMultisampledRenderToTexture(
+            contextVk, renderer->getMemoryProperties(), gl::TextureType::_2D, samples, *mImage));
+
+        mRenderTarget.init(&mMultisampledImage, &mMultisampledImageViews, mImage, &mImageViews,
+                           gl::LevelIndex(0), 0, true);
+    }
+    else
+    {
         mRenderTarget.init(mImage, &mImageViews, nullptr, nullptr, gl::LevelIndex(0), 0, false);
     }
 
@@ -210,6 +233,12 @@ void RenderbufferVk::releaseImage(ContextVk *contextVk)
     }
 
     mImageViews.release(renderer);
+
+    if (mMultisampledImage.valid())
+    {
+        mMultisampledImage.releaseImage(renderer);
+    }
+    mMultisampledImageViews.release(renderer);
 }
 
 const gl::InternalFormat &RenderbufferVk::getImplementationSizedFormat() const
@@ -239,7 +268,9 @@ angle::Result RenderbufferVk::getRenderbufferImage(const gl::Context *context,
 {
     // Storage not defined.
     if (!mImage || !mImage->valid())
+    {
         return angle::Result::Continue;
+    }
 
     ContextVk *contextVk = vk::GetImpl(context);
     ANGLE_TRY(mImage->flushAllStagedUpdates(contextVk));

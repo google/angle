@@ -2758,7 +2758,7 @@ bool ValidateBlitFramebufferANGLE(const Context *context,
                     return false;
                 }
 
-                if (readBuffer->getSamples() != 0 || drawBuffer->getSamples() != 0)
+                if (readBuffer->getResourceSamples() != 0 || drawBuffer->getResourceSamples() != 0)
                 {
                     context->validationError(GL_INVALID_OPERATION,
                                              kBlitExtensionMultisampledDepthOrStencil);

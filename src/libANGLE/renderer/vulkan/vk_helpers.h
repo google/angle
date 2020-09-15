@@ -1281,6 +1281,13 @@ class ImageHelper final : public Resource, public angle::Subject
                                 const Format &format,
                                 VkImageUsageFlags usage,
                                 uint32_t layerCount);
+    // Create a multisampled image for use as the implicit image in multisampled render to texture
+    // rendering.  If LAZILY_ALLOCATED memory is available, it will prefer that.
+    angle::Result initImplicitMultisampledRenderToTexture(Context *context,
+                                                          const MemoryProperties &memoryProperties,
+                                                          gl::TextureType textureType,
+                                                          GLint samples,
+                                                          const ImageHelper &resolveImage);
 
     void releaseImage(RendererVk *rendererVk);
     void releaseStagingBuffer(RendererVk *renderer);
@@ -1357,7 +1364,7 @@ class ImageHelper final : public Resource, public angle::Subject
     void removeSingleSubresourceStagedUpdates(ContextVk *contextVk,
                                               gl::LevelIndex levelIndexGL,
                                               uint32_t layerIndex);
-    void removeStagedUpdates(ContextVk *contextVk,
+    void removeStagedUpdates(Context *context,
                              gl::LevelIndex levelGLStart,
                              gl::LevelIndex levelGLEnd);
 
