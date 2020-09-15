@@ -74,6 +74,8 @@ for abi in ${abis[@]}; do
         "angle_enable_essl = true" # TODO(geofflang): Disable ESSL once Andrid no longer requires it. anglebug.com/4444
         "angle_enable_glsl = true" # TODO(geofflang): Disable ESSL once Andrid no longer requires it. anglebug.com/4444
         "angle_enable_hlsl = false"
+
+        "angle_enable_commit_id = false"
     )
 
     gn gen ${GN_OUTPUT_DIRECTORY} --args="${gn_args[*]}"
