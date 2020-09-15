@@ -77,13 +77,13 @@ class Renderbuffer final : public RefCountObject<RenderbufferID>,
 
     angle::Result setStorage(const Context *context,
                              GLenum internalformat,
-                             size_t width,
-                             size_t height);
+                             GLsizei width,
+                             GLsizei height);
     angle::Result setStorageMultisample(const Context *context,
-                                        size_t samples,
+                                        GLsizei samples,
                                         GLenum internalformat,
-                                        size_t width,
-                                        size_t height,
+                                        GLsizei width,
+                                        GLsizei height,
                                         MultisamplingMode mode);
     angle::Result setStorageEGLImageTarget(const Context *context, egl::Image *imageTarget);
 

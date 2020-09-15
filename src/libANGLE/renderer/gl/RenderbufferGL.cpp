@@ -41,8 +41,8 @@ void RenderbufferGL::onDestroy(const gl::Context *context)
 
 angle::Result RenderbufferGL::setStorage(const gl::Context *context,
                                          GLenum internalformat,
-                                         size_t width,
-                                         size_t height)
+                                         GLsizei width,
+                                         GLsizei height)
 {
     const FunctionsGL *functions      = GetFunctionsGL(context);
     StateManagerGL *stateManager      = GetStateManagerGL(context);
@@ -53,9 +53,8 @@ angle::Result RenderbufferGL::setStorage(const gl::Context *context,
     nativegl::RenderbufferFormat renderbufferFormat =
         nativegl::GetRenderbufferFormat(functions, features, internalformat);
     ANGLE_GL_TRY_ALWAYS_CHECK(
-        context,
-        functions->renderbufferStorage(GL_RENDERBUFFER, renderbufferFormat.internalFormat,
-                                       static_cast<GLsizei>(width), static_cast<GLsizei>(height)));
+        context, functions->renderbufferStorage(GL_RENDERBUFFER, renderbufferFormat.internalFormat,
+                                                width, height));
 
     mNativeInternalFormat = renderbufferFormat.internalFormat;
 
@@ -63,10 +62,10 @@ angle::Result RenderbufferGL::setStorage(const gl::Context *context,
 }
 
 angle::Result RenderbufferGL::setStorageMultisample(const gl::Context *context,
-                                                    size_t samples,
+                                                    GLsizei samples,
                                                     GLenum internalformat,
-                                                    size_t width,
-                                                    size_t height,
+                                                    GLsizei width,
+                                                    GLsizei height,
                                                     gl::MultisamplingMode mode)
 {
     // Note: GL_EXT_multisampled_render_to_texture is not supported in the GL backend.
@@ -82,10 +81,8 @@ angle::Result RenderbufferGL::setStorageMultisample(const gl::Context *context,
     nativegl::RenderbufferFormat renderbufferFormat =
         nativegl::GetRenderbufferFormat(functions, features, internalformat);
     ANGLE_GL_TRY_ALWAYS_CHECK(
-        context,
-        functions->renderbufferStorageMultisample(
-            GL_RENDERBUFFER, static_cast<GLsizei>(samples), renderbufferFormat.internalFormat,
-            static_cast<GLsizei>(width), static_cast<GLsizei>(height)));
+        context, functions->renderbufferStorageMultisample(
+                     GL_RENDERBUFFER, samples, renderbufferFormat.internalFormat, width, height));
 
     mNativeInternalFormat = renderbufferFormat.internalFormat;
 

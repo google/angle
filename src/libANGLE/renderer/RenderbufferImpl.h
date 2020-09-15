@@ -38,13 +38,13 @@ class RenderbufferImpl : public FramebufferAttachmentObjectImpl
 
     virtual angle::Result setStorage(const gl::Context *context,
                                      GLenum internalformat,
-                                     size_t width,
-                                     size_t height)                         = 0;
+                                     GLsizei width,
+                                     GLsizei height)                        = 0;
     virtual angle::Result setStorageMultisample(const gl::Context *context,
-                                                size_t samples,
+                                                GLsizei samples,
                                                 GLenum internalformat,
-                                                size_t width,
-                                                size_t height,
+                                                GLsizei width,
+                                                GLsizei height,
                                                 gl::MultisamplingMode mode) = 0;
     virtual angle::Result setStorageEGLImageTarget(const gl::Context *context,
                                                    egl::Image *image)       = 0;

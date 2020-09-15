@@ -38,10 +38,10 @@ void RenderbufferVk::onDestroy(const gl::Context *context)
 }
 
 angle::Result RenderbufferVk::setStorageImpl(const gl::Context *context,
-                                             size_t samples,
+                                             GLsizei samples,
                                              GLenum internalformat,
-                                             size_t width,
-                                             size_t height,
+                                             GLsizei width,
+                                             GLsizei height,
                                              gl::MultisamplingMode mode)
 {
     ContextVk *contextVk       = vk::GetImpl(context);
@@ -57,8 +57,7 @@ angle::Result RenderbufferVk::setStorageImpl(const gl::Context *context,
     {
         // Check against the state if we need to recreate the storage.
         if (internalformat != mState.getFormat().info->internalFormat ||
-            static_cast<GLsizei>(width) != mState.getWidth() ||
-            static_cast<GLsizei>(height) != mState.getHeight())
+            width != mState.getWidth() || height != mState.getHeight())
         {
             releaseImage(contextVk);
         }
@@ -88,9 +87,8 @@ angle::Result RenderbufferVk::setStorageImpl(const gl::Context *context,
             (isDepthOrStencilFormat ? VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT : 0);
 
         VkExtent3D extents = {static_cast<uint32_t>(width), static_cast<uint32_t>(height), 1u};
-        ANGLE_TRY(mImage->init(contextVk, gl::TextureType::_2D, extents, vkFormat,
-                               static_cast<uint32_t>(samples), usage, gl::LevelIndex(0),
-                               gl::LevelIndex(0), 1, 1));
+        ANGLE_TRY(mImage->init(contextVk, gl::TextureType::_2D, extents, vkFormat, samples, usage,
+                               gl::LevelIndex(0), gl::LevelIndex(0), 1, 1));
 
         VkMemoryPropertyFlags flags = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
         ANGLE_TRY(mImage->initMemory(contextVk, renderer->getMemoryProperties(), flags));
@@ -103,18 +101,18 @@ angle::Result RenderbufferVk::setStorageImpl(const gl::Context *context,
 
 angle::Result RenderbufferVk::setStorage(const gl::Context *context,
                                          GLenum internalformat,
-                                         size_t width,
-                                         size_t height)
+                                         GLsizei width,
+                                         GLsizei height)
 {
     return setStorageImpl(context, 1, internalformat, width, height,
                           gl::MultisamplingMode::Regular);
 }
 
 angle::Result RenderbufferVk::setStorageMultisample(const gl::Context *context,
-                                                    size_t samples,
+                                                    GLsizei samples,
                                                     GLenum internalformat,
-                                                    size_t width,
-                                                    size_t height,
+                                                    GLsizei width,
+                                                    GLsizei height,
                                                     gl::MultisamplingMode mode)
 {
     return setStorageImpl(context, samples, internalformat, width, height, mode);

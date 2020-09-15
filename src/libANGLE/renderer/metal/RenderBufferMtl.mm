@@ -31,10 +31,10 @@ void RenderbufferMtl::releaseTexture()
 }
 
 angle::Result RenderbufferMtl::setStorageImpl(const gl::Context *context,
-                                              size_t samples,
+                                              GLsizei samples,
                                               GLenum internalformat,
-                                              size_t width,
-                                              size_t height)
+                                              GLsizei width,
+                                              GLsizei height)
 {
     ContextMtl *contextMtl = mtl::GetImpl(context);
 
@@ -45,8 +45,7 @@ angle::Result RenderbufferMtl::setStorageImpl(const gl::Context *context,
     {
         // Check against the state if we need to recreate the storage.
         if (internalformat != mState.getFormat().info->internalFormat ||
-            static_cast<GLsizei>(width) != mState.getWidth() ||
-            static_cast<GLsizei>(height) != mState.getHeight())
+            width != mState.getWidth() || height != mState.getHeight())
         {
             releaseTexture();
         }
@@ -59,8 +58,7 @@ angle::Result RenderbufferMtl::setStorageImpl(const gl::Context *context,
 
     if ((mTexture == nullptr || !mTexture->valid()) && (width != 0 && height != 0))
     {
-        ANGLE_TRY(mtl::Texture::Make2DTexture(contextMtl, mFormat, static_cast<uint32_t>(width),
-                                              static_cast<uint32_t>(height), 1, false,
+        ANGLE_TRY(mtl::Texture::Make2DTexture(contextMtl, mFormat, width, height, 1, false,
                                               mFormat.hasDepthAndStencilBits(), &mTexture));
 
         mRenderTarget.set(mTexture, 0, 0, mFormat);
@@ -83,17 +81,17 @@ angle::Result RenderbufferMtl::setStorageImpl(const gl::Context *context,
 
 angle::Result RenderbufferMtl::setStorage(const gl::Context *context,
                                           GLenum internalformat,
-                                          size_t width,
-                                          size_t height)
+                                          GLsizei width,
+                                          GLsizei height)
 {
     return setStorageImpl(context, 1, internalformat, width, height);
 }
 
 angle::Result RenderbufferMtl::setStorageMultisample(const gl::Context *context,
-                                                     size_t samples,
+                                                     GLsizei samples,
                                                      GLenum internalformat,
-                                                     size_t width,
-                                                     size_t height,
+                                                     GLsizei width,
+                                                     GLsizei height,
                                                      gl::MultisamplingMode mode)
 {
     // NOTE(hqle): Support MSAA
