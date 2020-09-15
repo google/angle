@@ -779,6 +779,42 @@ void Format::init(const DisplayMtl *display, angle::FormatID intendedFormatId_)
             this->swizzled = false;
             break;
 
+        case angle::FormatID::BPTC_RGBA_UNORM_BLOCK:
+
+            this->metalFormat    = MTLPixelFormatBC7_RGBAUnorm;
+            this->actualFormatId = angle::FormatID::BPTC_RGBA_UNORM_BLOCK;
+            this->initFunction   = nullptr;
+
+            this->swizzled = false;
+            break;
+
+        case angle::FormatID::BPTC_RGB_SIGNED_FLOAT_BLOCK:
+
+            this->metalFormat    = MTLPixelFormatBC6H_RGBFloat;
+            this->actualFormatId = angle::FormatID::BPTC_RGB_SIGNED_FLOAT_BLOCK;
+            this->initFunction   = nullptr;
+
+            this->swizzled = false;
+            break;
+
+        case angle::FormatID::BPTC_RGB_UNSIGNED_FLOAT_BLOCK:
+
+            this->metalFormat    = MTLPixelFormatBC6H_RGBUfloat;
+            this->actualFormatId = angle::FormatID::BPTC_RGB_UNSIGNED_FLOAT_BLOCK;
+            this->initFunction   = nullptr;
+
+            this->swizzled = false;
+            break;
+
+        case angle::FormatID::BPTC_SRGB_ALPHA_UNORM_BLOCK:
+
+            this->metalFormat    = MTLPixelFormatBC7_RGBAUnorm_sRGB;
+            this->actualFormatId = angle::FormatID::BPTC_SRGB_ALPHA_UNORM_BLOCK;
+            this->initFunction   = nullptr;
+
+            this->swizzled = false;
+            break;
+
         case angle::FormatID::D16_UNORM:
 
             this->metalFormat    = MTLPixelFormatDepth16Unorm;
@@ -2540,6 +2576,62 @@ void FormatTable::initNativeFormatCapsAutogen(const DisplayMtl *display)
                   /** colorRenderable*/ false, /** depthRenderable*/ true);
 
 #if TARGET_OS_OSX || TARGET_OS_MACCATALYST
+    setFormatCaps(MTLPixelFormatBC1_RGBA, /** filterable*/ true, /** writable*/ false,
+                  /** blendable*/ false, /** multisample*/ false, /** resolve*/ false,
+                  /** colorRenderable*/ false, /** depthRenderable*/ false);
+
+    setFormatCaps(MTLPixelFormatBC1_RGBA_sRGB, /** filterable*/ true, /** writable*/ false,
+                  /** blendable*/ false, /** multisample*/ false, /** resolve*/ false,
+                  /** colorRenderable*/ false, /** depthRenderable*/ false);
+
+    setFormatCaps(MTLPixelFormatBC2_RGBA, /** filterable*/ true, /** writable*/ false,
+                  /** blendable*/ false, /** multisample*/ false, /** resolve*/ false,
+                  /** colorRenderable*/ false, /** depthRenderable*/ false);
+
+    setFormatCaps(MTLPixelFormatBC2_RGBA_sRGB, /** filterable*/ true, /** writable*/ false,
+                  /** blendable*/ false, /** multisample*/ false, /** resolve*/ false,
+                  /** colorRenderable*/ false, /** depthRenderable*/ false);
+
+    setFormatCaps(MTLPixelFormatBC3_RGBA, /** filterable*/ true, /** writable*/ false,
+                  /** blendable*/ false, /** multisample*/ false, /** resolve*/ false,
+                  /** colorRenderable*/ false, /** depthRenderable*/ false);
+
+    setFormatCaps(MTLPixelFormatBC3_RGBA_sRGB, /** filterable*/ true, /** writable*/ false,
+                  /** blendable*/ false, /** multisample*/ false, /** resolve*/ false,
+                  /** colorRenderable*/ false, /** depthRenderable*/ false);
+
+    setFormatCaps(MTLPixelFormatBC4_RSnorm, /** filterable*/ true, /** writable*/ false,
+                  /** blendable*/ false, /** multisample*/ false, /** resolve*/ false,
+                  /** colorRenderable*/ false, /** depthRenderable*/ false);
+
+    setFormatCaps(MTLPixelFormatBC4_RUnorm, /** filterable*/ true, /** writable*/ false,
+                  /** blendable*/ false, /** multisample*/ false, /** resolve*/ false,
+                  /** colorRenderable*/ false, /** depthRenderable*/ false);
+
+    setFormatCaps(MTLPixelFormatBC5_RGSnorm, /** filterable*/ true, /** writable*/ false,
+                  /** blendable*/ false, /** multisample*/ false, /** resolve*/ false,
+                  /** colorRenderable*/ false, /** depthRenderable*/ false);
+
+    setFormatCaps(MTLPixelFormatBC5_RGUnorm, /** filterable*/ true, /** writable*/ false,
+                  /** blendable*/ false, /** multisample*/ false, /** resolve*/ false,
+                  /** colorRenderable*/ false, /** depthRenderable*/ false);
+
+    setFormatCaps(MTLPixelFormatBC6H_RGBFloat, /** filterable*/ true, /** writable*/ false,
+                  /** blendable*/ false, /** multisample*/ false, /** resolve*/ false,
+                  /** colorRenderable*/ false, /** depthRenderable*/ false);
+
+    setFormatCaps(MTLPixelFormatBC6H_RGBUfloat, /** filterable*/ true, /** writable*/ false,
+                  /** blendable*/ false, /** multisample*/ false, /** resolve*/ false,
+                  /** colorRenderable*/ false, /** depthRenderable*/ false);
+
+    setFormatCaps(MTLPixelFormatBC7_RGBAUnorm, /** filterable*/ true, /** writable*/ false,
+                  /** blendable*/ false, /** multisample*/ false, /** resolve*/ false,
+                  /** colorRenderable*/ false, /** depthRenderable*/ false);
+
+    setFormatCaps(MTLPixelFormatBC7_RGBAUnorm_sRGB, /** filterable*/ true, /** writable*/ false,
+                  /** blendable*/ false, /** multisample*/ false, /** resolve*/ false,
+                  /** colorRenderable*/ false, /** depthRenderable*/ false);
+
     setFormatCaps(MTLPixelFormatDepth16Unorm, /** filterable*/ true, /** writable*/ false,
                   /** blendable*/ false, /** multisample*/ true,
                   /** resolve*/ supportDepthAutoResolve, /** colorRenderable*/ false,
@@ -2567,6 +2659,78 @@ void FormatTable::initNativeFormatCapsAutogen(const DisplayMtl *display)
     setFormatCaps(MTLPixelFormatBGR5A1Unorm, /** filterable*/ true, /** writable*/ false,
                   /** blendable*/ true, /** multisample*/ true, /** resolve*/ true,
                   /** colorRenderable*/ true, /** depthRenderable*/ false);
+
+    setFormatCaps(MTLPixelFormatEAC_R11Snorm, /** filterable*/ true, /** writable*/ false,
+                  /** blendable*/ false, /** multisample*/ false, /** resolve*/ false,
+                  /** colorRenderable*/ false, /** depthRenderable*/ false);
+
+    setFormatCaps(MTLPixelFormatEAC_R11Unorm, /** filterable*/ true, /** writable*/ false,
+                  /** blendable*/ false, /** multisample*/ false, /** resolve*/ false,
+                  /** colorRenderable*/ false, /** depthRenderable*/ false);
+
+    setFormatCaps(MTLPixelFormatEAC_RG11Snorm, /** filterable*/ true, /** writable*/ false,
+                  /** blendable*/ false, /** multisample*/ false, /** resolve*/ false,
+                  /** colorRenderable*/ false, /** depthRenderable*/ false);
+
+    setFormatCaps(MTLPixelFormatEAC_RG11Unorm, /** filterable*/ true, /** writable*/ false,
+                  /** blendable*/ false, /** multisample*/ false, /** resolve*/ false,
+                  /** colorRenderable*/ false, /** depthRenderable*/ false);
+
+    setFormatCaps(MTLPixelFormatEAC_RGBA8, /** filterable*/ true, /** writable*/ false,
+                  /** blendable*/ false, /** multisample*/ false, /** resolve*/ false,
+                  /** colorRenderable*/ false, /** depthRenderable*/ false);
+
+    setFormatCaps(MTLPixelFormatEAC_RGBA8_sRGB, /** filterable*/ true, /** writable*/ false,
+                  /** blendable*/ false, /** multisample*/ false, /** resolve*/ false,
+                  /** colorRenderable*/ false, /** depthRenderable*/ false);
+
+    setFormatCaps(MTLPixelFormatETC2_RGB8, /** filterable*/ true, /** writable*/ false,
+                  /** blendable*/ false, /** multisample*/ false, /** resolve*/ false,
+                  /** colorRenderable*/ false, /** depthRenderable*/ false);
+
+    setFormatCaps(MTLPixelFormatETC2_RGB8A1, /** filterable*/ true, /** writable*/ false,
+                  /** blendable*/ false, /** multisample*/ false, /** resolve*/ false,
+                  /** colorRenderable*/ false, /** depthRenderable*/ false);
+
+    setFormatCaps(MTLPixelFormatETC2_RGB8A1_sRGB, /** filterable*/ true, /** writable*/ false,
+                  /** blendable*/ false, /** multisample*/ false, /** resolve*/ false,
+                  /** colorRenderable*/ false, /** depthRenderable*/ false);
+
+    setFormatCaps(MTLPixelFormatETC2_RGB8_sRGB, /** filterable*/ true, /** writable*/ false,
+                  /** blendable*/ false, /** multisample*/ false, /** resolve*/ false,
+                  /** colorRenderable*/ false, /** depthRenderable*/ false);
+
+    setFormatCaps(MTLPixelFormatPVRTC_RGBA_2BPP, /** filterable*/ true, /** writable*/ false,
+                  /** blendable*/ false, /** multisample*/ false, /** resolve*/ false,
+                  /** colorRenderable*/ false, /** depthRenderable*/ false);
+
+    setFormatCaps(MTLPixelFormatPVRTC_RGBA_2BPP_sRGB, /** filterable*/ true, /** writable*/ false,
+                  /** blendable*/ false, /** multisample*/ false, /** resolve*/ false,
+                  /** colorRenderable*/ false, /** depthRenderable*/ false);
+
+    setFormatCaps(MTLPixelFormatPVRTC_RGBA_4BPP, /** filterable*/ true, /** writable*/ false,
+                  /** blendable*/ false, /** multisample*/ false, /** resolve*/ false,
+                  /** colorRenderable*/ false, /** depthRenderable*/ false);
+
+    setFormatCaps(MTLPixelFormatPVRTC_RGBA_4BPP_sRGB, /** filterable*/ true, /** writable*/ false,
+                  /** blendable*/ false, /** multisample*/ false, /** resolve*/ false,
+                  /** colorRenderable*/ false, /** depthRenderable*/ false);
+
+    setFormatCaps(MTLPixelFormatPVRTC_RGB_2BPP, /** filterable*/ true, /** writable*/ false,
+                  /** blendable*/ false, /** multisample*/ false, /** resolve*/ false,
+                  /** colorRenderable*/ false, /** depthRenderable*/ false);
+
+    setFormatCaps(MTLPixelFormatPVRTC_RGB_2BPP_sRGB, /** filterable*/ true, /** writable*/ false,
+                  /** blendable*/ false, /** multisample*/ false, /** resolve*/ false,
+                  /** colorRenderable*/ false, /** depthRenderable*/ false);
+
+    setFormatCaps(MTLPixelFormatPVRTC_RGB_4BPP, /** filterable*/ true, /** writable*/ false,
+                  /** blendable*/ false, /** multisample*/ false, /** resolve*/ false,
+                  /** colorRenderable*/ false, /** depthRenderable*/ false);
+
+    setFormatCaps(MTLPixelFormatPVRTC_RGB_4BPP_sRGB, /** filterable*/ true, /** writable*/ false,
+                  /** blendable*/ false, /** multisample*/ false, /** resolve*/ false,
+                  /** colorRenderable*/ false, /** depthRenderable*/ false);
 
 #endif  // TARGET_OS_OSX || TARGET_OS_MACCATALYST
 }

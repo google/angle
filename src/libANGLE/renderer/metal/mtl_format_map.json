@@ -115,7 +115,11 @@
             "BC4_RED_UNORM_BLOCK": "MTLPixelFormatBC4_RUnorm",
             "BC4_RED_SNORM_BLOCK": "MTLPixelFormatBC4_RSnorm",
             "BC5_RG_UNORM_BLOCK": "MTLPixelFormatBC5_RGUnorm",
-            "BC5_RG_SNORM_BLOCK": "MTLPixelFormatBC5_RGSnorm"
+            "BC5_RG_SNORM_BLOCK": "MTLPixelFormatBC5_RGSnorm",
+            "BPTC_RGB_UNSIGNED_FLOAT_BLOCK": "MTLPixelFormatBC6H_RGBUfloat",
+            "BPTC_RGB_SIGNED_FLOAT_BLOCK": "MTLPixelFormatBC6H_RGBFloat",
+            "BPTC_RGBA_UNORM_BLOCK": "MTLPixelFormatBC7_RGBAUnorm",
+            "BPTC_SRGB_ALPHA_UNORM_BLOCK": "MTLPixelFormatBC7_RGBAUnorm_sRGB"
         },
         "override": {
             "L8_UNORM": "R8G8B8A8_UNORM",
@@ -581,6 +585,48 @@
                 "resolve": "supportDepthStencilAutoResolve",
                 "colorRenderable": "false",
                 "depthRenderable": "display->supportsMacGPUFamily(1)"
+            },
+            "MTLPixelFormatBC1_RGBA":{
+                "filterable": "true"
+            },
+            "MTLPixelFormatBC1_RGBA_sRGB":{
+                "filterable": "true"
+            },
+            "MTLPixelFormatBC2_RGBA":{
+                "filterable": "true"
+            },
+            "MTLPixelFormatBC2_RGBA_sRGB":{
+                "filterable": "true"
+            },
+            "MTLPixelFormatBC3_RGBA":{
+                "filterable": "true"
+            },
+            "MTLPixelFormatBC3_RGBA_sRGB":{
+                "filterable": "true"
+            },
+            "MTLPixelFormatBC4_RUnorm":{
+                "filterable": "true"
+            },
+            "MTLPixelFormatBC4_RSnorm":{
+                "filterable": "true"
+            },
+            "MTLPixelFormatBC5_RGUnorm":{
+                "filterable": "true"
+            },
+            "MTLPixelFormatBC5_RGSnorm":{
+                "filterable": "true"
+            },
+            "MTLPixelFormatBC6H_RGBUfloat":{
+                "filterable": "true"
+            },
+            "MTLPixelFormatBC6H_RGBFloat":{
+                "filterable": "true"
+            },
+            "MTLPixelFormatBC7_RGBAUnorm":{
+                "filterable": "true"
+            },
+            "MTLPixelFormatBC7_RGBAUnorm_sRGB":{
+                "filterable": "true"
             }
         },
         "caps_ios": {
@@ -615,6 +661,60 @@
                 "multisample": "true",
                 "resolve": "true",
                 "colorRenderable": "true"
+            },
+            "MTLPixelFormatPVRTC_RGB_4BPP":{
+                "filterable": "true"
+            },
+            "MTLPixelFormatPVRTC_RGB_2BPP":{
+                "filterable": "true"
+            },
+            "MTLPixelFormatPVRTC_RGBA_4BPP":{
+                "filterable": "true"
+            },
+            "MTLPixelFormatPVRTC_RGBA_2BPP":{
+                "filterable": "true"
+            },
+            "MTLPixelFormatPVRTC_RGB_2BPP_sRGB":{
+                "filterable": "true"
+            },
+            "MTLPixelFormatPVRTC_RGB_4BPP_sRGB":{
+                "filterable": "true"
+            },
+            "MTLPixelFormatPVRTC_RGBA_2BPP_sRGB":{
+                "filterable": "true"
+            },
+            "MTLPixelFormatPVRTC_RGBA_4BPP_sRGB":{
+                "filterable": "true"
+            },
+            "MTLPixelFormatETC2_RGB8":{
+                "filterable": "true"
+            },
+            "MTLPixelFormatETC2_RGB8_sRGB":{
+                "filterable": "true"
+            },
+            "MTLPixelFormatETC2_RGB8A1":{
+                "filterable": "true"
+            },
+            "MTLPixelFormatETC2_RGB8A1_sRGB":{
+                "filterable": "true"
+            },
+            "MTLPixelFormatEAC_RGBA8":{
+                "filterable": "true"
+            },
+            "MTLPixelFormatEAC_RGBA8_sRGB":{
+                "filterable": "true"
+            },
+            "MTLPixelFormatEAC_R11Unorm":{
+                "filterable": "true"
+            },
+            "MTLPixelFormatEAC_R11Snorm":{
+                "filterable": "true"
+            },
+            "MTLPixelFormatEAC_RG11Unorm":{
+                "filterable": "true"
+            },
+            "MTLPixelFormatEAC_RG11Snorm":{
+                "filterable": "true"
             }
         }
     },
