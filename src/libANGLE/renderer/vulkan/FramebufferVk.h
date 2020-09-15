@@ -116,6 +116,7 @@ class FramebufferVk : public FramebufferImpl
     RenderTargetVk *getColorReadRenderTarget() const;
 
     angle::Result startNewRenderPass(ContextVk *contextVk,
+                                     bool readOnlyDepthMode,
                                      const gl::Rectangle &renderArea,
                                      vk::CommandBuffer **commandBufferOut);
     void restoreDepthStencilDefinedContents();
@@ -133,9 +134,13 @@ class FramebufferVk : public FramebufferImpl
 
     bool hasDeferredClears() const { return !mDeferredClears.empty(); }
     angle::Result flushDeferredClears(ContextVk *contextVk, const gl::Rectangle &renderArea);
-    void setReadOnlyDepthMode(bool readOnlyDepthEnabled);
-    angle::Result restartRenderPassInReadOnlyDepthMode(ContextVk *contextVk,
-                                                       vk::CommandBufferHelper *renderPass);
+    void setReadOnlyDepthFeedbackLoopMode(bool readOnlyDepthFeedbackModeEnabled)
+    {
+        mReadOnlyDepthFeedbackLoopMode = readOnlyDepthFeedbackModeEnabled;
+    }
+    bool isReadOnlyDepthFeedbackLoopMode() const { return mReadOnlyDepthFeedbackLoopMode; }
+    angle::Result updateRenderPassReadOnlyDepthMode(ContextVk *contextVk,
+                                                    vk::CommandBufferHelper *renderPass);
 
   private:
     FramebufferVk(RendererVk *renderer,
@@ -189,19 +194,20 @@ class FramebufferVk : public FramebufferImpl
                                 uint8_t stencilMask,
                                 const VkClearColorValue &clearColorValue,
                                 const VkClearDepthStencilValue &clearDepthStencilValue);
-    void clearWithLoadOp(ContextVk *contextVk,
-                         gl::DrawBufferMask clearColorBuffers,
-                         bool clearDepth,
-                         bool clearStencil,
-                         const VkClearColorValue &clearColorValue,
-                         const VkClearDepthStencilValue &clearDepthStencilValue);
-    void clearWithCommand(vk::CommandBuffer *renderPassCommandBuffer,
-                          const gl::Rectangle &scissoredRenderArea,
-                          gl::DrawBufferMask clearColorBuffers,
-                          bool clearDepth,
-                          bool clearStencil,
-                          const VkClearColorValue &clearColorValue,
-                          const VkClearDepthStencilValue &clearDepthStencilValue);
+    angle::Result clearWithLoadOp(ContextVk *contextVk,
+                                  gl::DrawBufferMask clearColorBuffers,
+                                  bool clearDepth,
+                                  bool clearStencil,
+                                  const VkClearColorValue &clearColorValue,
+                                  const VkClearDepthStencilValue &clearDepthStencilValue);
+    angle::Result clearWithCommand(ContextVk *contextVk,
+                                   vk::CommandBufferHelper *renderpassCommands,
+                                   const gl::Rectangle &scissoredRenderArea,
+                                   gl::DrawBufferMask clearColorBuffers,
+                                   bool clearDepth,
+                                   bool clearStencil,
+                                   const VkClearColorValue &clearColorValue,
+                                   const VkClearDepthStencilValue &clearDepthStencilValue);
     void updateActiveColorMasks(size_t colorIndex, bool r, bool g, bool b, bool a);
     void updateRenderPassDesc();
     angle::Result updateColorAttachment(const gl::Context *context,
@@ -226,6 +232,8 @@ class FramebufferVk : public FramebufferImpl
                                       vk::ImageViewSubresourceSerial resolveImageViewSerial);
     void removeColorResolveAttachment(uint32_t colorIndexGL);
 
+    void setReadOnlyDepthMode(bool readOnlyDepthEnabled);
+
     WindowSurfaceVk *mBackbuffer;
 
     vk::RenderPassDesc mRenderPassDesc;
@@ -248,6 +256,11 @@ class FramebufferVk : public FramebufferImpl
     angle::HashMap<vk::FramebufferDesc, vk::FramebufferHelper> mFramebufferCache;
 
     vk::ClearValuesArray mDeferredClears;
+
+    // Tracks if we are in depth feedback loop. Depth read only feedback loop is a special kind of
+    // depth stencil read only mode. When we are in feedback loop, we must flush renderpass to exit
+    // the loop instead of update the layout.
+    bool mReadOnlyDepthFeedbackLoopMode;
 };
 }  // namespace rx
 

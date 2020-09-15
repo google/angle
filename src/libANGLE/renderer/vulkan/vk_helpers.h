@@ -981,8 +981,9 @@ class CommandBufferHelper : angle::NonCopyable
 
     void endRenderPass(ContextVk *contextVk);
 
-    void restartRenderPassWithReadOnlyDepth(const Framebuffer &framebuffer,
-                                            const RenderPassDesc &renderPassDesc);
+    void updateStartedRenderPassWithDepthMode(const Framebuffer &framebuffer,
+                                              const RenderPassDesc &renderPassDesc,
+                                              bool readOnlyDepth);
 
     void beginTransformFeedback(size_t validBufferCount,
                                 const VkBuffer *counterBuffers,
@@ -1081,12 +1082,13 @@ class CommandBufferHelper : angle::NonCopyable
 
     void updateRenderPassForResolve(vk::Framebuffer *newFramebuffer,
                                     const vk::RenderPassDesc &renderPassDesc);
-    ResourceAccess getDepthStartAccess() const { return mDepthStartAccess; }
 
-    bool hasDepthWriteOrClear() const
+    bool hasDepthStencilWriteOrClear() const
     {
-        return mDepthStartAccess == ResourceAccess::Write ||
-               mAttachmentOps[mDepthStencilAttachmentIndex].loadOp == VK_ATTACHMENT_LOAD_OP_CLEAR;
+        return mDepthAccess == ResourceAccess::Write || mStencilAccess == ResourceAccess::Write ||
+               mAttachmentOps[mDepthStencilAttachmentIndex].loadOp == VK_ATTACHMENT_LOAD_OP_CLEAR ||
+               mAttachmentOps[mDepthStencilAttachmentIndex].stencilLoadOp ==
+                   VK_ATTACHMENT_LOAD_OP_CLEAR;
     }
 
   private:
@@ -1122,9 +1124,14 @@ class CommandBufferHelper : angle::NonCopyable
 
     bool mIsRenderPassCommandBuffer;
 
-    // State tracking for whether to optimize the loadOp to DONT_CARE
-    ResourceAccess mDepthStartAccess;
-    ResourceAccess mStencilStartAccess;
+    // State tracking for the maximum (Write been the highest) depth access during the entire
+    // renderpass. Note that this does not include VK_ATTACHMENT_LOAD_OP_CLEAR which is tracked
+    // separately. This is done this way to allow clear op to being optimized out when we find out
+    // that the depth buffer is not being used during the entire renderpass and store op is
+    // VK_ATTACHMENT_STORE_OP_DONTCARE.
+    ResourceAccess mDepthAccess;
+    // Similar tracking to mDepthAccess but for the stencil aspect.
+    ResourceAccess mStencilAccess;
 
     // State tracking for whether to optimize the storeOp to DONT_CARE
     uint32_t mDepthCmdSizeInvalidated;

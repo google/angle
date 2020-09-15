@@ -443,6 +443,7 @@ TEST_P(VulkanPerformanceCounterTest, ReadOnlyDepthStencilFeedbackLoopUsesSingleR
 
     // Draw to a first FBO to initialize the depth buffer.
     glBindFramebuffer(GL_FRAMEBUFFER, depthOnlyFBO);
+    glEnable(GL_DEPTH_TEST);
     glUseProgram(redProgram);
     glDrawArrays(GL_TRIANGLES, 0, 6);
     ASSERT_GL_NO_ERROR();
@@ -451,7 +452,6 @@ TEST_P(VulkanPerformanceCounterTest, ReadOnlyDepthStencilFeedbackLoopUsesSingleR
 
     // Start new RenderPass with depth write disabled and no loop.
     glBindFramebuffer(GL_FRAMEBUFFER, depthAndColorFBO);
-    glEnable(GL_DEPTH_TEST);
     glDepthMask(false);
     glDrawArrays(GL_TRIANGLES, 0, 6);
     ASSERT_GL_NO_ERROR();
@@ -1636,6 +1636,73 @@ TEST_P(VulkanPerformanceCounterTest, RenderToTextureDepthStencilTextureShouldNot
     EXPECT_PIXEL_COLOR_EQ(kSize / 2 - 1, 0, GLColor::red);
     EXPECT_PIXEL_COLOR_EQ(0, kSize / 2 - 1, GLColor::red);
     EXPECT_PIXEL_COLOR_EQ(kSize / 2 - 1, kSize / 2 - 1, GLColor::red);
+}
+
+// Ensures we use read-only depth layout when there is no write
+TEST_P(VulkanPerformanceCounterTest, ReadOnlyDepthBufferLayout)
+{
+    const rx::vk::PerfCounters &counters = hackANGLE();
+
+    constexpr GLsizei kSize = 64;
+
+    // Create depth only FBO and fill depth texture to leftHalf=0.0 and rightHalf=1.0. This should
+    // use writeable layout
+    uint32_t expectedReadOnlyDepthStencilCount = counters.readOnlyDepthStencilRenderPasses;
+    GLTexture depthTexture;
+    glBindTexture(GL_TEXTURE_2D, depthTexture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT16, kSize, kSize, 0, GL_DEPTH_COMPONENT,
+                 GL_UNSIGNED_INT, nullptr);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    GLFramebuffer depthOnlyFBO;
+    glBindFramebuffer(GL_FRAMEBUFFER, depthOnlyFBO);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthTexture, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_ALWAYS);
+    glDepthMask(GL_TRUE);
+    ANGLE_GL_PROGRAM(redProgram, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
+    glViewport(0, 0, kSize / 2, kSize);
+    drawQuad(redProgram, essl1_shaders::PositionAttrib(), 0.0f);
+    glViewport(kSize / 2, 0, kSize / 2, kSize);
+    drawQuad(redProgram, essl1_shaders::PositionAttrib(), 1.0f);
+    glViewport(0, 0, kSize, kSize);
+    ASSERT_GL_NO_ERROR();
+
+    // Because the layout counter is updated at end of renderpass, we need to issue a finish call
+    // here to end the renderpass.
+    glFinish();
+
+    uint32_t actualReadOnlyDepthStencilCount = counters.readOnlyDepthStencilRenderPasses;
+    EXPECT_EQ(expectedReadOnlyDepthStencilCount, actualReadOnlyDepthStencilCount);
+
+    // Create a color+depth FBO and use depth as read only. This should use read only layout
+    expectedReadOnlyDepthStencilCount = counters.readOnlyDepthStencilRenderPasses + 1;
+    GLTexture colorTexture;
+    glBindTexture(GL_TEXTURE_2D, colorTexture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    GLFramebuffer depthAndColorFBO;
+    glBindFramebuffer(GL_FRAMEBUFFER, depthAndColorFBO);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorTexture, 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthTexture, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    // Clear color to blue and draw a green quad with depth=0.5
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
+    glDepthMask(GL_FALSE);
+    GLfloat *clearColor = GLColor::blue.toNormalizedVector().data();
+    glClearColor(clearColor[0], clearColor[1], clearColor[2], clearColor[3]);
+    glClear(GL_COLOR_BUFFER_BIT);
+    drawQuad(redProgram, essl1_shaders::PositionAttrib(), 0.5f);
+    ASSERT_GL_NO_ERROR();
+    // The pixel check will end renderpass.
+    EXPECT_PIXEL_COLOR_EQ(1, 1, GLColor::blue);
+    EXPECT_PIXEL_COLOR_EQ(1 + kSize / 2, 1, GLColor::red);
+    actualReadOnlyDepthStencilCount = counters.readOnlyDepthStencilRenderPasses;
+    EXPECT_EQ(expectedReadOnlyDepthStencilCount, actualReadOnlyDepthStencilCount);
 }
 
 ANGLE_INSTANTIATE_TEST(VulkanPerformanceCounterTest, ES3_VULKAN());

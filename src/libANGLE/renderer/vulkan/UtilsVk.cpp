@@ -1327,6 +1327,20 @@ angle::Result UtilsVk::clearFramebuffer(ContextVk *contextVk,
         ANGLE_TRY(contextVk->startRenderPass(scissoredRenderArea, &commandBuffer));
     }
 
+    if (params.clearStencil)
+    {
+        vk::CommandBufferHelper *renderpassCommands;
+        renderpassCommands = &contextVk->getStartedRenderPassCommands();
+
+        // Because clear is not affected by stencil test, we have to explicitly mark stencil write
+        // here.
+        renderpassCommands->onStencilAccess(vk::ResourceAccess::Write);
+
+        // We may have changed depth stencil access mode, so update read only depth stencil mode
+        // here.
+        ANGLE_TRY(framebuffer->updateRenderPassReadOnlyDepthMode(contextVk, renderpassCommands));
+    }
+
     ImageClearShaderParams shaderParams;
     shaderParams.clearValue = params.colorClearValue;
 
@@ -1587,7 +1601,7 @@ angle::Result UtilsVk::blitResolveImpl(ContextVk *contextVk,
     pipelineDesc.setScissor(gl_vk::GetRect(params.blitArea));
 
     vk::CommandBuffer *commandBuffer;
-    ANGLE_TRY(framebuffer->startNewRenderPass(contextVk, params.blitArea, &commandBuffer));
+    ANGLE_TRY(framebuffer->startNewRenderPass(contextVk, false, params.blitArea, &commandBuffer));
     contextVk->onImageRenderPassRead(src->getAspectFlags(), vk::ImageLayout::FragmentShaderReadOnly,
                                      src);
 

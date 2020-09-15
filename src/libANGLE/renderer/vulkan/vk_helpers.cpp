@@ -606,8 +606,8 @@ CommandBufferHelper::CommandBufferHelper()
       mValidTransformFeedbackBufferCount(0),
       mRebindTransformFeedbackBuffers(false),
       mIsRenderPassCommandBuffer(false),
-      mDepthStartAccess(ResourceAccess::Unused),
-      mStencilStartAccess(ResourceAccess::Unused),
+      mDepthAccess(ResourceAccess::Unused),
+      mStencilAccess(ResourceAccess::Unused),
       mDepthCmdSizeInvalidated(kInfiniteCmdSize),
       mDepthCmdSizeDisabled(kInfiniteCmdSize),
       mStencilCmdSizeInvalidated(kInfiniteCmdSize),
@@ -754,9 +754,7 @@ void CommandBufferHelper::imageWrite(ResourceUseList *resourceUseList,
 bool CommandBufferHelper::onDepthAccess(ResourceAccess access)
 {
     // Update the access for optimizing this render pass's loadOp
-    UpdateAccess(&mDepthStartAccess, access);
-    ASSERT((mRenderPassDesc.getDepthStencilAccess() != ResourceAccess::ReadOnly) ||
-           mDepthStartAccess != ResourceAccess::Write);
+    UpdateAccess(&mDepthAccess, access);
 
     // Update the invalidate state for optimizing this render pass's storeOp
     return onDepthStencilAccess(access, &mDepthCmdSizeInvalidated, &mDepthCmdSizeDisabled);
@@ -765,7 +763,7 @@ bool CommandBufferHelper::onDepthAccess(ResourceAccess access)
 bool CommandBufferHelper::onStencilAccess(ResourceAccess access)
 {
     // Update the access for optimizing this render pass's loadOp
-    UpdateAccess(&mStencilStartAccess, access);
+    UpdateAccess(&mStencilAccess, access);
 
     // Update the invalidate state for optimizing this render pass's stencilStoreOp
     return onDepthStencilAccess(access, &mStencilCmdSizeInvalidated, &mStencilCmdSizeDisabled);
@@ -881,15 +879,17 @@ void CommandBufferHelper::beginRenderPass(const Framebuffer &framebuffer,
     mCounter++;
 }
 
-void CommandBufferHelper::restartRenderPassWithReadOnlyDepth(const Framebuffer &framebuffer,
-                                                             const RenderPassDesc &renderPassDesc)
+void CommandBufferHelper::updateStartedRenderPassWithDepthMode(const Framebuffer &framebuffer,
+                                                               const RenderPassDesc &renderPassDesc,
+                                                               bool readOnlyDepth)
 {
     ASSERT(mIsRenderPassCommandBuffer);
     ASSERT(mRenderPassStarted);
 
     mRenderPassDesc = renderPassDesc;
-    mAttachmentOps.setLayouts(mDepthStencilAttachmentIndex, ImageLayout::DepthStencilReadOnly,
-                              ImageLayout::DepthStencilReadOnly);
+    ImageLayout depthStencilLayout =
+        readOnlyDepth ? ImageLayout::DepthStencilReadOnly : ImageLayout::DepthStencilAttachment;
+    mAttachmentOps.setLayouts(mDepthStencilAttachmentIndex, depthStencilLayout, depthStencilLayout);
     mFramebuffer.setHandle(framebuffer.getHandle());
 
     // Barrier aggregation messes up with RenderPass restarting.
@@ -919,13 +919,12 @@ void CommandBufferHelper::endRenderPass(ContextVk *contextVk)
 
     // Second, if we are loading or clearing the attachment, but the attachment has not been used,
     // and the data has also not been stored back into attachment, then just skip the load/clear op.
-    if (mDepthStartAccess == ResourceAccess::Unused &&
-        dsOps.storeOp == VK_ATTACHMENT_STORE_OP_DONT_CARE)
+    if (mDepthAccess == ResourceAccess::Unused && dsOps.storeOp == VK_ATTACHMENT_STORE_OP_DONT_CARE)
     {
         dsOps.loadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
     }
 
-    if (mStencilStartAccess == ResourceAccess::Unused &&
+    if (mStencilAccess == ResourceAccess::Unused &&
         dsOps.stencilStoreOp == VK_ATTACHMENT_STORE_OP_DONT_CARE)
     {
         dsOps.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
@@ -933,7 +932,7 @@ void CommandBufferHelper::endRenderPass(ContextVk *contextVk)
 
     // Ensure we don't write to a read-only RenderPass. (ReadOnly -> !Write)
     ASSERT((mRenderPassDesc.getDepthStencilAccess() != ResourceAccess::ReadOnly) ||
-           mDepthStartAccess != ResourceAccess::Write);
+           mDepthAccess != ResourceAccess::Write);
 
     // Fill out perf counters
     PerfCounters &counters = contextVk->getPerfCounters();
@@ -944,6 +943,9 @@ void CommandBufferHelper::endRenderPass(ContextVk *contextVk)
     counters.stencilClears += dsOps.stencilLoadOp == VK_ATTACHMENT_LOAD_OP_CLEAR ? 1 : 0;
     counters.stencilLoads += dsOps.stencilLoadOp == VK_ATTACHMENT_LOAD_OP_LOAD ? 1 : 0;
     counters.stencilStores += dsOps.stencilStoreOp == VK_ATTACHMENT_STORE_OP_STORE ? 1 : 0;
+    counters.readOnlyDepthStencilRenderPasses +=
+        static_cast<ImageLayout>(dsOps.finalLayout) == vk::ImageLayout::DepthStencilReadOnly ? 1
+                                                                                             : 0;
 }
 
 void CommandBufferHelper::beginTransformFeedback(size_t validBufferCount,
@@ -1141,8 +1143,8 @@ void CommandBufferHelper::reset()
         mRenderPassStarted                 = false;
         mValidTransformFeedbackBufferCount = 0;
         mRebindTransformFeedbackBuffers    = false;
-        mDepthStartAccess                  = ResourceAccess::Unused;
-        mStencilStartAccess                = ResourceAccess::Unused;
+        mDepthAccess                       = ResourceAccess::Unused;
+        mStencilAccess                     = ResourceAccess::Unused;
         mDepthCmdSizeInvalidated           = kInfiniteCmdSize;
         mDepthCmdSizeDisabled              = kInfiniteCmdSize;
         mStencilCmdSizeInvalidated         = kInfiniteCmdSize;
