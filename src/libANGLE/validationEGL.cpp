@@ -4520,6 +4520,65 @@ Error ValidateGetNativeClientBufferANDROID(const AHardwareBuffer *buffer)
     return NoError();
 }
 
+Error ValidateCreateNativeClientBufferANDROID(const egl::AttributeMap &attribMap)
+{
+    int width     = attribMap.getAsInt(EGL_WIDTH, 0);
+    int height    = attribMap.getAsInt(EGL_HEIGHT, 0);
+    int redSize   = attribMap.getAsInt(EGL_RED_SIZE, 0);
+    int greenSize = attribMap.getAsInt(EGL_GREEN_SIZE, 0);
+    int blueSize  = attribMap.getAsInt(EGL_BLUE_SIZE, 0);
+    int alphaSize = attribMap.getAsInt(EGL_ALPHA_SIZE, 0);
+    int usage     = attribMap.getAsInt(EGL_NATIVE_BUFFER_USAGE_ANDROID, 0);
+
+    for (AttributeMap::const_iterator attributeIter = attribMap.begin();
+         attributeIter != attribMap.end(); attributeIter++)
+    {
+        EGLAttrib attribute = attributeIter->first;
+        switch (attribute)
+        {
+            case EGL_WIDTH:
+            case EGL_HEIGHT:
+                // Validation done after the switch statement
+                break;
+            case EGL_RED_SIZE:
+            case EGL_GREEN_SIZE:
+            case EGL_BLUE_SIZE:
+            case EGL_ALPHA_SIZE:
+                if (redSize < 0 || greenSize < 0 || blueSize < 0 || alphaSize < 0)
+                {
+                    return EglBadParameter() << "incorrect channel size requested";
+                }
+                break;
+            case EGL_NATIVE_BUFFER_USAGE_ANDROID:
+                // The buffer must be used for either a texture or a renderbuffer.
+                if ((usage & ~(EGL_NATIVE_BUFFER_USAGE_PROTECTED_BIT_ANDROID |
+                               EGL_NATIVE_BUFFER_USAGE_RENDERBUFFER_BIT_ANDROID |
+                               EGL_NATIVE_BUFFER_USAGE_TEXTURE_BIT_ANDROID)) != 0)
+                {
+                    return EglBadParameter() << "invalid usage flag";
+                }
+                break;
+            case EGL_NONE:
+                break;
+            default:
+                return EglBadAttribute() << "invalid attribute";
+        }
+    }
+
+    // Validate EGL_WIDTH and EGL_HEIGHT values passed in. Done here to account
+    // for the case where EGL_WIDTH and EGL_HEIGHT were not part of the attribute list.
+    if (width <= 0 || height <= 0)
+    {
+        return EglBadParameter() << "incorrect buffer dimensions requested";
+    }
+
+    if (gl::GetAndroidHardwareBufferFormatFromChannelSizes(attribMap) == 0)
+    {
+        return EglBadParameter() << "unsupported format";
+    }
+    return NoError();
+}
+
 Error ValidateDupNativeFenceFDANDROID(const Display *display, const Sync *sync)
 {
     ANGLE_TRY(ValidateDisplay(display));

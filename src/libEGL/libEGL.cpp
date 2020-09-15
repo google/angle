@@ -715,6 +715,12 @@ EGLClientBuffer EGLAPIENTRY eglGetNativeClientBufferANDROID(const struct AHardwa
     return EGL_GetNativeClientBufferANDROID(buffer);
 }
 
+EGLClientBuffer EGLAPIENTRY eglCreateNativeClientBufferANDROID(const EGLint *attrib_list)
+{
+    EnsureEGLLoaded();
+    return EGL_CreateNativeClientBufferANDROID(attrib_list);
+}
+
 EGLint EGLAPIENTRY eglDupNativeFenceFDANDROID(EGLDisplay dpy, EGLSyncKHR sync)
 {
     EnsureEGLLoaded();

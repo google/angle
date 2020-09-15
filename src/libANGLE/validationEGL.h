@@ -336,6 +336,9 @@ Error ValidateQueryDisplayAttribANGLE(const Display *display, const EGLint attri
 // EGL_ANDROID_get_native_client_buffer
 Error ValidateGetNativeClientBufferANDROID(const struct AHardwareBuffer *buffer);
 
+// EGL_ANDROID_create_native_client_buffer
+Error ValidateCreateNativeClientBufferANDROID(const egl::AttributeMap &attribMap);
+
 // EGL_ANDROID_native_fence_sync
 Error ValidateDupNativeFenceFDANDROID(const Display *display, const Sync *sync);
 

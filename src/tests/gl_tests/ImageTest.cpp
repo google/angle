@@ -43,6 +43,38 @@ constexpr EGLint kDefaultAttribs[]               = {
 constexpr EGLint kColorspaceAttribs[] = {
     EGL_IMAGE_PRESERVED, EGL_TRUE, EGL_GL_COLORSPACE, EGL_GL_COLORSPACE_SRGB_KHR, EGL_NONE,
 };
+constexpr EGLint kNativeClientBufferAttribs_RGBA8_Texture[] = {
+    EGL_WIDTH,
+    1,
+    EGL_HEIGHT,
+    1,
+    EGL_RED_SIZE,
+    8,
+    EGL_GREEN_SIZE,
+    8,
+    EGL_BLUE_SIZE,
+    8,
+    EGL_ALPHA_SIZE,
+    8,
+    EGL_NATIVE_BUFFER_USAGE_ANDROID,
+    EGL_NATIVE_BUFFER_USAGE_TEXTURE_BIT_ANDROID,
+    EGL_NONE};
+constexpr EGLint kNativeClientBufferAttribs_RGBA8_Renderbuffer[] = {
+    EGL_WIDTH,
+    1,
+    EGL_HEIGHT,
+    1,
+    EGL_RED_SIZE,
+    8,
+    EGL_GREEN_SIZE,
+    8,
+    EGL_BLUE_SIZE,
+    8,
+    EGL_ALPHA_SIZE,
+    8,
+    EGL_NATIVE_BUFFER_USAGE_ANDROID,
+    EGL_NATIVE_BUFFER_USAGE_RENDERBUFFER_BIT_ANDROID,
+    EGL_NONE};
 }  // anonymous namespace
 
 class ImageTest : public ANGLETest
@@ -475,6 +507,60 @@ class ImageTest : public ANGLETest
         *outSourceAHB   = aHardwareBuffer;
         *outSourceImage = image;
     }
+
+    void createEGLImageANWBClientBufferSource(size_t width,
+                                              size_t height,
+                                              size_t depth,
+                                              const EGLint *attribsANWB,
+                                              const EGLint *attribsImage,
+                                              const GLubyte *data,
+                                              size_t bytesPerPixel,
+                                              EGLImageKHR *outSourceImage)
+    {
+        // Set Android Memory
+
+        EGLClientBuffer eglClientBuffer = eglCreateNativeClientBufferANDROID(attribsANWB);
+        EXPECT_NE(eglClientBuffer, nullptr);
+
+        // allocate AHB memory
+#if defined(ANGLE_AHARDWARE_BUFFER_SUPPORT)
+        AHardwareBuffer *pAHardwareBuffer = angle::android::ANativeWindowBufferToAHardwareBuffer(
+            angle::android::ClientBufferToANativeWindowBuffer(eglClientBuffer));
+        void *mappedMemory = nullptr;
+        int res = AHardwareBuffer_lock(pAHardwareBuffer, AHARDWAREBUFFER_USAGE_CPU_WRITE_RARELY, -1,
+                                       nullptr, &mappedMemory);
+        EXPECT_EQ(res, 0);
+
+        // Need to grab the stride the implementation might have enforced
+        AHardwareBuffer_Desc aHardwareBufferDescription = {};
+        AHardwareBuffer_describe(pAHardwareBuffer, &aHardwareBufferDescription);
+        const uint32_t stride = aHardwareBufferDescription.stride;
+
+        uint32_t rowSize = stride * height;
+        for (uint32_t i = 0; i < height; i++)
+        {
+            uint32_t dstPtrOffset = stride * i * (uint32_t)bytesPerPixel;
+            uint32_t srcPtrOffset = width * i * (uint32_t)bytesPerPixel;
+
+            void *dst = reinterpret_cast<uint8_t *>(mappedMemory) + dstPtrOffset;
+            memcpy(dst, data + srcPtrOffset, rowSize);
+        }
+
+        res = AHardwareBuffer_unlock(pAHardwareBuffer, nullptr);
+        EXPECT_EQ(res, 0);
+#endif  // ANGLE_AHARDWARE_BUFFER_SUPPORT
+
+        // Create an image from the source eglClientBuffer
+        EGLWindow *window = getEGLWindow();
+
+        EGLImageKHR image =
+            eglCreateImageKHR(window->getDisplay(), EGL_NO_CONTEXT, EGL_NATIVE_BUFFER_ANDROID,
+                              eglClientBuffer, attribsImage);
+        ASSERT_EGL_SUCCESS();
+
+        *outSourceImage = image;
+    }
+
     void createEGLImageTargetRenderbuffer(EGLImageKHR image, GLuint *outTargetRenderbuffer)
     {
         // Create a target texture from the image
@@ -493,6 +579,8 @@ class ImageTest : public ANGLETest
     void SourceAHBTarget2DArray_helper(const EGLint *attribs);
     void SourceAHBTargetExternal_helper(const EGLint *attribs);
     void SourceAHBTargetExternalESSL3_helper(const EGLint *attribs);
+    void SourceNativeClientBufferTargetExternal_helper(const EGLint *attribs);
+    void SourceNativeClientBufferTargetRenderbuffer_helper(const EGLint *attribs);
     void Source2DTarget2D_helper(const EGLint *attribs);
     void Source2DTarget2DArray_helper(const EGLint *attribs);
     void Source2DTargetRenderbuffer_helper(const EGLint *attribs);
@@ -1757,6 +1845,96 @@ void ImageTest::Source2DTargetRenderbuffer_helper(const EGLint *attribs)
     glDeleteTextures(1, &source);
     eglDestroyImageKHR(window->getDisplay(), image);
     glDeleteRenderbuffers(1, &target);
+}
+
+// Testing source native client buffer EGL image, target external texture
+// where source native client buffer is created using EGL_ANDROID_create_native_client_buffer API
+TEST_P(ImageTest, SourceNativeClientBufferTargetExternal)
+{
+    ANGLE_SKIP_TEST_IF(!IsAndroid());
+    SourceNativeClientBufferTargetExternal_helper(kDefaultAttribs);
+}
+
+// Testing source native client buffer EGL image with colorspace, target external texture
+// where source native client buffer is created using EGL_ANDROID_create_native_client_buffer API
+TEST_P(ImageTest, SourceNativeClientBufferTargetExternal_Colorspace)
+{
+    ANGLE_SKIP_TEST_IF(!IsAndroid());
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3);
+    ANGLE_SKIP_TEST_IF(!hasImageGLColorspaceExt());
+    SourceNativeClientBufferTargetExternal_helper(kColorspaceAttribs);
+}
+
+void ImageTest::SourceNativeClientBufferTargetExternal_helper(const EGLint *attribs)
+{
+
+    EGLWindow *window = getEGLWindow();
+    ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
+    ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
+
+    GLubyte data[] = {0, 125, 64, 250};
+
+    // Create an Image backed by a native client buffer allocated using
+    // EGL_ANDROID_create_native_client_buffer API
+    EGLImageKHR image;
+    createEGLImageANWBClientBufferSource(1, 1, 1, kNativeClientBufferAttribs_RGBA8_Texture, attribs,
+                                         data, 4, &image);
+
+    // Create the target
+    GLuint target;
+    createEGLImageTargetTextureExternal(image, &target);
+
+    // Expect that the target texture when sampled has the same color as the source image
+    verifyResultsExternal(target, data);
+
+    // Clean up
+    glDeleteTextures(1, &target);
+    eglDestroyImageKHR(window->getDisplay(), image);
+}
+
+// Testing source native client buffer EGL image, target Renderbuffer
+// where source native client buffer is created using EGL_ANDROID_create_native_client_buffer API
+TEST_P(ImageTest, SourceNativeClientBufferTargetRenderbuffer)
+{
+    ANGLE_SKIP_TEST_IF(!IsAndroid());
+    SourceNativeClientBufferTargetRenderbuffer_helper(kDefaultAttribs);
+}
+
+// Testing source native client buffer EGL image with colorspace, target Renderbuffer
+// where source native client buffer is created using EGL_ANDROID_create_native_client_buffer API
+TEST_P(ImageTest, SourceNativeClientBufferTargetRenderbuffer_Colorspace)
+{
+    ANGLE_SKIP_TEST_IF(!IsAndroid());
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3);
+    ANGLE_SKIP_TEST_IF(!hasImageGLColorspaceExt());
+    SourceNativeClientBufferTargetRenderbuffer_helper(kColorspaceAttribs);
+}
+
+void ImageTest::SourceNativeClientBufferTargetRenderbuffer_helper(const EGLint *attribs)
+{
+
+    EGLWindow *window = getEGLWindow();
+    ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
+    ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
+
+    GLubyte data[] = {0, 125, 64, 250};
+
+    // Create an Image backed by a native client buffer allocated using
+    // EGL_ANDROID_create_native_client_buffer API
+    EGLImageKHR image;
+    createEGLImageANWBClientBufferSource(1, 1, 1, kNativeClientBufferAttribs_RGBA8_Renderbuffer,
+                                         attribs, data, 4, &image);
+
+    // Create the target
+    GLuint target;
+    createEGLImageTargetRenderbuffer(image, &target);
+
+    // Expect that the target renderbuffer has the same color as the source texture
+    verifyResultsRenderbuffer(target, data);
+
+    // Clean up
+    glDeleteRenderbuffers(1, &target);
+    eglDestroyImageKHR(window->getDisplay(), image);
 }
 
 TEST_P(ImageTest, Source2DTargetExternal)

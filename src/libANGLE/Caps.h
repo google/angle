@@ -1051,6 +1051,9 @@ struct DisplayExtensions
     // EGL_ANDROID_get_native_client_buffer
     bool getNativeClientBufferANDROID = false;
 
+    // EGL_ANDROID_create_native_client_buffer
+    bool createNativeClientBufferANDROID = false;
+
     // EGL_ANDROID_native_fence_sync
     bool nativeFenceSyncANDROID = false;
 

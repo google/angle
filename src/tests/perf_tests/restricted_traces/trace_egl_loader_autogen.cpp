@@ -55,6 +55,7 @@ ANGLE_TRACE_EXPORT PFNEGLCREATEPLATFORMWINDOWSURFACEPROC t_eglCreatePlatformWind
 ANGLE_TRACE_EXPORT PFNEGLCREATEPLATFORMPIXMAPSURFACEPROC t_eglCreatePlatformPixmapSurface;
 ANGLE_TRACE_EXPORT PFNEGLWAITSYNCPROC t_eglWaitSync;
 ANGLE_TRACE_EXPORT PFNEGLSETBLOBCACHEFUNCSANDROIDPROC t_eglSetBlobCacheFuncsANDROID;
+ANGLE_TRACE_EXPORT PFNEGLCREATENATIVECLIENTBUFFERANDROIDPROC t_eglCreateNativeClientBufferANDROID;
 ANGLE_TRACE_EXPORT PFNEGLGETCOMPOSITORTIMINGANDROIDPROC t_eglGetCompositorTimingANDROID;
 ANGLE_TRACE_EXPORT PFNEGLGETCOMPOSITORTIMINGSUPPORTEDANDROIDPROC
     t_eglGetCompositorTimingSupportedANDROID;
@@ -175,6 +176,9 @@ void LoadEGL(LoadProc loadProc)
     t_eglWaitSync                 = reinterpret_cast<PFNEGLWAITSYNCPROC>(loadProc("eglWaitSync"));
     t_eglSetBlobCacheFuncsANDROID = reinterpret_cast<PFNEGLSETBLOBCACHEFUNCSANDROIDPROC>(
         loadProc("eglSetBlobCacheFuncsANDROID"));
+    t_eglCreateNativeClientBufferANDROID =
+        reinterpret_cast<PFNEGLCREATENATIVECLIENTBUFFERANDROIDPROC>(
+            loadProc("eglCreateNativeClientBufferANDROID"));
     t_eglGetCompositorTimingANDROID = reinterpret_cast<PFNEGLGETCOMPOSITORTIMINGANDROIDPROC>(
         loadProc("eglGetCompositorTimingANDROID"));
     t_eglGetCompositorTimingSupportedANDROID =

@@ -666,6 +666,9 @@ void DisplayEGL::generateExtensions(egl::DisplayExtensions *outExtensions) const
     outExtensions->getNativeClientBufferANDROID =
         mEGL->hasExtension("EGL_ANDROID_get_native_client_buffer");
 
+    outExtensions->createNativeClientBufferANDROID =
+        mEGL->hasExtension("EGL_ANDROID_create_native_client_buffer");
+
     outExtensions->nativeFenceSyncANDROID = mEGL->hasExtension("EGL_ANDROID_native_fence_sync");
 
     outExtensions->noConfigContext = mEGL->hasExtension("EGL_KHR_no_config_context");

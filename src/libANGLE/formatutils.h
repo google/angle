@@ -179,6 +179,16 @@ struct InternalFormat
     // Support upload a portion of image?
     bool supportSubImage() const;
 
+    ANGLE_INLINE bool isChannelSizeCompatible(GLuint redSize,
+                                              GLuint greenSize,
+                                              GLuint blueSize,
+                                              GLuint alphaSize) const
+    {
+        // We only check for equality in all channel sizes
+        return ((redSize == redBits) && (greenSize == greenBits) && (blueSize == blueBits) &&
+                (alphaSize == alphaBits));
+    }
+
     // Return true if the format is a required renderbuffer format in the given version of the core
     // spec. Note that it isn't always clear whether all the rules that apply to core required
     // renderbuffer formats also apply to additional formats added by extensions. Because of this
@@ -277,6 +287,8 @@ const FormatSet &GetAllSizedInternalFormats();
 typedef std::unordered_map<GLenum, std::unordered_map<GLenum, InternalFormat>>
     InternalFormatInfoMap;
 const InternalFormatInfoMap &GetInternalFormatMap();
+
+int GetAndroidHardwareBufferFormatFromChannelSizes(const egl::AttributeMap &attribMap);
 
 ANGLE_INLINE int GetNativeVisualID(const InternalFormat &internalFormat)
 {

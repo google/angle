@@ -1116,6 +1116,32 @@ const InternalFormatInfoMap &GetInternalFormatMap()
     return *formatMap;
 }
 
+int GetAndroidHardwareBufferFormatFromChannelSizes(const egl::AttributeMap &attribMap)
+{
+    // Retrieve channel size from attribute map. The default value should be 0, per spec.
+    GLuint redSize   = static_cast<GLuint>(attribMap.getAsInt(EGL_RED_SIZE, 0));
+    GLuint greenSize = static_cast<GLuint>(attribMap.getAsInt(EGL_GREEN_SIZE, 0));
+    GLuint blueSize  = static_cast<GLuint>(attribMap.getAsInt(EGL_BLUE_SIZE, 0));
+    GLuint alphaSize = static_cast<GLuint>(attribMap.getAsInt(EGL_ALPHA_SIZE, 0));
+
+    GLenum glInternalFormat = 0;
+    for (GLenum sizedInternalFormat : angle::android::kSupportedSizedInternalFormats)
+    {
+        const gl::InternalFormat &internalFormat = GetSizedInternalFormatInfo(sizedInternalFormat);
+        ASSERT(internalFormat.internalFormat != GL_NONE && internalFormat.sized);
+
+        if (internalFormat.isChannelSizeCompatible(redSize, greenSize, blueSize, alphaSize))
+        {
+            glInternalFormat = sizedInternalFormat;
+            break;
+        }
+    }
+
+    return (glInternalFormat != 0)
+               ? angle::android::GLInternalFormatToNativePixelFormat(glInternalFormat)
+               : 0;
+}
+
 static FormatSet BuildAllSizedInternalFormatSet()
 {
     FormatSet result;
