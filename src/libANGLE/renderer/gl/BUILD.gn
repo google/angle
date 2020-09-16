@@ -6,6 +6,10 @@
 
 import("../../../../gni/angle.gni")
 
+if (angle_has_build && ozone_platform_gbm) {
+  import("//build/config/linux/pkg_config.gni")
+}
+
 assert(angle_enable_gl)
 
 declare_args() {
