@@ -217,6 +217,7 @@ angle_source_set("angle_gl_backend") {
 
   public_configs = [ ":angle_gl_backend_config" ]
   public_deps = [ "$angle_root:libANGLE_headers" ]
+  defines = []
 
   deps = [
     "$angle_root:angle_gpu_info_util",
