@@ -242,6 +242,7 @@ IGNORED_INCLUDE_PREFIXES = {
 }
 
 IGNORED_DIRECTORIES = {
+    '//buildtools/third_party/libc++',
     '//third_party/SwiftShader',
     '//third_party/zlib',
 }
