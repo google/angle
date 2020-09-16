@@ -510,8 +510,10 @@ void RenderPassDesc::packColorAttachment(size_t colorIndexGL, angle::FormatID fo
     uint8_t &packedFormat = mAttachmentFormats[colorIndexGL];
     SetBitField(packedFormat, formatID);
 
-    // Set color attachment range such that it covers the range from index 0 through last
-    // active index.  This is the reason why we need depth/stencil to be packed last.
+    // Set color attachment range such that it covers the range from index 0 through last active
+    // index.  Additionally, a few bits at the end of the array are used for other purposes, so we
+    // need the last format to use only a few bits.  These are the reasons why we need depth/stencil
+    // to be packed last.
     SetBitField(mPackedColorAttachmentRangeAndDSAccess,
                 std::max<size_t>(mPackedColorAttachmentRangeAndDSAccess, colorIndexGL + 1));
 }
@@ -534,11 +536,15 @@ void RenderPassDesc::packDepthStencilAttachment(angle::FormatID formatID, Resour
     ASSERT(access != ResourceAccess::Unused);
     ASSERT(!hasDepthStencilAttachment());
 
+    // 3 bits are used to store the depth/stencil attachment format.
+    ASSERT(static_cast<uint8_t>(formatID) <= kDepthStencilFormatStorageMask);
+
     size_t index = depthStencilAttachmentIndex();
     ASSERT(index < mAttachmentFormats.size());
 
     uint8_t &packedFormat = mAttachmentFormats[index];
-    SetBitField(packedFormat, formatID);
+    packedFormat &= ~kDepthStencilFormatStorageMask;
+    packedFormat |= static_cast<uint8_t>(formatID);
 
     size_t colorRange = colorAttachmentRange();
     size_t offset =
