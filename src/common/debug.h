@@ -63,7 +63,7 @@ class LogMessage : angle::NonCopyable
 {
   public:
     // Used for ANGLE_LOG(severity).
-    LogMessage(const char *function, int line, LogSeverity severity);
+    LogMessage(const char *file, const char *function, int line, LogSeverity severity);
     ~LogMessage();
     std::ostream &stream() { return mStream; }
 
@@ -71,6 +71,7 @@ class LogMessage : angle::NonCopyable
     std::string getMessage() const;
 
   private:
+    const char *mFile;
     const char *mFunction;
     const int mLine;
     const LogSeverity mSeverity;
@@ -188,15 +189,15 @@ std::ostream &FmtHex(std::ostream &os, T value)
 // by ANGLE_LOG(). Since these are used all over our code, it's
 // better to have compact code for these operations.
 #define COMPACT_ANGLE_LOG_EX_EVENT(ClassName, ...) \
-    ::gl::ClassName(__FUNCTION__, __LINE__, ::gl::LOG_EVENT, ##__VA_ARGS__)
+    ::gl::ClassName(__FILE__, __FUNCTION__, __LINE__, ::gl::LOG_EVENT, ##__VA_ARGS__)
 #define COMPACT_ANGLE_LOG_EX_INFO(ClassName, ...) \
-    ::gl::ClassName(__FUNCTION__, __LINE__, ::gl::LOG_INFO, ##__VA_ARGS__)
+    ::gl::ClassName(__FILE__, __FUNCTION__, __LINE__, ::gl::LOG_INFO, ##__VA_ARGS__)
 #define COMPACT_ANGLE_LOG_EX_WARN(ClassName, ...) \
-    ::gl::ClassName(__FUNCTION__, __LINE__, ::gl::LOG_WARN, ##__VA_ARGS__)
+    ::gl::ClassName(__FILE__, __FUNCTION__, __LINE__, ::gl::LOG_WARN, ##__VA_ARGS__)
 #define COMPACT_ANGLE_LOG_EX_ERR(ClassName, ...) \
-    ::gl::ClassName(__FUNCTION__, __LINE__, ::gl::LOG_ERR, ##__VA_ARGS__)
+    ::gl::ClassName(__FILE__, __FUNCTION__, __LINE__, ::gl::LOG_ERR, ##__VA_ARGS__)
 #define COMPACT_ANGLE_LOG_EX_FATAL(ClassName, ...) \
-    ::gl::ClassName(__FUNCTION__, __LINE__, ::gl::LOG_FATAL, ##__VA_ARGS__)
+    ::gl::ClassName(__FILE__, __FUNCTION__, __LINE__, ::gl::LOG_FATAL, ##__VA_ARGS__)
 
 #define COMPACT_ANGLE_LOG_EVENT COMPACT_ANGLE_LOG_EX_EVENT(LogMessage)
 #define COMPACT_ANGLE_LOG_INFO COMPACT_ANGLE_LOG_EX_INFO(LogMessage)

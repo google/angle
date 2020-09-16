@@ -12,6 +12,7 @@
 
 #include <array>
 #include <cstdio>
+#include <cstring>
 #include <fstream>
 #include <mutex>
 #include <ostream>
@@ -145,13 +146,14 @@ ScopedPerfEventHelper::~ScopedPerfEventHelper()
     }
 }
 
-LogMessage::LogMessage(const char *function, int line, LogSeverity severity)
-    : mFunction(function), mLine(line), mSeverity(severity)
+LogMessage::LogMessage(const char *file, const char *function, int line, LogSeverity severity)
+    : mFile(file), mFunction(function), mLine(line), mSeverity(severity)
 {
     // EVENT() does not require additional function(line) info.
     if (mSeverity != LOG_EVENT)
     {
-        mStream << mFunction << "(" << mLine << "): ";
+        const char *slash = std::max(strrchr(mFile, '/'), strrchr(mFile, '\\'));
+        mStream << (slash ? (slash + 1) : mFile) << ":" << mLine << " (" << mFunction << "): ";
     }
 }
 
