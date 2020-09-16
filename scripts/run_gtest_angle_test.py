@@ -69,9 +69,9 @@ def main():
     # total_shards = None
     # shard_index = None
     if 'GTEST_TOTAL_SHARDS' in env:
-        extra_flags += ['--shard-count=%d' % env['GTEST_TOTAL_SHARDS']]
+        extra_flags += ['--shard-count=' + env['GTEST_TOTAL_SHARDS']]
     if 'GTEST_SHARD_INDEX' in env:
-        extra_flags += ['--shard-index=%d' % env['GTEST_SHARD_INDEX']]
+        extra_flags += ['--shard-index=' + env['GTEST_SHARD_INDEX']]
 
     # Assume we want to set up the sandbox environment variables all the
     # time; doing so is harmless on non-Linux platforms and is needed
