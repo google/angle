@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a981c479_d9abff67",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-09-16T03:48:49Z",
+      "side": 1,
+      "message": "3570?",
+      "range": {
+        "startLine": 13,
+        "startChar": 18,
+        "endLine": 13,
+        "endChar": 19
+      },
+      "revId": "c32d7a33a1fab1f2b06620afc6de4208ae3d9908",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f5dd9c01_82ce18af",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2161,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-09-16T03:48:49Z",
+      "side": 1,
+      "message": "While you\u0027re at it, can you remove this parameter too?",
+      "range": {
+        "startLine": 2161,
+        "startChar": 40,
+        "endLine": 2161,
+        "endChar": 97
+      },
+      "revId": "c32d7a33a1fab1f2b06620afc6de4208ae3d9908",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
