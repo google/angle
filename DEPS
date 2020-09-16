@@ -28,7 +28,7 @@ vars = {
   'checkout_angle_internal': False,
 
   # Version of Chromium our Chromium-based DEPS are mirrored from.
-  'chromium_revision': '1960f3b234087ce7fcd793b3ca8a54384304b3c0',
+  'chromium_revision': 'e4cbd27e4a5563e4869abe6dbdddff32e18dd0d0',
   # We never want to checkout chromium,
   # but need a dummy DEPS entry for the autoroller
   'dummy_checkout_chromium': False,
@@ -108,22 +108,22 @@ vars = {
 deps = {
 
   'build': {
-    'url': '{chromium_git}/chromium/src/build.git@dc90e7d1033825253a760d5a18d4a4bc1077e30a',
+    'url': '{chromium_git}/chromium/src/build.git@42cbd32cfbf6554187145e8664c5f5638e2541ab',
     'condition': 'not build_with_chromium',
   },
 
   'buildtools': {
-    'url': '{chromium_git}/chromium/src/buildtools.git@a90362b4fcee287764f46f57c7880f4643dae5d3',
+    'url': '{chromium_git}/chromium/src/buildtools.git@3ff4f5027b4b81a6c9c36d64d71444f2709a4896',
     'condition': 'not build_with_chromium',
   },
 
   'testing': {
-    'url': '{chromium_git}/chromium/src/testing@598b9bd5a4e314c0fbd73ffb6aa92a67458e1697',
+    'url': '{chromium_git}/chromium/src/testing@1d2f486547d472013be7c9f5e5dee63b1838e856',
     'condition': 'not build_with_chromium',
   },
 
   'third_party/abseil-cpp': {
-    'url': '{chromium_git}/chromium/src/third_party/abseil-cpp@9967a97317a6eb9280e92f589dc701cd2bf55e12',
+    'url': '{chromium_git}/chromium/src/third_party/abseil-cpp@e73d9666524517269540990839eea97de80a56f6',
     'condition': 'not build_with_chromium',
   },
 
@@ -279,7 +279,7 @@ deps = {
   },
 
   'tools/clang': {
-    'url': '{chromium_git}/chromium/src/tools/clang.git@bf815f1a74094cb38287f86952bde4f861582735',
+    'url': '{chromium_git}/chromium/src/tools/clang.git@e075ddd622bde357fc7f0807a6483057e593fd28',
     'condition': 'not build_with_chromium',
   },
 
@@ -314,7 +314,7 @@ deps = {
   },
 
   'tools/mb': {
-    'url': '{chromium_git}/chromium/src/tools/mb@8d1fa6cbe849040109a857557d1dec6915d4fabe',
+    'url': '{chromium_git}/chromium/src/tools/mb@552c4cfa71cd9439f611668072b577beb34b1fbd',
     'condition': 'not build_with_chromium',
   },
 
