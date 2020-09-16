@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7b64130a_e09bd460",
+        "filename": "src/libANGLE/renderer/vulkan/GlslangWrapperVk.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-09-16T21:00:23Z",
+      "side": 0,
+      "message": "This cleanup is missing from metal/.",
+      "revId": "377e748714bfcb827a2a61a3b8ccf8ea8fab2156",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
