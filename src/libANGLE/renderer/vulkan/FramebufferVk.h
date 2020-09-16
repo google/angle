@@ -29,7 +29,7 @@ class FramebufferVk : public FramebufferImpl
     // Factory methods so we don't have to use constructors with overloads.
     static FramebufferVk *CreateUserFBO(RendererVk *renderer, const gl::FramebufferState &state);
 
-    // The passed-in SurfaceVK must be destroyed after this FBO is destroyed. Our Surface code is
+    // The passed-in SurfaceVk must be destroyed after this FBO is destroyed. Our Surface code is
     // ref-counted on the number of 'current' contexts, so we shouldn't get any dangling surface
     // references. See Surface::setIsCurrent(bool).
     static FramebufferVk *CreateDefaultFBO(RendererVk *renderer,

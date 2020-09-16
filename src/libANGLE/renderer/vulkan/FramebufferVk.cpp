@@ -798,13 +798,13 @@ angle::Result FramebufferVk::blitWithCommand(ContextVk *contextVk,
 
     VkImageBlit blit               = {};
     blit.srcSubresource.aspectMask = blitAspectMask;
-    blit.srcSubresource.mipLevel   = srcImage->toVKLevel(readRenderTarget->getLevelIndex()).get();
+    blit.srcSubresource.mipLevel   = srcImage->toVkLevel(readRenderTarget->getLevelIndex()).get();
     blit.srcSubresource.baseArrayLayer = readRenderTarget->getLayerIndex();
     blit.srcSubresource.layerCount     = 1;
     blit.srcOffsets[0]                 = {sourceArea.x0(), sourceArea.y0(), 0};
     blit.srcOffsets[1]                 = {sourceArea.x1(), sourceArea.y1(), 1};
     blit.dstSubresource.aspectMask     = blitAspectMask;
-    blit.dstSubresource.mipLevel = dstImage->toVKLevel(drawRenderTarget->getLevelIndex()).get();
+    blit.dstSubresource.mipLevel = dstImage->toVkLevel(drawRenderTarget->getLevelIndex()).get();
     blit.dstSubresource.baseArrayLayer = drawRenderTarget->getLayerIndex();
     blit.dstSubresource.layerCount     = 1;
     blit.dstOffsets[0]                 = {destArea.x0(), destArea.y0(), 0};
@@ -1181,7 +1181,7 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
 
             vk::ImageHelper *depthStencilImage = &readRenderTarget->getImageForCopy();
             vk::LevelIndex levelIndex =
-                depthStencilImage->toVKLevel(readRenderTarget->getLevelIndex());
+                depthStencilImage->toVkLevel(readRenderTarget->getLevelIndex());
             uint32_t layerIndex         = readRenderTarget->getLayerIndex();
             gl::TextureType textureType = vk::Get2DTextureType(depthStencilImage->getLayerCount(),
                                                                depthStencilImage->getSamples());
@@ -1337,8 +1337,8 @@ angle::Result FramebufferVk::resolveColorWithCommand(ContextVk *contextVk,
         vk::CommandBuffer &commandBuffer = contextVk->getOutsideRenderPassCommandBuffer();
 
         vk::ImageHelper &dstImage = drawRenderTarget->getImageForWrite();
-        vk::LevelIndex levelVK    = dstImage.toVKLevel(drawRenderTarget->getLevelIndex());
-        resolveRegion.dstSubresource.mipLevel       = levelVK.get();
+        vk::LevelIndex levelVk    = dstImage.toVkLevel(drawRenderTarget->getLevelIndex());
+        resolveRegion.dstSubresource.mipLevel       = levelVk.get();
         resolveRegion.dstSubresource.baseArrayLayer = drawRenderTarget->getLayerIndex();
 
         srcImage->resolve(&dstImage, resolveRegion, &commandBuffer);
@@ -1367,7 +1367,7 @@ angle::Result FramebufferVk::copyResolveToMultisampedAttachment(ContextVk *conte
     // There's no choice but to use a draw-based path to perform this copy.
 
     gl::Extents extents    = colorRenderTarget->getExtents();
-    vk::LevelIndex levelVK = src->toVKLevel(colorRenderTarget->getLevelIndex());
+    vk::LevelIndex levelVk = src->toVkLevel(colorRenderTarget->getLevelIndex());
     uint32_t layer         = colorRenderTarget->getLayerIndex();
 
     UtilsVk::CopyImageParameters params;
@@ -1377,7 +1377,7 @@ angle::Result FramebufferVk::copyResolveToMultisampedAttachment(ContextVk *conte
     params.srcExtents[1]       = extents.height;
     params.destOffset[0]       = 0;
     params.destOffset[1]       = 0;
-    params.srcMip              = levelVK.get();
+    params.srcMip              = levelVk.get();
     params.srcLayer            = layer;
     params.srcHeight           = extents.height;
     params.srcPremultiplyAlpha = false;

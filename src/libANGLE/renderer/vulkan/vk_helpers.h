@@ -1247,7 +1247,7 @@ class ImageHelper final : public Resource, public angle::Subject
                                      VkImageAspectFlags aspectMask,
                                      const gl::SwizzleState &swizzleMap,
                                      ImageView *imageViewOut,
-                                     LevelIndex baseMipLevelVK,
+                                     LevelIndex baseMipLevelVk,
                                      uint32_t levelCount,
                                      uint32_t baseArrayLayer,
                                      uint32_t layerCount) const;
@@ -1256,7 +1256,7 @@ class ImageHelper final : public Resource, public angle::Subject
                                             VkImageAspectFlags aspectMask,
                                             const gl::SwizzleState &swizzleMap,
                                             ImageView *imageViewOut,
-                                            LevelIndex baseMipLevelVK,
+                                            LevelIndex baseMipLevelVk,
                                             uint32_t levelCount,
                                             uint32_t baseArrayLayer,
                                             uint32_t layerCount,
@@ -1267,7 +1267,7 @@ class ImageHelper final : public Resource, public angle::Subject
                                 VkImageAspectFlags aspectMask,
                                 const gl::SwizzleState &swizzleMap,
                                 ImageView *imageViewOut,
-                                LevelIndex baseMipLevelVK,
+                                LevelIndex baseMipLevelVk,
                                 uint32_t levelCount);
     // Create a 2D[Array] for staging purposes.  Used by:
     //
@@ -1322,10 +1322,10 @@ class ImageHelper final : public Resource, public angle::Subject
     ImageLayout getCurrentImageLayout() const { return mCurrentLayout; }
     VkImageLayout getCurrentLayout() const;
 
-    gl::Extents getLevelExtents(LevelIndex levelVK) const;
+    gl::Extents getLevelExtents(LevelIndex levelVk) const;
     // Helper function to calculate the extents of a render target created for a certain mip of the
     // image.
-    gl::Extents getLevelExtents2D(LevelIndex levelVK) const;
+    gl::Extents getLevelExtents2D(LevelIndex levelVk) const;
     bool isDepthOrStencil() const;
 
     // Clear either color or depth/stencil based on image format.
@@ -1519,8 +1519,8 @@ class ImageHelper final : public Resource, public angle::Subject
     gl::LevelIndex getBaseLevel() const { return mBaseLevel; }
     void setBaseAndMaxLevels(gl::LevelIndex baseLevel, gl::LevelIndex maxLevel);
     gl::LevelIndex getMaxLevel() const { return mMaxLevel; }
-    LevelIndex toVKLevel(gl::LevelIndex levelIndexGL) const;
-    gl::LevelIndex toGLLevel(LevelIndex levelIndexVK) const;
+    LevelIndex toVkLevel(gl::LevelIndex levelIndexGL) const;
+    gl::LevelIndex toGLLevel(LevelIndex levelIndexVk) const;
 
     angle::Result copyImageDataToBuffer(ContextVk *contextVk,
                                         gl::LevelIndex sourceLevelGL,
@@ -1658,7 +1658,7 @@ class ImageHelper final : public Resource, public angle::Subject
     void stageClearIfEmulatedFormat(Context *context);
 
     void clearColor(const VkClearColorValue &color,
-                    LevelIndex baseMipLevelVK,
+                    LevelIndex baseMipLevelVk,
                     uint32_t levelCount,
                     uint32_t baseArrayLayer,
                     uint32_t layerCount,
@@ -1666,7 +1666,7 @@ class ImageHelper final : public Resource, public angle::Subject
 
     void clearDepthStencil(VkImageAspectFlags clearAspectFlags,
                            const VkClearDepthStencilValue &depthStencil,
-                           LevelIndex baseMipLevelVK,
+                           LevelIndex baseMipLevelVk,
                            uint32_t levelCount,
                            uint32_t baseArrayLayer,
                            uint32_t layerCount,
@@ -1684,7 +1684,7 @@ class ImageHelper final : public Resource, public angle::Subject
         VkImageAspectFlags aspectMask,
         const gl::SwizzleState &swizzleMap,
         ImageView *imageViewOut,
-        LevelIndex baseMipLevelVK,
+        LevelIndex baseMipLevelVk,
         uint32_t levelCount,
         uint32_t baseArrayLayer,
         uint32_t layerCount,
@@ -1861,7 +1861,7 @@ class ImageViewHelper : angle::NonCopyable
     angle::Result getLevelDrawImageView(ContextVk *contextVk,
                                         gl::TextureType viewType,
                                         const ImageHelper &image,
-                                        LevelIndex levelVK,
+                                        LevelIndex levelVk,
                                         uint32_t layer,
                                         VkImageUsageFlags imageUsageFlags,
                                         VkFormat vkImageFormat,
@@ -1870,7 +1870,7 @@ class ImageViewHelper : angle::NonCopyable
     // Creates a view with a single layer of the level.
     angle::Result getLevelLayerDrawImageView(ContextVk *contextVk,
                                              const ImageHelper &image,
-                                             LevelIndex levelVK,
+                                             LevelIndex levelVk,
                                              uint32_t layer,
                                              const ImageView **imageViewOut);
 

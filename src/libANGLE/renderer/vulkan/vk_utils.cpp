@@ -1341,9 +1341,9 @@ GLuint GetSampleCount(VkSampleCountFlags supportedCounts, GLuint requestedCount)
     return 0;
 }
 
-gl::LevelIndex GetLevelIndex(vk::LevelIndex levelVK, gl::LevelIndex baseLevel)
+gl::LevelIndex GetLevelIndex(vk::LevelIndex levelVk, gl::LevelIndex baseLevel)
 {
-    return gl::LevelIndex(levelVK.get() + baseLevel.get());
+    return gl::LevelIndex(levelVk.get() + baseLevel.get());
 }
 }  // namespace vk_gl
 }  // namespace rx

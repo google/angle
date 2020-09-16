@@ -54,8 +54,8 @@ bool IsTextureLevelInAllocatedImage(const vk::ImageHelper &image,
         return false;
     }
 
-    vk::LevelIndex imageLevelIndexVK = image.toVKLevel(textureLevelIndexGL);
-    return imageLevelIndexVK < vk::LevelIndex(image.getLevelCount());
+    vk::LevelIndex imageLevelIndexVk = image.toVkLevel(textureLevelIndexGL);
+    return imageLevelIndexVk < vk::LevelIndex(image.getLevelCount());
 }
 
 // Test whether a redefined texture level is compatible with the currently allocated image.  Returns
@@ -74,8 +74,8 @@ bool IsTextureLevelDefinitionCompatibleWithImage(const vk::ImageHelper &image,
 {
     ASSERT(IsTextureLevelInAllocatedImage(image, textureLevelIndexGL));
 
-    vk::LevelIndex imageLevelIndexVK = image.toVKLevel(textureLevelIndexGL);
-    return size == image.getLevelExtents(imageLevelIndexVK) && format == image.getFormat();
+    vk::LevelIndex imageLevelIndexVk = image.toVkLevel(textureLevelIndexGL);
+    return size == image.getLevelExtents(imageLevelIndexVk) && format == image.getFormat();
 }
 
 ANGLE_INLINE bool FormatHasNecessaryFeature(RendererVk *renderer,
@@ -348,14 +348,14 @@ bool TextureVk::shouldUpdateBeStaged(gl::LevelIndex textureLevelIndexGL) const
         return true;
     }
 
-    vk::LevelIndex imageLevelIndexVK = mImage->toVKLevel(textureLevelIndexGL);
+    vk::LevelIndex imageLevelIndexVk = mImage->toVkLevel(textureLevelIndexGL);
 
     // Can't have more than 32 mips for the foreseeable future.
-    ASSERT(imageLevelIndexVK < vk::LevelIndex(32));
+    ASSERT(imageLevelIndexVk < vk::LevelIndex(32));
 
     // Otherwise, it can only be directly applied to the image if the level is not previously
     // incompatibly redefined.
-    return mRedefinedLevels.test(imageLevelIndexVK.get());
+    return mRedefinedLevels.test(imageLevelIndexVk.get());
 }
 
 angle::Result TextureVk::setSubImageImpl(const gl::Context *context,
@@ -808,7 +808,7 @@ angle::Result TextureVk::copySubImageImplWithTransfer(ContextVk *contextVk,
 
     VkImageSubresourceLayers srcSubresource = {};
     srcSubresource.aspectMask               = VK_IMAGE_ASPECT_COLOR_BIT;
-    srcSubresource.mipLevel                 = srcImage->toVKLevel(sourceLevelGL).get();
+    srcSubresource.mipLevel                 = srcImage->toVkLevel(sourceLevelGL).get();
     srcSubresource.baseArrayLayer           = static_cast<uint32_t>(sourceLayer);
     srcSubresource.layerCount               = layerCount;
 
@@ -846,7 +846,7 @@ angle::Result TextureVk::copySubImageImplWithTransfer(ContextVk *contextVk,
         vk::CommandBuffer &commandBuffer = contextVk->getOutsideRenderPassCommandBuffer();
 
         VkImageSubresourceLayers destSubresource = srcSubresource;
-        destSubresource.mipLevel                 = mImage->toVKLevel(level).get();
+        destSubresource.mipLevel                 = mImage->toVkLevel(level).get();
         destSubresource.baseArrayLayer           = baseLayer;
         destSubresource.layerCount               = layerCount;
 
@@ -968,7 +968,7 @@ angle::Result TextureVk::copySubImageImplWithDraw(ContextVk *contextVk,
     params.srcExtents[1]       = rotatedSourceBox.height;
     params.destOffset[0]       = destOffset.x;
     params.destOffset[1]       = destOffset.y;
-    params.srcMip              = srcImage->toVKLevel(sourceLevelGL).get();
+    params.srcMip              = srcImage->toVkLevel(sourceLevelGL).get();
     params.srcHeight           = srcExtents.height;
     params.srcPremultiplyAlpha = unpackPremultiplyAlpha && !unpackUnmultiplyAlpha;
     params.srcUnmultiplyAlpha  = unpackUnmultiplyAlpha && !unpackPremultiplyAlpha;
@@ -1362,8 +1362,8 @@ angle::Result TextureVk::redefineLevel(const gl::Context *context,
             // corresponding bit should clear.
             if (isInAllocatedImage)
             {
-                vk::LevelIndex levelIndexVK = mImage->toVKLevel(levelIndexGL);
-                mRedefinedLevels.set(levelIndexVK.get(), !isCompatibleRedefinition);
+                vk::LevelIndex levelIndexVk = mImage->toVkLevel(levelIndexGL);
+                mRedefinedLevels.set(levelIndexVk.get(), !isCompatibleRedefinition);
             }
 
             bool isUpdateToSingleLevelImage =
@@ -1466,7 +1466,7 @@ angle::Result TextureVk::copyBufferDataToImage(ContextVk *contextVk,
     region.imageSubresource.baseArrayLayer = layerIndex;
     region.imageSubresource.layerCount     = 1;
     region.imageSubresource.mipLevel =
-        mImage->toVKLevel(gl::LevelIndex(index.getLevelIndex())).get();
+        mImage->toVkLevel(gl::LevelIndex(index.getLevelIndex())).get();
 
     if (index.getType() == gl::TextureType::_2DArray)
     {
@@ -1518,9 +1518,9 @@ angle::Result TextureVk::generateMipmapsWithCompute(ContextVk *contextVk)
     // If the image has more levels than supported, generate as many mips as possible at a time.
     const vk::LevelIndex maxGenerateLevels(UtilsVk::GetGenerateMipmapMaxLevels(contextVk));
 
-    for (vk::LevelIndex destBaseLevelVK(1);
-         destBaseLevelVK < vk::LevelIndex(mImage->getLevelCount());
-         destBaseLevelVK = destBaseLevelVK + maxGenerateLevels.get())
+    for (vk::LevelIndex destBaseLevelVk(1);
+         destBaseLevelVk < vk::LevelIndex(mImage->getLevelCount());
+         destBaseLevelVk = destBaseLevelVk + maxGenerateLevels.get())
     {
         ANGLE_TRY(contextVk->onImageComputeShaderWrite(VK_IMAGE_ASPECT_COLOR_BIT, mImage));
 
@@ -1531,37 +1531,37 @@ angle::Result TextureVk::generateMipmapsWithCompute(ContextVk *contextVk)
             const vk::ImageView *srcView                         = nullptr;
             UtilsVk::GenerateMipmapDestLevelViews destLevelViews = {};
 
-            const vk::LevelIndex srcLevelVK = destBaseLevelVK - 1;
-            ANGLE_TRY(getImageViews().getLevelLayerDrawImageView(contextVk, *mImage, srcLevelVK,
+            const vk::LevelIndex srcLevelVk = destBaseLevelVk - 1;
+            ANGLE_TRY(getImageViews().getLevelLayerDrawImageView(contextVk, *mImage, srcLevelVk,
                                                                  layer, &srcView));
 
             vk::LevelIndex destLevelCount = maxGenerateLevels;
-            for (vk::LevelIndex levelVK(0); levelVK < maxGenerateLevels; ++levelVK)
+            for (vk::LevelIndex levelVk(0); levelVk < maxGenerateLevels; ++levelVk)
             {
-                vk::LevelIndex destLevelVK = destBaseLevelVK + levelVK.get();
+                vk::LevelIndex destLevelVk = destBaseLevelVk + levelVk.get();
 
                 // If fewer levels left than maxGenerateLevels, cut the loop short.
-                if (destLevelVK >= vk::LevelIndex(mImage->getLevelCount()))
+                if (destLevelVk >= vk::LevelIndex(mImage->getLevelCount()))
                 {
-                    destLevelCount = levelVK;
+                    destLevelCount = levelVk;
                     break;
                 }
 
                 ANGLE_TRY(getImageViews().getLevelLayerDrawImageView(
-                    contextVk, *mImage, destLevelVK, layer, &destLevelViews[levelVK.get()]));
+                    contextVk, *mImage, destLevelVk, layer, &destLevelViews[levelVk.get()]));
             }
 
             // If the image has fewer than maximum levels, fill the last views with a dummy view.
             ASSERT(destLevelCount > vk::LevelIndex(0));
-            for (vk::LevelIndex levelVK = destLevelCount;
-                 levelVK < vk::LevelIndex(UtilsVk::kGenerateMipmapMaxLevels); ++levelVK)
+            for (vk::LevelIndex levelVk = destLevelCount;
+                 levelVk < vk::LevelIndex(UtilsVk::kGenerateMipmapMaxLevels); ++levelVk)
             {
-                destLevelViews[levelVK.get()] = destLevelViews[levelVK.get() - 1];
+                destLevelViews[levelVk.get()] = destLevelViews[levelVk.get() - 1];
             }
 
             // Generate mipmaps.
             UtilsVk::GenerateMipmapParameters params = {};
-            params.srcLevel                          = srcLevelVK.get();
+            params.srcLevel                          = srcLevelVk.get();
             params.destLevelCount                    = destLevelCount.get();
 
             ANGLE_TRY(contextVk->getUtils().generateMipmap(
@@ -1801,13 +1801,13 @@ angle::Result TextureVk::respecifyImageAttributesAndLevels(ContextVk *contextVk,
     // The staged updates won't be applied until the image has the requisite mip levels
     for (uint32_t layer = 0; layer < mImage->getLayerCount(); layer++)
     {
-        for (vk::LevelIndex levelVK(0); levelVK < vk::LevelIndex(mImage->getLevelCount());
-             ++levelVK)
+        for (vk::LevelIndex levelVk(0); levelVk < vk::LevelIndex(mImage->getLevelCount());
+             ++levelVk)
         {
             // Vulkan level 0 previously aligned with whatever the base level was.
-            gl::LevelIndex levelGL = vk_gl::GetLevelIndex(levelVK, previousBaseLevel);
+            gl::LevelIndex levelGL = vk_gl::GetLevelIndex(levelVk, previousBaseLevel);
 
-            if (mRedefinedLevels.test(levelVK.get()))
+            if (mRedefinedLevels.test(levelVk.get()))
             {
                 // Note: if this level is incompatibly redefined, there will necessarily be a staged
                 // update, and the contents of the image are to be thrown away.
@@ -1820,7 +1820,7 @@ angle::Result TextureVk::respecifyImageAttributesAndLevels(ContextVk *contextVk,
             // Pull data from the current image and stage it as an update for the new image
 
             // First we populate the staging buffer with current level data
-            ANGLE_TRY(copyAndStageImageSubresource(contextVk, true, layer, levelVK, levelGL));
+            ANGLE_TRY(copyAndStageImageSubresource(contextVk, true, layer, levelVk, levelGL));
         }
     }
 
@@ -1991,10 +1991,10 @@ angle::Result TextureVk::flushImageStagedUpdates(ContextVk *contextVk)
     ASSERT(mImage->valid());
 
     gl::LevelIndex baseLevelGL = getNativeImageLevel(mImage->getBaseLevel());
-    vk::LevelIndex baseLevelVK = mImage->toVKLevel(baseLevelGL);
+    vk::LevelIndex baseLevelVk = mImage->toVkLevel(baseLevelGL);
 
     return mImage->flushStagedUpdates(
-        contextVk, baseLevelVK, vk::LevelIndex(mImage->getLevelCount()), getNativeImageLayer(0),
+        contextVk, baseLevelVk, vk::LevelIndex(mImage->getLevelCount()), getNativeImageLayer(0),
         mImage->getLayerCount(), mRedefinedLevels);
 }
 
@@ -2324,10 +2324,10 @@ angle::Result TextureVk::getLevelLayerImageView(ContextVk *contextVk,
     ASSERT(mImage && mImage->valid());
 
     gl::LevelIndex levelGL = getNativeImageLevel(level);
-    vk::LevelIndex levelVK = mImage->toVKLevel(levelGL);
+    vk::LevelIndex levelVk = mImage->toVkLevel(levelGL);
     uint32_t nativeLayer   = getNativeImageLayer(static_cast<uint32_t>(layer));
 
-    return getImageViews().getLevelLayerDrawImageView(contextVk, *mImage, levelVK, nativeLayer,
+    return getImageViews().getLevelLayerDrawImageView(contextVk, *mImage, levelVk, nativeLayer,
                                                       imageViewOut);
 }
 
@@ -2346,11 +2346,11 @@ angle::Result TextureVk::getStorageImageView(ContextVk *contextVk,
 
     gl::LevelIndex nativeLevelGL =
         getNativeImageLevel(gl::LevelIndex(static_cast<uint32_t>(binding.level)));
-    vk::LevelIndex nativeLevelVK = mImage->toVKLevel(nativeLevelGL);
+    vk::LevelIndex nativeLevelVk = mImage->toVkLevel(nativeLevelGL);
     uint32_t nativeLayer         = getNativeImageLayer(0);
 
     return getImageViews().getLevelDrawImageView(
-        contextVk, mState.getType(), *mImage, nativeLevelVK, nativeLayer,
+        contextVk, mState.getType(), *mImage, nativeLevelVk, nativeLayer,
         VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_STORAGE_BIT, format.vkImageFormat,
         imageViewOut);
 }
@@ -2391,14 +2391,14 @@ angle::Result TextureVk::initImageViews(ContextVk *contextVk,
     ASSERT(mImage != nullptr && mImage->valid());
 
     gl::LevelIndex baseLevelGL = getNativeImageLevel(mImage->getBaseLevel());
-    vk::LevelIndex baseLevelVK = mImage->toVKLevel(baseLevelGL);
+    vk::LevelIndex baseLevelVk = mImage->toVkLevel(baseLevelGL);
     uint32_t baseLayer         = getNativeImageLayer(0);
 
     gl::SwizzleState formatSwizzle = GetFormatSwizzle(contextVk, format, sized);
     gl::SwizzleState readSwizzle   = ApplySwizzle(formatSwizzle, mState.getSwizzleState());
 
     ANGLE_TRY(getImageViews().initReadViews(contextVk, mState.getType(), *mImage, format,
-                                            formatSwizzle, readSwizzle, baseLevelVK, levelCount,
+                                            formatSwizzle, readSwizzle, baseLevelVk, levelCount,
                                             baseLayer, layerCount, mRequiresSRGBViews,
                                             mImageUsageFlags & ~VK_IMAGE_USAGE_STORAGE_BIT));
 

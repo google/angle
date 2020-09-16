@@ -487,7 +487,7 @@ void DestroyImageViews(ImageViewVector *imageViewVector, VkDevice device)
     imageViewVector->clear();
 }
 
-ImageView *GetLevelImageView(ImageViewVector *imageViews, LevelIndex levelVK, uint32_t levelCount)
+ImageView *GetLevelImageView(ImageViewVector *imageViews, LevelIndex levelVk, uint32_t levelCount)
 {
     // Lazily allocate the storage for image views. We allocate the full level count because we
     // don't want to trigger any std::vector reallocations. Reallocations could invalidate our
@@ -496,9 +496,9 @@ ImageView *GetLevelImageView(ImageViewVector *imageViews, LevelIndex levelVK, ui
     {
         imageViews->resize(levelCount);
     }
-    ASSERT(imageViews->size() > levelVK.get());
+    ASSERT(imageViews->size() > levelVk.get());
 
-    return &(*imageViews)[levelVK.get()];
+    return &(*imageViews)[levelVk.get()];
 }
 
 // Special rules apply to VkBufferImageCopy with depth/stencil. The components are tightly packed
@@ -3172,11 +3172,11 @@ angle::Result ImageHelper::initImageView(Context *context,
                                          VkImageAspectFlags aspectMask,
                                          const gl::SwizzleState &swizzleMap,
                                          ImageView *imageViewOut,
-                                         LevelIndex baseMipLevelVK,
+                                         LevelIndex baseMipLevelVk,
                                          uint32_t levelCount)
 {
     return initLayerImageView(context, textureType, aspectMask, swizzleMap, imageViewOut,
-                              baseMipLevelVK, levelCount, 0, mLayerCount);
+                              baseMipLevelVk, levelCount, 0, mLayerCount);
 }
 
 angle::Result ImageHelper::initLayerImageView(Context *context,
@@ -3184,13 +3184,13 @@ angle::Result ImageHelper::initLayerImageView(Context *context,
                                               VkImageAspectFlags aspectMask,
                                               const gl::SwizzleState &swizzleMap,
                                               ImageView *imageViewOut,
-                                              LevelIndex baseMipLevelVK,
+                                              LevelIndex baseMipLevelVk,
                                               uint32_t levelCount,
                                               uint32_t baseArrayLayer,
                                               uint32_t layerCount) const
 {
     return initLayerImageViewImpl(context, textureType, aspectMask, swizzleMap, imageViewOut,
-                                  baseMipLevelVK, levelCount, baseArrayLayer, layerCount,
+                                  baseMipLevelVk, levelCount, baseArrayLayer, layerCount,
                                   mFormat->vkImageFormat, nullptr);
 }
 
@@ -3200,7 +3200,7 @@ angle::Result ImageHelper::initLayerImageViewImpl(
     VkImageAspectFlags aspectMask,
     const gl::SwizzleState &swizzleMap,
     ImageView *imageViewOut,
-    LevelIndex baseMipLevelVK,
+    LevelIndex baseMipLevelVk,
     uint32_t levelCount,
     uint32_t baseArrayLayer,
     uint32_t layerCount,
@@ -3229,7 +3229,7 @@ angle::Result ImageHelper::initLayerImageViewImpl(
         viewInfo.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
     }
     viewInfo.subresourceRange.aspectMask     = aspectMask;
-    viewInfo.subresourceRange.baseMipLevel   = baseMipLevelVK.get();
+    viewInfo.subresourceRange.baseMipLevel   = baseMipLevelVk.get();
     viewInfo.subresourceRange.levelCount     = levelCount;
     viewInfo.subresourceRange.baseArrayLayer = baseArrayLayer;
     viewInfo.subresourceRange.layerCount     = layerCount;
@@ -3254,7 +3254,7 @@ angle::Result ImageHelper::initAliasedLayerImageView(Context *context,
                                                      VkImageAspectFlags aspectMask,
                                                      const gl::SwizzleState &swizzleMap,
                                                      ImageView *imageViewOut,
-                                                     LevelIndex baseMipLevelVK,
+                                                     LevelIndex baseMipLevelVk,
                                                      uint32_t levelCount,
                                                      uint32_t baseArrayLayer,
                                                      uint32_t layerCount,
@@ -3267,7 +3267,7 @@ angle::Result ImageHelper::initAliasedLayerImageView(Context *context,
         imageUsageFlags & GetMaximalImageUsageFlags(context->getRenderer(), imageViewFormat);
 
     return initLayerImageViewImpl(context, textureType, aspectMask, swizzleMap, imageViewOut,
-                                  baseMipLevelVK, levelCount, baseArrayLayer, layerCount,
+                                  baseMipLevelVk, levelCount, baseArrayLayer, layerCount,
                                   imageViewFormat, &imageViewUsageCreateInfo);
 }
 
@@ -3365,20 +3365,20 @@ VkImageLayout ImageHelper::getCurrentLayout() const
     return ConvertImageLayoutToVkImageLayout(mCurrentLayout);
 }
 
-gl::Extents ImageHelper::getLevelExtents(LevelIndex levelVK) const
+gl::Extents ImageHelper::getLevelExtents(LevelIndex levelVk) const
 {
     // Level 0 should be the size of the extents, after that every time you increase a level
     // you shrink the extents by half.
-    uint32_t width  = std::max(mExtents.width >> levelVK.get(), 1u);
-    uint32_t height = std::max(mExtents.height >> levelVK.get(), 1u);
-    uint32_t depth  = std::max(mExtents.depth >> levelVK.get(), 1u);
+    uint32_t width  = std::max(mExtents.width >> levelVk.get(), 1u);
+    uint32_t height = std::max(mExtents.height >> levelVk.get(), 1u);
+    uint32_t depth  = std::max(mExtents.depth >> levelVk.get(), 1u);
 
     return gl::Extents(width, height, depth);
 }
 
-gl::Extents ImageHelper::getLevelExtents2D(LevelIndex levelVK) const
+gl::Extents ImageHelper::getLevelExtents2D(LevelIndex levelVk) const
 {
-    gl::Extents extents = getLevelExtents(levelVK);
+    gl::Extents extents = getLevelExtents(levelVk);
     extents.depth       = 1;
     return extents;
 }
@@ -3459,14 +3459,14 @@ void ImageHelper::setBaseAndMaxLevels(gl::LevelIndex baseLevel, gl::LevelIndex m
     mMaxLevel  = maxLevel;
 }
 
-LevelIndex ImageHelper::toVKLevel(gl::LevelIndex levelIndexGL) const
+LevelIndex ImageHelper::toVkLevel(gl::LevelIndex levelIndexGL) const
 {
     return gl_vk::GetLevelIndex(levelIndexGL, mBaseLevel);
 }
 
-gl::LevelIndex ImageHelper::toGLLevel(LevelIndex levelIndexVK) const
+gl::LevelIndex ImageHelper::toGLLevel(LevelIndex levelIndexVk) const
 {
-    return vk_gl::GetLevelIndex(levelIndexVK, mBaseLevel);
+    return vk_gl::GetLevelIndex(levelIndexVk, mBaseLevel);
 }
 
 ANGLE_INLINE void ImageHelper::initImageMemoryBarrierStruct(
@@ -3595,7 +3595,7 @@ bool ImageHelper::updateLayoutAndBarrier(VkImageAspectFlags aspectMask,
 }
 
 void ImageHelper::clearColor(const VkClearColorValue &color,
-                             LevelIndex baseMipLevelVK,
+                             LevelIndex baseMipLevelVk,
                              uint32_t levelCount,
                              uint32_t baseArrayLayer,
                              uint32_t layerCount,
@@ -3607,7 +3607,7 @@ void ImageHelper::clearColor(const VkClearColorValue &color,
 
     VkImageSubresourceRange range = {};
     range.aspectMask              = VK_IMAGE_ASPECT_COLOR_BIT;
-    range.baseMipLevel            = baseMipLevelVK.get();
+    range.baseMipLevel            = baseMipLevelVk.get();
     range.levelCount              = levelCount;
     range.baseArrayLayer          = baseArrayLayer;
     range.layerCount              = layerCount;
@@ -3617,7 +3617,7 @@ void ImageHelper::clearColor(const VkClearColorValue &color,
 
 void ImageHelper::clearDepthStencil(VkImageAspectFlags clearAspectFlags,
                                     const VkClearDepthStencilValue &depthStencil,
-                                    LevelIndex baseMipLevelVK,
+                                    LevelIndex baseMipLevelVk,
                                     uint32_t levelCount,
                                     uint32_t baseArrayLayer,
                                     uint32_t layerCount,
@@ -3629,7 +3629,7 @@ void ImageHelper::clearDepthStencil(VkImageAspectFlags clearAspectFlags,
 
     VkImageSubresourceRange clearRange = {
         /*aspectMask*/ clearAspectFlags,
-        /*baseMipLevel*/ baseMipLevelVK.get(),
+        /*baseMipLevel*/ baseMipLevelVk.get(),
         /*levelCount*/ levelCount,
         /*baseArrayLayer*/ baseArrayLayer,
         /*layerCount*/ layerCount,
@@ -4492,13 +4492,13 @@ angle::Result ImageHelper::flushSingleSubresourceStagedUpdates(ContextVk *contex
         // Otherwise we proceed with a normal update.
     }
 
-    LevelIndex levelVK = toVKLevel(levelGL);
-    return flushStagedUpdates(contextVk, levelVK, levelVK + 1, layer, layer + 1, {});
+    LevelIndex levelVk = toVkLevel(levelGL);
+    return flushStagedUpdates(contextVk, levelVk, levelVk + 1, layer, layer + 1, {});
 }
 
 angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
-                                              LevelIndex levelVKStart,
-                                              LevelIndex levelVKEnd,
+                                              LevelIndex levelVkStart,
+                                              LevelIndex levelVkEnd,
                                               uint32_t layerStart,
                                               uint32_t layerEnd,
                                               gl::TexLevelMask skipLevelsMask)
@@ -4526,8 +4526,8 @@ angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
         }
     }
 
-    const gl::LevelIndex levelGLStart = toGLLevel(levelVKStart);
-    const gl::LevelIndex levelGLEnd   = toGLLevel(levelVKEnd);
+    const gl::LevelIndex levelGLStart = toGLLevel(levelVkStart);
+    const gl::LevelIndex levelGLEnd   = toGLLevel(levelVkEnd);
 
     ANGLE_TRY(mStagingBuffer.flush(contextVk));
 
@@ -4567,14 +4567,14 @@ angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
         const bool areUpdateLayersOutsideRange =
             updateBaseLayer + updateLayerCount <= layerStart || updateBaseLayer >= layerEnd;
 
-        LevelIndex updateMipLevelVK =
-            isUpdateLevelOutsideRange ? LevelIndex(0) : toVKLevel(updateMipLevelGL);
+        LevelIndex updateMipLevelVk =
+            isUpdateLevelOutsideRange ? LevelIndex(0) : toVkLevel(updateMipLevelGL);
 
         // Additionally, if updates to this level are specifically asked to be skipped, skip them.
         // This can happen when recreating an image that has been partially incompatibly redefined,
         // in which case only updates to the levels that haven't been redefined should be flushed.
         if (isUpdateLevelOutsideRange || areUpdateLayersOutsideRange ||
-            skipLevelsMask.test(updateMipLevelVK.get()))
+            skipLevelsMask.test(updateMipLevelVk.get()))
         {
             updatesToKeep.emplace_back(update);
             continue;
@@ -4585,15 +4585,15 @@ angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
         // we need to change miplevel to vk::LevelIndex.
         if (update.updateSource == UpdateSource::Clear)
         {
-            update.clear.levelIndex = updateMipLevelVK.get();
+            update.clear.levelIndex = updateMipLevelVk.get();
         }
         else if (update.updateSource == UpdateSource::Buffer)
         {
-            update.buffer.copyRegion.imageSubresource.mipLevel = updateMipLevelVK.get();
+            update.buffer.copyRegion.imageSubresource.mipLevel = updateMipLevelVk.get();
         }
         else if (update.updateSource == UpdateSource::Image)
         {
-            update.image.copyRegion.dstSubresource.mipLevel = updateMipLevelVK.get();
+            update.image.copyRegion.dstSubresource.mipLevel = updateMipLevelVk.get();
         }
 
         if (updateLayerCount >= kMaxParallelSubresourceUpload)
@@ -4606,7 +4606,7 @@ angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
         {
             const uint64_t subresourceHashRange = angle::Bit<uint64_t>(updateLayerCount) - 1;
             const uint32_t subresourceHashOffset =
-                (updateMipLevelVK.get() * mLayerCount + updateBaseLayer) %
+                (updateMipLevelVk.get() * mLayerCount + updateBaseLayer) %
                 kMaxParallelSubresourceUpload;
             const uint64_t subresourceHash =
                 ANGLE_ROTL64(subresourceHashRange, subresourceHashOffset);
@@ -4622,7 +4622,7 @@ angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
 
         if (update.updateSource == UpdateSource::Clear)
         {
-            clear(update.clear.aspectFlags, update.clear.value, updateMipLevelVK, updateBaseLayer,
+            clear(update.clear.aspectFlags, update.clear.value, updateMipLevelVk, updateBaseLayer,
                   updateLayerCount, commandBuffer);
             // Remember the latest operation is a clear call
             mCurrentSingleClearValue = update.clear;
@@ -4742,8 +4742,8 @@ void ImageHelper::removeSupersededUpdates(gl::TexLevelMask skipLevelsMask)
         }
 
         // If level is skipped (because incompatibly redefined), don't remove any of its updates.
-        const LevelIndex updateMipLevelVK = toVKLevel(updateMipLevelGL);
-        if (skipLevelsMask.test(updateMipLevelVK.get()))
+        const LevelIndex updateMipLevelVk = toVkLevel(updateMipLevelGL);
+        if (skipLevelsMask.test(updateMipLevelVk.get()))
         {
             return false;
         }
@@ -4761,10 +4761,10 @@ void ImageHelper::removeSupersededUpdates(gl::TexLevelMask skipLevelsMask)
         updateLayersMask <<= updateBaseLayer;
 
         const bool isColorOrDepthSuperseded =
-            !hasColorOrDepth || (levelSupersededLayers[kIndexColorOrDepth][updateMipLevelVK.get()] &
+            !hasColorOrDepth || (levelSupersededLayers[kIndexColorOrDepth][updateMipLevelVk.get()] &
                                  updateLayersMask) == updateLayersMask;
         const bool isStencilSuperseded =
-            !hasStencil || (levelSupersededLayers[kIndexStencil][updateMipLevelVK.get()] &
+            !hasStencil || (levelSupersededLayers[kIndexStencil][updateMipLevelVk.get()] &
                             updateLayersMask) == updateLayersMask;
 
         if (isColorOrDepthSuperseded && isStencilSuperseded)
@@ -4774,7 +4774,7 @@ void ImageHelper::removeSupersededUpdates(gl::TexLevelMask skipLevelsMask)
 
         // Get the area this update affects.  Note that clear updates always clear the whole
         // subresource.
-        const gl::Extents &levelExtent = levelExtents[updateMipLevelVK.get()];
+        const gl::Extents &levelExtent = levelExtents[updateMipLevelVk.get()];
         gl::Box updateBox(gl::kOffsetZero, levelExtent);
 
         if (update.updateSource == UpdateSource::Buffer)
@@ -4792,12 +4792,12 @@ void ImageHelper::removeSupersededUpdates(gl::TexLevelMask skipLevelsMask)
         {
             if (hasColorOrDepth)
             {
-                levelSupersededLayers[kIndexColorOrDepth][updateMipLevelVK.get()] |=
+                levelSupersededLayers[kIndexColorOrDepth][updateMipLevelVk.get()] |=
                     updateLayersMask;
             }
             if (hasStencil)
             {
-                levelSupersededLayers[kIndexStencil][updateMipLevelVK.get()] |= updateLayersMask;
+                levelSupersededLayers[kIndexStencil][updateMipLevelVk.get()] |= updateLayersMask;
             }
         }
 
@@ -4852,7 +4852,7 @@ angle::Result ImageHelper::copyImageDataToBuffer(ContextVk *contextVk,
         nullptr));
     *bufferOut = contextVk->getStagingBuffer()->getCurrentBuffer();
 
-    LevelIndex sourceLevelVk = toVKLevel(sourceLevelGL);
+    LevelIndex sourceLevelVk = toVkLevel(sourceLevelGL);
 
     VkBufferImageCopy regions[2] = {};
     // Default to non-combined DS case
@@ -4972,8 +4972,8 @@ angle::Result ImageHelper::readPixelsForGetImage(ContextVk *contextVk,
     PackPixelsParams params;
     GLuint outputSkipBytes = 0;
 
-    const LevelIndex levelVK     = toVKLevel(levelGL);
-    const gl::Extents mipExtents = getLevelExtents(levelVK);
+    const LevelIndex levelVk     = toVkLevel(levelGL);
+    const gl::Extents mipExtents = getLevelExtents(levelVk);
     gl::Rectangle area(0, 0, mipExtents.width, mipExtents.height);
 
     ANGLE_TRY(GetReadPixelsParams(contextVk, packState, packBuffer, format, type, area, area,
@@ -5059,7 +5059,7 @@ angle::Result ImageHelper::readPixels(ContextVk *contextVk,
 
     VkImageSubresourceLayers srcSubresource = {};
     srcSubresource.aspectMask               = copyAspectFlags;
-    srcSubresource.mipLevel                 = toVKLevel(levelGL).get();
+    srcSubresource.mipLevel                 = toVkLevel(levelGL).get();
     srcSubresource.baseArrayLayer           = layer;
     srcSubresource.layerCount               = 1;
 
@@ -5606,7 +5606,7 @@ angle::Result ImageViewHelper::initSRGBReadViewsImpl(ContextVk *contextVk,
 angle::Result ImageViewHelper::getLevelDrawImageView(ContextVk *contextVk,
                                                      gl::TextureType viewType,
                                                      const ImageHelper &image,
-                                                     LevelIndex levelVK,
+                                                     LevelIndex levelVk,
                                                      uint32_t layer,
                                                      VkImageUsageFlags imageUsageFlags,
                                                      VkFormat vkImageFormat,
@@ -5616,7 +5616,7 @@ angle::Result ImageViewHelper::getLevelDrawImageView(ContextVk *contextVk,
 
     retain(&contextVk->getResourceUseList());
 
-    ImageView *imageView = GetLevelImageView(&mLevelDrawImageViews, levelVK, image.getLevelCount());
+    ImageView *imageView = GetLevelImageView(&mLevelDrawImageViews, levelVk, image.getLevelCount());
 
     *imageViewOut = imageView;
     if (imageView->valid())
@@ -5626,13 +5626,13 @@ angle::Result ImageViewHelper::getLevelDrawImageView(ContextVk *contextVk,
 
     // Create the view.  Note that storage images are not affected by swizzle parameters.
     return image.initAliasedLayerImageView(contextVk, viewType, image.getAspectFlags(),
-                                           gl::SwizzleState(), imageView, levelVK, 1, layer,
+                                           gl::SwizzleState(), imageView, levelVk, 1, layer,
                                            image.getLayerCount(), imageUsageFlags, vkImageFormat);
 }
 
 angle::Result ImageViewHelper::getLevelLayerDrawImageView(ContextVk *contextVk,
                                                           const ImageHelper &image,
-                                                          LevelIndex levelVK,
+                                                          LevelIndex levelVk,
                                                           uint32_t layer,
                                                           const ImageView **imageViewOut)
 {
@@ -5652,7 +5652,7 @@ angle::Result ImageViewHelper::getLevelLayerDrawImageView(ContextVk *contextVk,
     ASSERT(mLayerLevelDrawImageViews.size() > layer);
 
     ImageView *imageView =
-        GetLevelImageView(&mLayerLevelDrawImageViews[layer], levelVK, image.getLevelCount());
+        GetLevelImageView(&mLayerLevelDrawImageViews[layer], levelVk, image.getLevelCount());
     *imageViewOut = imageView;
 
     if (imageView->valid())
@@ -5665,7 +5665,7 @@ angle::Result ImageViewHelper::getLevelLayerDrawImageView(ContextVk *contextVk,
     // don't have swizzle.
     gl::TextureType viewType = Get2DTextureType(1, image.getSamples());
     return image.initLayerImageView(contextVk, viewType, image.getAspectFlags(), gl::SwizzleState(),
-                                    imageView, levelVK, 1, layer, 1);
+                                    imageView, levelVk, 1, layer, 1);
 }
 
 ImageViewSubresourceSerial ImageViewHelper::getSubresourceSerial(gl::LevelIndex levelGL,

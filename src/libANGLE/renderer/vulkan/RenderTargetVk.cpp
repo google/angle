@@ -165,8 +165,8 @@ angle::Result RenderTargetVk::getImageViewImpl(ContextVk *contextVk,
                                                const vk::ImageView **imageViewOut) const
 {
     ASSERT(image.valid() && imageViews);
-    vk::LevelIndex levelVK = mImage->toVKLevel(mLevelIndexGL);
-    return imageViews->getLevelLayerDrawImageView(contextVk, image, levelVK, mLayerIndex,
+    vk::LevelIndex levelVk = mImage->toVkLevel(mLevelIndexGL);
+    return imageViews->getLevelLayerDrawImageView(contextVk, image, levelVk, mLayerIndex,
                                                   imageViewOut);
 }
 
@@ -224,8 +224,8 @@ const vk::Format &RenderTargetVk::getImageFormat() const
 gl::Extents RenderTargetVk::getExtents() const
 {
     ASSERT(mImage && mImage->valid());
-    vk::LevelIndex levelVK = mImage->toVKLevel(mLevelIndexGL);
-    return mImage->getLevelExtents2D(levelVK);
+    vk::LevelIndex levelVk = mImage->toVkLevel(mLevelIndexGL);
+    return mImage->getLevelExtents2D(levelVk);
 }
 
 void RenderTargetVk::updateSwapchainImage(vk::ImageHelper *image,

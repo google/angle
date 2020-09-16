@@ -1670,7 +1670,7 @@ angle::Result UtilsVk::stencilBlitResolveNoShaderExport(ContextVk *contextVk,
     region.bufferImageHeight           = params.blitArea.height;
     region.imageSubresource.aspectMask = VK_IMAGE_ASPECT_STENCIL_BIT;
     region.imageSubresource.mipLevel =
-        depthStencilImage->toVKLevel(gl::LevelIndex(depthStencilRenderTarget->getLevelIndex()))
+        depthStencilImage->toVkLevel(gl::LevelIndex(depthStencilRenderTarget->getLevelIndex()))
             .get();
     region.imageSubresource.baseArrayLayer = depthStencilRenderTarget->getLayerIndex();
     region.imageSubresource.layerCount     = 1;

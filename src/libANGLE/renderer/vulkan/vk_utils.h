@@ -899,7 +899,7 @@ GLuint GetMaxSampleCount(VkSampleCountFlags sampleCounts);
 // Return a supported sample count that's at least as large as the requested one.
 GLuint GetSampleCount(VkSampleCountFlags supportedCounts, GLuint requestedCount);
 
-gl::LevelIndex GetLevelIndex(vk::LevelIndex levelVK, gl::LevelIndex baseLevel);
+gl::LevelIndex GetLevelIndex(vk::LevelIndex levelVk, gl::LevelIndex baseLevel);
 }  // namespace vk_gl
 
 }  // namespace rx
