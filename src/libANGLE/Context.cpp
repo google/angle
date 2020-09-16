@@ -3196,8 +3196,9 @@ Extensions Context::generateSupportedExtensions() const
         // can be blit onto each other if the format is available.
         // We require colorBufferFloat to be present in order to enable colorBufferHalfFloat, so
         // that blitting is always allowed if the requested formats are exposed and have the correct
-        // feature capabilities
-        if (!supportedExtensions.colorBufferFloat)
+        // feature capabilities.
+        // WebGL 2 wants to support colorBufferHalfFloat without colorBufferFloat.
+        if (!supportedExtensions.colorBufferFloat && !mWebGLContext)
         {
             supportedExtensions.colorBufferHalfFloat = false;
         }
