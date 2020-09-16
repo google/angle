@@ -1160,7 +1160,20 @@ int TestSuite::run()
     if (!mBotMode)
     {
         startWatchdog();
-        return RUN_ALL_TESTS();
+        int retVal = RUN_ALL_TESTS();
+
+        {
+            std::lock_guard<std::mutex> guard(mTestResults.currentTestMutex);
+            mTestResults.allDone = true;
+        }
+
+        for (int tries = 0; tries < 10; ++tries)
+        {
+            if (!mWatchdogThread.joinable())
+                break;
+            angle::Sleep(100);
+        }
+        return retVal;
     }
 
     Timer totalRunTime;
