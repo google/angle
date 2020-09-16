@@ -16,6 +16,69 @@
       "revId": "cd637f604b878ca790af2162f952e2d9ad7acb77",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a2554ed1_77e97c6e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 17
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-09-16T23:45:07Z",
+      "side": 1,
+      "message": "Looks good. Very minimal new state added. Just some naming suggestions.",
+      "revId": "cd637f604b878ca790af2162f952e2d9ad7acb77",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "067fbcf8_399571d1",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 1360,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-09-16T23:45:07Z",
+      "side": 1,
+      "message": "nit: wording is a bit awkward... maybe just deferAcquireNextImage?",
+      "range": {
+        "startLine": 1360,
+        "startChar": 22,
+        "endLine": 1360,
+        "endChar": 56
+      },
+      "revId": "cd637f604b878ca790af2162f952e2d9ad7acb77",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3ee811d6_150846e4",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 1373,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-09-16T23:45:07Z",
+      "side": 1,
+      "message": "nit: maybe doDeferredAcquireNextImage ?",
+      "range": {
+        "startLine": 1373,
+        "startChar": 31,
+        "endLine": 1373,
+        "endChar": 68
+      },
+      "revId": "cd637f604b878ca790af2162f952e2d9ad7acb77",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
