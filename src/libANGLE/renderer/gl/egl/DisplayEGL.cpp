@@ -471,6 +471,11 @@ egl::ConfigSet DisplayEGL::generateConfigs()
             {
                 config.renderTargetFormat = GL_RGBA4;
             }
+            else if (config.redSize == 10 && config.greenSize == 10 && config.blueSize == 10 &&
+                     config.alphaSize == 2)
+            {
+                config.renderTargetFormat = GL_RGB10_A2;
+            }
             else
             {
                 ERR() << "RGBA(" << config.redSize << "," << config.greenSize << ","
