@@ -1109,7 +1109,7 @@ TEST_P(EGLPreRotationBlitFramebufferTest, BlitStencilWithFlip)
     ANGLE_SKIP_TEST_IF(IsLinux() && isSwiftshader());
 
     // We need to fix blit with pre-rotation. http://anglebug.com/5044
-    ANGLE_SKIP_TEST_IF(IsAndroid());
+    ANGLE_SKIP_TEST_IF(IsAndroid() || IsWindows());
 
     // To aid in debugging, we want this window visible
     setWindowVisible(mOSWindow, true);
