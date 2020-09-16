@@ -16,6 +16,24 @@
       "revId": "377e748714bfcb827a2a61a3b8ccf8ea8fab2156",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "694f9eac_4bbfcc99",
+        "filename": "src/libANGLE/renderer/vulkan/GlslangWrapperVk.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-09-16T23:44:51Z",
+      "side": 0,
+      "message": "Bah, Metal always gets missed.",
+      "parentUuid": "7b64130a_e09bd460",
+      "revId": "377e748714bfcb827a2a61a3b8ccf8ea8fab2156",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
