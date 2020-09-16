@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "c0a13dec_d9c31881",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 1348,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-09-16T23:21:29Z",
+      "side": 1,
+      "message": "Sounds good to me. I didn\u0027t realize that throttle usage of mCurrentSwapHistoryIndex",
+      "parentUuid": "7d3a39a8_6c9364d5",
+      "range": {
+        "startLine": 1348,
+        "startChar": 4,
+        "endLine": 1348,
+        "endChar": 80
+      },
+      "revId": "ce4bd26d6792eb352480eb2564417d829e18cb8b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3375631a_97606989",
         "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
         "patchSetId": 14
