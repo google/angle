@@ -836,7 +836,7 @@ TestSuite::TestSuite(int *argc, char **argv)
 
         if (mFilterString.substr(0, strlen("--gtest_filter=")) != std::string("--gtest_filter="))
         {
-            printf("Filter file must start with \"--gtest_filter=\".");
+            printf("Filter file must start with \"--gtest_filter=\".\n");
             exit(1);
         }
 
@@ -856,6 +856,15 @@ TestSuite::TestSuite(int *argc, char **argv)
 
     if (mShardCount > 0)
     {
+        if (!angle::GetEnvironmentVar("GTEST_SHARD_INDEX").empty() ||
+            !angle::GetEnvironmentVar("GTEST_TOTAL_SHARDS").empty())
+        {
+            printf(
+                "Error: --shard-index and --shard-count are incompatible with GTEST_SHARD_INDEX "
+                "and GTEST_TOTAL_SHARDS.\n");
+            exit(1);
+        }
+
         testSet =
             GetShardTests(testSet, mShardIndex, mShardCount, &mTestFileLines, alsoRunDisabledTests);
 
