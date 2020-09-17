@@ -498,8 +498,8 @@ hooks = [
     'pattern': '\\.sha1',
     'condition': 'checkout_angle_internal',
     'action': [ 'python',
-                'src/tests/perf_tests/restricted_traces/download_restricted_traces.py',
-                'src/tests/perf_tests/restricted_traces',
+                'src/tests/restricted_traces/download_restricted_traces.py',
+                'src/tests/restricted_traces',
     ]
   }
 ]

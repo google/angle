@@ -227,7 +227,7 @@ def gen_util_gles_and_egl_loaders():
 
 
 def gen_trace_gles_and_egl_loaders():
-    path = os.path.join("..", "src", "tests", "perf_tests", "restricted_traces")
+    path = os.path.join("..", "src", "tests", "restricted_traces")
     export = "ANGLE_TRACE_EXPORT "
     lib = "ANGLE_RESTRICTED_TRACES"
     gen_gles_loader(trace_gles_preamble, path, lib, export, "t_", "trace_")
@@ -283,10 +283,10 @@ def main():
             '../util/gles_loader_autogen.h',
             '../util/windows/wgl_loader_autogen.cpp',
             '../util/windows/wgl_loader_autogen.h',
-            '../src/tests/perf_tests/restricted_traces/trace_egl_loader_autogen.cpp',
-            '../src/tests/perf_tests/restricted_traces/trace_egl_loader_autogen.h',
-            '../src/tests/perf_tests/restricted_traces/trace_gles_loader_autogen.cpp',
-            '../src/tests/perf_tests/restricted_traces/trace_gles_loader_autogen.h',
+            '../src/tests/restricted_traces/trace_egl_loader_autogen.cpp',
+            '../src/tests/restricted_traces/trace_egl_loader_autogen.h',
+            '../src/tests/restricted_traces/trace_gles_loader_autogen.cpp',
+            '../src/tests/restricted_traces/trace_gles_loader_autogen.h',
         ]
 
         if sys.argv[1] == 'inputs':

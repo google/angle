@@ -193,6 +193,7 @@ void SetBinaryDataDecompressCallback(RestrictedTraceID traceID, DecompressCallba
 }}  // namespace angle
 """
 
+
 def reject_duplicate_keys(pairs):
     found_keys = {}
     for key, value in pairs:

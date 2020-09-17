@@ -67,16 +67,16 @@ cd out/install/$PLATFORM/lib
 python ../../../../scripts/refresh_angle_libs.py
 
 # TRex
-mkdir -p ../../../../../angle/src/tests/perf_tests/restricted_traces/trex_200
-ANGLE_CAPTURE_OUT_DIR=../../../../../angle/src/tests/perf_tests/restricted_traces/trex_200 ANGLE_CAPTURE_FRAME_START=200 ANGLE_CAPTURE_FRAME_END=210 ANGLE_CAPTURE_LABEL=trex_200 ../bin/testfw_app -b $TFW_PACKAGE_DIR --gfx egl -w 1920 -h 1080 -t gl_trex --ei -frame_step_time=40
+mkdir -p ../../../../../angle/src/tests/restricted_traces/trex_200
+ANGLE_CAPTURE_OUT_DIR=../../../../../angle/src/tests/restricted_traces/trex_200 ANGLE_CAPTURE_FRAME_START=200 ANGLE_CAPTURE_FRAME_END=210 ANGLE_CAPTURE_LABEL=trex_200 ../bin/testfw_app -b $TFW_PACKAGE_DIR --gfx egl -w 1920 -h 1080 -t gl_trex --ei -frame_step_time=40
 
 # Manhattan
-mkdir -p ../../../../../angle/src/tests/perf_tests/restricted_traces/manhattan_10
-ANGLE_CAPTURE_OUT_DIR=../../../../../angle/src/tests/perf_tests/restricted_traces/manhattan_10 ANGLE_CAPTURE_FRAME_START=10 ANGLE_CAPTURE_FRAME_END=20 ANGLE_CAPTURE_LABEL=manhattan_10 ../bin/testfw_app -b $TFW_PACKAGE_DIR --gfx egl -w 1920 -h 1080 -t gl_manhattan --ei -frame_step_time=40
+mkdir -p ../../../../../angle/src/tests/restricted_traces/manhattan_10
+ANGLE_CAPTURE_OUT_DIR=../../../../../angle/src/tests/restricted_traces/manhattan_10 ANGLE_CAPTURE_FRAME_START=10 ANGLE_CAPTURE_FRAME_END=20 ANGLE_CAPTURE_LABEL=manhattan_10 ../bin/testfw_app -b $TFW_PACKAGE_DIR --gfx egl -w 1920 -h 1080 -t gl_manhattan --ei -frame_step_time=40
 
 # Egypt
-mkdir -p ../../../../../angle/src/tests/perf_tests/restricted_traces/egypt_1500
-ANGLE_CAPTURE_OUT_DIR=../../../../../angle/src/tests/perf_tests/restricted_traces/egypt_1500 ANGLE_CAPTURE_FRAME_START=1500 ANGLE_CAPTURE_FRAME_END=1510 ANGLE_CAPTURE_LABEL=egypt_1500 ../bin/testfw_app -b $TFW_PACKAGE_DIR --gfx egl -w 1920 -h 1080 -t gl_egypt --ei -frame_step_time=40
+mkdir -p ../../../../../angle/src/tests/restricted_traces/egypt_1500
+ANGLE_CAPTURE_OUT_DIR=../../../../../angle/src/tests/restricted_traces/egypt_1500 ANGLE_CAPTURE_FRAME_START=1500 ANGLE_CAPTURE_FRAME_END=1510 ANGLE_CAPTURE_LABEL=egypt_1500 ../bin/testfw_app -b $TFW_PACKAGE_DIR --gfx egl -w 1920 -h 1080 -t gl_egypt --ei -frame_step_time=40
 ```
 
 ## Upload to the cloud
@@ -84,7 +84,7 @@ ANGLE_CAPTURE_OUT_DIR=../../../../../angle/src/tests/perf_tests/restricted_trace
 Starting from you ANGLE root directory:
 
 ```
-cd src/tests/perf_tests/restricted_traces
+cd src/tests/restricted_traces
 upload_to_google_storage.py --bucket chrome-angle-capture-binaries --archive trex_200
 upload_to_google_storage.py --bucket chrome-angle-capture-binaries --archive manhattan_10
 upload_to_google_storage.py --bucket chrome-angle-capture-binaries --archive egypt_1500

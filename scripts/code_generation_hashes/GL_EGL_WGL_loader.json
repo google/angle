@@ -4,7 +4,7 @@
   "scripts/egl_angle_ext.xml":
     "087d6a3996a91fbb0b664cac57c50c4c",
   "scripts/generate_loader.py":
-    "92c731390cf5c0305ea57a3661a01240",
+    "5533a717e679c558be6985a5cb016ad2",
   "scripts/gl.xml":
     "e74a595068cbdd6064300be1e71b7cc9",
   "scripts/gl_angle_ext.xml":
@@ -17,13 +17,13 @@
     "419041385faafafc4299cd6b5b8da642",
   "src/libEGL/egl_loader_autogen.h":
     "01035f491f6692446c882504c3d20792",
-  "src/tests/perf_tests/restricted_traces/trace_egl_loader_autogen.cpp":
+  "src/tests/restricted_traces/trace_egl_loader_autogen.cpp":
     "929f135ba9ba7717e76552c9e76f0f2f",
-  "src/tests/perf_tests/restricted_traces/trace_egl_loader_autogen.h":
+  "src/tests/restricted_traces/trace_egl_loader_autogen.h":
     "af2eb06cc8de3456b7bfde497b04c0c4",
-  "src/tests/perf_tests/restricted_traces/trace_gles_loader_autogen.cpp":
+  "src/tests/restricted_traces/trace_gles_loader_autogen.cpp":
     "f989f0d3e94d1ae985cfc9514cea8d48",
-  "src/tests/perf_tests/restricted_traces/trace_gles_loader_autogen.h":
+  "src/tests/restricted_traces/trace_gles_loader_autogen.h":
     "90da6d113a8248e148bf3a3853192292",
   "util/egl_loader_autogen.cpp":
     "e10da66fdf789e6c52dee1f9e1cd5a68",

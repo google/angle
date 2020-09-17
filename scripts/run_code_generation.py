@@ -114,7 +114,7 @@ generators = {
     'proc table':
         'scripts/gen_proc_table.py',
     'restricted traces':
-        'src/tests/perf_tests/restricted_traces/gen_restricted_traces.py',
+        'src/tests/restricted_traces/gen_restricted_traces.py',
     'Static builtins':
         'src/compiler/translator/gen_builtin_symbols.py',
     'uniform type':
