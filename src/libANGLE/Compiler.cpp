@@ -9,6 +9,8 @@
 #include "libANGLE/Compiler.h"
 
 #include "common/debug.h"
+#include "libANGLE/Context.h"
+#include "libANGLE/Display.h"
 #include "libANGLE/State.h"
 #include "libANGLE/renderer/CompilerImpl.h"
 #include "libANGLE/renderer/GLImplFactory.h"
@@ -56,7 +58,7 @@ ShShaderSpec SelectShaderSpec(GLint majorVersion,
 
 }  // anonymous namespace
 
-Compiler::Compiler(rx::GLImplFactory *implFactory, const State &state)
+Compiler::Compiler(rx::GLImplFactory *implFactory, const State &state, egl::Display *display)
     : mImplementation(implFactory->createCompiler()),
       mSpec(SelectShaderSpec(state.getClientMajorVersion(),
                              state.getClientMinorVersion(),
@@ -72,11 +74,14 @@ Compiler::Compiler(rx::GLImplFactory *implFactory, const State &state)
     const gl::Caps &caps             = state.getCaps();
     const gl::Extensions &extensions = state.getExtensions();
 
-    if (gActiveCompilers == 0)
     {
-        sh::Initialize();
+        std::lock_guard<std::mutex> lock(display->getDisplayGlobalMutex());
+        if (gActiveCompilers == 0)
+        {
+            sh::Initialize();
+        }
+        ++gActiveCompilers;
     }
-    ++gActiveCompilers;
 
     sh::InitBuiltInResources(&mResources);
     mResources.MaxVertexAttribs             = caps.maxVertexAttributes;
@@ -211,8 +216,11 @@ Compiler::Compiler(rx::GLImplFactory *implFactory, const State &state)
     mResources.SubPixelBits = static_cast<int>(caps.subPixelBits);
 }
 
-Compiler::~Compiler()
+Compiler::~Compiler() = default;
+
+void Compiler::onDestroy(const Context *context)
 {
+    std::lock_guard<std::mutex> lock(context->getDisplay()->getDisplayGlobalMutex());
     for (auto &pool : mPools)
     {
         for (ShCompilerInstance &instance : pool)
