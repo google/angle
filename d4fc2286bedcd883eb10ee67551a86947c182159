@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3b4d2ff6_de840709",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 19
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-09-17T16:07:49Z",
+      "side": 1,
+      "message": "The CL is great, but the ASSERT change needs to be addressed.",
+      "revId": "d4fc2286bedcd883eb10ee67551a86947c182159",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
