@@ -239,8 +239,6 @@ void AdjustBlitResolveParametersForPreRotation(SurfaceRotation framebufferAngle,
             ASSERT(!params->flipX && params->flipY);
             params->flipX = true;
             params->flipY = false;
-            // Align the offset.
-            --params->srcOffset[0];
             break;
         case SurfaceRotation::Rotated270Degrees:
             std::swap(params->stretch[0], params->stretch[1]);
@@ -253,10 +251,6 @@ void AdjustBlitResolveParametersForPreRotation(SurfaceRotation framebufferAngle,
             ASSERT(!params->flipX && !params->flipY);
             params->flipX = true;
             params->flipY = true;
-
-            // Align the offset, or the sample position near the edge will be wrong.
-            --params->srcOffset[0];
-            --params->srcOffset[1];
             break;
         default:
             UNREACHABLE();

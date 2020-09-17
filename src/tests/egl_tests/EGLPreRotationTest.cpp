@@ -1248,6 +1248,63 @@ TEST_P(EGLPreRotationBlitFramebufferTest, BlitColorWithFlip)
     ASSERT_GL_NO_ERROR();
 }
 
+// Blit color buffer to default framebuffer with linear filter.
+TEST_P(EGLPreRotationBlitFramebufferTest, BlitColorWithLinearFilter)
+{
+    // http://anglebug.com/4453
+    ANGLE_SKIP_TEST_IF(isVulkanRenderer() && IsLinux() && IsIntel());
+
+    // Flaky on Linux SwANGLE http://anglebug.com/4453
+    ANGLE_SKIP_TEST_IF(IsLinux() && isSwiftshader());
+
+    setWindowVisible(mOSWindow, true);
+
+    initializeDisplay();
+    initializeSurfaceWithRGBA8888Config();
+
+    eglMakeCurrent(mDisplay, mWindowSurface, mWindowSurface, mContext);
+    ASSERT_EGL_SUCCESS();
+
+    mOSWindow->setOrientation(300, 400);
+    angle::Sleep(1000);
+    eglSwapBuffers(mDisplay, mWindowSurface);
+    ASSERT_EGL_SUCCESS();
+
+    constexpr int kSize = 128;
+    glViewport(0, 0, kSize, kSize);
+
+    GLRenderbuffer colorbuf;
+    glBindRenderbuffer(GL_RENDERBUFFER, colorbuf.get());
+    glRenderbufferStorageMultisample(GL_RENDERBUFFER, 0, GL_RGBA8, kSize, kSize);
+
+    GLFramebuffer framebuffer;
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer.get());
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, colorbuf);
+
+    glCheckFramebufferStatus(GL_FRAMEBUFFER);
+
+    glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    ANGLE_GL_PROGRAM(gradientProgram, essl31_shaders::vs::Passthrough(),
+                     essl31_shaders::fs::RedGreenGradient());
+    drawQuad(gradientProgram, essl31_shaders::PositionAttrib(), 0.5f, 1.0f, true);
+
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+    glBlitFramebuffer(0, 0, kSize, kSize, 0, 0, kSize, kSize, GL_COLOR_BUFFER_BIT, GL_LINEAR);
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
+
+    // Check the result, especially the boundaries.
+    EXPECT_PIXEL_NEAR(0, 0, 0, 0, 0, 255, 1.0);                      // Black
+    EXPECT_PIXEL_NEAR(kSize - 1, 0, 253, 0, 0, 255, 1.0);            // Red
+    EXPECT_PIXEL_NEAR(0, kSize - 1, 0, 253, 0, 255, 1.0);            // Green
+    EXPECT_PIXEL_NEAR(kSize - 1, kSize - 1, 253, 253, 0, 255, 1.0);  // Yellow
+
+    eglSwapBuffers(mDisplay, mWindowSurface);
+
+    ASSERT_GL_NO_ERROR();
+}
+
 // Draw a predictable pattern (for testing pre-rotation) into an FBO, and then use glBlitFramebuffer
 // to blit the left and right halves of that pattern into various places within the 400x300 window
 TEST_P(EGLPreRotationBlitFramebufferTest, LeftAndRightBlitFramebuffer)

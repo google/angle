@@ -1560,25 +1560,27 @@ angle::Result UtilsVk::stencilBlitResolveNoShaderExport(ContextVk *contextVk,
         case SurfaceRotation::Rotated180Degrees:
             if (isResolve)
             {
-                shaderParams.offset.resolve[0] += params.rotatedOffsetFactor[0];
+                // Align the offset with minus 1, or the sample position near the edge will be
+                // wrong.
+                shaderParams.offset.resolve[0] += params.rotatedOffsetFactor[0] - 1;
                 shaderParams.offset.resolve[1] += params.rotatedOffsetFactor[1];
             }
             else
             {
-                shaderParams.offset.blit[0] += params.rotatedOffsetFactor[0];
+                shaderParams.offset.blit[0] += params.rotatedOffsetFactor[0] - 1;
                 shaderParams.offset.blit[1] += params.rotatedOffsetFactor[1];
             }
             break;
         case SurfaceRotation::Rotated270Degrees:
             if (isResolve)
             {
-                shaderParams.offset.resolve[0] += params.rotatedOffsetFactor[0];
-                shaderParams.offset.resolve[1] += params.rotatedOffsetFactor[1];
+                shaderParams.offset.resolve[0] += params.rotatedOffsetFactor[0] - 1;
+                shaderParams.offset.resolve[1] += params.rotatedOffsetFactor[1] - 1;
             }
             else
             {
-                shaderParams.offset.blit[0] += params.rotatedOffsetFactor[0];
-                shaderParams.offset.blit[1] += params.rotatedOffsetFactor[1];
+                shaderParams.offset.blit[0] += params.rotatedOffsetFactor[0] - 1;
+                shaderParams.offset.blit[1] += params.rotatedOffsetFactor[1] - 1;
             }
             shaderParams.rotateXY = 1;
             break;
