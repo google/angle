@@ -63,3 +63,14 @@ angle_shared_library("angle_restricted_traces") {
     configs += [ "//build/config/compiler:no_optimize" ]
   }
 }
+
+group("angle_restricted_trace_gold_tests") {
+  testonly = true
+  data_deps = [ "$angle_root/src/tests:angle_perftests" ]
+  data = [
+    "restricted_trace_gold_tests.py",
+    "restricted_traces.json",
+    "//testing/scripts/common.py",
+    "//testing/xvfb.py",
+  ]
+}

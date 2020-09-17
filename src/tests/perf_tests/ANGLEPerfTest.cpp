@@ -40,7 +40,7 @@ constexpr double kMicroSecondsPerSecond       = 1e6;
 constexpr double kNanoSecondsPerSecond        = 1e9;
 constexpr double kCalibrationRunTimeSeconds   = 1.0;
 constexpr double kMaximumRunTimeSeconds       = 10.0;
-constexpr unsigned int kNumTrials             = 3;
+constexpr uint32_t kNumTrials                 = 3;
 
 struct TraceCategory
 {
@@ -222,9 +222,14 @@ void ANGLEPerfTest::run()
     }
 
     // Do another warmup run. Seems to consistently improve results.
-    doRunLoop(kMaximumRunTimeSeconds);
+    if (gStepsToRunOverride != 1)
+    {
+        doRunLoop(kMaximumRunTimeSeconds);
+    }
 
-    for (unsigned int trial = 0; trial < kNumTrials; ++trial)
+    uint32_t numTrials = gStepsToRunOverride == 1 ? 1 : kNumTrials;
+
+    for (uint32_t trial = 0; trial < numTrials; ++trial)
     {
         doRunLoop(kMaximumRunTimeSeconds);
         printResults();
