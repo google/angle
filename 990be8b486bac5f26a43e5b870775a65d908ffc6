@@ -749,6 +749,30 @@
     },
     {
       "key": {
+        "uuid": "95252013_f3ac9532",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 1716,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-09-17T20:21:30Z",
+      "side": 1,
+      "message": "Sorry for the confusion, but that was an unrelated bug. It wasn\u0027t even correct (it was, but for MSRTT only). Anyway, irrelevant to any of this.",
+      "parentUuid": "0f7f8d76_731973ff",
+      "range": {
+        "startLine": 1716,
+        "startChar": 23,
+        "endLine": 1716,
+        "endChar": 38
+      },
+      "revId": "990be8b486bac5f26a43e5b870775a65d908ffc6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d036d4e8_cc853cae",
         "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
         "patchSetId": 18
