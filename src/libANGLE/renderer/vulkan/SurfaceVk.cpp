@@ -927,6 +927,13 @@ angle::Result WindowSurfaceVk::createSwapChain(vk::Context *context,
     swapchainInfo.clipped               = VK_TRUE;
     swapchainInfo.oldSwapchain          = lastSwapchain;
 
+    // On Android, vkCreateSwapchainKHR destroys lastSwapchain, which is incorrect.  Wait idle in
+    // that case as a workaround.
+    if (lastSwapchain && renderer->getFeatures().waitIdleBeforeSwapchainRecreation.enabled)
+    {
+        ANGLE_TRY(renderer->deviceWaitIdle(context));
+    }
+
     // TODO(syoussefi): Once EGL_SWAP_BEHAVIOR_PRESERVED_BIT is supported, the contents of the old
     // swapchain need to carry over to the new one.  http://anglebug.com/2942
     VkSwapchainKHR newSwapChain = VK_NULL_HANDLE;

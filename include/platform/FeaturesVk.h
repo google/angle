@@ -370,6 +370,14 @@ struct FeaturesVk : FeatureSetBase
         "defer_flush_until_endrenderpass", FeatureCategory::VulkanWorkarounds,
         "Allow glFlush to be deferred until renderpass ends", &members,
         "https://issuetracker.google.com/issues/166475273"};
+
+    // Android mistakenly destroys oldSwapchain passed to vkCreateSwapchainKHR, causing crashes on
+    // certain drivers.  http://anglebug.com/5061
+    Feature waitIdleBeforeSwapchainRecreation = {
+        "wait_idle_before_swapchain_recreation", FeatureCategory::VulkanWorkarounds,
+        "Before passing an oldSwapchain to VkSwapchainCreateInfoKHR, wait for queue to be idle. "
+        "Works around a bug on platforms which destroy oldSwapchain in vkCreateSwapchainKHR.",
+        &members, "http://anglebug.com/5061"};
 };
 
 inline FeaturesVk::FeaturesVk()  = default;
