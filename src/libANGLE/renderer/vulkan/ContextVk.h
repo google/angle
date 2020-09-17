@@ -795,7 +795,7 @@ class ContextVk : public ContextImpl, public vk::Context
 
     ANGLE_INLINE void invalidateCurrentGraphicsPipeline()
     {
-        mGraphicsDirtyBits |= mNewGraphicsPipelineDirtyBits;
+        mGraphicsDirtyBits.set(DIRTY_BIT_PIPELINE);
     }
 
     ANGLE_INLINE void invalidateCurrentComputePipeline()
@@ -919,6 +919,7 @@ class ContextVk : public ContextImpl, public vk::Context
     void populateTransformFeedbackBufferSet(
         size_t bufferCount,
         const gl::TransformFeedbackBuffersArray<vk::BufferHelper *> &buffers);
+    void resumeTransformFeedbackIfStarted();
 
     // DescriptorSet writes
     template <typename T, const T *VkWriteDescriptorSet::*pInfo>
@@ -964,7 +965,6 @@ class ContextVk : public ContextImpl, public vk::Context
     DirtyBits mIndexedDirtyBitsMask;
     DirtyBits mNewGraphicsCommandBufferDirtyBits;
     DirtyBits mNewComputeCommandBufferDirtyBits;
-    DirtyBits mNewGraphicsPipelineDirtyBits;
 
     // Cached back-end objects.
     VertexArrayVk *mVertexArray;

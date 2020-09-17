@@ -582,7 +582,8 @@ TEST_P(TransformFeedbackTest, MultiContext)
         GLuint buffer;
         size_t primitiveCounts[passCount];
     };
-    ContextInfo contexts[32];
+    static constexpr uint32_t kContextCount = 32;
+    ContextInfo contexts[kContextCount];
 
     const size_t maxDrawSize = 512;
 

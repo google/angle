@@ -898,8 +898,6 @@ void CommandBufferHelper::restartRenderPassWithReadOnlyDepth(const Framebuffer &
 
 void CommandBufferHelper::endRenderPass(ContextVk *contextVk)
 {
-    pauseTransformFeedbackIfStarted();
-
     if (mDepthStencilAttachmentIndex == kAttachmentIndexInvalid)
     {
         return;
@@ -965,7 +963,7 @@ void CommandBufferHelper::beginTransformFeedback(size_t validBufferCount,
 void CommandBufferHelper::endTransformFeedback()
 {
     ASSERT(mIsRenderPassCommandBuffer);
-    pauseTransformFeedbackIfStarted();
+    pauseTransformFeedback();
     mValidTransformFeedbackBufferCount = 0;
 }
 
@@ -1164,13 +1162,10 @@ void CommandBufferHelper::releaseToContextQueue(ContextVk *contextVk)
     contextVk->recycleCommandBuffer(this);
 }
 
-void CommandBufferHelper::resumeTransformFeedbackIfStarted()
+void CommandBufferHelper::resumeTransformFeedback()
 {
     ASSERT(mIsRenderPassCommandBuffer);
-    if (mValidTransformFeedbackBufferCount == 0)
-    {
-        return;
-    }
+    ASSERT(isTransformFeedbackStarted());
 
     uint32_t numCounterBuffers =
         mRebindTransformFeedbackBuffers ? 0 : mValidTransformFeedbackBufferCount;
@@ -1181,14 +1176,10 @@ void CommandBufferHelper::resumeTransformFeedbackIfStarted()
                                           mTransformFeedbackCounterBuffers.data());
 }
 
-void CommandBufferHelper::pauseTransformFeedbackIfStarted()
+void CommandBufferHelper::pauseTransformFeedback()
 {
     ASSERT(mIsRenderPassCommandBuffer);
-    if (mValidTransformFeedbackBufferCount == 0)
-    {
-        return;
-    }
-
+    ASSERT(isTransformFeedbackStarted());
     mCommandBuffer.endTransformFeedback(mValidTransformFeedbackBufferCount,
                                         mTransformFeedbackCounterBuffers.data());
 }

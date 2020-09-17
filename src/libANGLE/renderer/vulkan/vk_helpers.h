@@ -1047,8 +1047,9 @@ class CommandBufferHelper : angle::NonCopyable
         return mRenderArea;
     }
 
-    void resumeTransformFeedbackIfStarted();
-    void pauseTransformFeedbackIfStarted();
+    void resumeTransformFeedback();
+    void pauseTransformFeedback();
+    bool isTransformFeedbackStarted() const { return mValidTransformFeedbackBufferCount > 0; }
 
     uint32_t getAndResetCounter()
     {
