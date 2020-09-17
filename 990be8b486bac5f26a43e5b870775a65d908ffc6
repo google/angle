@@ -36,6 +36,24 @@
     },
     {
       "key": {
+        "uuid": "da2222f8_d7a9ef02",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 18
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-09-17T15:55:32Z",
+      "side": 1,
+      "message": "It\u0027s smaller, but it\u0027s probably more subtle now ...",
+      "parentUuid": "3efe1e85_7d682855",
+      "revId": "990be8b486bac5f26a43e5b870775a65d908ffc6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2d6bbc9a_1584ad9d",
         "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
         "patchSetId": 18
@@ -47,6 +65,30 @@
       "writtenOn": "2020-09-17T04:25:22Z",
       "side": 1,
       "message": "What is the reason for this change? This is an error in my opinion if deferClears is true and previousDeferredClears is not empty.\n\nIt means that some clears were gathered to be flushed right after syncState but weren\u0027t. Here, the attachments have been changed/modified which means it\u0027s too late for those clears to be applied. The fact that there are new clears doesn\u0027t make it ok for the previous clears to not be applied.",
+      "range": {
+        "startLine": 1716,
+        "startChar": 23,
+        "endLine": 1716,
+        "endChar": 38
+      },
+      "revId": "990be8b486bac5f26a43e5b870775a65d908ffc6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8a783d19_496fd1a0",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 1716,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-09-17T15:55:32Z",
+      "side": 1,
+      "message": "Here\u0027s one of those subtleties.  Because eglSwapBuffers adds the dirty bit/object, we\u0027re now going down this path that we didn\u0027t used to go down (I forget for which tests).  In fact, when Jamie and I spoke about this approach, he was thinking that we always went down this path for each new frame; but I saw that for the tests I was initially using, this method was never called after the first frame.  Now, it is.\n\nIn watching the code in the debugger, I learned that updateColorAttachment() will process the clears when deferClears is set (which it is).  Thus, I changed the ASSERT.\n\nIs this explanation satisfactory?",
+      "parentUuid": "2d6bbc9a_1584ad9d",
       "range": {
         "startLine": 1716,
         "startChar": 23,
@@ -76,6 +118,24 @@
     },
     {
       "key": {
+        "uuid": "dff6921a_1b366c62",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 678,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-09-17T15:55:32Z",
+      "side": 1,
+      "message": "I filed https://issuetracker.google.com/issues/168797043",
+      "parentUuid": "d036d4e8_cc853cae",
+      "revId": "990be8b486bac5f26a43e5b870775a65d908ffc6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7a406774_2046cecd",
         "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
         "patchSetId": 18
@@ -90,6 +150,24 @@
       "revId": "990be8b486bac5f26a43e5b870775a65d908ffc6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "10e5be94_51c4fe2f",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 936,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-09-17T15:55:32Z",
+      "side": 1,
+      "message": "Done\n\nYou\u0027re correct, thanks.  I had added it here before I simplified things and no longer needed it here.",
+      "parentUuid": "7a406774_2046cecd",
+      "revId": "990be8b486bac5f26a43e5b870775a65d908ffc6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -116,6 +194,30 @@
     },
     {
       "key": {
+        "uuid": "6b53bf7a_10160dc6",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 1338,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-09-17T15:55:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "840ae67f_d4ef8ee4",
+      "range": {
+        "startLine": 1336,
+        "startChar": 58,
+        "endLine": 1338,
+        "endChar": 86
+      },
+      "revId": "990be8b486bac5f26a43e5b870775a65d908ffc6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9877ac1a_c3bd4de9",
         "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
         "patchSetId": 18
@@ -136,6 +238,30 @@
       "revId": "990be8b486bac5f26a43e5b870775a65d908ffc6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "49ac50d4_6640ff09",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 1364,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-09-17T15:55:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9877ac1a_c3bd4de9",
+      "range": {
+        "startLine": 1364,
+        "startChar": 28,
+        "endLine": 1364,
+        "endChar": 61
+      },
+      "revId": "990be8b486bac5f26a43e5b870775a65d908ffc6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -162,6 +288,30 @@
     },
     {
       "key": {
+        "uuid": "7ea3d157_f859d4e2",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 1408,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-09-17T15:55:32Z",
+      "side": 1,
+      "message": "Done.\n\nI originally used the variable, but \u003cstory omitted\u003e:-).",
+      "parentUuid": "7305177e_36dfc4f7",
+      "range": {
+        "startLine": 1405,
+        "startChar": 0,
+        "endLine": 1408,
+        "endChar": 1
+      },
+      "revId": "990be8b486bac5f26a43e5b870775a65d908ffc6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4804e6ad_81cc38ba",
         "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.h",
         "patchSetId": 18
@@ -182,6 +332,30 @@
       "revId": "990be8b486bac5f26a43e5b870775a65d908ffc6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7b3fa809_35ce0bc2",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.h",
+        "patchSetId": 18
+      },
+      "lineNbr": 273,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-09-17T15:55:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4804e6ad_81cc38ba",
+      "range": {
+        "startLine": 273,
+        "startChar": 23,
+        "endLine": 273,
+        "endChar": 24
+      },
+      "revId": "990be8b486bac5f26a43e5b870775a65d908ffc6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -208,6 +382,30 @@
     },
     {
       "key": {
+        "uuid": "d8b7c67e_8476729c",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.h",
+        "patchSetId": 18
+      },
+      "lineNbr": 276,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-09-17T15:55:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "58063ac5_5e6f8604",
+      "range": {
+        "startLine": 276,
+        "startChar": 7,
+        "endLine": 276,
+        "endChar": 28
+      },
+      "revId": "990be8b486bac5f26a43e5b870775a65d908ffc6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "61cc0895_ee549d80",
         "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.h",
         "patchSetId": 18
@@ -228,6 +426,30 @@
       "revId": "990be8b486bac5f26a43e5b870775a65d908ffc6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "16fe9009_8087378c",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.h",
+        "patchSetId": 18
+      },
+      "lineNbr": 278,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-09-17T15:55:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "61cc0895_ee549d80",
+      "range": {
+        "startLine": 278,
+        "startChar": 7,
+        "endLine": 278,
+        "endChar": 67
+      },
+      "revId": "990be8b486bac5f26a43e5b870775a65d908ffc6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
