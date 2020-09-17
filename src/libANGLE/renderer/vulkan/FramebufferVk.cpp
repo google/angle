@@ -479,6 +479,11 @@ angle::Result FramebufferVk::clearImpl(const gl::Context *context,
         if (contextVk->hasStartedRenderPassWithCommands() &&
             contextVk->hasStartedRenderPassWithFramebuffer(currentFramebuffer))
         {
+            ANGLE_PERF_WARNING(
+                contextVk->getDebug(), GL_DEBUG_SEVERITY_LOW,
+                "Clear effectively discarding previous draw call results. Suggest earlier Clear "
+                "followed by masked color or depth/stencil draw calls instead");
+
             clearWithCommand(&contextVk->getStartedRenderPassCommands().getCommandBuffer(),
                              scissoredRenderArea, clearColorDrawBuffersMask,
                              clearDepthWithRenderPassLoadOp, clearStencilWithRenderPassLoadOp,
