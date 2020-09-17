@@ -233,7 +233,11 @@ class RendererVk : angle::NonCopyable
     using ExtensionNameList = angle::FixedVector<const char *, kMaxExtensionNames>;
 
     angle::Result getPipelineCache(vk::PipelineCache **pipelineCache);
-    void onNewGraphicsPipeline() { mPipelineCacheDirty = true; }
+    void onNewGraphicsPipeline()
+    {
+        std::lock_guard<std::mutex> lock(mPipelineCacheMutex);
+        mPipelineCacheDirty = true;
+    }
 
     void onNewValidationMessage(const std::string &message);
     std::string getAndClearLastValidationMessage(uint32_t *countSinceLastClear);
@@ -342,6 +346,7 @@ class RendererVk : angle::NonCopyable
 
     // All access to the pipeline cache is done through EGL objects so it is thread safe to not use
     // a lock.
+    std::mutex mPipelineCacheMutex;
     vk::PipelineCache mPipelineCache;
     egl::BlobCache::Key mPipelineCacheVkBlobKey;
     uint32_t mPipelineCacheVkUpdateTimeout;

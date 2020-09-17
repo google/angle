@@ -1918,6 +1918,11 @@ angle::Result RendererVk::initPipelineCache(DisplayVk *display,
 
 angle::Result RendererVk::getPipelineCache(vk::PipelineCache **pipelineCache)
 {
+    // Note that unless external synchronization is specifically requested the pipeline cache
+    // is internally synchronized. See VK_EXT_pipeline_creation_cache_control. We might want
+    // to investigate controlling synchronization manually in ANGLE at some point for perf.
+    std::lock_guard<std::mutex> lock(mPipelineCacheMutex);
+
     if (mPipelineCacheInitialized)
     {
         *pipelineCache = &mPipelineCache;
