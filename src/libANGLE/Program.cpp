@@ -1437,6 +1437,7 @@ angle::Result Program::linkImpl(const Context *context)
     // TODO: http://anglebug.com/4530: Enable program caching for separable programs
     if (cache && !isSeparable())
     {
+        std::lock_guard<std::mutex> cacheLock(context->getProgramCacheMutex());
         angle::Result cacheResult = cache->getProgram(context, this, &programHash);
         ANGLE_TRY(cacheResult);
 
@@ -1658,6 +1659,7 @@ void Program::resolveLinkImpl(const Context *context)
     postResolveLink(context);
 
     // Save to the program cache.
+    std::lock_guard<std::mutex> cacheLock(context->getProgramCacheMutex());
     MemoryProgramCache *cache = context->getMemoryProgramCache();
     // TODO: http://anglebug.com/4530: Enable program caching for separable programs
     if (cache && !isSeparable() &&

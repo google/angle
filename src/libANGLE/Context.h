@@ -10,6 +10,7 @@
 #ifndef LIBANGLE_CONTEXT_H_
 #define LIBANGLE_CONTEXT_H_
 
+#include <mutex>
 #include <set>
 #include <string>
 
@@ -506,6 +507,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     angle::Result prepareForDispatch();
 
     MemoryProgramCache *getMemoryProgramCache() const { return mMemoryProgramCache; }
+    std::mutex &getProgramCacheMutex() const;
 
     bool hasBeenCurrent() const { return mHasBeenCurrent; }
     egl::Display *getDisplay() const { return mDisplay; }
