@@ -557,6 +557,30 @@
     },
     {
       "key": {
+        "uuid": "0cb09a15_8af99450",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 1716,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-09-17T19:17:26Z",
+      "side": 1,
+      "message": "Could a \"flush deferred clears of current draw buffer\" on link errors at least let us proceed with this change, and allow the fix to be done in a follow up?",
+      "parentUuid": "7fe47243_b02984cf",
+      "range": {
+        "startLine": 1716,
+        "startChar": 23,
+        "endLine": 1716,
+        "endChar": 38
+      },
+      "revId": "990be8b486bac5f26a43e5b870775a65d908ffc6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "d036d4e8_cc853cae",
         "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
         "patchSetId": 18
