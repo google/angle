@@ -16,6 +16,218 @@
       "revId": "990be8b486bac5f26a43e5b870775a65d908ffc6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3efe1e85_7d682855",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 18
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-09-17T04:25:22Z",
+      "side": 1,
+      "message": "I\u0027m glad this work became so simple to actually implement!",
+      "revId": "990be8b486bac5f26a43e5b870775a65d908ffc6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2d6bbc9a_1584ad9d",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 1716,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-09-17T04:25:22Z",
+      "side": 1,
+      "message": "What is the reason for this change? This is an error in my opinion if deferClears is true and previousDeferredClears is not empty.\n\nIt means that some clears were gathered to be flushed right after syncState but weren\u0027t. Here, the attachments have been changed/modified which means it\u0027s too late for those clears to be applied. The fact that there are new clears doesn\u0027t make it ok for the previous clears to not be applied.",
+      "range": {
+        "startLine": 1716,
+        "startChar": 23,
+        "endLine": 1716,
+        "endChar": 38
+      },
+      "revId": "990be8b486bac5f26a43e5b870775a65d908ffc6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d036d4e8_cc853cae",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 678,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-09-17T04:25:22Z",
+      "side": 1,
+      "message": "Unrelated to this change, but I think there\u0027s a bug here. The other caller of acquireNextSwapchainImage retries on VK_SUBOPTIMAL_KHR and fails if still VK_SUBOPTIMAL_KHR. In that case, it\u0027s ok that mAcquireImageSemaphore and RenderTarget updates for example are conditional to only VK_SUCCESS being returned.\n\nIn this particular case, if VK_SUBOPTIMAL_KHR is returned, the code happily continues running, but mAcquireImageSemaphore is not set, neither is mColorRenderTarget updated.\n\nCould you please create a tracking bug to fix this? I think refactoring the ANI-retry code into a function and calling it here (then expecting VK_SUCCESS) should fix it, i.e. the code that says:\n\n        VkResult result \u003d acquireNextSwapchainImage(contextVk);\n        // If SUBOPTIMAL/OUT_OF_DATE is returned, it\u0027s ok, we just need to recreate the swapchain\n        // before continuing.\n        if (ANGLE_UNLIKELY((result \u003d\u003d VK_ERROR_OUT_OF_DATE_KHR) || (result \u003d\u003d VK_SUBOPTIMAL_KHR)))\n        {\n            ANGLE_TRY(checkForOutOfDateSwapchain(contextVk, true));\n            // Try one more time and bail if we fail\n            result \u003d acquireNextSwapchainImage(contextVk);\n        }\n        ANGLE_VK_TRY(contextVk, result);",
+      "revId": "990be8b486bac5f26a43e5b870775a65d908ffc6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7a406774_2046cecd",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 936,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-09-17T04:25:22Z",
+      "side": 1,
+      "message": "Looks a bit out of place. This function is not calling ANI, so why should it clear this flag? I expected the code that leads to this to have already handled this.\n\nWhat happens if this is removed? I may have missed something, but it looks like the paths that lead to this are:\n\n- Init: mAcquireDeferred is already false, besides it will call ANI right after.\n- checkForOutOfDateSwapchain: immediately calls ANI after, which sets this to false on success",
+      "revId": "990be8b486bac5f26a43e5b870775a65d908ffc6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "840ae67f_d4ef8ee4",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 1338,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-09-17T04:25:22Z",
+      "side": 1,
+      "message": "I would reword this a bit so it\u0027s less about the tests and more about the condition in which it is called:\n\n\u003e The image may not have been already acquired if there was no rendering done at all to the default framebuffer in this frame, for example if all rendering was done to FBOs.",
+      "range": {
+        "startLine": 1336,
+        "startChar": 58,
+        "endLine": 1338,
+        "endChar": 86
+      },
+      "revId": "990be8b486bac5f26a43e5b870775a65d908ffc6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9877ac1a_c3bd4de9",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 1364,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-09-17T04:25:22Z",
+      "side": 1,
+      "message": "DIRTY_BIT_COLOR_ATTACHMENT_0 is actually what gets processed first, not DIRTY_BIT_COLOR_BUFFER_CONTENTS_0. However, that\u0027s ok since the attachments of the default framebuffer cannot change (so that dirty bit doesn\u0027t apply to the default framebuffer). I\u0027d incorporate this information in the comment to be more precise.",
+      "range": {
+        "startLine": 1364,
+        "startChar": 28,
+        "endLine": 1364,
+        "endChar": 61
+      },
+      "revId": "990be8b486bac5f26a43e5b870775a65d908ffc6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7305177e_36dfc4f7",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 1408,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-09-17T04:25:22Z",
+      "side": 1,
+      "message": "Might as well have just used mAcquireDeferred everywhere instead of this function. If you like the function name better, you could call the variable mNeedToAcquireNextSwapchainImage ;)",
+      "range": {
+        "startLine": 1405,
+        "startChar": 0,
+        "endLine": 1408,
+        "endChar": 1
+      },
+      "revId": "990be8b486bac5f26a43e5b870775a65d908ffc6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4804e6ad_81cc38ba",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.h",
+        "patchSetId": 18
+      },
+      "lineNbr": 273,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-09-17T04:25:22Z",
+      "side": 1,
+      "message": "suggest: scheduled to be",
+      "range": {
+        "startLine": 273,
+        "startChar": 23,
+        "endLine": 273,
+        "endChar": 24
+      },
+      "revId": "990be8b486bac5f26a43e5b870775a65d908ffc6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "58063ac5_5e6f8604",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.h",
+        "patchSetId": 18
+      },
+      "lineNbr": 276,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-09-17T04:25:22Z",
+      "side": 1,
+      "message": "typo: acquireNextSwapchainImage",
+      "range": {
+        "startLine": 276,
+        "startChar": 7,
+        "endLine": 276,
+        "endChar": 28
+      },
+      "revId": "990be8b486bac5f26a43e5b870775a65d908ffc6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "61cc0895_ee549d80",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.h",
+        "patchSetId": 18
+      },
+      "lineNbr": 278,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-09-17T04:25:22Z",
+      "side": 1,
+      "message": "suggest: Called when a swapchain image whose acquisition was deferred must be acquired.\n\n`later` is confusing out of context of this change. Later than what?",
+      "range": {
+        "startLine": 278,
+        "startChar": 7,
+        "endLine": 278,
+        "endChar": 67
+      },
+      "revId": "990be8b486bac5f26a43e5b870775a65d908ffc6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
