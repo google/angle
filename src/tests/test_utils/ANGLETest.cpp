@@ -365,10 +365,13 @@ ANGLETestBase::ANGLETestBase(const PlatformParameters &params)
     PlatformParameters withMethods            = params;
     withMethods.eglParameters.platformMethods = &gDefaultPlatformMethods;
 
-    // We don't build vulkan debug layers on Mac (http://anglebug.com/4376)
-    if (IsOSX() && withMethods.getRenderer() == EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE)
+    if (withMethods.getRenderer() == EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE)
     {
+#if defined(ANGLE_ENABLE_VULKAN_VALIDATION_LAYERS)
+        withMethods.eglParameters.debugLayersEnabled = true;
+#else
         withMethods.eglParameters.debugLayersEnabled = false;
+#endif
     }
 
     auto iter = gFixtures.find(withMethods);
