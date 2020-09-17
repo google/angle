@@ -389,6 +389,30 @@
     },
     {
       "key": {
+        "uuid": "b7c9e31a_81e90bd9",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 1716,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-09-17T18:50:10Z",
+      "side": 1,
+      "message": "ProgramPipeline::syncState() sees the Stop, generates GL_INVALID_OPERATION with the error message \"Program pipeline link failed\"",
+      "parentUuid": "4b746d96_a59de84d",
+      "range": {
+        "startLine": 1716,
+        "startChar": 23,
+        "endLine": 1716,
+        "endChar": 38
+      },
+      "revId": "990be8b486bac5f26a43e5b870775a65d908ffc6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "d036d4e8_cc853cae",
         "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
         "patchSetId": 18
