@@ -200,6 +200,7 @@ class RendererVk : angle::NonCopyable
     angle::Result newSharedFence(vk::Context *context, vk::Shared<vk::Fence> *sharedFenceOut);
     inline void resetSharedFence(vk::Shared<vk::Fence> *sharedFenceIn)
     {
+        std::lock_guard<std::mutex> lock(mFenceRecyclerMutex);
         sharedFenceIn->resetAndRecycle(&mFenceRecycler);
     }
 
@@ -336,6 +337,7 @@ class RendererVk : angle::NonCopyable
 
     bool mDeviceLost;
 
+    std::mutex mFenceRecyclerMutex;
     vk::Recycler<vk::Fence> mFenceRecycler;
 
     std::mutex mGarbageMutex;

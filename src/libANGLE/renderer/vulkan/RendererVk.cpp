@@ -512,7 +512,10 @@ void RendererVk::onDestroy()
 
     mOneOffCommandPool.destroy(mDevice);
 
-    mFenceRecycler.destroy(mDevice);
+    {
+        std::lock_guard<std::mutex> lock(mFenceRecyclerMutex);
+        mFenceRecycler.destroy(mDevice);
+    }
 
     mPipelineLayoutCache.destroy(mDevice);
     mDescriptorSetLayoutCache.destroy(mDevice);
@@ -2205,18 +2208,26 @@ VkResult RendererVk::queuePresent(egl::ContextPriority priority,
 angle::Result RendererVk::newSharedFence(vk::Context *context,
                                          vk::Shared<vk::Fence> *sharedFenceOut)
 {
+    bool gotRecycledFence = false;
     vk::Fence fence;
-    if (mFenceRecycler.empty())
+    {
+        std::lock_guard<std::mutex> lock(mFenceRecyclerMutex);
+        if (!mFenceRecycler.empty())
+        {
+            mFenceRecycler.fetch(&fence);
+            gotRecycledFence = true;
+        }
+    }
+    if (gotRecycledFence)
+    {
+        ANGLE_VK_TRY(context, fence.reset(mDevice));
+    }
+    else
     {
         VkFenceCreateInfo fenceCreateInfo = {};
         fenceCreateInfo.sType             = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
         fenceCreateInfo.flags             = 0;
         ANGLE_VK_TRY(context, fence.init(mDevice, fenceCreateInfo));
-    }
-    else
-    {
-        mFenceRecycler.fetch(&fence);
-        ANGLE_VK_TRY(context, fence.reset(mDevice));
     }
     sharedFenceOut->assign(mDevice, std::move(fence));
     return angle::Result::Continue;
