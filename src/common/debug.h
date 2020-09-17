@@ -15,6 +15,7 @@
 
 #include <iomanip>
 #include <ios>
+#include <mutex>
 #include <sstream>
 #include <string>
 
@@ -102,6 +103,8 @@ bool DebugAnnotationsActive();
 bool DebugAnnotationsInitialized();
 
 void InitializeDebugMutexIfNeeded();
+
+std::mutex &GetDebugMutex();
 
 namespace priv
 {

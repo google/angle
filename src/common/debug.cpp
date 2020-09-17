@@ -14,7 +14,6 @@
 #include <cstdio>
 #include <cstring>
 #include <fstream>
-#include <mutex>
 #include <ostream>
 #include <vector>
 
@@ -112,6 +111,12 @@ void InitializeDebugMutexIfNeeded()
     {
         g_debugMutex = new std::mutex();
     }
+}
+
+std::mutex &GetDebugMutex()
+{
+    ASSERT(g_debugMutex);
+    return *g_debugMutex;
 }
 
 ScopedPerfEventHelper::ScopedPerfEventHelper(const char *format, ...) : mFunctionName(nullptr)
