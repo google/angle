@@ -197,6 +197,30 @@
     },
     {
       "key": {
+        "uuid": "78a8794f_12c41e71",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 1716,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-09-17T17:06:04Z",
+      "side": 1,
+      "message": "I\u0027m digging (I saw this in Patchset 8, where you can see other test failures) ... It\u0027s always the 2nd test in a group.  There\u0027s no cleanup between tests.  Thus, anything left over in ANGLE state is there when they go to render the next test.  This apparently always included a deferred clear, and now includes a deferred ANI,\n\nSo, it sounds like my job is to find the bug about why this deferred clear is still there?",
+      "parentUuid": "48840fac_67318353",
+      "range": {
+        "startLine": 1716,
+        "startChar": 23,
+        "endLine": 1716,
+        "endChar": 38
+      },
+      "revId": "990be8b486bac5f26a43e5b870775a65d908ffc6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "d036d4e8_cc853cae",
         "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
         "patchSetId": 18
