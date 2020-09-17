@@ -83,6 +83,7 @@ class RendererVk : angle::NonCopyable
 
     void notifyDeviceLost();
     bool isDeviceLost() const;
+    bool hasSharedGarbage();
 
     std::string getVendorString() const;
     std::string getRendererDescription() const;
@@ -226,6 +227,7 @@ class RendererVk : angle::NonCopyable
     {
         if (!sharedGarbage.empty())
         {
+            std::lock_guard<std::mutex> lock(mGarbageMutex);
             mSharedGarbage.emplace_back(std::move(use), std::move(sharedGarbage));
         }
     }

@@ -480,7 +480,13 @@ RendererVk::~RendererVk()
 {
     mAllocator.release();
     mPipelineCache.release();
-    ASSERT(mSharedGarbage.empty());
+    ASSERT(!hasSharedGarbage());
+}
+
+bool RendererVk::hasSharedGarbage()
+{
+    std::lock_guard<std::mutex> lock(mGarbageMutex);
+    return !mSharedGarbage.empty();
 }
 
 void RendererVk::onDestroy()
@@ -503,7 +509,7 @@ void RendererVk::onDestroy()
     // Then assign an infinite "last completed" serial to force garbage to delete.
     mLastCompletedQueueSerial = Serial::Infinite();
     (void)cleanupGarbage(true);
-    ASSERT(mSharedGarbage.empty());
+    ASSERT(!hasSharedGarbage());
 
     for (PendingOneOffCommands &pending : mPendingOneOffCommands)
     {
@@ -2271,7 +2277,7 @@ bool RendererVk::hasFormatFeatureBits(VkFormat format, const VkFormatFeatureFlag
 
 angle::Result RendererVk::cleanupGarbage(bool block)
 {
-    std::lock_guard<decltype(mGarbageMutex)> lock(mGarbageMutex);
+    std::lock_guard<std::mutex> lock(mGarbageMutex);
 
     for (auto garbageIter = mSharedGarbage.begin(); garbageIter != mSharedGarbage.end();)
     {
