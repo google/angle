@@ -293,6 +293,30 @@
     },
     {
       "key": {
+        "uuid": "73408ca2_274af335",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 1716,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-09-17T18:35:31Z",
+      "side": 1,
+      "message": "I\u0027ll look more (the tests aren\u0027t written to make this easy).  The one test is:\n\ndEQP.GLES31/functional_separate_shader_validation_es31_varying_missing_input\n\nThere\u0027s also another test:\n\ndEQP.GLES31/functional_separate_shader_validation_es31_varying_missing_output",
+      "parentUuid": "d2b2a3c3_0b472230",
+      "range": {
+        "startLine": 1716,
+        "startChar": 23,
+        "endLine": 1716,
+        "endChar": 38
+      },
+      "revId": "990be8b486bac5f26a43e5b870775a65d908ffc6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "d036d4e8_cc853cae",
         "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
         "patchSetId": 18
