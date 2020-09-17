@@ -629,6 +629,30 @@
     },
     {
       "key": {
+        "uuid": "5330ae17_70c94475",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 1716,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-09-17T19:36:20Z",
+      "side": 1,
+      "message": "\u003e Actually, why don\u0027t we just comment out the ASSERT with a TODO to put it back in with the fix?\n\nSure.  Should I file the bug to put with the TODO?\n\n\u003e Could a \"flush deferred clears of current draw buffer\" ...?\n\nHere\u0027s an idea ... taking advantage of the fact that we\u0027re using subject-observer.  Instead of re-using an existing message (SubjectChanged, which Surface changes to ContentsChanged), what if we make a unique message that tells Framebuffer::onSubjectStateChange to call a new Impl method that says to flush deferred clears (or anything else we need to flush).",
+      "parentUuid": "15ebf1a3_7a8aba5a",
+      "range": {
+        "startLine": 1716,
+        "startChar": 23,
+        "endLine": 1716,
+        "endChar": 38
+      },
+      "revId": "990be8b486bac5f26a43e5b870775a65d908ffc6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "d036d4e8_cc853cae",
         "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
         "patchSetId": 18
