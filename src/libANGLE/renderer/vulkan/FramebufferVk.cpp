@@ -1705,7 +1705,12 @@ angle::Result FramebufferVk::syncState(const gl::Context *context,
                         dirtyBit - gl::Framebuffer::DIRTY_BIT_COLOR_BUFFER_CONTENTS_0);
                 }
 
-                ASSERT(!previousDeferredClears.test(colorIndexGL));
+                // TODO: uncomment the following ASSERT once deferred clears don't exist if
+                // Context::prepareForDraw() returns an error (and the draw doesn't process the
+                // deferred clear).  http://anglebug.com/5064
+                //
+                // ASSERT(!previousDeferredClears.test(colorIndexGL));
+
                 ANGLE_TRY(updateColorAttachment(context, deferClears, colorIndexGL));
                 shouldUpdateColorMask = true;
                 break;
