@@ -2248,11 +2248,12 @@ SamplerDesc::SamplerDesc(const SamplerDesc &other) = default;
 
 SamplerDesc &SamplerDesc::operator=(const SamplerDesc &rhs) = default;
 
-SamplerDesc::SamplerDesc(const gl::SamplerState &samplerState,
+SamplerDesc::SamplerDesc(const angle::FeaturesVk &featuresVk,
+                         const gl::SamplerState &samplerState,
                          bool stencilMode,
                          uint64_t externalFormat)
 {
-    update(samplerState, stencilMode, externalFormat);
+    update(featuresVk, samplerState, stencilMode, externalFormat);
 }
 
 void SamplerDesc::reset()
@@ -2275,11 +2276,23 @@ void SamplerDesc::reset()
     mReserved[2]    = 0;
 }
 
-void SamplerDesc::update(const gl::SamplerState &samplerState,
+void SamplerDesc::update(const angle::FeaturesVk &featuresVk,
+                         const gl::SamplerState &samplerState,
                          bool stencilMode,
                          uint64_t externalFormat)
 {
-    mMipLodBias    = 0.0f;
+    mMipLodBias = 0.0f;
+    for (size_t lodOffsetFeatureIdx = 0;
+         lodOffsetFeatureIdx < featuresVk.forceTextureLODOffset.size(); lodOffsetFeatureIdx++)
+    {
+        if (featuresVk.forceTextureLODOffset[lodOffsetFeatureIdx].enabled)
+        {
+            // Make sure only one forceTextureLODOffset feature is set.
+            ASSERT(mMipLodBias == 0.0f);
+            mMipLodBias = static_cast<float>(lodOffsetFeatureIdx + 1);
+        }
+    }
+
     mMaxAnisotropy = samplerState.getMaxAnisotropy();
     mMinLod        = samplerState.getMinLod();
     mMaxLod        = samplerState.getMaxLod();
@@ -2298,8 +2311,20 @@ void SamplerDesc::update(const gl::SamplerState &samplerState,
         compareOp     = VK_COMPARE_OP_ALWAYS;
     }
 
-    SetBitField(mMagFilter, gl_vk::GetFilter(samplerState.getMagFilter()));
-    SetBitField(mMinFilter, gl_vk::GetFilter(samplerState.getMinFilter()));
+    GLenum magFilter = samplerState.getMagFilter();
+    GLenum minFilter = samplerState.getMinFilter();
+    if (featuresVk.forceNearestFiltering.enabled)
+    {
+        magFilter = gl::ConvertToNearestFilterMode(magFilter);
+        minFilter = gl::ConvertToNearestFilterMode(minFilter);
+    }
+    if (featuresVk.forceNearestMipFiltering.enabled)
+    {
+        minFilter = gl::ConvertToNearestMipFilterMode(minFilter);
+    }
+
+    SetBitField(mMagFilter, gl_vk::GetFilter(magFilter));
+    SetBitField(mMinFilter, gl_vk::GetFilter(minFilter));
     SetBitField(mMipmapMode, gl_vk::GetSamplerMipmapMode(samplerState.getMinFilter()));
     SetBitField(mAddressModeU, gl_vk::GetSamplerAddressMode(samplerState.getWrapS()));
     SetBitField(mAddressModeV, gl_vk::GetSamplerAddressMode(samplerState.getWrapT()));
@@ -2307,7 +2332,7 @@ void SamplerDesc::update(const gl::SamplerState &samplerState,
     SetBitField(mCompareEnabled, compareEnable);
     SetBitField(mCompareOp, compareOp);
 
-    if (!gl::IsMipmapFiltered(samplerState.getMinFilter()))
+    if (!gl::IsMipmapFiltered(minFilter))
     {
         // Per the Vulkan spec, GL_NEAREST and GL_LINEAR do not map directly to Vulkan, so
         // they must be emulated (See "Mapping of OpenGL to Vulkan filter modes")
@@ -2336,7 +2361,7 @@ angle::Result SamplerDesc::init(ContextVk *contextVk, vk::Sampler *sampler) cons
     createInfo.addressModeU            = static_cast<VkSamplerAddressMode>(mAddressModeU);
     createInfo.addressModeV            = static_cast<VkSamplerAddressMode>(mAddressModeV);
     createInfo.addressModeW            = static_cast<VkSamplerAddressMode>(mAddressModeW);
-    createInfo.mipLodBias              = 0.0f;
+    createInfo.mipLodBias              = mMipLodBias;
     createInfo.anisotropyEnable        = anisotropyEnable;
     createInfo.maxAnisotropy           = mMaxAnisotropy;
     createInfo.compareEnable           = mCompareEnabled ? VK_TRUE : VK_FALSE;

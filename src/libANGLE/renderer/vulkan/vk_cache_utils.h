@@ -756,13 +756,19 @@ class SamplerDesc final
 {
   public:
     SamplerDesc();
-    SamplerDesc(const gl::SamplerState &samplerState, bool stencilMode, uint64_t externalFormat);
+    SamplerDesc(const angle::FeaturesVk &featuresVk,
+                const gl::SamplerState &samplerState,
+                bool stencilMode,
+                uint64_t externalFormat);
     ~SamplerDesc();
 
     SamplerDesc(const SamplerDesc &other);
     SamplerDesc &operator=(const SamplerDesc &rhs);
 
-    void update(const gl::SamplerState &samplerState, bool stencilMode, uint64_t externalFormat);
+    void update(const angle::FeaturesVk &featuresVk,
+                const gl::SamplerState &samplerState,
+                bool stencilMode,
+                uint64_t externalFormat);
     void reset();
     angle::Result init(ContextVk *contextVk, vk::Sampler *sampler) const;
 

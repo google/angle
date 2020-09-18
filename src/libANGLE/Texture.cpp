@@ -67,6 +67,34 @@ bool IsMipmapFiltered(GLenum minFilterMode)
     }
 }
 
+GLenum ConvertToNearestFilterMode(GLenum filterMode)
+{
+    switch (filterMode)
+    {
+        case GL_LINEAR:
+            return GL_NEAREST;
+        case GL_LINEAR_MIPMAP_NEAREST:
+            return GL_NEAREST_MIPMAP_NEAREST;
+        case GL_LINEAR_MIPMAP_LINEAR:
+            return GL_NEAREST_MIPMAP_LINEAR;
+        default:
+            return filterMode;
+    }
+}
+
+GLenum ConvertToNearestMipFilterMode(GLenum filterMode)
+{
+    switch (filterMode)
+    {
+        case GL_LINEAR_MIPMAP_LINEAR:
+            return GL_LINEAR_MIPMAP_NEAREST;
+        case GL_NEAREST_MIPMAP_LINEAR:
+            return GL_NEAREST_MIPMAP_NEAREST;
+        default:
+            return filterMode;
+    }
+}
+
 SwizzleState::SwizzleState()
     : swizzleRed(GL_RED), swizzleGreen(GL_GREEN), swizzleBlue(GL_BLUE), swizzleAlpha(GL_ALPHA)
 {}
