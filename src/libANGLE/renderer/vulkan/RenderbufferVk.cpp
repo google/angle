@@ -81,11 +81,12 @@ angle::Result RenderbufferVk::setStorageImpl(const gl::Context *context,
     const bool isDepthStencilFormat    = textureFormat.hasDepthOrStencilBits();
     ASSERT(textureFormat.redBits > 0 || isDepthStencilFormat);
 
-    // TODO(syoussefi): Currently not supported for depth/stencil images. Tests (and Chromium) only
-    // use this for depth/stencil buffers and don't attempt to read from it.  This needs to be fixed
-    // and tests added.  http://anglebug.com/4836
+    // TODO(syoussefi): Currently not supported for depth/stencil images if
+    // VK_KHR_depth_stencil_resolve is not supported.  Chromium only uses this for depth/stencil
+    // buffers and doesn't attempt to read from it.  http://anglebug.com/5065
     const bool isRenderToTexture =
-        mode == gl::MultisamplingMode::MultisampledRenderToTexture && !isDepthStencilFormat;
+        mode == gl::MultisamplingMode::MultisampledRenderToTexture &&
+        (!isDepthStencilFormat || renderer->getFeatures().supportsDepthStencilResolve.enabled);
 
     const VkImageUsageFlags usage =
         VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_TRANSFER_SRC_BIT |

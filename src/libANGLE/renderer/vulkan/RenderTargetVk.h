@@ -115,7 +115,7 @@ class RenderTargetVk final : public FramebufferAttachmentRenderTarget
     void restoreEntireContent() { mContentDefined = true; }
 
     // See the description of mTransience for details of how the following two can interact.
-    bool hasResolveAttachment() const { return mResolveImage != nullptr; }
+    bool hasResolveAttachment() const { return mResolveImage != nullptr && !isEntirelyTransient(); }
     bool isImageTransient() const { return mTransience != RenderTargetTransience::Default; }
     bool isEntirelyTransient() const
     {

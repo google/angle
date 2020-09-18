@@ -108,10 +108,12 @@ inline void UpdateAccess(ResourceAccess *oldAccess, ResourceAccess newAccess)
 }
 
 // There can be a maximum of IMPLEMENTATION_MAX_DRAW_BUFFERS color and resolve attachments, plus one
-// depth/stencil attachment.
-constexpr size_t kMaxFramebufferAttachments = gl::IMPLEMENTATION_MAX_DRAW_BUFFERS * 2 + 1;
+// depth/stencil attachment and one depth/stencil resolve attachment.
+constexpr size_t kMaxFramebufferAttachments = gl::IMPLEMENTATION_MAX_DRAW_BUFFERS * 2 + 2;
 template <typename T>
 using FramebufferAttachmentArray = std::array<T, kMaxFramebufferAttachments>;
+template <typename T>
+using FramebufferAttachmentsVector = angle::FixedVector<T, kMaxFramebufferAttachments>;
 
 constexpr size_t kMaxFramebufferNonResolveAttachments = gl::IMPLEMENTATION_MAX_DRAW_BUFFERS + 1;
 template <typename T>
@@ -140,6 +142,8 @@ class alignas(4) RenderPassDesc final
     // Indicate that a color attachment should take its data from the resolve attachment initially.
     void packColorUnresolveAttachment(size_t colorIndexGL);
     void removeColorUnresolveAttachment(size_t colorIndexGL);
+    // Indicate that a depth/stencil attachment should have a corresponding resolve attachment.
+    void packDepthStencilResolveAttachment(bool resolveDepth, bool resolveStencil);
 
     size_t hash() const;
 
@@ -164,6 +168,18 @@ class alignas(4) RenderPassDesc final
     bool hasColorUnresolveAttachment(size_t colorIndexGL) const
     {
         return mColorUnresolveAttachmentMask.test(colorIndexGL);
+    }
+    bool hasDepthStencilResolveAttachment() const
+    {
+        return (mAttachmentFormats.back() & (kResolveDepthFlag | kResolveStencilFlag)) != 0;
+    }
+    bool hasDepthResolveAttachment() const
+    {
+        return (mAttachmentFormats.back() & kResolveDepthFlag) != 0;
+    }
+    bool hasStencilResolveAttachment() const
+    {
+        return (mAttachmentFormats.back() & kResolveStencilFlag) != 0;
     }
 
     // Get the number of attachments in the Vulkan render pass, i.e. after removing disabled
@@ -241,6 +257,10 @@ class alignas(4) RenderPassDesc final
 
     // Depth/stencil format is stored in 3 bits.
     static constexpr uint8_t kDepthStencilFormatStorageMask = 0x7;
+
+    // Flags stored in the upper 5 bits of mAttachmentFormats.back().
+    static constexpr uint8_t kResolveDepthFlag   = 0x80;
+    static constexpr uint8_t kResolveStencilFlag = 0x40;
 };
 
 bool operator==(const RenderPassDesc &lhs, const RenderPassDesc &rhs);
@@ -1016,11 +1036,15 @@ class UniformsAndXfbDesc
 // In the FramebufferDesc object:
 //  - Depth/stencil serial is at index 0
 //  - Color serials are at indices [1:gl::IMPLEMENTATION_MAX_DRAW_BUFFERS]
-//  - Resolve attachments are at indices [gl::IMPLEMENTATION_MAX_DRAW_BUFFERS+1,
-//                                        gl::IMPLEMENTATION_MAX_DRAW_BUFFERS*2]
-constexpr size_t kFramebufferDescDepthStencilIndex  = 0;
-constexpr size_t kFramebufferDescColorIndexOffset   = 1;
-constexpr size_t kFramebufferDescResolveIndexOffset = gl::IMPLEMENTATION_MAX_DRAW_BUFFERS + 1;
+//  - Depth/stencil resolve attachment is at index gl::IMPLEMENTATION_MAX_DRAW_BUFFERS+1
+//  - Resolve attachments are at indices [gl::IMPLEMENTATION_MAX_DRAW_BUFFERS+2,
+//                                        gl::IMPLEMENTATION_MAX_DRAW_BUFFERS*2+1]
+constexpr size_t kFramebufferDescDepthStencilIndex = 0;
+constexpr size_t kFramebufferDescColorIndexOffset  = kFramebufferDescDepthStencilIndex + 1;
+constexpr size_t kFramebufferDescDepthStencilResolveIndexOffset =
+    kFramebufferDescColorIndexOffset + gl::IMPLEMENTATION_MAX_DRAW_BUFFERS;
+constexpr size_t kFramebufferDescColorResolveIndexOffset =
+    kFramebufferDescDepthStencilResolveIndexOffset + 1;
 
 class FramebufferDesc
 {
@@ -1035,6 +1059,7 @@ class FramebufferDesc
     void updateColorResolve(uint32_t index, ImageViewSubresourceSerial serial);
     void updateColorUnresolveMask(gl::DrawBufferMask colorUnresolveMask);
     void updateDepthStencil(ImageViewSubresourceSerial serial);
+    void updateDepthStencilResolve(ImageViewSubresourceSerial serial);
     void updateReadOnlyDepth(bool readOnlyDepth);
     size_t hash() const;
     void reset();

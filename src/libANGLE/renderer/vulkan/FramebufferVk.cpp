@@ -1600,6 +1600,16 @@ void FramebufferVk::updateDepthStencilAttachmentSerial(ContextVk *contextVk)
     {
         mCurrentFramebufferDesc.updateDepthStencil(vk::kInvalidImageViewSubresourceSerial);
     }
+
+    if (depthStencilRT != nullptr && depthStencilRT->hasResolveAttachment())
+    {
+        mCurrentFramebufferDesc.updateDepthStencilResolve(
+            depthStencilRT->getResolveSubresourceSerial());
+    }
+    else
+    {
+        mCurrentFramebufferDesc.updateDepthStencilResolve(vk::kInvalidImageViewSubresourceSerial);
+    }
 }
 
 angle::Result FramebufferVk::syncState(const gl::Context *context,
@@ -1793,6 +1803,16 @@ void FramebufferVk::updateRenderPassDesc()
         mRenderPassDesc.packDepthStencilAttachment(
             depthStencilRenderTarget->getImageForRenderPass().getFormat().intendedFormatID,
             dsAccess);
+
+        // Add the resolve attachment, if any.
+        if (depthStencilRenderTarget->hasResolveAttachment())
+        {
+            const vk::Format &format = depthStencilRenderTarget->getImageFormat();
+            bool hasDepth            = format.intendedFormat().depthBits > 0;
+            bool hasStencil          = format.intendedFormat().stencilBits > 0;
+
+            mRenderPassDesc.packDepthStencilResolveAttachment(hasDepth, hasStencil);
+        }
     }
 }
 
@@ -1892,6 +1912,17 @@ angle::Result FramebufferVk::getFramebuffer(ContextVk *contextVk,
                 ASSERT(!attachmentsSize.empty());
             }
         }
+    }
+
+    // Depth/stencil resolve attachment.
+    if (depthStencilRenderTarget && depthStencilRenderTarget->hasResolveAttachment())
+    {
+        const vk::ImageView *imageView = nullptr;
+        ANGLE_TRY(depthStencilRenderTarget->getResolveImageView(contextVk, &imageView));
+
+        attachments.push_back(imageView->getHandle());
+
+        ASSERT(!attachmentsSize.empty());
     }
 
     if (attachmentsSize.empty())
@@ -2265,7 +2296,7 @@ angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
     RenderTargetVk *depthStencilRenderTarget              = getDepthStencilRenderTarget();
     if (depthStencilRenderTarget)
     {
-        // depth stencil attachment always immediately follow color attachment
+        // depth stencil attachment always immediately follows color attachment
         depthStencilAttachmentIndex = colorIndexVk;
 
         VkAttachmentLoadOp depthLoadOp     = VK_ATTACHMENT_LOAD_OP_LOAD;
@@ -2286,8 +2317,14 @@ angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
 
         if (depthStencilRenderTarget->isImageTransient())
         {
-            depthStoreOp   = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-            stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+            // TODO(syoussefi): currently, depth/stencil unresolve is not implemented.  Until then,
+            // don't change storeOp to DONT_CARE, unless the attachment is entirely transient (i.e.
+            // depth textures from EXT_multisampled_render_to_texture2.  http://anglebug.com/4836
+            if (depthStencilRenderTarget->isEntirelyTransient())
+            {
+                depthStoreOp   = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+                stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+            }
         }
 
         vk::ImageLayout dsLayout = isReadOnlyDepthMode() ? vk::ImageLayout::DepthStencilReadOnly

@@ -142,7 +142,6 @@ class MultisampledRenderToTextureTest : public ANGLETest
     void drawCopyThenBlendCommon(bool useRenderbuffer);
     void clearDrawCopyThenBlendSameProgramCommon(bool useRenderbuffer);
     void clearThenBlendCommon(bool useRenderbuffer);
-    void depthStencilClearThenDrawCommon(bool useRenderbuffer);
 
     GLProgram mCopyTextureProgram;
     GLint mCopyTextureUniformLocation = -1;
@@ -153,6 +152,7 @@ class MultisampledRenderToTextureES3Test : public MultisampledRenderToTextureTes
   protected:
     void readPixelsTestCommon(bool useRenderbuffer);
     void blitFramebufferTestCommon(bool useRenderbuffer);
+    void depthStencilClearThenDrawCommon(bool useRenderbuffer);
     void colorAttachment1Common(bool useRenderbuffer);
     void colorAttachments0And3Common(bool useRenderbuffer);
     void blitFramebufferMixedColorAndDepthCommon(bool useRenderbuffer);
@@ -1176,13 +1176,17 @@ TEST_P(MultisampledRenderToTextureTest, RenderbufferClearThenBlend)
     clearThenBlendCommon(true);
 }
 
-void MultisampledRenderToTextureTest::depthStencilClearThenDrawCommon(bool useRenderbuffer)
+void MultisampledRenderToTextureES3Test::depthStencilClearThenDrawCommon(bool useRenderbuffer)
 {
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_multisampled_render_to_texture"));
     if (!useRenderbuffer)
     {
         ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_multisampled_render_to_texture2"));
     }
+
+    // http://anglebug.com/5083
+    ANGLE_SKIP_TEST_IF(IsWindows() && IsAMD() && IsVulkan());
+
     constexpr GLsizei kSize = 64;
 
     setupCopyTexProgram();
@@ -1211,7 +1215,7 @@ void MultisampledRenderToTextureTest::depthStencilClearThenDrawCommon(bool useRe
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
 
-    // If stencil is not clear to 0x55, rendering would fail.
+    // If stencil is not cleared to 0x55, rendering would fail.
     glEnable(GL_STENCIL_TEST);
     glStencilFunc(GL_EQUAL, 0x55, 0xFF);
     glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
@@ -1238,15 +1242,104 @@ void MultisampledRenderToTextureTest::depthStencilClearThenDrawCommon(bool useRe
 }
 
 // Clear depth stencil, then draw.  The clear should be applied correctly.
-TEST_P(MultisampledRenderToTextureTest, DepthStencilClearThenDraw)
+TEST_P(MultisampledRenderToTextureES3Test, DepthStencilClearThenDraw)
 {
-    clearThenBlendCommon(false);
+    depthStencilClearThenDrawCommon(false);
 }
 
 // Clear depth stencil, then draw.  The clear should be applied correctly.  Uses renderbuffer.
-TEST_P(MultisampledRenderToTextureTest, RenderbufferDepthStencilClearThenDraw)
+TEST_P(MultisampledRenderToTextureES3Test, RenderbufferDepthStencilClearThenDraw)
 {
-    clearThenBlendCommon(true);
+    depthStencilClearThenDrawCommon(true);
+}
+
+// Clear&Draw, copy, then blend similarly to RenderbufferClearDrawCopyThenBlendSameProgram.  This
+// tests uses a depth/stencil buffer and makes sure the second draw (in the second render pass)
+// succeeds (i.e. depth/stencil data is not lost).  Note that this test doesn't apply to
+// depth/stencil textures as they are explicitly autoinvalidated between render passes.
+TEST_P(MultisampledRenderToTextureES3Test, RenderbufferDepthStencilClearDrawCopyThenBlend)
+{
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_multisampled_render_to_texture"));
+
+    // http://anglebug.com/5083
+    ANGLE_SKIP_TEST_IF(IsWindows() && IsAMD() && IsVulkan());
+
+    constexpr GLsizei kSize = 64;
+
+    setupCopyTexProgram();
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+    // Create framebuffer to draw into, with both color and depth attachments.
+    GLTexture color;
+    glBindTexture(GL_TEXTURE_2D, color);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glFramebufferTexture2DMultisampleEXT(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color,
+                                         0, 4);
+
+    GLRenderbuffer depthStencil;
+    glBindRenderbuffer(GL_RENDERBUFFER, depthStencil);
+    glRenderbufferStorageMultisampleEXT(GL_RENDERBUFFER, 4, GL_DEPTH24_STENCIL8, kSize, kSize);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER,
+                              depthStencil);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    // Set viewport and clear depth/stencil
+    glViewport(0, 0, kSize, kSize);
+    glClearDepthf(1);
+    glClearStencil(0x55);
+    glClear(GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
+    // If depth is not cleared to 1, rendering would fail.
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
+
+    // If stencil is not cleared to 0x55, rendering would fail.
+    glEnable(GL_STENCIL_TEST);
+    glStencilFunc(GL_EQUAL, 0x55, 0xFF);
+    glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+    glStencilMask(0xFF);
+
+    // Set up program
+    ANGLE_GL_PROGRAM(drawColor, essl1_shaders::vs::Simple(), essl1_shaders::fs::UniformColor());
+    glUseProgram(drawColor);
+    GLint colorUniformLocation =
+        glGetUniformLocation(drawColor, angle::essl1_shaders::ColorUniform());
+    ASSERT_NE(colorUniformLocation, -1);
+
+    // Draw red
+    glUniform4f(colorUniformLocation, 1.0f, 0.0f, 0.0f, 1.0f);
+    drawQuad(drawColor, essl1_shaders::PositionAttrib(), 0.25f);
+    ASSERT_GL_NO_ERROR();
+
+    // Create a texture and copy into it.
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 0, 0, kSize, kSize, 0);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    ASSERT_GL_NO_ERROR();
+
+    // Draw again into the framebuffer, this time blending.  This tests that both the color and
+    // depth/stencil data are preserved after the resolve incurred by the copy above.
+    glUniform4f(colorUniformLocation, 0.0f, 1.0f, 0.0f, 0.5f);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    drawQuad(drawColor, essl1_shaders::PositionAttrib(), 0.0f);
+    ASSERT_GL_NO_ERROR();
+
+    // Verify that the texture is now yellow
+    const GLColor kExpected(127, 127, 0, 191);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, kExpected, 1);
+    EXPECT_PIXEL_COLOR_NEAR(kSize - 1, 0, kExpected, 1);
+    EXPECT_PIXEL_COLOR_NEAR(0, kSize - 1, kExpected, 1);
+    EXPECT_PIXEL_COLOR_NEAR(kSize - 1, kSize - 1, kExpected, 1);
+
+    // For completeness, verify that the texture used as copy target is red.
+    const GLColor expectedCopyResult(255, 0, 0, 255);
+    verifyResults(texture, expectedCopyResult, kSize, 0, 0, kSize, kSize);
 }
 
 void MultisampledRenderToTextureES3Test::colorAttachment1Common(bool useRenderbuffer)

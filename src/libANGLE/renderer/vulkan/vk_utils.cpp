@@ -833,6 +833,9 @@ PFN_vkGetPhysicalDeviceExternalSemaphorePropertiesKHR
 PFN_vkCreateSamplerYcbcrConversionKHR vkCreateSamplerYcbcrConversionKHR   = nullptr;
 PFN_vkDestroySamplerYcbcrConversionKHR vkDestroySamplerYcbcrConversionKHR = nullptr;
 
+// VK_KHR_create_renderpass2
+PFN_vkCreateRenderPass2KHR vkCreateRenderPass2KHR = nullptr;
+
 #    if defined(ANGLE_PLATFORM_FUCHSIA)
 // VK_FUCHSIA_imagepipe_surface
 PFN_vkCreateImagePipeSurfaceFUCHSIA vkCreateImagePipeSurfaceFUCHSIA = nullptr;
@@ -898,6 +901,12 @@ void InitSamplerYcbcrKHRFunctions(VkDevice device)
 {
     GET_DEVICE_FUNC(vkCreateSamplerYcbcrConversionKHR);
     GET_DEVICE_FUNC(vkDestroySamplerYcbcrConversionKHR);
+}
+
+// VK_KHR_create_renderpass2
+void InitRenderPass2KHRFunctions(VkDevice device)
+{
+    GET_DEVICE_FUNC(vkCreateRenderPass2KHR);
 }
 
 #    if defined(ANGLE_PLATFORM_FUCHSIA)

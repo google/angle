@@ -513,6 +513,7 @@ class RenderPass final : public WrappedObject<RenderPass, VkRenderPass>
     void destroy(VkDevice device);
 
     VkResult init(VkDevice device, const VkRenderPassCreateInfo &createInfo);
+    VkResult init2(VkDevice device, const VkRenderPassCreateInfo2 &createInfo);
 };
 
 enum class StagingUsage
@@ -1499,6 +1500,12 @@ ANGLE_INLINE VkResult RenderPass::init(VkDevice device, const VkRenderPassCreate
 {
     ASSERT(!valid());
     return vkCreateRenderPass(device, &createInfo, nullptr, &mHandle);
+}
+
+ANGLE_INLINE VkResult RenderPass::init2(VkDevice device, const VkRenderPassCreateInfo2 &createInfo)
+{
+    ASSERT(!valid());
+    return vkCreateRenderPass2KHR(device, &createInfo, nullptr, &mHandle);
 }
 
 // Buffer implementation.
