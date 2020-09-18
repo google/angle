@@ -4902,10 +4902,10 @@ angle::Result ImageHelper::copyImageDataToBuffer(ContextVk *contextVk,
     // Allocate staging buffer data from context
     VkBuffer bufferHandle;
     size_t alignment = mStagingBuffer.getAlignment();
-    ANGLE_TRY(contextVk->getStagingBuffer()->allocateWithAlignment(
-        contextVk, *bufferSize, alignment, outDataPtr, &bufferHandle, &(*bufferOffsetsOut)[0],
-        nullptr));
-    *bufferOut = contextVk->getStagingBuffer()->getCurrentBuffer();
+    ANGLE_TRY(mStagingBuffer.allocateWithAlignment(contextVk, *bufferSize, alignment, outDataPtr,
+                                                   &bufferHandle, &(*bufferOffsetsOut)[0],
+                                                   nullptr));
+    *bufferOut = mStagingBuffer.getCurrentBuffer();
 
     LevelIndex sourceLevelVk = toVkLevel(sourceLevelGL);
 
