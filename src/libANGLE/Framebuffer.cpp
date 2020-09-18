@@ -276,8 +276,8 @@ bool AttachmentOverlapsWithTexture(const FramebufferAttachment &attachment,
     GLuint attachmentLevel      = static_cast<GLuint>(index.getLevelIndex());
     GLuint textureBaseLevel     = texture->getBaseLevel();
     GLuint textureMaxLevel      = textureBaseLevel;
-    if ((sampler && IsMipmapFiltered(sampler->getSamplerState())) ||
-        IsMipmapFiltered(texture->getSamplerState()))
+    if ((sampler && IsMipmapFiltered(sampler->getSamplerState().getMinFilter())) ||
+        IsMipmapFiltered(texture->getSamplerState().getMinFilter()))
     {
         textureMaxLevel = texture->getMipmapMaxLevel();
     }

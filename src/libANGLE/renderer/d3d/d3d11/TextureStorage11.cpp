@@ -223,7 +223,7 @@ angle::Result TextureStorage11::getSRVForSampler(const gl::Context *context,
     // Make sure to add the level offset for our tiny compressed texture workaround
     const GLuint effectiveBaseLevel = textureState.getEffectiveBaseLevel();
     const bool swizzleRequired      = textureState.swizzleRequired();
-    const bool mipmapping           = gl::IsMipmapFiltered(sampler);
+    const bool mipmapping           = gl::IsMipmapFiltered(sampler.getMinFilter());
     unsigned int mipLevels =
         mipmapping ? (textureState.getEffectiveMaxLevel() - effectiveBaseLevel + 1) : 1;
 

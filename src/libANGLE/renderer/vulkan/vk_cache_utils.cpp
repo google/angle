@@ -2019,7 +2019,7 @@ void SamplerDesc::update(const gl::SamplerState &samplerState,
     SetBitField(mCompareEnabled, compareEnable);
     SetBitField(mCompareOp, compareOp);
 
-    if (!gl::IsMipmapFiltered(samplerState))
+    if (!gl::IsMipmapFiltered(samplerState.getMinFilter()))
     {
         // Per the Vulkan spec, GL_NEAREST and GL_LINEAR do not map directly to Vulkan, so
         // they must be emulated (See "Mapping of OpenGL to Vulkan filter modes")

@@ -50,7 +50,7 @@ class Texture;
 
 constexpr GLuint kInitialMaxLevel = 1000;
 
-bool IsMipmapFiltered(const SamplerState &samplerState);
+bool IsMipmapFiltered(GLenum minFilterMode);
 
 struct ImageDesc final
 {
