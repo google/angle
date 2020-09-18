@@ -931,9 +931,7 @@ TestSuite::TestSuite(int *argc, char **argv)
         listeners.Append(new TestEventListener(mResultsFile, mHistogramJsonFile,
                                                mTestSuiteName.c_str(), &mTestResults));
 
-        std::vector<TestIdentifier> testList = GetFilteredTests(nullptr, alsoRunDisabledTests);
-
-        for (const TestIdentifier &id : testList)
+        for (const TestIdentifier &id : testSet)
         {
             mTestResults.results[id].type = TestResultType::Skip;
         }
