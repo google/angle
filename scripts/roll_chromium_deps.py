@@ -321,7 +321,7 @@ def CalculateChangedDeps(angle_deps, new_cr_deps):
 
             if isinstance(cr_deps_entry, CipdDepsEntry):
                 result.extend(
-                    _FindChangedCipdPackages(chrome_path, angle_deps_entry.packages,
+                    _FindChangedCipdPackages(path, angle_deps_entry.packages,
                                              cr_deps_entry.packages))
                 continue
 
