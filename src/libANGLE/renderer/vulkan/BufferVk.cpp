@@ -78,6 +78,23 @@ ANGLE_INLINE VkMemoryPropertyFlags GetPreferredMemoryType(gl::BufferBinding targ
     }
 }
 
+ANGLE_INLINE VkMemoryPropertyFlags GetStorageMemoryType(GLbitfield storageFlags)
+{
+    constexpr VkMemoryPropertyFlags kDeviceLocalHostVisibleFlags =
+        (VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT | VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT);
+    constexpr VkMemoryPropertyFlags kDeviceLocalHostCoherentFlags =
+        (VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT | VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT |
+         VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
+
+    if (((storageFlags & GL_MAP_COHERENT_BIT_EXT) != 0) ||
+        ((storageFlags & GL_MAP_PERSISTENT_BIT_EXT) != 0))
+    {
+        return kDeviceLocalHostCoherentFlags;
+    }
+
+    return kDeviceLocalHostVisibleFlags;
+}
+
 ANGLE_INLINE bool SubDataSizeMeetsThreshold(size_t subDataSize, size_t bufferSize)
 {
     // A sub data update with size > 50% of buffer size meets the threshold
@@ -179,11 +196,54 @@ void BufferVk::updateShadowBuffer(const uint8_t *data, size_t size, size_t offse
     }
 }
 
+angle::Result BufferVk::setDataWithUsageFlags(const gl::Context *context,
+                                              gl::BufferBinding target,
+                                              const void *data,
+                                              size_t size,
+                                              gl::BufferUsage usage,
+                                              GLbitfield flags)
+{
+    VkMemoryPropertyFlags memoryPropertyFlags = 0;
+    bool persistentMapRequired                = false;
+
+    switch (usage)
+    {
+        case gl::BufferUsage::InvalidEnum:
+        {
+            // glBufferStorage API call
+            memoryPropertyFlags   = GetStorageMemoryType(flags);
+            persistentMapRequired = (flags & GL_MAP_PERSISTENT_BIT_EXT) != 0;
+            break;
+        }
+        default:
+        {
+            // glBufferData API call
+            memoryPropertyFlags = GetPreferredMemoryType(target, usage);
+            break;
+        }
+    }
+
+    return setDataWithMemoryType(context, target, data, size, memoryPropertyFlags,
+                                 persistentMapRequired);
+}
+
 angle::Result BufferVk::setData(const gl::Context *context,
                                 gl::BufferBinding target,
                                 const void *data,
                                 size_t size,
                                 gl::BufferUsage usage)
+{
+    // Assume host visible/coherent memory available.
+    VkMemoryPropertyFlags memoryPropertyFlags = GetPreferredMemoryType(target, usage);
+    return setDataWithMemoryType(context, target, data, size, memoryPropertyFlags, false);
+}
+
+angle::Result BufferVk::setDataWithMemoryType(const gl::Context *context,
+                                              gl::BufferBinding target,
+                                              const void *data,
+                                              size_t size,
+                                              VkMemoryPropertyFlags memoryPropertyFlags,
+                                              bool persistentMapRequired)
 {
     ContextVk *contextVk = vk::GetImpl(context);
 
@@ -207,9 +267,6 @@ angle::Result BufferVk::setData(const gl::Context *context,
             usageFlags |= VK_BUFFER_USAGE_TRANSFORM_FEEDBACK_BUFFER_BIT_EXT;
         }
 
-        // Assume host visible/coherent memory available.
-        VkMemoryPropertyFlags memoryPropertyFlags = GetPreferredMemoryType(target, usage);
-
         // mBuffer will be allocated through a DynamicBuffer
         constexpr size_t kBufferHelperAlignment       = 1;
         constexpr size_t kBufferHelperPoolInitialSize = 0;
@@ -219,8 +276,14 @@ angle::Result BufferVk::setData(const gl::Context *context,
 
         ANGLE_TRY(acquireBufferHelper(contextVk, size, &mBuffer));
 
-        // Initialize the shadow buffer
-        ANGLE_TRY(initializeShadowBuffer(contextVk, target, size));
+        // persistentMapRequired may request that the server read from or write to the buffer while
+        // it is mapped. The client's pointer to the data store remains valid so long as the data
+        // store is mapped. So it cannot have shadow buffer
+        if (!persistentMapRequired)
+        {
+            // Initialize the shadow buffer
+            ANGLE_TRY(initializeShadowBuffer(contextVk, target, size));
+        }
     }
 
     if (data && size > 0)

@@ -3168,6 +3168,15 @@ bool ValidateMapBufferOES(const Context *context, BufferBinding target, GLenum a
         return false;
     }
 
+    // Though there is no explicit mention of an interaction between GL_EXT_buffer_storage
+    // and GL_OES_mapbuffer extension, allow it as long as the access type of glMapBufferOES
+    // is compatible with the buffer's usage flags specified during glBufferStorageEXT
+    if (buffer->isImmutable() && (buffer->getStorageExtUsageFlags() & GL_MAP_WRITE_BIT) == 0)
+    {
+        context->validationError(GL_INVALID_OPERATION, kBufferNotMappable);
+        return false;
+    }
+
     if (buffer->isMapped())
     {
         context->validationError(GL_INVALID_OPERATION, kBufferAlreadyMapped);
@@ -3700,6 +3709,12 @@ bool ValidateBufferData(const Context *context,
         return false;
     }
 
+    if (buffer->isImmutable())
+    {
+        context->validationError(GL_INVALID_OPERATION, kBufferImmutable);
+        return false;
+    }
+
     return true;
 }
 
@@ -3745,6 +3760,13 @@ bool ValidateBufferSubData(const Context *context,
         buffer->isBoundForTransformFeedbackAndOtherUse())
     {
         context->validationError(GL_INVALID_OPERATION, kBufferBoundForTransformFeedback);
+        return false;
+    }
+
+    if (buffer->isImmutable() &&
+        (buffer->getStorageExtUsageFlags() & GL_DYNAMIC_STORAGE_BIT_EXT) == 0)
+    {
+        context->validationError(GL_INVALID_OPERATION, kBufferNotUpdatable);
         return false;
     }
 

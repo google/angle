@@ -1019,6 +1019,7 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["GL_EXT_gpu_shader5"] = enableableExtension(&Extensions::gpuShader5EXT);
         map["GL_APPLE_clip_distance"] = enableableExtension(&Extensions::clipDistanceAPPLE);
         map["GL_EXT_EGL_image_array"] = enableableExtension(&Extensions::eglImageArray);
+        map["GL_EXT_buffer_storage"] = enableableExtension(&Extensions::bufferStorageEXT);
         // GLES1 extensions
         map["GL_OES_point_size_array"] = enableableExtension(&Extensions::pointSizeArrayOES);
         map["GL_OES_texture_cube_map"] = enableableExtension(&Extensions::textureCubeMapOES);

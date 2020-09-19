@@ -3954,11 +3954,35 @@ bool ValidateMapBufferRangeBase(const Context *context,
     }
 
     // Check for invalid bits in the mask
-    GLbitfield allAccessBits = GL_MAP_READ_BIT | GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_RANGE_BIT |
-                               GL_MAP_INVALIDATE_BUFFER_BIT | GL_MAP_FLUSH_EXPLICIT_BIT |
-                               GL_MAP_UNSYNCHRONIZED_BIT;
+    constexpr GLbitfield kAllAccessBits =
+        GL_MAP_READ_BIT | GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_RANGE_BIT |
+        GL_MAP_INVALIDATE_BUFFER_BIT | GL_MAP_FLUSH_EXPLICIT_BIT | GL_MAP_UNSYNCHRONIZED_BIT;
 
-    if (access & ~(allAccessBits))
+    if (buffer->isImmutable())
+    {
+        // GL_EXT_buffer_storage's additions to glMapBufferRange
+        constexpr GLbitfield kBufferStorageAccessBits =
+            kAllAccessBits | GL_MAP_PERSISTENT_BIT_EXT | GL_MAP_COHERENT_BIT_EXT;
+
+        if ((access & ~kBufferStorageAccessBits) != 0)
+        {
+            context->validationError(GL_INVALID_VALUE, kInvalidAccessBits);
+            return false;
+        }
+
+        // It is invalid if any of bufferStorageMatchedAccessBits bits are included in access,
+        // but the same bits are not included in the buffer's storage flags
+        constexpr GLbitfield kBufferStorageMatchedAccessBits = GL_MAP_READ_BIT | GL_MAP_WRITE_BIT |
+                                                               GL_MAP_PERSISTENT_BIT_EXT |
+                                                               GL_MAP_COHERENT_BIT_EXT;
+        GLbitfield accessFlags = access & kBufferStorageMatchedAccessBits;
+        if ((accessFlags & buffer->getStorageExtUsageFlags()) != accessFlags)
+        {
+            context->validationError(GL_INVALID_OPERATION, kInvalidAccessBits);
+            return false;
+        }
+    }
+    else if ((access & ~kAllAccessBits) != 0)
     {
         context->validationError(GL_INVALID_VALUE, kInvalidAccessBits);
         return false;

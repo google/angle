@@ -63,6 +63,8 @@ class BufferState final : angle::NonCopyable
     int mBindingCount;
     int mTransformFeedbackIndexedBindingCount;
     int mTransformFeedbackGenericBindingCount;
+    GLboolean mImmutable;
+    GLbitfield mStorageExtUsageFlags;
 };
 
 class Buffer final : public RefCountObject<BufferID>,
@@ -78,11 +80,22 @@ class Buffer final : public RefCountObject<BufferID>,
     void setLabel(const Context *context, const std::string &label) override;
     const std::string &getLabel() const override;
 
+    angle::Result bufferStorage(Context *context,
+                                BufferBinding target,
+                                GLsizeiptr size,
+                                const void *data,
+                                GLbitfield flags);
     angle::Result bufferData(Context *context,
                              BufferBinding target,
                              const void *data,
                              GLsizeiptr size,
                              BufferUsage usage);
+    angle::Result bufferDataImpl(Context *context,
+                                 BufferBinding target,
+                                 const void *data,
+                                 GLsizeiptr size,
+                                 BufferUsage usage,
+                                 GLbitfield flags);
     angle::Result bufferSubData(const Context *context,
                                 BufferBinding target,
                                 const void *data,
@@ -119,6 +132,8 @@ class Buffer final : public RefCountObject<BufferID>,
     GLint64 getMapLength() const { return mState.mMapLength; }
     GLint64 getSize() const { return mState.mSize; }
     GLint64 getMemorySize() const;
+    GLboolean isImmutable() const { return mState.mImmutable; }
+    GLbitfield getStorageExtUsageFlags() const { return mState.mStorageExtUsageFlags; }
 
     rx::BufferImpl *getImplementation() const { return mImpl; }
 

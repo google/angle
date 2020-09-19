@@ -5437,7 +5437,9 @@ void Context::bufferStorage(BufferBinding target,
                             const void *data,
                             GLbitfield flags)
 {
-    UNIMPLEMENTED();
+    Buffer *buffer = mState.getTargetBuffer(target);
+    ASSERT(buffer);
+    ANGLE_CONTEXT_TRY(buffer->bufferStorage(this, target, size, data, flags));
 }
 
 void Context::bufferData(BufferBinding target, GLsizeiptr size, const void *data, BufferUsage usage)

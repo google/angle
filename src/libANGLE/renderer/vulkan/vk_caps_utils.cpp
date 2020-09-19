@@ -48,6 +48,9 @@ void RendererVk::ensureCapsInitialized() const
 
     mNativeExtensions.setTextureExtensionSupport(mNativeTextureCaps);
 
+    // Enable GL_EXT_buffer_storage"
+    mNativeExtensions.bufferStorageEXT = true;
+
     // TODO: http://anglebug.com/3609
     // Due to a dEQP bug, this extension cannot be exposed until EXT_texture_sRGB_decode is
     // implemented

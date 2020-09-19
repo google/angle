@@ -640,6 +640,12 @@ void QueryBufferParameterBase(const Buffer *buffer, GLenum pname, ParamType *par
         case GL_MEMORY_SIZE_ANGLE:
             *params = CastFromStateValue<ParamType>(pname, buffer->getMemorySize());
             break;
+        case GL_BUFFER_IMMUTABLE_STORAGE_EXT:
+            *params = CastFromStateValue<ParamType>(pname, buffer->isImmutable());
+            break;
+        case GL_BUFFER_STORAGE_FLAGS_EXT:
+            *params = CastFromGLintStateValue<ParamType>(pname, buffer->getStorageExtUsageFlags());
+            break;
         default:
             UNREACHABLE();
             break;
