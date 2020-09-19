@@ -1030,6 +1030,9 @@ bool TestSuite::launchChildTestProcess(const std::vector<TestIdentifier> &testsI
     args.push_back(filterFileArg.c_str());
     args.push_back(resultsFileArg.c_str());
 
+    // TODO(jmadill): Remove this once migrated. http://anglebug.com/3162
+    args.push_back("--reuse-displays");
+
     for (const std::string &arg : mGoogleTestCommandLineArgs)
     {
         args.push_back(arg.c_str());

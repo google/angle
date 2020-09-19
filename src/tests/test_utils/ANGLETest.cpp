@@ -170,11 +170,11 @@ const char *GetColorName(GLColor color)
 }
 
 // Always re-use displays when using --bot-mode in the test runner.
-bool gBotModeEnabled = false;
+bool gReuseDisplays = false;
 
 bool ShouldAlwaysForceNewDisplay()
 {
-    if (gBotModeEnabled)
+    if (gReuseDisplays)
         return false;
 
     // We prefer to reuse config displays. This is faster and solves a driver issue where creating
@@ -313,7 +313,7 @@ TestPlatformContext gPlatformContext;
 constexpr uint32_t kWindowReuseLimit = 50;
 
 constexpr char kUseConfig[]                      = "--use-config=";
-constexpr char kBotMode[]                        = "--bot-mode";
+constexpr char kReuseDisplays[]                  = "--reuse-displays";
 constexpr char kEnableANGLEPerTestCaptureLabel[] = "--angle-per-test-capture-label";
 
 void SetupEnvironmentVarsForCaptureReplay()
@@ -1358,9 +1358,9 @@ void ANGLEProcessTestArgs(int *argc, char *argv[])
         {
             SetSelectedConfig(argv[argIndex] + strlen(kUseConfig));
         }
-        if (strncmp(argv[argIndex], kBotMode, strlen(kBotMode)) == 0)
+        if (strncmp(argv[argIndex], kReuseDisplays, strlen(kReuseDisplays)) == 0)
         {
-            gBotModeEnabled = true;
+            gReuseDisplays = true;
         }
         if (strncmp(argv[argIndex], kEnableANGLEPerTestCaptureLabel,
                     strlen(kEnableANGLEPerTestCaptureLabel)) == 0)
