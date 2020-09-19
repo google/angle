@@ -1262,7 +1262,7 @@ int TestSuite::run()
     totalRunTime.stop();
     printf("Tests completed in %lf seconds\n", totalRunTime.getElapsedTime());
 
-    return printFailuresAndReturnCount() == 0;
+    return printFailuresAndReturnCount() == 0 ? 0 : 1;
 }
 
 int TestSuite::printFailuresAndReturnCount() const
