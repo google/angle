@@ -4522,6 +4522,40 @@ CallCapture CaptureGetProgramResourceLocationIndexEXT(const State &glState,
     return CallCapture(gl::EntryPoint::GetProgramResourceLocationIndexEXT, std::move(paramBuffer));
 }
 
+CallCapture CaptureBufferStorageEXT(const State &glState,
+                                    bool isCallValid,
+                                    BufferBinding targetPacked,
+                                    GLsizeiptr size,
+                                    const void *data,
+                                    GLbitfield flags)
+{
+    ParamBuffer paramBuffer;
+
+    paramBuffer.addValueParam("targetPacked", ParamType::TBufferBinding, targetPacked);
+    paramBuffer.addValueParam("size", ParamType::TGLsizeiptr, size);
+
+    if (isCallValid)
+    {
+        ParamCapture dataParam("data", ParamType::TvoidConstPointer);
+        InitParamValue(ParamType::TvoidConstPointer, data, &dataParam.value);
+        CaptureBufferStorageEXT_data(glState, isCallValid, targetPacked, size, data, flags,
+                                     &dataParam);
+        paramBuffer.addParam(std::move(dataParam));
+    }
+    else
+    {
+        ParamCapture dataParam("data", ParamType::TvoidConstPointer);
+        InitParamValue(ParamType::TvoidConstPointer, static_cast<const void *>(nullptr),
+                       &dataParam.value);
+        paramBuffer.addParam(std::move(dataParam));
+    }
+
+    paramBuffer.addEnumParam("flags", GLenumGroup::MapBufferUsageMask, ParamType::TGLbitfield,
+                             flags);
+
+    return CallCapture(gl::EntryPoint::BufferStorageEXT, std::move(paramBuffer));
+}
+
 CallCapture CaptureInsertEventMarkerEXT(const State &glState,
                                         bool isCallValid,
                                         GLsizei length,

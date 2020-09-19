@@ -5430,6 +5430,14 @@ void Context::primitiveBoundingBox(GLfloat minX,
     UNIMPLEMENTED();
 }
 
+void Context::bufferStorage(BufferBinding target,
+                            GLsizeiptr size,
+                            const void *data,
+                            GLbitfield flags)
+{
+    UNIMPLEMENTED();
+}
+
 void Context::bufferData(BufferBinding target, GLsizeiptr size, const void *data, BufferUsage usage)
 {
     Buffer *buffer = mState.getTargetBuffer(target);

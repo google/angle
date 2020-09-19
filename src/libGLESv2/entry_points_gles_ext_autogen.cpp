@@ -3364,6 +3364,34 @@ GLint GL_APIENTRY GetProgramResourceLocationIndexEXT(GLuint program,
     return returnValue;
 }
 
+// GL_EXT_buffer_storage
+void GL_APIENTRY BufferStorageEXT(GLenum target,
+                                  GLsizeiptr size,
+                                  const void *data,
+                                  GLbitfield flags)
+{
+    Context *context = GetValidGlobalContext();
+    EVENT("glBufferStorageEXT",
+          "context = %d, GLenum target = %s, GLsizeiptr size = %llu, const void *data = "
+          "0x%016" PRIxPTR ", GLbitfield flags = %s",
+          CID(context), GLenumToString(GLenumGroup::BufferStorageTarget, target),
+          static_cast<unsigned long long>(size), (uintptr_t)data,
+          GLbitfieldToString(GLenumGroup::MapBufferUsageMask, flags).c_str());
+
+    if (context)
+    {
+        BufferBinding targetPacked                            = FromGL<BufferBinding>(target);
+        std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateBufferStorageEXT(context, targetPacked, size, data, flags));
+        if (isCallValid)
+        {
+            context->bufferStorage(targetPacked, size, data, flags);
+        }
+        ANGLE_CAPTURE(BufferStorageEXT, isCallValid, context, targetPacked, size, data, flags);
+    }
+}
+
 // GL_EXT_debug_marker
 void GL_APIENTRY InsertEventMarkerEXT(GLsizei length, const GLchar *marker)
 {
@@ -8710,6 +8738,35 @@ void GL_APIENTRY BufferDataContextANGLE(GLeglContext ctx,
             context->bufferData(targetPacked, size, data, usagePacked);
         }
         ANGLE_CAPTURE(BufferData, isCallValid, context, targetPacked, size, data, usagePacked);
+    }
+}
+
+void GL_APIENTRY BufferStorageEXTContextANGLE(GLeglContext ctx,
+                                              GLenum target,
+                                              GLsizeiptr size,
+                                              const void *data,
+                                              GLbitfield flags)
+{
+    Context *context = static_cast<gl::Context *>(ctx);
+    EVENT("glBufferStorageEXT",
+          "context = %d, GLenum target = %s, GLsizeiptr size = %llu, const void *data = "
+          "0x%016" PRIxPTR ", GLbitfield flags = %s",
+          CID(context), GLenumToString(GLenumGroup::BufferStorageTarget, target),
+          static_cast<unsigned long long>(size), (uintptr_t)data,
+          GLbitfieldToString(GLenumGroup::MapBufferUsageMask, flags).c_str());
+
+    if (context)
+    {
+        ASSERT(context == GetValidGlobalContext());
+        BufferBinding targetPacked                            = FromGL<BufferBinding>(target);
+        std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateBufferStorageEXT(context, targetPacked, size, data, flags));
+        if (isCallValid)
+        {
+            context->bufferStorage(targetPacked, size, data, flags);
+        }
+        ANGLE_CAPTURE(BufferStorageEXT, isCallValid, context, targetPacked, size, data, flags);
     }
 }
 

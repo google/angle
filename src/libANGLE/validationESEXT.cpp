@@ -1049,4 +1049,15 @@ bool ValidateTexStorageMemFlags3DMultisampleANGLE(const Context *context,
     UNIMPLEMENTED();
     return false;
 }
+
+// GL_EXT_buffer_storage
+bool ValidateBufferStorageEXT(const Context *context,
+                              BufferBinding targetPacked,
+                              GLsizeiptr size,
+                              const void *data,
+                              GLbitfield flags)
+{
+    UNIMPLEMENTED();
+    return false;
+}
 }  // namespace gl

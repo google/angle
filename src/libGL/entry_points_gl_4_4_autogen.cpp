@@ -185,14 +185,15 @@ void GL_APIENTRY BufferStorage(GLenum target, GLsizeiptr size, const void *data,
 
     if (context)
     {
+        BufferBinding targetPacked                            = FromGL<BufferBinding>(target);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateBufferStorage(context, target, size, data, flags));
+                            ValidateBufferStorage(context, targetPacked, size, data, flags));
         if (isCallValid)
         {
-            context->bufferStorage(target, size, data, flags);
+            context->bufferStorage(targetPacked, size, data, flags);
         }
-        ANGLE_CAPTURE(BufferStorage, isCallValid, context, target, size, data, flags);
+        ANGLE_CAPTURE(BufferStorage, isCallValid, context, targetPacked, size, data, flags);
     }
 }
 

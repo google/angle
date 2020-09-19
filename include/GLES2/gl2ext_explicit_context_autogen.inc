@@ -163,6 +163,7 @@ typedef void (GL_APIENTRYP PFNGLBLENDFUNCSEPARATEIOESCONTEXTANGLEPROC)(GLeglCont
 typedef void (GL_APIENTRYP PFNGLBLENDFUNCIEXTCONTEXTANGLEPROC)(GLeglContext ctx, GLuint buf, GLenum src, GLenum dst);
 typedef void (GL_APIENTRYP PFNGLBLENDFUNCIOESCONTEXTANGLEPROC)(GLeglContext ctx, GLuint buf, GLenum src, GLenum dst);
 typedef void (GL_APIENTRYP PFNGLBLITFRAMEBUFFERANGLECONTEXTANGLEPROC)(GLeglContext ctx, GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1, GLint dstX0, GLint dstY0, GLint dstX1, GLint dstY1, GLbitfield mask, GLenum filter);
+typedef void (GL_APIENTRYP PFNGLBUFFERSTORAGEEXTCONTEXTANGLEPROC)(GLeglContext ctx, GLenum target, GLsizeiptr size, const void *data, GLbitfield flags);
 typedef void (GL_APIENTRYP PFNGLBUFFERSTORAGEMEMEXTCONTEXTANGLEPROC)(GLeglContext ctx, GLenum target, GLsizeiptr size, GLuint memory, GLuint64 offset);
 typedef void (GL_APIENTRYP PFNGLCOLORMASKIEXTCONTEXTANGLEPROC)(GLeglContext ctx, GLuint index, GLboolean r, GLboolean g, GLboolean b, GLboolean a);
 typedef void (GL_APIENTRYP PFNGLCOLORMASKIOESCONTEXTANGLEPROC)(GLeglContext ctx, GLuint index, GLboolean r, GLboolean g, GLboolean b, GLboolean a);
@@ -540,6 +541,7 @@ GL_APICALL void GL_APIENTRY glBlendFuncSeparateiOESContextANGLE(GLeglContext ctx
 GL_APICALL void GL_APIENTRY glBlendFunciEXTContextANGLE(GLeglContext ctx, GLuint buf, GLenum src, GLenum dst);
 GL_APICALL void GL_APIENTRY glBlendFunciOESContextANGLE(GLeglContext ctx, GLuint buf, GLenum src, GLenum dst);
 GL_APICALL void GL_APIENTRY glBlitFramebufferANGLEContextANGLE(GLeglContext ctx, GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1, GLint dstX0, GLint dstY0, GLint dstX1, GLint dstY1, GLbitfield mask, GLenum filter);
+GL_APICALL void GL_APIENTRY glBufferStorageEXTContextANGLE(GLeglContext ctx, GLenum target, GLsizeiptr size, const void *data, GLbitfield flags);
 GL_APICALL void GL_APIENTRY glBufferStorageMemEXTContextANGLE(GLeglContext ctx, GLenum target, GLsizeiptr size, GLuint memory, GLuint64 offset);
 GL_APICALL void GL_APIENTRY glColorMaskiEXTContextANGLE(GLeglContext ctx, GLuint index, GLboolean r, GLboolean g, GLboolean b, GLboolean a);
 GL_APICALL void GL_APIENTRY glColorMaskiOESContextANGLE(GLeglContext ctx, GLuint index, GLboolean r, GLboolean g, GLboolean b, GLboolean a);

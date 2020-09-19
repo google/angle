@@ -3321,4 +3321,15 @@ void CaptureGetRenderbufferImageANGLE_pixels(const State &glState,
 {
     UNIMPLEMENTED();
 }
+
+void CaptureBufferStorageEXT_data(const State &glState,
+                                  bool isCallValid,
+                                  BufferBinding targetPacked,
+                                  GLsizeiptr size,
+                                  const void *data,
+                                  GLbitfield flags,
+                                  angle::ParamCapture *paramCapture)
+{
+    UNIMPLEMENTED();
+}
 }  // namespace gl

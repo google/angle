@@ -265,6 +265,10 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_MAP_FLUSH_EXPLICIT_BIT";
                 case 0x20:
                     return "GL_MAP_UNSYNCHRONIZED_BIT";
+                case 0x40:
+                    return "GL_MAP_PERSISTENT_BIT_EXT";
+                case 0x80:
+                    return "GL_MAP_COHERENT_BIT_EXT";
                 default:
                     return kUnknownGLenumString;
             }
@@ -756,6 +760,10 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_NUM_EXTENSIONS";
                 case 0x821E:
                     return "GL_CONTEXT_FLAGS";
+                case 0x821F:
+                    return "GL_BUFFER_IMMUTABLE_STORAGE_EXT";
+                case 0x8220:
+                    return "GL_BUFFER_STORAGE_FLAGS_EXT";
                 case 0x8221:
                     return "GL_PRIMITIVE_RESTART_FOR_PATCHES_SUPPORTED";
                 case 0x8228:
@@ -2694,6 +2702,14 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_MAP_FLUSH_EXPLICIT_BIT";
                 case 0x20:
                     return "GL_MAP_UNSYNCHRONIZED_BIT";
+                case 0x40:
+                    return "GL_MAP_PERSISTENT_BIT_EXT";
+                case 0x80:
+                    return "GL_MAP_COHERENT_BIT_EXT";
+                case 0x100:
+                    return "GL_DYNAMIC_STORAGE_BIT_EXT";
+                case 0x200:
+                    return "GL_CLIENT_STORAGE_BIT_EXT";
                 default:
                     return kUnknownGLenumString;
             }
@@ -2755,6 +2771,8 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_ATOMIC_COUNTER_BARRIER_BIT";
                 case 0x2000:
                     return "GL_SHADER_STORAGE_BARRIER_BIT";
+                case 0x4000:
+                    return "GL_CLIENT_MAPPED_BUFFER_BARRIER_BIT_EXT";
                 case 0xFFFFFFFF:
                     return "GL_ALL_BARRIER_BITS";
                 default:

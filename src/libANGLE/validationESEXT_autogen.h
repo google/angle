@@ -767,6 +767,13 @@ bool ValidateGetProgramResourceLocationIndexEXT(const Context *context,
                                                 GLenum programInterface,
                                                 const GLchar *name);
 
+// GL_EXT_buffer_storage
+bool ValidateBufferStorageEXT(const Context *context,
+                              BufferBinding targetPacked,
+                              GLsizeiptr size,
+                              const void *data,
+                              GLbitfield flags);
+
 // GL_EXT_debug_marker
 bool ValidateInsertEventMarkerEXT(const Context *context, GLsizei length, const GLchar *marker);
 bool ValidatePopGroupMarkerEXT(const Context *context);

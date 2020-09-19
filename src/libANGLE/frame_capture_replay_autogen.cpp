@@ -238,6 +238,15 @@ void FrameCapture::ReplayCall(gl::Context *context,
                     params.getParam("data", ParamType::TvoidConstPointer, 2)),
                 params.getParam("usagePacked", ParamType::TBufferUsage, 3).value.BufferUsageVal);
             break;
+        case gl::EntryPoint::BufferStorage:
+            context->bufferStorage(
+                params.getParam("targetPacked", ParamType::TBufferBinding, 0)
+                    .value.BufferBindingVal,
+                params.getParam("size", ParamType::TGLsizeiptr, 1).value.GLsizeiptrVal,
+                replayContext->getAsConstPointer<const void *>(
+                    params.getParam("data", ParamType::TvoidConstPointer, 2)),
+                params.getParam("flags", ParamType::TGLbitfield, 3).value.GLbitfieldVal);
+            break;
         case gl::EntryPoint::BufferSubData:
             context->bufferSubData(
                 params.getParam("targetPacked", ParamType::TBufferBinding, 0)

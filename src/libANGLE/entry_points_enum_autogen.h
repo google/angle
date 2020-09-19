@@ -81,6 +81,7 @@ enum class EntryPoint
     BlitNamedFramebuffer,
     BufferData,
     BufferStorage,
+    BufferStorageEXT,
     BufferStorageMemEXT,
     BufferSubData,
     CallList,

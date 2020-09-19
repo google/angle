@@ -662,6 +662,12 @@ ANGLE_EXPORT GLint GL_APIENTRY GetProgramResourceLocationIndexEXT(GLuint program
                                                                   GLenum programInterface,
                                                                   const GLchar *name);
 
+// GL_EXT_buffer_storage
+ANGLE_EXPORT void GL_APIENTRY BufferStorageEXT(GLenum target,
+                                               GLsizeiptr size,
+                                               const void *data,
+                                               GLbitfield flags);
+
 // GL_EXT_debug_marker
 ANGLE_EXPORT void GL_APIENTRY InsertEventMarkerEXT(GLsizei length, const GLchar *marker);
 ANGLE_EXPORT void GL_APIENTRY PopGroupMarkerEXT();
@@ -1389,6 +1395,11 @@ ANGLE_EXPORT void GL_APIENTRY BufferDataContextANGLE(GLeglContext ctx,
                                                      GLsizeiptr size,
                                                      const void *data,
                                                      GLenum usage);
+ANGLE_EXPORT void GL_APIENTRY BufferStorageEXTContextANGLE(GLeglContext ctx,
+                                                           GLenum target,
+                                                           GLsizeiptr size,
+                                                           const void *data,
+                                                           GLbitfield flags);
 ANGLE_EXPORT void GL_APIENTRY BufferStorageMemEXTContextANGLE(GLeglContext ctx,
                                                               GLenum target,
                                                               GLsizeiptr size,

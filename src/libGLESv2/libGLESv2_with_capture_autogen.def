@@ -616,6 +616,9 @@ EXPORTS
     glGetFragDataIndexEXT
     glGetProgramResourceLocationIndexEXT
 
+    ; GL_EXT_buffer_storage
+    glBufferStorageEXT
+
     ; GL_EXT_debug_marker
     glInsertEventMarkerEXT
     glPopGroupMarkerEXT
@@ -937,6 +940,7 @@ EXPORTS
     glBlitFramebufferContextANGLE
     glBlitFramebufferANGLEContextANGLE
     glBufferDataContextANGLE
+    glBufferStorageEXTContextANGLE
     glBufferStorageMemEXTContextANGLE
     glBufferSubDataContextANGLE
     glCheckFramebufferStatusContextANGLE

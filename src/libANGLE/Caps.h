@@ -644,6 +644,9 @@ struct Extensions
 
     // GL_EXT_shadow_samplers
     bool shadowSamplersEXT = false;
+
+    // GL_EXT_buffer_storage
+    bool bufferStorageEXT = false;
 };
 
 // Pointer to a boolean memeber of the Extensions struct

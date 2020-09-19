@@ -890,6 +890,14 @@ angle::CallCapture CaptureGetProgramResourceLocationIndexEXT(const State &glStat
                                                              const GLchar *name,
                                                              GLint returnValue);
 
+// GL_EXT_buffer_storage
+angle::CallCapture CaptureBufferStorageEXT(const State &glState,
+                                           bool isCallValid,
+                                           BufferBinding targetPacked,
+                                           GLsizeiptr size,
+                                           const void *data,
+                                           GLbitfield flags);
+
 // GL_EXT_debug_marker
 angle::CallCapture CaptureInsertEventMarkerEXT(const State &glState,
                                                bool isCallValid,
@@ -3205,6 +3213,13 @@ void CaptureGetProgramResourceLocationIndexEXT_name(const State &glState,
                                                     GLenum programInterface,
                                                     const GLchar *name,
                                                     angle::ParamCapture *paramCapture);
+void CaptureBufferStorageEXT_data(const State &glState,
+                                  bool isCallValid,
+                                  BufferBinding targetPacked,
+                                  GLsizeiptr size,
+                                  const void *data,
+                                  GLbitfield flags,
+                                  angle::ParamCapture *paramCapture);
 void CaptureInsertEventMarkerEXT_marker(const State &glState,
                                         bool isCallValid,
                                         GLsizei length,
