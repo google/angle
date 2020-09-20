@@ -650,7 +650,14 @@ std::string GetConfigNameFromTestIdentifier(const TestIdentifier &id)
     size_t doubleUnderscorePos = id.testName.find("__");
     if (doubleUnderscorePos == std::string::npos)
     {
-        return id.testName.substr(slashPos + 1);
+        std::string configName = id.testName.substr(slashPos + 1);
+
+        if (!BeginsWith(configName, "ES"))
+        {
+            return "default";
+        }
+
+        return configName;
     }
     else
     {
@@ -900,7 +907,8 @@ TestSuite::TestSuite(int *argc, char **argv)
             while (!mTestQueue.empty())
             {
                 const std::vector<TestIdentifier> &tests = mTestQueue.front();
-                std::cout << tests[0] << " (" << static_cast<int>(tests.size()) << ")\n";
+                std::cout << GetConfigNameFromTestIdentifier(tests[0]) << " ("
+                          << static_cast<int>(tests.size()) << ")\n";
                 mTestQueue.pop();
             }
 
