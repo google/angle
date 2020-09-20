@@ -1263,7 +1263,7 @@ void DynamicHLSL::getPixelShaderOutputKey(const gl::State &data,
             return;
         }
 
-        const auto &shaderOutputVars = fragmentShader->getData().getActiveOutputVariables();
+        const auto &shaderOutputVars = fragmentShader->getState().getActiveOutputVariables();
 
         for (size_t outputLocationIndex = 0u;
              outputLocationIndex < programData.getOutputLocations().size(); ++outputLocationIndex)

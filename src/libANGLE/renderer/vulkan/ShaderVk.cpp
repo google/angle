@@ -17,7 +17,7 @@
 namespace rx
 {
 
-ShaderVk::ShaderVk(const gl::ShaderState &data) : ShaderImpl(data) {}
+ShaderVk::ShaderVk(const gl::ShaderState &state) : ShaderImpl(state) {}
 
 ShaderVk::~ShaderVk() {}
 
@@ -37,7 +37,7 @@ std::shared_ptr<WaitableCompileEvent> ShaderVk::compile(const gl::Context *conte
         // Extra initialization in spirv shader may affect performance.
         compileOptions |= SH_INITIALIZE_UNINITIALIZED_LOCALS;
 
-        if (mData.getShaderType() != gl::ShaderType::Compute)
+        if (mState.getShaderType() != gl::ShaderType::Compute)
         {
             compileOptions |= SH_INIT_OUTPUT_VARIABLES;
         }
@@ -78,12 +78,12 @@ std::shared_ptr<WaitableCompileEvent> ShaderVk::compile(const gl::Context *conte
         compileOptions |= SH_ADD_PRE_ROTATION;
     }
 
-    return compileImpl(context, compilerInstance, mData.getSource(), compileOptions | options);
+    return compileImpl(context, compilerInstance, mState.getSource(), compileOptions | options);
 }
 
 std::string ShaderVk::getDebugInfo() const
 {
-    return mData.getTranslatedSource();
+    return mState.getTranslatedSource();
 }
 
 }  // namespace rx

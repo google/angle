@@ -524,7 +524,7 @@ bool ProgramD3DMetadata::usesCustomOutVars() const
 {
 
     const rx::ShaderD3D *shader = mAttachedShaders[gl::ShaderType::Vertex];
-    int version                 = shader ? shader->getData().getShaderVersion() : -1;
+    int version                 = shader ? shader->getState().getShaderVersion() : -1;
 
     switch (mClientType)
     {
@@ -2643,7 +2643,7 @@ template <typename T>
 void ProgramD3D::setUniformImpl(const gl::VariableLocation &locationInfo,
                                 GLsizei count,
                                 const T *v,
-                                uint8_t *targetData,
+                                uint8_t *targetState,
                                 GLenum uniformType)
 {
     D3DUniform *targetUniform             = mD3DUniforms[locationInfo.index];
@@ -2652,7 +2652,7 @@ void ProgramD3D::setUniformImpl(const gl::VariableLocation &locationInfo,
 
     if (targetUniform->typeInfo.type == uniformType)
     {
-        T *dest         = reinterpret_cast<T *>(targetData) + arrayElementOffset * 4;
+        T *dest         = reinterpret_cast<T *>(targetState) + arrayElementOffset * 4;
         const T *source = v;
 
         for (GLint i = 0; i < count; i++, dest += 4, source += components)
@@ -2663,7 +2663,7 @@ void ProgramD3D::setUniformImpl(const gl::VariableLocation &locationInfo,
     else
     {
         ASSERT(targetUniform->typeInfo.type == gl::VariableBoolVectorType(uniformType));
-        GLint *boolParams = reinterpret_cast<GLint *>(targetData) + arrayElementOffset * 4;
+        GLint *boolParams = reinterpret_cast<GLint *>(targetState) + arrayElementOffset * 4;
 
         for (GLint i = 0; i < count; i++)
         {
