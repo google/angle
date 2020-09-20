@@ -5,6 +5,9 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
+// This file is similar to src/libANGLE/renderer/FormatID_autogen.h but is used by Metal default
+// shaders instead of C++ code.
+//
 namespace rx
 {
 namespace mtl_shader
@@ -15,6 +18,13 @@ namespace FormatID
 enum
 {
     NONE,
+    D16_UNORM,
+    D24_UNORM_S8_UINT,
+    D24_UNORM_X8_UINT,
+    D32_FLOAT,
+    D32_FLOAT_S8X24_UINT,
+    D32_UNORM,
+    S8_UINT,
     A16_FLOAT,
     A1R5G5B5_UNORM,
     A2R10G10B10_SINT_VERTEX,
@@ -98,12 +108,6 @@ enum
     BPTC_RGB_SIGNED_FLOAT_BLOCK,
     BPTC_RGB_UNSIGNED_FLOAT_BLOCK,
     BPTC_SRGB_ALPHA_UNORM_BLOCK,
-    D16_UNORM,
-    D24_UNORM_S8_UINT,
-    D24_UNORM_X8_UINT,
-    D32_FLOAT,
-    D32_FLOAT_S8X24_UINT,
-    D32_UNORM,
     EAC_R11G11_SNORM_BLOCK,
     EAC_R11G11_UNORM_BLOCK,
     EAC_R11_SNORM_BLOCK,
@@ -231,13 +235,12 @@ enum
     R8_UNORM_SRGB,
     R8_USCALED,
     R9G9B9E5_SHAREDEXP,
-    S8_UINT,
     X2R10G10B10_SINT_VERTEX,
     X2R10G10B10_SNORM_VERTEX,
     X2R10G10B10_SSCALED_VERTEX,
     X2R10G10B10_UINT_VERTEX,
     X2R10G10B10_UNORM_VERTEX,
-    X2R10G10B10_USCALED_VERTEX,
+    X2R10G10B10_USCALED_VERTEX
 };
 
 }
