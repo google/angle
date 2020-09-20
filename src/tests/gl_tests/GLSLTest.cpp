@@ -2118,6 +2118,9 @@ TEST_P(GLSLTest, VerifyMaxVertexUniformVectorsWithSamplers)
 {
     ANGLE_SKIP_TEST_IF(IsOpenGL() || IsOpenGLES());
 
+    // Times out on D3D11 on test infra. http://anglebug.com/5076
+    ANGLE_SKIP_TEST_IF(IsD3D11() && IsIntel());
+
     int maxUniforms = 10000;
     glGetIntegerv(GL_MAX_VERTEX_UNIFORM_VECTORS, &maxUniforms);
     EXPECT_GL_NO_ERROR();
