@@ -805,7 +805,7 @@ TestSuite::TestSuite(int *argc, char **argv)
         ++argIndex;
     }
 
-    if ((mShardIndex >= 0) != (mShardCount > 1))
+    if ((mShardIndex > 0) != (mShardCount > 1))
     {
         printf("Shard index and shard count must be specified together.\n");
         exit(1);
