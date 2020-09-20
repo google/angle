@@ -118,6 +118,8 @@ ShaderState::ShaderState(ShaderType shaderType)
     : mLabel(),
       mShaderType(shaderType),
       mShaderVersion(100),
+      mEarlyFragmentTestsOptimization(false),
+      mOptimizationEnabled(true),
       mNumViews(-1),
       mGeometryShaderInvocations(1),
       mCompileStatus(CompileStatus::NOT_COMPILED)
@@ -427,7 +429,8 @@ void Shader::resolveCompile()
 #endif  // !defined(NDEBUG)
 
     // Gather the shader information
-    mState.mShaderVersion = sh::GetShaderVersion(compilerHandle);
+    mState.mShaderVersion       = sh::GetShaderVersion(compilerHandle);
+    mState.mOptimizationEnabled = sh::GetPragmaOptimize(compilerHandle);
 
     mState.mUniforms            = GetShaderVariables(sh::GetUniforms(compilerHandle));
     mState.mUniformBlocks       = GetShaderVariables(sh::GetUniformBlocks(compilerHandle));

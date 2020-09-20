@@ -416,6 +416,17 @@ void ProgramPipeline::updateExecutable()
 
     // Must be last, since it queries things updated by earlier functions
     updateHasBooleans();
+
+    for (const gl::ShaderType shaderType : kAllGraphicsShaderTypes)
+    {
+        const Program *shaderProgram = getShaderProgram(shaderType);
+        if (shaderProgram)
+        {
+            const ProgramExecutable &executable = shaderProgram->getExecutable();
+            mState.mExecutable->mShaderOptimizationEnabled[shaderType] =
+                executable.isShaderOptimizationEnabled(shaderType);
+        }
+    }
 }
 
 ProgramMergedVaryings ProgramPipeline::getMergedVaryings() const

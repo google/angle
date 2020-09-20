@@ -1684,6 +1684,8 @@ void Program::updateLinkedShaderStages()
         if (shader)
         {
             mState.mExecutable->setLinkedShaderStages(shader->getType());
+            mState.mExecutable->mShaderOptimizationEnabled[shader->getType()] =
+                shader->getState().isOptimizationEnabled();
         }
     }
 

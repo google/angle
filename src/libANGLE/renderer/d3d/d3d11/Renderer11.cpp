@@ -2994,7 +2994,8 @@ angle::Result Renderer11::compileToExecutable(d3d::Context *context,
                   << getShaderModelSuffix();
     std::string profile = profileStream.str();
 
-    UINT flags = D3DCOMPILE_OPTIMIZATION_LEVEL2;
+    UINT flags = workarounds.skipOptimization ? D3DCOMPILE_SKIP_OPTIMIZATION
+                                              : D3DCOMPILE_OPTIMIZATION_LEVEL2;
 
 #if defined(ANGLE_ENABLE_DEBUG_TRACE)
 #    ifndef NDEBUG
