@@ -902,7 +902,7 @@ class PackedClearValuesArray final
 // The following are used to help track the state of an invalidated attachment.
 
 // This value indicates an "infinite" CmdSize that is not valid for comparing
-constexpr uint32_t kInfiniteCmdSize = 0xffffffff;
+constexpr uint32_t kInfiniteCmdSize = 0xFFFFFFFF;
 
 // CommandBufferHelper (CBH) class wraps ANGLE's custom command buffer
 //  class, SecondaryCommandBuffer. This provides a way to temporarily
@@ -996,7 +996,7 @@ class CommandBufferHelper : angle::NonCopyable
         ASSERT(mIsRenderPassCommandBuffer);
         // Keep track of the size of commands in the command buffer.  If the size grows in the
         // future, that implies that drawing occured since invalidated.
-        mDepthCmdSizeInvalidated = mCommandBuffer.getCommandBufferSize();
+        mDepthCmdSizeInvalidated = mCommandBuffer.getCommandSize();
         // Also track the size if the attachment is currently disabled.
         mDepthCmdSizeDisabled =
             (dsState.depthTest && dsState.depthMask) ? kInfiniteCmdSize : mDepthCmdSizeInvalidated;
@@ -1007,26 +1007,24 @@ class CommandBufferHelper : angle::NonCopyable
         ASSERT(mIsRenderPassCommandBuffer);
         // Keep track of the size of commands in the command buffer.  If the size grows in the
         // future, that implies that drawing occured since invalidated.
-        mStencilCmdSizeInvalidated = mCommandBuffer.getCommandBufferSize();
+        mStencilCmdSizeInvalidated = mCommandBuffer.getCommandSize();
         // Also track the size if the attachment is currently disabled.
         mStencilCmdSizeDisabled =
             dsState.stencilTest ? kInfiniteCmdSize : mStencilCmdSizeInvalidated;
     }
 
-    bool isNoLongerInvalidated(uint32_t cmdCountInvalidated, uint32_t cmdCountDisabled)
+    bool hasWriteAfterInvalidate(uint32_t cmdCountInvalidated, uint32_t cmdCountDisabled)
     {
         ASSERT(mIsRenderPassCommandBuffer);
         return (cmdCountInvalidated != kInfiniteCmdSize &&
-                std::min(cmdCountDisabled, mCommandBuffer.getCommandBufferSize()) !=
-                    cmdCountInvalidated);
+                std::min(cmdCountDisabled, mCommandBuffer.getCommandSize()) != cmdCountInvalidated);
     }
 
     bool isInvalidated(uint32_t cmdCountInvalidated, uint32_t cmdCountDisabled)
     {
         ASSERT(mIsRenderPassCommandBuffer);
         return cmdCountInvalidated != kInfiniteCmdSize &&
-               std::min(cmdCountDisabled, mCommandBuffer.getCommandBufferSize()) ==
-                   cmdCountInvalidated;
+               std::min(cmdCountDisabled, mCommandBuffer.getCommandSize()) == cmdCountInvalidated;
     }
 
     void updateRenderPassAttachmentFinalLayout(PackedAttachmentIndex attachmentIndex,

@@ -794,7 +794,7 @@ bool CommandBufferHelper::onDepthStencilAccess(ResourceAccess access,
     else
     {
         // Drawing to this attachment is being disabled.
-        if (isNoLongerInvalidated(*cmdCountInvalidated, *cmdCountDisabled))
+        if (hasWriteAfterInvalidate(*cmdCountInvalidated, *cmdCountDisabled))
         {
             // The attachment was previously drawn while enabled, and so is no longer invalidated.
             *cmdCountInvalidated = kInfiniteCmdSize;
@@ -808,7 +808,7 @@ bool CommandBufferHelper::onDepthStencilAccess(ResourceAccess access,
             // Get the latest CmdSize at the start of being disabled.  At the end of the render
             // pass, cmdCountDisabled is <= the actual command buffer size, and so it's compared
             // with cmdCountInvalidated.  If the same, the attachment is still invalidated.
-            *cmdCountDisabled = mCommandBuffer.getCommandBufferSize();
+            *cmdCountDisabled = mCommandBuffer.getCommandSize();
             return false;
         }
     }
