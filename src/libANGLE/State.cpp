@@ -1880,11 +1880,6 @@ angle::Result State::setProgramPipelineBinding(const Context *context, ProgramPi
     if (mProgramPipeline.get())
     {
         ANGLE_TRY(onProgramPipelineExecutableChange(context, mProgramPipeline.get()));
-
-        if (mProgramPipeline->hasAnyDirtyBit())
-        {
-            mDirtyObjects.set(DIRTY_OBJECT_PROGRAM_PIPELINE);
-        }
     }
 
     return angle::Result::Continue;
@@ -3222,16 +3217,6 @@ angle::Result State::syncProgram(const Context *context, Command command)
     return angle::Result::Continue;
 }
 
-angle::Result State::syncProgramPipeline(const Context *context, Command command)
-{
-    // There may not be a program pipeline if the calling application only uses programs.
-    if (mProgramPipeline.get())
-    {
-        return mProgramPipeline->syncState(context);
-    }
-    return angle::Result::Continue;
-}
-
 angle::Result State::syncDirtyObject(const Context *context, GLenum target)
 {
     DirtyObjects localSet;
@@ -3351,11 +3336,6 @@ angle::Result State::onProgramPipelineExecutableChange(const Context *context,
                                                        ProgramPipeline *programPipeline)
 {
     mDirtyBits.set(DIRTY_BIT_PROGRAM_EXECUTABLE);
-
-    if (programPipeline->hasAnyDirtyBit())
-    {
-        mDirtyObjects.set(DIRTY_OBJECT_PROGRAM_PIPELINE);
-    }
 
     // Set any bound textures.
     const ActiveTextureTypeArray &textureTypes =

@@ -27,7 +27,11 @@ enum SubjectIndexes : angle::SubjectIndex
 };
 
 ProgramPipelineState::ProgramPipelineState()
-    : mLabel(), mActiveShaderProgram(nullptr), mValid(false), mExecutable(new ProgramExecutable())
+    : mLabel(),
+      mActiveShaderProgram(nullptr),
+      mValid(false),
+      mExecutable(new ProgramExecutable()),
+      mIsLinked(false)
 {
     for (const ShaderType shaderType : gl::AllShaderTypes())
     {
@@ -213,7 +217,7 @@ void ProgramPipeline::useProgramStages(const Context *context,
     updateLinkedShaderStages();
     updateExecutable();
 
-    mDirtyBits.set(DIRTY_BIT_PROGRAM_STAGE);
+    mState.mIsLinked = false;
 }
 
 void ProgramPipeline::updateLinkedShaderStages()
@@ -540,6 +544,11 @@ ProgramMergedVaryings ProgramPipeline::getMergedVaryings() const
 // The code gets compiled into binaries.
 angle::Result ProgramPipeline::link(const Context *context)
 {
+    if (mState.mIsLinked)
+    {
+        return angle::Result::Continue;
+    }
+
     ProgramMergedVaryings mergedVaryings;
 
     if (!getExecutable().isCompute())
@@ -589,6 +598,8 @@ angle::Result ProgramPipeline::link(const Context *context)
     }
 
     ANGLE_TRY(getImplementation()->link(context, mergedVaryings));
+
+    mState.mIsLinked = true;
 
     return angle::Result::Continue;
 }
@@ -697,34 +708,13 @@ bool ProgramPipeline::validateSamplers(InfoLog *infoLog, const Caps &caps)
     return true;
 }
 
-angle::Result ProgramPipeline::syncState(const Context *context)
-{
-    if (mDirtyBits.any())
-    {
-        mDirtyBits.reset();
-
-        // If there's a Program bound, we still want to link the PPO so we don't
-        // lose the dirty bit, but, we don't want to signal any errors if it fails
-        // since the failure would be unrelated to drawing with the Program.
-        bool goodResult = link(context) == angle::Result::Continue;
-        if (!context->getState().getProgram())
-        {
-            ANGLE_CHECK(const_cast<Context *>(context), goodResult, "Program pipeline link failed",
-                        GL_INVALID_OPERATION);
-        }
-    }
-
-    return angle::Result::Continue;
-}
-
 void ProgramPipeline::onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMessage message)
 {
     switch (message)
     {
         case angle::SubjectMessage::SubjectChanged:
-            setDirtyBit(ProgramPipeline::DirtyBitType::DIRTY_BIT_PROGRAM_STAGE);
+            mState.mIsLinked = false;
             mState.updateExecutableTextures();
-            onStateChange(angle::SubjectMessage::DirtyBitsFlagged);
             break;
         default:
             UNREACHABLE();

@@ -2982,6 +2982,18 @@ const char *ValidateDrawStates(const Context *context)
             {
                 return errorMsg;
             }
+
+            bool goodResult = programPipeline->link(context) == angle::Result::Continue;
+
+            //  If there is no active program for the vertex or fragment shader stages, the results
+            //  of vertex and fragment shader execution will respectively be undefined. However,
+            //  this is not an error, so ANGLE only signals PPO link failures if both VS and FS
+            //  stages are present.
+            const ProgramExecutable &executable = programPipeline->getExecutable();
+            if (!goodResult && executable.hasVertexAndFragmentShader())
+            {
+                return err::kProgramPipelineLinkFailed;
+            }
         }
 
         // Do some additional WebGL-specific validation
