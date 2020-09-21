@@ -389,10 +389,12 @@ void TracePerfTest::saveScreenshot(const std::string &screenshotName)
                       mTestParams.windowHeight, rgbData);
 
     // Finish the frame loop.
-    for (uint32_t nextFrame = traceInfo.startFrame + 1; nextFrame < traceInfo.endFrame; ++nextFrame)
+    for (uint32_t nextFrame = traceInfo.startFrame + 1; nextFrame <= traceInfo.endFrame;
+         ++nextFrame)
     {
         ReplayFrame(testID, nextFrame);
     }
+    ResetReplay(testID);
     getGLWindow()->swap();
     glFinish();
 }
