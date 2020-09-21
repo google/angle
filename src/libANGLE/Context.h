@@ -800,6 +800,10 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
 
     OverlayType mOverlay;
 };
+
+// Thread-local current valid context bound to the thread.
+extern thread_local Context *gCurrentValidContext;
+
 }  // namespace gl
 
 #endif  // LIBANGLE_CONTEXT_H_

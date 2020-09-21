@@ -563,7 +563,11 @@ Display *Display::GetDisplayFromNativeDisplay(EGLNativeDisplayType nativeDisplay
             // No valid display implementation for these attributes
             return nullptr;
         }
-        SetUseAndroidOpenGLTlsSlot(displayType == EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE);
+
+#if defined(ANGLE_PLATFORM_ANDROID)
+        angle::gUseAndroidOpenGLTlsSlot = displayType == EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE;
+#endif  // defined(ANGLE_PLATFORM_ANDROID)
+
         display->setupDisplayPlatform(impl);
     }
 
@@ -1993,5 +1997,4 @@ egl::Error Display::handleGPUSwitch()
 {
     return mImplementation->handleGPUSwitch();
 }
-
 }  // namespace egl

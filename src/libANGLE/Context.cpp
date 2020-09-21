@@ -272,6 +272,8 @@ bool IsColorMaskedOut(const BlendState &blend)
 }
 }  // anonymous namespace
 
+thread_local Context *gCurrentValidContext = nullptr;
+
 Context::Context(egl::Display *display,
                  const egl::Config *config,
                  const Context *shareContext,
@@ -2525,6 +2527,9 @@ void Context::setContextLost()
     // Stop skipping validation, since many implementation entrypoint assume they can't
     // be called when lost, or with null object arguments, etc.
     mSkipValidation = false;
+
+    // Make sure we update TLS.
+    gCurrentValidContext = nullptr;
 }
 
 GLenum Context::getGraphicsResetStatus()
