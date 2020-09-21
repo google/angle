@@ -618,7 +618,7 @@ void ProgramExecutableVk::updateEarlyFragmentTestsOptimization(ContextVk *contex
     const gl::State &glState = contextVk->getState();
 
     mTransformOptionBits[ProgramTransformOption::RemoveEarlyFragmentTestsOptimization] = false;
-    if (!glState.isEarlyFragmentTestsOptimizationAllowed())
+    if (!glState.canEnableEarlyFragmentTestsOptimization())
     {
         ProgramVk *programVk = getShaderProgram(glState, gl::ShaderType::Fragment);
         if (programVk->getState().hasEarlyFragmentTestsOptimization())

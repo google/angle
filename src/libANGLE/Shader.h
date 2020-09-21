@@ -85,8 +85,6 @@ class ShaderState final : angle::NonCopyable
         return mActiveOutputVariables;
     }
 
-    bool isEarlyFragmentTeststOptimization() const { return mEarlyFragmentTestsOptimization; }
-
     bool compilePending() const { return mCompileStatus == CompileStatus::COMPILE_REQUESTED; }
 
     const sh::WorkGroupSize &getLocalSize() const { return mLocalSize; }
