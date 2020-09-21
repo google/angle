@@ -1851,12 +1851,15 @@ void main()
 
 // Use groupMemoryBarrier and barrier to sync reads/writes order and the execution
 // order of multiple shader invocations in compute shader.
-TEST_P(ComputeShaderTest, groupMemoryBarrierAndBarrierTest)
+TEST_P(ComputeShaderTest, GroupMemoryBarrierAndBarrierTest)
 {
     // TODO(xinghua.cao@intel.com): Figure out why we get this error message
     // that shader uses features not recognized by this D3D version.
     ANGLE_SKIP_TEST_IF((IsAMD() || IsNVIDIA()) && IsD3D11());
     ANGLE_SKIP_TEST_IF(IsARM64() && IsWindows() && IsD3D());
+
+    // http://anglebug.com/5072
+    ANGLE_SKIP_TEST_IF(IsIntel() && IsLinux() && IsOpenGL());
 
     GLTexture texture;
     GLFramebuffer framebuffer;
@@ -2014,6 +2017,9 @@ void main()
 // Verify shared non-array variables can work correctly.
 TEST_P(ComputeShaderTest, NonArraySharedVariable)
 {
+    // http://anglebug.com/5072
+    ANGLE_SKIP_TEST_IF(IsIntel() && IsLinux() && IsOpenGL());
+
     const char kCSShader[] = R"(#version 310 es
 layout (local_size_x = 2, local_size_y = 2, local_size_z = 1) in;
 layout (r32ui, binding = 0) readonly uniform highp uimage2D srcImage;
@@ -2047,6 +2053,9 @@ void main()
 // Verify shared non-struct array variables can work correctly.
 TEST_P(ComputeShaderTest, NonStructArrayAsSharedVariable)
 {
+    // http://anglebug.com/5072
+    ANGLE_SKIP_TEST_IF(IsIntel() && IsLinux() && IsOpenGL());
+
     const char kCSShader[] = R"(#version 310 es
 layout (local_size_x = 2, local_size_y = 2, local_size_z = 1) in;
 layout (r32ui, binding = 0) readonly uniform highp uimage2D srcImage;
@@ -2071,6 +2080,9 @@ void main()
 // Verify shared struct array variables work correctly.
 TEST_P(ComputeShaderTest, StructArrayAsSharedVariable)
 {
+    // http://anglebug.com/5072
+    ANGLE_SKIP_TEST_IF(IsIntel() && IsLinux() && IsOpenGL());
+
     const char kCSShader[] = R"(#version 310 es
 layout (local_size_x = 2, local_size_y = 2, local_size_z = 1) in;
 layout (r32ui, binding = 0) readonly uniform highp uimage2D srcImage;
@@ -2099,6 +2111,9 @@ void main()
 // Verify using atomic functions without return value can work correctly.
 TEST_P(ComputeShaderTest, AtomicFunctionsNoReturnValue)
 {
+    // http://anglebug.com/5072
+    ANGLE_SKIP_TEST_IF(IsIntel() && IsLinux() && IsOpenGL());
+
     // Fails on AMD windows drivers.  http://anglebug.com/3872
     ANGLE_SKIP_TEST_IF(IsWindows() && IsAMD() && IsVulkan());
 
@@ -2165,6 +2180,9 @@ void main()
 // Verify using atomic functions in a non-initializer single assignment can work correctly.
 TEST_P(ComputeShaderTest, AtomicFunctionsInNonInitializerSingleAssignment)
 {
+    // http://anglebug.com/5072
+    ANGLE_SKIP_TEST_IF(IsIntel() && IsLinux() && IsOpenGL());
+
     // Fails on AMD windows drivers.  http://anglebug.com/3872
     ANGLE_SKIP_TEST_IF(IsWindows() && IsAMD() && IsVulkan());
 
@@ -2214,6 +2232,9 @@ void main()
 // Verify using atomic functions in an initializers and using unsigned int works correctly.
 TEST_P(ComputeShaderTest, AtomicFunctionsInitializerWithUnsigned)
 {
+    // http://anglebug.com/5072
+    ANGLE_SKIP_TEST_IF(IsIntel() && IsLinux() && IsOpenGL());
+
     // Fails on AMD windows drivers.  http://anglebug.com/3872
     ANGLE_SKIP_TEST_IF(IsWindows() && IsAMD() && IsVulkan());
 
@@ -2274,6 +2295,9 @@ void main()
 // Verify using atomic functions inside expressions as unsigned int.
 TEST_P(ComputeShaderTest, AtomicFunctionsReturnWithUnsigned)
 {
+    // http://anglebug.com/5072
+    ANGLE_SKIP_TEST_IF(IsIntel() && IsLinux() && IsOpenGL());
+
     // Fails on AMD windows drivers.  http://anglebug.com/3872
     ANGLE_SKIP_TEST_IF(IsWindows() && IsAMD() && IsVulkan());
 
@@ -2324,6 +2348,9 @@ void main()
 // Verify using nested atomic functions in expressions.
 TEST_P(ComputeShaderTest, AtomicFunctionsReturnWithMultipleTypes)
 {
+    // http://anglebug.com/5072
+    ANGLE_SKIP_TEST_IF(IsIntel() && IsLinux() && IsOpenGL());
+
     constexpr char kCShader[] = R"(#version 310 es
 layout (local_size_x = 4, local_size_y = 1, local_size_z = 1) in;
 layout (r32ui, binding = 0) readonly uniform highp uimage2D srcImage;
@@ -2430,6 +2457,9 @@ void main()
 // Test that storing data to image and then loading the same image data works correctly.
 TEST_P(ComputeShaderTest, StoreImageThenLoad)
 {
+    // http://anglebug.com/5072
+    ANGLE_SKIP_TEST_IF(IsIntel() && IsLinux() && IsOpenGL());
+
     const char kCSSource[] = R"(#version 310 es
 layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
 layout(r32ui, binding = 0) readonly uniform highp uimage2D uImage_1;
@@ -2487,6 +2517,9 @@ void main()
 // Test that loading image data and then storing data to the same image works correctly.
 TEST_P(ComputeShaderTest, LoadImageThenStore)
 {
+    // http://anglebug.com/5072
+    ANGLE_SKIP_TEST_IF(IsIntel() && IsLinux() && IsOpenGL());
+
     const char kCSSource[] = R"(#version 310 es
 layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
 layout(r32ui, binding = 0) readonly uniform highp uimage2D uImage_1;
@@ -2878,6 +2911,9 @@ void main()
 // Test uniform dirty in compute shader, and verify the contents.
 TEST_P(ComputeShaderTest, UniformDirty)
 {
+    // http://anglebug.com/5072
+    ANGLE_SKIP_TEST_IF(IsIntel() && IsLinux() && IsOpenGL());
+
     // glReadPixels is getting the result of the first dispatch call.  http://anglebug.com/3879
     ANGLE_SKIP_TEST_IF(IsVulkan() && IsWindows() && (IsAMD() || IsNVIDIA()));
 
@@ -3321,6 +3357,9 @@ void main(void) {
 //   2. DrawArrays.
 TEST_P(ComputeShaderTest, DispatchDraw)
 {
+    // http://anglebug.com/5072
+    ANGLE_SKIP_TEST_IF(IsIntel() && IsLinux() && IsOpenGL());
+
     const char kCSSource[] = R"(#version 310 es
 layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
 layout(rgba32f, binding = 0) writeonly uniform highp image2D image;
@@ -3388,6 +3427,9 @@ void main(void) {
 //   4. DrawArrays.
 TEST_P(ComputeShaderTest, DrawDispatchDispatchDraw)
 {
+    // http://anglebug.com/5072
+    ANGLE_SKIP_TEST_IF(IsIntel() && IsLinux() && IsOpenGL());
+
     // Fails on Intel and AMD windows drivers.  http://anglebug.com/3871
     ANGLE_SKIP_TEST_IF(IsWindows() && (IsIntel() || IsAMD()) && IsVulkan());
 

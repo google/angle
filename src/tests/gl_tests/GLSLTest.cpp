@@ -3430,6 +3430,9 @@ TEST_P(GLSLTest_ES31, ArraysOfArraysSampler)
 // Test that arrays of arrays of images work as expected.
 TEST_P(GLSLTest_ES31, ArraysOfArraysImage)
 {
+    // http://anglebug.com/5072
+    ANGLE_SKIP_TEST_IF(IsIntel() && IsLinux() && IsOpenGL());
+
     // anglebug.com/2703 - QC doesn't support arrays of image as parameters,
     // so image array of array handling is disabled
     ANGLE_SKIP_TEST_IF(IsAndroid() && IsVulkan());
@@ -8172,6 +8175,9 @@ void main() {
 // be empty in the presence of other resources.
 TEST_P(GLSLTest_ES31, MixOfAllResources)
 {
+    // http://anglebug.com/5072
+    ANGLE_SKIP_TEST_IF(IsIntel() && IsLinux() && IsOpenGL());
+
     constexpr char kComputeShader[] = R"(#version 310 es
 layout(local_size_x = 1, local_size_y = 1, local_size_z = 1) in;
 layout(binding = 1, std430) buffer Output {
