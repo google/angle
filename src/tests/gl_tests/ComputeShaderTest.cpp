@@ -3518,6 +3518,9 @@ void main(void) {
 //   4. DispatchCompute.
 TEST_P(ComputeShaderTest, DispatchDrawDrawDispatch)
 {
+    // http://anglebug.com/5072
+    ANGLE_SKIP_TEST_IF(IsIntel() && IsLinux() && IsOpenGL());
+
     const char kCSSource[] = R"(#version 310 es
 layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
 layout(rgba32f, binding = 0) writeonly uniform highp image2D image;
@@ -3715,6 +3718,9 @@ void main()
 //   3. DrawArrays and check data.
 TEST_P(ComputeShaderTest, DrawDispatchDrawPreserve)
 {
+    // http://anglebug.com/5072
+    ANGLE_SKIP_TEST_IF(IsIntel() && IsLinux() && IsOpenGL());
+
     const char kCSSource[] = R"(#version 310 es
 layout(local_size_x=1, local_size_y=1) in;
 layout(rgba8, binding = 0) writeonly uniform highp image2D image;
