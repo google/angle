@@ -812,7 +812,7 @@ TestSuite::TestSuite(int *argc, char **argv)
         ++argIndex;
     }
 
-    if ((mShardIndex > 0) != (mShardCount > 1))
+    if ((mShardIndex == -1) != (mShardCount == -1))
     {
         printf("Shard index and shard count must be specified together.\n");
         exit(1);
@@ -861,8 +861,19 @@ TestSuite::TestSuite(int *argc, char **argv)
 
     std::vector<TestIdentifier> testSet = GetFilteredTests(&mTestFileLines, alsoRunDisabledTests);
 
-    if (mShardCount > 0)
+    if (mShardCount == 0)
     {
+        printf("Shard count must be > 0.\n");
+        exit(1);
+    }
+    else if (mShardCount > 0)
+    {
+        if (mShardIndex >= mShardCount)
+        {
+            printf("Shard index must be less than shard count.\n");
+            exit(1);
+        }
+
         if (!angle::GetEnvironmentVar("GTEST_SHARD_INDEX").empty() ||
             !angle::GetEnvironmentVar("GTEST_TOTAL_SHARDS").empty())
         {
