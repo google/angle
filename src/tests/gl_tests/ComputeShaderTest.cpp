@@ -1711,6 +1711,9 @@ TEST_P(ComputeShaderTest, BindImageTextureWithMixTextureTypes)
     // http://anglebug.com/3736
     ANGLE_SKIP_TEST_IF(IsNVIDIA() && IsOpenGL() && IsLinux());
 
+    // http://anglebug.com/5072
+    ANGLE_SKIP_TEST_IF(IsIntel() && IsLinux() && IsOpenGL());
+
     GLTexture texture[4];
     GLFramebuffer framebuffer;
     const char csSource[] =
@@ -2396,6 +2399,9 @@ void main()
 // Basic uniform buffer functionality.
 TEST_P(ComputeShaderTest, UniformBuffer)
 {
+    // http://anglebug.com/5072
+    ANGLE_SKIP_TEST_IF(IsIntel() && IsLinux() && IsOpenGL());
+
     GLTexture texture;
     GLBuffer buffer;
     GLFramebuffer framebuffer;
@@ -3252,6 +3258,9 @@ void main()
 // pipeline input. It works well. See http://anglebug.com/3658
 TEST_P(ComputeShaderTest, DrawTexture1DispatchTexture2)
 {
+    // http://anglebug.com/5072
+    ANGLE_SKIP_TEST_IF(IsIntel() && IsLinux() && IsOpenGL());
+
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_color_buffer_float"));
 
     const char kCSSource[] = R"(#version 310 es
