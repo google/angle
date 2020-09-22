@@ -146,6 +146,13 @@ bool ValidateBuiltinVertexAttributeCommon(const Context *context,
         case VertexAttribType::Fixed:
         case VertexAttribType::Float:
             break;
+        case VertexAttribType::UnsignedByte:
+            if (arrayType != ClientVertexArrayType::Color)
+            {
+                context->validationError(GL_INVALID_ENUM, kInvalidVertexPointerType);
+                return false;
+            }
+            break;
         default:
             context->validationError(GL_INVALID_ENUM, kInvalidVertexPointerType);
             return false;
