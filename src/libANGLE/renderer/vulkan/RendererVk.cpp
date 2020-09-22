@@ -1446,7 +1446,10 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
 
     // Initialize the vulkan pipeline cache.
     bool success = false;
-    ANGLE_TRY(initPipelineCache(displayVk, &mPipelineCache, &success));
+    {
+        std::lock_guard<std::mutex> lock(mPipelineCacheMutex);
+        ANGLE_TRY(initPipelineCache(displayVk, &mPipelineCache, &success));
+    }
 
     return angle::Result::Continue;
 }
