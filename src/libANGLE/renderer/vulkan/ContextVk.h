@@ -608,6 +608,9 @@ class ContextVk : public ContextImpl, public vk::Context
     void beginOcclusionQuery(QueryVk *queryVk);
     void endOcclusionQuery(QueryVk *queryVk);
 
+    angle::Result pauseOcclusionQueryIfActive();
+    angle::Result resumeOcclusionQueryIfActive();
+
     void updateOverlayOnPresent();
     void addOverlayUsedBuffersCount(vk::CommandBufferHelper *commandBuffer);
 
