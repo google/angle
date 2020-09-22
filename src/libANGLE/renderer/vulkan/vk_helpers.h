@@ -1204,6 +1204,7 @@ enum class ImageLayout
     ColorAttachment,
     DepthStencilReadOnly,
     DepthStencilAttachment,
+    DepthStencilResolveAttachment,
     Present,
 
     InvalidEnum,

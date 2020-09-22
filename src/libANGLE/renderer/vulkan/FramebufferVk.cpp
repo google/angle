@@ -2243,7 +2243,10 @@ angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
     // Initialize RenderPass info.
     vk::AttachmentOpsArray renderPassAttachmentOps;
     vk::PackedClearValuesArray packedClearValues;
-    gl::DrawBufferMask previousUnresolveMask = mRenderPassDesc.getColorUnresolveAttachmentMask();
+    gl::DrawBufferMask previousUnresolveColorMask =
+        mRenderPassDesc.getColorUnresolveAttachmentMask();
+    bool previousUnresolveDepth   = mRenderPassDesc.hasDepthUnresolveAttachment();
+    bool previousUnresolveStencil = mRenderPassDesc.hasStencilUnresolveAttachment();
 
     // Color attachments.
     const auto &colorRenderTargets = mRenderTargetCache.getColors();
@@ -2318,6 +2321,9 @@ angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
     RenderTargetVk *depthStencilRenderTarget              = getDepthStencilRenderTarget();
     if (depthStencilRenderTarget)
     {
+        const bool canExportStencil =
+            contextVk->getRenderer()->getFeatures().supportsShaderStencilExport.enabled;
+
         // depth stencil attachment always immediately follows color attachment
         depthStencilAttachmentIndex = colorIndexVk;
 
@@ -2337,14 +2343,16 @@ angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
             stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
         }
 
+        // If depth/stencil image is transient, no need to store its data at the end of the render
+        // pass.  If shader stencil export is not supported, stencil data cannot be unresolved on
+        // the next render pass, so it must be stored/loaded.  If the image is entirely transient,
+        // there is no resolve/unresolve and the image data is never stored/loaded.
         if (depthStencilRenderTarget->isImageTransient())
         {
-            // TODO(syoussefi): currently, depth/stencil unresolve is not implemented.  Until then,
-            // don't change storeOp to DONT_CARE, unless the attachment is entirely transient (i.e.
-            // depth textures from EXT_multisampled_render_to_texture2.  http://anglebug.com/4836
-            if (depthStencilRenderTarget->isEntirelyTransient())
+            depthStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+
+            if (canExportStencil || depthStencilRenderTarget->isEntirelyTransient())
             {
-                depthStoreOp   = VK_ATTACHMENT_STORE_OP_DONT_CARE;
                 stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
             }
         }
@@ -2391,6 +2399,40 @@ angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
             depthLoadOp  = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
             depthStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
         }
+
+        // Similar to color attachments, if there's a resolve attachment and the multisampled image
+        // is transient, depth/stencil data need to be unresolved in an initial subpass.
+        //
+        // Note that stencil unresolve is currently only possible if shader stencil export is
+        // supported.
+        if (depthStencilRenderTarget->hasResolveAttachment() &&
+            depthStencilRenderTarget->isImageTransient())
+        {
+            const bool unresolveDepth = depthLoadOp == VK_ATTACHMENT_LOAD_OP_LOAD;
+            const bool unresolveStencil =
+                stencilLoadOp == VK_ATTACHMENT_LOAD_OP_LOAD && canExportStencil;
+
+            if (unresolveDepth)
+            {
+                depthLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+            }
+
+            if (unresolveStencil)
+            {
+                stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+            }
+
+            if (unresolveDepth || unresolveStencil)
+            {
+                mRenderPassDesc.packDepthStencilUnresolveAttachment(unresolveDepth,
+                                                                    unresolveStencil);
+            }
+            else
+            {
+                mRenderPassDesc.removeDepthStencilUnresolveAttachment();
+            }
+        }
+
         renderPassAttachmentOps.setOps(depthStencilAttachmentIndex, depthLoadOp, depthStoreOp);
         renderPassAttachmentOps.setStencilOps(depthStencilAttachmentIndex, stencilLoadOp,
                                               stencilStoreOp);
@@ -2418,13 +2460,28 @@ angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
     // Note that render passes are compatible only if the differences are in loadOp/storeOp values,
     // or the existence of resolve attachments in single subpass render passes.  The modification
     // here can add/remove a subpass, or modify its input attachments.
-    gl::DrawBufferMask unresolveMask = mRenderPassDesc.getColorUnresolveAttachmentMask();
-    if (previousUnresolveMask != unresolveMask)
+    gl::DrawBufferMask unresolveColorMask = mRenderPassDesc.getColorUnresolveAttachmentMask();
+    bool unresolveDepth                   = mRenderPassDesc.hasDepthUnresolveAttachment();
+    bool unresolveStencil                 = mRenderPassDesc.hasStencilUnresolveAttachment();
+    if (previousUnresolveColorMask != unresolveColorMask ||
+        previousUnresolveDepth != unresolveDepth || previousUnresolveStencil != unresolveStencil)
     {
         contextVk->onDrawFramebufferRenderPassDescChange(this);
+
         // Make sure framebuffer is recreated.
         mFramebuffer = nullptr;
-        mCurrentFramebufferDesc.updateColorUnresolveMask(unresolveMask);
+
+        vk::FramebufferNonResolveAttachmentMask unresolveMask(unresolveColorMask.bits());
+        if (unresolveDepth)
+        {
+            unresolveMask.set(gl::IMPLEMENTATION_MAX_DRAW_BUFFERS);
+        }
+        if (unresolveStencil)
+        {
+            unresolveMask.set(gl::IMPLEMENTATION_MAX_DRAW_BUFFERS + 1);
+        }
+
+        mCurrentFramebufferDesc.updateUnresolveMask(unresolveMask);
     }
 
     vk::Framebuffer *framebuffer = nullptr;
@@ -2450,11 +2507,13 @@ angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
         depthStencilRenderTarget->onDepthStencilDraw(contextVk, mReadOnlyDepthStencilMode);
     }
 
-    if (unresolveMask.any())
+    if (unresolveColorMask.any() || unresolveDepth || unresolveStencil)
     {
         // Unresolve attachments if any.
         UtilsVk::UnresolveParameters params;
-        params.unresolveMask = unresolveMask;
+        params.unresolveColorMask = unresolveColorMask;
+        params.unresolveDepth     = unresolveDepth;
+        params.unresolveStencil   = unresolveStencil;
 
         ANGLE_TRY(contextVk->getUtils().unresolve(contextVk, this, params));
 

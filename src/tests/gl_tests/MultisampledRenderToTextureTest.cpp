@@ -98,6 +98,9 @@ class MultisampledRenderToTextureTest : public ANGLETest
         glBindTexture(GL_TEXTURE_2D, texture);
         glUniform1i(mCopyTextureUniformLocation, 0);
 
+        glDisable(GL_DEPTH_TEST);
+        glDisable(GL_STENCIL_TEST);
+        glDisable(GL_BLEND);
         drawQuad(mCopyTextureProgram, essl1_shaders::PositionAttrib(), 0.5f);
 
         // Expect that the rendered quad has the same color as the source texture
@@ -121,7 +124,7 @@ class MultisampledRenderToTextureTest : public ANGLETest
 
     struct GLType
     {
-        GLint internalFormat;
+        GLenum internalFormat;
         GLenum format;
         GLenum type;
     };
@@ -156,6 +159,7 @@ class MultisampledRenderToTextureES3Test : public MultisampledRenderToTextureTes
     void colorAttachment1Common(bool useRenderbuffer);
     void colorAttachments0And3Common(bool useRenderbuffer);
     void blitFramebufferMixedColorAndDepthCommon(bool useRenderbuffer);
+    void renderbufferUnresolveColorAndDepthStencilThenTwoColors(bool withDepth, bool withStencil);
 };
 
 class MultisampledRenderToTextureES31Test : public MultisampledRenderToTextureTest
@@ -1264,6 +1268,9 @@ TEST_P(MultisampledRenderToTextureES3Test, RenderbufferDepthStencilClearDrawCopy
     // http://anglebug.com/5083
     ANGLE_SKIP_TEST_IF(IsWindows() && IsAMD() && IsVulkan());
 
+    // http://anglebug.com/5096
+    ANGLE_SKIP_TEST_IF(IsLinux() && IsIntel() && IsVulkan());
+
     constexpr GLsizei kSize = 64;
 
     setupCopyTexProgram();
@@ -1271,7 +1278,7 @@ TEST_P(MultisampledRenderToTextureES3Test, RenderbufferDepthStencilClearDrawCopy
     GLFramebuffer fbo;
     glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 
-    // Create framebuffer to draw into, with both color and depth attachments.
+    // Create framebuffer to draw into, with both color and depth/stencil attachments.
     GLTexture color;
     glBindTexture(GL_TEXTURE_2D, color);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
@@ -1340,6 +1347,506 @@ TEST_P(MultisampledRenderToTextureES3Test, RenderbufferDepthStencilClearDrawCopy
     // For completeness, verify that the texture used as copy target is red.
     const GLColor expectedCopyResult(255, 0, 0, 255);
     verifyResults(texture, expectedCopyResult, kSize, 0, 0, kSize, kSize);
+}
+
+// Draw, copy, then clear&blend.  This tests uses a depth/stencil buffer and makes sure the second
+// draw (in the second render pass) succeeds (i.e.  depth/stencil data is not lost).  The difference
+// with RenderbufferDepthStencilClearDrawCopyThenBlend is that color is cleared in the second render
+// pass, so only depth/stencil data is unresolved.  This test doesn't apply to depth/stencil
+// textures as they are explicitly autoinvalidated between render passes.
+TEST_P(MultisampledRenderToTextureES3Test, RenderbufferDepthStencilDrawCopyClearThenBlend)
+{
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_multisampled_render_to_texture"));
+
+    // http://anglebug.com/5083
+    ANGLE_SKIP_TEST_IF(IsWindows() && IsAMD() && IsVulkan());
+
+    // http://anglebug.com/5096
+    ANGLE_SKIP_TEST_IF(IsLinux() && IsIntel() && IsVulkan());
+
+    constexpr GLsizei kSize = 64;
+
+    setupCopyTexProgram();
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+    // Create framebuffer to draw into, with both color and depth/stencil attachments.
+    GLTexture color;
+    glBindTexture(GL_TEXTURE_2D, color);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glFramebufferTexture2DMultisampleEXT(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color,
+                                         0, 4);
+
+    GLRenderbuffer depthStencil;
+    glBindRenderbuffer(GL_RENDERBUFFER, depthStencil);
+    glRenderbufferStorageMultisampleEXT(GL_RENDERBUFFER, 4, GL_DEPTH24_STENCIL8, kSize, kSize);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER,
+                              depthStencil);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    // Set viewport and clear depth/stencil through draw
+    glViewport(0, 0, kSize, kSize);
+
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_ALWAYS);
+
+    glEnable(GL_STENCIL_TEST);
+    glStencilFunc(GL_ALWAYS, 0x55, 0xFF);
+    glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);
+    glStencilMask(0xFF);
+
+    // Set up program
+    ANGLE_GL_PROGRAM(drawColor, essl1_shaders::vs::Simple(), essl1_shaders::fs::UniformColor());
+    glUseProgram(drawColor);
+    GLint colorUniformLocation =
+        glGetUniformLocation(drawColor, angle::essl1_shaders::ColorUniform());
+    ASSERT_NE(colorUniformLocation, -1);
+
+    // Draw red
+    glUniform4f(colorUniformLocation, 1.0f, 0.0f, 0.0f, 1.0f);
+    drawQuad(drawColor, essl1_shaders::PositionAttrib(), 1.0f);
+    ASSERT_GL_NO_ERROR();
+
+    // Create a texture and copy into it.
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 0, 0, kSize, kSize, 0);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    ASSERT_GL_NO_ERROR();
+
+    // Clear color to blue
+    glClearColor(0.0, 0.0, 1.0, 1.0);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    // If depth is not cleared to 1, rendering would fail.
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
+
+    // If stencil is not cleared to 0x55, rendering would fail.
+    glEnable(GL_STENCIL_TEST);
+    glStencilFunc(GL_EQUAL, 0x55, 0xFF);
+    glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+    glStencilMask(0xFF);
+
+    // Draw again into the framebuffer, this time blending.  This tests that depth/stencil data are
+    // preserved after the resolve incurred by the copy above and color is cleared correctly.
+    glUniform4f(colorUniformLocation, 0.0f, 1.0f, 0.0f, 0.5f);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    drawQuad(drawColor, essl1_shaders::PositionAttrib(), 0.0f);
+    ASSERT_GL_NO_ERROR();
+
+    // Copy into the texture again.
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 0, 0, kSize, kSize, 0);
+    ASSERT_GL_NO_ERROR();
+
+    // Verify that the texture is now cyan
+    const GLColor kExpected(0, 127, 127, 191);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, kExpected, 1);
+    EXPECT_PIXEL_COLOR_NEAR(kSize - 1, 0, kExpected, 1);
+    EXPECT_PIXEL_COLOR_NEAR(0, kSize - 1, kExpected, 1);
+    EXPECT_PIXEL_COLOR_NEAR(kSize - 1, kSize - 1, kExpected, 1);
+
+    // For completeness, verify that the texture used as copy target is also cyan.
+    const GLColor expectedCopyResult(0, 127, 127, 191);
+    verifyResults(texture, expectedCopyResult, kSize, 0, 0, kSize, kSize);
+}
+
+// Clear, then blit depth/stencil with renderbuffers.  This test makes sure depth/stencil blit uses
+// the correct image.  Note that this test doesn't apply to depth/stencil textures as they are
+// explicitly autoinvalidated between render passes.
+TEST_P(MultisampledRenderToTextureES3Test, RenderbufferClearThenBlitDepthStencil)
+{
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_multisampled_render_to_texture"));
+
+    // D3D backend doesn't implement multisampled render to texture renderbuffers correctly.
+    // http://anglebug.com/3107
+    ANGLE_SKIP_TEST_IF(IsD3D());
+
+    // The following trybot configurations don't support VK_KHR_depth_stencil_resolve.  ANGLE is not
+    // conformant without this extension, but it's allowed as users commonly invalidate
+    // depth/stencil.
+    //
+    //  - SwifthShader
+    //  - Android
+    ANGLE_SKIP_TEST_IF(IsVulkan() && (isSwiftshader() || IsAndroid() || IsAMD()));
+
+    constexpr GLsizei kSize = 64;
+
+    setupCopyTexProgram();
+
+    GLFramebuffer fboMS;
+    glBindFramebuffer(GL_FRAMEBUFFER, fboMS);
+
+    // Create framebuffer to draw into, with both color and depth/stencil attachments.
+    GLTexture color;
+    glBindTexture(GL_TEXTURE_2D, color);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glFramebufferTexture2DMultisampleEXT(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color,
+                                         0, 4);
+
+    GLRenderbuffer depthStencilMS;
+    glBindRenderbuffer(GL_RENDERBUFFER, depthStencilMS);
+    glRenderbufferStorageMultisampleEXT(GL_RENDERBUFFER, 4, GL_DEPTH24_STENCIL8, kSize, kSize);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER,
+                              depthStencilMS);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    // Clear depth/stencil
+    glClearDepthf(1);
+    glClearStencil(0x55);
+    glClear(GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
+    // Create framebuffer as blit target.
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
+
+    glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color, 0);
+
+    GLRenderbuffer depthStencil;
+    glBindRenderbuffer(GL_RENDERBUFFER, depthStencil);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, kSize, kSize);
+    glFramebufferRenderbuffer(GL_DRAW_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER,
+                              depthStencil);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_DRAW_FRAMEBUFFER);
+
+    // Blit depth/stencil
+    glBlitFramebuffer(0, 0, kSize, kSize, 0, 0, kSize, kSize,
+                      GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT, GL_NEAREST);
+
+    // Draw into the framebuffer that was the destination of blit, verifying that depth and stencil
+    // values are correct.
+
+    // If depth is not 1, rendering would fail.
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
+
+    // If stencil is not 0x55, rendering would fail.
+    glEnable(GL_STENCIL_TEST);
+    glStencilFunc(GL_EQUAL, 0x55, 0xFF);
+    glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+    glStencilMask(0xFF);
+
+    // Set up program
+    ANGLE_GL_PROGRAM(drawColor, essl1_shaders::vs::Simple(), essl1_shaders::fs::UniformColor());
+    glUseProgram(drawColor);
+    GLint colorUniformLocation =
+        glGetUniformLocation(drawColor, angle::essl1_shaders::ColorUniform());
+    ASSERT_NE(colorUniformLocation, -1);
+
+    // Draw red
+    glUniform4f(colorUniformLocation, 1.0f, 0.0f, 0.0f, 1.0f);
+    drawQuad(drawColor, essl1_shaders::PositionAttrib(), 0.0f);
+    ASSERT_GL_NO_ERROR();
+
+    // Verify that the texture is now red
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(kSize - 1, 0, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(0, kSize - 1, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(kSize - 1, kSize - 1, GLColor::red);
+
+    // Clear depth/stencil to a different value, and blit again but this time flipped.
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fboMS);
+    glClearDepthf(0);
+    glClearStencil(0x3E);
+    glClear(GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
+    // Blit
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
+    glBlitFramebuffer(0, 0, kSize, kSize, kSize, kSize, 0, 0,
+                      GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT, GL_NEAREST);
+
+    // Draw green
+    glDepthFunc(GL_GREATER);
+    glStencilFunc(GL_EQUAL, 0x3E, 0xFF);
+    glUniform4f(colorUniformLocation, 0.0f, 1.0f, 0.0f, 1.0f);
+    drawQuad(drawColor, essl1_shaders::PositionAttrib(), 0.0f);
+    ASSERT_GL_NO_ERROR();
+
+    // Verify that the texture is now green
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+    EXPECT_PIXEL_COLOR_EQ(kSize - 1, 0, GLColor::green);
+    EXPECT_PIXEL_COLOR_EQ(0, kSize - 1, GLColor::green);
+    EXPECT_PIXEL_COLOR_EQ(kSize - 1, kSize - 1, GLColor::green);
+}
+
+// Draw, then blit depth/stencil with renderbuffers.  This test makes sure depth/stencil resolve is
+// correctly implemented.  Note that this test doesn't apply to depth/stencil textures as they are
+// explicitly autoinvalidated between render passes.
+TEST_P(MultisampledRenderToTextureES3Test, RenderbufferDrawThenBlitDepthStencil)
+{
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_multisampled_render_to_texture"));
+
+    // Skip on configurations that don't support VK_KHR_depth_stencil_resolve.  See comment
+    // in RenderbufferClearThenBlitDepthStencil.
+    ANGLE_SKIP_TEST_IF(IsVulkan() && (isSwiftshader() || IsAndroid() || IsAMD()));
+
+    // http://anglebug.com/5096
+    ANGLE_SKIP_TEST_IF(IsLinux() && IsIntel() && IsVulkan());
+
+    constexpr GLsizei kSize = 64;
+
+    GLFramebuffer fboMS;
+    glBindFramebuffer(GL_FRAMEBUFFER, fboMS);
+
+    // Create framebuffer to draw into, with both color and depth/stencil attachments.
+    GLTexture color;
+    glBindTexture(GL_TEXTURE_2D, color);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glFramebufferTexture2DMultisampleEXT(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color,
+                                         0, 4);
+
+    GLRenderbuffer depthStencilMS;
+    glBindRenderbuffer(GL_RENDERBUFFER, depthStencilMS);
+    glRenderbufferStorageMultisampleEXT(GL_RENDERBUFFER, 4, GL_DEPTH24_STENCIL8, kSize, kSize);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER,
+                              depthStencilMS);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    // Set up program
+    ANGLE_GL_PROGRAM(drawColor, essl1_shaders::vs::Simple(), essl1_shaders::fs::UniformColor());
+    glUseProgram(drawColor);
+    GLint colorUniformLocation =
+        glGetUniformLocation(drawColor, angle::essl1_shaders::ColorUniform());
+    ASSERT_NE(colorUniformLocation, -1);
+
+    // Output depth/stencil through draw
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_ALWAYS);
+
+    glEnable(GL_STENCIL_TEST);
+    glStencilFunc(GL_ALWAYS, 0x55, 0xFF);
+    glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);
+    glStencilMask(0xFF);
+
+    // Draw blue
+    glUniform4f(colorUniformLocation, 0.0f, 0.0f, 1.0f, 1.0f);
+    drawQuad(drawColor, essl1_shaders::PositionAttrib(), 1.0f);
+    ASSERT_GL_NO_ERROR();
+
+    // Create framebuffer as blit target.
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
+
+    glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color, 0);
+
+    GLRenderbuffer depthStencil;
+    glBindRenderbuffer(GL_RENDERBUFFER, depthStencil);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, kSize, kSize);
+    glFramebufferRenderbuffer(GL_DRAW_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER,
+                              depthStencil);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_DRAW_FRAMEBUFFER);
+
+    // Blit depth/stencil
+    glBlitFramebuffer(0, 0, kSize, kSize, 0, 0, kSize, kSize,
+                      GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT, GL_NEAREST);
+
+    // Draw into the framebuffer that was the destination of blit, verifying that depth and stencil
+    // values are correct.
+
+    // If depth is not 1, rendering would fail.
+    glDepthFunc(GL_LESS);
+
+    // If stencil is not 0x55, rendering would fail.
+    glStencilFunc(GL_EQUAL, 0x55, 0xFF);
+    glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+    glStencilMask(0xFF);
+
+    // Draw red
+    glUniform4f(colorUniformLocation, 1.0f, 0.0f, 0.0f, 1.0f);
+    drawQuad(drawColor, essl1_shaders::PositionAttrib(), 0.0f);
+    ASSERT_GL_NO_ERROR();
+
+    // Verify that the texture is now red
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(kSize - 1, 0, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(0, kSize - 1, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(kSize - 1, kSize - 1, GLColor::red);
+}
+
+// Draw, then blit depth/stencil with renderbuffers, without a color attachment. Note that this test
+// doesn't apply to depth/stencil textures as they are explicitly autoinvalidated between render
+// passes.
+//
+// This test first uses a draw call to fill in the depth/stencil buffer, then blits it to force a
+// resolve.  Then it uses a no-op draw call to start a "fullscreen" render pass followed by a
+// scissored draw to modify parts of the depth buffer:
+//
+// +--------------------+
+// |     D=1, S=0x55    |
+// |                    |
+// |     +--------+     |
+// |     |  D=0   |     |
+// |     | S=0xAA |     |
+// |     +--------+     |
+// |                    |
+// |                    |
+// +--------------------+
+//
+// Blit is used again to copy the depth/stencil attachment data, and the result is verified.
+TEST_P(MultisampledRenderToTextureES3Test, RenderbufferDrawThenBlitDepthStencilOnly)
+{
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_multisampled_render_to_texture"));
+
+    // Skip on configurations that don't support VK_KHR_depth_stencil_resolve.  See comment
+    // in RenderbufferClearThenBlitDepthStencil.
+    ANGLE_SKIP_TEST_IF(IsVulkan() && (isSwiftshader() || IsAndroid() || IsAMD()));
+
+    // http://anglebug.com/5096
+    ANGLE_SKIP_TEST_IF(IsLinux() && IsIntel() && IsVulkan());
+
+    // http://anglebug.com/5110
+    ANGLE_SKIP_TEST_IF(IsD3D());
+
+    constexpr GLsizei kSize = 64;
+
+    GLFramebuffer fboMS;
+    glBindFramebuffer(GL_FRAMEBUFFER, fboMS);
+
+    // Create framebuffer to draw into, with depth/stencil attachment only.
+    GLRenderbuffer depthStencilMS;
+    glBindRenderbuffer(GL_RENDERBUFFER, depthStencilMS);
+    glRenderbufferStorageMultisampleEXT(GL_RENDERBUFFER, 4, GL_DEPTH24_STENCIL8, kSize, kSize);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER,
+                              depthStencilMS);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    // Set up program
+    ANGLE_GL_PROGRAM(drawColor, essl1_shaders::vs::Simple(), essl1_shaders::fs::UniformColor());
+    glUseProgram(drawColor);
+    GLint colorUniformLocation =
+        glGetUniformLocation(drawColor, angle::essl1_shaders::ColorUniform());
+    ASSERT_NE(colorUniformLocation, -1);
+    glUniform4f(colorUniformLocation, 1.0f, 0.0f, 0.0f, 1.0f);
+
+    // Output depth/stencil through draw
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_ALWAYS);
+
+    glEnable(GL_STENCIL_TEST);
+    glStencilFunc(GL_ALWAYS, 0x55, 0xFF);
+    glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);
+    glStencilMask(0xFF);
+
+    // Draw.  Depth/stencil is now:
+    //
+    // +--------------------+
+    // |     D=1, S=0x55    |
+    // |                    |
+    // |                    |
+    // |                    |
+    // |                    |
+    // |                    |
+    // |                    |
+    // |                    |
+    // +--------------------+
+    drawQuad(drawColor, essl1_shaders::PositionAttrib(), 1.0f);
+    ASSERT_GL_NO_ERROR();
+
+    // Create framebuffer as blit target.
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
+
+    GLRenderbuffer depthStencil;
+    glBindRenderbuffer(GL_RENDERBUFFER, depthStencil);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, kSize, kSize);
+    glFramebufferRenderbuffer(GL_DRAW_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER,
+                              depthStencil);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_DRAW_FRAMEBUFFER);
+
+    // Blit depth/stencil
+    glBlitFramebuffer(0, 0, kSize, kSize, 0, 0, kSize, kSize,
+                      GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT, GL_NEAREST);
+
+    // Disable depth/stencil and draw again.  Depth/stencil is not modified.
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fboMS);
+    glDisable(GL_DEPTH_TEST);
+    glDisable(GL_STENCIL_TEST);
+    drawQuad(drawColor, essl1_shaders::PositionAttrib(), 0.0f);
+    ASSERT_GL_NO_ERROR();
+
+    // Enable depth/stencil and do a scissored draw.  Depth/stencil is now:
+    //
+    // +--------------------+
+    // |     D=1, S=0x55    |
+    // |                    |
+    // |     +--------+     |
+    // |     |  D=0   |     |
+    // |     | S=0xAA |     |
+    // |     +--------+     |
+    // |                    |
+    // |                    |
+    // +--------------------+
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_STENCIL_TEST);
+    glStencilFunc(GL_ALWAYS, 0xAA, 0xFF);
+    glEnable(GL_SCISSOR_TEST);
+    glScissor(kSize / 4, kSize / 4, kSize / 2, kSize / 2);
+    drawQuad(drawColor, essl1_shaders::PositionAttrib(), -1.0f);
+    glDisable(GL_SCISSOR_TEST);
+    ASSERT_GL_NO_ERROR();
+
+    // Blit depth/stencil again.
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
+    glBlitFramebuffer(0, 0, kSize, kSize, 0, 0, kSize, kSize,
+                      GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT, GL_NEAREST);
+    ASSERT_GL_NO_ERROR();
+
+    // Draw into the framebuffer that was the destination of blit, verifying that depth and stencil
+    // values are correct.
+    GLTexture color;
+    glBindTexture(GL_TEXTURE_2D, color);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color, 0);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_DRAW_FRAMEBUFFER);
+
+    // First, verify the outside border, where D=1 and S=0x55
+    glDepthFunc(GL_LESS);
+    glStencilFunc(GL_EQUAL, 0x55, 0xFF);
+    glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+    glStencilMask(0xFF);
+    ASSERT_GL_NO_ERROR();
+
+    // Draw green
+    glUniform4f(colorUniformLocation, 0.0f, 1.0f, 0.0f, 1.0f);
+    drawQuad(drawColor, essl1_shaders::PositionAttrib(), 0.95f);
+    ASSERT_GL_NO_ERROR();
+
+    // Then, verify the center, where D=0 and S=0xAA
+    glDepthFunc(GL_GREATER);
+    glStencilFunc(GL_EQUAL, 0xAA, 0xFF);
+    glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+    glStencilMask(0xFF);
+
+    // Draw blue
+    glUniform4f(colorUniformLocation, 0.0f, 0.0f, 1.0f, 1.0f);
+    drawQuad(drawColor, essl1_shaders::PositionAttrib(), -0.95f);
+    ASSERT_GL_NO_ERROR();
+
+    // Verify that the border is now green
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, fbo);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+    EXPECT_PIXEL_COLOR_EQ(kSize - 1, 0, GLColor::green);
+    EXPECT_PIXEL_COLOR_EQ(0, kSize - 1, GLColor::green);
+    EXPECT_PIXEL_COLOR_EQ(kSize - 1, kSize - 1, GLColor::green);
+
+    // Verify that the center is now blue
+    EXPECT_PIXEL_COLOR_EQ(kSize / 4, kSize / 4, GLColor::blue);
+    EXPECT_PIXEL_COLOR_EQ(3 * kSize / 4 - 1, kSize / 4, GLColor::blue);
+    EXPECT_PIXEL_COLOR_EQ(kSize / 4, 3 * kSize / 4 - 1, GLColor::blue);
+    EXPECT_PIXEL_COLOR_EQ(3 * kSize / 4 - 1, 3 * kSize / 4 - 1, GLColor::blue);
+    EXPECT_PIXEL_COLOR_EQ(kSize / 2, kSize / 2, GLColor::blue);
 }
 
 // Test the depth read/write mode change within the renderpass while there is color unresolve
@@ -2139,10 +2646,6 @@ void MultisampledRenderToTextureES31Test::drawCopyThenBlendAllAttachmentsMixed(b
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_multisampled_render_to_texture"));
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_multisampled_render_to_texture2"));
 
-    // The Vulkan backend doesn't appropriately disable blend for integer attachments.  This causes
-    // an assertion failure within swiftshader.  http://anglebug.com/4583
-    ANGLE_SKIP_TEST_IF(isSwiftshader());
-
     GLint maxDrawBuffers = 0;
     glGetIntegerv(GL_MAX_DRAW_BUFFERS, &maxDrawBuffers);
 
@@ -2307,6 +2810,204 @@ TEST_P(MultisampledRenderToTextureES31Test, DrawCopyThenBlendAllAttachmentsMixed
 TEST_P(MultisampledRenderToTextureES31Test, RenderbufferDrawCopyThenBlendAllAttachmentsMixed)
 {
     drawCopyThenBlendAllAttachmentsMixed(true);
+}
+
+void MultisampledRenderToTextureES3Test::renderbufferUnresolveColorAndDepthStencilThenTwoColors(
+    bool withDepth,
+    bool withStencil)
+{
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_multisampled_render_to_texture"));
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_multisampled_render_to_texture2"));
+
+    // http://anglebug.com/5083
+    ANGLE_SKIP_TEST_IF(IsWindows() && IsAMD() && IsVulkan());
+
+    // http://anglebug.com/5096
+    ANGLE_SKIP_TEST_IF(IsLinux() && IsIntel() && IsVulkan());
+
+    constexpr GLsizei kSize = 64;
+
+    setupCopyTexProgram();
+
+    GLFramebuffer fboColorAndDepthStencil;
+    glBindFramebuffer(GL_FRAMEBUFFER, fboColorAndDepthStencil);
+
+    // Create framebuffer to draw into, with both color and depth/stencil attachments.
+    GLTexture color1;
+    glBindTexture(GL_TEXTURE_2D, color1);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glFramebufferTexture2DMultisampleEXT(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
+                                         color1, 0, 4);
+
+    GLenum depthStencilFormat = GL_DEPTH24_STENCIL8;
+    GLenum depthStencilTarget = GL_DEPTH_STENCIL_ATTACHMENT;
+
+    ASSERT_TRUE(withDepth || withStencil);
+    if (withDepth && !withStencil)
+    {
+        depthStencilFormat = GL_DEPTH_COMPONENT24;
+        depthStencilTarget = GL_DEPTH_ATTACHMENT;
+    }
+    if (!withDepth && withStencil)
+    {
+        depthStencilFormat = GL_STENCIL_INDEX8;
+        depthStencilTarget = GL_STENCIL_ATTACHMENT;
+    }
+
+    GLRenderbuffer depthStencil;
+    glBindRenderbuffer(GL_RENDERBUFFER, depthStencil);
+    glRenderbufferStorageMultisampleEXT(GL_RENDERBUFFER, 4, depthStencilFormat, kSize, kSize);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, depthStencilTarget, GL_RENDERBUFFER, depthStencil);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    // Set viewport and clear depth/stencil
+    glViewport(0, 0, kSize, kSize);
+    glClearDepthf(1);
+    glClearStencil(0x55);
+    glClear(GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
+    // If depth is not cleared to 1, rendering would fail.
+    if (withDepth)
+    {
+        glEnable(GL_DEPTH_TEST);
+        glDepthFunc(GL_LESS);
+    }
+
+    // If stencil is not cleared to 0x55, rendering would fail.
+    if (withStencil)
+    {
+        glEnable(GL_STENCIL_TEST);
+        glStencilFunc(GL_EQUAL, 0x55, 0xFF);
+        glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+        glStencilMask(0xFF);
+    }
+
+    // Set up program
+    ANGLE_GL_PROGRAM(drawColor, essl1_shaders::vs::Simple(), essl1_shaders::fs::UniformColor());
+    glUseProgram(drawColor);
+    GLint colorUniformLocation =
+        glGetUniformLocation(drawColor, angle::essl1_shaders::ColorUniform());
+    ASSERT_NE(colorUniformLocation, -1);
+
+    // Draw red
+    glUniform4f(colorUniformLocation, 1.0f, 0.0f, 0.0f, 1.0f);
+    drawQuad(drawColor, essl1_shaders::PositionAttrib(), 0.25f);
+    ASSERT_GL_NO_ERROR();
+
+    // Create a texture and copy into it.
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 0, 0, kSize, kSize, 0);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    ASSERT_GL_NO_ERROR();
+
+    // Draw again into the framebuffer, this time blending.  This tests that both the color and
+    // depth/stencil data are preserved after the resolve incurred by the copy above.
+    glUniform4f(colorUniformLocation, 0.0f, 1.0f, 0.0f, 0.5f);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    drawQuad(drawColor, essl1_shaders::PositionAttrib(), 0.0f);
+    ASSERT_GL_NO_ERROR();
+
+    // Verify that the texture is now yellow
+    const GLColor kExpected(127, 127, 0, 191);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, kExpected, 1);
+    EXPECT_PIXEL_COLOR_NEAR(kSize - 1, 0, kExpected, 1);
+    EXPECT_PIXEL_COLOR_NEAR(0, kSize - 1, kExpected, 1);
+    EXPECT_PIXEL_COLOR_NEAR(kSize - 1, kSize - 1, kExpected, 1);
+
+    // For completeness, verify that the texture used as copy target is red.
+    const GLColor expectedCopyResult(255, 0, 0, 255);
+    verifyResults(texture, expectedCopyResult, kSize, 0, 0, kSize, kSize);
+
+    // Now create a framebuffer with two color attachments and do something similar.  This makes
+    // sure that the fact that both these framebuffers have 2 attachments does not cause confusion,
+    // for example by having the unresolve shader generated for the first framebuffer used for the
+    // second framebuffer.
+    GLFramebuffer fboTwoColors;
+    glBindFramebuffer(GL_FRAMEBUFFER, fboTwoColors);
+
+    GLTexture color2;
+    glBindTexture(GL_TEXTURE_2D, color2);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glFramebufferTexture2DMultisampleEXT(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
+                                         color2, 0, 4);
+
+    GLTexture color3;
+    glBindTexture(GL_TEXTURE_2D, color3);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glFramebufferTexture2DMultisampleEXT(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D,
+                                         color3, 0, 4);
+
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    glDisable(GL_DEPTH_TEST);
+    glDisable(GL_STENCIL_TEST);
+    glDisable(GL_BLEND);
+
+    constexpr GLenum kDrawBuffers[] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1};
+    glDrawBuffers(2, kDrawBuffers);
+    glReadBuffer(GL_COLOR_ATTACHMENT1);
+
+    // Setup program
+    constexpr bool kBuffersEnabled[8] = {true, true};
+
+    GLuint drawColorMRT;
+    setupUniformColorProgramMultiRenderTarget(kBuffersEnabled, &drawColorMRT);
+    glUseProgram(drawColorMRT);
+    GLint colorUniformLocationMRT =
+        glGetUniformLocation(drawColorMRT, angle::essl1_shaders::ColorUniform());
+    ASSERT_NE(colorUniformLocationMRT, -1);
+
+    // Draw blue
+    glUniform4f(colorUniformLocationMRT, 0.0f, 0.0f, 1.0f, 1.0f);
+    drawQuad(drawColorMRT, essl1_shaders::PositionAttrib(), 0.5f);
+    ASSERT_GL_NO_ERROR();
+
+    // Copy into texture
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 0, 0, kSize, kSize, 0);
+
+    // Blend.
+    glUniform4f(colorUniformLocationMRT, 0.0f, 1.0f, 0.0f, 0.5f);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    drawQuad(drawColorMRT, essl1_shaders::PositionAttrib(), 0.0f);
+    ASSERT_GL_NO_ERROR();
+
+    // Verify that the texture is now cyan
+    const GLColor kExpected2(0, 127, 127, 191);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, kExpected2, 1);
+    EXPECT_PIXEL_COLOR_NEAR(kSize - 1, 0, kExpected2, 1);
+    EXPECT_PIXEL_COLOR_NEAR(0, kSize - 1, kExpected2, 1);
+    EXPECT_PIXEL_COLOR_NEAR(kSize - 1, kSize - 1, kExpected2, 1);
+
+    // For completeness, verify that the texture used as copy target is blue.
+    const GLColor expectedCopyResult2(0, 0, 255, 255);
+    verifyResults(texture, expectedCopyResult2, kSize, 0, 0, kSize, kSize);
+}
+
+// Draw, copy, then blend once on a framebuffer with color and depth attachments, and once with two
+// color attachments.  Tests that unresolve is done correctly on two framebuffers with the same
+// number of attachments, but differing in depth being there.  Note that this test doesn't apply to
+// depth/stencil textures as they are explicitly autoinvalidated between render passes.
+TEST_P(MultisampledRenderToTextureES3Test, RenderbufferUnresolveColorAndDepthThenTwoColors)
+{
+    renderbufferUnresolveColorAndDepthStencilThenTwoColors(true, false);
+}
+
+// Similar to RenderbufferUnresolveColorAndDepthThenTwoColors, but with stencil.
+TEST_P(MultisampledRenderToTextureES3Test, RenderbufferUnresolveColorAndStencilThenTwoColors)
+{
+    renderbufferUnresolveColorAndDepthStencilThenTwoColors(false, true);
+}
+
+// Similar to RenderbufferUnresolveColorAndDepthThenTwoColors, but with depth and stencil.
+TEST_P(MultisampledRenderToTextureES3Test, RenderbufferUnresolveColorAndDepthStencilThenTwoColors)
+{
+    renderbufferUnresolveColorAndDepthStencilThenTwoColors(true, true);
 }
 
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND_ES31(MultisampledRenderToTextureTest);

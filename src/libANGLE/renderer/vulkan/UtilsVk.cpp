@@ -272,7 +272,7 @@ uint32_t GetGenerateMipmapFlags(ContextVk *contextVk, const vk::Format &format)
     return flags;
 }
 
-enum UnresolveAttachmentType
+enum UnresolveColorAttachmentType
 {
     kUnresolveTypeUnused = 0,
     kUnresolveTypeFloat  = 1,
@@ -280,17 +280,19 @@ enum UnresolveAttachmentType
     kUnresolveTypeUint   = 3,
 };
 
-uint32_t GetUnresolveFlags(uint32_t attachmentCount,
-                           const gl::DrawBuffersArray<vk::ImageHelper *> &src,
-                           gl::DrawBuffersArray<UnresolveAttachmentType> *attachmentTypesOut)
+uint32_t GetUnresolveFlags(uint32_t colorAttachmentCount,
+                           const gl::DrawBuffersArray<vk::ImageHelper *> &colorSrc,
+                           bool unresolveDepth,
+                           bool unresolveStencil,
+                           gl::DrawBuffersArray<UnresolveColorAttachmentType> *attachmentTypesOut)
 {
     uint32_t flags = 0;
 
-    for (uint32_t attachmentIndex = 0; attachmentIndex < attachmentCount; ++attachmentIndex)
+    for (uint32_t attachmentIndex = 0; attachmentIndex < colorAttachmentCount; ++attachmentIndex)
     {
-        const angle::Format &format = src[attachmentIndex]->getFormat().intendedFormat();
+        const angle::Format &format = colorSrc[attachmentIndex]->getFormat().intendedFormat();
 
-        UnresolveAttachmentType type = kUnresolveTypeFloat;
+        UnresolveColorAttachmentType type = kUnresolveTypeFloat;
         if (format.isSint())
         {
             type = kUnresolveTypeSint;
@@ -302,9 +304,22 @@ uint32_t GetUnresolveFlags(uint32_t attachmentCount,
 
         (*attachmentTypesOut)[attachmentIndex] = type;
 
-        // |flags| is comprised of |attachmentCount| values from |UnresolveAttachmentType|, each
-        // taking up 2 bits.
+        // |flags| is comprised of |colorAttachmentCount| values from
+        // |UnresolveColorAttachmentType|, each taking up 2 bits.
         flags |= type << (2 * attachmentIndex);
+    }
+
+    // Additionally, two bits are used for depth and stencil unresolve.
+    constexpr uint32_t kDepthUnresolveFlagBit   = 2 * gl::IMPLEMENTATION_MAX_DRAW_BUFFERS;
+    constexpr uint32_t kStencilUnresolveFlagBit = kDepthUnresolveFlagBit + 1;
+    if (unresolveDepth)
+    {
+        flags |= 1 << kDepthUnresolveFlagBit;
+    }
+
+    if (unresolveStencil)
+    {
+        flags |= 1 << kStencilUnresolveFlagBit;
     }
 
     return flags;
@@ -348,10 +363,29 @@ void CalculateResolveOffset(const UtilsVk::BlitResolveParameters &params, int32_
     offset[1] = params.destOffset[1] - params.srcOffset[1] * srcOffsetFactorY;
 }
 
+// Sets the appropriate settings in the pipeline for the shader to output stencil.  Requires the
+// shader stencil export extension.
+void SetStencilForShaderExport(ContextVk *contextVk, vk::GraphicsPipelineDesc *desc)
+{
+    ASSERT(contextVk->getRenderer()->getFeatures().supportsShaderStencilExport.enabled);
+
+    const uint8_t completeMask    = 0xFF;
+    const uint8_t unusedReference = 0x00;
+
+    desc->setStencilTestEnabled(true);
+    desc->setStencilFrontFuncs(unusedReference, VK_COMPARE_OP_ALWAYS, completeMask);
+    desc->setStencilBackFuncs(unusedReference, VK_COMPARE_OP_ALWAYS, completeMask);
+    desc->setStencilFrontOps(VK_STENCIL_OP_REPLACE, VK_STENCIL_OP_REPLACE, VK_STENCIL_OP_REPLACE);
+    desc->setStencilBackOps(VK_STENCIL_OP_REPLACE, VK_STENCIL_OP_REPLACE, VK_STENCIL_OP_REPLACE);
+    desc->setStencilFrontWriteMask(completeMask);
+    desc->setStencilBackWriteMask(completeMask);
+}
+
 // Creates a shader that looks like the following, based on the number and types of unresolve
 // attachments.
 //
 //     #version 450 core
+//     #extension GL_ARB_shader_stencil_export : require
 //
 //     layout(location = 0) out vec4 colorOut0;
 //     layout(location = 1) out ivec4 colorOut1;
@@ -359,26 +393,37 @@ void CalculateResolveOffset(const UtilsVk::BlitResolveParameters &params, int32_
 //     layout(input_attachment_index = 0, set = 0, binding = 0) uniform subpassInput colorIn0;
 //     layout(input_attachment_index = 1, set = 0, binding = 1) uniform isubpassInput colorIn1;
 //     layout(input_attachment_index = 2, set = 0, binding = 2) uniform usubpassInput colorIn2;
+//     layout(input_attachment_index = 3, set = 0, binding = 3) uniform subpassInput depthIn;
+//     layout(input_attachment_index = 3, set = 0, binding = 4) uniform usubpassInput stencilIn;
 //
 //     void main()
 //     {
 //         colorOut0 = subpassLoad(colorIn0);
 //         colorOut1 = subpassLoad(colorIn1);
 //         colorOut2 = subpassLoad(colorIn2);
+//         gl_FragDepth = subpassLoad(depthIn).x;
+//         gl_FragStencilRefARB = int(subpassLoad(stencilIn).x);
 //     }
 angle::Result MakeUnresolveFragShader(
     vk::Context *context,
-    uint32_t attachmentCount,
-    gl::DrawBuffersArray<UnresolveAttachmentType> &attachmentTypes,
+    uint32_t colorAttachmentCount,
+    gl::DrawBuffersArray<UnresolveColorAttachmentType> &colorAttachmentTypes,
+    bool unresolveDepth,
+    bool unresolveStencil,
     SpirvBlob *spirvBlobOut)
 {
     std::ostringstream source;
 
     source << "#version 450 core\n";
 
-    for (uint32_t attachmentIndex = 0; attachmentIndex < attachmentCount; ++attachmentIndex)
+    if (unresolveStencil)
     {
-        const UnresolveAttachmentType type = attachmentTypes[attachmentIndex];
+        source << "#extension GL_ARB_shader_stencil_export : require\n";
+    }
+
+    for (uint32_t attachmentIndex = 0; attachmentIndex < colorAttachmentCount; ++attachmentIndex)
+    {
+        const UnresolveColorAttachmentType type = colorAttachmentTypes[attachmentIndex];
         ASSERT(type != kUnresolveTypeUnused);
 
         const char *prefix =
@@ -387,16 +432,43 @@ angle::Result MakeUnresolveFragShader(
         source << "layout(location=" << attachmentIndex << ") out " << prefix << "vec4 colorOut"
                << attachmentIndex << ";\n";
         source << "layout(input_attachment_index=" << attachmentIndex
-               << ", set=0, binding=" << attachmentIndex << ") uniform " << prefix
-               << "subpassInput colorIn" << attachmentIndex << ";\n";
+               << ", set=" << DescriptorSetIndex::InternalShader << ", binding=" << attachmentIndex
+               << ") uniform " << prefix << "subpassInput colorIn" << attachmentIndex << ";\n";
+    }
+
+    const uint32_t depthStencilInputIndex = colorAttachmentCount;
+    uint32_t depthStencilBindingIndex     = colorAttachmentCount;
+    if (unresolveDepth)
+    {
+        source << "layout(input_attachment_index=" << depthStencilInputIndex
+               << ", set=" << DescriptorSetIndex::InternalShader
+               << ", binding=" << depthStencilBindingIndex << ") uniform subpassInput depthIn;\n";
+        ++depthStencilBindingIndex;
+    }
+    if (unresolveStencil)
+    {
+        source << "layout(input_attachment_index=" << depthStencilInputIndex
+               << ", set=" << DescriptorSetIndex::InternalShader
+               << ", binding=" << depthStencilBindingIndex
+               << ") uniform usubpassInput stencilIn;\n";
     }
 
     source << "void main(){\n";
 
-    for (uint32_t attachmentIndex = 0; attachmentIndex < attachmentCount; ++attachmentIndex)
+    for (uint32_t attachmentIndex = 0; attachmentIndex < colorAttachmentCount; ++attachmentIndex)
     {
         source << "colorOut" << attachmentIndex << " = subpassLoad(colorIn" << attachmentIndex
                << ");\n";
+    }
+
+    if (unresolveDepth)
+    {
+        source << "gl_FragDepth = subpassLoad(depthIn).x;\n";
+    }
+
+    if (unresolveStencil)
+    {
+        source << "gl_FragStencilRefARB = int(subpassLoad(stencilIn).x);\n";
     }
 
     source << "}\n";
@@ -405,10 +477,13 @@ angle::Result MakeUnresolveFragShader(
                                                  spirvBlobOut);
 }
 
-angle::Result GetUnresolveFrag(vk::Context *context,
-                               uint32_t attachmentCount,
-                               gl::DrawBuffersArray<UnresolveAttachmentType> &attachmentTypes,
-                               vk::RefCounted<vk::ShaderAndSerial> *shader)
+angle::Result GetUnresolveFrag(
+    vk::Context *context,
+    uint32_t colorAttachmentCount,
+    gl::DrawBuffersArray<UnresolveColorAttachmentType> &colorAttachmentTypes,
+    bool unresolveDepth,
+    bool unresolveStencil,
+    vk::RefCounted<vk::ShaderAndSerial> *shader)
 {
     if (shader->get().valid())
     {
@@ -416,7 +491,8 @@ angle::Result GetUnresolveFrag(vk::Context *context,
     }
 
     SpirvBlob shaderCode;
-    ANGLE_TRY(MakeUnresolveFragShader(context, attachmentCount, attachmentTypes, &shaderCode));
+    ANGLE_TRY(MakeUnresolveFragShader(context, colorAttachmentCount, colorAttachmentTypes,
+                                      unresolveDepth, unresolveStencil, &shaderCode));
 
     // Create shader lazily. Access will need to be locked for multi-threading.
     return vk::InitShaderAndSerial(context, &shader->get(), shaderCode.data(),
@@ -813,7 +889,7 @@ angle::Result UtilsVk::ensureUnresolveResourcesInitialized(ContextVk *contextVk,
         return angle::Result::Continue;
     }
 
-    gl::DrawBuffersArray<VkDescriptorPoolSize> setSizes;
+    vk::FramebufferAttachmentArray<VkDescriptorPoolSize> setSizes;
     std::fill(setSizes.begin(), setSizes.end(),
               VkDescriptorPoolSize{VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT, 1});
 
@@ -1577,20 +1653,7 @@ angle::Result UtilsVk::blitResolveImpl(ContextVk *contextVk,
 
     if (blitStencil)
     {
-        ASSERT(contextVk->getRenderer()->getFeatures().supportsShaderStencilExport.enabled);
-
-        const uint8_t completeMask    = 0xFF;
-        const uint8_t unusedReference = 0x00;
-
-        pipelineDesc.setStencilTestEnabled(true);
-        pipelineDesc.setStencilFrontFuncs(unusedReference, VK_COMPARE_OP_ALWAYS, completeMask);
-        pipelineDesc.setStencilBackFuncs(unusedReference, VK_COMPARE_OP_ALWAYS, completeMask);
-        pipelineDesc.setStencilFrontOps(VK_STENCIL_OP_REPLACE, VK_STENCIL_OP_REPLACE,
-                                        VK_STENCIL_OP_REPLACE);
-        pipelineDesc.setStencilBackOps(VK_STENCIL_OP_REPLACE, VK_STENCIL_OP_REPLACE,
-                                       VK_STENCIL_OP_REPLACE);
-        pipelineDesc.setStencilFrontWriteMask(completeMask);
-        pipelineDesc.setStencilBackWriteMask(completeMask);
+        SetStencilForShaderExport(contextVk, &pipelineDesc);
     }
 
     VkViewport viewport;
@@ -2144,41 +2207,92 @@ angle::Result UtilsVk::unresolve(ContextVk *contextVk,
                                  const UnresolveParameters &params)
 {
     // Get attachment count and pointers to resolve images and views.
-    gl::DrawBuffersArray<vk::ImageHelper *> src;
-    gl::DrawBuffersArray<const vk::ImageView *> srcView;
+    gl::DrawBuffersArray<vk::ImageHelper *> colorSrc         = {};
+    gl::DrawBuffersArray<const vk::ImageView *> colorSrcView = {};
 
-    ASSERT(params.unresolveMask.any());
+    vk::DeviceScoped<vk::ImageView> depthView(contextVk->getDevice());
+    vk::DeviceScoped<vk::ImageView> stencilView(contextVk->getDevice());
+
+    const vk::ImageView *depthSrcView   = nullptr;
+    const vk::ImageView *stencilSrcView = nullptr;
 
     // The subpass that initializes the multisampled-render-to-texture attachments packs the
     // attachments that need to be unresolved, so the attachment indices of this subpass are not the
     // same.  See InitializeUnresolveSubpass for details.
     vk::PackedAttachmentIndex colorIndexVk(0);
-    for (size_t colorIndexGL : params.unresolveMask)
+    for (size_t colorIndexGL : params.unresolveColorMask)
     {
         RenderTargetVk *colorRenderTarget = framebuffer->getColorDrawRenderTarget(colorIndexGL);
 
         ASSERT(colorRenderTarget->hasResolveAttachment());
         ASSERT(colorRenderTarget->isImageTransient());
 
-        src[colorIndexVk.get()] = &colorRenderTarget->getResolveImageForRenderPass();
-        ANGLE_TRY(colorRenderTarget->getResolveImageView(contextVk, &srcView[colorIndexVk.get()]));
+        colorSrc[colorIndexVk.get()] = &colorRenderTarget->getResolveImageForRenderPass();
+        ANGLE_TRY(
+            colorRenderTarget->getResolveImageView(contextVk, &colorSrcView[colorIndexVk.get()]));
 
         ++colorIndexVk;
     }
 
-    const uint32_t attachmentCount = colorIndexVk.get();
-    const Function function        = static_cast<Function>(
-        static_cast<uint32_t>(Function::Unresolve1Attachment) + attachmentCount - 1);
-    ANGLE_TRY(ensureUnresolveResourcesInitialized(contextVk, function, attachmentCount));
+    if (params.unresolveDepth || params.unresolveStencil)
+    {
+        RenderTargetVk *depthStencilRenderTarget = framebuffer->getDepthStencilRenderTarget();
+
+        ASSERT(depthStencilRenderTarget->hasResolveAttachment());
+        ASSERT(depthStencilRenderTarget->isImageTransient());
+
+        vk::ImageHelper *depthStencilSrc =
+            &depthStencilRenderTarget->getResolveImageForRenderPass();
+
+        // The resolved depth/stencil image is necessarily single-sampled.
+        ASSERT(depthStencilSrc->getSamples() == 1);
+        gl::TextureType textureType = vk::Get2DTextureType(depthStencilSrc->getLayerCount(), 1);
+
+        const vk::LevelIndex levelIndex = gl_vk::GetLevelIndex(
+            depthStencilRenderTarget->getLevelIndex(), depthStencilSrc->getBaseLevel());
+        const uint32_t layerIndex = depthStencilRenderTarget->getLayerIndex();
+
+        if (params.unresolveDepth)
+        {
+            ANGLE_TRY(depthStencilSrc->initLayerImageView(
+                contextVk, textureType, VK_IMAGE_ASPECT_DEPTH_BIT, gl::SwizzleState(),
+                &depthView.get(), levelIndex, 1, layerIndex, 1));
+            depthSrcView = &depthView.get();
+        }
+
+        if (params.unresolveStencil)
+        {
+            ANGLE_TRY(depthStencilSrc->initLayerImageView(
+                contextVk, textureType, VK_IMAGE_ASPECT_STENCIL_BIT, gl::SwizzleState(),
+                &stencilView.get(), levelIndex, 1, layerIndex, 1));
+            stencilSrcView = &stencilView.get();
+        }
+    }
+
+    const uint32_t colorAttachmentCount = colorIndexVk.get();
+    const uint32_t depthStencilBindingCount =
+        (params.unresolveDepth ? 1 : 0) + (params.unresolveStencil ? 1 : 0);
+    const uint32_t totalBindingCount = colorAttachmentCount + depthStencilBindingCount;
+
+    ASSERT(totalBindingCount > 0);
+    const Function function = static_cast<Function>(
+        static_cast<uint32_t>(Function::Unresolve1Attachment) + totalBindingCount - 1);
+
+    ANGLE_TRY(ensureUnresolveResourcesInitialized(contextVk, function, totalBindingCount));
 
     vk::GraphicsPipelineDesc pipelineDesc;
     pipelineDesc.initDefaults();
     pipelineDesc.setCullMode(VK_CULL_MODE_NONE);
     pipelineDesc.setRasterizationSamples(framebuffer->getSamples());
     pipelineDesc.setRenderPassDesc(framebuffer->getRenderPassDesc());
-    // Note: depth test is disabled by default so this should be unnecessary, but works around an
-    // Intel bug on windows.  http://anglebug.com/3348
-    pipelineDesc.setDepthWriteEnabled(false);
+    pipelineDesc.setDepthTestEnabled(params.unresolveDepth);
+    pipelineDesc.setDepthWriteEnabled(params.unresolveDepth);
+    pipelineDesc.setDepthFunc(VK_COMPARE_OP_ALWAYS);
+
+    if (params.unresolveStencil)
+    {
+        SetStencilForShaderExport(contextVk, &pipelineDesc);
+    }
 
     VkViewport viewport;
     gl::Rectangle completeRenderArea = framebuffer->getRotatedCompleteRenderArea(contextVk);
@@ -2193,31 +2307,48 @@ angle::Result UtilsVk::unresolve(ContextVk *contextVk,
     vk::RefCountedDescriptorPoolBinding descriptorPoolBinding;
     ANGLE_TRY(allocateDescriptorSet(contextVk, function, &descriptorPoolBinding, &descriptorSet));
 
-    gl::DrawBuffersArray<VkDescriptorImageInfo> inputImageInfo = {};
-    for (uint32_t attachmentIndex = 0; attachmentIndex < attachmentCount; ++attachmentIndex)
+    vk::FramebufferAttachmentArray<VkDescriptorImageInfo> inputImageInfo = {};
+    for (uint32_t attachmentIndex = 0; attachmentIndex < colorAttachmentCount; ++attachmentIndex)
     {
-        inputImageInfo[attachmentIndex].imageView   = srcView[attachmentIndex]->getHandle();
+        inputImageInfo[attachmentIndex].imageView   = colorSrcView[attachmentIndex]->getHandle();
         inputImageInfo[attachmentIndex].imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+    }
+
+    uint32_t depthStencilBindingIndex = colorAttachmentCount;
+    if (params.unresolveDepth)
+    {
+        inputImageInfo[depthStencilBindingIndex].imageView = depthSrcView->getHandle();
+        inputImageInfo[depthStencilBindingIndex].imageLayout =
+            VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+        ++depthStencilBindingIndex;
+    }
+    if (params.unresolveStencil)
+    {
+        inputImageInfo[depthStencilBindingIndex].imageView = stencilSrcView->getHandle();
+        inputImageInfo[depthStencilBindingIndex].imageLayout =
+            VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
     }
 
     VkWriteDescriptorSet writeInfo = {};
     writeInfo.sType                = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
     writeInfo.dstSet               = descriptorSet;
     writeInfo.dstBinding           = 0;
-    writeInfo.descriptorCount      = attachmentCount;
+    writeInfo.descriptorCount      = totalBindingCount;
     writeInfo.descriptorType       = VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT;
     writeInfo.pImageInfo           = inputImageInfo.data();
 
     vkUpdateDescriptorSets(contextVk->getDevice(), 1, &writeInfo, 0, nullptr);
 
-    gl::DrawBuffersArray<UnresolveAttachmentType> attachmentTypes;
-    uint32_t flags = GetUnresolveFlags(attachmentCount, src, &attachmentTypes);
+    gl::DrawBuffersArray<UnresolveColorAttachmentType> colorAttachmentTypes;
+    uint32_t flags = GetUnresolveFlags(colorAttachmentCount, colorSrc, params.unresolveDepth,
+                                       params.unresolveStencil, &colorAttachmentTypes);
 
     vk::ShaderLibrary &shaderLibrary                    = contextVk->getShaderLibrary();
     vk::RefCounted<vk::ShaderAndSerial> *vertexShader   = nullptr;
     vk::RefCounted<vk::ShaderAndSerial> *fragmentShader = &mUnresolveFragShaders[flags];
     ANGLE_TRY(shaderLibrary.getFullScreenQuad_vert(contextVk, 0, &vertexShader));
-    ANGLE_TRY(GetUnresolveFrag(contextVk, attachmentCount, attachmentTypes, fragmentShader));
+    ANGLE_TRY(GetUnresolveFrag(contextVk, colorAttachmentCount, colorAttachmentTypes,
+                               params.unresolveDepth, params.unresolveStencil, fragmentShader));
 
     vk::CommandBuffer *commandBuffer =
         &contextVk->getStartedRenderPassCommands().getCommandBuffer();
@@ -2225,10 +2356,17 @@ angle::Result UtilsVk::unresolve(ContextVk *contextVk,
     ANGLE_TRY(setupProgram(contextVk, function, fragmentShader, vertexShader,
                            &mUnresolvePrograms[flags], &pipelineDesc, descriptorSet, nullptr, 0,
                            commandBuffer));
-
     // This draw call is made before ContextVk gets a chance to start the occlusion query.  As such,
     // occlusion queries are not enabled.
     commandBuffer->draw(3, 0);
+
+    // Release temporary views
+    vk::ImageView depthViewObject   = depthView.release();
+    vk::ImageView stencilViewObject = stencilView.release();
+
+    contextVk->addGarbage(&depthViewObject);
+    contextVk->addGarbage(&stencilViewObject);
+
     return angle::Result::Continue;
 }
 

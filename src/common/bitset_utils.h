@@ -511,6 +511,9 @@ template <size_t N>
 using BitSet8 = BitSetT<N, uint8_t>;
 
 template <size_t N>
+using BitSet16 = BitSetT<N, uint16_t>;
+
+template <size_t N>
 using BitSet32 = BitSetT<N, uint32_t>;
 
 template <size_t N>

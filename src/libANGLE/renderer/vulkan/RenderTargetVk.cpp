@@ -125,8 +125,8 @@ void RenderTargetVk::onDepthStencilDraw(ContextVk *contextVk, bool isReadOnly)
                                           mImage);
         if (mResolveImage)
         {
-            contextVk->onImageRenderPassWrite(aspectFlags, vk::ImageLayout::DepthStencilAttachment,
-                                              mResolveImage);
+            contextVk->onImageRenderPassWrite(
+                aspectFlags, vk::ImageLayout::DepthStencilResolveAttachment, mResolveImage);
         }
     }
 
