@@ -27,6 +27,7 @@ import os
 import shutil
 import sys
 import tempfile
+import time
 import traceback
 
 # Add //src/testing into sys.path for importing xvfb and test_env, and
@@ -67,6 +68,7 @@ def temporary_dir(prefix=''):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--isolated-script-test-output', type=str, required=True)
+    parser.add_argument('--isolated-script-test-perf-output', type=str)
     parser.add_argument('--test-suite', help='Test suite to run.', default=DEFAULT_TEST_SUITE)
     parser.add_argument('--render-test-output-dir', help='Directory to store screenshots')
     parser.add_argument('--xvfb', help='Start xvfb.', action='store_true')
@@ -77,6 +79,22 @@ def main():
     if 'GTEST_TOTAL_SHARDS' in env and int(env['GTEST_TOTAL_SHARDS']) != 1:
         print('Sharding not yet implemented.')
         sys.exit(1)
+
+    results = {
+        'tests': {
+            'angle_restricted_trace_gold_tests': {}
+        },
+        'interrupted': False,
+        'seconds_since_epoch': time.time(),
+        'path_delimiter': '.',
+        'version': 3,
+        'num_failures_by_type': {
+            'PASS': 0,
+            'FAIL': 0,
+        }
+    }
+
+    result_tests = results['tests']['angle_restricted_trace_gold_tests']
 
     def run_tests(args, tests, extra_flags, env, screenshot_dir):
         for test in tests['traces']:
@@ -93,10 +111,11 @@ def main():
                 else:
                     rc = test_env.run_command_with_output(cmd, env=env, stdoutfile=tempfile_path)
 
-                if rc != 0:
-                    return rc
+                pass_fail = 'PASS' if rc == 0 else 'FAIL'
+                result_tests[test] = {'expected': 'PASS', 'actual': pass_fail}
+                results['num_failures_by_type'][pass_fail] += 1
 
-        return 0
+        return results['num_failures_by_type']['FAIL'] == 0
 
     rc = 0
     try:
@@ -120,6 +139,14 @@ def main():
     except Exception:
         traceback.print_exc()
         rc = 1
+
+    if args.isolated_script_test_output:
+        with open(args.isolated_script_test_output, 'w') as out_file:
+            out_file.write(json.dumps(results))
+
+    if args.isolated_script_test_perf_output:
+        with open(args.isolated_script_test_perf_output, 'w') as out_file:
+            out_file.write(json.dumps({}))
 
     return rc
 
