@@ -64,12 +64,33 @@ angle_shared_library("angle_restricted_traces") {
   }
 }
 
+group("goldctl") {
+  data = []
+
+  # Because this links to a CIPD dependency, which is a symlink on Unix
+  # platforms, refer to the actual executable rather than the whole directory;
+  # copying the whole directory doesn't work, at least with "mb.py zip".
+  if (is_win) {
+    data += [ "//tools/skia_goldctl/win/goldctl.exe" ]
+  } else if (is_mac) {
+    data += [ "//tools/skia_goldctl/mac/goldctl" ]
+  } else {
+    data += [ "//tools/skia_goldctl/linux/goldctl" ]
+  }
+}
+
 group("angle_restricted_trace_gold_tests") {
   testonly = true
-  data_deps = [ "$angle_root/src/tests:angle_perftests" ]
+  data_deps = [
+    ":goldctl",
+    "$angle_root/src/tests:angle_perftests",
+    "$angle_root/src/tests:angle_system_info_test",
+  ]
   data = [
     "restricted_trace_gold_tests.py",
     "restricted_traces.json",
+    "skia_gold/",
+    "//build/skia_gold_common/",
     "//testing/scripts/common.py",
     "//testing/xvfb.py",
   ]

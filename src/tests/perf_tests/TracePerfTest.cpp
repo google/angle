@@ -385,8 +385,15 @@ void TracePerfTest::saveScreenshot(const std::string &screenshotName)
         }
     }
 
-    angle::SavePNGRGB(screenshotName.c_str(), "ANGLE Screenshot", mTestParams.windowWidth,
-                      mTestParams.windowHeight, rgbData);
+    if (!angle::SavePNGRGB(screenshotName.c_str(), "ANGLE Screenshot", mTestParams.windowWidth,
+                           mTestParams.windowHeight, rgbData))
+    {
+        FAIL() << "Error saving screenshot: " << screenshotName;
+    }
+    else
+    {
+        printf("Saved screenshot: '%s'\n", screenshotName.c_str());
+    }
 
     // Finish the frame loop.
     for (uint32_t nextFrame = traceInfo.startFrame + 1; nextFrame <= traceInfo.endFrame;
