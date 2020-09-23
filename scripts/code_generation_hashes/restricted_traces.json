@@ -1,4 +1,6 @@
 {
+  "src/tests/restricted_traces/.gitignore":
+    "0eb7d74b8842c59d8b4692842bf31209",
   "src/tests/restricted_traces/angry_birds_2_1500.tar.gz.sha1":
     "44fc5437c4a84012e338b3da4b6fc28a",
   "src/tests/restricted_traces/candy_crush_500.tar.gz.sha1":
@@ -8,7 +10,7 @@
   "src/tests/restricted_traces/egypt_1500.tar.gz.sha1":
     "1d80caa37b937f83c95cd053b1bdd4ac",
   "src/tests/restricted_traces/gen_restricted_traces.py":
-    "321e6bb9078501db78299c54980f96ac",
+    "a520ef50175b1b9a20383a884e293b54",
   "src/tests/restricted_traces/manhattan_10.tar.gz.sha1":
     "752781119592a190cc02b773adf38fc3",
   "src/tests/restricted_traces/mobile_legends.tar.gz.sha1":

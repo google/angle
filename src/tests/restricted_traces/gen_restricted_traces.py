@@ -275,6 +275,13 @@ def gen_source(source_file, format_args):
     return True
 
 
+def gen_git_ignore(traces):
+    ignores = ['%s/' % trace for trace in traces] + ['%s.tar.gz' % trace for trace in traces]
+    with open('.gitignore', 'w') as out_file:
+        out_file.write('\n'.join(sorted(ignores)))
+    return True
+
+
 def read_json(json_file):
     with open(json_file) as map_file:
         return json.loads(map_file.read(), object_pairs_hook=reject_duplicate_keys)
@@ -295,7 +302,7 @@ def main():
     # auto_script parameters.
     if len(sys.argv) > 1:
         inputs = [json_file] + [get_sha1_name(trace) for trace in traces]
-        outputs = [gni_file, header_file, source_file]
+        outputs = [gni_file, header_file, source_file, '.gitignore']
 
         if sys.argv[1] == 'inputs':
             print ','.join(inputs)
@@ -337,6 +344,10 @@ def main():
 
     if not gen_source(source_file, format_args):
         print('.cpp file generation failed.')
+        return 1
+
+    if not gen_git_ignore(traces):
+        print('.gitignore file generation failed')
         return 1
 
     return 0
