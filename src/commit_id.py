@@ -12,11 +12,16 @@ import os
 
 usage = """\
 Usage: commit_id.py check                - check if git is present
+       commit_id.py position             - print commit position
        commit_id.py gen <file_to_write>  - generate commit.h"""
 
 
 def grab_output(command, cwd):
     return sp.Popen(command, stdout=sp.PIPE, shell=True, cwd=cwd).communicate()[0].strip()
+
+
+def get_commit_position(cwd):
+    return grab_output('git rev-list HEAD --count', cwd)
 
 
 if len(sys.argv) < 2:
@@ -35,6 +40,12 @@ if operation == 'check':
     else:
         print("0")
     sys.exit(0)
+elif operation == 'position':
+    if git_dir_exists:
+        print(get_commit_position(cwd))
+    else:
+        print("0")
+    sys.exit(0)
 
 if len(sys.argv) < 3 or operation != 'gen':
     sys.exit(usage)
@@ -50,7 +61,7 @@ if git_dir_exists:
     try:
         commit_id = grab_output('git rev-parse --short=%d HEAD' % commit_id_size, cwd)
         commit_date = grab_output('git show -s --format=%ci HEAD', cwd)
-        commit_position = grab_output('git rev-list HEAD --count', cwd)
+        commit_position = get_commit_position(cwd)
         enable_binary_loading = True
     except:
         pass

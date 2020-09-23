@@ -1163,6 +1163,14 @@ if (build_with_chromium && !is_component_build && is_android &&
   angle_apk("angle_chromium_apk") {
     package_name = "org.chromium.angle"
     apk_name = "AngleLibraries"
+    version_name = "ANGLE Developer Build"
+
+    if (angle_enable_commit_id) {
+      version_code =
+          exec_script("src/commit_id.py", [ "position" ], "trim string")
+    } else {
+      version_code = "0"
+    }
   }
 
   group("angle_apks") {
