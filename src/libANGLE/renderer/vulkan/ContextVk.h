@@ -75,6 +75,7 @@ class CommandQueue final : angle::NonCopyable
                               egl::ContextPriority priority,
                               const VkSubmitInfo &submitInfo,
                               const vk::Shared<vk::Fence> &sharedFence,
+                              vk::ResourceUseList *resourceList,
                               vk::GarbageList *currentGarbage,
                               vk::CommandPool *commandPool,
                               vk::PrimaryCommandBuffer &&commandBuffer);
@@ -873,6 +874,7 @@ class ContextVk : public ContextImpl, public vk::Context
     void writeAtomicCounterBufferDriverUniformOffsets(uint32_t *offsetsOut, size_t offsetsSize);
 
     angle::Result submitFrame(const VkSubmitInfo &submitInfo,
+                              vk::ResourceUseList *resourceList,
                               vk::PrimaryCommandBuffer &&commandBuffer);
     angle::Result memoryBarrierImpl(GLbitfield barriers, VkPipelineStageFlags stageMask);
 

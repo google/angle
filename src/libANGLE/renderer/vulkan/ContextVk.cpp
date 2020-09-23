@@ -583,6 +583,7 @@ angle::Result CommandQueue::submitFrame(vk::Context *context,
                                         egl::ContextPriority priority,
                                         const VkSubmitInfo &submitInfo,
                                         const vk::Shared<vk::Fence> &sharedFence,
+                                        vk::ResourceUseList *resourceList,
                                         vk::GarbageList *currentGarbage,
                                         vk::CommandPool *commandPool,
                                         vk::PrimaryCommandBuffer &&commandBuffer)
@@ -596,8 +597,8 @@ angle::Result CommandQueue::submitFrame(vk::Context *context,
     CommandBatch &batch = scopedBatch.get();
     batch.fence.copy(device, sharedFence);
 
-    ANGLE_TRY(
-        renderer->queueSubmit(context, priority, submitInfo, &batch.fence.get(), &batch.serial));
+    ANGLE_TRY(renderer->queueSubmit(context, priority, submitInfo, resourceList, &batch.fence.get(),
+                                    &batch.serial));
 
     if (!currentGarbage->empty())
     {
@@ -798,7 +799,7 @@ void ContextVk::onDestroy(const gl::Context *context)
 
     mCommandQueue.destroy(device);
 
-    mResourceUseList.releaseResourceUses();
+    mRenderer->releaseSharedResources(&mResourceUseList);
 
     mUtils.destroy(mRenderer);
 
@@ -1710,6 +1711,7 @@ void ContextVk::addOverlayUsedBuffersCount(vk::CommandBufferHelper *commandBuffe
 }
 
 angle::Result ContextVk::submitFrame(const VkSubmitInfo &submitInfo,
+                                     vk::ResourceUseList *resourceList,
                                      vk::PrimaryCommandBuffer &&commandBuffer)
 {
     if (vk::CommandBufferHelper::kEnableCommandStreamDiagnostics)
@@ -1719,7 +1721,8 @@ angle::Result ContextVk::submitFrame(const VkSubmitInfo &submitInfo,
 
     ANGLE_TRY(ensureSubmitFenceInitialized());
     ANGLE_TRY(mCommandQueue.submitFrame(this, mContextPriority, submitInfo, mSubmitFence,
-                                        &mCurrentGarbage, &mCommandPool, std::move(commandBuffer)));
+                                        resourceList, &mCurrentGarbage, &mCommandPool,
+                                        std::move(commandBuffer)));
 
     onRenderPassFinished();
     mComputeDirtyBits |= mNewComputeCommandBufferDirtyBits;
@@ -4207,16 +4210,13 @@ angle::Result ContextVk::flushImpl(const vk::Semaphore *signalSemaphore)
 
     ANGLE_VK_TRY(this, mPrimaryCommands.end());
 
-    Serial serial = getCurrentQueueSerial();
-    mResourceUseList.releaseResourceUsesAndUpdateSerials(serial);
-
     waitForSwapchainImageIfNecessary();
 
     VkSubmitInfo submitInfo = {};
     InitializeSubmitInfo(&submitInfo, mPrimaryCommands, mWaitSemaphores, mWaitSemaphoreStageMasks,
                          signalSemaphore);
 
-    ANGLE_TRY(submitFrame(submitInfo, std::move(mPrimaryCommands)));
+    ANGLE_TRY(submitFrame(submitInfo, &mResourceUseList, std::move(mPrimaryCommands)));
 
     ANGLE_TRY(startPrimaryCommandBuffer());
 

@@ -5,8 +5,8 @@
 //
 // MulithreadingTest.cpp : Tests of multithreaded rendering
 
+#include "platform/FeaturesVk.h"
 #include "test_utils/ANGLETest.h"
-
 #include "test_utils/gl_raii.h"
 #include "util/EGLWindow.h"
 
@@ -200,6 +200,111 @@ TEST_P(MultithreadingTest, MultiContextDraw)
         }
     };
     runMultithreadedGLTest(testBody, 4);
+}
+
+// Test that multiple threads can draw and read back pixels correctly.
+// Using eglSwapBuffers stresses race conditions around use of QueueSerials.
+TEST_P(MultithreadingTest, MultiContextDrawWithSwapBuffers)
+{
+    ANGLE_SKIP_TEST_IF(!platformSupportsMultithreading());
+
+    EGLWindow *window = getEGLWindow();
+    EGLDisplay dpy    = window->getDisplay();
+
+    auto testBody = [dpy](EGLSurface surface, size_t thread) {
+        constexpr size_t kIterationsPerThread = 100;
+        constexpr size_t kDrawsPerIteration   = 10;
+
+        ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::UniformColor());
+        glUseProgram(program);
+
+        GLint colorLocation = glGetUniformLocation(program, essl1_shaders::ColorUniform());
+
+        auto quadVertices = GetQuadVertices();
+
+        GLBuffer vertexBuffer;
+        glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 3 * 6, quadVertices.data(), GL_STATIC_DRAW);
+
+        GLint positionLocation = glGetAttribLocation(program, essl1_shaders::PositionAttrib());
+        glEnableVertexAttribArray(positionLocation);
+        glVertexAttribPointer(positionLocation, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+        for (size_t iteration = 0; iteration < kIterationsPerThread; iteration++)
+        {
+            // Base the clear color on the thread and iteration indexes so every clear color is
+            // unique
+            const GLColor color(static_cast<GLubyte>(thread % 255),
+                                static_cast<GLubyte>(iteration % 255), 0, 255);
+            const angle::Vector4 floatColor = color.toNormalizedVector();
+            glUniform4fv(colorLocation, 1, floatColor.data());
+
+            for (size_t draw = 0; draw < kDrawsPerIteration; draw++)
+            {
+                glDrawArrays(GL_TRIANGLES, 0, 6);
+            }
+
+            EXPECT_EGL_TRUE(eglSwapBuffers(dpy, surface));
+            EXPECT_EGL_SUCCESS();
+
+            EXPECT_PIXEL_COLOR_EQ(0, 0, color);
+        }
+    };
+    runMultithreadedGLTest(testBody, 32);
+}
+
+// Test that ANGLE handles multiple threads creating and destroying resources (vertex buffer in this
+// case). Disable defer_flush_until_endrenderpass so that glFlush will issue work to GPU in order to
+// maximize the chance we resources can be destroyed at the wrong time.
+TEST_P(MultithreadingTest, MultiContextCreateAndDeleteResources)
+{
+    ANGLE_SKIP_TEST_IF(!platformSupportsMultithreading());
+
+    EGLWindow *window = getEGLWindow();
+    EGLDisplay dpy    = window->getDisplay();
+
+    auto testBody = [dpy](EGLSurface surface, size_t thread) {
+        constexpr size_t kIterationsPerThread = 32;
+        constexpr size_t kDrawsPerIteration   = 1;
+
+        ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::UniformColor());
+        glUseProgram(program);
+
+        GLint colorLocation = glGetUniformLocation(program, essl1_shaders::ColorUniform());
+
+        auto quadVertices = GetQuadVertices();
+
+        for (size_t iteration = 0; iteration < kIterationsPerThread; iteration++)
+        {
+            GLBuffer vertexBuffer;
+            glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+            glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 3 * 6, quadVertices.data(),
+                         GL_STATIC_DRAW);
+
+            GLint positionLocation = glGetAttribLocation(program, essl1_shaders::PositionAttrib());
+            glEnableVertexAttribArray(positionLocation);
+            glVertexAttribPointer(positionLocation, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+            // Base the clear color on the thread and iteration indexes so every clear color is
+            // unique
+            const GLColor color(static_cast<GLubyte>(thread % 255),
+                                static_cast<GLubyte>(iteration % 255), 0, 255);
+            const angle::Vector4 floatColor = color.toNormalizedVector();
+            glUniform4fv(colorLocation, 1, floatColor.data());
+
+            for (size_t draw = 0; draw < kDrawsPerIteration; draw++)
+            {
+                glDrawArrays(GL_TRIANGLES, 0, 6);
+            }
+
+            EXPECT_EGL_TRUE(eglSwapBuffers(dpy, surface));
+            EXPECT_EGL_SUCCESS();
+
+            EXPECT_PIXEL_COLOR_EQ(0, 0, color);
+        }
+        glFinish();
+    };
+    runMultithreadedGLTest(testBody, 32);
 }
 
 TEST_P(MultithreadingTest, MultiCreateContext)

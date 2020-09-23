@@ -192,7 +192,7 @@ angle::Result SyncHelperNativeFence::initializeWithFd(ContextVk *contextVk, int 
         Serial serialOut;
         VkSubmitInfo submitInfo = {};
         submitInfo.sType        = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-        ANGLE_TRY(renderer->queueSubmit(contextVk, contextVk->getPriority(), submitInfo,
+        ANGLE_TRY(renderer->queueSubmit(contextVk, contextVk->getPriority(), submitInfo, nullptr,
                                         &fence.get(), &serialOut));
 
         VkFenceGetFdInfoKHR fenceGetFdInfo = {};
