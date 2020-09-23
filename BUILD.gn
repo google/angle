@@ -489,15 +489,15 @@ angle_source_set("translator_fuzzer") {
   deps = [ ":translator" ]
 }
 
-config("commit_id_config") {
+config("angle_commit_id_config") {
   include_dirs = [ "$root_gen_dir/angle" ]
-  visibility = [ ":commit_id" ]
+  visibility = [ ":angle_commit_id" ]
 }
 
-commit_id_output_file = "$root_gen_dir/angle/commit.h"
-action("commit_id") {
+_commit_id_output_file = "$root_gen_dir/angle/angle_commit.h"
+action("angle_commit_id") {
   script = "src/commit_id.py"
-  outputs = [ commit_id_output_file ]
+  outputs = [ _commit_id_output_file ]
 
   # Add git as a dependency if it is available.
   if (angle_enable_commit_id &&
@@ -513,15 +513,24 @@ action("commit_id") {
 
   args = [
     "gen",
-    rebase_path(commit_id_output_file, root_build_dir),
+    rebase_path(_commit_id_output_file, root_build_dir),
   ]
 
-  public_configs = [ ":commit_id_config" ]
+  public_configs = [ ":angle_commit_id_config" ]
+}
+
+# TODO(jmadill): Remove this. http://b/168736059
+group("commit_id") {
+  data_deps = [ ":angle_commit_id" ]
 }
 
 angle_source_set("angle_version") {
-  sources = [ "src/common/version.h" ]
-  public_deps = [ ":commit_id" ]
+  # TODO(jmadill): Remove version.h. http://b/168736059
+  sources = [
+    "src/common/angle_version.h",
+    "src/common/version.h",
+  ]
+  public_deps = [ ":angle_commit_id" ]
 }
 
 config("angle_backend_config") {

@@ -16,10 +16,10 @@
 #include <vector>
 
 #include "common/PackedEnums.h"
+#include "common/angle_version.h"
 #include "common/matrix_utils.h"
 #include "common/platform.h"
 #include "common/utilities.h"
-#include "common/version.h"
 #include "libANGLE/Buffer.h"
 #include "libANGLE/Compiler.h"
 #include "libANGLE/Display.h"

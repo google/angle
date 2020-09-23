@@ -13,7 +13,7 @@
 #include <android/native_window.h>
 #include <vulkan/vulkan.h>
 
-#include "common/version.h"
+#include "common/angle_version.h"
 #include "libANGLE/renderer/vulkan/RendererVk.h"
 #include "libANGLE/renderer/vulkan/android/HardwareBufferImageSiblingVkAndroid.h"
 #include "libANGLE/renderer/vulkan/android/WindowSurfaceVkAndroid.h"

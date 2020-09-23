@@ -8,9 +8,9 @@
 
 #include "libGLESv2/entry_points_egl.h"
 
+#include "common/angle_version.h"
 #include "common/debug.h"
 #include "common/utilities.h"
-#include "common/version.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/Display.h"
 #include "libANGLE/EGLSync.h"

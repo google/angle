@@ -7,10 +7,10 @@
 
 #include "entry_points_wgl.h"
 
+#include "common/angle_version.h"
 #include "common/debug.h"
 #include "common/event_tracer.h"
 #include "common/utilities.h"
-#include "common/version.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/Display.h"
 #include "libANGLE/EGLSync.h"
