@@ -253,40 +253,9 @@ void RendererGL::pushDebugGroup(GLenum source, GLuint id, const std::string &mes
 
 void RendererGL::popDebugGroup() {}
 
-std::string RendererGL::getVendorString() const
-{
-    return std::string(reinterpret_cast<const char *>(mFunctions->getString(GL_VENDOR)));
-}
-
 std::string RendererGL::getRendererDescription() const
 {
-    std::string nativeVendorString(
-        reinterpret_cast<const char *>(mFunctions->getString(GL_VENDOR)));
-    std::string nativeRendererString(
-        reinterpret_cast<const char *>(mFunctions->getString(GL_RENDERER)));
-
-    std::ostringstream rendererString;
-    rendererString << nativeVendorString << ", " << nativeRendererString << ", OpenGL";
-    if (mFunctions->standard == STANDARD_GL_ES)
-    {
-        rendererString << " ES";
-    }
-    rendererString << " " << mFunctions->version.major << "." << mFunctions->version.minor;
-    if (mFunctions->standard == STANDARD_GL_DESKTOP)
-    {
-        // Some drivers (NVIDIA) use a profile mask of 0 when in compatibility profile.
-        if ((mFunctions->profile & GL_CONTEXT_COMPATIBILITY_PROFILE_BIT) != 0 ||
-            (mFunctions->isAtLeastGL(gl::Version(3, 2)) && mFunctions->profile == 0))
-        {
-            rendererString << " compatibility";
-        }
-        else if ((mFunctions->profile & GL_CONTEXT_CORE_PROFILE_BIT) != 0)
-        {
-            rendererString << " core";
-        }
-    }
-
-    return rendererString.str();
+    return std::string(reinterpret_cast<const char *>(mFunctions->getString(GL_RENDERER)));
 }
 
 const gl::Version &RendererGL::getMaxSupportedESVersion() const

@@ -478,6 +478,9 @@ class Renderer11 : public RendererD3D
 
     void setGlobalDebugAnnotator() override;
 
+    std::string getVendorString() const override;
+    std::string getVersionString() const override;
+
   private:
     void generateCaps(gl::Caps *outCaps,
                       gl::TextureCapsMap *outTextureCaps,

@@ -408,6 +408,9 @@ class Renderer9 : public RendererD3D
 
     void setGlobalDebugAnnotator() override;
 
+    std::string getVendorString() const override;
+    std::string getVersionString() const override;
+
   private:
     angle::Result drawArraysImpl(const gl::Context *context,
                                  gl::PrimitiveMode mode,

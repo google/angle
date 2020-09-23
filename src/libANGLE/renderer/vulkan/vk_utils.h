@@ -1023,4 +1023,20 @@ gl::LevelIndex GetLevelIndex(vk::LevelIndex levelVk, gl::LevelIndex baseLevel);
     UNREACHABLE();                    \
     ANGLE_VK_CHECK(context, false, VK_ERROR_FEATURE_NOT_PRESENT)
 
+// NVIDIA uses special formatting for the driver version:
+// Major: 10
+// Minor: 8
+// Sub-minor: 8
+// patch: 6
+#define ANGLE_VK_VERSION_MAJOR_NVIDIA(version) (((uint32_t)(version) >> 22) & 0x3ff)
+#define ANGLE_VK_VERSION_MINOR_NVIDIA(version) (((uint32_t)(version) >> 14) & 0xff)
+#define ANGLE_VK_VERSION_SUB_MINOR_NVIDIA(version) (((uint32_t)(version) >> 6) & 0xff)
+#define ANGLE_VK_VERSION_PATCH_NVIDIA(version) ((uint32_t)(version)&0x3f)
+
+// Similarly for Intel on Windows:
+// Major: 18
+// Minor: 14
+#define ANGLE_VK_VERSION_MAJOR_WIN_INTEL(version) (((uint32_t)(version) >> 14) & 0x3ffff)
+#define ANGLE_VK_VERSION_MINOR_WIN_INTEL(version) ((uint32_t)(version)&0x3fff)
+
 #endif  // LIBANGLE_RENDERER_VULKAN_VK_UTILS_H_

@@ -789,8 +789,12 @@ bool DisplayGLX::isValidNativeWindow(EGLNativeWindowType window) const
 
 std::string DisplayGLX::getVendorString() const
 {
-    // UNIMPLEMENTED();
-    return "";
+    return GetVendorString(mRenderer->getFunctions());
+}
+
+std::string DisplayGLX::getVersionString() const
+{
+    return GetVersionString(mRenderer->getFunctions());
 }
 
 egl::Error DisplayGLX::waitClient(const gl::Context *context)

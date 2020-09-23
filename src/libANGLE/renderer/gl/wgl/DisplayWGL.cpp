@@ -472,6 +472,16 @@ rx::ContextImpl *DisplayWGL::createContext(const gl::State &state,
     return new ContextWGL(state, errorSet, mRenderer);
 }
 
+std::string DisplayWGL::getVendorString() const
+{
+    return GetVendorString(mRenderer->getFunctions());
+}
+
+std::string DisplayWGL::getVersionString() const
+{
+    return GetVersionString(mRenderer->getFunctions());
+}
+
 egl::ConfigSet DisplayWGL::generateConfigs()
 {
     egl::ConfigSet configs;
@@ -580,12 +590,6 @@ egl::Error DisplayWGL::validateClientBuffer(const egl::Config *configuration,
         default:
             return DisplayGL::validateClientBuffer(configuration, buftype, clientBuffer, attribs);
     }
-}
-
-std::string DisplayWGL::getVendorString() const
-{
-    // UNIMPLEMENTED();
-    return "";
 }
 
 egl::Error DisplayWGL::initializeD3DDevice()

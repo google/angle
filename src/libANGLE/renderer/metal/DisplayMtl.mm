@@ -12,6 +12,7 @@
 #include "libANGLE/Context.h"
 #include "libANGLE/Display.h"
 #include "libANGLE/Surface.h"
+#include "libANGLE/renderer/driver_utils.h"
 #include "libANGLE/renderer/glslang_wrapper_utils.h"
 #include "libANGLE/renderer/metal/ContextMtl.h"
 #include "libANGLE/renderer/metal/SurfaceMtl.h"
@@ -139,16 +140,15 @@ egl::Error DisplayMtl::restoreLostDevice(const egl::Display *display)
 
 std::string DisplayMtl::getVendorString() const
 {
+    return GetVendorString(mMetalDeviceVendorId);
+}
+
+std::string DisplayMtl::getVersionString() const
+{
     ANGLE_MTL_OBJC_SCOPE
     {
-        std::string vendorString = "Google Inc.";
-        if (mMetalDevice)
-        {
-            vendorString += " Metal Renderer: ";
-            vendorString += mMetalDevice.get().name.UTF8String;
-        }
-
-        return vendorString;
+        NSProcessInfo *procInfo = [NSProcessInfo processInfo];
+        return procInfo.operatingSystemVersionString.UTF8String;
     }
 }
 

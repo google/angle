@@ -1121,6 +1121,9 @@ void RendererVk::queryDeviceExtensionFeatures(const vk::ExtensionNameList &devic
     mDepthStencilResolveProperties.sType =
         VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_STENCIL_RESOLVE_PROPERTIES;
 
+    mDriverProperties       = {};
+    mDriverProperties.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DRIVER_PROPERTIES;
+
     mExternalFenceProperties       = {};
     mExternalFenceProperties.sType = VK_STRUCTURE_TYPE_EXTERNAL_FENCE_PROPERTIES;
 
@@ -1204,6 +1207,12 @@ void RendererVk::queryDeviceExtensionFeatures(const vk::ExtensionNameList &devic
         vk::AddToPNextChain(&deviceProperties, &mDepthStencilResolveProperties);
     }
 
+    // Query driver properties
+    if (ExtensionFound(VK_KHR_DRIVER_PROPERTIES_EXTENSION_NAME, deviceExtensionNames))
+    {
+        vk::AddToPNextChain(&deviceProperties, &mDriverProperties);
+    }
+
     // Query subgroup properties
     vk::AddToPNextChain(&deviceProperties, &mSubgroupProperties);
 
@@ -1244,6 +1253,7 @@ void RendererVk::queryDeviceExtensionFeatures(const vk::ExtensionNameList &devic
     mExternalMemoryHostProperties.pNext     = nullptr;
     mShaderFloat16Int8Features.pNext        = nullptr;
     mDepthStencilResolveProperties.pNext    = nullptr;
+    mDriverProperties.pNext                 = nullptr;
     mSamplerYcbcrConversionFeatures.pNext   = nullptr;
 }
 
@@ -1805,7 +1815,7 @@ std::string RendererVk::getRendererDescription() const
     strstr << VK_VERSION_MINOR(apiVersion) << ".";
     strstr << VK_VERSION_PATCH(apiVersion);
 
-    strstr << "(";
+    strstr << " (";
 
     // In the case of NVIDIA, deviceName does not necessarily contain "NVIDIA". Add "NVIDIA" so that
     // Vulkan end2end tests can be selectively disabled on NVIDIA. TODO(jmadill): should not be
@@ -1820,6 +1830,47 @@ std::string RendererVk::getRendererDescription() const
     strstr << " (" << gl::FmtHex(mPhysicalDeviceProperties.deviceID) << ")";
 
     strstr << ")";
+
+    return strstr.str();
+}
+
+std::string RendererVk::getVersionString() const
+{
+    std::stringstream strstr;
+
+    uint32_t driverVersion = mPhysicalDeviceProperties.driverVersion;
+    std::string driverName = std::string(mDriverProperties.driverName);
+
+    if (!driverName.empty())
+    {
+        strstr << driverName;
+    }
+    else
+    {
+        strstr << GetVendorString(mPhysicalDeviceProperties.vendorID);
+    }
+
+    strstr << "-";
+
+    if (mPhysicalDeviceProperties.vendorID == VENDOR_ID_NVIDIA)
+    {
+        strstr << ANGLE_VK_VERSION_MAJOR_NVIDIA(driverVersion) << ".";
+        strstr << ANGLE_VK_VERSION_MINOR_NVIDIA(driverVersion) << ".";
+        strstr << ANGLE_VK_VERSION_SUB_MINOR_NVIDIA(driverVersion) << ".";
+        strstr << ANGLE_VK_VERSION_PATCH_NVIDIA(driverVersion);
+    }
+    else if (mPhysicalDeviceProperties.vendorID == VENDOR_ID_INTEL && IsWindows())
+    {
+        strstr << ANGLE_VK_VERSION_MAJOR_WIN_INTEL(driverVersion) << ".";
+        strstr << ANGLE_VK_VERSION_MAJOR_WIN_INTEL(driverVersion) << ".";
+    }
+    // All other drivers use the Vulkan standard
+    else
+    {
+        strstr << VK_VERSION_MAJOR(driverVersion) << ".";
+        strstr << VK_VERSION_MINOR(driverVersion) << ".";
+        strstr << VK_VERSION_PATCH(driverVersion);
+    }
 
     return strstr.str();
 }

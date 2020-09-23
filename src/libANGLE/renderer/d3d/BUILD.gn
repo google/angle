@@ -60,6 +60,8 @@ _d3d_shared_sources = [
   "VertexBuffer.h",
   "VertexDataManager.cpp",
   "VertexDataManager.h",
+  "driver_utils_d3d.cpp",
+  "driver_utils_d3d.h",
   "formatutilsD3D.h",
 ]
 

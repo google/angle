@@ -135,9 +135,12 @@ EGLSyncImpl *DisplayEGL::createSync(const egl::AttributeMap &attribs)
 
 std::string DisplayEGL::getVendorString() const
 {
-    const char *vendor = mEGL->queryString(EGL_VENDOR);
-    ASSERT(vendor);
-    return vendor;
+    return GetVendorString(mRenderer->getFunctions());
+}
+
+std::string DisplayEGL::getVersionString() const
+{
+    return GetVersionString(mRenderer->getFunctions());
 }
 
 egl::Error DisplayEGL::initializeContext(EGLContext shareContext,

@@ -117,6 +117,7 @@ class RendererVk : angle::NonCopyable
 
     std::string getVendorString() const;
     std::string getRendererDescription() const;
+    std::string getVersionString() const;
 
     gl::Version getMaxSupportedESVersion() const;
     gl::Version getMaxConformantESVersion() const;
@@ -417,6 +418,7 @@ class RendererVk : angle::NonCopyable
     VkPhysicalDeviceExternalMemoryHostPropertiesEXT mExternalMemoryHostProperties;
     VkPhysicalDeviceShaderFloat16Int8FeaturesKHR mShaderFloat16Int8Features;
     VkPhysicalDeviceDepthStencilResolvePropertiesKHR mDepthStencilResolveProperties;
+    VkPhysicalDeviceDriverPropertiesKHR mDriverProperties;
     VkExternalFenceProperties mExternalFenceProperties;
     VkExternalSemaphoreProperties mExternalSemaphoreProperties;
     VkPhysicalDeviceSamplerYcbcrConversionFeatures mSamplerYcbcrConversionFeatures;

@@ -41,6 +41,7 @@ class DisplayNULL : public DisplayImpl
     bool isValidNativeWindow(EGLNativeWindowType window) const override;
 
     std::string getVendorString() const override;
+    std::string getVersionString() const override;
 
     DeviceImpl *createDevice() override;
 

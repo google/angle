@@ -2339,4 +2339,26 @@ std::vector<ContextCreationTry> GenerateContextCreationToTry(EGLint requestedTyp
 
     return contextsToTry;
 }
+
+std::string GetVendorString(const FunctionsGL *functions)
+{
+    return std::string(reinterpret_cast<const char *>(functions->getString(GL_VENDOR)));
+}
+
+std::string GetVersionString(const FunctionsGL *functions)
+{
+    std::string versionString =
+        std::string(reinterpret_cast<const char *>(functions->getString(GL_VERSION)));
+    if (versionString.find("OpenGL") == std::string::npos)
+    {
+        std::string prefix = "OpenGL ";
+        if (functions->standard == STANDARD_GL_ES)
+        {
+            prefix += "ES ";
+        }
+        versionString = prefix + versionString;
+    }
+    return versionString;
+}
+
 }  // namespace rx

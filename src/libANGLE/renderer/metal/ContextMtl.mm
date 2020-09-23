@@ -789,11 +789,7 @@ gl::GraphicsResetStatus ContextMtl::getResetStatus()
     return gl::GraphicsResetStatus::NoError;
 }
 
-// Vendor and description strings.
-std::string ContextMtl::getVendorString() const
-{
-    return getDisplay()->getVendorString();
-}
+// Renderer description
 std::string ContextMtl::getRendererDescription() const
 {
     return getDisplay()->getRendererDescription();

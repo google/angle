@@ -64,6 +64,7 @@ class DisplayWGL : public DisplayGL
                                     const egl::AttributeMap &attribs) const override;
 
     std::string getVendorString() const override;
+    std::string getVersionString() const override;
 
     egl::Error waitClient(const gl::Context *context) override;
     egl::Error waitNative(const gl::Context *context, EGLint engine) override;

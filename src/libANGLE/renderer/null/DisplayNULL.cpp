@@ -112,6 +112,11 @@ std::string DisplayNULL::getVendorString() const
     return "NULL";
 }
 
+std::string DisplayNULL::getVersionString() const
+{
+    return std::string();
+}
+
 DeviceImpl *DisplayNULL::createDevice()
 {
     return new DeviceNULL();

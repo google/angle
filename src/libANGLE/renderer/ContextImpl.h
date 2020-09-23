@@ -161,8 +161,7 @@ class ContextImpl : public GLImplFactory
     // Device loss
     virtual gl::GraphicsResetStatus getResetStatus() = 0;
 
-    // Vendor and description strings.
-    virtual std::string getVendorString() const        = 0;
+    // Renderer description
     virtual std::string getRendererDescription() const = 0;
 
     // EXT_debug_marker

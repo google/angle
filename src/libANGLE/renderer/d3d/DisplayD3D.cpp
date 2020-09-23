@@ -355,13 +355,20 @@ void DisplayD3D::generateExtensions(egl::DisplayExtensions *outExtensions) const
 
 std::string DisplayD3D::getVendorString() const
 {
-    std::string vendorString = "Google Inc.";
     if (mRenderer)
     {
-        vendorString += " " + mRenderer->getVendorString();
+        return mRenderer->getVendorString();
     }
+    return std::string();
+}
 
-    return vendorString;
+std::string DisplayD3D::getVersionString() const
+{
+    if (mRenderer)
+    {
+        return mRenderer->getVersionString();
+    }
+    return std::string();
 }
 
 void DisplayD3D::generateCaps(egl::Caps *outCaps) const

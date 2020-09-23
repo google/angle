@@ -76,13 +76,20 @@ egl::Error DisplayVk::restoreLostDevice(const egl::Display *display)
 
 std::string DisplayVk::getVendorString() const
 {
-    std::string vendorString = "Google Inc.";
     if (mRenderer)
     {
-        vendorString += " " + mRenderer->getVendorString();
+        return mRenderer->getVendorString();
     }
+    return std::string();
+}
 
-    return vendorString;
+std::string DisplayVk::getVersionString() const
+{
+    if (mRenderer)
+    {
+        return mRenderer->getVersionString();
+    }
+    return std::string();
 }
 
 egl::Error DisplayVk::waitClient(const gl::Context *context)

@@ -191,8 +191,7 @@ class Context11 : public ContextD3D, public MultisampleTextureInitializer
     // Device loss
     gl::GraphicsResetStatus getResetStatus() override;
 
-    // Vendor and description strings.
-    std::string getVendorString() const override;
+    // Renderer description
     std::string getRendererDescription() const override;
 
     // EXT_debug_marker

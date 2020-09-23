@@ -358,11 +358,6 @@ gl::GraphicsResetStatus Context9::getResetStatus()
     return mRenderer->getResetStatus();
 }
 
-std::string Context9::getVendorString() const
-{
-    return mRenderer->getVendorString();
-}
-
 std::string Context9::getRendererDescription() const
 {
     return mRenderer->getRendererDescription();

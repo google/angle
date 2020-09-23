@@ -3079,12 +3079,27 @@ void Context::programParameteri(ShaderProgramID program, GLenum pname, GLint val
 
 void Context::initRendererString()
 {
-    std::ostringstream rendererString;
-    rendererString << "ANGLE (";
-    rendererString << mImplementation->getRendererDescription();
-    rendererString << ")";
+    std::ostringstream frontendRendererString;
+    std::string vendorString(mDisplay->getImplementation()->getVendorString());
+    std::string rendererString(mImplementation->getRendererDescription());
+    std::string versionString(mDisplay->getImplementation()->getVersionString());
+    // Commas are used as a separator in ANGLE's renderer string, so remove commas from each
+    // element.
+    vendorString.erase(std::remove(vendorString.begin(), vendorString.end(), ','),
+                       vendorString.end());
+    rendererString.erase(std::remove(rendererString.begin(), rendererString.end(), ','),
+                         rendererString.end());
+    versionString.erase(std::remove(versionString.begin(), versionString.end(), ','),
+                        versionString.end());
+    frontendRendererString << "ANGLE (";
+    frontendRendererString << vendorString;
+    frontendRendererString << ", ";
+    frontendRendererString << rendererString;
+    frontendRendererString << ", ";
+    frontendRendererString << versionString;
+    frontendRendererString << ")";
 
-    mRendererString = MakeStaticString(rendererString.str());
+    mRendererString = MakeStaticString(frontendRendererString.str());
 }
 
 void Context::initVersionStrings()
@@ -3160,7 +3175,7 @@ const GLubyte *Context::getString(GLenum name) const
     switch (name)
     {
         case GL_VENDOR:
-            return reinterpret_cast<const GLubyte *>("Google Inc.");
+            return reinterpret_cast<const GLubyte *>(mDisplay->getVendorString().c_str());
 
         case GL_RENDERER:
             return reinterpret_cast<const GLubyte *>(mRendererString);
