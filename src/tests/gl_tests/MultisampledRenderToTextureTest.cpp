@@ -1342,6 +1342,110 @@ TEST_P(MultisampledRenderToTextureES3Test, RenderbufferDepthStencilClearDrawCopy
     verifyResults(texture, expectedCopyResult, kSize, 0, 0, kSize, kSize);
 }
 
+// Test the depth read/write mode change within the renderpass while there is color unresolve
+// attachment
+TEST_P(MultisampledRenderToTextureTest, DepthReadWriteToggleWithStartedRenderPass)
+{
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_multisampled_render_to_texture"));
+    constexpr GLsizei kSize = 64;
+
+    setupCopyTexProgram();
+
+    GLFramebuffer fboMS;
+    glBindFramebuffer(GL_FRAMEBUFFER, fboMS);
+
+    // Create framebuffer to draw into, with both color and depth attachments.
+    GLTexture textureMS;
+    GLRenderbuffer renderbufferMS;
+    createAndAttachColorAttachment(true, kSize, GL_COLOR_ATTACHMENT0, nullptr, &textureMS,
+                                   &renderbufferMS);
+
+    GLTexture dsTextureMS;
+    GLRenderbuffer dsRenderbufferMS;
+    glBindRenderbuffer(GL_RENDERBUFFER, dsRenderbufferMS);
+    glRenderbufferStorageMultisampleEXT(GL_RENDERBUFFER, 4, GL_DEPTH_COMPONENT16, kSize, kSize);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER,
+                              dsRenderbufferMS);
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    // First renderpass: draw with depth value 0.5f
+    glViewport(0, 0, kSize, kSize);
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_ALWAYS);
+    glDepthMask(GL_TRUE);
+    glClearColor(0.0, 0.0, 0.0, 1.0);
+    glClear(GL_COLOR_BUFFER_BIT);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_ONE, GL_ZERO);
+    ANGLE_GL_PROGRAM(drawBlue, essl1_shaders::vs::Simple(), essl1_shaders::fs::Blue());
+    drawQuad(drawBlue, essl1_shaders::PositionAttrib(), 0.5f);
+    ASSERT_GL_NO_ERROR();
+    // The color check should end the renderpass
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
+
+    // Create another FBO and render, jus so try to clear rendering cache. At least on pixel4,
+    // the test now properly fail if I force the loadOP to DontCare in the next renderpass.
+    constexpr bool clearRenderingCacheWithFBO = true;
+    if (clearRenderingCacheWithFBO)
+    {
+        GLFramebuffer fboMS2;
+        glBindFramebuffer(GL_FRAMEBUFFER, fboMS2);
+        GLTexture textureMS2;
+        GLRenderbuffer renderbufferMS2;
+        createAndAttachColorAttachment(true, 2048, GL_COLOR_ATTACHMENT0, nullptr, &textureMS2,
+                                       &renderbufferMS2);
+        GLTexture dsTextureMS2;
+        GLRenderbuffer dsRenderbufferMS2;
+        glBindRenderbuffer(GL_RENDERBUFFER, dsRenderbufferMS2);
+        glRenderbufferStorageMultisampleEXT(GL_RENDERBUFFER, 4, GL_DEPTH_COMPONENT16, 2048, 2048);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER,
+                                  dsRenderbufferMS2);
+        EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+        ASSERT_GL_NO_ERROR();
+        glViewport(0, 0, 2048, 2048);
+        ANGLE_GL_PROGRAM(drawColor, essl1_shaders::vs::Simple(), essl1_shaders::fs::UniformColor());
+        glUseProgram(drawColor);
+        GLint colorUniformLocation =
+            glGetUniformLocation(drawColor, angle::essl1_shaders::ColorUniform());
+        ASSERT_NE(colorUniformLocation, -1);
+        glUniform4f(colorUniformLocation, 0.0f, 0.0f, 0.0f, 0.0f);
+        drawQuad(drawColor, essl1_shaders::PositionAttrib(), 0.5f);
+        ASSERT_GL_NO_ERROR();
+    }
+
+    // Second renderpass: Start with depth read only and then switch to depth write
+    glBindFramebuffer(GL_FRAMEBUFFER, fboMS);
+    glViewport(0, 0, kSize, kSize);
+    glDepthFunc(GL_LESS);
+    // Draw red with depth read only. pass depth test, Result: color=Red, depth=0.5
+    glDepthMask(GL_FALSE);
+    glBlendFunc(GL_ONE, GL_ONE);
+    ANGLE_GL_PROGRAM(drawRed, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
+    glUseProgram(drawRed);
+    drawQuad(drawRed, essl1_shaders::PositionAttrib(), 0.1f);
+    ASSERT_GL_NO_ERROR();
+
+    // Draw green with depth write. Pass depth test. Result: color=Green, depth=0.3
+    glDepthMask(GL_TRUE);
+    glBlendFunc(GL_ONE, GL_ONE);
+    ANGLE_GL_PROGRAM(drawGreen, essl1_shaders::vs::Simple(), essl1_shaders::fs::Green());
+    glUseProgram(drawGreen);
+    drawQuad(drawGreen, essl1_shaders::PositionAttrib(), 0.3f);
+    ASSERT_GL_NO_ERROR();
+
+    // Create a texture and copy into it.
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 0, 0, kSize, kSize, 0);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    ASSERT_GL_NO_ERROR();
+
+    // Verify the color has all three color in it.
+    const GLColor expectedCopyResult(255, 255, 255, 255);
+    EXPECT_PIXEL_COLOR_EQ(1, 1, expectedCopyResult);
+}
+
 void MultisampledRenderToTextureES3Test::colorAttachment1Common(bool useRenderbuffer)
 {
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_multisampled_render_to_texture"));

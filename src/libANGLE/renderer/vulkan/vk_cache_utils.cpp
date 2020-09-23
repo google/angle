@@ -1027,6 +1027,13 @@ void RenderPassDesc::packDepthStencilAttachment(angle::FormatID formatID, Resour
     packedFormat &= ~kDepthStencilFormatStorageMask;
     packedFormat |= static_cast<uint8_t>(formatID);
 
+    updateDepthStencilAccess(access);
+}
+
+void RenderPassDesc::updateDepthStencilAccess(ResourceAccess access)
+{
+    ASSERT(access != ResourceAccess::Unused);
+
     size_t colorRange = colorAttachmentRange();
     size_t offset =
         access == ResourceAccess::ReadOnly ? NoColorDepthStencilRead : NoColorDepthStencilWrite;

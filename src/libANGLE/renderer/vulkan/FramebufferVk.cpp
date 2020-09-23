@@ -2557,7 +2557,12 @@ void FramebufferVk::setReadOnlyDepthMode(bool readOnlyDepthEnabled)
     {
         mCurrentFramebufferDesc.updateReadOnlyDepth(readOnlyDepthEnabled);
         mFramebuffer = nullptr;
-        updateRenderPassDesc();
+
+        ASSERT(getDepthStencilRenderTarget());
+        vk::ResourceAccess dsAccess =
+            isReadOnlyDepthMode() ? vk::ResourceAccess::ReadOnly : vk::ResourceAccess::Write;
+        ASSERT(mRenderPassDesc.hasDepthStencilAttachment());
+        mRenderPassDesc.updateDepthStencilAccess(dsAccess);
     }
 }
 
