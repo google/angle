@@ -13,7 +13,7 @@
 #define ANGLE_MINOR_VERSION 1
 
 #ifndef ANGLE_REVISION
-#    define ANGLE_REVISION 0
+#    define ANGLE_REVISION ANGLE_COMMIT_POSITION
 #endif
 
 #define ANGLE_STRINGIFY(x) #x
@@ -22,6 +22,6 @@
 #define ANGLE_VERSION_STRING                                                  \
     ANGLE_MACRO_STRINGIFY(ANGLE_MAJOR_VERSION)                                \
     "." ANGLE_MACRO_STRINGIFY(ANGLE_MINOR_VERSION) "." ANGLE_MACRO_STRINGIFY( \
-        ANGLE_REVISION) "." ANGLE_COMMIT_HASH
+        ANGLE_REVISION) " git hash: " ANGLE_COMMIT_HASH
 
 #endif  // COMMON_VERSION_H_

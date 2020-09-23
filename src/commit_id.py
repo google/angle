@@ -43,12 +43,14 @@ output_file = sys.argv[2]
 commit_id_size = 12
 commit_id = 'unknown hash'
 commit_date = 'unknown date'
+commit_position = '0'
 enable_binary_loading = False
 
 if git_dir_exists:
     try:
         commit_id = grab_output('git rev-parse --short=%d HEAD' % commit_id_size, cwd)
         commit_date = grab_output('git show -s --format=%ci HEAD', cwd)
+        commit_position = grab_output('git rev-list HEAD --count', cwd)
         enable_binary_loading = True
     except:
         pass
@@ -58,6 +60,7 @@ hfile = open(output_file, 'w')
 hfile.write('#define ANGLE_COMMIT_HASH "%s"\n' % commit_id)
 hfile.write('#define ANGLE_COMMIT_HASH_SIZE %d\n' % commit_id_size)
 hfile.write('#define ANGLE_COMMIT_DATE "%s"\n' % commit_date)
+hfile.write('#define ANGLE_COMMIT_POSITION %s\n' % commit_position)
 
 if not enable_binary_loading:
     hfile.write('#define ANGLE_DISABLE_PROGRAM_BINARY_LOAD\n')
