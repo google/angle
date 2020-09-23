@@ -764,8 +764,10 @@ ResourceSerialFactory::~ResourceSerialFactory() {}
 
 uint32_t ResourceSerialFactory::issueSerial()
 {
-    ASSERT(mCurrentUniqueSerial + 1 > mCurrentUniqueSerial);
-    return mCurrentUniqueSerial++;
+    uint32_t newSerial = ++mCurrentUniqueSerial;
+    // make sure serial does not wrap
+    ASSERT(newSerial > 0);
+    return newSerial;
 }
 
 #define ANGLE_DEFINE_GEN_VK_SERIAL(Type)                         \
