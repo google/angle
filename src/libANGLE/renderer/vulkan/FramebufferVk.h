@@ -130,7 +130,7 @@ class FramebufferVk : public FramebufferImpl
                                  vk::Framebuffer **framebufferOut,
                                  const vk::ImageView *resolveImageViewIn);
 
-    bool isReadOnlyDepthMode() const { return mCurrentFramebufferDesc.isReadOnlyDepth(); }
+    bool isReadOnlyDepthMode() const { return mReadOnlyDepthStencilMode; }
 
     bool hasDeferredClears() const { return !mDeferredClears.empty(); }
     angle::Result flushDeferredClears(ContextVk *contextVk, const gl::Rectangle &renderArea);
@@ -257,6 +257,8 @@ class FramebufferVk : public FramebufferImpl
 
     vk::ClearValuesArray mDeferredClears;
 
+    // True if depth stencil buffer is read only.
+    bool mReadOnlyDepthStencilMode;
     // Tracks if we are in depth feedback loop. Depth read only feedback loop is a special kind of
     // depth stencil read only mode. When we are in feedback loop, we must flush renderpass to exit
     // the loop instead of update the layout.

@@ -2464,11 +2464,6 @@ void FramebufferDesc::updateDepthStencilResolve(ImageViewSubresourceSerial seria
     update(kFramebufferDescDepthStencilResolveIndexOffset, serial);
 }
 
-void FramebufferDesc::updateReadOnlyDepth(bool readOnlyDepth)
-{
-    mReadOnlyDepth = readOnlyDepth;
-}
-
 size_t FramebufferDesc::hash() const
 {
     return angle::ComputeGenericHash(&mSerials, sizeof(mSerials[0]) * mMaxIndex) ^
@@ -2477,15 +2472,15 @@ size_t FramebufferDesc::hash() const
 
 void FramebufferDesc::reset()
 {
-    mMaxIndex      = 0;
-    mReadOnlyDepth = false;
+    mMaxIndex = 0;
+    mPadding  = 0;
     mColorUnresolveAttachmentMask.reset();
     memset(&mSerials, 0, sizeof(mSerials));
 }
 
 bool FramebufferDesc::operator==(const FramebufferDesc &other) const
 {
-    if (mMaxIndex != other.mMaxIndex || mReadOnlyDepth != other.mReadOnlyDepth ||
+    if (mMaxIndex != other.mMaxIndex ||
         mColorUnresolveAttachmentMask != other.mColorUnresolveAttachmentMask)
     {
         return false;

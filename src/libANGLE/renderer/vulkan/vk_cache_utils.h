@@ -1047,6 +1047,9 @@ constexpr size_t kFramebufferDescDepthStencilResolveIndexOffset =
 constexpr size_t kFramebufferDescColorResolveIndexOffset =
     kFramebufferDescDepthStencilResolveIndexOffset + 1;
 
+// Enable struct padding warnings for the code below since it is used in caches.
+ANGLE_ENABLE_STRUCT_PADDING_WARNINGS
+
 class FramebufferDesc
 {
   public:
@@ -1061,14 +1064,12 @@ class FramebufferDesc
     void updateColorUnresolveMask(gl::DrawBufferMask colorUnresolveMask);
     void updateDepthStencil(ImageViewSubresourceSerial serial);
     void updateDepthStencilResolve(ImageViewSubresourceSerial serial);
-    void updateReadOnlyDepth(bool readOnlyDepth);
     size_t hash() const;
     void reset();
 
     bool operator==(const FramebufferDesc &other) const;
 
     uint32_t attachmentCount() const;
-    bool isReadOnlyDepth() const { return mReadOnlyDepth != 0; }
 
     ImageViewSubresourceSerial getColorImageViewSerial(uint32_t index)
     {
@@ -1081,7 +1082,7 @@ class FramebufferDesc
 
     // Note: this is an exclusive index. If there is one index it will be "1".
     uint16_t mMaxIndex;
-    uint8_t mReadOnlyDepth;
+    uint8_t mPadding;
 
     // If the render pass contains an initial subpass to unresolve a number of attachments, the
     // subpass description is derived from the following mask, specifying which attachments need
@@ -1090,6 +1091,9 @@ class FramebufferDesc
 
     FramebufferAttachmentArray<ImageViewSubresourceSerial> mSerials;
 };
+
+// Disable warnings about struct padding.
+ANGLE_DISABLE_STRUCT_PADDING_WARNINGS
 
 // The SamplerHelper allows a Sampler to be coupled with a serial.
 // Must be included before we declare SamplerCache.
