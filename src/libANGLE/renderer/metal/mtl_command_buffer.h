@@ -442,6 +442,8 @@ class RenderCommandEncoder final : public CommandEncoder
     RenderCommandEncoder &setDepthLoadAction(MTLLoadAction action, double clearValue);
     RenderCommandEncoder &setStencilLoadAction(MTLLoadAction action, uint32_t clearValue);
 
+    void setLabel(NSString *label);
+
     const RenderPassDesc &renderPassDesc() const { return mRenderPassDesc; }
     bool hasDrawCalls() const { return mHasDrawCalls; }
 
@@ -466,6 +468,9 @@ class RenderCommandEncoder final : public CommandEncoder
     RenderPassDesc mRenderPassDesc;
     // Cached Objective-C render pass desc to avoid re-allocate every frame.
     mtl::AutoObjCObj<MTLRenderPassDescriptor> mCachedRenderPassDescObjC;
+
+    mtl::AutoObjCObj<NSString> mLabel;
+
     MTLScissorRect mRenderPassMaxScissorRect;
 
     const OcclusionQueryPool &mOcclusionQueryPool;

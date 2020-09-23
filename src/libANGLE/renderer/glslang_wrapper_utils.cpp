@@ -354,7 +354,7 @@ std::string GenerateTransformFeedbackVaryingOutput(const gl::TransformFeedbackVa
     return result.str();
 }
 
-void GenerateTransformFeedbackEmulationOutputs(GlslangSourceOptions &options,
+void GenerateTransformFeedbackEmulationOutputs(const GlslangSourceOptions &options,
                                                const gl::ProgramState &programState,
                                                GlslangProgramInterfaceInfo *programInterfaceInfo,
                                                std::string *vertexShader,
@@ -730,7 +730,7 @@ void AssignTransformFeedbackExtensionQualifiers(const gl::ProgramExecutable &pro
     }
 }
 
-void AssignUniformBindings(GlslangSourceOptions &options,
+void AssignUniformBindings(const GlslangSourceOptions &options,
                            const gl::ProgramExecutable &programExecutable,
                            const gl::ShaderType shaderType,
                            GlslangProgramInterfaceInfo *programInterfaceInfo,
@@ -752,7 +752,7 @@ void AssignUniformBindings(GlslangSourceOptions &options,
 
 // TODO: http://anglebug.com/4512: Need to combine descriptor set bindings across
 // shader stages.
-void AssignInterfaceBlockBindings(GlslangSourceOptions &options,
+void AssignInterfaceBlockBindings(const GlslangSourceOptions &options,
                                   const gl::ProgramExecutable &programExecutable,
                                   const std::vector<gl::InterfaceBlock> &blocks,
                                   const gl::ShaderType shaderType,
@@ -778,7 +778,7 @@ void AssignInterfaceBlockBindings(GlslangSourceOptions &options,
 
 // TODO: http://anglebug.com/4512: Need to combine descriptor set bindings across
 // shader stages.
-void AssignAtomicCounterBufferBindings(GlslangSourceOptions &options,
+void AssignAtomicCounterBufferBindings(const GlslangSourceOptions &options,
                                        const gl::ProgramExecutable &programExecutable,
                                        const std::vector<gl::AtomicCounterBuffer> &buffers,
                                        const gl::ShaderType shaderType,
@@ -801,7 +801,7 @@ void AssignAtomicCounterBufferBindings(GlslangSourceOptions &options,
 
 // TODO: http://anglebug.com/4512: Need to combine descriptor set bindings across
 // shader stages.
-void AssignImageBindings(GlslangSourceOptions &options,
+void AssignImageBindings(const GlslangSourceOptions &options,
                          const gl::ProgramExecutable &programExecutable,
                          const std::vector<gl::LinkedUniform> &uniforms,
                          const gl::RangeUI &imageUniformRange,
@@ -828,7 +828,7 @@ void AssignImageBindings(GlslangSourceOptions &options,
     }
 }
 
-void AssignNonTextureBindings(GlslangSourceOptions &options,
+void AssignNonTextureBindings(const GlslangSourceOptions &options,
                               const gl::ProgramExecutable &programExecutable,
                               const gl::ShaderType shaderType,
                               GlslangProgramInterfaceInfo *programInterfaceInfo,
@@ -856,7 +856,7 @@ void AssignNonTextureBindings(GlslangSourceOptions &options,
 
 // TODO: http://anglebug.com/4512: Need to combine descriptor set bindings across
 // shader stages.
-void AssignTextureBindings(GlslangSourceOptions &options,
+void AssignTextureBindings(const GlslangSourceOptions &options,
                            const gl::ProgramExecutable &programExecutable,
                            const gl::ShaderType shaderType,
                            GlslangProgramInterfaceInfo *programInterfaceInfo,
@@ -2086,7 +2086,17 @@ std::string GetXfbBufferName(const uint32_t bufferIndex)
     return "xfbBuffer" + Str(bufferIndex);
 }
 
-void GlslangAssignLocations(GlslangSourceOptions &options,
+void GlslangGenTransformFeedbackEmulationOutputs(const GlslangSourceOptions &options,
+                                                 const gl::ProgramState &programState,
+                                                 GlslangProgramInterfaceInfo *programInterfaceInfo,
+                                                 std::string *vertexShader,
+                                                 ShaderInterfaceVariableInfoMap *variableInfoMapOut)
+{
+    GenerateTransformFeedbackEmulationOutputs(options, programState, programInterfaceInfo,
+                                              vertexShader, variableInfoMapOut);
+}
+
+void GlslangAssignLocations(const GlslangSourceOptions &options,
                             const gl::ProgramExecutable &programExecutable,
                             const gl::ShaderType shaderType,
                             GlslangProgramInterfaceInfo *programInterfaceInfo,
@@ -2131,7 +2141,7 @@ void GlslangAssignLocations(GlslangSourceOptions &options,
                              variableInfoMapOut);
 }
 
-void GlslangGetShaderSource(GlslangSourceOptions &options,
+void GlslangGetShaderSource(const GlslangSourceOptions &options,
                             const gl::ProgramState &programState,
                             const gl::ProgramLinkedResources &resources,
                             GlslangProgramInterfaceInfo *programInterfaceInfo,
@@ -2166,6 +2176,10 @@ void GlslangGetShaderSource(GlslangSourceOptions &options,
                 GenerateTransformFeedbackEmulationOutputs(
                     options, programState, programInterfaceInfo, vertexSource,
                     &(*variableInfoMapOut)[gl::ShaderType::Vertex]);
+            }
+            else
+            {
+                *vertexSource = SubstituteTransformFeedbackMarkers(*vertexSource, "", "");
             }
         }
     }

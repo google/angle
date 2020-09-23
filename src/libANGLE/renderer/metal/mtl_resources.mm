@@ -225,7 +225,7 @@ angle::Result Texture::MakeTexture(ContextMtl *context,
 
     refOut->reset(new Texture(context, desc, mips, renderTargetOnly, allowFormatView));
 
-    if (!refOut || !refOut->get())
+    if (!(*refOut) || !(*refOut)->get())
     {
         ANGLE_MTL_CHECK(context, false, GL_OUT_OF_MEMORY);
     }
@@ -666,7 +666,7 @@ angle::Result Buffer::MakeBufferWithSharedMemOpt(ContextMtl *context,
 {
     bufferOut->reset(new Buffer(context, forceUseSharedMem, size, data));
 
-    if (!bufferOut || !bufferOut->get())
+    if (!(*bufferOut) || !(*bufferOut)->get())
     {
         ANGLE_MTL_CHECK(context, false, GL_OUT_OF_MEMORY);
     }
@@ -682,7 +682,7 @@ angle::Result Buffer::MakeBufferWithResOpt(ContextMtl *context,
 {
     bufferOut->reset(new Buffer(context, options, size, data));
 
-    if (!bufferOut || !bufferOut->get())
+    if (!(*bufferOut) || !(*bufferOut)->get())
     {
         ANGLE_MTL_CHECK(context, false, GL_OUT_OF_MEMORY);
     }

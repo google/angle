@@ -12,13 +12,10 @@
 
 #include "libANGLE/renderer/TransformFeedbackImpl.h"
 
-namespace gl
-{
-class ProgramState;
-}  // namespace gl
-
 namespace rx
 {
+
+class ContextMtl;
 
 class TransformFeedbackMtl : public TransformFeedbackImpl
 {
@@ -34,6 +31,16 @@ class TransformFeedbackMtl : public TransformFeedbackImpl
     angle::Result bindIndexedBuffer(const gl::Context *context,
                                     size_t index,
                                     const gl::OffsetBindingPointer<gl::Buffer> &binding) override;
+
+    // Params:
+    // - drawCallFirstVertex is first vertex used by glDrawArrays*. This is important because
+    // gl_VertexIndex is starting from this.
+    // - skippedVertices is number of skipped vertices (useful for multiple metal draws per GL draw
+    // call).
+    angle::Result getBufferOffsets(ContextMtl *contextMtl,
+                                   GLint drawCallFirstVertex,
+                                   uint32_t skippedVertices,
+                                   int32_t *offsetsOut);
 
   private:
 };

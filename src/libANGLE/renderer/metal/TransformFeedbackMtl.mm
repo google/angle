@@ -9,10 +9,11 @@
 
 #include "libANGLE/renderer/metal/TransformFeedbackMtl.h"
 
+#include "common/debug.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/Query.h"
-
-#include "common/debug.h"
+#include "libANGLE/renderer/metal/ContextMtl.h"
+#include "libANGLE/renderer/metal/QueryMtl.h"
 
 namespace rx
 {
@@ -26,27 +27,39 @@ TransformFeedbackMtl::~TransformFeedbackMtl() {}
 angle::Result TransformFeedbackMtl::begin(const gl::Context *context,
                                           gl::PrimitiveMode primitiveMode)
 {
-    UNIMPLEMENTED();
+    mtl::GetImpl(context)->onTransformFeedbackActive(context, this);
 
     return angle::Result::Continue;
 }
 
 angle::Result TransformFeedbackMtl::end(const gl::Context *context)
 {
-    UNIMPLEMENTED();
+    const gl::State &glState = context->getState();
+    gl::Query *transformFeedbackQuery =
+        glState.getActiveQuery(gl::QueryType::TransformFeedbackPrimitivesWritten);
+    if (transformFeedbackQuery)
+    {
+        mtl::GetImpl(transformFeedbackQuery)->onTransformFeedbackEnd(context);
+    }
+
+    mtl::GetImpl(context)->onTransformFeedbackInactive(context, this);
 
     return angle::Result::Continue;
 }
 
 angle::Result TransformFeedbackMtl::pause(const gl::Context *context)
 {
-    UNIMPLEMENTED();
+    // When XFB is paused, OpenGL allows XFB buffers to be bound for other purposes. We need to call
+    // onTransformFeedbackInactive() to issue a sync.
+    mtl::GetImpl(context)->onTransformFeedbackInactive(context, this);
+
     return angle::Result::Continue;
 }
 
 angle::Result TransformFeedbackMtl::resume(const gl::Context *context)
 {
-    UNIMPLEMENTED();
+    mtl::GetImpl(context)->onTransformFeedbackActive(context, this);
+
     return angle::Result::Continue;
 }
 
@@ -55,7 +68,44 @@ angle::Result TransformFeedbackMtl::bindIndexedBuffer(
     size_t index,
     const gl::OffsetBindingPointer<gl::Buffer> &binding)
 {
-    UNIMPLEMENTED();
+    // Do nothing for now
+
+    return angle::Result::Continue;
+}
+
+angle::Result TransformFeedbackMtl::getBufferOffsets(ContextMtl *contextMtl,
+                                                     GLint drawCallFirstVertex,
+                                                     uint32_t skippedVertices,
+                                                     int32_t *offsetsOut)
+{
+    int64_t verticesDrawn = static_cast<int64_t>(mState.getVerticesDrawn()) + skippedVertices;
+    const std::vector<GLsizei> &bufferStrides =
+        mState.getBoundProgram()->getTransformFeedbackStrides();
+    const gl::ProgramExecutable *executable = contextMtl->getState().getProgramExecutable();
+    ASSERT(executable);
+    size_t xfbBufferCount = executable->getTransformFeedbackBufferCount();
+
+    ASSERT(xfbBufferCount > 0);
+
+    for (size_t bufferIndex = 0; bufferIndex < xfbBufferCount; ++bufferIndex)
+    {
+        const gl::OffsetBindingPointer<gl::Buffer> &bufferBinding =
+            mState.getIndexedBuffer(bufferIndex);
+
+        ASSERT((bufferBinding.getOffset() % 4) == 0);
+
+        // Offset the gl_VertexIndex by drawCallFirstVertex
+        int64_t drawCallVertexOffset = static_cast<int64_t>(verticesDrawn) - drawCallFirstVertex;
+
+        int64_t writeOffset =
+            (bufferBinding.getOffset() + drawCallVertexOffset * bufferStrides[bufferIndex]) /
+            static_cast<int64_t>(sizeof(uint32_t));
+
+        offsetsOut[bufferIndex] = static_cast<int32_t>(writeOffset);
+
+        // Check for overflow.
+        ANGLE_CHECK_GL_ALLOC(contextMtl, offsetsOut[bufferIndex] == writeOffset);
+    }
 
     return angle::Result::Continue;
 }

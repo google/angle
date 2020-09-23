@@ -105,7 +105,15 @@ std::string GetMappedSamplerNameOld(const std::string &originalName);
 std::string GlslangGetMappedSamplerName(const std::string &originalName);
 std::string GetXfbBufferName(const uint32_t bufferIndex);
 
-void GlslangAssignLocations(GlslangSourceOptions &options,
+// NOTE: options.emulateTransformFeedback is ignored in this case. It is assumed to be always true.
+void GlslangGenTransformFeedbackEmulationOutputs(
+    const GlslangSourceOptions &options,
+    const gl::ProgramState &programState,
+    GlslangProgramInterfaceInfo *programInterfaceInfo,
+    std::string *vertexShader,
+    ShaderInterfaceVariableInfoMap *variableInfoMapOut);
+
+void GlslangAssignLocations(const GlslangSourceOptions &options,
                             const gl::ProgramExecutable &programExecutable,
                             const gl::ShaderType shaderType,
                             GlslangProgramInterfaceInfo *programInterfaceInfo,
@@ -115,7 +123,7 @@ void GlslangAssignLocations(GlslangSourceOptions &options,
 // buffers, xfb, etc).  For some variables, these values are instead output to the variableInfoMap
 // to be set during a SPIR-V transformation.  This is a transitory step towards moving all variables
 // to this map, at which point GlslangGetShaderSpirvCode will also be called by this function.
-void GlslangGetShaderSource(GlslangSourceOptions &options,
+void GlslangGetShaderSource(const GlslangSourceOptions &options,
                             const gl::ProgramState &programState,
                             const gl::ProgramLinkedResources &resources,
                             GlslangProgramInterfaceInfo *programInterfaceInfo,

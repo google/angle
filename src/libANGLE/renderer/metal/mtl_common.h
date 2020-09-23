@@ -102,6 +102,8 @@ constexpr uint32_t kMaxRenderTargets = 4;
 constexpr uint32_t kMaxShaderUBOs = 12;
 constexpr uint32_t kMaxUBOSize    = 16384;
 
+constexpr uint32_t kMaxShaderXFBs = gl::IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_SEPARATE_ATTRIBS;
+
 // The max size of a buffer that will be allocated in shared memory.
 // NOTE(hqle): This is just a hint. There is no official document on what is the max allowed size
 // for shared memory.

@@ -252,6 +252,7 @@ void ProgramMtl::reset(ContextMtl *context)
     {
         mMslShaderTranslateInfo[shaderType].reset();
     }
+    mMslXfbOnlyVertexShaderInfo.reset();
 
     for (ProgramShaderObjVariantMtl &var : mVertexShaderVariants)
     {
@@ -316,21 +317,38 @@ angle::Result ProgramMtl::linkImpl(const gl::Context *glContext,
 
     // Gather variable info and transform sources.
     gl::ShaderMap<std::string> shaderSources;
+    gl::ShaderMap<std::string> xfbOnlyShaderSources;
     ShaderMapInterfaceVariableInfoMap variableInfoMap;
-    mtl::GlslangGetShaderSource(mState, resources, &shaderSources, &variableInfoMap);
+    ShaderMapInterfaceVariableInfoMap xfbOnlyVariableInfoMap;
+    mtl::GlslangGetShaderSource(mState, resources, &shaderSources,
+                                &xfbOnlyShaderSources[gl::ShaderType::Vertex], &variableInfoMap,
+                                &xfbOnlyVariableInfoMap[gl::ShaderType::Vertex]);
 
     // Convert GLSL to spirv code
     gl::ShaderMap<std::vector<uint32_t>> shaderCodes;
+    gl::ShaderMap<std::vector<uint32_t>> xfbOnlyShaderCodes;  // only vertex shader is needed.
     ANGLE_TRY(mtl::GlslangGetShaderSpirvCode(
         contextMtl, mState.getExecutable().getLinkedShaderStages(), contextMtl->getCaps(),
         shaderSources, variableInfoMap, &shaderCodes));
 
+    if (!mState.getLinkedTransformFeedbackVaryings().empty())
+    {
+        gl::ShaderBitSet onlyVS;
+        onlyVS.set(gl::ShaderType::Vertex);
+        ANGLE_TRY(mtl::GlslangGetShaderSpirvCode(contextMtl, onlyVS, contextMtl->getCaps(),
+                                                 xfbOnlyShaderSources, xfbOnlyVariableInfoMap,
+                                                 &xfbOnlyShaderCodes));
+    }
+
     // Convert spirv code to MSL
-    ANGLE_TRY(mtl::SpirvCodeToMsl(contextMtl, mState, &shaderCodes, &mMslShaderTranslateInfo));
+    ANGLE_TRY(mtl::SpirvCodeToMsl(contextMtl, mState,
+                                  xfbOnlyVariableInfoMap[gl::ShaderType::Vertex], &shaderCodes,
+                                  &xfbOnlyShaderCodes[gl::ShaderType::Vertex],
+                                  &mMslShaderTranslateInfo, &mMslXfbOnlyVertexShaderInfo));
 
     for (gl::ShaderType shaderType : gl::AllGLES2ShaderTypes())
     {
-        // Create actual Metal shader
+        // Create actual Metal shader library
         ANGLE_TRY(createMslShaderLib(contextMtl, shaderType, infoLog,
                                      &mMslShaderTranslateInfo[shaderType]));
     }
@@ -442,16 +460,46 @@ angle::Result ProgramMtl::getSpecializedShader(mtl::Context *context,
 
     if (shaderType == gl::ShaderType::Vertex)
     {
-        // NOTE(hqle): Only one vertex shader variant for now. In future, there should be a variant
-        // with rasterization discard enabled.
-        shaderVariant = &mVertexShaderVariants[0];
+        // For vertex shader, we need to create 3 variants, one with emulated rasterization
+        // discard, one with true rasterization discard and one without.
+        shaderVariant = &mVertexShaderVariants[renderPipelineDesc.rasterizationType];
         if (shaderVariant->metalShader)
         {
             // Already created.
             *shaderOut = shaderVariant->metalShader;
             return angle::Result::Continue;
         }
-    }
+
+        if (renderPipelineDesc.rasterizationType == mtl::RenderPipelineRasterization::Disabled)
+        {
+            // Special case: XFB output only vertex shader.
+            ASSERT(!mState.getLinkedTransformFeedbackVaryings().empty());
+            translatedMslInfo = &mMslXfbOnlyVertexShaderInfo;
+            if (!translatedMslInfo->metalLibrary)
+            {
+                // Lazily compile XFB only shader
+                gl::InfoLog infoLog;
+                ANGLE_TRY(
+                    createMslShaderLib(context, shaderType, infoLog, &mMslXfbOnlyVertexShaderInfo));
+                translatedMslInfo->metalLibrary.get().label = @"TransformFeedback";
+            }
+        }
+
+        ANGLE_MTL_OBJC_SCOPE
+        {
+            BOOL emulateDiscard = renderPipelineDesc.rasterizationType ==
+                                  mtl::RenderPipelineRasterization::EmulatedDiscard;
+
+            NSString *discardEnabledStr =
+                [NSString stringWithFormat:@"%s%s", sh::mtl::kRasterizerDiscardEnabledConstName,
+                                           kSpirvCrossSpecConstSuffix];
+
+            funcConstants = [[MTLFunctionConstantValues alloc] init];
+            [funcConstants setConstantValue:&emulateDiscard
+                                       type:MTLDataTypeBool
+                                   withName:discardEnabledStr];
+        }
+    }  // if (shaderType == gl::ShaderType::Vertex)
     else if (shaderType == gl::ShaderType::Fragment)
     {
         // For fragment shader, we need to create 2 variants, one with sample coverage mask
@@ -849,9 +897,12 @@ angle::Result ProgramMtl::setupDraw(const gl::Context *glContext,
         mSamplerBindingsDirty.set();
 
         // Cache current shader variant references for easier querying.
-        mCurrentShaderVariants[gl::ShaderType::Vertex] = &mVertexShaderVariants[0];
+        mCurrentShaderVariants[gl::ShaderType::Vertex] =
+            &mVertexShaderVariants[pipelineDesc.rasterizationType];
         mCurrentShaderVariants[gl::ShaderType::Fragment] =
-            &mFragmentShaderVariants[pipelineDesc.emulateCoverageMask];
+            pipelineDesc.rasterizationEnabled()
+                ? &mFragmentShaderVariants[pipelineDesc.emulateCoverageMask]
+                : nullptr;
     }
 
     ANGLE_TRY(commitUniforms(context, cmdEncoder));
@@ -860,6 +911,11 @@ angle::Result ProgramMtl::setupDraw(const gl::Context *glContext,
     if (uniformBuffersDirty || pipelineDescChanged)
     {
         ANGLE_TRY(updateUniformBuffers(context, cmdEncoder, pipelineDesc));
+    }
+
+    if (pipelineDescChanged)
+    {
+        ANGLE_TRY(updateXfbBuffers(context, cmdEncoder, pipelineDesc));
     }
 
     return angle::Result::Continue;
@@ -1166,6 +1222,51 @@ angle::Result ProgramMtl::encodeUniformBuffersInfoArgumentBuffer(
 
     cmdEncoder->setBuffer(shaderType, argumentBuffer, static_cast<uint32_t>(argumentBufferOffset),
                           mtl::kUBOArgumentBufferBindingIndex);
+    return angle::Result::Continue;
+}
+
+angle::Result ProgramMtl::updateXfbBuffers(ContextMtl *context,
+                                           mtl::RenderCommandEncoder *cmdEncoder,
+                                           const mtl::RenderPipelineDesc &pipelineDesc)
+{
+    const gl::State &glState                 = context->getState();
+    gl::TransformFeedback *transformFeedback = glState.getCurrentTransformFeedback();
+
+    if (pipelineDesc.rasterizationEnabled() || !glState.isTransformFeedbackActiveUnpaused() ||
+        ANGLE_UNLIKELY(!transformFeedback))
+    {
+        // XFB output can only be used with rasterization disabled.
+        return angle::Result::Continue;
+    }
+
+    size_t xfbBufferCount = glState.getProgramExecutable()->getTransformFeedbackBufferCount();
+
+    ASSERT(xfbBufferCount > 0);
+    ASSERT(mState.getTransformFeedbackBufferMode() != GL_INTERLEAVED_ATTRIBS ||
+           xfbBufferCount == 1);
+
+    for (size_t bufferIndex = 0; bufferIndex < xfbBufferCount; ++bufferIndex)
+    {
+        uint32_t actualBufferIdx = mMslXfbOnlyVertexShaderInfo.actualXFBBindings[bufferIndex];
+
+        if (actualBufferIdx >= mtl::kMaxShaderBuffers)
+        {
+            continue;
+        }
+
+        const gl::OffsetBindingPointer<gl::Buffer> &bufferBinding =
+            transformFeedback->getIndexedBuffer(bufferIndex);
+        gl::Buffer *buffer = bufferBinding.get();
+        ASSERT((bufferBinding.getOffset() % 4) == 0);
+        ASSERT(buffer != nullptr);
+
+        BufferMtl *bufferMtl = mtl::GetImpl(buffer);
+
+        // Use offset=0, actual offset will be set in Driver Uniform inside ContextMtl.
+        cmdEncoder->setBufferForWrite(gl::ShaderType::Vertex, bufferMtl->getCurrentBuffer(), 0,
+                                      actualBufferIdx);
+    }
+
     return angle::Result::Continue;
 }
 

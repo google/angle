@@ -177,6 +177,10 @@ class ProgramMtl : public ProgramImpl, public mtl::RenderPipelineCacheSpecialize
         const std::vector<gl::InterfaceBlock> &blocks,
         gl::ShaderType shaderType);
 
+    angle::Result updateXfbBuffers(ContextMtl *context,
+                                   mtl::RenderCommandEncoder *cmdEncoder,
+                                   const mtl::RenderPipelineDesc &pipelineDesc);
+
     void reset(ContextMtl *context);
 
     void linkResources(const gl::ProgramLinkedResources &resources);
@@ -210,9 +214,16 @@ class ProgramMtl : public ProgramImpl, public mtl::RenderPipelineCacheSpecialize
     // Translated metal shaders:
     gl::ShaderMap<mtl::TranslatedShaderInfo> mMslShaderTranslateInfo;
 
+    // Translated metal version for transform feedback only vertex shader:
+    // - Metal doesn't allow vertex shader to write to both buffers and to stage output
+    // (gl_Position). Need a special version of vertex shader that only writes to transform feedback
+    // buffers.
+    mtl::TranslatedShaderInfo mMslXfbOnlyVertexShaderInfo;
+
     // Compiled native shader object variants:
-    // - Vertex shader: one variant for now.
-    std::array<ProgramShaderObjVariantMtl, 1> mVertexShaderVariants;
+    // - Vertex shader: One with emulated rasterization discard, one with true rasterization
+    // discard, one without.
+    mtl::RenderPipelineRasterStateMap<ProgramShaderObjVariantMtl> mVertexShaderVariants;
     // - Fragment shader: One with sample coverage mask enabled, one with it disabled.
     std::array<ProgramShaderObjVariantMtl, 2> mFragmentShaderVariants;
 

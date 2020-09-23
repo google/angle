@@ -926,6 +926,11 @@ void RenderCommandEncoder::encodeMetalEncoder()
         // Verify that it was created successfully
         ASSERT(metalCmdEncoder);
 
+        if (mLabel)
+        {
+            metalCmdEncoder.label = mLabel;
+        }
+
         while (mCommands.good())
         {
             CmdType cmdType            = mCommands.fetch<CmdType>();
@@ -956,6 +961,8 @@ RenderCommandEncoder &RenderCommandEncoder::restart(const RenderPassDesc &desc)
         reset();
         return *this;
     }
+
+    mLabel.reset();
 
     mRenderPassDesc           = desc;
     mRecording                = true;
@@ -1554,6 +1561,11 @@ RenderCommandEncoder &RenderCommandEncoder::setStencilLoadAction(MTLLoadAction a
         mCachedRenderPassDescObjC.get().stencilAttachment.clearStencil = clearVal;
     }
     return *this;
+}
+
+void RenderCommandEncoder::setLabel(NSString *label)
+{
+    mLabel.retainAssign(label);
 }
 
 // BlitCommandEncoder

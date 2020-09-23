@@ -166,6 +166,7 @@ class TextureMtl : public TextureImpl
                                int samplerSlotIndex);
 
     const mtl::Format &getFormat() const { return mFormat; }
+    const mtl::TextureRef &getNativeTexture() const { return mNativeTexture; }
 
   private:
     void releaseTexture(bool releaseImages);

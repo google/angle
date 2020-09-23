@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 233
+#define ANGLE_SH_VERSION 234
 
 enum ShShaderSpec
 {
@@ -800,6 +800,9 @@ namespace mtl
 {
 // Specialization constant to enable GL_SAMPLE_COVERAGE_VALUE emulation.
 extern const char kCoverageMaskEnabledConstName[];
+
+// Specialization constant to emulate rasterizer discard.
+extern const char kRasterizerDiscardEnabledConstName[];
 }  // namespace mtl
 }  // namespace sh
 
