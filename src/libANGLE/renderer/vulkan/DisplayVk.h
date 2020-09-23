@@ -12,7 +12,6 @@
 
 #include "common/MemoryBuffer.h"
 #include "libANGLE/renderer/DisplayImpl.h"
-#include "libANGLE/renderer/vulkan/ResourceVk.h"
 #include "libANGLE/renderer/vulkan/vk_utils.h"
 
 namespace rx
@@ -23,14 +22,6 @@ class ShareGroupVk : public ShareGroupImpl
 {
   public:
     ShareGroupVk() {}
-
-    ANGLE_INLINE vk::SharedResourceUsePool *getSharedResourceUsePool()
-    {
-        return &mSharedResourceUsePool;
-    }
-
-  private:
-    vk::SharedResourceUsePool mSharedResourceUsePool;
 };
 
 class DisplayVk : public DisplayImpl, public vk::Context

@@ -931,7 +931,7 @@ void ProgramExecutableVk::updateDefaultUniformsDescriptorSet(
     else
     {
         vk::BufferHelper &emptyBuffer = contextVk->getEmptyBuffer();
-        emptyBuffer.retain(&contextVk->getResourceUseList(), contextVk->getSharedResourceUsePool());
+        emptyBuffer.retain(&contextVk->getResourceUseList());
         bufferInfo.buffer = emptyBuffer.getBuffer().getHandle();
     }
 
@@ -1035,13 +1035,13 @@ angle::Result ProgramExecutableVk::updateBuffersDescriptorSet(
         {
             // We set the SHADER_READ_BIT to be conservative.
             VkAccessFlags accessFlags = VK_ACCESS_SHADER_READ_BIT | VK_ACCESS_SHADER_WRITE_BIT;
-            commandBufferHelper->bufferWrite(contextVk, accessFlags,
+            commandBufferHelper->bufferWrite(resourceUseList, accessFlags,
                                              kPipelineStageShaderMap[shaderType],
                                              vk::AliasingMode::Allowed, &bufferHelper);
         }
         else
         {
-            commandBufferHelper->bufferRead(contextVk, VK_ACCESS_UNIFORM_READ_BIT,
+            commandBufferHelper->bufferRead(resourceUseList, VK_ACCESS_UNIFORM_READ_BIT,
                                             kPipelineStageShaderMap[shaderType], &bufferHelper);
         }
     }
@@ -1117,7 +1117,7 @@ angle::Result ProgramExecutableVk::updateAtomicCounterBuffersDescriptorSet(
 
         // We set SHADER_READ_BIT to be conservative.
         commandBufferHelper->bufferWrite(
-            contextVk, VK_ACCESS_SHADER_READ_BIT | VK_ACCESS_SHADER_WRITE_BIT,
+            resourceUseList, VK_ACCESS_SHADER_READ_BIT | VK_ACCESS_SHADER_WRITE_BIT,
             kPipelineStageShaderMap[shaderType], vk::AliasingMode::Allowed, &bufferHelper);
 
         writtenBindings.set(binding);
@@ -1127,7 +1127,7 @@ angle::Result ProgramExecutableVk::updateAtomicCounterBuffersDescriptorSet(
 
     // Bind the empty buffer to every array slot that's unused.
     vk::BufferHelper &emptyBuffer = contextVk->getEmptyBuffer();
-    emptyBuffer.retain(&contextVk->getResourceUseList(), contextVk->getSharedResourceUsePool());
+    emptyBuffer.retain(&contextVk->getResourceUseList());
     size_t count                        = (~writtenBindings).count();
     VkDescriptorBufferInfo *bufferInfos = contextVk->allocDescriptorBufferInfos(count);
     VkWriteDescriptorSet *writeInfos    = contextVk->allocWriteDescriptorSets(count);

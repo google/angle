@@ -54,7 +54,7 @@ angle::Result SyncHelper::initialize(ContextVk *contextVk)
 
     vk::CommandBuffer &commandBuffer = contextVk->getOutsideRenderPassCommandBuffer();
     commandBuffer.setEvent(mEvent.getHandle(), VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT);
-    retain(&contextVk->getResourceUseList(), contextVk->getSharedResourceUsePool());
+    retain(&contextVk->getResourceUseList());
 
     contextVk->onSyncHelperInitialize();
 
@@ -111,7 +111,7 @@ angle::Result SyncHelper::serverWait(ContextVk *contextVk)
     commandBuffer.waitEvents(1, mEvent.ptr(), VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT,
                              VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, 0, nullptr, 0, nullptr, 0,
                              nullptr);
-    retain(&contextVk->getResourceUseList(), contextVk->getSharedResourceUsePool());
+    retain(&contextVk->getResourceUseList());
     return angle::Result::Continue;
 }
 
@@ -187,7 +187,7 @@ angle::Result SyncHelperNativeFence::initializeWithFd(ContextVk *contextVk, int 
         // Flush first because the fence comes after current pending set of commands.
         ANGLE_TRY(contextVk->flushImpl(nullptr));
 
-        retain(&contextVk->getResourceUseList(), contextVk->getSharedResourceUsePool());
+        retain(&contextVk->getResourceUseList());
 
         Serial serialOut;
         VkSubmitInfo submitInfo = {};
@@ -220,7 +220,7 @@ angle::Result SyncHelperNativeFence::initializeWithFd(ContextVk *contextVk, int 
 
     ANGLE_VK_TRY(contextVk, fence.get().importFd(device, importFenceFdInfo));
     mFenceWithFd = fence.release();
-    retain(&contextVk->getResourceUseList(), contextVk->getSharedResourceUsePool());
+    retain(&contextVk->getResourceUseList());
 
     return angle::Result::Continue;
 }

@@ -926,21 +926,21 @@ class CommandBufferHelper : angle::NonCopyable
     // General Functions (non-renderPass specific)
     void initialize(bool isRenderPassCommandBuffer);
 
-    void bufferRead(ContextVk *contextVk,
+    void bufferRead(ResourceUseList *resourceUseList,
                     VkAccessFlags readAccessType,
                     PipelineStage readStage,
                     BufferHelper *buffer);
-    void bufferWrite(ContextVk *contextVk,
+    void bufferWrite(ResourceUseList *resourceUseList,
                      VkAccessFlags writeAccessType,
                      PipelineStage writeStage,
                      AliasingMode aliasingMode,
                      BufferHelper *buffer);
 
-    void imageRead(ContextVk *contextVk,
+    void imageRead(ResourceUseList *resourceUseList,
                    VkImageAspectFlags aspectFlags,
                    ImageLayout imageLayout,
                    ImageHelper *image);
-    void imageWrite(ContextVk *contextVk,
+    void imageWrite(ResourceUseList *resourceUseList,
                     VkImageAspectFlags aspectFlags,
                     ImageLayout imageLayout,
                     AliasingMode aliasingMode,
@@ -1851,11 +1851,7 @@ class ImageViewHelper : angle::NonCopyable
     }
 
     // Store reference to usage in graph.
-    ANGLE_INLINE void retain(ResourceUseList *resourceUseList,
-                             SharedResourceUsePool *sharedResourceUsePool) const
-    {
-        resourceUseList->add(mUse, sharedResourceUsePool);
-    }
+    void retain(ResourceUseList *resourceUseList) const { resourceUseList->add(mUse); }
 
     // For applications that frequently switch a texture's max level, and make no other changes to
     // the texture, change the currently-used max level, and potentially create new "read views"

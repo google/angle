@@ -22,7 +22,6 @@
 namespace rx
 {
 
-// DisplayVk implementation
 DisplayVk::DisplayVk(const egl::DisplayState &state)
     : DisplayImpl(state),
       vk::Context(new RendererVk()),
