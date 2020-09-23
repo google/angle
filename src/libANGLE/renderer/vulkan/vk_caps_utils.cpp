@@ -87,6 +87,8 @@ void RendererVk::ensureCapsInitialized() const
         getFeatures().enableMultisampledRenderToTexture.enabled;
     mNativeExtensions.multisampledRenderToTexture2 =
         getFeatures().enableMultisampledRenderToTexture.enabled;
+    mNativeExtensions.textureStorageMultisample2DArrayOES =
+        (limitsVk.standardSampleLocations == VK_TRUE);
     mNativeExtensions.copyTexture           = true;
     mNativeExtensions.copyTexture3d         = true;
     mNativeExtensions.copyCompressedTexture = true;

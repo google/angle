@@ -454,6 +454,7 @@ MSG kTextureTargetRequiresES31 = "Texture target requires at least OpenGL ES 3.1
 MSG kTextureTypeConflict = "Two textures of different types use the same sampler location.";
 MSG kTextureTypeMismatch = "Passed in texture type must match the one originally used to define the texture.";
 MSG kTextureWidthOrHeightOutOfRange = "Width and height must be less than or equal to GL_MAX_TEXTURE_SIZE.";
+MSG kTextureDepthOutOfRange = "Depth must be less than or equal to MAX_ARRAY_TEXTURE_LAYERS";
 MSG kTransfomFeedbackAlreadyActive = "Transform feedback is already active.";
 MSG kTransformFeedbackActiveDelete = "Attempt to delete an active transform feedback.";
 MSG kTransformFeedbackActiveDuringLink = "Cannot link program while program is associated with an active transform feedback object.";

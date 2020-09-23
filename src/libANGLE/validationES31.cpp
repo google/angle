@@ -2075,6 +2075,12 @@ bool ValidateTexStorage3DMultisampleOES(const Context *context,
         return false;
     }
 
+    if (depth > context->getCaps().maxArrayTextureLayers)
+    {
+        context->validationError(GL_INVALID_VALUE, kTextureDepthOutOfRange);
+        return false;
+    }
+
     return ValidateTexStorageMultisample(context, target, samples, sizedinternalformat, width,
                                          height);
 }
