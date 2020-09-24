@@ -184,10 +184,6 @@ void ShaderD3D::generateWorkarounds(angle::CompilerWorkaroundsD3D *workarounds) 
         // disabling optimization
         workarounds->skipOptimization = true;
     }
-    else if (!mState.isOptimizationEnabled())
-    {
-        workarounds->skipOptimization = true;
-    }
     else if (mUsesNestedBreak)
     {
         // ANGLE issue 603:

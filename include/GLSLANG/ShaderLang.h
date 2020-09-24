@@ -743,8 +743,6 @@ int GetGeometryShaderInvocations(const ShHandle handle);
 int GetGeometryShaderMaxVertices(const ShHandle handle);
 unsigned int GetShaderSharedMemorySize(const ShHandle handle);
 
-bool GetPragmaOptimize(const ShHandle handle);
-
 //
 // Helper function to identify specs that are based on the WebGL spec.
 //

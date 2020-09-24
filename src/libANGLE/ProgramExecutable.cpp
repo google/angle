@@ -147,8 +147,6 @@ void ProgramExecutable::load(gl::BinaryInputStream *stream)
     mLinkedComputeShaderStages  = ShaderBitSet(stream->readInt<uint8_t>());
     mIsCompute                  = stream->readBool();
 
-    mShaderOptimizationEnabled = ShaderBitSet(stream->readInt<uint8_t>());
-
     mPipelineHasGraphicsUniformBuffers       = stream->readBool();
     mPipelineHasComputeUniformBuffers        = stream->readBool();
     mPipelineHasGraphicsStorageBuffers       = stream->readBool();
@@ -173,8 +171,6 @@ void ProgramExecutable::save(gl::BinaryOutputStream *stream) const
     stream->writeInt(mLinkedGraphicsShaderStages.bits());
     stream->writeInt(mLinkedComputeShaderStages.bits());
     stream->writeInt(static_cast<bool>(mIsCompute));
-
-    stream->writeInt(mShaderOptimizationEnabled.bits());
 
     stream->writeInt(static_cast<bool>(mPipelineHasGraphicsUniformBuffers));
     stream->writeInt(static_cast<bool>(mPipelineHasComputeUniformBuffers));

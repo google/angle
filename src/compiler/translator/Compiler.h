@@ -144,13 +144,12 @@ class TCompiler : public TShHandleBase
         return mGeometryShaderOutputPrimitiveType;
     }
 
+    unsigned int getStructSize(const ShaderVariable &var) const;
     unsigned int getSharedMemorySize() const;
 
     sh::GLenum getShaderType() const { return mShaderType; }
 
     bool validateAST(TIntermNode *root);
-
-    bool getPragmaOptimize() const;
 
   protected:
     // Add emulated functions to the built-in function emulator.

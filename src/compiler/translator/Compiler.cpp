@@ -1506,11 +1506,6 @@ bool TCompiler::isVaryingDefined(const char *varyingName)
     return false;
 }
 
-bool TCompiler::getPragmaOptimize() const
-{
-    return mPragma.optimize;
-}
-
 void EmitEarlyFragmentTestsGLSL(const TCompiler &compiler, TInfoSinkBase &sink)
 {
     if (compiler.isEarlyFragmentTestsSpecified() || compiler.isEarlyFragmentTestsOptimized())

@@ -302,11 +302,6 @@ class ProgramExecutable final : public angle::Subject
     }
     int getLinkedShaderVersion(ShaderType shaderType) { return mLinkedShaderVersions[shaderType]; }
 
-    bool isShaderOptimizationEnabled(ShaderType shaderType) const
-    {
-        return mShaderOptimizationEnabled[shaderType];
-    }
-
   private:
     // TODO(timvp): http://anglebug.com/3570: Investigate removing these friend
     // class declarations and accessing the necessary members with getters/setters.
@@ -397,8 +392,6 @@ class ProgramExecutable final : public angle::Subject
     bool mPipelineHasComputeImages;
 
     bool mIsCompute;
-
-    ShaderBitSet mShaderOptimizationEnabled;
 
     ShaderMap<std::vector<sh::ShaderVariable>> mLinkedOutputVaryings;
     ShaderMap<std::vector<sh::ShaderVariable>> mLinkedInputVaryings;

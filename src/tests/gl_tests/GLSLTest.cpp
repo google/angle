@@ -368,8 +368,7 @@ class GLSLTest : public ANGLETest
         std::stringstream fragmentShader;
 
         // Generate the vertex shader
-        vertexShader << "#pragma optimize(off)\n"
-                     << "precision mediump float;\n";
+        vertexShader << "precision mediump float;\n";
 
         for (int i = 0; i < vertexUniformCount; i++)
         {

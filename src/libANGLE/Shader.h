@@ -109,8 +109,6 @@ class ShaderState final : angle::NonCopyable
 
     CompileStatus getCompileStatus() const { return mCompileStatus; }
 
-    bool isOptimizationEnabled() const { return mOptimizationEnabled; }
-
   private:
     friend class Shader;
 
@@ -133,7 +131,6 @@ class ShaderState final : angle::NonCopyable
     std::vector<sh::ShaderVariable> mActiveOutputVariables;
 
     bool mEarlyFragmentTestsOptimization;
-    bool mOptimizationEnabled;
 
     // ANGLE_multiview.
     int mNumViews;
