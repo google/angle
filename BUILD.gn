@@ -363,7 +363,7 @@ angle_static_library("angle_gpu_info_util") {
   libs = []
   defines = []
 
-  if (is_android || is_fuchsia) {
+  if (angle_enable_vulkan) {
     sources += libangle_gpu_info_util_vulkan_sources
     deps += [ "$angle_root/third_party/vulkan-headers/src:vulkan_headers" ]
   }
