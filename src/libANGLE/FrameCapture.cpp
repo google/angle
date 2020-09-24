@@ -2798,7 +2798,7 @@ void CaptureMidExecutionSetup(const gl::Context *context,
     const gl::ResourceMap<gl::Shader, gl::ShaderProgramID> &shaders =
         shadersAndPrograms.getShadersForCapture();
     const gl::ResourceMap<gl::Program, gl::ShaderProgramID> &programs =
-        shadersAndPrograms.getProgramsForCapture();
+        shadersAndPrograms.getProgramsForCaptureAndPerf();
 
     // Capture Program binary state. Use max ID as a temporary shader ID.
     gl::ShaderProgramID tempShaderID = {resourceTracker->getMaxShaderPrograms()};

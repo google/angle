@@ -26,6 +26,8 @@ enum class WidgetId
     VulkanSecondaryCommandBufferPoolWaste,
     // Number of Descriptor Set writes in a frame (Count).
     VulkanWriteDescriptorSetCount,
+    // Descriptor Set Allocations.
+    VulkanDescriptorSetAllocations,
 
     InvalidEnum,
     EnumCount = InvalidEnum,
@@ -39,6 +41,7 @@ enum class WidgetId
     PROC(VulkanRenderPassCount)                 \
     PROC(VulkanRenderPassBufferCount)           \
     PROC(VulkanSecondaryCommandBufferPoolWaste) \
-    PROC(VulkanWriteDescriptorSetCount)
+    PROC(VulkanWriteDescriptorSetCount)         \
+    PROC(VulkanDescriptorSetAllocations)
 
 }  // namespace gl

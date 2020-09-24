@@ -70,6 +70,7 @@ namespace rx
 {
 class DisplayVk;
 class ImageVk;
+class ProgramExecutableVk;
 class RenderTargetVk;
 class RendererVk;
 class RenderPassCache;
@@ -184,7 +185,7 @@ class Context : angle::NonCopyable
 #if ANGLE_USE_CUSTOM_VULKAN_CMD_BUFFERS
 using CommandBuffer = priv::SecondaryCommandBuffer;
 #else
-using CommandBuffer = priv::CommandBuffer;
+using CommandBuffer                          = priv::CommandBuffer;
 #endif
 
 using PrimaryCommandBuffer = priv::CommandBuffer;
@@ -781,6 +782,12 @@ class ResourceSerialFactory final : angle::NonCopyable
     std::atomic<uint32_t> mCurrentUniqueSerial;
 };
 
+#if defined(ANGLE_ENABLE_PERF_COUNTER_OUTPUT)
+constexpr bool kOutputCumulativePerfCounters = ANGLE_ENABLE_PERF_COUNTER_OUTPUT;
+#else
+constexpr bool kOutputCumulativePerfCounters = false;
+#endif
+
 // Performance and resource counters.
 struct RenderPassPerfCounters
 {
@@ -823,6 +830,7 @@ struct PerfCounters
     uint32_t depthAttachmentResolves;
     uint32_t stencilAttachmentResolves;
     uint32_t readOnlyDepthStencilRenderPasses;
+    uint32_t descriptorSetAllocations;
 };
 
 // A Vulkan image level index.

@@ -991,7 +991,7 @@ Result SerializeContext(gl::BinaryOutputStream *bos, const gl::Context *context)
         SerializeShader(bos, shaderPtr);
     }
     const gl::ResourceMap<gl::Program, gl::ShaderProgramID> &programManager =
-        shaderProgramManager.getProgramsForCapture();
+        shaderProgramManager.getProgramsForCaptureAndPerf();
     for (const auto &program : programManager)
     {
         gl::Program *programPtr = program.second;

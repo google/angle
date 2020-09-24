@@ -15,6 +15,7 @@
 #include "libANGLE/renderer/vulkan/GlslangWrapperVk.h"
 #include "libANGLE/renderer/vulkan/RenderTargetVk.h"
 #include "libANGLE/renderer/vulkan/RendererVk.h"
+#include "libANGLE/renderer/vulkan/vk_utils.h"
 
 namespace rx
 {
@@ -530,13 +531,15 @@ uint32_t UtilsVk::GetGenerateMipmapMaxLevels(ContextVk *contextVk)
                : kGenerateMipmapMaxLevels;
 }
 
-UtilsVk::UtilsVk() = default;
+UtilsVk::UtilsVk() : mObjectPerfCounters{} {}
 
 UtilsVk::~UtilsVk() = default;
 
 void UtilsVk::destroy(RendererVk *renderer)
 {
     VkDevice device = renderer->getDevice();
+
+    outputCumulativePerfCounters();
 
     for (Function f : angle::AllEnums<Function>())
     {
@@ -2632,6 +2635,9 @@ angle::Result UtilsVk::allocateDescriptorSet(ContextVk *contextVk,
             .ptr(),
         1, bindingOut, descriptorSetOut));
     bindingOut->get().updateSerial(contextVk->getCurrentQueueSerial());
+
+    mObjectPerfCounters.descriptorSetsAllocated++;
+
     return angle::Result::Continue;
 }
 
@@ -2646,5 +2652,16 @@ UtilsVk::ClearFramebufferParameters::ClearFramebufferParameters()
       colorClearValue{},
       depthStencilClearValue{}
 {}
+
+// Requires that trace is enabled to see the output, which is supported with is_debug=true
+void UtilsVk::outputCumulativePerfCounters()
+{
+    if (!vk::kOutputCumulativePerfCounters)
+    {
+        return;
+    }
+
+    INFO() << "Utils Descriptor Set Allocations: " << mObjectPerfCounters.descriptorSetsAllocated;
+}
 
 }  // namespace rx

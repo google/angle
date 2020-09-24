@@ -300,10 +300,10 @@ void AppendWidgetDataHelper::AppendRunningHistogramCommon(const overlay::Widget 
                                                           OverlayWidgetCounts *widgetCounts,
                                                           FormatHistogramTitleFunc formatFunc)
 {
-    const overlay::RunningHistogram *secondaryCommandBufferPoolWaste =
+    const overlay::RunningHistogram *runningHistogram =
         static_cast<const overlay::RunningHistogram *>(widget);
 
-    std::vector<size_t> histogram = CreateHistogram(secondaryCommandBufferPoolWaste->runningValues);
+    std::vector<size_t> histogram = CreateHistogram(runningHistogram->runningValues);
     auto peakRangeIt              = std::max_element(histogram.rbegin(), histogram.rend());
     const size_t peakRangeValue   = *peakRangeIt;
     const int32_t graphHeight     = std::abs(widget->coords[3] - widget->coords[1]);
@@ -320,8 +320,8 @@ void AppendWidgetDataHelper::AppendRunningHistogramCommon(const overlay::Widget 
         size_t maxValueRange = std::distance(maxValueIter, histogram.rend() - 1);
 
         std::string text = formatFunc(peakRange, maxValueRange, histogram.size());
-        AppendTextCommon(&secondaryCommandBufferPoolWaste->description, imageExtent, text,
-                         textWidget, widgetCounts);
+        AppendTextCommon(&runningHistogram->description, imageExtent, text, textWidget,
+                         widgetCounts);
     }
 }
 
@@ -425,6 +425,21 @@ void AppendWidgetDataHelper::AppendVulkanWriteDescriptorSetCount(const overlay::
     auto format = [](size_t maxValue) {
         std::ostringstream text;
         text << "WriteDescriptorSet Count (Max: " << maxValue << ")";
+        return text.str();
+    };
+
+    AppendRunningGraphCommon(widget, imageExtent, textWidget, graphWidget, widgetCounts, format);
+}
+
+void AppendWidgetDataHelper::AppendVulkanDescriptorSetAllocations(const overlay::Widget *widget,
+                                                                  const gl::Extents &imageExtent,
+                                                                  TextWidgetData *textWidget,
+                                                                  GraphWidgetData *graphWidget,
+                                                                  OverlayWidgetCounts *widgetCounts)
+{
+    auto format = [](size_t maxValue) {
+        std::ostringstream text;
+        text << "Descriptor Set Allocations (Max: " << maxValue << ")";
         return text.str();
     };
 

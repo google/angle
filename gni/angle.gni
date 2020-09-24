@@ -131,6 +131,9 @@ declare_args() {
 
   # Disable overlay by default
   angle_enable_overlay = false
+
+  # Disable performance counter output by default
+  angle_enable_perf_counter_output = false
 }
 
 if (!defined(angle_zlib_compression_utils_dir)) {

@@ -116,6 +116,22 @@
                 "font": "small",
                 "length": 40
             }
+        },
+        {
+            "name": "VulkanDescriptorSetAllocations",
+            "comment": "Descriptor Set Allocations.",
+            "type": "RunningGraph(60)",
+            "color": [255, 0, 75, 200],
+            "coords": [-50, 250],
+            "bar_width": 6,
+            "height": 100,
+            "description": {
+                "color": [255, 0, 75, 255],
+                "coords": ["VulkanDescriptorSetAllocations.left.align",
+                           "VulkanDescriptorSetAllocations.top.adjacent"],
+                "font": "small",
+                "length": 40
+            }
         }
     ]
 }

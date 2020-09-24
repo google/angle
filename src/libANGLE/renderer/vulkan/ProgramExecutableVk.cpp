@@ -182,10 +182,14 @@ ProgramExecutableVk::ProgramExecutableVk()
       mNumDefaultUniformDescriptors(0),
       mDynamicBufferOffsets{},
       mProgram(nullptr),
-      mProgramPipeline(nullptr)
+      mProgramPipeline(nullptr),
+      mObjectPerfCounters{}
 {}
 
-ProgramExecutableVk::~ProgramExecutableVk() = default;
+ProgramExecutableVk::~ProgramExecutableVk()
+{
+    outputCumulativePerfCounters();
+}
 
 void ProgramExecutableVk::reset(ContextVk *contextVk)
 {
@@ -423,6 +427,8 @@ angle::Result ProgramExecutableVk::allocateDescriptorSetAndGetInfo(
         &mDescriptorPoolBindings[ToUnderlying(descriptorSetIndex)],
         &mDescriptorSets[ToUnderlying(descriptorSetIndex)], newPoolAllocatedOut));
     mEmptyDescriptorSets[ToUnderlying(descriptorSetIndex)] = VK_NULL_HANDLE;
+
+    ++mObjectPerfCounters.descriptorSetsAllocated[ToUnderlying(descriptorSetIndex)];
 
     return angle::Result::Continue;
 }
@@ -1561,6 +1567,8 @@ angle::Result ProgramExecutableVk::updateDescriptorSets(ContextVk *contextVk,
                     contextVk, descriptorSetLayout.ptr(), 1,
                     &mDescriptorPoolBindings[descriptorSetIndex],
                     &mEmptyDescriptorSets[descriptorSetIndex]));
+
+                ++mObjectPerfCounters.descriptorSetsAllocated[descriptorSetIndex];
             }
             descSet = mEmptyDescriptorSets[descriptorSetIndex];
         }
@@ -1580,6 +1588,46 @@ angle::Result ProgramExecutableVk::updateDescriptorSets(ContextVk *contextVk,
     }
 
     return angle::Result::Continue;
+}
+
+// Requires that trace is enabled to see the output, which is supported with is_debug=true
+void ProgramExecutableVk::outputCumulativePerfCounters()
+{
+    if (!vk::kOutputCumulativePerfCounters)
+    {
+        return;
+    }
+
+    {
+        std::ostringstream text;
+
+        for (size_t descriptorSetIndex = 0;
+             descriptorSetIndex < mObjectPerfCounters.descriptorSetsAllocated.size();
+             ++descriptorSetIndex)
+        {
+            uint32_t count = mObjectPerfCounters.descriptorSetsAllocated[descriptorSetIndex];
+            if (count > 0)
+            {
+                text << "    DescriptorSetIndex " << descriptorSetIndex << ": " << count << "\n";
+            }
+        }
+
+        // Only output information for programs that allocated descriptor sets.
+        std::string textStr = text.str();
+        if (!textStr.empty())
+        {
+            INFO() << "ProgramExecutable: " << this << ":";
+
+            // Output each descriptor set allocation on a single line, so they're prefixed with the
+            // INFO information (file, line number, etc.).
+            // https://stackoverflow.com/a/12514641
+            std::istringstream iss(textStr);
+            for (std::string line; std::getline(iss, line);)
+            {
+                INFO() << line;
+            }
+        }
+    }
 }
 
 }  // namespace rx

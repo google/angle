@@ -164,9 +164,12 @@ class ShaderProgramManager : public ResourceManagerBase
         return mPrograms.query(handle);
     }
 
-    // For capture only.
+    // For capture and performance counters only.
     const ResourceMap<Shader, ShaderProgramID> &getShadersForCapture() const { return mShaders; }
-    const ResourceMap<Program, ShaderProgramID> &getProgramsForCapture() const { return mPrograms; }
+    const ResourceMap<Program, ShaderProgramID> &getProgramsForCaptureAndPerf() const
+    {
+        return mPrograms;
+    }
 
   protected:
     ~ShaderProgramManager() override;
