@@ -47,6 +47,7 @@ bool IsARM64();
 // GPU devices.
 bool IsSwiftshaderDevice();
 
+// Compiler configs.
 inline bool IsASan()
 {
 #if defined(ANGLE_WITH_ASAN)
@@ -54,6 +55,15 @@ inline bool IsASan()
 #else
     return false;
 #endif  // defined(ANGLE_WITH_ASAN)
+}
+
+inline bool IsTSan()
+{
+#if defined(THREAD_SANITIZER)
+    return true;
+#else
+    return false;
+#endif  // defined(THREAD_SANITIZER)
 }
 
 bool IsPlatformAvailable(const PlatformParameters &param);

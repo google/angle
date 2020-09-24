@@ -2139,6 +2139,9 @@ TEST_P(Texture2DTest, TexStorageWithPBO)
     // http://anglebug.com/5081
     ANGLE_SKIP_TEST_IF(IsWindows() && IsNVIDIA() && IsOpenGL());
 
+    // http://anglebug.com/5097
+    ANGLE_SKIP_TEST_IF(IsLinux() && IsOpenGL() && IsTSan());
+
     if (getClientMajorVersion() < 3)
     {
         ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_storage"));
