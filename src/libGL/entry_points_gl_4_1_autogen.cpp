@@ -30,8 +30,9 @@ namespace gl
 void GL_APIENTRY ActiveShaderProgram(GLuint pipeline, GLuint program)
 {
     Context *context = GetValidGlobalContext();
-    EVENT("glActiveShaderProgram", "context = %d, GLuint pipeline = %u, GLuint program = %u",
-          CID(context), pipeline, program);
+    EVENT(context, "glActiveShaderProgram",
+          "context = %d, GLuint pipeline = %u, GLuint program = %u", CID(context), pipeline,
+          program);
 
     if (context)
     {
@@ -51,7 +52,8 @@ void GL_APIENTRY ActiveShaderProgram(GLuint pipeline, GLuint program)
 void GL_APIENTRY BindProgramPipeline(GLuint pipeline)
 {
     Context *context = GetValidGlobalContext();
-    EVENT("glBindProgramPipeline", "context = %d, GLuint pipeline = %u", CID(context), pipeline);
+    EVENT(context, "glBindProgramPipeline", "context = %d, GLuint pipeline = %u", CID(context),
+          pipeline);
 
     if (context)
     {
@@ -70,7 +72,7 @@ void GL_APIENTRY BindProgramPipeline(GLuint pipeline)
 void GL_APIENTRY ClearDepthf(GLfloat d)
 {
     Context *context = GetValidGlobalContext();
-    EVENT("glClearDepthf", "context = %d, GLfloat d = %f", CID(context), d);
+    EVENT(context, "glClearDepthf", "context = %d, GLfloat d = %f", CID(context), d);
 
     if (context)
     {
@@ -87,7 +89,7 @@ void GL_APIENTRY ClearDepthf(GLfloat d)
 GLuint GL_APIENTRY CreateShaderProgramv(GLenum type, GLsizei count, const GLchar *const *strings)
 {
     Context *context = GetValidGlobalContext();
-    EVENT("glCreateShaderProgramv",
+    EVENT(context, "glCreateShaderProgramv",
           "context = %d, GLenum type = %s, GLsizei count = %d, const GLchar *const*strings = "
           "0x%016" PRIxPTR "",
           CID(context), GLenumToString(GLenumGroup::ShaderType, type), count, (uintptr_t)strings);
@@ -120,7 +122,7 @@ GLuint GL_APIENTRY CreateShaderProgramv(GLenum type, GLsizei count, const GLchar
 void GL_APIENTRY DeleteProgramPipelines(GLsizei n, const GLuint *pipelines)
 {
     Context *context = GetValidGlobalContext();
-    EVENT("glDeleteProgramPipelines",
+    EVENT(context, "glDeleteProgramPipelines",
           "context = %d, GLsizei n = %d, const GLuint *pipelines = 0x%016" PRIxPTR "", CID(context),
           n, (uintptr_t)pipelines);
 
@@ -141,7 +143,7 @@ void GL_APIENTRY DeleteProgramPipelines(GLsizei n, const GLuint *pipelines)
 void GL_APIENTRY DepthRangeArrayv(GLuint first, GLsizei count, const GLdouble *v)
 {
     Context *context = GetValidGlobalContext();
-    EVENT("glDepthRangeArrayv",
+    EVENT(context, "glDepthRangeArrayv",
           "context = %d, GLuint first = %u, GLsizei count = %d, const GLdouble *v = 0x%016" PRIxPTR
           "",
           CID(context), first, count, (uintptr_t)v);
@@ -162,7 +164,7 @@ void GL_APIENTRY DepthRangeArrayv(GLuint first, GLsizei count, const GLdouble *v
 void GL_APIENTRY DepthRangeIndexed(GLuint index, GLdouble n, GLdouble f)
 {
     Context *context = GetValidGlobalContext();
-    EVENT("glDepthRangeIndexed",
+    EVENT(context, "glDepthRangeIndexed",
           "context = %d, GLuint index = %u, GLdouble n = %f, GLdouble f = %f", CID(context), index,
           n, f);
 
@@ -182,7 +184,8 @@ void GL_APIENTRY DepthRangeIndexed(GLuint index, GLdouble n, GLdouble f)
 void GL_APIENTRY DepthRangef(GLfloat n, GLfloat f)
 {
     Context *context = GetValidGlobalContext();
-    EVENT("glDepthRangef", "context = %d, GLfloat n = %f, GLfloat f = %f", CID(context), n, f);
+    EVENT(context, "glDepthRangef", "context = %d, GLfloat n = %f, GLfloat f = %f", CID(context), n,
+          f);
 
     if (context)
     {
@@ -199,7 +202,7 @@ void GL_APIENTRY DepthRangef(GLfloat n, GLfloat f)
 void GL_APIENTRY GenProgramPipelines(GLsizei n, GLuint *pipelines)
 {
     Context *context = GetValidGlobalContext();
-    EVENT("glGenProgramPipelines",
+    EVENT(context, "glGenProgramPipelines",
           "context = %d, GLsizei n = %d, GLuint *pipelines = 0x%016" PRIxPTR "", CID(context), n,
           (uintptr_t)pipelines);
 
@@ -220,7 +223,7 @@ void GL_APIENTRY GenProgramPipelines(GLsizei n, GLuint *pipelines)
 void GL_APIENTRY GetDoublei_v(GLenum target, GLuint index, GLdouble *data)
 {
     Context *context = GetValidGlobalContext();
-    EVENT("glGetDoublei_v",
+    EVENT(context, "glGetDoublei_v",
           "context = %d, GLenum target = %s, GLuint index = %u, GLdouble *data = 0x%016" PRIxPTR "",
           CID(context), GLenumToString(GLenumGroup::TypeEnum, target), index, (uintptr_t)data);
 
@@ -240,7 +243,7 @@ void GL_APIENTRY GetDoublei_v(GLenum target, GLuint index, GLdouble *data)
 void GL_APIENTRY GetFloati_v(GLenum target, GLuint index, GLfloat *data)
 {
     Context *context = GetValidGlobalContext();
-    EVENT("glGetFloati_v",
+    EVENT(context, "glGetFloati_v",
           "context = %d, GLenum target = %s, GLuint index = %u, GLfloat *data = 0x%016" PRIxPTR "",
           CID(context), GLenumToString(GLenumGroup::TypeEnum, target), index, (uintptr_t)data);
 
@@ -265,7 +268,7 @@ void GL_APIENTRY GetProgramBinary(GLuint program,
 {
     Context *context = GetValidGlobalContext();
     EVENT(
-        "glGetProgramBinary",
+        context, "glGetProgramBinary",
         "context = %d, GLuint program = %u, GLsizei bufSize = %d, GLsizei *length = 0x%016" PRIxPTR
         ", GLenum *binaryFormat = 0x%016" PRIxPTR ", void *binary = 0x%016" PRIxPTR "",
         CID(context), program, bufSize, (uintptr_t)length, (uintptr_t)binaryFormat,
@@ -294,7 +297,7 @@ void GL_APIENTRY GetProgramPipelineInfoLog(GLuint pipeline,
 {
     Context *context = GetValidGlobalContext();
     EVENT(
-        "glGetProgramPipelineInfoLog",
+        context, "glGetProgramPipelineInfoLog",
         "context = %d, GLuint pipeline = %u, GLsizei bufSize = %d, GLsizei *length = 0x%016" PRIxPTR
         ", GLchar *infoLog = 0x%016" PRIxPTR "",
         CID(context), pipeline, bufSize, (uintptr_t)length, (uintptr_t)infoLog);
@@ -318,7 +321,7 @@ void GL_APIENTRY GetProgramPipelineInfoLog(GLuint pipeline,
 void GL_APIENTRY GetProgramPipelineiv(GLuint pipeline, GLenum pname, GLint *params)
 {
     Context *context = GetValidGlobalContext();
-    EVENT("glGetProgramPipelineiv",
+    EVENT(context, "glGetProgramPipelineiv",
           "context = %d, GLuint pipeline = %u, GLenum pname = %s, GLint *params = 0x%016" PRIxPTR
           "",
           CID(context), pipeline, GLenumToString(GLenumGroup::PipelineParameterName, pname),
@@ -344,7 +347,7 @@ void GL_APIENTRY GetShaderPrecisionFormat(GLenum shadertype,
                                           GLint *precision)
 {
     Context *context = GetValidGlobalContext();
-    EVENT("glGetShaderPrecisionFormat",
+    EVENT(context, "glGetShaderPrecisionFormat",
           "context = %d, GLenum shadertype = %s, GLenum precisiontype = %s, GLint *range = "
           "0x%016" PRIxPTR ", GLint *precision = 0x%016" PRIxPTR "",
           CID(context), GLenumToString(GLenumGroup::ShaderType, shadertype),
@@ -369,7 +372,7 @@ void GL_APIENTRY GetShaderPrecisionFormat(GLenum shadertype,
 void GL_APIENTRY GetVertexAttribLdv(GLuint index, GLenum pname, GLdouble *params)
 {
     Context *context = GetValidGlobalContext();
-    EVENT("glGetVertexAttribLdv",
+    EVENT(context, "glGetVertexAttribLdv",
           "context = %d, GLuint index = %u, GLenum pname = %s, GLdouble *params = 0x%016" PRIxPTR
           "",
           CID(context), index, GLenumToString(GLenumGroup::VertexAttribEnum, pname),
@@ -391,7 +394,8 @@ void GL_APIENTRY GetVertexAttribLdv(GLuint index, GLenum pname, GLdouble *params
 GLboolean GL_APIENTRY IsProgramPipeline(GLuint pipeline)
 {
     Context *context = GetValidGlobalContext();
-    EVENT("glIsProgramPipeline", "context = %d, GLuint pipeline = %u", CID(context), pipeline);
+    EVENT(context, "glIsProgramPipeline", "context = %d, GLuint pipeline = %u", CID(context),
+          pipeline);
 
     GLboolean returnValue;
     if (context)
@@ -423,7 +427,7 @@ void GL_APIENTRY ProgramBinary(GLuint program,
                                GLsizei length)
 {
     Context *context = GetValidGlobalContext();
-    EVENT("glProgramBinary",
+    EVENT(context, "glProgramBinary",
           "context = %d, GLuint program = %u, GLenum binaryFormat = %s, const void *binary = "
           "0x%016" PRIxPTR ", GLsizei length = %d",
           CID(context), program, GLenumToString(GLenumGroup::DefaultGroup, binaryFormat),
@@ -448,7 +452,7 @@ void GL_APIENTRY ProgramBinary(GLuint program,
 void GL_APIENTRY ProgramParameteri(GLuint program, GLenum pname, GLint value)
 {
     Context *context = GetValidGlobalContext();
-    EVENT("glProgramParameteri",
+    EVENT(context, "glProgramParameteri",
           "context = %d, GLuint program = %u, GLenum pname = %s, GLint value = %d", CID(context),
           program, GLenumToString(GLenumGroup::ProgramParameterPName, pname), value);
 
@@ -469,7 +473,7 @@ void GL_APIENTRY ProgramParameteri(GLuint program, GLenum pname, GLint value)
 void GL_APIENTRY ProgramUniform1d(GLuint program, GLint location, GLdouble v0)
 {
     Context *context = GetValidGlobalContext();
-    EVENT("glProgramUniform1d",
+    EVENT(context, "glProgramUniform1d",
           "context = %d, GLuint program = %u, GLint location = %d, GLdouble v0 = %f", CID(context),
           program, location, v0);
 
@@ -494,7 +498,7 @@ void GL_APIENTRY ProgramUniform1dv(GLuint program,
                                    const GLdouble *value)
 {
     Context *context = GetValidGlobalContext();
-    EVENT("glProgramUniform1dv",
+    EVENT(context, "glProgramUniform1dv",
           "context = %d, GLuint program = %u, GLint location = %d, GLsizei count = %d, const "
           "GLdouble *value = 0x%016" PRIxPTR "",
           CID(context), program, location, count, (uintptr_t)value);
@@ -519,7 +523,7 @@ void GL_APIENTRY ProgramUniform1dv(GLuint program,
 void GL_APIENTRY ProgramUniform1f(GLuint program, GLint location, GLfloat v0)
 {
     Context *context = GetValidGlobalContext();
-    EVENT("glProgramUniform1f",
+    EVENT(context, "glProgramUniform1f",
           "context = %d, GLuint program = %u, GLint location = %d, GLfloat v0 = %f", CID(context),
           program, location, v0);
 
@@ -544,7 +548,7 @@ void GL_APIENTRY ProgramUniform1fv(GLuint program,
                                    const GLfloat *value)
 {
     Context *context = GetValidGlobalContext();
-    EVENT("glProgramUniform1fv",
+    EVENT(context, "glProgramUniform1fv",
           "context = %d, GLuint program = %u, GLint location = %d, GLsizei count = %d, const "
           "GLfloat *value = 0x%016" PRIxPTR "",
           CID(context), program, location, count, (uintptr_t)value);
@@ -569,7 +573,7 @@ void GL_APIENTRY ProgramUniform1fv(GLuint program,
 void GL_APIENTRY ProgramUniform1i(GLuint program, GLint location, GLint v0)
 {
     Context *context = GetValidGlobalContext();
-    EVENT("glProgramUniform1i",
+    EVENT(context, "glProgramUniform1i",
           "context = %d, GLuint program = %u, GLint location = %d, GLint v0 = %d", CID(context),
           program, location, v0);
 
@@ -594,7 +598,7 @@ void GL_APIENTRY ProgramUniform1iv(GLuint program,
                                    const GLint *value)
 {
     Context *context = GetValidGlobalContext();
-    EVENT("glProgramUniform1iv",
+    EVENT(context, "glProgramUniform1iv",
           "context = %d, GLuint program = %u, GLint location = %d, GLsizei count = %d, const GLint "
           "*value = 0x%016" PRIxPTR "",
           CID(context), program, location, count, (uintptr_t)value);
@@ -619,7 +623,7 @@ void GL_APIENTRY ProgramUniform1iv(GLuint program,
 void GL_APIENTRY ProgramUniform1ui(GLuint program, GLint location, GLuint v0)
 {
     Context *context = GetValidGlobalContext();
-    EVENT("glProgramUniform1ui",
+    EVENT(context, "glProgramUniform1ui",
           "context = %d, GLuint program = %u, GLint location = %d, GLuint v0 = %u", CID(context),
           program, location, v0);
 
@@ -644,7 +648,7 @@ void GL_APIENTRY ProgramUniform1uiv(GLuint program,
                                     const GLuint *value)
 {
     Context *context = GetValidGlobalContext();
-    EVENT("glProgramUniform1uiv",
+    EVENT(context, "glProgramUniform1uiv",
           "context = %d, GLuint program = %u, GLint location = %d, GLsizei count = %d, const "
           "GLuint *value = 0x%016" PRIxPTR "",
           CID(context), program, location, count, (uintptr_t)value);
@@ -669,7 +673,7 @@ void GL_APIENTRY ProgramUniform1uiv(GLuint program,
 void GL_APIENTRY ProgramUniform2d(GLuint program, GLint location, GLdouble v0, GLdouble v1)
 {
     Context *context = GetValidGlobalContext();
-    EVENT("glProgramUniform2d",
+    EVENT(context, "glProgramUniform2d",
           "context = %d, GLuint program = %u, GLint location = %d, GLdouble v0 = %f, GLdouble v1 = "
           "%f",
           CID(context), program, location, v0, v1);
@@ -697,7 +701,7 @@ void GL_APIENTRY ProgramUniform2dv(GLuint program,
                                    const GLdouble *value)
 {
     Context *context = GetValidGlobalContext();
-    EVENT("glProgramUniform2dv",
+    EVENT(context, "glProgramUniform2dv",
           "context = %d, GLuint program = %u, GLint location = %d, GLsizei count = %d, const "
           "GLdouble *value = 0x%016" PRIxPTR "",
           CID(context), program, location, count, (uintptr_t)value);
@@ -723,7 +727,7 @@ void GL_APIENTRY ProgramUniform2f(GLuint program, GLint location, GLfloat v0, GL
 {
     Context *context = GetValidGlobalContext();
     EVENT(
-        "glProgramUniform2f",
+        context, "glProgramUniform2f",
         "context = %d, GLuint program = %u, GLint location = %d, GLfloat v0 = %f, GLfloat v1 = %f",
         CID(context), program, location, v0, v1);
 
@@ -750,7 +754,7 @@ void GL_APIENTRY ProgramUniform2fv(GLuint program,
                                    const GLfloat *value)
 {
     Context *context = GetValidGlobalContext();
-    EVENT("glProgramUniform2fv",
+    EVENT(context, "glProgramUniform2fv",
           "context = %d, GLuint program = %u, GLint location = %d, GLsizei count = %d, const "
           "GLfloat *value = 0x%016" PRIxPTR "",
           CID(context), program, location, count, (uintptr_t)value);
@@ -775,7 +779,7 @@ void GL_APIENTRY ProgramUniform2fv(GLuint program,
 void GL_APIENTRY ProgramUniform2i(GLuint program, GLint location, GLint v0, GLint v1)
 {
     Context *context = GetValidGlobalContext();
-    EVENT("glProgramUniform2i",
+    EVENT(context, "glProgramUniform2i",
           "context = %d, GLuint program = %u, GLint location = %d, GLint v0 = %d, GLint v1 = %d",
           CID(context), program, location, v0, v1);
 
@@ -802,7 +806,7 @@ void GL_APIENTRY ProgramUniform2iv(GLuint program,
                                    const GLint *value)
 {
     Context *context = GetValidGlobalContext();
-    EVENT("glProgramUniform2iv",
+    EVENT(context, "glProgramUniform2iv",
           "context = %d, GLuint program = %u, GLint location = %d, GLsizei count = %d, const GLint "
           "*value = 0x%016" PRIxPTR "",
           CID(context), program, location, count, (uintptr_t)value);
@@ -827,7 +831,7 @@ void GL_APIENTRY ProgramUniform2iv(GLuint program,
 void GL_APIENTRY ProgramUniform2ui(GLuint program, GLint location, GLuint v0, GLuint v1)
 {
     Context *context = GetValidGlobalContext();
-    EVENT("glProgramUniform2ui",
+    EVENT(context, "glProgramUniform2ui",
           "context = %d, GLuint program = %u, GLint location = %d, GLuint v0 = %u, GLuint v1 = %u",
           CID(context), program, location, v0, v1);
 
@@ -854,7 +858,7 @@ void GL_APIENTRY ProgramUniform2uiv(GLuint program,
                                     const GLuint *value)
 {
     Context *context = GetValidGlobalContext();
-    EVENT("glProgramUniform2uiv",
+    EVENT(context, "glProgramUniform2uiv",
           "context = %d, GLuint program = %u, GLint location = %d, GLsizei count = %d, const "
           "GLuint *value = 0x%016" PRIxPTR "",
           CID(context), program, location, count, (uintptr_t)value);
@@ -880,7 +884,7 @@ void GL_APIENTRY
 ProgramUniform3d(GLuint program, GLint location, GLdouble v0, GLdouble v1, GLdouble v2)
 {
     Context *context = GetValidGlobalContext();
-    EVENT("glProgramUniform3d",
+    EVENT(context, "glProgramUniform3d",
           "context = %d, GLuint program = %u, GLint location = %d, GLdouble v0 = %f, GLdouble v1 = "
           "%f, GLdouble v2 = %f",
           CID(context), program, location, v0, v1, v2);
@@ -908,7 +912,7 @@ void GL_APIENTRY ProgramUniform3dv(GLuint program,
                                    const GLdouble *value)
 {
     Context *context = GetValidGlobalContext();
-    EVENT("glProgramUniform3dv",
+    EVENT(context, "glProgramUniform3dv",
           "context = %d, GLuint program = %u, GLint location = %d, GLsizei count = %d, const "
           "GLdouble *value = 0x%016" PRIxPTR "",
           CID(context), program, location, count, (uintptr_t)value);
@@ -934,7 +938,7 @@ void GL_APIENTRY
 ProgramUniform3f(GLuint program, GLint location, GLfloat v0, GLfloat v1, GLfloat v2)
 {
     Context *context = GetValidGlobalContext();
-    EVENT("glProgramUniform3f",
+    EVENT(context, "glProgramUniform3f",
           "context = %d, GLuint program = %u, GLint location = %d, GLfloat v0 = %f, GLfloat v1 = "
           "%f, GLfloat v2 = %f",
           CID(context), program, location, v0, v1, v2);
@@ -962,7 +966,7 @@ void GL_APIENTRY ProgramUniform3fv(GLuint program,
                                    const GLfloat *value)
 {
     Context *context = GetValidGlobalContext();
-    EVENT("glProgramUniform3fv",
+    EVENT(context, "glProgramUniform3fv",
           "context = %d, GLuint program = %u, GLint location = %d, GLsizei count = %d, const "
           "GLfloat *value = 0x%016" PRIxPTR "",
           CID(context), program, location, count, (uintptr_t)value);
@@ -987,7 +991,7 @@ void GL_APIENTRY ProgramUniform3fv(GLuint program,
 void GL_APIENTRY ProgramUniform3i(GLuint program, GLint location, GLint v0, GLint v1, GLint v2)
 {
     Context *context = GetValidGlobalContext();
-    EVENT("glProgramUniform3i",
+    EVENT(context, "glProgramUniform3i",
           "context = %d, GLuint program = %u, GLint location = %d, GLint v0 = %d, GLint v1 = %d, "
           "GLint v2 = %d",
           CID(context), program, location, v0, v1, v2);
@@ -1015,7 +1019,7 @@ void GL_APIENTRY ProgramUniform3iv(GLuint program,
                                    const GLint *value)
 {
     Context *context = GetValidGlobalContext();
-    EVENT("glProgramUniform3iv",
+    EVENT(context, "glProgramUniform3iv",
           "context = %d, GLuint program = %u, GLint location = %d, GLsizei count = %d, const GLint "
           "*value = 0x%016" PRIxPTR "",
           CID(context), program, location, count, (uintptr_t)value);
@@ -1040,7 +1044,7 @@ void GL_APIENTRY ProgramUniform3iv(GLuint program,
 void GL_APIENTRY ProgramUniform3ui(GLuint program, GLint location, GLuint v0, GLuint v1, GLuint v2)
 {
     Context *context = GetValidGlobalContext();
-    EVENT("glProgramUniform3ui",
+    EVENT(context, "glProgramUniform3ui",
           "context = %d, GLuint program = %u, GLint location = %d, GLuint v0 = %u, GLuint v1 = %u, "
           "GLuint v2 = %u",
           CID(context), program, location, v0, v1, v2);
@@ -1068,7 +1072,7 @@ void GL_APIENTRY ProgramUniform3uiv(GLuint program,
                                     const GLuint *value)
 {
     Context *context = GetValidGlobalContext();
-    EVENT("glProgramUniform3uiv",
+    EVENT(context, "glProgramUniform3uiv",
           "context = %d, GLuint program = %u, GLint location = %d, GLsizei count = %d, const "
           "GLuint *value = 0x%016" PRIxPTR "",
           CID(context), program, location, count, (uintptr_t)value);
@@ -1094,7 +1098,7 @@ void GL_APIENTRY
 ProgramUniform4d(GLuint program, GLint location, GLdouble v0, GLdouble v1, GLdouble v2, GLdouble v3)
 {
     Context *context = GetValidGlobalContext();
-    EVENT("glProgramUniform4d",
+    EVENT(context, "glProgramUniform4d",
           "context = %d, GLuint program = %u, GLint location = %d, GLdouble v0 = %f, GLdouble v1 = "
           "%f, GLdouble v2 = %f, GLdouble v3 = %f",
           CID(context), program, location, v0, v1, v2, v3);
@@ -1122,7 +1126,7 @@ void GL_APIENTRY ProgramUniform4dv(GLuint program,
                                    const GLdouble *value)
 {
     Context *context = GetValidGlobalContext();
-    EVENT("glProgramUniform4dv",
+    EVENT(context, "glProgramUniform4dv",
           "context = %d, GLuint program = %u, GLint location = %d, GLsizei count = %d, const "
           "GLdouble *value = 0x%016" PRIxPTR "",
           CID(context), program, location, count, (uintptr_t)value);
@@ -1148,7 +1152,7 @@ void GL_APIENTRY
 ProgramUniform4f(GLuint program, GLint location, GLfloat v0, GLfloat v1, GLfloat v2, GLfloat v3)
 {
     Context *context = GetValidGlobalContext();
-    EVENT("glProgramUniform4f",
+    EVENT(context, "glProgramUniform4f",
           "context = %d, GLuint program = %u, GLint location = %d, GLfloat v0 = %f, GLfloat v1 = "
           "%f, GLfloat v2 = %f, GLfloat v3 = %f",
           CID(context), program, location, v0, v1, v2, v3);
@@ -1176,7 +1180,7 @@ void GL_APIENTRY ProgramUniform4fv(GLuint program,
                                    const GLfloat *value)
 {
     Context *context = GetValidGlobalContext();
-    EVENT("glProgramUniform4fv",
+    EVENT(context, "glProgramUniform4fv",
           "context = %d, GLuint program = %u, GLint location = %d, GLsizei count = %d, const "
           "GLfloat *value = 0x%016" PRIxPTR "",
           CID(context), program, location, count, (uintptr_t)value);
@@ -1202,7 +1206,7 @@ void GL_APIENTRY
 ProgramUniform4i(GLuint program, GLint location, GLint v0, GLint v1, GLint v2, GLint v3)
 {
     Context *context = GetValidGlobalContext();
-    EVENT("glProgramUniform4i",
+    EVENT(context, "glProgramUniform4i",
           "context = %d, GLuint program = %u, GLint location = %d, GLint v0 = %d, GLint v1 = %d, "
           "GLint v2 = %d, GLint v3 = %d",
           CID(context), program, location, v0, v1, v2, v3);
@@ -1230,7 +1234,7 @@ void GL_APIENTRY ProgramUniform4iv(GLuint program,
                                    const GLint *value)
 {
     Context *context = GetValidGlobalContext();
-    EVENT("glProgramUniform4iv",
+    EVENT(context, "glProgramUniform4iv",
           "context = %d, GLuint program = %u, GLint location = %d, GLsizei count = %d, const GLint "
           "*value = 0x%016" PRIxPTR "",
           CID(context), program, location, count, (uintptr_t)value);
@@ -1256,7 +1260,7 @@ void GL_APIENTRY
 ProgramUniform4ui(GLuint program, GLint location, GLuint v0, GLuint v1, GLuint v2, GLuint v3)
 {
     Context *context = GetValidGlobalContext();
-    EVENT("glProgramUniform4ui",
+    EVENT(context, "glProgramUniform4ui",
           "context = %d, GLuint program = %u, GLint location = %d, GLuint v0 = %u, GLuint v1 = %u, "
           "GLuint v2 = %u, GLuint v3 = %u",
           CID(context), program, location, v0, v1, v2, v3);
@@ -1284,7 +1288,7 @@ void GL_APIENTRY ProgramUniform4uiv(GLuint program,
                                     const GLuint *value)
 {
     Context *context = GetValidGlobalContext();
-    EVENT("glProgramUniform4uiv",
+    EVENT(context, "glProgramUniform4uiv",
           "context = %d, GLuint program = %u, GLint location = %d, GLsizei count = %d, const "
           "GLuint *value = 0x%016" PRIxPTR "",
           CID(context), program, location, count, (uintptr_t)value);
@@ -1313,7 +1317,7 @@ void GL_APIENTRY ProgramUniformMatrix2dv(GLuint program,
                                          const GLdouble *value)
 {
     Context *context = GetValidGlobalContext();
-    EVENT("glProgramUniformMatrix2dv",
+    EVENT(context, "glProgramUniformMatrix2dv",
           "context = %d, GLuint program = %u, GLint location = %d, GLsizei count = %d, GLboolean "
           "transpose = %s, const GLdouble *value = 0x%016" PRIxPTR "",
           CID(context), program, location, count, GLbooleanToString(transpose), (uintptr_t)value);
@@ -1343,7 +1347,7 @@ void GL_APIENTRY ProgramUniformMatrix2fv(GLuint program,
                                          const GLfloat *value)
 {
     Context *context = GetValidGlobalContext();
-    EVENT("glProgramUniformMatrix2fv",
+    EVENT(context, "glProgramUniformMatrix2fv",
           "context = %d, GLuint program = %u, GLint location = %d, GLsizei count = %d, GLboolean "
           "transpose = %s, const GLfloat *value = 0x%016" PRIxPTR "",
           CID(context), program, location, count, GLbooleanToString(transpose), (uintptr_t)value);
@@ -1373,7 +1377,7 @@ void GL_APIENTRY ProgramUniformMatrix2x3dv(GLuint program,
                                            const GLdouble *value)
 {
     Context *context = GetValidGlobalContext();
-    EVENT("glProgramUniformMatrix2x3dv",
+    EVENT(context, "glProgramUniformMatrix2x3dv",
           "context = %d, GLuint program = %u, GLint location = %d, GLsizei count = %d, GLboolean "
           "transpose = %s, const GLdouble *value = 0x%016" PRIxPTR "",
           CID(context), program, location, count, GLbooleanToString(transpose), (uintptr_t)value);
@@ -1403,7 +1407,7 @@ void GL_APIENTRY ProgramUniformMatrix2x3fv(GLuint program,
                                            const GLfloat *value)
 {
     Context *context = GetValidGlobalContext();
-    EVENT("glProgramUniformMatrix2x3fv",
+    EVENT(context, "glProgramUniformMatrix2x3fv",
           "context = %d, GLuint program = %u, GLint location = %d, GLsizei count = %d, GLboolean "
           "transpose = %s, const GLfloat *value = 0x%016" PRIxPTR "",
           CID(context), program, location, count, GLbooleanToString(transpose), (uintptr_t)value);
@@ -1433,7 +1437,7 @@ void GL_APIENTRY ProgramUniformMatrix2x4dv(GLuint program,
                                            const GLdouble *value)
 {
     Context *context = GetValidGlobalContext();
-    EVENT("glProgramUniformMatrix2x4dv",
+    EVENT(context, "glProgramUniformMatrix2x4dv",
           "context = %d, GLuint program = %u, GLint location = %d, GLsizei count = %d, GLboolean "
           "transpose = %s, const GLdouble *value = 0x%016" PRIxPTR "",
           CID(context), program, location, count, GLbooleanToString(transpose), (uintptr_t)value);
@@ -1463,7 +1467,7 @@ void GL_APIENTRY ProgramUniformMatrix2x4fv(GLuint program,
                                            const GLfloat *value)
 {
     Context *context = GetValidGlobalContext();
-    EVENT("glProgramUniformMatrix2x4fv",
+    EVENT(context, "glProgramUniformMatrix2x4fv",
           "context = %d, GLuint program = %u, GLint location = %d, GLsizei count = %d, GLboolean "
           "transpose = %s, const GLfloat *value = 0x%016" PRIxPTR "",
           CID(context), program, location, count, GLbooleanToString(transpose), (uintptr_t)value);
@@ -1493,7 +1497,7 @@ void GL_APIENTRY ProgramUniformMatrix3dv(GLuint program,
                                          const GLdouble *value)
 {
     Context *context = GetValidGlobalContext();
-    EVENT("glProgramUniformMatrix3dv",
+    EVENT(context, "glProgramUniformMatrix3dv",
           "context = %d, GLuint program = %u, GLint location = %d, GLsizei count = %d, GLboolean "
           "transpose = %s, const GLdouble *value = 0x%016" PRIxPTR "",
           CID(context), program, location, count, GLbooleanToString(transpose), (uintptr_t)value);
@@ -1523,7 +1527,7 @@ void GL_APIENTRY ProgramUniformMatrix3fv(GLuint program,
                                          const GLfloat *value)
 {
     Context *context = GetValidGlobalContext();
-    EVENT("glProgramUniformMatrix3fv",
+    EVENT(context, "glProgramUniformMatrix3fv",
           "context = %d, GLuint program = %u, GLint location = %d, GLsizei count = %d, GLboolean "
           "transpose = %s, const GLfloat *value = 0x%016" PRIxPTR "",
           CID(context), program, location, count, GLbooleanToString(transpose), (uintptr_t)value);
@@ -1553,7 +1557,7 @@ void GL_APIENTRY ProgramUniformMatrix3x2dv(GLuint program,
                                            const GLdouble *value)
 {
     Context *context = GetValidGlobalContext();
-    EVENT("glProgramUniformMatrix3x2dv",
+    EVENT(context, "glProgramUniformMatrix3x2dv",
           "context = %d, GLuint program = %u, GLint location = %d, GLsizei count = %d, GLboolean "
           "transpose = %s, const GLdouble *value = 0x%016" PRIxPTR "",
           CID(context), program, location, count, GLbooleanToString(transpose), (uintptr_t)value);
@@ -1583,7 +1587,7 @@ void GL_APIENTRY ProgramUniformMatrix3x2fv(GLuint program,
                                            const GLfloat *value)
 {
     Context *context = GetValidGlobalContext();
-    EVENT("glProgramUniformMatrix3x2fv",
+    EVENT(context, "glProgramUniformMatrix3x2fv",
           "context = %d, GLuint program = %u, GLint location = %d, GLsizei count = %d, GLboolean "
           "transpose = %s, const GLfloat *value = 0x%016" PRIxPTR "",
           CID(context), program, location, count, GLbooleanToString(transpose), (uintptr_t)value);
@@ -1613,7 +1617,7 @@ void GL_APIENTRY ProgramUniformMatrix3x4dv(GLuint program,
                                            const GLdouble *value)
 {
     Context *context = GetValidGlobalContext();
-    EVENT("glProgramUniformMatrix3x4dv",
+    EVENT(context, "glProgramUniformMatrix3x4dv",
           "context = %d, GLuint program = %u, GLint location = %d, GLsizei count = %d, GLboolean "
           "transpose = %s, const GLdouble *value = 0x%016" PRIxPTR "",
           CID(context), program, location, count, GLbooleanToString(transpose), (uintptr_t)value);
@@ -1643,7 +1647,7 @@ void GL_APIENTRY ProgramUniformMatrix3x4fv(GLuint program,
                                            const GLfloat *value)
 {
     Context *context = GetValidGlobalContext();
-    EVENT("glProgramUniformMatrix3x4fv",
+    EVENT(context, "glProgramUniformMatrix3x4fv",
           "context = %d, GLuint program = %u, GLint location = %d, GLsizei count = %d, GLboolean "
           "transpose = %s, const GLfloat *value = 0x%016" PRIxPTR "",
           CID(context), program, location, count, GLbooleanToString(transpose), (uintptr_t)value);
@@ -1673,7 +1677,7 @@ void GL_APIENTRY ProgramUniformMatrix4dv(GLuint program,
                                          const GLdouble *value)
 {
     Context *context = GetValidGlobalContext();
-    EVENT("glProgramUniformMatrix4dv",
+    EVENT(context, "glProgramUniformMatrix4dv",
           "context = %d, GLuint program = %u, GLint location = %d, GLsizei count = %d, GLboolean "
           "transpose = %s, const GLdouble *value = 0x%016" PRIxPTR "",
           CID(context), program, location, count, GLbooleanToString(transpose), (uintptr_t)value);
@@ -1703,7 +1707,7 @@ void GL_APIENTRY ProgramUniformMatrix4fv(GLuint program,
                                          const GLfloat *value)
 {
     Context *context = GetValidGlobalContext();
-    EVENT("glProgramUniformMatrix4fv",
+    EVENT(context, "glProgramUniformMatrix4fv",
           "context = %d, GLuint program = %u, GLint location = %d, GLsizei count = %d, GLboolean "
           "transpose = %s, const GLfloat *value = 0x%016" PRIxPTR "",
           CID(context), program, location, count, GLbooleanToString(transpose), (uintptr_t)value);
@@ -1733,7 +1737,7 @@ void GL_APIENTRY ProgramUniformMatrix4x2dv(GLuint program,
                                            const GLdouble *value)
 {
     Context *context = GetValidGlobalContext();
-    EVENT("glProgramUniformMatrix4x2dv",
+    EVENT(context, "glProgramUniformMatrix4x2dv",
           "context = %d, GLuint program = %u, GLint location = %d, GLsizei count = %d, GLboolean "
           "transpose = %s, const GLdouble *value = 0x%016" PRIxPTR "",
           CID(context), program, location, count, GLbooleanToString(transpose), (uintptr_t)value);
@@ -1763,7 +1767,7 @@ void GL_APIENTRY ProgramUniformMatrix4x2fv(GLuint program,
                                            const GLfloat *value)
 {
     Context *context = GetValidGlobalContext();
-    EVENT("glProgramUniformMatrix4x2fv",
+    EVENT(context, "glProgramUniformMatrix4x2fv",
           "context = %d, GLuint program = %u, GLint location = %d, GLsizei count = %d, GLboolean "
           "transpose = %s, const GLfloat *value = 0x%016" PRIxPTR "",
           CID(context), program, location, count, GLbooleanToString(transpose), (uintptr_t)value);
@@ -1793,7 +1797,7 @@ void GL_APIENTRY ProgramUniformMatrix4x3dv(GLuint program,
                                            const GLdouble *value)
 {
     Context *context = GetValidGlobalContext();
-    EVENT("glProgramUniformMatrix4x3dv",
+    EVENT(context, "glProgramUniformMatrix4x3dv",
           "context = %d, GLuint program = %u, GLint location = %d, GLsizei count = %d, GLboolean "
           "transpose = %s, const GLdouble *value = 0x%016" PRIxPTR "",
           CID(context), program, location, count, GLbooleanToString(transpose), (uintptr_t)value);
@@ -1823,7 +1827,7 @@ void GL_APIENTRY ProgramUniformMatrix4x3fv(GLuint program,
                                            const GLfloat *value)
 {
     Context *context = GetValidGlobalContext();
-    EVENT("glProgramUniformMatrix4x3fv",
+    EVENT(context, "glProgramUniformMatrix4x3fv",
           "context = %d, GLuint program = %u, GLint location = %d, GLsizei count = %d, GLboolean "
           "transpose = %s, const GLfloat *value = 0x%016" PRIxPTR "",
           CID(context), program, location, count, GLbooleanToString(transpose), (uintptr_t)value);
@@ -1849,7 +1853,7 @@ void GL_APIENTRY ProgramUniformMatrix4x3fv(GLuint program,
 void GL_APIENTRY ReleaseShaderCompiler()
 {
     Context *context = GetValidGlobalContext();
-    EVENT("glReleaseShaderCompiler", "context = %d", CID(context));
+    EVENT(context, "glReleaseShaderCompiler", "context = %d", CID(context));
 
     if (context)
     {
@@ -1866,7 +1870,7 @@ void GL_APIENTRY ReleaseShaderCompiler()
 void GL_APIENTRY ScissorArrayv(GLuint first, GLsizei count, const GLint *v)
 {
     Context *context = GetValidGlobalContext();
-    EVENT("glScissorArrayv",
+    EVENT(context, "glScissorArrayv",
           "context = %d, GLuint first = %u, GLsizei count = %d, const GLint *v = 0x%016" PRIxPTR "",
           CID(context), first, count, (uintptr_t)v);
 
@@ -1887,7 +1891,7 @@ void GL_APIENTRY
 ScissorIndexed(GLuint index, GLint left, GLint bottom, GLsizei width, GLsizei height)
 {
     Context *context = GetValidGlobalContext();
-    EVENT("glScissorIndexed",
+    EVENT(context, "glScissorIndexed",
           "context = %d, GLuint index = %u, GLint left = %d, GLint bottom = %d, GLsizei width = "
           "%d, GLsizei height = %d",
           CID(context), index, left, bottom, width, height);
@@ -1908,7 +1912,7 @@ ScissorIndexed(GLuint index, GLint left, GLint bottom, GLsizei width, GLsizei he
 void GL_APIENTRY ScissorIndexedv(GLuint index, const GLint *v)
 {
     Context *context = GetValidGlobalContext();
-    EVENT("glScissorIndexedv",
+    EVENT(context, "glScissorIndexedv",
           "context = %d, GLuint index = %u, const GLint *v = 0x%016" PRIxPTR "", CID(context),
           index, (uintptr_t)v);
 
@@ -1932,7 +1936,7 @@ void GL_APIENTRY ShaderBinary(GLsizei count,
                               GLsizei length)
 {
     Context *context = GetValidGlobalContext();
-    EVENT("glShaderBinary",
+    EVENT(context, "glShaderBinary",
           "context = %d, GLsizei count = %d, const GLuint *shaders = 0x%016" PRIxPTR
           ", GLenum binaryformat = %s, const void *binary = 0x%016" PRIxPTR ", GLsizei length = %d",
           CID(context), count, (uintptr_t)shaders,
@@ -1957,7 +1961,7 @@ void GL_APIENTRY ShaderBinary(GLsizei count,
 void GL_APIENTRY UseProgramStages(GLuint pipeline, GLbitfield stages, GLuint program)
 {
     Context *context = GetValidGlobalContext();
-    EVENT("glUseProgramStages",
+    EVENT(context, "glUseProgramStages",
           "context = %d, GLuint pipeline = %u, GLbitfield stages = %s, GLuint program = %u",
           CID(context), pipeline,
           GLbitfieldToString(GLenumGroup::UseProgramStageMask, stages).c_str(), program);
@@ -1982,7 +1986,7 @@ void GL_APIENTRY UseProgramStages(GLuint pipeline, GLbitfield stages, GLuint pro
 void GL_APIENTRY ValidateProgramPipeline(GLuint pipeline)
 {
     Context *context = GetValidGlobalContext();
-    EVENT("glValidateProgramPipeline", "context = %d, GLuint pipeline = %u", CID(context),
+    EVENT(context, "glValidateProgramPipeline", "context = %d, GLuint pipeline = %u", CID(context),
           pipeline);
 
     if (context)
@@ -2002,8 +2006,8 @@ void GL_APIENTRY ValidateProgramPipeline(GLuint pipeline)
 void GL_APIENTRY VertexAttribL1d(GLuint index, GLdouble x)
 {
     Context *context = GetValidGlobalContext();
-    EVENT("glVertexAttribL1d", "context = %d, GLuint index = %u, GLdouble x = %f", CID(context),
-          index, x);
+    EVENT(context, "glVertexAttribL1d", "context = %d, GLuint index = %u, GLdouble x = %f",
+          CID(context), index, x);
 
     if (context)
     {
@@ -2021,7 +2025,7 @@ void GL_APIENTRY VertexAttribL1d(GLuint index, GLdouble x)
 void GL_APIENTRY VertexAttribL1dv(GLuint index, const GLdouble *v)
 {
     Context *context = GetValidGlobalContext();
-    EVENT("glVertexAttribL1dv",
+    EVENT(context, "glVertexAttribL1dv",
           "context = %d, GLuint index = %u, const GLdouble *v = 0x%016" PRIxPTR "", CID(context),
           index, (uintptr_t)v);
 
@@ -2041,8 +2045,9 @@ void GL_APIENTRY VertexAttribL1dv(GLuint index, const GLdouble *v)
 void GL_APIENTRY VertexAttribL2d(GLuint index, GLdouble x, GLdouble y)
 {
     Context *context = GetValidGlobalContext();
-    EVENT("glVertexAttribL2d", "context = %d, GLuint index = %u, GLdouble x = %f, GLdouble y = %f",
-          CID(context), index, x, y);
+    EVENT(context, "glVertexAttribL2d",
+          "context = %d, GLuint index = %u, GLdouble x = %f, GLdouble y = %f", CID(context), index,
+          x, y);
 
     if (context)
     {
@@ -2060,7 +2065,7 @@ void GL_APIENTRY VertexAttribL2d(GLuint index, GLdouble x, GLdouble y)
 void GL_APIENTRY VertexAttribL2dv(GLuint index, const GLdouble *v)
 {
     Context *context = GetValidGlobalContext();
-    EVENT("glVertexAttribL2dv",
+    EVENT(context, "glVertexAttribL2dv",
           "context = %d, GLuint index = %u, const GLdouble *v = 0x%016" PRIxPTR "", CID(context),
           index, (uintptr_t)v);
 
@@ -2080,7 +2085,7 @@ void GL_APIENTRY VertexAttribL2dv(GLuint index, const GLdouble *v)
 void GL_APIENTRY VertexAttribL3d(GLuint index, GLdouble x, GLdouble y, GLdouble z)
 {
     Context *context = GetValidGlobalContext();
-    EVENT("glVertexAttribL3d",
+    EVENT(context, "glVertexAttribL3d",
           "context = %d, GLuint index = %u, GLdouble x = %f, GLdouble y = %f, GLdouble z = %f",
           CID(context), index, x, y, z);
 
@@ -2100,7 +2105,7 @@ void GL_APIENTRY VertexAttribL3d(GLuint index, GLdouble x, GLdouble y, GLdouble 
 void GL_APIENTRY VertexAttribL3dv(GLuint index, const GLdouble *v)
 {
     Context *context = GetValidGlobalContext();
-    EVENT("glVertexAttribL3dv",
+    EVENT(context, "glVertexAttribL3dv",
           "context = %d, GLuint index = %u, const GLdouble *v = 0x%016" PRIxPTR "", CID(context),
           index, (uintptr_t)v);
 
@@ -2120,7 +2125,7 @@ void GL_APIENTRY VertexAttribL3dv(GLuint index, const GLdouble *v)
 void GL_APIENTRY VertexAttribL4d(GLuint index, GLdouble x, GLdouble y, GLdouble z, GLdouble w)
 {
     Context *context = GetValidGlobalContext();
-    EVENT("glVertexAttribL4d",
+    EVENT(context, "glVertexAttribL4d",
           "context = %d, GLuint index = %u, GLdouble x = %f, GLdouble y = %f, GLdouble z = %f, "
           "GLdouble w = %f",
           CID(context), index, x, y, z, w);
@@ -2141,7 +2146,7 @@ void GL_APIENTRY VertexAttribL4d(GLuint index, GLdouble x, GLdouble y, GLdouble 
 void GL_APIENTRY VertexAttribL4dv(GLuint index, const GLdouble *v)
 {
     Context *context = GetValidGlobalContext();
-    EVENT("glVertexAttribL4dv",
+    EVENT(context, "glVertexAttribL4dv",
           "context = %d, GLuint index = %u, const GLdouble *v = 0x%016" PRIxPTR "", CID(context),
           index, (uintptr_t)v);
 
@@ -2162,7 +2167,7 @@ void GL_APIENTRY
 VertexAttribLPointer(GLuint index, GLint size, GLenum type, GLsizei stride, const void *pointer)
 {
     Context *context = GetValidGlobalContext();
-    EVENT("glVertexAttribLPointer",
+    EVENT(context, "glVertexAttribLPointer",
           "context = %d, GLuint index = %u, GLint size = %d, GLenum type = %s, GLsizei stride = "
           "%d, const void *pointer = 0x%016" PRIxPTR "",
           CID(context), index, size, GLenumToString(GLenumGroup::VertexAttribPointerType, type),
@@ -2186,7 +2191,7 @@ VertexAttribLPointer(GLuint index, GLint size, GLenum type, GLsizei stride, cons
 void GL_APIENTRY ViewportArrayv(GLuint first, GLsizei count, const GLfloat *v)
 {
     Context *context = GetValidGlobalContext();
-    EVENT("glViewportArrayv",
+    EVENT(context, "glViewportArrayv",
           "context = %d, GLuint first = %u, GLsizei count = %d, const GLfloat *v = 0x%016" PRIxPTR
           "",
           CID(context), first, count, (uintptr_t)v);
@@ -2207,7 +2212,7 @@ void GL_APIENTRY ViewportArrayv(GLuint first, GLsizei count, const GLfloat *v)
 void GL_APIENTRY ViewportIndexedf(GLuint index, GLfloat x, GLfloat y, GLfloat w, GLfloat h)
 {
     Context *context = GetValidGlobalContext();
-    EVENT("glViewportIndexedf",
+    EVENT(context, "glViewportIndexedf",
           "context = %d, GLuint index = %u, GLfloat x = %f, GLfloat y = %f, GLfloat w = %f, "
           "GLfloat h = %f",
           CID(context), index, x, y, w, h);
@@ -2228,7 +2233,7 @@ void GL_APIENTRY ViewportIndexedf(GLuint index, GLfloat x, GLfloat y, GLfloat w,
 void GL_APIENTRY ViewportIndexedfv(GLuint index, const GLfloat *v)
 {
     Context *context = GetValidGlobalContext();
-    EVENT("glViewportIndexedfv",
+    EVENT(context, "glViewportIndexedfv",
           "context = %d, GLuint index = %u, const GLfloat *v = 0x%016" PRIxPTR "", CID(context),
           index, (uintptr_t)v);
 

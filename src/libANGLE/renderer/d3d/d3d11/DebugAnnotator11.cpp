@@ -19,9 +19,11 @@ DebugAnnotator11::DebugAnnotator11() {}
 
 DebugAnnotator11::~DebugAnnotator11() {}
 
-void DebugAnnotator11::beginEvent(const char *eventName, const char *eventMessage)
+void DebugAnnotator11::beginEvent(gl::Context *context,
+                                  const char *eventName,
+                                  const char *eventMessage)
 {
-    angle::LoggingAnnotator::beginEvent(eventName, eventMessage);
+    angle::LoggingAnnotator::beginEvent(context, eventName, eventMessage);
     if (loggingEnabledForThisThread())
     {
         std::mbstate_t state = std::mbstate_t();

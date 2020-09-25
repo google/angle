@@ -95,7 +95,7 @@ constexpr ANGLE_INLINE ReturnType GetDefaultReturnValue()
 #    define ANGLE_CAPTURE(...)
 #endif  // ANGLE_CAPTURE_ENABLED
 
-#define FUNC_EVENT(format, ...) EVENT(__FUNCTION__, format, __VA_ARGS__)
+#define FUNC_EVENT(format, ...) EVENT(nullptr, __FUNCTION__, format, __VA_ARGS__)
 
 inline int CID(const Context *context)
 {

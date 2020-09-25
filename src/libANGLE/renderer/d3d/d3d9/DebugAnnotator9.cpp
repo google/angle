@@ -13,9 +13,11 @@
 namespace rx
 {
 
-void DebugAnnotator9::beginEvent(const char *eventName, const char *eventMessage)
+void DebugAnnotator9::beginEvent(gl::Context *context,
+                                 const char *eventName,
+                                 const char *eventMessage)
 {
-    angle::LoggingAnnotator::beginEvent(eventName, eventMessage);
+    angle::LoggingAnnotator::beginEvent(context, eventName, eventMessage);
     std::mbstate_t state = std::mbstate_t();
     std::mbsrtowcs(mWCharMessage, &eventMessage, kMaxMessageLength, &state);
     D3DPERF_BeginEvent(0, mWCharMessage);
