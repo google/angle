@@ -47,6 +47,9 @@ ANGLE_CHROMIUM_DEPS = [
     'tools/mb',
     'tools/md_browser',
     'tools/memory',
+    'tools/skia_goldctl/linux',
+    'tools/skia_goldctl/mac',
+    'tools/skia_goldctl/win',
 ]
 
 ANGLE_URL = 'https://chromium.googlesource.com/angle/angle'

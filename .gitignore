@@ -71,6 +71,7 @@
 /tools/mb
 /tools/md_browser
 /tools/memory
+/tools/skia_goldctl
 angle_debug.txt
 build
 buildtools/
