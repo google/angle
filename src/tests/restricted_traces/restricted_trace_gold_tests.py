@@ -131,10 +131,12 @@ def main():
             tests = json.load(fp)
 
         if args.render_test_output_dir:
-            rc = run_tests(args, tests, extra_flags, env, args.render_test_output_dir)
+            if not run_tests(args, tests, extra_flags, env, args.render_test_output_dir):
+                rc = 1
         else:
             with temporary_dir('angle_trace_') as temp_dir:
-                rc = run_tests(args, tests, extra_flags, env, temp_dir)
+                if not run_tests(args, tests, extra_flags, env, temp_dir):
+                    rc = 1
 
     except Exception:
         traceback.print_exc()
