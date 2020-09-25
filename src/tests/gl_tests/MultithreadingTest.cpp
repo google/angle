@@ -208,6 +208,9 @@ TEST_P(MultithreadingTest, MultiContextDrawWithSwapBuffers)
 {
     ANGLE_SKIP_TEST_IF(!platformSupportsMultithreading());
 
+    // http://anglebug.com/5099
+    ANGLE_SKIP_TEST_IF(IsAndroid() && IsOpenGLES());
+
     EGLWindow *window = getEGLWindow();
     EGLDisplay dpy    = window->getDisplay();
 
