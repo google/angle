@@ -1870,6 +1870,8 @@ angle::CallCapture CaptureTexGenxvOES(const State &glState,
 
 // GL_OES_texture_half_float
 
+// GL_OES_texture_stencil8
+
 // GL_OES_texture_storage_multisample_2d_array
 angle::CallCapture CaptureTexStorage3DMultisampleOES(const State &glState,
                                                      bool isCallValid,

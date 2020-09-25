@@ -877,6 +877,8 @@ EXPORTS
 
     ; GL_OES_texture_half_float
 
+    ; GL_OES_texture_stencil8
+
     ; GL_OES_texture_storage_multisample_2d_array
     glTexStorage3DMultisampleOES
 

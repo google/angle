@@ -1202,6 +1202,8 @@ ANGLE_EXPORT void GL_APIENTRY TexGenxvOES(GLenum coord, GLenum pname, const GLfi
 
 // GL_OES_texture_half_float
 
+// GL_OES_texture_stencil8
+
 // GL_OES_texture_storage_multisample_2d_array
 ANGLE_EXPORT void GL_APIENTRY TexStorage3DMultisampleOES(GLenum target,
                                                          GLsizei samples,

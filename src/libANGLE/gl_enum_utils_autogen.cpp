@@ -694,6 +694,8 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_ANGLE";
                 case 0x1004:
                     return "GL_TEXTURE_BORDER_COLOR_OES";
+                case 0x1901:
+                    return "GL_STENCIL_INDEX_OES";
                 case 0x2000:
                     return "GL_CREATE_CORNER_SAMPLED_BIT_ANGLE";
                 case 0x2500:

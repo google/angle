@@ -1489,6 +1489,8 @@ bool ValidateTexGenxvOES(const Context *context, GLenum coord, GLenum pname, con
 
 // GL_OES_texture_half_float
 
+// GL_OES_texture_stencil8
+
 // GL_OES_texture_storage_multisample_2d_array
 bool ValidateTexStorage3DMultisampleOES(const Context *context,
                                         TextureType targetPacked,

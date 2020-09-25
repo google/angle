@@ -111,6 +111,7 @@ gles_extensions = [
     "GL_OES_texture_buffer",
     "GL_OES_texture_cube_map_array",
     "GL_OES_texture_half_float",
+    "GL_OES_texture_stencil8",
     "GL_OES_texture_storage_multisample_2d_array",
     "GL_OES_vertex_array_object",
     "GL_OVR_multiview",
