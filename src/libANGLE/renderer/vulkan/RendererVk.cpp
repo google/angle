@@ -1919,8 +1919,9 @@ void RendererVk::initFeatures(DisplayVk *displayVk, const ExtensionNameList &dev
     //
     // - Swiftshader on mac: http://anglebug.com/4937
     // - Intel on windows: http://anglebug.com/5032
+    // - AMD on windows: http://crbug.com/1132366
     ANGLE_FEATURE_CONDITION(&mFeatures, enableMultisampledRenderToTexture,
-                            !(IsApple() && isSwiftShader) && !(isIntel && IsWindows()));
+                            !(IsApple() && isSwiftShader) && !(IsWindows() && (isIntel || isAMD)));
 
     ANGLE_FEATURE_CONDITION(&mFeatures, preferredLargeHeapBlockSize4MB, !isQualcomm);
 
