@@ -36,6 +36,24 @@
     },
     {
       "key": {
+        "uuid": "8b44ebf9_e0f068a1",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 4736,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-09-25T19:33:04Z",
+      "side": 1,
+      "message": "Not needed unless using threading. The flushToPrimary resets the renderpass so it would be impossible for later commands to add to previous renderpass, there\u0027s no way to get to it.\nWith threading, however, the processing of the renderpass is handled in a separate thread and there is still a pointer hanging around to that renderpass.",
+      "parentUuid": "0f7c04b7_f36d14d9",
+      "revId": "1e489dc3bb8221b9a26f451e040b8e1fbc00985b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "8ace46c7_1155bad8",
         "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
         "patchSetId": 11
@@ -47,6 +65,30 @@
       "writtenOn": "2020-09-25T18:11:55Z",
       "side": 1,
       "message": "I don\u0027t quite understand what these are doing.   It doesn\u0027t look like mCommandBuffer.open()/close() do any work, so these should probably be:\n\n    bool open()\n    {\n        return mCommandBuffer.open();\n    }\n    bool close()\n    {\n        return mCommandBuffer.close();\n    }\n\n?",
+      "range": {
+        "startLine": 956,
+        "startChar": 0,
+        "endLine": 965,
+        "endChar": 5
+      },
+      "revId": "1e489dc3bb8221b9a26f451e040b8e1fbc00985b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f02e5280_1f0656b7",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 965,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-09-25T19:33:04Z",
+      "side": 1,
+      "message": "I did it this way so that I could put the mRenderPassCommands-\u003eclose() \u0026 open calls inside an ASSERT that makes the code go away in a release build.\nJamie wanted to make sure this tracking didn\u0027t have any perf impact.\nThe mCommandBuffer.open \u0026 close simply set the tracking flag true or false accordingly. I don\u0027t call those anywhere but here so didn\u0027t see a need to propagate the return value lower.",
+      "parentUuid": "8ace46c7_1155bad8",
       "range": {
         "startLine": 956,
         "startChar": 0,
