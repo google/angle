@@ -54,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "335ef123_28346d55",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 4736,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-09-25T22:40:11Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "8b44ebf9_e0f068a1",
+      "revId": "1e489dc3bb8221b9a26f451e040b8e1fbc00985b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8ace46c7_1155bad8",
         "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
         "patchSetId": 11
@@ -113,6 +131,30 @@
       "side": 1,
       "message": "I agree with Tim that this looks strange. You are using ASSERT to compile out functionality, but that\u0027s not what ASSERT is for.\n\nHonestly, I don\u0027t think there\u0027s a measurable performance impact here. These just set a bool, and there\u0027s what, 50 command buffers in the whole frame? The real impact is with checking the flag in every command recording, but that\u0027s already in ASSERT.\n\nI don\u0027t personally see a problem just calling these, but if you/Jamie insist, I think this\n\n#if defined(ANGLE_ENABLE_ASSERTS)\n    void open() { mCommandBuffer.open(); }\n    void close() { mCommandBuffer.close(); }\n#else\n    void open() {}\n    void close() {}\n#endif\n\nmakes more sense.",
       "parentUuid": "f02e5280_1f0656b7",
+      "range": {
+        "startLine": 956,
+        "startChar": 0,
+        "endLine": 965,
+        "endChar": 5
+      },
+      "revId": "1e489dc3bb8221b9a26f451e040b8e1fbc00985b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "51517053_d3597dfd",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 965,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-09-25T22:40:11Z",
+      "side": 1,
+      "message": "Oh, I see now.   Yeah, I agree with what Shabi proposes, since I don\u0027t think this version will make immediate sense to the next person that comes across it in 12 month.",
+      "parentUuid": "46c2de2c_c7c644f3",
       "range": {
         "startLine": 956,
         "startChar": 0,
