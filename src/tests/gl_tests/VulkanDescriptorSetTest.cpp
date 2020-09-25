@@ -29,22 +29,30 @@ class VulkanDescriptorSetTest : public ANGLETest
     void testSetUp() override
     {
         mMaxSetsPerPool = rx::vk::DynamicDescriptorPool::GetMaxSetsPerPoolForTesting();
+        mMaxSetsPerPoolMultiplier =
+            rx::vk::DynamicDescriptorPool::GetMaxSetsPerPoolMultiplierForTesting();
     }
 
     void testTearDown() override
     {
         rx::vk::DynamicDescriptorPool::SetMaxSetsPerPoolForTesting(mMaxSetsPerPool);
+        rx::vk::DynamicDescriptorPool::SetMaxSetsPerPoolMultiplierForTesting(
+            mMaxSetsPerPoolMultiplier);
     }
 
-    static constexpr uint32_t kMaxSetsForTesting = 1;
+    static constexpr uint32_t kMaxSetsForTesting           = 1;
+    static constexpr uint32_t kMaxSetsMultiplierForTesting = 1;
 
     void limitMaxSets()
     {
         rx::vk::DynamicDescriptorPool::SetMaxSetsPerPoolForTesting(kMaxSetsForTesting);
+        rx::vk::DynamicDescriptorPool::SetMaxSetsPerPoolMultiplierForTesting(
+            kMaxSetsMultiplierForTesting);
     }
 
   private:
     uint32_t mMaxSetsPerPool;
+    uint32_t mMaxSetsPerPoolMultiplier;
 };
 
 // Test atomic counter read.

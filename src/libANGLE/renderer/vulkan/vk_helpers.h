@@ -253,7 +253,7 @@ class DescriptorPoolHelper
 
     bool hasCapacity(uint32_t descriptorSetCount) const;
     angle::Result init(ContextVk *contextVk,
-                       const std::vector<VkDescriptorPoolSize> &poolSizes,
+                       const std::vector<VkDescriptorPoolSize> &poolSizesIn,
                        uint32_t maxSets);
     void destroy(VkDevice device);
     void release(ContextVk *contextVk);
@@ -317,11 +317,15 @@ class DynamicDescriptorPool final : angle::NonCopyable
     // For testing only!
     static uint32_t GetMaxSetsPerPoolForTesting();
     static void SetMaxSetsPerPoolForTesting(uint32_t maxSetsPerPool);
+    static uint32_t GetMaxSetsPerPoolMultiplierForTesting();
+    static void SetMaxSetsPerPoolMultiplierForTesting(uint32_t maxSetsPerPool);
 
   private:
     angle::Result allocateNewPool(ContextVk *contextVk);
 
+    static constexpr uint32_t KMaxSetsPerPoolMax = 512;
     static uint32_t mMaxSetsPerPool;
+    static uint32_t mMaxSetsPerPoolMultiplier;
     size_t mCurrentPoolIndex;
     std::vector<RefCountedDescriptorPoolHelper *> mDescriptorPools;
     std::vector<VkDescriptorPoolSize> mPoolSizes;

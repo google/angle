@@ -41,11 +41,15 @@ class VulkanUniformUpdatesTest : public ANGLETest
         mLastContext = getEGLWindow()->getContext();
 
         mMaxSetsPerPool = rx::vk::DynamicDescriptorPool::GetMaxSetsPerPoolForTesting();
+        mMaxSetsPerPoolMultiplier =
+            rx::vk::DynamicDescriptorPool::GetMaxSetsPerPoolMultiplierForTesting();
     }
 
     void testTearDown() override
     {
         rx::vk::DynamicDescriptorPool::SetMaxSetsPerPoolForTesting(mMaxSetsPerPool);
+        rx::vk::DynamicDescriptorPool::SetMaxSetsPerPoolMultiplierForTesting(
+            mMaxSetsPerPoolMultiplier);
     }
 
     rx::ContextVk *hackANGLE() const
@@ -63,11 +67,14 @@ class VulkanUniformUpdatesTest : public ANGLETest
         return rx::vk::GetImpl(texture);
     }
 
-    static constexpr uint32_t kMaxSetsForTesting = 1;
+    static constexpr uint32_t kMaxSetsForTesting           = 1;
+    static constexpr uint32_t kMaxSetsMultiplierForTesting = 1;
 
     void limitMaxSets()
     {
         rx::vk::DynamicDescriptorPool::SetMaxSetsPerPoolForTesting(kMaxSetsForTesting);
+        rx::vk::DynamicDescriptorPool::SetMaxSetsPerPoolMultiplierForTesting(
+            kMaxSetsMultiplierForTesting);
     }
 
     static constexpr size_t kTextureStagingBufferSizeForTesting = 128;
@@ -81,6 +88,7 @@ class VulkanUniformUpdatesTest : public ANGLETest
   private:
     EGLContext mLastContext;
     uint32_t mMaxSetsPerPool;
+    uint32_t mMaxSetsPerPoolMultiplier;
 };
 
 // This test updates a uniform until a new buffer is allocated and then make sure the uniform
