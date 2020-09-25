@@ -37,7 +37,7 @@ vars = {
   'vk_gl_cts_revision': 'c9f4fb2fccda29fcf14356ce696201032b5bf1e2',
 
   # Current revision of glslang, the Khronos SPIRV compiler.
-  'glslang_revision': '4dcc12d1a441b29d5901bc708bb1343d29d6459f',
+  'glslang_revision': 'bacaef3237c515e40d1a24722be48c0a0b30f75f',
 
   # Current revision of googletest.
   # Note: this dep cannot be auto-rolled b/c of nesting.
