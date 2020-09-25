@@ -98,6 +98,30 @@
       "revId": "1e489dc3bb8221b9a26f451e040b8e1fbc00985b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "46c2de2c_c7c644f3",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 965,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-09-25T21:48:37Z",
+      "side": 1,
+      "message": "I agree with Tim that this looks strange. You are using ASSERT to compile out functionality, but that\u0027s not what ASSERT is for.\n\nHonestly, I don\u0027t think there\u0027s a measurable performance impact here. These just set a bool, and there\u0027s what, 50 command buffers in the whole frame? The real impact is with checking the flag in every command recording, but that\u0027s already in ASSERT.\n\nI don\u0027t personally see a problem just calling these, but if you/Jamie insist, I think this\n\n#if defined(ANGLE_ENABLE_ASSERTS)\n    void open() { mCommandBuffer.open(); }\n    void close() { mCommandBuffer.close(); }\n#else\n    void open() {}\n    void close() {}\n#endif\n\nmakes more sense.",
+      "parentUuid": "f02e5280_1f0656b7",
+      "range": {
+        "startLine": 956,
+        "startChar": 0,
+        "endLine": 965,
+        "endChar": 5
+      },
+      "revId": "1e489dc3bb8221b9a26f451e040b8e1fbc00985b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
