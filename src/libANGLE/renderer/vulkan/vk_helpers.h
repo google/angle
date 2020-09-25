@@ -950,6 +950,10 @@ class CommandBufferHelper : angle::NonCopyable
                     AliasingMode aliasingMode,
                     ImageHelper *image);
 
+    void depthStencilImagesDraw(ResourceUseList *resourceUseList,
+                                ImageHelper *image,
+                                ImageHelper *resolveImage);
+
     CommandBuffer &getCommandBuffer() { return mCommandBuffer; }
 
     angle::Result flushToPrimary(ContextVk *contextVk, PrimaryCommandBuffer *primary);
@@ -999,9 +1003,12 @@ class CommandBufferHelper : angle::NonCopyable
 
     void endRenderPass(ContextVk *contextVk);
 
-    void updateStartedRenderPassWithDepthMode(const Framebuffer &framebuffer,
-                                              const RenderPassDesc &renderPassDesc,
-                                              bool readOnlyDepth);
+    void updateStartedRenderPassWithDepthMode(bool readOnlyDepthStencilMode)
+    {
+        ASSERT(mIsRenderPassCommandBuffer);
+        ASSERT(mRenderPassStarted);
+        mReadOnlyDepthStencilMode = readOnlyDepthStencilMode;
+    }
 
     void beginTransformFeedback(size_t validBufferCount,
                                 const VkBuffer *counterBuffers,
@@ -1109,12 +1116,17 @@ class CommandBufferHelper : angle::NonCopyable
                    VK_ATTACHMENT_LOAD_OP_CLEAR;
     }
 
+    bool isReadOnlyDepthMode() const { return mReadOnlyDepthStencilMode; }
+
   private:
     void addCommandDiagnostics(ContextVk *contextVk);
 
     bool onDepthStencilAccess(ResourceAccess access,
                               uint32_t *cmdCountInvalidated,
                               uint32_t *cmdCountDisabled);
+
+    void finalizeDepthStencilImageLayout();
+    void finalizeDepthStencilResolveImageLayout();
 
     // Allocator used by this class. Using a pool allocator per CBH to avoid threading issues
     //  that occur w/ shared allocator between multiple CBHs.
@@ -1133,7 +1145,6 @@ class CommandBufferHelper : angle::NonCopyable
     gl::Rectangle mRenderArea;
     PackedClearValuesArray mClearValues;
     bool mRenderPassStarted;
-    bool mForceIndividualBarriers;
 
     // Transform feedback state
     gl::TransformFeedbackBuffersArray<VkBuffer> mTransformFeedbackCounterBuffers;
@@ -1141,6 +1152,7 @@ class CommandBufferHelper : angle::NonCopyable
     bool mRebindTransformFeedbackBuffers;
 
     bool mIsRenderPassCommandBuffer;
+    bool mReadOnlyDepthStencilMode;
 
     // State tracking for the maximum (Write been the highest) depth access during the entire
     // renderpass. Note that this does not include VK_ATTACHMENT_LOAD_OP_CLEAR which is tracked
@@ -1165,6 +1177,9 @@ class CommandBufferHelper : angle::NonCopyable
     // Images have unique layouts unlike buffers therefore we don't support multi-read.
     angle::FastIntegerMap<BufferAccess> mUsedBuffers;
     angle::FastIntegerSet mRenderPassUsedImages;
+
+    ImageHelper *mDepthStencilImage;
+    ImageHelper *mDepthStencilResolveImage;
 };
 
 // Imagine an image going through a few layout transitions:
