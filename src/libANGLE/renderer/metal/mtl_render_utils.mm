@@ -737,7 +737,7 @@ void ClearUtils::ensureRenderPipelineStateCacheInitialized(ContextMtl *ctx, uint
                                withName:NUM_COLOR_OUTPUTS_CONSTANT_NAME];
 
         id<MTLFunction> fragmentShader =
-            [[shaderLib newFunctionWithName:@"clearFS" constantValues:funcConstants
+            [[shaderLib newFunctionWithName:@"clearFloatFS" constantValues:funcConstants
                                       error:&err] ANGLE_MTL_AUTORELEASE];
         ASSERT(fragmentShader);
 
@@ -953,7 +953,7 @@ void ColorBlitUtils::ensureRenderPipelineStateCacheInitialized(ContextMtl *ctx,
                                withName:SOURCE_TEXTURE_TYPE_CONSTANT_NAME];
 
         id<MTLFunction> fragmentShader =
-            [[shaderLib newFunctionWithName:@"blitFS" constantValues:funcConstants
+            [[shaderLib newFunctionWithName:@"blitFloatFS" constantValues:funcConstants
                                       error:&err] ANGLE_MTL_AUTORELEASE];
 
         ASSERT(vertexShader);

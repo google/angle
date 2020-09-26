@@ -156,9 +156,31 @@ static inline vec<T, 4> blitReadTexture(BLIT_COLOR_FS_PARAMS(T))
     return output;
 }
 
-fragment MultipleColorOutputs<float> blitFS(BLIT_COLOR_FS_PARAMS(float))
+template <typename T>
+static inline MultipleColorOutputs<T> blitFS(BLIT_COLOR_FS_PARAMS(T))
 {
-    vec<float, 4> output = blitReadTexture(FORWARD_BLIT_COLOR_FS_PARAMS);
+    vec<T, 4> output = blitReadTexture(FORWARD_BLIT_COLOR_FS_PARAMS);
+
+    return toMultipleColorOutputs(output);
+}
+
+fragment MultipleColorOutputs<float> blitFloatFS(BLIT_COLOR_FS_PARAMS(float))
+{
+    return blitFS(FORWARD_BLIT_COLOR_FS_PARAMS);
+}
+fragment MultipleColorOutputs<int> blitIntFS(BLIT_COLOR_FS_PARAMS(int))
+{
+    return blitFS(FORWARD_BLIT_COLOR_FS_PARAMS);
+}
+fragment MultipleColorOutputs<uint> blitUIntFS(BLIT_COLOR_FS_PARAMS(uint))
+{
+    return blitFS(FORWARD_BLIT_COLOR_FS_PARAMS);
+}
+
+fragment MultipleColorOutputs<uint> copyTextureFloatToUIntFS(BLIT_COLOR_FS_PARAMS(float))
+{
+    float4 inputColor = blitReadTexture<>(FORWARD_BLIT_COLOR_FS_PARAMS);
+    uint4 output = uint4(inputColor * float4(255.0));
 
     return toMultipleColorOutputs(output);
 }
