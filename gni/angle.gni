@@ -211,7 +211,6 @@ set_defaults("angle_test") {
   sources = []
   data = []
   defines = []
-  deps = []
   data_deps = []
   main = ""
   suppressed_configs = angle_remove_configs

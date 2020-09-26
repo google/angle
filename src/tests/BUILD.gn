@@ -110,16 +110,6 @@ angle_common_test_utils("angle_common_test_utils_static") {
   angle_util = "angle_util_static"
 }
 
-# We use this in the restricted trace tests to load driver info.
-angle_test("angle_system_info_test") {
-  standalone_harness = true
-  sources = [ "angle_system_info_tests_main.cpp" ]
-  deps = [
-    "$angle_root:angle_gpu_info_util",
-    "$angle_root/util:angle_util_static",
-  ]
-}
-
 angle_test("angle_unittests") {
   sources = angle_unittests_sources
   main = "angle_unittest_main"
@@ -1317,7 +1307,6 @@ group("angle_tests") {
   deps = [
     ":angle_end2end_tests",
     ":angle_perftests",
-    ":angle_system_info_test",
     ":angle_unittests",
     "capture_replay_tests",
   ]
