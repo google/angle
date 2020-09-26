@@ -38,14 +38,12 @@ angle::Result RenderbufferMtl::setStorageImpl(const gl::Context *context,
 {
     ContextMtl *contextMtl = mtl::GetImpl(context);
 
-    // NOTE(hqle): Support MSAA
-    ANGLE_CHECK(contextMtl, samples == 1, "Multisample is not supported atm.", GL_INVALID_VALUE);
-
     if (mTexture != nullptr && mTexture->valid())
     {
         // Check against the state if we need to recreate the storage.
         if (internalformat != mState.getFormat().info->internalFormat ||
-            width != mState.getWidth() || height != mState.getHeight())
+            width != mState.getWidth() || height != mState.getHeight() ||
+            samples != mState.getSamples())
         {
             releaseTexture();
         }
@@ -56,10 +54,36 @@ angle::Result RenderbufferMtl::setStorageImpl(const gl::Context *context,
         angle::Format::InternalFormatToID(internalFormat.sizedInternalFormat);
     mFormat = contextMtl->getPixelFormat(angleFormatId);
 
+    uint32_t actualSamples;
+    if (samples == 0)
+    {
+        actualSamples = 1;
+    }
+    else
+    {
+        // We always start at at least 2 samples
+        actualSamples = static_cast<uint32_t>(std::max<size_t>(2, samples));
+
+        const gl::TextureCaps &textureCaps =
+            contextMtl->getTextureCaps().get(mFormat.intendedFormatId);
+        actualSamples = textureCaps.getNearestSamples(actualSamples);
+        ANGLE_MTL_CHECK(contextMtl, actualSamples != 0, GL_INVALID_VALUE);
+    }
+
     if ((mTexture == nullptr || !mTexture->valid()) && (width != 0 && height != 0))
     {
-        ANGLE_TRY(mtl::Texture::Make2DTexture(contextMtl, mFormat, width, height, 1, false,
-                                              mFormat.hasDepthAndStencilBits(), &mTexture));
+        if (actualSamples == 1)
+        {
+            ANGLE_TRY(mtl::Texture::Make2DTexture(contextMtl, mFormat, width, height, 1, false,
+                                                  mFormat.hasDepthAndStencilBits(), &mTexture));
+        }
+        else
+        {
+            ANGLE_TRY(mtl::Texture::Make2DMSTexture(
+                contextMtl, mFormat, width, height, actualSamples,
+                /* renderTargetOnly */ false,
+                /* allowFormatView */ mFormat.hasDepthAndStencilBits(), &mTexture));
+        }
 
         mRenderTarget.set(mTexture, mtl::kZeroNativeMipLevel, 0, mFormat);
 
@@ -82,7 +106,7 @@ angle::Result RenderbufferMtl::setStorage(const gl::Context *context,
                                           GLsizei width,
                                           GLsizei height)
 {
-    return setStorageImpl(context, 1, internalformat, width, height);
+    return setStorageImpl(context, 0, internalformat, width, height);
 }
 
 angle::Result RenderbufferMtl::setStorageMultisample(const gl::Context *context,
@@ -92,9 +116,7 @@ angle::Result RenderbufferMtl::setStorageMultisample(const gl::Context *context,
                                                      GLsizei height,
                                                      gl::MultisamplingMode mode)
 {
-    // NOTE(hqle): Support MSAA
-    UNIMPLEMENTED();
-    return angle::Result::Stop;
+    return setStorageImpl(context, samples, internalformat, width, height);
 }
 
 angle::Result RenderbufferMtl::setStorageEGLImageTarget(const gl::Context *context,

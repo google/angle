@@ -165,9 +165,9 @@ struct CombinedPrintToStringParamName
     INSTANTIATE_TEST_SUITE_P(, testName, ANGLE_INSTANTIATE_TEST_PLATFORMS(testName), \
                              testing::PrintToStringParamName())
 
-#define ANGLE_INSTANTIATE_TEST_ES3_AND(testName, extra)                                  \
-    const PlatformParameters testName##params[] = {ANGLE_ALL_TEST_PLATFORMS_ES3, extra}; \
-    INSTANTIATE_TEST_SUITE_P(, testName, ANGLE_INSTANTIATE_TEST_PLATFORMS(testName),     \
+#define ANGLE_INSTANTIATE_TEST_ES3_AND(testName, ...)                                          \
+    const PlatformParameters testName##params[] = {ANGLE_ALL_TEST_PLATFORMS_ES3, __VA_ARGS__}; \
+    INSTANTIATE_TEST_SUITE_P(, testName, ANGLE_INSTANTIATE_TEST_PLATFORMS(testName),           \
                              testing::PrintToStringParamName())
 
 // Instantiate the test once for each GLES31 platform
@@ -176,9 +176,9 @@ struct CombinedPrintToStringParamName
     INSTANTIATE_TEST_SUITE_P(, testName, ANGLE_INSTANTIATE_TEST_PLATFORMS(testName), \
                              testing::PrintToStringParamName())
 
-#define ANGLE_INSTANTIATE_TEST_ES31_AND(testName, extra)                                  \
-    const PlatformParameters testName##params[] = {ANGLE_ALL_TEST_PLATFORMS_ES31, extra}; \
-    INSTANTIATE_TEST_SUITE_P(, testName, ANGLE_INSTANTIATE_TEST_PLATFORMS(testName),      \
+#define ANGLE_INSTANTIATE_TEST_ES31_AND(testName, ...)                                          \
+    const PlatformParameters testName##params[] = {ANGLE_ALL_TEST_PLATFORMS_ES31, __VA_ARGS__}; \
+    INSTANTIATE_TEST_SUITE_P(, testName, ANGLE_INSTANTIATE_TEST_PLATFORMS(testName),            \
                              testing::PrintToStringParamName())
 
 // Multiple ES Version macros
@@ -188,10 +188,10 @@ struct CombinedPrintToStringParamName
     INSTANTIATE_TEST_SUITE_P(, testName, ANGLE_INSTANTIATE_TEST_PLATFORMS(testName), \
                              testing::PrintToStringParamName())
 
-#define ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND(testName, extra)                          \
-    const PlatformParameters testName##params[] = {ANGLE_ALL_TEST_PLATFORMS_ES2,         \
-                                                   ANGLE_ALL_TEST_PLATFORMS_ES3, extra}; \
-    INSTANTIATE_TEST_SUITE_P(, testName, ANGLE_INSTANTIATE_TEST_PLATFORMS(testName),     \
+#define ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND(testName, ...)                                  \
+    const PlatformParameters testName##params[] = {ANGLE_ALL_TEST_PLATFORMS_ES2,               \
+                                                   ANGLE_ALL_TEST_PLATFORMS_ES3, __VA_ARGS__}; \
+    INSTANTIATE_TEST_SUITE_P(, testName, ANGLE_INSTANTIATE_TEST_PLATFORMS(testName),           \
                              testing::PrintToStringParamName())
 
 #define ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND_ES31(testName)                        \
@@ -212,6 +212,12 @@ struct CombinedPrintToStringParamName
     const PlatformParameters testName##params[] = {ANGLE_ALL_TEST_PLATFORMS_ES3,     \
                                                    ANGLE_ALL_TEST_PLATFORMS_ES31};   \
     INSTANTIATE_TEST_SUITE_P(, testName, ANGLE_INSTANTIATE_TEST_PLATFORMS(testName), \
+                             testing::PrintToStringParamName())
+
+#define ANGLE_INSTANTIATE_TEST_ES3_AND_ES31_AND(testName, ...)                                  \
+    const PlatformParameters testName##params[] = {ANGLE_ALL_TEST_PLATFORMS_ES3,                \
+                                                   ANGLE_ALL_TEST_PLATFORMS_ES31, __VA_ARGS__}; \
+    INSTANTIATE_TEST_SUITE_P(, testName, ANGLE_INSTANTIATE_TEST_PLATFORMS(testName),            \
                              testing::PrintToStringParamName())
 
 // Instantiate the test for a combination of N parameters and the

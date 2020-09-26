@@ -509,5 +509,6 @@ ANGLE_INSTANTIATE_TEST_COMBINE_1(MultisampleTestES3,
                                  WithNoFixture(ES3_OPENGLES()),
                                  WithNoFixture(ES31_OPENGLES()),
                                  WithNoFixture(ES3_VULKAN()),
-                                 WithNoFixture(ES31_VULKAN()));
+                                 WithNoFixture(ES31_VULKAN()),
+                                 WithNoFixture(ES3_METAL()));
 }  // anonymous namespace
