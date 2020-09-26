@@ -223,6 +223,13 @@ std::ostream &operator<<(std::ostream &os, const FmtCapturePrefix &fmt)
     return os;
 }
 
+enum class ReplayFunc
+{
+    Replay,
+    Setup,
+    Reset,
+};
+
 struct FmtReplayFunction
 {
     FmtReplayFunction(gl::ContextID contextIdIn, uint32_t frameIndexIn)
@@ -235,6 +242,81 @@ struct FmtReplayFunction
 std::ostream &operator<<(std::ostream &os, const FmtReplayFunction &fmt)
 {
     os << "ReplayContext" << static_cast<int>(fmt.contextId) << "Frame" << fmt.frameIndex << "()";
+    return os;
+}
+
+constexpr uint32_t kNoPartId = std::numeric_limits<uint32_t>::max();
+
+struct FmtSetupFunction
+{
+    FmtSetupFunction(gl::ContextID contextIdIn, uint32_t partIdIn)
+        : contextId(contextIdIn), partId(partIdIn)
+    {}
+
+    gl::ContextID contextId;
+    uint32_t partId;
+};
+
+std::ostream &operator<<(std::ostream &os, const FmtSetupFunction &fmt)
+{
+    os << "SetupContext" << Str(static_cast<int>(fmt.contextId)) << "Replay";
+    if (fmt.partId != kNoPartId)
+    {
+        os << "Part" << fmt.partId;
+    }
+    os << "()";
+    return os;
+}
+
+struct FmtResetFunction
+{
+    FmtResetFunction(gl::ContextID contextIdIn) : contextId(contextIdIn) {}
+
+    gl::ContextID contextId;
+};
+
+std::ostream &operator<<(std::ostream &os, const FmtResetFunction &fmt)
+{
+    os << "ResetContext" << Str(static_cast<int>(fmt.contextId)) << "Replay()";
+    return os;
+}
+
+struct FmtFunction
+{
+    FmtFunction(ReplayFunc funcTypeIn,
+                gl::ContextID contextIdIn,
+                uint32_t frameIndexIn,
+                uint32_t partIdIn)
+        : funcType(funcTypeIn), contextId(contextIdIn), frameIndex(frameIndexIn), partId(partIdIn)
+    {}
+
+    ReplayFunc funcType;
+    gl::ContextID contextId;
+    uint32_t frameIndex;
+    uint32_t partId;
+};
+
+std::ostream &operator<<(std::ostream &os, const FmtFunction &fmt)
+{
+    switch (fmt.funcType)
+    {
+        case ReplayFunc::Replay:
+            os << FmtReplayFunction(fmt.contextId, fmt.frameIndex);
+            break;
+
+        case ReplayFunc::Setup:
+            os << FmtSetupFunction(fmt.contextId, fmt.partId);
+            break;
+
+        case ReplayFunc::Reset:
+            os << FmtResetFunction(fmt.contextId);
+            break;
+
+        default:
+            UNREACHABLE();
+            break;
+    }
+
     return os;
 }
 
@@ -901,6 +983,68 @@ void MaybeResetResources(std::stringstream &out,
     }
 }
 
+void WriteCppReplayFunctionWithParts(const gl::Context *context,
+                                     ReplayFunc replayFunc,
+                                     DataTracker *dataTracker,
+                                     uint32_t frameIndex,
+                                     std::vector<uint8_t> *binaryData,
+                                     const std::vector<CallCapture> &calls,
+                                     std::stringstream &header,
+                                     std::stringstream &callStream,
+                                     std::stringstream &out)
+{
+    std::stringstream callStreamParts;
+
+    int callCount = 0;
+    int partCount = 0;
+
+    // Setup can get quite large. If over a certain size, break up the function to avoid
+    // overflowing the stack
+    if (calls.size() > kFunctionSizeLimit)
+    {
+        callStreamParts << "void "
+                        << FmtFunction(replayFunc, context->id(), frameIndex, ++partCount) << "\n";
+        callStreamParts << "{\n";
+    }
+
+    for (const CallCapture &call : calls)
+    {
+        callStreamParts << "    ";
+        WriteCppReplayForCall(call, dataTracker, callStreamParts, header, binaryData);
+        callStreamParts << ";\n";
+
+        if (partCount > 0 && ++callCount % kFunctionSizeLimit == 0)
+        {
+            callStreamParts << "}\n";
+            callStreamParts << "\n";
+            callStreamParts << "void "
+                            << FmtFunction(replayFunc, context->id(), frameIndex, ++partCount)
+                            << "\n";
+            callStreamParts << "{\n";
+        }
+    }
+
+    if (partCount > 0)
+    {
+        callStreamParts << "}\n";
+        callStreamParts << "\n";
+
+        // Write out the parts
+        out << callStreamParts.str();
+
+        // Write out the calls to the parts
+        for (int i = 1; i <= partCount; i++)
+        {
+            callStream << "    " << FmtFunction(replayFunc, context->id(), frameIndex, i) << ";\n";
+        }
+    }
+    else
+    {
+        // If we didn't chunk it up, write all the calls directly to SetupContext
+        callStream << callStreamParts.str();
+    }
+}
+
 void WriteCppReplay(bool compression,
                     const std::string &outDir,
                     const gl::Context *context,
@@ -935,62 +1079,13 @@ void WriteCppReplay(bool compression,
     if (frameIndex == frameStart)
     {
         std::stringstream setupCallStream;
-        std::stringstream setupCallStreamParts;
 
-        setupCallStream << "void SetupContext" << Str(static_cast<int>(context->id()))
-                        << "Replay()\n";
+        setupCallStream << "void " << FmtSetupFunction(context->id(), kNoPartId) << "\n";
         setupCallStream << "{\n";
 
         WriteLoadBinaryDataCall(compression, setupCallStream, context->id(), captureLabel);
-
-        int callCount = 0;
-        int partCount = 0;
-
-        // Setup can get quite large. If over a certain size, break up the function to avoid
-        // overflowing the stack
-        if (setupCalls.size() > kFunctionSizeLimit)
-        {
-            setupCallStreamParts << "void SetupContext" << Str(static_cast<int>(context->id()))
-                                 << "ReplayPart" << ++partCount << "()\n";
-            setupCallStreamParts << "{\n";
-        }
-
-        for (const CallCapture &call : setupCalls)
-        {
-            setupCallStreamParts << "    ";
-            WriteCppReplayForCall(call, &dataTracker, setupCallStreamParts, header, binaryData);
-            setupCallStreamParts << ";\n";
-
-            if (partCount > 0 && ++callCount % kFunctionSizeLimit == 0)
-            {
-                setupCallStreamParts << "}\n";
-                setupCallStreamParts << "\n";
-                setupCallStreamParts << "void SetupContext" << Str(static_cast<int>(context->id()))
-                                     << "ReplayPart" << ++partCount << "()\n";
-                setupCallStreamParts << "{\n";
-            }
-        }
-
-        if (partCount > 0)
-        {
-            setupCallStreamParts << "}\n";
-            setupCallStreamParts << "\n";
-
-            // Write out the parts
-            out << setupCallStreamParts.str();
-
-            // Write out the calls to the parts
-            for (int i = 1; i <= partCount; i++)
-            {
-                setupCallStream << "    SetupContext" << Str(static_cast<int>(context->id()))
-                                << "ReplayPart" << i << "();\n";
-            }
-        }
-        else
-        {
-            // If we didn't chunk it up, write all the calls directly to SetupContext
-            setupCallStream << setupCallStreamParts.str();
-        }
+        WriteCppReplayFunctionWithParts(context, ReplayFunc::Setup, &dataTracker, frameIndex,
+                                        binaryData, setupCalls, header, setupCallStream, out);
 
         out << setupCallStream.str();
         out << "}\n";
@@ -1000,7 +1095,7 @@ void WriteCppReplay(bool compression,
     if (frameIndex == frameEnd)
     {
         // Emit code to reset back to starting state
-        out << "void ResetContext" << Str(static_cast<int>(context->id())) << "Replay()\n";
+        out << "void " << FmtResetFunction(context->id()) << "\n";
         out << "{\n";
 
         std::stringstream restoreCallStream;
