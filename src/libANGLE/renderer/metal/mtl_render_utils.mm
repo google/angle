@@ -437,7 +437,7 @@ void SetupBlitWithDrawUniformData(RenderCommandEncoder *cmdEncoder,
     BlitParamsUniform uniformParams;
     uniformParams.dstFlipX = params.dstFlipX ? 1 : 0;
     uniformParams.dstFlipY = params.dstFlipY ? 1 : 0;
-    uniformParams.srcLevel = params.srcLevel;
+    uniformParams.srcLevel = params.srcLevel.get();
     uniformParams.srcLayer = params.srcLayer;
     if (isColorBlit)
     {
@@ -611,10 +611,10 @@ angle::Result RenderUtils::blitColorWithDraw(const gl::Context *context,
     }
     ColorBlitParams params;
     params.enabledBuffers.set(0);
-    params.src = srcTexture;
-    params.dstTextureSize =
-        gl::Extents(static_cast<int>(srcTexture->width()), static_cast<int>(srcTexture->height()),
-                    static_cast<int>(srcTexture->depth()));
+    params.src            = srcTexture;
+    params.dstTextureSize = gl::Extents(static_cast<int>(srcTexture->widthAt0()),
+                                        static_cast<int>(srcTexture->heightAt0()),
+                                        static_cast<int>(srcTexture->depthAt0()));
     params.dstRect = params.dstScissorRect = params.srcRect =
         gl::Rectangle(0, 0, params.dstTextureSize.width, params.dstTextureSize.height);
 
@@ -682,7 +682,7 @@ void RenderUtils::combineVisibilityResult(
 angle::Result RenderUtils::generateMipmapCS(ContextMtl *contextMtl,
                                             const TextureRef &srcTexture,
                                             bool sRGBMipmap,
-                                            gl::TexLevelArray<mtl::TextureRef> *mipmapOutputViews)
+                                            NativeTexLevelArray *mipmapOutputViews)
 {
     return mMipmapUtils.generateMipmapCS(contextMtl, srcTexture, sRGBMipmap, mipmapOutputViews);
 }
@@ -1336,7 +1336,7 @@ angle::Result DepthStencilBlitUtils::blitStencilViaCopyBuffer(
     uniform.srcTexCoordSteps[1]  = (v1 - v0) / params.dstRect.height;
     uniform.srcStartTexCoords[0] = u0 + uniform.srcTexCoordSteps[0] * 0.5f;
     uniform.srcStartTexCoords[1] = v0 + uniform.srcTexCoordSteps[1] * 0.5f;
-    uniform.srcLevel             = params.srcLevel;
+    uniform.srcLevel             = params.srcLevel.get();
     uniform.srcLayer             = params.srcLayer;
     uniform.dstSize[0]           = params.dstRect.width;
     uniform.dstSize[1]           = params.dstRect.height;
@@ -1801,7 +1801,7 @@ void MipmapUtils::ensure3DMipGeneratorPipelineInitialized(ContextMtl *contextMtl
 angle::Result MipmapUtils::generateMipmapCS(ContextMtl *contextMtl,
                                             const TextureRef &srcTexture,
                                             bool sRGBMipmap,
-                                            gl::TexLevelArray<mtl::TextureRef> *mipmapOutputViews)
+                                            NativeTexLevelArray *mipmapOutputViews)
 {
     // Only support 3D texture for now.
     ASSERT(srcTexture->textureType() == MTLTextureType3D);
@@ -1848,16 +1848,17 @@ angle::Result MipmapUtils::generateMipmapCS(ContextMtl *contextMtl,
 
     GenerateMipmapUniform options;
 
-    uint32_t remainMips = srcTexture->mipmapLevels() - 1;
-    options.srcLevel    = 0;
-    options.sRGB        = sRGBMipmap;
+    uint32_t remainMips             = srcTexture->mipmapLevels() - 1;
+    MipmapNativeLevel batchSrcLevel = kZeroNativeMipLevel;
+    options.srcLevel                = batchSrcLevel.get();
+    options.sRGB                    = sRGBMipmap;
 
     cmdEncoder->setTexture(srcTexture, 0);
     cmdEncoder->markResourceBeingWrittenByGPU(srcTexture);
     while (remainMips)
     {
-        const TextureRef &firstMipView = mipmapOutputViews->at(options.srcLevel + 1);
-        gl::Extents size               = firstMipView->size();
+        const TextureRef &firstMipView = mipmapOutputViews->at(batchSrcLevel + 1);
+        gl::Extents size               = firstMipView->sizeAt0();
         bool isPow2 = gl::isPow2(size.width) && gl::isPow2(size.height) && gl::isPow2(size.depth);
 
         // Currently multiple mipmaps generation is only supported for power of two base level.
@@ -1874,18 +1875,20 @@ angle::Result MipmapUtils::generateMipmapCS(ContextMtl *contextMtl,
 
         for (uint32_t i = 1; i <= options.numMipmapsToGenerate; ++i)
         {
-            cmdEncoder->setTexture(mipmapOutputViews->at(options.srcLevel + i), i);
+            cmdEncoder->setTexture(mipmapOutputViews->at(batchSrcLevel + i), i);
         }
 
-        uint32_t threadsPerZ = std::max(slices, firstMipView->depth());
+        uint32_t threadsPerZ = std::max(slices, firstMipView->depthAt0());
 
-        DispatchCompute(contextMtl, cmdEncoder,
-                        /** allowNonUniform */ false,
-                        MTLSizeMake(firstMipView->width(), firstMipView->height(), threadsPerZ),
-                        threadGroupSize);
+        DispatchCompute(
+            contextMtl, cmdEncoder,
+            /** allowNonUniform */ false,
+            MTLSizeMake(firstMipView->widthAt0(), firstMipView->heightAt0(), threadsPerZ),
+            threadGroupSize);
 
         remainMips -= options.numMipmapsToGenerate;
-        options.srcLevel += options.numMipmapsToGenerate;
+        batchSrcLevel    = batchSrcLevel + options.numMipmapsToGenerate;
+        options.srcLevel = batchSrcLevel.get();
     }
 
     return angle::Result::Continue;
@@ -2012,7 +2015,7 @@ angle::Result CopyPixelsUtils::packPixelsFromTextureToBuffer(ContextMtl *context
     options.bufferRowPitch         = params.bufferRowPitch;
     options.textureOffset[0]       = params.textureArea.x;
     options.textureOffset[1]       = params.textureArea.y;
-    options.textureLevel           = params.textureLevel;
+    options.textureLevel           = params.textureLevel.get();
     options.textureLayer           = params.textureSliceOrDeph;
     options.reverseTextureRowOrder = params.reverseTextureRowOrder;
     cmdEncoder->setData(options, 0);

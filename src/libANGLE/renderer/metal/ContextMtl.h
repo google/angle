@@ -341,7 +341,7 @@ class ContextMtl : public ContextImpl, public mtl::Context
     // Utilities to quickly create render command encoder to a specific texture:
     // The previous content of texture will be loaded
     mtl::RenderCommandEncoder *getTextureRenderCommandEncoder(const mtl::TextureRef &textureTarget,
-                                                              const gl::ImageIndex &index);
+                                                              const mtl::ImageNativeIndex &index);
     // The previous content of texture will be loaded if clearColor is not provided
     mtl::RenderCommandEncoder *getRenderTargetCommandEncoderWithClear(
         const RenderTargetMtl &renderTarget,

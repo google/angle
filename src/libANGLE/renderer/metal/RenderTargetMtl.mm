@@ -26,18 +26,18 @@ RenderTargetMtl::RenderTargetMtl(RenderTargetMtl &&other)
 {}
 
 void RenderTargetMtl::set(const mtl::TextureRef &texture,
-                          uint32_t level,
+                          const mtl::MipmapNativeLevel &level,
                           uint32_t layer,
                           const mtl::Format &format)
 {
-    set(texture, nullptr, level, layer, format);
+    setWithImplicitMSTexture(texture, nullptr, level, layer, format);
 }
 
-void RenderTargetMtl::set(const mtl::TextureRef &texture,
-                          const mtl::TextureRef &implicitMSTexture,
-                          uint32_t level,
-                          uint32_t layer,
-                          const mtl::Format &format)
+void RenderTargetMtl::setWithImplicitMSTexture(const mtl::TextureRef &texture,
+                                               const mtl::TextureRef &implicitMSTexture,
+                                               const mtl::MipmapNativeLevel &level,
+                                               uint32_t layer,
+                                               const mtl::Format &format)
 {
     mTexture           = texture;
     mImplicitMSTexture = implicitMSTexture;
@@ -60,7 +60,7 @@ void RenderTargetMtl::reset()
 {
     mTexture.reset();
     mImplicitMSTexture.reset();
-    mLevelIndex = 0;
+    mLevelIndex = mtl::kZeroNativeMipLevel;
     mLayerIndex = 0;
     mFormat     = nullptr;
 }

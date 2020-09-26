@@ -193,7 +193,7 @@ void BaseRenderPassAttachmentDescToObjC(const RenderPassAttachmentDesc &src,
         dst.slice          = 0;
         dst.depthPlane     = 0;
         dst.resolveTexture = ToObjC(src.texture);
-        dst.resolveLevel   = src.level;
+        dst.resolveLevel   = src.level.get();
         if (dst.resolveTexture.textureType == MTLTextureType3D)
         {
             dst.resolveDepthPlane = src.sliceOrDepth;
@@ -208,7 +208,7 @@ void BaseRenderPassAttachmentDescToObjC(const RenderPassAttachmentDesc &src,
     else
     {
         dst.texture = ToObjC(src.texture);
-        dst.level   = src.level;
+        dst.level   = src.level.get();
         if (dst.texture.textureType == MTLTextureType3D)
         {
             dst.depthPlane = src.sliceOrDepth;
@@ -691,7 +691,7 @@ void RenderPassAttachmentDesc::reset()
 {
     texture.reset();
     implicitMSTexture.reset();
-    level              = 0;
+    level              = mtl::kZeroNativeMipLevel;
     sliceOrDepth       = 0;
     loadAction         = MTLLoadActionLoad;
     storeAction        = MTLStoreActionStore;

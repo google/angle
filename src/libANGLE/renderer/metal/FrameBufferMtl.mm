@@ -1053,9 +1053,8 @@ gl::Rectangle FramebufferMtl::getCorrectFlippedReadArea(const gl::Context *conte
     gl::Rectangle flippedArea = glArea;
     if (mFlipY)
     {
-        flippedArea.y =
-            readRT->getTexture()->height(static_cast<uint32_t>(readRT->getLevelIndex())) -
-            flippedArea.y - flippedArea.height;
+        flippedArea.y = readRT->getTexture()->height(readRT->getLevelIndex()) - flippedArea.y -
+                        flippedArea.height;
     }
 
     return flippedArea;

@@ -519,13 +519,13 @@ class BlitCommandEncoder final : public CommandEncoder
                                             MTLSize srcSize,
                                             const TextureRef &dst,
                                             uint32_t dstSlice,
-                                            uint32_t dstLevel,
+                                            MipmapNativeLevel dstLevel,
                                             MTLOrigin dstOrigin,
                                             MTLBlitOption blitOption);
 
     BlitCommandEncoder &copyTextureToBuffer(const TextureRef &src,
                                             uint32_t srcSlice,
-                                            uint32_t srcLevel,
+                                            MipmapNativeLevel srcLevel,
                                             MTLOrigin srcOrigin,
                                             MTLSize srcSize,
                                             const BufferRef &dst,
@@ -536,10 +536,10 @@ class BlitCommandEncoder final : public CommandEncoder
 
     BlitCommandEncoder &copyTexture(const TextureRef &src,
                                     uint32_t srcSlice,
-                                    uint32_t srcLevel,
+                                    MipmapNativeLevel srcLevel,
                                     const TextureRef &dst,
                                     uint32_t dstSlice,
-                                    uint32_t dstLevel,
+                                    MipmapNativeLevel dstLevel,
                                     uint32_t sliceCount,
                                     uint32_t levelCount);
 

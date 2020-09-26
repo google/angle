@@ -32,27 +32,27 @@ NS_ASSUME_NONNULL_BEGIN
 angle::Result InitializeTextureContents(const gl::Context *context,
                                         const TextureRef &texture,
                                         const Format &textureObjFormat,
-                                        const gl::ImageIndex &index);
+                                        const ImageNativeIndex &index);
 // Same as above but using GPU clear operation instead of CPU.
 // - channelsToInit parameter controls which channels will get their content initialized.
 angle::Result InitializeTextureContentsGPU(const gl::Context *context,
                                            const TextureRef &texture,
                                            const Format &textureObjFormat,
-                                           const gl::ImageIndex &index,
+                                           const ImageNativeIndex &index,
                                            MTLColorWriteMask channelsToInit);
 
 // Same as above but for a depth/stencil texture.
 angle::Result InitializeDepthStencilTextureContentsGPU(const gl::Context *context,
                                                        const TextureRef &texture,
                                                        const Format &textureObjFormat,
-                                                       const gl::ImageIndex &index);
+                                                       const ImageNativeIndex &index);
 
 // Unified texture's per slice/depth texel reading function
 angle::Result ReadTexturePerSliceBytes(const gl::Context *context,
                                        const TextureRef &texture,
                                        size_t bytesPerRow,
                                        const gl::Rectangle &fromRegion,
-                                       uint32_t mipLevel,
+                                       const MipmapNativeLevel &mipLevel,
                                        uint32_t sliceOrDepth,
                                        uint8_t *dataOut);
 
@@ -60,7 +60,7 @@ angle::Result ReadTexturePerSliceBytesToBuffer(const gl::Context *context,
                                                const TextureRef &texture,
                                                size_t bytesPerRow,
                                                const gl::Rectangle &fromRegion,
-                                               uint32_t mipLevel,
+                                               const MipmapNativeLevel &mipLevel,
                                                uint32_t sliceOrDepth,
                                                uint32_t dstOffset,
                                                const BufferRef &dstBuffer);
@@ -142,6 +142,9 @@ bool IsFormatEmulated(const mtl::Format &mtlFormat);
 MTLClearColor EmulatedAlphaClearColor(MTLClearColor color, MTLColorWriteMask colorMask);
 
 gl::Box MTLRegionToGLBox(const MTLRegion &mtlRegion);
+
+MipmapNativeLevel GetNativeMipLevel(GLuint level, GLuint base);
+GLuint GetGLMipLevel(const MipmapNativeLevel &nativeLevel, GLuint base);
 
 NS_ASSUME_NONNULL_END
 }  // namespace mtl

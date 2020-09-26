@@ -1285,14 +1285,14 @@ mtl::RenderCommandEncoder *ContextMtl::getRenderPassCommandEncoder(const mtl::Re
 // The previous content of texture will be loaded
 mtl::RenderCommandEncoder *ContextMtl::getTextureRenderCommandEncoder(
     const mtl::TextureRef &textureTarget,
-    const gl::ImageIndex &index)
+    const mtl::ImageNativeIndex &index)
 {
     ASSERT(textureTarget && textureTarget->valid());
 
     mtl::RenderPassDesc rpDesc;
 
     rpDesc.colorAttachments[0].texture      = textureTarget;
-    rpDesc.colorAttachments[0].level        = index.getLevelIndex();
+    rpDesc.colorAttachments[0].level        = index.getNativeLevel();
     rpDesc.colorAttachments[0].sliceOrDepth = index.hasLayer() ? index.getLayerIndex() : 0;
     rpDesc.numColorAttachments              = 1;
     rpDesc.sampleCount                      = textureTarget->samples();
@@ -1898,8 +1898,9 @@ angle::Result ContextMtl::handleDirtyRenderPass(const gl::Context *context)
                                                   getPixelFormat(angle::FormatID::R8G8B8A8_UNORM),
                                                   1, 1, 1, true, false, &mDummyXFBRenderTexture));
         }
-        mtl::RenderCommandEncoder *encoder =
-            getTextureRenderCommandEncoder(mDummyXFBRenderTexture, gl::ImageIndex::Make2D(0));
+        mtl::RenderCommandEncoder *encoder = getTextureRenderCommandEncoder(
+            mDummyXFBRenderTexture,
+            mtl::ImageNativeIndex::FromBaseZeroGLIndex(gl::ImageIndex::Make2D(0)));
         encoder->setColorLoadAction(MTLLoadActionDontCare, MTLClearColor(), 0);
         encoder->setColorStoreAction(MTLStoreActionDontCare);
 

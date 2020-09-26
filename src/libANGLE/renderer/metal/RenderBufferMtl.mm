@@ -61,16 +61,14 @@ angle::Result RenderbufferMtl::setStorageImpl(const gl::Context *context,
         ANGLE_TRY(mtl::Texture::Make2DTexture(contextMtl, mFormat, width, height, 1, false,
                                               mFormat.hasDepthAndStencilBits(), &mTexture));
 
-        mRenderTarget.set(mTexture, 0, 0, mFormat);
+        mRenderTarget.set(mTexture, mtl::kZeroNativeMipLevel, 0, mFormat);
 
         // For emulated channels that GL texture intends to not have,
         // we need to initialize their content.
         bool emulatedChannels = mtl::IsFormatEmulated(mFormat);
         if (emulatedChannels)
         {
-            gl::ImageIndex index;
-
-            index = gl::ImageIndex::Make2D(0);
+            auto index = mtl::ImageNativeIndex::FromBaseZeroGLIndex(gl::ImageIndex::Make2D(0));
 
             ANGLE_TRY(mtl::InitializeTextureContents(context, mTexture, mFormat, index));
         }
@@ -122,6 +120,7 @@ angle::Result RenderbufferMtl::getAttachmentRenderTarget(const gl::Context *cont
 angle::Result RenderbufferMtl::initializeContents(const gl::Context *context,
                                                   const gl::ImageIndex &imageIndex)
 {
-    return mtl::InitializeTextureContents(context, mTexture, mFormat, imageIndex);
+    return mtl::InitializeTextureContents(context, mTexture, mFormat,
+                                          mtl::ImageNativeIndex::FromBaseZeroGLIndex(imageIndex));
 }
 }

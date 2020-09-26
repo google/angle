@@ -300,7 +300,7 @@ struct RenderPassAttachmentDesc
     // Implicit multisample texture that will be rendered into and discarded at the end of
     // a render pass. Its result will be resolved into normal texture above.
     TextureRef implicitMSTexture;
-    uint32_t level;
+    MipmapNativeLevel level;
     uint32_t sliceOrDepth;
 
     MTLLoadAction loadAction;

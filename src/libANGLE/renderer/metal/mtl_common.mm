@@ -21,6 +21,13 @@ namespace rx
 namespace mtl
 {
 
+// ImageNativeIndex implementation
+ImageNativeIndexIterator ImageNativeIndex::getLayerIterator(GLint layerCount) const
+{
+    return ImageNativeIndexIterator(mNativeIndex.getLayerIterator(layerCount));
+}
+
+// Context implementation
 Context::Context(DisplayMtl *display) : mDisplay(display) {}
 
 id<MTLDevice> Context::getMetalDevice() const

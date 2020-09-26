@@ -22,6 +22,7 @@
 #include "common/angleutils.h"
 #include "common/apple_platform_utils.h"
 #include "libANGLE/Constants.h"
+#include "libANGLE/ImageIndex.h"
 #include "libANGLE/Version.h"
 #include "libANGLE/angletypes.h"
 
@@ -338,6 +339,70 @@ using SharedEventRef = AutoObjCPtr<id<MTLSharedEvent>>;
 #    define ANGLE_MTL_EVENT_AVAILABLE 0
 using SharedEventRef                                       = AutoObjCObj<NSObject>;
 #endif
+
+// The native image index used by Metal back-end,  the image index uses native mipmap level instead
+// of "virtual" level modified by OpenGL's base level.
+using MipmapNativeLevel = gl::LevelIndexWrapper<uint32_t>;
+
+constexpr MipmapNativeLevel kZeroNativeMipLevel(0);
+
+class ImageNativeIndexIterator;
+
+class ImageNativeIndex final
+{
+  public:
+    ImageNativeIndex() = delete;
+    ImageNativeIndex(const gl::ImageIndex &src, GLint baseLevel)
+    {
+        mNativeIndex = gl::ImageIndex::MakeFromType(src.getType(), src.getLevelIndex() - baseLevel,
+                                                    src.getLayerIndex(), src.getLayerCount());
+    }
+
+    static ImageNativeIndex FromBaseZeroGLIndex(const gl::ImageIndex &src)
+    {
+        return ImageNativeIndex(src, 0);
+    }
+
+    MipmapNativeLevel getNativeLevel() const
+    {
+        return MipmapNativeLevel(mNativeIndex.getLevelIndex());
+    }
+
+    gl::TextureType getType() const { return mNativeIndex.getType(); }
+    GLint getLayerIndex() const { return mNativeIndex.getLayerIndex(); }
+    GLint getLayerCount() const { return mNativeIndex.getLayerCount(); }
+    GLint cubeMapFaceIndex() const { return mNativeIndex.cubeMapFaceIndex(); }
+
+    bool isLayered() const { return mNativeIndex.isLayered(); }
+    bool hasLayer() const { return mNativeIndex.hasLayer(); }
+    bool has3DLayer() const { return mNativeIndex.has3DLayer(); }
+    bool usesTex3D() const { return mNativeIndex.usesTex3D(); }
+
+    bool valid() const { return mNativeIndex.valid(); }
+
+    ImageNativeIndexIterator getLayerIterator(GLint layerCount) const;
+
+  private:
+    gl::ImageIndex mNativeIndex;
+};
+
+class ImageNativeIndexIterator final
+{
+  public:
+    ImageNativeIndex next() { return ImageNativeIndex(mNativeIndexIte.next(), 0); }
+    ImageNativeIndex current() const { return ImageNativeIndex(mNativeIndexIte.current(), 0); }
+    bool hasNext() const { return mNativeIndexIte.hasNext(); }
+
+  private:
+    // This class is only constructable from ImageNativeIndex
+    friend class ImageNativeIndex;
+
+    explicit ImageNativeIndexIterator(const gl::ImageIndexIterator &baseZeroSrc)
+        : mNativeIndexIte(baseZeroSrc)
+    {}
+
+    gl::ImageIndexIterator mNativeIndexIte;
+};
 
 struct ClearOptions
 {

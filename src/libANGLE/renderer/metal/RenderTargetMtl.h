@@ -33,21 +33,21 @@ class RenderTargetMtl final : public FramebufferAttachmentRenderTarget
     RenderTargetMtl(RenderTargetMtl &&other);
 
     void set(const mtl::TextureRef &texture,
-             uint32_t level,
+             const mtl::MipmapNativeLevel &level,
              uint32_t layer,
              const mtl::Format &format);
-    void set(const mtl::TextureRef &texture,
-             const mtl::TextureRef &implicitMSTexture,
-             uint32_t level,
-             uint32_t layer,
-             const mtl::Format &format);
+    void setWithImplicitMSTexture(const mtl::TextureRef &texture,
+                                  const mtl::TextureRef &implicitMSTexture,
+                                  const mtl::MipmapNativeLevel &level,
+                                  uint32_t layer,
+                                  const mtl::Format &format);
     void setTexture(const mtl::TextureRef &texture);
     void setImplicitMSTexture(const mtl::TextureRef &implicitMSTexture);
     void reset();
 
     mtl::TextureRef getTexture() const { return mTexture.lock(); }
     mtl::TextureRef getImplicitMSTexture() const { return mImplicitMSTexture.lock(); }
-    uint32_t getLevelIndex() const { return mLevelIndex; }
+    const mtl::MipmapNativeLevel &getLevelIndex() const { return mLevelIndex; }
     uint32_t getLayerIndex() const { return mLayerIndex; }
     uint32_t getRenderSamples() const;
     const mtl::Format *getFormat() const { return mFormat; }
@@ -57,9 +57,9 @@ class RenderTargetMtl final : public FramebufferAttachmentRenderTarget
   private:
     mtl::TextureWeakRef mTexture;
     mtl::TextureWeakRef mImplicitMSTexture;
-    uint32_t mLevelIndex       = 0;
-    uint32_t mLayerIndex       = 0;
-    const mtl::Format *mFormat = nullptr;
+    mtl::MipmapNativeLevel mLevelIndex = mtl::kZeroNativeMipLevel;
+    uint32_t mLayerIndex               = 0;
+    const mtl::Format *mFormat         = nullptr;
 };
 }  // namespace rx
 

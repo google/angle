@@ -57,8 +57,8 @@ struct BlitParams
     bool dstFlipX = false;
 
     TextureRef src;
-    uint32_t srcLevel = 0;
-    uint32_t srcLayer = 0;
+    MipmapNativeLevel srcLevel = kZeroNativeMipLevel;
+    uint32_t srcLayer          = 0;
 
     // Source rectangle:
     // NOTE: if srcYFlipped=true, this rectangle will be converted internally to flipped rect before
@@ -93,9 +93,9 @@ struct StencilBlitViaBufferParams : public DepthStencilBlitParams
     StencilBlitViaBufferParams(const DepthStencilBlitParams &src);
 
     TextureRef dstStencil;
-    uint32_t dstStencilLevel         = 0;
-    uint32_t dstStencilLayer         = 0;
-    bool dstPackedDepthStencilFormat = false;
+    MipmapNativeLevel dstStencilLevel = kZeroNativeMipLevel;
+    uint32_t dstStencilLayer          = 0;
+    bool dstPackedDepthStencilFormat  = false;
 };
 
 struct TriFanFromArrayParams
@@ -150,8 +150,8 @@ struct CopyPixelsFromBufferParams : CopyPixelsCommonParams
 struct CopyPixelsToBufferParams : CopyPixelsCommonParams
 {
     gl::Rectangle textureArea;
-    uint32_t textureLevel       = 0;
-    uint32_t textureSliceOrDeph = 0;
+    MipmapNativeLevel textureLevel = kZeroNativeMipLevel;
+    uint32_t textureSliceOrDeph    = 0;
     bool reverseTextureRowOrder;
 };
 
@@ -371,7 +371,7 @@ class MipmapUtils final : angle::NonCopyable
     angle::Result generateMipmapCS(ContextMtl *contextMtl,
                                    const TextureRef &srcTexture,
                                    bool sRGBMipmap,
-                                   gl::TexLevelArray<mtl::TextureRef> *mipmapOutputViews);
+                                   NativeTexLevelArray *mipmapOutputViews);
 
   private:
     void ensure3DMipGeneratorPipelineInitialized(ContextMtl *contextMtl);
@@ -470,7 +470,7 @@ class RenderUtils : public Context, angle::NonCopyable
     angle::Result generateMipmapCS(ContextMtl *contextMtl,
                                    const TextureRef &srcTexture,
                                    bool sRGBMipmap,
-                                   gl::TexLevelArray<mtl::TextureRef> *mipmapOutputViews);
+                                   NativeTexLevelArray *mipmapOutputViews);
 
     angle::Result unpackPixelsFromBufferToTexture(ContextMtl *contextMtl,
                                                   const angle::Format &srcAngleFormat,

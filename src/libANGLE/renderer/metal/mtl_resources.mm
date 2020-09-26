@@ -26,9 +26,9 @@ namespace mtl
 {
 namespace
 {
-inline NSUInteger GetMipSize(NSUInteger baseSize, NSUInteger level)
+inline NSUInteger GetMipSize(NSUInteger baseSize, const MipmapNativeLevel level)
 {
-    return std::max<NSUInteger>(1, baseSize >> level);
+    return std::max<NSUInteger>(1, baseSize >> level.get());
 }
 
 void SetTextureSwizzle(ContextMtl *context,
@@ -355,7 +355,7 @@ bool Texture::supportFormatView() const
 
 void Texture::replace2DRegion(ContextMtl *context,
                               const MTLRegion &region,
-                              uint32_t mipmapLevel,
+                              const MipmapNativeLevel &mipmapLevel,
                               uint32_t slice,
                               const uint8_t *data,
                               size_t bytesPerRow)
@@ -366,13 +366,13 @@ void Texture::replace2DRegion(ContextMtl *context,
 
 void Texture::replaceRegion(ContextMtl *context,
                             const MTLRegion &region,
-                            uint32_t mipmapLevel,
+                            const MipmapNativeLevel &mipmapLevel,
                             uint32_t slice,
                             const uint8_t *data,
                             size_t bytesPerRow,
                             size_t bytesPer2DImage)
 {
-    if (mipmapLevel >= this->mipmapLevels())
+    if (mipmapLevel.get() >= this->mipmapLevels())
     {
         return;
     }
@@ -397,7 +397,7 @@ void Texture::replaceRegion(ContextMtl *context,
     }
 
     [get() replaceRegion:region
-             mipmapLevel:mipmapLevel
+             mipmapLevel:mipmapLevel.get()
                    slice:slice
                withBytes:data
              bytesPerRow:bytesPerRow
@@ -408,7 +408,7 @@ void Texture::getBytes(ContextMtl *context,
                        size_t bytesPerRow,
                        size_t bytesPer2DInage,
                        const MTLRegion &region,
-                       uint32_t mipmapLevel,
+                       const MipmapNativeLevel &mipmapLevel,
                        uint32_t slice,
                        uint8_t *dataOut)
 {
@@ -430,7 +430,7 @@ void Texture::getBytes(ContextMtl *context,
           bytesPerRow:bytesPerRow
         bytesPerImage:bytesPer2DInage
            fromRegion:region
-          mipmapLevel:mipmapLevel
+          mipmapLevel:mipmapLevel.get()
                 slice:slice];
 }
 
@@ -450,7 +450,7 @@ TextureRef Texture::createCubeFaceView(uint32_t face)
     }
 }
 
-TextureRef Texture::createSliceMipView(uint32_t slice, uint32_t level)
+TextureRef Texture::createSliceMipView(uint32_t slice, const MipmapNativeLevel &level)
 {
     ANGLE_MTL_OBJC_SCOPE
     {
@@ -459,7 +459,7 @@ TextureRef Texture::createSliceMipView(uint32_t slice, uint32_t level)
             case MTLTextureTypeCube:
             case MTLTextureType2D:
             case MTLTextureType2DArray:
-                return TextureRef(new Texture(this, MTLTextureType2D, NSMakeRange(level, 1),
+                return TextureRef(new Texture(this, MTLTextureType2D, NSMakeRange(level.get(), 1),
                                               NSMakeRange(slice, 1)));
             default:
                 UNREACHABLE();
@@ -468,13 +468,13 @@ TextureRef Texture::createSliceMipView(uint32_t slice, uint32_t level)
     }
 }
 
-TextureRef Texture::createMipView(uint32_t level)
+TextureRef Texture::createMipView(const MipmapNativeLevel &level)
 {
     ANGLE_MTL_OBJC_SCOPE
     {
         NSUInteger slices = cubeFacesOrArrayLength();
         return TextureRef(
-            new Texture(this, textureType(), NSMakeRange(level, 1), NSMakeRange(0, slices)));
+            new Texture(this, textureType(), NSMakeRange(level.get(), 1), NSMakeRange(0, slices)));
     }
 }
 
@@ -518,22 +518,22 @@ uint32_t Texture::cubeFacesOrArrayLength() const
     return arrayLength();
 }
 
-uint32_t Texture::width(uint32_t level) const
+uint32_t Texture::width(const MipmapNativeLevel &level) const
 {
     return static_cast<uint32_t>(GetMipSize(get().width, level));
 }
 
-uint32_t Texture::height(uint32_t level) const
+uint32_t Texture::height(const MipmapNativeLevel &level) const
 {
     return static_cast<uint32_t>(GetMipSize(get().height, level));
 }
 
-uint32_t Texture::depth(uint32_t level) const
+uint32_t Texture::depth(const MipmapNativeLevel &level) const
 {
     return static_cast<uint32_t>(GetMipSize(get().depth, level));
 }
 
-gl::Extents Texture::size(uint32_t level) const
+gl::Extents Texture::size(const MipmapNativeLevel &level) const
 {
     gl::Extents re;
 
@@ -544,9 +544,9 @@ gl::Extents Texture::size(uint32_t level) const
     return re;
 }
 
-gl::Extents Texture::size(const gl::ImageIndex &index) const
+gl::Extents Texture::size(const ImageNativeIndex &index) const
 {
-    gl::Extents extents = size(index.getLevelIndex());
+    gl::Extents extents = size(index.getNativeLevel());
 
     if (index.hasLayer())
     {

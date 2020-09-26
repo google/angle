@@ -975,7 +975,7 @@ inline void RenderCommandEncoder::initAttachmentWriteDependencyAndScissorRect(
     {
         cmdBuffer().setWriteDependency(texture);
 
-        uint32_t mipLevel = attachment.level;
+        const MipmapNativeLevel &mipLevel = attachment.level;
 
         mRenderPassMaxScissorRect.width =
             std::min<NSUInteger>(mRenderPassMaxScissorRect.width, texture->width(mipLevel));
@@ -1703,7 +1703,7 @@ BlitCommandEncoder &BlitCommandEncoder::copyBufferToTexture(const BufferRef &src
                                                             MTLSize srcSize,
                                                             const TextureRef &dst,
                                                             uint32_t dstSlice,
-                                                            uint32_t dstLevel,
+                                                            MipmapNativeLevel dstLevel,
                                                             MTLOrigin dstOrigin,
                                                             MTLBlitOption blitOption)
 {
@@ -1722,7 +1722,7 @@ BlitCommandEncoder &BlitCommandEncoder::copyBufferToTexture(const BufferRef &src
                  sourceSize:srcSize
                   toTexture:dst->get()
            destinationSlice:dstSlice
-           destinationLevel:dstLevel
+           destinationLevel:dstLevel.get()
           destinationOrigin:dstOrigin
                     options:blitOption];
 
@@ -1731,7 +1731,7 @@ BlitCommandEncoder &BlitCommandEncoder::copyBufferToTexture(const BufferRef &src
 
 BlitCommandEncoder &BlitCommandEncoder::copyTextureToBuffer(const TextureRef &src,
                                                             uint32_t srcSlice,
-                                                            uint32_t srcLevel,
+                                                            MipmapNativeLevel srcLevel,
                                                             MTLOrigin srcOrigin,
                                                             MTLSize srcSize,
                                                             const BufferRef &dst,
@@ -1751,7 +1751,7 @@ BlitCommandEncoder &BlitCommandEncoder::copyTextureToBuffer(const TextureRef &sr
 
     [get() copyFromTexture:src->get()
                      sourceSlice:srcSlice
-                     sourceLevel:srcLevel
+                     sourceLevel:srcLevel.get()
                     sourceOrigin:srcOrigin
                       sourceSize:srcSize
                         toBuffer:dst->get()
@@ -1765,10 +1765,10 @@ BlitCommandEncoder &BlitCommandEncoder::copyTextureToBuffer(const TextureRef &sr
 
 BlitCommandEncoder &BlitCommandEncoder::copyTexture(const TextureRef &src,
                                                     uint32_t srcStartSlice,
-                                                    uint32_t srcStartLevel,
+                                                    MipmapNativeLevel srcStartLevel,
                                                     const TextureRef &dst,
                                                     uint32_t dstStartSlice,
-                                                    uint32_t dstStartLevel,
+                                                    MipmapNativeLevel dstStartLevel,
                                                     uint32_t sliceCount,
                                                     uint32_t levelCount)
 {
@@ -1787,19 +1787,19 @@ BlitCommandEncoder &BlitCommandEncoder::copyTexture(const TextureRef &src,
         uint32_t dstSlice = dstStartSlice + slice;
         for (uint32_t level = 0; level < levelCount; ++level)
         {
-            uint32_t srcLevel = srcStartLevel + level;
-            uint32_t dstLevel = dstStartLevel + level;
+            MipmapNativeLevel srcLevel = srcStartLevel + level;
+            MipmapNativeLevel dstLevel = dstStartLevel + level;
             MTLSize srcSize =
                 MTLSizeMake(src->width(srcLevel), src->height(srcLevel), src->depth(srcLevel));
 
             [get() copyFromTexture:src->get()
                        sourceSlice:srcSlice
-                       sourceLevel:srcLevel
+                       sourceLevel:srcLevel.get()
                       sourceOrigin:origin
                         sourceSize:srcSize
                          toTexture:dst->get()
                   destinationSlice:dstSlice
-                  destinationLevel:dstLevel
+                  destinationLevel:dstLevel.get()
                  destinationOrigin:origin];
         }
     }

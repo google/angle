@@ -64,7 +64,7 @@ uint32_t GetDeviceVendorIdFromIOKit(id<MTLDevice> device)
 }
 #endif
 
-void GetSliceAndDepth(const gl::ImageIndex &index, GLint *layer, GLint *startDepth)
+void GetSliceAndDepth(const ImageNativeIndex &index, GLint *layer, GLint *startDepth)
 {
     *layer = *startDepth = 0;
     if (!index.hasLayer())
@@ -87,7 +87,7 @@ void GetSliceAndDepth(const gl::ImageIndex &index, GLint *layer, GLint *startDep
             break;
     }
 }
-GLint GetSliceOrDepth(const gl::ImageIndex &index)
+GLint GetSliceOrDepth(const ImageNativeIndex &index)
 {
     GLint layer, startDepth;
     GetSliceAndDepth(index, &layer, &startDepth);
@@ -100,7 +100,7 @@ GLint GetSliceOrDepth(const gl::ImageIndex &index)
 angle::Result InitializeTextureContents(const gl::Context *context,
                                         const TextureRef &texture,
                                         const Format &textureObjFormat,
-                                        const gl::ImageIndex &index)
+                                        const ImageNativeIndex &index)
 {
     ASSERT(texture && texture->valid());
     // Only one slice can be initialized at a time.
@@ -161,7 +161,7 @@ angle::Result InitializeTextureContents(const gl::Context *context,
                 mtlRowRegion.origin.y = r;
 
                 // Upload to texture
-                texture->replace2DRegion(contextMtl, mtlRowRegion, index.getLevelIndex(), layer,
+                texture->replace2DRegion(contextMtl, mtlRowRegion, index.getNativeLevel(), layer,
                                          conversionRow.data(), dstRowPitch);
             }
         }
@@ -178,17 +178,18 @@ angle::Result InitializeTextureContents(const gl::Context *context,
 angle::Result InitializeTextureContentsGPU(const gl::Context *context,
                                            const TextureRef &texture,
                                            const Format &textureObjFormat,
-                                           const gl::ImageIndex &index,
+                                           const ImageNativeIndex &index,
                                            MTLColorWriteMask channelsToInit)
 {
     // Only one slice can be initialized at a time.
     ASSERT(!index.isLayered() || index.getType() == gl::TextureType::_3D);
     if (index.isLayered() && index.getType() == gl::TextureType::_3D)
     {
-        gl::ImageIndexIterator ite = index.getLayerIterator(texture->depth(index.getLevelIndex()));
+        ImageNativeIndexIterator ite =
+            index.getLayerIterator(texture->depth(index.getNativeLevel()));
         while (ite.hasNext())
         {
-            gl::ImageIndex depthLayerIndex = ite.next();
+            ImageNativeIndex depthLayerIndex = ite.next();
             ANGLE_TRY(InitializeTextureContentsGPU(context, texture, textureObjFormat,
                                                    depthLayerIndex, MTLColorWriteMaskAll));
         }
@@ -207,7 +208,7 @@ angle::Result InitializeTextureContentsGPU(const gl::Context *context,
 
     // Use clear render command
     RenderTargetMtl tempRtt;
-    tempRtt.set(texture, index.getLevelIndex(), sliceOrDepth, textureObjFormat);
+    tempRtt.set(texture, index.getNativeLevel(), sliceOrDepth, textureObjFormat);
 
     MTLClearColor blackColor = {};
     if (!textureObjFormat.intendedAngleFormat().alphaBits)
@@ -234,9 +235,9 @@ angle::Result InitializeTextureContentsGPU(const gl::Context *context,
 
         ClearRectParams clearParams;
         clearParams.clearColor     = blackColor;
-        clearParams.dstTextureSize = texture->size();
+        clearParams.dstTextureSize = texture->sizeAt0();
         clearParams.enabledBuffers.set(0);
-        clearParams.clearArea = gl::Rectangle(0, 0, texture->width(), texture->height());
+        clearParams.clearArea = gl::Rectangle(0, 0, texture->widthAt0(), texture->heightAt0());
 
         ANGLE_TRY(
             contextMtl->getDisplay()->getUtils().clearWithDraw(context, encoder, clearParams));
@@ -252,8 +253,9 @@ angle::Result InitializeTextureContentsGPU(const gl::Context *context,
 angle::Result InitializeDepthStencilTextureContentsGPU(const gl::Context *context,
                                                        const TextureRef &texture,
                                                        const Format &textureObjFormat,
-                                                       const gl::ImageIndex &index)
+                                                       const ImageNativeIndex &index)
 {
+    const MipmapNativeLevel &level = index.getNativeLevel();
     // Use clear operation
     ContextMtl *contextMtl           = mtl::GetImpl(context);
     const angle::Format &angleFormat = textureObjFormat.actualAngleFormat();
@@ -266,7 +268,7 @@ angle::Result InitializeDepthStencilTextureContentsGPU(const gl::Context *contex
     if (angleFormat.depthBits)
     {
         rpDesc.depthAttachment.texture      = texture;
-        rpDesc.depthAttachment.level        = index.getLevelIndex();
+        rpDesc.depthAttachment.level        = level;
         rpDesc.depthAttachment.sliceOrDepth = layer;
         rpDesc.depthAttachment.loadAction   = MTLLoadActionClear;
         rpDesc.depthAttachment.clearDepth   = 1.0;
@@ -274,7 +276,7 @@ angle::Result InitializeDepthStencilTextureContentsGPU(const gl::Context *contex
     if (angleFormat.stencilBits)
     {
         rpDesc.stencilAttachment.texture      = texture;
-        rpDesc.stencilAttachment.level        = index.getLevelIndex();
+        rpDesc.stencilAttachment.level        = level;
         rpDesc.stencilAttachment.sliceOrDepth = layer;
         rpDesc.stencilAttachment.loadAction   = MTLLoadActionClear;
     }
@@ -292,7 +294,7 @@ angle::Result ReadTexturePerSliceBytes(const gl::Context *context,
                                        const TextureRef &texture,
                                        size_t bytesPerRow,
                                        const gl::Rectangle &fromRegion,
-                                       uint32_t mipLevel,
+                                       const MipmapNativeLevel &mipLevel,
                                        uint32_t sliceOrDepth,
                                        uint8_t *dataOut)
 {
@@ -325,7 +327,7 @@ angle::Result ReadTexturePerSliceBytesToBuffer(const gl::Context *context,
                                                const TextureRef &texture,
                                                size_t bytesPerRow,
                                                const gl::Rectangle &fromRegion,
-                                               uint32_t mipLevel,
+                                               const MipmapNativeLevel &mipLevel,
                                                uint32_t sliceOrDepth,
                                                uint32_t dstOffset,
                                                const BufferRef &dstBuffer)
@@ -824,6 +826,17 @@ gl::Box MTLRegionToGLBox(const MTLRegion &mtlRegion)
     return gl::Box(static_cast<int>(mtlRegion.origin.x), static_cast<int>(mtlRegion.origin.y),
                    static_cast<int>(mtlRegion.origin.z), static_cast<int>(mtlRegion.size.width),
                    static_cast<int>(mtlRegion.size.height), static_cast<int>(mtlRegion.size.depth));
+}
+
+MipmapNativeLevel GetNativeMipLevel(GLuint level, GLuint base)
+{
+    ASSERT(level >= base);
+    return MipmapNativeLevel(level - base);
+}
+
+GLuint GetGLMipLevel(const MipmapNativeLevel &nativeLevel, GLuint base)
+{
+    return nativeLevel.get() + base;
 }
 
 }  // namespace mtl
