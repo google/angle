@@ -175,6 +175,7 @@ class TextureMtl : public TextureImpl
                                       gl::TextureType type,
                                       GLuint mips,
                                       const gl::Extents &size);
+    angle::Result onBaseMaxLevelsChanged(const gl::Context *context);
     angle::Result ensureSamplerStateCreated(const gl::Context *context);
     // Ensure image at given index is created:
     angle::Result ensureImageCreated(const gl::Context *context, const gl::ImageIndex &index);
@@ -333,6 +334,9 @@ class TextureMtl : public TextureImpl
 
     // Mipmap views are indexed by native level (ignored base level):
     mtl::NativeTexLevelArray mNativeLevelViews;
+
+    GLuint mCurrentBaseLevel = 0;
+    GLuint mCurrentMaxLevel  = 1000;
 
     bool mIsPow2 = false;
 };

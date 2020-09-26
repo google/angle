@@ -166,6 +166,7 @@ angle::Result ContextMtl::ensureIncompleteTexturesCreated(const gl::Context *con
         return angle::Result::Continue;
     }
     constexpr gl::TextureType supportedTextureTypes[] = {gl::TextureType::_2D, gl::TextureType::_3D,
+                                                         gl::TextureType::_2DArray,
                                                          gl::TextureType::CubeMap};
     for (gl::TextureType texType : supportedTextureTypes)
     {

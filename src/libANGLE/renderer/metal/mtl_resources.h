@@ -127,6 +127,16 @@ class Texture final : public Resource,
                                          bool allowFormatView,
                                          TextureRef *refOut);
 
+    static angle::Result Make2DArrayTexture(ContextMtl *context,
+                                            const Format &format,
+                                            uint32_t width,
+                                            uint32_t height,
+                                            uint32_t mips,
+                                            uint32_t arrayLength,
+                                            bool renderTargetOnly,
+                                            bool allowFormatView,
+                                            TextureRef *refOut);
+
     static angle::Result Make3DTexture(ContextMtl *context,
                                        const Format &format,
                                        uint32_t width,

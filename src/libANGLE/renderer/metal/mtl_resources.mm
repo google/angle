@@ -182,6 +182,33 @@ angle::Result Texture::Make2DMSTexture(ContextMtl *context,
 }
 
 /** static */
+angle::Result Texture::Make2DArrayTexture(ContextMtl *context,
+                                          const Format &format,
+                                          uint32_t width,
+                                          uint32_t height,
+                                          uint32_t mips,
+                                          uint32_t arrayLength,
+                                          bool renderTargetOnly,
+                                          bool allowFormatView,
+                                          TextureRef *refOut)
+{
+    ANGLE_MTL_OBJC_SCOPE
+    {
+        // Use texture2DDescriptorWithPixelFormat to calculate full range mipmap range:
+        MTLTextureDescriptor *desc =
+            [MTLTextureDescriptor texture2DDescriptorWithPixelFormat:format.metalFormat
+                                                               width:width
+                                                              height:height
+                                                           mipmapped:mips == 0 || mips > 1];
+
+        desc.textureType = MTLTextureType2DArray;
+        desc.arrayLength = arrayLength;
+
+        return MakeTexture(context, format, desc, mips, renderTargetOnly, allowFormatView, refOut);
+    }  // ANGLE_MTL_OBJC_SCOPE
+}
+
+/** static */
 angle::Result Texture::Make3DTexture(ContextMtl *context,
                                      const Format &format,
                                      uint32_t width,
