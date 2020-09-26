@@ -475,11 +475,21 @@ angle::Result TextureD3D::generateMipmapUsingImages(const gl::Context *context,
     // We know that all layers have the same dimension, for the texture to be complete
     GLint layerCount = static_cast<GLint>(getLayerCount(mBaseLevel));
 
-    // When making mipmaps with the setData workaround enabled, the texture storage has
-    // the image data already. For non-render-target storage, we have to pull it out into
-    // an image layer.
-    if (mRenderer->getFeatures().setDataFasterThanImageUpload.enabled && mTexStorage)
+    if (mTexStorage && !mTexStorage->isRenderTarget() &&
+        canCreateRenderTargetForImage(getImageIndex(mBaseLevel, 0)) &&
+        mRenderer->getRendererClass() == RENDERER_D3D11)
     {
+        if (!mRenderer->getFeatures().setDataFasterThanImageUpload.enabled)
+        {
+            ANGLE_TRY(updateStorage(context));
+        }
+        ANGLE_TRY(ensureRenderTarget(context));
+    }
+    else if (mRenderer->getFeatures().setDataFasterThanImageUpload.enabled && mTexStorage)
+    {
+        // When making mipmaps with the setData workaround enabled, the texture storage has
+        // the image data already. For non-render-target storage, we have to pull it out into
+        // an image layer.
         if (!mTexStorage->isRenderTarget())
         {
             // Copy from the storage mip 0 to Image mip 0
@@ -530,9 +540,9 @@ angle::Result TextureD3D::generateMipmapUsingImages(const gl::Context *context,
         }
     }
 
-    mDirtyImages = true;
+    mDirtyImages = !renderableStorage;
 
-    if (mTexStorage)
+    if (mTexStorage && mDirtyImages)
     {
         ANGLE_TRY(updateStorage(context));
     }
