@@ -693,6 +693,7 @@ void RenderPassAttachmentDesc::reset()
     implicitMSTexture.reset();
     level              = mtl::kZeroNativeMipLevel;
     sliceOrDepth       = 0;
+    blendable          = false;
     loadAction         = MTLLoadActionLoad;
     storeAction        = MTLStoreActionStore;
     storeActionOptions = MTLStoreActionOptionNone;
@@ -746,6 +747,11 @@ void RenderPassDesc::populateRenderPipelineOutputDesc(const BlendDesc &blendStat
         {
             // Copy parameters from blend state
             outputDescriptor.colorAttachments[i].update(blendState);
+            if (!renderPassColorAttachment.blendable)
+            {
+                // Disable blending if the attachment's render target doesn't support blending.
+                outputDescriptor.colorAttachments[i].blendingEnabled = false;
+            }
 
             outputDescriptor.colorAttachments[i].pixelFormat = texture->pixelFormat();
 

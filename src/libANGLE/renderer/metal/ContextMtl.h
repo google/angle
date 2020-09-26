@@ -297,7 +297,7 @@ class ContextMtl : public ContextImpl, public mtl::Context
     void queueEventSignal(const mtl::SharedEventRef &event, uint64_t value);
     void serverWaitEvent(const mtl::SharedEventRef &event, uint64_t value);
 
-    const MTLClearColor &getClearColorValue() const;
+    const mtl::ClearColorValue &getClearColorValue() const;
     MTLColorWriteMask getColorMask() const;
     float getClearDepthValue() const;
     uint32_t getClearStencilValue() const;
@@ -529,7 +529,7 @@ class ContextMtl : public ContextImpl, public mtl::Context
     mtl::RenderPipelineDesc mRenderPipelineDesc;
     mtl::DepthStencilDesc mDepthStencilDesc;
     mtl::BlendDesc mBlendDesc;
-    MTLClearColor mClearColor;
+    mtl::ClearColorValue mClearColor;
     uint32_t mClearStencil    = 0;
     uint32_t mStencilRefFront = 0;
     uint32_t mStencilRefBack  = 0;

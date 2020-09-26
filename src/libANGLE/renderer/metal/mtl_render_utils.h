@@ -29,10 +29,16 @@ class VisibilityBufferOffsetsMtl;
 
 namespace mtl
 {
-struct ClearRectParams : public ClearOptions
+
+struct ClearRectParams
 {
+    Optional<ClearColorValue> clearColor;
+    Optional<float> clearDepth;
+    Optional<uint32_t> clearStencil;
+
     MTLColorWriteMask clearColorMask = MTLColorWriteMaskAll;
 
+    const mtl::Format *colorFormat = nullptr;
     gl::Extents dstTextureSize;
 
     // Only clear enabled buffers
@@ -159,7 +165,9 @@ struct CopyPixelsToBufferParams : CopyPixelsCommonParams
 class ClearUtils final : angle::NonCopyable
 {
   public:
-    ClearUtils();
+    ClearUtils() = delete;
+    ClearUtils(const std::string &fragmentShaderName);
+    ClearUtils(const ClearUtils &src);
 
     void onDestroy();
 
@@ -180,6 +188,8 @@ class ClearUtils final : angle::NonCopyable
                                                            RenderCommandEncoder *cmdEncoder,
                                                            const ClearRectParams &params);
 
+    const std::string mFragmentShaderName;
+
     // Render pipeline cache for clear with draw:
     std::array<RenderPipelineCache, kMaxRenderTargets + 1> mClearRenderPipelineCache;
 };
@@ -187,7 +197,9 @@ class ClearUtils final : angle::NonCopyable
 class ColorBlitUtils final : angle::NonCopyable
 {
   public:
-    ColorBlitUtils();
+    ColorBlitUtils() = delete;
+    ColorBlitUtils(const std::string &fragmentShaderName);
+    ColorBlitUtils(const ColorBlitUtils &src);
 
     void onDestroy();
 
@@ -211,6 +223,8 @@ class ColorBlitUtils final : angle::NonCopyable
                                                                RenderCommandEncoder *cmdEncoder,
                                                                const ColorBlitParams &params);
 
+    const std::string mFragmentShaderName;
+
     // Blit with draw pipeline caches:
     // First array dimension: number of outputs.
     // Second array dimension: source texture type (2d, ms, array, 3d, etc)
@@ -230,6 +244,7 @@ class DepthStencilBlitUtils final : angle::NonCopyable
     angle::Result blitDepthStencilWithDraw(const gl::Context *context,
                                            RenderCommandEncoder *cmdEncoder,
                                            const DepthStencilBlitParams &params);
+
     // Blit stencil data using intermediate buffer. This function is used on devices with no
     // support for direct stencil write in shader. Thus an intermediate buffer storing copied
     // stencil data is needed.
@@ -431,12 +446,19 @@ class RenderUtils : public Context, angle::NonCopyable
     // Blit texture data to current framebuffer
     angle::Result blitColorWithDraw(const gl::Context *context,
                                     RenderCommandEncoder *cmdEncoder,
+                                    const angle::Format &srcAngleFormat,
                                     const ColorBlitParams &params);
     // Same as above but blit the whole texture to the whole of current framebuffer.
     // This function assumes the framebuffer and the source texture have same size.
     angle::Result blitColorWithDraw(const gl::Context *context,
                                     RenderCommandEncoder *cmdEncoder,
+                                    const angle::Format &srcAngleFormat,
                                     const TextureRef &srcTexture);
+    angle::Result copyTextureWithDraw(const gl::Context *context,
+                                      RenderCommandEncoder *cmdEncoder,
+                                      const angle::Format &srcAngleFormat,
+                                      const angle::Format &dstAngleFormat,
+                                      const ColorBlitParams &params);
 
     angle::Result blitDepthStencilWithDraw(const gl::Context *context,
                                            RenderCommandEncoder *cmdEncoder,
@@ -490,8 +512,11 @@ class RenderUtils : public Context, angle::NonCopyable
                      const char *function,
                      unsigned int line) override;
 
-    ClearUtils mClearUtils;
-    ColorBlitUtils mColorBlitUtils;
+    std::array<ClearUtils, angle::EnumSize<PixelType>()> mClearUtils;
+
+    std::array<ColorBlitUtils, angle::EnumSize<PixelType>()> mColorBlitUtils;
+    ColorBlitUtils mCopyTextureFloatToUIntUtils;
+
     DepthStencilBlitUtils mDepthStencilBlitUtils;
     IndexGeneratorUtils mIndexUtils;
     VisibilityResultUtils mVisibilityResultUtils;

@@ -535,6 +535,11 @@ StencilBlitViaBufferParams::StencilBlitViaBufferParams(const DepthStencilBlitPar
 // RenderUtils implementation
 RenderUtils::RenderUtils(DisplayMtl *display)
     : Context(display),
+      mClearUtils(
+          {ClearUtils("clearIntFS"), ClearUtils("clearUIntFS"), ClearUtils("clearFloatFS")}),
+      mColorBlitUtils({ColorBlitUtils("blitIntFS"), ColorBlitUtils("blitUIntFS"),
+                       ColorBlitUtils("blitFloatFS")}),
+      mCopyTextureFloatToUIntUtils("copyTextureFloatToUIntFS"),
       mCopyPixelsUtils(
           {CopyPixelsUtils("readFromBufferToIntTexture", "writeFromIntTextureToBuffer"),
            CopyPixelsUtils("readFromBufferToUIntTexture", "writeFromUIntTextureToBuffer"),
@@ -550,11 +555,20 @@ angle::Result RenderUtils::initialize()
 
 void RenderUtils::onDestroy()
 {
-    mIndexUtils.onDestroy();
-    mClearUtils.onDestroy();
-    mColorBlitUtils.onDestroy();
     mDepthStencilBlitUtils.onDestroy();
+    mIndexUtils.onDestroy();
+    mVisibilityResultUtils.onDestroy();
+    mMipmapUtils.onDestroy();
+    mCopyTextureFloatToUIntUtils.onDestroy();
 
+    for (ClearUtils &util : mClearUtils)
+    {
+        util.onDestroy();
+    }
+    for (ColorBlitUtils &util : mColorBlitUtils)
+    {
+        util.onDestroy();
+    }
     for (CopyPixelsUtils &util : mCopyPixelsUtils)
     {
         util.onDestroy();
@@ -590,19 +604,31 @@ angle::Result RenderUtils::clearWithDraw(const gl::Context *context,
                                          RenderCommandEncoder *cmdEncoder,
                                          const ClearRectParams &params)
 {
-    return mClearUtils.clearWithDraw(context, cmdEncoder, params);
+    int index = 0;
+    if (params.clearColor.valid())
+    {
+        index = static_cast<int>(params.clearColor.value().getType());
+    }
+    else if (params.colorFormat)
+    {
+        index = GetPixelTypeIndex(params.colorFormat->actualAngleFormat());
+    }
+    return mClearUtils[index].clearWithDraw(context, cmdEncoder, params);
 }
 
 // Blit texture data to current framebuffer
 angle::Result RenderUtils::blitColorWithDraw(const gl::Context *context,
                                              RenderCommandEncoder *cmdEncoder,
+                                             const angle::Format &srcAngleFormat,
                                              const ColorBlitParams &params)
 {
-    return mColorBlitUtils.blitColorWithDraw(context, cmdEncoder, params);
+    int index = GetPixelTypeIndex(srcAngleFormat);
+    return mColorBlitUtils[index].blitColorWithDraw(context, cmdEncoder, params);
 }
 
 angle::Result RenderUtils::blitColorWithDraw(const gl::Context *context,
                                              RenderCommandEncoder *cmdEncoder,
+                                             const angle::Format &srcAngleFormat,
                                              const TextureRef &srcTexture)
 {
     if (!srcTexture)
@@ -618,7 +644,22 @@ angle::Result RenderUtils::blitColorWithDraw(const gl::Context *context,
     params.dstRect = params.dstScissorRect = params.srcRect =
         gl::Rectangle(0, 0, params.dstTextureSize.width, params.dstTextureSize.height);
 
-    return blitColorWithDraw(context, cmdEncoder, params);
+    return blitColorWithDraw(context, cmdEncoder, srcAngleFormat, params);
+}
+
+angle::Result RenderUtils::copyTextureWithDraw(const gl::Context *context,
+                                               RenderCommandEncoder *cmdEncoder,
+                                               const angle::Format &srcAngleFormat,
+                                               const angle::Format &dstAngleFormat,
+                                               const ColorBlitParams &params)
+{
+    if (!srcAngleFormat.isInt() && dstAngleFormat.isUint())
+    {
+        return mCopyTextureFloatToUIntUtils.blitColorWithDraw(context, cmdEncoder, params);
+    }
+    ASSERT(srcAngleFormat.isSint() == dstAngleFormat.isSint() &&
+           srcAngleFormat.isUint() == dstAngleFormat.isUint());
+    return blitColorWithDraw(context, cmdEncoder, srcAngleFormat, params);
 }
 
 angle::Result RenderUtils::blitDepthStencilWithDraw(const gl::Context *context,
@@ -705,7 +746,11 @@ angle::Result RenderUtils::packPixelsFromTextureToBuffer(ContextMtl *contextMtl,
 }
 
 // ClearUtils implementation
-ClearUtils::ClearUtils() = default;
+ClearUtils::ClearUtils(const std::string &fragmentShaderName)
+    : mFragmentShaderName(fragmentShaderName)
+{}
+
+ClearUtils::ClearUtils(const ClearUtils &src) : ClearUtils(src.mFragmentShaderName) {}
 
 void ClearUtils::onDestroy()
 {
@@ -736,9 +781,10 @@ void ClearUtils::ensureRenderPipelineStateCacheInitialized(ContextMtl *ctx, uint
                                    type:MTLDataTypeUInt
                                withName:NUM_COLOR_OUTPUTS_CONSTANT_NAME];
 
-        id<MTLFunction> fragmentShader =
-            [[shaderLib newFunctionWithName:@"clearFloatFS" constantValues:funcConstants
-                                      error:&err] ANGLE_MTL_AUTORELEASE];
+        id<MTLFunction> fragmentShader = [[shaderLib
+            newFunctionWithName:[NSString stringWithUTF8String:mFragmentShaderName.c_str()]
+                 constantValues:funcConstants
+                          error:&err] ANGLE_MTL_AUTORELEASE];
         ASSERT(fragmentShader);
 
         cache.setVertexShader(ctx, vertexShader);
@@ -840,11 +886,15 @@ void ClearUtils::setupClearWithDraw(const gl::Context *context,
 
     // uniform
     ClearParamsUniform uniformParams;
-    uniformParams.clearColor[0] = static_cast<float>(params.clearColor.value().red);
-    uniformParams.clearColor[1] = static_cast<float>(params.clearColor.value().green);
-    uniformParams.clearColor[2] = static_cast<float>(params.clearColor.value().blue);
-    uniformParams.clearColor[3] = static_cast<float>(params.clearColor.value().alpha);
-    uniformParams.clearDepth    = params.clearDepth.value();
+    const ClearColorValue &clearValue = params.clearColor.value();
+    // ClearColorValue is an int, uint, float union so it's safe to use only floats.
+    // The Shader will do the bit cast based on appropriate format type.
+    // See shaders/clear.metal (3 variants ClearFloatFS, ClearIntFS and ClearUIntFS each does the
+    // appropriate bit cast)
+    ASSERT(sizeof(uniformParams.clearColor) == clearValue.getValueBytes().size());
+    std::memcpy(uniformParams.clearColor, clearValue.getValueBytes().data(),
+                clearValue.getValueBytes().size());
+    uniformParams.clearDepth = params.clearDepth.value();
 
     cmdEncoder->setVertexData(uniformParams, 0);
     cmdEncoder->setFragmentData(uniformParams, 0);
@@ -893,7 +943,12 @@ angle::Result ClearUtils::clearWithDraw(const gl::Context *context,
 }
 
 // ColorBlitUtils implementation
-ColorBlitUtils::ColorBlitUtils() = default;
+ColorBlitUtils::ColorBlitUtils(const std::string &fragmentShaderName)
+    : mFragmentShaderName(fragmentShaderName)
+{}
+
+ColorBlitUtils::ColorBlitUtils(const ColorBlitUtils &src) : ColorBlitUtils(src.mFragmentShaderName)
+{}
 
 void ColorBlitUtils::onDestroy()
 {
@@ -952,9 +1007,10 @@ void ColorBlitUtils::ensureRenderPipelineStateCacheInitialized(ContextMtl *ctx,
                                    type:MTLDataTypeInt
                                withName:SOURCE_TEXTURE_TYPE_CONSTANT_NAME];
 
-        id<MTLFunction> fragmentShader =
-            [[shaderLib newFunctionWithName:@"blitFloatFS" constantValues:funcConstants
-                                      error:&err] ANGLE_MTL_AUTORELEASE];
+        id<MTLFunction> fragmentShader = [[shaderLib
+            newFunctionWithName:[NSString stringWithUTF8String:mFragmentShaderName.c_str()]
+                 constantValues:funcConstants
+                          error:&err] ANGLE_MTL_AUTORELEASE];
 
         ASSERT(vertexShader);
         ASSERT(fragmentShader);

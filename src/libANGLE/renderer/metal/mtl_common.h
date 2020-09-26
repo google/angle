@@ -156,7 +156,7 @@ constexpr uint32_t kStencilMaskAll = 0xff;  // Only 8 bits stencil is supported
 constexpr MTLVertexStepFunction kVertexStepFunctionInvalid =
     static_cast<MTLVertexStepFunction>(0xff);
 
-constexpr float kEmulatedAlphaValue = 1.0f;
+constexpr int kEmulatedAlphaValue = 1;
 
 constexpr size_t kOcclusionQueryResultSize = sizeof(uint64_t);
 
@@ -404,11 +404,59 @@ class ImageNativeIndexIterator final
     gl::ImageIndexIterator mNativeIndexIte;
 };
 
-struct ClearOptions
+using ClearColorValueBytes = std::array<uint8_t, 4 * sizeof(float)>;
+
+class ClearColorValue
 {
-    Optional<MTLClearColor> clearColor;
-    Optional<float> clearDepth;
-    Optional<uint32_t> clearStencil;
+  public:
+    constexpr ClearColorValue()
+        : mType(PixelType::Float), mRedF(0), mGreenF(0), mBlueF(0), mAlphaF(0)
+    {}
+    constexpr ClearColorValue(float r, float g, float b, float a)
+        : mType(PixelType::Float), mRedF(r), mGreenF(g), mBlueF(b), mAlphaF(a)
+    {}
+    constexpr ClearColorValue(int32_t r, int32_t g, int32_t b, int32_t a)
+        : mType(PixelType::Int), mRedI(r), mGreenI(g), mBlueI(b), mAlphaI(a)
+    {}
+    constexpr ClearColorValue(uint32_t r, uint32_t g, uint32_t b, uint32_t a)
+        : mType(PixelType::UInt), mRedU(r), mGreenU(g), mBlueU(b), mAlphaU(a)
+    {}
+    constexpr ClearColorValue(const ClearColorValue &src)
+        : mType(src.mType), mValueBytes(src.mValueBytes)
+    {}
+
+    MTLClearColor toMTLClearColor() const;
+
+    PixelType getType() const { return mType; }
+
+    const ClearColorValueBytes &getValueBytes() const { return mValueBytes; }
+
+    ClearColorValue &operator=(const ClearColorValue &src);
+
+    void setAsFloat(float r, float g, float b, float a);
+    void setAsInt(int32_t r, int32_t g, int32_t b, int32_t a);
+    void setAsUInt(uint32_t r, uint32_t g, uint32_t b, uint32_t a);
+
+  private:
+    PixelType mType;
+
+    union
+    {
+        struct
+        {
+            float mRedF, mGreenF, mBlueF, mAlphaF;
+        };
+        struct
+        {
+            int32_t mRedI, mGreenI, mBlueI, mAlphaI;
+        };
+        struct
+        {
+            uint32_t mRedU, mGreenU, mBlueU, mAlphaU;
+        };
+
+        ClearColorValueBytes mValueBytes;
+    };
 };
 
 class CommandQueue;

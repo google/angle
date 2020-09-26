@@ -303,6 +303,9 @@ struct RenderPassAttachmentDesc
     MipmapNativeLevel level;
     uint32_t sliceOrDepth;
 
+    // This attachment is blendable or not.
+    bool blendable;
+
     MTLLoadAction loadAction;
     MTLStoreAction storeAction;
     MTLStoreActionOptions storeActionOptions;

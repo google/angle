@@ -2541,6 +2541,6 @@ ANGLE_INSTANTIATE_TEST(CopyTextureTestDest,
                        ES2_OPENGLES(),
                        ES2_VULKAN(),
                        ES2_METAL());
-ANGLE_INSTANTIATE_TEST_ES3(CopyTextureTestES3);
+ANGLE_INSTANTIATE_TEST_ES3_AND(CopyTextureTestES3, ES3_METAL());
 
 }  // namespace angle

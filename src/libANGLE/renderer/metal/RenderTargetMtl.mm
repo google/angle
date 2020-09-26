@@ -77,5 +77,6 @@ void RenderTargetMtl::toRenderPassAttachmentDesc(mtl::RenderPassAttachmentDesc *
     rpaDescOut->implicitMSTexture = mImplicitMSTexture.lock();
     rpaDescOut->level             = mLevelIndex;
     rpaDescOut->sliceOrDepth      = mLayerIndex;
+    rpaDescOut->blendable         = mFormat ? mFormat->getCaps().blendable : false;
 }
 }

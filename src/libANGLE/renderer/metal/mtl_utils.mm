@@ -210,17 +210,18 @@ angle::Result InitializeTextureContentsGPU(const gl::Context *context,
     RenderTargetMtl tempRtt;
     tempRtt.set(texture, index.getNativeLevel(), sliceOrDepth, textureObjFormat);
 
-    MTLClearColor blackColor = {};
+    int clearAlpha = 0;
     if (!textureObjFormat.intendedAngleFormat().alphaBits)
     {
         // if intended format doesn't have alpha, set it to 1.0.
-        blackColor.alpha = kEmulatedAlphaValue;
+        clearAlpha = kEmulatedAlphaValue;
     }
 
     RenderCommandEncoder *encoder;
     if (channelsToInit == MTLColorWriteMaskAll)
     {
         // If all channels will be initialized, use clear loadOp.
+        Optional<MTLClearColor> blackColor = MTLClearColorMake(0, 0, 0, clearAlpha);
         encoder = contextMtl->getRenderTargetCommandEncoderWithClear(tempRtt, blackColor);
     }
     else
@@ -233,8 +234,23 @@ angle::Result InitializeTextureContentsGPU(const gl::Context *context,
         // If there are some channels don't need to be initialized, we must use clearWithDraw.
         encoder = contextMtl->getRenderTargetCommandEncoder(tempRtt);
 
+        const angle::Format &angleFormat = textureObjFormat.actualAngleFormat();
+
         ClearRectParams clearParams;
-        clearParams.clearColor     = blackColor;
+        ClearColorValue clearColor;
+        if (angleFormat.isSint())
+        {
+            clearColor.setAsInt(0, 0, 0, clearAlpha);
+        }
+        else if (angleFormat.isUint())
+        {
+            clearColor.setAsUInt(0, 0, 0, clearAlpha);
+        }
+        else
+        {
+            clearColor.setAsFloat(0, 0, 0, clearAlpha);
+        }
+        clearParams.clearColor     = clearColor;
         clearParams.dstTextureSize = texture->sizeAt0();
         clearParams.enabledBuffers.set(0);
         clearParams.clearArea = gl::Rectangle(0, 0, texture->widthAt0(), texture->heightAt0());

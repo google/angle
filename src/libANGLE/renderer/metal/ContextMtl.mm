@@ -780,10 +780,9 @@ angle::Result ContextMtl::syncState(const gl::Context *context,
                 // NOTE(hqle): ES 3.0 feature.
                 break;
             case gl::State::DIRTY_BIT_CLEAR_COLOR:
-                mClearColor.red   = glState.getColorClearValue().red;
-                mClearColor.green = glState.getColorClearValue().green;
-                mClearColor.blue  = glState.getColorClearValue().blue;
-                mClearColor.alpha = glState.getColorClearValue().alpha;
+                mClearColor = mtl::ClearColorValue(
+                    glState.getColorClearValue().red, glState.getColorClearValue().green,
+                    glState.getColorClearValue().blue, glState.getColorClearValue().alpha);
                 break;
             case gl::State::DIRTY_BIT_CLEAR_DEPTH:
                 break;
@@ -1123,7 +1122,7 @@ void ContextMtl::invalidateRenderPipeline()
     mDirtyBits.set(DIRTY_BIT_RENDER_PIPELINE);
 }
 
-const MTLClearColor &ContextMtl::getClearColorValue() const
+const mtl::ClearColorValue &ContextMtl::getClearColorValue() const
 {
     return mClearColor;
 }
