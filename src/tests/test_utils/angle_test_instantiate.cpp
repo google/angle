@@ -155,6 +155,14 @@ bool IsConfigSelected()
     return gSelectedConfig[0] != 0;
 }
 
+#if !defined(ANGLE_PLATFORM_APPLE)
+// For Apple platform, see angle_test_instantiate_apple.mm
+bool IsMetalTextureSwizzleAvailable()
+{
+    return false;
+}
+#endif
+
 SystemInfo *GetTestSystemInfo()
 {
     static SystemInfo *sSystemInfo = nullptr;

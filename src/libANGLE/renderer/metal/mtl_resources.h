@@ -188,6 +188,8 @@ class Texture final : public Resource,
     // Same as above but the target format must be compatible, for example sRGB to linear. In this
     // case texture doesn't need format view usage flag.
     TextureRef createViewWithCompatibleFormat(MTLPixelFormat format);
+    // Create a swizzled view
+    TextureRef createSwizzleView(const TextureSwizzleChannels &swizzle);
 
     MTLTextureType textureType() const;
     MTLPixelFormat pixelFormat() const;
@@ -249,6 +251,7 @@ class Texture final : public Resource,
     // Create a texture view
     Texture(Texture *original, MTLPixelFormat format);
     Texture(Texture *original, MTLTextureType type, NSRange mipmapLevelRange, NSRange slices);
+    Texture(Texture *original, const TextureSwizzleChannels &swizzle);
 
     void syncContentIfNeeded(ContextMtl *context);
 

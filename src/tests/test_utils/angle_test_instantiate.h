@@ -263,6 +263,9 @@ std::vector<std::string> GetAvailableTestPlatformNames();
 void SetSelectedConfig(const char *selectedConfig);
 bool IsConfigSelected();
 
+// Check whether texture swizzle is natively supported on Metal device.
+bool IsMetalTextureSwizzleAvailable();
+
 extern bool gEnableANGLEPerTestCaptureLabel;
 
 // For use with ANGLE_INSTANTIATE_TEST_ARRAY

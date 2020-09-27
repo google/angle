@@ -748,7 +748,7 @@ MTLIndexType GetIndexType(gl::DrawElementsType type)
     }
 }
 
-#if defined(__IPHONE_13_0) || defined(__MAC_10_15)
+#if ANGLE_MTL_SWIZZLE_AVAILABLE
 MTLTextureSwizzle GetTextureSwizzle(GLenum swizzle)
 {
     switch (swizzle)
