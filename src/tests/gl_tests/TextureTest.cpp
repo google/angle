@@ -4461,6 +4461,9 @@ TEST_P(Texture2DTestES3, TextureCOMPRESSEDRGB8ETC2ImplicitAlpha1)
     // ETC texture formats are not supported on Mac OpenGL. http://anglebug.com/3853
     ANGLE_SKIP_TEST_IF(IsOSX() && IsDesktopOpenGL());
 
+    // http://anglebug.com/5187
+    ANGLE_SKIP_TEST_IF(IsOSX() && IsMetal());
+
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, mTexture2D);
     glCompressedTexImage2D(GL_TEXTURE_2D, 0, GL_COMPRESSED_RGB8_ETC2, 1, 1, 0, 8, nullptr);
@@ -4477,6 +4480,9 @@ TEST_P(Texture2DTestES3, TextureCOMPRESSEDSRGB8ETC2ImplicitAlpha1)
 {
     // ETC texture formats are not supported on Mac OpenGL. http://anglebug.com/3853
     ANGLE_SKIP_TEST_IF(IsOSX() && IsDesktopOpenGL());
+
+    // http://anglebug.com/5187
+    ANGLE_SKIP_TEST_IF(IsOSX() && IsMetal());
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, mTexture2D);
@@ -6584,7 +6590,7 @@ TEST_P(Texture2DTestES3, UnpackOverlappingRowsFromUnpackBuffer)
     ANGLE_SKIP_TEST_IF(IsD3D11());
 
     // Incorrect rendering results seen on OSX AMD.
-    ANGLE_SKIP_TEST_IF(IsOSX() && IsAMD());
+    ANGLE_SKIP_TEST_IF(IsOpenGL() && IsOSX() && IsAMD());
 
     const GLuint width            = 8u;
     const GLuint height           = 8u;
@@ -8086,17 +8092,19 @@ ANGLE_INSTANTIATE_TEST_ES2(Texture2DTestWithDrawScale);
 ANGLE_INSTANTIATE_TEST_ES2(Sampler2DAsFunctionParameterTest);
 ANGLE_INSTANTIATE_TEST_ES2(SamplerArrayTest);
 ANGLE_INSTANTIATE_TEST_ES2(SamplerArrayAsFunctionParameterTest);
-ANGLE_INSTANTIATE_TEST_ES3_AND(Texture2DTestES3, WithAllocateNonZeroMemory(ES3_VULKAN()));
+ANGLE_INSTANTIATE_TEST_ES3_AND(Texture2DTestES3,
+                               WithAllocateNonZeroMemory(ES3_VULKAN()),
+                               ES3_METAL());
 ANGLE_INSTANTIATE_TEST_ES31(Texture2DTestES31PPO);
-ANGLE_INSTANTIATE_TEST_ES3(Texture2DBaseMaxTestES3);
+ANGLE_INSTANTIATE_TEST_ES3_AND(Texture2DBaseMaxTestES3, ES3_METAL());
 ANGLE_INSTANTIATE_TEST_ES2(Texture3DTestES2);
-ANGLE_INSTANTIATE_TEST_ES3(Texture3DTestES3);
-ANGLE_INSTANTIATE_TEST_ES3(Texture2DIntegerAlpha1TestES3);
-ANGLE_INSTANTIATE_TEST_ES3(Texture2DUnsignedIntegerAlpha1TestES3);
-ANGLE_INSTANTIATE_TEST_ES3(ShadowSamplerPlusSampler3DTestES3);
-ANGLE_INSTANTIATE_TEST_ES3(SamplerTypeMixTestES3);
+ANGLE_INSTANTIATE_TEST_ES3_AND(Texture3DTestES3, ES3_METAL());
+ANGLE_INSTANTIATE_TEST_ES3_AND(Texture2DIntegerAlpha1TestES3, ES3_METAL());
+ANGLE_INSTANTIATE_TEST_ES3_AND(Texture2DUnsignedIntegerAlpha1TestES3, ES3_METAL());
+ANGLE_INSTANTIATE_TEST_ES3_AND(ShadowSamplerPlusSampler3DTestES3, ES3_METAL());
+ANGLE_INSTANTIATE_TEST_ES3_AND(SamplerTypeMixTestES3, ES3_METAL());
 ANGLE_INSTANTIATE_TEST_ES3_AND(Texture2DArrayTestES3, ES3_METAL());
-ANGLE_INSTANTIATE_TEST_ES3(TextureSizeTextureArrayTest);
+ANGLE_INSTANTIATE_TEST_ES3_AND(TextureSizeTextureArrayTest, ES3_METAL());
 ANGLE_INSTANTIATE_TEST_ES2(SamplerInStructTest);
 ANGLE_INSTANTIATE_TEST_ES2(SamplerInStructAsFunctionParameterTest);
 ANGLE_INSTANTIATE_TEST_ES2(SamplerInStructArrayAsFunctionParameterTest);
@@ -8113,9 +8121,9 @@ ANGLE_INSTANTIATE_TEST(Texture2DRGTest,
                        ANGLE_ALL_TEST_PLATFORMS_ES3,
                        ES2_EMULATE_COPY_TEX_IMAGE(),
                        ES3_EMULATE_COPY_TEX_IMAGE());
-ANGLE_INSTANTIATE_TEST_ES3(Texture2DFloatTestES3);
+ANGLE_INSTANTIATE_TEST_ES3_AND(Texture2DFloatTestES3, ES3_METAL());
 ANGLE_INSTANTIATE_TEST_ES2(Texture2DFloatTestES2);
-ANGLE_INSTANTIATE_TEST_ES3(TextureCubeTestES3);
+ANGLE_INSTANTIATE_TEST_ES3_AND(TextureCubeTestES3, ES3_METAL());
 ANGLE_INSTANTIATE_TEST_ES3_AND(Texture2DIntegerTestES3, ES3_METAL());
 ANGLE_INSTANTIATE_TEST_ES3_AND(TextureCubeIntegerTestES3, ES3_METAL());
 ANGLE_INSTANTIATE_TEST_ES3_AND(TextureCubeIntegerEdgeTestES3, ES3_METAL());
@@ -8123,7 +8131,7 @@ ANGLE_INSTANTIATE_TEST_ES3_AND(Texture2DIntegerProjectiveOffsetTestES3, ES3_META
 ANGLE_INSTANTIATE_TEST_ES3_AND(Texture2DArrayIntegerTestES3, ES3_METAL());
 ANGLE_INSTANTIATE_TEST_ES3_AND(Texture3DIntegerTestES3, ES3_METAL());
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(Texture2DDepthTest);
-ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(PBOCompressedTextureTest);
-ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(ETC1CompressedTextureTest);
+ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND(PBOCompressedTextureTest, ES3_METAL());
+ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND(ETC1CompressedTextureTest, ES3_METAL());
 
 }  // anonymous namespace

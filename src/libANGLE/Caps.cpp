@@ -154,7 +154,10 @@ std::vector<std::string> Extensions::getStrings() const
     return extensionStrings;
 }
 
-Limitations::Limitations() = default;
+Limitations::Limitations()                         = default;
+Limitations::Limitations(const Limitations &other) = default;
+
+Limitations &Limitations::operator=(const Limitations &other) = default;
 
 static bool GetFormatSupportBase(const TextureCapsMap &textureCaps,
                                  const GLenum *requiredFormats,

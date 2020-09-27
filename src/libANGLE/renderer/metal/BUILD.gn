@@ -29,6 +29,8 @@ _metal_backend_sources = [
   "RenderBufferMtl.mm",
   "RenderTargetMtl.h",
   "RenderTargetMtl.mm",
+  "SamplerMtl.h",
+  "SamplerMtl.mm",
   "ShaderMtl.h",
   "ShaderMtl.mm",
   "SurfaceMtl.h",

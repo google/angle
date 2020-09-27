@@ -74,6 +74,7 @@ MTLSamplerDescriptor *ToObjC(const SamplerDesc &desc)
     ANGLE_OBJC_CP_PROPERTY(objCDesc, desc, magFilter);
     ANGLE_OBJC_CP_PROPERTY(objCDesc, desc, mipFilter);
     ANGLE_OBJC_CP_PROPERTY(objCDesc, desc, maxAnisotropy);
+    ANGLE_OBJC_CP_PROPERTY(objCDesc, desc, compareFunction);
 
     return [objCDesc ANGLE_MTL_AUTORELEASE];
 }
@@ -459,6 +460,8 @@ SamplerDesc::SamplerDesc(const gl::SamplerState &glState) : SamplerDesc()
     mipFilter = GetMipmapFilter(glState.getMinFilter());
 
     maxAnisotropy = static_cast<uint32_t>(glState.getMaxAnisotropy());
+
+    compareFunction = GetCompareFunc(glState.getCompareFunc());
 }
 
 SamplerDesc &SamplerDesc::operator=(const SamplerDesc &src)
@@ -478,6 +481,8 @@ void SamplerDesc::reset()
     mipFilter = MTLSamplerMipFilterNearest;
 
     maxAnisotropy = 1;
+
+    compareFunction = MTLCompareFunctionNever;
 }
 
 bool SamplerDesc::operator==(const SamplerDesc &rhs) const
@@ -488,7 +493,9 @@ bool SamplerDesc::operator==(const SamplerDesc &rhs) const
            ANGLE_PROP_EQ(*this, rhs, minFilter) && ANGLE_PROP_EQ(*this, rhs, magFilter) &&
            ANGLE_PROP_EQ(*this, rhs, mipFilter) &&
 
-           ANGLE_PROP_EQ(*this, rhs, maxAnisotropy);
+           ANGLE_PROP_EQ(*this, rhs, maxAnisotropy) &&
+
+           ANGLE_PROP_EQ(*this, rhs, compareFunction);
 }
 
 size_t SamplerDesc::hash() const

@@ -985,17 +985,34 @@ angle::Result ProgramMtl::updateTextures(const gl::Context *glContext,
             {
                 GLuint textureUnit   = samplerBinding.boundTextureUnits[arrayElement];
                 gl::Texture *texture = completeTextures[textureUnit];
+                gl::Sampler *sampler = contextMtl->getState().getSampler(textureUnit);
                 uint32_t textureSlot = mslBinding.textureBinding + arrayElement;
                 uint32_t samplerSlot = mslBinding.samplerBinding + arrayElement;
                 if (!texture)
                 {
                     ANGLE_TRY(contextMtl->getIncompleteTexture(glContext, textureType, &texture));
                 }
-
+                const gl::SamplerState *samplerState =
+                    sampler ? &sampler->getSamplerState() : &texture->getSamplerState();
                 TextureMtl *textureMtl = mtl::GetImpl(texture);
+                if (samplerBinding.format == gl::SamplerFormat::Shadow)
+                {
+                    // http://anglebug.com/5107
+                    // Metal doesn't support a compare mode where sampling a shadow sampler could
+                    // return a same value as if sampling from a normal sampler.
+                    // Supporting this could require hacking spirv-cross to change sample_compare()
+                    // to sample().
+                    if (ANGLE_UNLIKELY(samplerState->getCompareMode() != GL_COMPARE_REF_TO_TEXTURE))
+                    {
+                        ERR() << "GL_TEXTURE_COMPARE_MODE != GL_COMPARE_REF_TO_TEXTURE is not "
+                                 "supported";
+                        ANGLE_MTL_TRY(contextMtl,
+                                      samplerState->getCompareMode() == GL_COMPARE_REF_TO_TEXTURE);
+                    }
+                }
 
-                ANGLE_TRY(textureMtl->bindToShader(glContext, cmdEncoder, shaderType, textureSlot,
-                                                   samplerSlot));
+                ANGLE_TRY(textureMtl->bindToShader(glContext, cmdEncoder, shaderType, sampler,
+                                                   textureSlot, samplerSlot));
             }  // for array elements
         }      // for sampler bindings
     }          // for shader types

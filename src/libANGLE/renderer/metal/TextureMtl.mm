@@ -20,6 +20,7 @@
 #include "libANGLE/renderer/metal/ContextMtl.h"
 #include "libANGLE/renderer/metal/DisplayMtl.h"
 #include "libANGLE/renderer/metal/FrameBufferMtl.h"
+#include "libANGLE/renderer/metal/SamplerMtl.h"
 #include "libANGLE/renderer/metal/SurfaceMtl.h"
 #include "libANGLE/renderer/metal/mtl_common.h"
 #include "libANGLE/renderer/metal/mtl_format_utils.h"
@@ -536,9 +537,11 @@ angle::Result TextureMtl::createNativeTexture(const gl::Context *context,
                 }
                 encoder->copyTexture(imageToTransfer, 0, mtl::kZeroNativeMipLevel, mNativeTexture,
                                      face, actualMip, imageToTransfer->arrayLength(), 1);
-            }
 
-            imageToTransfer = nullptr;
+                // Invalidate texture image definition at this index so that we can make it a
+                // view of the native texture at this index later.
+                imageToTransfer = nullptr;
+            }
         }
     }
 
@@ -1001,14 +1004,14 @@ angle::Result TextureMtl::generateMipmap(const gl::Context *context)
     }
 
     const mtl::FormatCaps &caps = mFormat.getCaps();
+    //
+    bool sRGB = mFormat.actualInternalFormat().colorEncoding == GL_SRGB;
 
     if (caps.writable && mState.getType() == gl::TextureType::_3D)
     {
         // http://anglebug.com/4921.
         // Use compute for 3D mipmap generation.
         ANGLE_TRY(ensureNativeLevelViewsCreated());
-        bool sRGB = mFormat.metalFormat == MTLPixelFormatRGBA8Unorm_sRGB ||
-                    mFormat.metalFormat == MTLPixelFormatBGRA8Unorm_sRGB;
         ANGLE_TRY(contextMtl->getDisplay()->getUtils().generateMipmapCS(contextMtl, mNativeTexture,
                                                                         sRGB, &mNativeLevelViews));
     }
@@ -1195,16 +1198,34 @@ angle::Result TextureMtl::syncState(const gl::Context *context,
 angle::Result TextureMtl::bindToShader(const gl::Context *context,
                                        mtl::RenderCommandEncoder *cmdEncoder,
                                        gl::ShaderType shaderType,
+                                       gl::Sampler *sampler,
                                        int textureSlotIndex,
                                        int samplerSlotIndex)
 {
     ASSERT(mNativeTexture);
 
-    float minLodClamp = std::max(0.f, mState.getSamplerState().getMinLod());
-    float maxLodClamp = mState.getSamplerState().getMaxLod();
+    float minLodClamp;
+    float maxLodClamp;
+    id<MTLSamplerState> samplerState;
+
+    if (!sampler)
+    {
+        samplerState = mMetalSamplerState;
+        minLodClamp  = mState.getSamplerState().getMinLod();
+        maxLodClamp  = mState.getSamplerState().getMaxLod();
+    }
+    else
+    {
+        SamplerMtl *samplerMtl = mtl::GetImpl(sampler);
+        samplerState           = samplerMtl->getSampler(mtl::GetImpl(context));
+        minLodClamp            = sampler->getSamplerState().getMinLod();
+        maxLodClamp            = sampler->getSamplerState().getMaxLod();
+    }
+
+    minLodClamp = std::max(minLodClamp, 0.f);
 
     cmdEncoder->setTexture(shaderType, mNativeTexture, textureSlotIndex);
-    cmdEncoder->setSamplerState(shaderType, mMetalSamplerState, minLodClamp, maxLodClamp,
+    cmdEncoder->setSamplerState(shaderType, samplerState, minLodClamp, maxLodClamp,
                                 samplerSlotIndex);
 
     return angle::Result::Continue;
@@ -1453,9 +1474,14 @@ angle::Result TextureMtl::setPerSliceSubImage(const gl::Context *context,
     if (unpackBuffer)
     {
         uintptr_t offset = reinterpret_cast<uintptr_t>(pixels);
-        if (offset % mFormat.actualAngleFormat().pixelBytes)
+        GLuint minRowPitch;
+        ANGLE_CHECK_GL_MATH(contextMtl, internalFormat.computeRowPitch(
+                                            type, static_cast<GLint>(mtlArea.size.width),
+                                            /** aligment */ 1, /** rowLength */ 0, &minRowPitch));
+        if (offset % mFormat.actualAngleFormat().pixelBytes || pixelsRowPitch < minRowPitch)
         {
-            // offset is not divisible by pixelByte, use convertAndSetPerSliceSubImage() function.
+            // offset is not divisible by pixelByte or the source row pitch is smaller than minimum
+            // row pitch, use convertAndSetPerSliceSubImage() function.
             return convertAndSetPerSliceSubImage(context, slice, mtlArea, internalFormat, type,
                                                  pixelsAngleFormat, pixelsRowPitch,
                                                  pixelsDepthPitch, unpackBuffer, pixels, image);

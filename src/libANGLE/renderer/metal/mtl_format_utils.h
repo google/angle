@@ -63,6 +63,7 @@ struct Format : public FormatBase
     Format() = default;
 
     const gl::InternalFormat &intendedInternalFormat() const;
+    const gl::InternalFormat &actualInternalFormat() const;
 
     bool valid() const { return metalFormat != MTLPixelFormatInvalid; }
     bool hasDepthAndStencilBits() const

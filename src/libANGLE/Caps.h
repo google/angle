@@ -681,6 +681,9 @@ const ExtensionInfoMap &GetExtensionInfoMap();
 struct Limitations
 {
     Limitations();
+    Limitations(const Limitations &other);
+
+    Limitations &operator=(const Limitations &other);
 
     // Renderer doesn't support gl_FrontFacing in fragment shaders
     bool noFrontFacingSupport = false;
@@ -709,6 +712,10 @@ struct Limitations
 
     // D3D does not support vertex attribute aliasing
     bool noVertexAttributeAliasing = false;
+
+    // Renderer doesn't support GL_TEXTURE_COMPARE_MODE=GL_NONE on a shadow sampler.
+    // TODO(http://anglebug.com/5231): add validation code to front-end.
+    bool noShadowSamplerCompareModeNone = false;
 };
 
 struct TypePrecision

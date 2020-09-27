@@ -539,6 +539,9 @@ TEST_P(SRGBTextureTestES3, GenerateMipmaps)
 {
     ANGLE_SKIP_TEST_IF(IsOpenGL() && ((IsIntel() && IsOSX()) || IsAMD()));
 
+    // http://anglebug.com/5108
+    ANGLE_SKIP_TEST_IF(IsMetal());
+
     auto createAndReadBackTexture = [this](GLenum internalFormat, const GLColor &color) {
         constexpr GLsizei width  = 128;
         constexpr GLsizei height = 128;
@@ -593,7 +596,7 @@ TEST_P(SRGBTextureTestES3, GenerateMipmaps)
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against.
-ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(SRGBTextureTest);
-ANGLE_INSTANTIATE_TEST_ES3(SRGBTextureTestES3);
+ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND(SRGBTextureTest, ES3_METAL());
+ANGLE_INSTANTIATE_TEST_ES3_AND(SRGBTextureTestES3, ES3_METAL());
 
 }  // namespace angle

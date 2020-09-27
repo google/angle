@@ -132,6 +132,11 @@ const gl::InternalFormat &Format::intendedInternalFormat() const
     return gl::GetSizedInternalFormatInfo(intendedAngleFormat().glInternalFormat);
 }
 
+const gl::InternalFormat &Format::actualInternalFormat() const
+{
+    return gl::GetSizedInternalFormatInfo(actualAngleFormat().glInternalFormat);
+}
+
 bool Format::needConversion(angle::FormatID srcFormatId) const
 {
     if ((srcFormatId == angle::FormatID::BC1_RGB_UNORM_BLOCK &&

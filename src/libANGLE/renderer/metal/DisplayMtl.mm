@@ -247,7 +247,12 @@ ShareGroupImpl *DisplayMtl::createShareGroup()
 
 gl::Version DisplayMtl::getMaxSupportedESVersion() const
 {
-    return mtl::kMaxSupportedGLVersion;
+    // NOTE(hqle): Supports GLES 3.0 on iOS GPU family 4+ for now.
+    if (supportsEitherGPUFamily(4, 1))
+    {
+        return mtl::kMaxSupportedGLVersion;
+    }
+    return gl::Version(2, 0);
 }
 
 gl::Version DisplayMtl::getMaxConformantESVersion() const
@@ -456,6 +461,12 @@ const gl::Extensions &DisplayMtl::getNativeExtensions() const
     return mNativeExtensions;
 }
 
+const gl::Limitations &DisplayMtl::getNativeLimitations() const
+{
+    ensureCapsInitialized();
+    return mNativeLimitations;
+}
+
 void DisplayMtl::ensureCapsInitialized() const
 {
     if (mCapsInitialized)
@@ -600,6 +611,9 @@ void DisplayMtl::ensureCapsInitialized() const
 
     // GL_APPLE_clip_distance
     mNativeCaps.maxClipDistances = 8;
+
+    // Metal doesn't support GL_TEXTURE_COMPARE_MODE=GL_NONE for shadow samplers
+    mNativeLimitations.noShadowSamplerCompareModeNone = true;
 }
 
 void DisplayMtl::initializeExtensions() const
