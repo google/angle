@@ -63,7 +63,9 @@ namespace
     PROC(DrawIndexedInstanced)           \
     PROC(DrawIndexedInstancedBaseVertex) \
     PROC(SetVisibilityResultMode)        \
-    PROC(UseResource)
+    PROC(UseResource)                    \
+    PROC(PushDebugGroup)                 \
+    PROC(PopDebugGroup)
 
 #define ANGLE_MTL_TYPE_DECL(CMD) CMD,
 
@@ -345,11 +347,34 @@ void UseResourceCmd(id<MTLRenderCommandEncoder> encoder, IntermediateCommandStre
     [resource ANGLE_MTL_RELEASE];
 }
 
+void PushDebugGroupCmd(id<MTLRenderCommandEncoder> encoder, IntermediateCommandStream *stream)
+{
+    NSString *label = stream->fetch<NSString *>();
+    [encoder pushDebugGroup:label];
+    [label ANGLE_MTL_RELEASE];
+}
+
+void PopDebugGroupCmd(id<MTLRenderCommandEncoder> encoder, IntermediateCommandStream *stream)
+{
+    [encoder popDebugGroup];
+}
+
 // Command encoder mapping
 #define ANGLE_MTL_CMD_MAP(CMD) CMD##Cmd,
 
 using CommandEncoderFunc = void (*)(id<MTLRenderCommandEncoder>, IntermediateCommandStream *);
 constexpr CommandEncoderFunc gCommandEncoders[] = {ANGLE_MTL_CMD_X(ANGLE_MTL_CMD_MAP)};
+
+NSString *cppLabelToObjC(const std::string &marker)
+{
+    NSString *label = [NSString stringWithUTF8String:marker.c_str()];
+    if (!label)
+    {
+        // This can happen if the string is not a valid ascii string.
+        label = @"Invalid ASCII string";
+    }
+    return label;
+}
 
 }
 
@@ -593,6 +618,11 @@ void CommandBuffer::restart()
     mQueueSerial = serial;
     mCommitted   = false;
 
+    for (std::string &marker : mDebugGroups)
+    {
+        pushDebugGroupImpl(marker);
+    }
+
     ASSERT(metalCmdBuffer);
 }
 
@@ -620,6 +650,33 @@ void CommandBuffer::serverWaitEvent(const mtl::SharedEventRef &event, uint64_t v
     ASSERT(readyImpl());
 
     waitEventImpl(event, value);
+}
+
+void CommandBuffer::pushDebugGroup(const std::string &marker)
+{
+    mDebugGroups.push_back(marker);
+
+    std::lock_guard<std::mutex> lg(mLock);
+
+    if (readyImpl())
+    {
+        pushDebugGroupImpl(marker);
+    }
+}
+
+void CommandBuffer::popDebugGroup()
+{
+    if (!mDebugGroups.empty())
+    {
+        mDebugGroups.pop_back();
+    }
+
+    std::lock_guard<std::mutex> lg(mLock);
+
+    if (readyImpl())
+    {
+        return;
+    }
 }
 
 /** private use only */
@@ -733,6 +790,29 @@ void CommandBuffer::waitEventImpl(const mtl::SharedEventRef &event, uint64_t val
 #endif  // #if ANGLE_MTL_EVENT_AVAILABLE
 }
 
+void CommandBuffer::pushDebugGroupImpl(const std::string &marker)
+{
+    ANGLE_MTL_OBJC_SCOPE
+    {
+        NSString *label = cppLabelToObjC(marker);
+        [get() pushDebugGroup:label];
+
+        if (mActiveCommandEncoder)
+        {
+            mActiveCommandEncoder->pushDebugGroup(label);
+        }
+    }
+}
+
+void CommandBuffer::popDebugGroupImpl()
+{
+    if (mActiveCommandEncoder)
+    {
+        mActiveCommandEncoder->popDebugGroup();
+    }
+    [get() popDebugGroup];
+}
+
 // CommandEncoder implementation
 CommandEncoder::CommandEncoder(CommandBuffer *cmdBuffer, Type type)
     : mType(type), mCmdBuffer(*cmdBuffer)
@@ -774,6 +854,18 @@ CommandEncoder &CommandEncoder::markResourceBeingWrittenByGPU(const TextureRef &
 {
     cmdBuffer().setWriteDependency(texture);
     return *this;
+}
+
+void CommandEncoder::pushDebugGroup(NSString *label)
+{
+    // Default implementation
+    [get() pushDebugGroup:label];
+}
+
+void CommandEncoder::popDebugGroup()
+{
+    // Default implementation
+    [get() popDebugGroup];
 }
 
 // RenderCommandEncoderShaderStates implementation
@@ -1539,6 +1631,16 @@ RenderCommandEncoder &RenderCommandEncoder::useResource(const BufferRef &resourc
         .push(states);
 
     return *this;
+}
+
+void RenderCommandEncoder::pushDebugGroup(NSString *label)
+{
+    // Defer the insertion until endEncoding()
+    mCommands.push(CmdType::PushDebugGroup).push([label ANGLE_MTL_RETAIN]);
+}
+void RenderCommandEncoder::popDebugGroup()
+{
+    mCommands.push(CmdType::PopDebugGroup);
 }
 
 RenderCommandEncoder &RenderCommandEncoder::setColorStoreAction(MTLStoreAction action,

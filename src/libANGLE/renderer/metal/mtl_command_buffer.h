@@ -115,6 +115,8 @@ class CommandBuffer final : public WrappedObject<id<MTLCommandBuffer>>, angle::N
 
     void queueEventSignal(const mtl::SharedEventRef &event, uint64_t value);
     void serverWaitEvent(const mtl::SharedEventRef &event, uint64_t value);
+    void pushDebugGroup(const std::string &marker);
+    void popDebugGroup();
 
     CommandQueue &cmdQueue() { return mCmdQueue; }
 
@@ -134,6 +136,9 @@ class CommandBuffer final : public WrappedObject<id<MTLCommandBuffer>>, angle::N
     void setEventImpl(const mtl::SharedEventRef &event, uint64_t value);
     void waitEventImpl(const mtl::SharedEventRef &event, uint64_t value);
 
+    void pushDebugGroupImpl(const std::string &marker);
+    void popDebugGroupImpl();
+
     using ParentClass = WrappedObject<id<MTLCommandBuffer>>;
 
     CommandQueue &mCmdQueue;
@@ -145,6 +150,8 @@ class CommandBuffer final : public WrappedObject<id<MTLCommandBuffer>>, angle::N
     mutable std::mutex mLock;
 
     std::vector<std::pair<mtl::SharedEventRef, uint64_t>> mPendingSignalEvents;
+
+    std::vector<std::string> mDebugGroups;
 
     bool mCommitted = false;
 };
@@ -168,6 +175,9 @@ class CommandEncoder : public WrappedObject<id<MTLCommandEncoder>>, angle::NonCo
 
     CommandEncoder &markResourceBeingWrittenByGPU(const BufferRef &buffer);
     CommandEncoder &markResourceBeingWrittenByGPU(const TextureRef &texture);
+
+    virtual void pushDebugGroup(NSString *label);
+    virtual void popDebugGroup();
 
   protected:
     using ParentClass = WrappedObject<id<MTLCommandEncoder>>;
@@ -452,6 +462,9 @@ class RenderCommandEncoder final : public CommandEncoder
     RenderCommandEncoder &setStencilLoadAction(MTLLoadAction action, uint32_t clearValue);
 
     void setLabel(NSString *label);
+
+    void pushDebugGroup(NSString *label) override;
+    void popDebugGroup() override;
 
     const RenderPassDesc &renderPassDesc() const { return mRenderPassDesc; }
     bool hasDrawCalls() const { return mHasDrawCalls; }

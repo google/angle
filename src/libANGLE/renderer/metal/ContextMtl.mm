@@ -120,6 +120,20 @@ bool IsTransformFeedbackOnly(const gl::State &glState)
     return glState.isTransformFeedbackActiveUnpaused() && glState.isRasterizerDiscardEnabled();
 }
 
+std::string ConvertMarkerToString(GLsizei length, const char *marker)
+{
+    std::string cppString;
+    if (length == 0)
+    {
+        cppString = marker;
+    }
+    else
+    {
+        cppString.assign(marker, length);
+    }
+    return cppString;
+}
+
 }  // namespace
 
 ContextMtl::ContextMtl(const gl::State &state, gl::ErrorSet *errorSet, DisplayMtl *display)
@@ -629,11 +643,13 @@ angle::Result ContextMtl::insertEventMarker(GLsizei length, const char *marker)
 
 angle::Result ContextMtl::pushGroupMarker(GLsizei length, const char *marker)
 {
+    mCmdBuffer.pushDebugGroup(ConvertMarkerToString(length, marker));
     return angle::Result::Continue;
 }
 
 angle::Result ContextMtl::popGroupMarker()
 {
+    mCmdBuffer.popDebugGroup();
     return angle::Result::Continue;
 }
 
