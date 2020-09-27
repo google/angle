@@ -230,22 +230,30 @@ enum class ReplayFunc
     Reset,
 };
 
+constexpr uint32_t kNoPartId = std::numeric_limits<uint32_t>::max();
+
 struct FmtReplayFunction
 {
-    FmtReplayFunction(gl::ContextID contextIdIn, uint32_t frameIndexIn)
-        : contextId(contextIdIn), frameIndex(frameIndexIn)
+    FmtReplayFunction(gl::ContextID contextIdIn,
+                      uint32_t frameIndexIn,
+                      uint32_t partIdIn = kNoPartId)
+        : contextId(contextIdIn), frameIndex(frameIndexIn), partId(partIdIn)
     {}
     gl::ContextID contextId;
     uint32_t frameIndex;
+    uint32_t partId;
 };
 
 std::ostream &operator<<(std::ostream &os, const FmtReplayFunction &fmt)
 {
-    os << "ReplayContext" << static_cast<int>(fmt.contextId) << "Frame" << fmt.frameIndex << "()";
+    os << "ReplayContext" << static_cast<int>(fmt.contextId) << "Frame" << fmt.frameIndex;
+    if (fmt.partId != kNoPartId)
+    {
+        os << "Part" << fmt.partId;
+    }
+    os << "()";
     return os;
 }
-
-constexpr uint32_t kNoPartId = std::numeric_limits<uint32_t>::max();
 
 struct FmtSetupFunction
 {
@@ -301,7 +309,7 @@ std::ostream &operator<<(std::ostream &os, const FmtFunction &fmt)
     switch (fmt.funcType)
     {
         case ReplayFunc::Replay:
-            os << FmtReplayFunction(fmt.contextId, fmt.frameIndex);
+            os << FmtReplayFunction(fmt.contextId, fmt.frameIndex, fmt.partId);
             break;
 
         case ReplayFunc::Setup:
@@ -1114,20 +1122,18 @@ void WriteCppReplay(bool compression,
         out << "\n";
     }
 
-    out << "void " << FmtReplayFunction(context->id(), frameIndex) << "\n";
-    out << "{\n";
-
-    std::stringstream callStream;
-
-    for (const CallCapture &call : frameCalls)
     {
-        callStream << "    ";
-        WriteCppReplayForCall(call, &dataTracker, callStream, header, binaryData);
-        callStream << ";\n";
-    }
+        std::stringstream callStream;
 
-    out << callStream.str();
-    out << "}\n";
+        callStream << "void " << FmtReplayFunction(context->id(), frameIndex) << "\n";
+        callStream << "{\n";
+
+        WriteCppReplayFunctionWithParts(context, ReplayFunc::Replay, &dataTracker, frameIndex,
+                                        binaryData, frameCalls, header, callStream, out);
+
+        out << callStream.str();
+        out << "}\n";
+    }
 
     if (serializeStateEnabled)
     {
