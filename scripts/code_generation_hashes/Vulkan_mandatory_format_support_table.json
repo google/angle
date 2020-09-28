@@ -8,5 +8,5 @@
   "src/libANGLE/renderer/vulkan/vk_mandatory_format_support_table_autogen.cpp":
     "8bfd8a3857c2b9062d7ada46c7d27bcf",
   "third_party/vulkan-headers/src/registry/vk.xml":
-    "3f9ea59d174e53cfe6af1361ae7fc8e9"
+    "c39f609430f5671d8a5537129c8ce933"
 }
