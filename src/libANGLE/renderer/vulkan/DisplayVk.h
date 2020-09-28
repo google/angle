@@ -12,6 +12,7 @@
 
 #include "common/MemoryBuffer.h"
 #include "libANGLE/renderer/DisplayImpl.h"
+#include "libANGLE/renderer/vulkan/vk_cache_utils.h"
 #include "libANGLE/renderer/vulkan/vk_utils.h"
 
 namespace rx
@@ -22,6 +23,20 @@ class ShareGroupVk : public ShareGroupImpl
 {
   public:
     ShareGroupVk() {}
+    void onDestroy(const egl::Display *display) override;
+
+    // PipelineLayoutCache and DescriptorSetLayoutCache can be shared between multiple threads
+    // accessing them via shared contexts. The ShareGroup locks around gl entrypoints ensuring
+    // synchronous update to the caches.
+    PipelineLayoutCache &getPipelineLayoutCache() { return mPipelineLayoutCache; }
+    DescriptorSetLayoutCache &getDescriptorSetLayoutCache() { return mDescriptorSetLayoutCache; }
+
+  private:
+    // ANGLE uses a PipelineLayout cache to store compatible pipeline layouts.
+    PipelineLayoutCache mPipelineLayoutCache;
+
+    // DescriptorSetLayouts are also managed in a cache.
+    DescriptorSetLayoutCache mDescriptorSetLayoutCache;
 };
 
 class DisplayVk : public DisplayImpl, public vk::Context

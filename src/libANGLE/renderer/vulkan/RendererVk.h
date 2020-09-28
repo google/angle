@@ -134,18 +134,6 @@ class RendererVk : angle::NonCopyable
 
     const vk::Format &getFormat(angle::FormatID formatID) const { return mFormatTable[formatID]; }
 
-    // Queries the descriptor set layout cache. Creates the layout if not present.
-    angle::Result getDescriptorSetLayout(
-        ContextVk *context,
-        const vk::DescriptorSetLayoutDesc &desc,
-        vk::BindingPointer<vk::DescriptorSetLayout> *descriptorSetLayoutOut);
-
-    // Queries the pipeline layout cache. Creates the layout if not present.
-    angle::Result getPipelineLayout(vk::Context *context,
-                                    const vk::PipelineLayoutDesc &desc,
-                                    const vk::DescriptorSetLayoutPointerArray &descriptorSetLayouts,
-                                    vk::BindingPointer<vk::PipelineLayout> *pipelineLayoutOut);
-
     angle::Result getPipelineCacheSize(DisplayVk *displayVk, size_t *pipelineCacheSizeOut);
     angle::Result syncPipelineCacheVk(DisplayVk *displayVk);
 
@@ -376,14 +364,6 @@ class RendererVk : angle::NonCopyable
 
     // A cache of VkFormatProperties as queried from the device over time.
     std::array<VkFormatProperties, vk::kNumVkFormats> mFormatProperties;
-
-    // ANGLE uses a PipelineLayout cache to store compatible pipeline layouts.
-    std::mutex mPipelineLayoutCacheMutex;
-    PipelineLayoutCache mPipelineLayoutCache;
-
-    // DescriptorSetLayouts are also managed in a cache.
-    std::mutex mDescriptorSetLayoutCacheMutex;
-    DescriptorSetLayoutCache mDescriptorSetLayoutCache;
 
     // Latest validation data for debug overlay.
     std::string mLastValidationMessage;

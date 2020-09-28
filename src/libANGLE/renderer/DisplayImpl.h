@@ -57,6 +57,7 @@ class ShareGroupImpl : angle::NonCopyable
   public:
     ShareGroupImpl() {}
     virtual ~ShareGroupImpl() {}
+    virtual void onDestroy(const egl::Display *display) {}
 };
 
 class DisplayImpl : public EGLImplFactory, public angle::Subject

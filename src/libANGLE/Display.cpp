@@ -471,10 +471,14 @@ void ShareGroup::addRef()
     mRefCount++;
 }
 
-void ShareGroup::release(const gl::Context *context)
+void ShareGroup::release(const Display *display)
 {
     if (--mRefCount == 0)
     {
+        if (mImplementation)
+        {
+            mImplementation->onDestroy(display);
+        }
         delete this;
     }
 }
