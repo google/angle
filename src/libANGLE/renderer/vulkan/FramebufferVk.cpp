@@ -1637,7 +1637,6 @@ angle::Result FramebufferVk::syncState(const gl::Context *context,
     ContextVk *contextVk = vk::GetImpl(context);
 
     vk::FramebufferDesc priorFramebufferDesc = mCurrentFramebufferDesc;
-    bool priorReadOnlyDepthStencilMode       = mReadOnlyDepthStencilMode;
 
     // Only defer clears for whole draw framebuffer ops. If the scissor test is on and the scissor
     // rect doesn't match the draw rect, forget it.
@@ -1729,15 +1728,8 @@ angle::Result FramebufferVk::syncState(const gl::Context *context,
         ANGLE_TRY(flushDeferredClears(contextVk, rotatedScissoredRenderArea));
     }
 
-    // We cannot use read-only depth mode for clears.
-    if (mDeferredClears.any())
-    {
-        mReadOnlyDepthStencilMode = false;
-    }
-
     // No-op redundant changes to prevent closing the RenderPass.
-    if (mCurrentFramebufferDesc == priorFramebufferDesc &&
-        mReadOnlyDepthStencilMode == priorReadOnlyDepthStencilMode)
+    if (mCurrentFramebufferDesc == priorFramebufferDesc)
     {
         return angle::Result::Continue;
     }
