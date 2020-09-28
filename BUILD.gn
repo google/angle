@@ -758,24 +758,28 @@ if (!defined(angle_abseil_cpp_dir)) {
 }
 
 config("angle_abseil_config") {
-  defines = [ "ANGLE_USE_ABSEIL" ]
+  if (angle_enable_abseil) {
+    defines = [ "ANGLE_USE_ABSEIL" ]
 
-  configs = [
-    "$angle_abseil_cpp_dir:absl_define_config",
-    "$angle_abseil_cpp_dir:absl_include_config",
-  ]
+    configs = [
+      "$angle_abseil_cpp_dir:absl_define_config",
+      "$angle_abseil_cpp_dir:absl_include_config",
+    ]
+  }
 }
 
 group("angle_abseil") {
-  # When build_with_chromium=true we need to include "//third_party/abseil-cpp:absl" while
-  # we can be more specific when building standalone ANGLE.
-  if (build_with_chromium) {
-    public_deps = [ "$angle_abseil_cpp_dir:absl" ]
-  } else {
-    public_deps = [ "$angle_abseil_cpp_dir/absl/container:flat_hash_map" ]
-  }
+  if (angle_enable_abseil) {
+    # When build_with_chromium=true we need to include "//third_party/abseil-cpp:absl" while
+    # we can be more specific when building standalone ANGLE.
+    if (build_with_chromium) {
+      public_deps = [ "$angle_abseil_cpp_dir:absl" ]
+    } else {
+      public_deps = [ "$angle_abseil_cpp_dir/absl/container:flat_hash_map" ]
+    }
 
-  public_configs = [ ":angle_abseil_config" ]
+    public_configs = [ ":angle_abseil_config" ]
+  }
 }
 
 config("angle_compression_config") {
