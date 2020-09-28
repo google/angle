@@ -207,6 +207,10 @@ void RendererVk::ensureCapsInitialized() const
 
     mNativeExtensions.textureFilteringCHROMIUM = getFeatures().supportsFilteringPrecision.enabled;
 
+    // Only expose texture cubemap array if the physical device supports it.
+    mNativeExtensions.textureCubeMapArrayOES = getFeatures().supportsImageCubeArray.enabled;
+    mNativeExtensions.textureCubeMapArrayEXT = mNativeExtensions.textureCubeMapArrayOES;
+
     mNativeExtensions.shadowSamplersEXT = true;
 
     // From the Vulkan specs:

@@ -1210,6 +1210,7 @@ VkImageType GetImageType(gl::TextureType textureType)
         case gl::TextureType::_2DMultisample:
         case gl::TextureType::_2DMultisampleArray:
         case gl::TextureType::CubeMap:
+        case gl::TextureType::CubeMapArray:
         case gl::TextureType::External:
             return VK_IMAGE_TYPE_2D;
         case gl::TextureType::_3D:
@@ -1236,6 +1237,8 @@ VkImageViewType GetImageViewType(gl::TextureType textureType)
             return VK_IMAGE_VIEW_TYPE_3D;
         case gl::TextureType::CubeMap:
             return VK_IMAGE_VIEW_TYPE_CUBE;
+        case gl::TextureType::CubeMapArray:
+            return VK_IMAGE_VIEW_TYPE_CUBE_ARRAY;
         default:
             // We will need to implement all the texture types for ES3+.
             UNIMPLEMENTED();
@@ -1297,6 +1300,7 @@ void GetExtentsAndLayerCount(gl::TextureType textureType,
 
         case gl::TextureType::_2DArray:
         case gl::TextureType::_2DMultisampleArray:
+        case gl::TextureType::CubeMapArray:
             extentsOut->depth = 1;
             *layerCountOut    = extents.depth;
             break;

@@ -1309,6 +1309,8 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
     // Select additional features to be enabled.
     VkPhysicalDeviceFeatures2KHR enabledFeatures = {};
     enabledFeatures.sType                        = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
+    // Used to support cubemap array:
+    enabledFeatures.features.imageCubeArray = getFeatures().supportsImageCubeArray.enabled;
     // Used to support framebuffers with multiple attachments:
     enabledFeatures.features.independentBlend = mPhysicalDeviceFeatures.independentBlend;
     // Used to support robust buffer access:
@@ -1935,6 +1937,14 @@ void RendererVk::initFeatures(DisplayVk *displayVk, const ExtensionNameList &dev
     // - AMD on windows: http://crbug.com/1132366
     ANGLE_FEATURE_CONDITION(&mFeatures, enableMultisampledRenderToTexture,
                             !(IsApple() && isSwiftShader) && !(IsWindows() && (isIntel || isAMD)));
+
+    // Feature disabled due to driver bugs:
+    //
+    // - Swiftshader: http://anglebug.com/5142
+    // - Qualcomm: http://anglebug.com/5143
+    ANGLE_FEATURE_CONDITION(
+        &mFeatures, supportsImageCubeArray,
+        mPhysicalDeviceFeatures.imageCubeArray == VK_TRUE && !isSwiftShader && !isQualcomm);
 
     ANGLE_FEATURE_CONDITION(&mFeatures, preferredLargeHeapBlockSize4MB, !isQualcomm);
 

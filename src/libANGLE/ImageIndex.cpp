@@ -64,6 +64,7 @@ bool IsArrayTarget(TextureTarget target)
     {
         case TextureTarget::_2DArray:
         case TextureTarget::_2DMultisampleArray:
+        case TextureTarget::CubeMapArray:
             return true;
         default:
             return false;
