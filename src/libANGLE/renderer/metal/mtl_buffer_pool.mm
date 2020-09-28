@@ -112,6 +112,11 @@ BufferPool::~BufferPool() {}
 
 bool BufferPool::shouldAllocateInSharedMem(ContextMtl *contextMtl) const
 {
+    if (ANGLE_UNLIKELY(contextMtl->getDisplay()->getFeatures().forceBufferGPUStorage.enabled))
+    {
+        return false;
+    }
+
     switch (mMemPolicy)
     {
         case BufferPoolMemPolicy::AlwaysSharedMem:

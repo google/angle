@@ -855,5 +855,32 @@ GLuint GetGLMipLevel(const MipmapNativeLevel &nativeLevel, GLuint base)
     return nativeLevel.get() + base;
 }
 
+angle::Result TriangleFanBoundCheck(ContextMtl *context, size_t numTris)
+{
+    bool indexCheck =
+        (numTris > std::numeric_limits<unsigned int>::max() / (sizeof(unsigned int) * 3));
+    ANGLE_CHECK(context, !indexCheck,
+                "Failed to create a scratch index buffer for GL_TRIANGLE_FAN, "
+                "too many indices required.",
+                GL_OUT_OF_MEMORY);
+    return angle::Result::Continue;
+}
+
+angle::Result GetTriangleFanIndicesCount(ContextMtl *context,
+                                         GLsizei vetexCount,
+                                         uint32_t *numElemsOut)
+{
+    size_t numTris = vetexCount - 2;
+    ANGLE_TRY(TriangleFanBoundCheck(context, numTris));
+    size_t numIndices = numTris * 3;
+    ANGLE_CHECK(context, numIndices <= std::numeric_limits<uint32_t>::max(),
+                "Failed to create a scratch index buffer for GL_TRIANGLE_FAN, "
+                "too many indices required.",
+                GL_OUT_OF_MEMORY);
+
+    *numElemsOut = static_cast<uint32_t>(numIndices);
+    return angle::Result::Continue;
+}
+
 }  // namespace mtl
 }  // namespace rx

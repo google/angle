@@ -236,12 +236,17 @@ std::ostream &operator<<(std::ostream &stream, const PlatformParameters &pp)
 
     if (pp.eglParameters.hasExplicitMemBarrierFeatureMtl == EGL_FALSE)
     {
-        stream << "_NoExplicitMemoryBarrier";
+        stream << "_NoMetalExplicitMemoryBarrier";
     }
 
     if (pp.eglParameters.hasCheapRenderPassFeatureMtl == EGL_FALSE)
     {
-        stream << "_NoCheapRenderPass";
+        stream << "_NoMetalCheapRenderPass";
+    }
+
+    if (pp.eglParameters.forceBufferGPUStorageFeatureMtl == EGL_TRUE)
+    {
+        stream << "_ForceMetalBufferGPUStorage";
     }
 
     return stream;

@@ -725,6 +725,7 @@ struct IndexConversionParams
 {
     uint32_t srcOffset;
     uint32_t indexCount;
+    bool primitiveRestartEnabled;
 };
 
 
@@ -764,7 +765,17 @@ kernel void convertIndexU8ToU16(uint idx[[thread_position_in_grid]],
                                 device ushort *output[[buffer(2)]])
 {
     if (idx >= options.indexCount) { return; };
-    output[idx] = getIndexAligned(input, options.srcOffset, idx);
+
+    uchar value = getIndexAligned(input, options.srcOffset, idx);
+
+    if (options.primitiveRestartEnabled && value == 0xff)
+    {
+        output[idx] = 0xffff;
+    }
+    else
+    {
+        output[idx] = value;
+    }
 }
 
 kernel void convertIndexU16(
@@ -809,16 +820,19 @@ kernel void convertIndexU32(
     output[idx] = value;
 }
 
-struct TriFanArrayParams
+struct IndexFromArrayParams
 {
     uint firstVertex;
-    uint vertexCountFrom3rd;
+
+    uint vertexCount;
 };
-kernel void genTriFanIndicesFromArray(uint idx[[thread_position_in_grid]],
-                                      constant TriFanArrayParams &options[[buffer(0)]],
-                                      device uint *output[[buffer(2)]])
+
+
+kernel void genTriFanIndicesFromArray(uint idx [[thread_position_in_grid]],
+                                      constant IndexFromArrayParams &options [[buffer(0)]],
+                                      device uint *output [[buffer(2)]])
 {
-    if (idx >= options.vertexCountFrom3rd) { return; };
+    if (idx >= options.vertexCount) { return; };
 
     uint vertexIdx = options.firstVertex + 2 + idx;
 
@@ -858,6 +872,7 @@ inline uint getIndexU32(uint offset,
 
 
 
+
 kernel void genTriFanIndicesFromElements(
     uint idx[[thread_position_in_grid]],
     constant IndexConversionParams &options[[buffer(0)]],
@@ -873,6 +888,36 @@ kernel void genTriFanIndicesFromElements(
     output[3 * idx] = getIndexU32(options.srcOffset, 0, inputU8, inputU16, inputU32);
     output[3 * idx + 1] = getIndexU32(options.srcOffset, elemIdx - 1, inputU8, inputU16, inputU32);
     output[3 * idx + 2] = getIndexU32(options.srcOffset, elemIdx, inputU8, inputU16, inputU32);
+}
+
+
+kernel void genLineLoopIndicesFromArray(uint idx [[thread_position_in_grid]],
+                                        constant IndexFromArrayParams &options [[buffer(0)]],
+                                        device uint *output [[buffer(2)]])
+{
+    uint totalIndices = options.vertexCount + 1;
+    if (idx >= totalIndices) { return; };
+
+    output[idx] = options.firstVertex + idx % options.vertexCount;
+}
+
+
+
+kernel void genLineLoopIndicesFromElements(uint idx [[thread_position_in_grid]],
+                                           constant IndexConversionParams &options [[buffer(0)]],
+                                           constant uchar *inputU8
+                                           [[buffer(1), function_constant(kUseSourceBufferU8)]],
+                                           constant ushort *inputU16
+                                           [[buffer(1), function_constant(kUseSourceBufferU16)]],
+                                           constant uint *inputU32
+                                           [[buffer(1), function_constant(kUseSourceBufferU32)]],
+                                           device uint *output [[buffer(2)]])
+{
+    uint totalTargetIndices = options.indexCount + 1;
+    if (idx >= totalTargetIndices) { return; };
+
+    output[idx] =
+        getIndexU32(options.srcOffset, idx % options.indexCount, inputU8, inputU16, inputU32);
 }
 # 4 "temp_master_source.metal" 2
 # 1 "./gen_mipmap.metal" 1

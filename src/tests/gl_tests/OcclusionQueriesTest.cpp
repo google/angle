@@ -132,6 +132,9 @@ TEST_P(OcclusionQueriesTest, ClearNotCounted)
     // http://anglebug.com/4925
     ANGLE_SKIP_TEST_IF(IsD3D11());
 
+    // http://anglebug.com/5307
+    ANGLE_SKIP_TEST_IF(IsMetal() && IsNVIDIA());
+
     glDepthMask(GL_TRUE);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 

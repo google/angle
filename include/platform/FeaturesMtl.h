@@ -74,6 +74,12 @@ struct FeaturesMtl : FeatureSetBase
     Feature allowGenMultipleMipsPerPass = {
         "gen_multiple_mips_per_pass", FeatureCategory::MetalFeatures,
         "The renderer supports generating multiple mipmaps per pass", &members};
+
+    Feature forceBufferGPUStorage = {
+        "force_buffer_gpu_storage_mtl", FeatureCategory::MetalFeatures,
+        "On systems that support both buffer's memory allocation on GPU and shared memory (such as "
+        "macOS), force using GPU memory allocation for buffers.",
+        &members};
 };
 
 }  // namespace angle

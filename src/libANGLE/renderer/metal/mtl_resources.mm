@@ -756,7 +756,7 @@ angle::Result Buffer::resetWithSharedMemOpt(ContextMtl *context,
 
     options = 0;
 #if TARGET_OS_OSX || TARGET_OS_MACCATALYST
-    if (!forceUseSharedMem)
+    if (!forceUseSharedMem || context->getDisplay()->getFeatures().forceBufferGPUStorage.enabled)
     {
         options |= MTLResourceStorageModeManaged;
     }

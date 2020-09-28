@@ -728,22 +728,18 @@ void DisplayMtl::initializeFeatures()
         isMetal2_2 = true;
     }
 
-    // default values:
-    mFeatures.hasBaseVertexInstancedDraw.enabled        = true;
-    mFeatures.hasDepthTextureFiltering.enabled          = false;
-    mFeatures.hasExplicitMemBarrier.enabled             = false;
-    mFeatures.hasNonUniformDispatch.enabled             = true;
-    mFeatures.hasStencilOutput.enabled                  = false;
-    mFeatures.hasTextureSwizzle.enabled                 = false;
-    mFeatures.allowSeparatedDepthStencilBuffers.enabled = false;
-    mFeatures.allowGenMultipleMipsPerPass.enabled       = true;
-    mFeatures.hasCheapRenderPass.enabled                = false;
+    bool isOSX       = TARGET_OS_OSX;
+    bool isCatalyst  = TARGET_OS_MACCATALYST;
+    bool isSimulator = TARGET_OS_SIMULATOR;
+    bool isARM       = ANGLE_MTL_ARM;
+
+    ANGLE_FEATURE_CONDITION((&mFeatures), allowGenMultipleMipsPerPass, true);
+    ANGLE_FEATURE_CONDITION((&mFeatures), forceBufferGPUStorage, false);
 
     ANGLE_FEATURE_CONDITION((&mFeatures), hasDepthTextureFiltering,
-                            TARGET_OS_OSX || TARGET_OS_MACCATALYST);
-    ANGLE_FEATURE_CONDITION(
-        (&mFeatures), hasExplicitMemBarrier,
-        isMetal2_1 && (TARGET_OS_OSX || TARGET_OS_MACCATALYST) && !ANGLE_MTL_ARM);
+                            (isOSX || isCatalyst) && !isARM);
+    ANGLE_FEATURE_CONDITION((&mFeatures), hasExplicitMemBarrier,
+                            isMetal2_1 && (isOSX || isCatalyst) && !isARM);
     ANGLE_FEATURE_CONDITION((&mFeatures), hasDepthAutoResolve, supportsEitherGPUFamily(3, 2));
     ANGLE_FEATURE_CONDITION((&mFeatures), hasStencilAutoResolve, supportsEitherGPUFamily(5, 2));
     ANGLE_FEATURE_CONDITION((&mFeatures), allowMultisampleStoreAndResolve,
@@ -761,19 +757,17 @@ void DisplayMtl::initializeFeatures()
     // Fence sync is flaky on Nvidia
     ANGLE_FEATURE_CONDITION((&mFeatures), hasEvents, isMetal2_1 && !isNVIDIA());
 
-    ANGLE_FEATURE_CONDITION((&mFeatures), hasCheapRenderPass,
-                            (TARGET_OS_OSX || TARGET_OS_MACCATALYST) && !ANGLE_MTL_ARM);
+    ANGLE_FEATURE_CONDITION((&mFeatures), hasCheapRenderPass, (isOSX || isCatalyst) && !isARM);
 
-#if !TARGET_OS_MACCATALYST && (TARGET_OS_IOS || TARGET_OS_TV)
     // Base Vertex drawing is only supported since GPU family 3.
-    ANGLE_FEATURE_CONDITION((&mFeatures), hasBaseVertexInstancedDraw, supportsIOSGPUFamily(3));
+    ANGLE_FEATURE_CONDITION((&mFeatures), hasBaseVertexInstancedDraw,
+                            isOSX || isCatalyst || supportsIOSGPUFamily(3));
 
     ANGLE_FEATURE_CONDITION((&mFeatures), hasNonUniformDispatch,
-                            TARGET_OS_IOS && supportsIOSGPUFamily(4));
+                            isOSX || isCatalyst || supportsIOSGPUFamily(4));
 
-    ANGLE_FEATURE_CONDITION((&mFeatures), allowSeparatedDepthStencilBuffers, !TARGET_OS_SIMULATOR);
-
-#endif
+    ANGLE_FEATURE_CONDITION((&mFeatures), allowSeparatedDepthStencilBuffers,
+                            !isOSX && !isCatalyst && !isSimulator);
 
     angle::PlatformMethods *platform = ANGLEPlatformCurrent();
     platform->overrideFeaturesMtl(platform, &mFeatures);

@@ -251,6 +251,13 @@ inline PlatformParameters WithMetalMemoryBarrierAndCheapRenderPass(const Platfor
     return re;
 }
 
+inline PlatformParameters WithMetalForcedBufferGPUStorage(const PlatformParameters &params)
+{
+    PlatformParameters re                            = params;
+    re.eglParameters.forceBufferGPUStorageFeatureMtl = EGL_TRUE;
+    return re;
+}
+
 inline PlatformParameters WithRobustness(const PlatformParameters &params)
 {
     PlatformParameters withRobustness       = params;

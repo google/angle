@@ -23,6 +23,9 @@
 
 namespace rx
 {
+
+class ContextMtl;
+
 namespace mtl
 {
 
@@ -145,6 +148,12 @@ gl::Box MTLRegionToGLBox(const MTLRegion &mtlRegion);
 
 MipmapNativeLevel GetNativeMipLevel(GLuint level, GLuint base);
 GLuint GetGLMipLevel(const MipmapNativeLevel &nativeLevel, GLuint base);
+
+angle::Result TriangleFanBoundCheck(ContextMtl *context, size_t numTris);
+
+angle::Result GetTriangleFanIndicesCount(ContextMtl *context,
+                                         GLsizei vetexCount,
+                                         uint32_t *numElemsOut);
 
 NS_ASSUME_NONNULL_END
 }  // namespace mtl

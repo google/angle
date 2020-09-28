@@ -57,10 +57,14 @@ struct VertexConversionBufferMtl : public ConversionBufferMtl
 
 struct IndexConversionBufferMtl : public ConversionBufferMtl
 {
-    IndexConversionBufferMtl(ContextMtl *context, gl::DrawElementsType elemType, size_t offsetIn);
+    IndexConversionBufferMtl(ContextMtl *context,
+                             gl::DrawElementsType elemType,
+                             bool primitiveRestartEnabled,
+                             size_t offsetIn);
 
     const gl::DrawElementsType elemType;
     const size_t offset;
+    bool primitiveRestartEnabled;
 };
 
 struct UniformConversionBufferMtl : public ConversionBufferMtl
@@ -143,6 +147,7 @@ class BufferMtl : public BufferImpl, public BufferHolderMtl
 
     IndexConversionBufferMtl *getIndexConversionBuffer(ContextMtl *context,
                                                        gl::DrawElementsType elemType,
+                                                       bool primitiveRestartEnabled,
                                                        size_t offset);
 
     ConversionBufferMtl *getUniformConversionBuffer(ContextMtl *context, size_t offset);

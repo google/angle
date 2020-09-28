@@ -76,6 +76,7 @@ angle::Result StreamIndexData(ContextMtl *contextMtl,
                               const uint8_t *sourcePointer,
                               gl::DrawElementsType indexType,
                               size_t indexCount,
+                              bool primitiveRestartEnabled,
                               mtl::BufferRef *bufferOut,
                               size_t *bufferOffsetOut)
 {
@@ -94,13 +95,27 @@ angle::Result StreamIndexData(ContextMtl *contextMtl,
         const GLubyte *in     = static_cast<const GLubyte *>(sourcePointer);
         GLushort *expandedDst = reinterpret_cast<GLushort *>(dst);
 
-        // NOTE(hqle): May need to handle primitive restart index in future when ES 3.0
-        // is supported.
-        // Fast path for common case.
-        for (size_t index = 0; index < indexCount; index++)
+        if (primitiveRestartEnabled)
         {
-            expandedDst[index] = static_cast<GLushort>(in[index]);
-        }
+            for (size_t index = 0; index < indexCount; index++)
+            {
+                if (in[index] == 0xFF)
+                {
+                    expandedDst[index] = 0xFFFF;
+                }
+                else
+                {
+                    expandedDst[index] = static_cast<GLushort>(in[index]);
+                }
+            }
+        }  // if (primitiveRestartEnabled)
+        else
+        {
+            for (size_t index = 0; index < indexCount; index++)
+            {
+                expandedDst[index] = static_cast<GLushort>(in[index]);
+            }
+        }  // if (primitiveRestartEnabled)
     }
     else
     {
@@ -606,11 +621,12 @@ angle::Result VertexArrayMtl::convertIndexBuffer(const gl::Context *glContext,
         alignedOffset = alignedOffset << 1;
     }
 
-    ContextMtl *contextMtl = mtl::GetImpl(glContext);
-    BufferMtl *idxBuffer   = mtl::GetImpl(getState().getElementArrayBuffer());
+    ContextMtl *contextMtl   = mtl::GetImpl(glContext);
+    const gl::State &glState = glContext->getState();
+    BufferMtl *idxBuffer     = mtl::GetImpl(getState().getElementArrayBuffer());
 
-    IndexConversionBufferMtl *conversion =
-        idxBuffer->getIndexConversionBuffer(contextMtl, indexType, offsetModulo);
+    IndexConversionBufferMtl *conversion = idxBuffer->getIndexConversionBuffer(
+        contextMtl, indexType, glState.isPrimitiveRestartEnabled(), offsetModulo);
 
     // Has the content of the buffer has changed since last conversion?
     if (!conversion->dirty)
@@ -629,8 +645,8 @@ angle::Result VertexArrayMtl::convertIndexBuffer(const gl::Context *glContext,
         // We shouldn't use GPU to convert when we are in a middle of a render pass.
         ANGLE_TRY(StreamIndexData(contextMtl, &conversion->data,
                                   idxBuffer->getClientShadowCopyData(contextMtl) + offsetModulo,
-                                  indexType, indexCount, &conversion->convertedBuffer,
-                                  &conversion->convertedOffset));
+                                  indexType, indexCount, glState.isPrimitiveRestartEnabled(),
+                                  &conversion->convertedBuffer, &conversion->convertedOffset));
     }
     else
     {
@@ -664,10 +680,10 @@ angle::Result VertexArrayMtl::convertIndexBufferGPU(const gl::Context *glContext
 
     // Do the conversion on GPU.
     ANGLE_TRY(display->getUtils().convertIndexBufferGPU(
-        mtl::GetImpl(glContext),
-        {indexType, static_cast<uint32_t>(indexCount), idxBuffer->getCurrentBuffer(),
-         static_cast<uint32_t>(offset), conversion->convertedBuffer,
-         static_cast<uint32_t>(conversion->convertedOffset)}));
+        contextMtl, {indexType, static_cast<uint32_t>(indexCount), idxBuffer->getCurrentBuffer(),
+                     static_cast<uint32_t>(offset), conversion->convertedBuffer,
+                     static_cast<uint32_t>(conversion->convertedOffset),
+                     glContext->getState().isPrimitiveRestartEnabled()}));
 
     ANGLE_TRY(conversion->data.commit(contextMtl));
 
@@ -689,7 +705,8 @@ angle::Result VertexArrayMtl::streamIndexBufferFromClient(const gl::Context *con
 
     auto srcData = static_cast<const uint8_t *>(sourcePointer);
     ANGLE_TRY(StreamIndexData(contextMtl, &mDynamicIndexData, srcData, indexType, indexCount,
-                              idxBufferOut, idxBufferOffsetOut));
+                              context->getState().isPrimitiveRestartEnabled(), idxBufferOut,
+                              idxBufferOffsetOut));
 
     return angle::Result::Continue;
 }

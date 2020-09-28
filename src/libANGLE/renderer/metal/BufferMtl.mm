@@ -55,12 +55,14 @@ ConversionBufferMtl::~ConversionBufferMtl() = default;
 // IndexConversionBufferMtl implementation.
 IndexConversionBufferMtl::IndexConversionBufferMtl(ContextMtl *context,
                                                    gl::DrawElementsType elemTypeIn,
+                                                   bool primitiveRestartEnabledIn,
                                                    size_t offsetIn)
     : ConversionBufferMtl(context,
                           kConvertedElementArrayBufferInitialSize,
                           mtl::kIndexBufferOffsetAlignment),
       elemType(elemTypeIn),
-      offset(offsetIn)
+      offset(offsetIn),
+      primitiveRestartEnabled(primitiveRestartEnabledIn)
 {}
 
 // UniformConversionBufferMtl implementation
@@ -331,17 +333,19 @@ ConversionBufferMtl *BufferMtl::getVertexConversionBuffer(ContextMtl *context,
 
 IndexConversionBufferMtl *BufferMtl::getIndexConversionBuffer(ContextMtl *context,
                                                               gl::DrawElementsType elemType,
+                                                              bool primitiveRestartEnabled,
                                                               size_t offset)
 {
     for (auto &buffer : mIndexConversionBuffers)
     {
-        if (buffer.elemType == elemType && buffer.offset == offset)
+        if (buffer.elemType == elemType && buffer.offset == offset &&
+            buffer.primitiveRestartEnabled == primitiveRestartEnabled)
         {
             return &buffer;
         }
     }
 
-    mIndexConversionBuffers.emplace_back(context, elemType, offset);
+    mIndexConversionBuffers.emplace_back(context, elemType, primitiveRestartEnabled, offset);
     return &mIndexConversionBuffers.back();
 }
 
