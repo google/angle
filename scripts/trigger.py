@@ -19,9 +19,12 @@ def parse_args():
     parser.add_argument('gn_path', help='path to GN. (e.g. out/Release)')
     parser.add_argument('test', help='test name. (e.g. angle_end2end_tests)')
     parser.add_argument('os_dim', help='OS dimension. (e.g. Windows-10)')
-    parser.add_argument('gpu_dim', help='GPU dimension. (e.g. intel-hd-630-win10-stable)')
     parser.add_argument('-s', '--shards', default=1, help='number of shards', type=int)
     parser.add_argument('-p', '--pool', default='Chrome-GPU', help='swarming pool')
+    parser.add_argument('-g', '--gpu', help='GPU dimension. (e.g. intel-hd-630-win10-stable)')
+    parser.add_argument('-t', '--device-type', help='Android device type (e.g. bullhead)')
+    parser.add_argument('-o', '--device-os', help='Android OS.')
+
     return parser.parse_known_args()
 
 
@@ -52,8 +55,17 @@ def main():
     swarming_args = [
         swarming_script_path, 'trigger', '-S', 'chromium-swarm.appspot.com', '-I',
         'https://isolateserver.appspot.com', '-d', 'os=' + args.os_dim, '-d', 'pool=' + args.pool,
-        '-d', 'gpu=' + args.gpu_dim, '-s', sha
+        '-s', sha
     ]
+
+    if args.gpu:
+        swarming_args += ['-d', 'gpu=' + args.gpu]
+
+    if args.device_type:
+        swarming_args += ['-d', 'device_type=' + args.device_type]
+
+    if args.device_os:
+        swarming_args += ['-d', 'device_os=' + args.device_os]
 
     for i in range(args.shards):
         shard_args = swarming_args[:]
