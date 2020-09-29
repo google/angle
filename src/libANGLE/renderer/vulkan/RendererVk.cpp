@@ -902,11 +902,14 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
     // Initialize the format table.
     mFormatTable.initialize(this, &mNativeTextureCaps, &mNativeCaps.compressedTextureFormats);
 
+    gl::InitializeDebugAnnotations(&mAnnotator);
+
     if (getFeatures().enableCommandProcessingThread.enabled)
     {
         mCommandProcessorThread =
             std::thread(&CommandProcessor::processCommandProcessorTasks, &mCommandProcessor);
     }
+
     return angle::Result::Continue;
 }
 

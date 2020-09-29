@@ -81,7 +81,7 @@ std::ostream *gSwallowStream;
 
 bool DebugAnnotationsActive()
 {
-#if defined(ANGLE_ENABLE_DEBUG_ANNOTATIONS)
+#if defined(ANGLE_ENABLE_DEBUG_ANNOTATIONS) || defined(ANGLE_ENABLE_DEBUG_TRACE)
     return g_debugAnnotator != nullptr && g_debugAnnotator->getStatus();
 #else
     return false;
