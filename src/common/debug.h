@@ -29,16 +29,19 @@
 namespace gl
 {
 class Context;
+enum class EntryPoint;
 
 // Pairs a D3D begin event with an end event.
 class ScopedPerfEventHelper : angle::NonCopyable
 {
   public:
-    ANGLE_FORMAT_PRINTF(3, 4)
-    ScopedPerfEventHelper(gl::Context *context, const char *format, ...);
+    ANGLE_FORMAT_PRINTF(4, 5)
+    ScopedPerfEventHelper(gl::Context *context, gl::EntryPoint entryPoint, const char *format, ...);
     ~ScopedPerfEventHelper();
 
   private:
+    gl::Context *mContext;
+    const gl::EntryPoint mEntryPoint;
     const char *mFunctionName;
 };
 
@@ -89,9 +92,12 @@ class DebugAnnotator : angle::NonCopyable
     DebugAnnotator() {}
     virtual ~DebugAnnotator() {}
     virtual void beginEvent(gl::Context *context,
+                            gl::EntryPoint entryPoint,
                             const char *eventName,
                             const char *eventMessage) = 0;
-    virtual void endEvent(const char *eventName)      = 0;
+    virtual void endEvent(gl::Context *context,
+                          const char *eventName,
+                          gl::EntryPoint entryPoint)  = 0;
     virtual void setMarker(const char *markerName)    = 0;
     virtual bool getStatus()                          = 0;
     // Log Message Handler that gets passed every log message,
@@ -248,13 +254,13 @@ std::ostream &FmtHex(std::ostream &os, T value)
 // A macro to log a performance event around a scope.
 #if defined(ANGLE_TRACE_ENABLED)
 #    if defined(_MSC_VER)
-#        define EVENT(context, function, message, ...)                                            \
-            gl::ScopedPerfEventHelper scopedPerfEventHelper##__LINE__(context, "%s(" message ")", \
-                                                                      function, __VA_ARGS__)
+#        define EVENT(context, entryPoint, function, message, ...)     \
+            gl::ScopedPerfEventHelper scopedPerfEventHelper##__LINE__( \
+                context, entryPoint, "%s(" message ")", function, __VA_ARGS__)
 #    else
-#        define EVENT(context, function, message, ...)                                            \
-            gl::ScopedPerfEventHelper scopedPerfEventHelper(context, "%s(" message ")", function, \
-                                                            ##__VA_ARGS__)
+#        define EVENT(context, entryPoint, function, message, ...) \
+            gl::ScopedPerfEventHelper scopedPerfEventHelper(       \
+                context, entryPoint, "%s(" message ")", function, ##__VA_ARGS__)
 #    endif  // _MSC_VER
 #else
 #    define EVENT(message, ...) (void(0))

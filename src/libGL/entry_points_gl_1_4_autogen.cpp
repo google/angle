@@ -31,7 +31,7 @@ void GL_APIENTRY BlendColor(GLfloat red, GLfloat green, GLfloat blue, GLfloat al
 {
     Context *context = GetValidGlobalContext();
     EVENT(
-        context, "glBlendColor",
+        context, gl::EntryPoint::BlendColor, "glBlendColor",
         "context = %d, GLfloat red = %f, GLfloat green = %f, GLfloat blue = %f, GLfloat alpha = %f",
         CID(context), red, green, blue, alpha);
 
@@ -51,7 +51,8 @@ void GL_APIENTRY BlendColor(GLfloat red, GLfloat green, GLfloat blue, GLfloat al
 void GL_APIENTRY BlendEquation(GLenum mode)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, "glBlendEquation", "context = %d, GLenum mode = %s", CID(context),
+    EVENT(context, gl::EntryPoint::BlendEquation, "glBlendEquation",
+          "context = %d, GLenum mode = %s", CID(context),
           GLenumToString(GLenumGroup::BlendEquationModeEXT, mode));
 
     if (context)
@@ -72,7 +73,7 @@ void GL_APIENTRY BlendFuncSeparate(GLenum sfactorRGB,
                                    GLenum dfactorAlpha)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, "glBlendFuncSeparate",
+    EVENT(context, gl::EntryPoint::BlendFuncSeparate, "glBlendFuncSeparate",
           "context = %d, GLenum sfactorRGB = %s, GLenum dfactorRGB = %s, GLenum sfactorAlpha = %s, "
           "GLenum dfactorAlpha = %s",
           CID(context), GLenumToString(GLenumGroup::BlendingFactor, sfactorRGB),
@@ -99,7 +100,7 @@ void GL_APIENTRY FogCoordPointer(GLenum type, GLsizei stride, const void *pointe
 {
     Context *context = GetValidGlobalContext();
     EVENT(
-        context, "glFogCoordPointer",
+        context, gl::EntryPoint::FogCoordPointer, "glFogCoordPointer",
         "context = %d, GLenum type = %s, GLsizei stride = %d, const void *pointer = 0x%016" PRIxPTR
         "",
         CID(context), GLenumToString(GLenumGroup::FogPointerTypeEXT, type), stride,
@@ -121,7 +122,8 @@ void GL_APIENTRY FogCoordPointer(GLenum type, GLsizei stride, const void *pointe
 void GL_APIENTRY FogCoordd(GLdouble coord)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, "glFogCoordd", "context = %d, GLdouble coord = %f", CID(context), coord);
+    EVENT(context, gl::EntryPoint::FogCoordd, "glFogCoordd", "context = %d, GLdouble coord = %f",
+          CID(context), coord);
 
     if (context)
     {
@@ -138,8 +140,9 @@ void GL_APIENTRY FogCoordd(GLdouble coord)
 void GL_APIENTRY FogCoorddv(const GLdouble *coord)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, "glFogCoorddv", "context = %d, const GLdouble *coord = 0x%016" PRIxPTR "",
-          CID(context), (uintptr_t)coord);
+    EVENT(context, gl::EntryPoint::FogCoorddv, "glFogCoorddv",
+          "context = %d, const GLdouble *coord = 0x%016" PRIxPTR "", CID(context),
+          (uintptr_t)coord);
 
     if (context)
     {
@@ -156,7 +159,8 @@ void GL_APIENTRY FogCoorddv(const GLdouble *coord)
 void GL_APIENTRY FogCoordf(GLfloat coord)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, "glFogCoordf", "context = %d, GLfloat coord = %f", CID(context), coord);
+    EVENT(context, gl::EntryPoint::FogCoordf, "glFogCoordf", "context = %d, GLfloat coord = %f",
+          CID(context), coord);
 
     if (context)
     {
@@ -173,8 +177,8 @@ void GL_APIENTRY FogCoordf(GLfloat coord)
 void GL_APIENTRY FogCoordfv(const GLfloat *coord)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, "glFogCoordfv", "context = %d, const GLfloat *coord = 0x%016" PRIxPTR "",
-          CID(context), (uintptr_t)coord);
+    EVENT(context, gl::EntryPoint::FogCoordfv, "glFogCoordfv",
+          "context = %d, const GLfloat *coord = 0x%016" PRIxPTR "", CID(context), (uintptr_t)coord);
 
     if (context)
     {
@@ -194,7 +198,7 @@ void GL_APIENTRY MultiDrawArrays(GLenum mode,
                                  GLsizei drawcount)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, "glMultiDrawArrays",
+    EVENT(context, gl::EntryPoint::MultiDrawArrays, "glMultiDrawArrays",
           "context = %d, GLenum mode = %s, const GLint *first = 0x%016" PRIxPTR
           ", const GLsizei *count = 0x%016" PRIxPTR ", GLsizei drawcount = %d",
           CID(context), GLenumToString(GLenumGroup::PrimitiveType, mode), (uintptr_t)first,
@@ -221,7 +225,7 @@ void GL_APIENTRY MultiDrawElements(GLenum mode,
                                    GLsizei drawcount)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, "glMultiDrawElements",
+    EVENT(context, gl::EntryPoint::MultiDrawElements, "glMultiDrawElements",
           "context = %d, GLenum mode = %s, const GLsizei *count = 0x%016" PRIxPTR
           ", GLenum type = %s, const void *const*indices = 0x%016" PRIxPTR
           ", GLsizei drawcount = %d",
@@ -248,8 +252,9 @@ void GL_APIENTRY MultiDrawElements(GLenum mode,
 void GL_APIENTRY PointParameterf(GLenum pname, GLfloat param)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, "glPointParameterf", "context = %d, GLenum pname = %s, GLfloat param = %f",
-          CID(context), GLenumToString(GLenumGroup::DefaultGroup, pname), param);
+    EVENT(context, gl::EntryPoint::PointParameterf, "glPointParameterf",
+          "context = %d, GLenum pname = %s, GLfloat param = %f", CID(context),
+          GLenumToString(GLenumGroup::DefaultGroup, pname), param);
 
     if (context)
     {
@@ -268,7 +273,7 @@ void GL_APIENTRY PointParameterf(GLenum pname, GLfloat param)
 void GL_APIENTRY PointParameterfv(GLenum pname, const GLfloat *params)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, "glPointParameterfv",
+    EVENT(context, gl::EntryPoint::PointParameterfv, "glPointParameterfv",
           "context = %d, GLenum pname = %s, const GLfloat *params = 0x%016" PRIxPTR "",
           CID(context), GLenumToString(GLenumGroup::DefaultGroup, pname), (uintptr_t)params);
 
@@ -289,8 +294,9 @@ void GL_APIENTRY PointParameterfv(GLenum pname, const GLfloat *params)
 void GL_APIENTRY PointParameteri(GLenum pname, GLint param)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, "glPointParameteri", "context = %d, GLenum pname = %s, GLint param = %d",
-          CID(context), GLenumToString(GLenumGroup::DefaultGroup, pname), param);
+    EVENT(context, gl::EntryPoint::PointParameteri, "glPointParameteri",
+          "context = %d, GLenum pname = %s, GLint param = %d", CID(context),
+          GLenumToString(GLenumGroup::DefaultGroup, pname), param);
 
     if (context)
     {
@@ -308,7 +314,7 @@ void GL_APIENTRY PointParameteri(GLenum pname, GLint param)
 void GL_APIENTRY PointParameteriv(GLenum pname, const GLint *params)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, "glPointParameteriv",
+    EVENT(context, gl::EntryPoint::PointParameteriv, "glPointParameteriv",
           "context = %d, GLenum pname = %s, const GLint *params = 0x%016" PRIxPTR "", CID(context),
           GLenumToString(GLenumGroup::DefaultGroup, pname), (uintptr_t)params);
 
@@ -328,7 +334,7 @@ void GL_APIENTRY PointParameteriv(GLenum pname, const GLint *params)
 void GL_APIENTRY SecondaryColor3b(GLbyte red, GLbyte green, GLbyte blue)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, "glSecondaryColor3b",
+    EVENT(context, gl::EntryPoint::SecondaryColor3b, "glSecondaryColor3b",
           "context = %d, GLbyte red = %d, GLbyte green = %d, GLbyte blue = %d", CID(context), red,
           green, blue);
 
@@ -348,8 +354,8 @@ void GL_APIENTRY SecondaryColor3b(GLbyte red, GLbyte green, GLbyte blue)
 void GL_APIENTRY SecondaryColor3bv(const GLbyte *v)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, "glSecondaryColor3bv", "context = %d, const GLbyte *v = 0x%016" PRIxPTR "",
-          CID(context), (uintptr_t)v);
+    EVENT(context, gl::EntryPoint::SecondaryColor3bv, "glSecondaryColor3bv",
+          "context = %d, const GLbyte *v = 0x%016" PRIxPTR "", CID(context), (uintptr_t)v);
 
     if (context)
     {
@@ -366,7 +372,7 @@ void GL_APIENTRY SecondaryColor3bv(const GLbyte *v)
 void GL_APIENTRY SecondaryColor3d(GLdouble red, GLdouble green, GLdouble blue)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, "glSecondaryColor3d",
+    EVENT(context, gl::EntryPoint::SecondaryColor3d, "glSecondaryColor3d",
           "context = %d, GLdouble red = %f, GLdouble green = %f, GLdouble blue = %f", CID(context),
           red, green, blue);
 
@@ -386,8 +392,8 @@ void GL_APIENTRY SecondaryColor3d(GLdouble red, GLdouble green, GLdouble blue)
 void GL_APIENTRY SecondaryColor3dv(const GLdouble *v)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, "glSecondaryColor3dv", "context = %d, const GLdouble *v = 0x%016" PRIxPTR "",
-          CID(context), (uintptr_t)v);
+    EVENT(context, gl::EntryPoint::SecondaryColor3dv, "glSecondaryColor3dv",
+          "context = %d, const GLdouble *v = 0x%016" PRIxPTR "", CID(context), (uintptr_t)v);
 
     if (context)
     {
@@ -404,7 +410,7 @@ void GL_APIENTRY SecondaryColor3dv(const GLdouble *v)
 void GL_APIENTRY SecondaryColor3f(GLfloat red, GLfloat green, GLfloat blue)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, "glSecondaryColor3f",
+    EVENT(context, gl::EntryPoint::SecondaryColor3f, "glSecondaryColor3f",
           "context = %d, GLfloat red = %f, GLfloat green = %f, GLfloat blue = %f", CID(context),
           red, green, blue);
 
@@ -424,8 +430,8 @@ void GL_APIENTRY SecondaryColor3f(GLfloat red, GLfloat green, GLfloat blue)
 void GL_APIENTRY SecondaryColor3fv(const GLfloat *v)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, "glSecondaryColor3fv", "context = %d, const GLfloat *v = 0x%016" PRIxPTR "",
-          CID(context), (uintptr_t)v);
+    EVENT(context, gl::EntryPoint::SecondaryColor3fv, "glSecondaryColor3fv",
+          "context = %d, const GLfloat *v = 0x%016" PRIxPTR "", CID(context), (uintptr_t)v);
 
     if (context)
     {
@@ -442,7 +448,7 @@ void GL_APIENTRY SecondaryColor3fv(const GLfloat *v)
 void GL_APIENTRY SecondaryColor3i(GLint red, GLint green, GLint blue)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, "glSecondaryColor3i",
+    EVENT(context, gl::EntryPoint::SecondaryColor3i, "glSecondaryColor3i",
           "context = %d, GLint red = %d, GLint green = %d, GLint blue = %d", CID(context), red,
           green, blue);
 
@@ -462,8 +468,8 @@ void GL_APIENTRY SecondaryColor3i(GLint red, GLint green, GLint blue)
 void GL_APIENTRY SecondaryColor3iv(const GLint *v)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, "glSecondaryColor3iv", "context = %d, const GLint *v = 0x%016" PRIxPTR "",
-          CID(context), (uintptr_t)v);
+    EVENT(context, gl::EntryPoint::SecondaryColor3iv, "glSecondaryColor3iv",
+          "context = %d, const GLint *v = 0x%016" PRIxPTR "", CID(context), (uintptr_t)v);
 
     if (context)
     {
@@ -480,7 +486,7 @@ void GL_APIENTRY SecondaryColor3iv(const GLint *v)
 void GL_APIENTRY SecondaryColor3s(GLshort red, GLshort green, GLshort blue)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, "glSecondaryColor3s",
+    EVENT(context, gl::EntryPoint::SecondaryColor3s, "glSecondaryColor3s",
           "context = %d, GLshort red = %d, GLshort green = %d, GLshort blue = %d", CID(context),
           red, green, blue);
 
@@ -500,8 +506,8 @@ void GL_APIENTRY SecondaryColor3s(GLshort red, GLshort green, GLshort blue)
 void GL_APIENTRY SecondaryColor3sv(const GLshort *v)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, "glSecondaryColor3sv", "context = %d, const GLshort *v = 0x%016" PRIxPTR "",
-          CID(context), (uintptr_t)v);
+    EVENT(context, gl::EntryPoint::SecondaryColor3sv, "glSecondaryColor3sv",
+          "context = %d, const GLshort *v = 0x%016" PRIxPTR "", CID(context), (uintptr_t)v);
 
     if (context)
     {
@@ -518,7 +524,7 @@ void GL_APIENTRY SecondaryColor3sv(const GLshort *v)
 void GL_APIENTRY SecondaryColor3ub(GLubyte red, GLubyte green, GLubyte blue)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, "glSecondaryColor3ub",
+    EVENT(context, gl::EntryPoint::SecondaryColor3ub, "glSecondaryColor3ub",
           "context = %d, GLubyte red = %d, GLubyte green = %d, GLubyte blue = %d", CID(context),
           red, green, blue);
 
@@ -538,8 +544,8 @@ void GL_APIENTRY SecondaryColor3ub(GLubyte red, GLubyte green, GLubyte blue)
 void GL_APIENTRY SecondaryColor3ubv(const GLubyte *v)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, "glSecondaryColor3ubv", "context = %d, const GLubyte *v = 0x%016" PRIxPTR "",
-          CID(context), (uintptr_t)v);
+    EVENT(context, gl::EntryPoint::SecondaryColor3ubv, "glSecondaryColor3ubv",
+          "context = %d, const GLubyte *v = 0x%016" PRIxPTR "", CID(context), (uintptr_t)v);
 
     if (context)
     {
@@ -556,7 +562,7 @@ void GL_APIENTRY SecondaryColor3ubv(const GLubyte *v)
 void GL_APIENTRY SecondaryColor3ui(GLuint red, GLuint green, GLuint blue)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, "glSecondaryColor3ui",
+    EVENT(context, gl::EntryPoint::SecondaryColor3ui, "glSecondaryColor3ui",
           "context = %d, GLuint red = %u, GLuint green = %u, GLuint blue = %u", CID(context), red,
           green, blue);
 
@@ -576,8 +582,8 @@ void GL_APIENTRY SecondaryColor3ui(GLuint red, GLuint green, GLuint blue)
 void GL_APIENTRY SecondaryColor3uiv(const GLuint *v)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, "glSecondaryColor3uiv", "context = %d, const GLuint *v = 0x%016" PRIxPTR "",
-          CID(context), (uintptr_t)v);
+    EVENT(context, gl::EntryPoint::SecondaryColor3uiv, "glSecondaryColor3uiv",
+          "context = %d, const GLuint *v = 0x%016" PRIxPTR "", CID(context), (uintptr_t)v);
 
     if (context)
     {
@@ -594,7 +600,7 @@ void GL_APIENTRY SecondaryColor3uiv(const GLuint *v)
 void GL_APIENTRY SecondaryColor3us(GLushort red, GLushort green, GLushort blue)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, "glSecondaryColor3us",
+    EVENT(context, gl::EntryPoint::SecondaryColor3us, "glSecondaryColor3us",
           "context = %d, GLushort red = %u, GLushort green = %u, GLushort blue = %u", CID(context),
           red, green, blue);
 
@@ -614,8 +620,8 @@ void GL_APIENTRY SecondaryColor3us(GLushort red, GLushort green, GLushort blue)
 void GL_APIENTRY SecondaryColor3usv(const GLushort *v)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, "glSecondaryColor3usv", "context = %d, const GLushort *v = 0x%016" PRIxPTR "",
-          CID(context), (uintptr_t)v);
+    EVENT(context, gl::EntryPoint::SecondaryColor3usv, "glSecondaryColor3usv",
+          "context = %d, const GLushort *v = 0x%016" PRIxPTR "", CID(context), (uintptr_t)v);
 
     if (context)
     {
@@ -632,7 +638,7 @@ void GL_APIENTRY SecondaryColor3usv(const GLushort *v)
 void GL_APIENTRY SecondaryColorPointer(GLint size, GLenum type, GLsizei stride, const void *pointer)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, "glSecondaryColorPointer",
+    EVENT(context, gl::EntryPoint::SecondaryColorPointer, "glSecondaryColorPointer",
           "context = %d, GLint size = %d, GLenum type = %s, GLsizei stride = %d, const void "
           "*pointer = 0x%016" PRIxPTR "",
           CID(context), size, GLenumToString(GLenumGroup::ColorPointerType, type), stride,
@@ -654,8 +660,8 @@ void GL_APIENTRY SecondaryColorPointer(GLint size, GLenum type, GLsizei stride, 
 void GL_APIENTRY WindowPos2d(GLdouble x, GLdouble y)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, "glWindowPos2d", "context = %d, GLdouble x = %f, GLdouble y = %f", CID(context),
-          x, y);
+    EVENT(context, gl::EntryPoint::WindowPos2d, "glWindowPos2d",
+          "context = %d, GLdouble x = %f, GLdouble y = %f", CID(context), x, y);
 
     if (context)
     {
@@ -672,8 +678,8 @@ void GL_APIENTRY WindowPos2d(GLdouble x, GLdouble y)
 void GL_APIENTRY WindowPos2dv(const GLdouble *v)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, "glWindowPos2dv", "context = %d, const GLdouble *v = 0x%016" PRIxPTR "",
-          CID(context), (uintptr_t)v);
+    EVENT(context, gl::EntryPoint::WindowPos2dv, "glWindowPos2dv",
+          "context = %d, const GLdouble *v = 0x%016" PRIxPTR "", CID(context), (uintptr_t)v);
 
     if (context)
     {
@@ -690,8 +696,8 @@ void GL_APIENTRY WindowPos2dv(const GLdouble *v)
 void GL_APIENTRY WindowPos2f(GLfloat x, GLfloat y)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, "glWindowPos2f", "context = %d, GLfloat x = %f, GLfloat y = %f", CID(context), x,
-          y);
+    EVENT(context, gl::EntryPoint::WindowPos2f, "glWindowPos2f",
+          "context = %d, GLfloat x = %f, GLfloat y = %f", CID(context), x, y);
 
     if (context)
     {
@@ -708,8 +714,8 @@ void GL_APIENTRY WindowPos2f(GLfloat x, GLfloat y)
 void GL_APIENTRY WindowPos2fv(const GLfloat *v)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, "glWindowPos2fv", "context = %d, const GLfloat *v = 0x%016" PRIxPTR "",
-          CID(context), (uintptr_t)v);
+    EVENT(context, gl::EntryPoint::WindowPos2fv, "glWindowPos2fv",
+          "context = %d, const GLfloat *v = 0x%016" PRIxPTR "", CID(context), (uintptr_t)v);
 
     if (context)
     {
@@ -726,7 +732,8 @@ void GL_APIENTRY WindowPos2fv(const GLfloat *v)
 void GL_APIENTRY WindowPos2i(GLint x, GLint y)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, "glWindowPos2i", "context = %d, GLint x = %d, GLint y = %d", CID(context), x, y);
+    EVENT(context, gl::EntryPoint::WindowPos2i, "glWindowPos2i",
+          "context = %d, GLint x = %d, GLint y = %d", CID(context), x, y);
 
     if (context)
     {
@@ -743,8 +750,8 @@ void GL_APIENTRY WindowPos2i(GLint x, GLint y)
 void GL_APIENTRY WindowPos2iv(const GLint *v)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, "glWindowPos2iv", "context = %d, const GLint *v = 0x%016" PRIxPTR "",
-          CID(context), (uintptr_t)v);
+    EVENT(context, gl::EntryPoint::WindowPos2iv, "glWindowPos2iv",
+          "context = %d, const GLint *v = 0x%016" PRIxPTR "", CID(context), (uintptr_t)v);
 
     if (context)
     {
@@ -761,8 +768,8 @@ void GL_APIENTRY WindowPos2iv(const GLint *v)
 void GL_APIENTRY WindowPos2s(GLshort x, GLshort y)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, "glWindowPos2s", "context = %d, GLshort x = %d, GLshort y = %d", CID(context), x,
-          y);
+    EVENT(context, gl::EntryPoint::WindowPos2s, "glWindowPos2s",
+          "context = %d, GLshort x = %d, GLshort y = %d", CID(context), x, y);
 
     if (context)
     {
@@ -779,8 +786,8 @@ void GL_APIENTRY WindowPos2s(GLshort x, GLshort y)
 void GL_APIENTRY WindowPos2sv(const GLshort *v)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, "glWindowPos2sv", "context = %d, const GLshort *v = 0x%016" PRIxPTR "",
-          CID(context), (uintptr_t)v);
+    EVENT(context, gl::EntryPoint::WindowPos2sv, "glWindowPos2sv",
+          "context = %d, const GLshort *v = 0x%016" PRIxPTR "", CID(context), (uintptr_t)v);
 
     if (context)
     {
@@ -797,7 +804,7 @@ void GL_APIENTRY WindowPos2sv(const GLshort *v)
 void GL_APIENTRY WindowPos3d(GLdouble x, GLdouble y, GLdouble z)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, "glWindowPos3d",
+    EVENT(context, gl::EntryPoint::WindowPos3d, "glWindowPos3d",
           "context = %d, GLdouble x = %f, GLdouble y = %f, GLdouble z = %f", CID(context), x, y, z);
 
     if (context)
@@ -815,8 +822,8 @@ void GL_APIENTRY WindowPos3d(GLdouble x, GLdouble y, GLdouble z)
 void GL_APIENTRY WindowPos3dv(const GLdouble *v)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, "glWindowPos3dv", "context = %d, const GLdouble *v = 0x%016" PRIxPTR "",
-          CID(context), (uintptr_t)v);
+    EVENT(context, gl::EntryPoint::WindowPos3dv, "glWindowPos3dv",
+          "context = %d, const GLdouble *v = 0x%016" PRIxPTR "", CID(context), (uintptr_t)v);
 
     if (context)
     {
@@ -833,8 +840,8 @@ void GL_APIENTRY WindowPos3dv(const GLdouble *v)
 void GL_APIENTRY WindowPos3f(GLfloat x, GLfloat y, GLfloat z)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, "glWindowPos3f", "context = %d, GLfloat x = %f, GLfloat y = %f, GLfloat z = %f",
-          CID(context), x, y, z);
+    EVENT(context, gl::EntryPoint::WindowPos3f, "glWindowPos3f",
+          "context = %d, GLfloat x = %f, GLfloat y = %f, GLfloat z = %f", CID(context), x, y, z);
 
     if (context)
     {
@@ -851,8 +858,8 @@ void GL_APIENTRY WindowPos3f(GLfloat x, GLfloat y, GLfloat z)
 void GL_APIENTRY WindowPos3fv(const GLfloat *v)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, "glWindowPos3fv", "context = %d, const GLfloat *v = 0x%016" PRIxPTR "",
-          CID(context), (uintptr_t)v);
+    EVENT(context, gl::EntryPoint::WindowPos3fv, "glWindowPos3fv",
+          "context = %d, const GLfloat *v = 0x%016" PRIxPTR "", CID(context), (uintptr_t)v);
 
     if (context)
     {
@@ -869,8 +876,8 @@ void GL_APIENTRY WindowPos3fv(const GLfloat *v)
 void GL_APIENTRY WindowPos3i(GLint x, GLint y, GLint z)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, "glWindowPos3i", "context = %d, GLint x = %d, GLint y = %d, GLint z = %d",
-          CID(context), x, y, z);
+    EVENT(context, gl::EntryPoint::WindowPos3i, "glWindowPos3i",
+          "context = %d, GLint x = %d, GLint y = %d, GLint z = %d", CID(context), x, y, z);
 
     if (context)
     {
@@ -887,8 +894,8 @@ void GL_APIENTRY WindowPos3i(GLint x, GLint y, GLint z)
 void GL_APIENTRY WindowPos3iv(const GLint *v)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, "glWindowPos3iv", "context = %d, const GLint *v = 0x%016" PRIxPTR "",
-          CID(context), (uintptr_t)v);
+    EVENT(context, gl::EntryPoint::WindowPos3iv, "glWindowPos3iv",
+          "context = %d, const GLint *v = 0x%016" PRIxPTR "", CID(context), (uintptr_t)v);
 
     if (context)
     {
@@ -905,8 +912,8 @@ void GL_APIENTRY WindowPos3iv(const GLint *v)
 void GL_APIENTRY WindowPos3s(GLshort x, GLshort y, GLshort z)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, "glWindowPos3s", "context = %d, GLshort x = %d, GLshort y = %d, GLshort z = %d",
-          CID(context), x, y, z);
+    EVENT(context, gl::EntryPoint::WindowPos3s, "glWindowPos3s",
+          "context = %d, GLshort x = %d, GLshort y = %d, GLshort z = %d", CID(context), x, y, z);
 
     if (context)
     {
@@ -923,8 +930,8 @@ void GL_APIENTRY WindowPos3s(GLshort x, GLshort y, GLshort z)
 void GL_APIENTRY WindowPos3sv(const GLshort *v)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, "glWindowPos3sv", "context = %d, const GLshort *v = 0x%016" PRIxPTR "",
-          CID(context), (uintptr_t)v);
+    EVENT(context, gl::EntryPoint::WindowPos3sv, "glWindowPos3sv",
+          "context = %d, const GLshort *v = 0x%016" PRIxPTR "", CID(context), (uintptr_t)v);
 
     if (context)
     {

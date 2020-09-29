@@ -34,7 +34,7 @@ void GL_APIENTRY MultiDrawArraysIndirectCount(GLenum mode,
                                               GLsizei stride)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, "glMultiDrawArraysIndirectCount",
+    EVENT(context, gl::EntryPoint::MultiDrawArraysIndirectCount, "glMultiDrawArraysIndirectCount",
           "context = %d, GLenum mode = %s, const void *indirect = 0x%016" PRIxPTR
           ", GLintptr drawcount = %llu, GLsizei maxdrawcount = %d, GLsizei stride = %d",
           CID(context), GLenumToString(GLenumGroup::PrimitiveType, mode), (uintptr_t)indirect,
@@ -63,7 +63,8 @@ void GL_APIENTRY MultiDrawElementsIndirectCount(GLenum mode,
                                                 GLsizei stride)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, "glMultiDrawElementsIndirectCount",
+    EVENT(context, gl::EntryPoint::MultiDrawElementsIndirectCount,
+          "glMultiDrawElementsIndirectCount",
           "context = %d, GLenum mode = %s, GLenum type = %s, const void *indirect = 0x%016" PRIxPTR
           ", GLintptr drawcount = %llu, GLsizei maxdrawcount = %d, GLsizei stride = %d",
           CID(context), GLenumToString(GLenumGroup::PrimitiveType, mode),
@@ -89,7 +90,7 @@ void GL_APIENTRY MultiDrawElementsIndirectCount(GLenum mode,
 void GL_APIENTRY PolygonOffsetClamp(GLfloat factor, GLfloat units, GLfloat clamp)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, "glPolygonOffsetClamp",
+    EVENT(context, gl::EntryPoint::PolygonOffsetClamp, "glPolygonOffsetClamp",
           "context = %d, GLfloat factor = %f, GLfloat units = %f, GLfloat clamp = %f", CID(context),
           factor, units, clamp);
 
@@ -113,7 +114,7 @@ void GL_APIENTRY SpecializeShader(GLuint shader,
                                   const GLuint *pConstantValue)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, "glSpecializeShader",
+    EVENT(context, gl::EntryPoint::SpecializeShader, "glSpecializeShader",
           "context = %d, GLuint shader = %u, const GLchar *pEntryPoint = 0x%016" PRIxPTR
           ", GLuint numSpecializationConstants = %u, const GLuint *pConstantIndex = 0x%016" PRIxPTR
           ", const GLuint *pConstantValue = 0x%016" PRIxPTR "",

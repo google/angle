@@ -157,7 +157,7 @@ template_entry_point_decl = """ANGLE_EXPORT {return_type}GL_APIENTRY {name}{expl
 template_entry_point_no_return = """void GL_APIENTRY {name}{explicit_context_suffix}({explicit_context_param}{explicit_context_comma}{params})
 {{
     Context *context = {context_getter};
-    {event_comment}EVENT(context, "gl{name}", "context = %d{comma_if_needed}{format_params}", CID(context){comma_if_needed}{pass_params});
+    {event_comment}EVENT(context, gl::EntryPoint::{name}, "gl{name}", "context = %d{comma_if_needed}{format_params}", CID(context){comma_if_needed}{pass_params});
 
     if (context)
     {{{assert_explicit_context}{packed_gl_enum_conversions}
@@ -175,7 +175,7 @@ template_entry_point_no_return = """void GL_APIENTRY {name}{explicit_context_suf
 template_entry_point_with_return = """{return_type}GL_APIENTRY {name}{explicit_context_suffix}({explicit_context_param}{explicit_context_comma}{params})
 {{
     Context *context = {context_getter};
-    {event_comment}EVENT(context, "gl{name}", "context = %d{comma_if_needed}{format_params}", CID(context){comma_if_needed}{pass_params});
+    {event_comment}EVENT(context, gl::EntryPoint::{name}, "gl{name}", "context = %d{comma_if_needed}{format_params}", CID(context){comma_if_needed}{pass_params});
 
     {return_type} returnValue;
     if (context)
@@ -469,6 +469,7 @@ template_sources_includes = """#include "libGLESv2/entry_points_{header_version}
 #include "libANGLE/gl_enum_utils.h"
 #include "libANGLE/validation{validation_header_version}.h"
 #include "libANGLE/entry_points_utils.h"
+#include "libANGLE/entry_points_enum_autogen.h"
 #include "libGLESv2/global_state.h"
 """
 

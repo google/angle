@@ -56,7 +56,7 @@ extern "C" {
 EGLint EGLAPIENTRY EGL_GetError(void)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
-    EVENT(nullptr, __FUNCTION__, "");
+    EVENT(nullptr, gl::EntryPoint::Begin, __FUNCTION__, "");
     Thread *thread = egl::GetCurrentThread();
 
     EGLint error = thread->getError();
@@ -491,7 +491,7 @@ EGLSurface EGLAPIENTRY EGL_GetCurrentSurface(EGLint readdraw)
 EGLDisplay EGLAPIENTRY EGL_GetCurrentDisplay(void)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
-    EVENT(nullptr, __FUNCTION__, "");
+    EVENT(nullptr, gl::EntryPoint::Begin, __FUNCTION__, "");
     Thread *thread = egl::GetCurrentThread();
 
     thread->setSuccess();
@@ -530,7 +530,7 @@ EGLBoolean EGLAPIENTRY EGL_QueryContext(EGLDisplay dpy,
 EGLBoolean EGLAPIENTRY EGL_WaitGL(void)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
-    EVENT(nullptr, __FUNCTION__, "");
+    EVENT(nullptr, gl::EntryPoint::Begin, __FUNCTION__, "");
     Thread *thread = egl::GetCurrentThread();
 
     egl::Display *display = thread->getDisplay();
@@ -730,7 +730,7 @@ EGLBoolean EGLAPIENTRY EGL_BindAPI(EGLenum api)
 EGLenum EGLAPIENTRY EGL_QueryAPI(void)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
-    EVENT(nullptr, __FUNCTION__, "");
+    EVENT(nullptr, gl::EntryPoint::Begin, __FUNCTION__, "");
     Thread *thread = egl::GetCurrentThread();
 
     EGLenum API = thread->getAPI();
@@ -776,7 +776,7 @@ EGLSurface EGLAPIENTRY EGL_CreatePbufferFromClientBuffer(EGLDisplay dpy,
 EGLBoolean EGLAPIENTRY EGL_ReleaseThread(void)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
-    EVENT(nullptr, __FUNCTION__, "");
+    EVENT(nullptr, gl::EntryPoint::Begin, __FUNCTION__, "");
     Thread *thread = egl::GetCurrentThread();
 
     Surface *previousDraw         = thread->getCurrentDrawSurface();
@@ -805,7 +805,7 @@ EGLBoolean EGLAPIENTRY EGL_ReleaseThread(void)
 EGLBoolean EGLAPIENTRY EGL_WaitClient(void)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
-    EVENT(nullptr, __FUNCTION__, "");
+    EVENT(nullptr, gl::EntryPoint::Begin, __FUNCTION__, "");
     Thread *thread = egl::GetCurrentThread();
 
     egl::Display *display = thread->getDisplay();
@@ -825,7 +825,7 @@ EGLBoolean EGLAPIENTRY EGL_WaitClient(void)
 EGLContext EGLAPIENTRY EGL_GetCurrentContext(void)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
-    EVENT(nullptr, __FUNCTION__, "");
+    EVENT(nullptr, gl::EntryPoint::Begin, __FUNCTION__, "");
     Thread *thread = egl::GetCurrentThread();
 
     gl::Context *context = thread->getContext();

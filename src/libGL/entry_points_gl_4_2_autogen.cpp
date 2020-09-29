@@ -36,7 +36,7 @@ void GL_APIENTRY BindImageTexture(GLuint unit,
                                   GLenum format)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, "glBindImageTexture",
+    EVENT(context, gl::EntryPoint::BindImageTexture, "glBindImageTexture",
           "context = %d, GLuint unit = %u, GLuint texture = %u, GLint level = %d, GLboolean "
           "layered = %s, GLint layer = %d, GLenum access = %s, GLenum format = %s",
           CID(context), unit, texture, level, GLbooleanToString(layered), layer,
@@ -66,7 +66,8 @@ void GL_APIENTRY DrawArraysInstancedBaseInstance(GLenum mode,
                                                  GLuint baseinstance)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, "glDrawArraysInstancedBaseInstance",
+    EVENT(context, gl::EntryPoint::DrawArraysInstancedBaseInstance,
+          "glDrawArraysInstancedBaseInstance",
           "context = %d, GLenum mode = %s, GLint first = %d, GLsizei count = %d, GLsizei "
           "instancecount = %d, GLuint baseinstance = %u",
           CID(context), GLenumToString(GLenumGroup::PrimitiveType, mode), first, count,
@@ -97,7 +98,8 @@ void GL_APIENTRY DrawElementsInstancedBaseInstance(GLenum mode,
                                                    GLuint baseinstance)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, "glDrawElementsInstancedBaseInstance",
+    EVENT(context, gl::EntryPoint::DrawElementsInstancedBaseInstance,
+          "glDrawElementsInstancedBaseInstance",
           "context = %d, GLenum mode = %s, GLsizei count = %d, GLenum type = %s, const void "
           "*indices = 0x%016" PRIxPTR ", GLsizei instancecount = %d, GLuint baseinstance = %u",
           CID(context), GLenumToString(GLenumGroup::PrimitiveType, mode), count,
@@ -129,7 +131,8 @@ void GL_APIENTRY DrawElementsInstancedBaseVertexBaseInstance(GLenum mode,
                                                              GLuint baseinstance)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, "glDrawElementsInstancedBaseVertexBaseInstance",
+    EVENT(context, gl::EntryPoint::DrawElementsInstancedBaseVertexBaseInstance,
+          "glDrawElementsInstancedBaseVertexBaseInstance",
           "context = %d, GLenum mode = %s, GLsizei count = %d, GLenum type = %s, const void "
           "*indices = 0x%016" PRIxPTR
           ", GLsizei instancecount = %d, GLint basevertex = %d, GLuint baseinstance = %u",
@@ -159,7 +162,8 @@ void GL_APIENTRY DrawElementsInstancedBaseVertexBaseInstance(GLenum mode,
 void GL_APIENTRY DrawTransformFeedbackInstanced(GLenum mode, GLuint id, GLsizei instancecount)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, "glDrawTransformFeedbackInstanced",
+    EVENT(context, gl::EntryPoint::DrawTransformFeedbackInstanced,
+          "glDrawTransformFeedbackInstanced",
           "context = %d, GLenum mode = %s, GLuint id = %u, GLsizei instancecount = %d",
           CID(context), GLenumToString(GLenumGroup::PrimitiveType, mode), id, instancecount);
 
@@ -185,7 +189,8 @@ void GL_APIENTRY DrawTransformFeedbackStreamInstanced(GLenum mode,
                                                       GLsizei instancecount)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, "glDrawTransformFeedbackStreamInstanced",
+    EVENT(context, gl::EntryPoint::DrawTransformFeedbackStreamInstanced,
+          "glDrawTransformFeedbackStreamInstanced",
           "context = %d, GLenum mode = %s, GLuint id = %u, GLuint stream = %u, GLsizei "
           "instancecount = %d",
           CID(context), GLenumToString(GLenumGroup::PrimitiveType, mode), id, stream,
@@ -213,7 +218,8 @@ void GL_APIENTRY GetActiveAtomicCounterBufferiv(GLuint program,
                                                 GLint *params)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, "glGetActiveAtomicCounterBufferiv",
+    EVENT(context, gl::EntryPoint::GetActiveAtomicCounterBufferiv,
+          "glGetActiveAtomicCounterBufferiv",
           "context = %d, GLuint program = %u, GLuint bufferIndex = %u, GLenum pname = %s, GLint "
           "*params = 0x%016" PRIxPTR "",
           CID(context), program, bufferIndex,
@@ -242,7 +248,7 @@ void GL_APIENTRY GetInternalformativ(GLenum target,
                                      GLint *params)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, "glGetInternalformativ",
+    EVENT(context, gl::EntryPoint::GetInternalformativ, "glGetInternalformativ",
           "context = %d, GLenum target = %s, GLenum internalformat = %s, GLenum pname = %s, "
           "GLsizei bufSize = %d, GLint *params = 0x%016" PRIxPTR "",
           CID(context), GLenumToString(GLenumGroup::TextureTarget, target),
@@ -267,7 +273,8 @@ void GL_APIENTRY GetInternalformativ(GLenum target,
 void GL_APIENTRY MemoryBarrier(GLbitfield barriers)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, "glMemoryBarrier", "context = %d, GLbitfield barriers = %s", CID(context),
+    EVENT(context, gl::EntryPoint::MemoryBarrier, "glMemoryBarrier",
+          "context = %d, GLbitfield barriers = %s", CID(context),
           GLbitfieldToString(GLenumGroup::MemoryBarrierMask, barriers).c_str());
 
     if (context)
@@ -285,7 +292,7 @@ void GL_APIENTRY MemoryBarrier(GLbitfield barriers)
 void GL_APIENTRY TexStorage1D(GLenum target, GLsizei levels, GLenum internalformat, GLsizei width)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, "glTexStorage1D",
+    EVENT(context, gl::EntryPoint::TexStorage1D, "glTexStorage1D",
           "context = %d, GLenum target = %s, GLsizei levels = %d, GLenum internalformat = %s, "
           "GLsizei width = %d",
           CID(context), GLenumToString(GLenumGroup::TextureTarget, target), levels,
@@ -308,7 +315,7 @@ void GL_APIENTRY
 TexStorage2D(GLenum target, GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, "glTexStorage2D",
+    EVENT(context, gl::EntryPoint::TexStorage2D, "glTexStorage2D",
           "context = %d, GLenum target = %s, GLsizei levels = %d, GLenum internalformat = %s, "
           "GLsizei width = %d, GLsizei height = %d",
           CID(context), GLenumToString(GLenumGroup::TextureTarget, target), levels,
@@ -338,7 +345,7 @@ void GL_APIENTRY TexStorage3D(GLenum target,
                               GLsizei depth)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, "glTexStorage3D",
+    EVENT(context, gl::EntryPoint::TexStorage3D, "glTexStorage3D",
           "context = %d, GLenum target = %s, GLsizei levels = %d, GLenum internalformat = %s, "
           "GLsizei width = %d, GLsizei height = %d, GLsizei depth = %d",
           CID(context), GLenumToString(GLenumGroup::TextureTarget, target), levels,
