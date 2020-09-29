@@ -1425,8 +1425,7 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
     VkPipelineRasterizationStateCreateInfo rasterState        = {};
     VkPipelineMultisampleStateCreateInfo multisampleState     = {};
     VkPipelineDepthStencilStateCreateInfo depthStencilState   = {};
-    std::array<VkPipelineColorBlendAttachmentState, gl::IMPLEMENTATION_MAX_DRAW_BUFFERS>
-        blendAttachmentState;
+    gl::DrawBuffersArray<VkPipelineColorBlendAttachmentState> blendAttachmentState;
     VkPipelineColorBlendStateCreateInfo blendState = {};
     VkSpecializationInfo specializationInfo        = {};
     VkGraphicsPipelineCreateInfo createInfo        = {};

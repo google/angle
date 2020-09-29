@@ -739,10 +739,10 @@ void ClearValuesArray::store(uint32_t index,
     if ((aspectFlags & VK_IMAGE_ASPECT_STENCIL_BIT) != 0)
     {
         // Ensure for packed DS we're writing to the depth index.
-        ASSERT(index == kClearValueDepthIndex ||
-               (index == kClearValueStencilIndex && aspectFlags == VK_IMAGE_ASPECT_STENCIL_BIT));
+        ASSERT(index == kUnpackedDepthIndex ||
+               (index == kUnpackedStencilIndex && aspectFlags == VK_IMAGE_ASPECT_STENCIL_BIT));
 
-        storeNoDepthStencil(kClearValueStencilIndex, clearValue);
+        storeNoDepthStencil(kUnpackedStencilIndex, clearValue);
     }
 
     if (aspectFlags != VK_IMAGE_ASPECT_STENCIL_BIT)

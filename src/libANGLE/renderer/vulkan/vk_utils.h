@@ -679,8 +679,8 @@ using SpecializationConstantMap = angle::PackedEnumMap<sh::vk::SpecializationCon
 
 void MakeDebugUtilsLabel(GLenum source, const char *marker, VkDebugUtilsLabelEXT *label);
 
-constexpr size_t kClearValueDepthIndex   = gl::IMPLEMENTATION_MAX_DRAW_BUFFERS;
-constexpr size_t kClearValueStencilIndex = gl::IMPLEMENTATION_MAX_DRAW_BUFFERS + 1;
+constexpr size_t kUnpackedDepthIndex   = gl::IMPLEMENTATION_MAX_DRAW_BUFFERS;
+constexpr size_t kUnpackedStencilIndex = gl::IMPLEMENTATION_MAX_DRAW_BUFFERS + 1;
 
 class ClearValuesArray final
 {
@@ -701,16 +701,13 @@ class ClearValuesArray final
     }
 
     bool test(size_t index) const { return mEnabled.test(index); }
-    bool testDepth() const { return mEnabled.test(kClearValueDepthIndex); }
-    bool testStencil() const { return mEnabled.test(kClearValueStencilIndex); }
+    bool testDepth() const { return mEnabled.test(kUnpackedDepthIndex); }
+    bool testStencil() const { return mEnabled.test(kUnpackedStencilIndex); }
 
     const VkClearValue &operator[](size_t index) const { return mValues[index]; }
 
-    float getDepthValue() const { return mValues[kClearValueDepthIndex].depthStencil.depth; }
-    uint32_t getStencilValue() const
-    {
-        return mValues[kClearValueStencilIndex].depthStencil.stencil;
-    }
+    float getDepthValue() const { return mValues[kUnpackedDepthIndex].depthStencil.depth; }
+    uint32_t getStencilValue() const { return mValues[kUnpackedStencilIndex].depthStencil.stencil; }
 
     const VkClearValue *data() const { return mValues.data(); }
     bool empty() const { return mEnabled.none(); }
