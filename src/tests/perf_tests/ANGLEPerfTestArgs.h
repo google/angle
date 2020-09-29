@@ -20,6 +20,9 @@ extern bool gEnableTrace;
 extern const char *gTraceFile;
 extern const char *gScreenShotDir;
 extern bool gVerboseLogging;
+extern int gWarmupLoops;
+extern double gTestTimeSeconds;
+extern int gTestTrials;
 
 inline bool OneFrame()
 {

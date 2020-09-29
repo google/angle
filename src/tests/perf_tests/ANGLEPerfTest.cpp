@@ -36,11 +36,10 @@ using namespace angle;
 namespace
 {
 constexpr size_t kInitialTraceEventBufferSize = 50000;
+constexpr double kMilliSecondsPerSecond       = 1e3;
 constexpr double kMicroSecondsPerSecond       = 1e6;
 constexpr double kNanoSecondsPerSecond        = 1e9;
-constexpr double kCalibrationRunTimeSeconds   = 1.0;
 constexpr double kMaximumRunTimeSeconds       = 10.0;
-constexpr uint32_t kNumTrials                 = 3;
 
 struct TraceCategory
 {
@@ -174,7 +173,8 @@ TraceEvent::TraceEvent(char phaseIn,
 ANGLEPerfTest::ANGLEPerfTest(const std::string &name,
                              const std::string &backend,
                              const std::string &story,
-                             unsigned int iterationsPerStep)
+                             unsigned int iterationsPerStep,
+                             const char *units)
     : mName(name),
       mBackend(backend),
       mStory(story),
@@ -195,8 +195,8 @@ ANGLEPerfTest::ANGLEPerfTest(const std::string &name,
         mStory = mStory.substr(1);
     }
     mReporter = std::make_unique<perf_test::PerfResultReporter>(mName + mBackend, mStory);
-    mReporter->RegisterImportantMetric(".wall_time", "ns");
-    mReporter->RegisterImportantMetric(".gpu_time", "ns");
+    mReporter->RegisterImportantMetric(".wall_time", units);
+    mReporter->RegisterImportantMetric(".gpu_time", units);
     mReporter->RegisterFyiMetric(".steps", "count");
 }
 
@@ -209,34 +209,46 @@ void ANGLEPerfTest::run()
         return;
     }
 
-    // Calibrate to a fixed number of steps during an initial set time.
-    if (mStepsToRun <= 0)
-    {
-        calibrateStepsToRun();
-    }
-
-    // Check again for early exit.
-    if (mSkipTest)
-    {
-        return;
-    }
-
-    // Do another warmup run. Seems to consistently improve results.
-    if (gStepsToRunOverride != 1)
-    {
-        doRunLoop(kMaximumRunTimeSeconds);
-    }
-
-    uint32_t numTrials = gStepsToRunOverride == 1 ? 1 : kNumTrials;
+    uint32_t numTrials = OneFrame() ? 1 : gTestTrials;
 
     for (uint32_t trial = 0; trial < numTrials; ++trial)
     {
-        doRunLoop(kMaximumRunTimeSeconds);
+        doRunLoop(kMaximumRunTimeSeconds, mStepsToRun);
         printResults();
         if (gVerboseLogging)
         {
-            printf("Trial %d time: %.2lf seconds.\n", trial + 1, mTimer.getElapsedTime());
+            double trialTime = mTimer.getElapsedTime();
+            printf("Trial %d time: %.2lf seconds.\n", trial + 1, trialTime);
+
+            double secondsPerStep      = trialTime / static_cast<double>(mNumStepsPerformed);
+            double secondsPerIteration = secondsPerStep / static_cast<double>(mIterationsPerStep);
+            mTestTrialResults.push_back(secondsPerIteration * 1000.0);
         }
+    }
+
+    if (gVerboseLogging)
+    {
+        double numResults = static_cast<double>(mTestTrialResults.size());
+        double mean       = 0;
+        for (double trialResult : mTestTrialResults)
+        {
+            mean += trialResult;
+        }
+        mean /= numResults;
+
+        double variance = 0;
+        for (double trialResult : mTestTrialResults)
+        {
+            double difference = trialResult - mean;
+            variance += difference * difference;
+        }
+        variance /= numResults;
+
+        double standardDeviation      = std::sqrt(variance);
+        double coefficientOfVariation = standardDeviation / mean;
+
+        printf("Mean result time: %.4lf ms.\n", mean);
+        printf("Coefficient of variation: %.2lf%%\n", coefficientOfVariation * 100.0);
     }
 }
 
@@ -246,7 +258,7 @@ void ANGLEPerfTest::setStepsPerRunLoopStep(int stepsPerRunLoop)
     mStepsPerRunLoopStep = stepsPerRunLoop;
 }
 
-void ANGLEPerfTest::doRunLoop(double maxRunTime)
+void ANGLEPerfTest::doRunLoop(double maxRunTime, int maxStepsToRun)
 {
     mNumStepsPerformed = 0;
     mRunning           = true;
@@ -264,7 +276,7 @@ void ANGLEPerfTest::doRunLoop(double maxRunTime)
             {
                 mRunning = false;
             }
-            else if (mNumStepsPerformed >= mStepsToRun)
+            else if (mNumStepsPerformed >= maxStepsToRun)
             {
                 mRunning = false;
             }
@@ -306,6 +318,7 @@ double ANGLEPerfTest::printResults()
         // already registered.
         if (!mReporter->GetMetricInfo(clockNames[i], &metricInfo))
         {
+            printf("Seconds per iteration: %lf\n", secondsPerIteration);
             units = secondsPerIteration > 1e-3 ? "us" : "ns";
             mReporter->RegisterImportantMetric(clockNames[i], units);
         }
@@ -314,7 +327,11 @@ double ANGLEPerfTest::printResults()
             units = metricInfo.units;
         }
 
-        if (units == "us")
+        if (units == "ms")
+        {
+            retValue = secondsPerIteration * kMilliSecondsPerSecond;
+        }
+        else if (units == "us")
         {
             retValue = secondsPerIteration * kMicroSecondsPerSecond;
         }
@@ -334,24 +351,12 @@ double ANGLEPerfTest::normalizedTime(size_t value) const
 
 void ANGLEPerfTest::calibrateStepsToRun()
 {
-    // First do two warmup loops. There's no science to this. Two loops was experimentally helpful
-    // on a Windows NVIDIA setup when testing with Vulkan and native trace tests.
-    for (int i = 0; i < 2; ++i)
-    {
-        doRunLoop(kCalibrationRunTimeSeconds);
-        if (gVerboseLogging)
-        {
-            printf("Pre-calibration warm-up took %.2lf seconds.\n", mTimer.getElapsedTime());
-        }
-    }
-
-    // Now the real computation.
-    doRunLoop(kCalibrationRunTimeSeconds);
+    doRunLoop(gTestTimeSeconds, std::numeric_limits<int>::max());
 
     double elapsedTime = mTimer.getElapsedTime();
 
     // Scale steps down according to the time that exeeded one second.
-    double scale = kCalibrationRunTimeSeconds / elapsedTime;
+    double scale = gTestTimeSeconds / elapsedTime;
     mStepsToRun  = static_cast<unsigned int>(static_cast<double>(mNumStepsPerformed) * scale);
 
     if (gVerboseLogging)
@@ -430,11 +435,14 @@ std::string RenderTestParams::backendAndStory() const
     return backend() + story();
 }
 
-ANGLERenderTest::ANGLERenderTest(const std::string &name, const RenderTestParams &testParams)
+ANGLERenderTest::ANGLERenderTest(const std::string &name,
+                                 const RenderTestParams &testParams,
+                                 const char *units)
     : ANGLEPerfTest(name,
                     testParams.backend(),
                     testParams.story(),
-                    OneFrame() ? 1 : testParams.iterationsPerStep),
+                    OneFrame() ? 1 : testParams.iterationsPerStep,
+                    units),
       mTestParams(testParams),
       mIsTimestampQueryAvailable(false),
       mGLWindow(nullptr),
@@ -588,6 +596,8 @@ void ANGLERenderTest::SetUp()
         // FAIL returns.
     }
 
+    mTestTrialResults.reserve(gTestTrials);
+
     // Capture a screenshot if enabled.
     if (gScreenShotDir != nullptr)
     {
@@ -596,6 +606,15 @@ void ANGLERenderTest::SetUp()
                           << mStory << ".png";
         std::string screenshotName = screenshotNameStr.str();
         saveScreenshot(screenshotName);
+    }
+
+    for (int loopIndex = 0; loopIndex < gWarmupLoops; ++loopIndex)
+    {
+        doRunLoop(gTestTimeSeconds, std::numeric_limits<int>::max());
+        if (gVerboseLogging)
+        {
+            printf("Warm-up loop took %.2lf seconds.\n", mTimer.getElapsedTime());
+        }
     }
 
     if (mStepsToRun <= 0)

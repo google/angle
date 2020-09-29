@@ -120,7 +120,7 @@ angle::GenericProc KHRONOS_APIENTRY TraceLoadProc(const char *procName)
 }
 
 TracePerfTest::TracePerfTest()
-    : ANGLERenderTest("TracePerf", GetParam()), mStartFrame(0), mEndFrame(0)
+    : ANGLERenderTest("TracePerf", GetParam(), "ms"), mStartFrame(0), mEndFrame(0)
 {
     const TracePerfParams &param = GetParam();
 

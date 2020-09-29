@@ -18,6 +18,29 @@ You can choose individual tests to run with `--gtest_filter=*TestName*`. To sele
 
 ANGLE implements a no-op driver for OpenGL, D3D11 and Vulkan. To run on these configurations use the `gl_null`, `d3d11_null` or `vulkan_null` test configurations. These null drivers will not do any GPU work. They will skip the driver entirely. These null configs are useful for diagnosing performance overhead in ANGLE code.
 
+### Command-line Arguments
+
+Several command-line arguments control how the tests run:
+
+* `--one-frame-only`: Runs tests once and quickly exits. Used as a quick smoke test.
+* `--enable-trace`: Write a JSON event log that can be loaded in Chrome.
+* `--trace-file file`: Name of the JSON event log for `--enable-trace`.
+* `--calibration`: Prints the number of steps a test runs in a fixed time. Used by `perf_test_runner.py`.
+* `--steps x`: Fixed number of steps to run for each test.
+* `--screenshot-dir dir`: Directory to store test screenshots. Only implemented in `TracePerfTest`.
+* `--render-test-output-dir=dir`: Equivalent to `--screenshot-dir dir`.
+* `--verbose-logging`: Print extra timing information.
+* `--warmup-loops x`: Number of times to warm up the test before starting timing. Defaults to 3.
+* `--no-warmup`: Skip warming up the tests. Equivalent to `--warmup-steps 0`.
+* `--test-time`: Run each test trial in a fixed time. Defaults to 1 second.
+* `--trials`: Number of times to repeat testing. Defaults to 3.
+
+For example, for an endless run with no warmup, run:
+
+`angle_perftests --gtest_filter=TracePerfTest.Run/vulkan_trex_200 --steps 1000000 --no-warmup`
+
+The command line arguments implementations are located in [`ANGLEPerfTestArgs.cpp`](ANGLEPerfTestArgs.cpp).
+
 ## Test Breakdown
 
 * [`DrawCallPerfBenchmark`](DrawCallPerf.cpp): Runs a tight loop around DrawArarys calls.
