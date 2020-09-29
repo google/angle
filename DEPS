@@ -28,7 +28,7 @@ vars = {
   'checkout_angle_internal': False,
 
   # Version of Chromium our Chromium-based DEPS are mirrored from.
-  'chromium_revision': '30cee4f4533f2f82bb26cbdf5380c92663c656d0',
+  'chromium_revision': '3049a95d28fb096edb16dab8cc5154a29587ef79',
   # We never want to checkout chromium,
   # but need a dummy DEPS entry for the autoroller
   'dummy_checkout_chromium': False,
@@ -108,7 +108,7 @@ vars = {
 deps = {
 
   'build': {
-    'url': '{chromium_git}/chromium/src/build.git@8f04da0238502b78c3af09a176b56be60c9366ea',
+    'url': '{chromium_git}/chromium/src/build.git@00ed20cfb85216692b502bb2a549028e2ee27a30',
     'condition': 'not build_with_chromium',
   },
 
@@ -118,7 +118,7 @@ deps = {
   },
 
   'testing': {
-    'url': '{chromium_git}/chromium/src/testing@505458c1400980f682b0314f04cd5e54a694c4f6',
+    'url': '{chromium_git}/chromium/src/testing@31ad7f13e169c295cf24870f6cc89928dddb2ad0',
     'condition': 'not build_with_chromium',
   },
 
@@ -332,7 +332,7 @@ deps = {
       'packages': [
         {
           'package': 'skia/tools/goldctl/linux-amd64',
-          'version': 'afwCiHe5Fh5p0UN2CvmhSo6uWXlU0d289Yml61Egvg0C',
+          'version': 'dMvix4BkhDJmKBK1tudaxlOMub1Dif3ZPcqzSY72-ZAC',
         },
       ],
       'dep_type': 'cipd',
@@ -343,7 +343,7 @@ deps = {
       'packages': [
         {
           'package': 'skia/tools/goldctl/windows-amd64',
-          'version': '4faik34WiW106WOvsK6NNM4Q1Bz0vY5c29bxlSAWOWMC',
+          'version': 'cLgS219WFD65Hr6NfoCQYA5KEE2FfO3FBl30KYhpTFoC',
         },
       ],
       'dep_type': 'cipd',
@@ -354,7 +354,7 @@ deps = {
       'packages': [
         {
           'package': 'skia/tools/goldctl/mac-amd64',
-          'version': '_s8IulBrrqUxGhXDY3zbvzauPXhMHKLl63qibypfwXcC',
+          'version': 'xJncEfNMb0HaDG9EglMx2YNbKAxqk6qJbckhfn0BXb8C',
         },
       ],
       'dep_type': 'cipd',
