@@ -415,6 +415,11 @@ TracePerfParams CombineTestID(const TracePerfParams &in, RestrictedTraceID id)
     return out;
 }
 
+bool NoAndroidMockICD(const TracePerfParams &in)
+{
+    return in.eglParameters.deviceType != EGL_PLATFORM_ANGLE_DEVICE_TYPE_NULL_ANGLE || !IsAndroid();
+}
+
 using namespace params;
 using P = TracePerfParams;
 
@@ -422,6 +427,7 @@ std::vector<P> gTestsWithID =
     CombineWithValues({P()}, AllEnums<RestrictedTraceID>(), CombineTestID);
 std::vector<P> gTestsWithRenderer =
     CombineWithFuncs(gTestsWithID, {Vulkan<P>, VulkanMockICD<P>, Native<P>});
-ANGLE_INSTANTIATE_TEST_ARRAY(TracePerfTest, gTestsWithRenderer);
+std::vector<P> gTestsWithoutMockICD = FilterWithFunc(gTestsWithRenderer, NoAndroidMockICD);
+ANGLE_INSTANTIATE_TEST_ARRAY(TracePerfTest, gTestsWithoutMockICD);
 
 }  // anonymous namespace

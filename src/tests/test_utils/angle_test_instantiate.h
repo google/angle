@@ -307,6 +307,20 @@ std::vector<ParamT> CombineWithValues(const std::vector<ParamT> &in,
 {
     return CombineWithValues(in, std::begin(modifiers), std::end(modifiers), combine);
 }
+
+template <typename ParamT, typename FilterFunc>
+std::vector<ParamT> FilterWithFunc(const std::vector<ParamT> &in, FilterFunc filter)
+{
+    std::vector<ParamT> out;
+    for (const ParamT &param : in)
+    {
+        if (filter(param))
+        {
+            out.push_back(param);
+        }
+    }
+    return out;
+}
 }  // namespace angle
 
 #define ANGLE_SKIP_TEST_IF(COND)                                  \
