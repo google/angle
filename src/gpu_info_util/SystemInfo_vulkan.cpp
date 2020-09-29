@@ -91,8 +91,8 @@ class VulkanLibrary final : NonCopyable
         createInstanceInfo.ppEnabledExtensionNames = nullptr;
 
         auto pfnCreateInstance = getProc<PFN_vkCreateInstance>("vkCreateInstance");
-        ASSERT(pfnCreateInstance);
-        if (pfnCreateInstance(&createInstanceInfo, nullptr, &mInstance) != VK_SUCCESS)
+        if (!pfnCreateInstance ||
+            pfnCreateInstance(&createInstanceInfo, nullptr, &mInstance) != VK_SUCCESS)
         {
             return VK_NULL_HANDLE;
         }

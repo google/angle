@@ -72,13 +72,7 @@ std::string GetHelperExecutableDir()
 class PosixLibrary : public Library
 {
   public:
-    PosixLibrary(const std::string &fullPath) : mModule(dlopen(fullPath.c_str(), RTLD_NOW))
-    {
-        if (!mModule)
-        {
-            std::cerr << "Failed to load " << fullPath << ": " << dlerror() << std::endl;
-        }
-    }
+    PosixLibrary(const std::string &fullPath) : mModule(dlopen(fullPath.c_str(), RTLD_NOW)) {}
 
     ~PosixLibrary() override
     {

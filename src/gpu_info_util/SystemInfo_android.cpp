@@ -15,10 +15,6 @@
 #include "common/angleutils.h"
 #include "common/debug.h"
 
-#if defined(ANGLE_ENABLE_VULKAN)
-#    include "gpu_info_util/SystemInfo_vulkan.h"
-#endif  // defined(ANGLE_ENABLE_VULKAN)
-
 namespace angle
 {
 namespace
@@ -47,13 +43,7 @@ bool GetSystemInfo(SystemInfo *info)
     isFullyPopulated =
         GetAndroidSystemProperty("ro.product.model", &info->machineModelName) && isFullyPopulated;
 
-#if defined(ANGLE_ENABLE_VULKAN)
-    isFullyPopulated = GetSystemInfoVulkan(info) && isFullyPopulated;
-#else
-    isFullyPopulated = false;
-#endif  // defined(ANGLE_ENABLE_VULKAN)
-
-    return isFullyPopulated;
+    return GetSystemInfoVulkan(info) && isFullyPopulated;
 }
 
 }  // namespace angle
