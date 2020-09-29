@@ -16,6 +16,23 @@
       "revId": "9987afbbbcd9bddc50c14718cf4ea173038484ba",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "797178df_548168f5",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 957,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-09-29T03:12:29Z",
+      "side": 1,
+      "message": "It might be good to make this explicitly for debugging. Otherwise it may look suspicious if \"open\" doesn\u0027t do anything. Like `markOpenForAssertion` or `markOpenForDebugging`. A better name though if you can find one.\n\nA comment would also be good.",
+      "revId": "9987afbbbcd9bddc50c14718cf4ea173038484ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
