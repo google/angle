@@ -647,6 +647,9 @@ struct Extensions
 
     // GL_EXT_buffer_storage
     bool bufferStorageEXT = false;
+
+    // GL_OES_texture_stencil8
+    bool stencilIndex8 = false;
 };
 
 // Pointer to a boolean memeber of the Extensions struct
@@ -892,6 +895,9 @@ struct Caps
 
     // Support for NPOT surfaces
     bool textureNPOT;
+
+    // Support for Stencil8 configs
+    bool stencil8;
 };
 
 struct DisplayExtensions
