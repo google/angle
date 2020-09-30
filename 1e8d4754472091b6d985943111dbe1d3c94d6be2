@@ -50,6 +50,24 @@
       "revId": "1e8d4754472091b6d985943111dbe1d3c94d6be2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f213f86d_db2ca2cc",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-09-30T23:15:00Z",
+      "side": 1,
+      "message": "My understanding is that we don\u0027t have AHB/YUV support in CQ, otherwise that testing would have been added along with the YUV support.\n\nI\u0027m happy to work with someone on implementing a test if that\u0027s no longer the case though.",
+      "parentUuid": "42f7199d_cd20425f",
+      "revId": "1e8d4754472091b6d985943111dbe1d3c94d6be2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
