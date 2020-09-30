@@ -58,6 +58,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('executable', help='Test executable.')
     parser.add_argument('--isolated-script-test-output', type=str, required=True)
+    # TODO(jmadill): Remove when removed from the recipes. http://anglebug.com/3162
     parser.add_argument('--isolated-script-test-perf-output', type=str, required=False)
     parser.add_argument('--isolated-script-test-filter', type=str, required=False)
     parser.add_argument('--xvfb', help='Start xvfb.', action='store_true')
@@ -84,10 +85,6 @@ def main():
         if args.isolated_script_test_output:
             extra_flags.append('--isolated-script-test-output=%s' %
                                args.isolated_script_test_output)
-
-        if args.isolated_script_test_perf_output:
-            extra_flags.append('--isolated-script-test-perf-output=%s' %
-                               args.isolated_script_test_perf_output)
 
         if args.isolated_script_test_filter:
             filter_list = common.extract_filter_list(args.isolated_script_test_filter)
