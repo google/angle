@@ -28,7 +28,7 @@ vars = {
   'checkout_angle_internal': False,
 
   # Version of Chromium our Chromium-based DEPS are mirrored from.
-  'chromium_revision': '3049a95d28fb096edb16dab8cc5154a29587ef79',
+  'chromium_revision': '18cdc3179c58fe51f0c54f5038d74246eb39c3b5',
   # We never want to checkout chromium,
   # but need a dummy DEPS entry for the autoroller
   'dummy_checkout_chromium': False,
@@ -108,17 +108,17 @@ vars = {
 deps = {
 
   'build': {
-    'url': '{chromium_git}/chromium/src/build.git@00ed20cfb85216692b502bb2a549028e2ee27a30',
+    'url': '{chromium_git}/chromium/src/build.git@3ede10128b2ae14d2ffa8f0ee4bac0561400dc94',
     'condition': 'not build_with_chromium',
   },
 
   'buildtools': {
-    'url': '{chromium_git}/chromium/src/buildtools.git@3ff4f5027b4b81a6c9c36d64d71444f2709a4896',
+    'url': '{chromium_git}/chromium/src/buildtools.git@4be464e050b3d05060471788f926b34c641db9fd',
     'condition': 'not build_with_chromium',
   },
 
   'testing': {
-    'url': '{chromium_git}/chromium/src/testing@31ad7f13e169c295cf24870f6cc89928dddb2ad0',
+    'url': '{chromium_git}/chromium/src/testing@fe12eb7d0ade031e56fbe333d5a6e8fd01e71c32',
     'condition': 'not build_with_chromium',
   },
 
@@ -274,12 +274,12 @@ deps = {
   },
 
   'third_party/zlib': {
-    'url': '{chromium_git}/chromium/src/third_party/zlib@4668feaaa47973a6f9d9f9caeb14cd03731854f1',
+    'url': '{chromium_git}/chromium/src/third_party/zlib@26211a5a8e7e28286fc28a84a0e102cc96bf0f0b',
     'condition': 'not build_with_chromium',
   },
 
   'tools/clang': {
-    'url': '{chromium_git}/chromium/src/tools/clang.git@3017edade60658a699be776d9e282509a902ffe9',
+    'url': '{chromium_git}/chromium/src/tools/clang.git@bd8e096f1d69fbcb43ee8cf6b77dccbcc19ff9d6',
     'condition': 'not build_with_chromium',
   },
 
@@ -314,7 +314,7 @@ deps = {
   },
 
   'tools/mb': {
-    'url': '{chromium_git}/chromium/src/tools/mb@dec9a2365dfcd7a10b8b4e013cac760dc9583493',
+    'url': '{chromium_git}/chromium/src/tools/mb@6c5b056475fadbe6c9f76c425a3605c4d98f8439',
     'condition': 'not build_with_chromium',
   },
 
