@@ -1925,7 +1925,9 @@ void RendererVk::initFeatures(DisplayVk *displayVk, const ExtensionNameList &dev
 
     ANGLE_FEATURE_CONDITION(&mFeatures, preferredLargeHeapBlockSize4MB, !isQualcomm);
 
-    ANGLE_FEATURE_CONDITION(&mFeatures, deferFlushUntilEndRenderPass, true);
+    // Defer glFLush call causes manhattan 3.0 perf regression. Let Qualcomm driver opt out from
+    // this optimization.
+    ANGLE_FEATURE_CONDITION(&mFeatures, deferFlushUntilEndRenderPass, !isQualcomm);
 
     // Android mistakenly destroys the old swapchain when creating a new one.
     ANGLE_FEATURE_CONDITION(&mFeatures, waitIdleBeforeSwapchainRecreation, IsAndroid() && isARM);
