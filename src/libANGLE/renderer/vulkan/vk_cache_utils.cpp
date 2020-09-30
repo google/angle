@@ -2228,6 +2228,16 @@ void GraphicsPipelineDesc::nextSubpass(GraphicsPipelineTransitionBits *transitio
     updateSubpass(transition, mRasterizationAndMultisampleStateInfo.bits.subpass + 1);
 }
 
+void GraphicsPipelineDesc::setSubpass(uint32_t subpass)
+{
+    SetBitField(mRasterizationAndMultisampleStateInfo.bits.subpass, subpass);
+}
+
+uint32_t GraphicsPipelineDesc::getSubpass() const
+{
+    return mRasterizationAndMultisampleStateInfo.bits.subpass;
+}
+
 void GraphicsPipelineDesc::updateRenderPassDesc(GraphicsPipelineTransitionBits *transition,
                                                 const RenderPassDesc &renderPassDesc)
 {

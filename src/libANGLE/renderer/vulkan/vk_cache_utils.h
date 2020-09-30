@@ -670,6 +670,8 @@ class GraphicsPipelineDesc final
     // Subpass
     void resetSubpass(GraphicsPipelineTransitionBits *transition);
     void nextSubpass(GraphicsPipelineTransitionBits *transition);
+    void setSubpass(uint32_t subpass);
+    uint32_t getSubpass() const;
 
   private:
     void updateSubpass(GraphicsPipelineTransitionBits *transition, uint32_t subpass);

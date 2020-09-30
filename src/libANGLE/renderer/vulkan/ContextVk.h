@@ -593,6 +593,8 @@ class ContextVk : public ContextImpl, public vk::Context
     // TODO(https://anglebug.com/4968): Support multiple open render passes.
     void restoreFinishedRenderPass(vk::Framebuffer *framebuffer);
 
+    uint32_t getCurrentSubpassIndex() const;
+
     egl::ContextPriority getContextPriority() const override { return mContextPriority; }
     angle::Result startRenderPass(gl::Rectangle renderArea, vk::CommandBuffer **commandBufferOut);
     void startNextSubpass();

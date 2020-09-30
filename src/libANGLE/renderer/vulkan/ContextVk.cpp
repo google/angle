@@ -4687,6 +4687,11 @@ void ContextVk::restoreFinishedRenderPass(vk::Framebuffer *framebuffer)
     }
 }
 
+uint32_t ContextVk::getCurrentSubpassIndex() const
+{
+    return mGraphicsPipelineDesc->getSubpass();
+}
+
 angle::Result ContextVk::flushCommandsAndEndRenderPass()
 {
     // Ensure we flush the RenderPass *after* the prior commands.

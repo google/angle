@@ -1429,6 +1429,9 @@ angle::Result UtilsVk::clearFramebuffer(ContextVk *contextVk,
     // Note: depth test is disabled by default so this should be unnecessary, but works around an
     // Intel bug on windows.  http://anglebug.com/3348
     pipelineDesc.setDepthWriteEnabled(false);
+    // Clears can be done on a currently open render pass, so make sure the correct subpass index is
+    // used.
+    pipelineDesc.setSubpass(contextVk->getCurrentSubpassIndex());
 
     // Clear stencil by enabling stencil write with the right mask.
     if (params.clearStencil)
