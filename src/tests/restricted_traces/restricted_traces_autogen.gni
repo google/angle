@@ -10,13 +10,12 @@
 
 angle_restricted_traces = [
   "angry_birds_2_1500 2",
-  "candy_crush_500 2",
+  "candy_crush_500 1",
   "cod_mobile 4",
   "egypt_1500 6",
   "manhattan_10 6",
   "mobile_legends 3",
   "nba2k20_800 1",
-  "subway_surfer_500 4",
-  "temple_run_300 3",
+  "temple_run_300 1",
   "trex_200 6",
 ]

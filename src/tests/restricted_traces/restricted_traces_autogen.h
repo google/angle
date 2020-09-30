@@ -47,7 +47,6 @@ enum class RestrictedTraceID
     manhattan_10,
     mobile_legends,
     nba2k20_800,
-    subway_surfer_500,
     temple_run_300,
     trex_200,
     InvalidEnum,

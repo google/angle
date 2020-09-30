@@ -12,14 +12,13 @@
 #include "common/PackedEnums.h"
 
 #include "angry_birds_2_1500/angry_birds_2_1500_capture_context2.h"
-#include "candy_crush_500/candy_crush_500_capture_context2.h"
+#include "candy_crush_500/candy_crush_500_capture_context1.h"
 #include "cod_mobile/cod_mobile_capture_context4.h"
 #include "egypt_1500/egypt_1500_capture_context6.h"
 #include "manhattan_10/manhattan_10_capture_context6.h"
 #include "mobile_legends/mobile_legends_capture_context3.h"
 #include "nba2k20_800/nba2k20_800_capture_context1.h"
-#include "subway_surfer_500/subway_surfer_500_capture_context4.h"
-#include "temple_run_300/temple_run_300_capture_context3.h"
+#include "temple_run_300/temple_run_300_capture_context1.h"
 #include "trex_200/trex_200_capture_context6.h"
 
 namespace angle
@@ -52,10 +51,6 @@ constexpr angle::PackedEnumMap<RestrictedTraceID, TraceInfo> kTraceInfos = {
     {RestrictedTraceID::nba2k20_800,
      {nba2k20_800::kReplayFrameStart, nba2k20_800::kReplayFrameEnd,
       nba2k20_800::kReplayDrawSurfaceWidth, nba2k20_800::kReplayDrawSurfaceHeight, "nba2k20_800"}},
-    {RestrictedTraceID::subway_surfer_500,
-     {subway_surfer_500::kReplayFrameStart, subway_surfer_500::kReplayFrameEnd,
-      subway_surfer_500::kReplayDrawSurfaceWidth, subway_surfer_500::kReplayDrawSurfaceHeight,
-      "subway_surfer_500"}},
     {RestrictedTraceID::temple_run_300,
      {temple_run_300::kReplayFrameStart, temple_run_300::kReplayFrameEnd,
       temple_run_300::kReplayDrawSurfaceWidth, temple_run_300::kReplayDrawSurfaceHeight,
@@ -78,7 +73,7 @@ void ReplayFrame(RestrictedTraceID traceID, uint32_t frameIndex)
             angry_birds_2_1500::ReplayContext2Frame(frameIndex);
             break;
         case RestrictedTraceID::candy_crush_500:
-            candy_crush_500::ReplayContext2Frame(frameIndex);
+            candy_crush_500::ReplayContext1Frame(frameIndex);
             break;
         case RestrictedTraceID::cod_mobile:
             cod_mobile::ReplayContext4Frame(frameIndex);
@@ -95,11 +90,8 @@ void ReplayFrame(RestrictedTraceID traceID, uint32_t frameIndex)
         case RestrictedTraceID::nba2k20_800:
             nba2k20_800::ReplayContext1Frame(frameIndex);
             break;
-        case RestrictedTraceID::subway_surfer_500:
-            subway_surfer_500::ReplayContext4Frame(frameIndex);
-            break;
         case RestrictedTraceID::temple_run_300:
-            temple_run_300::ReplayContext3Frame(frameIndex);
+            temple_run_300::ReplayContext1Frame(frameIndex);
             break;
         case RestrictedTraceID::trex_200:
             trex_200::ReplayContext6Frame(frameIndex);
@@ -119,7 +111,7 @@ void ResetReplay(RestrictedTraceID traceID)
             angry_birds_2_1500::ResetContext2Replay();
             break;
         case RestrictedTraceID::candy_crush_500:
-            candy_crush_500::ResetContext2Replay();
+            candy_crush_500::ResetContext1Replay();
             break;
         case RestrictedTraceID::cod_mobile:
             cod_mobile::ResetContext4Replay();
@@ -136,11 +128,8 @@ void ResetReplay(RestrictedTraceID traceID)
         case RestrictedTraceID::nba2k20_800:
             nba2k20_800::ResetContext1Replay();
             break;
-        case RestrictedTraceID::subway_surfer_500:
-            subway_surfer_500::ResetContext4Replay();
-            break;
         case RestrictedTraceID::temple_run_300:
-            temple_run_300::ResetContext3Replay();
+            temple_run_300::ResetContext1Replay();
             break;
         case RestrictedTraceID::trex_200:
             trex_200::ResetContext6Replay();
@@ -160,7 +149,7 @@ void SetupReplay(RestrictedTraceID traceID)
             angry_birds_2_1500::SetupContext2Replay();
             break;
         case RestrictedTraceID::candy_crush_500:
-            candy_crush_500::SetupContext2Replay();
+            candy_crush_500::SetupContext1Replay();
             break;
         case RestrictedTraceID::cod_mobile:
             cod_mobile::SetupContext4Replay();
@@ -177,11 +166,8 @@ void SetupReplay(RestrictedTraceID traceID)
         case RestrictedTraceID::nba2k20_800:
             nba2k20_800::SetupContext1Replay();
             break;
-        case RestrictedTraceID::subway_surfer_500:
-            subway_surfer_500::SetupContext4Replay();
-            break;
         case RestrictedTraceID::temple_run_300:
-            temple_run_300::SetupContext3Replay();
+            temple_run_300::SetupContext1Replay();
             break;
         case RestrictedTraceID::trex_200:
             trex_200::SetupContext6Replay();
@@ -217,9 +203,6 @@ void SetBinaryDataDir(RestrictedTraceID traceID, const char *dataDir)
             break;
         case RestrictedTraceID::nba2k20_800:
             nba2k20_800::SetBinaryDataDir(dataDir);
-            break;
-        case RestrictedTraceID::subway_surfer_500:
-            subway_surfer_500::SetBinaryDataDir(dataDir);
             break;
         case RestrictedTraceID::temple_run_300:
             temple_run_300::SetBinaryDataDir(dataDir);
@@ -258,9 +241,6 @@ void SetBinaryDataDecompressCallback(RestrictedTraceID traceID, DecompressCallba
             break;
         case RestrictedTraceID::nba2k20_800:
             nba2k20_800::SetBinaryDataDecompressCallback(callback);
-            break;
-        case RestrictedTraceID::subway_surfer_500:
-            subway_surfer_500::SetBinaryDataDecompressCallback(callback);
             break;
         case RestrictedTraceID::temple_run_300:
             temple_run_300::SetBinaryDataDecompressCallback(callback);
