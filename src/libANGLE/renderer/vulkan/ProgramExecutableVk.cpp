@@ -743,14 +743,7 @@ angle::Result ProgramExecutableVk::createPipelineLayout(
     gl::ShaderMap<const gl::ProgramState *> programStates;
     fillProgramStateMap(contextVk, &programStates);
 
-    // If 'activeTextures' is null, this is creating a new pipeline layout, rather than re-creating
-    // one due to (for example) the addition of an immutable sampler. Creating a new pipeline layout
-    // requires a reset before proceeding to clean anything up from the last pipeline layout
-    // creation.
-    if (activeTextures == nullptr)
-    {
-        reset(contextVk);
-    }
+    reset(contextVk);
 
     // Store a reference to the pipeline and descriptor set layouts. This will create them if they
     // don't already exist in the cache.
