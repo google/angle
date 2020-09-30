@@ -664,10 +664,7 @@ void CaptureShaderSource_length(const State &glState,
     if (!length)
         return;
 
-    for (GLsizei index = 0; index < count; ++index)
-    {
-        CaptureMemory(&length[index], sizeof(GLint), paramCapture);
-    }
+    CaptureMemory(length, count * sizeof(GLint), paramCapture);
 }
 
 void CaptureTexImage2D_pixels(const State &glState,
