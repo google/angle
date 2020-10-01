@@ -1473,7 +1473,10 @@ TEST_P(MultisampledRenderToTextureES3Test, RenderbufferClearThenBlitDepthStencil
     //
     //  - SwifthShader
     //  - Android
-    ANGLE_SKIP_TEST_IF(IsVulkan() && (isSwiftshader() || IsAndroid() || IsAMD()));
+    //  - AMD
+    //  - Nvidia on Windows7
+    ANGLE_SKIP_TEST_IF(IsVulkan() &&
+                       (isSwiftshader() || IsAndroid() || IsAMD() || (IsWindows7() && IsNVIDIA())));
 
     constexpr GLsizei kSize = 64;
 
@@ -1585,7 +1588,8 @@ TEST_P(MultisampledRenderToTextureES3Test, RenderbufferDrawThenBlitDepthStencil)
 
     // Skip on configurations that don't support VK_KHR_depth_stencil_resolve.  See comment
     // in RenderbufferClearThenBlitDepthStencil.
-    ANGLE_SKIP_TEST_IF(IsVulkan() && (isSwiftshader() || IsAndroid() || IsAMD()));
+    ANGLE_SKIP_TEST_IF(IsVulkan() &&
+                       (isSwiftshader() || IsAndroid() || IsAMD() || (IsWindows7() && IsNVIDIA())));
 
     // http://anglebug.com/5096
     ANGLE_SKIP_TEST_IF(IsLinux() && IsIntel() && IsVulkan());
@@ -1698,7 +1702,8 @@ TEST_P(MultisampledRenderToTextureES3Test, RenderbufferDrawThenBlitDepthStencilO
 
     // Skip on configurations that don't support VK_KHR_depth_stencil_resolve.  See comment
     // in RenderbufferClearThenBlitDepthStencil.
-    ANGLE_SKIP_TEST_IF(IsVulkan() && (isSwiftshader() || IsAndroid() || IsAMD()));
+    ANGLE_SKIP_TEST_IF(IsVulkan() &&
+                       (isSwiftshader() || IsAndroid() || IsAMD() || (IsWindows7() && IsNVIDIA())));
 
     // http://anglebug.com/5096
     ANGLE_SKIP_TEST_IF(IsLinux() && IsIntel() && IsVulkan());

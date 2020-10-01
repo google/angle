@@ -1645,6 +1645,9 @@ TEST_P(VulkanPerformanceCounterTest, RenderToTextureDepthStencilRenderbufferShou
     // http://anglebug.com/5083
     ANGLE_SKIP_TEST_IF(IsWindows() && IsAMD() && IsVulkan());
 
+    // http://crbug.com/1134286
+    ANGLE_SKIP_TEST_IF(IsWindows7() && IsNVIDIA() && IsVulkan());
+
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_multisampled_render_to_texture"));
 
     const rx::vk::PerfCounters &counters = hackANGLE();
