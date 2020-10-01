@@ -553,6 +553,14 @@ class ContextVk : public ContextImpl, public vk::Context
                                         vk::AliasingMode::Allowed, image);
     }
 
+    void onImageHelperRelease(const vk::ImageHelper *image)
+    {
+        if (mRenderPassCommands->started())
+        {
+            mRenderPassCommands->onImageHelperRelease(image);
+        }
+    }
+
     vk::CommandBuffer &getOutsideRenderPassCommandBuffer()
     {
         return mOutsideRenderPassCommands->getCommandBuffer();

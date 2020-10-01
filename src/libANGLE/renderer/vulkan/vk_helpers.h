@@ -987,6 +987,8 @@ class CommandBufferHelper : angle::NonCopyable
         return mRenderPassStarted;
     }
 
+    void onImageHelperRelease(const vk::ImageHelper *image);
+
     void beginRenderPass(const Framebuffer &framebuffer,
                          const gl::Rectangle &renderArea,
                          const RenderPassDesc &renderPassDesc,
@@ -1319,8 +1321,11 @@ class ImageHelper final : public Resource, public angle::Subject
                                                           gl::TextureType textureType,
                                                           GLint samples,
                                                           const ImageHelper &resolveImage);
-
-    void releaseImage(RendererVk *rendererVk);
+    // Release the underlining VkImage object for garbage collection.
+    void releaseImage(RendererVk *renderer);
+    // Similar to releaseImage, but also notify all contexts in the same share group to stop
+    // accessing to it.
+    void releaseImageFromShareContexts(RendererVk *renderer, ContextVk *contextVk);
     void releaseStagingBuffer(RendererVk *renderer);
 
     bool valid() const { return mImage.valid(); }
