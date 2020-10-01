@@ -363,7 +363,7 @@ angle_static_library("angle_gpu_info_util") {
   libs = []
   defines = []
 
-  if (!is_chromeos) {
+  if (!is_chromeos && angle_has_build) {
     sources += libangle_gpu_info_util_vulkan_sources
     deps += [ "$angle_root/third_party/vulkan-headers/src:vulkan_headers" ]
   }
