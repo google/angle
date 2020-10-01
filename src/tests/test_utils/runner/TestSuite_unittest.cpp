@@ -48,11 +48,11 @@ TEST_F(TestSuiteTest, RunMockTests)
     executablePath += std::string("/") + kTestHelperExecutable + GetExecutableExtension();
 
     constexpr uint32_t kMaxTempDirLen = 100;
-    char tempFileName[kMaxTempDirLen * 2];
-    ASSERT_TRUE(GetTempDir(tempFileName, kMaxTempDirLen));
+    char tempDirName[kMaxTempDirLen * 2];
+    ASSERT_TRUE(GetTempDir(tempDirName, kMaxTempDirLen));
 
     std::stringstream tempFNameStream;
-    tempFNameStream << tempFileName << "/test_temp_" << rand() << ".json";
+    tempFNameStream << tempDirName << GetPathSeparator() << "test_temp_" << rand() << ".json";
     mTempFileName = tempFNameStream.str();
 
     std::string resultsFileName = "--results-file=" + mTempFileName;
@@ -62,7 +62,7 @@ TEST_F(TestSuiteTest, RunMockTests)
                                       "--gtest_filter=MockTestSuiteTest.DISABLED_*",
                                       "--gtest_also_run_disabled_tests",
                                       "--bot-mode",
-                                      "--test-timeout=10",
+                                      "--test-timeout=2",
                                       resultsFileName.c_str()};
 
     ProcessHandle process(args, true, true);
@@ -70,6 +70,9 @@ TEST_F(TestSuiteTest, RunMockTests)
     EXPECT_TRUE(process->finish());
     EXPECT_TRUE(process->finished());
     EXPECT_EQ(process->getStderr(), "");
+
+    // Uncomment this for debugging.
+    // printf("stdout:\n%s\n", process->getStdout().c_str());
 
     TestResults actual;
     ASSERT_TRUE(GetTestResultsFromFile(mTempFileName.c_str(), &actual));
@@ -101,7 +104,7 @@ TEST(MockTestSuiteTest, DISABLED_Fail)
 // Trigger a test timeout.
 TEST(MockTestSuiteTest, DISABLED_Timeout)
 {
-    angle::Sleep(30000);
+    angle::Sleep(5000);
 }
 
 // Trigger a test crash.

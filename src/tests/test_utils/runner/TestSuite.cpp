@@ -14,7 +14,9 @@
 #include "common/system_utils.h"
 #include "util/Timer.h"
 
+#include <stdlib.h>
 #include <time.h>
+
 #include <fstream>
 #include <unordered_map>
 
@@ -944,7 +946,7 @@ TestSuite::TestSuite(int *argc, char **argv)
         mResultsFile = resultFileName.str();
     }
 
-    if (!mResultsFile.empty() || !mHistogramJsonFile.empty())
+    if (!mBotMode)
     {
         testing::TestEventListeners &listeners = testing::UnitTest::GetInstance()->listeners();
         listeners.Append(new TestEventListener(mResultsFile, mHistogramJsonFile,
@@ -987,6 +989,7 @@ bool TestSuite::parseSingleArg(const char *argument)
 
 void TestSuite::onCrashOrTimeout(TestResultType crashOrTimeout)
 {
+    std::lock_guard<std::mutex> guard(mTestResults.currentTestMutex);
     if (mTestResults.currentTest.valid())
     {
         TestResult &result        = mTestResults.results[mTestResults.currentTest];
@@ -1191,12 +1194,7 @@ int TestSuite::run()
             mTestResults.allDone = true;
         }
 
-        for (int tries = 0; tries < 10; ++tries)
-        {
-            if (!mWatchdogThread.joinable())
-                break;
-            angle::Sleep(100);
-        }
+        mWatchdogThread.join();
         return retVal;
     }
 
@@ -1333,16 +1331,17 @@ void TestSuite::startWatchdog()
                 if (mTestResults.currentTestTimer.getElapsedTime() >
                     static_cast<double>(mTestTimeout))
                 {
-                    onCrashOrTimeout(TestResultType::Timeout);
-                    exit(2);
+                    break;
                 }
 
                 if (mTestResults.allDone)
                     return;
             }
 
-            angle::Sleep(1000);
+            angle::Sleep(500);
         } while (true);
+        onCrashOrTimeout(TestResultType::Timeout);
+        ::_Exit(1);
     };
     mWatchdogThread = std::thread(watchdogMain);
 }
