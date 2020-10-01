@@ -86,6 +86,24 @@
       "revId": "1e8d4754472091b6d985943111dbe1d3c94d6be2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "53755121_3ddabf92",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-10-01T00:00:54Z",
+      "side": 1,
+      "message": "Just to follow up here also, Courtney was able to find the bug tracking adding this testing:\n\nhttp://issuetracker.google.com/160709550\n\nHe also added (also mentioned in that bug):\n\n\u003e Here\u0027s a CL that might get a lot of the way: https://chromium-review.googlesource.com/c/angle/angle/+/2231884\n\n\u003e Where it does createEGLImageAndroidHardwareBufferSource(1, 1, 1, GL_RGBA8, attribs, data, 4, \u0026source, \u0026image); need to make equivalent for YUV.\n\nSince this stuff is affecting ads in a lot of games, it\u0027s probably time to bump up the priority of that testing to help stabilize app compatibility.",
+      "parentUuid": "fa36fa2d_48c74b5c",
+      "revId": "1e8d4754472091b6d985943111dbe1d3c94d6be2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
