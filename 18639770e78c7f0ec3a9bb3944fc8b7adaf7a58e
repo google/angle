@@ -16,6 +16,23 @@
       "revId": "18639770e78c7f0ec3a9bb3944fc8b7adaf7a58e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cae7b341_c9e0b965",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002358
+      },
+      "writtenOn": "2020-10-01T20:15:08Z",
+      "side": 1,
+      "message": "Is there a way to make the tests check for this extension, instead of blacklisting based on configuration?",
+      "revId": "18639770e78c7f0ec3a9bb3944fc8b7adaf7a58e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
