@@ -9,6 +9,7 @@
 
 import argparse
 import hashlib
+import logging
 import os
 import subprocess
 import sys
@@ -34,8 +35,18 @@ def main():
     out_gn_path = '//' + path
     out_file_path = os.path.join(*path.split('/'))
 
+    # Attempt to detect standalone vs chromium component build.
+    is_standalone = not os.path.isdir(os.path.join('third_party', 'angle'))
+
     mb_script_path = os.path.join('tools', 'mb', 'mb.py')
-    subprocess.call(['python', mb_script_path, 'isolate', out_gn_path, args.test])
+    mb_args = ['python', mb_script_path, 'isolate', out_gn_path, args.test]
+
+    if is_standalone:
+        logging.info('Standalone mode detected.')
+        mb_args += ['-i', os.path.join('infra', 'gn_isolate_map.pyl')]
+
+    if subprocess.call(mb_args):
+        sys.exit('MB step failed, exiting')
 
     isolate_cmd_path = os.path.join('tools', 'luci-go', 'isolate')
     isolate_file = os.path.join(out_file_path, '%s.isolate' % args.test)
@@ -49,7 +60,7 @@ def main():
     with open(isolated_file, 'rb') as f:
         sha = hashlib.sha1(f.read()).hexdigest()
 
-    print('Got an isolated SHA of %s' % sha)
+    logging.info('Got an isolated SHA of %s' % sha)
     swarming_script_path = os.path.join('tools', 'luci-go', 'swarming')
 
     swarming_args = [
@@ -78,7 +89,7 @@ def main():
         if unknown:
             shard_args += ["--"] + unknown
 
-        print(' '.join(shard_args))
+        logging.info(' '.join(shard_args))
         subprocess.call(shard_args)
     return 0
 
