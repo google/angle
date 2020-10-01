@@ -33,6 +33,24 @@
       "revId": "18639770e78c7f0ec3a9bb3944fc8b7adaf7a58e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "257731ba_4187f6fa",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-10-01T20:37:20Z",
+      "side": 1,
+      "message": "Ideally we wouldn\u0027t expose GL_EXT_multisampled_render_to_texture unless VK_EXT_depth_stencil_resolve is supported. However, as that extension is rather new and our drivers are old, we would lose precious testing and non-depth-stencil tests.\n\nAdditionally, ideally the application renders in such a way that depth/stencil resolve doesn\u0027t happen (through invalidate calls), so gating this useful GL extension on support for a rarely-used VK extension seems like a pity. I\u0027m in the process of making sure chromium always does the right thing and never needs that extension.",
+      "parentUuid": "cae7b341_c9e0b965",
+      "revId": "18639770e78c7f0ec3a9bb3944fc8b7adaf7a58e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
