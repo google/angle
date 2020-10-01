@@ -106,6 +106,12 @@ MultisampledRenderToTextureBenchmark::MultisampledRenderToTextureBenchmark()
     {
         mSkipTest = true;
     }
+
+    // Fails on Pixel 2 GLES: http://anglebug.com/5120
+    if (IsPixel2() && GetParam().eglParameters.renderer == EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE)
+    {
+        mSkipTest = true;
+    }
 }
 
 void MultisampledRenderToTextureBenchmark::initializeBenchmark()
