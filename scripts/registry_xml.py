@@ -106,6 +106,7 @@ gles_extensions = [
     "GL_OES_EGL_image",
     "GL_OES_get_program_binary",
     "GL_OES_mapbuffer",
+    "GL_OES_sample_shading",
     "GL_OES_texture_3D",
     "GL_OES_texture_border_clamp",
     "GL_OES_texture_buffer",

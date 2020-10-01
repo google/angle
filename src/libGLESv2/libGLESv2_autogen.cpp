@@ -4721,6 +4721,12 @@ GLbitfield GL_APIENTRY glQueryMatrixxOES(GLfixed *mantissa, GLint *exponent)
     return gl::QueryMatrixxOES(mantissa, exponent);
 }
 
+// GL_OES_sample_shading
+void GL_APIENTRY glMinSampleShadingOES(GLfloat value)
+{
+    return gl::MinSampleShadingOES(value);
+}
+
 // GL_OES_texture_3D
 void GL_APIENTRY glCompressedTexImage3DOES(GLenum target,
                                            GLint level,
@@ -7862,6 +7868,11 @@ void GL_APIENTRY glMemoryObjectParameterivEXTContextANGLE(GLeglContext ctx,
 void GL_APIENTRY glMinSampleShadingContextANGLE(GLeglContext ctx, GLfloat value)
 {
     return gl::MinSampleShadingContextANGLE(ctx, value);
+}
+
+void GL_APIENTRY glMinSampleShadingOESContextANGLE(GLeglContext ctx, GLfloat value)
+{
+    return gl::MinSampleShadingOESContextANGLE(ctx, value);
 }
 
 void GL_APIENTRY glMultMatrixfContextANGLE(GLeglContext ctx, const GLfloat *m)

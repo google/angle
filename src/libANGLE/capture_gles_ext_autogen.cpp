@@ -7960,6 +7960,15 @@ CallCapture CaptureQueryMatrixxOES(const State &glState,
     return CallCapture(gl::EntryPoint::QueryMatrixxOES, std::move(paramBuffer));
 }
 
+CallCapture CaptureMinSampleShadingOES(const State &glState, bool isCallValid, GLfloat value)
+{
+    ParamBuffer paramBuffer;
+
+    paramBuffer.addValueParam("value", ParamType::TGLfloat, value);
+
+    return CallCapture(gl::EntryPoint::MinSampleShadingOES, std::move(paramBuffer));
+}
+
 CallCapture CaptureCompressedTexImage3DOES(const State &glState,
                                            bool isCallValid,
                                            TextureTarget targetPacked,

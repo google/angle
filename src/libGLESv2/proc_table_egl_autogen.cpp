@@ -1094,6 +1094,8 @@ const ProcEntry g_procTable[] = {
     {"glMemoryObjectParameterivEXTContextANGLE", P(gl::MemoryObjectParameterivEXTContextANGLE)},
     {"glMinSampleShading", P(gl::MinSampleShading)},
     {"glMinSampleShadingContextANGLE", P(gl::MinSampleShadingContextANGLE)},
+    {"glMinSampleShadingOES", P(gl::MinSampleShadingOES)},
+    {"glMinSampleShadingOESContextANGLE", P(gl::MinSampleShadingOESContextANGLE)},
     {"glMultMatrixf", P(gl::MultMatrixf)},
     {"glMultMatrixfContextANGLE", P(gl::MultMatrixfContextANGLE)},
     {"glMultMatrixx", P(gl::MultMatrixx)},
@@ -1629,5 +1631,5 @@ const ProcEntry g_procTable[] = {
     {"glWeightPointerOES", P(gl::WeightPointerOES)},
     {"glWeightPointerOESContextANGLE", P(gl::WeightPointerOESContextANGLE)}};
 
-const size_t g_numProcs = 1532;
+const size_t g_numProcs = 1534;
 }  // namespace egl

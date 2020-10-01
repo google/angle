@@ -1101,6 +1101,9 @@ ANGLE_EXPORT void GL_APIENTRY PointSizePointerOES(GLenum type, GLsizei stride, c
 // GL_OES_query_matrix
 ANGLE_EXPORT GLbitfield GL_APIENTRY QueryMatrixxOES(GLfixed *mantissa, GLint *exponent);
 
+// GL_OES_sample_shading
+ANGLE_EXPORT void GL_APIENTRY MinSampleShadingOES(GLfloat value);
+
 // GL_OES_texture_3D
 ANGLE_EXPORT void GL_APIENTRY CompressedTexImage3DOES(GLenum target,
                                                       GLint level,
@@ -2674,6 +2677,7 @@ ANGLE_EXPORT void GL_APIENTRY MemoryObjectParameterivEXTContextANGLE(GLeglContex
                                                                      GLenum pname,
                                                                      const GLint *params);
 ANGLE_EXPORT void GL_APIENTRY MinSampleShadingContextANGLE(GLeglContext ctx, GLfloat value);
+ANGLE_EXPORT void GL_APIENTRY MinSampleShadingOESContextANGLE(GLeglContext ctx, GLfloat value);
 ANGLE_EXPORT void GL_APIENTRY MultMatrixfContextANGLE(GLeglContext ctx, const GLfloat *m);
 ANGLE_EXPORT void GL_APIENTRY MultMatrixxContextANGLE(GLeglContext ctx, const GLfixed *m);
 ANGLE_EXPORT void GL_APIENTRY MultiDrawElementsBaseVertexEXTContextANGLE(GLeglContext ctx,

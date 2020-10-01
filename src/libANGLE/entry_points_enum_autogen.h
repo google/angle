@@ -739,6 +739,7 @@ enum class EntryPoint
     MemoryBarrierByRegion,
     MemoryObjectParameterivEXT,
     MinSampleShading,
+    MinSampleShadingOES,
     MultMatrixd,
     MultMatrixf,
     MultMatrixx,

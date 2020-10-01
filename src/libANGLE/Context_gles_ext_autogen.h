@@ -410,6 +410,7 @@
     /* GL_OES_get_program_binary */                                                                \
     /* GL_OES_mapbuffer */                                                                         \
     void *mapBuffer(BufferBinding targetPacked, GLenum access);                                    \
+    /* GL_OES_sample_shading */                                                                    \
     /* GL_OES_texture_3D */                                                                        \
     void framebufferTexture3D(GLenum target, GLenum attachment, TextureTarget textargetPacked,     \
                               TextureID texturePacked, GLint level, GLint zoffset);                \

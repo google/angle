@@ -249,6 +249,7 @@ typedef void *(GL_APIENTRYP PFNGLMAPBUFFEROESCONTEXTANGLEPROC)(GLeglContext ctx,
 typedef void *(GL_APIENTRYP PFNGLMAPBUFFERRANGEEXTCONTEXTANGLEPROC)(GLeglContext ctx, GLenum target, GLintptr offset, GLsizeiptr length, GLbitfield access);
 typedef void (GL_APIENTRYP PFNGLMAXSHADERCOMPILERTHREADSKHRCONTEXTANGLEPROC)(GLeglContext ctx, GLuint count);
 typedef void (GL_APIENTRYP PFNGLMEMORYOBJECTPARAMETERIVEXTCONTEXTANGLEPROC)(GLeglContext ctx, GLuint memoryObject, GLenum pname, const GLint *params);
+typedef void (GL_APIENTRYP PFNGLMINSAMPLESHADINGOESCONTEXTANGLEPROC)(GLeglContext ctx, GLfloat value);
 typedef void (GL_APIENTRYP PFNGLMULTIDRAWELEMENTSBASEVERTEXEXTCONTEXTANGLEPROC)(GLeglContext ctx, GLenum mode, const GLsizei *count, GLenum type, const void *const*indices, GLsizei primcount, const GLint *basevertex);
 typedef void (GL_APIENTRYP PFNGLOBJECTLABELKHRCONTEXTANGLEPROC)(GLeglContext ctx, GLenum identifier, GLuint name, GLsizei length, const GLchar *label);
 typedef void (GL_APIENTRYP PFNGLOBJECTPTRLABELKHRCONTEXTANGLEPROC)(GLeglContext ctx, const void *ptr, GLsizei length, const GLchar *label);
@@ -627,6 +628,7 @@ GL_APICALL void *GL_APIENTRY glMapBufferOESContextANGLE(GLeglContext ctx, GLenum
 GL_APICALL void *GL_APIENTRY glMapBufferRangeEXTContextANGLE(GLeglContext ctx, GLenum target, GLintptr offset, GLsizeiptr length, GLbitfield access);
 GL_APICALL void GL_APIENTRY glMaxShaderCompilerThreadsKHRContextANGLE(GLeglContext ctx, GLuint count);
 GL_APICALL void GL_APIENTRY glMemoryObjectParameterivEXTContextANGLE(GLeglContext ctx, GLuint memoryObject, GLenum pname, const GLint *params);
+GL_APICALL void GL_APIENTRY glMinSampleShadingOESContextANGLE(GLeglContext ctx, GLfloat value);
 GL_APICALL void GL_APIENTRY glMultiDrawElementsBaseVertexEXTContextANGLE(GLeglContext ctx, GLenum mode, const GLsizei *count, GLenum type, const void *const*indices, GLsizei primcount, const GLint *basevertex);
 GL_APICALL void GL_APIENTRY glObjectLabelKHRContextANGLE(GLeglContext ctx, GLenum identifier, GLuint name, GLsizei length, const GLchar *label);
 GL_APICALL void GL_APIENTRY glObjectPtrLabelKHRContextANGLE(GLeglContext ctx, const void *ptr, GLsizei length, const GLchar *label);

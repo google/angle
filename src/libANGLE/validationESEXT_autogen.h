@@ -1355,6 +1355,9 @@ bool ValidateQueryMatrixxOES(const Context *context,
                              const GLfixed *mantissa,
                              const GLint *exponent);
 
+// GL_OES_sample_shading
+bool ValidateMinSampleShadingOES(const Context *context, GLfloat value);
+
 // GL_OES_texture_3D
 bool ValidateCompressedTexImage3DOES(const Context *context,
                                      TextureTarget targetPacked,

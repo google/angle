@@ -840,6 +840,9 @@ EXPORTS
     ; GL_OES_query_matrix
     glQueryMatrixxOES
 
+    ; GL_OES_sample_shading
+    glMinSampleShadingOES
+
     ; GL_OES_texture_3D
     glCompressedTexImage3DOES
     glCompressedTexSubImage3DOES
@@ -1352,6 +1355,7 @@ EXPORTS
     glMemoryBarrierByRegionContextANGLE
     glMemoryObjectParameterivEXTContextANGLE
     glMinSampleShadingContextANGLE
+    glMinSampleShadingOESContextANGLE
     glMultMatrixfContextANGLE
     glMultMatrixxContextANGLE
     glMultiDrawArraysANGLEContextANGLE

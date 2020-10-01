@@ -1693,6 +1693,11 @@ angle::CallCapture CaptureQueryMatrixxOES(const State &glState,
                                           GLint *exponent,
                                           GLbitfield returnValue);
 
+// GL_OES_sample_shading
+angle::CallCapture CaptureMinSampleShadingOES(const State &glState,
+                                              bool isCallValid,
+                                              GLfloat value);
+
 // GL_OES_texture_3D
 angle::CallCapture CaptureCompressedTexImage3DOES(const State &glState,
                                                   bool isCallValid,

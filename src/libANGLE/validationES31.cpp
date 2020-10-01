@@ -2006,6 +2006,12 @@ bool ValidateSampleMaski(const Context *context, GLuint maskNumber, GLbitfield m
     return ValidateSampleMaskiBase(context, maskNumber, mask);
 }
 
+bool ValidateMinSampleShadingOES(const Context *context, GLfloat value)
+{
+    UNIMPLEMENTED();
+    return false;
+}
+
 bool ValidateFramebufferTextureEXT(const Context *context,
                                    GLenum target,
                                    GLenum attachment,

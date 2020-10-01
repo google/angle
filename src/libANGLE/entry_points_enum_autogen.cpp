@@ -1466,6 +1466,8 @@ const char *GetEntryPointName(EntryPoint ep)
             return "glMemoryObjectParameterivEXT";
         case EntryPoint::MinSampleShading:
             return "glMinSampleShading";
+        case EntryPoint::MinSampleShadingOES:
+            return "glMinSampleShadingOES";
         case EntryPoint::MultMatrixd:
             return "glMultMatrixd";
         case EntryPoint::MultMatrixf:

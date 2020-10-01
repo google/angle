@@ -6779,6 +6779,26 @@ GLbitfield GL_APIENTRY QueryMatrixxOES(GLfixed *mantissa, GLint *exponent)
     return returnValue;
 }
 
+// GL_OES_sample_shading
+void GL_APIENTRY MinSampleShadingOES(GLfloat value)
+{
+    Context *context = GetValidGlobalContext();
+    EVENT(context, "glMinSampleShadingOES", "context = %d, GLfloat value = %f", CID(context),
+          value);
+
+    if (context)
+    {
+        std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid =
+            (context->skipValidation() || ValidateMinSampleShadingOES(context, value));
+        if (isCallValid)
+        {
+            context->minSampleShading(value);
+        }
+        ANGLE_CAPTURE(MinSampleShadingOES, isCallValid, context, value);
+    }
+}
+
 // GL_OES_texture_3D
 void GL_APIENTRY CompressedTexImage3DOES(GLenum target,
                                          GLint level,
@@ -17885,6 +17905,26 @@ void GL_APIENTRY MinSampleShadingContextANGLE(GLeglContext ctx, GLfloat value)
             context->minSampleShading(value);
         }
         ANGLE_CAPTURE(MinSampleShading, isCallValid, context, value);
+    }
+}
+
+void GL_APIENTRY MinSampleShadingOESContextANGLE(GLeglContext ctx, GLfloat value)
+{
+    Context *context = static_cast<gl::Context *>(ctx);
+    EVENT(context, "glMinSampleShadingOES", "context = %d, GLfloat value = %f", CID(context),
+          value);
+
+    if (context)
+    {
+        ASSERT(context == GetValidGlobalContext());
+        std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid =
+            (context->skipValidation() || ValidateMinSampleShadingOES(context, value));
+        if (isCallValid)
+        {
+            context->minSampleShading(value);
+        }
+        ANGLE_CAPTURE(MinSampleShadingOES, isCallValid, context, value);
     }
 }
 
