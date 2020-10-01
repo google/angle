@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1008cb06_0f4f5554",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1075,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-10-01T22:48:23Z",
+      "side": 1,
+      "message": "contextVk-\u003egetShareGroupVk()",
+      "range": {
+        "startLine": 1075,
+        "startChar": 43,
+        "endLine": 1075,
+        "endChar": 53
+      },
+      "revId": "3780d4b6d93911bbbbd42d7fd47d349b4d6842b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
