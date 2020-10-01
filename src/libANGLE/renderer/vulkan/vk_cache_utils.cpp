@@ -2649,6 +2649,11 @@ uint32_t FramebufferDesc::attachmentCount() const
     return count;
 }
 
+FramebufferNonResolveAttachmentMask FramebufferDesc::getUnresolveAttachmentMask() const
+{
+    return mUnresolveAttachmentMask;
+}
+
 // SamplerDesc implementation.
 SamplerDesc::SamplerDesc()
 {

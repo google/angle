@@ -1086,7 +1086,6 @@ class FramebufferDesc
     void updateDepthStencil(ImageViewSubresourceSerial serial);
     void updateDepthStencilResolve(ImageViewSubresourceSerial serial);
     size_t hash() const;
-    void reset();
 
     bool operator==(const FramebufferDesc &other) const;
 
@@ -1098,7 +1097,10 @@ class FramebufferDesc
         return mSerials[kFramebufferDescColorIndexOffset + index];
     }
 
+    FramebufferNonResolveAttachmentMask getUnresolveAttachmentMask() const;
+
   private:
+    void reset();
     void update(uint32_t index, ImageViewSubresourceSerial serial);
 
     // Note: this is an exclusive index. If there is one index it will be "1".

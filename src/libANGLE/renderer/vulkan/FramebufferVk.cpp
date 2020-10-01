@@ -271,6 +271,21 @@ bool HasResolveAttachment(const gl::AttachmentArray<RenderTargetVk *> &colorRend
     }
     return false;
 }
+
+vk::FramebufferNonResolveAttachmentMask MakeUnresolveAttachmentMask(const vk::RenderPassDesc &desc)
+{
+    vk::FramebufferNonResolveAttachmentMask unresolveMask(
+        desc.getColorUnresolveAttachmentMask().bits());
+    if (desc.hasDepthUnresolveAttachment())
+    {
+        unresolveMask.set(vk::kUnpackedDepthIndex);
+    }
+    if (desc.hasStencilUnresolveAttachment())
+    {
+        unresolveMask.set(vk::kUnpackedStencilIndex);
+    }
+    return unresolveMask;
+}
 }  // anonymous namespace
 
 // static
@@ -1821,6 +1836,8 @@ void FramebufferVk::updateRenderPassDesc()
             mRenderPassDesc.packDepthStencilResolveAttachment(hasDepth, hasStencil);
         }
     }
+
+    mCurrentFramebufferDesc.updateUnresolveMask({});
 }
 
 angle::Result FramebufferVk::getFramebuffer(ContextVk *contextVk,
@@ -2248,6 +2265,10 @@ angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
     bool previousUnresolveDepth   = mRenderPassDesc.hasDepthUnresolveAttachment();
     bool previousUnresolveStencil = mRenderPassDesc.hasStencilUnresolveAttachment();
 
+    // Make sure render pass and framebuffer are in agreement w.r.t unresolve attachments.
+    ASSERT(mCurrentFramebufferDesc.getUnresolveAttachmentMask() ==
+           MakeUnresolveAttachmentMask(mRenderPassDesc));
+
     // Color attachments.
     const auto &colorRenderTargets = mRenderTargetCache.getColors();
     vk::PackedAttachmentIndex colorIndexVk(0);
@@ -2471,17 +2492,7 @@ angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
         // Make sure framebuffer is recreated.
         mFramebuffer = nullptr;
 
-        vk::FramebufferNonResolveAttachmentMask unresolveMask(unresolveColorMask.bits());
-        if (unresolveDepth)
-        {
-            unresolveMask.set(vk::kUnpackedDepthIndex);
-        }
-        if (unresolveStencil)
-        {
-            unresolveMask.set(vk::kUnpackedStencilIndex);
-        }
-
-        mCurrentFramebufferDesc.updateUnresolveMask(unresolveMask);
+        mCurrentFramebufferDesc.updateUnresolveMask(MakeUnresolveAttachmentMask(mRenderPassDesc));
     }
 
     vk::Framebuffer *framebuffer = nullptr;

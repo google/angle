@@ -157,6 +157,8 @@ class MultisampledRenderToTextureES3Test : public MultisampledRenderToTextureTes
   protected:
     void readPixelsTestCommon(bool useRenderbuffer);
     void blitFramebufferTestCommon(bool useRenderbuffer);
+    void drawCopyDrawAttachInvalidatedThenDrawCommon(bool useRenderbuffer);
+    void drawCopyDrawAttachDepthStencilClearThenDrawCommon(bool useRenderbuffer);
     void depthStencilClearThenDrawCommon(bool useRenderbuffer);
     void colorAttachment1Common(bool useRenderbuffer);
     void colorAttachments0And3Common(bool useRenderbuffer);
@@ -1015,8 +1017,7 @@ void MultisampledRenderToTextureTest::drawCopyThenBlendCommon(bool useRenderbuff
 
     // For completeness, verify that the texture used as copy target is red.
     ASSERT_GL_NO_ERROR();
-    const GLColor kExpectedCopyResult(255, 0, 0, 255);
-    verifyResults(texture, kExpectedCopyResult, kSize, 0, 0, kSize, kSize);
+    verifyResults(texture, GLColor::red, kSize, 0, 0, kSize, kSize);
 
     ASSERT_GL_NO_ERROR();
 }
@@ -1326,6 +1327,381 @@ TEST_P(MultisampledRenderToTextureTest, RenderbufferDrawCopyDrawThenMaskedClear)
     drawCopyDrawThenMaskedClearCommon(true);
 }
 
+void MultisampledRenderToTextureES3Test::drawCopyDrawAttachInvalidatedThenDrawCommon(
+    bool useRenderbuffer)
+{
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_multisampled_render_to_texture"));
+    constexpr GLsizei kSize = 64;
+
+    setupCopyTexProgram();
+
+    GLFramebuffer fboMS;
+    glBindFramebuffer(GL_FRAMEBUFFER, fboMS);
+
+    // Create multisampled framebuffer to draw into
+    GLTexture textureMS;
+    GLRenderbuffer renderbufferMS;
+    createAndAttachColorAttachment(useRenderbuffer, kSize, GL_COLOR_ATTACHMENT0, nullptr,
+                                   &textureMS, &renderbufferMS);
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    // Draw red into the multisampled color buffer.
+    ANGLE_GL_PROGRAM(drawColor, essl1_shaders::vs::Simple(), essl1_shaders::fs::UniformColor());
+    glUseProgram(drawColor);
+    GLint colorUniformLocation =
+        glGetUniformLocation(drawColor, angle::essl1_shaders::ColorUniform());
+    ASSERT_NE(colorUniformLocation, -1);
+
+    // Clear and draw into framebuffer.
+    glClear(GL_COLOR_BUFFER_BIT);
+    glUniform4f(colorUniformLocation, 1.0f, 0.0f, 0.0f, 1.0f);
+    drawQuad(drawColor, essl1_shaders::PositionAttrib(), 0.5f);
+    ASSERT_GL_NO_ERROR();
+
+    // Create a texture and copy into it.
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 0, 0, kSize, kSize, 0);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    // Draw green into framebuffer.  This will unresolve color.
+    glUniform4f(colorUniformLocation, 0.0f, 1.0f, 0.0f, 1.0f);
+    drawQuad(drawColor, essl1_shaders::PositionAttrib(), 0.5f);
+    ASSERT_GL_NO_ERROR();
+
+    // Create multisampled framebuffer and invalidate its attachment.
+    GLFramebuffer invalidateFboMS;
+    glBindFramebuffer(GL_FRAMEBUFFER, invalidateFboMS);
+
+    // Create multisampled framebuffer to draw into
+    GLTexture invalidateTextureMS;
+    GLRenderbuffer invalidateRenderbufferMS;
+    createAndAttachColorAttachment(useRenderbuffer, kSize, GL_COLOR_ATTACHMENT0, nullptr,
+                                   &invalidateTextureMS, &invalidateRenderbufferMS);
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    // Invalidate the attachment.
+    GLenum invalidateAttachments[] = {GL_COLOR_ATTACHMENT0};
+    glInvalidateFramebuffer(GL_FRAMEBUFFER, 1, invalidateAttachments);
+
+    // Replace the original framebuffer's attachment with the invalidated one.
+    glBindFramebuffer(GL_FRAMEBUFFER, fboMS);
+    if (useRenderbuffer)
+    {
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER,
+                                  invalidateRenderbufferMS);
+    }
+    else
+    {
+        glFramebufferTexture2DMultisampleEXT(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
+                                             invalidateTextureMS, 0, 4);
+    }
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    // Draw blue into the multisampled color buffer.
+    glUniform4f(colorUniformLocation, 0.0f, 0.0f, 1.0f, 1.0f);
+    drawQuad(drawColor, essl1_shaders::PositionAttrib(), 0.5f);
+    ASSERT_GL_NO_ERROR();
+
+    // Verify that the texture is now blue
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
+    EXPECT_PIXEL_COLOR_EQ(kSize - 1, 0, GLColor::blue);
+    EXPECT_PIXEL_COLOR_EQ(0, kSize - 1, GLColor::blue);
+    EXPECT_PIXEL_COLOR_EQ(kSize - 1, kSize - 1, GLColor::blue);
+
+    // For completeness, verify that the texture used as copy target is red.
+    ASSERT_GL_NO_ERROR();
+    verifyResults(texture, GLColor::red, kSize, 0, 0, kSize, kSize);
+
+    ASSERT_GL_NO_ERROR();
+}
+
+// Draw, copy, draw, attach an invalidated image then draw.  The second draw will need to unresolve
+// color.  Attaching an invalidated image changes the framebuffer, and the following draw doesn't
+// require an unresolve.  In the Vulkan backend, mismatches in unresolve state between framebuffer
+// and render pass will result in an ASSERT.
+TEST_P(MultisampledRenderToTextureES3Test, DrawCopyDrawAttachInvalidatedThenDraw)
+{
+    drawCopyDrawAttachInvalidatedThenDrawCommon(false);
+}
+
+// Same as DrawCopyDrawAttachInvalidatedThenDraw but with renderbuffers
+TEST_P(MultisampledRenderToTextureES3Test, RenderbufferDrawCopyDrawAttachInvalidatedThenDraw)
+{
+    drawCopyDrawAttachInvalidatedThenDrawCommon(true);
+}
+
+void MultisampledRenderToTextureES3Test::drawCopyDrawAttachDepthStencilClearThenDrawCommon(
+    bool useRenderbuffer)
+{
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_multisampled_render_to_texture"));
+    constexpr GLsizei kSize = 64;
+
+    // http://anglebug.com/4935
+    ANGLE_SKIP_TEST_IF(IsD3D11());
+
+    setupCopyTexProgram();
+
+    GLFramebuffer fboMS;
+    glBindFramebuffer(GL_FRAMEBUFFER, fboMS);
+
+    // Create multisampled framebuffer to draw into
+    GLTexture textureMS;
+    GLRenderbuffer renderbufferMS;
+    createAndAttachColorAttachment(useRenderbuffer, kSize, GL_COLOR_ATTACHMENT0, nullptr,
+                                   &textureMS, &renderbufferMS);
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    // Draw red into the multisampled color buffer.
+    ANGLE_GL_PROGRAM(drawColor, essl1_shaders::vs::Simple(), essl1_shaders::fs::UniformColor());
+    glUseProgram(drawColor);
+    GLint colorUniformLocation =
+        glGetUniformLocation(drawColor, angle::essl1_shaders::ColorUniform());
+    ASSERT_NE(colorUniformLocation, -1);
+
+    // Clear and draw into framebuffer.  There is no unresolve due to clear.  The clear value is
+    // irrelevant as the contents are immediately overdrawn with the draw call.
+    glClear(GL_COLOR_BUFFER_BIT);
+    glUniform4f(colorUniformLocation, 1.0f, 0.0f, 0.0f, 1.0f);
+    drawQuad(drawColor, essl1_shaders::PositionAttrib(), 0.5f);
+    ASSERT_GL_NO_ERROR();
+
+    // Create a texture and copy into it.
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 0, 0, kSize, kSize, 0);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    // Draw green into framebuffer.  This will unresolve color.
+    glUniform4f(colorUniformLocation, 0.0f, 1.0f, 0.0f, 1.0f);
+    drawQuad(drawColor, essl1_shaders::PositionAttrib(), 0.5f);
+    ASSERT_GL_NO_ERROR();
+
+    // Attach a depth/stencil attachment.
+    GLTexture dsTextureMS;
+    GLRenderbuffer dsRenderbufferMS;
+    createAndAttachDepthStencilAttachment(useRenderbuffer, kSize, &dsTextureMS, &dsRenderbufferMS);
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    // Clear all attachments, so no unresolve would be necessary.
+    glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
+    glClearDepthf(1);
+    glClearStencil(0x55);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
+    // If depth is not cleared to 1, rendering would fail.
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
+
+    // If stencil is not cleared to 0x55, rendering would fail.
+    glEnable(GL_STENCIL_TEST);
+    glStencilFunc(GL_EQUAL, 0x55, 0xFF);
+    glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+    glStencilMask(0xFF);
+
+    // Blend half-transparent green into the multisampled color buffer.
+    glUniform4f(colorUniformLocation, 0.0f, 1.0f, 0.0f, 0.5f);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    drawQuad(drawColor, essl1_shaders::PositionAttrib(), 0.95f);
+    ASSERT_GL_NO_ERROR();
+
+    // Verify that the texture is now cyan
+    const GLColor kExpected2(0, 127, 127, 191);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, kExpected2, 1);
+    EXPECT_PIXEL_COLOR_NEAR(kSize - 1, 0, kExpected2, 1);
+    EXPECT_PIXEL_COLOR_NEAR(0, kSize - 1, kExpected2, 1);
+    EXPECT_PIXEL_COLOR_NEAR(kSize - 1, kSize - 1, kExpected2, 1);
+
+    // For completeness, verify that the texture used as copy target is red.
+    ASSERT_GL_NO_ERROR();
+    verifyResults(texture, GLColor::red, kSize, 0, 0, kSize, kSize);
+
+    ASSERT_GL_NO_ERROR();
+}
+
+// Draw, copy, draw, attach depth/stencil, clear then draw.  The second draw will need to unresolve
+// color.  Attaching depth/stencil changes the framebuffer, and the following clear ensures no
+// unresolve is necessary.  In the Vulkan backend, mismatches in unresolve state between framebuffer
+// and render pass will result in an ASSERT.
+TEST_P(MultisampledRenderToTextureES3Test, DrawCopyDrawAttachDepthStencilClearThenDraw)
+{
+    drawCopyDrawAttachDepthStencilClearThenDrawCommon(false);
+}
+
+// Same as DrawCopyDrawAttachDepthStencilClearThenDraw but with renderbuffers
+TEST_P(MultisampledRenderToTextureES3Test, RenderbufferDrawCopyDrawAttachDepthStencilClearThenDraw)
+{
+    drawCopyDrawAttachDepthStencilClearThenDrawCommon(true);
+}
+
+// Draw, copy, redefine the color attachment with a different format, clear, copy then draw.  The
+// initial draw will need to unresolve color as the color attachment is preinitilized with data.
+// Redefining the color attachment forces framebuffer to recreate when the clear is called.  The
+// second copy resolves the clear and the final draw unresolves again.  In the Vulkan backend,
+// mismatches in unresolve state between framebuffer and render pass will result in an ASSERT and a
+// validation error (if ASSERT is removed).
+TEST_P(MultisampledRenderToTextureES3Test, DrawCopyRedefineClearCopyThenDraw)
+{
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_multisampled_render_to_texture"));
+    constexpr GLsizei kSize = 64;
+
+    setupCopyTexProgram();
+
+    GLFramebuffer fboMS;
+    glBindFramebuffer(GL_FRAMEBUFFER, fboMS);
+
+    std::vector<GLColor> initialColorData(kSize * kSize, GLColor::black);
+
+    // Create multisampled framebuffer to draw into
+    GLTexture colorMS;
+    glBindTexture(GL_TEXTURE_2D, colorMS);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 initialColorData.data());
+    glFramebufferTexture2DMultisampleEXT(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
+                                         colorMS, 0, 4);
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    // Draw red into the multisampled color buffer.
+    ANGLE_GL_PROGRAM(drawColor, essl1_shaders::vs::Simple(), essl1_shaders::fs::UniformColor());
+    glUseProgram(drawColor);
+    GLint colorUniformLocation =
+        glGetUniformLocation(drawColor, angle::essl1_shaders::ColorUniform());
+    ASSERT_NE(colorUniformLocation, -1);
+
+    // Draw into framebuffer.  This will unresolve color.
+    glUniform4f(colorUniformLocation, 1.0f, 0.0f, 0.0f, 1.0f);
+    drawQuad(drawColor, essl1_shaders::PositionAttrib(), 0.5f);
+    ASSERT_GL_NO_ERROR();
+
+    // Create a texture and copy into it.
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 0, 0, kSize, kSize, 0);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    // Incompatibly redefine the texture, forcing its image to be recreated.
+    glBindTexture(GL_TEXTURE_2D, colorMS);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, kSize, kSize, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    // Create another texture and copy into it.
+    GLTexture texture2;
+    glBindTexture(GL_TEXTURE_2D, texture2);
+    glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 0, 0, kSize, kSize, 0);
+
+    // Clear to green and blend blue into the multisampled color buffer.
+    glUseProgram(drawColor);
+    glUniform4f(colorUniformLocation, 0.0f, 0.0f, 1.0f, 1.0f);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_ONE, GL_ONE);
+    drawQuad(drawColor, essl1_shaders::PositionAttrib(), 0.5f);
+    ASSERT_GL_NO_ERROR();
+
+    // Verify that the texture is now cyan
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::cyan);
+    EXPECT_PIXEL_COLOR_EQ(kSize - 1, 0, GLColor::cyan);
+    EXPECT_PIXEL_COLOR_EQ(0, kSize - 1, GLColor::cyan);
+    EXPECT_PIXEL_COLOR_EQ(kSize - 1, kSize - 1, GLColor::cyan);
+
+    // For completeness, verify that the texture used as copy target is red.
+    ASSERT_GL_NO_ERROR();
+    verifyResults(texture, GLColor::red, kSize, 0, 0, kSize, kSize);
+
+    ASSERT_GL_NO_ERROR();
+}
+
+// Draw, copy, rebind the attachment, clear then draw.  The initial draw will need to unresolve
+// color.  The framebuffer attachment is temporary changed and then reset back to the original.
+// This causes the framebuffer to be recreated on the following clear and draw.  The clear prevents
+// the final draw from doing an unresolve.  In the Vulkan backend, mismatches in unresolve state
+// between framebuffer and render pass will result in an ASSERT and a validation error (if ASSERT is
+// removed).
+TEST_P(MultisampledRenderToTextureES3Test, DrawCopyRebindAttachmentClearThenDraw)
+{
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_multisampled_render_to_texture"));
+    constexpr GLsizei kSize = 64;
+
+    setupCopyTexProgram();
+
+    GLFramebuffer fboMS;
+    glBindFramebuffer(GL_FRAMEBUFFER, fboMS);
+
+    std::vector<GLColor> initialColorData(kSize * kSize, GLColor::black);
+
+    // Create multisampled framebuffer to draw into
+    GLTexture colorMS;
+    glBindTexture(GL_TEXTURE_2D, colorMS);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 initialColorData.data());
+    glFramebufferTexture2DMultisampleEXT(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
+                                         colorMS, 0, 4);
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    // Draw red into the multisampled color buffer.
+    ANGLE_GL_PROGRAM(drawColor, essl1_shaders::vs::Simple(), essl1_shaders::fs::UniformColor());
+    glUseProgram(drawColor);
+    GLint colorUniformLocation =
+        glGetUniformLocation(drawColor, angle::essl1_shaders::ColorUniform());
+    ASSERT_NE(colorUniformLocation, -1);
+
+    // Draw into framebuffer.  This will unresolve color.
+    glUniform4f(colorUniformLocation, 1.0f, 0.0f, 0.0f, 1.0f);
+    drawQuad(drawColor, essl1_shaders::PositionAttrib(), 0.5f);
+    ASSERT_GL_NO_ERROR();
+
+    // Create a texture and copy into it.
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 0, 0, kSize, kSize, 0);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    // Bind the framebuffer to another texture.
+    GLTexture color;
+    glBindTexture(GL_TEXTURE_2D, color);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color, 0);
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    // Do whatever.
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    // Rebind the framebuffer back to the original texture.
+    glBindTexture(GL_TEXTURE_2D, colorMS);
+    glFramebufferTexture2DMultisampleEXT(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
+                                         colorMS, 0, 4);
+
+    // Clear to green and blend blue into the multisampled color buffer.
+    glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    glUseProgram(drawColor);
+    glUniform4f(colorUniformLocation, 0.0f, 0.0f, 1.0f, 1.0f);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_ONE, GL_ONE);
+    drawQuad(drawColor, essl1_shaders::PositionAttrib(), 0.5f);
+    ASSERT_GL_NO_ERROR();
+
+    // Verify that the texture is now cyan
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::cyan);
+    EXPECT_PIXEL_COLOR_EQ(kSize - 1, 0, GLColor::cyan);
+    EXPECT_PIXEL_COLOR_EQ(0, kSize - 1, GLColor::cyan);
+    EXPECT_PIXEL_COLOR_EQ(kSize - 1, kSize - 1, GLColor::cyan);
+
+    // For completeness, verify that the texture used as copy target is red.
+    ASSERT_GL_NO_ERROR();
+    verifyResults(texture, GLColor::red, kSize, 0, 0, kSize, kSize);
+
+    ASSERT_GL_NO_ERROR();
+}
+
 void MultisampledRenderToTextureTest::clearThenBlendCommon(bool useRenderbuffer)
 {
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_multisampled_render_to_texture"));
@@ -1441,8 +1817,7 @@ void MultisampledRenderToTextureES3Test::depthStencilClearThenDrawCommon(bool us
     ASSERT_GL_NO_ERROR();
 
     // Verify.
-    const GLColor expectedCopyResult(255, 0, 0, 255);
-    verifyResults(texture, expectedCopyResult, kSize, 0, 0, kSize, kSize);
+    verifyResults(texture, GLColor::red, kSize, 0, 0, kSize, kSize);
 }
 
 // Clear depth stencil, then draw.  The clear should be applied correctly.
@@ -1545,8 +1920,7 @@ TEST_P(MultisampledRenderToTextureES3Test, RenderbufferDepthStencilClearDrawCopy
     EXPECT_PIXEL_COLOR_NEAR(kSize - 1, kSize - 1, kExpected, 1);
 
     // For completeness, verify that the texture used as copy target is red.
-    const GLColor expectedCopyResult(255, 0, 0, 255);
-    verifyResults(texture, expectedCopyResult, kSize, 0, 0, kSize, kSize);
+    verifyResults(texture, GLColor::red, kSize, 0, 0, kSize, kSize);
 }
 
 // Draw, copy, then clear&blend.  This tests uses a depth/stencil buffer and makes sure the second
@@ -2154,8 +2528,7 @@ TEST_P(MultisampledRenderToTextureTest, DepthReadWriteToggleWithStartedRenderPas
     ASSERT_GL_NO_ERROR();
 
     // Verify the color has all three color in it.
-    const GLColor expectedCopyResult(255, 255, 255, 255);
-    EXPECT_PIXEL_COLOR_EQ(1, 1, expectedCopyResult);
+    EXPECT_PIXEL_COLOR_EQ(1, 1, GLColor::white);
 }
 
 void MultisampledRenderToTextureES3Test::colorAttachment1Common(bool useRenderbuffer)
@@ -2227,8 +2600,7 @@ void MultisampledRenderToTextureES3Test::colorAttachment1Common(bool useRenderbu
     EXPECT_PIXEL_COLOR_NEAR(kSize - 1, kSize - 1, kExpected, 1);
 
     // For completeness, verify that the texture used as copy target is red.
-    const GLColor kExpectedCopyResult(255, 0, 0, 255);
-    verifyResults(texture, kExpectedCopyResult, kSize, 0, 0, kSize, kSize);
+    verifyResults(texture, GLColor::red, kSize, 0, 0, kSize, kSize);
 
     ASSERT_GL_NO_ERROR();
 
@@ -2331,8 +2703,7 @@ void MultisampledRenderToTextureES3Test::colorAttachments0And3Common(bool useRen
     EXPECT_PIXEL_COLOR_NEAR(kSize - 1, kSize - 1, kExpected, 1);
 
     // For completeness, verify that the texture used as copy target is red.
-    const GLColor kExpectedCopyResult(255, 0, 0, 255);
-    verifyResults(texture, kExpectedCopyResult, kSize, 0, 0, kSize, kSize);
+    verifyResults(texture, GLColor::red, kSize, 0, 0, kSize, kSize);
 
     ASSERT_GL_NO_ERROR();
 
@@ -2501,8 +2872,7 @@ TEST_P(MultisampledRenderToTextureES31Test, MixedMultisampledAndMultisampledRend
     EXPECT_PIXEL_COLOR_NEAR(kSize - 1, kSize - 1, kExpected, 1);
 
     // For completeness, verify that the texture used as copy target is red.
-    const GLColor kExpectedCopyResult(255, 0, 0, 255);
-    verifyResults(texture, kExpectedCopyResult, kSize, 0, 0, kSize, kSize);
+    verifyResults(texture, GLColor::red, kSize, 0, 0, kSize, kSize);
 
     ASSERT_GL_NO_ERROR();
 
@@ -2997,8 +3367,7 @@ precision highp float;
     }
 
     // For completeness, verify that the texture used as copy target is red.
-    const GLColor kExpectedCopyResult(255, 0, 0, 255);
-    verifyResults(texture, kExpectedCopyResult, kSize, 0, 0, kSize, kSize);
+    verifyResults(texture, GLColor::red, kSize, 0, 0, kSize, kSize);
 
     ASSERT_GL_NO_ERROR();
 }
@@ -3124,8 +3493,7 @@ void MultisampledRenderToTextureES3Test::renderbufferUnresolveColorAndDepthStenc
     EXPECT_PIXEL_COLOR_NEAR(kSize - 1, kSize - 1, kExpected, 1);
 
     // For completeness, verify that the texture used as copy target is red.
-    const GLColor expectedCopyResult(255, 0, 0, 255);
-    verifyResults(texture, expectedCopyResult, kSize, 0, 0, kSize, kSize);
+    verifyResults(texture, GLColor::red, kSize, 0, 0, kSize, kSize);
 
     // Now create a framebuffer with two color attachments and do something similar.  This makes
     // sure that the fact that both these framebuffers have 2 attachments does not cause confusion,
@@ -3190,8 +3558,7 @@ void MultisampledRenderToTextureES3Test::renderbufferUnresolveColorAndDepthStenc
     EXPECT_PIXEL_COLOR_NEAR(kSize - 1, kSize - 1, kExpected2, 1);
 
     // For completeness, verify that the texture used as copy target is blue.
-    const GLColor expectedCopyResult2(0, 0, 255, 255);
-    verifyResults(texture, expectedCopyResult2, kSize, 0, 0, kSize, kSize);
+    verifyResults(texture, GLColor::blue, kSize, 0, 0, kSize, kSize);
 }
 
 // Draw, copy, then blend once on a framebuffer with color and depth attachments, and once with two
