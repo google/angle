@@ -261,9 +261,6 @@ class ContextVk : public ContextImpl, public vk::Context
                                  const std::string &message) override;
     angle::Result popDebugGroup(const gl::Context *context) override;
 
-    // Record GL API calls for debuggers
-    void logEvent(const char *eventString) { mEventLog.push_back(eventString); }
-
     bool isViewportFlipEnabledForDrawFBO() const;
     bool isViewportFlipEnabledForReadFBO() const;
     // When the device/surface is rotated such that the surface's aspect ratio is different than
@@ -955,9 +952,6 @@ class ContextVk : public ContextImpl, public vk::Context
     bool shouldSwitchToReadOnlyDepthFeedbackLoopMode(const gl::Context *context,
                                                      gl::Texture *texture) const;
 
-    // Record GL API calls for debuggers
-    void writeEventLog(const gl::Context *context, vk::CommandBuffer *commandBuffer);
-
     std::array<DirtyBitHandler, DIRTY_BIT_MAX> mGraphicsDirtyBitHandlers;
     std::array<DirtyBitHandler, DIRTY_BIT_MAX> mComputeDirtyBitHandlers;
 
@@ -1155,9 +1149,6 @@ class ContextVk : public ContextImpl, public vk::Context
     vk::DynamicBuffer mStagingBuffer;
 
     std::vector<std::string> mCommandBufferDiagnostics;
-
-    // Record GL API calls for debuggers
-    std::vector<std::string> mEventLog;
 };
 
 ANGLE_INLINE angle::Result ContextVk::endRenderPassIfTransformFeedbackBuffer(

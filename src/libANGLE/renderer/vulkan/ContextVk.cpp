@@ -312,14 +312,6 @@ vk::ResourceAccess GetStencilAccess(const gl::DepthStencilState &dsState)
     // Simplify this check by returning write instead of checking the mask.
     return vk::ResourceAccess::Write;
 }
-
-#if defined(ANGLE_ENABLE_DEBUG_TRACE)
-#    define ANGLE_WRITE_EVENT_LOG(context, commandBuffer) writeEventLog(context, commandBuffer)
-#    define ANGLE_END_EVENT_LOG(commandBuffer) commandBuffer->endDebugUtilsLabelEXT()
-#else
-#    define ANGLE_WRITE_EVENT_LOG(context, commandBuffer)
-#    define ANGLE_END_EVENT_LOG(commandBuffer)
-#endif
 }  // anonymous namespace
 
 ANGLE_INLINE void ContextVk::flushDescriptorSetUpdates()
@@ -1095,8 +1087,6 @@ angle::Result ContextVk::setupDraw(const gl::Context *context,
     if (dirtyBits.none())
         return angle::Result::Continue;
 
-    ANGLE_WRITE_EVENT_LOG(context, *commandBufferOut);
-
     // Flush any relevant dirty bits.
     for (size_t dirtyBit : dirtyBits)
     {
@@ -1302,7 +1292,6 @@ angle::Result ContextVk::setupDispatch(const gl::Context *context,
     // The following ensures prior commands are flushed before we start processing dirty bits.
     ANGLE_TRY(flushCommandsAndEndRenderPass());
     *commandBufferOut = &mOutsideRenderPassCommands->getCommandBuffer();
-    ANGLE_WRITE_EVENT_LOG(context, *commandBufferOut);
 
     // Create a local object to ensure we flush the descriptor updates to device when we leave this
     // function
@@ -2108,7 +2097,7 @@ angle::Result ContextVk::drawArrays(const gl::Context *context,
                             nullptr, mNonIndexedDirtyBitsMask, &commandBuffer));
         commandBuffer->draw(clampedVertexCount, first);
     }
-    ANGLE_END_EVENT_LOG(commandBuffer);
+
     return angle::Result::Continue;
 }
 
@@ -2128,15 +2117,12 @@ angle::Result ContextVk::drawArraysInstanced(const gl::Context *context,
                                     gl::DrawElementsType::InvalidEnum, nullptr, &commandBuffer,
                                     &numIndices));
         commandBuffer->drawIndexedInstanced(numIndices, instances);
+        return angle::Result::Continue;
     }
-    else
-    {
-        ANGLE_TRY(setupDraw(context, mode, first, count, instances,
-                            gl::DrawElementsType::InvalidEnum, nullptr, mNonIndexedDirtyBitsMask,
-                            &commandBuffer));
-        commandBuffer->drawInstanced(gl::GetClampedVertexCount<uint32_t>(count), instances, first);
-    }
-    ANGLE_END_EVENT_LOG(commandBuffer);
+
+    ANGLE_TRY(setupDraw(context, mode, first, count, instances, gl::DrawElementsType::InvalidEnum,
+                        nullptr, mNonIndexedDirtyBitsMask, &commandBuffer));
+    commandBuffer->drawInstanced(gl::GetClampedVertexCount<uint32_t>(count), instances, first);
     return angle::Result::Continue;
 }
 
@@ -2158,16 +2144,13 @@ angle::Result ContextVk::drawArraysInstancedBaseInstance(const gl::Context *cont
                                     &numIndices));
         commandBuffer->drawIndexedInstancedBaseVertexBaseInstance(numIndices, instances, 0, 0,
                                                                   baseInstance);
+        return angle::Result::Continue;
     }
-    else
-    {
-        ANGLE_TRY(setupDraw(context, mode, first, count, instances,
-                            gl::DrawElementsType::InvalidEnum, nullptr, mNonIndexedDirtyBitsMask,
-                            &commandBuffer));
-        commandBuffer->drawInstancedBaseInstance(gl::GetClampedVertexCount<uint32_t>(count),
-                                                 instances, first, baseInstance);
-    }
-    ANGLE_END_EVENT_LOG(commandBuffer);
+
+    ANGLE_TRY(setupDraw(context, mode, first, count, instances, gl::DrawElementsType::InvalidEnum,
+                        nullptr, mNonIndexedDirtyBitsMask, &commandBuffer));
+    commandBuffer->drawInstancedBaseInstance(gl::GetClampedVertexCount<uint32_t>(count), instances,
+                                             first, baseInstance);
     return angle::Result::Continue;
 }
 
@@ -2190,7 +2173,7 @@ angle::Result ContextVk::drawElements(const gl::Context *context,
         ANGLE_TRY(setupIndexedDraw(context, mode, count, 1, type, indices, &commandBuffer));
         commandBuffer->drawIndexed(count);
     }
-    ANGLE_END_EVENT_LOG(commandBuffer);
+
     return angle::Result::Continue;
 }
 
@@ -2214,7 +2197,7 @@ angle::Result ContextVk::drawElementsBaseVertex(const gl::Context *context,
         ANGLE_TRY(setupIndexedDraw(context, mode, count, 1, type, indices, &commandBuffer));
         commandBuffer->drawIndexedBaseVertex(count, baseVertex);
     }
-    ANGLE_END_EVENT_LOG(commandBuffer);
+
     return angle::Result::Continue;
 }
 
@@ -2240,7 +2223,6 @@ angle::Result ContextVk::drawElementsInstanced(const gl::Context *context,
     }
 
     commandBuffer->drawIndexedInstanced(count, instances);
-    ANGLE_END_EVENT_LOG(commandBuffer);
     return angle::Result::Continue;
 }
 
@@ -2267,7 +2249,6 @@ angle::Result ContextVk::drawElementsInstancedBaseVertex(const gl::Context *cont
     }
 
     commandBuffer->drawIndexedInstancedBaseVertex(count, instances, baseVertex);
-    ANGLE_END_EVENT_LOG(commandBuffer);
     return angle::Result::Continue;
 }
 
@@ -2289,14 +2270,12 @@ angle::Result ContextVk::drawElementsInstancedBaseVertexBaseInstance(const gl::C
             setupLineLoopDraw(context, mode, 0, count, type, indices, &commandBuffer, &indexCount));
         commandBuffer->drawIndexedInstancedBaseVertexBaseInstance(indexCount, instances, 0,
                                                                   baseVertex, baseInstance);
+        return angle::Result::Continue;
     }
-    else
-    {
-        ANGLE_TRY(setupIndexedDraw(context, mode, count, instances, type, indices, &commandBuffer));
-        commandBuffer->drawIndexedInstancedBaseVertexBaseInstance(count, instances, 0, baseVertex,
-                                                                  baseInstance);
-    }
-    ANGLE_END_EVENT_LOG(commandBuffer);
+
+    ANGLE_TRY(setupIndexedDraw(context, mode, count, instances, type, indices, &commandBuffer));
+    commandBuffer->drawIndexedInstancedBaseVertexBaseInstance(count, instances, 0, baseVertex,
+                                                              baseInstance);
     return angle::Result::Continue;
 }
 
@@ -2370,16 +2349,13 @@ angle::Result ContextVk::drawArraysIndirect(const gl::Context *context,
                                             &dstIndirectBuf, &dstIndirectBufOffset));
 
         commandBuffer->drawIndexedIndirect(dstIndirectBuf->getBuffer(), dstIndirectBufOffset, 1, 0);
+        return angle::Result::Continue;
     }
-    else
-    {
-        ANGLE_TRY(setupIndirectDraw(context, mode, mNonIndexedDirtyBitsMask, currentIndirectBuf,
-                                    currentIndirectBufOffset, &commandBuffer));
 
-        commandBuffer->drawIndirect(currentIndirectBuf->getBuffer(), currentIndirectBufOffset, 1,
-                                    0);
-    }
-    ANGLE_END_EVENT_LOG(commandBuffer);
+    ANGLE_TRY(setupIndirectDraw(context, mode, mNonIndexedDirtyBitsMask, currentIndirectBuf,
+                                currentIndirectBufOffset, &commandBuffer));
+
+    commandBuffer->drawIndirect(currentIndirectBuf->getBuffer(), currentIndirectBufOffset, 1, 0);
     return angle::Result::Continue;
 }
 
@@ -2454,7 +2430,6 @@ angle::Result ContextVk::drawElementsIndirect(const gl::Context *context,
 
     commandBuffer->drawIndexedIndirect(currentIndirectBuf->getBuffer(), currentIndirectBufOffset, 1,
                                        0);
-    ANGLE_END_EVENT_LOG(commandBuffer);
     return angle::Result::Continue;
 }
 
@@ -2650,56 +2625,6 @@ angle::Result ContextVk::popDebugGroup(const gl::Context *context)
     mOutsideRenderPassCommands->getCommandBuffer().endDebugUtilsLabelEXT();
 
     return angle::Result::Continue;
-}
-
-void ContextVk::writeEventLog(const gl::Context *context, vk::CommandBuffer *commandBuffer)
-{
-    if (mEventLog.empty())
-    {
-        return;
-    }
-
-    // Insert OpenGL ES commands into debug label.  We create a 3-level cascade here for
-    // OpenGL-ES-first debugging in AGI.  Here's the general outline of commands:
-    // -glDrawCommand
-    // --vkCmdBeginDebugUtilsLabelEXT() #1 for "glDrawCommand"
-    // --OpenGL ES Commands
-    // ---vkCmdBeginDebugUtilsLabelEXT() #2 for "OpenGL ES Commands"
-    // ---Individual OpenGL ES Commands leading up to glDrawCommand
-    // ----vkCmdBeginDebugUtilsLabelEXT() #3 for each individual OpenGL ES Command
-    // ----vkCmdEndDebugUtilsLabelEXT() #3 for each individual OpenGL ES Command
-    // ----...More Individual OGL Commands...
-    // ----Final Individual OGL command will be the same glDrawCommand shown in #1 above
-    // ---vkCmdEndDebugUtilsLabelEXT() #2 for "OpenGL ES Commands"
-    // --VK SetupDraw & Draw-related commands will be embedded here under glDraw #1
-    // --vkCmdEndDebugUtilsLabelEXT() #1 is called after each vkDraw* or vkDispatch* call
-    VkDebugUtilsLabelEXT label = {VK_STRUCTURE_TYPE_DEBUG_UTILS_LABEL_EXT,
-                                  nullptr,
-                                  mEventLog.back().c_str(),
-                                  {0.0f, 0.0f, 0.0f, 0.0f}};
-    // This is #1 from comment above
-    commandBuffer->beginDebugUtilsLabelEXT(label);
-    std::string oglCmds = "OpenGL ES Commands";
-    label.pLabelName    = oglCmds.c_str();
-    // This is #2 from comment above
-    commandBuffer->beginDebugUtilsLabelEXT(label);
-    for (uint32_t i = 0; i < mEventLog.size(); ++i)
-    {
-        label.pLabelName = mEventLog[i].c_str();
-        // NOTE: We have to use a begin/end pair here because AGI does not promote the
-        // pLabelName from an insertDebugUtilsLabelEXT() call to the Commands panel.
-        // Internal bug b/169243237 is tracking this and once the insert* call shows the
-        // pLabelName similar to begin* call, we can switch these to insert* calls instead.
-        // This is #3 from comment above.
-        // TODO(ianelliott): Transfer the bug to a publicly-visible bug.
-        commandBuffer->beginDebugUtilsLabelEXT(label);
-        commandBuffer->endDebugUtilsLabelEXT();
-    }
-    commandBuffer->endDebugUtilsLabelEXT();
-    // The final end* call for #1 above is made in the ContextVk::draw* or
-    //  ContextVk::dispatch* function calls.
-
-    mEventLog.clear();
 }
 
 bool ContextVk::isViewportFlipEnabledForDrawFBO() const
@@ -3663,8 +3588,6 @@ angle::Result ContextVk::dispatchCompute(const gl::Context *context,
 
     commandBuffer->dispatch(numGroupsX, numGroupsY, numGroupsZ);
 
-    ANGLE_END_EVENT_LOG(commandBuffer);
-
     return angle::Result::Continue;
 }
 
@@ -3679,8 +3602,6 @@ angle::Result ContextVk::dispatchComputeIndirect(const gl::Context *context, GLi
                                            vk::PipelineStage::DrawIndirect, &buffer);
 
     commandBuffer->dispatchIndirect(buffer.getBuffer(), indirect);
-
-    ANGLE_END_EVENT_LOG(commandBuffer);
 
     return angle::Result::Continue;
 }

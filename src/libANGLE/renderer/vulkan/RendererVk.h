@@ -27,7 +27,6 @@
 #include "libANGLE/BlobCache.h"
 #include "libANGLE/Caps.h"
 #include "libANGLE/renderer/vulkan/CommandProcessor.h"
-#include "libANGLE/renderer/vulkan/DebugAnnotatorVk.h"
 #include "libANGLE/renderer/vulkan/QueryVk.h"
 #include "libANGLE/renderer/vulkan/ResourceVk.h"
 #include "libANGLE/renderer/vulkan/UtilsVk.h"
@@ -369,8 +368,6 @@ class RendererVk : angle::NonCopyable
     // Latest validation data for debug overlay.
     std::string mLastValidationMessage;
     uint32_t mValidationMessageCount;
-
-    DebugAnnotatorVk mAnnotator;
 
     // How close to VkPhysicalDeviceLimits::maxMemoryAllocationCount we allow ourselves to get
     static constexpr double kPercentMaxMemoryAllocationCount = 0.3;
