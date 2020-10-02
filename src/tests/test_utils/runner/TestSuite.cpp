@@ -1281,7 +1281,7 @@ int TestSuite::run()
     }
 
     // Dump combined results.
-    WriteOutputFiles(true, mTestResults, mResultsFile, mHistogramJsonFile, mTestSuiteName.c_str());
+    WriteOutputFiles(false, mTestResults, mResultsFile, mHistogramJsonFile, mTestSuiteName.c_str());
 
     totalRunTime.stop();
     printf("Tests completed in %lf seconds\n", totalRunTime.getElapsedTime());
