@@ -1002,12 +1002,8 @@ angle::Result CommandBufferHelper::flushToPrimary(ContextVk *contextVk,
     {
         mCommandBuffer.executeQueuedResetQueryPoolCommands(primary->getHandle());
         // Pull a RenderPass from the cache.
-        RenderPassCache &renderPassCache = contextVk->getRenderPassCache();
-        Serial serial                    = contextVk->getCurrentQueueSerial();
-
         RenderPass *renderPass = nullptr;
-        ANGLE_TRY(renderPassCache.getRenderPassWithOps(contextVk, serial, mRenderPassDesc,
-                                                       mAttachmentOps, &renderPass));
+        ANGLE_TRY(contextVk->getRenderPassWithOps(mRenderPassDesc, mAttachmentOps, &renderPass));
 
         VkRenderPassBeginInfo beginInfo    = {};
         beginInfo.sType                    = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;

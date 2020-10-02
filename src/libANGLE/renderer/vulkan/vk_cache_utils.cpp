@@ -736,6 +736,8 @@ angle::Result InitializeRenderPassFromDesc(Context *context,
                                            const AttachmentOpsArray &ops,
                                            RenderPass *renderPass)
 {
+    RendererVk *renderer = context->getRenderer();
+
     constexpr VkAttachmentReference kUnusedAttachment   = {VK_ATTACHMENT_UNUSED,
                                                          VK_IMAGE_LAYOUT_UNDEFINED};
     constexpr VkAttachmentReference2 kUnusedAttachment2 = {
@@ -750,6 +752,9 @@ angle::Result InitializeRenderPassFromDesc(Context *context,
 
     // The list of attachments includes all non-resolve and resolve attachments.
     FramebufferAttachmentArray<VkAttachmentDescription> attachmentDescs;
+
+    const bool hasUnresolveAttachments =
+        desc.getColorUnresolveAttachmentMask().any() || desc.hasDepthStencilUnresolveAttachment();
 
     // Pack color attachments
     PackedAttachmentIndex attachmentCount(0);
@@ -772,7 +777,7 @@ angle::Result InitializeRenderPassFromDesc(Context *context,
 
         angle::FormatID formatID = desc[colorIndexGL];
         ASSERT(formatID != angle::FormatID::NONE);
-        const vk::Format &format = context->getRenderer()->getFormat(formatID);
+        const vk::Format &format = renderer->getFormat(formatID);
 
         VkAttachmentReference colorRef;
         colorRef.attachment = attachmentCount.get();
@@ -794,7 +799,7 @@ angle::Result InitializeRenderPassFromDesc(Context *context,
 
         angle::FormatID formatID = desc[depthStencilIndexGL];
         ASSERT(formatID != angle::FormatID::NONE);
-        const vk::Format &format = context->getRenderer()->getFormat(formatID);
+        const vk::Format &format = renderer->getFormat(formatID);
 
         depthStencilAttachmentRef.attachment = attachmentCount.get();
 
@@ -828,7 +833,7 @@ angle::Result InitializeRenderPassFromDesc(Context *context,
 
         ASSERT(desc.isColorAttachmentEnabled(colorIndexGL));
 
-        const vk::Format &format = context->getRenderer()->getFormat(desc[colorIndexGL]);
+        const vk::Format &format = renderer->getFormat(desc[colorIndexGL]);
 
         VkAttachmentReference colorRef;
         colorRef.attachment = attachmentCount.get();
@@ -849,7 +854,7 @@ angle::Result InitializeRenderPassFromDesc(Context *context,
 
         uint32_t depthStencilIndexGL = static_cast<uint32_t>(desc.depthStencilAttachmentIndex());
 
-        const vk::Format &format = context->getRenderer()->getFormat(desc[depthStencilIndexGL]);
+        const vk::Format &format = renderer->getFormat(desc[depthStencilIndexGL]);
 
         depthStencilResolveAttachmentRef.attachment = attachmentCount.get();
         depthStencilResolveAttachmentRef.layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
@@ -873,7 +878,7 @@ angle::Result InitializeRenderPassFromDesc(Context *context,
     VkAttachmentReference unresolveDepthStencilAttachmentRef = kUnusedAttachment;
     FramebufferAttachmentsVector<VkAttachmentReference> unresolveInputAttachmentRefs;
     FramebufferAttachmentsVector<uint32_t> unresolvePreserveAttachmentRefs;
-    if (desc.getColorUnresolveAttachmentMask().any() || desc.hasDepthStencilUnresolveAttachment())
+    if (hasUnresolveAttachments)
     {
         subpassDesc.push_back({});
         InitializeUnresolveSubpass(
@@ -919,7 +924,7 @@ angle::Result InitializeRenderPassFromDesc(Context *context,
     }
 
     std::vector<VkSubpassDependency> subpassDependencies;
-    if (desc.getColorUnresolveAttachmentMask().any() || desc.hasDepthStencilUnresolveAttachment())
+    if (hasUnresolveAttachments)
     {
         InitializeUnresolveSubpassDependencies(
             subpassDesc, desc.getColorUnresolveAttachmentMask().any(),
