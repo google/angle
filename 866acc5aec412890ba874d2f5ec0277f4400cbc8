@@ -197,6 +197,30 @@
     },
     {
       "key": {
+        "uuid": "b124d2c3_b9309981",
+        "filename": "src/libANGLE/renderer/vulkan/DisplayVk.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-10-02T23:43:02Z",
+      "side": 1,
+      "message": "The thread safe thing has nothing to do with front end back end though. There is an existing bug that Courtney found https://issuetracker.google.com/169847078. We should be good once that is fixed. As we discussed in the previous meeting, EGLImage may still have issues if used on two non-shared contexts, but we also agreed that we will deal with it separetely, tracked by http://b/169868803. (I believe there are general threading issues with EGLImage used on two non-shared contexts, not just when ImageHelper get released).\n\nBut anyway, moving the shared context tracking to front end is orthogonal issue to threading. I can move it to front end, but access it will mean another extra indirection from gl::Context to implementation and then cast to ContextVk. Right now front end does not have such need, so I figured leave it in back end probably is enough. But anyway, I will move it to front end at next update, along with absorbing other feedbacks.",
+      "parentUuid": "4517726d_a5b1c75d",
+      "range": {
+        "startLine": 43,
+        "startChar": 0,
+        "endLine": 45,
+        "endChar": 37
+      },
+      "revId": "866acc5aec412890ba874d2f5ec0277f4400cbc8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "76df7ac7_d5887cb2",
         "filename": "src/libANGLE/renderer/vulkan/ImageVk.cpp",
         "patchSetId": 5
