@@ -3475,6 +3475,10 @@ void Context::initCaps()
         INFO() << "Limiting binary format support count to zero while FrameCapture enabled"
                << std::endl;
         mDisplay->overrideFrontendFeatures({"disable_program_binary"}, true);
+
+        INFO() << "Disabling GL_EXT_map_buffer_range during capture, it is not supported on "
+               << "some native drivers" << std::endl;
+        mState.mExtensions.mapBufferRange = false;
     }
 
     // Disable support for OES_get_program_binary

@@ -839,6 +839,18 @@ void MaybeResetResources(std::stringstream &out,
             BufferSet &buffersToRestore = resourceTracker->getBuffersToRestore();
             for (const gl::BufferID id : buffersToRestore)
             {
+                if (resourceTracker->getStartingBuffersMappedCurrent(id))
+                {
+                    // Some drivers require the buffer to be unmapped before you can update data,
+                    // which violates the spec. See gl::Buffer::bufferDataImpl().
+                    for (CallCapture &call : bufferUnmapCalls[id])
+                    {
+                        out << "    ";
+                        WriteCppReplayForCall(call, dataTracker, out, header, binaryData);
+                        out << ";\n";
+                    }
+                }
+
                 // Emit their restore calls
                 for (CallCapture &call : bufferRestoreCalls[id])
                 {
