@@ -1777,6 +1777,9 @@ TEST_P(CopyTextureTestES3, ES3UnormFormats)
     // http://anglebug.com/4092
     ANGLE_SKIP_TEST_IF(IsAndroid());
 
+    // http://anglebug.com/5127
+    ANGLE_SKIP_TEST_IF(IsWindows() && IsOpenGL() && IsIntel());
+
     auto testOutput = [this](GLuint texture, const GLColor &expectedColor) {
         constexpr char kVS[] =
             "#version 300 es\n"
