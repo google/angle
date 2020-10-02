@@ -235,7 +235,8 @@ void DisplayCGL::terminate()
     }
 }
 
-egl::Error DisplayCGL::makeCurrent(egl::Surface *drawSurface,
+egl::Error DisplayCGL::makeCurrent(egl::Display *display,
+                                   egl::Surface *drawSurface,
                                    egl::Surface *readSurface,
                                    gl::Context *context)
 {
@@ -252,7 +253,7 @@ egl::Error DisplayCGL::makeCurrent(egl::Surface *drawSurface,
         CGLSetCurrentContext(newContext);
         mCurrentContexts[std::this_thread::get_id()] = newContext;
     }
-    return DisplayGL::makeCurrent(drawSurface, readSurface, context);
+    return DisplayGL::makeCurrent(display, drawSurface, readSurface, context);
 }
 
 SurfaceImpl *DisplayCGL::createWindowSurface(const egl::SurfaceState &state,

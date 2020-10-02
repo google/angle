@@ -786,7 +786,7 @@ Error Display::initialize()
         mBlobCache.resize(1024 * 1024);
     }
 
-    gl::InitializeDebugAnnotations(&mAnnotator);
+    setGlobalDebugAnnotator();
 
     gl::InitializeDebugMutexIfNeeded();
 
@@ -1258,7 +1258,7 @@ Error Display::makeCurrent(gl::Context *previousContext,
         }
     }
 
-    ANGLE_TRY(mImplementation->makeCurrent(drawSurface, readSurface, context));
+    ANGLE_TRY(mImplementation->makeCurrent(this, drawSurface, readSurface, context));
 
     if (context != nullptr)
     {
