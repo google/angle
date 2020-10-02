@@ -679,7 +679,8 @@ egl::Error DisplayWGL::waitNative(const gl::Context *context, EGLint engine)
     return egl::NoError();
 }
 
-egl::Error DisplayWGL::makeCurrent(egl::Surface *drawSurface,
+egl::Error DisplayWGL::makeCurrent(egl::Display *display,
+                                   egl::Surface *drawSurface,
                                    egl::Surface *readSurface,
                                    gl::Context *context)
 {
@@ -720,7 +721,7 @@ egl::Error DisplayWGL::makeCurrent(egl::Surface *drawSurface,
         currentContext.glrc = newContext;
     }
 
-    return DisplayGL::makeCurrent(drawSurface, readSurface, context);
+    return DisplayGL::makeCurrent(display, drawSurface, readSurface, context);
 }
 
 egl::Error DisplayWGL::registerD3DDevice(IUnknown *device, HANDLE *outHandle)

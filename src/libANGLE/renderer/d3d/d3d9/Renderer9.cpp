@@ -154,6 +154,11 @@ Renderer9::Renderer9(egl::Display *display) : RendererD3D(display), mStateManage
     gl::InitializeDebugAnnotations(&mAnnotator);
 }
 
+void Renderer9::setGlobalDebugAnnotator()
+{
+    gl::InitializeDebugAnnotations(&mAnnotator);
+}
+
 Renderer9::~Renderer9()
 {
     if (mDevice)

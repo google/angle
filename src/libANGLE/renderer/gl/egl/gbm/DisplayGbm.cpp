@@ -915,11 +915,12 @@ ContextImpl *DisplayGbm::createContext(const gl::State &state,
     return new ContextEGL(state, errorSet, mRenderer);
 }
 
-egl::Error DisplayGbm::makeCurrent(egl::Surface *drawSurface,
+egl::Error DisplayGbm::makeCurrent(egl::Display *display,
+                                   egl::Surface *drawSurface,
                                    egl::Surface *readSurface,
                                    gl::Context *context)
 {
-    return DisplayGL::makeCurrent(drawSurface, readSurface, context);
+    return DisplayGL::makeCurrent(display, drawSurface, readSurface, context);
 }
 
 bool DisplayGbm::validateEglConfig(const EGLint *configAttribs)

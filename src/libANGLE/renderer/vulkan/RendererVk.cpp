@@ -902,6 +902,8 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
     // Initialize the format table.
     mFormatTable.initialize(this, &mNativeTextureCaps, &mNativeCaps.compressedTextureFormats);
 
+    setGlobalDebugAnnotator();
+
     if (getFeatures().enableCommandProcessingThread.enabled)
     {
         mCommandProcessorThread =
@@ -2372,6 +2374,13 @@ void RendererVk::onCompletedSerial(Serial serial)
     {
         mLastCompletedQueueSerial = serial;
     }
+}
+
+void RendererVk::setGlobalDebugAnnotator()
+{
+    // TODO(ianelliott): Implement this method.
+    //
+    // https://issuetracker.google.com/issues/162068318
 }
 
 void RendererVk::reloadVolkIfNeeded() const

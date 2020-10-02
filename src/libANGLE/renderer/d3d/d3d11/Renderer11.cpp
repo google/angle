@@ -956,6 +956,11 @@ egl::Error Renderer11::initializeD3DDevice()
     return egl::NoError();
 }
 
+void Renderer11::setGlobalDebugAnnotator()
+{
+    gl::InitializeDebugAnnotations(&mAnnotator);
+}
+
 // do any one-time device initialization
 // NOTE: this is also needed after a device lost/reset
 // to reset the scene status and ensure the default states are reset.
