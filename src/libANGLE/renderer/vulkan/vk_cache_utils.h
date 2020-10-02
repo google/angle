@@ -289,8 +289,14 @@ struct PackedAttachmentOpsDesc final
     uint16_t stencilLoadOp : 2;
     uint16_t stencilStoreOp : 1;
 
-    // Reserved for use with multisampled-render-to-texture invalidate.
-    uint16_t reserved : 2;
+    // If a corresponding resolve attachment exists, storeOp may already be DONT_CARE, and it's
+    // unclear whether the attachment was invalidated or not.  This information is passed along here
+    // so that the resolve attachment's storeOp can be set to DONT_CARE if the attachment is
+    // invalidated, and if possible removed from the list of resolve attachments altogether.  Note
+    // that the latter may not be possible if the render pass has multiple subpasses due to Vulkan
+    // render pass compatibility rules.
+    uint16_t isInvalidated : 1;
+    uint16_t isStencilInvalidated : 1;
 
     // 4-bits to force pad the structure to exactly 2 bytes.  Note that we currently don't support
     // any of the extension layouts, whose values start at 1'000'000'000.

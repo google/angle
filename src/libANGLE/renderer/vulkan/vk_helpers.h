@@ -1025,6 +1025,7 @@ class CommandBufferHelper : angle::NonCopyable
     {
         ASSERT(mIsRenderPassCommandBuffer);
         SetBitField(mAttachmentOps[attachmentIndex].storeOp, VK_ATTACHMENT_STORE_OP_DONT_CARE);
+        mAttachmentOps[attachmentIndex].isInvalidated = true;
     }
 
     void invalidateRenderPassDepthAttachment(const gl::DepthStencilState &dsState)
