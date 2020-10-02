@@ -377,8 +377,11 @@ bool IsConfigWhitelisted(const SystemInfo &systemInfo, const PlatformParameters 
                 {
                     case EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE:
                     case EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE:
-                    case EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE:
                         return true;
+                    case EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE:
+                        // Note we disable AMD OpenGL testing on Windows due to using a very old and
+                        // outdated card with many driver bugs. See http://anglebug.com/5123
+                        return !IsAMD();
                     case EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE:
                         if (IsARM64())
                         {
