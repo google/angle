@@ -1032,19 +1032,6 @@ void CommandBufferHelper::endRenderPass(ContextVk *contextVk)
 
     // Ensure we don't write to a read-only RenderPass. (ReadOnly -> !Write)
     ASSERT(!mReadOnlyDepthStencilMode || mDepthAccess != ResourceAccess::Write);
-
-    // Fill out perf counters
-    PerfCounters &counters = contextVk->getPerfCounters();
-
-    counters.depthClears += dsOps.loadOp == VK_ATTACHMENT_LOAD_OP_CLEAR ? 1 : 0;
-    counters.depthLoads += dsOps.loadOp == VK_ATTACHMENT_LOAD_OP_LOAD ? 1 : 0;
-    counters.depthStores += dsOps.storeOp == VK_ATTACHMENT_STORE_OP_STORE ? 1 : 0;
-    counters.stencilClears += dsOps.stencilLoadOp == VK_ATTACHMENT_LOAD_OP_CLEAR ? 1 : 0;
-    counters.stencilLoads += dsOps.stencilLoadOp == VK_ATTACHMENT_LOAD_OP_LOAD ? 1 : 0;
-    counters.stencilStores += dsOps.stencilStoreOp == VK_ATTACHMENT_STORE_OP_STORE ? 1 : 0;
-    counters.readOnlyDepthStencilRenderPasses +=
-        static_cast<ImageLayout>(dsOps.finalLayout) == vk::ImageLayout::DepthStencilReadOnly ? 1
-                                                                                             : 0;
 }
 
 void CommandBufferHelper::beginTransformFeedback(size_t validBufferCount,

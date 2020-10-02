@@ -56,8 +56,7 @@ class DynamicDescriptorPool;
 class ImageHelper;
 enum class ImageLayout;
 
-using RenderPassAndSerial = ObjectAndSerial<RenderPass>;
-using PipelineAndSerial   = ObjectAndSerial<Pipeline>;
+using PipelineAndSerial = ObjectAndSerial<Pipeline>;
 
 using RefCountedDescriptorSetLayout    = RefCounted<DescriptorSetLayout>;
 using RefCountedPipelineLayout         = RefCounted<PipelineLayout>;
@@ -114,6 +113,7 @@ template <typename T>
 using FramebufferAttachmentArray = std::array<T, kMaxFramebufferAttachments>;
 template <typename T>
 using FramebufferAttachmentsVector = angle::FixedVector<T, kMaxFramebufferAttachments>;
+using FramebufferAttachmentMask    = angle::BitSet<kMaxFramebufferAttachments>;
 
 constexpr size_t kMaxFramebufferNonResolveAttachments = gl::IMPLEMENTATION_MAX_DRAW_BUFFERS + 1;
 template <typename T>
@@ -1139,6 +1139,31 @@ class SamplerHelper final : angle::NonCopyable
 
 using RefCountedSampler = RefCounted<SamplerHelper>;
 using SamplerBinding    = BindingPointer<SamplerHelper>;
+
+class RenderPassHelper final : angle::NonCopyable
+{
+  public:
+    RenderPassHelper();
+    ~RenderPassHelper();
+
+    RenderPassHelper(RenderPassHelper &&other);
+    RenderPassHelper &operator=(RenderPassHelper &&other);
+
+    void destroy(VkDevice device);
+
+    const RenderPass &getRenderPass() const;
+    RenderPass &getRenderPass();
+
+    void updateSerial(Serial serial);
+
+    const RenderPassPerfCounters &getPerfCounters() const;
+    RenderPassPerfCounters &getPerfCounters();
+
+  private:
+    RenderPass mRenderPass;
+    Serial mSerial;
+    RenderPassPerfCounters mPerfCounters;
+};
 }  // namespace vk
 }  // namespace rx
 
@@ -1235,20 +1260,27 @@ class RenderPassCache final : angle::NonCopyable
 
             // Find the first element and return it.
             innerCache.begin()->second.updateSerial(serial);
-            *renderPassOut = &innerCache.begin()->second.get();
+            *renderPassOut = &innerCache.begin()->second.getRenderPass();
             return angle::Result::Continue;
         }
 
         return addRenderPass(contextVk, serial, desc, renderPassOut);
     }
 
-    angle::Result getRenderPassWithOps(vk::Context *context,
+    angle::Result getRenderPassWithOps(ContextVk *contextVk,
                                        Serial serial,
                                        const vk::RenderPassDesc &desc,
                                        const vk::AttachmentOpsArray &attachmentOps,
                                        vk::RenderPass **renderPassOut);
 
   private:
+    angle::Result getRenderPassWithOpsImpl(ContextVk *contextVk,
+                                           Serial serial,
+                                           const vk::RenderPassDesc &desc,
+                                           const vk::AttachmentOpsArray &attachmentOps,
+                                           bool updatePerfCounters,
+                                           vk::RenderPass **renderPassOut);
+
     angle::Result addRenderPass(ContextVk *contextVk,
                                 Serial serial,
                                 const vk::RenderPassDesc &desc,
@@ -1256,7 +1288,7 @@ class RenderPassCache final : angle::NonCopyable
 
     // Use a two-layer caching scheme. The top level matches the "compatible" RenderPass elements.
     // The second layer caches the attachment load/store ops and initial/final layout.
-    using InnerCache = std::unordered_map<vk::AttachmentOpsArray, vk::RenderPassAndSerial>;
+    using InnerCache = std::unordered_map<vk::AttachmentOpsArray, vk::RenderPassHelper>;
     using OuterCache = std::unordered_map<vk::RenderPassDesc, InnerCache>;
 
     OuterCache mPayload;

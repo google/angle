@@ -773,6 +773,27 @@ class ResourceSerialFactory final : angle::NonCopyable
 };
 
 // Performance and resource counters.
+struct RenderPassPerfCounters
+{
+    // load/storeOps. Includes ops for resolve attachment. Maximum value = 2.
+    uint8_t depthClears;
+    uint8_t depthLoads;
+    uint8_t depthStores;
+    uint8_t stencilClears;
+    uint8_t stencilLoads;
+    uint8_t stencilStores;
+    // Number of unresolve and resolve operations.  Maximum value for color =
+    // gl::IMPLEMENTATION_MAX_DRAW_BUFFERS and for depth/stencil = 1 each.
+    uint8_t colorAttachmentUnresolves;
+    uint8_t colorAttachmentResolves;
+    uint8_t depthAttachmentUnresolves;
+    uint8_t depthAttachmentResolves;
+    uint8_t stencilAttachmentUnresolves;
+    uint8_t stencilAttachmentResolves;
+    // Whether the depth/stencil attachment is using a read-only layout.
+    uint8_t readOnlyDepthStencil;
+};
+
 struct PerfCounters
 {
     uint32_t primaryBuffers;
@@ -786,6 +807,12 @@ struct PerfCounters
     uint32_t stencilClears;
     uint32_t stencilLoads;
     uint32_t stencilStores;
+    uint32_t colorAttachmentUnresolves;
+    uint32_t depthAttachmentUnresolves;
+    uint32_t stencilAttachmentUnresolves;
+    uint32_t colorAttachmentResolves;
+    uint32_t depthAttachmentResolves;
+    uint32_t stencilAttachmentResolves;
     uint32_t readOnlyDepthStencilRenderPasses;
 };
 

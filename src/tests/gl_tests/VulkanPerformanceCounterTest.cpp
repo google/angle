@@ -94,15 +94,6 @@ class VulkanPerformanceCounterTest : public ANGLETest
         expected->stencilStores = counters.stencilStores + incrementalStencilStores;
     }
 
-    void setAndIncrementLoadCountersForInvalidateTest(const rx::vk::PerfCounters &counters,
-                                                      uint32_t incrementalDepthLoads,
-                                                      uint32_t incrementalStencilLoads,
-                                                      rx::vk::PerfCounters *expected)
-    {
-        expected->depthLoads   = counters.depthLoads + incrementalDepthLoads;
-        expected->stencilLoads = counters.stencilLoads + incrementalStencilLoads;
-    }
-
     void compareDepthStencilCountersForInvalidateTest(const rx::vk::PerfCounters &counters,
                                                       const rx::vk::PerfCounters &expected)
     {
@@ -114,11 +105,59 @@ class VulkanPerformanceCounterTest : public ANGLETest
         EXPECT_EQ(expected.stencilStores, counters.stencilStores);
     }
 
+    void setAndIncrementLoadCountersForInvalidateTest(const rx::vk::PerfCounters &counters,
+                                                      uint32_t incrementalDepthLoads,
+                                                      uint32_t incrementalStencilLoads,
+                                                      rx::vk::PerfCounters *expected)
+    {
+        expected->depthLoads   = counters.depthLoads + incrementalDepthLoads;
+        expected->stencilLoads = counters.stencilLoads + incrementalStencilLoads;
+    }
+
     void compareLoadCountersForInvalidateTest(const rx::vk::PerfCounters &counters,
                                               const rx::vk::PerfCounters &expected)
     {
         EXPECT_EQ(expected.depthLoads, counters.depthLoads);
         EXPECT_EQ(expected.stencilLoads, counters.stencilLoads);
+    }
+
+    void setExpectedCountersForUnresolveResolveTest(const rx::vk::PerfCounters &counters,
+                                                    uint32_t incrementalColorAttachmentUnresolves,
+                                                    uint32_t incrementalDepthAttachmentUnresolves,
+                                                    uint32_t incrementalStencilAttachmentUnresolves,
+                                                    uint32_t incrementalColorAttachmentResolves,
+                                                    uint32_t incrementalDepthAttachmentResolves,
+                                                    uint32_t incrementalStencilAttachmentResolves,
+                                                    rx::vk::PerfCounters *expected)
+    {
+        expected->colorAttachmentUnresolves =
+            counters.colorAttachmentUnresolves + incrementalColorAttachmentUnresolves;
+        expected->depthAttachmentUnresolves =
+            counters.depthAttachmentUnresolves + incrementalDepthAttachmentUnresolves;
+        expected->stencilAttachmentUnresolves =
+            counters.stencilAttachmentUnresolves + incrementalStencilAttachmentUnresolves;
+        expected->colorAttachmentResolves =
+            counters.colorAttachmentResolves + incrementalColorAttachmentResolves;
+        expected->depthAttachmentResolves =
+            counters.depthAttachmentResolves + incrementalDepthAttachmentResolves;
+        expected->stencilAttachmentResolves =
+            counters.stencilAttachmentResolves + incrementalStencilAttachmentResolves;
+    }
+
+    void compareCountersForUnresolveResolveTest(const rx::vk::PerfCounters &counters,
+                                                const rx::vk::PerfCounters &expected)
+    {
+        EXPECT_EQ(expected.colorAttachmentUnresolves, counters.colorAttachmentUnresolves);
+        EXPECT_EQ(expected.depthAttachmentUnresolves, counters.depthAttachmentUnresolves);
+        if (counters.stencilAttachmentUnresolves != 0)
+        {
+            // Allow stencil unresolves to be 0.  If VK_EXT_shader_stencil_export is not supported,
+            // stencil unresolve is impossible.
+            EXPECT_EQ(expected.stencilAttachmentUnresolves, counters.stencilAttachmentUnresolves);
+        }
+        EXPECT_EQ(expected.colorAttachmentResolves, counters.colorAttachmentResolves);
+        EXPECT_EQ(expected.depthAttachmentResolves, counters.depthAttachmentResolves);
+        EXPECT_EQ(expected.stencilAttachmentResolves, counters.stencilAttachmentResolves);
     }
 };
 
@@ -1700,11 +1739,19 @@ TEST_P(VulkanPerformanceCounterTest, RenderToTextureDepthStencilRenderbufferShou
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_multisampled_render_to_texture"));
 
     const rx::vk::PerfCounters &counters = hackANGLE();
-    uint32_t expectedDepthClearCount     = counters.depthClears + 1;
-    uint32_t expectedDepthLoadCount      = counters.depthLoads;
-    uint32_t expectedStencilClearCount   = counters.stencilClears + 1;
-    uint32_t expectedStencilLoadCountMin = counters.stencilLoads;
-    uint32_t expectedStencilLoadCountMax = counters.stencilLoads + 4;
+    rx::vk::PerfCounters expected;
+
+    // This test creates 4 render passes. In the first render pass, color, depth and stencil are
+    // cleared.  In the following render passes, they must be loaded.  However, given that the
+    // attachments are multisampled-render-to-texture, loads are done through an unresolve
+    // operation.  All 4 render passes resolve the attachments.
+
+    // Expect rpCount+4, depth(Clears+1, Loads+3, Stores+3), stencil(Clears+1, Load+3, Stores+3).
+    // Note that the Loads and Stores are from the resolve attachments.
+    setExpectedCountersForInvalidateTest(counters, 4, 1, 3, 3, 1, 3, 3, &expected);
+
+    // Additionally, expect 4 resolves and 3 unresolves.
+    setExpectedCountersForUnresolveResolveTest(counters, 3, 3, 3, 4, 4, 4, &expected);
 
     GLFramebuffer FBO;
     glBindFramebuffer(GL_FRAMEBUFFER, FBO);
@@ -1733,11 +1780,11 @@ TEST_P(VulkanPerformanceCounterTest, RenderToTextureDepthStencilRenderbufferShou
     glBindTexture(GL_TEXTURE_2D, copyTex);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
 
-    // Set viewport and clear depth
+    // Set viewport and clear color, depth and stencil
     glViewport(0, 0, kSize, kSize);
     glClearDepthf(1);
     glClearStencil(0x55);
-    glClear(GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
     // If depth is not cleared to 1, rendering would fail.
     glEnable(GL_DEPTH_TEST);
@@ -1793,11 +1840,8 @@ TEST_P(VulkanPerformanceCounterTest, RenderToTextureDepthStencilRenderbufferShou
     ASSERT_GL_NO_ERROR();
 
     // Verify the counters
-    EXPECT_EQ(counters.depthClears, expectedDepthClearCount);
-    EXPECT_EQ(counters.depthLoads, expectedDepthLoadCount);
-    EXPECT_EQ(counters.stencilClears, expectedStencilClearCount);
-    EXPECT_GE(counters.stencilLoads, expectedStencilLoadCountMin);
-    EXPECT_LE(counters.stencilLoads, expectedStencilLoadCountMax);
+    compareLoadCountersForInvalidateTest(counters, expected);
+    compareCountersForUnresolveResolveTest(counters, expected);
 
     // Verify that copies were done correctly.
     GLFramebuffer verifyFBO;

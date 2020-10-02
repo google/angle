@@ -1215,7 +1215,7 @@ class CommandBufferHelper : angle::NonCopyable
 enum class ImageLayout
 {
     Undefined = 0,
-    // Framebuffer attachment layouts are placed first, so they could fit in fewer bits in
+    // Framebuffer attachment layouts are placed first, so they can fit in fewer bits in
     // PackedAttachmentOpsDesc.
     ColorAttachment,
     DepthStencilReadOnly,
