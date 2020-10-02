@@ -16,6 +16,92 @@
       "revId": "866acc5aec412890ba874d2f5ec0277f4400cbc8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4486bbe3_3617e370",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-02T21:56:42Z",
+      "side": 1,
+      "message": "What about the idea of merging this with the next CL so we can see what the new APIs are used for?",
+      "revId": "866acc5aec412890ba874d2f5ec0277f4400cbc8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b5978682_c3ac5197",
+        "filename": "src/libANGLE/renderer/vulkan/DisplayVk.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-02T21:56:42Z",
+      "side": 1,
+      "message": "-1 to duplicating the cache here.",
+      "range": {
+        "startLine": 43,
+        "startChar": 0,
+        "endLine": 45,
+        "endChar": 37
+      },
+      "revId": "866acc5aec412890ba874d2f5ec0277f4400cbc8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "76df7ac7_d5887cb2",
+        "filename": "src/libANGLE/renderer/vulkan/ImageVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-02T21:56:42Z",
+      "side": 1,
+      "message": "nit: for TODO please use all upper case",
+      "range": {
+        "startLine": 37,
+        "startChar": 11,
+        "endLine": 37,
+        "endChar": 15
+      },
+      "revId": "866acc5aec412890ba874d2f5ec0277f4400cbc8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0842b380_697d4f84",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 3056,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-02T21:56:42Z",
+      "side": 1,
+      "message": "nit: you can use the explicit type here.",
+      "range": {
+        "startLine": 3056,
+        "startChar": 13,
+        "endLine": 3056,
+        "endChar": 17
+      },
+      "revId": "866acc5aec412890ba874d2f5ec0277f4400cbc8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
