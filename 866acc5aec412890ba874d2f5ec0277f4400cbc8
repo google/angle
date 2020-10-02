@@ -221,6 +221,30 @@
     },
     {
       "key": {
+        "uuid": "553a658e_93660db2",
+        "filename": "src/libANGLE/renderer/vulkan/DisplayVk.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-02T23:45:21Z",
+      "side": 1,
+      "message": "Unfortunately the thread safe has everything to do with front-end back-end. If you put the list in the front-end, the list could be modified by a CreateContext call.",
+      "parentUuid": "b124d2c3_b9309981",
+      "range": {
+        "startLine": 43,
+        "startChar": 0,
+        "endLine": 45,
+        "endChar": 37
+      },
+      "revId": "866acc5aec412890ba874d2f5ec0277f4400cbc8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "76df7ac7_d5887cb2",
         "filename": "src/libANGLE/renderer/vulkan/ImageVk.cpp",
         "patchSetId": 5
