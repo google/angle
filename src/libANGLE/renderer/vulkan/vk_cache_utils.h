@@ -296,10 +296,13 @@ struct PackedAttachmentOpsDesc final
     uint16_t stencilLoadOp : 2;
     uint16_t stencilStoreOp : 1;
 
-    // 5-bits to force pad the structure to exactly 2 bytes.  Note that we currently don't support
+    // Reserved for use with multisampled-render-to-texture invalidate.
+    uint16_t reserved : 2;
+
+    // 4-bits to force pad the structure to exactly 2 bytes.  Note that we currently don't support
     // any of the extension layouts, whose values start at 1'000'000'000.
-    uint16_t initialLayout : 5;
-    uint16_t finalLayout : 5;
+    uint16_t initialLayout : 4;
+    uint16_t finalLayout : 4;
 };
 
 static_assert(sizeof(PackedAttachmentOpsDesc) == 2, "Size check failed");
