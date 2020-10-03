@@ -50,7 +50,9 @@ constexpr int kDefaultBatchTimeout = 240;
 #else
 constexpr int kDefaultBatchTimeout = 600;
 #endif
-constexpr int kDefaultBatchSize = 1000;
+constexpr int kDefaultBatchSize      = 256;
+constexpr double kIdleMessageTimeout = 10.0;
+constexpr int kDefaultMaxProcesses   = 16;
 
 const char *ParseFlagValue(const char *flag, const char *argument)
 {
@@ -76,13 +78,13 @@ bool ParseIntArg(const char *flag, const char *argument, int *valueOut)
     if (*end != '\0')
     {
         printf("Error parsing integer flag value.\n");
-        exit(1);
+        exit(EXIT_FAILURE);
     }
 
     if (longValue == LONG_MAX || longValue == LONG_MIN || static_cast<int>(longValue) != longValue)
     {
         printf("Overflow when parsing integer flag value.\n");
-        exit(1);
+        exit(EXIT_FAILURE);
     }
 
     *valueOut = static_cast<int>(longValue);
@@ -682,20 +684,21 @@ TestQueue BatchTests(const std::vector<TestIdentifier> &tests, int batchSize)
     for (const auto &configAndIds : testsSortedByConfig)
     {
         const std::vector<TestIdentifier> &configTests = configAndIds.second;
-        std::vector<TestIdentifier> batchTests;
-        for (const TestIdentifier &id : configTests)
-        {
-            if (batchTests.size() >= static_cast<size_t>(batchSize))
-            {
-                testQueue.emplace(std::move(batchTests));
-                ASSERT(batchTests.empty());
-            }
-            batchTests.push_back(id);
-        }
 
-        if (!batchTests.empty())
+        // Count the number of batches needed for this config.
+        int batchesForConfig = static_cast<int>(configTests.size() + batchSize - 1) / batchSize;
+
+        // Create batches with striping to split up slow tests.
+        for (int batchIndex = 0; batchIndex < batchesForConfig; ++batchIndex)
         {
+            std::vector<TestIdentifier> batchTests;
+            for (size_t testIndex = batchIndex; testIndex < configTests.size();
+                 testIndex += batchesForConfig)
+            {
+                batchTests.push_back(configTests[testIndex]);
+            }
             testQueue.emplace(std::move(batchTests));
+            ASSERT(batchTests.empty());
         }
     }
 
@@ -765,7 +768,7 @@ TestSuite::TestSuite(int *argc, char **argv)
       mBatchSize(kDefaultBatchSize),
       mCurrentResultCount(0),
       mTotalResultCount(0),
-      mMaxProcesses(NumberOfProcessors()),
+      mMaxProcesses(std::min(NumberOfProcessors(), kDefaultMaxProcesses)),
       mTestTimeout(kDefaultTestTimeout),
       mBatchTimeout(kDefaultBatchTimeout)
 {
@@ -783,7 +786,7 @@ TestSuite::TestSuite(int *argc, char **argv)
     if (*argc <= 0)
     {
         printf("Missing test arguments.\n");
-        exit(1);
+        exit(EXIT_FAILURE);
     }
 
     mTestExecutableName = argv[0];
@@ -817,7 +820,7 @@ TestSuite::TestSuite(int *argc, char **argv)
     if ((mShardIndex == -1) != (mShardCount == -1))
     {
         printf("Shard index and shard count must be specified together.\n");
-        exit(1);
+        exit(EXIT_FAILURE);
     }
 
     if (!mFilterFile.empty())
@@ -825,28 +828,28 @@ TestSuite::TestSuite(int *argc, char **argv)
         if (filterArgIndex.valid())
         {
             printf("Cannot use gtest_filter in conjunction with a filter file.\n");
-            exit(1);
+            exit(EXIT_FAILURE);
         }
 
         uint32_t fileSize = 0;
         if (!GetFileSize(mFilterFile.c_str(), &fileSize))
         {
             printf("Error getting filter file size: %s\n", mFilterFile.c_str());
-            exit(1);
+            exit(EXIT_FAILURE);
         }
 
         std::vector<char> fileContents(fileSize + 1, 0);
         if (!ReadEntireFileToString(mFilterFile.c_str(), fileContents.data(), fileSize))
         {
             printf("Error loading filter file: %s\n", mFilterFile.c_str());
-            exit(1);
+            exit(EXIT_FAILURE);
         }
         mFilterString.assign(fileContents.data());
 
         if (mFilterString.substr(0, strlen("--gtest_filter=")) != std::string("--gtest_filter="))
         {
             printf("Filter file must start with \"--gtest_filter=\".\n");
-            exit(1);
+            exit(EXIT_FAILURE);
         }
 
         // Note that we only add a filter string if we previously deleted a shader filter file
@@ -866,14 +869,14 @@ TestSuite::TestSuite(int *argc, char **argv)
     if (mShardCount == 0)
     {
         printf("Shard count must be > 0.\n");
-        exit(1);
+        exit(EXIT_FAILURE);
     }
     else if (mShardCount > 0)
     {
         if (mShardIndex >= mShardCount)
         {
             printf("Shard index must be less than shard count.\n");
-            exit(1);
+            exit(EXIT_FAILURE);
         }
 
         if (!angle::GetEnvironmentVar("GTEST_SHARD_INDEX").empty() ||
@@ -882,7 +885,7 @@ TestSuite::TestSuite(int *argc, char **argv)
             printf(
                 "Error: --shard-index and --shard-count are incompatible with GTEST_SHARD_INDEX "
                 "and GTEST_TOTAL_SHARDS.\n");
-            exit(1);
+            exit(EXIT_FAILURE);
         }
 
         testSet =
@@ -925,7 +928,7 @@ TestSuite::TestSuite(int *argc, char **argv)
                 mTestQueue.pop();
             }
 
-            exit(0);
+            exit(EXIT_SUCCESS);
         }
     }
 
@@ -1201,8 +1204,6 @@ int TestSuite::run()
     Timer totalRunTime;
     totalRunTime.start();
 
-    constexpr double kIdleMessageTimeout = 5.0;
-
     Timer messageTimer;
     messageTimer.start();
 
@@ -1225,6 +1226,7 @@ int TestSuite::run()
         }
 
         // Check for process completion.
+        uint32_t totalTestCount = 0;
         for (auto processIter = mCurrentProcesses.begin(); processIter != mCurrentProcesses.end();)
         {
             ProcessInfo &processInfo = *processIter;
@@ -1257,22 +1259,17 @@ int TestSuite::run()
             }
             else
             {
+                totalTestCount += static_cast<uint32_t>(processInfo.testsInBatch.size());
                 processIter++;
             }
         }
 
         if (!progress && messageTimer.getElapsedTime() > kIdleMessageTimeout)
         {
-            for (const ProcessInfo &processInfo : mCurrentProcesses)
-            {
-                double processTime = processInfo.process->getElapsedTimeSeconds();
-                if (processTime > kIdleMessageTimeout)
-                {
-                    printf("Running for %d seconds: %s\n", static_cast<int>(processTime),
-                           processInfo.commandLine.c_str());
-                }
-            }
-
+            const ProcessInfo &processInfo = mCurrentProcesses[0];
+            double processTime             = processInfo.process->getElapsedTimeSeconds();
+            printf("Running %d tests in %d processes, longest for %d seconds.\n", totalTestCount,
+                   static_cast<int>(mCurrentProcesses.size()), static_cast<int>(processTime));
             messageTimer.start();
         }
 
@@ -1341,7 +1338,7 @@ void TestSuite::startWatchdog()
             angle::Sleep(500);
         } while (true);
         onCrashOrTimeout(TestResultType::Timeout);
-        ::_Exit(1);
+        ::_Exit(EXIT_FAILURE);
     };
     mWatchdogThread = std::thread(watchdogMain);
 }
