@@ -271,7 +271,7 @@ size_t Debug::getMessages(GLuint count,
 
         if (lengths != nullptr)
         {
-            lengths[messageCount] = static_cast<GLsizei>(m.message.length());
+            lengths[messageCount] = static_cast<GLsizei>(m.message.length()) + 1;
         }
 
         mMessages.pop_front();
@@ -284,7 +284,7 @@ size_t Debug::getMessages(GLuint count,
 
 size_t Debug::getNextMessageLength() const
 {
-    return mMessages.empty() ? 0 : mMessages.front().message.length();
+    return mMessages.empty() ? 0 : mMessages.front().message.length() + 1;
 }
 
 size_t Debug::getMessageCount() const
