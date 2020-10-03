@@ -38,6 +38,22 @@ struct CommandProcessorTask
 };
 
 static const CommandProcessorTask kEndCommandProcessorThread = {nullptr, nullptr, nullptr};
+
+struct CommandBatch final : angle::NonCopyable
+{
+    CommandBatch();
+    ~CommandBatch();
+    CommandBatch(CommandBatch &&other);
+    CommandBatch &operator=(CommandBatch &&other);
+
+    void destroy(VkDevice device);
+
+    vk::PrimaryCommandBuffer primaryCommands;
+    // commandPool is for secondary CommandBuffer allocation
+    vk::CommandPool commandPool;
+    vk::Shared<vk::Fence> fence;
+    Serial serial;
+};
 }  // namespace vk
 
 class CommandProcessor : angle::NonCopyable

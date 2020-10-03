@@ -364,32 +364,6 @@ void ContextVk::DriverUniformsDescriptorSet::destroy(RendererVk *renderer)
     descriptorSetCache.clear();
 }
 
-// CommandBatch implementation.
-CommandBatch::CommandBatch() = default;
-
-CommandBatch::~CommandBatch() = default;
-
-CommandBatch::CommandBatch(CommandBatch &&other)
-{
-    *this = std::move(other);
-}
-
-CommandBatch &CommandBatch::operator=(CommandBatch &&other)
-{
-    std::swap(primaryCommands, other.primaryCommands);
-    std::swap(commandPool, other.commandPool);
-    std::swap(fence, other.fence);
-    std::swap(serial, other.serial);
-    return *this;
-}
-
-void CommandBatch::destroy(VkDevice device)
-{
-    primaryCommands.destroy(device);
-    commandPool.destroy(device);
-    fence.reset(device);
-}
-
 // CommandQueue implementation.
 CommandQueue::CommandQueue()  = default;
 CommandQueue::~CommandQueue() = default;
@@ -419,7 +393,7 @@ angle::Result CommandQueue::checkCompletedCommands(vk::Context *context)
 
     int finishedCount = 0;
 
-    for (CommandBatch &batch : mInFlightCommands)
+    for (vk::CommandBatch &batch : mInFlightCommands)
     {
         VkResult result = batch.fence.get().getStatus(device);
         if (result == VK_NOT_READY)
@@ -474,7 +448,7 @@ angle::Result CommandQueue::checkCompletedCommands(vk::Context *context)
 angle::Result CommandQueue::releaseToCommandBatch(vk::Context *context,
                                                   vk::PrimaryCommandBuffer &&commandBuffer,
                                                   vk::CommandPool *commandPool,
-                                                  CommandBatch *batch)
+                                                  vk::CommandBatch *batch)
 {
     RendererVk *renderer = context->getRenderer();
     VkDevice device      = renderer->getDevice();
@@ -528,7 +502,7 @@ void CommandQueue::handleDeviceLost(RendererVk *renderer)
 {
     VkDevice device = renderer->getDevice();
 
-    for (CommandBatch &batch : mInFlightCommands)
+    for (vk::CommandBatch &batch : mInFlightCommands)
     {
         // On device loss we need to wait for fence to be signaled before destroying it
         VkResult status = batch.fence.get().wait(device, renderer->getMaxFenceWaitTimeNs());
@@ -577,7 +551,7 @@ angle::Result CommandQueue::finishToSerial(vk::Context *context, Serial serial, 
             break;
         }
     }
-    const CommandBatch &batch = mInFlightCommands[batchIndex];
+    const vk::CommandBatch &batch = mInFlightCommands[batchIndex];
 
     // Wait for it finish
     VkDevice device = context->getDevice();
@@ -603,8 +577,8 @@ angle::Result CommandQueue::submitFrame(vk::Context *context,
     RendererVk *renderer = context->getRenderer();
     VkDevice device      = renderer->getDevice();
 
-    vk::DeviceScoped<CommandBatch> scopedBatch(device);
-    CommandBatch &batch = scopedBatch.get();
+    vk::DeviceScoped<vk::CommandBatch> scopedBatch(device);
+    vk::CommandBatch &batch = scopedBatch.get();
     batch.fence.copy(device, sharedFence);
 
     ANGLE_TRY(renderer->queueSubmit(context, priority, submitInfo, resourceList, &batch.fence.get(),
