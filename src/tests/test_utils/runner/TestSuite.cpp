@@ -812,7 +812,7 @@ TestSuite::TestSuite(int *argc, char **argv)
                 alsoRunDisabledTests = true;
             }
 
-            mGoogleTestCommandLineArgs.push_back(argv[argIndex]);
+            mChildProcessArgs.push_back(argv[argIndex]);
         }
         ++argIndex;
     }
@@ -1058,7 +1058,7 @@ bool TestSuite::launchChildTestProcess(const std::vector<TestIdentifier> &testsI
     // TODO(jmadill): Remove this once migrated. http://anglebug.com/3162
     args.push_back("--reuse-displays");
 
-    for (const std::string &arg : mGoogleTestCommandLineArgs)
+    for (const std::string &arg : mChildProcessArgs)
     {
         args.push_back(arg.c_str());
     }

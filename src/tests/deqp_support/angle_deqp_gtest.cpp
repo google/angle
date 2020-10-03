@@ -627,15 +627,6 @@ void HandleCaseName(const char *caseString, int *argc, int argIndex, char **argv
 
     argv[argIndex] = gCaseStringBuffer.data();
 }
-
-void DeleteArg(int *argc, int argIndex, char **argv)
-{
-    (*argc)--;
-    for (int moveIndex = argIndex; moveIndex < *argc; ++moveIndex)
-    {
-        argv[moveIndex] = argv[moveIndex + 1];
-    }
-}
 }  // anonymous namespace
 
 // Called from main() to process command-line arguments.
@@ -647,28 +638,21 @@ void InitTestHarness(int *argc, char **argv)
         if (strncmp(argv[argIndex], kdEQPEGLString, strlen(kdEQPEGLString)) == 0)
         {
             HandleDisplayType(argv[argIndex] + strlen(kdEQPEGLString));
-            DeleteArg(argc, argIndex, argv);
         }
         else if (strncmp(argv[argIndex], kANGLEEGLString, strlen(kANGLEEGLString)) == 0)
         {
             HandleDisplayType(argv[argIndex] + strlen(kANGLEEGLString));
-            DeleteArg(argc, argIndex, argv);
         }
         else if (strncmp(argv[argIndex], gdEQPEGLConfigNameString,
                          strlen(gdEQPEGLConfigNameString)) == 0)
         {
             HandleEGLConfigName(argv[argIndex] + strlen(gdEQPEGLConfigNameString));
-            DeleteArg(argc, argIndex, argv);
         }
         else if (strncmp(argv[argIndex], kdEQPCaseString, strlen(kdEQPCaseString)) == 0)
         {
             HandleCaseName(argv[argIndex] + strlen(kdEQPCaseString), argc, argIndex, argv);
-            argIndex++;
         }
-        else
-        {
-            argIndex++;
-        }
+        argIndex++;
     }
 }
 }  // namespace angle

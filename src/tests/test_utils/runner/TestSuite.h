@@ -148,7 +148,7 @@ class TestSuite
     int mMaxProcesses;
     int mTestTimeout;
     int mBatchTimeout;
-    std::vector<std::string> mGoogleTestCommandLineArgs;
+    std::vector<std::string> mChildProcessArgs;
     std::map<TestIdentifier, FileLine> mTestFileLines;
     std::vector<ProcessInfo> mCurrentProcesses;
     std::thread mWatchdogThread;
