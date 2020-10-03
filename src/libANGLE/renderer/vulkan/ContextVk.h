@@ -47,7 +47,6 @@ class CommandQueue final : angle::NonCopyable
     bool hasInFlightCommands() const;
 
     angle::Result allocatePrimaryCommandBuffer(vk::Context *context,
-                                               const vk::CommandPool &commandPool,
                                                vk::PrimaryCommandBuffer *commandBufferOut);
     angle::Result releasePrimaryCommandBuffer(vk::Context *context,
                                               vk::PrimaryCommandBuffer &&commandBuffer);
@@ -653,11 +652,10 @@ class ContextVk : public ContextImpl, public vk::Context
     void updateOverlayOnPresent();
     void addOverlayUsedBuffersCount(vk::CommandBufferHelper *commandBuffer);
 
-    // Submit commands to worker thread for processing
-    ANGLE_INLINE void queueCommandsToWorker(const vk::CommandProcessorTask &commands)
-    {
-        mRenderer->queueCommands(commands);
-    }
+    // Sync any errors from the command processor
+    void commandProcessorSyncErrors();
+    // Sync any error from worker thread and queue up next command for processing
+    void commandProcessorSyncErrorsAndQueueCommand(vk::CommandProcessorTask *command);
     // When worker thread completes, it releases command buffers back to context queue
     void recycleCommandBuffer(vk::CommandBufferHelper *commandBuffer);
 
@@ -1085,6 +1083,7 @@ class ContextVk : public ContextImpl, public vk::Context
     // We use a single pool for recording commands. We also keep a free list for pool recycling.
     vk::CommandPool mCommandPool;
 
+    // TODO: This can be killed once threading is enabled https://issuetracker.google.com/153666475
     CommandQueue mCommandQueue;
     vk::GarbageList mCurrentGarbage;
 

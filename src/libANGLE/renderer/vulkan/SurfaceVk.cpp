@@ -1186,6 +1186,7 @@ angle::Result WindowSurfaceVk::present(ContextVk *contextVk,
                                        bool *presentOutOfDate)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "WindowSurfaceVk::present");
+    RendererVk *renderer = contextVk->getRenderer();
 
     // Throttle the submissions to avoid getting too far ahead of the GPU.
     SwapHistory &swap = mSwapHistory[mCurrentSwapHistoryIndex];
@@ -1194,7 +1195,7 @@ angle::Result WindowSurfaceVk::present(ContextVk *contextVk,
         if (swap.sharedFence.isReferenced())
         {
             ANGLE_TRY(swap.waitFence(contextVk));
-            swap.destroy(contextVk->getRenderer());
+            swap.destroy(renderer);
         }
     }
 
@@ -1316,6 +1317,8 @@ angle::Result WindowSurfaceVk::present(ContextVk *contextVk,
     }
 
     // Update the swap history for this presentation
+    // TODO: https://issuetracker.google.com/issues/170312581 - this will force us to flush worker
+    // queue to get the fence.
     swap.sharedFence = contextVk->getLastSubmittedFence();
     ASSERT(!mAcquireImageSemaphore.valid());
 
@@ -1323,13 +1326,47 @@ angle::Result WindowSurfaceVk::present(ContextVk *contextVk,
     mCurrentSwapHistoryIndex =
         mCurrentSwapHistoryIndex == mSwapHistory.size() ? 0 : mCurrentSwapHistoryIndex;
 
-    VkResult result = contextVk->getRenderer()->queuePresent(contextVk->getPriority(), presentInfo);
+    VkResult result;
+    if (renderer->getFeatures().enableCommandProcessingThread.enabled)
+    {
+        vk::CommandProcessorTask present;
+        present.initPresent(contextVk->getPriority(), presentInfo);
+
+        // Make sure everything has been submitted (and errors handled)
+        renderer->waitForCommandProcessorIdle(contextVk);
+
+        // Submit queuePresent all by itself (ignoring interference from other threads for now)
+        renderer->queueCommand(contextVk, &present);
+        // TODO: https://issuetracker.google.com/issues/170329600 - Just stalling here for now, but
+        // really want to let main thread continue
+        // need to figure out how to handle work below off-thread and sync to main
+        // Also, need to fix lifetime of presentInfo data when main thread continues.
+        // There is a bunch of work happening after present to deal with swapchain recreation.
+        // Will that require moving a large chunk of swapImpl to the CommandProcessor?
+        // That will likely require serializing access to the WindowSurfaceVk object in order
+        // to have current content.
+        result = VK_SUCCESS;
+
+        // wait for the queuePresent to be submitted and intentionally set the context to nullptr so
+        // that we can catch any error. Note this doesn't prevent another context from grabbing the
+        // error. Will be fixed properly in a follow-up as part of present work.
+        renderer->waitForCommandProcessorIdle(nullptr);
+        if (renderer->hasPendingError())
+        {
+            vk::Error error = renderer->getAndClearPendingError();
+            result          = error.mErrorCode;
+        }
+    }
+    else
+    {
+        result = renderer->queuePresent(contextVk->getPriority(), presentInfo);
+    }
 
     // If OUT_OF_DATE is returned, it's ok, we just need to recreate the swapchain before
     // continuing.
     // If VK_SUBOPTIMAL_KHR is returned it's because the device orientation changed and we should
     // recreate the swapchain with a new window orientation.
-    if (contextVk->getFeatures().enablePreRotateSurfaces.enabled)
+    if (renderer->getFeatures().enablePreRotateSurfaces.enabled)
     {
         // Also check for VK_SUBOPTIMAL_KHR.
         *presentOutOfDate = ((result == VK_ERROR_OUT_OF_DATE_KHR) || (result == VK_SUBOPTIMAL_KHR));

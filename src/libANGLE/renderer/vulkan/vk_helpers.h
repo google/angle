@@ -962,9 +962,12 @@ class CommandBufferHelper : angle::NonCopyable
 
     CommandBuffer &getCommandBuffer() { return mCommandBuffer; }
 
-    angle::Result flushToPrimary(ContextVk *contextVk, PrimaryCommandBuffer *primary);
+    angle::Result getRenderPassWithOps(ContextVk *contextVk, RenderPass **renderPass);
+    angle::Result flushToPrimary(const angle::FeaturesVk &features,
+                                 PrimaryCommandBuffer *primary,
+                                 RenderPass *renderPass);
 
-    void executeBarriers(ContextVk *contextVk, PrimaryCommandBuffer *primary);
+    void executeBarriers(const angle::FeaturesVk &features, PrimaryCommandBuffer *primary);
 
     void setHasRenderPass(bool hasRenderPass) { mIsRenderPassCommandBuffer = hasRenderPass; }
 
@@ -1129,9 +1132,9 @@ class CommandBufferHelper : angle::NonCopyable
 
     bool isReadOnlyDepthMode() const { return mReadOnlyDepthStencilMode; }
 
-  private:
     void addCommandDiagnostics(ContextVk *contextVk);
 
+  private:
     bool onDepthStencilAccess(ResourceAccess access,
                               uint32_t *cmdCountInvalidated,
                               uint32_t *cmdCountDisabled);

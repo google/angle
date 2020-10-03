@@ -916,7 +916,8 @@ void CommandBufferHelper::restoreStencilContent()
     }
 }
 
-void CommandBufferHelper::executeBarriers(ContextVk *contextVk, PrimaryCommandBuffer *primary)
+void CommandBufferHelper::executeBarriers(const angle::FeaturesVk &features,
+                                          PrimaryCommandBuffer *primary)
 {
     // make a local copy for faster access
     PipelineStagesMask mask = mPipelineBarrierMask;
@@ -925,7 +926,7 @@ void CommandBufferHelper::executeBarriers(ContextVk *contextVk, PrimaryCommandBu
         return;
     }
 
-    if (contextVk->getFeatures().preferAggregateBarrierCalls.enabled)
+    if (features.preferAggregateBarrierCalls.enabled)
     {
         PipelineStagesMask::Iterator iter = mask.begin();
         PipelineBarrier &barrier          = mPipelineBarriers[*iter];
@@ -1152,24 +1153,31 @@ void CommandBufferHelper::endTransformFeedback()
     mValidTransformFeedbackBufferCount = 0;
 }
 
-angle::Result CommandBufferHelper::flushToPrimary(ContextVk *contextVk,
-                                                  PrimaryCommandBuffer *primary)
+angle::Result CommandBufferHelper::getRenderPassWithOps(ContextVk *contextVk,
+                                                        RenderPass **renderPass)
+{
+    *renderPass = nullptr;
+    if (mIsRenderPassCommandBuffer)
+    {
+        ANGLE_TRY(contextVk->getRenderPassWithOps(mRenderPassDesc, mAttachmentOps, renderPass));
+    }
+    return angle::Result::Continue;
+}
+
+angle::Result CommandBufferHelper::flushToPrimary(const angle::FeaturesVk &features,
+                                                  PrimaryCommandBuffer *primary,
+                                                  RenderPass *renderPass)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "CommandBufferHelper::flushToPrimary");
     ASSERT(!empty());
-    if (kEnableCommandStreamDiagnostics)
-    {
-        addCommandDiagnostics(contextVk);
-    }
+
     // Commands that are added to primary before beginRenderPass command
-    executeBarriers(contextVk, primary);
+    executeBarriers(features, primary);
 
     if (mIsRenderPassCommandBuffer)
     {
         mCommandBuffer.executeQueuedResetQueryPoolCommands(primary->getHandle());
-        // Pull a RenderPass from the cache.
-        RenderPass *renderPass = nullptr;
-        ANGLE_TRY(contextVk->getRenderPassWithOps(mRenderPassDesc, mAttachmentOps, &renderPass));
+        ASSERT(renderPass != nullptr);
 
         VkRenderPassBeginInfo beginInfo    = {};
         beginInfo.sType                    = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;

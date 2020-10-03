@@ -136,7 +136,9 @@ class ResourceUseList final : angle::NonCopyable
 {
   public:
     ResourceUseList();
+    ResourceUseList(ResourceUseList &&other);
     virtual ~ResourceUseList();
+    ResourceUseList &operator=(ResourceUseList &&rhs);
 
     void add(const SharedResourceUse &resourceUse);
 

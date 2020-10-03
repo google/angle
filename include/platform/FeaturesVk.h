@@ -343,6 +343,13 @@ struct FeaturesVk : FeatureSetBase
         "Enable parallel processing and submission of Vulkan commands in worker thread", &members,
         "http://anglebug.com/4324"};
 
+    // Enable parallel thread execution when enableCommandProcessingThread is enabled.
+    // Currently off by default.
+    Feature asynchronousCommandProcessing = {"asynchronous_command_processing",
+                                             FeatureCategory::VulkanFeatures,
+                                             "Enable/Disable parallel processing of worker thread",
+                                             &members, "http://anglebug.com/4324"};
+
     // Whether the VkDevice supports the VK_KHR_shader_float16_int8 extension and has the
     // shaderFloat16 feature.
     Feature supportsShaderFloat16 = {"supports_shader_float16", FeatureCategory::VulkanFeatures,

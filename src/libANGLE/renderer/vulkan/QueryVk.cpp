@@ -180,18 +180,30 @@ angle::Result QueryVk::getResult(const gl::Context *context, bool wait)
     // finite time.
     // Note regarding time-elapsed: end should have been called after begin, so flushing when end
     // has pending work should flush begin too.
-    if (mQueryHelper.hasPendingWork(contextVk))
+    // TODO: https://issuetracker.google.com/169788986 - can't guarantee hasPendingWork() works when
+    // using threaded worker
+    if (mQueryHelper.hasPendingWork(contextVk) ||
+        contextVk->getRenderer()->getFeatures().enableCommandProcessingThread.enabled)
     {
         ANGLE_TRY(contextVk->flushImpl(nullptr));
+        if (contextVk->getRenderer()->getFeatures().enableCommandProcessingThread.enabled)
+        {
+            // TODO: https://issuetracker.google.com/170312581 - For now just stalling here
+            contextVk->getRenderer()->waitForCommandProcessorIdle(contextVk);
+        }
 
         ASSERT(!mQueryHelperTimeElapsedBegin.hasPendingWork(contextVk));
         ASSERT(!mQueryHelper.hasPendingWork(contextVk));
     }
 
-    // If the command buffer this query is being written to is still in flight, its reset command
-    // may not have been performed by the GPU yet.  To avoid a race condition in this case, wait
-    // for the batch to finish first before querying (or return not-ready if not waiting).
-    ANGLE_TRY(contextVk->checkCompletedCommands());
+    if (!contextVk->getRenderer()->getFeatures().enableCommandProcessingThread.enabled)
+    {
+        // If the command buffer this query is being written to is still in flight, its reset
+        // command may not have been performed by the GPU yet.  To avoid a race condition in this
+        // case, wait for the batch to finish first before querying (or return not-ready if not
+        // waiting).
+        ANGLE_TRY(contextVk->checkCompletedCommands());
+    }
     if (contextVk->isSerialInUse(mQueryHelper.getStoredQueueSerial()))
     {
         if (!wait)
