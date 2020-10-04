@@ -226,6 +226,7 @@ class Shader final : angle::NonCopyable, public LabeledObject
     }
 
     unsigned int getMaxComputeSharedMemory() const { return mMaxComputeSharedMemory; }
+    bool hasBeenDeleted() const { return mDeleteStatus; }
 
   private:
     struct CompilingState;

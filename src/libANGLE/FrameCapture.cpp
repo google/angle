@@ -2883,6 +2883,13 @@ void CaptureMidExecutionSetup(const gl::Context *context,
     {
         gl::ShaderProgramID id = {shaderIter.first};
         gl::Shader *shader     = shaderIter.second;
+
+        // Skip shaders scheduled for deletion.
+        if (shader->hasBeenDeleted())
+        {
+            continue;
+        }
+
         cap(CaptureCreateShader(replayState, true, shader->getType(), id.value));
 
         std::string shaderSource  = shader->getSourceString();
