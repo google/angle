@@ -85,6 +85,9 @@ bool EndsWith(const char *str, const char *suffix);
 // Convert to lower-case.
 void ToLower(std::string *str);
 
+// Convert to upper-case.
+void ToUpper(std::string *str);
+
 // Replaces the substring 'substring' in 'str' with 'replacement'. Returns true if successful.
 bool ReplaceSubstring(std::string *str,
                       const std::string &substring,

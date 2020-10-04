@@ -208,9 +208,17 @@ bool EndsWith(const char *str, const char *suffix)
 
 void ToLower(std::string *str)
 {
-    for (auto &ch : *str)
+    for (char &ch : *str)
     {
         ch = static_cast<char>(::tolower(ch));
+    }
+}
+
+void ToUpper(std::string *str)
+{
+    for (char &ch : *str)
+    {
+        ch = static_cast<char>(::toupper(ch));
     }
 }
 

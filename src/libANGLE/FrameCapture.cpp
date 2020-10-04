@@ -19,6 +19,7 @@
 #include "common/mathutil.h"
 #include "common/string_utils.h"
 #include "common/system_utils.h"
+#include "common/version.h"
 #include "libANGLE/Config.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/Display.h"
@@ -1202,6 +1203,16 @@ void WriteCppReplayIndexFiles(bool compression,
     std::stringstream source;
 
     header << "#pragma once\n";
+    header << "\n";
+    header << "// Version of ANGLE used to capture this replay.\n";
+    header << "#define ANGLE_REPLAY_VERSION";
+    if (!captureLabel.empty())
+    {
+        std::string captureLabelUpper = captureLabel;
+        angle::ToUpper(&captureLabelUpper);
+        header << "_" << captureLabelUpper;
+    }
+    header << " " << ANGLE_REVISION << "\n";
     header << "\n";
     header << "#include <EGL/egl.h>\n";
     header << "#include \"angle_gl.h\"\n";
