@@ -358,6 +358,7 @@ void ANGLEPerfTest::calibrateStepsToRun()
     // Scale steps down according to the time that exeeded one second.
     double scale = gTestTimeSeconds / elapsedTime;
     mStepsToRun  = static_cast<unsigned int>(static_cast<double>(mNumStepsPerformed) * scale);
+    mStepsToRun  = std::max(1, mStepsToRun);
 
     if (gVerboseLogging)
     {
