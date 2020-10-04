@@ -3103,7 +3103,6 @@ void CaptureMidExecutionSetup(const gl::Context *context,
     };
 
     // Rasterizer state. Missing ES 3.x features.
-    // TODO(http://anglebug.com/3662): Complete state capture.
     const gl::RasterizerState &defaultRasterState = replayState.getRasterizerState();
     const gl::RasterizerState &currentRasterState = apiState.getRasterizerState();
     if (currentRasterState.cullFace != defaultRasterState.cullFace)
@@ -3119,6 +3118,30 @@ void CaptureMidExecutionSetup(const gl::Context *context,
     if (currentRasterState.frontFace != defaultRasterState.frontFace)
     {
         cap(CaptureFrontFace(replayState, true, currentRasterState.frontFace));
+    }
+
+    if (currentRasterState.polygonOffsetFill != defaultRasterState.polygonOffsetFill)
+    {
+        capCap(GL_POLYGON_OFFSET_FILL, currentRasterState.polygonOffsetFill);
+    }
+
+    if (currentRasterState.polygonOffsetFactor != defaultRasterState.polygonOffsetFactor ||
+        currentRasterState.polygonOffsetUnits != defaultRasterState.polygonOffsetUnits)
+    {
+        cap(CapturePolygonOffset(replayState, true, currentRasterState.polygonOffsetFactor,
+                                 currentRasterState.polygonOffsetUnits));
+    }
+
+    // pointDrawMode/multiSample are only used in the D3D back-end right now.
+
+    if (currentRasterState.rasterizerDiscard != defaultRasterState.rasterizerDiscard)
+    {
+        capCap(GL_RASTERIZER_DISCARD, currentRasterState.rasterizerDiscard);
+    }
+
+    if (currentRasterState.dither != defaultRasterState.dither)
+    {
+        capCap(GL_DITHER, currentRasterState.dither);
     }
 
     // Depth/stencil state.
@@ -3341,11 +3364,6 @@ void CaptureMidExecutionSetup(const gl::Context *context,
     {
         cap(CaptureScissor(replayState, true, currentScissor.x, currentScissor.y,
                            currentScissor.width, currentScissor.height));
-    }
-
-    if (apiState.isDitherEnabled())
-    {
-        capCap(GL_DITHER, apiState.isDitherEnabled());
     }
 
     // Allow the replayState object to be destroyed conveniently.
