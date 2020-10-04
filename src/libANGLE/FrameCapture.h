@@ -253,6 +253,9 @@ class ResourceTracker final : angle::NonCopyable
         mStartingBuffersMappedInitial[id] = mapped;
     }
 
+    void onShaderProgramAccess(gl::ShaderProgramID shaderProgramID);
+    uint32_t getMaxShaderPrograms() const { return mMaxShaderPrograms; }
+
   private:
     // Buffer regen calls will delete and gen a buffer
     BufferCalls mBufferRegenCalls;
@@ -276,6 +279,9 @@ class ResourceTracker final : angle::NonCopyable
     BufferMapStatusMap mStartingBuffersMappedInitial;
     // The status of buffer mapping throughout the trace, modified with each Map/Unmap call
     BufferMapStatusMap mStartingBuffersMappedCurrent;
+
+    // Maximum accessed shader program ID.
+    uint32_t mMaxShaderPrograms = 0;
 };
 
 // Used by the CPP replay to filter out unnecessary code.
@@ -329,7 +335,7 @@ class FrameCapture final : angle::NonCopyable
 
     void reset();
     void maybeOverrideEntryPoint(const gl::Context *context, CallCapture &call);
-    void maybeCaptureClientData(const gl::Context *context, CallCapture &call);
+    void maybeCapturePreCallUpdates(const gl::Context *context, CallCapture &call);
     void maybeCapturePostCallUpdates(const gl::Context *context);
 
     static void ReplayCall(gl::Context *context,
