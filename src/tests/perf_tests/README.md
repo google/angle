@@ -34,6 +34,7 @@ Several command-line arguments control how the tests run:
 * `--no-warmup`: Skip warming up the tests. Equivalent to `--warmup-steps 0`.
 * `--test-time`: Run each test trial in a fixed time. Defaults to 1 second.
 * `--trials`: Number of times to repeat testing. Defaults to 3.
+* `--no-finish`: Don't call glFinish after each test trial.
 
 For example, for an endless run with no warmup, run:
 

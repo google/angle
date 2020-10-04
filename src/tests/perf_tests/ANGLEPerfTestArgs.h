@@ -23,6 +23,7 @@ extern bool gVerboseLogging;
 extern int gWarmupLoops;
 extern double gTestTimeSeconds;
 extern int gTestTrials;
+extern bool gNoFinish;
 
 inline bool OneFrame()
 {

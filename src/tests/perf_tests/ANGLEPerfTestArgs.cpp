@@ -21,6 +21,7 @@ const char *gScreenShotDir = nullptr;
 bool gVerboseLogging       = false;
 double gTestTimeSeconds    = 1.0;
 int gTestTrials            = 3;
+bool gNoFinish             = false;
 
 // Default to three warmup loops. There's no science to this. More than two loops was experimentally
 // helpful on a Windows NVIDIA setup when testing with Vulkan and native trace tests.
@@ -110,6 +111,10 @@ void ANGLEProcessPerfTestArgs(int *argc, char **argv)
             gTestTrials = ReadIntArgument(argv[argIndex + 1]);
             // Skip an additional argument.
             argIndex++;
+        }
+        else if (strcmp("--no-finish", argv[argIndex]) == 0)
+        {
+            gNoFinish = true;
         }
         else
         {
