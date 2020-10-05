@@ -111,6 +111,30 @@
     },
     {
       "key": {
+        "uuid": "8f519e4f_cb4c7c3f",
+        "filename": "src/libANGLE/renderer/vulkan/DisplayVk.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-10-05T22:10:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "420fc70b_d5d0ef88",
+      "range": {
+        "startLine": 27,
+        "startChar": 21,
+        "endLine": 27,
+        "endChar": 39
+      },
+      "revId": "866acc5aec412890ba874d2f5ec0277f4400cbc8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b5978682_c3ac5197",
         "filename": "src/libANGLE/renderer/vulkan/DisplayVk.h",
         "patchSetId": 5
@@ -397,6 +421,30 @@
     },
     {
       "key": {
+        "uuid": "a92d6e8e_9e01a6e9",
+        "filename": "src/libANGLE/renderer/vulkan/ImageVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-10-05T22:10:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "76df7ac7_d5887cb2",
+      "range": {
+        "startLine": 37,
+        "startChar": 11,
+        "endLine": 37,
+        "endChar": 15
+      },
+      "revId": "866acc5aec412890ba874d2f5ec0277f4400cbc8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ba81962d_4ac471dd",
         "filename": "src/libANGLE/renderer/vulkan/android/HardwareBufferImageSiblingVkAndroid.cpp",
         "patchSetId": 5
@@ -420,6 +468,30 @@
     },
     {
       "key": {
+        "uuid": "425921d5_e7d211b3",
+        "filename": "src/libANGLE/renderer/vulkan/android/HardwareBufferImageSiblingVkAndroid.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 316,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-10-05T22:10:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ba81962d_4ac471dd",
+      "range": {
+        "startLine": 316,
+        "startChar": 11,
+        "endLine": 316,
+        "endChar": 15
+      },
+      "revId": "866acc5aec412890ba874d2f5ec0277f4400cbc8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "75b6507f_8adba00b",
         "filename": "src/libANGLE/renderer/vulkan/android/HardwareBufferImageSiblingVkAndroid.cpp",
         "patchSetId": 5
@@ -434,6 +506,24 @@
       "revId": "866acc5aec412890ba874d2f5ec0277f4400cbc8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "92d4f767_89a893c0",
+        "filename": "src/libANGLE/renderer/vulkan/android/HardwareBufferImageSiblingVkAndroid.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 317,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-10-05T22:10:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "75b6507f_8adba00b",
+      "revId": "866acc5aec412890ba874d2f5ec0277f4400cbc8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -460,6 +550,30 @@
     },
     {
       "key": {
+        "uuid": "74f22d1f_848889ef",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 878,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-10-05T22:10:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5bbe63de_b684e107",
+      "range": {
+        "startLine": 878,
+        "startChar": 7,
+        "endLine": 878,
+        "endChar": 11
+      },
+      "revId": "866acc5aec412890ba874d2f5ec0277f4400cbc8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8f8d0a02_f67aebfd",
         "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
         "patchSetId": 5
@@ -471,6 +585,30 @@
       "writtenOn": "2020-10-05T20:07:03Z",
       "side": 1,
       "message": "Can this be called legitimately with an invalid Serial, or can this be moved into an ASSERT()?",
+      "range": {
+        "startLine": 3053,
+        "startChar": 21,
+        "endLine": 3053,
+        "endChar": 41
+      },
+      "revId": "866acc5aec412890ba874d2f5ec0277f4400cbc8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "504ccb2f_91513186",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 3053,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-10-05T22:10:03Z",
+      "side": 1,
+      "message": "Yes, it can. There are bots failure on this. If ImageHelper object have not been used, the serial is invalid.",
+      "parentUuid": "8f8d0a02_f67aebfd",
       "range": {
         "startLine": 3053,
         "startChar": 21,
@@ -506,6 +644,30 @@
     },
     {
       "key": {
+        "uuid": "cf0ef8ca_d6540fc2",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 3056,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-10-05T22:10:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0842b380_697d4f84",
+      "range": {
+        "startLine": 3056,
+        "startChar": 13,
+        "endLine": 3056,
+        "endChar": 17
+      },
+      "revId": "866acc5aec412890ba874d2f5ec0277f4400cbc8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a7c32810_92ae30a1",
         "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
         "patchSetId": 5
@@ -529,6 +691,30 @@
     },
     {
       "key": {
+        "uuid": "6d01618b_4577ba04",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 5333,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-10-05T22:10:03Z",
+      "side": 1,
+      "message": "Comment updated.",
+      "parentUuid": "a7c32810_92ae30a1",
+      "range": {
+        "startLine": 5333,
+        "startChar": 26,
+        "endLine": 5333,
+        "endChar": 30
+      },
+      "revId": "866acc5aec412890ba874d2f5ec0277f4400cbc8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f744361d_91395966",
         "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
         "patchSetId": 5
@@ -549,6 +735,30 @@
       "revId": "866acc5aec412890ba874d2f5ec0277f4400cbc8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "61828f94_21216d83",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 1322,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-10-05T22:10:03Z",
+      "side": 1,
+      "message": "I have changed the new one to releaseImageFromShareContexts to reflect the fact that it releases the access from all contexts in the same share group.",
+      "parentUuid": "f744361d_91395966",
+      "range": {
+        "startLine": 1322,
+        "startChar": 3,
+        "endLine": 1322,
+        "endChar": 66
+      },
+      "revId": "866acc5aec412890ba874d2f5ec0277f4400cbc8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
