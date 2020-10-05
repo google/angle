@@ -716,6 +716,8 @@ bool ValidCap(const Context *context, GLenum cap, bool queryOnly)
                 return true;
             }
             break;
+        case GL_SAMPLE_SHADING:
+            return context->getExtensions().sampleShadingOES;
     }
 
     // GLES1 emulation: GLES1-specific caps after this point

@@ -2008,8 +2008,13 @@ bool ValidateSampleMaski(const Context *context, GLuint maskNumber, GLbitfield m
 
 bool ValidateMinSampleShadingOES(const Context *context, GLfloat value)
 {
-    UNIMPLEMENTED();
-    return false;
+    if (!context->getExtensions().sampleShadingOES)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    return true;
 }
 
 bool ValidateFramebufferTextureEXT(const Context *context,

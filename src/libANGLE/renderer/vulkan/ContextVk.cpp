@@ -3221,6 +3221,11 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 mGraphicsPipelineDesc->updateAlphaToOneEnable(&mGraphicsPipelineTransition,
                                                               glState.isSampleAlphaToOneEnabled());
                 break;
+            case gl::State::DIRTY_BIT_SAMPLE_SHADING:
+                mGraphicsPipelineDesc->updateSampleShading(&mGraphicsPipelineTransition,
+                                                           glState.isSampleShadingEnabled(),
+                                                           glState.getMinSampleShading());
+                break;
             case gl::State::DIRTY_BIT_COVERAGE_MODULATION:
                 break;
             case gl::State::DIRTY_BIT_FRAMEBUFFER_SRGB:

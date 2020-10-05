@@ -1333,7 +1333,7 @@ void GraphicsPipelineDesc::initDefaults()
 
     mRasterizationAndMultisampleStateInfo.bits.rasterizationSamples = 1;
     mRasterizationAndMultisampleStateInfo.bits.sampleShadingEnable  = 0;
-    mRasterizationAndMultisampleStateInfo.minSampleShading          = 0.0f;
+    mRasterizationAndMultisampleStateInfo.minSampleShading          = 1.0f;
     for (uint32_t &sampleMask : mRasterizationAndMultisampleStateInfo.sampleMask)
     {
         sampleMask = 0xFFFFFFFF;
@@ -1871,6 +1871,18 @@ void GraphicsPipelineDesc::updateSampleMask(GraphicsPipelineTransitionBits *tran
         sizeof(mRasterizationAndMultisampleStateInfo.sampleMask[0]) * kBitsPerByte;
     transition->set(ANGLE_GET_INDEXED_TRANSITION_BIT(mRasterizationAndMultisampleStateInfo,
                                                      sampleMask, maskNumber, kMaskBits));
+}
+
+void GraphicsPipelineDesc::updateSampleShading(GraphicsPipelineTransitionBits *transition,
+                                               bool enable,
+                                               float value)
+{
+    mRasterizationAndMultisampleStateInfo.bits.sampleShadingEnable = enable;
+    mRasterizationAndMultisampleStateInfo.minSampleShading         = (enable ? value : 1.0f);
+
+    transition->set(ANGLE_GET_TRANSITION_BIT(mRasterizationAndMultisampleStateInfo, bits));
+    transition->set(
+        ANGLE_GET_TRANSITION_BIT(mRasterizationAndMultisampleStateInfo, minSampleShading));
 }
 
 void GraphicsPipelineDesc::updateBlendColor(GraphicsPipelineTransitionBits *transition,

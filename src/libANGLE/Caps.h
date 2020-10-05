@@ -650,6 +650,9 @@ struct Extensions
 
     // GL_OES_texture_stencil8
     bool stencilIndex8 = false;
+
+    // GL_OES_sample_shading
+    bool sampleShadingOES = false;
 };
 
 // Pointer to a boolean memeber of the Extensions struct

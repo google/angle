@@ -3683,7 +3683,12 @@ bool GetQueryParameterInfo(const State &glState,
             *numParams = 1;
             return true;
         case GL_SAMPLE_MASK:
+        case GL_SAMPLE_SHADING:
             *type      = GL_BOOL;
+            *numParams = 1;
+            return true;
+        case GL_MIN_SAMPLE_SHADING_VALUE:
+            *type      = GL_FLOAT;
             *numParams = 1;
             return true;
     }

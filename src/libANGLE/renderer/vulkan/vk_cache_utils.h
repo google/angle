@@ -594,6 +594,8 @@ class GraphicsPipelineDesc final
                           uint32_t maskNumber,
                           uint32_t mask);
 
+    void updateSampleShading(GraphicsPipelineTransitionBits *transition, bool enable, float value);
+
     // RenderPass description.
     const RenderPassDesc &getRenderPassDesc() const { return mRenderPassDesc; }
 

@@ -327,6 +327,8 @@ State::State(const State *shareContextState,
       mSampleCoverageInvert(false),
       mSampleMask(false),
       mMaxSampleMaskWords(0),
+      mIsSampleShadingEnabled(false),
+      mMinSampleShading(0.0f),
       mStencilRef(0),
       mStencilBackRef(0),
       mLineWidth(0),
@@ -1071,6 +1073,24 @@ void State::setMultisampling(bool enabled)
     mDirtyBits.set(DIRTY_BIT_MULTISAMPLING);
 }
 
+void State::setSampleShading(bool enabled)
+{
+    mIsSampleShadingEnabled = enabled;
+    mMinSampleShading       = (enabled) ? 1.0f : mMinSampleShading;
+    mDirtyBits.set(DIRTY_BIT_SAMPLE_SHADING);
+}
+
+void State::setMinSampleShading(float value)
+{
+    value = gl::clamp01(value);
+
+    if (mMinSampleShading != value)
+    {
+        mMinSampleShading = value;
+        mDirtyBits.set(DIRTY_BIT_SAMPLE_SHADING);
+    }
+}
+
 void State::setScissorTest(bool enabled)
 {
     if (mScissorTest != enabled)
@@ -1176,6 +1196,9 @@ void State::setEnableFeature(GLenum feature, bool enabled)
             return;
         case GL_TEXTURE_RECTANGLE_ANGLE:
             mTextureRectangleEnabled = enabled;
+            return;
+        case GL_SAMPLE_SHADING:
+            setSampleShading(enabled);
             return;
         // GL_APPLE_clip_distance/GL_EXT_clip_cull_distance
         case GL_CLIP_DISTANCE0_EXT:
@@ -1320,7 +1343,8 @@ bool State::getEnableFeature(GLenum feature) const
             return mProgramBinaryCacheEnabled;
         case GL_TEXTURE_RECTANGLE_ANGLE:
             return mTextureRectangleEnabled;
-
+        case GL_SAMPLE_SHADING:
+            return isSampleShadingEnabled();
         // GL_APPLE_clip_distance/GL_EXT_clip_cull_distance
         case GL_CLIP_DISTANCE0_EXT:
         case GL_CLIP_DISTANCE1_EXT:
@@ -2290,7 +2314,9 @@ void State::getBooleanv(GLenum pname, GLboolean *params) const
         case GL_LIGHT_MODEL_TWO_SIDE:
             *params = IsLightModelTwoSided(&mGLES1State);
             break;
-
+        case GL_SAMPLE_SHADING:
+            *params = mIsSampleShadingEnabled;
+            break;
         default:
             UNREACHABLE();
             break;
@@ -2403,6 +2429,9 @@ void State::getFloatv(GLenum pname, GLfloat *params) const
         case GL_POINT_FADE_THRESHOLD_SIZE:
         case GL_POINT_DISTANCE_ATTENUATION:
             GetPointParameter(&mGLES1State, FromGLenum<PointParameter>(pname), params);
+            break;
+        case GL_MIN_SAMPLE_SHADING_VALUE:
+            *params = mMinSampleShading;
             break;
         default:
             UNREACHABLE();

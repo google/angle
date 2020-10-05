@@ -205,6 +205,14 @@ void RendererVk::ensureCapsInitialized() const
 
     mNativeExtensions.shadowSamplersEXT = true;
 
+    // From the Vulkan specs:
+    // sampleRateShading specifies whether Sample Shading and multisample interpolation are
+    // supported. If this feature is not enabled, the sampleShadingEnable member of the
+    // VkPipelineMultisampleStateCreateInfo structure must be set to VK_FALSE and the
+    // minSampleShading member is ignored. This also specifies whether shader modules can declare
+    // the SampleRateShading capability
+    mNativeExtensions.sampleShadingOES = (mPhysicalDeviceFeatures.sampleRateShading == VK_TRUE);
+
     // https://vulkan.lunarg.com/doc/view/1.0.30.0/linux/vkspec.chunked/ch31s02.html
     mNativeCaps.maxElementIndex  = std::numeric_limits<GLuint>::max() - 1;
     mNativeCaps.max3DTextureSize = LimitToInt(limitsVk.maxImageDimension3D);

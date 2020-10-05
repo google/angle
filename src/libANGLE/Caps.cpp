@@ -1032,6 +1032,7 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["GL_EXT_EGL_image_array"] = enableableExtension(&Extensions::eglImageArray);
         map["GL_EXT_buffer_storage"] = enableableExtension(&Extensions::bufferStorageEXT);
         map["GL_OES_texture_stencil8"] = enableableExtension(&Extensions::stencilIndex8);
+        map["GL_OES_sample_shading"] = enableableExtension(&Extensions::sampleShadingOES);
         // GLES1 extensions
         map["GL_OES_point_size_array"] = enableableExtension(&Extensions::pointSizeArrayOES);
         map["GL_OES_texture_cube_map"] = enableableExtension(&Extensions::textureCubeMapOES);

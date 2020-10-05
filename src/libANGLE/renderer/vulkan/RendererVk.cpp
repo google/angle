@@ -1335,6 +1335,8 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
         mPhysicalDeviceFeatures.shaderStorageBufferArrayDynamicIndexing;
     // Used to support APPLE_clip_distance
     enabledFeatures.features.shaderClipDistance = mPhysicalDeviceFeatures.shaderClipDistance;
+    // Used to support OES_sample_shading
+    enabledFeatures.features.sampleRateShading = mPhysicalDeviceFeatures.sampleRateShading;
 
     if (!vk::CommandBuffer::ExecutesInline())
     {
