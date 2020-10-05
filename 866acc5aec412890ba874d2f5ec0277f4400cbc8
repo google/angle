@@ -621,6 +621,30 @@
     },
     {
       "key": {
+        "uuid": "30da49f5_bf31c467",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 3053,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-10-05T22:49:48Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "504ccb2f_91513186",
+      "range": {
+        "startLine": 3053,
+        "startChar": 21,
+        "endLine": 3053,
+        "endChar": 41
+      },
+      "revId": "866acc5aec412890ba874d2f5ec0277f4400cbc8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0842b380_697d4f84",
         "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
         "patchSetId": 5
