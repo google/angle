@@ -27,6 +27,8 @@ _vulkan_backend_sources = [
   "CompilerVk.h",
   "ContextVk.cpp",
   "ContextVk.h",
+  "DebugAnnotatorVk.cpp",
+  "DebugAnnotatorVk.h",
   "DeviceVk.cpp",
   "DeviceVk.h",
   "DisplayVk.cpp",

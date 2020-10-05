@@ -261,6 +261,10 @@ class ContextVk : public ContextImpl, public vk::Context
                                  const std::string &message) override;
     angle::Result popDebugGroup(const gl::Context *context) override;
 
+    // Record GL API calls for debuggers
+    void logEvent(const char *eventString);
+    void endEventLog(gl::EntryPoint entryPoint);
+
     bool isViewportFlipEnabledForDrawFBO() const;
     bool isViewportFlipEnabledForReadFBO() const;
     // When the device/surface is rotated such that the surface's aspect ratio is different than
@@ -675,6 +679,7 @@ class ContextVk : public ContextImpl, public vk::Context
     // Dirty bits.
     enum DirtyBitType : size_t
     {
+        DIRTY_BIT_EVENT_LOG,
         DIRTY_BIT_DEFAULT_ATTRIBS,
         DIRTY_BIT_PIPELINE,
         DIRTY_BIT_TEXTURES,
@@ -846,6 +851,8 @@ class ContextVk : public ContextImpl, public vk::Context
     void invalidateDriverUniforms();
 
     // Handlers for graphics pipeline dirty bits.
+    angle::Result handleDirtyGraphicsEventLog(const gl::Context *context,
+                                              vk::CommandBuffer *commandBuffer);
     angle::Result handleDirtyGraphicsDefaultAttribs(const gl::Context *context,
                                                     vk::CommandBuffer *commandBuffer);
     angle::Result handleDirtyGraphicsPipeline(const gl::Context *context,
@@ -1165,6 +1172,9 @@ class ContextVk : public ContextImpl, public vk::Context
     vk::DynamicBuffer mStagingBuffer;
 
     std::vector<std::string> mCommandBufferDiagnostics;
+
+    // Record GL API calls for debuggers
+    std::vector<std::string> mEventLog;
 };
 
 ANGLE_INLINE angle::Result ContextVk::endRenderPassIfTransformFeedbackBuffer(

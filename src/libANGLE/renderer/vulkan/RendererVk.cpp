@@ -909,6 +909,7 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
         mCommandProcessorThread =
             std::thread(&CommandProcessor::processCommandProcessorTasks, &mCommandProcessor);
     }
+
     return angle::Result::Continue;
 }
 
@@ -2378,9 +2379,12 @@ void RendererVk::onCompletedSerial(Serial serial)
 
 void RendererVk::setGlobalDebugAnnotator()
 {
-    // TODO(ianelliott): Implement this method.
-    //
-    // https://issuetracker.google.com/issues/162068318
+    // If the vkCmd*DebugUtilsLabelEXT functions exist, initialize DebugAnnotatorVk to log the
+    // OpenGL ES commands that are used, for debuggers (e.g. AGI).
+    if (vkCmdBeginDebugUtilsLabelEXT)
+    {
+        gl::InitializeDebugAnnotations(&mAnnotator);
+    }
 }
 
 void RendererVk::reloadVolkIfNeeded() const
