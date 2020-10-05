@@ -252,7 +252,7 @@ def _CheckNewHeaderWithoutGnChange(input_api, output_api):
   """
 
     def headers(f):
-        return input_api.FilterSourceFile(f, allow_list=(r'.+%s' % _HEADER_EXTENSIONS,))
+        return input_api.FilterSourceFile(f, files_to_check=(r'.+%s' % _HEADER_EXTENSIONS,))
 
     new_headers = []
     for f in input_api.AffectedSourceFiles(headers):
@@ -261,7 +261,7 @@ def _CheckNewHeaderWithoutGnChange(input_api, output_api):
         new_headers.append(f.LocalPath())
 
     def gn_files(f):
-        return input_api.FilterSourceFile(f, allow_list=(r'.+\.gn',))
+        return input_api.FilterSourceFile(f, files_to_check=(r'.+\.gn',))
 
     all_gn_changed_contents = ''
     for f in input_api.AffectedSourceFiles(gn_files):
@@ -325,7 +325,7 @@ def _CheckTabsInSourceFiles(input_api, output_api):
 
     def implementation_and_headers(f):
         return input_api.FilterSourceFile(
-            f, allow_list=(r'.+%s' % _IMPLEMENTATION_AND_HEADER_EXTENSIONS,))
+            f, files_to_check=(r'.+%s' % _IMPLEMENTATION_AND_HEADER_EXTENSIONS,))
 
     files_with_tabs = []
     for f in input_api.AffectedSourceFiles(implementation_and_headers):
@@ -357,7 +357,7 @@ def _CheckNonAsciiInSourceFiles(input_api, output_api):
 
     def implementation_and_headers(f):
         return input_api.FilterSourceFile(
-            f, allow_list=(r'.+%s' % _IMPLEMENTATION_AND_HEADER_EXTENSIONS,))
+            f, files_to_check=(r'.+%s' % _IMPLEMENTATION_AND_HEADER_EXTENSIONS,))
 
     files_with_non_ascii = []
     for f in input_api.AffectedSourceFiles(implementation_and_headers):
