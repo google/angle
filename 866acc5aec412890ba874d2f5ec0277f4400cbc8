@@ -420,6 +420,23 @@
     },
     {
       "key": {
+        "uuid": "75b6507f_8adba00b",
+        "filename": "src/libANGLE/renderer/vulkan/android/HardwareBufferImageSiblingVkAndroid.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 317,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-10-05T20:07:03Z",
+      "side": 1,
+      "message": "For all of these \"b/\" shortlinks, move the bug to an externally visible component and use:\n\nhttps://issuetracker.google.com/\n\nIn the future, please use go/anglebug to open the bug as public.",
+      "revId": "866acc5aec412890ba874d2f5ec0277f4400cbc8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "5bbe63de_b684e107",
         "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
         "patchSetId": 5
@@ -443,6 +460,29 @@
     },
     {
       "key": {
+        "uuid": "8f8d0a02_f67aebfd",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 3053,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-10-05T20:07:03Z",
+      "side": 1,
+      "message": "Can this be called legitimately with an invalid Serial, or can this be moved into an ASSERT()?",
+      "range": {
+        "startLine": 3053,
+        "startChar": 21,
+        "endLine": 3053,
+        "endChar": 41
+      },
+      "revId": "866acc5aec412890ba874d2f5ec0277f4400cbc8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "0842b380_697d4f84",
         "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
         "patchSetId": 5
@@ -459,6 +499,29 @@
         "startChar": 13,
         "endLine": 3056,
         "endChar": 17
+      },
+      "revId": "866acc5aec412890ba874d2f5ec0277f4400cbc8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a7c32810_92ae30a1",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 5333,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-10-05T20:07:03Z",
+      "side": 1,
+      "message": "typo: can\u0027t\n\nI\u0027m also not entirely sure what this comment is trying to state.   Is this trying to state that staging images are only used by a single context (they\u0027re never shared)?",
+      "range": {
+        "startLine": 5333,
+        "startChar": 26,
+        "endLine": 5333,
+        "endChar": 30
       },
       "revId": "866acc5aec412890ba874d2f5ec0277f4400cbc8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
