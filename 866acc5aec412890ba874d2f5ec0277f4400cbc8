@@ -54,6 +54,46 @@
     },
     {
       "key": {
+        "uuid": "66645e97_7f9c93e3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-05T17:56:15Z",
+      "side": 1,
+      "message": "LGTM with nits.",
+      "revId": "866acc5aec412890ba874d2f5ec0277f4400cbc8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "420fc70b_d5d0ef88",
+        "filename": "src/libANGLE/renderer/vulkan/DisplayVk.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-05T17:56:15Z",
+      "side": 1,
+      "message": "nit: can omit this",
+      "range": {
+        "startLine": 27,
+        "startChar": 21,
+        "endLine": 27,
+        "endChar": 39
+      },
+      "revId": "866acc5aec412890ba874d2f5ec0277f4400cbc8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b5978682_c3ac5197",
         "filename": "src/libANGLE/renderer/vulkan/DisplayVk.h",
         "patchSetId": 5
@@ -293,6 +333,30 @@
     },
     {
       "key": {
+        "uuid": "c94955bd_b6962682",
+        "filename": "src/libANGLE/renderer/vulkan/DisplayVk.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-05T17:56:15Z",
+      "side": 1,
+      "message": "Per offline discussion - happy to keep this design and re-visit it when / if we run into another back-end that needs this list. Or the front-end.",
+      "parentUuid": "36377b74_1ab3b5a5",
+      "range": {
+        "startLine": 43,
+        "startChar": 0,
+        "endLine": 45,
+        "endChar": 37
+      },
+      "revId": "866acc5aec412890ba874d2f5ec0277f4400cbc8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "76df7ac7_d5887cb2",
         "filename": "src/libANGLE/renderer/vulkan/ImageVk.cpp",
         "patchSetId": 5
@@ -316,6 +380,52 @@
     },
     {
       "key": {
+        "uuid": "ba81962d_4ac471dd",
+        "filename": "src/libANGLE/renderer/vulkan/android/HardwareBufferImageSiblingVkAndroid.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 316,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-05T17:56:15Z",
+      "side": 1,
+      "message": "same nit",
+      "range": {
+        "startLine": 316,
+        "startChar": 11,
+        "endLine": 316,
+        "endChar": 15
+      },
+      "revId": "866acc5aec412890ba874d2f5ec0277f4400cbc8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5bbe63de_b684e107",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 878,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-05T17:56:15Z",
+      "side": 1,
+      "message": "same nit",
+      "range": {
+        "startLine": 878,
+        "startChar": 7,
+        "endLine": 878,
+        "endChar": 11
+      },
+      "revId": "866acc5aec412890ba874d2f5ec0277f4400cbc8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "0842b380_697d4f84",
         "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
         "patchSetId": 5
@@ -332,6 +442,29 @@
         "startChar": 13,
         "endLine": 3056,
         "endChar": 17
+      },
+      "revId": "866acc5aec412890ba874d2f5ec0277f4400cbc8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f744361d_91395966",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 1322,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-05T17:56:15Z",
+      "side": 1,
+      "message": "nit: instead of making this optionally nullptr, can you make two release functions?\n\nreleaseImageAndUpdateRenderPass(contextvk)\nreleaseImage(renderer)\n\nnaming can change but that\u0027s the general idea.",
+      "range": {
+        "startLine": 1322,
+        "startChar": 3,
+        "endLine": 1322,
+        "endChar": 66
       },
       "revId": "866acc5aec412890ba874d2f5ec0277f4400cbc8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
