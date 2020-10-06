@@ -1569,19 +1569,25 @@ ANGLE_INLINE angle::Result ContextVk::handleDirtyTexturesImpl(
                 {
                     if (image.hasRenderPassUsageFlag(vk::RenderPassUsage::ReadOnlyAttachment))
                     {
-                        textureLayout = vk::ImageLayout::DepthStencilReadOnly;
+                        if (firstShader == gl::ShaderType::Fragment)
+                        {
+                            ASSERT(remainingShaderBits.none() && lastShader == firstShader);
+                            textureLayout = vk::ImageLayout::DSAttachmentReadAndFragmentShaderRead;
+                        }
+                        else
+                        {
+                            textureLayout = vk::ImageLayout::DSAttachmentReadAndAllShadersRead;
+                        }
                     }
                     else
                     {
                         if (firstShader == gl::ShaderType::Fragment)
                         {
-                            textureLayout =
-                                vk::ImageLayout::DepthStencilAttachmentAndFragmentShaderRead;
+                            textureLayout = vk::ImageLayout::DSAttachmentWriteAndFragmentShaderRead;
                         }
                         else
                         {
-                            textureLayout =
-                                vk::ImageLayout::DepthStencilAttachmentAndAllShadersRead;
+                            textureLayout = vk::ImageLayout::DSAttachmentWriteAndAllShadersRead;
                         }
                     }
                 }
@@ -1604,7 +1610,15 @@ ANGLE_INLINE angle::Result ContextVk::handleDirtyTexturesImpl(
                 // split a RenderPass to transition a depth texture from shader-read to read-only.
                 // This improves performance in Manhattan. Future optimizations are likely possible
                 // here including using specialized barriers without breaking the RenderPass.
-                textureLayout = vk::ImageLayout::DepthStencilReadOnly;
+                if (firstShader == gl::ShaderType::Fragment)
+                {
+                    ASSERT(remainingShaderBits.none() && lastShader == firstShader);
+                    textureLayout = vk::ImageLayout::DSAttachmentReadAndFragmentShaderRead;
+                }
+                else
+                {
+                    textureLayout = vk::ImageLayout::DSAttachmentReadAndAllShadersRead;
+                }
             }
             else
             {
