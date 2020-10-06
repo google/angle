@@ -554,6 +554,11 @@ GL_APICALL void GL_APIENTRY glImportSemaphoreZirconHandleANGLE(GLuint memory,
 #define GL_TEXTURE_FILTERING_HINT_CHROMIUM 0x8AF0
 #endif /* GL_CHROMIUM_texture_filtering_hint */
 
+#ifndef GL_NV_robustness_video_memory
+#define GL_NV_robustness_video_memory
+#define GL_PURGED_CONTEXT_RESET_NV 0x92BB
+#endif /* GL_NV_robustness_video_memory */
+
 // clang-format on
 
 #endif  // INCLUDE_GLES2_GL2EXT_ANGLE_H_

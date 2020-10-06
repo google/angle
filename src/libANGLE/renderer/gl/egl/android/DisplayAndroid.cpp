@@ -229,7 +229,8 @@ ContextImpl *DisplayAndroid::createContext(const gl::State &state,
         }
     }
 
-    return new ContextEGL(state, errorSet, renderer);
+    return new ContextEGL(state, errorSet, renderer,
+                          RobustnessVideoMemoryPurgeStatus::NOT_REQUESTED);
 }
 
 bool DisplayAndroid::isValidNativeWindow(EGLNativeWindowType window) const

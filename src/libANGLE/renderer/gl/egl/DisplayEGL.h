@@ -141,6 +141,9 @@ class DisplayEGL : public DisplayGL
     void generateCaps(egl::Caps *outCaps) const override;
 
     std::map<EGLint, EGLint> mConfigIds;
+
+    bool mHasEXTCreateContextRobustness;
+    bool mHasNVRobustnessVideoMemoryPurge;
 };
 
 }  // namespace rx

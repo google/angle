@@ -1405,6 +1405,20 @@ Error ValidateCreateContext(Display *display,
                 }
                 break;
 
+            case EGL_GENERATE_RESET_ON_VIDEO_MEMORY_PURGE_NV:
+                if (!display->getExtensions().robustnessVideoMemoryPurgeNV)
+                {
+                    return EglBadAttribute()
+                           << "Attribute EGL_GENERATE_RESET_ON_VIDEO_MEMORY_PURGE_NV requires "
+                              "extension EGL_NV_robustness_video_memory_purge.";
+                }
+                if (value != EGL_TRUE && value != EGL_FALSE)
+                {
+                    return EglBadAttribute() << "EGL_GENERATE_RESET_ON_VIDEO_MEMORY_PURGE_NV must "
+                                                "be either EGL_TRUE or EGL_FALSE.";
+                }
+                break;
+
             default:
                 return EglBadAttribute() << "Unknown attribute.";
         }
