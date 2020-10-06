@@ -52,10 +52,6 @@ template_gl_enums_source = """// GENERATED FILE - DO NOT EDIT.
 
 #include "libANGLE/gl_enum_utils.h"
 
-#include <sstream>
-
-#include "common/bitset_utils.h"
-
 namespace gl
 {{
 const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
@@ -66,33 +62,6 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
         default:
             return kUnknownGLenumString;
     }}
-}}
-
-
-std::string GLbitfieldToString(GLenumGroup enumGroup, unsigned int value)
-{{
-    std::stringstream st;
-
-    if (value == 0)
-    {{
-        return "0";
-    }}
-
-    const angle::BitSet<32> bitSet(value);
-    bool first = true;
-    for (const auto index : bitSet)
-    {{
-        if (!first)
-        {{
-            st << " | ";
-        }}
-        first = false;
-
-        unsigned int mask = 1u << index;
-        OutputGLenumString(st, enumGroup, mask);
-    }}
-
-    return st.str();
 }}
 }}  // namespace gl
 

@@ -117,7 +117,7 @@ std::string FormatString(const char *fmt, ...)
     va_list vararg;
     va_start(vararg, fmt);
 
-    std::vector<char> buffer(512);
+    std::vector<char> buffer;
     size_t len = FormatStringIntoVector(fmt, vararg, buffer);
     va_end(vararg);
 

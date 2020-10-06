@@ -28,6 +28,7 @@
 #include "anglebase/no_destructor.h"
 #include "common/Optional.h"
 #include "common/angleutils.h"
+#include "common/entry_points_enum_autogen.h"
 #include "common/system_utils.h"
 
 namespace gl
@@ -123,7 +124,7 @@ ScopedPerfEventHelper::ScopedPerfEventHelper(gl::Context *context,
                                              gl::EntryPoint entryPoint,
                                              const char *format,
                                              ...)
-    : mContext(context), mEntryPoint(entryPoint), mFunctionName(nullptr)
+    : mContext(context), mEntryPoint(entryPoint), mFunctionName(GetEntryPointName(entryPoint))
 {
     bool dbgTrace = DebugAnnotationsActive();
 #if !defined(ANGLE_ENABLE_DEBUG_TRACE)
@@ -135,12 +136,12 @@ ScopedPerfEventHelper::ScopedPerfEventHelper(gl::Context *context,
 
     va_list vararg;
     va_start(vararg, format);
-    std::vector<char> buffer(512);
+
+    std::vector<char> buffer;
     size_t len = FormatStringIntoVector(format, vararg, buffer);
-    ANGLE_LOG(EVENT) << std::string(&buffer[0], len);
-    // Pull function name from variable args
-    mFunctionName = va_arg(vararg, const char *);
     va_end(vararg);
+
+    ANGLE_LOG(EVENT) << std::string(&buffer[0], len);
     if (dbgTrace)
     {
         g_debugAnnotator->beginEvent(context, entryPoint, mFunctionName, buffer.data());
