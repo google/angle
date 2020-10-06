@@ -58,33 +58,36 @@ struct ScopedPipe
     };
 };
 
-bool ReadFromFile(int fd, std::string *out)
+enum class ReadResult
 {
-    char buffer[256];
+    NoData,
+    GotData,
+};
+
+ReadResult ReadFromFile(int fd, std::string *out)
+{
+    constexpr size_t kBufSize = 2048;
+    char buffer[kBufSize];
     ssize_t bytesRead = read(fd, buffer, sizeof(buffer));
 
-    // If interrupted, retry.
     if (bytesRead < 0 && errno == EINTR)
     {
-        return true;
+        return ReadResult::GotData;
     }
 
-    // If failed, or nothing to read, we are done.
     if (bytesRead <= 0)
     {
-        return false;
+        return ReadResult::NoData;
     }
 
     out->append(buffer, bytesRead);
-    return true;
+    return ReadResult::GotData;
 }
 
 void ReadEntireFile(int fd, std::string *out)
 {
-    while (true)
+    while (ReadFromFile(fd, out) == ReadResult::GotData)
     {
-        if (!ReadFromFile(fd, out))
-            break;
     }
 }
 
@@ -244,12 +247,12 @@ class PosixProcess : public Process
 
         if (mStdoutPipe.valid())
         {
-            ReadFromFile(mStdoutPipe.fds[0], &mStdout);
+            ReadEntireFile(mStdoutPipe.fds[0], &mStdout);
         }
 
         if (mStderrPipe.valid())
         {
-            ReadFromFile(mStderrPipe.fds[0], &mStderr);
+            ReadEntireFile(mStderrPipe.fds[0], &mStderr);
         }
 
         return false;
