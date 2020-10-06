@@ -418,6 +418,7 @@ angle::Result FramebufferVk::clearImpl(const gl::Context *context,
     // Discard clear altogether if scissor has 0 width or height.
     if (scissoredRenderArea.width == 0 || scissoredRenderArea.height == 0)
     {
+        ASSERT(mDeferredClears.empty());
         return angle::Result::Continue;
     }
 

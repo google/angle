@@ -3190,6 +3190,62 @@ TEST_P(SimpleStateChangeTestES3, ClearThenNoopClearThenRebindAttachment)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
+// Test that clear followed by rebind of framebuffer attachment works (with 0-sized scissor clear in
+// between).
+TEST_P(SimpleStateChangeTestES3, ClearThenZeroSizeScissoredClearThenRebindAttachment)
+{
+    // Create a texture with red
+    const GLColor kInitColor1 = GLColor::red;
+    GLTexture texture1;
+    glBindTexture(GL_TEXTURE_2D, texture1);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, &kInitColor1);
+
+    // Create a framebuffer to be cleared
+    GLTexture texture2;
+    glBindTexture(GL_TEXTURE_2D, texture2);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    GLFramebuffer drawFBO;
+    glBindFramebuffer(GL_FRAMEBUFFER, drawFBO);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture2, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    EXPECT_GL_NO_ERROR();
+
+    // Clear the framebuffer to green
+    glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    // Clear again, but in a way that would be a no-op.  In the Vulkan backend, this will result in
+    // a framebuffer sync state, which extracts deferred clears.  However, as the clear is actually
+    // a noop, the deferred clears will remain unflushed.
+    glEnable(GL_SCISSOR_TEST);
+    glScissor(0, 0, 0, 0);
+    glClear(GL_COLOR_BUFFER_BIT);
+    glDisable(GL_SCISSOR_TEST);
+
+    // Change framebuffer's attachment to the other texture.
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture1, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    // A bogus draw to make sure the render pass is cleared in the Vulkan backend.
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Blue());
+    glUseProgram(program);
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_ZERO, GL_ONE);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5);
+    EXPECT_GL_NO_ERROR();
+
+    // Expect red, which is the original contents of texture1.  If the clear is mistakenly applied
+    // to the new attachment, green will be read back.
+    EXPECT_PIXEL_COLOR_EQ(0, 0, kInitColor1);
+
+    // Attach back to texture2.  It should be cleared to green.
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture2, 0);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
 // Test that clear followed by rebind of framebuffer attachment works (with noop blit in between).
 TEST_P(SimpleStateChangeTestES3, ClearThenNoopBlitThenRebindAttachment)
 {
