@@ -268,8 +268,7 @@ ExternalImageSiblingImpl *DisplayAndroid::createExternalImageSibling(
     }
 }
 
-egl::Error DisplayAndroid::makeCurrent(egl::Display *display,
-                                       egl::Surface *drawSurface,
+egl::Error DisplayAndroid::makeCurrent(egl::Surface *drawSurface,
                                        egl::Surface *readSurface,
                                        gl::Context *context)
 {
@@ -325,7 +324,7 @@ egl::Error DisplayAndroid::makeCurrent(egl::Display *display,
         currentContext.context = newContext;
     }
 
-    return DisplayGL::makeCurrent(display, drawSurface, readSurface, context);
+    return DisplayGL::makeCurrent(drawSurface, readSurface, context);
 }
 
 void DisplayAndroid::destroyNativeContext(EGLContext context)

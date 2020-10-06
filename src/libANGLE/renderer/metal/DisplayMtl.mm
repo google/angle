@@ -245,8 +245,7 @@ EGLSyncImpl *DisplayMtl::createSync(const egl::AttributeMap &attribs)
     return nullptr;
 }
 
-egl::Error DisplayMtl::makeCurrent(egl::Display *display,
-                                   egl::Surface *drawSurface,
+egl::Error DisplayMtl::makeCurrent(egl::Surface *drawSurface,
                                    egl::Surface *readSurface,
                                    gl::Context *context)
 {

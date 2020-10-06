@@ -272,8 +272,6 @@ class RendererVk : angle::NonCopyable
 
     vk::ResourceSerialFactory &getResourceSerialFactory() { return mResourceSerialFactory; }
 
-    void setGlobalDebugAnnotator();
-
   private:
     angle::Result initializeDevice(DisplayVk *displayVk, uint32_t queueFamilyIndex);
     void ensureCapsInitialized() const;

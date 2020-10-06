@@ -50,15 +50,10 @@ void DisplayVk::terminate()
     mRenderer->onDestroy();
 }
 
-egl::Error DisplayVk::makeCurrent(egl::Display * /*display*/,
-                                  egl::Surface * /*drawSurface*/,
+egl::Error DisplayVk::makeCurrent(egl::Surface * /*drawSurface*/,
                                   egl::Surface * /*readSurface*/,
                                   gl::Context * /*context*/)
 {
-    // Ensure the appropriate global DebugAnnotator is used
-    ASSERT(mRenderer);
-    mRenderer->setGlobalDebugAnnotator();
-
     return egl::NoError();
 }
 

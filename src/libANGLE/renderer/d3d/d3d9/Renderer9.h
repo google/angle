@@ -405,8 +405,6 @@ class Renderer9 : public RendererD3D
 
     angle::Result ensureVertexDataManagerInitialized(const gl::Context *context);
 
-    void setGlobalDebugAnnotator() override;
-
   private:
     angle::Result drawArraysImpl(const gl::Context *context,
                                  gl::PrimitiveMode mode,

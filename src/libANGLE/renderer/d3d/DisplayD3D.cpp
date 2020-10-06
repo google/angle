@@ -240,15 +240,10 @@ ShareGroupImpl *DisplayD3D::createShareGroup()
     return new ShareGroupD3D();
 }
 
-egl::Error DisplayD3D::makeCurrent(egl::Display *display,
-                                   egl::Surface *drawSurface,
+egl::Error DisplayD3D::makeCurrent(egl::Surface *drawSurface,
                                    egl::Surface *readSurface,
                                    gl::Context *context)
 {
-    // Ensure the appropriate global DebugAnnotator is used
-    ASSERT(mRenderer != nullptr);
-    mRenderer->setGlobalDebugAnnotator();
-
     return egl::NoError();
 }
 

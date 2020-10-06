@@ -194,8 +194,6 @@ class RendererD3D : public BufferFactoryD3D
 
     virtual int getMajorShaderModel() const = 0;
 
-    virtual void setGlobalDebugAnnotator() = 0;
-
     const angle::FeaturesD3D &getFeatures() const;
 
     // Pixel operations

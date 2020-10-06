@@ -69,8 +69,7 @@ class DisplayImpl : public EGLImplFactory, public angle::Subject
     virtual egl::Error initialize(egl::Display *display) = 0;
     virtual void terminate()                             = 0;
 
-    virtual egl::Error makeCurrent(egl::Display *display,
-                                   egl::Surface *drawSurface,
+    virtual egl::Error makeCurrent(egl::Surface *drawSurface,
                                    egl::Surface *readSurface,
                                    gl::Context *context) = 0;
 

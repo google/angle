@@ -36,8 +36,7 @@ void DisplayNULL::terminate()
     mAllocationTracker.reset();
 }
 
-egl::Error DisplayNULL::makeCurrent(egl::Display *display,
-                                    egl::Surface *drawSurface,
+egl::Error DisplayNULL::makeCurrent(egl::Surface *drawSurface,
                                     egl::Surface *readSurface,
                                     gl::Context *context)
 {

@@ -475,8 +475,6 @@ class Renderer11 : public RendererD3D
                                        gl::TextureType type,
                                        gl::Texture **textureOut) override;
 
-    void setGlobalDebugAnnotator() override;
-
   private:
     void generateCaps(gl::Caps *outCaps,
                       gl::TextureCapsMap *outTextureCaps,

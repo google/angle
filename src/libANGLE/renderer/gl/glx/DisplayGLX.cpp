@@ -377,8 +377,7 @@ void DisplayGLX::terminate()
     }
 }
 
-egl::Error DisplayGLX::makeCurrent(egl::Display *display,
-                                   egl::Surface *drawSurface,
+egl::Error DisplayGLX::makeCurrent(egl::Surface *drawSurface,
                                    egl::Surface *readSurface,
                                    gl::Context *context)
 {
@@ -403,7 +402,7 @@ egl::Error DisplayGLX::makeCurrent(egl::Display *display,
         mCurrentDrawable                             = newDrawable;
     }
 
-    return DisplayGL::makeCurrent(display, drawSurface, readSurface, context);
+    return DisplayGL::makeCurrent(drawSurface, readSurface, context);
 }
 
 SurfaceImpl *DisplayGLX::createWindowSurface(const egl::SurfaceState &state,
