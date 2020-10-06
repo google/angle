@@ -794,7 +794,6 @@ angle::Result InitializeRenderPassFromDesc(Context *context,
     // Pack depth/stencil attachment, if any
     if (desc.hasDepthStencilAttachment())
     {
-        ResourceAccess dsAccess      = desc.getDepthStencilAccess();
         uint32_t depthStencilIndexGL = static_cast<uint32_t>(desc.depthStencilAttachmentIndex());
 
         angle::FormatID formatID = desc[depthStencilIndexGL];
@@ -802,18 +801,8 @@ angle::Result InitializeRenderPassFromDesc(Context *context,
         const vk::Format &format = renderer->getFormat(formatID);
 
         depthStencilAttachmentRef.attachment = attachmentCount.get();
-
-        switch (dsAccess)
-        {
-            case ResourceAccess::ReadOnly:
-                depthStencilAttachmentRef.layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL;
-                break;
-            case ResourceAccess::Write:
-                depthStencilAttachmentRef.layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
-                break;
-            default:
-                UNREACHABLE();
-        }
+        depthStencilAttachmentRef.layout     = ConvertImageLayoutToVkImageLayout(
+            static_cast<ImageLayout>(ops[attachmentCount].initialLayout));
 
         UnpackAttachmentDesc(&attachmentDescs[attachmentCount.get()], format, desc.samples(),
                              ops[attachmentCount]);
@@ -1065,44 +1054,13 @@ void RenderPassDesc::setSamples(GLint samples)
     SetBitField(mLogSamples, PackSampleCount(samples));
 }
 
-// We can use a bit packing trick to combine two states into a smaller number of bits. The first
-// state is the "depth stencil access" mode which can be Unused/ReadOnly/Write. Naively the DS
-// access would take 2 bits. The color attachment count state can have 9 values: no attachments +
-// 1-8 attachments. Naively this would take 4 bits. So our total bit count naively would be 6. We
-// can pack into 5 bits simply by treating the combination of the 9*3 values as an enum with 27
-// values. 5 bits gives us 32 possible values. Mod and divide allow us to access the two different
-// state components of the enum.
-enum PackedAttachmentCount : uint8_t
-{
-    NoColor                   = 0,
-    ColorMax                  = NoColor + gl::IMPLEMENTATION_MAX_DRAW_BUFFERS,
-    NoColorDepthStencilRead   = ColorMax + 1,
-    ColorMaxDepthStencilRead  = NoColorDepthStencilRead + gl::IMPLEMENTATION_MAX_DRAW_BUFFERS,
-    NoColorDepthStencilWrite  = ColorMaxDepthStencilRead + 1,
-    ColorMaxDepthStencilWrite = NoColorDepthStencilWrite + gl::IMPLEMENTATION_MAX_DRAW_BUFFERS,
-    EnumCount,
-};
-
-static_assert(PackedAttachmentCount::EnumCount < angle::Bit<uint8_t>(5), "Bit overflow");
-
-size_t RenderPassDesc::colorAttachmentRange() const
-{
-    return mPackedColorAttachmentRangeAndDSAccess % (PackedAttachmentCount::ColorMax + 1);
-}
-
-ResourceAccess RenderPassDesc::getDepthStencilAccess() const
-{
-    return static_cast<ResourceAccess>(mPackedColorAttachmentRangeAndDSAccess /
-                                       (PackedAttachmentCount::ColorMax + 1));
-}
-
 void RenderPassDesc::packColorAttachment(size_t colorIndexGL, angle::FormatID formatID)
 {
     ASSERT(colorIndexGL < mAttachmentFormats.size());
     static_assert(angle::kNumANGLEFormats < std::numeric_limits<uint8_t>::max(),
                   "Too many ANGLE formats to fit in uint8_t");
     // Force the user to pack the depth/stencil attachment last.
-    ASSERT(!hasDepthStencilAttachment());
+    ASSERT(mHasDepthStencilAttachment == false);
     // This function should only be called for enabled GL color attachments.
     ASSERT(formatID != angle::FormatID::NONE);
 
@@ -1113,8 +1071,7 @@ void RenderPassDesc::packColorAttachment(size_t colorIndexGL, angle::FormatID fo
     // index.  Additionally, a few bits at the end of the array are used for other purposes, so we
     // need the last format to use only a few bits.  These are the reasons why we need depth/stencil
     // to be packed last.
-    SetBitField(mPackedColorAttachmentRangeAndDSAccess,
-                std::max<size_t>(mPackedColorAttachmentRangeAndDSAccess, colorIndexGL + 1));
+    SetBitField(mColorAttachmentRange, std::max<size_t>(mColorAttachmentRange, colorIndexGL + 1));
 }
 
 void RenderPassDesc::packColorAttachmentGap(size_t colorIndexGL)
@@ -1123,17 +1080,17 @@ void RenderPassDesc::packColorAttachmentGap(size_t colorIndexGL)
     static_assert(angle::kNumANGLEFormats < std::numeric_limits<uint8_t>::max(),
                   "Too many ANGLE formats to fit in uint8_t");
     // Force the user to pack the depth/stencil attachment last.
-    ASSERT(!hasDepthStencilAttachment());
+    ASSERT(mHasDepthStencilAttachment == false);
 
     // Use NONE as a flag for gaps in GL color attachments.
     uint8_t &packedFormat = mAttachmentFormats[colorIndexGL];
     SetBitField(packedFormat, angle::FormatID::NONE);
 }
 
-void RenderPassDesc::packDepthStencilAttachment(angle::FormatID formatID, ResourceAccess access)
+void RenderPassDesc::packDepthStencilAttachment(angle::FormatID formatID)
 {
-    ASSERT(access != ResourceAccess::Unused);
-    ASSERT(!hasDepthStencilAttachment());
+    // Though written as Count, there is only ever a single depth/stencil attachment.
+    ASSERT(mHasDepthStencilAttachment == false);
 
     // 3 bits are used to store the depth/stencil attachment format.
     ASSERT(static_cast<uint8_t>(formatID) <= kDepthStencilFormatStorageMask);
@@ -1142,20 +1099,9 @@ void RenderPassDesc::packDepthStencilAttachment(angle::FormatID formatID, Resour
     ASSERT(index < mAttachmentFormats.size());
 
     uint8_t &packedFormat = mAttachmentFormats[index];
-    packedFormat &= ~kDepthStencilFormatStorageMask;
-    packedFormat |= static_cast<uint8_t>(formatID);
+    SetBitField(packedFormat, formatID);
 
-    updateDepthStencilAccess(access);
-}
-
-void RenderPassDesc::updateDepthStencilAccess(ResourceAccess access)
-{
-    ASSERT(access != ResourceAccess::Unused);
-
-    size_t colorRange = colorAttachmentRange();
-    size_t offset =
-        access == ResourceAccess::ReadOnly ? NoColorDepthStencilRead : NoColorDepthStencilWrite;
-    SetBitField(mPackedColorAttachmentRangeAndDSAccess, colorRange + offset);
+    mHasDepthStencilAttachment = true;
 }
 
 void RenderPassDesc::packColorResolveAttachment(size_t colorIndexGL)
@@ -1243,8 +1189,7 @@ bool RenderPassDesc::isColorAttachmentEnabled(size_t colorIndexGL) const
 size_t RenderPassDesc::attachmentCount() const
 {
     size_t colorAttachmentCount = 0;
-    size_t colorRange           = colorAttachmentRange();
-    for (size_t i = 0; i < colorRange; ++i)
+    for (size_t i = 0; i < mColorAttachmentRange; ++i)
     {
         colorAttachmentCount += isColorAttachmentEnabled(i);
     }
@@ -2926,18 +2871,14 @@ angle::Result RenderPassCache::addRenderPass(ContextVk *contextVk,
 
     if (desc.hasDepthStencilAttachment())
     {
-        vk::ResourceAccess dsAccess = desc.getDepthStencilAccess();
-        vk::ImageLayout imageLayout;
-        if (dsAccess == vk::ResourceAccess::ReadOnly)
-        {
-            imageLayout = vk::ImageLayout::DepthStencilReadOnly;
-        }
-        else
-        {
-            ASSERT(dsAccess == vk::ResourceAccess::Write);
-            imageLayout = vk::ImageLayout::DepthStencilAttachment;
-        }
-
+        // This API is only called by getCompatibleRenderPass(). What we need here is to create a
+        // compatible renderpass with the desc. Vulkan spec says image layout are not counted toward
+        // render pass compatibility: "Two render passes are compatible if their corresponding
+        // color, input, resolve, and depth/stencil attachment references are compatible and if they
+        // are otherwise identical except for: Initial and final image layout in attachment
+        // descriptions; Image layout in attachment references". We pick the most used layout here
+        // since it doesn't matter.
+        vk::ImageLayout imageLayout = vk::ImageLayout::DepthStencilAttachment;
         ops.initWithLoadStore(colorIndexVk, imageLayout, imageLayout);
     }
 

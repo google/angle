@@ -897,15 +897,13 @@ void CommandBufferHelper::finalizeDepthStencilImageLayout()
 
     if (mReadOnlyDepthStencilMode)
     {
-        imageLayout = ImageLayout::DepthStencilReadOnly;
-        mRenderPassDesc.updateDepthStencilAccess(ResourceAccess::ReadOnly);
+        imageLayout     = ImageLayout::DepthStencilReadOnly;
         barrierRequired = mDepthStencilImage->isReadBarrierNecessary(imageLayout);
     }
     else
     {
         // Write always requires a barrier
-        imageLayout = ImageLayout::DepthStencilAttachment;
-        mRenderPassDesc.updateDepthStencilAccess(ResourceAccess::Write);
+        imageLayout     = ImageLayout::DepthStencilAttachment;
         barrierRequired = true;
     }
 
@@ -1033,8 +1031,7 @@ void CommandBufferHelper::endRenderPass(ContextVk *contextVk)
     }
 
     // Ensure we don't write to a read-only RenderPass. (ReadOnly -> !Write)
-    ASSERT((mRenderPassDesc.getDepthStencilAccess() != ResourceAccess::ReadOnly) ||
-           mDepthAccess != ResourceAccess::Write);
+    ASSERT(!mReadOnlyDepthStencilMode || mDepthAccess != ResourceAccess::Write);
 
     // Fill out perf counters
     PerfCounters &counters = contextVk->getPerfCounters();
