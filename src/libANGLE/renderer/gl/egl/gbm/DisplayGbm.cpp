@@ -912,7 +912,8 @@ ContextImpl *DisplayGbm::createContext(const gl::State &state,
                                        const egl::AttributeMap &attribs)
 {
     // All contexts on Gbm are virtualized and share the same renderer.
-    return new ContextEGL(state, errorSet, mRenderer);
+    return new ContextEGL(state, errorSet, mRenderer,
+                          RobustnessVideoMemoryPurgeStatus::NOT_REQUESTED);
 }
 
 egl::Error DisplayGbm::makeCurrent(egl::Surface *drawSurface,

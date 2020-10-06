@@ -139,6 +139,7 @@ class DisplayGLX : public DisplayGL
     bool mHasARBCreateContextProfile;
     bool mHasARBCreateContextRobustness;
     bool mHasEXTCreateContextES2Profile;
+    bool mHasNVRobustnessVideoMemoryPurge;
 
     enum class SwapControl
     {

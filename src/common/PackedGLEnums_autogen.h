@@ -160,9 +160,10 @@ enum class GraphicsResetStatus : uint8_t
     GuiltyContextReset   = 1,
     InnocentContextReset = 2,
     UnknownContextReset  = 3,
+    PurgedContextResetNV = 4,
 
-    InvalidEnum = 4,
-    EnumCount   = 4,
+    InvalidEnum = 5,
+    EnumCount   = 5,
 };
 
 template <>

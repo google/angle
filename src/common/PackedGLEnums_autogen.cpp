@@ -560,6 +560,8 @@ GraphicsResetStatus FromGLenum<GraphicsResetStatus>(GLenum from)
             return GraphicsResetStatus::InnocentContextReset;
         case GL_UNKNOWN_CONTEXT_RESET:
             return GraphicsResetStatus::UnknownContextReset;
+        case GL_PURGED_CONTEXT_RESET_NV:
+            return GraphicsResetStatus::PurgedContextResetNV;
         default:
             return GraphicsResetStatus::InvalidEnum;
     }
@@ -577,6 +579,8 @@ GLenum ToGLenum(GraphicsResetStatus from)
             return GL_INNOCENT_CONTEXT_RESET;
         case GraphicsResetStatus::UnknownContextReset:
             return GL_UNKNOWN_CONTEXT_RESET;
+        case GraphicsResetStatus::PurgedContextResetNV:
+            return GL_PURGED_CONTEXT_RESET_NV;
         default:
             UNREACHABLE();
             return 0;
@@ -598,6 +602,9 @@ std::ostream &operator<<(std::ostream &os, GraphicsResetStatus value)
             break;
         case GraphicsResetStatus::UnknownContextReset:
             os << "GL_UNKNOWN_CONTEXT_RESET";
+            break;
+        case GraphicsResetStatus::PurgedContextResetNV:
+            os << "GL_PURGED_CONTEXT_RESET_NV";
             break;
         default:
             os << "GL_INVALID_ENUM";
