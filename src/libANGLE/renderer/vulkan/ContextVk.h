@@ -609,7 +609,7 @@ class ContextVk : public ContextImpl, public vk::Context
 
     vk::CommandBufferHelper &getStartedRenderPassCommands()
     {
-        ASSERT(hasStartedRenderPass());
+        ASSERT(mRenderPassCommands->started());
         return *mRenderPassCommands;
     }
 
