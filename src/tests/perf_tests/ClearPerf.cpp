@@ -31,12 +31,16 @@ struct ClearParams final : public RenderTestParams
 
         fboSize     = 2048;
         textureSize = 16;
+
+        internalFormat = GL_RGBA8;
     }
 
     std::string story() const override;
 
     GLsizei fboSize;
     GLsizei textureSize;
+
+    GLenum internalFormat;
 };
 
 std::ostream &operator<<(std::ostream &os, const ClearParams &params)
@@ -50,6 +54,11 @@ std::string ClearParams::story() const
     std::stringstream strstr;
 
     strstr << RenderTestParams::story();
+
+    if (internalFormat == GL_RGB8)
+    {
+        strstr << "_rgb";
+    }
 
     return strstr.str();
 }
@@ -83,7 +92,6 @@ ClearBenchmark::ClearBenchmark() : ANGLERenderTest("Clear", GetParam()), mProgra
 void ClearBenchmark::initializeBenchmark()
 {
     initShaders();
-    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glViewport(0, 0, getWindow()->getWidth(), getWindow()->getHeight());
 
     ASSERT_GL_NO_ERROR();
@@ -125,7 +133,7 @@ void ClearBenchmark::drawBenchmark()
 
     GLRenderbuffer colorRbo;
     glBindRenderbuffer(GL_RENDERBUFFER, colorRbo);
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, params.fboSize, params.fboSize);
+    glRenderbufferStorage(GL_RENDERBUFFER, params.internalFormat, params.fboSize, params.fboSize);
 
     GLRenderbuffer depthRbo;
     glBindRenderbuffer(GL_RENDERBUFFER, depthRbo);
@@ -139,6 +147,8 @@ void ClearBenchmark::drawBenchmark()
     startGpuTimer();
     for (size_t it = 0; it < params.iterationsPerStep; ++it)
     {
+        float clearValue = (it % 2) * 0.5f + 0.2f;
+        glClearColor(clearValue, clearValue, clearValue, clearValue);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glDrawArrays(GL_TRIANGLES, 0, 3);
     }
@@ -161,10 +171,14 @@ ClearParams OpenGLOrGLESParams()
     return params;
 }
 
-ClearParams VulkanParams()
+ClearParams VulkanParams(bool emulatedFormat)
 {
     ClearParams params;
     params.eglParameters = egl_platform::VULKAN();
+    if (emulatedFormat)
+    {
+        params.internalFormat = GL_RGB8;
+    }
     return params;
 }
 
@@ -175,4 +189,8 @@ TEST_P(ClearBenchmark, Run)
     run();
 }
 
-ANGLE_INSTANTIATE_TEST(ClearBenchmark, D3D11Params(), OpenGLOrGLESParams(), VulkanParams());
+ANGLE_INSTANTIATE_TEST(ClearBenchmark,
+                       D3D11Params(),
+                       OpenGLOrGLESParams(),
+                       VulkanParams(false),
+                       VulkanParams(true));
