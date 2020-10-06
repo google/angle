@@ -33,6 +33,7 @@ class Texture;
 enum class Command
 {
     Blit,
+    Clear,
     CopyImage,
     Dispatch,
     Draw,
