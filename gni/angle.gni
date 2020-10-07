@@ -13,6 +13,7 @@ declare_args() {
 
 if (angle_has_build) {
   import("//build/config/dcheck_always_on.gni")
+  import("//build/config/ozone.gni")
   import("//build/config/sanitizers/sanitizers.gni")
   import("//build/config/ui.gni")  # import the use_x11 variable
   import("//build_overrides/build.gni")
@@ -36,14 +37,6 @@ if (angle_has_build) {
     angle_use_x11 = (is_linux || is_chromeos) && !is_ggp
     use_ozone = false
     use_fuzzing_engine = false
-  }
-}
-
-if (build_with_chromium) {
-  import("//build/config/ozone.gni")
-} else {
-  declare_args() {
-    ozone_platform_gbm = false
   }
 }
 
