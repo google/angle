@@ -184,8 +184,6 @@ foreach(is_shared_library,
     }
 
     if (is_android) {
-      # To prevent linux sources filtering on android
-      set_sources_assignment_filter([])
       libs += [
         "android",
         "log",
