@@ -257,7 +257,7 @@ deps = {
   },
 
   'third_party/vulkan-loader/src': {
-    'url': '{chromium_git}/external/github.com/KhronosGroup/Vulkan-Loader@{vulkan_loader_revision}',
+    'url': 'https://github.com/cdotstout/Vulkan-Loader@c234b930010d19b0fa0b720e22ee0079c42fa2f6',
   },
 
   'third_party/vulkan_memory_allocator': {
