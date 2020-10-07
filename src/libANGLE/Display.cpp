@@ -31,6 +31,7 @@
 #include "libANGLE/Context.h"
 #include "libANGLE/Device.h"
 #include "libANGLE/EGLSync.h"
+#include "libANGLE/FrameCapture.h"
 #include "libANGLE/Image.h"
 #include "libANGLE/ResourceManager.h"
 #include "libANGLE/Stream.h"
@@ -457,7 +458,9 @@ static constexpr uint32_t kScratchBufferLifetime = 64u;
 
 // ShareGroup
 ShareGroup::ShareGroup(rx::EGLImplFactory *factory)
-    : mRefCount(1), mImplementation(factory->createShareGroup())
+    : mRefCount(1),
+      mImplementation(factory->createShareGroup()),
+      mFrameCaptureShared(new angle::FrameCaptureShared)
 {}
 
 ShareGroup::~ShareGroup()

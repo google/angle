@@ -28,6 +28,11 @@
 #include "platform/Feature.h"
 #include "platform/FrontendFeatures.h"
 
+namespace angle
+{
+class FrameCaptureShared;
+}  // namespace angle
+
 namespace gl
 {
 class Context;
@@ -79,6 +84,8 @@ class ShareGroup final : angle::NonCopyable
 
     rx::Serial generateFramebufferSerial() { return mFramebufferSerialFactory.generate(); }
 
+    angle::FrameCaptureShared *getFrameCaptureShared() { return mFrameCaptureShared.get(); }
+
   protected:
     ~ShareGroup();
 
@@ -86,6 +93,9 @@ class ShareGroup final : angle::NonCopyable
     size_t mRefCount;
     rx::ShareGroupImpl *mImplementation;
     rx::SerialFactory mFramebufferSerialFactory;
+
+    // Note: we use a raw pointer here so we can exclude frame capture sources from the build.
+    std::unique_ptr<angle::FrameCaptureShared> mFrameCaptureShared;
 };
 
 // Constant coded here as a reasonable limit.

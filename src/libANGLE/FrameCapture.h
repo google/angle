@@ -373,14 +373,34 @@ class FrameCapture final : angle::NonCopyable
     ShaderSourceMap mCachedShaderSources;
     ProgramSourceMap mCachedProgramSources;
 
-    // Cache a shadow copy of texture level data
-    TextureLevels mCachedTextureLevels;
-    TextureLevelDataMap mCachedTextureLevelData;
-
     // If you don't know which frame you want to start capturing at, use the capture trigger.
     // Initialize it to the number of frames you want to capture, and then clear the value to 0 when
     // you reach the content you want to capture. Currently only available on Android.
     uint32_t mCaptureTrigger;
+};
+
+// Shared class for any items that need to be tracked by FrameCapture across shared contexts
+class FrameCaptureShared final : angle::NonCopyable
+{
+  public:
+    FrameCaptureShared();
+    ~FrameCaptureShared();
+
+    // Load data from a previously stored texture level
+    const std::vector<uint8_t> &retrieveCachedTextureLevel(gl::TextureID id, GLint level);
+
+    // Create the location that should be used to cache texture level data
+    std::vector<uint8_t> &getTextureLevelCacheLocation(gl::Texture *texture,
+                                                       gl::TextureTarget target,
+                                                       GLint level);
+
+    // Remove any cached texture levels on deletion
+    void deleteCachedTextureLevelData(gl::TextureID id);
+
+  private:
+    // Cache a shadow copy of texture level data
+    TextureLevels mCachedTextureLevels;
+    TextureLevelDataMap mCachedTextureLevelData;
 };
 
 template <typename CaptureFuncT, typename... ArgsT>

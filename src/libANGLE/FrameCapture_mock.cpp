@@ -27,4 +27,7 @@ void FrameCapture::onEndFrame(const gl::Context *context) {}
 void FrameCapture::onMakeCurrent(const egl::Surface *drawSurface) {}
 void FrameCapture::onDestroyContext(const gl::Context *context) {}
 void FrameCapture::replay(gl::Context *context) {}
+
+FrameCaptureShared::FrameCaptureShared() {}
+FrameCaptureShared::~FrameCaptureShared() {}
 }  // namespace angle
