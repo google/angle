@@ -4690,6 +4690,8 @@ angle::Result ContextVk::beginNewRenderPass(
     // Restart at subpass 0.
     mGraphicsPipelineDesc->resetSubpass(&mGraphicsPipelineTransition);
 
+    mPerfCounters.renderPasses++;
+
     return angle::Result::Continue;
 }
 
@@ -4714,8 +4716,6 @@ angle::Result ContextVk::startRenderPass(gl::Rectangle renderArea,
     {
         *commandBufferOut = mRenderPassCommandBuffer;
     }
-
-    mPerfCounters.renderPasses++;
 
     return angle::Result::Continue;
 }

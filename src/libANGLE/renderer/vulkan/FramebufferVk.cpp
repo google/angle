@@ -422,12 +422,6 @@ angle::Result FramebufferVk::clearImpl(const gl::Context *context,
         return angle::Result::Continue;
     }
 
-    // We can sometimes get to a clear operation with other pending clears (e.g. for emulated
-    // formats). Ensure the prior clears happen before the new clear. Note that we do not defer
-    // clears for scissored operations. Note that some clears may be redundant with the current
-    // clear. Due to complexity we haven't implemented de-duplication here.
-    ANGLE_TRY(flushDeferredClears(contextVk, scissoredRenderArea));
-
     // This function assumes that only enabled attachments are asked to be cleared.
     ASSERT((clearColorBuffers & mState.getEnabledDrawBuffers()) == clearColorBuffers);
 
@@ -445,7 +439,7 @@ angle::Result FramebufferVk::clearImpl(const gl::Context *context,
     clearStencil                                       = clearStencil && stencilAttachment;
     ASSERT(!clearStencil || stencilAttachment->isAttached());
 
-    uint8_t stencilMask =
+    const uint8_t stencilMask =
         static_cast<uint8_t>(contextVk->getState().getDepthStencilState().stencilWritemask);
 
     // The front-end should ensure we don't attempt to clear color if all channels are masked.
@@ -455,105 +449,127 @@ angle::Result FramebufferVk::clearImpl(const gl::Context *context,
     // The front-end should ensure we don't attempt to clear stencil if all bits are masked.
     ASSERT(!clearStencil || stencilMask != 0);
 
-    bool scissoredClear = scissoredRenderArea != getRotatedCompleteRenderArea(contextVk);
+    const bool scissoredClear = scissoredRenderArea != getRotatedCompleteRenderArea(contextVk);
 
     // If there is nothing to clear, return right away (for example, if asked to clear depth, but
     // there is no depth attachment).
     if (!clearColor && !clearDepth && !clearStencil)
     {
-        return angle::Result::Continue;
+        // We can sometimes get to a clear operation with other pending clears (e.g. for emulated
+        // formats). Ensure the prior clears happen if new clear is no-op.
+        return flushDeferredClears(contextVk, scissoredRenderArea);
     }
 
-    // We can use render pass load ops if clearing depth, unmasked color or unmasked stencil.  If
-    // there's a depth mask, depth clearing is already disabled.
-    bool maskedClearColor = clearColor && (mActiveColorComponentMasksForClear & colorMasks) !=
-                                              mActiveColorComponentMasksForClear;
-    bool maskedClearStencil = clearStencil && stencilMask != 0xFF;
+    // We use the draw path if scissored clear, or color or stencil are masked.  Note that depth
+    // clearing is already disabled if there's a depth mask.
+    const bool maskedClearColor = clearColor && (mActiveColorComponentMasksForClear & colorMasks) !=
+                                                    mActiveColorComponentMasksForClear;
+    const bool maskedClearStencil = clearStencil && stencilMask != 0xFF;
 
-    bool clearColorWithRenderPassLoadOp   = clearColor && !maskedClearColor && !scissoredClear;
-    bool clearDepthWithRenderPassLoadOp   = clearDepth && !scissoredClear;
-    bool clearStencilWithRenderPassLoadOp = clearStencil && !maskedClearStencil && !scissoredClear;
+    bool clearColorWithDraw   = clearColor && (maskedClearColor || scissoredClear);
+    bool clearDepthWithDraw   = clearDepth && scissoredClear;
+    bool clearStencilWithDraw = clearStencil && (maskedClearStencil || scissoredClear);
 
-    // At least one of color, depth or stencil should be clearable with render pass loadOp for us
-    // to use this clear path.
-    bool clearAnyWithRenderPassLoadOp = clearColorWithRenderPassLoadOp ||
-                                        clearDepthWithRenderPassLoadOp ||
-                                        clearStencilWithRenderPassLoadOp;
+    vk::Framebuffer *currentFramebuffer = nullptr;
+    ANGLE_TRY(getFramebuffer(contextVk, &currentFramebuffer, nullptr));
+    const bool isMidRenderPassClear =
+        contextVk->hasStartedRenderPassWithCommands() &&
+        contextVk->hasStartedRenderPassWithFramebuffer(currentFramebuffer);
+    const bool preferDrawOverClearAttachments =
+        contextVk->getRenderer()->getFeatures().preferDrawClearOverVkCmdClearAttachments.enabled;
 
-    if (clearAnyWithRenderPassLoadOp)
+    // Merge current clears with the deferred clears, then proceed with only processing deferred
+    // clears.  This simplifies the clear paths such that they don't need to consider both the
+    // current and deferred clears.  Additionally, it avoids needing to undo an unresolve
+    // operation; say attachment A is deferred cleared and multisampled-render-to-texture
+    // attachment B is currently cleared.  Assuming a render pass needs to start (because for
+    // example attachment C needs to clear with a draw path), starting one with only deferred
+    // clears and then applying the current clears won't work as attachment B is unresolved, and
+    // there are no facilities to undo that.
+    if (preferDrawOverClearAttachments && isMidRenderPassClear)
     {
-        vk::Framebuffer *currentFramebuffer = nullptr;
-        ANGLE_TRY(getFramebuffer(contextVk, &currentFramebuffer, nullptr));
+        // On buggy hardware, prefer to clear with a draw call instead of vkCmdClearAttachments.
+        // In this case, flush deferred clears and don't merge current clears (so they take the draw
+        // path).  Note that this path could be optimized by a clearWithDraw-like call that operates
+        // on mDeferredClears.  However, having deferred clears mid-render-pass is rare (if at all
+        // possible).
+        ANGLE_TRY(flushDeferredClears(contextVk, scissoredRenderArea));
 
+        clearColorWithDraw   = clearColor;
+        clearDepthWithDraw   = clearDepth;
+        clearStencilWithDraw = clearStencil;
+    }
+    else
+    {
         gl::DrawBufferMask clearColorDrawBuffersMask;
-        if (clearColorWithRenderPassLoadOp)
+        if (clearColor && !clearColorWithDraw)
         {
             clearColorDrawBuffersMask = clearColorBuffers;
         }
 
+        mergeClearsWithDeferredClears(clearColorDrawBuffersMask, clearDepth && !clearDepthWithDraw,
+                                      clearStencil && !clearStencilWithDraw, clearColorValue,
+                                      clearDepthStencilValue);
+    }
+
+    // If any deferred clears, we can further defer them, modify the current render pass' loadOps,
+    // or clear them with vkCmdClearAttachments.
+    if (mDeferredClears.any())
+    {
+        const bool clearAnyWithDraw =
+            clearColorWithDraw || clearDepthWithDraw || clearStencilWithDraw;
+
         // If we are in an active renderpass that has recorded commands and the framebuffer hasn't
         // changed, inline the clear
-        if (contextVk->hasStartedRenderPassWithCommands() &&
-            contextVk->hasStartedRenderPassWithFramebuffer(currentFramebuffer))
+        if (isMidRenderPassClear)
         {
             ANGLE_PERF_WARNING(
                 contextVk->getDebug(), GL_DEBUG_SEVERITY_LOW,
                 "Clear effectively discarding previous draw call results. Suggest earlier Clear "
                 "followed by masked color or depth/stencil draw calls instead");
 
-            RendererVk *renderer     = contextVk->getRenderer();
-            bool clearAnyWithCommand = clearAnyWithRenderPassLoadOp;
+            ASSERT(!preferDrawOverClearAttachments);
 
-            // On buggy hardware, prefer to clear with a draw call instead of vkCmdClearAttachments.
-            if (renderer->getFeatures().preferDrawClearOverVkCmdClearAttachments.enabled)
-            {
-                clearColorWithRenderPassLoadOp   = false;
-                clearDepthWithRenderPassLoadOp   = false;
-                clearStencilWithRenderPassLoadOp = false;
-                clearAnyWithCommand              = false;
-            }
-
-            if (clearAnyWithCommand)
-            {
-                ANGLE_TRY(clearWithCommand(
-                    contextVk, &contextVk->getStartedRenderPassCommands(), scissoredRenderArea,
-                    clearColorDrawBuffersMask, clearDepthWithRenderPassLoadOp,
-                    clearStencilWithRenderPassLoadOp, clearColorValue, clearDepthStencilValue));
-            }
+            // clearWithCommand will operate on deferred clears.
+            ANGLE_TRY(clearWithCommand(contextVk, &contextVk->getStartedRenderPassCommands(),
+                                       scissoredRenderArea));
         }
         else
         {
-            ANGLE_TRY(clearWithLoadOp(
-                contextVk, clearColorDrawBuffersMask, clearDepthWithRenderPassLoadOp,
-                clearStencilWithRenderPassLoadOp, clearColorValue, clearDepthStencilValue));
-        }
-
-        // Fallback to other methods for whatever isn't cleared here.
-        if (clearColorWithRenderPassLoadOp)
-        {
-            clearColorBuffers.reset();
-            clearColor = false;
-        }
-        if (clearDepthWithRenderPassLoadOp)
-        {
-            clearDepth = false;
-        }
-        if (clearStencilWithRenderPassLoadOp)
-        {
-            clearStencil = false;
+            // This path will defer the current clears along with deferred clears.  This won't work
+            // if any attachment needs to be subsequently cleared with a draw call.  In that case,
+            // flush deferred clears, which will start a render pass with deferred clear values.
+            // The subsequent draw call will then operate on the cleared attachments.
+            if (!contextVk->hasStartedRenderPass() && clearAnyWithDraw)
+            {
+                ANGLE_TRY(flushDeferredClears(contextVk, scissoredRenderArea));
+            }
+            else
+            {
+                // clearWithLoadOp will operate on deferred clears.  Either these will affect the
+                // currently open render pass' loadOps, or will be re-staged.  The latter will
+                // further defer these clears.
+                ANGLE_TRY(clearWithLoadOp(contextVk));
+            }
         }
 
         // If nothing left to clear, early out.
-        if (!clearColor && !clearDepth && !clearStencil)
+        if (!clearAnyWithDraw)
         {
+            ASSERT(mDeferredClears.empty());
             return angle::Result::Continue;
         }
     }
 
+    if (!clearColorWithDraw)
+    {
+        clearColorBuffers.reset();
+    }
+
     // The most costly clear mode is when we need to mask out specific color channels or stencil
     // bits. This can only be done with a draw call.
-    return clearWithDraw(contextVk, scissoredRenderArea, clearColorBuffers, clearDepth,
-                         clearStencil, colorMasks, stencilMask, clearColorValue,
+    return clearWithDraw(contextVk, scissoredRenderArea, clearColorBuffers, clearDepthWithDraw,
+                         clearStencilWithDraw, colorMasks, stencilMask, clearColorValue,
                          clearDepthStencilValue);
 }
 
@@ -1968,6 +1984,43 @@ angle::Result FramebufferVk::getFramebuffer(ContextVk *contextVk,
     return angle::Result::Continue;
 }
 
+void FramebufferVk::mergeClearsWithDeferredClears(
+    gl::DrawBufferMask clearColorBuffers,
+    bool clearDepth,
+    bool clearStencil,
+    const VkClearColorValue &clearColorValue,
+    const VkClearDepthStencilValue &clearDepthStencilValue)
+{
+    // Apply clears to mDeferredClears.  Note that clears override deferred clears.
+
+    // Color clears.
+    for (size_t colorIndexGL : clearColorBuffers)
+    {
+        ASSERT(mState.getEnabledDrawBuffers().test(colorIndexGL));
+        VkClearValue clearValue = getCorrectedColorClearValue(colorIndexGL, clearColorValue);
+        mDeferredClears.store(static_cast<uint32_t>(colorIndexGL), VK_IMAGE_ASPECT_COLOR_BIT,
+                              clearValue);
+    }
+
+    // Depth and stencil clears.
+    VkImageAspectFlags dsAspectFlags = 0;
+    VkClearValue dsClearValue;
+    dsClearValue.depthStencil = clearDepthStencilValue;
+    if (clearDepth)
+    {
+        dsAspectFlags |= VK_IMAGE_ASPECT_DEPTH_BIT;
+    }
+    if (clearStencil)
+    {
+        dsAspectFlags |= VK_IMAGE_ASPECT_STENCIL_BIT;
+    }
+
+    if (dsAspectFlags != 0)
+    {
+        mDeferredClears.store(vk::kUnpackedDepthIndex, dsAspectFlags, dsClearValue);
+    }
+}
+
 angle::Result FramebufferVk::clearWithDraw(ContextVk *contextVk,
                                            const gl::Rectangle &clearArea,
                                            gl::DrawBufferMask clearColorBuffers,
@@ -1978,6 +2031,9 @@ angle::Result FramebufferVk::clearWithDraw(ContextVk *contextVk,
                                            const VkClearColorValue &clearColorValue,
                                            const VkClearDepthStencilValue &clearDepthStencilValue)
 {
+    // All deferred clears should be handled already.
+    ASSERT(mDeferredClears.empty());
+
     UtilsVk::ClearFramebufferParameters params = {};
     params.clearArea                           = clearArea;
     params.colorClearValue                     = clearColorValue;
@@ -2055,62 +2111,64 @@ VkClearValue FramebufferVk::getCorrectedColorClearValue(size_t colorIndexGL,
     return clearValue;
 }
 
-angle::Result FramebufferVk::clearWithLoadOp(ContextVk *contextVk,
-                                             gl::DrawBufferMask clearColorBuffers,
-                                             bool clearDepth,
-                                             bool clearStencil,
-                                             const VkClearColorValue &clearColorValue,
-                                             const VkClearDepthStencilValue &clearDepthStencilValue)
+angle::Result FramebufferVk::clearWithLoadOp(ContextVk *contextVk)
 {
     // Set the appropriate loadOp and clear values for depth and stencil.
     VkImageAspectFlags dsAspectFlags = 0;
-    if (clearDepth)
+    VkClearValue dsClearValue;
+    dsClearValue.depthStencil.depth   = mDeferredClears.getDepthValue();
+    dsClearValue.depthStencil.stencil = mDeferredClears.getStencilValue();
+
+    if (mDeferredClears.testDepth())
     {
         dsAspectFlags |= VK_IMAGE_ASPECT_DEPTH_BIT;
+        mDeferredClears.reset(vk::kUnpackedDepthIndex);
     }
 
-    if (clearStencil)
+    if (mDeferredClears.testStencil())
     {
         dsAspectFlags |= VK_IMAGE_ASPECT_STENCIL_BIT;
+        mDeferredClears.reset(vk::kUnpackedStencilIndex);
     }
 
+    // If the render pass has started, modify its ops directly.  Note that the render pass should
+    // otherwise not have any commands in it.
     if (contextVk->hasStartedRenderPass())
     {
         vk::CommandBufferHelper &commands = contextVk->getStartedRenderPassCommands();
 
         ASSERT(commands.getCommandBuffer().empty());
 
+        // Go through deferred clears and update render pass loadOp and clear colors.
         vk::PackedAttachmentIndex colorIndexVk(0);
-        for (size_t colorIndexGL : mState.getColorAttachmentsMask())
+        for (size_t colorIndexGL : mDeferredClears.getColorMask())
         {
-            if (mState.getEnabledDrawBuffers()[colorIndexGL] && clearColorBuffers[colorIndexGL])
-            {
-                VkClearValue clearValue =
-                    getCorrectedColorClearValue(colorIndexGL, clearColorValue);
-                commands.updateRenderPassColorClear(colorIndexVk, clearValue);
-            }
+            ASSERT(mState.getEnabledDrawBuffers().test(colorIndexGL));
+
+            commands.updateRenderPassColorClear(colorIndexVk, mDeferredClears[colorIndexGL]);
+            mDeferredClears.reset(colorIndexGL);
             ++colorIndexVk;
         }
 
         if (dsAspectFlags)
         {
-            VkClearValue clearValue;
-            clearValue.depthStencil = clearDepthStencilValue;
-            commands.updateRenderPassDepthStencilClear(dsAspectFlags, clearValue);
+            commands.updateRenderPassDepthStencilClear(dsAspectFlags, dsClearValue);
             // If we were in depth read only mode, we must change to write mode
             updateRenderPassReadOnlyDepthMode(contextVk, &commands);
         }
     }
     else
     {
-        for (size_t colorIndexGL : clearColorBuffers)
+        // Go through deferred clears and stage the clears for future.
+        for (size_t colorIndexGL : mDeferredClears.getColorMask())
         {
             ASSERT(mState.getEnabledDrawBuffers().test(colorIndexGL));
+
             RenderTargetVk *renderTarget = getColorDrawRenderTarget(colorIndexGL);
-            VkClearValue clearValue   = getCorrectedColorClearValue(colorIndexGL, clearColorValue);
-            gl::ImageIndex imageIndex = renderTarget->getImageIndex();
+            gl::ImageIndex imageIndex    = renderTarget->getImageIndex();
             renderTarget->getImageForWrite().stageClear(imageIndex, VK_IMAGE_ASPECT_COLOR_BIT,
-                                                        clearValue);
+                                                        mDeferredClears[colorIndexGL]);
+            mDeferredClears.reset(colorIndexGL);
         }
 
         if (dsAspectFlags)
@@ -2118,55 +2176,50 @@ angle::Result FramebufferVk::clearWithLoadOp(ContextVk *contextVk,
             RenderTargetVk *renderTarget = getDepthStencilRenderTarget();
             ASSERT(renderTarget);
 
-            VkClearValue clearValue;
-            clearValue.depthStencil = clearDepthStencilValue;
-
             gl::ImageIndex imageIndex = renderTarget->getImageIndex();
-            renderTarget->getImageForWrite().stageClear(imageIndex, dsAspectFlags, clearValue);
+            renderTarget->getImageForWrite().stageClear(imageIndex, dsAspectFlags, dsClearValue);
         }
     }
     return angle::Result::Continue;
 }
 
-angle::Result FramebufferVk::clearWithCommand(
-    ContextVk *contextVk,
-    vk::CommandBufferHelper *renderpassCommands,
-    const gl::Rectangle &scissoredRenderArea,
-    gl::DrawBufferMask clearColorBuffers,
-    bool clearDepth,
-    bool clearStencil,
-    const VkClearColorValue &clearColorValue,
-    const VkClearDepthStencilValue &clearDepthStencilValue)
+angle::Result FramebufferVk::clearWithCommand(ContextVk *contextVk,
+                                              vk::CommandBufferHelper *renderpassCommands,
+                                              const gl::Rectangle &scissoredRenderArea)
 {
     gl::AttachmentVector<VkClearAttachment> attachments;
 
-    // Go through clearColorBuffers and add them to the list of attachments to clear.
-    for (size_t colorIndexGL : clearColorBuffers)
+    // Go through deferred clears and add them to the list of attachments to clear.
+    for (size_t colorIndexGL : mDeferredClears.getColorMask())
     {
         ASSERT(mState.getEnabledDrawBuffers().test(colorIndexGL));
-        VkClearValue clearValue = getCorrectedColorClearValue(colorIndexGL, clearColorValue);
-        attachments.emplace_back(VkClearAttachment{
-            VK_IMAGE_ASPECT_COLOR_BIT, static_cast<uint32_t>(colorIndexGL), clearValue});
         ASSERT(getColorDrawRenderTarget(colorIndexGL)->hasDefinedContent());
+
+        attachments.emplace_back(VkClearAttachment{VK_IMAGE_ASPECT_COLOR_BIT,
+                                                   static_cast<uint32_t>(colorIndexGL),
+                                                   mDeferredClears[colorIndexGL]});
+        mDeferredClears.reset(colorIndexGL);
     }
 
     // Add depth and stencil to list of attachments as needed.
     VkImageAspectFlags dsAspectFlags = 0;
-    VkClearValue dsClearValue        = {};
-    if (clearDepth)
+    VkClearValue dsClearValue;
+    dsClearValue.depthStencil.depth   = mDeferredClears.getDepthValue();
+    dsClearValue.depthStencil.stencil = mDeferredClears.getStencilValue();
+    if (mDeferredClears.testDepth())
     {
         dsAspectFlags |= VK_IMAGE_ASPECT_DEPTH_BIT;
-        dsClearValue.depthStencil = clearDepthStencilValue;
         // Explicitly mark a depth write because we are clearing the depth buffer.
         renderpassCommands->onDepthAccess(vk::ResourceAccess::Write);
+        mDeferredClears.reset(vk::kUnpackedDepthIndex);
     }
 
-    if (clearStencil)
+    if (mDeferredClears.testStencil())
     {
         dsAspectFlags |= VK_IMAGE_ASPECT_STENCIL_BIT;
-        dsClearValue.depthStencil = clearDepthStencilValue;
         // Explicitly mark a stencil write because we are clearing the stencil buffer.
         renderpassCommands->onStencilAccess(vk::ResourceAccess::Write);
+        mDeferredClears.reset(vk::kUnpackedStencilIndex);
     }
 
     if (dsAspectFlags != 0)
