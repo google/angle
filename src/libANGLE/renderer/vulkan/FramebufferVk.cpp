@@ -1326,11 +1326,7 @@ angle::Result FramebufferVk::resolveColorWithSubpass(ContextVk *contextVk,
                                                    srcFramebufferVk->getRenderPassDesc());
 
     // End the render pass now since we don't (yet) support subpass dependencies.
-    RenderTargetVk *readRenderTarget = getColorReadRenderTarget();
-    contextVk->onImageRenderPassWrite(readRenderTarget->getLevelIndex(),
-                                      readRenderTarget->getLayerIndex(), 1,
-                                      VK_IMAGE_ASPECT_COLOR_BIT, vk::ImageLayout::ColorAttachment,
-                                      &readRenderTarget->getImageForRenderPass());
+    drawRenderTarget->onColorDraw(contextVk);
     ANGLE_TRY(contextVk->flushCommandsAndEndRenderPass());
 
     // Remove the resolve attachment from the source framebuffer.

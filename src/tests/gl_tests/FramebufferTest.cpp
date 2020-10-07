@@ -1371,6 +1371,70 @@ TEST_P(FramebufferTest_ES31, MultisampleResolveWithBlitMultipleResolves)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
 }
 
+// Test resolving a multisampled texture with blit into an FBO with different read and draw
+// attachments.
+TEST_P(FramebufferTest_ES31, MultisampleResolveWithBlitDifferentReadDrawBuffers)
+{
+    constexpr int kSize = 16;
+    glViewport(0, 0, kSize, kSize);
+
+    GLFramebuffer msaaFBO;
+    glBindFramebuffer(GL_FRAMEBUFFER, msaaFBO.get());
+
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, texture.get());
+    glTexStorage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_RGBA8, kSize, kSize, false);
+    ASSERT_GL_NO_ERROR();
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE,
+                           texture.get(), 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    ANGLE_GL_PROGRAM(gradientProgram, essl31_shaders::vs::Passthrough(),
+                     essl31_shaders::fs::RedGreenGradient());
+    drawQuad(gradientProgram, essl31_shaders::PositionAttrib(), 0.5f, 1.0f, true);
+    ASSERT_GL_NO_ERROR();
+
+    // Create another FBO to resolve the multisample buffer into.
+    GLFramebuffer resolveFBO;
+    glBindFramebuffer(GL_FRAMEBUFFER, resolveFBO);
+
+    // Bind both read and draw textures as separate attachments.
+    const std::vector<GLColor> blueColors(kSize * kSize, GLColor::blue);
+    GLTexture resolveReadTexture;
+    glBindTexture(GL_TEXTURE_2D, resolveReadTexture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 blueColors.data());
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, resolveReadTexture,
+                           0);
+    glReadBuffer(GL_COLOR_ATTACHMENT0);
+    ASSERT_GL_NO_ERROR();
+
+    GLTexture resolveDrawTexture;
+    glBindTexture(GL_TEXTURE_2D, resolveDrawTexture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, resolveDrawTexture,
+                           0);
+    // Only enable color attachment 1 to be drawn to, since the Vulkan back end (currently) only
+    // supports using resolve attachments when there is a single draw attachment enabled. This
+    // ensures that the read and draw images are treated separately, including their layouts.
+    GLenum drawBuffers[] = {GL_NONE, GL_COLOR_ATTACHMENT1};
+    glDrawBuffers(2, drawBuffers);
+    ASSERT_GL_NO_ERROR();
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, msaaFBO);
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, resolveFBO);
+    glBlitFramebuffer(0, 0, kSize, kSize, 0, 0, kSize, kSize, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+    ASSERT_GL_NO_ERROR();
+
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, resolveFBO);
+    glReadBuffer(GL_COLOR_ATTACHMENT1);
+    EXPECT_PIXEL_NEAR(0, 0, 0, 0, 0, 255, 1.0);                      // Black
+    EXPECT_PIXEL_NEAR(kSize - 1, 1, 239, 0, 0, 255, 1.0);            // Red
+    EXPECT_PIXEL_NEAR(0, kSize - 1, 0, 239, 0, 255, 1.0);            // Green
+    EXPECT_PIXEL_NEAR(kSize - 1, kSize - 1, 239, 239, 0, 255, 1.0);  // Yellow
+}
+
 // Test resolving a multisampled texture into a mipmaped texture with blit
 TEST_P(FramebufferTest_ES31, MultisampleResolveIntoMipMapWithBlit)
 {
