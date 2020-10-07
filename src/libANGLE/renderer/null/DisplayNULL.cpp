@@ -11,6 +11,7 @@
 
 #include "common/debug.h"
 
+#include "libANGLE/Display.h"
 #include "libANGLE/renderer/null/ContextNULL.h"
 #include "libANGLE/renderer/null/DeviceNULL.h"
 #include "libANGLE/renderer/null/ImageNULL.h"
@@ -41,6 +42,10 @@ egl::Error DisplayNULL::makeCurrent(egl::Display *display,
                                     egl::Surface *readSurface,
                                     gl::Context *context)
 {
+    // Ensure that the correct global DebugAnnotator is installed when the end2end tests change
+    // the ANGLE back-end (done frequently).
+    display->setGlobalDebugAnnotator();
+
     return egl::NoError();
 }
 
