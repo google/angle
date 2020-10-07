@@ -8,7 +8,7 @@
 // entry_points_enum_autogen.cpp:
 //   Helper methods for the GL/GLES entry points enumeration.
 
-#include "libANGLE/entry_points_enum_autogen.h"
+#include "common/entry_points_enum_autogen.h"
 
 #include "common/debug.h"
 

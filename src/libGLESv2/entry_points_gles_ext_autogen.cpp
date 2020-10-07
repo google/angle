@@ -10,10 +10,10 @@
 
 #include "libGLESv2/entry_points_gles_ext_autogen.h"
 
+#include "common/entry_points_enum_autogen.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/Context.inl.h"
 #include "libANGLE/capture_gles_ext_autogen.h"
-#include "libANGLE/entry_points_enum_autogen.h"
 #include "libANGLE/entry_points_utils.h"
 #include "libANGLE/gl_enum_utils.h"
 #include "libANGLE/validationESEXT.h"

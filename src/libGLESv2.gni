@@ -29,6 +29,8 @@ libangle_common_sources = [
   "src/common/bitset_utils.h",
   "src/common/debug.cpp",
   "src/common/debug.h",
+  "src/common/entry_points_enum_autogen.cpp",
+  "src/common/entry_points_enum_autogen.h",
   "src/common/event_tracer.cpp",
   "src/common/event_tracer.h",
   "src/common/hash_utils.h",
@@ -271,7 +273,6 @@ libangle_headers = [
   "src/libANGLE/WorkerThread.h",
   "src/libANGLE/angletypes.h",
   "src/libANGLE/angletypes.inc",
-  "src/libANGLE/entry_points_enum_autogen.h",
   "src/libANGLE/entry_points_utils.h",
   "src/libANGLE/features.h",
   "src/libANGLE/formatutils.h",
@@ -406,7 +407,6 @@ libangle_sources = [
   "src/libANGLE/VertexAttribute.cpp",
   "src/libANGLE/WorkerThread.cpp",
   "src/libANGLE/angletypes.cpp",
-  "src/libANGLE/entry_points_enum_autogen.cpp",
   "src/libANGLE/es3_copy_conversion_table_autogen.cpp",
   "src/libANGLE/format_map_autogen.cpp",
   "src/libANGLE/format_map_desktop.cpp",
@@ -494,8 +494,6 @@ libangle_capture_sources = [
 ]
 
 libgl_sources = [
-  "src/common/angleutils.h",
-  "src/common/debug.h",
   "src/libGL/entry_points_gl_1_0_autogen.cpp",
   "src/libGL/entry_points_gl_1_0_autogen.h",
   "src/libGL/entry_points_gl_1_1_autogen.cpp",
@@ -552,10 +550,6 @@ if (is_win) {
 }
 
 libglesv2_sources = [
-  "src/common/angleutils.h",
-  "src/common/debug.h",
-  "src/libANGLE/entry_points_enum_autogen.h",
-  "src/libANGLE/entry_points_utils.h",
   "src/libGLESv2/entry_points_egl.cpp",
   "src/libGLESv2/entry_points_egl.h",
   "src/libGLESv2/entry_points_egl_ext.cpp",

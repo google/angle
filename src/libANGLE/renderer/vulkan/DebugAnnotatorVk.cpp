@@ -7,8 +7,9 @@
 //
 
 #include "libANGLE/renderer/vulkan/DebugAnnotatorVk.h"
+
+#include "common/entry_points_enum_autogen.h"
 #include "libANGLE/Context.h"
-#include "libANGLE/entry_points_enum_autogen.h"
 #include "libANGLE/renderer/vulkan/ContextVk.h"
 
 namespace rx

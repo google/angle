@@ -9,11 +9,11 @@
 
 #include "libANGLE/renderer/d3d/d3d11/Context11.h"
 
+#include "common/entry_points_enum_autogen.h"
 #include "common/string_utils.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/Context.inl.h"
 #include "libANGLE/MemoryProgramCache.h"
-#include "libANGLE/entry_points_enum_autogen.h"
 #include "libANGLE/renderer/OverlayImpl.h"
 #include "libANGLE/renderer/d3d/CompilerD3D.h"
 #include "libANGLE/renderer/d3d/RenderbufferD3D.h"

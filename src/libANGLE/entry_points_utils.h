@@ -13,9 +13,9 @@
 #include "common/Optional.h"
 #include "common/PackedEnums.h"
 #include "common/angleutils.h"
+#include "common/entry_points_enum_autogen.h"
 #include "common/mathutil.h"
 #include "libANGLE/Display.h"
-#include "libANGLE/entry_points_enum_autogen.h"
 
 namespace gl
 {

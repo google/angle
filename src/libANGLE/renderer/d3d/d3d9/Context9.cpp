@@ -9,8 +9,8 @@
 
 #include "libANGLE/renderer/d3d/d3d9/Context9.h"
 
+#include "common/entry_points_enum_autogen.h"
 #include "common/string_utils.h"
-#include "libANGLE/entry_points_enum_autogen.h"
 #include "libANGLE/renderer/OverlayImpl.h"
 #include "libANGLE/renderer/d3d/CompilerD3D.h"
 #include "libANGLE/renderer/d3d/ProgramD3D.h"

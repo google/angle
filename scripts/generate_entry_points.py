@@ -90,8 +90,8 @@ template_entry_points_enum_header = """// GENERATED FILE - DO NOT EDIT.
 // entry_points_enum_autogen.h:
 //   Defines the {lib} entry points enumeration.
 
-#ifndef LIBANGLE_ENTRYPOINTSENUM_AUTOGEN_H_
-#define LIBANGLE_ENTRYPOINTSENUM_AUTOGEN_H_
+#ifndef COMMON_ENTRYPOINTSENUM_AUTOGEN_H_
+#define COMMON_ENTRYPOINTSENUM_AUTOGEN_H_
 
 namespace gl
 {{
@@ -102,7 +102,7 @@ enum class EntryPoint
 
 const char *GetEntryPointName(EntryPoint ep);
 }}  // namespace gl
-#endif  // LIBANGLE_ENTRY_POINTS_ENUM_AUTOGEN_H_
+#endif  // COMMON_ENTRY_POINTS_ENUM_AUTOGEN_H_
 """
 
 template_entry_points_name_case = """        case EntryPoint::{enum}:
@@ -118,7 +118,7 @@ template_entry_points_enum_source = """// GENERATED FILE - DO NOT EDIT.
 // entry_points_enum_autogen.cpp:
 //   Helper methods for the {lib} entry points enumeration.
 
-#include "libANGLE/entry_points_enum_autogen.h"
+#include "common/entry_points_enum_autogen.h"
 
 #include "common/debug.h"
 
@@ -463,13 +463,13 @@ template_header_includes = """#include <GLES{major}/gl{major}{minor}.h>
 
 template_sources_includes = """#include "libGLESv2/entry_points_{header_version}_autogen.h"
 
+#include "common/entry_points_enum_autogen.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/Context.inl.h"
 #include "libANGLE/capture_{header_version}_autogen.h"
 #include "libANGLE/gl_enum_utils.h"
 #include "libANGLE/validation{validation_header_version}.h"
 #include "libANGLE/entry_points_utils.h"
-#include "libANGLE/entry_points_enum_autogen.h"
 #include "libGLESv2/global_state.h"
 """
 
@@ -1652,6 +1652,8 @@ def main():
     if len(sys.argv) > 1:
         inputs = ['entry_point_packed_gl_enums.json'] + registry_xml.xml_inputs
         outputs = [
+            '../src/common/entry_points_enum_autogen.cpp',
+            '../src/common/entry_points_enum_autogen.h',
             '../src/libANGLE/Context_gl_1_0_autogen.h',
             '../src/libANGLE/Context_gl_1_1_autogen.h',
             '../src/libANGLE/Context_gl_1_2_autogen.h',
@@ -1692,8 +1694,6 @@ def main():
             '../src/libANGLE/frame_capture_replay_autogen.cpp',
             '../src/libANGLE/frame_capture_utils_autogen.cpp',
             '../src/libANGLE/frame_capture_utils_autogen.h',
-            '../src/libANGLE/entry_points_enum_autogen.cpp',
-            '../src/libANGLE/entry_points_enum_autogen.h',
             '../src/libANGLE/validationES1_autogen.h',
             '../src/libANGLE/validationES2_autogen.h',
             '../src/libANGLE/validationES31_autogen.h',
@@ -2140,7 +2140,7 @@ def main():
         lib="GL/GLES",
         entry_points_list=",\n".join(["    " + cmd for cmd in sorted_cmd_names]))
 
-    entry_points_enum_header_path = path_to("libANGLE", "entry_points_enum_autogen.h")
+    entry_points_enum_header_path = path_to("common", "entry_points_enum_autogen.h")
     with open(entry_points_enum_header_path, "w") as out:
         out.write(entry_points_enum_header)
         out.close()
@@ -2155,7 +2155,7 @@ def main():
         lib="GL/GLES",
         entry_points_name_cases="\n".join(entry_points_cases))
 
-    entry_points_enum_source_path = path_to("libANGLE", "entry_points_enum_autogen.cpp")
+    entry_points_enum_source_path = path_to("common", "entry_points_enum_autogen.cpp")
     with open(entry_points_enum_source_path, "w") as out:
         out.write(entry_points_enum_source)
         out.close()

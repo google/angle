@@ -8,8 +8,8 @@
 // entry_points_enum_autogen.h:
 //   Defines the GL/GLES entry points enumeration.
 
-#ifndef LIBANGLE_ENTRYPOINTSENUM_AUTOGEN_H_
-#define LIBANGLE_ENTRYPOINTSENUM_AUTOGEN_H_
+#ifndef COMMON_ENTRYPOINTSENUM_AUTOGEN_H_
+#define COMMON_ENTRYPOINTSENUM_AUTOGEN_H_
 
 namespace gl
 {
@@ -1387,4 +1387,4 @@ enum class EntryPoint
 
 const char *GetEntryPointName(EntryPoint ep);
 }  // namespace gl
-#endif  // LIBANGLE_ENTRY_POINTS_ENUM_AUTOGEN_H_
+#endif  // COMMON_ENTRY_POINTS_ENUM_AUTOGEN_H_
