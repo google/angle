@@ -24,6 +24,17 @@ namespace rx
 
 class WorkerContext;
 
+struct EnsureCGLContextIsCurrent : angle::NonCopyable
+{
+  public:
+    EnsureCGLContextIsCurrent(CGLContextObj context);
+    ~EnsureCGLContextIsCurrent();
+
+  private:
+    CGLContextObj mOldContext;
+    bool mResetContext;
+};
+
 class DisplayCGL : public DisplayGL
 {
   public:

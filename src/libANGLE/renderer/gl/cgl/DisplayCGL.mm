@@ -110,6 +110,23 @@ static void SetGPUByRegistryID(CGLContextObj contextObj,
 
 }  // anonymous namespace
 
+EnsureCGLContextIsCurrent::EnsureCGLContextIsCurrent(CGLContextObj context)
+    : mOldContext(CGLGetCurrentContext()), mResetContext(mOldContext != context)
+{
+    if (mResetContext)
+    {
+        CGLSetCurrentContext(context);
+    }
+}
+
+EnsureCGLContextIsCurrent::~EnsureCGLContextIsCurrent()
+{
+    if (mResetContext)
+    {
+        CGLSetCurrentContext(mOldContext);
+    }
+}
+
 class FunctionsGLCGL : public FunctionsGL
 {
   public:
