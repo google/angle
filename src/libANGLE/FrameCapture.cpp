@@ -2280,8 +2280,6 @@ void CaptureBufferResetCalls(const gl::State &replayState,
 void CaptureMidExecutionSetup(const gl::Context *context,
                               std::vector<CallCapture> *setupCalls,
                               ResourceTracker *resourceTracker,
-                              const ShaderSourceMap &cachedShaderSources,
-                              const ProgramSourceMap &cachedProgramSources,
                               FrameCapture *frameCapture)
 {
     const gl::State &apiState = context->getState();
@@ -2811,9 +2809,8 @@ void CaptureMidExecutionSetup(const gl::Context *context,
         const gl::Program *program = programIter.second;
 
         // Get last compiled shader source.
-        const auto &foundSources = cachedProgramSources.find(id);
-        ASSERT(foundSources != cachedProgramSources.end());
-        const ProgramSources &linkedSources = foundSources->second;
+        const ProgramSources &linkedSources =
+            context->getShareGroup()->getFrameCaptureShared()->getProgramSources(id);
 
         // Unlinked programs don't have an executable. Thus they don't need to be linked.
         if (!program->isLinked())
@@ -2904,10 +2901,8 @@ void CaptureMidExecutionSetup(const gl::Context *context,
         // TODO(jmadill): Handle trickier program uses. http://anglebug.com/3662
         if (shader->isCompiled())
         {
-            const auto &foundSources = cachedShaderSources.find(id);
-            ASSERT(foundSources != cachedShaderSources.end());
-            const std::string &capturedSource = foundSources->second;
-
+            const std::string &capturedSource =
+                context->getShareGroup()->getFrameCaptureShared()->getShaderSource(id);
             if (capturedSource != shaderSource)
             {
                 ASSERT(!capturedSource.empty());
@@ -4011,8 +4006,9 @@ void FrameCapture::maybeCapturePreCallUpdates(const gl::Context *context, CallCa
             gl::ShaderProgramID shaderID =
                 call.params.getParam("shaderPacked", ParamType::TShaderProgramID, 0)
                     .value.ShaderProgramIDVal;
-            const gl::Shader *shader       = context->getShader(shaderID);
-            mCachedShaderSources[shaderID] = shader->getSourceString();
+            const gl::Shader *shader = context->getShader(shaderID);
+            context->getShareGroup()->getFrameCaptureShared()->setShaderSource(
+                shaderID, shader->getSourceString());
             break;
         }
 
@@ -4022,8 +4018,9 @@ void FrameCapture::maybeCapturePreCallUpdates(const gl::Context *context, CallCa
             gl::ShaderProgramID programID =
                 call.params.getParam("programPacked", ParamType::TShaderProgramID, 0)
                     .value.ShaderProgramIDVal;
-            const gl::Program *program       = context->getProgramResolveLink(programID);
-            mCachedProgramSources[programID] = GetAttachedProgramSources(program);
+            const gl::Program *program = context->getProgramResolveLink(programID);
+            context->getShareGroup()->getFrameCaptureShared()->setProgramSources(
+                programID, GetAttachedProgramSources(program));
             break;
         }
 
@@ -4404,8 +4401,7 @@ void FrameCapture::onEndFrame(const gl::Context *context)
     if (enabled() && mFrameIndex == mFrameStart)
     {
         mSetupCalls.clear();
-        CaptureMidExecutionSetup(context, &mSetupCalls, &mResourceTracker, mCachedShaderSources,
-                                 mCachedProgramSources, this);
+        CaptureMidExecutionSetup(context, &mSetupCalls, &mResourceTracker, this);
     }
 }
 
@@ -4606,6 +4602,30 @@ void FrameCapture::reset()
 
 FrameCaptureShared::FrameCaptureShared()  = default;
 FrameCaptureShared::~FrameCaptureShared() = default;
+
+const std::string &FrameCaptureShared::getShaderSource(gl::ShaderProgramID id) const
+{
+    const auto &foundSources = mCachedShaderSource.find(id);
+    ASSERT(foundSources != mCachedShaderSource.end());
+    return foundSources->second;
+}
+
+void FrameCaptureShared::setShaderSource(gl::ShaderProgramID id, std::string source)
+{
+    mCachedShaderSource[id] = source;
+}
+
+const ProgramSources &FrameCaptureShared::getProgramSources(gl::ShaderProgramID id) const
+{
+    const auto &foundSources = mCachedProgramSources.find(id);
+    ASSERT(foundSources != mCachedProgramSources.end());
+    return foundSources->second;
+}
+
+void FrameCaptureShared::setProgramSources(gl::ShaderProgramID id, ProgramSources sources)
+{
+    mCachedProgramSources[id] = sources;
+}
 
 const std::vector<uint8_t> &FrameCaptureShared::retrieveCachedTextureLevel(gl::TextureID id,
                                                                            GLint level)

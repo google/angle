@@ -369,10 +369,6 @@ class FrameCapture final : angle::NonCopyable
 
     ResourceTracker mResourceTracker;
 
-    // Cache most recently compiled and linked sources.
-    ShaderSourceMap mCachedShaderSources;
-    ProgramSourceMap mCachedProgramSources;
-
     // If you don't know which frame you want to start capturing at, use the capture trigger.
     // Initialize it to the number of frames you want to capture, and then clear the value to 0 when
     // you reach the content you want to capture. Currently only available on Android.
@@ -386,6 +382,12 @@ class FrameCaptureShared final : angle::NonCopyable
     FrameCaptureShared();
     ~FrameCaptureShared();
 
+    const std::string &getShaderSource(gl::ShaderProgramID id) const;
+    void setShaderSource(gl::ShaderProgramID id, std::string sources);
+
+    const ProgramSources &getProgramSources(gl::ShaderProgramID id) const;
+    void setProgramSources(gl::ShaderProgramID id, ProgramSources sources);
+
     // Load data from a previously stored texture level
     const std::vector<uint8_t> &retrieveCachedTextureLevel(gl::TextureID id, GLint level);
 
@@ -398,6 +400,10 @@ class FrameCaptureShared final : angle::NonCopyable
     void deleteCachedTextureLevelData(gl::TextureID id);
 
   private:
+    // Cache most recently compiled and linked sources.
+    ShaderSourceMap mCachedShaderSource;
+    ProgramSourceMap mCachedProgramSources;
+
     // Cache a shadow copy of texture level data
     TextureLevels mCachedTextureLevels;
     TextureLevelDataMap mCachedTextureLevelData;
