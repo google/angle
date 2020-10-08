@@ -615,6 +615,7 @@ config("angle_backend_config") {
 
   if (angle_enable_d3d11) {
     configs += [ "src/libANGLE/renderer/d3d:angle_d3d11_backend_config" ]
+    defines += [ "ANGLE_FORCE_CONTEXT_CHECK_EVERY_CALL=1" ]
   }
 
   if (angle_enable_d3d9) {

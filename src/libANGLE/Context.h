@@ -617,6 +617,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     egl::ShareGroup *getShareGroup() const { return mState.getShareGroup(); }
 
     bool supportsGeometryOrTesselation() const;
+    void dirtyAllState();
 
   private:
     void initialize();

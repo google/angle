@@ -7,7 +7,7 @@
 // Globally disable Metal testing for now
 4235 METAL : dEQP-EGL.* = SKIP
 
-// Only Vulkan supports multithreading
+// Only Vulkan and D3D11 support multithreading
 3916 OPENGL : dEQP-EGL.functional.sharing.gles2.multithread.* = SKIP
 3916 OPENGL : dEQP-EGL.functional.multithread.* = SKIP
 3916 OPENGL : dEQP-EGL.functional.render.multi_thread.* = SKIP
@@ -16,10 +16,6 @@
 3916 GLES : dEQP-EGL.functional.multithread.* = SKIP
 3916 GLES : dEQP-EGL.functional.render.multi_thread.* = SKIP
 3916 GLES : dEQP-EGL.functional.color_clears.multi_thread.* = SKIP
-3916 D3D11 : dEQP-EGL.functional.sharing.gles2.multithread.* = SKIP
-3916 D3D11 : dEQP-EGL.functional.multithread.* = SKIP
-3916 D3D11 : dEQP-EGL.functional.render.multi_thread.* = SKIP
-3916 D3D11 : dEQP-EGL.functional.color_clears.multi_thread.* = SKIP
 3916 D3D9 : dEQP-EGL.functional.sharing.gles2.multithread.* = SKIP
 3916 D3D9 : dEQP-EGL.functional.multithread.* = SKIP
 3916 D3D9 : dEQP-EGL.functional.render.multi_thread.* = SKIP

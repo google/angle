@@ -8888,6 +8888,12 @@ bool Context::supportsGeometryOrTesselation() const
            mState.getExtensions().tessellationShaderEXT;
 }
 
+void Context::dirtyAllState()
+{
+    mState.setAllDirtyBits();
+    mState.setAllDirtyObjects();
+}
+
 // ErrorSet implementation.
 ErrorSet::ErrorSet(Context *context) : mContext(context) {}
 
