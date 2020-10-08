@@ -1234,6 +1234,17 @@ enum class ImageLayout
 
 VkImageLayout ConvertImageLayoutToVkImageLayout(ImageLayout imageLayout);
 
+bool FormatHasNecessaryFeature(RendererVk *renderer,
+                               VkFormat format,
+                               VkImageTiling tilingMode,
+                               VkFormatFeatureFlags featureBits);
+
+bool CanCopyWithTransfer(RendererVk *renderer,
+                         const vk::Format &srcFormat,
+                         VkImageTiling srcTilingMode,
+                         const vk::Format &destFormat,
+                         VkImageTiling destTilingMode);
+
 class ImageHelper final : public Resource, public angle::Subject
 {
   public:
@@ -1396,6 +1407,21 @@ class ImageHelper final : public Resource, public angle::Subject
                      const VkImageSubresourceLayers &srcSubresources,
                      const VkImageSubresourceLayers &dstSubresources,
                      CommandBuffer *commandBuffer);
+
+    static angle::Result CopyImageSubData(const gl::Context *context,
+                                          vk::ImageHelper *srcImage,
+                                          GLint srcLevel,
+                                          GLint srcX,
+                                          GLint srcY,
+                                          GLint srcZ,
+                                          vk::ImageHelper *dstImage,
+                                          GLint dstLevel,
+                                          GLint dstX,
+                                          GLint dstY,
+                                          GLint dstZ,
+                                          GLsizei srcWidth,
+                                          GLsizei srcHeight,
+                                          GLsizei srcDepth);
 
     // Generate mipmap from level 0 into the rest of the levels with blit.
     angle::Result generateMipmapsWithBlit(ContextVk *contextVk, LevelIndex maxLevel);

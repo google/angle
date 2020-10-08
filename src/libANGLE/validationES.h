@@ -311,6 +311,23 @@ bool ValidateRobustStateQuery(const Context *context,
                               GLenum *nativeType,
                               unsigned int *numParams);
 
+bool ValidateCopyImageSubDataBase(const Context *context,
+                                  GLuint srcName,
+                                  GLenum srcTarget,
+                                  GLint srcLevel,
+                                  GLint srcX,
+                                  GLint srcY,
+                                  GLint srcZ,
+                                  GLuint dstName,
+                                  GLenum dstTarget,
+                                  GLint dstLevel,
+                                  GLint dstX,
+                                  GLint dstY,
+                                  GLint dstZ,
+                                  GLsizei srcWidth,
+                                  GLsizei srcHeight,
+                                  GLsizei srcDepth);
+
 bool ValidateCopyTexImageParametersBase(const Context *context,
                                         TextureTarget target,
                                         GLint level,

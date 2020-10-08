@@ -139,7 +139,15 @@ bool ValidateCopyImageSubData(const Context *context,
                               GLsizei srcHeight,
                               GLsizei srcDepth)
 {
-    return true;
+    if (context->getClientVersion() < ES_3_2)
+    {
+        context->validationError(GL_INVALID_OPERATION, kES32Required);
+        return false;
+    }
+
+    return ValidateCopyImageSubDataBase(context, srcName, srcTarget, srcLevel, srcX, srcY, srcZ,
+                                        dstName, dstTarget, dstLevel, dstX, dstY, dstZ, srcWidth,
+                                        srcHeight, srcDepth);
 }
 
 bool ValidateDebugMessageCallback(const Context *context,

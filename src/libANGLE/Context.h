@@ -653,6 +653,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     angle::Result syncStateForTexImage();
     angle::Result syncStateForBlit();
     angle::Result syncStateForClear();
+    angle::Result syncTextureForCopy(Texture *texture);
 
     VertexArray *checkVertexArrayAllocation(VertexArrayID vertexArrayHandle);
     TransformFeedback *checkTransformFeedbackAllocation(TransformFeedbackID transformFeedback);

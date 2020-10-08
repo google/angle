@@ -1326,6 +1326,52 @@ angle::Result Texture::copySubImage(Context *context,
     return angle::Result::Continue;
 }
 
+angle::Result Texture::copyRenderbufferSubData(Context *context,
+                                               const gl::Renderbuffer *srcBuffer,
+                                               GLint srcLevel,
+                                               GLint srcX,
+                                               GLint srcY,
+                                               GLint srcZ,
+                                               GLint dstLevel,
+                                               GLint dstX,
+                                               GLint dstY,
+                                               GLint dstZ,
+                                               GLsizei srcWidth,
+                                               GLsizei srcHeight,
+                                               GLsizei srcDepth)
+{
+    ANGLE_TRY(mTexture->copyRenderbufferSubData(context, srcBuffer, srcLevel, srcX, srcY, srcZ,
+                                                dstLevel, dstX, dstY, dstZ, srcWidth, srcHeight,
+                                                srcDepth));
+
+    signalDirtyStorage(InitState::Initialized);
+
+    return angle::Result::Continue;
+}
+
+angle::Result Texture::copyTextureSubData(Context *context,
+                                          const gl::Texture *srcTexture,
+                                          GLint srcLevel,
+                                          GLint srcX,
+                                          GLint srcY,
+                                          GLint srcZ,
+                                          GLint dstLevel,
+                                          GLint dstX,
+                                          GLint dstY,
+                                          GLint dstZ,
+                                          GLsizei srcWidth,
+                                          GLsizei srcHeight,
+                                          GLsizei srcDepth)
+{
+    ANGLE_TRY(mTexture->copyTextureSubData(context, srcTexture, srcLevel, srcX, srcY, srcZ,
+                                           dstLevel, dstX, dstY, dstZ, srcWidth, srcHeight,
+                                           srcDepth));
+
+    signalDirtyStorage(InitState::Initialized);
+
+    return angle::Result::Continue;
+}
+
 angle::Result Texture::copyTexture(Context *context,
                                    TextureTarget target,
                                    GLint level,

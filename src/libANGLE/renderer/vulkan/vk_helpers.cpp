@@ -605,6 +605,22 @@ void ExtendRenderPassInvalidateArea(const gl::Rectangle &invalidateArea, gl::Rec
         gl::ExtendRectangle(*out, invalidateArea, out);
     }
 }
+
+bool CanCopyWithTransferForCopyImage(RendererVk *renderer,
+                                     const vk::Format &srcFormat,
+                                     VkImageTiling srcTilingMode,
+                                     const vk::Format &destFormat,
+                                     VkImageTiling destTilingMode)
+{
+    // Transfers for copy image must have the source and destination formats be size compatible
+    const angle::Format &srcFormatActual  = srcFormat.actualImageFormat();
+    const angle::Format &destFormatActual = destFormat.actualImageFormat();
+
+    bool isFormatCompatible = srcFormatActual.pixelBytes == destFormatActual.pixelBytes;
+
+    return isFormatCompatible &&
+           CanCopyWithTransfer(renderer, srcFormat, srcTilingMode, destFormat, destTilingMode);
+}
 }  // anonymous namespace
 
 // This is an arbitrary max. We can change this later if necessary.
@@ -614,6 +630,32 @@ uint32_t DynamicDescriptorPool::mMaxSetsPerPoolMultiplier = 2;
 VkImageLayout ConvertImageLayoutToVkImageLayout(ImageLayout imageLayout)
 {
     return kImageMemoryBarrierData[imageLayout].layout;
+}
+
+bool FormatHasNecessaryFeature(RendererVk *renderer,
+                               VkFormat format,
+                               VkImageTiling tilingMode,
+                               VkFormatFeatureFlags featureBits)
+{
+    return (tilingMode == VK_IMAGE_TILING_OPTIMAL)
+               ? renderer->hasImageFormatFeatureBits(format, featureBits)
+               : renderer->hasLinearImageFormatFeatureBits(format, featureBits);
+}
+
+bool CanCopyWithTransfer(RendererVk *renderer,
+                         const vk::Format &srcFormat,
+                         VkImageTiling srcTilingMode,
+                         const vk::Format &destFormat,
+                         VkImageTiling destTilingMode)
+{
+    // Checks that the formats in the copy transfer have the appropriate tiling and transfer bits
+    bool isTilingCompatible           = srcTilingMode == destTilingMode;
+    bool srcFormatHasNecessaryFeature = FormatHasNecessaryFeature(
+        renderer, srcFormat.vkImageFormat, srcTilingMode, VK_FORMAT_FEATURE_TRANSFER_SRC_BIT);
+    bool dstFormatHasNecessaryFeature = FormatHasNecessaryFeature(
+        renderer, destFormat.vkImageFormat, destTilingMode, VK_FORMAT_FEATURE_TRANSFER_DST_BIT);
+
+    return isTilingCompatible && srcFormatHasNecessaryFeature && dstFormatHasNecessaryFeature;
 }
 
 // PackedClearValuesArray implementation
@@ -4182,6 +4224,89 @@ void ImageHelper::Copy(ImageHelper *srcImage,
 
     commandBuffer->copyImage(srcImage->getImage(), srcImage->getCurrentLayout(),
                              dstImage->getImage(), dstImage->getCurrentLayout(), 1, &region);
+}
+
+// static
+angle::Result ImageHelper::CopyImageSubData(const gl::Context *context,
+                                            vk::ImageHelper *srcImage,
+                                            GLint srcLevel,
+                                            GLint srcX,
+                                            GLint srcY,
+                                            GLint srcZ,
+                                            vk::ImageHelper *dstImage,
+                                            GLint dstLevel,
+                                            GLint dstX,
+                                            GLint dstY,
+                                            GLint dstZ,
+                                            GLsizei srcWidth,
+                                            GLsizei srcHeight,
+                                            GLsizei srcDepth)
+{
+    ContextVk *contextVk = vk::GetImpl(context);
+
+    const vk::Format &sourceVkFormat = srcImage->getFormat();
+    VkImageTiling srcTilingMode      = srcImage->getTilingMode();
+    const vk::Format &destVkFormat   = dstImage->getFormat();
+    VkImageTiling destTilingMode     = dstImage->getTilingMode();
+
+    if (CanCopyWithTransferForCopyImage(contextVk->getRenderer(), sourceVkFormat, srcTilingMode,
+                                        destVkFormat, destTilingMode))
+    {
+        bool isSrc3D                    = (srcImage->getType() == VK_IMAGE_TYPE_3D);
+        bool isDst3D                    = (dstImage->getType() == VK_IMAGE_TYPE_3D);
+        const gl::LevelIndex srcLevelGL = gl::LevelIndex(srcLevel);
+        const gl::LevelIndex dstLevelGL = gl::LevelIndex(dstLevel);
+
+        vk::CommandBuffer &commandBuffer = contextVk->getOutsideRenderPassCommandBuffer();
+
+        srcImage->retain(&contextVk->getResourceUseList());
+        dstImage->retain(&contextVk->getResourceUseList());
+
+        VkImageCopy region = {};
+
+        region.srcSubresource.aspectMask     = VK_IMAGE_ASPECT_COLOR_BIT;
+        region.srcSubresource.mipLevel       = srcImage->toVkLevel(srcLevelGL).get();
+        region.srcSubresource.baseArrayLayer = isSrc3D ? 0 : srcZ;
+        region.srcSubresource.layerCount     = isSrc3D ? 1 : srcDepth;
+
+        region.dstSubresource.aspectMask     = VK_IMAGE_ASPECT_COLOR_BIT;
+        region.dstSubresource.mipLevel       = dstImage->toVkLevel(dstLevelGL).get();
+        region.dstSubresource.baseArrayLayer = isDst3D ? 0 : dstZ;
+        region.dstSubresource.layerCount     = isDst3D ? 1 : srcDepth;
+
+        region.srcOffset.x   = srcX;
+        region.srcOffset.y   = srcY;
+        region.srcOffset.z   = isSrc3D ? srcZ : 0;
+        region.dstOffset.x   = dstX;
+        region.dstOffset.y   = dstY;
+        region.dstOffset.z   = isDst3D ? dstZ : 0;
+        region.extent.width  = srcWidth;
+        region.extent.height = srcHeight;
+        region.extent.depth  = (isSrc3D || isDst3D) ? srcDepth : 1;
+
+        ANGLE_TRY(contextVk->onImageTransferRead(VK_IMAGE_ASPECT_COLOR_BIT, srcImage));
+        ANGLE_TRY(contextVk->onImageTransferWrite(
+            dstLevelGL, 1, region.dstSubresource.baseArrayLayer, region.dstSubresource.layerCount,
+            VK_IMAGE_ASPECT_COLOR_BIT, dstImage));
+
+        ASSERT(commandBuffer.valid() && srcImage->valid() && dstImage->valid());
+        ASSERT(srcImage->getCurrentLayout() == VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL);
+        ASSERT(dstImage->getCurrentLayout() == VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
+
+        commandBuffer.copyImage(srcImage->getImage(), srcImage->getCurrentLayout(),
+                                dstImage->getImage(), dstImage->getCurrentLayout(), 1, &region);
+    }
+    else
+    {
+        // TODO (anglebug.com/5278) - implement fallback path
+        // There is a possibility for the underlying source and destination VK image formats to be
+        // incompatible. An example scenario would be if the source image (RGB8UI) falls back
+        // to an emulated format(RGBA8UI) but the destination image is natively supported(RGB8I).
+        UNIMPLEMENTED();
+        ANGLE_VK_CHECK(contextVk, false, VK_ERROR_FEATURE_NOT_PRESENT);
+    }
+
+    return angle::Result::Continue;
 }
 
 angle::Result ImageHelper::generateMipmapsWithBlit(ContextVk *contextVk, LevelIndex maxLevel)

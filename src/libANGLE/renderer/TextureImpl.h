@@ -112,6 +112,34 @@ class TextureImpl : public FramebufferAttachmentObjectImpl
                                          bool unpackUnmultiplyAlpha,
                                          const gl::Texture *source);
 
+    virtual angle::Result copyRenderbufferSubData(const gl::Context *context,
+                                                  const gl::Renderbuffer *srcBuffer,
+                                                  GLint srcLevel,
+                                                  GLint srcX,
+                                                  GLint srcY,
+                                                  GLint srcZ,
+                                                  GLint dstLevel,
+                                                  GLint dstX,
+                                                  GLint dstY,
+                                                  GLint dstZ,
+                                                  GLsizei srcWidth,
+                                                  GLsizei srcHeight,
+                                                  GLsizei srcDepth);
+
+    virtual angle::Result copyTextureSubData(const gl::Context *context,
+                                             const gl::Texture *srcTexture,
+                                             GLint srcLevel,
+                                             GLint srcX,
+                                             GLint srcY,
+                                             GLint srcZ,
+                                             GLint dstLevel,
+                                             GLint dstX,
+                                             GLint dstY,
+                                             GLint dstZ,
+                                             GLsizei srcWidth,
+                                             GLsizei srcHeight,
+                                             GLsizei srcDepth);
+
     virtual angle::Result copyCompressedTexture(const gl::Context *context,
                                                 const gl::Texture *source);
 

@@ -169,6 +169,48 @@ angle::Result Renderbuffer::setStorageEGLImageTarget(const Context *context, egl
     return angle::Result::Continue;
 }
 
+angle::Result Renderbuffer::copyRenderbufferSubData(Context *context,
+                                                    const gl::Renderbuffer *srcBuffer,
+                                                    GLint srcLevel,
+                                                    GLint srcX,
+                                                    GLint srcY,
+                                                    GLint srcZ,
+                                                    GLint dstLevel,
+                                                    GLint dstX,
+                                                    GLint dstY,
+                                                    GLint dstZ,
+                                                    GLsizei srcWidth,
+                                                    GLsizei srcHeight,
+                                                    GLsizei srcDepth)
+{
+    ANGLE_TRY(mImplementation->copyRenderbufferSubData(context, srcBuffer, srcLevel, srcX, srcY,
+                                                       srcZ, dstLevel, dstX, dstY, dstZ, srcWidth,
+                                                       srcHeight, srcDepth));
+
+    return angle::Result::Continue;
+}
+
+angle::Result Renderbuffer::copyTextureSubData(Context *context,
+                                               const gl::Texture *srcTexture,
+                                               GLint srcLevel,
+                                               GLint srcX,
+                                               GLint srcY,
+                                               GLint srcZ,
+                                               GLint dstLevel,
+                                               GLint dstX,
+                                               GLint dstY,
+                                               GLint dstZ,
+                                               GLsizei srcWidth,
+                                               GLsizei srcHeight,
+                                               GLsizei srcDepth)
+{
+    ANGLE_TRY(mImplementation->copyTextureSubData(context, srcTexture, srcLevel, srcX, srcY, srcZ,
+                                                  dstLevel, dstX, dstY, dstZ, srcWidth, srcHeight,
+                                                  srcDepth));
+
+    return angle::Result::Continue;
+}
+
 rx::RenderbufferImpl *Renderbuffer::getImplementation() const
 {
     ASSERT(mImplementation);

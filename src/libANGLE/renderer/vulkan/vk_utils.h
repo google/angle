@@ -30,10 +30,11 @@
     PROC(Context)                \
     PROC(Framebuffer)            \
     PROC(MemoryObject)           \
-    PROC(Query)                  \
     PROC(Overlay)                \
     PROC(Program)                \
     PROC(ProgramPipeline)        \
+    PROC(Query)                  \
+    PROC(Renderbuffer)           \
     PROC(Sampler)                \
     PROC(Semaphore)              \
     PROC(Texture)                \
@@ -71,6 +72,7 @@ namespace rx
 class DisplayVk;
 class ImageVk;
 class ProgramExecutableVk;
+class RenderbufferVk;
 class RenderTargetVk;
 class RendererVk;
 class RenderPassCache;

@@ -44,6 +44,42 @@ angle::Result TextureImpl::copySubTexture(const gl::Context *context,
     return angle::Result::Stop;
 }
 
+angle::Result TextureImpl::copyRenderbufferSubData(const gl::Context *context,
+                                                   const gl::Renderbuffer *srcBuffer,
+                                                   GLint srcLevel,
+                                                   GLint srcX,
+                                                   GLint srcY,
+                                                   GLint srcZ,
+                                                   GLint dstLevel,
+                                                   GLint dstX,
+                                                   GLint dstY,
+                                                   GLint dstZ,
+                                                   GLsizei srcWidth,
+                                                   GLsizei srcHeight,
+                                                   GLsizei srcDepth)
+{
+    UNREACHABLE();
+    return angle::Result::Stop;
+}
+
+angle::Result TextureImpl::copyTextureSubData(const gl::Context *context,
+                                              const gl::Texture *srcTexture,
+                                              GLint srcLevel,
+                                              GLint srcX,
+                                              GLint srcY,
+                                              GLint srcZ,
+                                              GLint dstLevel,
+                                              GLint dstX,
+                                              GLint dstY,
+                                              GLint dstZ,
+                                              GLsizei srcWidth,
+                                              GLsizei srcHeight,
+                                              GLsizei srcDepth)
+{
+    UNREACHABLE();
+    return angle::Result::Stop;
+}
+
 angle::Result TextureImpl::copyCompressedTexture(const gl::Context *context,
                                                  const gl::Texture *source)
 {

@@ -273,3 +273,30 @@
 4822 VULKAN ANDROID : dEQP-GLES31.functional.draw_buffers_indexed.random.max_required_draw_buffers.10 = SKIP
 4822 VULKAN ANDROID : dEQP-GLES31.functional.draw_buffers_indexed.random.max_required_draw_buffers.11 = SKIP
 4822 VULKAN ANDROID : dEQP-GLES31.functional.draw_buffers_indexed.random.max_required_draw_buffers.17 = SKIP
+
+// There is an issue with renderbuffers where the test fails verification before the copy.
+3593 VULKAN : dEQP-GLES31.functional.copy_image.non_compressed*renderbuffer* = FAIL
+3593 SWIFTSHADER : dEQP-GLES31.functional.copy_image.mixed*renderbuffer* = FAIL
+3593 VULKAN ANDROID : dEQP-GLES31.functional.copy_image.mixed*renderbuffer* = FAIL
+
+// Swiftshader fails to create a correct source/destination srgb8_alpha8_astc image before copy, however 5x4 is correct
+5275 SWIFTSHADER : dEQP-GLES31.functional.copy_image.*rgba*srgb8_alpha8_astc_*_khr.*_to_texture2d* = FAIL
+5275 SWIFTSHADER : dEQP-GLES31.functional.copy_image.*rgba*srgb8_alpha8_astc_*_khr.*_to_cubemap* = FAIL
+5275 SWIFTSHADER : dEQP-GLES31.functional.copy_image.*srgb8_alpha8_astc_*_khr_rgba*.*cubemap_to* = FAIL
+5275 SWIFTSHADER : dEQP-GLES31.functional.copy_image.*srgb8_alpha8_astc_*_khr_rgba*.*texture2d*_to* = FAIL
+5275 SWIFTSHADER : dEQP-GLES31.functional.copy_image.*srgb8_alpha8_astc_5x4_khr.*texture2d*_to_texture2d* = PASS
+5275 SWIFTSHADER : dEQP-GLES31.functional.copy_image.*srgb8_alpha8_astc_5x4_khr.*texture2d*_to_cubemap = PASS
+5275 SWIFTSHADER : dEQP-GLES31.functional.copy_image.*srgb8_alpha8_astc_5x4_khr.*cubemap*_to_texture2d* = PASS
+5275 SWIFTSHADER : dEQP-GLES31.functional.copy_image.*srgb8_alpha8_astc_5x4_khr.*cubemap_to_cubemap = PASS
+
+// Desktop cards without native etc support, angle emulated format fails
+5276 AMD VULKAN : dEQP-GLES31.functional.copy_image.compressed.viewclass_eac* = FAIL
+5276 AMD VULKAN : dEQP-GLES31.functional.copy_image.compressed.viewclass_etc* = FAIL
+5276 AMD VULKAN : dEQP-GLES31.functional.copy_image.mixed.*eac* = FAIL
+5276 NVIDIA VULKAN : dEQP-GLES31.functional.copy_image.compressed.viewclass_eac* = FAIL
+5276 NVIDIA VULKAN : dEQP-GLES31.functional.copy_image.compressed.viewclass_etc* = FAIL
+5276 NVIDIA VULKAN : dEQP-GLES31.functional.copy_image.mixed.*eac* = FAIL
+
+// Vulkan Android failures with these formats
+5277 VULKAN ANDROID : dEQP-GLES31.functional.copy_image.non_compressed.viewclass_32_bits.rgba8_snorm_rgb10_a2* = FAIL
+5277 VULKAN ANDROID : dEQP-GLES31.functional.copy_image.non_compressed.viewclass_32_bits.rgba8_snorm_rgb9_e5* = FAIL

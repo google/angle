@@ -4122,7 +4122,75 @@ void Context::copyImageSubData(GLuint srcName,
                                GLsizei srcHeight,
                                GLsizei srcDepth)
 {
-    UNIMPLEMENTED();
+    // if copy region is zero, the copy is a successful no-op
+    if ((srcWidth == 0) || (srcHeight == 0) || (srcDepth == 0))
+    {
+        return;
+    }
+
+    if (srcTarget == GL_RENDERBUFFER)
+    {
+        // Source target is a Renderbuffer
+        Renderbuffer *readBuffer = getRenderbuffer(FromGL<RenderbufferID>(srcName));
+        if (dstTarget == GL_RENDERBUFFER)
+        {
+            // Destination target is a Renderbuffer
+            Renderbuffer *writeBuffer = getRenderbuffer(FromGL<RenderbufferID>(dstName));
+
+            // Copy Renderbuffer to Renderbuffer
+            ANGLE_CONTEXT_TRY(writeBuffer->copyRenderbufferSubData(
+                this, readBuffer, srcLevel, srcX, srcY, srcZ, dstLevel, dstX, dstY, dstZ, srcWidth,
+                srcHeight, srcDepth));
+        }
+        else
+        {
+            // Destination target is a Texture
+            ASSERT(dstTarget == GL_TEXTURE_2D || dstTarget == GL_TEXTURE_2D_ARRAY ||
+                   dstTarget == GL_TEXTURE_3D || dstTarget == GL_TEXTURE_CUBE_MAP);
+
+            Texture *writeTexture = getTexture(FromGL<TextureID>(dstName));
+            ANGLE_CONTEXT_TRY(syncTextureForCopy(writeTexture));
+
+            // Copy Renderbuffer to Texture
+            ANGLE_CONTEXT_TRY(writeTexture->copyRenderbufferSubData(
+                this, readBuffer, srcLevel, srcX, srcY, srcZ, dstLevel, dstX, dstY, dstZ, srcWidth,
+                srcHeight, srcDepth));
+        }
+    }
+    else
+    {
+        // Source target is a Texture
+        ASSERT(srcTarget == GL_TEXTURE_2D || srcTarget == GL_TEXTURE_2D_ARRAY ||
+               srcTarget == GL_TEXTURE_3D || srcTarget == GL_TEXTURE_CUBE_MAP);
+
+        Texture *readTexture = getTexture(FromGL<TextureID>(srcName));
+        ANGLE_CONTEXT_TRY(syncTextureForCopy(readTexture));
+
+        if (dstTarget == GL_RENDERBUFFER)
+        {
+            // Destination target is a Renderbuffer
+            Renderbuffer *writeBuffer = getRenderbuffer(FromGL<RenderbufferID>(dstName));
+
+            // Copy Texture to Renderbuffer
+            ANGLE_CONTEXT_TRY(writeBuffer->copyTextureSubData(this, readTexture, srcLevel, srcX,
+                                                              srcY, srcZ, dstLevel, dstX, dstY,
+                                                              dstZ, srcWidth, srcHeight, srcDepth));
+        }
+        else
+        {
+            // Destination target is a Texture
+            ASSERT(dstTarget == GL_TEXTURE_2D || dstTarget == GL_TEXTURE_2D_ARRAY ||
+                   dstTarget == GL_TEXTURE_3D || dstTarget == GL_TEXTURE_CUBE_MAP);
+
+            Texture *writeTexture = getTexture(FromGL<TextureID>(dstName));
+            ANGLE_CONTEXT_TRY(syncTextureForCopy(writeTexture));
+
+            // Copy Texture to Texture
+            ANGLE_CONTEXT_TRY(writeTexture->copyTextureSubData(
+                this, readTexture, srcLevel, srcX, srcY, srcZ, dstLevel, dstX, dstY, dstZ, srcWidth,
+                srcHeight, srcDepth));
+        }
+    }
 }
 
 void Context::framebufferTexture2D(GLenum target,
@@ -4860,6 +4928,18 @@ angle::Result Context::syncStateForBlit()
 angle::Result Context::syncStateForClear()
 {
     return syncState(mClearDirtyBits, mClearDirtyObjects, Command::Clear);
+}
+
+angle::Result Context::syncTextureForCopy(Texture *texture)
+{
+    ASSERT(texture);
+    // Sync texture not active but scheduled for a copy
+    if (texture->hasAnyDirtyBit())
+    {
+        return texture->syncState(this, Command::Other);
+    }
+
+    return angle::Result::Continue;
 }
 
 void Context::activeShaderProgram(ProgramPipelineID pipeline, ShaderProgramID program)

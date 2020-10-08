@@ -3604,6 +3604,212 @@ TEST_P(Texture2DTestES3, DrawWithBaseLevel1)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
+// Test basic GL_EXT_copy_image copy without any bound textures
+TEST_P(Texture2DTestES3, CopyImage)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_copy_image"));
+
+    std::vector<GLColor> texDataRed(4u * 4u, GLColor::red);
+    GLTexture srcTexture;
+    GLTexture destTexture;
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, destTexture);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 4, 4, 0, GL_RGBA, GL_UNSIGNED_BYTE, texDataRed.data());
+
+    std::vector<GLColor> texDataGreen(4u * 4u, GLColor::green);
+    glBindTexture(GL_TEXTURE_2D, srcTexture);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 4, 4, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 texDataGreen.data());
+
+    glBindTexture(GL_TEXTURE_2D, 0);
+
+    // copy
+    glCopyImageSubDataEXT(srcTexture, GL_TEXTURE_2D, 0, 2, 2, 0, destTexture, GL_TEXTURE_2D, 0, 2,
+                          2, 0, 2, 2, 1);
+
+    glBindTexture(GL_TEXTURE_2D, destTexture);
+
+    EXPECT_GL_NO_ERROR();
+
+    glViewport(0, 0, 4, 4);
+    drawQuad(mProgram, "position", 0.5f);
+    EXPECT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_RECT_EQ(2, 2, 2, 2, GLColor::green);
+    EXPECT_PIXEL_RECT_EQ(0, 0, 4, 2, GLColor::red);
+    EXPECT_PIXEL_RECT_EQ(0, 0, 2, 4, GLColor::red);
+}
+
+// Test GL_EXT_copy_image copy with a non-zero base level
+TEST_P(Texture2DTestES3, CopyImageBaseLevel1)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_copy_image"));
+
+    std::vector<GLColor> texDataBlack(8u * 8u, GLColor::black);
+    std::vector<GLColor> texDataRed(4u * 4u, GLColor::red);
+    std::vector<GLColor> texDataGreen(4u * 4u, GLColor::green);
+    std::vector<GLColor> texDataBlue(4u * 4u, GLColor::blue);
+
+    GLTexture srcTexture;
+    GLTexture destTexture;
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, destTexture);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 8, 8, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 texDataBlack.data());
+    glTexImage2D(GL_TEXTURE_2D, 1, GL_RGBA, 4, 4, 0, GL_RGBA, GL_UNSIGNED_BYTE, texDataRed.data());
+    glTexImage2D(GL_TEXTURE_2D, 2, GL_RGBA, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 texDataGreen.data());
+    glTexImage2D(GL_TEXTURE_2D, 3, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, texDataBlue.data());
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 1);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 1);
+
+    glBindTexture(GL_TEXTURE_2D, srcTexture);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 8, 8, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 texDataBlack.data());
+    glTexImage2D(GL_TEXTURE_2D, 1, GL_RGBA, 4, 4, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 texDataGreen.data());
+    glTexImage2D(GL_TEXTURE_2D, 2, GL_RGBA, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, texDataBlue.data());
+    glTexImage2D(GL_TEXTURE_2D, 3, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, texDataRed.data());
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 1);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 1);
+
+    glBindTexture(GL_TEXTURE_2D, 0);
+
+    // copy
+    glCopyImageSubDataEXT(srcTexture, GL_TEXTURE_2D, 1, 2, 2, 0, destTexture, GL_TEXTURE_2D, 1, 2,
+                          2, 0, 2, 2, 1);
+
+    glBindTexture(GL_TEXTURE_2D, destTexture);
+
+    EXPECT_GL_NO_ERROR();
+
+    glViewport(0, 0, 4, 4);
+    drawQuad(mProgram, "position", 0.5f);
+    EXPECT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_RECT_EQ(2, 2, 2, 2, GLColor::green);
+    EXPECT_PIXEL_RECT_EQ(0, 0, 4, 2, GLColor::red);
+    EXPECT_PIXEL_RECT_EQ(0, 0, 2, 4, GLColor::red);
+}
+
+// Test basic GL_EXT_copy_image copy without any draw calls by attaching the texture
+// to a framebuffer and reads from the framebuffer to validate the copy
+TEST_P(Texture2DTestES3, CopyImageFB)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_copy_image"));
+
+    glViewport(0, 0, 4, 4);
+    std::vector<GLColor> texDataRed(4u * 4u, GLColor::red);
+    GLTexture srcTexture;
+    GLTexture destTexture;
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, destTexture);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 4, 4, 0, GL_RGBA, GL_UNSIGNED_BYTE, texDataRed.data());
+
+    std::vector<GLColor> texDataGreen(4u * 4u, GLColor::green);
+    glBindTexture(GL_TEXTURE_2D, srcTexture);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 4, 4, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 texDataGreen.data());
+    glBindTexture(GL_TEXTURE_2D, 0);
+
+    // copy
+    glCopyImageSubDataEXT(srcTexture, GL_TEXTURE_2D, 0, 0, 0, 0, destTexture, GL_TEXTURE_2D, 0, 0,
+                          1, 0, 3, 3, 1);
+
+    EXPECT_GL_NO_ERROR();
+
+    GLFramebuffer fb;
+    glBindFramebuffer(GL_FRAMEBUFFER, fb);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, destTexture, 0);
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    EXPECT_PIXEL_RECT_EQ(0, 1, 3, 3, GLColor::green);
+    EXPECT_PIXEL_RECT_EQ(3, 0, 1, 4, GLColor::red);
+    EXPECT_PIXEL_RECT_EQ(0, 0, 4, 1, GLColor::red);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+// Test GL_EXT_copy_image copy to a framebuffer attachment after
+// invalidation. Then draw with blending onto the framebuffer.
+TEST_P(Texture2DTestES3, CopyImageFBInvalidateThenBlend)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_copy_image"));
+
+    ANGLE_GL_PROGRAM(drawBlueProgram, essl1_shaders::vs::Simple(), essl1_shaders::fs::Blue());
+    ANGLE_GL_PROGRAM(drawRedProgram, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
+
+    glViewport(0, 0, 4, 4);
+    GLTexture srcTexture;
+    GLTexture textureAttachment;
+
+    std::vector<GLColor> texDataGreen(4u * 4u, GLColor::green);
+    glBindTexture(GL_TEXTURE_2D, srcTexture);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 0);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 4, 4, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 texDataGreen.data());
+    glBindTexture(GL_TEXTURE_2D, 0);
+
+    glBindTexture(GL_TEXTURE_2D, textureAttachment);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 4, 4, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 0);
+    glBindTexture(GL_TEXTURE_2D, 0);
+
+    GLFramebuffer fb;
+    glBindFramebuffer(GL_FRAMEBUFFER, fb);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureAttachment,
+                           0);
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    // Draw something in the texture to make sure it's image is defined.
+    drawQuad(drawRedProgram, essl1_shaders::PositionAttrib(), 0.0f);
+
+    // Invalidate the framebuffer.
+    const GLenum discards[] = {GL_COLOR_ATTACHMENT0};
+    glInvalidateFramebuffer(GL_FRAMEBUFFER, 1, discards);
+    ASSERT_GL_NO_ERROR();
+
+    // Copy into the framebuffer attachment.
+    glCopyImageSubDataEXT(srcTexture, GL_TEXTURE_2D, 0, 0, 0, 0, textureAttachment, GL_TEXTURE_2D,
+                          0, 0, 0, 0, 4, 4, 1);
+    EXPECT_GL_NO_ERROR();
+
+    // Draw and blend, making sure both the copy and draw happen correctly.
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_ONE, GL_ONE);
+    drawQuad(drawBlueProgram, essl1_shaders::PositionAttrib(), 0.0f);
+    ASSERT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_RECT_EQ(0, 0, 4, 4, GLColor::cyan);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
 // Test that drawing works correctly when levels outside the BASE_LEVEL/MAX_LEVEL range do not
 // have images defined.
 TEST_P(Texture2DTestES3, DrawWithLevelsOutsideRangeUndefined)

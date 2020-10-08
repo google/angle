@@ -14,6 +14,7 @@
 #include "libANGLE/renderer/vulkan/ContextVk.h"
 #include "libANGLE/renderer/vulkan/ImageVk.h"
 #include "libANGLE/renderer/vulkan/RendererVk.h"
+#include "libANGLE/renderer/vulkan/TextureVk.h"
 
 namespace rx
 {
@@ -190,6 +191,57 @@ angle::Result RenderbufferVk::setStorageEGLImageTarget(const gl::Context *contex
     return angle::Result::Continue;
 }
 
+angle::Result RenderbufferVk::copyRenderbufferSubData(const gl::Context *context,
+                                                      const gl::Renderbuffer *srcBuffer,
+                                                      GLint srcLevel,
+                                                      GLint srcX,
+                                                      GLint srcY,
+                                                      GLint srcZ,
+                                                      GLint dstLevel,
+                                                      GLint dstX,
+                                                      GLint dstY,
+                                                      GLint dstZ,
+                                                      GLsizei srcWidth,
+                                                      GLsizei srcHeight,
+                                                      GLsizei srcDepth)
+{
+    RenderbufferVk *sourceVk = vk::GetImpl(srcBuffer);
+
+    // Make sure the source/destination targets are initialized and all staged updates are flushed.
+    ANGLE_TRY(sourceVk->ensureImageInitialized(context));
+    ANGLE_TRY(ensureImageInitialized(context));
+
+    return vk::ImageHelper::CopyImageSubData(context, sourceVk->getImage(), srcLevel, srcX, srcY,
+                                             srcZ, mImage, dstLevel, dstX, dstY, dstZ, srcWidth,
+                                             srcHeight, srcDepth);
+}
+
+angle::Result RenderbufferVk::copyTextureSubData(const gl::Context *context,
+                                                 const gl::Texture *srcTexture,
+                                                 GLint srcLevel,
+                                                 GLint srcX,
+                                                 GLint srcY,
+                                                 GLint srcZ,
+                                                 GLint dstLevel,
+                                                 GLint dstX,
+                                                 GLint dstY,
+                                                 GLint dstZ,
+                                                 GLsizei srcWidth,
+                                                 GLsizei srcHeight,
+                                                 GLsizei srcDepth)
+{
+    ContextVk *contextVk = vk::GetImpl(context);
+    TextureVk *sourceVk  = vk::GetImpl(srcTexture);
+
+    // Make sure the source/destination targets are initialized and all staged updates are flushed.
+    ANGLE_TRY(sourceVk->ensureImageInitialized(contextVk, ImageMipLevels::EnabledLevels));
+    ANGLE_TRY(ensureImageInitialized(context));
+
+    return vk::ImageHelper::CopyImageSubData(context, &sourceVk->getImage(), srcLevel, srcX, srcY,
+                                             srcZ, mImage, dstLevel, dstX, dstY, dstZ, srcWidth,
+                                             srcHeight, srcDepth);
+}
+
 angle::Result RenderbufferVk::getAttachmentRenderTarget(const gl::Context *context,
                                                         GLenum binding,
                                                         const gl::ImageIndex &imageIndex,
@@ -287,6 +339,14 @@ angle::Result RenderbufferVk::getRenderbufferImage(const gl::Context *context,
 
     return mImage->readPixelsForGetImage(contextVk, packState, packBuffer, gl::LevelIndex(0), 0,
                                          format, type, pixels);
+}
+
+angle::Result RenderbufferVk::ensureImageInitialized(const gl::Context *context)
+{
+    ANGLE_TRY(setStorage(context, mState.getFormat().info->internalFormat, mState.getWidth(),
+                         mState.getHeight()));
+
+    return mImage->flushAllStagedUpdates(vk::GetImpl(context));
 }
 
 void RenderbufferVk::onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMessage message)
