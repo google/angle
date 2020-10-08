@@ -619,6 +619,9 @@ EXPORTS
     ; GL_EXT_buffer_storage
     glBufferStorageEXT
 
+    ; GL_EXT_copy_image
+    glCopyImageSubDataEXT
+
     ; GL_EXT_debug_marker
     glInsertEventMarkerEXT
     glPopGroupMarkerEXT
@@ -774,6 +777,9 @@ EXPORTS
     glEGLImageTargetTexture2DOES
 
     ; GL_OES_compressed_ETC1_RGB8_texture
+
+    ; GL_OES_copy_image
+    glCopyImageSubDataOES
 
     ; GL_OES_depth32
 
@@ -986,6 +992,8 @@ EXPORTS
     glCompressedTexSubImage3DRobustANGLEContextANGLE
     glCopyBufferSubDataContextANGLE
     glCopyImageSubDataContextANGLE
+    glCopyImageSubDataEXTContextANGLE
+    glCopyImageSubDataOESContextANGLE
     glCopySubTexture3DANGLEContextANGLE
     glCopySubTextureCHROMIUMContextANGLE
     glCopyTexImage2DContextANGLE

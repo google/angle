@@ -181,6 +181,8 @@ enum class EntryPoint
     CompressedTextureSubImage3D,
     CopyBufferSubData,
     CopyImageSubData,
+    CopyImageSubDataEXT,
+    CopyImageSubDataOES,
     CopyNamedBufferSubData,
     CopyPixels,
     CopySubTexture3DANGLE,

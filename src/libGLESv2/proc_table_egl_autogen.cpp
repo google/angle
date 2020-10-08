@@ -312,6 +312,10 @@ const ProcEntry g_procTable[] = {
     {"glCopyBufferSubDataContextANGLE", P(gl::CopyBufferSubDataContextANGLE)},
     {"glCopyImageSubData", P(gl::CopyImageSubData)},
     {"glCopyImageSubDataContextANGLE", P(gl::CopyImageSubDataContextANGLE)},
+    {"glCopyImageSubDataEXT", P(gl::CopyImageSubDataEXT)},
+    {"glCopyImageSubDataEXTContextANGLE", P(gl::CopyImageSubDataEXTContextANGLE)},
+    {"glCopyImageSubDataOES", P(gl::CopyImageSubDataOES)},
+    {"glCopyImageSubDataOESContextANGLE", P(gl::CopyImageSubDataOESContextANGLE)},
     {"glCopySubTexture3DANGLE", P(gl::CopySubTexture3DANGLE)},
     {"glCopySubTexture3DANGLEContextANGLE", P(gl::CopySubTexture3DANGLEContextANGLE)},
     {"glCopySubTextureCHROMIUM", P(gl::CopySubTextureCHROMIUM)},
@@ -1631,5 +1635,5 @@ const ProcEntry g_procTable[] = {
     {"glWeightPointerOES", P(gl::WeightPointerOES)},
     {"glWeightPointerOESContextANGLE", P(gl::WeightPointerOESContextANGLE)}};
 
-const size_t g_numProcs = 1534;
+const size_t g_numProcs = 1538;
 }  // namespace egl

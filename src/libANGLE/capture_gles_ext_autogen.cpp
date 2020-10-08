@@ -4556,6 +4556,47 @@ CallCapture CaptureBufferStorageEXT(const State &glState,
     return CallCapture(gl::EntryPoint::BufferStorageEXT, std::move(paramBuffer));
 }
 
+CallCapture CaptureCopyImageSubDataEXT(const State &glState,
+                                       bool isCallValid,
+                                       GLuint srcName,
+                                       GLenum srcTarget,
+                                       GLint srcLevel,
+                                       GLint srcX,
+                                       GLint srcY,
+                                       GLint srcZ,
+                                       GLuint dstName,
+                                       GLenum dstTarget,
+                                       GLint dstLevel,
+                                       GLint dstX,
+                                       GLint dstY,
+                                       GLint dstZ,
+                                       GLsizei srcWidth,
+                                       GLsizei srcHeight,
+                                       GLsizei srcDepth)
+{
+    ParamBuffer paramBuffer;
+
+    paramBuffer.addValueParam("srcName", ParamType::TGLuint, srcName);
+    paramBuffer.addEnumParam("srcTarget", GLenumGroup::CopyBufferSubDataTarget, ParamType::TGLenum,
+                             srcTarget);
+    paramBuffer.addValueParam("srcLevel", ParamType::TGLint, srcLevel);
+    paramBuffer.addValueParam("srcX", ParamType::TGLint, srcX);
+    paramBuffer.addValueParam("srcY", ParamType::TGLint, srcY);
+    paramBuffer.addValueParam("srcZ", ParamType::TGLint, srcZ);
+    paramBuffer.addValueParam("dstName", ParamType::TGLuint, dstName);
+    paramBuffer.addEnumParam("dstTarget", GLenumGroup::CopyBufferSubDataTarget, ParamType::TGLenum,
+                             dstTarget);
+    paramBuffer.addValueParam("dstLevel", ParamType::TGLint, dstLevel);
+    paramBuffer.addValueParam("dstX", ParamType::TGLint, dstX);
+    paramBuffer.addValueParam("dstY", ParamType::TGLint, dstY);
+    paramBuffer.addValueParam("dstZ", ParamType::TGLint, dstZ);
+    paramBuffer.addValueParam("srcWidth", ParamType::TGLsizei, srcWidth);
+    paramBuffer.addValueParam("srcHeight", ParamType::TGLsizei, srcHeight);
+    paramBuffer.addValueParam("srcDepth", ParamType::TGLsizei, srcDepth);
+
+    return CallCapture(gl::EntryPoint::CopyImageSubDataEXT, std::move(paramBuffer));
+}
+
 CallCapture CaptureInsertEventMarkerEXT(const State &glState,
                                         bool isCallValid,
                                         GLsizei length,
@@ -6911,6 +6952,47 @@ CallCapture CaptureEGLImageTargetTexture2DOES(const State &glState,
     paramBuffer.addValueParam("image", ParamType::TGLeglImageOES, image);
 
     return CallCapture(gl::EntryPoint::EGLImageTargetTexture2DOES, std::move(paramBuffer));
+}
+
+CallCapture CaptureCopyImageSubDataOES(const State &glState,
+                                       bool isCallValid,
+                                       GLuint srcName,
+                                       GLenum srcTarget,
+                                       GLint srcLevel,
+                                       GLint srcX,
+                                       GLint srcY,
+                                       GLint srcZ,
+                                       GLuint dstName,
+                                       GLenum dstTarget,
+                                       GLint dstLevel,
+                                       GLint dstX,
+                                       GLint dstY,
+                                       GLint dstZ,
+                                       GLsizei srcWidth,
+                                       GLsizei srcHeight,
+                                       GLsizei srcDepth)
+{
+    ParamBuffer paramBuffer;
+
+    paramBuffer.addValueParam("srcName", ParamType::TGLuint, srcName);
+    paramBuffer.addEnumParam("srcTarget", GLenumGroup::CopyBufferSubDataTarget, ParamType::TGLenum,
+                             srcTarget);
+    paramBuffer.addValueParam("srcLevel", ParamType::TGLint, srcLevel);
+    paramBuffer.addValueParam("srcX", ParamType::TGLint, srcX);
+    paramBuffer.addValueParam("srcY", ParamType::TGLint, srcY);
+    paramBuffer.addValueParam("srcZ", ParamType::TGLint, srcZ);
+    paramBuffer.addValueParam("dstName", ParamType::TGLuint, dstName);
+    paramBuffer.addEnumParam("dstTarget", GLenumGroup::CopyBufferSubDataTarget, ParamType::TGLenum,
+                             dstTarget);
+    paramBuffer.addValueParam("dstLevel", ParamType::TGLint, dstLevel);
+    paramBuffer.addValueParam("dstX", ParamType::TGLint, dstX);
+    paramBuffer.addValueParam("dstY", ParamType::TGLint, dstY);
+    paramBuffer.addValueParam("dstZ", ParamType::TGLint, dstZ);
+    paramBuffer.addValueParam("srcWidth", ParamType::TGLsizei, srcWidth);
+    paramBuffer.addValueParam("srcHeight", ParamType::TGLsizei, srcHeight);
+    paramBuffer.addValueParam("srcDepth", ParamType::TGLsizei, srcDepth);
+
+    return CallCapture(gl::EntryPoint::CopyImageSubDataOES, std::move(paramBuffer));
 }
 
 CallCapture CaptureBlendEquationSeparateiOES(const State &glState,

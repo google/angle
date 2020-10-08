@@ -668,6 +668,23 @@ ANGLE_EXPORT void GL_APIENTRY BufferStorageEXT(GLenum target,
                                                const void *data,
                                                GLbitfield flags);
 
+// GL_EXT_copy_image
+ANGLE_EXPORT void GL_APIENTRY CopyImageSubDataEXT(GLuint srcName,
+                                                  GLenum srcTarget,
+                                                  GLint srcLevel,
+                                                  GLint srcX,
+                                                  GLint srcY,
+                                                  GLint srcZ,
+                                                  GLuint dstName,
+                                                  GLenum dstTarget,
+                                                  GLint dstLevel,
+                                                  GLint dstX,
+                                                  GLint dstY,
+                                                  GLint dstZ,
+                                                  GLsizei srcWidth,
+                                                  GLsizei srcHeight,
+                                                  GLsizei srcDepth);
+
 // GL_EXT_debug_marker
 ANGLE_EXPORT void GL_APIENTRY InsertEventMarkerEXT(GLsizei length, const GLchar *marker);
 ANGLE_EXPORT void GL_APIENTRY PopGroupMarkerEXT();
@@ -985,6 +1002,23 @@ ANGLE_EXPORT void GL_APIENTRY EGLImageTargetRenderbufferStorageOES(GLenum target
 ANGLE_EXPORT void GL_APIENTRY EGLImageTargetTexture2DOES(GLenum target, GLeglImageOES image);
 
 // GL_OES_compressed_ETC1_RGB8_texture
+
+// GL_OES_copy_image
+ANGLE_EXPORT void GL_APIENTRY CopyImageSubDataOES(GLuint srcName,
+                                                  GLenum srcTarget,
+                                                  GLint srcLevel,
+                                                  GLint srcX,
+                                                  GLint srcY,
+                                                  GLint srcZ,
+                                                  GLuint dstName,
+                                                  GLenum dstTarget,
+                                                  GLint dstLevel,
+                                                  GLint dstX,
+                                                  GLint dstY,
+                                                  GLint dstZ,
+                                                  GLsizei srcWidth,
+                                                  GLsizei srcHeight,
+                                                  GLsizei srcDepth);
 
 // GL_OES_depth32
 
@@ -1574,6 +1608,38 @@ ANGLE_EXPORT void GL_APIENTRY CopyImageSubDataContextANGLE(GLeglContext ctx,
                                                            GLsizei srcWidth,
                                                            GLsizei srcHeight,
                                                            GLsizei srcDepth);
+ANGLE_EXPORT void GL_APIENTRY CopyImageSubDataEXTContextANGLE(GLeglContext ctx,
+                                                              GLuint srcName,
+                                                              GLenum srcTarget,
+                                                              GLint srcLevel,
+                                                              GLint srcX,
+                                                              GLint srcY,
+                                                              GLint srcZ,
+                                                              GLuint dstName,
+                                                              GLenum dstTarget,
+                                                              GLint dstLevel,
+                                                              GLint dstX,
+                                                              GLint dstY,
+                                                              GLint dstZ,
+                                                              GLsizei srcWidth,
+                                                              GLsizei srcHeight,
+                                                              GLsizei srcDepth);
+ANGLE_EXPORT void GL_APIENTRY CopyImageSubDataOESContextANGLE(GLeglContext ctx,
+                                                              GLuint srcName,
+                                                              GLenum srcTarget,
+                                                              GLint srcLevel,
+                                                              GLint srcX,
+                                                              GLint srcY,
+                                                              GLint srcZ,
+                                                              GLuint dstName,
+                                                              GLenum dstTarget,
+                                                              GLint dstLevel,
+                                                              GLint dstX,
+                                                              GLint dstY,
+                                                              GLint dstZ,
+                                                              GLsizei srcWidth,
+                                                              GLsizei srcHeight,
+                                                              GLsizei srcDepth);
 ANGLE_EXPORT void GL_APIENTRY CopyTexImage2DContextANGLE(GLeglContext ctx,
                                                          GLenum target,
                                                          GLint level,

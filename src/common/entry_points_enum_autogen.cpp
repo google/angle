@@ -350,6 +350,10 @@ const char *GetEntryPointName(EntryPoint ep)
             return "glCopyBufferSubData";
         case EntryPoint::CopyImageSubData:
             return "glCopyImageSubData";
+        case EntryPoint::CopyImageSubDataEXT:
+            return "glCopyImageSubDataEXT";
+        case EntryPoint::CopyImageSubDataOES:
+            return "glCopyImageSubDataOES";
         case EntryPoint::CopyNamedBufferSubData:
             return "glCopyNamedBufferSubData";
         case EntryPoint::CopyPixels:

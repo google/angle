@@ -3434,6 +3434,54 @@ void GL_APIENTRY BufferStorageEXT(GLenum target,
     }
 }
 
+// GL_EXT_copy_image
+void GL_APIENTRY CopyImageSubDataEXT(GLuint srcName,
+                                     GLenum srcTarget,
+                                     GLint srcLevel,
+                                     GLint srcX,
+                                     GLint srcY,
+                                     GLint srcZ,
+                                     GLuint dstName,
+                                     GLenum dstTarget,
+                                     GLint dstLevel,
+                                     GLint dstX,
+                                     GLint dstY,
+                                     GLint dstZ,
+                                     GLsizei srcWidth,
+                                     GLsizei srcHeight,
+                                     GLsizei srcDepth)
+{
+    Context *context = GetValidGlobalContext();
+    EVENT(context, gl::EntryPoint::CopyImageSubDataEXT, "glCopyImageSubDataEXT",
+          "context = %d, GLuint srcName = %u, GLenum srcTarget = %s, GLint srcLevel = %d, GLint "
+          "srcX = %d, GLint srcY = %d, GLint srcZ = %d, GLuint dstName = %u, GLenum dstTarget = "
+          "%s, GLint dstLevel = %d, GLint dstX = %d, GLint dstY = %d, GLint dstZ = %d, GLsizei "
+          "srcWidth = %d, GLsizei srcHeight = %d, GLsizei srcDepth = %d",
+          CID(context), srcName, GLenumToString(GLenumGroup::CopyBufferSubDataTarget, srcTarget),
+          srcLevel, srcX, srcY, srcZ, dstName,
+          GLenumToString(GLenumGroup::CopyBufferSubDataTarget, dstTarget), dstLevel, dstX, dstY,
+          dstZ, srcWidth, srcHeight, srcDepth);
+
+    if (context)
+    {
+        std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateCopyImageSubDataEXT(context, srcName, srcTarget, srcLevel, srcX, srcY, srcZ,
+                                         dstName, dstTarget, dstLevel, dstX, dstY, dstZ, srcWidth,
+                                         srcHeight, srcDepth));
+        if (isCallValid)
+        {
+            context->copyImageSubData(srcName, srcTarget, srcLevel, srcX, srcY, srcZ, dstName,
+                                      dstTarget, dstLevel, dstX, dstY, dstZ, srcWidth, srcHeight,
+                                      srcDepth);
+        }
+        ANGLE_CAPTURE(CopyImageSubDataEXT, isCallValid, context, srcName, srcTarget, srcLevel, srcX,
+                      srcY, srcZ, dstName, dstTarget, dstLevel, dstX, dstY, dstZ, srcWidth,
+                      srcHeight, srcDepth);
+    }
+}
+
 // GL_EXT_debug_marker
 void GL_APIENTRY InsertEventMarkerEXT(GLsizei length, const GLchar *marker)
 {
@@ -5748,6 +5796,54 @@ void GL_APIENTRY EGLImageTargetTexture2DOES(GLenum target, GLeglImageOES image)
 }
 
 // GL_OES_compressed_ETC1_RGB8_texture
+
+// GL_OES_copy_image
+void GL_APIENTRY CopyImageSubDataOES(GLuint srcName,
+                                     GLenum srcTarget,
+                                     GLint srcLevel,
+                                     GLint srcX,
+                                     GLint srcY,
+                                     GLint srcZ,
+                                     GLuint dstName,
+                                     GLenum dstTarget,
+                                     GLint dstLevel,
+                                     GLint dstX,
+                                     GLint dstY,
+                                     GLint dstZ,
+                                     GLsizei srcWidth,
+                                     GLsizei srcHeight,
+                                     GLsizei srcDepth)
+{
+    Context *context = GetValidGlobalContext();
+    EVENT(context, gl::EntryPoint::CopyImageSubDataOES, "glCopyImageSubDataOES",
+          "context = %d, GLuint srcName = %u, GLenum srcTarget = %s, GLint srcLevel = %d, GLint "
+          "srcX = %d, GLint srcY = %d, GLint srcZ = %d, GLuint dstName = %u, GLenum dstTarget = "
+          "%s, GLint dstLevel = %d, GLint dstX = %d, GLint dstY = %d, GLint dstZ = %d, GLsizei "
+          "srcWidth = %d, GLsizei srcHeight = %d, GLsizei srcDepth = %d",
+          CID(context), srcName, GLenumToString(GLenumGroup::CopyBufferSubDataTarget, srcTarget),
+          srcLevel, srcX, srcY, srcZ, dstName,
+          GLenumToString(GLenumGroup::CopyBufferSubDataTarget, dstTarget), dstLevel, dstX, dstY,
+          dstZ, srcWidth, srcHeight, srcDepth);
+
+    if (context)
+    {
+        std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateCopyImageSubDataOES(context, srcName, srcTarget, srcLevel, srcX, srcY, srcZ,
+                                         dstName, dstTarget, dstLevel, dstX, dstY, dstZ, srcWidth,
+                                         srcHeight, srcDepth));
+        if (isCallValid)
+        {
+            context->copyImageSubData(srcName, srcTarget, srcLevel, srcX, srcY, srcZ, dstName,
+                                      dstTarget, dstLevel, dstX, dstY, dstZ, srcWidth, srcHeight,
+                                      srcDepth);
+        }
+        ANGLE_CAPTURE(CopyImageSubDataOES, isCallValid, context, srcName, srcTarget, srcLevel, srcX,
+                      srcY, srcZ, dstName, dstTarget, dstLevel, dstX, dstY, dstZ, srcWidth,
+                      srcHeight, srcDepth);
+    }
+}
 
 // GL_OES_depth32
 
@@ -9901,6 +9997,104 @@ void GL_APIENTRY CopyImageSubDataContextANGLE(GLeglContext ctx,
                                       srcDepth);
         }
         ANGLE_CAPTURE(CopyImageSubData, isCallValid, context, srcName, srcTarget, srcLevel, srcX,
+                      srcY, srcZ, dstName, dstTarget, dstLevel, dstX, dstY, dstZ, srcWidth,
+                      srcHeight, srcDepth);
+    }
+}
+
+void GL_APIENTRY CopyImageSubDataEXTContextANGLE(GLeglContext ctx,
+                                                 GLuint srcName,
+                                                 GLenum srcTarget,
+                                                 GLint srcLevel,
+                                                 GLint srcX,
+                                                 GLint srcY,
+                                                 GLint srcZ,
+                                                 GLuint dstName,
+                                                 GLenum dstTarget,
+                                                 GLint dstLevel,
+                                                 GLint dstX,
+                                                 GLint dstY,
+                                                 GLint dstZ,
+                                                 GLsizei srcWidth,
+                                                 GLsizei srcHeight,
+                                                 GLsizei srcDepth)
+{
+    Context *context = static_cast<gl::Context *>(ctx);
+    EVENT(context, gl::EntryPoint::CopyImageSubDataEXT, "glCopyImageSubDataEXT",
+          "context = %d, GLuint srcName = %u, GLenum srcTarget = %s, GLint srcLevel = %d, GLint "
+          "srcX = %d, GLint srcY = %d, GLint srcZ = %d, GLuint dstName = %u, GLenum dstTarget = "
+          "%s, GLint dstLevel = %d, GLint dstX = %d, GLint dstY = %d, GLint dstZ = %d, GLsizei "
+          "srcWidth = %d, GLsizei srcHeight = %d, GLsizei srcDepth = %d",
+          CID(context), srcName, GLenumToString(GLenumGroup::CopyBufferSubDataTarget, srcTarget),
+          srcLevel, srcX, srcY, srcZ, dstName,
+          GLenumToString(GLenumGroup::CopyBufferSubDataTarget, dstTarget), dstLevel, dstX, dstY,
+          dstZ, srcWidth, srcHeight, srcDepth);
+
+    if (context)
+    {
+        ASSERT(context == GetValidGlobalContext());
+        std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateCopyImageSubDataEXT(context, srcName, srcTarget, srcLevel, srcX, srcY, srcZ,
+                                         dstName, dstTarget, dstLevel, dstX, dstY, dstZ, srcWidth,
+                                         srcHeight, srcDepth));
+        if (isCallValid)
+        {
+            context->copyImageSubData(srcName, srcTarget, srcLevel, srcX, srcY, srcZ, dstName,
+                                      dstTarget, dstLevel, dstX, dstY, dstZ, srcWidth, srcHeight,
+                                      srcDepth);
+        }
+        ANGLE_CAPTURE(CopyImageSubDataEXT, isCallValid, context, srcName, srcTarget, srcLevel, srcX,
+                      srcY, srcZ, dstName, dstTarget, dstLevel, dstX, dstY, dstZ, srcWidth,
+                      srcHeight, srcDepth);
+    }
+}
+
+void GL_APIENTRY CopyImageSubDataOESContextANGLE(GLeglContext ctx,
+                                                 GLuint srcName,
+                                                 GLenum srcTarget,
+                                                 GLint srcLevel,
+                                                 GLint srcX,
+                                                 GLint srcY,
+                                                 GLint srcZ,
+                                                 GLuint dstName,
+                                                 GLenum dstTarget,
+                                                 GLint dstLevel,
+                                                 GLint dstX,
+                                                 GLint dstY,
+                                                 GLint dstZ,
+                                                 GLsizei srcWidth,
+                                                 GLsizei srcHeight,
+                                                 GLsizei srcDepth)
+{
+    Context *context = static_cast<gl::Context *>(ctx);
+    EVENT(context, gl::EntryPoint::CopyImageSubDataOES, "glCopyImageSubDataOES",
+          "context = %d, GLuint srcName = %u, GLenum srcTarget = %s, GLint srcLevel = %d, GLint "
+          "srcX = %d, GLint srcY = %d, GLint srcZ = %d, GLuint dstName = %u, GLenum dstTarget = "
+          "%s, GLint dstLevel = %d, GLint dstX = %d, GLint dstY = %d, GLint dstZ = %d, GLsizei "
+          "srcWidth = %d, GLsizei srcHeight = %d, GLsizei srcDepth = %d",
+          CID(context), srcName, GLenumToString(GLenumGroup::CopyBufferSubDataTarget, srcTarget),
+          srcLevel, srcX, srcY, srcZ, dstName,
+          GLenumToString(GLenumGroup::CopyBufferSubDataTarget, dstTarget), dstLevel, dstX, dstY,
+          dstZ, srcWidth, srcHeight, srcDepth);
+
+    if (context)
+    {
+        ASSERT(context == GetValidGlobalContext());
+        std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateCopyImageSubDataOES(context, srcName, srcTarget, srcLevel, srcX, srcY, srcZ,
+                                         dstName, dstTarget, dstLevel, dstX, dstY, dstZ, srcWidth,
+                                         srcHeight, srcDepth));
+        if (isCallValid)
+        {
+            context->copyImageSubData(srcName, srcTarget, srcLevel, srcX, srcY, srcZ, dstName,
+                                      dstTarget, dstLevel, dstX, dstY, dstZ, srcWidth, srcHeight,
+                                      srcDepth);
+        }
+        ANGLE_CAPTURE(CopyImageSubDataOES, isCallValid, context, srcName, srcTarget, srcLevel, srcX,
                       srcY, srcZ, dstName, dstTarget, dstLevel, dstX, dstY, dstZ, srcWidth,
                       srcHeight, srcDepth);
     }
