@@ -475,6 +475,15 @@ struct FeaturesGL : FeatureSetBase
         "clamp_msc_rate", FeatureCategory::OpenGLWorkarounds,
         "Some drivers return bogus values for GetMscRate, so we clamp it to 30Hz", &members,
         "https://crbug.com/1042393"};
+
+    // Mac drivers generate GL_INVALID_VALUE when binding a transform feedback buffer with
+    // glBindBufferRange before first binding it to some generic binding point.
+    Feature bindTransformFeedbackBufferBeforeBindBufferRange = {
+        "bind_transform_feedback_buffer_before_bind_buffer_range",
+        FeatureCategory::OpenGLWorkarounds,
+        "Bind transform feedback buffers to the generic binding point before calling "
+        "glBindBufferBase or glBindBufferRange.",
+        &members, "https://anglebug.com/5140"};
 };
 
 inline FeaturesGL::FeaturesGL()  = default;

@@ -1828,6 +1828,8 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
     // causes issues in Chrome. To get around this, default to a 30Hz refresh rate if we see bogus
     // from the driver.
     ANGLE_FEATURE_CONDITION(features, clampMscRate, IsLinux() && IsWayland());
+
+    ANGLE_FEATURE_CONDITION(features, bindTransformFeedbackBufferBeforeBindBufferRange, IsApple());
 }
 
 void InitializeFrontendFeatures(const FunctionsGL *functions, angle::FrontendFeatures *features)
