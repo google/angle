@@ -945,12 +945,17 @@ class CommandBufferHelper : angle::NonCopyable
                    ImageLayout imageLayout,
                    ImageHelper *image);
     void imageWrite(ResourceUseList *resourceUseList,
+                    gl::LevelIndex level,
+                    uint32_t layerStart,
+                    uint32_t layerCount,
                     VkImageAspectFlags aspectFlags,
                     ImageLayout imageLayout,
                     AliasingMode aliasingMode,
                     ImageHelper *image);
 
     void depthStencilImagesDraw(ResourceUseList *resourceUseList,
+                                gl::LevelIndex level,
+                                uint32_t layer,
                                 ImageHelper *image,
                                 ImageHelper *resolveImage);
 
@@ -1629,9 +1634,28 @@ class ImageHelper final : public Resource, public angle::Subject
                                       GLuint *inputDepthPitch,
                                       GLuint *inputSkipBytes);
 
-    void onWrite() { mCurrentSingleClearValue.reset(); }
+    // Mark a given subresource as written to.  The subresource is identified by [levelStart,
+    // levelStart + levelCount) and [layerStart, layerStart + layerCount).
+    void onWrite(gl::LevelIndex levelStart,
+                 uint32_t levelCount,
+                 uint32_t layerStart,
+                 uint32_t layerCount,
+                 VkImageAspectFlags aspectFlags);
     bool hasImmutableSampler() { return mExternalFormat != 0; }
     uint64_t getExternalFormat() const { return mExternalFormat; }
+
+    // Used by framebuffer and render pass functions to decide loadOps and invalidate/un-invalidate
+    // render target contents.
+    bool hasSubresourceDefinedContent(gl::LevelIndex level, uint32_t layerIndex) const;
+    bool hasSubresourceDefinedStencilContent(gl::LevelIndex level, uint32_t layerIndex) const;
+    void invalidateSubresourceContent(ContextVk *contextVk,
+                                      gl::LevelIndex level,
+                                      uint32_t layerIndex);
+    void invalidateSubresourceStencilContent(ContextVk *contextVk,
+                                             gl::LevelIndex level,
+                                             uint32_t layerIndex);
+    void restoreSubresourceContent(gl::LevelIndex level, uint32_t layerIndex);
+    void restoreSubresourceStencilContent(gl::LevelIndex level, uint32_t layerIndex);
 
   private:
     enum class UpdateSource
@@ -1736,6 +1760,31 @@ class ImageHelper final : public Resource, public angle::Subject
     void appendSubresourceUpdate(SubresourceUpdate &&update);
     void prependSubresourceUpdate(SubresourceUpdate &&update);
     void resetCachedProperties();
+    void setEntireContentUndefined();
+    void setContentDefined(LevelIndex levelStart,
+                           uint32_t levelCount,
+                           uint32_t layerStart,
+                           uint32_t layerCount,
+                           VkImageAspectFlags aspectFlags);
+
+    // Up to 8 layers are tracked per level for whether contents are defined, above which the
+    // contents are considered unconditionally defined.  This handles the more likely scenarios of:
+    //
+    // - Single layer framebuffer attachments,
+    // - Cube map framebuffer attachments,
+    // - Multi-view rendering.
+    //
+    // If there arises a need to optimize an application that invalidates layer >= 8, an additional
+    // hash map can be used to track such subresources.
+    static constexpr uint32_t kMaxContentDefinedLayerCount = 8;
+    using LevelContentDefinedMask = angle::BitSet8<kMaxContentDefinedLayerCount>;
+
+    // Use the following functions to access m*ContentDefined to make sure the correct level index
+    // is used (i.e. vk::LevelIndex and not gl::LevelIndex).
+    LevelContentDefinedMask &getLevelContentDefined(LevelIndex level);
+    LevelContentDefinedMask &getLevelStencilContentDefined(LevelIndex level);
+    const LevelContentDefinedMask &getLevelContentDefined(LevelIndex level) const;
+    const LevelContentDefinedMask &getLevelStencilContentDefined(LevelIndex level) const;
 
     angle::Result initLayerImageViewImpl(
         Context *context,
@@ -1788,6 +1837,11 @@ class ImageHelper final : public Resource, public angle::Subject
     // image it has been cleared to the specified clear value. If another clear call is made with
     // the exact same clear value, we will detect and skip the clear call.
     Optional<ClearUpdate> mCurrentSingleClearValue;
+
+    // Track whether each subresource has defined contents.  Up to 8 layers are tracked per level,
+    // above which the contents are considered unconditionally defined.
+    gl::TexLevelArray<LevelContentDefinedMask> mContentDefined;
+    gl::TexLevelArray<LevelContentDefinedMask> mStencilContentDefined;
 };
 
 // A vector of image views, such as one per level or one per layer.

@@ -824,7 +824,9 @@ angle::Result FramebufferVk::blitWithCommand(ContextVk *contextVk,
     }
 
     ANGLE_TRY(contextVk->onImageTransferRead(imageAspectMask, srcImage));
-    ANGLE_TRY(contextVk->onImageTransferWrite(imageAspectMask, dstImage));
+    ANGLE_TRY(contextVk->onImageTransferWrite(drawRenderTarget->getLevelIndex(), 1,
+                                              drawRenderTarget->getLayerIndex(), 1, imageAspectMask,
+                                              dstImage));
     vk::CommandBuffer &commandBuffer = contextVk->getOutsideRenderPassCommandBuffer();
 
     VkImageBlit blit               = {};
@@ -1325,7 +1327,9 @@ angle::Result FramebufferVk::resolveColorWithSubpass(ContextVk *contextVk,
 
     // End the render pass now since we don't (yet) support subpass dependencies.
     RenderTargetVk *readRenderTarget = getColorReadRenderTarget();
-    contextVk->onImageRenderPassWrite(VK_IMAGE_ASPECT_COLOR_BIT, vk::ImageLayout::ColorAttachment,
+    contextVk->onImageRenderPassWrite(readRenderTarget->getLevelIndex(),
+                                      readRenderTarget->getLayerIndex(), 1,
+                                      VK_IMAGE_ASPECT_COLOR_BIT, vk::ImageLayout::ColorAttachment,
                                       &readRenderTarget->getImageForRenderPass());
     ANGLE_TRY(contextVk->flushCommandsAndEndRenderPass());
 
@@ -1362,8 +1366,9 @@ angle::Result FramebufferVk::resolveColorWithCommand(ContextVk *contextVk,
     for (size_t colorIndexGL : mState.getEnabledDrawBuffers())
     {
         RenderTargetVk *drawRenderTarget = mRenderTargetCache.getColors()[colorIndexGL];
-        ANGLE_TRY(contextVk->onImageTransferWrite(VK_IMAGE_ASPECT_COLOR_BIT,
-                                                  &drawRenderTarget->getImageForWrite()));
+        ANGLE_TRY(contextVk->onImageTransferWrite(
+            drawRenderTarget->getLevelIndex(), 1, drawRenderTarget->getLayerIndex(), 1,
+            VK_IMAGE_ASPECT_COLOR_BIT, &drawRenderTarget->getImageForWrite()));
 
         vk::CommandBuffer &commandBuffer = contextVk->getOutsideRenderPassCommandBuffer();
 
@@ -1517,7 +1522,7 @@ angle::Result FramebufferVk::invalidateImpl(ContextVk *contextVk,
             {
                 RenderTargetVk *colorRenderTarget = colorRenderTargets[colorIndexGL];
                 ASSERT(colorRenderTarget);
-                colorRenderTarget->invalidateEntireContent();
+                colorRenderTarget->invalidateEntireContent(contextVk);
             }
         }
 
@@ -1525,7 +1530,7 @@ angle::Result FramebufferVk::invalidateImpl(ContextVk *contextVk,
         // invalid. Maybe in the future add separate depth & stencil invalid flags.
         if (depthStencilRenderTarget && invalidateDepthBuffer && invalidateStencilBuffer)
         {
-            depthStencilRenderTarget->invalidateEntireContent();
+            depthStencilRenderTarget->invalidateEntireContent(contextVk);
         }
     }
 

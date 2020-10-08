@@ -2567,7 +2567,7 @@ void ContextVk::optimizeRenderPassForPresent(VkFramebuffer framebufferHandle)
         mRenderPassCommands->invalidateRenderPassStencilAttachment(dsState);
         mRenderPassCommands->invalidateRenderPassDepthAttachment(dsState);
         // Mark content as invalid so that we will not load them in next renderpass
-        depthStencilRenderTarget->invalidateEntireContent();
+        depthStencilRenderTarget->invalidateEntireContent(this);
     }
 
     // Use finalLayout instead of extra barrier for layout change to present
@@ -4202,8 +4202,17 @@ angle::Result ContextVk::updateActiveImages(const gl::Context *context,
         }
         VkImageAspectFlags aspectFlags = image->getAspectFlags();
 
-        commandBufferHelper->imageWrite(&mResourceUseList, aspectFlags, imageLayout,
-                                        vk::AliasingMode::Allowed, image);
+        uint32_t layerStart = 0;
+        uint32_t layerCount = image->getLayerCount();
+        if (imageUnit.layered)
+        {
+            layerStart = imageUnit.layered;
+            layerCount = 1;
+        }
+
+        commandBufferHelper->imageWrite(
+            &mResourceUseList, gl::LevelIndex(static_cast<uint32_t>(imageUnit.level)), layerStart,
+            layerCount, aspectFlags, imageLayout, vk::AliasingMode::Allowed, image);
     }
 
     return angle::Result::Continue;
@@ -4635,7 +4644,11 @@ angle::Result ContextVk::onImageRead(VkImageAspectFlags aspectFlags,
     return angle::Result::Continue;
 }
 
-angle::Result ContextVk::onImageWrite(VkImageAspectFlags aspectFlags,
+angle::Result ContextVk::onImageWrite(gl::LevelIndex levelStart,
+                                      uint32_t levelCount,
+                                      uint32_t layerStart,
+                                      uint32_t layerCount,
+                                      VkImageAspectFlags aspectFlags,
                                       vk::ImageLayout imageLayout,
                                       vk::ImageHelper *image)
 {
@@ -4647,7 +4660,7 @@ angle::Result ContextVk::onImageWrite(VkImageAspectFlags aspectFlags,
     image->recordWriteBarrier(aspectFlags, imageLayout,
                               &mOutsideRenderPassCommands->getCommandBuffer());
     image->retain(&mResourceUseList);
-    image->onWrite();
+    image->onWrite(levelStart, levelCount, layerStart, layerCount, aspectFlags);
 
     return angle::Result::Continue;
 }

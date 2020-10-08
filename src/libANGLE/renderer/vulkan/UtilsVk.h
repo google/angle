@@ -139,6 +139,8 @@ class UtilsVk : angle::NonCopyable
         int srcMip;
         int srcLayer;
         int srcHeight;
+        gl::LevelIndex dstMip;
+        int dstLayer;
         bool srcPremultiplyAlpha;
         bool srcUnmultiplyAlpha;
         bool srcFlipY;
