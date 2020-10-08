@@ -648,7 +648,9 @@ CommandBufferHelper::CommandBufferHelper()
       mStencilCmdSizeDisabled(kInfiniteCmdSize),
       mDepthStencilAttachmentIndex(kAttachmentIndexInvalid),
       mDepthStencilImage(nullptr),
-      mDepthStencilResolveImage(nullptr)
+      mDepthStencilResolveImage(nullptr),
+      mDepthStencilLevelIndex(0),
+      mDepthStencilLayerIndex(0)
 {}
 
 CommandBufferHelper::~CommandBufferHelper()
@@ -806,10 +808,15 @@ void CommandBufferHelper::depthStencilImagesDraw(ResourceUseList *resourceUseLis
     image->retain(resourceUseList);
     image->onWrite(level, 1, layer, 1, kDepthStencilAspects);
     mRenderPassUsedImages.insert(image->getImageSerial().getValue());
-    mDepthStencilImage = image;
+    mDepthStencilImage      = image;
+    mDepthStencilLevelIndex = level;
+    mDepthStencilLayerIndex = layer;
 
     if (resolveImage)
     {
+        // Note that the resolve depth/stencil image has the same level/layer index as the
+        // depth/stencil image as currently it can only ever come from
+        // multisampled-render-to-texture renderbuffers.
         resolveImage->retain(resourceUseList);
         resolveImage->onWrite(level, 1, layer, 1, kDepthStencilAspects);
         mRenderPassUsedImages.insert(resolveImage->getImageSerial().getValue());
@@ -817,22 +824,30 @@ void CommandBufferHelper::depthStencilImagesDraw(ResourceUseList *resourceUseLis
     }
 }
 
-bool CommandBufferHelper::onDepthAccess(ResourceAccess access)
+void CommandBufferHelper::onDepthAccess(ResourceAccess access)
 {
     // Update the access for optimizing this render pass's loadOp
     UpdateAccess(&mDepthAccess, access);
 
     // Update the invalidate state for optimizing this render pass's storeOp
-    return onDepthStencilAccess(access, &mDepthCmdSizeInvalidated, &mDepthCmdSizeDisabled);
+    if (onDepthStencilAccess(access, &mDepthCmdSizeInvalidated, &mDepthCmdSizeDisabled))
+    {
+        // The attachment is no longer invalid, so restore its content.
+        restoreDepthContent();
+    }
 }
 
-bool CommandBufferHelper::onStencilAccess(ResourceAccess access)
+void CommandBufferHelper::onStencilAccess(ResourceAccess access)
 {
     // Update the access for optimizing this render pass's loadOp
     UpdateAccess(&mStencilAccess, access);
 
     // Update the invalidate state for optimizing this render pass's stencilStoreOp
-    return onDepthStencilAccess(access, &mStencilCmdSizeInvalidated, &mStencilCmdSizeDisabled);
+    if (onDepthStencilAccess(access, &mStencilCmdSizeInvalidated, &mStencilCmdSizeDisabled))
+    {
+        // The attachment is no longer invalid, so restore its content.
+        restoreStencilContent();
+    }
 }
 
 bool CommandBufferHelper::onDepthStencilAccess(ResourceAccess access,
@@ -875,6 +890,28 @@ bool CommandBufferHelper::onDepthStencilAccess(ResourceAccess access,
             *cmdCountDisabled = mCommandBuffer.getCommandSize();
             return false;
         }
+    }
+}
+
+void CommandBufferHelper::restoreDepthContent()
+{
+    // Note that the image may have been deleted since the render pass has started.
+    if (mDepthStencilImage)
+    {
+        ASSERT(mDepthStencilImage->valid());
+        mDepthStencilImage->restoreSubresourceContent(mDepthStencilLevelIndex,
+                                                      mDepthStencilLayerIndex);
+    }
+}
+
+void CommandBufferHelper::restoreStencilContent()
+{
+    // Note that the image may have been deleted since the render pass has started.
+    if (mDepthStencilImage)
+    {
+        ASSERT(mDepthStencilImage->valid());
+        mDepthStencilImage->restoreSubresourceStencilContent(mDepthStencilLevelIndex,
+                                                             mDepthStencilLayerIndex);
     }
 }
 
@@ -1035,10 +1072,22 @@ void CommandBufferHelper::endRenderPass(ContextVk *contextVk)
         dsOps.storeOp       = VK_ATTACHMENT_STORE_OP_DONT_CARE;
         dsOps.isInvalidated = true;
     }
+    else if (hasWriteAfterInvalidate(mDepthCmdSizeInvalidated, mDepthCmdSizeDisabled))
+    {
+        // The depth attachment was invalidated, but is now valid.  Let the image know the contents
+        // are now defined so a future render pass would use loadOp=LOAD.
+        restoreDepthContent();
+    }
     if (isInvalidated(mStencilCmdSizeInvalidated, mStencilCmdSizeDisabled))
     {
         dsOps.stencilStoreOp       = VK_ATTACHMENT_STORE_OP_DONT_CARE;
         dsOps.isStencilInvalidated = true;
+    }
+    else if (hasWriteAfterInvalidate(mStencilCmdSizeInvalidated, mStencilCmdSizeDisabled))
+    {
+        // The stencil attachment was invalidated, but is now valid.  Let the image know the
+        // contents are now defined so a future render pass would use loadOp=LOAD.
+        restoreStencilContent();
     }
 
     // Second, if we are loading or clearing the attachment, but the attachment has not been used,

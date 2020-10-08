@@ -1108,8 +1108,8 @@ class CommandBufferHelper : angle::NonCopyable
     // Dumping the command stream is disabled by default.
     static constexpr bool kEnableCommandStreamDiagnostics = false;
 
-    bool onDepthAccess(ResourceAccess access);
-    bool onStencilAccess(ResourceAccess access);
+    void onDepthAccess(ResourceAccess access);
+    void onStencilAccess(ResourceAccess access);
 
     void updateRenderPassForResolve(vk::Framebuffer *newFramebuffer,
                                     const vk::RenderPassDesc &renderPassDesc);
@@ -1130,6 +1130,8 @@ class CommandBufferHelper : angle::NonCopyable
     bool onDepthStencilAccess(ResourceAccess access,
                               uint32_t *cmdCountInvalidated,
                               uint32_t *cmdCountDisabled);
+    void restoreDepthContent();
+    void restoreStencilContent();
 
     void finalizeDepthStencilImageLayout();
     void finalizeDepthStencilResolveImageLayout();
@@ -1186,6 +1188,8 @@ class CommandBufferHelper : angle::NonCopyable
 
     ImageHelper *mDepthStencilImage;
     ImageHelper *mDepthStencilResolveImage;
+    gl::LevelIndex mDepthStencilLevelIndex;
+    uint32_t mDepthStencilLayerIndex;
 };
 
 // Imagine an image going through a few layout transitions:

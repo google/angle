@@ -2216,11 +2216,7 @@ angle::Result FramebufferVk::clearWithCommand(
         dsAspectFlags |= VK_IMAGE_ASPECT_DEPTH_BIT;
         dsClearValue.depthStencil = clearDepthStencilValue;
         // Explicitly mark a depth write because we are clearing the depth buffer.
-        if (renderpassCommands->onDepthAccess(vk::ResourceAccess::Write))
-        {
-            // The attachment is no longer invalidated, so set mContentDefined to true
-            restoreDepthDefinedContents();
-        }
+        renderpassCommands->onDepthAccess(vk::ResourceAccess::Write);
     }
 
     if (clearStencil)
@@ -2228,11 +2224,7 @@ angle::Result FramebufferVk::clearWithCommand(
         dsAspectFlags |= VK_IMAGE_ASPECT_STENCIL_BIT;
         dsClearValue.depthStencil = clearDepthStencilValue;
         // Explicitly mark a stencil write because we are clearing the stencil buffer.
-        if (renderpassCommands->onStencilAccess(vk::ResourceAccess::Write))
-        {
-            // The attachment is no longer invalidated, so set mContentDefined to true
-            restoreStencilDefinedContents();
-        }
+        renderpassCommands->onStencilAccess(vk::ResourceAccess::Write);
     }
 
     if (dsAspectFlags != 0)
@@ -2533,28 +2525,6 @@ angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
     }
 
     return angle::Result::Continue;
-}
-
-void FramebufferVk::restoreDepthDefinedContents()
-{
-    // If the depthStencilRenderTarget does not have "defined content" (i.e. meaning that a future
-    // render pass should use a loadOp of DONT_CARE), we should restore it (i.e. so that a future
-    // render pass uses a loadOp of LOAD).
-    RenderTargetVk *depthStencilRenderTarget = mRenderTargetCache.getDepthStencil();
-    if (depthStencilRenderTarget)
-    {
-        depthStencilRenderTarget->restoreEntireContent();
-    }
-}
-
-void FramebufferVk::restoreStencilDefinedContents()
-{
-    // Similar to restoreDepthDefinedContents, but for the stencil aspect.
-    RenderTargetVk *depthStencilRenderTarget = mRenderTargetCache.getDepthStencil();
-    if (depthStencilRenderTarget)
-    {
-        depthStencilRenderTarget->restoreEntireStencilContent();
-    }
 }
 
 void FramebufferVk::updateActiveColorMasks(size_t colorIndexGL, bool r, bool g, bool b, bool a)

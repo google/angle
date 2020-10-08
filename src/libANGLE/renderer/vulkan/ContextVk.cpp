@@ -5129,16 +5129,8 @@ angle::Result ContextVk::updateRenderPassDepthStencilAccess()
         }
         else
         {
-            if (mRenderPassCommands->onDepthAccess(depthAccess))
-            {
-                // The attachment is no longer invalidated, so set mContentDefined to true
-                mDrawFramebuffer->restoreDepthDefinedContents();
-            }
-            if (mRenderPassCommands->onStencilAccess(stencilAccess))
-            {
-                // The attachment is no longer invalidated, so set mContentDefined to true
-                mDrawFramebuffer->restoreStencilDefinedContents();
-            }
+            mRenderPassCommands->onDepthAccess(depthAccess);
+            mRenderPassCommands->onStencilAccess(stencilAccess);
 
             mDrawFramebuffer->updateRenderPassReadOnlyDepthMode(this, mRenderPassCommands);
         }
