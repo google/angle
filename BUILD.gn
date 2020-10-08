@@ -772,7 +772,7 @@ group("angle_abseil") {
   if (angle_enable_abseil) {
     # When build_with_chromium=true we need to include "//third_party/abseil-cpp:absl" while
     # we can be more specific when building standalone ANGLE.
-    if (build_with_chromium) {
+    if (build_with_chromium || is_component_build) {
       public_deps = [ "$angle_abseil_cpp_dir:absl" ]
     } else {
       public_deps = [ "$angle_abseil_cpp_dir/absl/container:flat_hash_map" ]
