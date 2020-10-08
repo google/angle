@@ -390,6 +390,9 @@ std::ostream &operator<<(std::ostream &os, VertexAttribType value)
         case VertexAttribType::HalfFloat:
             os << "GL_HALF_FLOAT";
             break;
+        case VertexAttribType::HalfFloatOES:
+            os << "GL_HALF_FLOAT_OES";
+            break;
         case VertexAttribType::Int:
             os << "GL_INT";
             break;
