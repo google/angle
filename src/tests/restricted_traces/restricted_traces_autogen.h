@@ -46,6 +46,7 @@ enum class RestrictedTraceID
     candy_crush_500,
     cod_mobile,
     egypt_1500,
+    free_fire,
     manhattan_10,
     mobile_legends,
     nba2k20_800,
