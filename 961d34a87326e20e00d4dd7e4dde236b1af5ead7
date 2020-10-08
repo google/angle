@@ -16,6 +16,24 @@
       "message": "This one has some very odd performance impact that I can not really understand. On S20+, with GPU and memory clock locked. I am seeing this CL has quite sizable negative performance effect with Manhattan 3.0 offscreen scores. But seeing performance improvement with on screen scores. The same thing also reproduced without GPU clock locked. And I further narrow down to the VK_PIPELINE_STAGE_VERTEX_SHADER_BIT in the dstSageMask of the barrier for the depth stencil layout change from VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL to VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL. With the bit, I am seeing good performance. Without the bit, performance goes down. This is the exact opposite of what this CL try to fix (and hope to gain the performance) by avoiding the unnecessary 3D\u003d\u003eTA dependency. Does anyone have any explanation on this?",
       "revId": "961d34a87326e20e00d4dd7e4dde236b1af5ead7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d781450a_07b7919f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 10
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-08T22:04:01Z",
+      "side": 1,
+      "message": "Maybe we should ask our partners at ARM. Happy to write up an email if you\u0027d like. To me it\u0027s not at all obvious.",
+      "parentUuid": "1aa8786e_ba3f72e9",
+      "revId": "961d34a87326e20e00d4dd7e4dde236b1af5ead7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
