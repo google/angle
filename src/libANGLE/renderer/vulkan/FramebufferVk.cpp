@@ -2019,7 +2019,9 @@ angle::Result FramebufferVk::clearWithDraw(ContextVk *contextVk,
                                            const VkClearColorValue &clearColorValue,
                                            const VkClearDepthStencilValue &clearDepthStencilValue)
 {
-    if (clearDepth)
+    RendererVk *renderer = contextVk->getRenderer();
+
+    if (clearDepth && !renderer->getPhysicalDeviceFeatures().depthClamp)
     {
         VkClearValue clearValue;
         clearValue.depthStencil = clearDepthStencilValue;
@@ -2031,15 +2033,18 @@ angle::Result FramebufferVk::clearWithDraw(ContextVk *contextVk,
         // Force start a new render pass for the depth clear to take effect.
         // UtilsVk::clearFramebuffer may not start a new render pass if there's one already started.
         ANGLE_TRY(flushDeferredClears(contextVk, clearArea));
+
+        clearDepth = false;
     }
 
     UtilsVk::ClearFramebufferParameters params = {};
     params.clearArea                           = clearArea;
     params.colorClearValue                     = clearColorValue;
-    params.stencilClearValue = static_cast<uint8_t>(clearDepthStencilValue.stencil);
-    params.stencilMask       = stencilMask;
+    params.depthStencilClearValue              = clearDepthStencilValue;
+    params.stencilMask                         = stencilMask;
 
     params.clearColor   = true;
+    params.clearDepth   = clearDepth;
     params.clearStencil = clearStencil;
 
     const auto &colorRenderTargets = mRenderTargetCache.getColors();
@@ -2060,12 +2065,13 @@ angle::Result FramebufferVk::clearWithDraw(ContextVk *contextVk,
 
         ANGLE_TRY(contextVk->getUtils().clearFramebuffer(contextVk, this, params));
 
-        // Clear stencil only once!
+        // Clear depth/stencil only once!
+        params.clearDepth   = false;
         params.clearStencil = false;
     }
 
-    // If there was no color clear, clear stencil alone.
-    if (params.clearStencil)
+    // If there was no color clear, clear depth/stencil alone.
+    if (params.clearDepth || params.clearStencil)
     {
         params.clearColor = false;
         ANGLE_TRY(contextVk->getUtils().clearFramebuffer(contextVk, this, params));

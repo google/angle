@@ -46,20 +46,25 @@ class VulkanPerformanceCounterTest : public ANGLETest
         return rx::GetImplAs<const rx::ContextVk>(context)->getPerfCounters();
     }
 
+    static constexpr GLsizei kInvalidateTestSize = 16;
+
     void setupClearAndDrawForInvalidateTest(GLProgram *program,
                                             GLFramebuffer *framebuffer,
                                             GLTexture *texture,
-                                            GLRenderbuffer *renderbuffer)
+                                            GLRenderbuffer *renderbuffer,
+                                            bool clearStencil)
     {
         glUseProgram(*program);
 
         // Setup to draw to color, depth, and stencil
         glBindFramebuffer(GL_FRAMEBUFFER, *framebuffer);
         glBindTexture(GL_TEXTURE_2D, *texture);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 16, 16, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kInvalidateTestSize, kInvalidateTestSize, 0,
+                     GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, *texture, 0);
         glBindRenderbuffer(GL_RENDERBUFFER, *renderbuffer);
-        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, 16, 16);
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, kInvalidateTestSize,
+                              kInvalidateTestSize);
         glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER,
                                   *renderbuffer);
         ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
@@ -70,7 +75,10 @@ class VulkanPerformanceCounterTest : public ANGLETest
         glDepthFunc(GL_GEQUAL);
         glClearDepthf(0.99f);
         glEnable(GL_STENCIL_TEST);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glClearStencil(0xAA);
+        glViewport(0, 0, kInvalidateTestSize, kInvalidateTestSize);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT |
+                (clearStencil ? GL_STENCIL_BUFFER_BIT : 0));
         drawQuad(*program, essl1_shaders::PositionAttrib(), 0.5f);
         ASSERT_GL_NO_ERROR();
     }
@@ -545,7 +553,7 @@ TEST_P(VulkanPerformanceCounterTest, InvalidateDisableDraw)
     GLFramebuffer framebuffer;
     GLTexture texture;
     GLRenderbuffer renderbuffer;
-    setupClearAndDrawForInvalidateTest(&program, &framebuffer, &texture, &renderbuffer);
+    setupClearAndDrawForInvalidateTest(&program, &framebuffer, &texture, &renderbuffer, false);
 
     // Execute the scenario that this test is for:
 
@@ -592,7 +600,7 @@ TEST_P(VulkanPerformanceCounterTest, DisableInvalidateDraw)
     GLFramebuffer framebuffer;
     GLTexture texture;
     GLRenderbuffer renderbuffer;
-    setupClearAndDrawForInvalidateTest(&program, &framebuffer, &texture, &renderbuffer);
+    setupClearAndDrawForInvalidateTest(&program, &framebuffer, &texture, &renderbuffer, false);
 
     // Execute the scenario that this test is for:
 
@@ -639,7 +647,7 @@ TEST_P(VulkanPerformanceCounterTest, DisableDrawInvalidateEnable)
     GLFramebuffer framebuffer;
     GLTexture texture;
     GLRenderbuffer renderbuffer;
-    setupClearAndDrawForInvalidateTest(&program, &framebuffer, &texture, &renderbuffer);
+    setupClearAndDrawForInvalidateTest(&program, &framebuffer, &texture, &renderbuffer, false);
 
     // Execute the scenario that this test is for:
 
@@ -697,7 +705,7 @@ TEST_P(VulkanPerformanceCounterTest, Invalidate)
     GLFramebuffer framebuffer;
     GLTexture texture;
     GLRenderbuffer renderbuffer;
-    setupClearAndDrawForInvalidateTest(&program, &framebuffer, &texture, &renderbuffer);
+    setupClearAndDrawForInvalidateTest(&program, &framebuffer, &texture, &renderbuffer, false);
 
     // Execute the scenario that this test is for:
 
@@ -736,7 +744,7 @@ TEST_P(VulkanPerformanceCounterTest, InvalidateDraw)
     GLFramebuffer framebuffer;
     GLTexture texture;
     GLRenderbuffer renderbuffer;
-    setupClearAndDrawForInvalidateTest(&program, &framebuffer, &texture, &renderbuffer);
+    setupClearAndDrawForInvalidateTest(&program, &framebuffer, &texture, &renderbuffer, false);
 
     // Execute the scenario that this test is for:
 
@@ -784,7 +792,7 @@ TEST_P(VulkanPerformanceCounterTest, InvalidateDrawDisable)
     GLFramebuffer framebuffer;
     GLTexture texture;
     GLRenderbuffer renderbuffer;
-    setupClearAndDrawForInvalidateTest(&program, &framebuffer, &texture, &renderbuffer);
+    setupClearAndDrawForInvalidateTest(&program, &framebuffer, &texture, &renderbuffer, false);
 
     // Execute the scenario that this test is for:
 
@@ -834,7 +842,7 @@ TEST_P(VulkanPerformanceCounterTest, InvalidateDisableDrawEnable)
     GLFramebuffer framebuffer;
     GLTexture texture;
     GLRenderbuffer renderbuffer;
-    setupClearAndDrawForInvalidateTest(&program, &framebuffer, &texture, &renderbuffer);
+    setupClearAndDrawForInvalidateTest(&program, &framebuffer, &texture, &renderbuffer, false);
 
     // Execute the scenario that this test is for:
 
@@ -887,7 +895,7 @@ TEST_P(VulkanPerformanceCounterTest, InvalidateDisableDrawEnableDraw)
     GLFramebuffer framebuffer;
     GLTexture texture;
     GLRenderbuffer renderbuffer;
-    setupClearAndDrawForInvalidateTest(&program, &framebuffer, &texture, &renderbuffer);
+    setupClearAndDrawForInvalidateTest(&program, &framebuffer, &texture, &renderbuffer, false);
 
     // Execute the scenario that this test is for:
 
@@ -942,7 +950,7 @@ TEST_P(VulkanPerformanceCounterTest, InvalidateDrawDisableEnable)
     GLFramebuffer framebuffer;
     GLTexture texture;
     GLRenderbuffer renderbuffer;
-    setupClearAndDrawForInvalidateTest(&program, &framebuffer, &texture, &renderbuffer);
+    setupClearAndDrawForInvalidateTest(&program, &framebuffer, &texture, &renderbuffer, false);
 
     // Execute the scenario that this test is for:
 
@@ -998,7 +1006,7 @@ TEST_P(VulkanPerformanceCounterTest, InvalidateDrawDisableEnableInvalidate)
     GLFramebuffer framebuffer;
     GLTexture texture;
     GLRenderbuffer renderbuffer;
-    setupClearAndDrawForInvalidateTest(&program, &framebuffer, &texture, &renderbuffer);
+    setupClearAndDrawForInvalidateTest(&program, &framebuffer, &texture, &renderbuffer, false);
 
     // Execute the scenario that this test is for:
 
@@ -1056,7 +1064,7 @@ TEST_P(VulkanPerformanceCounterTest, InvalidateDrawDisableEnableInvalidateDraw)
     GLFramebuffer framebuffer;
     GLTexture texture;
     GLRenderbuffer renderbuffer;
-    setupClearAndDrawForInvalidateTest(&program, &framebuffer, &texture, &renderbuffer);
+    setupClearAndDrawForInvalidateTest(&program, &framebuffer, &texture, &renderbuffer, false);
 
     // Execute the scenario that this test is for:
 
@@ -1118,7 +1126,7 @@ TEST_P(VulkanPerformanceCounterTest, InvalidateDisableEnableDraw)
     GLFramebuffer framebuffer;
     GLTexture texture;
     GLRenderbuffer renderbuffer;
-    setupClearAndDrawForInvalidateTest(&program, &framebuffer, &texture, &renderbuffer);
+    setupClearAndDrawForInvalidateTest(&program, &framebuffer, &texture, &renderbuffer, false);
 
     // Execute the scenario that this test is for:
 
@@ -1170,7 +1178,7 @@ TEST_P(VulkanPerformanceCounterTest, InvalidateAndClear)
     GLFramebuffer framebuffer;
     GLTexture texture;
     GLRenderbuffer renderbuffer;
-    setupClearAndDrawForInvalidateTest(&program, &framebuffer, &texture, &renderbuffer);
+    setupClearAndDrawForInvalidateTest(&program, &framebuffer, &texture, &renderbuffer, false);
 
     // Disable depth test but with depth mask enabled so that clear should still work.
     glDisable(GL_DEPTH_TEST);
@@ -1202,8 +1210,69 @@ TEST_P(VulkanPerformanceCounterTest, InvalidateAndClear)
     ANGLE_GL_PROGRAM(blueProgram, essl1_shaders::vs::Simple(), essl1_shaders::fs::Blue());
     // Should pass depth test: (0.5+1.0)/2.0=0.75 < 1.0
     drawQuad(blueProgram, essl1_shaders::PositionAttrib(), 0.5f);
-    EXPECT_PIXEL_COLOR_EQ(5, 4, GLColor::blue);
+    EXPECT_PIXEL_COLOR_EQ(kInvalidateTestSize / 2, kInvalidateTestSize / 2, GLColor::blue);
     compareDepthStencilCountersForInvalidateTest(counters, expected);
+}
+
+// Tests that the draw path for clear after invalidate and disabling depth/stencil test keeps
+// content stored.
+TEST_P(VulkanPerformanceCounterTest, InvalidateAndMaskedClear)
+{
+    const rx::vk::PerfCounters &counters = hackANGLE();
+    rx::vk::PerfCounters expected;
+
+    // Expect rpCount+1, depth(Clears+1, Loads+0, Stores+1), stencil(Clears+1, Load+0, Stores+1)
+    setExpectedCountersForInvalidateTest(counters, 1, 1, 0, 1, 1, 0, 1, &expected);
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
+    GLFramebuffer framebuffer;
+    GLTexture texture;
+    GLRenderbuffer renderbuffer;
+    setupClearAndDrawForInvalidateTest(&program, &framebuffer, &texture, &renderbuffer, true);
+
+    // Invalidate (should result: in storeOp = DONT_CARE; mContentDefined = false)
+    const GLenum discards[] = {GL_DEPTH_ATTACHMENT, GL_STENCIL_ATTACHMENT};
+    glInvalidateFramebuffer(GL_FRAMEBUFFER, 2, discards);
+    ASSERT_GL_NO_ERROR();
+
+    // Disable depth/stencil test but make stencil masked
+    glDisable(GL_DEPTH_TEST);
+    glDisable(GL_STENCIL_TEST);
+    glDepthMask(GL_TRUE);
+    glStencilMask(0xF0);
+
+    // Enable scissor for the draw path to be taken.
+    glEnable(GL_SCISSOR_TEST);
+    glScissor(kInvalidateTestSize / 4, kInvalidateTestSize / 4, kInvalidateTestSize / 2,
+              kInvalidateTestSize / 2);
+
+    // Do in-renderpass clear. This should result in StoreOp=STORE
+    glClearDepthf(1.0f);
+    glClearStencil(0x55);
+    glClear(GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+    ASSERT_GL_NO_ERROR();
+
+    // Use swapBuffers and then check how many loads and stores were actually done
+    swapBuffers();
+    compareDepthStencilCountersForInvalidateTest(counters, expected);
+
+    // Expect rpCount+1, depth(Clears+0, Loads+1, Stores+1), stencil(Clears+0, Load+1, Stores+1)
+    setExpectedCountersForInvalidateTest(counters, 0, 0, 1, 1, 0, 1, 1, &expected);
+
+    // Bind FBO again and try to use the depth buffer without clear. This should result in
+    // loadOp=LOAD and StoreOP=STORE
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
+    glEnable(GL_STENCIL_TEST);
+    glStencilFunc(GL_EQUAL, 0x50, 0xF0);
+    glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+    glStencilMask(0xFF);
+    ANGLE_GL_PROGRAM(blueProgram, essl1_shaders::vs::Simple(), essl1_shaders::fs::Blue());
+    drawQuad(blueProgram, essl1_shaders::PositionAttrib(), 0.95f);
+    EXPECT_PIXEL_COLOR_EQ(kInvalidateTestSize / 2, kInvalidateTestSize / 2, GLColor::blue);
+    // TODO: After fixing ANGLE per https://issuetracker.google.com/issues/167275320, uncomment:
+    // compareDepthStencilCountersForInvalidateTest(counters, expected);
 }
 
 // Tests whether depth-stencil ContentDefined will be correct when:
@@ -1314,7 +1383,7 @@ TEST_P(VulkanPerformanceCounterTest, InvalidateDrawAndDeleteRenderbuffer)
         // Declare the RAII-based GLRenderbuffer object within this set of curly braces, so that it
         // will be deleted early (at the close-curly-brace)
         GLRenderbuffer renderbuffer;
-        setupClearAndDrawForInvalidateTest(&program, &framebuffer, &texture, &renderbuffer);
+        setupClearAndDrawForInvalidateTest(&program, &framebuffer, &texture, &renderbuffer, false);
 
         // Invalidate (storeOp = DONT_CARE; mContentDefined = false)
         const GLenum discards[] = {GL_DEPTH_ATTACHMENT, GL_STENCIL_ATTACHMENT};

@@ -20,7 +20,7 @@
 //      resolve on depth/stencil images.
 //    - Generate mipmap: Used by TextureVk::generateMipmapsWithCompute().
 //    - Overlay Cull/Draw: Used by OverlayVk to efficiently draw a UI for debugging.
-//    - Mipmap generation: Not yet implemented
+//    - Mipmap generation: Used by TextureVk to generate mipmaps more efficiently in compute.
 //
 
 #ifndef LIBANGLE_RENDERER_VULKAN_UTILSVK_H_
@@ -95,8 +95,10 @@ class UtilsVk : angle::NonCopyable
 
         gl::Rectangle clearArea;
 
-        // Note that depth clear is never needed to be done with a draw call.
+        // Note that depth clear is only possible if the depthClamp Vulkan feature is supported.  If
+        // needs be, this can be emulated by exporting depth from shaders/src/ImageClear.frag.
         bool clearColor;
+        bool clearDepth;
         bool clearStencil;
 
         uint8_t stencilMask;
@@ -105,7 +107,7 @@ class UtilsVk : angle::NonCopyable
         const angle::Format *colorFormat;
 
         VkClearColorValue colorClearValue;
-        uint8_t stencilClearValue;
+        VkClearDepthStencilValue depthStencilClearValue;
     };
 
     struct BlitResolveParameters

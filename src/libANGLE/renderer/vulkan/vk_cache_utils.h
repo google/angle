@@ -623,6 +623,7 @@ class GraphicsPipelineDesc final
     void setDepthTestEnabled(bool enabled);
     void setDepthWriteEnabled(bool enabled);
     void setDepthFunc(VkCompareOp op);
+    void setDepthClampEnabled(bool enabled);
     void setStencilTestEnabled(bool enabled);
     void setStencilFrontFuncs(uint8_t reference, VkCompareOp compareOp, uint8_t compareMask);
     void setStencilBackFuncs(uint8_t reference, VkCompareOp compareOp, uint8_t compareMask);

@@ -1402,14 +1402,21 @@ angle::Result UtilsVk::clearFramebuffer(ContextVk *contextVk,
         ANGLE_TRY(contextVk->startRenderPass(scissoredRenderArea, &commandBuffer));
     }
 
-    if (params.clearStencil)
+    if (params.clearStencil || params.clearDepth)
     {
         vk::CommandBufferHelper *renderpassCommands;
         renderpassCommands = &contextVk->getStartedRenderPassCommands();
 
-        // Because clear is not affected by stencil test, we have to explicitly mark stencil write
-        // here.
-        renderpassCommands->onStencilAccess(vk::ResourceAccess::Write);
+        // Because clear is not affected by depth/stencil test, we have to explicitly mark
+        // depth/stencil write here.
+        if (params.clearDepth)
+        {
+            renderpassCommands->onDepthAccess(vk::ResourceAccess::Write);
+        }
+        if (params.clearStencil)
+        {
+            renderpassCommands->onStencilAccess(vk::ResourceAccess::Write);
+        }
 
         // We may have changed depth stencil access mode, so update read only depth stencil mode
         // here.
@@ -1433,11 +1440,25 @@ angle::Result UtilsVk::clearFramebuffer(ContextVk *contextVk,
     // used.
     pipelineDesc.setSubpass(contextVk->getCurrentSubpassIndex());
 
+    // Clear depth by enabling depth clamping and setting the viewport depth range to the clear
+    // value.
+    if (params.clearDepth)
+    {
+        // This path requires the depthClamp Vulkan feature.
+        ASSERT(contextVk->getRenderer()->getPhysicalDeviceFeatures().depthClamp);
+
+        pipelineDesc.setDepthTestEnabled(true);
+        pipelineDesc.setDepthWriteEnabled(true);
+        pipelineDesc.setDepthFunc(VK_COMPARE_OP_ALWAYS);
+        pipelineDesc.setDepthClampEnabled(true);
+    }
+
     // Clear stencil by enabling stencil write with the right mask.
     if (params.clearStencil)
     {
-        const uint8_t compareMask       = 0xFF;
-        const uint8_t clearStencilValue = params.stencilClearValue;
+        const uint8_t compareMask = 0xFF;
+        const uint8_t clearStencilValue =
+            static_cast<uint8_t>(params.depthStencilClearValue.stencil);
 
         pipelineDesc.setStencilTestEnabled(true);
         pipelineDesc.setStencilFrontFuncs(clearStencilValue, VK_COMPARE_OP_ALWAYS, compareMask);
@@ -1453,8 +1474,11 @@ angle::Result UtilsVk::clearFramebuffer(ContextVk *contextVk,
     VkViewport viewport;
     gl::Rectangle completeRenderArea = framebuffer->getRotatedCompleteRenderArea(contextVk);
     bool invertViewport              = contextVk->isViewportFlipEnabledForDrawFBO();
-    gl_vk::GetViewport(completeRenderArea, 0.0f, 1.0f, invertViewport, completeRenderArea.height,
-                       &viewport);
+    // Set depth range to clear value.  If clearing depth, the vertex shader depth output is clamped
+    // to this value, thus clearing the depth buffer to the desired clear value.
+    const float clearDepthValue = params.depthStencilClearValue.depth;
+    gl_vk::GetViewport(completeRenderArea, clearDepthValue, clearDepthValue, invertViewport,
+                       completeRenderArea.height, &viewport);
     pipelineDesc.setViewport(viewport);
 
     pipelineDesc.setScissor(gl_vk::GetRect(params.clearArea));
@@ -2576,13 +2600,14 @@ angle::Result UtilsVk::allocateDescriptorSet(ContextVk *contextVk,
 
 UtilsVk::ClearFramebufferParameters::ClearFramebufferParameters()
     : clearColor(false),
+      clearDepth(false),
       clearStencil(false),
       stencilMask(0),
       colorMaskFlags(0),
       colorAttachmentIndexGL(0),
       colorFormat(nullptr),
       colorClearValue{},
-      stencilClearValue(0)
+      depthStencilClearValue{}
 {}
 
 }  // namespace rx
