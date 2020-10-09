@@ -52,6 +52,40 @@
       "parentUuid": "d781450a_07b7919f",
       "revId": "961d34a87326e20e00d4dd7e4dde236b1af5ead7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e7474b03_1e7588cc",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 779,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-10-09T02:49:28Z",
+      "side": 1,
+      "message": "Please avoid this. I\u0027m using mDepthStencilImage for invalidate-related reasons in upcoming changes.\n\nAlso, this is definitely a hack just to avoid `finalizeDepthStencilImageLayout` from getting called. If you can make `finalizeDepthStencilImageLayout` do the job, that would be best. Otherwise, you can have `finalizeDepthStencilImageLayout` early out if `mReadOnlyDepthStencilMode` on the pretext that read-only layout is already set here.",
+      "revId": "961d34a87326e20e00d4dd7e4dde236b1af5ead7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "46b4157a_3cffdb2b",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 947,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-10-09T02:49:28Z",
+      "side": 1,
+      "message": "Tim\u0027s comment on the next change got me thinking. What\u0027s the point of this layout? There are no shader stages in it so it can\u0027t be used for feedback loop. Can mReadOnlyDepthStencilMode even be true in this case?\n\n---\n\nEdit: read the other comment",
+      "revId": "961d34a87326e20e00d4dd7e4dde236b1af5ead7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
