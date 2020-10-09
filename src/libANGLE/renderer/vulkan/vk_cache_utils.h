@@ -685,6 +685,7 @@ class GraphicsPipelineDesc final
     void updateDepthRange(GraphicsPipelineTransitionBits *transition,
                           float nearPlane,
                           float farPlane);
+    void setDynamicScissor();
     void setScissor(const VkRect2D &scissor);
     void updateScissor(GraphicsPipelineTransitionBits *transition, const VkRect2D &scissor);
 
@@ -703,6 +704,8 @@ class GraphicsPipelineDesc final
     PackedDepthStencilStateInfo mDepthStencilStateInfo;
     PackedInputAssemblyAndColorBlendStateInfo mInputAssemblyAndColorBlendStateInfo;
     VkViewport mViewport;
+    // The special value of .offset.x == INT_MIN for scissor implies dynamic scissor that needs to
+    // be set through vkCmdSetScissor.
     VkRect2D mScissor;
 };
 

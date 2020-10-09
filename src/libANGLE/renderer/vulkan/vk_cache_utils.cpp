@@ -32,6 +32,13 @@ namespace vk
 namespace
 {
 
+constexpr int32_t kDynamicScissorSentinel = std::numeric_limits<int32_t>::min();
+
+bool IsScissorStateDynamic(const VkRect2D &scissor)
+{
+    return scissor.offset.x == kDynamicScissorSentinel;
+}
+
 uint8_t PackGLBlendOp(GLenum blendOp)
 {
     switch (blendOp)
@@ -1754,7 +1761,7 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
     viewportState.viewportCount = 1;
     viewportState.pViewports    = &viewport;
     viewportState.scissorCount  = 1;
-    viewportState.pScissors     = &mScissor;
+    viewportState.pScissors     = IsScissorStateDynamic(mScissor) ? nullptr : &mScissor;
 
     const PackedRasterizationAndMultisampleStateInfo &rasterAndMS =
         mRasterizationAndMultisampleStateInfo;
@@ -1890,7 +1897,17 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
             Int4Array_Get<VkColorComponentFlags>(inputAndBlend.colorWriteMaskBits, colorIndexGL);
     }
 
-    // We would define dynamic state here if it were to be used.
+    // Dynamic state
+    angle::FixedVector<VkDynamicState, 1> dynamicStateList;
+    if (IsScissorStateDynamic(mScissor))
+    {
+        dynamicStateList.push_back(VK_DYNAMIC_STATE_SCISSOR);
+    }
+
+    VkPipelineDynamicStateCreateInfo dynamicState = {};
+    dynamicState.sType             = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;
+    dynamicState.dynamicStateCount = static_cast<uint32_t>(dynamicStateList.size());
+    dynamicState.pDynamicStates    = dynamicStateList.data();
 
     createInfo.sType               = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
     createInfo.flags               = 0;
@@ -1904,7 +1921,7 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
     createInfo.pMultisampleState   = &multisampleState;
     createInfo.pDepthStencilState  = &depthStencilState;
     createInfo.pColorBlendState    = &blendState;
-    createInfo.pDynamicState       = nullptr;
+    createInfo.pDynamicState       = dynamicStateList.empty() ? nullptr : &dynamicState;
     createInfo.layout              = pipelineLayout.getHandle();
     createInfo.renderPass          = compatibleRenderPass.getHandle();
     createInfo.subpass             = mRasterizationAndMultisampleStateInfo.bits.subpass;
@@ -2391,6 +2408,14 @@ void GraphicsPipelineDesc::updateDepthRange(GraphicsPipelineTransitionBits *tran
     mViewport.maxDepth = farPlane;
     transition->set(ANGLE_GET_TRANSITION_BIT(mViewport, minDepth));
     transition->set(ANGLE_GET_TRANSITION_BIT(mViewport, maxDepth));
+}
+
+void GraphicsPipelineDesc::setDynamicScissor()
+{
+    mScissor.offset.x      = kDynamicScissorSentinel;
+    mScissor.offset.y      = 0;
+    mScissor.extent.width  = 0;
+    mScissor.extent.height = 0;
 }
 
 void GraphicsPipelineDesc::setScissor(const VkRect2D &scissor)

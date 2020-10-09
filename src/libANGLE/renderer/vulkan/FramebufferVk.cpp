@@ -550,13 +550,6 @@ angle::Result FramebufferVk::clearImpl(const gl::Context *context,
         }
     }
 
-    if (scissoredClear && !maskedClearColor && !maskedClearStencil)
-    {
-        return clearImmediatelyWithRenderPassOp(contextVk, scissoredRenderArea, clearColorBuffers,
-                                                clearDepth, clearStencil, clearColorValue,
-                                                clearDepthStencilValue);
-    }
-
     // The most costly clear mode is when we need to mask out specific color channels or stencil
     // bits. This can only be done with a draw call.
     return clearWithDraw(contextVk, scissoredRenderArea, clearColorBuffers, clearDepth,
@@ -1973,40 +1966,6 @@ angle::Result FramebufferVk::getFramebuffer(ContextVk *contextVk,
     mFramebuffer                               = &mFramebufferCache[mCurrentFramebufferDesc];
     *framebufferOut                            = &mFramebuffer->getFramebuffer();
     return angle::Result::Continue;
-}
-
-angle::Result FramebufferVk::clearImmediatelyWithRenderPassOp(
-    ContextVk *contextVk,
-    const gl::Rectangle &clearArea,
-    gl::DrawBufferMask clearColorBuffers,
-    bool clearDepth,
-    bool clearStencil,
-    const VkClearColorValue &clearColorValue,
-    const VkClearDepthStencilValue &clearDepthStencilValue)
-{
-    for (size_t colorIndexGL : clearColorBuffers)
-    {
-        VkClearValue clearValue = getCorrectedColorClearValue(colorIndexGL, clearColorValue);
-        mDeferredClears.store(static_cast<uint32_t>(colorIndexGL), VK_IMAGE_ASPECT_COLOR_BIT,
-                              clearValue);
-    }
-
-    if (clearDepth)
-    {
-        VkClearValue clearValue;
-        clearValue.depthStencil = clearDepthStencilValue;
-        mDeferredClears.store(vk::kUnpackedDepthIndex, VK_IMAGE_ASPECT_DEPTH_BIT, clearValue);
-    }
-
-    if (clearStencil)
-    {
-        VkClearValue clearValue;
-        clearValue.depthStencil = clearDepthStencilValue;
-        mDeferredClears.store(vk::kUnpackedStencilIndex, VK_IMAGE_ASPECT_STENCIL_BIT, clearValue);
-    }
-
-    // Ensure the clear happens immediately.
-    return flushDeferredClears(contextVk, clearArea);
 }
 
 angle::Result FramebufferVk::clearWithDraw(ContextVk *contextVk,
