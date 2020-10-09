@@ -31,6 +31,7 @@ namespace
 {
 bool gGlobalError = false;
 bool gExpectError = false;
+uint32_t gBatchId = 0;
 
 constexpr char kInfoTag[] = "*RESULT";
 
@@ -101,6 +102,7 @@ constexpr APIInfo kEGLDisplayAPIs[] = {
 constexpr char kdEQPEGLString[]  = "--deqp-egl-display-type=";
 constexpr char kANGLEEGLString[] = "--use-angle=";
 constexpr char kdEQPCaseString[] = "--deqp-case=";
+constexpr char kBatchIdString[]  = "--batch-id=";
 
 std::array<char, 500> gCaseStringBuffer;
 
@@ -523,6 +525,19 @@ void dEQPTest<TestModuleIndex>::SetUpTestCase()
         argv.push_back("--deqp-visibility=hidden");
     }
 
+    std::string logNameString;
+    if (gBatchId != 0)
+    {
+        std::stringstream logNameStream;
+        logNameStream << "--deqp-log-filename=test-results-batch-" << std::setfill('0')
+                      << std::setw(3) << gBatchId << ".qpa";
+        logNameString = logNameStream.str();
+        argv.push_back(logNameString.c_str());
+
+        // Flushing during multi-process execution punishes HDDs. http://anglebug.com/5157
+        argv.push_back("--deqp-log-flush=disable");
+    }
+
     // Init the platform.
     if (!deqp_libtester_init_platform(static_cast<int>(argv.size()), argv.data(),
                                       reinterpret_cast<void *>(&HandlePlatformError)))
@@ -627,6 +642,12 @@ void HandleCaseName(const char *caseString, int *argc, int argIndex, char **argv
 
     argv[argIndex] = gCaseStringBuffer.data();
 }
+
+void HandleBatchId(const char *batchIdString)
+{
+    std::stringstream batchIdStream(batchIdString);
+    batchIdStream >> gBatchId;
+}
 }  // anonymous namespace
 
 // Called from main() to process command-line arguments.
@@ -651,6 +672,10 @@ void InitTestHarness(int *argc, char **argv)
         else if (strncmp(argv[argIndex], kdEQPCaseString, strlen(kdEQPCaseString)) == 0)
         {
             HandleCaseName(argv[argIndex] + strlen(kdEQPCaseString), argc, argIndex, argv);
+        }
+        else if (strncmp(argv[argIndex], kBatchIdString, strlen(kBatchIdString)) == 0)
+        {
+            HandleBatchId(argv[argIndex] + strlen(kBatchIdString));
         }
         argIndex++;
     }

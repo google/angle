@@ -123,7 +123,7 @@ class TestSuite
 
   private:
     bool parseSingleArg(const char *argument);
-    bool launchChildTestProcess(const std::vector<TestIdentifier> &testsInBatch);
+    bool launchChildTestProcess(uint32_t batchId, const std::vector<TestIdentifier> &testsInBatch);
     bool finishProcess(ProcessInfo *processInfo);
     int printFailuresAndReturnCount() const;
     void startWatchdog();

@@ -315,6 +315,7 @@ constexpr uint32_t kWindowReuseLimit = 50;
 constexpr char kUseConfig[]                      = "--use-config=";
 constexpr char kReuseDisplays[]                  = "--reuse-displays";
 constexpr char kEnableANGLEPerTestCaptureLabel[] = "--angle-per-test-capture-label";
+constexpr char kBatchId[]                        = "--batch-id=";
 
 void SetupEnvironmentVarsForCaptureReplay()
 {
@@ -1358,12 +1359,17 @@ void ANGLEProcessTestArgs(int *argc, char *argv[])
         {
             SetSelectedConfig(argv[argIndex] + strlen(kUseConfig));
         }
-        if (strncmp(argv[argIndex], kReuseDisplays, strlen(kReuseDisplays)) == 0)
+        else if (strncmp(argv[argIndex], kReuseDisplays, strlen(kReuseDisplays)) == 0)
         {
             gReuseDisplays = true;
         }
-        if (strncmp(argv[argIndex], kEnableANGLEPerTestCaptureLabel,
-                    strlen(kEnableANGLEPerTestCaptureLabel)) == 0)
+        else if (strncmp(argv[argIndex], kBatchId, strlen(kBatchId)) == 0)
+        {
+            // TODO(jmadill): Remove this once default. http://anglebug.com/5124
+            gReuseDisplays = true;
+        }
+        else if (strncmp(argv[argIndex], kEnableANGLEPerTestCaptureLabel,
+                         strlen(kEnableANGLEPerTestCaptureLabel)) == 0)
         {
             gEnableANGLEPerTestCaptureLabel = true;
         }

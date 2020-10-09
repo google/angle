@@ -1009,7 +1009,8 @@ void TestSuite::onCrashOrTimeout(TestResultType crashOrTimeout)
     WriteOutputFiles(true, mTestResults, mResultsFile, mHistogramJsonFile, mTestSuiteName.c_str());
 }
 
-bool TestSuite::launchChildTestProcess(const std::vector<TestIdentifier> &testsInBatch)
+bool TestSuite::launchChildTestProcess(uint32_t batchId,
+                                       const std::vector<TestIdentifier> &testsInBatch)
 {
     constexpr uint32_t kMaxPath = 1000;
 
@@ -1055,8 +1056,10 @@ bool TestSuite::launchChildTestProcess(const std::vector<TestIdentifier> &testsI
     args.push_back(filterFileArg.c_str());
     args.push_back(resultsFileArg.c_str());
 
-    // TODO(jmadill): Remove this once migrated. http://anglebug.com/3162
-    args.push_back("--reuse-displays");
+    std::stringstream batchIdStream;
+    batchIdStream << "--batch-id=" << batchId;
+    std::string batchIdString = batchIdStream.str();
+    args.push_back(batchIdString.c_str());
 
     for (const std::string &arg : mChildProcessArgs)
     {
@@ -1207,6 +1210,8 @@ int TestSuite::run()
     Timer messageTimer;
     messageTimer.start();
 
+    uint32_t batchId = 0;
+
     while (!mTestQueue.empty() || !mCurrentProcesses.empty())
     {
         bool progress = false;
@@ -1217,7 +1222,7 @@ int TestSuite::run()
             std::vector<TestIdentifier> testsInBatch = mTestQueue.front();
             mTestQueue.pop();
 
-            if (!launchChildTestProcess(testsInBatch))
+            if (!launchChildTestProcess(++batchId, testsInBatch))
             {
                 return 1;
             }
