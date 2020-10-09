@@ -504,13 +504,13 @@ angle::Result FramebufferVk::clearImpl(const gl::Context *context,
             RendererVk *renderer     = contextVk->getRenderer();
             bool clearAnyWithCommand = clearAnyWithRenderPassLoadOp;
 
-            // On buggy hardware, prefer to clear color with a draw call instead of
-            // vkCmdClearAttachments.
+            // On buggy hardware, prefer to clear with a draw call instead of vkCmdClearAttachments.
             if (renderer->getFeatures().preferDrawClearOverVkCmdClearAttachments.enabled)
             {
-                clearColorDrawBuffersMask.reset();
-                clearAnyWithCommand =
-                    clearDepthWithRenderPassLoadOp || clearStencilWithRenderPassLoadOp;
+                clearColorWithRenderPassLoadOp   = false;
+                clearDepthWithRenderPassLoadOp   = false;
+                clearStencilWithRenderPassLoadOp = false;
+                clearAnyWithCommand              = false;
             }
 
             if (clearAnyWithCommand)
@@ -529,7 +529,7 @@ angle::Result FramebufferVk::clearImpl(const gl::Context *context,
         }
 
         // Fallback to other methods for whatever isn't cleared here.
-        if (clearColorDrawBuffersMask.any())
+        if (clearColorWithRenderPassLoadOp)
         {
             clearColorBuffers.reset();
             clearColor = false;
@@ -544,7 +544,7 @@ angle::Result FramebufferVk::clearImpl(const gl::Context *context,
         }
 
         // If nothing left to clear, early out.
-        if (!clearColor && !clearStencil)
+        if (!clearColor && !clearDepth && !clearStencil)
         {
             return angle::Result::Continue;
         }
@@ -2138,7 +2138,8 @@ angle::Result FramebufferVk::clearWithCommand(
     const VkClearColorValue &clearColorValue,
     const VkClearDepthStencilValue &clearDepthStencilValue)
 {
-    gl::DrawBuffersVector<VkClearAttachment> attachments;
+    gl::AttachmentVector<VkClearAttachment> attachments;
+
     // Go through clearColorBuffers and add them to the list of attachments to clear.
     for (size_t colorIndexGL : clearColorBuffers)
     {
