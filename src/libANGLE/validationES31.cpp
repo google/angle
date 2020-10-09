@@ -1448,6 +1448,12 @@ bool ValidateBindImageTexture(const Context *context,
                               GLenum access,
                               GLenum format)
 {
+    if (context->getClientVersion() < ES_3_1)
+    {
+        context->validationError(GL_INVALID_OPERATION, kES31Required);
+        return false;
+    }
+
     GLuint maxImageUnits = static_cast<GLuint>(context->getCaps().maxImageUnits);
     if (unit >= maxImageUnits)
     {
