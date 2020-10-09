@@ -11,6 +11,7 @@ import argparse
 import hashlib
 import logging
 import os
+import re
 import subprocess
 import sys
 
@@ -68,6 +69,15 @@ def main():
         'https://isolateserver.appspot.com', '-d', 'os=' + args.os_dim, '-d', 'pool=' + args.pool,
         '-s', sha
     ]
+
+    # Define a user tag.
+    try:
+        whoami = subprocess.check_output(['whoami'])
+        # Strip extra stuff (e.g. on Windows we are 'hostname\username')
+        whoami = re.sub(r'\w+[^\w]', '', whoami.strip())
+        swarming_args += ['-user', whoami]
+    except:
+        pass
 
     if args.gpu:
         swarming_args += ['-d', 'gpu=' + args.gpu]
