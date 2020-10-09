@@ -86,6 +86,24 @@
       "message": "Tim\u0027s comment on the next change got me thinking. What\u0027s the point of this layout? There are no shader stages in it so it can\u0027t be used for feedback loop. Can mReadOnlyDepthStencilMode even be true in this case?\n\n---\n\nEdit: read the other comment",
       "revId": "961d34a87326e20e00d4dd7e4dde236b1af5ead7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "97a8fba6_9aaa7520",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 947,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-10-09T19:48:57Z",
+      "side": 1,
+      "message": "fyi, will respond to you and Tim\u0027s comments after I figure out the performance issue.",
+      "parentUuid": "46b4157a_3cffdb2b",
+      "revId": "961d34a87326e20e00d4dd7e4dde236b1af5ead7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
