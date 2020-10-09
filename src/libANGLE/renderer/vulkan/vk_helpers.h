@@ -1034,9 +1034,10 @@ class CommandBufferHelper : angle::NonCopyable
         // Keep track of the size of commands in the command buffer.  If the size grows in the
         // future, that implies that drawing occured since invalidated.
         mDepthCmdSizeInvalidated = mCommandBuffer.getCommandSize();
+
         // Also track the size if the attachment is currently disabled.
-        mDepthCmdSizeDisabled =
-            (dsState.depthTest && dsState.depthMask) ? kInfiniteCmdSize : mDepthCmdSizeInvalidated;
+        const bool isDepthWriteEnabled = dsState.depthTest && dsState.depthMask;
+        mDepthCmdSizeDisabled = isDepthWriteEnabled ? kInfiniteCmdSize : mDepthCmdSizeInvalidated;
     }
 
     void invalidateRenderPassStencilAttachment(const gl::DepthStencilState &dsState)
@@ -1045,9 +1046,12 @@ class CommandBufferHelper : angle::NonCopyable
         // Keep track of the size of commands in the command buffer.  If the size grows in the
         // future, that implies that drawing occured since invalidated.
         mStencilCmdSizeInvalidated = mCommandBuffer.getCommandSize();
+
         // Also track the size if the attachment is currently disabled.
+        const bool isStencilWriteEnabled =
+            dsState.stencilTest && (!dsState.isStencilNoOp() || !dsState.isStencilBackNoOp());
         mStencilCmdSizeDisabled =
-            dsState.stencilTest ? kInfiniteCmdSize : mStencilCmdSizeInvalidated;
+            isStencilWriteEnabled ? kInfiniteCmdSize : mStencilCmdSizeInvalidated;
     }
 
     bool hasWriteAfterInvalidate(uint32_t cmdCountInvalidated, uint32_t cmdCountDisabled)

@@ -300,7 +300,7 @@ vk::ResourceAccess GetDepthAccess(const gl::DepthStencilState &dsState)
     {
         return vk::ResourceAccess::Unused;
     }
-    return dsState.depthMask ? vk::ResourceAccess::Write : vk::ResourceAccess::ReadOnly;
+    return dsState.isDepthMaskedOut() ? vk::ResourceAccess::ReadOnly : vk::ResourceAccess::Write;
 }
 
 vk::ResourceAccess GetStencilAccess(const gl::DepthStencilState &dsState)
@@ -309,8 +309,9 @@ vk::ResourceAccess GetStencilAccess(const gl::DepthStencilState &dsState)
     {
         return vk::ResourceAccess::Unused;
     }
-    // Simplify this check by returning write instead of checking the mask.
-    return vk::ResourceAccess::Write;
+
+    return dsState.isStencilNoOp() && dsState.isStencilBackNoOp() ? vk::ResourceAccess::ReadOnly
+                                                                  : vk::ResourceAccess::Write;
 }
 }  // anonymous namespace
 
