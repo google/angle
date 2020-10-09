@@ -85,6 +85,9 @@ class TransformFeedbackTest : public TransformFeedbackTestBase
 
 TEST_P(TransformFeedbackTest, ZeroSizedViewport)
 {
+    // http://anglebug.com/5154
+    ANGLE_SKIP_TEST_IF(IsOSX() && IsOpenGL());
+
     // Set the program's transform feedback varyings (just gl_Position)
     std::vector<std::string> tfVaryings;
     tfVaryings.push_back("gl_Position");
@@ -126,6 +129,9 @@ TEST_P(TransformFeedbackTest, ZeroSizedViewport)
 // old position)
 TEST_P(TransformFeedbackTest, BufferRebinding)
 {
+    // http://anglebug.com/5154
+    ANGLE_SKIP_TEST_IF(IsOSX() && IsOpenGL());
+
     glDisable(GL_DEPTH_TEST);
 
     // Set the program's transform feedback varyings (just gl_Position)
@@ -334,6 +340,9 @@ TEST_P(TransformFeedbackTest, DISABLED_TooSmallBuffers)
 // Test that buffer binding happens only on the current transform feedback object
 TEST_P(TransformFeedbackTest, BufferBinding)
 {
+    // http://anglebug.com/5154
+    ANGLE_SKIP_TEST_IF(IsOSX() && IsOpenGL());
+
     // Reset any state
     glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, 0);
     glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, 0);

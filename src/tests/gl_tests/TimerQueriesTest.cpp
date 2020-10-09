@@ -91,6 +91,9 @@ TEST_P(TimerQueriesTest, TimeElapsed)
 
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_disjoint_timer_query"));
 
+    // http://anglebug.com/5154
+    ANGLE_SKIP_TEST_IF(IsOSX() && IsOpenGL());
+
     GLint queryTimeElapsedBits = 0;
     glGetQueryivEXT(GL_TIME_ELAPSED_EXT, GL_QUERY_COUNTER_BITS_EXT, &queryTimeElapsedBits);
     ASSERT_GL_NO_ERROR();

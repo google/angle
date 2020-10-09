@@ -3030,6 +3030,9 @@ TEST_P(Texture2DBaseMaxTestES3, ExtendMipChainAfterRedefine)
     // http://anglebug.com/4699
     ANGLE_SKIP_TEST_IF(IsOpenGL() && IsIntel() && IsOSX());
 
+    // http://anglebug.com/5153
+    ANGLE_SKIP_TEST_IF(IsOpenGL() && IsNVIDIA() && IsOSX());
+
     GLFramebuffer framebuffer;
     glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
 
@@ -5873,16 +5876,25 @@ TEST_P(Texture2DNorm16TestES3, TextureNorm16RGBA16SNORMTextureTest)
 
 TEST_P(Texture2DNorm16TestES3, TextureNorm16R16RenderTest)
 {
+    // http://anglebug.com/5153
+    ANGLE_SKIP_TEST_IF(IsOSX() && IsOpenGL() && IsNVIDIA());
+
     testNorm16RenderAndReadPixels(GL_R16_EXT, GL_RED, GL_UNSIGNED_SHORT);
 }
 
 TEST_P(Texture2DNorm16TestES3, TextureNorm16RG16RenderTest)
 {
+    // http://anglebug.com/5153
+    ANGLE_SKIP_TEST_IF(IsOSX() && IsOpenGL() && IsNVIDIA());
+
     testNorm16RenderAndReadPixels(GL_RG16_EXT, GL_RG, GL_UNSIGNED_SHORT);
 }
 
 TEST_P(Texture2DNorm16TestES3, TextureNorm16RGBA16RenderTest)
 {
+    // http://anglebug.com/5153
+    ANGLE_SKIP_TEST_IF(IsOSX() && IsOpenGL() && IsNVIDIA());
+
     testNorm16RenderAndReadPixels(GL_RGBA16_EXT, GL_RGBA, GL_UNSIGNED_SHORT);
 }
 
