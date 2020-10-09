@@ -78,6 +78,7 @@ enum class CommandID : uint16_t
     ResetQueryPool,
     ResolveImage,
     SetEvent,
+    SetScissor,
     WaitEvents,
     WriteTimestamp,
 };
@@ -416,6 +417,12 @@ struct SetEventParams
 };
 VERIFY_4_BYTE_ALIGNMENT(SetEventParams)
 
+struct SetScissorParams
+{
+    VkRect2D scissor;
+};
+VERIFY_4_BYTE_ALIGNMENT(SetScissorParams)
+
 struct WaitEventsParams
 {
     uint32_t eventCount;
@@ -640,6 +647,8 @@ class SecondaryCommandBuffer final : angle::NonCopyable
                       const VkImageResolve *regions);
 
     void setEvent(VkEvent event, VkPipelineStageFlags stageMask);
+
+    void setScissor(uint32_t firstScissor, uint32_t scissorCount, const VkRect2D *scissors);
 
     void waitEvents(uint32_t eventCount,
                     const VkEvent *events,
@@ -1387,6 +1396,17 @@ ANGLE_INLINE void SecondaryCommandBuffer::setEvent(VkEvent event, VkPipelineStag
     SetEventParams *paramStruct = initCommand<SetEventParams>(CommandID::SetEvent);
     paramStruct->event          = event;
     paramStruct->stageMask      = stageMask;
+}
+
+ANGLE_INLINE void SecondaryCommandBuffer::setScissor(uint32_t firstScissor,
+                                                     uint32_t scissorCount,
+                                                     const VkRect2D *scissors)
+{
+    ASSERT(firstScissor == 0);
+    ASSERT(scissorCount == 1);
+    ASSERT(scissors != nullptr);
+    SetScissorParams *paramStruct = initCommand<SetScissorParams>(CommandID::SetScissor);
+    paramStruct->scissor          = scissors[0];
 }
 
 ANGLE_INLINE void SecondaryCommandBuffer::waitEvents(

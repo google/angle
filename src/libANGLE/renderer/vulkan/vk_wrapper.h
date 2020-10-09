@@ -343,6 +343,7 @@ class CommandBuffer : public WrappedObject<CommandBuffer, VkCommandBuffer>
                        const void *data);
 
     void setEvent(VkEvent event, VkPipelineStageFlags stageMask);
+    void setScissor(uint32_t firstScissor, uint32_t scissorCount, const VkRect2D *scissors);
     VkResult reset();
     void resetEvent(VkEvent event, VkPipelineStageFlags stageMask);
     void resetQueryPool(const QueryPool &queryPool, uint32_t firstQuery, uint32_t queryCount);
@@ -966,6 +967,14 @@ ANGLE_INLINE void CommandBuffer::setEvent(VkEvent event, VkPipelineStageFlags st
 {
     ASSERT(valid() && event != VK_NULL_HANDLE);
     vkCmdSetEvent(mHandle, event, stageMask);
+}
+
+ANGLE_INLINE void CommandBuffer::setScissor(uint32_t firstScissor,
+                                            uint32_t scissorCount,
+                                            const VkRect2D *scissors)
+{
+    ASSERT(valid() && scissors != nullptr);
+    vkCmdSetScissor(mHandle, firstScissor, scissorCount, scissors);
 }
 
 ANGLE_INLINE void CommandBuffer::resetEvent(VkEvent event, VkPipelineStageFlags stageMask)
