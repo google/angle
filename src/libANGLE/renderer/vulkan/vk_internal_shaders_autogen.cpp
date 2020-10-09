@@ -99,6 +99,30 @@ namespace
 #include "libANGLE/renderer/vulkan/shaders/gen/ImageClear.frag.00000015.inc"
 #include "libANGLE/renderer/vulkan/shaders/gen/ImageClear.frag.00000016.inc"
 #include "libANGLE/renderer/vulkan/shaders/gen/ImageClear.frag.00000017.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/ImageClear.frag.00000018.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/ImageClear.frag.00000019.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/ImageClear.frag.0000001A.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/ImageClear.frag.0000001B.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/ImageClear.frag.0000001C.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/ImageClear.frag.0000001D.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/ImageClear.frag.0000001E.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/ImageClear.frag.0000001F.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/ImageClear.frag.00000020.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/ImageClear.frag.00000021.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/ImageClear.frag.00000022.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/ImageClear.frag.00000023.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/ImageClear.frag.00000024.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/ImageClear.frag.00000025.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/ImageClear.frag.00000026.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/ImageClear.frag.00000027.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/ImageClear.frag.00000028.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/ImageClear.frag.00000029.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/ImageClear.frag.0000002A.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/ImageClear.frag.0000002B.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/ImageClear.frag.0000002C.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/ImageClear.frag.0000002D.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/ImageClear.frag.0000002E.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/ImageClear.frag.0000002F.inc"
 #include "libANGLE/renderer/vulkan/shaders/gen/ImageCopy.frag.00000000.inc"
 #include "libANGLE/renderer/vulkan/shaders/gen/ImageCopy.frag.00000001.inc"
 #include "libANGLE/renderer/vulkan/shaders/gen/ImageCopy.frag.00000002.inc"
@@ -242,6 +266,30 @@ constexpr CompressedShaderBlob kImageClear_frag_shaders[] = {
     {kImageClear_frag_00000015, sizeof(kImageClear_frag_00000015)},
     {kImageClear_frag_00000016, sizeof(kImageClear_frag_00000016)},
     {kImageClear_frag_00000017, sizeof(kImageClear_frag_00000017)},
+    {kImageClear_frag_00000018, sizeof(kImageClear_frag_00000018)},
+    {kImageClear_frag_00000019, sizeof(kImageClear_frag_00000019)},
+    {kImageClear_frag_0000001A, sizeof(kImageClear_frag_0000001A)},
+    {kImageClear_frag_0000001B, sizeof(kImageClear_frag_0000001B)},
+    {kImageClear_frag_0000001C, sizeof(kImageClear_frag_0000001C)},
+    {kImageClear_frag_0000001D, sizeof(kImageClear_frag_0000001D)},
+    {kImageClear_frag_0000001E, sizeof(kImageClear_frag_0000001E)},
+    {kImageClear_frag_0000001F, sizeof(kImageClear_frag_0000001F)},
+    {kImageClear_frag_00000020, sizeof(kImageClear_frag_00000020)},
+    {kImageClear_frag_00000021, sizeof(kImageClear_frag_00000021)},
+    {kImageClear_frag_00000022, sizeof(kImageClear_frag_00000022)},
+    {kImageClear_frag_00000023, sizeof(kImageClear_frag_00000023)},
+    {kImageClear_frag_00000024, sizeof(kImageClear_frag_00000024)},
+    {kImageClear_frag_00000025, sizeof(kImageClear_frag_00000025)},
+    {kImageClear_frag_00000026, sizeof(kImageClear_frag_00000026)},
+    {kImageClear_frag_00000027, sizeof(kImageClear_frag_00000027)},
+    {kImageClear_frag_00000028, sizeof(kImageClear_frag_00000028)},
+    {kImageClear_frag_00000029, sizeof(kImageClear_frag_00000029)},
+    {kImageClear_frag_0000002A, sizeof(kImageClear_frag_0000002A)},
+    {kImageClear_frag_0000002B, sizeof(kImageClear_frag_0000002B)},
+    {kImageClear_frag_0000002C, sizeof(kImageClear_frag_0000002C)},
+    {kImageClear_frag_0000002D, sizeof(kImageClear_frag_0000002D)},
+    {kImageClear_frag_0000002E, sizeof(kImageClear_frag_0000002E)},
+    {kImageClear_frag_0000002F, sizeof(kImageClear_frag_0000002F)},
 };
 constexpr CompressedShaderBlob kImageCopy_frag_shaders[] = {
     {kImageCopy_frag_00000000, sizeof(kImageCopy_frag_00000000)},

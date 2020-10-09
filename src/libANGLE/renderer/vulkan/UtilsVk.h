@@ -40,13 +40,6 @@ class UtilsVk : angle::NonCopyable
 
     void destroy(RendererVk *renderer);
 
-    struct ClearParameters
-    {
-        VkClearColorValue clearValue;
-        size_t offset;
-        size_t size;
-    };
-
     struct ConvertIndexParameters
     {
         uint32_t srcOffset = 0;
@@ -95,8 +88,6 @@ class UtilsVk : angle::NonCopyable
 
         gl::Rectangle clearArea;
 
-        // Note that depth clear is only possible if the depthClamp Vulkan feature is supported.  If
-        // needs be, this can be emulated by exporting depth from shaders/src/ImageClear.frag.
         bool clearColor;
         bool clearDepth;
         bool clearStencil;
@@ -331,6 +322,7 @@ class UtilsVk : angle::NonCopyable
     {
         // Structure matching PushConstants in ImageClear.frag
         VkClearColorValue clearValue = {};
+        float clearDepth             = 0.0f;
     };
 
     struct ImageCopyShaderParams

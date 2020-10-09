@@ -134,7 +134,7 @@ uint32_t GetConvertVertexFlags(const UtilsVk::ConvertVertexParameters &params)
     return flags;
 }
 
-uint32_t GetImageClearFlags(const angle::Format &format, uint32_t attachmentIndex)
+uint32_t GetImageClearFlags(const angle::Format &format, uint32_t attachmentIndex, bool clearDepth)
 {
     constexpr uint32_t kAttachmentFlagStep =
         ImageClear_frag::kAttachment1 - ImageClear_frag::kAttachment0;
@@ -158,6 +158,11 @@ uint32_t GetImageClearFlags(const angle::Format &format, uint32_t attachmentInde
     else
     {
         flags |= ImageClear_frag::kIsFloat;
+    }
+
+    if (clearDepth)
+    {
+        flags |= ImageClear_frag::kClearDepth;
     }
 
     return flags;
@@ -1425,6 +1430,7 @@ angle::Result UtilsVk::clearFramebuffer(ContextVk *contextVk,
 
     ImageClearShaderParams shaderParams;
     shaderParams.clearValue = params.colorClearValue;
+    shaderParams.clearDepth = params.depthStencilClearValue.depth;
 
     vk::GraphicsPipelineDesc pipelineDesc;
     pipelineDesc.initDefaults();
@@ -1441,16 +1447,19 @@ angle::Result UtilsVk::clearFramebuffer(ContextVk *contextVk,
     pipelineDesc.setSubpass(contextVk->getCurrentSubpassIndex());
 
     // Clear depth by enabling depth clamping and setting the viewport depth range to the clear
-    // value.
+    // value if possible.  Otherwise use the shader to export depth.
+    const bool supportsDepthClamp =
+        contextVk->getRenderer()->getPhysicalDeviceFeatures().depthClamp == VK_TRUE;
     if (params.clearDepth)
     {
-        // This path requires the depthClamp Vulkan feature.
-        ASSERT(contextVk->getRenderer()->getPhysicalDeviceFeatures().depthClamp);
-
         pipelineDesc.setDepthTestEnabled(true);
         pipelineDesc.setDepthWriteEnabled(true);
         pipelineDesc.setDepthFunc(VK_COMPARE_OP_ALWAYS);
-        pipelineDesc.setDepthClampEnabled(true);
+        if (supportsDepthClamp)
+        {
+            // Note: this path requires the depthClamp Vulkan feature.
+            pipelineDesc.setDepthClampEnabled(true);
+        }
     }
 
     // Clear stencil by enabling stencil write with the right mask.
@@ -1491,7 +1500,8 @@ angle::Result UtilsVk::clearFramebuffer(ContextVk *contextVk,
     ANGLE_TRY(shaderLibrary.getFullScreenQuad_vert(contextVk, 0, &vertexShader));
     if (params.clearColor)
     {
-        uint32_t flags = GetImageClearFlags(*params.colorFormat, params.colorAttachmentIndexGL);
+        uint32_t flags = GetImageClearFlags(*params.colorFormat, params.colorAttachmentIndexGL,
+                                            params.clearDepth && !supportsDepthClamp);
         ANGLE_TRY(shaderLibrary.getImageClear_frag(contextVk, flags, &fragmentShader));
         imageClearProgram = &mImageClearProgram[flags];
     }
