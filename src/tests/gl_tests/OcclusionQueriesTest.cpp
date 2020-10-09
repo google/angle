@@ -391,6 +391,9 @@ TEST_P(OcclusionQueriesTest, MultiQueries)
     // http://anglebug.com/4925
     ANGLE_SKIP_TEST_IF(IsMetal() && IsNVIDIA());
 
+    // TODO(crbug.com/1132295): Failing on Apple DTK.
+    ANGLE_SKIP_TEST_IF(IsOSX() && IsARM64() && IsDesktopOpenGL());
+
     GLuint query[5] = {};
     glGenQueriesEXT(5, query);
 

@@ -213,6 +213,15 @@ bool IsOSX()
 #endif
 }
 
+bool IsARM64()
+{
+#if defined(_M_ARM64)
+    return true;
+#else
+    return false;
+#endif
+}
+
 bool IsOzone()
 {
 #if defined(USE_OZONE) && defined(USE_X11)
@@ -330,15 +339,6 @@ bool IsNVIDIA()
     }
 #endif
     return HasSystemVendorID(kVendorID_NVIDIA);
-}
-
-bool IsARM64()
-{
-#if defined(_M_ARM64)
-    return true;
-#else
-    return false;
-#endif
 }
 
 bool IsConfigAllowlisted(const SystemInfo &systemInfo, const PlatformParameters &param)

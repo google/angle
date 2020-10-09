@@ -28,6 +28,9 @@ bool IsWindows();
 bool IsWindows7();
 bool IsFuchsia();
 
+// CPU architectures
+bool IsARM64();
+
 // Android devices
 bool IsNexus5X();
 bool IsNexus6P();
@@ -40,9 +43,8 @@ bool IsNVIDIAShield();
 // GPU vendors.
 bool IsIntel();
 bool IsAMD();
-bool IsNVIDIA();
 bool IsARM();
-bool IsARM64();
+bool IsNVIDIA();
 
 // GPU devices.
 bool IsSwiftshaderDevice();
