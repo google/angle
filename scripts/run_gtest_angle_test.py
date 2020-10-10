@@ -35,7 +35,10 @@ import traceback
 # //src/testing/scripts for importing common.
 d = os.path.dirname
 THIS_DIR = d(os.path.abspath(__file__))
-CHROMIUM_SRC_DIR = d(d(d(THIS_DIR)))
+ANGLE_SRC_DIR = d(THIS_DIR)
+sys.path.insert(0, os.path.join(ANGLE_SRC_DIR, 'testing'))
+sys.path.insert(0, os.path.join(ANGLE_SRC_DIR, 'testing', 'scripts'))
+CHROMIUM_SRC_DIR = d(d(ANGLE_SRC_DIR))
 sys.path.insert(0, os.path.join(CHROMIUM_SRC_DIR, 'testing'))
 sys.path.insert(0, os.path.join(CHROMIUM_SRC_DIR, 'testing', 'scripts'))
 
