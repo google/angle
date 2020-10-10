@@ -300,7 +300,7 @@ vk::ResourceAccess GetDepthAccess(const gl::DepthStencilState &dsState)
     {
         return vk::ResourceAccess::Unused;
     }
-    return dsState.isDepthMaskedOut() ? vk::ResourceAccess::ReadOnly : vk::ResourceAccess::Write;
+    return dsState.depthMask ? vk::ResourceAccess::Write : vk::ResourceAccess::ReadOnly;
 }
 
 vk::ResourceAccess GetStencilAccess(const gl::DepthStencilState &dsState)
@@ -309,9 +309,8 @@ vk::ResourceAccess GetStencilAccess(const gl::DepthStencilState &dsState)
     {
         return vk::ResourceAccess::Unused;
     }
-
-    return dsState.isStencilNoOp() && dsState.isStencilBackNoOp() ? vk::ResourceAccess::ReadOnly
-                                                                  : vk::ResourceAccess::Write;
+    // Simplify this check by returning write instead of checking the mask.
+    return vk::ResourceAccess::Write;
 }
 }  // anonymous namespace
 
@@ -2568,8 +2567,7 @@ void ContextVk::optimizeRenderPassForPresent(VkFramebuffer framebufferHandle)
         mRenderPassCommands->invalidateRenderPassStencilAttachment(dsState);
         mRenderPassCommands->invalidateRenderPassDepthAttachment(dsState);
         // Mark content as invalid so that we will not load them in next renderpass
-        depthStencilRenderTarget->invalidateEntireContent(this);
-        depthStencilRenderTarget->invalidateEntireStencilContent(this);
+        depthStencilRenderTarget->invalidateEntireContent();
     }
 
     // Use finalLayout instead of extra barrier for layout change to present
@@ -4204,17 +4202,8 @@ angle::Result ContextVk::updateActiveImages(const gl::Context *context,
         }
         VkImageAspectFlags aspectFlags = image->getAspectFlags();
 
-        uint32_t layerStart = 0;
-        uint32_t layerCount = image->getLayerCount();
-        if (imageUnit.layered)
-        {
-            layerStart = imageUnit.layered;
-            layerCount = 1;
-        }
-
-        commandBufferHelper->imageWrite(
-            &mResourceUseList, gl::LevelIndex(static_cast<uint32_t>(imageUnit.level)), layerStart,
-            layerCount, aspectFlags, imageLayout, vk::AliasingMode::Allowed, image);
+        commandBufferHelper->imageWrite(&mResourceUseList, aspectFlags, imageLayout,
+                                        vk::AliasingMode::Allowed, image);
     }
 
     return angle::Result::Continue;
@@ -4646,11 +4635,7 @@ angle::Result ContextVk::onImageRead(VkImageAspectFlags aspectFlags,
     return angle::Result::Continue;
 }
 
-angle::Result ContextVk::onImageWrite(gl::LevelIndex levelStart,
-                                      uint32_t levelCount,
-                                      uint32_t layerStart,
-                                      uint32_t layerCount,
-                                      VkImageAspectFlags aspectFlags,
+angle::Result ContextVk::onImageWrite(VkImageAspectFlags aspectFlags,
                                       vk::ImageLayout imageLayout,
                                       vk::ImageHelper *image)
 {
@@ -4662,7 +4647,7 @@ angle::Result ContextVk::onImageWrite(gl::LevelIndex levelStart,
     image->recordWriteBarrier(aspectFlags, imageLayout,
                               &mOutsideRenderPassCommands->getCommandBuffer());
     image->retain(&mResourceUseList);
-    image->onWrite(levelStart, levelCount, layerStart, layerCount, aspectFlags);
+    image->onWrite();
 
     return angle::Result::Continue;
 }
@@ -5130,8 +5115,16 @@ angle::Result ContextVk::updateRenderPassDepthStencilAccess()
         }
         else
         {
-            mRenderPassCommands->onDepthAccess(depthAccess);
-            mRenderPassCommands->onStencilAccess(stencilAccess);
+            if (mRenderPassCommands->onDepthAccess(depthAccess))
+            {
+                // The attachment is no longer invalidated, so set mContentDefined to true
+                mDrawFramebuffer->restoreDepthStencilDefinedContents();
+            }
+            if (mRenderPassCommands->onStencilAccess(stencilAccess))
+            {
+                // The attachment is no longer invalidated, so set mContentDefined to true
+                mDrawFramebuffer->restoreDepthStencilDefinedContents();
+            }
 
             mDrawFramebuffer->updateRenderPassReadOnlyDepthMode(this, mRenderPassCommands);
         }

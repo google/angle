@@ -199,8 +199,6 @@ struct DepthStencilState final
 
     bool isDepthMaskedOut() const;
     bool isStencilMaskedOut() const;
-    bool isStencilNoOp() const;
-    bool isStencilBackNoOp() const;
 
     bool depthTest;
     GLenum depthFunc;

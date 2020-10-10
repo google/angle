@@ -824,9 +824,7 @@ angle::Result FramebufferVk::blitWithCommand(ContextVk *contextVk,
     }
 
     ANGLE_TRY(contextVk->onImageTransferRead(imageAspectMask, srcImage));
-    ANGLE_TRY(contextVk->onImageTransferWrite(drawRenderTarget->getLevelIndex(), 1,
-                                              drawRenderTarget->getLayerIndex(), 1, imageAspectMask,
-                                              dstImage));
+    ANGLE_TRY(contextVk->onImageTransferWrite(imageAspectMask, dstImage));
     vk::CommandBuffer &commandBuffer = contextVk->getOutsideRenderPassCommandBuffer();
 
     VkImageBlit blit               = {};
@@ -1362,9 +1360,8 @@ angle::Result FramebufferVk::resolveColorWithCommand(ContextVk *contextVk,
     for (size_t colorIndexGL : mState.getEnabledDrawBuffers())
     {
         RenderTargetVk *drawRenderTarget = mRenderTargetCache.getColors()[colorIndexGL];
-        ANGLE_TRY(contextVk->onImageTransferWrite(
-            drawRenderTarget->getLevelIndex(), 1, drawRenderTarget->getLayerIndex(), 1,
-            VK_IMAGE_ASPECT_COLOR_BIT, &drawRenderTarget->getImageForWrite()));
+        ANGLE_TRY(contextVk->onImageTransferWrite(VK_IMAGE_ASPECT_COLOR_BIT,
+                                                  &drawRenderTarget->getImageForWrite()));
 
         vk::CommandBuffer &commandBuffer = contextVk->getOutsideRenderPassCommandBuffer();
 
@@ -1518,21 +1515,15 @@ angle::Result FramebufferVk::invalidateImpl(ContextVk *contextVk,
             {
                 RenderTargetVk *colorRenderTarget = colorRenderTargets[colorIndexGL];
                 ASSERT(colorRenderTarget);
-                colorRenderTarget->invalidateEntireContent(contextVk);
+                colorRenderTarget->invalidateEntireContent();
             }
         }
 
-        // If we have a depth / stencil render target, invalidate its aspects.
-        if (depthStencilRenderTarget)
+        // If we have a depth / stencil render target AND we invalidate both we'll mark it as
+        // invalid. Maybe in the future add separate depth & stencil invalid flags.
+        if (depthStencilRenderTarget && invalidateDepthBuffer && invalidateStencilBuffer)
         {
-            if (invalidateDepthBuffer)
-            {
-                depthStencilRenderTarget->invalidateEntireContent(contextVk);
-            }
-            if (invalidateStencilBuffer)
-            {
-                depthStencilRenderTarget->invalidateEntireStencilContent(contextVk);
-            }
+            depthStencilRenderTarget->invalidateEntireContent();
         }
     }
 
@@ -2198,7 +2189,11 @@ angle::Result FramebufferVk::clearWithCommand(
         dsAspectFlags |= VK_IMAGE_ASPECT_DEPTH_BIT;
         dsClearValue.depthStencil = clearDepthStencilValue;
         // Explicitly mark a depth write because we are clearing the depth buffer.
-        renderpassCommands->onDepthAccess(vk::ResourceAccess::Write);
+        if (renderpassCommands->onDepthAccess(vk::ResourceAccess::Write))
+        {
+            // The attachment is no longer invalidated, so set mContentDefined to true
+            restoreDepthStencilDefinedContents();
+        }
     }
 
     if (clearStencil)
@@ -2206,7 +2201,11 @@ angle::Result FramebufferVk::clearWithCommand(
         dsAspectFlags |= VK_IMAGE_ASPECT_STENCIL_BIT;
         dsClearValue.depthStencil = clearDepthStencilValue;
         // Explicitly mark a stencil write because we are clearing the stencil buffer.
-        renderpassCommands->onStencilAccess(vk::ResourceAccess::Write);
+        if (renderpassCommands->onStencilAccess(vk::ResourceAccess::Write))
+        {
+            // The attachment is no longer invalidated, so set mContentDefined to true
+            restoreDepthStencilDefinedContents();
+        }
     }
 
     if (dsAspectFlags != 0)
@@ -2345,11 +2344,7 @@ angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
         if (!depthStencilRenderTarget->hasDefinedContent() ||
             depthStencilRenderTarget->isEntirelyTransient())
         {
-            depthLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
-        }
-        if (!depthStencilRenderTarget->hasDefinedStencilContent() ||
-            depthStencilRenderTarget->isEntirelyTransient())
-        {
+            depthLoadOp   = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
             stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
         }
 
@@ -2484,7 +2479,7 @@ angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
 
     if (depthStencilRenderTarget)
     {
-        // This must be called after hasDefined*Content() since it will set content to valid. We are
+        // This must be called after hasDefinedContent() since it will set content to valid. We are
         // tracking content valid very loosely here that as long as it is attached, it assumes will
         // have valid content. The only time it has undefined content is between swap and
         // startNewRenderPass
@@ -2507,6 +2502,18 @@ angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
     }
 
     return angle::Result::Continue;
+}
+
+void FramebufferVk::restoreDepthStencilDefinedContents()
+{
+    // If the depthStencilRenderTarget does not have "defined content" (i.e. meaning that a future
+    // render pass should use a loadOp of DONT_CARE), we should restore it (i.e. so that a future
+    // render pass uses a loadOp of LOAD).
+    RenderTargetVk *depthStencilRenderTarget = mRenderTargetCache.getDepthStencil();
+    if (depthStencilRenderTarget)
+    {
+        depthStencilRenderTarget->restoreEntireContent();
+    }
 }
 
 void FramebufferVk::updateActiveColorMasks(size_t colorIndexGL, bool r, bool g, bool b, bool a)

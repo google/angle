@@ -14,23 +14,6 @@
 
 namespace gl
 {
-namespace
-{
-bool IsStencilNoOp(GLenum stencilFunc,
-                   GLenum stencilFail,
-                   GLenum stencilPassDepthFail,
-                   GLenum stencilPassDepthPass)
-{
-    const bool isNeverAndKeep           = stencilFunc == GL_NEVER && stencilFail == GL_KEEP;
-    const bool isAlwaysAndKeepOrAllKeep = (stencilFunc == GL_ALWAYS || stencilFail == GL_KEEP) &&
-                                          stencilPassDepthFail == GL_KEEP &&
-                                          stencilPassDepthPass == GL_KEEP;
-
-    return isNeverAndKeep || isAlwaysAndKeepOrAllKeep;
-}
-
-}  // anonymous namespace
-
 RasterizerState::RasterizerState()
 {
     memset(this, 0, sizeof(RasterizerState));
@@ -129,20 +112,6 @@ bool DepthStencilState::isDepthMaskedOut() const
 bool DepthStencilState::isStencilMaskedOut() const
 {
     return (stencilMask & stencilWritemask) == 0;
-}
-
-bool DepthStencilState::isStencilNoOp() const
-{
-    return isStencilMaskedOut() ||
-           IsStencilNoOp(stencilFunc, stencilFail, stencilPassDepthFail, stencilPassDepthPass);
-}
-
-bool DepthStencilState::isStencilBackNoOp() const
-{
-    const bool isStencilBackMaskedOut = (stencilBackMask & stencilBackWritemask) == 0;
-    return isStencilBackMaskedOut ||
-           IsStencilNoOp(stencilBackFunc, stencilBackFail, stencilBackPassDepthFail,
-                         stencilBackPassDepthPass);
 }
 
 bool operator==(const DepthStencilState &a, const DepthStencilState &b)

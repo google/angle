@@ -1893,9 +1893,8 @@ angle::Result UtilsVk::stencilBlitResolveNoShaderExport(ContextVk *contextVk,
 
     // Change source layout prior to computation.
     ANGLE_TRY(contextVk->onImageComputeShaderRead(src->getAspectFlags(), src));
-    ANGLE_TRY(contextVk->onImageTransferWrite(
-        depthStencilRenderTarget->getLevelIndex(), 1, depthStencilRenderTarget->getLayerIndex(), 1,
-        depthStencilImage->getAspectFlags(), depthStencilImage));
+    ANGLE_TRY(
+        contextVk->onImageTransferWrite(depthStencilImage->getAspectFlags(), depthStencilImage));
 
     vk::CommandBuffer &commandBuffer = contextVk->getOutsideRenderPassCommandBuffer();
 
@@ -2126,8 +2125,8 @@ angle::Result UtilsVk::copyImage(ContextVk *contextVk,
     // Change source layout inside render pass.
     contextVk->onImageRenderPassRead(VK_IMAGE_ASPECT_COLOR_BIT,
                                      vk::ImageLayout::FragmentShaderReadOnly, src);
-    contextVk->onImageRenderPassWrite(params.dstMip, params.dstLayer, 1, VK_IMAGE_ASPECT_COLOR_BIT,
-                                      vk::ImageLayout::ColorAttachment, dest);
+    contextVk->onImageRenderPassWrite(VK_IMAGE_ASPECT_COLOR_BIT, vk::ImageLayout::ColorAttachment,
+                                      dest);
 
     VkDescriptorImageInfo imageInfo = {};
     imageInfo.imageView             = srcView->getHandle();
@@ -2439,11 +2438,8 @@ angle::Result UtilsVk::cullOverlayWidgets(ContextVk *contextVk,
     ANGLE_TRY(allocateDescriptorSet(contextVk, Function::OverlayCull, &descriptorPoolBinding,
                                     &descriptorSet));
 
-    ASSERT(dest->getLevelCount() == 1 && dest->getLayerCount() == 1 &&
-           dest->getBaseLevel() == gl::LevelIndex(0));
     ANGLE_TRY(contextVk->onBufferComputeShaderRead(enabledWidgetsBuffer));
-    ANGLE_TRY(contextVk->onImageComputeShaderWrite(gl::LevelIndex(0), 1, 0, 1,
-                                                   VK_IMAGE_ASPECT_COLOR_BIT, dest));
+    ANGLE_TRY(contextVk->onImageComputeShaderWrite(VK_IMAGE_ASPECT_COLOR_BIT, dest));
 
     vk::CommandBuffer &commandBuffer = contextVk->getOutsideRenderPassCommandBuffer();
 
@@ -2512,10 +2508,7 @@ angle::Result UtilsVk::drawOverlay(ContextVk *contextVk,
     ANGLE_TRY(allocateDescriptorSet(contextVk, Function::OverlayDraw, &descriptorPoolBinding,
                                     &descriptorSet));
 
-    ASSERT(dest->getLevelCount() == 1 && dest->getLayerCount() == 1 &&
-           dest->getBaseLevel() == gl::LevelIndex(0));
-    ANGLE_TRY(contextVk->onImageComputeShaderWrite(gl::LevelIndex(0), 1, 0, 1,
-                                                   VK_IMAGE_ASPECT_COLOR_BIT, dest));
+    ANGLE_TRY(contextVk->onImageComputeShaderWrite(VK_IMAGE_ASPECT_COLOR_BIT, dest));
     ANGLE_TRY(contextVk->onImageComputeShaderRead(VK_IMAGE_ASPECT_COLOR_BIT, culledWidgets));
     ANGLE_TRY(contextVk->onImageComputeShaderRead(VK_IMAGE_ASPECT_COLOR_BIT, font));
     ANGLE_TRY(contextVk->onBufferComputeShaderRead(textWidgetsBuffer));

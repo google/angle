@@ -842,8 +842,7 @@ angle::Result TextureVk::copySubImageImplWithTransfer(ContextVk *contextVk,
         // Make sure any updates to the image are already flushed.
         ANGLE_TRY(ensureImageInitialized(contextVk, ImageMipLevels::EnabledLevels));
 
-        ANGLE_TRY(contextVk->onImageTransferWrite(level, 1, baseLayer, layerCount,
-                                                  VK_IMAGE_ASPECT_COLOR_BIT, mImage));
+        ANGLE_TRY(contextVk->onImageTransferWrite(VK_IMAGE_ASPECT_COLOR_BIT, mImage));
         vk::CommandBuffer &commandBuffer = contextVk->getOutsideRenderPassCommandBuffer();
 
         VkImageSubresourceLayers destSubresource = srcSubresource;
@@ -876,8 +875,7 @@ angle::Result TextureVk::copySubImageImplWithTransfer(ContextVk *contextVk,
                                               gl::Extents(sourceBox.width, sourceBox.height, 1),
                                               destFormat, kTransferStagingImageFlags, layerCount));
 
-        ANGLE_TRY(contextVk->onImageTransferWrite(gl::LevelIndex(0), 1, 0, layerCount,
-                                                  VK_IMAGE_ASPECT_COLOR_BIT, stagingImage.get()));
+        ANGLE_TRY(contextVk->onImageTransferWrite(VK_IMAGE_ASPECT_COLOR_BIT, stagingImage.get()));
         vk::CommandBuffer &commandBuffer = contextVk->getOutsideRenderPassCommandBuffer();
 
         VkImageSubresourceLayers destSubresource = srcSubresource;
@@ -963,8 +961,6 @@ angle::Result TextureVk::copySubImageImplWithDraw(ContextVk *contextVk,
             break;
     }
 
-    gl::LevelIndex level(index.getLevelIndex());
-
     UtilsVk::CopyImageParameters params;
     params.srcOffset[0]        = rotatedSourceBox.x;
     params.srcOffset[1]        = rotatedSourceBox.y;
@@ -974,13 +970,13 @@ angle::Result TextureVk::copySubImageImplWithDraw(ContextVk *contextVk,
     params.destOffset[1]       = destOffset.y;
     params.srcMip              = srcImage->toVkLevel(sourceLevelGL).get();
     params.srcHeight           = srcExtents.height;
-    params.dstMip              = level;
     params.srcPremultiplyAlpha = unpackPremultiplyAlpha && !unpackUnmultiplyAlpha;
     params.srcUnmultiplyAlpha  = unpackUnmultiplyAlpha && !unpackPremultiplyAlpha;
     params.srcFlipY            = isSrcFlipY;
     params.destFlipY           = unpackFlipY;
     params.srcRotation         = srcFramebufferRotation;
 
+    gl::LevelIndex level(index.getLevelIndex());
     uint32_t baseLayer  = index.hasLayer() ? index.getLayerIndex() : destOffset.z;
     uint32_t layerCount = sourceBox.depth;
 
@@ -1005,7 +1001,6 @@ angle::Result TextureVk::copySubImageImplWithDraw(ContextVk *contextVk,
         for (uint32_t layerIndex = 0; layerIndex < layerCount; ++layerIndex)
         {
             params.srcLayer = layerIndex + sourceBox.z;
-            params.dstLayer = baseLayer + layerIndex;
 
             const vk::ImageView *destView;
             ANGLE_TRY(getLevelLayerImageView(contextVk, level, baseLayer + layerIndex, &destView));
@@ -1033,7 +1028,6 @@ angle::Result TextureVk::copySubImageImplWithDraw(ContextVk *contextVk,
         for (uint32_t layerIndex = 0; layerIndex < layerCount; ++layerIndex)
         {
             params.srcLayer = layerIndex + sourceBox.z;
-            params.dstLayer = layerIndex;
 
             // Create a temporary view for this layer.
             vk::ImageView stagingView;
@@ -1453,24 +1447,15 @@ angle::Result TextureVk::copyBufferDataToImage(ContextVk *contextVk,
     // Vulkan Spec requires the bufferOffset to be a multiple of 4 for vkCmdCopyBufferToImage.
     ASSERT((offset & (kBufferOffsetMultiple - 1)) == 0);
 
-    gl::LevelIndex level = gl::LevelIndex(index.getLevelIndex());
-    GLuint layerCount    = 0;
-    GLuint layerIndex    = 0;
+    GLuint layerCount = 0;
+    GLuint layerIndex = 0;
     GetRenderTargetLayerCountAndIndex(mImage, index, &layerCount, &layerIndex);
-
-    GLuint depth = sourceArea.depth;
-    if (index.getType() == gl::TextureType::_2DArray)
-    {
-        layerCount = depth;
-        depth      = 1;
-    }
 
     // Make sure the source is initialized and its images are flushed.
     ANGLE_TRY(ensureImageInitialized(contextVk, ImageMipLevels::EnabledLevels));
 
     ANGLE_TRY(contextVk->onBufferTransferRead(srcBuffer));
-    ANGLE_TRY(contextVk->onImageTransferWrite(level, 1, layerIndex, layerCount,
-                                              VK_IMAGE_ASPECT_COLOR_BIT, mImage));
+    ANGLE_TRY(contextVk->onImageTransferWrite(VK_IMAGE_ASPECT_COLOR_BIT, mImage));
 
     vk::CommandBuffer &commandBuffer = contextVk->getOutsideRenderPassCommandBuffer();
 
@@ -1480,14 +1465,21 @@ angle::Result TextureVk::copyBufferDataToImage(ContextVk *contextVk,
     region.bufferImageHeight               = imageHeight;
     region.imageExtent.width               = sourceArea.width;
     region.imageExtent.height              = sourceArea.height;
-    region.imageExtent.depth               = depth;
+    region.imageExtent.depth               = sourceArea.depth;
     region.imageOffset.x                   = sourceArea.x;
     region.imageOffset.y                   = sourceArea.y;
     region.imageOffset.z                   = sourceArea.z;
     region.imageSubresource.aspectMask     = VK_IMAGE_ASPECT_COLOR_BIT;
     region.imageSubresource.baseArrayLayer = layerIndex;
-    region.imageSubresource.layerCount     = layerCount;
-    region.imageSubresource.mipLevel       = mImage->toVkLevel(level).get();
+    region.imageSubresource.layerCount     = 1;
+    region.imageSubresource.mipLevel =
+        mImage->toVkLevel(gl::LevelIndex(index.getLevelIndex())).get();
+
+    if (index.getType() == gl::TextureType::_2DArray)
+    {
+        region.imageExtent.depth           = 1;
+        region.imageSubresource.layerCount = sourceArea.depth;
+    }
 
     commandBuffer.copyBufferToImage(srcBuffer->getBuffer().getHandle(), mImage->getImage(),
                                     mImage->getCurrentLayout(), 1, &region);
@@ -1537,11 +1529,7 @@ angle::Result TextureVk::generateMipmapsWithCompute(ContextVk *contextVk)
          destBaseLevelVk < vk::LevelIndex(mImage->getLevelCount());
          destBaseLevelVk = destBaseLevelVk + maxGenerateLevels.get())
     {
-        uint32_t writeLevelCount =
-            std::min(maxGenerateLevels.get(), mImage->getLevelCount() - destBaseLevelVk.get());
-        ANGLE_TRY(contextVk->onImageComputeShaderWrite(mImage->toGLLevel(destBaseLevelVk),
-                                                       writeLevelCount, 0, mImage->getLayerCount(),
-                                                       VK_IMAGE_ASPECT_COLOR_BIT, mImage));
+        ANGLE_TRY(contextVk->onImageComputeShaderWrite(VK_IMAGE_ASPECT_COLOR_BIT, mImage));
 
         // Generate mipmaps for every layer separately.
         for (uint32_t layer = 0; layer < mImage->getLayerCount(); ++layer)
