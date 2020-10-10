@@ -210,6 +210,9 @@ TEST_P(TransformFeedbackTest, RecordAndDraw)
     // TODO(anglebug.com/4533) This fails after the upgrade to the 26.20.100.7870 driver.
     ANGLE_SKIP_TEST_IF(IsWindows() && IsIntel() && IsVulkan());
 
+    // Fails on Mac Intel GL drivers. http://anglebug.com/4992
+    ANGLE_SKIP_TEST_IF(IsOpenGL() && IsIntel() && IsOSX());
+
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
@@ -471,6 +474,9 @@ TEST_P(TransformFeedbackTest, VertexOnly)
 // Test that multiple paused transform feedbacks do not generate errors or crash
 TEST_P(TransformFeedbackTest, MultiplePaused)
 {
+    // Crashes on Mac Intel GL drivers. http://anglebug.com/4992
+    ANGLE_SKIP_TEST_IF(IsOpenGL() && IsIntel() && IsOSX());
+
     const size_t drawSize = 1024;
     std::vector<float> transformFeedbackData(drawSize);
     for (size_t i = 0; i < drawSize; i++)
@@ -1894,6 +1900,9 @@ TEST_P(TransformFeedbackTest, OverrunWithPause)
     // TODO(anglebug.com/4533) This fails after the upgrade to the 26.20.100.7870 driver.
     ANGLE_SKIP_TEST_IF(IsWindows() && IsIntel() && IsVulkan());
 
+    // Fails on Mac Intel GL drivers. http://anglebug.com/4992
+    ANGLE_SKIP_TEST_IF(IsOpenGL() && IsIntel() && IsOSX());
+
     const std::vector<GLfloat> vertices = {
         -1.0f, 1.0f, 0.5f, 1.0f, -1.0f, -1.0f, 0.5f, 1.0f, 1.0f, -1.0f, 0.5f, 1.0f,
         -1.0f, 1.0f, 0.5f, 1.0f, 1.0f,  -1.0f, 0.5f, 1.0f, 1.0f, 1.0f,  0.5f, 1.0f,
@@ -1974,6 +1983,9 @@ TEST_P(TransformFeedbackTest, OverrunWithMultiplePauseAndResume)
 
     // Fails on Mac AMD GL drivers. http://anglebug.com/4775
     ANGLE_SKIP_TEST_IF(IsOpenGL() && IsAMD() && IsOSX());
+
+    // Crashes on Mac Intel GL drivers. http://anglebug.com/4992
+    ANGLE_SKIP_TEST_IF(IsOpenGL() && IsIntel() && IsOSX());
 
     const std::vector<GLfloat> vertices = {
         -1.0f, 1.0f, 0.5f, 1.0f, -1.0f, -1.0f, 0.5f, 1.0f, 1.0f, -1.0f, 0.5f, 1.0f,
