@@ -108,11 +108,14 @@ class RenderTargetVk final : public FramebufferAttachmentRenderTarget
 
     void retainImageViews(ContextVk *contextVk) const;
 
-    bool hasDefinedContent() const { return mContentDefined; }
+    bool hasDefinedContent() const;
+    bool hasDefinedStencilContent() const;
     // Mark content as undefined so that certain optimizations are possible such as using DONT_CARE
     // as loadOp of the render target in the next renderpass.
-    void invalidateEntireContent() { mContentDefined = false; }
-    void restoreEntireContent() { mContentDefined = true; }
+    void invalidateEntireContent(ContextVk *contextVk);
+    void invalidateEntireStencilContent(ContextVk *contextVk);
+    void restoreEntireContent();
+    void restoreEntireStencilContent();
 
     // See the description of mTransience for details of how the following two can interact.
     bool hasResolveAttachment() const { return mResolveImage != nullptr && !isEntirelyTransient(); }
@@ -131,6 +134,7 @@ class RenderTargetVk final : public FramebufferAttachmentRenderTarget
     vk::ImageViewSubresourceSerial getSubresourceSerialImpl(vk::ImageViewHelper *imageViews) const;
 
     bool isResolveImageOwnerOfData() const;
+    vk::ImageHelper *getOwnerOfData() const;
 
     // The color or depth/stencil attachment of the framebuffer and its view.
     vk::ImageHelper *mImage;
@@ -140,7 +144,7 @@ class RenderTargetVk final : public FramebufferAttachmentRenderTarget
     // implement GL_EXT_multisampled_render_to_texture, so while the rendering is done on mImage
     // during the renderpass, the resolved image is the one that actually holds the data.  This
     // means that data uploads and blit are done on this image, copies are done out of this image
-    // etc.  This means that if there is no clear, and hasDefinedContent(), the contents of
+    // etc.  This means that if there is no clear, and hasDefined*Content(), the contents of
     // mResolveImage must be copied to mImage since the loadOp of the attachment must be set to
     // LOAD.
     vk::ImageHelper *mResolveImage;
@@ -149,10 +153,6 @@ class RenderTargetVk final : public FramebufferAttachmentRenderTarget
     // Which subresource of the image is used as render target.
     gl::LevelIndex mLevelIndexGL;
     uint32_t mLayerIndex;
-
-    // Whether the render target has been invalidated.  If so, DONT_CARE is used instead of LOAD for
-    // loadOp of this attachment.
-    bool mContentDefined;
 
     // If resolve attachment exists, |mTransience| could be *Transient if the multisampled results
     // need to be discarded.

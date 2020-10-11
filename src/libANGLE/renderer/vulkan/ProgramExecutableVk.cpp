@@ -1221,9 +1221,6 @@ angle::Result ProgramExecutableVk::updateImagesDescriptorSet(
 
             // Note: binding.access is unused because it is implied by the shader.
 
-            // TODO(syoussefi): Support image data reinterpretation by using binding.format.
-            // http://anglebug.com/3563
-
             // Lazily allocate the descriptor set, since we may not need one if all of the image
             // uniforms are inactive.
             if (descriptorSet == VK_NULL_HANDLE)

@@ -511,17 +511,29 @@ class ContextVk : public ContextImpl, public vk::Context
     {
         return onImageRead(aspectFlags, vk::ImageLayout::TransferSrc, image);
     }
-    angle::Result onImageTransferWrite(VkImageAspectFlags aspectFlags, vk::ImageHelper *image)
+    angle::Result onImageTransferWrite(gl::LevelIndex levelStart,
+                                       uint32_t levelCount,
+                                       uint32_t layerStart,
+                                       uint32_t layerCount,
+                                       VkImageAspectFlags aspectFlags,
+                                       vk::ImageHelper *image)
     {
-        return onImageWrite(aspectFlags, vk::ImageLayout::TransferDst, image);
+        return onImageWrite(levelStart, levelCount, layerStart, layerCount, aspectFlags,
+                            vk::ImageLayout::TransferDst, image);
     }
     angle::Result onImageComputeShaderRead(VkImageAspectFlags aspectFlags, vk::ImageHelper *image)
     {
         return onImageRead(aspectFlags, vk::ImageLayout::ComputeShaderReadOnly, image);
     }
-    angle::Result onImageComputeShaderWrite(VkImageAspectFlags aspectFlags, vk::ImageHelper *image)
+    angle::Result onImageComputeShaderWrite(gl::LevelIndex levelStart,
+                                            uint32_t levelCount,
+                                            uint32_t layerStart,
+                                            uint32_t layerCount,
+                                            VkImageAspectFlags aspectFlags,
+                                            vk::ImageHelper *image)
     {
-        return onImageWrite(aspectFlags, vk::ImageLayout::ComputeShaderWrite, image);
+        return onImageWrite(levelStart, levelCount, layerStart, layerCount, aspectFlags,
+                            vk::ImageLayout::ComputeShaderWrite, image);
     }
 
     void onImageRenderPassRead(VkImageAspectFlags aspectFlags,
@@ -532,19 +544,26 @@ class ContextVk : public ContextImpl, public vk::Context
         mRenderPassCommands->imageRead(&mResourceUseList, aspectFlags, imageLayout, image);
     }
 
-    void onImageRenderPassWrite(VkImageAspectFlags aspectFlags,
+    void onImageRenderPassWrite(gl::LevelIndex level,
+                                uint32_t layerStart,
+                                uint32_t layerCount,
+                                VkImageAspectFlags aspectFlags,
                                 vk::ImageLayout imageLayout,
                                 vk::ImageHelper *image)
     {
         ASSERT(mRenderPassCommands->started());
-        mRenderPassCommands->imageWrite(&mResourceUseList, aspectFlags, imageLayout,
-                                        vk::AliasingMode::Allowed, image);
+        mRenderPassCommands->imageWrite(&mResourceUseList, level, layerStart, layerCount,
+                                        aspectFlags, imageLayout, vk::AliasingMode::Allowed, image);
     }
 
-    void onDepthStencilDraw(vk::ImageHelper *image, vk::ImageHelper *resolveImage)
+    void onDepthStencilDraw(gl::LevelIndex level,
+                            uint32_t layer,
+                            vk::ImageHelper *image,
+                            vk::ImageHelper *resolveImage)
     {
         ASSERT(mRenderPassCommands->started());
-        mRenderPassCommands->depthStencilImagesDraw(&mResourceUseList, image, resolveImage);
+        mRenderPassCommands->depthStencilImagesDraw(&mResourceUseList, level, layer, image,
+                                                    resolveImage);
     }
 
     void onImageHelperRelease(const vk::ImageHelper *image)
@@ -930,7 +949,11 @@ class ContextVk : public ContextImpl, public vk::Context
     angle::Result onImageRead(VkImageAspectFlags aspectFlags,
                               vk::ImageLayout imageLayout,
                               vk::ImageHelper *image);
-    angle::Result onImageWrite(VkImageAspectFlags aspectFlags,
+    angle::Result onImageWrite(gl::LevelIndex levelStart,
+                               uint32_t levelCount,
+                               uint32_t layerStart,
+                               uint32_t layerCount,
+                               VkImageAspectFlags aspectFlags,
                                vk::ImageLayout imageLayout,
                                vk::ImageHelper *image);
 
