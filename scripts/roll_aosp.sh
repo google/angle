@@ -77,6 +77,9 @@ for abi in ${abis[@]}; do
         "angle_enable_hlsl = false"
 
         "angle_enable_commit_id = false"
+
+        # Disable histogram/protobuf support
+        "angle_has_histograms = false"
     )
 
     gn gen ${GN_OUTPUT_DIRECTORY} --args="${gn_args[*]}"

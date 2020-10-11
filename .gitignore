@@ -43,6 +43,7 @@
 /third_party/libpng/src
 /third_party/llvm-build
 /third_party/nasm
+/third_party/protobuf
 /third_party/Python-Markdown
 /third_party/qemu-linux-x64
 /third_party/qemu-mac-x64
@@ -71,6 +72,7 @@
 /tools/mb
 /tools/md_browser
 /tools/memory
+/tools/protoc_wrapper
 /tools/skia_goldctl
 angle_debug.txt
 build

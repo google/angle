@@ -36,4 +36,7 @@ default_args = {
   clang_use_chrome_plugins = true
   build_angle_deqp_tests = true
   use_sysroot = true
+
+  # Saves on importing extra dependencies and ANGLE doesn't use JS.
+  enable_js_protobuf = false
 }

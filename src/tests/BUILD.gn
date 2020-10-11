@@ -16,6 +16,10 @@ declare_args() {
       is_win || is_linux || is_chromeos || is_android || is_mac || is_fuchsia
 }
 
+declare_args() {
+  angle_has_histograms = build_angle_perftests && angle_has_build
+}
+
 angle_test("test_utils_unittest_helper") {
   sources = [
     "../../util/test_utils_unittest_helper.cpp",
@@ -248,6 +252,10 @@ template("angle_perftests_common") {
     deps = [ "$angle_jsoncpp_dir:jsoncpp" ]
     public_deps = [ "${invoker.test_utils}" ]
     public_configs += [ "${angle_root}:libANGLE_config" ]
+
+    if (angle_has_histograms) {
+      deps += [ "//third_party/catapult/tracing/tracing:histogram" ]
+    }
   }
 }
 
