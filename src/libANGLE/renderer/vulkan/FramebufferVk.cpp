@@ -2269,9 +2269,9 @@ angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
         renderPassAttachmentOps.setLayouts(colorIndexVk, vk::ImageLayout::ColorAttachment,
                                            vk::ImageLayout::ColorAttachment);
 
-        const VkAttachmentStoreOp storeOp = colorRenderTarget->isImageTransient()
-                                                ? VK_ATTACHMENT_STORE_OP_DONT_CARE
-                                                : VK_ATTACHMENT_STORE_OP_STORE;
+        const vk::RenderPassStoreOp storeOp = colorRenderTarget->isImageTransient()
+                                                  ? vk::RenderPassStoreOp::DontCare
+                                                  : vk::RenderPassStoreOp::Store;
 
         if (mDeferredClears.test(colorIndexGL))
         {
@@ -2291,7 +2291,7 @@ angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
                                     kUninitializedClearValue);
         }
         renderPassAttachmentOps.setStencilOps(colorIndexVk, VK_ATTACHMENT_LOAD_OP_DONT_CARE,
-                                              VK_ATTACHMENT_STORE_OP_DONT_CARE);
+                                              vk::RenderPassStoreOp::DontCare);
 
         // If there's a resolve attachment, and loadOp needs to be LOAD, the multisampled attachment
         // needs to take its value from the resolve attachment.  In this case, an initial subpass is
@@ -2333,10 +2333,10 @@ angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
         // depth stencil attachment always immediately follows color attachment
         depthStencilAttachmentIndex = colorIndexVk;
 
-        VkAttachmentLoadOp depthLoadOp     = VK_ATTACHMENT_LOAD_OP_LOAD;
-        VkAttachmentLoadOp stencilLoadOp   = VK_ATTACHMENT_LOAD_OP_LOAD;
-        VkAttachmentStoreOp depthStoreOp   = VK_ATTACHMENT_STORE_OP_STORE;
-        VkAttachmentStoreOp stencilStoreOp = VK_ATTACHMENT_STORE_OP_STORE;
+        VkAttachmentLoadOp depthLoadOp       = VK_ATTACHMENT_LOAD_OP_LOAD;
+        VkAttachmentLoadOp stencilLoadOp     = VK_ATTACHMENT_LOAD_OP_LOAD;
+        vk::RenderPassStoreOp depthStoreOp   = vk::RenderPassStoreOp::Store;
+        vk::RenderPassStoreOp stencilStoreOp = vk::RenderPassStoreOp::Store;
 
         // If the image data was previously discarded (with no update in between), don't attempt to
         // load the image.  Additionally, if the multisampled image data is transient and there is
@@ -2359,11 +2359,11 @@ angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
         // there is no resolve/unresolve and the image data is never stored/loaded.
         if (depthStencilRenderTarget->isImageTransient())
         {
-            depthStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+            depthStoreOp = vk::RenderPassStoreOp::DontCare;
 
             if (canExportStencil || depthStencilRenderTarget->isEntirelyTransient())
             {
-                stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+                stencilStoreOp = vk::RenderPassStoreOp::DontCare;
             }
         }
 
@@ -2402,12 +2402,12 @@ angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
         if (format.intendedFormat().stencilBits == 0)
         {
             stencilLoadOp  = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
-            stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+            stencilStoreOp = vk::RenderPassStoreOp::DontCare;
         }
         if (format.intendedFormat().depthBits == 0)
         {
             depthLoadOp  = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
-            depthStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+            depthStoreOp = vk::RenderPassStoreOp::DontCare;
         }
 
         // Similar to color attachments, if there's a resolve attachment and the multisampled image

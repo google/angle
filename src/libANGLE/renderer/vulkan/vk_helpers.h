@@ -1024,7 +1024,7 @@ class CommandBufferHelper : angle::NonCopyable
     void invalidateRenderPassColorAttachment(PackedAttachmentIndex attachmentIndex)
     {
         ASSERT(mIsRenderPassCommandBuffer);
-        SetBitField(mAttachmentOps[attachmentIndex].storeOp, VK_ATTACHMENT_STORE_OP_DONT_CARE);
+        SetBitField(mAttachmentOps[attachmentIndex].storeOp, vk::RenderPassStoreOp::DontCare);
         mAttachmentOps[attachmentIndex].isInvalidated = true;
     }
 

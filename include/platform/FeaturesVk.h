@@ -354,6 +354,13 @@ struct FeaturesVk : FeatureSetBase
         "and the performance is better.",
         &members, "http://anglebug.com/4551"};
 
+    // Whether the VkDevice supports the VK_QCOM_render_pass_store_ops extension
+    // http://anglebug.com/5505
+    Feature supportsRenderPassStoreOpNoneQCOM = {
+        "supports_render_pass_store_ops_none_qcom", FeatureCategory::VulkanFeatures,
+        "VkDevice supports VK_QCOM_render_pass_store_ops extension.", &members,
+        "http://anglebug.com/5055"};
+
     // Force maxUniformBufferSize to 16K on Qualcomm's Adreno 540. Pixel2's Adreno540 reports
     // maxUniformBufferSize 64k but various tests failed with that size. For that specific
     // device, we set to 16k for now which is known to pass all tests.

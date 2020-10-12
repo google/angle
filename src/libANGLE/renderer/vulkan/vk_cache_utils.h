@@ -106,6 +106,22 @@ inline void UpdateAccess(ResourceAccess *oldAccess, ResourceAccess newAccess)
     }
 }
 
+enum RenderPassStoreOp
+{
+    Store    = VK_ATTACHMENT_STORE_OP_STORE,
+    DontCare = VK_ATTACHMENT_STORE_OP_DONT_CARE,
+    NoneQCOM,
+};
+// ConvertRenderPassStoreOpToVkStoreOp rely on the fact that only NoneQCOM is different from VK
+// enums.
+static_assert(RenderPassStoreOp::NoneQCOM == 2, "ConvertRenderPassStoreOpToVkStoreOp must updated");
+
+inline VkAttachmentStoreOp ConvertRenderPassStoreOpToVkStoreOp(RenderPassStoreOp storeOp)
+{
+    return storeOp == RenderPassStoreOp::NoneQCOM ? VK_ATTACHMENT_STORE_OP_NONE_QCOM
+                                                  : static_cast<VkAttachmentStoreOp>(storeOp);
+}
+
 // There can be a maximum of IMPLEMENTATION_MAX_DRAW_BUFFERS color and resolve attachments, plus one
 // depth/stencil attachment and one depth/stencil resolve attachment.
 constexpr size_t kMaxFramebufferAttachments = gl::IMPLEMENTATION_MAX_DRAW_BUFFERS * 2 + 2;
@@ -283,11 +299,11 @@ static_assert(kRenderPassDescSize == 12, "Size check failed");
 
 struct PackedAttachmentOpsDesc final
 {
-    // VkAttachmentLoadOp is in range [0, 2], and VkAttachmentStoreOp is in range [0, 1].
+    // VkAttachmentLoadOp is in range [0, 2], and VkAttachmentStoreOp is in range [0, 2].
     uint16_t loadOp : 2;
-    uint16_t storeOp : 1;
+    uint16_t storeOp : 2;
     uint16_t stencilLoadOp : 2;
-    uint16_t stencilStoreOp : 1;
+    uint16_t stencilStoreOp : 2;
     // If a corresponding resolve attachment exists, storeOp may already be DONT_CARE, and it's
     // unclear whether the attachment was invalidated or not.  This information is passed along here
     // so that the resolve attachment's storeOp can be set to DONT_CARE if the attachment is
@@ -296,7 +312,7 @@ struct PackedAttachmentOpsDesc final
     // render pass compatibility rules.
     uint16_t isInvalidated : 1;
     uint16_t isStencilInvalidated : 1;
-    uint16_t padding1 : 8;
+    uint16_t padding1 : 6;
 
     // 4-bits to force pad the structure to exactly 2 bytes.  Note that we currently don't support
     // any of the extension layouts, whose values start at 1'000'000'000.
@@ -328,12 +344,10 @@ class AttachmentOpsArray final
     void setLayouts(PackedAttachmentIndex index,
                     ImageLayout initialLayout,
                     ImageLayout finalLayout);
-    void setOps(PackedAttachmentIndex index,
-                VkAttachmentLoadOp loadOp,
-                VkAttachmentStoreOp storeOp);
+    void setOps(PackedAttachmentIndex index, VkAttachmentLoadOp loadOp, RenderPassStoreOp storeOp);
     void setStencilOps(PackedAttachmentIndex index,
                        VkAttachmentLoadOp loadOp,
-                       VkAttachmentStoreOp storeOp);
+                       RenderPassStoreOp storeOp);
 
     void setClearOp(PackedAttachmentIndex index);
     void setClearStencilOp(PackedAttachmentIndex index);
