@@ -149,6 +149,8 @@ const char *GetVendorString(uint32_t vendorId)
             return "Intel";
         case VENDOR_ID_NVIDIA:
             return "NVIDIA";
+        case VENDOR_ID_POWERVR:
+            return "Imagination Technologies";
         case VENDOR_ID_QUALCOMM:
             return "Qualcomm";
         default:
