@@ -18,6 +18,23 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e1b5bcbf_0055b0e2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-12T13:03:37Z",
+      "side": 1,
+      "message": "Also, please add your name \u0026 company where appropriate to OWNERS and CONTRIBUTORS.",
+      "revId": "bdbb20850fedde7f568b2e84c1f8f95baeb5380b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ac853ef8_7ba00d32",
