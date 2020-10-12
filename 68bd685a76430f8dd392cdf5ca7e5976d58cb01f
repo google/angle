@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f0a03acf_3c2cef6e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-12T12:49:02Z",
+      "side": 1,
+      "message": "LGTM after the local testing. Regression test would be welcome.",
+      "revId": "68bd685a76430f8dd392cdf5ca7e5976d58cb01f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
