@@ -6986,6 +6986,43 @@ TEST_P(Texture3DTestES3, FormatRedefinitionBug)
     ASSERT_GL_NO_ERROR();
 }
 
+// Test glTexSubImage using PBO to 3D texture that expose the regression bug
+// https://issuetracker.google.com/170657065
+TEST_P(Texture3DTestES3, TexSubImageWithPBO)
+{
+    GLTexture tex;
+
+    GLuint pbo;
+    glGenBuffers(1, &pbo);
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, pbo);
+    std::vector<uint8_t> pixelData(128 * 128 * 8 * 4, 0x1f);
+    glBufferData(GL_PIXEL_UNPACK_BUFFER, 128 * 128 * 8 * 4, pixelData.data(), GL_STATIC_DRAW);
+
+    glBindTexture(GL_TEXTURE_3D, tex.get());
+    glTexStorage3D(GL_TEXTURE_3D, 8, GL_RGBA8, 128, 128, 8);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexSubImage3D(GL_TEXTURE_3D, 0, 0, 0, 0, 128, 128, 8, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glTexSubImage3D(GL_TEXTURE_3D, 1, 0, 0, 0, 64, 64, 4, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glTexSubImage3D(GL_TEXTURE_3D, 2, 0, 0, 0, 32, 32, 2, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glTexSubImage3D(GL_TEXTURE_3D, 3, 0, 0, 0, 16, 16, 1, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glTexSubImage3D(GL_TEXTURE_3D, 4, 0, 0, 0, 8, 8, 1, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glTexSubImage3D(GL_TEXTURE_3D, 5, 0, 0, 0, 4, 4, 1, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glTexSubImage3D(GL_TEXTURE_3D, 6, 0, 0, 0, 2, 2, 1, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glTexSubImage3D(GL_TEXTURE_3D, 7, 0, 0, 0, 1, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    drawQuad(mProgram, "position", 0.5f);
+    ASSERT_GL_NO_ERROR();
+
+    glTexSubImage3D(GL_TEXTURE_3D, 0, 0, 0, 0, 128, 128, 8, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glTexSubImage3D(GL_TEXTURE_3D, 1, 0, 0, 0, 64, 64, 4, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glTexSubImage3D(GL_TEXTURE_3D, 2, 0, 0, 0, 32, 32, 2, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    ASSERT_GL_NO_ERROR();
+
+    drawQuad(mProgram, "position", 0.5f);
+    ASSERT_GL_NO_ERROR();
+}
+
 // Test basic pixel unpack buffer OOB checks when uploading to a 2D or 3D texture
 TEST_P(Texture3DTestES3, BasicUnpackBufferOOB)
 {

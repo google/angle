@@ -181,13 +181,13 @@ void GetRenderTargetLayerCountAndIndex(vk::ImageHelper *image,
 
         case gl::TextureType::_3D:
             *layerIndex = index.hasLayer() ? index.getLayerIndex() : 0;
-            *layerCount = image->getExtents().depth;
+            *layerCount = index.hasLayer() ? image->getExtents().depth : 1;
             return;
 
         case gl::TextureType::_2DArray:
         case gl::TextureType::_2DMultisampleArray:
             *layerIndex = index.hasLayer() ? index.getLayerIndex() : 0;
-            *layerCount = image->getLayerCount();
+            *layerCount = index.hasLayer() ? image->getLayerCount() : 1;
             return;
 
         default:
