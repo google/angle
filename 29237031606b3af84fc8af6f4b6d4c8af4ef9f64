@@ -1,0 +1,90 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a7ab4b7e_40b15ebf",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-12T12:55:05Z",
+      "side": 1,
+      "message": "Nice work! A couple small comments.",
+      "revId": "29237031606b3af84fc8af6f4b6d4c8af4ef9f64",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2837b57c_ba13b753",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1933,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-12T12:55:05Z",
+      "side": 1,
+      "message": "If you could post the names of some of the failing tests for the SwiftShader/QC bugs, that would be appreciated.",
+      "range": {
+        "startLine": 1933,
+        "startChar": 22,
+        "endLine": 1933,
+        "endChar": 46
+      },
+      "revId": "29237031606b3af84fc8af6f4b6d4c8af4ef9f64",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0414cf0b_0f46aaed",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1934,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-12T12:55:05Z",
+      "side": 1,
+      "message": "nit: Qualcomm (typo)",
+      "range": {
+        "startLine": 1934,
+        "startChar": 9,
+        "endLine": 1934,
+        "endChar": 17
+      },
+      "revId": "29237031606b3af84fc8af6f4b6d4c8af4ef9f64",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b3aa4f65_cb3c945d",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1468,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-12T12:55:05Z",
+      "side": 1,
+      "message": "Instead of changing the code below, can you update this check to IsArrayTextureType?",
+      "range": {
+        "startLine": 1463,
+        "startChar": 0,
+        "endLine": 1468,
+        "endChar": 0
+      },
+      "revId": "29237031606b3af84fc8af6f4b6d4c8af4ef9f64",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
