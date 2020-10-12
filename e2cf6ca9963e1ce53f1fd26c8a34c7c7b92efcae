@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6c1d53af_5a2b2655",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-10-12T02:30:55Z",
+      "side": 1,
+      "message": "Tried the change locally and I can reproduce the crash (which was an ASSERT failure) on Fuchsia, and this reland fixes it. I can\u0027t verify it on the bots until the change lands. I\u0027m going to take advantage of it being weekend and land this so we can check the next roll (not trying to bypass reviews, I swear). Please revert again if broken (if I don\u0027t get a chance to do that myself).\n\nOn Tuesday I\u0027ll add a regression test for external images, and see if I can figure out how to write one for AHBs too.\n\n@Charlie, hopefully the AHB fix will take care of the Manhattan crash. If it doesn\u0027t, I\u0027d need your help figuring out why.",
+      "revId": "e2cf6ca9963e1ce53f1fd26c8a34c7c7b92efcae",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
