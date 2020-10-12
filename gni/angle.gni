@@ -9,6 +9,9 @@ declare_args() {
 
   # Extract native libs in ANGLE apk. Useful for flamegraph generation.
   angle_extract_native_libs = false
+
+  # Display mode for ANGLE vulkan display, could be 'simple' or 'headless', default is 'simple'.
+  angle_vulkan_display_mode = "simple"
 }
 
 if (angle_has_build) {
@@ -27,6 +30,7 @@ if (angle_has_build) {
   }
 
   angle_use_x11 = use_x11 && !is_ggp
+  angle_use_vulkan_display = is_linux && !use_x11 && !is_ggp && !use_ozone
 } else {
   declare_args() {
     is_ubsan = false
@@ -35,6 +39,7 @@ if (angle_has_build) {
     build_with_chromium = false
     dcheck_always_on = false
     angle_use_x11 = (is_linux || is_chromeos) && !is_ggp
+    angle_use_vulkan_display = is_linux && !angle_use_x11 && !is_ggp
     use_ozone = false
     ozone_platform_gbm = false
     use_fuzzing_engine = false
@@ -101,10 +106,11 @@ declare_args() {
   # Vulkan Validation Layers compatibility issues, see http://crrev/c/1405714.
   # Otherwise, API level 24 would have been enough.
   angle_enable_vulkan =
-      angle_has_build && ((is_win && !angle_is_winuwp) ||
-                          (is_linux && angle_use_x11 && !is_chromeos) ||
-                          (is_android && ndk_api_level_at_least_26) ||
-                          is_fuchsia || is_ggp || is_mac)
+      angle_has_build &&
+      ((is_win && !angle_is_winuwp) ||
+       (is_linux && (angle_use_x11 || angle_use_vulkan_display) &&
+        !is_chromeos) || (is_android && ndk_api_level_at_least_26) ||
+       is_fuchsia || is_ggp || is_mac)
   angle_enable_null = true
   angle_enable_essl = true
   angle_enable_glsl = true
