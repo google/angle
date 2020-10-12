@@ -101,6 +101,15 @@ _vulkan_backend_sources = [
   "vk_wrapper.h",
 ]
 
+if (is_linux) {
+  _vulkan_backend_sources += [
+    "display/DisplayVkSimple.cpp",
+    "display/DisplayVkSimple.h",
+    "display/WindowSurfaceVkSimple.cpp",
+    "display/WindowSurfaceVkSimple.h",
+  ]
+}
+
 if (is_android) {
   _vulkan_backend_sources += [
     "android/DisplayVkAndroid.cpp",

@@ -226,11 +226,17 @@ EGLAttrib GetDeviceTypeFromEnvironment()
 
 EGLAttrib GetPlatformTypeFromEnvironment()
 {
-#if defined(ANGLE_USE_X11) && !defined(ANGLE_USE_OZONE)
+#if defined(ANGLE_USE_OZONE)
+    return 0;
+#elif defined(ANGLE_USE_X11)
     return EGL_PLATFORM_X11_EXT;
+#elif defined(ANGLE_USE_VULKAN_DISPLAY) && defined(ANGLE_VULKAN_DISPLAY_MODE_SIMPLE)
+    return EGL_PLATFORM_VULKAN_DISPLAY_MODE_SIMPLE_ANGLE;
+#elif defined(ANGLE_USE_VULKAN_DISPLAY) && defined(ANGLE_VULKAN_DISPLAY_MODE_HEADLESS)
+    return EGL_PLATFORM_VULKAN_DISPLAY_MODE_HEADLESS_ANGLE;
 #else
     return 0;
-#endif
+#endif  // defined(ANGLE_USE_OZONE)
 }
 
 rx::DisplayImpl *CreateDisplayFromAttribs(EGLAttrib displayType,
@@ -354,6 +360,24 @@ rx::DisplayImpl *CreateDisplayFromAttribs(EGLAttrib displayType,
                 impl = rx::CreateVulkanXcbDisplay(state);
                 break;
             }
+#        elif defined(ANGLE_USE_VULKAN_DISPLAY)
+            if (platformType == EGL_PLATFORM_VULKAN_DISPLAY_MODE_SIMPLE_ANGLE &&
+                rx::IsVulkanSimpleDisplayAvailable())
+            {
+                impl = rx::CreateVulkanSimpleDisplay(state);
+            }
+            else if (platformType == EGL_PLATFORM_VULKAN_DISPLAY_MODE_HEADLESS_ANGLE)
+            {
+                // TODO: anglebug.com/5260
+                // Add support for headless rendering
+                UNIMPLEMENTED();
+            }
+            else
+            {
+                // Not supported creation type on vulkan display, fail display creation.
+                impl = nullptr;
+            }
+            break;
 #        endif
 #    elif defined(ANGLE_PLATFORM_ANDROID)
             if (rx::IsVulkanAndroidDisplayAvailable())
