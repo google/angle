@@ -67,6 +67,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "191219d4_65105597",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1933,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-12T21:24:35Z",
+      "side": 1,
+      "message": "Ah, I was just wondering for the QC/SwS cases, if it was any test from the list, or only a few specific tests that were failing.",
+      "parentUuid": "bcf22c14_acc77204",
+      "range": {
+        "startLine": 1933,
+        "startChar": 22,
+        "endLine": 1933,
+        "endChar": 46
+      },
+      "revId": "29237031606b3af84fc8af6f4b6d4c8af4ef9f64",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "0414cf0b_0f46aaed",
         "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
         "patchSetId": 4
