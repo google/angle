@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7f06a3fb_6875dd9c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-13T14:35:43Z",
+      "side": 1,
+      "message": "Thanks Kyle. FYI you can let us know you\u0027ve answered the comments by marking them as \"Done\" then hitting the \"Reply\" button. Still LGTM - Geoff/Shabi can you sign off?",
+      "revId": "3db829bf012ffc6eb1504579f155cff5ca10b00e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
