@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b853ef35_74993bea",
+        "filename": "src/libANGLE/Caps.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1036,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2020-10-13T19:49:52Z",
+      "side": 1,
+      "message": "I can never remember the semantics of \"esOnlyExtension\". Does that mean that it\u0027s only advertised on ANGLE\u0027s OpenGL ES contexts, or is only available on ANGLE\u0027s OpenGL ES backend? This extension is available only on desktop.",
+      "revId": "1298489e353b8dd1bfacb548aab2817902f54532",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
