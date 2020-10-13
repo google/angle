@@ -18,6 +18,63 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1f341f0d_98f08130",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-10-13T18:30:18Z",
+      "side": 1,
+      "message": "Thanks Mohan, really glad your team is hacking away at 3.2 extensions.",
+      "revId": "e7cc26683317b05e2da440fb50329922f8513869",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1d213b9f_1d988ddd",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1313,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-10-13T18:30:18Z",
+      "side": 1,
+      "message": "Nit: I would just say `\u003d mPhysicalDeviceFeatures.imageCubeArray`. The ones with driver bugs would ideally fix the driver bugs at some point, and enabling this feature is likely not going to cause harm.",
+      "range": {
+        "startLine": 1313,
+        "startChar": 46,
+        "endLine": 1313,
+        "endChar": 90
+      },
+      "revId": "e7cc26683317b05e2da440fb50329922f8513869",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "46ac53f4_15dc9b30",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1458,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-10-13T18:30:18Z",
+      "side": 1,
+      "message": "Charlie had just made a change which made `getLayerCount()` check for `index.hasLayer()`. Is this passing the new test he added in that change?",
+      "revId": "e7cc26683317b05e2da440fb50329922f8513869",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2eb44d6e_9301a09f",
@@ -36,6 +93,29 @@
         "startChar": 25,
         "endLine": 1465,
         "endChar": 45
+      },
+      "revId": "e7cc26683317b05e2da440fb50329922f8513869",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e6693796_e17a0a6b",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 212,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-10-13T18:30:18Z",
+      "side": 1,
+      "message": "nit, can replace with mNativeExtensions.textureCubeMapArrayOES, so that the expression is not repeated.",
+      "range": {
+        "startLine": 212,
+        "startChar": 48,
+        "endLine": 212,
+        "endChar": 91
       },
       "revId": "e7cc26683317b05e2da440fb50329922f8513869",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
