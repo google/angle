@@ -662,9 +662,9 @@ angle::Result ProgramExecutableVk::getGraphicsPipeline(
     ASSERT(shaderProgram);
     ANGLE_TRY(renderer->getPipelineCache(&pipelineCache));
     return shaderProgram->getGraphicsPipeline(
-        contextVk, &contextVk->getRenderPassCache(), *pipelineCache,
-        contextVk->getCurrentQueueSerial(), getPipelineLayout(), desc, activeAttribLocations,
-        glState.getProgramExecutable()->getAttributesTypeMask(), descPtrOut, pipelineOut);
+        contextVk, &contextVk->getRenderPassCache(), *pipelineCache, getPipelineLayout(), desc,
+        activeAttribLocations, glState.getProgramExecutable()->getAttributesTypeMask(), descPtrOut,
+        pipelineOut);
 }
 
 angle::Result ProgramExecutableVk::getComputePipeline(ContextVk *contextVk,

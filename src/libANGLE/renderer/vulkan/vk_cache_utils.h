@@ -1179,14 +1179,11 @@ class RenderPassHelper final : angle::NonCopyable
     const RenderPass &getRenderPass() const;
     RenderPass &getRenderPass();
 
-    void updateSerial(Serial serial);
-
     const RenderPassPerfCounters &getPerfCounters() const;
     RenderPassPerfCounters &getPerfCounters();
 
   private:
     RenderPass mRenderPass;
-    Serial mSerial;
     RenderPassPerfCounters mPerfCounters;
 };
 }  // namespace vk
@@ -1273,7 +1270,6 @@ class RenderPassCache final : angle::NonCopyable
     void destroy(VkDevice device);
 
     ANGLE_INLINE angle::Result getCompatibleRenderPass(ContextVk *contextVk,
-                                                       Serial serial,
                                                        const vk::RenderPassDesc &desc,
                                                        vk::RenderPass **renderPassOut)
     {
@@ -1284,30 +1280,26 @@ class RenderPassCache final : angle::NonCopyable
             ASSERT(!innerCache.empty());
 
             // Find the first element and return it.
-            innerCache.begin()->second.updateSerial(serial);
             *renderPassOut = &innerCache.begin()->second.getRenderPass();
             return angle::Result::Continue;
         }
 
-        return addRenderPass(contextVk, serial, desc, renderPassOut);
+        return addRenderPass(contextVk, desc, renderPassOut);
     }
 
     angle::Result getRenderPassWithOps(ContextVk *contextVk,
-                                       Serial serial,
                                        const vk::RenderPassDesc &desc,
                                        const vk::AttachmentOpsArray &attachmentOps,
                                        vk::RenderPass **renderPassOut);
 
   private:
     angle::Result getRenderPassWithOpsImpl(ContextVk *contextVk,
-                                           Serial serial,
                                            const vk::RenderPassDesc &desc,
                                            const vk::AttachmentOpsArray &attachmentOps,
                                            bool updatePerfCounters,
                                            vk::RenderPass **renderPassOut);
 
     angle::Result addRenderPass(ContextVk *contextVk,
-                                Serial serial,
                                 const vk::RenderPassDesc &desc,
                                 vk::RenderPass **renderPassOut);
 

@@ -2145,7 +2145,6 @@ class ShaderProgramHelper : angle::NonCopyable
         ContextVk *contextVk,
         RenderPassCache *renderPassCache,
         const PipelineCache &pipelineCache,
-        Serial currentQueueSerial,
         const PipelineLayout &pipelineLayout,
         const GraphicsPipelineDesc &pipelineDesc,
         const gl::AttributesMask &activeAttribLocationsMask,
@@ -2155,9 +2154,8 @@ class ShaderProgramHelper : angle::NonCopyable
     {
         // Pull in a compatible RenderPass.
         RenderPass *compatibleRenderPass = nullptr;
-        ANGLE_TRY(renderPassCache->getCompatibleRenderPass(contextVk, currentQueueSerial,
-                                                           pipelineDesc.getRenderPassDesc(),
-                                                           &compatibleRenderPass));
+        ANGLE_TRY(renderPassCache->getCompatibleRenderPass(
+            contextVk, pipelineDesc.getRenderPassDesc(), &compatibleRenderPass));
 
         ShaderModule *vertexShader   = &mShaders[gl::ShaderType::Vertex].get().get();
         ShaderModule *fragmentShader = mShaders[gl::ShaderType::Fragment].valid()

@@ -1156,13 +1156,11 @@ angle::Result InitializeRenderPassFromDesc(ContextVk *contextVk,
     return angle::Result::Continue;
 }
 
-void GetRenderPassAndUpdateSerial(ContextVk *contextVk,
-                                  Serial serial,
-                                  bool updatePerfCounters,
-                                  vk::RenderPassHelper *renderPassHelper,
-                                  vk::RenderPass **renderPassOut)
+void GetRenderPassAndUpdateCounters(ContextVk *contextVk,
+                                    bool updatePerfCounters,
+                                    vk::RenderPassHelper *renderPassHelper,
+                                    vk::RenderPass **renderPassOut)
 {
-    renderPassHelper->updateSerial(serial);
     *renderPassOut = &renderPassHelper->getRenderPass();
     if (updatePerfCounters)
     {
@@ -3096,7 +3094,6 @@ RenderPassHelper::RenderPassHelper(RenderPassHelper &&other)
 RenderPassHelper &RenderPassHelper::operator=(RenderPassHelper &&other)
 {
     mRenderPass   = std::move(other.mRenderPass);
-    mSerial       = std::move(other.mSerial);
     mPerfCounters = std::move(other.mPerfCounters);
     return *this;
 }
@@ -3104,7 +3101,6 @@ RenderPassHelper &RenderPassHelper::operator=(RenderPassHelper &&other)
 void RenderPassHelper::destroy(VkDevice device)
 {
     mRenderPass.destroy(device);
-    mSerial = Serial();
 }
 
 const RenderPass &RenderPassHelper::getRenderPass() const
@@ -3115,11 +3111,6 @@ const RenderPass &RenderPassHelper::getRenderPass() const
 RenderPass &RenderPassHelper::getRenderPass()
 {
     return mRenderPass;
-}
-
-void RenderPassHelper::updateSerial(Serial serial)
-{
-    mSerial = serial;
 }
 
 const RenderPassPerfCounters &RenderPassHelper::getPerfCounters() const
@@ -3154,7 +3145,6 @@ void RenderPassCache::destroy(VkDevice device)
 }
 
 angle::Result RenderPassCache::addRenderPass(ContextVk *contextVk,
-                                             Serial serial,
                                              const vk::RenderPassDesc &desc,
                                              vk::RenderPass **renderPassOut)
 {
@@ -3190,20 +3180,18 @@ angle::Result RenderPassCache::addRenderPass(ContextVk *contextVk,
         ops.initWithLoadStore(colorIndexVk, imageLayout, imageLayout);
     }
 
-    return getRenderPassWithOpsImpl(contextVk, serial, desc, ops, false, renderPassOut);
+    return getRenderPassWithOpsImpl(contextVk, desc, ops, false, renderPassOut);
 }
 
 angle::Result RenderPassCache::getRenderPassWithOps(ContextVk *contextVk,
-                                                    Serial serial,
                                                     const vk::RenderPassDesc &desc,
                                                     const vk::AttachmentOpsArray &attachmentOps,
                                                     vk::RenderPass **renderPassOut)
 {
-    return getRenderPassWithOpsImpl(contextVk, serial, desc, attachmentOps, true, renderPassOut);
+    return getRenderPassWithOpsImpl(contextVk, desc, attachmentOps, true, renderPassOut);
 }
 
 angle::Result RenderPassCache::getRenderPassWithOpsImpl(ContextVk *contextVk,
-                                                        Serial serial,
                                                         const vk::RenderPassDesc &desc,
                                                         const vk::AttachmentOpsArray &attachmentOps,
                                                         bool updatePerfCounters,
@@ -3217,10 +3205,9 @@ angle::Result RenderPassCache::getRenderPassWithOpsImpl(ContextVk *contextVk,
         auto innerIt = innerCache.find(attachmentOps);
         if (innerIt != innerCache.end())
         {
-            // Update the serial before we return.
             // TODO(jmadill): Could possibly use an MRU cache here.
-            vk::GetRenderPassAndUpdateSerial(contextVk, serial, updatePerfCounters,
-                                             &innerIt->second, renderPassOut);
+            vk::GetRenderPassAndUpdateCounters(contextVk, updatePerfCounters, &innerIt->second,
+                                               renderPassOut);
             return angle::Result::Continue;
         }
     }
@@ -3235,8 +3222,8 @@ angle::Result RenderPassCache::getRenderPassWithOpsImpl(ContextVk *contextVk,
 
     InnerCache &innerCache = outerIt->second;
     auto insertPos         = innerCache.emplace(attachmentOps, std::move(newRenderPass));
-    vk::GetRenderPassAndUpdateSerial(contextVk, serial, updatePerfCounters,
-                                     &insertPos.first->second, renderPassOut);
+    vk::GetRenderPassAndUpdateCounters(contextVk, updatePerfCounters, &insertPos.first->second,
+                                       renderPassOut);
 
     // TODO(jmadill): Trim cache, and pre-populate with the most common RPs on startup.
     return angle::Result::Continue;

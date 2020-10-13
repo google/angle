@@ -4370,16 +4370,14 @@ angle::Result ContextVk::finishToSerial(Serial serial)
 angle::Result ContextVk::getCompatibleRenderPass(const vk::RenderPassDesc &desc,
                                                  vk::RenderPass **renderPassOut)
 {
-    return mRenderPassCache.getCompatibleRenderPass(this, getCurrentQueueSerial(), desc,
-                                                    renderPassOut);
+    return mRenderPassCache.getCompatibleRenderPass(this, desc, renderPassOut);
 }
 
 angle::Result ContextVk::getRenderPassWithOps(const vk::RenderPassDesc &desc,
                                               const vk::AttachmentOpsArray &ops,
                                               vk::RenderPass **renderPassOut)
 {
-    return mRenderPassCache.getRenderPassWithOps(this, getCurrentQueueSerial(), desc, ops,
-                                                 renderPassOut);
+    return mRenderPassCache.getRenderPassWithOps(this, desc, ops, renderPassOut);
 }
 
 angle::Result ContextVk::ensureSubmitFenceInitialized()
