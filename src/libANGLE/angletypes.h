@@ -432,6 +432,7 @@ class BlendStateExt final
 
         static constexpr Type GetMask(const size_t drawBuffers)
         {
+            ASSERT(drawBuffers > 0);
             ASSERT(drawBuffers <= IMPLEMENTATION_MAX_DRAW_BUFFERS);
             return static_cast<Type>(0xFFFFFFFFFFFFFFFFull >> (64 - drawBuffers * kBits));
         }
