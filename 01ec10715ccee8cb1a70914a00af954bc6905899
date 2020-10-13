@@ -16,6 +16,29 @@
       "message": "Looks good to me for what it\u0027s worth. One small comment.\n",
       "revId": "01ec10715ccee8cb1a70914a00af954bc6905899",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ef2b7226_152035b7",
+        "filename": "src/libANGLE/renderer/gl/egl/DisplayEGL.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 647,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2020-10-13T21:10:23Z",
+      "side": 1,
+      "message": "I don\u0027t know why I can\u0027t use mHasEXTCreateContextRobustness (set in DisplayEGL::initialize) here, but without explicitly checking, this fails robustness tests on Android. Do these functions get called in reverse order on Android?",
+      "range": {
+        "startLine": 647,
+        "startChar": 7,
+        "endLine": 647,
+        "endChar": 64
+      },
+      "revId": "01ec10715ccee8cb1a70914a00af954bc6905899",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
