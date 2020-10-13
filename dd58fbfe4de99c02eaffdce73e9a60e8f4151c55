@@ -16,6 +16,29 @@
       "message": "PTAL",
       "revId": "dd58fbfe4de99c02eaffdce73e9a60e8f4151c55",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "95541cee_e41bd782",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1498,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-13T02:11:21Z",
+      "side": 1,
+      "message": "I\u0027m still not sure this is right. I think you should try to update GetRenderTargetLayerCountAndIndex if you need to update layerCount above. For instance, onImageTransferWrite might be addressing the wrong range of layers. What goes wrong if you remove this code?",
+      "range": {
+        "startLine": 1493,
+        "startChar": 0,
+        "endLine": 1498,
+        "endChar": 5
+      },
+      "revId": "dd58fbfe4de99c02eaffdce73e9a60e8f4151c55",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
