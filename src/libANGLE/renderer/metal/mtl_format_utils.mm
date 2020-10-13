@@ -144,8 +144,8 @@ bool Format::needConversion(angle::FormatID srcFormatId) const
         (srcFormatId == angle::FormatID::BC1_RGB_UNORM_SRGB_BLOCK &&
          actualFormatId == angle::FormatID::BC1_RGBA_UNORM_SRGB_BLOCK))
     {
-        // DXT1 RGB format already swizzled with alpha=1, so no need to convert
-        ASSERT(swizzled);
+        // When texture swizzling is available, DXT1 RGB format will be swizzled with RGB1.
+        // WebGL allows unswizzled mapping when swizzling is not available. No need to convert.
         return false;
     }
     if (srcFormatId == angle::FormatID::ETC1_R8G8B8_UNORM_BLOCK &&

@@ -31,9 +31,9 @@ bool IsMetalTextureSwizzleAvailable()
     // hardwares, however, it is OK for testing.
     if (ANGLE_APPLE_AVAILABLE_XCI(10.15, 13.0, 13))
     {
-        // Intel doesn't support swizzle because it is GPU family 1. We don't have a way to detect
-        // Metal family here, so skip on Intel.
-        return !IsIntel();
+        // All NVIDIA and older Intel don't support swizzle because they are GPU family 1.
+        // We don't have a way to detect Metal family here, so skip all Intel for now.
+        return !IsIntel() && !IsNVIDIA();
     }
     return false;
 }

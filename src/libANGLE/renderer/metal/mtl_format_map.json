@@ -184,11 +184,11 @@
             "R5G5B5A1_UNORM": "R8G8B8A8_UNORM",
             "R4G4B4A4_UNORM": "R8G8B8A8_UNORM",
             "BC1_RGB_UNORM_BLOCK": {
-                "default": "NONE",
+                "default": "BC1_RGBA_UNORM_BLOCK",
                 "swizzle": ["RGB1", "BC1_RGBA_UNORM_BLOCK"]
             },
             "BC1_RGB_UNORM_SRGB_BLOCK": {
-                "default": "NONE",
+                "default": "BC1_RGBA_UNORM_SRGB_BLOCK",
                 "swizzle": ["RGB1", "BC1_RGBA_UNORM_SRGB_BLOCK"]
             },
             "ETC1_R8G8B8_UNORM_BLOCK": "R8G8B8A8_UNORM",
