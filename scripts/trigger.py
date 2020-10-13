@@ -88,19 +88,24 @@ def main():
     if args.device_os:
         swarming_args += ['-d', 'device_os=' + args.device_os]
 
-    for i in range(args.shards):
-        shard_args = swarming_args[:]
-        shard_args.extend([
-            '--env',
-            'GTEST_TOTAL_SHARDS=%d' % args.shards,
-            '--env',
-            'GTEST_SHARD_INDEX=%d' % i,
-        ])
-        if unknown:
-            shard_args += ["--"] + unknown
+    if args.shards > 1:
+        for i in range(args.shards):
+            shard_args = swarming_args[:]
+            shard_args.extend([
+                '--env',
+                'GTEST_TOTAL_SHARDS=%d' % args.shards,
+                '--env',
+                'GTEST_SHARD_INDEX=%d' % i,
+            ])
+            if unknown:
+                shard_args += ["--"] + unknown
 
-        logging.info(' '.join(shard_args))
-        subprocess.call(shard_args)
+            logging.info(' '.join(shard_args))
+            subprocess.call(shard_args)
+    else:
+        if unknown:
+            swarming_args += ["--"] + unknown
+        subprocess.call(swarming_args)
     return 0
 
 
