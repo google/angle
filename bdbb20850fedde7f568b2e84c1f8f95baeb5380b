@@ -58,6 +58,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d32ffb4c_eb417cb2",
+        "filename": "src/libANGLE/renderer/driver_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 1460524
+      },
+      "writtenOn": "2020-10-13T14:44:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ac853ef8_7ba00d32",
+      "range": {
+        "startLine": 154,
+        "startChar": 13,
+        "endLine": 154,
+        "endChar": 30
+      },
+      "revId": "bdbb20850fedde7f568b2e84c1f8f95baeb5380b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f89b03df_7a0429d3",
@@ -71,6 +95,30 @@
       "writtenOn": "2020-10-12T12:47:53Z",
       "side": 1,
       "message": "nit: can you place this so it\u0027s sorted alphabetically? i.e. just before QUALCOMM.",
+      "range": {
+        "startLine": 33,
+        "startChar": 4,
+        "endLine": 33,
+        "endChar": 21
+      },
+      "revId": "bdbb20850fedde7f568b2e84c1f8f95baeb5380b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0871a340_33f29f66",
+        "filename": "src/libANGLE/renderer/driver_utils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1460524
+      },
+      "writtenOn": "2020-10-13T14:44:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f89b03df_7a0429d3",
       "range": {
         "startLine": 33,
         "startChar": 4,
