@@ -107,6 +107,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "8f8760a7_ca2fe9dc",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1946,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-13T20:49:39Z",
+      "side": 1,
+      "message": "Could also do that as a follow-up Shabi.",
+      "parentUuid": "85581316_2d50dd72",
+      "range": {
+        "startLine": 1946,
+        "startChar": 61,
+        "endLine": 1946,
+        "endChar": 75
+      },
+      "revId": "e7cc26683317b05e2da440fb50329922f8513869",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "46ac53f4_15dc9b30",
         "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
         "patchSetId": 6
