@@ -198,7 +198,13 @@ ContextMtl::~ContextMtl() {}
 
 angle::Result ContextMtl::initialize()
 {
-    mBlendDesc.reset();
+    for (mtl::BlendDesc &blendDesc : mBlendDescArray)
+    {
+        blendDesc.reset();
+    }
+
+    mWriteMaskArray.fill(MTLColorWriteMaskAll);
+
     mDepthStencilDesc.reset();
 
     mTriFanIndexBuffer.initialize(this, 0, mtl::kIndexBufferOffsetAlignment,
@@ -832,7 +838,20 @@ angle::Result ContextMtl::syncState(const gl::Context *context,
     // Initialize incomplete texture set.
     ANGLE_TRY(ensureIncompleteTexturesCreated(context));
 
-    for (size_t dirtyBit : dirtyBits)
+    // Metal's blend state is set at once, while ANGLE tracks separate dirty
+    // bits: ENABLED, FUNCS, and EQUATIONS. Merge all three of them to the first one.
+    constexpr gl::State::DirtyBits checkBlendBitsMask(
+        angle::Bit<gl::State::DirtyBits::value_type>(gl::State::DIRTY_BIT_BLEND_ENABLED) |
+        angle::Bit<gl::State::DirtyBits::value_type>(gl::State::DIRTY_BIT_BLEND_FUNCS) |
+        angle::Bit<gl::State::DirtyBits::value_type>(gl::State::DIRTY_BIT_BLEND_EQUATIONS));
+    constexpr gl::State::DirtyBits resetBlendBitsMask(
+        angle::Bit<gl::State::DirtyBits::value_type>(gl::State::DIRTY_BIT_BLEND_FUNCS) |
+        angle::Bit<gl::State::DirtyBits::value_type>(gl::State::DIRTY_BIT_BLEND_EQUATIONS));
+
+    gl::State::DirtyBits mergedDirtyBits = gl::State::DirtyBits(dirtyBits) & ~resetBlendBitsMask;
+    mergedDirtyBits.set(gl::State::DIRTY_BIT_BLEND_ENABLED, (dirtyBits & checkBlendBitsMask).any());
+
+    for (size_t dirtyBit : mergedDirtyBits)
     {
         switch (dirtyBit)
         {
@@ -856,21 +875,19 @@ angle::Result ContextMtl::syncState(const gl::Context *context,
                 mDirtyBits.set(DIRTY_BIT_BLEND_COLOR);
                 break;
             case gl::State::DIRTY_BIT_BLEND_ENABLED:
-                mBlendDesc.updateBlendEnabled(glState.getBlendState());
-                invalidateRenderPipeline();
-                break;
-            case gl::State::DIRTY_BIT_BLEND_FUNCS:
-                mBlendDesc.updateBlendFactors(glState.getBlendState());
-                invalidateRenderPipeline();
-                break;
-            case gl::State::DIRTY_BIT_BLEND_EQUATIONS:
-                mBlendDesc.updateBlendOps(glState.getBlendState());
-                invalidateRenderPipeline();
+                updateBlendDescArray(glState.getBlendStateExt());
                 break;
             case gl::State::DIRTY_BIT_COLOR_MASK:
-                mBlendDesc.updateWriteMask(glState.getBlendState());
+            {
+                const gl::BlendStateExt &blendStateExt = glState.getBlendStateExt();
+                for (size_t i = 0; i < mBlendDescArray.size(); i++)
+                {
+                    mBlendDescArray[i].updateWriteMask(blendStateExt.getColorMaskIndexed(i));
+                    mWriteMaskArray[i] = mBlendDescArray[i].writeMask;
+                }
                 invalidateRenderPipeline();
                 break;
+            }
             case gl::State::DIRTY_BIT_SAMPLE_ALPHA_TO_COVERAGE_ENABLED:
                 invalidateRenderPipeline();
                 break;
@@ -1299,9 +1316,9 @@ const mtl::ClearColorValue &ContextMtl::getClearColorValue() const
 {
     return mClearColor;
 }
-MTLColorWriteMask ContextMtl::getColorMask() const
+const mtl::WriteMaskArray &ContextMtl::getWriteMaskArray() const
 {
-    return mBlendDesc.writeMask;
+    return mWriteMaskArray;
 }
 float ContextMtl::getClearDepthValue() const
 {
@@ -1565,6 +1582,37 @@ void ContextMtl::updateDepthRange(float nearPlane, float farPlane)
     mDirtyBits.set(DIRTY_BIT_VIEWPORT);
 
     invalidateDriverUniforms();
+}
+
+void ContextMtl::updateBlendDescArray(const gl::BlendStateExt &blendStateExt)
+{
+    for (size_t i = 0; i < mBlendDescArray.size(); i++)
+    {
+        mtl::BlendDesc &blendDesc = mBlendDescArray[i];
+        if (blendStateExt.mEnabledMask.test(i))
+        {
+            blendDesc.blendingEnabled = true;
+
+            blendDesc.sourceRGBBlendFactor =
+                mtl::GetBlendFactor(blendStateExt.getSrcColorIndexed(i));
+            blendDesc.sourceAlphaBlendFactor =
+                mtl::GetBlendFactor(blendStateExt.getSrcAlphaIndexed(i));
+            blendDesc.destinationRGBBlendFactor =
+                mtl::GetBlendFactor(blendStateExt.getDstColorIndexed(i));
+            blendDesc.destinationAlphaBlendFactor =
+                mtl::GetBlendFactor(blendStateExt.getDstAlphaIndexed(i));
+
+            blendDesc.rgbBlendOperation = mtl::GetBlendOp(blendStateExt.getEquationColorIndexed(i));
+            blendDesc.alphaBlendOperation =
+                mtl::GetBlendOp(blendStateExt.getEquationAlphaIndexed(i));
+        }
+        else
+        {
+            // Enforce default state when blending is disabled,
+            blendDesc.reset(blendDesc.writeMask);
+        }
+    }
+    invalidateRenderPipeline();
 }
 
 void ContextMtl::updateScissor(const gl::State &glState)
@@ -2209,7 +2257,7 @@ angle::Result ContextMtl::checkIfPipelineChanged(const gl::Context *context,
     {
         const mtl::RenderPassDesc &renderPassDesc = mRenderEncoder.renderPassDesc();
         // Obtain RenderPipelineDesc's output descriptor.
-        renderPassDesc.populateRenderPipelineOutputDesc(mBlendDesc,
+        renderPassDesc.populateRenderPipelineOutputDesc(mBlendDescArray,
                                                         &mRenderPipelineDesc.outputDescriptor);
 
         if (xfbPass)

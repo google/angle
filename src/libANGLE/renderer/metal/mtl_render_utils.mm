@@ -1211,16 +1211,16 @@ id<MTLRenderPipelineState> ClearUtils::getClearRenderPipelineState(const gl::Con
 {
     ContextMtl *contextMtl = GetImpl(context);
     // The color mask to be applied to every color attachment:
-    MTLColorWriteMask globalColorMask = params.clearColorMask;
+    WriteMaskArray clearWriteMaskArray = params.clearWriteMaskArray;
     if (!params.clearColor.valid())
     {
-        globalColorMask = MTLColorWriteMaskNone;
+        clearWriteMaskArray.fill(MTLColorWriteMaskNone);
     }
 
     RenderPipelineDesc pipelineDesc;
     const RenderPassDesc &renderPassDesc = cmdEncoder->renderPassDesc();
 
-    renderPassDesc.populateRenderPipelineOutputDesc(globalColorMask,
+    renderPassDesc.populateRenderPipelineOutputDesc(clearWriteMaskArray,
                                                     &pipelineDesc.outputDescriptor);
 
     // Disable clear for some outputs that are not enabled
@@ -1404,7 +1404,7 @@ id<MTLRenderPipelineState> ColorBlitUtils::getColorBlitRenderPipelineState(
     RenderPipelineDesc pipelineDesc;
     const RenderPassDesc &renderPassDesc = cmdEncoder->renderPassDesc();
 
-    renderPassDesc.populateRenderPipelineOutputDesc(params.blitColorMask,
+    renderPassDesc.populateRenderPipelineOutputDesc(params.blitWriteMaskArray,
                                                     &pipelineDesc.outputDescriptor);
 
     // Disable blit for some outputs that are not enabled

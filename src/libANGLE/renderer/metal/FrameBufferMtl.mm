@@ -456,10 +456,10 @@ angle::Result FramebufferMtl::blitWithDraw(const gl::Context *context,
         colorBlitParams.srcLevel = srcColorRt->getLevelIndex();
         colorBlitParams.srcLayer = srcColorRt->getLayerIndex();
 
-        colorBlitParams.blitColorMask  = contextMtl->getColorMask();
-        colorBlitParams.enabledBuffers = getState().getEnabledDrawBuffers();
-        colorBlitParams.filter         = filter;
-        colorBlitParams.dstLuminance   = srcColorRt->getFormat()->actualAngleFormat().isLUMA();
+        colorBlitParams.blitWriteMaskArray = contextMtl->getWriteMaskArray();
+        colorBlitParams.enabledBuffers     = getState().getEnabledDrawBuffers();
+        colorBlitParams.filter             = filter;
+        colorBlitParams.dstLuminance       = srcColorRt->getFormat()->actualAngleFormat().isLUMA();
 
         ANGLE_TRY(contextMtl->getDisplay()->getUtils().blitColorWithDraw(
             context, renderEncoder, srcColorRt->getFormat()->actualAngleFormat(), colorBlitParams));
@@ -1042,6 +1042,8 @@ angle::Result FramebufferMtl::clearWithDraw(const gl::Context *context,
             continue;
         }
 
+        overrideClearOps.clearWriteMaskArray[0] = overrideClearOps.clearWriteMaskArray[drawbuffer];
+
         mtl::RenderCommandEncoder *encoder =
             contextMtl->getRenderTargetCommandEncoder(*renderTarget);
         ANGLE_TRY(display->getUtils().clearWithDraw(context, encoder, overrideClearOps));
@@ -1078,8 +1080,8 @@ angle::Result FramebufferMtl::clearImpl(const gl::Context *context,
         return angle::Result::Continue;
     }
 
-    clearOpts.clearColorMask = contextMtl->getColorMask();
-    uint32_t stencilMask     = contextMtl->getStencilMask();
+    clearOpts.clearWriteMaskArray = contextMtl->getWriteMaskArray();
+    uint32_t stencilMask          = contextMtl->getStencilMask();
     if (!contextMtl->getDepthMask())
     {
         // Disable depth clearing, since depth write is disable
@@ -1089,8 +1091,18 @@ angle::Result FramebufferMtl::clearImpl(const gl::Context *context,
     // Only clear enabled buffers
     clearOpts.enabledBuffers = clearColorBuffers;
 
+    bool allBuffersUnmasked = true;
+    for (size_t enabledBuffer : clearColorBuffers)
+    {
+        if (clearOpts.clearWriteMaskArray[enabledBuffer] != MTLColorWriteMaskAll)
+        {
+            allBuffersUnmasked = false;
+            break;
+        }
+    }
+
     if (clearOpts.clearArea == renderArea &&
-        (!clearOpts.clearColor.valid() || clearOpts.clearColorMask == MTLColorWriteMaskAll) &&
+        (!clearOpts.clearColor.valid() || allBuffersUnmasked) &&
         (!clearOpts.clearStencil.valid() ||
          (stencilMask & mtl::kStencilMaskAll) == mtl::kStencilMaskAll))
     {
