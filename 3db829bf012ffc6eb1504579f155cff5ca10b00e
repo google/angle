@@ -34,6 +34,23 @@
       "parentUuid": "7f06a3fb_6875dd9c",
       "revId": "3db829bf012ffc6eb1504579f155cff5ca10b00e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f0268b1f_099c3f52",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2020-10-13T16:52:41Z",
+      "side": 1,
+      "message": "LGTM!\n\nKyle, I gave you tryjob access so next time you can trigger our bots by pressing the \u0027CQ DRY RUN\u0027 button",
+      "revId": "3db829bf012ffc6eb1504579f155cff5ca10b00e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
