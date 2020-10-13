@@ -151,6 +151,14 @@ void AddToPNextChain(VulkanStruct1 *chainStart, VulkanStruct2 *ptr)
     localPtr->pNext              = reinterpret_cast<VkBaseOutStructure *>(ptr);
 }
 
+struct Error
+{
+    VkResult mErrorCode;
+    const char *mFile;
+    const char *mFunction;
+    unsigned int mLine;
+};
+
 // Abstracts error handling. Implemented by both ContextVk for GL and DisplayVk for EGL errors.
 class Context : angle::NonCopyable
 {

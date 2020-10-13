@@ -26,6 +26,7 @@ DisplayVk::DisplayVk(const egl::DisplayState &state)
     : DisplayImpl(state),
       vk::Context(new RendererVk()),
       mScratchBuffer(1000u),
+      mSavedError({VK_SUCCESS, "", "", 0}),
       mHasSurfaceWithRobustInit(false)
 {}
 
@@ -267,14 +268,15 @@ void DisplayVk::handleError(VkResult result,
 {
     ASSERT(result != VK_SUCCESS);
 
-    std::stringstream errorStream;
-    errorStream << "Internal Vulkan error (" << result << "): " << VulkanResultString(result)
-                << ", in " << file << ", " << function << ":" << line << ".";
-    mStoredErrorString = errorStream.str();
+    mSavedError.mErrorCode = result;
+    mSavedError.mFile      = file;
+    mSavedError.mFunction  = function;
+    mSavedError.mLine      = line;
 
     if (result == VK_ERROR_DEVICE_LOST)
     {
-        WARN() << mStoredErrorString;
+        WARN() << "Internal Vulkan error (" << result << "): " << VulkanResultString(result)
+               << ", in " << file << ", " << function << ":" << line << ".";
         mRenderer->notifyDeviceLost();
     }
 }
@@ -282,7 +284,14 @@ void DisplayVk::handleError(VkResult result,
 // TODO(jmadill): Remove this. http://anglebug.com/3041
 egl::Error DisplayVk::getEGLError(EGLint errorCode)
 {
-    return egl::Error(errorCode, 0, std::move(mStoredErrorString));
+    std::stringstream errorStream;
+    errorStream << "Internal Vulkan error (" << mSavedError.mErrorCode
+                << "): " << VulkanResultString(mSavedError.mErrorCode) << ", in "
+                << mSavedError.mFile << ", " << mSavedError.mFunction << ":" << mSavedError.mLine
+                << ".";
+    std::string errorString = errorStream.str();
+
+    return egl::Error(errorCode, 0, std::move(errorString));
 }
 
 void DisplayVk::populateFeatureList(angle::FeatureList *features)

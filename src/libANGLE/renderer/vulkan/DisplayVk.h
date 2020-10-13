@@ -140,7 +140,7 @@ class DisplayVk : public DisplayImpl, public vk::Context
 
     mutable angle::ScratchBuffer mScratchBuffer;
 
-    std::string mStoredErrorString;
+    vk::Error mSavedError;
     bool mHasSurfaceWithRobustInit;
 };
 
