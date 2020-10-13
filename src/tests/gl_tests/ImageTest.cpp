@@ -437,8 +437,9 @@ class ImageTest : public ANGLETest
         aHardwareBufferDescription.height               = height;
         aHardwareBufferDescription.layers               = depth;
         aHardwareBufferDescription.format               = androidFormat;
-        aHardwareBufferDescription.usage =
-            AHARDWAREBUFFER_USAGE_CPU_WRITE_RARELY | AHARDWAREBUFFER_USAGE_GPU_SAMPLED_IMAGE;
+        aHardwareBufferDescription.usage                = AHARDWAREBUFFER_USAGE_CPU_WRITE_RARELY |
+                                           AHARDWAREBUFFER_USAGE_GPU_SAMPLED_IMAGE |
+                                           AHARDWAREBUFFER_USAGE_GPU_FRAMEBUFFER;
         aHardwareBufferDescription.stride = 0;
         aHardwareBufferDescription.rfu0   = 0;
         aHardwareBufferDescription.rfu1   = 0;
@@ -1592,6 +1593,55 @@ void ImageTest::SourceAHBTarget2D_helper(const EGLint *attribs)
     // Use texture target bound to egl image as source and render to framebuffer
     // Verify that data in framebuffer matches that in the egl image
     verifyResults2D(target, data);
+
+    // Clean up
+    eglDestroyImageKHR(window->getDisplay(), image);
+    destroyAndroidHardwareBuffer(source);
+    glDeleteTextures(1, &target);
+}
+
+// Testing source AHB EGL image, target 2D texture retaining initial data.
+TEST_P(ImageTest, SourceAHBTarget2DRetainInitialData)
+{
+    ANGLE_SKIP_TEST_IF(!IsAndroid());
+
+    EGLWindow *window = getEGLWindow();
+
+    ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
+    ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
+
+    GLubyte data[4] = {0, 255, 0, 255};
+
+    // Create the Image
+    AHardwareBuffer *source;
+    EGLImageKHR image;
+    createEGLImageAndroidHardwareBufferSource(1, 1, 1, GL_RGBA8, kDefaultAttribs, data, 4, &source,
+                                              &image);
+
+    // Create a texture target to bind the egl image
+    GLuint target;
+    createEGLImageTargetTexture2D(image, &target);
+
+    // Create a framebuffer, and blend into the texture.
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, target, 0);
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    // Blend into the framebuffer.
+    ANGLE_GL_PROGRAM(drawRed, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_ONE, GL_ONE);
+    drawQuad(drawRed, essl1_shaders::PositionAttrib(), 0.0f);
+    ASSERT_GL_NO_ERROR();
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glDisable(GL_BLEND);
+
+    // Use texture target bound to egl image as source and render to framebuffer
+    // Verify that data in framebuffer matches that in the egl image
+    GLubyte expect[4] = {255, 255, 0, 255};
+    verifyResults2D(target, expect);
 
     // Clean up
     eglDestroyImageKHR(window->getDisplay(), image);
