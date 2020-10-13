@@ -60,6 +60,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "d1ed0359_06fb2a67",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1313,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-13T18:36:21Z",
+      "side": 1,
+      "message": "Mild preference for keeping it the way it is here... nice to totally remove all traces from the Vulkan stream for incompatible platforms.",
+      "parentUuid": "1d213b9f_1d988ddd",
+      "range": {
+        "startLine": 1313,
+        "startChar": 46,
+        "endLine": 1313,
+        "endChar": 90
+      },
+      "revId": "e7cc26683317b05e2da440fb50329922f8513869",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "46ac53f4_15dc9b30",
         "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
         "patchSetId": 6
