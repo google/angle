@@ -39,6 +39,30 @@
       },
       "revId": "dd58fbfe4de99c02eaffdce73e9a60e8f4151c55",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "de25f8f1_c7eab3c9",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1498,
+      "author": {
+        "id": 1357791
+      },
+      "writtenOn": "2020-10-13T07:44:52Z",
+      "side": 1,
+      "message": "I\u0027ve modified the code a little. layerCount value returned from GetRenderTargetLayerCountAndIndex is total layer of image. But layerCount here should be a depth param in texSubImage3D. Since GetRenderTargetLayerCountAndIndex function is currently used in getAttachmentRenderTarget for other purpose, I would rather not modify that function.",
+      "parentUuid": "95541cee_e41bd782",
+      "range": {
+        "startLine": 1493,
+        "startChar": 0,
+        "endLine": 1498,
+        "endChar": 5
+      },
+      "revId": "dd58fbfe4de99c02eaffdce73e9a60e8f4151c55",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
