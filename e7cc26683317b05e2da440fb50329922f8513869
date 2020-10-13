@@ -84,6 +84,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "85581316_2d50dd72",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1946,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-10-13T20:47:32Z",
+      "side": 1,
+      "message": "I just saw the bug comments. This should instead then check the device limits instead of making assumptions about the platform. And the platform having low limits is not a driver bug as the comment suggests.\n\nIs Qualcomm also failing the tests due to too low limits?",
+      "range": {
+        "startLine": 1946,
+        "startChar": 61,
+        "endLine": 1946,
+        "endChar": 75
+      },
+      "revId": "e7cc26683317b05e2da440fb50329922f8513869",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "46ac53f4_15dc9b30",
         "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
         "patchSetId": 6
