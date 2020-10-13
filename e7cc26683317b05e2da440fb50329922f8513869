@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "06ab6e8b_3cd77954",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-13T13:18:25Z",
+      "side": 1,
+      "message": "LGTM but the layer index stuff is very tricky.",
+      "revId": "e7cc26683317b05e2da440fb50329922f8513869",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2eb44d6e_9301a09f",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1465,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-13T13:18:25Z",
+      "side": 1,
+      "message": "I\u0027m not sure this is getting called with the right \"layerIndex\" for array textures. it should be sourceArea.z, right?",
+      "range": {
+        "startLine": 1465,
+        "startChar": 25,
+        "endLine": 1465,
+        "endChar": 45
+      },
+      "revId": "e7cc26683317b05e2da440fb50329922f8513869",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
