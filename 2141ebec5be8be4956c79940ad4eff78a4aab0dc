@@ -53,6 +53,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6f622a46_a7ac45cf",
+        "filename": "src/libANGLE/renderer/gl/ContextGL.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2020-10-13T17:07:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f68e733a_2aff200e",
+      "revId": "2141ebec5be8be4956c79940ad4eff78a4aab0dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3c609790_5be05424",
