@@ -1830,6 +1830,10 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
     ANGLE_FEATURE_CONDITION(features, clampMscRate, IsLinux() && IsWayland());
 
     ANGLE_FEATURE_CONDITION(features, bindTransformFeedbackBufferBeforeBindBufferRange, IsApple());
+
+    // http://crbug.com/1137851
+    // Speculative fix for now, leave disabled so users can enable it via flags.
+    ANGLE_FEATURE_CONDITION(features, disableSyncControlSupport, false);
 }
 
 void InitializeFrontendFeatures(const FunctionsGL *functions, angle::FrontendFeatures *features)

@@ -886,9 +886,12 @@ void DisplayGLX::generateExtensions(egl::DisplayExtensions *outExtensions) const
 
     outExtensions->surfacelessContext = true;
 
-    const bool hasSyncControlOML        = mGLX.hasExtension("GLX_OML_sync_control");
-    outExtensions->syncControlCHROMIUM  = hasSyncControlOML;
-    outExtensions->syncControlRateANGLE = hasSyncControlOML;
+    if (!mRenderer->getFeatures().disableSyncControlSupport.enabled)
+    {
+        const bool hasSyncControlOML        = mGLX.hasExtension("GLX_OML_sync_control");
+        outExtensions->syncControlCHROMIUM  = hasSyncControlOML;
+        outExtensions->syncControlRateANGLE = hasSyncControlOML;
+    }
 
     outExtensions->textureFromPixmapNOK = mGLX.hasExtension("GLX_EXT_texture_from_pixmap");
 

@@ -484,6 +484,14 @@ struct FeaturesGL : FeatureSetBase
         "Bind transform feedback buffers to the generic binding point before calling "
         "glBindBufferBase or glBindBufferRange.",
         &members, "https://anglebug.com/5140"};
+
+    // Speculative fix for issues on Linux/Wayland where exposing GLX_OML_sync_control renders
+    // Chrome unusable
+    Feature disableSyncControlSupport = {
+        "disable_sync_control_support", FeatureCategory::OpenGLWorkarounds,
+        "Speculative fix for issues on Linux/Wayland where exposing GLX_OML_sync_control renders "
+        "Chrome unusable",
+        &members, "https://crbug.com/1137851"};
 };
 
 inline FeaturesGL::FeaturesGL()  = default;
