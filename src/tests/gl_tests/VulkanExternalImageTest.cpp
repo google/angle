@@ -206,6 +206,9 @@ class VulkanExternalImageTest : public ANGLETest
         setConfigBlueBits(8);
         setConfigAlphaBits(8);
     }
+
+    template <typename Traits>
+    void runShouldDrawTest(bool isSwiftshader, bool enableDebugLayers);
 };
 
 template <typename Traits>
@@ -442,7 +445,7 @@ TEST_P(VulkanExternalImageTest, ShouldClearZirconWithFlagsVmoRGBA8)
 // Test creating and clearing a simple RGBA8 texture without STORAGE usage in a zircon vmo.
 TEST_P(VulkanExternalImageTest, ShouldClearNoStorageUsageZirconVmoRGBA8)
 {
-    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_memory_object_fuchsia"));
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_ANGLE_memory_object_fuchsia"));
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_ANGLE_memory_object_flags"));
     RunShouldClearTest<FuchsiaTraits>(true, kDefaultImageCreateFlags, kNoStorageImageUsageFlags,
                                       isSwiftshader(), enableDebugLayers());
@@ -452,7 +455,7 @@ TEST_P(VulkanExternalImageTest, ShouldClearNoStorageUsageZirconVmoRGBA8)
 // zircon vmo.
 TEST_P(VulkanExternalImageTest, ShouldClearMutableNoStorageUsageZirconVmoRGBA8)
 {
-    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_memory_object_fuchsia"));
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_ANGLE_memory_object_fuchsia"));
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_ANGLE_memory_object_flags"));
     RunShouldClearTest<FuchsiaTraits>(true, kMutableImageCreateFlags, kNoStorageImageUsageFlags,
                                       isSwiftshader(), enableDebugLayers());
@@ -820,6 +823,7 @@ TEST_P(VulkanExternalImageTest, ShouldClearZirconVmoWithSemaphoresNoStorage)
 {
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_ANGLE_memory_object_fuchsia"));
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_ANGLE_semaphore_fuchsia"));
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_ANGLE_memory_object_flags"));
     RunShouldClearWithSemaphoresTest<FuchsiaTraits>(true, kDefaultImageCreateFlags,
                                                     kNoStorageImageUsageFlags, isSwiftshader(),
                                                     enableDebugLayers());
@@ -831,9 +835,155 @@ TEST_P(VulkanExternalImageTest, ShouldClearZirconVmoWithSemaphoresMutableNoStora
 {
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_ANGLE_memory_object_fuchsia"));
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_ANGLE_semaphore_fuchsia"));
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_ANGLE_memory_object_flags"));
     RunShouldClearWithSemaphoresTest<FuchsiaTraits>(true, kMutableImageCreateFlags,
                                                     kNoStorageImageUsageFlags, isSwiftshader(),
                                                     enableDebugLayers());
+}
+
+template <typename Traits>
+void VulkanExternalImageTest::runShouldDrawTest(bool isSwiftshader, bool enableDebugLayers)
+{
+    ASSERT(EnsureGLExtensionEnabled(Traits::MemoryObjectExtension()));
+    ASSERT(EnsureGLExtensionEnabled(Traits::SemaphoreExtension()));
+
+    VulkanExternalHelper helper;
+    helper.initialize(isSwiftshader, enableDebugLayers);
+
+    VkFormat format = VK_FORMAT_R8G8B8A8_UNORM;
+    ANGLE_SKIP_TEST_IF(!Traits::CanCreateImage(helper, format, VK_IMAGE_TYPE_2D,
+                                               VK_IMAGE_TILING_OPTIMAL, kDefaultImageCreateFlags,
+                                               kDefaultImageUsageFlags));
+    ANGLE_SKIP_TEST_IF(!Traits::CanCreateSemaphore(helper));
+
+    VkSemaphore vkAcquireSemaphore = VK_NULL_HANDLE;
+    VkResult result                = Traits::CreateSemaphore(&helper, &vkAcquireSemaphore);
+    EXPECT_EQ(result, VK_SUCCESS);
+    EXPECT_TRUE(vkAcquireSemaphore != VK_NULL_HANDLE);
+
+    VkSemaphore vkReleaseSemaphore = VK_NULL_HANDLE;
+    result                         = Traits::CreateSemaphore(&helper, &vkReleaseSemaphore);
+    EXPECT_EQ(result, VK_SUCCESS);
+    EXPECT_TRUE(vkReleaseSemaphore != VK_NULL_HANDLE);
+
+    typename Traits::Handle acquireSemaphoreHandle = Traits::InvalidHandle();
+    result = Traits::ExportSemaphore(&helper, vkAcquireSemaphore, &acquireSemaphoreHandle);
+    EXPECT_EQ(result, VK_SUCCESS);
+    EXPECT_NE(acquireSemaphoreHandle, Traits::InvalidHandle());
+
+    typename Traits::Handle releaseSemaphoreHandle = Traits::InvalidHandle();
+    result = Traits::ExportSemaphore(&helper, vkReleaseSemaphore, &releaseSemaphoreHandle);
+    EXPECT_EQ(result, VK_SUCCESS);
+    EXPECT_NE(releaseSemaphoreHandle, Traits::InvalidHandle());
+
+    VkImage image                 = VK_NULL_HANDLE;
+    VkDeviceMemory deviceMemory   = VK_NULL_HANDLE;
+    VkDeviceSize deviceMemorySize = 0;
+
+    VkExtent3D extent = {1, 1, 1};
+    result =
+        Traits::CreateImage2D(&helper, format, kDefaultImageCreateFlags, kDefaultImageUsageFlags,
+                              extent, &image, &deviceMemory, &deviceMemorySize);
+    EXPECT_EQ(result, VK_SUCCESS);
+
+    typename Traits::Handle memoryHandle = Traits::InvalidHandle();
+    result = Traits::ExportMemory(&helper, deviceMemory, &memoryHandle);
+    EXPECT_EQ(result, VK_SUCCESS);
+    EXPECT_NE(memoryHandle, Traits::InvalidHandle());
+
+    {
+        GLMemoryObject memoryObject;
+        GLint dedicatedMemory = GL_TRUE;
+        glMemoryObjectParameterivEXT(memoryObject, GL_DEDICATED_MEMORY_OBJECT_EXT,
+                                     &dedicatedMemory);
+        Traits::ImportMemory(memoryObject, deviceMemorySize, memoryHandle);
+
+        GLTexture texture;
+        glBindTexture(GL_TEXTURE_2D, texture);
+        glTexStorageMem2DEXT(GL_TEXTURE_2D, 1, GL_RGBA8, 1, 1, memoryObject, 0);
+
+        GLSemaphore glAcquireSemaphore;
+        Traits::ImportSemaphore(glAcquireSemaphore, acquireSemaphoreHandle);
+
+        // Transfer ownership to GL.
+        helper.releaseImageAndSignalSemaphore(image, VK_IMAGE_LAYOUT_UNDEFINED,
+                                              VK_IMAGE_LAYOUT_GENERAL, vkAcquireSemaphore);
+
+        const GLuint barrierTextures[] = {
+            texture,
+        };
+        constexpr uint32_t textureBarriersCount = std::extent<decltype(barrierTextures)>();
+        const GLenum textureSrcLayouts[]        = {
+            GL_LAYOUT_GENERAL_EXT,
+        };
+        constexpr uint32_t textureSrcLayoutsCount = std::extent<decltype(textureSrcLayouts)>();
+        static_assert(textureBarriersCount == textureSrcLayoutsCount,
+                      "barrierTextures and textureSrcLayouts must be the same length");
+        glWaitSemaphoreEXT(glAcquireSemaphore, 0, nullptr, textureBarriersCount, barrierTextures,
+                           textureSrcLayouts);
+
+        GLFramebuffer framebuffer;
+        glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
+        EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+        // Make the texture red.
+        ANGLE_GL_PROGRAM(drawRed, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
+        drawQuad(drawRed, essl1_shaders::PositionAttrib(), 0.0f);
+        EXPECT_GL_NO_ERROR();
+
+        // Transfer ownership back to test.
+        GLSemaphore glReleaseSemaphore;
+        Traits::ImportSemaphore(glReleaseSemaphore, releaseSemaphoreHandle);
+
+        const GLenum textureDstLayouts[] = {
+            GL_LAYOUT_TRANSFER_SRC_EXT,
+        };
+        constexpr uint32_t textureDstLayoutsCount = std::extent<decltype(textureSrcLayouts)>();
+        static_assert(textureBarriersCount == textureDstLayoutsCount,
+                      "barrierTextures and textureDstLayouts must be the same length");
+        glSignalSemaphoreEXT(glReleaseSemaphore, 0, nullptr, textureBarriersCount, barrierTextures,
+                             textureDstLayouts);
+
+        helper.waitSemaphoreAndAcquireImage(image, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
+                                            VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
+                                            vkReleaseSemaphore);
+
+        uint8_t pixels[4];
+        VkOffset3D offset = {};
+        VkExtent3D extent = {1, 1, 1};
+        helper.readPixels(image, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, format, offset, extent,
+                          pixels, sizeof(pixels));
+
+        EXPECT_EQ(0xFF, pixels[0]);
+        EXPECT_EQ(0x00, pixels[1]);
+        EXPECT_EQ(0x00, pixels[2]);
+        EXPECT_EQ(0xFF, pixels[3]);
+    }
+
+    EXPECT_GL_NO_ERROR();
+
+    vkDeviceWaitIdle(helper.getDevice());
+    vkDestroyImage(helper.getDevice(), image, nullptr);
+    vkDestroySemaphore(helper.getDevice(), vkAcquireSemaphore, nullptr);
+    vkDestroySemaphore(helper.getDevice(), vkReleaseSemaphore, nullptr);
+    vkFreeMemory(helper.getDevice(), deviceMemory, nullptr);
+}
+
+// Test drawing to RGBA8 texture in opaque fd with acquire/release.
+TEST_P(VulkanExternalImageTest, ShouldDrawOpaqueFdWithSemaphores)
+{
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_memory_object_fd"));
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_semaphore_fd"));
+    runShouldDrawTest<OpaqueFdTraits>(isSwiftshader(), enableDebugLayers());
+}
+
+// Test drawing to RGBA8 texture in zircon vmo with acquire/release multiple times.
+TEST_P(VulkanExternalImageTest, ShouldDrawZirconVmoWithSemaphores)
+{
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_ANGLE_memory_object_fuchsia"));
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_ANGLE_semaphore_fuchsia"));
+    runShouldDrawTest<FuchsiaTraits>(isSwiftshader(), enableDebugLayers());
 }
 
 // Support for Zircon handle types is mandatory on Fuchsia.

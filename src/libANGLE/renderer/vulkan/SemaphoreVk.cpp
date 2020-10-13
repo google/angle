@@ -168,6 +168,7 @@ angle::Result SemaphoreVk::signal(gl::Context *context,
             BufferVk *bufferVk             = vk::GetImpl(buffer);
             vk::BufferHelper &bufferHelper = bufferVk->getBuffer();
 
+            ANGLE_TRY(contextVk->onBufferReleaseToExternal(bufferHelper));
             vk::CommandBuffer &commandBuffer = contextVk->getOutsideRenderPassCommandBuffer();
 
             // Queue ownership transfer.
@@ -196,6 +197,7 @@ angle::Result SemaphoreVk::signal(gl::Context *context,
 
             ANGLE_TRY(textureVk->ensureImageInitialized(contextVk, ImageMipLevels::EnabledLevels));
 
+            ANGLE_TRY(contextVk->onImageReleaseToExternal(image));
             vk::CommandBuffer &commandBuffer = contextVk->getOutsideRenderPassCommandBuffer();
 
             // Queue ownership transfer and layout transition.

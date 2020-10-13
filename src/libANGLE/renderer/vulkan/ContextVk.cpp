@@ -4667,6 +4667,20 @@ angle::Result ContextVk::onImageWrite(gl::LevelIndex levelStart,
     return angle::Result::Continue;
 }
 
+angle::Result ContextVk::onBufferReleaseToExternal(const vk::BufferHelper &buffer)
+{
+    if (mRenderPassCommands->usesBuffer(buffer))
+    {
+        ANGLE_TRY(flushCommandsAndEndRenderPass());
+    }
+    return angle::Result::Continue;
+}
+
+angle::Result ContextVk::onImageReleaseToExternal(const vk::ImageHelper &image)
+{
+    return endRenderPassIfImageUsed(image);
+}
+
 angle::Result ContextVk::beginNewRenderPass(
     const vk::Framebuffer &framebuffer,
     const gl::Rectangle &renderArea,

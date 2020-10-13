@@ -506,6 +506,7 @@ class ContextVk : public ContextImpl, public vk::Context
     {
         return onBufferWrite(VK_ACCESS_SHADER_WRITE_BIT, vk::PipelineStage::ComputeShader, buffer);
     }
+    angle::Result onBufferReleaseToExternal(const vk::BufferHelper &buffer);
 
     angle::Result onImageTransferRead(VkImageAspectFlags aspectFlags, vk::ImageHelper *image)
     {
@@ -535,6 +536,7 @@ class ContextVk : public ContextImpl, public vk::Context
         return onImageWrite(levelStart, levelCount, layerStart, layerCount, aspectFlags,
                             vk::ImageLayout::ComputeShaderWrite, image);
     }
+    angle::Result onImageReleaseToExternal(const vk::ImageHelper &image);
 
     void onImageRenderPassRead(VkImageAspectFlags aspectFlags,
                                vk::ImageLayout imageLayout,
