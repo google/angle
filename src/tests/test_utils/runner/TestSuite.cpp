@@ -40,6 +40,7 @@ constexpr char kTestTimeoutArg[]       = "--test-timeout=";
 constexpr char kFilterFileArg[]        = "--filter-file=";
 constexpr char kResultFileArg[]        = "--results-file=";
 constexpr char kHistogramJsonFileArg[] = "--histogram-json-file=";
+constexpr char kListTests[]            = "--gtest_list_tests";
 #if defined(NDEBUG)
 constexpr int kDefaultTestTimeout = 20;
 #else
@@ -704,6 +705,38 @@ TestQueue BatchTests(const std::vector<TestIdentifier> &tests, int batchSize)
 
     return testQueue;
 }
+
+// Prints the names of the tests matching the user-specified filter flag.
+// This matches the output from googletest/src/gtest.cc but is much much faster for large filters.
+// See http://anglebug.com/5164
+void ListTests(const std::map<TestIdentifier, TestResult> &resultsMap)
+{
+    std::map<std::string, std::vector<std::string>> suites;
+
+    for (const auto &resultIt : resultsMap)
+    {
+        const TestIdentifier &id = resultIt.first;
+        suites[id.testSuiteName].push_back(id.testName);
+    }
+
+    for (const auto &testSuiteIt : suites)
+    {
+        bool printedTestSuiteName = false;
+
+        const std::string &suiteName              = testSuiteIt.first;
+        const std::vector<std::string> &testNames = testSuiteIt.second;
+
+        for (const std::string &testName : testNames)
+        {
+            if (!printedTestSuiteName)
+            {
+                printedTestSuiteName = true;
+                printf("%s.\n", suiteName.c_str());
+            }
+            printf("  %s\n", testName.c_str());
+        }
+    }
+}
 }  // namespace
 
 TestIdentifier::TestIdentifier() = default;
@@ -765,6 +798,7 @@ TestSuite::TestSuite(int *argc, char **argv)
       mShardIndex(-1),
       mBotMode(false),
       mDebugTestGroups(false),
+      mListTests(false),
       mBatchSize(kDefaultBatchSize),
       mCurrentResultCount(0),
       mTotalResultCount(0),
@@ -987,7 +1021,8 @@ bool TestSuite::parseSingleArg(const char *argument)
             ParseStringArg(kHistogramJsonFileArg, argument, &mHistogramJsonFile) ||
             ParseStringArg("--isolated-script-test-perf-output=", argument, &mHistogramJsonFile) ||
             ParseFlag("--bot-mode", argument, &mBotMode) ||
-            ParseFlag("--debug-test-groups", argument, &mDebugTestGroups));
+            ParseFlag("--debug-test-groups", argument, &mDebugTestGroups) ||
+            ParseFlag(kListTests, argument, &mListTests));
 }
 
 void TestSuite::onCrashOrTimeout(TestResultType crashOrTimeout)
@@ -1189,6 +1224,12 @@ bool TestSuite::finishProcess(ProcessInfo *processInfo)
 
 int TestSuite::run()
 {
+    if (mListTests)
+    {
+        ListTests(mTestResults.results);
+        return EXIT_SUCCESS;
+    }
+
     // Run tests serially.
     if (!mBotMode)
     {
