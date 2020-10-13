@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c4bc4d36_2f02a3e6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 12
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-10-13T22:34:53Z",
+      "side": 1,
+      "message": "The performance issue is still not resolved, still under investigation.",
+      "revId": "bd46bc58c3abbce2d7bb41b1dabccc981e9d8ea5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}

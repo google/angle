@@ -71,6 +71,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "358152d9_acb4a580",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 779,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-10-13T22:34:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e7474b03_1e7588cc",
+      "revId": "961d34a87326e20e00d4dd7e4dde236b1af5ead7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "46b4157a_3cffdb2b",
@@ -102,6 +120,24 @@
       "side": 1,
       "message": "fyi, will respond to you and Tim\u0027s comments after I figure out the performance issue.",
       "parentUuid": "46b4157a_3cffdb2b",
+      "revId": "961d34a87326e20e00d4dd7e4dde236b1af5ead7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "210b52fd_249b8df5",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 947,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-10-13T22:34:53Z",
+      "side": 1,
+      "message": "This is try to optimize the case that the depth buffer is used for depth test only. The feedback loop means used by fragment shader stage.",
+      "parentUuid": "97a8fba6_9aaa7520",
       "revId": "961d34a87326e20e00d4dd7e4dde236b1af5ead7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
