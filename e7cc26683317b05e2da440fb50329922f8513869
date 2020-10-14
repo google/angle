@@ -166,6 +166,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "eda4e9c5_31505d16",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1458,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-14T00:42:59Z",
+      "side": 1,
+      "message": "https://chromium-review.googlesource.com/c/angle/angle/+/2466616",
+      "parentUuid": "ec70bd57_f88a008c",
+      "revId": "e7cc26683317b05e2da440fb50329922f8513869",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "2eb44d6e_9301a09f",
         "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
         "patchSetId": 6
