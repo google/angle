@@ -64,6 +64,8 @@ constexpr uint32_t kPipelineCacheVkUpdatePeriod = 60;
 // version of Vulkan.
 constexpr uint32_t kPreferredVulkanAPIVersion = VK_API_VERSION_1_1;
 
+constexpr bool kOutputVmaStatsString = false;
+
 angle::vk::ICD ChooseICDFromAttribs(const egl::AttributeMap &attribs)
 {
 #if !defined(ANGLE_PLATFORM_ANDROID)
@@ -2182,6 +2184,17 @@ angle::Result RendererVk::queueSubmit(vk::Context *context,
                                       const vk::Fence *fence,
                                       Serial *serialOut)
 {
+    if (kOutputVmaStatsString)
+    {
+        // Output the VMA stats string
+        // This JSON string can be passed to VmaDumpVis.py to generate a visualization of the
+        // allocations the VMA has performed.
+        char *statsString;
+        mAllocator.buildStatsString(&statsString, true);
+        INFO() << std::endl << statsString << std::endl;
+        mAllocator.freeStatsString(statsString);
+    }
+
     if (getFeatures().enableCommandProcessingThread.enabled)
     {
         // For initial threading phase 1 code make sure any outstanding command processing

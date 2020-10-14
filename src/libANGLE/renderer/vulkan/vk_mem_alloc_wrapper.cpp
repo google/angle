@@ -148,4 +148,14 @@ void InvalidateAllocation(VmaAllocator allocator,
 {
     vmaInvalidateAllocation(allocator, allocation, offset, size);
 }
+
+void BuildStatsString(VmaAllocator allocator, char **statsString, VkBool32 detailedMap)
+{
+    vmaBuildStatsString(allocator, statsString, detailedMap);
+}
+
+void FreeStatsString(VmaAllocator allocator, char *statsString)
+{
+    vmaFreeStatsString(allocator, statsString);
+}
 }  // namespace vma

@@ -62,6 +62,9 @@ void InvalidateAllocation(VmaAllocator allocator,
                           VkDeviceSize offset,
                           VkDeviceSize size);
 
+void BuildStatsString(VmaAllocator allocator, char **statsString, VkBool32 detailedMap);
+void FreeStatsString(VmaAllocator allocator, char *statsString);
+
 }  // namespace vma
 
 #endif  // LIBANGLE_RENDERER_VULKAN_VK_MEM_ALLOC_WRAPPER_H_

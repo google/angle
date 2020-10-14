@@ -490,6 +490,9 @@ class Allocator : public WrappedObject<Allocator, VmaAllocator>
                                               VkMemoryPropertyFlags preferredFlags,
                                               bool persistentlyMappedBuffers,
                                               uint32_t *memoryTypeIndexOut) const;
+
+    void buildStatsString(char **statsString, VkBool32 detailedMap);
+    void freeStatsString(char *statsString);
 };
 
 class Allocation final : public WrappedObject<Allocation, VmaAllocation>
@@ -1455,6 +1458,18 @@ Allocator::findMemoryTypeIndexForBufferInfo(const VkBufferCreateInfo &bufferCrea
     return vma::FindMemoryTypeIndexForBufferInfo(mHandle, &bufferCreateInfo, requiredFlags,
                                                  preferredFlags, persistentlyMappedBuffers,
                                                  memoryTypeIndexOut);
+}
+
+ANGLE_INLINE void Allocator::buildStatsString(char **statsString, VkBool32 detailedMap)
+{
+    ASSERT(valid());
+    vma::BuildStatsString(mHandle, statsString, detailedMap);
+}
+
+ANGLE_INLINE void Allocator::freeStatsString(char *statsString)
+{
+    ASSERT(valid());
+    vma::FreeStatsString(mHandle, statsString);
 }
 
 // Allocation implementation.
