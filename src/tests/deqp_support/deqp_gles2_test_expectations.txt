@@ -509,3 +509,8 @@
 4944 VULKAN ANDROID : dEQP-GLES2.functional.fbo.render.recreate_depthbuffer.no_rebind_rbo_rgba4_depth_component16 = FAIL
 4944 VULKAN ANDROID : dEQP-GLES2.functional.fbo.render.recreate_stencilbuffer.rebind_rbo_rgba4_stencil_index8 = FAIL
 4944 VULKAN ANDROID : dEQP-GLES2.functional.fbo.render.recreate_stencilbuffer.no_rebind_rbo_rgba4_stencil_index8 = FAIL
+
+// Fails on N5X for unknown test ordering reasons.
+5169 NEXUS5X GLES : dEQP-GLES2.functional.fbo.render.texsubimage.after_render_tex2d_rgba = FAIL
+5169 NEXUS5X GLES : dEQP-GLES2.functional.fbo.render.texsubimage.between_render_tex2d_rgb = FAIL
+5169 NEXUS5X GLES : dEQP-GLES2.functional.fbo.render.texsubimage.between_render_tex2d_rgba = FAIL
