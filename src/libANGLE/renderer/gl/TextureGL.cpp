@@ -1338,9 +1338,10 @@ angle::Result TextureGL::bindTexImage(const gl::Context *context, egl::Surface *
 
     SurfaceGL *surfaceGL = GetImplAs<SurfaceGL>(surface);
 
+    const gl::Format &surfaceFormat = surface->getBindTexImageFormat();
     setLevelInfo(context, getType(), 0, 1,
-                 LevelInfoGL(GL_NONE, GL_NONE, false, LUMAWorkaroundGL(),
-                             surfaceGL->hasEmulatedAlphaChannel()));
+                 LevelInfoGL(surfaceFormat.info->format, surfaceFormat.info->internalFormat, false,
+                             LUMAWorkaroundGL(), surfaceGL->hasEmulatedAlphaChannel()));
     return angle::Result::Continue;
 }
 
