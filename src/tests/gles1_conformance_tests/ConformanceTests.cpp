@@ -185,6 +185,8 @@ TEST_P(GLES1ConformanceTest, BCorner)
 
 TEST_P(GLES1ConformanceTest, Blend)
 {
+    // Slow test, takes over 20 seconds in some configs. http://anglebug.com/5171
+    ANGLE_SKIP_TEST_IF(IsVulkan() && IsIntel() && IsWindows());
     ASSERT_NE(CONFORMANCE_TEST_ERROR, BlendExec());
 }
 
