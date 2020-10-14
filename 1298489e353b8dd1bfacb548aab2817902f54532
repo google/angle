@@ -52,6 +52,24 @@
       "parentUuid": "d064c5cc_8ef4192c",
       "revId": "1298489e353b8dd1bfacb548aab2817902f54532",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b59d54f5_049233bc",
+        "filename": "src/libANGLE/Caps.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1036,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2020-10-14T16:05:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9fb75eed_edec284d",
+      "revId": "1298489e353b8dd1bfacb548aab2817902f54532",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
