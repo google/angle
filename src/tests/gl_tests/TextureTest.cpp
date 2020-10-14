@@ -2904,6 +2904,73 @@ TEST_P(Texture3DTestES2, CopySubImageAlpha)
     EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(0, 0, 0, 128), 1.0);
 }
 
+// Verify shrinking a texture with glTexStorage2D works correctly
+TEST_P(Texture2DTestES3, ChangeTexSizeWithTexStorage)
+{
+    // TODO: http://anglebug.com/5256
+    ANGLE_SKIP_TEST_IF(IsWindows() && IsOpenGL());
+
+    constexpr uint32_t kSizeLarge = 128;
+    constexpr uint32_t kSizeSmall = 64;
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, mTexture2D);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+    // Create the texture with 'large' dimensions
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, kSizeLarge, kSizeLarge, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 nullptr);
+    ASSERT_GL_NO_ERROR();
+
+    GLFramebuffer destFbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, destFbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mTexture2D, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    // Draw with the new texture so it's created in the back end
+    ANGLE_GL_PROGRAM(blueProgram, essl1_shaders::vs::Simple(), essl1_shaders::fs::Blue());
+    glUseProgram(blueProgram);
+    drawQuad(blueProgram.get(), std::string(essl1_shaders::PositionAttrib()), 0.0f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_RECT_EQ(0, 0, kSizeLarge, kSizeLarge, GLColor::blue);
+
+    // Shrink the texture
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, kSizeSmall, kSizeSmall);
+    ASSERT_GL_NO_ERROR();
+
+    // Create a source texture/FBO to blit from
+    GLTexture sourceTex;
+    glBindTexture(GL_TEXTURE_2D, sourceTex.get());
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, kSizeSmall, kSizeSmall);
+    ASSERT_GL_NO_ERROR();
+    GLFramebuffer sourceFbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, sourceFbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, sourceTex, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    // Fill the source texture with green
+    ANGLE_GL_PROGRAM(greenProgram, essl1_shaders::vs::Simple(), essl1_shaders::fs::Green());
+    glUseProgram(greenProgram);
+    drawQuad(greenProgram.get(), std::string(essl1_shaders::PositionAttrib()), 0.0f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_RECT_EQ(0, 0, kSizeSmall, kSizeSmall, GLColor::green);
+
+    // Blit the source (green) to the destination
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, sourceFbo);
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, destFbo);
+    glBlitFramebuffer(0, 0, kSizeSmall, kSizeSmall, 0, 0, kSizeSmall, kSizeSmall,
+                      GL_COLOR_BUFFER_BIT, GL_NEAREST);
+    ASSERT_GL_NO_ERROR();
+
+    // Render to the default framebuffer sampling from the blited texture and verify it's green
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glBindTexture(GL_TEXTURE_2D, mTexture2D);
+    ANGLE_GL_PROGRAM(texProgram, essl1_shaders::vs::Texture2D(), essl1_shaders::fs::Texture2D());
+    glUseProgram(texProgram);
+    drawQuad(texProgram.get(), std::string(essl1_shaders::PositionAttrib()), 0.0f);
+    EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth(), getWindowHeight(), GLColor::green);
+}
+
 // Regression test for http://crbug.com/949985 to make sure dirty bits are propagated up from
 // TextureImpl and the texture is synced before being used in a draw call.
 TEST_P(Texture2DTestES3, TextureImplPropogatesDirtyBits)
