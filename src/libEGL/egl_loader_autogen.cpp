@@ -96,6 +96,7 @@ PFNEGLDESTROYSYNCKHRPROC l_EGL_DestroySyncKHR;
 PFNEGLGETSYNCATTRIBKHRPROC l_EGL_GetSyncAttribKHR;
 PFNEGLCREATEIMAGEKHRPROC l_EGL_CreateImageKHR;
 PFNEGLDESTROYIMAGEKHRPROC l_EGL_DestroyImageKHR;
+PFNEGLSIGNALSYNCKHRPROC l_EGL_SignalSyncKHR;
 PFNEGLCREATESTREAMKHRPROC l_EGL_CreateStreamKHR;
 PFNEGLDESTROYSTREAMKHRPROC l_EGL_DestroyStreamKHR;
 PFNEGLQUERYSTREAMKHRPROC l_EGL_QueryStreamKHR;
@@ -262,6 +263,7 @@ void LoadEGL_EGL(LoadProc loadProc)
         reinterpret_cast<PFNEGLCREATEIMAGEKHRPROC>(loadProc("EGL_CreateImageKHR"));
     l_EGL_DestroyImageKHR =
         reinterpret_cast<PFNEGLDESTROYIMAGEKHRPROC>(loadProc("EGL_DestroyImageKHR"));
+    l_EGL_SignalSyncKHR = reinterpret_cast<PFNEGLSIGNALSYNCKHRPROC>(loadProc("EGL_SignalSyncKHR"));
     l_EGL_CreateStreamKHR =
         reinterpret_cast<PFNEGLCREATESTREAMKHRPROC>(loadProc("EGL_CreateStreamKHR"));
     l_EGL_DestroyStreamKHR =

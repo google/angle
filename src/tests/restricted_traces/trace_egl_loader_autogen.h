@@ -102,6 +102,7 @@
 #define eglGetSyncAttribKHR t_eglGetSyncAttribKHR
 #define eglCreateImageKHR t_eglCreateImageKHR
 #define eglDestroyImageKHR t_eglDestroyImageKHR
+#define eglSignalSyncKHR t_eglSignalSyncKHR
 #define eglCreateStreamKHR t_eglCreateStreamKHR
 #define eglDestroyStreamKHR t_eglDestroyStreamKHR
 #define eglQueryStreamKHR t_eglQueryStreamKHR
@@ -208,6 +209,7 @@ ANGLE_TRACE_EXPORT extern PFNEGLDESTROYSYNCKHRPROC t_eglDestroySyncKHR;
 ANGLE_TRACE_EXPORT extern PFNEGLGETSYNCATTRIBKHRPROC t_eglGetSyncAttribKHR;
 ANGLE_TRACE_EXPORT extern PFNEGLCREATEIMAGEKHRPROC t_eglCreateImageKHR;
 ANGLE_TRACE_EXPORT extern PFNEGLDESTROYIMAGEKHRPROC t_eglDestroyImageKHR;
+ANGLE_TRACE_EXPORT extern PFNEGLSIGNALSYNCKHRPROC t_eglSignalSyncKHR;
 ANGLE_TRACE_EXPORT extern PFNEGLCREATESTREAMKHRPROC t_eglCreateStreamKHR;
 ANGLE_TRACE_EXPORT extern PFNEGLDESTROYSTREAMKHRPROC t_eglDestroyStreamKHR;
 ANGLE_TRACE_EXPORT extern PFNEGLQUERYSTREAMKHRPROC t_eglQueryStreamKHR;

@@ -240,6 +240,9 @@ ANGLE_EXPORT void EGLAPIENTRY EGL_ReacquireHighPowerGPUANGLE(EGLDisplay dpy, EGL
 
 ANGLE_EXPORT void EGLAPIENTRY EGL_HandleGPUSwitchANGLE(EGLDisplay dpy);
 
+// EGL_KHR_reusable_sync
+ANGLE_EXPORT EGLBoolean EGLAPIENTRY EGL_SignalSyncKHR(EGLDisplay dpy, EGLSync sync, EGLenum mode);
+
 }  // extern "C"
 
 #endif  // LIBGLESV2_ENTRYPOINTSEGLEXT_H_

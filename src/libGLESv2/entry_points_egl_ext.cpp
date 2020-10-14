@@ -1638,4 +1638,18 @@ void EGLAPIENTRY EGL_HandleGPUSwitchANGLE(EGLDisplay dpy)
     thread->setSuccess();
 }
 
+// EGL_KHR_reusable_sync
+ANGLE_EXPORT EGLBoolean EGLAPIENTRY EGL_SignalSyncKHR(EGLDisplay dpy, EGLSync sync, EGLenum mode)
+{
+    ANGLE_SCOPED_GLOBAL_LOCK();
+    FUNC_EVENT("EGLDisplay dpy = 0x%016" PRIxPTR ", EGLSync sync = 0x%016" PRIxPTR
+               ", EGLint mode = 0x%X",
+               (uintptr_t)dpy, (uintptr_t)sync, mode);
+
+    Thread *thread = egl::GetCurrentThread();
+    // Unimplemented.
+    thread->setSuccess();
+    return EGL_TRUE;
+}
+
 }  // extern "C"

@@ -768,4 +768,10 @@ EGLint EGLAPIENTRY eglWaitSyncKHR(EGLDisplay dpy, EGLSync sync, EGLint flags)
     return EGL_WaitSyncKHR(dpy, sync, flags);
 }
 
+EGLBoolean EGLAPIENTRY eglSignalSyncKHR(EGLDisplay dpy, EGLSync sync, EGLenum mode)
+{
+    EnsureEGLLoaded();
+    return EGL_SignalSyncKHR(dpy, sync, mode);
+}
+
 }  // extern "C"

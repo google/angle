@@ -1759,6 +1759,9 @@ EXPORTS
     EGL_CreateImageKHR
     EGL_DestroyImageKHR
 
+    ; EGL_KHR_reusable_sync
+    EGL_SignalSyncKHR
+
     ; EGL_KHR_stream
     EGL_CreateStreamKHR
     EGL_DestroyStreamKHR

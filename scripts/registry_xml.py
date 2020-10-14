@@ -164,6 +164,7 @@ supported_egl_extensions = [
     "EGL_EXT_gl_colorspace_scrgb_linear",
     "EGL_KHR_image",
     "EGL_KHR_no_config_context",
+    "EGL_KHR_reusable_sync",
     "EGL_KHR_stream",
     "EGL_KHR_stream_consumer_gltexture",
     "EGL_KHR_surfaceless_context",
