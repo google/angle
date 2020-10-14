@@ -39,6 +39,30 @@
       },
       "revId": "01ec10715ccee8cb1a70914a00af954bc6905899",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e70c8f51_0bc8e199",
+        "filename": "src/libANGLE/renderer/gl/egl/DisplayEGL.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 647,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2020-10-14T15:26:35Z",
+      "side": 1,
+      "message": "Found that android uses DisplayAndroid::initialize instead of DisplayEGL::initialize, skipping the init of mHasEXTCreateContextRobustness.",
+      "parentUuid": "ef2b7226_152035b7",
+      "range": {
+        "startLine": 647,
+        "startChar": 7,
+        "endLine": 647,
+        "endChar": 64
+      },
+      "revId": "01ec10715ccee8cb1a70914a00af954bc6905899",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }

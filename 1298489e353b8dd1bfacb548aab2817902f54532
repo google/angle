@@ -34,6 +34,24 @@
       "parentUuid": "b853ef35_74993bea",
       "revId": "1298489e353b8dd1bfacb548aab2817902f54532",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9fb75eed_edec284d",
+        "filename": "src/libANGLE/Caps.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1036,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2020-10-14T15:26:35Z",
+      "side": 1,
+      "message": "Yep, esOnlyExtension is a bad name. It means \"extension that can\u0027t be enabled and is always exposed if supported\".\n\nWe want esOnlyExtension here.",
+      "parentUuid": "d064c5cc_8ef4192c",
+      "revId": "1298489e353b8dd1bfacb548aab2817902f54532",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
