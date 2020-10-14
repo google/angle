@@ -151,9 +151,7 @@ constexpr const char *kSkippedMessages[] = {
     // http://anglebug.com/5027
     "UNASSIGNED-CoreValidation-Shader-PushConstantOutOfRange",
     // http://anglebug.com/5148
-    "UNASSIGNED-CoreValidation-DevLimit-MissingQueryCount",
-    // http://anglebug.com/5149
-    "UNASSIGNED-BestPractices-vkCreateDevice-physical-device-features-not-retrieved"};
+    "UNASSIGNED-CoreValidation-DevLimit-MissingQueryCount"};
 
 // Suppress validation errors that are known
 //  return "true" if given code/prefix/message is known, else return "false"
