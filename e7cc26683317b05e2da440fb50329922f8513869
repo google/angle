@@ -82,6 +82,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1ea88990_8a0dac98",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1313,
+      "author": {
+        "id": 1357791
+      },
+      "writtenOn": "2020-10-14T10:04:37Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "d1ed0359_06fb2a67",
+      "range": {
+        "startLine": 1313,
+        "startChar": 46,
+        "endLine": 1313,
+        "endChar": 90
+      },
+      "revId": "e7cc26683317b05e2da440fb50329922f8513869",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "85581316_2d50dd72",
@@ -119,6 +143,54 @@
       "side": 1,
       "message": "Could also do that as a follow-up Shabi.",
       "parentUuid": "85581316_2d50dd72",
+      "range": {
+        "startLine": 1946,
+        "startChar": 61,
+        "endLine": 1946,
+        "endChar": 75
+      },
+      "revId": "e7cc26683317b05e2da440fb50329922f8513869",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "83840978_9e534a82",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1946,
+      "author": {
+        "id": 1357791
+      },
+      "writtenOn": "2020-10-14T10:04:37Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "8f8760a7_ca2fe9dc",
+      "range": {
+        "startLine": 1946,
+        "startChar": 61,
+        "endLine": 1946,
+        "endChar": 75
+      },
+      "revId": "e7cc26683317b05e2da440fb50329922f8513869",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e5804bba_26154d68",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1946,
+      "author": {
+        "id": 1357791
+      },
+      "writtenOn": "2020-10-14T10:04:37Z",
+      "side": 1,
+      "message": "In case of Qualcomm, I have no idea. It is hard for me to debug Pixel device. Anyway, since there are no problem in all other vendors\u0027s devices, including MALI, Qualcomm seems to have some problem in imageCubeArray feature support.",
+      "parentUuid": "8f8760a7_ca2fe9dc",
       "range": {
         "startLine": 1946,
         "startChar": 61,
@@ -182,6 +254,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "93501213_b4730888",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1458,
+      "author": {
+        "id": 1357791
+      },
+      "writtenOn": "2020-10-14T10:04:37Z",
+      "side": 1,
+      "message": "Thanks Jamie, the test passed with my change.",
+      "parentUuid": "eda4e9c5_31505d16",
+      "revId": "e7cc26683317b05e2da440fb50329922f8513869",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2eb44d6e_9301a09f",
@@ -218,6 +308,30 @@
       "writtenOn": "2020-10-13T18:30:18Z",
       "side": 1,
       "message": "nit, can replace with mNativeExtensions.textureCubeMapArrayOES, so that the expression is not repeated.",
+      "range": {
+        "startLine": 212,
+        "startChar": 48,
+        "endLine": 212,
+        "endChar": 91
+      },
+      "revId": "e7cc26683317b05e2da440fb50329922f8513869",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "48f35351_90f0d52f",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 212,
+      "author": {
+        "id": 1357791
+      },
+      "writtenOn": "2020-10-14T10:04:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e6693796_e17a0a6b",
       "range": {
         "startLine": 212,
         "startChar": 48,
