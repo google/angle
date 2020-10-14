@@ -108,6 +108,16 @@ ANGLE_EXPORT void GL_APIENTRY GetRenderbufferImageANGLE(GLenum target,
                                                         GLenum type,
                                                         void *pixels);
 
+// GL_ANGLE_get_tex_level_parameter
+ANGLE_EXPORT void GL_APIENTRY GetTexLevelParameterivANGLE(GLenum target,
+                                                          GLint level,
+                                                          GLenum pname,
+                                                          GLint *params);
+ANGLE_EXPORT void GL_APIENTRY GetTexLevelParameterfvANGLE(GLenum target,
+                                                          GLint level,
+                                                          GLenum pname,
+                                                          GLfloat *params);
+
 // GL_ANGLE_instanced_arrays
 ANGLE_EXPORT void GL_APIENTRY DrawArraysInstancedANGLE(GLenum mode,
                                                        GLint first,
@@ -590,14 +600,6 @@ ANGLE_EXPORT void GL_APIENTRY TexStorage2DMultisampleANGLE(GLenum target,
                                                            GLsizei width,
                                                            GLsizei height,
                                                            GLboolean fixedsamplelocations);
-ANGLE_EXPORT void GL_APIENTRY GetTexLevelParameterivANGLE(GLenum target,
-                                                          GLint level,
-                                                          GLenum pname,
-                                                          GLint *params);
-ANGLE_EXPORT void GL_APIENTRY GetTexLevelParameterfvANGLE(GLenum target,
-                                                          GLint level,
-                                                          GLenum pname,
-                                                          GLfloat *params);
 ANGLE_EXPORT void GL_APIENTRY GetMultisamplefvANGLE(GLenum pname, GLuint index, GLfloat *val);
 ANGLE_EXPORT void GL_APIENTRY SampleMaskiANGLE(GLuint maskNumber, GLbitfield mask);
 

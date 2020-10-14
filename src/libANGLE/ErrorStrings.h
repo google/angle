@@ -357,6 +357,7 @@ MSG kMissingTexture = "No Texture is bound to the specified target.";
 MSG kMissingTextureName = "texture is not the name of an existing texture object.";
 MSG kMultisampleArrayExtensionRequired = "GL_ANGLE_texture_multisample_array not enabled.";
 MSG kMultisampleTextureExtensionOrES31Required = "GL_ANGLE_texture_multisample or GLES 3.1 required.";
+MSG kMultisampleTextureExtensionOrGetTexLevelParameterExtensionOrES31Required = "GL_ANGLE_texture_multisample, GL_ANGLE_get_tex_level_parameter or GLES 3.1 required.";
 MSG kMultiviewActive = "The number of views in the active draw framebuffer is greater than 1.";
 MSG kMultiviewMismatch = "The number of views in the active program and draw framebuffer does not match.";
 MSG kMultiviewNotAvailable = "ANGLE_multiview is not available.";

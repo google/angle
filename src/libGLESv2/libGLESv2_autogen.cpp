@@ -2843,6 +2843,23 @@ void GL_APIENTRY glGetRenderbufferImageANGLE(GLenum target,
     return gl::GetRenderbufferImageANGLE(target, format, type, pixels);
 }
 
+// GL_ANGLE_get_tex_level_parameter
+void GL_APIENTRY glGetTexLevelParameterivANGLE(GLenum target,
+                                               GLint level,
+                                               GLenum pname,
+                                               GLint *params)
+{
+    return gl::GetTexLevelParameterivANGLE(target, level, pname, params);
+}
+
+void GL_APIENTRY glGetTexLevelParameterfvANGLE(GLenum target,
+                                               GLint level,
+                                               GLenum pname,
+                                               GLfloat *params)
+{
+    return gl::GetTexLevelParameterfvANGLE(target, level, pname, params);
+}
+
 // GL_ANGLE_instanced_arrays
 void GL_APIENTRY glDrawArraysInstancedANGLE(GLenum mode,
                                             GLint first,
@@ -3672,22 +3689,6 @@ void GL_APIENTRY glTexStorage2DMultisampleANGLE(GLenum target,
 {
     return gl::TexStorage2DMultisampleANGLE(target, samples, internalformat, width, height,
                                             fixedsamplelocations);
-}
-
-void GL_APIENTRY glGetTexLevelParameterivANGLE(GLenum target,
-                                               GLint level,
-                                               GLenum pname,
-                                               GLint *params)
-{
-    return gl::GetTexLevelParameterivANGLE(target, level, pname, params);
-}
-
-void GL_APIENTRY glGetTexLevelParameterfvANGLE(GLenum target,
-                                               GLint level,
-                                               GLenum pname,
-                                               GLfloat *params)
-{
-    return gl::GetTexLevelParameterfvANGLE(target, level, pname, params);
 }
 
 void GL_APIENTRY glGetMultisamplefvANGLE(GLenum pname, GLuint index, GLfloat *val)

@@ -33,6 +33,7 @@ angle_extensions = [
     "GL_CHROMIUM_lose_context",
     "GL_ANGLE_copy_texture_3d",
     "GL_ANGLE_get_image",
+    "GL_ANGLE_get_tex_level_parameter",
     "GL_ANGLE_program_binary",
     "GL_ANGLE_request_extension",
     "GL_ANGLE_robust_client_memory",

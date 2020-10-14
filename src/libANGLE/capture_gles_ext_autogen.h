@@ -128,6 +128,20 @@ angle::CallCapture CaptureGetRenderbufferImageANGLE(const State &glState,
                                                     GLenum type,
                                                     void *pixels);
 
+// GL_ANGLE_get_tex_level_parameter
+angle::CallCapture CaptureGetTexLevelParameterivANGLE(const State &glState,
+                                                      bool isCallValid,
+                                                      TextureTarget targetPacked,
+                                                      GLint level,
+                                                      GLenum pname,
+                                                      GLint *params);
+angle::CallCapture CaptureGetTexLevelParameterfvANGLE(const State &glState,
+                                                      bool isCallValid,
+                                                      TextureTarget targetPacked,
+                                                      GLint level,
+                                                      GLenum pname,
+                                                      GLfloat *params);
+
 // GL_ANGLE_instanced_arrays
 angle::CallCapture CaptureDrawArraysInstancedANGLE(const State &glState,
                                                    bool isCallValid,
@@ -780,18 +794,6 @@ angle::CallCapture CaptureTexStorage2DMultisampleANGLE(const State &glState,
                                                        GLsizei width,
                                                        GLsizei height,
                                                        GLboolean fixedsamplelocations);
-angle::CallCapture CaptureGetTexLevelParameterivANGLE(const State &glState,
-                                                      bool isCallValid,
-                                                      TextureTarget targetPacked,
-                                                      GLint level,
-                                                      GLenum pname,
-                                                      GLint *params);
-angle::CallCapture CaptureGetTexLevelParameterfvANGLE(const State &glState,
-                                                      bool isCallValid,
-                                                      TextureTarget targetPacked,
-                                                      GLint level,
-                                                      GLenum pname,
-                                                      GLfloat *params);
 angle::CallCapture CaptureGetMultisamplefvANGLE(const State &glState,
                                                 bool isCallValid,
                                                 GLenum pname,
@@ -2081,6 +2083,20 @@ void CaptureGetRenderbufferImageANGLE_pixels(const State &glState,
                                              GLenum type,
                                              void *pixels,
                                              angle::ParamCapture *paramCapture);
+void CaptureGetTexLevelParameterivANGLE_params(const State &glState,
+                                               bool isCallValid,
+                                               TextureTarget targetPacked,
+                                               GLint level,
+                                               GLenum pname,
+                                               GLint *params,
+                                               angle::ParamCapture *paramCapture);
+void CaptureGetTexLevelParameterfvANGLE_params(const State &glState,
+                                               bool isCallValid,
+                                               TextureTarget targetPacked,
+                                               GLint level,
+                                               GLenum pname,
+                                               GLfloat *params,
+                                               angle::ParamCapture *paramCapture);
 void CaptureDrawElementsInstancedANGLE_indices(const State &glState,
                                                bool isCallValid,
                                                PrimitiveMode modePacked,
@@ -3194,20 +3210,6 @@ void CaptureGetQueryObjectui64vRobustANGLE_params(const State &glState,
                                                   GLsizei *length,
                                                   GLuint64 *params,
                                                   angle::ParamCapture *paramCapture);
-void CaptureGetTexLevelParameterivANGLE_params(const State &glState,
-                                               bool isCallValid,
-                                               TextureTarget targetPacked,
-                                               GLint level,
-                                               GLenum pname,
-                                               GLint *params,
-                                               angle::ParamCapture *paramCapture);
-void CaptureGetTexLevelParameterfvANGLE_params(const State &glState,
-                                               bool isCallValid,
-                                               TextureTarget targetPacked,
-                                               GLint level,
-                                               GLenum pname,
-                                               GLfloat *params,
-                                               angle::ParamCapture *paramCapture);
 void CaptureGetMultisamplefvANGLE_val(const State &glState,
                                       bool isCallValid,
                                       GLenum pname,

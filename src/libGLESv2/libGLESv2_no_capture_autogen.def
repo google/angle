@@ -480,6 +480,10 @@ EXPORTS
     glGetRenderbufferImageANGLE
     glGetTexImageANGLE
 
+    ; GL_ANGLE_get_tex_level_parameter
+    glGetTexLevelParameterfvANGLE
+    glGetTexLevelParameterivANGLE
+
     ; GL_ANGLE_instanced_arrays
     glDrawArraysInstancedANGLE
     glDrawElementsInstancedANGLE
@@ -584,8 +588,6 @@ EXPORTS
 
     ; GL_ANGLE_texture_multisample
     glGetMultisamplefvANGLE
-    glGetTexLevelParameterfvANGLE
-    glGetTexLevelParameterivANGLE
     glSampleMaskiANGLE
     glTexStorage2DMultisampleANGLE
 

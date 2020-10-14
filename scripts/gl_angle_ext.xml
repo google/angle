@@ -1070,6 +1070,12 @@
                 <command name="glGetRenderbufferImageANGLE"/>
             </require>
         </extension>
+        <extension name ="GL_ANGLE_get_tex_level_parameter" supported='gles2'>
+            <require>
+                <command name="glGetTexLevelParameterfvANGLE"/>
+                <command name="glGetTexLevelParameterivANGLE"/>
+            </require>
+        </extension>
         <extension name="GL_ANGLE_memory_object_flags" supported="gl|gles2">
             <require>
                 <enum name="GL_CREATE_SPARSE_BINDING_BIT_ANGLE"/>

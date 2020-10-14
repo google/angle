@@ -401,6 +401,16 @@ GL_APICALL void GL_APIENTRY glSampleMaskiANGLE(GLuint maskNumber, GLbitfield mas
 #endif
 #endif  // !GL_ANGLE_texture_multisample
 
+#ifndef GL_ANGLE_get_tex_level_parameter
+#define GL_ANGLE_get_tex_level_parameter 1
+typedef void(GL_APIENTRYP PFNGLGETTEXLEVELPARAMETERFVANGLEPROC)(GLenum target, GLint level, GLenum pname, GLfloat *params);
+typedef void(GL_APIENTRYP PFNGLGETTEXLEVELPARAMETERIVANGLEPROC)(GLenum target, GLint level, GLenum pname, GLint *params);
+#ifdef GL_GLEXT_PROTOTYPES
+GL_APICALL void GL_APIENTRY glGetTexLevelParameterfvANGLE(GLenum target, GLint level, GLenum pname, GLfloat *params);
+GL_APICALL void GL_APIENTRY glGetTexLevelParameterivANGLE(GLenum target, GLint level, GLenum pname, GLint *params);
+#endif
+#endif /* GL_ANGLE_get_tex_level_parameter */
+
 #ifndef GL_ANGLE_explicit_context
 #define GL_ANGLE_explicit_context
 typedef void *GLeglContext;

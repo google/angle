@@ -443,6 +443,71 @@ void GL_APIENTRY GetRenderbufferImageANGLE(GLenum target, GLenum format, GLenum 
     }
 }
 
+// GL_ANGLE_get_tex_level_parameter
+void GL_APIENTRY GetTexLevelParameterivANGLE(GLenum target,
+                                             GLint level,
+                                             GLenum pname,
+                                             GLint *params)
+{
+    Context *context = GetValidGlobalContext();
+    EVENT(context, gl::EntryPoint::GetTexLevelParameterivANGLE, "glGetTexLevelParameterivANGLE",
+          "context = %d, GLenum target = %s, GLint level = %d, GLenum pname = %s, GLint * params = "
+          "0x%016" PRIxPTR "",
+          CID(context), GLenumToString(GLenumGroup::DefaultGroup, target), level,
+          GLenumToString(GLenumGroup::DefaultGroup, pname), (uintptr_t)params);
+
+    if (context)
+    {
+        TextureTarget targetPacked                            = FromGL<TextureTarget>(target);
+        std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateGetTexLevelParameterivANGLE(context, targetPacked, level, pname, params));
+        if (isCallValid)
+        {
+            context->getTexLevelParameteriv(targetPacked, level, pname, params);
+        }
+        ANGLE_CAPTURE(GetTexLevelParameterivANGLE, isCallValid, context, targetPacked, level, pname,
+                      params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
+}
+
+void GL_APIENTRY GetTexLevelParameterfvANGLE(GLenum target,
+                                             GLint level,
+                                             GLenum pname,
+                                             GLfloat *params)
+{
+    Context *context = GetValidGlobalContext();
+    EVENT(context, gl::EntryPoint::GetTexLevelParameterfvANGLE, "glGetTexLevelParameterfvANGLE",
+          "context = %d, GLenum target = %s, GLint level = %d, GLenum pname = %s, GLfloat * params "
+          "= 0x%016" PRIxPTR "",
+          CID(context), GLenumToString(GLenumGroup::DefaultGroup, target), level,
+          GLenumToString(GLenumGroup::DefaultGroup, pname), (uintptr_t)params);
+
+    if (context)
+    {
+        TextureTarget targetPacked                            = FromGL<TextureTarget>(target);
+        std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateGetTexLevelParameterfvANGLE(context, targetPacked, level, pname, params));
+        if (isCallValid)
+        {
+            context->getTexLevelParameterfv(targetPacked, level, pname, params);
+        }
+        ANGLE_CAPTURE(GetTexLevelParameterfvANGLE, isCallValid, context, targetPacked, level, pname,
+                      params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
+}
+
 // GL_ANGLE_instanced_arrays
 void GL_APIENTRY DrawArraysInstancedANGLE(GLenum mode,
                                           GLint first,
@@ -3329,70 +3394,6 @@ void GL_APIENTRY TexStorage2DMultisampleANGLE(GLenum target,
     }
 }
 
-void GL_APIENTRY GetTexLevelParameterivANGLE(GLenum target,
-                                             GLint level,
-                                             GLenum pname,
-                                             GLint *params)
-{
-    Context *context = GetValidGlobalContext();
-    EVENT(context, gl::EntryPoint::GetTexLevelParameterivANGLE, "glGetTexLevelParameterivANGLE",
-          "context = %d, GLenum target = %s, GLint level = %d, GLenum pname = %s, GLint * params = "
-          "0x%016" PRIxPTR "",
-          CID(context), GLenumToString(GLenumGroup::DefaultGroup, target), level,
-          GLenumToString(GLenumGroup::DefaultGroup, pname), (uintptr_t)params);
-
-    if (context)
-    {
-        TextureTarget targetPacked                            = FromGL<TextureTarget>(target);
-        std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateGetTexLevelParameterivANGLE(context, targetPacked, level, pname, params));
-        if (isCallValid)
-        {
-            context->getTexLevelParameteriv(targetPacked, level, pname, params);
-        }
-        ANGLE_CAPTURE(GetTexLevelParameterivANGLE, isCallValid, context, targetPacked, level, pname,
-                      params);
-    }
-    else
-    {
-        GenerateContextLostErrorOnCurrentGlobalContext();
-    }
-}
-
-void GL_APIENTRY GetTexLevelParameterfvANGLE(GLenum target,
-                                             GLint level,
-                                             GLenum pname,
-                                             GLfloat *params)
-{
-    Context *context = GetValidGlobalContext();
-    EVENT(context, gl::EntryPoint::GetTexLevelParameterfvANGLE, "glGetTexLevelParameterfvANGLE",
-          "context = %d, GLenum target = %s, GLint level = %d, GLenum pname = %s, GLfloat * params "
-          "= 0x%016" PRIxPTR "",
-          CID(context), GLenumToString(GLenumGroup::DefaultGroup, target), level,
-          GLenumToString(GLenumGroup::DefaultGroup, pname), (uintptr_t)params);
-
-    if (context)
-    {
-        TextureTarget targetPacked                            = FromGL<TextureTarget>(target);
-        std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateGetTexLevelParameterfvANGLE(context, targetPacked, level, pname, params));
-        if (isCallValid)
-        {
-            context->getTexLevelParameterfv(targetPacked, level, pname, params);
-        }
-        ANGLE_CAPTURE(GetTexLevelParameterfvANGLE, isCallValid, context, targetPacked, level, pname,
-                      params);
-    }
-    else
-    {
-        GenerateContextLostErrorOnCurrentGlobalContext();
-    }
-}
-
 void GL_APIENTRY GetMultisamplefvANGLE(GLenum pname, GLuint index, GLfloat *val)
 {
     Context *context = GetValidGlobalContext();
@@ -3440,6 +3441,10 @@ void GL_APIENTRY SampleMaskiANGLE(GLuint maskNumber, GLbitfield mask)
         GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
+
+// GetTexLevelParameterfvANGLE is already defined.
+
+// GetTexLevelParameterivANGLE is already defined.
 
 // GL_ANGLE_translated_shader_source
 void GL_APIENTRY GetTranslatedShaderSourceANGLE(GLuint shader,

@@ -114,6 +114,18 @@ bool ValidateGetRenderbufferImageANGLE(const Context *context,
                                        GLenum type,
                                        const void *pixels);
 
+// GL_ANGLE_get_tex_level_parameter
+bool ValidateGetTexLevelParameterivANGLE(const Context *context,
+                                         TextureTarget targetPacked,
+                                         GLint level,
+                                         GLenum pname,
+                                         const GLint *params);
+bool ValidateGetTexLevelParameterfvANGLE(const Context *context,
+                                         TextureTarget targetPacked,
+                                         GLint level,
+                                         GLenum pname,
+                                         const GLfloat *params);
+
 // GL_ANGLE_instanced_arrays
 bool ValidateDrawArraysInstancedANGLE(const Context *context,
                                       PrimitiveMode modePacked,
@@ -677,16 +689,6 @@ bool ValidateTexStorage2DMultisampleANGLE(const Context *context,
                                           GLsizei width,
                                           GLsizei height,
                                           GLboolean fixedsamplelocations);
-bool ValidateGetTexLevelParameterivANGLE(const Context *context,
-                                         TextureTarget targetPacked,
-                                         GLint level,
-                                         GLenum pname,
-                                         const GLint *params);
-bool ValidateGetTexLevelParameterfvANGLE(const Context *context,
-                                         TextureTarget targetPacked,
-                                         GLint level,
-                                         GLenum pname,
-                                         const GLfloat *params);
 bool ValidateGetMultisamplefvANGLE(const Context *context,
                                    GLenum pname,
                                    GLuint index,

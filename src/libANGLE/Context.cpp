@@ -3296,6 +3296,9 @@ Extensions Context::generateSupportedExtensions() const
         ASSERT(supportedExtensions.textureCompressionASTCHDRKHR);
     }
 
+    // GL_ANGLE_get_tex_level_parameter is implemented in the frontend
+    supportedExtensions.getTexLevelParameterANGLE = true;
+
     return supportedExtensions;
 }
 

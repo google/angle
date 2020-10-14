@@ -656,6 +656,9 @@ struct Extensions
 
     // GL_NV_robustness_video_memory_purge
     bool robustnessVideoMemoryPurgeNV = false;
+
+    // GL_ANGLE_get_tex_level_parameter
+    bool getTexLevelParameterANGLE = false;
 };
 
 // Pointer to a boolean memeber of the Extensions struct
