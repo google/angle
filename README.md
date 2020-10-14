@@ -12,7 +12,7 @@ Metal and MacOS, Chrome OS, and Fuchsia support.
 |----------------|:-------------:|:----------------:|:--------------:|:-------------:|:-------------:|:-------------:|
 | OpenGL ES 2.0  |    complete   |    complete      |    complete    |    complete   |    complete   |    complete   |
 | OpenGL ES 3.0  |               |    complete      |    complete    |    complete   |    complete   |  in progress  |
-| OpenGL ES 3.1  |               |   in progress    |    complete    |    complete   |    complete   |               |
+| OpenGL ES 3.1  |               | [incomplete](doc/ES31StatusOnD3D11.md) |    complete    |    complete   |    complete   |               |
 | OpenGL ES 3.2  |               |                  |  in progress   |  in progress  |  in progress  |               |
 
 ### Platform support via backing renderers
