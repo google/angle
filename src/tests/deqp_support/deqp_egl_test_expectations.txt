@@ -205,3 +205,7 @@
 // EGL images with the GL back-ends are not supported
 4606 OPENGL : dEQP-EGL.functional.image.api.create_image_gles2_* = FAIL
 4606 GLES : dEQP-EGL.functional.image.api.create_image_gles2_* = FAIL
+
+// Very slow on Vulkan Linux
+5170 VULKAN LINUX : dEQP-EGL.functional.swap_buffers_with_damage.resize_after_swap.* = SKIP
+5170 VULKAN LINUX : dEQP-EGL.functional.swap_buffers_with_damage.resize_before_swap.* = SKIP
