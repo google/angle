@@ -16,6 +16,23 @@
       "message": "shabi, can i get a +2 to land this?",
       "revId": "65ad932bd8351ee9251ab05af7b897ed738d4ca4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "af25dd89_0bbf7dca",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-10-14T16:18:24Z",
+      "side": 1,
+      "message": "👍",
+      "revId": "65ad932bd8351ee9251ab05af7b897ed738d4ca4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
