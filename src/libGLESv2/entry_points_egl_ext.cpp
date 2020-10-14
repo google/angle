@@ -1646,8 +1646,17 @@ ANGLE_EXPORT EGLBoolean EGLAPIENTRY EGL_SignalSyncKHR(EGLDisplay dpy, EGLSync sy
                ", EGLint mode = 0x%X",
                (uintptr_t)dpy, (uintptr_t)sync, mode);
 
-    Thread *thread = egl::GetCurrentThread();
-    // Unimplemented.
+    Thread *thread        = egl::GetCurrentThread();
+    egl::Display *display = static_cast<egl::Display *>(dpy);
+    egl::Sync *syncObject = static_cast<Sync *>(sync);
+
+    ANGLE_EGL_TRY_RETURN(thread, ValidateSignalSyncKHR(display, syncObject, mode),
+                         "eglSignalSyncKHR", GetSyncIfValid(display, syncObject), EGL_FALSE);
+
+    gl::Context *currentContext = thread->getContext();
+    ANGLE_EGL_TRY_RETURN(thread, syncObject->signal(display, currentContext, mode),
+                         "eglSignalSyncKHR", GetSyncIfValid(display, syncObject), EGL_FALSE);
+
     thread->setSuccess();
     return EGL_TRUE;
 }

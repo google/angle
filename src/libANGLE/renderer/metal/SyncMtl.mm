@@ -307,10 +307,4 @@ egl::Error EGLSyncMtl::getStatus(const egl::Display *display, EGLint *outStatus)
     return egl::NoError();
 }
 
-egl::Error EGLSyncMtl::dupNativeFenceFD(const egl::Display *display, EGLint *result) const
-{
-    UNREACHABLE();
-    return egl::EglBadDisplay();
-}
-
 }

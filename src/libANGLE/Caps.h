@@ -1122,6 +1122,9 @@ struct DisplayExtensions
 
     // EGL_NV_robustness_video_memory_purge
     bool robustnessVideoMemoryPurgeNV = false;
+
+    // EGL_KHR_reusable_sync
+    bool reusableSyncKHR = false;
 };
 
 struct DeviceExtensions

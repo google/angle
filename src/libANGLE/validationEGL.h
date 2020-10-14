@@ -347,6 +347,9 @@ Error ValidateSwapBuffersWithFrameTokenANGLE(const Display *display,
                                              const Surface *surface,
                                              EGLFrameTokenANGLE frametoken);
 
+// EGL_KHR_reusable_sync
+Error ValidateSignalSyncKHR(const Display *display, const Sync *sync, EGLint mode);
+
 }  // namespace egl
 
 #define ANGLE_EGL_TRY(THREAD, EXPR, FUNCNAME, LABELOBJECT)                               \
