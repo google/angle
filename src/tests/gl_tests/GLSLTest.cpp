@@ -824,6 +824,8 @@ TEST_P(GLSLTest_ES3, GLVertexIDIntegerTextureDrawArrays)
 {
     // http://anglebug.com/4092
     ANGLE_SKIP_TEST_IF(isSwiftshader());
+    // TODO(crbug.com/1132295): Failing on ARM-based Apple DTKs.
+    ANGLE_SKIP_TEST_IF(IsOSX() && IsARM64() && IsDesktopOpenGL());
     // Have to set a large point size because the window size is much larger than the texture
     constexpr char kVS[] = R"(#version 300 es
 flat out highp int vVertexID;

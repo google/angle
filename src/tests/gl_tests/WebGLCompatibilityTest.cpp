@@ -2792,6 +2792,9 @@ TEST_P(WebGL2CompatibilityTest, CopyMip1ToMip0)
     // http://anglebug.com/4805
     ANGLE_SKIP_TEST_IF(IsOpenGL() && IsIntel() && (IsWindows() || IsOSX()));
 
+    // TODO(crbug.com/1132295): Failing on ARM64-based Apple DTKs.
+    ANGLE_SKIP_TEST_IF(IsOSX() && IsARM64() && IsDesktopOpenGL());
+
     GLFramebuffer framebuffer;
     glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
 

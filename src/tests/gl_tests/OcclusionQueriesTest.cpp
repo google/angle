@@ -393,6 +393,7 @@ TEST_P(OcclusionQueriesTest, MultiQueries)
 
     // TODO(crbug.com/1132295): Failing on Apple DTK.
     ANGLE_SKIP_TEST_IF(IsOSX() && IsARM64() && IsDesktopOpenGL());
+    ANGLE_SKIP_TEST_IF(IsOSX() && IsARM64() && IsMetal());
 
     GLuint query[5] = {};
     glGenQueriesEXT(5, query);
