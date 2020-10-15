@@ -41,6 +41,7 @@ namespace angle
 enum class RestrictedTraceID
 {
     angry_birds_2_1500,
+    arena_of_valor,
     candy_crush_500,
     cod_mobile,
     egypt_1500,
