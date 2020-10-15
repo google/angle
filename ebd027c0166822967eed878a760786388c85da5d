@@ -16,6 +16,46 @@
       "message": "Please review again. I found a few subtle bugs with the previous implementation that led me to redoing the change completely.\n\nThe new version makes a few decisions earlier and merges current and deferred clears up front, which simplifies things.",
       "revId": "ebd027c0166822967eed878a760786388c85da5d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "64fcf4b7_0c9a0dd4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 11
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-10-15T18:23:36Z",
+      "side": 1,
+      "message": "LGTM",
+      "revId": "ebd027c0166822967eed878a760786388c85da5d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ed834533_8efa4769",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 549,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-10-15T18:23:36Z",
+      "side": 1,
+      "message": "clearWithLoadOp",
+      "range": {
+        "startLine": 549,
+        "startChar": 19,
+        "endLine": 549,
+        "endChar": 32
+      },
+      "revId": "ebd027c0166822967eed878a760786388c85da5d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
