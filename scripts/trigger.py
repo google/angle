@@ -15,6 +15,9 @@ import re
 import subprocess
 import sys
 
+# This is the same as the trybots.
+DEFAULT_TASK_PRIORITY = 30
+
 
 def parse_args():
     parser = argparse.ArgumentParser(os.path.basename(sys.argv[0]))
@@ -26,6 +29,10 @@ def parse_args():
     parser.add_argument('-g', '--gpu', help='GPU dimension. (e.g. intel-hd-630-win10-stable)')
     parser.add_argument('-t', '--device-type', help='Android device type (e.g. bullhead)')
     parser.add_argument('-o', '--device-os', help='Android OS.')
+    parser.add_argument(
+        '--priority',
+        help='Task priority. Default is %s. Use judiciously.' % DEFAULT_TASK_PRIORITY,
+        default=DEFAULT_TASK_PRIORITY)
 
     return parser.parse_known_args()
 
@@ -69,6 +76,9 @@ def main():
         'https://isolateserver.appspot.com', '-d', 'os=' + args.os_dim, '-d', 'pool=' + args.pool,
         '-s', sha
     ]
+
+    # Set priority. Don't abuse this!
+    swarming_args += ['-priority', str(args.priority)]
 
     # Define a user tag.
     try:
