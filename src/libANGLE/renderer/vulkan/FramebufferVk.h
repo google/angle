@@ -186,7 +186,7 @@ class FramebufferVk : public FramebufferImpl
                                 uint8_t stencilMask,
                                 const VkClearColorValue &clearColorValue,
                                 const VkClearDepthStencilValue &clearDepthStencilValue);
-    angle::Result clearWithLoadOp(ContextVk *contextVk);
+    void redeferClears(ContextVk *contextVk);
     angle::Result clearWithCommand(ContextVk *contextVk,
                                    vk::CommandBufferHelper *renderpassCommands,
                                    const gl::Rectangle &scissoredRenderArea);

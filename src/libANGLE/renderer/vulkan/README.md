@@ -76,6 +76,7 @@ More implementation details can be found in the `doc` directory:
 - [Shader Module Compilation](doc/ShaderModuleCompilation.md)
 - [OpenGL Line Segment Rasterization](doc/OpenGLLineSegmentRasterization.md)
 - [Format Tables and Emulation](doc/FormatTablesAndEmulation.md)
+- [Deferred Clears](doc/DeferredClears.md)
 
 [VkDevice]: https://www.khronos.org/registry/vulkan/specs/1.1-extensions/man/html/VkDevice.html
 [VkQueue]: https://www.khronos.org/registry/vulkan/specs/1.1-extensions/man/html/VkQueue.html
