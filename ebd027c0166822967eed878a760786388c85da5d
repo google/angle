@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4e39c5a1_9005dfcc",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 11
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-10-15T03:58:45Z",
+      "side": 1,
+      "message": "Please review again. I found a few subtle bugs with the previous implementation that led me to redoing the change completely.\n\nThe new version makes a few decisions earlier and merges current and deferred clears up front, which simplifies things.",
+      "revId": "ebd027c0166822967eed878a760786388c85da5d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}

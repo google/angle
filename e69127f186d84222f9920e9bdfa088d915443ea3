@@ -51,6 +51,24 @@
       "parentUuid": "b499f361_e4dbc03f",
       "revId": "e69127f186d84222f9920e9bdfa088d915443ea3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c1da3986_01ed8ebd",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-10-15T03:58:45Z",
+      "side": 1,
+      "message": "Thanks Charlie. Remind me again what the app actually does? I thought it clears an image every frame to the same color, but it\u0027s otherwise not used. What is it doing with the image?",
+      "parentUuid": "63632b76_52a835c9",
+      "revId": "e69127f186d84222f9920e9bdfa088d915443ea3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
