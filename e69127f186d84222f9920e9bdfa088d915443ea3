@@ -69,6 +69,24 @@
       "parentUuid": "63632b76_52a835c9",
       "revId": "e69127f186d84222f9920e9bdfa088d915443ea3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "42a8f399_35d13f35",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-10-15T16:47:38Z",
+      "side": 1,
+      "message": "It\u0027s Gfxbench T-Rex. App basically creates a texture and clears to white (not exact sure about the color) and use it. But do it for every frame and on multiple textures.",
+      "parentUuid": "c1da3986_01ed8ebd",
+      "revId": "e69127f186d84222f9920e9bdfa088d915443ea3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
