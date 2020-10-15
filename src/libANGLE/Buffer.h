@@ -18,6 +18,7 @@
 #include "libANGLE/IndexRangeCache.h"
 #include "libANGLE/Observer.h"
 #include "libANGLE/RefCountObject.h"
+#include "libANGLE/angletypes.h"
 
 namespace rx
 {
@@ -134,6 +135,9 @@ class Buffer final : public RefCountObject<BufferID>,
     GLint64 getMemorySize() const;
     GLboolean isImmutable() const { return mState.mImmutable; }
     GLbitfield getStorageExtUsageFlags() const { return mState.mStorageExtUsageFlags; }
+
+    // Buffers are always initialized immediately when allocated
+    InitState initState() const { return InitState::Initialized; }
 
     rx::BufferImpl *getImplementation() const { return mImpl; }
 

@@ -503,6 +503,7 @@ class Texture final : public RefCountObject<TextureID>,
     InitState initState(const ImageIndex &imageIndex) const override;
     InitState initState() const { return mState.mInitState; }
     void setInitState(const ImageIndex &imageIndex, InitState initState) override;
+    void setInitState(InitState initState);
 
     bool isBoundToFramebuffer(rx::Serial framebufferSerial) const
     {

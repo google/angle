@@ -134,7 +134,7 @@ TextureState::TextureState(TextureType type)
       mImageDescs((IMPLEMENTATION_MAX_TEXTURE_LEVELS + 1) * (type == TextureType::CubeMap ? 6 : 1)),
       mCropRect(0, 0, 0, 0),
       mGenerateMipmapHint(GL_FALSE),
-      mInitState(InitState::MayNeedInit),
+      mInitState(InitState::Initialized),
       mCachedSamplerFormat(SamplerFormat::InvalidEnum),
       mCachedSamplerCompareMode(GL_NONE),
       mCachedSamplerFormatValid(false)
@@ -554,7 +554,7 @@ GLuint TextureState::getEnabledLevelCount() const
 }
 
 ImageDesc::ImageDesc()
-    : ImageDesc(Extents(0, 0, 0), Format::Invalid(), 0, GL_TRUE, InitState::MayNeedInit)
+    : ImageDesc(Extents(0, 0, 0), Format::Invalid(), 0, GL_TRUE, InitState::Initialized)
 {}
 
 ImageDesc::ImageDesc(const Extents &size, const Format &format, const InitState initState)
@@ -600,6 +600,27 @@ void TextureState::setImageDesc(TextureTarget target, size_t level, const ImageD
     if (desc.initState == InitState::MayNeedInit)
     {
         mInitState = InitState::MayNeedInit;
+    }
+    else
+    {
+        // Scan for any uninitialized images. If there are none, set the init state of the entire
+        // texture to initialized. The cost of the scan is only paid after doing image
+        // initialization which is already very expensive.
+        bool allImagesInitialized = true;
+
+        for (const ImageDesc &desc : mImageDescs)
+        {
+            if (desc.initState == InitState::MayNeedInit)
+            {
+                allImagesInitialized = false;
+                break;
+            }
+        }
+
+        if (allImagesInitialized)
+        {
+            mInitState = InitState::Initialized;
+        }
     }
 }
 
@@ -1949,6 +1970,19 @@ void Texture::setInitState(const ImageIndex &imageIndex, InitState initState)
         newDesc.initState = initState;
         mState.setImageDesc(imageIndex.getTarget(), imageIndex.getLevelIndex(), newDesc);
     }
+}
+
+void Texture::setInitState(InitState initState)
+{
+    for (ImageDesc &imageDesc : mState.mImageDescs)
+    {
+        // Only modifiy defined images, undefined images will remain in the initialized state
+        if (!imageDesc.size.empty())
+        {
+            imageDesc.initState = initState;
+        }
+    }
+    mState.mInitState = initState;
 }
 
 bool Texture::doesSubImageNeedInit(const Context *context,

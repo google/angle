@@ -15,6 +15,7 @@
 #include "libANGLE/Error.h"
 #include "libANGLE/ImageIndex.h"
 #include "libANGLE/Observer.h"
+#include "libANGLE/angletypes.h"
 #include "libANGLE/formatutils.h"
 #include "libANGLE/renderer/FramebufferAttachmentObjectImpl.h"
 
@@ -42,12 +43,6 @@ namespace gl
 class FramebufferAttachmentObject;
 class Renderbuffer;
 class Texture;
-
-enum class InitState
-{
-    MayNeedInit,
-    Initialized,
-};
 
 // FramebufferAttachment implements a GL framebuffer attachment.
 // Attachments are "light" containers, which store pointers to ref-counted GL objects.

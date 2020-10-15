@@ -212,6 +212,11 @@ void QueryTexLevelParameterBase(const Texture *texture,
             *params =
                 CastFromStateValue<ParamType>(pname, texture->getLevelMemorySize(target, level));
             break;
+        case GL_RESOURCE_INITIALIZED_ANGLE:
+            *params = CastFromGLintStateValue<ParamType>(
+                pname, texture->initState(ImageIndex::MakeFromTarget(target, level)) ==
+                           InitState::Initialized);
+            break;
         default:
             UNREACHABLE();
             break;
@@ -344,6 +349,10 @@ void QueryTexParameterBase(const Context *context,
             *params =
                 CastFromGLintStateValue<ParamType>(pname, GL_IMAGE_FORMAT_COMPATIBILITY_BY_SIZE);
             break;
+        case GL_RESOURCE_INITIALIZED_ANGLE:
+            *params = CastFromGLintStateValue<ParamType>(
+                pname, texture->initState() == InitState::Initialized);
+            break;
         default:
             UNREACHABLE();
             break;
@@ -449,6 +458,10 @@ void SetTexParameterBase(Context *context, Texture *texture, GLenum pname, const
             break;
         case GL_TEXTURE_BORDER_COLOR:
             texture->setBorderColor(context, ConvertToColor<isPureInteger>(params));
+            break;
+        case GL_RESOURCE_INITIALIZED_ANGLE:
+            texture->setInitState(ConvertToBool(params[0]) ? InitState::Initialized
+                                                           : InitState::MayNeedInit);
             break;
         default:
             UNREACHABLE();
@@ -645,6 +658,10 @@ void QueryBufferParameterBase(const Buffer *buffer, GLenum pname, ParamType *par
             break;
         case GL_BUFFER_STORAGE_FLAGS_EXT:
             *params = CastFromGLintStateValue<ParamType>(pname, buffer->getStorageExtUsageFlags());
+            break;
+        case GL_RESOURCE_INITIALIZED_ANGLE:
+            *params = CastFromStateValue<ParamType>(
+                pname, ConvertToGLBoolean(buffer->initState() == InitState::Initialized));
             break;
         default:
             UNREACHABLE();
@@ -1376,6 +1393,9 @@ void QueryRenderbufferiv(const Context *context,
             break;
         case GL_IMPLEMENTATION_COLOR_READ_TYPE:
             *params = static_cast<GLint>(renderbuffer->getImplementationColorReadType(context));
+            break;
+        case GL_RESOURCE_INITIALIZED_ANGLE:
+            *params = (renderbuffer->initState(ImageIndex()) == InitState::Initialized);
             break;
         default:
             UNREACHABLE();

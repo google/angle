@@ -43,6 +43,12 @@ enum class Command
     Other
 };
 
+enum class InitState
+{
+    MayNeedInit,
+    Initialized,
+};
+
 struct Rectangle
 {
     Rectangle() : x(0), y(0), width(0), height(0) {}

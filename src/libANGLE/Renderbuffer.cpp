@@ -34,7 +34,7 @@ RenderbufferState::RenderbufferState()
       mFormat(GL_RGBA4),
       mSamples(0),
       mMultisamplingMode(MultisamplingMode::Regular),
-      mInitState(InitState::MayNeedInit)
+      mInitState(InitState::Initialized)
 {}
 
 RenderbufferState::~RenderbufferState() {}

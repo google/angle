@@ -331,6 +331,30 @@ TEST_P(RobustResourceInitTest, Queries)
 
         EXPECT_GL_TRUE(glIsEnabled(GL_ROBUST_RESOURCE_INITIALIZATION_ANGLE));
         EXPECT_GL_NO_ERROR();
+
+        GLTexture texture;
+        glBindTexture(GL_TEXTURE_2D, texture);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+        // Can't verify the init state after glTexImage2D, the implementation is free to initialize
+        // any time before the resource is read.
+
+        {
+            // Force to uninitialized
+            glTexParameteri(GL_TEXTURE_2D, GL_RESOURCE_INITIALIZED_ANGLE, GL_FALSE);
+
+            GLint initState = 0;
+            glGetTexParameteriv(GL_TEXTURE_2D, GL_RESOURCE_INITIALIZED_ANGLE, &initState);
+            EXPECT_GL_FALSE(initState);
+        }
+        {
+            // Force to initialized
+            glTexParameteri(GL_TEXTURE_2D, GL_RESOURCE_INITIALIZED_ANGLE, GL_TRUE);
+
+            GLint initState = 0;
+            glGetTexParameteriv(GL_TEXTURE_2D, GL_RESOURCE_INITIALIZED_ANGLE, &initState);
+            EXPECT_GL_TRUE(initState);
+        }
     }
     else
     {
@@ -384,6 +408,11 @@ TEST_P(RobustResourceInitTest, BufferData)
     glReadPixels(0, 0, getWindowWidth(), getWindowHeight(), GL_RGBA, GL_UNSIGNED_BYTE,
                  actual.data());
     EXPECT_EQ(expected, actual);
+
+    GLint initState = 0;
+    glBindBuffer(GL_ARRAY_BUFFER, buffer);
+    glGetBufferParameteriv(GL_ARRAY_BUFFER, GL_RESOURCE_INITIALIZED_ANGLE, &initState);
+    EXPECT_GL_TRUE(initState);
 }
 
 // Regression test for passing a zero size init buffer with the extension.
@@ -973,6 +1002,11 @@ TEST_P(RobustResourceInitTest, Texture)
     glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
     checkFramebufferNonZeroPixels(0, 0, 0, 0, GLColor::black);
+
+    GLint initState = 0;
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glGetTexParameteriv(GL_TEXTURE_2D, GL_RESOURCE_INITIALIZED_ANGLE, &initState);
+    EXPECT_GL_TRUE(initState);
 }
 
 // Test that uploading texture data with an unpack state set correctly initializes the texture and
@@ -1039,6 +1073,20 @@ void RobustResourceInitTestES3::testIntegerTextureInit(const char *samplerType,
 
     // Blit from the texture to the framebuffer.
     drawQuad(program, "position", 0.5f);
+
+    // Verify both textures have been initialized
+    {
+        GLint initState = 0;
+        glBindTexture(GL_TEXTURE_2D, framebufferTexture);
+        glGetTexParameteriv(GL_TEXTURE_2D, GL_RESOURCE_INITIALIZED_ANGLE, &initState);
+        EXPECT_GL_TRUE(initState);
+    }
+    {
+        GLint initState = 0;
+        glBindTexture(GL_TEXTURE_2D, texture);
+        glGetTexParameteriv(GL_TEXTURE_2D, GL_RESOURCE_INITIALIZED_ANGLE, &initState);
+        EXPECT_GL_TRUE(initState);
+    }
 
     std::array<PixelT, kWidth * kHeight * 4> data;
     glReadPixels(0, 0, kWidth, kHeight, GL_RGBA_INTEGER, type, data.data());
@@ -1881,6 +1929,10 @@ TEST_P(RobustResourceInitTest, ClearWithScissor)
     EXPECT_GL_NO_ERROR();
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
     EXPECT_PIXEL_COLOR_EQ(kSize - 1, 0, GLColor::transparentBlack);
+
+    GLint initState = 0;
+    glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RESOURCE_INITIALIZED_ANGLE, &initState);
+    EXPECT_GL_TRUE(initState);
 }
 
 // Tests that surfaces are initialized when they are created

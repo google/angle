@@ -31,6 +31,7 @@ GL_APICALL void GL_APIENTRY glRequestExtensionANGLE (const GLchar *name);
 #ifndef GL_ANGLE_robust_resource_initialization
 #define GL_ANGLE_robust_resource_initialization 1
 #define GL_ROBUST_RESOURCE_INITIALIZATION_ANGLE 0x93AB
+#define GL_RESOURCE_INITIALIZED_ANGLE 0x969F
 #endif /* GL_ANGLE_robust_resource_initialization */
 
 #ifndef GL_ANGLE_provoking_vertex

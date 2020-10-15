@@ -5293,6 +5293,15 @@ bool ValidateGetBufferParameterBase(const Context *context,
             }
             break;
 
+        case GL_RESOURCE_INITIALIZED_ANGLE:
+            if (!context->getExtensions().robustResourceInitialization)
+            {
+                context->validationError(GL_INVALID_ENUM,
+                                         kRobustResourceInitializationExtensionRequired);
+                return false;
+            }
+            break;
+
         default:
             context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
             return false;
@@ -5364,6 +5373,15 @@ bool ValidateGetRenderbufferParameterivBase(const Context *context,
             if (!context->getExtensions().getImageANGLE)
             {
                 context->validationError(GL_INVALID_ENUM, kGetImageExtensionNotEnabled);
+                return false;
+            }
+            break;
+
+        case GL_RESOURCE_INITIALIZED_ANGLE:
+            if (!context->getExtensions().robustResourceInitialization)
+            {
+                context->validationError(GL_INVALID_ENUM,
+                                         kRobustResourceInitializationExtensionRequired);
                 return false;
             }
             break;
@@ -5591,6 +5609,15 @@ bool ValidateGetTexParameterBase(const Context *context,
             if (!context->getExtensions().getImageANGLE)
             {
                 context->validationError(GL_INVALID_ENUM, kGetImageExtensionNotEnabled);
+                return false;
+            }
+            break;
+
+        case GL_RESOURCE_INITIALIZED_ANGLE:
+            if (!context->getExtensions().robustResourceInitialization)
+            {
+                context->validationError(GL_INVALID_ENUM,
+                                         kRobustResourceInitializationExtensionRequired);
                 return false;
             }
             break;
@@ -6288,6 +6315,16 @@ bool ValidateTexParameterBase(const Context *context,
             }
             break;
 
+        case GL_RESOURCE_INITIALIZED_ANGLE:
+            if (!context->getExtensions().robustResourceInitialization)
+            {
+                context->validationError(GL_INVALID_ENUM,
+                                         kRobustResourceInitializationExtensionRequired);
+                return false;
+            }
+
+            break;
+
         default:
             context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
             return false;
@@ -6811,7 +6848,6 @@ bool ValidateGetTexLevelParameterBase(const Context *context,
         case GL_TEXTURE_BLUE_TYPE:
         case GL_TEXTURE_ALPHA_TYPE:
         case GL_TEXTURE_DEPTH_TYPE:
-            break;
         case GL_TEXTURE_RED_SIZE:
         case GL_TEXTURE_GREEN_SIZE:
         case GL_TEXTURE_BLUE_SIZE:
@@ -6819,17 +6855,24 @@ bool ValidateGetTexLevelParameterBase(const Context *context,
         case GL_TEXTURE_DEPTH_SIZE:
         case GL_TEXTURE_STENCIL_SIZE:
         case GL_TEXTURE_SHARED_SIZE:
-            break;
         case GL_TEXTURE_INTERNAL_FORMAT:
         case GL_TEXTURE_WIDTH:
         case GL_TEXTURE_HEIGHT:
         case GL_TEXTURE_DEPTH:
-            break;
         case GL_TEXTURE_SAMPLES:
         case GL_TEXTURE_FIXED_SAMPLE_LOCATIONS:
-            break;
         case GL_TEXTURE_COMPRESSED:
             break;
+
+        case GL_RESOURCE_INITIALIZED_ANGLE:
+            if (!context->getExtensions().robustResourceInitialization)
+            {
+                context->validationError(GL_INVALID_ENUM,
+                                         kRobustResourceInitializationExtensionRequired);
+                return false;
+            }
+            break;
+
         default:
             context->validationError(GL_INVALID_ENUM, kInvalidPname);
             return false;
