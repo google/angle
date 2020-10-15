@@ -505,10 +505,8 @@
 2222 OPENGL NVIDIA : dEQP-GLES3.functional.fbo.completeness.samples.rbo1_rbo2_rbo0 = FAIL
 
 // Low memory warnings when run multi-process.
-5162 OPENGL NVIDIA WIN : dEQP-GLES3.functional.multisample.fbo_8_samples.constancy_alpha_to_coverage = SKIP
-5162 OPENGL NVIDIA WIN : dEQP-GLES3.functional.multisample.fbo_max_samples.constancy_alpha_to_coverage = SKIP
-5162 OPENGL NVIDIA WIN : dEQP-GLES3.functional.multisample.fbo_max_samples.constancy_both = SKIP
-5162 OPENGL NVIDIA WIN : dEQP-GLES3.functional.multisample.fbo_max_samples.constancy_sample_coverage_inverted = SKIP
+5162 OPENGL NVIDIA WIN : dEQP-GLES3.functional.multisample.fbo_8_samples.constancy* = SKIP
+5162 OPENGL NVIDIA WIN : dEQP-GLES3.functional.multisample.fbo_max_samples.constancy* = SKIP
 
 // General Vulkan failures
 
