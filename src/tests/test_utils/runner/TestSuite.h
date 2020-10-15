@@ -108,6 +108,7 @@ struct ProcessInfo : angle::NonCopyable
     std::string resultsFileName;
     std::string filterFileName;
     std::string commandLine;
+    std::string filterString;
 };
 
 using TestQueue = std::queue<std::vector<TestIdentifier>>;

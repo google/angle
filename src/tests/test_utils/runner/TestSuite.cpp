@@ -783,6 +783,7 @@ ProcessInfo &ProcessInfo::operator=(ProcessInfo &&rhs)
     resultsFileName = std::move(rhs.resultsFileName);
     filterFileName  = std::move(rhs.filterFileName);
     commandLine     = std::move(rhs.commandLine);
+    filterString    = std::move(rhs.filterString);
     return *this;
 }
 
@@ -936,26 +937,31 @@ TestSuite::TestSuite(int *argc, char **argv)
             exit(EXIT_FAILURE);
         }
 
-        testSet =
-            GetShardTests(testSet, mShardIndex, mShardCount, &mTestFileLines, alsoRunDisabledTests);
-
-        if (!mBotMode)
+        // If there's only one shard, we can use the testSet as defined above.
+        if (mShardCount > 1)
         {
-            mFilterString = GetTestFilter(testSet);
+            testSet = GetShardTests(testSet, mShardIndex, mShardCount, &mTestFileLines,
+                                    alsoRunDisabledTests);
 
-            if (filterArgIndex.valid())
+            if (!mBotMode)
             {
-                argv[filterArgIndex.value()] = const_cast<char *>(mFilterString.c_str());
-            }
-            else
-            {
-                // Note that we only add a filter string if we previously deleted a shard
-                // index/count argument. So we will have space for the new filter string in argv.
-                AddArg(argc, argv, mFilterString.c_str());
-            }
+                mFilterString = GetTestFilter(testSet);
 
-            // Force-re-initialize GoogleTest flags to load the shard filter.
-            testing::internal::ParseGoogleTestFlagsOnly(argc, argv);
+                if (filterArgIndex.valid())
+                {
+                    argv[filterArgIndex.value()] = const_cast<char *>(mFilterString.c_str());
+                }
+                else
+                {
+                    // Note that we only add a filter string if we previously deleted a shard
+                    // index/count argument. So we will have space for the new filter string in
+                    // argv.
+                    AddArg(argc, argv, mFilterString.c_str());
+                }
+
+                // Force-re-initialize GoogleTest flags to load the shard filter.
+                testing::internal::ParseGoogleTestFlagsOnly(argc, argv);
+            }
         }
     }
 
@@ -1085,6 +1091,8 @@ bool TestSuite::launchChildTestProcess(uint32_t batchId,
     fprintf(fp, "%s", filterString.c_str());
     fclose(fp);
 
+    processInfo.filterString = filterString;
+
     std::string filterFileArg = kFilterFileArg + processInfo.filterFileName;
 
     // Create a temporary file to store the test output.
@@ -1167,6 +1175,17 @@ bool TestSuite::finishProcess(ProcessInfo *processInfo)
         const TestIdentifier &id = batchResults.results.begin()->first;
         std::string config       = GetConfigNameFromTestIdentifier(id);
         printf("Completed batch with config: %s\n", config.c_str());
+
+        for (const auto &resultIter : batchResults.results)
+        {
+            const TestResult &result = resultIter.second;
+            if (result.type != TestResultType::Skip && result.type != TestResultType::Pass)
+            {
+                printf("To reproduce the batch, use filter:\n%s\n",
+                       processInfo->filterString.c_str());
+                break;
+            }
+        }
     }
 
     // Process results and print unexpected errors.
@@ -1224,8 +1243,9 @@ bool TestSuite::finishProcess(ProcessInfo *processInfo)
     // Clean up any dirty temporary files.
     for (const std::string &tempFile : {processInfo->filterFileName, processInfo->resultsFileName})
     {
-        // Note: we should be aware that this cleanup won't happen if the harness itself crashes.
-        // If this situation comes up in the future we should add crash cleanup to the harness.
+        // Note: we should be aware that this cleanup won't happen if the harness itself
+        // crashes. If this situation comes up in the future we should add crash cleanup to the
+        // harness.
         if (!angle::DeleteFile(tempFile.c_str()))
         {
             std::cerr << "Warning: Error cleaning up temp file: " << tempFile << "\n";
