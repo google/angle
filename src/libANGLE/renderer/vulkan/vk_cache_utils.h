@@ -1081,7 +1081,7 @@ class UniformsAndXfbDesc
 
 // In the FramebufferDesc object:
 //  - Depth/stencil serial is at index 0
-//  - Color serials are at indices [1, gl::IMPLEMENTATION_MAX_DRAW_BUFFERS]
+//  - Color serials are at indices [1:gl::IMPLEMENTATION_MAX_DRAW_BUFFERS]
 //  - Depth/stencil resolve attachment is at index gl::IMPLEMENTATION_MAX_DRAW_BUFFERS+1
 //  - Resolve attachments are at indices [gl::IMPLEMENTATION_MAX_DRAW_BUFFERS+2,
 //                                        gl::IMPLEMENTATION_MAX_DRAW_BUFFERS*2+1]
