@@ -140,6 +140,24 @@
       "parentUuid": "a169b3b6_014d9202",
       "revId": "b3f5a314be154b9af2f49f1d66b3be932fca0088",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7dee7271_ba6e53bf",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-16T16:45:42Z",
+      "side": 1,
+      "message": "Also, please leave the check for an empty image set as an ASSERT to catch future implementation bugs.",
+      "parentUuid": "a169b3b6_014d9202",
+      "revId": "b3f5a314be154b9af2f49f1d66b3be932fca0088",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
