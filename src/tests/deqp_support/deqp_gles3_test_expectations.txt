@@ -356,6 +356,24 @@
 3317 MAC OPENGL AMD : dEQP-GLES3.functional.shaders.texture_functions.textureprojlod.isampler3d_vertex = FAIL
 3317 MAC OPENGL AMD : dEQP-GLES3.functional.shaders.texture_functions.textureprojlod.usampler3d_vertex = FAIL
 
+5172 MAC OPENGL AMD : dEQP-GLES3.functional.draw.draw_elements.indices.user_ptr.index_byte = FAIL
+5172 MAC OPENGL AMD : dEQP-GLES3.functional.draw.draw_elements_instanced.indices.user_ptr.index_byte = FAIL
+5172 MAC OPENGL AMD : dEQP-GLES3.functional.dither.enabled.* = FAIL
+5172 MAC OPENGL AMD : dEQP-GLES3.functional.draw.random.31 = FAIL
+5172 MAC OPENGL AMD : dEQP-GLES3.functional.draw.random.32 = FAIL
+5172 MAC OPENGL AMD : dEQP-GLES3.functional.draw.random.39 = FAIL
+5172 MAC OPENGL AMD : dEQP-GLES3.functional.draw.random.125 = FAIL
+5172 MAC OPENGL AMD : dEQP-GLES3.functional.draw.random.129 = FAIL
+5172 MAC OPENGL AMD : dEQP-GLES3.functional.draw.random.131 = FAIL
+5172 MAC OPENGL AMD : dEQP-GLES3.functional.draw.random.135 = FAIL
+5172 MAC OPENGL AMD : dEQP-GLES3.functional.draw.random.136 = FAIL
+5172 MAC OPENGL AMD : dEQP-GLES3.functional.fragment_ops.depth_stencil.stencil_depth_funcs.no_stencil* = FAIL
+5172 MAC OPENGL AMD : dEQP-GLES3.functional.fragment_ops.depth_stencil.stencil_ops.keep* = FAIL
+5172 MAC OPENGL AMD : dEQP-GLES3.functional.fragment_ops.depth_stencil.stencil_ops.zero* = FAIL
+5172 MAC OPENGL AMD : dEQP-GLES3.functional.shaders.fragdata.valid_dynamic_index = FAIL
+5172 MAC OPENGL AMD : dEQP-GLES3.functional.shaders.fragdata.valid_uniform_index = FAIL
+5172 MAC OPENGL AMD : dEQP-GLES3.functional.shaders.fragdata.draw_buffers = FAIL
+
 // Mac Intel crashes
 2137 MAC OPENGL INTEL : dEQP-GLES3.functional.shaders.discard.function_static_loop_never = SKIP
 2137 MAC OPENGL INTEL : dEQP-GLES3.functional.shaders.discard.dynamic_loop_never = SKIP
