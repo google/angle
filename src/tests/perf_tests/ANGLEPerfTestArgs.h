@@ -24,7 +24,7 @@ extern int gWarmupLoops;
 extern double gTestTimeSeconds;
 extern int gTestTrials;
 extern bool gNoFinish;
-extern bool gEnableOffscreen;
+extern bool gEnableAllTraceTests;
 
 inline bool OneFrame()
 {

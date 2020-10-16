@@ -36,9 +36,6 @@ struct TracePerfParams final : public RenderTestParams
         majorVersion = 3;
         minorVersion = 0;
 
-        // Tracking GPU time adds overhead to native traces. http://anglebug.com/4879
-        trackGpuTime = false;
-
         // Display the frame after every drawBenchmark invocation
         iterationsPerStep = 1;
     }
@@ -218,9 +215,9 @@ TracePerfTest::TracePerfTest()
         mSkipTest = true;
     }
 
-    if (param.surfaceType == SurfaceType::Offscreen && !gEnableOffscreen)
+    if (param.surfaceType != SurfaceType::Window && !gEnableAllTraceTests)
     {
-        printf("Test skipped because offscreen tests are disabled.\n");
+        printf("Test skipped. Use --enable-all-trace-tests to run.\n");
         mSkipTest = true;
     }
 
@@ -390,17 +387,17 @@ void TracePerfTest::drawBenchmark()
     // Add a time sample from GL and the host.
     sampleTime();
 
-    startGpuTimer();
-
     for (uint32_t frame = mStartFrame; frame <= mEndFrame; ++frame)
     {
         char frameName[32];
         sprintf(frameName, "Frame %u", frame);
         beginInternalTraceEvent(frameName);
 
+        startGpuTimer();
         ReplayFrame(params.testID, frame);
+        stopGpuTimer();
 
-        if (params.surfaceType == SurfaceType::Window)
+        if (params.surfaceType != SurfaceType::Offscreen)
         {
             getGLWindow()->swap();
         }
@@ -496,8 +493,6 @@ void TracePerfTest::drawBenchmark()
             queryIndex++;
         }
     }
-
-    stopGpuTimer();
 }
 
 // Converts a GL timestamp into a host-side CPU time aligned with "GetHostTimeSeconds".
@@ -646,7 +641,7 @@ void TracePerfTest::onReplayInvalidateFramebuffer(GLenum target,
                                                   GLsizei numAttachments,
                                                   const GLenum *attachments)
 {
-    if (GetParam().surfaceType == SurfaceType::Window || !isDefaultFramebuffer(target))
+    if (GetParam().surfaceType != SurfaceType::Offscreen || !isDefaultFramebuffer(target))
     {
         glInvalidateFramebuffer(target, numAttachments, attachments);
     }
@@ -666,7 +661,7 @@ void TracePerfTest::onReplayInvalidateSubFramebuffer(GLenum target,
                                                      GLsizei width,
                                                      GLsizei height)
 {
-    if (GetParam().surfaceType == SurfaceType::Window || !isDefaultFramebuffer(target))
+    if (GetParam().surfaceType != SurfaceType::Offscreen || !isDefaultFramebuffer(target))
     {
         glInvalidateSubFramebuffer(target, numAttachments, attachments, x, y, width, height);
     }
@@ -681,7 +676,8 @@ void TracePerfTest::onReplayInvalidateSubFramebuffer(GLenum target,
 
 void TracePerfTest::onReplayDrawBuffers(GLsizei n, const GLenum *bufs)
 {
-    if (GetParam().surfaceType == SurfaceType::Window || !isDefaultFramebuffer(GL_DRAW_FRAMEBUFFER))
+    if (GetParam().surfaceType != SurfaceType::Offscreen ||
+        !isDefaultFramebuffer(GL_DRAW_FRAMEBUFFER))
     {
         glDrawBuffers(n, bufs);
     }
@@ -694,7 +690,8 @@ void TracePerfTest::onReplayDrawBuffers(GLsizei n, const GLenum *bufs)
 
 void TracePerfTest::onReplayReadBuffer(GLenum src)
 {
-    if (GetParam().surfaceType == SurfaceType::Window || !isDefaultFramebuffer(GL_READ_FRAMEBUFFER))
+    if (GetParam().surfaceType != SurfaceType::Offscreen ||
+        !isDefaultFramebuffer(GL_READ_FRAMEBUFFER))
     {
         glReadBuffer(src);
     }
@@ -709,7 +706,7 @@ void TracePerfTest::onReplayDiscardFramebufferEXT(GLenum target,
                                                   GLsizei numAttachments,
                                                   const GLenum *attachments)
 {
-    if (GetParam().surfaceType == SurfaceType::Window || !isDefaultFramebuffer(target))
+    if (GetParam().surfaceType != SurfaceType::Offscreen || !isDefaultFramebuffer(target))
     {
         glDiscardFramebufferEXT(target, numAttachments, attachments);
     }
@@ -801,6 +798,9 @@ TracePerfParams CombineWithSurfaceType(const TracePerfParams &in, SurfaceType su
         out.windowHeight /= 4;
     }
 
+    // We track GPU time only in frame-rate-limited cases.
+    out.trackGpuTime = surfaceType == SurfaceType::WindowWithVSync;
+
     return out;
 }
 
@@ -811,7 +811,7 @@ std::vector<P> gTestsWithID =
     CombineWithValues({P()}, AllEnums<RestrictedTraceID>(), CombineTestID);
 std::vector<P> gTestsWithSurfaceType =
     CombineWithValues(gTestsWithID,
-                      {SurfaceType::Offscreen, SurfaceType::Window},
+                      {SurfaceType::Offscreen, SurfaceType::Window, SurfaceType::WindowWithVSync},
                       CombineWithSurfaceType);
 std::vector<P> gTestsWithRenderer =
     CombineWithFuncs(gTestsWithSurfaceType, {Vulkan<P>, VulkanMockICD<P>, Native<P>});

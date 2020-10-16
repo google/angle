@@ -341,6 +341,14 @@ double ANGLEPerfTest::printResults()
         }
         mReporter->AddResult(clockNames[i], retValue);
     }
+
+    if (gVerboseLogging)
+    {
+        double fps =
+            static_cast<double>(mNumStepsPerformed * mIterationsPerStep) / elapsedTimeSeconds[0];
+        printf("Ran %0.2lf iterations per second\n", fps);
+    }
+
     return retValue;
 }
 
@@ -428,7 +436,18 @@ std::string RenderTestParams::backend() const
 
 std::string RenderTestParams::story() const
 {
-    return (surfaceType == SurfaceType::Offscreen ? "_offscreen" : "");
+    switch (surfaceType)
+    {
+        case SurfaceType::Window:
+            return "";
+        case SurfaceType::WindowWithVSync:
+            return "_vsync";
+        case SurfaceType::Offscreen:
+            return "_offscreen";
+        default:
+            UNREACHABLE();
+            return "";
+    }
 }
 
 std::string RenderTestParams::backendAndStory() const
@@ -562,11 +581,14 @@ void ANGLERenderTest::SetUp()
     }
 
     // Disable vsync.
-    if (!mGLWindow->setSwapInterval(0))
+    if (mTestParams.surfaceType != SurfaceType::WindowWithVSync)
     {
-        mSkipTest = true;
-        FAIL() << "Failed setting swap interval";
-        // FAIL returns.
+        if (!mGLWindow->setSwapInterval(0))
+        {
+            mSkipTest = true;
+            FAIL() << "Failed setting swap interval";
+            // FAIL returns.
+        }
     }
 
     mIsTimestampQueryAvailable = IsGLExtensionEnabled("GL_EXT_disjoint_timer_query");

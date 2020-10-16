@@ -114,6 +114,7 @@ class ANGLEPerfTest : public testing::Test, angle::NonCopyable
 enum class SurfaceType
 {
     Window,
+    WindowWithVSync,
     Offscreen,
 };
 
