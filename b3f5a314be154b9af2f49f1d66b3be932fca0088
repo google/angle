@@ -122,6 +122,24 @@
       "parentUuid": "f02cb899_9465606f",
       "revId": "b3f5a314be154b9af2f49f1d66b3be932fca0088",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c8807371_00a45b16",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2020-10-16T16:43:50Z",
+      "side": 1,
+      "message": "Yeah, I believe it was the validation code getting ANGLE into trouble (haven\u0027t been able to get back to a state where I can recreate the crash, ).  This is a better fix, will update and verify.",
+      "parentUuid": "a169b3b6_014d9202",
+      "revId": "b3f5a314be154b9af2f49f1d66b3be932fca0088",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
