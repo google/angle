@@ -1549,7 +1549,7 @@ void State::initializeZeroTextures(const Context *context, const TextureMap &zer
     }
 }
 
-void State::invalidateTexture(TextureType type)
+void State::invalidateTextureBindings(TextureType type)
 {
     mDirtyBits.set(DIRTY_BIT_TEXTURE_BINDINGS);
 }

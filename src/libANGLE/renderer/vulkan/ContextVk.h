@@ -334,6 +334,8 @@ class ContextVk : public ContextImpl, public vk::Context
     angle::Result memoryBarrier(const gl::Context *context, GLbitfield barriers) override;
     angle::Result memoryBarrierByRegion(const gl::Context *context, GLbitfield barriers) override;
 
+    ANGLE_INLINE void invalidateTexture(gl::TextureType target) override {}
+
     VkDevice getDevice() const;
     egl::ContextPriority getPriority() const { return mContextPriority; }
 

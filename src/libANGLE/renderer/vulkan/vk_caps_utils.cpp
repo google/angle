@@ -27,6 +27,66 @@ constexpr unsigned int kComponentsPerVector = 4;
 namespace rx
 {
 
+namespace vk
+{
+namespace
+{
+bool FormatReinterpretationSupported(const std::vector<GLenum> &optionalSizedFormats,
+                                     const RendererVk *rendererVk,
+                                     bool checkLinearColorspace)
+{
+    for (GLenum glFormat : optionalSizedFormats)
+    {
+        const gl::TextureCaps &baseCaps = rendererVk->getNativeTextureCaps().get(glFormat);
+        if (baseCaps.texturable && baseCaps.filterable)
+        {
+            const vk::Format &vkFormat = rendererVk->getFormat(glFormat);
+
+            VkFormat reinterpretedFormat = checkLinearColorspace
+                                               ? vk::ConvertToLinear(vkFormat.vkImageFormat)
+                                               : vk::ConvertToNonLinear(vkFormat.vkImageFormat);
+            ASSERT(reinterpretedFormat != VK_FORMAT_UNDEFINED);
+
+            constexpr uint32_t kBitsSampleFilter =
+                VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT |
+                VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT;
+
+            if (!rendererVk->hasImageFormatFeatureBits(reinterpretedFormat, kBitsSampleFilter))
+            {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+bool GetTextureSRGBDecodeSupport(const RendererVk *rendererVk)
+{
+    static constexpr bool kLinearColorspace = true;
+
+    // GL_SRGB and GL_SRGB_ALPHA unsized formats are also required by the spec, but the only valid
+    // type for them is GL_UNSIGNED_BYTE, so they are fully included in the sized formats listed
+    // here
+    std::vector<GLenum> optionalSizedNonLinearFormats = {
+        GL_SRGB8,
+        GL_SRGB8_ALPHA8_EXT,
+        GL_COMPRESSED_SRGB_S3TC_DXT1_EXT,
+        GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT1_EXT,
+        GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT3_EXT,
+        GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT,
+    };
+
+    if (!FormatReinterpretationSupported(optionalSizedNonLinearFormats, rendererVk,
+                                         kLinearColorspace))
+    {
+        return false;
+    }
+
+    return true;
+}
+}  // namespace
+}  // namespace vk
+
 GLint LimitToInt(const uint32_t physicalDeviceValue)
 {
     // Limit to INT_MAX / 2 instead of INT_MAX.  If the limit is queried as float, the imprecision
@@ -47,14 +107,6 @@ void RendererVk::ensureCapsInitialized() const
     const VkPhysicalDeviceLimits &limitsVk = mPhysicalDeviceProperties.limits;
 
     mNativeExtensions.setTextureExtensionSupport(mNativeTextureCaps);
-
-    // Enable GL_EXT_buffer_storage"
-    mNativeExtensions.bufferStorageEXT = true;
-
-    // TODO: http://anglebug.com/3609
-    // Due to a dEQP bug, this extension cannot be exposed until EXT_texture_sRGB_decode is
-    // implemented
-    mNativeExtensions.sRGBR8EXT = false;
 
     // To ensure that ETC2/EAC formats are enabled only on hardware that supports them natively,
     // this flag is not set by the function above and must be set explicitly. It exposes
@@ -200,8 +252,10 @@ void RendererVk::ensureCapsInitialized() const
     mNativeExtensions.depthTextureCubeMapOES =
         mNativeExtensions.depthTextureOES && mNativeExtensions.packedDepthStencilOES;
 
-    // Vulkan natively supports format reinterpretation
-    mNativeExtensions.textureSRGBOverride = mNativeExtensions.sRGB;
+    // Vulkan natively supports format reinterpretation, but we still require support for all
+    // formats we may reinterpret to
+    mNativeExtensions.textureSRGBOverride = true;
+    mNativeExtensions.textureSRGBDecode   = vk::GetTextureSRGBDecodeSupport(this);
 
     mNativeExtensions.gpuShader5EXT = vk::CanSupportGPUShader5EXT(mPhysicalDeviceFeatures);
 

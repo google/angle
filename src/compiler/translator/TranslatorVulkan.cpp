@@ -18,6 +18,7 @@
 #include "compiler/translator/ImmutableStringBuilder.h"
 #include "compiler/translator/OutputVulkanGLSL.h"
 #include "compiler/translator/StaticType.h"
+#include "compiler/translator/tree_ops/FlagSamplersWithTexelFetch.h"
 #include "compiler/translator/tree_ops/NameEmbeddedUniformStructs.h"
 #include "compiler/translator/tree_ops/RemoveAtomicCounterBuiltins.h"
 #include "compiler/translator/tree_ops/RemoveInactiveInterfaceVariables.h"
@@ -846,6 +847,11 @@ bool TranslatorVulkan::translateImpl(TIntermBlock *root,
         {
             return false;
         }
+    }
+
+    if (!FlagSamplersForTexelFetch(this, root, &getSymbolTable(), &mUniforms))
+    {
+        return false;
     }
 
     if (defaultUniformCount > 0)

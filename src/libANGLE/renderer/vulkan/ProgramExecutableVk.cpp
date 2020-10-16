@@ -1420,13 +1420,17 @@ angle::Result ProgramExecutableVk::updateTexturesDescriptorSet(ContextVk *contex
             VkWriteDescriptorSet *writeInfos  = contextVk->allocWriteDescriptorSets(arraySize);
             for (uint32_t arrayElement = 0; arrayElement < arraySize; ++arrayElement)
             {
-                GLuint textureUnit                 = samplerBinding.boundTextureUnits[arrayElement];
-                TextureVk *textureVk               = activeTextures[textureUnit].texture;
-                const vk::SamplerHelper &samplerVk = *activeTextures[textureUnit].sampler;
+                GLuint textureUnit   = samplerBinding.boundTextureUnits[arrayElement];
+                TextureVk *textureVk = activeTextures[textureUnit].texture;
+                const vk::SamplerHelper &samplerHelper = *activeTextures[textureUnit].sampler;
+                bool linearColorspaceWithSampler = activeTextures[textureUnit].useLinearImageView;
 
                 vk::ImageHelper &image = textureVk->getImage();
 
-                imageInfos[arrayElement].sampler     = samplerVk.get().getHandle();
+                bool shouldUseLinearColorspace = textureVk->shouldUseLinearColorspaceWithTexelFetch(
+                    linearColorspaceWithSampler, samplerUniform.texelFetchInvoked);
+
+                imageInfos[arrayElement].sampler     = samplerHelper.get().getHandle();
                 imageInfos[arrayElement].imageLayout = image.getCurrentLayout();
 
                 if (emulateSeamfulCubeMapSampling)
@@ -1434,13 +1438,15 @@ angle::Result ProgramExecutableVk::updateTexturesDescriptorSet(ContextVk *contex
                     // If emulating seamful cubemapping, use the fetch image view.  This is
                     // basically the same image view as read, except it's a 2DArray view for
                     // cube maps.
-                    imageInfos[arrayElement].imageView =
-                        textureVk->getFetchImageViewAndRecordUse(contextVk).getHandle();
+                    const vk::ImageView &imageView = textureVk->getFetchImageViewAndRecordUse(
+                        contextVk, shouldUseLinearColorspace);
+                    imageInfos[arrayElement].imageView = imageView.getHandle();
                 }
                 else
                 {
-                    imageInfos[arrayElement].imageView =
-                        textureVk->getReadImageViewAndRecordUse(contextVk).getHandle();
+                    const vk::ImageView &imageView = textureVk->getReadImageViewAndRecordUse(
+                        contextVk, shouldUseLinearColorspace);
+                    imageInfos[arrayElement].imageView = imageView.getHandle();
                 }
 
                 if (textureVk->getImage().hasImmutableSampler())

@@ -156,11 +156,12 @@ class RendererVk : angle::NonCopyable
     // Query the format properties for select bits (linearTilingFeatures, optimalTilingFeatures and
     // bufferFeatures).  Looks through mandatory features first, and falls back to querying the
     // device (first time only).
-    bool hasLinearImageFormatFeatureBits(VkFormat format, const VkFormatFeatureFlags featureBits);
+    bool hasLinearImageFormatFeatureBits(VkFormat format,
+                                         const VkFormatFeatureFlags featureBits) const;
     VkFormatFeatureFlags getImageFormatFeatureBits(VkFormat format,
-                                                   const VkFormatFeatureFlags featureBits);
-    bool hasImageFormatFeatureBits(VkFormat format, const VkFormatFeatureFlags featureBits);
-    bool hasBufferFormatFeatureBits(VkFormat format, const VkFormatFeatureFlags featureBits);
+                                                   const VkFormatFeatureFlags featureBits) const;
+    bool hasImageFormatFeatureBits(VkFormat format, const VkFormatFeatureFlags featureBits) const;
+    bool hasBufferFormatFeatureBits(VkFormat format, const VkFormatFeatureFlags featureBits) const;
 
     ANGLE_INLINE egl::ContextPriority getDriverPriority(egl::ContextPriority priority)
     {
@@ -289,10 +290,10 @@ class RendererVk : angle::NonCopyable
 
     template <VkFormatFeatureFlags VkFormatProperties::*features>
     VkFormatFeatureFlags getFormatFeatureBits(VkFormat format,
-                                              const VkFormatFeatureFlags featureBits);
+                                              const VkFormatFeatureFlags featureBits) const;
 
     template <VkFormatFeatureFlags VkFormatProperties::*features>
-    bool hasFormatFeatureBits(VkFormat format, const VkFormatFeatureFlags featureBits);
+    bool hasFormatFeatureBits(VkFormat format, const VkFormatFeatureFlags featureBits) const;
 
     angle::Result cleanupGarbage(bool block);
 
@@ -366,7 +367,7 @@ class RendererVk : angle::NonCopyable
     bool mPipelineCacheInitialized;
 
     // A cache of VkFormatProperties as queried from the device over time.
-    std::array<VkFormatProperties, vk::kNumVkFormats> mFormatProperties;
+    mutable std::array<VkFormatProperties, vk::kNumVkFormats> mFormatProperties;
 
     // Latest validation data for debug overlay.
     std::string mLastValidationMessage;

@@ -2159,23 +2159,26 @@ Serial RendererVk::issueShaderSerial()
 // These functions look at the mandatory format for support, and fallback to querying the device (if
 // necessary) to test the availability of the bits.
 bool RendererVk::hasLinearImageFormatFeatureBits(VkFormat format,
-                                                 const VkFormatFeatureFlags featureBits)
+                                                 const VkFormatFeatureFlags featureBits) const
 {
     return hasFormatFeatureBits<&VkFormatProperties::linearTilingFeatures>(format, featureBits);
 }
 
-VkFormatFeatureFlags RendererVk::getImageFormatFeatureBits(VkFormat format,
-                                                           const VkFormatFeatureFlags featureBits)
+VkFormatFeatureFlags RendererVk::getImageFormatFeatureBits(
+    VkFormat format,
+    const VkFormatFeatureFlags featureBits) const
 {
     return getFormatFeatureBits<&VkFormatProperties::optimalTilingFeatures>(format, featureBits);
 }
 
-bool RendererVk::hasImageFormatFeatureBits(VkFormat format, const VkFormatFeatureFlags featureBits)
+bool RendererVk::hasImageFormatFeatureBits(VkFormat format,
+                                           const VkFormatFeatureFlags featureBits) const
 {
     return hasFormatFeatureBits<&VkFormatProperties::optimalTilingFeatures>(format, featureBits);
 }
 
-bool RendererVk::hasBufferFormatFeatureBits(VkFormat format, const VkFormatFeatureFlags featureBits)
+bool RendererVk::hasBufferFormatFeatureBits(VkFormat format,
+                                            const VkFormatFeatureFlags featureBits) const
 {
     return hasFormatFeatureBits<&VkFormatProperties::bufferFeatures>(format, featureBits);
 }
@@ -2328,7 +2331,7 @@ angle::Result RendererVk::newSharedFence(vk::Context *context,
 
 template <VkFormatFeatureFlags VkFormatProperties::*features>
 VkFormatFeatureFlags RendererVk::getFormatFeatureBits(VkFormat format,
-                                                      const VkFormatFeatureFlags featureBits)
+                                                      const VkFormatFeatureFlags featureBits) const
 {
     ASSERT(static_cast<uint32_t>(format) < vk::kNumVkFormats);
     VkFormatProperties &deviceProperties = mFormatProperties[format];
@@ -2357,7 +2360,7 @@ VkFormatFeatureFlags RendererVk::getFormatFeatureBits(VkFormat format,
 }
 
 template <VkFormatFeatureFlags VkFormatProperties::*features>
-bool RendererVk::hasFormatFeatureBits(VkFormat format, const VkFormatFeatureFlags featureBits)
+bool RendererVk::hasFormatFeatureBits(VkFormat format, const VkFormatFeatureFlags featureBits) const
 {
     return IsMaskFlagSet(getFormatFeatureBits<features>(format, featureBits), featureBits);
 }

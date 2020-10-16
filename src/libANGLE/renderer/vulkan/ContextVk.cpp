@@ -730,7 +730,7 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
     mGraphicsDirtyBits = mNewGraphicsCommandBufferDirtyBits;
     mComputeDirtyBits  = mNewComputeCommandBufferDirtyBits;
 
-    mActiveTextures.fill({nullptr, nullptr});
+    mActiveTextures.fill({nullptr, nullptr, true});
     mActiveImages.fill(nullptr);
 
     mPipelineDirtyBitsMask.set();
@@ -4105,14 +4105,28 @@ angle::Result ContextVk::updateActiveTextures(const gl::Context *context)
         TextureVk *textureVk = vk::GetImpl(texture);
         ASSERT(textureVk != nullptr);
 
-        const vk::SamplerHelper &samplerVk =
-            sampler ? vk::GetImpl(sampler)->getSampler() : textureVk->getSampler();
+        const SamplerVk *samplerVk = sampler ? vk::GetImpl(sampler) : nullptr;
 
+        if (samplerVk != nullptr && samplerVk->skipSamplerSRGBDecode())
+        {
+            // TODO (http://anglebug.com/5176) Refactor to use ensureImageInitialized instead of
+            // syncState
+            // A sampler may force a texture to reallocate in order to support sRGB_decode
+            // state
+            gl::Texture::DirtyBits decodeBit;
+            decodeBit.set(gl::Texture::DIRTY_BIT_SRGB_DECODE);
+            ANGLE_TRY(textureVk->syncState(context, decodeBit, gl::Command::Other));
+        }
+
+        const vk::SamplerHelper &samplerHelper =
+            samplerVk ? samplerVk->getSampler() : textureVk->getSampler();
         activeTexture.texture = textureVk;
-        activeTexture.sampler = &samplerVk;
+        activeTexture.sampler = &samplerHelper;
+        activeTexture.useLinearImageView =
+            textureVk->shouldUseLinearColorspaceWithSampler(samplerVk);
 
         vk::ImageViewSubresourceSerial imageViewSerial = textureVk->getImageViewSubresourceSerial();
-        mActiveTexturesDesc.update(textureUnit, imageViewSerial, samplerVk.getSamplerSerial());
+        mActiveTexturesDesc.update(textureUnit, imageViewSerial, samplerHelper.getSamplerSerial());
 
         if (textureVk->getImage().hasImmutableSampler())
         {

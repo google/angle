@@ -307,7 +307,7 @@ class State : angle::NonCopyable
     void detachTexture(const Context *context, const TextureMap &zeroTextures, TextureID texture);
     void initializeZeroTextures(const Context *context, const TextureMap &zeroTextures);
 
-    void invalidateTexture(TextureType type);
+    void invalidateTextureBindings(TextureType type);
 
     // Sampler object binding manipulation
     void setSamplerBinding(const Context *context, GLuint textureUnit, Sampler *sampler);

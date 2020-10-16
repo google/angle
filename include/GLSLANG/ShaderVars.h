@@ -200,6 +200,9 @@ struct ShaderVariable
     // Deprecated version of isSameVaryingAtLinkTime, which assumes ESSL1.
     bool isSameVaryingAtLinkTime(const ShaderVariable &other) const;
 
+    // If the variable is a sampler that has ever been statically used with texelFetch
+    bool texelFetchInvoked;
+
   protected:
     bool isSameVariableAtLinkTime(const ShaderVariable &other,
                                   bool matchPrecision,

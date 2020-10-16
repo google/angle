@@ -134,6 +134,8 @@ angle_translator_sources = [
   "src/compiler/translator/tree_ops/EmulatePrecision.h",
   "src/compiler/translator/tree_ops/ExpandIntegerPowExpressions.cpp",
   "src/compiler/translator/tree_ops/ExpandIntegerPowExpressions.h",
+  "src/compiler/translator/tree_ops/FlagSamplersWithTexelFetch.cpp",
+  "src/compiler/translator/tree_ops/FlagSamplersWithTexelFetch.h",
   "src/compiler/translator/tree_ops/FoldExpressions.cpp",
   "src/compiler/translator/tree_ops/FoldExpressions.h",
   "src/compiler/translator/tree_ops/InitializeVariables.cpp",

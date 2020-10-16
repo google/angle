@@ -469,10 +469,11 @@ class FlattenUniformVisitor : public sh::VariableNameVisitor
             LinkedUniform linkedUniform(variable.type, variable.precision, fullNameWithArrayIndex,
                                         variable.arraySizes, getBinding(), getOffset(), mLocation,
                                         -1, sh::kDefaultBlockMemberInfo);
-            linkedUniform.mappedName      = fullMappedNameWithArrayIndex;
-            linkedUniform.active          = mMarkActive;
-            linkedUniform.staticUse       = mMarkStaticUse;
-            linkedUniform.outerArraySizes = arraySizes;
+            linkedUniform.mappedName        = fullMappedNameWithArrayIndex;
+            linkedUniform.active            = mMarkActive;
+            linkedUniform.staticUse         = mMarkStaticUse;
+            linkedUniform.outerArraySizes   = arraySizes;
+            linkedUniform.texelFetchInvoked = variable.texelFetchInvoked;
             if (variable.hasParentArrayIndex())
             {
                 linkedUniform.setParentArrayIndex(variable.parentArrayIndex());

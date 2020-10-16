@@ -6020,8 +6020,18 @@ angle::Result ImageViewHelper::initSRGBReadViewsImpl(ContextVk *contextVk,
                                                      uint32_t layerCount,
                                                      VkImageUsageFlags imageUsageFlags)
 {
+    // When we select the linear/nonlinear counterpart formats, we must first make sure they're
+    // actually supported by the ICD. If they are not supported by the ICD, then we treat that as if
+    // there is no counterpart format. (In this case, the relevant extension should not be exposed)
     VkFormat nonLinearOverrideFormat = ConvertToNonLinear(image.getFormat().vkImageFormat);
-    VkFormat linearOverrideFormat    = ConvertToLinear(image.getFormat().vkImageFormat);
+    ASSERT(
+        (nonLinearOverrideFormat == VK_FORMAT_UNDEFINED) ||
+        (HasNonRenderableTextureFormatSupport(contextVk->getRenderer(), nonLinearOverrideFormat)));
+
+    VkFormat linearOverrideFormat = ConvertToLinear(image.getFormat().vkImageFormat);
+    ASSERT((linearOverrideFormat == VK_FORMAT_UNDEFINED) ||
+           (HasNonRenderableTextureFormatSupport(contextVk->getRenderer(), linearOverrideFormat)));
+
     VkFormat linearFormat =
         (linearOverrideFormat != VK_FORMAT_UNDEFINED) ? linearOverrideFormat : format.vkImageFormat;
     ASSERT(linearFormat != VK_FORMAT_UNDEFINED);

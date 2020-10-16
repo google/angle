@@ -5611,7 +5611,7 @@ void Context::texImage2DExternal(TextureTarget target,
 void Context::invalidateTexture(TextureType target)
 {
     mImplementation->invalidateTexture(target);
-    mState.invalidateTexture(target);
+    mState.invalidateTextureBindings(target);
 }
 
 void Context::getMultisamplefv(GLenum pname, GLuint index, GLfloat *val)

@@ -889,6 +889,7 @@ void WriteShaderVar(BinaryOutputStream *stream, const sh::ShaderVariable &var)
     stream->writeInt(var.offset);
     stream->writeInt(var.readonly);
     stream->writeInt(var.writeonly);
+    stream->writeInt(var.texelFetchInvoked);
 
     ASSERT(var.fields.empty());
 }
@@ -906,10 +907,11 @@ void LoadShaderVar(BinaryInputStream *stream, sh::ShaderVariable *var)
     var->structName = stream->readString();
     var->setParentArrayIndex(stream->readInt<int>());
 
-    var->imageUnitFormat = stream->readInt<GLenum>();
-    var->offset          = stream->readInt<int>();
-    var->readonly        = stream->readBool();
-    var->writeonly       = stream->readBool();
+    var->imageUnitFormat   = stream->readInt<GLenum>();
+    var->offset            = stream->readInt<int>();
+    var->readonly          = stream->readBool();
+    var->writeonly         = stream->readBool();
+    var->texelFetchInvoked = stream->readBool();
 }
 
 // VariableLocation implementation.

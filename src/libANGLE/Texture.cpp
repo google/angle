@@ -893,7 +893,7 @@ void Texture::setSRGBOverride(const Context *context, GLenum sRGBOverride)
 {
     SrgbOverride oldOverride = mState.mSrgbOverride;
     mState.mSrgbOverride =
-        (sRGBOverride == GL_SRGB) ? SrgbOverride::Enabled : SrgbOverride::Default;
+        (sRGBOverride == GL_SRGB) ? SrgbOverride::NonLinear : SrgbOverride::Default;
     if (mState.mSrgbOverride != oldOverride)
     {
         signalDirtyState(DIRTY_BIT_SRGB_OVERRIDE);
@@ -902,7 +902,7 @@ void Texture::setSRGBOverride(const Context *context, GLenum sRGBOverride)
 
 GLenum Texture::getSRGBOverride() const
 {
-    return (mState.mSrgbOverride == SrgbOverride::Enabled) ? GL_SRGB : GL_NONE;
+    return (mState.mSrgbOverride == SrgbOverride::NonLinear) ? GL_SRGB : GL_NONE;
 }
 
 const SamplerState &Texture::getSamplerState() const
