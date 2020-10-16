@@ -415,7 +415,9 @@ TEST_P(TimerQueriesTest, TimeElapsedMulticontextTest)
     EXPECT_LT(0ul, result2);
     EXPECT_LT(result1, 1000000000ul);
     EXPECT_LT(result2, 1000000000ul);
-    EXPECT_LT(result1, result2);
+
+    // This check can never really be non-flaky. http://anglebug.com/5178
+    // EXPECT_LT(result1, result2);
 }
 
 // Tests GPU timestamp functionality
