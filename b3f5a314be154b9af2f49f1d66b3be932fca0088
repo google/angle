@@ -104,6 +104,24 @@
       "parentUuid": "7da3d67e_4e59b34d",
       "revId": "b3f5a314be154b9af2f49f1d66b3be932fca0088",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a169b3b6_014d9202",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-16T16:38:39Z",
+      "side": 1,
+      "message": "Looks like ValidateBindImageTexture is missing the API level check:\n\n    if (context-\u003egetClientVersion() \u003c ES_3_1)\n    {\n        context-\u003evalidationError(GL_INVALID_OPERATION, kES31Required);\n        return false;\n    }\n\n\nCody , can you fix that? Seems to be the real root cause. Thanks Charlie for noticing the issue.",
+      "parentUuid": "f02cb899_9465606f",
+      "revId": "b3f5a314be154b9af2f49f1d66b3be932fca0088",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
