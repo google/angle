@@ -28,7 +28,7 @@ vars = {
   'checkout_angle_internal': False,
 
   # Version of Chromium our Chromium-based DEPS are mirrored from.
-  'chromium_revision': '312a2b1c9d0516673d44f0e7461bd297da00e5a4',
+  'chromium_revision': '20073b8681d2244969452b3775327dd5e22b434b',
   # We never want to checkout chromium,
   # but need a dummy DEPS entry for the autoroller
   'dummy_checkout_chromium': False,
@@ -108,7 +108,7 @@ vars = {
 deps = {
 
   'build': {
-    'url': '{chromium_git}/chromium/src/build.git@d6e2fedeed3495d3e8cf9264cee21b6867491f43',
+    'url': '{chromium_git}/chromium/src/build.git@53ad43e6195950f4d01a33dbf438ec75c4d30af8',
     'condition': 'not build_with_chromium',
   },
 
@@ -118,12 +118,12 @@ deps = {
   },
 
   'testing': {
-    'url': '{chromium_git}/chromium/src/testing@a990bf47a4f7ecf0eb209c1dcca92124c33e568c',
+    'url': '{chromium_git}/chromium/src/testing@14abbc061e02f683e7078180d51302dbfdb9486d',
     'condition': 'not build_with_chromium',
   },
 
   'third_party/abseil-cpp': {
-    'url': '{chromium_git}/chromium/src/third_party/abseil-cpp@66b870c3b1cbbb7f85b31cc9a8a785329f5ebcb8',
+    'url': '{chromium_git}/chromium/src/third_party/abseil-cpp@9c0fc6713cc5c22719b4982f0f747eef1f41eb8b',
     'condition': 'not build_with_chromium',
   },
 
@@ -274,12 +274,12 @@ deps = {
   },
 
   'third_party/zlib': {
-    'url': '{chromium_git}/chromium/src/third_party/zlib@26211a5a8e7e28286fc28a84a0e102cc96bf0f0b',
+    'url': '{chromium_git}/chromium/src/third_party/zlib@8cd0fc1ed5ea7b59e4df6428318043a8215254cc',
     'condition': 'not build_with_chromium',
   },
 
   'tools/clang': {
-    'url': '{chromium_git}/chromium/src/tools/clang.git@d4827bfe100154b06d9ffa59b21bb845fce9c7d5',
+    'url': '{chromium_git}/chromium/src/tools/clang.git@3a982adabb720aa8f3e3885d40bf3fe506990157',
     'condition': 'not build_with_chromium',
   },
 
@@ -314,7 +314,7 @@ deps = {
   },
 
   'tools/mb': {
-    'url': '{chromium_git}/chromium/src/tools/mb@d3ce77fdae48d93c43353b9e3ad49b92f46b495c',
+    'url': '{chromium_git}/chromium/src/tools/mb@eef787ed933615386fb3daf651d5aea8ef2e69da',
     'condition': 'not build_with_chromium',
   },
 
