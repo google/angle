@@ -176,6 +176,15 @@ inline bool IsFuchsia()
 #endif
 }
 
+inline bool IsIOS()
+{
+#if defined(ANGLE_PLATFORM_IOS)
+    return true;
+#else
+    return false;
+#endif
+}
+
 bool IsWayland();
 
 struct OSVersion
