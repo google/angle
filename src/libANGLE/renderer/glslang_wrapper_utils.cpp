@@ -967,7 +967,7 @@ bool ValidateSpirv(const std::vector<uint32_t> &spirvBlob)
     if (!result)
     {
         std::string readableSpirv;
-        spirvTools.Disassemble(spirvBlob, &readableSpirv, SPV_BINARY_TO_TEXT_OPTION_FRIENDLY_NAMES);
+        spirvTools.Disassemble(spirvBlob, &readableSpirv, 0);
         WARN() << "Invalid SPIR-V:\n" << readableSpirv;
     }
 
@@ -981,155 +981,6 @@ bool ValidateSpirv(const std::vector<uint32_t> &spirvBlob)
     return false;
 }
 #endif  // ANGLE_ENABLE_ASSERTS
-
-// A SPIR-V transformer.  It walks the instructions and modifies them as necessary, for example to
-// assign bindings or locations.
-class SpirvTransformer final : angle::NonCopyable
-{
-  public:
-    SpirvTransformer(const std::vector<uint32_t> &spirvBlobIn,
-                     bool removeEarlyFragmentTestsOptimization,
-                     bool removeDebugInfo,
-                     const ShaderInterfaceVariableInfoMap &variableInfoMap,
-                     gl::ShaderType shaderType,
-                     SpirvBlob *spirvBlobOut)
-        : mSpirvBlobIn(spirvBlobIn),
-          mShaderType(shaderType),
-          mHasTransformFeedbackOutput(false),
-          mVariableInfoMap(variableInfoMap),
-          mSpirvBlobOut(spirvBlobOut)
-    {
-        gl::ShaderBitSet allStages;
-        allStages.set();
-        mRemoveEarlyFragmentTestsOptimization = removeEarlyFragmentTestsOptimization;
-        mRemoveDebugInfo                      = removeDebugInfo;
-        mBuiltinVariableInfo.activeStages     = allStages;
-    }
-
-    bool transform();
-
-  private:
-    // SPIR-V 1.0 Table 1: First Words of Physical Layout
-    enum HeaderIndex
-    {
-        kHeaderIndexMagic        = 0,
-        kHeaderIndexVersion      = 1,
-        kHeaderIndexGenerator    = 2,
-        kHeaderIndexIndexBound   = 3,
-        kHeaderIndexSchema       = 4,
-        kHeaderIndexInstructions = 5,
-    };
-
-    // A prepass to resolve interesting ids:
-    void resolveVariableIds();
-
-    // Transform instructions:
-    void transformInstruction();
-
-    // Instructions that are purely informational:
-    void visitName(const uint32_t *instruction);
-    void visitTypeHelper(const uint32_t *instruction, size_t idIndex, size_t typeIdIndex);
-    void visitTypeArray(const uint32_t *instruction);
-    void visitTypePointer(const uint32_t *instruction);
-    void visitVariable(const uint32_t *instruction);
-
-    // Instructions that potentially need transformation.  They return true if the instruction is
-    // transformed.  If false is returned, the instruction should be copied as-is.
-    bool transformAccessChain(const uint32_t *instruction, size_t wordCount);
-    bool transformCapability(const uint32_t *instruction, size_t wordCount);
-    bool transformEntryPoint(const uint32_t *instruction, size_t wordCount);
-    bool transformDecorate(const uint32_t *instruction, size_t wordCount);
-    bool transformTypePointer(const uint32_t *instruction, size_t wordCount);
-    bool transformReturn(const uint32_t *instruction, size_t wordCount);
-    bool transformVariable(const uint32_t *instruction, size_t wordCount);
-    bool transformExecutionMode(const uint32_t *instruction, size_t wordCount);
-
-    // Any other instructions:
-    void writeInputPreamble();
-    size_t copyInstruction(const uint32_t *instruction, size_t wordCount);
-    uint32_t getNewId();
-    void writeOpLoad(uint32_t id, uint32_t typeId, uint32_t tempVarId);
-    void writeOpStore(uint32_t tempVarId, uint32_t destId);
-    void writeOpVariable(uint32_t id, uint32_t typeId, uint32_t storageClassId);
-
-    // SPIR-V to transform:
-    const std::vector<uint32_t> &mSpirvBlobIn;
-    const gl::ShaderType mShaderType;
-    bool mHasTransformFeedbackOutput;
-
-    bool mRemoveEarlyFragmentTestsOptimization;
-    bool mRemoveDebugInfo;
-
-    // Input shader variable info map:
-    const ShaderInterfaceVariableInfoMap &mVariableInfoMap;
-    ShaderInterfaceVariableInfo mBuiltinVariableInfo;
-
-    // Transformed SPIR-V:
-    SpirvBlob *mSpirvBlobOut;
-
-    // Traversal state:
-    size_t mCurrentWord           = 0;
-    bool mIsInFunctionSection     = false;
-    bool mInsertFunctionVariables = false;
-    uint32_t mEntryPointId        = 0;
-    uint32_t mOpFunctionId        = 0;
-
-    // Transformation state:
-
-    // Names associated with ids through OpName.  The same name may be assigned to multiple ids, but
-    // not all names are interesting (for example function arguments).  When the variable
-    // declaration is met (OpVariable), the variable info is matched with the corresponding id's
-    // name based on the Storage Class.
-    std::vector<const char *> mNamesById;
-
-    // Shader variable info per id, if id is a shader variable.
-    std::vector<const ShaderInterfaceVariableInfo *> mVariableInfoById;
-
-    // Each OpTypePointer instruction that defines a type with the Output storage class is
-    // duplicated with a similar instruction but which defines a type with the Private storage
-    // class.  If inactive varyings are encountered, its type is changed to the Private one.  The
-    // following vector maps the Output type id to the corresponding Private one.
-    struct TransformedIDs
-    {
-        uint32_t privateID;
-        uint32_t typeID;
-    };
-    std::vector<TransformedIDs> mTypePointerTransformedId;
-    std::vector<uint32_t> mFixedVaryingId;
-    std::vector<uint32_t> mFixedVaryingTypeId;
-};
-
-bool SpirvTransformer::transform()
-{
-    // Glslang succeeded in outputting SPIR-V, so we assume it's valid.
-    ASSERT(mSpirvBlobIn.size() >= kHeaderIndexInstructions);
-    // Since SPIR-V comes from a local call to glslang, it necessarily has the same endianness as
-    // the running architecture, so no byte-swapping is necessary.
-    ASSERT(mSpirvBlobIn[kHeaderIndexMagic] == spv::MagicNumber);
-
-    // Make sure the transformer is not reused to avoid having to reinitialize it here.
-    ASSERT(mCurrentWord == 0);
-    ASSERT(mIsInFunctionSection == false);
-
-    // Make sure the SpirvBlob is not reused.
-    ASSERT(mSpirvBlobOut->empty());
-
-    // Copy the header to SpirvBlob, we need that to be defined for SpirvTransformer::getNewId to
-    // work.
-    mSpirvBlobOut->assign(mSpirvBlobIn.begin(), mSpirvBlobIn.begin() + kHeaderIndexInstructions);
-
-    // First, find all necessary ids and associate them with the information required to transform
-    // their decorations.
-    resolveVariableIds();
-
-    mCurrentWord = kHeaderIndexInstructions;
-    while (mCurrentWord < mSpirvBlobIn.size())
-    {
-        transformInstruction();
-    }
-
-    return true;
-}
 
 // SPIR-V 1.0 Table 2: Instruction Physical Layout
 uint32_t GetSpirvInstructionLength(const uint32_t *instruction)
@@ -1157,6 +1008,210 @@ void SetSpirvInstructionOp(uint32_t *instruction, uint32_t op)
     constexpr uint32_t kOpMask = 0xFFFFu;
     instruction[0] &= ~kOpMask;
     instruction[0] |= op;
+}
+
+// Base class for SPIR-V transformations.
+class SpirvTransformerBase : angle::NonCopyable
+{
+  public:
+    SpirvTransformerBase(const std::vector<uint32_t> &spirvBlobIn,
+                         const ShaderInterfaceVariableInfoMap &variableInfoMap,
+                         gl::ShaderType shaderType,
+                         SpirvBlob *spirvBlobOut)
+        : mSpirvBlobIn(spirvBlobIn),
+          mShaderType(shaderType),
+          mVariableInfoMap(variableInfoMap),
+          mSpirvBlobOut(spirvBlobOut)
+    {
+        gl::ShaderBitSet allStages;
+        allStages.set();
+        mBuiltinVariableInfo.activeStages = allStages;
+    }
+
+  protected:
+    // SPIR-V 1.0 Table 1: First Words of Physical Layout
+    enum HeaderIndex
+    {
+        kHeaderIndexMagic        = 0,
+        kHeaderIndexVersion      = 1,
+        kHeaderIndexGenerator    = 2,
+        kHeaderIndexIndexBound   = 3,
+        kHeaderIndexSchema       = 4,
+        kHeaderIndexInstructions = 5,
+    };
+
+    // Common utilities
+    void onTransformBegin();
+    const uint32_t *getCurrentInstruction(uint32_t *opCodeOut, uint32_t *wordCountOut) const;
+    size_t copyInstruction(const uint32_t *instruction, size_t wordCount);
+    uint32_t getNewId();
+
+    // SPIR-V to transform:
+    const std::vector<uint32_t> &mSpirvBlobIn;
+    const gl::ShaderType mShaderType;
+
+    // Input shader variable info map:
+    const ShaderInterfaceVariableInfoMap &mVariableInfoMap;
+    ShaderInterfaceVariableInfo mBuiltinVariableInfo;
+
+    // Transformed SPIR-V:
+    SpirvBlob *mSpirvBlobOut;
+
+    // Traversal state:
+    size_t mCurrentWord       = 0;
+    bool mIsInFunctionSection = false;
+
+    // Transformation state:
+
+    // Shader variable info per id, if id is a shader variable.
+    std::vector<const ShaderInterfaceVariableInfo *> mVariableInfoById;
+};
+
+void SpirvTransformerBase::onTransformBegin()
+{
+    // Glslang succeeded in outputting SPIR-V, so we assume it's valid.
+    ASSERT(mSpirvBlobIn.size() >= kHeaderIndexInstructions);
+    // Since SPIR-V comes from a local call to glslang, it necessarily has the same endianness as
+    // the running architecture, so no byte-swapping is necessary.
+    ASSERT(mSpirvBlobIn[kHeaderIndexMagic] == spv::MagicNumber);
+
+    // Make sure the transformer is not reused to avoid having to reinitialize it here.
+    ASSERT(mCurrentWord == 0);
+    ASSERT(mIsInFunctionSection == false);
+
+    // Make sure the SpirvBlob is not reused.
+    ASSERT(mSpirvBlobOut->empty());
+
+    // Copy the header to SpirvBlob, we need that to be defined for SpirvTransformerBase::getNewId
+    // to work.
+    mSpirvBlobOut->assign(mSpirvBlobIn.begin(), mSpirvBlobIn.begin() + kHeaderIndexInstructions);
+
+    mCurrentWord = kHeaderIndexInstructions;
+}
+
+const uint32_t *SpirvTransformerBase::getCurrentInstruction(uint32_t *opCodeOut,
+                                                            uint32_t *wordCountOut) const
+{
+    ASSERT(mCurrentWord < mSpirvBlobIn.size());
+    const uint32_t *instruction = &mSpirvBlobIn[mCurrentWord];
+
+    *wordCountOut = GetSpirvInstructionLength(instruction);
+    *opCodeOut    = GetSpirvInstructionOp(instruction);
+
+    // Since glslang succeeded in producing SPIR-V, we assume it to be valid.
+    ASSERT(mCurrentWord + *wordCountOut <= mSpirvBlobIn.size());
+
+    return instruction;
+}
+
+size_t SpirvTransformerBase::copyInstruction(const uint32_t *instruction, size_t wordCount)
+{
+    size_t instructionOffset = mSpirvBlobOut->size();
+    mSpirvBlobOut->insert(mSpirvBlobOut->end(), instruction, instruction + wordCount);
+    return instructionOffset;
+}
+
+uint32_t SpirvTransformerBase::getNewId()
+{
+    return (*mSpirvBlobOut)[kHeaderIndexIndexBound]++;
+}
+
+// A SPIR-V transformer.  It walks the instructions and modifies them as necessary, for example to
+// assign bindings or locations.
+class SpirvTransformer final : public SpirvTransformerBase
+{
+  public:
+    SpirvTransformer(const std::vector<uint32_t> &spirvBlobIn,
+                     bool removeEarlyFragmentTestsOptimization,
+                     bool removeDebugInfo,
+                     const ShaderInterfaceVariableInfoMap &variableInfoMap,
+                     gl::ShaderType shaderType,
+                     SpirvBlob *spirvBlobOut)
+        : SpirvTransformerBase(spirvBlobIn, variableInfoMap, shaderType, spirvBlobOut),
+          mHasTransformFeedbackOutput(false),
+          mRemoveEarlyFragmentTestsOptimization(removeEarlyFragmentTestsOptimization),
+          mRemoveDebugInfo(removeDebugInfo)
+    {}
+
+    bool transform();
+
+  private:
+    // A prepass to resolve interesting ids:
+    void resolveVariableIds();
+
+    // Transform instructions:
+    void transformInstruction();
+
+    // Instructions that are purely informational:
+    void visitName(const uint32_t *instruction);
+    void visitTypeHelper(const uint32_t *instruction, size_t idIndex, size_t typeIdIndex);
+    void visitTypeArray(const uint32_t *instruction);
+    void visitTypePointer(const uint32_t *instruction);
+    void visitVariable(const uint32_t *instruction);
+
+    // Instructions that potentially need transformation.  They return true if the instruction is
+    // transformed.  If false is returned, the instruction should be copied as-is.
+    bool transformAccessChain(const uint32_t *instruction, size_t wordCount);
+    bool transformCapability(const uint32_t *instruction, size_t wordCount);
+    bool transformEntryPoint(const uint32_t *instruction, size_t wordCount);
+    bool transformDecorate(const uint32_t *instruction, size_t wordCount);
+    bool transformTypePointer(const uint32_t *instruction, size_t wordCount);
+    bool transformReturn(const uint32_t *instruction, size_t wordCount);
+    bool transformVariable(const uint32_t *instruction, size_t wordCount);
+    bool transformExecutionMode(const uint32_t *instruction, size_t wordCount);
+
+    // Any other instructions:
+    void writeInputPreamble();
+    void writeOpLoad(uint32_t id, uint32_t typeId, uint32_t tempVarId);
+    void writeOpStore(uint32_t tempVarId, uint32_t destId);
+    void writeOpVariable(uint32_t id, uint32_t typeId, uint32_t storageClassId);
+
+    // Special flags:
+    bool mHasTransformFeedbackOutput;
+    bool mRemoveEarlyFragmentTestsOptimization;
+    bool mRemoveDebugInfo;
+
+    // Traversal state:
+    bool mInsertFunctionVariables = false;
+    uint32_t mEntryPointId        = 0;
+    uint32_t mOpFunctionId        = 0;
+
+    // Transformation state:
+
+    // Names associated with ids through OpName.  The same name may be assigned to multiple ids, but
+    // not all names are interesting (for example function arguments).  When the variable
+    // declaration is met (OpVariable), the variable info is matched with the corresponding id's
+    // name based on the Storage Class.
+    std::vector<const char *> mNamesById;
+
+    // Each OpTypePointer instruction that defines a type with the Output storage class is
+    // duplicated with a similar instruction but which defines a type with the Private storage
+    // class.  If inactive varyings are encountered, its type is changed to the Private one.  The
+    // following vector maps the Output type id to the corresponding Private one.
+    struct TransformedIDs
+    {
+        uint32_t privateID;
+        uint32_t typeID;
+    };
+    std::vector<TransformedIDs> mTypePointerTransformedId;
+    std::vector<uint32_t> mFixedVaryingId;
+    std::vector<uint32_t> mFixedVaryingTypeId;
+};
+
+bool SpirvTransformer::transform()
+{
+    onTransformBegin();
+
+    // First, find all necessary ids and associate them with the information required to transform
+    // their decorations.
+    resolveVariableIds();
+
+    while (mCurrentWord < mSpirvBlobIn.size())
+    {
+        transformInstruction();
+    }
+
+    return true;
 }
 
 void SpirvTransformer::resolveVariableIds()
@@ -1220,14 +1275,9 @@ void SpirvTransformer::resolveVariableIds()
 
 void SpirvTransformer::transformInstruction()
 {
-    ASSERT(mCurrentWord < mSpirvBlobIn.size());
-    const uint32_t *instruction = &mSpirvBlobIn[mCurrentWord];
-
-    const uint32_t wordCount = GetSpirvInstructionLength(instruction);
-    const uint32_t opCode    = GetSpirvInstructionOp(instruction);
-
-    // Since glslang succeeded in producing SPIR-V, we assume it to be valid.
-    ASSERT(mCurrentWord + wordCount <= mSpirvBlobIn.size());
+    uint32_t wordCount;
+    uint32_t opCode;
+    const uint32_t *instruction = getCurrentInstruction(&opCode, &wordCount);
 
     if (opCode == spv::OpFunction)
     {
@@ -1925,18 +1975,6 @@ bool SpirvTransformer::transformExecutionMode(const uint32_t *instruction, size_
         return true;
     }
     return false;
-}
-
-size_t SpirvTransformer::copyInstruction(const uint32_t *instruction, size_t wordCount)
-{
-    size_t instructionOffset = mSpirvBlobOut->size();
-    mSpirvBlobOut->insert(mSpirvBlobOut->end(), instruction, instruction + wordCount);
-    return instructionOffset;
-}
-
-uint32_t SpirvTransformer::getNewId()
-{
-    return (*mSpirvBlobOut)[kHeaderIndexIndexBound]++;
 }
 
 void SpirvTransformer::writeOpStore(uint32_t tempVarId, uint32_t destId)
