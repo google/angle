@@ -3051,6 +3051,405 @@ void main()
     EXPECT_EQ(expectedColors, actualColors);
 }
 
+// Test that aliasing attribute locations work with es 100 shaders.  Note that es 300 and above
+// don't allow vertex attribute aliasing.  This test excludes matrix types.
+TEST_P(VertexAttributeTest, AliasingVectorAttribLocations)
+{
+    // TODO(syoussefi): Support vertex attribute aliasing on Vulkan.  The metal backend will
+    // automatically be fixed in the process.  http://anglebug.com/4249
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+    ANGLE_SKIP_TEST_IF(IsMetal());
+
+    // http://anglebug.com/5180
+    ANGLE_SKIP_TEST_IF(IsAndroid() && IsOpenGL());
+
+    // http://anglebug.com/5181
+    ANGLE_SKIP_TEST_IF(IsOSX() && IsOpenGL());
+
+    // http://anglebug.com/5182
+    ANGLE_SKIP_TEST_IF(IsD3D());
+
+    constexpr char kVS[] = R"(attribute vec4 position;
+// 4 aliasing attributes
+attribute float attr0f;
+attribute vec2 attr0v2;
+attribute vec3 attr0v3;
+attribute vec4 attr0v4;
+const vec4 attr0Expected = vec4(0.1, 0.2, 0.3, 0.4);
+
+// 2 aliasing attributes
+attribute vec2 attr1v2;
+attribute vec3 attr1v3;
+const vec3 attr1Expected = vec3(0.5, 0.6, 0.7);
+
+// 2 aliasing attributes
+attribute vec4 attr2v4;
+attribute float attr2f;
+const vec4 attr2Expected = vec4(0.8, 0.85, 0.9, 0.95);
+
+// 2 aliasing attributes
+attribute float attr3f1;
+attribute float attr3f2;
+const float attr3Expected = 1.0;
+
+uniform float attr0Select;
+uniform float attr1Select;
+uniform float attr2Select;
+uniform float attr3Select;
+
+// Each channel controlled by success from each set of aliasing attributes.  If a channel is 0, the
+// attribute test has failed.  Otherwise it will be 0.25, 0.5, 0.75 or 1.0, depending on how many
+// channels there are in the compared attribute (except attr3).
+varying mediump vec4 color;
+void main()
+{
+    gl_Position = position;
+
+    vec4 result = vec4(0);
+
+    if (attr0Select < 0.5)
+        result.r = abs(attr0f - attr0Expected.x) < 0.01 ? 0.25 : 0.0;
+    else if (attr0Select < 1.5)
+        result.r = all(lessThan(abs(attr0v2 - attr0Expected.xy), vec2(0.01))) ? 0.5 : 0.0;
+    else if (attr0Select < 2.5)
+        result.r = all(lessThan(abs(attr0v3 - attr0Expected.xyz), vec3(0.01))) ? 0.75 : 0.0;
+    else
+        result.r = all(lessThan(abs(attr0v4 - attr0Expected), vec4(0.01 )))? 1.0 : 0.0;
+
+    if (attr1Select < 0.5)
+        result.g = all(lessThan(abs(attr1v2 - attr1Expected.xy), vec2(0.01 )))? 0.5 : 0.0;
+    else
+        result.g = all(lessThan(abs(attr1v3 - attr1Expected), vec3(0.01 )))? 0.75 : 0.0;
+
+    if (attr2Select < 0.5)
+        result.b = abs(attr2f - attr2Expected.x) < 0.01 ? 0.25 : 0.0;
+    else
+        result.b = all(lessThan(abs(attr2v4 - attr2Expected), vec4(0.01))) ? 1.0 : 0.0;
+
+    if (attr3Select < 0.5)
+        result.a = abs(attr3f1 - attr3Expected) < 0.01 ? 0.25 : 0.0;
+    else
+        result.a = abs(attr3f2 - attr3Expected) < 0.01 ? 0.5 : 0.0;
+
+    color = result;
+})";
+
+    constexpr char kFS[] = R"(varying mediump vec4 color;
+    void main(void)
+    {
+        gl_FragColor = color;
+    })";
+
+    // Compile shaders.
+    GLuint program = CompileProgram(kVS, kFS);
+    ASSERT_NE(program, 0u);
+
+    // Setup bindings.
+    glBindAttribLocation(program, 0, "attr0f");
+    glBindAttribLocation(program, 0, "attr0v2");
+    glBindAttribLocation(program, 0, "attr0v3");
+    glBindAttribLocation(program, 0, "attr0v4");
+    glBindAttribLocation(program, 1, "attr1v2");
+    glBindAttribLocation(program, 1, "attr1v3");
+    glBindAttribLocation(program, 2, "attr2v4");
+    glBindAttribLocation(program, 2, "attr2f");
+    glBindAttribLocation(program, 3, "attr3f1");
+    glBindAttribLocation(program, 3, "attr3f2");
+    EXPECT_GL_NO_ERROR();
+
+    // Link program and get uniform locations.
+    glLinkProgram(program);
+    glUseProgram(program);
+    GLint attr0SelectLoc = glGetUniformLocation(program, "attr0Select");
+    GLint attr1SelectLoc = glGetUniformLocation(program, "attr1Select");
+    GLint attr2SelectLoc = glGetUniformLocation(program, "attr2Select");
+    GLint attr3SelectLoc = glGetUniformLocation(program, "attr3Select");
+    ASSERT_NE(-1, attr0SelectLoc);
+    ASSERT_NE(-1, attr1SelectLoc);
+    ASSERT_NE(-1, attr2SelectLoc);
+    ASSERT_NE(-1, attr3SelectLoc);
+    EXPECT_GL_NO_ERROR();
+
+    // Set values for attributes.
+    glVertexAttrib4f(0, 0.1f, 0.2f, 0.3f, 0.4f);
+    glVertexAttrib3f(1, 0.5f, 0.6f, 0.7f);
+    glVertexAttrib4f(2, 0.8f, 0.85f, 0.9f, 0.95f);
+    glVertexAttrib1f(3, 1.0f);
+    glDisableVertexAttribArray(0);
+    glDisableVertexAttribArray(1);
+    glDisableVertexAttribArray(2);
+    glDisableVertexAttribArray(3);
+    EXPECT_GL_NO_ERROR();
+
+    // Go through different combination of attributes and make sure reading through every alias is
+    // correctly handled.
+    GLColor expected;
+    for (uint32_t attr0Select = 0; attr0Select < 4; ++attr0Select)
+    {
+        glUniform1f(attr0SelectLoc, attr0Select);
+        expected.R = attr0Select * 64 + 63;
+
+        for (uint32_t attr1Select = 0; attr1Select < 2; ++attr1Select)
+        {
+            glUniform1f(attr1SelectLoc, attr1Select);
+            expected.G = attr1Select * 64 + 127;
+
+            for (uint32_t attr2Select = 0; attr2Select < 2; ++attr2Select)
+            {
+                glUniform1f(attr2SelectLoc, attr2Select);
+                expected.B = attr2Select * 192 + 63;
+
+                for (uint32_t attr3Select = 0; attr3Select < 2; ++attr3Select)
+                {
+                    glUniform1f(attr3SelectLoc, attr3Select);
+                    expected.A = attr3Select * 64 + 63;
+
+                    drawQuad(program, "position", 0.5f);
+                    EXPECT_GL_NO_ERROR();
+                    EXPECT_PIXEL_COLOR_NEAR(0, 0, expected, 1);
+                }
+            }
+        }
+    }
+}
+
+// Test that aliasing attribute locations work with es 100 shaders.  Note that es 300 and above
+// don't allow vertex attribute aliasing.  This test includes matrix types.
+TEST_P(VertexAttributeTest, AliasingMatrixAttribLocations)
+{
+    // TODO(syoussefi): Support vertex attribute aliasing on Vulkan.  The metal backend will
+    // automatically be fixed in the process.  http://anglebug.com/4249
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+    ANGLE_SKIP_TEST_IF(IsMetal());
+
+    // http://anglebug.com/5180
+    ANGLE_SKIP_TEST_IF(IsAndroid() && IsOpenGL());
+
+    // http://anglebug.com/5181
+    ANGLE_SKIP_TEST_IF(IsOSX() && IsOpenGL());
+
+    // http://anglebug.com/5182
+    ANGLE_SKIP_TEST_IF(IsD3D());
+
+    constexpr char kVS[] = R"(attribute vec4 position;
+// attributes aliasing location 0 and above
+attribute float attr0f;
+attribute mat3 attr0m3;
+attribute mat2 attr0m2;
+
+// attributes aliasing location 1 and above
+attribute vec4 attr1v4;
+
+// attributes aliasing location 2 and above
+attribute mat4 attr2m4;
+
+// attributes aliasing location 3 and above
+attribute mat2 attr3m2;
+
+// attributes aliasing location 5 and above
+attribute vec2 attr5v2;
+
+// In summary (attr prefix shortened to a):
+//
+// location 0: a0f a0m3[0] a0m2[0]
+// location 1:     a0m3[1] a0m2[1] a1v4
+// location 2:     a0m3[2]              a2m4[0]
+// location 3:                          a2m4[1] a3m2[0]
+// location 4:                          a2m4[2] a3m2[1]
+// location 5:                          a2m4[3]         a5v2
+
+const vec3 loc0Expected = vec3(0.05, 0.1, 0.15);
+const vec4 loc1Expected = vec4(0.2, 0.25, 0.3, 0.35);
+const vec4 loc2Expected = vec4(0.4, 0.45, 0.5, 0.55);
+const vec4 loc3Expected = vec4(0.6, 0.65, 0.7, 0.75);
+const vec4 loc4Expected = vec4(0.8, 0.85, 0.9, 0.95);
+const vec4 loc5Expected = vec4(0.25, 0.5, 0.75, 1.0);
+
+uniform float loc0Select;
+uniform float loc1Select;
+uniform float loc2Select;
+uniform float loc3Select;
+uniform float loc4Select;
+uniform float loc5Select;
+
+// Each channel controlled by success from each set of aliasing locations.  Locations 2 and 3
+// contribute to B together, while locations 4 and 5 contribute to A together.  If a channel is 0,
+// the attribute test has failed.  Otherwise it will be 1/N, 2/N, ..., 1, depending on how many
+// possible values there are for the controlling uniforms.
+varying mediump vec4 color;
+void main()
+{
+    gl_Position = position;
+
+    vec4 result = vec4(0);
+
+    if (loc0Select < 0.5)
+        result.r = abs(attr0f - loc0Expected.x) < 0.01 ? 0.333333 : 0.0;
+    else if (loc0Select < 1.5)
+        result.r = all(lessThan(abs(attr0m2[0] - loc0Expected.xy), vec2(0.01))) ? 0.666667 : 0.0;
+    else
+        result.r = all(lessThan(abs(attr0m3[0] - loc0Expected), vec3(0.01))) ? 1.0 : 0.0;
+
+    if (loc1Select < 0.5)
+        result.g = all(lessThan(abs(attr0m3[1] - loc1Expected.xyz), vec3(0.01))) ? 0.333333 : 0.0;
+    else if (loc1Select < 1.5)
+        result.g = all(lessThan(abs(attr0m2[1] - loc1Expected.xy), vec2(0.01))) ? 0.666667 : 0.0;
+    else
+        result.g = all(lessThan(abs(attr1v4 - loc1Expected), vec4(0.01))) ? 1.0 : 0.0;
+
+    bool loc2Ok = false;
+    bool loc3Ok = false;
+
+    if (loc2Select < 0.5)
+        loc2Ok = all(lessThan(abs(attr0m3[2] - loc2Expected.xyz), vec3(0.01)));
+    else
+        loc2Ok = all(lessThan(abs(attr2m4[0] - loc2Expected), vec4(0.01)));
+
+    if (loc3Select < 0.5)
+        loc3Ok = all(lessThan(abs(attr2m4[1] - loc3Expected), vec4(0.01)));
+    else
+        loc3Ok = all(lessThan(abs(attr3m2[0] - loc3Expected.xy), vec2(0.01)));
+
+    if (loc2Ok && loc3Ok)
+    {
+        if (loc2Select < 0.5)
+            if (loc3Select < 0.5)
+                result.b = 0.25;
+            else
+                result.b = 0.5;
+        else
+            if (loc3Select < 0.5)
+                result.b = 0.75;
+            else
+                result.b = 1.0;
+    }
+
+    bool loc4Ok = false;
+    bool loc5Ok = false;
+
+    if (loc4Select < 0.5)
+        loc4Ok = all(lessThan(abs(attr2m4[2] - loc4Expected), vec4(0.01)));
+    else
+        loc4Ok = all(lessThan(abs(attr3m2[1] - loc4Expected.xy), vec2(0.01)));
+
+    if (loc5Select < 0.5)
+        loc5Ok = all(lessThan(abs(attr2m4[3] - loc5Expected), vec4(0.01)));
+    else
+        loc5Ok = all(lessThan(abs(attr5v2 - loc5Expected.xy), vec2(0.01)));
+
+    if (loc4Ok && loc5Ok)
+    {
+        if (loc4Select < 0.5)
+            if (loc5Select < 0.5)
+                result.a = 0.25;
+            else
+                result.a = 0.5;
+        else
+            if (loc5Select < 0.5)
+                result.a = 0.75;
+            else
+                result.a = 1.0;
+    }
+
+    color = result;
+})";
+
+    constexpr char kFS[] = R"(varying mediump vec4 color;
+    void main(void)
+    {
+        gl_FragColor = color;
+    })";
+
+    // Compile shaders.
+    GLuint program = CompileProgram(kVS, kFS);
+    ASSERT_NE(program, 0u);
+
+    // Setup bindings.
+    glBindAttribLocation(program, 0, "attr0f");
+    glBindAttribLocation(program, 0, "attr0m3");
+    glBindAttribLocation(program, 0, "attr0m2");
+    glBindAttribLocation(program, 1, "attr1v4");
+    glBindAttribLocation(program, 2, "attr2m4");
+    glBindAttribLocation(program, 3, "attr3m2");
+    glBindAttribLocation(program, 5, "attr5v2");
+    EXPECT_GL_NO_ERROR();
+
+    // Link program and get uniform locations.
+    glLinkProgram(program);
+    glUseProgram(program);
+    EXPECT_GL_NO_ERROR();
+
+    GLint loc0SelectLoc = glGetUniformLocation(program, "loc0Select");
+    GLint loc1SelectLoc = glGetUniformLocation(program, "loc1Select");
+    GLint loc2SelectLoc = glGetUniformLocation(program, "loc2Select");
+    GLint loc3SelectLoc = glGetUniformLocation(program, "loc3Select");
+    GLint loc4SelectLoc = glGetUniformLocation(program, "loc4Select");
+    GLint loc5SelectLoc = glGetUniformLocation(program, "loc5Select");
+    ASSERT_NE(-1, loc0SelectLoc);
+    ASSERT_NE(-1, loc1SelectLoc);
+    ASSERT_NE(-1, loc2SelectLoc);
+    ASSERT_NE(-1, loc3SelectLoc);
+    ASSERT_NE(-1, loc4SelectLoc);
+    ASSERT_NE(-1, loc5SelectLoc);
+    EXPECT_GL_NO_ERROR();
+
+    // Set values for attributes.
+    glVertexAttrib3f(0, 0.05, 0.1, 0.15);
+    glVertexAttrib4f(1, 0.2, 0.25, 0.3, 0.35);
+    glVertexAttrib4f(2, 0.4, 0.45, 0.5, 0.55);
+    glVertexAttrib4f(3, 0.6, 0.65, 0.7, 0.75);
+    glVertexAttrib4f(4, 0.8, 0.85, 0.9, 0.95);
+    glVertexAttrib4f(5, 0.25, 0.5, 0.75, 1.0);
+    glDisableVertexAttribArray(0);
+    glDisableVertexAttribArray(1);
+    glDisableVertexAttribArray(2);
+    glDisableVertexAttribArray(3);
+    glDisableVertexAttribArray(4);
+    glDisableVertexAttribArray(5);
+    EXPECT_GL_NO_ERROR();
+
+    // Go through different combination of attributes and make sure reading through every alias is
+    // correctly handled.
+    GLColor expected;
+    for (uint32_t loc0Select = 0; loc0Select < 3; ++loc0Select)
+    {
+        glUniform1f(loc0SelectLoc, loc0Select);
+        expected.R = loc0Select * 85 + 85;
+
+        for (uint32_t loc1Select = 0; loc1Select < 3; ++loc1Select)
+        {
+            glUniform1f(loc1SelectLoc, loc1Select);
+            expected.G = loc1Select * 85 + 85;
+
+            for (uint32_t loc2Select = 0; loc2Select < 2; ++loc2Select)
+            {
+                glUniform1f(loc2SelectLoc, loc2Select);
+
+                for (uint32_t loc3Select = 0; loc3Select < 2; ++loc3Select)
+                {
+                    glUniform1f(loc3SelectLoc, loc3Select);
+                    expected.B = (loc2Select << 1 | loc3Select) * 64 + 63;
+
+                    for (uint32_t loc4Select = 0; loc4Select < 2; ++loc4Select)
+                    {
+                        glUniform1f(loc4SelectLoc, loc4Select);
+
+                        for (uint32_t loc5Select = 0; loc5Select < 2; ++loc5Select)
+                        {
+                            glUniform1f(loc5SelectLoc, loc5Select);
+                            expected.A = (loc4Select << 1 | loc5Select) * 64 + 63;
+
+                            drawQuad(program, "position", 0.5f);
+                            EXPECT_GL_NO_ERROR();
+                            EXPECT_PIXEL_COLOR_NEAR(0, 0, expected, 1);
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against.
 // D3D11 Feature Level 9_3 uses different D3D formats for vertex attribs compared to Feature Levels
