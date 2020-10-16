@@ -68,6 +68,8 @@ class ANGLE_UTIL_EXPORT OSWindow
     // Whether window has been successfully initialized.
     bool valid() const { return mValid; }
 
+    void ignoreSizeEvents() { mIgnoreSizeEvents = true; }
+
   protected:
     OSWindow();
     virtual ~OSWindow();
@@ -82,6 +84,7 @@ class ANGLE_UTIL_EXPORT OSWindow
     std::list<Event> mEvents;
 
     bool mValid;
+    bool mIgnoreSizeEvents;
 };
 
 #endif  // UTIL_OSWINDOW_H_

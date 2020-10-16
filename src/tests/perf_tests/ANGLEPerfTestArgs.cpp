@@ -22,6 +22,7 @@ bool gVerboseLogging       = false;
 double gTestTimeSeconds    = 1.0;
 int gTestTrials            = 3;
 bool gNoFinish             = false;
+bool gEnableOffscreen      = false;
 
 // Default to three warmup loops. There's no science to this. More than two loops was experimentally
 // helpful on a Windows NVIDIA setup when testing with Vulkan and native trace tests.
@@ -115,6 +116,10 @@ void ANGLEProcessPerfTestArgs(int *argc, char **argv)
         else if (strcmp("--no-finish", argv[argIndex]) == 0)
         {
             gNoFinish = true;
+        }
+        else if (strcmp("--enable-offscreen", argv[argIndex]) == 0)
+        {
+            gEnableOffscreen = true;
         }
         else
         {

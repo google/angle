@@ -347,7 +347,8 @@ static void PrintEvent(const Event &event)
 }
 #endif
 
-OSWindow::OSWindow() : mX(0), mY(0), mWidth(0), mHeight(0) {}
+OSWindow::OSWindow() : mX(0), mY(0), mWidth(0), mHeight(0), mValid(false), mIgnoreSizeEvents(false)
+{}
 
 OSWindow::~OSWindow() {}
 

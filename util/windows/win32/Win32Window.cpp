@@ -277,6 +277,9 @@ LRESULT CALLBACK Win32Window::WndProc(HWND hWnd, UINT message, WPARAM wParam, LP
 
             case WM_SIZE:
             {
+                if (window->mIgnoreSizeEvents)
+                    break;
+
                 RECT winRect;
                 GetClientRect(hWnd, &winRect);
 
