@@ -34,7 +34,7 @@ struct TracePerfParams final : public RenderTestParams
     TracePerfParams()
     {
         majorVersion = 3;
-        minorVersion = 0;
+        minorVersion = 1;
 
         // Display the frame after every drawBenchmark invocation
         iterationsPerStep = 1;
