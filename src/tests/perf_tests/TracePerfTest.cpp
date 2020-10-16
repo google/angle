@@ -235,6 +235,11 @@ TracePerfTest::TracePerfTest()
         addExtensionPrerequisite("GL_OES_EGL_image_external");
     }
 
+    if (param.testID == RestrictedTraceID::brawl_stars)
+    {
+        addExtensionPrerequisite("GL_EXT_shadow_samplers");
+    }
+
     // We already swap in TracePerfTest::drawBenchmark, no need to swap again in the harness.
     disableTestHarnessSwap();
 

@@ -13,6 +13,7 @@
 
 #include "angry_birds_2_1500/angry_birds_2_1500_capture_context2.h"
 #include "arena_of_valor/arena_of_valor_capture_context3.h"
+#include "brawl_stars/brawl_stars_capture_context2.h"
 #include "candy_crush_500/candy_crush_500_capture_context1.h"
 #include "cod_mobile/cod_mobile_capture_context4.h"
 #include "egypt_1500/egypt_1500_capture_context6.h"
@@ -35,6 +36,9 @@ constexpr angle::PackedEnumMap<RestrictedTraceID, TraceInfo> kTraceInfos = {
      {arena_of_valor::kReplayFrameStart, arena_of_valor::kReplayFrameEnd,
       arena_of_valor::kReplayDrawSurfaceWidth, arena_of_valor::kReplayDrawSurfaceHeight,
       "arena_of_valor"}},
+    {RestrictedTraceID::brawl_stars,
+     {brawl_stars::kReplayFrameStart, brawl_stars::kReplayFrameEnd,
+      brawl_stars::kReplayDrawSurfaceWidth, brawl_stars::kReplayDrawSurfaceHeight, "brawl_stars"}},
     {RestrictedTraceID::candy_crush_500,
      {candy_crush_500::kReplayFrameStart, candy_crush_500::kReplayFrameEnd,
       candy_crush_500::kReplayDrawSurfaceWidth, candy_crush_500::kReplayDrawSurfaceHeight,
@@ -80,6 +84,9 @@ void ReplayFrame(RestrictedTraceID traceID, uint32_t frameIndex)
         case RestrictedTraceID::arena_of_valor:
             arena_of_valor::ReplayContext3Frame(frameIndex);
             break;
+        case RestrictedTraceID::brawl_stars:
+            brawl_stars::ReplayContext2Frame(frameIndex);
+            break;
         case RestrictedTraceID::candy_crush_500:
             candy_crush_500::ReplayContext1Frame(frameIndex);
             break;
@@ -120,6 +127,9 @@ void ResetReplay(RestrictedTraceID traceID)
             break;
         case RestrictedTraceID::arena_of_valor:
             arena_of_valor::ResetContext3Replay();
+            break;
+        case RestrictedTraceID::brawl_stars:
+            brawl_stars::ResetContext2Replay();
             break;
         case RestrictedTraceID::candy_crush_500:
             candy_crush_500::ResetContext1Replay();
@@ -162,6 +172,9 @@ void SetupReplay(RestrictedTraceID traceID)
         case RestrictedTraceID::arena_of_valor:
             arena_of_valor::SetupContext3Replay();
             break;
+        case RestrictedTraceID::brawl_stars:
+            brawl_stars::SetupContext2Replay();
+            break;
         case RestrictedTraceID::candy_crush_500:
             candy_crush_500::SetupContext1Replay();
             break;
@@ -203,6 +216,9 @@ void SetBinaryDataDir(RestrictedTraceID traceID, const char *dataDir)
         case RestrictedTraceID::arena_of_valor:
             arena_of_valor::SetBinaryDataDir(dataDir);
             break;
+        case RestrictedTraceID::brawl_stars:
+            brawl_stars::SetBinaryDataDir(dataDir);
+            break;
         case RestrictedTraceID::candy_crush_500:
             candy_crush_500::SetBinaryDataDir(dataDir);
             break;
@@ -243,6 +259,9 @@ void SetBinaryDataDecompressCallback(RestrictedTraceID traceID, DecompressCallba
             break;
         case RestrictedTraceID::arena_of_valor:
             arena_of_valor::SetBinaryDataDecompressCallback(callback);
+            break;
+        case RestrictedTraceID::brawl_stars:
+            brawl_stars::SetBinaryDataDecompressCallback(callback);
             break;
         case RestrictedTraceID::candy_crush_500:
             candy_crush_500::SetBinaryDataDecompressCallback(callback);
