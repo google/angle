@@ -69,6 +69,23 @@
       "parentUuid": "4129a6bc_14559715",
       "revId": "b3f5a314be154b9af2f49f1d66b3be932fca0088",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "877d93fb_6510f0cd",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-16T15:08:36Z",
+      "side": 1,
+      "message": "This is a bit of an odd fix. How do we even get to this point in the code?",
+      "revId": "b3f5a314be154b9af2f49f1d66b3be932fca0088",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
