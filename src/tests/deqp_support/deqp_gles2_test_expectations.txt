@@ -220,6 +220,12 @@
 3317 MAC OPENGL AMD : dEQP-GLES2.functional.clipping.point.wide_point_clip_viewport_center = FAIL
 3317 MAC OPENGL AMD : dEQP-GLES2.functional.clipping.point.wide_point_clip_viewport_corner = FAIL
 
+5172 MAC OPENGL AMD : dEQP-GLES2.functional.dither.* = FAIL
+5172 MAC OPENGL AMD : dEQP-GLES2.functional.draw.random.* = FAIL
+5172 MAC OPENGL AMD : dEQP-GLES2.functional.fragment_ops.depth_stencil.stencil_depth_funcs.stencil* = FAIL
+5172 MAC OPENGL AMD : dEQP-GLES2.functional.shaders.fragdata.* = FAIL
+5172 MAC OPENGL AMD : dEQP-GLES2.functional.fragment_ops.blend.equation_src_func_dst_func.* = FAIL
+
 // Android GLES backend only failures
 1488 GLES ANDROID : dEQP-GLES2.functional.shaders.return.conditional_return_always_vertex = FAIL
 1488 GLES ANDROID : dEQP-GLES2.functional.shaders.return.conditional_return_always_fragment = FAIL
