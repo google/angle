@@ -3045,18 +3045,13 @@ void main()
 // don't allow vertex attribute aliasing.  This test excludes matrix types.
 TEST_P(VertexAttributeTest, AliasingVectorAttribLocations)
 {
-    // TODO(syoussefi): Support vertex attribute aliasing on Vulkan.  The metal backend will
-    // automatically be fixed in the process.  http://anglebug.com/4249
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-    ANGLE_SKIP_TEST_IF(IsMetal());
-
     // http://anglebug.com/5180
     ANGLE_SKIP_TEST_IF(IsAndroid() && IsOpenGL());
 
-    // http://anglebug.com/5181
+    // http://anglebug.com/3466
     ANGLE_SKIP_TEST_IF(IsOSX() && IsOpenGL());
 
-    // http://anglebug.com/5182
+    // http://anglebug.com/3467
     ANGLE_SKIP_TEST_IF(IsD3D());
 
     constexpr char kVS[] = R"(attribute vec4 position;
@@ -3215,10 +3210,10 @@ TEST_P(VertexAttributeTest, AliasingMatrixAttribLocations)
     // http://anglebug.com/5180
     ANGLE_SKIP_TEST_IF(IsAndroid() && IsOpenGL());
 
-    // http://anglebug.com/5181
+    // http://anglebug.com/3466
     ANGLE_SKIP_TEST_IF(IsOSX() && IsOpenGL());
 
-    // http://anglebug.com/5182
+    // http://anglebug.com/3467
     ANGLE_SKIP_TEST_IF(IsD3D());
 
     constexpr char kVS[] = R"(attribute vec4 position;

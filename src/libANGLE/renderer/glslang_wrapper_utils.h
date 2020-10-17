@@ -88,6 +88,13 @@ struct ShaderInterfaceVariableInfo
     bool useRelaxedPrecision = false;
     // Indicate if varying is input or output
     bool varyingIsOutput = false;
+    // For vertex attributes, this is the number of components.  This is used by the vertex
+    // attribute aliasing transformation only.
+    uint8_t attributeComponentCount = 0;
+    // Indicate whether this is a vertex attribute of matrix type.  This is temporarily used to
+    // avoid handling aliasing matrix vertex attributes as they are currently not supported.
+    // TODO: remove when support for aliasing matrix attributes is added.  http://anglebug.com/4249
+    bool isMatrixAttribute = false;
 };
 
 // TODO: http://anglebug.com/4524: Need a different hash key than a string, since

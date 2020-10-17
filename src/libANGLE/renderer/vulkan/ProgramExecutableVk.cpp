@@ -219,12 +219,14 @@ std::unique_ptr<rx::LinkEvent> ProgramExecutableVk::load(gl::BinaryInputStream *
             info->location      = stream->readInt<uint32_t>();
             info->component     = stream->readInt<uint32_t>();
             // PackedEnumBitSet uses uint8_t
-            info->activeStages        = gl::ShaderBitSet(stream->readInt<uint8_t>());
-            info->xfbBuffer           = stream->readInt<uint32_t>();
-            info->xfbOffset           = stream->readInt<uint32_t>();
-            info->xfbStride           = stream->readInt<uint32_t>();
-            info->useRelaxedPrecision = stream->readBool();
-            info->varyingIsOutput     = stream->readBool();
+            info->activeStages            = gl::ShaderBitSet(stream->readInt<uint8_t>());
+            info->xfbBuffer               = stream->readInt<uint32_t>();
+            info->xfbOffset               = stream->readInt<uint32_t>();
+            info->xfbStride               = stream->readInt<uint32_t>();
+            info->useRelaxedPrecision     = stream->readBool();
+            info->varyingIsOutput         = stream->readBool();
+            info->attributeComponentCount = stream->readInt<uint8_t>();
+            info->isMatrixAttribute       = stream->readBool();
         }
     }
 
@@ -250,6 +252,8 @@ void ProgramExecutableVk::save(gl::BinaryOutputStream *stream)
             stream->writeInt<uint32_t>(it.second.xfbStride);
             stream->writeInt<uint8_t>(it.second.useRelaxedPrecision);
             stream->writeInt<uint8_t>(it.second.varyingIsOutput);
+            stream->writeInt<uint8_t>(it.second.attributeComponentCount);
+            stream->writeInt<uint8_t>(it.second.isMatrixAttribute);
         }
     }
 }
