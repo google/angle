@@ -757,6 +757,13 @@ void ClearValuesArray::storeNoDepthStencil(uint32_t index, const VkClearValue &c
     mEnabled.set(index);
 }
 
+gl::DrawBufferMask ClearValuesArray::getColorMask() const
+{
+    constexpr uint32_t kColorBuffersMask =
+        angle::Bit<uint32_t>(gl::IMPLEMENTATION_MAX_DRAW_BUFFERS) - 1;
+    return gl::DrawBufferMask(mEnabled.bits() & kColorBuffersMask);
+}
+
 // ResourceSerialFactory implementation.
 ResourceSerialFactory::ResourceSerialFactory() : mCurrentUniqueSerial(1) {}
 

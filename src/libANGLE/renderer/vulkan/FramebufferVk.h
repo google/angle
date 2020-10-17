@@ -172,6 +172,11 @@ class FramebufferVk : public FramebufferImpl
                             const VkClearColorValue &clearColorValue,
                             const VkClearDepthStencilValue &clearDepthStencilValue);
 
+    void mergeClearsWithDeferredClears(gl::DrawBufferMask clearColorBuffers,
+                                       bool clearDepth,
+                                       bool clearStencil,
+                                       const VkClearColorValue &clearColorValue,
+                                       const VkClearDepthStencilValue &clearDepthStencilValue);
     angle::Result clearWithDraw(ContextVk *contextVk,
                                 const gl::Rectangle &clearArea,
                                 gl::DrawBufferMask clearColorBuffers,
@@ -181,20 +186,10 @@ class FramebufferVk : public FramebufferImpl
                                 uint8_t stencilMask,
                                 const VkClearColorValue &clearColorValue,
                                 const VkClearDepthStencilValue &clearDepthStencilValue);
-    angle::Result clearWithLoadOp(ContextVk *contextVk,
-                                  gl::DrawBufferMask clearColorBuffers,
-                                  bool clearDepth,
-                                  bool clearStencil,
-                                  const VkClearColorValue &clearColorValue,
-                                  const VkClearDepthStencilValue &clearDepthStencilValue);
+    angle::Result clearWithLoadOp(ContextVk *contextVk);
     angle::Result clearWithCommand(ContextVk *contextVk,
                                    vk::CommandBufferHelper *renderpassCommands,
-                                   const gl::Rectangle &scissoredRenderArea,
-                                   gl::DrawBufferMask clearColorBuffers,
-                                   bool clearDepth,
-                                   bool clearStencil,
-                                   const VkClearColorValue &clearColorValue,
-                                   const VkClearDepthStencilValue &clearDepthStencilValue);
+                                   const gl::Rectangle &scissoredRenderArea);
     void updateActiveColorMasks(size_t colorIndex, bool r, bool g, bool b, bool a);
     void updateRenderPassDesc();
     angle::Result updateColorAttachment(const gl::Context *context,

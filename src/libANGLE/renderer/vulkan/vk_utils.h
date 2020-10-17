@@ -711,6 +711,7 @@ class ClearValuesArray final
     bool test(size_t index) const { return mEnabled.test(index); }
     bool testDepth() const { return mEnabled.test(kUnpackedDepthIndex); }
     bool testStencil() const { return mEnabled.test(kUnpackedStencilIndex); }
+    gl::DrawBufferMask getColorMask() const;
 
     const VkClearValue &operator[](size_t index) const { return mValues[index]; }
 
