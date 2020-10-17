@@ -204,9 +204,11 @@
 
 // Passing on recent drivers:
 3726 VULKAN ANDROID : dEQP-GLES31.functional.ssbo.layout.* = FAIL
-3726 VULKAN ANDROID : dEQP-GLES31.functional.atomic_counter.* = FAIL
 3726 VULKAN ANDROID : dEQP-GLES31.functional.synchronization.inter_call.without_memory_barrier.*atomic_counter* = FAIL
 3726 VULKAN ANDROID : dEQP-GLES31.functional.compute.basic.atomic_counter* = FAIL
+
+// Seem to trigger LowMemoryKiller when run in a certain sequence
+5185 VULKAN ANDROID : dEQP-GLES31.functional.atomic_counter.* = SKIP
 
 // Arrays of opaque types as function parameters (possibly related to issue 3882)
 2703 VULKAN ANDROID : dEQP-GLES31.functional.shaders.opaque_type_indexing.atomic_counter.const_literal_vertex = FAIL
