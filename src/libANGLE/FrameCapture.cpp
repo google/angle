@@ -3085,7 +3085,7 @@ void CaptureMidExecutionSetup(const gl::Context *context,
     const gl::SyncManager &syncs = apiState.getSyncManagerForCapture();
     for (const auto &syncIter : syncs)
     {
-        GLsync syncID        = gl::bitCast<GLsync>(syncIter.first);
+        GLsync syncID        = gl::bitCast<GLsync>(static_cast<size_t>(syncIter.first));
         const gl::Sync *sync = syncIter.second;
 
         if (!sync)
