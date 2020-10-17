@@ -71,7 +71,7 @@ static constexpr rx::FastCopyFunctionMap NoCopyFunctions;
 
 const Format gFormatInfoTable[] = {{
     // clang-format off
-    {{ FormatID::NONE, GL_NONE, GL_NONE, nullptr, NoCopyFunctions, nullptr, nullptr, GL_NONE, 0, 0, 0, 0, 0, 0, 0, 0, 0, false, false, false, gl::VertexAttribType::InvalidEnum }},
+    {{ FormatID::NONE, GL_NONE, GL_NONE, nullptr, NoCopyFunctions, nullptr, nullptr, GL_NONE, 0, 0, 0, 0, 0, 0, 0, 0, 0, false, false, false, false, gl::VertexAttribType::InvalidEnum }},
 {angle_format_info_cases}    // clang-format on
 }};
 
@@ -194,7 +194,7 @@ def get_color_write_function(angle_format):
     return 'WriteColor<' + channel_struct + ', ' + write_component_type + '>'
 
 
-format_entry_template = """    {{ FormatID::{id}, {glInternalFormat}, {fboImplementationInternalFormat}, {mipGenerationFunction}, {fastCopyFunctions}, {colorReadFunction}, {colorWriteFunction}, {namedComponentType}, {R}, {G}, {B}, {A}, {L}, {D}, {S}, {pixelBytes}, {componentAlignmentMask}, {isBlock}, {isFixed}, {isScaled}, {vertexAttribType} }},
+format_entry_template = """    {{ FormatID::{id}, {glInternalFormat}, {fboImplementationInternalFormat}, {mipGenerationFunction}, {fastCopyFunctions}, {colorReadFunction}, {colorWriteFunction}, {namedComponentType}, {R}, {G}, {B}, {A}, {L}, {D}, {S}, {pixelBytes}, {componentAlignmentMask}, {isBlock}, {isFixed}, {isScaled}, {isSRGB}, {vertexAttribType} }},
 """
 
 
@@ -275,6 +275,10 @@ def get_vertex_attrib_type(format_id):
     return "InvalidEnum"
 
 
+def bool_str(cond):
+    return "true" if cond else "false"
+
+
 def json_to_table_data(format_id, json, angle_to_gl):
 
     table_data = ""
@@ -334,9 +338,10 @@ def json_to_table_data(format_id, json, angle_to_gl):
     parsed["pixelBytes"] = pixel_bytes
     parsed["componentAlignmentMask"] = get_component_alignment_mask(parsed["channels"],
                                                                     parsed["bits"])
-    parsed["isBlock"] = "true" if is_block else "false"
-    parsed["isFixed"] = "true" if "FIXED" in format_id else "false"
-    parsed["isScaled"] = "true" if "SCALED" in format_id else "false"
+    parsed["isBlock"] = bool_str(is_block)
+    parsed["isFixed"] = bool_str("FIXED" in format_id)
+    parsed["isScaled"] = bool_str("SCALED" in format_id)
+    parsed["isSRGB"] = bool_str("SRGB" in format_id)
 
     parsed["vertexAttribType"] = "gl::VertexAttribType::" + get_vertex_attrib_type(format_id)
 

@@ -43,6 +43,7 @@ struct Format final : private angle::NonCopyable
                             bool isBlock,
                             bool isFixed,
                             bool isScaled,
+                            bool isSRGB,
                             gl::VertexAttribType vertexAttribType);
 
     static const Format &Get(FormatID id) { return gFormatInfoTable[static_cast<int>(id)]; }
@@ -51,7 +52,6 @@ struct Format final : private angle::NonCopyable
 
     constexpr bool hasDepthOrStencilBits() const;
     constexpr bool isLUMA() const;
-    constexpr bool isSRGB() const;
 
     constexpr bool isSint() const;
     constexpr bool isUint() const;
@@ -105,6 +105,7 @@ struct Format final : private angle::NonCopyable
     bool isBlock;
     bool isFixed;
     bool isScaled;
+    bool isSRGB;
 
     // For vertex formats only. Returns the "type" value for glVertexAttribPointer etc.
     gl::VertexAttribType vertexAttribType;
@@ -143,6 +144,7 @@ constexpr Format::Format(FormatID id,
                          bool isBlock,
                          bool isFixed,
                          bool isScaled,
+                         bool isSRGB,
                          gl::VertexAttribType vertexAttribType)
     : id(id),
       glInternalFormat(glFormat),
@@ -171,6 +173,7 @@ constexpr Format::Format(FormatID id,
       isBlock(isBlock),
       isFixed(isFixed),
       isScaled(isScaled),
+      isSRGB(isSRGB),
       vertexAttribType(vertexAttribType)
 {}
 
@@ -184,40 +187,6 @@ constexpr bool Format::isLUMA() const
     // There's no format with G or B without R
     ASSERT(redBits > 0 || (greenBits == 0 && blueBits == 0));
     return redBits == 0 && (luminanceBits > 0 || alphaBits > 0);
-}
-
-constexpr bool Format::isSRGB() const
-{
-    // R8G8_UNORM_SRGB and B8G8R8_UNORM_SRGB are not yet supported by ANGLE
-    // clang-format off
-    return
-        id == FormatID::R8_UNORM_SRGB ||
-        id == FormatID::R8G8B8_UNORM_SRGB ||
-        id == FormatID::R8G8B8A8_UNORM_SRGB ||
-        id == FormatID::B8G8R8A8_UNORM_SRGB ||
-        id == FormatID::BC1_RGB_UNORM_SRGB_BLOCK ||
-        id == FormatID::BC1_RGBA_UNORM_SRGB_BLOCK ||
-        id == FormatID::BC2_RGBA_UNORM_SRGB_BLOCK ||
-        id == FormatID::BC3_RGBA_UNORM_SRGB_BLOCK ||
-        id == FormatID::BPTC_SRGB_ALPHA_UNORM_BLOCK ||
-        id == FormatID::ETC2_R8G8B8_SRGB_BLOCK ||
-        id == FormatID::ETC2_R8G8B8A1_SRGB_BLOCK ||
-        id == FormatID::ETC2_R8G8B8A8_SRGB_BLOCK ||
-        id == FormatID::ASTC_4x4_SRGB_BLOCK ||
-        id == FormatID::ASTC_5x4_SRGB_BLOCK ||
-        id == FormatID::ASTC_5x5_SRGB_BLOCK ||
-        id == FormatID::ASTC_6x5_SRGB_BLOCK ||
-        id == FormatID::ASTC_6x6_SRGB_BLOCK ||
-        id == FormatID::ASTC_8x5_SRGB_BLOCK ||
-        id == FormatID::ASTC_8x6_SRGB_BLOCK ||
-        id == FormatID::ASTC_8x8_SRGB_BLOCK ||
-        id == FormatID::ASTC_10x5_SRGB_BLOCK ||
-        id == FormatID::ASTC_10x6_SRGB_BLOCK ||
-        id == FormatID::ASTC_10x8_SRGB_BLOCK ||
-        id == FormatID::ASTC_10x10_SRGB_BLOCK ||
-        id == FormatID::ASTC_12x10_SRGB_BLOCK ||
-        id == FormatID::ASTC_12x12_SRGB_BLOCK;
-    // clang-format on
 }
 
 constexpr bool Format::isSint() const

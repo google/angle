@@ -2281,10 +2281,10 @@ bool TextureVk::shouldUseLinearColorspaceWithSampler(const SamplerVk *samplerVk)
             }
             else
             {
-                ASSERT(mImage->getFormat().actualImageFormat().isSRGB() ==
+                ASSERT(mImage->getFormat().actualImageFormat().isSRGB ==
                        (vk::ConvertToLinear(mImage->getFormat().vkImageFormat) !=
                         VK_FORMAT_UNDEFINED));
-                return !mImage->getFormat().actualImageFormat().isSRGB();
+                return !mImage->getFormat().actualImageFormat().isSRGB;
             }
         default:
             // sRGB_decode texture state takes precedence over sRGB_override texture state
@@ -2298,10 +2298,10 @@ bool TextureVk::shouldUseLinearColorspaceWithSampler(const SamplerVk *samplerVk)
             }
             else
             {
-                ASSERT(mImage->getFormat().actualImageFormat().isSRGB() ==
+                ASSERT(mImage->getFormat().actualImageFormat().isSRGB ==
                        (vk::ConvertToLinear(mImage->getFormat().vkImageFormat) !=
                         VK_FORMAT_UNDEFINED));
-                return !mImage->getFormat().actualImageFormat().isSRGB();
+                return !mImage->getFormat().actualImageFormat().isSRGB;
             }
     }
 }
@@ -2336,9 +2336,9 @@ bool TextureVk::shouldUseLinearColorspaceWithTexelFetch(bool colorspaceWithSampl
         }
         else
         {
-            ASSERT(mImage->getFormat().actualImageFormat().isSRGB() ==
+            ASSERT(mImage->getFormat().actualImageFormat().isSRGB ==
                    (vk::ConvertToLinear(mImage->getFormat().vkImageFormat) != VK_FORMAT_UNDEFINED));
-            return !mImage->getFormat().actualImageFormat().isSRGB();
+            return !mImage->getFormat().actualImageFormat().isSRGB;
         }
     }
     else
@@ -2402,9 +2402,9 @@ const vk::ImageView &TextureVk::getCopyImageViewAndRecordUse(ContextVk *contextV
     const vk::ImageViewHelper &imageViews = getImageViews();
     imageViews.retain(&contextVk->getResourceUseList());
 
-    ASSERT(mImage->getFormat().actualImageFormat().isSRGB() ==
+    ASSERT(mImage->getFormat().actualImageFormat().isSRGB ==
            (vk::ConvertToLinear(mImage->getFormat().vkImageFormat) != VK_FORMAT_UNDEFINED));
-    if (!mImage->getFormat().actualImageFormat().isSRGB())
+    if (!mImage->getFormat().actualImageFormat().isSRGB)
     {
         return imageViews.getLinearCopyImageView();
     }
