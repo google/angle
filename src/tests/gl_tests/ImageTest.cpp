@@ -719,6 +719,10 @@ class ImageTest : public ANGLETest
 
     bool hasImageGLColorspaceExt() const
     {
+        // Vulkan back-end bug: http://anglebug.com/5209
+        if (IsVulkan())
+            return false;
+
         return IsEGLDisplayExtensionEnabled(getEGLWindow()->getDisplay(), kImageGLColorspaceExt);
     }
 

@@ -32,8 +32,6 @@ class SamplerVk : public SamplerImpl
         return mSampler.get();
     }
 
-    bool skipSamplerSRGBDecode() const { return mState.getSRGBDecode() == GL_SKIP_DECODE_EXT; }
-
   private:
     vk::SamplerBinding mSampler;
 };

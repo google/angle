@@ -4167,23 +4167,20 @@ angle::Result ContextVk::updateActiveTextures(const gl::Context *context)
 
         const SamplerVk *samplerVk = sampler ? vk::GetImpl(sampler) : nullptr;
 
-        if (samplerVk != nullptr && samplerVk->skipSamplerSRGBDecode())
-        {
-            // TODO (http://anglebug.com/5176) Refactor to use ensureImageInitialized instead of
-            // syncState
-            // A sampler may force a texture to reallocate in order to support sRGB_decode
-            // state
-            gl::Texture::DirtyBits decodeBit;
-            decodeBit.set(gl::Texture::DIRTY_BIT_SRGB_DECODE);
-            ANGLE_TRY(textureVk->syncState(context, decodeBit, gl::Command::Other));
-        }
-
         const vk::SamplerHelper &samplerHelper =
             samplerVk ? samplerVk->getSampler() : textureVk->getSampler();
-        activeTexture.texture = textureVk;
-        activeTexture.sampler = &samplerHelper;
-        activeTexture.useLinearImageView =
-            textureVk->shouldUseLinearColorspaceWithSampler(samplerVk);
+        const gl::SamplerState &samplerState =
+            sampler ? sampler->getSamplerState() : texture->getSamplerState();
+        activeTexture.texture    = textureVk;
+        activeTexture.sampler    = &samplerHelper;
+        activeTexture.srgbDecode = samplerState.getSRGBDecode();
+
+        if (activeTexture.srgbDecode == GL_SKIP_DECODE_EXT)
+        {
+            // Make sure we use the MUTABLE bit for the storage. Because the "skip decode" is a
+            // Sampler state we might not have caught this setting in TextureVk::syncState.
+            ANGLE_TRY(textureVk->ensureMutable(this));
+        }
 
         vk::ImageViewSubresourceSerial imageViewSerial = textureVk->getImageViewSubresourceSerial();
         mActiveTexturesDesc.update(textureUnit, imageViewSerial, samplerHelper.getSamplerSerial());

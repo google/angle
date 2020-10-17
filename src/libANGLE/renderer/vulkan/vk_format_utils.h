@@ -325,19 +325,10 @@ ANGLE_INLINE VkFormat ConvertToLinear(VkFormat format)
     }
 }
 
-ANGLE_INLINE bool IsSRGBFormat(VkFormat format)
-{
-    return ConvertToLinear(format) != VK_FORMAT_UNDEFINED;
-}
 ANGLE_INLINE bool IsOverridableLinearFormat(VkFormat format)
 {
     return ConvertToSRGB(format) != VK_FORMAT_UNDEFINED;
 }
-ANGLE_INLINE bool IsLinearFormat(VkFormat format)
-{
-    return !IsSRGBFormat(format);
-}
-
 }  // namespace vk
 }  // namespace rx
 
