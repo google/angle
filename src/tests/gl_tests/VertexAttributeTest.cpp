@@ -1204,24 +1204,6 @@ TEST_P(VertexAttributeOORTest, ANGLEDrawArraysOutOfBoundsCases)
 // Verify that using a different start vertex doesn't mess up the draw.
 TEST_P(VertexAttributeTest, DrawArraysWithBufferOffset)
 {
-    // anglebug.com/4258
-    ANGLE_SKIP_TEST_IF(IsOpenGL() && IsNVIDIA() && IsOSX());
-
-    // anglebug.com/4163
-    ANGLE_SKIP_TEST_IF(IsD3D11() && IsNVIDIA() && IsWindows7());
-
-    // TODO(jmadill): Diagnose this failure.
-    ANGLE_SKIP_TEST_IF(IsD3D11_FL93());
-
-    // TODO(geofflang): Figure out why this is broken on AMD OpenGL
-    ANGLE_SKIP_TEST_IF(IsAMD() && IsOpenGL());
-
-    // TODO(cnorthrop): Test this again on more recent drivers. http://anglebug.com/3951
-    ANGLE_SKIP_TEST_IF(IsLinux() && IsNVIDIA() && IsVulkan());
-
-    // TODO(https://anglebug.com/4269): Test is flaky on OpenGL and Metal on Mac NVIDIA.
-    ANGLE_SKIP_TEST_IF(IsOSX() && IsNVIDIA());
-
     initBasicProgram();
     glUseProgram(mProgram);
 
@@ -1229,13 +1211,21 @@ TEST_P(VertexAttributeTest, DrawArraysWithBufferOffset)
     std::array<GLfloat, kVertexCount> expectedData;
     InitTestData(inputData, expectedData);
 
-    auto quadVertices        = GetQuadVertices();
-    GLsizei quadVerticesSize = static_cast<GLsizei>(quadVertices.size() * sizeof(quadVertices[0]));
+    auto quadVertices = GetQuadVertices();
+
+    std::vector<Vector3> quadVerticesPlusOne(quadVertices.size() + 1);
+    for (size_t index = 0; index < quadVerticesPlusOne.size(); ++index)
+    {
+        quadVerticesPlusOne[index] = quadVertices[index % quadVertices.size()];
+    }
+
+    GLsizei quadVerticesSize =
+        static_cast<GLsizei>(quadVerticesPlusOne.size() * sizeof(quadVertices[0]));
 
     glGenBuffers(1, &mQuadBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, mQuadBuffer);
-    glBufferData(GL_ARRAY_BUFFER, quadVerticesSize + sizeof(Vector3), nullptr, GL_STATIC_DRAW);
-    glBufferSubData(GL_ARRAY_BUFFER, 0, quadVerticesSize, quadVertices.data());
+    glBufferData(GL_ARRAY_BUFFER, quadVerticesSize, nullptr, GL_STATIC_DRAW);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, quadVerticesSize, quadVerticesPlusOne.data());
 
     GLint positionLocation = glGetAttribLocation(mProgram, "position");
     ASSERT_NE(-1, positionLocation);
