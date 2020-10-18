@@ -7,9 +7,11 @@
 #   Code generation for Metal backend's default shaders.
 #   NOTE: don't run this script directly. Run scripts/run_code_generation.py.
 
-import os
-import sys
 import json
+import os
+import subprocess
+import sys
+
 from datetime import datetime
 
 sys.path.append('../..')
@@ -51,6 +53,21 @@ def gen_shader_enums_code(angle_formats):
     return code
 
 
+def find_clang():
+    if os.name == 'nt':
+        binary = 'clang-cl.exe'
+    else:
+        binary = 'clang++'
+
+    clang = os.path.join('..', '..', '..', '..', '..', 'third_party', 'llvm-build',
+                         'Release+Asserts', 'bin', binary)
+
+    if not os.path.isfile(clang):
+        raise Exception('Cannot find clang')
+
+    return clang
+
+
 def main():
     angle_format_script_files = [
         '../../angle_format_map.json', '../../angle_format.py', '../../gen_angle_format_table.py'
@@ -89,25 +106,25 @@ def main():
         out_file.close()
 
     # -------- Combine and create shader source string -----------
-    # Generate a combination source
-    os.system('mkdir -p temp && rm -f temp/master_source.metal && touch temp/master_source.metal')
-    for src_file in src_files:
-        os.system('echo "#include \\"../{0}\\"" >> temp/master_source.metal'.format(src_file))
+    # Generate combined source
+    clang = find_clang()
 
-    # Use clang/gcc to preprocess the combination source. "@@" token is used to prevent clang from
+    # Use clang to preprocess the combination source. "@@" token is used to prevent clang from
     # expanding the preprocessor directive
-    if os.system('which gcc') == 0:
-        print('combining source files using gcc -E')
-        os.system('gcc -xc++ -E temp/master_source.metal > temp/master_source.metal.pp')
-    else:
-        print('combining source files using clang -E')
-        os.system('clang -xc++ -E temp/master_source.metal > temp/master_source.metal.pp')
+    temp_fname = 'temp_master_source.metal'
+    with open(temp_fname, 'wb') as temp_file:
+        for src_file in src_files:
+            temp_file.write('#include "%s"\n' % src_file)
+
+    args = [clang]
+    if not os.name == 'nt':
+        args += ['-xc++']
+    args += ['-E', temp_fname]
+
+    combined_source = subprocess.check_output(args)
 
     # Remove '@@' tokens
-    final_combined_src_string = ''
-    with open('temp/master_source.metal.pp', 'rt') as in_file:
-        final_combined_src_string = in_file.read().replace('@@', '')
-        in_file.close()
+    final_combined_src_string = combined_source.replace('@@', '')
 
     # Generate final file:
     with open('mtl_default_shaders_src_autogen.inc', 'wt') as out_file:
@@ -120,9 +137,7 @@ def main():
         out_file.write(')";\n')
         out_file.close()
 
-    # Clean up
-    os.system('rm -rf temp')
-
+    os.remove(temp_fname)
 
 
 if __name__ == '__main__':

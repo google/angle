@@ -11,14 +11,14 @@
 
 
 static char gDefaultMetallibSrc[] = R"(
-# 1 "temp/master_source.metal"
+# 1 "temp_master_source.metal"
 # 1 "<built-in>" 1
 # 1 "<built-in>" 3
-# 376 "<built-in>" 3
+# 392 "<built-in>" 3
 # 1 "<command line>" 1
 # 1 "<built-in>" 2
-# 1 "temp/master_source.metal" 2
-# 1 "temp/../blit.metal" 1
+# 1 "temp_master_source.metal" 2
+# 1 "./blit.metal" 1
 
 
 
@@ -26,15 +26,15 @@ static char gDefaultMetallibSrc[] = R"(
 
 
 
-# 1 "temp/../common.h" 1
-# 13 "temp/../common.h"
+# 1 "./common.h" 1
+# 13 "./common.h"
 # include <simd/simd.h>
 # include <metal_stdlib>
 
 
 
-# 1 "temp/../constants.h" 1
-# 11 "temp/../constants.h"
+# 1 "./constants.h" 1
+# 11 "./constants.h"
 namespace rx
 {
 namespace mtl_shader
@@ -55,7 +55,7 @@ enum
 
 }
 }
-# 18 "temp/../common.h" 2
+# 18 "./common.h" 2
 
 
 
@@ -89,7 +89,7 @@ struct MultipleColorOutputs
     vec<T, 4> color2 [[color(2), function_constant(kColorOutputAvailable2)]];
     vec<T, 4> color3 [[color(3), function_constant(kColorOutputAvailable3)]];
 };
-# 61 "temp/../common.h"
+# 61 "./common.h"
 template <typename T>
 static inline MultipleColorOutputs<T> toMultipleColorOutputs(vec<T, 4> color)
 {
@@ -292,7 +292,7 @@ static inline T floatToNormalized(float input)
 
 }
 }
-# 9 "temp/../blit.metal" 2
+# 9 "./blit.metal" 2
 
 using namespace rx::mtl_shader;
 
@@ -378,7 +378,7 @@ static inline vec<T, 4> blitSampleTexture3D(texture3d<T> srcTexture,
 
     return srcTexture.sample(textureSampler, float3(texCoords, zCoord), level(options.srcLevel));
 }
-# 112 "temp/../blit.metal"
+# 112 "./blit.metal"
 template <typename T>
 static inline vec<T, 4> blitReadTexture(BlitVSOut input [[stage_in]], texture2d<T> srcTexture2d [[texture(0), function_constant(kSourceTextureType2D)]], texture2d_array<T> srcTexture2dArray [[texture(0), function_constant(kSourceTextureType2DArray)]], texture2d_ms<T> srcTexture2dMS [[texture(0), function_constant(kSourceTextureType2DMS)]], texturecube<T> srcTextureCube [[texture(0), function_constant(kSourceTextureTypeCube)]], texture3d<T> srcTexture3d [[texture(0), function_constant(kSourceTextureType3D)]], sampler textureSampler [[sampler(0)]], constant BlitParams &options [[buffer(0)]])
 {
@@ -668,9 +668,9 @@ fragment FragmentDepthStencilOut blitDepthStencilFS(
     return re;
 }
 #endif
-# 2 "temp/master_source.metal" 2
-# 1 "temp/../clear.metal" 1
-# 10 "temp/../clear.metal"
+# 2 "temp_master_source.metal" 2
+# 1 "./clear.metal" 1
+# 10 "./clear.metal"
 using namespace rx::mtl_shader;
 
 struct ClearParams
@@ -699,8 +699,8 @@ fragment MultipleColorOutputs<uint> clearUIntFS(constant ClearParams &clearParam
 {
     return toMultipleColorOutputs(as_type<uint4>(clearParams.clearColor));
 }
-# 3 "temp/master_source.metal" 2
-# 1 "temp/../gen_indices.metal" 1
+# 3 "temp_master_source.metal" 2
+# 1 "./gen_indices.metal" 1
 
 
 
@@ -874,8 +874,8 @@ kernel void genTriFanIndicesFromElements(
     output[3 * idx + 1] = getIndexU32(options.srcOffset, elemIdx - 1, inputU8, inputU16, inputU32);
     output[3 * idx + 2] = getIndexU32(options.srcOffset, elemIdx, inputU8, inputU16, inputU32);
 }
-# 4 "temp/master_source.metal" 2
-# 1 "temp/../gen_mipmap.metal" 1
+# 4 "temp_master_source.metal" 2
+# 1 "./gen_mipmap.metal" 1
 
 
 
@@ -885,7 +885,7 @@ kernel void genTriFanIndicesFromElements(
 
 
 using namespace rx::mtl_shader;
-# 31 "temp/../gen_mipmap.metal"
+# 31 "./gen_mipmap.metal"
 struct GenMipParams
 {
     uint srcLevel;
@@ -1072,15 +1072,15 @@ kernel void generate3DMipmaps(uint lIndex [[thread_index_in_threadgroup]],
         dstMip4.write((options.sRGB ? sRGBtoLinear(texel1) : texel1), gIndices >> 3);
     }
 }
-# 5 "temp/master_source.metal" 2
-# 1 "temp/../copy_buffer.metal" 1
-# 12 "temp/../copy_buffer.metal"
+# 5 "temp_master_source.metal" 2
+# 1 "./copy_buffer.metal" 1
+# 12 "./copy_buffer.metal"
 #include <metal_pack>
 
 
 
-# 1 "temp/../format_autogen.h" 1
-# 11 "temp/../format_autogen.h"
+# 1 "./format_autogen.h" 1
+# 11 "./format_autogen.h"
 namespace rx
 {
 namespace mtl_shader
@@ -1320,7 +1320,7 @@ enum
 
 }
 }
-# 16 "temp/../copy_buffer.metal" 2
+# 16 "./copy_buffer.metal" 2
 
 using namespace rx::mtl_shader;
 
@@ -1360,7 +1360,7 @@ struct WritePixelParams
 
     bool reverseTextureRowOrder;
 };
-# 120 "temp/../copy_buffer.metal"
+# 120 "./copy_buffer.metal"
 template <typename T>
 static inline void textureWrite(ushort3 gIndices,
                                 constant CopyPixelParams &options,
@@ -1418,7 +1418,7 @@ static inline vec<T, 4> textureRead(ushort2 gIndices,
     }
     return color;
 }
-# 215 "temp/../copy_buffer.metal"
+# 215 "./copy_buffer.metal"
 static inline float4 readR5G6B5_UNORM(uint bufferOffset, constant uchar *buffer)
 {
     float4 color;
@@ -2473,7 +2473,7 @@ static inline void writeR32G32B32A32_UINT(ushort2 gIndices, constant WritePixelP
     intToBytes(color.b, bufferOffset + 8, buffer);
     intToBytes(color.a, bufferOffset + 12, buffer);
 }
-# 1292 "temp/../copy_buffer.metal"
+# 1292 "./copy_buffer.metal"
 static inline int4 readR8_SSCALED(uint bufferOffset, constant uchar *buffer) { return readR8_SINT(bufferOffset, buffer); } static inline uint4 readR8_USCALED(uint bufferOffset, constant uchar *buffer) { return readR8_UINT(bufferOffset, buffer); } static inline int4 readR8G8_SSCALED(uint bufferOffset, constant uchar *buffer) { return readR8G8_SINT(bufferOffset, buffer); } static inline uint4 readR8G8_USCALED(uint bufferOffset, constant uchar *buffer) { return readR8G8_UINT(bufferOffset, buffer); } static inline int4 readR8G8B8_SSCALED(uint bufferOffset, constant uchar *buffer) { return readR8G8B8_SINT(bufferOffset, buffer); } static inline uint4 readR8G8B8_USCALED(uint bufferOffset, constant uchar *buffer) { return readR8G8B8_UINT(bufferOffset, buffer); } static inline int4 readR8G8B8A8_SSCALED(uint bufferOffset, constant uchar *buffer) { return readR8G8B8A8_SINT(bufferOffset, buffer); } static inline uint4 readR8G8B8A8_USCALED(uint bufferOffset, constant uchar *buffer) { return readR8G8B8A8_UINT(bufferOffset, buffer); }
 static inline int4 readR16_SSCALED(uint bufferOffset, constant uchar *buffer) { return readR16_SINT(bufferOffset, buffer); } static inline uint4 readR16_USCALED(uint bufferOffset, constant uchar *buffer) { return readR16_UINT(bufferOffset, buffer); } static inline int4 readR16G16_SSCALED(uint bufferOffset, constant uchar *buffer) { return readR16G16_SINT(bufferOffset, buffer); } static inline uint4 readR16G16_USCALED(uint bufferOffset, constant uchar *buffer) { return readR16G16_UINT(bufferOffset, buffer); } static inline int4 readR16G16B16_SSCALED(uint bufferOffset, constant uchar *buffer) { return readR16G16B16_SINT(bufferOffset, buffer); } static inline uint4 readR16G16B16_USCALED(uint bufferOffset, constant uchar *buffer) { return readR16G16B16_UINT(bufferOffset, buffer); } static inline int4 readR16G16B16A16_SSCALED(uint bufferOffset, constant uchar *buffer) { return readR16G16B16A16_SINT(bufferOffset, buffer); } static inline uint4 readR16G16B16A16_USCALED(uint bufferOffset, constant uchar *buffer) { return readR16G16B16A16_UINT(bufferOffset, buffer); }
 static inline int4 readR32_SSCALED(uint bufferOffset, constant uchar *buffer) { return readR32_SINT(bufferOffset, buffer); } static inline uint4 readR32_USCALED(uint bufferOffset, constant uchar *buffer) { return readR32_UINT(bufferOffset, buffer); } static inline int4 readR32G32_SSCALED(uint bufferOffset, constant uchar *buffer) { return readR32G32_SINT(bufferOffset, buffer); } static inline uint4 readR32G32_USCALED(uint bufferOffset, constant uchar *buffer) { return readR32G32_UINT(bufferOffset, buffer); } static inline int4 readR32G32B32_SSCALED(uint bufferOffset, constant uchar *buffer) { return readR32G32B32_SINT(bufferOffset, buffer); } static inline uint4 readR32G32B32_USCALED(uint bufferOffset, constant uchar *buffer) { return readR32G32B32_UINT(bufferOffset, buffer); } static inline int4 readR32G32B32A32_SSCALED(uint bufferOffset, constant uchar *buffer) { return readR32G32B32A32_SINT(bufferOffset, buffer); } static inline uint4 readR32G32B32A32_USCALED(uint bufferOffset, constant uchar *buffer) { return readR32G32B32A32_UINT(bufferOffset, buffer); }
@@ -2484,7 +2484,7 @@ static inline int4 readR10G10B10A2_SSCALED(uint bufferOffset, constant uchar *bu
 kernel void readFromBufferToFloatTexture(ushort3 gIndices [[thread_position_in_grid]], constant CopyPixelParams &options[[buffer(0)]], constant uchar *buffer [[buffer(1)]], texture2d<float, access::write> dstTexture2d [[texture(0), function_constant(kCopyTextureType2D)]], texture2d_array<float, access::write> dstTexture2dArray [[texture(0), function_constant(kCopyTextureType2DArray)]], texture3d<float, access::write> dstTexture3d [[texture(0), function_constant(kCopyTextureType3D)]], texturecube<float, access::write> dstTextureCube [[texture(0), function_constant(kCopyTextureTypeCube)]])
 {
     if (gIndices.x >= options.copySize.x || gIndices.y >= options.copySize.y || gIndices.z >= options.copySize.z) { return; }
-# 1336 "temp/../copy_buffer.metal"
+# 1336 "./copy_buffer.metal"
     uint bufferOffset = options.bufferStartOffset + (gIndices.z * options.bufferDepthPitch + gIndices.y * options.bufferRowPitch + gIndices.x * options.pixelSize);
 
     switch (kCopyFormatType)
@@ -2498,7 +2498,7 @@ kernel void readFromBufferToFloatTexture(ushort3 gIndices [[thread_position_in_g
 kernel void readFromBufferToIntTexture(ushort3 gIndices [[thread_position_in_grid]], constant CopyPixelParams &options[[buffer(0)]], constant uchar *buffer [[buffer(1)]], texture2d<int, access::write> dstTexture2d [[texture(0), function_constant(kCopyTextureType2D)]], texture2d_array<int, access::write> dstTexture2dArray [[texture(0), function_constant(kCopyTextureType2DArray)]], texture3d<int, access::write> dstTexture3d [[texture(0), function_constant(kCopyTextureType3D)]], texturecube<int, access::write> dstTextureCube [[texture(0), function_constant(kCopyTextureTypeCube)]])
 {
     if (gIndices.x >= options.copySize.x || gIndices.y >= options.copySize.y || gIndices.z >= options.copySize.z) { return; }
-# 1364 "temp/../copy_buffer.metal"
+# 1364 "./copy_buffer.metal"
     uint bufferOffset = options.bufferStartOffset + (gIndices.z * options.bufferDepthPitch + gIndices.y * options.bufferRowPitch + gIndices.x * options.pixelSize);
 
     switch (kCopyFormatType)
@@ -2512,7 +2512,7 @@ kernel void readFromBufferToIntTexture(ushort3 gIndices [[thread_position_in_gri
 kernel void readFromBufferToUIntTexture(ushort3 gIndices [[thread_position_in_grid]], constant CopyPixelParams &options[[buffer(0)]], constant uchar *buffer [[buffer(1)]], texture2d<uint, access::write> dstTexture2d [[texture(0), function_constant(kCopyTextureType2D)]], texture2d_array<uint, access::write> dstTexture2dArray [[texture(0), function_constant(kCopyTextureType2DArray)]], texture3d<uint, access::write> dstTexture3d [[texture(0), function_constant(kCopyTextureType3D)]], texturecube<uint, access::write> dstTextureCube [[texture(0), function_constant(kCopyTextureTypeCube)]])
 {
     if (gIndices.x >= options.copySize.x || gIndices.y >= options.copySize.y || gIndices.z >= options.copySize.z) { return; }
-# 1392 "temp/../copy_buffer.metal"
+# 1392 "./copy_buffer.metal"
     uint bufferOffset = options.bufferStartOffset + (gIndices.z * options.bufferDepthPitch + gIndices.y * options.bufferRowPitch + gIndices.x * options.pixelSize);
 
     switch (kCopyFormatType)
@@ -2527,7 +2527,7 @@ kernel void readFromBufferToUIntTexture(ushort3 gIndices [[thread_position_in_gr
 kernel void writeFromFloatTextureToBuffer(ushort2 gIndices [[thread_position_in_grid]], constant WritePixelParams &options[[buffer(0)]], texture2d<float, access::read> srcTexture2d [[texture(0), function_constant(kCopyTextureType2D)]], texture2d_array<float, access::read> srcTexture2dArray [[texture(0), function_constant(kCopyTextureType2DArray)]], texture3d<float, access::read> srcTexture3d [[texture(0), function_constant(kCopyTextureType3D)]], texturecube<float, access::read> srcTextureCube [[texture(0), function_constant(kCopyTextureTypeCube)]], texture2d_ms<float, access::read> srcTexture2dMS [[texture(0), function_constant(kCopyTextureType2DMS)]], device uchar *buffer [[buffer(1)]])
 {
     if (gIndices.x >= options.copySize.x || gIndices.y >= options.copySize.y) { return; }
-# 1439 "temp/../copy_buffer.metal"
+# 1439 "./copy_buffer.metal"
     uint bufferOffset = options.bufferStartOffset + (gIndices.y * options.bufferRowPitch + gIndices.x * options.pixelSize);
 
     switch (kCopyFormatType)
@@ -2541,7 +2541,7 @@ kernel void writeFromFloatTextureToBuffer(ushort2 gIndices [[thread_position_in_
 kernel void writeFromIntTextureToBuffer(ushort2 gIndices [[thread_position_in_grid]], constant WritePixelParams &options[[buffer(0)]], texture2d<int, access::read> srcTexture2d [[texture(0), function_constant(kCopyTextureType2D)]], texture2d_array<int, access::read> srcTexture2dArray [[texture(0), function_constant(kCopyTextureType2DArray)]], texture3d<int, access::read> srcTexture3d [[texture(0), function_constant(kCopyTextureType3D)]], texturecube<int, access::read> srcTextureCube [[texture(0), function_constant(kCopyTextureTypeCube)]], texture2d_ms<int, access::read> srcTexture2dMS [[texture(0), function_constant(kCopyTextureType2DMS)]], device uchar *buffer [[buffer(1)]])
 {
     if (gIndices.x >= options.copySize.x || gIndices.y >= options.copySize.y) { return; }
-# 1464 "temp/../copy_buffer.metal"
+# 1464 "./copy_buffer.metal"
     uint bufferOffset = options.bufferStartOffset + (gIndices.y * options.bufferRowPitch + gIndices.x * options.pixelSize);
 
     switch (kCopyFormatType)
@@ -2555,7 +2555,7 @@ kernel void writeFromIntTextureToBuffer(ushort2 gIndices [[thread_position_in_gr
 kernel void writeFromUIntTextureToBuffer(ushort2 gIndices [[thread_position_in_grid]], constant WritePixelParams &options[[buffer(0)]], texture2d<uint, access::read> srcTexture2d [[texture(0), function_constant(kCopyTextureType2D)]], texture2d_array<uint, access::read> srcTexture2dArray [[texture(0), function_constant(kCopyTextureType2DArray)]], texture3d<uint, access::read> srcTexture3d [[texture(0), function_constant(kCopyTextureType3D)]], texturecube<uint, access::read> srcTextureCube [[texture(0), function_constant(kCopyTextureTypeCube)]], texture2d_ms<uint, access::read> srcTexture2dMS [[texture(0), function_constant(kCopyTextureType2DMS)]], device uchar *buffer [[buffer(1)]])
 {
     if (gIndices.x >= options.copySize.x || gIndices.y >= options.copySize.y) { return; }
-# 1489 "temp/../copy_buffer.metal"
+# 1489 "./copy_buffer.metal"
     uint bufferOffset = options.bufferStartOffset + (gIndices.y * options.bufferRowPitch + gIndices.x * options.pixelSize);
 
     switch (kCopyFormatType)
@@ -2565,8 +2565,8 @@ kernel void writeFromUIntTextureToBuffer(ushort2 gIndices [[thread_position_in_g
 
 
 }
-# 6 "temp/master_source.metal" 2
-# 1 "temp/../visibility.metal" 1
+# 6 "temp_master_source.metal" 2
+# 1 "./visibility.metal" 1
 
 
 
@@ -2620,7 +2620,7 @@ kernel void combineVisibilityResult(uint idx [[thread_position_in_grid]],
     }
     finalResults[0] = finalResult16x4;
 }
-# 7 "temp/master_source.metal" 2
+# 7 "temp_master_source.metal" 2
 
 
 )";
