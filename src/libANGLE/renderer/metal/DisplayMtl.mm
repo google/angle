@@ -17,7 +17,7 @@
 #include "libANGLE/renderer/metal/SurfaceMtl.h"
 #include "libANGLE/renderer/metal/SyncMtl.h"
 #include "libANGLE/renderer/metal/mtl_common.h"
-#include "libANGLE/renderer/metal/shaders/compiled/mtl_default_shaders_autogen.inc"
+#include "libANGLE/renderer/metal/shaders/mtl_default_shaders_src_autogen.inc"
 #include "platform/Platform.h"
 
 #include "EGL/eglext.h"
@@ -43,6 +43,18 @@ DisplayImpl *CreateMetalDisplay(const egl::DisplayState &state)
 {
     return new DisplayMtl(state);
 }
+
+struct DefaultShaderAsyncInfoMtl
+{
+    mtl::AutoObjCPtr<id<MTLLibrary>> defaultShaders;
+    mtl::AutoObjCPtr<NSError *> defaultShadersCompileError;
+
+    // Synchronization primitives for compiling default shaders in back-ground
+    std::condition_variable cv;
+    std::mutex lock;
+
+    bool compiled = false;
+};
 
 DisplayMtl::DisplayMtl(const egl::DisplayState &state)
     : DisplayImpl(state), mUtils(this), mGlslangInitialized(false)
@@ -100,8 +112,8 @@ void DisplayMtl::terminate()
 {
     mUtils.onDestroy();
     mCmdQueue.reset();
-    mDefaultShaders = nil;
-    mMetalDevice    = nil;
+    mDefaultShadersAsyncInfo = nullptr;
+    mMetalDevice             = nil;
 #if ANGLE_MTL_EVENT_AVAILABLE
     mSharedEventListener = nil;
 #endif
@@ -751,48 +763,62 @@ void DisplayMtl::initializeFeatures()
 
 angle::Result DisplayMtl::initializeShaderLibrary()
 {
-    mtl::AutoObjCObj<NSError> err = nil;
+    mDefaultShadersAsyncInfo.reset(new DefaultShaderAsyncInfoMtl);
 
-    const uint8_t *compiled_shader_binary;
-    size_t compiled_shader_binary_len;
+    // Create references to async info struct since it might be released in terminate(), but the
+    // callback might still not be fired yet.
+    std::shared_ptr<DefaultShaderAsyncInfoMtl> asyncRef = mDefaultShadersAsyncInfo;
 
-#if !defined(NDEBUG)
-    if (getFeatures().hasStencilOutput.enabled)
+    // Compile the default shaders asynchronously
+    ANGLE_MTL_OBJC_SCOPE
     {
-        compiled_shader_binary     = compiled_default_metallib_2_1_debug;
-        compiled_shader_binary_len = compiled_default_metallib_2_1_debug_len;
-    }
-    else
-    {
-        compiled_shader_binary     = compiled_default_metallib_debug;
-        compiled_shader_binary_len = compiled_default_metallib_debug_len;
-    }
-#else
-    if (getFeatures().hasStencilOutput.enabled)
-    {
-        compiled_shader_binary     = compiled_default_metallib_2_1;
-        compiled_shader_binary_len = compiled_default_metallib_2_1_len;
-    }
-    else
-    {
-        compiled_shader_binary     = compiled_default_metallib;
-        compiled_shader_binary_len = compiled_default_metallib_len;
-    }
-#endif
+        auto nsSource = [[NSString alloc] initWithBytesNoCopy:gDefaultMetallibSrc
+                                                       length:sizeof(gDefaultMetallibSrc)
+                                                     encoding:NSUTF8StringEncoding
+                                                 freeWhenDone:NO];
+        auto options  = [[[MTLCompileOptions alloc] init] ANGLE_MTL_AUTORELEASE];
+        [getMetalDevice() newLibraryWithSource:nsSource
+                                       options:options
+                             completionHandler:^(id<MTLLibrary> library, NSError *error) {
+                               std::unique_lock<std::mutex> lg(asyncRef->lock);
 
-    mDefaultShaders = CreateShaderLibraryFromBinary(getMetalDevice(), compiled_shader_binary,
-                                                    compiled_shader_binary_len, &err);
+                               asyncRef->defaultShaders             = std::move(library);
+                               asyncRef->defaultShadersCompileError = std::move(error);
 
-    if (err && !mDefaultShaders)
-    {
-        ANGLE_MTL_OBJC_SCOPE
-        {
-            ERR() << "Internal error: " << err.get().localizedDescription.UTF8String;
-        }
-        return angle::Result::Stop;
+                               asyncRef->compiled = true;
+                               asyncRef->cv.notify_one();
+                             }];
+
+        [nsSource ANGLE_MTL_AUTORELEASE];
     }
 
     return angle::Result::Continue;
+}
+
+id<MTLLibrary> DisplayMtl::getDefaultShadersLib()
+{
+    std::unique_lock<std::mutex> lg(mDefaultShadersAsyncInfo->lock);
+    if (!mDefaultShadersAsyncInfo->compiled)
+    {
+        // Wait for async compilation
+        mDefaultShadersAsyncInfo->cv.wait(lg,
+                                          [this] { return mDefaultShadersAsyncInfo->compiled; });
+    }
+
+    if (mDefaultShadersAsyncInfo->defaultShadersCompileError &&
+        !mDefaultShadersAsyncInfo->defaultShaders)
+    {
+        ANGLE_MTL_OBJC_SCOPE
+        {
+            ERR() << "Internal error: "
+                  << mDefaultShadersAsyncInfo->defaultShadersCompileError.get()
+                         .localizedDescription.UTF8String;
+        }
+        // This is not supposed to happen
+        UNREACHABLE();
+    }
+
+    return mDefaultShadersAsyncInfo->defaultShaders;
 }
 
 bool DisplayMtl::supportsIOSGPUFamily(uint8_t iOSFamily) const

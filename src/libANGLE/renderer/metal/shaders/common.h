@@ -8,9 +8,10 @@
 #ifndef LIBANGLE_RENDERER_METAL_SHADERS_COMMON_H_
 #define LIBANGLE_RENDERER_METAL_SHADERS_COMMON_H_
 
+// clang-format off
 #ifndef SKIP_STD_HEADERS
-#    include <simd/simd.h>
-#    include <metal_stdlib>
+@@#    include <simd/simd.h>
+@@#    include <metal_stdlib>
 #endif
 
 #include "constants.h"
@@ -22,6 +23,7 @@
     }
 
 using namespace metal;
+// clang-format on
 
 // Common constant defined number of color outputs
 constant uint32_t kNumColorOutputs [[function_constant(0)]];

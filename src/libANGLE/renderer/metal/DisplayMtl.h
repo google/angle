@@ -32,6 +32,8 @@ class ShareGroupMtl : public ShareGroupImpl
 
 class ContextMtl;
 
+struct DefaultShaderAsyncInfoMtl;
+
 class DisplayMtl : public DisplayImpl
 {
   public:
@@ -123,7 +125,7 @@ class DisplayMtl : public DisplayImpl
     mtl::RenderUtils &getUtils() { return mUtils; }
     mtl::StateCache &getStateCache() { return mStateCache; }
 
-    id<MTLLibrary> getDefaultShadersLib() const { return mDefaultShaders; }
+    id<MTLLibrary> getDefaultShadersLib();
 
     id<MTLDepthStencilState> getDepthStencilState(const mtl::DepthStencilDesc &desc)
     {
@@ -175,7 +177,7 @@ class DisplayMtl : public DisplayImpl
     mtl::RenderUtils mUtils;
 
     // Built-in Shaders
-    mtl::AutoObjCPtr<id<MTLLibrary>> mDefaultShaders = nil;
+    std::shared_ptr<DefaultShaderAsyncInfoMtl> mDefaultShadersAsyncInfo;
 #if ANGLE_MTL_EVENT_AVAILABLE
     mtl::AutoObjCObj<MTLSharedEventListener> mSharedEventListener;
 #endif
