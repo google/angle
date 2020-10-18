@@ -235,7 +235,7 @@ enum class SrgbOverride
 {
     Default = 0,
     Linear,
-    NonLinear
+    SRGB
 };
 
 }  // namespace gl

@@ -5816,11 +5816,11 @@ ImageViewHelper::ImageViewHelper(ImageViewHelper &&other)
 {
     std::swap(mCurrentMaxLevel, other.mCurrentMaxLevel);
     std::swap(mPerLevelLinearReadImageViews, other.mPerLevelLinearReadImageViews);
-    std::swap(mPerLevelNonLinearReadImageViews, other.mPerLevelNonLinearReadImageViews);
+    std::swap(mPerLevelSRGBReadImageViews, other.mPerLevelSRGBReadImageViews);
     std::swap(mPerLevelLinearFetchImageViews, other.mPerLevelLinearFetchImageViews);
-    std::swap(mPerLevelNonLinearFetchImageViews, other.mPerLevelNonLinearFetchImageViews);
+    std::swap(mPerLevelSRGBFetchImageViews, other.mPerLevelSRGBFetchImageViews);
     std::swap(mPerLevelLinearCopyImageViews, other.mPerLevelLinearCopyImageViews);
-    std::swap(mPerLevelNonLinearCopyImageViews, other.mPerLevelNonLinearCopyImageViews);
+    std::swap(mPerLevelSRGBCopyImageViews, other.mPerLevelSRGBCopyImageViews);
     std::swap(mLinearColorspace, other.mLinearColorspace);
 
     std::swap(mPerLevelStencilReadImageViews, other.mPerLevelStencilReadImageViews);
@@ -5850,11 +5850,11 @@ void ImageViewHelper::release(RendererVk *renderer)
 
     // Release the read views
     ReleaseImageViews(&mPerLevelLinearReadImageViews, &garbage);
-    ReleaseImageViews(&mPerLevelNonLinearReadImageViews, &garbage);
+    ReleaseImageViews(&mPerLevelSRGBReadImageViews, &garbage);
     ReleaseImageViews(&mPerLevelLinearFetchImageViews, &garbage);
-    ReleaseImageViews(&mPerLevelNonLinearFetchImageViews, &garbage);
+    ReleaseImageViews(&mPerLevelSRGBFetchImageViews, &garbage);
     ReleaseImageViews(&mPerLevelLinearCopyImageViews, &garbage);
-    ReleaseImageViews(&mPerLevelNonLinearCopyImageViews, &garbage);
+    ReleaseImageViews(&mPerLevelSRGBCopyImageViews, &garbage);
     ReleaseImageViews(&mPerLevelStencilReadImageViews, &garbage);
 
     // Release the draw views
@@ -5889,11 +5889,11 @@ void ImageViewHelper::destroy(VkDevice device)
 
     // Release the read views
     DestroyImageViews(&mPerLevelLinearReadImageViews, device);
-    DestroyImageViews(&mPerLevelNonLinearReadImageViews, device);
+    DestroyImageViews(&mPerLevelSRGBReadImageViews, device);
     DestroyImageViews(&mPerLevelLinearFetchImageViews, device);
-    DestroyImageViews(&mPerLevelNonLinearFetchImageViews, device);
+    DestroyImageViews(&mPerLevelSRGBFetchImageViews, device);
     DestroyImageViews(&mPerLevelLinearCopyImageViews, device);
-    DestroyImageViews(&mPerLevelNonLinearCopyImageViews, device);
+    DestroyImageViews(&mPerLevelSRGBCopyImageViews, device);
     DestroyImageViews(&mPerLevelStencilReadImageViews, device);
 
     // Release the draw views
@@ -5927,11 +5927,11 @@ angle::Result ImageViewHelper::initReadViews(ContextVk *contextVk,
     if (levelCount > mPerLevelLinearReadImageViews.size())
     {
         mPerLevelLinearReadImageViews.resize(levelCount);
-        mPerLevelNonLinearReadImageViews.resize(levelCount);
+        mPerLevelSRGBReadImageViews.resize(levelCount);
         mPerLevelLinearFetchImageViews.resize(levelCount);
-        mPerLevelNonLinearFetchImageViews.resize(levelCount);
+        mPerLevelSRGBFetchImageViews.resize(levelCount);
         mPerLevelLinearCopyImageViews.resize(levelCount);
-        mPerLevelNonLinearCopyImageViews.resize(levelCount);
+        mPerLevelSRGBCopyImageViews.resize(levelCount);
         mPerLevelStencilReadImageViews.resize(levelCount);
     }
     mCurrentMaxLevel = LevelIndex(levelCount - 1);
@@ -6020,13 +6020,12 @@ angle::Result ImageViewHelper::initSRGBReadViewsImpl(ContextVk *contextVk,
                                                      uint32_t layerCount,
                                                      VkImageUsageFlags imageUsageFlags)
 {
-    // When we select the linear/nonlinear counterpart formats, we must first make sure they're
+    // When we select the linear/srgb counterpart formats, we must first make sure they're
     // actually supported by the ICD. If they are not supported by the ICD, then we treat that as if
     // there is no counterpart format. (In this case, the relevant extension should not be exposed)
-    VkFormat nonLinearOverrideFormat = ConvertToNonLinear(image.getFormat().vkImageFormat);
-    ASSERT(
-        (nonLinearOverrideFormat == VK_FORMAT_UNDEFINED) ||
-        (HasNonRenderableTextureFormatSupport(contextVk->getRenderer(), nonLinearOverrideFormat)));
+    VkFormat srgbOverrideFormat = ConvertToSRGB(image.getFormat().vkImageFormat);
+    ASSERT((srgbOverrideFormat == VK_FORMAT_UNDEFINED) ||
+           (HasNonRenderableTextureFormatSupport(contextVk->getRenderer(), srgbOverrideFormat)));
 
     VkFormat linearOverrideFormat = ConvertToLinear(image.getFormat().vkImageFormat);
     ASSERT((linearOverrideFormat == VK_FORMAT_UNDEFINED) ||
@@ -6045,13 +6044,13 @@ angle::Result ImageViewHelper::initSRGBReadViewsImpl(ContextVk *contextVk,
             &mPerLevelLinearReadImageViews[mCurrentMaxLevel.get()], baseLevel, levelCount,
             baseLayer, layerCount, imageUsageFlags, linearFormat));
     }
-    if (nonLinearOverrideFormat != VK_FORMAT_UNDEFINED &&
-        !mPerLevelNonLinearReadImageViews[mCurrentMaxLevel.get()].valid())
+    if (srgbOverrideFormat != VK_FORMAT_UNDEFINED &&
+        !mPerLevelSRGBReadImageViews[mCurrentMaxLevel.get()].valid())
     {
         ANGLE_TRY(image.initAliasedLayerImageView(
             contextVk, viewType, aspectFlags, readSwizzle,
-            &mPerLevelNonLinearReadImageViews[mCurrentMaxLevel.get()], baseLevel, levelCount,
-            baseLayer, layerCount, imageUsageFlags, nonLinearOverrideFormat));
+            &mPerLevelSRGBReadImageViews[mCurrentMaxLevel.get()], baseLevel, levelCount, baseLayer,
+            layerCount, imageUsageFlags, srgbOverrideFormat));
     }
 
     gl::TextureType fetchType = viewType;
@@ -6069,13 +6068,13 @@ angle::Result ImageViewHelper::initSRGBReadViewsImpl(ContextVk *contextVk,
                 &mPerLevelLinearFetchImageViews[mCurrentMaxLevel.get()], baseLevel, levelCount,
                 baseLayer, layerCount, imageUsageFlags, linearFormat));
         }
-        if (nonLinearOverrideFormat != VK_FORMAT_UNDEFINED &&
-            !mPerLevelNonLinearFetchImageViews[mCurrentMaxLevel.get()].valid())
+        if (srgbOverrideFormat != VK_FORMAT_UNDEFINED &&
+            !mPerLevelSRGBFetchImageViews[mCurrentMaxLevel.get()].valid())
         {
             ANGLE_TRY(image.initAliasedLayerImageView(
                 contextVk, fetchType, aspectFlags, readSwizzle,
-                &mPerLevelNonLinearFetchImageViews[mCurrentMaxLevel.get()], baseLevel, levelCount,
-                baseLayer, layerCount, imageUsageFlags, nonLinearOverrideFormat));
+                &mPerLevelSRGBFetchImageViews[mCurrentMaxLevel.get()], baseLevel, levelCount,
+                baseLayer, layerCount, imageUsageFlags, srgbOverrideFormat));
         }
     }
 
@@ -6086,13 +6085,13 @@ angle::Result ImageViewHelper::initSRGBReadViewsImpl(ContextVk *contextVk,
             &mPerLevelLinearCopyImageViews[mCurrentMaxLevel.get()], baseLevel, levelCount,
             baseLayer, layerCount, imageUsageFlags, linearFormat));
     }
-    if (nonLinearOverrideFormat != VK_FORMAT_UNDEFINED &&
-        !mPerLevelNonLinearCopyImageViews[mCurrentMaxLevel.get()].valid())
+    if (srgbOverrideFormat != VK_FORMAT_UNDEFINED &&
+        !mPerLevelSRGBCopyImageViews[mCurrentMaxLevel.get()].valid())
     {
         ANGLE_TRY(image.initAliasedLayerImageView(
             contextVk, fetchType, aspectFlags, formatSwizzle,
-            &mPerLevelNonLinearCopyImageViews[mCurrentMaxLevel.get()], baseLevel, levelCount,
-            baseLayer, layerCount, imageUsageFlags, nonLinearOverrideFormat));
+            &mPerLevelSRGBCopyImageViews[mCurrentMaxLevel.get()], baseLevel, levelCount, baseLayer,
+            layerCount, imageUsageFlags, srgbOverrideFormat));
     }
 
     return angle::Result::Continue;

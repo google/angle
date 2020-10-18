@@ -2255,14 +2255,13 @@ bool TextureVk::shouldUseLinearColorspaceWithSampler(const SamplerVk *samplerVk)
         (mState.getSamplerState().getSRGBDecode() == GL_SKIP_DECODE_EXT);
 
     // True if GL_TEXTURE_FORMAT_SRGB_OVERRIDE_EXT == GL_SRGB in the texture state
-    bool textureSRGBOverriddenToNonLinear =
-        (mState.getSRGBOverride() == gl::SrgbOverride::NonLinear);
+    bool textureSRGBOverriddenToSRGB = (mState.getSRGBOverride() == gl::SrgbOverride::SRGB);
 
     gl::SrgbOverride samplerDecodeOverride = gl::SrgbOverride::Default;
     if (samplerVk != nullptr)
     {
         samplerDecodeOverride = (samplerVk->skipSamplerSRGBDecode() ? gl::SrgbOverride::Linear
-                                                                    : gl::SrgbOverride::NonLinear);
+                                                                    : gl::SrgbOverride::SRGB);
     }
 
     switch (samplerDecodeOverride)
@@ -2271,11 +2270,11 @@ bool TextureVk::shouldUseLinearColorspaceWithSampler(const SamplerVk *samplerVk)
             // If the sampler state skips decoding, we must choose the linear imageview,
             // regardless of the texture state. This takes precedence over sRGB_override
             return true;
-        case gl::SrgbOverride::NonLinear:
+        case gl::SrgbOverride::SRGB:
             // If the sampler state does not skip decoding, we should choose the imageview
-            // required by sRGB_override- we should not force a linear format to use a nonlinear
+            // required by sRGB_override- we should not force a linear format to use a SRGB
             // imageview if sRGB_override has not forced that
-            if (textureSRGBOverriddenToNonLinear)
+            if (textureSRGBOverriddenToSRGB)
             {
                 return false;
             }
@@ -2292,7 +2291,7 @@ bool TextureVk::shouldUseLinearColorspaceWithSampler(const SamplerVk *samplerVk)
             {
                 return true;
             }
-            else if (textureSRGBOverriddenToNonLinear)
+            else if (textureSRGBOverriddenToSRGB)
             {
                 return false;
             }
@@ -2313,8 +2312,7 @@ bool TextureVk::shouldUseLinearColorspaceWithTexelFetch(bool colorspaceWithSampl
     ASSERT(mImage->valid());
 
     // True if GL_TEXTURE_FORMAT_SRGB_OVERRIDE_EXT == GL_SRGB in the texture state
-    bool textureSRGBOverriddenToNonLinear =
-        (mState.getSRGBOverride() == gl::SrgbOverride::NonLinear);
+    bool textureSRGBOverriddenToSRGB = (mState.getSRGBOverride() == gl::SrgbOverride::SRGB);
 
     // Enable sRGB decoding regardless of skipSamplerSRGBDecode, due to an edge
     // case in the EXT_texture_sRGB_decode spec:
@@ -2330,7 +2328,7 @@ bool TextureVk::shouldUseLinearColorspaceWithTexelFetch(bool colorspaceWithSampl
     {
         // This imageview is used with a texelFetch invocation, so we must ignore all sRGB_decode
         // state. sRGB_override state should still be considered.
-        if (textureSRGBOverriddenToNonLinear)
+        if (textureSRGBOverriddenToSRGB)
         {
             return false;
         }
@@ -2367,8 +2365,8 @@ const vk::ImageView &TextureVk::getReadImageViewAndRecordUse(ContextVk *contextV
     }
     else
     {
-        ASSERT(imageViews.getNonLinearReadImageView().valid());
-        return imageViews.getNonLinearReadImageView();
+        ASSERT(imageViews.getSRGBReadImageView().valid());
+        return imageViews.getSRGBReadImageView();
     }
 }
 
@@ -2390,8 +2388,8 @@ const vk::ImageView &TextureVk::getFetchImageViewAndRecordUse(ContextVk *context
     }
     else
     {
-        return (imageViews.hasFetchImageView() ? imageViews.getNonLinearFetchImageView()
-                                               : imageViews.getNonLinearReadImageView());
+        return (imageViews.hasFetchImageView() ? imageViews.getSRGBFetchImageView()
+                                               : imageViews.getSRGBReadImageView());
     }
 }
 
@@ -2410,7 +2408,7 @@ const vk::ImageView &TextureVk::getCopyImageViewAndRecordUse(ContextVk *contextV
     }
     else
     {
-        return imageViews.getNonLinearCopyImageView();
+        return imageViews.getSRGBCopyImageView();
     }
 }
 

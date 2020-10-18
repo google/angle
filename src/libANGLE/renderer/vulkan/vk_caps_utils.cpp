@@ -44,7 +44,7 @@ bool FormatReinterpretationSupported(const std::vector<GLenum> &optionalSizedFor
 
             VkFormat reinterpretedFormat = checkLinearColorspace
                                                ? vk::ConvertToLinear(vkFormat.vkImageFormat)
-                                               : vk::ConvertToNonLinear(vkFormat.vkImageFormat);
+                                               : vk::ConvertToSRGB(vkFormat.vkImageFormat);
             ASSERT(reinterpretedFormat != VK_FORMAT_UNDEFINED);
 
             constexpr uint32_t kBitsSampleFilter =
@@ -67,7 +67,7 @@ bool GetTextureSRGBDecodeSupport(const RendererVk *rendererVk)
     // GL_SRGB and GL_SRGB_ALPHA unsized formats are also required by the spec, but the only valid
     // type for them is GL_UNSIGNED_BYTE, so they are fully included in the sized formats listed
     // here
-    std::vector<GLenum> optionalSizedNonLinearFormats = {
+    std::vector<GLenum> optionalSizedSRGBFormats = {
         GL_SRGB8,
         GL_SRGB8_ALPHA8_EXT,
         GL_COMPRESSED_SRGB_S3TC_DXT1_EXT,
@@ -76,8 +76,7 @@ bool GetTextureSRGBDecodeSupport(const RendererVk *rendererVk)
         GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT,
     };
 
-    if (!FormatReinterpretationSupported(optionalSizedNonLinearFormats, rendererVk,
-                                         kLinearColorspace))
+    if (!FormatReinterpretationSupported(optionalSizedSRGBFormats, rendererVk, kLinearColorspace))
     {
         return false;
     }

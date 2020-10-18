@@ -195,7 +195,7 @@ gl::SwizzleState ApplySwizzle(const gl::SwizzleState &formatSwizzle,
 namespace vk
 {
 
-ANGLE_INLINE VkFormat ConvertToNonLinear(VkFormat format)
+ANGLE_INLINE VkFormat ConvertToSRGB(VkFormat format)
 {
     switch (format)
     {
@@ -325,17 +325,17 @@ ANGLE_INLINE VkFormat ConvertToLinear(VkFormat format)
     }
 }
 
-ANGLE_INLINE bool IsNonLinearFormat(VkFormat format)
+ANGLE_INLINE bool IsSRGBFormat(VkFormat format)
 {
     return ConvertToLinear(format) != VK_FORMAT_UNDEFINED;
 }
 ANGLE_INLINE bool IsOverridableLinearFormat(VkFormat format)
 {
-    return ConvertToNonLinear(format) != VK_FORMAT_UNDEFINED;
+    return ConvertToSRGB(format) != VK_FORMAT_UNDEFINED;
 }
 ANGLE_INLINE bool IsLinearFormat(VkFormat format)
 {
-    return !IsNonLinearFormat(format);
+    return !IsSRGBFormat(format);
 }
 
 }  // namespace vk
