@@ -213,7 +213,7 @@ void ANGLEPerfTest::run()
 
     for (uint32_t trial = 0; trial < numTrials; ++trial)
     {
-        doRunLoop(kMaximumRunTimeSeconds, mStepsToRun);
+        doRunLoop(kMaximumRunTimeSeconds, mStepsToRun, RunLoopPolicy::RunContinuously);
         printResults();
         if (gVerboseLogging)
         {
@@ -258,7 +258,7 @@ void ANGLEPerfTest::setStepsPerRunLoopStep(int stepsPerRunLoop)
     mStepsPerRunLoopStep = stepsPerRunLoop;
 }
 
-void ANGLEPerfTest::doRunLoop(double maxRunTime, int maxStepsToRun)
+void ANGLEPerfTest::doRunLoop(double maxRunTime, int maxStepsToRun, RunLoopPolicy runPolicy)
 {
     mNumStepsPerformed = 0;
     mRunning           = true;
@@ -269,6 +269,12 @@ void ANGLEPerfTest::doRunLoop(double maxRunTime, int maxStepsToRun)
     while (mRunning)
     {
         step();
+
+        if (runPolicy == RunLoopPolicy::FinishEveryStep)
+        {
+            glFinish();
+        }
+
         if (mRunning)
         {
             mNumStepsPerformed += mStepsPerRunLoopStep;
@@ -359,7 +365,7 @@ double ANGLEPerfTest::normalizedTime(size_t value) const
 
 void ANGLEPerfTest::calibrateStepsToRun()
 {
-    doRunLoop(gTestTimeSeconds, std::numeric_limits<int>::max());
+    doRunLoop(gTestTimeSeconds, std::numeric_limits<int>::max(), RunLoopPolicy::FinishEveryStep);
 
     double elapsedTime = mTimer.getElapsedTime();
 
@@ -633,7 +639,8 @@ void ANGLERenderTest::SetUp()
 
     for (int loopIndex = 0; loopIndex < gWarmupLoops; ++loopIndex)
     {
-        doRunLoop(gTestTimeSeconds, std::numeric_limits<int>::max());
+        doRunLoop(gTestTimeSeconds, std::numeric_limits<int>::max(),
+                  RunLoopPolicy::FinishEveryStep);
         if (gVerboseLogging)
         {
             printf("Warm-up loop took %.2lf seconds.\n", mTimer.getElapsedTime());

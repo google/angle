@@ -73,6 +73,12 @@ class ANGLEPerfTest : public testing::Test, angle::NonCopyable
     virtual void flush() {}
 
   protected:
+    enum class RunLoopPolicy
+    {
+        FinishEveryStep,
+        RunContinuously,
+    };
+
     void run();
     void SetUp() override;
     void TearDown() override;
@@ -87,7 +93,7 @@ class ANGLEPerfTest : public testing::Test, angle::NonCopyable
 
     // Defaults to one step per run loop. Can be changed in any test.
     void setStepsPerRunLoopStep(int stepsPerRunLoop);
-    void doRunLoop(double maxRunTime, int maxStepsToRun);
+    void doRunLoop(double maxRunTime, int maxStepsToRun, RunLoopPolicy runPolicy);
 
     // Overriden in trace perf tests.
     virtual void saveScreenshot(const std::string &screenshotName) {}
