@@ -1267,7 +1267,11 @@ int TestSuite::run()
     // Run tests serially.
     if (!mBotMode)
     {
-        startWatchdog();
+        if (!angle::IsDebuggerAttached())
+        {
+            startWatchdog();
+        }
+
         int retVal = RUN_ALL_TESTS();
 
         {
@@ -1275,7 +1279,10 @@ int TestSuite::run()
             mTestResults.allDone = true;
         }
 
-        mWatchdogThread.join();
+        if (mWatchdogThread.joinable())
+        {
+            mWatchdogThread.join();
+        }
         return retVal;
     }
 
