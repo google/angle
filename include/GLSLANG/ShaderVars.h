@@ -201,7 +201,7 @@ struct ShaderVariable
     bool isSameVaryingAtLinkTime(const ShaderVariable &other) const;
 
     // If the variable is a sampler that has ever been statically used with texelFetch
-    bool texelFetchInvoked;
+    bool texelFetchStaticUse;
 
   protected:
     bool isSameVariableAtLinkTime(const ShaderVariable &other,

@@ -68,7 +68,7 @@ class FlagSamplersWithTexelFetchTraverser : public TIntermTraverser
             if (samplerVariable.name() == uniform.name)
             {
                 ASSERT(gl::IsSamplerType(uniform.type));
-                uniform.texelFetchInvoked = true;
+                uniform.texelFetchStaticUse = true;
                 break;
             }
         }

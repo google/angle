@@ -1428,7 +1428,7 @@ angle::Result ProgramExecutableVk::updateTexturesDescriptorSet(ContextVk *contex
                 vk::ImageHelper &image = textureVk->getImage();
 
                 bool shouldUseLinearColorspace = textureVk->shouldUseLinearColorspaceWithTexelFetch(
-                    linearColorspaceWithSampler, samplerUniform.texelFetchInvoked);
+                    linearColorspaceWithSampler, samplerUniform.texelFetchStaticUse);
 
                 imageInfos[arrayElement].sampler     = samplerHelper.get().getHandle();
                 imageInfos[arrayElement].imageLayout = image.getCurrentLayout();

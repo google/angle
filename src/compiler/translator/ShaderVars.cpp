@@ -48,7 +48,7 @@ ShaderVariable::ShaderVariable(GLenum typeIn)
       index(-1),
       interpolation(INTERPOLATION_SMOOTH),
       isInvariant(false),
-      texelFetchInvoked(false),
+      texelFetchStaticUse(false),
       flattenedOffsetInParentArrays(-1)
 {}
 
@@ -80,7 +80,7 @@ ShaderVariable::ShaderVariable(const ShaderVariable &other)
       index(other.index),
       interpolation(other.interpolation),
       isInvariant(other.isInvariant),
-      texelFetchInvoked(other.texelFetchInvoked),
+      texelFetchStaticUse(other.texelFetchStaticUse),
       flattenedOffsetInParentArrays(other.flattenedOffsetInParentArrays)
 {}
 
@@ -106,7 +106,7 @@ ShaderVariable &ShaderVariable::operator=(const ShaderVariable &other)
     index                         = other.index;
     interpolation                 = other.interpolation;
     isInvariant                   = other.isInvariant;
-    texelFetchInvoked             = other.texelFetchInvoked;
+    texelFetchStaticUse           = other.texelFetchStaticUse;
     return *this;
 }
 
@@ -120,7 +120,7 @@ bool ShaderVariable::operator==(const ShaderVariable &other) const
         binding != other.binding || imageUnitFormat != other.imageUnitFormat ||
         offset != other.offset || readonly != other.readonly || writeonly != other.writeonly ||
         index != other.index || interpolation != other.interpolation ||
-        isInvariant != other.isInvariant || texelFetchInvoked != other.texelFetchInvoked)
+        isInvariant != other.isInvariant || texelFetchStaticUse != other.texelFetchStaticUse)
     {
         return false;
     }
