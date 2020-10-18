@@ -41,6 +41,7 @@ constexpr char kFilterFileArg[]        = "--filter-file=";
 constexpr char kResultFileArg[]        = "--results-file=";
 constexpr char kHistogramJsonFileArg[] = "--histogram-json-file=";
 constexpr char kListTests[]            = "--gtest_list_tests";
+constexpr char kPrintTestStdout[]      = "--print-test-stdout";
 #if defined(NDEBUG)
 constexpr int kDefaultTestTimeout = 20;
 #else
@@ -52,7 +53,7 @@ constexpr int kDefaultBatchTimeout = 240;
 constexpr int kDefaultBatchTimeout = 600;
 #endif
 constexpr int kDefaultBatchSize      = 256;
-constexpr double kIdleMessageTimeout = 10.0;
+constexpr double kIdleMessageTimeout = 15.0;
 constexpr int kDefaultMaxProcesses   = 16;
 
 const char *ParseFlagValue(const char *flag, const char *argument)
@@ -641,7 +642,6 @@ void PrintTestOutputSnippet(const TestIdentifier &id,
     {
         std::cout << fullOutput.substr(runPos);
     }
-    std::cout << "\n";
 }
 
 std::string GetConfigNameFromTestIdentifier(const TestIdentifier &id)
@@ -800,6 +800,7 @@ TestSuite::TestSuite(int *argc, char **argv)
       mBotMode(false),
       mDebugTestGroups(false),
       mListTests(false),
+      mPrintTestStdout(false),
       mBatchSize(kDefaultBatchSize),
       mCurrentResultCount(0),
       mTotalResultCount(0),
@@ -1042,7 +1043,8 @@ bool TestSuite::parseSingleArg(const char *argument)
             ParseStringArg("--isolated-script-test-perf-output=", argument, &mHistogramJsonFile) ||
             ParseFlag("--bot-mode", argument, &mBotMode) ||
             ParseFlag("--debug-test-groups", argument, &mDebugTestGroups) ||
-            ParseFlag(kListTests, argument, &mListTests));
+            ParseFlag(kListTests, argument, &mListTests) ||
+            ParseFlag(kPrintTestStdout, argument, &mPrintTestStdout));
 }
 
 void TestSuite::onCrashOrTimeout(TestResultType crashOrTimeout)
@@ -1201,10 +1203,16 @@ bool TestSuite::finishProcess(ProcessInfo *processInfo)
         }
 
         mCurrentResultCount++;
+
         printf("[%d/%d] %s.%s", mCurrentResultCount, mTotalResultCount, id.testSuiteName.c_str(),
                id.testName.c_str());
 
-        if (result.type == TestResultType::Pass)
+        if (mPrintTestStdout)
+        {
+            const std::string &batchStdout = processInfo->process->getStdout();
+            PrintTestOutputSnippet(id, result, batchStdout);
+        }
+        else if (result.type == TestResultType::Pass)
         {
             printf(" (%0.1lf ms)\n", result.elapsedTimeSeconds * 1000.0);
         }
@@ -1271,7 +1279,6 @@ int TestSuite::run()
         {
             startWatchdog();
         }
-
         int retVal = RUN_ALL_TESTS();
 
         {
@@ -1351,7 +1358,11 @@ int TestSuite::run()
             }
         }
 
-        if (!progress && messageTimer.getElapsedTime() > kIdleMessageTimeout)
+        if (progress)
+        {
+            messageTimer.start();
+        }
+        else if (messageTimer.getElapsedTime() > kIdleMessageTimeout)
         {
             const ProcessInfo &processInfo = mCurrentProcesses[0];
             double processTime             = processInfo.process->getElapsedTimeSeconds();

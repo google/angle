@@ -144,6 +144,7 @@ class TestSuite
     bool mBotMode;
     bool mDebugTestGroups;
     bool mListTests;
+    bool mPrintTestStdout;
     int mBatchSize;
     int mCurrentResultCount;
     int mTotalResultCount;
