@@ -749,6 +749,12 @@ CGSize WindowSurfaceMtl::calcExpectedDrawableSize() const
 
 bool WindowSurfaceMtl::checkIfLayerResized(const gl::Context *context)
 {
+    if (mMetalLayer.get() != mLayer && mMetalLayer.get().contentsScale != mLayer.contentsScale)
+    {
+        // Parent layer's content scale has changed, update Metal layer's scale factor.
+        mMetalLayer.get().contentsScale = mLayer.contentsScale;
+    }
+
     CGSize currentLayerDrawableSize = mMetalLayer.get().drawableSize;
     CGSize expectedDrawableSize     = calcExpectedDrawableSize();
 
