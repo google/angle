@@ -733,15 +733,13 @@ angle::Result ContextMtl::syncState(const gl::Context *context,
                 break;
             case gl::State::DIRTY_BIT_STENCIL_FUNCS_FRONT:
                 mDepthStencilDesc.updateStencilFrontFuncs(glState.getDepthStencilState());
-                mStencilRefFront =
-                    gl::clamp<int, int, int>(glState.getStencilRef(), 0, mtl::kStencilMaskAll);
+                mStencilRefFront = glState.getStencilRef();  // clamped on the frontend
                 mDirtyBits.set(DIRTY_BIT_DEPTH_STENCIL_DESC);
                 mDirtyBits.set(DIRTY_BIT_STENCIL_REF);
                 break;
             case gl::State::DIRTY_BIT_STENCIL_FUNCS_BACK:
                 mDepthStencilDesc.updateStencilBackFuncs(glState.getDepthStencilState());
-                mStencilRefBack =
-                    gl::clamp<int, int, int>(glState.getStencilBackRef(), 0, mtl::kStencilMaskAll);
+                mStencilRefBack = glState.getStencilBackRef();  // clamped on the frontend
                 mDirtyBits.set(DIRTY_BIT_DEPTH_STENCIL_DESC);
                 mDirtyBits.set(DIRTY_BIT_STENCIL_REF);
                 break;
