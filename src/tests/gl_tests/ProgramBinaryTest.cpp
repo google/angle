@@ -757,8 +757,8 @@ TEST_P(ProgramBinaryTest, SRGBDecodeWithSamplerAndTexelFetchTest)
     // http://anglebug.com/4991
     ANGLE_SKIP_TEST_IF(IsOpenGL() && IsIntel() && IsWindows());
     ANGLE_SKIP_TEST_IF(IsOpenGL() && IsAMD() && IsWindows());
-    ANGLE_SKIP_TEST_IF(IsOpenGL() && IsNVIDIA() && IsOSX());
-    ANGLE_SKIP_TEST_IF(IsOpenGLES() && IsNexus5X());
+    ANGLE_SKIP_TEST_IF(IsOpenGL() && (IsNVIDIA() || IsARM64()) && IsOSX());
+    ANGLE_SKIP_TEST_IF(IsOpenGLES() && (IsNexus5X() || IsNexus6P()));
 
     constexpr char kVS[] =
         "#version 300 es\n"
