@@ -9,6 +9,9 @@
 #ifndef LIBANGLE_RENDERER_GL_EAGL_DISPLAYEAGL_H_
 #define LIBANGLE_RENDERER_GL_EAGL_DISPLAYEAGL_H_
 
+#include <thread>
+#include <unordered_set>
+
 #import "common/platform.h"
 
 #if defined(ANGLE_PLATFORM_IOS) && !defined(ANGLE_PLATFORM_MACCATALYST)
@@ -35,6 +38,8 @@ class DisplayEAGL : public DisplayGL
 
     egl::Error initialize(egl::Display *display) override;
     void terminate() override;
+    egl::Error prepareForCall() override;
+    egl::Error releaseThread() override;
 
     SurfaceImpl *createWindowSurface(const egl::SurfaceState &state,
                                      EGLNativeWindowType window,
@@ -93,6 +98,8 @@ class DisplayEAGL : public DisplayGL
 
     egl::Display *mEGLDisplay;
     EAGLContextObj mContext;
+    std::unordered_set<std::thread::id> mThreadsWithContextCurrent;
+    bool mDeviceContextIsVolatile = false;
 };
 
 }  // namespace rx
