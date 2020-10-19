@@ -28,7 +28,7 @@ vars = {
   'checkout_angle_internal': False,
 
   # Version of Chromium our Chromium-based DEPS are mirrored from.
-  'chromium_revision': '7e36b15b99a796a32dc15497f93713efa92f0cc2',
+  'chromium_revision': '7501f24543762531c785e764e819765cf4732a9e',
   # We never want to checkout chromium,
   # but need a dummy DEPS entry for the autoroller
   'dummy_checkout_chromium': False,
@@ -108,7 +108,7 @@ vars = {
 deps = {
 
   'build': {
-    'url': '{chromium_git}/chromium/src/build.git@0a3d03b92f3f560d2de5752917ef3e43c23c8a3f',
+    'url': '{chromium_git}/chromium/src/build.git@c44d024474cdffd05dce4c11dbe38f7d9d4d8fee',
     'condition': 'not build_with_chromium',
   },
 
@@ -118,7 +118,7 @@ deps = {
   },
 
   'testing': {
-    'url': '{chromium_git}/chromium/src/testing@16f793c6e0a8eae8cf8779ad279050511ae8c2f2',
+    'url': '{chromium_git}/chromium/src/testing@3a89edfa61576671fc4ca7d728625af6316b3860',
     'condition': 'not build_with_chromium',
   },
 
@@ -314,7 +314,7 @@ deps = {
   },
 
   'tools/mb': {
-    'url': '{chromium_git}/chromium/src/tools/mb@eef787ed933615386fb3daf651d5aea8ef2e69da',
+    'url': '{chromium_git}/chromium/src/tools/mb@9b04f810d4dc94fdb6f33e70d3068b695a698f66',
     'condition': 'not build_with_chromium',
   },
 
@@ -332,7 +332,7 @@ deps = {
       'packages': [
         {
           'package': 'skia/tools/goldctl/linux-amd64',
-          'version': 'sEWxSos77EKQLWziVoCV6Sa52qijVB0fz9uN1EGoUd0C',
+          'version': 'VmHdV6-yVqwj-ADGTGWTpbP4nIDpDzLHKgQq-B7KKCQC',
         },
       ],
       'dep_type': 'cipd',
@@ -343,7 +343,7 @@ deps = {
       'packages': [
         {
           'package': 'skia/tools/goldctl/windows-amd64',
-          'version': '6eX8c167sU_avc61blSZpNkSEa5HwWNYfWCk-88QTNsC',
+          'version': 'tNDNsPkF0Z-epC61GUCYNBjIMrq1IwzBctk8W1ySG2YC',
         },
       ],
       'dep_type': 'cipd',
@@ -354,7 +354,7 @@ deps = {
       'packages': [
         {
           'package': 'skia/tools/goldctl/mac-amd64',
-          'version': 'rp50J-ChpY5Dyvjwl71mK28FOzgevSspS8YE1qxgkrAC',
+          'version': 'aaumPfBnl9wmnaRNjWDmktxWKk7iB7h3VYDlC8nRGXIC',
         },
       ],
       'dep_type': 'cipd',
