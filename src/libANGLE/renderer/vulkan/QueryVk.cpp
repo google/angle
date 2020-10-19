@@ -168,6 +168,8 @@ angle::Result QueryVk::queryCounter(const gl::Context *context)
 
 angle::Result QueryVk::getResult(const gl::Context *context, bool wait)
 {
+    ANGLE_TRACE_EVENT0("gpu.angle", "QueryVk::getResult");
+
     if (mCachedResultValid)
     {
         return angle::Result::Continue;
@@ -182,11 +184,10 @@ angle::Result QueryVk::getResult(const gl::Context *context, bool wait)
     // has pending work should flush begin too.
     // TODO: https://issuetracker.google.com/169788986 - can't guarantee hasPendingWork() works when
     // using threaded worker
-    if (mQueryHelper.hasPendingWork(contextVk) ||
-        contextVk->getRenderer()->getFeatures().enableCommandProcessingThread.enabled)
+    if (mQueryHelper.hasPendingWork(contextVk))
     {
         ANGLE_TRY(contextVk->flushImpl(nullptr));
-        if (contextVk->getRenderer()->getFeatures().enableCommandProcessingThread.enabled)
+        if (contextVk->getRenderer()->getFeatures().asynchronousCommandProcessing.enabled)
         {
             // TODO: https://issuetracker.google.com/170312581 - For now just stalling here
             contextVk->getRenderer()->waitForCommandProcessorIdle(contextVk);
@@ -196,14 +197,12 @@ angle::Result QueryVk::getResult(const gl::Context *context, bool wait)
         ASSERT(!mQueryHelper.hasPendingWork(contextVk));
     }
 
-    if (!contextVk->getRenderer()->getFeatures().enableCommandProcessingThread.enabled)
-    {
-        // If the command buffer this query is being written to is still in flight, its reset
-        // command may not have been performed by the GPU yet.  To avoid a race condition in this
-        // case, wait for the batch to finish first before querying (or return not-ready if not
-        // waiting).
-        ANGLE_TRY(contextVk->checkCompletedCommands());
-    }
+    ANGLE_TRY(contextVk->checkCompletedCommands());
+
+    // If the command buffer this query is being written to is still in flight, its reset
+    // command may not have been performed by the GPU yet.  To avoid a race condition in this
+    // case, wait for the batch to finish first before querying (or return not-ready if not
+    // waiting).
     if (contextVk->isSerialInUse(mQueryHelper.getStoredQueueSerial()))
     {
         if (!wait)

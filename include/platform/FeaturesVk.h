@@ -336,14 +336,14 @@ struct FeaturesVk : FeatureSetBase
         "fine grained pipeline stage dependency information",
         &members, "http://anglebug.com/4633"};
 
-    // Enable parallel thread that processes and submits vulkan command buffers.
-    // Currently off by default to enable testing.
-    Feature enableCommandProcessingThread = {
-        "enable_command_processing_thread", FeatureCategory::VulkanFeatures,
-        "Enable parallel processing and submission of Vulkan commands in worker thread", &members,
-        "http://anglebug.com/4324"};
+    // Tell Vulkan back-end to use CommandProcessor class to dispatch work to the GPU. The work will
+    // happen asynchronously in a different thread if asynchronousCommandProcessing is true.
+    // Otherwise use Renderer::CommandQueue to dispatch work.
+    Feature commandProcessor = {"command_processor", FeatureCategory::VulkanFeatures,
+                                "Use CommandProcessor class to dispatch work to GPU.", &members,
+                                "http://anglebug.com/4324"};
 
-    // Enable parallel thread execution when enableCommandProcessingThread is enabled.
+    // Enable parallel thread execution when commandProcessor is enabled.
     // Currently off by default.
     Feature asynchronousCommandProcessing = {"asynchronous_command_processing",
                                              FeatureCategory::VulkanFeatures,

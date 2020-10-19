@@ -289,6 +289,9 @@ class WindowSurfaceVk : public SurfaceVk
     // Called when a swapchain image whose acquisition was deferred must be acquired.  This method
     // will recreate the swapchain (if needed) and call the acquireNextSwapchainImage() method.
     angle::Result doDeferredAcquireNextImage(const gl::Context *context, bool presentOutOfDate);
+    angle::Result computePresentOutOfDate(vk::Context *context,
+                                          VkResult result,
+                                          bool *presentOutOfDate);
     angle::Result present(ContextVk *contextVk,
                           EGLint *rects,
                           EGLint n_rects,

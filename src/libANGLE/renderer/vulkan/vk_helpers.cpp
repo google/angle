@@ -2324,8 +2324,9 @@ void QueryHelper::writeTimestamp(ContextVk *contextVk, CommandBuffer *commandBuf
 
 bool QueryHelper::hasPendingWork(ContextVk *contextVk)
 {
-    // If the renderer has a queue serial higher than the stored one, the command buffers that
-    // recorded this query have already been submitted, so there is no pending work.
+    // TODO: https://issuetracker.google.com/169788986 - this is not a valid statement with
+    // CommandProcessor: If the renderer has a queue serial higher than the stored one, the command
+    // buffers that recorded this query have already been submitted, so there is no pending work.
     return mMostRecentSerial.valid() && (mMostRecentSerial == contextVk->getCurrentQueueSerial());
 }
 
