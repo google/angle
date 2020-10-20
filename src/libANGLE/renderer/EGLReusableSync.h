@@ -14,6 +14,8 @@
 
 #include "common/angleutils.h"
 
+#include <condition_variable>
+
 namespace rx
 {
 
