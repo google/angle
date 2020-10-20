@@ -18,6 +18,7 @@
 #include "cod_mobile/cod_mobile_capture_context4.h"
 #include "egypt_1500/egypt_1500_capture_context6.h"
 #include "free_fire/free_fire_capture_context3.h"
+#include "kartrider_rush/kartrider_rush_capture_context3.h"
 #include "manhattan_10/manhattan_10_capture_context6.h"
 #include "marvel_contest_of_champions/marvel_contest_of_champions_capture_context2.h"
 #include "mobile_legends/mobile_legends_capture_context3.h"
@@ -54,6 +55,10 @@ constexpr angle::PackedEnumMap<RestrictedTraceID, TraceInfo> kTraceInfos = {
     {RestrictedTraceID::free_fire,
      {free_fire::kReplayFrameStart, free_fire::kReplayFrameEnd, free_fire::kReplayDrawSurfaceWidth,
       free_fire::kReplayDrawSurfaceHeight, "free_fire"}},
+    {RestrictedTraceID::kartrider_rush,
+     {kartrider_rush::kReplayFrameStart, kartrider_rush::kReplayFrameEnd,
+      kartrider_rush::kReplayDrawSurfaceWidth, kartrider_rush::kReplayDrawSurfaceHeight,
+      "kartrider_rush"}},
     {RestrictedTraceID::manhattan_10,
      {manhattan_10::kReplayFrameStart, manhattan_10::kReplayFrameEnd,
       manhattan_10::kReplayDrawSurfaceWidth, manhattan_10::kReplayDrawSurfaceHeight,
@@ -108,6 +113,9 @@ void ReplayFrame(RestrictedTraceID traceID, uint32_t frameIndex)
         case RestrictedTraceID::free_fire:
             free_fire::ReplayContext3Frame(frameIndex);
             break;
+        case RestrictedTraceID::kartrider_rush:
+            kartrider_rush::ReplayContext3Frame(frameIndex);
+            break;
         case RestrictedTraceID::manhattan_10:
             manhattan_10::ReplayContext6Frame(frameIndex);
             break;
@@ -157,6 +165,9 @@ void ResetReplay(RestrictedTraceID traceID)
             break;
         case RestrictedTraceID::free_fire:
             free_fire::ResetContext3Replay();
+            break;
+        case RestrictedTraceID::kartrider_rush:
+            kartrider_rush::ResetContext3Replay();
             break;
         case RestrictedTraceID::manhattan_10:
             manhattan_10::ResetContext6Replay();
@@ -208,6 +219,9 @@ void SetupReplay(RestrictedTraceID traceID)
         case RestrictedTraceID::free_fire:
             free_fire::SetupContext3Replay();
             break;
+        case RestrictedTraceID::kartrider_rush:
+            kartrider_rush::SetupContext3Replay();
+            break;
         case RestrictedTraceID::manhattan_10:
             manhattan_10::SetupContext6Replay();
             break;
@@ -258,6 +272,9 @@ void SetBinaryDataDir(RestrictedTraceID traceID, const char *dataDir)
         case RestrictedTraceID::free_fire:
             free_fire::SetBinaryDataDir(dataDir);
             break;
+        case RestrictedTraceID::kartrider_rush:
+            kartrider_rush::SetBinaryDataDir(dataDir);
+            break;
         case RestrictedTraceID::manhattan_10:
             manhattan_10::SetBinaryDataDir(dataDir);
             break;
@@ -307,6 +324,9 @@ void SetBinaryDataDecompressCallback(RestrictedTraceID traceID, DecompressCallba
             break;
         case RestrictedTraceID::free_fire:
             free_fire::SetBinaryDataDecompressCallback(callback);
+            break;
+        case RestrictedTraceID::kartrider_rush:
+            kartrider_rush::SetBinaryDataDecompressCallback(callback);
             break;
         case RestrictedTraceID::manhattan_10:
             manhattan_10::SetBinaryDataDecompressCallback(callback);

@@ -1,6 +1,6 @@
 {
   "src/tests/restricted_traces/.gitignore":
-    "cababe61df13c60c4bf75017178a867e",
+    "975053b988efba09342bbc967b8cbb76",
   "src/tests/restricted_traces/angry_birds_2_1500.tar.gz.sha1":
     "44fc5437c4a84012e338b3da4b6fc28a",
   "src/tests/restricted_traces/arena_of_valor.tar.gz.sha1":
@@ -17,6 +17,8 @@
     "a95efee5e5c6d85bac2d8c2ab09dc34c",
   "src/tests/restricted_traces/gen_restricted_traces.py":
     "a520ef50175b1b9a20383a884e293b54",
+  "src/tests/restricted_traces/kartrider_rush.tar.gz.sha1":
+    "64079b7406be62a9b04062b8790f3313",
   "src/tests/restricted_traces/manhattan_10.tar.gz.sha1":
     "752781119592a190cc02b773adf38fc3",
   "src/tests/restricted_traces/marvel_contest_of_champions.tar.gz.sha1":
@@ -26,13 +28,13 @@
   "src/tests/restricted_traces/nba2k20_800.tar.gz.sha1":
     "03df0dcf41c18bc59edfc0b088ca4a87",
   "src/tests/restricted_traces/restricted_traces.json":
-    "92754f0dc16c9aa4e2c31699c78ed771",
+    "964d9d30361aae731f495562ed373b79",
   "src/tests/restricted_traces/restricted_traces_autogen.cpp":
-    "90c4690798c3a0208f1e3dc15938762b",
+    "8d82249c50da7d734fb71e11f2829d90",
   "src/tests/restricted_traces/restricted_traces_autogen.gni":
-    "5c41df13ceeb7a41a59ab8e86b223eab",
+    "2367de2be057b3b3b7bbd3e89053b0f2",
   "src/tests/restricted_traces/restricted_traces_autogen.h":
-    "d242dcd3e814076b84d3fdf54e67f545",
+    "7601e1f0c3806fa2ff203788906762b1",
   "src/tests/restricted_traces/temple_run_300.tar.gz.sha1":
     "77475b0186ee0380eeb9db47433d0457",
   "src/tests/restricted_traces/trex_200.tar.gz.sha1":
