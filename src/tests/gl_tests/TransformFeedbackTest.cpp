@@ -1528,6 +1528,9 @@ TEST_P(TransformFeedbackTest, NonExistentTransformFeedbackVarying)
 // nonexistent varying is prefixed with "gl_".
 TEST_P(TransformFeedbackTest, NonExistentTransformFeedbackVaryingWithGLPrefix)
 {
+    // TODO(crbug.com/1132295): Failing on ARM-based Apple DTKs.
+    ANGLE_SKIP_TEST_IF(IsOSX() && IsARM64() && IsDesktopOpenGL());
+
     std::vector<std::string> tfVaryings;
     tfVaryings.push_back("gl_Bogus");
 
@@ -1630,6 +1633,7 @@ TEST_P(TransformFeedbackTest, SwitchProgramBeforeDraw)
 {
     // TODO(crbug.com/1132295): Failing on ARM-based Apple DTKs.
     ANGLE_SKIP_TEST_IF(IsOSX() && IsARM64() && IsDesktopOpenGL());
+
     std::vector<std::string> tfVaryings;
     tfVaryings.push_back("gl_Position");
     compileDefaultProgram(tfVaryings, GL_INTERLEAVED_ATTRIBS);
