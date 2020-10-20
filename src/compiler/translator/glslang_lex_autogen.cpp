@@ -452,19 +452,19 @@ static const flex_int16_t yy_accept[938] = {
     193, 180, 181, 182, 193, 35,  193, 172, 29,  183, 184, 185, 2,   177, 178, 179, 193, 193, 193,
     27,  175, 193, 193, 193,
 
-    193, 193, 53,  54,  55,  193, 193, 193, 193, 193, 193, 193, 193, 193, 193, 193, 121, 193, 193,
+    193, 193, 53,  54,  55,  193, 193, 193, 193, 193, 193, 193, 193, 193, 193, 193, 122, 193, 193,
     193, 193, 193, 193, 193, 193, 169, 193, 193, 193, 193, 193, 193, 193, 193, 193, 193, 193, 155,
     193, 193, 192, 59,  60,  61,  193, 193, 15,  193, 193, 193, 126, 193, 193, 9,   193, 193, 124,
     193, 193, 193, 170, 165, 127, 193, 193, 193, 193, 193, 193, 161, 193, 193, 193, 193, 193, 93,
     41,  44,  46,  45,  42,  48,  47,  49,  43,  193, 193, 193, 193, 176, 152, 193, 193, 163, 193,
-    193, 193, 37,  122, 28,
+    193, 193, 37,  119, 28,
 
     189, 23,  164, 92,  193, 174, 18,  193, 193, 193, 193, 193, 193, 193, 193, 193, 193, 193, 193,
     193, 193, 193, 193, 20,  36,  193, 193, 193, 193, 193, 193, 128, 98,  104, 193, 193, 193, 193,
-    193, 95,  97,  3,   193, 193, 193, 193, 119, 193, 193, 193, 193, 193, 193, 193, 157, 193, 193,
+    193, 95,  97,  3,   193, 193, 193, 193, 120, 193, 193, 193, 193, 193, 193, 193, 157, 193, 193,
     193, 193, 193, 8,   193, 193, 10,  193, 193, 193, 193, 193, 193, 21,  115, 12,  166, 129, 99,
     106, 193, 193, 193, 193, 193, 193, 193, 193, 193, 193, 193, 193, 193, 162, 193, 193, 193, 113,
-    120, 116, 193, 193, 193,
+    121, 116, 193, 193, 193,
 
     193, 193, 193, 193, 193, 158, 130, 100, 105, 193, 193, 173, 193, 117, 193, 193, 193, 193, 6,
     193, 193, 193, 193, 193, 193, 193, 193, 193, 109, 167, 1,   193, 193, 193, 193, 193, 193, 191,
@@ -933,6 +933,9 @@ static int ES3_reserved_ES3_1_extension_ES3_2_keyword(TParseContext *context,
                                                       int token);
 static int ES3_reserved_ES3_extension(TParseContext *context, TExtension extension, int token);
 static int ES3_reserved_ES3_extension_ES3_1_keyword(TParseContext *context,
+                                                    TExtension extension,
+                                                    int token);
+static int ES3_reserved_ES3_extension_ES3_2_keyword(TParseContext *context,
                                                     TExtension extension,
                                                     int token);
 static int ES3_1_reserved_ES3_1_extension_ES3_2_keyword(TParseContext *context,
@@ -1746,12 +1749,18 @@ YY_DECL
                 case 119:
                     YY_RULE_SETUP
                     {
+                        return ES3_reserved_ES3_extension_ES3_2_keyword(
+                            context, TExtension::OES_shader_multisample_interpolation, SAMPLE);
+                    }
+                    YY_BREAK
+                case 120:
+                    YY_RULE_SETUP
+                    {
                         return ES3_1_reserved_ES3_1_extension_ES3_2_keyword(
                             context, TExtension::EXT_gpu_shader5, PRECISE);
                     }
                     YY_BREAK
                 /* Reserved keywords for GLSL ES 3.00 that are not reserved for GLSL ES 1.00 */
-                case 120:
                 case 121:
                 case 122:
                 case 123:
@@ -3475,6 +3484,28 @@ int ES3_reserved_ES3_extension_ES3_1_keyword(TParseContext *context,
     }
 
     if (context->getShaderVersion() == 300)
+    {
+        return reserved_word(yyscanner);
+    }
+
+    yylval->lex.string = AllocatePoolCharArray(yytext, yyleng);
+    return check_type(yyscanner);
+}
+
+int ES3_reserved_ES3_extension_ES3_2_keyword(TParseContext *context,
+                                             TExtension extension,
+                                             int token)
+{
+    struct yyguts_t *yyg = (struct yyguts_t *)context->getScanner();
+    yyscan_t yyscanner   = (yyscan_t)context->getScanner();
+
+    // A keyword in GLSL ES 3.00 with enabled extension or in GLSL ES 3.20
+    if (is_extension_enabled_or_is_core(context, 300, extension, 320))
+    {
+        return token;
+    }
+
+    if (context->getShaderVersion() == 300 || context->getShaderVersion() == 310)
     {
         return reserved_word(yyscanner);
     }

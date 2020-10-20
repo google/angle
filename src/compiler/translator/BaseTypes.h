@@ -976,6 +976,7 @@ enum TQualifier
     EvqFlat,           // Incomplete qualifier
     EvqNoPerspective,  // Incomplete qualifier
     EvqCentroid,       // Incomplete qualifier
+    EvqSample,
     EvqSmoothOut,
     EvqFlatOut,
     EvqNoPerspectiveOut,

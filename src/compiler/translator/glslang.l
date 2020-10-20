@@ -107,6 +107,7 @@ static int ES3_extension(TParseContext *context, TExtension extension, int token
 static int ES3_reserved_ES3_1_extension_ES3_2_keyword(TParseContext *context, TExtension extension, int token);
 static int ES3_reserved_ES3_extension(TParseContext *context, TExtension extension, int token);
 static int ES3_reserved_ES3_extension_ES3_1_keyword(TParseContext *context, TExtension extension, int token);
+static int ES3_reserved_ES3_extension_ES3_2_keyword(TParseContext *context, TExtension extension, int token);
 static int ES3_1_reserved_ES3_1_extension_ES3_2_keyword(TParseContext *context, TExtension extension, int token);
 static int ES3_1_reserved_ES3_1_extension_ES3_2_keyword_2(TParseContext *context, TExtension extension1, TExtension extension2, int token1, int token2);
 static int WEBGL_video_texture_extension(TParseContext *context, int token);
@@ -267,13 +268,12 @@ O           [0-7]
 "restrict" { return ES3_reserved_ES3_1_keyword(context, RESTRICT); }
 "volatile" { return ES2_reserved_ES3_1_keyword(context, VOLATILE); }
 "atomic_uint" { return ES3_reserved_ES3_1_keyword(context, ATOMICUINT); }
-
+"sample" { return ES3_reserved_ES3_extension_ES3_2_keyword(context, TExtension::OES_shader_multisample_interpolation, SAMPLE); }
 "precise" { return ES3_1_reserved_ES3_1_extension_ES3_2_keyword(context, TExtension::EXT_gpu_shader5, PRECISE); }
 
     /* Reserved keywords for GLSL ES 3.00 that are not reserved for GLSL ES 1.00 */
 "resource"          |
 "patch"             |
-"sample"            |
 "subroutine"        |
 "common"            |
 "partition"         |
@@ -690,6 +690,26 @@ int ES3_reserved_ES3_extension_ES3_1_keyword(TParseContext *context, TExtension 
     }
 
     if(context->getShaderVersion() == 300)
+    {
+        return reserved_word(yyscanner);
+    }
+
+    yylval->lex.string = AllocatePoolCharArray(yytext, yyleng);
+    return check_type(yyscanner);
+}
+
+int ES3_reserved_ES3_extension_ES3_2_keyword(TParseContext *context, TExtension extension, int token)
+{
+    struct yyguts_t* yyg = (struct yyguts_t*) context->getScanner();
+    yyscan_t yyscanner = (yyscan_t) context->getScanner();
+
+    // A keyword in GLSL ES 3.00 with enabled extension or in GLSL ES 3.20
+    if (is_extension_enabled_or_is_core(context, 300, extension, 320))
+    {
+        return token;
+    }
+
+    if(context->getShaderVersion() == 300 ||context->getShaderVersion() == 310)
     {
         return reserved_word(yyscanner);
     }
