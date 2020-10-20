@@ -5744,6 +5744,25 @@ TEST_P(RobustBufferAccessWebGL2ValidationStateChangeTest, BindZeroSizeBufferThen
     ASSERT_GL_NO_ERROR();
 }
 
+// Tests DrawElements with an empty buffer using a VAO.
+TEST_P(WebGL2ValidationStateChangeTest, DrawElementsEmptyVertexArray)
+{
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
+
+    glUseProgram(program);
+
+    // Draw with empty buffer. Out of range but valid.
+    GLBuffer buffer;
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer);
+    glDrawElements(GL_TRIANGLES, 0, GL_UNSIGNED_SHORT, reinterpret_cast<const GLvoid *>(0x1000));
+
+    // Switch VAO. No buffer bound, should be an error.
+    GLVertexArray vao;
+    glBindVertexArray(vao);
+    glDrawElements(GL_LINE_STRIP, 0x1000, GL_UNSIGNED_SHORT,
+                   reinterpret_cast<const GLvoid *>(0x1000));
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+}
 }  // anonymous namespace
 
 ANGLE_INSTANTIATE_TEST_ES2(StateChangeTest);
