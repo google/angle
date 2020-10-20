@@ -57,6 +57,10 @@ void GL_APIENTRY BindImageTexture(GLuint unit,
         ANGLE_CAPTURE(BindImageTexture, isCallValid, context, unit, texturePacked, level, layered,
                       layer, access, format);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY DrawArraysInstancedBaseInstance(GLenum mode,
@@ -86,6 +90,10 @@ void GL_APIENTRY DrawArraysInstancedBaseInstance(GLenum mode,
         }
         ANGLE_CAPTURE(DrawArraysInstancedBaseInstance, isCallValid, context, modePacked, first,
                       count, instancecount, baseinstance);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -117,6 +125,10 @@ void GL_APIENTRY DrawElementsInstancedBaseInstance(GLenum mode,
         }
         ANGLE_CAPTURE(DrawElementsInstancedBaseInstance, isCallValid, context, mode, count, type,
                       indices, instancecount, baseinstance);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -154,6 +166,10 @@ void GL_APIENTRY DrawElementsInstancedBaseVertexBaseInstance(GLenum mode,
         ANGLE_CAPTURE(DrawElementsInstancedBaseVertexBaseInstance, isCallValid, context, modePacked,
                       count, typePacked, indices, instancecount, basevertex, baseinstance);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY DrawTransformFeedbackInstanced(GLenum mode, GLuint id, GLsizei instancecount)
@@ -176,6 +192,10 @@ void GL_APIENTRY DrawTransformFeedbackInstanced(GLenum mode, GLuint id, GLsizei 
         }
         ANGLE_CAPTURE(DrawTransformFeedbackInstanced, isCallValid, context, mode, idPacked,
                       instancecount);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -205,6 +225,10 @@ void GL_APIENTRY DrawTransformFeedbackStreamInstanced(GLenum mode,
         ANGLE_CAPTURE(DrawTransformFeedbackStreamInstanced, isCallValid, context, mode, idPacked,
                       stream, instancecount);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY GetActiveAtomicCounterBufferiv(GLuint program,
@@ -232,6 +256,10 @@ void GL_APIENTRY GetActiveAtomicCounterBufferiv(GLuint program,
         }
         ANGLE_CAPTURE(GetActiveAtomicCounterBufferiv, isCallValid, context, programPacked,
                       bufferIndex, pname, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -262,6 +290,10 @@ void GL_APIENTRY GetInternalformativ(GLenum target,
         ANGLE_CAPTURE(GetInternalformativ, isCallValid, context, target, internalformat, pname,
                       bufSize, params);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY MemoryBarrier(GLbitfield barriers)
@@ -279,6 +311,10 @@ void GL_APIENTRY MemoryBarrier(GLbitfield barriers)
             context->memoryBarrier(barriers);
         }
         ANGLE_CAPTURE(MemoryBarrier, isCallValid, context, barriers);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -301,6 +337,10 @@ void GL_APIENTRY TexStorage1D(GLenum target, GLsizei levels, GLenum internalform
             context->texStorage1D(target, levels, internalformat, width);
         }
         ANGLE_CAPTURE(TexStorage1D, isCallValid, context, target, levels, internalformat, width);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -327,6 +367,10 @@ TexStorage2D(GLenum target, GLsizei levels, GLenum internalformat, GLsizei width
         }
         ANGLE_CAPTURE(TexStorage2D, isCallValid, context, targetPacked, levels, internalformat,
                       width, height);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -357,6 +401,10 @@ void GL_APIENTRY TexStorage3D(GLenum target,
         }
         ANGLE_CAPTURE(TexStorage3D, isCallValid, context, targetPacked, levels, internalformat,
                       width, height, depth);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 }  // namespace gl

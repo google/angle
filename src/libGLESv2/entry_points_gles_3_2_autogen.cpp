@@ -35,6 +35,10 @@ void GL_APIENTRY BlendBarrier()
         }
         ANGLE_CAPTURE(BlendBarrier, isCallValid, context);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY BlendEquationSeparatei(GLuint buf, GLenum modeRGB, GLenum modeAlpha)
@@ -56,6 +60,10 @@ void GL_APIENTRY BlendEquationSeparatei(GLuint buf, GLenum modeRGB, GLenum modeA
         }
         ANGLE_CAPTURE(BlendEquationSeparatei, isCallValid, context, buf, modeRGB, modeAlpha);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY BlendEquationi(GLuint buf, GLenum mode)
@@ -74,6 +82,10 @@ void GL_APIENTRY BlendEquationi(GLuint buf, GLenum mode)
             context->blendEquationi(buf, mode);
         }
         ANGLE_CAPTURE(BlendEquationi, isCallValid, context, buf, mode);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -102,6 +114,10 @@ BlendFuncSeparatei(GLuint buf, GLenum srcRGB, GLenum dstRGB, GLenum srcAlpha, GL
         ANGLE_CAPTURE(BlendFuncSeparatei, isCallValid, context, buf, srcRGB, dstRGB, srcAlpha,
                       dstAlpha);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY BlendFunci(GLuint buf, GLenum src, GLenum dst)
@@ -122,6 +138,10 @@ void GL_APIENTRY BlendFunci(GLuint buf, GLenum src, GLenum dst)
             context->blendFunci(buf, src, dst);
         }
         ANGLE_CAPTURE(BlendFunci, isCallValid, context, buf, src, dst);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -144,6 +164,10 @@ void GL_APIENTRY ColorMaski(GLuint index, GLboolean r, GLboolean g, GLboolean b,
             context->colorMaski(index, r, g, b, a);
         }
         ANGLE_CAPTURE(ColorMaski, isCallValid, context, index, r, g, b, a);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -191,6 +215,10 @@ void GL_APIENTRY CopyImageSubData(GLuint srcName,
                       srcY, srcZ, dstName, dstTarget, dstLevel, dstX, dstY, dstZ, srcWidth,
                       srcHeight, srcDepth);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY DebugMessageCallback(GLDEBUGPROC callback, const void *userParam)
@@ -211,6 +239,10 @@ void GL_APIENTRY DebugMessageCallback(GLDEBUGPROC callback, const void *userPara
             context->debugMessageCallback(callback, userParam);
         }
         ANGLE_CAPTURE(DebugMessageCallback, isCallValid, context, callback, userParam);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -243,6 +275,10 @@ void GL_APIENTRY DebugMessageControl(GLenum source,
         ANGLE_CAPTURE(DebugMessageControl, isCallValid, context, source, type, severity, count, ids,
                       enabled);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY DebugMessageInsert(GLenum source,
@@ -273,6 +309,10 @@ void GL_APIENTRY DebugMessageInsert(GLenum source,
         ANGLE_CAPTURE(DebugMessageInsert, isCallValid, context, source, type, id, severity, length,
                       buf);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY Disablei(GLenum target, GLuint index)
@@ -290,6 +330,10 @@ void GL_APIENTRY Disablei(GLenum target, GLuint index)
             context->disablei(target, index);
         }
         ANGLE_CAPTURE(Disablei, isCallValid, context, target, index);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -320,6 +364,10 @@ void GL_APIENTRY DrawElementsBaseVertex(GLenum mode,
         }
         ANGLE_CAPTURE(DrawElementsBaseVertex, isCallValid, context, modePacked, count, typePacked,
                       indices, basevertex);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -354,6 +402,10 @@ void GL_APIENTRY DrawElementsInstancedBaseVertex(GLenum mode,
         ANGLE_CAPTURE(DrawElementsInstancedBaseVertex, isCallValid, context, modePacked, count,
                       typePacked, indices, instancecount, basevertex);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY DrawRangeElementsBaseVertex(GLenum mode,
@@ -387,6 +439,10 @@ void GL_APIENTRY DrawRangeElementsBaseVertex(GLenum mode,
         ANGLE_CAPTURE(DrawRangeElementsBaseVertex, isCallValid, context, modePacked, start, end,
                       count, typePacked, indices, basevertex);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY Enablei(GLenum target, GLuint index)
@@ -404,6 +460,10 @@ void GL_APIENTRY Enablei(GLenum target, GLuint index)
             context->enablei(target, index);
         }
         ANGLE_CAPTURE(Enablei, isCallValid, context, target, index);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -429,6 +489,10 @@ void GL_APIENTRY FramebufferTexture(GLenum target, GLenum attachment, GLuint tex
         }
         ANGLE_CAPTURE(FramebufferTexture, isCallValid, context, target, attachment, texturePacked,
                       level);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -471,6 +535,7 @@ GLuint GL_APIENTRY GetDebugMessageLog(GLuint count,
     }
     else
     {
+        GenerateContextLostErrorOnCurrentGlobalContext();
         returnValue = GetDefaultReturnValue<EntryPoint::GetDebugMessageLog, GLuint>();
     }
     return returnValue;
@@ -498,6 +563,7 @@ GLenum GL_APIENTRY GetGraphicsResetStatus()
     }
     else
     {
+
         returnValue = GetDefaultReturnValue<EntryPoint::GetGraphicsResetStatus, GLenum>();
     }
     return returnValue;
@@ -526,6 +592,10 @@ GetObjectLabel(GLenum identifier, GLuint name, GLsizei bufSize, GLsizei *length,
         ANGLE_CAPTURE(GetObjectLabel, isCallValid, context, identifier, name, bufSize, length,
                       label);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY GetObjectPtrLabel(const void *ptr, GLsizei bufSize, GLsizei *length, GLchar *label)
@@ -548,6 +618,10 @@ void GL_APIENTRY GetObjectPtrLabel(const void *ptr, GLsizei bufSize, GLsizei *le
         }
         ANGLE_CAPTURE(GetObjectPtrLabel, isCallValid, context, ptr, bufSize, length, label);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY GetPointerv(GLenum pname, void **params)
@@ -567,6 +641,10 @@ void GL_APIENTRY GetPointerv(GLenum pname, void **params)
             context->getPointerv(pname, params);
         }
         ANGLE_CAPTURE(GetPointerv, isCallValid, context, pname, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -589,6 +667,10 @@ void GL_APIENTRY GetSamplerParameterIiv(GLuint sampler, GLenum pname, GLint *par
             context->getSamplerParameterIiv(samplerPacked, pname, params);
         }
         ANGLE_CAPTURE(GetSamplerParameterIiv, isCallValid, context, samplerPacked, pname, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -613,6 +695,10 @@ void GL_APIENTRY GetSamplerParameterIuiv(GLuint sampler, GLenum pname, GLuint *p
         }
         ANGLE_CAPTURE(GetSamplerParameterIuiv, isCallValid, context, samplerPacked, pname, params);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY GetTexParameterIiv(GLenum target, GLenum pname, GLint *params)
@@ -635,6 +721,10 @@ void GL_APIENTRY GetTexParameterIiv(GLenum target, GLenum pname, GLint *params)
         }
         ANGLE_CAPTURE(GetTexParameterIiv, isCallValid, context, targetPacked, pname, params);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY GetTexParameterIuiv(GLenum target, GLenum pname, GLuint *params)
@@ -656,6 +746,10 @@ void GL_APIENTRY GetTexParameterIuiv(GLenum target, GLenum pname, GLuint *params
             context->getTexParameterIuiv(targetPacked, pname, params);
         }
         ANGLE_CAPTURE(GetTexParameterIuiv, isCallValid, context, targetPacked, pname, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -682,6 +776,10 @@ void GL_APIENTRY GetnUniformfv(GLuint program, GLint location, GLsizei bufSize, 
         ANGLE_CAPTURE(GetnUniformfv, isCallValid, context, programPacked, locationPacked, bufSize,
                       params);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY GetnUniformiv(GLuint program, GLint location, GLsizei bufSize, GLint *params)
@@ -707,6 +805,10 @@ void GL_APIENTRY GetnUniformiv(GLuint program, GLint location, GLsizei bufSize, 
         ANGLE_CAPTURE(GetnUniformiv, isCallValid, context, programPacked, locationPacked, bufSize,
                       params);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY GetnUniformuiv(GLuint program, GLint location, GLsizei bufSize, GLuint *params)
@@ -731,6 +833,10 @@ void GL_APIENTRY GetnUniformuiv(GLuint program, GLint location, GLsizei bufSize,
         }
         ANGLE_CAPTURE(GetnUniformuiv, isCallValid, context, programPacked, locationPacked, bufSize,
                       params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -758,6 +864,7 @@ GLboolean GL_APIENTRY IsEnabledi(GLenum target, GLuint index)
     }
     else
     {
+        GenerateContextLostErrorOnCurrentGlobalContext();
         returnValue = GetDefaultReturnValue<EntryPoint::IsEnabledi, GLboolean>();
     }
     return returnValue;
@@ -777,6 +884,10 @@ void GL_APIENTRY MinSampleShading(GLfloat value)
             context->minSampleShading(value);
         }
         ANGLE_CAPTURE(MinSampleShading, isCallValid, context, value);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -800,6 +911,10 @@ void GL_APIENTRY ObjectLabel(GLenum identifier, GLuint name, GLsizei length, con
         }
         ANGLE_CAPTURE(ObjectLabel, isCallValid, context, identifier, name, length, label);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY ObjectPtrLabel(const void *ptr, GLsizei length, const GLchar *label)
@@ -821,6 +936,10 @@ void GL_APIENTRY ObjectPtrLabel(const void *ptr, GLsizei length, const GLchar *l
         }
         ANGLE_CAPTURE(ObjectPtrLabel, isCallValid, context, ptr, length, label);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY PatchParameteri(GLenum pname, GLint value)
@@ -840,6 +959,10 @@ void GL_APIENTRY PatchParameteri(GLenum pname, GLint value)
         }
         ANGLE_CAPTURE(PatchParameteri, isCallValid, context, pname, value);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY PopDebugGroup()
@@ -856,6 +979,10 @@ void GL_APIENTRY PopDebugGroup()
             context->popDebugGroup();
         }
         ANGLE_CAPTURE(PopDebugGroup, isCallValid, context);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -887,6 +1014,10 @@ void GL_APIENTRY PrimitiveBoundingBox(GLfloat minX,
         ANGLE_CAPTURE(PrimitiveBoundingBox, isCallValid, context, minX, minY, minZ, minW, maxX,
                       maxY, maxZ, maxW);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY PushDebugGroup(GLenum source, GLuint id, GLsizei length, const GLchar *message)
@@ -908,6 +1039,10 @@ void GL_APIENTRY PushDebugGroup(GLenum source, GLuint id, GLsizei length, const 
             context->pushDebugGroup(source, id, length, message);
         }
         ANGLE_CAPTURE(PushDebugGroup, isCallValid, context, source, id, length, message);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -941,6 +1076,10 @@ void GL_APIENTRY ReadnPixels(GLint x,
         ANGLE_CAPTURE(ReadnPixels, isCallValid, context, x, y, width, height, format, type, bufSize,
                       data);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY SamplerParameterIiv(GLuint sampler, GLenum pname, const GLint *param)
@@ -964,6 +1103,10 @@ void GL_APIENTRY SamplerParameterIiv(GLuint sampler, GLenum pname, const GLint *
             context->samplerParameterIiv(samplerPacked, pname, param);
         }
         ANGLE_CAPTURE(SamplerParameterIiv, isCallValid, context, samplerPacked, pname, param);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -989,6 +1132,10 @@ void GL_APIENTRY SamplerParameterIuiv(GLuint sampler, GLenum pname, const GLuint
         }
         ANGLE_CAPTURE(SamplerParameterIuiv, isCallValid, context, samplerPacked, pname, param);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY TexBuffer(GLenum target, GLenum internalformat, GLuint buffer)
@@ -1011,6 +1158,10 @@ void GL_APIENTRY TexBuffer(GLenum target, GLenum internalformat, GLuint buffer)
             context->texBuffer(targetPacked, internalformat, bufferPacked);
         }
         ANGLE_CAPTURE(TexBuffer, isCallValid, context, targetPacked, internalformat, bufferPacked);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -1043,6 +1194,10 @@ void GL_APIENTRY TexBufferRange(GLenum target,
         ANGLE_CAPTURE(TexBufferRange, isCallValid, context, targetPacked, internalformat,
                       bufferPacked, offset, size);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY TexParameterIiv(GLenum target, GLenum pname, const GLint *params)
@@ -1067,6 +1222,10 @@ void GL_APIENTRY TexParameterIiv(GLenum target, GLenum pname, const GLint *param
         }
         ANGLE_CAPTURE(TexParameterIiv, isCallValid, context, targetPacked, pname, params);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY TexParameterIuiv(GLenum target, GLenum pname, const GLuint *params)
@@ -1090,6 +1249,10 @@ void GL_APIENTRY TexParameterIuiv(GLenum target, GLenum pname, const GLuint *par
             context->texParameterIuiv(targetPacked, pname, params);
         }
         ANGLE_CAPTURE(TexParameterIuiv, isCallValid, context, targetPacked, pname, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -1125,6 +1288,10 @@ void GL_APIENTRY TexStorage3DMultisample(GLenum target,
         }
         ANGLE_CAPTURE(TexStorage3DMultisample, isCallValid, context, targetPacked, samples,
                       internalformat, width, height, depth, fixedsamplelocations);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 }  // namespace gl

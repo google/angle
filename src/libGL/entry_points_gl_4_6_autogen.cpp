@@ -53,6 +53,10 @@ void GL_APIENTRY MultiDrawArraysIndirectCount(GLenum mode,
         ANGLE_CAPTURE(MultiDrawArraysIndirectCount, isCallValid, context, mode, indirect, drawcount,
                       maxdrawcount, stride);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY MultiDrawElementsIndirectCount(GLenum mode,
@@ -84,6 +88,10 @@ void GL_APIENTRY MultiDrawElementsIndirectCount(GLenum mode,
         ANGLE_CAPTURE(MultiDrawElementsIndirectCount, isCallValid, context, mode, type, indirect,
                       drawcount, maxdrawcount, stride);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY PolygonOffsetClamp(GLfloat factor, GLfloat units, GLfloat clamp)
@@ -103,6 +111,10 @@ void GL_APIENTRY PolygonOffsetClamp(GLfloat factor, GLfloat units, GLfloat clamp
             context->polygonOffsetClamp(factor, units, clamp);
         }
         ANGLE_CAPTURE(PolygonOffsetClamp, isCallValid, context, factor, units, clamp);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -134,6 +146,10 @@ void GL_APIENTRY SpecializeShader(GLuint shader,
         }
         ANGLE_CAPTURE(SpecializeShader, isCallValid, context, shader, pEntryPoint,
                       numSpecializationConstants, pConstantIndex, pConstantValue);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 }  // namespace gl

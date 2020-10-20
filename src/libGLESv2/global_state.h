@@ -134,11 +134,16 @@ ANGLE_INLINE Context *GetValidGlobalContext()
     return gCurrentValidContext;
 }
 
+// Generate a context lost error on the context if it is non-null and lost.
+void GenerateContextLostErrorOnContext(Context *context);
+void GenerateContextLostErrorOnCurrentGlobalContext();
+
 ANGLE_INLINE std::unique_lock<angle::GlobalMutex> GetShareGroupLock(const Context *context)
 {
     return context->isShared() ? std::unique_lock<angle::GlobalMutex>(egl::GetGlobalMutex())
                                : std::unique_lock<angle::GlobalMutex>();
 }
+
 }  // namespace gl
 
 #endif  // LIBGLESV2_GLOBALSTATE_H_

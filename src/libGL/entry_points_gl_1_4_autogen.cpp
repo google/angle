@@ -46,6 +46,10 @@ void GL_APIENTRY BlendColor(GLfloat red, GLfloat green, GLfloat blue, GLfloat al
         }
         ANGLE_CAPTURE(BlendColor, isCallValid, context, red, green, blue, alpha);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY BlendEquation(GLenum mode)
@@ -63,6 +67,10 @@ void GL_APIENTRY BlendEquation(GLenum mode)
             context->blendEquation(mode);
         }
         ANGLE_CAPTURE(BlendEquation, isCallValid, context, mode);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -93,6 +101,10 @@ void GL_APIENTRY BlendFuncSeparate(GLenum sfactorRGB,
         ANGLE_CAPTURE(BlendFuncSeparate, isCallValid, context, sfactorRGB, dfactorRGB, sfactorAlpha,
                       dfactorAlpha);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY FogCoordPointer(GLenum type, GLsizei stride, const void *pointer)
@@ -116,6 +128,10 @@ void GL_APIENTRY FogCoordPointer(GLenum type, GLsizei stride, const void *pointe
         }
         ANGLE_CAPTURE(FogCoordPointer, isCallValid, context, type, stride, pointer);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY FogCoordd(GLdouble coord)
@@ -132,6 +148,10 @@ void GL_APIENTRY FogCoordd(GLdouble coord)
             context->fogCoordd(coord);
         }
         ANGLE_CAPTURE(FogCoordd, isCallValid, context, coord);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -151,6 +171,10 @@ void GL_APIENTRY FogCoorddv(const GLdouble *coord)
         }
         ANGLE_CAPTURE(FogCoorddv, isCallValid, context, coord);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY FogCoordf(GLfloat coord)
@@ -167,6 +191,10 @@ void GL_APIENTRY FogCoordf(GLfloat coord)
             context->fogCoordf(coord);
         }
         ANGLE_CAPTURE(FogCoordf, isCallValid, context, coord);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -185,6 +213,10 @@ void GL_APIENTRY FogCoordfv(const GLfloat *coord)
             context->fogCoordfv(coord);
         }
         ANGLE_CAPTURE(FogCoordfv, isCallValid, context, coord);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -211,6 +243,10 @@ void GL_APIENTRY MultiDrawArrays(GLenum mode,
             context->multiDrawArrays(modePacked, first, count, drawcount);
         }
         ANGLE_CAPTURE(MultiDrawArrays, isCallValid, context, modePacked, first, count, drawcount);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -243,6 +279,10 @@ void GL_APIENTRY MultiDrawElements(GLenum mode,
         ANGLE_CAPTURE(MultiDrawElements, isCallValid, context, modePacked, count, typePacked,
                       indices, drawcount);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY PointParameterf(GLenum pname, GLfloat param)
@@ -262,6 +302,10 @@ void GL_APIENTRY PointParameterf(GLenum pname, GLfloat param)
             context->pointParameterf(pnamePacked, param);
         }
         ANGLE_CAPTURE(PointParameterf, isCallValid, context, pnamePacked, param);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -284,6 +328,10 @@ void GL_APIENTRY PointParameterfv(GLenum pname, const GLfloat *params)
         }
         ANGLE_CAPTURE(PointParameterfv, isCallValid, context, pnamePacked, params);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY PointParameteri(GLenum pname, GLint param)
@@ -302,6 +350,10 @@ void GL_APIENTRY PointParameteri(GLenum pname, GLint param)
             context->pointParameteri(pname, param);
         }
         ANGLE_CAPTURE(PointParameteri, isCallValid, context, pname, param);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -323,6 +375,10 @@ void GL_APIENTRY PointParameteriv(GLenum pname, const GLint *params)
         }
         ANGLE_CAPTURE(PointParameteriv, isCallValid, context, pname, params);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY SecondaryColor3b(GLbyte red, GLbyte green, GLbyte blue)
@@ -343,6 +399,10 @@ void GL_APIENTRY SecondaryColor3b(GLbyte red, GLbyte green, GLbyte blue)
         }
         ANGLE_CAPTURE(SecondaryColor3b, isCallValid, context, red, green, blue);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY SecondaryColor3bv(const GLbyte *v)
@@ -360,6 +420,10 @@ void GL_APIENTRY SecondaryColor3bv(const GLbyte *v)
             context->secondaryColor3bv(v);
         }
         ANGLE_CAPTURE(SecondaryColor3bv, isCallValid, context, v);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -381,6 +445,10 @@ void GL_APIENTRY SecondaryColor3d(GLdouble red, GLdouble green, GLdouble blue)
         }
         ANGLE_CAPTURE(SecondaryColor3d, isCallValid, context, red, green, blue);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY SecondaryColor3dv(const GLdouble *v)
@@ -398,6 +466,10 @@ void GL_APIENTRY SecondaryColor3dv(const GLdouble *v)
             context->secondaryColor3dv(v);
         }
         ANGLE_CAPTURE(SecondaryColor3dv, isCallValid, context, v);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -419,6 +491,10 @@ void GL_APIENTRY SecondaryColor3f(GLfloat red, GLfloat green, GLfloat blue)
         }
         ANGLE_CAPTURE(SecondaryColor3f, isCallValid, context, red, green, blue);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY SecondaryColor3fv(const GLfloat *v)
@@ -436,6 +512,10 @@ void GL_APIENTRY SecondaryColor3fv(const GLfloat *v)
             context->secondaryColor3fv(v);
         }
         ANGLE_CAPTURE(SecondaryColor3fv, isCallValid, context, v);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -457,6 +537,10 @@ void GL_APIENTRY SecondaryColor3i(GLint red, GLint green, GLint blue)
         }
         ANGLE_CAPTURE(SecondaryColor3i, isCallValid, context, red, green, blue);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY SecondaryColor3iv(const GLint *v)
@@ -474,6 +558,10 @@ void GL_APIENTRY SecondaryColor3iv(const GLint *v)
             context->secondaryColor3iv(v);
         }
         ANGLE_CAPTURE(SecondaryColor3iv, isCallValid, context, v);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -495,6 +583,10 @@ void GL_APIENTRY SecondaryColor3s(GLshort red, GLshort green, GLshort blue)
         }
         ANGLE_CAPTURE(SecondaryColor3s, isCallValid, context, red, green, blue);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY SecondaryColor3sv(const GLshort *v)
@@ -512,6 +604,10 @@ void GL_APIENTRY SecondaryColor3sv(const GLshort *v)
             context->secondaryColor3sv(v);
         }
         ANGLE_CAPTURE(SecondaryColor3sv, isCallValid, context, v);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -533,6 +629,10 @@ void GL_APIENTRY SecondaryColor3ub(GLubyte red, GLubyte green, GLubyte blue)
         }
         ANGLE_CAPTURE(SecondaryColor3ub, isCallValid, context, red, green, blue);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY SecondaryColor3ubv(const GLubyte *v)
@@ -550,6 +650,10 @@ void GL_APIENTRY SecondaryColor3ubv(const GLubyte *v)
             context->secondaryColor3ubv(v);
         }
         ANGLE_CAPTURE(SecondaryColor3ubv, isCallValid, context, v);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -571,6 +675,10 @@ void GL_APIENTRY SecondaryColor3ui(GLuint red, GLuint green, GLuint blue)
         }
         ANGLE_CAPTURE(SecondaryColor3ui, isCallValid, context, red, green, blue);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY SecondaryColor3uiv(const GLuint *v)
@@ -588,6 +696,10 @@ void GL_APIENTRY SecondaryColor3uiv(const GLuint *v)
             context->secondaryColor3uiv(v);
         }
         ANGLE_CAPTURE(SecondaryColor3uiv, isCallValid, context, v);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -609,6 +721,10 @@ void GL_APIENTRY SecondaryColor3us(GLushort red, GLushort green, GLushort blue)
         }
         ANGLE_CAPTURE(SecondaryColor3us, isCallValid, context, red, green, blue);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY SecondaryColor3usv(const GLushort *v)
@@ -626,6 +742,10 @@ void GL_APIENTRY SecondaryColor3usv(const GLushort *v)
             context->secondaryColor3usv(v);
         }
         ANGLE_CAPTURE(SecondaryColor3usv, isCallValid, context, v);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -649,6 +769,10 @@ void GL_APIENTRY SecondaryColorPointer(GLint size, GLenum type, GLsizei stride, 
         }
         ANGLE_CAPTURE(SecondaryColorPointer, isCallValid, context, size, type, stride, pointer);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY WindowPos2d(GLdouble x, GLdouble y)
@@ -666,6 +790,10 @@ void GL_APIENTRY WindowPos2d(GLdouble x, GLdouble y)
             context->windowPos2d(x, y);
         }
         ANGLE_CAPTURE(WindowPos2d, isCallValid, context, x, y);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -685,6 +813,10 @@ void GL_APIENTRY WindowPos2dv(const GLdouble *v)
         }
         ANGLE_CAPTURE(WindowPos2dv, isCallValid, context, v);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY WindowPos2f(GLfloat x, GLfloat y)
@@ -702,6 +834,10 @@ void GL_APIENTRY WindowPos2f(GLfloat x, GLfloat y)
             context->windowPos2f(x, y);
         }
         ANGLE_CAPTURE(WindowPos2f, isCallValid, context, x, y);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -721,6 +857,10 @@ void GL_APIENTRY WindowPos2fv(const GLfloat *v)
         }
         ANGLE_CAPTURE(WindowPos2fv, isCallValid, context, v);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY WindowPos2i(GLint x, GLint y)
@@ -737,6 +877,10 @@ void GL_APIENTRY WindowPos2i(GLint x, GLint y)
             context->windowPos2i(x, y);
         }
         ANGLE_CAPTURE(WindowPos2i, isCallValid, context, x, y);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -756,6 +900,10 @@ void GL_APIENTRY WindowPos2iv(const GLint *v)
         }
         ANGLE_CAPTURE(WindowPos2iv, isCallValid, context, v);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY WindowPos2s(GLshort x, GLshort y)
@@ -773,6 +921,10 @@ void GL_APIENTRY WindowPos2s(GLshort x, GLshort y)
             context->windowPos2s(x, y);
         }
         ANGLE_CAPTURE(WindowPos2s, isCallValid, context, x, y);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -792,6 +944,10 @@ void GL_APIENTRY WindowPos2sv(const GLshort *v)
         }
         ANGLE_CAPTURE(WindowPos2sv, isCallValid, context, v);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY WindowPos3d(GLdouble x, GLdouble y, GLdouble z)
@@ -809,6 +965,10 @@ void GL_APIENTRY WindowPos3d(GLdouble x, GLdouble y, GLdouble z)
             context->windowPos3d(x, y, z);
         }
         ANGLE_CAPTURE(WindowPos3d, isCallValid, context, x, y, z);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -828,6 +988,10 @@ void GL_APIENTRY WindowPos3dv(const GLdouble *v)
         }
         ANGLE_CAPTURE(WindowPos3dv, isCallValid, context, v);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY WindowPos3f(GLfloat x, GLfloat y, GLfloat z)
@@ -845,6 +1009,10 @@ void GL_APIENTRY WindowPos3f(GLfloat x, GLfloat y, GLfloat z)
             context->windowPos3f(x, y, z);
         }
         ANGLE_CAPTURE(WindowPos3f, isCallValid, context, x, y, z);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -864,6 +1032,10 @@ void GL_APIENTRY WindowPos3fv(const GLfloat *v)
         }
         ANGLE_CAPTURE(WindowPos3fv, isCallValid, context, v);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY WindowPos3i(GLint x, GLint y, GLint z)
@@ -881,6 +1053,10 @@ void GL_APIENTRY WindowPos3i(GLint x, GLint y, GLint z)
             context->windowPos3i(x, y, z);
         }
         ANGLE_CAPTURE(WindowPos3i, isCallValid, context, x, y, z);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -900,6 +1076,10 @@ void GL_APIENTRY WindowPos3iv(const GLint *v)
         }
         ANGLE_CAPTURE(WindowPos3iv, isCallValid, context, v);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY WindowPos3s(GLshort x, GLshort y, GLshort z)
@@ -918,6 +1098,10 @@ void GL_APIENTRY WindowPos3s(GLshort x, GLshort y, GLshort z)
         }
         ANGLE_CAPTURE(WindowPos3s, isCallValid, context, x, y, z);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY WindowPos3sv(const GLshort *v)
@@ -935,6 +1119,10 @@ void GL_APIENTRY WindowPos3sv(const GLshort *v)
             context->windowPos3sv(v);
         }
         ANGLE_CAPTURE(WindowPos3sv, isCallValid, context, v);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 }  // namespace gl

@@ -159,7 +159,7 @@ template_entry_point_no_return = """void GL_APIENTRY {name}{explicit_context_suf
     Context *context = {context_getter};
     {event_comment}EVENT(context, "gl{name}", "context = %d{comma_if_needed}{format_params}", CID(context){comma_if_needed}{pass_params});
 
-    if (context)
+    if ({valid_context_check})
     {{{assert_explicit_context}{packed_gl_enum_conversions}
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid = (context->skipValidation() || Validate{name}({validate_params}));
@@ -168,6 +168,10 @@ template_entry_point_no_return = """void GL_APIENTRY {name}{explicit_context_suf
             context->{name_lower_no_suffix}({internal_params});
         }}
         ANGLE_CAPTURE({name}, isCallValid, {validate_params});
+    }}
+    else
+    {{
+        {constext_lost_error_generator}
     }}
 }}
 """
@@ -178,7 +182,7 @@ template_entry_point_with_return = """{return_type}GL_APIENTRY {name}{explicit_c
     {event_comment}EVENT(context, "gl{name}", "context = %d{comma_if_needed}{format_params}", CID(context){comma_if_needed}{pass_params});
 
     {return_type} returnValue;
-    if (context)
+    if ({valid_context_check})
     {{{assert_explicit_context}{packed_gl_enum_conversions}
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid = (context->skipValidation() || Validate{name}({validate_params}));
@@ -194,6 +198,7 @@ template_entry_point_with_return = """{return_type}GL_APIENTRY {name}{explicit_c
     }}
     else
     {{
+        {constext_lost_error_generator}
         returnValue = GetDefaultReturnValue<EntryPoint::{name}, {return_type}>();
     }}
     return returnValue;
@@ -791,10 +796,7 @@ def default_return_value(cmd_name, return_type):
     return "GetDefaultReturnValue<EntryPoint::" + cmd_name[2:] + ", " + return_type + ">()"
 
 
-def get_context_getter_function(cmd_name, is_explicit_context):
-    if is_explicit_context:
-        return "static_cast<gl::Context *>(ctx)"
-
+def is_context_lost_acceptable_cmd(cmd_name):
     lost_context_acceptable_cmds = [
         "glGetError",
         "glGetSync",
@@ -803,10 +805,42 @@ def get_context_getter_function(cmd_name, is_explicit_context):
         "glGetGraphicsResetStatus",
         "glGetShaderiv",
     ]
+
     for context_lost_entry_pont in lost_context_acceptable_cmds:
         if cmd_name.startswith(context_lost_entry_pont):
-            return "GetGlobalContext()"
+            return True
+    return False
+
+
+def get_context_getter_function(cmd_name, is_explicit_context):
+    if is_explicit_context:
+        return "static_cast<gl::Context *>(ctx)"
+
+    if is_context_lost_acceptable_cmd(cmd_name):
+        return "GetGlobalContext()"
+
     return "GetValidGlobalContext()"
+
+
+def get_valid_context_check(cmd_name, is_explicit_context):
+    if is_explicit_context:
+        if is_context_lost_acceptable_cmd(cmd_name):
+            return "context"
+        else:
+            return "context && !context->isContextLost()"
+
+    return "context"
+
+
+def get_constext_lost_error_generator(cmd_name, is_explicit_context):
+    # Don't generate context lost errors on commands that accept lost contexts
+    if is_context_lost_acceptable_cmd(cmd_name):
+        return ""
+
+    if is_explicit_context:
+        return "GenerateContextLostErrorOnContext(context);"
+    else:
+        return "GenerateContextLostErrorOnCurrentGlobalContext();"
 
 
 def strip_suffix(name, is_gles):
@@ -883,6 +917,10 @@ def format_entry_point_def(command_node, cmd_name, proto, params, is_explicit_co
             ", ".join(format_params),
         "context_getter":
             get_context_getter_function(cmd_name, is_explicit_context),
+        "valid_context_check":
+            get_valid_context_check(cmd_name, is_explicit_context),
+        "constext_lost_error_generator":
+            get_constext_lost_error_generator(cmd_name, is_explicit_context),
         "event_comment":
             event_comment,
         "explicit_context_suffix":

@@ -58,6 +58,10 @@ void GL_APIENTRY CopyBufferSubData(GLenum readTarget,
         ANGLE_CAPTURE(CopyBufferSubData, isCallValid, context, readTargetPacked, writeTargetPacked,
                       readOffset, writeOffset, size);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY DrawArraysInstanced(GLenum mode, GLint first, GLsizei count, GLsizei instancecount)
@@ -82,6 +86,10 @@ void GL_APIENTRY DrawArraysInstanced(GLenum mode, GLint first, GLsizei count, GL
         }
         ANGLE_CAPTURE(DrawArraysInstanced, isCallValid, context, modePacked, first, count,
                       instancecount);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -112,6 +120,10 @@ void GL_APIENTRY DrawElementsInstanced(GLenum mode,
         }
         ANGLE_CAPTURE(DrawElementsInstanced, isCallValid, context, modePacked, count, typePacked,
                       indices, instancecount);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -144,6 +156,10 @@ void GL_APIENTRY GetActiveUniformBlockName(GLuint program,
         ANGLE_CAPTURE(GetActiveUniformBlockName, isCallValid, context, programPacked,
                       uniformBlockIndex, bufSize, length, uniformBlockName);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY GetActiveUniformBlockiv(GLuint program,
@@ -171,6 +187,10 @@ void GL_APIENTRY GetActiveUniformBlockiv(GLuint program,
         }
         ANGLE_CAPTURE(GetActiveUniformBlockiv, isCallValid, context, programPacked,
                       uniformBlockIndex, pname, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -200,6 +220,10 @@ void GL_APIENTRY GetActiveUniformName(GLuint program,
         }
         ANGLE_CAPTURE(GetActiveUniformName, isCallValid, context, programPacked, uniformIndex,
                       bufSize, length, uniformName);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -232,6 +256,10 @@ void GL_APIENTRY GetActiveUniformsiv(GLuint program,
         ANGLE_CAPTURE(GetActiveUniformsiv, isCallValid, context, programPacked, uniformCount,
                       uniformIndices, pname, params);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 GLuint GL_APIENTRY GetUniformBlockIndex(GLuint program, const GLchar *uniformBlockName)
@@ -261,6 +289,7 @@ GLuint GL_APIENTRY GetUniformBlockIndex(GLuint program, const GLchar *uniformBlo
     }
     else
     {
+        GenerateContextLostErrorOnCurrentGlobalContext();
         returnValue = GetDefaultReturnValue<EntryPoint::GetUniformBlockIndex, GLuint>();
     }
     return returnValue;
@@ -291,6 +320,10 @@ void GL_APIENTRY GetUniformIndices(GLuint program,
         ANGLE_CAPTURE(GetUniformIndices, isCallValid, context, programPacked, uniformCount,
                       uniformNames, uniformIndices);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY PrimitiveRestartIndex(GLuint index)
@@ -309,6 +342,10 @@ void GL_APIENTRY PrimitiveRestartIndex(GLuint index)
             context->primitiveRestartIndex(index);
         }
         ANGLE_CAPTURE(PrimitiveRestartIndex, isCallValid, context, index);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -332,6 +369,10 @@ void GL_APIENTRY TexBuffer(GLenum target, GLenum internalformat, GLuint buffer)
             context->texBuffer(targetPacked, internalformat, bufferPacked);
         }
         ANGLE_CAPTURE(TexBuffer, isCallValid, context, targetPacked, internalformat, bufferPacked);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -358,6 +399,10 @@ void GL_APIENTRY UniformBlockBinding(GLuint program,
         }
         ANGLE_CAPTURE(UniformBlockBinding, isCallValid, context, programPacked, uniformBlockIndex,
                       uniformBlockBinding);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 }  // namespace gl
