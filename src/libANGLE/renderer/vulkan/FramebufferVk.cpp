@@ -637,9 +637,8 @@ angle::Result FramebufferVk::clearBufferiv(const gl::Context *context,
 
     if (buffer == GL_STENCIL)
     {
-        clearStencil = true;
-        clearValue.depthStencil.stencil =
-            gl::clamp(values[0], 0, std::numeric_limits<uint8_t>::max());
+        clearStencil                    = true;
+        clearValue.depthStencil.stencil = static_cast<uint8_t>(values[0]);
     }
     else
     {
@@ -663,7 +662,7 @@ angle::Result FramebufferVk::clearBufferfi(const gl::Context *context,
     VkClearValue clearValue = {};
 
     clearValue.depthStencil.depth   = depth;
-    clearValue.depthStencil.stencil = gl::clamp(stencil, 0, std::numeric_limits<uint8_t>::max());
+    clearValue.depthStencil.stencil = static_cast<uint8_t>(stencil);
 
     return clearImpl(context, gl::DrawBufferMask(), true, true, clearValue.color,
                      clearValue.depthStencil);

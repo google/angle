@@ -1972,6 +1972,107 @@ TEST_P(ClearTestES3, ClearThenMixedMaskedClear)
     EXPECT_PIXEL_COLOR_NEAR(kSize - 1, kSize - 1, kExpected, 1);
 }
 
+// Test that clear stencil value is correctly masked to 8 bits.
+TEST_P(ClearTest, ClearStencilMask)
+{
+    GLint stencilBits = 0;
+    glGetIntegerv(GL_STENCIL_BITS, &stencilBits);
+    EXPECT_EQ(stencilBits, 8);
+
+    ANGLE_GL_PROGRAM(drawColor, essl1_shaders::vs::Simple(), essl1_shaders::fs::Green());
+    glUseProgram(drawColor);
+
+    glClearColor(0, 0, 0, 1);
+    glClear(GL_COLOR_BUFFER_BIT);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::black);
+
+    // Clear stencil value must be masked to 0x42
+    glClearStencil(0x142);
+    glClear(GL_STENCIL_BUFFER_BIT);
+
+    // Check that the stencil test works as expected
+    glEnable(GL_STENCIL_TEST);
+
+    // Negative case
+    glStencilFunc(GL_NOTEQUAL, 0x42, 0xFF);
+    drawQuad(drawColor, essl1_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::black);
+
+    // Positive case
+    glStencilFunc(GL_EQUAL, 0x42, 0xFF);
+    drawQuad(drawColor, essl1_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+    ASSERT_GL_NO_ERROR();
+}
+
+// Test that glClearBufferiv correctly masks the clear stencil value.
+TEST_P(ClearTestES3, ClearBufferivStencilMask)
+{
+    GLint stencilBits = 0;
+    glGetIntegerv(GL_STENCIL_BITS, &stencilBits);
+    EXPECT_EQ(stencilBits, 8);
+
+    ANGLE_GL_PROGRAM(drawColor, essl1_shaders::vs::Simple(), essl1_shaders::fs::Green());
+    glUseProgram(drawColor);
+
+    glClearColor(0, 0, 0, 1);
+    glClear(GL_COLOR_BUFFER_BIT);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::black);
+
+    // Clear stencil value must be masked to 0x42
+    const GLint kStencilClearValue = 0x142;
+    glClearBufferiv(GL_STENCIL, 0, &kStencilClearValue);
+
+    // Check that the stencil test works as expected
+    glEnable(GL_STENCIL_TEST);
+
+    // Negative case
+    glStencilFunc(GL_NOTEQUAL, 0x42, 0xFF);
+    drawQuad(drawColor, essl1_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::black);
+
+    // Positive case
+    glStencilFunc(GL_EQUAL, 0x42, 0xFF);
+    drawQuad(drawColor, essl1_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+    ASSERT_GL_NO_ERROR();
+}
+
+// Test that glClearBufferfi correctly masks the clear stencil value.
+TEST_P(ClearTestES3, ClearBufferfiStencilMask)
+{
+    GLint stencilBits = 0;
+    glGetIntegerv(GL_STENCIL_BITS, &stencilBits);
+    EXPECT_EQ(stencilBits, 8);
+
+    ANGLE_GL_PROGRAM(drawColor, essl1_shaders::vs::Simple(), essl1_shaders::fs::Green());
+    glUseProgram(drawColor);
+
+    glClearColor(0, 0, 0, 1);
+    glClear(GL_COLOR_BUFFER_BIT);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::black);
+
+    // Clear stencil value must be masked to 0x42
+    glClearBufferfi(GL_DEPTH_STENCIL, 0, 0.5f, 0x142);
+
+    // Check that the stencil test works as expected
+    glEnable(GL_STENCIL_TEST);
+
+    // Negative case
+    glStencilFunc(GL_NOTEQUAL, 0x42, 0xFF);
+    drawQuad(drawColor, essl1_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::black);
+
+    // Positive case
+    glStencilFunc(GL_EQUAL, 0x42, 0xFF);
+    drawQuad(drawColor, essl1_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+    ASSERT_GL_NO_ERROR();
+}
+
 #ifdef Bool
 // X11 craziness.
 #    undef Bool
