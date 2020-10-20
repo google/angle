@@ -48,6 +48,7 @@ enum class RestrictedTraceID
     egypt_1500,
     free_fire,
     manhattan_10,
+    marvel_contest_of_champions,
     mobile_legends,
     nba2k20_800,
     temple_run_300,

@@ -245,6 +245,11 @@ TracePerfTest::TracePerfTest()
         addExtensionPrerequisite("GL_OES_EGL_image_external");
     }
 
+    if (param.testID == RestrictedTraceID::marvel_contest_of_champions)
+    {
+        addExtensionPrerequisite("GL_EXT_color_buffer_half_float");
+    }
+
     // We already swap in TracePerfTest::drawBenchmark, no need to swap again in the harness.
     disableTestHarnessSwap();
 

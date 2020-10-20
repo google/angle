@@ -1,6 +1,6 @@
 {
   "src/tests/restricted_traces/.gitignore":
-    "df7b65db17f6db84e1c1c45f1027bdb1",
+    "cababe61df13c60c4bf75017178a867e",
   "src/tests/restricted_traces/angry_birds_2_1500.tar.gz.sha1":
     "44fc5437c4a84012e338b3da4b6fc28a",
   "src/tests/restricted_traces/arena_of_valor.tar.gz.sha1":
@@ -19,18 +19,20 @@
     "a520ef50175b1b9a20383a884e293b54",
   "src/tests/restricted_traces/manhattan_10.tar.gz.sha1":
     "752781119592a190cc02b773adf38fc3",
+  "src/tests/restricted_traces/marvel_contest_of_champions.tar.gz.sha1":
+    "d95d5167639b7b72ae9ae51f77b70f7e",
   "src/tests/restricted_traces/mobile_legends.tar.gz.sha1":
     "a3fe48a3acc2165a7fb3eb6cf01b441f",
   "src/tests/restricted_traces/nba2k20_800.tar.gz.sha1":
     "03df0dcf41c18bc59edfc0b088ca4a87",
   "src/tests/restricted_traces/restricted_traces.json":
-    "03d84b1e4d3e5a3cfadd050750b9b1ce",
+    "92754f0dc16c9aa4e2c31699c78ed771",
   "src/tests/restricted_traces/restricted_traces_autogen.cpp":
-    "bf2e36f2de6c095228ad8a9655eae0a9",
+    "90c4690798c3a0208f1e3dc15938762b",
   "src/tests/restricted_traces/restricted_traces_autogen.gni":
-    "b6f1670b97ae0ea561f107721de4ca90",
+    "5c41df13ceeb7a41a59ab8e86b223eab",
   "src/tests/restricted_traces/restricted_traces_autogen.h":
-    "522c35f107b20fc2031da4b87590fe85",
+    "d242dcd3e814076b84d3fdf54e67f545",
   "src/tests/restricted_traces/temple_run_300.tar.gz.sha1":
     "77475b0186ee0380eeb9db47433d0457",
   "src/tests/restricted_traces/trex_200.tar.gz.sha1":
