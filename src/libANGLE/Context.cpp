@@ -8696,6 +8696,7 @@ void StateCache::onVertexArrayBindingChange(Context *context)
     updateActiveAttribsMask(context);
     updateVertexElementLimits(context);
     updateBasicDrawStatesError();
+    updateBasicDrawElementsError();
 }
 
 void StateCache::onProgramExecutableChange(Context *context)
