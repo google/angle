@@ -371,7 +371,8 @@ class dEQPTest : public testing::TestWithParam<size_t>
         // crashed tests we track how many tests we "tried" to run.
         sTestCount++;
 
-        if (caseInfo.mExpectation == GPUTestExpectationsParser::kGpuTestSkip)
+        if (caseInfo.mExpectation == GPUTestExpectationsParser::kGpuTestSkip ||
+            caseInfo.mExpectation == GPUTestExpectationsParser::kGpuTestTimeout)
         {
             sSkippedTestCount++;
             std::cout << "Test skipped.\n";
