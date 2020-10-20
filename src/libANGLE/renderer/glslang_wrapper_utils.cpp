@@ -2075,12 +2075,10 @@ class SpirvVertexAttributeAliasingTransformer final : public SpirvTransformerBas
         const std::vector<uint32_t> &spirvBlobIn,
         const ShaderInterfaceVariableInfoMap &variableInfoMap,
         std::vector<const ShaderInterfaceVariableInfo *> &&variableInfoById,
-        gl::AttribArray<AliasingAttributeMap> &&aliasingAttributeMap,
         SpirvBlob *spirvBlobOut)
         : SpirvTransformerBase(spirvBlobIn, variableInfoMap, gl::ShaderType::Vertex, spirvBlobOut)
     {
-        mVariableInfoById     = std::move(variableInfoById);
-        mAliasingAttributeMap = std::move(aliasingAttributeMap);
+        mVariableInfoById = std::move(variableInfoById);
     }
 
     bool transform();
@@ -2154,13 +2152,59 @@ void SpirvVertexAttributeAliasingTransformer::preprocessAliasingAttributes()
     const size_t indexBound = mSpirvBlobIn[kHeaderIndexIndexBound];
     mIsAliasingAttributeById.resize(indexBound + 1, false);
 
-    for (const AliasingAttributeMap &aliasingMap : mAliasingAttributeMap)
+    // Go through attributes and find out which alias which.
+    for (size_t id = 0; id < mVariableInfoById.size(); ++id)
     {
-        for (uint32_t aliasingId : aliasingMap.aliasingAttributes)
+        const ShaderInterfaceVariableInfo *info = mVariableInfoById[id];
+
+        // Ignore non attribute or inactive ids.
+        if (info == nullptr || info->attributeComponentCount == 0 ||
+            !info->activeStages[gl::ShaderType::Vertex])
         {
-            ASSERT(mIsAliasingAttributeById[aliasingId] == false);
-            mIsAliasingAttributeById[aliasingId] = true;
+            continue;
         }
+
+        // Ignore matrix attributes for now.
+        // TODO: aliasing matrix attributes.  http://anglebug.com/4249
+        if (info->isMatrixAttribute)
+        {
+            continue;
+        }
+
+        ASSERT(info->location != ShaderInterfaceVariableInfo::kInvalid);
+        ASSERT(info->location < mAliasingAttributeMap.size());
+
+        AliasingAttributeMap *aliasingMap = &mAliasingAttributeMap[info->location];
+
+        // If this is the first attribute in this location, remember it.
+        if (aliasingMap->attribute == 0)
+        {
+            aliasingMap->attribute = id;
+            continue;
+        }
+
+        // Otherwise, either add it to the list of aliasing attributes, or replace the main
+        // attribute (and add that to the list of aliasing attributes).  The one with the largest
+        // number of component is used as the main attribute.
+        const ShaderInterfaceVariableInfo *curMainAttribute =
+            mVariableInfoById[aliasingMap->attribute];
+        ASSERT(curMainAttribute != nullptr && curMainAttribute->attributeComponentCount > 0 &&
+               !curMainAttribute->isMatrixAttribute);
+
+        uint32_t aliasingId;
+        if (info->attributeComponentCount > curMainAttribute->attributeComponentCount)
+        {
+            aliasingId             = aliasingMap->attribute;
+            aliasingMap->attribute = id;
+        }
+        else
+        {
+            aliasingId = id;
+        }
+
+        aliasingMap->aliasingAttributes.push_back(aliasingId);
+        ASSERT(mIsAliasingAttributeById[aliasingId] == false);
+        mIsAliasingAttributeById[aliasingId] = true;
     }
 }
 
@@ -2588,64 +2632,39 @@ void SpirvVertexAttributeAliasingTransformer::writeVectorShuffle(
     copyInstruction(vectorShuffle.data(), kVectorShuffleInstructionBaseLength + fields.size());
 }
 
-bool CalculateAliasingAttributes(
-    const std::vector<const ShaderInterfaceVariableInfo *> &variableInfoById,
-    gl::AttribArray<AliasingAttributeMap> *aliasingAttributeMapOut)
+bool HasAliasingAttributes(const ShaderInterfaceVariableInfoMap &variableInfoMap)
 {
-    bool anyAliasing = false;
+    gl::AttributesMask isLocationAssigned;
 
-    for (size_t id = 0; id < variableInfoById.size(); ++id)
+    for (const auto &infoIter : variableInfoMap)
     {
-        const ShaderInterfaceVariableInfo *info = variableInfoById[id];
+        const ShaderInterfaceVariableInfo &info = infoIter.second;
 
         // Ignore non attribute or inactive ids.
-        if (info == nullptr || info->attributeComponentCount == 0 ||
-            !info->activeStages[gl::ShaderType::Vertex])
+        if (info.attributeComponentCount == 0 || !info.activeStages[gl::ShaderType::Vertex])
         {
             continue;
         }
 
         // Ignore matrix attributes for now.
         // TODO: aliasing matrix attributes.  http://anglebug.com/4249
-        if (info->isMatrixAttribute)
+        if (info.isMatrixAttribute)
         {
             continue;
         }
 
-        ASSERT(info->location != ShaderInterfaceVariableInfo::kInvalid);
-        ASSERT(info->location < aliasingAttributeMapOut->size());
+        ASSERT(info.location != ShaderInterfaceVariableInfo::kInvalid);
 
-        AliasingAttributeMap *aliasingMap = &(*aliasingAttributeMapOut)[info->location];
-
-        // If this is the first attribute in this location, remember it.
-        if (aliasingMap->attribute == 0)
+        // If there's aliasing, return immediately.
+        if (isLocationAssigned.test(info.location))
         {
-            aliasingMap->attribute = id;
-            continue;
+            return true;
         }
 
-        anyAliasing = true;
-
-        // Otherwise, either add it to the list of aliasing attributes, or replace the main
-        // attribute (and add that to the list of aliasing attributes).  The one with the largest
-        // number of component is used as the main attribute.
-        const ShaderInterfaceVariableInfo *curMainAttribute =
-            variableInfoById[aliasingMap->attribute];
-        ASSERT(curMainAttribute != nullptr && curMainAttribute->attributeComponentCount > 0 &&
-               !curMainAttribute->isMatrixAttribute);
-
-        if (info->attributeComponentCount > curMainAttribute->attributeComponentCount)
-        {
-            aliasingMap->aliasingAttributes.push_back(aliasingMap->attribute);
-            aliasingMap->attribute = id;
-        }
-        else
-        {
-            aliasingMap->aliasingAttributes.push_back(id);
-        }
+        isLocationAssigned.set(info.location);
     }
 
-    return anyAliasing;
+    return false;
 }
 }  // anonymous namespace
 
@@ -2867,22 +2886,14 @@ angle::Result GlslangTransformSpirvCode(const GlslangErrorCallback &callback,
                                  removeDebugInfo, variableInfoMap, shaderType, spirvBlobOut);
     ANGLE_GLSLANG_CHECK(callback, transformer.transform(), GlslangError::InvalidSpirv);
 
-    if (shaderType == gl::ShaderType::Vertex)
+    // If there are aliasing vertex attributes, transform the SPIR-V again to remove them.
+    if (shaderType == gl::ShaderType::Vertex && HasAliasingAttributes(variableInfoMap))
     {
-        gl::AttribArray<AliasingAttributeMap> aliasingAttributeMap;
-        std::vector<const ShaderInterfaceVariableInfo *> &variableInfoById =
-            transformer.getVariableInfoByIdMap();
-
-        // If there are aliasing vertex attributes, transform the SPIR-V again to remove them.
-        if (CalculateAliasingAttributes(variableInfoById, &aliasingAttributeMap))
-        {
-            SpirvBlob preTransformBlob = std::move(*spirvBlobOut);
-            SpirvVertexAttributeAliasingTransformer aliasingTransformer(
-                preTransformBlob, variableInfoMap, std::move(variableInfoById),
-                std::move(aliasingAttributeMap), spirvBlobOut);
-            ANGLE_GLSLANG_CHECK(callback, aliasingTransformer.transform(),
-                                GlslangError::InvalidSpirv);
-        }
+        SpirvBlob preTransformBlob = std::move(*spirvBlobOut);
+        SpirvVertexAttributeAliasingTransformer aliasingTransformer(
+            preTransformBlob, variableInfoMap, std::move(transformer.getVariableInfoByIdMap()),
+            spirvBlobOut);
+        ANGLE_GLSLANG_CHECK(callback, aliasingTransformer.transform(), GlslangError::InvalidSpirv);
     }
 
     ASSERT(ValidateSpirv(*spirvBlobOut));
