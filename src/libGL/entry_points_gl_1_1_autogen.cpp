@@ -54,6 +54,7 @@ GLboolean GL_APIENTRY AreTexturesResident(GLsizei n, const GLuint *textures, GLb
     }
     else
     {
+        GenerateContextLostErrorOnCurrentGlobalContext();
         returnValue = GetDefaultReturnValue<EntryPoint::AreTexturesResident, GLboolean>();
     }
     return returnValue;
@@ -74,6 +75,10 @@ void GL_APIENTRY ArrayElement(GLint i)
             context->arrayElement(i);
         }
         ANGLE_CAPTURE(ArrayElement, isCallValid, context, i);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -97,6 +102,10 @@ void GL_APIENTRY BindTexture(GLenum target, GLuint texture)
         }
         ANGLE_CAPTURE(BindTexture, isCallValid, context, targetPacked, texturePacked);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY ColorPointer(GLint size, GLenum type, GLsizei stride, const void *pointer)
@@ -119,6 +128,10 @@ void GL_APIENTRY ColorPointer(GLint size, GLenum type, GLsizei stride, const voi
             context->colorPointer(size, typePacked, stride, pointer);
         }
         ANGLE_CAPTURE(ColorPointer, isCallValid, context, size, typePacked, stride, pointer);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -149,6 +162,10 @@ void GL_APIENTRY CopyTexImage1D(GLenum target,
         }
         ANGLE_CAPTURE(CopyTexImage1D, isCallValid, context, target, level, internalformat, x, y,
                       width, border);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -183,6 +200,10 @@ void GL_APIENTRY CopyTexImage2D(GLenum target,
         ANGLE_CAPTURE(CopyTexImage2D, isCallValid, context, targetPacked, level, internalformat, x,
                       y, width, height, border);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY
@@ -206,6 +227,10 @@ CopyTexSubImage1D(GLenum target, GLint level, GLint xoffset, GLint x, GLint y, G
             context->copyTexSubImage1D(target, level, xoffset, x, y, width);
         }
         ANGLE_CAPTURE(CopyTexSubImage1D, isCallValid, context, target, level, xoffset, x, y, width);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -239,6 +264,10 @@ void GL_APIENTRY CopyTexSubImage2D(GLenum target,
         ANGLE_CAPTURE(CopyTexSubImage2D, isCallValid, context, targetPacked, level, xoffset,
                       yoffset, x, y, width, height);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY DeleteTextures(GLsizei n, const GLuint *textures)
@@ -259,6 +288,10 @@ void GL_APIENTRY DeleteTextures(GLsizei n, const GLuint *textures)
             context->deleteTextures(n, texturesPacked);
         }
         ANGLE_CAPTURE(DeleteTextures, isCallValid, context, n, texturesPacked);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -281,6 +314,10 @@ void GL_APIENTRY DisableClientState(GLenum array)
         }
         ANGLE_CAPTURE(DisableClientState, isCallValid, context, arrayPacked);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY DrawArrays(GLenum mode, GLint first, GLsizei count)
@@ -301,6 +338,10 @@ void GL_APIENTRY DrawArrays(GLenum mode, GLint first, GLsizei count)
             context->drawArrays(modePacked, first, count);
         }
         ANGLE_CAPTURE(DrawArrays, isCallValid, context, modePacked, first, count);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -326,6 +367,10 @@ void GL_APIENTRY DrawElements(GLenum mode, GLsizei count, GLenum type, const voi
         }
         ANGLE_CAPTURE(DrawElements, isCallValid, context, modePacked, count, typePacked, indices);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY EdgeFlagPointer(GLsizei stride, const void *pointer)
@@ -345,6 +390,10 @@ void GL_APIENTRY EdgeFlagPointer(GLsizei stride, const void *pointer)
             context->edgeFlagPointer(stride, pointer);
         }
         ANGLE_CAPTURE(EdgeFlagPointer, isCallValid, context, stride, pointer);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -367,6 +416,10 @@ void GL_APIENTRY EnableClientState(GLenum array)
         }
         ANGLE_CAPTURE(EnableClientState, isCallValid, context, arrayPacked);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY GenTextures(GLsizei n, GLuint *textures)
@@ -388,6 +441,10 @@ void GL_APIENTRY GenTextures(GLsizei n, GLuint *textures)
         }
         ANGLE_CAPTURE(GenTextures, isCallValid, context, n, texturesPacked);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY GetPointerv(GLenum pname, void **params)
@@ -407,6 +464,10 @@ void GL_APIENTRY GetPointerv(GLenum pname, void **params)
             context->getPointerv(pname, params);
         }
         ANGLE_CAPTURE(GetPointerv, isCallValid, context, pname, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -431,6 +492,10 @@ void GL_APIENTRY IndexPointer(GLenum type, GLsizei stride, const void *pointer)
         }
         ANGLE_CAPTURE(IndexPointer, isCallValid, context, type, stride, pointer);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY Indexub(GLubyte c)
@@ -449,6 +514,10 @@ void GL_APIENTRY Indexub(GLubyte c)
         }
         ANGLE_CAPTURE(Indexub, isCallValid, context, c);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY Indexubv(const GLubyte *c)
@@ -466,6 +535,10 @@ void GL_APIENTRY Indexubv(const GLubyte *c)
             context->indexubv(c);
         }
         ANGLE_CAPTURE(Indexubv, isCallValid, context, c);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -488,6 +561,10 @@ void GL_APIENTRY InterleavedArrays(GLenum format, GLsizei stride, const void *po
             context->interleavedArrays(format, stride, pointer);
         }
         ANGLE_CAPTURE(InterleavedArrays, isCallValid, context, format, stride, pointer);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -515,6 +592,7 @@ GLboolean GL_APIENTRY IsTexture(GLuint texture)
     }
     else
     {
+        GenerateContextLostErrorOnCurrentGlobalContext();
         returnValue = GetDefaultReturnValue<EntryPoint::IsTexture, GLboolean>();
     }
     return returnValue;
@@ -542,6 +620,10 @@ void GL_APIENTRY NormalPointer(GLenum type, GLsizei stride, const void *pointer)
         }
         ANGLE_CAPTURE(NormalPointer, isCallValid, context, typePacked, stride, pointer);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY PolygonOffset(GLfloat factor, GLfloat units)
@@ -561,6 +643,10 @@ void GL_APIENTRY PolygonOffset(GLfloat factor, GLfloat units)
         }
         ANGLE_CAPTURE(PolygonOffset, isCallValid, context, factor, units);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY PopClientAttrib()
@@ -578,6 +664,10 @@ void GL_APIENTRY PopClientAttrib()
             context->popClientAttrib();
         }
         ANGLE_CAPTURE(PopClientAttrib, isCallValid, context);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -600,6 +690,10 @@ void GL_APIENTRY PrioritizeTextures(GLsizei n, const GLuint *textures, const GLf
         }
         ANGLE_CAPTURE(PrioritizeTextures, isCallValid, context, n, textures, priorities);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY PushClientAttrib(GLbitfield mask)
@@ -618,6 +712,10 @@ void GL_APIENTRY PushClientAttrib(GLbitfield mask)
             context->pushClientAttrib(mask);
         }
         ANGLE_CAPTURE(PushClientAttrib, isCallValid, context, mask);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -641,6 +739,10 @@ void GL_APIENTRY TexCoordPointer(GLint size, GLenum type, GLsizei stride, const 
             context->texCoordPointer(size, typePacked, stride, pointer);
         }
         ANGLE_CAPTURE(TexCoordPointer, isCallValid, context, size, typePacked, stride, pointer);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -672,6 +774,10 @@ void GL_APIENTRY TexSubImage1D(GLenum target,
         }
         ANGLE_CAPTURE(TexSubImage1D, isCallValid, context, target, level, xoffset, width, format,
                       type, pixels);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -709,6 +815,10 @@ void GL_APIENTRY TexSubImage2D(GLenum target,
         ANGLE_CAPTURE(TexSubImage2D, isCallValid, context, targetPacked, level, xoffset, yoffset,
                       width, height, format, type, pixels);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY VertexPointer(GLint size, GLenum type, GLsizei stride, const void *pointer)
@@ -731,6 +841,10 @@ void GL_APIENTRY VertexPointer(GLint size, GLenum type, GLsizei stride, const vo
             context->vertexPointer(size, typePacked, stride, pointer);
         }
         ANGLE_CAPTURE(VertexPointer, isCallValid, context, size, typePacked, stride, pointer);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 }  // namespace gl

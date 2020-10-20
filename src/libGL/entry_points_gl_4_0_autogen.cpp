@@ -46,6 +46,10 @@ void GL_APIENTRY BeginQueryIndexed(GLenum target, GLuint index, GLuint id)
         }
         ANGLE_CAPTURE(BeginQueryIndexed, isCallValid, context, target, index, idPacked);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY BindTransformFeedback(GLenum target, GLuint id)
@@ -66,6 +70,10 @@ void GL_APIENTRY BindTransformFeedback(GLenum target, GLuint id)
             context->bindTransformFeedback(target, idPacked);
         }
         ANGLE_CAPTURE(BindTransformFeedback, isCallValid, context, target, idPacked);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -88,6 +96,10 @@ void GL_APIENTRY BlendEquationSeparatei(GLuint buf, GLenum modeRGB, GLenum modeA
         }
         ANGLE_CAPTURE(BlendEquationSeparatei, isCallValid, context, buf, modeRGB, modeAlpha);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY BlendEquationi(GLuint buf, GLenum mode)
@@ -107,6 +119,10 @@ void GL_APIENTRY BlendEquationi(GLuint buf, GLenum mode)
             context->blendEquationi(buf, mode);
         }
         ANGLE_CAPTURE(BlendEquationi, isCallValid, context, buf, mode);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -135,6 +151,10 @@ BlendFuncSeparatei(GLuint buf, GLenum srcRGB, GLenum dstRGB, GLenum srcAlpha, GL
         ANGLE_CAPTURE(BlendFuncSeparatei, isCallValid, context, buf, srcRGB, dstRGB, srcAlpha,
                       dstAlpha);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY BlendFunci(GLuint buf, GLenum src, GLenum dst)
@@ -155,6 +175,10 @@ void GL_APIENTRY BlendFunci(GLuint buf, GLenum src, GLenum dst)
             context->blendFunci(buf, src, dst);
         }
         ANGLE_CAPTURE(BlendFunci, isCallValid, context, buf, src, dst);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -177,6 +201,10 @@ void GL_APIENTRY DeleteTransformFeedbacks(GLsizei n, const GLuint *ids)
         }
         ANGLE_CAPTURE(DeleteTransformFeedbacks, isCallValid, context, n, idsPacked);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY DrawArraysIndirect(GLenum mode, const void *indirect)
@@ -197,6 +225,10 @@ void GL_APIENTRY DrawArraysIndirect(GLenum mode, const void *indirect)
             context->drawArraysIndirect(modePacked, indirect);
         }
         ANGLE_CAPTURE(DrawArraysIndirect, isCallValid, context, modePacked, indirect);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -223,6 +255,10 @@ void GL_APIENTRY DrawElementsIndirect(GLenum mode, GLenum type, const void *indi
         }
         ANGLE_CAPTURE(DrawElementsIndirect, isCallValid, context, modePacked, typePacked, indirect);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY DrawTransformFeedback(GLenum mode, GLuint id)
@@ -243,6 +279,10 @@ void GL_APIENTRY DrawTransformFeedback(GLenum mode, GLuint id)
             context->drawTransformFeedback(mode, idPacked);
         }
         ANGLE_CAPTURE(DrawTransformFeedback, isCallValid, context, mode, idPacked);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -265,6 +305,10 @@ void GL_APIENTRY DrawTransformFeedbackStream(GLenum mode, GLuint id, GLuint stre
         }
         ANGLE_CAPTURE(DrawTransformFeedbackStream, isCallValid, context, mode, idPacked, stream);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY EndQueryIndexed(GLenum target, GLuint index)
@@ -284,6 +328,10 @@ void GL_APIENTRY EndQueryIndexed(GLenum target, GLuint index)
             context->endQueryIndexed(target, index);
         }
         ANGLE_CAPTURE(EndQueryIndexed, isCallValid, context, target, index);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -305,6 +353,10 @@ void GL_APIENTRY GenTransformFeedbacks(GLsizei n, GLuint *ids)
             context->genTransformFeedbacks(n, idsPacked);
         }
         ANGLE_CAPTURE(GenTransformFeedbacks, isCallValid, context, n, idsPacked);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -336,6 +388,10 @@ void GL_APIENTRY GetActiveSubroutineName(GLuint program,
         }
         ANGLE_CAPTURE(GetActiveSubroutineName, isCallValid, context, programPacked, shadertype,
                       index, bufsize, length, name);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -369,6 +425,10 @@ void GL_APIENTRY GetActiveSubroutineUniformName(GLuint program,
         ANGLE_CAPTURE(GetActiveSubroutineUniformName, isCallValid, context, programPacked,
                       shadertype, index, bufsize, length, name);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY GetActiveSubroutineUniformiv(GLuint program,
@@ -398,6 +458,10 @@ void GL_APIENTRY GetActiveSubroutineUniformiv(GLuint program,
         ANGLE_CAPTURE(GetActiveSubroutineUniformiv, isCallValid, context, programPacked, shadertype,
                       index, pname, values);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY GetProgramStageiv(GLuint program, GLenum shadertype, GLenum pname, GLint *values)
@@ -423,6 +487,10 @@ void GL_APIENTRY GetProgramStageiv(GLuint program, GLenum shadertype, GLenum pna
         ANGLE_CAPTURE(GetProgramStageiv, isCallValid, context, programPacked, shadertype, pname,
                       values);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY GetQueryIndexediv(GLenum target, GLuint index, GLenum pname, GLint *params)
@@ -444,6 +512,10 @@ void GL_APIENTRY GetQueryIndexediv(GLenum target, GLuint index, GLenum pname, GL
             context->getQueryIndexediv(target, index, pname, params);
         }
         ANGLE_CAPTURE(GetQueryIndexediv, isCallValid, context, target, index, pname, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -476,6 +548,7 @@ GLuint GL_APIENTRY GetSubroutineIndex(GLuint program, GLenum shadertype, const G
     }
     else
     {
+        GenerateContextLostErrorOnCurrentGlobalContext();
         returnValue = GetDefaultReturnValue<EntryPoint::GetSubroutineIndex, GLuint>();
     }
     return returnValue;
@@ -513,6 +586,7 @@ GLint GL_APIENTRY GetSubroutineUniformLocation(GLuint program,
     }
     else
     {
+        GenerateContextLostErrorOnCurrentGlobalContext();
         returnValue = GetDefaultReturnValue<EntryPoint::GetSubroutineUniformLocation, GLint>();
     }
     return returnValue;
@@ -539,6 +613,10 @@ void GL_APIENTRY GetUniformSubroutineuiv(GLenum shadertype, GLint location, GLui
         }
         ANGLE_CAPTURE(GetUniformSubroutineuiv, isCallValid, context, shadertype, location, params);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY GetUniformdv(GLuint program, GLint location, GLdouble *params)
@@ -562,6 +640,10 @@ void GL_APIENTRY GetUniformdv(GLuint program, GLint location, GLdouble *params)
             context->getUniformdv(programPacked, locationPacked, params);
         }
         ANGLE_CAPTURE(GetUniformdv, isCallValid, context, programPacked, locationPacked, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -590,6 +672,7 @@ GLboolean GL_APIENTRY IsTransformFeedback(GLuint id)
     }
     else
     {
+        GenerateContextLostErrorOnCurrentGlobalContext();
         returnValue = GetDefaultReturnValue<EntryPoint::IsTransformFeedback, GLboolean>();
     }
     return returnValue;
@@ -611,6 +694,10 @@ void GL_APIENTRY MinSampleShading(GLfloat value)
         }
         ANGLE_CAPTURE(MinSampleShading, isCallValid, context, value);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY PatchParameterfv(GLenum pname, const GLfloat *values)
@@ -630,6 +717,10 @@ void GL_APIENTRY PatchParameterfv(GLenum pname, const GLfloat *values)
             context->patchParameterfv(pname, values);
         }
         ANGLE_CAPTURE(PatchParameterfv, isCallValid, context, pname, values);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -651,6 +742,10 @@ void GL_APIENTRY PatchParameteri(GLenum pname, GLint value)
         }
         ANGLE_CAPTURE(PatchParameteri, isCallValid, context, pname, value);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY PauseTransformFeedback()
@@ -669,6 +764,10 @@ void GL_APIENTRY PauseTransformFeedback()
         }
         ANGLE_CAPTURE(PauseTransformFeedback, isCallValid, context);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY ResumeTransformFeedback()
@@ -686,6 +785,10 @@ void GL_APIENTRY ResumeTransformFeedback()
             context->resumeTransformFeedback();
         }
         ANGLE_CAPTURE(ResumeTransformFeedback, isCallValid, context);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -706,6 +809,10 @@ void GL_APIENTRY Uniform1d(GLint location, GLdouble x)
             context->uniform1d(locationPacked, x);
         }
         ANGLE_CAPTURE(Uniform1d, isCallValid, context, locationPacked, x);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -729,6 +836,10 @@ void GL_APIENTRY Uniform1dv(GLint location, GLsizei count, const GLdouble *value
         }
         ANGLE_CAPTURE(Uniform1dv, isCallValid, context, locationPacked, count, value);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY Uniform2d(GLint location, GLdouble x, GLdouble y)
@@ -749,6 +860,10 @@ void GL_APIENTRY Uniform2d(GLint location, GLdouble x, GLdouble y)
             context->uniform2d(locationPacked, x, y);
         }
         ANGLE_CAPTURE(Uniform2d, isCallValid, context, locationPacked, x, y);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -772,6 +887,10 @@ void GL_APIENTRY Uniform2dv(GLint location, GLsizei count, const GLdouble *value
         }
         ANGLE_CAPTURE(Uniform2dv, isCallValid, context, locationPacked, count, value);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY Uniform3d(GLint location, GLdouble x, GLdouble y, GLdouble z)
@@ -792,6 +911,10 @@ void GL_APIENTRY Uniform3d(GLint location, GLdouble x, GLdouble y, GLdouble z)
             context->uniform3d(locationPacked, x, y, z);
         }
         ANGLE_CAPTURE(Uniform3d, isCallValid, context, locationPacked, x, y, z);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -815,6 +938,10 @@ void GL_APIENTRY Uniform3dv(GLint location, GLsizei count, const GLdouble *value
         }
         ANGLE_CAPTURE(Uniform3dv, isCallValid, context, locationPacked, count, value);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY Uniform4d(GLint location, GLdouble x, GLdouble y, GLdouble z, GLdouble w)
@@ -837,6 +964,10 @@ void GL_APIENTRY Uniform4d(GLint location, GLdouble x, GLdouble y, GLdouble z, G
         }
         ANGLE_CAPTURE(Uniform4d, isCallValid, context, locationPacked, x, y, z, w);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY Uniform4dv(GLint location, GLsizei count, const GLdouble *value)
@@ -858,6 +989,10 @@ void GL_APIENTRY Uniform4dv(GLint location, GLsizei count, const GLdouble *value
             context->uniform4dv(locationPacked, count, value);
         }
         ANGLE_CAPTURE(Uniform4dv, isCallValid, context, locationPacked, count, value);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -886,6 +1021,10 @@ void GL_APIENTRY UniformMatrix2dv(GLint location,
         ANGLE_CAPTURE(UniformMatrix2dv, isCallValid, context, locationPacked, count, transpose,
                       value);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY UniformMatrix2x3dv(GLint location,
@@ -912,6 +1051,10 @@ void GL_APIENTRY UniformMatrix2x3dv(GLint location,
         }
         ANGLE_CAPTURE(UniformMatrix2x3dv, isCallValid, context, locationPacked, count, transpose,
                       value);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -940,6 +1083,10 @@ void GL_APIENTRY UniformMatrix2x4dv(GLint location,
         ANGLE_CAPTURE(UniformMatrix2x4dv, isCallValid, context, locationPacked, count, transpose,
                       value);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY UniformMatrix3dv(GLint location,
@@ -966,6 +1113,10 @@ void GL_APIENTRY UniformMatrix3dv(GLint location,
         }
         ANGLE_CAPTURE(UniformMatrix3dv, isCallValid, context, locationPacked, count, transpose,
                       value);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -994,6 +1145,10 @@ void GL_APIENTRY UniformMatrix3x2dv(GLint location,
         ANGLE_CAPTURE(UniformMatrix3x2dv, isCallValid, context, locationPacked, count, transpose,
                       value);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY UniformMatrix3x4dv(GLint location,
@@ -1020,6 +1175,10 @@ void GL_APIENTRY UniformMatrix3x4dv(GLint location,
         }
         ANGLE_CAPTURE(UniformMatrix3x4dv, isCallValid, context, locationPacked, count, transpose,
                       value);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -1048,6 +1207,10 @@ void GL_APIENTRY UniformMatrix4dv(GLint location,
         ANGLE_CAPTURE(UniformMatrix4dv, isCallValid, context, locationPacked, count, transpose,
                       value);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY UniformMatrix4x2dv(GLint location,
@@ -1074,6 +1237,10 @@ void GL_APIENTRY UniformMatrix4x2dv(GLint location,
         }
         ANGLE_CAPTURE(UniformMatrix4x2dv, isCallValid, context, locationPacked, count, transpose,
                       value);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -1102,6 +1269,10 @@ void GL_APIENTRY UniformMatrix4x3dv(GLint location,
         ANGLE_CAPTURE(UniformMatrix4x3dv, isCallValid, context, locationPacked, count, transpose,
                       value);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY UniformSubroutinesuiv(GLenum shadertype, GLsizei count, const GLuint *indices)
@@ -1123,6 +1294,10 @@ void GL_APIENTRY UniformSubroutinesuiv(GLenum shadertype, GLsizei count, const G
             context->uniformSubroutinesuiv(shadertype, count, indices);
         }
         ANGLE_CAPTURE(UniformSubroutinesuiv, isCallValid, context, shadertype, count, indices);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 }  // namespace gl

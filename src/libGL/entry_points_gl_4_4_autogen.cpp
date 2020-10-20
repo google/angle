@@ -48,6 +48,10 @@ void GL_APIENTRY BindBuffersBase(GLenum target, GLuint first, GLsizei count, con
         }
         ANGLE_CAPTURE(BindBuffersBase, isCallValid, context, target, first, count, buffersPacked);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY BindBuffersRange(GLenum target,
@@ -79,6 +83,10 @@ void GL_APIENTRY BindBuffersRange(GLenum target,
         ANGLE_CAPTURE(BindBuffersRange, isCallValid, context, target, first, count, buffersPacked,
                       offsets, sizes);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY BindImageTextures(GLuint first, GLsizei count, const GLuint *textures)
@@ -99,6 +107,10 @@ void GL_APIENTRY BindImageTextures(GLuint first, GLsizei count, const GLuint *te
             context->bindImageTextures(first, count, textures);
         }
         ANGLE_CAPTURE(BindImageTextures, isCallValid, context, first, count, textures);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -121,6 +133,10 @@ void GL_APIENTRY BindSamplers(GLuint first, GLsizei count, const GLuint *sampler
         }
         ANGLE_CAPTURE(BindSamplers, isCallValid, context, first, count, samplers);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY BindTextures(GLuint first, GLsizei count, const GLuint *textures)
@@ -141,6 +157,10 @@ void GL_APIENTRY BindTextures(GLuint first, GLsizei count, const GLuint *texture
             context->bindTextures(first, count, textures);
         }
         ANGLE_CAPTURE(BindTextures, isCallValid, context, first, count, textures);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -171,6 +191,10 @@ void GL_APIENTRY BindVertexBuffers(GLuint first,
         ANGLE_CAPTURE(BindVertexBuffers, isCallValid, context, first, count, buffersPacked, offsets,
                       strides);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY BufferStorage(GLenum target, GLsizeiptr size, const void *data, GLbitfield flags)
@@ -194,6 +218,10 @@ void GL_APIENTRY BufferStorage(GLenum target, GLsizeiptr size, const void *data,
             context->bufferStorage(targetPacked, size, data, flags);
         }
         ANGLE_CAPTURE(BufferStorage, isCallValid, context, targetPacked, size, data, flags);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -220,6 +248,10 @@ ClearTexImage(GLuint texture, GLint level, GLenum format, GLenum type, const voi
         }
         ANGLE_CAPTURE(ClearTexImage, isCallValid, context, texturePacked, level, format, type,
                       data);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -259,6 +291,10 @@ void GL_APIENTRY ClearTexSubImage(GLuint texture,
         }
         ANGLE_CAPTURE(ClearTexSubImage, isCallValid, context, texturePacked, level, xoffset,
                       yoffset, zoffset, width, height, depth, format, type, data);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 }  // namespace gl

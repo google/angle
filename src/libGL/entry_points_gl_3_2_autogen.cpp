@@ -55,6 +55,7 @@ GLenum GL_APIENTRY ClientWaitSync(GLsync sync, GLbitfield flags, GLuint64 timeou
     }
     else
     {
+        GenerateContextLostErrorOnCurrentGlobalContext();
         returnValue = GetDefaultReturnValue<EntryPoint::ClientWaitSync, GLenum>();
     }
     return returnValue;
@@ -75,6 +76,10 @@ void GL_APIENTRY DeleteSync(GLsync sync)
             context->deleteSync(sync);
         }
         ANGLE_CAPTURE(DeleteSync, isCallValid, context, sync);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -105,6 +110,10 @@ void GL_APIENTRY DrawElementsBaseVertex(GLenum mode,
         }
         ANGLE_CAPTURE(DrawElementsBaseVertex, isCallValid, context, modePacked, count, typePacked,
                       indices, basevertex);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -140,6 +149,10 @@ void GL_APIENTRY DrawElementsInstancedBaseVertex(GLenum mode,
         ANGLE_CAPTURE(DrawElementsInstancedBaseVertex, isCallValid, context, modePacked, count,
                       typePacked, indices, instancecount, basevertex);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY DrawRangeElementsBaseVertex(GLenum mode,
@@ -173,6 +186,10 @@ void GL_APIENTRY DrawRangeElementsBaseVertex(GLenum mode,
         ANGLE_CAPTURE(DrawRangeElementsBaseVertex, isCallValid, context, modePacked, start, end,
                       count, typePacked, indices, basevertex);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 GLsync GL_APIENTRY FenceSync(GLenum condition, GLbitfield flags)
@@ -201,6 +218,7 @@ GLsync GL_APIENTRY FenceSync(GLenum condition, GLbitfield flags)
     }
     else
     {
+        GenerateContextLostErrorOnCurrentGlobalContext();
         returnValue = GetDefaultReturnValue<EntryPoint::FenceSync, GLsync>();
     }
     return returnValue;
@@ -229,6 +247,10 @@ void GL_APIENTRY FramebufferTexture(GLenum target, GLenum attachment, GLuint tex
         ANGLE_CAPTURE(FramebufferTexture, isCallValid, context, target, attachment, texturePacked,
                       level);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY GetBufferParameteri64v(GLenum target, GLenum pname, GLint64 *params)
@@ -252,6 +274,10 @@ void GL_APIENTRY GetBufferParameteri64v(GLenum target, GLenum pname, GLint64 *pa
         }
         ANGLE_CAPTURE(GetBufferParameteri64v, isCallValid, context, targetPacked, pname, params);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY GetInteger64i_v(GLenum target, GLuint index, GLint64 *data)
@@ -271,6 +297,10 @@ void GL_APIENTRY GetInteger64i_v(GLenum target, GLuint index, GLint64 *data)
             context->getInteger64i_v(target, index, data);
         }
         ANGLE_CAPTURE(GetInteger64i_v, isCallValid, context, target, index, data);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -292,6 +322,10 @@ void GL_APIENTRY GetInteger64v(GLenum pname, GLint64 *data)
         }
         ANGLE_CAPTURE(GetInteger64v, isCallValid, context, pname, data);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY GetMultisamplefv(GLenum pname, GLuint index, GLfloat *val)
@@ -311,6 +345,10 @@ void GL_APIENTRY GetMultisamplefv(GLenum pname, GLuint index, GLfloat *val)
             context->getMultisamplefv(pname, index, val);
         }
         ANGLE_CAPTURE(GetMultisamplefv, isCallValid, context, pname, index, val);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -336,6 +374,8 @@ GetSynciv(GLsync sync, GLenum pname, GLsizei bufSize, GLsizei *length, GLint *va
         }
         ANGLE_CAPTURE(GetSynciv, isCallValid, context, sync, pname, bufSize, length, values);
     }
+    else
+    {}
 }
 
 GLboolean GL_APIENTRY IsSync(GLsync sync)
@@ -361,6 +401,7 @@ GLboolean GL_APIENTRY IsSync(GLsync sync)
     }
     else
     {
+        GenerateContextLostErrorOnCurrentGlobalContext();
         returnValue = GetDefaultReturnValue<EntryPoint::IsSync, GLboolean>();
     }
     return returnValue;
@@ -398,6 +439,10 @@ void GL_APIENTRY MultiDrawElementsBaseVertex(GLenum mode,
         ANGLE_CAPTURE(MultiDrawElementsBaseVertex, isCallValid, context, modePacked, count,
                       typePacked, indices, drawcount, basevertex);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY ProvokingVertex(GLenum mode)
@@ -419,6 +464,10 @@ void GL_APIENTRY ProvokingVertex(GLenum mode)
         }
         ANGLE_CAPTURE(ProvokingVertex, isCallValid, context, modePacked);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY SampleMaski(GLuint maskNumber, GLbitfield mask)
@@ -438,6 +487,10 @@ void GL_APIENTRY SampleMaski(GLuint maskNumber, GLbitfield mask)
             context->sampleMaski(maskNumber, mask);
         }
         ANGLE_CAPTURE(SampleMaski, isCallValid, context, maskNumber, mask);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -469,6 +522,10 @@ void GL_APIENTRY TexImage2DMultisample(GLenum target,
         }
         ANGLE_CAPTURE(TexImage2DMultisample, isCallValid, context, target, samples, internalformat,
                       width, height, fixedsamplelocations);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -504,6 +561,10 @@ void GL_APIENTRY TexImage3DMultisample(GLenum target,
         ANGLE_CAPTURE(TexImage3DMultisample, isCallValid, context, target, samples, internalformat,
                       width, height, depth, fixedsamplelocations);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY WaitSync(GLsync sync, GLbitfield flags, GLuint64 timeout)
@@ -526,6 +587,10 @@ void GL_APIENTRY WaitSync(GLsync sync, GLbitfield flags, GLuint64 timeout)
             context->waitSync(sync, flags, timeout);
         }
         ANGLE_CAPTURE(WaitSync, isCallValid, context, sync, flags, timeout);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 }  // namespace gl

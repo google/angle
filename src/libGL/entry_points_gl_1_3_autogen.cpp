@@ -44,6 +44,10 @@ void GL_APIENTRY ActiveTexture(GLenum texture)
         }
         ANGLE_CAPTURE(ActiveTexture, isCallValid, context, texture);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY ClientActiveTexture(GLenum texture)
@@ -63,6 +67,10 @@ void GL_APIENTRY ClientActiveTexture(GLenum texture)
             context->clientActiveTexture(texture);
         }
         ANGLE_CAPTURE(ClientActiveTexture, isCallValid, context, texture);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -96,6 +104,10 @@ void GL_APIENTRY CompressedTexImage1D(GLenum target,
         }
         ANGLE_CAPTURE(CompressedTexImage1D, isCallValid, context, target, level, internalformat,
                       width, border, imageSize, data);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -132,6 +144,10 @@ void GL_APIENTRY CompressedTexImage2D(GLenum target,
         }
         ANGLE_CAPTURE(CompressedTexImage2D, isCallValid, context, targetPacked, level,
                       internalformat, width, height, border, imageSize, data);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -170,6 +186,10 @@ void GL_APIENTRY CompressedTexImage3D(GLenum target,
         ANGLE_CAPTURE(CompressedTexImage3D, isCallValid, context, targetPacked, level,
                       internalformat, width, height, depth, border, imageSize, data);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY CompressedTexSubImage1D(GLenum target,
@@ -200,6 +220,10 @@ void GL_APIENTRY CompressedTexSubImage1D(GLenum target,
         }
         ANGLE_CAPTURE(CompressedTexSubImage1D, isCallValid, context, target, level, xoffset, width,
                       format, imageSize, data);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -237,6 +261,10 @@ void GL_APIENTRY CompressedTexSubImage2D(GLenum target,
         }
         ANGLE_CAPTURE(CompressedTexSubImage2D, isCallValid, context, targetPacked, level, xoffset,
                       yoffset, width, height, format, imageSize, data);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -277,6 +305,10 @@ void GL_APIENTRY CompressedTexSubImage3D(GLenum target,
         ANGLE_CAPTURE(CompressedTexSubImage3D, isCallValid, context, targetPacked, level, xoffset,
                       yoffset, zoffset, width, height, depth, format, imageSize, data);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY GetCompressedTexImage(GLenum target, GLint level, void *img)
@@ -297,6 +329,10 @@ void GL_APIENTRY GetCompressedTexImage(GLenum target, GLint level, void *img)
         }
         ANGLE_CAPTURE(GetCompressedTexImage, isCallValid, context, target, level, img);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY LoadTransposeMatrixd(const GLdouble *m)
@@ -314,6 +350,10 @@ void GL_APIENTRY LoadTransposeMatrixd(const GLdouble *m)
             context->loadTransposeMatrixd(m);
         }
         ANGLE_CAPTURE(LoadTransposeMatrixd, isCallValid, context, m);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -333,6 +373,10 @@ void GL_APIENTRY LoadTransposeMatrixf(const GLfloat *m)
         }
         ANGLE_CAPTURE(LoadTransposeMatrixf, isCallValid, context, m);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY MultTransposeMatrixd(const GLdouble *m)
@@ -351,6 +395,10 @@ void GL_APIENTRY MultTransposeMatrixd(const GLdouble *m)
         }
         ANGLE_CAPTURE(MultTransposeMatrixd, isCallValid, context, m);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY MultTransposeMatrixf(const GLfloat *m)
@@ -368,6 +416,10 @@ void GL_APIENTRY MultTransposeMatrixf(const GLfloat *m)
             context->multTransposeMatrixf(m);
         }
         ANGLE_CAPTURE(MultTransposeMatrixf, isCallValid, context, m);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -389,6 +441,10 @@ void GL_APIENTRY MultiTexCoord1d(GLenum target, GLdouble s)
         }
         ANGLE_CAPTURE(MultiTexCoord1d, isCallValid, context, target, s);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY MultiTexCoord1dv(GLenum target, const GLdouble *v)
@@ -408,6 +464,10 @@ void GL_APIENTRY MultiTexCoord1dv(GLenum target, const GLdouble *v)
             context->multiTexCoord1dv(target, v);
         }
         ANGLE_CAPTURE(MultiTexCoord1dv, isCallValid, context, target, v);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -429,6 +489,10 @@ void GL_APIENTRY MultiTexCoord1f(GLenum target, GLfloat s)
         }
         ANGLE_CAPTURE(MultiTexCoord1f, isCallValid, context, target, s);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY MultiTexCoord1fv(GLenum target, const GLfloat *v)
@@ -448,6 +512,10 @@ void GL_APIENTRY MultiTexCoord1fv(GLenum target, const GLfloat *v)
             context->multiTexCoord1fv(target, v);
         }
         ANGLE_CAPTURE(MultiTexCoord1fv, isCallValid, context, target, v);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -469,6 +537,10 @@ void GL_APIENTRY MultiTexCoord1i(GLenum target, GLint s)
         }
         ANGLE_CAPTURE(MultiTexCoord1i, isCallValid, context, target, s);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY MultiTexCoord1iv(GLenum target, const GLint *v)
@@ -488,6 +560,10 @@ void GL_APIENTRY MultiTexCoord1iv(GLenum target, const GLint *v)
             context->multiTexCoord1iv(target, v);
         }
         ANGLE_CAPTURE(MultiTexCoord1iv, isCallValid, context, target, v);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -509,6 +585,10 @@ void GL_APIENTRY MultiTexCoord1s(GLenum target, GLshort s)
         }
         ANGLE_CAPTURE(MultiTexCoord1s, isCallValid, context, target, s);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY MultiTexCoord1sv(GLenum target, const GLshort *v)
@@ -528,6 +608,10 @@ void GL_APIENTRY MultiTexCoord1sv(GLenum target, const GLshort *v)
             context->multiTexCoord1sv(target, v);
         }
         ANGLE_CAPTURE(MultiTexCoord1sv, isCallValid, context, target, v);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -549,6 +633,10 @@ void GL_APIENTRY MultiTexCoord2d(GLenum target, GLdouble s, GLdouble t)
         }
         ANGLE_CAPTURE(MultiTexCoord2d, isCallValid, context, target, s, t);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY MultiTexCoord2dv(GLenum target, const GLdouble *v)
@@ -568,6 +656,10 @@ void GL_APIENTRY MultiTexCoord2dv(GLenum target, const GLdouble *v)
             context->multiTexCoord2dv(target, v);
         }
         ANGLE_CAPTURE(MultiTexCoord2dv, isCallValid, context, target, v);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -589,6 +681,10 @@ void GL_APIENTRY MultiTexCoord2f(GLenum target, GLfloat s, GLfloat t)
         }
         ANGLE_CAPTURE(MultiTexCoord2f, isCallValid, context, target, s, t);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY MultiTexCoord2fv(GLenum target, const GLfloat *v)
@@ -608,6 +704,10 @@ void GL_APIENTRY MultiTexCoord2fv(GLenum target, const GLfloat *v)
             context->multiTexCoord2fv(target, v);
         }
         ANGLE_CAPTURE(MultiTexCoord2fv, isCallValid, context, target, v);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -629,6 +729,10 @@ void GL_APIENTRY MultiTexCoord2i(GLenum target, GLint s, GLint t)
         }
         ANGLE_CAPTURE(MultiTexCoord2i, isCallValid, context, target, s, t);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY MultiTexCoord2iv(GLenum target, const GLint *v)
@@ -648,6 +752,10 @@ void GL_APIENTRY MultiTexCoord2iv(GLenum target, const GLint *v)
             context->multiTexCoord2iv(target, v);
         }
         ANGLE_CAPTURE(MultiTexCoord2iv, isCallValid, context, target, v);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -669,6 +777,10 @@ void GL_APIENTRY MultiTexCoord2s(GLenum target, GLshort s, GLshort t)
         }
         ANGLE_CAPTURE(MultiTexCoord2s, isCallValid, context, target, s, t);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY MultiTexCoord2sv(GLenum target, const GLshort *v)
@@ -688,6 +800,10 @@ void GL_APIENTRY MultiTexCoord2sv(GLenum target, const GLshort *v)
             context->multiTexCoord2sv(target, v);
         }
         ANGLE_CAPTURE(MultiTexCoord2sv, isCallValid, context, target, v);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -709,6 +825,10 @@ void GL_APIENTRY MultiTexCoord3d(GLenum target, GLdouble s, GLdouble t, GLdouble
         }
         ANGLE_CAPTURE(MultiTexCoord3d, isCallValid, context, target, s, t, r);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY MultiTexCoord3dv(GLenum target, const GLdouble *v)
@@ -728,6 +848,10 @@ void GL_APIENTRY MultiTexCoord3dv(GLenum target, const GLdouble *v)
             context->multiTexCoord3dv(target, v);
         }
         ANGLE_CAPTURE(MultiTexCoord3dv, isCallValid, context, target, v);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -749,6 +873,10 @@ void GL_APIENTRY MultiTexCoord3f(GLenum target, GLfloat s, GLfloat t, GLfloat r)
         }
         ANGLE_CAPTURE(MultiTexCoord3f, isCallValid, context, target, s, t, r);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY MultiTexCoord3fv(GLenum target, const GLfloat *v)
@@ -768,6 +896,10 @@ void GL_APIENTRY MultiTexCoord3fv(GLenum target, const GLfloat *v)
             context->multiTexCoord3fv(target, v);
         }
         ANGLE_CAPTURE(MultiTexCoord3fv, isCallValid, context, target, v);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -789,6 +921,10 @@ void GL_APIENTRY MultiTexCoord3i(GLenum target, GLint s, GLint t, GLint r)
         }
         ANGLE_CAPTURE(MultiTexCoord3i, isCallValid, context, target, s, t, r);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY MultiTexCoord3iv(GLenum target, const GLint *v)
@@ -808,6 +944,10 @@ void GL_APIENTRY MultiTexCoord3iv(GLenum target, const GLint *v)
             context->multiTexCoord3iv(target, v);
         }
         ANGLE_CAPTURE(MultiTexCoord3iv, isCallValid, context, target, v);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -829,6 +969,10 @@ void GL_APIENTRY MultiTexCoord3s(GLenum target, GLshort s, GLshort t, GLshort r)
         }
         ANGLE_CAPTURE(MultiTexCoord3s, isCallValid, context, target, s, t, r);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY MultiTexCoord3sv(GLenum target, const GLshort *v)
@@ -848,6 +992,10 @@ void GL_APIENTRY MultiTexCoord3sv(GLenum target, const GLshort *v)
             context->multiTexCoord3sv(target, v);
         }
         ANGLE_CAPTURE(MultiTexCoord3sv, isCallValid, context, target, v);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -870,6 +1018,10 @@ void GL_APIENTRY MultiTexCoord4d(GLenum target, GLdouble s, GLdouble t, GLdouble
         }
         ANGLE_CAPTURE(MultiTexCoord4d, isCallValid, context, target, s, t, r, q);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY MultiTexCoord4dv(GLenum target, const GLdouble *v)
@@ -889,6 +1041,10 @@ void GL_APIENTRY MultiTexCoord4dv(GLenum target, const GLdouble *v)
             context->multiTexCoord4dv(target, v);
         }
         ANGLE_CAPTURE(MultiTexCoord4dv, isCallValid, context, target, v);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -911,6 +1067,10 @@ void GL_APIENTRY MultiTexCoord4f(GLenum target, GLfloat s, GLfloat t, GLfloat r,
         }
         ANGLE_CAPTURE(MultiTexCoord4f, isCallValid, context, target, s, t, r, q);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY MultiTexCoord4fv(GLenum target, const GLfloat *v)
@@ -930,6 +1090,10 @@ void GL_APIENTRY MultiTexCoord4fv(GLenum target, const GLfloat *v)
             context->multiTexCoord4fv(target, v);
         }
         ANGLE_CAPTURE(MultiTexCoord4fv, isCallValid, context, target, v);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -952,6 +1116,10 @@ void GL_APIENTRY MultiTexCoord4i(GLenum target, GLint s, GLint t, GLint r, GLint
         }
         ANGLE_CAPTURE(MultiTexCoord4i, isCallValid, context, target, s, t, r, q);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY MultiTexCoord4iv(GLenum target, const GLint *v)
@@ -971,6 +1139,10 @@ void GL_APIENTRY MultiTexCoord4iv(GLenum target, const GLint *v)
             context->multiTexCoord4iv(target, v);
         }
         ANGLE_CAPTURE(MultiTexCoord4iv, isCallValid, context, target, v);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -993,6 +1165,10 @@ void GL_APIENTRY MultiTexCoord4s(GLenum target, GLshort s, GLshort t, GLshort r,
         }
         ANGLE_CAPTURE(MultiTexCoord4s, isCallValid, context, target, s, t, r, q);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY MultiTexCoord4sv(GLenum target, const GLshort *v)
@@ -1013,6 +1189,10 @@ void GL_APIENTRY MultiTexCoord4sv(GLenum target, const GLshort *v)
         }
         ANGLE_CAPTURE(MultiTexCoord4sv, isCallValid, context, target, v);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY SampleCoverage(GLfloat value, GLboolean invert)
@@ -1032,6 +1212,10 @@ void GL_APIENTRY SampleCoverage(GLfloat value, GLboolean invert)
             context->sampleCoverage(value, invert);
         }
         ANGLE_CAPTURE(SampleCoverage, isCallValid, context, value, invert);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 }  // namespace gl

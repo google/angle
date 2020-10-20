@@ -47,6 +47,10 @@ void GL_APIENTRY BeginQuery(GLenum target, GLuint id)
         }
         ANGLE_CAPTURE(BeginQuery, isCallValid, context, targetPacked, idPacked);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY BindBuffer(GLenum target, GLuint buffer)
@@ -68,6 +72,10 @@ void GL_APIENTRY BindBuffer(GLenum target, GLuint buffer)
             context->bindBuffer(targetPacked, bufferPacked);
         }
         ANGLE_CAPTURE(BindBuffer, isCallValid, context, targetPacked, bufferPacked);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -94,6 +102,10 @@ void GL_APIENTRY BufferData(GLenum target, GLsizeiptr size, const void *data, GL
         }
         ANGLE_CAPTURE(BufferData, isCallValid, context, targetPacked, size, data, usagePacked);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY BufferSubData(GLenum target, GLintptr offset, GLsizeiptr size, const void *data)
@@ -118,6 +130,10 @@ void GL_APIENTRY BufferSubData(GLenum target, GLintptr offset, GLsizeiptr size, 
         }
         ANGLE_CAPTURE(BufferSubData, isCallValid, context, targetPacked, offset, size, data);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY DeleteBuffers(GLsizei n, const GLuint *buffers)
@@ -138,6 +154,10 @@ void GL_APIENTRY DeleteBuffers(GLsizei n, const GLuint *buffers)
             context->deleteBuffers(n, buffersPacked);
         }
         ANGLE_CAPTURE(DeleteBuffers, isCallValid, context, n, buffersPacked);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -160,6 +180,10 @@ void GL_APIENTRY DeleteQueries(GLsizei n, const GLuint *ids)
         }
         ANGLE_CAPTURE(DeleteQueries, isCallValid, context, n, idsPacked);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY EndQuery(GLenum target)
@@ -178,6 +202,10 @@ void GL_APIENTRY EndQuery(GLenum target)
             context->endQuery(targetPacked);
         }
         ANGLE_CAPTURE(EndQuery, isCallValid, context, targetPacked);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -200,6 +228,10 @@ void GL_APIENTRY GenBuffers(GLsizei n, GLuint *buffers)
         }
         ANGLE_CAPTURE(GenBuffers, isCallValid, context, n, buffersPacked);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY GenQueries(GLsizei n, GLuint *ids)
@@ -219,6 +251,10 @@ void GL_APIENTRY GenQueries(GLsizei n, GLuint *ids)
             context->genQueries(n, idsPacked);
         }
         ANGLE_CAPTURE(GenQueries, isCallValid, context, n, idsPacked);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -242,6 +278,10 @@ void GL_APIENTRY GetBufferParameteriv(GLenum target, GLenum pname, GLint *params
         }
         ANGLE_CAPTURE(GetBufferParameteriv, isCallValid, context, targetPacked, pname, params);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY GetBufferPointerv(GLenum target, GLenum pname, void **params)
@@ -263,6 +303,10 @@ void GL_APIENTRY GetBufferPointerv(GLenum target, GLenum pname, void **params)
             context->getBufferPointerv(targetPacked, pname, params);
         }
         ANGLE_CAPTURE(GetBufferPointerv, isCallValid, context, targetPacked, pname, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -287,6 +331,10 @@ void GL_APIENTRY GetBufferSubData(GLenum target, GLintptr offset, GLsizeiptr siz
         }
         ANGLE_CAPTURE(GetBufferSubData, isCallValid, context, target, offset, size, data);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY GetQueryObjectiv(GLuint id, GLenum pname, GLint *params)
@@ -309,6 +357,8 @@ void GL_APIENTRY GetQueryObjectiv(GLuint id, GLenum pname, GLint *params)
         }
         ANGLE_CAPTURE(GetQueryObjectiv, isCallValid, context, idPacked, pname, params);
     }
+    else
+    {}
 }
 
 void GL_APIENTRY GetQueryObjectuiv(GLuint id, GLenum pname, GLuint *params)
@@ -331,6 +381,10 @@ void GL_APIENTRY GetQueryObjectuiv(GLuint id, GLenum pname, GLuint *params)
         }
         ANGLE_CAPTURE(GetQueryObjectuiv, isCallValid, context, idPacked, pname, params);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY GetQueryiv(GLenum target, GLenum pname, GLint *params)
@@ -352,6 +406,10 @@ void GL_APIENTRY GetQueryiv(GLenum target, GLenum pname, GLint *params)
             context->getQueryiv(targetPacked, pname, params);
         }
         ANGLE_CAPTURE(GetQueryiv, isCallValid, context, targetPacked, pname, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -379,6 +437,7 @@ GLboolean GL_APIENTRY IsBuffer(GLuint buffer)
     }
     else
     {
+        GenerateContextLostErrorOnCurrentGlobalContext();
         returnValue = GetDefaultReturnValue<EntryPoint::IsBuffer, GLboolean>();
     }
     return returnValue;
@@ -408,6 +467,7 @@ GLboolean GL_APIENTRY IsQuery(GLuint id)
     }
     else
     {
+        GenerateContextLostErrorOnCurrentGlobalContext();
         returnValue = GetDefaultReturnValue<EntryPoint::IsQuery, GLboolean>();
     }
     return returnValue;
@@ -440,6 +500,7 @@ void *GL_APIENTRY MapBuffer(GLenum target, GLenum access)
     }
     else
     {
+        GenerateContextLostErrorOnCurrentGlobalContext();
         returnValue = GetDefaultReturnValue<EntryPoint::MapBuffer, void *>();
     }
     return returnValue;
@@ -470,6 +531,7 @@ GLboolean GL_APIENTRY UnmapBuffer(GLenum target)
     }
     else
     {
+        GenerateContextLostErrorOnCurrentGlobalContext();
         returnValue = GetDefaultReturnValue<EntryPoint::UnmapBuffer, GLboolean>();
     }
     return returnValue;

@@ -11,6 +11,7 @@
 #include "common/debug.h"
 #include "common/platform.h"
 #include "common/system_utils.h"
+#include "libANGLE/ErrorStrings.h"
 #include "libGLESv2/resource.h"
 
 #include <atomic>
@@ -98,6 +99,22 @@ void SetContextCurrent(Thread *thread, gl::Context *context)
     gl::gCurrentValidContext = context;
 }
 }  // namespace egl
+
+namespace gl
+{
+void GenerateContextLostErrorOnContext(Context *context)
+{
+    if (context && context->isContextLost())
+    {
+        context->validationError(GL_CONTEXT_LOST, err::kContextLost);
+    }
+}
+
+void GenerateContextLostErrorOnCurrentGlobalContext()
+{
+    GenerateContextLostErrorOnContext(GetGlobalContext());
+}
+}  // namespace gl
 
 #ifdef ANGLE_PLATFORM_WINDOWS
 namespace egl

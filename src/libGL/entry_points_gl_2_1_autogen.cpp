@@ -52,6 +52,10 @@ void GL_APIENTRY UniformMatrix2x3fv(GLint location,
         ANGLE_CAPTURE(UniformMatrix2x3fv, isCallValid, context, locationPacked, count, transpose,
                       value);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY UniformMatrix2x4fv(GLint location,
@@ -78,6 +82,10 @@ void GL_APIENTRY UniformMatrix2x4fv(GLint location,
         }
         ANGLE_CAPTURE(UniformMatrix2x4fv, isCallValid, context, locationPacked, count, transpose,
                       value);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -106,6 +114,10 @@ void GL_APIENTRY UniformMatrix3x2fv(GLint location,
         ANGLE_CAPTURE(UniformMatrix3x2fv, isCallValid, context, locationPacked, count, transpose,
                       value);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY UniformMatrix3x4fv(GLint location,
@@ -132,6 +144,10 @@ void GL_APIENTRY UniformMatrix3x4fv(GLint location,
         }
         ANGLE_CAPTURE(UniformMatrix3x4fv, isCallValid, context, locationPacked, count, transpose,
                       value);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -160,6 +176,10 @@ void GL_APIENTRY UniformMatrix4x2fv(GLint location,
         ANGLE_CAPTURE(UniformMatrix4x2fv, isCallValid, context, locationPacked, count, transpose,
                       value);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY UniformMatrix4x3fv(GLint location,
@@ -186,6 +206,10 @@ void GL_APIENTRY UniformMatrix4x3fv(GLint location,
         }
         ANGLE_CAPTURE(UniformMatrix4x3fv, isCallValid, context, locationPacked, count, transpose,
                       value);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 }  // namespace gl

@@ -63,6 +63,10 @@ void GL_APIENTRY DrawArraysInstancedBaseInstanceANGLE(GLenum mode,
         ANGLE_CAPTURE(DrawArraysInstancedBaseInstanceANGLE, isCallValid, context, modePacked, first,
                       count, instanceCount, baseInstance);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY DrawElementsInstancedBaseVertexBaseInstanceANGLE(GLenum mode,
@@ -101,6 +105,10 @@ void GL_APIENTRY DrawElementsInstancedBaseVertexBaseInstanceANGLE(GLenum mode,
                       modePacked, count, typePacked, indices, instanceCounts, baseVertex,
                       baseInstance);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY MultiDrawArraysInstancedBaseInstanceANGLE(GLenum mode,
@@ -135,6 +143,10 @@ void GL_APIENTRY MultiDrawArraysInstancedBaseInstanceANGLE(GLenum mode,
         }
         ANGLE_CAPTURE(MultiDrawArraysInstancedBaseInstanceANGLE, isCallValid, context, modePacked,
                       firsts, counts, instanceCounts, baseInstances, drawcount);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -178,6 +190,10 @@ MultiDrawElementsInstancedBaseVertexBaseInstanceANGLE(GLenum mode,
         ANGLE_CAPTURE(MultiDrawElementsInstancedBaseVertexBaseInstanceANGLE, isCallValid, context,
                       modePacked, counts, typePacked, indices, instanceCounts, baseVertices,
                       baseInstances, drawcount);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -224,6 +240,10 @@ void GL_APIENTRY CopyTexture3DANGLE(GLuint sourceId,
         ANGLE_CAPTURE(CopyTexture3DANGLE, isCallValid, context, sourceIdPacked, sourceLevel,
                       destTargetPacked, destIdPacked, destLevel, internalFormat, destType,
                       unpackFlipY, unpackPremultiplyAlpha, unpackUnmultiplyAlpha);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -281,6 +301,10 @@ void GL_APIENTRY CopySubTexture3DANGLE(GLuint sourceId,
                       width, height, depth, unpackFlipY, unpackPremultiplyAlpha,
                       unpackUnmultiplyAlpha);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 // GL_ANGLE_framebuffer_blit
@@ -318,6 +342,10 @@ void GL_APIENTRY BlitFramebufferANGLE(GLint srcX0,
         ANGLE_CAPTURE(BlitFramebufferANGLE, isCallValid, context, srcX0, srcY0, srcX1, srcY1, dstX0,
                       dstY0, dstX1, dstY1, mask, filter);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 // GL_ANGLE_framebuffer_multisample
@@ -348,6 +376,10 @@ void GL_APIENTRY RenderbufferStorageMultisampleANGLE(GLenum target,
         ANGLE_CAPTURE(RenderbufferStorageMultisampleANGLE, isCallValid, context, target, samples,
                       internalformat, width, height);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 // GL_ANGLE_get_image
@@ -376,6 +408,10 @@ GetTexImageANGLE(GLenum target, GLint level, GLenum format, GLenum type, void *p
         ANGLE_CAPTURE(GetTexImageANGLE, isCallValid, context, targetPacked, level, format, type,
                       pixels);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY GetRenderbufferImageANGLE(GLenum target, GLenum format, GLenum type, void *pixels)
@@ -400,6 +436,10 @@ void GL_APIENTRY GetRenderbufferImageANGLE(GLenum target, GLenum format, GLenum 
         }
         ANGLE_CAPTURE(GetRenderbufferImageANGLE, isCallValid, context, target, format, type,
                       pixels);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -428,6 +468,10 @@ void GL_APIENTRY DrawArraysInstancedANGLE(GLenum mode,
         }
         ANGLE_CAPTURE(DrawArraysInstancedANGLE, isCallValid, context, modePacked, first, count,
                       primcount);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -459,6 +503,10 @@ void GL_APIENTRY DrawElementsInstancedANGLE(GLenum mode,
         ANGLE_CAPTURE(DrawElementsInstancedANGLE, isCallValid, context, modePacked, count,
                       typePacked, indices, primcount);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY VertexAttribDivisorANGLE(GLuint index, GLuint divisor)
@@ -477,6 +525,10 @@ void GL_APIENTRY VertexAttribDivisorANGLE(GLuint index, GLuint divisor)
             context->vertexAttribDivisor(index, divisor);
         }
         ANGLE_CAPTURE(VertexAttribDivisorANGLE, isCallValid, context, index, divisor);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -518,6 +570,10 @@ void GL_APIENTRY TexStorageMemFlags2DANGLE(GLenum target,
         }
         ANGLE_CAPTURE(TexStorageMemFlags2DANGLE, isCallValid, context, targetPacked, levels,
                       internalFormat, width, height, memoryPacked, offset, createFlags, usageFlags);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -565,6 +621,10 @@ void GL_APIENTRY TexStorageMemFlags2DMultisampleANGLE(GLenum target,
                       samples, internalFormat, width, height, fixedSampleLocations, memoryPacked,
                       offset, createFlags, usageFlags);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY TexStorageMemFlags3DANGLE(GLenum target,
@@ -606,6 +666,10 @@ void GL_APIENTRY TexStorageMemFlags3DANGLE(GLenum target,
         ANGLE_CAPTURE(TexStorageMemFlags3DANGLE, isCallValid, context, targetPacked, levels,
                       internalFormat, width, height, depth, memoryPacked, offset, createFlags,
                       usageFlags);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -654,6 +718,10 @@ void GL_APIENTRY TexStorageMemFlags3DMultisampleANGLE(GLenum target,
                       samples, internalFormat, width, height, depth, fixedSampleLocations,
                       memoryPacked, offset, createFlags, usageFlags);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 // GL_ANGLE_memory_object_fuchsia
@@ -684,6 +752,10 @@ void GL_APIENTRY ImportMemoryZirconHandleANGLE(GLuint memory,
         ANGLE_CAPTURE(ImportMemoryZirconHandleANGLE, isCallValid, context, memoryPacked, size,
                       handleTypePacked, handle);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 // GL_ANGLE_multi_draw
@@ -712,6 +784,10 @@ void GL_APIENTRY MultiDrawArraysANGLE(GLenum mode,
         }
         ANGLE_CAPTURE(MultiDrawArraysANGLE, isCallValid, context, modePacked, firsts, counts,
                       drawcount);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -744,6 +820,10 @@ void GL_APIENTRY MultiDrawArraysInstancedANGLE(GLenum mode,
         ANGLE_CAPTURE(MultiDrawArraysInstancedANGLE, isCallValid, context, modePacked, firsts,
                       counts, instanceCounts, drawcount);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY MultiDrawElementsANGLE(GLenum mode,
@@ -774,6 +854,10 @@ void GL_APIENTRY MultiDrawElementsANGLE(GLenum mode,
         }
         ANGLE_CAPTURE(MultiDrawElementsANGLE, isCallValid, context, modePacked, counts, typePacked,
                       indices, drawcount);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -811,6 +895,10 @@ void GL_APIENTRY MultiDrawElementsInstancedANGLE(GLenum mode,
         ANGLE_CAPTURE(MultiDrawElementsInstancedANGLE, isCallValid, context, modePacked, counts,
                       typePacked, indices, instanceCounts, drawcount);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 // GL_ANGLE_program_binary
@@ -835,6 +923,10 @@ void GL_APIENTRY ProvokingVertexANGLE(GLenum mode)
         }
         ANGLE_CAPTURE(ProvokingVertexANGLE, isCallValid, context, modePacked);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 // GL_ANGLE_request_extension
@@ -855,6 +947,10 @@ void GL_APIENTRY RequestExtensionANGLE(const GLchar *name)
         }
         ANGLE_CAPTURE(RequestExtensionANGLE, isCallValid, context, name);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY DisableExtensionANGLE(const GLchar *name)
@@ -873,6 +969,10 @@ void GL_APIENTRY DisableExtensionANGLE(const GLchar *name)
             context->disableExtension(name);
         }
         ANGLE_CAPTURE(DisableExtensionANGLE, isCallValid, context, name);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -900,6 +1000,10 @@ void GL_APIENTRY GetBooleanvRobustANGLE(GLenum pname,
             context->getBooleanvRobust(pname, bufSize, length, params);
         }
         ANGLE_CAPTURE(GetBooleanvRobustANGLE, isCallValid, context, pname, bufSize, length, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -932,6 +1036,10 @@ void GL_APIENTRY GetBufferParameterivRobustANGLE(GLenum target,
         ANGLE_CAPTURE(GetBufferParameterivRobustANGLE, isCallValid, context, targetPacked, pname,
                       bufSize, length, params);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY GetFloatvRobustANGLE(GLenum pname,
@@ -956,6 +1064,10 @@ void GL_APIENTRY GetFloatvRobustANGLE(GLenum pname,
             context->getFloatvRobust(pname, bufSize, length, params);
         }
         ANGLE_CAPTURE(GetFloatvRobustANGLE, isCallValid, context, pname, bufSize, length, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -990,6 +1102,10 @@ void GL_APIENTRY GetFramebufferAttachmentParameterivRobustANGLE(GLenum target,
         ANGLE_CAPTURE(GetFramebufferAttachmentParameterivRobustANGLE, isCallValid, context, target,
                       attachment, pname, bufSize, length, params);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY GetIntegervRobustANGLE(GLenum pname, GLsizei bufSize, GLsizei *length, GLint *data)
@@ -1011,6 +1127,10 @@ void GL_APIENTRY GetIntegervRobustANGLE(GLenum pname, GLsizei bufSize, GLsizei *
             context->getIntegervRobust(pname, bufSize, length, data);
         }
         ANGLE_CAPTURE(GetIntegervRobustANGLE, isCallValid, context, pname, bufSize, length, data);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -1041,6 +1161,8 @@ void GL_APIENTRY GetProgramivRobustANGLE(GLuint program,
         ANGLE_CAPTURE(GetProgramivRobustANGLE, isCallValid, context, programPacked, pname, bufSize,
                       length, params);
     }
+    else
+    {}
 }
 
 void GL_APIENTRY GetRenderbufferParameterivRobustANGLE(GLenum target,
@@ -1071,6 +1193,10 @@ void GL_APIENTRY GetRenderbufferParameterivRobustANGLE(GLenum target,
         ANGLE_CAPTURE(GetRenderbufferParameterivRobustANGLE, isCallValid, context, target, pname,
                       bufSize, length, params);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY
@@ -1097,6 +1223,8 @@ GetShaderivRobustANGLE(GLuint shader, GLenum pname, GLsizei bufSize, GLsizei *le
         ANGLE_CAPTURE(GetShaderivRobustANGLE, isCallValid, context, shaderPacked, pname, bufSize,
                       length, params);
     }
+    else
+    {}
 }
 
 void GL_APIENTRY GetTexParameterfvRobustANGLE(GLenum target,
@@ -1126,6 +1254,10 @@ void GL_APIENTRY GetTexParameterfvRobustANGLE(GLenum target,
         }
         ANGLE_CAPTURE(GetTexParameterfvRobustANGLE, isCallValid, context, targetPacked, pname,
                       bufSize, length, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -1157,6 +1289,10 @@ void GL_APIENTRY GetTexParameterivRobustANGLE(GLenum target,
         ANGLE_CAPTURE(GetTexParameterivRobustANGLE, isCallValid, context, targetPacked, pname,
                       bufSize, length, params);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY GetUniformfvRobustANGLE(GLuint program,
@@ -1185,6 +1321,10 @@ void GL_APIENTRY GetUniformfvRobustANGLE(GLuint program,
         }
         ANGLE_CAPTURE(GetUniformfvRobustANGLE, isCallValid, context, programPacked, locationPacked,
                       bufSize, length, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -1215,6 +1355,10 @@ void GL_APIENTRY GetUniformivRobustANGLE(GLuint program,
         ANGLE_CAPTURE(GetUniformivRobustANGLE, isCallValid, context, programPacked, locationPacked,
                       bufSize, length, params);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY GetVertexAttribfvRobustANGLE(GLuint index,
@@ -1242,6 +1386,10 @@ void GL_APIENTRY GetVertexAttribfvRobustANGLE(GLuint index,
         }
         ANGLE_CAPTURE(GetVertexAttribfvRobustANGLE, isCallValid, context, index, pname, bufSize,
                       length, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -1271,6 +1419,10 @@ void GL_APIENTRY GetVertexAttribivRobustANGLE(GLuint index,
         ANGLE_CAPTURE(GetVertexAttribivRobustANGLE, isCallValid, context, index, pname, bufSize,
                       length, params);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY GetVertexAttribPointervRobustANGLE(GLuint index,
@@ -1299,6 +1451,10 @@ void GL_APIENTRY GetVertexAttribPointervRobustANGLE(GLuint index,
         }
         ANGLE_CAPTURE(GetVertexAttribPointervRobustANGLE, isCallValid, context, index, pname,
                       bufSize, length, pointer);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -1340,6 +1496,10 @@ void GL_APIENTRY ReadPixelsRobustANGLE(GLint x,
         ANGLE_CAPTURE(ReadPixelsRobustANGLE, isCallValid, context, x, y, width, height, format,
                       type, bufSize, length, columns, rows, pixels);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY TexImage2DRobustANGLE(GLenum target,
@@ -1378,6 +1538,10 @@ void GL_APIENTRY TexImage2DRobustANGLE(GLenum target,
         ANGLE_CAPTURE(TexImage2DRobustANGLE, isCallValid, context, targetPacked, level,
                       internalformat, width, height, border, format, type, bufSize, pixels);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY TexParameterfvRobustANGLE(GLenum target,
@@ -1406,6 +1570,10 @@ void GL_APIENTRY TexParameterfvRobustANGLE(GLenum target,
         ANGLE_CAPTURE(TexParameterfvRobustANGLE, isCallValid, context, targetPacked, pname, bufSize,
                       params);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY TexParameterivRobustANGLE(GLenum target,
@@ -1433,6 +1601,10 @@ void GL_APIENTRY TexParameterivRobustANGLE(GLenum target,
         }
         ANGLE_CAPTURE(TexParameterivRobustANGLE, isCallValid, context, targetPacked, pname, bufSize,
                       params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -1472,6 +1644,10 @@ void GL_APIENTRY TexSubImage2DRobustANGLE(GLenum target,
         ANGLE_CAPTURE(TexSubImage2DRobustANGLE, isCallValid, context, targetPacked, level, xoffset,
                       yoffset, width, height, format, type, bufSize, pixels);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY TexImage3DRobustANGLE(GLenum target,
@@ -1510,6 +1686,10 @@ void GL_APIENTRY TexImage3DRobustANGLE(GLenum target,
         }
         ANGLE_CAPTURE(TexImage3DRobustANGLE, isCallValid, context, targetPacked, level,
                       internalformat, width, height, depth, border, format, type, bufSize, pixels);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -1552,6 +1732,10 @@ void GL_APIENTRY TexSubImage3DRobustANGLE(GLenum target,
         ANGLE_CAPTURE(TexSubImage3DRobustANGLE, isCallValid, context, targetPacked, level, xoffset,
                       yoffset, zoffset, width, height, depth, format, type, bufSize, pixels);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY CompressedTexImage2DRobustANGLE(GLenum target,
@@ -1589,6 +1773,10 @@ void GL_APIENTRY CompressedTexImage2DRobustANGLE(GLenum target,
         }
         ANGLE_CAPTURE(CompressedTexImage2DRobustANGLE, isCallValid, context, targetPacked, level,
                       internalformat, width, height, border, imageSize, dataSize, data);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -1629,6 +1817,10 @@ void GL_APIENTRY CompressedTexSubImage2DRobustANGLE(GLenum target,
         ANGLE_CAPTURE(CompressedTexSubImage2DRobustANGLE, isCallValid, context, targetPacked, level,
                       xoffset, yoffset, width, height, format, imageSize, dataSize, data);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY CompressedTexImage3DRobustANGLE(GLenum target,
@@ -1667,6 +1859,10 @@ void GL_APIENTRY CompressedTexImage3DRobustANGLE(GLenum target,
         }
         ANGLE_CAPTURE(CompressedTexImage3DRobustANGLE, isCallValid, context, targetPacked, level,
                       internalformat, width, height, depth, border, imageSize, dataSize, data);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -1712,6 +1908,10 @@ void GL_APIENTRY CompressedTexSubImage3DRobustANGLE(GLenum target,
                       xoffset, yoffset, zoffset, width, height, depth, format, imageSize, dataSize,
                       data);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY
@@ -1738,6 +1938,10 @@ GetQueryivRobustANGLE(GLenum target, GLenum pname, GLsizei bufSize, GLsizei *len
         }
         ANGLE_CAPTURE(GetQueryivRobustANGLE, isCallValid, context, targetPacked, pname, bufSize,
                       length, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -1767,6 +1971,10 @@ void GL_APIENTRY GetQueryObjectuivRobustANGLE(GLuint id,
         }
         ANGLE_CAPTURE(GetQueryObjectuivRobustANGLE, isCallValid, context, idPacked, pname, bufSize,
                       length, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -1798,6 +2006,10 @@ void GL_APIENTRY GetBufferPointervRobustANGLE(GLenum target,
         ANGLE_CAPTURE(GetBufferPointervRobustANGLE, isCallValid, context, targetPacked, pname,
                       bufSize, length, params);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY
@@ -1822,6 +2034,10 @@ GetIntegeri_vRobustANGLE(GLenum target, GLuint index, GLsizei bufSize, GLsizei *
         }
         ANGLE_CAPTURE(GetIntegeri_vRobustANGLE, isCallValid, context, target, index, bufSize,
                       length, data);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -1856,6 +2072,10 @@ void GL_APIENTRY GetInternalformativRobustANGLE(GLenum target,
         ANGLE_CAPTURE(GetInternalformativRobustANGLE, isCallValid, context, target, internalformat,
                       pname, bufSize, length, params);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY GetVertexAttribIivRobustANGLE(GLuint index,
@@ -1883,6 +2103,10 @@ void GL_APIENTRY GetVertexAttribIivRobustANGLE(GLuint index,
         }
         ANGLE_CAPTURE(GetVertexAttribIivRobustANGLE, isCallValid, context, index, pname, bufSize,
                       length, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -1913,6 +2137,10 @@ void GL_APIENTRY GetVertexAttribIuivRobustANGLE(GLuint index,
         ANGLE_CAPTURE(GetVertexAttribIuivRobustANGLE, isCallValid, context, index, pname, bufSize,
                       length, params);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY GetUniformuivRobustANGLE(GLuint program,
@@ -1941,6 +2169,10 @@ void GL_APIENTRY GetUniformuivRobustANGLE(GLuint program,
         }
         ANGLE_CAPTURE(GetUniformuivRobustANGLE, isCallValid, context, programPacked, locationPacked,
                       bufSize, length, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -1977,6 +2209,10 @@ void GL_APIENTRY GetActiveUniformBlockivRobustANGLE(GLuint program,
         ANGLE_CAPTURE(GetActiveUniformBlockivRobustANGLE, isCallValid, context, programPacked,
                       uniformBlockIndex, pname, bufSize, length, params);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY GetInteger64vRobustANGLE(GLenum pname,
@@ -2002,6 +2238,10 @@ void GL_APIENTRY GetInteger64vRobustANGLE(GLenum pname,
             context->getInteger64vRobust(pname, bufSize, length, data);
         }
         ANGLE_CAPTURE(GetInteger64vRobustANGLE, isCallValid, context, pname, bufSize, length, data);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -2030,6 +2270,10 @@ void GL_APIENTRY GetInteger64i_vRobustANGLE(GLenum target,
         }
         ANGLE_CAPTURE(GetInteger64i_vRobustANGLE, isCallValid, context, target, index, bufSize,
                       length, data);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -2062,6 +2306,10 @@ void GL_APIENTRY GetBufferParameteri64vRobustANGLE(GLenum target,
         ANGLE_CAPTURE(GetBufferParameteri64vRobustANGLE, isCallValid, context, targetPacked, pname,
                       bufSize, length, params);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY SamplerParameterivRobustANGLE(GLuint sampler,
@@ -2088,6 +2336,10 @@ void GL_APIENTRY SamplerParameterivRobustANGLE(GLuint sampler,
         }
         ANGLE_CAPTURE(SamplerParameterivRobustANGLE, isCallValid, context, samplerPacked, pname,
                       bufSize, param);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -2116,6 +2368,10 @@ void GL_APIENTRY SamplerParameterfvRobustANGLE(GLuint sampler,
         }
         ANGLE_CAPTURE(SamplerParameterfvRobustANGLE, isCallValid, context, samplerPacked, pname,
                       bufSize, param);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -2147,6 +2403,10 @@ void GL_APIENTRY GetSamplerParameterivRobustANGLE(GLuint sampler,
         ANGLE_CAPTURE(GetSamplerParameterivRobustANGLE, isCallValid, context, samplerPacked, pname,
                       bufSize, length, params);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY GetSamplerParameterfvRobustANGLE(GLuint sampler,
@@ -2177,6 +2437,10 @@ void GL_APIENTRY GetSamplerParameterfvRobustANGLE(GLuint sampler,
         ANGLE_CAPTURE(GetSamplerParameterfvRobustANGLE, isCallValid, context, samplerPacked, pname,
                       bufSize, length, params);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY GetFramebufferParameterivRobustANGLE(GLenum target,
@@ -2206,6 +2470,10 @@ void GL_APIENTRY GetFramebufferParameterivRobustANGLE(GLenum target,
         }
         ANGLE_CAPTURE(GetFramebufferParameterivRobustANGLE, isCallValid, context, target, pname,
                       bufSize, length, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -2242,6 +2510,10 @@ void GL_APIENTRY GetProgramInterfaceivRobustANGLE(GLuint program,
         ANGLE_CAPTURE(GetProgramInterfaceivRobustANGLE, isCallValid, context, programPacked,
                       programInterface, pname, bufSize, length, params);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY GetBooleani_vRobustANGLE(GLenum target,
@@ -2270,6 +2542,10 @@ void GL_APIENTRY GetBooleani_vRobustANGLE(GLenum target,
         ANGLE_CAPTURE(GetBooleani_vRobustANGLE, isCallValid, context, target, index, bufSize,
                       length, data);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY GetMultisamplefvRobustANGLE(GLenum pname,
@@ -2297,6 +2573,10 @@ void GL_APIENTRY GetMultisamplefvRobustANGLE(GLenum pname,
         }
         ANGLE_CAPTURE(GetMultisamplefvRobustANGLE, isCallValid, context, pname, index, bufSize,
                       length, val);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -2331,6 +2611,10 @@ void GL_APIENTRY GetTexLevelParameterivRobustANGLE(GLenum target,
         ANGLE_CAPTURE(GetTexLevelParameterivRobustANGLE, isCallValid, context, targetPacked, level,
                       pname, bufSize, length, params);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY GetTexLevelParameterfvRobustANGLE(GLenum target,
@@ -2364,6 +2648,10 @@ void GL_APIENTRY GetTexLevelParameterfvRobustANGLE(GLenum target,
         ANGLE_CAPTURE(GetTexLevelParameterfvRobustANGLE, isCallValid, context, targetPacked, level,
                       pname, bufSize, length, params);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY GetPointervRobustANGLERobustANGLE(GLenum pname,
@@ -2391,6 +2679,10 @@ void GL_APIENTRY GetPointervRobustANGLERobustANGLE(GLenum pname,
         }
         ANGLE_CAPTURE(GetPointervRobustANGLERobustANGLE, isCallValid, context, pname, bufSize,
                       length, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -2432,6 +2724,10 @@ void GL_APIENTRY ReadnPixelsRobustANGLE(GLint x,
         ANGLE_CAPTURE(ReadnPixelsRobustANGLE, isCallValid, context, x, y, width, height, format,
                       type, bufSize, length, columns, rows, data);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY GetnUniformfvRobustANGLE(GLuint program,
@@ -2460,6 +2756,10 @@ void GL_APIENTRY GetnUniformfvRobustANGLE(GLuint program,
         }
         ANGLE_CAPTURE(GetnUniformfvRobustANGLE, isCallValid, context, programPacked, locationPacked,
                       bufSize, length, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -2490,6 +2790,10 @@ void GL_APIENTRY GetnUniformivRobustANGLE(GLuint program,
         ANGLE_CAPTURE(GetnUniformivRobustANGLE, isCallValid, context, programPacked, locationPacked,
                       bufSize, length, params);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY GetnUniformuivRobustANGLE(GLuint program,
@@ -2519,6 +2823,10 @@ void GL_APIENTRY GetnUniformuivRobustANGLE(GLuint program,
         ANGLE_CAPTURE(GetnUniformuivRobustANGLE, isCallValid, context, programPacked,
                       locationPacked, bufSize, length, params);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY TexParameterIivRobustANGLE(GLenum target,
@@ -2547,6 +2855,10 @@ void GL_APIENTRY TexParameterIivRobustANGLE(GLenum target,
         ANGLE_CAPTURE(TexParameterIivRobustANGLE, isCallValid, context, targetPacked, pname,
                       bufSize, params);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY TexParameterIuivRobustANGLE(GLenum target,
@@ -2574,6 +2886,10 @@ void GL_APIENTRY TexParameterIuivRobustANGLE(GLenum target,
         }
         ANGLE_CAPTURE(TexParameterIuivRobustANGLE, isCallValid, context, targetPacked, pname,
                       bufSize, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -2604,6 +2920,10 @@ void GL_APIENTRY GetTexParameterIivRobustANGLE(GLenum target,
         }
         ANGLE_CAPTURE(GetTexParameterIivRobustANGLE, isCallValid, context, targetPacked, pname,
                       bufSize, length, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -2636,6 +2956,10 @@ void GL_APIENTRY GetTexParameterIuivRobustANGLE(GLenum target,
         ANGLE_CAPTURE(GetTexParameterIuivRobustANGLE, isCallValid, context, targetPacked, pname,
                       bufSize, length, params);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY SamplerParameterIivRobustANGLE(GLuint sampler,
@@ -2665,6 +2989,10 @@ void GL_APIENTRY SamplerParameterIivRobustANGLE(GLuint sampler,
         ANGLE_CAPTURE(SamplerParameterIivRobustANGLE, isCallValid, context, samplerPacked, pname,
                       bufSize, param);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY SamplerParameterIuivRobustANGLE(GLuint sampler,
@@ -2693,6 +3021,10 @@ void GL_APIENTRY SamplerParameterIuivRobustANGLE(GLuint sampler,
         }
         ANGLE_CAPTURE(SamplerParameterIuivRobustANGLE, isCallValid, context, samplerPacked, pname,
                       bufSize, param);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -2724,6 +3056,10 @@ void GL_APIENTRY GetSamplerParameterIivRobustANGLE(GLuint sampler,
         ANGLE_CAPTURE(GetSamplerParameterIivRobustANGLE, isCallValid, context, samplerPacked, pname,
                       bufSize, length, params);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY GetSamplerParameterIuivRobustANGLE(GLuint sampler,
@@ -2754,6 +3090,10 @@ void GL_APIENTRY GetSamplerParameterIuivRobustANGLE(GLuint sampler,
         ANGLE_CAPTURE(GetSamplerParameterIuivRobustANGLE, isCallValid, context, samplerPacked,
                       pname, bufSize, length, params);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY GetQueryObjectivRobustANGLE(GLuint id,
@@ -2783,6 +3123,8 @@ void GL_APIENTRY GetQueryObjectivRobustANGLE(GLuint id,
         ANGLE_CAPTURE(GetQueryObjectivRobustANGLE, isCallValid, context, idPacked, pname, bufSize,
                       length, params);
     }
+    else
+    {}
 }
 
 void GL_APIENTRY GetQueryObjecti64vRobustANGLE(GLuint id,
@@ -2812,6 +3154,8 @@ void GL_APIENTRY GetQueryObjecti64vRobustANGLE(GLuint id,
         ANGLE_CAPTURE(GetQueryObjecti64vRobustANGLE, isCallValid, context, idPacked, pname, bufSize,
                       length, params);
     }
+    else
+    {}
 }
 
 void GL_APIENTRY GetQueryObjectui64vRobustANGLE(GLuint id,
@@ -2842,6 +3186,10 @@ void GL_APIENTRY GetQueryObjectui64vRobustANGLE(GLuint id,
         ANGLE_CAPTURE(GetQueryObjectui64vRobustANGLE, isCallValid, context, idPacked, pname,
                       bufSize, length, params);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 // GL_ANGLE_semaphore_fuchsia
@@ -2870,6 +3218,10 @@ void GL_APIENTRY ImportSemaphoreZirconHandleANGLE(GLuint semaphore,
         }
         ANGLE_CAPTURE(ImportSemaphoreZirconHandleANGLE, isCallValid, context, semaphorePacked,
                       handleTypePacked, handle);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -2908,6 +3260,10 @@ void GL_APIENTRY TexImage2DExternalANGLE(GLenum target,
         ANGLE_CAPTURE(TexImage2DExternalANGLE, isCallValid, context, targetPacked, level,
                       internalformat, width, height, border, format, type);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY InvalidateTextureANGLE(GLenum target)
@@ -2928,6 +3284,10 @@ void GL_APIENTRY InvalidateTextureANGLE(GLenum target)
             context->invalidateTexture(targetPacked);
         }
         ANGLE_CAPTURE(InvalidateTextureANGLE, isCallValid, context, targetPacked);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -2963,6 +3323,10 @@ void GL_APIENTRY TexStorage2DMultisampleANGLE(GLenum target,
         ANGLE_CAPTURE(TexStorage2DMultisampleANGLE, isCallValid, context, targetPacked, samples,
                       internalformat, width, height, fixedsamplelocations);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY GetTexLevelParameterivANGLE(GLenum target,
@@ -2990,6 +3354,10 @@ void GL_APIENTRY GetTexLevelParameterivANGLE(GLenum target,
         }
         ANGLE_CAPTURE(GetTexLevelParameterivANGLE, isCallValid, context, targetPacked, level, pname,
                       params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -3019,6 +3387,10 @@ void GL_APIENTRY GetTexLevelParameterfvANGLE(GLenum target,
         ANGLE_CAPTURE(GetTexLevelParameterfvANGLE, isCallValid, context, targetPacked, level, pname,
                       params);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY GetMultisamplefvANGLE(GLenum pname, GLuint index, GLfloat *val)
@@ -3039,6 +3411,10 @@ void GL_APIENTRY GetMultisamplefvANGLE(GLenum pname, GLuint index, GLfloat *val)
         }
         ANGLE_CAPTURE(GetMultisamplefvANGLE, isCallValid, context, pname, index, val);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY SampleMaskiANGLE(GLuint maskNumber, GLbitfield mask)
@@ -3058,6 +3434,10 @@ void GL_APIENTRY SampleMaskiANGLE(GLuint maskNumber, GLbitfield mask)
             context->sampleMaski(maskNumber, mask);
         }
         ANGLE_CAPTURE(SampleMaskiANGLE, isCallValid, context, maskNumber, mask);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -3088,6 +3468,10 @@ void GL_APIENTRY GetTranslatedShaderSourceANGLE(GLuint shader,
         ANGLE_CAPTURE(GetTranslatedShaderSourceANGLE, isCallValid, context, shaderPacked, bufsize,
                       length, source);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 // GL_CHROMIUM_bind_uniform_location
@@ -3114,6 +3498,10 @@ void GL_APIENTRY BindUniformLocationCHROMIUM(GLuint program, GLint location, con
         ANGLE_CAPTURE(BindUniformLocationCHROMIUM, isCallValid, context, programPacked,
                       locationPacked, name);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 // GL_CHROMIUM_copy_compressed_texture
@@ -3137,6 +3525,10 @@ void GL_APIENTRY CompressedCopyTextureCHROMIUM(GLuint sourceId, GLuint destId)
         }
         ANGLE_CAPTURE(CompressedCopyTextureCHROMIUM, isCallValid, context, sourceIdPacked,
                       destIdPacked);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -3183,6 +3575,10 @@ void GL_APIENTRY CopyTextureCHROMIUM(GLuint sourceId,
         ANGLE_CAPTURE(CopyTextureCHROMIUM, isCallValid, context, sourceIdPacked, sourceLevel,
                       destTargetPacked, destIdPacked, destLevel, internalFormat, destType,
                       unpackFlipY, unpackPremultiplyAlpha, unpackUnmultiplyAlpha);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -3233,6 +3629,10 @@ void GL_APIENTRY CopySubTextureCHROMIUM(GLuint sourceId,
                       destTargetPacked, destIdPacked, destLevel, xoffset, yoffset, x, y, width,
                       height, unpackFlipY, unpackPremultiplyAlpha, unpackUnmultiplyAlpha);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 // GL_CHROMIUM_framebuffer_mixed_samples
@@ -3253,6 +3653,10 @@ void GL_APIENTRY CoverageModulationCHROMIUM(GLenum components)
             context->coverageModulation(components);
         }
         ANGLE_CAPTURE(CoverageModulationCHROMIUM, isCallValid, context, components);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -3277,6 +3681,10 @@ void GL_APIENTRY LoseContextCHROMIUM(GLenum current, GLenum other)
             context->loseContext(currentPacked, otherPacked);
         }
         ANGLE_CAPTURE(LoseContextCHROMIUM, isCallValid, context, currentPacked, otherPacked);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -3303,6 +3711,10 @@ void GL_APIENTRY BindFragDataLocationEXT(GLuint program, GLuint color, const GLc
             context->bindFragDataLocation(programPacked, color, name);
         }
         ANGLE_CAPTURE(BindFragDataLocationEXT, isCallValid, context, programPacked, color, name);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -3332,6 +3744,10 @@ void GL_APIENTRY BindFragDataLocationIndexedEXT(GLuint program,
         ANGLE_CAPTURE(BindFragDataLocationIndexedEXT, isCallValid, context, programPacked,
                       colorNumber, index, name);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 GLint GL_APIENTRY GetFragDataIndexEXT(GLuint program, const GLchar *name)
@@ -3360,6 +3776,7 @@ GLint GL_APIENTRY GetFragDataIndexEXT(GLuint program, const GLchar *name)
     }
     else
     {
+        GenerateContextLostErrorOnCurrentGlobalContext();
         returnValue = GetDefaultReturnValue<EntryPoint::GetFragDataIndexEXT, GLint>();
     }
     return returnValue;
@@ -3400,6 +3817,7 @@ GLint GL_APIENTRY GetProgramResourceLocationIndexEXT(GLuint program,
     }
     else
     {
+        GenerateContextLostErrorOnCurrentGlobalContext();
         returnValue =
             GetDefaultReturnValue<EntryPoint::GetProgramResourceLocationIndexEXT, GLint>();
     }
@@ -3431,6 +3849,10 @@ void GL_APIENTRY BufferStorageEXT(GLenum target,
             context->bufferStorage(targetPacked, size, data, flags);
         }
         ANGLE_CAPTURE(BufferStorageEXT, isCallValid, context, targetPacked, size, data, flags);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -3480,6 +3902,10 @@ void GL_APIENTRY CopyImageSubDataEXT(GLuint srcName,
                       srcY, srcZ, dstName, dstTarget, dstLevel, dstX, dstY, dstZ, srcWidth,
                       srcHeight, srcDepth);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 // GL_EXT_debug_marker
@@ -3503,6 +3929,10 @@ void GL_APIENTRY InsertEventMarkerEXT(GLsizei length, const GLchar *marker)
         }
         ANGLE_CAPTURE(InsertEventMarkerEXT, isCallValid, context, length, marker);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY PopGroupMarkerEXT()
@@ -3522,6 +3952,10 @@ void GL_APIENTRY PopGroupMarkerEXT()
             context->popGroupMarker();
         }
         ANGLE_CAPTURE(PopGroupMarkerEXT, isCallValid, context);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -3544,6 +3978,10 @@ void GL_APIENTRY PushGroupMarkerEXT(GLsizei length, const GLchar *marker)
             context->pushGroupMarker(length, marker);
         }
         ANGLE_CAPTURE(PushGroupMarkerEXT, isCallValid, context, length, marker);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -3572,6 +4010,10 @@ void GL_APIENTRY DiscardFramebufferEXT(GLenum target,
         ANGLE_CAPTURE(DiscardFramebufferEXT, isCallValid, context, target, numAttachments,
                       attachments);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 // GL_EXT_disjoint_timer_query
@@ -3595,6 +4037,10 @@ void GL_APIENTRY BeginQueryEXT(GLenum target, GLuint id)
         }
         ANGLE_CAPTURE(BeginQueryEXT, isCallValid, context, targetPacked, idPacked);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY DeleteQueriesEXT(GLsizei n, const GLuint *ids)
@@ -3616,6 +4062,10 @@ void GL_APIENTRY DeleteQueriesEXT(GLsizei n, const GLuint *ids)
         }
         ANGLE_CAPTURE(DeleteQueriesEXT, isCallValid, context, n, idsPacked);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY EndQueryEXT(GLenum target)
@@ -3635,6 +4085,10 @@ void GL_APIENTRY EndQueryEXT(GLenum target)
             context->endQuery(targetPacked);
         }
         ANGLE_CAPTURE(EndQueryEXT, isCallValid, context, targetPacked);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -3657,6 +4111,10 @@ void GL_APIENTRY GenQueriesEXT(GLsizei n, GLuint *ids)
         }
         ANGLE_CAPTURE(GenQueriesEXT, isCallValid, context, n, idsPacked);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY GetInteger64vEXT(GLenum pname, GLint64 *data)
@@ -3676,6 +4134,10 @@ void GL_APIENTRY GetInteger64vEXT(GLenum pname, GLint64 *data)
             context->getInteger64v(pname, data);
         }
         ANGLE_CAPTURE(GetInteger64vEXT, isCallValid, context, pname, data);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -3699,6 +4161,8 @@ void GL_APIENTRY GetQueryObjecti64vEXT(GLuint id, GLenum pname, GLint64 *params)
         }
         ANGLE_CAPTURE(GetQueryObjecti64vEXT, isCallValid, context, idPacked, pname, params);
     }
+    else
+    {}
 }
 
 void GL_APIENTRY GetQueryObjectivEXT(GLuint id, GLenum pname, GLint *params)
@@ -3721,6 +4185,8 @@ void GL_APIENTRY GetQueryObjectivEXT(GLuint id, GLenum pname, GLint *params)
         }
         ANGLE_CAPTURE(GetQueryObjectivEXT, isCallValid, context, idPacked, pname, params);
     }
+    else
+    {}
 }
 
 void GL_APIENTRY GetQueryObjectui64vEXT(GLuint id, GLenum pname, GLuint64 *params)
@@ -3742,6 +4208,10 @@ void GL_APIENTRY GetQueryObjectui64vEXT(GLuint id, GLenum pname, GLuint64 *param
             context->getQueryObjectui64v(idPacked, pname, params);
         }
         ANGLE_CAPTURE(GetQueryObjectui64vEXT, isCallValid, context, idPacked, pname, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -3765,6 +4235,10 @@ void GL_APIENTRY GetQueryObjectuivEXT(GLuint id, GLenum pname, GLuint *params)
         }
         ANGLE_CAPTURE(GetQueryObjectuivEXT, isCallValid, context, idPacked, pname, params);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY GetQueryivEXT(GLenum target, GLenum pname, GLint *params)
@@ -3786,6 +4260,10 @@ void GL_APIENTRY GetQueryivEXT(GLenum target, GLenum pname, GLint *params)
             context->getQueryiv(targetPacked, pname, params);
         }
         ANGLE_CAPTURE(GetQueryivEXT, isCallValid, context, targetPacked, pname, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -3813,6 +4291,7 @@ GLboolean GL_APIENTRY IsQueryEXT(GLuint id)
     }
     else
     {
+        GenerateContextLostErrorOnCurrentGlobalContext();
         returnValue = GetDefaultReturnValue<EntryPoint::IsQueryEXT, GLboolean>();
     }
     return returnValue;
@@ -3838,6 +4317,10 @@ void GL_APIENTRY QueryCounterEXT(GLuint id, GLenum target)
         }
         ANGLE_CAPTURE(QueryCounterEXT, isCallValid, context, idPacked, targetPacked);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 // GL_EXT_draw_buffers
@@ -3857,6 +4340,10 @@ void GL_APIENTRY DrawBuffersEXT(GLsizei n, const GLenum *bufs)
             context->drawBuffers(n, bufs);
         }
         ANGLE_CAPTURE(DrawBuffersEXT, isCallValid, context, n, bufs);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -3880,6 +4367,10 @@ void GL_APIENTRY BlendEquationSeparateiEXT(GLuint buf, GLenum modeRGB, GLenum mo
         }
         ANGLE_CAPTURE(BlendEquationSeparateiEXT, isCallValid, context, buf, modeRGB, modeAlpha);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY BlendEquationiEXT(GLuint buf, GLenum mode)
@@ -3899,6 +4390,10 @@ void GL_APIENTRY BlendEquationiEXT(GLuint buf, GLenum mode)
             context->blendEquationi(buf, mode);
         }
         ANGLE_CAPTURE(BlendEquationiEXT, isCallValid, context, buf, mode);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -3927,6 +4422,10 @@ BlendFuncSeparateiEXT(GLuint buf, GLenum srcRGB, GLenum dstRGB, GLenum srcAlpha,
         ANGLE_CAPTURE(BlendFuncSeparateiEXT, isCallValid, context, buf, srcRGB, dstRGB, srcAlpha,
                       dstAlpha);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY BlendFunciEXT(GLuint buf, GLenum src, GLenum dst)
@@ -3947,6 +4446,10 @@ void GL_APIENTRY BlendFunciEXT(GLuint buf, GLenum src, GLenum dst)
             context->blendFunci(buf, src, dst);
         }
         ANGLE_CAPTURE(BlendFunciEXT, isCallValid, context, buf, src, dst);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -3970,6 +4473,10 @@ void GL_APIENTRY ColorMaskiEXT(GLuint index, GLboolean r, GLboolean g, GLboolean
         }
         ANGLE_CAPTURE(ColorMaskiEXT, isCallValid, context, index, r, g, b, a);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY DisableiEXT(GLenum target, GLuint index)
@@ -3990,6 +4497,10 @@ void GL_APIENTRY DisableiEXT(GLenum target, GLuint index)
         }
         ANGLE_CAPTURE(DisableiEXT, isCallValid, context, target, index);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY EnableiEXT(GLenum target, GLuint index)
@@ -4009,6 +4520,10 @@ void GL_APIENTRY EnableiEXT(GLenum target, GLuint index)
             context->enablei(target, index);
         }
         ANGLE_CAPTURE(EnableiEXT, isCallValid, context, target, index);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -4037,6 +4552,7 @@ GLboolean GL_APIENTRY IsEnablediEXT(GLenum target, GLuint index)
     }
     else
     {
+        GenerateContextLostErrorOnCurrentGlobalContext();
         returnValue = GetDefaultReturnValue<EntryPoint::IsEnablediEXT, GLboolean>();
     }
     return returnValue;
@@ -4070,6 +4586,10 @@ void GL_APIENTRY DrawElementsBaseVertexEXT(GLenum mode,
         }
         ANGLE_CAPTURE(DrawElementsBaseVertexEXT, isCallValid, context, modePacked, count,
                       typePacked, indices, basevertex);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -4105,6 +4625,10 @@ void GL_APIENTRY DrawElementsInstancedBaseVertexEXT(GLenum mode,
         ANGLE_CAPTURE(DrawElementsInstancedBaseVertexEXT, isCallValid, context, modePacked, count,
                       typePacked, indices, instancecount, basevertex);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY DrawRangeElementsBaseVertexEXT(GLenum mode,
@@ -4138,6 +4662,10 @@ void GL_APIENTRY DrawRangeElementsBaseVertexEXT(GLenum mode,
         }
         ANGLE_CAPTURE(DrawRangeElementsBaseVertexEXT, isCallValid, context, modePacked, start, end,
                       count, typePacked, indices, basevertex);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -4174,6 +4702,10 @@ void GL_APIENTRY MultiDrawElementsBaseVertexEXT(GLenum mode,
         ANGLE_CAPTURE(MultiDrawElementsBaseVertexEXT, isCallValid, context, modePacked, count,
                       typePacked, indices, primcount, basevertex);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 // GL_EXT_geometry_shader
@@ -4203,6 +4735,10 @@ void GL_APIENTRY FramebufferTextureEXT(GLenum target,
         ANGLE_CAPTURE(FramebufferTextureEXT, isCallValid, context, target, attachment,
                       texturePacked, level);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 // GL_EXT_instanced_arrays
@@ -4227,6 +4763,10 @@ void GL_APIENTRY DrawArraysInstancedEXT(GLenum mode, GLint start, GLsizei count,
         }
         ANGLE_CAPTURE(DrawArraysInstancedEXT, isCallValid, context, modePacked, start, count,
                       primcount);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -4258,6 +4798,10 @@ void GL_APIENTRY DrawElementsInstancedEXT(GLenum mode,
         ANGLE_CAPTURE(DrawElementsInstancedEXT, isCallValid, context, modePacked, count, typePacked,
                       indices, primcount);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY VertexAttribDivisorEXT(GLuint index, GLuint divisor)
@@ -4276,6 +4820,10 @@ void GL_APIENTRY VertexAttribDivisorEXT(GLuint index, GLuint divisor)
             context->vertexAttribDivisor(index, divisor);
         }
         ANGLE_CAPTURE(VertexAttribDivisorEXT, isCallValid, context, index, divisor);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -4301,6 +4849,10 @@ void GL_APIENTRY FlushMappedBufferRangeEXT(GLenum target, GLintptr offset, GLsiz
         }
         ANGLE_CAPTURE(FlushMappedBufferRangeEXT, isCallValid, context, targetPacked, offset,
                       length);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -4338,6 +4890,7 @@ void *GL_APIENTRY MapBufferRangeEXT(GLenum target,
     }
     else
     {
+        GenerateContextLostErrorOnCurrentGlobalContext();
         returnValue = GetDefaultReturnValue<EntryPoint::MapBufferRangeEXT, void *>();
     }
     return returnValue;
@@ -4368,6 +4921,10 @@ void GL_APIENTRY BufferStorageMemEXT(GLenum target, GLsizeiptr size, GLuint memo
         ANGLE_CAPTURE(BufferStorageMemEXT, isCallValid, context, targetPacked, size, memoryPacked,
                       offset);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY CreateMemoryObjectsEXT(GLsizei n, GLuint *memoryObjects)
@@ -4389,6 +4946,10 @@ void GL_APIENTRY CreateMemoryObjectsEXT(GLsizei n, GLuint *memoryObjects)
         }
         ANGLE_CAPTURE(CreateMemoryObjectsEXT, isCallValid, context, n, memoryObjectsPacked);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY DeleteMemoryObjectsEXT(GLsizei n, const GLuint *memoryObjects)
@@ -4409,6 +4970,10 @@ void GL_APIENTRY DeleteMemoryObjectsEXT(GLsizei n, const GLuint *memoryObjects)
             context->deleteMemoryObjects(n, memoryObjectsPacked);
         }
         ANGLE_CAPTURE(DeleteMemoryObjectsEXT, isCallValid, context, n, memoryObjectsPacked);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -4436,6 +5001,10 @@ void GL_APIENTRY GetMemoryObjectParameterivEXT(GLuint memoryObject, GLenum pname
         ANGLE_CAPTURE(GetMemoryObjectParameterivEXT, isCallValid, context, memoryObjectPacked,
                       pname, params);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY GetUnsignedBytevEXT(GLenum pname, GLubyte *data)
@@ -4456,6 +5025,10 @@ void GL_APIENTRY GetUnsignedBytevEXT(GLenum pname, GLubyte *data)
         }
         ANGLE_CAPTURE(GetUnsignedBytevEXT, isCallValid, context, pname, data);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY GetUnsignedBytei_vEXT(GLenum target, GLuint index, GLubyte *data)
@@ -4475,6 +5048,10 @@ void GL_APIENTRY GetUnsignedBytei_vEXT(GLenum target, GLuint index, GLubyte *dat
             context->getUnsignedBytei_v(target, index, data);
         }
         ANGLE_CAPTURE(GetUnsignedBytei_vEXT, isCallValid, context, target, index, data);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -4503,6 +5080,7 @@ GLboolean GL_APIENTRY IsMemoryObjectEXT(GLuint memoryObject)
     }
     else
     {
+        GenerateContextLostErrorOnCurrentGlobalContext();
         returnValue = GetDefaultReturnValue<EntryPoint::IsMemoryObjectEXT, GLboolean>();
     }
     return returnValue;
@@ -4530,6 +5108,10 @@ void GL_APIENTRY MemoryObjectParameterivEXT(GLuint memoryObject, GLenum pname, c
         }
         ANGLE_CAPTURE(MemoryObjectParameterivEXT, isCallValid, context, memoryObjectPacked, pname,
                       params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -4565,6 +5147,10 @@ void GL_APIENTRY TexStorageMem2DEXT(GLenum target,
         }
         ANGLE_CAPTURE(TexStorageMem2DEXT, isCallValid, context, targetPacked, levels,
                       internalFormat, width, height, memoryPacked, offset);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -4603,6 +5189,10 @@ void GL_APIENTRY TexStorageMem2DMultisampleEXT(GLenum target,
         ANGLE_CAPTURE(TexStorageMem2DMultisampleEXT, isCallValid, context, targetPacked, samples,
                       internalFormat, width, height, fixedSampleLocations, memoryPacked, offset);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY TexStorageMem3DEXT(GLenum target,
@@ -4639,6 +5229,10 @@ void GL_APIENTRY TexStorageMem3DEXT(GLenum target,
         }
         ANGLE_CAPTURE(TexStorageMem3DEXT, isCallValid, context, targetPacked, levels,
                       internalFormat, width, height, depth, memoryPacked, offset);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -4680,6 +5274,10 @@ void GL_APIENTRY TexStorageMem3DMultisampleEXT(GLenum target,
                       internalFormat, width, height, depth, fixedSampleLocations, memoryPacked,
                       offset);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 // GL_EXT_memory_object_fd
@@ -4706,6 +5304,10 @@ void GL_APIENTRY ImportMemoryFdEXT(GLuint memory, GLuint64 size, GLenum handleTy
         }
         ANGLE_CAPTURE(ImportMemoryFdEXT, isCallValid, context, memoryPacked, size, handleTypePacked,
                       fd);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -4743,6 +5345,10 @@ void GL_APIENTRY FramebufferTexture2DMultisampleEXT(GLenum target,
         ANGLE_CAPTURE(FramebufferTexture2DMultisampleEXT, isCallValid, context, target, attachment,
                       textargetPacked, texturePacked, level, samples);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY RenderbufferStorageMultisampleEXT(GLenum target,
@@ -4772,6 +5378,10 @@ void GL_APIENTRY RenderbufferStorageMultisampleEXT(GLenum target,
         }
         ANGLE_CAPTURE(RenderbufferStorageMultisampleEXT, isCallValid, context, target, samples,
                       internalformat, width, height);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -4817,6 +5427,7 @@ GLenum GL_APIENTRY GetGraphicsResetStatusEXT()
     }
     else
     {
+
         returnValue = GetDefaultReturnValue<EntryPoint::GetGraphicsResetStatusEXT, GLenum>();
     }
     return returnValue;
@@ -4845,6 +5456,10 @@ void GL_APIENTRY GetnUniformfvEXT(GLuint program, GLint location, GLsizei bufSiz
         ANGLE_CAPTURE(GetnUniformfvEXT, isCallValid, context, programPacked, locationPacked,
                       bufSize, params);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY GetnUniformivEXT(GLuint program, GLint location, GLsizei bufSize, GLint *params)
@@ -4869,6 +5484,10 @@ void GL_APIENTRY GetnUniformivEXT(GLuint program, GLint location, GLsizei bufSiz
         }
         ANGLE_CAPTURE(GetnUniformivEXT, isCallValid, context, programPacked, locationPacked,
                       bufSize, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -4902,6 +5521,10 @@ void GL_APIENTRY ReadnPixelsEXT(GLint x,
         ANGLE_CAPTURE(ReadnPixelsEXT, isCallValid, context, x, y, width, height, format, type,
                       bufSize, data);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 // GL_EXT_sRGB
@@ -4926,6 +5549,10 @@ void GL_APIENTRY DeleteSemaphoresEXT(GLsizei n, const GLuint *semaphores)
         }
         ANGLE_CAPTURE(DeleteSemaphoresEXT, isCallValid, context, n, semaphoresPacked);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY GenSemaphoresEXT(GLsizei n, GLuint *semaphores)
@@ -4946,6 +5573,10 @@ void GL_APIENTRY GenSemaphoresEXT(GLsizei n, GLuint *semaphores)
             context->genSemaphores(n, semaphoresPacked);
         }
         ANGLE_CAPTURE(GenSemaphoresEXT, isCallValid, context, n, semaphoresPacked);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -4972,6 +5603,10 @@ void GL_APIENTRY GetSemaphoreParameterui64vEXT(GLuint semaphore, GLenum pname, G
         }
         ANGLE_CAPTURE(GetSemaphoreParameterui64vEXT, isCallValid, context, semaphorePacked, pname,
                       params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -5000,6 +5635,7 @@ GLboolean GL_APIENTRY IsSemaphoreEXT(GLuint semaphore)
     }
     else
     {
+        GenerateContextLostErrorOnCurrentGlobalContext();
         returnValue = GetDefaultReturnValue<EntryPoint::IsSemaphoreEXT, GLboolean>();
     }
     return returnValue;
@@ -5027,6 +5663,10 @@ void GL_APIENTRY SemaphoreParameterui64vEXT(GLuint semaphore, GLenum pname, cons
         }
         ANGLE_CAPTURE(SemaphoreParameterui64vEXT, isCallValid, context, semaphorePacked, pname,
                       params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -5064,6 +5704,10 @@ void GL_APIENTRY SignalSemaphoreEXT(GLuint semaphore,
         ANGLE_CAPTURE(SignalSemaphoreEXT, isCallValid, context, semaphorePacked, numBufferBarriers,
                       buffersPacked, numTextureBarriers, texturesPacked, dstLayouts);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY WaitSemaphoreEXT(GLuint semaphore,
@@ -5100,6 +5744,10 @@ void GL_APIENTRY WaitSemaphoreEXT(GLuint semaphore,
         ANGLE_CAPTURE(WaitSemaphoreEXT, isCallValid, context, semaphorePacked, numBufferBarriers,
                       buffersPacked, numTextureBarriers, texturesPacked, srcLayouts);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 // GetUnsignedBytei_vEXT is already defined.
@@ -5129,6 +5777,10 @@ void GL_APIENTRY ImportSemaphoreFdEXT(GLuint semaphore, GLenum handleType, GLint
         ANGLE_CAPTURE(ImportSemaphoreFdEXT, isCallValid, context, semaphorePacked, handleTypePacked,
                       fd);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 // GL_EXT_texture_buffer
@@ -5154,6 +5806,10 @@ void GL_APIENTRY TexBufferEXT(GLenum target, GLenum internalformat, GLuint buffe
         }
         ANGLE_CAPTURE(TexBufferEXT, isCallValid, context, targetPacked, internalformat,
                       bufferPacked);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -5185,6 +5841,10 @@ void GL_APIENTRY TexBufferRangeEXT(GLenum target,
         }
         ANGLE_CAPTURE(TexBufferRangeEXT, isCallValid, context, targetPacked, internalformat,
                       bufferPacked, offset, size);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -5231,6 +5891,10 @@ void GL_APIENTRY TexStorage1DEXT(GLenum target,
         }
         ANGLE_CAPTURE(TexStorage1DEXT, isCallValid, context, target, levels, internalformat, width);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY
@@ -5256,6 +5920,10 @@ TexStorage2DEXT(GLenum target, GLsizei levels, GLenum internalformat, GLsizei wi
         }
         ANGLE_CAPTURE(TexStorage2DEXT, isCallValid, context, targetPacked, levels, internalformat,
                       width, height);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -5287,6 +5955,10 @@ void GL_APIENTRY TexStorage3DEXT(GLenum target,
         ANGLE_CAPTURE(TexStorage3DEXT, isCallValid, context, targetPacked, levels, internalformat,
                       width, height, depth);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 // GL_KHR_debug
@@ -5308,6 +5980,10 @@ void GL_APIENTRY DebugMessageCallbackKHR(GLDEBUGPROCKHR callback, const void *us
             context->debugMessageCallback(callback, userParam);
         }
         ANGLE_CAPTURE(DebugMessageCallbackKHR, isCallValid, context, callback, userParam);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -5340,6 +6016,10 @@ void GL_APIENTRY DebugMessageControlKHR(GLenum source,
         ANGLE_CAPTURE(DebugMessageControlKHR, isCallValid, context, source, type, severity, count,
                       ids, enabled);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY DebugMessageInsertKHR(GLenum source,
@@ -5369,6 +6049,10 @@ void GL_APIENTRY DebugMessageInsertKHR(GLenum source,
         }
         ANGLE_CAPTURE(DebugMessageInsertKHR, isCallValid, context, source, type, id, severity,
                       length, buf);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -5411,6 +6095,7 @@ GLuint GL_APIENTRY GetDebugMessageLogKHR(GLuint count,
     }
     else
     {
+        GenerateContextLostErrorOnCurrentGlobalContext();
         returnValue = GetDefaultReturnValue<EntryPoint::GetDebugMessageLogKHR, GLuint>();
     }
     return returnValue;
@@ -5439,6 +6124,10 @@ GetObjectLabelKHR(GLenum identifier, GLuint name, GLsizei bufSize, GLsizei *leng
         ANGLE_CAPTURE(GetObjectLabelKHR, isCallValid, context, identifier, name, bufSize, length,
                       label);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY GetObjectPtrLabelKHR(const void *ptr,
@@ -5464,6 +6153,10 @@ void GL_APIENTRY GetObjectPtrLabelKHR(const void *ptr,
         }
         ANGLE_CAPTURE(GetObjectPtrLabelKHR, isCallValid, context, ptr, bufSize, length, label);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY GetPointervKHR(GLenum pname, void **params)
@@ -5483,6 +6176,10 @@ void GL_APIENTRY GetPointervKHR(GLenum pname, void **params)
             context->getPointerv(pname, params);
         }
         ANGLE_CAPTURE(GetPointervKHR, isCallValid, context, pname, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -5506,6 +6203,10 @@ void GL_APIENTRY ObjectLabelKHR(GLenum identifier, GLuint name, GLsizei length, 
         }
         ANGLE_CAPTURE(ObjectLabelKHR, isCallValid, context, identifier, name, length, label);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY ObjectPtrLabelKHR(const void *ptr, GLsizei length, const GLchar *label)
@@ -5527,6 +6228,10 @@ void GL_APIENTRY ObjectPtrLabelKHR(const void *ptr, GLsizei length, const GLchar
         }
         ANGLE_CAPTURE(ObjectPtrLabelKHR, isCallValid, context, ptr, length, label);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY PopDebugGroupKHR()
@@ -5544,6 +6249,10 @@ void GL_APIENTRY PopDebugGroupKHR()
             context->popDebugGroup();
         }
         ANGLE_CAPTURE(PopDebugGroupKHR, isCallValid, context);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -5567,6 +6276,10 @@ void GL_APIENTRY PushDebugGroupKHR(GLenum source, GLuint id, GLsizei length, con
         }
         ANGLE_CAPTURE(PushDebugGroupKHR, isCallValid, context, source, id, length, message);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 // GL_KHR_parallel_shader_compile
@@ -5586,6 +6299,10 @@ void GL_APIENTRY MaxShaderCompilerThreadsKHR(GLuint count)
             context->maxShaderCompilerThreads(count);
         }
         ANGLE_CAPTURE(MaxShaderCompilerThreadsKHR, isCallValid, context, count);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -5609,6 +6326,10 @@ void GL_APIENTRY DeleteFencesNV(GLsizei n, const GLuint *fences)
         }
         ANGLE_CAPTURE(DeleteFencesNV, isCallValid, context, n, fencesPacked);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY FinishFenceNV(GLuint fence)
@@ -5628,6 +6349,10 @@ void GL_APIENTRY FinishFenceNV(GLuint fence)
             context->finishFenceNV(fencePacked);
         }
         ANGLE_CAPTURE(FinishFenceNV, isCallValid, context, fencePacked);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -5650,6 +6375,10 @@ void GL_APIENTRY GenFencesNV(GLsizei n, GLuint *fences)
         }
         ANGLE_CAPTURE(GenFencesNV, isCallValid, context, n, fencesPacked);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY GetFenceivNV(GLuint fence, GLenum pname, GLint *params)
@@ -5670,6 +6399,10 @@ void GL_APIENTRY GetFenceivNV(GLuint fence, GLenum pname, GLint *params)
             context->getFenceivNV(fencePacked, pname, params);
         }
         ANGLE_CAPTURE(GetFenceivNV, isCallValid, context, fencePacked, pname, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -5697,6 +6430,7 @@ GLboolean GL_APIENTRY IsFenceNV(GLuint fence)
     }
     else
     {
+        GenerateContextLostErrorOnCurrentGlobalContext();
         returnValue = GetDefaultReturnValue<EntryPoint::IsFenceNV, GLboolean>();
     }
     return returnValue;
@@ -5720,6 +6454,10 @@ void GL_APIENTRY SetFenceNV(GLuint fence, GLenum condition)
             context->setFenceNV(fencePacked, condition);
         }
         ANGLE_CAPTURE(SetFenceNV, isCallValid, context, fencePacked, condition);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -5747,6 +6485,7 @@ GLboolean GL_APIENTRY TestFenceNV(GLuint fence)
     }
     else
     {
+        GenerateContextLostErrorOnCurrentGlobalContext();
         returnValue = GetDefaultReturnValue<EntryPoint::TestFenceNV, GLboolean>();
     }
     return returnValue;
@@ -5772,6 +6511,10 @@ void GL_APIENTRY EGLImageTargetRenderbufferStorageOES(GLenum target, GLeglImageO
         }
         ANGLE_CAPTURE(EGLImageTargetRenderbufferStorageOES, isCallValid, context, target, image);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY EGLImageTargetTexture2DOES(GLenum target, GLeglImageOES image)
@@ -5792,6 +6535,10 @@ void GL_APIENTRY EGLImageTargetTexture2DOES(GLenum target, GLeglImageOES image)
             context->eGLImageTargetTexture2D(targetPacked, image);
         }
         ANGLE_CAPTURE(EGLImageTargetTexture2DOES, isCallValid, context, targetPacked, image);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -5843,6 +6590,10 @@ void GL_APIENTRY CopyImageSubDataOES(GLuint srcName,
                       srcY, srcZ, dstName, dstTarget, dstLevel, dstX, dstY, dstZ, srcWidth,
                       srcHeight, srcDepth);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 // GL_OES_depth32
@@ -5867,6 +6618,10 @@ void GL_APIENTRY BlendEquationSeparateiOES(GLuint buf, GLenum modeRGB, GLenum mo
         }
         ANGLE_CAPTURE(BlendEquationSeparateiOES, isCallValid, context, buf, modeRGB, modeAlpha);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY BlendEquationiOES(GLuint buf, GLenum mode)
@@ -5886,6 +6641,10 @@ void GL_APIENTRY BlendEquationiOES(GLuint buf, GLenum mode)
             context->blendEquationi(buf, mode);
         }
         ANGLE_CAPTURE(BlendEquationiOES, isCallValid, context, buf, mode);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -5914,6 +6673,10 @@ BlendFuncSeparateiOES(GLuint buf, GLenum srcRGB, GLenum dstRGB, GLenum srcAlpha,
         ANGLE_CAPTURE(BlendFuncSeparateiOES, isCallValid, context, buf, srcRGB, dstRGB, srcAlpha,
                       dstAlpha);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY BlendFunciOES(GLuint buf, GLenum src, GLenum dst)
@@ -5934,6 +6697,10 @@ void GL_APIENTRY BlendFunciOES(GLuint buf, GLenum src, GLenum dst)
             context->blendFunci(buf, src, dst);
         }
         ANGLE_CAPTURE(BlendFunciOES, isCallValid, context, buf, src, dst);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -5957,6 +6724,10 @@ void GL_APIENTRY ColorMaskiOES(GLuint index, GLboolean r, GLboolean g, GLboolean
         }
         ANGLE_CAPTURE(ColorMaskiOES, isCallValid, context, index, r, g, b, a);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY DisableiOES(GLenum target, GLuint index)
@@ -5977,6 +6748,10 @@ void GL_APIENTRY DisableiOES(GLenum target, GLuint index)
         }
         ANGLE_CAPTURE(DisableiOES, isCallValid, context, target, index);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY EnableiOES(GLenum target, GLuint index)
@@ -5996,6 +6771,10 @@ void GL_APIENTRY EnableiOES(GLenum target, GLuint index)
             context->enablei(target, index);
         }
         ANGLE_CAPTURE(EnableiOES, isCallValid, context, target, index);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -6024,6 +6803,7 @@ GLboolean GL_APIENTRY IsEnablediOES(GLenum target, GLuint index)
     }
     else
     {
+        GenerateContextLostErrorOnCurrentGlobalContext();
         returnValue = GetDefaultReturnValue<EntryPoint::IsEnablediOES, GLboolean>();
     }
     return returnValue;
@@ -6057,6 +6837,10 @@ void GL_APIENTRY DrawElementsBaseVertexOES(GLenum mode,
         }
         ANGLE_CAPTURE(DrawElementsBaseVertexOES, isCallValid, context, modePacked, count,
                       typePacked, indices, basevertex);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -6092,6 +6876,10 @@ void GL_APIENTRY DrawElementsInstancedBaseVertexOES(GLenum mode,
         ANGLE_CAPTURE(DrawElementsInstancedBaseVertexOES, isCallValid, context, modePacked, count,
                       typePacked, indices, instancecount, basevertex);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY DrawRangeElementsBaseVertexOES(GLenum mode,
@@ -6126,6 +6914,10 @@ void GL_APIENTRY DrawRangeElementsBaseVertexOES(GLenum mode,
         ANGLE_CAPTURE(DrawRangeElementsBaseVertexOES, isCallValid, context, modePacked, start, end,
                       count, typePacked, indices, basevertex);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 // MultiDrawElementsBaseVertexEXT is already defined.
@@ -6150,6 +6942,10 @@ void GL_APIENTRY DrawTexfOES(GLfloat x, GLfloat y, GLfloat z, GLfloat width, GLf
         }
         ANGLE_CAPTURE(DrawTexfOES, isCallValid, context, x, y, z, width, height);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY DrawTexfvOES(const GLfloat *coords)
@@ -6168,6 +6964,10 @@ void GL_APIENTRY DrawTexfvOES(const GLfloat *coords)
             context->drawTexfv(coords);
         }
         ANGLE_CAPTURE(DrawTexfvOES, isCallValid, context, coords);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -6190,6 +6990,10 @@ void GL_APIENTRY DrawTexiOES(GLint x, GLint y, GLint z, GLint width, GLint heigh
         }
         ANGLE_CAPTURE(DrawTexiOES, isCallValid, context, x, y, z, width, height);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY DrawTexivOES(const GLint *coords)
@@ -6207,6 +7011,10 @@ void GL_APIENTRY DrawTexivOES(const GLint *coords)
             context->drawTexiv(coords);
         }
         ANGLE_CAPTURE(DrawTexivOES, isCallValid, context, coords);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -6229,6 +7037,10 @@ void GL_APIENTRY DrawTexsOES(GLshort x, GLshort y, GLshort z, GLshort width, GLs
         }
         ANGLE_CAPTURE(DrawTexsOES, isCallValid, context, x, y, z, width, height);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY DrawTexsvOES(const GLshort *coords)
@@ -6247,6 +7059,10 @@ void GL_APIENTRY DrawTexsvOES(const GLshort *coords)
             context->drawTexsv(coords);
         }
         ANGLE_CAPTURE(DrawTexsvOES, isCallValid, context, coords);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -6269,6 +7085,10 @@ void GL_APIENTRY DrawTexxOES(GLfixed x, GLfixed y, GLfixed z, GLfixed width, GLf
         }
         ANGLE_CAPTURE(DrawTexxOES, isCallValid, context, x, y, z, width, height);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY DrawTexxvOES(const GLfixed *coords)
@@ -6287,6 +7107,10 @@ void GL_APIENTRY DrawTexxvOES(const GLfixed *coords)
             context->drawTexxv(coords);
         }
         ANGLE_CAPTURE(DrawTexxvOES, isCallValid, context, coords);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -6310,6 +7134,10 @@ void GL_APIENTRY BindFramebufferOES(GLenum target, GLuint framebuffer)
         }
         ANGLE_CAPTURE(BindFramebufferOES, isCallValid, context, target, framebufferPacked);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY BindRenderbufferOES(GLenum target, GLuint renderbuffer)
@@ -6330,6 +7158,10 @@ void GL_APIENTRY BindRenderbufferOES(GLenum target, GLuint renderbuffer)
             context->bindRenderbuffer(target, renderbufferPacked);
         }
         ANGLE_CAPTURE(BindRenderbufferOES, isCallValid, context, target, renderbufferPacked);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -6358,6 +7190,7 @@ GLenum GL_APIENTRY CheckFramebufferStatusOES(GLenum target)
     }
     else
     {
+        GenerateContextLostErrorOnCurrentGlobalContext();
         returnValue = GetDefaultReturnValue<EntryPoint::CheckFramebufferStatusOES, GLenum>();
     }
     return returnValue;
@@ -6382,6 +7215,10 @@ void GL_APIENTRY DeleteFramebuffersOES(GLsizei n, const GLuint *framebuffers)
         }
         ANGLE_CAPTURE(DeleteFramebuffersOES, isCallValid, context, n, framebuffersPacked);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY DeleteRenderbuffersOES(GLsizei n, const GLuint *renderbuffers)
@@ -6402,6 +7239,10 @@ void GL_APIENTRY DeleteRenderbuffersOES(GLsizei n, const GLuint *renderbuffers)
             context->deleteRenderbuffers(n, renderbuffersPacked);
         }
         ANGLE_CAPTURE(DeleteRenderbuffersOES, isCallValid, context, n, renderbuffersPacked);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -6433,6 +7274,10 @@ void GL_APIENTRY FramebufferRenderbufferOES(GLenum target,
         }
         ANGLE_CAPTURE(FramebufferRenderbufferOES, isCallValid, context, target, attachment,
                       renderbuffertarget, renderbufferPacked);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -6466,6 +7311,10 @@ void GL_APIENTRY FramebufferTexture2DOES(GLenum target,
         ANGLE_CAPTURE(FramebufferTexture2DOES, isCallValid, context, target, attachment,
                       textargetPacked, texturePacked, level);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY GenFramebuffersOES(GLsizei n, GLuint *framebuffers)
@@ -6486,6 +7335,10 @@ void GL_APIENTRY GenFramebuffersOES(GLsizei n, GLuint *framebuffers)
             context->genFramebuffers(n, framebuffersPacked);
         }
         ANGLE_CAPTURE(GenFramebuffersOES, isCallValid, context, n, framebuffersPacked);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -6508,6 +7361,10 @@ void GL_APIENTRY GenRenderbuffersOES(GLsizei n, GLuint *renderbuffers)
         }
         ANGLE_CAPTURE(GenRenderbuffersOES, isCallValid, context, n, renderbuffersPacked);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY GenerateMipmapOES(GLenum target)
@@ -6528,6 +7385,10 @@ void GL_APIENTRY GenerateMipmapOES(GLenum target)
             context->generateMipmap(targetPacked);
         }
         ANGLE_CAPTURE(GenerateMipmapOES, isCallValid, context, targetPacked);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -6559,6 +7420,10 @@ void GL_APIENTRY GetFramebufferAttachmentParameterivOES(GLenum target,
         ANGLE_CAPTURE(GetFramebufferAttachmentParameterivOES, isCallValid, context, target,
                       attachment, pname, params);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY GetRenderbufferParameterivOES(GLenum target, GLenum pname, GLint *params)
@@ -6579,6 +7444,10 @@ void GL_APIENTRY GetRenderbufferParameterivOES(GLenum target, GLenum pname, GLin
             context->getRenderbufferParameteriv(target, pname, params);
         }
         ANGLE_CAPTURE(GetRenderbufferParameterivOES, isCallValid, context, target, pname, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -6607,6 +7476,7 @@ GLboolean GL_APIENTRY IsFramebufferOES(GLuint framebuffer)
     }
     else
     {
+        GenerateContextLostErrorOnCurrentGlobalContext();
         returnValue = GetDefaultReturnValue<EntryPoint::IsFramebufferOES, GLboolean>();
     }
     return returnValue;
@@ -6637,6 +7507,7 @@ GLboolean GL_APIENTRY IsRenderbufferOES(GLuint renderbuffer)
     }
     else
     {
+        GenerateContextLostErrorOnCurrentGlobalContext();
         returnValue = GetDefaultReturnValue<EntryPoint::IsRenderbufferOES, GLboolean>();
     }
     return returnValue;
@@ -6666,6 +7537,10 @@ void GL_APIENTRY RenderbufferStorageOES(GLenum target,
         }
         ANGLE_CAPTURE(RenderbufferStorageOES, isCallValid, context, target, internalformat, width,
                       height);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -6698,6 +7573,10 @@ void GL_APIENTRY GetProgramBinaryOES(GLuint program,
         ANGLE_CAPTURE(GetProgramBinaryOES, isCallValid, context, programPacked, bufSize, length,
                       binaryFormat, binary);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY ProgramBinaryOES(GLuint program,
@@ -6726,6 +7605,10 @@ void GL_APIENTRY ProgramBinaryOES(GLuint program,
         ANGLE_CAPTURE(ProgramBinaryOES, isCallValid, context, programPacked, binaryFormat, binary,
                       length);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 // GL_OES_mapbuffer
@@ -6748,6 +7631,10 @@ void GL_APIENTRY GetBufferPointervOES(GLenum target, GLenum pname, void **params
             context->getBufferPointerv(targetPacked, pname, params);
         }
         ANGLE_CAPTURE(GetBufferPointervOES, isCallValid, context, targetPacked, pname, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -6778,6 +7665,7 @@ void *GL_APIENTRY MapBufferOES(GLenum target, GLenum access)
     }
     else
     {
+        GenerateContextLostErrorOnCurrentGlobalContext();
         returnValue = GetDefaultReturnValue<EntryPoint::MapBufferOES, void *>();
     }
     return returnValue;
@@ -6809,6 +7697,7 @@ GLboolean GL_APIENTRY UnmapBufferOES(GLenum target)
     }
     else
     {
+        GenerateContextLostErrorOnCurrentGlobalContext();
         returnValue = GetDefaultReturnValue<EntryPoint::UnmapBufferOES, GLboolean>();
     }
     return returnValue;
@@ -6832,6 +7721,10 @@ void GL_APIENTRY CurrentPaletteMatrixOES(GLuint matrixpaletteindex)
         }
         ANGLE_CAPTURE(CurrentPaletteMatrixOES, isCallValid, context, matrixpaletteindex);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY LoadPaletteFromModelViewMatrixOES()
@@ -6850,6 +7743,10 @@ void GL_APIENTRY LoadPaletteFromModelViewMatrixOES()
             context->loadPaletteFromModelViewMatrix();
         }
         ANGLE_CAPTURE(LoadPaletteFromModelViewMatrixOES, isCallValid, context);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -6873,6 +7770,10 @@ void GL_APIENTRY MatrixIndexPointerOES(GLint size, GLenum type, GLsizei stride, 
         }
         ANGLE_CAPTURE(MatrixIndexPointerOES, isCallValid, context, size, type, stride, pointer);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY WeightPointerOES(GLint size, GLenum type, GLsizei stride, const void *pointer)
@@ -6894,6 +7795,10 @@ void GL_APIENTRY WeightPointerOES(GLint size, GLenum type, GLsizei stride, const
             context->weightPointer(size, type, stride, pointer);
         }
         ANGLE_CAPTURE(WeightPointerOES, isCallValid, context, size, type, stride, pointer);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -6918,6 +7823,10 @@ void GL_APIENTRY PointSizePointerOES(GLenum type, GLsizei stride, const void *po
             context->pointSizePointer(typePacked, stride, pointer);
         }
         ANGLE_CAPTURE(PointSizePointerOES, isCallValid, context, typePacked, stride, pointer);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -6948,6 +7857,7 @@ GLbitfield GL_APIENTRY QueryMatrixxOES(GLfixed *mantissa, GLint *exponent)
     }
     else
     {
+        GenerateContextLostErrorOnCurrentGlobalContext();
         returnValue = GetDefaultReturnValue<EntryPoint::QueryMatrixxOES, GLbitfield>();
     }
     return returnValue;
@@ -6970,6 +7880,10 @@ void GL_APIENTRY MinSampleShadingOES(GLfloat value)
             context->minSampleShading(value);
         }
         ANGLE_CAPTURE(MinSampleShadingOES, isCallValid, context, value);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -7008,6 +7922,10 @@ void GL_APIENTRY CompressedTexImage3DOES(GLenum target,
         }
         ANGLE_CAPTURE(CompressedTexImage3DOES, isCallValid, context, targetPacked, level,
                       internalformat, width, height, depth, border, imageSize, data);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -7048,6 +7966,10 @@ void GL_APIENTRY CompressedTexSubImage3DOES(GLenum target,
         ANGLE_CAPTURE(CompressedTexSubImage3DOES, isCallValid, context, targetPacked, level,
                       xoffset, yoffset, zoffset, width, height, depth, format, imageSize, data);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY CopyTexSubImage3DOES(GLenum target,
@@ -7083,6 +8005,10 @@ void GL_APIENTRY CopyTexSubImage3DOES(GLenum target,
         ANGLE_CAPTURE(CopyTexSubImage3DOES, isCallValid, context, targetPacked, level, xoffset,
                       yoffset, zoffset, x, y, width, height);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY FramebufferTexture3DOES(GLenum target,
@@ -7116,6 +8042,10 @@ void GL_APIENTRY FramebufferTexture3DOES(GLenum target,
         }
         ANGLE_CAPTURE(FramebufferTexture3DOES, isCallValid, context, target, attachment,
                       textargetPacked, texturePacked, level, zoffset);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -7156,6 +8086,10 @@ void GL_APIENTRY TexImage3DOES(GLenum target,
         ANGLE_CAPTURE(TexImage3DOES, isCallValid, context, targetPacked, level, internalformat,
                       width, height, depth, border, format, type, pixels);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY TexSubImage3DOES(GLenum target,
@@ -7195,6 +8129,10 @@ void GL_APIENTRY TexSubImage3DOES(GLenum target,
         ANGLE_CAPTURE(TexSubImage3DOES, isCallValid, context, targetPacked, level, xoffset, yoffset,
                       zoffset, width, height, depth, format, type, pixels);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 // GL_OES_texture_border_clamp
@@ -7219,6 +8157,10 @@ void GL_APIENTRY GetSamplerParameterIivOES(GLuint sampler, GLenum pname, GLint *
         }
         ANGLE_CAPTURE(GetSamplerParameterIivOES, isCallValid, context, samplerPacked, pname,
                       params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -7245,6 +8187,10 @@ void GL_APIENTRY GetSamplerParameterIuivOES(GLuint sampler, GLenum pname, GLuint
         ANGLE_CAPTURE(GetSamplerParameterIuivOES, isCallValid, context, samplerPacked, pname,
                       params);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY GetTexParameterIivOES(GLenum target, GLenum pname, GLint *params)
@@ -7267,6 +8213,10 @@ void GL_APIENTRY GetTexParameterIivOES(GLenum target, GLenum pname, GLint *param
         }
         ANGLE_CAPTURE(GetTexParameterIivOES, isCallValid, context, targetPacked, pname, params);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY GetTexParameterIuivOES(GLenum target, GLenum pname, GLuint *params)
@@ -7288,6 +8238,10 @@ void GL_APIENTRY GetTexParameterIuivOES(GLenum target, GLenum pname, GLuint *par
             context->getTexParameterIuiv(targetPacked, pname, params);
         }
         ANGLE_CAPTURE(GetTexParameterIuivOES, isCallValid, context, targetPacked, pname, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -7313,6 +8267,10 @@ void GL_APIENTRY SamplerParameterIivOES(GLuint sampler, GLenum pname, const GLin
         }
         ANGLE_CAPTURE(SamplerParameterIivOES, isCallValid, context, samplerPacked, pname, param);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY SamplerParameterIuivOES(GLuint sampler, GLenum pname, const GLuint *param)
@@ -7336,6 +8294,10 @@ void GL_APIENTRY SamplerParameterIuivOES(GLuint sampler, GLenum pname, const GLu
             context->samplerParameterIuiv(samplerPacked, pname, param);
         }
         ANGLE_CAPTURE(SamplerParameterIuivOES, isCallValid, context, samplerPacked, pname, param);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -7361,6 +8323,10 @@ void GL_APIENTRY TexParameterIivOES(GLenum target, GLenum pname, const GLint *pa
         }
         ANGLE_CAPTURE(TexParameterIivOES, isCallValid, context, targetPacked, pname, params);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY TexParameterIuivOES(GLenum target, GLenum pname, const GLuint *params)
@@ -7384,6 +8350,10 @@ void GL_APIENTRY TexParameterIuivOES(GLenum target, GLenum pname, const GLuint *
             context->texParameterIuiv(targetPacked, pname, params);
         }
         ANGLE_CAPTURE(TexParameterIuivOES, isCallValid, context, targetPacked, pname, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -7410,6 +8380,10 @@ void GL_APIENTRY TexBufferOES(GLenum target, GLenum internalformat, GLuint buffe
         }
         ANGLE_CAPTURE(TexBufferOES, isCallValid, context, targetPacked, internalformat,
                       bufferPacked);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -7442,6 +8416,10 @@ void GL_APIENTRY TexBufferRangeOES(GLenum target,
         ANGLE_CAPTURE(TexBufferRangeOES, isCallValid, context, targetPacked, internalformat,
                       bufferPacked, offset, size);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 // GL_OES_texture_cube_map
@@ -7464,6 +8442,10 @@ void GL_APIENTRY GetTexGenfvOES(GLenum coord, GLenum pname, GLfloat *params)
         }
         ANGLE_CAPTURE(GetTexGenfvOES, isCallValid, context, coord, pname, params);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY GetTexGenivOES(GLenum coord, GLenum pname, GLint *params)
@@ -7484,6 +8466,10 @@ void GL_APIENTRY GetTexGenivOES(GLenum coord, GLenum pname, GLint *params)
             context->getTexGeniv(coord, pname, params);
         }
         ANGLE_CAPTURE(GetTexGenivOES, isCallValid, context, coord, pname, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -7506,6 +8492,10 @@ void GL_APIENTRY GetTexGenxvOES(GLenum coord, GLenum pname, GLfixed *params)
         }
         ANGLE_CAPTURE(GetTexGenxvOES, isCallValid, context, coord, pname, params);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY TexGenfOES(GLenum coord, GLenum pname, GLfloat param)
@@ -7526,6 +8516,10 @@ void GL_APIENTRY TexGenfOES(GLenum coord, GLenum pname, GLfloat param)
             context->texGenf(coord, pname, param);
         }
         ANGLE_CAPTURE(TexGenfOES, isCallValid, context, coord, pname, param);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -7550,6 +8544,10 @@ void GL_APIENTRY TexGenfvOES(GLenum coord, GLenum pname, const GLfloat *params)
         }
         ANGLE_CAPTURE(TexGenfvOES, isCallValid, context, coord, pname, params);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY TexGeniOES(GLenum coord, GLenum pname, GLint param)
@@ -7570,6 +8568,10 @@ void GL_APIENTRY TexGeniOES(GLenum coord, GLenum pname, GLint param)
             context->texGeni(coord, pname, param);
         }
         ANGLE_CAPTURE(TexGeniOES, isCallValid, context, coord, pname, param);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -7593,6 +8595,10 @@ void GL_APIENTRY TexGenivOES(GLenum coord, GLenum pname, const GLint *params)
         }
         ANGLE_CAPTURE(TexGenivOES, isCallValid, context, coord, pname, params);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY TexGenxOES(GLenum coord, GLenum pname, GLfixed param)
@@ -7613,6 +8619,10 @@ void GL_APIENTRY TexGenxOES(GLenum coord, GLenum pname, GLfixed param)
             context->texGenx(coord, pname, param);
         }
         ANGLE_CAPTURE(TexGenxOES, isCallValid, context, coord, pname, param);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -7636,6 +8646,10 @@ void GL_APIENTRY TexGenxvOES(GLenum coord, GLenum pname, const GLfixed *params)
             context->texGenxv(coord, pname, params);
         }
         ANGLE_CAPTURE(TexGenxvOES, isCallValid, context, coord, pname, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -7679,6 +8693,10 @@ void GL_APIENTRY TexStorage3DMultisampleOES(GLenum target,
         ANGLE_CAPTURE(TexStorage3DMultisampleOES, isCallValid, context, targetPacked, samples,
                       internalformat, width, height, depth, fixedsamplelocations);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 // GL_OES_vertex_array_object
@@ -7699,6 +8717,10 @@ void GL_APIENTRY BindVertexArrayOES(GLuint array)
             context->bindVertexArray(arrayPacked);
         }
         ANGLE_CAPTURE(BindVertexArrayOES, isCallValid, context, arrayPacked);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -7721,6 +8743,10 @@ void GL_APIENTRY DeleteVertexArraysOES(GLsizei n, const GLuint *arrays)
         }
         ANGLE_CAPTURE(DeleteVertexArraysOES, isCallValid, context, n, arraysPacked);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 void GL_APIENTRY GenVertexArraysOES(GLsizei n, GLuint *arrays)
@@ -7741,6 +8767,10 @@ void GL_APIENTRY GenVertexArraysOES(GLsizei n, GLuint *arrays)
             context->genVertexArrays(n, arraysPacked);
         }
         ANGLE_CAPTURE(GenVertexArraysOES, isCallValid, context, n, arraysPacked);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
     }
 }
 
@@ -7769,6 +8799,7 @@ GLboolean GL_APIENTRY IsVertexArrayOES(GLuint array)
     }
     else
     {
+        GenerateContextLostErrorOnCurrentGlobalContext();
         returnValue = GetDefaultReturnValue<EntryPoint::IsVertexArrayOES, GLboolean>();
     }
     return returnValue;
@@ -7807,6 +8838,10 @@ void GL_APIENTRY FramebufferTextureMultiviewOVR(GLenum target,
         ANGLE_CAPTURE(FramebufferTextureMultiviewOVR, isCallValid, context, target, attachment,
                       texturePacked, level, baseViewIndex, numViews);
     }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
 }
 
 // GL_OVR_multiview2
@@ -7819,7 +8854,7 @@ void GL_APIENTRY ActiveShaderProgramContextANGLE(GLeglContext ctx, GLuint pipeli
           "context = %d, GLuint pipeline = %u, GLuint program = %u", CID(context), pipeline,
           program);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ProgramPipelineID pipelinePacked                      = FromGL<ProgramPipelineID>(pipeline);
@@ -7833,6 +8868,10 @@ void GL_APIENTRY ActiveShaderProgramContextANGLE(GLeglContext ctx, GLuint pipeli
         }
         ANGLE_CAPTURE(ActiveShaderProgram, isCallValid, context, pipelinePacked, programPacked);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY ActiveTextureContextANGLE(GLeglContext ctx, GLenum texture)
@@ -7842,7 +8881,7 @@ void GL_APIENTRY ActiveTextureContextANGLE(GLeglContext ctx, GLenum texture)
           "context = %d, GLenum texture = %s", CID(context),
           GLenumToString(GLenumGroup::TextureUnit, texture));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -7853,6 +8892,10 @@ void GL_APIENTRY ActiveTextureContextANGLE(GLeglContext ctx, GLenum texture)
         }
         ANGLE_CAPTURE(ActiveTexture, isCallValid, context, texture);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY AlphaFuncContextANGLE(GLeglContext ctx, GLenum func, GLfloat ref)
@@ -7862,7 +8905,7 @@ void GL_APIENTRY AlphaFuncContextANGLE(GLeglContext ctx, GLenum func, GLfloat re
           "context = %d, GLenum func = %s, GLfloat ref = %f", CID(context),
           GLenumToString(GLenumGroup::AlphaFunction, func), ref);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         AlphaTestFunc funcPacked                              = FromGL<AlphaTestFunc>(func);
@@ -7875,6 +8918,10 @@ void GL_APIENTRY AlphaFuncContextANGLE(GLeglContext ctx, GLenum func, GLfloat re
         }
         ANGLE_CAPTURE(AlphaFunc, isCallValid, context, funcPacked, ref);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY AlphaFuncxContextANGLE(GLeglContext ctx, GLenum func, GLfixed ref)
@@ -7884,7 +8931,7 @@ void GL_APIENTRY AlphaFuncxContextANGLE(GLeglContext ctx, GLenum func, GLfixed r
           "context = %d, GLenum func = %s, GLfixed ref = 0x%X", CID(context),
           GLenumToString(GLenumGroup::AlphaFunction, func), ref);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         AlphaTestFunc funcPacked                              = FromGL<AlphaTestFunc>(func);
@@ -7897,6 +8944,10 @@ void GL_APIENTRY AlphaFuncxContextANGLE(GLeglContext ctx, GLenum func, GLfixed r
         }
         ANGLE_CAPTURE(AlphaFuncx, isCallValid, context, funcPacked, ref);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY AttachShaderContextANGLE(GLeglContext ctx, GLuint program, GLuint shader)
@@ -7905,7 +8956,7 @@ void GL_APIENTRY AttachShaderContextANGLE(GLeglContext ctx, GLuint program, GLui
     EVENT(context, gl::EntryPoint::AttachShader, "glAttachShader",
           "context = %d, GLuint program = %u, GLuint shader = %u", CID(context), program, shader);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID programPacked                         = FromGL<ShaderProgramID>(program);
@@ -7919,6 +8970,10 @@ void GL_APIENTRY AttachShaderContextANGLE(GLeglContext ctx, GLuint program, GLui
         }
         ANGLE_CAPTURE(AttachShader, isCallValid, context, programPacked, shaderPacked);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY BeginQueryContextANGLE(GLeglContext ctx, GLenum target, GLuint id)
@@ -7928,7 +8983,7 @@ void GL_APIENTRY BeginQueryContextANGLE(GLeglContext ctx, GLenum target, GLuint 
           "context = %d, GLenum target = %s, GLuint id = %u", CID(context),
           GLenumToString(GLenumGroup::QueryTarget, target), id);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         QueryType targetPacked                                = FromGL<QueryType>(target);
@@ -7942,6 +8997,10 @@ void GL_APIENTRY BeginQueryContextANGLE(GLeglContext ctx, GLenum target, GLuint 
         }
         ANGLE_CAPTURE(BeginQuery, isCallValid, context, targetPacked, idPacked);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY BeginQueryEXTContextANGLE(GLeglContext ctx, GLenum target, GLuint id)
@@ -7951,7 +9010,7 @@ void GL_APIENTRY BeginQueryEXTContextANGLE(GLeglContext ctx, GLenum target, GLui
           "context = %d, GLenum target = %s, GLuint id = %u", CID(context),
           GLenumToString(GLenumGroup::QueryTarget, target), id);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         QueryType targetPacked                                = FromGL<QueryType>(target);
@@ -7965,6 +9024,10 @@ void GL_APIENTRY BeginQueryEXTContextANGLE(GLeglContext ctx, GLenum target, GLui
         }
         ANGLE_CAPTURE(BeginQueryEXT, isCallValid, context, targetPacked, idPacked);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY BeginTransformFeedbackContextANGLE(GLeglContext ctx, GLenum primitiveMode)
@@ -7974,7 +9037,7 @@ void GL_APIENTRY BeginTransformFeedbackContextANGLE(GLeglContext ctx, GLenum pri
           "context = %d, GLenum primitiveMode = %s", CID(context),
           GLenumToString(GLenumGroup::PrimitiveType, primitiveMode));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         PrimitiveMode primitiveModePacked = FromGL<PrimitiveMode>(primitiveMode);
@@ -7986,6 +9049,10 @@ void GL_APIENTRY BeginTransformFeedbackContextANGLE(GLeglContext ctx, GLenum pri
             context->beginTransformFeedback(primitiveModePacked);
         }
         ANGLE_CAPTURE(BeginTransformFeedback, isCallValid, context, primitiveModePacked);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -8001,7 +9068,7 @@ void GL_APIENTRY BindAttribLocationContextANGLE(GLeglContext ctx,
         "",
         CID(context), program, index, (uintptr_t)name);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID programPacked                         = FromGL<ShaderProgramID>(program);
@@ -8014,6 +9081,10 @@ void GL_APIENTRY BindAttribLocationContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(BindAttribLocation, isCallValid, context, programPacked, index, name);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY BindBufferContextANGLE(GLeglContext ctx, GLenum target, GLuint buffer)
@@ -8023,7 +9094,7 @@ void GL_APIENTRY BindBufferContextANGLE(GLeglContext ctx, GLenum target, GLuint 
           "context = %d, GLenum target = %s, GLuint buffer = %u", CID(context),
           GLenumToString(GLenumGroup::BufferTargetARB, target), buffer);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         BufferBinding targetPacked                            = FromGL<BufferBinding>(target);
@@ -8037,6 +9108,10 @@ void GL_APIENTRY BindBufferContextANGLE(GLeglContext ctx, GLenum target, GLuint 
         }
         ANGLE_CAPTURE(BindBuffer, isCallValid, context, targetPacked, bufferPacked);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY BindBufferBaseContextANGLE(GLeglContext ctx,
@@ -8049,7 +9124,7 @@ void GL_APIENTRY BindBufferBaseContextANGLE(GLeglContext ctx,
           "context = %d, GLenum target = %s, GLuint index = %u, GLuint buffer = %u", CID(context),
           GLenumToString(GLenumGroup::BufferTargetARB, target), index, buffer);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         BufferBinding targetPacked                            = FromGL<BufferBinding>(target);
@@ -8062,6 +9137,10 @@ void GL_APIENTRY BindBufferBaseContextANGLE(GLeglContext ctx,
             context->bindBufferBase(targetPacked, index, bufferPacked);
         }
         ANGLE_CAPTURE(BindBufferBase, isCallValid, context, targetPacked, index, bufferPacked);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -8079,7 +9158,7 @@ void GL_APIENTRY BindBufferRangeContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::BufferTargetARB, target), index, buffer,
           static_cast<unsigned long long>(offset), static_cast<unsigned long long>(size));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         BufferBinding targetPacked                            = FromGL<BufferBinding>(target);
@@ -8095,6 +9174,10 @@ void GL_APIENTRY BindBufferRangeContextANGLE(GLeglContext ctx,
         ANGLE_CAPTURE(BindBufferRange, isCallValid, context, targetPacked, index, bufferPacked,
                       offset, size);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY BindFragDataLocationEXTContextANGLE(GLeglContext ctx,
@@ -8109,7 +9192,7 @@ void GL_APIENTRY BindFragDataLocationEXTContextANGLE(GLeglContext ctx,
         "",
         CID(context), program, color, (uintptr_t)name);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID programPacked                         = FromGL<ShaderProgramID>(program);
@@ -8121,6 +9204,10 @@ void GL_APIENTRY BindFragDataLocationEXTContextANGLE(GLeglContext ctx,
             context->bindFragDataLocation(programPacked, color, name);
         }
         ANGLE_CAPTURE(BindFragDataLocationEXT, isCallValid, context, programPacked, color, name);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -8137,7 +9224,7 @@ void GL_APIENTRY BindFragDataLocationIndexedEXTContextANGLE(GLeglContext ctx,
           "GLchar *name = 0x%016" PRIxPTR "",
           CID(context), program, colorNumber, index, (uintptr_t)name);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID programPacked                         = FromGL<ShaderProgramID>(program);
@@ -8152,6 +9239,10 @@ void GL_APIENTRY BindFragDataLocationIndexedEXTContextANGLE(GLeglContext ctx,
         ANGLE_CAPTURE(BindFragDataLocationIndexedEXT, isCallValid, context, programPacked,
                       colorNumber, index, name);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY BindFramebufferContextANGLE(GLeglContext ctx, GLenum target, GLuint framebuffer)
@@ -8161,7 +9252,7 @@ void GL_APIENTRY BindFramebufferContextANGLE(GLeglContext ctx, GLenum target, GL
           "context = %d, GLenum target = %s, GLuint framebuffer = %u", CID(context),
           GLenumToString(GLenumGroup::FramebufferTarget, target), framebuffer);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         FramebufferID framebufferPacked                       = FromGL<FramebufferID>(framebuffer);
@@ -8174,6 +9265,10 @@ void GL_APIENTRY BindFramebufferContextANGLE(GLeglContext ctx, GLenum target, GL
         }
         ANGLE_CAPTURE(BindFramebuffer, isCallValid, context, target, framebufferPacked);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY BindFramebufferOESContextANGLE(GLeglContext ctx, GLenum target, GLuint framebuffer)
@@ -8183,7 +9278,7 @@ void GL_APIENTRY BindFramebufferOESContextANGLE(GLeglContext ctx, GLenum target,
           "context = %d, GLenum target = %s, GLuint framebuffer = %u", CID(context),
           GLenumToString(GLenumGroup::FramebufferTarget, target), framebuffer);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         FramebufferID framebufferPacked                       = FromGL<FramebufferID>(framebuffer);
@@ -8195,6 +9290,10 @@ void GL_APIENTRY BindFramebufferOESContextANGLE(GLeglContext ctx, GLenum target,
             context->bindFramebuffer(target, framebufferPacked);
         }
         ANGLE_CAPTURE(BindFramebufferOES, isCallValid, context, target, framebufferPacked);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -8215,7 +9314,7 @@ void GL_APIENTRY BindImageTextureContextANGLE(GLeglContext ctx,
           GLenumToString(GLenumGroup::BufferAccessARB, access),
           GLenumToString(GLenumGroup::InternalFormat, format));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureID texturePacked                               = FromGL<TextureID>(texture);
@@ -8230,6 +9329,10 @@ void GL_APIENTRY BindImageTextureContextANGLE(GLeglContext ctx,
         ANGLE_CAPTURE(BindImageTexture, isCallValid, context, unit, texturePacked, level, layered,
                       layer, access, format);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY BindProgramPipelineContextANGLE(GLeglContext ctx, GLuint pipeline)
@@ -8238,7 +9341,7 @@ void GL_APIENTRY BindProgramPipelineContextANGLE(GLeglContext ctx, GLuint pipeli
     EVENT(context, gl::EntryPoint::BindProgramPipeline, "glBindProgramPipeline",
           "context = %d, GLuint pipeline = %u", CID(context), pipeline);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ProgramPipelineID pipelinePacked                      = FromGL<ProgramPipelineID>(pipeline);
@@ -8251,6 +9354,10 @@ void GL_APIENTRY BindProgramPipelineContextANGLE(GLeglContext ctx, GLuint pipeli
         }
         ANGLE_CAPTURE(BindProgramPipeline, isCallValid, context, pipelinePacked);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY BindRenderbufferContextANGLE(GLeglContext ctx, GLenum target, GLuint renderbuffer)
@@ -8260,7 +9367,7 @@ void GL_APIENTRY BindRenderbufferContextANGLE(GLeglContext ctx, GLenum target, G
           "context = %d, GLenum target = %s, GLuint renderbuffer = %u", CID(context),
           GLenumToString(GLenumGroup::RenderbufferTarget, target), renderbuffer);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         RenderbufferID renderbufferPacked = FromGL<RenderbufferID>(renderbuffer);
@@ -8273,6 +9380,10 @@ void GL_APIENTRY BindRenderbufferContextANGLE(GLeglContext ctx, GLenum target, G
         }
         ANGLE_CAPTURE(BindRenderbuffer, isCallValid, context, target, renderbufferPacked);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY BindRenderbufferOESContextANGLE(GLeglContext ctx,
@@ -8284,7 +9395,7 @@ void GL_APIENTRY BindRenderbufferOESContextANGLE(GLeglContext ctx,
           "context = %d, GLenum target = %s, GLuint renderbuffer = %u", CID(context),
           GLenumToString(GLenumGroup::RenderbufferTarget, target), renderbuffer);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         RenderbufferID renderbufferPacked = FromGL<RenderbufferID>(renderbuffer);
@@ -8297,6 +9408,10 @@ void GL_APIENTRY BindRenderbufferOESContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(BindRenderbufferOES, isCallValid, context, target, renderbufferPacked);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY BindSamplerContextANGLE(GLeglContext ctx, GLuint unit, GLuint sampler)
@@ -8305,7 +9420,7 @@ void GL_APIENTRY BindSamplerContextANGLE(GLeglContext ctx, GLuint unit, GLuint s
     EVENT(context, gl::EntryPoint::BindSampler, "glBindSampler",
           "context = %d, GLuint unit = %u, GLuint sampler = %u", CID(context), unit, sampler);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         SamplerID samplerPacked                               = FromGL<SamplerID>(sampler);
@@ -8318,6 +9433,10 @@ void GL_APIENTRY BindSamplerContextANGLE(GLeglContext ctx, GLuint unit, GLuint s
         }
         ANGLE_CAPTURE(BindSampler, isCallValid, context, unit, samplerPacked);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY BindTextureContextANGLE(GLeglContext ctx, GLenum target, GLuint texture)
@@ -8327,7 +9446,7 @@ void GL_APIENTRY BindTextureContextANGLE(GLeglContext ctx, GLenum target, GLuint
           "context = %d, GLenum target = %s, GLuint texture = %u", CID(context),
           GLenumToString(GLenumGroup::TextureTarget, target), texture);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureType targetPacked                              = FromGL<TextureType>(target);
@@ -8341,6 +9460,10 @@ void GL_APIENTRY BindTextureContextANGLE(GLeglContext ctx, GLenum target, GLuint
         }
         ANGLE_CAPTURE(BindTexture, isCallValid, context, targetPacked, texturePacked);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY BindTransformFeedbackContextANGLE(GLeglContext ctx, GLenum target, GLuint id)
@@ -8350,7 +9473,7 @@ void GL_APIENTRY BindTransformFeedbackContextANGLE(GLeglContext ctx, GLenum targ
           "context = %d, GLenum target = %s, GLuint id = %u", CID(context),
           GLenumToString(GLenumGroup::BindTransformFeedbackTarget, target), id);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TransformFeedbackID idPacked                          = FromGL<TransformFeedbackID>(id);
@@ -8363,6 +9486,10 @@ void GL_APIENTRY BindTransformFeedbackContextANGLE(GLeglContext ctx, GLenum targ
         }
         ANGLE_CAPTURE(BindTransformFeedback, isCallValid, context, target, idPacked);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY BindVertexArrayContextANGLE(GLeglContext ctx, GLuint array)
@@ -8371,7 +9498,7 @@ void GL_APIENTRY BindVertexArrayContextANGLE(GLeglContext ctx, GLuint array)
     EVENT(context, gl::EntryPoint::BindVertexArray, "glBindVertexArray",
           "context = %d, GLuint array = %u", CID(context), array);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         VertexArrayID arrayPacked                             = FromGL<VertexArrayID>(array);
@@ -8384,6 +9511,10 @@ void GL_APIENTRY BindVertexArrayContextANGLE(GLeglContext ctx, GLuint array)
         }
         ANGLE_CAPTURE(BindVertexArray, isCallValid, context, arrayPacked);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY BindVertexArrayOESContextANGLE(GLeglContext ctx, GLuint array)
@@ -8392,7 +9523,7 @@ void GL_APIENTRY BindVertexArrayOESContextANGLE(GLeglContext ctx, GLuint array)
     EVENT(context, gl::EntryPoint::BindVertexArrayOES, "glBindVertexArrayOES",
           "context = %d, GLuint array = %u", CID(context), array);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         VertexArrayID arrayPacked                             = FromGL<VertexArrayID>(array);
@@ -8404,6 +9535,10 @@ void GL_APIENTRY BindVertexArrayOESContextANGLE(GLeglContext ctx, GLuint array)
             context->bindVertexArray(arrayPacked);
         }
         ANGLE_CAPTURE(BindVertexArrayOES, isCallValid, context, arrayPacked);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -8419,7 +9554,7 @@ void GL_APIENTRY BindVertexBufferContextANGLE(GLeglContext ctx,
           "GLsizei stride = %d",
           CID(context), bindingindex, buffer, static_cast<unsigned long long>(offset), stride);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         BufferID bufferPacked                                 = FromGL<BufferID>(buffer);
@@ -8434,6 +9569,10 @@ void GL_APIENTRY BindVertexBufferContextANGLE(GLeglContext ctx,
         ANGLE_CAPTURE(BindVertexBuffer, isCallValid, context, bindingindex, bufferPacked, offset,
                       stride);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY BlendBarrierContextANGLE(GLeglContext ctx)
@@ -8441,7 +9580,7 @@ void GL_APIENTRY BlendBarrierContextANGLE(GLeglContext ctx)
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, gl::EntryPoint::BlendBarrier, "glBlendBarrier", "context = %d", CID(context));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -8451,6 +9590,10 @@ void GL_APIENTRY BlendBarrierContextANGLE(GLeglContext ctx)
             context->blendBarrier();
         }
         ANGLE_CAPTURE(BlendBarrier, isCallValid, context);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -8463,7 +9606,7 @@ BlendColorContextANGLE(GLeglContext ctx, GLfloat red, GLfloat green, GLfloat blu
         "context = %d, GLfloat red = %f, GLfloat green = %f, GLfloat blue = %f, GLfloat alpha = %f",
         CID(context), red, green, blue, alpha);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -8475,6 +9618,10 @@ BlendColorContextANGLE(GLeglContext ctx, GLfloat red, GLfloat green, GLfloat blu
         }
         ANGLE_CAPTURE(BlendColor, isCallValid, context, red, green, blue, alpha);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY BlendEquationContextANGLE(GLeglContext ctx, GLenum mode)
@@ -8484,7 +9631,7 @@ void GL_APIENTRY BlendEquationContextANGLE(GLeglContext ctx, GLenum mode)
           "context = %d, GLenum mode = %s", CID(context),
           GLenumToString(GLenumGroup::BlendEquationModeEXT, mode));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -8494,6 +9641,10 @@ void GL_APIENTRY BlendEquationContextANGLE(GLeglContext ctx, GLenum mode)
             context->blendEquation(mode);
         }
         ANGLE_CAPTURE(BlendEquation, isCallValid, context, mode);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -8507,7 +9658,7 @@ void GL_APIENTRY BlendEquationSeparateContextANGLE(GLeglContext ctx,
           GLenumToString(GLenumGroup::BlendEquationModeEXT, modeRGB),
           GLenumToString(GLenumGroup::BlendEquationModeEXT, modeAlpha));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -8518,6 +9669,10 @@ void GL_APIENTRY BlendEquationSeparateContextANGLE(GLeglContext ctx,
             context->blendEquationSeparate(modeRGB, modeAlpha);
         }
         ANGLE_CAPTURE(BlendEquationSeparate, isCallValid, context, modeRGB, modeAlpha);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -8532,7 +9687,7 @@ void GL_APIENTRY BlendEquationSeparateiContextANGLE(GLeglContext ctx,
           buf, GLenumToString(GLenumGroup::BlendEquationModeEXT, modeRGB),
           GLenumToString(GLenumGroup::BlendEquationModeEXT, modeAlpha));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -8543,6 +9698,10 @@ void GL_APIENTRY BlendEquationSeparateiContextANGLE(GLeglContext ctx,
             context->blendEquationSeparatei(buf, modeRGB, modeAlpha);
         }
         ANGLE_CAPTURE(BlendEquationSeparatei, isCallValid, context, buf, modeRGB, modeAlpha);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -8557,7 +9716,7 @@ void GL_APIENTRY BlendEquationSeparateiEXTContextANGLE(GLeglContext ctx,
           buf, GLenumToString(GLenumGroup::BlendEquationModeEXT, modeRGB),
           GLenumToString(GLenumGroup::BlendEquationModeEXT, modeAlpha));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -8568,6 +9727,10 @@ void GL_APIENTRY BlendEquationSeparateiEXTContextANGLE(GLeglContext ctx,
             context->blendEquationSeparatei(buf, modeRGB, modeAlpha);
         }
         ANGLE_CAPTURE(BlendEquationSeparateiEXT, isCallValid, context, buf, modeRGB, modeAlpha);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -8582,7 +9745,7 @@ void GL_APIENTRY BlendEquationSeparateiOESContextANGLE(GLeglContext ctx,
           buf, GLenumToString(GLenumGroup::BlendEquationModeEXT, modeRGB),
           GLenumToString(GLenumGroup::BlendEquationModeEXT, modeAlpha));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -8594,6 +9757,10 @@ void GL_APIENTRY BlendEquationSeparateiOESContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(BlendEquationSeparateiOES, isCallValid, context, buf, modeRGB, modeAlpha);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY BlendEquationiContextANGLE(GLeglContext ctx, GLuint buf, GLenum mode)
@@ -8603,7 +9770,7 @@ void GL_APIENTRY BlendEquationiContextANGLE(GLeglContext ctx, GLuint buf, GLenum
           "context = %d, GLuint buf = %u, GLenum mode = %s", CID(context), buf,
           GLenumToString(GLenumGroup::BlendEquationModeEXT, mode));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -8615,6 +9782,10 @@ void GL_APIENTRY BlendEquationiContextANGLE(GLeglContext ctx, GLuint buf, GLenum
         }
         ANGLE_CAPTURE(BlendEquationi, isCallValid, context, buf, mode);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY BlendEquationiEXTContextANGLE(GLeglContext ctx, GLuint buf, GLenum mode)
@@ -8624,7 +9795,7 @@ void GL_APIENTRY BlendEquationiEXTContextANGLE(GLeglContext ctx, GLuint buf, GLe
           "context = %d, GLuint buf = %u, GLenum mode = %s", CID(context), buf,
           GLenumToString(GLenumGroup::BlendEquationModeEXT, mode));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -8636,6 +9807,10 @@ void GL_APIENTRY BlendEquationiEXTContextANGLE(GLeglContext ctx, GLuint buf, GLe
         }
         ANGLE_CAPTURE(BlendEquationiEXT, isCallValid, context, buf, mode);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY BlendEquationiOESContextANGLE(GLeglContext ctx, GLuint buf, GLenum mode)
@@ -8645,7 +9820,7 @@ void GL_APIENTRY BlendEquationiOESContextANGLE(GLeglContext ctx, GLuint buf, GLe
           "context = %d, GLuint buf = %u, GLenum mode = %s", CID(context), buf,
           GLenumToString(GLenumGroup::BlendEquationModeEXT, mode));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -8657,6 +9832,10 @@ void GL_APIENTRY BlendEquationiOESContextANGLE(GLeglContext ctx, GLuint buf, GLe
         }
         ANGLE_CAPTURE(BlendEquationiOES, isCallValid, context, buf, mode);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY BlendFuncContextANGLE(GLeglContext ctx, GLenum sfactor, GLenum dfactor)
@@ -8667,7 +9846,7 @@ void GL_APIENTRY BlendFuncContextANGLE(GLeglContext ctx, GLenum sfactor, GLenum 
           GLenumToString(GLenumGroup::BlendingFactor, sfactor),
           GLenumToString(GLenumGroup::BlendingFactor, dfactor));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -8678,6 +9857,10 @@ void GL_APIENTRY BlendFuncContextANGLE(GLeglContext ctx, GLenum sfactor, GLenum 
             context->blendFunc(sfactor, dfactor);
         }
         ANGLE_CAPTURE(BlendFunc, isCallValid, context, sfactor, dfactor);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -8696,7 +9879,7 @@ void GL_APIENTRY BlendFuncSeparateContextANGLE(GLeglContext ctx,
           GLenumToString(GLenumGroup::BlendingFactor, sfactorAlpha),
           GLenumToString(GLenumGroup::BlendingFactor, dfactorAlpha));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -8709,6 +9892,10 @@ void GL_APIENTRY BlendFuncSeparateContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(BlendFuncSeparate, isCallValid, context, sfactorRGB, dfactorRGB, sfactorAlpha,
                       dfactorAlpha);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -8728,7 +9915,7 @@ void GL_APIENTRY BlendFuncSeparateiContextANGLE(GLeglContext ctx,
           GLenumToString(GLenumGroup::BlendingFactor, srcAlpha),
           GLenumToString(GLenumGroup::BlendingFactor, dstAlpha));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -8741,6 +9928,10 @@ void GL_APIENTRY BlendFuncSeparateiContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(BlendFuncSeparatei, isCallValid, context, buf, srcRGB, dstRGB, srcAlpha,
                       dstAlpha);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -8760,7 +9951,7 @@ void GL_APIENTRY BlendFuncSeparateiEXTContextANGLE(GLeglContext ctx,
           GLenumToString(GLenumGroup::BlendingFactor, srcAlpha),
           GLenumToString(GLenumGroup::BlendingFactor, dstAlpha));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -8773,6 +9964,10 @@ void GL_APIENTRY BlendFuncSeparateiEXTContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(BlendFuncSeparateiEXT, isCallValid, context, buf, srcRGB, dstRGB, srcAlpha,
                       dstAlpha);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -8792,7 +9987,7 @@ void GL_APIENTRY BlendFuncSeparateiOESContextANGLE(GLeglContext ctx,
           GLenumToString(GLenumGroup::BlendingFactor, srcAlpha),
           GLenumToString(GLenumGroup::BlendingFactor, dstAlpha));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -8806,6 +10001,10 @@ void GL_APIENTRY BlendFuncSeparateiOESContextANGLE(GLeglContext ctx,
         ANGLE_CAPTURE(BlendFuncSeparateiOES, isCallValid, context, buf, srcRGB, dstRGB, srcAlpha,
                       dstAlpha);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY BlendFunciContextANGLE(GLeglContext ctx, GLuint buf, GLenum src, GLenum dst)
@@ -8816,7 +10015,7 @@ void GL_APIENTRY BlendFunciContextANGLE(GLeglContext ctx, GLuint buf, GLenum src
           GLenumToString(GLenumGroup::BlendingFactor, src),
           GLenumToString(GLenumGroup::BlendingFactor, dst));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -8828,6 +10027,10 @@ void GL_APIENTRY BlendFunciContextANGLE(GLeglContext ctx, GLuint buf, GLenum src
         }
         ANGLE_CAPTURE(BlendFunci, isCallValid, context, buf, src, dst);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY BlendFunciEXTContextANGLE(GLeglContext ctx, GLuint buf, GLenum src, GLenum dst)
@@ -8838,7 +10041,7 @@ void GL_APIENTRY BlendFunciEXTContextANGLE(GLeglContext ctx, GLuint buf, GLenum 
           GLenumToString(GLenumGroup::BlendingFactor, src),
           GLenumToString(GLenumGroup::BlendingFactor, dst));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -8850,6 +10053,10 @@ void GL_APIENTRY BlendFunciEXTContextANGLE(GLeglContext ctx, GLuint buf, GLenum 
         }
         ANGLE_CAPTURE(BlendFunciEXT, isCallValid, context, buf, src, dst);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY BlendFunciOESContextANGLE(GLeglContext ctx, GLuint buf, GLenum src, GLenum dst)
@@ -8860,7 +10067,7 @@ void GL_APIENTRY BlendFunciOESContextANGLE(GLeglContext ctx, GLuint buf, GLenum 
           GLenumToString(GLenumGroup::BlendingFactor, src),
           GLenumToString(GLenumGroup::BlendingFactor, dst));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -8871,6 +10078,10 @@ void GL_APIENTRY BlendFunciOESContextANGLE(GLeglContext ctx, GLuint buf, GLenum 
             context->blendFunci(buf, src, dst);
         }
         ANGLE_CAPTURE(BlendFunciOES, isCallValid, context, buf, src, dst);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -8895,7 +10106,7 @@ void GL_APIENTRY BlitFramebufferContextANGLE(GLeglContext ctx,
           GLbitfieldToString(GLenumGroup::ClearBufferMask, mask).c_str(),
           GLenumToString(GLenumGroup::BlitFramebufferFilter, filter));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -8909,6 +10120,10 @@ void GL_APIENTRY BlitFramebufferContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(BlitFramebuffer, isCallValid, context, srcX0, srcY0, srcX1, srcY1, dstX0,
                       dstY0, dstX1, dstY1, mask, filter);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -8933,7 +10148,7 @@ void GL_APIENTRY BlitFramebufferANGLEContextANGLE(GLeglContext ctx,
           GLbitfieldToString(GLenumGroup::ClearBufferMask, mask).c_str(),
           GLenumToString(GLenumGroup::BlitFramebufferFilter, filter));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -8947,6 +10162,10 @@ void GL_APIENTRY BlitFramebufferANGLEContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(BlitFramebufferANGLE, isCallValid, context, srcX0, srcY0, srcX1, srcY1, dstX0,
                       dstY0, dstX1, dstY1, mask, filter);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -8964,7 +10183,7 @@ void GL_APIENTRY BufferDataContextANGLE(GLeglContext ctx,
           static_cast<unsigned long long>(size), (uintptr_t)data,
           GLenumToString(GLenumGroup::BufferUsageARB, usage));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         BufferBinding targetPacked                            = FromGL<BufferBinding>(target);
@@ -8977,6 +10196,10 @@ void GL_APIENTRY BufferDataContextANGLE(GLeglContext ctx,
             context->bufferData(targetPacked, size, data, usagePacked);
         }
         ANGLE_CAPTURE(BufferData, isCallValid, context, targetPacked, size, data, usagePacked);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -8994,7 +10217,7 @@ void GL_APIENTRY BufferStorageEXTContextANGLE(GLeglContext ctx,
           static_cast<unsigned long long>(size), (uintptr_t)data,
           GLbitfieldToString(GLenumGroup::MapBufferUsageMask, flags).c_str());
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         BufferBinding targetPacked                            = FromGL<BufferBinding>(target);
@@ -9006,6 +10229,10 @@ void GL_APIENTRY BufferStorageEXTContextANGLE(GLeglContext ctx,
             context->bufferStorage(targetPacked, size, data, flags);
         }
         ANGLE_CAPTURE(BufferStorageEXT, isCallValid, context, targetPacked, size, data, flags);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -9022,7 +10249,7 @@ void GL_APIENTRY BufferStorageMemEXTContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::BufferTargetARB, target),
           static_cast<unsigned long long>(size), memory, static_cast<unsigned long long>(offset));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureType targetPacked                              = FromGL<TextureType>(target);
@@ -9037,6 +10264,10 @@ void GL_APIENTRY BufferStorageMemEXTContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(BufferStorageMemEXT, isCallValid, context, targetPacked, size, memoryPacked,
                       offset);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -9054,7 +10285,7 @@ void GL_APIENTRY BufferSubDataContextANGLE(GLeglContext ctx,
           static_cast<unsigned long long>(offset), static_cast<unsigned long long>(size),
           (uintptr_t)data);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         BufferBinding targetPacked                            = FromGL<BufferBinding>(target);
@@ -9067,6 +10298,10 @@ void GL_APIENTRY BufferSubDataContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(BufferSubData, isCallValid, context, targetPacked, offset, size, data);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 GLenum GL_APIENTRY CheckFramebufferStatusContextANGLE(GLeglContext ctx, GLenum target)
@@ -9077,7 +10312,7 @@ GLenum GL_APIENTRY CheckFramebufferStatusContextANGLE(GLeglContext ctx, GLenum t
           GLenumToString(GLenumGroup::FramebufferTarget, target));
 
     GLenum returnValue;
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -9095,6 +10330,7 @@ GLenum GL_APIENTRY CheckFramebufferStatusContextANGLE(GLeglContext ctx, GLenum t
     }
     else
     {
+        GenerateContextLostErrorOnContext(context);
         returnValue = GetDefaultReturnValue<EntryPoint::CheckFramebufferStatus, GLenum>();
     }
     return returnValue;
@@ -9108,7 +10344,7 @@ GLenum GL_APIENTRY CheckFramebufferStatusOESContextANGLE(GLeglContext ctx, GLenu
           GLenumToString(GLenumGroup::FramebufferTarget, target));
 
     GLenum returnValue;
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -9126,6 +10362,7 @@ GLenum GL_APIENTRY CheckFramebufferStatusOESContextANGLE(GLeglContext ctx, GLenu
     }
     else
     {
+        GenerateContextLostErrorOnContext(context);
         returnValue = GetDefaultReturnValue<EntryPoint::CheckFramebufferStatusOES, GLenum>();
     }
     return returnValue;
@@ -9137,7 +10374,7 @@ void GL_APIENTRY ClearContextANGLE(GLeglContext ctx, GLbitfield mask)
     EVENT(context, gl::EntryPoint::Clear, "glClear", "context = %d, GLbitfield mask = %s",
           CID(context), GLbitfieldToString(GLenumGroup::ClearBufferMask, mask).c_str());
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -9147,6 +10384,10 @@ void GL_APIENTRY ClearContextANGLE(GLeglContext ctx, GLbitfield mask)
             context->clear(mask);
         }
         ANGLE_CAPTURE(Clear, isCallValid, context, mask);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -9162,7 +10403,7 @@ void GL_APIENTRY ClearBufferfiContextANGLE(GLeglContext ctx,
           "stencil = %d",
           CID(context), GLenumToString(GLenumGroup::Buffer, buffer), drawbuffer, depth, stencil);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -9173,6 +10414,10 @@ void GL_APIENTRY ClearBufferfiContextANGLE(GLeglContext ctx,
             context->clearBufferfi(buffer, drawbuffer, depth, stencil);
         }
         ANGLE_CAPTURE(ClearBufferfi, isCallValid, context, buffer, drawbuffer, depth, stencil);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -9187,7 +10432,7 @@ void GL_APIENTRY ClearBufferfvContextANGLE(GLeglContext ctx,
           "0x%016" PRIxPTR "",
           CID(context), GLenumToString(GLenumGroup::Buffer, buffer), drawbuffer, (uintptr_t)value);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -9198,6 +10443,10 @@ void GL_APIENTRY ClearBufferfvContextANGLE(GLeglContext ctx,
             context->clearBufferfv(buffer, drawbuffer, value);
         }
         ANGLE_CAPTURE(ClearBufferfv, isCallValid, context, buffer, drawbuffer, value);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -9212,7 +10461,7 @@ void GL_APIENTRY ClearBufferivContextANGLE(GLeglContext ctx,
           "0x%016" PRIxPTR "",
           CID(context), GLenumToString(GLenumGroup::Buffer, buffer), drawbuffer, (uintptr_t)value);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -9223,6 +10472,10 @@ void GL_APIENTRY ClearBufferivContextANGLE(GLeglContext ctx,
             context->clearBufferiv(buffer, drawbuffer, value);
         }
         ANGLE_CAPTURE(ClearBufferiv, isCallValid, context, buffer, drawbuffer, value);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -9237,7 +10490,7 @@ void GL_APIENTRY ClearBufferuivContextANGLE(GLeglContext ctx,
           "0x%016" PRIxPTR "",
           CID(context), GLenumToString(GLenumGroup::Buffer, buffer), drawbuffer, (uintptr_t)value);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -9248,6 +10501,10 @@ void GL_APIENTRY ClearBufferuivContextANGLE(GLeglContext ctx,
             context->clearBufferuiv(buffer, drawbuffer, value);
         }
         ANGLE_CAPTURE(ClearBufferuiv, isCallValid, context, buffer, drawbuffer, value);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -9260,7 +10517,7 @@ ClearColorContextANGLE(GLeglContext ctx, GLfloat red, GLfloat green, GLfloat blu
         "context = %d, GLfloat red = %f, GLfloat green = %f, GLfloat blue = %f, GLfloat alpha = %f",
         CID(context), red, green, blue, alpha);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -9271,6 +10528,10 @@ ClearColorContextANGLE(GLeglContext ctx, GLfloat red, GLfloat green, GLfloat blu
             context->clearColor(red, green, blue, alpha);
         }
         ANGLE_CAPTURE(ClearColor, isCallValid, context, red, green, blue, alpha);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -9283,7 +10544,7 @@ ClearColorxContextANGLE(GLeglContext ctx, GLfixed red, GLfixed green, GLfixed bl
           "alpha = 0x%X",
           CID(context), red, green, blue, alpha);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -9295,6 +10556,10 @@ ClearColorxContextANGLE(GLeglContext ctx, GLfixed red, GLfixed green, GLfixed bl
         }
         ANGLE_CAPTURE(ClearColorx, isCallValid, context, red, green, blue, alpha);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY ClearDepthfContextANGLE(GLeglContext ctx, GLfloat d)
@@ -9303,7 +10568,7 @@ void GL_APIENTRY ClearDepthfContextANGLE(GLeglContext ctx, GLfloat d)
     EVENT(context, gl::EntryPoint::ClearDepthf, "glClearDepthf", "context = %d, GLfloat d = %f",
           CID(context), d);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -9314,6 +10579,10 @@ void GL_APIENTRY ClearDepthfContextANGLE(GLeglContext ctx, GLfloat d)
         }
         ANGLE_CAPTURE(ClearDepthf, isCallValid, context, d);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY ClearDepthxContextANGLE(GLeglContext ctx, GLfixed depth)
@@ -9322,7 +10591,7 @@ void GL_APIENTRY ClearDepthxContextANGLE(GLeglContext ctx, GLfixed depth)
     EVENT(context, gl::EntryPoint::ClearDepthx, "glClearDepthx",
           "context = %d, GLfixed depth = 0x%X", CID(context), depth);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -9333,6 +10602,10 @@ void GL_APIENTRY ClearDepthxContextANGLE(GLeglContext ctx, GLfixed depth)
         }
         ANGLE_CAPTURE(ClearDepthx, isCallValid, context, depth);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY ClearStencilContextANGLE(GLeglContext ctx, GLint s)
@@ -9341,7 +10614,7 @@ void GL_APIENTRY ClearStencilContextANGLE(GLeglContext ctx, GLint s)
     EVENT(context, gl::EntryPoint::ClearStencil, "glClearStencil", "context = %d, GLint s = %d",
           CID(context), s);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -9352,6 +10625,10 @@ void GL_APIENTRY ClearStencilContextANGLE(GLeglContext ctx, GLint s)
         }
         ANGLE_CAPTURE(ClearStencil, isCallValid, context, s);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY ClientActiveTextureContextANGLE(GLeglContext ctx, GLenum texture)
@@ -9361,7 +10638,7 @@ void GL_APIENTRY ClientActiveTextureContextANGLE(GLeglContext ctx, GLenum textur
           "context = %d, GLenum texture = %s", CID(context),
           GLenumToString(GLenumGroup::TextureUnit, texture));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -9372,6 +10649,10 @@ void GL_APIENTRY ClientActiveTextureContextANGLE(GLeglContext ctx, GLenum textur
             context->clientActiveTexture(texture);
         }
         ANGLE_CAPTURE(ClientActiveTexture, isCallValid, context, texture);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -9389,7 +10670,7 @@ GLenum GL_APIENTRY ClientWaitSyncContextANGLE(GLeglContext ctx,
           static_cast<unsigned long long>(timeout));
 
     GLenum returnValue;
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -9407,6 +10688,7 @@ GLenum GL_APIENTRY ClientWaitSyncContextANGLE(GLeglContext ctx,
     }
     else
     {
+        GenerateContextLostErrorOnContext(context);
         returnValue = GetDefaultReturnValue<EntryPoint::ClientWaitSync, GLenum>();
     }
     return returnValue;
@@ -9419,7 +10701,7 @@ void GL_APIENTRY ClipPlanefContextANGLE(GLeglContext ctx, GLenum p, const GLfloa
           "context = %d, GLenum p = %s, const GLfloat *eqn = 0x%016" PRIxPTR "", CID(context),
           GLenumToString(GLenumGroup::ClipPlaneName, p), (uintptr_t)eqn);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -9430,6 +10712,10 @@ void GL_APIENTRY ClipPlanefContextANGLE(GLeglContext ctx, GLenum p, const GLfloa
         }
         ANGLE_CAPTURE(ClipPlanef, isCallValid, context, p, eqn);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY ClipPlanexContextANGLE(GLeglContext ctx, GLenum plane, const GLfixed *equation)
@@ -9439,7 +10725,7 @@ void GL_APIENTRY ClipPlanexContextANGLE(GLeglContext ctx, GLenum plane, const GL
           "context = %d, GLenum plane = %s, const GLfixed *equation = 0x%016" PRIxPTR "",
           CID(context), GLenumToString(GLenumGroup::ClipPlaneName, plane), (uintptr_t)equation);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -9450,6 +10736,10 @@ void GL_APIENTRY ClipPlanexContextANGLE(GLeglContext ctx, GLenum plane, const GL
             context->clipPlanex(plane, equation);
         }
         ANGLE_CAPTURE(ClipPlanex, isCallValid, context, plane, equation);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -9462,7 +10752,7 @@ Color4fContextANGLE(GLeglContext ctx, GLfloat red, GLfloat green, GLfloat blue, 
         "context = %d, GLfloat red = %f, GLfloat green = %f, GLfloat blue = %f, GLfloat alpha = %f",
         CID(context), red, green, blue, alpha);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -9473,6 +10763,10 @@ Color4fContextANGLE(GLeglContext ctx, GLfloat red, GLfloat green, GLfloat blue, 
             context->color4f(red, green, blue, alpha);
         }
         ANGLE_CAPTURE(Color4f, isCallValid, context, red, green, blue, alpha);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -9485,7 +10779,7 @@ Color4ubContextANGLE(GLeglContext ctx, GLubyte red, GLubyte green, GLubyte blue,
         "context = %d, GLubyte red = %d, GLubyte green = %d, GLubyte blue = %d, GLubyte alpha = %d",
         CID(context), red, green, blue, alpha);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -9496,6 +10790,10 @@ Color4ubContextANGLE(GLeglContext ctx, GLubyte red, GLubyte green, GLubyte blue,
             context->color4ub(red, green, blue, alpha);
         }
         ANGLE_CAPTURE(Color4ub, isCallValid, context, red, green, blue, alpha);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -9508,7 +10806,7 @@ Color4xContextANGLE(GLeglContext ctx, GLfixed red, GLfixed green, GLfixed blue, 
           "alpha = 0x%X",
           CID(context), red, green, blue, alpha);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -9519,6 +10817,10 @@ Color4xContextANGLE(GLeglContext ctx, GLfixed red, GLfixed green, GLfixed blue, 
             context->color4x(red, green, blue, alpha);
         }
         ANGLE_CAPTURE(Color4x, isCallValid, context, red, green, blue, alpha);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -9535,7 +10837,7 @@ void GL_APIENTRY ColorMaskContextANGLE(GLeglContext ctx,
           CID(context), GLbooleanToString(red), GLbooleanToString(green), GLbooleanToString(blue),
           GLbooleanToString(alpha));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -9546,6 +10848,10 @@ void GL_APIENTRY ColorMaskContextANGLE(GLeglContext ctx,
             context->colorMask(red, green, blue, alpha);
         }
         ANGLE_CAPTURE(ColorMask, isCallValid, context, red, green, blue, alpha);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -9563,7 +10869,7 @@ void GL_APIENTRY ColorMaskiContextANGLE(GLeglContext ctx,
           CID(context), index, GLbooleanToString(r), GLbooleanToString(g), GLbooleanToString(b),
           GLbooleanToString(a));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -9574,6 +10880,10 @@ void GL_APIENTRY ColorMaskiContextANGLE(GLeglContext ctx,
             context->colorMaski(index, r, g, b, a);
         }
         ANGLE_CAPTURE(ColorMaski, isCallValid, context, index, r, g, b, a);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -9591,7 +10901,7 @@ void GL_APIENTRY ColorMaskiEXTContextANGLE(GLeglContext ctx,
           CID(context), index, GLbooleanToString(r), GLbooleanToString(g), GLbooleanToString(b),
           GLbooleanToString(a));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -9602,6 +10912,10 @@ void GL_APIENTRY ColorMaskiEXTContextANGLE(GLeglContext ctx,
             context->colorMaski(index, r, g, b, a);
         }
         ANGLE_CAPTURE(ColorMaskiEXT, isCallValid, context, index, r, g, b, a);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -9619,7 +10933,7 @@ void GL_APIENTRY ColorMaskiOESContextANGLE(GLeglContext ctx,
           CID(context), index, GLbooleanToString(r), GLbooleanToString(g), GLbooleanToString(b),
           GLbooleanToString(a));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -9630,6 +10944,10 @@ void GL_APIENTRY ColorMaskiOESContextANGLE(GLeglContext ctx,
             context->colorMaski(index, r, g, b, a);
         }
         ANGLE_CAPTURE(ColorMaskiOES, isCallValid, context, index, r, g, b, a);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -9646,7 +10964,7 @@ void GL_APIENTRY ColorPointerContextANGLE(GLeglContext ctx,
           CID(context), size, GLenumToString(GLenumGroup::ColorPointerType, type), stride,
           (uintptr_t)pointer);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         VertexAttribType typePacked                           = FromGL<VertexAttribType>(type);
@@ -9659,6 +10977,10 @@ void GL_APIENTRY ColorPointerContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(ColorPointer, isCallValid, context, size, typePacked, stride, pointer);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY CompileShaderContextANGLE(GLeglContext ctx, GLuint shader)
@@ -9667,7 +10989,7 @@ void GL_APIENTRY CompileShaderContextANGLE(GLeglContext ctx, GLuint shader)
     EVENT(context, gl::EntryPoint::CompileShader, "glCompileShader",
           "context = %d, GLuint shader = %u", CID(context), shader);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID shaderPacked                          = FromGL<ShaderProgramID>(shader);
@@ -9679,6 +11001,10 @@ void GL_APIENTRY CompileShaderContextANGLE(GLeglContext ctx, GLuint shader)
             context->compileShader(shaderPacked);
         }
         ANGLE_CAPTURE(CompileShader, isCallValid, context, shaderPacked);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -9701,7 +11027,7 @@ void GL_APIENTRY CompressedTexImage2DContextANGLE(GLeglContext ctx,
           GLenumToString(GLenumGroup::InternalFormat, internalformat), width, height, border,
           imageSize, (uintptr_t)data);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureTarget targetPacked                            = FromGL<TextureTarget>(target);
@@ -9717,6 +11043,10 @@ void GL_APIENTRY CompressedTexImage2DContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(CompressedTexImage2D, isCallValid, context, targetPacked, level,
                       internalformat, width, height, border, imageSize, data);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -9740,7 +11070,7 @@ void GL_APIENTRY CompressedTexImage3DContextANGLE(GLeglContext ctx,
           GLenumToString(GLenumGroup::InternalFormat, internalformat), width, height, depth, border,
           imageSize, (uintptr_t)data);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureTarget targetPacked                            = FromGL<TextureTarget>(target);
@@ -9756,6 +11086,10 @@ void GL_APIENTRY CompressedTexImage3DContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(CompressedTexImage3D, isCallValid, context, targetPacked, level,
                       internalformat, width, height, depth, border, imageSize, data);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -9779,7 +11113,7 @@ void GL_APIENTRY CompressedTexImage3DOESContextANGLE(GLeglContext ctx,
           GLenumToString(GLenumGroup::InternalFormat, internalformat), width, height, depth, border,
           imageSize, (uintptr_t)data);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureTarget targetPacked                            = FromGL<TextureTarget>(target);
@@ -9795,6 +11129,10 @@ void GL_APIENTRY CompressedTexImage3DOESContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(CompressedTexImage3DOES, isCallValid, context, targetPacked, level,
                       internalformat, width, height, depth, border, imageSize, data);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -9818,7 +11156,7 @@ void GL_APIENTRY CompressedTexSubImage2DContextANGLE(GLeglContext ctx,
           width, height, GLenumToString(GLenumGroup::PixelFormat, format), imageSize,
           (uintptr_t)data);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureTarget targetPacked                            = FromGL<TextureTarget>(target);
@@ -9834,6 +11172,10 @@ void GL_APIENTRY CompressedTexSubImage2DContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(CompressedTexSubImage2D, isCallValid, context, targetPacked, level, xoffset,
                       yoffset, width, height, format, imageSize, data);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -9859,7 +11201,7 @@ void GL_APIENTRY CompressedTexSubImage3DContextANGLE(GLeglContext ctx,
           zoffset, width, height, depth, GLenumToString(GLenumGroup::PixelFormat, format),
           imageSize, (uintptr_t)data);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureTarget targetPacked                            = FromGL<TextureTarget>(target);
@@ -9875,6 +11217,10 @@ void GL_APIENTRY CompressedTexSubImage3DContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(CompressedTexSubImage3D, isCallValid, context, targetPacked, level, xoffset,
                       yoffset, zoffset, width, height, depth, format, imageSize, data);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -9900,7 +11246,7 @@ void GL_APIENTRY CompressedTexSubImage3DOESContextANGLE(GLeglContext ctx,
           zoffset, width, height, depth, GLenumToString(GLenumGroup::PixelFormat, format),
           imageSize, (uintptr_t)data);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureTarget targetPacked                            = FromGL<TextureTarget>(target);
@@ -9916,6 +11262,10 @@ void GL_APIENTRY CompressedTexSubImage3DOESContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(CompressedTexSubImage3DOES, isCallValid, context, targetPacked, level,
                       xoffset, yoffset, zoffset, width, height, depth, format, imageSize, data);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -9935,7 +11285,7 @@ void GL_APIENTRY CopyBufferSubDataContextANGLE(GLeglContext ctx,
           static_cast<unsigned long long>(readOffset), static_cast<unsigned long long>(writeOffset),
           static_cast<unsigned long long>(size));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         BufferBinding readTargetPacked                        = FromGL<BufferBinding>(readTarget);
@@ -9951,6 +11301,10 @@ void GL_APIENTRY CopyBufferSubDataContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(CopyBufferSubData, isCallValid, context, readTargetPacked, writeTargetPacked,
                       readOffset, writeOffset, size);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -9982,7 +11336,7 @@ void GL_APIENTRY CopyImageSubDataContextANGLE(GLeglContext ctx,
           GLenumToString(GLenumGroup::CopyBufferSubDataTarget, dstTarget), dstLevel, dstX, dstY,
           dstZ, srcWidth, srcHeight, srcDepth);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -9999,6 +11353,10 @@ void GL_APIENTRY CopyImageSubDataContextANGLE(GLeglContext ctx,
         ANGLE_CAPTURE(CopyImageSubData, isCallValid, context, srcName, srcTarget, srcLevel, srcX,
                       srcY, srcZ, dstName, dstTarget, dstLevel, dstX, dstY, dstZ, srcWidth,
                       srcHeight, srcDepth);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -10030,7 +11388,7 @@ void GL_APIENTRY CopyImageSubDataEXTContextANGLE(GLeglContext ctx,
           GLenumToString(GLenumGroup::CopyBufferSubDataTarget, dstTarget), dstLevel, dstX, dstY,
           dstZ, srcWidth, srcHeight, srcDepth);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -10048,6 +11406,10 @@ void GL_APIENTRY CopyImageSubDataEXTContextANGLE(GLeglContext ctx,
         ANGLE_CAPTURE(CopyImageSubDataEXT, isCallValid, context, srcName, srcTarget, srcLevel, srcX,
                       srcY, srcZ, dstName, dstTarget, dstLevel, dstX, dstY, dstZ, srcWidth,
                       srcHeight, srcDepth);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -10079,7 +11441,7 @@ void GL_APIENTRY CopyImageSubDataOESContextANGLE(GLeglContext ctx,
           GLenumToString(GLenumGroup::CopyBufferSubDataTarget, dstTarget), dstLevel, dstX, dstY,
           dstZ, srcWidth, srcHeight, srcDepth);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -10097,6 +11459,10 @@ void GL_APIENTRY CopyImageSubDataOESContextANGLE(GLeglContext ctx,
         ANGLE_CAPTURE(CopyImageSubDataOES, isCallValid, context, srcName, srcTarget, srcLevel, srcX,
                       srcY, srcZ, dstName, dstTarget, dstLevel, dstX, dstY, dstZ, srcWidth,
                       srcHeight, srcDepth);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -10117,7 +11483,7 @@ void GL_APIENTRY CopyTexImage2DContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::TextureTarget, target), level,
           GLenumToString(GLenumGroup::InternalFormat, internalformat), x, y, width, height, border);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureTarget targetPacked                            = FromGL<TextureTarget>(target);
@@ -10132,6 +11498,10 @@ void GL_APIENTRY CopyTexImage2DContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(CopyTexImage2D, isCallValid, context, targetPacked, level, internalformat, x,
                       y, width, height, border);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -10152,7 +11522,7 @@ void GL_APIENTRY CopyTexSubImage2DContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::TextureTarget, target), level, xoffset, yoffset,
           x, y, width, height);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureTarget targetPacked                            = FromGL<TextureTarget>(target);
@@ -10166,6 +11536,10 @@ void GL_APIENTRY CopyTexSubImage2DContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(CopyTexSubImage2D, isCallValid, context, targetPacked, level, xoffset,
                       yoffset, x, y, width, height);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -10188,7 +11562,7 @@ void GL_APIENTRY CopyTexSubImage3DContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::TextureTarget, target), level, xoffset, yoffset,
           zoffset, x, y, width, height);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureTarget targetPacked                            = FromGL<TextureTarget>(target);
@@ -10203,6 +11577,10 @@ void GL_APIENTRY CopyTexSubImage3DContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(CopyTexSubImage3D, isCallValid, context, targetPacked, level, xoffset,
                       yoffset, zoffset, x, y, width, height);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -10225,7 +11603,7 @@ void GL_APIENTRY CopyTexSubImage3DOESContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::DefaultGroup, target), level, xoffset, yoffset,
           zoffset, x, y, width, height);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureTarget targetPacked                            = FromGL<TextureTarget>(target);
@@ -10241,6 +11619,10 @@ void GL_APIENTRY CopyTexSubImage3DOESContextANGLE(GLeglContext ctx,
         ANGLE_CAPTURE(CopyTexSubImage3DOES, isCallValid, context, targetPacked, level, xoffset,
                       yoffset, zoffset, x, y, width, height);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY CreateMemoryObjectsEXTContextANGLE(GLeglContext ctx,
@@ -10252,7 +11634,7 @@ void GL_APIENTRY CreateMemoryObjectsEXTContextANGLE(GLeglContext ctx,
           "context = %d, GLsizei n = %d, GLuint *memoryObjects = 0x%016" PRIxPTR "", CID(context),
           n, (uintptr_t)memoryObjects);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         MemoryObjectID *memoryObjectsPacked = FromGL<MemoryObjectID *>(memoryObjects);
@@ -10265,6 +11647,10 @@ void GL_APIENTRY CreateMemoryObjectsEXTContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(CreateMemoryObjectsEXT, isCallValid, context, n, memoryObjectsPacked);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 GLuint GL_APIENTRY CreateProgramContextANGLE(GLeglContext ctx)
@@ -10273,7 +11659,7 @@ GLuint GL_APIENTRY CreateProgramContextANGLE(GLeglContext ctx)
     EVENT(context, gl::EntryPoint::CreateProgram, "glCreateProgram", "context = %d", CID(context));
 
     GLuint returnValue;
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -10290,6 +11676,7 @@ GLuint GL_APIENTRY CreateProgramContextANGLE(GLeglContext ctx)
     }
     else
     {
+        GenerateContextLostErrorOnContext(context);
         returnValue = GetDefaultReturnValue<EntryPoint::CreateProgram, GLuint>();
     }
     return returnValue;
@@ -10302,7 +11689,7 @@ GLuint GL_APIENTRY CreateShaderContextANGLE(GLeglContext ctx, GLenum type)
           CID(context), GLenumToString(GLenumGroup::ShaderType, type));
 
     GLuint returnValue;
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderType typePacked                                 = FromGL<ShaderType>(type);
@@ -10320,6 +11707,7 @@ GLuint GL_APIENTRY CreateShaderContextANGLE(GLeglContext ctx, GLenum type)
     }
     else
     {
+        GenerateContextLostErrorOnContext(context);
         returnValue = GetDefaultReturnValue<EntryPoint::CreateShader, GLuint>();
     }
     return returnValue;
@@ -10337,7 +11725,7 @@ GLuint GL_APIENTRY CreateShaderProgramvContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::ShaderType, type), count, (uintptr_t)strings);
 
     GLuint returnValue;
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderType typePacked                                 = FromGL<ShaderType>(type);
@@ -10357,6 +11745,7 @@ GLuint GL_APIENTRY CreateShaderProgramvContextANGLE(GLeglContext ctx,
     }
     else
     {
+        GenerateContextLostErrorOnContext(context);
         returnValue = GetDefaultReturnValue<EntryPoint::CreateShaderProgramv, GLuint>();
     }
     return returnValue;
@@ -10368,7 +11757,7 @@ void GL_APIENTRY CullFaceContextANGLE(GLeglContext ctx, GLenum mode)
     EVENT(context, gl::EntryPoint::CullFace, "glCullFace", "context = %d, GLenum mode = %s",
           CID(context), GLenumToString(GLenumGroup::CullFaceMode, mode));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         CullFaceMode modePacked                               = FromGL<CullFaceMode>(mode);
@@ -10380,6 +11769,10 @@ void GL_APIENTRY CullFaceContextANGLE(GLeglContext ctx, GLenum mode)
         }
         ANGLE_CAPTURE(CullFace, isCallValid, context, modePacked);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY CurrentPaletteMatrixOESContextANGLE(GLeglContext ctx, GLuint matrixpaletteindex)
@@ -10388,7 +11781,7 @@ void GL_APIENTRY CurrentPaletteMatrixOESContextANGLE(GLeglContext ctx, GLuint ma
     EVENT(context, gl::EntryPoint::CurrentPaletteMatrixOES, "glCurrentPaletteMatrixOES",
           "context = %d, GLuint matrixpaletteindex = %u", CID(context), matrixpaletteindex);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -10399,6 +11792,10 @@ void GL_APIENTRY CurrentPaletteMatrixOESContextANGLE(GLeglContext ctx, GLuint ma
             context->currentPaletteMatrix(matrixpaletteindex);
         }
         ANGLE_CAPTURE(CurrentPaletteMatrixOES, isCallValid, context, matrixpaletteindex);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -10412,7 +11809,7 @@ void GL_APIENTRY DebugMessageCallbackContextANGLE(GLeglContext ctx,
           ", const void *userParam = 0x%016" PRIxPTR "",
           CID(context), (uintptr_t)callback, (uintptr_t)userParam);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -10423,6 +11820,10 @@ void GL_APIENTRY DebugMessageCallbackContextANGLE(GLeglContext ctx,
             context->debugMessageCallback(callback, userParam);
         }
         ANGLE_CAPTURE(DebugMessageCallback, isCallValid, context, callback, userParam);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -10436,7 +11837,7 @@ void GL_APIENTRY DebugMessageCallbackKHRContextANGLE(GLeglContext ctx,
           ", const void *userParam = 0x%016" PRIxPTR "",
           CID(context), (uintptr_t)callback, (uintptr_t)userParam);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -10447,6 +11848,10 @@ void GL_APIENTRY DebugMessageCallbackKHRContextANGLE(GLeglContext ctx,
             context->debugMessageCallback(callback, userParam);
         }
         ANGLE_CAPTURE(DebugMessageCallbackKHR, isCallValid, context, callback, userParam);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -10467,7 +11872,7 @@ void GL_APIENTRY DebugMessageControlContextANGLE(GLeglContext ctx,
           GLenumToString(GLenumGroup::DebugSeverity, severity), count, (uintptr_t)ids,
           GLbooleanToString(enabled));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -10480,6 +11885,10 @@ void GL_APIENTRY DebugMessageControlContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(DebugMessageControl, isCallValid, context, source, type, severity, count, ids,
                       enabled);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -10500,7 +11909,7 @@ void GL_APIENTRY DebugMessageControlKHRContextANGLE(GLeglContext ctx,
           GLenumToString(GLenumGroup::DebugSeverity, severity), count, (uintptr_t)ids,
           GLbooleanToString(enabled));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -10513,6 +11922,10 @@ void GL_APIENTRY DebugMessageControlKHRContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(DebugMessageControlKHR, isCallValid, context, source, type, severity, count,
                       ids, enabled);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -10532,7 +11945,7 @@ void GL_APIENTRY DebugMessageInsertContextANGLE(GLeglContext ctx,
           GLenumToString(GLenumGroup::DebugType, type), id,
           GLenumToString(GLenumGroup::DebugSeverity, severity), length, (uintptr_t)buf);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -10545,6 +11958,10 @@ void GL_APIENTRY DebugMessageInsertContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(DebugMessageInsert, isCallValid, context, source, type, id, severity, length,
                       buf);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -10564,7 +11981,7 @@ void GL_APIENTRY DebugMessageInsertKHRContextANGLE(GLeglContext ctx,
           GLenumToString(GLenumGroup::DebugType, type), id,
           GLenumToString(GLenumGroup::DebugSeverity, severity), length, (uintptr_t)buf);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -10578,6 +11995,10 @@ void GL_APIENTRY DebugMessageInsertKHRContextANGLE(GLeglContext ctx,
         ANGLE_CAPTURE(DebugMessageInsertKHR, isCallValid, context, source, type, id, severity,
                       length, buf);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY DeleteBuffersContextANGLE(GLeglContext ctx, GLsizei n, const GLuint *buffers)
@@ -10587,7 +12008,7 @@ void GL_APIENTRY DeleteBuffersContextANGLE(GLeglContext ctx, GLsizei n, const GL
           "context = %d, GLsizei n = %d, const GLuint *buffers = 0x%016" PRIxPTR "", CID(context),
           n, (uintptr_t)buffers);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         const BufferID *buffersPacked                         = FromGL<const BufferID *>(buffers);
@@ -10600,6 +12021,10 @@ void GL_APIENTRY DeleteBuffersContextANGLE(GLeglContext ctx, GLsizei n, const GL
         }
         ANGLE_CAPTURE(DeleteBuffers, isCallValid, context, n, buffersPacked);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY DeleteFencesNVContextANGLE(GLeglContext ctx, GLsizei n, const GLuint *fences)
@@ -10609,7 +12034,7 @@ void GL_APIENTRY DeleteFencesNVContextANGLE(GLeglContext ctx, GLsizei n, const G
           "context = %d, GLsizei n = %d, const GLuint *fences = 0x%016" PRIxPTR "", CID(context), n,
           (uintptr_t)fences);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         const FenceNVID *fencesPacked                         = FromGL<const FenceNVID *>(fences);
@@ -10622,6 +12047,10 @@ void GL_APIENTRY DeleteFencesNVContextANGLE(GLeglContext ctx, GLsizei n, const G
         }
         ANGLE_CAPTURE(DeleteFencesNV, isCallValid, context, n, fencesPacked);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY DeleteFramebuffersContextANGLE(GLeglContext ctx,
@@ -10633,7 +12062,7 @@ void GL_APIENTRY DeleteFramebuffersContextANGLE(GLeglContext ctx,
           "context = %d, GLsizei n = %d, const GLuint *framebuffers = 0x%016" PRIxPTR "",
           CID(context), n, (uintptr_t)framebuffers);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         const FramebufferID *framebuffersPacked = FromGL<const FramebufferID *>(framebuffers);
@@ -10646,6 +12075,10 @@ void GL_APIENTRY DeleteFramebuffersContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(DeleteFramebuffers, isCallValid, context, n, framebuffersPacked);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY DeleteFramebuffersOESContextANGLE(GLeglContext ctx,
@@ -10657,7 +12090,7 @@ void GL_APIENTRY DeleteFramebuffersOESContextANGLE(GLeglContext ctx,
           "context = %d, GLsizei n = %d, const GLuint *framebuffers = 0x%016" PRIxPTR "",
           CID(context), n, (uintptr_t)framebuffers);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         const FramebufferID *framebuffersPacked = FromGL<const FramebufferID *>(framebuffers);
@@ -10670,6 +12103,10 @@ void GL_APIENTRY DeleteFramebuffersOESContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(DeleteFramebuffersOES, isCallValid, context, n, framebuffersPacked);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY DeleteMemoryObjectsEXTContextANGLE(GLeglContext ctx,
@@ -10681,7 +12118,7 @@ void GL_APIENTRY DeleteMemoryObjectsEXTContextANGLE(GLeglContext ctx,
           "context = %d, GLsizei n = %d, const GLuint *memoryObjects = 0x%016" PRIxPTR "",
           CID(context), n, (uintptr_t)memoryObjects);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         const MemoryObjectID *memoryObjectsPacked = FromGL<const MemoryObjectID *>(memoryObjects);
@@ -10694,6 +12131,10 @@ void GL_APIENTRY DeleteMemoryObjectsEXTContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(DeleteMemoryObjectsEXT, isCallValid, context, n, memoryObjectsPacked);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY DeleteProgramContextANGLE(GLeglContext ctx, GLuint program)
@@ -10702,7 +12143,7 @@ void GL_APIENTRY DeleteProgramContextANGLE(GLeglContext ctx, GLuint program)
     EVENT(context, gl::EntryPoint::DeleteProgram, "glDeleteProgram",
           "context = %d, GLuint program = %u", CID(context), program);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID programPacked                         = FromGL<ShaderProgramID>(program);
@@ -10715,6 +12156,10 @@ void GL_APIENTRY DeleteProgramContextANGLE(GLeglContext ctx, GLuint program)
         }
         ANGLE_CAPTURE(DeleteProgram, isCallValid, context, programPacked);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY DeleteProgramPipelinesContextANGLE(GLeglContext ctx,
@@ -10726,7 +12171,7 @@ void GL_APIENTRY DeleteProgramPipelinesContextANGLE(GLeglContext ctx,
           "context = %d, GLsizei n = %d, const GLuint *pipelines = 0x%016" PRIxPTR "", CID(context),
           n, (uintptr_t)pipelines);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         const ProgramPipelineID *pipelinesPacked = FromGL<const ProgramPipelineID *>(pipelines);
@@ -10739,6 +12184,10 @@ void GL_APIENTRY DeleteProgramPipelinesContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(DeleteProgramPipelines, isCallValid, context, n, pipelinesPacked);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY DeleteQueriesContextANGLE(GLeglContext ctx, GLsizei n, const GLuint *ids)
@@ -10748,7 +12197,7 @@ void GL_APIENTRY DeleteQueriesContextANGLE(GLeglContext ctx, GLsizei n, const GL
           "context = %d, GLsizei n = %d, const GLuint *ids = 0x%016" PRIxPTR "", CID(context), n,
           (uintptr_t)ids);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         const QueryID *idsPacked                              = FromGL<const QueryID *>(ids);
@@ -10761,6 +12210,10 @@ void GL_APIENTRY DeleteQueriesContextANGLE(GLeglContext ctx, GLsizei n, const GL
         }
         ANGLE_CAPTURE(DeleteQueries, isCallValid, context, n, idsPacked);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY DeleteQueriesEXTContextANGLE(GLeglContext ctx, GLsizei n, const GLuint *ids)
@@ -10770,7 +12223,7 @@ void GL_APIENTRY DeleteQueriesEXTContextANGLE(GLeglContext ctx, GLsizei n, const
           "context = %d, GLsizei n = %d, const GLuint *ids = 0x%016" PRIxPTR "", CID(context), n,
           (uintptr_t)ids);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         const QueryID *idsPacked                              = FromGL<const QueryID *>(ids);
@@ -10783,6 +12236,10 @@ void GL_APIENTRY DeleteQueriesEXTContextANGLE(GLeglContext ctx, GLsizei n, const
         }
         ANGLE_CAPTURE(DeleteQueriesEXT, isCallValid, context, n, idsPacked);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY DeleteRenderbuffersContextANGLE(GLeglContext ctx,
@@ -10794,7 +12251,7 @@ void GL_APIENTRY DeleteRenderbuffersContextANGLE(GLeglContext ctx,
           "context = %d, GLsizei n = %d, const GLuint *renderbuffers = 0x%016" PRIxPTR "",
           CID(context), n, (uintptr_t)renderbuffers);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         const RenderbufferID *renderbuffersPacked = FromGL<const RenderbufferID *>(renderbuffers);
@@ -10807,6 +12264,10 @@ void GL_APIENTRY DeleteRenderbuffersContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(DeleteRenderbuffers, isCallValid, context, n, renderbuffersPacked);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY DeleteRenderbuffersOESContextANGLE(GLeglContext ctx,
@@ -10818,7 +12279,7 @@ void GL_APIENTRY DeleteRenderbuffersOESContextANGLE(GLeglContext ctx,
           "context = %d, GLsizei n = %d, const GLuint *renderbuffers = 0x%016" PRIxPTR "",
           CID(context), n, (uintptr_t)renderbuffers);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         const RenderbufferID *renderbuffersPacked = FromGL<const RenderbufferID *>(renderbuffers);
@@ -10831,6 +12292,10 @@ void GL_APIENTRY DeleteRenderbuffersOESContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(DeleteRenderbuffersOES, isCallValid, context, n, renderbuffersPacked);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY DeleteSamplersContextANGLE(GLeglContext ctx, GLsizei count, const GLuint *samplers)
@@ -10840,7 +12305,7 @@ void GL_APIENTRY DeleteSamplersContextANGLE(GLeglContext ctx, GLsizei count, con
           "context = %d, GLsizei count = %d, const GLuint *samplers = 0x%016" PRIxPTR "",
           CID(context), count, (uintptr_t)samplers);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         const SamplerID *samplersPacked                       = FromGL<const SamplerID *>(samplers);
@@ -10853,6 +12318,10 @@ void GL_APIENTRY DeleteSamplersContextANGLE(GLeglContext ctx, GLsizei count, con
         }
         ANGLE_CAPTURE(DeleteSamplers, isCallValid, context, count, samplersPacked);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY DeleteSemaphoresEXTContextANGLE(GLeglContext ctx,
@@ -10864,7 +12333,7 @@ void GL_APIENTRY DeleteSemaphoresEXTContextANGLE(GLeglContext ctx,
           "context = %d, GLsizei n = %d, const GLuint *semaphores = 0x%016" PRIxPTR "",
           CID(context), n, (uintptr_t)semaphores);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         const SemaphoreID *semaphoresPacked = FromGL<const SemaphoreID *>(semaphores);
@@ -10877,6 +12346,10 @@ void GL_APIENTRY DeleteSemaphoresEXTContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(DeleteSemaphoresEXT, isCallValid, context, n, semaphoresPacked);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY DeleteShaderContextANGLE(GLeglContext ctx, GLuint shader)
@@ -10885,7 +12358,7 @@ void GL_APIENTRY DeleteShaderContextANGLE(GLeglContext ctx, GLuint shader)
     EVENT(context, gl::EntryPoint::DeleteShader, "glDeleteShader",
           "context = %d, GLuint shader = %u", CID(context), shader);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID shaderPacked                          = FromGL<ShaderProgramID>(shader);
@@ -10898,6 +12371,10 @@ void GL_APIENTRY DeleteShaderContextANGLE(GLeglContext ctx, GLuint shader)
         }
         ANGLE_CAPTURE(DeleteShader, isCallValid, context, shaderPacked);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY DeleteSyncContextANGLE(GLeglContext ctx, GLsync sync)
@@ -10906,7 +12383,7 @@ void GL_APIENTRY DeleteSyncContextANGLE(GLeglContext ctx, GLsync sync)
     EVENT(context, gl::EntryPoint::DeleteSync, "glDeleteSync",
           "context = %d, GLsync sync = 0x%016" PRIxPTR "", CID(context), (uintptr_t)sync);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -10917,6 +12394,10 @@ void GL_APIENTRY DeleteSyncContextANGLE(GLeglContext ctx, GLsync sync)
         }
         ANGLE_CAPTURE(DeleteSync, isCallValid, context, sync);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY DeleteTexturesContextANGLE(GLeglContext ctx, GLsizei n, const GLuint *textures)
@@ -10926,7 +12407,7 @@ void GL_APIENTRY DeleteTexturesContextANGLE(GLeglContext ctx, GLsizei n, const G
           "context = %d, GLsizei n = %d, const GLuint *textures = 0x%016" PRIxPTR "", CID(context),
           n, (uintptr_t)textures);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         const TextureID *texturesPacked                       = FromGL<const TextureID *>(textures);
@@ -10939,6 +12420,10 @@ void GL_APIENTRY DeleteTexturesContextANGLE(GLeglContext ctx, GLsizei n, const G
         }
         ANGLE_CAPTURE(DeleteTextures, isCallValid, context, n, texturesPacked);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY DeleteTransformFeedbacksContextANGLE(GLeglContext ctx,
@@ -10950,7 +12435,7 @@ void GL_APIENTRY DeleteTransformFeedbacksContextANGLE(GLeglContext ctx,
           "context = %d, GLsizei n = %d, const GLuint *ids = 0x%016" PRIxPTR "", CID(context), n,
           (uintptr_t)ids);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         const TransformFeedbackID *idsPacked = FromGL<const TransformFeedbackID *>(ids);
@@ -10963,6 +12448,10 @@ void GL_APIENTRY DeleteTransformFeedbacksContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(DeleteTransformFeedbacks, isCallValid, context, n, idsPacked);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY DeleteVertexArraysContextANGLE(GLeglContext ctx, GLsizei n, const GLuint *arrays)
@@ -10972,7 +12461,7 @@ void GL_APIENTRY DeleteVertexArraysContextANGLE(GLeglContext ctx, GLsizei n, con
           "context = %d, GLsizei n = %d, const GLuint *arrays = 0x%016" PRIxPTR "", CID(context), n,
           (uintptr_t)arrays);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         const VertexArrayID *arraysPacked = FromGL<const VertexArrayID *>(arrays);
@@ -10985,6 +12474,10 @@ void GL_APIENTRY DeleteVertexArraysContextANGLE(GLeglContext ctx, GLsizei n, con
         }
         ANGLE_CAPTURE(DeleteVertexArrays, isCallValid, context, n, arraysPacked);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY DeleteVertexArraysOESContextANGLE(GLeglContext ctx,
@@ -10996,7 +12489,7 @@ void GL_APIENTRY DeleteVertexArraysOESContextANGLE(GLeglContext ctx,
           "context = %d, GLsizei n = %d, const GLuint *arrays = 0x%016" PRIxPTR "", CID(context), n,
           (uintptr_t)arrays);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         const VertexArrayID *arraysPacked = FromGL<const VertexArrayID *>(arrays);
@@ -11009,6 +12502,10 @@ void GL_APIENTRY DeleteVertexArraysOESContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(DeleteVertexArraysOES, isCallValid, context, n, arraysPacked);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY DepthFuncContextANGLE(GLeglContext ctx, GLenum func)
@@ -11017,7 +12514,7 @@ void GL_APIENTRY DepthFuncContextANGLE(GLeglContext ctx, GLenum func)
     EVENT(context, gl::EntryPoint::DepthFunc, "glDepthFunc", "context = %d, GLenum func = %s",
           CID(context), GLenumToString(GLenumGroup::DepthFunction, func));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -11028,6 +12525,10 @@ void GL_APIENTRY DepthFuncContextANGLE(GLeglContext ctx, GLenum func)
         }
         ANGLE_CAPTURE(DepthFunc, isCallValid, context, func);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY DepthMaskContextANGLE(GLeglContext ctx, GLboolean flag)
@@ -11036,7 +12537,7 @@ void GL_APIENTRY DepthMaskContextANGLE(GLeglContext ctx, GLboolean flag)
     EVENT(context, gl::EntryPoint::DepthMask, "glDepthMask", "context = %d, GLboolean flag = %s",
           CID(context), GLbooleanToString(flag));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -11047,6 +12548,10 @@ void GL_APIENTRY DepthMaskContextANGLE(GLeglContext ctx, GLboolean flag)
         }
         ANGLE_CAPTURE(DepthMask, isCallValid, context, flag);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY DepthRangefContextANGLE(GLeglContext ctx, GLfloat n, GLfloat f)
@@ -11055,7 +12560,7 @@ void GL_APIENTRY DepthRangefContextANGLE(GLeglContext ctx, GLfloat n, GLfloat f)
     EVENT(context, gl::EntryPoint::DepthRangef, "glDepthRangef",
           "context = %d, GLfloat n = %f, GLfloat f = %f", CID(context), n, f);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -11066,6 +12571,10 @@ void GL_APIENTRY DepthRangefContextANGLE(GLeglContext ctx, GLfloat n, GLfloat f)
         }
         ANGLE_CAPTURE(DepthRangef, isCallValid, context, n, f);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY DepthRangexContextANGLE(GLeglContext ctx, GLfixed n, GLfixed f)
@@ -11074,7 +12583,7 @@ void GL_APIENTRY DepthRangexContextANGLE(GLeglContext ctx, GLfixed n, GLfixed f)
     EVENT(context, gl::EntryPoint::DepthRangex, "glDepthRangex",
           "context = %d, GLfixed n = 0x%X, GLfixed f = 0x%X", CID(context), n, f);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -11085,6 +12594,10 @@ void GL_APIENTRY DepthRangexContextANGLE(GLeglContext ctx, GLfixed n, GLfixed f)
         }
         ANGLE_CAPTURE(DepthRangex, isCallValid, context, n, f);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY DetachShaderContextANGLE(GLeglContext ctx, GLuint program, GLuint shader)
@@ -11093,7 +12606,7 @@ void GL_APIENTRY DetachShaderContextANGLE(GLeglContext ctx, GLuint program, GLui
     EVENT(context, gl::EntryPoint::DetachShader, "glDetachShader",
           "context = %d, GLuint program = %u, GLuint shader = %u", CID(context), program, shader);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID programPacked                         = FromGL<ShaderProgramID>(program);
@@ -11107,6 +12620,10 @@ void GL_APIENTRY DetachShaderContextANGLE(GLeglContext ctx, GLuint program, GLui
         }
         ANGLE_CAPTURE(DetachShader, isCallValid, context, programPacked, shaderPacked);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY DisableContextANGLE(GLeglContext ctx, GLenum cap)
@@ -11115,7 +12632,7 @@ void GL_APIENTRY DisableContextANGLE(GLeglContext ctx, GLenum cap)
     EVENT(context, gl::EntryPoint::Disable, "glDisable", "context = %d, GLenum cap = %s",
           CID(context), GLenumToString(GLenumGroup::EnableCap, cap));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -11126,6 +12643,10 @@ void GL_APIENTRY DisableContextANGLE(GLeglContext ctx, GLenum cap)
         }
         ANGLE_CAPTURE(Disable, isCallValid, context, cap);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY DisableClientStateContextANGLE(GLeglContext ctx, GLenum array)
@@ -11135,7 +12656,7 @@ void GL_APIENTRY DisableClientStateContextANGLE(GLeglContext ctx, GLenum array)
           "context = %d, GLenum array = %s", CID(context),
           GLenumToString(GLenumGroup::EnableCap, array));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ClientVertexArrayType arrayPacked = FromGL<ClientVertexArrayType>(array);
@@ -11148,6 +12669,10 @@ void GL_APIENTRY DisableClientStateContextANGLE(GLeglContext ctx, GLenum array)
         }
         ANGLE_CAPTURE(DisableClientState, isCallValid, context, arrayPacked);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY DisableVertexAttribArrayContextANGLE(GLeglContext ctx, GLuint index)
@@ -11156,7 +12681,7 @@ void GL_APIENTRY DisableVertexAttribArrayContextANGLE(GLeglContext ctx, GLuint i
     EVENT(context, gl::EntryPoint::DisableVertexAttribArray, "glDisableVertexAttribArray",
           "context = %d, GLuint index = %u", CID(context), index);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -11168,6 +12693,10 @@ void GL_APIENTRY DisableVertexAttribArrayContextANGLE(GLeglContext ctx, GLuint i
         }
         ANGLE_CAPTURE(DisableVertexAttribArray, isCallValid, context, index);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY DisableiContextANGLE(GLeglContext ctx, GLenum target, GLuint index)
@@ -11177,7 +12706,7 @@ void GL_APIENTRY DisableiContextANGLE(GLeglContext ctx, GLenum target, GLuint in
           "context = %d, GLenum target = %s, GLuint index = %u", CID(context),
           GLenumToString(GLenumGroup::EnableCap, target), index);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -11188,6 +12717,10 @@ void GL_APIENTRY DisableiContextANGLE(GLeglContext ctx, GLenum target, GLuint in
         }
         ANGLE_CAPTURE(Disablei, isCallValid, context, target, index);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY DisableiEXTContextANGLE(GLeglContext ctx, GLenum target, GLuint index)
@@ -11197,7 +12730,7 @@ void GL_APIENTRY DisableiEXTContextANGLE(GLeglContext ctx, GLenum target, GLuint
           "context = %d, GLenum target = %s, GLuint index = %u", CID(context),
           GLenumToString(GLenumGroup::EnableCap, target), index);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -11209,6 +12742,10 @@ void GL_APIENTRY DisableiEXTContextANGLE(GLeglContext ctx, GLenum target, GLuint
         }
         ANGLE_CAPTURE(DisableiEXT, isCallValid, context, target, index);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY DisableiOESContextANGLE(GLeglContext ctx, GLenum target, GLuint index)
@@ -11218,7 +12755,7 @@ void GL_APIENTRY DisableiOESContextANGLE(GLeglContext ctx, GLenum target, GLuint
           "context = %d, GLenum target = %s, GLuint index = %u", CID(context),
           GLenumToString(GLenumGroup::EnableCap, target), index);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -11229,6 +12766,10 @@ void GL_APIENTRY DisableiOESContextANGLE(GLeglContext ctx, GLenum target, GLuint
             context->disablei(target, index);
         }
         ANGLE_CAPTURE(DisableiOES, isCallValid, context, target, index);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -11244,7 +12785,7 @@ void GL_APIENTRY DiscardFramebufferEXTContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::DefaultGroup, target), numAttachments,
           (uintptr_t)attachments);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -11257,6 +12798,10 @@ void GL_APIENTRY DiscardFramebufferEXTContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(DiscardFramebufferEXT, isCallValid, context, target, numAttachments,
                       attachments);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -11271,7 +12816,7 @@ void GL_APIENTRY DispatchComputeContextANGLE(GLeglContext ctx,
           "%u",
           CID(context), num_groups_x, num_groups_y, num_groups_z);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -11285,6 +12830,10 @@ void GL_APIENTRY DispatchComputeContextANGLE(GLeglContext ctx,
         ANGLE_CAPTURE(DispatchCompute, isCallValid, context, num_groups_x, num_groups_y,
                       num_groups_z);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY DispatchComputeIndirectContextANGLE(GLeglContext ctx, GLintptr indirect)
@@ -11294,7 +12843,7 @@ void GL_APIENTRY DispatchComputeIndirectContextANGLE(GLeglContext ctx, GLintptr 
           "context = %d, GLintptr indirect = %llu", CID(context),
           static_cast<unsigned long long>(indirect));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -11306,6 +12855,10 @@ void GL_APIENTRY DispatchComputeIndirectContextANGLE(GLeglContext ctx, GLintptr 
         }
         ANGLE_CAPTURE(DispatchComputeIndirect, isCallValid, context, indirect);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY DrawArraysContextANGLE(GLeglContext ctx, GLenum mode, GLint first, GLsizei count)
@@ -11315,7 +12868,7 @@ void GL_APIENTRY DrawArraysContextANGLE(GLeglContext ctx, GLenum mode, GLint fir
           "context = %d, GLenum mode = %s, GLint first = %d, GLsizei count = %d", CID(context),
           GLenumToString(GLenumGroup::PrimitiveType, mode), first, count);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         PrimitiveMode modePacked                              = FromGL<PrimitiveMode>(mode);
@@ -11328,6 +12881,10 @@ void GL_APIENTRY DrawArraysContextANGLE(GLeglContext ctx, GLenum mode, GLint fir
         }
         ANGLE_CAPTURE(DrawArrays, isCallValid, context, modePacked, first, count);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY DrawArraysIndirectContextANGLE(GLeglContext ctx, GLenum mode, const void *indirect)
@@ -11337,7 +12894,7 @@ void GL_APIENTRY DrawArraysIndirectContextANGLE(GLeglContext ctx, GLenum mode, c
           "context = %d, GLenum mode = %s, const void *indirect = 0x%016" PRIxPTR "", CID(context),
           GLenumToString(GLenumGroup::PrimitiveType, mode), (uintptr_t)indirect);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         PrimitiveMode modePacked                              = FromGL<PrimitiveMode>(mode);
@@ -11349,6 +12906,10 @@ void GL_APIENTRY DrawArraysIndirectContextANGLE(GLeglContext ctx, GLenum mode, c
             context->drawArraysIndirect(modePacked, indirect);
         }
         ANGLE_CAPTURE(DrawArraysIndirect, isCallValid, context, modePacked, indirect);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -11365,7 +12926,7 @@ void GL_APIENTRY DrawArraysInstancedContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::PrimitiveType, mode), first, count,
           instancecount);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         PrimitiveMode modePacked                              = FromGL<PrimitiveMode>(mode);
@@ -11379,6 +12940,10 @@ void GL_APIENTRY DrawArraysInstancedContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(DrawArraysInstanced, isCallValid, context, modePacked, first, count,
                       instancecount);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -11394,7 +12959,7 @@ void GL_APIENTRY DrawArraysInstancedANGLEContextANGLE(GLeglContext ctx,
           "= %d",
           CID(context), GLenumToString(GLenumGroup::PrimitiveType, mode), first, count, primcount);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         PrimitiveMode modePacked                              = FromGL<PrimitiveMode>(mode);
@@ -11408,6 +12973,10 @@ void GL_APIENTRY DrawArraysInstancedANGLEContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(DrawArraysInstancedANGLE, isCallValid, context, modePacked, first, count,
                       primcount);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -11423,7 +12992,7 @@ void GL_APIENTRY DrawArraysInstancedEXTContextANGLE(GLeglContext ctx,
           "= %d",
           CID(context), GLenumToString(GLenumGroup::PrimitiveType, mode), start, count, primcount);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         PrimitiveMode modePacked                              = FromGL<PrimitiveMode>(mode);
@@ -11438,6 +13007,10 @@ void GL_APIENTRY DrawArraysInstancedEXTContextANGLE(GLeglContext ctx,
         ANGLE_CAPTURE(DrawArraysInstancedEXT, isCallValid, context, modePacked, start, count,
                       primcount);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY DrawBuffersContextANGLE(GLeglContext ctx, GLsizei n, const GLenum *bufs)
@@ -11447,7 +13020,7 @@ void GL_APIENTRY DrawBuffersContextANGLE(GLeglContext ctx, GLsizei n, const GLen
           "context = %d, GLsizei n = %d, const GLenum *bufs = 0x%016" PRIxPTR "", CID(context), n,
           (uintptr_t)bufs);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -11458,6 +13031,10 @@ void GL_APIENTRY DrawBuffersContextANGLE(GLeglContext ctx, GLsizei n, const GLen
         }
         ANGLE_CAPTURE(DrawBuffers, isCallValid, context, n, bufs);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY DrawBuffersEXTContextANGLE(GLeglContext ctx, GLsizei n, const GLenum *bufs)
@@ -11467,7 +13044,7 @@ void GL_APIENTRY DrawBuffersEXTContextANGLE(GLeglContext ctx, GLsizei n, const G
           "context = %d, GLsizei n = %d, const GLenum *bufs = 0x%016" PRIxPTR "", CID(context), n,
           (uintptr_t)bufs);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -11477,6 +13054,10 @@ void GL_APIENTRY DrawBuffersEXTContextANGLE(GLeglContext ctx, GLsizei n, const G
             context->drawBuffers(n, bufs);
         }
         ANGLE_CAPTURE(DrawBuffersEXT, isCallValid, context, n, bufs);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -11493,7 +13074,7 @@ void GL_APIENTRY DrawElementsContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::PrimitiveType, mode), count,
           GLenumToString(GLenumGroup::DrawElementsType, type), (uintptr_t)indices);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         PrimitiveMode modePacked                              = FromGL<PrimitiveMode>(mode);
@@ -11506,6 +13087,10 @@ void GL_APIENTRY DrawElementsContextANGLE(GLeglContext ctx,
             context->drawElements(modePacked, count, typePacked, indices);
         }
         ANGLE_CAPTURE(DrawElements, isCallValid, context, modePacked, count, typePacked, indices);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -11523,7 +13108,7 @@ void GL_APIENTRY DrawElementsBaseVertexContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::PrimitiveType, mode), count,
           GLenumToString(GLenumGroup::DrawElementsType, type), (uintptr_t)indices, basevertex);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         PrimitiveMode modePacked                              = FromGL<PrimitiveMode>(mode);
@@ -11538,6 +13123,10 @@ void GL_APIENTRY DrawElementsBaseVertexContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(DrawElementsBaseVertex, isCallValid, context, modePacked, count, typePacked,
                       indices, basevertex);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -11555,7 +13144,7 @@ void GL_APIENTRY DrawElementsBaseVertexEXTContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::PrimitiveType, mode), count,
           GLenumToString(GLenumGroup::DrawElementsType, type), (uintptr_t)indices, basevertex);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         PrimitiveMode modePacked                              = FromGL<PrimitiveMode>(mode);
@@ -11570,6 +13159,10 @@ void GL_APIENTRY DrawElementsBaseVertexEXTContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(DrawElementsBaseVertexEXT, isCallValid, context, modePacked, count,
                       typePacked, indices, basevertex);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -11587,7 +13180,7 @@ void GL_APIENTRY DrawElementsBaseVertexOESContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::PrimitiveType, mode), count,
           GLenumToString(GLenumGroup::DrawElementsType, type), (uintptr_t)indices, basevertex);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         PrimitiveMode modePacked                              = FromGL<PrimitiveMode>(mode);
@@ -11603,6 +13196,10 @@ void GL_APIENTRY DrawElementsBaseVertexOESContextANGLE(GLeglContext ctx,
         ANGLE_CAPTURE(DrawElementsBaseVertexOES, isCallValid, context, modePacked, count,
                       typePacked, indices, basevertex);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY DrawElementsIndirectContextANGLE(GLeglContext ctx,
@@ -11617,7 +13214,7 @@ void GL_APIENTRY DrawElementsIndirectContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::PrimitiveType, mode),
           GLenumToString(GLenumGroup::DrawElementsType, type), (uintptr_t)indirect);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         PrimitiveMode modePacked                              = FromGL<PrimitiveMode>(mode);
@@ -11631,6 +13228,10 @@ void GL_APIENTRY DrawElementsIndirectContextANGLE(GLeglContext ctx,
             context->drawElementsIndirect(modePacked, typePacked, indirect);
         }
         ANGLE_CAPTURE(DrawElementsIndirect, isCallValid, context, modePacked, typePacked, indirect);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -11648,7 +13249,7 @@ void GL_APIENTRY DrawElementsInstancedContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::PrimitiveType, mode), count,
           GLenumToString(GLenumGroup::DrawElementsType, type), (uintptr_t)indices, instancecount);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         PrimitiveMode modePacked                              = FromGL<PrimitiveMode>(mode);
@@ -11663,6 +13264,10 @@ void GL_APIENTRY DrawElementsInstancedContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(DrawElementsInstanced, isCallValid, context, modePacked, count, typePacked,
                       indices, instancecount);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -11680,7 +13285,7 @@ void GL_APIENTRY DrawElementsInstancedANGLEContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::PrimitiveType, mode), count,
           GLenumToString(GLenumGroup::PrimitiveType, type), (uintptr_t)indices, primcount);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         PrimitiveMode modePacked                              = FromGL<PrimitiveMode>(mode);
@@ -11695,6 +13300,10 @@ void GL_APIENTRY DrawElementsInstancedANGLEContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(DrawElementsInstancedANGLE, isCallValid, context, modePacked, count,
                       typePacked, indices, primcount);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -11715,7 +13324,7 @@ void GL_APIENTRY DrawElementsInstancedBaseVertexContextANGLE(GLeglContext ctx,
           GLenumToString(GLenumGroup::DrawElementsType, type), (uintptr_t)indices, instancecount,
           basevertex);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         PrimitiveMode modePacked                              = FromGL<PrimitiveMode>(mode);
@@ -11731,6 +13340,10 @@ void GL_APIENTRY DrawElementsInstancedBaseVertexContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(DrawElementsInstancedBaseVertex, isCallValid, context, modePacked, count,
                       typePacked, indices, instancecount, basevertex);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -11751,7 +13364,7 @@ void GL_APIENTRY DrawElementsInstancedBaseVertexEXTContextANGLE(GLeglContext ctx
           GLenumToString(GLenumGroup::DrawElementsType, type), (uintptr_t)indices, instancecount,
           basevertex);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         PrimitiveMode modePacked                              = FromGL<PrimitiveMode>(mode);
@@ -11767,6 +13380,10 @@ void GL_APIENTRY DrawElementsInstancedBaseVertexEXTContextANGLE(GLeglContext ctx
         }
         ANGLE_CAPTURE(DrawElementsInstancedBaseVertexEXT, isCallValid, context, modePacked, count,
                       typePacked, indices, instancecount, basevertex);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -11787,7 +13404,7 @@ void GL_APIENTRY DrawElementsInstancedBaseVertexOESContextANGLE(GLeglContext ctx
           GLenumToString(GLenumGroup::DrawElementsType, type), (uintptr_t)indices, instancecount,
           basevertex);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         PrimitiveMode modePacked                              = FromGL<PrimitiveMode>(mode);
@@ -11803,6 +13420,10 @@ void GL_APIENTRY DrawElementsInstancedBaseVertexOESContextANGLE(GLeglContext ctx
         }
         ANGLE_CAPTURE(DrawElementsInstancedBaseVertexOES, isCallValid, context, modePacked, count,
                       typePacked, indices, instancecount, basevertex);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -11820,7 +13441,7 @@ void GL_APIENTRY DrawElementsInstancedEXTContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::PrimitiveType, mode), count,
           GLenumToString(GLenumGroup::DrawElementsType, type), (uintptr_t)indices, primcount);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         PrimitiveMode modePacked                              = FromGL<PrimitiveMode>(mode);
@@ -11835,6 +13456,10 @@ void GL_APIENTRY DrawElementsInstancedEXTContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(DrawElementsInstancedEXT, isCallValid, context, modePacked, count, typePacked,
                       indices, primcount);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -11853,7 +13478,7 @@ void GL_APIENTRY DrawRangeElementsContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::PrimitiveType, mode), start, end, count,
           GLenumToString(GLenumGroup::DrawElementsType, type), (uintptr_t)indices);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         PrimitiveMode modePacked                              = FromGL<PrimitiveMode>(mode);
@@ -11868,6 +13493,10 @@ void GL_APIENTRY DrawRangeElementsContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(DrawRangeElements, isCallValid, context, modePacked, start, end, count,
                       typePacked, indices);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -11887,7 +13516,7 @@ void GL_APIENTRY DrawRangeElementsBaseVertexContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::PrimitiveType, mode), start, end, count,
           GLenumToString(GLenumGroup::DrawElementsType, type), (uintptr_t)indices, basevertex);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         PrimitiveMode modePacked                              = FromGL<PrimitiveMode>(mode);
@@ -11903,6 +13532,10 @@ void GL_APIENTRY DrawRangeElementsBaseVertexContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(DrawRangeElementsBaseVertex, isCallValid, context, modePacked, start, end,
                       count, typePacked, indices, basevertex);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -11923,7 +13556,7 @@ void GL_APIENTRY DrawRangeElementsBaseVertexEXTContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::PrimitiveType, mode), start, end, count,
           GLenumToString(GLenumGroup::DrawElementsType, type), (uintptr_t)indices, basevertex);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         PrimitiveMode modePacked                              = FromGL<PrimitiveMode>(mode);
@@ -11939,6 +13572,10 @@ void GL_APIENTRY DrawRangeElementsBaseVertexEXTContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(DrawRangeElementsBaseVertexEXT, isCallValid, context, modePacked, start, end,
                       count, typePacked, indices, basevertex);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -11959,7 +13596,7 @@ void GL_APIENTRY DrawRangeElementsBaseVertexOESContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::PrimitiveType, mode), start, end, count,
           GLenumToString(GLenumGroup::DrawElementsType, type), (uintptr_t)indices, basevertex);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         PrimitiveMode modePacked                              = FromGL<PrimitiveMode>(mode);
@@ -11976,6 +13613,10 @@ void GL_APIENTRY DrawRangeElementsBaseVertexOESContextANGLE(GLeglContext ctx,
         ANGLE_CAPTURE(DrawRangeElementsBaseVertexOES, isCallValid, context, modePacked, start, end,
                       count, typePacked, indices, basevertex);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY DrawTexfOESContextANGLE(GLeglContext ctx,
@@ -11991,7 +13632,7 @@ void GL_APIENTRY DrawTexfOESContextANGLE(GLeglContext ctx,
           "GLfloat height = %f",
           CID(context), x, y, z, width, height);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -12003,6 +13644,10 @@ void GL_APIENTRY DrawTexfOESContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(DrawTexfOES, isCallValid, context, x, y, z, width, height);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY DrawTexfvOESContextANGLE(GLeglContext ctx, const GLfloat *coords)
@@ -12012,7 +13657,7 @@ void GL_APIENTRY DrawTexfvOESContextANGLE(GLeglContext ctx, const GLfloat *coord
           "context = %d, const GLfloat *coords = 0x%016" PRIxPTR "", CID(context),
           (uintptr_t)coords);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -12022,6 +13667,10 @@ void GL_APIENTRY DrawTexfvOESContextANGLE(GLeglContext ctx, const GLfloat *coord
             context->drawTexfv(coords);
         }
         ANGLE_CAPTURE(DrawTexfvOES, isCallValid, context, coords);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -12034,7 +13683,7 @@ DrawTexiOESContextANGLE(GLeglContext ctx, GLint x, GLint y, GLint z, GLint width
           "= %d",
           CID(context), x, y, z, width, height);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -12046,6 +13695,10 @@ DrawTexiOESContextANGLE(GLeglContext ctx, GLint x, GLint y, GLint z, GLint width
         }
         ANGLE_CAPTURE(DrawTexiOES, isCallValid, context, x, y, z, width, height);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY DrawTexivOESContextANGLE(GLeglContext ctx, const GLint *coords)
@@ -12054,7 +13707,7 @@ void GL_APIENTRY DrawTexivOESContextANGLE(GLeglContext ctx, const GLint *coords)
     EVENT(context, gl::EntryPoint::DrawTexivOES, "glDrawTexivOES",
           "context = %d, const GLint *coords = 0x%016" PRIxPTR "", CID(context), (uintptr_t)coords);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -12064,6 +13717,10 @@ void GL_APIENTRY DrawTexivOESContextANGLE(GLeglContext ctx, const GLint *coords)
             context->drawTexiv(coords);
         }
         ANGLE_CAPTURE(DrawTexivOES, isCallValid, context, coords);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -12080,7 +13737,7 @@ void GL_APIENTRY DrawTexsOESContextANGLE(GLeglContext ctx,
           "GLshort height = %d",
           CID(context), x, y, z, width, height);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -12092,6 +13749,10 @@ void GL_APIENTRY DrawTexsOESContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(DrawTexsOES, isCallValid, context, x, y, z, width, height);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY DrawTexsvOESContextANGLE(GLeglContext ctx, const GLshort *coords)
@@ -12101,7 +13762,7 @@ void GL_APIENTRY DrawTexsvOESContextANGLE(GLeglContext ctx, const GLshort *coord
           "context = %d, const GLshort *coords = 0x%016" PRIxPTR "", CID(context),
           (uintptr_t)coords);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -12111,6 +13772,10 @@ void GL_APIENTRY DrawTexsvOESContextANGLE(GLeglContext ctx, const GLshort *coord
             context->drawTexsv(coords);
         }
         ANGLE_CAPTURE(DrawTexsvOES, isCallValid, context, coords);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -12127,7 +13792,7 @@ void GL_APIENTRY DrawTexxOESContextANGLE(GLeglContext ctx,
           "0x%X, GLfixed height = 0x%X",
           CID(context), x, y, z, width, height);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -12139,6 +13804,10 @@ void GL_APIENTRY DrawTexxOESContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(DrawTexxOES, isCallValid, context, x, y, z, width, height);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY DrawTexxvOESContextANGLE(GLeglContext ctx, const GLfixed *coords)
@@ -12148,7 +13817,7 @@ void GL_APIENTRY DrawTexxvOESContextANGLE(GLeglContext ctx, const GLfixed *coord
           "context = %d, const GLfixed *coords = 0x%016" PRIxPTR "", CID(context),
           (uintptr_t)coords);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -12158,6 +13827,10 @@ void GL_APIENTRY DrawTexxvOESContextANGLE(GLeglContext ctx, const GLfixed *coord
             context->drawTexxv(coords);
         }
         ANGLE_CAPTURE(DrawTexxvOES, isCallValid, context, coords);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -12171,7 +13844,7 @@ void GL_APIENTRY EGLImageTargetRenderbufferStorageOESContextANGLE(GLeglContext c
           "context = %d, GLenum target = %s, GLeglImageOES image = 0x%016" PRIxPTR "", CID(context),
           GLenumToString(GLenumGroup::DefaultGroup, target), (uintptr_t)image);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -12182,6 +13855,10 @@ void GL_APIENTRY EGLImageTargetRenderbufferStorageOESContextANGLE(GLeglContext c
             context->eGLImageTargetRenderbufferStorage(target, image);
         }
         ANGLE_CAPTURE(EGLImageTargetRenderbufferStorageOES, isCallValid, context, target, image);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -12194,7 +13871,7 @@ void GL_APIENTRY EGLImageTargetTexture2DOESContextANGLE(GLeglContext ctx,
           "context = %d, GLenum target = %s, GLeglImageOES image = 0x%016" PRIxPTR "", CID(context),
           GLenumToString(GLenumGroup::DefaultGroup, target), (uintptr_t)image);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureType targetPacked                              = FromGL<TextureType>(target);
@@ -12207,6 +13884,10 @@ void GL_APIENTRY EGLImageTargetTexture2DOESContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(EGLImageTargetTexture2DOES, isCallValid, context, targetPacked, image);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY EnableContextANGLE(GLeglContext ctx, GLenum cap)
@@ -12215,7 +13896,7 @@ void GL_APIENTRY EnableContextANGLE(GLeglContext ctx, GLenum cap)
     EVENT(context, gl::EntryPoint::Enable, "glEnable", "context = %d, GLenum cap = %s",
           CID(context), GLenumToString(GLenumGroup::EnableCap, cap));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -12226,6 +13907,10 @@ void GL_APIENTRY EnableContextANGLE(GLeglContext ctx, GLenum cap)
         }
         ANGLE_CAPTURE(Enable, isCallValid, context, cap);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY EnableClientStateContextANGLE(GLeglContext ctx, GLenum array)
@@ -12235,7 +13920,7 @@ void GL_APIENTRY EnableClientStateContextANGLE(GLeglContext ctx, GLenum array)
           "context = %d, GLenum array = %s", CID(context),
           GLenumToString(GLenumGroup::EnableCap, array));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ClientVertexArrayType arrayPacked = FromGL<ClientVertexArrayType>(array);
@@ -12248,6 +13933,10 @@ void GL_APIENTRY EnableClientStateContextANGLE(GLeglContext ctx, GLenum array)
         }
         ANGLE_CAPTURE(EnableClientState, isCallValid, context, arrayPacked);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY EnableVertexAttribArrayContextANGLE(GLeglContext ctx, GLuint index)
@@ -12256,7 +13945,7 @@ void GL_APIENTRY EnableVertexAttribArrayContextANGLE(GLeglContext ctx, GLuint in
     EVENT(context, gl::EntryPoint::EnableVertexAttribArray, "glEnableVertexAttribArray",
           "context = %d, GLuint index = %u", CID(context), index);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -12268,6 +13957,10 @@ void GL_APIENTRY EnableVertexAttribArrayContextANGLE(GLeglContext ctx, GLuint in
         }
         ANGLE_CAPTURE(EnableVertexAttribArray, isCallValid, context, index);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY EnableiContextANGLE(GLeglContext ctx, GLenum target, GLuint index)
@@ -12277,7 +13970,7 @@ void GL_APIENTRY EnableiContextANGLE(GLeglContext ctx, GLenum target, GLuint ind
           "context = %d, GLenum target = %s, GLuint index = %u", CID(context),
           GLenumToString(GLenumGroup::EnableCap, target), index);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -12288,6 +13981,10 @@ void GL_APIENTRY EnableiContextANGLE(GLeglContext ctx, GLenum target, GLuint ind
         }
         ANGLE_CAPTURE(Enablei, isCallValid, context, target, index);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY EnableiEXTContextANGLE(GLeglContext ctx, GLenum target, GLuint index)
@@ -12297,7 +13994,7 @@ void GL_APIENTRY EnableiEXTContextANGLE(GLeglContext ctx, GLenum target, GLuint 
           "context = %d, GLenum target = %s, GLuint index = %u", CID(context),
           GLenumToString(GLenumGroup::EnableCap, target), index);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -12309,6 +14006,10 @@ void GL_APIENTRY EnableiEXTContextANGLE(GLeglContext ctx, GLenum target, GLuint 
         }
         ANGLE_CAPTURE(EnableiEXT, isCallValid, context, target, index);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY EnableiOESContextANGLE(GLeglContext ctx, GLenum target, GLuint index)
@@ -12318,7 +14019,7 @@ void GL_APIENTRY EnableiOESContextANGLE(GLeglContext ctx, GLenum target, GLuint 
           "context = %d, GLenum target = %s, GLuint index = %u", CID(context),
           GLenumToString(GLenumGroup::EnableCap, target), index);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -12330,6 +14031,10 @@ void GL_APIENTRY EnableiOESContextANGLE(GLeglContext ctx, GLenum target, GLuint 
         }
         ANGLE_CAPTURE(EnableiOES, isCallValid, context, target, index);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY EndQueryContextANGLE(GLeglContext ctx, GLenum target)
@@ -12338,7 +14043,7 @@ void GL_APIENTRY EndQueryContextANGLE(GLeglContext ctx, GLenum target)
     EVENT(context, gl::EntryPoint::EndQuery, "glEndQuery", "context = %d, GLenum target = %s",
           CID(context), GLenumToString(GLenumGroup::QueryTarget, target));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         QueryType targetPacked                                = FromGL<QueryType>(target);
@@ -12350,6 +14055,10 @@ void GL_APIENTRY EndQueryContextANGLE(GLeglContext ctx, GLenum target)
         }
         ANGLE_CAPTURE(EndQuery, isCallValid, context, targetPacked);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY EndQueryEXTContextANGLE(GLeglContext ctx, GLenum target)
@@ -12358,7 +14067,7 @@ void GL_APIENTRY EndQueryEXTContextANGLE(GLeglContext ctx, GLenum target)
     EVENT(context, gl::EntryPoint::EndQueryEXT, "glEndQueryEXT", "context = %d, GLenum target = %s",
           CID(context), GLenumToString(GLenumGroup::QueryTarget, target));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         QueryType targetPacked                                = FromGL<QueryType>(target);
@@ -12371,6 +14080,10 @@ void GL_APIENTRY EndQueryEXTContextANGLE(GLeglContext ctx, GLenum target)
         }
         ANGLE_CAPTURE(EndQueryEXT, isCallValid, context, targetPacked);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY EndTransformFeedbackContextANGLE(GLeglContext ctx)
@@ -12379,7 +14092,7 @@ void GL_APIENTRY EndTransformFeedbackContextANGLE(GLeglContext ctx)
     EVENT(context, gl::EntryPoint::EndTransformFeedback, "glEndTransformFeedback", "context = %d",
           CID(context));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -12389,6 +14102,10 @@ void GL_APIENTRY EndTransformFeedbackContextANGLE(GLeglContext ctx)
             context->endTransformFeedback();
         }
         ANGLE_CAPTURE(EndTransformFeedback, isCallValid, context);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -12401,7 +14118,7 @@ GLsync GL_APIENTRY FenceSyncContextANGLE(GLeglContext ctx, GLenum condition, GLb
           GLbitfieldToString(GLenumGroup::DefaultGroup, flags).c_str());
 
     GLsync returnValue;
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -12419,6 +14136,7 @@ GLsync GL_APIENTRY FenceSyncContextANGLE(GLeglContext ctx, GLenum condition, GLb
     }
     else
     {
+        GenerateContextLostErrorOnContext(context);
         returnValue = GetDefaultReturnValue<EntryPoint::FenceSync, GLsync>();
     }
     return returnValue;
@@ -12429,7 +14147,7 @@ void GL_APIENTRY FinishContextANGLE(GLeglContext ctx)
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, gl::EntryPoint::Finish, "glFinish", "context = %d", CID(context));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -12440,6 +14158,10 @@ void GL_APIENTRY FinishContextANGLE(GLeglContext ctx)
         }
         ANGLE_CAPTURE(Finish, isCallValid, context);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY FinishFenceNVContextANGLE(GLeglContext ctx, GLuint fence)
@@ -12448,7 +14170,7 @@ void GL_APIENTRY FinishFenceNVContextANGLE(GLeglContext ctx, GLuint fence)
     EVENT(context, gl::EntryPoint::FinishFenceNV, "glFinishFenceNV",
           "context = %d, GLuint fence = %u", CID(context), fence);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         FenceNVID fencePacked                                 = FromGL<FenceNVID>(fence);
@@ -12461,6 +14183,10 @@ void GL_APIENTRY FinishFenceNVContextANGLE(GLeglContext ctx, GLuint fence)
         }
         ANGLE_CAPTURE(FinishFenceNV, isCallValid, context, fencePacked);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY FlushContextANGLE(GLeglContext ctx)
@@ -12468,7 +14194,7 @@ void GL_APIENTRY FlushContextANGLE(GLeglContext ctx)
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, gl::EntryPoint::Flush, "glFlush", "context = %d", CID(context));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -12478,6 +14204,10 @@ void GL_APIENTRY FlushContextANGLE(GLeglContext ctx)
             context->flush();
         }
         ANGLE_CAPTURE(Flush, isCallValid, context);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -12492,7 +14222,7 @@ void GL_APIENTRY FlushMappedBufferRangeContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::BufferTargetARB, target),
           static_cast<unsigned long long>(offset), static_cast<unsigned long long>(length));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         BufferBinding targetPacked                            = FromGL<BufferBinding>(target);
@@ -12504,6 +14234,10 @@ void GL_APIENTRY FlushMappedBufferRangeContextANGLE(GLeglContext ctx,
             context->flushMappedBufferRange(targetPacked, offset, length);
         }
         ANGLE_CAPTURE(FlushMappedBufferRange, isCallValid, context, targetPacked, offset, length);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -12518,7 +14252,7 @@ void GL_APIENTRY FlushMappedBufferRangeEXTContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::BufferTargetARB, target),
           static_cast<unsigned long long>(offset), static_cast<unsigned long long>(length));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         BufferBinding targetPacked                            = FromGL<BufferBinding>(target);
@@ -12533,6 +14267,10 @@ void GL_APIENTRY FlushMappedBufferRangeEXTContextANGLE(GLeglContext ctx,
         ANGLE_CAPTURE(FlushMappedBufferRangeEXT, isCallValid, context, targetPacked, offset,
                       length);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY FogfContextANGLE(GLeglContext ctx, GLenum pname, GLfloat param)
@@ -12542,7 +14280,7 @@ void GL_APIENTRY FogfContextANGLE(GLeglContext ctx, GLenum pname, GLfloat param)
           "context = %d, GLenum pname = %s, GLfloat param = %f", CID(context),
           GLenumToString(GLenumGroup::FogParameter, pname), param);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -12553,6 +14291,10 @@ void GL_APIENTRY FogfContextANGLE(GLeglContext ctx, GLenum pname, GLfloat param)
         }
         ANGLE_CAPTURE(Fogf, isCallValid, context, pname, param);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY FogfvContextANGLE(GLeglContext ctx, GLenum pname, const GLfloat *params)
@@ -12562,7 +14304,7 @@ void GL_APIENTRY FogfvContextANGLE(GLeglContext ctx, GLenum pname, const GLfloat
           "context = %d, GLenum pname = %s, const GLfloat *params = 0x%016" PRIxPTR "",
           CID(context), GLenumToString(GLenumGroup::FogParameter, pname), (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -12573,6 +14315,10 @@ void GL_APIENTRY FogfvContextANGLE(GLeglContext ctx, GLenum pname, const GLfloat
         }
         ANGLE_CAPTURE(Fogfv, isCallValid, context, pname, params);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY FogxContextANGLE(GLeglContext ctx, GLenum pname, GLfixed param)
@@ -12582,7 +14328,7 @@ void GL_APIENTRY FogxContextANGLE(GLeglContext ctx, GLenum pname, GLfixed param)
           "context = %d, GLenum pname = %s, GLfixed param = 0x%X", CID(context),
           GLenumToString(GLenumGroup::FogPName, pname), param);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -12593,6 +14339,10 @@ void GL_APIENTRY FogxContextANGLE(GLeglContext ctx, GLenum pname, GLfixed param)
         }
         ANGLE_CAPTURE(Fogx, isCallValid, context, pname, param);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY FogxvContextANGLE(GLeglContext ctx, GLenum pname, const GLfixed *param)
@@ -12602,7 +14352,7 @@ void GL_APIENTRY FogxvContextANGLE(GLeglContext ctx, GLenum pname, const GLfixed
           "context = %d, GLenum pname = %s, const GLfixed *param = 0x%016" PRIxPTR "", CID(context),
           GLenumToString(GLenumGroup::FogPName, pname), (uintptr_t)param);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -12612,6 +14362,10 @@ void GL_APIENTRY FogxvContextANGLE(GLeglContext ctx, GLenum pname, const GLfixed
             context->fogxv(pname, param);
         }
         ANGLE_CAPTURE(Fogxv, isCallValid, context, pname, param);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -12626,7 +14380,7 @@ void GL_APIENTRY FramebufferParameteriContextANGLE(GLeglContext ctx,
           GLenumToString(GLenumGroup::FramebufferTarget, target),
           GLenumToString(GLenumGroup::FramebufferParameterName, pname), param);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -12637,6 +14391,10 @@ void GL_APIENTRY FramebufferParameteriContextANGLE(GLeglContext ctx,
             context->framebufferParameteri(target, pname, param);
         }
         ANGLE_CAPTURE(FramebufferParameteri, isCallValid, context, target, pname, param);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -12654,7 +14412,7 @@ void GL_APIENTRY FramebufferRenderbufferContextANGLE(GLeglContext ctx,
           GLenumToString(GLenumGroup::FramebufferAttachment, attachment),
           GLenumToString(GLenumGroup::RenderbufferTarget, renderbuffertarget), renderbuffer);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         RenderbufferID renderbufferPacked = FromGL<RenderbufferID>(renderbuffer);
@@ -12670,6 +14428,10 @@ void GL_APIENTRY FramebufferRenderbufferContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(FramebufferRenderbuffer, isCallValid, context, target, attachment,
                       renderbuffertarget, renderbufferPacked);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -12687,7 +14449,7 @@ void GL_APIENTRY FramebufferRenderbufferOESContextANGLE(GLeglContext ctx,
           GLenumToString(GLenumGroup::FramebufferAttachment, attachment),
           GLenumToString(GLenumGroup::RenderbufferTarget, renderbuffertarget), renderbuffer);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         RenderbufferID renderbufferPacked = FromGL<RenderbufferID>(renderbuffer);
@@ -12704,6 +14466,10 @@ void GL_APIENTRY FramebufferRenderbufferOESContextANGLE(GLeglContext ctx,
         ANGLE_CAPTURE(FramebufferRenderbufferOES, isCallValid, context, target, attachment,
                       renderbuffertarget, renderbufferPacked);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY FramebufferTextureContextANGLE(GLeglContext ctx,
@@ -12719,7 +14485,7 @@ void GL_APIENTRY FramebufferTextureContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::FramebufferTarget, target),
           GLenumToString(GLenumGroup::FramebufferAttachment, attachment), texture, level);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureID texturePacked                               = FromGL<TextureID>(texture);
@@ -12733,6 +14499,10 @@ void GL_APIENTRY FramebufferTextureContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(FramebufferTexture, isCallValid, context, target, attachment, texturePacked,
                       level);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -12751,7 +14521,7 @@ void GL_APIENTRY FramebufferTexture2DContextANGLE(GLeglContext ctx,
           GLenumToString(GLenumGroup::FramebufferAttachment, attachment),
           GLenumToString(GLenumGroup::TextureTarget, textarget), texture, level);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureTarget textargetPacked                         = FromGL<TextureTarget>(textarget);
@@ -12767,6 +14537,10 @@ void GL_APIENTRY FramebufferTexture2DContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(FramebufferTexture2D, isCallValid, context, target, attachment,
                       textargetPacked, texturePacked, level);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -12787,7 +14561,7 @@ void GL_APIENTRY FramebufferTexture2DMultisampleEXTContextANGLE(GLeglContext ctx
           GLenumToString(GLenumGroup::FramebufferAttachment, attachment),
           GLenumToString(GLenumGroup::TextureTarget, textarget), texture, level, samples);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureTarget textargetPacked                         = FromGL<TextureTarget>(textarget);
@@ -12804,6 +14578,10 @@ void GL_APIENTRY FramebufferTexture2DMultisampleEXTContextANGLE(GLeglContext ctx
         }
         ANGLE_CAPTURE(FramebufferTexture2DMultisampleEXT, isCallValid, context, target, attachment,
                       textargetPacked, texturePacked, level, samples);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -12822,7 +14600,7 @@ void GL_APIENTRY FramebufferTexture2DOESContextANGLE(GLeglContext ctx,
           GLenumToString(GLenumGroup::FramebufferAttachment, attachment),
           GLenumToString(GLenumGroup::TextureTarget, textarget), texture, level);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureTarget textargetPacked                         = FromGL<TextureTarget>(textarget);
@@ -12838,6 +14616,10 @@ void GL_APIENTRY FramebufferTexture2DOESContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(FramebufferTexture2DOES, isCallValid, context, target, attachment,
                       textargetPacked, texturePacked, level);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -12857,7 +14639,7 @@ void GL_APIENTRY FramebufferTexture3DOESContextANGLE(GLeglContext ctx,
           GLenumToString(GLenumGroup::FramebufferAttachment, attachment),
           GLenumToString(GLenumGroup::TextureTarget, textarget), texture, level, zoffset);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureTarget textargetPacked                         = FromGL<TextureTarget>(textarget);
@@ -12875,6 +14657,10 @@ void GL_APIENTRY FramebufferTexture3DOESContextANGLE(GLeglContext ctx,
         ANGLE_CAPTURE(FramebufferTexture3DOES, isCallValid, context, target, attachment,
                       textargetPacked, texturePacked, level, zoffset);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY FramebufferTextureEXTContextANGLE(GLeglContext ctx,
@@ -12890,7 +14676,7 @@ void GL_APIENTRY FramebufferTextureEXTContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::FramebufferTarget, target),
           GLenumToString(GLenumGroup::FramebufferAttachment, attachment), texture, level);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureID texturePacked                               = FromGL<TextureID>(texture);
@@ -12904,6 +14690,10 @@ void GL_APIENTRY FramebufferTextureEXTContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(FramebufferTextureEXT, isCallValid, context, target, attachment,
                       texturePacked, level);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -12921,7 +14711,7 @@ void GL_APIENTRY FramebufferTextureLayerContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::FramebufferTarget, target),
           GLenumToString(GLenumGroup::FramebufferAttachment, attachment), texture, level, layer);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureID texturePacked                               = FromGL<TextureID>(texture);
@@ -12935,6 +14725,10 @@ void GL_APIENTRY FramebufferTextureLayerContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(FramebufferTextureLayer, isCallValid, context, target, attachment,
                       texturePacked, level, layer);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -12955,7 +14749,7 @@ void GL_APIENTRY FramebufferTextureMultiviewOVRContextANGLE(GLeglContext ctx,
           GLenumToString(GLenumGroup::FramebufferAttachment, attachment), texture, level,
           baseViewIndex, numViews);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureID texturePacked                               = FromGL<TextureID>(texture);
@@ -12972,6 +14766,10 @@ void GL_APIENTRY FramebufferTextureMultiviewOVRContextANGLE(GLeglContext ctx,
         ANGLE_CAPTURE(FramebufferTextureMultiviewOVR, isCallValid, context, target, attachment,
                       texturePacked, level, baseViewIndex, numViews);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY FrontFaceContextANGLE(GLeglContext ctx, GLenum mode)
@@ -12980,7 +14778,7 @@ void GL_APIENTRY FrontFaceContextANGLE(GLeglContext ctx, GLenum mode)
     EVENT(context, gl::EntryPoint::FrontFace, "glFrontFace", "context = %d, GLenum mode = %s",
           CID(context), GLenumToString(GLenumGroup::FrontFaceDirection, mode));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -12990,6 +14788,10 @@ void GL_APIENTRY FrontFaceContextANGLE(GLeglContext ctx, GLenum mode)
             context->frontFace(mode);
         }
         ANGLE_CAPTURE(FrontFace, isCallValid, context, mode);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -13007,7 +14809,7 @@ void GL_APIENTRY FrustumfContextANGLE(GLeglContext ctx,
           "= %f, GLfloat f = %f",
           CID(context), l, r, b, t, n, f);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -13018,6 +14820,10 @@ void GL_APIENTRY FrustumfContextANGLE(GLeglContext ctx,
             context->frustumf(l, r, b, t, n, f);
         }
         ANGLE_CAPTURE(Frustumf, isCallValid, context, l, r, b, t, n, f);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -13035,7 +14841,7 @@ void GL_APIENTRY FrustumxContextANGLE(GLeglContext ctx,
           "GLfixed n = 0x%X, GLfixed f = 0x%X",
           CID(context), l, r, b, t, n, f);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -13047,6 +14853,10 @@ void GL_APIENTRY FrustumxContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(Frustumx, isCallValid, context, l, r, b, t, n, f);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY GenBuffersContextANGLE(GLeglContext ctx, GLsizei n, GLuint *buffers)
@@ -13056,7 +14866,7 @@ void GL_APIENTRY GenBuffersContextANGLE(GLeglContext ctx, GLsizei n, GLuint *buf
           "context = %d, GLsizei n = %d, GLuint *buffers = 0x%016" PRIxPTR "", CID(context), n,
           (uintptr_t)buffers);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         BufferID *buffersPacked                               = FromGL<BufferID *>(buffers);
@@ -13069,6 +14879,10 @@ void GL_APIENTRY GenBuffersContextANGLE(GLeglContext ctx, GLsizei n, GLuint *buf
         }
         ANGLE_CAPTURE(GenBuffers, isCallValid, context, n, buffersPacked);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY GenFencesNVContextANGLE(GLeglContext ctx, GLsizei n, GLuint *fences)
@@ -13078,7 +14892,7 @@ void GL_APIENTRY GenFencesNVContextANGLE(GLeglContext ctx, GLsizei n, GLuint *fe
           "context = %d, GLsizei n = %d, GLuint *fences = 0x%016" PRIxPTR "", CID(context), n,
           (uintptr_t)fences);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         FenceNVID *fencesPacked                               = FromGL<FenceNVID *>(fences);
@@ -13091,6 +14905,10 @@ void GL_APIENTRY GenFencesNVContextANGLE(GLeglContext ctx, GLsizei n, GLuint *fe
         }
         ANGLE_CAPTURE(GenFencesNV, isCallValid, context, n, fencesPacked);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY GenFramebuffersContextANGLE(GLeglContext ctx, GLsizei n, GLuint *framebuffers)
@@ -13100,7 +14918,7 @@ void GL_APIENTRY GenFramebuffersContextANGLE(GLeglContext ctx, GLsizei n, GLuint
           "context = %d, GLsizei n = %d, GLuint *framebuffers = 0x%016" PRIxPTR "", CID(context), n,
           (uintptr_t)framebuffers);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         FramebufferID *framebuffersPacked = FromGL<FramebufferID *>(framebuffers);
@@ -13113,6 +14931,10 @@ void GL_APIENTRY GenFramebuffersContextANGLE(GLeglContext ctx, GLsizei n, GLuint
         }
         ANGLE_CAPTURE(GenFramebuffers, isCallValid, context, n, framebuffersPacked);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY GenFramebuffersOESContextANGLE(GLeglContext ctx, GLsizei n, GLuint *framebuffers)
@@ -13122,7 +14944,7 @@ void GL_APIENTRY GenFramebuffersOESContextANGLE(GLeglContext ctx, GLsizei n, GLu
           "context = %d, GLsizei n = %d, GLuint *framebuffers = 0x%016" PRIxPTR "", CID(context), n,
           (uintptr_t)framebuffers);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         FramebufferID *framebuffersPacked = FromGL<FramebufferID *>(framebuffers);
@@ -13135,6 +14957,10 @@ void GL_APIENTRY GenFramebuffersOESContextANGLE(GLeglContext ctx, GLsizei n, GLu
         }
         ANGLE_CAPTURE(GenFramebuffersOES, isCallValid, context, n, framebuffersPacked);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY GenProgramPipelinesContextANGLE(GLeglContext ctx, GLsizei n, GLuint *pipelines)
@@ -13144,7 +14970,7 @@ void GL_APIENTRY GenProgramPipelinesContextANGLE(GLeglContext ctx, GLsizei n, GL
           "context = %d, GLsizei n = %d, GLuint *pipelines = 0x%016" PRIxPTR "", CID(context), n,
           (uintptr_t)pipelines);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ProgramPipelineID *pipelinesPacked = FromGL<ProgramPipelineID *>(pipelines);
@@ -13157,6 +14983,10 @@ void GL_APIENTRY GenProgramPipelinesContextANGLE(GLeglContext ctx, GLsizei n, GL
         }
         ANGLE_CAPTURE(GenProgramPipelines, isCallValid, context, n, pipelinesPacked);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY GenQueriesContextANGLE(GLeglContext ctx, GLsizei n, GLuint *ids)
@@ -13166,7 +14996,7 @@ void GL_APIENTRY GenQueriesContextANGLE(GLeglContext ctx, GLsizei n, GLuint *ids
           "context = %d, GLsizei n = %d, GLuint *ids = 0x%016" PRIxPTR "", CID(context), n,
           (uintptr_t)ids);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         QueryID *idsPacked                                    = FromGL<QueryID *>(ids);
@@ -13178,6 +15008,10 @@ void GL_APIENTRY GenQueriesContextANGLE(GLeglContext ctx, GLsizei n, GLuint *ids
         }
         ANGLE_CAPTURE(GenQueries, isCallValid, context, n, idsPacked);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY GenQueriesEXTContextANGLE(GLeglContext ctx, GLsizei n, GLuint *ids)
@@ -13187,7 +15021,7 @@ void GL_APIENTRY GenQueriesEXTContextANGLE(GLeglContext ctx, GLsizei n, GLuint *
           "context = %d, GLsizei n = %d, GLuint *ids = 0x%016" PRIxPTR "", CID(context), n,
           (uintptr_t)ids);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         QueryID *idsPacked                                    = FromGL<QueryID *>(ids);
@@ -13200,6 +15034,10 @@ void GL_APIENTRY GenQueriesEXTContextANGLE(GLeglContext ctx, GLsizei n, GLuint *
         }
         ANGLE_CAPTURE(GenQueriesEXT, isCallValid, context, n, idsPacked);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY GenRenderbuffersContextANGLE(GLeglContext ctx, GLsizei n, GLuint *renderbuffers)
@@ -13209,7 +15047,7 @@ void GL_APIENTRY GenRenderbuffersContextANGLE(GLeglContext ctx, GLsizei n, GLuin
           "context = %d, GLsizei n = %d, GLuint *renderbuffers = 0x%016" PRIxPTR "", CID(context),
           n, (uintptr_t)renderbuffers);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         RenderbufferID *renderbuffersPacked = FromGL<RenderbufferID *>(renderbuffers);
@@ -13222,6 +15060,10 @@ void GL_APIENTRY GenRenderbuffersContextANGLE(GLeglContext ctx, GLsizei n, GLuin
         }
         ANGLE_CAPTURE(GenRenderbuffers, isCallValid, context, n, renderbuffersPacked);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY GenRenderbuffersOESContextANGLE(GLeglContext ctx, GLsizei n, GLuint *renderbuffers)
@@ -13231,7 +15073,7 @@ void GL_APIENTRY GenRenderbuffersOESContextANGLE(GLeglContext ctx, GLsizei n, GL
           "context = %d, GLsizei n = %d, GLuint *renderbuffers = 0x%016" PRIxPTR "", CID(context),
           n, (uintptr_t)renderbuffers);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         RenderbufferID *renderbuffersPacked = FromGL<RenderbufferID *>(renderbuffers);
@@ -13244,6 +15086,10 @@ void GL_APIENTRY GenRenderbuffersOESContextANGLE(GLeglContext ctx, GLsizei n, GL
         }
         ANGLE_CAPTURE(GenRenderbuffersOES, isCallValid, context, n, renderbuffersPacked);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY GenSamplersContextANGLE(GLeglContext ctx, GLsizei count, GLuint *samplers)
@@ -13253,7 +15099,7 @@ void GL_APIENTRY GenSamplersContextANGLE(GLeglContext ctx, GLsizei count, GLuint
           "context = %d, GLsizei count = %d, GLuint *samplers = 0x%016" PRIxPTR "", CID(context),
           count, (uintptr_t)samplers);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         SamplerID *samplersPacked                             = FromGL<SamplerID *>(samplers);
@@ -13266,6 +15112,10 @@ void GL_APIENTRY GenSamplersContextANGLE(GLeglContext ctx, GLsizei count, GLuint
         }
         ANGLE_CAPTURE(GenSamplers, isCallValid, context, count, samplersPacked);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY GenSemaphoresEXTContextANGLE(GLeglContext ctx, GLsizei n, GLuint *semaphores)
@@ -13275,7 +15125,7 @@ void GL_APIENTRY GenSemaphoresEXTContextANGLE(GLeglContext ctx, GLsizei n, GLuin
           "context = %d, GLsizei n = %d, GLuint *semaphores = 0x%016" PRIxPTR "", CID(context), n,
           (uintptr_t)semaphores);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         SemaphoreID *semaphoresPacked                         = FromGL<SemaphoreID *>(semaphores);
@@ -13288,6 +15138,10 @@ void GL_APIENTRY GenSemaphoresEXTContextANGLE(GLeglContext ctx, GLsizei n, GLuin
         }
         ANGLE_CAPTURE(GenSemaphoresEXT, isCallValid, context, n, semaphoresPacked);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY GenTexturesContextANGLE(GLeglContext ctx, GLsizei n, GLuint *textures)
@@ -13297,7 +15151,7 @@ void GL_APIENTRY GenTexturesContextANGLE(GLeglContext ctx, GLsizei n, GLuint *te
           "context = %d, GLsizei n = %d, GLuint *textures = 0x%016" PRIxPTR "", CID(context), n,
           (uintptr_t)textures);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureID *texturesPacked                             = FromGL<TextureID *>(textures);
@@ -13310,6 +15164,10 @@ void GL_APIENTRY GenTexturesContextANGLE(GLeglContext ctx, GLsizei n, GLuint *te
         }
         ANGLE_CAPTURE(GenTextures, isCallValid, context, n, texturesPacked);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY GenTransformFeedbacksContextANGLE(GLeglContext ctx, GLsizei n, GLuint *ids)
@@ -13319,7 +15177,7 @@ void GL_APIENTRY GenTransformFeedbacksContextANGLE(GLeglContext ctx, GLsizei n, 
           "context = %d, GLsizei n = %d, GLuint *ids = 0x%016" PRIxPTR "", CID(context), n,
           (uintptr_t)ids);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TransformFeedbackID *idsPacked                        = FromGL<TransformFeedbackID *>(ids);
@@ -13332,6 +15190,10 @@ void GL_APIENTRY GenTransformFeedbacksContextANGLE(GLeglContext ctx, GLsizei n, 
         }
         ANGLE_CAPTURE(GenTransformFeedbacks, isCallValid, context, n, idsPacked);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY GenVertexArraysContextANGLE(GLeglContext ctx, GLsizei n, GLuint *arrays)
@@ -13341,7 +15203,7 @@ void GL_APIENTRY GenVertexArraysContextANGLE(GLeglContext ctx, GLsizei n, GLuint
           "context = %d, GLsizei n = %d, GLuint *arrays = 0x%016" PRIxPTR "", CID(context), n,
           (uintptr_t)arrays);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         VertexArrayID *arraysPacked                           = FromGL<VertexArrayID *>(arrays);
@@ -13354,6 +15216,10 @@ void GL_APIENTRY GenVertexArraysContextANGLE(GLeglContext ctx, GLsizei n, GLuint
         }
         ANGLE_CAPTURE(GenVertexArrays, isCallValid, context, n, arraysPacked);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY GenVertexArraysOESContextANGLE(GLeglContext ctx, GLsizei n, GLuint *arrays)
@@ -13363,7 +15229,7 @@ void GL_APIENTRY GenVertexArraysOESContextANGLE(GLeglContext ctx, GLsizei n, GLu
           "context = %d, GLsizei n = %d, GLuint *arrays = 0x%016" PRIxPTR "", CID(context), n,
           (uintptr_t)arrays);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         VertexArrayID *arraysPacked                           = FromGL<VertexArrayID *>(arrays);
@@ -13376,6 +15242,10 @@ void GL_APIENTRY GenVertexArraysOESContextANGLE(GLeglContext ctx, GLsizei n, GLu
         }
         ANGLE_CAPTURE(GenVertexArraysOES, isCallValid, context, n, arraysPacked);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY GenerateMipmapContextANGLE(GLeglContext ctx, GLenum target)
@@ -13385,7 +15255,7 @@ void GL_APIENTRY GenerateMipmapContextANGLE(GLeglContext ctx, GLenum target)
           "context = %d, GLenum target = %s", CID(context),
           GLenumToString(GLenumGroup::TextureTarget, target));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureType targetPacked                              = FromGL<TextureType>(target);
@@ -13398,6 +15268,10 @@ void GL_APIENTRY GenerateMipmapContextANGLE(GLeglContext ctx, GLenum target)
         }
         ANGLE_CAPTURE(GenerateMipmap, isCallValid, context, targetPacked);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY GenerateMipmapOESContextANGLE(GLeglContext ctx, GLenum target)
@@ -13407,7 +15281,7 @@ void GL_APIENTRY GenerateMipmapOESContextANGLE(GLeglContext ctx, GLenum target)
           "context = %d, GLenum target = %s", CID(context),
           GLenumToString(GLenumGroup::TextureTarget, target));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureType targetPacked                              = FromGL<TextureType>(target);
@@ -13419,6 +15293,10 @@ void GL_APIENTRY GenerateMipmapOESContextANGLE(GLeglContext ctx, GLenum target)
             context->generateMipmap(targetPacked);
         }
         ANGLE_CAPTURE(GenerateMipmapOES, isCallValid, context, targetPacked);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -13439,7 +15317,7 @@ void GL_APIENTRY GetActiveAttribContextANGLE(GLeglContext ctx,
           CID(context), program, index, bufSize, (uintptr_t)length, (uintptr_t)size,
           (uintptr_t)type, (uintptr_t)name);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID programPacked                         = FromGL<ShaderProgramID>(program);
@@ -13453,6 +15331,10 @@ void GL_APIENTRY GetActiveAttribContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(GetActiveAttrib, isCallValid, context, programPacked, index, bufSize, length,
                       size, type, name);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -13473,7 +15355,7 @@ void GL_APIENTRY GetActiveUniformContextANGLE(GLeglContext ctx,
           CID(context), program, index, bufSize, (uintptr_t)length, (uintptr_t)size,
           (uintptr_t)type, (uintptr_t)name);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID programPacked                         = FromGL<ShaderProgramID>(program);
@@ -13487,6 +15369,10 @@ void GL_APIENTRY GetActiveUniformContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(GetActiveUniform, isCallValid, context, programPacked, index, bufSize, length,
                       size, type, name);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -13504,7 +15390,7 @@ void GL_APIENTRY GetActiveUniformBlockNameContextANGLE(GLeglContext ctx,
           CID(context), program, uniformBlockIndex, bufSize, (uintptr_t)length,
           (uintptr_t)uniformBlockName);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID programPacked                         = FromGL<ShaderProgramID>(program);
@@ -13521,6 +15407,10 @@ void GL_APIENTRY GetActiveUniformBlockNameContextANGLE(GLeglContext ctx,
         ANGLE_CAPTURE(GetActiveUniformBlockName, isCallValid, context, programPacked,
                       uniformBlockIndex, bufSize, length, uniformBlockName);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY GetActiveUniformBlockivContextANGLE(GLeglContext ctx,
@@ -13536,7 +15426,7 @@ void GL_APIENTRY GetActiveUniformBlockivContextANGLE(GLeglContext ctx,
           CID(context), program, uniformBlockIndex,
           GLenumToString(GLenumGroup::UniformBlockPName, pname), (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID programPacked                         = FromGL<ShaderProgramID>(program);
@@ -13550,6 +15440,10 @@ void GL_APIENTRY GetActiveUniformBlockivContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(GetActiveUniformBlockiv, isCallValid, context, programPacked,
                       uniformBlockIndex, pname, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -13568,7 +15462,7 @@ void GL_APIENTRY GetActiveUniformsivContextANGLE(GLeglContext ctx,
           CID(context), program, uniformCount, (uintptr_t)uniformIndices,
           GLenumToString(GLenumGroup::UniformPName, pname), (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID programPacked                         = FromGL<ShaderProgramID>(program);
@@ -13583,6 +15477,10 @@ void GL_APIENTRY GetActiveUniformsivContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(GetActiveUniformsiv, isCallValid, context, programPacked, uniformCount,
                       uniformIndices, pname, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -13599,7 +15497,7 @@ void GL_APIENTRY GetAttachedShadersContextANGLE(GLeglContext ctx,
         ", GLuint *shaders = 0x%016" PRIxPTR "",
         CID(context), program, maxCount, (uintptr_t)count, (uintptr_t)shaders);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID programPacked                         = FromGL<ShaderProgramID>(program);
@@ -13615,6 +15513,10 @@ void GL_APIENTRY GetAttachedShadersContextANGLE(GLeglContext ctx,
         ANGLE_CAPTURE(GetAttachedShaders, isCallValid, context, programPacked, maxCount, count,
                       shadersPacked);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 GLint GL_APIENTRY GetAttribLocationContextANGLE(GLeglContext ctx,
@@ -13627,7 +15529,7 @@ GLint GL_APIENTRY GetAttribLocationContextANGLE(GLeglContext ctx,
           program, (uintptr_t)name);
 
     GLint returnValue;
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID programPacked                         = FromGL<ShaderProgramID>(program);
@@ -13646,6 +15548,7 @@ GLint GL_APIENTRY GetAttribLocationContextANGLE(GLeglContext ctx,
     }
     else
     {
+        GenerateContextLostErrorOnContext(context);
         returnValue = GetDefaultReturnValue<EntryPoint::GetAttribLocation, GLint>();
     }
     return returnValue;
@@ -13662,7 +15565,7 @@ void GL_APIENTRY GetBooleani_vContextANGLE(GLeglContext ctx,
         "context = %d, GLenum target = %s, GLuint index = %u, GLboolean *data = 0x%016" PRIxPTR "",
         CID(context), GLenumToString(GLenumGroup::BufferTargetARB, target), index, (uintptr_t)data);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -13674,6 +15577,10 @@ void GL_APIENTRY GetBooleani_vContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(GetBooleani_v, isCallValid, context, target, index, data);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY GetBooleanvContextANGLE(GLeglContext ctx, GLenum pname, GLboolean *data)
@@ -13683,7 +15590,7 @@ void GL_APIENTRY GetBooleanvContextANGLE(GLeglContext ctx, GLenum pname, GLboole
           "context = %d, GLenum pname = %s, GLboolean *data = 0x%016" PRIxPTR "", CID(context),
           GLenumToString(GLenumGroup::GetPName, pname), (uintptr_t)data);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -13693,6 +15600,10 @@ void GL_APIENTRY GetBooleanvContextANGLE(GLeglContext ctx, GLenum pname, GLboole
             context->getBooleanv(pname, data);
         }
         ANGLE_CAPTURE(GetBooleanv, isCallValid, context, pname, data);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -13708,7 +15619,7 @@ void GL_APIENTRY GetBufferParameteri64vContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::BufferTargetARB, target),
           GLenumToString(GLenumGroup::DefaultGroup, pname), (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         BufferBinding targetPacked                            = FromGL<BufferBinding>(target);
@@ -13720,6 +15631,10 @@ void GL_APIENTRY GetBufferParameteri64vContextANGLE(GLeglContext ctx,
             context->getBufferParameteri64v(targetPacked, pname, params);
         }
         ANGLE_CAPTURE(GetBufferParameteri64v, isCallValid, context, targetPacked, pname, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -13734,7 +15649,7 @@ void GL_APIENTRY GetBufferParameterivContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::BufferTargetARB, target),
           GLenumToString(GLenumGroup::DefaultGroup, pname), (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         BufferBinding targetPacked                            = FromGL<BufferBinding>(target);
@@ -13746,6 +15661,10 @@ void GL_APIENTRY GetBufferParameterivContextANGLE(GLeglContext ctx,
             context->getBufferParameteriv(targetPacked, pname, params);
         }
         ANGLE_CAPTURE(GetBufferParameteriv, isCallValid, context, targetPacked, pname, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -13760,7 +15679,7 @@ void GL_APIENTRY GetBufferPointervContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::BufferTargetARB, target),
           GLenumToString(GLenumGroup::DefaultGroup, pname), (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         BufferBinding targetPacked                            = FromGL<BufferBinding>(target);
@@ -13772,6 +15691,10 @@ void GL_APIENTRY GetBufferPointervContextANGLE(GLeglContext ctx,
             context->getBufferPointerv(targetPacked, pname, params);
         }
         ANGLE_CAPTURE(GetBufferPointerv, isCallValid, context, targetPacked, pname, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -13786,7 +15709,7 @@ void GL_APIENTRY GetBufferPointervOESContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::BufferTargetARB, target),
           GLenumToString(GLenumGroup::DefaultGroup, pname), (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         BufferBinding targetPacked                            = FromGL<BufferBinding>(target);
@@ -13799,6 +15722,10 @@ void GL_APIENTRY GetBufferPointervOESContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(GetBufferPointervOES, isCallValid, context, targetPacked, pname, params);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY GetClipPlanefContextANGLE(GLeglContext ctx, GLenum plane, GLfloat *equation)
@@ -13808,7 +15735,7 @@ void GL_APIENTRY GetClipPlanefContextANGLE(GLeglContext ctx, GLenum plane, GLflo
           "context = %d, GLenum plane = %s, GLfloat *equation = 0x%016" PRIxPTR "", CID(context),
           GLenumToString(GLenumGroup::ClipPlaneName, plane), (uintptr_t)equation);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -13820,6 +15747,10 @@ void GL_APIENTRY GetClipPlanefContextANGLE(GLeglContext ctx, GLenum plane, GLflo
         }
         ANGLE_CAPTURE(GetClipPlanef, isCallValid, context, plane, equation);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY GetClipPlanexContextANGLE(GLeglContext ctx, GLenum plane, GLfixed *equation)
@@ -13829,7 +15760,7 @@ void GL_APIENTRY GetClipPlanexContextANGLE(GLeglContext ctx, GLenum plane, GLfix
           "context = %d, GLenum plane = %s, GLfixed *equation = 0x%016" PRIxPTR "", CID(context),
           GLenumToString(GLenumGroup::ClipPlaneName, plane), (uintptr_t)equation);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -13840,6 +15771,10 @@ void GL_APIENTRY GetClipPlanexContextANGLE(GLeglContext ctx, GLenum plane, GLfix
             context->getClipPlanex(plane, equation);
         }
         ANGLE_CAPTURE(GetClipPlanex, isCallValid, context, plane, equation);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -13863,7 +15798,7 @@ GLuint GL_APIENTRY GetDebugMessageLogContextANGLE(GLeglContext ctx,
           (uintptr_t)severities, (uintptr_t)lengths, (uintptr_t)messageLog);
 
     GLuint returnValue;
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -13884,6 +15819,7 @@ GLuint GL_APIENTRY GetDebugMessageLogContextANGLE(GLeglContext ctx,
     }
     else
     {
+        GenerateContextLostErrorOnContext(context);
         returnValue = GetDefaultReturnValue<EntryPoint::GetDebugMessageLog, GLuint>();
     }
     return returnValue;
@@ -13909,7 +15845,7 @@ GLuint GL_APIENTRY GetDebugMessageLogKHRContextANGLE(GLeglContext ctx,
           (uintptr_t)severities, (uintptr_t)lengths, (uintptr_t)messageLog);
 
     GLuint returnValue;
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -13930,6 +15866,7 @@ GLuint GL_APIENTRY GetDebugMessageLogKHRContextANGLE(GLeglContext ctx,
     }
     else
     {
+        GenerateContextLostErrorOnContext(context);
         returnValue = GetDefaultReturnValue<EntryPoint::GetDebugMessageLogKHR, GLuint>();
     }
     return returnValue;
@@ -13958,6 +15895,7 @@ GLenum GL_APIENTRY GetErrorContextANGLE(GLeglContext ctx)
     }
     else
     {
+
         returnValue = GetDefaultReturnValue<EntryPoint::GetError, GLenum>();
     }
     return returnValue;
@@ -13973,7 +15911,7 @@ void GL_APIENTRY GetFenceivNVContextANGLE(GLeglContext ctx,
           "context = %d, GLuint fence = %u, GLenum pname = %s, GLint *params = 0x%016" PRIxPTR "",
           CID(context), fence, GLenumToString(GLenumGroup::DefaultGroup, pname), (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         FenceNVID fencePacked                                 = FromGL<FenceNVID>(fence);
@@ -13986,6 +15924,10 @@ void GL_APIENTRY GetFenceivNVContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(GetFenceivNV, isCallValid, context, fencePacked, pname, params);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY GetFixedvContextANGLE(GLeglContext ctx, GLenum pname, GLfixed *params)
@@ -13995,7 +15937,7 @@ void GL_APIENTRY GetFixedvContextANGLE(GLeglContext ctx, GLenum pname, GLfixed *
           "context = %d, GLenum pname = %s, GLfixed *params = 0x%016" PRIxPTR "", CID(context),
           GLenumToString(GLenumGroup::GetPName, pname), (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -14006,6 +15948,10 @@ void GL_APIENTRY GetFixedvContextANGLE(GLeglContext ctx, GLenum pname, GLfixed *
         }
         ANGLE_CAPTURE(GetFixedv, isCallValid, context, pname, params);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY GetFloatvContextANGLE(GLeglContext ctx, GLenum pname, GLfloat *data)
@@ -14015,7 +15961,7 @@ void GL_APIENTRY GetFloatvContextANGLE(GLeglContext ctx, GLenum pname, GLfloat *
           "context = %d, GLenum pname = %s, GLfloat *data = 0x%016" PRIxPTR "", CID(context),
           GLenumToString(GLenumGroup::GetPName, pname), (uintptr_t)data);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -14025,6 +15971,10 @@ void GL_APIENTRY GetFloatvContextANGLE(GLeglContext ctx, GLenum pname, GLfloat *
             context->getFloatv(pname, data);
         }
         ANGLE_CAPTURE(GetFloatv, isCallValid, context, pname, data);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -14038,7 +15988,7 @@ GLint GL_APIENTRY GetFragDataIndexEXTContextANGLE(GLeglContext ctx,
           program, (uintptr_t)name);
 
     GLint returnValue;
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID programPacked                         = FromGL<ShaderProgramID>(program);
@@ -14057,6 +16007,7 @@ GLint GL_APIENTRY GetFragDataIndexEXTContextANGLE(GLeglContext ctx,
     }
     else
     {
+        GenerateContextLostErrorOnContext(context);
         returnValue = GetDefaultReturnValue<EntryPoint::GetFragDataIndexEXT, GLint>();
     }
     return returnValue;
@@ -14072,7 +16023,7 @@ GLint GL_APIENTRY GetFragDataLocationContextANGLE(GLeglContext ctx,
           program, (uintptr_t)name);
 
     GLint returnValue;
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID programPacked                         = FromGL<ShaderProgramID>(program);
@@ -14091,6 +16042,7 @@ GLint GL_APIENTRY GetFragDataLocationContextANGLE(GLeglContext ctx,
     }
     else
     {
+        GenerateContextLostErrorOnContext(context);
         returnValue = GetDefaultReturnValue<EntryPoint::GetFragDataLocation, GLint>();
     }
     return returnValue;
@@ -14112,7 +16064,7 @@ void GL_APIENTRY GetFramebufferAttachmentParameterivContextANGLE(GLeglContext ct
           GLenumToString(GLenumGroup::FramebufferAttachmentParameterName, pname),
           (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -14125,6 +16077,10 @@ void GL_APIENTRY GetFramebufferAttachmentParameterivContextANGLE(GLeglContext ct
         }
         ANGLE_CAPTURE(GetFramebufferAttachmentParameteriv, isCallValid, context, target, attachment,
                       pname, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -14144,7 +16100,7 @@ void GL_APIENTRY GetFramebufferAttachmentParameterivOESContextANGLE(GLeglContext
           GLenumToString(GLenumGroup::FramebufferAttachmentParameterName, pname),
           (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -14157,6 +16113,10 @@ void GL_APIENTRY GetFramebufferAttachmentParameterivOESContextANGLE(GLeglContext
         }
         ANGLE_CAPTURE(GetFramebufferAttachmentParameterivOES, isCallValid, context, target,
                       attachment, pname, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -14172,7 +16132,7 @@ void GL_APIENTRY GetFramebufferParameterivContextANGLE(GLeglContext ctx,
           GLenumToString(GLenumGroup::FramebufferAttachmentParameterName, pname),
           (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -14183,6 +16143,10 @@ void GL_APIENTRY GetFramebufferParameterivContextANGLE(GLeglContext ctx,
             context->getFramebufferParameteriv(target, pname, params);
         }
         ANGLE_CAPTURE(GetFramebufferParameteriv, isCallValid, context, target, pname, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -14210,6 +16174,7 @@ GLenum GL_APIENTRY GetGraphicsResetStatusContextANGLE(GLeglContext ctx)
     }
     else
     {
+
         returnValue = GetDefaultReturnValue<EntryPoint::GetGraphicsResetStatus, GLenum>();
     }
     return returnValue;
@@ -14240,6 +16205,7 @@ GLenum GL_APIENTRY GetGraphicsResetStatusEXTContextANGLE(GLeglContext ctx)
     }
     else
     {
+
         returnValue = GetDefaultReturnValue<EntryPoint::GetGraphicsResetStatusEXT, GLenum>();
     }
     return returnValue;
@@ -14255,7 +16221,7 @@ void GL_APIENTRY GetInteger64i_vContextANGLE(GLeglContext ctx,
           "context = %d, GLenum target = %s, GLuint index = %u, GLint64 *data = 0x%016" PRIxPTR "",
           CID(context), GLenumToString(GLenumGroup::TypeEnum, target), index, (uintptr_t)data);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -14267,6 +16233,10 @@ void GL_APIENTRY GetInteger64i_vContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(GetInteger64i_v, isCallValid, context, target, index, data);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY GetInteger64vContextANGLE(GLeglContext ctx, GLenum pname, GLint64 *data)
@@ -14276,7 +16246,7 @@ void GL_APIENTRY GetInteger64vContextANGLE(GLeglContext ctx, GLenum pname, GLint
           "context = %d, GLenum pname = %s, GLint64 *data = 0x%016" PRIxPTR "", CID(context),
           GLenumToString(GLenumGroup::GetPName, pname), (uintptr_t)data);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -14288,6 +16258,10 @@ void GL_APIENTRY GetInteger64vContextANGLE(GLeglContext ctx, GLenum pname, GLint
         }
         ANGLE_CAPTURE(GetInteger64v, isCallValid, context, pname, data);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY GetInteger64vEXTContextANGLE(GLeglContext ctx, GLenum pname, GLint64 *data)
@@ -14297,7 +16271,7 @@ void GL_APIENTRY GetInteger64vEXTContextANGLE(GLeglContext ctx, GLenum pname, GL
           "context = %d, GLenum pname = %s, GLint64 *data = 0x%016" PRIxPTR "", CID(context),
           GLenumToString(GLenumGroup::GetPName, pname), (uintptr_t)data);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -14308,6 +16282,10 @@ void GL_APIENTRY GetInteger64vEXTContextANGLE(GLeglContext ctx, GLenum pname, GL
             context->getInteger64v(pname, data);
         }
         ANGLE_CAPTURE(GetInteger64vEXT, isCallValid, context, pname, data);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -14321,7 +16299,7 @@ void GL_APIENTRY GetIntegeri_vContextANGLE(GLeglContext ctx,
           "context = %d, GLenum target = %s, GLuint index = %u, GLint *data = 0x%016" PRIxPTR "",
           CID(context), GLenumToString(GLenumGroup::TypeEnum, target), index, (uintptr_t)data);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -14333,6 +16311,10 @@ void GL_APIENTRY GetIntegeri_vContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(GetIntegeri_v, isCallValid, context, target, index, data);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY GetIntegervContextANGLE(GLeglContext ctx, GLenum pname, GLint *data)
@@ -14342,7 +16324,7 @@ void GL_APIENTRY GetIntegervContextANGLE(GLeglContext ctx, GLenum pname, GLint *
           "context = %d, GLenum pname = %s, GLint *data = 0x%016" PRIxPTR "", CID(context),
           GLenumToString(GLenumGroup::GetPName, pname), (uintptr_t)data);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -14352,6 +16334,10 @@ void GL_APIENTRY GetIntegervContextANGLE(GLeglContext ctx, GLenum pname, GLint *
             context->getIntegerv(pname, data);
         }
         ANGLE_CAPTURE(GetIntegerv, isCallValid, context, pname, data);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -14370,7 +16356,7 @@ void GL_APIENTRY GetInternalformativContextANGLE(GLeglContext ctx,
           GLenumToString(GLenumGroup::InternalFormat, internalformat),
           GLenumToString(GLenumGroup::InternalFormatPName, pname), bufSize, (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -14383,6 +16369,10 @@ void GL_APIENTRY GetInternalformativContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(GetInternalformativ, isCallValid, context, target, internalformat, pname,
                       bufSize, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -14397,7 +16387,7 @@ void GL_APIENTRY GetLightfvContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::LightName, light),
           GLenumToString(GLenumGroup::LightParameter, pname), (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         LightParameter pnamePacked                            = FromGL<LightParameter>(pname);
@@ -14409,6 +16399,10 @@ void GL_APIENTRY GetLightfvContextANGLE(GLeglContext ctx,
             context->getLightfv(light, pnamePacked, params);
         }
         ANGLE_CAPTURE(GetLightfv, isCallValid, context, light, pnamePacked, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -14423,7 +16417,7 @@ void GL_APIENTRY GetLightxvContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::LightName, light),
           GLenumToString(GLenumGroup::LightParameter, pname), (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         LightParameter pnamePacked                            = FromGL<LightParameter>(pname);
@@ -14435,6 +16429,10 @@ void GL_APIENTRY GetLightxvContextANGLE(GLeglContext ctx,
             context->getLightxv(light, pnamePacked, params);
         }
         ANGLE_CAPTURE(GetLightxv, isCallValid, context, light, pnamePacked, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -14449,7 +16447,7 @@ void GL_APIENTRY GetMaterialfvContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::MaterialFace, face),
           GLenumToString(GLenumGroup::MaterialParameter, pname), (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         MaterialParameter pnamePacked                         = FromGL<MaterialParameter>(pname);
@@ -14461,6 +16459,10 @@ void GL_APIENTRY GetMaterialfvContextANGLE(GLeglContext ctx,
             context->getMaterialfv(face, pnamePacked, params);
         }
         ANGLE_CAPTURE(GetMaterialfv, isCallValid, context, face, pnamePacked, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -14475,7 +16477,7 @@ void GL_APIENTRY GetMaterialxvContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::MaterialFace, face),
           GLenumToString(GLenumGroup::MaterialParameter, pname), (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         MaterialParameter pnamePacked                         = FromGL<MaterialParameter>(pname);
@@ -14487,6 +16489,10 @@ void GL_APIENTRY GetMaterialxvContextANGLE(GLeglContext ctx,
             context->getMaterialxv(face, pnamePacked, params);
         }
         ANGLE_CAPTURE(GetMaterialxv, isCallValid, context, face, pnamePacked, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -14503,7 +16509,7 @@ void GL_APIENTRY GetMemoryObjectParameterivEXTContextANGLE(GLeglContext ctx,
         CID(context), memoryObject, GLenumToString(GLenumGroup::MemoryObjectParameterName, pname),
         (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         MemoryObjectID memoryObjectPacked = FromGL<MemoryObjectID>(memoryObject);
@@ -14518,6 +16524,10 @@ void GL_APIENTRY GetMemoryObjectParameterivEXTContextANGLE(GLeglContext ctx,
         ANGLE_CAPTURE(GetMemoryObjectParameterivEXT, isCallValid, context, memoryObjectPacked,
                       pname, params);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY GetMultisamplefvContextANGLE(GLeglContext ctx,
@@ -14530,7 +16540,7 @@ void GL_APIENTRY GetMultisamplefvContextANGLE(GLeglContext ctx,
           "context = %d, GLenum pname = %s, GLuint index = %u, GLfloat *val = 0x%016" PRIxPTR "",
           CID(context), GLenumToString(GLenumGroup::DefaultGroup, pname), index, (uintptr_t)val);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -14541,6 +16551,10 @@ void GL_APIENTRY GetMultisamplefvContextANGLE(GLeglContext ctx,
             context->getMultisamplefv(pname, index, val);
         }
         ANGLE_CAPTURE(GetMultisamplefv, isCallValid, context, pname, index, val);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -14558,7 +16572,7 @@ void GL_APIENTRY GetObjectLabelContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::DefaultGroup, identifier), name, bufSize,
           (uintptr_t)length, (uintptr_t)label);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -14571,6 +16585,10 @@ void GL_APIENTRY GetObjectLabelContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(GetObjectLabel, isCallValid, context, identifier, name, bufSize, length,
                       label);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -14588,7 +16606,7 @@ void GL_APIENTRY GetObjectLabelKHRContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::DefaultGroup, identifier), name, bufSize,
           (uintptr_t)length, (uintptr_t)label);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -14601,6 +16619,10 @@ void GL_APIENTRY GetObjectLabelKHRContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(GetObjectLabelKHR, isCallValid, context, identifier, name, bufSize, length,
                       label);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -14617,7 +16639,7 @@ void GL_APIENTRY GetObjectPtrLabelContextANGLE(GLeglContext ctx,
           ", GLchar *label = 0x%016" PRIxPTR "",
           CID(context), (uintptr_t)ptr, bufSize, (uintptr_t)length, (uintptr_t)label);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -14628,6 +16650,10 @@ void GL_APIENTRY GetObjectPtrLabelContextANGLE(GLeglContext ctx,
             context->getObjectPtrLabel(ptr, bufSize, length, label);
         }
         ANGLE_CAPTURE(GetObjectPtrLabel, isCallValid, context, ptr, bufSize, length, label);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -14644,7 +16670,7 @@ void GL_APIENTRY GetObjectPtrLabelKHRContextANGLE(GLeglContext ctx,
           ", GLchar *label = 0x%016" PRIxPTR "",
           CID(context), (uintptr_t)ptr, bufSize, (uintptr_t)length, (uintptr_t)label);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -14656,6 +16682,10 @@ void GL_APIENTRY GetObjectPtrLabelKHRContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(GetObjectPtrLabelKHR, isCallValid, context, ptr, bufSize, length, label);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY GetPointervContextANGLE(GLeglContext ctx, GLenum pname, void **params)
@@ -14665,7 +16695,7 @@ void GL_APIENTRY GetPointervContextANGLE(GLeglContext ctx, GLenum pname, void **
           "context = %d, GLenum pname = %s, void **params = 0x%016" PRIxPTR "", CID(context),
           GLenumToString(GLenumGroup::GetPointervPName, pname), (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -14677,6 +16707,10 @@ void GL_APIENTRY GetPointervContextANGLE(GLeglContext ctx, GLenum pname, void **
         }
         ANGLE_CAPTURE(GetPointerv, isCallValid, context, pname, params);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY GetPointervKHRContextANGLE(GLeglContext ctx, GLenum pname, void **params)
@@ -14686,7 +16720,7 @@ void GL_APIENTRY GetPointervKHRContextANGLE(GLeglContext ctx, GLenum pname, void
           "context = %d, GLenum pname = %s, void **params = 0x%016" PRIxPTR "", CID(context),
           GLenumToString(GLenumGroup::DefaultGroup, pname), (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -14697,6 +16731,10 @@ void GL_APIENTRY GetPointervKHRContextANGLE(GLeglContext ctx, GLenum pname, void
             context->getPointerv(pname, params);
         }
         ANGLE_CAPTURE(GetPointervKHR, isCallValid, context, pname, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -14715,7 +16753,7 @@ void GL_APIENTRY GetProgramBinaryContextANGLE(GLeglContext ctx,
         CID(context), program, bufSize, (uintptr_t)length, (uintptr_t)binaryFormat,
         (uintptr_t)binary);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID programPacked                         = FromGL<ShaderProgramID>(program);
@@ -14729,6 +16767,10 @@ void GL_APIENTRY GetProgramBinaryContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(GetProgramBinary, isCallValid, context, programPacked, bufSize, length,
                       binaryFormat, binary);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -14747,7 +16789,7 @@ void GL_APIENTRY GetProgramBinaryOESContextANGLE(GLeglContext ctx,
         CID(context), program, bufSize, (uintptr_t)length, (uintptr_t)binaryFormat,
         (uintptr_t)binary);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID programPacked                         = FromGL<ShaderProgramID>(program);
@@ -14761,6 +16803,10 @@ void GL_APIENTRY GetProgramBinaryOESContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(GetProgramBinaryOES, isCallValid, context, programPacked, bufSize, length,
                       binaryFormat, binary);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -14777,7 +16823,7 @@ void GL_APIENTRY GetProgramInfoLogContextANGLE(GLeglContext ctx,
         ", GLchar *infoLog = 0x%016" PRIxPTR "",
         CID(context), program, bufSize, (uintptr_t)length, (uintptr_t)infoLog);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID programPacked                         = FromGL<ShaderProgramID>(program);
@@ -14791,6 +16837,10 @@ void GL_APIENTRY GetProgramInfoLogContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(GetProgramInfoLog, isCallValid, context, programPacked, bufSize, length,
                       infoLog);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -14807,7 +16857,7 @@ void GL_APIENTRY GetProgramInterfaceivContextANGLE(GLeglContext ctx,
           CID(context), program, GLenumToString(GLenumGroup::ProgramInterface, programInterface),
           GLenumToString(GLenumGroup::ProgramInterfacePName, pname), (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID programPacked                         = FromGL<ShaderProgramID>(program);
@@ -14821,6 +16871,10 @@ void GL_APIENTRY GetProgramInterfaceivContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(GetProgramInterfaceiv, isCallValid, context, programPacked, programInterface,
                       pname, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -14837,7 +16891,7 @@ void GL_APIENTRY GetProgramPipelineInfoLogContextANGLE(GLeglContext ctx,
         ", GLchar *infoLog = 0x%016" PRIxPTR "",
         CID(context), pipeline, bufSize, (uintptr_t)length, (uintptr_t)infoLog);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ProgramPipelineID pipelinePacked                      = FromGL<ProgramPipelineID>(pipeline);
@@ -14851,6 +16905,10 @@ void GL_APIENTRY GetProgramPipelineInfoLogContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(GetProgramPipelineInfoLog, isCallValid, context, pipelinePacked, bufSize,
                       length, infoLog);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -14866,7 +16924,7 @@ void GL_APIENTRY GetProgramPipelineivContextANGLE(GLeglContext ctx,
           CID(context), pipeline, GLenumToString(GLenumGroup::PipelineParameterName, pname),
           (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ProgramPipelineID pipelinePacked                      = FromGL<ProgramPipelineID>(pipeline);
@@ -14878,6 +16936,10 @@ void GL_APIENTRY GetProgramPipelineivContextANGLE(GLeglContext ctx,
             context->getProgramPipelineiv(pipelinePacked, pname, params);
         }
         ANGLE_CAPTURE(GetProgramPipelineiv, isCallValid, context, pipelinePacked, pname, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -14894,7 +16956,7 @@ GLuint GL_APIENTRY GetProgramResourceIndexContextANGLE(GLeglContext ctx,
           (uintptr_t)name);
 
     GLuint returnValue;
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID programPacked                         = FromGL<ShaderProgramID>(program);
@@ -14915,6 +16977,7 @@ GLuint GL_APIENTRY GetProgramResourceIndexContextANGLE(GLeglContext ctx,
     }
     else
     {
+        GenerateContextLostErrorOnContext(context);
         returnValue = GetDefaultReturnValue<EntryPoint::GetProgramResourceIndex, GLuint>();
     }
     return returnValue;
@@ -14933,7 +16996,7 @@ GLint GL_APIENTRY GetProgramResourceLocationContextANGLE(GLeglContext ctx,
           (uintptr_t)name);
 
     GLint returnValue;
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID programPacked                         = FromGL<ShaderProgramID>(program);
@@ -14955,6 +17018,7 @@ GLint GL_APIENTRY GetProgramResourceLocationContextANGLE(GLeglContext ctx,
     }
     else
     {
+        GenerateContextLostErrorOnContext(context);
         returnValue = GetDefaultReturnValue<EntryPoint::GetProgramResourceLocation, GLint>();
     }
     return returnValue;
@@ -14974,7 +17038,7 @@ GLint GL_APIENTRY GetProgramResourceLocationIndexEXTContextANGLE(GLeglContext ct
           (uintptr_t)name);
 
     GLint returnValue;
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID programPacked                         = FromGL<ShaderProgramID>(program);
@@ -14997,6 +17061,7 @@ GLint GL_APIENTRY GetProgramResourceLocationIndexEXTContextANGLE(GLeglContext ct
     }
     else
     {
+        GenerateContextLostErrorOnContext(context);
         returnValue =
             GetDefaultReturnValue<EntryPoint::GetProgramResourceLocationIndexEXT, GLint>();
     }
@@ -15019,7 +17084,7 @@ void GL_APIENTRY GetProgramResourceNameContextANGLE(GLeglContext ctx,
           CID(context), program, GLenumToString(GLenumGroup::ProgramInterface, programInterface),
           index, bufSize, (uintptr_t)length, (uintptr_t)name);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID programPacked                         = FromGL<ShaderProgramID>(program);
@@ -15034,6 +17099,10 @@ void GL_APIENTRY GetProgramResourceNameContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(GetProgramResourceName, isCallValid, context, programPacked, programInterface,
                       index, bufSize, length, name);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -15056,7 +17125,7 @@ void GL_APIENTRY GetProgramResourceivContextANGLE(GLeglContext ctx,
           CID(context), program, GLenumToString(GLenumGroup::ProgramInterface, programInterface),
           index, propCount, (uintptr_t)props, bufSize, (uintptr_t)length, (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID programPacked                         = FromGL<ShaderProgramID>(program);
@@ -15072,6 +17141,10 @@ void GL_APIENTRY GetProgramResourceivContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(GetProgramResourceiv, isCallValid, context, programPacked, programInterface,
                       index, propCount, props, bufSize, length, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -15099,6 +17172,8 @@ void GL_APIENTRY GetProgramivContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(GetProgramiv, isCallValid, context, programPacked, pname, params);
     }
+    else
+    {}
 }
 
 void GL_APIENTRY GetQueryObjecti64vEXTContextANGLE(GLeglContext ctx,
@@ -15125,6 +17200,8 @@ void GL_APIENTRY GetQueryObjecti64vEXTContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(GetQueryObjecti64vEXT, isCallValid, context, idPacked, pname, params);
     }
+    else
+    {}
 }
 
 void GL_APIENTRY GetQueryObjectivEXTContextANGLE(GLeglContext ctx,
@@ -15151,6 +17228,8 @@ void GL_APIENTRY GetQueryObjectivEXTContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(GetQueryObjectivEXT, isCallValid, context, idPacked, pname, params);
     }
+    else
+    {}
 }
 
 void GL_APIENTRY GetQueryObjectui64vEXTContextANGLE(GLeglContext ctx,
@@ -15164,7 +17243,7 @@ void GL_APIENTRY GetQueryObjectui64vEXTContextANGLE(GLeglContext ctx,
           CID(context), id, GLenumToString(GLenumGroup::QueryObjectParameterName, pname),
           (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         QueryID idPacked                                      = FromGL<QueryID>(id);
@@ -15176,6 +17255,10 @@ void GL_APIENTRY GetQueryObjectui64vEXTContextANGLE(GLeglContext ctx,
             context->getQueryObjectui64v(idPacked, pname, params);
         }
         ANGLE_CAPTURE(GetQueryObjectui64vEXT, isCallValid, context, idPacked, pname, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -15190,7 +17273,7 @@ void GL_APIENTRY GetQueryObjectuivContextANGLE(GLeglContext ctx,
           CID(context), id, GLenumToString(GLenumGroup::QueryObjectParameterName, pname),
           (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         QueryID idPacked                                      = FromGL<QueryID>(id);
@@ -15202,6 +17285,10 @@ void GL_APIENTRY GetQueryObjectuivContextANGLE(GLeglContext ctx,
             context->getQueryObjectuiv(idPacked, pname, params);
         }
         ANGLE_CAPTURE(GetQueryObjectuiv, isCallValid, context, idPacked, pname, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -15216,7 +17303,7 @@ void GL_APIENTRY GetQueryObjectuivEXTContextANGLE(GLeglContext ctx,
           CID(context), id, GLenumToString(GLenumGroup::QueryObjectParameterName, pname),
           (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         QueryID idPacked                                      = FromGL<QueryID>(id);
@@ -15228,6 +17315,10 @@ void GL_APIENTRY GetQueryObjectuivEXTContextANGLE(GLeglContext ctx,
             context->getQueryObjectuiv(idPacked, pname, params);
         }
         ANGLE_CAPTURE(GetQueryObjectuivEXT, isCallValid, context, idPacked, pname, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -15242,7 +17333,7 @@ void GL_APIENTRY GetQueryivContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::QueryTarget, target),
           GLenumToString(GLenumGroup::QueryParameterName, pname), (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         QueryType targetPacked                                = FromGL<QueryType>(target);
@@ -15254,6 +17345,10 @@ void GL_APIENTRY GetQueryivContextANGLE(GLeglContext ctx,
             context->getQueryiv(targetPacked, pname, params);
         }
         ANGLE_CAPTURE(GetQueryiv, isCallValid, context, targetPacked, pname, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -15268,7 +17363,7 @@ void GL_APIENTRY GetQueryivEXTContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::QueryTarget, target),
           GLenumToString(GLenumGroup::QueryParameterName, pname), (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         QueryType targetPacked                                = FromGL<QueryType>(target);
@@ -15280,6 +17375,10 @@ void GL_APIENTRY GetQueryivEXTContextANGLE(GLeglContext ctx,
             context->getQueryiv(targetPacked, pname, params);
         }
         ANGLE_CAPTURE(GetQueryivEXT, isCallValid, context, targetPacked, pname, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -15294,7 +17393,7 @@ void GL_APIENTRY GetRenderbufferParameterivContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::RenderbufferTarget, target),
           GLenumToString(GLenumGroup::RenderbufferParameterName, pname), (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -15305,6 +17404,10 @@ void GL_APIENTRY GetRenderbufferParameterivContextANGLE(GLeglContext ctx,
             context->getRenderbufferParameteriv(target, pname, params);
         }
         ANGLE_CAPTURE(GetRenderbufferParameteriv, isCallValid, context, target, pname, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -15319,7 +17422,7 @@ void GL_APIENTRY GetRenderbufferParameterivOESContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::RenderbufferTarget, target),
           GLenumToString(GLenumGroup::RenderbufferParameterName, pname), (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -15330,6 +17433,10 @@ void GL_APIENTRY GetRenderbufferParameterivOESContextANGLE(GLeglContext ctx,
             context->getRenderbufferParameteriv(target, pname, params);
         }
         ANGLE_CAPTURE(GetRenderbufferParameterivOES, isCallValid, context, target, pname, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -15344,7 +17451,7 @@ void GL_APIENTRY GetSamplerParameterIivContextANGLE(GLeglContext ctx,
           CID(context), sampler, GLenumToString(GLenumGroup::SamplerParameterName, pname),
           (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         SamplerID samplerPacked                               = FromGL<SamplerID>(sampler);
@@ -15356,6 +17463,10 @@ void GL_APIENTRY GetSamplerParameterIivContextANGLE(GLeglContext ctx,
             context->getSamplerParameterIiv(samplerPacked, pname, params);
         }
         ANGLE_CAPTURE(GetSamplerParameterIiv, isCallValid, context, samplerPacked, pname, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -15370,7 +17481,7 @@ void GL_APIENTRY GetSamplerParameterIivOESContextANGLE(GLeglContext ctx,
           CID(context), sampler, GLenumToString(GLenumGroup::SamplerParameterName, pname),
           (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         SamplerID samplerPacked                               = FromGL<SamplerID>(sampler);
@@ -15384,6 +17495,10 @@ void GL_APIENTRY GetSamplerParameterIivOESContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(GetSamplerParameterIivOES, isCallValid, context, samplerPacked, pname,
                       params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -15399,7 +17514,7 @@ void GL_APIENTRY GetSamplerParameterIuivContextANGLE(GLeglContext ctx,
           CID(context), sampler, GLenumToString(GLenumGroup::SamplerParameterName, pname),
           (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         SamplerID samplerPacked                               = FromGL<SamplerID>(sampler);
@@ -15411,6 +17526,10 @@ void GL_APIENTRY GetSamplerParameterIuivContextANGLE(GLeglContext ctx,
             context->getSamplerParameterIuiv(samplerPacked, pname, params);
         }
         ANGLE_CAPTURE(GetSamplerParameterIuiv, isCallValid, context, samplerPacked, pname, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -15426,7 +17545,7 @@ void GL_APIENTRY GetSamplerParameterIuivOESContextANGLE(GLeglContext ctx,
           CID(context), sampler, GLenumToString(GLenumGroup::SamplerParameterName, pname),
           (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         SamplerID samplerPacked                               = FromGL<SamplerID>(sampler);
@@ -15440,6 +17559,10 @@ void GL_APIENTRY GetSamplerParameterIuivOESContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(GetSamplerParameterIuivOES, isCallValid, context, samplerPacked, pname,
                       params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -15455,7 +17578,7 @@ void GL_APIENTRY GetSamplerParameterfvContextANGLE(GLeglContext ctx,
           CID(context), sampler, GLenumToString(GLenumGroup::SamplerParameterName, pname),
           (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         SamplerID samplerPacked                               = FromGL<SamplerID>(sampler);
@@ -15467,6 +17590,10 @@ void GL_APIENTRY GetSamplerParameterfvContextANGLE(GLeglContext ctx,
             context->getSamplerParameterfv(samplerPacked, pname, params);
         }
         ANGLE_CAPTURE(GetSamplerParameterfv, isCallValid, context, samplerPacked, pname, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -15481,7 +17608,7 @@ void GL_APIENTRY GetSamplerParameterivContextANGLE(GLeglContext ctx,
           CID(context), sampler, GLenumToString(GLenumGroup::SamplerParameterName, pname),
           (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         SamplerID samplerPacked                               = FromGL<SamplerID>(sampler);
@@ -15493,6 +17620,10 @@ void GL_APIENTRY GetSamplerParameterivContextANGLE(GLeglContext ctx,
             context->getSamplerParameteriv(samplerPacked, pname, params);
         }
         ANGLE_CAPTURE(GetSamplerParameteriv, isCallValid, context, samplerPacked, pname, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -15509,7 +17640,7 @@ void GL_APIENTRY GetSemaphoreParameterui64vEXTContextANGLE(GLeglContext ctx,
         CID(context), semaphore, GLenumToString(GLenumGroup::SemaphoreParameterName, pname),
         (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         SemaphoreID semaphorePacked                           = FromGL<SemaphoreID>(semaphore);
@@ -15523,6 +17654,10 @@ void GL_APIENTRY GetSemaphoreParameterui64vEXTContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(GetSemaphoreParameterui64vEXT, isCallValid, context, semaphorePacked, pname,
                       params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -15538,7 +17673,7 @@ void GL_APIENTRY GetShaderInfoLogContextANGLE(GLeglContext ctx,
           ", GLchar *infoLog = 0x%016" PRIxPTR "",
           CID(context), shader, bufSize, (uintptr_t)length, (uintptr_t)infoLog);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID shaderPacked                          = FromGL<ShaderProgramID>(shader);
@@ -15552,6 +17687,10 @@ void GL_APIENTRY GetShaderInfoLogContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(GetShaderInfoLog, isCallValid, context, shaderPacked, bufSize, length,
                       infoLog);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -15569,7 +17708,7 @@ void GL_APIENTRY GetShaderPrecisionFormatContextANGLE(GLeglContext ctx,
           GLenumToString(GLenumGroup::PrecisionType, precisiontype), (uintptr_t)range,
           (uintptr_t)precision);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -15582,6 +17721,10 @@ void GL_APIENTRY GetShaderPrecisionFormatContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(GetShaderPrecisionFormat, isCallValid, context, shadertype, precisiontype,
                       range, precision);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -15597,7 +17740,7 @@ void GL_APIENTRY GetShaderSourceContextANGLE(GLeglContext ctx,
           ", GLchar *source = 0x%016" PRIxPTR "",
           CID(context), shader, bufSize, (uintptr_t)length, (uintptr_t)source);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID shaderPacked                          = FromGL<ShaderProgramID>(shader);
@@ -15610,6 +17753,10 @@ void GL_APIENTRY GetShaderSourceContextANGLE(GLeglContext ctx,
             context->getShaderSource(shaderPacked, bufSize, length, source);
         }
         ANGLE_CAPTURE(GetShaderSource, isCallValid, context, shaderPacked, bufSize, length, source);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -15637,6 +17784,8 @@ void GL_APIENTRY GetShaderivContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(GetShaderiv, isCallValid, context, shaderPacked, pname, params);
     }
+    else
+    {}
 }
 
 const GLubyte *GL_APIENTRY GetStringContextANGLE(GLeglContext ctx, GLenum name)
@@ -15646,7 +17795,7 @@ const GLubyte *GL_APIENTRY GetStringContextANGLE(GLeglContext ctx, GLenum name)
           CID(context), GLenumToString(GLenumGroup::StringName, name));
 
     const GLubyte *returnValue;
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -15663,6 +17812,7 @@ const GLubyte *GL_APIENTRY GetStringContextANGLE(GLeglContext ctx, GLenum name)
     }
     else
     {
+        GenerateContextLostErrorOnContext(context);
         returnValue = GetDefaultReturnValue<EntryPoint::GetString, const GLubyte *>();
     }
     return returnValue;
@@ -15676,7 +17826,7 @@ const GLubyte *GL_APIENTRY GetStringiContextANGLE(GLeglContext ctx, GLenum name,
           GLenumToString(GLenumGroup::StringName, name), index);
 
     const GLubyte *returnValue;
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -15693,6 +17843,7 @@ const GLubyte *GL_APIENTRY GetStringiContextANGLE(GLeglContext ctx, GLenum name,
     }
     else
     {
+        GenerateContextLostErrorOnContext(context);
         returnValue = GetDefaultReturnValue<EntryPoint::GetStringi, const GLubyte *>();
     }
     return returnValue;
@@ -15725,6 +17876,8 @@ void GL_APIENTRY GetSyncivContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(GetSynciv, isCallValid, context, sync, pname, bufSize, length, values);
     }
+    else
+    {}
 }
 
 void GL_APIENTRY GetTexEnvfvContextANGLE(GLeglContext ctx,
@@ -15739,7 +17892,7 @@ void GL_APIENTRY GetTexEnvfvContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::TextureEnvTarget, target),
           GLenumToString(GLenumGroup::TextureEnvParameter, pname), (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureEnvTarget targetPacked                         = FromGL<TextureEnvTarget>(target);
@@ -15752,6 +17905,10 @@ void GL_APIENTRY GetTexEnvfvContextANGLE(GLeglContext ctx,
             context->getTexEnvfv(targetPacked, pnamePacked, params);
         }
         ANGLE_CAPTURE(GetTexEnvfv, isCallValid, context, targetPacked, pnamePacked, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -15766,7 +17923,7 @@ void GL_APIENTRY GetTexEnvivContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::TextureEnvTarget, target),
           GLenumToString(GLenumGroup::TextureEnvParameter, pname), (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureEnvTarget targetPacked                         = FromGL<TextureEnvTarget>(target);
@@ -15779,6 +17936,10 @@ void GL_APIENTRY GetTexEnvivContextANGLE(GLeglContext ctx,
             context->getTexEnviv(targetPacked, pnamePacked, params);
         }
         ANGLE_CAPTURE(GetTexEnviv, isCallValid, context, targetPacked, pnamePacked, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -15794,7 +17955,7 @@ void GL_APIENTRY GetTexEnvxvContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::TextureEnvTarget, target),
           GLenumToString(GLenumGroup::TextureEnvParameter, pname), (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureEnvTarget targetPacked                         = FromGL<TextureEnvTarget>(target);
@@ -15807,6 +17968,10 @@ void GL_APIENTRY GetTexEnvxvContextANGLE(GLeglContext ctx,
             context->getTexEnvxv(targetPacked, pnamePacked, params);
         }
         ANGLE_CAPTURE(GetTexEnvxv, isCallValid, context, targetPacked, pnamePacked, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -15821,7 +17986,7 @@ void GL_APIENTRY GetTexGenfvOESContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::TextureCoordName, coord),
           GLenumToString(GLenumGroup::TextureGenParameter, pname), (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -15832,6 +17997,10 @@ void GL_APIENTRY GetTexGenfvOESContextANGLE(GLeglContext ctx,
             context->getTexGenfv(coord, pname, params);
         }
         ANGLE_CAPTURE(GetTexGenfvOES, isCallValid, context, coord, pname, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -15846,7 +18015,7 @@ void GL_APIENTRY GetTexGenivOESContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::TextureCoordName, coord),
           GLenumToString(GLenumGroup::TextureGenParameter, pname), (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -15857,6 +18026,10 @@ void GL_APIENTRY GetTexGenivOESContextANGLE(GLeglContext ctx,
             context->getTexGeniv(coord, pname, params);
         }
         ANGLE_CAPTURE(GetTexGenivOES, isCallValid, context, coord, pname, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -15871,7 +18044,7 @@ void GL_APIENTRY GetTexGenxvOESContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::TextureCoordName, coord),
           GLenumToString(GLenumGroup::TextureGenParameter, pname), (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -15882,6 +18055,10 @@ void GL_APIENTRY GetTexGenxvOESContextANGLE(GLeglContext ctx,
             context->getTexGenxv(coord, pname, params);
         }
         ANGLE_CAPTURE(GetTexGenxvOES, isCallValid, context, coord, pname, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -15898,7 +18075,7 @@ void GL_APIENTRY GetTexLevelParameterfvContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::TextureTarget, target), level,
           GLenumToString(GLenumGroup::GetTextureParameter, pname), (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureTarget targetPacked                            = FromGL<TextureTarget>(target);
@@ -15912,6 +18089,10 @@ void GL_APIENTRY GetTexLevelParameterfvContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(GetTexLevelParameterfv, isCallValid, context, targetPacked, level, pname,
                       params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -15928,7 +18109,7 @@ void GL_APIENTRY GetTexLevelParameterivContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::TextureTarget, target), level,
           GLenumToString(GLenumGroup::GetTextureParameter, pname), (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureTarget targetPacked                            = FromGL<TextureTarget>(target);
@@ -15943,6 +18124,10 @@ void GL_APIENTRY GetTexLevelParameterivContextANGLE(GLeglContext ctx,
         ANGLE_CAPTURE(GetTexLevelParameteriv, isCallValid, context, targetPacked, level, pname,
                       params);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY GetTexParameterIivContextANGLE(GLeglContext ctx,
@@ -15956,7 +18141,7 @@ void GL_APIENTRY GetTexParameterIivContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::TextureTarget, target),
           GLenumToString(GLenumGroup::GetTextureParameter, pname), (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureType targetPacked                              = FromGL<TextureType>(target);
@@ -15968,6 +18153,10 @@ void GL_APIENTRY GetTexParameterIivContextANGLE(GLeglContext ctx,
             context->getTexParameterIiv(targetPacked, pname, params);
         }
         ANGLE_CAPTURE(GetTexParameterIiv, isCallValid, context, targetPacked, pname, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -15982,7 +18171,7 @@ void GL_APIENTRY GetTexParameterIivOESContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::TextureTarget, target),
           GLenumToString(GLenumGroup::GetTextureParameter, pname), (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureType targetPacked                              = FromGL<TextureType>(target);
@@ -15994,6 +18183,10 @@ void GL_APIENTRY GetTexParameterIivOESContextANGLE(GLeglContext ctx,
             context->getTexParameterIiv(targetPacked, pname, params);
         }
         ANGLE_CAPTURE(GetTexParameterIivOES, isCallValid, context, targetPacked, pname, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -16008,7 +18201,7 @@ void GL_APIENTRY GetTexParameterIuivContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::TextureTarget, target),
           GLenumToString(GLenumGroup::GetTextureParameter, pname), (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureType targetPacked                              = FromGL<TextureType>(target);
@@ -16020,6 +18213,10 @@ void GL_APIENTRY GetTexParameterIuivContextANGLE(GLeglContext ctx,
             context->getTexParameterIuiv(targetPacked, pname, params);
         }
         ANGLE_CAPTURE(GetTexParameterIuiv, isCallValid, context, targetPacked, pname, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -16034,7 +18231,7 @@ void GL_APIENTRY GetTexParameterIuivOESContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::TextureTarget, target),
           GLenumToString(GLenumGroup::GetTextureParameter, pname), (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureType targetPacked                              = FromGL<TextureType>(target);
@@ -16046,6 +18243,10 @@ void GL_APIENTRY GetTexParameterIuivOESContextANGLE(GLeglContext ctx,
             context->getTexParameterIuiv(targetPacked, pname, params);
         }
         ANGLE_CAPTURE(GetTexParameterIuivOES, isCallValid, context, targetPacked, pname, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -16061,7 +18262,7 @@ void GL_APIENTRY GetTexParameterfvContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::TextureTarget, target),
           GLenumToString(GLenumGroup::GetTextureParameter, pname), (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureType targetPacked                              = FromGL<TextureType>(target);
@@ -16073,6 +18274,10 @@ void GL_APIENTRY GetTexParameterfvContextANGLE(GLeglContext ctx,
             context->getTexParameterfv(targetPacked, pname, params);
         }
         ANGLE_CAPTURE(GetTexParameterfv, isCallValid, context, targetPacked, pname, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -16087,7 +18292,7 @@ void GL_APIENTRY GetTexParameterivContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::TextureTarget, target),
           GLenumToString(GLenumGroup::GetTextureParameter, pname), (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureType targetPacked                              = FromGL<TextureType>(target);
@@ -16099,6 +18304,10 @@ void GL_APIENTRY GetTexParameterivContextANGLE(GLeglContext ctx,
             context->getTexParameteriv(targetPacked, pname, params);
         }
         ANGLE_CAPTURE(GetTexParameteriv, isCallValid, context, targetPacked, pname, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -16114,7 +18323,7 @@ void GL_APIENTRY GetTexParameterxvContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::TextureTarget, target),
           GLenumToString(GLenumGroup::GetTextureParameter, pname), (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureType targetPacked                              = FromGL<TextureType>(target);
@@ -16126,6 +18335,10 @@ void GL_APIENTRY GetTexParameterxvContextANGLE(GLeglContext ctx,
             context->getTexParameterxv(targetPacked, pname, params);
         }
         ANGLE_CAPTURE(GetTexParameterxv, isCallValid, context, targetPacked, pname, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -16146,7 +18359,7 @@ void GL_APIENTRY GetTransformFeedbackVaryingContextANGLE(GLeglContext ctx,
           CID(context), program, index, bufSize, (uintptr_t)length, (uintptr_t)size,
           (uintptr_t)type, (uintptr_t)name);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID programPacked                         = FromGL<ShaderProgramID>(program);
@@ -16161,6 +18374,10 @@ void GL_APIENTRY GetTransformFeedbackVaryingContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(GetTransformFeedbackVarying, isCallValid, context, programPacked, index,
                       bufSize, length, size, type, name);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -16177,7 +18394,7 @@ void GL_APIENTRY GetTranslatedShaderSourceANGLEContextANGLE(GLeglContext ctx,
           ", GLchar *source = 0x%016" PRIxPTR "",
           CID(context), shader, bufsize, (uintptr_t)length, (uintptr_t)source);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID shaderPacked                          = FromGL<ShaderProgramID>(shader);
@@ -16192,6 +18409,10 @@ void GL_APIENTRY GetTranslatedShaderSourceANGLEContextANGLE(GLeglContext ctx,
         ANGLE_CAPTURE(GetTranslatedShaderSourceANGLE, isCallValid, context, shaderPacked, bufsize,
                       length, source);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 GLuint GL_APIENTRY GetUniformBlockIndexContextANGLE(GLeglContext ctx,
@@ -16204,7 +18425,7 @@ GLuint GL_APIENTRY GetUniformBlockIndexContextANGLE(GLeglContext ctx,
           CID(context), program, (uintptr_t)uniformBlockName);
 
     GLuint returnValue;
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID programPacked                         = FromGL<ShaderProgramID>(program);
@@ -16224,6 +18445,7 @@ GLuint GL_APIENTRY GetUniformBlockIndexContextANGLE(GLeglContext ctx,
     }
     else
     {
+        GenerateContextLostErrorOnContext(context);
         returnValue = GetDefaultReturnValue<EntryPoint::GetUniformBlockIndex, GLuint>();
     }
     return returnValue;
@@ -16241,7 +18463,7 @@ void GL_APIENTRY GetUniformIndicesContextANGLE(GLeglContext ctx,
           "*const*uniformNames = 0x%016" PRIxPTR ", GLuint *uniformIndices = 0x%016" PRIxPTR "",
           CID(context), program, uniformCount, (uintptr_t)uniformNames, (uintptr_t)uniformIndices);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID programPacked                         = FromGL<ShaderProgramID>(program);
@@ -16256,6 +18478,10 @@ void GL_APIENTRY GetUniformIndicesContextANGLE(GLeglContext ctx,
         ANGLE_CAPTURE(GetUniformIndices, isCallValid, context, programPacked, uniformCount,
                       uniformNames, uniformIndices);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 GLint GL_APIENTRY GetUniformLocationContextANGLE(GLeglContext ctx,
@@ -16268,7 +18494,7 @@ GLint GL_APIENTRY GetUniformLocationContextANGLE(GLeglContext ctx,
           program, (uintptr_t)name);
 
     GLint returnValue;
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID programPacked                         = FromGL<ShaderProgramID>(program);
@@ -16287,6 +18513,7 @@ GLint GL_APIENTRY GetUniformLocationContextANGLE(GLeglContext ctx,
     }
     else
     {
+        GenerateContextLostErrorOnContext(context);
         returnValue = GetDefaultReturnValue<EntryPoint::GetUniformLocation, GLint>();
     }
     return returnValue;
@@ -16303,7 +18530,7 @@ void GL_APIENTRY GetUniformfvContextANGLE(GLeglContext ctx,
           "",
           CID(context), program, location, (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID programPacked                         = FromGL<ShaderProgramID>(program);
@@ -16316,6 +18543,10 @@ void GL_APIENTRY GetUniformfvContextANGLE(GLeglContext ctx,
             context->getUniformfv(programPacked, locationPacked, params);
         }
         ANGLE_CAPTURE(GetUniformfv, isCallValid, context, programPacked, locationPacked, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -16330,7 +18561,7 @@ void GL_APIENTRY GetUniformivContextANGLE(GLeglContext ctx,
           "",
           CID(context), program, location, (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID programPacked                         = FromGL<ShaderProgramID>(program);
@@ -16343,6 +18574,10 @@ void GL_APIENTRY GetUniformivContextANGLE(GLeglContext ctx,
             context->getUniformiv(programPacked, locationPacked, params);
         }
         ANGLE_CAPTURE(GetUniformiv, isCallValid, context, programPacked, locationPacked, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -16357,7 +18592,7 @@ void GL_APIENTRY GetUniformuivContextANGLE(GLeglContext ctx,
           "",
           CID(context), program, location, (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID programPacked                         = FromGL<ShaderProgramID>(program);
@@ -16371,6 +18606,10 @@ void GL_APIENTRY GetUniformuivContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(GetUniformuiv, isCallValid, context, programPacked, locationPacked, params);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY GetUnsignedBytevEXTContextANGLE(GLeglContext ctx, GLenum pname, GLubyte *data)
@@ -16380,7 +18619,7 @@ void GL_APIENTRY GetUnsignedBytevEXTContextANGLE(GLeglContext ctx, GLenum pname,
           "context = %d, GLenum pname = %s, GLubyte *data = 0x%016" PRIxPTR "", CID(context),
           GLenumToString(GLenumGroup::GetPName, pname), (uintptr_t)data);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -16391,6 +18630,10 @@ void GL_APIENTRY GetUnsignedBytevEXTContextANGLE(GLeglContext ctx, GLenum pname,
             context->getUnsignedBytev(pname, data);
         }
         ANGLE_CAPTURE(GetUnsignedBytevEXT, isCallValid, context, pname, data);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -16404,7 +18647,7 @@ void GL_APIENTRY GetUnsignedBytei_vEXTContextANGLE(GLeglContext ctx,
           "context = %d, GLenum target = %s, GLuint index = %u, GLubyte *data = 0x%016" PRIxPTR "",
           CID(context), GLenumToString(GLenumGroup::DefaultGroup, target), index, (uintptr_t)data);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -16415,6 +18658,10 @@ void GL_APIENTRY GetUnsignedBytei_vEXTContextANGLE(GLeglContext ctx,
             context->getUnsignedBytei_v(target, index, data);
         }
         ANGLE_CAPTURE(GetUnsignedBytei_vEXT, isCallValid, context, target, index, data);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -16429,7 +18676,7 @@ void GL_APIENTRY GetVertexAttribIivContextANGLE(GLeglContext ctx,
           CID(context), index, GLenumToString(GLenumGroup::VertexAttribEnum, pname),
           (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -16440,6 +18687,10 @@ void GL_APIENTRY GetVertexAttribIivContextANGLE(GLeglContext ctx,
             context->getVertexAttribIiv(index, pname, params);
         }
         ANGLE_CAPTURE(GetVertexAttribIiv, isCallValid, context, index, pname, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -16454,7 +18705,7 @@ void GL_APIENTRY GetVertexAttribIuivContextANGLE(GLeglContext ctx,
           CID(context), index, GLenumToString(GLenumGroup::VertexAttribEnum, pname),
           (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -16465,6 +18716,10 @@ void GL_APIENTRY GetVertexAttribIuivContextANGLE(GLeglContext ctx,
             context->getVertexAttribIuiv(index, pname, params);
         }
         ANGLE_CAPTURE(GetVertexAttribIuiv, isCallValid, context, index, pname, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -16479,7 +18734,7 @@ void GL_APIENTRY GetVertexAttribPointervContextANGLE(GLeglContext ctx,
           CID(context), index, GLenumToString(GLenumGroup::DefaultGroup, pname),
           (uintptr_t)pointer);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -16490,6 +18745,10 @@ void GL_APIENTRY GetVertexAttribPointervContextANGLE(GLeglContext ctx,
             context->getVertexAttribPointerv(index, pname, pointer);
         }
         ANGLE_CAPTURE(GetVertexAttribPointerv, isCallValid, context, index, pname, pointer);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -16503,7 +18762,7 @@ void GL_APIENTRY GetVertexAttribfvContextANGLE(GLeglContext ctx,
           "context = %d, GLuint index = %u, GLenum pname = %s, GLfloat *params = 0x%016" PRIxPTR "",
           CID(context), index, GLenumToString(GLenumGroup::DefaultGroup, pname), (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -16514,6 +18773,10 @@ void GL_APIENTRY GetVertexAttribfvContextANGLE(GLeglContext ctx,
             context->getVertexAttribfv(index, pname, params);
         }
         ANGLE_CAPTURE(GetVertexAttribfv, isCallValid, context, index, pname, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -16527,7 +18790,7 @@ void GL_APIENTRY GetVertexAttribivContextANGLE(GLeglContext ctx,
           "context = %d, GLuint index = %u, GLenum pname = %s, GLint *params = 0x%016" PRIxPTR "",
           CID(context), index, GLenumToString(GLenumGroup::DefaultGroup, pname), (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -16538,6 +18801,10 @@ void GL_APIENTRY GetVertexAttribivContextANGLE(GLeglContext ctx,
             context->getVertexAttribiv(index, pname, params);
         }
         ANGLE_CAPTURE(GetVertexAttribiv, isCallValid, context, index, pname, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -16553,7 +18820,7 @@ void GL_APIENTRY GetnUniformfvContextANGLE(GLeglContext ctx,
           "*params = 0x%016" PRIxPTR "",
           CID(context), program, location, bufSize, (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID programPacked                         = FromGL<ShaderProgramID>(program);
@@ -16569,6 +18836,10 @@ void GL_APIENTRY GetnUniformfvContextANGLE(GLeglContext ctx,
         ANGLE_CAPTURE(GetnUniformfv, isCallValid, context, programPacked, locationPacked, bufSize,
                       params);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY GetnUniformfvEXTContextANGLE(GLeglContext ctx,
@@ -16583,7 +18854,7 @@ void GL_APIENTRY GetnUniformfvEXTContextANGLE(GLeglContext ctx,
           "*params = 0x%016" PRIxPTR "",
           CID(context), program, location, bufSize, (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID programPacked                         = FromGL<ShaderProgramID>(program);
@@ -16599,6 +18870,10 @@ void GL_APIENTRY GetnUniformfvEXTContextANGLE(GLeglContext ctx,
         ANGLE_CAPTURE(GetnUniformfvEXT, isCallValid, context, programPacked, locationPacked,
                       bufSize, params);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY GetnUniformivContextANGLE(GLeglContext ctx,
@@ -16613,7 +18888,7 @@ void GL_APIENTRY GetnUniformivContextANGLE(GLeglContext ctx,
           "*params = 0x%016" PRIxPTR "",
           CID(context), program, location, bufSize, (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID programPacked                         = FromGL<ShaderProgramID>(program);
@@ -16629,6 +18904,10 @@ void GL_APIENTRY GetnUniformivContextANGLE(GLeglContext ctx,
         ANGLE_CAPTURE(GetnUniformiv, isCallValid, context, programPacked, locationPacked, bufSize,
                       params);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY GetnUniformivEXTContextANGLE(GLeglContext ctx,
@@ -16643,7 +18922,7 @@ void GL_APIENTRY GetnUniformivEXTContextANGLE(GLeglContext ctx,
           "*params = 0x%016" PRIxPTR "",
           CID(context), program, location, bufSize, (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID programPacked                         = FromGL<ShaderProgramID>(program);
@@ -16659,6 +18938,10 @@ void GL_APIENTRY GetnUniformivEXTContextANGLE(GLeglContext ctx,
         ANGLE_CAPTURE(GetnUniformivEXT, isCallValid, context, programPacked, locationPacked,
                       bufSize, params);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY GetnUniformuivContextANGLE(GLeglContext ctx,
@@ -16673,7 +18956,7 @@ void GL_APIENTRY GetnUniformuivContextANGLE(GLeglContext ctx,
           "*params = 0x%016" PRIxPTR "",
           CID(context), program, location, bufSize, (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID programPacked                         = FromGL<ShaderProgramID>(program);
@@ -16689,6 +18972,10 @@ void GL_APIENTRY GetnUniformuivContextANGLE(GLeglContext ctx,
         ANGLE_CAPTURE(GetnUniformuiv, isCallValid, context, programPacked, locationPacked, bufSize,
                       params);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY HintContextANGLE(GLeglContext ctx, GLenum target, GLenum mode)
@@ -16699,7 +18986,7 @@ void GL_APIENTRY HintContextANGLE(GLeglContext ctx, GLenum target, GLenum mode)
           GLenumToString(GLenumGroup::HintTarget, target),
           GLenumToString(GLenumGroup::HintMode, mode));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -16709,6 +18996,10 @@ void GL_APIENTRY HintContextANGLE(GLeglContext ctx, GLenum target, GLenum mode)
             context->hint(target, mode);
         }
         ANGLE_CAPTURE(Hint, isCallValid, context, target, mode);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -16725,7 +19016,7 @@ void GL_APIENTRY ImportMemoryFdEXTContextANGLE(GLeglContext ctx,
           CID(context), memory, static_cast<unsigned long long>(size),
           GLenumToString(GLenumGroup::ExternalHandleType, handleType), fd);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         MemoryObjectID memoryPacked                           = FromGL<MemoryObjectID>(memory);
@@ -16741,6 +19032,10 @@ void GL_APIENTRY ImportMemoryFdEXTContextANGLE(GLeglContext ctx,
         ANGLE_CAPTURE(ImportMemoryFdEXT, isCallValid, context, memoryPacked, size, handleTypePacked,
                       fd);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY ImportSemaphoreFdEXTContextANGLE(GLeglContext ctx,
@@ -16753,7 +19048,7 @@ void GL_APIENTRY ImportSemaphoreFdEXTContextANGLE(GLeglContext ctx,
           "context = %d, GLuint semaphore = %u, GLenum handleType = %s, GLint fd = %d",
           CID(context), semaphore, GLenumToString(GLenumGroup::ExternalHandleType, handleType), fd);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         SemaphoreID semaphorePacked                           = FromGL<SemaphoreID>(semaphore);
@@ -16769,6 +19064,10 @@ void GL_APIENTRY ImportSemaphoreFdEXTContextANGLE(GLeglContext ctx,
         ANGLE_CAPTURE(ImportSemaphoreFdEXT, isCallValid, context, semaphorePacked, handleTypePacked,
                       fd);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY InsertEventMarkerEXTContextANGLE(GLeglContext ctx,
@@ -16782,7 +19081,7 @@ void GL_APIENTRY InsertEventMarkerEXTContextANGLE(GLeglContext ctx,
     // GLsizei length = %d, const GLchar *marker = 0x%016" PRIxPTR "", CID(context), length,
     // (uintptr_t)marker);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -16793,6 +19092,10 @@ void GL_APIENTRY InsertEventMarkerEXTContextANGLE(GLeglContext ctx,
             context->insertEventMarker(length, marker);
         }
         ANGLE_CAPTURE(InsertEventMarkerEXT, isCallValid, context, length, marker);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -16808,7 +19111,7 @@ void GL_APIENTRY InvalidateFramebufferContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::FramebufferTarget, target), numAttachments,
           (uintptr_t)attachments);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -16821,6 +19124,10 @@ void GL_APIENTRY InvalidateFramebufferContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(InvalidateFramebuffer, isCallValid, context, target, numAttachments,
                       attachments);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -16841,7 +19148,7 @@ void GL_APIENTRY InvalidateSubFramebufferContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::DefaultGroup, target), numAttachments,
           (uintptr_t)attachments, x, y, width, height);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -16856,6 +19163,10 @@ void GL_APIENTRY InvalidateSubFramebufferContextANGLE(GLeglContext ctx,
         ANGLE_CAPTURE(InvalidateSubFramebuffer, isCallValid, context, target, numAttachments,
                       attachments, x, y, width, height);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 GLboolean GL_APIENTRY IsBufferContextANGLE(GLeglContext ctx, GLuint buffer)
@@ -16865,7 +19176,7 @@ GLboolean GL_APIENTRY IsBufferContextANGLE(GLeglContext ctx, GLuint buffer)
           CID(context), buffer);
 
     GLboolean returnValue;
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         BufferID bufferPacked                                 = FromGL<BufferID>(buffer);
@@ -16883,6 +19194,7 @@ GLboolean GL_APIENTRY IsBufferContextANGLE(GLeglContext ctx, GLuint buffer)
     }
     else
     {
+        GenerateContextLostErrorOnContext(context);
         returnValue = GetDefaultReturnValue<EntryPoint::IsBuffer, GLboolean>();
     }
     return returnValue;
@@ -16895,7 +19207,7 @@ GLboolean GL_APIENTRY IsEnabledContextANGLE(GLeglContext ctx, GLenum cap)
           CID(context), GLenumToString(GLenumGroup::EnableCap, cap));
 
     GLboolean returnValue;
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -16912,6 +19224,7 @@ GLboolean GL_APIENTRY IsEnabledContextANGLE(GLeglContext ctx, GLenum cap)
     }
     else
     {
+        GenerateContextLostErrorOnContext(context);
         returnValue = GetDefaultReturnValue<EntryPoint::IsEnabled, GLboolean>();
     }
     return returnValue;
@@ -16925,7 +19238,7 @@ GLboolean GL_APIENTRY IsEnablediContextANGLE(GLeglContext ctx, GLenum target, GL
           GLenumToString(GLenumGroup::EnableCap, target), index);
 
     GLboolean returnValue;
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -16943,6 +19256,7 @@ GLboolean GL_APIENTRY IsEnablediContextANGLE(GLeglContext ctx, GLenum target, GL
     }
     else
     {
+        GenerateContextLostErrorOnContext(context);
         returnValue = GetDefaultReturnValue<EntryPoint::IsEnabledi, GLboolean>();
     }
     return returnValue;
@@ -16956,7 +19270,7 @@ GLboolean GL_APIENTRY IsEnablediEXTContextANGLE(GLeglContext ctx, GLenum target,
           GLenumToString(GLenumGroup::EnableCap, target), index);
 
     GLboolean returnValue;
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -16974,6 +19288,7 @@ GLboolean GL_APIENTRY IsEnablediEXTContextANGLE(GLeglContext ctx, GLenum target,
     }
     else
     {
+        GenerateContextLostErrorOnContext(context);
         returnValue = GetDefaultReturnValue<EntryPoint::IsEnablediEXT, GLboolean>();
     }
     return returnValue;
@@ -16987,7 +19302,7 @@ GLboolean GL_APIENTRY IsEnablediOESContextANGLE(GLeglContext ctx, GLenum target,
           GLenumToString(GLenumGroup::EnableCap, target), index);
 
     GLboolean returnValue;
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -17005,6 +19320,7 @@ GLboolean GL_APIENTRY IsEnablediOESContextANGLE(GLeglContext ctx, GLenum target,
     }
     else
     {
+        GenerateContextLostErrorOnContext(context);
         returnValue = GetDefaultReturnValue<EntryPoint::IsEnablediOES, GLboolean>();
     }
     return returnValue;
@@ -17017,7 +19333,7 @@ GLboolean GL_APIENTRY IsFenceNVContextANGLE(GLeglContext ctx, GLuint fence)
           CID(context), fence);
 
     GLboolean returnValue;
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         FenceNVID fencePacked                                 = FromGL<FenceNVID>(fence);
@@ -17035,6 +19351,7 @@ GLboolean GL_APIENTRY IsFenceNVContextANGLE(GLeglContext ctx, GLuint fence)
     }
     else
     {
+        GenerateContextLostErrorOnContext(context);
         returnValue = GetDefaultReturnValue<EntryPoint::IsFenceNV, GLboolean>();
     }
     return returnValue;
@@ -17047,7 +19364,7 @@ GLboolean GL_APIENTRY IsFramebufferContextANGLE(GLeglContext ctx, GLuint framebu
           "context = %d, GLuint framebuffer = %u", CID(context), framebuffer);
 
     GLboolean returnValue;
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         FramebufferID framebufferPacked                       = FromGL<FramebufferID>(framebuffer);
@@ -17066,6 +19383,7 @@ GLboolean GL_APIENTRY IsFramebufferContextANGLE(GLeglContext ctx, GLuint framebu
     }
     else
     {
+        GenerateContextLostErrorOnContext(context);
         returnValue = GetDefaultReturnValue<EntryPoint::IsFramebuffer, GLboolean>();
     }
     return returnValue;
@@ -17078,7 +19396,7 @@ GLboolean GL_APIENTRY IsFramebufferOESContextANGLE(GLeglContext ctx, GLuint fram
           "context = %d, GLuint framebuffer = %u", CID(context), framebuffer);
 
     GLboolean returnValue;
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         FramebufferID framebufferPacked                       = FromGL<FramebufferID>(framebuffer);
@@ -17097,6 +19415,7 @@ GLboolean GL_APIENTRY IsFramebufferOESContextANGLE(GLeglContext ctx, GLuint fram
     }
     else
     {
+        GenerateContextLostErrorOnContext(context);
         returnValue = GetDefaultReturnValue<EntryPoint::IsFramebufferOES, GLboolean>();
     }
     return returnValue;
@@ -17109,7 +19428,7 @@ GLboolean GL_APIENTRY IsMemoryObjectEXTContextANGLE(GLeglContext ctx, GLuint mem
           "context = %d, GLuint memoryObject = %u", CID(context), memoryObject);
 
     GLboolean returnValue;
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         MemoryObjectID memoryObjectPacked = FromGL<MemoryObjectID>(memoryObject);
@@ -17128,6 +19447,7 @@ GLboolean GL_APIENTRY IsMemoryObjectEXTContextANGLE(GLeglContext ctx, GLuint mem
     }
     else
     {
+        GenerateContextLostErrorOnContext(context);
         returnValue = GetDefaultReturnValue<EntryPoint::IsMemoryObjectEXT, GLboolean>();
     }
     return returnValue;
@@ -17140,7 +19460,7 @@ GLboolean GL_APIENTRY IsProgramContextANGLE(GLeglContext ctx, GLuint program)
           CID(context), program);
 
     GLboolean returnValue;
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID programPacked                         = FromGL<ShaderProgramID>(program);
@@ -17158,6 +19478,7 @@ GLboolean GL_APIENTRY IsProgramContextANGLE(GLeglContext ctx, GLuint program)
     }
     else
     {
+        GenerateContextLostErrorOnContext(context);
         returnValue = GetDefaultReturnValue<EntryPoint::IsProgram, GLboolean>();
     }
     return returnValue;
@@ -17170,7 +19491,7 @@ GLboolean GL_APIENTRY IsProgramPipelineContextANGLE(GLeglContext ctx, GLuint pip
           "context = %d, GLuint pipeline = %u", CID(context), pipeline);
 
     GLboolean returnValue;
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ProgramPipelineID pipelinePacked                      = FromGL<ProgramPipelineID>(pipeline);
@@ -17189,6 +19510,7 @@ GLboolean GL_APIENTRY IsProgramPipelineContextANGLE(GLeglContext ctx, GLuint pip
     }
     else
     {
+        GenerateContextLostErrorOnContext(context);
         returnValue = GetDefaultReturnValue<EntryPoint::IsProgramPipeline, GLboolean>();
     }
     return returnValue;
@@ -17201,7 +19523,7 @@ GLboolean GL_APIENTRY IsQueryContextANGLE(GLeglContext ctx, GLuint id)
           CID(context), id);
 
     GLboolean returnValue;
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         QueryID idPacked                                      = FromGL<QueryID>(id);
@@ -17219,6 +19541,7 @@ GLboolean GL_APIENTRY IsQueryContextANGLE(GLeglContext ctx, GLuint id)
     }
     else
     {
+        GenerateContextLostErrorOnContext(context);
         returnValue = GetDefaultReturnValue<EntryPoint::IsQuery, GLboolean>();
     }
     return returnValue;
@@ -17231,7 +19554,7 @@ GLboolean GL_APIENTRY IsQueryEXTContextANGLE(GLeglContext ctx, GLuint id)
           CID(context), id);
 
     GLboolean returnValue;
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         QueryID idPacked                                      = FromGL<QueryID>(id);
@@ -17249,6 +19572,7 @@ GLboolean GL_APIENTRY IsQueryEXTContextANGLE(GLeglContext ctx, GLuint id)
     }
     else
     {
+        GenerateContextLostErrorOnContext(context);
         returnValue = GetDefaultReturnValue<EntryPoint::IsQueryEXT, GLboolean>();
     }
     return returnValue;
@@ -17261,7 +19585,7 @@ GLboolean GL_APIENTRY IsRenderbufferContextANGLE(GLeglContext ctx, GLuint render
           "context = %d, GLuint renderbuffer = %u", CID(context), renderbuffer);
 
     GLboolean returnValue;
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         RenderbufferID renderbufferPacked = FromGL<RenderbufferID>(renderbuffer);
@@ -17280,6 +19604,7 @@ GLboolean GL_APIENTRY IsRenderbufferContextANGLE(GLeglContext ctx, GLuint render
     }
     else
     {
+        GenerateContextLostErrorOnContext(context);
         returnValue = GetDefaultReturnValue<EntryPoint::IsRenderbuffer, GLboolean>();
     }
     return returnValue;
@@ -17292,7 +19617,7 @@ GLboolean GL_APIENTRY IsRenderbufferOESContextANGLE(GLeglContext ctx, GLuint ren
           "context = %d, GLuint renderbuffer = %u", CID(context), renderbuffer);
 
     GLboolean returnValue;
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         RenderbufferID renderbufferPacked = FromGL<RenderbufferID>(renderbuffer);
@@ -17311,6 +19636,7 @@ GLboolean GL_APIENTRY IsRenderbufferOESContextANGLE(GLeglContext ctx, GLuint ren
     }
     else
     {
+        GenerateContextLostErrorOnContext(context);
         returnValue = GetDefaultReturnValue<EntryPoint::IsRenderbufferOES, GLboolean>();
     }
     return returnValue;
@@ -17323,7 +19649,7 @@ GLboolean GL_APIENTRY IsSemaphoreEXTContextANGLE(GLeglContext ctx, GLuint semaph
           "context = %d, GLuint semaphore = %u", CID(context), semaphore);
 
     GLboolean returnValue;
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         SemaphoreID semaphorePacked                           = FromGL<SemaphoreID>(semaphore);
@@ -17342,6 +19668,7 @@ GLboolean GL_APIENTRY IsSemaphoreEXTContextANGLE(GLeglContext ctx, GLuint semaph
     }
     else
     {
+        GenerateContextLostErrorOnContext(context);
         returnValue = GetDefaultReturnValue<EntryPoint::IsSemaphoreEXT, GLboolean>();
     }
     return returnValue;
@@ -17354,7 +19681,7 @@ GLboolean GL_APIENTRY IsSamplerContextANGLE(GLeglContext ctx, GLuint sampler)
           CID(context), sampler);
 
     GLboolean returnValue;
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         SamplerID samplerPacked                               = FromGL<SamplerID>(sampler);
@@ -17372,6 +19699,7 @@ GLboolean GL_APIENTRY IsSamplerContextANGLE(GLeglContext ctx, GLuint sampler)
     }
     else
     {
+        GenerateContextLostErrorOnContext(context);
         returnValue = GetDefaultReturnValue<EntryPoint::IsSampler, GLboolean>();
     }
     return returnValue;
@@ -17384,7 +19712,7 @@ GLboolean GL_APIENTRY IsShaderContextANGLE(GLeglContext ctx, GLuint shader)
           CID(context), shader);
 
     GLboolean returnValue;
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID shaderPacked                          = FromGL<ShaderProgramID>(shader);
@@ -17402,6 +19730,7 @@ GLboolean GL_APIENTRY IsShaderContextANGLE(GLeglContext ctx, GLuint shader)
     }
     else
     {
+        GenerateContextLostErrorOnContext(context);
         returnValue = GetDefaultReturnValue<EntryPoint::IsShader, GLboolean>();
     }
     return returnValue;
@@ -17414,7 +19743,7 @@ GLboolean GL_APIENTRY IsSyncContextANGLE(GLeglContext ctx, GLsync sync)
           "context = %d, GLsync sync = 0x%016" PRIxPTR "", CID(context), (uintptr_t)sync);
 
     GLboolean returnValue;
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -17431,6 +19760,7 @@ GLboolean GL_APIENTRY IsSyncContextANGLE(GLeglContext ctx, GLsync sync)
     }
     else
     {
+        GenerateContextLostErrorOnContext(context);
         returnValue = GetDefaultReturnValue<EntryPoint::IsSync, GLboolean>();
     }
     return returnValue;
@@ -17443,7 +19773,7 @@ GLboolean GL_APIENTRY IsTextureContextANGLE(GLeglContext ctx, GLuint texture)
           CID(context), texture);
 
     GLboolean returnValue;
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureID texturePacked                               = FromGL<TextureID>(texture);
@@ -17461,6 +19791,7 @@ GLboolean GL_APIENTRY IsTextureContextANGLE(GLeglContext ctx, GLuint texture)
     }
     else
     {
+        GenerateContextLostErrorOnContext(context);
         returnValue = GetDefaultReturnValue<EntryPoint::IsTexture, GLboolean>();
     }
     return returnValue;
@@ -17473,7 +19804,7 @@ GLboolean GL_APIENTRY IsTransformFeedbackContextANGLE(GLeglContext ctx, GLuint i
           "context = %d, GLuint id = %u", CID(context), id);
 
     GLboolean returnValue;
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TransformFeedbackID idPacked                          = FromGL<TransformFeedbackID>(id);
@@ -17492,6 +19823,7 @@ GLboolean GL_APIENTRY IsTransformFeedbackContextANGLE(GLeglContext ctx, GLuint i
     }
     else
     {
+        GenerateContextLostErrorOnContext(context);
         returnValue = GetDefaultReturnValue<EntryPoint::IsTransformFeedback, GLboolean>();
     }
     return returnValue;
@@ -17504,7 +19836,7 @@ GLboolean GL_APIENTRY IsVertexArrayContextANGLE(GLeglContext ctx, GLuint array)
           "context = %d, GLuint array = %u", CID(context), array);
 
     GLboolean returnValue;
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         VertexArrayID arrayPacked                             = FromGL<VertexArrayID>(array);
@@ -17523,6 +19855,7 @@ GLboolean GL_APIENTRY IsVertexArrayContextANGLE(GLeglContext ctx, GLuint array)
     }
     else
     {
+        GenerateContextLostErrorOnContext(context);
         returnValue = GetDefaultReturnValue<EntryPoint::IsVertexArray, GLboolean>();
     }
     return returnValue;
@@ -17535,7 +19868,7 @@ GLboolean GL_APIENTRY IsVertexArrayOESContextANGLE(GLeglContext ctx, GLuint arra
           "context = %d, GLuint array = %u", CID(context), array);
 
     GLboolean returnValue;
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         VertexArrayID arrayPacked                             = FromGL<VertexArrayID>(array);
@@ -17554,6 +19887,7 @@ GLboolean GL_APIENTRY IsVertexArrayOESContextANGLE(GLeglContext ctx, GLuint arra
     }
     else
     {
+        GenerateContextLostErrorOnContext(context);
         returnValue = GetDefaultReturnValue<EntryPoint::IsVertexArrayOES, GLboolean>();
     }
     return returnValue;
@@ -17566,7 +19900,7 @@ void GL_APIENTRY LightModelfContextANGLE(GLeglContext ctx, GLenum pname, GLfloat
           "context = %d, GLenum pname = %s, GLfloat param = %f", CID(context),
           GLenumToString(GLenumGroup::LightModelParameter, pname), param);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -17578,6 +19912,10 @@ void GL_APIENTRY LightModelfContextANGLE(GLeglContext ctx, GLenum pname, GLfloat
         }
         ANGLE_CAPTURE(LightModelf, isCallValid, context, pname, param);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY LightModelfvContextANGLE(GLeglContext ctx, GLenum pname, const GLfloat *params)
@@ -17587,7 +19925,7 @@ void GL_APIENTRY LightModelfvContextANGLE(GLeglContext ctx, GLenum pname, const 
           "context = %d, GLenum pname = %s, const GLfloat *params = 0x%016" PRIxPTR "",
           CID(context), GLenumToString(GLenumGroup::LightModelParameter, pname), (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -17599,6 +19937,10 @@ void GL_APIENTRY LightModelfvContextANGLE(GLeglContext ctx, GLenum pname, const 
         }
         ANGLE_CAPTURE(LightModelfv, isCallValid, context, pname, params);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY LightModelxContextANGLE(GLeglContext ctx, GLenum pname, GLfixed param)
@@ -17608,7 +19950,7 @@ void GL_APIENTRY LightModelxContextANGLE(GLeglContext ctx, GLenum pname, GLfixed
           "context = %d, GLenum pname = %s, GLfixed param = 0x%X", CID(context),
           GLenumToString(GLenumGroup::LightModelParameter, pname), param);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -17620,6 +19962,10 @@ void GL_APIENTRY LightModelxContextANGLE(GLeglContext ctx, GLenum pname, GLfixed
         }
         ANGLE_CAPTURE(LightModelx, isCallValid, context, pname, param);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY LightModelxvContextANGLE(GLeglContext ctx, GLenum pname, const GLfixed *param)
@@ -17629,7 +19975,7 @@ void GL_APIENTRY LightModelxvContextANGLE(GLeglContext ctx, GLenum pname, const 
           "context = %d, GLenum pname = %s, const GLfixed *param = 0x%016" PRIxPTR "", CID(context),
           GLenumToString(GLenumGroup::LightModelParameter, pname), (uintptr_t)param);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -17641,6 +19987,10 @@ void GL_APIENTRY LightModelxvContextANGLE(GLeglContext ctx, GLenum pname, const 
         }
         ANGLE_CAPTURE(LightModelxv, isCallValid, context, pname, param);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY LightfContextANGLE(GLeglContext ctx, GLenum light, GLenum pname, GLfloat param)
@@ -17651,7 +20001,7 @@ void GL_APIENTRY LightfContextANGLE(GLeglContext ctx, GLenum light, GLenum pname
           GLenumToString(GLenumGroup::LightName, light),
           GLenumToString(GLenumGroup::LightParameter, pname), param);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         LightParameter pnamePacked                            = FromGL<LightParameter>(pname);
@@ -17663,6 +20013,10 @@ void GL_APIENTRY LightfContextANGLE(GLeglContext ctx, GLenum light, GLenum pname
             context->lightf(light, pnamePacked, param);
         }
         ANGLE_CAPTURE(Lightf, isCallValid, context, light, pnamePacked, param);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -17679,7 +20033,7 @@ void GL_APIENTRY LightfvContextANGLE(GLeglContext ctx,
         CID(context), GLenumToString(GLenumGroup::LightName, light),
         GLenumToString(GLenumGroup::LightParameter, pname), (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         LightParameter pnamePacked                            = FromGL<LightParameter>(pname);
@@ -17692,6 +20046,10 @@ void GL_APIENTRY LightfvContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(Lightfv, isCallValid, context, light, pnamePacked, params);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY LightxContextANGLE(GLeglContext ctx, GLenum light, GLenum pname, GLfixed param)
@@ -17702,7 +20060,7 @@ void GL_APIENTRY LightxContextANGLE(GLeglContext ctx, GLenum light, GLenum pname
           GLenumToString(GLenumGroup::LightName, light),
           GLenumToString(GLenumGroup::LightParameter, pname), param);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         LightParameter pnamePacked                            = FromGL<LightParameter>(pname);
@@ -17714,6 +20072,10 @@ void GL_APIENTRY LightxContextANGLE(GLeglContext ctx, GLenum light, GLenum pname
             context->lightx(light, pnamePacked, param);
         }
         ANGLE_CAPTURE(Lightx, isCallValid, context, light, pnamePacked, param);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -17730,7 +20092,7 @@ void GL_APIENTRY LightxvContextANGLE(GLeglContext ctx,
         CID(context), GLenumToString(GLenumGroup::LightName, light),
         GLenumToString(GLenumGroup::LightParameter, pname), (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         LightParameter pnamePacked                            = FromGL<LightParameter>(pname);
@@ -17743,6 +20105,10 @@ void GL_APIENTRY LightxvContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(Lightxv, isCallValid, context, light, pnamePacked, params);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY LineWidthContextANGLE(GLeglContext ctx, GLfloat width)
@@ -17751,7 +20117,7 @@ void GL_APIENTRY LineWidthContextANGLE(GLeglContext ctx, GLfloat width)
     EVENT(context, gl::EntryPoint::LineWidth, "glLineWidth", "context = %d, GLfloat width = %f",
           CID(context), width);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -17762,6 +20128,10 @@ void GL_APIENTRY LineWidthContextANGLE(GLeglContext ctx, GLfloat width)
         }
         ANGLE_CAPTURE(LineWidth, isCallValid, context, width);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY LineWidthxContextANGLE(GLeglContext ctx, GLfixed width)
@@ -17770,7 +20140,7 @@ void GL_APIENTRY LineWidthxContextANGLE(GLeglContext ctx, GLfixed width)
     EVENT(context, gl::EntryPoint::LineWidthx, "glLineWidthx", "context = %d, GLfixed width = 0x%X",
           CID(context), width);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -17781,6 +20151,10 @@ void GL_APIENTRY LineWidthxContextANGLE(GLeglContext ctx, GLfixed width)
         }
         ANGLE_CAPTURE(LineWidthx, isCallValid, context, width);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY LinkProgramContextANGLE(GLeglContext ctx, GLuint program)
@@ -17789,7 +20163,7 @@ void GL_APIENTRY LinkProgramContextANGLE(GLeglContext ctx, GLuint program)
     EVENT(context, gl::EntryPoint::LinkProgram, "glLinkProgram",
           "context = %d, GLuint program = %u", CID(context), program);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID programPacked                         = FromGL<ShaderProgramID>(program);
@@ -17802,6 +20176,10 @@ void GL_APIENTRY LinkProgramContextANGLE(GLeglContext ctx, GLuint program)
         }
         ANGLE_CAPTURE(LinkProgram, isCallValid, context, programPacked);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY LoadIdentityContextANGLE(GLeglContext ctx)
@@ -17809,7 +20187,7 @@ void GL_APIENTRY LoadIdentityContextANGLE(GLeglContext ctx)
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, gl::EntryPoint::LoadIdentity, "glLoadIdentity", "context = %d", CID(context));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -17820,6 +20198,10 @@ void GL_APIENTRY LoadIdentityContextANGLE(GLeglContext ctx)
         }
         ANGLE_CAPTURE(LoadIdentity, isCallValid, context);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY LoadMatrixfContextANGLE(GLeglContext ctx, const GLfloat *m)
@@ -17828,7 +20210,7 @@ void GL_APIENTRY LoadMatrixfContextANGLE(GLeglContext ctx, const GLfloat *m)
     EVENT(context, gl::EntryPoint::LoadMatrixf, "glLoadMatrixf",
           "context = %d, const GLfloat *m = 0x%016" PRIxPTR "", CID(context), (uintptr_t)m);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -17839,6 +20221,10 @@ void GL_APIENTRY LoadMatrixfContextANGLE(GLeglContext ctx, const GLfloat *m)
         }
         ANGLE_CAPTURE(LoadMatrixf, isCallValid, context, m);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY LoadMatrixxContextANGLE(GLeglContext ctx, const GLfixed *m)
@@ -17847,7 +20233,7 @@ void GL_APIENTRY LoadMatrixxContextANGLE(GLeglContext ctx, const GLfixed *m)
     EVENT(context, gl::EntryPoint::LoadMatrixx, "glLoadMatrixx",
           "context = %d, const GLfixed *m = 0x%016" PRIxPTR "", CID(context), (uintptr_t)m);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -17858,6 +20244,10 @@ void GL_APIENTRY LoadMatrixxContextANGLE(GLeglContext ctx, const GLfixed *m)
         }
         ANGLE_CAPTURE(LoadMatrixx, isCallValid, context, m);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY LoadPaletteFromModelViewMatrixOESContextANGLE(GLeglContext ctx)
@@ -17866,7 +20256,7 @@ void GL_APIENTRY LoadPaletteFromModelViewMatrixOESContextANGLE(GLeglContext ctx)
     EVENT(context, gl::EntryPoint::LoadPaletteFromModelViewMatrixOES,
           "glLoadPaletteFromModelViewMatrixOES", "context = %d", CID(context));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -17878,6 +20268,10 @@ void GL_APIENTRY LoadPaletteFromModelViewMatrixOESContextANGLE(GLeglContext ctx)
         }
         ANGLE_CAPTURE(LoadPaletteFromModelViewMatrixOES, isCallValid, context);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY LogicOpContextANGLE(GLeglContext ctx, GLenum opcode)
@@ -17886,7 +20280,7 @@ void GL_APIENTRY LogicOpContextANGLE(GLeglContext ctx, GLenum opcode)
     EVENT(context, gl::EntryPoint::LogicOp, "glLogicOp", "context = %d, GLenum opcode = %s",
           CID(context), GLenumToString(GLenumGroup::LogicOp, opcode));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         LogicalOperation opcodePacked                         = FromGL<LogicalOperation>(opcode);
@@ -17897,6 +20291,10 @@ void GL_APIENTRY LogicOpContextANGLE(GLeglContext ctx, GLenum opcode)
             context->logicOp(opcodePacked);
         }
         ANGLE_CAPTURE(LogicOp, isCallValid, context, opcodePacked);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -17909,7 +20307,7 @@ void *GL_APIENTRY MapBufferOESContextANGLE(GLeglContext ctx, GLenum target, GLen
           GLenumToString(GLenumGroup::BufferAccessARB, access));
 
     void *returnValue;
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         BufferBinding targetPacked                            = FromGL<BufferBinding>(target);
@@ -17928,6 +20326,7 @@ void *GL_APIENTRY MapBufferOESContextANGLE(GLeglContext ctx, GLenum target, GLen
     }
     else
     {
+        GenerateContextLostErrorOnContext(context);
         returnValue = GetDefaultReturnValue<EntryPoint::MapBufferOES, void *>();
     }
     return returnValue;
@@ -17948,7 +20347,7 @@ void *GL_APIENTRY MapBufferRangeContextANGLE(GLeglContext ctx,
           GLbitfieldToString(GLenumGroup::BufferAccessMask, access).c_str());
 
     void *returnValue;
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         BufferBinding targetPacked                            = FromGL<BufferBinding>(target);
@@ -17968,6 +20367,7 @@ void *GL_APIENTRY MapBufferRangeContextANGLE(GLeglContext ctx,
     }
     else
     {
+        GenerateContextLostErrorOnContext(context);
         returnValue = GetDefaultReturnValue<EntryPoint::MapBufferRange, void *>();
     }
     return returnValue;
@@ -17988,7 +20388,7 @@ void *GL_APIENTRY MapBufferRangeEXTContextANGLE(GLeglContext ctx,
           GLbitfieldToString(GLenumGroup::BufferAccessMask, access).c_str());
 
     void *returnValue;
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         BufferBinding targetPacked                            = FromGL<BufferBinding>(target);
@@ -18009,6 +20409,7 @@ void *GL_APIENTRY MapBufferRangeEXTContextANGLE(GLeglContext ctx,
     }
     else
     {
+        GenerateContextLostErrorOnContext(context);
         returnValue = GetDefaultReturnValue<EntryPoint::MapBufferRangeEXT, void *>();
     }
     return returnValue;
@@ -18022,7 +20423,7 @@ void GL_APIENTRY MaterialfContextANGLE(GLeglContext ctx, GLenum face, GLenum pna
           GLenumToString(GLenumGroup::MaterialFace, face),
           GLenumToString(GLenumGroup::MaterialParameter, pname), param);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         MaterialParameter pnamePacked                         = FromGL<MaterialParameter>(pname);
@@ -18034,6 +20435,10 @@ void GL_APIENTRY MaterialfContextANGLE(GLeglContext ctx, GLenum face, GLenum pna
             context->materialf(face, pnamePacked, param);
         }
         ANGLE_CAPTURE(Materialf, isCallValid, context, face, pnamePacked, param);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -18050,7 +20455,7 @@ void GL_APIENTRY MaterialfvContextANGLE(GLeglContext ctx,
         CID(context), GLenumToString(GLenumGroup::MaterialFace, face),
         GLenumToString(GLenumGroup::MaterialParameter, pname), (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         MaterialParameter pnamePacked                         = FromGL<MaterialParameter>(pname);
@@ -18063,6 +20468,10 @@ void GL_APIENTRY MaterialfvContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(Materialfv, isCallValid, context, face, pnamePacked, params);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY MaterialxContextANGLE(GLeglContext ctx, GLenum face, GLenum pname, GLfixed param)
@@ -18073,7 +20482,7 @@ void GL_APIENTRY MaterialxContextANGLE(GLeglContext ctx, GLenum face, GLenum pna
           GLenumToString(GLenumGroup::MaterialFace, face),
           GLenumToString(GLenumGroup::MaterialParameter, pname), param);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         MaterialParameter pnamePacked                         = FromGL<MaterialParameter>(pname);
@@ -18085,6 +20494,10 @@ void GL_APIENTRY MaterialxContextANGLE(GLeglContext ctx, GLenum face, GLenum pna
             context->materialx(face, pnamePacked, param);
         }
         ANGLE_CAPTURE(Materialx, isCallValid, context, face, pnamePacked, param);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -18100,7 +20513,7 @@ void GL_APIENTRY MaterialxvContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::MaterialFace, face),
           GLenumToString(GLenumGroup::MaterialParameter, pname), (uintptr_t)param);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         MaterialParameter pnamePacked                         = FromGL<MaterialParameter>(pname);
@@ -18112,6 +20525,10 @@ void GL_APIENTRY MaterialxvContextANGLE(GLeglContext ctx,
             context->materialxv(face, pnamePacked, param);
         }
         ANGLE_CAPTURE(Materialxv, isCallValid, context, face, pnamePacked, param);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -18128,7 +20545,7 @@ void GL_APIENTRY MatrixIndexPointerOESContextANGLE(GLeglContext ctx,
           CID(context), size, GLenumToString(GLenumGroup::DefaultGroup, type), stride,
           (uintptr_t)pointer);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -18140,6 +20557,10 @@ void GL_APIENTRY MatrixIndexPointerOESContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(MatrixIndexPointerOES, isCallValid, context, size, type, stride, pointer);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY MatrixModeContextANGLE(GLeglContext ctx, GLenum mode)
@@ -18148,7 +20569,7 @@ void GL_APIENTRY MatrixModeContextANGLE(GLeglContext ctx, GLenum mode)
     EVENT(context, gl::EntryPoint::MatrixMode, "glMatrixMode", "context = %d, GLenum mode = %s",
           CID(context), GLenumToString(GLenumGroup::MatrixMode, mode));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         MatrixType modePacked                                 = FromGL<MatrixType>(mode);
@@ -18160,6 +20581,10 @@ void GL_APIENTRY MatrixModeContextANGLE(GLeglContext ctx, GLenum mode)
         }
         ANGLE_CAPTURE(MatrixMode, isCallValid, context, modePacked);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY MaxShaderCompilerThreadsKHRContextANGLE(GLeglContext ctx, GLuint count)
@@ -18168,7 +20593,7 @@ void GL_APIENTRY MaxShaderCompilerThreadsKHRContextANGLE(GLeglContext ctx, GLuin
     EVENT(context, gl::EntryPoint::MaxShaderCompilerThreadsKHR, "glMaxShaderCompilerThreadsKHR",
           "context = %d, GLuint count = %u", CID(context), count);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -18180,6 +20605,10 @@ void GL_APIENTRY MaxShaderCompilerThreadsKHRContextANGLE(GLeglContext ctx, GLuin
         }
         ANGLE_CAPTURE(MaxShaderCompilerThreadsKHR, isCallValid, context, count);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY MemoryBarrierContextANGLE(GLeglContext ctx, GLbitfield barriers)
@@ -18189,7 +20618,7 @@ void GL_APIENTRY MemoryBarrierContextANGLE(GLeglContext ctx, GLbitfield barriers
           "context = %d, GLbitfield barriers = %s", CID(context),
           GLbitfieldToString(GLenumGroup::MemoryBarrierMask, barriers).c_str());
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -18200,6 +20629,10 @@ void GL_APIENTRY MemoryBarrierContextANGLE(GLeglContext ctx, GLbitfield barriers
         }
         ANGLE_CAPTURE(MemoryBarrier, isCallValid, context, barriers);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY MemoryBarrierByRegionContextANGLE(GLeglContext ctx, GLbitfield barriers)
@@ -18209,7 +20642,7 @@ void GL_APIENTRY MemoryBarrierByRegionContextANGLE(GLeglContext ctx, GLbitfield 
           "context = %d, GLbitfield barriers = %s", CID(context),
           GLbitfieldToString(GLenumGroup::MemoryBarrierMask, barriers).c_str());
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -18220,6 +20653,10 @@ void GL_APIENTRY MemoryBarrierByRegionContextANGLE(GLeglContext ctx, GLbitfield 
             context->memoryBarrierByRegion(barriers);
         }
         ANGLE_CAPTURE(MemoryBarrierByRegion, isCallValid, context, barriers);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -18235,7 +20672,7 @@ void GL_APIENTRY MemoryObjectParameterivEXTContextANGLE(GLeglContext ctx,
           CID(context), memoryObject, GLenumToString(GLenumGroup::MemoryObjectParameterName, pname),
           (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         MemoryObjectID memoryObjectPacked = FromGL<MemoryObjectID>(memoryObject);
@@ -18250,6 +20687,10 @@ void GL_APIENTRY MemoryObjectParameterivEXTContextANGLE(GLeglContext ctx,
         ANGLE_CAPTURE(MemoryObjectParameterivEXT, isCallValid, context, memoryObjectPacked, pname,
                       params);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY MinSampleShadingContextANGLE(GLeglContext ctx, GLfloat value)
@@ -18258,7 +20699,7 @@ void GL_APIENTRY MinSampleShadingContextANGLE(GLeglContext ctx, GLfloat value)
     EVENT(context, gl::EntryPoint::MinSampleShading, "glMinSampleShading",
           "context = %d, GLfloat value = %f", CID(context), value);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -18269,6 +20710,10 @@ void GL_APIENTRY MinSampleShadingContextANGLE(GLeglContext ctx, GLfloat value)
         }
         ANGLE_CAPTURE(MinSampleShading, isCallValid, context, value);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY MinSampleShadingOESContextANGLE(GLeglContext ctx, GLfloat value)
@@ -18277,7 +20722,7 @@ void GL_APIENTRY MinSampleShadingOESContextANGLE(GLeglContext ctx, GLfloat value
     EVENT(context, gl::EntryPoint::MinSampleShadingOES, "glMinSampleShadingOES",
           "context = %d, GLfloat value = %f", CID(context), value);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -18289,6 +20734,10 @@ void GL_APIENTRY MinSampleShadingOESContextANGLE(GLeglContext ctx, GLfloat value
         }
         ANGLE_CAPTURE(MinSampleShadingOES, isCallValid, context, value);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY MultMatrixfContextANGLE(GLeglContext ctx, const GLfloat *m)
@@ -18297,7 +20746,7 @@ void GL_APIENTRY MultMatrixfContextANGLE(GLeglContext ctx, const GLfloat *m)
     EVENT(context, gl::EntryPoint::MultMatrixf, "glMultMatrixf",
           "context = %d, const GLfloat *m = 0x%016" PRIxPTR "", CID(context), (uintptr_t)m);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -18308,6 +20757,10 @@ void GL_APIENTRY MultMatrixfContextANGLE(GLeglContext ctx, const GLfloat *m)
         }
         ANGLE_CAPTURE(MultMatrixf, isCallValid, context, m);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY MultMatrixxContextANGLE(GLeglContext ctx, const GLfixed *m)
@@ -18316,7 +20769,7 @@ void GL_APIENTRY MultMatrixxContextANGLE(GLeglContext ctx, const GLfixed *m)
     EVENT(context, gl::EntryPoint::MultMatrixx, "glMultMatrixx",
           "context = %d, const GLfixed *m = 0x%016" PRIxPTR "", CID(context), (uintptr_t)m);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -18326,6 +20779,10 @@ void GL_APIENTRY MultMatrixxContextANGLE(GLeglContext ctx, const GLfixed *m)
             context->multMatrixx(m);
         }
         ANGLE_CAPTURE(MultMatrixx, isCallValid, context, m);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -18347,7 +20804,7 @@ void GL_APIENTRY MultiDrawElementsBaseVertexEXTContextANGLE(GLeglContext ctx,
           GLenumToString(GLenumGroup::DrawElementsType, type), (uintptr_t)indices, primcount,
           (uintptr_t)basevertex);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         PrimitiveMode modePacked                              = FromGL<PrimitiveMode>(mode);
@@ -18364,6 +20821,10 @@ void GL_APIENTRY MultiDrawElementsBaseVertexEXTContextANGLE(GLeglContext ctx,
         ANGLE_CAPTURE(MultiDrawElementsBaseVertexEXT, isCallValid, context, modePacked, count,
                       typePacked, indices, primcount, basevertex);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY MultiTexCoord4fContextANGLE(GLeglContext ctx,
@@ -18379,7 +20840,7 @@ void GL_APIENTRY MultiTexCoord4fContextANGLE(GLeglContext ctx,
           "GLfloat q = %f",
           CID(context), GLenumToString(GLenumGroup::TextureUnit, target), s, t, r, q);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -18390,6 +20851,10 @@ void GL_APIENTRY MultiTexCoord4fContextANGLE(GLeglContext ctx,
             context->multiTexCoord4f(target, s, t, r, q);
         }
         ANGLE_CAPTURE(MultiTexCoord4f, isCallValid, context, target, s, t, r, q);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -18406,7 +20871,7 @@ void GL_APIENTRY MultiTexCoord4xContextANGLE(GLeglContext ctx,
           "0x%X, GLfixed q = 0x%X",
           CID(context), GLenumToString(GLenumGroup::TextureUnit, texture), s, t, r, q);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -18418,6 +20883,10 @@ void GL_APIENTRY MultiTexCoord4xContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(MultiTexCoord4x, isCallValid, context, texture, s, t, r, q);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY Normal3fContextANGLE(GLeglContext ctx, GLfloat nx, GLfloat ny, GLfloat nz)
@@ -18427,7 +20896,7 @@ void GL_APIENTRY Normal3fContextANGLE(GLeglContext ctx, GLfloat nx, GLfloat ny, 
           "context = %d, GLfloat nx = %f, GLfloat ny = %f, GLfloat nz = %f", CID(context), nx, ny,
           nz);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -18438,6 +20907,10 @@ void GL_APIENTRY Normal3fContextANGLE(GLeglContext ctx, GLfloat nx, GLfloat ny, 
         }
         ANGLE_CAPTURE(Normal3f, isCallValid, context, nx, ny, nz);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY Normal3xContextANGLE(GLeglContext ctx, GLfixed nx, GLfixed ny, GLfixed nz)
@@ -18447,7 +20920,7 @@ void GL_APIENTRY Normal3xContextANGLE(GLeglContext ctx, GLfixed nx, GLfixed ny, 
           "context = %d, GLfixed nx = 0x%X, GLfixed ny = 0x%X, GLfixed nz = 0x%X", CID(context), nx,
           ny, nz);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -18457,6 +20930,10 @@ void GL_APIENTRY Normal3xContextANGLE(GLeglContext ctx, GLfixed nx, GLfixed ny, 
             context->normal3x(nx, ny, nz);
         }
         ANGLE_CAPTURE(Normal3x, isCallValid, context, nx, ny, nz);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -18473,7 +20950,7 @@ void GL_APIENTRY NormalPointerContextANGLE(GLeglContext ctx,
         CID(context), GLenumToString(GLenumGroup::NormalPointerType, type), stride,
         (uintptr_t)pointer);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         VertexAttribType typePacked                           = FromGL<VertexAttribType>(type);
@@ -18485,6 +20962,10 @@ void GL_APIENTRY NormalPointerContextANGLE(GLeglContext ctx,
             context->normalPointer(typePacked, stride, pointer);
         }
         ANGLE_CAPTURE(NormalPointer, isCallValid, context, typePacked, stride, pointer);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -18501,7 +20982,7 @@ void GL_APIENTRY ObjectLabelContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::ObjectIdentifier, identifier), name, length,
           (uintptr_t)label);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -18512,6 +20993,10 @@ void GL_APIENTRY ObjectLabelContextANGLE(GLeglContext ctx,
             context->objectLabel(identifier, name, length, label);
         }
         ANGLE_CAPTURE(ObjectLabel, isCallValid, context, identifier, name, length, label);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -18528,7 +21013,7 @@ void GL_APIENTRY ObjectLabelKHRContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::ObjectIdentifier, identifier), name, length,
           (uintptr_t)label);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -18539,6 +21024,10 @@ void GL_APIENTRY ObjectLabelKHRContextANGLE(GLeglContext ctx,
             context->objectLabel(identifier, name, length, label);
         }
         ANGLE_CAPTURE(ObjectLabelKHR, isCallValid, context, identifier, name, length, label);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -18553,7 +21042,7 @@ void GL_APIENTRY ObjectPtrLabelContextANGLE(GLeglContext ctx,
           ", GLsizei length = %d, const GLchar *label = 0x%016" PRIxPTR "",
           CID(context), (uintptr_t)ptr, length, (uintptr_t)label);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -18564,6 +21053,10 @@ void GL_APIENTRY ObjectPtrLabelContextANGLE(GLeglContext ctx,
             context->objectPtrLabel(ptr, length, label);
         }
         ANGLE_CAPTURE(ObjectPtrLabel, isCallValid, context, ptr, length, label);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -18578,7 +21071,7 @@ void GL_APIENTRY ObjectPtrLabelKHRContextANGLE(GLeglContext ctx,
           ", GLsizei length = %d, const GLchar *label = 0x%016" PRIxPTR "",
           CID(context), (uintptr_t)ptr, length, (uintptr_t)label);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -18589,6 +21082,10 @@ void GL_APIENTRY ObjectPtrLabelKHRContextANGLE(GLeglContext ctx,
             context->objectPtrLabel(ptr, length, label);
         }
         ANGLE_CAPTURE(ObjectPtrLabelKHR, isCallValid, context, ptr, length, label);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -18606,7 +21103,7 @@ void GL_APIENTRY OrthofContextANGLE(GLeglContext ctx,
           "= %f, GLfloat f = %f",
           CID(context), l, r, b, t, n, f);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -18616,6 +21113,10 @@ void GL_APIENTRY OrthofContextANGLE(GLeglContext ctx,
             context->orthof(l, r, b, t, n, f);
         }
         ANGLE_CAPTURE(Orthof, isCallValid, context, l, r, b, t, n, f);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -18633,7 +21134,7 @@ void GL_APIENTRY OrthoxContextANGLE(GLeglContext ctx,
           "GLfixed n = 0x%X, GLfixed f = 0x%X",
           CID(context), l, r, b, t, n, f);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -18644,6 +21145,10 @@ void GL_APIENTRY OrthoxContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(Orthox, isCallValid, context, l, r, b, t, n, f);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY PatchParameteriContextANGLE(GLeglContext ctx, GLenum pname, GLint value)
@@ -18653,7 +21158,7 @@ void GL_APIENTRY PatchParameteriContextANGLE(GLeglContext ctx, GLenum pname, GLi
           "context = %d, GLenum pname = %s, GLint value = %d", CID(context),
           GLenumToString(GLenumGroup::PatchParameterName, pname), value);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -18665,6 +21170,10 @@ void GL_APIENTRY PatchParameteriContextANGLE(GLeglContext ctx, GLenum pname, GLi
         }
         ANGLE_CAPTURE(PatchParameteri, isCallValid, context, pname, value);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY PauseTransformFeedbackContextANGLE(GLeglContext ctx)
@@ -18673,7 +21182,7 @@ void GL_APIENTRY PauseTransformFeedbackContextANGLE(GLeglContext ctx)
     EVENT(context, gl::EntryPoint::PauseTransformFeedback, "glPauseTransformFeedback",
           "context = %d", CID(context));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -18684,6 +21193,10 @@ void GL_APIENTRY PauseTransformFeedbackContextANGLE(GLeglContext ctx)
         }
         ANGLE_CAPTURE(PauseTransformFeedback, isCallValid, context);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY PixelStoreiContextANGLE(GLeglContext ctx, GLenum pname, GLint param)
@@ -18693,7 +21206,7 @@ void GL_APIENTRY PixelStoreiContextANGLE(GLeglContext ctx, GLenum pname, GLint p
           "context = %d, GLenum pname = %s, GLint param = %d", CID(context),
           GLenumToString(GLenumGroup::PixelStoreParameter, pname), param);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -18705,6 +21218,10 @@ void GL_APIENTRY PixelStoreiContextANGLE(GLeglContext ctx, GLenum pname, GLint p
         }
         ANGLE_CAPTURE(PixelStorei, isCallValid, context, pname, param);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY PointParameterfContextANGLE(GLeglContext ctx, GLenum pname, GLfloat param)
@@ -18714,7 +21231,7 @@ void GL_APIENTRY PointParameterfContextANGLE(GLeglContext ctx, GLenum pname, GLf
           "context = %d, GLenum pname = %s, GLfloat param = %f", CID(context),
           GLenumToString(GLenumGroup::DefaultGroup, pname), param);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         PointParameter pnamePacked                            = FromGL<PointParameter>(pname);
@@ -18727,6 +21244,10 @@ void GL_APIENTRY PointParameterfContextANGLE(GLeglContext ctx, GLenum pname, GLf
         }
         ANGLE_CAPTURE(PointParameterf, isCallValid, context, pnamePacked, param);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY PointParameterfvContextANGLE(GLeglContext ctx, GLenum pname, const GLfloat *params)
@@ -18736,7 +21257,7 @@ void GL_APIENTRY PointParameterfvContextANGLE(GLeglContext ctx, GLenum pname, co
           "context = %d, GLenum pname = %s, const GLfloat *params = 0x%016" PRIxPTR "",
           CID(context), GLenumToString(GLenumGroup::DefaultGroup, pname), (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         PointParameter pnamePacked                            = FromGL<PointParameter>(pname);
@@ -18749,6 +21270,10 @@ void GL_APIENTRY PointParameterfvContextANGLE(GLeglContext ctx, GLenum pname, co
         }
         ANGLE_CAPTURE(PointParameterfv, isCallValid, context, pnamePacked, params);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY PointParameterxContextANGLE(GLeglContext ctx, GLenum pname, GLfixed param)
@@ -18758,7 +21283,7 @@ void GL_APIENTRY PointParameterxContextANGLE(GLeglContext ctx, GLenum pname, GLf
           "context = %d, GLenum pname = %s, GLfixed param = 0x%X", CID(context),
           GLenumToString(GLenumGroup::DefaultGroup, pname), param);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         PointParameter pnamePacked                            = FromGL<PointParameter>(pname);
@@ -18771,6 +21296,10 @@ void GL_APIENTRY PointParameterxContextANGLE(GLeglContext ctx, GLenum pname, GLf
         }
         ANGLE_CAPTURE(PointParameterx, isCallValid, context, pnamePacked, param);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY PointParameterxvContextANGLE(GLeglContext ctx, GLenum pname, const GLfixed *params)
@@ -18780,7 +21309,7 @@ void GL_APIENTRY PointParameterxvContextANGLE(GLeglContext ctx, GLenum pname, co
           "context = %d, GLenum pname = %s, const GLfixed *params = 0x%016" PRIxPTR "",
           CID(context), GLenumToString(GLenumGroup::DefaultGroup, pname), (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         PointParameter pnamePacked                            = FromGL<PointParameter>(pname);
@@ -18793,6 +21322,10 @@ void GL_APIENTRY PointParameterxvContextANGLE(GLeglContext ctx, GLenum pname, co
         }
         ANGLE_CAPTURE(PointParameterxv, isCallValid, context, pnamePacked, params);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY PointSizeContextANGLE(GLeglContext ctx, GLfloat size)
@@ -18801,7 +21334,7 @@ void GL_APIENTRY PointSizeContextANGLE(GLeglContext ctx, GLfloat size)
     EVENT(context, gl::EntryPoint::PointSize, "glPointSize", "context = %d, GLfloat size = %f",
           CID(context), size);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -18811,6 +21344,10 @@ void GL_APIENTRY PointSizeContextANGLE(GLeglContext ctx, GLfloat size)
             context->pointSize(size);
         }
         ANGLE_CAPTURE(PointSize, isCallValid, context, size);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -18826,7 +21363,7 @@ void GL_APIENTRY PointSizePointerOESContextANGLE(GLeglContext ctx,
         "",
         CID(context), GLenumToString(GLenumGroup::DefaultGroup, type), stride, (uintptr_t)pointer);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         VertexAttribType typePacked                           = FromGL<VertexAttribType>(type);
@@ -18839,6 +21376,10 @@ void GL_APIENTRY PointSizePointerOESContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(PointSizePointerOES, isCallValid, context, typePacked, stride, pointer);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY PointSizexContextANGLE(GLeglContext ctx, GLfixed size)
@@ -18847,7 +21388,7 @@ void GL_APIENTRY PointSizexContextANGLE(GLeglContext ctx, GLfixed size)
     EVENT(context, gl::EntryPoint::PointSizex, "glPointSizex", "context = %d, GLfixed size = 0x%X",
           CID(context), size);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -18858,6 +21399,10 @@ void GL_APIENTRY PointSizexContextANGLE(GLeglContext ctx, GLfixed size)
         }
         ANGLE_CAPTURE(PointSizex, isCallValid, context, size);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY PolygonOffsetContextANGLE(GLeglContext ctx, GLfloat factor, GLfloat units)
@@ -18866,7 +21411,7 @@ void GL_APIENTRY PolygonOffsetContextANGLE(GLeglContext ctx, GLfloat factor, GLf
     EVENT(context, gl::EntryPoint::PolygonOffset, "glPolygonOffset",
           "context = %d, GLfloat factor = %f, GLfloat units = %f", CID(context), factor, units);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -18878,6 +21423,10 @@ void GL_APIENTRY PolygonOffsetContextANGLE(GLeglContext ctx, GLfloat factor, GLf
         }
         ANGLE_CAPTURE(PolygonOffset, isCallValid, context, factor, units);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY PolygonOffsetxContextANGLE(GLeglContext ctx, GLfixed factor, GLfixed units)
@@ -18886,7 +21435,7 @@ void GL_APIENTRY PolygonOffsetxContextANGLE(GLeglContext ctx, GLfixed factor, GL
     EVENT(context, gl::EntryPoint::PolygonOffsetx, "glPolygonOffsetx",
           "context = %d, GLfixed factor = 0x%X, GLfixed units = 0x%X", CID(context), factor, units);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -18898,6 +21447,10 @@ void GL_APIENTRY PolygonOffsetxContextANGLE(GLeglContext ctx, GLfixed factor, GL
         }
         ANGLE_CAPTURE(PolygonOffsetx, isCallValid, context, factor, units);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY PopDebugGroupContextANGLE(GLeglContext ctx)
@@ -18905,7 +21458,7 @@ void GL_APIENTRY PopDebugGroupContextANGLE(GLeglContext ctx)
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, gl::EntryPoint::PopDebugGroup, "glPopDebugGroup", "context = %d", CID(context));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -18916,6 +21469,10 @@ void GL_APIENTRY PopDebugGroupContextANGLE(GLeglContext ctx)
         }
         ANGLE_CAPTURE(PopDebugGroup, isCallValid, context);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY PopDebugGroupKHRContextANGLE(GLeglContext ctx)
@@ -18924,7 +21481,7 @@ void GL_APIENTRY PopDebugGroupKHRContextANGLE(GLeglContext ctx)
     EVENT(context, gl::EntryPoint::PopDebugGroupKHR, "glPopDebugGroupKHR", "context = %d",
           CID(context));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -18934,6 +21491,10 @@ void GL_APIENTRY PopDebugGroupKHRContextANGLE(GLeglContext ctx)
             context->popDebugGroup();
         }
         ANGLE_CAPTURE(PopDebugGroupKHR, isCallValid, context);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -18945,7 +21506,7 @@ void GL_APIENTRY PopGroupMarkerEXTContextANGLE(GLeglContext ctx)
     // EVENT(context, gl::EntryPoint::PopGroupMarkerEXT, "glPopGroupMarkerEXT", "context = %d",
     // CID(context));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -18956,6 +21517,10 @@ void GL_APIENTRY PopGroupMarkerEXTContextANGLE(GLeglContext ctx)
         }
         ANGLE_CAPTURE(PopGroupMarkerEXT, isCallValid, context);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY PopMatrixContextANGLE(GLeglContext ctx)
@@ -18963,7 +21528,7 @@ void GL_APIENTRY PopMatrixContextANGLE(GLeglContext ctx)
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, gl::EntryPoint::PopMatrix, "glPopMatrix", "context = %d", CID(context));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -18973,6 +21538,10 @@ void GL_APIENTRY PopMatrixContextANGLE(GLeglContext ctx)
             context->popMatrix();
         }
         ANGLE_CAPTURE(PopMatrix, isCallValid, context);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -18992,7 +21561,7 @@ void GL_APIENTRY PrimitiveBoundingBoxContextANGLE(GLeglContext ctx,
           "%f, GLfloat maxX = %f, GLfloat maxY = %f, GLfloat maxZ = %f, GLfloat maxW = %f",
           CID(context), minX, minY, minZ, minW, maxX, maxY, maxZ, maxW);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -19005,6 +21574,10 @@ void GL_APIENTRY PrimitiveBoundingBoxContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(PrimitiveBoundingBox, isCallValid, context, minX, minY, minZ, minW, maxX,
                       maxY, maxZ, maxW);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -19021,7 +21594,7 @@ void GL_APIENTRY ProgramBinaryContextANGLE(GLeglContext ctx,
           CID(context), program, GLenumToString(GLenumGroup::DefaultGroup, binaryFormat),
           (uintptr_t)binary, length);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID programPacked                         = FromGL<ShaderProgramID>(program);
@@ -19035,6 +21608,10 @@ void GL_APIENTRY ProgramBinaryContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(ProgramBinary, isCallValid, context, programPacked, binaryFormat, binary,
                       length);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -19051,7 +21628,7 @@ void GL_APIENTRY ProgramBinaryOESContextANGLE(GLeglContext ctx,
           CID(context), program, GLenumToString(GLenumGroup::DefaultGroup, binaryFormat),
           (uintptr_t)binary, length);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID programPacked                         = FromGL<ShaderProgramID>(program);
@@ -19066,6 +21643,10 @@ void GL_APIENTRY ProgramBinaryOESContextANGLE(GLeglContext ctx,
         ANGLE_CAPTURE(ProgramBinaryOES, isCallValid, context, programPacked, binaryFormat, binary,
                       length);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY ProgramParameteriContextANGLE(GLeglContext ctx,
@@ -19078,7 +21659,7 @@ void GL_APIENTRY ProgramParameteriContextANGLE(GLeglContext ctx,
           "context = %d, GLuint program = %u, GLenum pname = %s, GLint value = %d", CID(context),
           program, GLenumToString(GLenumGroup::ProgramParameterPName, pname), value);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID programPacked                         = FromGL<ShaderProgramID>(program);
@@ -19090,6 +21671,10 @@ void GL_APIENTRY ProgramParameteriContextANGLE(GLeglContext ctx,
             context->programParameteri(programPacked, pname, value);
         }
         ANGLE_CAPTURE(ProgramParameteri, isCallValid, context, programPacked, pname, value);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -19103,7 +21688,7 @@ void GL_APIENTRY ProgramUniform1fContextANGLE(GLeglContext ctx,
           "context = %d, GLuint program = %u, GLint location = %d, GLfloat v0 = %f", CID(context),
           program, location, v0);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID programPacked                         = FromGL<ShaderProgramID>(program);
@@ -19116,6 +21701,10 @@ void GL_APIENTRY ProgramUniform1fContextANGLE(GLeglContext ctx,
             context->programUniform1f(programPacked, locationPacked, v0);
         }
         ANGLE_CAPTURE(ProgramUniform1f, isCallValid, context, programPacked, locationPacked, v0);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -19131,7 +21720,7 @@ void GL_APIENTRY ProgramUniform1fvContextANGLE(GLeglContext ctx,
           "GLfloat *value = 0x%016" PRIxPTR "",
           CID(context), program, location, count, (uintptr_t)value);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID programPacked                         = FromGL<ShaderProgramID>(program);
@@ -19147,6 +21736,10 @@ void GL_APIENTRY ProgramUniform1fvContextANGLE(GLeglContext ctx,
         ANGLE_CAPTURE(ProgramUniform1fv, isCallValid, context, programPacked, locationPacked, count,
                       value);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY ProgramUniform1iContextANGLE(GLeglContext ctx,
@@ -19159,7 +21752,7 @@ void GL_APIENTRY ProgramUniform1iContextANGLE(GLeglContext ctx,
           "context = %d, GLuint program = %u, GLint location = %d, GLint v0 = %d", CID(context),
           program, location, v0);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID programPacked                         = FromGL<ShaderProgramID>(program);
@@ -19172,6 +21765,10 @@ void GL_APIENTRY ProgramUniform1iContextANGLE(GLeglContext ctx,
             context->programUniform1i(programPacked, locationPacked, v0);
         }
         ANGLE_CAPTURE(ProgramUniform1i, isCallValid, context, programPacked, locationPacked, v0);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -19187,7 +21784,7 @@ void GL_APIENTRY ProgramUniform1ivContextANGLE(GLeglContext ctx,
           "*value = 0x%016" PRIxPTR "",
           CID(context), program, location, count, (uintptr_t)value);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID programPacked                         = FromGL<ShaderProgramID>(program);
@@ -19203,6 +21800,10 @@ void GL_APIENTRY ProgramUniform1ivContextANGLE(GLeglContext ctx,
         ANGLE_CAPTURE(ProgramUniform1iv, isCallValid, context, programPacked, locationPacked, count,
                       value);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY ProgramUniform1uiContextANGLE(GLeglContext ctx,
@@ -19215,7 +21816,7 @@ void GL_APIENTRY ProgramUniform1uiContextANGLE(GLeglContext ctx,
           "context = %d, GLuint program = %u, GLint location = %d, GLuint v0 = %u", CID(context),
           program, location, v0);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID programPacked                         = FromGL<ShaderProgramID>(program);
@@ -19228,6 +21829,10 @@ void GL_APIENTRY ProgramUniform1uiContextANGLE(GLeglContext ctx,
             context->programUniform1ui(programPacked, locationPacked, v0);
         }
         ANGLE_CAPTURE(ProgramUniform1ui, isCallValid, context, programPacked, locationPacked, v0);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -19243,7 +21848,7 @@ void GL_APIENTRY ProgramUniform1uivContextANGLE(GLeglContext ctx,
           "GLuint *value = 0x%016" PRIxPTR "",
           CID(context), program, location, count, (uintptr_t)value);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID programPacked                         = FromGL<ShaderProgramID>(program);
@@ -19259,6 +21864,10 @@ void GL_APIENTRY ProgramUniform1uivContextANGLE(GLeglContext ctx,
         ANGLE_CAPTURE(ProgramUniform1uiv, isCallValid, context, programPacked, locationPacked,
                       count, value);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY ProgramUniform2fContextANGLE(GLeglContext ctx,
@@ -19273,7 +21882,7 @@ void GL_APIENTRY ProgramUniform2fContextANGLE(GLeglContext ctx,
         "context = %d, GLuint program = %u, GLint location = %d, GLfloat v0 = %f, GLfloat v1 = %f",
         CID(context), program, location, v0, v1);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID programPacked                         = FromGL<ShaderProgramID>(program);
@@ -19289,6 +21898,10 @@ void GL_APIENTRY ProgramUniform2fContextANGLE(GLeglContext ctx,
         ANGLE_CAPTURE(ProgramUniform2f, isCallValid, context, programPacked, locationPacked, v0,
                       v1);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY ProgramUniform2fvContextANGLE(GLeglContext ctx,
@@ -19303,7 +21916,7 @@ void GL_APIENTRY ProgramUniform2fvContextANGLE(GLeglContext ctx,
           "GLfloat *value = 0x%016" PRIxPTR "",
           CID(context), program, location, count, (uintptr_t)value);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID programPacked                         = FromGL<ShaderProgramID>(program);
@@ -19319,6 +21932,10 @@ void GL_APIENTRY ProgramUniform2fvContextANGLE(GLeglContext ctx,
         ANGLE_CAPTURE(ProgramUniform2fv, isCallValid, context, programPacked, locationPacked, count,
                       value);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY
@@ -19329,7 +21946,7 @@ ProgramUniform2iContextANGLE(GLeglContext ctx, GLuint program, GLint location, G
           "context = %d, GLuint program = %u, GLint location = %d, GLint v0 = %d, GLint v1 = %d",
           CID(context), program, location, v0, v1);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID programPacked                         = FromGL<ShaderProgramID>(program);
@@ -19345,6 +21962,10 @@ ProgramUniform2iContextANGLE(GLeglContext ctx, GLuint program, GLint location, G
         ANGLE_CAPTURE(ProgramUniform2i, isCallValid, context, programPacked, locationPacked, v0,
                       v1);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY ProgramUniform2ivContextANGLE(GLeglContext ctx,
@@ -19359,7 +21980,7 @@ void GL_APIENTRY ProgramUniform2ivContextANGLE(GLeglContext ctx,
           "*value = 0x%016" PRIxPTR "",
           CID(context), program, location, count, (uintptr_t)value);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID programPacked                         = FromGL<ShaderProgramID>(program);
@@ -19375,6 +21996,10 @@ void GL_APIENTRY ProgramUniform2ivContextANGLE(GLeglContext ctx,
         ANGLE_CAPTURE(ProgramUniform2iv, isCallValid, context, programPacked, locationPacked, count,
                       value);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY ProgramUniform2uiContextANGLE(GLeglContext ctx,
@@ -19388,7 +22013,7 @@ void GL_APIENTRY ProgramUniform2uiContextANGLE(GLeglContext ctx,
           "context = %d, GLuint program = %u, GLint location = %d, GLuint v0 = %u, GLuint v1 = %u",
           CID(context), program, location, v0, v1);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID programPacked                         = FromGL<ShaderProgramID>(program);
@@ -19404,6 +22029,10 @@ void GL_APIENTRY ProgramUniform2uiContextANGLE(GLeglContext ctx,
         ANGLE_CAPTURE(ProgramUniform2ui, isCallValid, context, programPacked, locationPacked, v0,
                       v1);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY ProgramUniform2uivContextANGLE(GLeglContext ctx,
@@ -19418,7 +22047,7 @@ void GL_APIENTRY ProgramUniform2uivContextANGLE(GLeglContext ctx,
           "GLuint *value = 0x%016" PRIxPTR "",
           CID(context), program, location, count, (uintptr_t)value);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID programPacked                         = FromGL<ShaderProgramID>(program);
@@ -19433,6 +22062,10 @@ void GL_APIENTRY ProgramUniform2uivContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(ProgramUniform2uiv, isCallValid, context, programPacked, locationPacked,
                       count, value);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -19449,7 +22082,7 @@ void GL_APIENTRY ProgramUniform3fContextANGLE(GLeglContext ctx,
           "%f, GLfloat v2 = %f",
           CID(context), program, location, v0, v1, v2);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID programPacked                         = FromGL<ShaderProgramID>(program);
@@ -19465,6 +22098,10 @@ void GL_APIENTRY ProgramUniform3fContextANGLE(GLeglContext ctx,
         ANGLE_CAPTURE(ProgramUniform3f, isCallValid, context, programPacked, locationPacked, v0, v1,
                       v2);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY ProgramUniform3fvContextANGLE(GLeglContext ctx,
@@ -19479,7 +22116,7 @@ void GL_APIENTRY ProgramUniform3fvContextANGLE(GLeglContext ctx,
           "GLfloat *value = 0x%016" PRIxPTR "",
           CID(context), program, location, count, (uintptr_t)value);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID programPacked                         = FromGL<ShaderProgramID>(program);
@@ -19494,6 +22131,10 @@ void GL_APIENTRY ProgramUniform3fvContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(ProgramUniform3fv, isCallValid, context, programPacked, locationPacked, count,
                       value);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -19510,7 +22151,7 @@ void GL_APIENTRY ProgramUniform3iContextANGLE(GLeglContext ctx,
           "GLint v2 = %d",
           CID(context), program, location, v0, v1, v2);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID programPacked                         = FromGL<ShaderProgramID>(program);
@@ -19526,6 +22167,10 @@ void GL_APIENTRY ProgramUniform3iContextANGLE(GLeglContext ctx,
         ANGLE_CAPTURE(ProgramUniform3i, isCallValid, context, programPacked, locationPacked, v0, v1,
                       v2);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY ProgramUniform3ivContextANGLE(GLeglContext ctx,
@@ -19540,7 +22185,7 @@ void GL_APIENTRY ProgramUniform3ivContextANGLE(GLeglContext ctx,
           "*value = 0x%016" PRIxPTR "",
           CID(context), program, location, count, (uintptr_t)value);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID programPacked                         = FromGL<ShaderProgramID>(program);
@@ -19555,6 +22200,10 @@ void GL_APIENTRY ProgramUniform3ivContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(ProgramUniform3iv, isCallValid, context, programPacked, locationPacked, count,
                       value);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -19571,7 +22220,7 @@ void GL_APIENTRY ProgramUniform3uiContextANGLE(GLeglContext ctx,
           "GLuint v2 = %u",
           CID(context), program, location, v0, v1, v2);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID programPacked                         = FromGL<ShaderProgramID>(program);
@@ -19587,6 +22236,10 @@ void GL_APIENTRY ProgramUniform3uiContextANGLE(GLeglContext ctx,
         ANGLE_CAPTURE(ProgramUniform3ui, isCallValid, context, programPacked, locationPacked, v0,
                       v1, v2);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY ProgramUniform3uivContextANGLE(GLeglContext ctx,
@@ -19601,7 +22254,7 @@ void GL_APIENTRY ProgramUniform3uivContextANGLE(GLeglContext ctx,
           "GLuint *value = 0x%016" PRIxPTR "",
           CID(context), program, location, count, (uintptr_t)value);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID programPacked                         = FromGL<ShaderProgramID>(program);
@@ -19616,6 +22269,10 @@ void GL_APIENTRY ProgramUniform3uivContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(ProgramUniform3uiv, isCallValid, context, programPacked, locationPacked,
                       count, value);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -19633,7 +22290,7 @@ void GL_APIENTRY ProgramUniform4fContextANGLE(GLeglContext ctx,
           "%f, GLfloat v2 = %f, GLfloat v3 = %f",
           CID(context), program, location, v0, v1, v2, v3);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID programPacked                         = FromGL<ShaderProgramID>(program);
@@ -19649,6 +22306,10 @@ void GL_APIENTRY ProgramUniform4fContextANGLE(GLeglContext ctx,
         ANGLE_CAPTURE(ProgramUniform4f, isCallValid, context, programPacked, locationPacked, v0, v1,
                       v2, v3);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY ProgramUniform4fvContextANGLE(GLeglContext ctx,
@@ -19663,7 +22324,7 @@ void GL_APIENTRY ProgramUniform4fvContextANGLE(GLeglContext ctx,
           "GLfloat *value = 0x%016" PRIxPTR "",
           CID(context), program, location, count, (uintptr_t)value);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID programPacked                         = FromGL<ShaderProgramID>(program);
@@ -19678,6 +22339,10 @@ void GL_APIENTRY ProgramUniform4fvContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(ProgramUniform4fv, isCallValid, context, programPacked, locationPacked, count,
                       value);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -19695,7 +22360,7 @@ void GL_APIENTRY ProgramUniform4iContextANGLE(GLeglContext ctx,
           "GLint v2 = %d, GLint v3 = %d",
           CID(context), program, location, v0, v1, v2, v3);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID programPacked                         = FromGL<ShaderProgramID>(program);
@@ -19711,6 +22376,10 @@ void GL_APIENTRY ProgramUniform4iContextANGLE(GLeglContext ctx,
         ANGLE_CAPTURE(ProgramUniform4i, isCallValid, context, programPacked, locationPacked, v0, v1,
                       v2, v3);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY ProgramUniform4ivContextANGLE(GLeglContext ctx,
@@ -19725,7 +22394,7 @@ void GL_APIENTRY ProgramUniform4ivContextANGLE(GLeglContext ctx,
           "*value = 0x%016" PRIxPTR "",
           CID(context), program, location, count, (uintptr_t)value);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID programPacked                         = FromGL<ShaderProgramID>(program);
@@ -19740,6 +22409,10 @@ void GL_APIENTRY ProgramUniform4ivContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(ProgramUniform4iv, isCallValid, context, programPacked, locationPacked, count,
                       value);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -19757,7 +22430,7 @@ void GL_APIENTRY ProgramUniform4uiContextANGLE(GLeglContext ctx,
           "GLuint v2 = %u, GLuint v3 = %u",
           CID(context), program, location, v0, v1, v2, v3);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID programPacked                         = FromGL<ShaderProgramID>(program);
@@ -19773,6 +22446,10 @@ void GL_APIENTRY ProgramUniform4uiContextANGLE(GLeglContext ctx,
         ANGLE_CAPTURE(ProgramUniform4ui, isCallValid, context, programPacked, locationPacked, v0,
                       v1, v2, v3);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY ProgramUniform4uivContextANGLE(GLeglContext ctx,
@@ -19787,7 +22464,7 @@ void GL_APIENTRY ProgramUniform4uivContextANGLE(GLeglContext ctx,
           "GLuint *value = 0x%016" PRIxPTR "",
           CID(context), program, location, count, (uintptr_t)value);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID programPacked                         = FromGL<ShaderProgramID>(program);
@@ -19802,6 +22479,10 @@ void GL_APIENTRY ProgramUniform4uivContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(ProgramUniform4uiv, isCallValid, context, programPacked, locationPacked,
                       count, value);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -19818,7 +22499,7 @@ void GL_APIENTRY ProgramUniformMatrix2fvContextANGLE(GLeglContext ctx,
           "transpose = %s, const GLfloat *value = 0x%016" PRIxPTR "",
           CID(context), program, location, count, GLbooleanToString(transpose), (uintptr_t)value);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID programPacked                         = FromGL<ShaderProgramID>(program);
@@ -19835,6 +22516,10 @@ void GL_APIENTRY ProgramUniformMatrix2fvContextANGLE(GLeglContext ctx,
         ANGLE_CAPTURE(ProgramUniformMatrix2fv, isCallValid, context, programPacked, locationPacked,
                       count, transpose, value);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY ProgramUniformMatrix2x3fvContextANGLE(GLeglContext ctx,
@@ -19850,7 +22535,7 @@ void GL_APIENTRY ProgramUniformMatrix2x3fvContextANGLE(GLeglContext ctx,
           "transpose = %s, const GLfloat *value = 0x%016" PRIxPTR "",
           CID(context), program, location, count, GLbooleanToString(transpose), (uintptr_t)value);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID programPacked                         = FromGL<ShaderProgramID>(program);
@@ -19867,6 +22552,10 @@ void GL_APIENTRY ProgramUniformMatrix2x3fvContextANGLE(GLeglContext ctx,
         ANGLE_CAPTURE(ProgramUniformMatrix2x3fv, isCallValid, context, programPacked,
                       locationPacked, count, transpose, value);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY ProgramUniformMatrix2x4fvContextANGLE(GLeglContext ctx,
@@ -19882,7 +22571,7 @@ void GL_APIENTRY ProgramUniformMatrix2x4fvContextANGLE(GLeglContext ctx,
           "transpose = %s, const GLfloat *value = 0x%016" PRIxPTR "",
           CID(context), program, location, count, GLbooleanToString(transpose), (uintptr_t)value);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID programPacked                         = FromGL<ShaderProgramID>(program);
@@ -19899,6 +22588,10 @@ void GL_APIENTRY ProgramUniformMatrix2x4fvContextANGLE(GLeglContext ctx,
         ANGLE_CAPTURE(ProgramUniformMatrix2x4fv, isCallValid, context, programPacked,
                       locationPacked, count, transpose, value);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY ProgramUniformMatrix3fvContextANGLE(GLeglContext ctx,
@@ -19914,7 +22607,7 @@ void GL_APIENTRY ProgramUniformMatrix3fvContextANGLE(GLeglContext ctx,
           "transpose = %s, const GLfloat *value = 0x%016" PRIxPTR "",
           CID(context), program, location, count, GLbooleanToString(transpose), (uintptr_t)value);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID programPacked                         = FromGL<ShaderProgramID>(program);
@@ -19931,6 +22624,10 @@ void GL_APIENTRY ProgramUniformMatrix3fvContextANGLE(GLeglContext ctx,
         ANGLE_CAPTURE(ProgramUniformMatrix3fv, isCallValid, context, programPacked, locationPacked,
                       count, transpose, value);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY ProgramUniformMatrix3x2fvContextANGLE(GLeglContext ctx,
@@ -19946,7 +22643,7 @@ void GL_APIENTRY ProgramUniformMatrix3x2fvContextANGLE(GLeglContext ctx,
           "transpose = %s, const GLfloat *value = 0x%016" PRIxPTR "",
           CID(context), program, location, count, GLbooleanToString(transpose), (uintptr_t)value);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID programPacked                         = FromGL<ShaderProgramID>(program);
@@ -19963,6 +22660,10 @@ void GL_APIENTRY ProgramUniformMatrix3x2fvContextANGLE(GLeglContext ctx,
         ANGLE_CAPTURE(ProgramUniformMatrix3x2fv, isCallValid, context, programPacked,
                       locationPacked, count, transpose, value);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY ProgramUniformMatrix3x4fvContextANGLE(GLeglContext ctx,
@@ -19978,7 +22679,7 @@ void GL_APIENTRY ProgramUniformMatrix3x4fvContextANGLE(GLeglContext ctx,
           "transpose = %s, const GLfloat *value = 0x%016" PRIxPTR "",
           CID(context), program, location, count, GLbooleanToString(transpose), (uintptr_t)value);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID programPacked                         = FromGL<ShaderProgramID>(program);
@@ -19995,6 +22696,10 @@ void GL_APIENTRY ProgramUniformMatrix3x4fvContextANGLE(GLeglContext ctx,
         ANGLE_CAPTURE(ProgramUniformMatrix3x4fv, isCallValid, context, programPacked,
                       locationPacked, count, transpose, value);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY ProgramUniformMatrix4fvContextANGLE(GLeglContext ctx,
@@ -20010,7 +22715,7 @@ void GL_APIENTRY ProgramUniformMatrix4fvContextANGLE(GLeglContext ctx,
           "transpose = %s, const GLfloat *value = 0x%016" PRIxPTR "",
           CID(context), program, location, count, GLbooleanToString(transpose), (uintptr_t)value);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID programPacked                         = FromGL<ShaderProgramID>(program);
@@ -20027,6 +22732,10 @@ void GL_APIENTRY ProgramUniformMatrix4fvContextANGLE(GLeglContext ctx,
         ANGLE_CAPTURE(ProgramUniformMatrix4fv, isCallValid, context, programPacked, locationPacked,
                       count, transpose, value);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY ProgramUniformMatrix4x2fvContextANGLE(GLeglContext ctx,
@@ -20042,7 +22751,7 @@ void GL_APIENTRY ProgramUniformMatrix4x2fvContextANGLE(GLeglContext ctx,
           "transpose = %s, const GLfloat *value = 0x%016" PRIxPTR "",
           CID(context), program, location, count, GLbooleanToString(transpose), (uintptr_t)value);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID programPacked                         = FromGL<ShaderProgramID>(program);
@@ -20059,6 +22768,10 @@ void GL_APIENTRY ProgramUniformMatrix4x2fvContextANGLE(GLeglContext ctx,
         ANGLE_CAPTURE(ProgramUniformMatrix4x2fv, isCallValid, context, programPacked,
                       locationPacked, count, transpose, value);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY ProgramUniformMatrix4x3fvContextANGLE(GLeglContext ctx,
@@ -20074,7 +22787,7 @@ void GL_APIENTRY ProgramUniformMatrix4x3fvContextANGLE(GLeglContext ctx,
           "transpose = %s, const GLfloat *value = 0x%016" PRIxPTR "",
           CID(context), program, location, count, GLbooleanToString(transpose), (uintptr_t)value);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID programPacked                         = FromGL<ShaderProgramID>(program);
@@ -20091,6 +22804,10 @@ void GL_APIENTRY ProgramUniformMatrix4x3fvContextANGLE(GLeglContext ctx,
         ANGLE_CAPTURE(ProgramUniformMatrix4x3fv, isCallValid, context, programPacked,
                       locationPacked, count, transpose, value);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY PushDebugGroupContextANGLE(GLeglContext ctx,
@@ -20106,7 +22823,7 @@ void GL_APIENTRY PushDebugGroupContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::DebugSource, source), id, length,
           (uintptr_t)message);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -20117,6 +22834,10 @@ void GL_APIENTRY PushDebugGroupContextANGLE(GLeglContext ctx,
             context->pushDebugGroup(source, id, length, message);
         }
         ANGLE_CAPTURE(PushDebugGroup, isCallValid, context, source, id, length, message);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -20133,7 +22854,7 @@ void GL_APIENTRY PushDebugGroupKHRContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::DebugSource, source), id, length,
           (uintptr_t)message);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -20144,6 +22865,10 @@ void GL_APIENTRY PushDebugGroupKHRContextANGLE(GLeglContext ctx,
             context->pushDebugGroup(source, id, length, message);
         }
         ANGLE_CAPTURE(PushDebugGroupKHR, isCallValid, context, source, id, length, message);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -20158,7 +22883,7 @@ void GL_APIENTRY PushGroupMarkerEXTContextANGLE(GLeglContext ctx,
     // GLsizei length = %d, const GLchar *marker = 0x%016" PRIxPTR "", CID(context), length,
     // (uintptr_t)marker);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -20170,6 +22895,10 @@ void GL_APIENTRY PushGroupMarkerEXTContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(PushGroupMarkerEXT, isCallValid, context, length, marker);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY PushMatrixContextANGLE(GLeglContext ctx)
@@ -20177,7 +22906,7 @@ void GL_APIENTRY PushMatrixContextANGLE(GLeglContext ctx)
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, gl::EntryPoint::PushMatrix, "glPushMatrix", "context = %d", CID(context));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -20188,6 +22917,10 @@ void GL_APIENTRY PushMatrixContextANGLE(GLeglContext ctx)
         }
         ANGLE_CAPTURE(PushMatrix, isCallValid, context);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY QueryCounterEXTContextANGLE(GLeglContext ctx, GLuint id, GLenum target)
@@ -20197,7 +22930,7 @@ void GL_APIENTRY QueryCounterEXTContextANGLE(GLeglContext ctx, GLuint id, GLenum
           "context = %d, GLuint id = %u, GLenum target = %s", CID(context), id,
           GLenumToString(GLenumGroup::QueryTarget, target));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         QueryID idPacked                                      = FromGL<QueryID>(id);
@@ -20210,6 +22943,10 @@ void GL_APIENTRY QueryCounterEXTContextANGLE(GLeglContext ctx, GLuint id, GLenum
             context->queryCounter(idPacked, targetPacked);
         }
         ANGLE_CAPTURE(QueryCounterEXT, isCallValid, context, idPacked, targetPacked);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -20224,7 +22961,7 @@ GLbitfield GL_APIENTRY QueryMatrixxOESContextANGLE(GLeglContext ctx,
           CID(context), (uintptr_t)mantissa, (uintptr_t)exponent);
 
     GLbitfield returnValue;
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -20242,6 +22979,7 @@ GLbitfield GL_APIENTRY QueryMatrixxOESContextANGLE(GLeglContext ctx,
     }
     else
     {
+        GenerateContextLostErrorOnContext(context);
         returnValue = GetDefaultReturnValue<EntryPoint::QueryMatrixxOES, GLbitfield>();
     }
     return returnValue;
@@ -20253,7 +22991,7 @@ void GL_APIENTRY ReadBufferContextANGLE(GLeglContext ctx, GLenum src)
     EVENT(context, gl::EntryPoint::ReadBuffer, "glReadBuffer", "context = %d, GLenum src = %s",
           CID(context), GLenumToString(GLenumGroup::ReadBufferMode, src));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -20263,6 +23001,10 @@ void GL_APIENTRY ReadBufferContextANGLE(GLeglContext ctx, GLenum src)
             context->readBuffer(src);
         }
         ANGLE_CAPTURE(ReadBuffer, isCallValid, context, src);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -20282,7 +23024,7 @@ void GL_APIENTRY ReadPixelsContextANGLE(GLeglContext ctx,
           CID(context), x, y, width, height, GLenumToString(GLenumGroup::PixelFormat, format),
           GLenumToString(GLenumGroup::PixelType, type), (uintptr_t)pixels);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -20293,6 +23035,10 @@ void GL_APIENTRY ReadPixelsContextANGLE(GLeglContext ctx,
             context->readPixels(x, y, width, height, format, type, pixels);
         }
         ANGLE_CAPTURE(ReadPixels, isCallValid, context, x, y, width, height, format, type, pixels);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -20314,7 +23060,7 @@ void GL_APIENTRY ReadnPixelsContextANGLE(GLeglContext ctx,
           CID(context), x, y, width, height, GLenumToString(GLenumGroup::PixelFormat, format),
           GLenumToString(GLenumGroup::PixelType, type), bufSize, (uintptr_t)data);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -20327,6 +23073,10 @@ void GL_APIENTRY ReadnPixelsContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(ReadnPixels, isCallValid, context, x, y, width, height, format, type, bufSize,
                       data);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -20348,7 +23098,7 @@ void GL_APIENTRY ReadnPixelsEXTContextANGLE(GLeglContext ctx,
           CID(context), x, y, width, height, GLenumToString(GLenumGroup::PixelFormat, format),
           GLenumToString(GLenumGroup::PixelType, type), bufSize, (uintptr_t)data);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -20362,6 +23112,10 @@ void GL_APIENTRY ReadnPixelsEXTContextANGLE(GLeglContext ctx,
         ANGLE_CAPTURE(ReadnPixelsEXT, isCallValid, context, x, y, width, height, format, type,
                       bufSize, data);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY ReleaseShaderCompilerContextANGLE(GLeglContext ctx)
@@ -20370,7 +23124,7 @@ void GL_APIENTRY ReleaseShaderCompilerContextANGLE(GLeglContext ctx)
     EVENT(context, gl::EntryPoint::ReleaseShaderCompiler, "glReleaseShaderCompiler", "context = %d",
           CID(context));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -20380,6 +23134,10 @@ void GL_APIENTRY ReleaseShaderCompilerContextANGLE(GLeglContext ctx)
             context->releaseShaderCompiler();
         }
         ANGLE_CAPTURE(ReleaseShaderCompiler, isCallValid, context);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -20396,7 +23154,7 @@ void GL_APIENTRY RenderbufferStorageContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::RenderbufferTarget, target),
           GLenumToString(GLenumGroup::InternalFormat, internalformat), width, height);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -20409,6 +23167,10 @@ void GL_APIENTRY RenderbufferStorageContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(RenderbufferStorage, isCallValid, context, target, internalformat, width,
                       height);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -20427,7 +23189,7 @@ void GL_APIENTRY RenderbufferStorageMultisampleContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::RenderbufferTarget, target), samples,
           GLenumToString(GLenumGroup::InternalFormat, internalformat), width, height);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -20440,6 +23202,10 @@ void GL_APIENTRY RenderbufferStorageMultisampleContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(RenderbufferStorageMultisample, isCallValid, context, target, samples,
                       internalformat, width, height);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -20458,7 +23224,7 @@ void GL_APIENTRY RenderbufferStorageMultisampleANGLEContextANGLE(GLeglContext ct
           CID(context), GLenumToString(GLenumGroup::RenderbufferTarget, target), samples,
           GLenumToString(GLenumGroup::InternalFormat, internalformat), width, height);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -20471,6 +23237,10 @@ void GL_APIENTRY RenderbufferStorageMultisampleANGLEContextANGLE(GLeglContext ct
         }
         ANGLE_CAPTURE(RenderbufferStorageMultisampleANGLE, isCallValid, context, target, samples,
                       internalformat, width, height);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -20489,7 +23259,7 @@ void GL_APIENTRY RenderbufferStorageMultisampleEXTContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::RenderbufferTarget, target), samples,
           GLenumToString(GLenumGroup::InternalFormat, internalformat), width, height);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -20503,6 +23273,10 @@ void GL_APIENTRY RenderbufferStorageMultisampleEXTContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(RenderbufferStorageMultisampleEXT, isCallValid, context, target, samples,
                       internalformat, width, height);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -20519,7 +23293,7 @@ void GL_APIENTRY RenderbufferStorageOESContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::RenderbufferTarget, target),
           GLenumToString(GLenumGroup::InternalFormat, internalformat), width, height);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -20533,6 +23307,10 @@ void GL_APIENTRY RenderbufferStorageOESContextANGLE(GLeglContext ctx,
         ANGLE_CAPTURE(RenderbufferStorageOES, isCallValid, context, target, internalformat, width,
                       height);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY ResumeTransformFeedbackContextANGLE(GLeglContext ctx)
@@ -20541,7 +23319,7 @@ void GL_APIENTRY ResumeTransformFeedbackContextANGLE(GLeglContext ctx)
     EVENT(context, gl::EntryPoint::ResumeTransformFeedback, "glResumeTransformFeedback",
           "context = %d", CID(context));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -20551,6 +23329,10 @@ void GL_APIENTRY ResumeTransformFeedbackContextANGLE(GLeglContext ctx)
             context->resumeTransformFeedback();
         }
         ANGLE_CAPTURE(ResumeTransformFeedback, isCallValid, context);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -20562,7 +23344,7 @@ RotatefContextANGLE(GLeglContext ctx, GLfloat angle, GLfloat x, GLfloat y, GLflo
           "context = %d, GLfloat angle = %f, GLfloat x = %f, GLfloat y = %f, GLfloat z = %f",
           CID(context), angle, x, y, z);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -20572,6 +23354,10 @@ RotatefContextANGLE(GLeglContext ctx, GLfloat angle, GLfloat x, GLfloat y, GLflo
             context->rotatef(angle, x, y, z);
         }
         ANGLE_CAPTURE(Rotatef, isCallValid, context, angle, x, y, z);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -20584,7 +23370,7 @@ RotatexContextANGLE(GLeglContext ctx, GLfixed angle, GLfixed x, GLfixed y, GLfix
         "context = %d, GLfixed angle = 0x%X, GLfixed x = 0x%X, GLfixed y = 0x%X, GLfixed z = 0x%X",
         CID(context), angle, x, y, z);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -20595,6 +23381,10 @@ RotatexContextANGLE(GLeglContext ctx, GLfixed angle, GLfixed x, GLfixed y, GLfix
         }
         ANGLE_CAPTURE(Rotatex, isCallValid, context, angle, x, y, z);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY SampleCoverageContextANGLE(GLeglContext ctx, GLfloat value, GLboolean invert)
@@ -20604,7 +23394,7 @@ void GL_APIENTRY SampleCoverageContextANGLE(GLeglContext ctx, GLfloat value, GLb
           "context = %d, GLfloat value = %f, GLboolean invert = %s", CID(context), value,
           GLbooleanToString(invert));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -20616,6 +23406,10 @@ void GL_APIENTRY SampleCoverageContextANGLE(GLeglContext ctx, GLfloat value, GLb
         }
         ANGLE_CAPTURE(SampleCoverage, isCallValid, context, value, invert);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY SampleCoveragexContextANGLE(GLeglContext ctx, GLclampx value, GLboolean invert)
@@ -20625,7 +23419,7 @@ void GL_APIENTRY SampleCoveragexContextANGLE(GLeglContext ctx, GLclampx value, G
           "context = %d, GLclampx value = 0x%X, GLboolean invert = %s", CID(context), value,
           GLbooleanToString(invert));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -20637,6 +23431,10 @@ void GL_APIENTRY SampleCoveragexContextANGLE(GLeglContext ctx, GLclampx value, G
         }
         ANGLE_CAPTURE(SampleCoveragex, isCallValid, context, value, invert);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY SampleMaskiContextANGLE(GLeglContext ctx, GLuint maskNumber, GLbitfield mask)
@@ -20646,7 +23444,7 @@ void GL_APIENTRY SampleMaskiContextANGLE(GLeglContext ctx, GLuint maskNumber, GL
           "context = %d, GLuint maskNumber = %u, GLbitfield mask = %s", CID(context), maskNumber,
           GLbitfieldToString(GLenumGroup::DefaultGroup, mask).c_str());
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -20657,6 +23455,10 @@ void GL_APIENTRY SampleMaskiContextANGLE(GLeglContext ctx, GLuint maskNumber, GL
             context->sampleMaski(maskNumber, mask);
         }
         ANGLE_CAPTURE(SampleMaski, isCallValid, context, maskNumber, mask);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -20673,7 +23475,7 @@ void GL_APIENTRY SamplerParameterIivContextANGLE(GLeglContext ctx,
         CID(context), sampler, GLenumToString(GLenumGroup::SamplerParameterName, pname),
         (uintptr_t)param);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         SamplerID samplerPacked                               = FromGL<SamplerID>(sampler);
@@ -20685,6 +23487,10 @@ void GL_APIENTRY SamplerParameterIivContextANGLE(GLeglContext ctx,
             context->samplerParameterIiv(samplerPacked, pname, param);
         }
         ANGLE_CAPTURE(SamplerParameterIiv, isCallValid, context, samplerPacked, pname, param);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -20701,7 +23507,7 @@ void GL_APIENTRY SamplerParameterIivOESContextANGLE(GLeglContext ctx,
         CID(context), sampler, GLenumToString(GLenumGroup::SamplerParameterName, pname),
         (uintptr_t)param);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         SamplerID samplerPacked                               = FromGL<SamplerID>(sampler);
@@ -20713,6 +23519,10 @@ void GL_APIENTRY SamplerParameterIivOESContextANGLE(GLeglContext ctx,
             context->samplerParameterIiv(samplerPacked, pname, param);
         }
         ANGLE_CAPTURE(SamplerParameterIivOES, isCallValid, context, samplerPacked, pname, param);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -20729,7 +23539,7 @@ void GL_APIENTRY SamplerParameterIuivContextANGLE(GLeglContext ctx,
         CID(context), sampler, GLenumToString(GLenumGroup::SamplerParameterName, pname),
         (uintptr_t)param);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         SamplerID samplerPacked                               = FromGL<SamplerID>(sampler);
@@ -20741,6 +23551,10 @@ void GL_APIENTRY SamplerParameterIuivContextANGLE(GLeglContext ctx,
             context->samplerParameterIuiv(samplerPacked, pname, param);
         }
         ANGLE_CAPTURE(SamplerParameterIuiv, isCallValid, context, samplerPacked, pname, param);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -20757,7 +23571,7 @@ void GL_APIENTRY SamplerParameterIuivOESContextANGLE(GLeglContext ctx,
         CID(context), sampler, GLenumToString(GLenumGroup::SamplerParameterName, pname),
         (uintptr_t)param);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         SamplerID samplerPacked                               = FromGL<SamplerID>(sampler);
@@ -20769,6 +23583,10 @@ void GL_APIENTRY SamplerParameterIuivOESContextANGLE(GLeglContext ctx,
             context->samplerParameterIuiv(samplerPacked, pname, param);
         }
         ANGLE_CAPTURE(SamplerParameterIuivOES, isCallValid, context, samplerPacked, pname, param);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -20782,7 +23600,7 @@ void GL_APIENTRY SamplerParameterfContextANGLE(GLeglContext ctx,
           "context = %d, GLuint sampler = %u, GLenum pname = %s, GLfloat param = %f", CID(context),
           sampler, GLenumToString(GLenumGroup::SamplerParameterName, pname), param);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         SamplerID samplerPacked                               = FromGL<SamplerID>(sampler);
@@ -20794,6 +23612,10 @@ void GL_APIENTRY SamplerParameterfContextANGLE(GLeglContext ctx,
             context->samplerParameterf(samplerPacked, pname, param);
         }
         ANGLE_CAPTURE(SamplerParameterf, isCallValid, context, samplerPacked, pname, param);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -20809,7 +23631,7 @@ void GL_APIENTRY SamplerParameterfvContextANGLE(GLeglContext ctx,
           CID(context), sampler, GLenumToString(GLenumGroup::SamplerParameterName, pname),
           (uintptr_t)param);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         SamplerID samplerPacked                               = FromGL<SamplerID>(sampler);
@@ -20821,6 +23643,10 @@ void GL_APIENTRY SamplerParameterfvContextANGLE(GLeglContext ctx,
             context->samplerParameterfv(samplerPacked, pname, param);
         }
         ANGLE_CAPTURE(SamplerParameterfv, isCallValid, context, samplerPacked, pname, param);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -20834,7 +23660,7 @@ void GL_APIENTRY SamplerParameteriContextANGLE(GLeglContext ctx,
           "context = %d, GLuint sampler = %u, GLenum pname = %s, GLint param = %d", CID(context),
           sampler, GLenumToString(GLenumGroup::SamplerParameterName, pname), param);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         SamplerID samplerPacked                               = FromGL<SamplerID>(sampler);
@@ -20846,6 +23672,10 @@ void GL_APIENTRY SamplerParameteriContextANGLE(GLeglContext ctx,
             context->samplerParameteri(samplerPacked, pname, param);
         }
         ANGLE_CAPTURE(SamplerParameteri, isCallValid, context, samplerPacked, pname, param);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -20862,7 +23692,7 @@ void GL_APIENTRY SamplerParameterivContextANGLE(GLeglContext ctx,
         CID(context), sampler, GLenumToString(GLenumGroup::SamplerParameterName, pname),
         (uintptr_t)param);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         SamplerID samplerPacked                               = FromGL<SamplerID>(sampler);
@@ -20875,6 +23705,10 @@ void GL_APIENTRY SamplerParameterivContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(SamplerParameteriv, isCallValid, context, samplerPacked, pname, param);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY ScalefContextANGLE(GLeglContext ctx, GLfloat x, GLfloat y, GLfloat z)
@@ -20883,7 +23717,7 @@ void GL_APIENTRY ScalefContextANGLE(GLeglContext ctx, GLfloat x, GLfloat y, GLfl
     EVENT(context, gl::EntryPoint::Scalef, "glScalef",
           "context = %d, GLfloat x = %f, GLfloat y = %f, GLfloat z = %f", CID(context), x, y, z);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -20894,6 +23728,10 @@ void GL_APIENTRY ScalefContextANGLE(GLeglContext ctx, GLfloat x, GLfloat y, GLfl
         }
         ANGLE_CAPTURE(Scalef, isCallValid, context, x, y, z);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY ScalexContextANGLE(GLeglContext ctx, GLfixed x, GLfixed y, GLfixed z)
@@ -20903,7 +23741,7 @@ void GL_APIENTRY ScalexContextANGLE(GLeglContext ctx, GLfixed x, GLfixed y, GLfi
           "context = %d, GLfixed x = 0x%X, GLfixed y = 0x%X, GLfixed z = 0x%X", CID(context), x, y,
           z);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -20913,6 +23751,10 @@ void GL_APIENTRY ScalexContextANGLE(GLeglContext ctx, GLfixed x, GLfixed y, GLfi
             context->scalex(x, y, z);
         }
         ANGLE_CAPTURE(Scalex, isCallValid, context, x, y, z);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -20924,7 +23766,7 @@ ScissorContextANGLE(GLeglContext ctx, GLint x, GLint y, GLsizei width, GLsizei h
           "context = %d, GLint x = %d, GLint y = %d, GLsizei width = %d, GLsizei height = %d",
           CID(context), x, y, width, height);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -20935,6 +23777,10 @@ ScissorContextANGLE(GLeglContext ctx, GLint x, GLint y, GLsizei width, GLsizei h
             context->scissor(x, y, width, height);
         }
         ANGLE_CAPTURE(Scissor, isCallValid, context, x, y, width, height);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -20950,7 +23796,7 @@ void GL_APIENTRY SemaphoreParameterui64vEXTContextANGLE(GLeglContext ctx,
           CID(context), semaphore, GLenumToString(GLenumGroup::SemaphoreParameterName, pname),
           (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         SemaphoreID semaphorePacked                           = FromGL<SemaphoreID>(semaphore);
@@ -20965,6 +23811,10 @@ void GL_APIENTRY SemaphoreParameterui64vEXTContextANGLE(GLeglContext ctx,
         ANGLE_CAPTURE(SemaphoreParameterui64vEXT, isCallValid, context, semaphorePacked, pname,
                       params);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY SetFenceNVContextANGLE(GLeglContext ctx, GLuint fence, GLenum condition)
@@ -20974,7 +23824,7 @@ void GL_APIENTRY SetFenceNVContextANGLE(GLeglContext ctx, GLuint fence, GLenum c
           "context = %d, GLuint fence = %u, GLenum condition = %s", CID(context), fence,
           GLenumToString(GLenumGroup::DefaultGroup, condition));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         FenceNVID fencePacked                                 = FromGL<FenceNVID>(fence);
@@ -20987,6 +23837,10 @@ void GL_APIENTRY SetFenceNVContextANGLE(GLeglContext ctx, GLuint fence, GLenum c
         }
         ANGLE_CAPTURE(SetFenceNV, isCallValid, context, fencePacked, condition);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY ShadeModelContextANGLE(GLeglContext ctx, GLenum mode)
@@ -20995,7 +23849,7 @@ void GL_APIENTRY ShadeModelContextANGLE(GLeglContext ctx, GLenum mode)
     EVENT(context, gl::EntryPoint::ShadeModel, "glShadeModel", "context = %d, GLenum mode = %s",
           CID(context), GLenumToString(GLenumGroup::ShadingModel, mode));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShadingModel modePacked                               = FromGL<ShadingModel>(mode);
@@ -21006,6 +23860,10 @@ void GL_APIENTRY ShadeModelContextANGLE(GLeglContext ctx, GLenum mode)
             context->shadeModel(modePacked);
         }
         ANGLE_CAPTURE(ShadeModel, isCallValid, context, modePacked);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -21023,7 +23881,7 @@ void GL_APIENTRY ShaderBinaryContextANGLE(GLeglContext ctx,
           CID(context), count, (uintptr_t)shaders,
           GLenumToString(GLenumGroup::DefaultGroup, binaryformat), (uintptr_t)binary, length);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         const ShaderProgramID *shadersPacked = FromGL<const ShaderProgramID *>(shaders);
@@ -21037,6 +23895,10 @@ void GL_APIENTRY ShaderBinaryContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(ShaderBinary, isCallValid, context, count, shadersPacked, binaryformat,
                       binary, length);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -21052,7 +23914,7 @@ void GL_APIENTRY ShaderSourceContextANGLE(GLeglContext ctx,
           "0x%016" PRIxPTR ", const GLint *length = 0x%016" PRIxPTR "",
           CID(context), shader, count, (uintptr_t)string, (uintptr_t)length);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID shaderPacked                          = FromGL<ShaderProgramID>(shader);
@@ -21064,6 +23926,10 @@ void GL_APIENTRY ShaderSourceContextANGLE(GLeglContext ctx,
             context->shaderSource(shaderPacked, count, string, length);
         }
         ANGLE_CAPTURE(ShaderSource, isCallValid, context, shaderPacked, count, string, length);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -21084,7 +23950,7 @@ void GL_APIENTRY SignalSemaphoreEXTContextANGLE(GLeglContext ctx,
           CID(context), semaphore, numBufferBarriers, (uintptr_t)buffers, numTextureBarriers,
           (uintptr_t)textures, (uintptr_t)dstLayouts);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         SemaphoreID semaphorePacked                           = FromGL<SemaphoreID>(semaphore);
@@ -21103,6 +23969,10 @@ void GL_APIENTRY SignalSemaphoreEXTContextANGLE(GLeglContext ctx,
         ANGLE_CAPTURE(SignalSemaphoreEXT, isCallValid, context, semaphorePacked, numBufferBarriers,
                       buffersPacked, numTextureBarriers, texturesPacked, dstLayouts);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY StencilFuncContextANGLE(GLeglContext ctx, GLenum func, GLint ref, GLuint mask)
@@ -21112,7 +23982,7 @@ void GL_APIENTRY StencilFuncContextANGLE(GLeglContext ctx, GLenum func, GLint re
           "context = %d, GLenum func = %s, GLint ref = %d, GLuint mask = %u", CID(context),
           GLenumToString(GLenumGroup::StencilFunction, func), ref, mask);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -21123,6 +23993,10 @@ void GL_APIENTRY StencilFuncContextANGLE(GLeglContext ctx, GLenum func, GLint re
             context->stencilFunc(func, ref, mask);
         }
         ANGLE_CAPTURE(StencilFunc, isCallValid, context, func, ref, mask);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -21135,7 +24009,7 @@ StencilFuncSeparateContextANGLE(GLeglContext ctx, GLenum face, GLenum func, GLin
           CID(context), GLenumToString(GLenumGroup::StencilFaceDirection, face),
           GLenumToString(GLenumGroup::StencilFunction, func), ref, mask);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -21147,6 +24021,10 @@ StencilFuncSeparateContextANGLE(GLeglContext ctx, GLenum face, GLenum func, GLin
         }
         ANGLE_CAPTURE(StencilFuncSeparate, isCallValid, context, face, func, ref, mask);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY StencilMaskContextANGLE(GLeglContext ctx, GLuint mask)
@@ -21155,7 +24033,7 @@ void GL_APIENTRY StencilMaskContextANGLE(GLeglContext ctx, GLuint mask)
     EVENT(context, gl::EntryPoint::StencilMask, "glStencilMask", "context = %d, GLuint mask = %u",
           CID(context), mask);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -21166,6 +24044,10 @@ void GL_APIENTRY StencilMaskContextANGLE(GLeglContext ctx, GLuint mask)
         }
         ANGLE_CAPTURE(StencilMask, isCallValid, context, mask);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY StencilMaskSeparateContextANGLE(GLeglContext ctx, GLenum face, GLuint mask)
@@ -21175,7 +24057,7 @@ void GL_APIENTRY StencilMaskSeparateContextANGLE(GLeglContext ctx, GLenum face, 
           "context = %d, GLenum face = %s, GLuint mask = %u", CID(context),
           GLenumToString(GLenumGroup::StencilFaceDirection, face), mask);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -21186,6 +24068,10 @@ void GL_APIENTRY StencilMaskSeparateContextANGLE(GLeglContext ctx, GLenum face, 
             context->stencilMaskSeparate(face, mask);
         }
         ANGLE_CAPTURE(StencilMaskSeparate, isCallValid, context, face, mask);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -21198,7 +24084,7 @@ void GL_APIENTRY StencilOpContextANGLE(GLeglContext ctx, GLenum fail, GLenum zfa
           GLenumToString(GLenumGroup::StencilOp, zfail),
           GLenumToString(GLenumGroup::StencilOp, zpass));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -21209,6 +24095,10 @@ void GL_APIENTRY StencilOpContextANGLE(GLeglContext ctx, GLenum fail, GLenum zfa
             context->stencilOp(fail, zfail, zpass);
         }
         ANGLE_CAPTURE(StencilOp, isCallValid, context, fail, zfail, zpass);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -21227,7 +24117,7 @@ void GL_APIENTRY StencilOpSeparateContextANGLE(GLeglContext ctx,
         GLenumToString(GLenumGroup::StencilOp, dpfail),
         GLenumToString(GLenumGroup::StencilOp, dppass));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -21239,6 +24129,10 @@ void GL_APIENTRY StencilOpSeparateContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(StencilOpSeparate, isCallValid, context, face, sfail, dpfail, dppass);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 GLboolean GL_APIENTRY TestFenceNVContextANGLE(GLeglContext ctx, GLuint fence)
@@ -21248,7 +24142,7 @@ GLboolean GL_APIENTRY TestFenceNVContextANGLE(GLeglContext ctx, GLuint fence)
           CID(context), fence);
 
     GLboolean returnValue;
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         FenceNVID fencePacked                                 = FromGL<FenceNVID>(fence);
@@ -21266,6 +24160,7 @@ GLboolean GL_APIENTRY TestFenceNVContextANGLE(GLeglContext ctx, GLuint fence)
     }
     else
     {
+        GenerateContextLostErrorOnContext(context);
         returnValue = GetDefaultReturnValue<EntryPoint::TestFenceNV, GLboolean>();
     }
     return returnValue;
@@ -21282,7 +24177,7 @@ void GL_APIENTRY TexBufferContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::TextureTarget, target),
           GLenumToString(GLenumGroup::InternalFormat, internalformat), buffer);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureType targetPacked                              = FromGL<TextureType>(target);
@@ -21295,6 +24190,10 @@ void GL_APIENTRY TexBufferContextANGLE(GLeglContext ctx,
             context->texBuffer(targetPacked, internalformat, bufferPacked);
         }
         ANGLE_CAPTURE(TexBuffer, isCallValid, context, targetPacked, internalformat, bufferPacked);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -21309,7 +24208,7 @@ void GL_APIENTRY TexBufferEXTContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::TextureTarget, target),
           GLenumToString(GLenumGroup::InternalFormat, internalformat), buffer);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureType targetPacked                              = FromGL<TextureType>(target);
@@ -21325,6 +24224,10 @@ void GL_APIENTRY TexBufferEXTContextANGLE(GLeglContext ctx,
         ANGLE_CAPTURE(TexBufferEXT, isCallValid, context, targetPacked, internalformat,
                       bufferPacked);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY TexBufferOESContextANGLE(GLeglContext ctx,
@@ -21338,7 +24241,7 @@ void GL_APIENTRY TexBufferOESContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::TextureTarget, target),
           GLenumToString(GLenumGroup::InternalFormat, internalformat), buffer);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureType targetPacked                              = FromGL<TextureType>(target);
@@ -21353,6 +24256,10 @@ void GL_APIENTRY TexBufferOESContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(TexBufferOES, isCallValid, context, targetPacked, internalformat,
                       bufferPacked);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -21371,7 +24278,7 @@ void GL_APIENTRY TexBufferRangeContextANGLE(GLeglContext ctx,
           GLenumToString(GLenumGroup::InternalFormat, internalformat), buffer,
           static_cast<unsigned long long>(offset), static_cast<unsigned long long>(size));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureType targetPacked                              = FromGL<TextureType>(target);
@@ -21386,6 +24293,10 @@ void GL_APIENTRY TexBufferRangeContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(TexBufferRange, isCallValid, context, targetPacked, internalformat,
                       bufferPacked, offset, size);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -21404,7 +24315,7 @@ void GL_APIENTRY TexBufferRangeEXTContextANGLE(GLeglContext ctx,
           GLenumToString(GLenumGroup::InternalFormat, internalformat), buffer,
           static_cast<unsigned long long>(offset), static_cast<unsigned long long>(size));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureType targetPacked                              = FromGL<TextureType>(target);
@@ -21419,6 +24330,10 @@ void GL_APIENTRY TexBufferRangeEXTContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(TexBufferRangeEXT, isCallValid, context, targetPacked, internalformat,
                       bufferPacked, offset, size);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -21437,7 +24352,7 @@ void GL_APIENTRY TexBufferRangeOESContextANGLE(GLeglContext ctx,
           GLenumToString(GLenumGroup::InternalFormat, internalformat), buffer,
           static_cast<unsigned long long>(offset), static_cast<unsigned long long>(size));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureType targetPacked                              = FromGL<TextureType>(target);
@@ -21452,6 +24367,10 @@ void GL_APIENTRY TexBufferRangeOESContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(TexBufferRangeOES, isCallValid, context, targetPacked, internalformat,
                       bufferPacked, offset, size);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -21468,7 +24387,7 @@ void GL_APIENTRY TexCoordPointerContextANGLE(GLeglContext ctx,
           CID(context), size, GLenumToString(GLenumGroup::TexCoordPointerType, type), stride,
           (uintptr_t)pointer);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         VertexAttribType typePacked                           = FromGL<VertexAttribType>(type);
@@ -21481,6 +24400,10 @@ void GL_APIENTRY TexCoordPointerContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(TexCoordPointer, isCallValid, context, size, typePacked, stride, pointer);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY TexEnvfContextANGLE(GLeglContext ctx, GLenum target, GLenum pname, GLfloat param)
@@ -21491,7 +24414,7 @@ void GL_APIENTRY TexEnvfContextANGLE(GLeglContext ctx, GLenum target, GLenum pna
           GLenumToString(GLenumGroup::TextureEnvTarget, target),
           GLenumToString(GLenumGroup::TextureEnvParameter, pname), param);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureEnvTarget targetPacked                         = FromGL<TextureEnvTarget>(target);
@@ -21504,6 +24427,10 @@ void GL_APIENTRY TexEnvfContextANGLE(GLeglContext ctx, GLenum target, GLenum pna
             context->texEnvf(targetPacked, pnamePacked, param);
         }
         ANGLE_CAPTURE(TexEnvf, isCallValid, context, targetPacked, pnamePacked, param);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -21519,7 +24446,7 @@ void GL_APIENTRY TexEnvfvContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::TextureEnvTarget, target),
           GLenumToString(GLenumGroup::TextureEnvParameter, pname), (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureEnvTarget targetPacked                         = FromGL<TextureEnvTarget>(target);
@@ -21533,6 +24460,10 @@ void GL_APIENTRY TexEnvfvContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(TexEnvfv, isCallValid, context, targetPacked, pnamePacked, params);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY TexEnviContextANGLE(GLeglContext ctx, GLenum target, GLenum pname, GLint param)
@@ -21543,7 +24474,7 @@ void GL_APIENTRY TexEnviContextANGLE(GLeglContext ctx, GLenum target, GLenum pna
           GLenumToString(GLenumGroup::TextureEnvTarget, target),
           GLenumToString(GLenumGroup::TextureEnvParameter, pname), param);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureEnvTarget targetPacked                         = FromGL<TextureEnvTarget>(target);
@@ -21556,6 +24487,10 @@ void GL_APIENTRY TexEnviContextANGLE(GLeglContext ctx, GLenum target, GLenum pna
             context->texEnvi(targetPacked, pnamePacked, param);
         }
         ANGLE_CAPTURE(TexEnvi, isCallValid, context, targetPacked, pnamePacked, param);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -21572,7 +24507,7 @@ void GL_APIENTRY TexEnvivContextANGLE(GLeglContext ctx,
         CID(context), GLenumToString(GLenumGroup::TextureEnvTarget, target),
         GLenumToString(GLenumGroup::TextureEnvParameter, pname), (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureEnvTarget targetPacked                         = FromGL<TextureEnvTarget>(target);
@@ -21586,6 +24521,10 @@ void GL_APIENTRY TexEnvivContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(TexEnviv, isCallValid, context, targetPacked, pnamePacked, params);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY TexEnvxContextANGLE(GLeglContext ctx, GLenum target, GLenum pname, GLfixed param)
@@ -21596,7 +24535,7 @@ void GL_APIENTRY TexEnvxContextANGLE(GLeglContext ctx, GLenum target, GLenum pna
           GLenumToString(GLenumGroup::TextureEnvTarget, target),
           GLenumToString(GLenumGroup::TextureEnvParameter, pname), param);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureEnvTarget targetPacked                         = FromGL<TextureEnvTarget>(target);
@@ -21609,6 +24548,10 @@ void GL_APIENTRY TexEnvxContextANGLE(GLeglContext ctx, GLenum target, GLenum pna
             context->texEnvx(targetPacked, pnamePacked, param);
         }
         ANGLE_CAPTURE(TexEnvx, isCallValid, context, targetPacked, pnamePacked, param);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -21624,7 +24567,7 @@ void GL_APIENTRY TexEnvxvContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::TextureEnvTarget, target),
           GLenumToString(GLenumGroup::TextureEnvParameter, pname), (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureEnvTarget targetPacked                         = FromGL<TextureEnvTarget>(target);
@@ -21638,6 +24581,10 @@ void GL_APIENTRY TexEnvxvContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(TexEnvxv, isCallValid, context, targetPacked, pnamePacked, params);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY TexGenfOESContextANGLE(GLeglContext ctx, GLenum coord, GLenum pname, GLfloat param)
@@ -21648,7 +24595,7 @@ void GL_APIENTRY TexGenfOESContextANGLE(GLeglContext ctx, GLenum coord, GLenum p
           GLenumToString(GLenumGroup::TextureCoordName, coord),
           GLenumToString(GLenumGroup::TextureGenParameter, pname), param);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -21659,6 +24606,10 @@ void GL_APIENTRY TexGenfOESContextANGLE(GLeglContext ctx, GLenum coord, GLenum p
             context->texGenf(coord, pname, param);
         }
         ANGLE_CAPTURE(TexGenfOES, isCallValid, context, coord, pname, param);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -21675,7 +24626,7 @@ void GL_APIENTRY TexGenfvOESContextANGLE(GLeglContext ctx,
         CID(context), GLenumToString(GLenumGroup::TextureCoordName, coord),
         GLenumToString(GLenumGroup::TextureGenParameter, pname), (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -21687,6 +24638,10 @@ void GL_APIENTRY TexGenfvOESContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(TexGenfvOES, isCallValid, context, coord, pname, params);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY TexGeniOESContextANGLE(GLeglContext ctx, GLenum coord, GLenum pname, GLint param)
@@ -21697,7 +24652,7 @@ void GL_APIENTRY TexGeniOESContextANGLE(GLeglContext ctx, GLenum coord, GLenum p
           GLenumToString(GLenumGroup::TextureCoordName, coord),
           GLenumToString(GLenumGroup::TextureGenParameter, pname), param);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -21708,6 +24663,10 @@ void GL_APIENTRY TexGeniOESContextANGLE(GLeglContext ctx, GLenum coord, GLenum p
             context->texGeni(coord, pname, param);
         }
         ANGLE_CAPTURE(TexGeniOES, isCallValid, context, coord, pname, param);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -21723,7 +24682,7 @@ void GL_APIENTRY TexGenivOESContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::TextureCoordName, coord),
           GLenumToString(GLenumGroup::TextureGenParameter, pname), (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -21735,6 +24694,10 @@ void GL_APIENTRY TexGenivOESContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(TexGenivOES, isCallValid, context, coord, pname, params);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY TexGenxOESContextANGLE(GLeglContext ctx, GLenum coord, GLenum pname, GLfixed param)
@@ -21745,7 +24708,7 @@ void GL_APIENTRY TexGenxOESContextANGLE(GLeglContext ctx, GLenum coord, GLenum p
           GLenumToString(GLenumGroup::TextureCoordName, coord),
           GLenumToString(GLenumGroup::TextureGenParameter, pname), param);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -21756,6 +24719,10 @@ void GL_APIENTRY TexGenxOESContextANGLE(GLeglContext ctx, GLenum coord, GLenum p
             context->texGenx(coord, pname, param);
         }
         ANGLE_CAPTURE(TexGenxOES, isCallValid, context, coord, pname, param);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -21772,7 +24739,7 @@ void GL_APIENTRY TexGenxvOESContextANGLE(GLeglContext ctx,
         CID(context), GLenumToString(GLenumGroup::TextureCoordName, coord),
         GLenumToString(GLenumGroup::TextureGenParameter, pname), (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -21783,6 +24750,10 @@ void GL_APIENTRY TexGenxvOESContextANGLE(GLeglContext ctx,
             context->texGenxv(coord, pname, params);
         }
         ANGLE_CAPTURE(TexGenxvOES, isCallValid, context, coord, pname, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -21806,7 +24777,7 @@ void GL_APIENTRY TexImage2DContextANGLE(GLeglContext ctx,
           width, height, border, GLenumToString(GLenumGroup::PixelFormat, format),
           GLenumToString(GLenumGroup::PixelType, type), (uintptr_t)pixels);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureTarget targetPacked                            = FromGL<TextureTarget>(target);
@@ -21821,6 +24792,10 @@ void GL_APIENTRY TexImage2DContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(TexImage2D, isCallValid, context, targetPacked, level, internalformat, width,
                       height, border, format, type, pixels);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -21845,7 +24820,7 @@ void GL_APIENTRY TexImage3DContextANGLE(GLeglContext ctx,
           width, height, depth, border, GLenumToString(GLenumGroup::PixelFormat, format),
           GLenumToString(GLenumGroup::PixelType, type), (uintptr_t)pixels);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureTarget targetPacked                            = FromGL<TextureTarget>(target);
@@ -21860,6 +24835,10 @@ void GL_APIENTRY TexImage3DContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(TexImage3D, isCallValid, context, targetPacked, level, internalformat, width,
                       height, depth, border, format, type, pixels);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -21885,7 +24864,7 @@ void GL_APIENTRY TexImage3DOESContextANGLE(GLeglContext ctx,
           GLenumToString(GLenumGroup::PixelFormat, format),
           GLenumToString(GLenumGroup::PixelType, type), (uintptr_t)pixels);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureTarget targetPacked                            = FromGL<TextureTarget>(target);
@@ -21902,6 +24881,10 @@ void GL_APIENTRY TexImage3DOESContextANGLE(GLeglContext ctx,
         ANGLE_CAPTURE(TexImage3DOES, isCallValid, context, targetPacked, level, internalformat,
                       width, height, depth, border, format, type, pixels);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY TexParameterIivContextANGLE(GLeglContext ctx,
@@ -21917,7 +24900,7 @@ void GL_APIENTRY TexParameterIivContextANGLE(GLeglContext ctx,
         CID(context), GLenumToString(GLenumGroup::TextureTarget, target),
         GLenumToString(GLenumGroup::TextureParameterName, pname), (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureType targetPacked                              = FromGL<TextureType>(target);
@@ -21929,6 +24912,10 @@ void GL_APIENTRY TexParameterIivContextANGLE(GLeglContext ctx,
             context->texParameterIiv(targetPacked, pname, params);
         }
         ANGLE_CAPTURE(TexParameterIiv, isCallValid, context, targetPacked, pname, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -21945,7 +24932,7 @@ void GL_APIENTRY TexParameterIivOESContextANGLE(GLeglContext ctx,
         CID(context), GLenumToString(GLenumGroup::TextureTarget, target),
         GLenumToString(GLenumGroup::TextureParameterName, pname), (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureType targetPacked                              = FromGL<TextureType>(target);
@@ -21957,6 +24944,10 @@ void GL_APIENTRY TexParameterIivOESContextANGLE(GLeglContext ctx,
             context->texParameterIiv(targetPacked, pname, params);
         }
         ANGLE_CAPTURE(TexParameterIivOES, isCallValid, context, targetPacked, pname, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -21973,7 +24964,7 @@ void GL_APIENTRY TexParameterIuivContextANGLE(GLeglContext ctx,
         CID(context), GLenumToString(GLenumGroup::TextureTarget, target),
         GLenumToString(GLenumGroup::TextureParameterName, pname), (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureType targetPacked                              = FromGL<TextureType>(target);
@@ -21985,6 +24976,10 @@ void GL_APIENTRY TexParameterIuivContextANGLE(GLeglContext ctx,
             context->texParameterIuiv(targetPacked, pname, params);
         }
         ANGLE_CAPTURE(TexParameterIuiv, isCallValid, context, targetPacked, pname, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -22001,7 +24996,7 @@ void GL_APIENTRY TexParameterIuivOESContextANGLE(GLeglContext ctx,
         CID(context), GLenumToString(GLenumGroup::TextureTarget, target),
         GLenumToString(GLenumGroup::TextureParameterName, pname), (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureType targetPacked                              = FromGL<TextureType>(target);
@@ -22013,6 +25008,10 @@ void GL_APIENTRY TexParameterIuivOESContextANGLE(GLeglContext ctx,
             context->texParameterIuiv(targetPacked, pname, params);
         }
         ANGLE_CAPTURE(TexParameterIuivOES, isCallValid, context, targetPacked, pname, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -22027,7 +25026,7 @@ void GL_APIENTRY TexParameterfContextANGLE(GLeglContext ctx,
           GLenumToString(GLenumGroup::TextureTarget, target),
           GLenumToString(GLenumGroup::TextureParameterName, pname), param);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureType targetPacked                              = FromGL<TextureType>(target);
@@ -22039,6 +25038,10 @@ void GL_APIENTRY TexParameterfContextANGLE(GLeglContext ctx,
             context->texParameterf(targetPacked, pname, param);
         }
         ANGLE_CAPTURE(TexParameterf, isCallValid, context, targetPacked, pname, param);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -22054,7 +25057,7 @@ void GL_APIENTRY TexParameterfvContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::TextureTarget, target),
           GLenumToString(GLenumGroup::TextureParameterName, pname), (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureType targetPacked                              = FromGL<TextureType>(target);
@@ -22066,6 +25069,10 @@ void GL_APIENTRY TexParameterfvContextANGLE(GLeglContext ctx,
             context->texParameterfv(targetPacked, pname, params);
         }
         ANGLE_CAPTURE(TexParameterfv, isCallValid, context, targetPacked, pname, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -22080,7 +25087,7 @@ void GL_APIENTRY TexParameteriContextANGLE(GLeglContext ctx,
           GLenumToString(GLenumGroup::TextureTarget, target),
           GLenumToString(GLenumGroup::TextureParameterName, pname), param);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureType targetPacked                              = FromGL<TextureType>(target);
@@ -22092,6 +25099,10 @@ void GL_APIENTRY TexParameteriContextANGLE(GLeglContext ctx,
             context->texParameteri(targetPacked, pname, param);
         }
         ANGLE_CAPTURE(TexParameteri, isCallValid, context, targetPacked, pname, param);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -22108,7 +25119,7 @@ void GL_APIENTRY TexParameterivContextANGLE(GLeglContext ctx,
         CID(context), GLenumToString(GLenumGroup::TextureTarget, target),
         GLenumToString(GLenumGroup::TextureParameterName, pname), (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureType targetPacked                              = FromGL<TextureType>(target);
@@ -22120,6 +25131,10 @@ void GL_APIENTRY TexParameterivContextANGLE(GLeglContext ctx,
             context->texParameteriv(targetPacked, pname, params);
         }
         ANGLE_CAPTURE(TexParameteriv, isCallValid, context, targetPacked, pname, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -22134,7 +25149,7 @@ void GL_APIENTRY TexParameterxContextANGLE(GLeglContext ctx,
           GLenumToString(GLenumGroup::TextureTarget, target),
           GLenumToString(GLenumGroup::GetTextureParameter, pname), param);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureType targetPacked                              = FromGL<TextureType>(target);
@@ -22146,6 +25161,10 @@ void GL_APIENTRY TexParameterxContextANGLE(GLeglContext ctx,
             context->texParameterx(targetPacked, pname, param);
         }
         ANGLE_CAPTURE(TexParameterx, isCallValid, context, targetPacked, pname, param);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -22161,7 +25180,7 @@ void GL_APIENTRY TexParameterxvContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::TextureTarget, target),
           GLenumToString(GLenumGroup::GetTextureParameter, pname), (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureType targetPacked                              = FromGL<TextureType>(target);
@@ -22173,6 +25192,10 @@ void GL_APIENTRY TexParameterxvContextANGLE(GLeglContext ctx,
             context->texParameterxv(targetPacked, pname, params);
         }
         ANGLE_CAPTURE(TexParameterxv, isCallValid, context, targetPacked, pname, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -22189,7 +25212,7 @@ void GL_APIENTRY TexStorage1DEXTContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::TextureTarget, target), levels,
           GLenumToString(GLenumGroup::InternalFormat, internalformat), width);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -22201,6 +25224,10 @@ void GL_APIENTRY TexStorage1DEXTContextANGLE(GLeglContext ctx,
             context->texStorage1D(target, levels, internalformat, width);
         }
         ANGLE_CAPTURE(TexStorage1DEXT, isCallValid, context, target, levels, internalformat, width);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -22218,7 +25245,7 @@ void GL_APIENTRY TexStorage2DContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::TextureTarget, target), levels,
           GLenumToString(GLenumGroup::InternalFormat, internalformat), width, height);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureType targetPacked                              = FromGL<TextureType>(target);
@@ -22232,6 +25259,10 @@ void GL_APIENTRY TexStorage2DContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(TexStorage2D, isCallValid, context, targetPacked, levels, internalformat,
                       width, height);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -22249,7 +25280,7 @@ void GL_APIENTRY TexStorage2DEXTContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::TextureTarget, target), levels,
           GLenumToString(GLenumGroup::InternalFormat, internalformat), width, height);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureType targetPacked                              = FromGL<TextureType>(target);
@@ -22263,6 +25294,10 @@ void GL_APIENTRY TexStorage2DEXTContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(TexStorage2DEXT, isCallValid, context, targetPacked, levels, internalformat,
                       width, height);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -22282,7 +25317,7 @@ void GL_APIENTRY TexStorage2DMultisampleContextANGLE(GLeglContext ctx,
           GLenumToString(GLenumGroup::InternalFormat, internalformat), width, height,
           GLbooleanToString(fixedsamplelocations));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureType targetPacked                              = FromGL<TextureType>(target);
@@ -22298,6 +25333,10 @@ void GL_APIENTRY TexStorage2DMultisampleContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(TexStorage2DMultisample, isCallValid, context, targetPacked, samples,
                       internalformat, width, height, fixedsamplelocations);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -22316,7 +25355,7 @@ void GL_APIENTRY TexStorage3DContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::TextureTarget, target), levels,
           GLenumToString(GLenumGroup::InternalFormat, internalformat), width, height, depth);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureType targetPacked                              = FromGL<TextureType>(target);
@@ -22330,6 +25369,10 @@ void GL_APIENTRY TexStorage3DContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(TexStorage3D, isCallValid, context, targetPacked, levels, internalformat,
                       width, height, depth);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -22348,7 +25391,7 @@ void GL_APIENTRY TexStorage3DEXTContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::TextureTarget, target), levels,
           GLenumToString(GLenumGroup::InternalFormat, internalformat), width, height, depth);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureType targetPacked                              = FromGL<TextureType>(target);
@@ -22362,6 +25405,10 @@ void GL_APIENTRY TexStorage3DEXTContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(TexStorage3DEXT, isCallValid, context, targetPacked, levels, internalformat,
                       width, height, depth);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -22383,7 +25430,7 @@ void GL_APIENTRY TexStorage3DMultisampleContextANGLE(GLeglContext ctx,
           GLenumToString(GLenumGroup::InternalFormat, internalformat), width, height, depth,
           GLbooleanToString(fixedsamplelocations));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureType targetPacked                              = FromGL<TextureType>(target);
@@ -22399,6 +25446,10 @@ void GL_APIENTRY TexStorage3DMultisampleContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(TexStorage3DMultisample, isCallValid, context, targetPacked, samples,
                       internalformat, width, height, depth, fixedsamplelocations);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -22420,7 +25471,7 @@ void GL_APIENTRY TexStorage3DMultisampleOESContextANGLE(GLeglContext ctx,
           GLenumToString(GLenumGroup::InternalFormat, internalformat), width, height, depth,
           GLbooleanToString(fixedsamplelocations));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureType targetPacked                              = FromGL<TextureType>(target);
@@ -22436,6 +25487,10 @@ void GL_APIENTRY TexStorage3DMultisampleOESContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(TexStorage3DMultisampleOES, isCallValid, context, targetPacked, samples,
                       internalformat, width, height, depth, fixedsamplelocations);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -22456,7 +25511,7 @@ void GL_APIENTRY TexStorageMem2DEXTContextANGLE(GLeglContext ctx,
           GLenumToString(GLenumGroup::DefaultGroup, internalFormat), width, height, memory,
           static_cast<unsigned long long>(offset));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureType targetPacked                              = FromGL<TextureType>(target);
@@ -22473,6 +25528,10 @@ void GL_APIENTRY TexStorageMem2DEXTContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(TexStorageMem2DEXT, isCallValid, context, targetPacked, levels,
                       internalFormat, width, height, memoryPacked, offset);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -22495,7 +25554,7 @@ void GL_APIENTRY TexStorageMem2DMultisampleEXTContextANGLE(GLeglContext ctx,
           GLenumToString(GLenumGroup::DefaultGroup, internalFormat), width, height,
           GLbooleanToString(fixedSampleLocations), memory, static_cast<unsigned long long>(offset));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureType targetPacked                              = FromGL<TextureType>(target);
@@ -22512,6 +25571,10 @@ void GL_APIENTRY TexStorageMem2DMultisampleEXTContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(TexStorageMem2DMultisampleEXT, isCallValid, context, targetPacked, samples,
                       internalFormat, width, height, fixedSampleLocations, memoryPacked, offset);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -22534,7 +25597,7 @@ void GL_APIENTRY TexStorageMem3DEXTContextANGLE(GLeglContext ctx,
           GLenumToString(GLenumGroup::DefaultGroup, internalFormat), width, height, depth, memory,
           static_cast<unsigned long long>(offset));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureType targetPacked                              = FromGL<TextureType>(target);
@@ -22551,6 +25614,10 @@ void GL_APIENTRY TexStorageMem3DEXTContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(TexStorageMem3DEXT, isCallValid, context, targetPacked, levels,
                       internalFormat, width, height, depth, memoryPacked, offset);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -22574,7 +25641,7 @@ void GL_APIENTRY TexStorageMem3DMultisampleEXTContextANGLE(GLeglContext ctx,
           GLenumToString(GLenumGroup::DefaultGroup, internalFormat), width, height, depth,
           GLbooleanToString(fixedSampleLocations), memory, static_cast<unsigned long long>(offset));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureType targetPacked                              = FromGL<TextureType>(target);
@@ -22593,6 +25660,10 @@ void GL_APIENTRY TexStorageMem3DMultisampleEXTContextANGLE(GLeglContext ctx,
         ANGLE_CAPTURE(TexStorageMem3DMultisampleEXT, isCallValid, context, targetPacked, samples,
                       internalFormat, width, height, depth, fixedSampleLocations, memoryPacked,
                       offset);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -22616,7 +25687,7 @@ void GL_APIENTRY TexSubImage2DContextANGLE(GLeglContext ctx,
           width, height, GLenumToString(GLenumGroup::PixelFormat, format),
           GLenumToString(GLenumGroup::PixelType, type), (uintptr_t)pixels);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureTarget targetPacked                            = FromGL<TextureTarget>(target);
@@ -22631,6 +25702,10 @@ void GL_APIENTRY TexSubImage2DContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(TexSubImage2D, isCallValid, context, targetPacked, level, xoffset, yoffset,
                       width, height, format, type, pixels);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -22656,7 +25731,7 @@ void GL_APIENTRY TexSubImage3DContextANGLE(GLeglContext ctx,
           zoffset, width, height, depth, GLenumToString(GLenumGroup::PixelFormat, format),
           GLenumToString(GLenumGroup::PixelType, type), (uintptr_t)pixels);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureTarget targetPacked                            = FromGL<TextureTarget>(target);
@@ -22672,6 +25747,10 @@ void GL_APIENTRY TexSubImage3DContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(TexSubImage3D, isCallValid, context, targetPacked, level, xoffset, yoffset,
                       zoffset, width, height, depth, format, type, pixels);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -22697,7 +25776,7 @@ void GL_APIENTRY TexSubImage3DOESContextANGLE(GLeglContext ctx,
           zoffset, width, height, depth, GLenumToString(GLenumGroup::PixelFormat, format),
           GLenumToString(GLenumGroup::PixelType, type), (uintptr_t)pixels);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureTarget targetPacked                            = FromGL<TextureTarget>(target);
@@ -22714,6 +25793,10 @@ void GL_APIENTRY TexSubImage3DOESContextANGLE(GLeglContext ctx,
         ANGLE_CAPTURE(TexSubImage3DOES, isCallValid, context, targetPacked, level, xoffset, yoffset,
                       zoffset, width, height, depth, format, type, pixels);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY TransformFeedbackVaryingsContextANGLE(GLeglContext ctx,
@@ -22729,7 +25812,7 @@ void GL_APIENTRY TransformFeedbackVaryingsContextANGLE(GLeglContext ctx,
           CID(context), program, count, (uintptr_t)varyings,
           GLenumToString(GLenumGroup::DefaultGroup, bufferMode));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID programPacked                         = FromGL<ShaderProgramID>(program);
@@ -22744,6 +25827,10 @@ void GL_APIENTRY TransformFeedbackVaryingsContextANGLE(GLeglContext ctx,
         ANGLE_CAPTURE(TransformFeedbackVaryings, isCallValid, context, programPacked, count,
                       varyings, bufferMode);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY TranslatefContextANGLE(GLeglContext ctx, GLfloat x, GLfloat y, GLfloat z)
@@ -22752,7 +25839,7 @@ void GL_APIENTRY TranslatefContextANGLE(GLeglContext ctx, GLfloat x, GLfloat y, 
     EVENT(context, gl::EntryPoint::Translatef, "glTranslatef",
           "context = %d, GLfloat x = %f, GLfloat y = %f, GLfloat z = %f", CID(context), x, y, z);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -22763,6 +25850,10 @@ void GL_APIENTRY TranslatefContextANGLE(GLeglContext ctx, GLfloat x, GLfloat y, 
         }
         ANGLE_CAPTURE(Translatef, isCallValid, context, x, y, z);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY TranslatexContextANGLE(GLeglContext ctx, GLfixed x, GLfixed y, GLfixed z)
@@ -22772,7 +25863,7 @@ void GL_APIENTRY TranslatexContextANGLE(GLeglContext ctx, GLfixed x, GLfixed y, 
           "context = %d, GLfixed x = 0x%X, GLfixed y = 0x%X, GLfixed z = 0x%X", CID(context), x, y,
           z);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -22783,6 +25874,10 @@ void GL_APIENTRY TranslatexContextANGLE(GLeglContext ctx, GLfixed x, GLfixed y, 
         }
         ANGLE_CAPTURE(Translatex, isCallValid, context, x, y, z);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY Uniform1fContextANGLE(GLeglContext ctx, GLint location, GLfloat v0)
@@ -22791,7 +25886,7 @@ void GL_APIENTRY Uniform1fContextANGLE(GLeglContext ctx, GLint location, GLfloat
     EVENT(context, gl::EntryPoint::Uniform1f, "glUniform1f",
           "context = %d, GLint location = %d, GLfloat v0 = %f", CID(context), location, v0);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         UniformLocation locationPacked                        = FromGL<UniformLocation>(location);
@@ -22803,6 +25898,10 @@ void GL_APIENTRY Uniform1fContextANGLE(GLeglContext ctx, GLint location, GLfloat
             context->uniform1f(locationPacked, v0);
         }
         ANGLE_CAPTURE(Uniform1f, isCallValid, context, locationPacked, v0);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -22817,7 +25916,7 @@ void GL_APIENTRY Uniform1fvContextANGLE(GLeglContext ctx,
           "0x%016" PRIxPTR "",
           CID(context), location, count, (uintptr_t)value);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         UniformLocation locationPacked                        = FromGL<UniformLocation>(location);
@@ -22830,6 +25929,10 @@ void GL_APIENTRY Uniform1fvContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(Uniform1fv, isCallValid, context, locationPacked, count, value);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY Uniform1iContextANGLE(GLeglContext ctx, GLint location, GLint v0)
@@ -22838,7 +25941,7 @@ void GL_APIENTRY Uniform1iContextANGLE(GLeglContext ctx, GLint location, GLint v
     EVENT(context, gl::EntryPoint::Uniform1i, "glUniform1i",
           "context = %d, GLint location = %d, GLint v0 = %d", CID(context), location, v0);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         UniformLocation locationPacked                        = FromGL<UniformLocation>(location);
@@ -22850,6 +25953,10 @@ void GL_APIENTRY Uniform1iContextANGLE(GLeglContext ctx, GLint location, GLint v
             context->uniform1i(locationPacked, v0);
         }
         ANGLE_CAPTURE(Uniform1i, isCallValid, context, locationPacked, v0);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -22865,7 +25972,7 @@ void GL_APIENTRY Uniform1ivContextANGLE(GLeglContext ctx,
         "",
         CID(context), location, count, (uintptr_t)value);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         UniformLocation locationPacked                        = FromGL<UniformLocation>(location);
@@ -22878,6 +25985,10 @@ void GL_APIENTRY Uniform1ivContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(Uniform1iv, isCallValid, context, locationPacked, count, value);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY Uniform1uiContextANGLE(GLeglContext ctx, GLint location, GLuint v0)
@@ -22886,7 +25997,7 @@ void GL_APIENTRY Uniform1uiContextANGLE(GLeglContext ctx, GLint location, GLuint
     EVENT(context, gl::EntryPoint::Uniform1ui, "glUniform1ui",
           "context = %d, GLint location = %d, GLuint v0 = %u", CID(context), location, v0);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         UniformLocation locationPacked                        = FromGL<UniformLocation>(location);
@@ -22898,6 +26009,10 @@ void GL_APIENTRY Uniform1uiContextANGLE(GLeglContext ctx, GLint location, GLuint
             context->uniform1ui(locationPacked, v0);
         }
         ANGLE_CAPTURE(Uniform1ui, isCallValid, context, locationPacked, v0);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -22912,7 +26027,7 @@ void GL_APIENTRY Uniform1uivContextANGLE(GLeglContext ctx,
           "0x%016" PRIxPTR "",
           CID(context), location, count, (uintptr_t)value);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         UniformLocation locationPacked                        = FromGL<UniformLocation>(location);
@@ -22925,6 +26040,10 @@ void GL_APIENTRY Uniform1uivContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(Uniform1uiv, isCallValid, context, locationPacked, count, value);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY Uniform2fContextANGLE(GLeglContext ctx, GLint location, GLfloat v0, GLfloat v1)
@@ -22934,7 +26053,7 @@ void GL_APIENTRY Uniform2fContextANGLE(GLeglContext ctx, GLint location, GLfloat
           "context = %d, GLint location = %d, GLfloat v0 = %f, GLfloat v1 = %f", CID(context),
           location, v0, v1);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         UniformLocation locationPacked                        = FromGL<UniformLocation>(location);
@@ -22946,6 +26065,10 @@ void GL_APIENTRY Uniform2fContextANGLE(GLeglContext ctx, GLint location, GLfloat
             context->uniform2f(locationPacked, v0, v1);
         }
         ANGLE_CAPTURE(Uniform2f, isCallValid, context, locationPacked, v0, v1);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -22960,7 +26083,7 @@ void GL_APIENTRY Uniform2fvContextANGLE(GLeglContext ctx,
           "0x%016" PRIxPTR "",
           CID(context), location, count, (uintptr_t)value);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         UniformLocation locationPacked                        = FromGL<UniformLocation>(location);
@@ -22973,6 +26096,10 @@ void GL_APIENTRY Uniform2fvContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(Uniform2fv, isCallValid, context, locationPacked, count, value);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY Uniform2iContextANGLE(GLeglContext ctx, GLint location, GLint v0, GLint v1)
@@ -22982,7 +26109,7 @@ void GL_APIENTRY Uniform2iContextANGLE(GLeglContext ctx, GLint location, GLint v
           "context = %d, GLint location = %d, GLint v0 = %d, GLint v1 = %d", CID(context), location,
           v0, v1);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         UniformLocation locationPacked                        = FromGL<UniformLocation>(location);
@@ -22994,6 +26121,10 @@ void GL_APIENTRY Uniform2iContextANGLE(GLeglContext ctx, GLint location, GLint v
             context->uniform2i(locationPacked, v0, v1);
         }
         ANGLE_CAPTURE(Uniform2i, isCallValid, context, locationPacked, v0, v1);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -23009,7 +26140,7 @@ void GL_APIENTRY Uniform2ivContextANGLE(GLeglContext ctx,
         "",
         CID(context), location, count, (uintptr_t)value);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         UniformLocation locationPacked                        = FromGL<UniformLocation>(location);
@@ -23022,6 +26153,10 @@ void GL_APIENTRY Uniform2ivContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(Uniform2iv, isCallValid, context, locationPacked, count, value);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY Uniform2uiContextANGLE(GLeglContext ctx, GLint location, GLuint v0, GLuint v1)
@@ -23031,7 +26166,7 @@ void GL_APIENTRY Uniform2uiContextANGLE(GLeglContext ctx, GLint location, GLuint
           "context = %d, GLint location = %d, GLuint v0 = %u, GLuint v1 = %u", CID(context),
           location, v0, v1);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         UniformLocation locationPacked                        = FromGL<UniformLocation>(location);
@@ -23043,6 +26178,10 @@ void GL_APIENTRY Uniform2uiContextANGLE(GLeglContext ctx, GLint location, GLuint
             context->uniform2ui(locationPacked, v0, v1);
         }
         ANGLE_CAPTURE(Uniform2ui, isCallValid, context, locationPacked, v0, v1);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -23057,7 +26196,7 @@ void GL_APIENTRY Uniform2uivContextANGLE(GLeglContext ctx,
           "0x%016" PRIxPTR "",
           CID(context), location, count, (uintptr_t)value);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         UniformLocation locationPacked                        = FromGL<UniformLocation>(location);
@@ -23070,6 +26209,10 @@ void GL_APIENTRY Uniform2uivContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(Uniform2uiv, isCallValid, context, locationPacked, count, value);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY
@@ -23080,7 +26223,7 @@ Uniform3fContextANGLE(GLeglContext ctx, GLint location, GLfloat v0, GLfloat v1, 
           "context = %d, GLint location = %d, GLfloat v0 = %f, GLfloat v1 = %f, GLfloat v2 = %f",
           CID(context), location, v0, v1, v2);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         UniformLocation locationPacked                        = FromGL<UniformLocation>(location);
@@ -23092,6 +26235,10 @@ Uniform3fContextANGLE(GLeglContext ctx, GLint location, GLfloat v0, GLfloat v1, 
             context->uniform3f(locationPacked, v0, v1, v2);
         }
         ANGLE_CAPTURE(Uniform3f, isCallValid, context, locationPacked, v0, v1, v2);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -23106,7 +26253,7 @@ void GL_APIENTRY Uniform3fvContextANGLE(GLeglContext ctx,
           "0x%016" PRIxPTR "",
           CID(context), location, count, (uintptr_t)value);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         UniformLocation locationPacked                        = FromGL<UniformLocation>(location);
@@ -23119,6 +26266,10 @@ void GL_APIENTRY Uniform3fvContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(Uniform3fv, isCallValid, context, locationPacked, count, value);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY
@@ -23129,7 +26280,7 @@ Uniform3iContextANGLE(GLeglContext ctx, GLint location, GLint v0, GLint v1, GLin
           "context = %d, GLint location = %d, GLint v0 = %d, GLint v1 = %d, GLint v2 = %d",
           CID(context), location, v0, v1, v2);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         UniformLocation locationPacked                        = FromGL<UniformLocation>(location);
@@ -23141,6 +26292,10 @@ Uniform3iContextANGLE(GLeglContext ctx, GLint location, GLint v0, GLint v1, GLin
             context->uniform3i(locationPacked, v0, v1, v2);
         }
         ANGLE_CAPTURE(Uniform3i, isCallValid, context, locationPacked, v0, v1, v2);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -23156,7 +26311,7 @@ void GL_APIENTRY Uniform3ivContextANGLE(GLeglContext ctx,
         "",
         CID(context), location, count, (uintptr_t)value);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         UniformLocation locationPacked                        = FromGL<UniformLocation>(location);
@@ -23169,6 +26324,10 @@ void GL_APIENTRY Uniform3ivContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(Uniform3iv, isCallValid, context, locationPacked, count, value);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY
@@ -23179,7 +26338,7 @@ Uniform3uiContextANGLE(GLeglContext ctx, GLint location, GLuint v0, GLuint v1, G
           "context = %d, GLint location = %d, GLuint v0 = %u, GLuint v1 = %u, GLuint v2 = %u",
           CID(context), location, v0, v1, v2);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         UniformLocation locationPacked                        = FromGL<UniformLocation>(location);
@@ -23191,6 +26350,10 @@ Uniform3uiContextANGLE(GLeglContext ctx, GLint location, GLuint v0, GLuint v1, G
             context->uniform3ui(locationPacked, v0, v1, v2);
         }
         ANGLE_CAPTURE(Uniform3ui, isCallValid, context, locationPacked, v0, v1, v2);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -23205,7 +26368,7 @@ void GL_APIENTRY Uniform3uivContextANGLE(GLeglContext ctx,
           "0x%016" PRIxPTR "",
           CID(context), location, count, (uintptr_t)value);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         UniformLocation locationPacked                        = FromGL<UniformLocation>(location);
@@ -23217,6 +26380,10 @@ void GL_APIENTRY Uniform3uivContextANGLE(GLeglContext ctx,
             context->uniform3uiv(locationPacked, count, value);
         }
         ANGLE_CAPTURE(Uniform3uiv, isCallValid, context, locationPacked, count, value);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -23233,7 +26400,7 @@ void GL_APIENTRY Uniform4fContextANGLE(GLeglContext ctx,
           "GLfloat v3 = %f",
           CID(context), location, v0, v1, v2, v3);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         UniformLocation locationPacked                        = FromGL<UniformLocation>(location);
@@ -23245,6 +26412,10 @@ void GL_APIENTRY Uniform4fContextANGLE(GLeglContext ctx,
             context->uniform4f(locationPacked, v0, v1, v2, v3);
         }
         ANGLE_CAPTURE(Uniform4f, isCallValid, context, locationPacked, v0, v1, v2, v3);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -23259,7 +26430,7 @@ void GL_APIENTRY Uniform4fvContextANGLE(GLeglContext ctx,
           "0x%016" PRIxPTR "",
           CID(context), location, count, (uintptr_t)value);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         UniformLocation locationPacked                        = FromGL<UniformLocation>(location);
@@ -23272,6 +26443,10 @@ void GL_APIENTRY Uniform4fvContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(Uniform4fv, isCallValid, context, locationPacked, count, value);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY
@@ -23283,7 +26458,7 @@ Uniform4iContextANGLE(GLeglContext ctx, GLint location, GLint v0, GLint v1, GLin
           "v3 = %d",
           CID(context), location, v0, v1, v2, v3);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         UniformLocation locationPacked                        = FromGL<UniformLocation>(location);
@@ -23295,6 +26470,10 @@ Uniform4iContextANGLE(GLeglContext ctx, GLint location, GLint v0, GLint v1, GLin
             context->uniform4i(locationPacked, v0, v1, v2, v3);
         }
         ANGLE_CAPTURE(Uniform4i, isCallValid, context, locationPacked, v0, v1, v2, v3);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -23310,7 +26489,7 @@ void GL_APIENTRY Uniform4ivContextANGLE(GLeglContext ctx,
         "",
         CID(context), location, count, (uintptr_t)value);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         UniformLocation locationPacked                        = FromGL<UniformLocation>(location);
@@ -23323,6 +26502,10 @@ void GL_APIENTRY Uniform4ivContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(Uniform4iv, isCallValid, context, locationPacked, count, value);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY
@@ -23334,7 +26517,7 @@ Uniform4uiContextANGLE(GLeglContext ctx, GLint location, GLuint v0, GLuint v1, G
           "GLuint v3 = %u",
           CID(context), location, v0, v1, v2, v3);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         UniformLocation locationPacked                        = FromGL<UniformLocation>(location);
@@ -23346,6 +26529,10 @@ Uniform4uiContextANGLE(GLeglContext ctx, GLint location, GLuint v0, GLuint v1, G
             context->uniform4ui(locationPacked, v0, v1, v2, v3);
         }
         ANGLE_CAPTURE(Uniform4ui, isCallValid, context, locationPacked, v0, v1, v2, v3);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -23360,7 +26547,7 @@ void GL_APIENTRY Uniform4uivContextANGLE(GLeglContext ctx,
           "0x%016" PRIxPTR "",
           CID(context), location, count, (uintptr_t)value);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         UniformLocation locationPacked                        = FromGL<UniformLocation>(location);
@@ -23372,6 +26559,10 @@ void GL_APIENTRY Uniform4uivContextANGLE(GLeglContext ctx,
             context->uniform4uiv(locationPacked, count, value);
         }
         ANGLE_CAPTURE(Uniform4uiv, isCallValid, context, locationPacked, count, value);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -23386,7 +26577,7 @@ void GL_APIENTRY UniformBlockBindingContextANGLE(GLeglContext ctx,
           "uniformBlockBinding = %u",
           CID(context), program, uniformBlockIndex, uniformBlockBinding);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID programPacked                         = FromGL<ShaderProgramID>(program);
@@ -23400,6 +26591,10 @@ void GL_APIENTRY UniformBlockBindingContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(UniformBlockBinding, isCallValid, context, programPacked, uniformBlockIndex,
                       uniformBlockBinding);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -23415,7 +26610,7 @@ void GL_APIENTRY UniformMatrix2fvContextANGLE(GLeglContext ctx,
           "GLfloat *value = 0x%016" PRIxPTR "",
           CID(context), location, count, GLbooleanToString(transpose), (uintptr_t)value);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         UniformLocation locationPacked                        = FromGL<UniformLocation>(location);
@@ -23429,6 +26624,10 @@ void GL_APIENTRY UniformMatrix2fvContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(UniformMatrix2fv, isCallValid, context, locationPacked, count, transpose,
                       value);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -23444,7 +26643,7 @@ void GL_APIENTRY UniformMatrix2x3fvContextANGLE(GLeglContext ctx,
           "GLfloat *value = 0x%016" PRIxPTR "",
           CID(context), location, count, GLbooleanToString(transpose), (uintptr_t)value);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         UniformLocation locationPacked                        = FromGL<UniformLocation>(location);
@@ -23458,6 +26657,10 @@ void GL_APIENTRY UniformMatrix2x3fvContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(UniformMatrix2x3fv, isCallValid, context, locationPacked, count, transpose,
                       value);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -23473,7 +26676,7 @@ void GL_APIENTRY UniformMatrix2x4fvContextANGLE(GLeglContext ctx,
           "GLfloat *value = 0x%016" PRIxPTR "",
           CID(context), location, count, GLbooleanToString(transpose), (uintptr_t)value);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         UniformLocation locationPacked                        = FromGL<UniformLocation>(location);
@@ -23487,6 +26690,10 @@ void GL_APIENTRY UniformMatrix2x4fvContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(UniformMatrix2x4fv, isCallValid, context, locationPacked, count, transpose,
                       value);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -23502,7 +26709,7 @@ void GL_APIENTRY UniformMatrix3fvContextANGLE(GLeglContext ctx,
           "GLfloat *value = 0x%016" PRIxPTR "",
           CID(context), location, count, GLbooleanToString(transpose), (uintptr_t)value);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         UniformLocation locationPacked                        = FromGL<UniformLocation>(location);
@@ -23516,6 +26723,10 @@ void GL_APIENTRY UniformMatrix3fvContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(UniformMatrix3fv, isCallValid, context, locationPacked, count, transpose,
                       value);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -23531,7 +26742,7 @@ void GL_APIENTRY UniformMatrix3x2fvContextANGLE(GLeglContext ctx,
           "GLfloat *value = 0x%016" PRIxPTR "",
           CID(context), location, count, GLbooleanToString(transpose), (uintptr_t)value);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         UniformLocation locationPacked                        = FromGL<UniformLocation>(location);
@@ -23545,6 +26756,10 @@ void GL_APIENTRY UniformMatrix3x2fvContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(UniformMatrix3x2fv, isCallValid, context, locationPacked, count, transpose,
                       value);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -23560,7 +26775,7 @@ void GL_APIENTRY UniformMatrix3x4fvContextANGLE(GLeglContext ctx,
           "GLfloat *value = 0x%016" PRIxPTR "",
           CID(context), location, count, GLbooleanToString(transpose), (uintptr_t)value);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         UniformLocation locationPacked                        = FromGL<UniformLocation>(location);
@@ -23574,6 +26789,10 @@ void GL_APIENTRY UniformMatrix3x4fvContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(UniformMatrix3x4fv, isCallValid, context, locationPacked, count, transpose,
                       value);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -23589,7 +26808,7 @@ void GL_APIENTRY UniformMatrix4fvContextANGLE(GLeglContext ctx,
           "GLfloat *value = 0x%016" PRIxPTR "",
           CID(context), location, count, GLbooleanToString(transpose), (uintptr_t)value);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         UniformLocation locationPacked                        = FromGL<UniformLocation>(location);
@@ -23603,6 +26822,10 @@ void GL_APIENTRY UniformMatrix4fvContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(UniformMatrix4fv, isCallValid, context, locationPacked, count, transpose,
                       value);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -23618,7 +26841,7 @@ void GL_APIENTRY UniformMatrix4x2fvContextANGLE(GLeglContext ctx,
           "GLfloat *value = 0x%016" PRIxPTR "",
           CID(context), location, count, GLbooleanToString(transpose), (uintptr_t)value);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         UniformLocation locationPacked                        = FromGL<UniformLocation>(location);
@@ -23632,6 +26855,10 @@ void GL_APIENTRY UniformMatrix4x2fvContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(UniformMatrix4x2fv, isCallValid, context, locationPacked, count, transpose,
                       value);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -23647,7 +26874,7 @@ void GL_APIENTRY UniformMatrix4x3fvContextANGLE(GLeglContext ctx,
           "GLfloat *value = 0x%016" PRIxPTR "",
           CID(context), location, count, GLbooleanToString(transpose), (uintptr_t)value);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         UniformLocation locationPacked                        = FromGL<UniformLocation>(location);
@@ -23662,6 +26889,10 @@ void GL_APIENTRY UniformMatrix4x3fvContextANGLE(GLeglContext ctx,
         ANGLE_CAPTURE(UniformMatrix4x3fv, isCallValid, context, locationPacked, count, transpose,
                       value);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 GLboolean GL_APIENTRY UnmapBufferContextANGLE(GLeglContext ctx, GLenum target)
@@ -23671,7 +26902,7 @@ GLboolean GL_APIENTRY UnmapBufferContextANGLE(GLeglContext ctx, GLenum target)
           CID(context), GLenumToString(GLenumGroup::BufferTargetARB, target));
 
     GLboolean returnValue;
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         BufferBinding targetPacked                            = FromGL<BufferBinding>(target);
@@ -23690,6 +26921,7 @@ GLboolean GL_APIENTRY UnmapBufferContextANGLE(GLeglContext ctx, GLenum target)
     }
     else
     {
+        GenerateContextLostErrorOnContext(context);
         returnValue = GetDefaultReturnValue<EntryPoint::UnmapBuffer, GLboolean>();
     }
     return returnValue;
@@ -23703,7 +26935,7 @@ GLboolean GL_APIENTRY UnmapBufferOESContextANGLE(GLeglContext ctx, GLenum target
           GLenumToString(GLenumGroup::DefaultGroup, target));
 
     GLboolean returnValue;
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         BufferBinding targetPacked                            = FromGL<BufferBinding>(target);
@@ -23722,6 +26954,7 @@ GLboolean GL_APIENTRY UnmapBufferOESContextANGLE(GLeglContext ctx, GLenum target
     }
     else
     {
+        GenerateContextLostErrorOnContext(context);
         returnValue = GetDefaultReturnValue<EntryPoint::UnmapBufferOES, GLboolean>();
     }
     return returnValue;
@@ -23733,7 +26966,7 @@ void GL_APIENTRY UseProgramContextANGLE(GLeglContext ctx, GLuint program)
     EVENT(context, gl::EntryPoint::UseProgram, "glUseProgram", "context = %d, GLuint program = %u",
           CID(context), program);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID programPacked                         = FromGL<ShaderProgramID>(program);
@@ -23745,6 +26978,10 @@ void GL_APIENTRY UseProgramContextANGLE(GLeglContext ctx, GLuint program)
             context->useProgram(programPacked);
         }
         ANGLE_CAPTURE(UseProgram, isCallValid, context, programPacked);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -23759,7 +26996,7 @@ void GL_APIENTRY UseProgramStagesContextANGLE(GLeglContext ctx,
           CID(context), pipeline,
           GLbitfieldToString(GLenumGroup::UseProgramStageMask, stages).c_str(), program);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ProgramPipelineID pipelinePacked                      = FromGL<ProgramPipelineID>(pipeline);
@@ -23775,6 +27012,10 @@ void GL_APIENTRY UseProgramStagesContextANGLE(GLeglContext ctx,
         ANGLE_CAPTURE(UseProgramStages, isCallValid, context, pipelinePacked, stages,
                       programPacked);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY ValidateProgramContextANGLE(GLeglContext ctx, GLuint program)
@@ -23783,7 +27024,7 @@ void GL_APIENTRY ValidateProgramContextANGLE(GLeglContext ctx, GLuint program)
     EVENT(context, gl::EntryPoint::ValidateProgram, "glValidateProgram",
           "context = %d, GLuint program = %u", CID(context), program);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID programPacked                         = FromGL<ShaderProgramID>(program);
@@ -23796,6 +27037,10 @@ void GL_APIENTRY ValidateProgramContextANGLE(GLeglContext ctx, GLuint program)
         }
         ANGLE_CAPTURE(ValidateProgram, isCallValid, context, programPacked);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY ValidateProgramPipelineContextANGLE(GLeglContext ctx, GLuint pipeline)
@@ -23804,7 +27049,7 @@ void GL_APIENTRY ValidateProgramPipelineContextANGLE(GLeglContext ctx, GLuint pi
     EVENT(context, gl::EntryPoint::ValidateProgramPipeline, "glValidateProgramPipeline",
           "context = %d, GLuint pipeline = %u", CID(context), pipeline);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ProgramPipelineID pipelinePacked                      = FromGL<ProgramPipelineID>(pipeline);
@@ -23817,6 +27062,10 @@ void GL_APIENTRY ValidateProgramPipelineContextANGLE(GLeglContext ctx, GLuint pi
         }
         ANGLE_CAPTURE(ValidateProgramPipeline, isCallValid, context, pipelinePacked);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY VertexAttrib1fContextANGLE(GLeglContext ctx, GLuint index, GLfloat x)
@@ -23825,7 +27074,7 @@ void GL_APIENTRY VertexAttrib1fContextANGLE(GLeglContext ctx, GLuint index, GLfl
     EVENT(context, gl::EntryPoint::VertexAttrib1f, "glVertexAttrib1f",
           "context = %d, GLuint index = %u, GLfloat x = %f", CID(context), index, x);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -23836,6 +27085,10 @@ void GL_APIENTRY VertexAttrib1fContextANGLE(GLeglContext ctx, GLuint index, GLfl
         }
         ANGLE_CAPTURE(VertexAttrib1f, isCallValid, context, index, x);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY VertexAttrib1fvContextANGLE(GLeglContext ctx, GLuint index, const GLfloat *v)
@@ -23845,7 +27098,7 @@ void GL_APIENTRY VertexAttrib1fvContextANGLE(GLeglContext ctx, GLuint index, con
           "context = %d, GLuint index = %u, const GLfloat *v = 0x%016" PRIxPTR "", CID(context),
           index, (uintptr_t)v);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -23857,6 +27110,10 @@ void GL_APIENTRY VertexAttrib1fvContextANGLE(GLeglContext ctx, GLuint index, con
         }
         ANGLE_CAPTURE(VertexAttrib1fv, isCallValid, context, index, v);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY VertexAttrib2fContextANGLE(GLeglContext ctx, GLuint index, GLfloat x, GLfloat y)
@@ -23866,7 +27123,7 @@ void GL_APIENTRY VertexAttrib2fContextANGLE(GLeglContext ctx, GLuint index, GLfl
           "context = %d, GLuint index = %u, GLfloat x = %f, GLfloat y = %f", CID(context), index, x,
           y);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -23878,6 +27135,10 @@ void GL_APIENTRY VertexAttrib2fContextANGLE(GLeglContext ctx, GLuint index, GLfl
         }
         ANGLE_CAPTURE(VertexAttrib2f, isCallValid, context, index, x, y);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY VertexAttrib2fvContextANGLE(GLeglContext ctx, GLuint index, const GLfloat *v)
@@ -23887,7 +27148,7 @@ void GL_APIENTRY VertexAttrib2fvContextANGLE(GLeglContext ctx, GLuint index, con
           "context = %d, GLuint index = %u, const GLfloat *v = 0x%016" PRIxPTR "", CID(context),
           index, (uintptr_t)v);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -23899,6 +27160,10 @@ void GL_APIENTRY VertexAttrib2fvContextANGLE(GLeglContext ctx, GLuint index, con
         }
         ANGLE_CAPTURE(VertexAttrib2fv, isCallValid, context, index, v);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY
@@ -23909,7 +27174,7 @@ VertexAttrib3fContextANGLE(GLeglContext ctx, GLuint index, GLfloat x, GLfloat y,
           "context = %d, GLuint index = %u, GLfloat x = %f, GLfloat y = %f, GLfloat z = %f",
           CID(context), index, x, y, z);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -23921,6 +27186,10 @@ VertexAttrib3fContextANGLE(GLeglContext ctx, GLuint index, GLfloat x, GLfloat y,
         }
         ANGLE_CAPTURE(VertexAttrib3f, isCallValid, context, index, x, y, z);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY VertexAttrib3fvContextANGLE(GLeglContext ctx, GLuint index, const GLfloat *v)
@@ -23930,7 +27199,7 @@ void GL_APIENTRY VertexAttrib3fvContextANGLE(GLeglContext ctx, GLuint index, con
           "context = %d, GLuint index = %u, const GLfloat *v = 0x%016" PRIxPTR "", CID(context),
           index, (uintptr_t)v);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -23941,6 +27210,10 @@ void GL_APIENTRY VertexAttrib3fvContextANGLE(GLeglContext ctx, GLuint index, con
             context->vertexAttrib3fv(index, v);
         }
         ANGLE_CAPTURE(VertexAttrib3fv, isCallValid, context, index, v);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -23957,7 +27230,7 @@ void GL_APIENTRY VertexAttrib4fContextANGLE(GLeglContext ctx,
           "GLfloat w = %f",
           CID(context), index, x, y, z, w);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -23969,6 +27242,10 @@ void GL_APIENTRY VertexAttrib4fContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(VertexAttrib4f, isCallValid, context, index, x, y, z, w);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY VertexAttrib4fvContextANGLE(GLeglContext ctx, GLuint index, const GLfloat *v)
@@ -23978,7 +27255,7 @@ void GL_APIENTRY VertexAttrib4fvContextANGLE(GLeglContext ctx, GLuint index, con
           "context = %d, GLuint index = %u, const GLfloat *v = 0x%016" PRIxPTR "", CID(context),
           index, (uintptr_t)v);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -23989,6 +27266,10 @@ void GL_APIENTRY VertexAttrib4fvContextANGLE(GLeglContext ctx, GLuint index, con
             context->vertexAttrib4fv(index, v);
         }
         ANGLE_CAPTURE(VertexAttrib4fv, isCallValid, context, index, v);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -24001,7 +27282,7 @@ void GL_APIENTRY VertexAttribBindingContextANGLE(GLeglContext ctx,
           "context = %d, GLuint attribindex = %u, GLuint bindingindex = %u", CID(context),
           attribindex, bindingindex);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -24013,6 +27294,10 @@ void GL_APIENTRY VertexAttribBindingContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(VertexAttribBinding, isCallValid, context, attribindex, bindingindex);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY VertexAttribDivisorContextANGLE(GLeglContext ctx, GLuint index, GLuint divisor)
@@ -24021,7 +27306,7 @@ void GL_APIENTRY VertexAttribDivisorContextANGLE(GLeglContext ctx, GLuint index,
     EVENT(context, gl::EntryPoint::VertexAttribDivisor, "glVertexAttribDivisor",
           "context = %d, GLuint index = %u, GLuint divisor = %u", CID(context), index, divisor);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -24033,6 +27318,10 @@ void GL_APIENTRY VertexAttribDivisorContextANGLE(GLeglContext ctx, GLuint index,
         }
         ANGLE_CAPTURE(VertexAttribDivisor, isCallValid, context, index, divisor);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY VertexAttribDivisorANGLEContextANGLE(GLeglContext ctx,
@@ -24043,7 +27332,7 @@ void GL_APIENTRY VertexAttribDivisorANGLEContextANGLE(GLeglContext ctx,
     EVENT(context, gl::EntryPoint::VertexAttribDivisorANGLE, "glVertexAttribDivisorANGLE",
           "context = %d, GLuint index = %u, GLuint divisor = %u", CID(context), index, divisor);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -24055,6 +27344,10 @@ void GL_APIENTRY VertexAttribDivisorANGLEContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(VertexAttribDivisorANGLE, isCallValid, context, index, divisor);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY VertexAttribDivisorEXTContextANGLE(GLeglContext ctx, GLuint index, GLuint divisor)
@@ -24063,7 +27356,7 @@ void GL_APIENTRY VertexAttribDivisorEXTContextANGLE(GLeglContext ctx, GLuint ind
     EVENT(context, gl::EntryPoint::VertexAttribDivisorEXT, "glVertexAttribDivisorEXT",
           "context = %d, GLuint index = %u, GLuint divisor = %u", CID(context), index, divisor);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -24074,6 +27367,10 @@ void GL_APIENTRY VertexAttribDivisorEXTContextANGLE(GLeglContext ctx, GLuint ind
             context->vertexAttribDivisor(index, divisor);
         }
         ANGLE_CAPTURE(VertexAttribDivisorEXT, isCallValid, context, index, divisor);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -24091,7 +27388,7 @@ void GL_APIENTRY VertexAttribFormatContextANGLE(GLeglContext ctx,
           CID(context), attribindex, size, GLenumToString(GLenumGroup::DefaultGroup, type),
           GLbooleanToString(normalized), relativeoffset);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         VertexAttribType typePacked                           = FromGL<VertexAttribType>(type);
@@ -24106,6 +27403,10 @@ void GL_APIENTRY VertexAttribFormatContextANGLE(GLeglContext ctx,
         ANGLE_CAPTURE(VertexAttribFormat, isCallValid, context, attribindex, size, typePacked,
                       normalized, relativeoffset);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY
@@ -24116,7 +27417,7 @@ VertexAttribI4iContextANGLE(GLeglContext ctx, GLuint index, GLint x, GLint y, GL
           "context = %d, GLuint index = %u, GLint x = %d, GLint y = %d, GLint z = %d, GLint w = %d",
           CID(context), index, x, y, z, w);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -24128,6 +27429,10 @@ VertexAttribI4iContextANGLE(GLeglContext ctx, GLuint index, GLint x, GLint y, GL
         }
         ANGLE_CAPTURE(VertexAttribI4i, isCallValid, context, index, x, y, z, w);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY VertexAttribI4ivContextANGLE(GLeglContext ctx, GLuint index, const GLint *v)
@@ -24137,7 +27442,7 @@ void GL_APIENTRY VertexAttribI4ivContextANGLE(GLeglContext ctx, GLuint index, co
           "context = %d, GLuint index = %u, const GLint *v = 0x%016" PRIxPTR "", CID(context),
           index, (uintptr_t)v);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -24148,6 +27453,10 @@ void GL_APIENTRY VertexAttribI4ivContextANGLE(GLeglContext ctx, GLuint index, co
             context->vertexAttribI4iv(index, v);
         }
         ANGLE_CAPTURE(VertexAttribI4iv, isCallValid, context, index, v);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -24160,7 +27469,7 @@ VertexAttribI4uiContextANGLE(GLeglContext ctx, GLuint index, GLuint x, GLuint y,
           "= %u",
           CID(context), index, x, y, z, w);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -24172,6 +27481,10 @@ VertexAttribI4uiContextANGLE(GLeglContext ctx, GLuint index, GLuint x, GLuint y,
         }
         ANGLE_CAPTURE(VertexAttribI4ui, isCallValid, context, index, x, y, z, w);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY VertexAttribI4uivContextANGLE(GLeglContext ctx, GLuint index, const GLuint *v)
@@ -24181,7 +27494,7 @@ void GL_APIENTRY VertexAttribI4uivContextANGLE(GLeglContext ctx, GLuint index, c
           "context = %d, GLuint index = %u, const GLuint *v = 0x%016" PRIxPTR "", CID(context),
           index, (uintptr_t)v);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -24192,6 +27505,10 @@ void GL_APIENTRY VertexAttribI4uivContextANGLE(GLeglContext ctx, GLuint index, c
             context->vertexAttribI4uiv(index, v);
         }
         ANGLE_CAPTURE(VertexAttribI4uiv, isCallValid, context, index, v);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -24208,7 +27525,7 @@ void GL_APIENTRY VertexAttribIFormatContextANGLE(GLeglContext ctx,
           CID(context), attribindex, size, GLenumToString(GLenumGroup::DefaultGroup, type),
           relativeoffset);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         VertexAttribType typePacked                           = FromGL<VertexAttribType>(type);
@@ -24222,6 +27539,10 @@ void GL_APIENTRY VertexAttribIFormatContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(VertexAttribIFormat, isCallValid, context, attribindex, size, typePacked,
                       relativeoffset);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -24239,7 +27560,7 @@ void GL_APIENTRY VertexAttribIPointerContextANGLE(GLeglContext ctx,
           CID(context), index, size, GLenumToString(GLenumGroup::VertexAttribPointerType, type),
           stride, (uintptr_t)pointer);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         VertexAttribType typePacked                           = FromGL<VertexAttribType>(type);
@@ -24253,6 +27574,10 @@ void GL_APIENTRY VertexAttribIPointerContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(VertexAttribIPointer, isCallValid, context, index, size, typePacked, stride,
                       pointer);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -24271,7 +27596,7 @@ void GL_APIENTRY VertexAttribPointerContextANGLE(GLeglContext ctx,
           CID(context), index, size, GLenumToString(GLenumGroup::VertexAttribPointerType, type),
           GLbooleanToString(normalized), stride, (uintptr_t)pointer);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         VertexAttribType typePacked                           = FromGL<VertexAttribType>(type);
@@ -24286,6 +27611,10 @@ void GL_APIENTRY VertexAttribPointerContextANGLE(GLeglContext ctx,
         ANGLE_CAPTURE(VertexAttribPointer, isCallValid, context, index, size, typePacked,
                       normalized, stride, pointer);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY VertexBindingDivisorContextANGLE(GLeglContext ctx,
@@ -24297,7 +27626,7 @@ void GL_APIENTRY VertexBindingDivisorContextANGLE(GLeglContext ctx,
           "context = %d, GLuint bindingindex = %u, GLuint divisor = %u", CID(context), bindingindex,
           divisor);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -24308,6 +27637,10 @@ void GL_APIENTRY VertexBindingDivisorContextANGLE(GLeglContext ctx,
             context->vertexBindingDivisor(bindingindex, divisor);
         }
         ANGLE_CAPTURE(VertexBindingDivisor, isCallValid, context, bindingindex, divisor);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -24324,7 +27657,7 @@ void GL_APIENTRY VertexPointerContextANGLE(GLeglContext ctx,
           CID(context), size, GLenumToString(GLenumGroup::VertexPointerType, type), stride,
           (uintptr_t)pointer);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         VertexAttribType typePacked                           = FromGL<VertexAttribType>(type);
@@ -24337,6 +27670,10 @@ void GL_APIENTRY VertexPointerContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(VertexPointer, isCallValid, context, size, typePacked, stride, pointer);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY
@@ -24347,7 +27684,7 @@ ViewportContextANGLE(GLeglContext ctx, GLint x, GLint y, GLsizei width, GLsizei 
           "context = %d, GLint x = %d, GLint y = %d, GLsizei width = %d, GLsizei height = %d",
           CID(context), x, y, width, height);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -24358,6 +27695,10 @@ ViewportContextANGLE(GLeglContext ctx, GLint x, GLint y, GLsizei width, GLsizei 
             context->viewport(x, y, width, height);
         }
         ANGLE_CAPTURE(Viewport, isCallValid, context, x, y, width, height);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -24378,7 +27719,7 @@ void GL_APIENTRY WaitSemaphoreEXTContextANGLE(GLeglContext ctx,
           CID(context), semaphore, numBufferBarriers, (uintptr_t)buffers, numTextureBarriers,
           (uintptr_t)textures, (uintptr_t)srcLayouts);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         SemaphoreID semaphorePacked                           = FromGL<SemaphoreID>(semaphore);
@@ -24397,6 +27738,10 @@ void GL_APIENTRY WaitSemaphoreEXTContextANGLE(GLeglContext ctx,
         ANGLE_CAPTURE(WaitSemaphoreEXT, isCallValid, context, semaphorePacked, numBufferBarriers,
                       buffersPacked, numTextureBarriers, texturesPacked, srcLayouts);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY WaitSyncContextANGLE(GLeglContext ctx,
@@ -24412,7 +27757,7 @@ void GL_APIENTRY WaitSyncContextANGLE(GLeglContext ctx,
           GLbitfieldToString(GLenumGroup::DefaultGroup, flags).c_str(),
           static_cast<unsigned long long>(timeout));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -24423,6 +27768,10 @@ void GL_APIENTRY WaitSyncContextANGLE(GLeglContext ctx,
             context->waitSync(sync, flags, timeout);
         }
         ANGLE_CAPTURE(WaitSync, isCallValid, context, sync, flags, timeout);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -24439,7 +27788,7 @@ void GL_APIENTRY WeightPointerOESContextANGLE(GLeglContext ctx,
           CID(context), size, GLenumToString(GLenumGroup::DefaultGroup, type), stride,
           (uintptr_t)pointer);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -24450,6 +27799,10 @@ void GL_APIENTRY WeightPointerOESContextANGLE(GLeglContext ctx,
             context->weightPointer(size, type, stride, pointer);
         }
         ANGLE_CAPTURE(WeightPointerOES, isCallValid, context, size, type, stride, pointer);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -24464,7 +27817,7 @@ void GL_APIENTRY BindUniformLocationCHROMIUMContextANGLE(GLeglContext ctx,
           "0x%016" PRIxPTR "",
           CID(context), program, location, (uintptr_t)name);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID programPacked                         = FromGL<ShaderProgramID>(program);
@@ -24480,6 +27833,10 @@ void GL_APIENTRY BindUniformLocationCHROMIUMContextANGLE(GLeglContext ctx,
         ANGLE_CAPTURE(BindUniformLocationCHROMIUM, isCallValid, context, programPacked,
                       locationPacked, name);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY CoverageModulationCHROMIUMContextANGLE(GLeglContext ctx, GLenum components)
@@ -24489,7 +27846,7 @@ void GL_APIENTRY CoverageModulationCHROMIUMContextANGLE(GLeglContext ctx, GLenum
           "context = %d, GLenum components = %s", CID(context),
           GLenumToString(GLenumGroup::DefaultGroup, components));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -24500,6 +27857,10 @@ void GL_APIENTRY CoverageModulationCHROMIUMContextANGLE(GLeglContext ctx, GLenum
             context->coverageModulation(components);
         }
         ANGLE_CAPTURE(CoverageModulationCHROMIUM, isCallValid, context, components);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -24526,7 +27887,7 @@ void GL_APIENTRY CopyTextureCHROMIUMContextANGLE(GLeglContext ctx,
           GLenumToString(GLenumGroup::DefaultGroup, destType), GLbooleanToString(unpackFlipY),
           GLbooleanToString(unpackPremultiplyAlpha), GLbooleanToString(unpackUnmultiplyAlpha));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureID sourceIdPacked                              = FromGL<TextureID>(sourceId);
@@ -24547,6 +27908,10 @@ void GL_APIENTRY CopyTextureCHROMIUMContextANGLE(GLeglContext ctx,
         ANGLE_CAPTURE(CopyTextureCHROMIUM, isCallValid, context, sourceIdPacked, sourceLevel,
                       destTargetPacked, destIdPacked, destLevel, internalFormat, destType,
                       unpackFlipY, unpackPremultiplyAlpha, unpackUnmultiplyAlpha);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -24577,7 +27942,7 @@ void GL_APIENTRY CopySubTextureCHROMIUMContextANGLE(GLeglContext ctx,
           yoffset, x, y, width, height, GLbooleanToString(unpackFlipY),
           GLbooleanToString(unpackPremultiplyAlpha), GLbooleanToString(unpackUnmultiplyAlpha));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureID sourceIdPacked                              = FromGL<TextureID>(sourceId);
@@ -24599,6 +27964,10 @@ void GL_APIENTRY CopySubTextureCHROMIUMContextANGLE(GLeglContext ctx,
                       destTargetPacked, destIdPacked, destLevel, xoffset, yoffset, x, y, width,
                       height, unpackFlipY, unpackPremultiplyAlpha, unpackUnmultiplyAlpha);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY CompressedCopyTextureCHROMIUMContextANGLE(GLeglContext ctx,
@@ -24609,7 +27978,7 @@ void GL_APIENTRY CompressedCopyTextureCHROMIUMContextANGLE(GLeglContext ctx,
     EVENT(context, gl::EntryPoint::CompressedCopyTextureCHROMIUM, "glCompressedCopyTextureCHROMIUM",
           "context = %d, GLuint sourceId = %u, GLuint destId = %u", CID(context), sourceId, destId);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureID sourceIdPacked                              = FromGL<TextureID>(sourceId);
@@ -24625,6 +27994,10 @@ void GL_APIENTRY CompressedCopyTextureCHROMIUMContextANGLE(GLeglContext ctx,
         ANGLE_CAPTURE(CompressedCopyTextureCHROMIUM, isCallValid, context, sourceIdPacked,
                       destIdPacked);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY RequestExtensionANGLEContextANGLE(GLeglContext ctx, const GLchar *name)
@@ -24633,7 +28006,7 @@ void GL_APIENTRY RequestExtensionANGLEContextANGLE(GLeglContext ctx, const GLcha
     EVENT(context, gl::EntryPoint::RequestExtensionANGLE, "glRequestExtensionANGLE",
           "context = %d, const GLchar * name = 0x%016" PRIxPTR "", CID(context), (uintptr_t)name);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -24645,6 +28018,10 @@ void GL_APIENTRY RequestExtensionANGLEContextANGLE(GLeglContext ctx, const GLcha
         }
         ANGLE_CAPTURE(RequestExtensionANGLE, isCallValid, context, name);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY DisableExtensionANGLEContextANGLE(GLeglContext ctx, const GLchar *name)
@@ -24653,7 +28030,7 @@ void GL_APIENTRY DisableExtensionANGLEContextANGLE(GLeglContext ctx, const GLcha
     EVENT(context, gl::EntryPoint::DisableExtensionANGLE, "glDisableExtensionANGLE",
           "context = %d, const GLchar * name = 0x%016" PRIxPTR "", CID(context), (uintptr_t)name);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -24664,6 +28041,10 @@ void GL_APIENTRY DisableExtensionANGLEContextANGLE(GLeglContext ctx, const GLcha
             context->disableExtension(name);
         }
         ANGLE_CAPTURE(DisableExtensionANGLE, isCallValid, context, name);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -24680,7 +28061,7 @@ void GL_APIENTRY GetBooleanvRobustANGLEContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::DefaultGroup, pname), bufSize,
           (uintptr_t)length, (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -24692,6 +28073,10 @@ void GL_APIENTRY GetBooleanvRobustANGLEContextANGLE(GLeglContext ctx,
             context->getBooleanvRobust(pname, bufSize, length, params);
         }
         ANGLE_CAPTURE(GetBooleanvRobustANGLE, isCallValid, context, pname, bufSize, length, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -24711,7 +28096,7 @@ void GL_APIENTRY GetBufferParameterivRobustANGLEContextANGLE(GLeglContext ctx,
           GLenumToString(GLenumGroup::DefaultGroup, pname), bufSize, (uintptr_t)length,
           (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         BufferBinding targetPacked                            = FromGL<BufferBinding>(target);
@@ -24725,6 +28110,10 @@ void GL_APIENTRY GetBufferParameterivRobustANGLEContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(GetBufferParameterivRobustANGLE, isCallValid, context, targetPacked, pname,
                       bufSize, length, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -24741,7 +28130,7 @@ void GL_APIENTRY GetFloatvRobustANGLEContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::DefaultGroup, pname), bufSize,
           (uintptr_t)length, (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -24752,6 +28141,10 @@ void GL_APIENTRY GetFloatvRobustANGLEContextANGLE(GLeglContext ctx,
             context->getFloatvRobust(pname, bufSize, length, params);
         }
         ANGLE_CAPTURE(GetFloatvRobustANGLE, isCallValid, context, pname, bufSize, length, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -24773,7 +28166,7 @@ void GL_APIENTRY GetFramebufferAttachmentParameterivRobustANGLEContextANGLE(GLeg
           GLenumToString(GLenumGroup::DefaultGroup, pname), bufSize, (uintptr_t)length,
           (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -24787,6 +28180,10 @@ void GL_APIENTRY GetFramebufferAttachmentParameterivRobustANGLEContextANGLE(GLeg
         }
         ANGLE_CAPTURE(GetFramebufferAttachmentParameterivRobustANGLE, isCallValid, context, target,
                       attachment, pname, bufSize, length, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -24803,7 +28200,7 @@ void GL_APIENTRY GetIntegervRobustANGLEContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::DefaultGroup, pname), bufSize,
           (uintptr_t)length, (uintptr_t)data);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -24814,6 +28211,10 @@ void GL_APIENTRY GetIntegervRobustANGLEContextANGLE(GLeglContext ctx,
             context->getIntegervRobust(pname, bufSize, length, data);
         }
         ANGLE_CAPTURE(GetIntegervRobustANGLE, isCallValid, context, pname, bufSize, length, data);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -24846,6 +28247,8 @@ void GL_APIENTRY GetProgramivRobustANGLEContextANGLE(GLeglContext ctx,
         ANGLE_CAPTURE(GetProgramivRobustANGLE, isCallValid, context, programPacked, pname, bufSize,
                       length, params);
     }
+    else
+    {}
 }
 
 void GL_APIENTRY GetRenderbufferParameterivRobustANGLEContextANGLE(GLeglContext ctx,
@@ -24864,7 +28267,7 @@ void GL_APIENTRY GetRenderbufferParameterivRobustANGLEContextANGLE(GLeglContext 
           GLenumToString(GLenumGroup::DefaultGroup, pname), bufSize, (uintptr_t)length,
           (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -24877,6 +28280,10 @@ void GL_APIENTRY GetRenderbufferParameterivRobustANGLEContextANGLE(GLeglContext 
         }
         ANGLE_CAPTURE(GetRenderbufferParameterivRobustANGLE, isCallValid, context, target, pname,
                       bufSize, length, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -24909,6 +28316,8 @@ void GL_APIENTRY GetShaderivRobustANGLEContextANGLE(GLeglContext ctx,
         ANGLE_CAPTURE(GetShaderivRobustANGLE, isCallValid, context, shaderPacked, pname, bufSize,
                       length, params);
     }
+    else
+    {}
 }
 
 void GL_APIENTRY GetTexParameterfvRobustANGLEContextANGLE(GLeglContext ctx,
@@ -24926,7 +28335,7 @@ void GL_APIENTRY GetTexParameterfvRobustANGLEContextANGLE(GLeglContext ctx,
           GLenumToString(GLenumGroup::DefaultGroup, pname), bufSize, (uintptr_t)length,
           (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureType targetPacked                              = FromGL<TextureType>(target);
@@ -24940,6 +28349,10 @@ void GL_APIENTRY GetTexParameterfvRobustANGLEContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(GetTexParameterfvRobustANGLE, isCallValid, context, targetPacked, pname,
                       bufSize, length, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -24958,7 +28371,7 @@ void GL_APIENTRY GetTexParameterivRobustANGLEContextANGLE(GLeglContext ctx,
           GLenumToString(GLenumGroup::DefaultGroup, pname), bufSize, (uintptr_t)length,
           (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureType targetPacked                              = FromGL<TextureType>(target);
@@ -24972,6 +28385,10 @@ void GL_APIENTRY GetTexParameterivRobustANGLEContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(GetTexParameterivRobustANGLE, isCallValid, context, targetPacked, pname,
                       bufSize, length, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -24988,7 +28405,7 @@ void GL_APIENTRY GetUniformfvRobustANGLEContextANGLE(GLeglContext ctx,
           "length = 0x%016" PRIxPTR ", GLfloat * params = 0x%016" PRIxPTR "",
           CID(context), program, location, bufSize, (uintptr_t)length, (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID programPacked                         = FromGL<ShaderProgramID>(program);
@@ -25003,6 +28420,10 @@ void GL_APIENTRY GetUniformfvRobustANGLEContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(GetUniformfvRobustANGLE, isCallValid, context, programPacked, locationPacked,
                       bufSize, length, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -25019,7 +28440,7 @@ void GL_APIENTRY GetUniformivRobustANGLEContextANGLE(GLeglContext ctx,
           "length = 0x%016" PRIxPTR ", GLint * params = 0x%016" PRIxPTR "",
           CID(context), program, location, bufSize, (uintptr_t)length, (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID programPacked                         = FromGL<ShaderProgramID>(program);
@@ -25034,6 +28455,10 @@ void GL_APIENTRY GetUniformivRobustANGLEContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(GetUniformivRobustANGLE, isCallValid, context, programPacked, locationPacked,
                       bufSize, length, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -25051,7 +28476,7 @@ void GL_APIENTRY GetVertexAttribfvRobustANGLEContextANGLE(GLeglContext ctx,
           CID(context), index, GLenumToString(GLenumGroup::DefaultGroup, pname), bufSize,
           (uintptr_t)length, (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -25064,6 +28489,10 @@ void GL_APIENTRY GetVertexAttribfvRobustANGLEContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(GetVertexAttribfvRobustANGLE, isCallValid, context, index, pname, bufSize,
                       length, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -25081,7 +28510,7 @@ void GL_APIENTRY GetVertexAttribivRobustANGLEContextANGLE(GLeglContext ctx,
           CID(context), index, GLenumToString(GLenumGroup::DefaultGroup, pname), bufSize,
           (uintptr_t)length, (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -25094,6 +28523,10 @@ void GL_APIENTRY GetVertexAttribivRobustANGLEContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(GetVertexAttribivRobustANGLE, isCallValid, context, index, pname, bufSize,
                       length, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -25112,7 +28545,7 @@ void GL_APIENTRY GetVertexAttribPointervRobustANGLEContextANGLE(GLeglContext ctx
           CID(context), index, GLenumToString(GLenumGroup::DefaultGroup, pname), bufSize,
           (uintptr_t)length, (uintptr_t)pointer);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -25125,6 +28558,10 @@ void GL_APIENTRY GetVertexAttribPointervRobustANGLEContextANGLE(GLeglContext ctx
         }
         ANGLE_CAPTURE(GetVertexAttribPointervRobustANGLE, isCallValid, context, index, pname,
                       bufSize, length, pointer);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -25152,7 +28589,7 @@ void GL_APIENTRY ReadPixelsRobustANGLEContextANGLE(GLeglContext ctx,
         GLenumToString(GLenumGroup::DefaultGroup, type), bufSize, (uintptr_t)length,
         (uintptr_t)columns, (uintptr_t)rows, (uintptr_t)pixels);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -25167,6 +28604,10 @@ void GL_APIENTRY ReadPixelsRobustANGLEContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(ReadPixelsRobustANGLE, isCallValid, context, x, y, width, height, format,
                       type, bufSize, length, columns, rows, pixels);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -25191,7 +28632,7 @@ void GL_APIENTRY TexImage2DRobustANGLEContextANGLE(GLeglContext ctx,
           width, height, border, GLenumToString(GLenumGroup::DefaultGroup, format),
           GLenumToString(GLenumGroup::DefaultGroup, type), bufSize, (uintptr_t)pixels);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureTarget targetPacked                            = FromGL<TextureTarget>(target);
@@ -25208,6 +28649,10 @@ void GL_APIENTRY TexImage2DRobustANGLEContextANGLE(GLeglContext ctx,
         ANGLE_CAPTURE(TexImage2DRobustANGLE, isCallValid, context, targetPacked, level,
                       internalformat, width, height, border, format, type, bufSize, pixels);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY TexParameterfvRobustANGLEContextANGLE(GLeglContext ctx,
@@ -25223,7 +28668,7 @@ void GL_APIENTRY TexParameterfvRobustANGLEContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::DefaultGroup, target),
           GLenumToString(GLenumGroup::DefaultGroup, pname), bufSize, (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureType targetPacked                              = FromGL<TextureType>(target);
@@ -25237,6 +28682,10 @@ void GL_APIENTRY TexParameterfvRobustANGLEContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(TexParameterfvRobustANGLE, isCallValid, context, targetPacked, pname, bufSize,
                       params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -25253,7 +28702,7 @@ void GL_APIENTRY TexParameterivRobustANGLEContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::DefaultGroup, target),
           GLenumToString(GLenumGroup::DefaultGroup, pname), bufSize, (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureType targetPacked                              = FromGL<TextureType>(target);
@@ -25267,6 +28716,10 @@ void GL_APIENTRY TexParameterivRobustANGLEContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(TexParameterivRobustANGLE, isCallValid, context, targetPacked, pname, bufSize,
                       params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -25291,7 +28744,7 @@ void GL_APIENTRY TexSubImage2DRobustANGLEContextANGLE(GLeglContext ctx,
           width, height, GLenumToString(GLenumGroup::DefaultGroup, format),
           GLenumToString(GLenumGroup::DefaultGroup, type), bufSize, (uintptr_t)pixels);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureTarget targetPacked                            = FromGL<TextureTarget>(target);
@@ -25307,6 +28760,10 @@ void GL_APIENTRY TexSubImage2DRobustANGLEContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(TexSubImage2DRobustANGLE, isCallValid, context, targetPacked, level, xoffset,
                       yoffset, width, height, format, type, bufSize, pixels);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -25332,7 +28789,7 @@ void GL_APIENTRY TexImage3DRobustANGLEContextANGLE(GLeglContext ctx,
           width, height, depth, border, GLenumToString(GLenumGroup::DefaultGroup, format),
           GLenumToString(GLenumGroup::DefaultGroup, type), bufSize, (uintptr_t)pixels);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureTarget targetPacked                            = FromGL<TextureTarget>(target);
@@ -25348,6 +28805,10 @@ void GL_APIENTRY TexImage3DRobustANGLEContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(TexImage3DRobustANGLE, isCallValid, context, targetPacked, level,
                       internalformat, width, height, depth, border, format, type, bufSize, pixels);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -25375,7 +28836,7 @@ void GL_APIENTRY TexSubImage3DRobustANGLEContextANGLE(GLeglContext ctx,
           zoffset, width, height, depth, GLenumToString(GLenumGroup::DefaultGroup, format),
           GLenumToString(GLenumGroup::DefaultGroup, type), bufSize, (uintptr_t)pixels);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureTarget targetPacked                            = FromGL<TextureTarget>(target);
@@ -25391,6 +28852,10 @@ void GL_APIENTRY TexSubImage3DRobustANGLEContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(TexSubImage3DRobustANGLE, isCallValid, context, targetPacked, level, xoffset,
                       yoffset, zoffset, width, height, depth, format, type, bufSize, pixels);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -25415,7 +28880,7 @@ void GL_APIENTRY CompressedTexImage2DRobustANGLEContextANGLE(GLeglContext ctx,
           GLenumToString(GLenumGroup::DefaultGroup, internalformat), width, height, border,
           imageSize, dataSize, (uintptr_t)data);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureTarget targetPacked                            = FromGL<TextureTarget>(target);
@@ -25431,6 +28896,10 @@ void GL_APIENTRY CompressedTexImage2DRobustANGLEContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(CompressedTexImage2DRobustANGLE, isCallValid, context, targetPacked, level,
                       internalformat, width, height, border, imageSize, dataSize, data);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -25456,7 +28925,7 @@ void GL_APIENTRY CompressedTexSubImage2DRobustANGLEContextANGLE(GLeglContext ctx
           width, height, GLenumToString(GLenumGroup::DefaultGroup, format), imageSize, dataSize,
           (uintptr_t)data);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureTarget targetPacked                            = FromGL<TextureTarget>(target);
@@ -25472,6 +28941,10 @@ void GL_APIENTRY CompressedTexSubImage2DRobustANGLEContextANGLE(GLeglContext ctx
         }
         ANGLE_CAPTURE(CompressedTexSubImage2DRobustANGLE, isCallValid, context, targetPacked, level,
                       xoffset, yoffset, width, height, format, imageSize, dataSize, data);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -25497,7 +28970,7 @@ void GL_APIENTRY CompressedTexImage3DRobustANGLEContextANGLE(GLeglContext ctx,
           GLenumToString(GLenumGroup::DefaultGroup, internalformat), width, height, depth, border,
           imageSize, dataSize, (uintptr_t)data);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureTarget targetPacked                            = FromGL<TextureTarget>(target);
@@ -25513,6 +28986,10 @@ void GL_APIENTRY CompressedTexImage3DRobustANGLEContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(CompressedTexImage3DRobustANGLE, isCallValid, context, targetPacked, level,
                       internalformat, width, height, depth, border, imageSize, dataSize, data);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -25541,7 +29018,7 @@ void GL_APIENTRY CompressedTexSubImage3DRobustANGLEContextANGLE(GLeglContext ctx
           zoffset, width, height, depth, GLenumToString(GLenumGroup::DefaultGroup, format),
           imageSize, dataSize, (uintptr_t)data);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureTarget targetPacked                            = FromGL<TextureTarget>(target);
@@ -25560,6 +29037,10 @@ void GL_APIENTRY CompressedTexSubImage3DRobustANGLEContextANGLE(GLeglContext ctx
                       xoffset, yoffset, zoffset, width, height, depth, format, imageSize, dataSize,
                       data);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY GetQueryivRobustANGLEContextANGLE(GLeglContext ctx,
@@ -25577,7 +29058,7 @@ void GL_APIENTRY GetQueryivRobustANGLEContextANGLE(GLeglContext ctx,
           GLenumToString(GLenumGroup::DefaultGroup, pname), bufSize, (uintptr_t)length,
           (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         QueryType targetPacked                                = FromGL<QueryType>(target);
@@ -25591,6 +29072,10 @@ void GL_APIENTRY GetQueryivRobustANGLEContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(GetQueryivRobustANGLE, isCallValid, context, targetPacked, pname, bufSize,
                       length, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -25608,7 +29093,7 @@ void GL_APIENTRY GetQueryObjectuivRobustANGLEContextANGLE(GLeglContext ctx,
           CID(context), id, GLenumToString(GLenumGroup::DefaultGroup, pname), bufSize,
           (uintptr_t)length, (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         QueryID idPacked                                      = FromGL<QueryID>(id);
@@ -25622,6 +29107,10 @@ void GL_APIENTRY GetQueryObjectuivRobustANGLEContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(GetQueryObjectuivRobustANGLE, isCallValid, context, idPacked, pname, bufSize,
                       length, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -25640,7 +29129,7 @@ void GL_APIENTRY GetBufferPointervRobustANGLEContextANGLE(GLeglContext ctx,
           GLenumToString(GLenumGroup::DefaultGroup, pname), bufSize, (uintptr_t)length,
           (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         BufferBinding targetPacked                            = FromGL<BufferBinding>(target);
@@ -25654,6 +29143,10 @@ void GL_APIENTRY GetBufferPointervRobustANGLEContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(GetBufferPointervRobustANGLE, isCallValid, context, targetPacked, pname,
                       bufSize, length, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -25671,7 +29164,7 @@ void GL_APIENTRY GetIntegeri_vRobustANGLEContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::DefaultGroup, target), index, bufSize,
           (uintptr_t)length, (uintptr_t)data);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -25684,6 +29177,10 @@ void GL_APIENTRY GetIntegeri_vRobustANGLEContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(GetIntegeri_vRobustANGLE, isCallValid, context, target, index, bufSize,
                       length, data);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -25705,7 +29202,7 @@ void GL_APIENTRY GetInternalformativRobustANGLEContextANGLE(GLeglContext ctx,
         GLenumToString(GLenumGroup::DefaultGroup, pname), bufSize, (uintptr_t)length,
         (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -25719,6 +29216,10 @@ void GL_APIENTRY GetInternalformativRobustANGLEContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(GetInternalformativRobustANGLE, isCallValid, context, target, internalformat,
                       pname, bufSize, length, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -25736,7 +29237,7 @@ void GL_APIENTRY GetVertexAttribIivRobustANGLEContextANGLE(GLeglContext ctx,
           CID(context), index, GLenumToString(GLenumGroup::DefaultGroup, pname), bufSize,
           (uintptr_t)length, (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -25749,6 +29250,10 @@ void GL_APIENTRY GetVertexAttribIivRobustANGLEContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(GetVertexAttribIivRobustANGLE, isCallValid, context, index, pname, bufSize,
                       length, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -25767,7 +29272,7 @@ void GL_APIENTRY GetVertexAttribIuivRobustANGLEContextANGLE(GLeglContext ctx,
           CID(context), index, GLenumToString(GLenumGroup::DefaultGroup, pname), bufSize,
           (uintptr_t)length, (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -25780,6 +29285,10 @@ void GL_APIENTRY GetVertexAttribIuivRobustANGLEContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(GetVertexAttribIuivRobustANGLE, isCallValid, context, index, pname, bufSize,
                       length, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -25796,7 +29305,7 @@ void GL_APIENTRY GetUniformuivRobustANGLEContextANGLE(GLeglContext ctx,
           "length = 0x%016" PRIxPTR ", GLuint * params = 0x%016" PRIxPTR "",
           CID(context), program, location, bufSize, (uintptr_t)length, (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID programPacked                         = FromGL<ShaderProgramID>(program);
@@ -25811,6 +29320,10 @@ void GL_APIENTRY GetUniformuivRobustANGLEContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(GetUniformuivRobustANGLE, isCallValid, context, programPacked, locationPacked,
                       bufSize, length, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -25832,7 +29345,7 @@ void GL_APIENTRY GetActiveUniformBlockivRobustANGLEContextANGLE(GLeglContext ctx
           GLenumToString(GLenumGroup::DefaultGroup, pname), bufSize, (uintptr_t)length,
           (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID programPacked                         = FromGL<ShaderProgramID>(program);
@@ -25849,6 +29362,10 @@ void GL_APIENTRY GetActiveUniformBlockivRobustANGLEContextANGLE(GLeglContext ctx
         ANGLE_CAPTURE(GetActiveUniformBlockivRobustANGLE, isCallValid, context, programPacked,
                       uniformBlockIndex, pname, bufSize, length, params);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY GetInteger64vRobustANGLEContextANGLE(GLeglContext ctx,
@@ -25864,7 +29381,7 @@ void GL_APIENTRY GetInteger64vRobustANGLEContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::DefaultGroup, pname), bufSize,
           (uintptr_t)length, (uintptr_t)data);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -25876,6 +29393,10 @@ void GL_APIENTRY GetInteger64vRobustANGLEContextANGLE(GLeglContext ctx,
             context->getInteger64vRobust(pname, bufSize, length, data);
         }
         ANGLE_CAPTURE(GetInteger64vRobustANGLE, isCallValid, context, pname, bufSize, length, data);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -25893,7 +29414,7 @@ void GL_APIENTRY GetInteger64i_vRobustANGLEContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::DefaultGroup, target), index, bufSize,
           (uintptr_t)length, (uintptr_t)data);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -25906,6 +29427,10 @@ void GL_APIENTRY GetInteger64i_vRobustANGLEContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(GetInteger64i_vRobustANGLE, isCallValid, context, target, index, bufSize,
                       length, data);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -25925,7 +29450,7 @@ void GL_APIENTRY GetBufferParameteri64vRobustANGLEContextANGLE(GLeglContext ctx,
           GLenumToString(GLenumGroup::DefaultGroup, pname), bufSize, (uintptr_t)length,
           (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         BufferBinding targetPacked                            = FromGL<BufferBinding>(target);
@@ -25939,6 +29464,10 @@ void GL_APIENTRY GetBufferParameteri64vRobustANGLEContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(GetBufferParameteri64vRobustANGLE, isCallValid, context, targetPacked, pname,
                       bufSize, length, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -25954,7 +29483,7 @@ void GL_APIENTRY SamplerParameterivRobustANGLEContextANGLE(GLeglContext ctx,
           "* param = 0x%016" PRIxPTR "",
           CID(context), sampler, pname, bufSize, (uintptr_t)param);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         SamplerID samplerPacked                               = FromGL<SamplerID>(sampler);
@@ -25968,6 +29497,10 @@ void GL_APIENTRY SamplerParameterivRobustANGLEContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(SamplerParameterivRobustANGLE, isCallValid, context, samplerPacked, pname,
                       bufSize, param);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -25984,7 +29517,7 @@ void GL_APIENTRY SamplerParameterfvRobustANGLEContextANGLE(GLeglContext ctx,
           CID(context), sampler, GLenumToString(GLenumGroup::DefaultGroup, pname), bufSize,
           (uintptr_t)param);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         SamplerID samplerPacked                               = FromGL<SamplerID>(sampler);
@@ -25998,6 +29531,10 @@ void GL_APIENTRY SamplerParameterfvRobustANGLEContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(SamplerParameterfvRobustANGLE, isCallValid, context, samplerPacked, pname,
                       bufSize, param);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -26016,7 +29553,7 @@ void GL_APIENTRY GetSamplerParameterivRobustANGLEContextANGLE(GLeglContext ctx,
           CID(context), sampler, GLenumToString(GLenumGroup::DefaultGroup, pname), bufSize,
           (uintptr_t)length, (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         SamplerID samplerPacked                               = FromGL<SamplerID>(sampler);
@@ -26030,6 +29567,10 @@ void GL_APIENTRY GetSamplerParameterivRobustANGLEContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(GetSamplerParameterivRobustANGLE, isCallValid, context, samplerPacked, pname,
                       bufSize, length, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -26048,7 +29589,7 @@ void GL_APIENTRY GetSamplerParameterfvRobustANGLEContextANGLE(GLeglContext ctx,
           CID(context), sampler, GLenumToString(GLenumGroup::DefaultGroup, pname), bufSize,
           (uintptr_t)length, (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         SamplerID samplerPacked                               = FromGL<SamplerID>(sampler);
@@ -26062,6 +29603,10 @@ void GL_APIENTRY GetSamplerParameterfvRobustANGLEContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(GetSamplerParameterfvRobustANGLE, isCallValid, context, samplerPacked, pname,
                       bufSize, length, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -26081,7 +29626,7 @@ void GL_APIENTRY GetFramebufferParameterivRobustANGLEContextANGLE(GLeglContext c
           GLenumToString(GLenumGroup::DefaultGroup, pname), bufSize, (uintptr_t)length,
           (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -26094,6 +29639,10 @@ void GL_APIENTRY GetFramebufferParameterivRobustANGLEContextANGLE(GLeglContext c
         }
         ANGLE_CAPTURE(GetFramebufferParameterivRobustANGLE, isCallValid, context, target, pname,
                       bufSize, length, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -26115,7 +29664,7 @@ void GL_APIENTRY GetProgramInterfaceivRobustANGLEContextANGLE(GLeglContext ctx,
           GLenumToString(GLenumGroup::DefaultGroup, pname), bufSize, (uintptr_t)length,
           (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID programPacked                         = FromGL<ShaderProgramID>(program);
@@ -26131,6 +29680,10 @@ void GL_APIENTRY GetProgramInterfaceivRobustANGLEContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(GetProgramInterfaceivRobustANGLE, isCallValid, context, programPacked,
                       programInterface, pname, bufSize, length, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -26148,7 +29701,7 @@ void GL_APIENTRY GetBooleani_vRobustANGLEContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::DefaultGroup, target), index, bufSize,
           (uintptr_t)length, (uintptr_t)data);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -26161,6 +29714,10 @@ void GL_APIENTRY GetBooleani_vRobustANGLEContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(GetBooleani_vRobustANGLE, isCallValid, context, target, index, bufSize,
                       length, data);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -26178,7 +29735,7 @@ void GL_APIENTRY GetMultisamplefvRobustANGLEContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::DefaultGroup, pname), index, bufSize,
           (uintptr_t)length, (uintptr_t)val);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -26191,6 +29748,10 @@ void GL_APIENTRY GetMultisamplefvRobustANGLEContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(GetMultisamplefvRobustANGLE, isCallValid, context, pname, index, bufSize,
                       length, val);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -26211,7 +29772,7 @@ void GL_APIENTRY GetTexLevelParameterivRobustANGLEContextANGLE(GLeglContext ctx,
           GLenumToString(GLenumGroup::DefaultGroup, pname), bufSize, (uintptr_t)length,
           (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureTarget targetPacked                            = FromGL<TextureTarget>(target);
@@ -26226,6 +29787,10 @@ void GL_APIENTRY GetTexLevelParameterivRobustANGLEContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(GetTexLevelParameterivRobustANGLE, isCallValid, context, targetPacked, level,
                       pname, bufSize, length, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -26246,7 +29811,7 @@ void GL_APIENTRY GetTexLevelParameterfvRobustANGLEContextANGLE(GLeglContext ctx,
           GLenumToString(GLenumGroup::DefaultGroup, pname), bufSize, (uintptr_t)length,
           (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureTarget targetPacked                            = FromGL<TextureTarget>(target);
@@ -26261,6 +29826,10 @@ void GL_APIENTRY GetTexLevelParameterfvRobustANGLEContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(GetTexLevelParameterfvRobustANGLE, isCallValid, context, targetPacked, level,
                       pname, bufSize, length, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -26278,7 +29847,7 @@ void GL_APIENTRY GetPointervRobustANGLERobustANGLEContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::DefaultGroup, pname), bufSize,
           (uintptr_t)length, (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -26291,6 +29860,10 @@ void GL_APIENTRY GetPointervRobustANGLERobustANGLEContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(GetPointervRobustANGLERobustANGLE, isCallValid, context, pname, bufSize,
                       length, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -26318,7 +29891,7 @@ void GL_APIENTRY ReadnPixelsRobustANGLEContextANGLE(GLeglContext ctx,
         GLenumToString(GLenumGroup::DefaultGroup, type), bufSize, (uintptr_t)length,
         (uintptr_t)columns, (uintptr_t)rows, (uintptr_t)data);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -26333,6 +29906,10 @@ void GL_APIENTRY ReadnPixelsRobustANGLEContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(ReadnPixelsRobustANGLE, isCallValid, context, x, y, width, height, format,
                       type, bufSize, length, columns, rows, data);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -26349,7 +29926,7 @@ void GL_APIENTRY GetnUniformfvRobustANGLEContextANGLE(GLeglContext ctx,
           "length = 0x%016" PRIxPTR ", GLfloat * params = 0x%016" PRIxPTR "",
           CID(context), program, location, bufSize, (uintptr_t)length, (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID programPacked                         = FromGL<ShaderProgramID>(program);
@@ -26364,6 +29941,10 @@ void GL_APIENTRY GetnUniformfvRobustANGLEContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(GetnUniformfvRobustANGLE, isCallValid, context, programPacked, locationPacked,
                       bufSize, length, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -26380,7 +29961,7 @@ void GL_APIENTRY GetnUniformivRobustANGLEContextANGLE(GLeglContext ctx,
           "length = 0x%016" PRIxPTR ", GLint * params = 0x%016" PRIxPTR "",
           CID(context), program, location, bufSize, (uintptr_t)length, (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID programPacked                         = FromGL<ShaderProgramID>(program);
@@ -26395,6 +29976,10 @@ void GL_APIENTRY GetnUniformivRobustANGLEContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(GetnUniformivRobustANGLE, isCallValid, context, programPacked, locationPacked,
                       bufSize, length, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -26411,7 +29996,7 @@ void GL_APIENTRY GetnUniformuivRobustANGLEContextANGLE(GLeglContext ctx,
           "length = 0x%016" PRIxPTR ", GLuint * params = 0x%016" PRIxPTR "",
           CID(context), program, location, bufSize, (uintptr_t)length, (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ShaderProgramID programPacked                         = FromGL<ShaderProgramID>(program);
@@ -26426,6 +30011,10 @@ void GL_APIENTRY GetnUniformuivRobustANGLEContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(GetnUniformuivRobustANGLE, isCallValid, context, programPacked,
                       locationPacked, bufSize, length, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -26442,7 +30031,7 @@ void GL_APIENTRY TexParameterIivRobustANGLEContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::DefaultGroup, target),
           GLenumToString(GLenumGroup::DefaultGroup, pname), bufSize, (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureType targetPacked                              = FromGL<TextureType>(target);
@@ -26456,6 +30045,10 @@ void GL_APIENTRY TexParameterIivRobustANGLEContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(TexParameterIivRobustANGLE, isCallValid, context, targetPacked, pname,
                       bufSize, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -26472,7 +30065,7 @@ void GL_APIENTRY TexParameterIuivRobustANGLEContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::DefaultGroup, target),
           GLenumToString(GLenumGroup::DefaultGroup, pname), bufSize, (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureType targetPacked                              = FromGL<TextureType>(target);
@@ -26486,6 +30079,10 @@ void GL_APIENTRY TexParameterIuivRobustANGLEContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(TexParameterIuivRobustANGLE, isCallValid, context, targetPacked, pname,
                       bufSize, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -26504,7 +30101,7 @@ void GL_APIENTRY GetTexParameterIivRobustANGLEContextANGLE(GLeglContext ctx,
           GLenumToString(GLenumGroup::DefaultGroup, pname), bufSize, (uintptr_t)length,
           (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureType targetPacked                              = FromGL<TextureType>(target);
@@ -26518,6 +30115,10 @@ void GL_APIENTRY GetTexParameterIivRobustANGLEContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(GetTexParameterIivRobustANGLE, isCallValid, context, targetPacked, pname,
                       bufSize, length, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -26537,7 +30138,7 @@ void GL_APIENTRY GetTexParameterIuivRobustANGLEContextANGLE(GLeglContext ctx,
           GLenumToString(GLenumGroup::DefaultGroup, pname), bufSize, (uintptr_t)length,
           (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureType targetPacked                              = FromGL<TextureType>(target);
@@ -26551,6 +30152,10 @@ void GL_APIENTRY GetTexParameterIuivRobustANGLEContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(GetTexParameterIuivRobustANGLE, isCallValid, context, targetPacked, pname,
                       bufSize, length, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -26568,7 +30173,7 @@ void GL_APIENTRY SamplerParameterIivRobustANGLEContextANGLE(GLeglContext ctx,
           CID(context), sampler, GLenumToString(GLenumGroup::DefaultGroup, pname), bufSize,
           (uintptr_t)param);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         SamplerID samplerPacked                               = FromGL<SamplerID>(sampler);
@@ -26582,6 +30187,10 @@ void GL_APIENTRY SamplerParameterIivRobustANGLEContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(SamplerParameterIivRobustANGLE, isCallValid, context, samplerPacked, pname,
                       bufSize, param);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -26599,7 +30208,7 @@ void GL_APIENTRY SamplerParameterIuivRobustANGLEContextANGLE(GLeglContext ctx,
           CID(context), sampler, GLenumToString(GLenumGroup::DefaultGroup, pname), bufSize,
           (uintptr_t)param);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         SamplerID samplerPacked                               = FromGL<SamplerID>(sampler);
@@ -26613,6 +30222,10 @@ void GL_APIENTRY SamplerParameterIuivRobustANGLEContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(SamplerParameterIuivRobustANGLE, isCallValid, context, samplerPacked, pname,
                       bufSize, param);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -26631,7 +30244,7 @@ void GL_APIENTRY GetSamplerParameterIivRobustANGLEContextANGLE(GLeglContext ctx,
           CID(context), sampler, GLenumToString(GLenumGroup::DefaultGroup, pname), bufSize,
           (uintptr_t)length, (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         SamplerID samplerPacked                               = FromGL<SamplerID>(sampler);
@@ -26645,6 +30258,10 @@ void GL_APIENTRY GetSamplerParameterIivRobustANGLEContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(GetSamplerParameterIivRobustANGLE, isCallValid, context, samplerPacked, pname,
                       bufSize, length, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -26663,7 +30280,7 @@ void GL_APIENTRY GetSamplerParameterIuivRobustANGLEContextANGLE(GLeglContext ctx
           CID(context), sampler, GLenumToString(GLenumGroup::DefaultGroup, pname), bufSize,
           (uintptr_t)length, (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         SamplerID samplerPacked                               = FromGL<SamplerID>(sampler);
@@ -26677,6 +30294,10 @@ void GL_APIENTRY GetSamplerParameterIuivRobustANGLEContextANGLE(GLeglContext ctx
         }
         ANGLE_CAPTURE(GetSamplerParameterIuivRobustANGLE, isCallValid, context, samplerPacked,
                       pname, bufSize, length, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -26709,6 +30330,8 @@ void GL_APIENTRY GetQueryObjectivRobustANGLEContextANGLE(GLeglContext ctx,
         ANGLE_CAPTURE(GetQueryObjectivRobustANGLE, isCallValid, context, idPacked, pname, bufSize,
                       length, params);
     }
+    else
+    {}
 }
 
 void GL_APIENTRY GetQueryObjecti64vRobustANGLEContextANGLE(GLeglContext ctx,
@@ -26740,6 +30363,8 @@ void GL_APIENTRY GetQueryObjecti64vRobustANGLEContextANGLE(GLeglContext ctx,
         ANGLE_CAPTURE(GetQueryObjecti64vRobustANGLE, isCallValid, context, idPacked, pname, bufSize,
                       length, params);
     }
+    else
+    {}
 }
 
 void GL_APIENTRY GetQueryObjectui64vRobustANGLEContextANGLE(GLeglContext ctx,
@@ -26757,7 +30382,7 @@ void GL_APIENTRY GetQueryObjectui64vRobustANGLEContextANGLE(GLeglContext ctx,
           CID(context), id, GLenumToString(GLenumGroup::DefaultGroup, pname), bufSize,
           (uintptr_t)length, (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         QueryID idPacked                                      = FromGL<QueryID>(id);
@@ -26771,6 +30396,10 @@ void GL_APIENTRY GetQueryObjectui64vRobustANGLEContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(GetQueryObjectui64vRobustANGLE, isCallValid, context, idPacked, pname,
                       bufSize, length, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -26797,7 +30426,7 @@ void GL_APIENTRY CopyTexture3DANGLEContextANGLE(GLeglContext ctx,
           GLenumToString(GLenumGroup::DefaultGroup, destType), GLbooleanToString(unpackFlipY),
           GLbooleanToString(unpackPremultiplyAlpha), GLbooleanToString(unpackUnmultiplyAlpha));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureID sourceIdPacked                              = FromGL<TextureID>(sourceId);
@@ -26818,6 +30447,10 @@ void GL_APIENTRY CopyTexture3DANGLEContextANGLE(GLeglContext ctx,
         ANGLE_CAPTURE(CopyTexture3DANGLE, isCallValid, context, sourceIdPacked, sourceLevel,
                       destTargetPacked, destIdPacked, destLevel, internalFormat, destType,
                       unpackFlipY, unpackPremultiplyAlpha, unpackUnmultiplyAlpha);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -26852,7 +30485,7 @@ void GL_APIENTRY CopySubTexture3DANGLEContextANGLE(GLeglContext ctx,
           yoffset, zoffset, x, y, z, width, height, depth, GLbooleanToString(unpackFlipY),
           GLbooleanToString(unpackPremultiplyAlpha), GLbooleanToString(unpackUnmultiplyAlpha));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureID sourceIdPacked                              = FromGL<TextureID>(sourceId);
@@ -26877,6 +30510,10 @@ void GL_APIENTRY CopySubTexture3DANGLEContextANGLE(GLeglContext ctx,
                       width, height, depth, unpackFlipY, unpackPremultiplyAlpha,
                       unpackUnmultiplyAlpha);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY TexStorage2DMultisampleANGLEContextANGLE(GLeglContext ctx,
@@ -26895,7 +30532,7 @@ void GL_APIENTRY TexStorage2DMultisampleANGLEContextANGLE(GLeglContext ctx,
           GLenumToString(GLenumGroup::DefaultGroup, internalformat), width, height,
           GLbooleanToString(fixedsamplelocations));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureType targetPacked                              = FromGL<TextureType>(target);
@@ -26912,6 +30549,10 @@ void GL_APIENTRY TexStorage2DMultisampleANGLEContextANGLE(GLeglContext ctx,
         ANGLE_CAPTURE(TexStorage2DMultisampleANGLE, isCallValid, context, targetPacked, samples,
                       internalformat, width, height, fixedsamplelocations);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY GetTexLevelParameterivANGLEContextANGLE(GLeglContext ctx,
@@ -26927,7 +30568,7 @@ void GL_APIENTRY GetTexLevelParameterivANGLEContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::DefaultGroup, target), level,
           GLenumToString(GLenumGroup::DefaultGroup, pname), (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureTarget targetPacked                            = FromGL<TextureTarget>(target);
@@ -26941,6 +30582,10 @@ void GL_APIENTRY GetTexLevelParameterivANGLEContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(GetTexLevelParameterivANGLE, isCallValid, context, targetPacked, level, pname,
                       params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -26957,7 +30602,7 @@ void GL_APIENTRY GetTexLevelParameterfvANGLEContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::DefaultGroup, target), level,
           GLenumToString(GLenumGroup::DefaultGroup, pname), (uintptr_t)params);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureTarget targetPacked                            = FromGL<TextureTarget>(target);
@@ -26971,6 +30616,10 @@ void GL_APIENTRY GetTexLevelParameterfvANGLEContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(GetTexLevelParameterfvANGLE, isCallValid, context, targetPacked, level, pname,
                       params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -26987,7 +30636,7 @@ void GL_APIENTRY MultiDrawArraysANGLEContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::PrimitiveType, mode), (uintptr_t)firsts,
           (uintptr_t)counts, drawcount);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         PrimitiveMode modePacked                              = FromGL<PrimitiveMode>(mode);
@@ -27001,6 +30650,10 @@ void GL_APIENTRY MultiDrawArraysANGLEContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(MultiDrawArraysANGLE, isCallValid, context, modePacked, firsts, counts,
                       drawcount);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -27019,7 +30672,7 @@ void GL_APIENTRY MultiDrawArraysInstancedANGLEContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::PrimitiveType, mode), (uintptr_t)firsts,
           (uintptr_t)counts, (uintptr_t)instanceCounts, drawcount);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         PrimitiveMode modePacked                              = FromGL<PrimitiveMode>(mode);
@@ -27034,6 +30687,10 @@ void GL_APIENTRY MultiDrawArraysInstancedANGLEContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(MultiDrawArraysInstancedANGLE, isCallValid, context, modePacked, firsts,
                       counts, instanceCounts, drawcount);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -27052,7 +30709,7 @@ void GL_APIENTRY MultiDrawElementsANGLEContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::PrimitiveType, mode), (uintptr_t)counts,
           GLenumToString(GLenumGroup::DrawElementsType, type), (uintptr_t)indices, drawcount);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         PrimitiveMode modePacked                              = FromGL<PrimitiveMode>(mode);
@@ -27067,6 +30724,10 @@ void GL_APIENTRY MultiDrawElementsANGLEContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(MultiDrawElementsANGLE, isCallValid, context, modePacked, counts, typePacked,
                       indices, drawcount);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -27088,7 +30749,7 @@ void GL_APIENTRY MultiDrawElementsInstancedANGLEContextANGLE(GLeglContext ctx,
           GLenumToString(GLenumGroup::DrawElementsType, type), (uintptr_t)indices,
           (uintptr_t)instanceCounts, drawcount);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         PrimitiveMode modePacked                              = FromGL<PrimitiveMode>(mode);
@@ -27105,6 +30766,10 @@ void GL_APIENTRY MultiDrawElementsInstancedANGLEContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(MultiDrawElementsInstancedANGLE, isCallValid, context, modePacked, counts,
                       typePacked, indices, instanceCounts, drawcount);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -27123,7 +30788,7 @@ void GL_APIENTRY DrawArraysInstancedBaseInstanceANGLEContextANGLE(GLeglContext c
           CID(context), GLenumToString(GLenumGroup::PrimitiveType, mode), first, count,
           instanceCount, baseInstance);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         PrimitiveMode modePacked                              = FromGL<PrimitiveMode>(mode);
@@ -27138,6 +30803,10 @@ void GL_APIENTRY DrawArraysInstancedBaseInstanceANGLEContextANGLE(GLeglContext c
         }
         ANGLE_CAPTURE(DrawArraysInstancedBaseInstanceANGLE, isCallValid, context, modePacked, first,
                       count, instanceCount, baseInstance);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -27161,7 +30830,7 @@ DrawElementsInstancedBaseVertexBaseInstanceANGLEContextANGLE(GLeglContext ctx,
           GLenumToString(GLenumGroup::DrawElementsType, type), (uintptr_t)indices, instanceCounts,
           baseVertex, baseInstance);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         PrimitiveMode modePacked                              = FromGL<PrimitiveMode>(mode);
@@ -27179,6 +30848,10 @@ DrawElementsInstancedBaseVertexBaseInstanceANGLEContextANGLE(GLeglContext ctx,
         ANGLE_CAPTURE(DrawElementsInstancedBaseVertexBaseInstanceANGLE, isCallValid, context,
                       modePacked, count, typePacked, indices, instanceCounts, baseVertex,
                       baseInstance);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -27201,7 +30874,7 @@ MultiDrawArraysInstancedBaseInstanceANGLEContextANGLE(GLeglContext ctx,
           CID(context), GLenumToString(GLenumGroup::PrimitiveType, mode), (uintptr_t)firsts,
           (uintptr_t)counts, (uintptr_t)instanceCounts, (uintptr_t)baseInstances, drawcount);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         PrimitiveMode modePacked                              = FromGL<PrimitiveMode>(mode);
@@ -27217,6 +30890,10 @@ MultiDrawArraysInstancedBaseInstanceANGLEContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(MultiDrawArraysInstancedBaseInstanceANGLE, isCallValid, context, modePacked,
                       firsts, counts, instanceCounts, baseInstances, drawcount);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -27243,7 +30920,7 @@ MultiDrawElementsInstancedBaseVertexBaseInstanceANGLEContextANGLE(GLeglContext c
           GLenumToString(GLenumGroup::DrawElementsType, type), (uintptr_t)indices,
           (uintptr_t)instanceCounts, (uintptr_t)baseVertices, (uintptr_t)baseInstances, drawcount);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         PrimitiveMode modePacked                              = FromGL<PrimitiveMode>(mode);
@@ -27263,6 +30940,10 @@ MultiDrawElementsInstancedBaseVertexBaseInstanceANGLEContextANGLE(GLeglContext c
                       modePacked, counts, typePacked, indices, instanceCounts, baseVertices,
                       baseInstances, drawcount);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY GetMultisamplefvANGLEContextANGLE(GLeglContext ctx,
@@ -27275,7 +30956,7 @@ void GL_APIENTRY GetMultisamplefvANGLEContextANGLE(GLeglContext ctx,
           "context = %d, GLenum pname = %s, GLuint index = %u, GLfloat * val = 0x%016" PRIxPTR "",
           CID(context), GLenumToString(GLenumGroup::DefaultGroup, pname), index, (uintptr_t)val);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -27287,6 +30968,10 @@ void GL_APIENTRY GetMultisamplefvANGLEContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(GetMultisamplefvANGLE, isCallValid, context, pname, index, val);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY SampleMaskiANGLEContextANGLE(GLeglContext ctx, GLuint maskNumber, GLbitfield mask)
@@ -27296,7 +30981,7 @@ void GL_APIENTRY SampleMaskiANGLEContextANGLE(GLeglContext ctx, GLuint maskNumbe
           "context = %d, GLuint maskNumber = %u, GLbitfield mask = %s", CID(context), maskNumber,
           GLbitfieldToString(GLenumGroup::DefaultGroup, mask).c_str());
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -27308,6 +30993,10 @@ void GL_APIENTRY SampleMaskiANGLEContextANGLE(GLeglContext ctx, GLuint maskNumbe
         }
         ANGLE_CAPTURE(SampleMaskiANGLE, isCallValid, context, maskNumber, mask);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY ProvokingVertexANGLEContextANGLE(GLeglContext ctx, GLenum mode)
@@ -27317,7 +31006,7 @@ void GL_APIENTRY ProvokingVertexANGLEContextANGLE(GLeglContext ctx, GLenum mode)
           "context = %d, GLenum mode = %s", CID(context),
           GLenumToString(GLenumGroup::VertexProvokingMode, mode));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         ProvokingVertexConvention modePacked = FromGL<ProvokingVertexConvention>(mode);
@@ -27330,6 +31019,10 @@ void GL_APIENTRY ProvokingVertexANGLEContextANGLE(GLeglContext ctx, GLenum mode)
         }
         ANGLE_CAPTURE(ProvokingVertexANGLE, isCallValid, context, modePacked);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY LoseContextCHROMIUMContextANGLE(GLeglContext ctx, GLenum current, GLenum other)
@@ -27340,7 +31033,7 @@ void GL_APIENTRY LoseContextCHROMIUMContextANGLE(GLeglContext ctx, GLenum curren
           GLenumToString(GLenumGroup::GraphicsResetStatus, current),
           GLenumToString(GLenumGroup::GraphicsResetStatus, other));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         GraphicsResetStatus currentPacked = FromGL<GraphicsResetStatus>(current);
@@ -27353,6 +31046,10 @@ void GL_APIENTRY LoseContextCHROMIUMContextANGLE(GLeglContext ctx, GLenum curren
             context->loseContext(currentPacked, otherPacked);
         }
         ANGLE_CAPTURE(LoseContextCHROMIUM, isCallValid, context, currentPacked, otherPacked);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -27375,7 +31072,7 @@ void GL_APIENTRY TexImage2DExternalANGLEContextANGLE(GLeglContext ctx,
         width, height, border, GLenumToString(GLenumGroup::PixelFormat, format),
         GLenumToString(GLenumGroup::PixelType, type));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureTarget targetPacked                            = FromGL<TextureTarget>(target);
@@ -27392,6 +31089,10 @@ void GL_APIENTRY TexImage2DExternalANGLEContextANGLE(GLeglContext ctx,
         ANGLE_CAPTURE(TexImage2DExternalANGLE, isCallValid, context, targetPacked, level,
                       internalformat, width, height, border, format, type);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY InvalidateTextureANGLEContextANGLE(GLeglContext ctx, GLenum target)
@@ -27401,7 +31102,7 @@ void GL_APIENTRY InvalidateTextureANGLEContextANGLE(GLeglContext ctx, GLenum tar
           "context = %d, GLenum target = %s", CID(context),
           GLenumToString(GLenumGroup::TextureTarget, target));
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureType targetPacked                              = FromGL<TextureType>(target);
@@ -27413,6 +31114,10 @@ void GL_APIENTRY InvalidateTextureANGLEContextANGLE(GLeglContext ctx, GLenum tar
             context->invalidateTexture(targetPacked);
         }
         ANGLE_CAPTURE(InvalidateTextureANGLE, isCallValid, context, targetPacked);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -27431,7 +31136,7 @@ void GL_APIENTRY GetTexImageANGLEContextANGLE(GLeglContext ctx,
           GLenumToString(GLenumGroup::PixelFormat, format),
           GLenumToString(GLenumGroup::PixelType, type), (uintptr_t)pixels);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureTarget targetPacked                            = FromGL<TextureTarget>(target);
@@ -27445,6 +31150,10 @@ void GL_APIENTRY GetTexImageANGLEContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(GetTexImageANGLE, isCallValid, context, targetPacked, level, format, type,
                       pixels);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -27462,7 +31171,7 @@ void GL_APIENTRY GetRenderbufferImageANGLEContextANGLE(GLeglContext ctx,
           GLenumToString(GLenumGroup::PixelFormat, format),
           GLenumToString(GLenumGroup::PixelType, type), (uintptr_t)pixels);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
@@ -27475,6 +31184,10 @@ void GL_APIENTRY GetRenderbufferImageANGLEContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(GetRenderbufferImageANGLE, isCallValid, context, target, format, type,
                       pixels);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -27500,7 +31213,7 @@ void GL_APIENTRY TexStorageMemFlags2DANGLEContextANGLE(GLeglContext ctx,
           GLbitfieldToString(GLenumGroup::DefaultGroup, createFlags).c_str(),
           GLbitfieldToString(GLenumGroup::DefaultGroup, usageFlags).c_str());
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureType targetPacked                              = FromGL<TextureType>(target);
@@ -27517,6 +31230,10 @@ void GL_APIENTRY TexStorageMemFlags2DANGLEContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(TexStorageMemFlags2DANGLE, isCallValid, context, targetPacked, levels,
                       internalFormat, width, height, memoryPacked, offset, createFlags, usageFlags);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -27545,7 +31262,7 @@ void GL_APIENTRY TexStorageMemFlags2DMultisampleANGLEContextANGLE(GLeglContext c
           GLbitfieldToString(GLenumGroup::DefaultGroup, createFlags).c_str(),
           GLbitfieldToString(GLenumGroup::DefaultGroup, usageFlags).c_str());
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureType targetPacked                              = FromGL<TextureType>(target);
@@ -27565,6 +31282,10 @@ void GL_APIENTRY TexStorageMemFlags2DMultisampleANGLEContextANGLE(GLeglContext c
         ANGLE_CAPTURE(TexStorageMemFlags2DMultisampleANGLE, isCallValid, context, targetPacked,
                       samples, internalFormat, width, height, fixedSampleLocations, memoryPacked,
                       offset, createFlags, usageFlags);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -27591,7 +31312,7 @@ void GL_APIENTRY TexStorageMemFlags3DANGLEContextANGLE(GLeglContext ctx,
           GLbitfieldToString(GLenumGroup::DefaultGroup, createFlags).c_str(),
           GLbitfieldToString(GLenumGroup::DefaultGroup, usageFlags).c_str());
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureType targetPacked                              = FromGL<TextureType>(target);
@@ -27609,6 +31330,10 @@ void GL_APIENTRY TexStorageMemFlags3DANGLEContextANGLE(GLeglContext ctx,
         ANGLE_CAPTURE(TexStorageMemFlags3DANGLE, isCallValid, context, targetPacked, levels,
                       internalFormat, width, height, depth, memoryPacked, offset, createFlags,
                       usageFlags);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 
@@ -27638,7 +31363,7 @@ void GL_APIENTRY TexStorageMemFlags3DMultisampleANGLEContextANGLE(GLeglContext c
           GLbitfieldToString(GLenumGroup::DefaultGroup, createFlags).c_str(),
           GLbitfieldToString(GLenumGroup::DefaultGroup, usageFlags).c_str());
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         TextureType targetPacked                              = FromGL<TextureType>(target);
@@ -27659,6 +31384,10 @@ void GL_APIENTRY TexStorageMemFlags3DMultisampleANGLEContextANGLE(GLeglContext c
                       samples, internalFormat, width, height, depth, fixedSampleLocations,
                       memoryPacked, offset, createFlags, usageFlags);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY ImportMemoryZirconHandleANGLEContextANGLE(GLeglContext ctx,
@@ -27674,7 +31403,7 @@ void GL_APIENTRY ImportMemoryZirconHandleANGLEContextANGLE(GLeglContext ctx,
           CID(context), memory, static_cast<unsigned long long>(size),
           GLenumToString(GLenumGroup::ExternalHandleType, handleType), handle);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         MemoryObjectID memoryPacked                           = FromGL<MemoryObjectID>(memory);
@@ -27690,6 +31419,10 @@ void GL_APIENTRY ImportMemoryZirconHandleANGLEContextANGLE(GLeglContext ctx,
         ANGLE_CAPTURE(ImportMemoryZirconHandleANGLE, isCallValid, context, memoryPacked, size,
                       handleTypePacked, handle);
     }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY ImportSemaphoreZirconHandleANGLEContextANGLE(GLeglContext ctx,
@@ -27704,7 +31437,7 @@ void GL_APIENTRY ImportSemaphoreZirconHandleANGLEContextANGLE(GLeglContext ctx,
           CID(context), semaphore, GLenumToString(GLenumGroup::ExternalHandleType, handleType),
           handle);
 
-    if (context)
+    if (context && !context->isContextLost())
     {
         ASSERT(context == GetValidGlobalContext());
         SemaphoreID semaphorePacked                           = FromGL<SemaphoreID>(semaphore);
@@ -27719,6 +31452,10 @@ void GL_APIENTRY ImportSemaphoreZirconHandleANGLEContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(ImportSemaphoreZirconHandleANGLE, isCallValid, context, semaphorePacked,
                       handleTypePacked, handle);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
     }
 }
 }  // namespace gl
