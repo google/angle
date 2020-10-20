@@ -427,9 +427,6 @@
 // Fails on 431.02 NVIDIA driver
 3748 VULKAN WIN NVIDIA : dEQP-GLES2.functional.fbo.render.repeated_clear.* = FAIL
 
-// Vertex attribute aliasing generates invalid SPIRV
-4249 VULKAN : dEQP-GLES2.functional.attribute_location.bind_aliasing.*mat* = SKIP
-
 // Fails on Metal, some of filtering tests fail when MSAA is off and pass when MSAA is on. Some
 // tests are opposite. The filtering tests mostly fail on a few pixels.
 4235 METAL AMD : dEQP-GLES2.functional.shaders.texture_functions.vertex.texturecubelod = FAIL
@@ -500,9 +497,6 @@
 
 // Line loop emulation bug, suspected to be caused by wrong segment order
 4853 METAL AMD : dEQP-GLES2.functional.draw.draw_arrays.line_loop.multiple_attributes = FAIL
-
-// Vertex attribute aliasing generates invalid SPIRV
-4249 METAL : dEQP-GLES2.functional.attribute_location.bind_aliasing.*mat* = SKIP
 
 // Globally disable Metal testing on Intel & NVIDIA for now
 4235 METAL INTEL : dEQP-GLES2.* = SKIP

@@ -3202,11 +3202,6 @@ void main()
 // don't allow vertex attribute aliasing.  This test includes matrix types.
 TEST_P(VertexAttributeTest, AliasingMatrixAttribLocations)
 {
-    // TODO(syoussefi): Support vertex attribute aliasing on Vulkan.  The metal backend will
-    // automatically be fixed in the process.  http://anglebug.com/4249
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-    ANGLE_SKIP_TEST_IF(IsMetal());
-
     // http://anglebug.com/5180
     ANGLE_SKIP_TEST_IF(IsAndroid() && IsOpenGL());
 

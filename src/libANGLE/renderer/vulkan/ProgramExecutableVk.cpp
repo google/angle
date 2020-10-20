@@ -226,7 +226,7 @@ std::unique_ptr<rx::LinkEvent> ProgramExecutableVk::load(gl::BinaryInputStream *
             info->useRelaxedPrecision     = stream->readBool();
             info->varyingIsOutput         = stream->readBool();
             info->attributeComponentCount = stream->readInt<uint8_t>();
-            info->isMatrixAttribute       = stream->readBool();
+            info->attributeLocationCount  = stream->readInt<uint8_t>();
         }
     }
 
@@ -253,7 +253,7 @@ void ProgramExecutableVk::save(gl::BinaryOutputStream *stream)
             stream->writeInt<uint8_t>(it.second.useRelaxedPrecision);
             stream->writeInt<uint8_t>(it.second.varyingIsOutput);
             stream->writeInt<uint8_t>(it.second.attributeComponentCount);
-            stream->writeInt<uint8_t>(it.second.isMatrixAttribute);
+            stream->writeInt<uint8_t>(it.second.attributeLocationCount);
         }
     }
 }

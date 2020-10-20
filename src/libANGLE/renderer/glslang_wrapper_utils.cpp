@@ -236,7 +236,8 @@ ShaderInterfaceVariableInfo *AddLocationInfo(ShaderInterfaceVariableInfoMap *inf
                                              uint32_t location,
                                              uint32_t component,
                                              gl::ShaderType stage,
-                                             uint8_t attributeComponentCount)
+                                             uint8_t attributeComponentCount,
+                                             uint8_t attributeLocationCount)
 {
     // The info map for this name may or may not exist already.  This function merges the
     // location/component information.
@@ -251,6 +252,7 @@ ShaderInterfaceVariableInfo *AddLocationInfo(ShaderInterfaceVariableInfoMap *inf
     info->component = component;
     info->activeStages.set(stage);
     info->attributeComponentCount = attributeComponentCount;
+    info->attributeLocationCount  = attributeLocationCount;
 
     return info;
 }
@@ -494,14 +496,16 @@ void AssignAttributeLocations(const gl::ProgramExecutable &programExecutable,
     {
         ASSERT(attribute.active);
 
-        AddLocationInfo(variableInfoMapOut, attribute.mappedName, attribute.location,
-                        ShaderInterfaceVariableInfo::kInvalid, stage,
-                        static_cast<uint8_t>(gl::VariableColumnCount(attribute.type)));
+        const uint8_t colCount = static_cast<uint8_t>(gl::VariableColumnCount(attribute.type));
+        const uint8_t rowCount = static_cast<uint8_t>(gl::VariableRowCount(attribute.type));
+        const bool isMatrix    = colCount > 1 && rowCount > 1;
 
-        // Temporarily mark matrix attributes as such.  TODO: remove when support for aliasing
-        // matrix attributes is added.  http://anglebug.com/4249
-        (*variableInfoMapOut)[attribute.mappedName].isMatrixAttribute =
-            gl::VariableRowCount(attribute.type) > 1;
+        const uint8_t componentCount = isMatrix ? rowCount : colCount;
+        const uint8_t locationCount  = isMatrix ? colCount : rowCount;
+
+        AddLocationInfo(variableInfoMapOut, attribute.mappedName, attribute.location,
+                        ShaderInterfaceVariableInfo::kInvalid, stage, componentCount,
+                        locationCount);
     }
 }
 
@@ -538,7 +542,7 @@ void AssignOutputLocations(const gl::ProgramExecutable &programExecutable,
             }
 
             AddLocationInfo(variableInfoMapOut, outputVar.mappedName, location,
-                            ShaderInterfaceVariableInfo::kInvalid, shaderType, 0);
+                            ShaderInterfaceVariableInfo::kInvalid, shaderType, 0, 0);
         }
     }
 
@@ -547,8 +551,8 @@ void AssignOutputLocations(const gl::ProgramExecutable &programExecutable,
     // location 0 to these entries, adding an entry for them here allows us to ASSERT that every
     // shader interface variable is processed during the SPIR-V transformation.  This is done when
     // iterating the ids provided by OpEntryPoint.
-    AddLocationInfo(variableInfoMapOut, "webgl_FragColor", 0, 0, shaderType, 0);
-    AddLocationInfo(variableInfoMapOut, "webgl_FragData", 0, 0, shaderType, 0);
+    AddLocationInfo(variableInfoMapOut, "webgl_FragColor", 0, 0, shaderType, 0, 0);
+    AddLocationInfo(variableInfoMapOut, "webgl_FragData", 0, 0, shaderType, 0, 0);
 }
 
 void AssignVaryingLocations(const GlslangSourceOptions &options,
@@ -567,7 +571,7 @@ void AssignVaryingLocations(const GlslangSourceOptions &options,
 
         AddLocationInfo(&(*variableInfoMapOut)[shaderType], sh::vk::kLineRasterEmulationPosition,
                         lineRasterEmulationPositionLocation, ShaderInterfaceVariableInfo::kInvalid,
-                        shaderType, 0);
+                        shaderType, 0, 0);
     }
 
     // Assign varying locations.
@@ -603,7 +607,7 @@ void AssignVaryingLocations(const GlslangSourceOptions &options,
                                           ? varying.frontVarying.parentStructMappedName
                                           : varying.frontVarying.varying->mappedName;
             AddLocationInfo(&(*variableInfoMapOut)[varying.frontVarying.stage], name, location,
-                            component, varying.frontVarying.stage, 0);
+                            component, varying.frontVarying.stage, 0, 0);
         }
         if (varying.backVarying.varying && (varying.backVarying.stage == shaderType))
         {
@@ -611,7 +615,7 @@ void AssignVaryingLocations(const GlslangSourceOptions &options,
                                           ? varying.backVarying.parentStructMappedName
                                           : varying.backVarying.varying->mappedName;
             AddLocationInfo(&(*variableInfoMapOut)[varying.backVarying.stage], name, location,
-                            component, varying.backVarying.stage, 0);
+                            component, varying.backVarying.stage, 0, 0);
         }
     }
 
@@ -690,7 +694,7 @@ void AssignTransformFeedbackExtensionQualifiers(const gl::ProgramExecutable &pro
             ASSERT(xfbVaryingLocation < locationsUsedForXfbExtension);
 
             AddLocationInfo(variableInfoMapOut, xfbVaryingName, xfbVaryingLocation,
-                            ShaderInterfaceVariableInfo::kInvalid, shaderType, 0);
+                            ShaderInterfaceVariableInfo::kInvalid, shaderType, 0, 0);
             SetXfbInfo(variableInfoMapOut, xfbVaryingName, bufferIndex, currentOffset,
                        currentStride);
         }
@@ -1234,19 +1238,19 @@ void SpirvTransformer::resolveVariableIds()
     // Allocate storage for id-to-name map.  Used to associate ShaderInterfaceVariableInfo with ids
     // based on name, but only when it's determined that the name corresponds to a shader interface
     // variable.
-    mNamesById.resize(indexBound + 1, nullptr);
+    mNamesById.resize(indexBound, nullptr);
 
     // Allocate storage for id-to-info map.  If %i is the id of a name in mVariableInfoMap, index i
     // in this vector will hold a pointer to the ShaderInterfaceVariableInfo object associated with
     // that name in mVariableInfoMap.
-    mVariableInfoById.resize(indexBound + 1, nullptr);
+    mVariableInfoById.resize(indexBound, nullptr);
 
     // Allocate storage for Output type pointer map.  At index i, this vector holds the identical
     // type as %i except for its storage class turned to Private.
     // Also store a FunctionID and TypeID for when we need to fix a precision mismatch
-    mTypePointerTransformedId.resize(indexBound + 1, {0, 0});
-    mFixedVaryingId.resize(indexBound + 1, {0});
-    mFixedVaryingTypeId.resize(indexBound + 1, {0});
+    mTypePointerTransformedId.resize(indexBound, {0, 0});
+    mFixedVaryingId.resize(indexBound, {0});
+    mFixedVaryingTypeId.resize(indexBound, {0});
 
     size_t currentWord = kHeaderIndexInstructions;
 
@@ -2054,6 +2058,7 @@ void ValidateShaderInterfaceVariableIsAttribute(const ShaderInterfaceVariableInf
     ASSERT(info);
     ASSERT(info->activeStages[gl::ShaderType::Vertex]);
     ASSERT(info->attributeComponentCount > 0);
+    ASSERT(info->attributeLocationCount > 0);
     ASSERT(info->location != ShaderInterfaceVariableInfo::kInvalid);
 }
 
@@ -2066,8 +2071,8 @@ void ValidateIsAliasingAttribute(const AliasingAttributeMap *aliasingMap, uint32
 
 // A transformation that resolves vertex attribute aliases.  Note that vertex attribute aliasing is
 // only allowed in GLSL ES 100, where the attribute types can only be one of float, vec2, vec3,
-// vec4, mat2, mat3, and mat4.  Currently, matrix attributes are not handled.
-// TODO: aliasing attributes of matrix type. http://anglebug.com/4249
+// vec4, mat2, mat3, and mat4.  Matrix attributes are handled by expanding them to multiple vector
+// attributes, each occupying one location.
 class SpirvVertexAttributeAliasingTransformer final : public SpirvTransformerBase
 {
   public:
@@ -2091,11 +2096,14 @@ class SpirvVertexAttributeAliasingTransformer final : public SpirvTransformerBas
     void transformInstruction();
 
     // Helpers:
-    uint32_t getAliasingAttributeReplacementId(uint32_t aliasingId) const;
+    uint32_t getAliasingAttributeReplacementId(uint32_t aliasingId, uint32_t row) const;
+    bool isMatrixAttribute(uint32_t id) const;
 
     // Instructions that are purely informational:
     void visitTypeFloat(const uint32_t *instruction);
     void visitTypeVector(const uint32_t *instruction);
+    void visitTypeMatrix(const uint32_t *instruction);
+    void visitTypePointer(const uint32_t *instruction);
 
     // Instructions that potentially need transformation.  They return true if the instruction is
     // transformed.  If false is returned, the instruction should be copied as-is.
@@ -2104,16 +2112,31 @@ class SpirvVertexAttributeAliasingTransformer final : public SpirvTransformerBas
     bool transformDecorate(const uint32_t *instruction, size_t wordCount);
     bool transformVariable(const uint32_t *instruction, size_t wordCount);
     bool transformAccessChain(const uint32_t *instruction, size_t wordCount);
+    void transformLoadHelper(const uint32_t *instruction,
+                             size_t wordCount,
+                             uint32_t pointerId,
+                             uint32_t typeId,
+                             uint32_t replacementId,
+                             uint32_t resultId);
     bool transformLoad(const uint32_t *instruction, size_t wordCount);
 
     // Generated instructions:
     void writeCopyObject(uint32_t id, uint32_t typeId, uint32_t operandId);
+    void writeCompositeConstruct(uint32_t id,
+                                 uint32_t typeId,
+                                 const angle::FixedVector<uint32_t, 4> &constituents);
     void writeCompositeExtract(uint32_t id, uint32_t typeId, uint32_t compositeId, uint32_t field);
+    void writeStore(uint32_t pointerId, uint32_t objectId);
+    void writeTypePointer(uint32_t id, uint32_t storageClass, uint32_t typeId);
+    void writeVariable(uint32_t id, uint32_t typeId, uint32_t storageClass);
     void writeVectorShuffle(uint32_t id,
                             uint32_t typeId,
                             uint32_t vec1Id,
                             uint32_t vec2Id,
                             const angle::FixedVector<uint32_t, 4> &fields);
+
+    void declareExpandedMatrixVectors();
+    void writeExpandedMatrixInitialization();
 
     // Transformation state:
 
@@ -2124,20 +2147,64 @@ class SpirvVertexAttributeAliasingTransformer final : public SpirvTransformerBas
     // removed.
     std::vector<bool> mIsAliasingAttributeById;
 
-    // Id of attribute types; float and veci. This array is one-based, and [0] is unused.
+    // Matrix attributes are split into vectors, each occupying one location.  The SPIR-V
+    // declaration would need to change from:
+    //
+    //     %type = OpTypeMatrix %vectorType N
+    //     %matrixType = OpTypePointer Input %type
+    //     %matrix = OpVariable %matrixType Input
+    //
+    // to:
+    //
+    //     %matrixType = OpTypePointer Private %type
+    //     %matrix = OpVariable %matrixType Private
+    //
+    //     %vecType = OpTypePointer Input %vectorType
+    //
+    //     %vec0 = OpVariable %vecType Input
+    //     ...
+    //     %vecN-1 = OpVariable %vecType Input
+    //
+    // For each id %matrix (which corresponds to a matrix attribute), this map contains %vec0.  The
+    // ids of the split vectors are consecutive, so %veci == %vec0 + i.  %veciType is taken from
+    // mInputTypePointers.
+    std::vector<uint32_t> mExpandedMatrixFirstVectorIdById;
+    // Whether the expanded matrix OpVariables are generated.
+    bool mHaveMatricesExpanded = false;
+    // Whether initialization of the matrix attributes should be written at the beginning of the
+    // current function.
+    bool mWriteExpandedMatrixInitialization = false;
+    uint32_t mEntryPointId                  = 0;
+
+    // Id of attribute types; float and veci.  This array is one-based, and [0] is unused.
     //
     // [1]: id of OpTypeFloat 32
     // [N]: id of OpTypeVector %[1] N, N = {2, 3, 4}
     //
     // In other words, index of the array corresponds to the number of components in the type.
-    uint32_t mFloatTypes[5] = {};
+    std::array<uint32_t, 5> mFloatTypes = {};
+
+    // Corresponding to mFloatTypes, [i]: id of OpMatrix %mFloatTypes[i] i.  Note that only square
+    // matrices are possible as attributes in GLSL ES 1.00.  [0] and [1] are unused.
+    std::array<uint32_t, 5> mMatrixTypes = {};
+
+    // Corresponding to mFloatTypes, [i]: id of OpTypePointer Input %mFloatTypes[i].  [0] is unused.
+    std::array<uint32_t, 5> mInputTypePointers = {};
+
+    // Corresponding to mFloatTypes, [i]: id of OpTypePointer Private %mFloatTypes[i].  [0] is
+    // unused.
+    std::array<uint32_t, 5> mPrivateFloatTypePointers = {};
+
+    // Corresponding to mMatrixTypes, [i]: id of OpTypePointer Private %mMatrixTypes[i].  [0] and
+    // [1] are unused.
+    std::array<uint32_t, 5> mPrivateMatrixTypePointers = {};
 };
 
 bool SpirvVertexAttributeAliasingTransformer::transform()
 {
-    preprocessAliasingAttributes();
-
     onTransformBegin();
+
+    preprocessAliasingAttributes();
 
     while (mCurrentWord < mSpirvBlobIn.size())
     {
@@ -2150,10 +2217,13 @@ bool SpirvVertexAttributeAliasingTransformer::transform()
 void SpirvVertexAttributeAliasingTransformer::preprocessAliasingAttributes()
 {
     const size_t indexBound = mSpirvBlobIn[kHeaderIndexIndexBound];
-    mIsAliasingAttributeById.resize(indexBound + 1, false);
+
+    mVariableInfoById.resize(indexBound, nullptr);
+    mIsAliasingAttributeById.resize(indexBound, false);
+    mExpandedMatrixFirstVectorIdById.resize(indexBound, 0);
 
     // Go through attributes and find out which alias which.
-    for (size_t id = 0; id < mVariableInfoById.size(); ++id)
+    for (size_t id = 0; id < indexBound; ++id)
     {
         const ShaderInterfaceVariableInfo *info = mVariableInfoById[id];
 
@@ -2164,47 +2234,67 @@ void SpirvVertexAttributeAliasingTransformer::preprocessAliasingAttributes()
             continue;
         }
 
-        // Ignore matrix attributes for now.
-        // TODO: aliasing matrix attributes.  http://anglebug.com/4249
-        if (info->isMatrixAttribute)
-        {
-            continue;
-        }
-
         ASSERT(info->location != ShaderInterfaceVariableInfo::kInvalid);
-        ASSERT(info->location < mAliasingAttributeMap.size());
 
-        AliasingAttributeMap *aliasingMap = &mAliasingAttributeMap[info->location];
+        const bool isMatrixAttribute = info->attributeLocationCount > 1;
 
-        // If this is the first attribute in this location, remember it.
-        if (aliasingMap->attribute == 0)
+        for (uint32_t offset = 0; offset < info->attributeLocationCount; ++offset)
         {
-            aliasingMap->attribute = id;
-            continue;
-        }
+            uint32_t location = info->location + offset;
+            ASSERT(location < mAliasingAttributeMap.size());
 
-        // Otherwise, either add it to the list of aliasing attributes, or replace the main
-        // attribute (and add that to the list of aliasing attributes).  The one with the largest
-        // number of component is used as the main attribute.
-        const ShaderInterfaceVariableInfo *curMainAttribute =
-            mVariableInfoById[aliasingMap->attribute];
-        ASSERT(curMainAttribute != nullptr && curMainAttribute->attributeComponentCount > 0 &&
-               !curMainAttribute->isMatrixAttribute);
+            uint32_t attributeId = id;
 
-        uint32_t aliasingId;
-        if (info->attributeComponentCount > curMainAttribute->attributeComponentCount)
-        {
-            aliasingId             = aliasingMap->attribute;
-            aliasingMap->attribute = id;
-        }
-        else
-        {
-            aliasingId = id;
-        }
+            // If this is a matrix attribute, expand it to vectors.
+            if (isMatrixAttribute)
+            {
+                uint32_t matrixId = id;
 
-        aliasingMap->aliasingAttributes.push_back(aliasingId);
-        ASSERT(mIsAliasingAttributeById[aliasingId] == false);
-        mIsAliasingAttributeById[aliasingId] = true;
+                // Get a new id for this location and associate it with the matrix.
+                attributeId = getNewId();
+                if (offset == 0)
+                {
+                    mExpandedMatrixFirstVectorIdById[matrixId] = attributeId;
+                }
+                // The ids are consecutive.
+                ASSERT(attributeId == mExpandedMatrixFirstVectorIdById[matrixId] + offset);
+
+                mIsAliasingAttributeById.resize(attributeId + 1, false);
+                mVariableInfoById.resize(attributeId + 1, nullptr);
+                mVariableInfoById[attributeId] = info;
+            }
+
+            AliasingAttributeMap *aliasingMap = &mAliasingAttributeMap[location];
+
+            // If this is the first attribute in this location, remember it.
+            if (aliasingMap->attribute == 0)
+            {
+                aliasingMap->attribute = attributeId;
+                continue;
+            }
+
+            // Otherwise, either add it to the list of aliasing attributes, or replace the main
+            // attribute (and add that to the list of aliasing attributes).  The one with the
+            // largest number of components is used as the main attribute.
+            const ShaderInterfaceVariableInfo *curMainAttribute =
+                mVariableInfoById[aliasingMap->attribute];
+            ASSERT(curMainAttribute != nullptr && curMainAttribute->attributeComponentCount > 0);
+
+            uint32_t aliasingId;
+            if (info->attributeComponentCount > curMainAttribute->attributeComponentCount)
+            {
+                aliasingId             = aliasingMap->attribute;
+                aliasingMap->attribute = attributeId;
+            }
+            else
+            {
+                aliasingId = attributeId;
+            }
+
+            aliasingMap->aliasingAttributes.push_back(aliasingId);
+            ASSERT(mIsAliasingAttributeById[aliasingId] == false);
+            mIsAliasingAttributeById[aliasingId] = true;
+        }
     }
 }
 
@@ -2214,40 +2304,93 @@ void SpirvVertexAttributeAliasingTransformer::transformInstruction()
     uint32_t opCode;
     const uint32_t *instruction = getCurrentInstruction(&opCode, &wordCount);
 
+    if (opCode == spv::OpFunction)
+    {
+        // Declare the expanded matrix variables right before the first function declaration.
+        if (!mHaveMatricesExpanded)
+        {
+            declareExpandedMatrixVectors();
+            mHaveMatricesExpanded = true;
+        }
+
+        // SPIR-V is structured in sections.  Function declarations come last.
+        mIsInFunctionSection = true;
+
+        // The matrix attribute declarations have been changed to have Private storage class, and
+        // they are initialized from the expanded (and potentially aliased) Input vectors.  This is
+        // done at the beginning of the entry point.
+
+        // SPIR-V 1.0 Section 3.32 Instructions, OpFunction
+        constexpr size_t kFunctionIdIndex = 2;
+
+        const uint32_t functionId = instruction[kFunctionIdIndex];
+
+        mWriteExpandedMatrixInitialization = functionId == mEntryPointId;
+    }
+
     // Only look at interesting instructions.
     bool transformed = false;
 
-    switch (opCode)
+    if (mIsInFunctionSection)
     {
-        // Informational instructions:
-        case spv::OpTypeFloat:
-            visitTypeFloat(instruction);
-            break;
-        case spv::OpTypeVector:
-            visitTypeVector(instruction);
-            break;
-        // Instructions that may need transformation:
-        case spv::OpEntryPoint:
-            transformed = transformEntryPoint(instruction, wordCount);
-            break;
-        case spv::OpName:
-            transformed = transformName(instruction, wordCount);
-            break;
-        case spv::OpDecorate:
-            transformed = transformDecorate(instruction, wordCount);
-            break;
-        case spv::OpVariable:
-            transformed = transformVariable(instruction, wordCount);
-            break;
-        case spv::OpAccessChain:
-        case spv::OpInBoundsAccessChain:
-            transformed = transformAccessChain(instruction, wordCount);
-            break;
-        case spv::OpLoad:
-            transformed = transformLoad(instruction, wordCount);
-            break;
-        default:
-            break;
+        // Write expanded matrix initialization right after the entry point's OpFunction and any
+        // instruction that must come immediately after it.
+        if (mWriteExpandedMatrixInitialization && opCode != spv::OpFunction &&
+            opCode != spv::OpFunctionParameter && opCode != spv::OpLabel &&
+            opCode != spv::OpVariable)
+        {
+            writeExpandedMatrixInitialization();
+            mWriteExpandedMatrixInitialization = false;
+        }
+
+        // Look at in-function opcodes.
+        switch (opCode)
+        {
+            case spv::OpAccessChain:
+            case spv::OpInBoundsAccessChain:
+                transformed = transformAccessChain(instruction, wordCount);
+                break;
+            case spv::OpLoad:
+                transformed = transformLoad(instruction, wordCount);
+                break;
+            default:
+                break;
+        }
+    }
+    else
+    {
+        // Look at global declaration opcodes.
+        switch (opCode)
+        {
+            // Informational instructions:
+            case spv::OpTypeFloat:
+                visitTypeFloat(instruction);
+                break;
+            case spv::OpTypeVector:
+                visitTypeVector(instruction);
+                break;
+            case spv::OpTypeMatrix:
+                visitTypeMatrix(instruction);
+                break;
+            case spv::OpTypePointer:
+                visitTypePointer(instruction);
+                break;
+            // Instructions that may need transformation:
+            case spv::OpEntryPoint:
+                transformed = transformEntryPoint(instruction, wordCount);
+                break;
+            case spv::OpName:
+                transformed = transformName(instruction, wordCount);
+                break;
+            case spv::OpDecorate:
+                transformed = transformDecorate(instruction, wordCount);
+                break;
+            case spv::OpVariable:
+                transformed = transformVariable(instruction, wordCount);
+                break;
+            default:
+                break;
+        }
     }
 
     // If the instruction was not transformed, copy it to output as is.
@@ -2261,14 +2404,16 @@ void SpirvVertexAttributeAliasingTransformer::transformInstruction()
 }
 
 uint32_t SpirvVertexAttributeAliasingTransformer::getAliasingAttributeReplacementId(
-    uint32_t aliasingId) const
+    uint32_t aliasingId,
+    uint32_t offset) const
 {
     // Get variable info corresponding to the aliasing attribute.
     const ShaderInterfaceVariableInfo *aliasingInfo = mVariableInfoById[aliasingId];
     ValidateShaderInterfaceVariableIsAttribute(aliasingInfo);
 
     // Find the replacement attribute.
-    const AliasingAttributeMap *aliasingMap = &mAliasingAttributeMap[aliasingInfo->location];
+    const AliasingAttributeMap *aliasingMap =
+        &mAliasingAttributeMap[aliasingInfo->location + offset];
     ValidateIsAliasingAttribute(aliasingMap, aliasingId);
 
     const uint32_t replacementId = aliasingMap->attribute;
@@ -2276,6 +2421,11 @@ uint32_t SpirvVertexAttributeAliasingTransformer::getAliasingAttributeReplacemen
     ASSERT(!mIsAliasingAttributeById[replacementId]);
 
     return replacementId;
+}
+
+bool SpirvVertexAttributeAliasingTransformer::isMatrixAttribute(uint32_t id) const
+{
+    return mExpandedMatrixFirstVectorIdById[id] != 0;
 }
 
 void SpirvVertexAttributeAliasingTransformer::visitTypeFloat(const uint32_t *instruction)
@@ -2315,30 +2465,126 @@ void SpirvVertexAttributeAliasingTransformer::visitTypeVector(const uint32_t *in
     }
 }
 
+void SpirvVertexAttributeAliasingTransformer::visitTypeMatrix(const uint32_t *instruction)
+{
+    // SPIR-V 1.0 Section 3.32 Instructions, OpTypeMatrix
+    constexpr size_t kIdIndex          = 1;
+    constexpr size_t kColumnTypeIndex  = 2;
+    constexpr size_t kColumnCountIndex = 3;
+
+    const uint32_t id          = instruction[kIdIndex];
+    const uint32_t columnType  = instruction[kColumnTypeIndex];
+    const uint32_t columnCount = instruction[kColumnCountIndex];
+
+    // Only interested in OpTypeMatrix %vecN, where %vecN is the id of OpTypeVector %f32 N.
+    // This is only for square matN types (as allowed by GLSL ES 1.00), so columnCount is the same
+    // as rowCount.
+    if (columnType == mFloatTypes[columnCount])
+    {
+        ASSERT(mMatrixTypes[columnCount] == 0);
+        mMatrixTypes[columnCount] = id;
+    }
+}
+
+void SpirvVertexAttributeAliasingTransformer::visitTypePointer(const uint32_t *instruction)
+{
+    // SPIR-V 1.0 Section 3.32 Instructions, OpTypePointer
+    constexpr size_t kIdIndex           = 1;
+    constexpr size_t kStorageClassIndex = 2;
+    constexpr size_t kTypeIdIndex       = 3;
+
+    const uint32_t id           = instruction[kIdIndex];
+    const uint32_t storageClass = instruction[kStorageClassIndex];
+    const uint32_t typeId       = instruction[kTypeIdIndex];
+
+    // Only interested in OpTypePointer Input %vecN, where %vecN is the id of OpTypeVector %f32 N,
+    // as well as OpTypePointer Private %matN, where %matN is the id of OpTypeMatrix %vecN N.
+    // This is only for matN types (as allowed by GLSL ES 1.00), so N >= 2.
+    if (storageClass == spv::StorageClassInput)
+    {
+        for (size_t n = 2; n < mFloatTypes.size(); ++n)
+        {
+            if (typeId == mFloatTypes[n])
+            {
+                ASSERT(mInputTypePointers[n] == 0);
+                mInputTypePointers[n] = id;
+                break;
+            }
+        }
+    }
+    else if (storageClass == spv::StorageClassPrivate)
+    {
+        ASSERT(mFloatTypes.size() == mMatrixTypes.size());
+        for (size_t n = 2; n < mMatrixTypes.size(); ++n)
+        {
+            // Note that Private types may not be unique, as the previous transformation can
+            // generate duplicates.
+            if (typeId == mFloatTypes[n])
+            {
+                mPrivateFloatTypePointers[n] = id;
+                break;
+            }
+            if (typeId == mMatrixTypes[n])
+            {
+                mPrivateMatrixTypePointers[n] = id;
+                break;
+            }
+        }
+    }
+}
+
 bool SpirvVertexAttributeAliasingTransformer::transformEntryPoint(const uint32_t *instruction,
                                                                   size_t wordCount)
 {
     // Remove aliasing attributes from the shader interface declaration.
 
     // SPIR-V 1.0 Section 3.32 Instructions, OpEntryPoint
-    constexpr size_t kNameIndex = 3;
+    constexpr size_t kEntryPointIdIndex = 2;
+    constexpr size_t kNameIndex         = 3;
 
     // See comment in SpirvTransformer::transformEntryPoint.
     const size_t nameLength =
         strlen(reinterpret_cast<const char *>(&instruction[kNameIndex])) / 4 + 1;
     const uint32_t instructionLength = GetSpirvInstructionLength(instruction);
     const size_t interfaceStart      = kNameIndex + nameLength;
-    const size_t interfaceCount      = instructionLength - interfaceStart;
+
+    // Should only have one EntryPoint
+    ASSERT(mEntryPointId == 0);
+    mEntryPointId = instruction[kEntryPointIdIndex];
 
     // Create a copy of the entry point for modification.
     std::vector<uint32_t> filteredEntryPoint(instruction, instruction + wordCount);
 
-    // Filter out aliasing attributes from entry point interface declaration.
-    // Filter out inactive varyings from entry point interface declaration.
-    size_t writeIndex = interfaceStart;
-    for (size_t index = 0; index < interfaceCount; ++index)
+    // As a first pass, filter out matrix attributes and append their replacement vectors.
+    for (size_t index = interfaceStart; index < instructionLength; ++index)
     {
-        uint32_t id = instruction[interfaceStart + index];
+        uint32_t matrixId = instruction[index];
+
+        if (mExpandedMatrixFirstVectorIdById[matrixId] == 0)
+        {
+            continue;
+        }
+
+        const ShaderInterfaceVariableInfo *info = mVariableInfoById[matrixId];
+        ValidateShaderInterfaceVariableIsAttribute(info);
+
+        // Replace the matrix id with its first vector id.
+        uint32_t vec0Id           = mExpandedMatrixFirstVectorIdById[matrixId];
+        filteredEntryPoint[index] = vec0Id;
+
+        // Append the rest of the vectors to the entry point.
+        for (uint32_t offset = 1; offset < info->attributeLocationCount; ++offset)
+        {
+            uint32_t vecId = vec0Id + offset;
+            filteredEntryPoint.push_back(vecId);
+        }
+    }
+
+    // Filter out aliasing attributes from entry point interface declaration.
+    size_t writeIndex = interfaceStart;
+    for (size_t index = interfaceStart; index < filteredEntryPoint.size(); ++index)
+    {
+        uint32_t id = filteredEntryPoint[index];
 
         // If this is an attribute that's aliasing another one in the same location, remove it.
         if (mIsAliasingAttributeById[id])
@@ -2346,8 +2592,12 @@ bool SpirvVertexAttributeAliasingTransformer::transformEntryPoint(const uint32_t
             const ShaderInterfaceVariableInfo *info = mVariableInfoById[id];
             ValidateShaderInterfaceVariableIsAttribute(info);
 
-            const AliasingAttributeMap *aliasingMap = &mAliasingAttributeMap[info->location];
-            ValidateIsAliasingAttribute(aliasingMap, id);
+            // The following assertion is only valid for non-matrix attributes.
+            if (info->attributeLocationCount == 1)
+            {
+                const AliasingAttributeMap *aliasingMap = &mAliasingAttributeMap[info->location];
+                ValidateIsAliasingAttribute(aliasingMap, id);
+            }
 
             continue;
         }
@@ -2389,15 +2639,51 @@ bool SpirvVertexAttributeAliasingTransformer::transformDecorate(const uint32_t *
                                                                 size_t wordCount)
 {
     // SPIR-V 1.0 Section 3.32 Instructions, OpDecorate
-    constexpr size_t kIdIndex = 1;
+    constexpr size_t kIdIndex              = 1;
+    constexpr size_t kDecorationIndex      = 2;
+    constexpr size_t kDecorationValueIndex = 3;
 
-    uint32_t id = instruction[kIdIndex];
+    uint32_t id         = instruction[kIdIndex];
+    uint32_t decoration = instruction[kDecorationIndex];
 
-    // If id is not that of an aliasing attribute, there's nothing to do.
-    ASSERT(id < mIsAliasingAttributeById.size());
-    if (!mIsAliasingAttributeById[id])
+    if (isMatrixAttribute(id))
     {
-        return false;
+        // If it's a matrix attribute, it's expanded to multiple vectors.  Insert the Location
+        // decorations for these vectors here.
+
+        // Keep all decorations except for Location.
+        if (decoration != spv::DecorationLocation)
+        {
+            return false;
+        }
+
+        const ShaderInterfaceVariableInfo *info = mVariableInfoById[id];
+        ValidateShaderInterfaceVariableIsAttribute(info);
+
+        uint32_t vec0Id = mExpandedMatrixFirstVectorIdById[id];
+        ASSERT(vec0Id != 0);
+
+        for (uint32_t offset = 0; offset < info->attributeLocationCount; ++offset)
+        {
+            uint32_t vecId = vec0Id + offset;
+            if (mIsAliasingAttributeById[vecId])
+            {
+                continue;
+            }
+
+            const size_t instOffset                 = copyInstruction(instruction, wordCount);
+            (*mSpirvBlobOut)[instOffset + kIdIndex] = vecId;
+            (*mSpirvBlobOut)[instOffset + kDecorationValueIndex] = info->location + offset;
+        }
+    }
+    else
+    {
+        // If id is not that of an aliasing attribute, there's nothing to do.
+        ASSERT(id < mIsAliasingAttributeById.size());
+        if (!mIsAliasingAttributeById[id])
+        {
+            return false;
+        }
     }
 
     // Drop every decoration for this id.
@@ -2414,11 +2700,15 @@ bool SpirvVertexAttributeAliasingTransformer::transformVariable(const uint32_t *
     const uint32_t id           = instruction[kIdIndex];
     const uint32_t storageClass = instruction[kStorageClassIndex];
 
-    // If id is not that of an aliasing attribute, there's nothing to do.
-    ASSERT(id < mIsAliasingAttributeById.size());
-    if (!mIsAliasingAttributeById[id])
+    if (!isMatrixAttribute(id))
     {
-        return false;
+        // If id is not that of an aliasing attribute, there's nothing to do.  Note that matrix
+        // declarations are always replaced.
+        ASSERT(id < mIsAliasingAttributeById.size());
+        if (!mIsAliasingAttributeById[id])
+        {
+            return false;
+        }
     }
 
     ASSERT(storageClass == spv::StorageClassInput);
@@ -2431,69 +2721,95 @@ bool SpirvVertexAttributeAliasingTransformer::transformAccessChain(const uint32_
                                                                    size_t wordCount)
 {
     // SPIR-V 1.0 Section 3.32 Instructions, OpAccessChain, OpInBoundsAccessChain
+    constexpr size_t kTypeIdIndex = 1;
     constexpr size_t kBaseIdIndex = 3;
 
+    const uint32_t typeId = instruction[kTypeIdIndex];
     const uint32_t baseId = instruction[kBaseIdIndex];
 
-    // If base id is not that of an aliasing attribute, there's nothing to do.
-    ASSERT(baseId < mIsAliasingAttributeById.size());
-    if (!mIsAliasingAttributeById[baseId])
+    if (isMatrixAttribute(baseId))
     {
-        return false;
+        // Copy the OpAccessChain instruction for modification.  Only modification is that the %type
+        // is replaced with the Private version of it.  If there is one %index, that would be a
+        // vector type, and if there are two %index'es, it's a float type.
+
+        const size_t instOffset = copyInstruction(instruction, wordCount);
+
+        // SPIR-V 1.0 Section 3.32 Instructions, OpAccessChain, OpInBoundsAccessChain
+        constexpr size_t kAccessChainBaseLength = 4;
+
+        if (wordCount == kAccessChainBaseLength + 1)
+        {
+            // If indexed once, it uses a vector type.
+            const ShaderInterfaceVariableInfo *info = mVariableInfoById[baseId];
+            ValidateShaderInterfaceVariableIsAttribute(info);
+
+            const uint32_t componentCount = info->attributeComponentCount;
+
+            // %type must have been the Input vector type with the matrice's component size.
+            ASSERT(typeId == mInputTypePointers[componentCount]);
+
+            // Replace the type with the corresponding Private one.
+            (*mSpirvBlobOut)[instOffset + kTypeIdIndex] = mPrivateFloatTypePointers[componentCount];
+        }
+        else
+        {
+            // If indexed twice, it uses the float type.
+            ASSERT(wordCount == kAccessChainBaseLength + 2);
+
+            // Replace the type with the Private pointer to float32.
+            (*mSpirvBlobOut)[instOffset + kTypeIdIndex] = mPrivateFloatTypePointers[1];
+        }
     }
+    else
+    {
+        // If base id is not that of an aliasing attribute, there's nothing to do.
+        ASSERT(baseId < mIsAliasingAttributeById.size());
+        if (!mIsAliasingAttributeById[baseId])
+        {
+            return false;
+        }
 
-    // Find the replacement attribute for the aliasing one.
-    const uint32_t replacementId = getAliasingAttributeReplacementId(baseId);
+        // Find the replacement attribute for the aliasing one.
+        const uint32_t replacementId = getAliasingAttributeReplacementId(baseId, 0);
 
-    // Get variable info corresponding to the replacement attribute.
-    const ShaderInterfaceVariableInfo *replacementInfo = mVariableInfoById[replacementId];
-    ValidateShaderInterfaceVariableIsAttribute(replacementInfo);
+        // Get variable info corresponding to the replacement attribute.
+        const ShaderInterfaceVariableInfo *replacementInfo = mVariableInfoById[replacementId];
+        ValidateShaderInterfaceVariableIsAttribute(replacementInfo);
 
-    // Copy the OpAccessChain instruction for modification.  Currently, the instruction is:
-    //
-    //     %id = OpAccessChain %type %base %index
-    //
-    // This is modified to:
-    //
-    //     %id = OpAccessChain %type %replacement %index
-    //
-    // Note that the replacement has at least as many components as the aliasing attribute,
-    // and both attributes start at component 0 (GLSL ES restriction).  So, indexing the replacement
-    // attribute with the same index yields the same result and type.
-    const size_t instOffset                     = copyInstruction(instruction, wordCount);
-    (*mSpirvBlobOut)[instOffset + kBaseIdIndex] = replacementId;
+        // Copy the OpAccessChain instruction for modification.  Currently, the instruction is:
+        //
+        //     %id = OpAccessChain %type %base %index
+        //
+        // This is modified to:
+        //
+        //     %id = OpAccessChain %type %replacement %index
+        //
+        // Note that the replacement has at least as many components as the aliasing attribute,
+        // and both attributes start at component 0 (GLSL ES restriction).  So, indexing the
+        // replacement attribute with the same index yields the same result and type.
+        const size_t instOffset                     = copyInstruction(instruction, wordCount);
+        (*mSpirvBlobOut)[instOffset + kBaseIdIndex] = replacementId;
+    }
 
     return true;
 }
 
-bool SpirvVertexAttributeAliasingTransformer::transformLoad(const uint32_t *instruction,
-                                                            size_t wordCount)
+void SpirvVertexAttributeAliasingTransformer::transformLoadHelper(const uint32_t *instruction,
+                                                                  size_t wordCount,
+                                                                  uint32_t pointerId,
+                                                                  uint32_t typeId,
+                                                                  uint32_t replacementId,
+                                                                  uint32_t resultId)
 {
     // SPIR-V 1.0 Section 3.32 Instructions, OpLoad
     constexpr size_t kTypeIdIndex    = 1;
     constexpr size_t kIdIndex        = 2;
     constexpr size_t kPointerIdIndex = 3;
 
-    const uint32_t id        = instruction[kIdIndex];
-    const uint32_t typeId    = instruction[kTypeIdIndex];
-    const uint32_t pointerId = instruction[kPointerIdIndex];
-
-    // If pointer id is not that of an aliasing attribute, there's nothing to do.
-    ASSERT(pointerId < mIsAliasingAttributeById.size());
-    if (!mIsAliasingAttributeById[pointerId])
-    {
-        return false;
-    }
-
-    // Find the replacement attribute for the aliasing one.
-    const uint32_t replacementId = getAliasingAttributeReplacementId(pointerId);
-
     // Get variable info corresponding to the replacement attribute.
     const ShaderInterfaceVariableInfo *replacementInfo = mVariableInfoById[replacementId];
     ValidateShaderInterfaceVariableIsAttribute(replacementInfo);
-
-    // Replace the load instruction by a load from the replacement id, followed by a swizzle if
-    // necessary.
 
     // Copy the load instruction for modification.  Currently, the instruction is:
     //
@@ -2512,12 +2828,12 @@ bool SpirvVertexAttributeAliasingTransformer::transformLoad(const uint32_t *inst
     (*mSpirvBlobOut)[instOffset + kTypeIdIndex]    = replacementTypeId;
     (*mSpirvBlobOut)[instOffset + kPointerIdIndex] = replacementId;
 
-    // If swizzle is not necessary, assign %newId to %id.
+    // If swizzle is not necessary, assign %newId to %resultId.
     const ShaderInterfaceVariableInfo *aliasingInfo = mVariableInfoById[pointerId];
     if (aliasingInfo->attributeComponentCount == replacementInfo->attributeComponentCount)
     {
-        writeCopyObject(id, typeId, loadResultId);
-        return true;
+        writeCopyObject(resultId, typeId, loadResultId);
+        return;
     }
 
     // Take as many components from the replacement as the aliasing attribute wanted.  This is done
@@ -2525,25 +2841,72 @@ bool SpirvVertexAttributeAliasingTransformer::transformLoad(const uint32_t *inst
     //
     // - If aliasing attribute has only one component:
     //
-    //     %id = OpCompositeExtract %floatType %newId 0
+    //     %resultId = OpCompositeExtract %floatType %newId 0
     //
     // - If aliasing attribute has more than one component:
     //
-    //     %id = OpVectorShuffle %vecType %newId %newId 0 1 ...
+    //     %resultId = OpVectorShuffle %vecType %newId %newId 0 1 ...
     //
     ASSERT(aliasingInfo->attributeComponentCount < replacementInfo->attributeComponentCount);
     ASSERT(mFloatTypes[aliasingInfo->attributeComponentCount] == typeId);
 
     if (aliasingInfo->attributeComponentCount == 1)
     {
-        writeCompositeExtract(id, typeId, loadResultId, 0);
+        writeCompositeExtract(resultId, typeId, loadResultId, 0);
     }
     else
     {
         angle::FixedVector<uint32_t, 4> swizzle = {0, 1, 2, 3};
         swizzle.resize(aliasingInfo->attributeComponentCount);
 
-        writeVectorShuffle(id, typeId, loadResultId, loadResultId, swizzle);
+        writeVectorShuffle(resultId, typeId, loadResultId, loadResultId, swizzle);
+    }
+}
+
+bool SpirvVertexAttributeAliasingTransformer::transformLoad(const uint32_t *instruction,
+                                                            size_t wordCount)
+{
+    // SPIR-V 1.0 Section 3.32 Instructions, OpLoad
+    constexpr size_t kTypeIdIndex    = 1;
+    constexpr size_t kIdIndex        = 2;
+    constexpr size_t kPointerIdIndex = 3;
+
+    const uint32_t id        = instruction[kIdIndex];
+    const uint32_t typeId    = instruction[kTypeIdIndex];
+    const uint32_t pointerId = instruction[kPointerIdIndex];
+
+    // Currently, the instruction is:
+    //
+    //     %id = OpLoad %type %pointer
+    //
+    // If non-matrix, this is modifed to load from the aliasing vector instead if aliasing.
+    //
+    // If matrix, this is modified such that %type points to the Private version of it.
+    //
+    if (isMatrixAttribute(pointerId))
+    {
+        const ShaderInterfaceVariableInfo *info = mVariableInfoById[pointerId];
+        ValidateShaderInterfaceVariableIsAttribute(info);
+
+        const uint32_t replacementTypeId = mMatrixTypes[info->attributeLocationCount];
+
+        const size_t instOffset                     = copyInstruction(instruction, wordCount);
+        (*mSpirvBlobOut)[instOffset + kTypeIdIndex] = replacementTypeId;
+    }
+    else
+    {
+        // If pointer id is not that of an aliasing attribute, there's nothing to do.
+        ASSERT(pointerId < mIsAliasingAttributeById.size());
+        if (!mIsAliasingAttributeById[pointerId])
+        {
+            return false;
+        }
+
+        // Find the replacement attribute for the aliasing one.
+        const uint32_t replacementId = getAliasingAttributeReplacementId(pointerId, 0);
+
+        // Replace the load instruction by a load from the replacement id.
+        transformLoadHelper(instruction, wordCount, pointerId, typeId, replacementId, id);
     }
 
     return true;
@@ -2571,6 +2934,39 @@ void SpirvVertexAttributeAliasingTransformer::writeCopyObject(uint32_t id,
     copyInstruction(copyObject.data(), kCopyObjectInstructionLength);
 }
 
+void SpirvVertexAttributeAliasingTransformer::writeCompositeConstruct(
+    uint32_t id,
+    uint32_t typeId,
+    const angle::FixedVector<uint32_t, 4> &constituents)
+{
+    // SPIR-V 1.0 Section 3.32 Instructions, OpCompositeConstruct
+    constexpr size_t kTypeIdIndex                             = 1;
+    constexpr size_t kIdIndex                                 = 2;
+    constexpr size_t kConstituentsIndexStart                  = 3;
+    constexpr size_t kConstituentsMaxCount                    = 4;
+    constexpr size_t kCompositeConstructInstructionBaseLength = 3;
+
+    ASSERT(kConstituentsMaxCount == constituents.max_size());
+    std::array<uint32_t, kCompositeConstructInstructionBaseLength + kConstituentsMaxCount>
+        compositeConstruct = {};
+
+    // Fill the fields.
+    SetSpirvInstructionOp(compositeConstruct.data(), spv::OpCompositeConstruct);
+    SetSpirvInstructionLength(compositeConstruct.data(),
+                              kCompositeConstructInstructionBaseLength + constituents.size());
+    compositeConstruct[kTypeIdIndex] = typeId;
+    compositeConstruct[kIdIndex]     = id;
+
+    for (size_t constituentIndex = 0; constituentIndex < constituents.size(); ++constituentIndex)
+    {
+        compositeConstruct[kConstituentsIndexStart + constituentIndex] =
+            constituents[constituentIndex];
+    }
+
+    copyInstruction(compositeConstruct.data(),
+                    kCompositeConstructInstructionBaseLength + constituents.size());
+}
+
 void SpirvVertexAttributeAliasingTransformer::writeCompositeExtract(uint32_t id,
                                                                     uint32_t typeId,
                                                                     uint32_t compositeId,
@@ -2594,6 +2990,68 @@ void SpirvVertexAttributeAliasingTransformer::writeCompositeExtract(uint32_t id,
     compositeExtract[kFieldIndex]       = field;
 
     copyInstruction(compositeExtract.data(), kCompositeExtractInstructionLength);
+}
+
+void SpirvVertexAttributeAliasingTransformer::writeStore(uint32_t pointerId, uint32_t objectId)
+{
+    // SPIR-V 1.0 Section 3.32 Instructions, OpStore
+    constexpr size_t kPointerIdIndex         = 1;
+    constexpr size_t kObjectIdIndex          = 2;
+    constexpr size_t kStoreInstructionLength = 3;
+
+    std::array<uint32_t, kStoreInstructionLength> store = {};
+
+    // Fill the fields.
+    SetSpirvInstructionOp(store.data(), spv::OpStore);
+    SetSpirvInstructionLength(store.data(), kStoreInstructionLength);
+    store[kPointerIdIndex] = pointerId;
+    store[kObjectIdIndex]  = objectId;
+
+    copyInstruction(store.data(), kStoreInstructionLength);
+}
+
+void SpirvVertexAttributeAliasingTransformer::writeTypePointer(uint32_t id,
+                                                               uint32_t storageClass,
+                                                               uint32_t typeId)
+{
+    // SPIR-V 1.0 Section 3.32 Instructions, OpTypePointer
+    constexpr size_t kIdIndex                      = 1;
+    constexpr size_t kStorageClassIndex            = 2;
+    constexpr size_t kTypeIdIndex                  = 3;
+    constexpr size_t kTypePointerInstructionLength = 4;
+
+    std::array<uint32_t, kTypePointerInstructionLength> typePointer = {};
+
+    // Fill the fields.
+    SetSpirvInstructionOp(typePointer.data(), spv::OpTypePointer);
+    SetSpirvInstructionLength(typePointer.data(), kTypePointerInstructionLength);
+    typePointer[kIdIndex]           = id;
+    typePointer[kStorageClassIndex] = storageClass;
+    typePointer[kTypeIdIndex]       = typeId;
+
+    copyInstruction(typePointer.data(), kTypePointerInstructionLength);
+}
+
+void SpirvVertexAttributeAliasingTransformer::writeVariable(uint32_t id,
+                                                            uint32_t typeId,
+                                                            uint32_t storageClass)
+{
+    // SPIR-V 1.0 Section 3.32 Instructions, OpVariable
+    constexpr size_t kTypeIdIndex               = 1;
+    constexpr size_t kIdIndex                   = 2;
+    constexpr size_t kStorageClassIndex         = 3;
+    constexpr size_t kVariableInstructionLength = 4;
+
+    std::array<uint32_t, kVariableInstructionLength> variable = {};
+
+    // Fill the fields.
+    SetSpirvInstructionOp(variable.data(), spv::OpVariable);
+    SetSpirvInstructionLength(variable.data(), kVariableInstructionLength);
+    variable[kTypeIdIndex]       = typeId;
+    variable[kIdIndex]           = id;
+    variable[kStorageClassIndex] = storageClass;
+
+    copyInstruction(variable.data(), kVariableInstructionLength);
 }
 
 void SpirvVertexAttributeAliasingTransformer::writeVectorShuffle(
@@ -2632,6 +3090,143 @@ void SpirvVertexAttributeAliasingTransformer::writeVectorShuffle(
     copyInstruction(vectorShuffle.data(), kVectorShuffleInstructionBaseLength + fields.size());
 }
 
+void SpirvVertexAttributeAliasingTransformer::declareExpandedMatrixVectors()
+{
+    // Go through matrix attributes and expand them.
+    for (size_t matrixId = 0; matrixId < mExpandedMatrixFirstVectorIdById.size(); ++matrixId)
+    {
+        uint32_t vec0Id = mExpandedMatrixFirstVectorIdById[matrixId];
+        if (vec0Id == 0)
+        {
+            continue;
+        }
+
+        const ShaderInterfaceVariableInfo *info = mVariableInfoById[matrixId];
+        ValidateShaderInterfaceVariableIsAttribute(info);
+
+        // Need to generate the following:
+        //
+        //     %privateType = OpTypePointer Private %matrixType
+        //     %id = OpVariable %privateType Private
+        //     %vecType = OpTypePointer %vecType Input
+        //     %vec0 = OpVariable %vecType Input
+        //     ...
+        //     %vecN-1 = OpVariable %vecType Input
+        const uint32_t componentCount = info->attributeComponentCount;
+        const uint32_t locationCount  = info->attributeLocationCount;
+        ASSERT(componentCount == locationCount);
+        ASSERT(mMatrixTypes[locationCount] != 0);
+
+        // OpTypePointer Private %matrixType
+        uint32_t privateType = mPrivateMatrixTypePointers[locationCount];
+        if (privateType == 0)
+        {
+            privateType                               = getNewId();
+            mPrivateMatrixTypePointers[locationCount] = privateType;
+            writeTypePointer(privateType, spv::StorageClassPrivate, mMatrixTypes[locationCount]);
+        }
+
+        // OpVariable %privateType Private
+        writeVariable(matrixId, privateType, spv::StorageClassPrivate);
+
+        // If the OpTypePointer is not declared for the vector type corresponding to each location,
+        // declare it now.
+        //
+        //     %vecType = OpTypePointer %vecType Input
+        uint32_t inputType = mInputTypePointers[componentCount];
+        if (inputType == 0)
+        {
+            inputType                          = getNewId();
+            mInputTypePointers[componentCount] = inputType;
+            writeTypePointer(inputType, spv::StorageClassInput, mFloatTypes[componentCount]);
+        }
+
+        // Declare a vector for each column of the matrix.
+        for (uint32_t offset = 0; offset < info->attributeLocationCount; ++offset)
+        {
+            uint32_t vecId = vec0Id + offset;
+            if (!mIsAliasingAttributeById[vecId])
+            {
+                writeVariable(vecId, inputType, spv::StorageClassInput);
+            }
+        }
+    }
+
+    // Additionally, declare OpTypePointer Private %mFloatTypes[i] in case needed (used in
+    // Op*AccessChain instructions, if any).
+    for (size_t n = 1; n < mFloatTypes.size(); ++n)
+    {
+        if (mFloatTypes[n] != 0 && mPrivateFloatTypePointers[n] == 0)
+        {
+            const uint32_t privateType   = getNewId();
+            mPrivateFloatTypePointers[n] = privateType;
+            writeTypePointer(privateType, spv::StorageClassPrivate, mFloatTypes[n]);
+        }
+    }
+}
+
+void SpirvVertexAttributeAliasingTransformer::writeExpandedMatrixInitialization()
+{
+    // SPIR-V 1.0 Section 3.32 Instructions, OpLoad
+    constexpr size_t kLoadInstructionLength = 4;
+
+    // A fake OpLoad instruction for transformLoadHelper to copy off of.
+    std::array<uint32_t, kLoadInstructionLength> loadInstruction = {};
+    SetSpirvInstructionOp(loadInstruction.data(), spv::OpLoad);
+    SetSpirvInstructionLength(loadInstruction.data(), kLoadInstructionLength);
+
+    // Go through matrix attributes and initialize them.  Note that their declaration is replaced
+    // with a Private storage class, but otherwise has the same id.
+    for (size_t matrixId = 0; matrixId < mExpandedMatrixFirstVectorIdById.size(); ++matrixId)
+    {
+        uint32_t vec0Id = mExpandedMatrixFirstVectorIdById[matrixId];
+        if (vec0Id == 0)
+        {
+            continue;
+        }
+
+        // For every matrix, need to generate the following:
+        //
+        //     %vec0Id = OpLoad %vecType %vec0Pointer
+        //     ...
+        //     %vecN-1Id = OpLoad %vecType %vecN-1Pointer
+        //     %mat = OpCompositeConstruct %matrixType %vec0 ... %vecN-1
+        //     OpStore %matrixId %mat
+
+        const ShaderInterfaceVariableInfo *info = mVariableInfoById[matrixId];
+        ValidateShaderInterfaceVariableIsAttribute(info);
+
+        angle::FixedVector<uint32_t, 4> vecLoadIds;
+        const uint32_t locationCount = info->attributeLocationCount;
+        for (uint32_t offset = 0; offset < locationCount; ++offset)
+        {
+            uint32_t vecId = vec0Id + offset;
+
+            // Load into temporary, potentially through an aliasing vector.
+            uint32_t replacementId = vecId;
+            ASSERT(vecId < mIsAliasingAttributeById.size());
+            if (mIsAliasingAttributeById[vecId])
+            {
+                replacementId = getAliasingAttributeReplacementId(vecId, offset);
+            }
+
+            // Write a load instruction from the replacement id.
+            vecLoadIds.push_back(getNewId());
+            transformLoadHelper(loadInstruction.data(), kLoadInstructionLength, matrixId,
+                                mFloatTypes[info->attributeComponentCount], replacementId,
+                                vecLoadIds.back());
+        }
+
+        // Aggregate the vector loads into a matrix.
+        ASSERT(mMatrixTypes[locationCount] != 0);
+        const uint32_t compositeId = getNewId();
+        writeCompositeConstruct(compositeId, mMatrixTypes[locationCount], vecLoadIds);
+
+        // Store it in the private variable.
+        writeStore(matrixId, compositeId);
+    }
+}
+
 bool HasAliasingAttributes(const ShaderInterfaceVariableInfoMap &variableInfoMap)
 {
     gl::AttributesMask isLocationAssigned;
@@ -2646,22 +3241,21 @@ bool HasAliasingAttributes(const ShaderInterfaceVariableInfoMap &variableInfoMap
             continue;
         }
 
-        // Ignore matrix attributes for now.
-        // TODO: aliasing matrix attributes.  http://anglebug.com/4249
-        if (info.isMatrixAttribute)
-        {
-            continue;
-        }
-
         ASSERT(info.location != ShaderInterfaceVariableInfo::kInvalid);
+        ASSERT(info.attributeLocationCount > 0);
 
-        // If there's aliasing, return immediately.
-        if (isLocationAssigned.test(info.location))
+        for (uint8_t offset = 0; offset < info.attributeLocationCount; ++offset)
         {
-            return true;
-        }
+            uint32_t location = info.location + offset;
 
-        isLocationAssigned.set(info.location);
+            // If there's aliasing, return immediately.
+            if (isLocationAssigned.test(location))
+            {
+                return true;
+            }
+
+            isLocationAssigned.set(location);
+        }
     }
 
     return false;
