@@ -853,27 +853,26 @@ TestSuite::TestSuite(int *argc, char **argv)
         ++argIndex;
     }
 
-    std::string envShardIndex  = angle::GetEnvironmentVar("GTEST_SHARD_INDEX");
-    std::string envTotalShards = angle::GetEnvironmentVar("GTEST_TOTAL_SHARDS");
-
-    if (!envShardIndex.empty() || !envTotalShards.empty())
+    std::string envShardIndex = angle::GetEnvironmentVar("GTEST_SHARD_INDEX");
+    if (!envShardIndex.empty())
     {
         angle::UnsetEnvironmentVar("GTEST_SHARD_INDEX");
-        angle::UnsetEnvironmentVar("GTEST_TOTAL_SHARDS");
-
-        if (mShardIndex != -1 || mShardCount != -1)
+        if (mShardIndex == -1)
         {
-            printf(
-                "Error: --shard-index and --shard-count are incompatible with GTEST_SHARD_INDEX "
-                "and GTEST_TOTAL_SHARDS.\n");
-            exit(EXIT_FAILURE);
+            std::stringstream shardIndexStream(envShardIndex);
+            shardIndexStream >> mShardIndex;
         }
+    }
 
-        std::stringstream shardIndexStream(envShardIndex);
-        shardIndexStream >> mShardIndex;
-
-        std::stringstream shardCountStream(envTotalShards);
-        shardCountStream >> mShardCount;
+    std::string envTotalShards = angle::GetEnvironmentVar("GTEST_TOTAL_SHARDS");
+    if (!envTotalShards.empty())
+    {
+        angle::UnsetEnvironmentVar("GTEST_TOTAL_SHARDS");
+        if (mShardCount == -1)
+        {
+            std::stringstream shardCountStream(envTotalShards);
+            shardCountStream >> mShardCount;
+        }
     }
 
     if ((mShardIndex == -1) != (mShardCount == -1))
