@@ -1,6 +1,6 @@
 {
   "src/tests/restricted_traces/.gitignore":
-    "975053b988efba09342bbc967b8cbb76",
+    "ed1e186b7880946aa6acbe4531900cdb",
   "src/tests/restricted_traces/angry_birds_2_1500.tar.gz.sha1":
     "44fc5437c4a84012e338b3da4b6fc28a",
   "src/tests/restricted_traces/arena_of_valor.tar.gz.sha1":
@@ -13,6 +13,8 @@
     "dffd3bed0d0e53481f43b414309bf152",
   "src/tests/restricted_traces/egypt_1500.tar.gz.sha1":
     "1d80caa37b937f83c95cd053b1bdd4ac",
+  "src/tests/restricted_traces/fifa_mobile.tar.gz.sha1":
+    "c1deaabd756b24677aa48aff56f2d331",
   "src/tests/restricted_traces/free_fire.tar.gz.sha1":
     "a95efee5e5c6d85bac2d8c2ab09dc34c",
   "src/tests/restricted_traces/gen_restricted_traces.py":
@@ -28,13 +30,13 @@
   "src/tests/restricted_traces/nba2k20_800.tar.gz.sha1":
     "03df0dcf41c18bc59edfc0b088ca4a87",
   "src/tests/restricted_traces/restricted_traces.json":
-    "964d9d30361aae731f495562ed373b79",
+    "7b7520b827d68e198840d8ad1bee8a99",
   "src/tests/restricted_traces/restricted_traces_autogen.cpp":
-    "8d82249c50da7d734fb71e11f2829d90",
+    "d3d51fd238bd31100c3a7600b20e362d",
   "src/tests/restricted_traces/restricted_traces_autogen.gni":
-    "2367de2be057b3b3b7bbd3e89053b0f2",
+    "2dd556cf9476dfddee3fdeaf7ea0eb18",
   "src/tests/restricted_traces/restricted_traces_autogen.h":
-    "7601e1f0c3806fa2ff203788906762b1",
+    "8a1057120937bd5de15aaed70c6f0517",
   "src/tests/restricted_traces/temple_run_300.tar.gz.sha1":
     "77475b0186ee0380eeb9db47433d0457",
   "src/tests/restricted_traces/trex_200.tar.gz.sha1":
