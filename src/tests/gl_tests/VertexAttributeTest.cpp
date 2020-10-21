@@ -366,8 +366,8 @@ class VertexAttributeTest : public ANGLETest
     {
         constexpr char kVS[] =
             "attribute mediump vec4 position;\n"
-            "attribute mediump vec4 test;\n"
-            "attribute mediump vec4 expected;\n"
+            "attribute highp vec4 test;\n"
+            "attribute highp vec4 expected;\n"
             "varying mediump vec4 color;\n"
             "void main(void)\n"
             "{\n"
