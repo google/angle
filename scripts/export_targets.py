@@ -188,6 +188,7 @@ IGNORED_INCLUDES = {
     b'compiler/translator/TranslatorVulkan.h',
     b'contrib/optimizations/slide_hash_neon.h',
     b'dirent_on_windows.h',
+    b'dlopen_fuchsia.h',
     b'kernel/image.h',
     b'libANGLE/renderer/d3d/d3d11/winrt/NativeWindow11WinRT.h',
     b'libANGLE/renderer/d3d/DeviceD3D.h',
