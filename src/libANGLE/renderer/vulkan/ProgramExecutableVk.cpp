@@ -44,6 +44,25 @@ VkDeviceSize GetShaderBufferBindingSize(const gl::OffsetBindingPointer<gl::Buffe
     ASSERT(bufferGL->getSize() >= bufferBinding.getOffset());
     return bufferGL->getSize() - bufferBinding.getOffset();
 }
+
+bool ValidateTransformedSpirV(ContextVk *contextVk,
+                              const gl::ShaderBitSet &linkedShaderStages,
+                              ProgramExecutableVk *executableVk,
+                              const gl::ShaderMap<SpirvBlob> &spirvBlobs)
+{
+    for (gl::ShaderType shaderType : linkedShaderStages)
+    {
+        SpirvBlob transformed;
+        if (GlslangWrapperVk::TransformSpirV(
+                contextVk, shaderType, false,
+                executableVk->getShaderInterfaceVariableInfoMap()[shaderType],
+                spirvBlobs[shaderType], &transformed) != angle::Result::Continue)
+        {
+            return false;
+        }
+    }
+    return true;
+}
 }  // namespace
 
 DefaultUniformBlock::DefaultUniformBlock() = default;
@@ -57,12 +76,16 @@ ShaderInfo::~ShaderInfo() = default;
 
 angle::Result ShaderInfo::initShaders(ContextVk *contextVk,
                                       const gl::ShaderBitSet &linkedShaderStages,
-                                      const gl::ShaderMap<std::string> &shaderSources)
+                                      const gl::ShaderMap<std::string> &shaderSources,
+                                      ProgramExecutableVk *executableVk)
 {
     ASSERT(!valid());
 
     ANGLE_TRY(GlslangWrapperVk::GetShaderCode(contextVk, linkedShaderStages, contextVk->getCaps(),
                                               shaderSources, &mSpirvBlobs));
+
+    // Assert that SPIR-V transformation is correct, even if the test never issues a draw call.
+    ASSERT(ValidateTransformedSpirV(contextVk, linkedShaderStages, executableVk, mSpirvBlobs));
 
     mIsInitialized = true;
     return angle::Result::Continue;
