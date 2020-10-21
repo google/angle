@@ -53,7 +53,7 @@ class CommandQueue final : angle::NonCopyable
 
     void clearAllGarbage(RendererVk *renderer);
 
-    angle::Result finishToSerial(vk::Context *context, Serial serial, uint64_t timeout);
+    angle::Result finishToSerial(vk::Context *context, Serial finishSerial, uint64_t timeout);
 
     angle::Result submitFrame(vk::Context *context,
                               egl::ContextPriority priority,
@@ -76,6 +76,7 @@ class CommandQueue final : angle::NonCopyable
                                         vk::PrimaryCommandBuffer &&commandBuffer,
                                         vk::CommandPool *commandPool,
                                         vk::CommandBatch *batch);
+    angle::Result retireFinishedCommands(vk::Context *context, size_t finishedCount);
 
     vk::GarbageQueue mGarbageQueue;
     std::vector<vk::CommandBatch> mInFlightCommands;

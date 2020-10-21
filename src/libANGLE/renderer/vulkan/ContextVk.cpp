@@ -309,6 +309,21 @@ vk::ResourceAccess GetStencilAccess(const gl::DepthStencilState &dsState)
     return dsState.isStencilNoOp() && dsState.isStencilBackNoOp() ? vk::ResourceAccess::ReadOnly
                                                                   : vk::ResourceAccess::Write;
 }
+
+bool CommandsHaveValidOrdering(const std::vector<vk::CommandBatch> &commands)
+{
+    Serial currentSerial;
+    for (const vk::CommandBatch &commands : commands)
+    {
+        if (commands.serial <= currentSerial)
+        {
+            return false;
+        }
+        currentSerial = commands.serial;
+    }
+
+    return true;
+}
 }  // anonymous namespace
 
 ANGLE_INLINE void ContextVk::flushDescriptorSetUpdates()
@@ -398,14 +413,33 @@ angle::Result CommandQueue::checkCompletedCommands(vk::Context *context)
             break;
         }
         ANGLE_VK_TRY(context, result);
+        ++finishedCount;
+    }
+
+    if (finishedCount == 0)
+    {
+        return angle::Result::Continue;
+    }
+
+    return retireFinishedCommands(context, finishedCount);
+}
+
+angle::Result CommandQueue::retireFinishedCommands(vk::Context *context, size_t finishedCount)
+{
+    ASSERT(finishedCount > 0);
+
+    RendererVk *renderer = context->getRenderer();
+    VkDevice device      = renderer->getDevice();
+
+    for (size_t commandIndex = 0; commandIndex < finishedCount; ++commandIndex)
+    {
+        vk::CommandBatch &batch = mInFlightCommands[commandIndex];
 
         renderer->onCompletedSerial(batch.serial);
-
         renderer->resetSharedFence(&batch.fence);
         ANGLE_TRACE_EVENT0("gpu.angle", "command buffer recycling");
         batch.commandPool.destroy(device);
         ANGLE_TRY(releasePrimaryCommandBuffer(context, std::move(batch.primaryCommands)));
-        ++finishedCount;
     }
 
     if (finishedCount > 0)
@@ -520,7 +554,9 @@ bool CommandQueue::hasInFlightCommands() const
     return !mInFlightCommands.empty();
 }
 
-angle::Result CommandQueue::finishToSerial(vk::Context *context, Serial serial, uint64_t timeout)
+angle::Result CommandQueue::finishToSerial(vk::Context *context,
+                                           Serial finishSerial,
+                                           uint64_t timeout)
 {
     ASSERT(!context->getRenderer()->getFeatures().asynchronousCommandProcessing.enabled);
 
@@ -528,28 +564,33 @@ angle::Result CommandQueue::finishToSerial(vk::Context *context, Serial serial, 
     {
         return angle::Result::Continue;
     }
+
     ANGLE_TRACE_EVENT0("gpu.angle", "CommandQueue::finishToSerial");
-    // Find the first batch with serial equal to or bigger than given serial (note that
-    // the batch serials are unique, otherwise upper-bound would have been necessary).
-    //
-    // Note: we don't check for the exact serial, because it may belong to another context.  For
-    // example, imagine the following submissions:
-    //
-    // - Context 1: Serial 1, Serial 3, Serial 5
-    // - Context 2: Serial 2, Serial 4, Serial 6
-    //
-    // And imagine none of the submissions have finished yet.  Now if Context 2 asks for
-    // finishToSerial(3), it will have no choice but to finish until Serial 4 instead.
-    size_t batchIndex = mInFlightCommands.size() - 1;
-    for (size_t i = 0; i < mInFlightCommands.size(); ++i)
+
+    // Find the serial in the the list. The serials should be in order.
+    ASSERT(CommandsHaveValidOrdering(mInFlightCommands));
+
+    size_t finishedCount = 0;
+    while (finishedCount < mInFlightCommands.size() &&
+           mInFlightCommands[finishedCount].serial < finishSerial)
     {
-        if (mInFlightCommands[i].serial >= serial)
-        {
-            batchIndex = i;
-            break;
-        }
+        finishedCount++;
     }
-    const vk::CommandBatch &batch = mInFlightCommands[batchIndex];
+
+    // This heuristic attempts to increase chances of success for shared resource scenarios.
+    // Ultimately as long as fences are managed by ContextVk there are edge case bugs here.
+    // TODO: http://anglebug.com/5217: fix this bug by moving it submit into RendererVk.
+    if (finishedCount < mInFlightCommands.size())
+    {
+        finishedCount++;
+    }
+
+    if (finishedCount == 0)
+    {
+        return angle::Result::Continue;
+    }
+
+    const vk::CommandBatch &batch = mInFlightCommands[finishedCount - 1];
 
     // Wait for it finish
     VkDevice device = context->getDevice();
@@ -558,7 +599,7 @@ angle::Result CommandQueue::finishToSerial(vk::Context *context, Serial serial, 
     ANGLE_VK_TRY(context, status);
 
     // Clean up finished batches.
-    return checkCompletedCommands(context);
+    return retireFinishedCommands(context, finishedCount);
 }
 
 angle::Result CommandQueue::submitFrame(vk::Context *context,
