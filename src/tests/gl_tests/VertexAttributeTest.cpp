@@ -3430,6 +3430,110 @@ void main()
     }
 }
 
+// Test that aliasing attribute locations work with differing precisions.
+TEST_P(VertexAttributeTest, AliasingVectorAttribLocationsDifferingPrecisions)
+{
+    swapBuffers();
+    // http://anglebug.com/5180
+    ANGLE_SKIP_TEST_IF(IsAndroid() && IsOpenGL());
+
+    // http://anglebug.com/3466
+    ANGLE_SKIP_TEST_IF(IsOSX() && IsOpenGL());
+
+    // http://anglebug.com/3467
+    ANGLE_SKIP_TEST_IF(IsD3D());
+
+    constexpr char kVS[] = R"(attribute vec4 position;
+// aliasing attributes.
+attribute mediump vec2 attr0v2;
+attribute highp vec3 attr0v3;
+const vec3 attr0Expected = vec3(0.125, 0.25, 0.375);
+
+// aliasing attributes.
+attribute highp vec2 attr1v2;
+attribute mediump vec3 attr1v3;
+const vec3 attr1Expected = vec3(0.5, 0.625, 0.75);
+
+uniform float attr0Select;
+uniform float attr1Select;
+
+// Each channel controlled by success from each set of aliasing attributes (R and G used only).  If
+// a channel is 0, the attribute test has failed.  Otherwise it will be 0.5 or 1.0.
+varying mediump vec4 color;
+void main()
+{
+    gl_Position = position;
+
+    vec4 result = vec4(0, 0, 0, 1);
+
+    if (attr0Select < 0.5)
+        result.r = all(lessThan(abs(attr0v2 - attr0Expected.xy), vec2(0.01))) ? 0.5 : 0.0;
+    else
+        result.r = all(lessThan(abs(attr0v3 - attr0Expected), vec3(0.01))) ? 1.0 : 0.0;
+
+    if (attr1Select < 0.5)
+        result.g = all(lessThan(abs(attr1v2 - attr1Expected.xy), vec2(0.01))) ? 0.5 : 0.0;
+    else
+        result.g = all(lessThan(abs(attr1v3 - attr1Expected), vec3(0.01))) ? 1.0 : 0.0;
+
+    color = result;
+})";
+
+    constexpr char kFS[] = R"(varying mediump vec4 color;
+    void main(void)
+    {
+        gl_FragColor = color;
+    })";
+
+    // Compile shaders.
+    GLuint program = CompileProgram(kVS, kFS);
+    ASSERT_NE(program, 0u);
+
+    // Setup bindings.
+    glBindAttribLocation(program, 0, "attr0v2");
+    glBindAttribLocation(program, 0, "attr0v3");
+    glBindAttribLocation(program, 1, "attr1v2");
+    glBindAttribLocation(program, 1, "attr1v3");
+    EXPECT_GL_NO_ERROR();
+
+    // Link program and get uniform locations.
+    glLinkProgram(program);
+    glUseProgram(program);
+    GLint attr0SelectLoc = glGetUniformLocation(program, "attr0Select");
+    GLint attr1SelectLoc = glGetUniformLocation(program, "attr1Select");
+    ASSERT_NE(-1, attr0SelectLoc);
+    ASSERT_NE(-1, attr1SelectLoc);
+    EXPECT_GL_NO_ERROR();
+
+    // Set values for attributes.
+    glVertexAttrib3f(0, 0.125f, 0.25f, 0.375f);
+    glVertexAttrib3f(1, 0.5f, 0.625f, 0.75f);
+    glDisableVertexAttribArray(0);
+    glDisableVertexAttribArray(1);
+    EXPECT_GL_NO_ERROR();
+
+    // Go through different combination of attributes and make sure reading through every alias is
+    // correctly handled.
+    GLColor expected;
+    expected.B = 0;
+    expected.A = 255;
+    for (uint32_t attr0Select = 0; attr0Select < 2; ++attr0Select)
+    {
+        glUniform1f(attr0SelectLoc, attr0Select);
+        expected.R = attr0Select * 128 + 127;
+
+        for (uint32_t attr1Select = 0; attr1Select < 2; ++attr1Select)
+        {
+            glUniform1f(attr1SelectLoc, attr1Select);
+            expected.G = attr1Select * 128 + 127;
+
+            drawQuad(program, "position", 0.5f);
+            EXPECT_GL_NO_ERROR();
+            EXPECT_PIXEL_COLOR_NEAR(0, 0, expected, 1);
+        }
+    }
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against.
 // D3D11 Feature Level 9_3 uses different D3D formats for vertex attribs compared to Feature Levels

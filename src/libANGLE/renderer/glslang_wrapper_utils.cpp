@@ -2678,7 +2678,22 @@ bool SpirvVertexAttributeAliasingTransformer::transformDecorate(const uint32_t *
     }
     else
     {
-        // If id is not that of an aliasing attribute, there's nothing to do.
+        // If id is not that of an active attribute, there's nothing to do.
+        const ShaderInterfaceVariableInfo *info = mVariableInfoById[id];
+        if (info == nullptr || info->attributeComponentCount == 0 ||
+            !info->activeStages[gl::ShaderType::Vertex])
+        {
+            return false;
+        }
+
+        // Always drop RelaxedPrecision from input attributes.  The temporary variable the attribute
+        // is loaded into has RelaxedPrecision and will implicitly convert.
+        if (decoration == spv::DecorationRelaxedPrecision)
+        {
+            return true;
+        }
+
+        // If id is not that of an aliasing attribute, there's nothing else to do.
         ASSERT(id < mIsAliasingAttributeById.size());
         if (!mIsAliasingAttributeById[id])
         {
