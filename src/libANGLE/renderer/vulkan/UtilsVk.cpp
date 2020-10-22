@@ -1517,7 +1517,12 @@ angle::Result UtilsVk::clearFramebuffer(ContextVk *contextVk,
     ANGLE_TRY(contextVk->pauseOcclusionQueryIfActive());
     commandBuffer->setScissor(0, 1, &scissor);
     commandBuffer->draw(3, 0);
-    return contextVk->resumeOcclusionQueryIfActive();
+    ANGLE_TRY(contextVk->resumeOcclusionQueryIfActive());
+
+    // Make sure what's bound here is correctly reverted on the next draw.
+    contextVk->invalidateGraphicsPipelineAndDescriptorSets();
+
+    return angle::Result::Continue;
 }
 
 angle::Result UtilsVk::colorBlitResolve(ContextVk *contextVk,

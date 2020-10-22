@@ -1908,7 +1908,6 @@ TEST_P(ClearTestES3, ClearThenMixedMaskedClear)
 
     // Setup framebuffer.
     GLRenderbuffer color;
-
     glBindRenderbuffer(GL_RENDERBUFFER, color);
     glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, kSize, kSize);
 
@@ -1970,6 +1969,66 @@ TEST_P(ClearTestES3, ClearThenMixedMaskedClear)
     EXPECT_PIXEL_COLOR_NEAR(0, kSize - 1, kExpected, 1);
     EXPECT_PIXEL_COLOR_NEAR(kSize - 1, 0, kExpected, 1);
     EXPECT_PIXEL_COLOR_NEAR(kSize - 1, kSize - 1, kExpected, 1);
+}
+
+// Test that draw without state change after masked clear works
+TEST_P(ClearTestES3, DrawClearThenDrawWithoutStateChange)
+{
+    swapBuffers();
+    constexpr GLsizei kSize = 16;
+
+    GLint maxDrawBuffers = 0;
+    glGetIntegerv(GL_MAX_DRAW_BUFFERS, &maxDrawBuffers);
+    ASSERT_GE(maxDrawBuffers, 4);
+
+    // Setup framebuffer.
+    GLRenderbuffer color;
+    glBindRenderbuffer(GL_RENDERBUFFER, color);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, kSize, kSize);
+
+    GLFramebuffer fb;
+    glBindFramebuffer(GL_FRAMEBUFFER, fb);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, color);
+    EXPECT_GL_NO_ERROR();
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    // Clear color initially.
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    // Mask color.
+    glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_FALSE);
+
+    ANGLE_GL_PROGRAM(drawColor, essl1_shaders::vs::Simple(), essl1_shaders::fs::UniformColor());
+    glUseProgram(drawColor);
+    GLint colorUniformLocation =
+        glGetUniformLocation(drawColor, angle::essl1_shaders::ColorUniform());
+    ASSERT_NE(colorUniformLocation, -1);
+
+    // Initialize position attribute.
+    GLint posLoc = glGetAttribLocation(drawColor, essl1_shaders::PositionAttrib());
+    ASSERT_NE(-1, posLoc);
+    setupQuadVertexBuffer(0.5f, 1.0f);
+    glVertexAttribPointer(posLoc, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+    glEnableVertexAttribArray(posLoc);
+
+    // Draw red.
+    glViewport(0, 0, kSize, kSize);
+    glClearColor(0.0f, 1.0f, 0.0f, 0.0f);
+    glUniform4f(colorUniformLocation, 1.0f, 0.0f, 0.0f, 0.5f);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+
+    // Clear to green without any state change.
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    // Draw red again without any state change.
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+
+    // Verify that the color buffer is now red
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(0, kSize - 1, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(kSize - 1, 0, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(kSize - 1, kSize - 1, GLColor::red);
 }
 
 // Test that clear stencil value is correctly masked to 8 bits.

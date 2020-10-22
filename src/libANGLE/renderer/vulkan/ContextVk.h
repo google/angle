@@ -681,6 +681,10 @@ class ContextVk : public ContextImpl, public vk::Context
 
     void onSyncHelperInitialize() { mSyncObjectPendingFlush = true; }
 
+    // When UtilsVk issues a draw call on the currently running render pass, the pipelines and
+    // descriptor sets it binds need to be undone.
+    void invalidateGraphicsPipelineAndDescriptorSets();
+
   private:
     // Dirty bits.
     enum DirtyBitType : size_t
