@@ -108,9 +108,9 @@ angle::Result SyncHelper::clientWait(Context *context,
 
     // If we are using worker need to wait for the commands to be issued before waiting on the
     // fence.
-    if (contextVk->getRenderer()->getFeatures().enableCommandProcessingThread.enabled)
+    if (renderer->getFeatures().enableCommandProcessingThread.enabled)
     {
-        contextVk->getRenderer()->waitForCommandProcessorIdle(contextVk);
+        renderer->waitForCommandProcessorIdle(contextVk);
     }
 
     // Wait on the fence that's expected to be signaled on the first vkQueueSubmit after
