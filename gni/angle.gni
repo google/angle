@@ -209,13 +209,6 @@ set_defaults("angle_test") {
   data_deps = []
   main = ""
   suppressed_configs = angle_remove_configs
-
-  # By default use the Chromium harness in Chromium. Can be overriden in a target.
-  standalone_harness = !build_with_chromium
-
-  if (!standalone_harness) {
-    suppressed_configs -= [ "//build/config/compiler:default_include_dirs" ]
-  }
 }
 
 template("angle_executable") {
@@ -330,16 +323,9 @@ template("angle_test") {
     ]
   }
 
-  # To use the Chromium test infrastructure we must currently use the
-  # //base test launcher. Eventually we could switch to using standalone
-  # testing. See http://crbug.com/837741.
-  # TODO(jmadill): Clean up duplication as part of http://anglebug.com/3152
-
-  _standalone_harness_test_name = target_name
-
+  # TODO(jmadill): Remove duplication. http://anglebug.com/5124
   if (build_with_chromium) {
-    _standalone_harness_test_name = "standalone_" + target_name
-    test(target_name) {
+    test("standalone_" + target_name) {
       if ((is_linux && !is_chromeos) ||
           (build_with_chromium && chromeos_is_browser_only)) {
         use_xvfb = true
@@ -347,12 +333,13 @@ template("angle_test") {
 
       public_deps = [ ":${_lib}" ]
       if (invoker.main != "") {
-        sources = [ "//gpu/${invoker.main}.cc" ]
+        sources = [ "${invoker.main}.cpp" ]
       }
-      deps = [ "//base/test:test_support" ]
-      if (is_android) {
-        configs -= [ "//build/config/android:hide_all_but_jni" ]
-      }
+      data = invoker.data + [
+               "$angle_root/scripts/run_gtest_angle_test.py",
+               "//testing/scripts/common.py",
+               "//testing/xvfb.py",
+             ]
 
       if ((is_linux || is_chromeos) && !is_component_build) {
         # Set rpath to find shared libs in a non-component build.
@@ -364,12 +351,17 @@ template("angle_test") {
       }
 
       if (is_android) {
-        use_native_activity = true
+        if (build_with_chromium) {
+          use_native_activity = true
+          configs -= [ "//build/config/android:hide_all_but_jni" ]
+        } else {
+          use_raw_android_executable = true
+        }
       }
     }
   }
 
-  test(_standalone_harness_test_name) {
+  test(target_name) {
     if ((is_linux && !is_chromeos) ||
         (build_with_chromium && chromeos_is_browser_only)) {
       use_xvfb = true

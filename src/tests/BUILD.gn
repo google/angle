@@ -17,8 +17,6 @@ declare_args() {
 }
 
 angle_test("test_utils_unittest_helper") {
-  standalone_harness = true
-
   sources = [
     "../../util/test_utils_unittest_helper.cpp",
     "../../util/test_utils_unittest_helper.h",
@@ -112,7 +110,6 @@ angle_common_test_utils("angle_common_test_utils_static") {
 
 # We use this in the restricted trace tests to load driver info.
 angle_test("angle_system_info_test") {
-  standalone_harness = true
   sources = [ "angle_system_info_tests_main.cpp" ]
   deps = [
     "$angle_root:angle_gpu_info_util",
