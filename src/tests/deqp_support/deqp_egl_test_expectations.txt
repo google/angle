@@ -192,9 +192,6 @@
 2330 : dEQP-EGL.functional.robustness.reset_context.fixed_function_pipeline.reset_status.index_buffer_out_of_bounds = SKIP
 2330 : dEQP-EGL.functional.robustness.reset_context.fixed_function_pipeline.reset_status.vertex_buffer_out_of_bounds = SKIP
 
-// Tests were being hidden by flakiness (anglebug.com/3271)
-3325 : dEQP-EGL.functional.fence_sync.* = SKIP
-
 // Nexus 5x
 2546 NEXUS5X : dEQP-EGL.functional.query_context.get_current_context.* = SKIP
 2546 NEXUS5X : dEQP-EGL.functional.query_context.get_current_display.* = SKIP
