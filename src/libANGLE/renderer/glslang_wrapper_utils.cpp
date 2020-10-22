@@ -2227,13 +2227,13 @@ void SpirvVertexAttributeAliasingTransformer::preprocessAliasingAttributes()
     {
         const ShaderInterfaceVariableInfo *info = mVariableInfoById[id];
 
-        // Ignore non attribute or inactive ids.
-        if (info == nullptr || info->attributeComponentCount == 0 ||
-            !info->activeStages[gl::ShaderType::Vertex])
+        // Ignore non attribute ids.
+        if (info == nullptr || info->attributeComponentCount == 0)
         {
             continue;
         }
 
+        ASSERT(info->activeStages[gl::ShaderType::Vertex]);
         ASSERT(info->location != ShaderInterfaceVariableInfo::kInvalid);
 
         const bool isMatrixAttribute = info->attributeLocationCount > 1;
@@ -3250,12 +3250,13 @@ bool HasAliasingAttributes(const ShaderInterfaceVariableInfoMap &variableInfoMap
     {
         const ShaderInterfaceVariableInfo &info = infoIter.second;
 
-        // Ignore non attribute or inactive ids.
-        if (info.attributeComponentCount == 0 || !info.activeStages[gl::ShaderType::Vertex])
+        // Ignore non attribute ids.
+        if (info.attributeComponentCount == 0)
         {
             continue;
         }
 
+        ASSERT(info.activeStages[gl::ShaderType::Vertex]);
         ASSERT(info.location != ShaderInterfaceVariableInfo::kInvalid);
         ASSERT(info.attributeLocationCount > 0);
 
