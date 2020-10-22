@@ -540,7 +540,7 @@ hooks = [
     'name': 'restricted_traces',
     'pattern': '\\.sha1',
     'condition': 'checkout_angle_internal',
-    'action': [ 'python',
+    'action': [ 'vpython3',
                 'src/tests/restricted_traces/download_restricted_traces.py',
                 'src/tests/restricted_traces',
     ]

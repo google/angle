@@ -10,6 +10,7 @@
 import fnmatch
 import json
 import os
+import subprocess
 import sys
 
 
@@ -28,6 +29,19 @@ def read_json(json_file):
         return json.loads(map_file.read(), object_pairs_hook=reject_duplicate_keys)
 
 
+def run_command(command):
+    env = os.environ.copy()
+    env['PYTHONUNBUFFERED'] = '1'
+    with subprocess.Popen(
+            command, stdout=subprocess.PIPE, universal_newlines=True, env=env) as proc:
+        while proc.poll() is None:
+            out = proc.stdout.read(1)
+            sys.stdout.write(out)
+            sys.stdout.flush()
+        if proc.returncode:
+            raise subprocess.CalledProcessError(proc.returncode, cmd)
+
+
 def main():
     if (len(sys.argv) != 2):
         print('Missing restricted traces directory')
@@ -36,8 +50,11 @@ def main():
     trace_dir = sys.argv[1]
 
     # issue download command
+    download_script = 'download_from_google_storage'
+    if os.name == 'nt':
+        download_script += '.bat'
     cmd = [
-        'download_from_google_storage',
+        download_script,
         '--directory',
         '--recursive',
         '--extract',
@@ -46,7 +63,7 @@ def main():
         trace_dir,
     ]
 
-    os.system(" ".join(cmd))
+    run_command(cmd)
 
     json_file = os.path.join(trace_dir, 'restricted_traces.json')
 
