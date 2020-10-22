@@ -120,19 +120,22 @@ std::mutex &GetDebugMutex()
     return *g_debugMutex;
 }
 
-ScopedPerfEventHelper::ScopedPerfEventHelper(gl::Context *context,
-                                             gl::EntryPoint entryPoint,
-                                             const char *format,
-                                             ...)
-    : mContext(context), mEntryPoint(entryPoint), mFunctionName(GetEntryPointName(entryPoint))
+ScopedPerfEventHelper::ScopedPerfEventHelper(gl::Context *context, gl::EntryPoint entryPoint)
+    : mContext(context), mEntryPoint(entryPoint), mFunctionName(nullptr)
+{}
+
+ScopedPerfEventHelper::~ScopedPerfEventHelper()
 {
-    bool dbgTrace = DebugAnnotationsActive();
-#if !defined(ANGLE_ENABLE_DEBUG_TRACE)
-    if (!dbgTrace)
+    // EGL_Terminate() can set g_debugAnnotator to nullptr; must call DebugAnnotationsActive() here
+    if (mFunctionName && DebugAnnotationsActive())
     {
-        return;
+        g_debugAnnotator->endEvent(mContext, mFunctionName, mEntryPoint);
     }
-#endif  // !ANGLE_ENABLE_DEBUG_TRACE
+}
+
+void ScopedPerfEventHelper::begin(const char *format, ...)
+{
+    mFunctionName = GetEntryPointName(mEntryPoint);
 
     va_list vararg;
     va_start(vararg, format);
@@ -142,18 +145,8 @@ ScopedPerfEventHelper::ScopedPerfEventHelper(gl::Context *context,
     va_end(vararg);
 
     ANGLE_LOG(EVENT) << std::string(&buffer[0], len);
-    if (dbgTrace)
-    {
-        g_debugAnnotator->beginEvent(context, entryPoint, mFunctionName, buffer.data());
-    }
-}
-
-ScopedPerfEventHelper::~ScopedPerfEventHelper()
-{
-    if (DebugAnnotationsActive())
-    {
-        g_debugAnnotator->endEvent(mContext, mFunctionName, mEntryPoint);
-    }
+    // Do not need to call DebugAnnotationsActive() here, because it was called in EVENT()
+    g_debugAnnotator->beginEvent(mContext, mEntryPoint, mFunctionName, buffer.data());
 }
 
 LogMessage::LogMessage(const char *file, const char *function, int line, LogSeverity severity)
