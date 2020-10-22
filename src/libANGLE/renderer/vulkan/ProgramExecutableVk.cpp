@@ -987,11 +987,6 @@ angle::Result ProgramExecutableVk::updateBuffersDescriptorSet(
            descriptorType == VK_DESCRIPTOR_TYPE_STORAGE_BUFFER);
     const bool isStorageBuffer = descriptorType == VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
 
-    static_assert(
-        gl::IMPLEMENTATION_MAX_SHADER_STORAGE_BUFFER_BINDINGS >=
-            gl::IMPLEMENTATION_MAX_UNIFORM_BUFFER_BINDINGS,
-        "The descriptor arrays here would have inadequate size for uniform buffer objects");
-
     VkDescriptorSet descriptorSet =
         mDescriptorSets[ToUnderlying(DescriptorSetIndex::ShaderResource)];
 
