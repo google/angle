@@ -1365,7 +1365,7 @@ void ANGLEProcessTestArgs(int *argc, char *argv[])
         }
         else if (strncmp(argv[argIndex], kBatchId, strlen(kBatchId)) == 0)
         {
-            // TODO(jmadill): Remove this once default. http://anglebug.com/5124
+            // Enable display reuse when running under --bot-mode.
             gReuseDisplays = true;
         }
         else if (strncmp(argv[argIndex], kEnableANGLEPerTestCaptureLabel,

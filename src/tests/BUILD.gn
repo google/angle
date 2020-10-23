@@ -23,8 +23,6 @@ angle_test("test_utils_unittest_helper") {
     "test_utils/angle_test_instantiate.h",
     "test_utils/runner/TestSuite_unittest.cpp",
   ]
-
-  deps = [ "$angle_root:angle_common" ]
 }
 
 test_expectations_sources = [
@@ -118,8 +116,7 @@ angle_test("angle_system_info_test") {
 }
 
 angle_test("angle_unittests") {
-  sources = angle_unittests_sources
-  main = "angle_unittest_main"
+  sources = angle_unittests_sources + [ "angle_unittest_main.cpp" ]
 
   if (angle_enable_hlsl) {
     sources += angle_unittests_hlsl_sources
@@ -149,8 +146,7 @@ if (is_win || is_linux || is_chromeos || is_mac || is_android || is_fuchsia) {
   angle_test("angle_end2end_tests") {
     include_dirs = [ "." ]
 
-    sources = angle_end2end_tests_sources
-    main = "angle_end2end_tests_main"
+    sources = angle_end2end_tests_sources + [ "angle_end2end_tests_main.cpp" ]
     libs = []
 
     if (is_mac) {
@@ -205,8 +201,7 @@ if (is_win || is_linux || is_chromeos || is_mac || is_android) {
 
   angle_test("angle_white_box_tests") {
     include_dirs = [ "." ]
-    sources = angle_white_box_tests_sources
-    main = "angle_end2end_tests_main"
+    sources = angle_white_box_tests_sources + [ "angle_end2end_tests_main.cpp" ]
 
     if (is_win && angle_enable_d3d11) {
       sources += angle_white_box_tests_win_sources
@@ -270,8 +265,8 @@ if (is_win || is_linux || is_chromeos || is_android || is_mac) {
   # This test suite is for perf tests that use ANGLE's internals in some direct way.
   angle_test("angle_white_box_perftests") {
     include_dirs = [ "." ]
-    sources = angle_white_box_perf_tests_sources
-    main = "angle_perftests_main"
+    sources =
+        angle_white_box_perf_tests_sources + [ "angle_perftests_main.cpp" ]
 
     deps = [
       ":angle_perftests_static",
@@ -321,8 +316,7 @@ if (build_angle_perftests) {
   # This test suite is designed to run against a generic GL implementation.
   angle_test("angle_perftests") {
     include_dirs = [ "." ]
-    sources = angle_perf_tests_sources
-    main = "angle_perftests_main"
+    sources = angle_perf_tests_sources + [ "angle_perftests_main.cpp" ]
 
     deps = [
       ":angle_perftests_shared",
@@ -572,11 +566,11 @@ if (build_angle_gles1_conform_tests) {
     include_dirs = [ "." ]
 
     sources = [
+      "angle_end2end_tests_main.cpp",
       "gles1_conformance_tests/ConformanceTests.cpp",
       "test_utils/ANGLETest.cpp",
       "test_utils/ANGLETest.h",
     ]
-    main = "angle_end2end_tests_main"
 
     configs += [
       "${angle_root}:libANGLE_config",
@@ -650,11 +644,11 @@ if (build_angle_gles1_conform_tests) {
 
       sources = [
         "$gles1_conform_root/conform/covgl/shell.c",
+        "angle_end2end_tests_main.cpp",
         "gles1_conformance_tests/CovglTests.cpp",
         "test_utils/ANGLETest.cpp",
         "test_utils/ANGLETest.h",
       ]
-      main = "angle_end2end_tests_main"
 
       configs += [
         ":angle_gles1_conform_support",
@@ -721,11 +715,11 @@ if (build_angle_gles1_conform_tests) {
     include_dirs = [ "$gles1_conform_root/conform" ]
 
     sources = [
+      "angle_end2end_tests_main.cpp",
       "gles1_conformance_tests/PrimtestTests.cpp",
       "test_utils/ANGLETest.cpp",
       "test_utils/ANGLETest.h",
     ]
-    main = "angle_end2end_tests_main"
 
     configs += [
       ":angle_gles1_conform_support",
@@ -1184,8 +1178,10 @@ if (build_angle_deqp_tests && !is_fuchsia) {
       ]
 
       # Must be included outside of the source set for the define
-      sources = [ "deqp_support/angle_deqp_gtest.cpp" ]
-      main = "angle_deqp_tests_main"
+      sources = [
+        "angle_deqp_tests_main.cpp",
+        "deqp_support/angle_deqp_gtest.cpp",
+      ]
 
       data = [
         "deqp_support/deqp_${_api}_test_expectations.txt",

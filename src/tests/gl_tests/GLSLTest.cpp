@@ -3772,7 +3772,7 @@ TEST_P(GLSLTest_ES31, ArrayStructArrayArraySampler)
         {
             for (int k = 0; k < 2; k++)
             {
-                for (size_t l = 0; l < 2; l++)
+                for (int l = 0; l < 2; l++)
                 {
                     // First generate the texture
                     int textureUnit = l + 2 * (k + 2 * (j + 2 * i));
@@ -3862,7 +3862,7 @@ TEST_P(GLSLTest_ES31, ComplexStructArraySampler)
                 GLTexture *array   = arrays[k];
                 size_t arrayLength = arrayLengths[k];
                 size_t arrayOffset = arrayOffsets[k];
-                for (size_t l = 0; l < arrayLength; l++)
+                for (int l = 0; l < static_cast<int>(arrayLength); l++)
                 {
                     // First generate the texture
                     int textureUnit = arrayOffset + l + totalArrayLength * (j + 3 * i);

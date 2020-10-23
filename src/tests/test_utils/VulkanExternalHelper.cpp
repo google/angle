@@ -238,7 +238,7 @@ void VulkanExternalHelper::initialize(bool useSwiftshader, bool enableValidation
         /* .pNext = */ nullptr,
         /* .flags = */ 0,
         /* .pApplicationInfo = */ &applicationInfo,
-        /* .enabledLayerCount = */ enabledLayerNames.size(),
+        /* .enabledLayerCount = */ static_cast<uint32_t>(enabledLayerNames.size()),
         /* .ppEnabledLayerNames = */ enabledLayerNames.data(),
         /* .enabledExtensionCount = */ enabledInstanceExtensionCount,
         /* .ppEnabledExtensionName = */ enabledInstanceExtensions.data(),

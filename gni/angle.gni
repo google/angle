@@ -193,21 +193,19 @@ set_defaults("angle_static_library") {
 }
 
 set_defaults("angle_test") {
-  configs = []
-
   # Gtest itself can't pass all the strict warning filters.
-  public_configs = angle_common_configs - [
-                     "$angle_root:constructor_and_destructor_warnings",
-                     "$angle_root:extra_warnings",
-                   ]
+  configs = angle_common_configs - [
+              "$angle_root:constructor_and_destructor_warnings",
+              "$angle_root:extra_warnings",
+            ]
 
+  public_configs = []
   public_deps = []
   sources = []
   data = []
   defines = []
   deps = []
   data_deps = []
-  main = ""
   suppressed_configs = angle_remove_configs
 }
 
@@ -291,102 +289,52 @@ template("angle_static_library") {
 }
 
 template("angle_test") {
-  _lib = target_name + "_lib"
-  angle_source_set(_lib) {
-    testonly = true
+  test(target_name) {
     forward_variables_from(invoker,
                            "*",
                            [
-                             "deps",
-                             "manifest",
-                             "use_xvfb",
+                             "configs",
+                             "data",
+                             "public_deps",
                            ])
 
-    if (is_android) {
-      public_configs += [ "$angle_root:build_id_config" ]
-    }
+    configs += invoker.configs
+    configs -= invoker.suppressed_configs
 
-    public_deps += invoker.deps + [
-                     "$angle_root:angle_common",
-                     "$angle_root:includes",
-                     "$angle_root/third_party/rapidjson:rapidjson",
-                     "$angle_root/util:angle_test_utils",
-                     "//testing/gmock",
-                     "//testing/gtest",
-                     "//third_party/googletest:gmock",
-                     "//third_party/googletest:gtest",
-                   ]
+    public_deps = invoker.public_deps + [
+                    "$angle_root:angle_common",
+                    "$angle_root:includes",
+                    "$angle_root/util:angle_test_utils",
+                    "$angle_root/third_party/rapidjson:rapidjson",
+                    "//testing/gmock",
+                    "//testing/gtest",
+                    "//third_party/googletest:gmock",
+                    "//third_party/googletest:gtest",
+                  ]
 
-    sources += [
-      "$angle_root/src/tests/test_utils/runner/TestSuite.cpp",
-      "$angle_root/src/tests/test_utils/runner/TestSuite.h",
-    ]
-  }
-
-  # TODO(jmadill): Remove duplication. http://anglebug.com/5124
-  if (build_with_chromium) {
-    test("standalone_" + target_name) {
-      if ((is_linux && !is_chromeos) ||
-          (build_with_chromium && chromeos_is_browser_only)) {
-        use_xvfb = true
-      }
-
-      public_deps = [ ":${_lib}" ]
-      if (invoker.main != "") {
-        sources = [ "${invoker.main}.cpp" ]
-      }
-      data = invoker.data + [
-               "$angle_root/scripts/run_gtest_angle_test.py",
-               "//testing/scripts/common.py",
-               "//testing/xvfb.py",
-             ]
-
-      if ((is_linux || is_chromeos) && !is_component_build) {
-        # Set rpath to find shared libs in a non-component build.
-        configs += [ "//build/config/gcc:rpath_for_built_shared_libraries" ]
-      }
-
-      if (defined(invoker.manifest)) {
-        manifest = invoker.manifest
-      }
-
-      if (is_android) {
-        if (build_with_chromium) {
-          use_native_activity = true
-          configs -= [ "//build/config/android:hide_all_but_jni" ]
-        } else {
-          use_raw_android_executable = true
-        }
-      }
-    }
-  }
-
-  test(target_name) {
-    if ((is_linux && !is_chromeos) ||
-        (build_with_chromium && chromeos_is_browser_only)) {
-      use_xvfb = true
-    }
-
-    public_deps = [ ":${_lib}" ]
-    if (invoker.main != "") {
-      sources = [ "${invoker.main}.cpp" ]
-    }
     data = invoker.data + [
              "$angle_root/scripts/run_gtest_angle_test.py",
              "//testing/scripts/common.py",
              "//testing/xvfb.py",
            ]
 
+    sources += [
+      "$angle_root/src/tests/test_utils/runner/TestSuite.cpp",
+      "$angle_root/src/tests/test_utils/runner/TestSuite.h",
+    ]
+
+    if ((is_linux && !is_chromeos) ||
+        (build_with_chromium && chromeos_is_browser_only)) {
+      use_xvfb = true
+    }
+
     if ((is_linux || is_chromeos) && !is_component_build) {
       # Set rpath to find shared libs in a non-component build.
       configs += [ "//build/config/gcc:rpath_for_built_shared_libraries" ]
     }
 
-    if (defined(invoker.manifest)) {
-      manifest = invoker.manifest
-    }
-
     if (is_android) {
+      public_configs += [ "$angle_root:build_id_config" ]
       if (build_with_chromium) {
         use_native_activity = true
         configs -= [ "//build/config/android:hide_all_but_jni" ]
