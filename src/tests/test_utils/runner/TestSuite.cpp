@@ -42,6 +42,7 @@ constexpr char kResultFileArg[]        = "--results-file=";
 constexpr char kHistogramJsonFileArg[] = "--histogram-json-file=";
 constexpr char kListTests[]            = "--gtest_list_tests";
 constexpr char kPrintTestStdout[]      = "--print-test-stdout";
+constexpr char kBatchId[]              = "--batch-id=";
 #if defined(NDEBUG)
 constexpr int kDefaultTestTimeout = 20;
 #else
@@ -91,6 +92,12 @@ bool ParseIntArg(const char *flag, const char *argument, int *valueOut)
 
     *valueOut = static_cast<int>(longValue);
     return true;
+}
+
+bool ParseIntArgNoDelete(const char *flag, const char *argument, int *valueOut)
+{
+    ParseIntArg(flag, argument, valueOut);
+    return false;
 }
 
 bool ParseFlag(const char *expected, const char *actual, bool *flagOut)
@@ -806,7 +813,8 @@ TestSuite::TestSuite(int *argc, char **argv)
       mTotalResultCount(0),
       mMaxProcesses(std::min(NumberOfProcessors(), kDefaultMaxProcesses)),
       mTestTimeout(kDefaultTestTimeout),
-      mBatchTimeout(kDefaultBatchTimeout)
+      mBatchTimeout(kDefaultBatchTimeout),
+      mBatchId(-1)
 {
     Optional<int> filterArgIndex;
     bool alsoRunDisabledTests = false;
@@ -1034,6 +1042,8 @@ bool TestSuite::parseSingleArg(const char *argument)
             ParseIntArg("--max-processes=", argument, &mMaxProcesses) ||
             ParseIntArg(kTestTimeoutArg, argument, &mTestTimeout) ||
             ParseIntArg("--batch-timeout=", argument, &mBatchTimeout) ||
+            // Other test functions consume the batch ID, so keep it in the list.
+            ParseIntArgNoDelete(kBatchId, argument, &mBatchId) ||
             ParseStringArg("--results-directory=", argument, &mResultsDirectory) ||
             ParseStringArg(kResultFileArg, argument, &mResultsFile) ||
             ParseStringArg("--isolated-script-test-output=", argument, &mResultsFile) ||
@@ -1115,7 +1125,7 @@ bool TestSuite::launchChildTestProcess(uint32_t batchId,
     args.push_back(resultsFileArg.c_str());
 
     std::stringstream batchIdStream;
-    batchIdStream << "--batch-id=" << batchId;
+    batchIdStream << kBatchId << batchId;
     std::string batchIdString = batchIdStream.str();
     args.push_back(batchIdString.c_str());
 
@@ -1274,7 +1284,8 @@ int TestSuite::run()
     // Run tests serially.
     if (!mBotMode)
     {
-        if (!angle::IsDebuggerAttached())
+        // Only start the watchdog if the debugger is not attached and we're a child process.
+        if (!angle::IsDebuggerAttached() && mBatchId != -1)
         {
             startWatchdog();
         }
