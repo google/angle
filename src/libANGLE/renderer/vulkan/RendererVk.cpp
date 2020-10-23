@@ -156,6 +156,8 @@ constexpr const char *kSkippedMessages[] = {
     "VUID-vkMapMemory-memory-00683",
     // http://anglebug.com/5027
     "UNASSIGNED-CoreValidation-Shader-PushConstantOutOfRange",
+    // http://anglebug.com/5191
+    "VUID-vkCmdDraw-None-02698",
 };
 
 // Suppress validation errors that are known
