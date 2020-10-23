@@ -1,6 +1,6 @@
 {
   "src/tests/restricted_traces/.gitignore":
-    "eec188523534544e0ce2fa6447f6a5dd",
+    "eb3949581fd837d3ce95555b1a137fc4",
   "src/tests/restricted_traces/angry_birds_2_1500.tar.gz.sha1":
     "44fc5437c4a84012e338b3da4b6fc28a",
   "src/tests/restricted_traces/arena_of_valor.tar.gz.sha1":
@@ -15,6 +15,8 @@
     "dc20d295d45ab85cd15bed6065d7a13a",
   "src/tests/restricted_traces/egypt_1500.tar.gz.sha1":
     "1d80caa37b937f83c95cd053b1bdd4ac",
+  "src/tests/restricted_traces/fate_grand_order.tar.gz.sha1":
+    "df7f111c1f4e30767a4c33eb190600b8",
   "src/tests/restricted_traces/free_fire.tar.gz.sha1":
     "a95efee5e5c6d85bac2d8c2ab09dc34c",
   "src/tests/restricted_traces/gen_restricted_traces.py":
@@ -30,13 +32,13 @@
   "src/tests/restricted_traces/nba2k20_800.tar.gz.sha1":
     "03df0dcf41c18bc59edfc0b088ca4a87",
   "src/tests/restricted_traces/restricted_traces.json":
-    "30f42d3194f9def566c9764a71dd0ba9",
+    "307a6e4f81e02ace27f98b9a74055c1f",
   "src/tests/restricted_traces/restricted_traces_autogen.cpp":
-    "8ce4d8abfab24a7d132159e62a454cb1",
+    "9e608fbcce60b25dc075a1f1059c17bd",
   "src/tests/restricted_traces/restricted_traces_autogen.gni":
-    "f20ea12d916b4cb8cbf5416a7852a10d",
+    "5215fd1e7503fe2b4d0cc8e46cb71cde",
   "src/tests/restricted_traces/restricted_traces_autogen.h":
-    "76c35abf57d743a790e6f634051f32ed",
+    "4d56428aea3627c37380ab3bc17a4316",
   "src/tests/restricted_traces/temple_run_300.tar.gz.sha1":
     "77475b0186ee0380eeb9db47433d0457",
   "src/tests/restricted_traces/trex_200.tar.gz.sha1":

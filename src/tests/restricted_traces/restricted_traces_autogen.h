@@ -47,6 +47,7 @@ enum class RestrictedTraceID
     cod_mobile,
     dragon_ball_legends,
     egypt_1500,
+    fate_grand_order,
     free_fire,
     kartrider_rush,
     manhattan_10,

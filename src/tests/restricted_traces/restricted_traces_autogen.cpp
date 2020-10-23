@@ -18,6 +18,7 @@
 #include "cod_mobile/cod_mobile_capture_context4.h"
 #include "dragon_ball_legends/dragon_ball_legends_capture_context3.h"
 #include "egypt_1500/egypt_1500_capture_context6.h"
+#include "fate_grand_order/fate_grand_order_capture_context2.h"
 #include "free_fire/free_fire_capture_context3.h"
 #include "kartrider_rush/kartrider_rush_capture_context3.h"
 #include "manhattan_10/manhattan_10_capture_context6.h"
@@ -58,6 +59,10 @@ constexpr angle::PackedEnumMap<RestrictedTraceID, TraceInfo> kTraceInfos = {
     {RestrictedTraceID::egypt_1500,
      {egypt_1500::kReplayFrameStart, egypt_1500::kReplayFrameEnd,
       egypt_1500::kReplayDrawSurfaceWidth, egypt_1500::kReplayDrawSurfaceHeight, "egypt_1500"}},
+    {RestrictedTraceID::fate_grand_order,
+     {fate_grand_order::kReplayFrameStart, fate_grand_order::kReplayFrameEnd,
+      fate_grand_order::kReplayDrawSurfaceWidth, fate_grand_order::kReplayDrawSurfaceHeight,
+      "fate_grand_order"}},
     {RestrictedTraceID::free_fire,
      {free_fire::kReplayFrameStart, free_fire::kReplayFrameEnd, free_fire::kReplayDrawSurfaceWidth,
       free_fire::kReplayDrawSurfaceHeight, "free_fire"}},
@@ -123,6 +128,9 @@ void ReplayFrame(RestrictedTraceID traceID, uint32_t frameIndex)
         case RestrictedTraceID::egypt_1500:
             egypt_1500::ReplayContext6Frame(frameIndex);
             break;
+        case RestrictedTraceID::fate_grand_order:
+            fate_grand_order::ReplayContext2Frame(frameIndex);
+            break;
         case RestrictedTraceID::free_fire:
             free_fire::ReplayContext3Frame(frameIndex);
             break;
@@ -181,6 +189,9 @@ void ResetReplay(RestrictedTraceID traceID)
             break;
         case RestrictedTraceID::egypt_1500:
             egypt_1500::ResetContext6Replay();
+            break;
+        case RestrictedTraceID::fate_grand_order:
+            fate_grand_order::ResetContext2Replay();
             break;
         case RestrictedTraceID::free_fire:
             free_fire::ResetContext3Replay();
@@ -241,6 +252,9 @@ void SetupReplay(RestrictedTraceID traceID)
         case RestrictedTraceID::egypt_1500:
             egypt_1500::SetupContext6Replay();
             break;
+        case RestrictedTraceID::fate_grand_order:
+            fate_grand_order::SetupContext2Replay();
+            break;
         case RestrictedTraceID::free_fire:
             free_fire::SetupContext3Replay();
             break;
@@ -300,6 +314,9 @@ void SetBinaryDataDir(RestrictedTraceID traceID, const char *dataDir)
         case RestrictedTraceID::egypt_1500:
             egypt_1500::SetBinaryDataDir(dataDir);
             break;
+        case RestrictedTraceID::fate_grand_order:
+            fate_grand_order::SetBinaryDataDir(dataDir);
+            break;
         case RestrictedTraceID::free_fire:
             free_fire::SetBinaryDataDir(dataDir);
             break;
@@ -358,6 +375,9 @@ void SetBinaryDataDecompressCallback(RestrictedTraceID traceID, DecompressCallba
             break;
         case RestrictedTraceID::egypt_1500:
             egypt_1500::SetBinaryDataDecompressCallback(callback);
+            break;
+        case RestrictedTraceID::fate_grand_order:
+            fate_grand_order::SetBinaryDataDecompressCallback(callback);
             break;
         case RestrictedTraceID::free_fire:
             free_fire::SetBinaryDataDecompressCallback(callback);
