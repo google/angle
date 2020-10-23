@@ -1,6 +1,6 @@
 {
   "src/tests/restricted_traces/.gitignore":
-    "975053b988efba09342bbc967b8cbb76",
+    "8296662ca72909d8f7e050ec8325d48d",
   "src/tests/restricted_traces/angry_birds_2_1500.tar.gz.sha1":
     "44fc5437c4a84012e338b3da4b6fc28a",
   "src/tests/restricted_traces/arena_of_valor.tar.gz.sha1":
@@ -28,15 +28,17 @@
   "src/tests/restricted_traces/nba2k20_800.tar.gz.sha1":
     "03df0dcf41c18bc59edfc0b088ca4a87",
   "src/tests/restricted_traces/restricted_traces.json":
-    "964d9d30361aae731f495562ed373b79",
+    "bbfc95bf0db20a314b8d79fdd1cbc65b",
   "src/tests/restricted_traces/restricted_traces_autogen.cpp":
-    "8d82249c50da7d734fb71e11f2829d90",
+    "92dab041f28cec16d31d79c742193fad",
   "src/tests/restricted_traces/restricted_traces_autogen.gni":
-    "2367de2be057b3b3b7bbd3e89053b0f2",
+    "5882a52348a45b1701161af20ee55336",
   "src/tests/restricted_traces/restricted_traces_autogen.h":
-    "7601e1f0c3806fa2ff203788906762b1",
+    "9ce9ba8a785cded6688635a48cfb97c3",
   "src/tests/restricted_traces/temple_run_300.tar.gz.sha1":
     "77475b0186ee0380eeb9db47433d0457",
   "src/tests/restricted_traces/trex_200.tar.gz.sha1":
-    "ca2d91a527f4a4317f944afc96c35268"
+    "ca2d91a527f4a4317f944afc96c35268",
+  "src/tests/restricted_traces/world_of_tanks_blitz.tar.gz.sha1":
+    "c72106f9999f5eff8916a0c699072687"
 }

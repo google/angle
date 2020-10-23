@@ -250,6 +250,11 @@ TracePerfTest::TracePerfTest()
         addExtensionPrerequisite("GL_EXT_color_buffer_half_float");
     }
 
+    if (param.testID == RestrictedTraceID::world_of_tanks_blitz)
+    {
+        addExtensionPrerequisite("EXT_disjoint_timer_query");
+    }
+
     // We already swap in TracePerfTest::drawBenchmark, no need to swap again in the harness.
     disableTestHarnessSwap();
 

@@ -54,6 +54,7 @@ enum class RestrictedTraceID
     nba2k20_800,
     temple_run_300,
     trex_200,
+    world_of_tanks_blitz,
     InvalidEnum,
     EnumCount = InvalidEnum
 };
