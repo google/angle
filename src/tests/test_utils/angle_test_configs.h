@@ -247,6 +247,13 @@ inline PlatformParameters WithRobustness(const PlatformParameters &params)
     withRobustness.eglParameters.robustness = EGL_TRUE;
     return withRobustness;
 }
+
+inline PlatformParameters WithEmulatedPrerotation(const PlatformParameters &params, EGLint rotation)
+{
+    PlatformParameters prerotation                = params;
+    prerotation.eglParameters.emulatedPrerotation = rotation;
+    return prerotation;
+}
 }  // namespace angle
 
 #endif  // ANGLE_TEST_CONFIGS_H_

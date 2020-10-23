@@ -62,7 +62,7 @@ struct EGLPlatformParameters
                         debugLayersEnabled, contextVirtualization, transformFeedbackFeature,
                         allocateNonZeroMemoryFeature, emulateCopyTexImage2DFromRenderbuffers,
                         shaderStencilOutputFeature, genMultipleMipsPerPassFeature, platformMethods,
-                        robustness);
+                        robustness, emulatedPrerotation);
     }
 
     EGLint renderer                               = EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE;
@@ -78,6 +78,7 @@ struct EGLPlatformParameters
     EGLint emulateCopyTexImage2DFromRenderbuffers = EGL_DONT_CARE;
     EGLint shaderStencilOutputFeature             = EGL_DONT_CARE;
     EGLint genMultipleMipsPerPassFeature          = EGL_DONT_CARE;
+    uint32_t emulatedPrerotation                  = 0;  // Can be 0, 90, 180 or 270
     angle::PlatformMethods *platformMethods       = nullptr;
 };
 

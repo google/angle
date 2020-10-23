@@ -462,7 +462,7 @@ class ANGLETestBase
     EGLWindow *getEGLWindow() const;
     int getWindowWidth() const;
     int getWindowHeight() const;
-    bool isMultisampleEnabled() const;
+    bool isEmulatedPrerotation() const;
 
     EGLint getPlatformRenderer() const;
 

@@ -243,7 +243,14 @@ class WindowSurfaceVk : public SurfaceVk
 
     vk::Semaphore getAcquireImageSemaphore();
 
-    VkSurfaceTransformFlagBitsKHR getPreTransform() { return mPreTransform; }
+    VkSurfaceTransformFlagBitsKHR getPreTransform()
+    {
+        if (mEmulatedPreTransform != VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR)
+        {
+            return mEmulatedPreTransform;
+        }
+        return mPreTransform;
+    }
 
   protected:
     angle::Result swapImpl(const gl::Context *context,
@@ -302,6 +309,7 @@ class WindowSurfaceVk : public SurfaceVk
     VkPresentModeKHR mDesiredSwapchainPresentMode;  // Desired mode set through setSwapInterval()
     uint32_t mMinImageCount;
     VkSurfaceTransformFlagBitsKHR mPreTransform;
+    VkSurfaceTransformFlagBitsKHR mEmulatedPreTransform;
     VkCompositeAlphaFlagBitsKHR mCompositeAlpha;
 
     // A circular buffer that stores the submission fence of the context on every swap.  The CPU is

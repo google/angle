@@ -14,7 +14,7 @@ class BlitFramebufferANGLETest : public ANGLETest
   protected:
     BlitFramebufferANGLETest()
     {
-        setWindowWidth(32);
+        setWindowWidth(64);
         setWindowHeight(32);
         setConfigRedBits(8);
         setConfigGreenBits(8);
@@ -2447,6 +2447,9 @@ ANGLE_INSTANTIATE_TEST(BlitFramebufferANGLETest,
                        ES3_OPENGL(),
                        ES2_VULKAN(),
                        ES3_VULKAN(),
+                       WithEmulatedPrerotation(ES3_VULKAN(), 90),
+                       WithEmulatedPrerotation(ES3_VULKAN(), 180),
+                       WithEmulatedPrerotation(ES3_VULKAN(), 270),
                        ES2_METAL(),
                        WithNoShaderStencilOutput(ES2_METAL()));
 

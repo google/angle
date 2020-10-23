@@ -475,6 +475,7 @@ WindowSurfaceVk::WindowSurfaceVk(const egl::SurfaceState &surfaceState, EGLNativ
       mDesiredSwapchainPresentMode(VK_PRESENT_MODE_FIFO_KHR),
       mMinImageCount(0),
       mPreTransform(VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR),
+      mEmulatedPreTransform(VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR),
       mCompositeAlpha(VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR),
       mCurrentSwapHistoryIndex(0),
       mCurrentSwapchainImageIndex(0),
@@ -610,10 +611,35 @@ angle::Result WindowSurfaceVk::initializeImpl(DisplayVk *displayVk)
     {
         // Default to identity transform.
         mPreTransform = VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR;
+
         if ((mSurfaceCaps.supportedTransforms & mPreTransform) == 0)
         {
             mPreTransform = mSurfaceCaps.currentTransform;
         }
+    }
+
+    // Set emulated pre-transform if any emulated prerotation features are set.
+    if (renderer->getFeatures().emulatedPrerotation90.enabled)
+    {
+        mEmulatedPreTransform = VK_SURFACE_TRANSFORM_ROTATE_90_BIT_KHR;
+    }
+    else if (renderer->getFeatures().emulatedPrerotation180.enabled)
+    {
+        mEmulatedPreTransform = VK_SURFACE_TRANSFORM_ROTATE_180_BIT_KHR;
+    }
+    else if (renderer->getFeatures().emulatedPrerotation270.enabled)
+    {
+        mEmulatedPreTransform = VK_SURFACE_TRANSFORM_ROTATE_270_BIT_KHR;
+    }
+
+    // If prerotation is emulated, the window is physically rotated.  With real prerotation, the
+    // surface reports the rotated sizes.  With emulated prerotation however, the surface reports
+    // the actual window sizes.  Adjust the window extents to match what real prerotation would have
+    // reported.
+    if (Is90DegreeRotation(mEmulatedPreTransform))
+    {
+        ASSERT(mPreTransform == VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR);
+        std::swap(extents.width, extents.height);
     }
 
     uint32_t presentModeCount = 0;
@@ -779,7 +805,16 @@ angle::Result WindowSurfaceVk::recreateSwapchain(ContextVk *contextVk, const gl:
 
     releaseSwapchainImages(contextVk);
 
-    angle::Result result = createSwapChain(contextVk, extents, lastSwapchain);
+    // If prerotation is emulated, adjust the window extents to match what real prerotation would
+    // have reported.
+    gl::Extents swapchainExtents = extents;
+    if (Is90DegreeRotation(mEmulatedPreTransform))
+    {
+        ASSERT(mPreTransform == VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR);
+        std::swap(swapchainExtents.width, swapchainExtents.height);
+    }
+
+    angle::Result result = createSwapChain(contextVk, swapchainExtents, lastSwapchain);
 
     // Notify the parent classes of the surface's new state.
     onStateChange(angle::SubjectMessage::SurfaceChanged);
@@ -882,7 +917,7 @@ angle::Result WindowSurfaceVk::createSwapChain(vk::Context *context,
     VkFormat nativeFormat    = format.vkImageFormat;
 
     gl::Extents rotatedExtents = extents;
-    if (Is90DegreeRotation(mPreTransform))
+    if (Is90DegreeRotation(getPreTransform()))
     {
         // The Surface is oriented such that its aspect ratio no longer matches that of the
         // device.  In this case, the width and height of the swapchain images must be swapped to
@@ -1300,7 +1335,7 @@ angle::Result WindowSurfaceVk::present(ContextVk *contextVk,
             rect.extent.width  = gl::clamp(*eglRects++, 0, width - rect.offset.x);
             rect.extent.height = gl::clamp(*eglRects++, 0, height - rect.offset.y);
             rect.layer         = 0;
-            if (Is90DegreeRotation(mPreTransform))
+            if (Is90DegreeRotation(getPreTransform()))
             {
                 std::swap(rect.offset.x, rect.offset.y);
                 std::swap(rect.extent.width, rect.extent.height);
@@ -1702,7 +1737,7 @@ angle::Result WindowSurfaceVk::getCurrentFramebuffer(ContextVk *contextVk,
     framebufferInfo.pAttachments    = imageViews.data();
     framebufferInfo.width           = static_cast<uint32_t>(extents.width);
     framebufferInfo.height          = static_cast<uint32_t>(extents.height);
-    if (Is90DegreeRotation(mPreTransform))
+    if (Is90DegreeRotation(getPreTransform()))
     {
         std::swap(framebufferInfo.width, framebufferInfo.height);
     }

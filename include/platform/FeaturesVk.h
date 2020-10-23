@@ -456,6 +456,21 @@ struct FeaturesVk : FeatureSetBase
         "On some hardware, clear using a draw call instead of vkCmdClearAttachments in the middle "
         "of render pass due to bugs",
         &members, "https://issuetracker.google.com/166809097"};
+
+    // Whether prerotation is being emulated for testing.  90 degree rotation.
+    Feature emulatedPrerotation90 = {"emulated_prerotation_90", FeatureCategory::VulkanFeatures,
+                                     "Emulate 90-degree prerotation.", &members,
+                                     "http://anglebug.com/4901"};
+
+    // Whether prerotation is being emulated for testing.  180 degree rotation.
+    Feature emulatedPrerotation180 = {"emulated_prerotation_180", FeatureCategory::VulkanFeatures,
+                                      "Emulate 180-degree prerotation.", &members,
+                                      "http://anglebug.com/4901"};
+
+    // Whether prerotation is being emulated for testing.  270 degree rotation.
+    Feature emulatedPrerotation270 = {"emulated_prerotation_270", FeatureCategory::VulkanFeatures,
+                                      "Emulate 270-degree prerotation.", &members,
+                                      "http://anglebug.com/4901"};
 };
 
 inline FeaturesVk::FeaturesVk()  = default;

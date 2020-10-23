@@ -219,6 +219,19 @@ std::ostream &operator<<(std::ostream &stream, const PlatformParameters &pp)
         stream << "_NoGenMultipleMipsPerPass";
     }
 
+    if (pp.eglParameters.emulatedPrerotation == 90)
+    {
+        stream << "_PreRotation90";
+    }
+    else if (pp.eglParameters.emulatedPrerotation == 180)
+    {
+        stream << "_PreRotation180";
+    }
+    else if (pp.eglParameters.emulatedPrerotation == 270)
+    {
+        stream << "_PreRotation270";
+    }
+
     return stream;
 }
 

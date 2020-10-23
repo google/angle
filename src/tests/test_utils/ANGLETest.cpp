@@ -538,9 +538,27 @@ void ANGLETestBase::ANGLETestSetUp()
     // Resize the window before creating the context so that the first make current
     // sets the viewport and scissor box to the right size.
     bool needSwap = false;
-    if (mFixture->osWindow->getWidth() != mWidth || mFixture->osWindow->getHeight() != mHeight)
+
+    int osWindowWidth  = mFixture->osWindow->getWidth();
+    int osWindowHeight = mFixture->osWindow->getHeight();
+
+    const bool isRotated = mCurrentParams->eglParameters.emulatedPrerotation == 90 ||
+                           mCurrentParams->eglParameters.emulatedPrerotation == 270;
+    if (isRotated)
     {
-        if (!mFixture->osWindow->resize(mWidth, mHeight))
+        std::swap(osWindowWidth, osWindowHeight);
+    }
+
+    if (osWindowWidth != mWidth || osWindowHeight != mHeight)
+    {
+        int newWindowWidth  = mWidth;
+        int newWindowHeight = mHeight;
+        if (isRotated)
+        {
+            std::swap(newWindowWidth, newWindowHeight);
+        }
+
+        if (!mFixture->osWindow->resize(newWindowWidth, newWindowHeight))
         {
             FAIL() << "Failed to resize ANGLE test window.";
         }
@@ -1229,9 +1247,9 @@ int ANGLETestBase::getWindowHeight() const
     return mHeight;
 }
 
-bool ANGLETestBase::isMultisampleEnabled() const
+bool ANGLETestBase::isEmulatedPrerotation() const
 {
-    return mFixture->eglWindow->isMultisample();
+    return mCurrentParams->eglParameters.emulatedPrerotation != 0;
 }
 
 void ANGLETestBase::setWindowVisible(OSWindow *osWindow, bool isVisible)
