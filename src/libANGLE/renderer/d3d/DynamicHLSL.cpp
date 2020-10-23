@@ -435,6 +435,9 @@ void DynamicHLSL::generateVaryingLinkHLSL(const VaryingPacking &varyingPacking,
             case sh::INTERPOLATION_CENTROID:
                 hlslStream << "    centroid ";
                 break;
+            case sh::INTERPOLATION_SAMPLE:
+                hlslStream << "    sample ";
+                break;
             default:
                 UNREACHABLE();
         }

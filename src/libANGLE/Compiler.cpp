@@ -110,7 +110,8 @@ Compiler::Compiler(rx::GLImplFactory *implFactory, const State &state, egl::Disp
     mResources.ANGLE_multi_draw                = extensions.multiDraw;
     mResources.ANGLE_base_vertex_base_instance = extensions.baseVertexBaseInstance;
     mResources.APPLE_clip_distance             = extensions.clipDistanceAPPLE;
-
+    // OES_shader_multisample_interpolation
+    mResources.OES_shader_multisample_interpolation = extensions.multisampleInterpolationOES;
     // TODO: use shader precision caps to determine if high precision is supported?
     mResources.FragmentPrecisionHigh = 1;
     mResources.EXT_frag_depth        = extensions.fragDepth;

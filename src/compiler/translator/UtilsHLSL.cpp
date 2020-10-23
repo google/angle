@@ -1063,6 +1063,8 @@ const char *InterpolationString(TQualifier qualifier)
             return "nointerpolation";
         case EvqCentroidOut:
             return "centroid";
+        case EvqSampleIn:
+            return "sample";
         default:
             UNREACHABLE();
     }
@@ -1083,6 +1085,8 @@ const char *QualifierString(TQualifier qualifier)
             return "inout";
         case EvqConstReadOnly:
             return "const";
+        case EvqSampleOut:
+            return "sample";
         default:
             UNREACHABLE();
     }

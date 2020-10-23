@@ -35,6 +35,7 @@ bool IsInterpolationIn(TQualifier qualifier)
         case EvqFlatIn:
         case EvqNoPerspectiveIn:
         case EvqCentroidIn:
+        case EvqSampleIn:
             return true;
         default:
             return false;
@@ -538,6 +539,7 @@ bool IsVaryingOut(TQualifier qualifier)
         case EvqCentroidOut:
         case EvqVertexOut:
         case EvqGeometryOut:
+        case EvqSampleOut:
             return true;
 
         default:
@@ -558,6 +560,7 @@ bool IsVaryingIn(TQualifier qualifier)
         case EvqCentroidIn:
         case EvqFragmentIn:
         case EvqGeometryIn:
+        case EvqSampleIn:
             return true;
 
         default:
@@ -604,6 +607,9 @@ InterpolationType GetInterpolationType(TQualifier qualifier)
         case EvqCentroidOut:
             return INTERPOLATION_CENTROID;
 
+        case EvqSampleIn:
+        case EvqSampleOut:
+            return INTERPOLATION_SAMPLE;
         default:
             UNREACHABLE();
 #if !UNREACHABLE_IS_NORETURN

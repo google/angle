@@ -654,6 +654,9 @@ struct Extensions
     // GL_OES_sample_shading
     bool sampleShadingOES = false;
 
+    // OES_shader_multisample_interpolation
+    bool multisampleInterpolationOES = false;
+
     // GL_NV_robustness_video_memory_purge
     bool robustnessVideoMemoryPurgeNV = false;
 
@@ -745,6 +748,10 @@ struct Caps
     // If the values could be got by using GetIntegeri_v, they should
     // be GLint instead of GLuint and call LimitToInt() to ensure
     // they will not overflow.
+
+    GLfloat minInterpolationOffset        = 0;
+    GLfloat maxInterpolationOffset        = 0;
+    GLint subPixelInterpolationOffsetBits = 0;
 
     // ES 3.1 (April 29, 2015) 20.39: implementation dependent values
     GLint64 maxElementIndex       = 0;
