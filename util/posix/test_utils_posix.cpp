@@ -383,7 +383,7 @@ bool GetTempDir(char *tempDirOut, uint32_t maxDirNameLen)
     }
 
 #if defined(ANGLE_PLATFORM_ANDROID)
-    // TODO(jmadill): Android support. http://anglebug.com/3162
+    // Not used right now in the ANGLE test runner.
     // return PathService::Get(DIR_CACHE, path);
     return false;
 #else
