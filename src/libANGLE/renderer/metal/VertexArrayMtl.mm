@@ -623,8 +623,20 @@ angle::Result VertexArrayMtl::convertIndexBuffer(const gl::Context *glContext,
 
     size_t indexCount = GetIndexCount(idxBuffer, offsetModulo, indexType);
 
-    ANGLE_TRY(convertIndexBufferGPU(glContext, indexType, idxBuffer, offsetModulo, indexCount,
-                                    conversion));
+    if (!contextMtl->getDisplay()->getFeatures().hasCheapRenderPass.enabled &&
+        contextMtl->getRenderCommandEncoder())
+    {
+        // We shouldn't use GPU to convert when we are in a middle of a render pass.
+        ANGLE_TRY(StreamIndexData(contextMtl, &conversion->data,
+                                  idxBuffer->getClientShadowCopyData(contextMtl) + offsetModulo,
+                                  indexType, indexCount, &conversion->convertedBuffer,
+                                  &conversion->convertedOffset));
+    }
+    else
+    {
+        ANGLE_TRY(convertIndexBufferGPU(glContext, indexType, idxBuffer, offsetModulo, indexCount,
+                                        conversion));
+    }
 
     *idxBufferOut       = conversion->convertedBuffer;
     *idxBufferOffsetOut = conversion->convertedOffset + alignedOffset;
@@ -688,70 +700,74 @@ angle::Result VertexArrayMtl::convertVertexBuffer(const gl::Context *glContext,
                                                   size_t attribIndex,
                                                   const mtl::VertexFormat &srcVertexFormat)
 {
+    unsigned srcFormatSize = srcVertexFormat.intendedAngleFormat().pixelBytes;
+
+    size_t numVertices = GetVertexCount(srcBuffer, binding, srcFormatSize);
+    if (numVertices == 0)
+    {
+        // Out of bound buffer access, can return any values.
+        // See KHR_robust_buffer_access_behavior
+        mCurrentArrayBuffers[attribIndex]       = srcBuffer;
+        mCurrentArrayBufferFormats[attribIndex] = &srcVertexFormat;
+        mCurrentArrayBufferOffsets[attribIndex] = 0;
+        mCurrentArrayBufferStrides[attribIndex] = 16;
+        return angle::Result::Continue;
+    }
+
     ContextMtl *contextMtl = mtl::GetImpl(glContext);
 
-    const angle::Format &intendedAngleFormat = srcVertexFormat.intendedAngleFormat();
+    // Convert to tightly packed format
+    GLuint stride;
+    const mtl::VertexFormat &convertedFormat =
+        GetVertexConversionFormat(contextMtl, srcVertexFormat.intendedFormatId, &stride);
 
     ConversionBufferMtl *conversion = srcBuffer->getVertexConversionBuffer(
-        contextMtl, intendedAngleFormat.id, binding.getStride(), binding.getOffset());
+        contextMtl, srcVertexFormat.intendedFormatId, binding.getStride(), binding.getOffset());
 
     // Has the content of the buffer has changed since last conversion?
     if (!conversion->dirty)
     {
         // Buffer's data hasn't been changed. Re-use last converted results
-        GLuint stride;
-        const mtl::VertexFormat &vertexFormat =
-            GetVertexConversionFormat(contextMtl, intendedAngleFormat.id, &stride);
-
         mConvertedArrayBufferHolders[attribIndex].set(conversion->convertedBuffer);
         mCurrentArrayBufferOffsets[attribIndex] = conversion->convertedOffset;
 
         mCurrentArrayBuffers[attribIndex]       = &mConvertedArrayBufferHolders[attribIndex];
-        mCurrentArrayBufferFormats[attribIndex] = &vertexFormat;
+        mCurrentArrayBufferFormats[attribIndex] = &convertedFormat;
         mCurrentArrayBufferStrides[attribIndex] = stride;
         return angle::Result::Continue;
     }
 
-    // NOTE(hqle): Do the conversion on GPU.
-    return convertVertexBufferCPU(glContext, srcBuffer, binding, attribIndex, srcVertexFormat,
-                                  conversion);
-}
+    const angle::Format &convertedAngleFormat = convertedFormat.actualAngleFormat();
+    bool canConvertToFloatOnGPU =
+        convertedAngleFormat.isFloat() && !convertedAngleFormat.isVertexTypeHalfFloat();
 
-angle::Result VertexArrayMtl::convertVertexBufferCPU(const gl::Context *glContext,
-                                                     BufferMtl *srcBuffer,
-                                                     const gl::VertexBinding &binding,
-                                                     size_t attribIndex,
-                                                     const mtl::VertexFormat &srcVertexFormat,
-                                                     ConversionBufferMtl *conversion)
-{
-    ContextMtl *contextMtl = mtl::GetImpl(glContext);
+    bool canExpandComponentsOnGPU = convertedFormat.actualSameGLType;
 
-    // Convert to tightly packed format
-    GLuint stride;
-    const mtl::VertexFormat &vertexFormat =
-        GetVertexConversionFormat(contextMtl, srcVertexFormat.intendedFormatId, &stride);
-    unsigned srcFormatSize = vertexFormat.intendedAngleFormat().pixelBytes;
-
-    conversion->data.releaseInFlightBuffers(contextMtl);
-
-    size_t numVertices = GetVertexCount(srcBuffer, binding, srcFormatSize);
-    if (numVertices == 0)
+    if (contextMtl->getRenderCommandEncoder() &&
+        !contextMtl->getDisplay()->getFeatures().hasCheapRenderPass.enabled &&
+        !contextMtl->getDisplay()->getFeatures().hasExplicitMemBarrier.enabled)
     {
-        return angle::Result::Continue;
+        // Cannot use GPU to convert when we are in a middle of a render pass.
+        canConvertToFloatOnGPU = canExpandComponentsOnGPU = false;
     }
 
-    const uint8_t *srcBytes = srcBuffer->getClientShadowCopyData(contextMtl);
-    ANGLE_CHECK_GL_ALLOC(contextMtl, srcBytes);
+    conversion->data.releaseInFlightBuffers(contextMtl);
+    conversion->data.updateAlignment(contextMtl, convertedAngleFormat.pixelBytes);
 
-    srcBytes += binding.getOffset();
-
-    ANGLE_TRY(StreamVertexData(contextMtl, &conversion->data, srcBytes, numVertices * stride, 0,
-                               numVertices, binding.getStride(), vertexFormat.vertexLoadFunction,
-                               &mConvertedArrayBufferHolders[attribIndex],
-                               &mCurrentArrayBufferOffsets[attribIndex]));
+    if (canConvertToFloatOnGPU || canExpandComponentsOnGPU)
+    {
+        ANGLE_TRY(convertVertexBufferGPU(glContext, srcBuffer, binding, attribIndex,
+                                         convertedFormat, stride, numVertices,
+                                         canExpandComponentsOnGPU, conversion));
+    }
+    else
+    {
+        ANGLE_TRY(convertVertexBufferCPU(contextMtl, srcBuffer, binding, attribIndex,
+                                         convertedFormat, stride, numVertices, conversion));
+    }
 
     mCurrentArrayBuffers[attribIndex]       = &mConvertedArrayBufferHolders[attribIndex];
-    mCurrentArrayBufferFormats[attribIndex] = &vertexFormat;
+    mCurrentArrayBufferFormats[attribIndex] = &convertedFormat;
     mCurrentArrayBufferStrides[attribIndex] = stride;
 
     // Cache the last converted results to be re-used later if the buffer's content won't ever be
@@ -770,6 +786,104 @@ angle::Result VertexArrayMtl::convertVertexBufferCPU(const gl::Context *glContex
 
     ASSERT(conversion->dirty);
     conversion->dirty = false;
+
+    return angle::Result::Continue;
+}
+
+angle::Result VertexArrayMtl::convertVertexBufferCPU(ContextMtl *contextMtl,
+                                                     BufferMtl *srcBuffer,
+                                                     const gl::VertexBinding &binding,
+                                                     size_t attribIndex,
+                                                     const mtl::VertexFormat &convertedFormat,
+                                                     GLuint targetStride,
+                                                     size_t numVertices,
+                                                     ConversionBufferMtl *conversion)
+{
+
+    const uint8_t *srcBytes = srcBuffer->getClientShadowCopyData(contextMtl);
+    ANGLE_CHECK_GL_ALLOC(contextMtl, srcBytes);
+
+    srcBytes += binding.getOffset();
+
+    ANGLE_TRY(StreamVertexData(
+        contextMtl, &conversion->data, srcBytes, numVertices * targetStride, 0, numVertices,
+        binding.getStride(), convertedFormat.vertexLoadFunction,
+        &mConvertedArrayBufferHolders[attribIndex], &mCurrentArrayBufferOffsets[attribIndex]));
+
+    return angle::Result::Continue;
+}
+
+angle::Result VertexArrayMtl::convertVertexBufferGPU(const gl::Context *glContext,
+                                                     BufferMtl *srcBuffer,
+                                                     const gl::VertexBinding &binding,
+                                                     size_t attribIndex,
+                                                     const mtl::VertexFormat &convertedFormat,
+                                                     GLuint targetStride,
+                                                     size_t numVertices,
+                                                     bool isExpandingComponents,
+                                                     ConversionBufferMtl *conversion)
+{
+    ContextMtl *contextMtl = mtl::GetImpl(glContext);
+
+    mtl::BufferRef newBuffer;
+    size_t newBufferOffset;
+    ANGLE_TRY(conversion->data.allocate(contextMtl, numVertices * targetStride, nullptr, &newBuffer,
+                                        &newBufferOffset));
+
+    ANGLE_CHECK_GL_MATH(contextMtl, binding.getOffset() <= std::numeric_limits<uint32_t>::max());
+    ANGLE_CHECK_GL_MATH(contextMtl, newBufferOffset <= std::numeric_limits<uint32_t>::max());
+    ANGLE_CHECK_GL_MATH(contextMtl, numVertices <= std::numeric_limits<uint32_t>::max());
+
+    mtl::VertexFormatConvertParams params;
+
+    params.srcBuffer            = srcBuffer->getCurrentBuffer();
+    params.srcBufferStartOffset = static_cast<uint32_t>(binding.getOffset());
+    params.srcStride            = binding.getStride();
+    params.srcDefaultAlphaData  = convertedFormat.defaultAlpha;
+
+    params.dstBuffer            = newBuffer;
+    params.dstBufferStartOffset = static_cast<uint32_t>(newBufferOffset);
+    params.dstStride            = targetStride;
+    params.dstComponents        = convertedFormat.actualAngleFormat().channelCount;
+
+    params.vertexCount = static_cast<uint32_t>(numVertices);
+
+    mtl::RenderUtils &utils                  = contextMtl->getDisplay()->getUtils();
+    mtl::RenderCommandEncoder *renderEncoder = contextMtl->getRenderCommandEncoder();
+    if (renderEncoder && contextMtl->getDisplay()->getFeatures().hasExplicitMemBarrier.enabled)
+    {
+        // If we are in the middle of a render pass, use vertex shader based buffer conversion to
+        // avoid breaking the render pass.
+        if (!isExpandingComponents)
+        {
+            ANGLE_TRY(utils.convertVertexFormatToFloatVS(
+                glContext, renderEncoder, convertedFormat.intendedAngleFormat(), params));
+        }
+        else
+        {
+            ANGLE_TRY(utils.expandVertexFormatComponentsVS(
+                glContext, renderEncoder, convertedFormat.intendedAngleFormat(), params));
+        }
+    }
+    else
+    {
+        // Compute based buffer conversion.
+        if (!isExpandingComponents)
+        {
+            ANGLE_TRY(utils.convertVertexFormatToFloatCS(
+                contextMtl, convertedFormat.intendedAngleFormat(), params));
+        }
+        else
+        {
+            ANGLE_TRY(utils.expandVertexFormatComponentsCS(
+                contextMtl, convertedFormat.intendedAngleFormat(), params));
+        }
+    }
+
+    ANGLE_TRY(conversion->data.commit(contextMtl));
+
+    mConvertedArrayBufferHolders[attribIndex].set(newBuffer);
+    mCurrentArrayBufferOffsets[attribIndex] = newBufferOffset;
 
     return angle::Result::Continue;
 }

@@ -126,6 +126,23 @@ struct WritePixelToBufferUniforms
     uint8_t padding[11];
 };
 
+struct CopyVertexUniforms
+{
+    uint32_t srcBufferStartOffset;
+    uint32_t srcStride;
+    uint32_t srcComponentBytes;
+    uint32_t srcComponents;
+    uint32_t srcDefaultAlphaData;
+
+    uint32_t dstBufferStartOffset;
+    uint32_t dstStride;
+    uint32_t dstComponents;
+
+    uint32_t vertexCount;
+
+    uint32_t padding[3];
+};
+
 // Class to automatically disable occlusion query upon entering block and re-able it upon
 // exiting block.
 struct ScopedDisableOcclusionQuery
@@ -344,6 +361,87 @@ void EnsureSpecializedComputePipelineInitialized(
     }
 }
 
+// Function to initialize render pipeline cache with only vertex shader.
+ANGLE_INLINE
+void EnsureVertexShaderOnlyPipelineCacheInitialized(Context *context,
+                                                    NSString *vertexFunctionName,
+                                                    RenderPipelineCache *pipelineCacheOut)
+{
+    RenderPipelineCache &pipelineCache = *pipelineCacheOut;
+    if (pipelineCache.getVertexShader())
+    {
+        // Already initialized
+        return;
+    }
+
+    ANGLE_MTL_OBJC_SCOPE
+    {
+        DisplayMtl *display      = context->getDisplay();
+        id<MTLLibrary> shaderLib = display->getDefaultShadersLib();
+        id<MTLFunction> shader   = [shaderLib newFunctionWithName:vertexFunctionName];
+
+        ASSERT([shader ANGLE_MTL_AUTORELEASE]);
+
+        pipelineCache.setVertexShader(context, shader);
+    }
+}
+
+// Function to initialize specialized render pipeline cache with only vertex shader.
+ANGLE_INLINE
+void EnsureSpecializedVertexShaderOnlyPipelineCacheInitialized(
+    Context *context,
+    NSString *vertexFunctionName,
+    MTLFunctionConstantValues *funcConstants,
+    RenderPipelineCache *pipelineCacheOut)
+{
+    if (!funcConstants)
+    {
+        // Non specialized constants provided, use default creation function.
+        EnsureVertexShaderOnlyPipelineCacheInitialized(context, vertexFunctionName,
+                                                       pipelineCacheOut);
+        return;
+    }
+
+    RenderPipelineCache &pipelineCache = *pipelineCacheOut;
+    if (pipelineCache.getVertexShader())
+    {
+        // Already initialized
+        return;
+    }
+
+    ANGLE_MTL_OBJC_SCOPE
+    {
+        DisplayMtl *display      = context->getDisplay();
+        id<MTLLibrary> shaderLib = display->getDefaultShadersLib();
+        NSError *err             = nil;
+
+        id<MTLFunction> shader = [shaderLib newFunctionWithName:vertexFunctionName
+                                                 constantValues:funcConstants
+                                                          error:&err];
+        if (err && !shader)
+        {
+            ERR() << "Internal error: " << err.localizedDescription.UTF8String << "\n";
+        }
+        ASSERT([shader ANGLE_MTL_AUTORELEASE]);
+
+        pipelineCache.setVertexShader(context, shader);
+    }
+}
+
+// Get pipeline descriptor for render pipeline that contains vertex shader acting as compute shader.
+ANGLE_INLINE
+RenderPipelineDesc GetComputingVertexShaderOnlyRenderPipelineDesc(RenderCommandEncoder *cmdEncoder)
+{
+    RenderPipelineDesc pipelineDesc;
+    const RenderPassDesc &renderPassDesc = cmdEncoder->renderPassDesc();
+
+    renderPassDesc.populateRenderPipelineOutputDesc(&pipelineDesc.outputDescriptor);
+    pipelineDesc.rasterizationType      = RenderPipelineRasterization::Disabled;
+    pipelineDesc.inputPrimitiveTopology = kPrimitiveTopologyClassPoint;
+
+    return pipelineDesc;
+}
+
 template <typename T>
 void ClearRenderPipelineCacheArray(T *pipelineCacheArray)
 {
@@ -512,6 +610,62 @@ void SetupCommonBlitWithDrawStates(const gl::Context *context,
     SetupBlitWithDrawUniformData(cmdEncoder, params, isColorBlit);
 }
 
+// Overloaded functions to be used with both compute and render command encoder.
+ANGLE_INLINE void SetComputeOrVertexBuffer(RenderCommandEncoder *encoder,
+                                           const BufferRef &buffer,
+                                           uint32_t offset,
+                                           uint32_t index)
+{
+    encoder->setBuffer(gl::ShaderType::Vertex, buffer, offset, index);
+}
+ANGLE_INLINE void SetComputeOrVertexBufferForWrite(RenderCommandEncoder *encoder,
+                                                   const BufferRef &buffer,
+                                                   uint32_t offset,
+                                                   uint32_t index)
+{
+    encoder->setBufferForWrite(gl::ShaderType::Vertex, buffer, offset, index);
+}
+ANGLE_INLINE void SetComputeOrVertexBuffer(ComputeCommandEncoder *encoder,
+                                           const BufferRef &buffer,
+                                           uint32_t offset,
+                                           uint32_t index)
+{
+    encoder->setBuffer(buffer, offset, index);
+}
+ANGLE_INLINE void SetComputeOrVertexBufferForWrite(ComputeCommandEncoder *encoder,
+                                                   const BufferRef &buffer,
+                                                   uint32_t offset,
+                                                   uint32_t index)
+{
+    encoder->setBufferForWrite(buffer, offset, index);
+}
+
+template <typename T>
+ANGLE_INLINE void SetComputeOrVertexData(RenderCommandEncoder *encoder,
+                                         const T &data,
+                                         uint32_t index)
+{
+    encoder->setData(gl::ShaderType::Vertex, data, index);
+}
+template <typename T>
+ANGLE_INLINE void SetComputeOrVertexData(ComputeCommandEncoder *encoder,
+                                         const T &data,
+                                         uint32_t index)
+{
+    encoder->setData(data, index);
+}
+
+ANGLE_INLINE void SetPipelineState(RenderCommandEncoder *encoder,
+                                   id<MTLRenderPipelineState> pipeline)
+{
+    encoder->setRenderPipelineState(pipeline);
+}
+ANGLE_INLINE void SetPipelineState(ComputeCommandEncoder *encoder,
+                                   id<MTLComputePipelineState> pipeline)
+{
+    encoder->setComputePipelineState(pipeline);
+}
+
 }  // namespace
 
 // StencilBlitViaBufferParams implementation
@@ -559,6 +713,7 @@ void RenderUtils::onDestroy()
     mIndexUtils.onDestroy();
     mVisibilityResultUtils.onDestroy();
     mMipmapUtils.onDestroy();
+    mVertexFormatUtils.onDestroy();
     mCopyTextureFloatToUIntUtils.onDestroy();
 
     for (ClearUtils &util : mClearUtils)
@@ -743,6 +898,39 @@ angle::Result RenderUtils::packPixelsFromTextureToBuffer(ContextMtl *contextMtl,
     int index = GetPixelTypeIndex(dstAngleFormat);
     return mCopyPixelsUtils[index].packPixelsFromTextureToBuffer(contextMtl, dstAngleFormat,
                                                                  params);
+}
+
+angle::Result RenderUtils::convertVertexFormatToFloatCS(ContextMtl *contextMtl,
+                                                        const angle::Format &srcAngleFormat,
+                                                        const VertexFormatConvertParams &params)
+{
+    return mVertexFormatUtils.convertVertexFormatToFloatCS(contextMtl, srcAngleFormat, params);
+}
+
+angle::Result RenderUtils::convertVertexFormatToFloatVS(const gl::Context *context,
+                                                        RenderCommandEncoder *encoder,
+                                                        const angle::Format &srcAngleFormat,
+                                                        const VertexFormatConvertParams &params)
+{
+    return mVertexFormatUtils.convertVertexFormatToFloatVS(context, encoder, srcAngleFormat,
+                                                           params);
+}
+
+// Expand number of components per vertex's attribute
+angle::Result RenderUtils::expandVertexFormatComponentsCS(ContextMtl *contextMtl,
+                                                          const angle::Format &srcAngleFormat,
+                                                          const VertexFormatConvertParams &params)
+{
+    return mVertexFormatUtils.expandVertexFormatComponentsCS(contextMtl, srcAngleFormat, params);
+}
+
+angle::Result RenderUtils::expandVertexFormatComponentsVS(const gl::Context *context,
+                                                          RenderCommandEncoder *encoder,
+                                                          const angle::Format &srcAngleFormat,
+                                                          const VertexFormatConvertParams &params)
+{
+    return mVertexFormatUtils.expandVertexFormatComponentsVS(context, encoder, srcAngleFormat,
+                                                             params);
 }
 
 // ClearUtils implementation
@@ -2085,6 +2273,238 @@ angle::Result CopyPixelsUtils::packPixelsFromTextureToBuffer(ContextMtl *context
                     /** allowNonUniform */ true, threads, threadsPerThreadgroup);
 
     return angle::Result::Continue;
+}
+
+// VertexFormatConversionUtils implementation
+void VertexFormatConversionUtils::onDestroy()
+{
+    ClearPipelineStateArray(&mConvertToFloatCompPipelineCaches);
+    ClearRenderPipelineCacheArray(&mConvertToFloatRenderPipelineCaches);
+
+    mComponentsExpandCompPipeline = nil;
+    mComponentsExpandRenderPipelineCache.clear();
+}
+
+angle::Result VertexFormatConversionUtils::convertVertexFormatToFloatCS(
+    ContextMtl *contextMtl,
+    const angle::Format &srcAngleFormat,
+    const VertexFormatConvertParams &params)
+{
+    ComputeCommandEncoder *cmdEncoder = contextMtl->getComputeCommandEncoder();
+    ASSERT(cmdEncoder);
+
+    AutoObjCPtr<id<MTLComputePipelineState>> pipeline =
+        getFloatConverstionComputePipeline(contextMtl, srcAngleFormat);
+
+    ANGLE_TRY(setupCommonConvertVertexFormatToFloat(contextMtl, cmdEncoder, pipeline,
+                                                    srcAngleFormat, params));
+
+    DispatchCompute(contextMtl, cmdEncoder, pipeline, params.vertexCount);
+    return angle::Result::Continue;
+}
+
+angle::Result VertexFormatConversionUtils::convertVertexFormatToFloatVS(
+    const gl::Context *context,
+    RenderCommandEncoder *cmdEncoder,
+    const angle::Format &srcAngleFormat,
+    const VertexFormatConvertParams &params)
+{
+    ContextMtl *contextMtl = GetImpl(context);
+    ASSERT(cmdEncoder);
+    ASSERT(contextMtl->getDisplay()->getFeatures().hasExplicitMemBarrier.enabled);
+
+    AutoObjCPtr<id<MTLRenderPipelineState>> pipeline =
+        getFloatConverstionRenderPipeline(contextMtl, cmdEncoder, srcAngleFormat);
+
+    ANGLE_TRY(setupCommonConvertVertexFormatToFloat(contextMtl, cmdEncoder, pipeline,
+                                                    srcAngleFormat, params));
+
+    cmdEncoder->draw(MTLPrimitiveTypePoint, 0, params.vertexCount);
+
+    cmdEncoder->memoryBarrierWithResource(params.dstBuffer, kRenderStageVertex, kRenderStageVertex);
+
+    // Invalidate current context's state.
+    // NOTE(hqle): Consider invalidating only affected states.
+    contextMtl->invalidateState(context);
+
+    return angle::Result::Continue;
+}
+
+template <typename EncoderType, typename PipelineType>
+angle::Result VertexFormatConversionUtils::setupCommonConvertVertexFormatToFloat(
+    ContextMtl *contextMtl,
+    EncoderType cmdEncoder,
+    const PipelineType &pipeline,
+    const angle::Format &srcAngleFormat,
+    const VertexFormatConvertParams &params)
+{
+    SetPipelineState(cmdEncoder, pipeline);
+    SetComputeOrVertexBuffer(cmdEncoder, params.srcBuffer, 0, 1);
+    SetComputeOrVertexBufferForWrite(cmdEncoder, params.dstBuffer, 0, 2);
+
+    CopyVertexUniforms options;
+    options.srcBufferStartOffset = params.srcBufferStartOffset;
+    options.srcStride            = params.srcStride;
+
+    options.dstBufferStartOffset = params.dstBufferStartOffset;
+    options.dstStride            = params.dstStride;
+    options.dstComponents        = params.dstComponents;
+
+    options.vertexCount = params.vertexCount;
+    SetComputeOrVertexData(cmdEncoder, options, 0);
+
+    return angle::Result::Continue;
+}
+
+// Expand number of components per vertex's attribute
+angle::Result VertexFormatConversionUtils::expandVertexFormatComponentsCS(
+    ContextMtl *contextMtl,
+    const angle::Format &srcAngleFormat,
+    const VertexFormatConvertParams &params)
+{
+    ComputeCommandEncoder *cmdEncoder = contextMtl->getComputeCommandEncoder();
+    ASSERT(cmdEncoder);
+
+    ensureComponentsExpandComputePipelineCreated(contextMtl);
+
+    ANGLE_TRY(setupCommonExpandVertexFormatComponents(
+        contextMtl, cmdEncoder, mComponentsExpandCompPipeline, srcAngleFormat, params));
+
+    DispatchCompute(contextMtl, cmdEncoder, mComponentsExpandCompPipeline, params.vertexCount);
+    return angle::Result::Continue;
+}
+
+angle::Result VertexFormatConversionUtils::expandVertexFormatComponentsVS(
+    const gl::Context *context,
+    RenderCommandEncoder *cmdEncoder,
+    const angle::Format &srcAngleFormat,
+    const VertexFormatConvertParams &params)
+{
+    ContextMtl *contextMtl = GetImpl(context);
+    ASSERT(cmdEncoder);
+    ASSERT(contextMtl->getDisplay()->getFeatures().hasExplicitMemBarrier.enabled);
+
+    AutoObjCPtr<id<MTLRenderPipelineState>> pipeline =
+        getComponentsExpandRenderPipeline(contextMtl, cmdEncoder);
+
+    ANGLE_TRY(setupCommonExpandVertexFormatComponents(contextMtl, cmdEncoder, pipeline,
+                                                      srcAngleFormat, params));
+
+    cmdEncoder->draw(MTLPrimitiveTypePoint, 0, params.vertexCount);
+
+    cmdEncoder->memoryBarrierWithResource(params.dstBuffer, kRenderStageVertex, kRenderStageVertex);
+
+    // Invalidate current context's state.
+    // NOTE(hqle): Consider invalidating only affected states.
+    contextMtl->invalidateState(context);
+
+    return angle::Result::Continue;
+}
+
+template <typename EncoderType, typename PipelineType>
+angle::Result VertexFormatConversionUtils::setupCommonExpandVertexFormatComponents(
+    ContextMtl *contextMtl,
+    EncoderType cmdEncoder,
+    const PipelineType &pipeline,
+    const angle::Format &srcAngleFormat,
+    const VertexFormatConvertParams &params)
+{
+    SetPipelineState(cmdEncoder, pipeline);
+    SetComputeOrVertexBuffer(cmdEncoder, params.srcBuffer, 0, 1);
+    SetComputeOrVertexBufferForWrite(cmdEncoder, params.dstBuffer, 0, 2);
+
+    CopyVertexUniforms options;
+    options.srcBufferStartOffset = params.srcBufferStartOffset;
+    options.srcStride            = params.srcStride;
+    options.srcComponentBytes    = srcAngleFormat.pixelBytes / srcAngleFormat.channelCount;
+    options.srcComponents        = srcAngleFormat.channelCount;
+    options.srcDefaultAlphaData  = params.srcDefaultAlphaData;
+
+    options.dstBufferStartOffset = params.dstBufferStartOffset;
+    options.dstStride            = params.dstStride;
+    options.dstComponents        = params.dstComponents;
+
+    options.vertexCount = params.vertexCount;
+    SetComputeOrVertexData(cmdEncoder, options, 0);
+
+    return angle::Result::Continue;
+}
+
+void VertexFormatConversionUtils::ensureComponentsExpandComputePipelineCreated(
+    ContextMtl *contextMtl)
+{
+    EnsureComputePipelineInitialized(contextMtl->getDisplay(), @"expandVertexFormatComponentsCS",
+                                     &mComponentsExpandCompPipeline);
+}
+
+AutoObjCPtr<id<MTLRenderPipelineState>>
+VertexFormatConversionUtils::getComponentsExpandRenderPipeline(ContextMtl *contextMtl,
+                                                               RenderCommandEncoder *cmdEncoder)
+{
+    EnsureVertexShaderOnlyPipelineCacheInitialized(contextMtl, @"expandVertexFormatComponentsVS",
+                                                   &mComponentsExpandRenderPipelineCache);
+
+    RenderPipelineDesc pipelineDesc = GetComputingVertexShaderOnlyRenderPipelineDesc(cmdEncoder);
+
+    return mComponentsExpandRenderPipelineCache.getRenderPipelineState(contextMtl, pipelineDesc);
+}
+
+AutoObjCPtr<id<MTLComputePipelineState>>
+VertexFormatConversionUtils::getFloatConverstionComputePipeline(ContextMtl *contextMtl,
+                                                                const angle::Format &srcAngleFormat)
+{
+    int formatIDValue = static_cast<int>(srcAngleFormat.id);
+
+    AutoObjCPtr<id<MTLComputePipelineState>> &cache =
+        mConvertToFloatCompPipelineCaches[formatIDValue];
+
+    if (!cache)
+    {
+        // Pipeline not cached, create it now:
+        ANGLE_MTL_OBJC_SCOPE
+        {
+            auto funcConstants = [[[MTLFunctionConstantValues alloc] init] ANGLE_MTL_AUTORELEASE];
+
+            [funcConstants setConstantValue:&formatIDValue
+                                       type:MTLDataTypeInt
+                                   withName:COPY_FORMAT_TYPE_CONSTANT_NAME];
+
+            EnsureSpecializedComputePipelineInitialized(
+                contextMtl->getDisplay(), @"convertToFloatVertexFormatCS", funcConstants, &cache);
+        }
+    }
+
+    return cache;
+}
+
+AutoObjCPtr<id<MTLRenderPipelineState>>
+VertexFormatConversionUtils::getFloatConverstionRenderPipeline(ContextMtl *contextMtl,
+                                                               RenderCommandEncoder *cmdEncoder,
+                                                               const angle::Format &srcAngleFormat)
+{
+    int formatIDValue = static_cast<int>(srcAngleFormat.id);
+
+    RenderPipelineCache &cache = mConvertToFloatRenderPipelineCaches[formatIDValue];
+
+    if (!cache.getVertexShader())
+    {
+        // Pipeline cache not intialized, do it now:
+        ANGLE_MTL_OBJC_SCOPE
+        {
+            auto funcConstants = [[[MTLFunctionConstantValues alloc] init] ANGLE_MTL_AUTORELEASE];
+
+            [funcConstants setConstantValue:&formatIDValue
+                                       type:MTLDataTypeInt
+                                   withName:COPY_FORMAT_TYPE_CONSTANT_NAME];
+
+            EnsureSpecializedVertexShaderOnlyPipelineCacheInitialized(
+                contextMtl, @"convertToFloatVertexFormatVS", funcConstants, &cache);
+        }
+    }
+
+    RenderPipelineDesc pipelineDesc = GetComputingVertexShaderOnlyRenderPipelineDesc(cmdEncoder);
+
+    return cache.getRenderPipelineState(contextMtl, pipelineDesc);
 }
 
 }  // namespace mtl

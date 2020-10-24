@@ -95,11 +95,22 @@ class VertexArrayMtl : public VertexArrayImpl
                                       size_t attribIndex,
                                       const mtl::VertexFormat &vertexFormat);
 
-    angle::Result convertVertexBufferCPU(const gl::Context *glContext,
+    angle::Result convertVertexBufferCPU(ContextMtl *contextMtl,
                                          BufferMtl *srcBuffer,
                                          const gl::VertexBinding &binding,
                                          size_t attribIndex,
-                                         const mtl::VertexFormat &vertexFormat,
+                                         const mtl::VertexFormat &convertedFormat,
+                                         GLuint targetStride,
+                                         size_t vertexCount,
+                                         ConversionBufferMtl *conversion);
+    angle::Result convertVertexBufferGPU(const gl::Context *glContext,
+                                         BufferMtl *srcBuffer,
+                                         const gl::VertexBinding &binding,
+                                         size_t attribIndex,
+                                         const mtl::VertexFormat &convertedFormat,
+                                         GLuint targetStride,
+                                         size_t vertexCount,
+                                         bool isExpandingComponents,
                                          ConversionBufferMtl *conversion);
 
     // These can point to real BufferMtl or converted buffer in mConvertedArrayBufferHolders

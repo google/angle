@@ -234,6 +234,16 @@ std::ostream &operator<<(std::ostream &stream, const PlatformParameters &pp)
             break;
     }
 
+    if (pp.eglParameters.hasExplicitMemBarrierFeatureMtl == EGL_FALSE)
+    {
+        stream << "_NoExplicitMemoryBarrier";
+    }
+
+    if (pp.eglParameters.hasCheapRenderPassFeatureMtl == EGL_FALSE)
+    {
+        stream << "_NoCheapRenderPass";
+    }
+
     return stream;
 }
 

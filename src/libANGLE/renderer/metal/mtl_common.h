@@ -36,6 +36,12 @@
 #    define TARGET_OS_MACCATALYST 0
 #endif
 
+#if defined(__ARM_ARCH)
+#    define ANGLE_MTL_ARM (__ARM_ARCH != 0)
+#else
+#    define ANGLE_MTL_ARM 0
+#endif
+
 #define ANGLE_MTL_OBJC_SCOPE @autoreleasepool
 
 #if !__has_feature(objc_arc)

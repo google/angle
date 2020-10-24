@@ -1495,3 +1495,184 @@ kernel void writeFromUIntTextureToBuffer(COMMON_WRITE_KERNEL_PARAMS(uint))
 
 #undef SUPPORTED_FORMATS
 }
+
+/** -----  vertex format conversion --------*/
+struct CopyVertexParams
+{
+    uint srcBufferStartOffset;
+    uint srcStride;
+    uint srcComponentBytes;  // unused when convert to float
+    uint srcComponents;      // unused when convert to float
+    // Default source alpha when expanding the number of components.
+    // if source has less than 32 bits per component, only those bits are usable in
+    // srcDefaultAlpha
+    uchar4 srcDefaultAlphaData;  // unused when convert to float
+
+    uint dstBufferStartOffset;
+    uint dstStride;
+    uint dstComponents;
+
+    uint vertexCount;
+};
+
+#define INT_FORMAT_PROC(FORMAT, PROC) \
+    PROC(FORMAT##_UNORM)              \
+    PROC(FORMAT##_SNORM)              \
+    PROC(FORMAT##_UINT)               \
+    PROC(FORMAT##_SINT)               \
+    PROC(FORMAT##_USCALED)            \
+    PROC(FORMAT##_SSCALED)
+
+#define PURE_INT_FORMAT_PROC(FORMAT, PROC) \
+    PROC(FORMAT##_UINT)                    \
+    PROC(FORMAT##_SINT)
+
+#define FLOAT_FORMAT_PROC(FORMAT, PROC) PROC(FORMAT##_FLOAT)
+#define FIXED_FORMAT_PROC(FORMAT, PROC) PROC(FORMAT##_FIXED)
+
+#define FORMAT_BITS_PROC(BITS, PROC1, PROC2) \
+    PROC1(R##BITS, PROC2)                    \
+    PROC1(R##BITS##G##BITS, PROC2)           \
+    PROC1(R##BITS##G##BITS##B##BITS, PROC2)  \
+    PROC1(R##BITS##G##BITS##B##BITS##A##BITS, PROC2)
+
+template <typename IntType>
+static inline void writeFloatVertex(constant CopyVertexParams &options,
+                                    uint idx,
+                                    vec<IntType, 4> data,
+                                    device uchar *dst)
+{
+    uint dstOffset = idx * options.dstStride + options.dstBufferStartOffset;
+
+    for (uint component = 0; component < options.dstComponents; ++component, dstOffset += 4)
+    {
+        floatToBytes(static_cast<float>(data[component]), dstOffset, dst);
+    }
+}
+
+template <>
+inline void writeFloatVertex(constant CopyVertexParams &options,
+                             uint idx,
+                             vec<float, 4> data,
+                             device uchar *dst)
+{
+    uint dstOffset = idx * options.dstStride + options.dstBufferStartOffset;
+
+    for (uint component = 0; component < options.dstComponents; ++component, dstOffset += 4)
+    {
+        floatToBytes(data[component], dstOffset, dst);
+    }
+}
+
+// Function to convert from any vertex format to float vertex format
+static inline void convertToFloatVertexFormat(uint index,
+                                              constant CopyVertexParams &options,
+                                              constant uchar *srcBuffer,
+                                              device uchar *dstBuffer)
+{
+#define SUPPORTED_FORMATS(PROC)                   \
+    FORMAT_BITS_PROC(8, INT_FORMAT_PROC, PROC)    \
+    FORMAT_BITS_PROC(16, INT_FORMAT_PROC, PROC)   \
+    FORMAT_BITS_PROC(32, INT_FORMAT_PROC, PROC)   \
+    FORMAT_BITS_PROC(16, FLOAT_FORMAT_PROC, PROC) \
+    FORMAT_BITS_PROC(32, FLOAT_FORMAT_PROC, PROC) \
+    FORMAT_BITS_PROC(32, FIXED_FORMAT_PROC, PROC) \
+    PROC(R10G10B10A2_SINT)                        \
+    PROC(R10G10B10A2_UINT)                        \
+    PROC(R10G10B10A2_SSCALED)                     \
+    PROC(R10G10B10A2_USCALED)
+
+    uint bufferOffset = options.srcBufferStartOffset + options.srcStride * index;
+
+#define COMVERT_FLOAT_VERTEX_SWITCH_CASE(FORMAT)           \
+    case FormatID::FORMAT: {                               \
+        auto data = read##FORMAT(bufferOffset, srcBuffer); \
+        writeFloatVertex(options, index, data, dstBuffer); \
+    }                                                      \
+    break;
+
+    switch (kCopyFormatType)
+    {
+        SUPPORTED_FORMATS(COMVERT_FLOAT_VERTEX_SWITCH_CASE)
+    }
+
+#undef SUPPORTED_FORMATS
+}
+
+// Kernel to convert from any vertex format to float vertex format
+kernel void convertToFloatVertexFormatCS(uint index [[thread_position_in_grid]],
+                                         constant CopyVertexParams &options [[buffer(0)]],
+                                         constant uchar *srcBuffer [[buffer(1)]],
+                                         device uchar *dstBuffer [[buffer(2)]])
+{
+    ANGLE_KERNEL_GUARD(index, options.vertexCount);
+    convertToFloatVertexFormat(index, options, srcBuffer, dstBuffer);
+}
+
+// Vertex shader to convert from any vertex format to float vertex format
+vertex void convertToFloatVertexFormatVS(uint index [[vertex_id]],
+                                         constant CopyVertexParams &options [[buffer(0)]],
+                                         constant uchar *srcBuffer [[buffer(1)]],
+                                         device uchar *dstBuffer [[buffer(2)]])
+{
+    convertToFloatVertexFormat(index, options, srcBuffer, dstBuffer);
+}
+
+// Function to expand (or just simply copy) the components of the vertex
+static inline void expandVertexFormatComponents(uint index,
+                                                constant CopyVertexParams &options,
+                                                constant uchar *srcBuffer,
+                                                device uchar *dstBuffer)
+{
+    uint srcOffset = options.srcBufferStartOffset + options.srcStride * index;
+    uint dstOffset = options.dstBufferStartOffset + options.dstStride * index;
+
+    uint dstComponentsBeforeAlpha = min(options.dstComponents, 3u);
+    uint component;
+    for (component = 0; component < options.srcComponents; ++component,
+        srcOffset += options.srcComponentBytes, dstOffset += options.srcComponentBytes)
+    {
+        for (uint byte = 0; byte < options.srcComponentBytes; ++byte)
+        {
+            dstBuffer[dstOffset + byte] = srcBuffer[srcOffset + byte];
+        }
+    }
+
+    for (; component < dstComponentsBeforeAlpha;
+         ++component, dstOffset += options.srcComponentBytes)
+    {
+        for (uint byte = 0; byte < options.srcComponentBytes; ++byte)
+        {
+            dstBuffer[dstOffset + byte] = 0;
+        }
+    }
+
+    if (component < options.dstComponents)
+    {
+        // Last alpha component
+        for (uint byte = 0; byte < options.srcComponentBytes; ++byte)
+        {
+            dstBuffer[dstOffset + byte] = options.srcDefaultAlphaData[byte];
+        }
+    }
+}
+
+// Kernel to expand (or just simply copy) the components of the vertex
+kernel void expandVertexFormatComponentsCS(uint index [[thread_position_in_grid]],
+                                           constant CopyVertexParams &options [[buffer(0)]],
+                                           constant uchar *srcBuffer [[buffer(1)]],
+                                           device uchar *dstBuffer [[buffer(2)]])
+{
+    ANGLE_KERNEL_GUARD(index, options.vertexCount);
+
+    expandVertexFormatComponents(index, options, srcBuffer, dstBuffer);
+}
+
+// Vertex shader to expand (or just simply copy) the components of the vertex
+vertex void expandVertexFormatComponentsVS(uint index [[vertex_id]],
+                                           constant CopyVertexParams &options [[buffer(0)]],
+                                           constant uchar *srcBuffer [[buffer(1)]],
+                                           device uchar *dstBuffer [[buffer(2)]])
+{
+    expandVertexFormatComponents(index, options, srcBuffer, dstBuffer);
+}

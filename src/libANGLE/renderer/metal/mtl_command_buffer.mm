@@ -64,6 +64,7 @@ namespace
     PROC(DrawIndexedInstancedBaseVertex) \
     PROC(SetVisibilityResultMode)        \
     PROC(UseResource)                    \
+    PROC(MemoryBarrierWithResource)      \
     PROC(PushDebugGroup)                 \
     PROC(PopDebugGroup)
 
@@ -344,6 +345,26 @@ void UseResourceCmd(id<MTLRenderCommandEncoder> encoder, IntermediateCommandStre
     {
         [encoder useResource:resource usage:usage];
     }
+    [resource ANGLE_MTL_RELEASE];
+}
+
+void MemoryBarrierWithResourceCmd(id<MTLRenderCommandEncoder> encoder,
+                                  IntermediateCommandStream *stream)
+{
+    id<MTLResource> resource = stream->fetch<id<MTLResource>>();
+    mtl::RenderStages after  = stream->fetch<mtl::RenderStages>();
+    mtl::RenderStages before = stream->fetch<mtl::RenderStages>();
+    ANGLE_UNUSED_VARIABLE(after);
+    ANGLE_UNUSED_VARIABLE(before);
+#if defined(__MAC_10_14) && (TARGET_OS_OSX || TARGET_OS_MACCATALYST)
+    if (ANGLE_APPLE_AVAILABLE_XC(10.14, 13.0))
+    {
+        [encoder memoryBarrierWithResources:&resource
+                                      count:1
+                                afterStages:after
+                               beforeStages:before];
+    }
+#endif
     [resource ANGLE_MTL_RELEASE];
 }
 
@@ -1629,6 +1650,25 @@ RenderCommandEncoder &RenderCommandEncoder::useResource(const BufferRef &resourc
         .push([resource->get() ANGLE_MTL_RETAIN])
         .push(usage)
         .push(states);
+
+    return *this;
+}
+
+RenderCommandEncoder &RenderCommandEncoder::memoryBarrierWithResource(const BufferRef &resource,
+                                                                      mtl::RenderStages after,
+                                                                      mtl::RenderStages before)
+{
+    if (!resource)
+    {
+        return *this;
+    }
+
+    cmdBuffer().setWriteDependency(resource);
+
+    mCommands.push(CmdType::MemoryBarrierWithResource)
+        .push([resource->get() ANGLE_MTL_RETAIN])
+        .push(after)
+        .push(before);
 
     return *this;
 }

@@ -161,6 +161,21 @@ struct CopyPixelsToBufferParams : CopyPixelsCommonParams
     bool reverseTextureRowOrder;
 };
 
+struct VertexFormatConvertParams
+{
+    BufferRef srcBuffer;
+    uint32_t srcBufferStartOffset = 0;
+    uint32_t srcStride            = 0;
+    uint32_t srcDefaultAlphaData  = 0;  // casted as uint
+
+    BufferRef dstBuffer;
+    uint32_t dstBufferStartOffset = 0;
+    uint32_t dstStride            = 0;
+    uint32_t dstComponents        = 0;
+
+    uint32_t vertexCount = 0;
+};
+
 // Utils class for clear & blitting
 class ClearUtils final : angle::NonCopyable
 {
@@ -356,7 +371,7 @@ class IndexGeneratorUtils final : angle::NonCopyable
 };
 
 // Util class for handling visibility query result
-class VisibilityResultUtils
+class VisibilityResultUtils final : angle::NonCopyable
 {
   public:
     void onDestroy();
@@ -396,7 +411,7 @@ class MipmapUtils final : angle::NonCopyable
 };
 
 // Util class for handling pixels copy between buffers and textures
-class CopyPixelsUtils
+class CopyPixelsUtils final : angle::NonCopyable
 {
   public:
     CopyPixelsUtils() = default;
@@ -427,6 +442,73 @@ class CopyPixelsUtils
 
     const std::string mReadShaderName;
     const std::string mWriteShaderName;
+};
+
+// Util class for handling vertex format conversion on GPU
+class VertexFormatConversionUtils final : angle::NonCopyable
+{
+  public:
+    void onDestroy();
+
+    // Convert vertex format to float. Compute shader version.
+    angle::Result convertVertexFormatToFloatCS(ContextMtl *contextMtl,
+                                               const angle::Format &srcAngleFormat,
+                                               const VertexFormatConvertParams &params);
+    // Convert vertex format to float. Vertex shader version. This version should be used if
+    // a render pass is active and we don't want to break it. Explicit memory barrier must be
+    // supported.
+    angle::Result convertVertexFormatToFloatVS(const gl::Context *context,
+                                               RenderCommandEncoder *renderEncoder,
+                                               const angle::Format &srcAngleFormat,
+                                               const VertexFormatConvertParams &params);
+    // Expand number of components per vertex's attribute (or just simply copy components between
+    // buffers with different stride and offset)
+    angle::Result expandVertexFormatComponentsCS(ContextMtl *contextMtl,
+                                                 const angle::Format &srcAngleFormat,
+                                                 const VertexFormatConvertParams &params);
+    angle::Result expandVertexFormatComponentsVS(const gl::Context *context,
+                                                 RenderCommandEncoder *renderEncoder,
+                                                 const angle::Format &srcAngleFormat,
+                                                 const VertexFormatConvertParams &params);
+
+  private:
+    void ensureComponentsExpandComputePipelineCreated(ContextMtl *contextMtl);
+    AutoObjCPtr<id<MTLRenderPipelineState>> getComponentsExpandRenderPipeline(
+        ContextMtl *contextMtl,
+        RenderCommandEncoder *renderEncoder);
+
+    AutoObjCPtr<id<MTLComputePipelineState>> getFloatConverstionComputePipeline(
+        ContextMtl *contextMtl,
+        const angle::Format &srcAngleFormat);
+
+    AutoObjCPtr<id<MTLRenderPipelineState>> getFloatConverstionRenderPipeline(
+        ContextMtl *contextMtl,
+        RenderCommandEncoder *renderEncoder,
+        const angle::Format &srcAngleFormat);
+
+    template <typename EncoderType, typename PipelineType>
+    angle::Result setupCommonConvertVertexFormatToFloat(ContextMtl *contextMtl,
+                                                        EncoderType cmdEncoder,
+                                                        const PipelineType &pipeline,
+                                                        const angle::Format &srcAngleFormat,
+                                                        const VertexFormatConvertParams &params);
+    template <typename EncoderType, typename PipelineType>
+    angle::Result setupCommonExpandVertexFormatComponents(ContextMtl *contextMtl,
+                                                          EncoderType cmdEncoder,
+                                                          const PipelineType &pipeline,
+                                                          const angle::Format &srcAngleFormat,
+                                                          const VertexFormatConvertParams &params);
+
+    using ConvertToFloatCompPipelineArray =
+        std::array<AutoObjCPtr<id<MTLComputePipelineState>>, angle::kNumANGLEFormats>;
+    using ConvertToFloatRenderPipelineArray =
+        std::array<RenderPipelineCache, angle::kNumANGLEFormats>;
+
+    ConvertToFloatCompPipelineArray mConvertToFloatCompPipelineCaches;
+    ConvertToFloatRenderPipelineArray mConvertToFloatRenderPipelineCaches;
+
+    AutoObjCPtr<id<MTLComputePipelineState>> mComponentsExpandCompPipeline;
+    RenderPipelineCache mComponentsExpandRenderPipelineCache;
 };
 
 // RenderUtils: container class of various util classes above
@@ -501,6 +583,25 @@ class RenderUtils : public Context, angle::NonCopyable
                                                 const angle::Format &dstAngleFormat,
                                                 const CopyPixelsToBufferParams &params);
 
+    // See VertexFormatConversionUtils::convertVertexFormatToFloatCS()
+    angle::Result convertVertexFormatToFloatCS(ContextMtl *contextMtl,
+                                               const angle::Format &srcAngleFormat,
+                                               const VertexFormatConvertParams &params);
+    // See VertexFormatConversionUtils::convertVertexFormatToFloatVS()
+    angle::Result convertVertexFormatToFloatVS(const gl::Context *context,
+                                               RenderCommandEncoder *renderEncoder,
+                                               const angle::Format &srcAngleFormat,
+                                               const VertexFormatConvertParams &params);
+    // See VertexFormatConversionUtils::expandVertexFormatComponentsCS()
+    angle::Result expandVertexFormatComponentsCS(ContextMtl *contextMtl,
+                                                 const angle::Format &srcAngleFormat,
+                                                 const VertexFormatConvertParams &params);
+    // See VertexFormatConversionUtils::expandVertexFormatComponentsVS()
+    angle::Result expandVertexFormatComponentsVS(const gl::Context *context,
+                                                 RenderCommandEncoder *renderEncoder,
+                                                 const angle::Format &srcAngleFormat,
+                                                 const VertexFormatConvertParams &params);
+
   private:
     // override ErrorHandler
     void handleError(GLenum error,
@@ -522,6 +623,7 @@ class RenderUtils : public Context, angle::NonCopyable
     VisibilityResultUtils mVisibilityResultUtils;
     MipmapUtils mMipmapUtils;
     std::array<CopyPixelsUtils, angle::EnumSize<PixelType>()> mCopyPixelsUtils;
+    VertexFormatConversionUtils mVertexFormatUtils;
 };
 
 }  // namespace mtl

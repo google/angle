@@ -26,6 +26,14 @@ struct FeaturesMtl : FeatureSetBase
         "has_depth_texture_filtering", FeatureCategory::MetalFeatures,
         "The renderer supports depth texture's filtering other than nearest", &members};
 
+    // Support explicit memory barrier
+    Feature hasExplicitMemBarrier = {"has_explicit_mem_barrier_mtl", FeatureCategory::MetalFeatures,
+                                     "The renderer supports explicit memory barrier", &members};
+
+    // Some renderer can break render pass cheaply, i.e. desktop class GPUs.
+    Feature hasCheapRenderPass = {"has_cheap_render_pass_mtl", FeatureCategory::MetalFeatures,
+                                  "The renderer can cheaply break a render pass.", &members};
+
     // Non-uniform compute shader dispatch support, i.e. Group size is not necessarily to be fixed:
     Feature hasNonUniformDispatch = {
         "has_non_uniform_dispatch", FeatureCategory::MetalFeatures,

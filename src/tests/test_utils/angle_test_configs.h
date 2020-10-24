@@ -241,6 +241,16 @@ inline PlatformParameters WithNoGenMultipleMipsPerPass(const PlatformParameters 
     return re;
 }
 
+inline PlatformParameters WithMetalMemoryBarrierAndCheapRenderPass(const PlatformParameters &params,
+                                                                   bool hasBarrier,
+                                                                   bool cheapRenderPass)
+{
+    PlatformParameters re                            = params;
+    re.eglParameters.hasExplicitMemBarrierFeatureMtl = hasBarrier ? EGL_TRUE : EGL_FALSE;
+    re.eglParameters.hasCheapRenderPassFeatureMtl    = cheapRenderPass ? EGL_TRUE : EGL_FALSE;
+    return re;
+}
+
 inline PlatformParameters WithRobustness(const PlatformParameters &params)
 {
     PlatformParameters withRobustness       = params;

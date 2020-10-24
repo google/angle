@@ -441,6 +441,10 @@ class RenderCommandEncoder final : public CommandEncoder
                                       MTLResourceUsage usage,
                                       mtl::RenderStages states);
 
+    RenderCommandEncoder &memoryBarrierWithResource(const BufferRef &resource,
+                                                    mtl::RenderStages after,
+                                                    mtl::RenderStages before);
+
     RenderCommandEncoder &setColorStoreAction(MTLStoreAction action, uint32_t colorAttachmentIndex);
     // Set store action for every color attachment.
     RenderCommandEncoder &setColorStoreAction(MTLStoreAction action);

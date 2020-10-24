@@ -221,6 +221,16 @@ bool EGLWindow::initializeDisplay(OSWindow *osWindow,
             break;
     }
 
+    if (params.hasExplicitMemBarrierFeatureMtl == EGL_FALSE)
+    {
+        disabledFeatureOverrides.push_back("has_explicit_mem_barrier_mtl");
+    }
+
+    if (params.hasCheapRenderPassFeatureMtl == EGL_FALSE)
+    {
+        disabledFeatureOverrides.push_back("has_cheap_render_pass_mtl");
+    }
+
     if (!disabledFeatureOverrides.empty())
     {
         if (strstr(extensionString, "EGL_ANGLE_feature_control") == nullptr)
