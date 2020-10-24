@@ -140,6 +140,8 @@ class GLES1ConformanceTest : public ANGLETest
 
 TEST_P(GLES1ConformanceTest, AmbLight)
 {
+    // Flaky timeouts due to slow test. http://anglebug.com/5234
+    ANGLE_SKIP_TEST_IF(IsVulkan());
     ASSERT_NE(CONFORMANCE_TEST_ERROR, AmbLightExec());
 }
 
