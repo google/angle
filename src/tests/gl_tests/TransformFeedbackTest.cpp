@@ -210,8 +210,8 @@ TEST_P(TransformFeedbackTest, RecordAndDraw)
     // TODO(anglebug.com/4533) This fails after the upgrade to the 26.20.100.7870 driver.
     ANGLE_SKIP_TEST_IF(IsWindows() && IsIntel() && IsVulkan());
 
-    // Fails on Mac Intel GL drivers. http://anglebug.com/4992
-    ANGLE_SKIP_TEST_IF(IsOpenGL() && IsIntel() && IsOSX());
+    // Fails on Mac GL drivers. http://anglebug.com/4992
+    ANGLE_SKIP_TEST_IF(IsOpenGL() && IsOSX());
 
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT);
