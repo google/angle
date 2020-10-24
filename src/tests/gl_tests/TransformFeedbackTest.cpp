@@ -2357,8 +2357,8 @@ TEST_P(TransformFeedbackWithDepthBufferTest, RecordAndDrawWithDepthWriteEnabled)
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against.
-ANGLE_INSTANTIATE_TEST_ES3_AND(TransformFeedbackTest, ES3_METAL());
-ANGLE_INSTANTIATE_TEST_ES3_AND(TransformFeedbackLifetimeTest, ES3_METAL());
+ANGLE_INSTANTIATE_TEST_ES3(TransformFeedbackTest);
+ANGLE_INSTANTIATE_TEST_ES3(TransformFeedbackLifetimeTest);
 ANGLE_INSTANTIATE_TEST_ES31(TransformFeedbackTestES31);
 
 ANGLE_INSTANTIATE_TEST(TransformFeedbackWithDepthBufferTest, ES3_METAL());

@@ -2632,6 +2632,5 @@ ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(FramebufferFormatsTest);
 ANGLE_INSTANTIATE_TEST_ES3_AND(FramebufferTest_ES3,
                                WithEmulatedPrerotation(ES3_VULKAN(), 90),
                                WithEmulatedPrerotation(ES3_VULKAN(), 180),
-                               WithEmulatedPrerotation(ES3_VULKAN(), 270),
-                               ES3_METAL());
+                               WithEmulatedPrerotation(ES3_VULKAN(), 270));
 ANGLE_INSTANTIATE_TEST_ES31(FramebufferTest_ES31);

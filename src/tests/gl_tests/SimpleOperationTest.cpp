@@ -1209,7 +1209,6 @@ TEST_P(SimpleOperationTest, PrimitiveModeNegativeTest)
 // tests should be run against.
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND(
     SimpleOperationTest,
-    ES3_METAL(),
     WithMetalForcedBufferGPUStorage(ES3_METAL()),
     WithMetalMemoryBarrierAndCheapRenderPass(ES3_METAL(),
                                              /* hasBarrier */ false,
@@ -1217,7 +1216,6 @@ ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND(
 
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND(
     TriangleFanDrawTest,
-    ES3_METAL(),
     WithMetalForcedBufferGPUStorage(ES3_METAL()),
     WithMetalMemoryBarrierAndCheapRenderPass(ES3_METAL(),
                                              /* hasBarrier */ false,

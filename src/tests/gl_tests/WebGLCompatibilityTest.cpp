@@ -5138,5 +5138,5 @@ TEST_P(WebGL2CompatibilityTest, RenderToLevelsOfSampledTexture)
 // tests should be run against.
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(WebGLCompatibilityTest);
 
-ANGLE_INSTANTIATE_TEST_ES3_AND(WebGL2CompatibilityTest, ES3_METAL());
+ANGLE_INSTANTIATE_TEST_ES3(WebGL2CompatibilityTest);
 }  // namespace angle

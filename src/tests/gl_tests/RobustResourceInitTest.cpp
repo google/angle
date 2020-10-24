@@ -2300,9 +2300,7 @@ TEST_P(RobustResourceInitTestES3, BlitDepthStencilAfterClearBuffer)
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND(RobustResourceInitTest,
                                        WithAllocateNonZeroMemory(ES2_VULKAN()));
 
-ANGLE_INSTANTIATE_TEST_ES3_AND(RobustResourceInitTestES3,
-                               WithAllocateNonZeroMemory(ES3_VULKAN()),
-                               ES3_METAL());
+ANGLE_INSTANTIATE_TEST_ES3_AND(RobustResourceInitTestES3, WithAllocateNonZeroMemory(ES3_VULKAN()));
 
 ANGLE_INSTANTIATE_TEST_ES31_AND(RobustResourceInitTestES31,
                                 WithAllocateNonZeroMemory(ES31_VULKAN()));

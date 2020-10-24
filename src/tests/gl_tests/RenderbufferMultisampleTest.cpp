@@ -123,5 +123,5 @@ TEST_P(RenderbufferMultisampleTest, OddSampleCount)
     }
 }
 
-ANGLE_INSTANTIATE_TEST_ES3_AND_ES31_AND(RenderbufferMultisampleTest, ES3_METAL());
+ANGLE_INSTANTIATE_TEST_ES3_AND_ES31(RenderbufferMultisampleTest);
 }  // namespace

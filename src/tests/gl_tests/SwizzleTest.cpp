@@ -490,7 +490,7 @@ TEST_P(SwizzleTest, SubUpdate)
     EXPECT_PIXEL_COLOR_EQ(0, 0, expectedUpdateData);
 }
 
-ANGLE_INSTANTIATE_TEST_ES3_AND(SwizzleTest, ES3_METAL());
-ANGLE_INSTANTIATE_TEST_ES3_AND(SwizzleIntegerTest, ES3_METAL());
+ANGLE_INSTANTIATE_TEST_ES3_AND(SwizzleTest);
+ANGLE_INSTANTIATE_TEST_ES3_AND(SwizzleIntegerTest);
 
 }  // namespace

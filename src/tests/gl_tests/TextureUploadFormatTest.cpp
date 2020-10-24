@@ -622,4 +622,4 @@ TEST_P(TextureUploadFormatTest, All)
     EXPECT_GL_NO_ERROR();
 }
 
-ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND(TextureUploadFormatTest, ES3_METAL());
+ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(TextureUploadFormatTest);

@@ -88,5 +88,5 @@ TEST_P(SamplersTest, InvalidOverTextureSamplerMaxAnisotropyExt)
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against.
 // Samplers are only supported on ES3.
-ANGLE_INSTANTIATE_TEST_ES3_AND(SamplersTest, ES3_METAL());
+ANGLE_INSTANTIATE_TEST_ES3(SamplersTest);
 }  // namespace angle

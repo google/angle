@@ -239,7 +239,7 @@ TEST_P(OcclusionQueriesTest, CopyNotCounted)
     ANGLE_SKIP_TEST_IF(IsD3D());
 
     // http://anglebug.com/5100
-    ANGLE_SKIP_TEST_IF(IsMetal());
+    ANGLE_SKIP_TEST_IF(IsMetal() && IsNVIDIA());
 
     GLuint query = 0;
     glGenQueriesEXT(1, &query);

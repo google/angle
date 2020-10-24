@@ -630,7 +630,7 @@ TEST_P(SRGBTextureTestES3, GenerateMipmaps)
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against.
-ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND(SRGBTextureTest, ES3_METAL());
-ANGLE_INSTANTIATE_TEST_ES3_AND(SRGBTextureTestES3, ES3_METAL());
+ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(SRGBTextureTest);
+ANGLE_INSTANTIATE_TEST_ES3(SRGBTextureTestES3);
 
 }  // namespace angle

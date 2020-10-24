@@ -4563,6 +4563,9 @@ TEST_P(WebGL2ValidationStateChangeTest, MultiAttachmentDrawFramebufferNegativeAP
     // Crashes on 64-bit Android.  http://anglebug.com/3878
     ANGLE_SKIP_TEST_IF(IsVulkan() && IsAndroid());
 
+    // http://anglebug.com/5233
+    ANGLE_SKIP_TEST_IF(IsMetal());
+
     // Set up a program that writes to two outputs: one int and one float.
     constexpr char kVS[] = R"(#version 300 es
 layout(location = 0) in vec2 position;
@@ -5827,7 +5830,7 @@ ANGLE_INSTANTIATE_TEST_ES2(StateChangeRenderTest);
 ANGLE_INSTANTIATE_TEST_ES3(StateChangeTestES3);
 ANGLE_INSTANTIATE_TEST_ES3(StateChangeRenderTestES3);
 ANGLE_INSTANTIATE_TEST_ES2(SimpleStateChangeTest);
-ANGLE_INSTANTIATE_TEST_ES3_AND(SimpleStateChangeTestES3, ES3_METAL());
+ANGLE_INSTANTIATE_TEST_ES3(SimpleStateChangeTestES3);
 ANGLE_INSTANTIATE_TEST_ES3(ImageRespecificationTest);
 ANGLE_INSTANTIATE_TEST_ES31(SimpleStateChangeTestES31);
 ANGLE_INSTANTIATE_TEST_ES31(SimpleStateChangeTestComputeES31);

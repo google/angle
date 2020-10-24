@@ -3087,7 +3087,7 @@ void main(void){
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against.
-ANGLE_INSTANTIATE_TEST_ES3_AND(UniformBufferTest, ES3_METAL());
+ANGLE_INSTANTIATE_TEST_ES3(UniformBufferTest);
 ANGLE_INSTANTIATE_TEST_ES3(UniformBlockWithOneLargeArrayMemberTest);
 ANGLE_INSTANTIATE_TEST_ES31(UniformBufferTest31);
 

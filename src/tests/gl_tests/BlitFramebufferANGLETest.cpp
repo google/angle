@@ -2453,6 +2453,4 @@ ANGLE_INSTANTIATE_TEST(BlitFramebufferANGLETest,
                        ES2_METAL(),
                        WithNoShaderStencilOutput(ES2_METAL()));
 
-ANGLE_INSTANTIATE_TEST_ES3_AND(BlitFramebufferTest,
-                               ES3_METAL(),
-                               WithNoShaderStencilOutput(ES3_METAL()));
+ANGLE_INSTANTIATE_TEST_ES3_AND(BlitFramebufferTest, WithNoShaderStencilOutput(ES3_METAL()));
