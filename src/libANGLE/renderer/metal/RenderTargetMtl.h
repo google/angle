@@ -43,6 +43,7 @@ class RenderTargetMtl final : public FramebufferAttachmentRenderTarget
                                   const mtl::Format &format);
     void setTexture(const mtl::TextureRef &texture);
     void setImplicitMSTexture(const mtl::TextureRef &implicitMSTexture);
+    void duplicateFrom(const RenderTargetMtl &src);
     void reset();
 
     mtl::TextureRef getTexture() const { return mTexture.lock(); }

@@ -487,26 +487,27 @@ void DisplayMtl::ensureCapsInitialized() const
     mNativeCaps.maxElementIndex  = std::numeric_limits<GLuint>::max() - 1;
     mNativeCaps.max3DTextureSize = 2048;
 #if TARGET_OS_OSX || TARGET_OS_MACCATALYST
-    mNativeCaps.max2DTextureSize          = 16384;
-    mNativeCaps.maxVaryingVectors         = 31;
-    mNativeCaps.maxVertexOutputComponents = 124;
+    mNativeCaps.max2DTextureSize = 16384;
+    // On macOS exclude [[position]] from maxVaryingVectors.
+    mNativeCaps.maxVaryingVectors         = 31 - 1;
+    mNativeCaps.maxVertexOutputComponents = mNativeCaps.maxFragmentInputComponents = 124 - 4;
 #else
     if (supportsIOSGPUFamily(3))
     {
         mNativeCaps.max2DTextureSize          = 16384;
-        mNativeCaps.maxVertexOutputComponents = 124;
-        mNativeCaps.maxVaryingVectors         = mNativeCaps.maxVertexOutputComponents / 4;
+        mNativeCaps.maxVertexOutputComponents = mNativeCaps.maxFragmentInputComponents = 124;
+        mNativeCaps.maxVaryingVectors = mNativeCaps.maxVertexOutputComponents / 4;
     }
     else
     {
         mNativeCaps.max2DTextureSize          = 8192;
-        mNativeCaps.maxVertexOutputComponents = 60;
-        mNativeCaps.maxVaryingVectors         = mNativeCaps.maxVertexOutputComponents / 4;
+        mNativeCaps.maxVertexOutputComponents = mNativeCaps.maxFragmentInputComponents = 60;
+        mNativeCaps.maxVaryingVectors = mNativeCaps.maxVertexOutputComponents / 4;
     }
 #endif
 
     mNativeCaps.maxArrayTextureLayers = 2048;
-    mNativeCaps.maxLODBias            = 0;
+    mNativeCaps.maxLODBias            = 2.0;  // default GLES3 limit
     mNativeCaps.maxCubeMapTextureSize = mNativeCaps.max2DTextureSize;
     mNativeCaps.maxRenderbufferSize   = mNativeCaps.max2DTextureSize;
     mNativeCaps.minAliasedPointSize   = 1;
@@ -538,8 +539,9 @@ void DisplayMtl::ensureCapsInitialized() const
     mNativeCaps.maxVertexAttribRelativeOffset = std::numeric_limits<GLint>::max();
     mNativeCaps.maxVertexAttribStride         = std::numeric_limits<GLint>::max();
 
-    mNativeCaps.maxElementsIndices  = std::numeric_limits<GLuint>::max();
-    mNativeCaps.maxElementsVertices = std::numeric_limits<GLuint>::max();
+    // glGet() use signed integer as parameter so we have to use GLint's max here, not GLuint.
+    mNativeCaps.maxElementsIndices  = std::numeric_limits<GLint>::max();
+    mNativeCaps.maxElementsVertices = std::numeric_limits<GLint>::max();
 
     // Looks like all floats are IEEE according to the docs here:
     mNativeCaps.vertexHighpFloat.setIEEEFloat();
@@ -577,6 +579,10 @@ void DisplayMtl::ensureCapsInitialized() const
     mNativeCaps.maxShaderTextureImageUnits[gl::ShaderType::Fragment] = mtl::kMaxShaderSamplers;
     mNativeCaps.maxShaderTextureImageUnits[gl::ShaderType::Vertex]   = mtl::kMaxShaderSamplers;
 
+    // No info from Metal given, use default GLES3 spec values:
+    mNativeCaps.minProgramTexelOffset = -8;
+    mNativeCaps.maxProgramTexelOffset = 7;
+
     // NOTE(hqle): support storage buffer.
     const uint32_t maxPerStageStorageBuffers                     = 0;
     mNativeCaps.maxShaderStorageBlocks[gl::ShaderType::Vertex]   = maxPerStageStorageBuffers;
@@ -592,7 +598,7 @@ void DisplayMtl::ensureCapsInitialized() const
     mNativeCaps.maxShaderStorageBlockSize          = 0;
     mNativeCaps.shaderStorageBufferOffsetAlignment = 0;
 
-    // NOTE(hqle): support UBO
+    // UBO plus default uniform limits
     const uint32_t maxCombinedUniformComponents =
         maxDefaultUniformComponents + mtl::kMaxUBOSize * mtl::kMaxShaderUBOs / 4;
     for (gl::ShaderType shaderType : gl::kAllGraphicsShaderTypes)
@@ -758,6 +764,10 @@ void DisplayMtl::initializeFeatures()
     ANGLE_FEATURE_CONDITION((&mFeatures), hasEvents, isMetal2_1 && !isNVIDIA());
 
     ANGLE_FEATURE_CONDITION((&mFeatures), hasCheapRenderPass, (isOSX || isCatalyst) && !isARM);
+
+    // http://anglebug.com/5235
+    // D24S8 is unreliable on AMD.
+    ANGLE_FEATURE_CONDITION((&mFeatures), forceD24S8AsUnsupported, isAMD());
 
     // Base Vertex drawing is only supported since GPU family 3.
     ANGLE_FEATURE_CONDITION((&mFeatures), hasBaseVertexInstancedDraw,

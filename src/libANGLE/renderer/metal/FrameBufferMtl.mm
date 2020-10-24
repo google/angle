@@ -1202,8 +1202,8 @@ gl::Rectangle FramebufferMtl::getCorrectFlippedReadArea(const gl::Context *conte
 angle::Result FramebufferMtl::readPixelsImpl(const gl::Context *context,
                                              const gl::Rectangle &area,
                                              const PackPixelsParams &packPixelsParams,
-                                             RenderTargetMtl *renderTarget,
-                                             uint8_t *pixels)
+                                             const RenderTargetMtl *renderTarget,
+                                             uint8_t *pixels) const
 {
     ContextMtl *contextMtl = mtl::GetImpl(context);
     if (!renderTarget)
@@ -1269,7 +1269,7 @@ angle::Result FramebufferMtl::readPixelsImpl(const gl::Context *context,
 angle::Result FramebufferMtl::readPixelsToPBO(const gl::Context *context,
                                               const gl::Rectangle &area,
                                               const PackPixelsParams &packPixelsParams,
-                                              RenderTargetMtl *renderTarget)
+                                              const RenderTargetMtl *renderTarget) const
 {
     ASSERT(packPixelsParams.packBuffer);
     ASSERT(renderTarget);

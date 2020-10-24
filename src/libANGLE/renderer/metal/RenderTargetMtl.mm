@@ -56,6 +56,12 @@ void RenderTargetMtl::setImplicitMSTexture(const mtl::TextureRef &implicitMSText
     mImplicitMSTexture = implicitMSTexture;
 }
 
+void RenderTargetMtl::duplicateFrom(const RenderTargetMtl &src)
+{
+    setWithImplicitMSTexture(src.getTexture(), src.getImplicitMSTexture(), src.getLevelIndex(),
+                             src.getLayerIndex(), *src.getFormat());
+}
+
 void RenderTargetMtl::reset()
 {
     mTexture.reset();

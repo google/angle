@@ -95,7 +95,8 @@ image_format_assign_template1 = """
 """
 
 image_format_assign_template2 = """
-            if (metalDevice.depth24Stencil8PixelFormatSupported)
+            if (metalDevice.depth24Stencil8PixelFormatSupported &&
+               !display->getFeatures().forceD24S8AsUnsupported.enabled)
             {{
                 this->metalFormat = {mtl_format};
                 this->actualFormatId = angle::FormatID::{actual_angle_format};

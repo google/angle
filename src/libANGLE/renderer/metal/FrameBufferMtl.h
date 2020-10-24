@@ -115,8 +115,8 @@ class FramebufferMtl : public FramebufferImpl
     angle::Result readPixelsImpl(const gl::Context *context,
                                  const gl::Rectangle &area,
                                  const PackPixelsParams &packPixelsParams,
-                                 RenderTargetMtl *renderTarget,
-                                 uint8_t *pixels);
+                                 const RenderTargetMtl *renderTarget,
+                                 uint8_t *pixels) const;
 
   private:
     void reset();
@@ -172,7 +172,7 @@ class FramebufferMtl : public FramebufferImpl
     angle::Result readPixelsToPBO(const gl::Context *context,
                                   const gl::Rectangle &area,
                                   const PackPixelsParams &packPixelsParams,
-                                  RenderTargetMtl *renderTarget);
+                                  const RenderTargetMtl *renderTarget) const;
 
     // NOTE: we cannot use RenderTargetCache here because it doesn't support separate
     // depth & stencil attachments as of now. Separate depth & stencil could be useful to

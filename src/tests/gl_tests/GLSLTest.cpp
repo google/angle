@@ -824,6 +824,8 @@ TEST_P(GLSLTest_ES3, GLVertexIDIntegerTextureDrawArrays)
 {
     // http://anglebug.com/4092
     ANGLE_SKIP_TEST_IF(isSwiftshader());
+    // http://anglebug.com/5232
+    ANGLE_SKIP_TEST_IF(IsMetal());
     // TODO(crbug.com/1132295): Failing on ARM-based Apple DTKs.
     ANGLE_SKIP_TEST_IF(IsOSX() && IsARM64() && IsDesktopOpenGL());
     // Have to set a large point size because the window size is much larger than the texture
@@ -2399,7 +2401,7 @@ TEST_P(GLSLTest_ES3, LargeNumberOfFloat4Parameters)
 {
     std::stringstream vertexShaderStream;
     // Note: SPIR-V doesn't allow more than 255 parameters to a function.
-    const unsigned int paramCount = IsVulkan() ? 255u : 1024u;
+    const unsigned int paramCount = (IsVulkan() || IsMetal()) ? 255u : 1024u;
 
     vertexShaderStream << "#version 300 es\n"
                           "precision highp float;\n"
@@ -2680,6 +2682,9 @@ TEST_P(GLSLTest_ES3, AtanVec2)
 // Convers a bug with the unary minus operator on signed integer workaround.
 TEST_P(GLSLTest_ES3, UnaryMinusOperatorSignedInt)
 {
+    // http://anglebug.com/5242
+    ANGLE_SKIP_TEST_IF(IsMetal() && IsIntel());
+
     constexpr char kVS[] =
         "#version 300 es\n"
         "in highp vec4 position;\n"
@@ -2727,6 +2732,9 @@ TEST_P(GLSLTest_ES3, UnaryMinusOperatorSignedInt)
 // Convers a bug with the unary minus operator on unsigned integer workaround.
 TEST_P(GLSLTest_ES3, UnaryMinusOperatorUnsignedInt)
 {
+    // http://anglebug.com/5242
+    ANGLE_SKIP_TEST_IF(IsMetal() && IsIntel());
+
     constexpr char kVS[] =
         "#version 300 es\n"
         "in highp vec4 position;\n"
@@ -8756,10 +8764,10 @@ ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(GLSLTestNoValidation);
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against.
-ANGLE_INSTANTIATE_TEST_ES3(GLSLTest_ES3);
+ANGLE_INSTANTIATE_TEST_ES3_AND(GLSLTest_ES3, ES3_METAL());
 
 ANGLE_INSTANTIATE_TEST_ES2(WebGLGLSLTest);
 
-ANGLE_INSTANTIATE_TEST_ES3(WebGL2GLSLTest);
+ANGLE_INSTANTIATE_TEST_ES3_AND(WebGL2GLSLTest, ES3_METAL());
 
 ANGLE_INSTANTIATE_TEST_ES31(GLSLTest_ES31);

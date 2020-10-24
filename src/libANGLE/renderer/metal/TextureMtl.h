@@ -229,19 +229,22 @@ class TextureMtl : public TextureImpl
                                    const gl::Offset &destOffset,
                                    const gl::Rectangle &sourceArea,
                                    const gl::InternalFormat &internalFormat,
-                                   gl::Framebuffer *source);
+                                   const FramebufferMtl *source,
+                                   const RenderTargetMtl *sourceRtt);
     angle::Result copySubImageWithDraw(const gl::Context *context,
                                        const gl::ImageIndex &index,
                                        const gl::Offset &destOffset,
                                        const gl::Rectangle &sourceArea,
                                        const gl::InternalFormat &internalFormat,
-                                       gl::Framebuffer *source);
+                                       const FramebufferMtl *source,
+                                       const RenderTargetMtl *sourceRtt);
     angle::Result copySubImageCPU(const gl::Context *context,
                                   const gl::ImageIndex &index,
                                   const gl::Offset &destOffset,
                                   const gl::Rectangle &sourceArea,
                                   const gl::InternalFormat &internalFormat,
-                                  gl::Framebuffer *source);
+                                  const FramebufferMtl *source,
+                                  const RenderTargetMtl *sourceRtt);
 
     angle::Result copySubTextureImpl(const gl::Context *context,
                                      const gl::ImageIndex &index,

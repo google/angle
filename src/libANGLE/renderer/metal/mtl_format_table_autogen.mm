@@ -826,7 +826,8 @@ void Format::init(const DisplayMtl *display, angle::FormatID intendedFormatId_)
 
         case angle::FormatID::D24_UNORM_S8_UINT:
 
-            if (metalDevice.depth24Stencil8PixelFormatSupported)
+            if (metalDevice.depth24Stencil8PixelFormatSupported &&
+                !display->getFeatures().forceD24S8AsUnsupported.enabled)
             {
                 this->metalFormat    = MTLPixelFormatDepth24Unorm_Stencil8;
                 this->actualFormatId = angle::FormatID::D24_UNORM_S8_UINT;
