@@ -1828,6 +1828,10 @@ TEST_P(RobustResourceInitTestES3, CompressedSubImage)
     ANGLE_SKIP_TEST_IF(!hasGLExtension());
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_compression_dxt1"));
 
+    // http://anglebug.com/4929
+    // Metal doesn't support robust resource init with compressed textures yet.
+    ANGLE_SKIP_TEST_IF(IsMetal());
+
     constexpr int width     = 8;
     constexpr int height    = 8;
     constexpr int subX0     = 0;
@@ -2207,7 +2211,9 @@ TEST_P(RobustResourceInitTest, CopyTexImageToOffsetCubeMap)
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND(RobustResourceInitTest,
                                        WithAllocateNonZeroMemory(ES2_VULKAN()));
 
-ANGLE_INSTANTIATE_TEST_ES3_AND(RobustResourceInitTestES3, WithAllocateNonZeroMemory(ES3_VULKAN()));
+ANGLE_INSTANTIATE_TEST_ES3_AND(RobustResourceInitTestES3,
+                               WithAllocateNonZeroMemory(ES3_VULKAN()),
+                               ES3_METAL());
 
 ANGLE_INSTANTIATE_TEST_ES31_AND(RobustResourceInitTestES31,
                                 WithAllocateNonZeroMemory(ES31_VULKAN()));

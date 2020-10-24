@@ -56,7 +56,9 @@ gl::ImageIndex GetZeroLevelIndex(const mtl::TextureRef &image)
 }
 
 // Slice is ignored if texture type is not Cube or 2D array
-gl::ImageIndex GetSliceMipIndex(const mtl::TextureRef &image, uint32_t slice, uint32_t level)
+gl::ImageIndex GetCubeOrArraySliceMipIndex(const mtl::TextureRef &image,
+                                           uint32_t slice,
+                                           uint32_t level)
 {
     switch (image->textureType())
     {
@@ -82,7 +84,34 @@ gl::ImageIndex GetSliceMipIndex(const mtl::TextureRef &image, uint32_t slice, ui
     return gl::ImageIndex();
 }
 
-GLuint GetImageLayerIndex(const gl::ImageIndex &index)
+// layer is ignored if texture type is not Cube or 2D array or 3D
+gl::ImageIndex GetLayerMipIndex(const mtl::TextureRef &image, uint32_t layer, uint32_t level)
+{
+    switch (image->textureType())
+    {
+        case MTLTextureType2D:
+            return gl::ImageIndex::Make2D(level);
+        case MTLTextureTypeCube:
+        {
+            auto cubeFace = static_cast<gl::TextureTarget>(
+                static_cast<int>(gl::TextureTarget::CubeMapPositiveX) + layer);
+            return gl::ImageIndex::MakeCubeMapFace(cubeFace, level);
+        }
+        case MTLTextureType2DArray:
+            return gl::ImageIndex::Make2DArray(level, layer);
+        case MTLTextureType2DMultisample:
+            return gl::ImageIndex::Make2DMultisample();
+        case MTLTextureType3D:
+            return gl::ImageIndex::Make3D(level, layer);
+        default:
+            UNREACHABLE();
+            break;
+    }
+
+    return gl::ImageIndex();
+}
+
+GLuint GetImageLayerIndexFrom(const gl::ImageIndex &index)
 {
     switch (index.getType())
     {
@@ -102,7 +131,7 @@ GLuint GetImageLayerIndex(const gl::ImageIndex &index)
     return 0;
 }
 
-GLuint GetImageCubeFaceIndexOrZero(const gl::ImageIndex &index)
+GLuint GetImageCubeFaceIndexOrZeroFrom(const gl::ImageIndex &index)
 {
     switch (index.getType())
     {
@@ -723,7 +752,7 @@ mtl::TextureRef &TextureMtl::getImage(const gl::ImageIndex &imageIndex)
 
 ImageDefinitionMtl &TextureMtl::getImageDefinition(const gl::ImageIndex &imageIndex)
 {
-    GLuint cubeFaceOrZero        = GetImageCubeFaceIndexOrZero(imageIndex);
+    GLuint cubeFaceOrZero        = GetImageCubeFaceIndexOrZeroFrom(imageIndex);
     ImageDefinitionMtl &imageDef = mTexImageDefs[cubeFaceOrZero][imageIndex.getLevelIndex()];
 
     if (!imageDef.image && mNativeTexture)
@@ -755,7 +784,7 @@ RenderTargetMtl &TextureMtl::getRenderTarget(const gl::ImageIndex &imageIndex)
     ASSERT(imageIndex.getType() == gl::TextureType::_2D ||
            imageIndex.getType() == gl::TextureType::Rectangle ||
            imageIndex.getType() == gl::TextureType::_2DMultisample || imageIndex.hasLayer());
-    GLuint layer         = GetImageLayerIndex(imageIndex);
+    GLuint layer         = GetImageLayerIndexFrom(imageIndex);
     RenderTargetMtl &rtt = mPerLayerRenderTargets[layer][imageIndex.getLevelIndex()];
     if (!rtt.getTexture())
     {
@@ -1677,7 +1706,7 @@ angle::Result TextureMtl::checkForEmulatedChannels(const gl::Context *context,
             for (uint32_t mip = 0; mip < mipmaps; ++mip)
             {
                 auto index = mtl::ImageNativeIndex::FromBaseZeroGLIndex(
-                    GetSliceMipIndex(texture, layer, mip));
+                    GetCubeOrArraySliceMipIndex(texture, layer, mip));
 
                 ANGLE_TRY(mtl::InitializeTextureContents(context, texture, mtlFormat, index));
             }
@@ -1729,9 +1758,11 @@ angle::Result TextureMtl::initializeContents(const gl::Context *context,
     ImageDefinitionMtl &imageDef = getImageDefinition(index);
     const mtl::TextureRef &image = imageDef.image;
     const mtl::Format &format    = contextMtl->getPixelFormat(imageDef.formatID);
+    // For Texture's image definition, we always use zero mip level.
     return mtl::InitializeTextureContents(
         context, image, format,
-        mtl::ImageNativeIndex::FromBaseZeroGLIndex(GetZeroLevelIndex(image)));
+        mtl::ImageNativeIndex::FromBaseZeroGLIndex(
+            GetLayerMipIndex(image, GetImageLayerIndexFrom(index), /** level */ 0)));
 }
 
 angle::Result TextureMtl::copySubImageImpl(const gl::Context *context,
