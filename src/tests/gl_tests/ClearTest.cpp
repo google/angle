@@ -1111,6 +1111,9 @@ TEST_P(ClearTestES3, ScissoredClearHeterogeneousAttachments)
     // http://anglebug.com/5116
     ANGLE_SKIP_TEST_IF(IsWindows() && (IsOpenGL() || IsD3D11()) && IsAMD());
 
+    // http://anglebug.com/5237
+    ANGLE_SKIP_TEST_IF(IsWindows7() && IsD3D11() && IsNVIDIA());
+
     constexpr uint32_t kSize                              = 16;
     constexpr uint32_t kHalfSize                          = kSize / 2;
     constexpr uint32_t kAttachmentCount                   = 3;
