@@ -503,8 +503,7 @@ class ContextMtl : public ContextImpl, public mtl::Context
 
     struct DefaultAttribute
     {
-        // NOTE(hqle): Support integer default attributes in ES 3.0
-        float values[4];
+        uint8_t values[sizeof(float) * 4];
     };
 
     mtl::OcclusionQueryPool mOcclusionQueryPool;
