@@ -8687,6 +8687,65 @@ void main() {
     GLuint program = CompileProgram(kVS, kFS);
     EXPECT_NE(0u, program);
 }
+
+// Verify that precision match validation of uniforms is performed only if they are statically used
+TEST_P(GLSLTest_ES31, UniformPrecisionMatchValidation)
+{
+    // Nvidia driver bug: http://anglebug.com/5240
+    ANGLE_SKIP_TEST_IF(IsOpenGL() && IsWindows() && IsNVIDIA());
+
+    constexpr char kVSUnused[] = R"(#version 300 es
+precision highp float;
+uniform highp vec4 positionIn;
+
+void main()
+{
+    gl_Position = vec4(1, 0, 0, 1);
+})";
+
+    constexpr char kVSStaticUse[] = R"(#version 300 es
+precision highp float;
+uniform highp vec4 positionIn;
+
+void main()
+{
+    gl_Position = positionIn;
+})";
+
+    constexpr char kFSUnused[] = R"(#version 300 es
+precision highp float;
+uniform highp vec4 positionIn;
+out vec4 my_FragColor;
+
+void main()
+{
+    my_FragColor = vec4(1, 0, 0, 1);
+})";
+
+    constexpr char kFSStaticUse[] = R"(#version 300 es
+precision highp float;
+uniform mediump vec4 positionIn;
+out vec4 my_FragColor;
+
+void main()
+{
+    my_FragColor = vec4(1, 0, 0, positionIn.z);
+})";
+
+    GLuint program = 0;
+
+    program = CompileProgram(kVSUnused, kFSUnused);
+    EXPECT_NE(0u, program);
+
+    program = CompileProgram(kVSUnused, kFSStaticUse);
+    EXPECT_NE(0u, program);
+
+    program = CompileProgram(kVSStaticUse, kFSUnused);
+    EXPECT_NE(0u, program);
+
+    program = CompileProgram(kVSStaticUse, kFSStaticUse);
+    EXPECT_EQ(0u, program);
+}
 }  // anonymous namespace
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these

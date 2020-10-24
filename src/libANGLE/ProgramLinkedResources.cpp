@@ -51,11 +51,13 @@ LinkMismatchError LinkValidateUniforms(const sh::ShaderVariable &uniform1,
                                        std::string *mismatchedStructFieldName)
 {
 #if ANGLE_PROGRAM_LINK_VALIDATE_UNIFORM_PRECISION == ANGLE_ENABLED
-    const bool validatePrecision = true;
+    const bool validatePrecisionFeature = true;
 #else
-    const bool validatePrecision = false;
+    const bool validatePrecisionFeature = false;
 #endif
 
+    // Validate precision match of uniforms iff they are statically used
+    bool validatePrecision = uniform1.staticUse && uniform2.staticUse && validatePrecisionFeature;
     LinkMismatchError linkError = Program::LinkValidateVariablesBase(
         uniform1, uniform2, validatePrecision, true, mismatchedStructFieldName);
     if (linkError != LinkMismatchError::NO_MISMATCH)
