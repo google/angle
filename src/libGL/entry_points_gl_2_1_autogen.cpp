@@ -34,8 +34,7 @@ void GL_APIENTRY UniformMatrix2x3fv(GLint location,
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, gl::EntryPoint::UniformMatrix2x3fv, "glUniformMatrix2x3fv",
-          "context = %d, GLint location = %d, GLsizei count = %d, GLboolean transpose = %s, const "
-          "GLfloat *value = 0x%016" PRIxPTR "",
+          "context = %d, location = %d, count = %d, transpose = %s, value = 0x%016" PRIxPTR "",
           CID(context), location, count, GLbooleanToString(transpose), (uintptr_t)value);
 
     if (context)
@@ -65,8 +64,7 @@ void GL_APIENTRY UniformMatrix2x4fv(GLint location,
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, gl::EntryPoint::UniformMatrix2x4fv, "glUniformMatrix2x4fv",
-          "context = %d, GLint location = %d, GLsizei count = %d, GLboolean transpose = %s, const "
-          "GLfloat *value = 0x%016" PRIxPTR "",
+          "context = %d, location = %d, count = %d, transpose = %s, value = 0x%016" PRIxPTR "",
           CID(context), location, count, GLbooleanToString(transpose), (uintptr_t)value);
 
     if (context)
@@ -96,8 +94,7 @@ void GL_APIENTRY UniformMatrix3x2fv(GLint location,
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, gl::EntryPoint::UniformMatrix3x2fv, "glUniformMatrix3x2fv",
-          "context = %d, GLint location = %d, GLsizei count = %d, GLboolean transpose = %s, const "
-          "GLfloat *value = 0x%016" PRIxPTR "",
+          "context = %d, location = %d, count = %d, transpose = %s, value = 0x%016" PRIxPTR "",
           CID(context), location, count, GLbooleanToString(transpose), (uintptr_t)value);
 
     if (context)
@@ -127,8 +124,7 @@ void GL_APIENTRY UniformMatrix3x4fv(GLint location,
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, gl::EntryPoint::UniformMatrix3x4fv, "glUniformMatrix3x4fv",
-          "context = %d, GLint location = %d, GLsizei count = %d, GLboolean transpose = %s, const "
-          "GLfloat *value = 0x%016" PRIxPTR "",
+          "context = %d, location = %d, count = %d, transpose = %s, value = 0x%016" PRIxPTR "",
           CID(context), location, count, GLbooleanToString(transpose), (uintptr_t)value);
 
     if (context)
@@ -158,8 +154,7 @@ void GL_APIENTRY UniformMatrix4x2fv(GLint location,
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, gl::EntryPoint::UniformMatrix4x2fv, "glUniformMatrix4x2fv",
-          "context = %d, GLint location = %d, GLsizei count = %d, GLboolean transpose = %s, const "
-          "GLfloat *value = 0x%016" PRIxPTR "",
+          "context = %d, location = %d, count = %d, transpose = %s, value = 0x%016" PRIxPTR "",
           CID(context), location, count, GLbooleanToString(transpose), (uintptr_t)value);
 
     if (context)
@@ -189,8 +184,7 @@ void GL_APIENTRY UniformMatrix4x3fv(GLint location,
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, gl::EntryPoint::UniformMatrix4x3fv, "glUniformMatrix4x3fv",
-          "context = %d, GLint location = %d, GLsizei count = %d, GLboolean transpose = %s, const "
-          "GLfloat *value = 0x%016" PRIxPTR "",
+          "context = %d, location = %d, count = %d, transpose = %s, value = 0x%016" PRIxPTR "",
           CID(context), location, count, GLbooleanToString(transpose), (uintptr_t)value);
 
     if (context)

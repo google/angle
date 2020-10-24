@@ -35,8 +35,8 @@ void GL_APIENTRY MultiDrawArraysIndirectCount(GLenum mode,
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, gl::EntryPoint::MultiDrawArraysIndirectCount, "glMultiDrawArraysIndirectCount",
-          "context = %d, GLenum mode = %s, const void *indirect = 0x%016" PRIxPTR
-          ", GLintptr drawcount = %llu, GLsizei maxdrawcount = %d, GLsizei stride = %d",
+          "context = %d, mode = %s, indirect = 0x%016" PRIxPTR
+          ", drawcount = %llu, maxdrawcount = %d, stride = %d",
           CID(context), GLenumToString(GLenumGroup::PrimitiveType, mode), (uintptr_t)indirect,
           static_cast<unsigned long long>(drawcount), maxdrawcount, stride);
 
@@ -69,8 +69,8 @@ void GL_APIENTRY MultiDrawElementsIndirectCount(GLenum mode,
     Context *context = GetValidGlobalContext();
     EVENT(context, gl::EntryPoint::MultiDrawElementsIndirectCount,
           "glMultiDrawElementsIndirectCount",
-          "context = %d, GLenum mode = %s, GLenum type = %s, const void *indirect = 0x%016" PRIxPTR
-          ", GLintptr drawcount = %llu, GLsizei maxdrawcount = %d, GLsizei stride = %d",
+          "context = %d, mode = %s, type = %s, indirect = 0x%016" PRIxPTR
+          ", drawcount = %llu, maxdrawcount = %d, stride = %d",
           CID(context), GLenumToString(GLenumGroup::PrimitiveType, mode),
           GLenumToString(GLenumGroup::DefaultGroup, type), (uintptr_t)indirect,
           static_cast<unsigned long long>(drawcount), maxdrawcount, stride);
@@ -99,8 +99,7 @@ void GL_APIENTRY PolygonOffsetClamp(GLfloat factor, GLfloat units, GLfloat clamp
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, gl::EntryPoint::PolygonOffsetClamp, "glPolygonOffsetClamp",
-          "context = %d, GLfloat factor = %f, GLfloat units = %f, GLfloat clamp = %f", CID(context),
-          factor, units, clamp);
+          "context = %d, factor = %f, units = %f, clamp = %f", CID(context), factor, units, clamp);
 
     if (context)
     {
@@ -127,9 +126,9 @@ void GL_APIENTRY SpecializeShader(GLuint shader,
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, gl::EntryPoint::SpecializeShader, "glSpecializeShader",
-          "context = %d, GLuint shader = %u, const GLchar *pEntryPoint = 0x%016" PRIxPTR
-          ", GLuint numSpecializationConstants = %u, const GLuint *pConstantIndex = 0x%016" PRIxPTR
-          ", const GLuint *pConstantValue = 0x%016" PRIxPTR "",
+          "context = %d, shader = %u, pEntryPoint = 0x%016" PRIxPTR
+          ", numSpecializationConstants = %u, pConstantIndex = 0x%016" PRIxPTR
+          ", pConstantValue = 0x%016" PRIxPTR "",
           CID(context), shader, (uintptr_t)pEntryPoint, numSpecializationConstants,
           (uintptr_t)pConstantIndex, (uintptr_t)pConstantValue);
 

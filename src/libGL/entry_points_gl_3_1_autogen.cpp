@@ -35,8 +35,8 @@ void GL_APIENTRY CopyBufferSubData(GLenum readTarget,
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, gl::EntryPoint::CopyBufferSubData, "glCopyBufferSubData",
-          "context = %d, GLenum readTarget = %s, GLenum writeTarget = %s, GLintptr readOffset = "
-          "%llu, GLintptr writeOffset = %llu, GLsizeiptr size = %llu",
+          "context = %d, readTarget = %s, writeTarget = %s, readOffset = %llu, writeOffset = %llu, "
+          "size = %llu",
           CID(context), GLenumToString(GLenumGroup::CopyBufferSubDataTarget, readTarget),
           GLenumToString(GLenumGroup::CopyBufferSubDataTarget, writeTarget),
           static_cast<unsigned long long>(readOffset), static_cast<unsigned long long>(writeOffset),
@@ -68,10 +68,8 @@ void GL_APIENTRY DrawArraysInstanced(GLenum mode, GLint first, GLsizei count, GL
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, gl::EntryPoint::DrawArraysInstanced, "glDrawArraysInstanced",
-          "context = %d, GLenum mode = %s, GLint first = %d, GLsizei count = %d, GLsizei "
-          "instancecount = %d",
-          CID(context), GLenumToString(GLenumGroup::PrimitiveType, mode), first, count,
-          instancecount);
+          "context = %d, mode = %s, first = %d, count = %d, instancecount = %d", CID(context),
+          GLenumToString(GLenumGroup::PrimitiveType, mode), first, count, instancecount);
 
     if (context)
     {
@@ -101,8 +99,8 @@ void GL_APIENTRY DrawElementsInstanced(GLenum mode,
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, gl::EntryPoint::DrawElementsInstanced, "glDrawElementsInstanced",
-          "context = %d, GLenum mode = %s, GLsizei count = %d, GLenum type = %s, const void "
-          "*indices = 0x%016" PRIxPTR ", GLsizei instancecount = %d",
+          "context = %d, mode = %s, count = %d, type = %s, indices = 0x%016" PRIxPTR
+          ", instancecount = %d",
           CID(context), GLenumToString(GLenumGroup::PrimitiveType, mode), count,
           GLenumToString(GLenumGroup::DrawElementsType, type), (uintptr_t)indices, instancecount);
 
@@ -134,11 +132,12 @@ void GL_APIENTRY GetActiveUniformBlockName(GLuint program,
                                            GLchar *uniformBlockName)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, gl::EntryPoint::GetActiveUniformBlockName, "glGetActiveUniformBlockName",
-          "context = %d, GLuint program = %u, GLuint uniformBlockIndex = %u, GLsizei bufSize = %d, "
-          "GLsizei *length = 0x%016" PRIxPTR ", GLchar *uniformBlockName = 0x%016" PRIxPTR "",
-          CID(context), program, uniformBlockIndex, bufSize, (uintptr_t)length,
-          (uintptr_t)uniformBlockName);
+    EVENT(
+        context, gl::EntryPoint::GetActiveUniformBlockName, "glGetActiveUniformBlockName",
+        "context = %d, program = %u, uniformBlockIndex = %u, bufSize = %d, length = 0x%016" PRIxPTR
+        ", uniformBlockName = 0x%016" PRIxPTR "",
+        CID(context), program, uniformBlockIndex, bufSize, (uintptr_t)length,
+        (uintptr_t)uniformBlockName);
 
     if (context)
     {
@@ -169,8 +168,8 @@ void GL_APIENTRY GetActiveUniformBlockiv(GLuint program,
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, gl::EntryPoint::GetActiveUniformBlockiv, "glGetActiveUniformBlockiv",
-          "context = %d, GLuint program = %u, GLuint uniformBlockIndex = %u, GLenum pname = %s, "
-          "GLint *params = 0x%016" PRIxPTR "",
+          "context = %d, program = %u, uniformBlockIndex = %u, pname = %s, params = 0x%016" PRIxPTR
+          "",
           CID(context), program, uniformBlockIndex,
           GLenumToString(GLenumGroup::UniformBlockPName, pname), (uintptr_t)params);
 
@@ -202,8 +201,8 @@ void GL_APIENTRY GetActiveUniformName(GLuint program,
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, gl::EntryPoint::GetActiveUniformName, "glGetActiveUniformName",
-          "context = %d, GLuint program = %u, GLuint uniformIndex = %u, GLsizei bufSize = %d, "
-          "GLsizei *length = 0x%016" PRIxPTR ", GLchar *uniformName = 0x%016" PRIxPTR "",
+          "context = %d, program = %u, uniformIndex = %u, bufSize = %d, length = 0x%016" PRIxPTR
+          ", uniformName = 0x%016" PRIxPTR "",
           CID(context), program, uniformIndex, bufSize, (uintptr_t)length, (uintptr_t)uniformName);
 
     if (context)
@@ -235,9 +234,8 @@ void GL_APIENTRY GetActiveUniformsiv(GLuint program,
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, gl::EntryPoint::GetActiveUniformsiv, "glGetActiveUniformsiv",
-          "context = %d, GLuint program = %u, GLsizei uniformCount = %d, const GLuint "
-          "*uniformIndices = 0x%016" PRIxPTR ", GLenum pname = %s, GLint *params = 0x%016" PRIxPTR
-          "",
+          "context = %d, program = %u, uniformCount = %d, uniformIndices = 0x%016" PRIxPTR
+          ", pname = %s, params = 0x%016" PRIxPTR "",
           CID(context), program, uniformCount, (uintptr_t)uniformIndices,
           GLenumToString(GLenumGroup::UniformPName, pname), (uintptr_t)params);
 
@@ -266,8 +264,8 @@ GLuint GL_APIENTRY GetUniformBlockIndex(GLuint program, const GLchar *uniformBlo
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, gl::EntryPoint::GetUniformBlockIndex, "glGetUniformBlockIndex",
-          "context = %d, GLuint program = %u, const GLchar *uniformBlockName = 0x%016" PRIxPTR "",
-          CID(context), program, (uintptr_t)uniformBlockName);
+          "context = %d, program = %u, uniformBlockName = 0x%016" PRIxPTR "", CID(context), program,
+          (uintptr_t)uniformBlockName);
 
     GLuint returnValue;
     if (context)
@@ -302,8 +300,8 @@ void GL_APIENTRY GetUniformIndices(GLuint program,
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, gl::EntryPoint::GetUniformIndices, "glGetUniformIndices",
-          "context = %d, GLuint program = %u, GLsizei uniformCount = %d, const GLchar "
-          "*const*uniformNames = 0x%016" PRIxPTR ", GLuint *uniformIndices = 0x%016" PRIxPTR "",
+          "context = %d, program = %u, uniformCount = %d, uniformNames = 0x%016" PRIxPTR
+          ", uniformIndices = 0x%016" PRIxPTR "",
           CID(context), program, uniformCount, (uintptr_t)uniformNames, (uintptr_t)uniformIndices);
 
     if (context)
@@ -330,7 +328,7 @@ void GL_APIENTRY PrimitiveRestartIndex(GLuint index)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, gl::EntryPoint::PrimitiveRestartIndex, "glPrimitiveRestartIndex",
-          "context = %d, GLuint index = %u", CID(context), index);
+          "context = %d, index = %u", CID(context), index);
 
     if (context)
     {
@@ -353,8 +351,8 @@ void GL_APIENTRY TexBuffer(GLenum target, GLenum internalformat, GLuint buffer)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, gl::EntryPoint::TexBuffer, "glTexBuffer",
-          "context = %d, GLenum target = %s, GLenum internalformat = %s, GLuint buffer = %u",
-          CID(context), GLenumToString(GLenumGroup::TextureTarget, target),
+          "context = %d, target = %s, internalformat = %s, buffer = %u", CID(context),
+          GLenumToString(GLenumGroup::TextureTarget, target),
           GLenumToString(GLenumGroup::InternalFormat, internalformat), buffer);
 
     if (context)
@@ -382,8 +380,7 @@ void GL_APIENTRY UniformBlockBinding(GLuint program,
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, gl::EntryPoint::UniformBlockBinding, "glUniformBlockBinding",
-          "context = %d, GLuint program = %u, GLuint uniformBlockIndex = %u, GLuint "
-          "uniformBlockBinding = %u",
+          "context = %d, program = %u, uniformBlockIndex = %u, uniformBlockBinding = %u",
           CID(context), program, uniformBlockIndex, uniformBlockBinding);
 
     if (context)

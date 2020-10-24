@@ -31,8 +31,7 @@ void GL_APIENTRY BindBuffersBase(GLenum target, GLuint first, GLsizei count, con
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, gl::EntryPoint::BindBuffersBase, "glBindBuffersBase",
-          "context = %d, GLenum target = %s, GLuint first = %u, GLsizei count = %d, const GLuint "
-          "*buffers = 0x%016" PRIxPTR "",
+          "context = %d, target = %s, first = %u, count = %d, buffers = 0x%016" PRIxPTR "",
           CID(context), GLenumToString(GLenumGroup::BufferTargetARB, target), first, count,
           (uintptr_t)buffers);
 
@@ -63,9 +62,8 @@ void GL_APIENTRY BindBuffersRange(GLenum target,
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, gl::EntryPoint::BindBuffersRange, "glBindBuffersRange",
-          "context = %d, GLenum target = %s, GLuint first = %u, GLsizei count = %d, const GLuint "
-          "*buffers = 0x%016" PRIxPTR ", const GLintptr *offsets = 0x%016" PRIxPTR
-          ", const GLsizeiptr *sizes = 0x%016" PRIxPTR "",
+          "context = %d, target = %s, first = %u, count = %d, buffers = 0x%016" PRIxPTR
+          ", offsets = 0x%016" PRIxPTR ", sizes = 0x%016" PRIxPTR "",
           CID(context), GLenumToString(GLenumGroup::BufferTargetARB, target), first, count,
           (uintptr_t)buffers, (uintptr_t)offsets, (uintptr_t)sizes);
 
@@ -93,9 +91,8 @@ void GL_APIENTRY BindImageTextures(GLuint first, GLsizei count, const GLuint *te
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, gl::EntryPoint::BindImageTextures, "glBindImageTextures",
-          "context = %d, GLuint first = %u, GLsizei count = %d, const GLuint *textures = "
-          "0x%016" PRIxPTR "",
-          CID(context), first, count, (uintptr_t)textures);
+          "context = %d, first = %u, count = %d, textures = 0x%016" PRIxPTR "", CID(context), first,
+          count, (uintptr_t)textures);
 
     if (context)
     {
@@ -118,9 +115,8 @@ void GL_APIENTRY BindSamplers(GLuint first, GLsizei count, const GLuint *sampler
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, gl::EntryPoint::BindSamplers, "glBindSamplers",
-          "context = %d, GLuint first = %u, GLsizei count = %d, const GLuint *samplers = "
-          "0x%016" PRIxPTR "",
-          CID(context), first, count, (uintptr_t)samplers);
+          "context = %d, first = %u, count = %d, samplers = 0x%016" PRIxPTR "", CID(context), first,
+          count, (uintptr_t)samplers);
 
     if (context)
     {
@@ -143,9 +139,8 @@ void GL_APIENTRY BindTextures(GLuint first, GLsizei count, const GLuint *texture
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, gl::EntryPoint::BindTextures, "glBindTextures",
-          "context = %d, GLuint first = %u, GLsizei count = %d, const GLuint *textures = "
-          "0x%016" PRIxPTR "",
-          CID(context), first, count, (uintptr_t)textures);
+          "context = %d, first = %u, count = %d, textures = 0x%016" PRIxPTR "", CID(context), first,
+          count, (uintptr_t)textures);
 
     if (context)
     {
@@ -172,9 +167,8 @@ void GL_APIENTRY BindVertexBuffers(GLuint first,
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, gl::EntryPoint::BindVertexBuffers, "glBindVertexBuffers",
-          "context = %d, GLuint first = %u, GLsizei count = %d, const GLuint *buffers = "
-          "0x%016" PRIxPTR ", const GLintptr *offsets = 0x%016" PRIxPTR
-          ", const GLsizei *strides = 0x%016" PRIxPTR "",
+          "context = %d, first = %u, count = %d, buffers = 0x%016" PRIxPTR
+          ", offsets = 0x%016" PRIxPTR ", strides = 0x%016" PRIxPTR "",
           CID(context), first, count, (uintptr_t)buffers, (uintptr_t)offsets, (uintptr_t)strides);
 
     if (context)
@@ -201,8 +195,7 @@ void GL_APIENTRY BufferStorage(GLenum target, GLsizeiptr size, const void *data,
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, gl::EntryPoint::BufferStorage, "glBufferStorage",
-          "context = %d, GLenum target = %s, GLsizeiptr size = %llu, const void *data = "
-          "0x%016" PRIxPTR ", GLbitfield flags = %s",
+          "context = %d, target = %s, size = %llu, data = 0x%016" PRIxPTR ", flags = %s",
           CID(context), GLenumToString(GLenumGroup::BufferStorageTarget, target),
           static_cast<unsigned long long>(size), (uintptr_t)data,
           GLbitfieldToString(GLenumGroup::MapBufferUsageMask, flags).c_str());
@@ -230,8 +223,8 @@ ClearTexImage(GLuint texture, GLint level, GLenum format, GLenum type, const voi
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, gl::EntryPoint::ClearTexImage, "glClearTexImage",
-          "context = %d, GLuint texture = %u, GLint level = %d, GLenum format = %s, GLenum type = "
-          "%s, const void *data = 0x%016" PRIxPTR "",
+          "context = %d, texture = %u, level = %d, format = %s, type = %s, data = 0x%016" PRIxPTR
+          "",
           CID(context), texture, level, GLenumToString(GLenumGroup::PixelFormat, format),
           GLenumToString(GLenumGroup::PixelType, type), (uintptr_t)data);
 
@@ -269,9 +262,8 @@ void GL_APIENTRY ClearTexSubImage(GLuint texture,
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, gl::EntryPoint::ClearTexSubImage, "glClearTexSubImage",
-          "context = %d, GLuint texture = %u, GLint level = %d, GLint xoffset = %d, GLint yoffset "
-          "= %d, GLint zoffset = %d, GLsizei width = %d, GLsizei height = %d, GLsizei depth = %d, "
-          "GLenum format = %s, GLenum type = %s, const void *data = 0x%016" PRIxPTR "",
+          "context = %d, texture = %u, level = %d, xoffset = %d, yoffset = %d, zoffset = %d, width "
+          "= %d, height = %d, depth = %d, format = %s, type = %s, data = 0x%016" PRIxPTR "",
           CID(context), texture, level, xoffset, yoffset, zoffset, width, height, depth,
           GLenumToString(GLenumGroup::PixelFormat, format),
           GLenumToString(GLenumGroup::PixelType, type), (uintptr_t)data);
