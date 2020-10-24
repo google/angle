@@ -9,6 +9,7 @@
 GN_OUTPUT_DIRECTORY=out/Android
 
 deps=(
+    "third_party/abseil-cpp"
     "third_party/spirv-tools/src"
     "third_party/glslang/src"
     "third_party/spirv-headers/src"
@@ -100,6 +101,7 @@ done
 extra_removal_files=(
    # Some third_party deps have OWNERS files which contains users that have not logged into
    # the Android gerrit. Repo cannot upload with these files present.
+   "third_party/abseil-cpp/OWNERS"
    "third_party/jsoncpp/OWNERS"
    "third_party/vulkan_memory_allocator/OWNERS"
    "third_party/zlib/OWNERS"

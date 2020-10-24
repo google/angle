@@ -311,6 +311,16 @@ angle_static_library("angle_common") {
   if (angle_has_build && use_fuzzing_engine) {
     all_dependent_configs = [ ":angle_disable_pool_alloc" ]
   }
+
+  if (is_android && (angle_enable_gl || angle_enable_vulkan)) {
+    # In API level 26 ANativeWindow APIs were moved from libandroid.so
+    # into a separate library, libnativewindow.so
+    if (ndk_api_level_at_least_26) {
+      libs = [ "nativewindow" ]
+    } else {
+      libs = [ "android" ]
+    }
+  }
 }
 
 config("angle_image_util_config") {
