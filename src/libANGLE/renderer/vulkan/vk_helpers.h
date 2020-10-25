@@ -237,15 +237,18 @@ class DynamicShadowBuffer : public angle::NonCopyable
 
 // Uses DescriptorPool to allocate descriptor sets as needed. If a descriptor pool becomes full, we
 // allocate new pools internally as needed. RendererVk takes care of the lifetime of the discarded
-// pools. Note that we used a fixed layout for descriptor pools in ANGLE.
+// pools. Note that we used a fixed layout for descriptor pools in ANGLE. Uniform buffers must
+// use set zero and combined Image Samplers must use set 1. We conservatively count each new set
+// using the maximum number of descriptor sets and buffers with each allocation. Currently: 2
+// (Vertex/Fragment) uniform buffers and 64 (MAX_ACTIVE_TEXTURES) image/samplers.
 
 // Shared handle to a descriptor pool. Each helper is allocated from the dynamic descriptor pool.
 // Can be used to share descriptor pools between multiple ProgramVks and the ContextVk.
-class DescriptorPoolHelper : public Resource
+class DescriptorPoolHelper
 {
   public:
     DescriptorPoolHelper();
-    ~DescriptorPoolHelper() override;
+    ~DescriptorPoolHelper();
 
     bool valid() { return mDescriptorPool.valid(); }
 
@@ -261,9 +264,14 @@ class DescriptorPoolHelper : public Resource
                                uint32_t descriptorSetCount,
                                VkDescriptorSet *descriptorSetsOut);
 
+    void updateSerial(Serial serial) { mMostRecentSerial = serial; }
+
+    Serial getSerial() const { return mMostRecentSerial; }
+
   private:
     uint32_t mFreeDescriptorSets;
     DescriptorPool mDescriptorPool;
+    Serial mMostRecentSerial;
 };
 
 using RefCountedDescriptorPoolHelper  = RefCounted<DescriptorPoolHelper>;

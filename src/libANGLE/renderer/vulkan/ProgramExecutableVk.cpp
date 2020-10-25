@@ -378,12 +378,8 @@ angle::Result ProgramExecutableVk::allocUniformAndXfbDescriptorSet(
     auto iter = mUniformsAndXfbDescriptorSetCache.find(xfbBufferDesc);
     if (iter != mUniformsAndXfbDescriptorSetCache.end())
     {
-        *newDescriptorSetAllocated                                        = false;
         mDescriptorSets[ToUnderlying(DescriptorSetIndex::UniformsAndXfb)] = iter->second;
-        // The descriptor pool that this descriptor set was allocated from needs to be retained each
-        // time the descriptor set is used in a new command.
-        mDescriptorPoolBindings[ToUnderlying(DescriptorSetIndex::UniformsAndXfb)].get().retain(
-            &contextVk->getResourceUseList());
+        *newDescriptorSetAllocated                                        = false;
         return angle::Result::Continue;
     }
 
@@ -1401,10 +1397,6 @@ angle::Result ProgramExecutableVk::updateTexturesDescriptorSet(ContextVk *contex
     if (iter != mTextureDescriptorsCache.end())
     {
         mDescriptorSets[ToUnderlying(DescriptorSetIndex::Texture)] = iter->second;
-        // The descriptor pool that this descriptor set was allocated from needs to be retained each
-        // time the descriptor set is used in a new command.
-        mDescriptorPoolBindings[ToUnderlying(DescriptorSetIndex::Texture)].get().retain(
-            &contextVk->getResourceUseList());
         return angle::Result::Continue;
     }
 
