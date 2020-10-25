@@ -260,23 +260,23 @@ void ProgramExecutableVk::save(gl::BinaryOutputStream *stream)
 {
     for (gl::ShaderType shaderType : gl::AllShaderTypes())
     {
-        stream->writeInt<size_t>(mVariableInfoMap[shaderType].size());
+        stream->writeInt(mVariableInfoMap[shaderType].size());
         for (const auto &it : mVariableInfoMap[shaderType])
         {
             stream->writeString(it.first);
-            stream->writeInt<uint32_t>(it.second.descriptorSet);
-            stream->writeInt<uint32_t>(it.second.binding);
-            stream->writeInt<uint32_t>(it.second.location);
-            stream->writeInt<uint32_t>(it.second.component);
+            stream->writeInt(it.second.descriptorSet);
+            stream->writeInt(it.second.binding);
+            stream->writeInt(it.second.location);
+            stream->writeInt(it.second.component);
             // PackedEnumBitSet uses uint8_t
-            stream->writeInt<uint8_t>(it.second.activeStages.bits());
-            stream->writeInt<uint32_t>(it.second.xfbBuffer);
-            stream->writeInt<uint32_t>(it.second.xfbOffset);
-            stream->writeInt<uint32_t>(it.second.xfbStride);
-            stream->writeInt<uint8_t>(it.second.useRelaxedPrecision);
-            stream->writeInt<uint8_t>(it.second.varyingIsOutput);
-            stream->writeInt<uint8_t>(it.second.attributeComponentCount);
-            stream->writeInt<uint8_t>(it.second.attributeLocationCount);
+            stream->writeInt(it.second.activeStages.bits());
+            stream->writeInt(it.second.xfbBuffer);
+            stream->writeInt(it.second.xfbOffset);
+            stream->writeInt(it.second.xfbStride);
+            stream->writeBool(it.second.useRelaxedPrecision);
+            stream->writeBool(it.second.varyingIsOutput);
+            stream->writeInt(it.second.attributeComponentCount);
+            stream->writeInt(it.second.attributeLocationCount);
         }
     }
 }
