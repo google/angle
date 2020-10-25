@@ -45,6 +45,7 @@ enum class RestrictedTraceID
     brawl_stars,
     candy_crush_500,
     cod_mobile,
+    dragon_ball_legends,
     egypt_1500,
     free_fire,
     kartrider_rush,
