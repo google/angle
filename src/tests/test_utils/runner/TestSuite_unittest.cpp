@@ -62,7 +62,7 @@ TEST_F(TestSuiteTest, RunMockTests)
                                       "--gtest_filter=MockTestSuiteTest.DISABLED_*",
                                       "--gtest_also_run_disabled_tests",
                                       "--bot-mode",
-                                      "--test-timeout=2",
+                                      "--test-timeout=5",
                                       resultsFileName.c_str()};
 
     ProcessHandle process(args, true, true);
@@ -104,7 +104,7 @@ TEST(MockTestSuiteTest, DISABLED_Fail)
 // Trigger a test timeout.
 TEST(MockTestSuiteTest, DISABLED_Timeout)
 {
-    angle::Sleep(5000);
+    angle::Sleep(20000);
 }
 
 // Trigger a test crash.
