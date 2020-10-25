@@ -156,7 +156,6 @@ if (!defined(angle_zlib_compression_utils_dir)) {
 
 angle_common_configs = [
   angle_root + ":angle_release_asserts_config",
-  angle_root + ":better_linux_stack_traces",
   angle_root + ":constructor_and_destructor_warnings",
   angle_root + ":extra_warnings",
   angle_root + ":internal_config",
@@ -167,22 +166,9 @@ angle_remove_configs = []
 if (angle_has_build) {
   angle_remove_configs += [ "//build/config/compiler:default_include_dirs" ]
 }
-angle_better_stack_traces = (is_debug || dcheck_always_on) &&
-                            (is_linux || is_chromeos) && !is_asan && !is_cfi
 
 if (angle_has_build && is_clang) {
   angle_remove_configs += [ "//build/config/clang:find_bad_constructs" ]
-
-  # Disabled to enable better stack traces.
-  if (angle_better_stack_traces) {
-    # This line causes in-class-inline-functions in glslang to be weak symbols.  The KHR dEQP tests
-    # link against glslang as well as libGLESv2.so, resulting in angle_deqp_khr_gles*_tests to link
-    # those weak symbols.  Due to glslang's usage of a global variable in InitializeDll.cpp, a bug
-    # is created where ANGLE sometimes calls into its own copy of glslang and sometimes the KHR
-    # dEQP's version, with the two copies of the global variable being inconsistent.
-    # Commented out until the underlying issue is resolved.  http://anglebug.com/4123
-    # angle_remove_configs += [ "//build/config/gcc:symbol_visibility_hidden" ]
-  }
 }
 
 set_defaults("angle_executable") {

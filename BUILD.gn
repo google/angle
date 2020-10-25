@@ -206,13 +206,6 @@ config("build_id_config") {
   ldflags = [ "-Wl,--build-id" ]
 }
 
-# Useful for more informative stack traces.
-config("better_linux_stack_traces") {
-  if (angle_better_stack_traces) {
-    ldflags = [ "-Wl,--export-dynamic" ]
-  }
-}
-
 _use_copy_compiler_dll = angle_has_build && is_win && target_cpu != "arm64"
 
 # Windows ARM64 is available since 10.0.16299 so no need to copy
