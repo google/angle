@@ -4,6 +4,9 @@
 
 // See README.md for format.
 
+// Globally disable Metal testing for now
+4235 METAL : dEQP-GLES3.* = SKIP
+
 // Don't run these tests for faster turnover
 1101 : dEQP-GLES3.functional.flush_finish.* = SKIP
 
