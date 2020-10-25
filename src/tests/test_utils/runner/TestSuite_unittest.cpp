@@ -83,7 +83,10 @@ TEST_F(TestSuiteTest, RunMockTests)
         {{"MockTestSuiteTest", "DISABLED_Pass"}, {TestResultType::Pass, 0.0}},
         {{"MockTestSuiteTest", "DISABLED_Fail"}, {TestResultType::Fail, 0.0}},
         {{"MockTestSuiteTest", "DISABLED_Timeout"}, {TestResultType::Timeout, 0.0}},
-        // {{"MockTestSuiteTest", "DISABLED_Crash"}, {TestResultType::Crash, 0.0}},
+    // Issues with ASAN on Windows. http://anglebug.com/5238
+#if !defined(ANGLE_PLATFORM_WINDOWS) || !defined(ANGLE_WITH_ASAN)
+        {{"MockTestSuiteTest", "DISABLED_Crash"}, {TestResultType::Crash, 0.0}},
+#endif  // !defined(ANGLE_PLATFORM_WINDOWS) || !defined(ANGLE_WITH_ASAN)
     };
 
     EXPECT_EQ(expectedResults, actual.results);
@@ -107,9 +110,12 @@ TEST(MockTestSuiteTest, DISABLED_Timeout)
     angle::Sleep(20000);
 }
 
+// Issues with ASAN on Windows. http://anglebug.com/5238
+#if !defined(ANGLE_PLATFORM_WINDOWS) || !defined(ANGLE_WITH_ASAN)
 // Trigger a test crash.
-// TEST(MockTestSuiteTest, DISABLED_Crash)
-// {
-//     ANGLE_CRASH();
-// }
+TEST(MockTestSuiteTest, DISABLED_Crash)
+{
+    ANGLE_CRASH();
+}
+#endif  // !defined(ANGLE_PLATFORM_WINDOWS) || !defined(ANGLE_WITH_ASAN)
 }  // namespace
