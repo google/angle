@@ -29,7 +29,7 @@
 // This will expand to "angle_capture_context<#>.h"
 #include ANGLE_MACRO_STRINGIZE(ANGLE_CAPTURE_REPLAY_COMPOSITE_TESTS_HEADER)
 
-const std::string resultTag = "*RESULT";
+constexpr char kResultTag[] = "*RESULT";
 
 class CaptureReplayTests
 {
@@ -144,7 +144,7 @@ class CaptureReplayTests
         for (size_t i = 0; i < testTraceInfos.size(); i++)
         {
             int result = runTest(static_cast<uint32_t>(i), testTraceInfos[i]);
-            std::cout << resultTag << " " << testTraceInfos[i].testName << " " << result << "\n";
+            std::cout << kResultTag << " " << testTraceInfos[i].testName << " " << result << "\n";
         }
         return 0;
     }

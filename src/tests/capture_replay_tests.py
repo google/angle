@@ -38,8 +38,8 @@ import time
 
 from sys import platform
 
-DEFAULT_CAPTURE_BUILD_DIR = "out/CaptureTest"  # relative to angle folder
-DEFAULT_REPLAY_BUILD_DIR = "out/ReplayTest"  # relative to angle folder
+PIPE_STDOUT = True
+DEFAULT_OUT_DIR = "out/CaptureReplayTest"  # relative to angle folder
 DEFAULT_FILTER = "*/ES2_Vulkan"
 DEFAULT_TEST_SUITE = "angle_end2end_tests"
 REPLAY_SAMPLE_FOLDER = "src/tests/capture_replay_tests"  # relative to angle folder
@@ -50,6 +50,10 @@ TIME_BETWEEN_MESSAGE = 20  # in seconds
 SUBPROCESS_TIMEOUT = 600  # in seconds
 DEFAULT_RESULT_FILE = "results.txt"
 DEFAULT_LOG_LEVEL = "info"
+DEFAULT_MAX_JOBS = 8
+REPLAY_BINARY = "capture_replay_tests"
+if platform == "win32":
+    REPLAY_BINARY += ".exe"
 
 switch_case_without_return_template = \
 """        case {case}:
@@ -166,25 +170,38 @@ void SetBinaryDataDir(uint32_t test, const char *dataDir)
 """
 
 
+def debug(str):
+    logging.debug('%s: %s' % (multiprocessing.current_process().name, str))
+
+
+def info(str):
+    logging.info('%s: %s' % (multiprocessing.current_process().name, str))
+
+
 class SubProcess():
 
-    def __init__(self, command, to_main_stdout):
+    def __init__(self, command, env=os.environ, pipe_stdout=PIPE_STDOUT):
         parsed_command = shlex.split(command)
         # shell=False so that only 1 subprocess is spawned.
         # if shell=True, a shell probess is spawned, which in turn spawns the process running
         # the command. Since we do not have a handle to the 2nd process, we cannot terminate it.
-        if not to_main_stdout:
+        if pipe_stdout:
             self.proc_handle = subprocess.Popen(
-                parsed_command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=False)
+                parsed_command,
+                env=env,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                shell=False)
         else:
-            self.proc_handle = subprocess.Popen(parsed_command, shell=False)
+            self.proc_handle = subprocess.Popen(parsed_command, env=env, shell=False)
 
-    def BlockingRun(self, timeout):
+    def Join(self, timeout):
+        debug('Joining with subprocess %d, timeout %s' % (self.Pid(), str(timeout)))
         output = self.proc_handle.communicate(timeout=timeout)[0]
-        if output != None:
-            output = output.decode("utf-8")
+        if output:
+            output = output.decode('utf-8')
         else:
-            output = ""
+            output = ''
         return self.proc_handle.returncode, output
 
     def Pid(self):
@@ -205,16 +222,16 @@ class ChildProcessesManager():
         # list of Python multiprocess.Process handles
         self.workers = []
 
-    def CreateSubprocess(self, command, to_main_stdout):
-        logging.debug('Creating subprocess: %s' % str(command))
-        subprocess = SubProcess(command, to_main_stdout)
+    def CreateSubprocess(self, command, env=None, pipe_stdout=True):
+        subprocess = SubProcess(command, env, pipe_stdout)
+        debug('Creating subprocess: %s with pid %d' % (str(command), subprocess.Pid()))
         self.subprocesses[subprocess.Pid()] = subprocess
         return subprocess.Pid()
 
-    def RunSubprocessBlocking(self, subprocess_id, timeout=None):
+    def JoinSubprocess(self, subprocess_id, timeout=None):
         assert subprocess_id in self.subprocesses
         try:
-            returncode, output = self.subprocesses[subprocess_id].BlockingRun(timeout)
+            returncode, output = self.subprocesses[subprocess_id].Join(timeout)
             self.RemoveSubprocess(subprocess_id)
             if returncode != 0:
                 return -1, output
@@ -264,19 +281,9 @@ class ChildProcessesManager():
 
 
 def CreateGNGenCommand(gn_path, build_dir, arguments):
-    logging.debug('Calling GN gen with %s', str(arguments))
-    command = '"' + gn_path + '"' + ' gen --args="'
-    is_first_argument = True
-    for argument in arguments:
-        if is_first_argument:
-            is_first_argument = False
-        else:
-            command += ' '
-        command += argument[0]
-        command += '='
-        command += argument[1]
-    command += '" '
-    command += build_dir
+    debug('Calling GN gen with %s' % str(arguments))
+    args_str = ' '.join(['%s=%s' % (k, v) for (k, v) in arguments])
+    command = '"%s" gen --args="%s" %s' % (gn_path, args_str, build_dir)
     return command
 
 
@@ -305,42 +312,49 @@ def GetGnAndAutoninjaAbsolutePaths():
     return "", ""
 
 
-def GetTestNamesAndParamsCommand(test_exec_path, filter="*"):
-    return '"' + test_exec_path + '" --gtest_list_tests --gtest_filter=' + filter
+def GetTestsListForFilter(test_path, filter):
+    cmd = [test_path, "--list-tests", "--gtest_filter=%s" % filter]
+    info('Getting test list from "%s"' % " ".join(cmd))
+    return subprocess.check_output(cmd, text=True)
 
 
-def ProcessGetTestNamesAndParamsCommandOutput(output):
+def GetSkippedTestPatterns():
+    skipped_test_patterns = []
+    test_expectations_filename = "capture_replay_expectations.txt"
+    test_expectations_path = os.path.join(REPLAY_SAMPLE_FOLDER, test_expectations_filename)
+    with open(test_expectations_path, "rt") as f:
+        for line in f:
+            l = line.strip()
+            if l != "" and not l.startswith("#"):
+                skipped_test_patterns.append(l)
+    return skipped_test_patterns
 
-    def SkipTest(skipped_test_patterns, full_test_name):
+
+def ParseTestNamesFromTestList(output):
+
+    def SkipTest(skipped_test_patterns, test):
         for skipped_test_pattern in skipped_test_patterns:
-            if fnmatch.fnmatch(full_test_name, skipped_test_pattern):
+            if fnmatch.fnmatch(test, skipped_test_pattern):
                 return True
         return False
 
     output_lines = output.splitlines()
     tests = []
-    last_testcase_name = ""
-    test_name_splitter = "# GetParam() ="
-    test_expectations_filename = "capture_replay_expectations.txt"
-    skipped_test_patterns = [
-        line.rstrip() for line in \
-        open(os.path.join(REPLAY_SAMPLE_FOLDER, test_expectations_filename), "r") \
-        if (not line.startswith("#") and not line.isspace())
-    ]
+    skipped_test_patterns = GetSkippedTestPatterns()
+    seen_start_of_tests = False
+    skips = 0
     for line in output_lines:
-        if test_name_splitter in line:
-            # must be a test name line
-            test_name_and_params = line.split(test_name_splitter)
-            full_test_name = last_testcase_name + test_name_and_params[0].strip()
-            if not SkipTest(skipped_test_patterns, full_test_name):
-                tests.append((full_test_name, test_name_and_params[1].strip()))
+        l = line.strip()
+        if l == "Tests list:":
+            seen_start_of_tests = True
+        elif not seen_start_of_tests:
+            pass
+        elif not SkipTest(skipped_test_patterns, l):
+            tests.append(l)
         else:
-            # gtest_list_tests returns the test in this format
-            # test case
-            #    test name1
-            #    test name2
-            # Need to remember the last test case name to append to the test name
-            last_testcase_name = line
+            skips += 1
+
+    info('Found %s tests and %d skipped tests.' % (len(tests), skips))
     return tests
 
 
@@ -461,16 +475,23 @@ class TestBatchResult():
         return "".join(error_lines)
 
     def GetAbbreviatedOutput(output):
+
+        # Get all lines after and including the last occurance of "Run".
         lines = output.splitlines()
-        return "".join([lines[-1 - i] + "\n" \
-            for i in range(min(len(lines), TestBatchResult.display_output_lines)-1, -1, -1)])
+        line_count = 0
+        for line_index in reversed(range(len(lines))):
+            line_count += 1
+            if "[ RUN      ]" in lines[line_index]:
+                break
+
+        return '\n' + '\n'.join(lines[-line_count:]) + '\n'
 
 
 class Test():
 
-    def __init__(self, full_test_name, params):
-        self.full_test_name = full_test_name
-        self.params = params
+    def __init__(self, test_name):
+        self.full_test_name = test_name
+        self.params = test_name.split('/')[1]
         self.context_id = 0
         self.test_index = -1  # index of test within a test batch
 
@@ -521,26 +542,29 @@ class TestBatch():
         self.verbose = verbose
         self.results = []
 
-    def Run(self, test_exe_path, trace_folder_path, child_processes_manager):
-        os.environ["ANGLE_CAPTURE_ENABLED"] = "1"
+    def RunWithCapture(self, test_exe_path, trace_folder_path, child_processes_manager):
+
+        # set the static environment variables that do not change throughout the script run
+        env = os.environ.copy()
+        env['ANGLE_CAPTURE_FRAME_END'] = '100'
+        env['ANGLE_CAPTURE_SERIALIZE_STATE'] = '1'
+        env['ANGLE_CAPTURE_ENABLED'] = '1'
+
+        info('Setting ANGLE_CAPTURE_OUT_DIR to %s' % trace_folder_path)
+        env['ANGLE_CAPTURE_OUT_DIR'] = trace_folder_path
+
         if not self.keep_temp_files:
             ClearFolderContent(trace_folder_path)
-        command = '"' + test_exe_path + '" --gtest_filter='
-        for test in self.tests:
-            command += test.full_test_name
-            if test.test_index != len(self.tests) - 1:
-                command += ':'
-        command += " --angle-per-test-capture-label"
-        capture_proc_id = child_processes_manager.CreateSubprocess(command, False)
-        returncode, output = child_processes_manager.RunSubprocessBlocking(
-            capture_proc_id, SUBPROCESS_TIMEOUT)
+        filt = ':'.join([test.full_test_name for test in self.tests])
+        cmd = '"%s" --gtest_filter=%s --angle-per-test-capture-label' % (test_exe_path, filt)
+        capture_proc_id = child_processes_manager.CreateSubprocess(cmd, env)
+        returncode, output = child_processes_manager.JoinSubprocess(capture_proc_id,
+                                                                    SUBPROCESS_TIMEOUT)
         if returncode == -1:
-            self.results.append(
-                GroupedResult(GroupedResult.Crashed, "Capture run crashed", output, self.tests))
+            self.results.append(GroupedResult(GroupedResult.Crashed, "", output, self.tests))
             return False
         elif returncode == -2:
-            self.results.append(
-                GroupedResult(GroupedResult.TimedOut, "Capture run timed out", "", self.tests))
+            self.results.append(GroupedResult(GroupedResult.TimedOut, "", "", self.tests))
             return False
         return True
 
@@ -560,8 +584,8 @@ class TestBatch():
                     skipped_tests))
         return continued_tests
 
-    def BuildReplay(self, gn_path, autoninja_path, build_dir, trace_dir, replay_exec,
-                    trace_folder_path, composite_file_id, tests, child_processes_manager):
+    def BuildReplay(self, gn_path, autoninja_path, replay_build_dir, trace_dir, trace_folder_path,
+                    composite_file_id, tests, child_processes_manager):
         # write gni file that holds all the traces files in a list
         self.CreateGNIFile(trace_folder_path, composite_file_id, tests)
         # write header and cpp composite files, which glue the trace files with
@@ -574,17 +598,17 @@ class TestBatch():
                    ("angle_capture_replay_composite_file_id", str(composite_file_id))]
         if self.goma_dir:
             gn_args.append(("goma_dir", self.goma_dir))
-        gn_command = CreateGNGenCommand(gn_path, build_dir, gn_args)
-        gn_proc_id = child_processes_manager.CreateSubprocess(gn_command, False)
-        returncode, output = child_processes_manager.RunSubprocessBlocking(gn_proc_id)
+        gn_command = CreateGNGenCommand(gn_path, replay_build_dir, gn_args)
+        gn_proc_id = child_processes_manager.CreateSubprocess(gn_command)
+        returncode, output = child_processes_manager.JoinSubprocess(gn_proc_id)
         if returncode != 0:
             self.results.append(
                 GroupedResult(GroupedResult.CompileFailed, "Build replay failed at gn generation",
                               output, tests))
             return False
-        autoninja_command = CreateAutoninjaCommand(autoninja_path, build_dir, replay_exec)
-        autoninja_proc_id = child_processes_manager.CreateSubprocess(autoninja_command, False)
-        returncode, output = child_processes_manager.RunSubprocessBlocking(autoninja_proc_id)
+        autoninja_command = CreateAutoninjaCommand(autoninja_path, replay_build_dir, REPLAY_BINARY)
+        autoninja_proc_id = child_processes_manager.CreateSubprocess(autoninja_command)
+        returncode, output = child_processes_manager.JoinSubprocess(autoninja_proc_id)
         if returncode != 0:
             self.results.append(
                 GroupedResult(GroupedResult.CompileFailed, "Build replay failed at autoninja",
@@ -593,11 +617,12 @@ class TestBatch():
         return True
 
     def RunReplay(self, replay_exe_path, child_processes_manager, tests):
-        os.environ["ANGLE_CAPTURE_ENABLED"] = "0"
+        env = os.environ.copy()
+        env['ANGLE_CAPTURE_ENABLED'] = '0'
         command = '"' + replay_exe_path + '"'
-        replay_proc_id = child_processes_manager.CreateSubprocess(command, False)
-        returncode, output = child_processes_manager.RunSubprocessBlocking(
-            replay_proc_id, SUBPROCESS_TIMEOUT)
+        replay_proc_id = child_processes_manager.CreateSubprocess(command, env)
+        returncode, output = child_processes_manager.JoinSubprocess(replay_proc_id,
+                                                                    SUBPROCESS_TIMEOUT)
         if returncode == -1:
             self.results.append(
                 GroupedResult(GroupedResult.Crashed, "Replay run crashed", output, tests))
@@ -737,13 +762,13 @@ def SetCWDToAngleFolder():
     return cwd
 
 
-def RunTests(worker_id, job_queue, gn_path, autoninja_path, capture_build_dir, replay_build_dir,
-             test_exec, replay_exec, trace_dir, result_list, message_queue):
+def RunTests(args, worker_id, job_queue, gn_path, autoninja_path, trace_dir, result_list,
+             message_queue):
     trace_folder_path = os.path.join(REPLAY_SAMPLE_FOLDER, trace_dir)
-    test_exec_path = os.path.join(capture_build_dir, test_exec)
-    replay_exec_path = os.path.join(replay_build_dir, replay_exec)
+    test_exec_path = os.path.join(args.out_dir, 'Capture', args.test_suite)
+    replay_build_dir = os.path.join(args.out_dir, 'Replay%d' % worker_id)
+    replay_exec_path = os.path.join(replay_build_dir, REPLAY_BINARY)
 
-    os.environ["ANGLE_CAPTURE_OUT_DIR"] = trace_folder_path
     child_processes_manager = ChildProcessesManager()
     # used to differentiate between multiple composite files when there are multiple test batchs
     # running on the same worker and --deleted_trace is set to False
@@ -753,7 +778,8 @@ def RunTests(worker_id, job_queue, gn_path, autoninja_path, capture_build_dir, r
             test_batch = job_queue.get()
             message_queue.put("Starting {} tests on worker {}. Unstarted jobs: {}".format(
                 len(test_batch.tests), worker_id, job_queue.qsize()))
-            success = test_batch.Run(test_exec_path, trace_folder_path, child_processes_manager)
+            success = test_batch.RunWithCapture(test_exec_path, trace_folder_path,
+                                                child_processes_manager)
             if not success:
                 result_list.append(test_batch.GetResults())
                 message_queue.put(str(test_batch.GetResults()))
@@ -765,8 +791,8 @@ def RunTests(worker_id, job_queue, gn_path, autoninja_path, capture_build_dir, r
                 message_queue.put(str(test_batch.GetResults()))
                 continue
             success = test_batch.BuildReplay(gn_path, autoninja_path, replay_build_dir, trace_dir,
-                                             replay_exec, trace_folder_path, composite_file_id,
-                                             continued_tests, child_processes_manager)
+                                             trace_folder_path, composite_file_id, continued_tests,
+                                             child_processes_manager)
             if test_batch.keep_temp_files:
                 composite_file_id += 1
             if not success:
@@ -787,14 +813,6 @@ def RunTests(worker_id, job_queue, gn_path, autoninja_path, capture_build_dir, r
             child_processes_manager.KillAll()
             pass
     child_processes_manager.KillAll()
-
-
-def CreateReplayBuildFolders(folder_num, replay_build_dir):
-    for i in range(folder_num):
-        replay_build_dir_name = replay_build_dir + str(i)
-        if not os.path.isdir(replay_build_dir_name):
-            logging.debug('Creating replay build folder: %s', replay_build_dir_name)
-            os.makedirs(replay_build_dir_name)
 
 
 def SafeDeleteFolder(folder_name):
@@ -838,19 +856,13 @@ def main(args):
         # set the number of workers to be cpu_count - 1 (since the main process already takes up a
         # CPU core). Whenever a worker is available, it grabs the next job from the job queue and
         # runs it. The worker closes down when there is no more job.
-        worker_count = multiprocessing.cpu_count() - 1
+        worker_count = min(multiprocessing.cpu_count() - 1, args.max_jobs)
         cwd = SetCWDToAngleFolder()
         # create traces and build folders
         trace_folder = "traces"
-        if not os.path.isdir(args.capture_build_dir):
-            os.makedirs(args.capture_build_dir)
-        CreateReplayBuildFolders(worker_count, args.replay_build_dir)
+
         CreateTraceFolders(worker_count, trace_folder)
         WriteAngleTraceGLHeader()
-        replay_exec = "capture_replay_tests"
-        if platform == "win32":
-            args.test_suite += ".exe"
-            replay_exec += ".exe"
         gn_path, autoninja_path = GetGnAndAutoninjaAbsolutePaths()
         if gn_path == "" or autoninja_path == "":
             logging.error("No gn or autoninja found on system")
@@ -860,57 +872,43 @@ def main(args):
                    ("angle_with_capture_by_default", "true")]
         if args.goma_dir:
             gn_args.append(("goma_dir", args.goma_dir))
-        gn_command = CreateGNGenCommand(gn_path, args.capture_build_dir, gn_args)
-        gn_proc_id = child_processes_manager.CreateSubprocess(gn_command, True)
-        returncode, output = child_processes_manager.RunSubprocessBlocking(gn_proc_id)
+        capture_build_dir = os.path.join(args.out_dir, 'Capture')
+        gn_command = CreateGNGenCommand(gn_path, capture_build_dir, gn_args)
+        gn_proc_id = child_processes_manager.CreateSubprocess(gn_command, pipe_stdout=False)
+        returncode, output = child_processes_manager.JoinSubprocess(gn_proc_id)
         if returncode != 0:
             logging.error(output)
             child_processes_manager.KillAll()
             return 1
         # run autoninja to build all tests
-        autoninja_command = CreateAutoninjaCommand(autoninja_path, args.capture_build_dir,
+        autoninja_command = CreateAutoninjaCommand(autoninja_path, capture_build_dir,
                                                    args.test_suite)
-        autoninja_proc_id = child_processes_manager.CreateSubprocess(autoninja_command, True)
-        returncode, output = child_processes_manager.RunSubprocessBlocking(autoninja_proc_id)
+        autoninja_proc_id = child_processes_manager.CreateSubprocess(
+            autoninja_command, pipe_stdout=False)
+        returncode, output = child_processes_manager.JoinSubprocess(autoninja_proc_id)
         if returncode != 0:
             logging.error(output)
             child_processes_manager.KillAll()
             return 1
         # get a list of tests
-        get_tests_command = GetTestNamesAndParamsCommand(
-            os.path.join(args.capture_build_dir, args.test_suite), args.gtest_filter)
-        get_tests_command_proc_id = child_processes_manager.CreateSubprocess(
-            get_tests_command, False)
-        returncode, output = child_processes_manager.RunSubprocessBlocking(
-            get_tests_command_proc_id)
-        if returncode != 0:
-            logging.error(output)
-            child_processes_manager.KillAll()
-            return 1
-        test_names_and_params = ProcessGetTestNamesAndParamsCommandOutput(output)
+        test_path = os.path.join(capture_build_dir, args.test_suite)
+        test_list = GetTestsListForFilter(test_path, args.gtest_filter)
+        test_names = ParseTestNamesFromTestList(test_list)
         # objects created by manager can be shared by multiple processes. We use it to create
         # collections that are shared by multiple processes such as job queue or result list.
         manager = multiprocessing.Manager()
         job_queue = manager.Queue()
-        test_batch_num = int(math.ceil(len(test_names_and_params) / float(args.batch_count)))
+        test_batch_num = int(math.ceil(len(test_names) / float(args.batch_count)))
 
         # put the test batchs into the job queue
         for batch_index in range(test_batch_num):
             batch = TestBatch(args.use_goma, int(args.batch_count), args.keep_temp_files,
                               args.goma_dir, args.verbose)
             test_index = batch_index
-            while test_index < len(test_names_and_params):
-                batch.AddTest(
-                    Test(test_names_and_params[test_index][0],
-                         test_names_and_params[test_index][1]))
+            while test_index < len(test_names):
+                batch.AddTest(Test(test_names[test_index]))
                 test_index += test_batch_num
             job_queue.put(batch)
-
-        # set the static environment variables that do not change throughout the script run
-        environment_vars = [("ANGLE_CAPTURE_FRAME_END", "100"),
-                            ("ANGLE_CAPTURE_SERIALIZE_STATE", "1")]
-        for environment_var in environment_vars:
-            os.environ[environment_var[0]] = environment_var[1]
 
         passed_count = 0
         failed_count = 0
@@ -937,12 +935,11 @@ def main(args):
         # so that we do not spawn more processes than we actually need
         worker_count = min(worker_count, test_batch_num)
         # spawning and starting up workers
-        for i in range(worker_count):
+        for worker_id in range(worker_count):
             proc = multiprocessing.Process(
                 target=RunTests,
-                args=(i, job_queue, gn_path, autoninja_path, args.capture_build_dir,
-                      args.replay_build_dir + str(i), args.test_suite, replay_exec,
-                      trace_folder + str(i), result_list, message_queue))
+                args=(args, worker_id, job_queue, gn_path, autoninja_path,
+                      trace_folder + str(worker_id), result_list, message_queue))
             child_processes_manager.AddWorker(proc)
             proc.start()
 
@@ -954,12 +951,12 @@ def main(args):
         while child_processes_manager.IsAnyWorkerAlive():
             while not message_queue.empty():
                 msg = message_queue.get()
-                logging.info(msg)
+                info(msg)
                 last_message_timestamp = time.time()
             cur_time = time.time()
             if cur_time - last_message_timestamp > TIME_BETWEEN_MESSAGE:
                 last_message_timestamp = cur_time
-                logging.info("Tests are still running. Remaining workers: " + \
+                info("Tests are still running. Remaining workers: " + \
                 str(child_processes_manager.GetRemainingWorkers()) + \
                 ". Unstarted jobs: " + str(job_queue.qsize()))
             time.sleep(1.0)
@@ -967,23 +964,19 @@ def main(args):
         while not message_queue.empty():
             msg = message_queue.get()
             logging.warning(msg)
-        # delete the static environment variables
-        for environment_var in environment_vars:
-            del os.environ[environment_var[0]]
         end_time = time.time()
 
         # print out results
-        logging.info("\n\n\n")
-        logging.info("Results:")
+        print("\n\n\n")
+        print("Results:")
         for test_batch_result in result_list:
-            logging.info(str(test_batch_result))
+            debug(str(test_batch_result))
             passed_count += len(test_batch_result.passes)
             failed_count += len(test_batch_result.fails)
             timedout_count += len(test_batch_result.timeouts)
             crashed_count += len(test_batch_result.crashes)
             compile_failed_count += len(test_batch_result.compile_fails)
             skipped_count += len(test_batch_result.skips)
-
 
             for failed_test in test_batch_result.fails:
                 failed_tests.append(failed_test)
@@ -995,34 +988,39 @@ def main(args):
                 compile_failed_tests.append(compile_failed_test)
             for skipped_test in test_batch_result.skips:
                 skipped_tests.append(skipped_test)
-        logging.info("\n\n")
-        logging.info("Elapsed time: %.2lf seconds" % (end_time - start_time))
-        logging.info("Passed: "+ str(passed_count) + " Failed: " + str(failed_count) + \
-        " Crashed: " + str(crashed_count) + " CompileFailed: " + str(compile_failed_count) + \
-        " Skipped: " + str(skipped_count) + " Timeout: " + str(timedout_count))
-        logging.info("Failed tests:")
-        for failed_test in failed_tests:
-            logging.info("\t" + failed_test)
-        logging.info("Crashed tests:")
-        for crashed_test in crashed_tests:
-            logging.info("\t" + crashed_test)
-        logging.info("Compile failed tests:")
-        for compile_failed_test in compile_failed_tests:
-            logging.info("\t" + compile_failed_test)
-        logging.info("Skipped tests:")
-        for skipped_test in skipped_tests:
-            logging.info("\t" + skipped_test)
-        logging.info("Timeout tests:")
-        for timeout_test in timed_out_tests:
-            logging.info("\t" + timeout_test)
+
+        print("\n\n")
+        print("Elapsed time: %.2lf seconds" % (end_time - start_time))
+        print("Passed: %d, Failed: %d, Crashed: %d, CompileFailed %d, Skipped: %d, Timeout: %d" %
+              (passed_count, failed_count, crashed_count, compile_failed_count, skipped_count,
+               timedout_count))
+        if len(failed_tests):
+            print("Failed tests:")
+            for failed_test in failed_tests:
+                print("\t" + failed_test)
+        if len(crashed_tests):
+            print("Crashed tests:")
+            for crashed_test in crashed_tests:
+                print("\t" + crashed_test)
+        if len(compile_failed_tests):
+            print("Compile failed tests:")
+            for compile_failed_test in compile_failed_tests:
+                print("\t" + compile_failed_test)
+        if len(skipped_tests):
+            print("Skipped tests:")
+            for skipped_test in skipped_tests:
+                print("\t" + skipped_test)
+        if len(timed_out_tests):
+            print("Timeout tests:")
+            for timeout_test in timed_out_tests:
+                print("\t" + timeout_test)
 
         # delete generated folders if --keep_temp_files flag is set to false
         if args.purge:
             os.remove(os.path.join(REPLAY_SAMPLE_FOLDER, "angle_trace_gl.h"))
             DeleteTraceFolders(worker_count, trace_folder)
-            DeleteReplayBuildFolders(worker_count, args.replay_build_dir, trace_folder)
-            if os.path.isdir(args.capture_build_dir):
-                SafeDeleteFolder(args.capture_build_dir)
+            if os.path.isdir(args.out_dir):
+                SafeDeleteFolder(args.out_dir)
     except KeyboardInterrupt:
         child_processes_manager.KillAll()
 
@@ -1030,15 +1028,10 @@ def main(args):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        '--capture-build-dir',
-        default=DEFAULT_CAPTURE_BUILD_DIR,
-        help='Specifies the capture build directory relative to the ANGLE folder. Default is "%s".'
-        % DEFAULT_CAPTURE_BUILD_DIR)
-    parser.add_argument(
-        '--replay-build-dir',
-        default=DEFAULT_REPLAY_BUILD_DIR,
-        help='Specifies the replay build directory relative to the ANGLE folder. Default is "%s".'
-        % DEFAULT_REPLAY_BUILD_DIR)
+        '--out-dir',
+        default=DEFAULT_OUT_DIR,
+        help='Where to build ANGLE for capture and replay. Relative to the ANGLE folder. Default is "%s".'
+        % DEFAULT_OUT_DIR)
     parser.add_argument(
         '--use-goma',
         action='store_true',
@@ -1079,7 +1072,15 @@ if __name__ == "__main__":
         "--log",
         default=DEFAULT_LOG_LEVEL,
         help='Controls the logging level. Default is "%s".' % DEFAULT_LOG_LEVEL)
+    parser.add_argument(
+        '-j',
+        '--max-jobs',
+        default=DEFAULT_MAX_JOBS,
+        type=int,
+        help='Maximum number of test processes. Default is %d.' % DEFAULT_MAX_JOBS)
     args = parser.parse_args()
+    if platform == "win32":
+        args.test_suite += ".exe"
     if args.output_to_file:
         logging.basicConfig(level=args.log.upper(), filename=args.result_file)
     else:

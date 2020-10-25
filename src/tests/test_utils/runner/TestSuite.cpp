@@ -40,7 +40,8 @@ constexpr char kTestTimeoutArg[]       = "--test-timeout=";
 constexpr char kFilterFileArg[]        = "--filter-file=";
 constexpr char kResultFileArg[]        = "--results-file=";
 constexpr char kHistogramJsonFileArg[] = "--histogram-json-file=";
-constexpr char kListTests[]            = "--gtest_list_tests";
+constexpr char kGTestListTests[]       = "--gtest_list_tests";
+constexpr char kListTests[]            = "--list-tests";
 constexpr char kPrintTestStdout[]      = "--print-test-stdout";
 constexpr char kBatchId[]              = "--batch-id=";
 #if defined(NDEBUG)
@@ -713,10 +714,23 @@ TestQueue BatchTests(const std::vector<TestIdentifier> &tests, int batchSize)
     return testQueue;
 }
 
+void ListTests(const std::map<TestIdentifier, TestResult> &resultsMap)
+{
+    std::map<std::string, std::vector<std::string>> suites;
+
+    std::cout << "Tests list:\n";
+
+    for (const auto &resultIt : resultsMap)
+    {
+        const TestIdentifier &id = resultIt.first;
+        std::cout << id << "\n";
+    }
+}
+
 // Prints the names of the tests matching the user-specified filter flag.
 // This matches the output from googletest/src/gtest.cc but is much much faster for large filters.
 // See http://anglebug.com/5164
-void ListTests(const std::map<TestIdentifier, TestResult> &resultsMap)
+void GTestListTests(const std::map<TestIdentifier, TestResult> &resultsMap)
 {
     std::map<std::string, std::vector<std::string>> suites;
 
@@ -806,6 +820,7 @@ TestSuite::TestSuite(int *argc, char **argv)
       mShardIndex(-1),
       mBotMode(false),
       mDebugTestGroups(false),
+      mGTestListTests(false),
       mListTests(false),
       mPrintTestStdout(false),
       mBatchSize(kDefaultBatchSize),
@@ -1052,6 +1067,7 @@ bool TestSuite::parseSingleArg(const char *argument)
             ParseStringArg("--isolated-script-test-perf-output=", argument, &mHistogramJsonFile) ||
             ParseFlag("--bot-mode", argument, &mBotMode) ||
             ParseFlag("--debug-test-groups", argument, &mDebugTestGroups) ||
+            ParseFlag(kGTestListTests, argument, &mGTestListTests) ||
             ParseFlag(kListTests, argument, &mListTests) ||
             ParseFlag(kPrintTestStdout, argument, &mPrintTestStdout));
 }
@@ -1278,6 +1294,12 @@ int TestSuite::run()
     if (mListTests)
     {
         ListTests(mTestResults.results);
+        return EXIT_SUCCESS;
+    }
+
+    if (mGTestListTests)
+    {
+        GTestListTests(mTestResults.results);
         return EXIT_SUCCESS;
     }
 
