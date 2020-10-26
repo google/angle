@@ -39,6 +39,52 @@
       "message": "Duplicated below. It\u0027s getting kinda big, so if you pull it in a helper it would be good.\n\nAlternatively, (while I like it this way TBH) you probably don\u0027t need to check is_signed. Like it was doing before, you could read either uint32_t or uint64_t and let the cast handle it.",
       "revId": "92b0eed9fbbdfbe5f90a73d2da46544d1b372155",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0c0c1d29_be5f3045",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1467,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-10-26T20:04:53Z",
+      "side": 1,
+      "message": "Should this be stream-\u003ewriteInt\u003csize_t\u003e?\nThat appears to be what we read:\nsize_t vertexShaderSize                   \u003d stream-\u003ereadInt\u003csize_t\u003e();\n\nAppear to be other writeInt\u0027s like that as well.",
+      "range": {
+        "startLine": 1467,
+        "startChar": 8,
+        "endLine": 1467,
+        "endChar": 24
+      },
+      "revId": "92b0eed9fbbdfbe5f90a73d2da46544d1b372155",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "324b4f62_98514c83",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1483,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-10-26T20:04:53Z",
+      "side": 1,
+      "message": "writeInt\u003cGLenum\u003e?\nThat\u0027s the type of the vector we are writing out.",
+      "range": {
+        "startLine": 1483,
+        "startChar": 12,
+        "endLine": 1483,
+        "endChar": 28
+      },
+      "revId": "92b0eed9fbbdfbe5f90a73d2da46544d1b372155",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
