@@ -442,6 +442,9 @@ ANGLE_MAYBE_UNUSED bool SemaphorePropertiesCompatibleWithAndroid(
     return true;
 }
 
+// Environment variable (and associated Android property) to enable Vulkan debug-utils markers
+constexpr char kEnableDebugMarkersVarName[]      = "ANGLE_ENABLE_DEBUG_MARKERS";
+constexpr char kEnableDebugMarkersPropertyName[] = "debug.angle.markers";
 }  // namespace
 
 // RendererVk implementation.
@@ -2462,11 +2465,28 @@ void RendererVk::onCompletedSerial(Serial serial)
 
 void RendererVk::setGlobalDebugAnnotator()
 {
-    // If the vkCmd*DebugUtilsLabelEXT functions exist, initialize DebugAnnotatorVk to log the
-    // OpenGL ES commands that are used, for debuggers (e.g. AGI).
+    // If the vkCmd*DebugUtilsLabelEXT functions exist, and if the kEnableDebugMarkersVarName
+    // environment variable is set, initialize DebugAnnotatorVk to log the OpenGL ES commands that
+    // are used, for debuggers (e.g. AGI).  Otherwise, uninitialize the global  DebugAnnotator
+    // pointer so that applications run full speed.
+    bool enableDebugAnnotatorVk = false;
     if (vkCmdBeginDebugUtilsLabelEXT)
     {
+        std::string enabled = angle::GetEnvironmentVarFromAndroidProperty(
+            kEnableDebugMarkersVarName, kEnableDebugMarkersPropertyName);
+        if (!enabled.empty() && enabled.compare("0") != 0)
+        {
+            enableDebugAnnotatorVk = true;
+        }
+    }
+
+    if (enableDebugAnnotatorVk)
+    {
         gl::InitializeDebugAnnotations(&mAnnotator);
+    }
+    else
+    {
+        gl::UninitializeDebugAnnotations();
     }
 }
 
