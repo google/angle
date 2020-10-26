@@ -996,23 +996,23 @@ def main(args):
                timedout_count))
         if len(failed_tests):
             print("Failed tests:")
-            for failed_test in failed_tests:
+            for failed_test in sorted(failed_tests):
                 print("\t" + failed_test)
         if len(crashed_tests):
             print("Crashed tests:")
-            for crashed_test in crashed_tests:
+            for crashed_test in sorted(crashed_tests):
                 print("\t" + crashed_test)
         if len(compile_failed_tests):
             print("Compile failed tests:")
-            for compile_failed_test in compile_failed_tests:
+            for compile_failed_test in sorted(compile_failed_tests):
                 print("\t" + compile_failed_test)
         if len(skipped_tests):
             print("Skipped tests:")
-            for skipped_test in skipped_tests:
+            for skipped_test in sorted(skipped_tests):
                 print("\t" + skipped_test)
         if len(timed_out_tests):
             print("Timeout tests:")
-            for timeout_test in timed_out_tests:
+            for timeout_test in sorted(timed_out_tests):
                 print("\t" + timeout_test)
 
         # delete generated folders if --keep_temp_files flag is set to false
