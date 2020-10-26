@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "282f1b86_a5111a83",
+        "filename": "src/libANGLE/BinaryStream.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-26T20:10:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c9ed099a_267772bf",
+      "range": {
+        "startLine": 38,
+        "startChar": 42,
+        "endLine": 38,
+        "endChar": 46
+      },
+      "revId": "92b0eed9fbbdfbe5f90a73d2da46544d1b372155",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2d32f13c_1b76525c",
@@ -37,6 +61,24 @@
       "writtenOn": "2020-10-26T18:57:55Z",
       "side": 1,
       "message": "Duplicated below. It\u0027s getting kinda big, so if you pull it in a helper it would be good.\n\nAlternatively, (while I like it this way TBH) you probably don\u0027t need to check is_signed. Like it was doing before, you could read either uint32_t or uint64_t and let the cast handle it.",
+      "revId": "92b0eed9fbbdfbe5f90a73d2da46544d1b372155",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fbb8d274_a847e4db",
+        "filename": "src/libANGLE/BinaryStream.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-26T20:10:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2d32f13c_1b76525c",
       "revId": "92b0eed9fbbdfbe5f90a73d2da46544d1b372155",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
@@ -64,6 +106,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "cf5b6631_0cbcb347",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1467,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-26T20:10:39Z",
+      "side": 1,
+      "message": "The \u003csize_t\u003e annotation on writeInt is redundant because the compiler infers the type from the arguments. readInt doesn\u0027t have this luxury because it can\u0027t infer from the return type. Technically we could strip out all the explicit types on writeInt. I did in some places.",
+      "parentUuid": "0c0c1d29_be5f3045",
+      "range": {
+        "startLine": 1467,
+        "startChar": 8,
+        "endLine": 1467,
+        "endChar": 24
+      },
+      "revId": "92b0eed9fbbdfbe5f90a73d2da46544d1b372155",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "324b4f62_98514c83",
@@ -77,6 +143,30 @@
       "writtenOn": "2020-10-26T20:04:53Z",
       "side": 1,
       "message": "writeInt\u003cGLenum\u003e?\nThat\u0027s the type of the vector we are writing out.",
+      "range": {
+        "startLine": 1483,
+        "startChar": 12,
+        "endLine": 1483,
+        "endChar": 28
+      },
+      "revId": "92b0eed9fbbdfbe5f90a73d2da46544d1b372155",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "617b32cf_65c34b56",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1483,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-26T20:10:39Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "324b4f62_98514c83",
       "range": {
         "startLine": 1483,
         "startChar": 12,
