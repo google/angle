@@ -79,8 +79,13 @@ ANGLE_UTIL_EXPORT const char *Texture2D();
 namespace fs
 {
 
-// A shader that renders a simple checker pattern of red and green. X axis and y axis separate the
-// different colors. Needs varying v_position.
+// A shader that renders a simple checker pattern of red, green and blue. X axis and Y axis separate
+// the different colors. Needs varying v_position.
+//
+// - X < 0 && y < 0: Red
+// - X < 0 && y >= 0: Green
+// - X >= 0 && y < 0: Blue
+// - X >= 0 && y >= 0: Yellow
 ANGLE_UTIL_EXPORT const char *Checkered();
 
 // A shader that fills with color taken from uniform named "color".

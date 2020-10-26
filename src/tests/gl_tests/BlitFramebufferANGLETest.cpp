@@ -410,9 +410,9 @@ TEST_P(BlitFramebufferANGLETest, BlitColorToDefault)
     glBindFramebuffer(GL_FRAMEBUFFER, mOriginalFBO);
 
     EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 4, getWindowHeight() / 4, GLColor::red);
-    EXPECT_PIXEL_COLOR_EQ(3 * getWindowWidth() / 4, getWindowHeight() / 4, GLColor::green);
-    EXPECT_PIXEL_COLOR_EQ(3 * getWindowWidth() / 4, 3 * getWindowHeight() / 4, GLColor::red);
     EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 4, 3 * getWindowHeight() / 4, GLColor::green);
+    EXPECT_PIXEL_COLOR_EQ(3 * getWindowWidth() / 4, getWindowHeight() / 4, GLColor::blue);
+    EXPECT_PIXEL_COLOR_EQ(3 * getWindowWidth() / 4, 3 * getWindowHeight() / 4, GLColor::yellow);
 }
 
 // Draw to system framebuffer, blit whole-buffer color to user-created framebuffer.
@@ -441,10 +441,10 @@ TEST_P(BlitFramebufferANGLETest, ReverseColorBlit)
 
     glBindFramebuffer(GL_FRAMEBUFFER, mUserFBO);
 
-    EXPECT_PIXEL_EQ(getWindowWidth() / 4, getWindowHeight() / 4, 255, 0, 0, 255);
-    EXPECT_PIXEL_EQ(3 * getWindowWidth() / 4, getWindowHeight() / 4, 0, 255, 0, 255);
-    EXPECT_PIXEL_EQ(3 * getWindowWidth() / 4, 3 * getWindowHeight() / 4, 255, 0, 0, 255);
-    EXPECT_PIXEL_EQ(getWindowWidth() / 4, 3 * getWindowHeight() / 4, 0, 255, 0, 255);
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 4, getWindowHeight() / 4, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 4, 3 * getWindowHeight() / 4, GLColor::green);
+    EXPECT_PIXEL_COLOR_EQ(3 * getWindowWidth() / 4, getWindowHeight() / 4, GLColor::blue);
+    EXPECT_PIXEL_COLOR_EQ(3 * getWindowWidth() / 4, 3 * getWindowHeight() / 4, GLColor::yellow);
 }
 
 // blit from user-created FBO to system framebuffer, with the scissor test enabled.
@@ -478,10 +478,10 @@ TEST_P(BlitFramebufferANGLETest, ScissoredBlit)
 
     glBindFramebuffer(GL_FRAMEBUFFER, mOriginalFBO);
 
-    EXPECT_PIXEL_EQ(getWindowWidth() / 4, getWindowHeight() / 4, 255, 255, 255, 255);
-    EXPECT_PIXEL_EQ(3 * getWindowWidth() / 4, getWindowHeight() / 4, 0, 255, 0, 255);
-    EXPECT_PIXEL_EQ(3 * getWindowWidth() / 4, 3 * getWindowHeight() / 4, 255, 0, 0, 255);
-    EXPECT_PIXEL_EQ(getWindowWidth() / 4, 3 * getWindowHeight() / 4, 255, 255, 255, 255);
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 4, getWindowHeight() / 4, GLColor::white);
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 4, 3 * getWindowHeight() / 4, GLColor::white);
+    EXPECT_PIXEL_COLOR_EQ(3 * getWindowWidth() / 4, getWindowHeight() / 4, GLColor::blue);
+    EXPECT_PIXEL_COLOR_EQ(3 * getWindowWidth() / 4, 3 * getWindowHeight() / 4, GLColor::yellow);
 }
 
 // blit from system FBO to user-created framebuffer, with the scissor test enabled.
@@ -515,10 +515,10 @@ TEST_P(BlitFramebufferANGLETest, ReverseScissoredBlit)
 
     glBindFramebuffer(GL_FRAMEBUFFER, mUserFBO);
 
-    EXPECT_PIXEL_EQ(getWindowWidth() / 4, getWindowHeight() / 4, 255, 255, 255, 255);
-    EXPECT_PIXEL_EQ(3 * getWindowWidth() / 4, getWindowHeight() / 4, 0, 255, 0, 255);
-    EXPECT_PIXEL_EQ(3 * getWindowWidth() / 4, 3 * getWindowHeight() / 4, 255, 0, 0, 255);
-    EXPECT_PIXEL_EQ(getWindowWidth() / 4, 3 * getWindowHeight() / 4, 255, 255, 255, 255);
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 4, getWindowHeight() / 4, GLColor::white);
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 4, 3 * getWindowHeight() / 4, GLColor::white);
+    EXPECT_PIXEL_COLOR_EQ(3 * getWindowWidth() / 4, getWindowHeight() / 4, GLColor::blue);
+    EXPECT_PIXEL_COLOR_EQ(3 * getWindowWidth() / 4, 3 * getWindowHeight() / 4, GLColor::yellow);
 }
 
 // blit from user-created FBO to system framebuffer, using region larger than buffer.
@@ -548,10 +548,10 @@ TEST_P(BlitFramebufferANGLETest, OversizedBlit)
 
     glBindFramebuffer(GL_FRAMEBUFFER, mOriginalFBO);
 
-    EXPECT_PIXEL_EQ(getWindowWidth() / 4, getWindowHeight() / 4, 255, 0, 0, 255);
-    EXPECT_PIXEL_EQ(3 * getWindowWidth() / 4, getWindowHeight() / 4, 0, 255, 0, 255);
-    EXPECT_PIXEL_EQ(3 * getWindowWidth() / 4, 3 * getWindowHeight() / 4, 255, 0, 0, 255);
-    EXPECT_PIXEL_EQ(getWindowWidth() / 4, 3 * getWindowHeight() / 4, 0, 255, 0, 255);
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 4, getWindowHeight() / 4, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 4, 3 * getWindowHeight() / 4, GLColor::green);
+    EXPECT_PIXEL_COLOR_EQ(3 * getWindowWidth() / 4, getWindowHeight() / 4, GLColor::blue);
+    EXPECT_PIXEL_COLOR_EQ(3 * getWindowWidth() / 4, 3 * getWindowHeight() / 4, GLColor::yellow);
 }
 
 // blit from system FBO to user-created framebuffer, using region larger than buffer.
@@ -580,10 +580,10 @@ TEST_P(BlitFramebufferANGLETest, ReverseOversizedBlit)
 
     glBindFramebuffer(GL_FRAMEBUFFER, mUserFBO);
 
-    EXPECT_PIXEL_EQ(getWindowWidth() / 4, getWindowHeight() / 4, 255, 0, 0, 255);
-    EXPECT_PIXEL_EQ(3 * getWindowWidth() / 4, getWindowHeight() / 4, 0, 255, 0, 255);
-    EXPECT_PIXEL_EQ(3 * getWindowWidth() / 4, 3 * getWindowHeight() / 4, 255, 0, 0, 255);
-    EXPECT_PIXEL_EQ(getWindowWidth() / 4, 3 * getWindowHeight() / 4, 0, 255, 0, 255);
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 4, getWindowHeight() / 4, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 4, 3 * getWindowHeight() / 4, GLColor::green);
+    EXPECT_PIXEL_COLOR_EQ(3 * getWindowWidth() / 4, getWindowHeight() / 4, GLColor::blue);
+    EXPECT_PIXEL_COLOR_EQ(3 * getWindowWidth() / 4, 3 * getWindowHeight() / 4, GLColor::yellow);
 }
 
 // blit from user-created FBO to system framebuffer, with depth buffer.
@@ -634,9 +634,9 @@ TEST_P(BlitFramebufferANGLETest, BlitWithDepthUserToDefault)
     glDisable(GL_DEPTH_TEST);
 
     EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 4, getWindowHeight() / 4, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 4, 3 * getWindowHeight() / 4, GLColor::blue);
     EXPECT_PIXEL_COLOR_EQ(3 * getWindowWidth() / 4, getWindowHeight() / 4, GLColor::red);
     EXPECT_PIXEL_COLOR_EQ(3 * getWindowWidth() / 4, 3 * getWindowHeight() / 4, GLColor::blue);
-    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 4, 3 * getWindowHeight() / 4, GLColor::blue);
 }
 
 // blit from system FBO to user-created framebuffer, with depth buffer.
@@ -686,10 +686,10 @@ TEST_P(BlitFramebufferANGLETest, BlitWithDepthDefaultToUser)
 
     glDisable(GL_DEPTH_TEST);
 
-    EXPECT_PIXEL_EQ(getWindowWidth() / 4, getWindowHeight() / 4, 255, 0, 0, 255);
-    EXPECT_PIXEL_EQ(3 * getWindowWidth() / 4, getWindowHeight() / 4, 255, 0, 0, 255);
-    EXPECT_PIXEL_EQ(3 * getWindowWidth() / 4, 3 * getWindowHeight() / 4, 0, 0, 255, 255);
-    EXPECT_PIXEL_EQ(getWindowWidth() / 4, 3 * getWindowHeight() / 4, 0, 0, 255, 255);
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 4, getWindowHeight() / 4, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 4, 3 * getWindowHeight() / 4, GLColor::blue);
+    EXPECT_PIXEL_COLOR_EQ(3 * getWindowWidth() / 4, getWindowHeight() / 4, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(3 * getWindowWidth() / 4, 3 * getWindowHeight() / 4, GLColor::blue);
 }
 
 // blit from one region of the system fbo to another-- this should fail.
@@ -755,9 +755,9 @@ TEST_P(BlitFramebufferANGLETest, BlitPartialColor)
     glBindFramebuffer(GL_FRAMEBUFFER, mOriginalFBO);
 
     EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 4, getWindowHeight() / 4, GLColor::white);
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 4, 3 * getWindowHeight() / 4, GLColor::red);
     EXPECT_PIXEL_COLOR_EQ(3 * getWindowWidth() / 4, getWindowHeight() / 4, GLColor::white);
     EXPECT_PIXEL_COLOR_EQ(3 * getWindowWidth() / 4, 3 * getWindowHeight() / 4, GLColor::white);
-    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 4, 3 * getWindowHeight() / 4, GLColor::red);
 }
 
 TEST_P(BlitFramebufferANGLETest, BlitDifferentSizes)
@@ -785,7 +785,7 @@ TEST_P(BlitFramebufferANGLETest, BlitDifferentSizes)
 
     glBindFramebuffer(GL_FRAMEBUFFER, mSmallFBO);
 
-    EXPECT_PIXEL_EQ(getWindowWidth() / 4, getWindowHeight() / 4, 255, 0, 0, 255);
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 4, getWindowHeight() / 4, GLColor::red);
 
     EXPECT_GL_NO_ERROR();
 }
@@ -873,10 +873,10 @@ TEST_P(BlitFramebufferANGLETest, BlitStencil)
 
     glBindFramebuffer(GL_FRAMEBUFFER, mOriginalFBO);
 
-    EXPECT_PIXEL_EQ(getWindowWidth() / 4, getWindowHeight() / 4, 255, 0, 0, 255);
-    EXPECT_PIXEL_EQ(3 * getWindowWidth() / 4, getWindowHeight() / 4, 255, 0, 0, 255);
-    EXPECT_PIXEL_EQ(3 * getWindowWidth() / 4, 3 * getWindowHeight() / 4, 0, 255, 0, 255);
-    EXPECT_PIXEL_EQ(getWindowWidth() / 4, 3 * getWindowHeight() / 4, 0, 255, 0, 255);
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 4, getWindowHeight() / 4, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 4, 3 * getWindowHeight() / 4, GLColor::green);
+    EXPECT_PIXEL_COLOR_EQ(3 * getWindowWidth() / 4, getWindowHeight() / 4, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(3 * getWindowWidth() / 4, 3 * getWindowHeight() / 4, GLColor::green);
 
     glStencilFunc(GL_EQUAL, 0x1, 0xFF);  // only pass if stencil buffer at pixel reads 0x1
 
@@ -885,10 +885,10 @@ TEST_P(BlitFramebufferANGLETest, BlitStencil)
 
     glDisable(GL_STENCIL_TEST);
 
-    EXPECT_PIXEL_EQ(getWindowWidth() / 4, getWindowHeight() / 4, 0, 0, 255, 255);
-    EXPECT_PIXEL_EQ(3 * getWindowWidth() / 4, getWindowHeight() / 4, 0, 0, 255, 255);
-    EXPECT_PIXEL_EQ(3 * getWindowWidth() / 4, 3 * getWindowHeight() / 4, 0, 255, 0, 255);
-    EXPECT_PIXEL_EQ(getWindowWidth() / 4, 3 * getWindowHeight() / 4, 0, 255, 0, 255);
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 4, getWindowHeight() / 4, GLColor::blue);
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 4, 3 * getWindowHeight() / 4, GLColor::green);
+    EXPECT_PIXEL_COLOR_EQ(3 * getWindowWidth() / 4, getWindowHeight() / 4, GLColor::blue);
+    EXPECT_PIXEL_COLOR_EQ(3 * getWindowWidth() / 4, 3 * getWindowHeight() / 4, GLColor::green);
 }
 
 // make sure that attempting to blit a partial depth buffer issues an error
@@ -946,19 +946,19 @@ TEST_P(BlitFramebufferANGLETest, BlitMRT)
 
     glBindFramebuffer(GL_FRAMEBUFFER, mMRTFBO);
 
-    EXPECT_PIXEL_EQ(getWindowWidth() / 4, getWindowHeight() / 4, 255, 0, 0, 255);
-    EXPECT_PIXEL_EQ(3 * getWindowWidth() / 4, getWindowHeight() / 4, 0, 255, 0, 255);
-    EXPECT_PIXEL_EQ(3 * getWindowWidth() / 4, 3 * getWindowHeight() / 4, 255, 0, 0, 255);
-    EXPECT_PIXEL_EQ(getWindowWidth() / 4, 3 * getWindowHeight() / 4, 0, 255, 0, 255);
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 4, getWindowHeight() / 4, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 4, 3 * getWindowHeight() / 4, GLColor::green);
+    EXPECT_PIXEL_COLOR_EQ(3 * getWindowWidth() / 4, getWindowHeight() / 4, GLColor::blue);
+    EXPECT_PIXEL_COLOR_EQ(3 * getWindowWidth() / 4, 3 * getWindowHeight() / 4, GLColor::yellow);
 
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1_EXT, GL_TEXTURE_2D, 0, 0);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mMRTColorBuffer0,
                            0);
 
-    EXPECT_PIXEL_EQ(getWindowWidth() / 4, getWindowHeight() / 4, 255, 0, 0, 255);
-    EXPECT_PIXEL_EQ(3 * getWindowWidth() / 4, getWindowHeight() / 4, 0, 255, 0, 255);
-    EXPECT_PIXEL_EQ(3 * getWindowWidth() / 4, 3 * getWindowHeight() / 4, 255, 0, 0, 255);
-    EXPECT_PIXEL_EQ(getWindowWidth() / 4, 3 * getWindowHeight() / 4, 0, 255, 0, 255);
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 4, getWindowHeight() / 4, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 4, 3 * getWindowHeight() / 4, GLColor::green);
+    EXPECT_PIXEL_COLOR_EQ(3 * getWindowWidth() / 4, getWindowHeight() / 4, GLColor::blue);
+    EXPECT_PIXEL_COLOR_EQ(3 * getWindowWidth() / 4, 3 * getWindowHeight() / 4, GLColor::yellow);
 
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mMRTColorBuffer0,
                            0);
@@ -1854,9 +1854,9 @@ TEST_P(BlitFramebufferTest, BlitSRGBToRGBAndScale)
     glBindFramebuffer(GL_FRAMEBUFFER, targetFBO);
 
     EXPECT_PIXEL_COLOR_EQ(kWidth / 4, kHeight / 4, GLColor::red);
-    EXPECT_PIXEL_COLOR_EQ(3 * kWidth / 4, kHeight / 4, GLColor::green);
-    EXPECT_PIXEL_COLOR_EQ(3 * kWidth / 4, 3 * kHeight / 4, GLColor::red);
     EXPECT_PIXEL_COLOR_EQ(kWidth / 4, 3 * kHeight / 4, GLColor::green);
+    EXPECT_PIXEL_COLOR_EQ(3 * kWidth / 4, kHeight / 4, GLColor::blue);
+    EXPECT_PIXEL_COLOR_EQ(3 * kWidth / 4, 3 * kHeight / 4, GLColor::yellow);
 
     glBindFramebuffer(GL_READ_FRAMEBUFFER, sourceFBO);
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, targetFBO);
@@ -1872,10 +1872,10 @@ TEST_P(BlitFramebufferTest, BlitSRGBToRGBAndScale)
 
     glBindFramebuffer(GL_FRAMEBUFFER, targetFBO);
 
-    EXPECT_PIXEL_COLOR_EQ(kWidth / 4, kHeight / 4, GLColor::green);
+    EXPECT_PIXEL_COLOR_EQ(kWidth / 4, kHeight / 4, GLColor::blue);
+    EXPECT_PIXEL_COLOR_EQ(kWidth / 4, 3 * kHeight / 4, GLColor::yellow);
     EXPECT_PIXEL_COLOR_EQ(3 * kWidth / 4, kHeight / 4, GLColor::red);
     EXPECT_PIXEL_COLOR_EQ(3 * kWidth / 4, 3 * kHeight / 4, GLColor::green);
-    EXPECT_PIXEL_COLOR_EQ(kWidth / 4, 3 * kHeight / 4, GLColor::red);
 }
 
 // Blit stencil, with scissor and scale it.
@@ -2068,10 +2068,10 @@ TEST_P(BlitFramebufferTest, PartialBlitSRGBToRGB)
 
     glBindFramebuffer(GL_FRAMEBUFFER, targetFBO);
 
-    EXPECT_PIXEL_COLOR_EQ(kWidth / 4, kHeight / 4, GLColor::red);
-    EXPECT_PIXEL_COLOR_EQ(3 * kWidth / 4, kHeight / 4, GLColor::red);
-    EXPECT_PIXEL_COLOR_EQ(3 * kWidth / 4, 3 * kHeight / 4, GLColor::red);
-    EXPECT_PIXEL_COLOR_EQ(kWidth / 4, 3 * kHeight / 4, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(kWidth / 4, kHeight / 4, GLColor::yellow);
+    EXPECT_PIXEL_COLOR_EQ(kWidth / 4, 3 * kHeight / 4, GLColor::yellow);
+    EXPECT_PIXEL_COLOR_EQ(3 * kWidth / 4, kHeight / 4, GLColor::yellow);
+    EXPECT_PIXEL_COLOR_EQ(3 * kWidth / 4, 3 * kHeight / 4, GLColor::yellow);
 
     glBindFramebuffer(GL_READ_FRAMEBUFFER, sourceFBO);
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, targetFBO);
@@ -2087,10 +2087,10 @@ TEST_P(BlitFramebufferTest, PartialBlitSRGBToRGB)
 
     glBindFramebuffer(GL_FRAMEBUFFER, targetFBO);
 
-    EXPECT_PIXEL_COLOR_EQ(kWidth / 4, kHeight / 4, GLColor::green);
-    EXPECT_PIXEL_COLOR_EQ(3 * kWidth / 4, kHeight / 4, GLColor::green);
-    EXPECT_PIXEL_COLOR_EQ(3 * kWidth / 4, 3 * kHeight / 4, GLColor::green);
-    EXPECT_PIXEL_COLOR_EQ(kWidth / 4, 3 * kHeight / 4, GLColor::green);
+    EXPECT_PIXEL_COLOR_EQ(kWidth / 4, kHeight / 4, GLColor::blue);
+    EXPECT_PIXEL_COLOR_EQ(kWidth / 4, 3 * kHeight / 4, GLColor::blue);
+    EXPECT_PIXEL_COLOR_EQ(3 * kWidth / 4, kHeight / 4, GLColor::blue);
+    EXPECT_PIXEL_COLOR_EQ(3 * kWidth / 4, 3 * kHeight / 4, GLColor::blue);
 }
 
 // Blit an SRGB framebuffer with an oversized source area (parts outside the source area should be
@@ -2126,16 +2126,16 @@ TEST_P(BlitFramebufferTest, BlitSRGBToRGBOversizedSourceArea)
 
     // Source FBO colors can be found in the middle of the target FBO.
     EXPECT_PIXEL_COLOR_EQ(7 * kWidth / 16, 7 * kHeight / 16, GLColor::red);
-    EXPECT_PIXEL_COLOR_EQ(9 * kWidth / 16, 7 * kHeight / 16, GLColor::green);
-    EXPECT_PIXEL_COLOR_EQ(9 * kWidth / 16, 9 * kHeight / 16, GLColor::red);
     EXPECT_PIXEL_COLOR_EQ(7 * kWidth / 16, 9 * kHeight / 16, GLColor::green);
+    EXPECT_PIXEL_COLOR_EQ(9 * kWidth / 16, 7 * kHeight / 16, GLColor::blue);
+    EXPECT_PIXEL_COLOR_EQ(9 * kWidth / 16, 9 * kHeight / 16, GLColor::yellow);
 
     // Clear color should remain around the edges of the target FBO (WebGL 2.0 spec explicitly
     // requires this and ANGLE is expected to follow that).
     EXPECT_PIXEL_COLOR_EQ(kWidth / 4, kHeight / 4, GLColor::blue);
+    EXPECT_PIXEL_COLOR_EQ(kWidth / 4, 3 * kHeight / 4, GLColor::blue);
     EXPECT_PIXEL_COLOR_EQ(3 * kWidth / 4, kHeight / 4, GLColor::blue);
     EXPECT_PIXEL_COLOR_EQ(3 * kWidth / 4, 3 * kHeight / 4, GLColor::blue);
-    EXPECT_PIXEL_COLOR_EQ(kWidth / 4, 3 * kHeight / 4, GLColor::blue);
 }
 
 // Blit an SRGB framebuffer with an oversized dest area (even though the result is clipped, it
@@ -2168,6 +2168,18 @@ TEST_P(BlitFramebufferTest, BlitSRGBToRGBOversizedDestArea)
 
     glBindFramebuffer(GL_FRAMEBUFFER, targetFBO);
 
+    // Expected result:
+    //
+    //     +-------+-------+
+    //     |       |       |
+    //     |   R   |   B   |
+    //     |       |       |
+    //     +-------+-------+
+    //     |       |       |
+    //     |   G   |   Y   |
+    //     |       |       |
+    //     +-------+-------+
+    //
     EXPECT_PIXEL_COLOR_EQ(1, 1, GLColor::red);
     EXPECT_PIXEL_COLOR_EQ(kWidth / 4, kHeight / 4, GLColor::red);
     EXPECT_PIXEL_COLOR_EQ(kWidth / 2 - 1, kHeight / 2 - 1, GLColor::red);
@@ -2176,13 +2188,13 @@ TEST_P(BlitFramebufferTest, BlitSRGBToRGBOversizedDestArea)
     EXPECT_PIXEL_COLOR_EQ(kWidth / 4, 3 * kHeight / 4, GLColor::green);
     EXPECT_PIXEL_COLOR_EQ(kWidth / 2 - 1, kHeight / 2 + 1, GLColor::green);
 
-    EXPECT_PIXEL_COLOR_EQ(kWidth - 1, 1, GLColor::green);
-    EXPECT_PIXEL_COLOR_EQ(3 * kWidth / 4, kHeight / 4, GLColor::green);
-    EXPECT_PIXEL_COLOR_EQ(kWidth / 2 + 1, kHeight / 2 - 1, GLColor::green);
+    EXPECT_PIXEL_COLOR_EQ(kWidth - 1, 1, GLColor::blue);
+    EXPECT_PIXEL_COLOR_EQ(3 * kWidth / 4, kHeight / 4, GLColor::blue);
+    EXPECT_PIXEL_COLOR_EQ(kWidth / 2 + 1, kHeight / 2 - 1, GLColor::blue);
 
-    EXPECT_PIXEL_COLOR_EQ(kWidth - 1, kHeight - 1, GLColor::red);
-    EXPECT_PIXEL_COLOR_EQ(3 * kWidth / 4, 3 * kHeight / 4, GLColor::red);
-    EXPECT_PIXEL_COLOR_EQ(kWidth / 2 + 1, kHeight / 2 + 1, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(kWidth - 1, kHeight - 1, GLColor::yellow);
+    EXPECT_PIXEL_COLOR_EQ(3 * kWidth / 4, 3 * kHeight / 4, GLColor::yellow);
+    EXPECT_PIXEL_COLOR_EQ(kWidth / 2 + 1, kHeight / 2 + 1, GLColor::yellow);
 
     // Dest is oversized in the negative direction
     glBindFramebuffer(GL_READ_FRAMEBUFFER, sourceFBO);
@@ -2195,20 +2207,44 @@ TEST_P(BlitFramebufferTest, BlitSRGBToRGBOversizedDestArea)
 
     glBindFramebuffer(GL_FRAMEBUFFER, targetFBO);
 
-    EXPECT_PIXEL_COLOR_EQ(1, 1, GLColor::red);
-    EXPECT_PIXEL_COLOR_EQ(kWidth / 2 - 1, kHeight / 2 - 1, GLColor::red);
+    // Expected result:
+    //
+    //     Width / 4
+    //         |
+    //         V
+    //     +---+-----------+
+    //     | R |     B     |
+    //     +---+-----------+ <- Height / 4
+    //     |   |           |
+    //     |   |           |
+    //     | G |     Y     |
+    //     |   |           |
+    //     |   |           |
+    //     +---+-----------+
+    //
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(0, kHeight / 4 - 1, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(kWidth / 4 - 1, 0, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(kWidth / 4 - 1, kHeight / 4 - 1, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(kWidth / 8, kHeight / 8, GLColor::red);
 
-    EXPECT_PIXEL_COLOR_EQ(1, kWidth - 1, GLColor::green);
-    EXPECT_PIXEL_COLOR_EQ(kWidth / 4, 3 * kHeight / 4, GLColor::red);
-    EXPECT_PIXEL_COLOR_EQ(kWidth / 2 - 1, kHeight / 2 + 1, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(0, kHeight / 4 + 1, GLColor::green);
+    EXPECT_PIXEL_COLOR_EQ(0, kHeight - 1, GLColor::green);
+    EXPECT_PIXEL_COLOR_EQ(kWidth / 4 - 1, kHeight / 4 + 1, GLColor::green);
+    EXPECT_PIXEL_COLOR_EQ(kWidth / 4 - 1, kHeight - 1, GLColor::green);
+    EXPECT_PIXEL_COLOR_EQ(kWidth / 8, kHeight / 2, GLColor::green);
 
-    EXPECT_PIXEL_COLOR_EQ(kWidth - 1, 1, GLColor::green);
-    EXPECT_PIXEL_COLOR_EQ(3 * kWidth / 4, kHeight / 4, GLColor::red);
-    EXPECT_PIXEL_COLOR_EQ(kWidth / 2 + 1, kHeight / 2 - 1, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(kWidth / 4 + 1, 0, GLColor::blue);
+    EXPECT_PIXEL_COLOR_EQ(kWidth / 4 + 1, kHeight / 4 - 1, GLColor::blue);
+    EXPECT_PIXEL_COLOR_EQ(kWidth - 1, 0, GLColor::blue);
+    EXPECT_PIXEL_COLOR_EQ(kWidth - 1, kHeight / 4 - 1, GLColor::blue);
+    EXPECT_PIXEL_COLOR_EQ(kWidth / 2, kHeight / 8, GLColor::blue);
 
-    EXPECT_PIXEL_COLOR_EQ(kWidth - 1, kHeight - 1, GLColor::red);
-    EXPECT_PIXEL_COLOR_EQ(3 * kWidth / 4, 3 * kHeight / 4, GLColor::red);
-    EXPECT_PIXEL_COLOR_EQ(kWidth / 2 + 1, kHeight / 2 + 1, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(kWidth / 4 + 1, kHeight / 4 + 1, GLColor::yellow);
+    EXPECT_PIXEL_COLOR_EQ(kWidth / 4 + 1, kHeight - 1, GLColor::yellow);
+    EXPECT_PIXEL_COLOR_EQ(kWidth - 1, kHeight / 4 + 1, GLColor::yellow);
+    EXPECT_PIXEL_COLOR_EQ(kWidth - 1, kHeight - 1, GLColor::yellow);
+    EXPECT_PIXEL_COLOR_EQ(kWidth / 2, kHeight / 2, GLColor::yellow);
 
     // Dest is oversized in the positive direction
     glBindFramebuffer(GL_READ_FRAMEBUFFER, sourceFBO);
@@ -2221,20 +2257,44 @@ TEST_P(BlitFramebufferTest, BlitSRGBToRGBOversizedDestArea)
 
     glBindFramebuffer(GL_FRAMEBUFFER, targetFBO);
 
-    EXPECT_PIXEL_COLOR_EQ(1, 1, GLColor::red);
-    EXPECT_PIXEL_COLOR_EQ(kWidth / 4, kHeight / 4, GLColor::red);
-    EXPECT_PIXEL_COLOR_EQ(kWidth / 2 - 1, kHeight / 2 - 1, GLColor::red);
+    // Expected result:
+    //
+    //           3 * Width / 4
+    //                 |
+    //                 V
+    //     +-----------+---+
+    //     |           |   |
+    //     |           |   |
+    //     |     R     | B |
+    //     |           |   |
+    //     |           |   |
+    //     +-----------+---+ <- 3 * Height / 4
+    //     |     G     | Y |
+    //     +-----------+---+
+    //
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(0, 3 * kHeight / 4 - 1, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(3 * kWidth / 4 - 1, 0, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(3 * kWidth / 4 - 1, 3 * kHeight / 4 - 1, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(kWidth / 2, kHeight / 2, GLColor::red);
 
-    EXPECT_PIXEL_COLOR_EQ(1, kWidth - 1, GLColor::green);
-    EXPECT_PIXEL_COLOR_EQ(kWidth / 4, 3 * kHeight / 4, GLColor::green);
-    EXPECT_PIXEL_COLOR_EQ(kWidth / 2 - 1, kHeight / 2 + 1, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(0, 3 * kHeight / 4 + 1, GLColor::green);
+    EXPECT_PIXEL_COLOR_EQ(0, kHeight - 1, GLColor::green);
+    EXPECT_PIXEL_COLOR_EQ(3 * kWidth / 4 - 1, 3 * kHeight / 4 + 1, GLColor::green);
+    EXPECT_PIXEL_COLOR_EQ(3 * kWidth / 4 - 1, kHeight - 1, GLColor::green);
+    EXPECT_PIXEL_COLOR_EQ(kWidth / 2, 7 * kHeight / 8, GLColor::green);
 
-    EXPECT_PIXEL_COLOR_EQ(kWidth - 1, 1, GLColor::green);
-    EXPECT_PIXEL_COLOR_EQ(3 * kWidth / 4, kHeight / 4, GLColor::green);
-    EXPECT_PIXEL_COLOR_EQ(kWidth / 2 + 1, kHeight / 2 - 1, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(3 * kWidth / 4 + 1, 0, GLColor::blue);
+    EXPECT_PIXEL_COLOR_EQ(3 * kWidth / 4 + 1, 3 * kHeight / 4 - 1, GLColor::blue);
+    EXPECT_PIXEL_COLOR_EQ(kWidth - 1, 0, GLColor::blue);
+    EXPECT_PIXEL_COLOR_EQ(kWidth - 1, 3 * kHeight / 4 - 1, GLColor::blue);
+    EXPECT_PIXEL_COLOR_EQ(7 * kWidth / 8, kHeight / 2, GLColor::blue);
 
-    EXPECT_PIXEL_COLOR_EQ(kWidth - 1, kHeight - 1, GLColor::red);
-    EXPECT_PIXEL_COLOR_EQ(kWidth / 2 + 1, kHeight / 2 + 1, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(3 * kWidth / 4 + 1, 3 * kHeight / 4 + 1, GLColor::yellow);
+    EXPECT_PIXEL_COLOR_EQ(3 * kWidth / 4 + 1, kHeight - 1, GLColor::yellow);
+    EXPECT_PIXEL_COLOR_EQ(kWidth - 1, 3 * kHeight / 4 + 1, GLColor::yellow);
+    EXPECT_PIXEL_COLOR_EQ(kWidth - 1, kHeight - 1, GLColor::yellow);
+    EXPECT_PIXEL_COLOR_EQ(7 * kWidth / 8, 7 * kHeight / 8, GLColor::yellow);
 }
 
 // Test blitFramebuffer size overflow checks. WebGL 2.0 spec section 5.41. We do validation for
