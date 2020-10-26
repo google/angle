@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c9ed099a_267772bf",
+        "filename": "src/libANGLE/BinaryStream.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-10-26T18:57:55Z",
+      "side": 1,
+      "message": "Use std::remove_cv to warn about `const bool` too.",
+      "range": {
+        "startLine": 38,
+        "startChar": 42,
+        "endLine": 38,
+        "endChar": 46
+      },
+      "revId": "92b0eed9fbbdfbe5f90a73d2da46544d1b372155",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2d32f13c_1b76525c",
+        "filename": "src/libANGLE/BinaryStream.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-10-26T18:57:55Z",
+      "side": 1,
+      "message": "Duplicated below. It\u0027s getting kinda big, so if you pull it in a helper it would be good.\n\nAlternatively, (while I like it this way TBH) you probably don\u0027t need to check is_signed. Like it was doing before, you could read either uint32_t or uint64_t and let the cast handle it.",
+      "revId": "92b0eed9fbbdfbe5f90a73d2da46544d1b372155",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
