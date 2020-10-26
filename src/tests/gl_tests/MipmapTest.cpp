@@ -605,6 +605,38 @@ TEST_P(MipmapTest, DISABLED_ThreeLevelsInitData)
     EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 8, getWindowHeight() / 8, GLColor::red);
 }
 
+// Test generating mipmaps with base level and max level set. Ported from part of the
+// conformance2/textures/misc/tex-mipmap-levels WebGL2 test.
+TEST_P(MipmapTestES3, GenerateMipmapPartialLevels)
+{
+    const std::vector<GLColor> kRedData(64, GLColor::red);
+    const std::vector<GLColor> kGreenData(16, GLColor::green);
+    const std::vector<GLColor> kBlueData(4, GLColor::blue);
+
+    // Initialize mips 2 to 4
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexImage2D(GL_TEXTURE_2D, 2, GL_RGBA, 8, 8, 0, GL_RGBA, GL_UNSIGNED_BYTE, kRedData.data());
+    glTexImage2D(GL_TEXTURE_2D, 3, GL_RGBA, 4, 4, 0, GL_RGBA, GL_UNSIGNED_BYTE, kGreenData.data());
+    glTexImage2D(GL_TEXTURE_2D, 4, GL_RGBA, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, kBlueData.data());
+
+    // Set base and max levels
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 2);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 4);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+
+    // Verify the data
+    clearAndDrawQuad(m2DProgram, 2, 2);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
+
+    // Test that generateMipmap works with partial levels.
+    glGenerateMipmap(GL_TEXTURE_2D);
+    clearAndDrawQuad(m2DProgram, 2, 2);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+}
+
 // This test generates mipmaps for a 1x1 texture, which should be a no-op.
 TEST_P(MipmapTestES3, GenerateMipmap1x1Texture)
 {

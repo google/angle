@@ -499,6 +499,12 @@ struct FeaturesGL : FeatureSetBase
         "keep_buffer_shadow_copy", FeatureCategory::OpenGLWorkarounds,
         "Maintain a shadow copy of buffer data when the GL API does not permit reading data back.",
         &members};
+
+    // glGenerateMipmap fails if the zero texture level is not set on some Mac drivers
+    Feature setZeroLevelBeforeGenerateMipmap = {
+        "set_zero_level_before_generating_mipmap", FeatureCategory::OpenGLWorkarounds,
+        "glGenerateMipmap fails if the zero texture level is not set on some Mac drivers.",
+        &members};
 };
 
 inline FeaturesGL::FeaturesGL()  = default;
