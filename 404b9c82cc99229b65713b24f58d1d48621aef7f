@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a2ad93db_1a927a9e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 18
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-10-27T18:46:29Z",
+      "side": 1,
+      "message": "I tried to look at the swapchain changes, which seem fine for now.",
+      "revId": "404b9c82cc99229b65713b24f58d1d48621aef7f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4038ea75_f861be3d",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-10-27T18:46:29Z",
+      "side": 1,
+      "message": "I\u0027m not yet sure of the purpose and use of this method.  I see copying taking place.  Does any new memory need to be allocated, or is it okay that pointer values are copied?  Will the things those pointers point to stay around as long as needed?  What will free them and when?",
+      "range": {
+        "startLine": 92,
+        "startChar": 4,
+        "endLine": 92,
+        "endChar": 36
+      },
+      "revId": "404b9c82cc99229b65713b24f58d1d48621aef7f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
