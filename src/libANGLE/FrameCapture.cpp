@@ -1205,16 +1205,6 @@ void WriteCppReplayIndexFiles(bool compression,
 
     header << "#pragma once\n";
     header << "\n";
-    header << "// Version of ANGLE used to capture this replay.\n";
-    header << "#define ANGLE_REPLAY_VERSION";
-    if (!captureLabel.empty())
-    {
-        std::string captureLabelUpper = captureLabel;
-        angle::ToUpper(&captureLabelUpper);
-        header << "_" << captureLabelUpper;
-    }
-    header << " " << ANGLE_REVISION << "\n";
-    header << "\n";
     header << "#include <EGL/egl.h>\n";
     header << "#include \"angle_gl.h\"\n";
     header << "\n";
@@ -1231,32 +1221,15 @@ void WriteCppReplayIndexFiles(bool compression,
         header << "namespace " << captureLabel << "\n";
         header << "{\n";
     }
-    header << "// Replay functions\n";
-    header << "\n";
-    header << "// Maps from <captured Program ID, captured location> to run-time location.\n";
-    header
-        << "using LocationsMap = std::unordered_map<GLuint, std::unordered_map<GLint, GLint>>;\n";
-    header << "extern LocationsMap gUniformLocations;\n";
-    header << "extern GLuint gCurrentProgram;\n";
-    header << "void UpdateUniformLocation(GLuint program, const char *name, GLint location);\n";
-    header << "void DeleteUniformLocations(GLuint program);\n";
-    header << "void UpdateCurrentProgram(GLuint program);\n";
-    header << "\n";
-    header << "// Maps from captured Resource ID to run-time Resource ID.\n";
-    header << "class ResourceMap\n\n";
-    header << "{\n";
-    header << "  public:\n";
-    header << "    ResourceMap() {}\n";
-    header << "    GLuint &operator[](GLuint index)\n";
-    header << "    {\n";
-    header << "        if (mIDs.size() <= static_cast<size_t>(index))\n";
-    header << "            mIDs.resize(index + 1, 0);\n";
-    header << "        return mIDs[index];\n";
-    header << "    }\n";
-    header << "  private:\n";
-    header << "    std::vector<GLuint> mIDs;\n";
-    header << "};\n";
-    header << "\n";
+    header << "// Begin Trace Metadata\n";
+    header << "#define ANGLE_REPLAY_VERSION";
+    if (!captureLabel.empty())
+    {
+        std::string captureLabelUpper = captureLabel;
+        angle::ToUpper(&captureLabelUpper);
+        header << "_" << captureLabelUpper;
+    }
+    header << " " << ANGLE_REVISION << "\n";
     header << "constexpr uint32_t kReplayFrameStart = " << frameStart << ";\n";
     header << "constexpr uint32_t kReplayFrameEnd = " << frameEnd << ";\n";
     header << "constexpr EGLint kReplayDrawSurfaceWidth = " << drawSurfaceWidth << ";\n";
@@ -1273,6 +1246,9 @@ void WriteCppReplayIndexFiles(bool compression,
            << (config ? std::to_string(config->depthSize) : "EGL_DONT_CARE") << ";\n";
     header << "constexpr EGLint kDefaultFramebufferStencilBits = "
            << (config ? std::to_string(config->stencilSize) : "EGL_DONT_CARE") << ";\n";
+    header << "constexpr bool kIsBinaryDataCompressed = " << (compression ? "true" : "false")
+           << ";\n";
+    header << "// End Trace Metadata\n";
     header << "\n";
     header << "void SetupContext" << static_cast<int>(contextId) << "Replay();\n";
     header << "void ReplayContext" << static_cast<int>(contextId)
@@ -1296,15 +1272,37 @@ void WriteCppReplayIndexFiles(bool compression,
             header << "std::vector<uint8_t> "
                    << FmtGetSerializedContextStateDataFunction(contextId, frameIndex) << ";\n";
         }
+        header << "\n";
     }
-    header << "\n";
 
-    header << "constexpr bool kIsBinaryDataCompressed = " << (compression ? "true" : "false")
-           << ";\n";
-    header << "\n";
     header << "using DecompressCallback = uint8_t *(*)(const std::vector<uint8_t> &);\n";
     header << "void SetBinaryDataDecompressCallback(DecompressCallback callback);\n";
     header << "void SetBinaryDataDir(const char *dataDir);\n";
+    header << "\n";
+    header << "// Maps from <captured Program ID, captured location> to run-time location.\n";
+    header
+        << "using LocationsMap = std::unordered_map<GLuint, std::unordered_map<GLint, GLint>>;\n";
+    header << "extern LocationsMap gUniformLocations;\n";
+    header << "extern GLuint gCurrentProgram;\n";
+    header << "void UpdateUniformLocation(GLuint program, const char *name, GLint location);\n";
+    header << "void DeleteUniformLocations(GLuint program);\n";
+    header << "void UpdateCurrentProgram(GLuint program);\n";
+    header << "\n";
+    header << "// Maps from captured Resource ID to run-time Resource ID.\n";
+    header << "class ResourceMap\n";
+    header << "{\n";
+    header << "  public:\n";
+    header << "    ResourceMap() {}\n";
+    header << "    GLuint &operator[](GLuint index)\n";
+    header << "    {\n";
+    header << "        if (mIDs.size() <= static_cast<size_t>(index))\n";
+    header << "            mIDs.resize(index + 1, 0);\n";
+    header << "        return mIDs[index];\n";
+    header << "    }\n";
+    header << "  private:\n";
+    header << "    std::vector<GLuint> mIDs;\n";
+    header << "};\n";
+    header << "\n";
     header << "void LoadBinaryData(const char *fileName);\n";
     header << "\n";
     header << "// Global state\n";
