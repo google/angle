@@ -63,6 +63,30 @@
       },
       "revId": "404b9c82cc99229b65713b24f58d1d48621aef7f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3340f027_973471ea",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-10-27T19:58:08Z",
+      "side": 1,
+      "message": "Definitely a bug. The pNext chain is most definitely initialized with local variables, which will go away before the thread has a chance to look at them. This should really deep copy the chain.",
+      "parentUuid": "b1446fed_985655a7",
+      "range": {
+        "startLine": 92,
+        "startChar": 4,
+        "endLine": 92,
+        "endChar": 36
+      },
+      "revId": "404b9c82cc99229b65713b24f58d1d48621aef7f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
