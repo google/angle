@@ -65,8 +65,7 @@ constexpr size_t kFunctionSizeLimit = 5000;
 // Limit based on MSVC Compiler Error C2026
 constexpr size_t kStringLengthLimit = 16380;
 
-#if defined(ANGLE_PLATFORM_ANDROID)
-
+// Android debug properties that correspond to the above environment variables
 constexpr char kAndroidCaptureEnabled[] = "debug.angle.capture.enabled";
 constexpr char kAndroidOutDir[]         = "debug.angle.capture.out_dir";
 constexpr char kAndroidFrameStart[]     = "debug.angle.capture.frame_start";
@@ -74,84 +73,6 @@ constexpr char kAndroidFrameEnd[]       = "debug.angle.capture.frame_end";
 constexpr char kAndroidCaptureTrigger[] = "debug.angle.capture.trigger";
 constexpr char kAndroidCaptureLabel[]   = "debug.angle.capture.label";
 constexpr char kAndroidCompression[]    = "debug.angle.capture.compression";
-
-constexpr int kStreamSize = 64;
-
-constexpr char kAndroidOutputSubdir[] = "/angle_capture/";
-
-// Call out to 'getprop' on a shell and return a string if the value was set
-std::string AndroidGetEnvFromProp(const char *key)
-{
-    std::string command("getprop ");
-    command += key;
-
-    // Run the command and open a I/O stream to read results
-    char stream[kStreamSize] = {};
-    FILE *pipe               = popen(command.c_str(), "r");
-    if (pipe != nullptr)
-    {
-        fgets(stream, kStreamSize, pipe);
-        pclose(pipe);
-    }
-
-    // Right strip white space
-    std::string result(stream);
-    result.erase(result.find_last_not_of(" \n\r\t") + 1);
-    return result;
-}
-
-void PrimeAndroidEnvironmentVariables()
-{
-    std::string enabled = AndroidGetEnvFromProp(kAndroidCaptureEnabled);
-    if (!enabled.empty())
-    {
-        INFO() << "Frame capture read " << enabled << " from " << kAndroidCaptureEnabled;
-        setenv(kEnabledVarName, enabled.c_str(), 1);
-    }
-
-    std::string outDir = AndroidGetEnvFromProp(kAndroidOutDir);
-    if (!outDir.empty())
-    {
-        INFO() << "Frame capture read " << outDir << " from " << kAndroidOutDir;
-        setenv(kOutDirectoryVarName, outDir.c_str(), 1);
-    }
-
-    std::string frameStart = AndroidGetEnvFromProp(kAndroidFrameStart);
-    if (!frameStart.empty())
-    {
-        INFO() << "Frame capture read " << frameStart << " from " << kAndroidFrameStart;
-        setenv(kFrameStartVarName, frameStart.c_str(), 1);
-    }
-
-    std::string frameEnd = AndroidGetEnvFromProp(kAndroidFrameEnd);
-    if (!frameEnd.empty())
-    {
-        INFO() << "Frame capture read " << frameEnd << " from " << kAndroidFrameEnd;
-        setenv(kFrameEndVarName, frameEnd.c_str(), 1);
-    }
-
-    std::string captureTrigger = AndroidGetEnvFromProp(kAndroidCaptureTrigger);
-    if (!captureTrigger.empty())
-    {
-        INFO() << "Capture trigger read " << captureTrigger << " from " << kAndroidCaptureTrigger;
-        setenv(kCaptureTriggerVarName, captureTrigger.c_str(), 1);
-    }
-
-    std::string captureLabel = AndroidGetEnvFromProp(kAndroidCaptureLabel);
-    if (!captureLabel.empty())
-    {
-        INFO() << "Frame capture read " << captureLabel << " from " << kAndroidCaptureLabel;
-        setenv(kCaptureLabel, captureLabel.c_str(), 1);
-    }
-
-    std::string compression = AndroidGetEnvFromProp(kAndroidCompression);
-    if (!compression.empty())
-    {
-        INFO() << "Frame capture read " << compression << " from " << kAndroidCompression;
-        setenv(kCompression, compression.c_str(), 1);
-    }
-}
-#endif
 
 std::string GetDefaultOutDirectory()
 {
@@ -178,6 +99,7 @@ std::string GetDefaultOutDirectory()
         ERR() << "not able to lookup application id";
     }
 
+    constexpr char kAndroidOutputSubdir[] = "/angle_capture/";
     path += std::string(applicationId) + kAndroidOutputSubdir;
 
     // Check for existance of output path
@@ -196,11 +118,7 @@ std::string GetDefaultOutDirectory()
 
 std::string GetCaptureTrigger()
 {
-#if defined(ANGLE_PLATFORM_ANDROID)
-    return AndroidGetEnvFromProp(kAndroidCaptureTrigger);
-#else
-    return GetEnvironmentVar(kCaptureTriggerVarName);
-#endif  // defined(ANGLE_PLATFORM_ANDROID)
+    return GetEnvironmentVarOrAndroidProperty(kCaptureTriggerVarName, kAndroidCaptureTrigger);
 }
 
 std::ostream &operator<<(std::ostream &os, gl::ContextID contextId)
@@ -3622,17 +3540,15 @@ FrameCapture::FrameCapture()
 {
     reset();
 
-#if defined(ANGLE_PLATFORM_ANDROID)
-    PrimeAndroidEnvironmentVariables();
-#endif
-
-    std::string enabledFromEnv = angle::GetEnvironmentVar(kEnabledVarName);
+    std::string enabledFromEnv =
+        GetEnvironmentVarOrAndroidProperty(kEnabledVarName, kAndroidCaptureEnabled);
     if (enabledFromEnv == "0")
     {
         mEnabled = false;
     }
 
-    std::string pathFromEnv = angle::GetEnvironmentVar(kOutDirectoryVarName);
+    std::string pathFromEnv =
+        GetEnvironmentVarOrAndroidProperty(kOutDirectoryVarName, kAndroidOutDir);
     if (pathFromEnv.empty())
     {
         mOutDirectory = GetDefaultOutDirectory();
@@ -3648,19 +3564,21 @@ FrameCapture::FrameCapture()
         mOutDirectory += '/';
     }
 
-    std::string startFromEnv = angle::GetEnvironmentVar(kFrameStartVarName);
+    std::string startFromEnv =
+        GetEnvironmentVarOrAndroidProperty(kFrameStartVarName, kAndroidFrameStart);
     if (!startFromEnv.empty())
     {
         mCaptureStartFrame = atoi(startFromEnv.c_str());
     }
 
-    std::string endFromEnv = angle::GetEnvironmentVar(kFrameEndVarName);
+    std::string endFromEnv = GetEnvironmentVarOrAndroidProperty(kFrameEndVarName, kAndroidFrameEnd);
     if (!endFromEnv.empty())
     {
         mCaptureEndFrame = atoi(endFromEnv.c_str());
     }
 
-    std::string captureTriggerFromEnv = angle::GetEnvironmentVar(kCaptureTriggerVarName);
+    std::string captureTriggerFromEnv =
+        GetEnvironmentVarOrAndroidProperty(kCaptureTriggerVarName, kAndroidCaptureTrigger);
     if (!captureTriggerFromEnv.empty())
     {
         mCaptureTrigger = atoi(captureTriggerFromEnv.c_str());
@@ -3671,14 +3589,16 @@ FrameCapture::FrameCapture()
         INFO() << "Capture trigger detected, disabling capture start/end frame.";
     }
 
-    std::string labelFromEnv = angle::GetEnvironmentVar(kCaptureLabel);
+    std::string labelFromEnv =
+        GetEnvironmentVarOrAndroidProperty(kCaptureLabel, kAndroidCaptureLabel);
     if (!labelFromEnv.empty())
     {
         // Optional label to provide unique file names and namespaces
         mCaptureLabel = labelFromEnv;
     }
 
-    std::string compressionFromEnv = angle::GetEnvironmentVar(kCompression);
+    std::string compressionFromEnv =
+        GetEnvironmentVarOrAndroidProperty(kCompression, kAndroidCompression);
     if (compressionFromEnv == "0")
     {
         mCompression = false;

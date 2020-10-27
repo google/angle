@@ -28,7 +28,7 @@ std::string GetExecutableName()
 
 // Call out to 'getprop' on a shell to get an Android property.  If the value was set, set an
 // environment variable with that value.  Return the value of the environment variable.
-std::string GetEnvironmentVarFromAndroidProperty(const char *variableName, const char *propertyName)
+std::string GetEnvironmentVarOrAndroidProperty(const char *variableName, const char *propertyName)
 {
 #if defined(ANGLE_PLATFORM_ANDROID) && __ANDROID_API__ >= 21
     std::string sanitizedPropertyName = propertyName;
