@@ -1185,8 +1185,7 @@ void WriteCppReplayIndexFiles(bool compression,
                               const gl::ContextID contextId,
                               const std::string &captureLabel,
                               uint32_t frameCount,
-                              EGLint drawSurfaceWidth,
-                              EGLint drawSurfaceHeight,
+                              const SurfaceDimensions &drawSurfaceDimensions,
                               size_t readBufferSize,
                               const gl::AttribArray<size_t> &clientArraySizes,
                               const HasResourceTypeMap &hasResourceType,
@@ -1230,8 +1229,10 @@ void WriteCppReplayIndexFiles(bool compression,
     header << " " << ANGLE_REVISION << "\n";
     header << "constexpr uint32_t kReplayFrameStart = 1;\n";
     header << "constexpr uint32_t kReplayFrameEnd = " << frameCount << ";\n";
-    header << "constexpr EGLint kReplayDrawSurfaceWidth = " << drawSurfaceWidth << ";\n";
-    header << "constexpr EGLint kReplayDrawSurfaceHeight = " << drawSurfaceHeight << ";\n";
+    header << "constexpr EGLint kReplayDrawSurfaceWidth = "
+           << drawSurfaceDimensions.at(contextId).width << ";\n";
+    header << "constexpr EGLint kReplayDrawSurfaceHeight = "
+           << drawSurfaceDimensions.at(contextId).height << ";\n";
     header << "constexpr EGLint kDefaultFramebufferRedBits = "
            << (config ? std::to_string(config->redSize) : "EGL_DONT_CARE") << ";\n";
     header << "constexpr EGLint kDefaultFramebufferGreenBits = "
@@ -4379,10 +4380,10 @@ void FrameCapture::onEndFrame(const gl::Context *context)
         if (mFrameIndex == mCaptureEndFrame)
         {
             // Save the index files after the last frame.
-            WriteCppReplayIndexFiles(
-                mCompression, mOutDirectory, context->id(), mCaptureLabel, getFrameCount(),
-                mDrawSurfaceWidth, mDrawSurfaceHeight, mReadBufferSize, mClientArraySizes,
-                mHasResourceType, mSerializeStateEnabled, false, context->getConfig(), mBinaryData);
+            WriteCppReplayIndexFiles(mCompression, mOutDirectory, context->id(), mCaptureLabel,
+                                     getFrameCount(), mDrawSurfaceDimensions, mReadBufferSize,
+                                     mClientArraySizes, mHasResourceType, mSerializeStateEnabled,
+                                     false, context->getConfig(), mBinaryData);
             if (!mBinaryData.empty())
             {
                 SaveBinaryData(mCompression, mOutDirectory, context->id(), mCaptureLabel,
@@ -4431,9 +4432,9 @@ void FrameCapture::onDestroyContext(const gl::Context *context)
         mFrameIndex -= 1;
         mCaptureEndFrame = mFrameIndex;
         WriteCppReplayIndexFiles(mCompression, mOutDirectory, context->id(), mCaptureLabel,
-                                 getFrameCount(), mDrawSurfaceWidth, mDrawSurfaceHeight,
-                                 mReadBufferSize, mClientArraySizes, mHasResourceType,
-                                 mSerializeStateEnabled, true, context->getConfig(), mBinaryData);
+                                 getFrameCount(), mDrawSurfaceDimensions, mReadBufferSize,
+                                 mClientArraySizes, mHasResourceType, mSerializeStateEnabled, true,
+                                 context->getConfig(), mBinaryData);
         if (!mBinaryData.empty())
         {
             SaveBinaryData(mCompression, mOutDirectory, context->id(), mCaptureLabel, mBinaryData);
@@ -4443,15 +4444,14 @@ void FrameCapture::onDestroyContext(const gl::Context *context)
     }
 }
 
-void FrameCapture::onMakeCurrent(const egl::Surface *drawSurface)
+void FrameCapture::onMakeCurrent(const gl::Context *context, const egl::Surface *drawSurface)
 {
     if (!drawSurface)
         return;
 
     // Track the width and height of the draw surface as provided to makeCurrent
-    // TODO (b/159238311): Track this per context. Right now last one wins.
-    mDrawSurfaceWidth  = drawSurface->getWidth();
-    mDrawSurfaceHeight = drawSurface->getHeight();
+    mDrawSurfaceDimensions[context->id()] =
+        gl::Extents(drawSurface->getWidth(), drawSurface->getHeight(), 1);
 }
 
 DataCounters::DataCounters() = default;
