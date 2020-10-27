@@ -25,6 +25,7 @@ extern double gTestTimeSeconds;
 extern int gTestTrials;
 extern bool gNoFinish;
 extern bool gEnableAllTraceTests;
+extern bool gStartTraceAfterSetup;
 
 inline bool OneFrame()
 {

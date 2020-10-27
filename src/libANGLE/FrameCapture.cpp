@@ -199,7 +199,7 @@ std::string GetCaptureTrigger()
 #if defined(ANGLE_PLATFORM_ANDROID)
     return AndroidGetEnvFromProp(kAndroidCaptureTrigger);
 #else
-    return std::string();
+    return GetEnvironmentVar(kCaptureTriggerVarName);
 #endif  // defined(ANGLE_PLATFORM_ANDROID)
 }
 
@@ -4352,7 +4352,7 @@ void FrameCapture::checkForCaptureTrigger()
         // Use the original trigger value as the frame count
         mCaptureEndFrame = mCaptureStartFrame + (mCaptureTrigger - 1);
 
-        INFO() << "Capture triggered at frame " << mCaptureStartFrame << " for " << mCaptureTrigger
+        INFO() << "Capture triggered after frame " << mFrameIndex << " for " << mCaptureTrigger
                << " frames";
 
         // Stop polling

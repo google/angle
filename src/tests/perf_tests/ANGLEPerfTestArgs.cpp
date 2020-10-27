@@ -23,6 +23,7 @@ double gTestTimeSeconds    = 1.0;
 int gTestTrials            = 3;
 bool gNoFinish             = false;
 bool gEnableAllTraceTests  = false;
+bool gStartTraceAfterSetup = false;
 
 // Default to three warmup loops. There's no science to this. More than two loops was experimentally
 // helpful on a Windows NVIDIA setup when testing with Vulkan and native trace tests.
@@ -120,6 +121,10 @@ void ANGLEProcessPerfTestArgs(int *argc, char **argv)
         else if (strcmp("--enable-all-trace-tests", argv[argIndex]) == 0)
         {
             gEnableAllTraceTests = true;
+        }
+        else if (strcmp("--start-trace-after-setup", argv[argIndex]) == 0)
+        {
+            gStartTraceAfterSetup = true;
         }
         else
         {

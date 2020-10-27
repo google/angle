@@ -210,6 +210,10 @@ void ANGLEPerfTest::run()
     }
 
     uint32_t numTrials = OneFrame() ? 1 : gTestTrials;
+    if (gVerboseLogging)
+    {
+        printf("Test Trials: %d\n", static_cast<int>(numTrials));
+    }
 
     for (uint32_t trial = 0; trial < numTrials; ++trial)
     {
