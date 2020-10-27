@@ -252,7 +252,7 @@ TracePerfTest::TracePerfTest()
 
     if (param.testID == RestrictedTraceID::world_of_tanks_blitz)
     {
-        addExtensionPrerequisite("EXT_disjoint_timer_query");
+        addExtensionPrerequisite("GL_EXT_disjoint_timer_query");
     }
 
     if (param.testID == RestrictedTraceID::dragon_ball_legends)
