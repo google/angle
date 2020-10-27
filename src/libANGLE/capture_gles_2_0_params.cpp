@@ -606,6 +606,12 @@ void CaptureReadPixels_pixels(const State &glState,
                               void *pixels,
                               ParamCapture *paramCapture)
 {
+    if (glState.getTargetBuffer(gl::BufferBinding::PixelPack))
+    {
+        // If a pixel pack buffer is bound, this is an offset, not a pointer
+        paramCapture->value.voidPointerVal = pixels;
+        return;
+    }
     // Use a conservative upper bound instead of an exact size to be simple.
     static constexpr GLsizei kMaxPixelSize = 32;
     paramCapture->readBufferSizeBytes      = kMaxPixelSize * width * height;
