@@ -39,6 +39,30 @@
       },
       "revId": "404b9c82cc99229b65713b24f58d1d48621aef7f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b1446fed_985655a7",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-10-27T19:12:36Z",
+      "side": 1,
+      "message": "Good questions. Need to do that in the case that other.pNext is nullptr.\nIf it\u0027s not nullptr, then we will overwrite this value in line 136.\nThe intent is that we will replace all the original data with a local copy so that the data lives long enough to be available for the Vulkan call that happens in the worker thread.",
+      "parentUuid": "4038ea75_f861be3d",
+      "range": {
+        "startLine": 92,
+        "startChar": 4,
+        "endLine": 92,
+        "endChar": 36
+      },
+      "revId": "404b9c82cc99229b65713b24f58d1d48621aef7f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
