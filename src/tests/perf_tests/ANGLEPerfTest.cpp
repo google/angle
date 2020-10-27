@@ -432,9 +432,16 @@ std::string RenderTestParams::backend() const
             return "_unk";
     }
 
-    if (eglParameters.deviceType == EGL_PLATFORM_ANGLE_DEVICE_TYPE_NULL_ANGLE)
+    switch (eglParameters.deviceType)
     {
-        strstr << "_null";
+        case EGL_PLATFORM_ANGLE_DEVICE_TYPE_NULL_ANGLE:
+            strstr << "_null";
+            break;
+        case EGL_PLATFORM_ANGLE_DEVICE_TYPE_SWIFTSHADER_ANGLE:
+            strstr << "_swiftshader";
+            break;
+        default:
+            break;
     }
 
     return strstr.str();

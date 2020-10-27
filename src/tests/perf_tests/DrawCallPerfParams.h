@@ -70,6 +70,14 @@ ParamsT VulkanMockICD(const ParamsT &in)
 }
 
 template <typename ParamsT>
+ParamsT VulkanSwiftShader(const ParamsT &in)
+{
+    ParamsT out       = in;
+    out.eglParameters = angle::egl_platform::VULKAN_SWIFTSHADER();
+    return out;
+}
+
+template <typename ParamsT>
 ParamsT WGL(const ParamsT &in)
 {
     ParamsT out = in;

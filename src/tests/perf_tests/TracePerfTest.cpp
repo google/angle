@@ -221,6 +221,13 @@ TracePerfTest::TracePerfTest()
         mSkipTest = true;
     }
 
+    if (param.eglParameters.deviceType != EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE &&
+        !gEnableAllTraceTests)
+    {
+        printf("Test skipped. Use --enable-all-trace-tests to run.\n");
+        mSkipTest = true;
+    }
+
     if (param.testID == RestrictedTraceID::cod_mobile)
     {
         // TODO: http://anglebug.com/4967 Vulkan: GL_EXT_color_buffer_float not supported on Pixel 2
@@ -839,7 +846,8 @@ std::vector<P> gTestsWithSurfaceType =
                       {SurfaceType::Offscreen, SurfaceType::Window, SurfaceType::WindowWithVSync},
                       CombineWithSurfaceType);
 std::vector<P> gTestsWithRenderer =
-    CombineWithFuncs(gTestsWithSurfaceType, {Vulkan<P>, VulkanMockICD<P>, Native<P>});
+    CombineWithFuncs(gTestsWithSurfaceType,
+                     {Vulkan<P>, VulkanMockICD<P>, VulkanSwiftShader<P>, Native<P>});
 std::vector<P> gTestsWithoutMockICD = FilterWithFunc(gTestsWithRenderer, NoAndroidMockICD);
 ANGLE_INSTANTIATE_TEST_ARRAY(TracePerfTest, gTestsWithoutMockICD);
 
