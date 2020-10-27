@@ -87,6 +87,30 @@
       },
       "revId": "404b9c82cc99229b65713b24f58d1d48621aef7f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6be72731_9ea2ebb7",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-10-27T20:08:03Z",
+      "side": 1,
+      "message": "It will, that\u0027s what the while loop below does.\nThere is the possibility that the pNext is nullptr in which case that\u0027s all we have to copy.",
+      "parentUuid": "3340f027_973471ea",
+      "range": {
+        "startLine": 92,
+        "startChar": 4,
+        "endLine": 92,
+        "endChar": 36
+      },
+      "revId": "404b9c82cc99229b65713b24f58d1d48621aef7f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
