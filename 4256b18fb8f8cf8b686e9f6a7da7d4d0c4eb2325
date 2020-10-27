@@ -26,6 +26,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "b81b24ac_f193f7a5",
+        "filename": "extensions/EGL_ANGLE_platform_angle.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-27T21:45:13Z",
+      "side": 1,
+      "message": "Ideally a new file / extension. Otherwise putting this in Vulkan is better than in the base extension.\n\nI reserved 0x34A4 for you so you can use that enum value here.",
+      "parentUuid": "4ff91d67_1a1308d1",
+      "range": {
+        "startLine": 91,
+        "startChar": 8,
+        "endLine": 91,
+        "endChar": 59
+      },
+      "revId": "4256b18fb8f8cf8b686e9f6a7da7d4d0c4eb2325",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "e3d6e2eb_550c0957",
         "filename": "extensions/EGL_ANGLE_platform_angle.txt",
         "patchSetId": 2
@@ -66,6 +90,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "ec7b4067_ac820406",
+        "filename": "gni/angle.gni",
+        "patchSetId": 2
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-27T21:45:13Z",
+      "side": 1,
+      "message": "I wonder if we can make do without this define? It seems like nothing in this extension should be that non-portable. Can you instead disable angle_use_x11? Or use the extension you added to pick the right path instead of compile variables?",
+      "parentUuid": "cf6a7739_3666f2fc",
+      "revId": "4256b18fb8f8cf8b686e9f6a7da7d4d0c4eb2325",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "4a6dec5c_68e7bb1d",
         "filename": "include/EGL/eglext_angle.h",
         "patchSetId": 2
@@ -77,6 +119,47 @@
       "writtenOn": "2020-10-27T21:00:38Z",
       "side": 1,
       "message": "@Jamie, could you please point me to the where we track ANGLE\u0027s allocated enums?",
+      "revId": "4256b18fb8f8cf8b686e9f6a7da7d4d0c4eb2325",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c45c879a_bb5f8e25",
+        "filename": "include/EGL/eglext_angle.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-27T21:45:13Z",
+      "side": 1,
+      "message": "0x34A4",
+      "parentUuid": "4a6dec5c_68e7bb1d",
+      "revId": "4256b18fb8f8cf8b686e9f6a7da7d4d0c4eb2325",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a377f1d4_9a05e386",
+        "filename": "src/gpu_info_util/SystemInfo_linux.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-27T21:45:13Z",
+      "side": 1,
+      "message": "I wonder if we can figure out a different solution to the problem this fixes. What happens if you take this out?",
+      "range": {
+        "startLine": 77,
+        "startChar": 0,
+        "endLine": 81,
+        "endChar": 6
+      },
       "revId": "4256b18fb8f8cf8b686e9f6a7da7d4d0c4eb2325",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
@@ -99,6 +182,98 @@
         "startChar": 3,
         "endLine": 232,
         "endChar": 5
+      },
+      "revId": "4256b18fb8f8cf8b686e9f6a7da7d4d0c4eb2325",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bf477c0c_b42b46de",
+        "filename": "src/libANGLE/renderer/vulkan/BUILD.gn",
+        "patchSetId": 2
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-27T21:45:13Z",
+      "side": 1,
+      "message": "can we include these unconditionally?",
+      "range": {
+        "startLine": 131,
+        "startChar": 0,
+        "endLine": 137,
+        "endChar": 3
+      },
+      "revId": "4256b18fb8f8cf8b686e9f6a7da7d4d0c4eb2325",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9d115815_7c6511c3",
+        "filename": "src/libANGLE/renderer/vulkan/DisplayVk_api.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-27T21:45:13Z",
+      "side": 1,
+      "message": "nit: I don\u0027t think you need the #ifdefs for this guy.",
+      "range": {
+        "startLine": 42,
+        "startChar": 0,
+        "endLine": 46,
+        "endChar": 0
+      },
+      "revId": "4256b18fb8f8cf8b686e9f6a7da7d4d0c4eb2325",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0b119e02_3533bc13",
+        "filename": "src/libANGLE/renderer/vulkan/display/DisplayVkDisplay.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-27T21:45:13Z",
+      "side": 1,
+      "message": "if you don\u0027t intend to resolve this TODO, please remove it. If you do, please tag it with the tracking bug.",
+      "range": {
+        "startLine": 45,
+        "startChar": 0,
+        "endLine": 45,
+        "endChar": 25
+      },
+      "revId": "4256b18fb8f8cf8b686e9f6a7da7d4d0c4eb2325",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "52e5b957_6f9cb3dd",
+        "filename": "src/libANGLE/renderer/vulkan/display/WindowSurfaceVkDisplay.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-27T21:45:13Z",
+      "side": 1,
+      "message": "nit: please make this fit ANGLE style by placing it in a namespace {} block at the top of the file. see other files for examples.\n\nAlso Capitalize the name.\n\nAlso fitting Shabi\u0027s suggestion, you can make this return angle::Result. You\u0027ll need to pass down the vk::Context to this function (aka DisplayVk) to handle the error. If there are functions we need to refactor to pass down the Context, please go ahead and pass it as the first argument to the required functions.",
+      "range": {
+        "startLine": 23,
+        "startChar": 16,
+        "endLine": 23,
+        "endChar": 45
       },
       "revId": "4256b18fb8f8cf8b686e9f6a7da7d4d0c4eb2325",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
@@ -198,6 +373,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "56af0d21_d1b2b29d",
+        "filename": "src/libANGLE/renderer/vulkan/display/WindowSurfaceVkDisplay.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-27T21:45:13Z",
+      "side": 1,
+      "message": "nit: ANGLE naming style uses camelCase instead of under_score.",
+      "range": {
+        "startLine": 51,
+        "startChar": 52,
+        "endLine": 51,
+        "endChar": 62
+      },
+      "revId": "4256b18fb8f8cf8b686e9f6a7da7d4d0c4eb2325",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "c6a40b98_7d6b9702",
         "filename": "src/libANGLE/renderer/vulkan/display/WindowSurfaceVkDisplay.cpp",
         "patchSetId": 2
@@ -237,6 +435,98 @@
         "startChar": 50,
         "endLine": 71,
         "endChar": 64
+      },
+      "revId": "4256b18fb8f8cf8b686e9f6a7da7d4d0c4eb2325",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ac14402e_a0889e5f",
+        "filename": "src/libANGLE/renderer/vulkan/display/WindowSurfaceVkDisplay.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-27T21:45:13Z",
+      "side": 1,
+      "message": "You can put this struct in src/common/vulkan. Either a new header file or just in vulkan_icd.h is fine.",
+      "range": {
+        "startLine": 18,
+        "startChar": 0,
+        "endLine": 19,
+        "endChar": 59
+      },
+      "revId": "4256b18fb8f8cf8b686e9f6a7da7d4d0c4eb2325",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "88334f03_d727d7b0",
+        "filename": "src/libANGLE/renderer/vulkan/display/WindowSurfaceVkDisplay.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-27T21:45:13Z",
+      "side": 1,
+      "message": "nit: ANGLE style would be\n\nstruct DisplayWindow\n{\n   uint16_t width;\n   uint16_t height;\n};",
+      "range": {
+        "startLine": 20,
+        "startChar": 0,
+        "endLine": 24,
+        "endChar": 17
+      },
+      "revId": "4256b18fb8f8cf8b686e9f6a7da7d4d0c4eb2325",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "04df4f94_c35d0eed",
+        "filename": "util/display/DisplayWindow.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-27T21:45:13Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 2,
+        "startChar": 12,
+        "endLine": 2,
+        "endChar": 17
+      },
+      "revId": "4256b18fb8f8cf8b686e9f6a7da7d4d0c4eb2325",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4db87704_f1fe3e7c",
+        "filename": "util/display/DisplayWindow.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-27T21:45:13Z",
+      "side": 1,
+      "message": "nit: omit (c).\n\nWhere did you copy this from? We are trying to get rid of the (c).",
+      "range": {
+        "startLine": 2,
+        "startChar": 12,
+        "endLine": 2,
+        "endChar": 16
       },
       "revId": "4256b18fb8f8cf8b686e9f6a7da7d4d0c4eb2325",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
