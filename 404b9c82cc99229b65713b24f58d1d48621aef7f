@@ -18,6 +18,23 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d6b4d1c3_2d49399e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 18
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-10-27T23:01:30Z",
+      "side": 1,
+      "message": "Okay, I think this might finally be good-to-go.\nWas seeing out-of-memory errors when running web_gl conformance tests. I believe I\u0027ve tracked that down to a missing RendererVk::cleanupGarbage call when using the CommandProcessor path. Without that it was possible for image and buffer allocations to be waiting for cleanup in the RendererVk::mSharedGarbage list.\n\nPTAL.",
+      "revId": "404b9c82cc99229b65713b24f58d1d48621aef7f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "4038ea75_f861be3d",
