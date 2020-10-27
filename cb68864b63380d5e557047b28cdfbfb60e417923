@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "391f6513_d2c4edaa",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-10-27T17:09:01Z",
+      "side": 1,
+      "message": "Here\u0027s the follow-on CL that refactors \"FrameCapture.cpp\" to use the new GetEnvironmentVarFromAndroidProperty() function.",
+      "revId": "cb68864b63380d5e557047b28cdfbfb60e417923",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
