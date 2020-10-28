@@ -1763,6 +1763,14 @@ void State::setVertexBindingDivisor(GLuint bindingIndex, GLuint divisor)
 
 angle::Result State::setProgram(const Context *context, Program *newProgram)
 {
+    if (newProgram && !newProgram->isLinked())
+    {
+        // Protect against applications that disable validation and try to use a program that was
+        // not successfully linked.
+        WARN() << "Attempted to use a program that was not successfully linked";
+        return angle::Result::Continue;
+    }
+
     if (mProgram != newProgram)
     {
         if (mProgram)
