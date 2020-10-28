@@ -140,8 +140,7 @@ DestT Pack1010102(std::array<SrcT, 4> input)
 class VertexAttributeTest : public ANGLETest
 {
   protected:
-    VertexAttributeTest()
-        : mProgram(0), mTestAttrib(-1), mExpectedAttrib(-1), mBuffer(0), mQuadBuffer(0)
+    VertexAttributeTest() : mProgram(0), mTestAttrib(-1), mExpectedAttrib(-1), mBuffer(0)
     {
         setWindowWidth(128);
         setWindowHeight(128);
@@ -310,7 +309,6 @@ class VertexAttributeTest : public ANGLETest
     {
         glDeleteProgram(mProgram);
         glDeleteBuffers(1, &mBuffer);
-        glDeleteBuffers(1, &mQuadBuffer);
     }
 
     // Override a feature to force emulation of attribute formats.
@@ -406,11 +404,33 @@ class VertexAttributeTest : public ANGLETest
         }
     }
 
+    static void InitQuadVertexBuffer(GLBuffer *buffer)
+    {
+        auto quadVertices = GetQuadVertices();
+        GLsizei quadVerticesSize =
+            static_cast<GLsizei>(quadVertices.size() * sizeof(quadVertices[0]));
+
+        glBindBuffer(GL_ARRAY_BUFFER, *buffer);
+        glBufferData(GL_ARRAY_BUFFER, quadVerticesSize, nullptr, GL_STATIC_DRAW);
+        glBufferSubData(GL_ARRAY_BUFFER, 0, quadVerticesSize, quadVertices.data());
+    }
+
+    static void InitQuadPlusOneVertexBuffer(GLBuffer *buffer)
+    {
+        auto quadVertices = GetQuadVertices();
+        GLsizei quadVerticesSize =
+            static_cast<GLsizei>(quadVertices.size() * sizeof(quadVertices[0]));
+
+        glBindBuffer(GL_ARRAY_BUFFER, *buffer);
+        glBufferData(GL_ARRAY_BUFFER, quadVerticesSize + sizeof(Vector3), nullptr, GL_STATIC_DRAW);
+        glBufferSubData(GL_ARRAY_BUFFER, 0, quadVerticesSize, quadVertices.data());
+        glBufferSubData(GL_ARRAY_BUFFER, quadVerticesSize, sizeof(Vector3), &quadVertices[0]);
+    }
+
     GLuint mProgram;
     GLint mTestAttrib;
     GLint mExpectedAttrib;
     GLuint mBuffer;
-    GLuint mQuadBuffer;
 };
 
 TEST_P(VertexAttributeTest, UnsignedByteUnnormalized)
@@ -1211,21 +1231,8 @@ TEST_P(VertexAttributeTest, DrawArraysWithBufferOffset)
     std::array<GLfloat, kVertexCount> expectedData;
     InitTestData(inputData, expectedData);
 
-    auto quadVertices = GetQuadVertices();
-
-    std::vector<Vector3> quadVerticesPlusOne(quadVertices.size() + 1);
-    for (size_t index = 0; index < quadVerticesPlusOne.size(); ++index)
-    {
-        quadVerticesPlusOne[index] = quadVertices[index % quadVertices.size()];
-    }
-
-    GLsizei quadVerticesSize =
-        static_cast<GLsizei>(quadVerticesPlusOne.size() * sizeof(quadVertices[0]));
-
-    glGenBuffers(1, &mQuadBuffer);
-    glBindBuffer(GL_ARRAY_BUFFER, mQuadBuffer);
-    glBufferData(GL_ARRAY_BUFFER, quadVerticesSize, nullptr, GL_STATIC_DRAW);
-    glBufferSubData(GL_ARRAY_BUFFER, 0, quadVerticesSize, quadVerticesPlusOne.data());
+    GLBuffer quadBuffer;
+    InitQuadPlusOneVertexBuffer(&quadBuffer);
 
     GLint positionLocation = glGetAttribLocation(mProgram, "position");
     ASSERT_NE(-1, positionLocation);
@@ -1257,24 +1264,6 @@ TEST_P(VertexAttributeTest, DrawArraysWithBufferOffset)
 // Verify that using an unaligned offset doesn't mess up the draw.
 TEST_P(VertexAttributeTest, DrawArraysWithUnalignedBufferOffset)
 {
-    // anglebug.com/4258
-    ANGLE_SKIP_TEST_IF(IsOpenGL() && IsNVIDIA() && IsOSX());
-
-    // anglebug.com/4163
-    ANGLE_SKIP_TEST_IF(IsD3D11() && IsNVIDIA() && IsWindows7());
-
-    // TODO(jmadill): Diagnose this failure.
-    ANGLE_SKIP_TEST_IF(IsD3D11_FL93());
-
-    // TODO(geofflang): Figure out why this is broken on AMD OpenGL
-    ANGLE_SKIP_TEST_IF(IsAMD() && IsOpenGL());
-
-    // TODO(cnorthrop): Test this again on more recent drivers. http://anglebug.com/3951
-    ANGLE_SKIP_TEST_IF(IsLinux() && IsNVIDIA() && IsVulkan());
-
-    // TODO(https://anglebug.com/4269): Test is flaky on OpenGL and Metal on Mac NVIDIA.
-    ANGLE_SKIP_TEST_IF(IsOSX() && IsNVIDIA());
-
     initBasicProgram();
     glUseProgram(mProgram);
 
@@ -1282,13 +1271,8 @@ TEST_P(VertexAttributeTest, DrawArraysWithUnalignedBufferOffset)
     std::array<GLfloat, kVertexCount> expectedData;
     InitTestData(inputData, expectedData);
 
-    auto quadVertices        = GetQuadVertices();
-    GLsizei quadVerticesSize = static_cast<GLsizei>(quadVertices.size() * sizeof(quadVertices[0]));
-
-    glGenBuffers(1, &mQuadBuffer);
-    glBindBuffer(GL_ARRAY_BUFFER, mQuadBuffer);
-    glBufferData(GL_ARRAY_BUFFER, quadVerticesSize + sizeof(Vector3), nullptr, GL_STATIC_DRAW);
-    glBufferSubData(GL_ARRAY_BUFFER, 0, quadVerticesSize, quadVertices.data());
+    GLBuffer quadBuffer;
+    InitQuadPlusOneVertexBuffer(&quadBuffer);
 
     GLint positionLocation = glGetAttribLocation(mProgram, "position");
     ASSERT_NE(-1, positionLocation);
@@ -1322,24 +1306,6 @@ TEST_P(VertexAttributeTest, DrawArraysWithUnalignedBufferOffset)
 // In Metal backend, GL_SHORTx3 is coverted to GL_SHORTx4 if offset is unaligned.
 TEST_P(VertexAttributeTest, DrawArraysWithUnalignedShortBufferOffset)
 {
-    // anglebug.com/4258
-    ANGLE_SKIP_TEST_IF(IsOpenGL() && IsNVIDIA() && IsOSX());
-
-    // anglebug.com/4163
-    ANGLE_SKIP_TEST_IF(IsD3D11() && IsNVIDIA() && IsWindows7());
-
-    // TODO(jmadill): Diagnose this failure.
-    ANGLE_SKIP_TEST_IF(IsD3D11_FL93());
-
-    // TODO(geofflang): Figure out why this is broken on AMD OpenGL
-    ANGLE_SKIP_TEST_IF(IsAMD() && IsOpenGL());
-
-    // TODO(cnorthrop): Test this again on more recent drivers. http://anglebug.com/3951
-    ANGLE_SKIP_TEST_IF(IsLinux() && IsNVIDIA() && IsVulkan());
-
-    // TODO(https://anglebug.com/4269): Test is flaky on OpenGL and Metal on Mac NVIDIA.
-    ANGLE_SKIP_TEST_IF(IsOSX() && IsNVIDIA());
-
     initBasicProgram();
     glUseProgram(mProgram);
 
@@ -1357,13 +1323,8 @@ TEST_P(VertexAttributeTest, DrawArraysWithUnalignedShortBufferOffset)
         expectedData[3 * i + 2] = 3 * i + 2;
     }
 
-    auto quadVertices        = GetQuadVertices();
-    GLsizei quadVerticesSize = static_cast<GLsizei>(quadVertices.size() * sizeof(quadVertices[0]));
-
-    glGenBuffers(1, &mQuadBuffer);
-    glBindBuffer(GL_ARRAY_BUFFER, mQuadBuffer);
-    glBufferData(GL_ARRAY_BUFFER, quadVerticesSize + sizeof(Vector3), nullptr, GL_STATIC_DRAW);
-    glBufferSubData(GL_ARRAY_BUFFER, 0, quadVerticesSize, quadVertices.data());
+    GLBuffer quadBuffer;
+    InitQuadPlusOneVertexBuffer(&quadBuffer);
 
     GLint positionLocation = glGetAttribLocation(mProgram, "position");
     ASSERT_NE(-1, positionLocation);
@@ -1398,24 +1359,6 @@ TEST_P(VertexAttributeTest, DrawArraysWithUnalignedShortBufferOffset)
 // draw.
 TEST_P(VertexAttributeTest, DrawArraysWithShortBufferOffsetNotMultipleOf4)
 {
-    // anglebug.com/4258
-    ANGLE_SKIP_TEST_IF(IsOpenGL() && IsNVIDIA() && IsOSX());
-
-    // anglebug.com/4163
-    ANGLE_SKIP_TEST_IF(IsD3D11() && IsNVIDIA() && IsWindows7());
-
-    // TODO(jmadill): Diagnose this failure.
-    ANGLE_SKIP_TEST_IF(IsD3D11_FL93());
-
-    // TODO(geofflang): Figure out why this is broken on AMD OpenGL
-    ANGLE_SKIP_TEST_IF(IsAMD() && IsOpenGL());
-
-    // TODO(cnorthrop): Test this again on more recent drivers. http://anglebug.com/3951
-    ANGLE_SKIP_TEST_IF(IsLinux() && IsNVIDIA() && IsVulkan());
-
-    // TODO(https://anglebug.com/4269): Test is flaky on OpenGL and Metal on Mac NVIDIA.
-    ANGLE_SKIP_TEST_IF(IsOSX() && IsNVIDIA());
-
     initBasicProgram();
     glUseProgram(mProgram);
 
@@ -1433,13 +1376,8 @@ TEST_P(VertexAttributeTest, DrawArraysWithShortBufferOffsetNotMultipleOf4)
         expectedData[3 * i + 2] = 3 * i + 2;
     }
 
-    auto quadVertices        = GetQuadVertices();
-    GLsizei quadVerticesSize = static_cast<GLsizei>(quadVertices.size() * sizeof(quadVertices[0]));
-
-    glGenBuffers(1, &mQuadBuffer);
-    glBindBuffer(GL_ARRAY_BUFFER, mQuadBuffer);
-    glBufferData(GL_ARRAY_BUFFER, quadVerticesSize + sizeof(Vector3), nullptr, GL_STATIC_DRAW);
-    glBufferSubData(GL_ARRAY_BUFFER, 0, quadVerticesSize, quadVertices.data());
+    GLBuffer quadBuffer;
+    InitQuadPlusOneVertexBuffer(&quadBuffer);
 
     GLint positionLocation = glGetAttribLocation(mProgram, "position");
     ASSERT_NE(-1, positionLocation);
@@ -1473,24 +1411,6 @@ TEST_P(VertexAttributeTest, DrawArraysWithShortBufferOffsetNotMultipleOf4)
 // Verify that using both aligned and unaligned offsets doesn't mess up the draw.
 TEST_P(VertexAttributeTest, DrawArraysWithAlignedAndUnalignedBufferOffset)
 {
-    // anglebug.com/4258
-    ANGLE_SKIP_TEST_IF(IsOpenGL() && IsNVIDIA() && IsOSX());
-
-    // anglebug.com/5258
-    ANGLE_SKIP_TEST_IF(IsD3D11() && IsNVIDIA());
-
-    // TODO(jmadill): Diagnose this failure.
-    ANGLE_SKIP_TEST_IF(IsD3D11_FL93());
-
-    // TODO(geofflang): Figure out why this is broken on AMD OpenGL
-    ANGLE_SKIP_TEST_IF(IsAMD() && IsOpenGL());
-
-    // TODO(cnorthrop): Test this again on more recent drivers. http://anglebug.com/3951
-    ANGLE_SKIP_TEST_IF(IsLinux() && IsNVIDIA() && IsVulkan());
-
-    // TODO(https://anglebug.com/4269): Test is flaky on OpenGL and Metal on Mac NVIDIA.
-    ANGLE_SKIP_TEST_IF(IsOSX() && IsNVIDIA());
-
     initBasicProgram();
     glUseProgram(mProgram);
 
@@ -1498,13 +1418,8 @@ TEST_P(VertexAttributeTest, DrawArraysWithAlignedAndUnalignedBufferOffset)
     std::array<GLfloat, kVertexCount> expectedData;
     InitTestData(inputData, expectedData);
 
-    auto quadVertices        = GetQuadVertices();
-    GLsizei quadVerticesSize = static_cast<GLsizei>(quadVertices.size() * sizeof(quadVertices[0]));
-
-    glGenBuffers(1, &mQuadBuffer);
-    glBindBuffer(GL_ARRAY_BUFFER, mQuadBuffer);
-    glBufferData(GL_ARRAY_BUFFER, quadVerticesSize + sizeof(Vector3), nullptr, GL_STATIC_DRAW);
-    glBufferSubData(GL_ARRAY_BUFFER, 0, quadVerticesSize, quadVertices.data());
+    GLBuffer quadBuffer;
+    InitQuadPlusOneVertexBuffer(&quadBuffer);
 
     GLint positionLocation = glGetAttribLocation(mProgram, "position");
     ASSERT_NE(-1, positionLocation);
@@ -1567,12 +1482,8 @@ TEST_P(VertexAttributeTest, DrawArraysWithDisabledAttribute)
     std::array<GLfloat, kVertexCount> expectedData;
     InitTestData(inputData, expectedData);
 
-    auto quadVertices        = GetQuadVertices();
-    GLsizei quadVerticesSize = static_cast<GLsizei>(quadVertices.size() * sizeof(quadVertices[0]));
-
-    glGenBuffers(1, &mQuadBuffer);
-    glBindBuffer(GL_ARRAY_BUFFER, mQuadBuffer);
-    glBufferData(GL_ARRAY_BUFFER, quadVerticesSize, quadVertices.data(), GL_STATIC_DRAW);
+    GLBuffer buffer;
+    InitQuadVertexBuffer(&buffer);
 
     GLint positionLocation = glGetAttribLocation(mProgram, "position");
     ASSERT_NE(-1, positionLocation);
@@ -1813,6 +1724,7 @@ class VertexAttributeTestES31 : public VertexAttributeTestES3
     {
         VertexAttributeTestES3::testTearDown();
 
+        glDeleteBuffers(1, &mQuadBuffer);
         glDeleteBuffers(1, &mExpectedBuffer);
         glDeleteVertexArrays(1, &mVAO);
     }
@@ -1889,8 +1801,9 @@ class VertexAttributeTestES31 : public VertexAttributeTestES3
         EXPECT_GL_NO_ERROR();
     }
 
-    GLuint mVAO;
-    GLuint mExpectedBuffer;
+    GLuint mVAO            = 0;
+    GLuint mExpectedBuffer = 0;
+    GLuint mQuadBuffer     = 0;
 
     const GLsizei kFloatStride = TypeStride(GL_FLOAT);
 
