@@ -1476,8 +1476,8 @@ TEST_P(VertexAttributeTest, DrawArraysWithAlignedAndUnalignedBufferOffset)
     // anglebug.com/4258
     ANGLE_SKIP_TEST_IF(IsOpenGL() && IsNVIDIA() && IsOSX());
 
-    // anglebug.com/4163
-    ANGLE_SKIP_TEST_IF(IsD3D11() && IsNVIDIA() && IsWindows7());
+    // anglebug.com/5258
+    ANGLE_SKIP_TEST_IF(IsD3D11() && IsNVIDIA());
 
     // TODO(jmadill): Diagnose this failure.
     ANGLE_SKIP_TEST_IF(IsD3D11_FL93());
