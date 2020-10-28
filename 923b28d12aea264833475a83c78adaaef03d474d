@@ -43,6 +43,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "91d6cd9f_ea8617d3",
+        "filename": "src/tests/perf_tests/TracePerfTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 358,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2020-10-28T14:48:04Z",
+      "side": 1,
+      "message": "Why do you need the swap here?  Would the trigger be picked up after setup anyway?",
+      "range": {
+        "startLine": 358,
+        "startChar": 8,
+        "endLine": 358,
+        "endChar": 30
+      },
+      "revId": "923b28d12aea264833475a83c78adaaef03d474d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "38320225_421520f3",
         "filename": "src/tests/restricted_traces/retrace_restricted_traces.py",
         "patchSetId": 7
