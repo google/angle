@@ -16,6 +16,23 @@
       "message": "PTAL",
       "revId": "5bd4f651e6440faf168a4bebfaeb7928d925f278",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1cda6545_22fa35ca",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-10-28T16:00:38Z",
+      "side": 1,
+      "message": "need to add to expectations file this set of tests - dEQP.GLES31/functional_image_load_store_3d_atomic_exchange_*\n\nsuspect root-cause same as -\n // Cannot create 2D (array) view of 3D texture.\n 3886 VULKAN : dEQP-GLES31.functional.image_load_store.3d.*layer \u003d FAIL",
+      "revId": "5bd4f651e6440faf168a4bebfaeb7928d925f278",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
