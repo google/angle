@@ -1061,8 +1061,7 @@ void WriteCppReplay(bool compression,
                     const gl::Context *context,
                     const std::string &captureLabel,
                     uint32_t frameIndex,
-                    uint32_t frameStart,
-                    uint32_t frameEnd,
+                    uint32_t frameCount,
                     const std::vector<CallCapture> &frameCalls,
                     const std::vector<CallCapture> &setupCalls,
                     ResourceTracker *resourceTracker,
@@ -1087,7 +1086,7 @@ void WriteCppReplay(bool compression,
         out << "{\n";
     }
 
-    if (frameIndex == frameStart)
+    if (frameIndex == 1)
     {
         std::stringstream setupCallStream;
 
@@ -1103,7 +1102,7 @@ void WriteCppReplay(bool compression,
         out << "\n";
     }
 
-    if (frameIndex == frameEnd)
+    if (frameIndex == frameCount)
     {
         // Emit code to reset back to starting state
         out << "void " << FmtResetFunction(context->id()) << "\n";
@@ -1185,8 +1184,7 @@ void WriteCppReplayIndexFiles(bool compression,
                               const std::string &outDir,
                               const gl::ContextID contextId,
                               const std::string &captureLabel,
-                              uint32_t frameStart,
-                              uint32_t frameEnd,
+                              uint32_t frameCount,
                               EGLint drawSurfaceWidth,
                               EGLint drawSurfaceHeight,
                               size_t readBufferSize,
@@ -1230,8 +1228,8 @@ void WriteCppReplayIndexFiles(bool compression,
         header << "_" << captureLabelUpper;
     }
     header << " " << ANGLE_REVISION << "\n";
-    header << "constexpr uint32_t kReplayFrameStart = " << frameStart << ";\n";
-    header << "constexpr uint32_t kReplayFrameEnd = " << frameEnd << ";\n";
+    header << "constexpr uint32_t kReplayFrameStart = 1;\n";
+    header << "constexpr uint32_t kReplayFrameEnd = " << frameCount << ";\n";
     header << "constexpr EGLint kReplayDrawSurfaceWidth = " << drawSurfaceWidth << ";\n";
     header << "constexpr EGLint kReplayDrawSurfaceHeight = " << drawSurfaceHeight << ";\n";
     header << "constexpr EGLint kDefaultFramebufferRedBits = "
@@ -1260,14 +1258,14 @@ void WriteCppReplayIndexFiles(bool compression,
                << "StateData(uint32_t frameIndex);\n";
     }
     header << "\n";
-    for (uint32_t frameIndex = frameStart; frameIndex <= frameEnd; ++frameIndex)
+    for (uint32_t frameIndex = 1; frameIndex <= frameCount; ++frameIndex)
     {
         header << "void " << FmtReplayFunction(contextId, frameIndex) << ";\n";
     }
     header << "\n";
     if (serializeStateEnabled)
     {
-        for (uint32_t frameIndex = frameStart; frameIndex <= frameEnd; ++frameIndex)
+        for (uint32_t frameIndex = 1; frameIndex <= frameCount; ++frameIndex)
         {
             header << "std::vector<uint8_t> "
                    << FmtGetSerializedContextStateDataFunction(contextId, frameIndex) << ";\n";
@@ -1388,7 +1386,7 @@ void WriteCppReplayIndexFiles(bool compression,
     source << "{\n";
     source << "    switch (frameIndex)\n";
     source << "    {\n";
-    for (uint32_t frameIndex = frameStart; frameIndex <= frameEnd; ++frameIndex)
+    for (uint32_t frameIndex = 1; frameIndex <= frameCount; ++frameIndex)
     {
         source << "        case " << frameIndex << ":\n";
         source << "            ReplayContext" << static_cast<int>(contextId) << "Frame"
@@ -1418,7 +1416,7 @@ void WriteCppReplayIndexFiles(bool compression,
         source << "{\n";
         source << "    switch (frameIndex)\n";
         source << "    {\n";
-        for (uint32_t frameIndex = frameStart; frameIndex <= frameEnd; ++frameIndex)
+        for (uint32_t frameIndex = 1; frameIndex <= frameCount; ++frameIndex)
         {
             source << "        case " << frameIndex << ":\n";
             source << "            return "
@@ -1554,7 +1552,7 @@ void WriteCppReplayIndexFiles(bool compression,
         std::string indexPath = indexPathStream.str();
 
         SaveFileHelper saveIndex(indexPath);
-        for (uint32_t frameIndex = frameStart; frameIndex <= frameEnd; ++frameIndex)
+        for (uint32_t frameIndex = 1; frameIndex <= frameCount; ++frameIndex)
         {
             saveIndex << GetCaptureFileName(contextId, captureLabel, frameIndex, ".cpp") << "\n";
         }
@@ -3596,9 +3594,9 @@ FrameCapture::FrameCapture()
       mSerializeStateEnabled(false),
       mCompression(true),
       mClientVertexArrayMap{},
-      mFrameIndex(0),
-      mFrameStart(0),
-      mFrameEnd(10),
+      mFrameIndex(1),
+      mCaptureStartFrame(1),
+      mCaptureEndFrame(10),
       mClientArraySizes{},
       mReadBufferSize(0),
       mHasResourceType{},
@@ -3635,13 +3633,13 @@ FrameCapture::FrameCapture()
     std::string startFromEnv = angle::GetEnvironmentVar(kFrameStartVarName);
     if (!startFromEnv.empty())
     {
-        mFrameStart = atoi(startFromEnv.c_str());
+        mCaptureStartFrame = atoi(startFromEnv.c_str());
     }
 
     std::string endFromEnv = angle::GetEnvironmentVar(kFrameEndVarName);
     if (!endFromEnv.empty())
     {
-        mFrameEnd = atoi(endFromEnv.c_str());
+        mCaptureEndFrame = atoi(endFromEnv.c_str());
     }
 
     std::string captureTriggerFromEnv = angle::GetEnvironmentVar(kCaptureTriggerVarName);
@@ -3651,10 +3649,8 @@ FrameCapture::FrameCapture()
 
         // If the trigger has been populated, ignore the other frame range variables by setting them
         // to unreasonable values. This isn't perfect, but it is effective.
-        // TODO (anglebug.com/4949): Improve this, possibly by moving away from default start frame.
-        mFrameStart = mFrameEnd = std::numeric_limits<uint32_t>::max();
-        INFO() << "Capture trigger detected, overriding mFrameStart and mFrameEnd to "
-               << mFrameStart;
+        mCaptureStartFrame = mCaptureEndFrame = std::numeric_limits<uint32_t>::max();
+        INFO() << "Capture trigger detected, disabling capture start/end frame.";
     }
 
     std::string labelFromEnv = angle::GetEnvironmentVar(kCaptureLabel);
@@ -3941,7 +3937,7 @@ void FrameCapture::maybeCapturePreCallUpdates(const gl::Context *context, CallCa
                     mBufferDataMap.erase(bufferDataInfo);
                 }
                 // If we're capturing, track what new buffers have been genned
-                if (mFrameIndex >= mFrameStart)
+                if (mFrameIndex >= mCaptureStartFrame)
                 {
                     mResourceTracker.setDeletedBuffer(bufferIDs[i]);
                 }
@@ -3958,7 +3954,7 @@ void FrameCapture::maybeCapturePreCallUpdates(const gl::Context *context, CallCa
             for (GLsizei i = 0; i < count; i++)
             {
                 // If we're capturing, track what new buffers have been genned
-                if (mFrameIndex >= mFrameStart)
+                if (mFrameIndex >= mCaptureStartFrame)
                 {
                     mResourceTracker.setGennedBuffer(bufferIDs[i]);
                 }
@@ -4351,12 +4347,12 @@ void FrameCapture::checkForCaptureTrigger()
     if (captureTrigger != mCaptureTrigger)
     {
         // Start mid-execution capture for the next frame
-        mFrameStart = mFrameIndex + 1;
+        mCaptureStartFrame = mFrameIndex + 1;
 
         // Use the original trigger value as the frame count
-        mFrameEnd = mFrameStart + (mCaptureTrigger - 1);
+        mCaptureEndFrame = mCaptureStartFrame + (mCaptureTrigger - 1);
 
-        INFO() << "Capture triggered at frame " << mFrameStart << " for " << mCaptureTrigger
+        INFO() << "Capture triggered at frame " << mCaptureStartFrame << " for " << mCaptureTrigger
                << " frames";
 
         // Stop polling
@@ -4370,21 +4366,21 @@ void FrameCapture::onEndFrame(const gl::Context *context)
     checkForCaptureTrigger();
 
     // Note that we currently capture before the start frame to collect shader and program sources.
-    if (!mFrameCalls.empty() && mFrameIndex >= mFrameStart)
+    if (!mFrameCalls.empty() && mFrameIndex >= mCaptureStartFrame)
     {
         if (mIsFirstFrame)
         {
-            mFrameStart   = mFrameIndex;
-            mIsFirstFrame = false;
+            mCaptureStartFrame = mFrameIndex;
+            mIsFirstFrame      = false;
         }
-        WriteCppReplay(mCompression, mOutDirectory, context, mCaptureLabel, mFrameIndex,
-                       mFrameStart, mFrameEnd, mFrameCalls, mSetupCalls, &mResourceTracker,
-                       &mBinaryData, mSerializeStateEnabled);
-        if (mFrameIndex == mFrameEnd)
+        WriteCppReplay(mCompression, mOutDirectory, context, mCaptureLabel, getReplayFrameIndex(),
+                       getFrameCount(), mFrameCalls, mSetupCalls, &mResourceTracker, &mBinaryData,
+                       mSerializeStateEnabled);
+        if (mFrameIndex == mCaptureEndFrame)
         {
             // Save the index files after the last frame.
             WriteCppReplayIndexFiles(
-                mCompression, mOutDirectory, context->id(), mCaptureLabel, mFrameStart, mFrameEnd,
+                mCompression, mOutDirectory, context->id(), mCaptureLabel, getFrameCount(),
                 mDrawSurfaceWidth, mDrawSurfaceHeight, mReadBufferSize, mClientArraySizes,
                 mHasResourceType, mSerializeStateEnabled, false, context->getConfig(), mBinaryData);
             if (!mBinaryData.empty())
@@ -4414,7 +4410,7 @@ void FrameCapture::onEndFrame(const gl::Context *context)
     reset();
     mFrameIndex++;
 
-    if (enabled() && mFrameIndex == mFrameStart)
+    if (enabled() && mFrameIndex == mCaptureStartFrame)
     {
         mSetupCalls.clear();
         CaptureMidExecutionSetup(context, &mSetupCalls, &mResourceTracker, this);
@@ -4427,15 +4423,15 @@ void FrameCapture::onDestroyContext(const gl::Context *context)
     {
         return;
     }
-    if (!mWroteIndexFile && mFrameIndex > mFrameStart)
+    if (!mWroteIndexFile && mFrameIndex > mCaptureStartFrame)
     {
         // If context is destroyed before end frame is reached and at least
         // 1 frame has been recorded, then write the index files.
         // It doesnt make sense to write the index files when no frame has been recorded
         mFrameIndex -= 1;
-        mFrameEnd = mFrameIndex;
+        mCaptureEndFrame = mFrameIndex;
         WriteCppReplayIndexFiles(mCompression, mOutDirectory, context->id(), mCaptureLabel,
-                                 mFrameStart, mFrameEnd, mDrawSurfaceWidth, mDrawSurfaceHeight,
+                                 getFrameCount(), mDrawSurfaceWidth, mDrawSurfaceHeight,
                                  mReadBufferSize, mClientArraySizes, mHasResourceType,
                                  mSerializeStateEnabled, true, context->getConfig(), mBinaryData);
         if (!mBinaryData.empty())
@@ -4567,7 +4563,17 @@ bool FrameCapture::isCapturing() const
     // Currently we will always do a capture up until the last frame. In the future we could improve
     // mid execution capture by only capturing between the start and end frames. The only necessary
     // reason we need to capture before the start is for attached program and shader sources.
-    return mEnabled && mFrameIndex <= mFrameEnd;
+    return mEnabled && mFrameIndex <= mCaptureEndFrame;
+}
+
+uint32_t FrameCapture::getFrameCount() const
+{
+    return mCaptureEndFrame - mCaptureStartFrame + 1;
+}
+
+uint32_t FrameCapture::getReplayFrameIndex() const
+{
+    return mFrameIndex - mCaptureStartFrame + 1;
 }
 
 void FrameCapture::replay(gl::Context *context)

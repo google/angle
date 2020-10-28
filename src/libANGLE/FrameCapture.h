@@ -316,6 +316,10 @@ class FrameCapture final : angle::NonCopyable
 
     bool isCapturing() const;
     void replay(gl::Context *context);
+    uint32_t getFrameCount() const;
+
+    // Returns a frame index starting from "1" as the first frame.
+    uint32_t getReplayFrameIndex() const;
 
     void trackBufferMapping(CallCapture *call,
                             gl::BufferID id,
@@ -356,8 +360,8 @@ class FrameCapture final : angle::NonCopyable
     bool mCompression;
     gl::AttribArray<int> mClientVertexArrayMap;
     uint32_t mFrameIndex;
-    uint32_t mFrameStart;
-    uint32_t mFrameEnd;
+    uint32_t mCaptureStartFrame;
+    uint32_t mCaptureEndFrame;
     bool mIsFirstFrame        = true;
     bool mWroteIndexFile      = false;
     EGLint mDrawSurfaceWidth  = 0;
