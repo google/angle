@@ -1,6 +1,29 @@
 {
   "comments": [
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "9c4e00af_7540c568",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-10-28T00:06:23Z",
+      "side": 1,
+      "message": "preserved",
+      "range": {
+        "startLine": 13,
+        "startChar": 58,
+        "endLine": 13,
+        "endChar": 67
+      },
+      "revId": "923b28d12aea264833475a83c78adaaef03d474d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "d14478e7_d1961fec",
@@ -14,6 +37,29 @@
       "writtenOn": "2020-10-27T23:12:52Z",
       "side": 1,
       "message": "PTAL",
+      "revId": "923b28d12aea264833475a83c78adaaef03d474d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "38320225_421520f3",
+        "filename": "src/tests/restricted_traces/retrace_restricted_traces.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-10-28T00:06:23Z",
+      "side": 1,
+      "message": "preserve",
+      "range": {
+        "startLine": 27,
+        "startChar": 5,
+        "endLine": 27,
+        "endChar": 14
+      },
       "revId": "923b28d12aea264833475a83c78adaaef03d474d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
