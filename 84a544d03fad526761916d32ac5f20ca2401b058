@@ -16,6 +16,23 @@
       "message": "This is a reland of:\nhttps://chromium-review.googlesource.com/c/angle/angle/+/2437609\n\nThat was reverted due to failing builds:\nhttps://ci.chromium.org/p/chromium/builders/try/linux-chromeos-rel/708103?\n\nCompare PS1 and PS2 for the differences:\nhttps://chromium-review.googlesource.com/c/angle/angle/+/2504457/1..2\n\nI know we generally try to avoid #ifdef\u0027ing if we can, but this approach seems better than duplicating the multithreading code into a separate Vulkan .cpp file.",
       "revId": "84a544d03fad526761916d32ac5f20ca2401b058",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8f41df35_53f147c4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-28T01:54:40Z",
+      "side": 1,
+      "message": "Tim, the change to make Multithreading test a white box test is disruptive. We run angle_end2end_tests on tsan and not white box. Maybe take out the regression test for now until we can clean that up. LGTM with that change.",
+      "revId": "84a544d03fad526761916d32ac5f20ca2401b058",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
