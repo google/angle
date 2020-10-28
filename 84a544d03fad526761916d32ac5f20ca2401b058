@@ -37,6 +37,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "4bdc81c8_7be62252",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-28T13:48:07Z",
+      "side": 1,
+      "message": "Actually, if you want to keep the test, can you move it to a new test just for white box? i.e. VulkanMultithreadingTest.",
+      "parentUuid": "8f41df35_53f147c4",
+      "revId": "84a544d03fad526761916d32ac5f20ca2401b058",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "11fa3448_cb2e0139",
         "filename": "src/tests/gl_tests/MultithreadingTest.cpp",
         "patchSetId": 2
