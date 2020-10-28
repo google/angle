@@ -69,6 +69,24 @@
       "parentUuid": "e7247ff5_a3be1d80",
       "revId": "3ed09b43551aada254c486160a0f630359e2e311",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "60798507_0fbea84c",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1771,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-10-28T20:14:04Z",
+      "side": 1,
+      "message": "Sorry for delay ... I was debugging something else and wanted to try angle::Result::Continue.\n\nI checked the spec yesterday, and it can be done, but should return an INVALID_OPERATION error (which the validation code does generate).  Here\u0027s some of the language:\n\n  This will install executable code as part of the current rendering state for each\n  shader stage present when the program was last linked successfully.\n\n  An INVALID_OPERATION error is generated if program has not been\n  linked successfully. The current rendering state is not modiﬁed.\n\nI did try angle::Result::Continue and it also worked.  I\u0027ll go with that.",
+      "parentUuid": "38d2e672_11aa04c6",
+      "revId": "3ed09b43551aada254c486160a0f630359e2e311",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
