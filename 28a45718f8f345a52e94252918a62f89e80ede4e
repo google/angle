@@ -34,6 +34,23 @@
       "parentUuid": "7b5c8608_69c6d339",
       "revId": "28a45718f8f345a52e94252918a62f89e80ede4e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ecb08641_12021746",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-28T01:56:00Z",
+      "side": 1,
+      "message": "I was not getting correct crashes when I ran angle_perftests. Also the bot was failing end2end_tests with this CL. Again abandoning this, feel free to fork it and take it over.",
+      "revId": "28a45718f8f345a52e94252918a62f89e80ede4e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
