@@ -34,6 +34,47 @@
       "parentUuid": "1ba3ef41_d033aad9",
       "revId": "59dab7afe30273ab44546c34d1ac76095c7e5d9c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "226b7972_64c68084",
+        "filename": "src/libANGLE/FrameCapture.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 4458,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-28T13:55:43Z",
+      "side": 1,
+      "message": "No, this cannot be accessed from multiple threads. EGL is internally synchronized.",
+      "parentUuid": "c56aa1a1_5352da83",
+      "revId": "59dab7afe30273ab44546c34d1ac76095c7e5d9c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "687e6f44_ca54aa42",
+        "filename": "src/libANGLE/FrameCapture.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 367,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-28T13:55:43Z",
+      "side": 1,
+      "message": "nit: it would be cleaner to use a single map to a single struct (e.g. gl::Extents)",
+      "range": {
+        "startLine": 366,
+        "startChar": 0,
+        "endLine": 367,
+        "endChar": 42
+      },
+      "revId": "59dab7afe30273ab44546c34d1ac76095c7e5d9c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
