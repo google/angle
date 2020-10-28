@@ -115,6 +115,30 @@
       },
       "revId": "5bd4f651e6440faf168a4bebfaeb7928d925f278",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f9589284_a0352629",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 371,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-28T19:00:08Z",
+      "side": 1,
+      "message": "Do the tests pass without the checks? If you have time to add these checks it would be welcome. What features do we need from https://www.khronos.org/registry/vulkan/specs/1.2-extensions/man/html/VkPhysicalDeviceShaderAtomicFloatFeaturesEXT.html ?\n\nI\u0027ve partially updated the requirements sheet here:\n\nhttps://docs.google.com/spreadsheets/d/1DV7rUH-aQf0s1ldM6MZZSgRSDq0Jm4hIhYBP-K94vMw/edit#gid\u003d1330108256",
+      "parentUuid": "d9764251_aabdc8d9",
+      "range": {
+        "startLine": 371,
+        "startChar": 22,
+        "endLine": 371,
+        "endChar": 42
+      },
+      "revId": "5bd4f651e6440faf168a4bebfaeb7928d925f278",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
