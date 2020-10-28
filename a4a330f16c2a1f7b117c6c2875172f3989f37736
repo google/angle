@@ -39,6 +39,30 @@
       },
       "revId": "a4a330f16c2a1f7b117c6c2875172f3989f37736",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a476fd92_86763ac0",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1769,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-10-28T16:49:05Z",
+      "side": 1,
+      "message": "This is meant to provide context for anybody who wonders what app might do such a think.  Would it be better to remove the link?",
+      "parentUuid": "62e76bc2_344f4b1e",
+      "range": {
+        "startLine": 1769,
+        "startChar": 37,
+        "endLine": 1769,
+        "endChar": 85
+      },
+      "revId": "a4a330f16c2a1f7b117c6c2875172f3989f37736",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
