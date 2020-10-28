@@ -63,6 +63,30 @@
       },
       "revId": "a4a330f16c2a1f7b117c6c2875172f3989f37736",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a4337d6a_d9bf4777",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1769,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-10-28T17:24:35Z",
+      "side": 1,
+      "message": "I\u0027d remove it, since \u0027git blame\u0027 and/or the CL description should provide the context.   Otherwise, every fix would have a bug number (or, put another way, why is this change special?).",
+      "parentUuid": "a476fd92_86763ac0",
+      "range": {
+        "startLine": 1769,
+        "startChar": 37,
+        "endLine": 1769,
+        "endChar": 85
+      },
+      "revId": "a4a330f16c2a1f7b117c6c2875172f3989f37736",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
