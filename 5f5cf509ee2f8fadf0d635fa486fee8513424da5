@@ -33,6 +33,223 @@
       "message": "Ping. Geoff, can you approve or comment? I believe this is the last change necessary before I can roll ANGLE in WebKit.",
       "revId": "5f5cf509ee2f8fadf0d635fa486fee8513424da5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5085245b_7836ceff",
+        "filename": "src/libANGLE/Caps.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2020-10-28T17:04:04Z",
+      "side": 1,
+      "message": "This should be a separate CL.",
+      "revId": "5f5cf509ee2f8fadf0d635fa486fee8513424da5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "29a2d612_c63f6aa4",
+        "filename": "src/libANGLE/Display.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 297,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2020-10-28T17:04:04Z",
+      "side": 1,
+      "message": "Could you refactor this into a new function? Maybe in DisplayCGL.h or DisplayEAGL.h or a new DisplayApple_api.h similiar to third_party/angle/src/libANGLE/renderer/vulkan/DisplayVk_api.h",
+      "range": {
+        "startLine": 274,
+        "startChar": 0,
+        "endLine": 297,
+        "endChar": 14
+      },
+      "revId": "5f5cf509ee2f8fadf0d635fa486fee8513424da5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3109f005_ad5ff1e5",
+        "filename": "src/libANGLE/formatutils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2020-10-28T17:04:04Z",
+      "side": 1,
+      "message": "Same for this, separate CL please.",
+      "revId": "5f5cf509ee2f8fadf0d635fa486fee8513424da5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "71a76222_280c63ad",
+        "filename": "src/libANGLE/renderer/gl/BUILD.gn",
+        "patchSetId": 3
+      },
+      "lineNbr": 184,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2020-10-28T17:04:04Z",
+      "side": 1,
+      "message": "nit: FunctionsCGL would match our other files: FunctionsGL, FunctionsEGL, FunctionsGLX, etc",
+      "range": {
+        "startLine": 183,
+        "startChar": 0,
+        "endLine": 184,
+        "endChar": 25
+      },
+      "revId": "5f5cf509ee2f8fadf0d635fa486fee8513424da5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "04ae4e1d_0213e005",
+        "filename": "src/libANGLE/renderer/gl/SoftLinking_apple.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2020-10-28T17:04:04Z",
+      "side": 1,
+      "message": "I\u0027d put this in src/libANGLE/renderer/gl/apple/SoftLinking.h. We prefer not to have platform-specific files mixed with general files.  Given that this is for mac and ios, a \"apple\" folder can work.",
+      "revId": "5f5cf509ee2f8fadf0d635fa486fee8513424da5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "eae13492_fbf4646e",
+        "filename": "src/libANGLE/renderer/gl/cgl/DisplayCGL.mm",
+        "patchSetId": 3
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2020-10-28T17:04:04Z",
+      "side": 1,
+      "message": "nit: merge with above list of includes.",
+      "revId": "5f5cf509ee2f8fadf0d635fa486fee8513424da5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ac052431_a5420483",
+        "filename": "src/libANGLE/renderer/gl/cgl/IOSurfaceSurfaceCGL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2020-10-28T17:04:04Z",
+      "side": 1,
+      "message": "same nit.",
+      "revId": "5f5cf509ee2f8fadf0d635fa486fee8513424da5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "97e215fc_50ce6ab6",
+        "filename": "src/libANGLE/renderer/gl/eagl/DeviceEAGL.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2020-10-28T17:04:04Z",
+      "side": 1,
+      "message": "This complex macro is now used in a lot of files and I\u0027m not exactly sure what it means anymore. Can you move it to common/platform.h with a specific name?",
+      "range": {
+        "startLine": 14,
+        "startChar": 5,
+        "endLine": 15,
+        "endChar": 69
+      },
+      "revId": "5f5cf509ee2f8fadf0d635fa486fee8513424da5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e8783a0f_cc8cfd89",
+        "filename": "src/libANGLE/renderer/gl/eagl/DisplayEAGL.mm",
+        "patchSetId": 3
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2020-10-28T17:04:04Z",
+      "side": 1,
+      "message": "Same nit, merge with other libANGLE includes",
+      "revId": "5f5cf509ee2f8fadf0d635fa486fee8513424da5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "71b3d159_3c6b0d39",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1363,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2020-10-28T17:04:04Z",
+      "side": 1,
+      "message": "nit: Merge into above if-statement",
+      "range": {
+        "startLine": 1363,
+        "startChar": 12,
+        "endLine": 1363,
+        "endChar": 31
+      },
+      "revId": "5f5cf509ee2f8fadf0d635fa486fee8513424da5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f989bc1e_5c3b7023",
+        "filename": "src/libGLESv2.gni",
+        "patchSetId": 3
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2020-10-28T17:04:04Z",
+      "side": 1,
+      "message": "These should be the lib angle mac sources in src/libANGLE/renderer/gl/BUILD.gn",
+      "range": {
+        "startLine": 149,
+        "startChar": 0,
+        "endLine": 151,
+        "endChar": 48
+      },
+      "revId": "5f5cf509ee2f8fadf0d635fa486fee8513424da5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
