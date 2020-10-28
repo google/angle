@@ -50,6 +50,23 @@
       "message": "Ian, I think this looks okay, would like to test it out before we land.  I should be able to do that this afternoon.",
       "revId": "cb68864b63380d5e557047b28cdfbfb60e417923",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "eacd4645_7874cbd4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-28T16:36:23Z",
+      "side": 1,
+      "message": "Hey Ian,\n\nThis can go one step further and eliminate the Android-specific and Desktop-specific queries into one path. i.e. merge the env variable init in FrameCapture::FrameCapture with PrimeAndroidEnvironmentVariables into one function and remove the Android #ifdefs.",
+      "revId": "cb68864b63380d5e557047b28cdfbfb60e417923",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
