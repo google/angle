@@ -51,6 +51,24 @@
       "message": "I was not getting correct crashes when I ran angle_perftests. Also the bot was failing end2end_tests with this CL. Again abandoning this, feel free to fork it and take it over.",
       "revId": "28a45718f8f345a52e94252918a62f89e80ede4e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "334d66a7_67b6a25f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-10-28T04:20:04Z",
+      "side": 1,
+      "message": "FYI, the bot failures seem to have been flakes. I ran linux-angle-rel on PS#7 last night and it\u0027s green.",
+      "parentUuid": "ecb08641_12021746",
+      "revId": "28a45718f8f345a52e94252918a62f89e80ede4e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
