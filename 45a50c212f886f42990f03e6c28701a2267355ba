@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dfe18c38_82fa8229",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-28T14:04:50Z",
+      "side": 1,
+      "message": "LGTM, though I wonder if we\u0027re running out of map options. 😊",
+      "revId": "45a50c212f886f42990f03e6c28701a2267355ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
