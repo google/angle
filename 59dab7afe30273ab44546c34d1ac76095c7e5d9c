@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1ba3ef41_d033aad9",
+        "filename": "src/libANGLE/FrameCapture.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 4458,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-10-28T13:13:44Z",
+      "side": 1,
+      "message": "Can this be accessed from multiple threads? If so, do we already protect FrameCapture from threading issues?",
+      "revId": "59dab7afe30273ab44546c34d1ac76095c7e5d9c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
