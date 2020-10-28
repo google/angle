@@ -58,6 +58,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1cc9828b_ba879081",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-10-28T23:43:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0bd49353_b403fb2c",
+      "range": {
+        "startLine": 43,
+        "startChar": 0,
+        "endLine": 45,
+        "endChar": 24
+      },
+      "revId": "4e7298be33ca485cc32cf435157a47ffa4f7fb2d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f468b8c4_82876e98",
@@ -81,6 +105,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1d4a3e6c_19085375",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-10-28T23:43:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f468b8c4_82876e98",
+      "range": {
+        "startLine": 53,
+        "startChar": 69,
+        "endLine": 53,
+        "endChar": 84
+      },
+      "revId": "4e7298be33ca485cc32cf435157a47ffa4f7fb2d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c5dc17be_d2f1e1ef",
@@ -94,6 +142,30 @@
       "writtenOn": "2020-10-28T22:17:39Z",
       "side": 1,
       "message": "You could also link to their github site:\nhttps://github.com/google/agi",
+      "range": {
+        "startLine": 77,
+        "startChar": 51,
+        "endLine": 77,
+        "endChar": 54
+      },
+      "revId": "4e7298be33ca485cc32cf435157a47ffa4f7fb2d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "823974b9_793720a5",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-10-28T23:43:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c5dc17be_d2f1e1ef",
       "range": {
         "startLine": 77,
         "startChar": 51,
