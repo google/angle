@@ -33,6 +33,24 @@
       "message": "Didn\u0027t Geoff (or Jamie?) say that it\u0027s perfectly ok (by spec) for an application to glUseProgram a program that\u0027s not linked?\n\nI\u0027m ok with the WARN(), but this should probably return angle::Result::Continue;",
       "revId": "3ed09b43551aada254c486160a0f630359e2e311",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e7247ff5_a3be1d80",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1771,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2020-10-28T18:36:02Z",
+      "side": 1,
+      "message": "It was probably me but I checked our validation and it is indeed invalid. You can create/modify/link programs without using them.",
+      "parentUuid": "fd671308_66596f1d",
+      "revId": "3ed09b43551aada254c486160a0f630359e2e311",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
