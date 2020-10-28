@@ -33,6 +33,64 @@
       "message": "need to add to expectations file this set of tests - dEQP.GLES31/functional_image_load_store_3d_atomic_exchange_*\n\nsuspect root-cause same as -\n // Cannot create 2D (array) view of 3D texture.\n 3886 VULKAN : dEQP-GLES31.functional.image_load_store.3d.*layer \u003d FAIL",
       "revId": "5bd4f651e6440faf168a4bebfaeb7928d925f278",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "952bb4ef_19d7a665",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-10-28T18:06:17Z",
+      "side": 1,
+      "message": "Looks good overall!",
+      "revId": "5bd4f651e6440faf168a4bebfaeb7928d925f278",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7a15c6d4_6ed05b6d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-10-28T18:06:17Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "1cda6545_22fa35ca",
+      "revId": "5bd4f651e6440faf168a4bebfaeb7928d925f278",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8fa9c63f_ce9e38b3",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 371,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-10-28T18:06:17Z",
+      "side": 1,
+      "message": "It looks like there\u0027s no way to limit this to certain shader types, is that correct? In that case this should be gated to support for the vertexPipelineStoresAndAtomics and fragmentStoresAndAtomics Vulkan features.",
+      "range": {
+        "startLine": 371,
+        "startChar": 22,
+        "endLine": 371,
+        "endChar": 42
+      },
+      "revId": "5bd4f651e6440faf168a4bebfaeb7928d925f278",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
