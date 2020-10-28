@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "12f829bf_ddd6c6de",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-10-28T20:40:33Z",
+      "side": 1,
+      "message": "Per Jamie\u0027s request ... this CL enables logging API commands.  I developed and tested this on Android.  This is a combination of:\n\n1) Courtney\u0027s original CL, that several of us have been using (crrev/c/2087645).\n\n2) Some changes that I gave Courtney to deal with my EVENT changes\n\n3) Making the logging compile-time enabled.",
+      "revId": "42c4b6dead14e81516db9bbb165cc2aa0b9a45f3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
