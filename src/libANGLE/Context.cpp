@@ -3496,9 +3496,11 @@ void Context::initCaps()
                << std::endl;
         mDisplay->overrideFrontendFeatures({"disable_program_binary"}, true);
 
-        INFO() << "Disabling GL_EXT_map_buffer_range during capture, it is not supported on "
-               << "some native drivers" << std::endl;
+        INFO() << "Disabling GL_EXT_map_buffer_range and GL_OES_mapbuffer during capture, which "
+                  "are not supported on some native drivers"
+               << std::endl;
         mState.mExtensions.mapBufferRange = false;
+        mState.mExtensions.mapBufferOES   = false;
     }
 
     // Disable support for OES_get_program_binary
