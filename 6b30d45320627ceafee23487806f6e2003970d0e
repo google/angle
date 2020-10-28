@@ -1,0 +1,113 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b81d8353_cb2b5ab3",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-10-28T23:58:35Z",
+      "side": 1,
+      "message": "GPU\n\n(I always think it\u0027s \u0027graphics\u0027 too.)",
+      "range": {
+        "startLine": 44,
+        "startChar": 0,
+        "endLine": 44,
+        "endChar": 8
+      },
+      "revId": "6b30d45320627ceafee23487806f6e2003970d0e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7439b45d_5996c360",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-10-28T23:58:35Z",
+      "side": 1,
+      "message": "I\u0027m not sure the correct way to state this.   This particular command only works for Linux, while Windows requires setting it either in Settings or with \"set NEWVAR\u003dSOMETHING\" for the current cmd window (or \"setx NEWVAR SOMETHING\"? I don\u0027t know much about Windows).\n\nIf nothing else, it\u0027s probably worth indicating that while the environment variable works on both Windows and Linux (MacOS too?) this command is only for Linux(/MacOS?).",
+      "revId": "6b30d45320627ceafee23487806f6e2003970d0e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "71307566_f8a5cb18",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-10-28T23:58:35Z",
+      "side": 1,
+      "message": "GPU",
+      "range": {
+        "startLine": 77,
+        "startChar": 31,
+        "endLine": 77,
+        "endChar": 39
+      },
+      "revId": "6b30d45320627ceafee23487806f6e2003970d0e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "85273b5f_6c51a09c",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-10-28T23:58:35Z",
+      "side": 1,
+      "message": "I\u0027m not sure what this part means, since it sounds like: GAPID is now AGI, but AGI is built from GAPID.   Regardless, I think this whole sentence should be removed since it isn\u0027t really clarifying anything.",
+      "range": {
+        "startLine": 78,
+        "startChar": 27,
+        "endLine": 78,
+        "endChar": 63
+      },
+      "revId": "6b30d45320627ceafee23487806f6e2003970d0e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "27e4d97a_0838b38e",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-10-28T23:58:35Z",
+      "side": 1,
+      "message": "Not entirely true, since ANGLE provides the GLES functionality.",
+      "range": {
+        "startLine": 78,
+        "startChar": 0,
+        "endLine": 78,
+        "endChar": 25
+      },
+      "revId": "6b30d45320627ceafee23487806f6e2003970d0e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
