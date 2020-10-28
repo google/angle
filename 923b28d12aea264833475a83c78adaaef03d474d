@@ -26,6 +26,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "21f4be34_576d761e",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-28T17:24:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9c4e00af_7540c568",
+      "range": {
+        "startLine": 13,
+        "startChar": 58,
+        "endLine": 13,
+        "endChar": 67
+      },
+      "revId": "923b28d12aea264833475a83c78adaaef03d474d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "d14478e7_d1961fec",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 7
@@ -64,6 +88,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6a65b703_4915413a",
+        "filename": "src/tests/perf_tests/TracePerfTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 358,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-28T17:24:55Z",
+      "side": 1,
+      "message": "This splits the calls into\n\nFrame 1 -\u003e SetupCalls |swap| Frame 2 -\u003e Previous Frame 1 |swap| Frame 3 -\u003e Previous Frame 2\n\nOtherwise you get\n\nFrame 1 -\u003e SetupCalls + Previous Frame 1 |swap| Frame 2 -\u003e Previous Frame 2\n\nSince \"MEC\" happens during Swap before the first frame, with the second you start MEC after frame 1 instead of between Setup and Frame 1.\n\nUpdated the comment to try and make this clearer.",
+      "parentUuid": "91d6cd9f_ea8617d3",
+      "range": {
+        "startLine": 358,
+        "startChar": 8,
+        "endLine": 358,
+        "endChar": 30
+      },
+      "revId": "923b28d12aea264833475a83c78adaaef03d474d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "38320225_421520f3",
@@ -77,6 +125,30 @@
       "writtenOn": "2020-10-28T00:06:23Z",
       "side": 1,
       "message": "preserve",
+      "range": {
+        "startLine": 27,
+        "startChar": 5,
+        "endLine": 27,
+        "endChar": 14
+      },
+      "revId": "923b28d12aea264833475a83c78adaaef03d474d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b5344ab9_bea98bf7",
+        "filename": "src/tests/restricted_traces/retrace_restricted_traces.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-28T17:24:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "38320225_421520f3",
       "range": {
         "startLine": 27,
         "startChar": 5,
