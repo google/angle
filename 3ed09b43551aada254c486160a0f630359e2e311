@@ -87,6 +87,24 @@
       "parentUuid": "38d2e672_11aa04c6",
       "revId": "3ed09b43551aada254c486160a0f630359e2e311",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ef465b0a_0b46c978",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1771,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-10-28T20:29:12Z",
+      "side": 1,
+      "message": "Well the app is not checking this, so anything goes! Based on your comments, Stop was the correct return value, but meh. If the application is ignoring validation and errors, there\u0027s not much point in generating errors.",
+      "parentUuid": "60798507_0fbea84c",
+      "revId": "3ed09b43551aada254c486160a0f630359e2e311",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
