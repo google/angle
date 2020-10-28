@@ -152,6 +152,30 @@
       },
       "revId": "090a157b51e413bdf0591b078f89bb2cf86f8eb0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "42f03158_0efc87e3",
+        "filename": "src/libANGLE/FrameCapture.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 4377,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-28T13:52:15Z",
+      "side": 1,
+      "message": "Thanks for pointing this out.\n\nI was juggling the patch between two computers and it got reverted. FYI, if you +2 patches with nits on them I can land them more quickly and that can help me prevent silly mistakes like this one.",
+      "parentUuid": "b387fb5e_4164d39c",
+      "range": {
+        "startLine": 4377,
+        "startChar": 23,
+        "endLine": 4377,
+        "endChar": 59
+      },
+      "revId": "090a157b51e413bdf0591b078f89bb2cf86f8eb0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
