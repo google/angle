@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4e4ea328_6fb67d86",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-10-28T16:31:58Z",
+      "side": 1,
+      "message": "I know that Jamie said this could wait, but I didn\u0027t want Cody and me to keep getting the PUBG ASSERT anymore.  This avoids the ASSERT and other crashes that can occur with moving the check lower in the function (as Geoff and I discussed yesterday).",
+      "revId": "3c946ba8f126b6161b86e73b9ebec28847217141",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
