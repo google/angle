@@ -105,6 +105,24 @@
       "parentUuid": "60798507_0fbea84c",
       "revId": "3ed09b43551aada254c486160a0f630359e2e311",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d13773eb_78b3e49c",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1771,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-28T20:39:53Z",
+      "side": 1,
+      "message": "Stop/Continue won\u0027t make much difference except that Stop will prevent ANGLE from setting further dirty bits. Not worth worrying too much about either way.",
+      "parentUuid": "ef465b0a_0b46c978",
+      "revId": "3ed09b43551aada254c486160a0f630359e2e311",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
