@@ -33,6 +33,46 @@
       "message": "Tim, the change to make Multithreading test a white box test is disruptive. We run angle_end2end_tests on tsan and not white box. Maybe take out the regression test for now until we can clean that up. LGTM with that change.",
       "revId": "84a544d03fad526761916d32ac5f20ca2401b058",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "11fa3448_cb2e0139",
+        "filename": "src/tests/gl_tests/MultithreadingTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 329,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-10-28T13:22:48Z",
+      "side": 1,
+      "message": "Did you mean to update this comment? Seems out of place since the function didn\u0027t change.\nAh, I see the test setup changes the behavior of all MultithreadingTest\u0027s tests.",
+      "range": {
+        "startLine": 329,
+        "startChar": 70,
+        "endLine": 329,
+        "endChar": 97
+      },
+      "revId": "84a544d03fad526761916d32ac5f20ca2401b058",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1951aeab_f11b6999",
+        "filename": "src/tests/gl_tests/MultithreadingTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 494,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-10-28T13:22:48Z",
+      "side": 1,
+      "message": "Jamie mentioned to me on a similar CL of mine that the \"WithNoVirtualContexts\" is not necessary for the Vulkan back-end pieces.",
+      "revId": "84a544d03fad526761916d32ac5f20ca2401b058",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
