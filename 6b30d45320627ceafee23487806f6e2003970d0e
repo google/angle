@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "16605786_007df750",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-10-29T00:12:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b81d8353_cb2b5ab3",
+      "range": {
+        "startLine": 44,
+        "startChar": 0,
+        "endLine": 44,
+        "endChar": 8
+      },
+      "revId": "6b30d45320627ceafee23487806f6e2003970d0e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7439b45d_5996c360",
@@ -41,6 +65,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "94393ae8_600856dd",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-10-29T00:12:48Z",
+      "side": 1,
+      "message": "Good point.  I took out the command and reworded the description to indicate what the environment variable is and that it\u0027s set in an OS-specific manner.",
+      "parentUuid": "7439b45d_5996c360",
+      "revId": "6b30d45320627ceafee23487806f6e2003970d0e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "71307566_f8a5cb18",
@@ -54,6 +96,30 @@
       "writtenOn": "2020-10-28T23:58:35Z",
       "side": 1,
       "message": "GPU",
+      "range": {
+        "startLine": 77,
+        "startChar": 31,
+        "endLine": 77,
+        "endChar": 39
+      },
+      "revId": "6b30d45320627ceafee23487806f6e2003970d0e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b733b9a6_f87bad51",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-10-29T00:12:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "71307566_f8a5cb18",
       "range": {
         "startLine": 77,
         "startChar": 31,
@@ -105,6 +171,54 @@
         "startChar": 0,
         "endLine": 78,
         "endChar": 25
+      },
+      "revId": "6b30d45320627ceafee23487806f6e2003970d0e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b6d07a50_993693af",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-10-29T00:12:48Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "27e4d97a_0838b38e",
+      "range": {
+        "startLine": 78,
+        "startChar": 0,
+        "endLine": 78,
+        "endChar": 25
+      },
+      "revId": "6b30d45320627ceafee23487806f6e2003970d0e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8badd171_7ddacefc",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-10-29T00:12:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "85273b5f_6c51a09c",
+      "range": {
+        "startLine": 78,
+        "startChar": 27,
+        "endLine": 78,
+        "endChar": 63
       },
       "revId": "6b30d45320627ceafee23487806f6e2003970d0e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
