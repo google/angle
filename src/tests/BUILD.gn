@@ -42,12 +42,7 @@ if (is_mac) {
   ]
 }
 
-config("angle_test_expectations_config") {
-  include_dirs = [ "${angle_root}:angle_common" ]
-}
-
 angle_static_library("angle_test_expectations") {
-  public_configs += [ ":angle_test_expectations_config" ]
   public_deps = [
     "$angle_root:angle_common",
     "$angle_root:angle_gpu_info_util",
