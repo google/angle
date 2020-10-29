@@ -3,6 +3,40 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "448346ad_ff76e596",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-10-29T17:48:10Z",
+      "side": 1,
+      "message": "I mentioned in a recent meeting that I\u0027d like to test real pre-rotation on Android.  How would we specify real vs. emulated pre-rotation?",
+      "revId": "3aa84eb5a76b1b827e2dbb06d497cbd6ffa809a3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "79d463a7_194623ac",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-10-29T17:48:10Z",
+      "side": 1,
+      "message": "A few drive-by comments/questions.",
+      "revId": "3aa84eb5a76b1b827e2dbb06d497cbd6ffa809a3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "0830aa72_4d61e542",
         "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
         "patchSetId": 3
@@ -14,6 +48,30 @@
       "writtenOn": "2020-10-29T17:35:07Z",
       "side": 1,
       "message": "nit: prerotation",
+      "range": {
+        "startLine": 1689,
+        "startChar": 52,
+        "endLine": 1689,
+        "endChar": 64
+      },
+      "revId": "3aa84eb5a76b1b827e2dbb06d497cbd6ffa809a3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1cdef395_dd9a4110",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1689,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-10-29T17:48:10Z",
+      "side": 1,
+      "message": "nit: Actually it\u0027s \"pre-rotation\":-)",
+      "parentUuid": "0830aa72_4d61e542",
       "range": {
         "startLine": 1689,
         "startChar": 52,
