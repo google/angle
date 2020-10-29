@@ -103,6 +103,52 @@
       },
       "revId": "3aa84eb5a76b1b827e2dbb06d497cbd6ffa809a3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4c395a33_46146f0f",
+        "filename": "src/tests/deqp_support/angle_deqp_gtest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-29T19:02:01Z",
+      "side": 1,
+      "message": "nit: --emulated-pre-rotation for clarity would be nice.",
+      "range": {
+        "startLine": 104,
+        "startChar": 39,
+        "endLine": 104,
+        "endChar": 50
+      },
+      "revId": "3aa84eb5a76b1b827e2dbb06d497cbd6ffa809a3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b559044d_b3d92635",
+        "filename": "src/tests/deqp_support/tcuANGLEPlatform.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-29T19:02:01Z",
+      "side": 1,
+      "message": "nit: would call these mEnableFeatureOverrides or something like that, as it\u0027s really clearer that way.",
+      "range": {
+        "startLine": 64,
+        "startChar": 30,
+        "endLine": 64,
+        "endChar": 50
+      },
+      "revId": "3aa84eb5a76b1b827e2dbb06d497cbd6ffa809a3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
