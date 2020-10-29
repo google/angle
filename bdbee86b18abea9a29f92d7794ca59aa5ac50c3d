@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "761e6a23_cff034fe",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-29T20:14:05Z",
+      "side": 1,
+      "message": "PTAL. Taking over from Courtney\u0027s patch. Using \u0027thread_local\u0027 should make this safe.",
+      "revId": "bdbee86b18abea9a29f92d7794ca59aa5ac50c3d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
