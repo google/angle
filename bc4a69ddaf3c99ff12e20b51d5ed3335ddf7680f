@@ -16,6 +16,23 @@
       "message": "Kind of embarrassing this didn\u0027t get caught in our CI.",
       "revId": "bc4a69ddaf3c99ff12e20b51d5ed3335ddf7680f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "58e00b9c_faeed6a6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2020-10-29T15:35:56Z",
+      "side": 1,
+      "message": "Think it just turns into a -I with a non-existent directory which is normally fine.",
+      "revId": "bc4a69ddaf3c99ff12e20b51d5ed3335ddf7680f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
