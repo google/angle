@@ -1474,6 +1474,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "8182fb11_24668bd5",
+        "filename": "src/libANGLE/validationES32.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1359667
+      },
+      "writtenOn": "2020-10-29T20:57:32Z",
+      "side": 1,
+      "message": "Do we need to do the check since the extension is core in 3.2 and we should only get here if the context is 3.2?",
+      "parentUuid": "2a5ef5f8_c6772048",
+      "range": {
+        "startLine": 142,
+        "startChar": 11,
+        "endLine": 142,
+        "endChar": 39
+      },
+      "revId": "90e28645c779afd9206e684e8ff05057ad3127ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "d6e64b34_ba68b8ca",
         "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
         "patchSetId": 12
