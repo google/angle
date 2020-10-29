@@ -276,6 +276,7 @@ void Trace(LogSeverity severity, const char *message)
 #    endif  // !defined(ANGLE_ENABLE_DEBUG_TRACE_TO_DEBUGGER)
     {
         OutputDebugStringA(str.c_str());
+        OutputDebugStringA("\n");
     }
 #endif
 
