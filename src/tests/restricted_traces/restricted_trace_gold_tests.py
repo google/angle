@@ -182,7 +182,7 @@ def get_skia_gold_keys(args):
         def append(self, line):
             if self.done_accepting_lines:
                 return
-            if 'android/test_runner.py' in line:
+            if 'Additional test environment' in line or 'android/test_runner.py' in line:
                 self.accepting_lines = False
                 self.is_android = True
             if ANDROID_BEGIN_SYSTEM_INFO in line:
