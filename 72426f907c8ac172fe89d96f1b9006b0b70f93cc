@@ -254,6 +254,30 @@
       },
       "revId": "72426f907c8ac172fe89d96f1b9006b0b70f93cc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8989ab7f_d8a2c50f",
+        "filename": "src/libANGLE/FrameCapture.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2020-10-29T19:16:44Z",
+      "side": 1,
+      "message": "I wasn\u0027t thinking about optional parameters (I don\u0027t think they are used very much in ANGLE), but that would work Ian.  Probably easiest to stick with the function you have, just rename for clarity.",
+      "parentUuid": "e93e41a3_b2edfb12",
+      "range": {
+        "startLine": 122,
+        "startChar": 11,
+        "endLine": 122,
+        "endChar": 47
+      },
+      "revId": "72426f907c8ac172fe89d96f1b9006b0b70f93cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
