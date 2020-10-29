@@ -100,7 +100,7 @@ constexpr ANGLE_INLINE ReturnType GetDefaultReturnValue()
 
 inline int CID(const Context *context)
 {
-    return context != nullptr ? static_cast<int>(context->id()) : 0;
+    return context == nullptr ? 0 : static_cast<int>(context->id().value);
 }
 }  // namespace gl
 

@@ -127,7 +127,7 @@ class CaptureReplayTests
                 cleanupTest();
                 return -1;
             }
-            bool isEqual = compareSerializedStates(testIndex, frame, bos);
+            bool isEqual = compareSerializedContexts(testIndex, frame, bos.getData());
             if (!isEqual)
             {
                 cleanupTest();
@@ -150,12 +150,14 @@ class CaptureReplayTests
     }
 
   private:
-    bool compareSerializedStates(uint32_t testIndex,
-                                 uint32_t frame,
-                                 const gl::BinaryOutputStream &replaySerializedContextData)
+    bool compareSerializedContexts(uint32_t testIndex,
+                                   uint32_t frame,
+                                   const std::vector<uint8_t> &replaySerializedContextState)
     {
-        return GetSerializedContextStateData(testIndex, frame) ==
-               replaySerializedContextData.getData();
+
+        return memcmp(replaySerializedContextState.data(),
+                      GetSerializedContextState(testIndex, frame),
+                      replaySerializedContextState.size()) == 0;
     }
 
     OSWindow *mOSWindow;

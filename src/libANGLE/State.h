@@ -59,8 +59,6 @@ static constexpr Version ES_3_0 = Version(3, 0);
 static constexpr Version ES_3_1 = Version(3, 1);
 static constexpr Version ES_3_2 = Version(3, 2);
 
-using ContextID = uintptr_t;
-
 template <typename T>
 using BufferBindingMap     = angle::PackedEnumMap<BufferBinding, T>;
 using BoundBufferMap       = BufferBindingMap<BindingPointer<Buffer>>;

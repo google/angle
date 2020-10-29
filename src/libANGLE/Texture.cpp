@@ -1890,12 +1890,12 @@ bool Texture::isSamplerComplete(const Context *context, const Sampler *optionalS
 }
 
 Texture::SamplerCompletenessCache::SamplerCompletenessCache()
-    : context(0), samplerState(), samplerComplete(false)
+    : context({0}), samplerState(), samplerComplete(false)
 {}
 
 void Texture::invalidateCompletenessCache() const
 {
-    mCompletenessCache.context = 0;
+    mCompletenessCache.context = {0};
 }
 
 angle::Result Texture::ensureInitialized(const Context *context)

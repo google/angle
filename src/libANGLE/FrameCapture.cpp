@@ -203,6 +203,12 @@ std::string GetCaptureTrigger()
 #endif  // defined(ANGLE_PLATFORM_ANDROID)
 }
 
+std::ostream &operator<<(std::ostream &os, gl::ContextID contextId)
+{
+    os << static_cast<int>(contextId.value);
+    return os;
+}
+
 struct FmtCapturePrefix
 {
     FmtCapturePrefix(gl::ContextID contextIdIn, const std::string &captureLabelIn)
@@ -222,7 +228,7 @@ std::ostream &operator<<(std::ostream &os, const FmtCapturePrefix &fmt)
     {
         os << fmt.captureLabel;
     }
-    os << "_capture_context" << static_cast<int>(fmt.contextId);
+    os << "_capture_context" << fmt.contextId;
     return os;
 }
 
@@ -249,7 +255,7 @@ struct FmtReplayFunction
 
 std::ostream &operator<<(std::ostream &os, const FmtReplayFunction &fmt)
 {
-    os << "ReplayContext" << static_cast<int>(fmt.contextId) << "Frame" << fmt.frameIndex;
+    os << "ReplayContext" << fmt.contextId << "Frame" << fmt.frameIndex;
     if (fmt.partId != kNoPartId)
     {
         os << "Part" << fmt.partId;
@@ -270,7 +276,7 @@ struct FmtSetupFunction
 
 std::ostream &operator<<(std::ostream &os, const FmtSetupFunction &fmt)
 {
-    os << "SetupContext" << Str(static_cast<int>(fmt.contextId)) << "Replay";
+    os << "SetupContext" << fmt.contextId << "Replay";
     if (fmt.partId != kNoPartId)
     {
         os << "Part" << fmt.partId;
@@ -288,7 +294,7 @@ struct FmtResetFunction
 
 std::ostream &operator<<(std::ostream &os, const FmtResetFunction &fmt)
 {
-    os << "ResetContext" << Str(static_cast<int>(fmt.contextId)) << "Replay()";
+    os << "ResetContext" << fmt.contextId << "Replay()";
     return os;
 }
 
@@ -331,19 +337,18 @@ std::ostream &operator<<(std::ostream &os, const FmtFunction &fmt)
     return os;
 }
 
-struct FmtGetSerializedContextStateDataFunction
+struct FmtGetSerializedContextStateFunction
 {
-    FmtGetSerializedContextStateDataFunction(gl::ContextID contextIdIn, uint32_t frameIndexIn)
+    FmtGetSerializedContextStateFunction(gl::ContextID contextIdIn, uint32_t frameIndexIn)
         : contextId(contextIdIn), frameIndex(frameIndexIn)
     {}
     gl::ContextID contextId;
     uint32_t frameIndex;
 };
 
-std::ostream &operator<<(std::ostream &os, const FmtGetSerializedContextStateDataFunction &fmt)
+std::ostream &operator<<(std::ostream &os, const FmtGetSerializedContextStateFunction &fmt)
 {
-    os << "GetSerializedContext" << static_cast<int>(fmt.contextId) << "StateFrame"
-       << fmt.frameIndex << "Data()";
+    os << "GetSerializedContext" << fmt.contextId << "StateFrame" << fmt.frameIndex << "Data()";
     return os;
 }
 
@@ -1148,14 +1153,10 @@ void WriteCppReplay(bool compression,
             binaryData->resize(serializedContextOffset + serializedContextLength);
             memcpy(binaryData->data() + serializedContextOffset, serializedContextData.data(),
                    serializedContextLength);
-            out << "std::vector<uint8_t> "
-                << FmtGetSerializedContextStateDataFunction(context->id(), frameIndex) << "\n";
+            out << "const uint8_t *"
+                << FmtGetSerializedContextStateFunction(context->id(), frameIndex) << "\n";
             out << "{\n";
-            out << "    std::vector<uint8_t> serializedContextData(" << serializedContextLength
-                << ");\n";
-            out << "    memcpy(serializedContextData.data(), &gBinaryData["
-                << serializedContextOffset << "], " << serializedContextLength << ");\n";
-            out << "    return serializedContextData;\n";
+            out << "    return &gBinaryData[" << serializedContextOffset << "];\n";
             out << "}\n";
             out << "\n";
         }
@@ -1249,14 +1250,13 @@ void WriteCppReplayIndexFiles(bool compression,
            << ";\n";
     header << "// End Trace Metadata\n";
     header << "\n";
-    header << "void SetupContext" << static_cast<int>(contextId) << "Replay();\n";
-    header << "void ReplayContext" << static_cast<int>(contextId)
-           << "Frame(uint32_t frameIndex);\n";
-    header << "void ResetContext" << static_cast<int>(contextId) << "Replay();\n";
+    header << "void SetupContext" << contextId << "Replay();\n";
+    header << "void ReplayContext" << contextId << "Frame(uint32_t frameIndex);\n";
+    header << "void ResetContext" << contextId << "Replay();\n";
     if (serializeStateEnabled)
     {
-        header << "std::vector<uint8_t> GetSerializedContext" << static_cast<int>(contextId)
-               << "StateData(uint32_t frameIndex);\n";
+        header << "const uint8_t *GetSerializedContext" << contextId
+               << "State(uint32_t frameIndex);\n";
     }
     header << "\n";
     for (uint32_t frameIndex = 1; frameIndex <= frameCount; ++frameIndex)
@@ -1268,8 +1268,8 @@ void WriteCppReplayIndexFiles(bool compression,
     {
         for (uint32_t frameIndex = 1; frameIndex <= frameCount; ++frameIndex)
         {
-            header << "std::vector<uint8_t> "
-                   << FmtGetSerializedContextStateDataFunction(contextId, frameIndex) << ";\n";
+            header << "const uint8_t *"
+                   << FmtGetSerializedContextStateFunction(contextId, frameIndex) << ";\n";
         }
         header << "\n";
     }
@@ -1383,15 +1383,14 @@ void WriteCppReplayIndexFiles(bool compression,
     header << "\n";
 
     source << "\n";
-    source << "void ReplayContext" << static_cast<int>(contextId) << "Frame(uint32_t frameIndex)\n";
+    source << "void ReplayContext" << contextId << "Frame(uint32_t frameIndex)\n";
     source << "{\n";
     source << "    switch (frameIndex)\n";
     source << "    {\n";
     for (uint32_t frameIndex = 1; frameIndex <= frameCount; ++frameIndex)
     {
         source << "        case " << frameIndex << ":\n";
-        source << "            ReplayContext" << static_cast<int>(contextId) << "Frame"
-               << frameIndex << "();\n";
+        source << "            ReplayContext" << contextId << "Frame" << frameIndex << "();\n";
         source << "            break;\n";
     }
     source << "        default:\n";
@@ -1402,7 +1401,7 @@ void WriteCppReplayIndexFiles(bool compression,
 
     if (writeResetContextCall)
     {
-        source << "void ResetContext" << Str(static_cast<int>(contextId)) << "Replay()\n";
+        source << "void ResetContext" << contextId << "Replay()\n";
         source << "{\n";
         source << "    // Reset context is empty because context is destroyed before end "
                   "frame is reached\n";
@@ -1412,8 +1411,8 @@ void WriteCppReplayIndexFiles(bool compression,
 
     if (serializeStateEnabled)
     {
-        source << "std::vector<uint8_t> GetSerializedContext" << static_cast<int>(contextId)
-               << "StateData(uint32_t frameIndex)\n";
+        source << "const uint8_t *GetSerializedContext" << contextId
+               << "State(uint32_t frameIndex)\n";
         source << "{\n";
         source << "    switch (frameIndex)\n";
         source << "    {\n";
@@ -1421,7 +1420,7 @@ void WriteCppReplayIndexFiles(bool compression,
         {
             source << "        case " << frameIndex << ":\n";
             source << "            return "
-                   << FmtGetSerializedContextStateDataFunction(contextId, frameIndex) << ";\n";
+                   << FmtGetSerializedContextStateFunction(contextId, frameIndex) << ";\n";
         }
         source << "        default:\n";
         source << "            return {};\n";

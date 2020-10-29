@@ -114,7 +114,7 @@ bool IsTextureCompatibleWithSampler(TextureType texture, TextureType sampler)
     return false;
 }
 
-int gIDCounter = 1;
+uint32_t gIDCounter = 1;
 }  // namespace
 
 template <typename BindingT, typename... ArgsT>
@@ -293,7 +293,7 @@ State::State(const State *shareContextState,
              bool robustResourceInit,
              bool programBinaryCacheEnabled,
              EGLenum contextPriority)
-    : mID(gIDCounter++),
+    : mID({gIDCounter++}),
       mClientType(clientType),
       mContextPriority(contextPriority),
       mClientVersion(clientVersion),
