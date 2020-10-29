@@ -69,6 +69,24 @@
       "message": "Very cool.",
       "revId": "946bdbd060d846272c786d4cbcc956f0be457ef3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "69322cf8_579d8db1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-10-29T17:23:19Z",
+      "side": 1,
+      "message": "I don\u0027t see why not, but I\u0027ll give it a try.\n\n---\n\nEdit, it does, but the arg sanity check was forbidding it (saying it can only work with Vulkan). Fixed that in the next PS. Thanks for pointing that out.",
+      "parentUuid": "ba56487c_98fdf6db",
+      "revId": "946bdbd060d846272c786d4cbcc956f0be457ef3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
