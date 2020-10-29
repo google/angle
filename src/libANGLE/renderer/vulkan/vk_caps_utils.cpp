@@ -368,6 +368,11 @@ void RendererVk::ensureCapsInitialized() const
     mNativeExtensions.multisampleInterpolationOES =
         supportSampleRateShading && (mNativeCaps.maxInterpolationOffset >= 0.5);
 
+    mNativeExtensions.shaderImageAtomicOES =
+        ((mPhysicalDeviceFeatures.vertexPipelineStoresAndAtomics == VK_TRUE) &&
+         (mPhysicalDeviceFeatures.fragmentStoresAndAtomics == VK_TRUE) &&
+         getFeatures().supportsShaderImageFloat32Atomics.enabled);
+
     // https://vulkan.lunarg.com/doc/view/1.0.30.0/linux/vkspec.chunked/ch31s02.html
     mNativeCaps.maxElementIndex  = std::numeric_limits<GLuint>::max() - 1;
     mNativeCaps.max3DTextureSize = LimitToInt(limitsVk.maxImageDimension3D);

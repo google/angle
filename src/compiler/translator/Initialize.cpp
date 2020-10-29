@@ -133,6 +133,10 @@ void InitExtensionBehavior(const ShBuiltInResources &resources, TExtensionBehavi
     {
         extBehavior[TExtension::OES_shader_multisample_interpolation] = EBhUndefined;
     }
+    if (resources.OES_shader_image_atomic)
+    {
+        extBehavior[TExtension::OES_shader_image_atomic] = EBhUndefined;
+    }
 }
 
 void ResetExtensionBehavior(const ShBuiltInResources &resources,

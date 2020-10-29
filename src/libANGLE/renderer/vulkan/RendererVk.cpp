@@ -961,6 +961,10 @@ void RendererVk::queryDeviceExtensionFeatures(const ExtensionNameList &deviceExt
     mShaderFloat16Int8Features.sType =
         VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_FLOAT16_INT8_FEATURES;
 
+    mShaderAtomicFloatFeature = {};
+    mShaderAtomicFloatFeature.sType =
+        VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ATOMIC_FLOAT_FEATURES_EXT;
+
     mDepthStencilResolveProperties = {};
     mDepthStencilResolveProperties.sType =
         VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_STENCIL_RESOLVE_PROPERTIES;
@@ -1036,6 +1040,12 @@ void RendererVk::queryDeviceExtensionFeatures(const ExtensionNameList &deviceExt
         vk::AddToPNextChain(&deviceFeatures, &mShaderFloat16Int8Features);
     }
 
+    // Query shader atomic float features
+    if (ExtensionFound(VK_EXT_SHADER_ATOMIC_FLOAT_EXTENSION_NAME, deviceExtensionNames))
+    {
+        vk::AddToPNextChain(&deviceFeatures, &mShaderAtomicFloatFeature);
+    }
+
     // Query depth/stencil resolve properties
     if (ExtensionFound(VK_KHR_DEPTH_STENCIL_RESOLVE_EXTENSION_NAME, deviceExtensionNames))
     {
@@ -1080,6 +1090,7 @@ void RendererVk::queryDeviceExtensionFeatures(const ExtensionNameList &deviceExt
     mSubgroupProperties.pNext               = nullptr;
     mExternalMemoryHostProperties.pNext     = nullptr;
     mShaderFloat16Int8Features.pNext        = nullptr;
+    mShaderAtomicFloatFeature.pNext         = nullptr;
     mDepthStencilResolveProperties.pNext    = nullptr;
     mSamplerYcbcrConversionFeatures.pNext   = nullptr;
 }
@@ -1429,6 +1440,12 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
     {
         enabledDeviceExtensions.push_back(VK_KHR_SHADER_FLOAT16_INT8_EXTENSION_NAME);
         vk::AddToPNextChain(&createInfo, &mShaderFloat16Int8Features);
+    }
+
+    if (getFeatures().supportsShaderImageFloat32Atomics.enabled)
+    {
+        enabledDeviceExtensions.push_back(VK_EXT_SHADER_ATOMIC_FLOAT_EXTENSION_NAME);
+        vk::AddToPNextChain(&createInfo, &mShaderAtomicFloatFeature);
     }
 
     createInfo.sType                 = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
@@ -1924,6 +1941,9 @@ void RendererVk::initFeatures(DisplayVk *displayVk, const ExtensionNameList &dev
 
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsShaderFloat16,
                             mShaderFloat16Int8Features.shaderFloat16 == VK_TRUE);
+
+    ANGLE_FEATURE_CONDITION(&mFeatures, supportsShaderImageFloat32Atomics,
+                            mShaderAtomicFloatFeature.shaderImageFloat32Atomics == VK_TRUE);
 
     // The compute shader used to generate mipmaps uses a 256-wide workgroup.  This path is only
     // enabled on devices that meet this minimum requirement.  Furthermore,

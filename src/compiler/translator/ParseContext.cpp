@@ -6105,6 +6105,21 @@ void TParseContext::checkImageMemoryAccessForBuiltinFunctions(TIntermAggregate *
                       GetImageArgumentToken(imageNode));
             }
         }
+        else if (BuiltInGroup::isImageAtomic(func))
+        {
+            if (memoryQualifier.readonly)
+            {
+                error(imageNode->getLine(),
+                      "'imageAtomic' cannot be used with images qualified as 'readonly'",
+                      GetImageArgumentToken(imageNode));
+            }
+            if (memoryQualifier.writeonly)
+            {
+                error(imageNode->getLine(),
+                      "'imageAtomic' cannot be used with images qualified as 'writeonly'",
+                      GetImageArgumentToken(imageNode));
+            }
+        }
     }
 }
 

@@ -1087,26 +1087,46 @@ GROUP BEGIN Image {"queryFunction": true}
   DEFAULT METADATA {"glsl_level": "GLSL4_5_BUILTINS", "op": "CallBuiltInFunction"}
     int imageSamples(readonly writeonly gimage2DMS);
     int imageSamples(readonly writeonly gimage2DMSArray);
-  DEFAULT METADATA {"glsl_level": "GLSL4_2_BUILTINS", "op": "CallBuiltInFunction"}
-    uint imageAtomicAdd(IMAGE_PARAMS, uint);
-    int imageAtomicAdd(IMAGE_PARAMS, int);
-    uint imageAtomicMin(IMAGE_PARAMS, uint);
-    int imageAtomicMin(IMAGE_PARAMS, int);
-    uint imageAtomicMax(IMAGE_PARAMS, uint);
-    int imageAtomicMax(IMAGE_PARAMS, int);
-    uint imageAtomicAnd(IMAGE_PARAMS, uint);
-    int imageAtomicAnd(IMAGE_PARAMS, int);
-    uint imageAtomicOr(IMAGE_PARAMS, uint);
-    int imageAtomicOr(IMAGE_PARAMS, int);
-    uint imageAtomicXor(IMAGE_PARAMS, uint);
-    int imageAtomicXor(IMAGE_PARAMS, int);
-    uint imageAtomicExchange(IMAGE_PARAMS, uint);
-    int imageAtomicExchange(IMAGE_PARAMS, int);
-  DEFAULT METADATA {"glsl_level": "GLSL4_5_BUILTINS", "op": "CallBuiltInFunction"}
-    int imageAtomicExchange(IMAGE_PARAMS, float);
-  DEFAULT METADATA {"glsl_level": "GLSL4_2_BUILTINS", "op": "CallBuiltInFunction"}
-    uint imageAtomicCompSwap(IMAGE_PARAMS, uint, uint);
-    int imageAtomicCompSwap(IMAGE_PARAMS, int, int);
+  GROUP BEGIN Atomic {"queryFunction": true}
+      DEFAULT METADATA {"glsl_level": "GLSL4_2_BUILTINS", "op": "CallBuiltInFunction"}
+        uint imageAtomicAdd(IMAGE_PARAMS, uint);
+        int imageAtomicAdd(IMAGE_PARAMS, int);
+        uint imageAtomicMin(IMAGE_PARAMS, uint);
+        int imageAtomicMin(IMAGE_PARAMS, int);
+        uint imageAtomicMax(IMAGE_PARAMS, uint);
+        int imageAtomicMax(IMAGE_PARAMS, int);
+        uint imageAtomicAnd(IMAGE_PARAMS, uint);
+        int imageAtomicAnd(IMAGE_PARAMS, int);
+        uint imageAtomicOr(IMAGE_PARAMS, uint);
+        int imageAtomicOr(IMAGE_PARAMS, int);
+        uint imageAtomicXor(IMAGE_PARAMS, uint);
+        int imageAtomicXor(IMAGE_PARAMS, int);
+        uint imageAtomicExchange(IMAGE_PARAMS, uint);
+        int imageAtomicExchange(IMAGE_PARAMS, int);
+      DEFAULT METADATA {"glsl_level": "GLSL4_5_BUILTINS", "op": "CallBuiltInFunction"}
+        int imageAtomicExchange(IMAGE_PARAMS, float);
+      DEFAULT METADATA {"glsl_level": "GLSL4_2_BUILTINS", "op": "CallBuiltInFunction"}
+        uint imageAtomicCompSwap(IMAGE_PARAMS, uint, uint);
+        int imageAtomicCompSwap(IMAGE_PARAMS, int, int);
+      DEFAULT METADATA {"essl_level": "ESSL3_1_BUILTINS", "op": "CallBuiltInFunction", "essl_extension": "OES_shader_image_atomic", "suffix": "Ext"}
+        uint imageAtomicAdd(readonly writeonly IMAGE_PARAMS, uint);
+        int imageAtomicAdd(readonly writeonly IMAGE_PARAMS, int);
+        uint imageAtomicMin(readonly writeonly IMAGE_PARAMS, uint);
+        int imageAtomicMin(readonly writeonly IMAGE_PARAMS, int);
+        uint imageAtomicMax(readonly writeonly IMAGE_PARAMS, uint);
+        int imageAtomicMax(readonly writeonly IMAGE_PARAMS, int);
+        uint imageAtomicAnd(readonly writeonly IMAGE_PARAMS, uint);
+        int imageAtomicAnd(readonly writeonly IMAGE_PARAMS, int);
+        uint imageAtomicOr(readonly writeonly IMAGE_PARAMS, uint);
+        int imageAtomicOr(readonly writeonly IMAGE_PARAMS, int);
+        uint imageAtomicXor(readonly writeonly IMAGE_PARAMS, uint);
+        int imageAtomicXor(readonly writeonly IMAGE_PARAMS, int);
+        uint imageAtomicExchange(readonly writeonly IMAGE_PARAMS, uint);
+        int imageAtomicExchange(readonly writeonly IMAGE_PARAMS, int);
+        int imageAtomicExchange(readonly writeonly IMAGE_PARAMS, float);
+        uint imageAtomicCompSwap(readonly writeonly IMAGE_PARAMS, uint, uint);
+        int imageAtomicCompSwap(readonly writeonly IMAGE_PARAMS, int, int);
+  GROUP END Atomic
 GROUP END Image
 
 GROUP BEGIN Noise

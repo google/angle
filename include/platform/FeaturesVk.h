@@ -357,6 +357,14 @@ struct FeaturesVk : FeatureSetBase
                                      "and has the shaderFloat16 feature",
                                      &members, "http://anglebug.com/4551"};
 
+    // Whether the VkDevice supports the VK_EXT_shader_atomic_flat extension and has the
+    // shaderImageFloat32Atomics feature
+    Feature supportsShaderImageFloat32Atomics = {
+        "shaderImageFloat32Atomics", FeatureCategory::VulkanFeatures,
+        "VkDevice supports the VK_EXT_shader_atomic_float extension and has the "
+        "shaderImageFloat32Atomics feature.",
+        &members, "http://anglebug.com/3578"};
+
     // Some devices don't meet the limits required to perform mipmap generation using the built-in
     // compute shader.  On some other devices, VK_IMAGE_USAGE_STORAGE_BIT is detrimental to
     // performance, making this solution impractical.

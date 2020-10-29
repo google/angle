@@ -112,6 +112,7 @@ Compiler::Compiler(rx::GLImplFactory *implFactory, const State &state, egl::Disp
     mResources.APPLE_clip_distance             = extensions.clipDistanceAPPLE;
     // OES_shader_multisample_interpolation
     mResources.OES_shader_multisample_interpolation = extensions.multisampleInterpolationOES;
+    mResources.OES_shader_image_atomic              = extensions.shaderImageAtomicOES;
     // TODO: use shader precision caps to determine if high precision is supported?
     mResources.FragmentPrecisionHigh = 1;
     mResources.EXT_frag_depth        = extensions.fragDepth;

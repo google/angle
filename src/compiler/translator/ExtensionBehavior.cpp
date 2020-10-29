@@ -36,6 +36,7 @@
     OP(OES_EGL_image_external)                      \
     OP(OES_EGL_image_external_essl3)                \
     OP(OES_shader_multisample_interpolation)        \
+    OP(OES_shader_image_atomic)                     \
     OP(OES_standard_derivatives)                    \
     OP(OES_texture_3D)                              \
     OP(OES_texture_cube_map_array)                  \
