@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9c956dce_e1c57a7e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2020-10-29T21:09:07Z",
+      "side": 1,
+      "message": "PTAL, since I\u0027m also adding new device id, not just skip.",
+      "revId": "fbd6179948ea46444c03fec8967cf1c6d65f088a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
