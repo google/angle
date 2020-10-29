@@ -16,6 +16,23 @@
       "message": "PTAL. Taking over from Courtney\u0027s patch. Using \u0027thread_local\u0027 should make this safe.",
       "revId": "bdbee86b18abea9a29f92d7794ca59aa5ac50c3d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "63e41bc7_24a26e9a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-10-29T21:11:37Z",
+      "side": 1,
+      "message": "Cool, I didn\u0027t know about the thread_local attribute. All the other suggestions were too messy.",
+      "revId": "bdbee86b18abea9a29f92d7794ca59aa5ac50c3d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
