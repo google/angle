@@ -139,6 +139,30 @@
       },
       "revId": "5bd4f651e6440faf168a4bebfaeb7928d925f278",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "faed1fd6_2e0bee4b",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 371,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-10-29T00:01:09Z",
+      "side": 1,
+      "message": "\u003e Do the tests pass without the checks?\n\nsome deqp tests that use r32f formats with atomic operations will fail due to lack of \"VK_EXT_shader_atomic_float\"\n\n\u003e What features do we need\n\nshaderImageFloat32Atomics",
+      "parentUuid": "f9589284_a0352629",
+      "range": {
+        "startLine": 371,
+        "startChar": 22,
+        "endLine": 371,
+        "endChar": 42
+      },
+      "revId": "5bd4f651e6440faf168a4bebfaeb7928d925f278",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
