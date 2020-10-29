@@ -1,6 +1,46 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d88b6d60_1cb41c1a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-29T18:21:36Z",
+      "side": 1,
+      "message": "LGTM with last nit (or two). Cody PTAL, hopefully we can suggest something clear to Ian so he can proceed.",
+      "revId": "72426f907c8ac172fe89d96f1b9006b0b70f93cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ff52eadf_5620eee1",
+        "filename": "src/libANGLE/FrameCapture.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-29T18:21:36Z",
+      "side": 1,
+      "message": "nit: remove the #if defined and make this unconditional.",
+      "range": {
+        "startLine": 121,
+        "startChar": 12,
+        "endLine": 121,
+        "endChar": 34
+      },
+      "revId": "72426f907c8ac172fe89d96f1b9006b0b70f93cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3382d181_415b9931",
@@ -62,6 +102,30 @@
       "side": 1,
       "message": "I was thinking we should add system_utils_android.cpp and implement GetEnvironmentVar there (without ifdefs), but we also want the posix version to keep working for Android.  That\u0027s why the Prime* method above was so convenient/elegant.  Maybe we just need to rename this new method to not include Android in the name.  Perhaps GetEnvironmentVarOrProperty.  Or maybe back out the new method and use an independent call that just reads and sets the property, then use common code to get it.",
       "parentUuid": "740c7e88_a025a147",
+      "range": {
+        "startLine": 122,
+        "startChar": 11,
+        "endLine": 122,
+        "endChar": 47
+      },
+      "revId": "72426f907c8ac172fe89d96f1b9006b0b70f93cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a0efc8ca_c9d1bb19",
+        "filename": "src/libANGLE/FrameCapture.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-29T18:21:36Z",
+      "side": 1,
+      "message": "Yeah probably \"From\" should be renamed to \"Or\". Other than that, I\u0027d keep the Android in there since Property means a lot of things on different platforms.",
+      "parentUuid": "7f5a19a0_dd677a1b",
       "range": {
         "startLine": 122,
         "startChar": 11,
