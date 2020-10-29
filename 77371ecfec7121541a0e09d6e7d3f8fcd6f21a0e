@@ -79,6 +79,30 @@
       },
       "revId": "77371ecfec7121541a0e09d6e7d3f8fcd6f21a0e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2a4b319c_fc5a9ea0",
+        "filename": "src/tests/restricted_traces/skia_gold/angle_skia_gold_properties.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-29T18:02:34Z",
+      "side": 1,
+      "message": "Ack\n\nYeah, would be nice if we could just get the stdout. This was still easier than transferring a file via adb.",
+      "parentUuid": "ef73cbf3_a43dd552",
+      "range": {
+        "startLine": 13,
+        "startChar": 15,
+        "endLine": 13,
+        "endChar": 23
+      },
+      "revId": "77371ecfec7121541a0e09d6e7d3f8fcd6f21a0e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
