@@ -23,6 +23,7 @@ angle_shared_library("angle_restricted_traces") {
 
   data = []
   defines = [ "ANGLE_TRACE_IMPLEMENTATION" ]
+  inputs = []
 
   include_dirs = [ "." ]
 
@@ -42,6 +43,9 @@ angle_shared_library("angle_restricted_traces") {
                  "${_test_ctx}.cpp",
                  "${_test_ctx}.h",
                ]
+
+    # The sha1 file is key to make "analyze" aware of a changed trace file.
+    inputs += [ "${_test}.tar.gz.sha1" ]
 
     data += [ "${_test_dir}/${_test}_capture_context${_ctx}.angledata.gz" ]
   }
