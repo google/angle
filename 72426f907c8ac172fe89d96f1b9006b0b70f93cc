@@ -278,6 +278,30 @@
       },
       "revId": "72426f907c8ac172fe89d96f1b9006b0b70f93cc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8780495c_48998f12",
+        "filename": "src/libANGLE/FrameCapture.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-29T19:19:55Z",
+      "side": 1,
+      "message": "Oh, I missed the optional part. No, optional parameters are effectively banned in our codebase. I\u0027d prefer the current renaming plan.",
+      "parentUuid": "8989ab7f_d8a2c50f",
+      "range": {
+        "startLine": 122,
+        "startChar": 11,
+        "endLine": 122,
+        "endChar": 47
+      },
+      "revId": "72426f907c8ac172fe89d96f1b9006b0b70f93cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
