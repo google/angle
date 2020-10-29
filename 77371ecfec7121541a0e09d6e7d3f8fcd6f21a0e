@@ -39,6 +39,29 @@
       },
       "revId": "77371ecfec7121541a0e09d6e7d3f8fcd6f21a0e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "db481ce8_79f34cd7",
+        "filename": "src/tests/restricted_traces/skia_gold/angle_skia_gold_properties.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-10-29T16:46:40Z",
+      "side": 1,
+      "message": "You should be able to do os.path.normpath(os.path.join(THIS_DIR, \"../../../../\")) instead of dddd.",
+      "range": {
+        "startLine": 13,
+        "startChar": 16,
+        "endLine": 13,
+        "endChar": 36
+      },
+      "revId": "77371ecfec7121541a0e09d6e7d3f8fcd6f21a0e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
