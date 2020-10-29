@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 238
+#define ANGLE_SH_VERSION 239
 
 enum ShShaderSpec
 {
@@ -774,9 +774,10 @@ namespace vk
 enum class SpecializationConstantId : uint32_t
 {
     LineRasterEmulation = 0,
+    SurfaceRotation     = 1,
 
-    InvalidEnum = 1,
-    EnumCount   = 1,
+    InvalidEnum = 2,
+    EnumCount   = InvalidEnum,
 };
 
 // Interface block name containing the aggregate default uniforms

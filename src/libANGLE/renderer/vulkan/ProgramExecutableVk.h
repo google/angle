@@ -11,6 +11,7 @@
 #define LIBANGLE_RENDERER_VULKAN_PROGRAMEXECUTABLEVK_H_
 
 #include "common/bitset_utils.h"
+#include "common/mathutil.h"
 #include "common/utilities.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/InfoLog.h"
@@ -47,14 +48,16 @@ class ShaderInfo final : angle::NonCopyable
     bool mIsInitialized = false;
 };
 
-enum class ProgramTransformOption : uint8_t
+struct ProgramTransformOptions final
 {
-    EnableLineRasterEmulation            = 0,
-    RemoveEarlyFragmentTestsOptimization = 1,
-    EnumCount                            = 2,
-    PermutationCount                     = 4,
+    uint8_t enableLineRasterEmulation : 1;
+    uint8_t removeEarlyFragmentTestsOptimization : 1;
+    uint8_t surfaceRotation : 3;
+    uint8_t reserved : 3;  // must initialize to zero
+    static constexpr uint32_t kPermutationCount = 0x1 << 5;
 };
-using ProgramTransformOptionBits = angle::PackedEnumBitSet<ProgramTransformOption, uint8_t>;
+static_assert(sizeof(ProgramTransformOptions) == 1, "Size check failed");
+static_assert(static_cast<int>(SurfaceRotation::EnumCount) <= 8, "Size check failed");
 
 class ProgramInfo final : angle::NonCopyable
 {
@@ -65,7 +68,7 @@ class ProgramInfo final : angle::NonCopyable
     angle::Result initProgram(ContextVk *contextVk,
                               const gl::ShaderType shaderType,
                               const ShaderInfo &shaderInfo,
-                              ProgramTransformOptionBits optionBits,
+                              ProgramTransformOptions optionBits,
                               ProgramExecutableVk *executableVk);
     void release(ContextVk *contextVk);
 
@@ -119,9 +122,10 @@ class ProgramExecutableVk
     const gl::ProgramExecutable &getGlExecutable();
 
     ProgramInfo &getGraphicsDefaultProgramInfo() { return mGraphicsProgramInfos[0]; }
-    ProgramInfo &getGraphicsProgramInfo(ProgramTransformOptionBits optionBits)
+    ProgramInfo &getGraphicsProgramInfo(ProgramTransformOptions option)
     {
-        return mGraphicsProgramInfos[optionBits.to_ulong()];
+        uint8_t index = gl::bitCast<uint8_t, ProgramTransformOptions>(option);
+        return mGraphicsProgramInfos[index];
     }
     ProgramInfo &getComputeProgramInfo() { return mComputeProgramInfo; }
     vk::BufferSerial getCurrentDefaultUniformBufferSerial() const
@@ -264,10 +268,12 @@ class ProgramExecutableVk
     // since that's slow to calculate.
     ShaderMapInterfaceVariableInfoMap mVariableInfoMap;
 
-    ProgramInfo mGraphicsProgramInfos[static_cast<int>(ProgramTransformOption::PermutationCount)];
+    // We store all permutations of surface rotation and transformed SPIR-V programs here. We may
+    // need some LRU algorithm to free least used programs to reduce the number of programs.
+    ProgramInfo mGraphicsProgramInfos[ProgramTransformOptions::kPermutationCount];
     ProgramInfo mComputeProgramInfo;
 
-    ProgramTransformOptionBits mTransformOptionBits;
+    ProgramTransformOptions mTransformOptions;
 
     ProgramVk *mProgram;
     ProgramPipelineVk *mProgramPipeline;

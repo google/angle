@@ -3126,6 +3126,15 @@ void ContextVk::updateSurfaceRotationDrawFramebuffer(const gl::State &glState)
     gl::Framebuffer *drawFramebuffer = glState.getDrawFramebuffer();
     mCurrentRotationDrawFramebuffer =
         DetermineSurfaceRotation(drawFramebuffer, mCurrentWindowSurface);
+
+    if (mCurrentRotationDrawFramebuffer != mGraphicsPipelineDesc->getSurfaceRotation())
+    {
+        // surface rotation are specialization constants, which affects program compilation. When
+        // rotation changes, we need to update GraphicsPipelineDesc so that the correct pipeline
+        // program object will be retrieved.
+        mGraphicsPipelineDesc->updateSurfaceRotation(&mGraphicsPipelineTransition,
+                                                     mCurrentRotationDrawFramebuffer);
+    }
 }
 
 void ContextVk::updateSurfaceRotationReadFramebuffer(const gl::State &glState)

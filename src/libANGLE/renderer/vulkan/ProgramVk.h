@@ -147,7 +147,7 @@ class ProgramVk : public ProgramImpl
 
     ANGLE_INLINE angle::Result initGraphicsShaderProgram(ContextVk *contextVk,
                                                          const gl::ShaderType shaderType,
-                                                         ProgramTransformOptionBits optionBits,
+                                                         ProgramTransformOptions optionBits,
                                                          ProgramInfo *programInfo,
                                                          ProgramExecutableVk *executableVk)
     {
@@ -158,7 +158,7 @@ class ProgramVk : public ProgramImpl
                                                   ProgramInfo *programInfo,
                                                   ProgramExecutableVk *executableVk)
     {
-        ProgramTransformOptionBits optionBits;
+        ProgramTransformOptions optionBits = {};
         return initProgram(contextVk, gl::ShaderType::Compute, optionBits, programInfo,
                            executableVk);
     }
@@ -192,7 +192,7 @@ class ProgramVk : public ProgramImpl
 
     ANGLE_INLINE angle::Result initProgram(ContextVk *contextVk,
                                            const gl::ShaderType shaderType,
-                                           ProgramTransformOptionBits optionBits,
+                                           ProgramTransformOptions optionBits,
                                            ProgramInfo *programInfo,
                                            ProgramExecutableVk *executableVk)
     {
