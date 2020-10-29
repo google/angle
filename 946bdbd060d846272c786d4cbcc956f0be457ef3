@@ -143,6 +143,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "111e6ed6_7ad654a4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-10-29T17:56:16Z",
+      "side": 1,
+      "message": "\u003e Maybe if we split our testing to 32 bit-only Pixel 2 and 64 bit-only Pixel 4, we will have enough.\n\nThat might be a good approach.",
+      "parentUuid": "c12877a7_2ecc0724",
+      "revId": "946bdbd060d846272c786d4cbcc956f0be457ef3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "50f54cb1_65d1f1bc",
