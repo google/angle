@@ -51,6 +51,24 @@
       "parentUuid": "73825dbb_29a13ab4",
       "revId": "60f292a166ccf99c0d0b4a56ab17501fd122b6dc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3aaeb62f_de2bd220",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2020-10-29T19:19:20Z",
+      "side": 1,
+      "message": "I\u0027m fine with it if you update the commit message and highlight the contextID change.  That change affects everything, the serialize change only affects our tests.",
+      "parentUuid": "5c87547a_c8b50f51",
+      "revId": "60f292a166ccf99c0d0b4a56ab17501fd122b6dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
