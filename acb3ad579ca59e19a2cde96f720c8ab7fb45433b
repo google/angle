@@ -1,0 +1,113 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "478c85ed_0e3ccdbe",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 14
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-29T23:17:09Z",
+      "side": 1,
+      "message": "Nice work Brandon. Some questions and then LGTM.",
+      "revId": "acb3ad579ca59e19a2cde96f720c8ab7fb45433b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "15d710c2_cc6cd55d",
+        "filename": "src/libANGLE/ErrorStrings.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-29T23:17:09Z",
+      "side": 1,
+      "message": "tiny nit: sort",
+      "range": {
+        "startLine": 106,
+        "startChar": 4,
+        "endLine": 106,
+        "endChar": 17
+      },
+      "revId": "acb3ad579ca59e19a2cde96f720c8ab7fb45433b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5d381148_3261f395",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 717,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-29T23:17:09Z",
+      "side": 1,
+      "message": "just to confirm - this requires no additional features? does it require certain format bits?",
+      "range": {
+        "startLine": 717,
+        "startChar": 22,
+        "endLine": 717,
+        "endChar": 34
+      },
+      "revId": "acb3ad579ca59e19a2cde96f720c8ab7fb45433b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f30ac960_b56fdc6f",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 648,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-29T23:17:09Z",
+      "side": 1,
+      "message": "just to confirm, do these need to be exposed to other files?",
+      "range": {
+        "startLine": 622,
+        "startChar": 0,
+        "endLine": 648,
+        "endChar": 0
+      },
+      "revId": "acb3ad579ca59e19a2cde96f720c8ab7fb45433b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e708b6dd_68cbc7cf",
+        "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
+        "patchSetId": 14
+      },
+      "lineNbr": 303,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-29T23:17:09Z",
+      "side": 1,
+      "message": "can you please file follow-up bugs for the ones you don\u0027t plan to address in 3593? We\u0027d like to close this off as supported without fixing every last config. But we do want to be sure we\u0027re not omitting anything important like checking for capabilities. If you plan to fix them after this CL no need to open a new bug.",
+      "range": {
+        "startLine": 277,
+        "startChar": 0,
+        "endLine": 303,
+        "endChar": 0
+      },
+      "revId": "acb3ad579ca59e19a2cde96f720c8ab7fb45433b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
