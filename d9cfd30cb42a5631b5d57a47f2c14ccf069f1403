@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1e6189b5_4e8a3a24",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-29T22:36:24Z",
+      "side": 1,
+      "message": "LGTM, non-blocking question.",
+      "revId": "d9cfd30cb42a5631b5d57a47f2c14ccf069f1403",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f2fd544e_cb450947",
+        "filename": "src/commit_id.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-29T22:36:24Z",
+      "side": 1,
+      "message": "does this need to change to py3 at some point?",
+      "range": {
+        "startLine": 1,
+        "startChar": 0,
+        "endLine": 1,
+        "endChar": 21
+      },
+      "revId": "d9cfd30cb42a5631b5d57a47f2c14ccf069f1403",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
