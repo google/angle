@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "75c2eb52_be0ef709",
+        "filename": "src/tests/gl_tests/MultithreadingTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-10-29T22:42:45Z",
+      "side": 1,
+      "message": "Ha, oops. Missed a step there.",
+      "parentUuid": "51dccc34_e10e536f",
+      "range": {
+        "startLine": 17,
+        "startChar": 0,
+        "endLine": 19,
+        "endChar": 39
+      },
+      "revId": "40daa7aac18db35519574405a04c9ae53407483b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2753f14c_cd7b3c72",
@@ -37,6 +61,30 @@
       "writtenOn": "2020-10-29T22:37:57Z",
       "side": 1,
       "message": "tiny nit: can update",
+      "range": {
+        "startLine": 2,
+        "startChar": 13,
+        "endLine": 2,
+        "endChar": 17
+      },
+      "revId": "40daa7aac18db35519574405a04c9ae53407483b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5a05fea8_4b7f4226",
+        "filename": "src/tests/gl_tests/VulkanMultithreadingTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-10-29T22:42:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2753f14c_cd7b3c72",
       "range": {
         "startLine": 2,
         "startChar": 13,
