@@ -1544,6 +1544,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "dacb00a8_ba5c60fa",
+        "filename": "src/libANGLE/validationES32.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1359667
+      },
+      "writtenOn": "2020-10-29T22:58:13Z",
+      "side": 1,
+      "message": "Okay I got it. I didn\u0027t realize we can get here even if we are not a 3.2 context. Done.",
+      "parentUuid": "ef6bfa15_495c6912",
+      "range": {
+        "startLine": 142,
+        "startChar": 11,
+        "endLine": 142,
+        "endChar": 39
+      },
+      "revId": "90e28645c779afd9206e684e8ff05057ad3127ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d6e64b34_ba68b8ca",
