@@ -65,6 +65,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b3ce883f_96f3bb2b",
+        "filename": "src/libANGLE/FrameCapture.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-10-29T18:57:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ff52eadf_5620eee1",
+      "range": {
+        "startLine": 121,
+        "startChar": 12,
+        "endLine": 121,
+        "endChar": 34
+      },
+      "revId": "72426f907c8ac172fe89d96f1b9006b0b70f93cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3382d181_415b9931",
@@ -173,6 +197,30 @@
       "writtenOn": "2020-10-29T18:57:04Z",
       "side": 1,
       "message": "For simplicity to move this forward, just rename to GetEnvironmentVarOrAndroidProperty.",
+      "parentUuid": "a0efc8ca_c9d1bb19",
+      "range": {
+        "startLine": 122,
+        "startChar": 11,
+        "endLine": 122,
+        "endChar": 47
+      },
+      "revId": "72426f907c8ac172fe89d96f1b9006b0b70f93cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1d8fc311_fa0f587a",
+        "filename": "src/libANGLE/FrameCapture.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-10-29T18:57:58Z",
+      "side": 1,
+      "message": "Another possibility (perhaps what Cody was thinking??):\n\n- Give GetEnvironmentVar() a 2nd, optional parameter (i.e. propertyName \u003d \"\")\n- Do an Android version that looks at propertyName\n  - Tf not \"\" it does what GetEnvironmentVarFromAndroidProperty() does now\n  - Otherwise, it does what the Posix GetEnvironmentVar() does now",
       "parentUuid": "a0efc8ca_c9d1bb19",
       "range": {
         "startLine": 122,
