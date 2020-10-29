@@ -58,6 +58,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "cce7ed4f_2ee2b8e8",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 664,
+      "author": {
+        "id": 1359667
+      },
+      "writtenOn": "2020-10-29T20:37:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "33e25e5f_b6c97c05",
+      "range": {
+        "startLine": 664,
+        "startChar": 9,
+        "endLine": 664,
+        "endChar": 19
+      },
+      "revId": "90e28645c779afd9206e684e8ff05057ad3127ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "70988437_1e0a9f3a",
@@ -105,6 +129,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1380f8fb_2b570414",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 4108,
+      "author": {
+        "id": 1359667
+      },
+      "writtenOn": "2020-10-29T20:37:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "766fb1d2_3f05a1a1",
+      "range": {
+        "startLine": 4108,
+        "startChar": 43,
+        "endLine": 4108,
+        "endChar": 59
+      },
+      "revId": "90e28645c779afd9206e684e8ff05057ad3127ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "efc2bb05_3fb4550a",
@@ -118,6 +166,30 @@
       "writtenOn": "2020-10-26T17:36:50Z",
       "side": 1,
       "message": "typo",
+      "range": {
+        "startLine": 4114,
+        "startChar": 15,
+        "endLine": 4114,
+        "endChar": 27
+      },
+      "revId": "90e28645c779afd9206e684e8ff05057ad3127ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "511d9ecc_450bab72",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 4114,
+      "author": {
+        "id": 1359667
+      },
+      "writtenOn": "2020-10-29T20:37:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "efc2bb05_3fb4550a",
       "range": {
         "startLine": 4114,
         "startChar": 15,
@@ -151,6 +223,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0da75138_18c6056e",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 4148,
+      "author": {
+        "id": 1359667
+      },
+      "writtenOn": "2020-10-29T20:37:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "13c30978_24f8d9be",
+      "range": {
+        "startLine": 4148,
+        "startChar": 15,
+        "endLine": 4148,
+        "endChar": 27
+      },
+      "revId": "90e28645c779afd9206e684e8ff05057ad3127ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "376f888b_251cec52",
@@ -164,6 +260,30 @@
       "writtenOn": "2020-10-26T17:36:50Z",
       "side": 1,
       "message": "Can this be nullptr? Maybe you can ASSERT instead.",
+      "range": {
+        "startLine": 4903,
+        "startChar": 8,
+        "endLine": 4903,
+        "endChar": 15
+      },
+      "revId": "90e28645c779afd9206e684e8ff05057ad3127ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1d705e99_5e1b42aa",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 4903,
+      "author": {
+        "id": 1359667
+      },
+      "writtenOn": "2020-10-29T20:37:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "376f888b_251cec52",
       "range": {
         "startLine": 4903,
         "startChar": 8,
@@ -197,6 +317,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a3b273ea_95be25be",
+        "filename": "src/libANGLE/Texture.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 406,
+      "author": {
+        "id": 1359667
+      },
+      "writtenOn": "2020-10-29T20:37:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4f1035ef_9388f635",
+      "range": {
+        "startLine": 393,
+        "startChar": 0,
+        "endLine": 406,
+        "endChar": 53
+      },
+      "revId": "90e28645c779afd9206e684e8ff05057ad3127ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2478259b_3a68a452",
@@ -220,6 +364,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "85384842_4d98326d",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 4206,
+      "author": {
+        "id": 1359667
+      },
+      "writtenOn": "2020-10-29T20:37:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2478259b_3a68a452",
+      "range": {
+        "startLine": 4206,
+        "startChar": 13,
+        "endLine": 4206,
+        "endChar": 25
+      },
+      "revId": "90e28645c779afd9206e684e8ff05057ad3127ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b0a302a3_405e83e0",
@@ -233,6 +401,30 @@
       "writtenOn": "2020-10-26T17:36:50Z",
       "side": 1,
       "message": "Based on how region.extent.depth is set, this can probably be `isSrc3D ? srcZ : 0`.",
+      "range": {
+        "startLine": 4230,
+        "startChar": 31,
+        "endLine": 4230,
+        "endChar": 68
+      },
+      "revId": "90e28645c779afd9206e684e8ff05057ad3127ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2b76db9f_98b8809d",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 4230,
+      "author": {
+        "id": 1359667
+      },
+      "writtenOn": "2020-10-29T20:37:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b0a302a3_405e83e0",
       "range": {
         "startLine": 4230,
         "startChar": 31,
@@ -340,6 +532,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "0e7ce571_5a5b3570",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 4257,
+      "author": {
+        "id": 1359667
+      },
+      "writtenOn": "2020-10-29T20:37:31Z",
+      "side": 1,
+      "message": "Added the ANGLE_VK_CHECK.",
+      "parentUuid": "2474cd63_992c8e31",
+      "range": {
+        "startLine": 4252,
+        "startChar": 0,
+        "endLine": 4257,
+        "endChar": 35
+      },
+      "revId": "90e28645c779afd9206e684e8ff05057ad3127ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "3da5d595_2085f6d2",
         "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
         "patchSetId": 12
@@ -375,6 +591,30 @@
       "side": 1,
       "message": "Only FormatHasNecessaryFeature and CanCopyWithTransferCommon (which can be named CanCopyWithTransfer) need to become utility functions. The rest can remain anonymous functions in the file that uses them.",
       "parentUuid": "3da5d595_2085f6d2",
+      "range": {
+        "startLine": 1408,
+        "startChar": 0,
+        "endLine": 1436,
+        "endChar": 0
+      },
+      "revId": "90e28645c779afd9206e684e8ff05057ad3127ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ab91f0fb_692375a1",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 1436,
+      "author": {
+        "id": 1359667
+      },
+      "writtenOn": "2020-10-29T20:37:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b95a4976_63aa7d0c",
       "range": {
         "startLine": 1408,
         "startChar": 0,
@@ -431,6 +671,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "479e23f4_7fe04ef1",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 2598,
+      "author": {
+        "id": 1359667
+      },
+      "writtenOn": "2020-10-29T20:37:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c3b7cdbc_35aec129",
+      "range": {
+        "startLine": 2598,
+        "startChar": 5,
+        "endLine": 2598,
+        "endChar": 37
+      },
+      "revId": "90e28645c779afd9206e684e8ff05057ad3127ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6dd1a34e_6dbb7408",
@@ -444,6 +708,30 @@
       "writtenOn": "2020-10-26T13:47:21Z",
       "side": 1,
       "message": "same not as below about comment formatting.",
+      "range": {
+        "startLine": 2600,
+        "startChar": 0,
+        "endLine": 2609,
+        "endChar": 23
+      },
+      "revId": "90e28645c779afd9206e684e8ff05057ad3127ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2cae8e46_500cf78c",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 2609,
+      "author": {
+        "id": 1359667
+      },
+      "writtenOn": "2020-10-29T20:37:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6dd1a34e_6dbb7408",
       "range": {
         "startLine": 2600,
         "startChar": 0,
@@ -548,6 +836,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ae1868ed_dc46eb95",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 2629,
+      "author": {
+        "id": 1359667
+      },
+      "writtenOn": "2020-10-29T20:37:31Z",
+      "side": 1,
+      "message": "Not quite correct on my previous comment because no textures are required to be bound when using glCopyImageSubData. I\u0027ve changed the checks to reflect that.",
+      "parentUuid": "7ed77295_f5f8306c",
+      "range": {
+        "startLine": 2629,
+        "startChar": 16,
+        "endLine": 2629,
+        "endChar": 30
+      },
+      "revId": "90e28645c779afd9206e684e8ff05057ad3127ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a76fcc80_05430924",
@@ -561,6 +873,30 @@
       "writtenOn": "2020-10-26T13:47:21Z",
       "side": 1,
       "message": "nit: can you fix the comment formatting on all of these?",
+      "range": {
+        "startLine": 2655,
+        "startChar": 0,
+        "endLine": 2657,
+        "endChar": 40
+      },
+      "revId": "90e28645c779afd9206e684e8ff05057ad3127ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "173e94d6_08b99c88",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 2657,
+      "author": {
+        "id": 1359667
+      },
+      "writtenOn": "2020-10-29T20:37:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a76fcc80_05430924",
       "range": {
         "startLine": 2655,
         "startChar": 0,
@@ -641,6 +977,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4d45b6b8_4dd57866",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 2752,
+      "author": {
+        "id": 1359667
+      },
+      "writtenOn": "2020-10-29T20:37:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a73ed056_8849f441",
+      "range": {
+        "startLine": 2752,
+        "startChar": 22,
+        "endLine": 2752,
+        "endChar": 35
+      },
+      "revId": "90e28645c779afd9206e684e8ff05057ad3127ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8ecd14fb_567a3f43",
@@ -654,6 +1014,30 @@
       "writtenOn": "2020-10-26T13:47:21Z",
       "side": 1,
       "message": "to be safe, I\u0027d just the switch here like you did above. That way you can handle the unexpected error case.",
+      "range": {
+        "startLine": 2754,
+        "startChar": 3,
+        "endLine": 2771,
+        "endChar": 1
+      },
+      "revId": "90e28645c779afd9206e684e8ff05057ad3127ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "337eab82_84324026",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 2771,
+      "author": {
+        "id": 1359667
+      },
+      "writtenOn": "2020-10-29T20:37:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8ecd14fb_567a3f43",
       "range": {
         "startLine": 2754,
         "startChar": 3,
@@ -687,6 +1071,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "aed73690_b42f1a68",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 2799,
+      "author": {
+        "id": 1359667
+      },
+      "writtenOn": "2020-10-29T20:37:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8f659c33_617f9525",
+      "range": {
+        "startLine": 2799,
+        "startChar": 69,
+        "endLine": 2799,
+        "endChar": 78
+      },
+      "revId": "90e28645c779afd9206e684e8ff05057ad3127ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "bfeb88e7_0ef6fc92",
@@ -700,6 +1108,30 @@
       "writtenOn": "2020-10-26T13:47:21Z",
       "side": 1,
       "message": "same",
+      "range": {
+        "startLine": 2803,
+        "startChar": 69,
+        "endLine": 2803,
+        "endChar": 78
+      },
+      "revId": "90e28645c779afd9206e684e8ff05057ad3127ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "20d92102_f5696355",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 2803,
+      "author": {
+        "id": 1359667
+      },
+      "writtenOn": "2020-10-29T20:37:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bfeb88e7_0ef6fc92",
       "range": {
         "startLine": 2803,
         "startChar": 69,
@@ -733,6 +1165,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "fe39af04_399e8b5f",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 2808,
+      "author": {
+        "id": 1359667
+      },
+      "writtenOn": "2020-10-29T20:37:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dcf59b97_6c5cda4a",
+      "range": {
+        "startLine": 2808,
+        "startChar": 10,
+        "endLine": 2808,
+        "endChar": 25
+      },
+      "revId": "90e28645c779afd9206e684e8ff05057ad3127ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "05e33825_77946e61",
@@ -746,6 +1202,30 @@
       "writtenOn": "2020-10-26T13:47:21Z",
       "side": 1,
       "message": "same",
+      "range": {
+        "startLine": 2809,
+        "startChar": 10,
+        "endLine": 2809,
+        "endChar": 25
+      },
+      "revId": "90e28645c779afd9206e684e8ff05057ad3127ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e9afb67b_01bc9f83",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 2809,
+      "author": {
+        "id": 1359667
+      },
+      "writtenOn": "2020-10-29T20:37:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "05e33825_77946e61",
       "range": {
         "startLine": 2809,
         "startChar": 10,
@@ -779,6 +1259,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f4c035e0_053cbd4b",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 2816,
+      "author": {
+        "id": 1359667
+      },
+      "writtenOn": "2020-10-29T20:37:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c7ac24d7_7dbcf6ce",
+      "range": {
+        "startLine": 2816,
+        "startChar": 85,
+        "endLine": 2816,
+        "endChar": 95
+      },
+      "revId": "90e28645c779afd9206e684e8ff05057ad3127ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "14ba57b9_98970ced",
@@ -792,6 +1296,30 @@
       "writtenOn": "2020-10-26T13:47:21Z",
       "side": 1,
       "message": "all these too",
+      "range": {
+        "startLine": 2842,
+        "startChar": 90,
+        "endLine": 2842,
+        "endChar": 95
+      },
+      "revId": "90e28645c779afd9206e684e8ff05057ad3127ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2a4cc8dd_47a4381b",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 2842,
+      "author": {
+        "id": 1359667
+      },
+      "writtenOn": "2020-10-29T20:37:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "14ba57b9_98970ced",
       "range": {
         "startLine": 2842,
         "startChar": 90,
@@ -849,6 +1377,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7ad2438e_16fba142",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 2861,
+      "author": {
+        "id": 1359667
+      },
+      "writtenOn": "2020-10-29T20:37:31Z",
+      "side": 1,
+      "message": "Added new function ValidateCopyFormatCompatible() to handle this.",
+      "parentUuid": "618e5305_c2f2eb7a",
+      "range": {
+        "startLine": 2857,
+        "startChar": 0,
+        "endLine": 2861,
+        "endChar": 31
+      },
+      "revId": "90e28645c779afd9206e684e8ff05057ad3127ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e9296343_1a09642a",
@@ -862,6 +1414,30 @@
       "writtenOn": "2020-10-26T13:47:21Z",
       "side": 1,
       "message": "also validate 3.2",
+      "range": {
+        "startLine": 142,
+        "startChar": 11,
+        "endLine": 142,
+        "endChar": 39
+      },
+      "revId": "90e28645c779afd9206e684e8ff05057ad3127ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "19927e2a_49db6f9f",
+        "filename": "src/libANGLE/validationES32.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1359667
+      },
+      "writtenOn": "2020-10-29T20:37:31Z",
+      "side": 1,
+      "message": "Is this not validating ES 3.2?",
+      "parentUuid": "e9296343_1a09642a",
       "range": {
         "startLine": 142,
         "startChar": 11,
@@ -909,6 +1485,30 @@
       "side": 1,
       "message": "I think I mistakenly kept this skip in here. Essentially the tests will give a \"Not Supported\" for us already if GL_KHR_texture_compression_astc_hdr is not supported. This HDR support is not a dependency for the copy image extension.",
       "parentUuid": "d6e64b34_ba68b8ca",
+      "range": {
+        "startLine": 271,
+        "startChar": 0,
+        "endLine": 274,
+        "endChar": 122
+      },
+      "revId": "90e28645c779afd9206e684e8ff05057ad3127ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "efee667c_a11f9afe",
+        "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
+        "patchSetId": 12
+      },
+      "lineNbr": 274,
+      "author": {
+        "id": 1359667
+      },
+      "writtenOn": "2020-10-29T20:37:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4c2d8385_33665f07",
       "range": {
         "startLine": 271,
         "startChar": 0,
@@ -1077,6 +1677,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "577913a7_214731d5",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 3541,
+      "author": {
+        "id": 1359667
+      },
+      "writtenOn": "2020-10-29T20:37:31Z",
+      "side": 1,
+      "message": "Added test Texture2DTestES3.CopyImageBaseLevel1",
+      "parentUuid": "34376393_a3af9edf",
+      "revId": "90e28645c779afd9206e684e8ff05057ad3127ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b1b00d69_9dc8fe10",
@@ -1090,6 +1708,24 @@
       "writtenOn": "2020-10-26T18:26:50Z",
       "side": 1,
       "message": "I ran your test, and yes it works without the signalDirtyStorage call. But that\u0027s because of the way the Vulkan backend works.\n\nFirst, please add the following here:\n\n    // Draw something in the texture to make sure it\u0027s image is defined.\n    ANGLE_GL_PROGRAM(drawRed, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());\n    drawQuad(drawRed, essl1_shaders::PositionAttrib(), 0.0f);\n\nThe above makes sure copyImageSubData doesn\u0027t call syncState on the texture as the texture has nothing to sync. That removes one call that sets the content of the texture defined.\n\nThere\u0027s another one however, and that\u0027s the onImageTransferWrite call in ImageHelper::CopySubImageData.\n\nAgain, this works in the Vulkan backend, but that\u0027s just due to the peculiarities of the current implementation. signalDirtyStorage is still necessary, but I don\u0027t know how we can write a regression test for it. Can you please add the call anyway and avoid future regressions?",
+      "revId": "90e28645c779afd9206e684e8ff05057ad3127ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a700f0c6_ff98c41f",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 3666,
+      "author": {
+        "id": 1359667
+      },
+      "writtenOn": "2020-10-29T20:37:31Z",
+      "side": 1,
+      "message": "Done. I\u0027ve added signalDirtyStorage in the latest patchset.",
+      "parentUuid": "b1b00d69_9dc8fe10",
       "revId": "90e28645c779afd9206e684e8ff05057ad3127ba",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
