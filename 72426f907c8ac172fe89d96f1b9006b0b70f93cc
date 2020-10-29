@@ -46,6 +46,30 @@
       },
       "revId": "72426f907c8ac172fe89d96f1b9006b0b70f93cc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7f5a19a0_dd677a1b",
+        "filename": "src/libANGLE/FrameCapture.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2020-10-29T18:04:38Z",
+      "side": 1,
+      "message": "I was thinking we should add system_utils_android.cpp and implement GetEnvironmentVar there (without ifdefs), but we also want the posix version to keep working for Android.  That\u0027s why the Prime* method above was so convenient/elegant.  Maybe we just need to rename this new method to not include Android in the name.  Perhaps GetEnvironmentVarOrProperty.  Or maybe back out the new method and use an independent call that just reads and sets the property, then use common code to get it.",
+      "parentUuid": "740c7e88_a025a147",
+      "range": {
+        "startLine": 122,
+        "startChar": 11,
+        "endLine": 122,
+        "endChar": 47
+      },
+      "revId": "72426f907c8ac172fe89d96f1b9006b0b70f93cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
