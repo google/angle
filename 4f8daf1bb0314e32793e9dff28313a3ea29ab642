@@ -16,6 +16,24 @@
       "message": "Cody, I\u0027m not sure why this test got the Skia-Gold \"untriaged\" message for CoD.  Is this a real problem?",
       "revId": "4f8daf1bb0314e32793e9dff28313a3ea29ab642",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5c38b414_8bc9d1b7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2020-10-29T17:42:58Z",
+      "side": 1,
+      "message": "There was an infrastructure problem that landed a new trace without allowing us to update the gold image.  Tracked over here: https://crbug.com/1143507\n\nThe new trace has been reverted so I think you can ignore the failure:\nhttps://chromium-review.googlesource.com/c/angle/angle/+/2506501",
+      "parentUuid": "d41ef978_fb86df64",
+      "revId": "4f8daf1bb0314e32793e9dff28313a3ea29ab642",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
