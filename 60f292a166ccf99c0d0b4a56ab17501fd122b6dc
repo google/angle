@@ -16,6 +16,23 @@
       "message": "PTAL",
       "revId": "60f292a166ccf99c0d0b4a56ab17501fd122b6dc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "73825dbb_29a13ab4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2020-10-29T19:05:02Z",
+      "side": 1,
+      "message": "I think you merged two changes here.  Most of this change is making ContextID almost a PackedEnum, which is great.  Can you land that first, then add the serialize vector change?",
+      "revId": "60f292a166ccf99c0d0b4a56ab17501fd122b6dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
