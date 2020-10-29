@@ -17,7 +17,8 @@ Usage: commit_id.py check                - check if git is present
 
 
 def grab_output(command, cwd):
-    return sp.Popen(command, stdout=sp.PIPE, shell=True, cwd=cwd).communicate()[0].strip()
+    return sp.Popen(
+        command, stdout=sp.PIPE, shell=True, cwd=cwd).communicate()[0].strip().decode('utf-8')
 
 
 def get_commit_position(cwd):
