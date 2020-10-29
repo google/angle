@@ -80,6 +80,9 @@ for abi in ${abis[@]}; do
 
         # Disable histogram/protobuf support
         "angle_has_histograms = false"
+
+        # Disable _LIBCPP_ABI_UNSTABLE, since it breaks std::string
+        "libcxx_abi_unstable = false"
     )
 
     gn gen ${GN_OUTPUT_DIRECTORY} --args="${gn_args[*]}"
