@@ -24,6 +24,7 @@ enum class StateChange
     Texture,
     Program,
     VertexBufferCycle,
+    Scissor,
     InvalidEnum,
 };
 
@@ -64,6 +65,9 @@ std::string DrawArraysPerfParams::story() const
             break;
         case StateChange::VertexBufferCycle:
             strstr << "_vbo_cycle";
+            break;
+        case StateChange::Scissor:
+            strstr << "_scissor_change";
             break;
         default:
             break;
@@ -378,6 +382,90 @@ void CycleVertexBufferThenDraw(unsigned int iterations,
     }
 }
 
+void ChangeScissorThenDraw(unsigned int iterations,
+                           GLsizei numElements,
+                           unsigned int windowWidth,
+                           unsigned int windowHeight)
+{
+    // Change scissor as such:
+    //
+    // - Start with a narrow vertical bar:
+    //
+    //           Scissor
+    //              |
+    //              V
+    //       +-----+-+-----+
+    //       |     | |     | <-- Window
+    //       |     | |     |
+    //       |     | |     |
+    //       |     | |     |
+    //       |     | |     |
+    //       |     | |     |
+    //       +-----+-+-----+
+    //
+    // - Gradually reduce height and increase width, to end up with a narrow horizontal bar:
+    //
+    //       +-------------+
+    //       |             |
+    //       |             |
+    //       +-------------+ <-- Scissor
+    //       +-------------+
+    //       |             |
+    //       |             |
+    //       +-------------+
+    //
+    // - If more iterations left, restart, but shift the initial bar left to cover more area:
+    //
+    //       +---+-+-------+          +-------------+
+    //       |   | |       |          |             |
+    //       |   | |       |          +-------------+
+    //       |   | |       |   --->   |             |
+    //       |   | |       |          |             |
+    //       |   | |       |          +-------------+
+    //       |   | |       |          |             |
+    //       +---+-+-------+          +-------------+
+    //
+    //       +-+-+---------+          +-------------+
+    //       | | |         |          +-------------+
+    //       | | |         |          |             |
+    //       | | |         |   --->   |             |
+    //       | | |         |          |             |
+    //       | | |         |          |             |
+    //       | | |         |          +-------------+
+    //       +-+-+---------+          +-------------+
+
+    glEnable(GL_SCISSOR_TEST);
+
+    constexpr unsigned int kScissorStep  = 2;
+    unsigned int scissorX                = windowWidth / 2 - 1;
+    unsigned int scissorY                = 0;
+    unsigned int scissorWidth            = 2;
+    unsigned int scissorHeight           = windowHeight;
+    unsigned int scissorPatternIteration = 0;
+
+    for (unsigned int it = 0; it < iterations; it++)
+    {
+        glScissor(scissorX, scissorY, scissorWidth, scissorHeight);
+        glDrawArrays(GL_TRIANGLES, 0, numElements);
+
+        if (scissorX < kScissorStep || scissorHeight < kScissorStep * 2)
+        {
+            ++scissorPatternIteration;
+            scissorX      = windowWidth / 2 - 1 - scissorPatternIteration * 2;
+            scissorY      = 0;
+            scissorWidth  = 2;
+            scissorHeight = windowHeight;
+        }
+        else
+        {
+            scissorX -= kScissorStep;
+            scissorY += kScissorStep;
+            scissorWidth += kScissorStep * 2;
+            scissorHeight -= kScissorStep * 2;
+        }
+    }
+}
+
 void DrawCallPerfBenchmark::drawBenchmark()
 {
     // This workaround fixes a huge queue of graphics commands accumulating on the GL
@@ -421,6 +509,10 @@ void DrawCallPerfBenchmark::drawBenchmark()
         case StateChange::VertexBufferCycle:
             CycleVertexBufferThenDraw(params.iterationsPerStep, numElements, mVBOPool,
                                       &mCurrentVBO);
+            break;
+        case StateChange::Scissor:
+            ChangeScissorThenDraw(params.iterationsPerStep, numElements, getWindow()->getWidth(),
+                                  getWindow()->getHeight());
             break;
         case StateChange::InvalidEnum:
             FAIL() << "Invalid state change.";
