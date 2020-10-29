@@ -99,6 +99,11 @@ def main():
     parser.add_argument('out_path', help='Output directory')
     parser.add_argument('-f', '--filter', help='Trace filter. Defaults to all.', default='*')
     parser.add_argument('-l', '--log', help='Logging level.', default=DEFAULT_LOG_LEVEL)
+    parser.add_argument(
+        '--no-swiftshader',
+        help='Trace against native Vulkan.',
+        action='store_true',
+        default=False)
     args, extra_flags = parser.parse_known_args()
 
     logging.basicConfig(level=args.log.upper())
@@ -134,7 +139,9 @@ def main():
         env['ANGLE_CAPTURE_LABEL'] = trace
         env['ANGLE_CAPTURE_TRIGGER'] = str(num_frames)
 
-        trace_filter = '--gtest_filter=TracePerfTest.Run/vulkan_swiftshader_%s' % trace
+        renderer = 'vulkan' if args.no_swiftshader else 'vulkan_swiftshader'
+
+        trace_filter = '--gtest_filter=TracePerfTest.Run/%s_%s' % (renderer, trace)
         run_args = [
             binary,
             trace_filter,
