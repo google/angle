@@ -385,7 +385,21 @@ TEST_P(FramebufferFormatsTest, RGB565Renderbuffer)
 }
 
 class FramebufferTest_ES3 : public ANGLETest
-{};
+{
+  protected:
+    FramebufferTest_ES3()
+    {
+        setWindowWidth(kWidth);
+        setWindowHeight(kHeight);
+        setConfigRedBits(8);
+        setConfigGreenBits(8);
+        setConfigBlueBits(8);
+        setConfigAlphaBits(8);
+    }
+
+    static constexpr GLsizei kWidth  = 64;
+    static constexpr GLsizei kHeight = 256;
+};
 
 // Covers invalidating an incomplete framebuffer. This should be a no-op, but should not error.
 TEST_P(FramebufferTest_ES3, InvalidateIncomplete)
@@ -423,6 +437,42 @@ TEST_P(FramebufferTest_ES3, SubInvalidateIncomplete)
 
     glInvalidateSubFramebuffer(GL_FRAMEBUFFER, 1, attachments.data(), 5, 5, 10, 10);
     EXPECT_GL_NO_ERROR();
+}
+
+// Test that subinvalidate with no prior command works.  Regression test for the Vulkan backend that
+// assumed a render pass is started when sub invalidate is called.
+TEST_P(FramebufferTest_ES3, SubInvalidateFirst)
+{
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+    // Invalidate half of the framebuffer using swapped dimensions.
+    std::array<GLenum, 1> attachments = {GL_COLOR};
+    glInvalidateSubFramebuffer(GL_DRAW_FRAMEBUFFER, 1, attachments.data(), 0, 0, kHeight, kWidth);
+    EXPECT_GL_NO_ERROR();
+}
+
+// Test that subinvalidate doesn't discard data outside area.  Uses swapped width/height for
+// invalidate which results in a partial invalidate, but also prevents bugs with Vulkan
+// pre-rotation.
+TEST_P(FramebufferTest_ES3, SubInvalidatePartial)
+{
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+    // Clear the attachment.
+    glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    EXPECT_GL_NO_ERROR();
+
+    // Invalidate half of the framebuffer using swapped dimensions.
+    std::array<GLenum, 1> attachments = {GL_COLOR};
+    glInvalidateSubFramebuffer(GL_DRAW_FRAMEBUFFER, 1, attachments.data(), 0, 0, kHeight, kWidth);
+    EXPECT_GL_NO_ERROR();
+
+    // Make sure the other half is correct.
+    EXPECT_PIXEL_COLOR_EQ(0, kWidth, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(kWidth - 1, kWidth, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(0, kHeight - 1, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(kWidth - 1, kHeight - 1, GLColor::red);
 }
 
 // Test that the framebuffer state tracking robustly handles a depth-only attachment being set
@@ -2510,5 +2560,9 @@ TEST_P(FramebufferTest, BindAndDrawDifferentSizedFBOs)
 ANGLE_INSTANTIATE_TEST_ES2(AddMockTextureNoRenderTargetTest);
 ANGLE_INSTANTIATE_TEST_ES2(FramebufferTest);
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(FramebufferFormatsTest);
-ANGLE_INSTANTIATE_TEST_ES3_AND(FramebufferTest_ES3, ES3_METAL());
+ANGLE_INSTANTIATE_TEST_ES3_AND(FramebufferTest_ES3,
+                               WithEmulatedPrerotation(ES3_VULKAN(), 90),
+                               WithEmulatedPrerotation(ES3_VULKAN(), 180),
+                               WithEmulatedPrerotation(ES3_VULKAN(), 270),
+                               ES3_METAL());
 ANGLE_INSTANTIATE_TEST_ES31(FramebufferTest_ES31);

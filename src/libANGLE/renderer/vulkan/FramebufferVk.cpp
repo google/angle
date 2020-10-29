@@ -128,7 +128,7 @@ void EarlyAdjustFlipYForPreRotation(SurfaceRotation blitAngleIn,
 
 void AdjustBlitAreaForPreRotation(SurfaceRotation framebufferAngle,
                                   const gl::Rectangle &blitAreaIn,
-                                  gl::Rectangle framebufferDimensions,
+                                  const gl::Rectangle &framebufferDimensions,
                                   gl::Rectangle *blitAreaOut)
 {
     switch (framebufferAngle)
@@ -359,9 +359,16 @@ angle::Result FramebufferVk::invalidateSub(const gl::Context *context,
 {
     ContextVk *contextVk = vk::GetImpl(context);
 
+    const gl::Rectangle nonRotatedCompleteRenderArea = getNonRotatedCompleteRenderArea();
+    gl::Rectangle rotatedInvalidateArea;
+    RotateRectangle(contextVk->getRotationDrawFramebuffer(),
+                    contextVk->isViewportFlipEnabledForDrawFBO(),
+                    nonRotatedCompleteRenderArea.width, nonRotatedCompleteRenderArea.height, area,
+                    &rotatedInvalidateArea);
+
     // If invalidateSub() covers the whole framebuffer area, make it behave as invalidate().
     const gl::Rectangle completeRenderArea = getRotatedCompleteRenderArea(contextVk);
-    if (area.encloses(completeRenderArea))
+    if (rotatedInvalidateArea.encloses(completeRenderArea))
     {
         return invalidateImpl(contextVk, count, attachments, false);
     }
@@ -372,7 +379,8 @@ angle::Result FramebufferVk::invalidateSub(const gl::Context *context,
     // glCopyTex[Sub]Image, shader storage image, etc).
     ANGLE_TRY(flushDeferredClears(contextVk, completeRenderArea));
 
-    if (area.encloses(contextVk->getStartedRenderPassCommands().getRenderArea()))
+    if (contextVk->hasStartedRenderPass() &&
+        rotatedInvalidateArea.encloses(contextVk->getStartedRenderPassCommands().getRenderArea()))
     {
         // Because the render pass's render area is within the invalidated area, it is fine for
         // invalidateImpl() to use a storeOp of DONT_CARE (i.e. fine to not store the contents of
