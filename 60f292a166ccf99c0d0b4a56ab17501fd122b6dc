@@ -33,6 +33,24 @@
       "message": "I think you merged two changes here.  Most of this change is making ContextID almost a PackedEnum, which is great.  Can you land that first, then add the serialize vector change?",
       "revId": "60f292a166ccf99c0d0b4a56ab17501fd122b6dc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5c87547a_c8b50f51",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-29T19:08:25Z",
+      "side": 1,
+      "message": "If you\u0027re okay with it, I\u0027d like to skip this step to save time. I agree it would be nice, just because of how the changes are coupled would require me to redo the changes.",
+      "parentUuid": "73825dbb_29a13ab4",
+      "revId": "60f292a166ccf99c0d0b4a56ab17501fd122b6dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
