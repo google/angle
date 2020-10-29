@@ -48,6 +48,7 @@ bool IsNVIDIA();
 
 // GPU devices.
 bool IsSwiftshaderDevice();
+bool IsIntelUHD630Mobile();
 
 // Compiler configs.
 inline bool IsASan()
