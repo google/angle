@@ -1213,6 +1213,20 @@ void WriteCppReplayIndexFiles(bool compression,
     header << "#include <vector>\n";
     header << "#include <unordered_map>\n";
     header << "\n";
+    header << "#if !defined(ANGLE_REPLAY_EXPORT)\n";
+    header << "#    if defined(_WIN32)\n";
+    header << "#        if defined(ANGLE_REPLAY_IMPLEMENTATION)\n";
+    header << "#            define ANGLE_REPLAY_EXPORT __declspec(dllexport)\n";
+    header << "#        else\n";
+    header << "#            define ANGLE_REPLAY_EXPORT __declspec(dllimport)\n";
+    header << "#        endif\n";
+    header << "#    elif defined(__GNUC__)\n";
+    header << "#        define ANGLE_REPLAY_EXPORT __attribute__((visibility(\"default\")))\n";
+    header << "#    else\n";
+    header << "#        define ANGLE_REPLAY_EXPORT\n";
+    header << "#    endif\n";
+    header << "#endif  // !defined(ANGLE_REPLAY_EXPORT)\n";
+    header << "\n";
 
     if (!captureLabel.empty())
     {
@@ -1250,33 +1264,37 @@ void WriteCppReplayIndexFiles(bool compression,
            << ";\n";
     header << "// End Trace Metadata\n";
     header << "\n";
-    header << "void SetupContext" << contextId << "Replay();\n";
-    header << "void ReplayContext" << contextId << "Frame(uint32_t frameIndex);\n";
-    header << "void ResetContext" << contextId << "Replay();\n";
+    header << "// Begin Exported Methods\n";
+    header << "ANGLE_REPLAY_EXPORT void SetupContext" << contextId << "Replay();\n";
+    header << "ANGLE_REPLAY_EXPORT void ReplayContext" << contextId
+           << "Frame(uint32_t frameIndex);\n";
+    header << "ANGLE_REPLAY_EXPORT void ResetContext" << contextId << "Replay();\n";
     if (serializeStateEnabled)
     {
-        header << "const uint8_t *GetSerializedContext" << contextId
+        header << "ANGLE_REPLAY_EXPORT const uint8_t *GetSerializedContext" << contextId
                << "State(uint32_t frameIndex);\n";
     }
     header << "\n";
     for (uint32_t frameIndex = 1; frameIndex <= frameCount; ++frameIndex)
     {
-        header << "void " << FmtReplayFunction(contextId, frameIndex) << ";\n";
+        header << "ANGLE_REPLAY_EXPORT void " << FmtReplayFunction(contextId, frameIndex) << ";\n";
     }
     header << "\n";
     if (serializeStateEnabled)
     {
         for (uint32_t frameIndex = 1; frameIndex <= frameCount; ++frameIndex)
         {
-            header << "const uint8_t *"
+            header << "ANGLE_REPLAY_EXPORT const uint8_t *"
                    << FmtGetSerializedContextStateFunction(contextId, frameIndex) << ";\n";
         }
         header << "\n";
     }
 
     header << "using DecompressCallback = uint8_t *(*)(const std::vector<uint8_t> &);\n";
-    header << "void SetBinaryDataDecompressCallback(DecompressCallback callback);\n";
-    header << "void SetBinaryDataDir(const char *dataDir);\n";
+    header << "ANGLE_REPLAY_EXPORT void SetBinaryDataDecompressCallback(DecompressCallback "
+              "callback);\n";
+    header << "ANGLE_REPLAY_EXPORT void SetBinaryDataDir(const char *dataDir);\n";
+    header << "// End Exported Methods\n";
     header << "\n";
     header << "// Maps from <captured Program ID, captured location> to run-time location.\n";
     header
