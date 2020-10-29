@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a4cc7304_f480be20",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-10-29T19:37:12Z",
+      "side": 1,
+      "message": "I see there\u0027s a merge conflict now ... but I did the requested changes ...",
+      "revId": "dc007096537c6cbadc9b687513962baeccffcd52",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
