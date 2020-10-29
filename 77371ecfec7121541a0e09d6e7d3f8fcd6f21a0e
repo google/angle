@@ -103,6 +103,30 @@
       },
       "revId": "77371ecfec7121541a0e09d6e7d3f8fcd6f21a0e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b6196b8d_8d2d2535",
+        "filename": "src/tests/restricted_traces/skia_gold/angle_skia_gold_properties.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-29T18:16:42Z",
+      "side": 1,
+      "message": "Ack\n\nThis is a the common pattern for these guys. BTW have I mentioned Python is full of quirks?",
+      "parentUuid": "db481ce8_79f34cd7",
+      "range": {
+        "startLine": 13,
+        "startChar": 16,
+        "endLine": 13,
+        "endChar": 36
+      },
+      "revId": "77371ecfec7121541a0e09d6e7d3f8fcd6f21a0e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
