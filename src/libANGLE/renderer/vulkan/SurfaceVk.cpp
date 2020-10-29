@@ -1283,6 +1283,10 @@ angle::Result WindowSurfaceVk::present(ContextVk *contextVk,
     updateOverlay(contextVk);
     bool overlayHasWidget = overlayHasEnabledWidget(contextVk);
 
+    // Make sure deferred clears are applied, if any.
+    ANGLE_TRY(
+        image.image.flushStagedUpdates(contextVk, gl::LevelIndex(0), gl::LevelIndex(1), 0, 1, {}));
+
     // We can only do present related optimization if this is the last renderpass that touches the
     // swapchain image. MSAA resolve and overlay will insert another renderpass which disqualifies
     // the optimization.
