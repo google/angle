@@ -1685,6 +1685,13 @@ angle::Result WindowSurfaceVk::getUserExtentsImpl(DisplayVk *displayVk,
     ANGLE_VK_TRY(displayVk,
                  vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physicalDevice, mSurface, surfaceCaps));
 
+    // With real prerotation, the surface reports the rotated sizes.  With emulated prerotation,
+    // adjust the window extents to match what real pre-rotation would have reported.
+    if (Is90DegreeRotation(mEmulatedPreTransform))
+    {
+        std::swap(surfaceCaps->currentExtent.width, surfaceCaps->currentExtent.height);
+    }
+
     return angle::Result::Continue;
 }
 

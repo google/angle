@@ -99,14 +99,16 @@ constexpr APIInfo kEGLDisplayAPIs[] = {
     {"angle-vulkan", GPUTestConfig::kAPIVulkan},
 };
 
-constexpr char kdEQPEGLString[]  = "--deqp-egl-display-type=";
-constexpr char kANGLEEGLString[] = "--use-angle=";
-constexpr char kdEQPCaseString[] = "--deqp-case=";
-constexpr char kBatchIdString[]  = "--batch-id=";
+constexpr char kdEQPEGLString[]    = "--deqp-egl-display-type=";
+constexpr char kANGLEEGLString[]   = "--use-angle=";
+constexpr char kANGLEPreRotation[] = "--emulated-pre-rotation=";
+constexpr char kdEQPCaseString[]   = "--deqp-case=";
+constexpr char kBatchIdString[]    = "--batch-id=";
 
 std::array<char, 500> gCaseStringBuffer;
 
 const APIInfo *gInitAPI = nullptr;
+uint32_t gPreRotation   = 0;
 
 constexpr const char *gdEQPEGLConfigNameString = "--deqp-gl-config-name=";
 
@@ -265,7 +267,7 @@ void dEQPCaseList::initialize()
         api = gInitAPI->second;
     }
 
-    GPUTestConfig testConfig = GPUTestConfig(api);
+    GPUTestConfig testConfig = GPUTestConfig(api, gPreRotation);
 
 #if !defined(ANGLE_PLATFORM_ANDROID)
     // Note: These prints mess up parsing of test list when running on Android.
@@ -541,7 +543,7 @@ void dEQPTest<TestModuleIndex>::SetUpTestCase()
 
     // Init the platform.
     if (!deqp_libtester_init_platform(static_cast<int>(argv.size()), argv.data(),
-                                      reinterpret_cast<void *>(&HandlePlatformError)))
+                                      reinterpret_cast<void *>(&HandlePlatformError), gPreRotation))
     {
         std::cout << "Aborting test due to dEQP initialization error." << std::endl;
         exit(1);
@@ -621,6 +623,24 @@ void HandleDisplayType(const char *displayTypeString)
     }
 }
 
+void HandlePreRotation(const char *preRotationString)
+{
+    std::istringstream argStream(preRotationString);
+
+    uint32_t preRotation = 0;
+    argStream >> preRotation;
+
+    if (!argStream ||
+        (preRotation != 0 && preRotation != 90 && preRotation != 180 && preRotation != 270))
+    {
+        std::cout << "Invalid PreRotation '" << preRotationString
+                  << "'; must be either 0, 90, 180 or 270" << std::endl;
+        exit(1);
+    }
+
+    gPreRotation = preRotation;
+}
+
 void HandleEGLConfigName(const char *configNameString)
 {
     gEGLConfigName = configNameString;
@@ -665,6 +685,10 @@ void InitTestHarness(int *argc, char **argv)
         {
             HandleDisplayType(argv[argIndex] + strlen(kANGLEEGLString));
         }
+        else if (strncmp(argv[argIndex], kANGLEPreRotation, strlen(kANGLEPreRotation)) == 0)
+        {
+            HandlePreRotation(argv[argIndex] + strlen(kANGLEPreRotation));
+        }
         else if (strncmp(argv[argIndex], gdEQPEGLConfigNameString,
                          strlen(gdEQPEGLConfigNameString)) == 0)
         {
@@ -679,6 +703,18 @@ void InitTestHarness(int *argc, char **argv)
             HandleBatchId(argv[argIndex] + strlen(kBatchIdString));
         }
         argIndex++;
+    }
+
+    GPUTestConfig::API api = GetDefaultAPIInfo()->second;
+    if (gInitAPI)
+    {
+        api = gInitAPI->second;
+    }
+    if (gPreRotation != 0 && api != GPUTestConfig::kAPIVulkan &&
+        api != GPUTestConfig::kAPISwiftShader)
+    {
+        std::cout << "PreRotation is only supported on Vulkan" << std::endl;
+        exit(1);
     }
 }
 }  // namespace angle

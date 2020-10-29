@@ -206,17 +206,19 @@ bool EGLWindow::initializeDisplay(OSWindow *osWindow,
         disabledFeatureOverrides.push_back("gen_multiple_mips_per_pass");
     }
 
-    if (params.emulatedPrerotation == 90)
+    switch (params.emulatedPrerotation)
     {
-        enabledFeatureOverrides.push_back("emulated_prerotation_90");
-    }
-    else if (params.emulatedPrerotation == 180)
-    {
-        enabledFeatureOverrides.push_back("emulated_prerotation_180");
-    }
-    else if (params.emulatedPrerotation == 270)
-    {
-        enabledFeatureOverrides.push_back("emulated_prerotation_270");
+        case 90:
+            enabledFeatureOverrides.push_back("emulated_prerotation_90");
+            break;
+        case 180:
+            enabledFeatureOverrides.push_back("emulated_prerotation_180");
+            break;
+        case 270:
+            enabledFeatureOverrides.push_back("emulated_prerotation_270");
+            break;
+        default:
+            break;
     }
 
     if (!disabledFeatureOverrides.empty())
