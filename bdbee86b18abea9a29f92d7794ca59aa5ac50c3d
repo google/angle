@@ -33,6 +33,23 @@
       "message": "Cool, I didn\u0027t know about the thread_local attribute. All the other suggestions were too messy.",
       "revId": "bdbee86b18abea9a29f92d7794ca59aa5ac50c3d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8a34d5ab_f9b7276b",
+        "filename": "scripts/gen_gl_enum_utils.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-10-29T22:17:08Z",
+      "side": 1,
+      "message": "1KB to hold 7 chars feels a bit overkill.   Can we drop that down a bit?",
+      "revId": "bdbee86b18abea9a29f92d7794ca59aa5ac50c3d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
