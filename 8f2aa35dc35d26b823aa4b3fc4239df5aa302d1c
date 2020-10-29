@@ -18,6 +18,23 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e400f428_4849ae6f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-10-29T16:43:40Z",
+      "side": 1,
+      "message": "Excellent, thanks",
+      "revId": "8f2aa35dc35d26b823aa4b3fc4239df5aa302d1c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d416ae8c_4f71baa5",
@@ -36,6 +53,29 @@
         "startChar": 8,
         "endLine": 29,
         "endChar": 24
+      },
+      "revId": "8f2aa35dc35d26b823aa4b3fc4239df5aa302d1c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f450b240_ae1c4d15",
+        "filename": "include/platform/FeaturesVk.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 365,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-10-29T16:43:40Z",
+      "side": 1,
+      "message": "nit: .",
+      "range": {
+        "startLine": 365,
+        "startChar": 42,
+        "endLine": 365,
+        "endChar": 43
       },
       "revId": "8f2aa35dc35d26b823aa4b3fc4239df5aa302d1c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
