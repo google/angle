@@ -53,6 +53,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3c875998_67c3b5ed",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-10-29T22:27:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4bdc81c8_7be62252",
+      "revId": "84a544d03fad526761916d32ac5f20ca2401b058",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "11fa3448_cb2e0139",
@@ -76,6 +94,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ed227328_210ce0b8",
+        "filename": "src/tests/gl_tests/MultithreadingTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 329,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-10-29T22:27:19Z",
+      "side": 1,
+      "message": "Hm, nope, not sure how this got here.   Only the tests that call limitMaxSets() will have the small descriptor set pools, which this one isn\u0027t doing.\n\nRemoved.",
+      "parentUuid": "11fa3448_cb2e0139",
+      "range": {
+        "startLine": 329,
+        "startChar": 70,
+        "endLine": 329,
+        "endChar": 97
+      },
+      "revId": "84a544d03fad526761916d32ac5f20ca2401b058",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1951aeab_f11b6999",
@@ -89,6 +131,24 @@
       "writtenOn": "2020-10-28T13:22:48Z",
       "side": 1,
       "message": "Jamie mentioned to me on a similar CL of mine that the \"WithNoVirtualContexts\" is not necessary for the Vulkan back-end pieces.",
+      "revId": "84a544d03fad526761916d32ac5f20ca2401b058",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dada326c_59ddb528",
+        "filename": "src/tests/gl_tests/MultithreadingTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 494,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-10-29T22:27:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1951aeab_f11b6999",
       "revId": "84a544d03fad526761916d32ac5f20ca2401b058",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
