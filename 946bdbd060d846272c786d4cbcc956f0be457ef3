@@ -125,6 +125,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c12877a7_2ecc0724",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2020-10-29T17:54:38Z",
+      "side": 1,
+      "message": "No, Pixel 2 bots are swamped at the moment.\nI think we didn\u0027t order enough Pixel 4s for this either.\nMaybe if we split our testing to 32 bit-only Pixel 2 and 64 bit-only Pixel 4, we will have enough.",
+      "parentUuid": "d807b950_d968f988",
+      "revId": "946bdbd060d846272c786d4cbcc956f0be457ef3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "50f54cb1_65d1f1bc",
