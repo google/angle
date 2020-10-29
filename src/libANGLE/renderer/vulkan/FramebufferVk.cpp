@@ -359,11 +359,18 @@ angle::Result FramebufferVk::invalidateSub(const gl::Context *context,
 {
     ContextVk *contextVk = vk::GetImpl(context);
 
+    // If invalidateSub() covers the whole framebuffer area, make it behave as invalidate().
+    const gl::Rectangle completeRenderArea = getRotatedCompleteRenderArea(contextVk);
+    if (area.encloses(completeRenderArea))
+    {
+        return invalidateImpl(contextVk, count, attachments, false);
+    }
+
     // If there are deferred clears, flush them.  syncState may have accumulated deferred clears,
     // but if the framebuffer's attachments are used after this call not through the framebuffer,
     // those clears wouldn't get flushed otherwise (for example as the destination of
     // glCopyTex[Sub]Image, shader storage image, etc).
-    ANGLE_TRY(flushDeferredClears(contextVk, getRotatedCompleteRenderArea(contextVk)));
+    ANGLE_TRY(flushDeferredClears(contextVk, completeRenderArea));
 
     if (area.encloses(contextVk->getStartedRenderPassCommands().getRenderArea()))
     {

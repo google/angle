@@ -729,6 +729,45 @@ TEST_P(VulkanPerformanceCounterTest, Invalidate)
     compareLoadCountersForInvalidateTest(counters, expected);
 }
 
+// Similar to Invalidate, but uses glInvalidateSubFramebuffer such that the given area covers the
+// whole framebuffer.
+TEST_P(VulkanPerformanceCounterTest, InvalidateSub)
+{
+    const rx::vk::PerfCounters &counters = hackANGLE();
+    rx::vk::PerfCounters expected;
+
+    // Expect rpCount+1, depth(Clears+1, Loads+0, Stores+0), stencil(Clears+0, Load+0, Stores+0)
+    setExpectedCountersForInvalidateTest(counters, 1, 1, 0, 0, 0, 0, 0, &expected);
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
+    GLFramebuffer framebuffer;
+    GLTexture texture;
+    GLRenderbuffer renderbuffer;
+    setupClearAndDrawForInvalidateTest(&program, &framebuffer, &texture, &renderbuffer, false);
+
+    // Execute the scenario that this test is for:
+
+    // Invalidate (storeOp = DONT_CARE; mContentDefined = false)
+    const GLenum discards[] = {GL_DEPTH_ATTACHMENT, GL_STENCIL_ATTACHMENT};
+    glInvalidateSubFramebuffer(GL_FRAMEBUFFER, 2, discards, -100, -100, kInvalidateTestSize + 200,
+                               kInvalidateTestSize + 200);
+    ASSERT_GL_NO_ERROR();
+
+    // Ensure that the render pass wasn't broken
+    EXPECT_EQ(expected.renderPasses, counters.renderPasses);
+
+    // Use swapBuffers and then check how many loads and stores were actually done
+    swapBuffers();
+    compareDepthStencilCountersForInvalidateTest(counters, expected);
+
+    // Start and end another render pass, to check that the load ops are as expected
+    setAndIncrementLoadCountersForInvalidateTest(counters, 0, 0, &expected);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+    ASSERT_GL_NO_ERROR();
+    swapBuffers();
+    compareLoadCountersForInvalidateTest(counters, expected);
+}
+
 // Tests that another case does not break render pass, and that counts are correct:
 //
 // - Scenario: invalidate, draw
