@@ -79,6 +79,29 @@
       },
       "revId": "8f2aa35dc35d26b823aa4b3fc4239df5aa302d1c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b41ea7cf_713c3053",
+        "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-10-29T16:59:05Z",
+      "side": 1,
+      "message": "with the conditional enabling of the extension this skip might not be necessary, need to check",
+      "range": {
+        "startLine": 189,
+        "startChar": 0,
+        "endLine": 189,
+        "endChar": 81
+      },
+      "revId": "8f2aa35dc35d26b823aa4b3fc4239df5aa302d1c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
