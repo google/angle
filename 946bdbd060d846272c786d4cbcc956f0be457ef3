@@ -87,6 +87,47 @@
       "parentUuid": "ba56487c_98fdf6db",
       "revId": "946bdbd060d846272c786d4cbcc956f0be457ef3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6978521e_d4689f15",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2020-10-29T17:35:07Z",
+      "side": 1,
+      "message": "Shouldn\u0027t be a problem to run this everywhere after recent Jamie\u0027s savings.\nHowever, an official dEQP run doesn\u0027t run every test rotated, but only a subset, e.g. https://github.com/KhronosGroup/VK-GL-CTS/blob/master/android/cts/master/gles3-rotate-landscape.txt\nSo, it makes sense to me that we only run these tests as well.",
+      "parentUuid": "69322cf8_579d8db1",
+      "revId": "946bdbd060d846272c786d4cbcc956f0be457ef3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "50f54cb1_65d1f1bc",
+        "filename": "src/tests/deqp_support/tcuANGLENativeDisplayFactory.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 349,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2020-10-29T17:35:07Z",
+      "side": 1,
+      "message": "Since you already swap these when you create the window above, why do you need to swap again?\nDoes this need to return the dimensions before the rotation?\nCan you add a comment?",
+      "range": {
+        "startLine": 345,
+        "startChar": 0,
+        "endLine": 349,
+        "endChar": 0
+      },
+      "revId": "946bdbd060d846272c786d4cbcc956f0be457ef3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }

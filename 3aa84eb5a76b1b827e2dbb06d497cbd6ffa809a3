@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0830aa72_4d61e542",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1689,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2020-10-29T17:35:07Z",
+      "side": 1,
+      "message": "nit: prerotation",
+      "range": {
+        "startLine": 1689,
+        "startChar": 52,
+        "endLine": 1689,
+        "endChar": 64
+      },
+      "revId": "3aa84eb5a76b1b827e2dbb06d497cbd6ffa809a3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "836b14f8_38d6df19",
+        "filename": "src/tests/deqp_support/README.md",
+        "patchSetId": 3
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2020-10-29T17:35:07Z",
+      "side": 1,
+      "message": "I wonder if we need the degree here.\nWouldn\u0027t be nice if we need to add an expectation for each one of these 3 every time.",
+      "range": {
+        "startLine": 37,
+        "startChar": 0,
+        "endLine": 37,
+        "endChar": 41
+      },
+      "revId": "3aa84eb5a76b1b827e2dbb06d497cbd6ffa809a3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
