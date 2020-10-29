@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "df92f10d_718ec131",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2020-10-29T14:08:35Z",
+      "side": 1,
+      "message": "This patch ended up generating a bunch of dEQP failures:\ndEQP.EGL/functional_get_frame_timestamps_rgb565_no_depth_no_stencil\ndEQP.EGL/functional_get_frame_timestamps_rgb565_no_depth_stencil\ndEQP.EGL/functional_hdr_metadata_cta861_3\ndEQP.EGL/functional_hdr_metadata_smpte2086\ndEQP.EGL/functional_mutable_render_buffer_basic\ndEQP.EGL/functional_swap_buffers_with_damage_resize_after_swap_buffer_age_clear\ndEQP.EGL/functional_swap_buffers_with_damage_resize_after_swap_buffer_age_clear_clear\ndEQP.EGL/functional_swap_buffers_with_damage_resize_after_swap_buffer_age_render\ndEQP.EGL/functional_swap_buffers_with_damage_resize_before_swap_buffer_age_clear\ndEQP.EGL/functional_swap_buffers_with_damage_resize_before_swap_buffer_age_clear_clear\ndEQP.EGL/functional_swap_buffers_with_damage_resize_before_swap_buffer_age_render\n\nex: https://ci.chromium.org/p/chromium/builders/ci/Mac%20FYI%20dEQP%20Release%20AMD/127737\n\nThey all appear to be crashes in prepareForCall being called as eglTerminate is being called. I\u0027ll revert this for now so we can reland it with a fix and trigger the dEQP trybots bots to verify.",
+      "revId": "e70f6aa679dd72eca5c88c71b0932928e92d6067",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
