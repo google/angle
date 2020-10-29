@@ -1522,6 +1522,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "ef6bfa15_495c6912",
+        "filename": "src/libANGLE/validationES32.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-29T21:01:33Z",
+      "side": 1,
+      "message": "For reference, look at any 3.1 or 3.0 validation entry point.",
+      "parentUuid": "e696371f_a1261c54",
+      "range": {
+        "startLine": 142,
+        "startChar": 11,
+        "endLine": 142,
+        "endChar": 39
+      },
+      "revId": "90e28645c779afd9206e684e8ff05057ad3127ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "d6e64b34_ba68b8ca",
         "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
         "patchSetId": 12
