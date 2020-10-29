@@ -1450,6 +1450,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "2a5ef5f8_c6772048",
+        "filename": "src/libANGLE/validationES32.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-29T20:47:01Z",
+      "side": 1,
+      "message": "Correct, it is not. Add a check that if the driver version \u003c 3.2, this throws an error, similar to how you validate the extension.",
+      "parentUuid": "19927e2a_49db6f9f",
+      "range": {
+        "startLine": 142,
+        "startChar": 11,
+        "endLine": 142,
+        "endChar": 39
+      },
+      "revId": "90e28645c779afd9206e684e8ff05057ad3127ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "d6e64b34_ba68b8ca",
         "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
         "patchSetId": 12
