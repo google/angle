@@ -10,7 +10,6 @@
 #define LIBANGLE_RENDERER_GL_CGL_DISPLAYCGL_H_
 
 #include <thread>
-#include <unordered_set>
 
 #include "libANGLE/renderer/gl/DisplayGL.h"
 
@@ -44,8 +43,6 @@ class DisplayCGL : public DisplayGL
 
     egl::Error initialize(egl::Display *display) override;
     void terminate() override;
-    egl::Error prepareForCall() override;
-    egl::Error releaseThread() override;
 
     egl::Error makeCurrent(egl::Display *display,
                            egl::Surface *drawSurface,
@@ -118,7 +115,7 @@ class DisplayCGL : public DisplayGL
 
     egl::Display *mEGLDisplay;
     CGLContextObj mContext;
-    std::unordered_set<std::thread::id> mThreadsWithCurrentContext;
+    std::unordered_map<std::thread::id, CGLContextObj> mCurrentContexts;
     CGLPixelFormatObj mPixelFormat;
     bool mSupportsGPUSwitching;
     uint64_t mCurrentGPUID;
@@ -128,7 +125,6 @@ class DisplayCGL : public DisplayGL
     // is unref'd for the last time, this is set to the time of that last unref. If it isn't
     // activated again in 10 seconds, the discrete GPU pixel format is deleted.
     double mLastDiscreteGPUUnrefTime;
-    bool mDeviceContextIsVolatile = false;
 };
 
 }  // namespace rx

@@ -75,12 +75,7 @@ egl::Error DisplayEAGL::initialize(egl::Display *display)
     {
         return egl::EglNotInitialized() << "Could not create the EAGL context.";
     }
-
-    if (![EAGLContext setCurrentContext:mContext])
-    {
-        return egl::EglNotInitialized() << "Could set the EAGL context current.";
-    }
-    mThreadsWithContextCurrent.insert(std::this_thread::get_id());
+    [EAGLContext setCurrentContext:mContext];
 
     // There is no equivalent getProcAddress in EAGL so we open the dylib directly
     void *handle = dlopen(kOpenGLESDylibName, RTLD_NOW);
@@ -100,10 +95,6 @@ egl::Error DisplayEAGL::initialize(egl::Display *display)
         return egl::EglNotInitialized() << "OpenGL ES 2.0 is not supportable.";
     }
 
-    auto &attributes = display->getAttributeMap();
-    mDeviceContextIsVolatile =
-        attributes.get(EGL_PLATFORM_ANGLE_DEVICE_CONTEXT_VOLATILE_EAGL_ANGLE, GL_FALSE);
-
     return DisplayGL::initialize(display);
 }
 
@@ -116,37 +107,7 @@ void DisplayEAGL::terminate()
     {
         [EAGLContext setCurrentContext:nil];
         mContext = nullptr;
-        mThreadsWithContextCurrent.clear();
     }
-}
-
-egl::Error DisplayEAGL::prepareForCall()
-{
-    auto threadId = std::this_thread::get_id();
-    if (mDeviceContextIsVolatile ||
-        mThreadsWithContextCurrent.find(threadId) == mThreadsWithContextCurrent.end())
-    {
-        if (![getEAGLContextClass() setCurrentContext:mContext])
-        {
-            return egl::EglBadAlloc() << "Could not make device EAGL context current.";
-        }
-        mThreadsWithContextCurrent.insert(threadId);
-    }
-    return egl::NoError();
-}
-
-egl::Error DisplayEAGL::releaseThread()
-{
-    auto threadId = std::this_thread::get_id();
-    if (mThreadsWithContextCurrent.find(threadId) != mThreadsWithContextCurrent.end())
-    {
-        if (![getEAGLContextClass() setCurrentContext:nil])
-        {
-            return egl::EglBadAlloc() << "Could not release device EAGL context.";
-        }
-        mThreadsWithContextCurrent.erase(threadId);
-    }
-    return egl::NoError();
 }
 
 SurfaceImpl *DisplayEAGL::createWindowSurface(const egl::SurfaceState &state,

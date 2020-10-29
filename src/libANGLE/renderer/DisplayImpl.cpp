@@ -23,16 +23,6 @@ DisplayImpl::~DisplayImpl()
     ASSERT(mState.surfaceSet.empty());
 }
 
-egl::Error DisplayImpl::prepareForCall()
-{
-    return egl::NoError();
-}
-
-egl::Error DisplayImpl::releaseThread()
-{
-    return egl::NoError();
-}
-
 const egl::DisplayExtensions &DisplayImpl::getExtensions() const
 {
     if (!mExtensionsInitialized)

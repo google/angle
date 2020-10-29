@@ -86,8 +86,7 @@ EGLBoolean EGLAPIENTRY EGL_QuerySurfacePointerANGLE(EGLDisplay dpy,
                              GetSurfaceIfValid(display, eglSurface));
             return EGL_FALSE;
     }
-    ANGLE_EGL_TRY_RETURN(thread, display->prepareForCall(), "eglQuerySurfacePointerANGLE",
-                         GetDisplayIfValid(display), EGL_FALSE);
+
     error = eglSurface->querySurfacePointerANGLE(attribute, value);
     if (error.isError())
     {
@@ -152,8 +151,7 @@ EGLBoolean EGLAPIENTRY EGL_PostSubBufferNV(EGLDisplay dpy,
         thread->setSuccess();
         return EGL_TRUE;
     }
-    ANGLE_EGL_TRY_RETURN(thread, display->prepareForCall(), "eglPostSubBufferNV",
-                         GetDisplayIfValid(display), EGL_FALSE);
+
     // TODO(jmadill): Validate Surface is bound to the thread.
     error = eglSurface->postSubBuffer(thread->getContext(), x, y, width, height);
     if (error.isError())
@@ -225,8 +223,7 @@ EGLSurface EGLAPIENTRY EGL_CreatePlatformWindowSurfaceEXT(EGLDisplay dpy,
         thread,
         ValidateCreatePlatformWindowSurfaceEXT(display, configuration, native_window, attributes),
         "eglCreatePlatformWindowSurfaceEXT", GetDisplayIfValid(display), EGL_NO_SURFACE);
-    ANGLE_EGL_TRY_RETURN(thread, display->prepareForCall(), "eglCreatePlatformWindowSurfaceEXT",
-                         GetDisplayIfValid(display), EGL_NO_SURFACE);
+
     thread->setError(EglBadDisplay() << "CreatePlatformWindowSurfaceEXT unimplemented.", GetDebug(),
                      "eglCreatePlatformWindowSurfaceEXT", GetDisplayIfValid(display));
     return EGL_NO_SURFACE;
@@ -253,8 +250,7 @@ EGLSurface EGLAPIENTRY EGL_CreatePlatformPixmapSurfaceEXT(EGLDisplay dpy,
         thread,
         ValidateCreatePlatformPixmapSurfaceEXT(display, configuration, native_pixmap, attributes),
         "eglCreatePlatformPixmapSurfaceEXT", GetDisplayIfValid(display), EGL_NO_SURFACE);
-    ANGLE_EGL_TRY_RETURN(thread, display->prepareForCall(), "eglCreatePlatformPixmapSurfaceEXT",
-                         GetDisplayIfValid(display), EGL_NO_SURFACE);
+
     thread->setError(EglBadDisplay() << "CreatePlatformPixmapSurfaceEXT unimplemented.", GetDebug(),
                      "eglCreatePlatformPixmapSurfaceEXT", GetDisplayIfValid(display));
     return EGL_NO_SURFACE;
@@ -279,14 +275,10 @@ EGLBoolean EGLAPIENTRY EGL_QueryDeviceAttribEXT(EGLDeviceEXT device,
         thread->setError(error, GetDebug(), "eglQueryDeviceAttribEXT", GetDeviceIfValid(dev));
         return EGL_FALSE;
     }
-    egl::Display *owningDisplay = dev->getOwningDisplay();
-    if (owningDisplay)
-    {
-        ANGLE_EGL_TRY_RETURN(thread, owningDisplay->prepareForCall(), "eglQueryDeviceAttribEXT",
-                             GetDisplayIfValid(owningDisplay), EGL_FALSE);
-    }
+
     // If the device was created by (and is owned by) a display, and that display doesn't support
     // device querying, then this call should fail
+    egl::Display *owningDisplay = dev->getOwningDisplay();
     if (owningDisplay != nullptr && !owningDisplay->getExtensions().deviceQuery)
     {
         thread->setError(EglBadAccess() << "Device wasn't created using eglCreateDeviceANGLE, "
@@ -359,9 +351,7 @@ const char *EGLAPIENTRY EGL_QueryDeviceStringEXT(EGLDeviceEXT device, EGLint nam
         thread->setError(error, GetDebug(), "eglQueryDeviceStringEXT", GetDeviceIfValid(dev));
         return EGL_FALSE;
     }
-    egl::Display *owningDisplay = dev->getOwningDisplay();
-    ANGLE_EGL_TRY_RETURN(thread, owningDisplay->prepareForCall(), "eglQueryDeviceStringEXT",
-                         GetDisplayIfValid(owningDisplay), EGL_FALSE);
+
     const char *result;
     switch (name)
     {
@@ -391,8 +381,7 @@ EGLBoolean EGLAPIENTRY EGL_QueryDisplayAttribEXT(EGLDisplay dpy, EGLint attribut
 
     ANGLE_EGL_TRY_RETURN(thread, ValidateQueryDisplayAttribEXT(display, attribute),
                          "eglQueryDisplayAttribEXT", GetDisplayIfValid(display), EGL_FALSE);
-    ANGLE_EGL_TRY_RETURN(thread, display->prepareForCall(), "eglQueryDisplayAttribEXT",
-                         GetDisplayIfValid(display), EGL_FALSE);
+
     *value = display->queryAttrib(attribute);
     thread->setSuccess();
     return EGL_TRUE;
@@ -413,8 +402,7 @@ EGLBoolean EGLAPIENTRY EGL_QueryDisplayAttribANGLE(EGLDisplay dpy,
 
     ANGLE_EGL_TRY_RETURN(thread, ValidateQueryDisplayAttribANGLE(display, attribute),
                          "eglQueryDisplayAttribANGLE", GetDisplayIfValid(display), EGL_FALSE);
-    ANGLE_EGL_TRY_RETURN(thread, display->prepareForCall(), "eglQueryDisplayAttribANGLE",
-                         GetDisplayIfValid(display), EGL_FALSE);
+
     *value = display->queryAttrib(attribute);
     thread->setSuccess();
     return EGL_TRUE;
@@ -445,8 +433,7 @@ ANGLE_EXPORT EGLImageKHR EGLAPIENTRY EGL_CreateImageKHR(EGLDisplay dpy,
         thread->setError(error, GetDebug(), "eglCreateImageKHR", GetDisplayIfValid(display));
         return EGL_NO_IMAGE;
     }
-    ANGLE_EGL_TRY_RETURN(thread, display->prepareForCall(), "eglCreateImageKHR",
-                         GetDisplayIfValid(display), EGL_NO_IMAGE);
+
     Image *image = nullptr;
     error        = display->createImage(context, target, buffer, attributes, &image);
     if (error.isError())
@@ -475,8 +462,7 @@ ANGLE_EXPORT EGLBoolean EGLAPIENTRY EGL_DestroyImageKHR(EGLDisplay dpy, EGLImage
         thread->setError(error, GetDebug(), "eglDestroyImageKHR", GetImageIfValid(display, img));
         return EGL_FALSE;
     }
-    ANGLE_EGL_TRY_RETURN(thread, display->prepareForCall(), "eglDestroyImageKHR",
-                         GetDisplayIfValid(display), EGL_FALSE);
+
     display->destroyImage(img);
 
     thread->setSuccess();
@@ -552,8 +538,7 @@ EGLStreamKHR EGLAPIENTRY EGL_CreateStreamKHR(EGLDisplay dpy, const EGLint *attri
         thread->setError(error, GetDebug(), "eglCreateStreamKHR", GetDisplayIfValid(display));
         return EGL_NO_STREAM_KHR;
     }
-    ANGLE_EGL_TRY_RETURN(thread, display->prepareForCall(), "eglCreateStreamKHR",
-                         GetDisplayIfValid(display), EGL_NO_STREAM_KHR);
+
     Stream *stream;
     error = display->createStream(attributes, &stream);
     if (error.isError())
@@ -583,8 +568,7 @@ EGLBoolean EGLAPIENTRY EGL_DestroyStreamKHR(EGLDisplay dpy, EGLStreamKHR stream)
                          GetStreamIfValid(display, streamObject));
         return EGL_FALSE;
     }
-    ANGLE_EGL_TRY_RETURN(thread, display->prepareForCall(), "eglDestroyStreamKHR",
-                         GetDisplayIfValid(display), EGL_FALSE);
+
     display->destroyStream(streamObject);
 
     thread->setSuccess();
@@ -613,8 +597,7 @@ EGLBoolean EGLAPIENTRY EGL_StreamAttribKHR(EGLDisplay dpy,
                          GetStreamIfValid(display, streamObject));
         return EGL_FALSE;
     }
-    ANGLE_EGL_TRY_RETURN(thread, display->prepareForCall(), "eglStreamAttribKHR",
-                         GetDisplayIfValid(display), EGL_FALSE);
+
     switch (attribute)
     {
         case EGL_CONSUMER_LATENCY_USEC_KHR:
@@ -653,8 +636,7 @@ EGLBoolean EGLAPIENTRY EGL_QueryStreamKHR(EGLDisplay dpy,
                          GetStreamIfValid(display, streamObject));
         return EGL_FALSE;
     }
-    ANGLE_EGL_TRY_RETURN(thread, display->prepareForCall(), "eglQueryStreamKHR",
-                         GetDisplayIfValid(display), EGL_FALSE);
+
     switch (attribute)
     {
         case EGL_STREAM_STATE_KHR:
@@ -696,8 +678,7 @@ EGLBoolean EGLAPIENTRY EGL_QueryStreamu64KHR(EGLDisplay dpy,
                          GetStreamIfValid(display, streamObject));
         return EGL_FALSE;
     }
-    ANGLE_EGL_TRY_RETURN(thread, display->prepareForCall(), "eglQueryStreamu64KHR",
-                         GetDisplayIfValid(display), EGL_FALSE);
+
     switch (attribute)
     {
         case EGL_PRODUCER_FRAME_KHR:
@@ -732,8 +713,7 @@ EGLBoolean EGLAPIENTRY EGL_StreamConsumerGLTextureExternalKHR(EGLDisplay dpy, EG
                          GetStreamIfValid(display, streamObject));
         return EGL_FALSE;
     }
-    ANGLE_EGL_TRY_RETURN(thread, display->prepareForCall(), "eglStreamConsumerGLTextureExternalKHR",
-                         GetDisplayIfValid(display), EGL_FALSE);
+
     error = streamObject->createConsumerGLTextureExternal(AttributeMap(), context);
     if (error.isError())
     {
@@ -764,8 +744,7 @@ EGLBoolean EGLAPIENTRY EGL_StreamConsumerAcquireKHR(EGLDisplay dpy, EGLStreamKHR
                          GetStreamIfValid(display, streamObject));
         return EGL_FALSE;
     }
-    ANGLE_EGL_TRY_RETURN(thread, display->prepareForCall(), "eglStreamConsumerAcquireKHR",
-                         GetDisplayIfValid(display), EGL_FALSE);
+
     error = streamObject->consumerAcquire(context);
     if (error.isError())
     {
@@ -796,8 +775,7 @@ EGLBoolean EGLAPIENTRY EGL_StreamConsumerReleaseKHR(EGLDisplay dpy, EGLStreamKHR
                          GetStreamIfValid(display, streamObject));
         return EGL_FALSE;
     }
-    ANGLE_EGL_TRY_RETURN(thread, display->prepareForCall(), "eglStreamConsumerReleaseKHR",
-                         GetDisplayIfValid(display), EGL_FALSE);
+
     error = streamObject->consumerRelease(context);
     if (error.isError())
     {
@@ -833,9 +811,7 @@ EGLBoolean EGLAPIENTRY EGL_StreamConsumerGLTextureExternalAttribsNV(EGLDisplay d
                          GetStreamIfValid(display, streamObject));
         return EGL_FALSE;
     }
-    ANGLE_EGL_TRY_RETURN(thread, display->prepareForCall(),
-                         "eglStreamConsumerGLTextureExternalAttribsNV", GetDisplayIfValid(display),
-                         EGL_FALSE);
+
     error = streamObject->createConsumerGLTextureExternal(attributes, context);
     if (error.isError())
     {
@@ -869,9 +845,7 @@ EGLBoolean EGLAPIENTRY EGL_CreateStreamProducerD3DTextureANGLE(EGLDisplay dpy,
                          GetStreamIfValid(display, streamObject));
         return EGL_FALSE;
     }
-    ANGLE_EGL_TRY_RETURN(thread, display->prepareForCall(),
-                         "eglCreateStreamProducerD3DTextureANGLE", GetDisplayIfValid(display),
-                         EGL_FALSE);
+
     error = streamObject->createProducerD3D11Texture(attributes);
     if (error.isError())
     {
@@ -908,8 +882,7 @@ EGLBoolean EGLAPIENTRY EGL_StreamPostD3DTextureANGLE(EGLDisplay dpy,
                          GetStreamIfValid(display, streamObject));
         return EGL_FALSE;
     }
-    ANGLE_EGL_TRY_RETURN(thread, display->prepareForCall(), "eglStreamPostD3DTextureANGLE",
-                         GetDisplayIfValid(display), EGL_FALSE);
+
     error = streamObject->postD3D11Texture(texture, attributes);
     if (error.isError())
     {
@@ -942,8 +915,7 @@ ANGLE_EXPORT EGLSync EGLAPIENTRY EGL_CreateSyncKHR(EGLDisplay dpy,
     ANGLE_EGL_TRY_RETURN(
         thread, ValidateCreateSyncKHR(display, type, attributes, currentDisplay, currentContext),
         "eglCreateSync", GetDisplayIfValid(display), EGL_NO_SYNC);
-    ANGLE_EGL_TRY_RETURN(thread, display->prepareForCall(), "eglCreateSync",
-                         GetDisplayIfValid(display), EGL_NO_SYNC);
+
     egl::Sync *syncObject = nullptr;
     ANGLE_EGL_TRY_RETURN(thread, display->createSync(currentContext, type, attributes, &syncObject),
                          "eglCreateSync", GetDisplayIfValid(display), EGL_NO_SYNC);
@@ -964,8 +936,7 @@ ANGLE_EXPORT EGLBoolean EGLAPIENTRY EGL_DestroySyncKHR(EGLDisplay dpy, EGLSync s
 
     ANGLE_EGL_TRY_RETURN(thread, ValidateDestroySync(display, syncObject), "eglDestroySync",
                          GetDisplayIfValid(display), EGL_FALSE);
-    ANGLE_EGL_TRY_RETURN(thread, display->prepareForCall(), "eglDestroySync",
-                         GetDisplayIfValid(display), EGL_FALSE);
+
     display->destroySync(syncObject);
 
     thread->setSuccess();
@@ -989,8 +960,7 @@ ANGLE_EXPORT EGLint EGLAPIENTRY EGL_ClientWaitSyncKHR(EGLDisplay dpy,
 
     ANGLE_EGL_TRY_RETURN(thread, ValidateClientWaitSync(display, syncObject, flags, timeout),
                          "eglClientWaitSync", GetSyncIfValid(display, syncObject), EGL_FALSE);
-    ANGLE_EGL_TRY_RETURN(thread, display->prepareForCall(), "eglClientWaitSync",
-                         GetDisplayIfValid(display), EGL_FALSE);
+
     gl::Context *currentContext = thread->getContext();
     EGLint syncStatus           = EGL_FALSE;
     ANGLE_EGL_TRY_RETURN(
@@ -1018,8 +988,7 @@ ANGLE_EXPORT EGLBoolean EGLAPIENTRY EGL_GetSyncAttribKHR(EGLDisplay dpy,
 
     ANGLE_EGL_TRY_RETURN(thread, ValidateGetSyncAttribKHR(display, syncObject, attribute, value),
                          "eglGetSyncAttrib", GetSyncIfValid(display, syncObject), EGL_FALSE);
-    ANGLE_EGL_TRY_RETURN(thread, display->prepareForCall(), "eglGetSyncAttrib",
-                         GetDisplayIfValid(display), EGL_FALSE);
+
     ANGLE_EGL_TRY_RETURN(thread, GetSyncAttrib(display, syncObject, attribute, value),
                          "eglGetSyncAttrib", GetSyncIfValid(display, syncObject), EGL_FALSE);
 
@@ -1042,8 +1011,7 @@ ANGLE_EXPORT EGLBoolean EGLAPIENTRY EGL_WaitSyncKHR(EGLDisplay dpy, EGLSync sync
 
     ANGLE_EGL_TRY_RETURN(thread, ValidateWaitSync(display, context, syncObject, flags),
                          "eglWaitSync", GetSyncIfValid(display, syncObject), EGL_FALSE);
-    ANGLE_EGL_TRY_RETURN(thread, display->prepareForCall(), "eglWaitSync",
-                         GetDisplayIfValid(display), EGL_FALSE);
+
     gl::Context *currentContext = thread->getContext();
     ANGLE_EGL_TRY_RETURN(thread, syncObject->serverWait(display, currentContext, flags),
                          "eglWaitSync", GetSyncIfValid(display, syncObject), EGL_FALSE);
@@ -1075,8 +1043,7 @@ EGLBoolean EGLAPIENTRY EGL_GetMscRateANGLE(EGLDisplay dpy,
                          GetSurfaceIfValid(display, eglSurface));
         return EGL_FALSE;
     }
-    ANGLE_EGL_TRY_RETURN(thread, display->prepareForCall(), "eglGetMscRateANGLE",
-                         GetDisplayIfValid(display), EGL_FALSE);
+
     error = eglSurface->getMscRate(numerator, denominator);
     if (error.isError())
     {
@@ -1113,8 +1080,7 @@ EGLBoolean EGLAPIENTRY EGL_GetSyncValuesCHROMIUM(EGLDisplay dpy,
                          GetSurfaceIfValid(display, eglSurface));
         return EGL_FALSE;
     }
-    ANGLE_EGL_TRY_RETURN(thread, display->prepareForCall(), "eglGetSyncValuesCHROMIUM",
-                         GetDisplayIfValid(display), EGL_FALSE);
+
     error = eglSurface->getSyncValues(ust, msc, sbc);
     if (error.isError())
     {
@@ -1150,8 +1116,7 @@ EGLBoolean EGLAPIENTRY EGL_SwapBuffersWithDamageKHR(EGLDisplay dpy,
                          GetSurfaceIfValid(display, eglSurface));
         return EGL_FALSE;
     }
-    ANGLE_EGL_TRY_RETURN(thread, display->prepareForCall(), "eglSwapBuffersWithDamageEXT",
-                         GetDisplayIfValid(display), EGL_FALSE);
+
     error = eglSurface->swapWithDamage(thread->getContext(), rects, n_rects);
     if (error.isError())
     {
@@ -1180,8 +1145,6 @@ EGLBoolean EGLAPIENTRY EGL_PresentationTimeANDROID(EGLDisplay dpy,
     ANGLE_EGL_TRY_RETURN(thread, ValidatePresentationTimeANDROID(display, eglSurface, time),
                          "eglPresentationTimeANDROID", GetSurfaceIfValid(display, eglSurface),
                          EGL_FALSE);
-    ANGLE_EGL_TRY_RETURN(thread, display->prepareForCall(), "eglPresentationTimeANDROID",
-                         GetDisplayIfValid(display), EGL_FALSE);
     ANGLE_EGL_TRY_RETURN(thread, eglSurface->setPresentationTime(time),
                          "eglPresentationTimeANDROID", GetSurfaceIfValid(display, eglSurface),
                          EGL_FALSE);
@@ -1203,8 +1166,7 @@ ANGLE_EXPORT void EGLAPIENTRY EGL_SetBlobCacheFuncsANDROID(EGLDisplay dpy,
 
     ANGLE_EGL_TRY(thread, ValidateSetBlobCacheANDROID(display, set, get),
                   "eglSetBlobCacheFuncsANDROID", GetDisplayIfValid(display));
-    ANGLE_EGL_TRY(thread, display->prepareForCall(), "eglSetBlobCacheFuncsANDROID",
-                  GetDisplayIfValid(display));
+
     thread->setSuccess();
     display->setBlobCacheFuncs(set, get);
 }
@@ -1219,8 +1181,7 @@ EGLint EGLAPIENTRY EGL_ProgramCacheGetAttribANGLE(EGLDisplay dpy, EGLenum attrib
 
     ANGLE_EGL_TRY_RETURN(thread, ValidateProgramCacheGetAttribANGLE(display, attrib),
                          "eglProgramCacheGetAttribANGLE", GetDisplayIfValid(display), 0);
-    ANGLE_EGL_TRY_RETURN(thread, display->prepareForCall(), "eglProgramCacheGetAttribANGLE",
-                         GetDisplayIfValid(display), 0);
+
     thread->setSuccess();
     return display->programCacheGetAttrib(attrib);
 }
@@ -1245,8 +1206,7 @@ void EGLAPIENTRY EGL_ProgramCacheQueryANGLE(EGLDisplay dpy,
     ANGLE_EGL_TRY(thread,
                   ValidateProgramCacheQueryANGLE(display, index, key, keysize, binary, binarysize),
                   "eglProgramCacheQueryANGLE", GetDisplayIfValid(display));
-    ANGLE_EGL_TRY(thread, display->prepareForCall(), "eglProgramCacheQueryANGLE",
-                  GetDisplayIfValid(display));
+
     ANGLE_EGL_TRY(thread, display->programCacheQuery(index, key, keysize, binary, binarysize),
                   "eglProgramCacheQueryANGLE", GetDisplayIfValid(display));
 
@@ -1271,8 +1231,7 @@ void EGLAPIENTRY EGL_ProgramCachePopulateANGLE(EGLDisplay dpy,
     ANGLE_EGL_TRY(thread,
                   ValidateProgramCachePopulateANGLE(display, key, keysize, binary, binarysize),
                   "eglProgramCachePopulateANGLE", GetDisplayIfValid(display));
-    ANGLE_EGL_TRY(thread, display->prepareForCall(), "eglProgramCachePopulateANGLE",
-                  GetDisplayIfValid(display));
+
     ANGLE_EGL_TRY(thread, display->programCachePopulate(key, keysize, binary, binarysize),
                   "eglProgramCachePopulateANGLE", GetDisplayIfValid(display));
 
@@ -1290,8 +1249,7 @@ EGLint EGLAPIENTRY EGL_ProgramCacheResizeANGLE(EGLDisplay dpy, EGLint limit, EGL
 
     ANGLE_EGL_TRY_RETURN(thread, ValidateProgramCacheResizeANGLE(display, limit, mode),
                          "eglProgramCacheResizeANGLE", GetDisplayIfValid(display), 0);
-    ANGLE_EGL_TRY_RETURN(thread, display->prepareForCall(), "eglProgramCacheResizeANGLE",
-                         GetDisplayIfValid(display), 0);
+
     thread->setSuccess();
     return display->programCacheResize(limit, mode);
 }
@@ -1382,15 +1340,7 @@ EGLint EGLAPIENTRY EGL_LabelObjectKHR(EGLDisplay dpy,
                          GetLabeledObjectIfValid(thread, display, objectTypePacked, object));
         return error.getCode();
     }
-    if (display)
-    {
-        error = display->prepareForCall();
-        if (error.isError())
-        {
-            thread->setError(error, GetDebug(), "eglLabelObjectKHR", GetDisplayIfValid(display));
-            return error.getCode();
-        }
-    }
+
     LabeledObject *labeledObject =
         GetLabeledObjectIfValid(thread, display, objectTypePacked, object);
     ASSERT(labeledObject != nullptr);
@@ -1444,8 +1394,6 @@ ANGLE_EXPORT EGLBoolean EGLAPIENTRY EGL_GetCompositorTimingANDROID(EGLDisplay dp
         thread,
         ValidateGetCompositorTimingANDROID(display, eglSurface, numTimestamps, names, values),
         "eglGetCompositorTimingANDROIDD", GetSurfaceIfValid(display, eglSurface), EGL_FALSE);
-    ANGLE_EGL_TRY_RETURN(thread, display->prepareForCall(), "eglGetCompositorTimingANDROIDD",
-                         GetDisplayIfValid(display), EGL_FALSE);
     ANGLE_EGL_TRY_RETURN(thread, eglSurface->getCompositorTiming(numTimestamps, names, values),
                          "eglGetCompositorTimingANDROIDD", GetSurfaceIfValid(display, eglSurface),
                          EGL_FALSE);
@@ -1470,8 +1418,6 @@ ANGLE_EXPORT EGLBoolean EGLAPIENTRY EGL_GetNextFrameIdANDROID(EGLDisplay dpy,
     ANGLE_EGL_TRY_RETURN(thread, ValidateGetNextFrameIdANDROID(display, eglSurface, frameId),
                          "eglGetNextFrameIdANDROID", GetSurfaceIfValid(display, eglSurface),
                          EGL_FALSE);
-    ANGLE_EGL_TRY_RETURN(thread, display->prepareForCall(), "eglGetNextFrameIdANDROID",
-                         GetDisplayIfValid(display), EGL_FALSE);
     ANGLE_EGL_TRY_RETURN(thread, eglSurface->getNextFrameId(frameId), "eglGetNextFrameIdANDROID",
                          GetSurfaceIfValid(display, eglSurface), EGL_FALSE);
 
@@ -1497,8 +1443,7 @@ ANGLE_EXPORT EGLBoolean EGLAPIENTRY EGL_GetFrameTimestampSupportedANDROID(EGLDis
     ANGLE_EGL_TRY_RETURN(
         thread, ValidateGetFrameTimestampSupportedANDROID(display, eglSurface, timestampInternal),
         "eglQueryTimestampSupportedANDROID", GetSurfaceIfValid(display, eglSurface), EGL_FALSE);
-    ANGLE_EGL_TRY_RETURN(thread, display->prepareForCall(), "eglQueryTimestampSupportedANDROID",
-                         GetDisplayIfValid(display), EGL_FALSE);
+
     thread->setSuccess();
     return eglSurface->getSupportedTimestamps().test(timestampInternal);
 }
@@ -1527,8 +1472,6 @@ ANGLE_EXPORT EGLBoolean EGLAPIENTRY EGL_GetFrameTimestampsANDROID(EGLDisplay dpy
                                                            numTimestamps, timestamps, values),
                          "eglGetFrameTimestampsANDROID", GetSurfaceIfValid(display, eglSurface),
                          EGL_FALSE);
-    ANGLE_EGL_TRY_RETURN(thread, display->prepareForCall(), "eglGetFrameTimestampsANDROID",
-                         GetDisplayIfValid(display), EGL_FALSE);
     ANGLE_EGL_TRY_RETURN(
         thread, eglSurface->getFrameTimestamps(frameId, numTimestamps, timestamps, values),
         "eglGetFrameTimestampsANDROID", GetSurfaceIfValid(display, eglSurface), EGL_FALSE);
@@ -1551,8 +1494,7 @@ ANGLE_EXPORT const char *EGLAPIENTRY EGL_QueryStringiANGLE(EGLDisplay dpy,
 
     ANGLE_EGL_TRY_RETURN(thread, ValidateQueryStringiANGLE(display, name, index),
                          "eglQueryStringiANGLE", GetDisplayIfValid(display), nullptr);
-    ANGLE_EGL_TRY_RETURN(thread, display->prepareForCall(), "eglQueryStringiANGLE",
-                         GetDisplayIfValid(display), nullptr);
+
     thread->setSuccess();
     return display->queryStringi(name, index);
 }
@@ -1609,8 +1551,7 @@ EGLint EGLAPIENTRY EGL_DupNativeFenceFDANDROID(EGLDisplay dpy, EGLSyncKHR sync)
     ANGLE_EGL_TRY_RETURN(thread, ValidateDupNativeFenceFDANDROID(display, syncObject),
                          "eglDupNativeFenceFDANDROID", GetSyncIfValid(display, syncObject),
                          EGL_NO_NATIVE_FENCE_FD_ANDROID);
-    ANGLE_EGL_TRY_RETURN(thread, display->prepareForCall(), "eglDupNativeFenceFDANDROID",
-                         GetDisplayIfValid(display), EGL_NO_NATIVE_FENCE_FD_ANDROID);
+
     EGLint result = EGL_NO_NATIVE_FENCE_FD_ANDROID;
     ANGLE_EGL_TRY_RETURN(thread, syncObject->dupNativeFenceFD(display, &result),
                          "eglDupNativeFenceFDANDROID", GetSyncIfValid(display, syncObject),
@@ -1636,8 +1577,7 @@ EGLBoolean EGLAPIENTRY EGL_SwapBuffersWithFrameTokenANGLE(EGLDisplay dpy,
     ANGLE_EGL_TRY_RETURN(
         thread, ValidateSwapBuffersWithFrameTokenANGLE(display, eglSurface, frametoken),
         "eglSwapBuffersWithFrameTokenANGLE", GetDisplayIfValid(display), EGL_FALSE);
-    ANGLE_EGL_TRY_RETURN(thread, display->prepareForCall(), "eglSwapBuffersWithFrameTokenANGLE",
-                         GetDisplayIfValid(display), EGL_FALSE);
+
     ANGLE_EGL_TRY_RETURN(thread, eglSurface->swapWithFrameToken(thread->getContext(), frametoken),
                          "eglSwapBuffersWithFrameTokenANGLE", GetDisplayIfValid(display),
                          EGL_FALSE);
@@ -1658,8 +1598,6 @@ void EGLAPIENTRY EGL_ReleaseHighPowerGPUANGLE(EGLDisplay dpy, EGLContext ctx)
 
     ANGLE_EGL_TRY(thread, ValidateContext(display, context), "eglReleaseHighPowerGPUANGLE",
                   GetDisplayIfValid(display));
-    ANGLE_EGL_TRY(thread, display->prepareForCall(), "eglReleaseHighPowerGPUANGLE",
-                  GetDisplayIfValid(display));
     ANGLE_EGL_TRY(thread, context->releaseHighPowerGPU(), "eglReleaseHighPowerGPUANGLE",
                   GetDisplayIfValid(display));
 
@@ -1678,8 +1616,6 @@ void EGLAPIENTRY EGL_ReacquireHighPowerGPUANGLE(EGLDisplay dpy, EGLContext ctx)
 
     ANGLE_EGL_TRY(thread, ValidateContext(display, context), "eglReacquireHighPowerGPUANGLE",
                   GetDisplayIfValid(display));
-    ANGLE_EGL_TRY(thread, display->prepareForCall(), "eglReacquireHighPowerGPUANGLE",
-                  GetDisplayIfValid(display));
     ANGLE_EGL_TRY(thread, context->reacquireHighPowerGPU(), "eglReacquireHighPowerGPUANGLE",
                   GetDisplayIfValid(display));
 
@@ -1695,8 +1631,6 @@ void EGLAPIENTRY EGL_HandleGPUSwitchANGLE(EGLDisplay dpy)
     egl::Display *display = static_cast<egl::Display *>(dpy);
 
     ANGLE_EGL_TRY(thread, ValidateDisplay(display), "eglHandleGPUSwitchANGLE",
-                  GetDisplayIfValid(display));
-    ANGLE_EGL_TRY(thread, display->prepareForCall(), "eglHandleGPUSwitchANGLE",
                   GetDisplayIfValid(display));
     ANGLE_EGL_TRY(thread, display->handleGPUSwitch(), "eglHandleGPUSwitchANGLE",
                   GetDisplayIfValid(display));
