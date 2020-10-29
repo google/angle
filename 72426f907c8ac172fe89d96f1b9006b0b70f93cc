@@ -22,6 +22,30 @@
       },
       "revId": "72426f907c8ac172fe89d96f1b9006b0b70f93cc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "740c7e88_a025a147",
+        "filename": "src/libANGLE/FrameCapture.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-10-29T17:52:59Z",
+      "side": 1,
+      "message": "Sorry, but I\u0027m not sure how to interpret this comment; or at least what\u0027s actionable for me.  What do you suggest we do?",
+      "parentUuid": "3382d181_415b9931",
+      "range": {
+        "startLine": 122,
+        "startChar": 11,
+        "endLine": 122,
+        "endChar": 47
+      },
+      "revId": "72426f907c8ac172fe89d96f1b9006b0b70f93cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
