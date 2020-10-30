@@ -60,6 +60,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "8e056283_835ed4ba",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 618,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2020-10-30T14:28:22Z",
+      "side": 1,
+      "message": "+1",
+      "parentUuid": "bdd36ad4_ef001427",
+      "range": {
+        "startLine": 605,
+        "startChar": 7,
+        "endLine": 618,
+        "endChar": 9
+      },
+      "revId": "376c0abffc56661d1f5637a90472fb247c88bf91",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "7426d4d6_35eb50fd",
         "filename": "src/tests/gl_tests/ProgramInterfaceTest.cpp",
         "patchSetId": 2
