@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "97edea4d_deec7477",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1166470
+      },
+      "writtenOn": "2020-10-30T16:41:16Z",
+      "side": 1,
+      "message": "removed blank line in description, please cq+2 again",
+      "revId": "e8e4f7aad21b4886d0678183b955bd406c4fa930",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
