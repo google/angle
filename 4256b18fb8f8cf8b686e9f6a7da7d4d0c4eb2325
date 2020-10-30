@@ -172,6 +172,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ec04ddb8_7ac766a5",
+        "filename": "gni/angle.gni",
+        "patchSetId": 2
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-30T22:31:16Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "dfe8bba4_b72d84a0",
+      "revId": "4256b18fb8f8cf8b686e9f6a7da7d4d0c4eb2325",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "4a6dec5c_68e7bb1d",
@@ -262,6 +280,30 @@
       "side": 1,
       "message": "Yes we can work on this in another CL.\n\nIt would not affect the ANGLE running, only shows no GPU info and continue with tests/apps:\n\n```\nWarning: incomplete system info collection.\n0 GPUs:\n\nActive GPU: 0\n\nOptimus: false\nAMD Switchable: false\n```",
       "parentUuid": "a377f1d4_9a05e386",
+      "range": {
+        "startLine": 77,
+        "startChar": 0,
+        "endLine": 81,
+        "endChar": 6
+      },
+      "revId": "4256b18fb8f8cf8b686e9f6a7da7d4d0c4eb2325",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e1c7dd2b_91f7df8b",
+        "filename": "src/gpu_info_util/SystemInfo_linux.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-30T22:31:16Z",
+      "side": 1,
+      "message": "SGTM to fix in another CL. Thanks!",
+      "parentUuid": "e9e559f3_b3366abf",
       "range": {
         "startLine": 77,
         "startChar": 0,
