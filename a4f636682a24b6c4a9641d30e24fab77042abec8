@@ -313,6 +313,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "f51886d4_30e8ebaa",
+        "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-30T21:40:54Z",
+      "side": 1,
+      "message": "Thanks Mohan. I filed https://github.com/KhronosGroup/glslang/issues/2441 to try and get this resolved upstream. This isn\u0027t something we should have to work around. We can land this if needed. Ideally we can revert it and get the SPIR-V we want out of glslang without too much hassle.",
+      "parentUuid": "175bca96_5cc22b90",
+      "range": {
+        "startLine": 186,
+        "startChar": 3,
+        "endLine": 186,
+        "endChar": 86
+      },
+      "revId": "a4f636682a24b6c4a9641d30e24fab77042abec8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "c846e699_524e00df",
         "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
         "patchSetId": 1
