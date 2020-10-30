@@ -35,6 +35,23 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a2da7ae9_aebce01d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-10-30T14:31:00Z",
+      "side": 1,
+      "message": "LGTM with Jamie\u0027s comment addressed. Thanks for the fix!",
+      "revId": "376c0abffc56661d1f5637a90472fb247c88bf91",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "bdd36ad4_ef001427",
