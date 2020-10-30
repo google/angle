@@ -4231,12 +4231,7 @@ angle::Result ContextVk::updateActiveTextures(const gl::Context *context)
             ASSERT(!mState.isDepthWriteEnabled());
 
             // Special handling for deferred clears.
-            if (mDrawFramebuffer->hasDeferredClears())
-            {
-                gl::Rectangle scissoredRenderArea =
-                    mDrawFramebuffer->getRotatedScissoredRenderArea(this);
-                ANGLE_TRY(mDrawFramebuffer->flushDeferredClears(this, scissoredRenderArea));
-            }
+            ANGLE_TRY(mDrawFramebuffer->flushDeferredClears(this));
 
             if (hasStartedRenderPass())
             {

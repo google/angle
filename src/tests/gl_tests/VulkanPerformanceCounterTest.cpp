@@ -1591,6 +1591,79 @@ TEST_P(VulkanPerformanceCounterTest, MaskedClearDoesNotBreakRenderPass)
     EXPECT_PIXEL_COLOR_EQ(kSize / 2, kSize / 2, GLColor::blue);
 }
 
+// Tests that clear followed by scissored draw uses loadOp to clear.
+TEST_P(VulkanPerformanceCounterTest, ClearThenScissoredDraw)
+{
+    const rx::vk::PerfCounters &counters = hackANGLE();
+
+    uint32_t expectedRenderPassCount = counters.renderPasses + 1;
+    uint32_t expectedDepthClears     = counters.depthClears + 1;
+    uint32_t expectedStencilClears   = counters.stencilClears + 1;
+
+    constexpr GLsizei kSize = 64;
+
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    GLRenderbuffer renderbuffer;
+    glBindRenderbuffer(GL_RENDERBUFFER, renderbuffer);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, kSize, kSize);
+
+    GLFramebuffer framebuffer;
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER,
+                              renderbuffer);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    ASSERT_GL_NO_ERROR();
+
+    // Clear depth/stencil
+    glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+    glClearDepthf(1.0f);
+    glClearStencil(0x55);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
+    // Issue a scissored draw call, expecting depth/stencil to be 1.0 and 0x55.
+    glViewport(0, 0, kSize, kSize);
+    glScissor(0, 0, kSize / 2, kSize);
+    glEnable(GL_SCISSOR_TEST);
+
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
+
+    glEnable(GL_STENCIL_TEST);
+    glStencilFunc(GL_EQUAL, 0x55, 0xFF);
+    glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+    glStencilMask(0xFF);
+
+    ANGLE_GL_PROGRAM(drawGreen, essl1_shaders::vs::Passthrough(), essl1_shaders::fs::Green());
+    drawQuad(drawGreen, essl1_shaders::PositionAttrib(), 0.95f);
+    ASSERT_GL_NO_ERROR();
+
+    // Break the render pass.
+    GLTexture copyTex;
+    glBindTexture(GL_TEXTURE_2D, copyTex);
+    glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 0, 0, kSize, kSize, 0);
+    ASSERT_GL_NO_ERROR();
+
+    // Make sure a single render pass was used and depth/stencil clear used loadOp=CLEAR.
+    EXPECT_EQ(expectedRenderPassCount, counters.renderPasses);
+    EXPECT_EQ(expectedDepthClears, counters.depthClears);
+    EXPECT_EQ(expectedStencilClears, counters.stencilClears);
+
+    // Verify correctness.
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+    EXPECT_PIXEL_COLOR_EQ(kSize / 2 - 1, 0, GLColor::green);
+    EXPECT_PIXEL_COLOR_EQ(0, kSize - 1, GLColor::green);
+    EXPECT_PIXEL_COLOR_EQ(kSize / 2 - 1, kSize - 1, GLColor::green);
+
+    EXPECT_PIXEL_COLOR_EQ(kSize / 2, 0, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(kSize - 1, 0, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(kSize / 2, kSize - 1, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(kSize - 1, kSize - 1, GLColor::red);
+}
+
 // Tests that scissored clears don't break the RP.
 TEST_P(VulkanPerformanceCounterTest, ScissoredClearDoesNotBreakRenderPass)
 {

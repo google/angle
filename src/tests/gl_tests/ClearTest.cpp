@@ -2393,6 +2393,38 @@ TEST_P(ClearTest, ScissoredClearThenNonScissoredDraw)
     EXPECT_PIXEL_COLOR_EQ(kSize - 1, kSize - 1, GLColor::cyan);
 }
 
+// Test that clear followed by a scissored masked clear works.
+TEST_P(ClearTest, ClearThenScissoredMaskedClear)
+{
+    constexpr GLsizei kSize = 16;
+
+    // Setup framebuffer
+    GLTexture color;
+    glBindTexture(GL_TEXTURE_2D, color);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    GLFramebuffer fb;
+    glBindFramebuffer(GL_FRAMEBUFFER, fb);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color, 0);
+    EXPECT_GL_NO_ERROR();
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    // Clear to red.
+    glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    // Mask red and clear to green with a scissor
+    glColorMask(GL_FALSE, GL_TRUE, GL_TRUE, GL_TRUE);
+    glScissor(0, 0, kSize / 2, kSize);
+    glEnable(GL_SCISSOR_TEST);
+    glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    // Verify that the left half is yellow, and the right half is red.
+    EXPECT_PIXEL_RECT_EQ(0, 0, kSize / 2, kSize, GLColor::yellow);
+    EXPECT_PIXEL_RECT_EQ(kSize / 2, 0, kSize / 2, kSize, GLColor::red);
+}
+
 #ifdef Bool
 // X11 craziness.
 #    undef Bool

@@ -116,7 +116,7 @@ class FramebufferVk : public FramebufferImpl
     RenderTargetVk *getColorReadRenderTarget() const;
 
     angle::Result startNewRenderPass(ContextVk *contextVk,
-                                     const gl::Rectangle &renderArea,
+                                     const gl::Rectangle &scissoredRenderArea,
                                      vk::CommandBuffer **commandBufferOut);
 
     RenderTargetVk *getFirstRenderTarget() const;
@@ -129,7 +129,7 @@ class FramebufferVk : public FramebufferImpl
                                  const vk::ImageView *resolveImageViewIn);
 
     bool hasDeferredClears() const { return !mDeferredClears.empty(); }
-    angle::Result flushDeferredClears(ContextVk *contextVk, const gl::Rectangle &renderArea);
+    angle::Result flushDeferredClears(ContextVk *contextVk);
     void setReadOnlyDepthFeedbackLoopMode(bool readOnlyDepthFeedbackModeEnabled)
     {
         mReadOnlyDepthFeedbackLoopMode = readOnlyDepthFeedbackModeEnabled;
