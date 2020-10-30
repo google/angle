@@ -62,6 +62,30 @@
       },
       "revId": "cdd89b5b57d344f936b21dedc64819b97f8728e9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2c152d89_c3e5ae12",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 2404,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-30T22:34:29Z",
+      "side": 1,
+      "message": "+1",
+      "parentUuid": "671bc580_f2ebe10f",
+      "range": {
+        "startLine": 2404,
+        "startChar": 19,
+        "endLine": 2404,
+        "endChar": 39
+      },
+      "revId": "cdd89b5b57d344f936b21dedc64819b97f8728e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
