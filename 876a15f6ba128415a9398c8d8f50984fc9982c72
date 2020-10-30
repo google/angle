@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "80190b86_32ab7f10",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2987,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-30T21:46:26Z",
+      "side": 1,
+      "message": "I don\u0027t know if other functions are passing a gl::State, but this is the same as mState. So please use mState. Also it seems you don\u0027t need to pass rasterizationSamples either. Same with the above method.",
+      "range": {
+        "startLine": 2986,
+        "startChar": 43,
+        "endLine": 2987,
+        "endChar": 78
+      },
+      "revId": "876a15f6ba128415a9398c8d8f50984fc9982c72",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5b47c629_210f1a1d",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2991,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-30T21:46:26Z",
+      "side": 1,
+      "message": "Is this just an optimization? Maybe just a short comment that it\u0027s not a correctness change.",
+      "range": {
+        "startLine": 2991,
+        "startChar": 4,
+        "endLine": 2991,
+        "endChar": 88
+      },
+      "revId": "876a15f6ba128415a9398c8d8f50984fc9982c72",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
