@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1b6597e7_6bc89023",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 12
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2020-10-30T14:27:15Z",
+      "side": 1,
+      "message": "LGTM",
+      "revId": "cdd89b5b57d344f936b21dedc64819b97f8728e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "213a470f_c9cf1b04",
+        "filename": "src/compiler/translator/ResourcesHLSL.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2020-10-30T14:27:15Z",
+      "side": 1,
+      "message": "Needs a break after this switch and maybe a default: UNREACHABLE(); in each switch",
+      "range": {
+        "startLine": 115,
+        "startChar": 12,
+        "endLine": 115,
+        "endChar": 13
+      },
+      "revId": "cdd89b5b57d344f936b21dedc64819b97f8728e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "671bc580_f2ebe10f",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 2404,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2020-10-30T14:27:15Z",
+      "side": 1,
+      "message": "Can you put the ANGLE_ENABLE_WINDOWS_UWP check into IsWindows10OrGreater?",
+      "range": {
+        "startLine": 2404,
+        "startChar": 19,
+        "endLine": 2404,
+        "endChar": 39
+      },
+      "revId": "cdd89b5b57d344f936b21dedc64819b97f8728e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
