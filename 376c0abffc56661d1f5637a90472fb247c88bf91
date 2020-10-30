@@ -56,6 +56,29 @@
       },
       "revId": "376c0abffc56661d1f5637a90472fb247c88bf91",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7426d4d6_35eb50fd",
+        "filename": "src/tests/gl_tests/ProgramInterfaceTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 551,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-30T12:57:48Z",
+      "side": 1,
+      "message": "nit: you could technically now remove this suppression (and the same one in the other test)",
+      "range": {
+        "startLine": 549,
+        "startChar": 0,
+        "endLine": 551,
+        "endChar": 34
+      },
+      "revId": "376c0abffc56661d1f5637a90472fb247c88bf91",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
