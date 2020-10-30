@@ -348,7 +348,8 @@ angle::Result FramebufferVk::invalidate(const gl::Context *context,
 {
     ContextVk *contextVk = vk::GetImpl(context);
 
-    ANGLE_TRY(invalidateImpl(contextVk, count, attachments, false));
+    ANGLE_TRY(invalidateImpl(contextVk, count, attachments, false,
+                             getRotatedCompleteRenderArea(contextVk)));
     return angle::Result::Continue;
 }
 
@@ -367,10 +368,12 @@ angle::Result FramebufferVk::invalidateSub(const gl::Context *context,
                     &rotatedInvalidateArea);
 
     // If invalidateSub() covers the whole framebuffer area, make it behave as invalidate().
+    // The invalidate area is clipped to the render area for use inside invalidateImpl.
     const gl::Rectangle completeRenderArea = getRotatedCompleteRenderArea(contextVk);
-    if (rotatedInvalidateArea.encloses(completeRenderArea))
+    if (ClipRectangle(rotatedInvalidateArea, completeRenderArea, &rotatedInvalidateArea) &&
+        rotatedInvalidateArea == completeRenderArea)
     {
-        return invalidateImpl(contextVk, count, attachments, false);
+        return invalidate(context, count, attachments);
     }
 
     // If there are deferred clears, flush them.  syncState may have accumulated deferred clears,
@@ -385,7 +388,7 @@ angle::Result FramebufferVk::invalidateSub(const gl::Context *context,
         // Because the render pass's render area is within the invalidated area, it is fine for
         // invalidateImpl() to use a storeOp of DONT_CARE (i.e. fine to not store the contents of
         // the invalidated area).
-        ANGLE_TRY(invalidateImpl(contextVk, count, attachments, true));
+        ANGLE_TRY(invalidateImpl(contextVk, count, attachments, true, rotatedInvalidateArea));
     }
     else
     {
@@ -1403,7 +1406,8 @@ bool FramebufferVk::checkStatus(const gl::Context *context) const
 angle::Result FramebufferVk::invalidateImpl(ContextVk *contextVk,
                                             size_t count,
                                             const GLenum *attachments,
-                                            bool isSubInvalidate)
+                                            bool isSubInvalidate,
+                                            const gl::Rectangle &invalidateArea)
 {
     gl::DrawBufferMask invalidateColorBuffers;
     bool invalidateDepthBuffer   = false;
@@ -1493,13 +1497,13 @@ angle::Result FramebufferVk::invalidateImpl(ContextVk *contextVk,
             if (invalidateDepthBuffer)
             {
                 contextVk->getStartedRenderPassCommands().invalidateRenderPassDepthAttachment(
-                    dsState);
+                    dsState, invalidateArea);
             }
 
             if (invalidateStencilBuffer)
             {
                 contextVk->getStartedRenderPassCommands().invalidateRenderPassStencilAttachment(
-                    dsState);
+                    dsState, invalidateArea);
             }
         }
         if (invalidateColorBuffers.any())
@@ -1780,7 +1784,7 @@ angle::Result FramebufferVk::syncState(const gl::Context *context,
     mFramebuffer = nullptr;
 
     // Notify the ContextVk to update the pipeline desc.
-    ANGLE_TRY(contextVk->onFramebufferChange(this));
+    contextVk->onFramebufferChange(this);
 
     return angle::Result::Continue;
 }
@@ -2150,6 +2154,11 @@ angle::Result FramebufferVk::clearWithCommand(ContextVk *contextVk,
                                               vk::CommandBufferHelper *renderpassCommands,
                                               const gl::Rectangle &scissoredRenderArea)
 {
+    // Clear is not affected by viewport, so ContextVk::updateScissor may have decided on a smaller
+    // render area.  Grow the render area to the full framebuffer size as this clear path is taken
+    // when not scissored.
+    contextVk->getStartedRenderPassCommands().growRenderArea(contextVk, scissoredRenderArea);
+
     gl::AttachmentVector<VkClearAttachment> attachments;
 
     // Go through deferred clears and add them to the list of attachments to clear.

@@ -2691,8 +2691,10 @@ void ContextVk::optimizeRenderPassForPresent(VkFramebuffer framebufferHandle)
     {
         // Change depthstencil attachment storeOp to DONT_CARE
         const gl::DepthStencilState &dsState = mState.getDepthStencilState();
-        mRenderPassCommands->invalidateRenderPassStencilAttachment(dsState);
-        mRenderPassCommands->invalidateRenderPassDepthAttachment(dsState);
+        mRenderPassCommands->invalidateRenderPassStencilAttachment(
+            dsState, mRenderPassCommands->getRenderArea());
+        mRenderPassCommands->invalidateRenderPassDepthAttachment(
+            dsState, mRenderPassCommands->getRenderArea());
         // Mark content as invalid so that we will not load them in next renderpass
         depthStencilRenderTarget->invalidateEntireContent(this);
         depthStencilRenderTarget->invalidateEntireStencilContent(this);
@@ -2931,7 +2933,7 @@ void ContextVk::updateDepthRange(float nearPlane, float farPlane)
     mGraphicsPipelineDesc->updateDepthRange(&mGraphicsPipelineTransition, nearPlane, farPlane);
 }
 
-angle::Result ContextVk::updateScissorImpl(const gl::State &glState, bool shouldEndRenderPass)
+void ContextVk::updateScissor(const gl::State &glState)
 {
     FramebufferVk *framebufferVk = vk::GetImpl(glState.getDrawFramebuffer());
     gl::Rectangle renderArea     = framebufferVk->getNonRotatedCompleteRenderArea();
@@ -2949,26 +2951,15 @@ angle::Result ContextVk::updateScissorImpl(const gl::State &glState, bool should
     mGraphicsPipelineDesc->updateScissor(&mGraphicsPipelineTransition,
                                          gl_vk::GetRect(rotatedScissoredArea));
 
-    // If the scissor has grown beyond the previous scissoredRenderArea, make sure the render pass
-    // is restarted.  Otherwise, we can continue using the same renderpass area.
-    //
-    // Without a scissor, the render pass area covers the whole of the framebuffer.  With a
-    // scissored clear, the render pass area could be smaller than the framebuffer size.  When the
-    // scissor changes, if the scissor area is completely encompassed by the render pass area, it's
-    // possible to continue using the same render pass.  However, if the current render pass area
-    // is too small, we need to start a new one.  The latter can happen if a scissored clear starts
-    // a render pass, the scissor is disabled and a draw call is issued to affect the whole
-    // framebuffer.
-    gl::Rectangle scissoredRenderArea = framebufferVk->getRotatedScissoredRenderArea(this);
-    if (shouldEndRenderPass && mRenderPassCommands->started())
+    // If the scissor has grown beyond the previous scissoredRenderArea, grow the render pass render
+    // area.  The only undesirable effect this may have is that if the render area does not cover a
+    // previously invalidated area, that invalidate will have to be discarded.
+    if (mRenderPassCommandBuffer &&
+        !mRenderPassCommands->getRenderArea().encloses(rotatedScissoredArea))
     {
-        if (!mRenderPassCommands->getRenderArea().encloses(scissoredRenderArea))
-        {
-            ANGLE_TRY(flushCommandsAndEndRenderPass());
-        }
+        ASSERT(mRenderPassCommands->started());
+        mRenderPassCommands->growRenderArea(this, rotatedScissoredArea);
     }
-
-    return angle::Result::Continue;
 }
 
 void ContextVk::invalidateProgramBindingHelper(const gl::State &glState)
@@ -3051,7 +3042,7 @@ angle::Result ContextVk::syncState(const gl::Context *context,
         {
             case gl::State::DIRTY_BIT_SCISSOR_TEST_ENABLED:
             case gl::State::DIRTY_BIT_SCISSOR:
-                ANGLE_TRY(updateScissorAndEndRenderPass(glState));
+                updateScissor(glState);
                 break;
             case gl::State::DIRTY_BIT_VIEWPORT:
             {
@@ -3059,7 +3050,7 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 updateViewport(framebufferVk, glState.getViewport(), glState.getNearPlane(),
                                glState.getFarPlane(), isViewportFlipEnabledForDrawFBO());
                 // Update the scissor, which will be constrained to the viewport
-                ANGLE_TRY(updateScissorAndEndRenderPass(glState));
+                updateScissor(glState);
                 break;
             }
             case gl::State::DIRTY_BIT_DEPTH_RANGE:
@@ -3226,8 +3217,10 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 // FramebufferVk::syncState signals that we should start a new command buffer.
                 // But changing the binding can skip FramebufferVk::syncState if the Framebuffer
                 // has no dirty bits. Thus we need to explicitly clear the current command
-                // buffer to ensure we start a new one. Note that we always start a new command
-                // buffer because we currently can only support one open RenderPass at a time.
+                // buffer to ensure we start a new one. We don't actually close the render pass here
+                // as some optimizations in non-draw commands require the render pass to remain
+                // open, such as invalidate or blit. Note that we always start a new command buffer
+                // because we currently can only support one open RenderPass at a time.
                 onRenderPassFinished();
 
                 gl::Framebuffer *drawFramebuffer = glState.getDrawFramebuffer();
@@ -3244,7 +3237,7 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 mGraphicsPipelineDesc->updateFrontFace(&mGraphicsPipelineTransition,
                                                        glState.getRasterizerState(),
                                                        isViewportFlipEnabledForDrawFBO());
-                ANGLE_TRY(updateScissor(glState));
+                updateScissor(glState);
                 const gl::DepthStencilState depthStencilState = glState.getDepthStencilState();
                 mGraphicsPipelineDesc->updateDepthTestEnabled(&mGraphicsPipelineTransition,
                                                               depthStencilState, drawFramebuffer);
@@ -3630,17 +3623,13 @@ void ContextVk::invalidateDriverUniforms()
     mComputeDirtyBits.set(DIRTY_BIT_DRIVER_UNIFORMS_BINDING);
 }
 
-angle::Result ContextVk::onFramebufferChange(FramebufferVk *framebufferVk)
+void ContextVk::onFramebufferChange(FramebufferVk *framebufferVk)
 {
     // This is called from FramebufferVk::syncState.  Skip these updates if the framebuffer being
-    // synced is:
-    //
-    // - The read framebuffer (which is not equal the draw framebuffer)
-    // - A newly bound draw framebuffer.  ContextVk::syncState which follows will update all these
-    //   states, so this is redundant.
-    if (framebufferVk != mDrawFramebuffer)
+    // synced is the read framebuffer (which is not equal the draw framebuffer).
+    if (framebufferVk != vk::GetImpl(mState.getDrawFramebuffer()))
     {
-        return angle::Result::Continue;
+        return;
     }
 
     // Ensure that the pipeline description is updated.
@@ -3652,11 +3641,9 @@ angle::Result ContextVk::onFramebufferChange(FramebufferVk *framebufferVk)
     }
 
     // Update scissor.
-    ANGLE_TRY(updateScissor(mState));
+    updateScissor(mState);
 
     onDrawFramebufferRenderPassDescChange(framebufferVk);
-
-    return angle::Result::Continue;
 }
 
 void ContextVk::onDrawFramebufferRenderPassDescChange(FramebufferVk *framebufferVk)

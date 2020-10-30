@@ -593,6 +593,18 @@ bool IsAnySubresourceContentDefined(const gl::TexLevelArray<angle::BitSet8<8>> &
     }
     return false;
 }
+
+void ExtendRenderPassInvalidateArea(const gl::Rectangle &invalidateArea, gl::Rectangle *out)
+{
+    if (out->empty())
+    {
+        *out = invalidateArea;
+    }
+    else
+    {
+        gl::ExtendRectangle(*out, invalidateArea, out);
+    }
+}
 }  // anonymous namespace
 
 // This is an arbitrary max. We can change this later if necessary.
@@ -902,6 +914,7 @@ void CommandBufferHelper::restoreDepthContent()
         ASSERT(mDepthStencilImage->valid());
         mDepthStencilImage->restoreSubresourceContent(mDepthStencilLevelIndex,
                                                       mDepthStencilLayerIndex);
+        mDepthInvalidateArea = gl::Rectangle();
     }
 }
 
@@ -913,6 +926,7 @@ void CommandBufferHelper::restoreStencilContent()
         ASSERT(mDepthStencilImage->valid());
         mDepthStencilImage->restoreSubresourceStencilContent(mDepthStencilLevelIndex,
                                                              mDepthStencilLayerIndex);
+        mStencilInvalidateArea = gl::Rectangle();
     }
 }
 
@@ -1153,6 +1167,47 @@ void CommandBufferHelper::endTransformFeedback()
     mValidTransformFeedbackBufferCount = 0;
 }
 
+void CommandBufferHelper::invalidateRenderPassColorAttachment(PackedAttachmentIndex attachmentIndex)
+{
+    ASSERT(mIsRenderPassCommandBuffer);
+    SetBitField(mAttachmentOps[attachmentIndex].storeOp, vk::RenderPassStoreOp::DontCare);
+    mAttachmentOps[attachmentIndex].isInvalidated = true;
+}
+
+void CommandBufferHelper::invalidateRenderPassDepthAttachment(const gl::DepthStencilState &dsState,
+                                                              const gl::Rectangle &invalidateArea)
+{
+    ASSERT(mIsRenderPassCommandBuffer);
+    // Keep track of the size of commands in the command buffer.  If the size grows in the
+    // future, that implies that drawing occured since invalidated.
+    mDepthCmdSizeInvalidated = mCommandBuffer.getCommandSize();
+
+    // Also track the size if the attachment is currently disabled.
+    const bool isDepthWriteEnabled = dsState.depthTest && dsState.depthMask;
+    mDepthCmdSizeDisabled = isDepthWriteEnabled ? kInfiniteCmdSize : mDepthCmdSizeInvalidated;
+
+    // Set/extend the invalidate area.
+    ExtendRenderPassInvalidateArea(invalidateArea, &mDepthInvalidateArea);
+}
+
+void CommandBufferHelper::invalidateRenderPassStencilAttachment(
+    const gl::DepthStencilState &dsState,
+    const gl::Rectangle &invalidateArea)
+{
+    ASSERT(mIsRenderPassCommandBuffer);
+    // Keep track of the size of commands in the command buffer.  If the size grows in the
+    // future, that implies that drawing occured since invalidated.
+    mStencilCmdSizeInvalidated = mCommandBuffer.getCommandSize();
+
+    // Also track the size if the attachment is currently disabled.
+    const bool isStencilWriteEnabled =
+        dsState.stencilTest && (!dsState.isStencilNoOp() || !dsState.isStencilBackNoOp());
+    mStencilCmdSizeDisabled = isStencilWriteEnabled ? kInfiniteCmdSize : mStencilCmdSizeInvalidated;
+
+    // Set/extend the invalidate area.
+    ExtendRenderPassInvalidateArea(invalidateArea, &mStencilInvalidateArea);
+}
+
 angle::Result CommandBufferHelper::getRenderPassWithOps(ContextVk *contextVk,
                                                         RenderPass **renderPass)
 {
@@ -1342,6 +1397,8 @@ void CommandBufferHelper::reset()
         mStencilCmdSizeInvalidated         = kInfiniteCmdSize;
         mStencilCmdSizeDisabled            = kInfiniteCmdSize;
         mDepthStencilAttachmentIndex       = kAttachmentIndexInvalid;
+        mDepthInvalidateArea               = gl::Rectangle();
+        mStencilInvalidateArea             = gl::Rectangle();
         mRenderPassUsedImages.clear();
         mDepthStencilImage        = nullptr;
         mDepthStencilResolveImage = nullptr;
@@ -1408,6 +1465,32 @@ void CommandBufferHelper::updateRenderPassDepthStencilClear(VkImageAspectFlags a
 
     // Bypass special D/S handling. This clear values array stores values packed.
     mClearValues.storeNoDepthStencil(mDepthStencilAttachmentIndex, combinedClearValue);
+}
+
+void CommandBufferHelper::growRenderArea(ContextVk *contextVk, const gl::Rectangle &newRenderArea)
+{
+    ASSERT(mIsRenderPassCommandBuffer);
+
+    // The render area is grown such that it covers both the previous and the new render areas.
+    gl::GetEnclosingRectangle(mRenderArea, newRenderArea, &mRenderArea);
+
+    // Remove invalidates that are no longer applicable.
+    if (!mDepthInvalidateArea.empty() && !mDepthInvalidateArea.encloses(mRenderArea))
+    {
+        ANGLE_PERF_WARNING(
+            contextVk->getDebug(), GL_DEBUG_SEVERITY_LOW,
+            "InvalidateSubFramebuffer for depth discarded due to increased scissor region");
+        mDepthInvalidateArea     = gl::Rectangle();
+        mDepthCmdSizeInvalidated = kInfiniteCmdSize;
+    }
+    if (!mStencilInvalidateArea.empty() && !mStencilInvalidateArea.encloses(mRenderArea))
+    {
+        ANGLE_PERF_WARNING(
+            contextVk->getDebug(), GL_DEBUG_SEVERITY_LOW,
+            "InvalidateSubFramebuffer for stencil discarded due to increased scissor region");
+        mStencilInvalidateArea     = gl::Rectangle();
+        mStencilCmdSizeInvalidated = kInfiniteCmdSize;
+    }
 }
 
 // DynamicBuffer implementation.

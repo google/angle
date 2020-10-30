@@ -72,6 +72,8 @@ struct Rectangle
 
     bool encloses(const gl::Rectangle &inside) const;
 
+    bool empty() const { return width == 0 && height == 0; }
+
     int x;
     int y;
     int width;
@@ -81,7 +83,27 @@ struct Rectangle
 bool operator==(const Rectangle &a, const Rectangle &b);
 bool operator!=(const Rectangle &a, const Rectangle &b);
 
+// Calculate the intersection of two rectangles.  Returns false if the intersection is empty.
 bool ClipRectangle(const Rectangle &source, const Rectangle &clip, Rectangle *intersection);
+// Calculate the smallest rectangle that covers both rectangles.  This rectangle may cover areas
+// not covered by the two rectangles, for example in this situation:
+//
+//   +--+        +----+
+//   | ++-+  ->  |    |
+//   +-++ |      |    |
+//     +--+      +----+
+//
+void GetEnclosingRectangle(const Rectangle &rect1, const Rectangle &rect2, Rectangle *rectUnion);
+// Extend the source rectangle to cover parts (or all of) the second rectangle, in such a way that
+// no area is covered that isn't covered by both rectangles.  For example:
+//
+//             +--+        +--+
+//  source --> |  |        |  |
+//            ++--+-+  ->  |  |
+//            |+--+ |      |  |
+//            +-----+      +--+
+//
+void ExtendRectangle(const Rectangle &source, const Rectangle &extend, Rectangle *extended);
 
 struct Offset
 {

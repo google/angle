@@ -2095,10 +2095,6 @@ TEST_P(ClearTestES3, ClearThenMixedMaskedClear)
 {
     constexpr GLsizei kSize = 16;
 
-    GLint maxDrawBuffers = 0;
-    glGetIntegerv(GL_MAX_DRAW_BUFFERS, &maxDrawBuffers);
-    ASSERT_GE(maxDrawBuffers, 4);
-
     // Setup framebuffer.
     GLRenderbuffer color;
     glBindRenderbuffer(GL_RENDERBUFFER, color);
@@ -2169,10 +2165,6 @@ TEST_P(ClearTestES3, DrawClearThenDrawWithoutStateChange)
 {
     swapBuffers();
     constexpr GLsizei kSize = 16;
-
-    GLint maxDrawBuffers = 0;
-    glGetIntegerv(GL_MAX_DRAW_BUFFERS, &maxDrawBuffers);
-    ASSERT_GE(maxDrawBuffers, 4);
 
     // Setup framebuffer.
     GLRenderbuffer color;
@@ -2351,6 +2343,54 @@ TEST_P(ClearTestES3, ClearBufferfiNoStencilAttachment)
 
     // Verify depth is cleared correctly.
     verifyDepth(0.5f, kSize);
+}
+
+// Test that scissored clear followed by non-scissored draw works.  Ensures that when scissor size
+// is expanded, the clear operation remains limited to the scissor region.  Written to catch
+// potential future bugs if loadOp=CLEAR is used in the Vulkan backend for a small render pass and
+// then the render area is mistakenly enlarged.
+TEST_P(ClearTest, ScissoredClearThenNonScissoredDraw)
+{
+    constexpr GLsizei kSize = 16;
+    const std::vector<GLColor> kInitialData(kSize * kSize, GLColor::red);
+
+    // Setup framebuffer.  Initialize color with red.
+    GLTexture color;
+    glBindTexture(GL_TEXTURE_2D, color);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 kInitialData.data());
+
+    GLFramebuffer fb;
+    glBindFramebuffer(GL_FRAMEBUFFER, fb);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color, 0);
+    EXPECT_GL_NO_ERROR();
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    // Issue a scissored clear to green.
+    glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
+    glScissor(kSize / 2, 0, kSize / 2, kSize);
+    glEnable(GL_SCISSOR_TEST);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    // Expand the scissor and blend blue into the framebuffer.
+    glScissor(0, 0, kSize, kSize);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_ONE, GL_ONE);
+
+    ANGLE_GL_PROGRAM(drawBlue, essl1_shaders::vs::Simple(), essl1_shaders::fs::Blue());
+    drawQuad(drawBlue, essl1_shaders::PositionAttrib(), 0.5f);
+    ASSERT_GL_NO_ERROR();
+
+    // Verify that the left half is magenta, and the right half is cyan.
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::magenta);
+    EXPECT_PIXEL_COLOR_EQ(kSize / 2 - 1, 0, GLColor::magenta);
+    EXPECT_PIXEL_COLOR_EQ(0, kSize - 1, GLColor::magenta);
+    EXPECT_PIXEL_COLOR_EQ(kSize / 2 - 1, kSize - 1, GLColor::magenta);
+
+    EXPECT_PIXEL_COLOR_EQ(kSize / 2, 0, GLColor::cyan);
+    EXPECT_PIXEL_COLOR_EQ(kSize / 2, kSize - 1, GLColor::cyan);
+    EXPECT_PIXEL_COLOR_EQ(kSize - 1, 0, GLColor::cyan);
+    EXPECT_PIXEL_COLOR_EQ(kSize - 1, kSize - 1, GLColor::cyan);
 }
 
 #ifdef Bool

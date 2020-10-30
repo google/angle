@@ -198,7 +198,8 @@ class FramebufferVk : public FramebufferImpl
     angle::Result invalidateImpl(ContextVk *contextVk,
                                  size_t count,
                                  const GLenum *attachments,
-                                 bool isSubInvalidate);
+                                 bool isSubInvalidate,
+                                 const gl::Rectangle &invalidateArea);
     // Release all FramebufferVk objects in the cache and clear cache
     void clearCache(ContextVk *contextVk);
     angle::Result updateDepthStencilAttachment(const gl::Context *context, bool deferClears);

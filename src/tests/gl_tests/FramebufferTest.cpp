@@ -395,6 +395,8 @@ class FramebufferTest_ES3 : public ANGLETest
         setConfigGreenBits(8);
         setConfigBlueBits(8);
         setConfigAlphaBits(8);
+        setConfigDepthBits(24);
+        setConfigStencilBits(8);
     }
 
     static constexpr GLsizei kWidth  = 64;
@@ -473,6 +475,71 @@ TEST_P(FramebufferTest_ES3, SubInvalidatePartial)
     EXPECT_PIXEL_COLOR_EQ(kWidth - 1, kWidth, GLColor::red);
     EXPECT_PIXEL_COLOR_EQ(0, kHeight - 1, GLColor::red);
     EXPECT_PIXEL_COLOR_EQ(kWidth - 1, kHeight - 1, GLColor::red);
+}
+
+// Test that a scissored draw followed by subinvalidate followed by a non-scissored draw retains the
+// part that is not invalidated.  Uses swapped width/height for invalidate which results in a
+// partial invalidate, but also prevents bugs with Vulkan pre-rotation.
+TEST_P(FramebufferTest_ES3, ScissoredDrawSubInvalidateThenNonScissoredDraw)
+{
+    swapBuffers();
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+    ANGLE_GL_PROGRAM(drawColor, essl1_shaders::vs::Simple(), essl1_shaders::fs::UniformColor());
+    glUseProgram(drawColor);
+    GLint colorUniformLocation =
+        glGetUniformLocation(drawColor, angle::essl1_shaders::ColorUniform());
+    ASSERT_NE(colorUniformLocation, -1);
+
+    // Clear color to red and the depth/stencil buffer to 1.0 and 0x55
+    glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+    glClearDepthf(1);
+    glClearStencil(0x55);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+    EXPECT_GL_NO_ERROR();
+
+    // Break rendering so the following draw call starts rendering with a scissored area.
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    // Issue a scissored draw call that changes depth to 0.5 and stencil 0x3C
+    glScissor(0, 0, kHeight, kWidth);
+    glEnable(GL_SCISSOR_TEST);
+
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_ALWAYS);
+
+    glEnable(GL_STENCIL_TEST);
+    glStencilFunc(GL_ALWAYS, 0x3C, 0xFF);
+    glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);
+    glStencilMask(0xFF);
+
+    glUniform4f(colorUniformLocation, 0.0f, 1.0f, 0.0f, 1.0f);
+    drawQuad(drawColor, essl1_shaders::PositionAttrib(), 0);
+
+    // Invalidate the draw region (half of the framebuffer using swapped dimensions).
+    std::array<GLenum, 3> attachments = {GL_COLOR, GL_DEPTH, GL_STENCIL};
+    glInvalidateSubFramebuffer(GL_DRAW_FRAMEBUFFER, 3, attachments.data(), 0, 0, kHeight, kWidth);
+    EXPECT_GL_NO_ERROR();
+
+    // Match the scissor to the framebuffer size and issue a draw call that blends blue, and expects
+    // depth to be 1 and stencil to be 0x55.  This is only valid for the half that was not
+    // invalidated.
+    glScissor(0, 0, kWidth, kHeight);
+    glDepthFunc(GL_LESS);
+    glStencilFunc(GL_EQUAL, 0x55, 0xFF);
+    glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_ONE, GL_ONE);
+    glUniform4f(colorUniformLocation, 0.0f, 0.0f, 1.0f, 1.0f);
+    drawQuad(drawColor, essl1_shaders::PositionAttrib(), 0.95f);
+    ASSERT_GL_NO_ERROR();
+
+    // Make sure the half that was not invalidated is correct.
+    EXPECT_PIXEL_COLOR_EQ(0, kWidth, GLColor::magenta);
+    EXPECT_PIXEL_COLOR_EQ(kWidth - 1, kWidth, GLColor::magenta);
+    EXPECT_PIXEL_COLOR_EQ(0, kHeight - 1, GLColor::magenta);
+    EXPECT_PIXEL_COLOR_EQ(kWidth - 1, kHeight - 1, GLColor::magenta);
 }
 
 // Test that the framebuffer state tracking robustly handles a depth-only attachment being set

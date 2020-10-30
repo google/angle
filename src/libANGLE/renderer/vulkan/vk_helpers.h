@@ -1017,38 +1017,11 @@ class CommandBufferHelper : angle::NonCopyable
 
     void endTransformFeedback();
 
-    void invalidateRenderPassColorAttachment(PackedAttachmentIndex attachmentIndex)
-    {
-        ASSERT(mIsRenderPassCommandBuffer);
-        SetBitField(mAttachmentOps[attachmentIndex].storeOp, vk::RenderPassStoreOp::DontCare);
-        mAttachmentOps[attachmentIndex].isInvalidated = true;
-    }
-
-    void invalidateRenderPassDepthAttachment(const gl::DepthStencilState &dsState)
-    {
-        ASSERT(mIsRenderPassCommandBuffer);
-        // Keep track of the size of commands in the command buffer.  If the size grows in the
-        // future, that implies that drawing occured since invalidated.
-        mDepthCmdSizeInvalidated = mCommandBuffer.getCommandSize();
-
-        // Also track the size if the attachment is currently disabled.
-        const bool isDepthWriteEnabled = dsState.depthTest && dsState.depthMask;
-        mDepthCmdSizeDisabled = isDepthWriteEnabled ? kInfiniteCmdSize : mDepthCmdSizeInvalidated;
-    }
-
-    void invalidateRenderPassStencilAttachment(const gl::DepthStencilState &dsState)
-    {
-        ASSERT(mIsRenderPassCommandBuffer);
-        // Keep track of the size of commands in the command buffer.  If the size grows in the
-        // future, that implies that drawing occured since invalidated.
-        mStencilCmdSizeInvalidated = mCommandBuffer.getCommandSize();
-
-        // Also track the size if the attachment is currently disabled.
-        const bool isStencilWriteEnabled =
-            dsState.stencilTest && (!dsState.isStencilNoOp() || !dsState.isStencilBackNoOp());
-        mStencilCmdSizeDisabled =
-            isStencilWriteEnabled ? kInfiniteCmdSize : mStencilCmdSizeInvalidated;
-    }
+    void invalidateRenderPassColorAttachment(PackedAttachmentIndex attachmentIndex);
+    void invalidateRenderPassDepthAttachment(const gl::DepthStencilState &dsState,
+                                             const gl::Rectangle &invalidateArea);
+    void invalidateRenderPassStencilAttachment(const gl::DepthStencilState &dsState,
+                                               const gl::Rectangle &invalidateArea);
 
     bool hasWriteAfterInvalidate(uint32_t cmdCountInvalidated, uint32_t cmdCountDisabled)
     {
@@ -1081,6 +1054,10 @@ class CommandBufferHelper : angle::NonCopyable
         ASSERT(mIsRenderPassCommandBuffer);
         return mRenderArea;
     }
+
+    // If render pass is started with a small render area due to a small scissor, and if a new
+    // larger scissor is specified, grow the render area to accomodate it.
+    void growRenderArea(ContextVk *contextVk, const gl::Rectangle &newRenderArea);
 
     void resumeTransformFeedback();
     void pauseTransformFeedback();
@@ -1176,6 +1153,8 @@ class CommandBufferHelper : angle::NonCopyable
     uint32_t mDepthCmdSizeDisabled;
     uint32_t mStencilCmdSizeInvalidated;
     uint32_t mStencilCmdSizeDisabled;
+    gl::Rectangle mDepthInvalidateArea;
+    gl::Rectangle mStencilInvalidateArea;
 
     // Keep track of the depth/stencil attachment index
     PackedAttachmentIndex mDepthStencilAttachmentIndex;
