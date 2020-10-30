@@ -556,6 +556,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "e6e54c57_99aa6f95",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 4257,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-30T23:24:41Z",
+      "side": 1,
+      "message": "nit: if you don\u0027t plan to implement this in 3593 please open a new bug to track this task. We have a policy that we should resolve all TODOs for a bug before closing it, and I\u0027d like us to be able to close the bug for this feature.",
+      "parentUuid": "0e7ce571_5a5b3570",
+      "range": {
+        "startLine": 4252,
+        "startChar": 0,
+        "endLine": 4257,
+        "endChar": 35
+      },
+      "revId": "90e28645c779afd9206e684e8ff05057ad3127ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "3da5d595_2085f6d2",
         "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
         "patchSetId": 12
@@ -789,6 +813,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "259f8e65_fe4d2598",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 2615,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-30T23:24:41Z",
+      "side": 1,
+      "message": "Bind is a very different function from Copy. Bind can generate a resource implicitly, Copy cannot. The  regression test to cover this bug is:\n\n1. in BindGeneratesResourceTest, make a 31 Context test permutation with bind generate disabled\n2. try to call this method with valid parameters \u0026 a Renderbuffer\n\nYou should see an error. Anyway the most important thing is that we fixed the bug.",
+      "parentUuid": "5144dd73_57a79bd9",
+      "range": {
+        "startLine": 2615,
+        "startChar": 14,
+        "endLine": 2615,
+        "endChar": 69
+      },
+      "revId": "90e28645c779afd9206e684e8ff05057ad3127ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "19e2e361_56b50b0c",
@@ -944,6 +992,30 @@
       "side": 1,
       "message": "The textures to be used must be Texture Complete. Being cube-complete is a prerequisite for that.\n\n\"INVALID_OPERATION is generated if either object is a texture and the texture is not complete (as defined in section 3.8.13)\"\n\nThis texture completeness check is done on line 2718.",
       "parentUuid": "776b91f7_021e4bf2",
+      "range": {
+        "startLine": 2694,
+        "startChar": 0,
+        "endLine": 2700,
+        "endChar": 9
+      },
+      "revId": "90e28645c779afd9206e684e8ff05057ad3127ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1784eb1a_4e5bb727",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 2700,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-30T23:24:41Z",
+      "side": 1,
+      "message": "nit: add an assert the texture is complete/cube complete if possible. (comment if not)",
+      "parentUuid": "71714a50_e0658d88",
       "range": {
         "startLine": 2694,
         "startChar": 0,
@@ -1686,6 +1758,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4d37c223_1769a509",
+        "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
+        "patchSetId": 12
+      },
+      "lineNbr": 276,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-30T23:24:41Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "46b2923a_09a3d314",
+      "range": {
+        "startLine": 276,
+        "startChar": 0,
+        "endLine": 276,
+        "endChar": 98
+      },
+      "revId": "90e28645c779afd9206e684e8ff05057ad3127ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0b9e69ae_63b08fb5",
@@ -1733,6 +1829,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f738733e_16a1897b",
+        "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
+        "patchSetId": 12
+      },
+      "lineNbr": 281,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-30T23:24:41Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "43942a2b_2243b689",
+      "range": {
+        "startLine": 281,
+        "startChar": 0,
+        "endLine": 281,
+        "endChar": 119
+      },
+      "revId": "90e28645c779afd9206e684e8ff05057ad3127ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "17f2136d_68014119",
@@ -1770,6 +1890,30 @@
       "side": 1,
       "message": "Similar to my comment on renderbuffers except I don\u0027t think these have regressed. The source/destination etc2 image verification (before the copy) fails.",
       "parentUuid": "17f2136d_68014119",
+      "range": {
+        "startLine": 292,
+        "startChar": 0,
+        "endLine": 292,
+        "endChar": 72
+      },
+      "revId": "90e28645c779afd9206e684e8ff05057ad3127ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a0ca6164_bb41e794",
+        "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
+        "patchSetId": 12
+      },
+      "lineNbr": 292,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-30T23:24:41Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "1a7bf1dd_746186a5",
       "range": {
         "startLine": 292,
         "startChar": 0,

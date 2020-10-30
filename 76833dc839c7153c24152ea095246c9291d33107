@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6a109aa8_92358c15",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 15
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-30T23:24:41Z",
+      "side": 1,
+      "message": "Thanks for filing the follow-up bugs. LGTM, few more comments/suggestions before landing.",
+      "revId": "76833dc839c7153c24152ea095246c9291d33107",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}

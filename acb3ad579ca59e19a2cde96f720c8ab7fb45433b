@@ -129,6 +129,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "cfe3a247_6d850f69",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 717,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-30T23:24:41Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "3d28ea01_375bc312",
+      "range": {
+        "startLine": 717,
+        "startChar": 22,
+        "endLine": 717,
+        "endChar": 34
+      },
+      "revId": "acb3ad579ca59e19a2cde96f720c8ab7fb45433b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f30ac960_b56fdc6f",
@@ -166,6 +190,30 @@
       "side": 1,
       "message": "It\u0027s mainly that the helper function ImageHelper::CopyImageSubData() will end up calling these two. ImageHelper::CopyImageSubData is exposed to TextureVk.cpp and RenderbufferVk.cpp\n\nThe call chain goes something like this:\nImageHelper::CopyImageSubData -\u003e CanCopyWithTransferForCopyImage() -\u003e CanCopyWithTransfer() -\u003e FormatHasNecessaryFeature()",
       "parentUuid": "f30ac960_b56fdc6f",
+      "range": {
+        "startLine": 622,
+        "startChar": 0,
+        "endLine": 648,
+        "endChar": 0
+      },
+      "revId": "acb3ad579ca59e19a2cde96f720c8ab7fb45433b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c496bf43_80987ec4",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 648,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-30T23:24:41Z",
+      "side": 1,
+      "message": "nit: please make these private to vk_helpers.cpp if they\u0027re not used in other files.",
+      "parentUuid": "24e36bc4_57c5eed2",
       "range": {
         "startLine": 622,
         "startChar": 0,
