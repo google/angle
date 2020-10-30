@@ -449,14 +449,6 @@ struct FeaturesVk : FeatureSetBase
                                         FeatureCategory::VulkanWorkarounds,
                                         "Force nearest mip filtering when sampling.", &members};
 
-    // Compress float32 vertices in static buffers to float16 at draw time. ANGLE is non-conformant
-    // if this feature is enabled.
-    angle::Feature compressVertexData = {"compress_vertex_data",
-                                         angle::FeatureCategory::VulkanWorkarounds,
-                                         "Compress vertex data to smaller data types when "
-                                         "possible. Using this feature makes ANGLE non-conformant.",
-                                         &members};
-
     // Qualcomm missynchronizes vkCmdClearAttachments in the middle of render pass.
     // https://issuetracker.google.com/166809097
     Feature preferDrawClearOverVkCmdClearAttachments = {

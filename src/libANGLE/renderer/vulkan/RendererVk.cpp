@@ -1998,8 +1998,6 @@ void RendererVk::initFeatures(DisplayVk *displayVk, const ExtensionNameList &dev
     ANGLE_FEATURE_CONDITION(&mFeatures, forceNearestFiltering, false);
     ANGLE_FEATURE_CONDITION(&mFeatures, forceNearestMipFiltering, false);
 
-    ANGLE_FEATURE_CONDITION(&mFeatures, compressVertexData, false);
-
     ANGLE_FEATURE_CONDITION(
         &mFeatures, preferDrawClearOverVkCmdClearAttachments,
         IsPixel2(mPhysicalDeviceProperties.vendorID, mPhysicalDeviceProperties.deviceID));
