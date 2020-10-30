@@ -1998,14 +1998,6 @@ void RendererVk::initFeatures(DisplayVk *displayVk, const ExtensionNameList &dev
     // Android mistakenly destroys the old swapchain when creating a new one.
     ANGLE_FEATURE_CONDITION(&mFeatures, waitIdleBeforeSwapchainRecreation, IsAndroid() && isARM);
 
-    for (size_t lodOffsetFeatureIdx = 0;
-         lodOffsetFeatureIdx < mFeatures.forceTextureLODOffset.size(); lodOffsetFeatureIdx++)
-    {
-        ANGLE_FEATURE_CONDITION(&mFeatures, forceTextureLODOffset[lodOffsetFeatureIdx], false);
-    }
-    ANGLE_FEATURE_CONDITION(&mFeatures, forceNearestFiltering, false);
-    ANGLE_FEATURE_CONDITION(&mFeatures, forceNearestMipFiltering, false);
-
     ANGLE_FEATURE_CONDITION(
         &mFeatures, preferDrawClearOverVkCmdClearAttachments,
         IsPixel2(mPhysicalDeviceProperties.vendorID, mPhysicalDeviceProperties.deviceID));

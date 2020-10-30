@@ -421,28 +421,6 @@ struct FeaturesVk : FeatureSetBase
         "Works around a bug on platforms which destroy oldSwapchain in vkCreateSwapchainKHR.",
         &members, "http://anglebug.com/5061"};
 
-    // Allow forcing an LOD offset on all sampling operations for performance comparisons. ANGLE is
-    // non-conformant if this feature is enabled.
-    std::array<angle::Feature, 4> forceTextureLODOffset = {
-        angle::Feature{"force_texture_lod_offset_1", angle::FeatureCategory::VulkanWorkarounds,
-                       "Increase the minimum texture level-of-detail by 1 when sampling.",
-                       &members},
-        angle::Feature{"force_texture_lod_offset_2", angle::FeatureCategory::VulkanWorkarounds,
-                       "Increase the minimum texture level-of-detail by 2 when sampling.",
-                       &members},
-        angle::Feature{"force_texture_lod_offset_3", angle::FeatureCategory::VulkanWorkarounds,
-                       "Increase the minimum texture level-of-detail by 3 when sampling.",
-                       &members},
-        angle::Feature{"force_texture_lod_offset_4", angle::FeatureCategory::VulkanWorkarounds,
-                       "Increase the minimum texture level-of-detail by 4 when sampling.",
-                       &members},
-    };
-
-    // Translate non-nearest filtering modes to nearest for all samplers for performance
-    // comparisons. ANGLE is non-conformant if this feature is enabled.
-    Feature forceNearestFiltering = {"force_nearest_filtering", FeatureCategory::VulkanWorkarounds,
-                                     "Force nearest filtering when sampling.", &members};
-
     // Translate  non-nearest mip filtering modes to nearest mip for all samplers for performance
     // comparisons. ANGLE is non-conformant if this feature is enabled.
     Feature forceNearestMipFiltering = {"force_nearest_mip_filtering",

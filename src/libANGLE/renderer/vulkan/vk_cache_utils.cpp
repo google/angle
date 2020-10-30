@@ -2925,16 +2925,6 @@ void SamplerDesc::update(const angle::FeaturesVk &featuresVk,
                          uint64_t externalFormat)
 {
     mMipLodBias = 0.0f;
-    for (size_t lodOffsetFeatureIdx = 0;
-         lodOffsetFeatureIdx < featuresVk.forceTextureLODOffset.size(); lodOffsetFeatureIdx++)
-    {
-        if (featuresVk.forceTextureLODOffset[lodOffsetFeatureIdx].enabled)
-        {
-            // Make sure only one forceTextureLODOffset feature is set.
-            ASSERT(mMipLodBias == 0.0f);
-            mMipLodBias = static_cast<float>(lodOffsetFeatureIdx + 1);
-        }
-    }
 
     mMaxAnisotropy = samplerState.getMaxAnisotropy();
     mMinLod        = samplerState.getMinLod();
@@ -2956,15 +2946,6 @@ void SamplerDesc::update(const angle::FeaturesVk &featuresVk,
 
     GLenum magFilter = samplerState.getMagFilter();
     GLenum minFilter = samplerState.getMinFilter();
-    if (featuresVk.forceNearestFiltering.enabled)
-    {
-        magFilter = gl::ConvertToNearestFilterMode(magFilter);
-        minFilter = gl::ConvertToNearestFilterMode(minFilter);
-    }
-    if (featuresVk.forceNearestMipFiltering.enabled)
-    {
-        minFilter = gl::ConvertToNearestMipFilterMode(minFilter);
-    }
 
     SetBitField(mMagFilter, gl_vk::GetFilter(magFilter));
     SetBitField(mMinFilter, gl_vk::GetFilter(minFilter));
