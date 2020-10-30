@@ -48,6 +48,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ef57a74d_0f59f5ab",
+        "filename": "extensions/EGL_ANGLE_platform_angle.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1382541
+      },
+      "writtenOn": "2020-10-30T02:47:39Z",
+      "side": 1,
+      "message": "Thanks for the new value! Created new extension: EGL_ANGLE_vulkan_display. And I also pre-reserved 0x34A5 for headless mode which we want to implement in further, is 0x34A5 okay for that?",
+      "parentUuid": "b81b24ac_f193f7a5",
+      "range": {
+        "startLine": 91,
+        "startChar": 8,
+        "endLine": 91,
+        "endChar": 59
+      },
+      "revId": "4256b18fb8f8cf8b686e9f6a7da7d4d0c4eb2325",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e3d6e2eb_550c0957",
@@ -61,6 +85,30 @@
       "writtenOn": "2020-10-27T21:00:38Z",
       "side": 1,
       "message": "nit: space before (",
+      "range": {
+        "startLine": 155,
+        "startChar": 55,
+        "endLine": 155,
+        "endChar": 56
+      },
+      "revId": "4256b18fb8f8cf8b686e9f6a7da7d4d0c4eb2325",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "92616cba_b0d8294f",
+        "filename": "extensions/EGL_ANGLE_platform_angle.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 155,
+      "author": {
+        "id": 1382541
+      },
+      "writtenOn": "2020-10-30T02:47:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e3d6e2eb_550c0957",
       "range": {
         "startLine": 155,
         "startChar": 55,
@@ -108,6 +156,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "dfe8bba4_b72d84a0",
+        "filename": "gni/angle.gni",
+        "patchSetId": 2
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1382541
+      },
+      "writtenOn": "2020-10-30T02:47:39Z",
+      "side": 1,
+      "message": "I used this with angle_use_x11\u003dfalse which looked to me is the default under linux. (No x11, GBM, etc.)",
+      "parentUuid": "ec7b4067_ac820406",
+      "revId": "4256b18fb8f8cf8b686e9f6a7da7d4d0c4eb2325",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "4a6dec5c_68e7bb1d",
         "filename": "include/EGL/eglext_angle.h",
         "patchSetId": 2
@@ -141,6 +207,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d061fa53_7305d4ce",
+        "filename": "include/EGL/eglext_angle.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1382541
+      },
+      "writtenOn": "2020-10-30T02:47:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c45c879a_bb5f8e25",
+      "revId": "4256b18fb8f8cf8b686e9f6a7da7d4d0c4eb2325",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a377f1d4_9a05e386",
@@ -154,6 +238,30 @@
       "writtenOn": "2020-10-27T21:45:13Z",
       "side": 1,
       "message": "I wonder if we can figure out a different solution to the problem this fixes. What happens if you take this out?",
+      "range": {
+        "startLine": 77,
+        "startChar": 0,
+        "endLine": 81,
+        "endChar": 6
+      },
+      "revId": "4256b18fb8f8cf8b686e9f6a7da7d4d0c4eb2325",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e9e559f3_b3366abf",
+        "filename": "src/gpu_info_util/SystemInfo_linux.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1382541
+      },
+      "writtenOn": "2020-10-30T02:47:39Z",
+      "side": 1,
+      "message": "Yes we can work on this in another CL.\n\nIt would not affect the ANGLE running, only shows no GPU info and continue with tests/apps:\n\n```\nWarning: incomplete system info collection.\n0 GPUs:\n\nActive GPU: 0\n\nOptimus: false\nAMD Switchable: false\n```",
+      "parentUuid": "a377f1d4_9a05e386",
       "range": {
         "startLine": 77,
         "startChar": 0,
@@ -187,6 +295,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "06cb3003_7ab88711",
+        "filename": "src/libANGLE/Display.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 232,
+      "author": {
+        "id": 1382541
+      },
+      "writtenOn": "2020-10-30T02:47:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8b707dff_4aeef638",
+      "range": {
+        "startLine": 231,
+        "startChar": 3,
+        "endLine": 232,
+        "endChar": 5
+      },
+      "revId": "4256b18fb8f8cf8b686e9f6a7da7d4d0c4eb2325",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "bf477c0c_b42b46de",
@@ -200,6 +332,30 @@
       "writtenOn": "2020-10-27T21:45:13Z",
       "side": 1,
       "message": "can we include these unconditionally?",
+      "range": {
+        "startLine": 131,
+        "startChar": 0,
+        "endLine": 137,
+        "endChar": 3
+      },
+      "revId": "4256b18fb8f8cf8b686e9f6a7da7d4d0c4eb2325",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "31370103_51184e9d",
+        "filename": "src/libANGLE/renderer/vulkan/BUILD.gn",
+        "patchSetId": 2
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1382541
+      },
+      "writtenOn": "2020-10-30T02:47:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bf477c0c_b42b46de",
       "range": {
         "startLine": 131,
         "startChar": 0,
@@ -233,6 +389,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f687b87c_f1601095",
+        "filename": "src/libANGLE/renderer/vulkan/DisplayVk_api.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1382541
+      },
+      "writtenOn": "2020-10-30T02:47:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9d115815_7c6511c3",
+      "range": {
+        "startLine": 42,
+        "startChar": 0,
+        "endLine": 46,
+        "endChar": 0
+      },
+      "revId": "4256b18fb8f8cf8b686e9f6a7da7d4d0c4eb2325",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0b119e02_3533bc13",
@@ -246,6 +426,30 @@
       "writtenOn": "2020-10-27T21:45:13Z",
       "side": 1,
       "message": "if you don\u0027t intend to resolve this TODO, please remove it. If you do, please tag it with the tracking bug.",
+      "range": {
+        "startLine": 45,
+        "startChar": 0,
+        "endLine": 45,
+        "endChar": 25
+      },
+      "revId": "4256b18fb8f8cf8b686e9f6a7da7d4d0c4eb2325",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9b4cd4c9_b4b9a7ad",
+        "filename": "src/libANGLE/renderer/vulkan/display/DisplayVkDisplay.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1382541
+      },
+      "writtenOn": "2020-10-30T02:47:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0b119e02_3533bc13",
       "range": {
         "startLine": 45,
         "startChar": 0,
@@ -279,6 +483,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2b1d2cf4_6b9c072f",
+        "filename": "src/libANGLE/renderer/vulkan/display/WindowSurfaceVkDisplay.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1382541
+      },
+      "writtenOn": "2020-10-30T02:47:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "52e5b957_6f9cb3dd",
+      "range": {
+        "startLine": 23,
+        "startChar": 16,
+        "endLine": 23,
+        "endChar": 45
+      },
+      "revId": "4256b18fb8f8cf8b686e9f6a7da7d4d0c4eb2325",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b8aabf54_1962cdde",
@@ -292,6 +520,30 @@
       "writtenOn": "2020-10-27T21:00:38Z",
       "side": 1,
       "message": "You can use ANGLE_VK_TRY on this function.",
+      "range": {
+        "startLine": 31,
+        "startChar": 4,
+        "endLine": 31,
+        "endChar": 8
+      },
+      "revId": "4256b18fb8f8cf8b686e9f6a7da7d4d0c4eb2325",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "08172f21_317c75dd",
+        "filename": "src/libANGLE/renderer/vulkan/display/WindowSurfaceVkDisplay.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1382541
+      },
+      "writtenOn": "2020-10-30T02:47:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b8aabf54_1962cdde",
       "range": {
         "startLine": 31,
         "startChar": 4,
@@ -325,6 +577,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ec2df4d1_4fb4d244",
+        "filename": "src/libANGLE/renderer/vulkan/display/WindowSurfaceVkDisplay.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1382541
+      },
+      "writtenOn": "2020-10-30T02:47:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "038070bd_136ca649",
+      "range": {
+        "startLine": 32,
+        "startChar": 8,
+        "endLine": 32,
+        "endChar": 18
+      },
+      "revId": "4256b18fb8f8cf8b686e9f6a7da7d4d0c4eb2325",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f75ac9b4_fc903ee5",
@@ -338,6 +614,30 @@
       "writtenOn": "2020-10-27T21:00:38Z",
       "side": 1,
       "message": "ANGLE_VK_TRY instead",
+      "range": {
+        "startLine": 40,
+        "startChar": 4,
+        "endLine": 40,
+        "endChar": 34
+      },
+      "revId": "4256b18fb8f8cf8b686e9f6a7da7d4d0c4eb2325",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d2bf1b1c_958f43d1",
+        "filename": "src/libANGLE/renderer/vulkan/display/WindowSurfaceVkDisplay.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1382541
+      },
+      "writtenOn": "2020-10-30T02:47:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f75ac9b4_fc903ee5",
       "range": {
         "startLine": 40,
         "startChar": 4,
@@ -371,6 +671,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9cf91361_3b0393a4",
+        "filename": "src/libANGLE/renderer/vulkan/display/WindowSurfaceVkDisplay.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1382541
+      },
+      "writtenOn": "2020-10-30T02:47:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "69637bda_5b8fa6a7",
+      "range": {
+        "startLine": 46,
+        "startChar": 8,
+        "endLine": 46,
+        "endChar": 14
+      },
+      "revId": "4256b18fb8f8cf8b686e9f6a7da7d4d0c4eb2325",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "56af0d21_d1b2b29d",
@@ -394,6 +718,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5cbf7412_a57e40d1",
+        "filename": "src/libANGLE/renderer/vulkan/display/WindowSurfaceVkDisplay.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1382541
+      },
+      "writtenOn": "2020-10-30T02:47:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "56af0d21_d1b2b29d",
+      "range": {
+        "startLine": 51,
+        "startChar": 52,
+        "endLine": 51,
+        "endChar": 62
+      },
+      "revId": "4256b18fb8f8cf8b686e9f6a7da7d4d0c4eb2325",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c6a40b98_7d6b9702",
@@ -407,6 +755,30 @@
       "writtenOn": "2020-10-27T21:00:38Z",
       "side": 1,
       "message": "ANGLE_VK_TRY instead",
+      "range": {
+        "startLine": 52,
+        "startChar": 12,
+        "endLine": 52,
+        "endChar": 18
+      },
+      "revId": "4256b18fb8f8cf8b686e9f6a7da7d4d0c4eb2325",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b2b300a8_51efc354",
+        "filename": "src/libANGLE/renderer/vulkan/display/WindowSurfaceVkDisplay.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1382541
+      },
+      "writtenOn": "2020-10-30T02:47:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c6a40b98_7d6b9702",
       "range": {
         "startLine": 52,
         "startChar": 12,
@@ -442,6 +814,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "8a0ed6c9_2bf449db",
+        "filename": "src/libANGLE/renderer/vulkan/display/WindowSurfaceVkDisplay.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1382541
+      },
+      "writtenOn": "2020-10-30T02:47:39Z",
+      "side": 1,
+      "message": "Came from native window type, aligned def with util/display/DisplayWindow.h",
+      "parentUuid": "1b29b9e9_b33c864d",
+      "range": {
+        "startLine": 71,
+        "startChar": 50,
+        "endLine": 71,
+        "endChar": 64
+      },
+      "revId": "4256b18fb8f8cf8b686e9f6a7da7d4d0c4eb2325",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "ac14402e_a0889e5f",
         "filename": "src/libANGLE/renderer/vulkan/display/WindowSurfaceVkDisplay.h",
         "patchSetId": 2
@@ -453,6 +849,30 @@
       "writtenOn": "2020-10-27T21:45:13Z",
       "side": 1,
       "message": "You can put this struct in src/common/vulkan. Either a new header file or just in vulkan_icd.h is fine.",
+      "range": {
+        "startLine": 18,
+        "startChar": 0,
+        "endLine": 19,
+        "endChar": 59
+      },
+      "revId": "4256b18fb8f8cf8b686e9f6a7da7d4d0c4eb2325",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4b3805eb_da89a497",
+        "filename": "src/libANGLE/renderer/vulkan/display/WindowSurfaceVkDisplay.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1382541
+      },
+      "writtenOn": "2020-10-30T02:47:39Z",
+      "side": 1,
+      "message": "Moved to vulkan_icd.h.",
+      "parentUuid": "ac14402e_a0889e5f",
       "range": {
         "startLine": 18,
         "startChar": 0,
@@ -486,6 +906,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6e81aa34_70a470d1",
+        "filename": "src/libANGLE/renderer/vulkan/display/WindowSurfaceVkDisplay.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1382541
+      },
+      "writtenOn": "2020-10-30T02:47:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "88334f03_d727d7b0",
+      "range": {
+        "startLine": 20,
+        "startChar": 0,
+        "endLine": 24,
+        "endChar": 17
+      },
+      "revId": "4256b18fb8f8cf8b686e9f6a7da7d4d0c4eb2325",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "04df4f94_c35d0eed",
@@ -509,6 +953,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "793ebf81_f89617b8",
+        "filename": "util/display/DisplayWindow.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1382541
+      },
+      "writtenOn": "2020-10-30T02:47:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "04df4f94_c35d0eed",
+      "range": {
+        "startLine": 2,
+        "startChar": 12,
+        "endLine": 2,
+        "endChar": 17
+      },
+      "revId": "4256b18fb8f8cf8b686e9f6a7da7d4d0c4eb2325",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "4db87704_f1fe3e7c",
@@ -522,6 +990,30 @@
       "writtenOn": "2020-10-27T21:45:13Z",
       "side": 1,
       "message": "nit: omit (c).\n\nWhere did you copy this from? We are trying to get rid of the (c).",
+      "range": {
+        "startLine": 2,
+        "startChar": 12,
+        "endLine": 2,
+        "endChar": 16
+      },
+      "revId": "4256b18fb8f8cf8b686e9f6a7da7d4d0c4eb2325",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fd518af7_7783b270",
+        "filename": "util/display/DisplayWindow.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1382541
+      },
+      "writtenOn": "2020-10-30T02:47:39Z",
+      "side": 1,
+      "message": "Aha, could be long times ago\u0027s copy from other files, let me update this. :)",
+      "parentUuid": "4db87704_f1fe3e7c",
       "range": {
         "startLine": 2,
         "startChar": 12,
