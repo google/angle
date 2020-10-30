@@ -16,6 +16,23 @@
       "message": "LGTM too, thanks!",
       "revId": "b0b07e22460900a5554dd55896c6c3c4d6c47e6e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fd96d12c_5166dcb9",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 261,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-10-30T16:14:46Z",
+      "side": 1,
+      "message": "This function looks really similar to RotateRectangle() in renderer_utils.cpp, with the only difference being \u0027flipY\u0027.   Can the calls to this just be replaced with that instead, so we don\u0027t have 2 copies?",
+      "revId": "b0b07e22460900a5554dd55896c6c3c4d6c47e6e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
