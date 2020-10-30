@@ -58,6 +58,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c9cef166_d4a04a49",
+        "filename": "src/libANGLE/ErrorStrings.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1359667
+      },
+      "writtenOn": "2020-10-30T23:07:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "15d710c2_cc6cd55d",
+      "range": {
+        "startLine": 106,
+        "startChar": 4,
+        "endLine": 106,
+        "endChar": 17
+      },
+      "revId": "acb3ad579ca59e19a2cde96f720c8ab7fb45433b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5d381148_3261f395",
@@ -71,6 +95,30 @@
       "writtenOn": "2020-10-29T23:17:09Z",
       "side": 1,
       "message": "just to confirm - this requires no additional features? does it require certain format bits?",
+      "range": {
+        "startLine": 717,
+        "startChar": 22,
+        "endLine": 717,
+        "endChar": 34
+      },
+      "revId": "acb3ad579ca59e19a2cde96f720c8ab7fb45433b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3d28ea01_375bc312",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 717,
+      "author": {
+        "id": 1359667
+      },
+      "writtenOn": "2020-10-30T23:07:01Z",
+      "side": 1,
+      "message": "The extension implementation utilizes vkCmdCopyImage which is core in Vulkan, so no need for vk extensions/checking vk features.\n\nFormat bits are checked in the vk_helpers.cpp in FormatHasNecessaryFeature();\nFrom the VK spec using vkCmdCopyImage:\n    The format features of srcImage must contain VK_FORMAT_FEATURE_TRANSFER_SRC_BIT\n    dstImage must have been created with VK_IMAGE_USAGE_TRANSFER_DST_BIT usage flag",
+      "parentUuid": "5d381148_3261f395",
       "range": {
         "startLine": 717,
         "startChar": 22,
@@ -106,6 +154,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "24e36bc4_57c5eed2",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 648,
+      "author": {
+        "id": 1359667
+      },
+      "writtenOn": "2020-10-30T23:07:01Z",
+      "side": 1,
+      "message": "It\u0027s mainly that the helper function ImageHelper::CopyImageSubData() will end up calling these two. ImageHelper::CopyImageSubData is exposed to TextureVk.cpp and RenderbufferVk.cpp\n\nThe call chain goes something like this:\nImageHelper::CopyImageSubData -\u003e CanCopyWithTransferForCopyImage() -\u003e CanCopyWithTransfer() -\u003e FormatHasNecessaryFeature()",
+      "parentUuid": "f30ac960_b56fdc6f",
+      "range": {
+        "startLine": 622,
+        "startChar": 0,
+        "endLine": 648,
+        "endChar": 0
+      },
+      "revId": "acb3ad579ca59e19a2cde96f720c8ab7fb45433b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "e708b6dd_68cbc7cf",
         "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
         "patchSetId": 14
@@ -117,6 +189,30 @@
       "writtenOn": "2020-10-29T23:17:09Z",
       "side": 1,
       "message": "can you please file follow-up bugs for the ones you don\u0027t plan to address in 3593? We\u0027d like to close this off as supported without fixing every last config. But we do want to be sure we\u0027re not omitting anything important like checking for capabilities. If you plan to fix them after this CL no need to open a new bug.",
+      "range": {
+        "startLine": 277,
+        "startChar": 0,
+        "endLine": 303,
+        "endChar": 0
+      },
+      "revId": "acb3ad579ca59e19a2cde96f720c8ab7fb45433b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "14f60e02_140e51a9",
+        "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
+        "patchSetId": 14
+      },
+      "lineNbr": 303,
+      "author": {
+        "id": 1359667
+      },
+      "writtenOn": "2020-10-30T23:07:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e708b6dd_68cbc7cf",
       "range": {
         "startLine": 277,
         "startChar": 0,
