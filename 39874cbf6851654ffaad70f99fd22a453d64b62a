@@ -1,0 +1,337 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d9710cb6_2c05a5f3",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-30T22:29:41Z",
+      "side": 1,
+      "message": "please remove when these are resolved.",
+      "range": {
+        "startLine": 26,
+        "startChar": 0,
+        "endLine": 27,
+        "endChar": 51
+      },
+      "revId": "39874cbf6851654ffaad70f99fd22a453d64b62a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "061cccec_b9bbf15f",
+        "filename": "BUILD.gn",
+        "patchSetId": 4
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-30T22:29:41Z",
+      "side": 1,
+      "message": "typo",
+      "range": {
+        "startLine": 121,
+        "startChar": 20,
+        "endLine": 121,
+        "endChar": 52
+      },
+      "revId": "39874cbf6851654ffaad70f99fd22a453d64b62a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "00310db8_74e2311c",
+        "filename": "extensions/EGL_ANGLE_vulkan_display.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-30T22:29:41Z",
+      "side": 1,
+      "message": "tiny nit: trailing space",
+      "range": {
+        "startLine": 42,
+        "startChar": 68,
+        "endLine": 42,
+        "endChar": 69
+      },
+      "revId": "39874cbf6851654ffaad70f99fd22a453d64b62a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8c0186ea_7ed719d1",
+        "filename": "extensions/EGL_ANGLE_vulkan_display.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-30T22:29:41Z",
+      "side": 1,
+      "message": "nit: add preceding space.",
+      "range": {
+        "startLine": 54,
+        "startChar": 9,
+        "endLine": 54,
+        "endChar": 22
+      },
+      "revId": "39874cbf6851654ffaad70f99fd22a453d64b62a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "30d2e7ca_6dba0b3f",
+        "filename": "extensions/EGL_ANGLE_vulkan_display.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-30T22:29:41Z",
+      "side": 1,
+      "message": "nit: please include a mention of error condition if the value is not a specified one.",
+      "range": {
+        "startLine": 79,
+        "startChar": 4,
+        "endLine": 79,
+        "endChar": 51
+      },
+      "revId": "39874cbf6851654ffaad70f99fd22a453d64b62a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7bf5054a_875a124c",
+        "filename": "src/common/vulkan/vulkan_icd.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-30T22:29:41Z",
+      "side": 1,
+      "message": "nit: extra space",
+      "revId": "39874cbf6851654ffaad70f99fd22a453d64b62a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fd2493a1_94473293",
+        "filename": "src/libANGLE/Display.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 367,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-30T22:29:41Z",
+      "side": 1,
+      "message": "How about we call this VulkanSimpleDisplay instead of VulkanDisplyDisplay? same with Surface, etc. Sorry if this is a pain to rename. It will help when we add Headless.",
+      "range": {
+        "startLine": 367,
+        "startChar": 27,
+        "endLine": 367,
+        "endChar": 53
+      },
+      "revId": "39874cbf6851654ffaad70f99fd22a453d64b62a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1c9f3161_93aa7a8e",
+        "filename": "src/libANGLE/Display.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 372,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-30T22:29:41Z",
+      "side": 1,
+      "message": "Will there be a future CL for this? If not please file a different bug so we can close 5260 once this CL lands.",
+      "range": {
+        "startLine": 372,
+        "startChar": 25,
+        "endLine": 372,
+        "endChar": 42
+      },
+      "revId": "39874cbf6851654ffaad70f99fd22a453d64b62a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b1bbe207_1a44a42e",
+        "filename": "src/libANGLE/renderer/vulkan/display/DisplayVkDisplay.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-30T22:29:41Z",
+      "side": 1,
+      "message": "nit: update",
+      "range": {
+        "startLine": 11,
+        "startChar": 8,
+        "endLine": 11,
+        "endChar": 56
+      },
+      "revId": "39874cbf6851654ffaad70f99fd22a453d64b62a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5e925896_7ab73c38",
+        "filename": "src/libANGLE/renderer/vulkan/display/WindowSurfaceVkDisplay.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-30T22:29:41Z",
+      "side": 1,
+      "message": "nit: remove extra space.",
+      "revId": "39874cbf6851654ffaad70f99fd22a453d64b62a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9d421de2_884c2fe9",
+        "filename": "src/libANGLE/renderer/vulkan/display/WindowSurfaceVkDisplay.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-30T22:29:41Z",
+      "side": 1,
+      "message": "nit: update",
+      "range": {
+        "startLine": 10,
+        "startChar": 8,
+        "endLine": 10,
+        "endChar": 62
+      },
+      "revId": "39874cbf6851654ffaad70f99fd22a453d64b62a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "95ecb4ee_914b09a1",
+        "filename": "util/BUILD.gn",
+        "patchSetId": 4
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-30T22:29:41Z",
+      "side": 1,
+      "message": "I\u0027m worried these files will bit-rot because we don\u0027t compile them on our CQ. Instead of conditionally including the sources in the build, can you use your #defines to control the behaviour of OSWindow::New/etc?",
+      "range": {
+        "startLine": 50,
+        "startChar": 11,
+        "endLine": 50,
+        "endChar": 35
+      },
+      "revId": "39874cbf6851654ffaad70f99fd22a453d64b62a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "45be0079_967c2226",
+        "filename": "util/display/DisplayPixmap.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-30T22:29:41Z",
+      "side": 1,
+      "message": "re-nit",
+      "range": {
+        "startLine": 2,
+        "startChar": 12,
+        "endLine": 2,
+        "endChar": 16
+      },
+      "revId": "39874cbf6851654ffaad70f99fd22a453d64b62a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "550ab05e_edfb986c",
+        "filename": "util/display/DisplayWindow.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-30T22:29:41Z",
+      "side": 1,
+      "message": "nit: uint32_t, see \n\nhttps://google.github.io/styleguide/cppguide.html#Integer_Types",
+      "range": {
+        "startLine": 18,
+        "startChar": 4,
+        "endLine": 18,
+        "endChar": 19
+      },
+      "revId": "39874cbf6851654ffaad70f99fd22a453d64b62a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0bb88fda_13684e90",
+        "filename": "util/display/DisplayWindow.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-30T22:29:41Z",
+      "side": 1,
+      "message": "nit: omit \"struct\"",
+      "range": {
+        "startLine": 48,
+        "startChar": 4,
+        "endLine": 48,
+        "endChar": 10
+      },
+      "revId": "39874cbf6851654ffaad70f99fd22a453d64b62a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
