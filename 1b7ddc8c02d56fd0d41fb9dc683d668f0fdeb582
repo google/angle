@@ -35,6 +35,230 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5c4f901b_f6a31690",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-30T22:58:44Z",
+      "side": 1,
+      "message": "Bunch of comments \u0026 questions.",
+      "revId": "1b7ddc8c02d56fd0d41fb9dc683d668f0fdeb582",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "28183b77_66394cf6",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-30T22:58:44Z",
+      "side": 1,
+      "message": "nit: remove.",
+      "range": {
+        "startLine": 56,
+        "startChar": 0,
+        "endLine": 57,
+        "endChar": 24
+      },
+      "revId": "1b7ddc8c02d56fd0d41fb9dc683d668f0fdeb582",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "583a4907_3fb55ae5",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-30T22:58:44Z",
+      "side": 1,
+      "message": "nit: comment?",
+      "range": {
+        "startLine": 62,
+        "startChar": 5,
+        "endLine": 62,
+        "endChar": 23
+      },
+      "revId": "1b7ddc8c02d56fd0d41fb9dc683d668f0fdeb582",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b9fb3bda_8da19fe9",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 176,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-30T22:58:44Z",
+      "side": 1,
+      "message": "implicit locations are variables? this is also confusing.",
+      "range": {
+        "startLine": 176,
+        "startChar": 9,
+        "endLine": 176,
+        "endChar": 27
+      },
+      "revId": "1b7ddc8c02d56fd0d41fb9dc683d668f0fdeb582",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0cd97792_4568b5a9",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-30T22:58:44Z",
+      "side": 1,
+      "message": "instance names are now a variable? this is a bit confusing.",
+      "range": {
+        "startLine": 189,
+        "startChar": 9,
+        "endLine": 189,
+        "endChar": 23
+      },
+      "revId": "1b7ddc8c02d56fd0d41fb9dc683d668f0fdeb582",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "28678693_44be5ae5",
+        "filename": "src/compiler/translator/ValidateVaryingLocations.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-30T22:58:44Z",
+      "side": 1,
+      "message": "nit:\n\nhttps://google.github.io/styleguide/cppguide.html#Integer_Types",
+      "range": {
+        "startLine": 28,
+        "startChar": 0,
+        "endLine": 28,
+        "endChar": 12
+      },
+      "revId": "1b7ddc8c02d56fd0d41fb9dc683d668f0fdeb582",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d882e51e_53075b18",
+        "filename": "src/compiler/translator/ValidateVaryingLocations.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-30T22:58:44Z",
+      "side": 1,
+      "message": "nit: \n\nhttps://google.github.io/styleguide/cppguide.html#Type_deduction",
+      "range": {
+        "startLine": 31,
+        "startChar": 15,
+        "endLine": 31,
+        "endChar": 19
+      },
+      "revId": "1b7ddc8c02d56fd0d41fb9dc683d668f0fdeb582",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2a8f2410_1c9757bf",
+        "filename": "src/compiler/translator/ValidateVaryingLocations.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-30T22:58:44Z",
+      "side": 1,
+      "message": "nit:\n\nhttps://google.github.io/styleguide/cppguide.html#Type_deduction",
+      "range": {
+        "startLine": 34,
+        "startChar": 14,
+        "endLine": 34,
+        "endChar": 18
+      },
+      "revId": "1b7ddc8c02d56fd0d41fb9dc683d668f0fdeb582",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "145c86db_06fb051e",
+        "filename": "src/compiler/translator/ValidateVaryingLocations.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-30T22:58:44Z",
+      "side": 1,
+      "message": "nit: same",
+      "range": {
+        "startLine": 88,
+        "startChar": 8,
+        "endLine": 93,
+        "endChar": 0
+      },
+      "revId": "1b7ddc8c02d56fd0d41fb9dc683d668f0fdeb582",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f812423d_98f1d33e",
+        "filename": "src/compiler/translator/util.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 656,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-30T22:58:44Z",
+      "side": 1,
+      "message": "this is confusing to me. Why not merge with the above?",
+      "range": {
+        "startLine": 620,
+        "startChar": 0,
+        "endLine": 656,
+        "endChar": 5
+      },
+      "revId": "1b7ddc8c02d56fd0d41fb9dc683d668f0fdeb582",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d155830a_e2c38eed",
@@ -53,6 +277,305 @@
         "startChar": 0,
         "endLine": 633,
         "endChar": 0
+      },
+      "revId": "1b7ddc8c02d56fd0d41fb9dc683d668f0fdeb582",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f29c558f_166f248c",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1806,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-30T22:58:44Z",
+      "side": 1,
+      "message": "largely duplicated with below. would be good to de-duplicate. Also this is very similar to the flatten function in UniformLinker. not sure how to de-duplicate with that.",
+      "range": {
+        "startLine": 1779,
+        "startChar": 15,
+        "endLine": 1806,
+        "endChar": 25
+      },
+      "revId": "1b7ddc8c02d56fd0d41fb9dc683d668f0fdeb582",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f0b40b03_03574c35",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 4257,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-30T22:58:44Z",
+      "side": 1,
+      "message": "is this for io blocks? Or is this just stuff that we missed before?",
+      "range": {
+        "startLine": 4233,
+        "startChar": 0,
+        "endLine": 4257,
+        "endChar": 0
+      },
+      "revId": "1b7ddc8c02d56fd0d41fb9dc683d668f0fdeb582",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "692e9fc3_3a3f3572",
+        "filename": "src/libANGLE/ProgramLinkedResources.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 748,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-30T22:58:44Z",
+      "side": 1,
+      "message": "nit: not used.",
+      "range": {
+        "startLine": 748,
+        "startChar": 42,
+        "endLine": 748,
+        "endChar": 58
+      },
+      "revId": "1b7ddc8c02d56fd0d41fb9dc683d668f0fdeb582",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "177042a3_b3c28eaf",
+        "filename": "src/libANGLE/ProgramLinkedResources.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 750,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-30T22:58:44Z",
+      "side": 1,
+      "message": "nit: not correct.",
+      "range": {
+        "startLine": 750,
+        "startChar": 18,
+        "endLine": 750,
+        "endChar": 26
+      },
+      "revId": "1b7ddc8c02d56fd0d41fb9dc683d668f0fdeb582",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3d454cb7_8b945a9e",
+        "filename": "src/libANGLE/ProgramLinkedResources.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 757,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-30T22:58:44Z",
+      "side": 1,
+      "message": "nit:\n\nif (!currentShader)\n{\n  continue;\n}\n\nWill help flatten this function.",
+      "range": {
+        "startLine": 756,
+        "startChar": 0,
+        "endLine": 757,
+        "endChar": 9
+      },
+      "revId": "1b7ddc8c02d56fd0d41fb9dc683d668f0fdeb582",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3533699e_0c5aa732",
+        "filename": "src/libANGLE/ProgramLinkedResources.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 760,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-30T22:58:44Z",
+      "side": 1,
+      "message": "nit: suggest using the explicit type",
+      "range": {
+        "startLine": 760,
+        "startChar": 16,
+        "endLine": 760,
+        "endChar": 20
+      },
+      "revId": "1b7ddc8c02d56fd0d41fb9dc683d668f0fdeb582",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "22f0d4e1_cb205e9c",
+        "filename": "src/libANGLE/ProgramLinkedResources.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 761,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-30T22:58:44Z",
+      "side": 1,
+      "message": "nit: .empty()",
+      "range": {
+        "startLine": 761,
+        "startChar": 20,
+        "endLine": 761,
+        "endChar": 40
+      },
+      "revId": "1b7ddc8c02d56fd0d41fb9dc683d668f0fdeb582",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "900163d8_fe5aebd8",
+        "filename": "src/libANGLE/ProgramLinkedResources.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 773,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-30T22:58:44Z",
+      "side": 1,
+      "message": "nit: suggest explicit type for readability",
+      "range": {
+        "startLine": 773,
+        "startChar": 16,
+        "endLine": 773,
+        "endChar": 20
+      },
+      "revId": "1b7ddc8c02d56fd0d41fb9dc683d668f0fdeb582",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f1b2dfec_f0c957f7",
+        "filename": "src/libANGLE/ProgramLinkedResources.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 774,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-30T22:58:44Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 774,
+        "startChar": 34,
+        "endLine": 774,
+        "endChar": 38
+      },
+      "revId": "1b7ddc8c02d56fd0d41fb9dc683d668f0fdeb582",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d4a857de_94b390a0",
+        "filename": "src/libANGLE/ProgramLinkedResources.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 777,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-30T22:58:44Z",
+      "side": 1,
+      "message": "seems you can lift this out.",
+      "range": {
+        "startLine": 774,
+        "startChar": 13,
+        "endLine": 777,
+        "endChar": 17
+      },
+      "revId": "1b7ddc8c02d56fd0d41fb9dc683d668f0fdeb582",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "40b56b23_999e1b56",
+        "filename": "src/libANGLE/ProgramLinkedResources.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 783,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-30T22:58:44Z",
+      "side": 1,
+      "message": "I don\u0027t follow this. A program can have many SSBOs.",
+      "range": {
+        "startLine": 783,
+        "startChar": 16,
+        "endLine": 783,
+        "endChar": 76
+      },
+      "revId": "1b7ddc8c02d56fd0d41fb9dc683d668f0fdeb582",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5c3dbecd_1a5c9cbf",
+        "filename": "src/libANGLE/ProgramLinkedResources.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 784,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-30T22:58:44Z",
+      "side": 1,
+      "message": "nit: suggest explicit type, and const \u0026.",
+      "range": {
+        "startLine": 784,
+        "startChar": 21,
+        "endLine": 784,
+        "endChar": 25
+      },
+      "revId": "1b7ddc8c02d56fd0d41fb9dc683d668f0fdeb582",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "92346373_deca63dd",
+        "filename": "src/libANGLE/ProgramLinkedResources.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 790,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-30T22:58:44Z",
+      "side": 1,
+      "message": "also don\u0027t follow this. what\u0027s wrong with only having a SSBO in one shader?",
+      "range": {
+        "startLine": 786,
+        "startChar": 0,
+        "endLine": 790,
+        "endChar": 17
       },
       "revId": "1b7ddc8c02d56fd0d41fb9dc683d668f0fdeb582",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
