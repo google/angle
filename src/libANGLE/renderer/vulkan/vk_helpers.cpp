@@ -3230,11 +3230,12 @@ angle::Result ImageHelper::init(Context *context,
                                 gl::LevelIndex baseLevel,
                                 gl::LevelIndex maxLevel,
                                 uint32_t mipLevels,
-                                uint32_t layerCount)
+                                uint32_t layerCount,
+                                bool isRobustResourceInitEnabled)
 {
     return initExternal(context, textureType, extents, format, samples, usage,
                         kVkImageCreateFlagsNone, ImageLayout::Undefined, nullptr, baseLevel,
-                        maxLevel, mipLevels, layerCount);
+                        maxLevel, mipLevels, layerCount, isRobustResourceInitEnabled);
 }
 
 angle::Result ImageHelper::initExternal(Context *context,
@@ -3249,7 +3250,8 @@ angle::Result ImageHelper::initExternal(Context *context,
                                         gl::LevelIndex baseLevel,
                                         gl::LevelIndex maxLevel,
                                         uint32_t mipLevels,
-                                        uint32_t layerCount)
+                                        uint32_t layerCount,
+                                        bool isRobustResourceInitEnabled)
 {
     ASSERT(!valid());
     ASSERT(!IsAnySubresourceContentDefined(mContentDefined));
@@ -3297,7 +3299,7 @@ angle::Result ImageHelper::initExternal(Context *context,
 
     ANGLE_VK_TRY(context, mImage.init(context->getDevice(), imageInfo));
 
-    stageClearIfEmulatedFormat(context);
+    stageClearIfEmulatedFormat(isRobustResourceInitEnabled);
 
     if (initialLayout != ImageLayout::Undefined)
     {
@@ -3625,7 +3627,8 @@ void ImageHelper::init2DWeakReference(Context *context,
                                       VkImage handle,
                                       const gl::Extents &glExtents,
                                       const Format &format,
-                                      GLint samples)
+                                      GLint samples,
+                                      bool isRobustResourceInitEnabled)
 {
     ASSERT(!valid());
     ASSERT(!IsAnySubresourceContentDefined(mContentDefined));
@@ -3641,7 +3644,7 @@ void ImageHelper::init2DWeakReference(Context *context,
 
     mImage.setHandle(handle);
 
-    stageClearIfEmulatedFormat(context);
+    stageClearIfEmulatedFormat(isRobustResourceInitEnabled);
 }
 
 angle::Result ImageHelper::init2DStaging(Context *context,
@@ -3695,7 +3698,8 @@ angle::Result ImageHelper::initImplicitMultisampledRenderToTexture(
     const MemoryProperties &memoryProperties,
     gl::TextureType textureType,
     GLint samples,
-    const ImageHelper &resolveImage)
+    const ImageHelper &resolveImage,
+    bool isRobustResourceInitEnabled)
 {
     ASSERT(!valid());
     ASSERT(samples > 1);
@@ -3721,11 +3725,11 @@ angle::Result ImageHelper::initImplicitMultisampledRenderToTexture(
              : VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT);
     constexpr VkImageCreateFlags kMultisampledCreateFlags = 0;
 
-    ANGLE_TRY(initExternal(context, textureType, resolveImage.getExtents(),
-                           resolveImage.getFormat(), samples, kMultisampledUsageFlags,
-                           kMultisampledCreateFlags, ImageLayout::Undefined, nullptr,
-                           resolveImage.getBaseLevel(), resolveImage.getMaxLevel(),
-                           resolveImage.getLevelCount(), resolveImage.getLayerCount()));
+    ANGLE_TRY(initExternal(
+        context, textureType, resolveImage.getExtents(), resolveImage.getFormat(), samples,
+        kMultisampledUsageFlags, kMultisampledCreateFlags, ImageLayout::Undefined, nullptr,
+        resolveImage.getBaseLevel(), resolveImage.getMaxLevel(), resolveImage.getLevelCount(),
+        resolveImage.getLayerCount(), isRobustResourceInitEnabled));
 
     const VkMemoryPropertyFlags kMultisampledMemoryFlags =
         VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT |
@@ -4851,10 +4855,10 @@ angle::Result ImageHelper::stageRobustResourceClearWithFormat(ContextVk *context
     return angle::Result::Continue;
 }
 
-void ImageHelper::stageClearIfEmulatedFormat(Context *context)
+void ImageHelper::stageClearIfEmulatedFormat(bool isRobustResourceInitEnabled)
 {
     // Skip staging extra clears if robust resource init is enabled.
-    if (!mFormat->hasEmulatedImageChannels() || context->isRobustResourceInitEnabled())
+    if (!mFormat->hasEmulatedImageChannels() || isRobustResourceInitEnabled)
         return;
 
     VkClearValue clearValue;

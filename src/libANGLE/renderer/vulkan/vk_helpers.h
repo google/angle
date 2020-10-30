@@ -1276,7 +1276,8 @@ class ImageHelper final : public Resource, public angle::Subject
                        gl::LevelIndex baseLevel,
                        gl::LevelIndex maxLevel,
                        uint32_t mipLevels,
-                       uint32_t layerCount);
+                       uint32_t layerCount,
+                       bool isRobustResourceInitEnabled);
     angle::Result initExternal(Context *context,
                                gl::TextureType textureType,
                                const VkExtent3D &extents,
@@ -1289,7 +1290,8 @@ class ImageHelper final : public Resource, public angle::Subject
                                gl::LevelIndex baseLevel,
                                gl::LevelIndex maxLevel,
                                uint32_t mipLevels,
-                               uint32_t layerCount);
+                               uint32_t layerCount,
+                               bool isRobustResourceInitEnabled);
     angle::Result initMemory(Context *context,
                              const MemoryProperties &memoryProperties,
                              VkMemoryPropertyFlags flags);
@@ -1345,7 +1347,8 @@ class ImageHelper final : public Resource, public angle::Subject
                                                           const MemoryProperties &memoryProperties,
                                                           gl::TextureType textureType,
                                                           GLint samples,
-                                                          const ImageHelper &resolveImage);
+                                                          const ImageHelper &resolveImage,
+                                                          bool isRobustResourceInitEnabled);
     // Release the underlining VkImage object for garbage collection.
     void releaseImage(RendererVk *renderer);
     // Similar to releaseImage, but also notify all contexts in the same share group to stop
@@ -1365,7 +1368,8 @@ class ImageHelper final : public Resource, public angle::Subject
                              VkImage handle,
                              const gl::Extents &glExtents,
                              const Format &format,
-                             GLint samples);
+                             GLint samples,
+                             bool isRobustResourceInitEnabled);
     void resetImageWeakReference();
 
     const Image &getImage() const { return mImage; }
@@ -1743,7 +1747,7 @@ class ImageHelper final : public Resource, public angle::Subject
 
     // If the image has emulated channels, we clear them once so as not to leave garbage on those
     // channels.
-    void stageClearIfEmulatedFormat(Context *context);
+    void stageClearIfEmulatedFormat(bool isRobustResourceInitEnabled);
 
     void clearColor(const VkClearColorValue &color,
                     LevelIndex baseMipLevelVk,

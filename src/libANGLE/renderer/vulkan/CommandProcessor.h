@@ -215,8 +215,6 @@ class CommandProcessor : public vk::Context
                      const char *function,
                      unsigned int line) override;
 
-    bool isRobustResourceInitEnabled() const override;
-
     // Entry point for command processor thread, calls processTasksImpl to do the
     // work. called by RendererVk::initialization on main thread
     void processTasks();

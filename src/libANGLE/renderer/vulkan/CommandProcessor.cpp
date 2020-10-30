@@ -469,12 +469,6 @@ CommandProcessor::CommandProcessor(RendererVk *renderer)
 
 CommandProcessor::~CommandProcessor() = default;
 
-bool CommandProcessor::isRobustResourceInitEnabled() const
-{
-    // Unused for worker thread, just return false.
-    return false;
-}
-
 vk::Error CommandProcessor::getAndClearPendingError()
 {
     std::lock_guard<std::mutex> queueLock(mErrorMutex);

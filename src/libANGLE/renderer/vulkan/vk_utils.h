@@ -174,10 +174,6 @@ class Context : angle::NonCopyable
     VkDevice getDevice() const;
     RendererVk *getRenderer() const { return mRenderer; }
 
-    // This is a special override needed so we can determine if we need to initialize images.
-    // It corresponds to the EGL or GL extensions depending on the vk::Context type.
-    virtual bool isRobustResourceInitEnabled() const = 0;
-
   protected:
     RendererVk *const mRenderer;
 };

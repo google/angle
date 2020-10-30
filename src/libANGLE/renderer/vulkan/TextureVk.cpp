@@ -1920,9 +1920,13 @@ angle::Result TextureVk::getAttachmentRenderTarget(const gl::Context *context,
         RendererVk *renderer = contextVk->getRenderer();
         mMultisampledImageViews[renderToTextureIndex].init(renderer);
 
+        // The MSAA image always comes from the single sampled one, so disable robust init.
+        bool useRobustInit = false;
+
         // Create the implicit multisampled image.
         ANGLE_TRY(multisampledImage->initImplicitMultisampledRenderToTexture(
-            contextVk, renderer->getMemoryProperties(), mState.getType(), samples, *mImage));
+            contextVk, renderer->getMemoryProperties(), mState.getType(), samples, *mImage,
+            useRobustInit));
     }
 
     // Don't flush staged updates here. We'll handle that in FramebufferVk so it can defer clears.
@@ -2382,10 +2386,11 @@ angle::Result TextureVk::initImage(ContextVk *contextVk,
     gl_vk::GetExtentsAndLayerCount(mState.getType(), extents, &vkExtent, &layerCount);
     GLint samples = mState.getBaseLevelDesc().samples ? mState.getBaseLevelDesc().samples : 1;
 
-    ANGLE_TRY(mImage->initExternal(
-        contextVk, mState.getType(), vkExtent, format, samples, mImageUsageFlags, mImageCreateFlags,
-        vk::ImageLayout::Undefined, nullptr, gl::LevelIndex(mState.getEffectiveBaseLevel()),
-        gl::LevelIndex(mState.getEffectiveMaxLevel()), levelCount, layerCount));
+    ANGLE_TRY(mImage->initExternal(contextVk, mState.getType(), vkExtent, format, samples,
+                                   mImageUsageFlags, mImageCreateFlags, vk::ImageLayout::Undefined,
+                                   nullptr, gl::LevelIndex(mState.getEffectiveBaseLevel()),
+                                   gl::LevelIndex(mState.getEffectiveMaxLevel()), levelCount,
+                                   layerCount, contextVk->isRobustResourceInitEnabled()));
 
     const VkMemoryPropertyFlags flags = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
 

@@ -87,14 +87,16 @@ class OffscreenSurfaceVk : public SurfaceVk
                                  EGLint width,
                                  EGLint height,
                                  const vk::Format &vkFormat,
-                                 GLint samples);
+                                 GLint samples,
+                                 bool isRobustResourceInitEnabled);
 
         angle::Result initializeWithExternalMemory(DisplayVk *displayVk,
                                                    EGLint width,
                                                    EGLint height,
                                                    const vk::Format &vkFormat,
                                                    GLint samples,
-                                                   void *buffer);
+                                                   void *buffer,
+                                                   bool isRobustResourceInitEnabled);
 
         void destroy(const egl::Display *display);
 

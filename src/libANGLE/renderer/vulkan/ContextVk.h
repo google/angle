@@ -641,7 +641,7 @@ class ContextVk : public ContextImpl, public vk::Context
     const ProgramExecutableVk *getExecutable() const { return mExecutable; }
     ProgramExecutableVk *getExecutable() { return mExecutable; }
 
-    bool isRobustResourceInitEnabled() const override;
+    bool isRobustResourceInitEnabled() const;
 
     // occlusion query
     void beginOcclusionQuery(QueryVk *queryVk);

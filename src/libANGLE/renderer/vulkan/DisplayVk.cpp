@@ -26,8 +26,7 @@ DisplayVk::DisplayVk(const egl::DisplayState &state)
     : DisplayImpl(state),
       vk::Context(new RendererVk()),
       mScratchBuffer(1000u),
-      mSavedError({VK_SUCCESS, "", "", 0}),
-      mHasSurfaceWithRobustInit(false)
+      mSavedError({VK_SUCCESS, "", "", 0})
 {}
 
 DisplayVk::~DisplayVk()
@@ -114,22 +113,12 @@ SurfaceImpl *DisplayVk::createWindowSurface(const egl::SurfaceState &state,
                                             EGLNativeWindowType window,
                                             const egl::AttributeMap &attribs)
 {
-    if (attribs.get(EGL_ROBUST_RESOURCE_INITIALIZATION_ANGLE, EGL_FALSE) == EGL_TRUE)
-    {
-        mHasSurfaceWithRobustInit = true;
-    }
-
     return createWindowSurfaceVk(state, window);
 }
 
 SurfaceImpl *DisplayVk::createPbufferSurface(const egl::SurfaceState &state,
                                              const egl::AttributeMap &attribs)
 {
-    if (attribs.get(EGL_ROBUST_RESOURCE_INITIALIZATION_ANGLE, EGL_FALSE) == EGL_TRUE)
-    {
-        mHasSurfaceWithRobustInit = true;
-    }
-
     ASSERT(mRenderer);
     return new OffscreenSurfaceVk(state, mRenderer);
 }
@@ -297,12 +286,6 @@ egl::Error DisplayVk::getEGLError(EGLint errorCode)
 void DisplayVk::populateFeatureList(angle::FeatureList *features)
 {
     mRenderer->getFeatures().populateFeatureList(features);
-}
-
-bool DisplayVk::isRobustResourceInitEnabled() const
-{
-    // We return true if any surface was created with robust resource init enabled.
-    return mHasSurfaceWithRobustInit;
 }
 
 void ShareGroupVk::onDestroy(const egl::Display *display)

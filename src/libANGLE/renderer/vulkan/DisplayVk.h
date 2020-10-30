@@ -124,8 +124,6 @@ class DisplayVk : public DisplayImpl, public vk::Context
 
     void populateFeatureList(angle::FeatureList *features) override;
 
-    bool isRobustResourceInitEnabled() const override;
-
     ShareGroupImpl *createShareGroup() override;
 
   protected:
@@ -141,7 +139,6 @@ class DisplayVk : public DisplayImpl, public vk::Context
     mutable angle::ScratchBuffer mScratchBuffer;
 
     vk::Error mSavedError;
-    bool mHasSurfaceWithRobustInit;
 };
 
 }  // namespace rx

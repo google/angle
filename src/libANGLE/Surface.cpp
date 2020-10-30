@@ -44,6 +44,11 @@ SurfaceState::~SurfaceState()
     delete config;
 }
 
+bool SurfaceState::isRobustResourceInitEnabled() const
+{
+    return attributes.get(EGL_ROBUST_RESOURCE_INITIALIZATION_ANGLE, EGL_FALSE) == EGL_TRUE;
+}
+
 Surface::Surface(EGLint surfaceType,
                  const egl::Config *config,
                  const AttributeMap &attributes,

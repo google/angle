@@ -48,6 +48,8 @@ struct SurfaceState final : private angle::NonCopyable
     SurfaceState(const egl::Config *configIn, const AttributeMap &attributesIn);
     ~SurfaceState();
 
+    bool isRobustResourceInitEnabled() const;
+
     EGLLabelKHR label;
     const egl::Config *config;
     AttributeMap attributes;
