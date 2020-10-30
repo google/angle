@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1abcb2d2_f997ca0d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-10-30T00:30:06Z",
+      "side": 1,
+      "message": "PTAL - early but want comments",
+      "revId": "1b7ddc8c02d56fd0d41fb9dc683d668f0fdeb582",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
