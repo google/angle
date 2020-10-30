@@ -433,20 +433,14 @@ angle::Result FramebufferVk::clearImpl(const gl::Context *context,
 
     // This function assumes that only enabled attachments are asked to be cleared.
     ASSERT((clearColorBuffers & mState.getEnabledDrawBuffers()) == clearColorBuffers);
-
-    // Adjust clear behavior based on whether the respective attachments are present; if asked to
-    // clear a non-existent attachment, don't attempt to clear it.
+    ASSERT(!clearDepth || mState.getDepthAttachment() != nullptr);
+    ASSERT(!clearStencil || mState.getStencilAttachment() != nullptr);
 
     gl::BlendStateExt::ColorMaskStorage::Type colorMasks = contextVk->getClearColorMasks();
     bool clearColor                                      = clearColorBuffers.any();
 
-    const gl::FramebufferAttachment *depthAttachment = mState.getDepthAttachment();
-    clearDepth                                       = clearDepth && depthAttachment;
-    ASSERT(!clearDepth || depthAttachment->isAttached());
-
-    const gl::FramebufferAttachment *stencilAttachment = mState.getStencilAttachment();
-    clearStencil                                       = clearStencil && stencilAttachment;
-    ASSERT(!clearStencil || stencilAttachment->isAttached());
+    // When this function is called, there should always be something to clear.
+    ASSERT(clearColor || clearDepth || clearStencil);
 
     const uint8_t stencilMask =
         static_cast<uint8_t>(contextVk->getState().getDepthStencilState().stencilWritemask);
@@ -459,15 +453,6 @@ angle::Result FramebufferVk::clearImpl(const gl::Context *context,
     ASSERT(!clearStencil || stencilMask != 0);
 
     const bool scissoredClear = scissoredRenderArea != getRotatedCompleteRenderArea(contextVk);
-
-    // If there is nothing to clear, return right away (for example, if asked to clear depth, but
-    // there is no depth attachment).
-    if (!clearColor && !clearDepth && !clearStencil)
-    {
-        // We can sometimes get to a clear operation with other pending clears (e.g. for emulated
-        // formats). Ensure the prior clears happen if new clear is no-op.
-        return flushDeferredClears(contextVk, scissoredRenderArea);
-    }
 
     // We use the draw path if scissored clear, or color or stencil are masked.  Note that depth
     // clearing is already disabled if there's a depth mask.
