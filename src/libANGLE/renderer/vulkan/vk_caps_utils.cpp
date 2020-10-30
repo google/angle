@@ -604,6 +604,17 @@ void RendererVk::ensureCapsInitialized() const
     {
         mNativeCaps.maxShaderAtomicCounters[shaderType] = maxAtomicCounters;
     }
+
+    // Set maxShaderAtomicCounters to zero if atomic is not supported.
+    if (!mPhysicalDeviceFeatures.vertexPipelineStoresAndAtomics)
+    {
+        mNativeCaps.maxShaderAtomicCounters[gl::ShaderType::Vertex] = 0;
+    }
+    if (!mPhysicalDeviceFeatures.fragmentStoresAndAtomics)
+    {
+        mNativeCaps.maxShaderAtomicCounters[gl::ShaderType::Fragment] = 0;
+    }
+
     mNativeCaps.maxCombinedAtomicCounters = maxAtomicCounters;
 
     // GL Images correspond to Vulkan Storage Images.
