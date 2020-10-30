@@ -56,6 +56,29 @@
       },
       "revId": "1b7ddc8c02d56fd0d41fb9dc683d668f0fdeb582",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a2c28935_b89eac2b",
+        "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 196,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-30T22:44:57Z",
+      "side": 1,
+      "message": "What\u0027s the deal with mat3x2? Is there something we can file against the glslang repo to get this fixed?\n\nBTW, you can use \n\ndEQP-GLES31.functional.program_interface_query.program_*.interface_blocks.*.mat3x2\n\nor two more specific suppressions for input/output.",
+      "range": {
+        "startLine": 195,
+        "startChar": 0,
+        "endLine": 196,
+        "endChar": 45
+      },
+      "revId": "1b7ddc8c02d56fd0d41fb9dc683d668f0fdeb582",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
