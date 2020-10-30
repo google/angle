@@ -1028,6 +1028,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "3c93ba91_6cc36870",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 2700,
+      "author": {
+        "id": 1359667
+      },
+      "writtenOn": "2020-10-30T23:46:08Z",
+      "side": 1,
+      "message": "Can\u0027t really assert that here. If the texture is incomplete then validation needs to return the appropriate glError.",
+      "parentUuid": "1784eb1a_4e5bb727",
+      "range": {
+        "startLine": 2694,
+        "startChar": 0,
+        "endLine": 2700,
+        "endChar": 9
+      },
+      "revId": "90e28645c779afd9206e684e8ff05057ad3127ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "a73ed056_8849f441",
         "filename": "src/libANGLE/validationES.cpp",
         "patchSetId": 12
