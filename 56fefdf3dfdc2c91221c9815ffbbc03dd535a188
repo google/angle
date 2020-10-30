@@ -58,6 +58,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7ba41dcd_0f6f161b",
+        "filename": "include/platform/FeaturesD3D.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 215,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2020-10-30T09:16:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0c69c893_8c248f73",
+      "range": {
+        "startLine": 215,
+        "startChar": 9,
+        "endLine": 215,
+        "endChar": 11
+      },
+      "revId": "56fefdf3dfdc2c91221c9815ffbbc03dd535a188",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1e13f495_04ef7ad8",
@@ -71,6 +95,30 @@
       "writtenOn": "2020-10-30T05:45:52Z",
       "side": 1,
       "message": "UniformBlocks",
+      "range": {
+        "startLine": 151,
+        "startChar": 42,
+        "endLine": 151,
+        "endChar": 54
+      },
+      "revId": "56fefdf3dfdc2c91221c9815ffbbc03dd535a188",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dd14be00_f87c2507",
+        "filename": "src/compiler.gni",
+        "patchSetId": 11
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2020-10-30T09:16:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1e13f495_04ef7ad8",
       "range": {
         "startLine": 151,
         "startChar": 42,
@@ -104,6 +152,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d3a18927_1a33bc72",
+        "filename": "src/compiler/translator/OutputHLSL.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2020-10-30T09:16:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3b373c2f_7d90d240",
+      "range": {
+        "startLine": 54,
+        "startChar": 54,
+        "endLine": 54,
+        "endChar": 66
+      },
+      "revId": "56fefdf3dfdc2c91221c9815ffbbc03dd535a188",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "33ac8635_33384f3b",
@@ -117,6 +189,30 @@
       "writtenOn": "2020-10-30T05:45:52Z",
       "side": 1,
       "message": "std140",
+      "range": {
+        "startLine": 839,
+        "startChar": 60,
+        "endLine": 839,
+        "endChar": 67
+      },
+      "revId": "56fefdf3dfdc2c91221c9815ffbbc03dd535a188",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fafc2e39_2f548aa3",
+        "filename": "src/compiler/translator/ResourcesHLSL.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 839,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2020-10-30T09:16:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "33ac8635_33384f3b",
       "range": {
         "startLine": 839,
         "startChar": 60,
