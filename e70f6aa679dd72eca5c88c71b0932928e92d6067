@@ -16,6 +16,24 @@
       "message": "This patch ended up generating a bunch of dEQP failures:\ndEQP.EGL/functional_get_frame_timestamps_rgb565_no_depth_no_stencil\ndEQP.EGL/functional_get_frame_timestamps_rgb565_no_depth_stencil\ndEQP.EGL/functional_hdr_metadata_cta861_3\ndEQP.EGL/functional_hdr_metadata_smpte2086\ndEQP.EGL/functional_mutable_render_buffer_basic\ndEQP.EGL/functional_swap_buffers_with_damage_resize_after_swap_buffer_age_clear\ndEQP.EGL/functional_swap_buffers_with_damage_resize_after_swap_buffer_age_clear_clear\ndEQP.EGL/functional_swap_buffers_with_damage_resize_after_swap_buffer_age_render\ndEQP.EGL/functional_swap_buffers_with_damage_resize_before_swap_buffer_age_clear\ndEQP.EGL/functional_swap_buffers_with_damage_resize_before_swap_buffer_age_clear_clear\ndEQP.EGL/functional_swap_buffers_with_damage_resize_before_swap_buffer_age_render\n\nex: https://ci.chromium.org/p/chromium/builders/ci/Mac%20FYI%20dEQP%20Release%20AMD/127737\n\nThey all appear to be crashes in prepareForCall being called as eglTerminate is being called. I\u0027ll revert this for now so we can reland it with a fix and trigger the dEQP trybots bots to verify.",
       "revId": "e70f6aa679dd72eca5c88c71b0932928e92d6067",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4049fcc9_02818da4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1117350
+      },
+      "writtenOn": "2020-10-30T00:08:38Z",
+      "side": 1,
+      "message": "I\u0027m working on this. Tough to debug because the tests aren\u0027t crashing, it\u0027s the teardown code and it has intentionally randomized destruction order, and doesn\u0027t crash if you run just one test in isolation. It seems like there are issues with partially initialized or uninitialized egl displays. I made prepareForCall not crash in this case, but then I\u0027m getting asserts in dEQP later during test object teardown because it calls DestroyContext and ANGLE returns an error saying the context is uninitialized.",
+      "parentUuid": "df92f10d_718ec131",
+      "revId": "e70f6aa679dd72eca5c88c71b0932928e92d6067",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
