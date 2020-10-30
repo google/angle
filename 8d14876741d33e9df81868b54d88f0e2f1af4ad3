@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "eb00f265_432d826f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-10-30T05:25:06Z",
+      "side": 1,
+      "message": "Working towards change that doesn\u0027t break RP when scissor changes.",
+      "revId": "8d14876741d33e9df81868b54d88f0e2f1af4ad3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
