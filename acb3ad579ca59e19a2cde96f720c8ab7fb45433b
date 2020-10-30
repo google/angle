@@ -18,6 +18,23 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "63c6e414_fde1ab49",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 14
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-10-30T03:53:00Z",
+      "side": 1,
+      "message": "Good job! LGTM with Jamie\u0027s concerns addressed.",
+      "revId": "acb3ad579ca59e19a2cde96f720c8ab7fb45433b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "15d710c2_cc6cd55d",
