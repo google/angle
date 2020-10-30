@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9237ea6a_13ab3842",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 3272,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-30T21:46:32Z",
+      "side": 1,
+      "message": "nit: can we refactor the code to not pass this around if it\u0027s always coming from mDrawFramebuffer-\u003egetSamples?",
+      "range": {
+        "startLine": 3272,
+        "startChar": 52,
+        "endLine": 3272,
+        "endChar": 82
+      },
+      "revId": "dbf37278ee6641619618c66888de649db7a9ac95",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
