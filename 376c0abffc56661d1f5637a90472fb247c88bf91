@@ -16,6 +16,46 @@
       "message": "Please review, thanks 😊",
       "revId": "376c0abffc56661d1f5637a90472fb247c88bf91",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "678d3bac_162f0b50",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-30T12:57:06Z",
+      "side": 1,
+      "message": "LGTM, one suggestion.",
+      "revId": "376c0abffc56661d1f5637a90472fb247c88bf91",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bdd36ad4_ef001427",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 618,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-30T12:57:06Z",
+      "side": 1,
+      "message": "nit: just to make the code more readable, I suggest you leave the loop the way it was before, then add two if statements after:\n\nfor (...)\n{\n}\n\nif (mPhysicalDeviceFeatures.vertex \u003d\u003d VK_FALSE)\n{\n   maxShaderAtomicCounters[Vertex] \u003d 0;\n}\n\nif (mPhysicalDeviceFeatures.fragment \u003d\u003d VK_FALSE)\n{\n   maxShaderAtomicCounters[Fragment] \u003d 0;\n}",
+      "range": {
+        "startLine": 605,
+        "startChar": 7,
+        "endLine": 618,
+        "endChar": 9
+      },
+      "revId": "376c0abffc56661d1f5637a90472fb247c88bf91",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
