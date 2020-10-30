@@ -429,13 +429,7 @@ angle::Result FramebufferVk::clearImpl(const gl::Context *context,
     ContextVk *contextVk = vk::GetImpl(context);
 
     const gl::Rectangle scissoredRenderArea = getRotatedScissoredRenderArea(contextVk);
-
-    // Discard clear altogether if scissor has 0 width or height.
-    if (scissoredRenderArea.width == 0 || scissoredRenderArea.height == 0)
-    {
-        ASSERT(mDeferredClears.empty());
-        return angle::Result::Continue;
-    }
+    ASSERT(scissoredRenderArea.width != 0 && scissoredRenderArea.height != 0);
 
     // This function assumes that only enabled attachments are asked to be cleared.
     ASSERT((clearColorBuffers & mState.getEnabledDrawBuffers()) == clearColorBuffers);

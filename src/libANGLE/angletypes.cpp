@@ -628,14 +628,20 @@ bool ClipRectangle(const Rectangle &source, const Rectangle &clip, Rectangle *in
     {
         return false;
     }
+
+    int x      = std::max(minSourceX, minClipX);
+    int y      = std::max(minSourceY, minClipY);
+    int width  = std::min(maxSourceX, maxClipX) - x;
+    int height = std::min(maxSourceY, maxClipY) - y;
+
     if (intersection)
     {
-        intersection->x      = std::max(minSourceX, minClipX);
-        intersection->y      = std::max(minSourceY, minClipY);
-        intersection->width  = std::min(maxSourceX, maxClipX) - std::max(minSourceX, minClipX);
-        intersection->height = std::min(maxSourceY, maxClipY) - std::max(minSourceY, minClipY);
+        intersection->x      = x;
+        intersection->y      = y;
+        intersection->width  = width;
+        intersection->height = height;
     }
-    return true;
+    return width != 0 && height != 0;
 }
 
 bool Box::operator==(const Box &other) const

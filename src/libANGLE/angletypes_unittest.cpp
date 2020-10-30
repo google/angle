@@ -227,4 +227,64 @@ TEST(BlendStateExt, BlendFactors)
     ASSERT_EQ(blendStateExt.getDstAlphaIndexed(1), static_cast<GLenum>(GL_ONE));
 }
 
+// Test clip rectangle
+TEST(Rectangle, Clip)
+{
+    const gl::Rectangle source(0, 0, 100, 200);
+    const gl::Rectangle clip1(0, 0, 50, 100);
+    gl::Rectangle result;
+
+    ASSERT_TRUE(gl::ClipRectangle(source, clip1, &result));
+    ASSERT_EQ(result.x, 0);
+    ASSERT_EQ(result.y, 0);
+    ASSERT_EQ(result.width, 50);
+    ASSERT_EQ(result.height, 100);
+
+    gl::Rectangle clip2(10, 20, 30, 40);
+
+    ASSERT_TRUE(gl::ClipRectangle(source, clip2, &result));
+    ASSERT_EQ(result.x, 10);
+    ASSERT_EQ(result.y, 20);
+    ASSERT_EQ(result.width, 30);
+    ASSERT_EQ(result.height, 40);
+
+    gl::Rectangle clip3(-20, -30, 10000, 400000);
+
+    ASSERT_TRUE(gl::ClipRectangle(source, clip3, &result));
+    ASSERT_EQ(result.x, 0);
+    ASSERT_EQ(result.y, 0);
+    ASSERT_EQ(result.width, 100);
+    ASSERT_EQ(result.height, 200);
+
+    gl::Rectangle clip4(50, 100, -20, -30);
+
+    ASSERT_TRUE(gl::ClipRectangle(source, clip4, &result));
+    ASSERT_EQ(result.x, 30);
+    ASSERT_EQ(result.y, 70);
+    ASSERT_EQ(result.width, 20);
+    ASSERT_EQ(result.height, 30);
+
+    // Non-overlapping rectangles
+    gl::Rectangle clip5(-100, 0, 99, 200);
+    ASSERT_FALSE(gl::ClipRectangle(source, clip5, nullptr));
+
+    gl::Rectangle clip6(0, -100, 100, 99);
+    ASSERT_FALSE(gl::ClipRectangle(source, clip6, nullptr));
+
+    gl::Rectangle clip7(101, 0, 99, 200);
+    ASSERT_FALSE(gl::ClipRectangle(source, clip7, nullptr));
+
+    gl::Rectangle clip8(0, 201, 100, 99);
+    ASSERT_FALSE(gl::ClipRectangle(source, clip8, nullptr));
+
+    // Zero-width/height rectangles
+    gl::Rectangle clip9(50, 0, 0, 200);
+    ASSERT_FALSE(gl::ClipRectangle(source, clip9, nullptr));
+    ASSERT_FALSE(gl::ClipRectangle(clip9, source, nullptr));
+
+    gl::Rectangle clip10(0, 100, 100, 0);
+    ASSERT_FALSE(gl::ClipRectangle(source, clip10, nullptr));
+    ASSERT_FALSE(gl::ClipRectangle(clip10, source, nullptr));
+}
+
 }  // namespace angle
