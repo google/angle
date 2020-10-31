@@ -226,6 +226,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "bf6201e5_dadfc890",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 648,
+      "author": {
+        "id": 1359667
+      },
+      "writtenOn": "2020-10-31T00:14:24Z",
+      "side": 1,
+      "message": "These two functions are used in vk_helpers.cpp and TextureVk.cpp.",
+      "parentUuid": "c496bf43_80987ec4",
+      "range": {
+        "startLine": 622,
+        "startChar": 0,
+        "endLine": 648,
+        "endChar": 0
+      },
+      "revId": "acb3ad579ca59e19a2cde96f720c8ab7fb45433b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "e708b6dd_68cbc7cf",
         "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
         "patchSetId": 14
