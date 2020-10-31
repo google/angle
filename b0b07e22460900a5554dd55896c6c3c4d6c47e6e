@@ -51,6 +51,24 @@
       "parentUuid": "fd96d12c_5166dcb9",
       "revId": "b0b07e22460900a5554dd55896c6c3c4d6c47e6e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "36969a57_84e192ae",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 261,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-10-31T02:36:14Z",
+      "side": 1,
+      "message": "Done. Actually flipY should have been taken into account to, which was missing here.",
+      "parentUuid": "d602c2f7_603d806c",
+      "revId": "b0b07e22460900a5554dd55896c6c3c4d6c47e6e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
