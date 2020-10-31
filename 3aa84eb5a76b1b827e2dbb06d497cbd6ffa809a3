@@ -20,6 +20,24 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "c86ed83f_6d166a44",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-10-31T02:05:01Z",
+      "side": 1,
+      "message": "I don\u0027t think you need to specify real pre-rotation in any way. Just turning the phone should be enough, isn\u0027t that right?",
+      "parentUuid": "448346ad_ff76e596",
+      "revId": "3aa84eb5a76b1b827e2dbb06d497cbd6ffa809a3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "79d463a7_194623ac",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 3
@@ -82,6 +100,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2b3a0010_6427a88a",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1689,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-10-31T02:05:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1cdef395_dd9a4110",
+      "range": {
+        "startLine": 1689,
+        "startChar": 52,
+        "endLine": 1689,
+        "endChar": 64
+      },
+      "revId": "3aa84eb5a76b1b827e2dbb06d497cbd6ffa809a3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "836b14f8_38d6df19",
@@ -95,6 +137,30 @@
       "writtenOn": "2020-10-29T17:35:07Z",
       "side": 1,
       "message": "I wonder if we need the degree here.\nWouldn\u0027t be nice if we need to add an expectation for each one of these 3 every time.",
+      "range": {
+        "startLine": 37,
+        "startChar": 0,
+        "endLine": 37,
+        "endChar": 41
+      },
+      "revId": "3aa84eb5a76b1b827e2dbb06d497cbd6ffa809a3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1a8b1d05_2d2118b9",
+        "filename": "src/tests/deqp_support/README.md",
+        "patchSetId": 3
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-10-31T02:05:01Z",
+      "side": 1,
+      "message": "I recall some tests only failed for 270. I went ahead and added a generic PREROTATION in here, so you can either suppress all 3 with that, or use these to specifically select an angle.\n\nAlso renamed these to PREROTATIONnn",
+      "parentUuid": "836b14f8_38d6df19",
       "range": {
         "startLine": 37,
         "startChar": 0,
@@ -128,6 +194,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e8b33f0a_a4699953",
+        "filename": "src/tests/deqp_support/angle_deqp_gtest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-10-31T02:05:01Z",
+      "side": 1,
+      "message": "Done, though a bit wordy IMO",
+      "parentUuid": "4c395a33_46146f0f",
+      "range": {
+        "startLine": 104,
+        "startChar": 39,
+        "endLine": 104,
+        "endChar": 50
+      },
+      "revId": "3aa84eb5a76b1b827e2dbb06d497cbd6ffa809a3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b559044d_b3d92635",
@@ -141,6 +231,30 @@
       "writtenOn": "2020-10-29T19:02:01Z",
       "side": 1,
       "message": "nit: would call these mEnableFeatureOverrides or something like that, as it\u0027s really clearer that way.",
+      "range": {
+        "startLine": 64,
+        "startChar": 30,
+        "endLine": 64,
+        "endChar": 50
+      },
+      "revId": "3aa84eb5a76b1b827e2dbb06d497cbd6ffa809a3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "34d54aa1_750b49fd",
+        "filename": "src/tests/deqp_support/tcuANGLEPlatform.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-10-31T02:05:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b559044d_b3d92635",
       "range": {
         "startLine": 64,
         "startChar": 30,

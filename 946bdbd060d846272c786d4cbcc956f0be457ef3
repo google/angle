@@ -182,6 +182,30 @@
       },
       "revId": "946bdbd060d846272c786d4cbcc956f0be457ef3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ec380537_588f83cb",
+        "filename": "src/tests/deqp_support/tcuANGLENativeDisplayFactory.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 349,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-10-31T02:05:01Z",
+      "side": 1,
+      "message": "Added a comment. This maintains a lie to the application that the window is the dimensions it asked for. For example:\n\n- dEQP asks for a 300x400 window\n- We test with 90 degree prerotation\n- Physical window is created at 400x300\n- getSurfaceSize() returns 300x400 to dEQP.",
+      "parentUuid": "50f54cb1_65d1f1bc",
+      "range": {
+        "startLine": 345,
+        "startChar": 0,
+        "endLine": 349,
+        "endChar": 0
+      },
+      "revId": "946bdbd060d846272c786d4cbcc956f0be457ef3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
