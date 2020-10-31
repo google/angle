@@ -104,6 +104,24 @@
       "message": "To clarify: your CL broke the workflow where we would log EVENT() calls to debug.txt when we set angle_enable_trace \u003d true . Can you restore this functionality either to angle_enable_trace or to another GN variable that we can use in its stead?",
       "revId": "4f8daf1bb0314e32793e9dff28313a3ea29ab642",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a076500f_b5209ba8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-31T14:40:36Z",
+      "side": 1,
+      "message": "i.e. tweak the changes you made to speed up AGI to restore the old code path, instead of adding a totally new one.",
+      "parentUuid": "43c411ef_74d6d1dd",
+      "revId": "4f8daf1bb0314e32793e9dff28313a3ea29ab642",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
