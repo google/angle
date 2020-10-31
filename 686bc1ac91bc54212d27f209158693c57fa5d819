@@ -117,6 +117,30 @@
       },
       "revId": "686bc1ac91bc54212d27f209158693c57fa5d819",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "aad9a736_91e03f38",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2683,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-10-31T22:11:54Z",
+      "side": 1,
+      "message": "\u003e We\u0027ll need another solution\n\nok, what did you have in mind?\n\n\u003e it\u0027ll refresh the images way too often\n\nif i followed the code right, only when skip decode is toggled? maybe i misunderstood your clean up code",
+      "parentUuid": "798f2cf3_938ded9e",
+      "range": {
+        "startLine": 2683,
+        "startChar": 15,
+        "endLine": 2683,
+        "endChar": 32
+      },
+      "revId": "686bc1ac91bc54212d27f209158693c57fa5d819",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
