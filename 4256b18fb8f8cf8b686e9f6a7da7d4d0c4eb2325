@@ -878,6 +878,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ae05df8f_70a06604",
+        "filename": "src/libANGLE/renderer/vulkan/display/WindowSurfaceVkDisplay.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-10-31T03:25:34Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "8a0ed6c9_2bf449db",
+      "range": {
+        "startLine": 71,
+        "startChar": 50,
+        "endLine": 71,
+        "endChar": 64
+      },
+      "revId": "4256b18fb8f8cf8b686e9f6a7da7d4d0c4eb2325",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ac14402e_a0889e5f",

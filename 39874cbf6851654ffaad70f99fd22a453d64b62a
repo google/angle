@@ -24,6 +24,23 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1c5b3d0b_408c5121",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-10-31T03:25:34Z",
+      "side": 1,
+      "message": "LGTM. I don\u0027t have any other comments to add to Jamie\u0027s.",
+      "revId": "39874cbf6851654ffaad70f99fd22a453d64b62a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "061cccec_b9bbf15f",
