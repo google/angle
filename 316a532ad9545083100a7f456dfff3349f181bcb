@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5f5e521c_cdeca1a1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-31T14:06:33Z",
+      "side": 1,
+      "message": "Nice, please disregard the earlier comment.",
+      "revId": "316a532ad9545083100a7f456dfff3349f181bcb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "57485a1f_435fb060",
+        "filename": "src/tests/gl_tests/DrawBuffersTest.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1009,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-31T14:06:33Z",
+      "side": 1,
+      "message": "this looks like a bug in Metal, instead of including this workaround please just skip the test.",
+      "range": {
+        "startLine": 1000,
+        "startChar": 0,
+        "endLine": 1009,
+        "endChar": 14
+      },
+      "revId": "316a532ad9545083100a7f456dfff3349f181bcb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
