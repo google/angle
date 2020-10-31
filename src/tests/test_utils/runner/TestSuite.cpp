@@ -315,14 +315,14 @@ void WriteResultsFile(bool interrupted,
     }
 }
 
-void WriteHistogramJson(const TestResults &testResults,
+void WriteHistogramJson(const HistogramWriter &histogramWriter,
                         const std::string &outputFile,
                         const char *testSuiteName)
 {
     js::Document doc;
     doc.SetArray();
 
-    // TODO: http://anglebug.com/4769 - Implement histogram output.
+    histogramWriter.getAsJSON(&doc);
 
     printf("Writing histogram json to %s\n", outputFile.c_str());
 
@@ -335,6 +335,7 @@ void WriteHistogramJson(const TestResults &testResults,
 void WriteOutputFiles(bool interrupted,
                       const TestResults &testResults,
                       const std::string &resultsFile,
+                      const HistogramWriter &histogramWriter,
                       const std::string &histogramJsonOutputFile,
                       const char *testSuiteName)
 {
@@ -345,7 +346,7 @@ void WriteOutputFiles(bool interrupted,
 
     if (!histogramJsonOutputFile.empty())
     {
-        WriteHistogramJson(testResults, histogramJsonOutputFile, testSuiteName);
+        WriteHistogramJson(histogramWriter, histogramJsonOutputFile, testSuiteName);
     }
 }
 
@@ -382,11 +383,13 @@ class TestEventListener : public testing::EmptyTestEventListener
     TestEventListener(const std::string &resultsFile,
                       const std::string &histogramJsonFile,
                       const char *testSuiteName,
-                      TestResults *testResults)
+                      TestResults *testResults,
+                      HistogramWriter *histogramWriter)
         : mResultsFile(resultsFile),
           mHistogramJsonFile(histogramJsonFile),
           mTestSuiteName(testSuiteName),
-          mTestResults(testResults)
+          mTestResults(testResults),
+          mHistogramWriter(histogramWriter)
     {}
 
     void OnTestStart(const testing::TestInfo &testInfo) override
@@ -409,7 +412,8 @@ class TestEventListener : public testing::EmptyTestEventListener
     {
         std::lock_guard<std::mutex> guard(mTestResults->currentTestMutex);
         mTestResults->allDone = true;
-        WriteOutputFiles(false, *mTestResults, mResultsFile, mHistogramJsonFile, mTestSuiteName);
+        WriteOutputFiles(false, *mTestResults, mResultsFile, *mHistogramWriter, mHistogramJsonFile,
+                         mTestSuiteName);
     }
 
   private:
@@ -417,6 +421,7 @@ class TestEventListener : public testing::EmptyTestEventListener
     std::string mHistogramJsonFile;
     const char *mTestSuiteName;
     TestResults *mTestResults;
+    HistogramWriter *mHistogramWriter;
 };
 
 bool IsTestDisabled(const testing::TestInfo &testInfo)
@@ -816,6 +821,9 @@ void GTestListTests(const std::map<TestIdentifier, TestResult> &resultsMap)
 }
 }  // namespace
 
+// static
+TestSuite *TestSuite::mInstance = nullptr;
+
 TestIdentifier::TestIdentifier() = default;
 
 TestIdentifier::TestIdentifier(const std::string &suiteNameIn, const std::string &nameIn)
@@ -889,6 +897,9 @@ TestSuite::TestSuite(int *argc, char **argv)
       mBatchId(-1),
       mFlakyRetries(0)
 {
+    ASSERT(mInstance == nullptr);
+    mInstance = this;
+
     Optional<int> filterArgIndex;
     bool alsoRunDisabledTests = false;
 
@@ -1091,7 +1102,8 @@ TestSuite::TestSuite(int *argc, char **argv)
     {
         testing::TestEventListeners &listeners = testing::UnitTest::GetInstance()->listeners();
         listeners.Append(new TestEventListener(mResultsFile, mHistogramJsonFile,
-                                               mTestSuiteName.c_str(), &mTestResults));
+                                               mTestSuiteName.c_str(), &mTestResults,
+                                               &mHistogramWriter));
 
         for (const TestIdentifier &id : testSet)
         {
@@ -1151,7 +1163,8 @@ void TestSuite::onCrashOrTimeout(TestResultType crashOrTimeout)
         return;
     }
 
-    WriteOutputFiles(true, mTestResults, mResultsFile, mHistogramJsonFile, mTestSuiteName.c_str());
+    WriteOutputFiles(true, mTestResults, mResultsFile, mHistogramWriter, mHistogramJsonFile,
+                     mTestSuiteName.c_str());
 }
 
 bool TestSuite::launchChildTestProcess(uint32_t batchId,
@@ -1522,7 +1535,8 @@ int TestSuite::run()
     }
 
     // Dump combined results.
-    WriteOutputFiles(false, mTestResults, mResultsFile, mHistogramJsonFile, mTestSuiteName.c_str());
+    WriteOutputFiles(false, mTestResults, mResultsFile, mHistogramWriter, mHistogramJsonFile,
+                     mTestSuiteName.c_str());
 
     totalRunTime.stop();
     printf("Tests completed in %lf seconds\n", totalRunTime.getElapsedTime());
@@ -1585,6 +1599,14 @@ void TestSuite::startWatchdog()
         ::_Exit(EXIT_FAILURE);
     };
     mWatchdogThread = std::thread(watchdogMain);
+}
+
+void TestSuite::addHistogramSample(const std::string &measurement,
+                                   const std::string &story,
+                                   double value,
+                                   const std::string &units)
+{
+    mHistogramWriter.addSample(measurement, story, value, units);
 }
 
 bool GetTestResultsFromFile(const char *fileName, TestResults *resultsOut)

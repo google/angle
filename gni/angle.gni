@@ -142,6 +142,10 @@ declare_args() {
   angle_enable_perf_counter_output = false
 }
 
+declare_args() {
+  angle_has_histograms = angle_has_build
+}
+
 if (!defined(angle_zlib_compression_utils_dir)) {
   angle_zlib_compression_utils_dir = "//third_party/zlib/google"
 }
@@ -206,7 +210,7 @@ set_defaults("angle_test") {
   configs = angle_common_configs - [
               "$angle_root:constructor_and_destructor_warnings",
               "$angle_root:extra_warnings",
-            ]
+            ] + [ "$angle_root/src/tests:angle_maybe_has_histograms" ]
 
   public_configs = []
   public_deps = []
@@ -328,9 +332,19 @@ template("angle_test") {
            ]
 
     sources += [
+      "$angle_root/src/tests/test_utils/runner/HistogramWriter.h",
       "$angle_root/src/tests/test_utils/runner/TestSuite.cpp",
       "$angle_root/src/tests/test_utils/runner/TestSuite.h",
     ]
+
+    if (angle_has_histograms) {
+      sources +=
+          [ "$angle_root/src/tests/test_utils/runner/HistogramWriter.cpp" ]
+      deps += [
+        "//third_party/catapult/tracing/tracing:histogram",
+        "//third_party/catapult/tracing/tracing:reserved_infos",
+      ]
+    }
 
     if ((is_linux && !is_chromeos) ||
         (build_with_chromium && chromeos_is_browser_only)) {
