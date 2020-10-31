@@ -361,6 +361,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "c63b92aa_22b55caa",
+        "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-31T13:06:29Z",
+      "side": 1,
+      "message": "Mohan could confirm. I don\u0027t really follow. If that\u0027s the case, we should remove the workaround.",
+      "parentUuid": "0c8f0cff_9cf4632b",
+      "range": {
+        "startLine": 186,
+        "startChar": 3,
+        "endLine": 186,
+        "endChar": 86
+      },
+      "revId": "a4f636682a24b6c4a9641d30e24fab77042abec8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "c846e699_524e00df",
         "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
         "patchSetId": 1
