@@ -16,6 +16,23 @@
       "message": "Jonah or Shabi, review ping.",
       "revId": "e6790bcb514645a790a6f0338e04ea51b287a3f9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "23685a29_9d5f0a6c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 14
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-10-31T03:16:56Z",
+      "side": 1,
+      "message": "Not really qualified to review Metal. Leaving +2 to Jonah.",
+      "revId": "e6790bcb514645a790a6f0338e04ea51b287a3f9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
