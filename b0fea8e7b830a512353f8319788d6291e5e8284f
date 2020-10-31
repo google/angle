@@ -37,6 +37,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "cc6bd305_dd7e7d5f",
+        "filename": "include/platform/FeaturesVk.h",
+        "patchSetId": 22
+      },
+      "lineNbr": 342,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-31T14:38:27Z",
+      "side": 1,
+      "message": "nit: should match the name of this feature (no renderer_)",
+      "range": {
+        "startLine": 342,
+        "startChar": 33,
+        "endLine": 342,
+        "endChar": 59
+      },
+      "revId": "b0fea8e7b830a512353f8319788d6291e5e8284f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "f75a6955_585a068b",
         "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.cpp",
         "patchSetId": 22
@@ -54,6 +77,52 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "c3e1aa46_b712d71a",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 269,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-31T14:38:27Z",
+      "side": 1,
+      "message": "The WithLock version doesn\u0027t take a lock and the without-lock version does. Can you clarify?",
+      "range": {
+        "startLine": 269,
+        "startChar": 4,
+        "endLine": 269,
+        "endChar": 69
+      },
+      "revId": "b0fea8e7b830a512353f8319788d6291e5e8284f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5757ef7f_bcd2011d",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 274,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-31T14:38:27Z",
+      "side": 1,
+      "message": "I guess technically this is getAndClearLastPresentResult?",
+      "range": {
+        "startLine": 274,
+        "startChar": 24,
+        "endLine": 274,
+        "endChar": 44
+      },
+      "revId": "b0fea8e7b830a512353f8319788d6291e5e8284f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "af9ba12a_9be34c37",
         "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.cpp",
         "patchSetId": 22
@@ -65,6 +134,52 @@
       "writtenOn": "2020-10-31T03:15:29Z",
       "side": 1,
       "message": "Why do you need to re-acquire the lock here?",
+      "revId": "b0fea8e7b830a512353f8319788d6291e5e8284f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "94fe1540_f861c039",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.h",
+        "patchSetId": 22
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-31T14:38:27Z",
+      "side": 1,
+      "message": "this still doesn\u0027t seem like a necessary command - maybe you just want a WaitIdle command?",
+      "range": {
+        "startLine": 49,
+        "startChar": 0,
+        "endLine": 50,
+        "endChar": 27
+      },
+      "revId": "b0fea8e7b830a512353f8319788d6291e5e8284f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cbc5656d_fd6bd436",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.h",
+        "patchSetId": 22
+      },
+      "lineNbr": 201,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-31T14:38:27Z",
+      "side": 1,
+      "message": "nit: const?",
+      "range": {
+        "startLine": 201,
+        "startChar": 13,
+        "endLine": 201,
+        "endChar": 33
+      },
       "revId": "b0fea8e7b830a512353f8319788d6291e5e8284f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
@@ -99,6 +214,24 @@
       "writtenOn": "2020-10-31T03:15:29Z",
       "side": 1,
       "message": "Bug?",
+      "revId": "b0fea8e7b830a512353f8319788d6291e5e8284f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fd77f34b_77572250",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 2264,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-31T14:38:27Z",
+      "side": 1,
+      "message": "Need to clean out open-ended TODOs before submission.",
+      "parentUuid": "1f801d01_bd56f2b9",
       "revId": "b0fea8e7b830a512353f8319788d6291e5e8284f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
