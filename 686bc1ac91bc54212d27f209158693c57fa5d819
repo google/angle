@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1479c9d5_98440587",
+        "filename": "include/platform/FeaturesVk.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 395,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-31T20:24:39Z",
+      "side": 1,
+      "message": "nit: I would call this specifically \u0027supportsImageFormatList\u0027 or similar to be clearer about  the driver property we\u0027re using",
+      "range": {
+        "startLine": 395,
+        "startChar": 12,
+        "endLine": 395,
+        "endChar": 38
+      },
+      "revId": "686bc1ac91bc54212d27f209158693c57fa5d819",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "823ea707_3effc762",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2683,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-31T20:24:39Z",
+      "side": 1,
+      "message": "this is suspect - can you revert this?",
+      "range": {
+        "startLine": 2683,
+        "startChar": 15,
+        "endLine": 2683,
+        "endChar": 32
+      },
+      "revId": "686bc1ac91bc54212d27f209158693c57fa5d819",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
