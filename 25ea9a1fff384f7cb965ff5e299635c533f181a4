@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ceaf1c3f_555aad36",
+        "filename": "include/platform/FeaturesMtl.h",
+        "patchSetId": 18
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2020-10-31T17:15:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "590752bd_775093af",
+      "range": {
+        "startLine": 74,
+        "startChar": 12,
+        "endLine": 74,
+        "endChar": 34
+      },
+      "revId": "25ea9a1fff384f7cb965ff5e299635c533f181a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3be399c3_7bd78a1f",
@@ -47,6 +71,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "55fbe54a_727f13eb",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2020-10-31T17:15:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3be399c3_7bd78a1f",
+      "range": {
+        "startLine": 169,
+        "startChar": 6,
+        "endLine": 183,
+        "endChar": 0
+      },
+      "revId": "25ea9a1fff384f7cb965ff5e299635c533f181a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d5ba7753_fa561d5f",
@@ -60,6 +108,30 @@
       "writtenOn": "2020-10-31T13:12:29Z",
       "side": 1,
       "message": "nit: please include the term Metal in here so we know this only applies to Metal.",
+      "range": {
+        "startLine": 244,
+        "startChar": 26,
+        "endLine": 244,
+        "endChar": 61
+      },
+      "revId": "25ea9a1fff384f7cb965ff5e299635c533f181a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3d56f518_a1a9575a",
+        "filename": "src/tests/test_utils/angle_test_configs.h",
+        "patchSetId": 18
+      },
+      "lineNbr": 244,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2020-10-31T17:15:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d5ba7753_fa561d5f",
       "range": {
         "startLine": 244,
         "startChar": 26,
