@@ -337,6 +337,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "0c8f0cff_9cf4632b",
+        "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-10-31T03:12:15Z",
+      "side": 1,
+      "message": "I don\u0027t believe this is an issue anymore when we support only an array size of 1 (so there\u0027s no non-const indexing anymore as every indexed can be statically replaced with 0).",
+      "parentUuid": "f51886d4_30e8ebaa",
+      "range": {
+        "startLine": 186,
+        "startChar": 3,
+        "endLine": 186,
+        "endChar": 86
+      },
+      "revId": "a4f636682a24b6c4a9641d30e24fab77042abec8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "c846e699_524e00df",
         "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
         "patchSetId": 1
