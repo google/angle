@@ -1,0 +1,153 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d7b3b750_43f0e688",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-10-31T01:38:31Z",
+      "side": 1,
+      "message": "Thank you Jamie for taking care of this. LGTM with some nits. Looks like the GL backend is also affected by this bug, but feel free to suppress and get this landed first.",
+      "revId": "2cb29eb6e19252be25641cf7ab826bc380e24b7d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "84914d2c_e93a0078",
+        "filename": "src/libANGLE/renderer/vulkan/OverlayVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-10-31T01:38:31Z",
+      "side": 1,
+      "message": "No biggie, but can be false. It will be overwritten entirely.",
+      "range": {
+        "startLine": 114,
+        "startChar": 55,
+        "endLine": 114,
+        "endChar": 95
+      },
+      "revId": "2cb29eb6e19252be25641cf7ab826bc380e24b7d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "04df0e57_5236d9c9",
+        "filename": "src/libANGLE/renderer/vulkan/OverlayVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-10-31T01:38:31Z",
+      "side": 1,
+      "message": "Same here. No need for clear.",
+      "range": {
+        "startLine": 183,
+        "startChar": 34,
+        "endLine": 183,
+        "endChar": 74
+      },
+      "revId": "2cb29eb6e19252be25641cf7ab826bc380e24b7d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5c9db436_43479937",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1926,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-10-31T01:38:31Z",
+      "side": 1,
+      "message": "false here. Data of the MSAA image always comes from the single sampled one. In fact, staged updates on the MSAA image are never flushed (because there aren\u0027t expected to be any)",
+      "range": {
+        "startLine": 1926,
+        "startChar": 12,
+        "endLine": 1926,
+        "endChar": 52
+      },
+      "revId": "2cb29eb6e19252be25641cf7ab826bc380e24b7d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8c926350_cce51b92",
+        "filename": "src/tests/egl_tests/EGLSurfaceTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-10-31T01:38:31Z",
+      "side": 1,
+      "message": "nit: pass in EGLContext *, and use it for both mContext and mSecondContext below",
+      "range": {
+        "startLine": 132,
+        "startChar": 33,
+        "endLine": 132,
+        "endChar": 34
+      },
+      "revId": "2cb29eb6e19252be25641cf7ab826bc380e24b7d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bb8e8cf1_d6161c34",
+        "filename": "src/tests/egl_tests/EGLSurfaceTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1277,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-10-31T01:38:31Z",
+      "side": 1,
+      "message": "Maybe you can use UniformColor and draw (1, 0, 0, 0) and expect (1, 0, 0, 1) to make sure emulated clear is really the one that\u0027s clearing alpha (and not the draw call accidentally writing to it).",
+      "range": {
+        "startLine": 1277,
+        "startChar": 82,
+        "endLine": 1277,
+        "endChar": 85
+      },
+      "revId": "2cb29eb6e19252be25641cf7ab826bc380e24b7d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "44c57ab5_57120bc9",
+        "filename": "src/tests/test_utils/ANGLETest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 643,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-10-31T01:38:31Z",
+      "side": 1,
+      "message": "*",
+      "revId": "2cb29eb6e19252be25641cf7ab826bc380e24b7d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
