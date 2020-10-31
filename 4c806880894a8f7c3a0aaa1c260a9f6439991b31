@@ -48,6 +48,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "64915205_bb44284e",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 213,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-10-31T03:15:29Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "80312e41_b57e6d30",
+      "range": {
+        "startLine": 207,
+        "startChar": 0,
+        "endLine": 213,
+        "endChar": 5
+      },
+      "revId": "4c806880894a8f7c3a0aaa1c260a9f6439991b31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "88b57634_05be965e",
@@ -79,6 +103,24 @@
       "side": 1,
       "message": "We don\u0027t care about anything but the last result. Though the way things are right now we won\u0027t ever have a second present finish without reading the prior result.",
       "parentUuid": "88b57634_05be965e",
+      "revId": "4c806880894a8f7c3a0aaa1c260a9f6439991b31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "55a14cee_ebfa907f",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 392,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-10-31T03:15:29Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "8d333073_1992e280",
       "revId": "4c806880894a8f7c3a0aaa1c260a9f6439991b31",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
@@ -489,6 +531,24 @@
       "side": 1,
       "message": "On devices that do not support renderer-\u003egetFeatures().enablePreRotateSurfaces.enabled we only handle OUT_OF_DATE and ignore SUBOPTIMAL.",
       "parentUuid": "1e6d7346_fe3a76fc",
+      "revId": "4c806880894a8f7c3a0aaa1c260a9f6439991b31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "70415880_112046a2",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1457,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-10-31T03:15:29Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "41d0b251_43d88391",
       "revId": "4c806880894a8f7c3a0aaa1c260a9f6439991b31",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },

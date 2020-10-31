@@ -16,6 +16,108 @@
       "message": "Okay, green run on the bots.\nNow defaults CommandProcessor \u0026 threading to OFF per Jamie\u0027s request to give him more time to evaluate. So this should be a No-op functionality-wise, but makes it easier for me to add follow-up work.\nPTAL",
       "revId": "b0fea8e7b830a512353f8319788d6291e5e8284f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "151f2f81_c964e4d8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 22
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-10-31T03:15:29Z",
+      "side": 1,
+      "message": "LGTM",
+      "revId": "b0fea8e7b830a512353f8319788d6291e5e8284f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f75a6955_585a068b",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-10-31T03:15:29Z",
+      "side": 1,
+      "message": "Wrap in {}s.",
+      "revId": "b0fea8e7b830a512353f8319788d6291e5e8284f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "af9ba12a_9be34c37",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 722,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-10-31T03:15:29Z",
+      "side": 1,
+      "message": "Why do you need to re-acquire the lock here?",
+      "revId": "b0fea8e7b830a512353f8319788d6291e5e8284f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "24f149d0_786e05d7",
+        "filename": "src/libANGLE/renderer/vulkan/QueryVk.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 190,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-10-31T03:15:29Z",
+      "side": 1,
+      "message": "Can this be moved to the start of the function?",
+      "revId": "b0fea8e7b830a512353f8319788d6291e5e8284f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1f801d01_bd56f2b9",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 2264,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-10-31T03:15:29Z",
+      "side": 1,
+      "message": "Bug?",
+      "revId": "b0fea8e7b830a512353f8319788d6291e5e8284f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bbc27fd9_a026ace9",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 2267,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-10-31T03:15:29Z",
+      "side": 1,
+      "message": "Same for the rest of these.   Move out to the start of the function.",
+      "revId": "b0fea8e7b830a512353f8319788d6291e5e8284f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
