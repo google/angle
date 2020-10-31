@@ -38,6 +38,24 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "931e5e8e_bea2e0e3",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-10-31T11:43:07Z",
+      "side": 1,
+      "message": "That works for manual testing.  We need automated testing to ensure we don\u0027t regress.",
+      "parentUuid": "c86ed83f_6d166a44",
+      "revId": "3aa84eb5a76b1b827e2dbb06d497cbd6ffa809a3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "79d463a7_194623ac",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 3
