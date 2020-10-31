@@ -1,0 +1,349 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9704f436_9cd30e23",
+        "filename": "include/platform/FeaturesMtl.h",
+        "patchSetId": 22
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-31T14:04:07Z",
+      "side": 1,
+      "message": "nit: can omit \"everytime or not\" to clarify the sentence.",
+      "range": {
+        "startLine": 80,
+        "startChar": 63,
+        "endLine": 80,
+        "endChar": 79
+      },
+      "revId": "3ff5d049624dceebb1fe79f869af26b762004c64",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "052551ff_74350e0f",
+        "filename": "src/libANGLE/renderer/metal/DisplayMtl.mm",
+        "patchSetId": 22
+      },
+      "lineNbr": 741,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-31T14:04:07Z",
+      "side": 1,
+      "message": "nit: can you replace all these with ANGLE_FEATURE_CONDITION and ensure they only get set once? this is important for how they get parsed IIRC.",
+      "range": {
+        "startLine": 732,
+        "startChar": 0,
+        "endLine": 741,
+        "endChar": 64
+      },
+      "revId": "3ff5d049624dceebb1fe79f869af26b762004c64",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a45805db_a470b8cb",
+        "filename": "src/tests/gl_tests/SimpleOperationTest.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 530,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-31T14:04:07Z",
+      "side": 1,
+      "message": "nit: std::vector\u003cVector3\u003e vertices \u003d {...};",
+      "range": {
+        "startLine": 530,
+        "startChar": 4,
+        "endLine": 530,
+        "endChar": 41
+      },
+      "revId": "3ff5d049624dceebb1fe79f869af26b762004c64",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e3940d93_fe10895a",
+        "filename": "src/tests/gl_tests/SimpleOperationTest.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 553,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-31T14:04:07Z",
+      "side": 1,
+      "message": "nit: unnecessary, can omit",
+      "range": {
+        "startLine": 552,
+        "startChar": 0,
+        "endLine": 553,
+        "endChar": 49
+      },
+      "revId": "3ff5d049624dceebb1fe79f869af26b762004c64",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9ee8fc1d_335c0b91",
+        "filename": "src/tests/gl_tests/SimpleOperationTest.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 577,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-31T14:04:07Z",
+      "side": 1,
+      "message": "nit: too many checks. please only check one pixel for each color. or instead read the whole rectangle back, then count the number of wrong pixels, and do a single check.",
+      "range": {
+        "startLine": 557,
+        "startChar": 0,
+        "endLine": 577,
+        "endChar": 5
+      },
+      "revId": "3ff5d049624dceebb1fe79f869af26b762004c64",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "66148bf4_fe64919c",
+        "filename": "src/tests/gl_tests/SimpleOperationTest.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 592,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-31T14:04:07Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 592,
+        "startChar": 3,
+        "endLine": 592,
+        "endChar": 18
+      },
+      "revId": "3ff5d049624dceebb1fe79f869af26b762004c64",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7428e5af_08f06c3b",
+        "filename": "src/tests/gl_tests/SimpleOperationTest.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 620,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-31T14:04:07Z",
+      "side": 1,
+      "message": "nit: unnecessary, can omit",
+      "range": {
+        "startLine": 620,
+        "startChar": 0,
+        "endLine": 620,
+        "endChar": 49
+      },
+      "revId": "3ff5d049624dceebb1fe79f869af26b762004c64",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "95a2aac4_08c11d8d",
+        "filename": "src/tests/gl_tests/SimpleOperationTest.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 650,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-31T14:04:07Z",
+      "side": 1,
+      "message": "nit: same.",
+      "range": {
+        "startLine": 624,
+        "startChar": 0,
+        "endLine": 650,
+        "endChar": 5
+      },
+      "revId": "3ff5d049624dceebb1fe79f869af26b762004c64",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "44bcdac7_40441081",
+        "filename": "src/tests/gl_tests/SimpleOperationTest.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 665,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-31T14:04:07Z",
+      "side": 1,
+      "message": "nit: same",
+      "range": {
+        "startLine": 665,
+        "startChar": 4,
+        "endLine": 665,
+        "endChar": 18
+      },
+      "revId": "3ff5d049624dceebb1fe79f869af26b762004c64",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "02a1a310_f72b2b84",
+        "filename": "src/tests/gl_tests/SimpleOperationTest.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 696,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-31T14:04:07Z",
+      "side": 1,
+      "message": "nit: unnecessary, can omit",
+      "range": {
+        "startLine": 696,
+        "startChar": 1,
+        "endLine": 696,
+        "endChar": 49
+      },
+      "revId": "3ff5d049624dceebb1fe79f869af26b762004c64",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d167e349_c51e1b9f",
+        "filename": "src/tests/gl_tests/SimpleOperationTest.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 726,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-31T14:04:07Z",
+      "side": 1,
+      "message": "nit: same",
+      "range": {
+        "startLine": 701,
+        "startChar": 2,
+        "endLine": 726,
+        "endChar": 5
+      },
+      "revId": "3ff5d049624dceebb1fe79f869af26b762004c64",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3e04d5c7_7ca9d638",
+        "filename": "src/tests/gl_tests/SimpleOperationTest.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 730,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-31T14:04:07Z",
+      "side": 1,
+      "message": "same comments here as well.",
+      "range": {
+        "startLine": 730,
+        "startChar": 7,
+        "endLine": 730,
+        "endChar": 26
+      },
+      "revId": "3ff5d049624dceebb1fe79f869af26b762004c64",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "63b311bd_224a716f",
+        "filename": "src/tests/gl_tests/SimpleOperationTest.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 1367,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-31T14:04:07Z",
+      "side": 1,
+      "message": "at some point you can go and add ES3_METAL to the list of \"all\" configs.",
+      "range": {
+        "startLine": 1367,
+        "startChar": 4,
+        "endLine": 1367,
+        "endChar": 13
+      },
+      "revId": "3ff5d049624dceebb1fe79f869af26b762004c64",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f9efac91_ce2c5012",
+        "filename": "src/tests/test_utils/angle_test_configs.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 249,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-31T14:04:07Z",
+      "side": 1,
+      "message": "nit: please use the same name as the feature and include the keyword \u0027Metal\u0027, e.g. \"MetalForceBufferGPUStorage\" or \"ForceMetalBufferGPUStorage\"",
+      "range": {
+        "startLine": 249,
+        "startChar": 19,
+        "endLine": 249,
+        "endChar": 39
+      },
+      "revId": "3ff5d049624dceebb1fe79f869af26b762004c64",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f7d27086_84660c2b",
+        "filename": "src/tests/test_utils/angle_test_configs.h",
+        "patchSetId": 22
+      },
+      "lineNbr": 254,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-31T14:04:07Z",
+      "side": 1,
+      "message": "same comment as the next",
+      "range": {
+        "startLine": 254,
+        "startChar": 26,
+        "endLine": 254,
+        "endChar": 44
+      },
+      "revId": "3ff5d049624dceebb1fe79f869af26b762004c64",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
