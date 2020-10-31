@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4d87bfd9_2f90669a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 15
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-31T13:07:23Z",
+      "side": 1,
+      "message": "I think that\u0027s fine Shabi. Two reviewers so +2.",
+      "revId": "f0c6b4b7add40209f305fbe22df5e859a0684eff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
