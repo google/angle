@@ -93,6 +93,30 @@
       },
       "revId": "686bc1ac91bc54212d27f209158693c57fa5d819",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "798f2cf3_938ded9e",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2683,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-31T22:08:57Z",
+      "side": 1,
+      "message": "We\u0027ll need another solution. This just isn\u0027t the right way to solve the problem as it\u0027ll refresh the images way too often.",
+      "parentUuid": "cce49c66_b9951ee4",
+      "range": {
+        "startLine": 2683,
+        "startChar": 15,
+        "endLine": 2683,
+        "endChar": 32
+      },
+      "revId": "686bc1ac91bc54212d27f209158693c57fa5d819",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
