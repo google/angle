@@ -1076,6 +1076,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "849cbff5_7f3e111f",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 2700,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-10-31T13:00:50Z",
+      "side": 1,
+      "message": "Right, I see you verify completeness below. Can you move that up before the widht/height checks to make it clearer? That would also match the spec ordering.\n\nThe only gotcha I see here is:\n\nAn INVALID_OPERATION error is generated if either object is a texture\nand the texture is not complete (as defined in section 8.17, but **ignoring\nformat-based completeness rule**), or if the source and destination internal formats are not compatible, or if the number of samples do not match.\n\nIt looks like we use a different completeness check for this function. I don\u0027t quite know what that means. I wonder if there are \"KHR\" that cover these format edge cases? I don\u0027t know if you ran into any in the 3.1 extension tests. Anyway maybe make a note of that.",
+      "parentUuid": "3c93ba91_6cc36870",
+      "range": {
+        "startLine": 2694,
+        "startChar": 0,
+        "endLine": 2700,
+        "endChar": 9
+      },
+      "revId": "90e28645c779afd9206e684e8ff05057ad3127ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "a73ed056_8849f441",
         "filename": "src/libANGLE/validationES.cpp",
         "patchSetId": 12
