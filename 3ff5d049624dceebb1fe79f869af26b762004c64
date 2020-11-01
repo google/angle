@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "462b1e8e_80deed47",
+        "filename": "include/platform/FeaturesMtl.h",
+        "patchSetId": 22
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2020-11-01T15:17:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9704f436_9cd30e23",
+      "range": {
+        "startLine": 80,
+        "startChar": 63,
+        "endLine": 80,
+        "endChar": 79
+      },
+      "revId": "3ff5d049624dceebb1fe79f869af26b762004c64",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "052551ff_74350e0f",
@@ -37,6 +61,30 @@
       "writtenOn": "2020-10-31T14:04:07Z",
       "side": 1,
       "message": "nit: can you replace all these with ANGLE_FEATURE_CONDITION and ensure they only get set once? this is important for how they get parsed IIRC.",
+      "range": {
+        "startLine": 732,
+        "startChar": 0,
+        "endLine": 741,
+        "endChar": 64
+      },
+      "revId": "3ff5d049624dceebb1fe79f869af26b762004c64",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "222282c8_7bae6a37",
+        "filename": "src/libANGLE/renderer/metal/DisplayMtl.mm",
+        "patchSetId": 22
+      },
+      "lineNbr": 741,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2020-11-01T15:17:00Z",
+      "side": 1,
+      "message": "forceBufferGPUStorage is supposed to be false by default, there is no condition for it. It is supposed to be overridden by tests.\n\nFor the rest, some are always true on certain platforms (e.g. mac). FYI,\nif I call:\n `ANGLE_FEATURE_CONDITION(..., ..., TARGET_OS_OSX)`\nfor example, it will become:\n `ANGLE_FEATURE_CONDITION(..., ..., 1)`\nafter compiler\u0027s preprocessing step, so it won\u0027t be useful either.\n\nI could clean these features up in future, but not in this CL. Want to avoid unrelated changes and extra testing at this point.",
+      "parentUuid": "052551ff_74350e0f",
       "range": {
         "startLine": 732,
         "startChar": 0,
@@ -70,6 +118,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "fd0c7372_d0be5b02",
+        "filename": "src/tests/gl_tests/SimpleOperationTest.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 530,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2020-11-01T15:17:00Z",
+      "side": 1,
+      "message": "Done in TriangleFanDrawTest class",
+      "parentUuid": "a45805db_a470b8cb",
+      "range": {
+        "startLine": 530,
+        "startChar": 4,
+        "endLine": 530,
+        "endChar": 41
+      },
+      "revId": "3ff5d049624dceebb1fe79f869af26b762004c64",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e3940d93_fe10895a",
@@ -83,6 +155,30 @@
       "writtenOn": "2020-10-31T14:04:07Z",
       "side": 1,
       "message": "nit: unnecessary, can omit",
+      "range": {
+        "startLine": 552,
+        "startChar": 0,
+        "endLine": 553,
+        "endChar": 49
+      },
+      "revId": "3ff5d049624dceebb1fe79f869af26b762004c64",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d414e502_32e15057",
+        "filename": "src/tests/gl_tests/SimpleOperationTest.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 553,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2020-11-01T15:17:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e3940d93_fe10895a",
       "range": {
         "startLine": 552,
         "startChar": 0,
@@ -116,6 +212,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8d29a87d_2c2792fb",
+        "filename": "src/tests/gl_tests/SimpleOperationTest.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 577,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2020-11-01T15:17:00Z",
+      "side": 1,
+      "message": "Done. Read whole backbuffer to a pixels array and do the check on the array.",
+      "parentUuid": "9ee8fc1d_335c0b91",
+      "range": {
+        "startLine": 557,
+        "startChar": 0,
+        "endLine": 577,
+        "endChar": 5
+      },
+      "revId": "3ff5d049624dceebb1fe79f869af26b762004c64",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "66148bf4_fe64919c",
@@ -129,6 +249,30 @@
       "writtenOn": "2020-10-31T14:04:07Z",
       "side": 1,
       "message": "same",
+      "range": {
+        "startLine": 592,
+        "startChar": 3,
+        "endLine": 592,
+        "endChar": 18
+      },
+      "revId": "3ff5d049624dceebb1fe79f869af26b762004c64",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d996394b_c9da44b6",
+        "filename": "src/tests/gl_tests/SimpleOperationTest.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 592,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2020-11-01T15:17:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "66148bf4_fe64919c",
       "range": {
         "startLine": 592,
         "startChar": 3,
@@ -162,6 +306,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d7710536_3b490bf6",
+        "filename": "src/tests/gl_tests/SimpleOperationTest.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 620,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2020-11-01T15:17:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7428e5af_08f06c3b",
+      "range": {
+        "startLine": 620,
+        "startChar": 0,
+        "endLine": 620,
+        "endChar": 49
+      },
+      "revId": "3ff5d049624dceebb1fe79f869af26b762004c64",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "95a2aac4_08c11d8d",
@@ -175,6 +343,30 @@
       "writtenOn": "2020-10-31T14:04:07Z",
       "side": 1,
       "message": "nit: same.",
+      "range": {
+        "startLine": 624,
+        "startChar": 0,
+        "endLine": 650,
+        "endChar": 5
+      },
+      "revId": "3ff5d049624dceebb1fe79f869af26b762004c64",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "809e8204_e6b7b592",
+        "filename": "src/tests/gl_tests/SimpleOperationTest.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 650,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2020-11-01T15:17:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "95a2aac4_08c11d8d",
       "range": {
         "startLine": 624,
         "startChar": 0,
@@ -208,6 +400,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5a83a58f_6f8bdb5f",
+        "filename": "src/tests/gl_tests/SimpleOperationTest.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 665,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2020-11-01T15:17:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "44bcdac7_40441081",
+      "range": {
+        "startLine": 665,
+        "startChar": 4,
+        "endLine": 665,
+        "endChar": 18
+      },
+      "revId": "3ff5d049624dceebb1fe79f869af26b762004c64",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "02a1a310_f72b2b84",
@@ -221,6 +437,30 @@
       "writtenOn": "2020-10-31T14:04:07Z",
       "side": 1,
       "message": "nit: unnecessary, can omit",
+      "range": {
+        "startLine": 696,
+        "startChar": 1,
+        "endLine": 696,
+        "endChar": 49
+      },
+      "revId": "3ff5d049624dceebb1fe79f869af26b762004c64",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5ed3be88_fd7cbd76",
+        "filename": "src/tests/gl_tests/SimpleOperationTest.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 696,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2020-11-01T15:17:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "02a1a310_f72b2b84",
       "range": {
         "startLine": 696,
         "startChar": 1,
@@ -254,6 +494,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ab2dea08_c1c7c38a",
+        "filename": "src/tests/gl_tests/SimpleOperationTest.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 726,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2020-11-01T15:17:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d167e349_c51e1b9f",
+      "range": {
+        "startLine": 701,
+        "startChar": 2,
+        "endLine": 726,
+        "endChar": 5
+      },
+      "revId": "3ff5d049624dceebb1fe79f869af26b762004c64",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3e04d5c7_7ca9d638",
@@ -267,6 +531,30 @@
       "writtenOn": "2020-10-31T14:04:07Z",
       "side": 1,
       "message": "same comments here as well.",
+      "range": {
+        "startLine": 730,
+        "startChar": 7,
+        "endLine": 730,
+        "endChar": 26
+      },
+      "revId": "3ff5d049624dceebb1fe79f869af26b762004c64",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3003ce88_eb0da4b8",
+        "filename": "src/tests/gl_tests/SimpleOperationTest.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 730,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2020-11-01T15:17:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3e04d5c7_7ca9d638",
       "range": {
         "startLine": 730,
         "startChar": 7,
@@ -323,6 +611,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "bfb2db68_5a4adb2c",
+        "filename": "src/tests/test_utils/angle_test_configs.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 249,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2020-11-01T15:17:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f9efac91_ce2c5012",
+      "range": {
+        "startLine": 249,
+        "startChar": 19,
+        "endLine": 249,
+        "endChar": 39
+      },
+      "revId": "3ff5d049624dceebb1fe79f869af26b762004c64",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f7d27086_84660c2b",
@@ -336,6 +648,30 @@
       "writtenOn": "2020-10-31T14:04:07Z",
       "side": 1,
       "message": "same comment as the next",
+      "range": {
+        "startLine": 254,
+        "startChar": 26,
+        "endLine": 254,
+        "endChar": 44
+      },
+      "revId": "3ff5d049624dceebb1fe79f869af26b762004c64",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0079d58d_56d48d13",
+        "filename": "src/tests/test_utils/angle_test_configs.h",
+        "patchSetId": 22
+      },
+      "lineNbr": 254,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2020-11-01T15:17:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f7d27086_84660c2b",
       "range": {
         "startLine": 254,
         "startChar": 26,
