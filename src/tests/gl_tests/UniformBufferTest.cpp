@@ -1694,6 +1694,9 @@ TEST_P(UniformBufferTest, ManyBlocks)
     // http://anglebug.com/5039
     ANGLE_SKIP_TEST_IF(IsD3D11());
 
+    // http://anglebug.com/5283
+    ANGLE_SKIP_TEST_IF(IsMetal() && IsIntel());
+
     constexpr char kFS[] =
         R"(#version 300 es
 
@@ -1745,7 +1748,7 @@ TEST_P(UniformBufferTest, ManyBlocks)
         vAsFloat[0] = (i + 1) / 255.0f;
         vAsFloat[1] = (i + 1) / 255.0f;
         vAsFloat[2] = (i + 1) / 255.0f;
-        vAsFloat[3] = 255.0f;
+        vAsFloat[3] = .0f;
 
         glBufferData(GL_UNIFORM_BUFFER, v.size(), v.data(), GL_STATIC_DRAW);
 
@@ -1753,8 +1756,26 @@ TEST_P(UniformBufferTest, ManyBlocks)
         glUniformBlockBinding(program, bufferIndex[i], i);
     }
 
+    glViewport(0, 0, getWindowWidth() / 2, getWindowHeight());
     drawQuad(program.get(), essl3_shaders::PositionAttrib(), 0.5f);
+
+    // Modify buffer[1]
+    glBindBuffer(GL_UNIFORM_BUFFER, buffers[1]);
+
+    vAsFloat[0] = 2 / 255.0f;
+    vAsFloat[1] = 22 / 255.0f;  // green channel increased by 20
+    vAsFloat[2] = 2 / 255.0f;
+    vAsFloat[3] = .0f;
+
+    glBufferData(GL_UNIFORM_BUFFER, v.size(), v.data(), GL_STATIC_DRAW);
+
+    glViewport(getWindowWidth() / 2, 0, getWindowWidth() / 2, getWindowHeight());
+    drawQuad(program.get(), essl3_shaders::PositionAttrib(), 0.5f);
+
+    // First draw
     EXPECT_PIXEL_NEAR(0, 0, 78, 78, 78, 255, 2);
+    // Second draw: green channel increased by 20
+    EXPECT_PIXEL_NEAR(getWindowWidth() / 2, 0, 78, 98, 78, 255, 2);
 }
 
 // These suite cases test the uniform blocks with a large array member. Unlike other uniform
