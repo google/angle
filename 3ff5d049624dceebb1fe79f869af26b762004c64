@@ -97,6 +97,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "c8c45a34_ac34dc3c",
+        "filename": "src/libANGLE/renderer/metal/DisplayMtl.mm",
+        "patchSetId": 22
+      },
+      "lineNbr": 741,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-01T16:44:38Z",
+      "side": 1,
+      "message": "For features that are disabled by default, please use ANGLE_FEATURE_CONDITION(..., false);\n\nFor features that are based on compile-time properties, set a local variable or a function that returns true/false. Then use that variable or function in the feature expression.\n\nYou can see this is the pattern we use for other back-ends, e.g. RendererVk.cpp.\n\nSo please use this pattern for this feature and your other new features. It would be appreciated if you could make a CL to clean up the others before finishing up the work on Metal/ES3.",
+      "parentUuid": "222282c8_7bae6a37",
+      "range": {
+        "startLine": 732,
+        "startChar": 0,
+        "endLine": 741,
+        "endChar": 64
+      },
+      "revId": "3ff5d049624dceebb1fe79f869af26b762004c64",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "a45805db_a470b8cb",
         "filename": "src/tests/gl_tests/SimpleOperationTest.cpp",
         "patchSetId": 22
