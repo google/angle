@@ -119,6 +119,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "29f7f459_f005e7c4",
+        "filename": "src/libANGLE/renderer/metal/DisplayMtl.mm",
+        "patchSetId": 22
+      },
+      "lineNbr": 741,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2020-11-01T17:53:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c8c45a34_ac34dc3c",
+      "range": {
+        "startLine": 732,
+        "startChar": 0,
+        "endLine": 741,
+        "endChar": 64
+      },
+      "revId": "3ff5d049624dceebb1fe79f869af26b762004c64",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a45805db_a470b8cb",
