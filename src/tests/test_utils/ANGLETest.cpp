@@ -640,6 +640,8 @@ void ANGLETestBase::ANGLETestTearDown()
 
     if (mFixture->reuseCounter++ >= kWindowReuseLimit || mForceNewDisplay)
     {
+        printf("Recreating test window because of reuse limit of %d\n", kWindowReuseLimit);
+
         mFixture->reuseCounter = 0;
         getGLWindow()->destroyGL();
     }
