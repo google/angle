@@ -88,6 +88,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5f2f7a99_1face358",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1976,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-02T16:42:09Z",
+      "side": 1,
+      "message": "Done, since i have only verified it on AMD and Nvidia seems to have issues with this and i dont have the cycles to look into that, i have switched the condition to isAMD",
+      "parentUuid": "7439669d_e51f9bd7",
+      "revId": "d52a15fde6dee2151299a6ca6c18608005445aa5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "df2d53bf_9ab9e2b9",
@@ -101,6 +119,30 @@
       "writtenOn": "2020-11-02T15:56:16Z",
       "side": 1,
       "message": "typo: colorspace",
+      "range": {
+        "startLine": 2390,
+        "startChar": 51,
+        "endLine": 2390,
+        "endChar": 60
+      },
+      "revId": "d52a15fde6dee2151299a6ca6c18608005445aa5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4a0a7e35_fb03ab17",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2390,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-02T16:42:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "df2d53bf_9ab9e2b9",
       "range": {
         "startLine": 2390,
         "startChar": 51,
@@ -134,6 +176,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7ce00043_f517f49f",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2391,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-02T16:42:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8856d87c_1075f752",
+      "range": {
+        "startLine": 2391,
+        "startChar": 4,
+        "endLine": 2391,
+        "endChar": 39
+      },
+      "revId": "d52a15fde6dee2151299a6ca6c18608005445aa5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2c3bd7f4_0b5bf236",
@@ -147,6 +213,30 @@
       "writtenOn": "2020-11-02T15:56:16Z",
       "side": 1,
       "message": "Same nit on parentheses",
+      "range": {
+        "startLine": 2397,
+        "startChar": 8,
+        "endLine": 2397,
+        "endChar": 9
+      },
+      "revId": "d52a15fde6dee2151299a6ca6c18608005445aa5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0b937b2d_fad1db54",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2397,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-02T16:42:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2c3bd7f4_0b5bf236",
       "range": {
         "startLine": 2397,
         "startChar": 8,
@@ -180,6 +270,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b48fed49_031b09fe",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2405,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-02T16:42:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8536d1dc_8f3b199c",
+      "range": {
+        "startLine": 2405,
+        "startChar": 11,
+        "endLine": 2405,
+        "endChar": 14
+      },
+      "revId": "d52a15fde6dee2151299a6ca6c18608005445aa5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "de3a041d_50e296b9",
@@ -193,6 +307,24 @@
       "writtenOn": "2020-11-02T15:56:16Z",
       "side": 1,
       "message": "How was this not a problem before this change? Say the application did:\n\n- Use linear view\n- Switch to sRGB view, which calls ensureMutable and the image is recreated\n- Switch back to linear view\n\nWhere did the serial get updated at the last step? And why isn\u0027t that mechanism sufficient when this extension is in use?",
+      "revId": "d52a15fde6dee2151299a6ca6c18608005445aa5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f4a0e79e_54311fe5",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2694,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-02T16:42:09Z",
+      "side": 1,
+      "message": "\u003e How was this not a problem before this change? \n\nI noticed an issue with descriptor cache returning previous image view and decided to update the serial to force a cache miss. Now i went back and updated the srgb decode test and sure enough there seems to be a bug with ToT ANGLE itseslf, the modified test fails.",
+      "parentUuid": "de3a041d_50e296b9",
       "revId": "d52a15fde6dee2151299a6ca6c18608005445aa5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
