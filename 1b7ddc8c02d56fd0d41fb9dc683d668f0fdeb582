@@ -52,6 +52,23 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "81df67b4_9e1afce8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-02T16:49:23Z",
+      "side": 1,
+      "message": "Thanks for all the contributions Mohan. Let\u0027s double down on getting this extension landed in preparation for Geometry shaders.",
+      "revId": "1b7ddc8c02d56fd0d41fb9dc683d668f0fdeb582",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "28183b77_66394cf6",
@@ -139,6 +156,172 @@
         "startChar": 9,
         "endLine": 189,
         "endChar": 23
+      },
+      "revId": "1b7ddc8c02d56fd0d41fb9dc683d668f0fdeb582",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "76a75ce5_1109acde",
+        "filename": "src/compiler/translator/CollectVariables.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 816,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-02T16:49:23Z",
+      "side": 1,
+      "message": "suggest \"isBlock..\". Otherwise it sounds like this is trying to block implicit locations.",
+      "range": {
+        "startLine": 816,
+        "startChar": 9,
+        "endLine": 816,
+        "endChar": 14
+      },
+      "revId": "1b7ddc8c02d56fd0d41fb9dc683d668f0fdeb582",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "45df863c_73b08d5d",
+        "filename": "src/compiler/translator/CollectVariables.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 820,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-02T16:49:23Z",
+      "side": 1,
+      "message": "If you plan to keep this TODO, file a bug (there are also multiple typos).\n\nOtherwise I can help you with this. We can talk about it in a meeting if you feel more comfortable, or right here if you want. My first answer here would be that it\u0027s because it thinks the variable is inactive.",
+      "revId": "1b7ddc8c02d56fd0d41fb9dc683d668f0fdeb582",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6206f022_ed76d61d",
+        "filename": "src/compiler/translator/CollectVariables.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 944,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-02T16:49:23Z",
+      "side": 1,
+      "message": "Again, either create a new bug and add link, or tell me what\u0027s going on exactly and I can help you resolve it.",
+      "revId": "1b7ddc8c02d56fd0d41fb9dc683d668f0fdeb582",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "75485120_f9deb5a5",
+        "filename": "src/compiler/translator/CollectVariables.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 955,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-02T16:49:23Z",
+      "side": 1,
+      "message": "typos.\n\nI would rephrase the comment to something like \"The SPIR-V transformer uses the interface block name instead of the instance name (which could be empty)\", rather than making it sound like it\u0027s a workaround to some bug.",
+      "range": {
+        "startLine": 955,
+        "startChar": 19,
+        "endLine": 955,
+        "endChar": 36
+      },
+      "revId": "1b7ddc8c02d56fd0d41fb9dc683d668f0fdeb582",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f1d229c7_f6c3a366",
+        "filename": "src/compiler/translator/OutputGLSLBase.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1411,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-02T16:49:23Z",
+      "side": 1,
+      "message": "Make `getVariableInterpolation` return the string with space added already, like \"smooth out \", then you can remove this.\n\nAt the same time, why isn\u0027t `getQualifierString()` enough (and `getVariableInterpolation()` is added)?",
+      "range": {
+        "startLine": 1410,
+        "startChar": 0,
+        "endLine": 1411,
+        "endChar": 36
+      },
+      "revId": "1b7ddc8c02d56fd0d41fb9dc683d668f0fdeb582",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2c8837fc_175e4698",
+        "filename": "src/compiler/translator/OutputGLSLBase.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1413,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-02T16:49:23Z",
+      "side": 1,
+      "message": "Could you please add a comment as to what\u0027s being generated here? I don\u0027t quite follow why getTypeName() wasn\u0027t doing the right thing here.",
+      "revId": "1b7ddc8c02d56fd0d41fb9dc683d668f0fdeb582",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bc81810f_4b478768",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3849,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-02T16:49:23Z",
+      "side": 1,
+      "message": "I highly suggest adding a helper in BaseTypes.h like `IsShaderIoBlock(qualifier)`. Then use it all throughout this change. When geometry/tessellation are added, it would be easy to miss a few of these spots to fix.",
+      "range": {
+        "startLine": 3849,
+        "startChar": 12,
+        "endLine": 3849,
+        "endChar": 95
+      },
+      "revId": "1b7ddc8c02d56fd0d41fb9dc683d668f0fdeb582",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5289ec10_bc280c86",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3977,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-02T16:49:23Z",
+      "side": 1,
+      "message": "in?\n\nAlso, the comment doesn\u0027t make sense. If the interface block has either in or out, how can the qualifier be incomplete?",
+      "range": {
+        "startLine": 3977,
+        "startChar": 81,
+        "endLine": 3977,
+        "endChar": 83
       },
       "revId": "1b7ddc8c02d56fd0d41fb9dc683d668f0fdeb582",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
@@ -238,6 +421,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "f3431bc7_7326face",
+        "filename": "src/compiler/translator/tree_ops/RemoveInactiveInterfaceVariables.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-02T16:49:23Z",
+      "side": 1,
+      "message": "typo",
+      "range": {
+        "startLine": 103,
+        "startChar": 68,
+        "endLine": 103,
+        "endChar": 74
+      },
+      "revId": "1b7ddc8c02d56fd0d41fb9dc683d668f0fdeb582",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "f812423d_98f1d33e",
         "filename": "src/compiler/translator/util.cpp",
         "patchSetId": 1
@@ -318,6 +524,30 @@
       "writtenOn": "2020-10-30T22:58:44Z",
       "side": 1,
       "message": "is this for io blocks? Or is this just stuff that we missed before?",
+      "range": {
+        "startLine": 4233,
+        "startChar": 0,
+        "endLine": 4257,
+        "endChar": 0
+      },
+      "revId": "1b7ddc8c02d56fd0d41fb9dc683d668f0fdeb582",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dc0cdd62_ecb062c9",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 4257,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-02T16:49:23Z",
+      "side": 1,
+      "message": "If unrelated to I/O blocks, suggest splitting to another CL.",
+      "parentUuid": "f0b40b03_03574c35",
       "range": {
         "startLine": 4233,
         "startChar": 0,
@@ -583,6 +813,46 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "4a6a9592_c1a3960d",
+        "filename": "src/libANGLE/ProgramLinkedResources.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-02T16:49:23Z",
+      "side": 1,
+      "message": "Looks like an unrelated change. Can you please split this into another CL?",
+      "revId": "1b7ddc8c02d56fd0d41fb9dc683d668f0fdeb582",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "12de5d11_c73297c8",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1518,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-02T16:49:23Z",
+      "side": 1,
+      "message": "Suggest `\u003d\u003d 0` instead",
+      "range": {
+        "startLine": 1518,
+        "startChar": 48,
+        "endLine": 1518,
+        "endChar": 49
+      },
+      "revId": "1b7ddc8c02d56fd0d41fb9dc683d668f0fdeb582",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "a2c28935_b89eac2b",
         "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
         "patchSetId": 1
@@ -594,6 +864,30 @@
       "writtenOn": "2020-10-30T22:44:57Z",
       "side": 1,
       "message": "What\u0027s the deal with mat3x2? Is there something we can file against the glslang repo to get this fixed?\n\nBTW, you can use \n\ndEQP-GLES31.functional.program_interface_query.program_*.interface_blocks.*.mat3x2\n\nor two more specific suppressions for input/output.",
+      "range": {
+        "startLine": 195,
+        "startChar": 0,
+        "endLine": 196,
+        "endChar": 45
+      },
+      "revId": "1b7ddc8c02d56fd0d41fb9dc683d668f0fdeb582",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "27210132_a4176676",
+        "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 196,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-02T16:49:23Z",
+      "side": 1,
+      "message": "Also, what\u0027s the error exactly?",
+      "parentUuid": "a2c28935_b89eac2b",
       "range": {
         "startLine": 195,
         "startChar": 0,
