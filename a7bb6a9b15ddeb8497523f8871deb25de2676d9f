@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "49f7db4a_fff8f01b",
+        "filename": "gni/angle.gni",
+        "patchSetId": 9
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2020-11-02T18:06:45Z",
+      "side": 1,
+      "message": "Probably this is what broke the Ozone bot.\nLet\u0027s not define angle_use_vulkan_display if use_ozone is true.",
+      "range": {
+        "startLine": 111,
+        "startChar": 35,
+        "endLine": 111,
+        "endChar": 62
+      },
+      "revId": "a7bb6a9b15ddeb8497523f8871deb25de2676d9f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
