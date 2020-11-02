@@ -381,6 +381,24 @@
       "parentUuid": "3d4b14e5_3e3f485d",
       "revId": "d52a15fde6dee2151299a6ca6c18608005445aa5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "386584aa_d2b82db2",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2694,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-02T17:12:35Z",
+      "side": 1,
+      "message": "This is another case where ANGLE\u0027s ImageView + serials management is struggling to keep up with our expanding use cases. A design to cache ImageViews in a big map instead of per-use-case would fix this. I don\u0027t have a bug to track that work right now.\n\nIn the interim we can add a \"srgbDecode\" bit to ImageSubresourceRange. This will force a descriptor set cache miss when the srgbDecode flag value changes. You can pull one of the bits out of \"layer\".\n\nIs this something we could make a regression test for? I downloaded this patch locally and was testing it out but was having trouble figuring out which bug was because of what.",
+      "parentUuid": "71057d70_bd3ca09a",
+      "revId": "d52a15fde6dee2151299a6ca6c18608005445aa5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
