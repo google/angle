@@ -28,7 +28,7 @@ vars = {
   'checkout_angle_internal': False,
 
   # Version of Chromium our Chromium-based DEPS are mirrored from.
-  'chromium_revision': 'f2fabcd1994cd753a8fa2b6b11281d036c82413e',
+  'chromium_revision': 'a64ace71870c1d6946c1f560a837f3e593d075ef',
   # We never want to checkout chromium,
   # but need a dummy DEPS entry for the autoroller
   'dummy_checkout_chromium': False,
@@ -97,7 +97,7 @@ vars = {
   # Three lines of non-changing comments so that
   # the commit queue can handle CLs rolling catapult
   # and whatever else without interference from each other.
-  'catapult_revision': 'dcd4fb3a509b843e2a37f1eb76efac93737657fc',
+  'catapult_revision': '584ab491091a3d6f23446d10237fac2c61a552b4',
 
   # Three lines of non-changing comments so that
   # the commit queue can handle CLs rolling luci-go
@@ -108,7 +108,7 @@ vars = {
 deps = {
 
   'build': {
-    'url': '{chromium_git}/chromium/src/build.git@01121614f1844ea40a2db414fcde3f3531b5bcd0',
+    'url': '{chromium_git}/chromium/src/build.git@787a783b9651465a131c564103b8533394f0f949',
     'condition': 'not build_with_chromium',
   },
 
@@ -118,7 +118,7 @@ deps = {
   },
 
   'testing': {
-    'url': '{chromium_git}/chromium/src/testing@3e2640a325dc34ec3d9cb2802b8da874aecaf52d',
+    'url': '{chromium_git}/chromium/src/testing@289a835ec8ceac5536b2d6920ab9cddeac6d5544',
     'condition': 'not build_with_chromium',
   },
 
@@ -284,7 +284,7 @@ deps = {
   },
 
   'tools/clang': {
-    'url': '{chromium_git}/chromium/src/tools/clang.git@e5230a2de429f3e28c8c5812caee053d6c92dfa9',
+    'url': '{chromium_git}/chromium/src/tools/clang.git@eb065289a4d96151ad9065f0234cb6754512faaf',
     'condition': 'not build_with_chromium',
   },
 
