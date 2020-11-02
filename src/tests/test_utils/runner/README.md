@@ -24,6 +24,7 @@ following additional command-line arguments:
  * `--results-file` specifies a location for the JSON test result output
  * `--shard-count` and `--shard-index` control the test sharding
  * `--test-timeout` limits the amount of time spent in each test
+ * `--flaky-retries` allows for tests to fail a fixed number of times and still pass
 
 `--isolated-script-test-output` and `--isolated-script-perf-test-output` mirror `--results-file`
 and `--histogram-json-file` respectively.

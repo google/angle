@@ -36,14 +36,15 @@ namespace angle
 {
 namespace
 {
-constexpr char kTestTimeoutArg[]       = "--test-timeout=";
+constexpr char kBatchId[]              = "--batch-id=";
 constexpr char kFilterFileArg[]        = "--filter-file=";
-constexpr char kResultFileArg[]        = "--results-file=";
-constexpr char kHistogramJsonFileArg[] = "--histogram-json-file=";
+constexpr char kFlakyRetries[]         = "--flaky-retries=";
 constexpr char kGTestListTests[]       = "--gtest_list_tests";
+constexpr char kHistogramJsonFileArg[] = "--histogram-json-file=";
 constexpr char kListTests[]            = "--list-tests";
 constexpr char kPrintTestStdout[]      = "--print-test-stdout";
-constexpr char kBatchId[]              = "--batch-id=";
+constexpr char kResultFileArg[]        = "--results-file=";
+constexpr char kTestTimeoutArg[]       = "--test-timeout=";
 #if defined(NDEBUG)
 constexpr int kDefaultTestTimeout = 20;
 #else
@@ -152,7 +153,7 @@ const char *ResultTypeToString(TestResultType type)
             return "FAIL";
         case TestResultType::Pass:
             return "PASS";
-        case TestResultType::Skip:
+        case TestResultType::NoResult:
             return "SKIP";
         case TestResultType::Timeout:
             return "TIMEOUT";
@@ -170,7 +171,7 @@ TestResultType GetResultTypeFromString(const std::string &str)
     if (str == "PASS")
         return TestResultType::Pass;
     if (str == "SKIP")
-        return TestResultType::Skip;
+        return TestResultType::NoResult;
     if (str == "TIMEOUT")
         return TestResultType::Timeout;
     return TestResultType::Unknown;
@@ -243,8 +244,27 @@ void WriteResultsFile(bool interrupted,
 
         counts[result.type]++;
 
-        jsResult.AddMember("expected", "PASS", allocator);
-        jsResult.AddMember("actual", ResultTypeToJSString(result.type, &allocator), allocator);
+        std::string actualResult;
+        for (uint32_t fail = 0; fail < result.flakyFailures; ++fail)
+        {
+            actualResult += "FAIL ";
+        }
+
+        actualResult += ResultTypeToString(result.type);
+
+        std::string expectedResult;
+        if (result.flakyFailures > 0)
+        {
+            expectedResult = "FAIL PASS";
+            jsResult.AddMember("is_flaky", true, allocator);
+        }
+        else
+        {
+            expectedResult = "PASS";
+        }
+
+        jsResult.AddMember("actual", actualResult, allocator);
+        jsResult.AddMember("expected", expectedResult, allocator);
 
         if (result.type != TestResultType::Pass)
         {
@@ -330,7 +350,7 @@ void UpdateCurrentTestResult(const testing::TestResult &resultIn, TestResults *r
     // Note: Crashes and Timeouts are detected by the crash handler and a watchdog thread.
     if (resultIn.Skipped())
     {
-        resultOut.type = TestResultType::Skip;
+        resultOut.type = TestResultType::NoResult;
     }
     else if (resultIn.Failed())
     {
@@ -546,18 +566,36 @@ bool GetTestResultsFromJSON(const js::Document &document, TestResults *resultsOu
             return false;
         }
 
-        const std::string expectedStr = expected.GetString();
-        const std::string actualStr   = actual.GetString();
+        const std::string actualStr = actual.GetString();
 
-        if (expectedStr != "PASS")
+        TestResultType resultType = TestResultType::Unknown;
+        int flakyFailures         = 0;
+        if (actualStr.find(' '))
         {
-            return false;
+            std::istringstream strstr(actualStr);
+            std::string token;
+            while (std::getline(strstr, token, ' '))
+            {
+                resultType = GetResultTypeFromString(token);
+                if (resultType == TestResultType::Unknown)
+                {
+                    printf("Failed to parse result type.\n");
+                    return false;
+                }
+                if (resultType != TestResultType::Pass)
+                {
+                    flakyFailures++;
+                }
+            }
         }
-
-        TestResultType resultType = GetResultTypeFromString(actualStr);
-        if (resultType == TestResultType::Unknown)
+        else
         {
-            return false;
+            resultType = GetResultTypeFromString(actualStr);
+            if (resultType == TestResultType::Unknown)
+            {
+                printf("Failed to parse result type.\n");
+                return false;
+            }
         }
 
         double elapsedTimeSeconds = 0.0;
@@ -581,31 +619,43 @@ bool GetTestResultsFromJSON(const js::Document &document, TestResults *resultsOu
         TestResult &result        = resultsOut->results[id];
         result.elapsedTimeSeconds = elapsedTimeSeconds;
         result.type               = resultType;
+        result.flakyFailures      = flakyFailures;
     }
 
     return true;
 }
 
-bool MergeTestResults(const TestResults &input, TestResults *output)
+bool MergeTestResults(TestResults *input, TestResults *output, int flakyRetries)
 {
-    for (const auto &resultsIter : input.results)
+    for (auto &resultsIter : input->results)
     {
-        const TestIdentifier &id      = resultsIter.first;
-        const TestResult &inputResult = resultsIter.second;
-        TestResult &outputResult      = output->results[id];
+        const TestIdentifier &id = resultsIter.first;
+        TestResult &inputResult  = resultsIter.second;
+        TestResult &outputResult = output->results[id];
 
-        // This should probably handle situations where a test is run more than once.
-        if (inputResult.type != TestResultType::Skip)
+        if (inputResult.type != TestResultType::NoResult)
         {
-            if (outputResult.type != TestResultType::Skip)
+            if (outputResult.type != TestResultType::NoResult)
             {
                 printf("Warning: duplicate entry for %s.%s.\n", id.testSuiteName.c_str(),
                        id.testName.c_str());
                 return false;
             }
 
-            outputResult.elapsedTimeSeconds = inputResult.elapsedTimeSeconds;
-            outputResult.type               = inputResult.type;
+            // Mark the tests that haven't exhausted their retries as 'SKIP'. This makes ANGLE
+            // attempt the test again.
+            uint32_t runCount = outputResult.flakyFailures + 1;
+            if (inputResult.type != TestResultType::Pass &&
+                runCount < static_cast<uint32_t>(flakyRetries))
+            {
+                inputResult.type = TestResultType::NoResult;
+                outputResult.flakyFailures++;
+            }
+            else
+            {
+                outputResult.elapsedTimeSeconds = inputResult.elapsedTimeSeconds;
+                outputResult.type               = inputResult.type;
+            }
         }
     }
 
@@ -829,7 +879,8 @@ TestSuite::TestSuite(int *argc, char **argv)
       mMaxProcesses(std::min(NumberOfProcessors(), kDefaultMaxProcesses)),
       mTestTimeout(kDefaultTestTimeout),
       mBatchTimeout(kDefaultBatchTimeout),
-      mBatchId(-1)
+      mBatchId(-1),
+      mFlakyRetries(0)
 {
     Optional<int> filterArgIndex;
     bool alsoRunDisabledTests = false;
@@ -1034,7 +1085,7 @@ TestSuite::TestSuite(int *argc, char **argv)
 
         for (const TestIdentifier &id : testSet)
         {
-            mTestResults.results[id].type = TestResultType::Skip;
+            mTestResults.results[id].type = TestResultType::NoResult;
         }
     }
 }
@@ -1057,6 +1108,7 @@ bool TestSuite::parseSingleArg(const char *argument)
             ParseIntArg("--max-processes=", argument, &mMaxProcesses) ||
             ParseIntArg(kTestTimeoutArg, argument, &mTestTimeout) ||
             ParseIntArg("--batch-timeout=", argument, &mBatchTimeout) ||
+            ParseIntArg(kFlakyRetries, argument, &mFlakyRetries) ||
             // Other test functions consume the batch ID, so keep it in the list.
             ParseIntArgNoDelete(kBatchId, argument, &mBatchId) ||
             ParseStringArg("--results-directory=", argument, &mResultsDirectory) ||
@@ -1191,7 +1243,7 @@ bool TestSuite::finishProcess(ProcessInfo *processInfo)
         return false;
     }
 
-    if (!MergeTestResults(batchResults, &mTestResults))
+    if (!MergeTestResults(&batchResults, &mTestResults, mFlakyRetries))
     {
         std::cerr << "Error merging batch test results.\n";
         return false;
@@ -1206,7 +1258,7 @@ bool TestSuite::finishProcess(ProcessInfo *processInfo)
         for (const auto &resultIter : batchResults.results)
         {
             const TestResult &result = resultIter.second;
-            if (result.type != TestResultType::Skip && result.type != TestResultType::Pass)
+            if (result.type != TestResultType::NoResult && result.type != TestResultType::Pass)
             {
                 printf("To reproduce the batch, use filter:\n%s\n",
                        processInfo->filterString.c_str());
@@ -1222,7 +1274,7 @@ bool TestSuite::finishProcess(ProcessInfo *processInfo)
         const TestResult &result = resultIter.second;
 
         // Skip results aren't procesed since they're added back to the test queue below.
-        if (result.type == TestResultType::Skip)
+        if (result.type == TestResultType::NoResult)
         {
             continue;
         }
@@ -1255,21 +1307,20 @@ bool TestSuite::finishProcess(ProcessInfo *processInfo)
     }
 
     // On unexpected exit, re-queue any unfinished tests.
-    if (processInfo->process->getExitCode() != 0)
+    std::vector<TestIdentifier> unfinishedTests;
+    for (const auto &resultIter : batchResults.results)
     {
-        std::vector<TestIdentifier> unfinishedTests;
+        const TestIdentifier &id = resultIter.first;
+        const TestResult &result = resultIter.second;
 
-        for (const auto &resultIter : batchResults.results)
+        if (result.type == TestResultType::NoResult)
         {
-            const TestIdentifier &id = resultIter.first;
-            const TestResult &result = resultIter.second;
-
-            if (result.type == TestResultType::Skip)
-            {
-                unfinishedTests.push_back(id);
-            }
+            unfinishedTests.push_back(id);
         }
+    }
 
+    if (!unfinishedTests.empty())
+    {
         mTestQueue.emplace(std::move(unfinishedTests));
     }
 
@@ -1509,8 +1560,8 @@ const char *TestResultTypeToString(TestResultType type)
             return "Crash";
         case TestResultType::Fail:
             return "Fail";
-        case TestResultType::Skip:
-            return "Skip";
+        case TestResultType::NoResult:
+            return "NoResult";
         case TestResultType::Pass:
             return "Pass";
         case TestResultType::Timeout:
