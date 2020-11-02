@@ -114,15 +114,6 @@ config("internal_config") {
   if (is_ggp) {
     defines += [ "__ggp__" ]
   }
-
-  if (angle_use_vulkan_display) {
-    defines += [ "ANGLE_USE_VULKAN_DISPLAY" ]
-    if (angle_vulkan_display_mode == "simple") {
-      defines += [ "ANGLE_VULKAN_DISPLAY_MODE_SIMPLE" ]
-    } else if (angle_vulkan_display_mode == "headless") {
-      defines += [ "ANGLE_VULKAN_DISPLAY_MODE_HEADLESS" ]
-    }
-  }
 }
 
 config("constructor_and_destructor_warnings") {

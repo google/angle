@@ -233,7 +233,7 @@ bool IsARM64()
 
 bool IsOzone()
 {
-#if defined(USE_OZONE) && (defined(USE_X11) || defined(ANGLE_USE_VULKAN_DISPLAY))
+#if defined(USE_OZONE) && defined(USE_X11)
     // We do not have a proper support for Ozone/Linux yet. Still, we need to figure out how to
     // properly initialize tests and differentiate between X11 and Wayland. Probably, passing a
     // command line argument could be sufficient. At the moment, run tests only for X11 backend
