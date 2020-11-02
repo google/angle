@@ -58,6 +58,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a8c16b5f_a2ac90dd",
+        "filename": "src/tests/test_utils/runner/TestSuite.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 252,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-02T22:23:34Z",
+      "side": 1,
+      "message": "Funny, I went back and read the spec:\n\nhttps://chromium.googlesource.com/chromium/src/+/master/docs/testing/json_test_results_format.md\n\nexpected\tstring\tRequired. An unordered space-separated list of the result types expected for the test, e.g. FAIL PASS means that a test is expected to either pass or fail. A test that contains multiple values is expected to be flaky.\n\nI changed this to \"FAIL PASS\" if flaky else just \"PASS\". Note that the \"is_unexpected\" tag should match the results.",
+      "parentUuid": "664a134f_4b47c29e",
+      "range": {
+        "startLine": 252,
+        "startChar": 0,
+        "endLine": 252,
+        "endChar": 38
+      },
+      "revId": "56e46dea9ad20d88c7c58299bac2064c8d2c4b69",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "744213e7_4af2bf0d",
@@ -71,6 +95,30 @@
       "writtenOn": "2020-11-02T20:08:50Z",
       "side": 1,
       "message": "Also awkward.\nI believe other harness only has 1 PASS expectation and there can be several actual values.",
+      "range": {
+        "startLine": 570,
+        "startChar": 0,
+        "endLine": 570,
+        "endChar": 80
+      },
+      "revId": "56e46dea9ad20d88c7c58299bac2064c8d2c4b69",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0d164c32_7a732a85",
+        "filename": "src/tests/test_utils/runner/TestSuite.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 570,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-02T22:23:34Z",
+      "side": 1,
+      "message": "Alright, I removed this handling. It wasn\u0027t affecting output.",
+      "parentUuid": "744213e7_4af2bf0d",
       "range": {
         "startLine": 570,
         "startChar": 0,
@@ -139,6 +187,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e2deb87a_99f5f6a8",
+        "filename": "src/tests/test_utils/runner/TestSuite.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 654,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-02T22:23:34Z",
+      "side": 1,
+      "message": "Renamed to NoResult. It means there\u0027s no result, pretty much.",
+      "parentUuid": "ccb3234b_05a3973b",
+      "range": {
+        "startLine": 654,
+        "startChar": 51,
+        "endLine": 654,
+        "endChar": 55
+      },
+      "revId": "56e46dea9ad20d88c7c58299bac2064c8d2c4b69",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6f8e02f0_2ee3372e",
@@ -162,6 +234,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e41b6704_a5049898",
+        "filename": "src/tests/test_utils/runner/TestSuite.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1323,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-02T22:23:34Z",
+      "side": 1,
+      "message": "Ack. Batches only have the tests in a batch.",
+      "parentUuid": "6f8e02f0_2ee3372e",
+      "range": {
+        "startLine": 1319,
+        "startChar": 0,
+        "endLine": 1323,
+        "endChar": 0
+      },
+      "revId": "56e46dea9ad20d88c7c58299bac2064c8d2c4b69",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "867d3ed2_cf85ef54",
@@ -175,6 +271,30 @@
       "writtenOn": "2020-11-02T20:08:50Z",
       "side": 1,
       "message": "flaky test",
+      "range": {
+        "startLine": 152,
+        "startChar": 13,
+        "endLine": 152,
+        "endChar": 25
+      },
+      "revId": "56e46dea9ad20d88c7c58299bac2064c8d2c4b69",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c15e176c_119f85bf",
+        "filename": "src/tests/test_utils/runner/TestSuite_unittest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 152,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-02T22:23:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "867d3ed2_cf85ef54",
       "range": {
         "startLine": 152,
         "startChar": 13,
