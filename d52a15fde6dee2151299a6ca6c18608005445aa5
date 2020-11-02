@@ -363,6 +363,24 @@
       "parentUuid": "56cc48d6_1916a32e",
       "revId": "d52a15fde6dee2151299a6ca6c18608005445aa5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "71057d70_bd3ca09a",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2694,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-02T16:53:12Z",
+      "side": 1,
+      "message": "waiting for comment from jamie, since it relates to his clean up CL, on how best to change the condition to \"if (toggled)\".\n\nthen will split it into its own commit",
+      "parentUuid": "3d4b14e5_3e3f485d",
+      "revId": "d52a15fde6dee2151299a6ca6c18608005445aa5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
