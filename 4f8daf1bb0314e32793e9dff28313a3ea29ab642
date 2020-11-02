@@ -174,6 +174,24 @@
       "message": "Oops, it\u0027s actually here that the crash occurs, because g_debugAnnotator is null, but that can be prevented by checking that in DebugAnnotationsActive().",
       "revId": "4f8daf1bb0314e32793e9dff28313a3ea29ab642",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "53a77e8b_74273afb",
+        "filename": "src/common/debug.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 260,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-11-02T23:51:11Z",
+      "side": 1,
+      "message": "It\u0027s looking like the original CL is having unintended consequences elsewhere as well. See anglebug.com/5291\nI think resetting that global pointer at MakeCurrent time is causing issues with multi-threaded apps.",
+      "parentUuid": "221167dc_a917a86f",
+      "revId": "4f8daf1bb0314e32793e9dff28313a3ea29ab642",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
