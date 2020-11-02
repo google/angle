@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "74c39363_85194b29",
+        "filename": "src/tests/gl_tests/ClearTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1767,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-02T17:08:24Z",
+      "side": 1,
+      "message": "Please add a ASSERT_GL_NO_ERROR() to make sure clearing a non-existing attachment doesn\u0027t generate an error.",
+      "revId": "2d2914d687e6c272380955df21751795f5591865",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b4eede85_bd941121",
+        "filename": "src/tests/gl_tests/ClearTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1791,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-02T17:08:24Z",
+      "side": 1,
+      "message": "ASSERT_GL_NO_ERROR()",
+      "revId": "2d2914d687e6c272380955df21751795f5591865",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7aa4e792_30796505",
+        "filename": "src/tests/gl_tests/ClearTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1795,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-02T17:08:24Z",
+      "side": 1,
+      "message": "ASSERT_GL_NO_ERROR()",
+      "revId": "2d2914d687e6c272380955df21751795f5591865",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
