@@ -41,6 +41,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f1b8935c_40e9a7e3",
+        "filename": "src/compiler/translator/ResourcesHLSL.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2020-11-02T12:14:34Z",
+      "side": 1,
+      "message": "I add a break here, do not add UNREACHABLE(). Because type.getNominalSize() may be 4 here",
+      "parentUuid": "213a470f_c9cf1b04",
+      "range": {
+        "startLine": 115,
+        "startChar": 12,
+        "endLine": 115,
+        "endChar": 13
+      },
+      "revId": "cdd89b5b57d344f936b21dedc64819b97f8728e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "671bc580_f2ebe10f",
@@ -78,6 +102,30 @@
       "side": 1,
       "message": "+1",
       "parentUuid": "671bc580_f2ebe10f",
+      "range": {
+        "startLine": 2404,
+        "startChar": 19,
+        "endLine": 2404,
+        "endChar": 39
+      },
+      "revId": "cdd89b5b57d344f936b21dedc64819b97f8728e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cf418f20_eb0c60f3",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 2404,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2020-11-02T12:14:34Z",
+      "side": 1,
+      "message": "Sorry, I do not understand your comments here. IsWindows10OrGreater is windows api, https://docs.microsoft.com/en-us/windows/win32/api/versionhelpers/nf-versionhelpers-iswindows10orgreater.",
+      "parentUuid": "2c152d89_c3e5ae12",
       "range": {
         "startLine": 2404,
         "startChar": 19,
