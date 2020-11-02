@@ -63,6 +63,30 @@
       },
       "revId": "2c95c2c37d4a83deaa35e27a7e39d1f72bf5d2d1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "431f3401_10362aef",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 2003,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-02T21:05:12Z",
+      "side": 1,
+      "message": "Done\n\n\u003e Is it possible to make a regression test for this?\n\nplease check \"SRGBTextureTestES3.SRGBDecodeSamplerParameter\"",
+      "parentUuid": "5390c0f2_b558fdd2",
+      "range": {
+        "startLine": 2003,
+        "startChar": 52,
+        "endLine": 2003,
+        "endChar": 67
+      },
+      "revId": "2c95c2c37d4a83deaa35e27a7e39d1f72bf5d2d1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
