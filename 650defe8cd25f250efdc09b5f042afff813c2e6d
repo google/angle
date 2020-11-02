@@ -34,6 +34,64 @@
       "parentUuid": "ebb876d7_77648176",
       "revId": "650defe8cd25f250efdc09b5f042afff813c2e6d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f3ea7d3f_90cd70b1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-02T15:32:13Z",
+      "side": 1,
+      "message": "Let\u0027s discuss on the bug. Looks like this feature is actually not necessary for clamping to [0, 1] to happen.",
+      "parentUuid": "c539bf65_ca2c68c8",
+      "revId": "650defe8cd25f250efdc09b5f042afff813c2e6d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "220ca2d7_dfd49150",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-02T15:32:13Z",
+      "side": 1,
+      "message": "Let\u0027s hold off until we reach a resolution on the bug.",
+      "revId": "650defe8cd25f250efdc09b5f042afff813c2e6d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cac59409_c33fc176",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 554,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-02T15:32:13Z",
+      "side": 1,
+      "message": "Suggest passing in `Context *context` and get the renderer and whatever feature is necessary out of it in this function itself.",
+      "range": {
+        "startLine": 554,
+        "startChar": 22,
+        "endLine": 554,
+        "endChar": 76
+      },
+      "revId": "650defe8cd25f250efdc09b5f042afff813c2e6d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
