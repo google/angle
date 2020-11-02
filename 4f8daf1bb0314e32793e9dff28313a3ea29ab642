@@ -122,6 +122,24 @@
       "parentUuid": "43c411ef_74d6d1dd",
       "revId": "4f8daf1bb0314e32793e9dff28313a3ea29ab642",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a87674a1_429e5da6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-02T19:19:10Z",
+      "side": 1,
+      "message": "It\u0027s working for me on Windows.  I build the \"master\" branch with \"angle_enable_trace \u003d true\".  When I run a test, I see \"out/Debug/obj/src/tests/angle_debug.txt\" get bigger with all of the gl/egl commands.\n\nBTW, I\u0027ve never used that workflow before.  It\u0027s not documented.  On Android, we use Courtney\u0027s WIP CL (that this CL builds on), which writes to logcat.  I found in the code where \"angle_debug.txt\" is written.  From that, I found the file.  It was huge (\u003e 6 GB).\n\nThe \"Boulder team\" discussed having this CL with a run-time option.  Do we want to proceed with that for Android development?",
+      "parentUuid": "a076500f_b5209ba8",
+      "revId": "4f8daf1bb0314e32793e9dff28313a3ea29ab642",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
