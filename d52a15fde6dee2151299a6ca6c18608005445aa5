@@ -327,6 +327,24 @@
       "parentUuid": "de3a041d_50e296b9",
       "revId": "d52a15fde6dee2151299a6ca6c18608005445aa5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "56cc48d6_1916a32e",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2694,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-02T16:43:48Z",
+      "side": 1,
+      "message": "This check in ContextVk.cpp -\n if (activeTexture.srgbDecode \u003d\u003d GL_SKIP_DECODE_EXT)\n        {\n            // Make sure we use the MUTABLE bit for the storage. Because the \"skip decode\" is a\n            // Sampler state we might not have caught this setting in TextureVk::syncState.\n            ANGLE_TRY(textureVk-\u003eensureMutable(this));\n        }\n\nshould actually be -\n\n if (activeTexture.srgbDecode has been toggled)",
+      "parentUuid": "f4a0e79e_54311fe5",
+      "revId": "d52a15fde6dee2151299a6ca6c18608005445aa5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
