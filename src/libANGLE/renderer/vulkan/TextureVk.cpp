@@ -2631,12 +2631,18 @@ void TextureVk::onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMe
     onStateChange(angle::SubjectMessage::SubjectChanged);
 }
 
-vk::ImageViewSubresourceSerial TextureVk::getImageViewSubresourceSerial() const
+vk::ImageViewSubresourceSerial TextureVk::getImageViewSubresourceSerial(
+    const gl::SamplerState &samplerState) const
 {
     gl::LevelIndex baseLevel(mState.getEffectiveBaseLevel());
     // getMipmapMaxLevel will clamp to the max level if it is smaller than the number of mips.
-    uint32_t levelCount = gl::LevelIndex(mState.getMipmapMaxLevel()) - baseLevel + 1;
-    return getImageViews().getSubresourceSerial(baseLevel, levelCount, 0, vk::LayerMode::All);
+    uint32_t levelCount               = gl::LevelIndex(mState.getMipmapMaxLevel()) - baseLevel + 1;
+    vk::SrgbDecodeMode srgbDecodeMode = (samplerState.getSRGBDecode() == GL_DECODE_EXT)
+                                            ? vk::SrgbDecodeMode::SrgbDecode
+                                            : vk::SrgbDecodeMode::SkipDecode;
+
+    return getImageViews().getSubresourceSerial(baseLevel, levelCount, 0, vk::LayerMode::All,
+                                                srgbDecodeMode);
 }
 
 angle::Result TextureVk::refreshImageViews(ContextVk *contextVk)

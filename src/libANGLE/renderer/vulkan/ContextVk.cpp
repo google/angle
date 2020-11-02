@@ -4265,7 +4265,8 @@ angle::Result ContextVk::updateActiveTextures(const gl::Context *context)
             ANGLE_TRY(textureVk->ensureMutable(this));
         }
 
-        vk::ImageViewSubresourceSerial imageViewSerial = textureVk->getImageViewSubresourceSerial();
+        vk::ImageViewSubresourceSerial imageViewSerial =
+            textureVk->getImageViewSubresourceSerial(samplerState);
         mActiveTexturesDesc.update(textureUnit, imageViewSerial, samplerHelper.getSamplerSerial());
 
         if (textureVk->getImage().hasImmutableSampler())

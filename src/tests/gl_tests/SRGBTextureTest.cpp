@@ -470,6 +470,40 @@ TEST_P(SRGBTextureTestES3, SRGBDecodeSamplerParameter)
     EXPECT_PIXEL_COLOR_NEAR(0, 0, linearColor, 1.0);
 }
 
+// Toggle between GL_DECODE_EXT and GL_SKIP_DECODE_EXT of sampler parameter
+// GL_TEXTURE_SRGB_DECODE_EXT
+TEST_P(SRGBTextureTestES3, SRGBDecodeSamplerParameterToggle)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_sRGB_decode"));
+
+    GLColor linearColor = kLinearColor;
+    GLColor srgbColor   = kNonlinearColor;
+
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_2D, tex.get());
+    glTexImage2D(GL_TEXTURE_2D, 0, getSRGBA8TextureInternalFormat(), 1, 1, 0,
+                 getSRGBA8TextureFormat(), GL_UNSIGNED_BYTE, &linearColor);
+    ASSERT_GL_NO_ERROR();
+
+    GLSampler sampler;
+    glBindSampler(0, sampler.get());
+
+    glUseProgram(mProgram);
+    glUniform1i(mTextureLocation, 0);
+    glDisable(GL_DEPTH_TEST);
+
+    for (int i = 0; i < 4; i++)
+    {
+        // Toggle betwee decode and skip decode and verify pixel value
+        GLint decode                  = ((i & 1) == 0) ? GL_DECODE_EXT : GL_SKIP_DECODE_EXT;
+        angle::GLColor &expectedColor = ((i & 1) == 0) ? srgbColor : linearColor;
+
+        glSamplerParameteri(sampler.get(), GL_TEXTURE_SRGB_DECODE_EXT, decode);
+        drawQuad(mProgram, "position", 0.5f);
+        EXPECT_PIXEL_COLOR_NEAR(0, 0, expectedColor, 1.0);
+    }
+}
+
 // Test that sampler state overrides texture state for srgb decode
 TEST_P(SRGBTextureTestES3, SRGBDecodeTextureAndSamplerParameter)
 {

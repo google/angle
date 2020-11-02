@@ -199,7 +199,8 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
     // Normally, initialize the image with enabled mipmap level counts.
     angle::Result ensureImageInitialized(ContextVk *contextVk, ImageMipLevels mipLevels);
 
-    vk::ImageViewSubresourceSerial getImageViewSubresourceSerial() const;
+    vk::ImageViewSubresourceSerial getImageViewSubresourceSerial(
+        const gl::SamplerState &samplerState) const;
 
     void overrideStagingBufferSizeForTesting(size_t initialSizeForTesting)
     {

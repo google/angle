@@ -6171,10 +6171,12 @@ angle::Result ImageViewHelper::getLevelLayerDrawImageView(ContextVk *contextVk,
                                     imageView, levelVk, 1, layer, 1);
 }
 
-ImageViewSubresourceSerial ImageViewHelper::getSubresourceSerial(gl::LevelIndex levelGL,
-                                                                 uint32_t levelCount,
-                                                                 uint32_t layer,
-                                                                 LayerMode layerMode) const
+ImageViewSubresourceSerial ImageViewHelper::getSubresourceSerial(
+    gl::LevelIndex levelGL,
+    uint32_t levelCount,
+    uint32_t layer,
+    LayerMode layerMode,
+    SrgbDecodeMode srgbDecodeMode) const
 {
     ASSERT(mImageViewSerial.valid());
 
@@ -6184,6 +6186,7 @@ ImageViewSubresourceSerial ImageViewHelper::getSubresourceSerial(gl::LevelIndex 
     SetBitField(serial.subresource.levelCount, levelCount);
     SetBitField(serial.subresource.layer, layer);
     SetBitField(serial.subresource.singleLayer, layerMode == LayerMode::Single ? 1 : 0);
+    SetBitField(serial.subresource.srgbDecodeMode, srgbDecodeMode);
     return serial;
 }
 

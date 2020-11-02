@@ -1867,6 +1867,13 @@ enum LayerMode
     All
 };
 
+// Sampler decode mode indicating if an attachment needs to be decoded in linear colorspace or sRGB
+enum class SrgbDecodeMode
+{
+    SkipDecode,
+    SrgbDecode
+};
+
 class ImageViewHelper : angle::NonCopyable
 {
   public:
@@ -1999,7 +2006,8 @@ class ImageViewHelper : angle::NonCopyable
     ImageViewSubresourceSerial getSubresourceSerial(gl::LevelIndex levelGL,
                                                     uint32_t levelCount,
                                                     uint32_t layer,
-                                                    LayerMode layerMode) const;
+                                                    LayerMode layerMode,
+                                                    SrgbDecodeMode srgbDecodeMode) const;
 
   private:
     ImageView &getReadImageView()
