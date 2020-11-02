@@ -64,6 +64,13 @@ struct FeaturesVk : FeatureSetBase
         "The point size range reported from the API is inconsistent with the actual behavior",
         &members, "http://anglebug.com/2970"};
 
+    // On some NVIDIA drivers the depth value is not clamped to [0,1] for floating point depth
+    // buffers. This is NVIDIA bug 3171019, see http://anglebug.com/3970 for details.
+    Feature depthClamping = {
+        "depth_clamping", FeatureCategory::VulkanWorkarounds,
+        "The depth value is not clamped to [0,1] for floating point depth buffers.", &members,
+        "http://anglebug.com/3970"};
+
     // On some android devices, the memory barrier between the compute shader that converts vertex
     // attributes and the vertex shader that reads from it is ineffective.  Only known workaround is
     // to perform a flush after the conversion.  http://anglebug.com/3016

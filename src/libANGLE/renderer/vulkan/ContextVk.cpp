@@ -602,7 +602,7 @@ angle::Result ContextVk::initialize()
     }
 
     mGraphicsPipelineDesc.reset(new vk::GraphicsPipelineDesc());
-    mGraphicsPipelineDesc->initDefaults();
+    mGraphicsPipelineDesc->initDefaults(this);
 
     // Initialize current value/default attribute buffers.
     for (vk::DynamicBuffer &buffer : mDefaultAttribBuffers)

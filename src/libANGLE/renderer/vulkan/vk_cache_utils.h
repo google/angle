@@ -574,7 +574,7 @@ class GraphicsPipelineDesc final
     size_t hash() const;
     bool operator==(const GraphicsPipelineDesc &other) const;
 
-    void initDefaults();
+    void initDefaults(const ContextVk *contextVk);
 
     // For custom comparisons.
     template <typename T>
