@@ -16,6 +16,29 @@
       "message": "PTAL",
       "revId": "2c95c2c37d4a83deaa35e27a7e39d1f72bf5d2d1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9a759409_f7fa19d5",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 2003,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-02T19:27:44Z",
+      "side": 1,
+      "message": "will split into 2 commits in the next patchset once bots pass",
+      "range": {
+        "startLine": 2003,
+        "startChar": 52,
+        "endLine": 2003,
+        "endChar": 67
+      },
+      "revId": "2c95c2c37d4a83deaa35e27a7e39d1f72bf5d2d1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
