@@ -16,6 +16,57 @@
       "message": "PTAL",
       "revId": "11197237f8e6ec554f9da00993923d3243ec9b1f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d21299b4_e27c58c7",
+        "filename": "src/tests/angle_unittest_main.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-02T17:44:34Z",
+      "side": 1,
+      "message": "Should explicitly set a default value for this.",
+      "revId": "11197237f8e6ec554f9da00993923d3243ec9b1f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "543e65f2_52d86c9b",
+        "filename": "src/tests/test_utils/runner/TestSuite_unittest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-02T17:44:34Z",
+      "side": 1,
+      "message": "Which gVerbose is this being externed to?",
+      "revId": "11197237f8e6ec554f9da00993923d3243ec9b1f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "39f605fd_49738d74",
+        "filename": "util/test_utils_unittest_helper.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-02T17:44:34Z",
+      "side": 1,
+      "message": "Can this be removed?",
+      "revId": "11197237f8e6ec554f9da00993923d3243ec9b1f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
