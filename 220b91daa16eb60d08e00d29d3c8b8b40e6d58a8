@@ -16,6 +16,29 @@
       "message": "jamie, anything else?",
       "revId": "220b91daa16eb60d08e00d29d3c8b8b40e6d58a8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6ab46eed_8df8d25b",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 1871,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-02T23:03:57Z",
+      "side": 1,
+      "message": "nit: enum class. I should have used it above and forgot.",
+      "range": {
+        "startLine": 1871,
+        "startChar": 0,
+        "endLine": 1871,
+        "endChar": 4
+      },
+      "revId": "220b91daa16eb60d08e00d29d3c8b8b40e6d58a8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
