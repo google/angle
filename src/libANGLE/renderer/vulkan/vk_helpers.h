@@ -627,7 +627,7 @@ class PipelineBarrier : angle::NonCopyable
     {}
     ~PipelineBarrier() = default;
 
-    bool isEmpty() const { return mImageMemoryBarriers.empty() && mMemoryBarrierSrcAccess == 0; }
+    bool isEmpty() const { return mImageMemoryBarriers.empty() && mMemoryBarrierDstAccess == 0; }
 
     void execute(PrimaryCommandBuffer *primary)
     {
@@ -639,7 +639,7 @@ class PipelineBarrier : angle::NonCopyable
         // Issue vkCmdPipelineBarrier call
         VkMemoryBarrier memoryBarrier = {};
         uint32_t memoryBarrierCount   = 0;
-        if (mMemoryBarrierSrcAccess != 0)
+        if (mMemoryBarrierDstAccess != 0)
         {
             memoryBarrier.sType         = VK_STRUCTURE_TYPE_MEMORY_BARRIER;
             memoryBarrier.srcAccessMask = mMemoryBarrierSrcAccess;
@@ -663,7 +663,7 @@ class PipelineBarrier : angle::NonCopyable
         // Issue vkCmdPipelineBarrier call
         VkMemoryBarrier memoryBarrier = {};
         uint32_t memoryBarrierCount   = 0;
-        if (mMemoryBarrierSrcAccess != 0)
+        if (mMemoryBarrierDstAccess != 0)
         {
             memoryBarrier.sType         = VK_STRUCTURE_TYPE_MEMORY_BARRIER;
             memoryBarrier.srcAccessMask = mMemoryBarrierSrcAccess;
