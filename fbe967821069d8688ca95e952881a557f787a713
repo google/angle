@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "65b0403f_7e66abb2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-02T15:14:54Z",
+      "side": 1,
+      "message": "Sorry I didn\u0027t realize this was intentional. LGTM.",
+      "revId": "fbe967821069d8688ca95e952881a557f787a713",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
