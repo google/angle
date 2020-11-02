@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1a2a4eba_93241a03",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3881,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-02T17:01:28Z",
+      "side": 1,
+      "message": "I think the IsEmptyScissor() call would be better inside this noopClearBuffer(), since that\u0027s why you\u0027re checking for an empty scissor anyway.   You\u0027ll need to pass in mState, but you\u0027ll be able to remove all of these additional calls to IsEmptyScissor().",
+      "range": {
+        "startLine": 3881,
+        "startChar": 8,
+        "endLine": 3881,
+        "endChar": 23
+      },
+      "revId": "9464bc4c0bb9b26d0ec604541680d5e775d80c85",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
