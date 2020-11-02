@@ -390,6 +390,14 @@ struct FeaturesVk : FeatureSetBase
         "Force max uniform buffer size to 16K on some device due to bug", &members,
         "https://issuetracker.google.com/161903006"};
 
+    // Enable mutable bit by default for ICD's that support VK_KHR_image_format_list.
+    // http://anglebug.com/5281
+    Feature supportsImageFormatList = {
+        "supportsImageFormatList", FeatureCategory::VulkanFeatures,
+        "Enable VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT by default for ICDs "
+        "that support VK_KHR_image_format_list",
+        &members, "http://anglebug.com/5281"};
+
     // Swiftshader on mac fails to initialize WebGL context when EXT_multisampled_render_to_texture
     // is used by Chromium.
     // http://anglebug.com/4937

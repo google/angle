@@ -1334,6 +1334,11 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
         enabledDeviceExtensions.push_back(VK_QCOM_render_pass_store_ops_EXTENSION_NAME);
     }
 
+    if (getFeatures().supportsImageFormatList.enabled)
+    {
+        enabledDeviceExtensions.push_back(VK_KHR_IMAGE_FORMAT_LIST_EXTENSION_NAME);
+    }
+
     std::sort(enabledDeviceExtensions.begin(), enabledDeviceExtensions.end(), StrLess);
     ANGLE_VK_TRY(displayVk, VerifyExtensionsPresent(deviceExtensionNames, enabledDeviceExtensions));
 
@@ -1972,6 +1977,10 @@ void RendererVk::initFeatures(DisplayVk *displayVk, const ExtensionNameList &dev
 
     bool isAdreno540 = mPhysicalDeviceProperties.deviceID == angle::kDeviceID_Adreno540;
     ANGLE_FEATURE_CONDITION(&mFeatures, forceMaxUniformBufferSize16KB, isQualcomm && isAdreno540);
+
+    ANGLE_FEATURE_CONDITION(
+        &mFeatures, supportsImageFormatList,
+        (ExtensionFound(VK_KHR_IMAGE_FORMAT_LIST_EXTENSION_NAME, deviceExtensionNames)) && isAMD);
 
     // Feature disabled due to driver bugs:
     //
