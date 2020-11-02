@@ -53,7 +53,7 @@ constexpr ImmutableString kSampleMaskWriteFuncName = ImmutableString("ANGLEWrite
 ANGLE_NO_DISCARD bool AppendVertexShaderPositionYCorrectionToMain(TCompiler *compiler,
                                                                   TIntermBlock *root,
                                                                   TSymbolTable *symbolTable,
-                                                                  TIntermSwizzle *negFlipY)
+                                                                  TIntermTyped *negFlipY)
 {
     // Create a symbol reference to "gl_Position"
     const TVariable *position  = BuiltInVariable::gl_Position();
@@ -158,7 +158,7 @@ bool TranslatorMetal::translate(TIntermBlock *root,
 
     if (getShaderType() == GL_VERTEX_SHADER)
     {
-        auto negFlipY = driverUniforms.getNegFlipYRef();
+        TIntermTyped *negFlipY = driverUniforms.getNegFlipYRef();
 
         // Append gl_Position.y correction to main
         if (!AppendVertexShaderPositionYCorrectionToMain(this, root, &getSymbolTable(), negFlipY))

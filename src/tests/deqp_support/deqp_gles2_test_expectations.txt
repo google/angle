@@ -359,6 +359,12 @@
 4344 VULKAN ANDROID : dEQP-GLES2.functional.fragment_ops.random.62 = FAIL
 4344 VULKAN ANDROID : dEQP-GLES2.functional.fragment_ops.random.78 = FAIL
 
+// Failing on the Pixel2.
+172932466 VULKAN PIXEL2ORXL : dEQP-GLES2.functional.shaders.indexing.tmp_array.float_const_write_dynamic_read_vertex = FAIL
+172932466 VULKAN PIXEL2ORXL : dEQP-GLES2.functional.shaders.indexing.tmp_array.vec2_const_write_dynamic_read_vertex = FAIL
+172932466 VULKAN PIXEL2ORXL : dEQP-GLES2.functional.shaders.indexing.tmp_array.vec3_const_write_dynamic_read_vertex = FAIL
+172932466 VULKAN PIXEL2ORXL : dEQP-GLES2.functional.shaders.indexing.tmp_array.vec4_const_write_dynamic_read_vertex = FAIL
+
 // These tests also fail on AMD windows driver as it is not allowed to use emulation due to errors.
 3243 VULKAN WIN AMD : dEQP-GLES2.functional.shaders.texture_functions.vertex.texturecubelod = FAIL
 3243 VULKAN WIN AMD : dEQP-GLES2.functional.texture.mipmap.cube.basic.linear_nearest = FAIL

@@ -14,23 +14,29 @@
 #define COMPILER_TRANSLATOR_TREEOPS_FLIP_DFDY_H_
 
 #include "common/angleutils.h"
+#include "compiler/translator/Compiler.h"
 
 namespace sh
 {
 
 class TCompiler;
 class TIntermNode;
+class TIntermSymbol;
 class TIntermBinary;
 class TIntermTyped;
 class TSymbolTable;
+class TVariable;
+class FlipRotateSpecConst;
+class DriverUniform;
 
 // If fragRotation = nullptr, no rotation will be applied.
 ANGLE_NO_DISCARD bool RewriteDfdy(TCompiler *compiler,
+                                  ShCompileOptions compileOptions,
                                   TIntermNode *root,
                                   const TSymbolTable &symbolTable,
                                   int shaderVersion,
-                                  TIntermBinary *flipXY,
-                                  TIntermTyped *fragRotation);
+                                  FlipRotateSpecConst *rotationSpecConst,
+                                  const DriverUniform *driverUniforms);
 
 }  // namespace sh
 

@@ -218,6 +218,8 @@ angle_translator_sources = [
   "src/compiler/translator/tree_util/FindMain.h",
   "src/compiler/translator/tree_util/FindSymbolNode.cpp",
   "src/compiler/translator/tree_util/FindSymbolNode.h",
+  "src/compiler/translator/tree_util/FlipRotateSpecConst.cpp",
+  "src/compiler/translator/tree_util/FlipRotateSpecConst.h",
   "src/compiler/translator/tree_util/IntermNodePatternMatcher.cpp",
   "src/compiler/translator/tree_util/IntermNodePatternMatcher.h",
   "src/compiler/translator/tree_util/IntermNode_util.cpp",
