@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2de4c13d_4e9a82eb",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-02T22:45:55Z",
+      "side": 1,
+      "message": "Unfortunate:\n\nC:/b/s/w/ir/cipd_bin_packages/python.exe ../../build/toolchain/win/tool_wrapper.py link-wrapper environment.x86 False link.exe /nologo /OUT:./angle_white_box_perftests.exe /PDB:./angle_white_box_perftests.exe.pdb @./angle_white_box_perftests.exe.rsp\nobj\\translator.lib : fatal error LNK1106: invalid file or disk full: cannot seek to 0x647B8287\n",
+      "revId": "fa1e881abe047f8626aabc7198ae571de7696bc5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
