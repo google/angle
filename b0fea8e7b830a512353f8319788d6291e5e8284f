@@ -188,6 +188,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1e480c88_9c10620d",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 269,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-11-02T21:08:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "250ead60_7a5e7a86",
+      "range": {
+        "startLine": 269,
+        "startChar": 4,
+        "endLine": 269,
+        "endChar": 69
+      },
+      "revId": "b0fea8e7b830a512353f8319788d6291e5e8284f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5757ef7f_bcd2011d",
@@ -331,6 +355,30 @@
       "side": 1,
       "message": "Ack, put a TODO if you haven\u0027t already put one?",
       "parentUuid": "7b8b8f14_5467304d",
+      "range": {
+        "startLine": 49,
+        "startChar": 0,
+        "endLine": 50,
+        "endChar": 27
+      },
+      "revId": "b0fea8e7b830a512353f8319788d6291e5e8284f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b6b9c1de_a73e128d",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.h",
+        "patchSetId": 22
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-11-02T21:08:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "aab793e1_b40060a7",
       "range": {
         "startLine": 49,
         "startChar": 0,
