@@ -26,6 +26,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "fc4ca36f_47692fb0",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1382541
+      },
+      "writtenOn": "2020-11-02T06:05:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d9710cb6_2c05a5f3",
+      "range": {
+        "startLine": 26,
+        "startChar": 0,
+        "endLine": 27,
+        "endChar": 51
+      },
+      "revId": "39874cbf6851654ffaad70f99fd22a453d64b62a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "1c5b3d0b_408c5121",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 4
@@ -64,6 +88,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f14d120c_cdbdf0f1",
+        "filename": "BUILD.gn",
+        "patchSetId": 4
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1382541
+      },
+      "writtenOn": "2020-11-02T06:05:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "061cccec_b9bbf15f",
+      "range": {
+        "startLine": 121,
+        "startChar": 20,
+        "endLine": 121,
+        "endChar": 52
+      },
+      "revId": "39874cbf6851654ffaad70f99fd22a453d64b62a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "00310db8_74e2311c",
@@ -77,6 +125,30 @@
       "writtenOn": "2020-10-30T22:29:41Z",
       "side": 1,
       "message": "tiny nit: trailing space",
+      "range": {
+        "startLine": 42,
+        "startChar": 68,
+        "endLine": 42,
+        "endChar": 69
+      },
+      "revId": "39874cbf6851654ffaad70f99fd22a453d64b62a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "06ff78db_38b3cfb1",
+        "filename": "extensions/EGL_ANGLE_vulkan_display.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1382541
+      },
+      "writtenOn": "2020-11-02T06:05:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "00310db8_74e2311c",
       "range": {
         "startLine": 42,
         "startChar": 68,
@@ -110,6 +182,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5265c25f_988f9f3c",
+        "filename": "extensions/EGL_ANGLE_vulkan_display.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1382541
+      },
+      "writtenOn": "2020-11-02T06:05:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8c0186ea_7ed719d1",
+      "range": {
+        "startLine": 54,
+        "startChar": 9,
+        "endLine": 54,
+        "endChar": 22
+      },
+      "revId": "39874cbf6851654ffaad70f99fd22a453d64b62a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "30d2e7ca_6dba0b3f",
@@ -123,6 +219,30 @@
       "writtenOn": "2020-10-30T22:29:41Z",
       "side": 1,
       "message": "nit: please include a mention of error condition if the value is not a specified one.",
+      "range": {
+        "startLine": 79,
+        "startChar": 4,
+        "endLine": 79,
+        "endChar": 51
+      },
+      "revId": "39874cbf6851654ffaad70f99fd22a453d64b62a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5dae3c59_f7a20267",
+        "filename": "extensions/EGL_ANGLE_vulkan_display.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1382541
+      },
+      "writtenOn": "2020-11-02T06:05:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "30d2e7ca_6dba0b3f",
       "range": {
         "startLine": 79,
         "startChar": 4,
@@ -150,6 +270,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "cd6ba8f6_c81795a5",
+        "filename": "src/common/vulkan/vulkan_icd.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1382541
+      },
+      "writtenOn": "2020-11-02T06:05:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7bf5054a_875a124c",
+      "revId": "39874cbf6851654ffaad70f99fd22a453d64b62a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "fd2493a1_94473293",
@@ -163,6 +301,30 @@
       "writtenOn": "2020-10-30T22:29:41Z",
       "side": 1,
       "message": "How about we call this VulkanSimpleDisplay instead of VulkanDisplyDisplay? same with Surface, etc. Sorry if this is a pain to rename. It will help when we add Headless.",
+      "range": {
+        "startLine": 367,
+        "startChar": 27,
+        "endLine": 367,
+        "endChar": 53
+      },
+      "revId": "39874cbf6851654ffaad70f99fd22a453d64b62a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1e20ea17_e1fa92aa",
+        "filename": "src/libANGLE/Display.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 367,
+      "author": {
+        "id": 1382541
+      },
+      "writtenOn": "2020-11-02T06:05:59Z",
+      "side": 1,
+      "message": "Sure.\n\nPrevious thought was to use same file/function name for simple and headless, and switch with Macro and attribute value, but just as you advised, we should make it clear on these 2 different way.",
+      "parentUuid": "fd2493a1_94473293",
       "range": {
         "startLine": 367,
         "startChar": 27,
@@ -198,6 +360,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "c8c1437e_d0dd5fca",
+        "filename": "src/libANGLE/Display.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 372,
+      "author": {
+        "id": 1382541
+      },
+      "writtenOn": "2020-11-02T06:05:59Z",
+      "side": 1,
+      "message": "This CL can close 5214, 5260 was created for headless which we\u0027ll try to upload another CL.",
+      "parentUuid": "1c9f3161_93aa7a8e",
+      "range": {
+        "startLine": 372,
+        "startChar": 25,
+        "endLine": 372,
+        "endChar": 42
+      },
+      "revId": "39874cbf6851654ffaad70f99fd22a453d64b62a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "b1bbe207_1a44a42e",
         "filename": "src/libANGLE/renderer/vulkan/display/DisplayVkDisplay.h",
         "patchSetId": 4
@@ -209,6 +395,30 @@
       "writtenOn": "2020-10-30T22:29:41Z",
       "side": 1,
       "message": "nit: update",
+      "range": {
+        "startLine": 11,
+        "startChar": 8,
+        "endLine": 11,
+        "endChar": 56
+      },
+      "revId": "39874cbf6851654ffaad70f99fd22a453d64b62a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "07bd3bf2_8af9a572",
+        "filename": "src/libANGLE/renderer/vulkan/display/DisplayVkDisplay.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1382541
+      },
+      "writtenOn": "2020-11-02T06:05:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b1bbe207_1a44a42e",
       "range": {
         "startLine": 11,
         "startChar": 8,
@@ -236,6 +446,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4b9b3ad5_71db9c86",
+        "filename": "src/libANGLE/renderer/vulkan/display/WindowSurfaceVkDisplay.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1382541
+      },
+      "writtenOn": "2020-11-02T06:05:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5e925896_7ab73c38",
+      "revId": "39874cbf6851654ffaad70f99fd22a453d64b62a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9d421de2_884c2fe9",
@@ -249,6 +477,30 @@
       "writtenOn": "2020-10-30T22:29:41Z",
       "side": 1,
       "message": "nit: update",
+      "range": {
+        "startLine": 10,
+        "startChar": 8,
+        "endLine": 10,
+        "endChar": 62
+      },
+      "revId": "39874cbf6851654ffaad70f99fd22a453d64b62a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dd8147a4_e2573752",
+        "filename": "src/libANGLE/renderer/vulkan/display/WindowSurfaceVkDisplay.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1382541
+      },
+      "writtenOn": "2020-11-02T06:05:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9d421de2_884c2fe9",
       "range": {
         "startLine": 10,
         "startChar": 8,
@@ -284,6 +536,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "e5c2760c_2bfb0138",
+        "filename": "util/BUILD.gn",
+        "patchSetId": 4
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1382541
+      },
+      "writtenOn": "2020-11-02T06:05:59Z",
+      "side": 1,
+      "message": "\u003e I\u0027m worried these files will bit-rot because we don\u0027t compile them on our CQ. Instead of conditionally including the sources in the build, can you use your #defines to control the behaviour of OSWindow::New/etc?\n\nTried to use #defines in OSWinsow::New, please help to check if I got your point.",
+      "parentUuid": "95ecb4ee_914b09a1",
+      "range": {
+        "startLine": 50,
+        "startChar": 11,
+        "endLine": 50,
+        "endChar": 35
+      },
+      "revId": "39874cbf6851654ffaad70f99fd22a453d64b62a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "45be0079_967c2226",
         "filename": "util/display/DisplayPixmap.cpp",
         "patchSetId": 4
@@ -295,6 +571,30 @@
       "writtenOn": "2020-10-30T22:29:41Z",
       "side": 1,
       "message": "re-nit",
+      "range": {
+        "startLine": 2,
+        "startChar": 12,
+        "endLine": 2,
+        "endChar": 16
+      },
+      "revId": "39874cbf6851654ffaad70f99fd22a453d64b62a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7eac9ad0_49bafe54",
+        "filename": "util/display/DisplayPixmap.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1382541
+      },
+      "writtenOn": "2020-11-02T06:05:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "45be0079_967c2226",
       "range": {
         "startLine": 2,
         "startChar": 12,
@@ -328,6 +628,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "13868897_8da8a422",
+        "filename": "util/display/DisplayWindow.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1382541
+      },
+      "writtenOn": "2020-11-02T06:05:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "550ab05e_edfb986c",
+      "range": {
+        "startLine": 18,
+        "startChar": 4,
+        "endLine": 18,
+        "endChar": 19
+      },
+      "revId": "39874cbf6851654ffaad70f99fd22a453d64b62a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0bb88fda_13684e90",
@@ -341,6 +665,30 @@
       "writtenOn": "2020-10-30T22:29:41Z",
       "side": 1,
       "message": "nit: omit \"struct\"",
+      "range": {
+        "startLine": 48,
+        "startChar": 4,
+        "endLine": 48,
+        "endChar": 10
+      },
+      "revId": "39874cbf6851654ffaad70f99fd22a453d64b62a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "75853ca1_bcdf83fa",
+        "filename": "util/display/DisplayWindow.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1382541
+      },
+      "writtenOn": "2020-11-02T06:05:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0bb88fda_13684e90",
       "range": {
         "startLine": 48,
         "startChar": 4,
