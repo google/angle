@@ -16,6 +16,23 @@
       "message": "Thanks, Jamie,Geoff,Shahbaz！\nPatchset 3 is ready. ",
       "revId": "5e75cc9ca178be303879e464a3bcf243dc8496f0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "29acf581_29a55049",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-02T14:06:29Z",
+      "side": 1,
+      "message": "LGTM, thanks for the fix!",
+      "revId": "5e75cc9ca178be303879e464a3bcf243dc8496f0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
