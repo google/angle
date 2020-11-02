@@ -16,6 +16,121 @@
       "message": "PTAL",
       "revId": "ac6a64c1f90d91db038e6c1f4d1812922b9af549",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "069ae8be_10f8773e",
+        "filename": "src/tests/perf_tests/ANGLEPerfTest.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 367,
+      "author": {
+        "id": 1163549
+      },
+      "writtenOn": "2020-11-02T22:34:41Z",
+      "side": 1,
+      "message": "I believe you can use msBestFitFormat to have the unit show up as the more appropriate one on the dashboard, e.g. if all results are over 1000, it\u0027ll use seconds instead of milliseconds. https://source.chromium.org/chromium/chromium/src/+/master:third_party/catapult/tracing/tracing/value/histogram.cc;l\u003d21?q\u003dmsbestfit",
+      "range": {
+        "startLine": 367,
+        "startChar": 81,
+        "endLine": 367,
+        "endChar": 83
+      },
+      "revId": "ac6a64c1f90d91db038e6c1f4d1812922b9af549",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "188e97d2_2e056086",
+        "filename": "src/tests/test_utils/runner/HistogramWriter.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1163549
+      },
+      "writtenOn": "2020-11-02T22:34:41Z",
+      "side": 1,
+      "message": "Nit: use something else since js is typically associated with JavaScript.",
+      "range": {
+        "startLine": 30,
+        "startChar": 10,
+        "endLine": 30,
+        "endChar": 12
+      },
+      "revId": "ac6a64c1f90d91db038e6c1f4d1812922b9af549",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3788348a_e5963f9a",
+        "filename": "src/tests/test_utils/runner/HistogramWriter.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1163549
+      },
+      "writtenOn": "2020-11-02T22:34:41Z",
+      "side": 1,
+      "message": "Nit: js or whatever you end up using as the shorter namespace?",
+      "range": {
+        "startLine": 83,
+        "startChar": 32,
+        "endLine": 83,
+        "endChar": 41
+      },
+      "revId": "ac6a64c1f90d91db038e6c1f4d1812922b9af549",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d9d96e24_87e7aafb",
+        "filename": "src/tests/test_utils/runner/HistogramWriter.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1163549
+      },
+      "writtenOn": "2020-11-02T22:34:41Z",
+      "side": 1,
+      "message": "How does ANGLE styling differ from Chromium\u0027s? In Chromium, I believe a forward declaration would be preferred to this, but not sure if that\u0027s the same here.",
+      "range": {
+        "startLine": 16,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 26
+      },
+      "revId": "ac6a64c1f90d91db038e6c1f4d1812922b9af549",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b333df11_4f2f78e7",
+        "filename": "src/tests/test_utils/runner/HistogramWriter.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1163549
+      },
+      "writtenOn": "2020-11-02T22:34:41Z",
+      "side": 1,
+      "message": "It feels a little weird to me to be passing in a pointer to be filled for a getX function that doesn\u0027t need to return multiple things, although I admittedly don\u0027t work very often in C++. Is there a particular reason to do so over returning a rapidjson::Document?",
+      "range": {
+        "startLine": 36,
+        "startChar": 19,
+        "endLine": 36,
+        "endChar": 43
+      },
+      "revId": "ac6a64c1f90d91db038e6c1f4d1812922b9af549",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
