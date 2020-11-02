@@ -58,6 +58,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d88efda8_8c82853e",
+        "filename": "include/platform/FeaturesVk.h",
+        "patchSetId": 22
+      },
+      "lineNbr": 342,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-11-02T16:04:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cc6bd305_dd7e7d5f",
+      "range": {
+        "startLine": 342,
+        "startChar": 33,
+        "endLine": 342,
+        "endChar": 59
+      },
+      "revId": "b0fea8e7b830a512353f8319788d6291e5e8284f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f75a6955_585a068b",
@@ -75,6 +99,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "fdb6ec96_90e6b52e",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-11-02T16:04:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f75a6955_585a068b",
+      "revId": "b0fea8e7b830a512353f8319788d6291e5e8284f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c3e1aa46_b712d71a",
@@ -88,6 +130,30 @@
       "writtenOn": "2020-10-31T14:38:27Z",
       "side": 1,
       "message": "The WithLock version doesn\u0027t take a lock and the without-lock version does. Can you clarify?",
+      "range": {
+        "startLine": 269,
+        "startChar": 4,
+        "endLine": 269,
+        "endChar": 69
+      },
+      "revId": "b0fea8e7b830a512353f8319788d6291e5e8284f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "39ef489c_c034f0c3",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 269,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-11-02T16:04:46Z",
+      "side": 1,
+      "message": "checkCompletedCommands can be called without holding the lock.\ncheckCompletedCommandsWithLock can only be called after grabbing the mInFlightCommandsMutex lock. Android does that a lot.",
+      "parentUuid": "c3e1aa46_b712d71a",
       "range": {
         "startLine": 269,
         "startChar": 4,
@@ -121,6 +187,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "cad1ff5b_8ed6c8c2",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 274,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-11-02T16:04:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5757ef7f_bcd2011d",
+      "range": {
+        "startLine": 274,
+        "startChar": 24,
+        "endLine": 274,
+        "endChar": 44
+      },
+      "revId": "b0fea8e7b830a512353f8319788d6291e5e8284f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "af9ba12a_9be34c37",
@@ -138,6 +228,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "36d04482_f26e0321",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 722,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-11-02T16:04:46Z",
+      "side": 1,
+      "message": "I\u0027m setting mWorkerThreadIdle. Need to have lock to access otherwise TSAN gets upset.",
+      "parentUuid": "af9ba12a_9be34c37",
+      "revId": "b0fea8e7b830a512353f8319788d6291e5e8284f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "94fe1540_f861c039",
@@ -151,6 +259,30 @@
       "writtenOn": "2020-10-31T14:38:27Z",
       "side": 1,
       "message": "this still doesn\u0027t seem like a necessary command - maybe you just want a WaitIdle command?",
+      "range": {
+        "startLine": 49,
+        "startChar": 0,
+        "endLine": 50,
+        "endChar": 27
+      },
+      "revId": "b0fea8e7b830a512353f8319788d6291e5e8284f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7b8b8f14_5467304d",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.h",
+        "patchSetId": 22
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-11-02T16:04:46Z",
+      "side": 1,
+      "message": "I need something to do the command cleanup. That\u0027s done right now by FinishToSerial. If I put a call to FinishToSerial in QueryVk.cpp we take a 20% hit to Manhattan 3.0 perf. Adding this instead preserves the perf.\nThis should go away when I refactor fence handling.",
+      "parentUuid": "94fe1540_f861c039",
       "range": {
         "startLine": 49,
         "startChar": 0,
@@ -184,6 +316,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "72c83801_ed3539fa",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.h",
+        "patchSetId": 22
+      },
+      "lineNbr": 201,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-11-02T16:04:46Z",
+      "side": 1,
+      "message": "No, we are caching the result in a map and delete the result from the map, so not const.\nI\u0027ll update the name to include AndClear per your other comment.",
+      "parentUuid": "cbc5656d_fd6bd436",
+      "range": {
+        "startLine": 201,
+        "startChar": 13,
+        "endLine": 201,
+        "endChar": 33
+      },
+      "revId": "b0fea8e7b830a512353f8319788d6291e5e8284f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "24f149d0_786e05d7",
@@ -197,6 +353,24 @@
       "writtenOn": "2020-10-31T03:15:29Z",
       "side": 1,
       "message": "Can this be moved to the start of the function?",
+      "revId": "b0fea8e7b830a512353f8319788d6291e5e8284f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "880646cb_26bfc556",
+        "filename": "src/libANGLE/renderer/vulkan/QueryVk.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 190,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-11-02T16:04:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "24f149d0_786e05d7",
       "revId": "b0fea8e7b830a512353f8319788d6291e5e8284f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
@@ -236,6 +410,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "381710e5_0836fa5e",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 2264,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-11-02T16:04:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fd77f34b_77572250",
+      "revId": "b0fea8e7b830a512353f8319788d6291e5e8284f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "bbc27fd9_a026ace9",
@@ -249,6 +441,24 @@
       "writtenOn": "2020-10-31T03:15:29Z",
       "side": 1,
       "message": "Same for the rest of these.   Move out to the start of the function.",
+      "revId": "b0fea8e7b830a512353f8319788d6291e5e8284f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f99d007e_46eb962d",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 2267,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-11-02T16:04:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bbc27fd9_a026ace9",
       "revId": "b0fea8e7b830a512353f8319788d6291e5e8284f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
