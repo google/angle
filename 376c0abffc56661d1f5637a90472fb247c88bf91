@@ -99,6 +99,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e7613fb4_c271f935",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 618,
+      "author": {
+        "id": 1393148
+      },
+      "writtenOn": "2020-11-02T06:18:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8e056283_835ed4ba",
+      "range": {
+        "startLine": 605,
+        "startChar": 7,
+        "endLine": 618,
+        "endChar": 9
+      },
+      "revId": "376c0abffc56661d1f5637a90472fb247c88bf91",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7426d4d6_35eb50fd",
@@ -112,6 +136,30 @@
       "writtenOn": "2020-10-30T12:57:48Z",
       "side": 1,
       "message": "nit: you could technically now remove this suppression (and the same one in the other test)",
+      "range": {
+        "startLine": 549,
+        "startChar": 0,
+        "endLine": 551,
+        "endChar": 34
+      },
+      "revId": "376c0abffc56661d1f5637a90472fb247c88bf91",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "57a07d2f_e0980891",
+        "filename": "src/tests/gl_tests/ProgramInterfaceTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 551,
+      "author": {
+        "id": 1393148
+      },
+      "writtenOn": "2020-11-02T06:18:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7426d4d6_35eb50fd",
       "range": {
         "startLine": 549,
         "startChar": 0,

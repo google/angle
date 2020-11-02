@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "96f59fb7_6be3a34c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1393148
+      },
+      "writtenOn": "2020-11-02T06:18:45Z",
+      "side": 1,
+      "message": "Thanks, Jamie,Geoff,Shahbaz！\nPatchset 3 is ready. ",
+      "revId": "5e75cc9ca178be303879e464a3bcf243dc8496f0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
