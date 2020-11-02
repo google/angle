@@ -39,6 +39,30 @@
       },
       "revId": "2c95c2c37d4a83deaa35e27a7e39d1f72bf5d2d1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5390c0f2_b558fdd2",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 2003,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-02T19:57:11Z",
+      "side": 1,
+      "message": "OK. We can land this dirty state fix first if you like. Is it possible to make a regression test for this?",
+      "parentUuid": "9a759409_f7fa19d5",
+      "range": {
+        "startLine": 2003,
+        "startChar": 52,
+        "endLine": 2003,
+        "endChar": 67
+      },
+      "revId": "2c95c2c37d4a83deaa35e27a7e39d1f72bf5d2d1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
