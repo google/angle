@@ -1,6 +1,29 @@
 {
   "comments": [
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "c7f05d34_09e4dcda",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-02T17:22:43Z",
+      "side": 1,
+      "message": "nit: GLES? it isn\u0027t specific to 3.0.",
+      "range": {
+        "startLine": 9,
+        "startChar": 3,
+        "endLine": 9,
+        "endChar": 10
+      },
+      "revId": "650defe8cd25f250efdc09b5f042afff813c2e6d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "ebb876d7_77648176",
@@ -67,6 +90,23 @@
       "writtenOn": "2020-11-02T15:32:13Z",
       "side": 1,
       "message": "Let\u0027s hold off until we reach a resolution on the bug.",
+      "revId": "650defe8cd25f250efdc09b5f042afff813c2e6d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "eef6f9c9_f133546d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-02T17:22:43Z",
+      "side": 1,
+      "message": "+1 to treating this like a driver bug and making an NVIDIA-specific workaround. If it\u0027s an ANGLE bug, please confirm in the issue.",
       "revId": "650defe8cd25f250efdc09b5f042afff813c2e6d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
