@@ -16,6 +16,24 @@
       "message": "removed blank line in description, please cq+2 again",
       "revId": "e8e4f7aad21b4886d0678183b955bd406c4fa930",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "34e7dc52_bb0da929",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1166470
+      },
+      "writtenOn": "2020-11-02T17:30:15Z",
+      "side": 1,
+      "message": "pinging geofflang@.  I don\u0027t have permission to CQ this CL",
+      "parentUuid": "97edea4d_deec7477",
+      "revId": "e8e4f7aad21b4886d0678183b955bd406c4fa930",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
