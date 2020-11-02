@@ -16,6 +16,46 @@
       "message": "PTAL",
       "revId": "a8c2fd8d2d1309c885af1ff2f9e286c86cd80c6c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "49c477e0_31d4da6b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-02T21:47:11Z",
+      "side": 1,
+      "message": "Thanks Mohan. Suggest cloning the test into a different test rather than changing the old one.",
+      "revId": "a8c2fd8d2d1309c885af1ff2f9e286c86cd80c6c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "14e9deea_cabc3e06",
+        "filename": "src/libANGLE/renderer/vulkan/RenderTargetVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-02T21:47:11Z",
+      "side": 1,
+      "message": "nit: suggest you mean an enum for this like I did with vk::LayerMode. Maybe just use that decode enum you already instated.",
+      "range": {
+        "startLine": 75,
+        "startChar": 62,
+        "endLine": 75,
+        "endChar": 67
+      },
+      "revId": "a8c2fd8d2d1309c885af1ff2f9e286c86cd80c6c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
