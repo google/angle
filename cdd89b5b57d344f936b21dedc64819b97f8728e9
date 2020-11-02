@@ -134,6 +134,30 @@
       },
       "revId": "cdd89b5b57d344f936b21dedc64819b97f8728e9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "79f7c137_8e0a8523",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 2404,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2020-11-02T15:48:58Z",
+      "side": 1,
+      "message": "Ah, sorry, I assumed it was an ANGLE helper function. It would help to have a helper function in driver_utils.h to wrap this macro usage.",
+      "parentUuid": "cf418f20_eb0c60f3",
+      "range": {
+        "startLine": 2404,
+        "startChar": 19,
+        "endLine": 2404,
+        "endChar": 39
+      },
+      "revId": "cdd89b5b57d344f936b21dedc64819b97f8728e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
