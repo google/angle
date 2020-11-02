@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8802a6bc_5db81952",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2020-11-02T20:08:50Z",
+      "side": 1,
+      "message": "A bit uncertain about:\n1. Having FAIL expectation for failed runs\n2. Re-using Skip for test retries.",
+      "revId": "2003311f7af9011f3777521baebcdab67b4408f6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
