@@ -157,6 +157,23 @@
       "message": "This CL crashes here with Asphalt 9:\n\n    11-02 16:26:18.685 22006 22006 F DEBUG   : backtrace:\n    11-02 16:26:18.685 22006 22006 F DEBUG   :       #00 pc 000000000073b004  /data/app/~~-rCkJ4AQ95K51NeOJbTaTg\u003d\u003d/org.chromium.angle-UVh-45yCpRapCNzhJa26xg\u003d\u003d/lib/arm64/libGLESv2_angle.so (gl::Trace(int, char const*)+64) (BuildId: 8adc294957bc5e5b)\n    11-02 16:26:18.685 22006 22006 F DEBUG   :       #01 pc 000000000073af18  /data/app/~~-rCkJ4AQ95K51NeOJbTaTg\u003d\u003d/org.chromium.angle-UVh-45yCpRapCNzhJa26xg\u003d\u003d/lib/arm64/libGLESv2_angle.so (gl::LogMessage::~LogMessage()+172) (BuildId: 8adc294957bc5e5b)\n    11-02 16:26:18.685 22006 22006 F DEBUG   :       #02 pc 00000000004715c0  /data/app/~~-rCkJ4AQ95K51NeOJbTaTg\u003d\u003d/org.chromium.angle-UVh-45yCpRapCNzhJa26xg\u003d\u003d/lib/arm64/libGLESv2_angle.so (egl::Surface::setSwapBehavior(unsigned int)+184) (BuildId: 8adc294957bc5e5b)\n    11-02 16:26:18.685 22006 22006 F DEBUG   :       #03 pc 00000000004a1cbc  /data/app/~~-rCkJ4AQ95K51NeOJbTaTg\u003d\u003d/org.chromium.angle-UVh-45yCpRapCNzhJa26xg\u003d\u003d/lib/arm64/libGLESv2_angle.so (egl::SetSurfaceAttrib(egl::Surface*, int, int)+152) (BuildId: 8adc294957bc5e5b)\n    11-02 16:26:18.685 22006 22006 F DEBUG   :       #04 pc 000000000032c880  /data/app/~~-rCkJ4AQ95K51NeOJbTaTg\u003d\u003d/org.chromium.angle-UVh-45yCpRapCNzhJa26xg\u003d\u003d/lib/arm64/libGLESv2_angle.so (EGL_SurfaceAttrib+188) (BuildId: 8adc294957bc5e5b)\n    11-02 16:26:18.685 22006 22006 F DEBUG   :       #05 pc 000000000001f1c8  /system/lib64/libEGL.so (android::eglSurfaceAttribImpl(void*, void*, int, int)+368) (BuildId: 9e90bed6894e07ae72b583df84477572)\n    11-02 16:26:18.685 22006 22006 F DEBUG   :       #06 pc 000000000034a314  /system/lib64/libhwui.so (android::uirenderer::renderthread::EglManager::createSurface(ANativeWindow*, android::uirenderer::ColorMode, sk_sp\u003cSkColorSpace\u003e)+260) (BuildId: b8d74eb18ee4832711bf3e4c37d3252f)\n\n\nUpdating DebugAnnotationsActive() to check g_debugAnnotator prevent the crash, but nothing is output to logcat:\n\n    return g_debugAnnotator !\u003d nullptr;",
       "revId": "4f8daf1bb0314e32793e9dff28313a3ea29ab642",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "221167dc_a917a86f",
+        "filename": "src/common/debug.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 260,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-02T23:32:20Z",
+      "side": 1,
+      "message": "Oops, it\u0027s actually here that the crash occurs, because g_debugAnnotator is null, but that can be prevented by checking that in DebugAnnotationsActive().",
+      "revId": "4f8daf1bb0314e32793e9dff28313a3ea29ab642",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
