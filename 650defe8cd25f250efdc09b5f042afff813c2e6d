@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ebb876d7_77648176",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1298773
+      },
+      "writtenOn": "2020-11-02T13:26:37Z",
+      "side": 1,
+      "message": "PTAL.\n\nI should maybe also disable ANGLE/Vulkan ES 3 support if Vulkan depth clamping is not available?\nShahbaz: Can you give me a pointer on how to do that?",
+      "revId": "650defe8cd25f250efdc09b5f042afff813c2e6d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
