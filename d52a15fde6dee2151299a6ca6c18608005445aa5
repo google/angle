@@ -52,6 +52,149 @@
       "parentUuid": "e4190b44_79823411",
       "revId": "d52a15fde6dee2151299a6ca6c18608005445aa5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f45eb89c_7bff4fc8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-02T15:56:16Z",
+      "side": 1,
+      "message": "Great find! Unfortunate that we can\u0027t use this for GL images.",
+      "revId": "d52a15fde6dee2151299a6ca6c18608005445aa5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7439669d_e51f9bd7",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1976,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-02T15:56:16Z",
+      "side": 1,
+      "message": "nit: excessive parenthese. f(x) and !x never need parentheses.",
+      "revId": "d52a15fde6dee2151299a6ca6c18608005445aa5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "df2d53bf_9ab9e2b9",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2390,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-02T15:56:16Z",
+      "side": 1,
+      "message": "typo: colorspace",
+      "range": {
+        "startLine": 2390,
+        "startChar": 51,
+        "endLine": 2390,
+        "endChar": 60
+      },
+      "revId": "d52a15fde6dee2151299a6ca6c18608005445aa5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8856d87c_1075f752",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2391,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-02T15:56:16Z",
+      "side": 1,
+      "message": "Suggest `VkImageFormatListCreateInfoKHR *additionalCreateInfo \u003d nullptr;`",
+      "range": {
+        "startLine": 2391,
+        "startChar": 4,
+        "endLine": 2391,
+        "endChar": 39
+      },
+      "revId": "d52a15fde6dee2151299a6ca6c18608005445aa5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2c3bd7f4_0b5bf236",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2397,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-02T15:56:16Z",
+      "side": 1,
+      "message": "Same nit on parentheses",
+      "range": {
+        "startLine": 2397,
+        "startChar": 8,
+        "endLine": 2397,
+        "endChar": 9
+      },
+      "revId": "d52a15fde6dee2151299a6ca6c18608005445aa5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8536d1dc_8f3b199c",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2405,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-02T15:56:16Z",
+      "side": 1,
+      "message": "typo: There",
+      "range": {
+        "startLine": 2405,
+        "startChar": 11,
+        "endLine": 2405,
+        "endChar": 14
+      },
+      "revId": "d52a15fde6dee2151299a6ca6c18608005445aa5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "de3a041d_50e296b9",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2694,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-02T15:56:16Z",
+      "side": 1,
+      "message": "How was this not a problem before this change? Say the application did:\n\n- Use linear view\n- Switch to sRGB view, which calls ensureMutable and the image is recreated\n- Switch back to linear view\n\nWhere did the serial get updated at the last step? And why isn\u0027t that mechanism sufficient when this extension is in use?",
+      "revId": "d52a15fde6dee2151299a6ca6c18608005445aa5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
