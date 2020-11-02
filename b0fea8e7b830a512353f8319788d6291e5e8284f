@@ -166,6 +166,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "250ead60_7a5e7a86",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 269,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-02T18:21:17Z",
+      "side": 1,
+      "message": "Ah I see. I would rename this to make it more clear what the functions do.. e.g. lockAndCheckCompletedCommands (the function will lock for you) vs checkCompletedCommandsNoLock (you already have the lock)",
+      "parentUuid": "39ef489c_c034f0c3",
+      "range": {
+        "startLine": 269,
+        "startChar": 4,
+        "endLine": 269,
+        "endChar": 69
+      },
+      "revId": "b0fea8e7b830a512353f8319788d6291e5e8284f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "5757ef7f_bcd2011d",
         "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.cpp",
         "patchSetId": 22
@@ -283,6 +307,30 @@
       "side": 1,
       "message": "I need something to do the command cleanup. That\u0027s done right now by FinishToSerial. If I put a call to FinishToSerial in QueryVk.cpp we take a 20% hit to Manhattan 3.0 perf. Adding this instead preserves the perf.\nThis should go away when I refactor fence handling.",
       "parentUuid": "94fe1540_f861c039",
+      "range": {
+        "startLine": 49,
+        "startChar": 0,
+        "endLine": 50,
+        "endChar": 27
+      },
+      "revId": "b0fea8e7b830a512353f8319788d6291e5e8284f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "aab793e1_b40060a7",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.h",
+        "patchSetId": 22
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-02T18:21:17Z",
+      "side": 1,
+      "message": "Ack, put a TODO if you haven\u0027t already put one?",
+      "parentUuid": "7b8b8f14_5467304d",
       "range": {
         "startLine": 49,
         "startChar": 0,
