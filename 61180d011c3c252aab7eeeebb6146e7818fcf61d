@@ -16,6 +16,29 @@
       "message": "Update: with change of patchset 2, we need to change 2 args to enable vulkan display on Linux:\n\n```\nuse_x11 \u003d false\nuse_ozone \u003d false\n\nangle_vulkan_display_mode \u003d \"simple\" # Optional, default is \u0027simple\u0027\n```",
       "revId": "61180d011c3c252aab7eeeebb6146e7818fcf61d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "41a7b585_977a01f7",
+        "filename": "gni/angle.gni",
+        "patchSetId": 3
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1000770
+      },
+      "writtenOn": "2020-11-03T16:43:52Z",
+      "side": 1,
+      "message": "Hi, this is causing the ANGLE-\u003eSkia roller to fail:\n\nERROR at //third_party/externals/angle2/gni/angle.gni:42:45: Reading a variable defined in the same declare_args() call.\n\nIf you need to set the value of one arg based on another, put\nthem in two separate declare_args() calls, one after the other.\n\n    angle_use_vulkan_display \u003d is_linux \u0026\u0026 !angle_use_x11 \u0026\u0026 !is_ggp\n                                            ^------------\nSee //third_party/externals/angle2/BUILD.gn:6:1: whence it was imported.\nimport(\"gni/angle.gni\")\n^---------------------\nSee //third_party/angle2/BUILD.gn:11:5: which caused the file to be included.\n    \"//third_party/externals/angle2:libEGL\",\n    ^--------------------------------------\n\nhttps://skia-review.googlesource.com/c/skia/+/331501",
+      "range": {
+        "startLine": 42,
+        "startChar": 44,
+        "endLine": 42,
+        "endChar": 57
+      },
+      "revId": "61180d011c3c252aab7eeeebb6146e7818fcf61d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
