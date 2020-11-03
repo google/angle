@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6682362b_784991d1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1382541
+      },
+      "writtenOn": "2020-11-03T07:19:53Z",
+      "side": 1,
+      "message": "Update: with change of patchset 2, we need to change 2 args to enable vulkan display on Linux:\n\n```\nuse_x11 \u003d false\nuse_ozone \u003d false\n\nangle_vulkan_display_mode \u003d \"simple\" # Optional, default is \u0027simple\u0027\n```",
+      "revId": "61180d011c3c252aab7eeeebb6146e7818fcf61d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
