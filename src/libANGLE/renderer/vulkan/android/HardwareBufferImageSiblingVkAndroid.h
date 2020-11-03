@@ -30,6 +30,7 @@ class HardwareBufferImageSiblingVkAndroid : public ExternalImageSiblingVk
     gl::Format getFormat() const override;
     bool isRenderable(const gl::Context *context) const override;
     bool isTexturable(const gl::Context *context) const override;
+    bool isYUV() const override;
     gl::Extents getSize() const override;
     size_t getSamples() const override;
 
@@ -47,6 +48,7 @@ class HardwareBufferImageSiblingVkAndroid : public ExternalImageSiblingVk
 
     bool mRenderable;
     bool mTextureable;
+    bool mYUV;
     size_t mSamples;
 
     vk::ImageHelper *mImage;

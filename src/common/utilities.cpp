@@ -170,6 +170,7 @@ GLenum VariableComponentType(GLenum type)
         case GL_UNSIGNED_INT_IMAGE_BUFFER:
         case GL_UNSIGNED_INT_ATOMIC_COUNTER:
         case GL_SAMPLER_VIDEO_IMAGE_WEBGL:
+        case GL_SAMPLER_EXTERNAL_2D_Y2Y_EXT:
             return GL_INT;
         case GL_UNSIGNED_INT:
         case GL_UNSIGNED_INT_VEC2:
@@ -360,6 +361,7 @@ int VariableRowCount(GLenum type)
         case GL_INT_IMAGE_BUFFER:
         case GL_UNSIGNED_INT_IMAGE_BUFFER:
         case GL_SAMPLER_VIDEO_IMAGE_WEBGL:
+        case GL_SAMPLER_EXTERNAL_2D_Y2Y_EXT:
             return 1;
         case GL_FLOAT_MAT2:
         case GL_FLOAT_MAT3x2:
@@ -440,6 +442,7 @@ int VariableColumnCount(GLenum type)
         case GL_UNSIGNED_INT_IMAGE_CUBE:
         case GL_UNSIGNED_INT_ATOMIC_COUNTER:
         case GL_SAMPLER_VIDEO_IMAGE_WEBGL:
+        case GL_SAMPLER_EXTERNAL_2D_Y2Y_EXT:
             return 1;
         case GL_BOOL_VEC2:
         case GL_FLOAT_VEC2:
@@ -507,6 +510,7 @@ bool IsSamplerType(GLenum type)
         case GL_SAMPLER_2D_ARRAY_SHADOW:
         case GL_SAMPLER_CUBE_MAP_ARRAY_SHADOW:
         case GL_SAMPLER_VIDEO_IMAGE_WEBGL:
+        case GL_SAMPLER_EXTERNAL_2D_Y2Y_EXT:
             return true;
     }
 
@@ -525,6 +529,18 @@ bool IsSamplerCubeType(GLenum type)
     }
 
     return false;
+}
+
+bool IsSamplerYUVType(GLenum type)
+{
+    switch (type)
+    {
+        case GL_SAMPLER_EXTERNAL_2D_Y2Y_EXT:
+            return true;
+
+        default:
+            return false;
+    }
 }
 
 bool IsImageType(GLenum type)
@@ -860,6 +876,7 @@ int VariableSortOrder(GLenum type)
         case GL_UNSIGNED_INT_IMAGE_CUBE:
         case GL_UNSIGNED_INT_ATOMIC_COUNTER:
         case GL_SAMPLER_VIDEO_IMAGE_WEBGL:
+        case GL_SAMPLER_EXTERNAL_2D_Y2Y_EXT:
             return 6;
 
         default:

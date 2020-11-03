@@ -868,6 +868,8 @@ angle::CallCapture CaptureLoseContextCHROMIUM(const State &glState,
 
 // GL_EXT_EGL_image_array
 
+// GL_EXT_YUV_target
+
 // GL_EXT_blend_func_extended
 angle::CallCapture CaptureBindFragDataLocationEXT(const State &glState,
                                                   bool isCallValid,

@@ -1464,6 +1464,14 @@ bool ValidateBlitFramebufferParameters(const Context *context,
         return false;
     }
 
+    // EXT_YUV_target disallows blitting to or from a YUV framebuffer
+    if ((mask & GL_COLOR_BUFFER_BIT) != 0 &&
+        (readFramebuffer->hasYUVAttachment() || drawFramebuffer->hasYUVAttachment()))
+    {
+        context->validationError(GL_INVALID_OPERATION, kBlitYUVFramebuffer);
+        return false;
+    }
+
     // The draw and read framebuffers can only match if:
     // - They are the default framebuffer AND
     // - The read/draw surfaces are different
@@ -3252,6 +3260,12 @@ bool ValidateCopyTexImageParametersBase(const Context *context,
         return false;
     }
 
+    if (source->isYUV())
+    {
+        context->validationError(GL_INVALID_OPERATION, kCopyFromYUVFramebuffer);
+        return false;
+    }
+
     // ANGLE_multiview spec, Revision 1:
     // Calling CopyTexSubImage3D, CopyTexImage2D, or CopyTexSubImage2D will result in an
     // INVALID_FRAMEBUFFER_OPERATION error if the multi-view layout of the current read framebuffer
@@ -3503,6 +3517,32 @@ const char *ValidateDrawStates(const Context *context)
         return kDrawFramebufferIncomplete;
     }
 
+    bool framebufferIsYUV = framebuffer->hasYUVAttachment();
+    if (framebufferIsYUV)
+    {
+        const BlendState &blendState = state.getBlendState();
+        if (!blendState.colorMaskRed || !blendState.colorMaskGreen || !blendState.colorMaskBlue)
+        {
+            // When rendering into a YUV framebuffer, the color mask must have r g and b set to
+            // true.
+            return kInvalidColorMaskForYUV;
+        }
+
+        if (blendState.blend)
+        {
+            // When rendering into a YUV framebuffer, blending must be disabled.
+            return kInvalidBlendStateForYUV;
+        }
+    }
+    else
+    {
+        if (framebuffer->hasExternalTextureAttachment())
+        {
+            // It is an error to render into an external texture that is not YUV.
+            return kExternalTextureAttachmentNotYUV;
+        }
+    }
+
     if (context->getStateCache().hasAnyEnabledClientAttrib())
     {
         if (extensions.webglCompatibility || !state.areClientArraysEnabled())
@@ -3528,6 +3568,8 @@ const char *ValidateDrawStates(const Context *context)
         Program *program                 = state.getLinkedProgram(context);
         ProgramPipeline *programPipeline = state.getProgramPipeline();
 
+        bool programIsYUVOutput = false;
+
         if (program)
         {
             if (!program->validateSamplers(nullptr, context->getCaps()))
@@ -3540,6 +3582,8 @@ const char *ValidateDrawStates(const Context *context)
             {
                 return errorMsg;
             }
+
+            programIsYUVOutput = program->isYUVOutput();
         }
         else if (programPipeline)
         {
@@ -3571,16 +3615,24 @@ const char *ValidateDrawStates(const Context *context)
             {
                 return err::kProgramPipelineLinkFailed;
             }
+
+            programIsYUVOutput = executable.isYUVOutput();
+        }
+
+        if (programIsYUVOutput != framebufferIsYUV)
+        {
+            // Both the program and framebuffer must match in YUV output state.
+            return kYUVOutputMissmatch;
+        }
+
+        if (!state.validateSamplerFormats())
+        {
+            return kSamplerFormatMismatch;
         }
 
         // Do some additional WebGL-specific validation
         if (extensions.webglCompatibility)
         {
-            if (!state.validateSamplerFormats())
-            {
-                return kSamplerFormatMismatch;
-            }
-
             const TransformFeedback *transformFeedbackObject = state.getCurrentTransformFeedback();
             if (state.isTransformFeedbackActive() &&
                 transformFeedbackObject->buffersBoundForOtherUse())

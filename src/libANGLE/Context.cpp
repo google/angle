@@ -3221,6 +3221,9 @@ Extensions Context::generateSupportedExtensions() const
         // between GLES 2.0 and 3.0, vertex type 10_10_10_2 is disabled
         // when the context version is lower than 3.0
         supportedExtensions.vertexAttribType1010102OES = false;
+
+        // GL_EXT_YUV_target requires ESSL3
+        supportedExtensions.yuvTargetEXT = false;
     }
 
     if (getClientVersion() < ES_3_1)

@@ -45,6 +45,8 @@ void GetANativeWindowBufferProperties(const ANativeWindowBuffer *buffer,
 GLenum NativePixelFormatToGLInternalFormat(int pixelFormat);
 int GLInternalFormatToNativePixelFormat(GLenum internalFormat);
 
+bool NativePixelFormatIsYUV(int pixelFormat);
+
 AHardwareBuffer *ANativeWindowBufferToAHardwareBuffer(ANativeWindowBuffer *windowBuffer);
 
 uint64_t GetAHBUsage(int eglNativeBufferUsage);

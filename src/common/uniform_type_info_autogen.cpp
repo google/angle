@@ -18,7 +18,7 @@ namespace gl
 
 namespace
 {
-constexpr std::array<UniformTypeInfo, 76> kInfoTable = {
+constexpr std::array<UniformTypeInfo, 77> kInfoTable = {
     {{GL_NONE, GL_NONE, GL_NONE, GL_NONE, GL_NONE, SamplerFormat::InvalidEnum, 0, 0, 0, 0, 0 * 0,
       0 * 0, false, false, false, ""},
      {GL_BOOL, GL_BOOL, GL_NONE, GL_NONE, GL_NONE, SamplerFormat::InvalidEnum, 1, 1, 1,
@@ -213,7 +213,10 @@ constexpr std::array<UniformTypeInfo, 76> kInfoTable = {
       false, false, false, "uintBitsToFloat"},
      {GL_SAMPLER_VIDEO_IMAGE_WEBGL, GL_INT, GL_TEXTURE_VIDEO_IMAGE_WEBGL, GL_NONE, GL_NONE,
       SamplerFormat::Float, 1, 1, 1, sizeof(GLint), sizeof(GLint) * 4, sizeof(GLint) * 1, true,
-      false, false, "intBitsToFloat"}}};
+      false, false, "intBitsToFloat"},
+     {GL_SAMPLER_EXTERNAL_2D_Y2Y_EXT, GL_INT, GL_NONE, GL_NONE, GL_NONE, SamplerFormat::Float, 1, 1,
+      1, sizeof(GLint), sizeof(GLint) * 4, sizeof(GLint) * 1, true, false, false,
+      "intBitsToFloat"}}};
 
 size_t GetTypeInfoIndex(GLenum uniformType)
 {
@@ -371,6 +374,8 @@ size_t GetTypeInfoIndex(GLenum uniformType)
             return 74;
         case GL_SAMPLER_VIDEO_IMAGE_WEBGL:
             return 75;
+        case GL_SAMPLER_EXTERNAL_2D_Y2Y_EXT:
+            return 76;
         default:
             UNREACHABLE();
             return 0;

@@ -86,7 +86,8 @@ void BindFramebufferAttachment(const FunctionsGL *functions,
 
             if (texture->getType() == TextureType::_2D ||
                 texture->getType() == TextureType::_2DMultisample ||
-                texture->getType() == TextureType::Rectangle)
+                texture->getType() == TextureType::Rectangle ||
+                texture->getType() == TextureType::External)
             {
                 functions->framebufferTexture2D(GL_FRAMEBUFFER, attachmentPoint,
                                                 ToGLenum(texture->getType()),

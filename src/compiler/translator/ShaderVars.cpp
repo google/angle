@@ -46,6 +46,7 @@ ShaderVariable::ShaderVariable(GLenum typeIn)
       readonly(false),
       writeonly(false),
       index(-1),
+      yuv(false),
       interpolation(INTERPOLATION_SMOOTH),
       isInvariant(false),
       texelFetchStaticUse(false),
@@ -78,6 +79,7 @@ ShaderVariable::ShaderVariable(const ShaderVariable &other)
       readonly(other.readonly),
       writeonly(other.writeonly),
       index(other.index),
+      yuv(other.yuv),
       interpolation(other.interpolation),
       isInvariant(other.isInvariant),
       texelFetchStaticUse(other.texelFetchStaticUse),
@@ -104,6 +106,7 @@ ShaderVariable &ShaderVariable::operator=(const ShaderVariable &other)
     readonly                      = other.readonly;
     writeonly                     = other.writeonly;
     index                         = other.index;
+    yuv                           = other.yuv;
     interpolation                 = other.interpolation;
     isInvariant                   = other.isInvariant;
     texelFetchStaticUse           = other.texelFetchStaticUse;
@@ -119,7 +122,7 @@ bool ShaderVariable::operator==(const ShaderVariable &other) const
         isRowMajorLayout != other.isRowMajorLayout || location != other.location ||
         binding != other.binding || imageUnitFormat != other.imageUnitFormat ||
         offset != other.offset || readonly != other.readonly || writeonly != other.writeonly ||
-        index != other.index || interpolation != other.interpolation ||
+        index != other.index || yuv != other.yuv || interpolation != other.interpolation ||
         isInvariant != other.isInvariant || texelFetchStaticUse != other.texelFetchStaticUse)
     {
         return false;

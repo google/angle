@@ -182,6 +182,9 @@ struct ShaderVariable
     // From EXT_blend_func_extended.
     int index;
 
+    // From EXT_YUV_target
+    bool yuv;
+
     // InterfaceBlockField
     // Decide whether two InterfaceBlock fields are the same at shader
     // link time, assuming one from vertex shader and the other from

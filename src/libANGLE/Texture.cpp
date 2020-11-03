@@ -1879,6 +1879,17 @@ const ColorGeneric &Texture::getBorderColor() const
     return mState.mSamplerState.getBorderColor();
 }
 
+GLint Texture::getRequiredTextureImageUnits(const Context *context) const
+{
+    // Only external texture types can return non-1.
+    if (mState.mType != TextureType::External)
+    {
+        return 1;
+    }
+
+    return mTexture->getRequiredExternalTextureImageUnits(context);
+}
+
 void Texture::setCrop(const Rectangle &rect)
 {
     mState.setCrop(rect);

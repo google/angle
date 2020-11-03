@@ -5516,6 +5516,28 @@ bool ValidateFramebufferTexture2D(const Context *context,
             }
             break;
 
+            case TextureTarget::External:
+            {
+                if (!context->getExtensions().yuvTargetEXT)
+                {
+                    context->validationError(GL_INVALID_OPERATION, kYUVTargetExtensionRequired);
+                    return false;
+                }
+
+                if (attachment != GL_COLOR_ATTACHMENT0)
+                {
+                    context->validationError(GL_INVALID_OPERATION, kInvalidAttachment);
+                    return false;
+                }
+
+                if (tex->getType() != TextureType::External)
+                {
+                    context->validationError(GL_INVALID_OPERATION, kTextureTargetMismatch);
+                    return false;
+                }
+            }
+            break;
+
             default:
                 context->validationError(GL_INVALID_ENUM, kInvalidTextureTarget);
                 return false;

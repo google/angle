@@ -595,6 +595,7 @@ void SerializeShaderVariable(gl::BinaryOutputStream *bos, const sh::ShaderVariab
     bos->writeBool(shaderVariable.readonly);
     bos->writeBool(shaderVariable.writeonly);
     bos->writeInt(shaderVariable.index);
+    bos->writeBool(shaderVariable.yuv);
     bos->writeEnum(shaderVariable.interpolation);
     bos->writeBool(shaderVariable.isInvariant);
     bos->writeBool(shaderVariable.texelFetchStaticUse);

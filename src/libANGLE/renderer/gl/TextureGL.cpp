@@ -2061,4 +2061,18 @@ angle::Result TextureGL::initializeContents(const gl::Context *context,
     return angle::Result::Continue;
 }
 
+GLint TextureGL::getRequiredExternalTextureImageUnits(const gl::Context *context)
+{
+    const FunctionsGL *functions = GetFunctionsGL(context);
+    StateManagerGL *stateManager = GetStateManagerGL(context);
+
+    ASSERT(getType() == gl::TextureType::External);
+    stateManager->bindTexture(getType(), mTextureID);
+
+    GLint result = 0;
+    functions->getTexParameteriv(ToGLenum(gl::NonCubeTextureTypeToTarget(getType())),
+                                 GL_REQUIRED_TEXTURE_IMAGE_UNITS_OES, &result);
+    return result;
+}
+
 }  // namespace rx

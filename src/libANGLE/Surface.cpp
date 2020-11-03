@@ -561,6 +561,12 @@ bool Surface::isRenderable(const gl::Context *context,
     return true;
 }
 
+bool Surface::isYUV() const
+{
+    // EGL_EXT_yuv_surface is not implemented.
+    return false;
+}
+
 GLuint Surface::getId() const
 {
     UNREACHABLE();

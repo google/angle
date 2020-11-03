@@ -678,6 +678,9 @@ struct Extensions
     bool textureBufferEXT = false;
     // Any version of the texture buffer extension
     bool textureBufferAny() const { return (textureBufferOES || textureBufferEXT); }
+
+    // GL_EXT_YUV_target
+    bool yuvTargetEXT = false;
 };
 
 // Pointer to a boolean memeber of the Extensions struct

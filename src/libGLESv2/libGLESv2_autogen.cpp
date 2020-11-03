@@ -3773,6 +3773,8 @@ void GL_APIENTRY glLoseContextCHROMIUM(GLenum current, GLenum other)
 
 // GL_EXT_EGL_image_array
 
+// GL_EXT_YUV_target
+
 // GL_EXT_blend_func_extended
 void GL_APIENTRY glBindFragDataLocationEXT(GLuint program, GLuint color, const GLchar *name)
 {

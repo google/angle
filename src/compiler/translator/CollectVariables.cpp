@@ -711,6 +711,7 @@ ShaderVariable CollectVariablesTraverser::recordOutputVariable(const TIntermSymb
 
     outputVariable.location = type.getLayoutQualifier().location;
     outputVariable.index    = type.getLayoutQualifier().index;
+    outputVariable.yuv      = type.getLayoutQualifier().yuv;
     return outputVariable;
 }
 

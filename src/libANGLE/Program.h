@@ -345,6 +345,8 @@ class ProgramState final : angle::NonCopyable
 
     ComponentTypeMask getDrawBufferTypeMask() const { return mDrawBufferTypeMask; }
 
+    bool isYUVOutput() const { return mYUVOutput; }
+
     bool hasBinaryRetrieveableHint() const { return mBinaryRetrieveableHint; }
 
     bool isSeparable() const { return mSeparable; }
@@ -406,6 +408,10 @@ class ProgramState final : angle::NonCopyable
     // Fragment output variable base types: FLOAT, INT, or UINT.  Ordered by location.
     std::vector<GLenum> mOutputVariableTypes;
     ComponentTypeMask mDrawBufferTypeMask;
+
+    // GL_EXT_YUV_target. YUV output shaders can only have one ouput and can only write to YUV
+    // framebuffers.
+    bool mYUVOutput;
 
     bool mBinaryRetrieveableHint;
     bool mSeparable;
@@ -796,6 +802,12 @@ class Program final : public LabeledObject, public angle::Subject
     bool usesMultiview() const { return mState.usesMultiview(); }
 
     ComponentTypeMask getDrawBufferTypeMask() const;
+
+    bool isYUVOutput() const
+    {
+        ASSERT(!mLinkingState);
+        return mState.isYUVOutput();
+    }
 
     const std::vector<GLsizei> &getTransformFeedbackStrides() const;
 

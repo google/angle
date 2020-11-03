@@ -925,9 +925,13 @@ VariableLocation::VariableLocation(unsigned int arrayIndex, unsigned int index)
 
 // SamplerBindings implementation.
 SamplerBinding::SamplerBinding(TextureType textureTypeIn,
+                               GLenum samplerTypeIn,
                                SamplerFormat formatIn,
                                size_t elementCount)
-    : textureType(textureTypeIn), format(formatIn), boundTextureUnits(elementCount, 0)
+    : textureType(textureTypeIn),
+      samplerType(samplerTypeIn),
+      format(formatIn),
+      boundTextureUnits(elementCount, 0)
 {}
 
 SamplerBinding::SamplerBinding(const SamplerBinding &other) = default;
@@ -1079,6 +1083,7 @@ ProgramState::ProgramState()
       mAttachedShadersMarkedForDetach{},
       mLocationsUsedForXfbExtension(0),
       mAtomicCounterUniformRange(0, 0),
+      mYUVOutput(false),
       mBinaryRetrieveableHint(false),
       mSeparable(false),
       mNumViews(-1),
@@ -1833,6 +1838,7 @@ void Program::unlink()
     mState.mSecondaryOutputLocations.clear();
     mState.mOutputVariableTypes.clear();
     mState.mDrawBufferTypeMask.reset();
+    mState.mYUVOutput = false;
     mState.mActiveOutputVariables.reset();
     mState.mComputeShaderLocalSize.fill(1);
     mState.mNumViews                          = -1;
@@ -3755,9 +3761,11 @@ void Program::linkSamplerAndImageBindings(GLuint *combinedImageUniforms)
     {
         const auto &samplerUniform = mState.mExecutable->getUniforms()[samplerIndex];
         TextureType textureType    = SamplerTypeToTextureType(samplerUniform.type);
+        GLenum samplerType         = samplerUniform.typeInfo->type;
         unsigned int elementCount  = samplerUniform.getBasicTypeElementCount();
         SamplerFormat format       = samplerUniform.typeInfo->samplerFormat;
-        mState.mExecutable->mSamplerBindings.emplace_back(textureType, format, elementCount);
+        mState.mExecutable->mSamplerBindings.emplace_back(textureType, samplerType, format,
+                                                          elementCount);
     }
 
     // Whatever is left constitutes the default uniforms.
@@ -4622,6 +4630,7 @@ bool Program::linkOutputVariables(const Caps &caps,
     ASSERT(mState.mOutputVariableTypes.empty());
     ASSERT(mState.mActiveOutputVariables.none());
     ASSERT(mState.mDrawBufferTypeMask.none());
+    ASSERT(!mState.mYUVOutput);
 
     if (!fragmentShader)
     {
@@ -4629,10 +4638,11 @@ bool Program::linkOutputVariables(const Caps &caps,
         return true;
     }
 
-    const auto &outputVariables = fragmentShader->getActiveOutputVariables();
+    const std::vector<sh::ShaderVariable> &outputVariables =
+        fragmentShader->getActiveOutputVariables();
 
     // Gather output variable types
-    for (const auto &outputVariable : outputVariables)
+    for (const sh::ShaderVariable &outputVariable : outputVariables)
     {
         if (outputVariable.isBuiltIn() && outputVariable.name != "gl_FragColor" &&
             outputVariable.name != "gl_FragData")
@@ -4661,6 +4671,12 @@ bool Program::linkOutputVariables(const Caps &caps,
                 GLenumToComponentType(mState.mOutputVariableTypes[location]);
             SetComponentTypeMask(componentType, location, &mState.mDrawBufferTypeMask);
         }
+
+        if (outputVariable.yuv)
+        {
+            ASSERT(outputVariables.size() == 1);
+            mState.mYUVOutput = true;
+        }
     }
 
     if (version >= ES_3_1)
@@ -4688,6 +4704,7 @@ bool Program::linkOutputVariables(const Caps &caps,
         return true;
 
     mState.mExecutable->mOutputVariables = outputVariables;
+    mState.mExecutable->mYUVOutput       = mState.mYUVOutput;
     // TODO(jmadill): any caps validation here?
 
     // EXT_blend_func_extended doesn't specify anything related to binding specific elements of an
@@ -5267,6 +5284,8 @@ angle::Result Program::serialize(const Context *context, angle::MemoryBuffer *bi
     stream.writeInt(static_cast<int>(mState.mDrawBufferTypeMask.to_ulong()));
     stream.writeInt(static_cast<int>(mState.mActiveOutputVariables.to_ulong()));
 
+    stream.writeBool(mState.isYUVOutput());
+
     stream.writeInt(mState.getDefaultUniformRange().low());
     stream.writeInt(mState.getDefaultUniformRange().high());
 
@@ -5277,6 +5296,7 @@ angle::Result Program::serialize(const Context *context, angle::MemoryBuffer *bi
     for (const auto &samplerBinding : mState.getSamplerBindings())
     {
         stream.writeEnum(samplerBinding.textureType);
+        stream.writeInt(samplerBinding.samplerType);
         stream.writeEnum(samplerBinding.format);
         stream.writeInt(samplerBinding.boundTextureUnits.size());
     }
@@ -5511,6 +5531,8 @@ angle::Result Program::deserialize(const Context *context,
     mState.mActiveOutputVariables =
         gl::DrawBufferMask(stream.readInt<gl::DrawBufferMask::value_type>());
 
+    stream.readBool(&mState.mYUVOutput);
+
     unsigned int defaultUniformRangeLow  = stream.readInt<unsigned int>();
     unsigned int defaultUniformRangeHigh = stream.readInt<unsigned int>();
     mState.mExecutable->mDefaultUniformRange =
@@ -5523,9 +5545,11 @@ angle::Result Program::deserialize(const Context *context,
     for (size_t samplerIndex = 0; samplerIndex < samplerCount; ++samplerIndex)
     {
         TextureType textureType = stream.readEnum<TextureType>();
+        GLenum samplerType      = stream.readInt<GLenum>();
         SamplerFormat format    = stream.readEnum<SamplerFormat>();
         size_t bindingCount     = stream.readInt<size_t>();
-        mState.mExecutable->mSamplerBindings.emplace_back(textureType, format, bindingCount);
+        mState.mExecutable->mSamplerBindings.emplace_back(textureType, samplerType, format,
+                                                          bindingCount);
     }
 
     unsigned int imageRangeLow             = stream.readInt<unsigned int>();

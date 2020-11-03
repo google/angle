@@ -1587,6 +1587,8 @@ void GenerateCaps(const FunctionsGL *functions,
         // Can't support ES3.2 without texture buffer objects
         LimitVersion(maxSupportedESVersion, gl::Version(3, 1));
     }
+
+    extensions->yuvTargetEXT = functions->hasGLESExtension("GL_EXT_YUV_target");
 }
 
 void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *features)

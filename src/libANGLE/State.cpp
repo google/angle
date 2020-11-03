@@ -636,12 +636,21 @@ ANGLE_INLINE void State::setActiveTextureDirty(size_t textureIndex, Texture *tex
     // If we defer the update until syncState it's too late and we've already passed validation.
     if (texture && mExecutable)
     {
-        const Sampler *sampler = mSamplers[textureIndex].get();
-        const SamplerState &samplerState =
-            sampler ? sampler->getSamplerState() : texture->getSamplerState();
+        // It is invalid to try to sample a non-yuv texture with a yuv sampler.
         mTexturesIncompatibleWithSamplers[textureIndex] =
-            !texture->getTextureState().compatibleWithSamplerFormat(
-                mExecutable->getSamplerFormatForTextureUnitIndex(textureIndex), samplerState);
+            mExecutable->getActiveYUVSamplers().test(textureIndex) && !texture->isYUV();
+
+        if (isWebGL())
+        {
+            const Sampler *sampler = mSamplers[textureIndex].get();
+            const SamplerState &samplerState =
+                sampler ? sampler->getSamplerState() : texture->getSamplerState();
+            if (!texture->getTextureState().compatibleWithSamplerFormatForWebGL(
+                    mExecutable->getSamplerFormatForTextureUnitIndex(textureIndex), samplerState))
+            {
+                mTexturesIncompatibleWithSamplers[textureIndex] = true;
+            }
+        }
     }
     else
     {

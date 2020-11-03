@@ -39,6 +39,7 @@ int VariableRowCount(GLenum type);
 int VariableColumnCount(GLenum type);
 bool IsSamplerType(GLenum type);
 bool IsSamplerCubeType(GLenum type);
+bool IsSamplerYUVType(GLenum type);
 bool IsImageType(GLenum type);
 bool IsImage2DType(GLenum type);
 bool IsAtomicCounterType(GLenum type);

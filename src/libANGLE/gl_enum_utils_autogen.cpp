@@ -1153,6 +1153,8 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_MATRIX_INDEX_ARRAY_BUFFER_BINDING_OES";
                 case 0x8B9F:
                     return "GL_POINT_SIZE_ARRAY_BUFFER_BINDING_OES";
+                case 0x8BE7:
+                    return "GL_SAMPLER_EXTERNAL_2D_Y2Y_EXT";
                 case 0x8C10:
                     return "GL_TEXTURE_RED_TYPE";
                 case 0x8C11:
@@ -1275,6 +1277,12 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_TEXTURE_GEN_STR_OES";
                 case 0x8D62:
                     return "GL_RGB565";
+                case 0x8D65:
+                    return "GL_TEXTURE_EXTERNAL_OES";
+                case 0x8D67:
+                    return "GL_TEXTURE_BINDING_EXTERNAL_OES";
+                case 0x8D68:
+                    return "GL_REQUIRED_TEXTURE_IMAGE_UNITS_OES";
                 case 0x8D69:
                     return "GL_PRIMITIVE_RESTART_FIXED_INDEX";
                 case 0x8D6A:

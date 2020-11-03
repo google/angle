@@ -99,6 +99,9 @@ class FramebufferState final : angle::NonCopyable
     bool hasDepth() const;
     bool hasStencil() const;
 
+    bool hasExternalTextureAttachment() const;
+    bool hasYUVAttachment() const;
+
     bool isMultiview() const;
 
     ANGLE_INLINE GLsizei getNumViews() const
@@ -258,6 +261,9 @@ class Framebuffer final : public angle::ObserverInterface,
     size_t getNumColorAttachments() const;
     bool hasDepth() const;
     bool hasStencil() const;
+
+    bool hasExternalTextureAttachment() const;
+    bool hasYUVAttachment() const;
 
     bool usingExtendedDrawBuffers() const;
 

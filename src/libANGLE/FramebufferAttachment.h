@@ -93,6 +93,10 @@ class FramebufferAttachment final
     {
         return mType == GL_TEXTURE && id() == textureId.value;
     }
+    bool isExternalTexture() const
+    {
+        return mType == GL_TEXTURE && getTextureImageIndex().getType() == gl::TextureType::External;
+    }
     bool isRenderbufferWithId(GLuint renderbufferId) const
     {
         return mType == GL_RENDERBUFFER && id() == renderbufferId;
@@ -127,6 +131,7 @@ class FramebufferAttachment final
     GLenum type() const { return mType; }
     bool isAttached() const { return mType != GL_NONE; }
     bool isRenderable(const Context *context) const;
+    bool isYUV() const;
 
     Renderbuffer *getRenderbuffer() const;
     Texture *getTexture() const;
@@ -202,6 +207,7 @@ class FramebufferAttachmentObject : public angle::Subject, public angle::Observe
     virtual bool isRenderable(const Context *context,
                               GLenum binding,
                               const ImageIndex &imageIndex) const                          = 0;
+    virtual bool isYUV() const                                                             = 0;
 
     virtual void onAttach(const Context *context, rx::Serial framebufferSerial) = 0;
     virtual void onDetach(const Context *context, rx::Serial framebufferSerial) = 0;
@@ -267,6 +273,12 @@ inline bool FramebufferAttachment::isRenderable(const Context *context) const
 {
     ASSERT(mResource);
     return mResource->isRenderable(context, mTarget.binding(), mTarget.textureIndex());
+}
+
+inline bool FramebufferAttachment::isYUV() const
+{
+    ASSERT(mResource);
+    return mResource->isYUV();
 }
 
 }  // namespace gl

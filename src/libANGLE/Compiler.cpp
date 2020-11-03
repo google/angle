@@ -142,6 +142,9 @@ Compiler::Compiler(rx::GLImplFactory *implFactory, const State &state, egl::Disp
     mResources.OES_texture_buffer = extensions.textureBufferOES;
     mResources.EXT_texture_buffer = extensions.textureBufferEXT;
 
+    // GL_EXT_YUV_target
+    mResources.EXT_YUV_target = extensions.yuvTargetEXT;
+
     // GLSL ES 3.0 constants
     mResources.MaxVertexOutputVectors  = caps.maxVertexOutputComponents / 4;
     mResources.MaxFragmentInputVectors = caps.maxFragmentInputComponents / 4;

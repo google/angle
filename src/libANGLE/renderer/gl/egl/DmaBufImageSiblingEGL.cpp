@@ -32,8 +32,10 @@ namespace
 #define DRM_FORMAT_NV12 FOURCC('N', 'V', '1', '2')
 #define DRM_FORMAT_P010 FOURCC('P', '0', '1', '0')
 
-GLenum FourCCFormatToGLInternalFormat(int format)
+GLenum FourCCFormatToGLInternalFormat(int format, bool *isYUV)
 {
+    *isYUV = false;
+
     switch (format)
     {
         case DRM_FORMAT_R8:
@@ -58,6 +60,7 @@ GLenum FourCCFormatToGLInternalFormat(int format)
         case DRM_FORMAT_NV12:
         case DRM_FORMAT_YVU420:
         case DRM_FORMAT_P010:
+            *isYUV = true;
             return GL_RGB8;
         default:
             NOTREACHED();
@@ -71,7 +74,7 @@ GLenum FourCCFormatToGLInternalFormat(int format)
 namespace rx
 {
 DmaBufImageSiblingEGL::DmaBufImageSiblingEGL(const egl::AttributeMap &attribs)
-    : mAttribs(attribs), mFormat(GL_NONE)
+    : mAttribs(attribs), mFormat(GL_NONE), mYUV(false)
 {
     ASSERT(mAttribs.contains(EGL_WIDTH));
     mSize.width = mAttribs.getAsInt(EGL_WIDTH);
@@ -80,7 +83,7 @@ DmaBufImageSiblingEGL::DmaBufImageSiblingEGL(const egl::AttributeMap &attribs)
     mSize.depth  = 1;
 
     int fourCCFormat = mAttribs.getAsInt(EGL_LINUX_DRM_FOURCC_EXT);
-    mFormat          = gl::Format(FourCCFormatToGLInternalFormat(fourCCFormat));
+    mFormat          = gl::Format(FourCCFormatToGLInternalFormat(fourCCFormat, &mYUV));
 }
 
 DmaBufImageSiblingEGL::~DmaBufImageSiblingEGL() {}
@@ -103,6 +106,11 @@ bool DmaBufImageSiblingEGL::isRenderable(const gl::Context *context) const
 bool DmaBufImageSiblingEGL::isTexturable(const gl::Context *context) const
 {
     return true;
+}
+
+bool DmaBufImageSiblingEGL::isYUV() const
+{
+    return mYUV;
 }
 
 gl::Extents DmaBufImageSiblingEGL::getSize() const

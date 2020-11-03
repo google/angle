@@ -132,6 +132,7 @@ TextureType SamplerTypeToTextureType(GLenum samplerType)
             return TextureType::_2D;
 
         case GL_SAMPLER_EXTERNAL_OES:
+        case GL_SAMPLER_EXTERNAL_2D_Y2Y_EXT:
             return TextureType::External;
 
         case GL_SAMPLER_CUBE:

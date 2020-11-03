@@ -376,6 +376,10 @@ void QueryTexParameterBase(const Context *context,
             *params = CastFromGLintStateValue<ParamType>(
                 pname, texture->initState() == InitState::Initialized);
             break;
+        case GL_REQUIRED_TEXTURE_IMAGE_UNITS_OES:
+            *params = CastFromGLintStateValue<ParamType>(
+                pname, texture->getRequiredTextureImageUnits(context));
+            break;
         default:
             UNREACHABLE();
             break;

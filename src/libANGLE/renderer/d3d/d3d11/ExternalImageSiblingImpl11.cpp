@@ -70,6 +70,11 @@ bool ExternalImageSiblingImpl11::isTexturable(const gl::Context *context) const
     return mIsTexturable;
 }
 
+bool ExternalImageSiblingImpl11::isYUV() const
+{
+    return mYUV;
+}
+
 gl::Extents ExternalImageSiblingImpl11::getSize() const
 {
     return gl::Extents(mWidth, mHeight, 1);
