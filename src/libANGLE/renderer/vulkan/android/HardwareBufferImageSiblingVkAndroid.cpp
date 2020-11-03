@@ -183,12 +183,17 @@ angle::Result HardwareBufferImageSiblingVkAndroid::initImpl(DisplayVk *displayVk
 
     if (bufferFormatProperties.format == VK_FORMAT_UNDEFINED)
     {
+        ANGLE_VK_CHECK(displayVk, bufferFormatProperties.externalFormat != 0, VK_ERROR_UNKNOWN);
         externalFormat.externalFormat = bufferFormatProperties.externalFormat;
 
         // VkImageCreateInfo struct: If the pNext chain includes a VkExternalFormatANDROID structure
         // whose externalFormat member is not 0, usage must not include any usages except
         // VK_IMAGE_USAGE_SAMPLED_BIT
         usage = VK_IMAGE_USAGE_SAMPLED_BIT;
+
+        // If the pNext chain includes a VkExternalFormatANDROID structure whose externalFormat
+        // member is not 0, tiling must be VK_IMAGE_TILING_OPTIMAL
+        imageTilingMode = VK_IMAGE_TILING_OPTIMAL;
     }
 
     // With the introduction of sRGB related GLES extensions any texture could be respecified
