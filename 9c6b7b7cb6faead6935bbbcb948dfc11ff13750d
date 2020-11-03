@@ -72,6 +72,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "258ddb7f_24e7b8a9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-03T17:14:03Z",
+      "side": 1,
+      "message": "It\u0027s something we do to make testing on the bots tractable. It\u0027s only done for the ANGLE tests. I think it\u0027s better than the alternative (not knowing how to load data files).\n\nFWIW even if we restored the CWD after we loaded data files, the issue would persist for crashes in the duration of changed CWD.",
+      "parentUuid": "2bccb764_eb88da21",
+      "revId": "9c6b7b7cb6faead6935bbbcb948dfc11ff13750d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "129886b4_930a7d80",
         "filename": "infra/gn_isolate_map.pyl",
         "patchSetId": 1
