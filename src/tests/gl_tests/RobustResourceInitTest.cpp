@@ -2208,6 +2208,95 @@ TEST_P(RobustResourceInitTest, CopyTexImageToOffsetCubeMap)
     EXPECT_PIXEL_COLOR_EQ(1, 1, GLColor::red);
 }
 
+// Test that blit between two depth/stencil buffers after glClearBufferfi works.  The blit is done
+// once expecting robust resource init value, then clear is called with the same value as the robust
+// init, and blit is done again.  This triggers an optimization in the Vulkan backend where the
+// second clear is no-oped.
+TEST_P(RobustResourceInitTestES3, BlitDepthStencilAfterClearBuffer)
+{
+    // http://anglebug.com/5301
+    ANGLE_SKIP_TEST_IF(IsAndroid() && IsOpenGLES());
+
+    // http://anglebug.com/5300
+    ANGLE_SKIP_TEST_IF(IsD3D11());
+
+    // http://anglebug.com/4919
+    ANGLE_SKIP_TEST_IF(IsIntel() && IsMetal());
+
+    constexpr GLsizei kSize = 16;
+
+    GLFramebuffer readFbo, drawFbo;
+    GLRenderbuffer readDepthStencil, drawDepthStencil;
+
+    // Create destination framebuffer.
+    glBindRenderbuffer(GL_RENDERBUFFER, drawDepthStencil);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, kSize, kSize);
+    glBindFramebuffer(GL_FRAMEBUFFER, drawFbo);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER,
+                              drawDepthStencil);
+    ASSERT_GL_NO_ERROR();
+
+    // Create source framebuffer
+    glBindRenderbuffer(GL_RENDERBUFFER, readDepthStencil);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, kSize, kSize);
+    glBindFramebuffer(GL_FRAMEBUFFER, readFbo);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER,
+                              readDepthStencil);
+    ASSERT_GL_NO_ERROR();
+
+    // Blit once with the robust resource init clear.
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, drawFbo);
+    glBlitFramebuffer(0, 0, kSize, kSize, 0, 0, kSize, kSize,
+                      GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT, GL_NEAREST);
+    ASSERT_GL_NO_ERROR();
+
+    // Verify that the blit was successful.
+    GLRenderbuffer color;
+    glBindRenderbuffer(GL_RENDERBUFFER, color);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, kSize, kSize);
+    glFramebufferRenderbuffer(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, color);
+    ASSERT_GL_NO_ERROR();
+
+    ANGLE_GL_PROGRAM(drawRed, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
+
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
+
+    glEnable(GL_STENCIL_TEST);
+    glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+    glStencilFunc(GL_EQUAL, 0, 0xFF);
+
+    drawQuad(drawRed, essl1_shaders::PositionAttrib(), 0.95f, 1.0f, true);
+    ASSERT_GL_NO_ERROR();
+
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, drawFbo);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(kSize - 1, 0, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(0, kSize - 1, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(kSize - 1, kSize - 1, GLColor::red);
+
+    // Clear to the same value as robust init, and blit again.
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, readFbo);
+    glClearBufferfi(GL_DEPTH_STENCIL, 0, 1.0f, 0);
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, readFbo);
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, drawFbo);
+    glClearBufferfi(GL_DEPTH_STENCIL, 0, 0.5f, 0x3C);
+    glBlitFramebuffer(0, 0, kSize, kSize, 0, 0, kSize, kSize,
+                      GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT, GL_NEAREST);
+    ASSERT_GL_NO_ERROR();
+
+    // Verify that the blit was successful.
+    ANGLE_GL_PROGRAM(drawGreen, essl1_shaders::vs::Simple(), essl1_shaders::fs::Green());
+    drawQuad(drawGreen, essl1_shaders::PositionAttrib(), 0.95f, 1.0f, true);
+    ASSERT_GL_NO_ERROR();
+
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, drawFbo);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+    EXPECT_PIXEL_COLOR_EQ(kSize - 1, 0, GLColor::green);
+    EXPECT_PIXEL_COLOR_EQ(0, kSize - 1, GLColor::green);
+    EXPECT_PIXEL_COLOR_EQ(kSize - 1, kSize - 1, GLColor::green);
+}
+
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND(RobustResourceInitTest,
                                        WithAllocateNonZeroMemory(ES2_VULKAN()));
 

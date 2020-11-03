@@ -2004,8 +2004,8 @@ void FramebufferVk::mergeClearsWithDeferredClears(
 
     // Depth and stencil clears.
     VkImageAspectFlags dsAspectFlags = 0;
-    VkClearValue dsClearValue;
-    dsClearValue.depthStencil = clearDepthStencilValue;
+    VkClearValue dsClearValue        = {};
+    dsClearValue.depthStencil        = clearDepthStencilValue;
     if (clearDepth)
     {
         dsAspectFlags |= VK_IMAGE_ASPECT_DEPTH_BIT;
@@ -2080,8 +2080,8 @@ angle::Result FramebufferVk::clearWithDraw(ContextVk *contextVk,
 VkClearValue FramebufferVk::getCorrectedColorClearValue(size_t colorIndexGL,
                                                         const VkClearColorValue &clearColor) const
 {
-    VkClearValue clearValue;
-    clearValue.color = clearColor;
+    VkClearValue clearValue = {};
+    clearValue.color        = clearColor;
 
     if (!mEmulatedAlphaAttachmentMask[colorIndexGL])
     {
@@ -2116,8 +2116,8 @@ void FramebufferVk::redeferClears(ContextVk *contextVk)
     ASSERT(!contextVk->hasStartedRenderPass());
 
     // Set the appropriate loadOp and clear values for depth and stencil.
-    VkImageAspectFlags dsAspectFlags = 0;
-    VkClearValue dsClearValue;
+    VkImageAspectFlags dsAspectFlags  = 0;
+    VkClearValue dsClearValue         = {};
     dsClearValue.depthStencil.depth   = mDeferredClears.getDepthValue();
     dsClearValue.depthStencil.stencil = mDeferredClears.getStencilValue();
 
@@ -2174,8 +2174,8 @@ angle::Result FramebufferVk::clearWithCommand(ContextVk *contextVk,
     }
 
     // Add depth and stencil to list of attachments as needed.
-    VkImageAspectFlags dsAspectFlags = 0;
-    VkClearValue dsClearValue;
+    VkImageAspectFlags dsAspectFlags  = 0;
+    VkClearValue dsClearValue         = {};
     dsClearValue.depthStencil.depth   = mDeferredClears.getDepthValue();
     dsClearValue.depthStencil.stencil = mDeferredClears.getStencilValue();
     if (mDeferredClears.testDepth())
@@ -2354,7 +2354,7 @@ angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
 
         if (mDeferredClears.testDepth() || mDeferredClears.testStencil())
         {
-            VkClearValue clearValue;
+            VkClearValue clearValue = {};
 
             if (mDeferredClears.testDepth())
             {
