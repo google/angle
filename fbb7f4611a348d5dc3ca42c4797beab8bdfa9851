@@ -26,6 +26,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "17a47e1a_84689712",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 13
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-03T23:03:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "85952c0a_749afc94",
+      "range": {
+        "startLine": 7,
+        "startChar": 24,
+        "endLine": 7,
+        "endChar": 48
+      },
+      "revId": "fbb7f4611a348d5dc3ca42c4797beab8bdfa9851",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "8d80c72a_cdc8d54d",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 13
@@ -54,6 +78,24 @@
       "writtenOn": "2020-11-03T22:24:12Z",
       "side": 1,
       "message": "Nice Mohan! I think we should add this to RenderbufferVk and the corresponding Swapchain option to SurfaceVk as well. Also we should turn off exposing mutable sRGB extensions when image_format_list is unavailable. ",
+      "revId": "fbb7f4611a348d5dc3ca42c4797beab8bdfa9851",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1c8ca71c_2be5eb8b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 13
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-03T23:03:53Z",
+      "side": 1,
+      "message": "i have someone looking into EGL_EXT_image_gl_colorspace which will benefit greatly if this change lands. i would suggest -\n1. we land this change now\n2. follow up change to enable VK_KHR_image_format_list support for surface and renderbuffer along with any additional regression tests needed\n3. clean up change that ties sRGB extensions to VK_KHR_image_format_list and removes dead code\n\nWDYT?",
+      "parentUuid": "fd36944c_ebfa414d",
       "revId": "fbb7f4611a348d5dc3ca42c4797beab8bdfa9851",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
