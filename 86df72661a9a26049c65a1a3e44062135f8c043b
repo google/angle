@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4c3cd6f6_deed90ff",
+        "filename": "src/common/string_utils.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-03T21:37:11Z",
+      "side": 1,
+      "message": "nit: GetStringsFromEnvironmentVarOrAndroidProperty",
+      "range": {
+        "startLine": 97,
+        "startChar": 25,
+        "endLine": 97,
+        "endChar": 54
+      },
+      "revId": "86df72661a9a26049c65a1a3e44062135f8c043b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5d4b217f_db238e80",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 1120,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-03T21:37:11Z",
+      "side": 1,
+      "message": "nit: revert.",
+      "range": {
+        "startLine": 1120,
+        "startChar": 28,
+        "endLine": 1120,
+        "endChar": 47
+      },
+      "revId": "86df72661a9a26049c65a1a3e44062135f8c043b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
