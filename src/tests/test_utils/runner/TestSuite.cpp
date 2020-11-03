@@ -45,6 +45,12 @@ constexpr char kListTests[]            = "--list-tests";
 constexpr char kPrintTestStdout[]      = "--print-test-stdout";
 constexpr char kResultFileArg[]        = "--results-file=";
 constexpr char kTestTimeoutArg[]       = "--test-timeout=";
+constexpr char kDisableCrashHandler[]  = "--disable-crash-handler";
+
+constexpr char kStartedTestString[] = "[ RUN      ] ";
+constexpr char kPassedTestString[]  = "[       OK ] ";
+constexpr char kFailedTestString[]  = "[  FAILED  ] ";
+
 #if defined(NDEBUG)
 constexpr int kDefaultTestTimeout = 20;
 #else
@@ -670,19 +676,19 @@ void PrintTestOutputSnippet(const TestIdentifier &id,
     nameStream << id;
     std::string fullName = nameStream.str();
 
-    size_t runPos = fullOutput.find(std::string("[ RUN      ] ") + fullName);
+    size_t runPos = fullOutput.find(std::string(kStartedTestString) + fullName);
     if (runPos == std::string::npos)
     {
         printf("Cannot locate test output snippet.\n");
         return;
     }
 
-    size_t endPos = fullOutput.find(std::string("[  FAILED  ] ") + fullName, runPos);
+    size_t endPos = fullOutput.find(std::string(kFailedTestString) + fullName, runPos);
     // Only clip the snippet to the "OK" message if the test really
     // succeeded. It still might have e.g. crashed after printing it.
     if (endPos == std::string::npos && result.type == TestResultType::Pass)
     {
-        endPos = fullOutput.find(std::string("[       OK ] ") + fullName, runPos);
+        endPos = fullOutput.find(std::string(kPassedTestString) + fullName, runPos);
     }
     if (endPos != std::string::npos)
     {
@@ -873,6 +879,7 @@ TestSuite::TestSuite(int *argc, char **argv)
       mGTestListTests(false),
       mListTests(false),
       mPrintTestStdout(false),
+      mDisableCrashHandler(false),
       mBatchSize(kDefaultBatchSize),
       mCurrentResultCount(0),
       mTotalResultCount(0),
@@ -888,10 +895,6 @@ TestSuite::TestSuite(int *argc, char **argv)
 #if defined(ANGLE_PLATFORM_WINDOWS)
     testing::GTEST_FLAG(catch_exceptions) = false;
 #endif
-
-    // Note that the crash callback must be owned and not use global constructors.
-    mCrashCallback = [this]() { onCrashOrTimeout(TestResultType::Crash); };
-    InitCrashHandler(&mCrashCallback);
 
     if (*argc <= 0)
     {
@@ -925,6 +928,13 @@ TestSuite::TestSuite(int *argc, char **argv)
             mChildProcessArgs.push_back(argv[argIndex]);
         }
         ++argIndex;
+    }
+
+    if (!mDisableCrashHandler)
+    {
+        // Note that the crash callback must be owned and not use global constructors.
+        mCrashCallback = [this]() { onCrashOrTimeout(TestResultType::Crash); };
+        InitCrashHandler(&mCrashCallback);
     }
 
     std::string envShardIndex = angle::GetEnvironmentVar("GTEST_SHARD_INDEX");
@@ -1121,7 +1131,8 @@ bool TestSuite::parseSingleArg(const char *argument)
             ParseFlag("--debug-test-groups", argument, &mDebugTestGroups) ||
             ParseFlag(kGTestListTests, argument, &mGTestListTests) ||
             ParseFlag(kListTests, argument, &mListTests) ||
-            ParseFlag(kPrintTestStdout, argument, &mPrintTestStdout));
+            ParseFlag(kPrintTestStdout, argument, &mPrintTestStdout) ||
+            ParseFlag(kDisableCrashHandler, argument, &mDisableCrashHandler));
 }
 
 void TestSuite::onCrashOrTimeout(TestResultType crashOrTimeout)
@@ -1202,6 +1213,11 @@ bool TestSuite::launchChildTestProcess(uint32_t batchId,
         args.push_back(arg.c_str());
     }
 
+    if (mDisableCrashHandler)
+    {
+        args.push_back(kDisableCrashHandler);
+    }
+
     std::string timeoutStr;
     if (mTestTimeout != kDefaultTestTimeout)
     {
@@ -1232,6 +1248,19 @@ bool TestSuite::launchChildTestProcess(uint32_t batchId,
     return true;
 }
 
+void ParseTestIdentifierAndSetResult(const std::string &testName,
+                                     TestResultType result,
+                                     TestResults *results)
+{
+    // Trim off any whitespace + extra stuff at the end of the string.
+    std::string modifiedTestName = testName.substr(0, testName.find(' '));
+    modifiedTestName             = modifiedTestName.substr(0, testName.find('\r'));
+    TestIdentifier id;
+    bool ok = TestIdentifier::ParseFromString(modifiedTestName, &id);
+    ASSERT(ok);
+    results->results[id] = {result};
+}
+
 bool TestSuite::finishProcess(ProcessInfo *processInfo)
 {
     // Get test results and merge into master list.
@@ -1239,8 +1268,42 @@ bool TestSuite::finishProcess(ProcessInfo *processInfo)
 
     if (!GetTestResultsFromFile(processInfo->resultsFileName.c_str(), &batchResults))
     {
-        std::cerr << "Error reading test results from child process.\n";
-        return false;
+        std::cerr << "Warning: could not find test results file from child process.\n";
+
+        // First assume all tests get skipped.
+        for (const TestIdentifier &id : processInfo->testsInBatch)
+        {
+            batchResults.results[id] = {TestResultType::NoResult};
+        }
+
+        // Attempt to reconstruct passing list from stdout snippets.
+        const std::string &batchStdout = processInfo->process->getStdout();
+        std::istringstream linesStream(batchStdout);
+
+        std::string line;
+        while (std::getline(linesStream, line))
+        {
+            size_t startPos = line.find(kStartedTestString);
+            size_t failPos  = line.find(kFailedTestString);
+            size_t passPos  = line.find(kPassedTestString);
+
+            if (startPos != std::string::npos)
+            {
+                // Assume a test that's started crashed until we see it completed.
+                std::string testName = line.substr(strlen(kStartedTestString));
+                ParseTestIdentifierAndSetResult(testName, TestResultType::Crash, &batchResults);
+            }
+            else if (failPos != std::string::npos)
+            {
+                std::string testName = line.substr(strlen(kFailedTestString));
+                ParseTestIdentifierAndSetResult(testName, TestResultType::Fail, &batchResults);
+            }
+            else if (passPos != std::string::npos)
+            {
+                std::string testName = line.substr(strlen(kPassedTestString));
+                ParseTestIdentifierAndSetResult(testName, TestResultType::Pass, &batchResults);
+            }
+        }
     }
 
     if (!MergeTestResults(&batchResults, &mTestResults, mFlakyRetries))

@@ -25,6 +25,7 @@ following additional command-line arguments:
  * `--shard-count` and `--shard-index` control the test sharding
  * `--test-timeout` limits the amount of time spent in each test
  * `--flaky-retries` allows for tests to fail a fixed number of times and still pass
+ * `--disable-crash-handler` forces off OS-level crash handling
 
 `--isolated-script-test-output` and `--isolated-script-perf-test-output` mirror `--results-file`
 and `--histogram-json-file` respectively.
