@@ -39,6 +39,30 @@
       },
       "revId": "a7bb6a9b15ddeb8497523f8871deb25de2676d9f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1e3be040_ea50a75a",
+        "filename": "gni/angle.gni",
+        "patchSetId": 9
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1382541
+      },
+      "writtenOn": "2020-11-03T01:31:01Z",
+      "side": 1,
+      "message": "Yes let\u0027s change line 33 to:\n\n```\nangle_use_vulkan_display \u003d is_linux \u0026\u0026 !use_x11 \u0026\u0026 !is_ggp \u0026\u0026 !use_ozone\n```",
+      "parentUuid": "49f7db4a_fff8f01b",
+      "range": {
+        "startLine": 111,
+        "startChar": 35,
+        "endLine": 111,
+        "endChar": 62
+      },
+      "revId": "a7bb6a9b15ddeb8497523f8871deb25de2676d9f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
