@@ -156,6 +156,9 @@ constexpr const char *kSkippedMessages[] = {
     "VUID-vkMapMemory-memory-00683",
     // http://anglebug.com/5027
     "UNASSIGNED-CoreValidation-Shader-PushConstantOutOfRange",
+    // http://anglebug.com/5304
+    "VUID-vkCmdDraw-magFilter-04553",
+    "VUID-vkCmdDrawIndexed-magFilter-04553",
 };
 
 // Suppress validation errors that are known
@@ -2517,11 +2520,14 @@ void RendererVk::setGlobalDebugAnnotator()
 
     if (enableDebugAnnotatorVk)
     {
+        // Install DebugAnnotatorVk so that GLES API commands will generate Vulkan debug markers
         gl::InitializeDebugAnnotations(&mAnnotator);
     }
     else
     {
-        gl::UninitializeDebugAnnotations();
+        // Install LoggingAnnotator so that other debug functionality will still work (e.g. Vulkan
+        // validation errors will cause dEQP tests to fail).
+        mDisplay->setGlobalDebugAnnotator();
     }
 }
 
