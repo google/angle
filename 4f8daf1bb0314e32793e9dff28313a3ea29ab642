@@ -192,6 +192,24 @@
       "parentUuid": "221167dc_a917a86f",
       "revId": "4f8daf1bb0314e32793e9dff28313a3ea29ab642",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6036ed3f_1945331d",
+        "filename": "src/common/debug.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 260,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-03T14:59:48Z",
+      "side": 1,
+      "message": "Thanks, I\u0027ll take a look at this when I start in a little bit.",
+      "parentUuid": "53a77e8b_74273afb",
+      "revId": "4f8daf1bb0314e32793e9dff28313a3ea29ab642",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
