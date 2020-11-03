@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "70ac27bf_6e8a1998",
+        "filename": "src/common/string_utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 249,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-11-03T21:19:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "635d51fe_c6f64a80",
+      "range": {
+        "startLine": 236,
+        "startChar": 1,
+        "endLine": 249,
+        "endChar": 27
+      },
+      "revId": "5472e4637198c78ec164302d49fa040172d37c71",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "51797a6f_6d25628e",
@@ -37,6 +61,30 @@
       "writtenOn": "2020-11-03T20:51:54Z",
       "side": 1,
       "message": "nit: Call this LogFeatureOverrides. Caps naming nit. Also no need to make the features a pointer (can be const \u0026).",
+      "range": {
+        "startLine": 904,
+        "startChar": 0,
+        "endLine": 920,
+        "endChar": 1
+      },
+      "revId": "5472e4637198c78ec164302d49fa040172d37c71",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8fd45d3f_4128236e",
+        "filename": "src/libANGLE/renderer/renderer_utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 920,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-11-03T21:19:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "51797a6f_6d25628e",
       "range": {
         "startLine": 904,
         "startChar": 0,
