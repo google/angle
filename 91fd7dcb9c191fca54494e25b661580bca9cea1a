@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3f6485f5_a9ed0a2e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 10
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-03T14:03:30Z",
+      "side": 1,
+      "message": "LGTM, it\u0027s getting tricky to track the rectangle state.",
+      "revId": "91fd7dcb9c191fca54494e25b661580bca9cea1a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fcdb5103_900429be",
+        "filename": "src/libANGLE/angletypes.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-03T14:03:30Z",
+      "side": 1,
+      "message": "nit: FindCoveringRectangle",
+      "range": {
+        "startLine": 96,
+        "startChar": 5,
+        "endLine": 96,
+        "endChar": 22
+      },
+      "revId": "91fd7dcb9c191fca54494e25b661580bca9cea1a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bd5e5cfb_46828022",
+        "filename": "src/libANGLE/angletypes.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-03T14:03:30Z",
+      "side": 1,
+      "message": "this is a weird one, not sure what to call this.",
+      "range": {
+        "startLine": 106,
+        "startChar": 5,
+        "endLine": 106,
+        "endChar": 20
+      },
+      "revId": "91fd7dcb9c191fca54494e25b661580bca9cea1a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
