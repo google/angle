@@ -1763,13 +1763,6 @@ angle::Result FramebufferVk::syncState(const gl::Context *context,
         return angle::Result::Continue;
     }
 
-    // The FBO's new attachment may have changed the renderable area
-    if (binding == GL_DRAW_FRAMEBUFFER)
-    {
-        const gl::State &glState = context->getState();
-        ANGLE_TRY(contextVk->updateScissor(glState));
-    }
-
     if (command != gl::Command::Blit)
     {
         // Don't end the render pass when handling a blit to resolve, since we may be able to
@@ -1783,13 +1776,11 @@ angle::Result FramebufferVk::syncState(const gl::Context *context,
 
     updateRenderPassDesc();
 
-    // Notify the ContextVk to update the pipeline desc.
-    if (binding == GL_DRAW_FRAMEBUFFER)
-    {
-        contextVk->onDrawFramebufferChange(this);
-    }
     // Deactivate Framebuffer
     mFramebuffer = nullptr;
+
+    // Notify the ContextVk to update the pipeline desc.
+    ANGLE_TRY(contextVk->onFramebufferChange(this));
 
     return angle::Result::Continue;
 }
