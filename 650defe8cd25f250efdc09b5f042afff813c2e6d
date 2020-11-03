@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "bdf7680f_bcfb1d74",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1298773
+      },
+      "writtenOn": "2020-11-03T06:19:01Z",
+      "side": 1,
+      "message": "I think floating point textures were not supported in GL ES 2, so the clamping would be implicitly done when converting to the fixed point format. (?)\n\nAnyway, yeah I might as well write GLES because the statement would still be true.",
+      "parentUuid": "c7f05d34_09e4dcda",
+      "range": {
+        "startLine": 9,
+        "startChar": 3,
+        "endLine": 9,
+        "endChar": 10
+      },
+      "revId": "650defe8cd25f250efdc09b5f042afff813c2e6d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "ebb876d7_77648176",
@@ -107,6 +131,23 @@
       "writtenOn": "2020-11-02T17:22:43Z",
       "side": 1,
       "message": "+1 to treating this like a driver bug and making an NVIDIA-specific workaround. If it\u0027s an ANGLE bug, please confirm in the issue.",
+      "revId": "650defe8cd25f250efdc09b5f042afff813c2e6d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1fdc7d57_20599225",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1298773
+      },
+      "writtenOn": "2020-11-03T06:19:01Z",
+      "side": 1,
+      "message": "Agreed -- let\u0027s first agree on what the spec says, on the angle bug.\nI found an additional relevant part of the spec after posting this patch.",
       "revId": "650defe8cd25f250efdc09b5f042afff813c2e6d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
