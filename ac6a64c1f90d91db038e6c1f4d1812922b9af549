@@ -66,6 +66,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "01bfad65_0fac4801",
+        "filename": "src/tests/test_utils/runner/HistogramWriter.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2020-11-03T01:26:00Z",
+      "side": 1,
+      "message": "Why is this not in the same order as in MS_BEST_FIT_FORMAT?",
+      "range": {
+        "startLine": 46,
+        "startChar": 12,
+        "endLine": 46,
+        "endChar": 30
+      },
+      "revId": "ac6a64c1f90d91db038e6c1f4d1812922b9af549",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "3788348a_e5963f9a",
         "filename": "src/tests/test_utils/runner/HistogramWriter.cpp",
         "patchSetId": 11
@@ -128,6 +151,29 @@
         "startChar": 19,
         "endLine": 36,
         "endChar": 43
+      },
+      "revId": "ac6a64c1f90d91db038e6c1f4d1812922b9af549",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "68d650c6_b33106a5",
+        "filename": "src/tests/test_utils/runner/TestSuite.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2020-11-03T01:26:00Z",
+      "side": 1,
+      "message": "Is it possible for ANGLEPerfTest to get this in some other way?\nLike have PerfTestSuite inherit from TestSuite and pass \"this\" in constructor of ANGLEPerfTest?\nOr move the whole Histogram implementation from TestSuite to ANGLEPerfTest?",
+      "range": {
+        "startLine": 133,
+        "startChar": 0,
+        "endLine": 133,
+        "endChar": 57
       },
       "revId": "ac6a64c1f90d91db038e6c1f4d1812922b9af549",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
