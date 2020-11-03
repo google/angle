@@ -41,6 +41,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "71526b5f_c959d65e",
+        "filename": "src/tests/perf_tests/ANGLEPerfTest.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 367,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-03T02:30:45Z",
+      "side": 1,
+      "message": "I convert ms to msBestFitFormat in HistogramWriter.cpp already. I changed it here too to be consistent.",
+      "parentUuid": "069ae8be_10f8773e",
+      "range": {
+        "startLine": 367,
+        "startChar": 81,
+        "endLine": 367,
+        "endChar": 83
+      },
+      "revId": "ac6a64c1f90d91db038e6c1f4d1812922b9af549",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "188e97d2_2e056086",
@@ -54,6 +78,30 @@
       "writtenOn": "2020-11-02T22:34:41Z",
       "side": 1,
       "message": "Nit: use something else since js is typically associated with JavaScript.",
+      "range": {
+        "startLine": 30,
+        "startChar": 10,
+        "endLine": 30,
+        "endChar": 12
+      },
+      "revId": "ac6a64c1f90d91db038e6c1f4d1812922b9af549",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "10cb0b3f_5520af24",
+        "filename": "src/tests/test_utils/runner/HistogramWriter.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-03T02:30:45Z",
+      "side": 1,
+      "message": "Ack, probably would be good but I already used this pattern in TestSuite.cpp so I figure I should leave it here unless I change both.",
+      "parentUuid": "188e97d2_2e056086",
       "range": {
         "startLine": 30,
         "startChar": 10,
@@ -89,6 +137,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "dd881b91_d9fb8f63",
+        "filename": "src/tests/test_utils/runner/HistogramWriter.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-03T02:30:45Z",
+      "side": 1,
+      "message": "I don\u0027t follow the question. How is the order not the same?",
+      "parentUuid": "01bfad65_0fac4801",
+      "range": {
+        "startLine": 46,
+        "startChar": 12,
+        "endLine": 46,
+        "endChar": 30
+      },
+      "revId": "ac6a64c1f90d91db038e6c1f4d1812922b9af549",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "3788348a_e5963f9a",
         "filename": "src/tests/test_utils/runner/HistogramWriter.cpp",
         "patchSetId": 11
@@ -100,6 +172,30 @@
       "writtenOn": "2020-11-02T22:34:41Z",
       "side": 1,
       "message": "Nit: js or whatever you end up using as the shorter namespace?",
+      "range": {
+        "startLine": 83,
+        "startChar": 32,
+        "endLine": 83,
+        "endChar": 41
+      },
+      "revId": "ac6a64c1f90d91db038e6c1f4d1812922b9af549",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "29f6f9d6_a4f7c8e8",
+        "filename": "src/tests/test_utils/runner/HistogramWriter.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-03T02:30:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3788348a_e5963f9a",
       "range": {
         "startLine": 83,
         "startChar": 32,
@@ -133,6 +229,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "35de4dc1_ca74344f",
+        "filename": "src/tests/test_utils/runner/HistogramWriter.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-03T02:30:45Z",
+      "side": 1,
+      "message": "\"fwd\" is a file of forward declarations. If you look in there you\u0027ll see these types are elaborate templates with multiple parameters. I started forward declaring them all before discovering that the library did it for us. Added a comment.",
+      "parentUuid": "d9d96e24_87e7aafb",
+      "range": {
+        "startLine": 16,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 26
+      },
+      "revId": "ac6a64c1f90d91db038e6c1f4d1812922b9af549",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b333df11_4f2f78e7",
@@ -156,6 +276,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5feb09a2_09f4fcd1",
+        "filename": "src/tests/test_utils/runner/HistogramWriter.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-03T02:30:45Z",
+      "side": 1,
+      "message": "It avoids any possible copy or need for copy constructors or assignment operators. It also avoids having a dangling pointer as a return value (i.e. if you allocate a pointer then free it in a different scope). FWIW the output pointer and return pointer may be converted to the same (or similar) machine code.\n\nIt may work fine with a copy but I\u0027m always suspicious of this in C++ libraries we don\u0027t control.",
+      "parentUuid": "b333df11_4f2f78e7",
+      "range": {
+        "startLine": 36,
+        "startChar": 19,
+        "endLine": 36,
+        "endChar": 43
+      },
+      "revId": "ac6a64c1f90d91db038e6c1f4d1812922b9af549",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "68d650c6_b33106a5",
@@ -169,6 +313,30 @@
       "writtenOn": "2020-11-03T01:26:00Z",
       "side": 1,
       "message": "Is it possible for ANGLEPerfTest to get this in some other way?\nLike have PerfTestSuite inherit from TestSuite and pass \"this\" in constructor of ANGLEPerfTest?\nOr move the whole Histogram implementation from TestSuite to ANGLEPerfTest?",
+      "range": {
+        "startLine": 133,
+        "startChar": 0,
+        "endLine": 133,
+        "endChar": 57
+      },
+      "revId": "ac6a64c1f90d91db038e6c1f4d1812922b9af549",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "80466407_9b3fee08",
+        "filename": "src/tests/test_utils/runner/TestSuite.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-03T02:30:45Z",
+      "side": 1,
+      "message": "Ack, inheritance is a no-go because this is a singleton and the test suite is instantiated for each test. I wanted this to be a part of the test runner than just ANGLEPerfTest as it could apply to other test suites with other base classes theoretically. I also had the same problem in ANGLEPerfTest where I needed a per-instance data member in a class that had no persistent storage. So I settled on this design. In my ideal world we could ditch gtest entirely.",
+      "parentUuid": "68d650c6_b33106a5",
       "range": {
         "startLine": 133,
         "startChar": 0,
