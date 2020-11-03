@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "39974c17_5573bbc8",
+        "filename": "src/tests/restricted_traces/restricted_trace_gold_tests.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 326,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2020-11-03T20:16:40Z",
+      "side": 0,
+      "message": "Oh, this is no longer required?\nWas this replaced by --output-directory?",
+      "range": {
+        "startLine": 326,
+        "startChar": 65,
+        "endLine": 326,
+        "endChar": 80
+      },
+      "revId": "39adaeb09df024b0baf831314329ba92619f88e1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
