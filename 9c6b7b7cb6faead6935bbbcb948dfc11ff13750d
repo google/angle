@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a3674aca_0edac2dd",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-03T00:22:40Z",
+      "side": 1,
+      "message": "This builds on Jamie\u0027s CL by building up the absolute path to each module based on the executable\u0027s path.\n\nJamie\u0027s CL:\nhttps://chromium-review.googlesource.com/c/angle/angle/+/2496041\n\nThis outputs good symbols using Jamie\u0027s repro steps:\n\nstep 1: enable capture in your gn args\nstep 2: apply this CL https://chromium-review.googlesource.com/c/angle/angle/+/2510014\nstep 3: also make sure you apply the crash CL\nstep 4: build normally\nstep 5: run $ ANGLE_CAPTURE_TRIGGER\u003d10 out/Debug/angle_perftests --gtest_filter\u003dTracePerfTest.Run/vulkan_swiftshader_angry* --enable-all-trace-tests --start-trace-after-setup",
+      "revId": "9c6b7b7cb6faead6935bbbcb948dfc11ff13750d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
