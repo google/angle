@@ -183,6 +183,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "61434b42_e5427200",
+        "filename": "src/tests/test_utils/runner/HistogramWriter.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-03T14:20:37Z",
+      "side": 1,
+      "message": "Done, thanks for catching. Updated to what I think is correct based on code search.",
+      "parentUuid": "e68936ae_7df0a279",
+      "range": {
+        "startLine": 46,
+        "startChar": 12,
+        "endLine": 46,
+        "endChar": 30
+      },
+      "revId": "ac6a64c1f90d91db038e6c1f4d1812922b9af549",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3788348a_e5963f9a",
