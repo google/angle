@@ -1104,12 +1104,10 @@ class ContextVk : public ContextImpl, public vk::Context
     // http://anglebug.com/2701
     vk::Shared<vk::Fence> mSubmitFence;
 
-    // When the command graph is disabled we record commands completely linearly. We have plans to
-    //  reorder independent draws so that we can create fewer RenderPasses in some scenarios.
     // We have a queue of CommandBufferHelpers (CBHs) that is drawn from for the two active command
     //  buffers in the main thread. The two active command buffers are the inside and outside
     //  RenderPass command buffers.
-    constexpr static size_t kNumCommandBuffers = 2;
+    constexpr static size_t kNumCommandBuffers = 50;
     std::array<vk::CommandBufferHelper, kNumCommandBuffers> mCommandBuffers;
 
     // Lock access to the command buffer queue
