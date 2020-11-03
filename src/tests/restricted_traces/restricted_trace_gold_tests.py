@@ -22,6 +22,7 @@
 
 import argparse
 import contextlib
+import fnmatch
 import json
 import logging
 import os
@@ -323,8 +324,9 @@ def upload_test_result_to_skia_gold(args, gold_session_manager, gold_session, go
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--isolated-script-test-output', type=str, required=True)
+    parser.add_argument('--isolated-script-test-output', type=str)
     parser.add_argument('--isolated-script-test-perf-output', type=str)
+    parser.add_argument('--isolated-script-test-filter', type=str)
     parser.add_argument('--test-suite', help='Test suite to run.', default=DEFAULT_TEST_SUITE)
     parser.add_argument('--render-test-output-dir', help='Directory to store screenshots')
     parser.add_argument('--xvfb', help='Start xvfb.', action='store_true')
@@ -365,6 +367,13 @@ def main():
             gold_session = gold_session_manager.GetSkiaGoldSession(keys)
 
             for test in tests['traces']:
+
+                # Apply test filter if present.
+                if args.isolated_script_test_filter:
+                    full_name = 'angle_restricted_trace_gold_tests.%s' % test
+                    if not fnmatch.fnmatch(test, args.isolated_script_test_filter):
+                        continue
+
                 with common.temporary_file() as tempfile_path:
                     cmd = [
                         args.test_suite,
