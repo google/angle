@@ -16,6 +16,24 @@
       "message": "Shabi asked me to file a bug and suppress the newly-failing tests, which I did.",
       "revId": "70d177997ebfc4d06fa6bce7dcacb381a63d5ba2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7d992fcf_2f7383a9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-03T22:03:48Z",
+      "side": 1,
+      "message": "Sorry suppressing the deqp tests was not what I meant. Could you suppress the VVL error in RendererVk instead?",
+      "parentUuid": "2598033d_1f29da8d",
+      "revId": "70d177997ebfc4d06fa6bce7dcacb381a63d5ba2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
