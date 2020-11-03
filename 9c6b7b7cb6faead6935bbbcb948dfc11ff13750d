@@ -16,6 +16,80 @@
       "message": "This builds on Jamie\u0027s CL by building up the absolute path to each module based on the executable\u0027s path.\n\nJamie\u0027s CL:\nhttps://chromium-review.googlesource.com/c/angle/angle/+/2496041\n\nThis outputs good symbols using Jamie\u0027s repro steps:\n\nstep 1: enable capture in your gn args\nstep 2: apply this CL https://chromium-review.googlesource.com/c/angle/angle/+/2510014\nstep 3: also make sure you apply the crash CL\nstep 4: build normally\nstep 5: run $ ANGLE_CAPTURE_TRIGGER\u003d10 out/Debug/angle_perftests --gtest_filter\u003dTracePerfTest.Run/vulkan_swiftshader_angry* --enable-all-trace-tests --start-trace-after-setup",
       "revId": "9c6b7b7cb6faead6935bbbcb948dfc11ff13750d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2ca1e183_74e4ddf4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-03T03:54:22Z",
+      "side": 1,
+      "message": "Thanks Tim! What\u0027s changed from Jamie\u0027s version?",
+      "revId": "9c6b7b7cb6faead6935bbbcb948dfc11ff13750d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "129886b4_930a7d80",
+        "filename": "infra/gn_isolate_map.pyl",
+        "patchSetId": 1
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-03T03:54:22Z",
+      "side": 1,
+      "message": "What\u0027s this?",
+      "revId": "9c6b7b7cb6faead6935bbbcb948dfc11ff13750d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1e276c1b_3f3d1c6f",
+        "filename": "util/posix/crash_handler_posix.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-03T03:54:22Z",
+      "side": 1,
+      "message": "Suggest `static`. This is called from a signal handler, who knows how much stack there is for use.",
+      "range": {
+        "startLine": 130,
+        "startChar": 12,
+        "endLine": 130,
+        "endChar": 16
+      },
+      "revId": "9c6b7b7cb6faead6935bbbcb948dfc11ff13750d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ce7708fc_49cc4972",
+        "filename": "util/posix/crash_handler_posix.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-03T03:54:22Z",
+      "side": 1,
+      "message": "If you can avoid strings, that would be preferable. Again, this is from a signal handler, so better not do memory allocations. You can also replace `system` with fork/execve/wait to avoid constructing a command line (which is also safer, for example `module` and `substring` above are not escaped).",
+      "revId": "9c6b7b7cb6faead6935bbbcb948dfc11ff13750d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
