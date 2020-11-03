@@ -4977,13 +4977,12 @@ angle::Result ImageHelper::flushSingleSubresourceStagedUpdates(ContextVk *contex
         // Otherwise we proceed with a normal update.
     }
 
-    LevelIndex levelVk = toVkLevel(levelGL);
-    return flushStagedUpdates(contextVk, levelVk, levelVk + 1, layer, layer + 1, {});
+    return flushStagedUpdates(contextVk, levelGL, levelGL + 1, layer, layer + 1, {});
 }
 
 angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
-                                              LevelIndex levelVkStart,
-                                              LevelIndex levelVkEnd,
+                                              gl::LevelIndex levelGLStart,
+                                              gl::LevelIndex levelGLEnd,
                                               uint32_t layerStart,
                                               uint32_t layerEnd,
                                               gl::TexLevelMask skipLevelsMask)
@@ -5010,9 +5009,6 @@ angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
             return angle::Result::Continue;
         }
     }
-
-    const gl::LevelIndex levelGLStart = toGLLevel(levelVkStart);
-    const gl::LevelIndex levelGLEnd   = toGLLevel(levelVkEnd);
 
     ANGLE_TRY(mStagingBuffer.flush(contextVk));
 
@@ -5164,9 +5160,7 @@ angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
 
 angle::Result ImageHelper::flushAllStagedUpdates(ContextVk *contextVk)
 {
-    // Clear the image.
-    return flushStagedUpdates(contextVk, LevelIndex(0), LevelIndex(mLevelCount), 0, mLayerCount,
-                              {});
+    return flushStagedUpdates(contextVk, mBaseLevel, mBaseLevel + mLevelCount, 0, mLayerCount, {});
 }
 
 bool ImageHelper::isUpdateStaged(gl::LevelIndex levelGL, uint32_t layer)

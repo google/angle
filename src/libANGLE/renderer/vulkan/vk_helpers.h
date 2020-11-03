@@ -1521,8 +1521,8 @@ class ImageHelper final : public Resource, public angle::Subject
     // Due to the nature of updates (done wholly to a VkImageSubresourceLayers), some unsolicited
     // layers may also be updated.
     angle::Result flushStagedUpdates(ContextVk *contextVk,
-                                     LevelIndex levelStart,
-                                     LevelIndex levelEnd,
+                                     gl::LevelIndex levelGLStart,
+                                     gl::LevelIndex levelGLEnd,
                                      uint32_t layerStart,
                                      uint32_t layerEnd,
                                      gl::TexLevelMask skipLevelsMask);
