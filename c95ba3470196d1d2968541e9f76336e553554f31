@@ -16,6 +16,24 @@
       "message": "Mohan: I traced this down to the ImageViewHelper not creating linear views when mLinearColorspace is false. This is inconsistent with how the mutable views bit works. We should always create the linear views, and only create the sRGB views when the bit is requested (requiresSRGBViews). Does this make sense?",
       "revId": "c95ba3470196d1d2968541e9f76336e553554f31",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "63c3afd5_d120d48b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 11
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-03T21:13:24Z",
+      "side": 1,
+      "message": "after some digging it turns out to be a premature reset of \"mRequiresMutableStorage\" causes bad things to happen when switching between colorspaces or setting storage from other objects. Trying this again",
+      "parentUuid": "1c5e3a8c_c022a29a",
+      "revId": "c95ba3470196d1d2968541e9f76336e553554f31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
