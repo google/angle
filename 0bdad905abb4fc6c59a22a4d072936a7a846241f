@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "aeebcd66_5d82a89c",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 15
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2020-11-03T20:20:12Z",
+      "side": 1,
+      "message": "Typo: transalted -\u003e translated",
+      "revId": "0bdad905abb4fc6c59a22a4d072936a7a846241f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "3998ef74_53bb4391",
@@ -14,6 +31,40 @@
       "writtenOn": "2020-11-03T16:19:35Z",
       "side": 1,
       "message": "Thanks, still LGTM",
+      "revId": "0bdad905abb4fc6c59a22a4d072936a7a846241f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "047919ce_57b65cbd",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 15
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2020-11-03T20:20:12Z",
+      "side": 1,
+      "message": "Thanks Xinghua, this is excellent! The code looks great. Two tiny typos if you have a chance to update them.\n",
+      "revId": "0bdad905abb4fc6c59a22a4d072936a7a846241f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4f28b650_2a87d0b8",
+        "filename": "include/platform/FeaturesD3D.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 214,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2020-11-03T20:20:12Z",
+      "side": 1,
+      "message": "translate -\u003e translating",
       "revId": "0bdad905abb4fc6c59a22a4d072936a7a846241f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
