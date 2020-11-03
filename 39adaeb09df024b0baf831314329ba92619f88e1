@@ -22,6 +22,30 @@
       },
       "revId": "39adaeb09df024b0baf831314329ba92619f88e1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ee1ca207_e1223cab",
+        "filename": "src/tests/restricted_traces/restricted_trace_gold_tests.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 326,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-03T20:32:53Z",
+      "side": 0,
+      "message": "Ack, it\u0027s just not required to run the tests. It\u0027s part of the isolated script contract, and not needed for local runs.",
+      "parentUuid": "39974c17_5573bbc8",
+      "range": {
+        "startLine": 326,
+        "startChar": 65,
+        "endLine": 326,
+        "endChar": 80
+      },
+      "revId": "39adaeb09df024b0baf831314329ba92619f88e1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
