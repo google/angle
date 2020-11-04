@@ -18,6 +18,69 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c7d4d997_c47ed62f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 10
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-04T03:49:47Z",
+      "side": 1,
+      "message": "Can you add a perf test that shows this is reducing the render pass count (and catches any regressions in the future)?",
+      "revId": "91fd7dcb9c191fca54494e25b661580bca9cea1a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "82987790_53e39923",
+        "filename": "src/libANGLE/angletypes.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-04T03:49:47Z",
+      "side": 1,
+      "message": "typo",
+      "range": {
+        "startLine": 32,
+        "startChar": 43,
+        "endLine": 32,
+        "endChar": 55
+      },
+      "revId": "91fd7dcb9c191fca54494e25b661580bca9cea1a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "21669c1b_bb4f9ed3",
+        "filename": "src/libANGLE/angletypes.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-04T03:49:47Z",
+      "side": 1,
+      "message": "typo",
+      "range": {
+        "startLine": 32,
+        "startChar": 13,
+        "endLine": 32,
+        "endChar": 19
+      },
+      "revId": "91fd7dcb9c191fca54494e25b661580bca9cea1a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "fcdb5103_900429be",
@@ -36,6 +99,53 @@
         "startChar": 5,
         "endLine": 96,
         "endChar": 22
+      },
+      "revId": "91fd7dcb9c191fca54494e25b661580bca9cea1a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f21da945_ea697651",
+        "filename": "src/libANGLE/angletypes.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-04T03:49:47Z",
+      "side": 1,
+      "message": "or:\n- GetMinimumBoundingBox\n- GetEnclosingBox\n- GetEnclosingRectangle",
+      "parentUuid": "fcdb5103_900429be",
+      "range": {
+        "startLine": 96,
+        "startChar": 5,
+        "endLine": 96,
+        "endChar": 22
+      },
+      "revId": "91fd7dcb9c191fca54494e25b661580bca9cea1a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "db974ec4_70697064",
+        "filename": "src/libANGLE/angletypes.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-04T03:49:47Z",
+      "side": 1,
+      "message": "typo",
+      "range": {
+        "startLine": 97,
+        "startChar": 3,
+        "endLine": 97,
+        "endChar": 9
       },
       "revId": "91fd7dcb9c191fca54494e25b661580bca9cea1a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
@@ -60,6 +170,23 @@
         "endLine": 106,
         "endChar": 20
       },
+      "revId": "91fd7dcb9c191fca54494e25b661580bca9cea1a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9879a37a_4e32b565",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 386,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-04T03:49:47Z",
+      "side": 1,
+      "message": "The \u0027rotatedInvalidateArea\u0027 here (and inside the conditional block) has now been clipped to the FBO\u0027s rotated render area.   Is that still ok, since we may be passing along a smaller invalidate area than before (I don\u0027t quite understand all of the subtleties of how invalidating works yet)?",
       "revId": "91fd7dcb9c191fca54494e25b661580bca9cea1a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
