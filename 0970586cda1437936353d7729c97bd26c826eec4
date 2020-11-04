@@ -1,0 +1,113 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c4a66d66_604e1399",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-04T23:10:34Z",
+      "side": 1,
+      "message": "Pascal from the AGI team would like this fix soon.\n\nShabi, I\u0027m wondering whether the same bug I\u0027m fixing is duplicated in another method.  I point out where.  PTAL",
+      "revId": "0970586cda1437936353d7729c97bd26c826eec4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e0e9d791_c26b6b3b",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 810,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-04T23:10:34Z",
+      "side": 1,
+      "message": "Does this method have the same problem as the method that is fixed by this CL?\n\nI think so because CanCopyWithTransfer() only ensures the same src/dst format, not color-only.",
+      "range": {
+        "startLine": 807,
+        "startChar": 45,
+        "endLine": 810,
+        "endChar": 71
+      },
+      "revId": "0970586cda1437936353d7729c97bd26c826eec4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "296a2662_57083b4f",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 846,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-04T23:10:34Z",
+      "side": 1,
+      "message": "Here too?",
+      "range": {
+        "startLine": 846,
+        "startChar": 50,
+        "endLine": 846,
+        "endChar": 75
+      },
+      "revId": "0970586cda1437936353d7729c97bd26c826eec4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cf71668d_71915bc0",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 880,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-04T23:10:34Z",
+      "side": 1,
+      "message": "And here?",
+      "range": {
+        "startLine": 880,
+        "startChar": 50,
+        "endLine": 880,
+        "endChar": 75
+      },
+      "revId": "0970586cda1437936353d7729c97bd26c826eec4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1764875f_75de80b4",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1041,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-04T23:10:34Z",
+      "side": 1,
+      "message": "I don\u0027t believe this is a problem because the CanCopyWithDraw() function ensures it has VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT.",
+      "range": {
+        "startLine": 1041,
+        "startChar": 47,
+        "endLine": 1041,
+        "endChar": 72
+      },
+      "revId": "0970586cda1437936353d7729c97bd26c826eec4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
