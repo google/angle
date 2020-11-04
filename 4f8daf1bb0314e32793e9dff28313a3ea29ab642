@@ -160,6 +160,23 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6327a9df_2966f078",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-04T02:30:05Z",
+      "side": 1,
+      "message": "I\u0027m going to abandon this CL.  Trying to adapt Courtney\u0027s CL is not working well.  I have a new CL to replace it with that is focused on Android and doesn\u0027t add Courtney\u0027s function that splits up large messages (not needed for API command logging).",
+      "revId": "4f8daf1bb0314e32793e9dff28313a3ea29ab642",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "404a7589_55ffffc7",
