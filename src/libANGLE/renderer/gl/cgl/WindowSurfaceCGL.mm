@@ -17,13 +17,14 @@
 #    import <QuartzCore/QuartzCore.h>
 
 #    include "common/debug.h"
+#    include "common/gl/cgl/FunctionsCGL.h"
 #    include "libANGLE/Context.h"
 #    include "libANGLE/renderer/gl/FramebufferGL.h"
 #    include "libANGLE/renderer/gl/RendererGL.h"
 #    include "libANGLE/renderer/gl/StateManagerGL.h"
 #    include "libANGLE/renderer/gl/cgl/DisplayCGL.h"
 
-@interface WebSwapLayer : CAOpenGLLayer {
+@interface WebSwapLayerCGL : CAOpenGLLayer {
     CGLContextObj mDisplayContext;
 
     bool initialized;
@@ -37,7 +38,7 @@
             withFunctions:(const rx::FunctionsGL *)functions;
 @end
 
-@implementation WebSwapLayer
+@implementation WebSwapLayerCGL
 - (id)initWithSharedState:(rx::SharedSwapState *)swapState
               withContext:(CGLContextObj)displayContext
             withFunctions:(const rx::FunctionsGL *)functions
@@ -212,9 +213,9 @@ egl::Error WindowSurfaceCGL::initialize(const egl::Display *display)
     mSwapState.lastRendered   = &mSwapState.textures[1];
     mSwapState.beingPresented = &mSwapState.textures[2];
 
-    mSwapLayer = [[WebSwapLayer alloc] initWithSharedState:&mSwapState
-                                               withContext:mContext
-                                             withFunctions:mFunctions];
+    mSwapLayer = [[WebSwapLayerCGL alloc] initWithSharedState:&mSwapState
+                                                  withContext:mContext
+                                                withFunctions:mFunctions];
     [mLayer addSublayer:mSwapLayer];
     [mSwapLayer setContentsScale:[mLayer contentsScale]];
 

@@ -15,6 +15,8 @@
 #    import <Cocoa/Cocoa.h>
 #    import <IOKit/IOKitLib.h>
 
+#    include "common/gl/cgl/FunctionsCGL.h"
+
 namespace angle
 {
 
@@ -281,7 +283,7 @@ VendorID GetVendorIDFromMetalDeviceRegistryID(uint64_t registryID)
     return 0;
 }
 
-bool GetSystemInfo(SystemInfo *info)
+bool GetSystemInfo_mac(SystemInfo *info)
 {
     {
         int32_t major = 0;

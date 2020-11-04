@@ -71,6 +71,7 @@ xxhash_sources = [
 angle_system_utils_sources = [
   "src/common/Optional.h",
   "src/common/angleutils.h",
+  "src/common/debug.h",
   "src/common/platform.h",
   "src/common/system_utils.cpp",
   "src/common/system_utils.h",
@@ -85,6 +86,9 @@ if (is_linux || is_chromeos || is_android || is_fuchsia) {
 
 if (is_mac) {
   angle_system_utils_sources += [
+    "src/common/apple/SoftLinking.h",
+    "src/common/gl/cgl/FunctionsCGL.cpp",
+    "src/common/gl/cgl/FunctionsCGL.h",
     "src/common/system_utils_mac.cpp",
     "src/common/system_utils_posix.cpp",
   ]
@@ -143,7 +147,10 @@ libangle_gpu_info_util_libpci_sources =
 
 libangle_gpu_info_util_x11_sources = [ "src/gpu_info_util/SystemInfo_x11.cpp" ]
 
-libangle_gpu_info_util_mac_sources = [ "src/gpu_info_util/SystemInfo_macos.mm" ]
+libangle_gpu_info_util_mac_sources = [
+  "src/gpu_info_util/SystemInfo_apple.mm",
+  "src/gpu_info_util/SystemInfo_macos.mm",
+]
 
 libangle_includes = [
   "include/angle_gl.h",
@@ -458,7 +465,11 @@ libangle_sources = [
   "src/libANGLE/validationGL46.cpp",
 ]
 
-libangle_mac_sources = [ "src/libANGLE/renderer/driver_utils_mac.mm" ]
+libangle_mac_sources = [
+  "src/libANGLE/renderer/driver_utils_mac.mm",
+  "src/libANGLE/renderer/gl/apple/DisplayApple_api.cpp",
+  "src/libANGLE/renderer/gl/apple/DisplayApple_api.h",
+]
 
 # The frame capture headers are always visible to libANGLE.
 libangle_sources += [

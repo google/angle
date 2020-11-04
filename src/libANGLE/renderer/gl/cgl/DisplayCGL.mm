@@ -17,6 +17,7 @@
 #    include <dlfcn.h>
 
 #    include "common/debug.h"
+#    include "common/gl/cgl/FunctionsCGL.h"
 #    include "gpu_info_util/SystemInfo.h"
 #    include "libANGLE/Display.h"
 #    include "libANGLE/Error.h"

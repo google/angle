@@ -18,6 +18,7 @@
 #    include <OpenGL/OpenGL.h>
 
 #    include "common/debug.h"
+#    include "common/gl/cgl/FunctionsCGL.h"
 #    include "libANGLE/AttributeMap.h"
 #    include "libANGLE/renderer/gl/BlitGL.h"
 #    include "libANGLE/renderer/gl/FramebufferGL.h"

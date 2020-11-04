@@ -28,6 +28,7 @@
 #include "common/system_utils.h"
 #include "common/tls.h"
 #include "common/utilities.h"
+#include "gpu_info_util/SystemInfo.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/Device.h"
 #include "libANGLE/EGLSync.h"
@@ -52,10 +53,8 @@
 #if defined(ANGLE_ENABLE_OPENGL)
 #    if defined(ANGLE_PLATFORM_WINDOWS)
 #        include "libANGLE/renderer/gl/wgl/DisplayWGL.h"
-#    elif defined(ANGLE_PLATFORM_MACOS) || defined(ANGLE_PLATFORM_MACCATALYST)
-#        include "libANGLE/renderer/gl/cgl/DisplayCGL.h"
-#    elif defined(ANGLE_PLATFORM_IOS)
-#        include "libANGLE/renderer/gl/eagl/DisplayEAGL.h"
+#    elif defined(ANGLE_PLATFORM_MACOS) || defined(ANGLE_PLATFORM_IOS)
+#        include "libANGLE/renderer/gl/apple/DisplayApple_api.h"
 #    elif defined(ANGLE_PLATFORM_LINUX)
 #        include "libANGLE/renderer/gl/egl/DisplayEGL.h"
 #        if defined(ANGLE_USE_GBM)
@@ -267,10 +266,12 @@ rx::DisplayImpl *CreateDisplayFromAttribs(EGLAttrib displayType,
 #if defined(ANGLE_ENABLE_OPENGL)
 #    if defined(ANGLE_PLATFORM_WINDOWS)
             impl = new rx::DisplayWGL(state);
-#    elif defined(ANGLE_PLATFORM_MACOS) || defined(ANGLE_PLATFORM_MACCATALYST)
-            impl = new rx::DisplayCGL(state);
-#    elif defined(ANGLE_PLATFORM_IOS)
-            impl = new rx::DisplayEAGL(state);
+            break;
+
+#    elif defined(ANGLE_PLATFORM_MACOS) || defined(ANGLE_PLATFORM_IOS)
+            impl = rx::CreateDisplayCGLOrEAGL(state);
+            break;
+
 #    elif defined(ANGLE_PLATFORM_LINUX)
 #        if defined(ANGLE_USE_GBM)
             if (platformType == 0)

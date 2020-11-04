@@ -14,7 +14,7 @@
 
 #import "common/platform.h"
 
-#if defined(ANGLE_PLATFORM_IOS) && !defined(ANGLE_PLATFORM_MACCATALYST)
+#if defined(ANGLE_ENABLE_EAGL)
 
 #    include "libANGLE/renderer/gl/DisplayGL.h"
 
@@ -104,6 +104,6 @@ class DisplayEAGL : public DisplayGL
 
 }  // namespace rx
 
-#endif  // defined(ANGLE_PLATFORM_IOS) && !defined(ANGLE_PLATFORM_MACCATALYST)
+#endif  // defined(ANGLE_ENABLE_EAGL)
 
 #endif  // LIBANGLE_RENDERER_GL_EAGL_DISPLAYEAGL_H_
