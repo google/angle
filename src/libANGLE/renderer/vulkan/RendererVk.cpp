@@ -159,6 +159,8 @@ constexpr const char *kSkippedMessages[] = {
     // http://anglebug.com/5304
     "VUID-vkCmdDraw-magFilter-04553",
     "VUID-vkCmdDrawIndexed-magFilter-04553",
+    // http://anglebug.com/5309
+    "VUID-VkImageViewCreateInfo-usage-02652",
 };
 
 // Suppress validation errors that are known
