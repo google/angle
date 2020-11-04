@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "cee1277f_c70c6a0c",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-04T17:34:09Z",
+      "side": 1,
+      "message": "I\u0027m willing to change the name if we\u0027ll land this.",
+      "parentUuid": "2eac18ff_728a8ed0",
+      "range": {
+        "startLine": 12,
+        "startChar": 4,
+        "endLine": 12,
+        "endChar": 35
+      },
+      "revId": "e66707b05063b09dd6d85c50a6925ba7d5a91f1d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "b84f6794_467bfbdd",
@@ -58,6 +82,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e256845f_a734fc4d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-04T17:34:09Z",
+      "side": 1,
+      "message": "Sigh.  There\u0027s a lot of background that\u0027s best probably discussed in the \"stand up\" meeting.  I\u0027ll try to summarize some of it here.\n\nI\u0027d prefer a more-generic cross-OS solution too.  It met with resistance.  I propose this, because I think it can work for our team, and didn\u0027t take much time to do.\n\nDesktop already has a special path that writes to a file.  I\u0027ve used it on Windows.  It works as long as \"angle_enable_trace \u003d true\" and you\u0027re running ANGLE tests (which provides the required infrastructure).  Jamie likes that path, didn\u0027t want it touched, etc.\n\nOn Android, I\u0027ve seen a need for being able to quickly turn on logcat output.  I played around with it last night.  With that, my AGI work, and debugging on both OS\u0027s, I understand why the other CLs (which added hacks to \"debug.cpp\") didn\u0027t work, made it more fragile/complicated, etc.\n\nFor both desktop and Android, the DebugAnnotatorVk class needs to be put into place.  DebugAnnotatorVk was originally written so that it only works when the Vulkan debug-utils extension entrypoints are available.  The Windows ANGLE test infrastructure provides that, but it\u0027s not available when running a random game on Android.  I wanted something that was easy for our team to turn on, without having to set a bunch of settings, stand on our head, etc:-).  I also didn\u0027t want us to pay a performance penalty in the normal case (can chat about this if you care to know).\n\nBottom line: this CL is something that I could do with a small amount of effort that moves the ball forward.",
+      "parentUuid": "d2aa2b68_3266a649",
+      "revId": "e66707b05063b09dd6d85c50a6925ba7d5a91f1d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b7c670bf_32987072",
@@ -75,6 +117,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "77850053_25478f5d",
+        "filename": "src/libANGLE/renderer/vulkan/DebugAnnotatorVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-04T17:34:09Z",
+      "side": 1,
+      "message": "As I explained in the general comment, this code was originally written to require the Vulkan debug-utils extension to be present.  This CL will allow DebugAnnotatorVk to be used without the Vulkan extension.  If the extension isn\u0027t there, it\u0027s not called; we\u0027ll still be able to send API commands to logcat.",
+      "parentUuid": "b7c670bf_32987072",
+      "revId": "e66707b05063b09dd6d85c50a6925ba7d5a91f1d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e9a38765_ccfcb5f3",
@@ -88,6 +148,30 @@
       "writtenOn": "2020-11-04T16:48:06Z",
       "side": 1,
       "message": "This part looks a bit awkward.   Why is enabling \u0027enableDebugAnnotatorVk\u0027 necessary to log GL API commands?   \u0027angle_enable_trace\u0027 existed before Vulkan debug annotations, so I don\u0027t quite understand how \u0027enableDebugAnnotatorVk\u0027 is related.",
+      "range": {
+        "startLine": 2516,
+        "startChar": 0,
+        "endLine": 2519,
+        "endChar": 6
+      },
+      "revId": "e66707b05063b09dd6d85c50a6925ba7d5a91f1d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "05fd7d6a_7ff1e1bf",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2519,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-04T17:34:09Z",
+      "side": 1,
+      "message": "Probably best discussed verbally.  DebugAnnotatorVk turns on various paths in \"debug.cpp\" that allow API commands to eventually get to Trace().\n\nCourtney\u0027s/my-earlier CLs hacked those paths, making them more complicated/fragile (why you saw a crash).  Turning on DebugAnnotatorVk allows those paths to work as-is.",
+      "parentUuid": "e9a38765_ccfcb5f3",
       "range": {
         "startLine": 2516,
         "startChar": 0,
