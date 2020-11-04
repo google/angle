@@ -372,6 +372,8 @@ def main():
                 if args.isolated_script_test_filter:
                     full_name = 'angle_restricted_trace_gold_tests.%s' % test
                     if not fnmatch.fnmatch(full_name, args.isolated_script_test_filter):
+                        print('Skipping test %s because it does not match filter %s' %
+                              (full_name, args.isolated_script_test_filter))
                         continue
 
                 with common.temporary_file() as tempfile_path:
