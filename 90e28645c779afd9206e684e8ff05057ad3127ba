@@ -1172,6 +1172,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "234b600a_9cbe9bb5",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 2700,
+      "author": {
+        "id": 1359667
+      },
+      "writtenOn": "2020-11-04T23:00:47Z",
+      "side": 1,
+      "message": "Ah, okay I understand now. Depending on the format there can be additional checks needed for that format to be considered complete. Good catch here, I\u0027ve added in a comment noting this.",
+      "parentUuid": "442b8c28_c03797d9",
+      "range": {
+        "startLine": 2694,
+        "startChar": 0,
+        "endLine": 2700,
+        "endChar": 9
+      },
+      "revId": "90e28645c779afd9206e684e8ff05057ad3127ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "a73ed056_8849f441",
         "filename": "src/libANGLE/validationES.cpp",
         "patchSetId": 12
