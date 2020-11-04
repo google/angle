@@ -25,7 +25,7 @@ void DebugAnnotatorVk::beginEvent(gl::Context *context,
                                   const char *eventMessage)
 {
     angle::LoggingAnnotator::beginEvent(context, entryPoint, eventName, eventMessage);
-    if (context)
+    if (vkCmdBeginDebugUtilsLabelEXT && context)
     {
         ContextVk *contextVk = vk::GetImpl(static_cast<gl::Context *>(context));
         contextVk->logEvent(eventMessage);
@@ -37,7 +37,7 @@ void DebugAnnotatorVk::endEvent(gl::Context *context,
                                 gl::EntryPoint entryPoint)
 {
     angle::LoggingAnnotator::endEvent(context, eventName, entryPoint);
-    if (context && isDrawOrDispatchEntryPoint(entryPoint))
+    if (vkCmdBeginDebugUtilsLabelEXT && context && isDrawOrDispatchEntryPoint(entryPoint))
     {
         ContextVk *contextVk = vk::GetImpl(static_cast<gl::Context *>(context));
         contextVk->endEventLog(entryPoint);

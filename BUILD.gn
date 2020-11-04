@@ -106,8 +106,17 @@ config("internal_config") {
     defines += [ "ANGLE_IS_LINUX" ]
   }
 
+  # Enables debug/trace-related functionality, including logging every GLES/EGL API command to the
+  # "angle_debug.txt" file on desktop.  Enables debug markers for AGI, but must also set
+  # angle_enable_annotator_run_time_checks to improve performance.
   if (angle_enable_trace) {
     defines += [ "ANGLE_ENABLE_DEBUG_TRACE=1" ]
+  }
+
+  # When used with angle_enable_trace, enables logging every GLES/EGL API command to Android logcat
+  # Enables debug markers for AGI regardless of run-time checks.
+  if (angle_enable_trace_android_logcat) {
+    defines += [ "ANGLE_ENABLE_TRACE_ANDROID_LOGCAT=1" ]
   }
 
   if (is_chromeos) {
@@ -254,6 +263,8 @@ config("debug_annotations_config") {
     defines = [ "ANGLE_ENABLE_DEBUG_ANNOTATIONS" ]
   }
   if (angle_enable_annotator_run_time_checks) {
+    # When used with angle_enable_trace, enables debug markers for AGI with run-time checks to
+    # filter out EVENT() messages when the debug annotator is disabled.
     defines = [ "ANGLE_ENABLE_ANNOTATOR_RUN_TIME_CHECKS" ]
   }
 }
