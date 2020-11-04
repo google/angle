@@ -87,6 +87,30 @@
       },
       "revId": "61180d011c3c252aab7eeeebb6146e7818fcf61d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "97389326_791a7dd0",
+        "filename": "gni/angle.gni",
+        "patchSetId": 3
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1382541
+      },
+      "writtenOn": "2020-11-04T05:26:48Z",
+      "side": 1,
+      "message": "typo: AOSP-\u003eASAP.\n\nFix CL: https://chromium-review.googlesource.com/c/angle/angle/+/2519171",
+      "parentUuid": "cba2d745_5f60b43e",
+      "range": {
+        "startLine": 42,
+        "startChar": 44,
+        "endLine": 42,
+        "endChar": 57
+      },
+      "revId": "61180d011c3c252aab7eeeebb6146e7818fcf61d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
