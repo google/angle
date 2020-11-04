@@ -1124,6 +1124,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "4f553ae9_ec8febed",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 2700,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-04T22:17:46Z",
+      "side": 1,
+      "message": "We actually don\u0027t use the correct check for the extension here.\n\nThe extension says: \" (as defined in section 8.17, but **ignoring format-based completeness rule**)\"\n\nWe do not ignore the format-based completeness rule. We just call \n\n        if (!texture-\u003eisSamplerComplete(context, nullptr))\n        {\n            context-\u003evalidationError(GL_INVALID_OPERATION, kNotTextureComplete);\n            return false;\n        }\n\nWe lack a completeness validation that ignores format-based compleness rules. Note that this validation wording is only present in the ES 3.2 spec so likely it was brought up as a result of a vendor clarification. As I mentioned we may run into this edge case with the ES 3.2 CTS.\n\nMaybe leave a note here indicating this edge case and we can move on.",
+      "parentUuid": "554d95f4_faa2c7cb",
+      "range": {
+        "startLine": 2694,
+        "startChar": 0,
+        "endLine": 2700,
+        "endChar": 9
+      },
+      "revId": "90e28645c779afd9206e684e8ff05057ad3127ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "a73ed056_8849f441",
         "filename": "src/libANGLE/validationES.cpp",
         "patchSetId": 12
