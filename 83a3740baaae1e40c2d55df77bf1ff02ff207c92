@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6000678f_d0cb0dca",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-04T01:48:31Z",
+      "side": 1,
+      "message": "Hi Geoff,\n\nThese are the tests we talked about earlier to recreate ANGLE\u0027s glWaitSync/glFlush behavior where a vkQueueSubmit is issued each time.   The FenceSyncTest seems to work fine and shows the bad behavior, however the MultithreadingTestES3 generates lots of VVL errors and then hangs:\n\nERR: RendererVk.cpp:338 (DebugUtilsMessenger): [ VUID-vkCmdWaitEvents-srcStageMask-parameter ] Validation Error: [ VUID-vkCmdWaitEvents-srcStageMask-parameter ] Object 0: handle \u003d 0x5566ff9c4e30, type \u003d VK_OBJECT_TYPE_COMMAND_BUFFER; | MessageID \u003d 0x3cbdb1db | Submitting cmdbuffer with call to VkCmdWaitEvents using srcStageMask 0x2000 which must be the bitwise OR of the stageMask parameters used in calls to vkCmdSetEvent and VK_PIPELINE_STAGE_HOST_BIT if used with vkSetEvent but instead is 0x0. The Vulkan spec states: srcStageMask must be a valid combination of VkPipelineStageFlagBits values (https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VUID-vkCmdWaitEvents-srcStageMask-parameter)\n\nCan you help take a look at what I\u0027m doing wrong with that test?   For more context, I\u0027m trying to follow along with this:\nhttps://arm-software.github.io/opengl-es-sdk-for-android/thread_sync.html",
+      "revId": "83a3740baaae1e40c2d55df77bf1ff02ff207c92",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
