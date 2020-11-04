@@ -22,6 +22,30 @@
       },
       "revId": "ef96b042cbbb79abd03302c2ca5c39907acc8cf4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e3a5bc5e_9e33bdff",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-04T17:26:52Z",
+      "side": 1,
+      "message": "Currently READ \u003c DRAW actually. I would like to change that at some point (and I can add that assert then, when the backend starts relying on this).",
+      "parentUuid": "0eee74b7_96e0d0b9",
+      "range": {
+        "startLine": 23,
+        "startChar": 0,
+        "endLine": 25,
+        "endChar": 9
+      },
+      "revId": "ef96b042cbbb79abd03302c2ca5c39907acc8cf4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
