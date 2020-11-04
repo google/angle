@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5173218d_8a3a63e4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-04T17:33:04Z",
+      "side": 1,
+      "message": "Nice.",
+      "revId": "699ad04081c6ea66eaaa4fcc727e470e0f4bd5fa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e3d9ca71_1da3ce11",
+        "filename": "src/tests/gl_tests/ClearTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2427,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-04T17:33:04Z",
+      "side": 1,
+      "message": "There\u0027s probably a +1/-1 for the width I\u0027m missing in one of these:\n\n    EXPECT_PIXEL_RECT_EQ(0, 0, kSize / 2, kSize, GLColor::yellow);",
+      "range": {
+        "startLine": 2424,
+        "startChar": 0,
+        "endLine": 2427,
+        "endChar": 69
+      },
+      "revId": "699ad04081c6ea66eaaa4fcc727e470e0f4bd5fa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6b3d6330_7084bced",
+        "filename": "src/tests/gl_tests/ClearTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2432,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-04T17:33:04Z",
+      "side": 1,
+      "message": "EXPECT_PIXEL_RECT_EQ(kSize / 2, 0, kSize / 2, kSize, GLColor::red);",
+      "range": {
+        "startLine": 2429,
+        "startChar": 0,
+        "endLine": 2432,
+        "endChar": 62
+      },
+      "revId": "699ad04081c6ea66eaaa4fcc727e470e0f4bd5fa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
