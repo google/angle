@@ -16,6 +16,115 @@
       "message": "Failures seem unrelated. Will fix the msvc build on next upload",
       "revId": "612bac81d2bf3b44d2a581f01d09812fc316fdcd",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bfc40d58_e22c8299",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-04T17:44:53Z",
+      "side": 1,
+      "message": "Nice work, some questions.",
+      "revId": "612bac81d2bf3b44d2a581f01d09812fc316fdcd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0fff6f79_1e2e23c3",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 5249,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-04T17:44:53Z",
+      "side": 1,
+      "message": "range is heavily overloaded, and basemaxrange is not clear what that means.\n\nI\u0027d just say hasStagedUpdatedInDefinedLevels()",
+      "range": {
+        "startLine": 5249,
+        "startChar": 18,
+        "endLine": 5249,
+        "endChar": 48
+      },
+      "revId": "612bac81d2bf3b44d2a581f01d09812fc316fdcd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c89f6836_a897b0ff",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 5254,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-04T17:44:53Z",
+      "side": 1,
+      "message": "range is heavily overloaded, I\u0027d just say hasStagedUpdatedInLevels or \"InLevelRange\"",
+      "range": {
+        "startLine": 5254,
+        "startChar": 18,
+        "endLine": 5254,
+        "endChar": 41
+      },
+      "revId": "612bac81d2bf3b44d2a581f01d09812fc316fdcd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ca7c5f6e_29ed159d",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 1775,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-04T17:44:53Z",
+      "side": 1,
+      "message": "for maintenance and code-simplicity-wise, there\u0027s some merit to splitting off this logic into a totally encapsulated class. anyway just something to consider for a follow-up.",
+      "range": {
+        "startLine": 1768,
+        "startChar": 0,
+        "endLine": 1775,
+        "endChar": 0
+      },
+      "revId": "612bac81d2bf3b44d2a581f01d09812fc316fdcd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d1349064_efd7a4d5",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 1849,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-04T17:44:53Z",
+      "side": 1,
+      "message": "So this will always use a flat 16 vectors. Not sure how many bytes an empty vector is on Android. I would suspect performance would be nearly or actually identical with a std::vector and we\u0027d shave off some memory usage. Any concerns about switching to std::vector?\n\nAnd if we use a flat vector, I\u0027d rather we just use std::array.",
+      "range": {
+        "startLine": 1849,
+        "startChar": 8,
+        "endLine": 1849,
+        "endChar": 26
+      },
+      "revId": "612bac81d2bf3b44d2a581f01d09812fc316fdcd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
