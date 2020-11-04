@@ -1606,8 +1606,8 @@ angle::Result TextureD3D_2D::redefineImage(const gl::Context *context,
         }
 
         if ((level >= storageLevels && storageLevels != 0) || size.width != storageWidth ||
-            size.height != storageHeight ||
-            internalformat != storageFormat)  // Discard mismatched storage
+            size.height != storageHeight || internalformat != storageFormat ||
+            mEGLImageTarget)  // Discard mismatched storage
         {
             ANGLE_TRY(releaseTexStorage(context));
             markAllImagesDirty();
