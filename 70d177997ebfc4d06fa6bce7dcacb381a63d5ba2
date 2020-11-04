@@ -70,6 +70,24 @@
       "parentUuid": "fe08396e_881fab85",
       "revId": "70d177997ebfc4d06fa6bce7dcacb381a63d5ba2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9aed3473_85aeb528",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-04T14:27:01Z",
+      "side": 1,
+      "message": "6 of the following: KHR-GLES31.core.sample_shading.render.rgba8*\n\nThe \"full\" and \"half\" variants.  On my Windows Intel-GPU laptop, running gWindows.",
+      "parentUuid": "d44c5d92_5fe66cc8",
+      "revId": "70d177997ebfc4d06fa6bce7dcacb381a63d5ba2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
