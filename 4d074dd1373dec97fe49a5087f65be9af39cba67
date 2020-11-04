@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c4034455_e3a6f7cd",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-04T20:04:01Z",
+      "side": 1,
+      "message": "Please update the tag before landing.",
+      "revId": "4d074dd1373dec97fe49a5087f65be9af39cba67",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "91a41ea3_f9fa47bc",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-04T20:04:01Z",
+      "side": 1,
+      "message": "nit: 5309",
+      "range": {
+        "startLine": 162,
+        "startChar": 27,
+        "endLine": 162,
+        "endChar": 31
+      },
+      "revId": "4d074dd1373dec97fe49a5087f65be9af39cba67",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
