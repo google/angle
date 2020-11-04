@@ -253,11 +253,12 @@ angle::Result RenderTargetVk::flushStagedUpdates(ContextVk *contextVk,
     // below will either flush all staged updates to the resolve image, or if the only staged update
     // is a clear, it will accumulate it in the |deferredClears| array.  Later, when the render pass
     // is started, the deferred clears are applied to the transient multisampled image.
-    ASSERT(!isResolveImageOwnerOfData() || !mImage->isUpdateStaged(mLevelIndexGL, layerIndex));
+    ASSERT(!isResolveImageOwnerOfData() ||
+           !mImage->hasStagedUpdatesForSubresource(mLevelIndexGL, layerIndex));
     ASSERT(isResolveImageOwnerOfData() || mResolveImage == nullptr ||
-           !mResolveImage->isUpdateStaged(mLevelIndexGL, layerIndex));
+           !mResolveImage->hasStagedUpdatesForSubresource(mLevelIndexGL, layerIndex));
 
-    if (!image->isUpdateStaged(mLevelIndexGL, layerIndex))
+    if (!image->hasStagedUpdatesForSubresource(mLevelIndexGL, layerIndex))
     {
         return angle::Result::Continue;
     }

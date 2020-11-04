@@ -1550,7 +1550,7 @@ VkResult WindowSurfaceVk::acquireNextSwapchainImage(vk::Context *context)
     }
 
     // Notify the owning framebuffer there may be staged updates.
-    if (image.image.hasStagedUpdates())
+    if (image.image.hasStagedUpdatesInAllocatedLevels())
     {
         onStateChange(angle::SubjectMessage::SubjectChanged);
     }

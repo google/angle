@@ -1537,8 +1537,8 @@ class ImageHelper final : public Resource, public angle::Subject
     // as with renderbuffers or surface images.
     angle::Result flushAllStagedUpdates(ContextVk *contextVk);
 
-    bool isUpdateStaged(gl::LevelIndex levelGL, uint32_t layer);
-    bool hasStagedUpdates() const { return !mSubresourceUpdates.empty(); }
+    bool hasStagedUpdatesForSubresource(gl::LevelIndex levelGL, uint32_t layer) const;
+    bool hasStagedUpdatesInAllocatedLevels() const;
 
     void recordWriteBarrier(VkImageAspectFlags aspectMask,
                             ImageLayout newLayout,
@@ -1717,9 +1717,8 @@ class ImageHelper final : public Resource, public angle::Subject
 
         void release(RendererVk *renderer);
 
-        bool isUpdateToLayerLevel(uint32_t layerIndex, gl::LevelIndex levelIndexGL) const;
+        bool isUpdateToLayer(uint32_t layerIndex) const;
         void getDestSubresource(uint32_t imageLayerCount,
-                                gl::LevelIndex *levelIndexGLOut,
                                 uint32_t *baseLayerOut,
                                 uint32_t *layerCountOut) const;
         VkImageAspectFlags getDestAspectFlags() const;
@@ -1771,8 +1770,14 @@ class ImageHelper final : public Resource, public angle::Subject
 
     angle::Result initializeNonZeroMemory(Context *context, VkDeviceSize size);
 
-    void appendSubresourceUpdate(SubresourceUpdate &&update);
-    void prependSubresourceUpdate(SubresourceUpdate &&update);
+    std::vector<SubresourceUpdate> *getLevelUpdates(gl::LevelIndex level);
+    const std::vector<SubresourceUpdate> *getLevelUpdates(gl::LevelIndex level) const;
+
+    void appendSubresourceUpdate(gl::LevelIndex level, SubresourceUpdate &&update);
+    void prependSubresourceUpdate(gl::LevelIndex level, SubresourceUpdate &&update);
+    // Whether there are any updates in [start, end).
+    bool hasStagedUpdatesInLevels(gl::LevelIndex levelStart, gl::LevelIndex levelEnd) const;
+
     void resetCachedProperties();
     void setEntireContentDefined();
     void setEntireContentUndefined();
@@ -1846,7 +1851,7 @@ class ImageHelper final : public Resource, public angle::Subject
 
     // Staging buffer
     DynamicBuffer mStagingBuffer;
-    std::vector<SubresourceUpdate> mSubresourceUpdates;
+    std::vector<std::vector<SubresourceUpdate>> mSubresourceUpdates;
 
     // Optimization for repeated clear with the same value. If this pointer is not null, the entire
     // image it has been cleared to the specified clear value. If another clear call is made with
