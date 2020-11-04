@@ -55,6 +55,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "84d84f83_270464dd",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 10
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-04T16:11:31Z",
+      "side": 1,
+      "message": "That\u0027s different than what I had in mind regarding counting the render passes when a scissor change increases the render area.   I\u0027d prefer to see a VulkanPerformanceCounterTest that expands the render area and verifies the render pass count doesn\u0027t increase, since that\u0027ll be a much more explicit check for any changes in the future that may regress the behavior (rather than buried in a graph only updated after CLs land).\n\nIt looks like VulkanPerformanceCounterTest::ClearAfterClearDoesNotBreakRenderPass() exists already, but that only shrinks the scissored area (which is why it didn\u0027t need a fix when this CL reduced the number of render passes).",
+      "parentUuid": "1a8ef7a3_d7468131",
+      "revId": "91fd7dcb9c191fca54494e25b661580bca9cea1a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "82987790_53e39923",
         "filename": "src/libANGLE/angletypes.cpp",
         "patchSetId": 10
