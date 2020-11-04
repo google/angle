@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2e319c8d_5263d794",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 1116,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-04T03:28:26Z",
+      "side": 1,
+      "message": "nit: Outdated comment can be removed.",
+      "range": {
+        "startLine": 1115,
+        "startChar": 0,
+        "endLine": 1116,
+        "endChar": 93
+      },
+      "revId": "95b2ddbad449eabe455e429dea6bfaf2e33c8c6b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
