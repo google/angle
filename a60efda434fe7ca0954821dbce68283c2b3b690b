@@ -16,6 +16,23 @@
       "message": "Ping. All comments addressed. Please review.",
       "revId": "a60efda434fe7ca0954821dbce68283c2b3b690b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "70eb8e5f_5caba6fd",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-04T15:55:27Z",
+      "side": 1,
+      "message": "LGTM",
+      "revId": "a60efda434fe7ca0954821dbce68283c2b3b690b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
