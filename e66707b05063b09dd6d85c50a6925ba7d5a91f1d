@@ -1,6 +1,29 @@
 {
   "comments": [
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "2eac18ff_728a8ed0",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-04T16:48:06Z",
+      "side": 1,
+      "message": "nit: If we decide to keep this, I\u0027d call this something like \u0027angle_enable_trace_android_logcat\u0027, so it mostly matches the \u0027angle_enable_trace\u0027 with Android-specific stuff tacked on to make it a bit clearer those two are similar.",
+      "range": {
+        "startLine": 12,
+        "startChar": 4,
+        "endLine": 12,
+        "endChar": 35
+      },
+      "revId": "e66707b05063b09dd6d85c50a6925ba7d5a91f1d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "b84f6794_467bfbdd",
@@ -14,6 +37,63 @@
       "writtenOn": "2020-11-04T02:32:18Z",
       "side": 1,
       "message": "This CL is focused on Android, doesn\u0027t change desktop functionality, and shouldn\u0027t have the problems that were being experienced with https://chromium-review.googlesource.com/c/angle/angle/+/2506036",
+      "revId": "e66707b05063b09dd6d85c50a6925ba7d5a91f1d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d2aa2b68_3266a649",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-04T16:48:06Z",
+      "side": 1,
+      "message": "Thanks for this, it works great on Android.\n\nHowever, I\u0027d prefer a different approach where we have a more generic \u0027angle_enable_trace_to_stdout\u0027 GN arg instead, which would apply to anything (Android, Desktop, etc.) and be directed to the appropriate terminal/logcat/whatever.",
+      "revId": "e66707b05063b09dd6d85c50a6925ba7d5a91f1d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b7c670bf_32987072",
+        "filename": "src/libANGLE/renderer/vulkan/DebugAnnotatorVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-04T16:48:06Z",
+      "side": 1,
+      "message": "How are the changes in this file related to logging API calls to logcat?",
+      "revId": "e66707b05063b09dd6d85c50a6925ba7d5a91f1d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e9a38765_ccfcb5f3",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2519,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-04T16:48:06Z",
+      "side": 1,
+      "message": "This part looks a bit awkward.   Why is enabling \u0027enableDebugAnnotatorVk\u0027 necessary to log GL API commands?   \u0027angle_enable_trace\u0027 existed before Vulkan debug annotations, so I don\u0027t quite understand how \u0027enableDebugAnnotatorVk\u0027 is related.",
+      "range": {
+        "startLine": 2516,
+        "startChar": 0,
+        "endLine": 2519,
+        "endChar": 6
+      },
       "revId": "e66707b05063b09dd6d85c50a6925ba7d5a91f1d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
