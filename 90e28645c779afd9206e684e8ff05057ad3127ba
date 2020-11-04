@@ -1148,6 +1148,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "442b8c28_c03797d9",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 2700,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-04T22:18:26Z",
+      "side": 1,
+      "message": "Sorry, that should read, we have the technical wording for the extension, but not for ES 3.2. Likely the ES 3.2 one is more correct and not back-ported to the ext.",
+      "parentUuid": "4f553ae9_ec8febed",
+      "range": {
+        "startLine": 2694,
+        "startChar": 0,
+        "endLine": 2700,
+        "endChar": 9
+      },
+      "revId": "90e28645c779afd9206e684e8ff05057ad3127ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "a73ed056_8849f441",
         "filename": "src/libANGLE/validationES.cpp",
         "patchSetId": 12
