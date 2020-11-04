@@ -39,6 +39,24 @@
       "message": "Since we have 1 command buffer per render pass, I\u0027d bump this up to something like 50 to try and guarantee we never run out in a single frame.",
       "revId": "95b2ddbad449eabe455e429dea6bfaf2e33c8c6b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e8d588c6_e55496f7",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 1120,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-04T13:34:09Z",
+      "side": 1,
+      "message": "+1. Ideally the number could be a dynamic a large upper limit. Bumping this to 50 or something large in the meantime SGTM.",
+      "parentUuid": "505abaaf_e244ff49",
+      "revId": "95b2ddbad449eabe455e429dea6bfaf2e33c8c6b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
