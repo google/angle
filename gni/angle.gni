@@ -39,10 +39,13 @@ if (angle_has_build) {
     build_with_chromium = false
     dcheck_always_on = false
     angle_use_x11 = (is_linux || is_chromeos) && !is_ggp
-    angle_use_vulkan_display = is_linux && !angle_use_x11 && !is_ggp
     use_ozone = false
     ozone_platform_gbm = false
     use_fuzzing_engine = false
+  }
+
+  declare_args() {
+    angle_use_vulkan_display = is_linux && !angle_use_x11 && !is_ggp
   }
 }
 
