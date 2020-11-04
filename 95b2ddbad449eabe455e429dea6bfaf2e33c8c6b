@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e147a541_e6dc18f7",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 1116,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-11-04T16:09:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2e319c8d_5263d794",
+      "range": {
+        "startLine": 1115,
+        "startChar": 0,
+        "endLine": 1116,
+        "endChar": 93
+      },
+      "revId": "95b2ddbad449eabe455e429dea6bfaf2e33c8c6b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "505abaaf_e244ff49",
@@ -55,6 +79,24 @@
       "side": 1,
       "message": "+1. Ideally the number could be a dynamic a large upper limit. Bumping this to 50 or something large in the meantime SGTM.",
       "parentUuid": "505abaaf_e244ff49",
+      "revId": "95b2ddbad449eabe455e429dea6bfaf2e33c8c6b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "37f8a024_7a35475c",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 1120,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-11-04T16:09:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e8d588c6_e55496f7",
       "revId": "95b2ddbad449eabe455e429dea6bfaf2e33c8c6b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
