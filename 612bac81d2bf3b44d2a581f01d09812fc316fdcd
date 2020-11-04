@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "39bcadb2_18a3b2bd",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-04T17:22:29Z",
+      "side": 1,
+      "message": "Failures seem unrelated. Will fix the msvc build on next upload",
+      "revId": "612bac81d2bf3b44d2a581f01d09812fc316fdcd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
