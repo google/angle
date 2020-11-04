@@ -16,6 +16,23 @@
       "message": "Still working on a couple of requested changes. But I have a question about the BUILD.gn changes.",
       "revId": "30e32ec13fa4ecb30df6eaf8684161b0522afa73",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "537a302a_1dfd2706",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2020-11-04T17:00:36Z",
+      "side": 1,
+      "message": "Thanks for addressing the comments so far, James! LGTM with the last couple.",
+      "revId": "30e32ec13fa4ecb30df6eaf8684161b0522afa73",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
