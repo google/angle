@@ -88,6 +88,24 @@
       "parentUuid": "d44c5d92_5fe66cc8",
       "revId": "70d177997ebfc4d06fa6bce7dcacb381a63d5ba2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a85e3980_73e04675",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-04T22:06:54Z",
+      "side": 1,
+      "message": "Ok, can\u0027t reproduce on Linux/Nvidia. Probably a driver bug on your platform.",
+      "parentUuid": "9aed3473_85aeb528",
+      "revId": "70d177997ebfc4d06fa6bce7dcacb381a63d5ba2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
