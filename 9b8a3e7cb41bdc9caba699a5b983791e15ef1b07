@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "51d18634_caf6128d",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3631,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-04T03:57:36Z",
+      "side": 1,
+      "message": "This can be called from FramebufferVk::syncState, which is called also on the READ framebuffer. This does two things:\n\n- If READ fbo !\u003d DRAW fbo, skip this for READ fbo\u0027s syncState\n- If framebuffer binding has changed, skip this even for the new DRAW fbo\u0027s syncState. Framebuffer binding change will take effect later in ContextVk::syncState, which does the same things, so there\u0027s no reason for doubly doing them.\n\nAdded a comment, and renamed to onFramebufferChange.",
+      "parentUuid": "d32b42ec_8fc1fb98",
+      "range": {
+        "startLine": 3628,
+        "startChar": 0,
+        "endLine": 3631,
+        "endChar": 5
+      },
+      "revId": "9b8a3e7cb41bdc9caba699a5b983791e15ef1b07",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3b4716de_96c90215",
@@ -47,6 +71,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1c49bc42_fa85ebb5",
+        "filename": "src/tests/gl_tests/FramebufferTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2407,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-04T03:57:36Z",
+      "side": 1,
+      "message": "Nice! That has the added benefit of calling glReadPixels only once. Done and will start using that more often.",
+      "parentUuid": "3b4716de_96c90215",
+      "range": {
+        "startLine": 2404,
+        "startChar": 0,
+        "endLine": 2407,
+        "endChar": 74
+      },
+      "revId": "9b8a3e7cb41bdc9caba699a5b983791e15ef1b07",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7b7d2c69_403e7aa9",
@@ -60,6 +108,30 @@
       "writtenOn": "2020-11-04T02:27:52Z",
       "side": 1,
       "message": "typo",
+      "range": {
+        "startLine": 2409,
+        "startChar": 24,
+        "endLine": 2409,
+        "endChar": 31
+      },
+      "revId": "9b8a3e7cb41bdc9caba699a5b983791e15ef1b07",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cf6596df_82ac405b",
+        "filename": "src/tests/gl_tests/FramebufferTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2409,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-04T03:57:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7b7d2c69_403e7aa9",
       "range": {
         "startLine": 2409,
         "startChar": 24,
