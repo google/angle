@@ -178,6 +178,9 @@ void RendererVk::ensureCapsInitialized() const
 
     mNativeExtensions.setTextureExtensionSupport(mNativeTextureCaps);
 
+    // Enable GL_EXT_buffer_storage
+    mNativeExtensions.bufferStorageEXT = true;
+
     // To ensure that ETC2/EAC formats are enabled only on hardware that supports them natively,
     // this flag is not set by the function above and must be set explicitly. It exposes
     // ANGLE_compressed_texture_etc extension string.
