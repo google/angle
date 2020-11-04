@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "257d1d17_af215332",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1117350
+      },
+      "writtenOn": "2020-11-04T01:06:07Z",
+      "side": 1,
+      "message": "Still working on a couple of requested changes. But I have a question about the BUILD.gn changes.",
+      "revId": "30e32ec13fa4ecb30df6eaf8684161b0522afa73",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
