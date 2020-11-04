@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2263e8e0_2a8d9f57",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 19
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-04T23:54:55Z",
+      "side": 1,
+      "message": "LGTM, thanks Brandon.",
+      "revId": "b8524d5f21ca44780a07b99e5946e72aa05d4854",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
