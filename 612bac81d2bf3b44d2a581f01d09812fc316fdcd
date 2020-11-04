@@ -58,6 +58,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2047bfdf_106ddd64",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 5249,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-04T22:01:53Z",
+      "side": 1,
+      "message": "Done. Defined is not really accurate. Levels 1 through 1000 could be \"defined\", but only 1 through 3 used.\n\nRenamed to hasStagedUpdatesInAllocatedLevels() (despite the imprecision that max may be lower than allocated levels).",
+      "parentUuid": "0fff6f79_1e2e23c3",
+      "range": {
+        "startLine": 5249,
+        "startChar": 18,
+        "endLine": 5249,
+        "endChar": 48
+      },
+      "revId": "612bac81d2bf3b44d2a581f01d09812fc316fdcd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c89f6836_a897b0ff",
@@ -71,6 +95,30 @@
       "writtenOn": "2020-11-04T17:44:53Z",
       "side": 1,
       "message": "range is heavily overloaded, I\u0027d just say hasStagedUpdatedInLevels or \"InLevelRange\"",
+      "range": {
+        "startLine": 5254,
+        "startChar": 18,
+        "endLine": 5254,
+        "endChar": 41
+      },
+      "revId": "612bac81d2bf3b44d2a581f01d09812fc316fdcd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "67bccf42_49e74318",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 5254,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-04T22:01:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c89f6836_a897b0ff",
       "range": {
         "startLine": 5254,
         "startChar": 18,
@@ -117,6 +165,30 @@
       "writtenOn": "2020-11-04T17:44:53Z",
       "side": 1,
       "message": "So this will always use a flat 16 vectors. Not sure how many bytes an empty vector is on Android. I would suspect performance would be nearly or actually identical with a std::vector and we\u0027d shave off some memory usage. Any concerns about switching to std::vector?\n\nAnd if we use a flat vector, I\u0027d rather we just use std::array.",
+      "range": {
+        "startLine": 1849,
+        "startChar": 8,
+        "endLine": 1849,
+        "endChar": 26
+      },
+      "revId": "612bac81d2bf3b44d2a581f01d09812fc316fdcd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0f0c96a6_736777d8",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 1849,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-04T22:01:53Z",
+      "side": 1,
+      "message": "This was your idea actually when we talked about it. I\u0027m ok with std::vector too. Probably a FastVector of size 1 or something might be best.\n\nIn terms of memory, this should be 16x(3x8) bytes (a vector is likely 2 pointers and a size_t, or one pointer and 2 size_ts). So 384 bytes per image.\n\n---\n\nSo what do you prefer, std::vector or angle::FastVector\u003c1\u003e? (Tentatively switched to std::vector)",
+      "parentUuid": "d1349064_efd7a4d5",
       "range": {
         "startLine": 1849,
         "startChar": 8,
