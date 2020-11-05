@@ -16,6 +16,24 @@
       "message": "Trevor: can we turn on any failing tests with this, or add a new one if there is no existing coverage?",
       "revId": "837c6da2e2bf7ce3e58edc72995aee5eae623b05",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bbb18f66_0e450f83",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2020-11-05T19:20:39Z",
+      "side": 1,
+      "message": "It\u0027s covered by the multithreaded EGL image tests but we can probably make a new test that...\n\n - Creates an image, with AxB size and C format\n - Binds it to a texture\n - Deletes the image\n - Redefines the texture with AxB size and C format\n\nThis can easily be done in ImageTest.cpp",
+      "parentUuid": "1eef40f7_785614e9",
+      "revId": "837c6da2e2bf7ce3e58edc72995aee5eae623b05",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
