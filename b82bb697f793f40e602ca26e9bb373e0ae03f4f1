@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "65ccdd0d_6ff7bfbd",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1394635
+      },
+      "writtenOn": "2020-11-05T13:38:05Z",
+      "side": 1,
+      "message": "Please review the updated test skip condition and swizzle support detection.",
+      "revId": "b82bb697f793f40e602ca26e9bb373e0ae03f4f1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
