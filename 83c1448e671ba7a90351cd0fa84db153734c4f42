@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2a437cf4_f1e7b27f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-11-05T16:25:24Z",
+      "side": 1,
+      "message": "Add cached version of call to allow existing users to keep same functionality.",
+      "revId": "83c1448e671ba7a90351cd0fa84db153734c4f42",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
