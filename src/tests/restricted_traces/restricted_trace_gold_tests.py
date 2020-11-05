@@ -396,6 +396,8 @@ def main():
 
                     expected_result = SKIP if result == SKIP else PASS
                     result_tests[test] = {'expected': expected_result, 'actual': result}
+                    if result == FAIL:
+                        result_tests[test]['is_unexpected'] = True
                     if len(artifacts) > 0:
                         result_tests[test]['artifacts'] = artifacts
                     results['num_failures_by_type'][result] += 1
