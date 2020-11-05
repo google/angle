@@ -100,6 +100,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "722b07c0_f993ae7b",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 341,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-05T00:38:10Z",
+      "side": 1,
+      "message": "Wait, is this really necessary? Seems like we should still be able to support sRGB even if we can\u0027t support image format list?",
+      "parentUuid": "944cfe67_ae239ff5",
+      "range": {
+        "startLine": 337,
+        "startChar": 0,
+        "endLine": 341,
+        "endChar": 5
+      },
+      "revId": "b38c705e12c2cd374c9b158247b0ef260e5139fa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "fa9eba25_edf0337e",
         "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
         "patchSetId": 4
