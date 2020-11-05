@@ -134,6 +134,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8c96ec6c_5be06705",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-05T13:18:11Z",
+      "side": 1,
+      "message": "No worries. The logging is complicated and messy. If we can move forward with this CL it should restore the prior behaviour of angle_enable_trace.",
+      "parentUuid": "90b923ac_95f892f5",
+      "revId": "4d9fa8d3e33b6e30b6baaebe86b03ac9fb7e8f68",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "40063a73_78c6c689",
