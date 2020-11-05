@@ -16,6 +16,29 @@
       "message": "Add cached version of call to allow existing users to keep same functionality.",
       "revId": "83c1448e671ba7a90351cd0fa84db153734c4f42",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "051a03c1_6ecc2511",
+        "filename": "src/common/system_utils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-05T16:29:29Z",
+      "side": 1,
+      "message": "Is the idea that non-FrameCapture code would call this?",
+      "range": {
+        "startLine": 29,
+        "startChar": 12,
+        "endLine": 29,
+        "endChar": 52
+      },
+      "revId": "83c1448e671ba7a90351cd0fa84db153734c4f42",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
