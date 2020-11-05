@@ -159,6 +159,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f7e779ad_b7eca7e9",
+        "filename": "infra/gn_isolate_map.pyl",
+        "patchSetId": 1
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-05T02:56:37Z",
+      "side": 1,
+      "message": "No idea, it was part of Jamie\u0027s change.   Reverted.",
+      "parentUuid": "129886b4_930a7d80",
+      "revId": "9c6b7b7cb6faead6935bbbcb948dfc11ff13750d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5a8c7b11_f6878849",
@@ -254,6 +272,24 @@
       "side": 1,
       "message": "Ok, I\u0027ll take a look at that approach.",
       "parentUuid": "ce7708fc_49cc4972",
+      "revId": "9c6b7b7cb6faead6935bbbcb948dfc11ff13750d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ed266cf7_68724692",
+        "filename": "util/posix/crash_handler_posix.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-05T02:56:37Z",
+      "side": 1,
+      "message": "Keeping std::string, std::vector, etc. really simplifies things here since those give us some nice string manipulation functions for free.\n\nfork/execv/wait is segfaulting for me.   It\u0027s also pretty ugly, since I can\u0027t find a good way to create an array of strings to pass to execv():\n\n        char *argv[8];\n        argv[0] \u003d \"addr2line\";\n\ngives:\n\n    ../../util/posix/crash_handler_posix.cpp:165:19: error: ISO C++11 does not allow conversion from string literal to \u0027char *\u0027 [-Werror,-Wwritable-strings]\n        argv[0] \u003d \"addr2line\";\n\nYou know C++ better than I do, so let me know if there\u0027s something else worth trying.\n\nRegardless, I think this approach is fine anyway.   As far as I understand things this is only intended for debug builds, since release builds will have symbols stripped anyway so there wouldn\u0027t be any strings to be printed by this handler.",
+      "parentUuid": "f97d27ff_a23c0001",
       "revId": "9c6b7b7cb6faead6935bbbcb948dfc11ff13750d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
