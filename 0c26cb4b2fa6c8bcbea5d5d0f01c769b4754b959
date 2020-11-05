@@ -16,6 +16,24 @@
       "message": "Can you please enable a test with this fix?",
       "revId": "0c26cb4b2fa6c8bcbea5d5d0f01c769b4754b959",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "167274b3_2d2fdce8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1394635
+      },
+      "writtenOn": "2020-11-05T16:08:42Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "608d3be6_0a21fda1",
+      "revId": "0c26cb4b2fa6c8bcbea5d5d0f01c769b4754b959",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
