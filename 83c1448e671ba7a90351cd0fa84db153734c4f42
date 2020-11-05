@@ -39,6 +39,30 @@
       },
       "revId": "83c1448e671ba7a90351cd0fa84db153734c4f42",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4d93de3e_d9532b99",
+        "filename": "src/common/system_utils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-11-05T17:12:56Z",
+      "side": 1,
+      "message": "Yeah, anything that is okay with having a constant value for that query.\nYour AGI support probably does not want to call the Cached version since it\u0027s looking for the property to change during the run - or at least that\u0027s my understanding. If it\u0027s okay to require an app restart when the property changes then the cached version would be appropriate and much faster.",
+      "parentUuid": "051a03c1_6ecc2511",
+      "range": {
+        "startLine": 29,
+        "startChar": 12,
+        "endLine": 29,
+        "endChar": 52
+      },
+      "revId": "83c1448e671ba7a90351cd0fa84db153734c4f42",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
