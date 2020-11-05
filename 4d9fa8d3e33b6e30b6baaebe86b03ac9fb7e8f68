@@ -58,6 +58,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "31cdc998_79f0716e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-05T01:32:52Z",
+      "side": 1,
+      "message": "BTW, I created a different CL last night, for Android use.  Perhaps there\u0027s some blending that can take place?",
+      "parentUuid": "3715fccd_159f2e5b",
+      "revId": "4d9fa8d3e33b6e30b6baaebe86b03ac9fb7e8f68",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "40063a73_78c6c689",
