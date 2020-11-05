@@ -70,6 +70,24 @@
       "parentUuid": "7388ae74_d3f528b5",
       "revId": "8bfd4f800f0c115a70258cfe208d94c22f14a28a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e984ae92_acea9157",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-11-05T17:23:09Z",
+      "side": 1,
+      "message": "The follow-on CL was causing 4 reads of Android properties for every RendererVk::initialize. That was enough to cause one of the test shards to exceed the 3 minute timeout (added about 20 seconds to the run time). By caching the answer the time is basically unchanged (maybe a couple seconds longer).",
+      "parentUuid": "2a5411bd_a3fc74a1",
+      "revId": "8bfd4f800f0c115a70258cfe208d94c22f14a28a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
