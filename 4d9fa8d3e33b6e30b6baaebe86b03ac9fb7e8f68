@@ -169,6 +169,23 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2bcaf8a4_daff6071",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-05T17:45:42Z",
+      "side": 1,
+      "message": "I\u0027m okay with landing this once the crash is fixed.  It requires 2 GN args to be set, but that\u0027s okay.  I\u0027ll +2 now since I\u0027m heading to a doctor appointment.\n\nHere\u0027s my notes from testing on Android:\n\nInitially, crashed at game startup.  Was easily fixed.\n\nI tested the permutations of these GN args and the \"debug.angle.markers\" property:\n- angle_enable_trace\n- angle_enable_annotator_run_time_checks\n\n1) Setting only angle_enable_trace:\n  - Property works (i.e. AGI sees markers when set)\n  - EVENT always calls ScopedPerfEventHelper::begin() (SLOWER)\n\n2) Setting neither GN arg:\n  - Property has no effect\n  - Did not see INFO messages from NBA 2K20\n\n3) Setting only angle_enable_annotator_run_time_checks:\n  - Property has no effect\n  - Did not see INFO messages from NBA 2K20\n\n4) Setting both GN args:\n  - Property works (i.e. AGI sees markers when set)\n  - Did see INFO messages from NBA 2K20",
+      "revId": "4d9fa8d3e33b6e30b6baaebe86b03ac9fb7e8f68",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "40063a73_78c6c689",
@@ -211,6 +228,29 @@
         "startChar": 4,
         "endLine": 97,
         "endChar": 16
+      },
+      "revId": "4d9fa8d3e33b6e30b6baaebe86b03ac9fb7e8f68",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "99758ec5_1555ba2a",
+        "filename": "src/common/debug.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 159,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-05T17:45:42Z",
+      "side": 1,
+      "message": "Need to replace the above code with the following, in order to avoid the crash.\n\n    if (g_debugAnnotator)\n    {\n        g_debugAnnotator-\u003ebeginEvent(mContext, mEntryPoint, mFunctionName, buffer.data());\n    }\n\nI think what\u0027s happening is that this is being called by EGL entrypoints, before the Vulkan back-end is started.  Nothing set g_debugAnnotator.",
+      "range": {
+        "startLine": 157,
+        "startChar": 0,
+        "endLine": 159,
+        "endChar": 0
       },
       "revId": "4d9fa8d3e33b6e30b6baaebe86b03ac9fb7e8f68",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
