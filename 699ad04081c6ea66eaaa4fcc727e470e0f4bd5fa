@@ -41,6 +41,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1406c7ff_2ead10ef",
+        "filename": "src/tests/gl_tests/ClearTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2427,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-05T04:12:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e3d9ca71_1da3ce11",
+      "range": {
+        "startLine": 2424,
+        "startChar": 0,
+        "endLine": 2427,
+        "endChar": 69
+      },
+      "revId": "699ad04081c6ea66eaaa4fcc727e470e0f4bd5fa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6b3d6330_7084bced",
@@ -54,6 +78,30 @@
       "writtenOn": "2020-11-04T17:33:04Z",
       "side": 1,
       "message": "EXPECT_PIXEL_RECT_EQ(kSize / 2, 0, kSize / 2, kSize, GLColor::red);",
+      "range": {
+        "startLine": 2429,
+        "startChar": 0,
+        "endLine": 2432,
+        "endChar": 62
+      },
+      "revId": "699ad04081c6ea66eaaa4fcc727e470e0f4bd5fa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fbb60a8f_6b4589f7",
+        "filename": "src/tests/gl_tests/ClearTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2432,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-05T04:12:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6b3d6330_7084bced",
       "range": {
         "startLine": 2429,
         "startChar": 0,
