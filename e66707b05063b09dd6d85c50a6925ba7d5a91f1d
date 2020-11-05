@@ -170,6 +170,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "69bb8b50_dc18450e",
+        "filename": "src/libANGLE/renderer/vulkan/DebugAnnotatorVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-05T01:26:58Z",
+      "side": 1,
+      "message": "Correct!\n\nThanks, you found a brief way of stating it.",
+      "parentUuid": "f80fa634_4bdaceb1",
+      "revId": "e66707b05063b09dd6d85c50a6925ba7d5a91f1d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e9a38765_ccfcb5f3",
@@ -231,6 +249,30 @@
       "side": 1,
       "message": "Similarly, we enable DebugAnnotatorVk so that g_debugAnnotator has a valid value for ScopedPerfEventHelper::begin. Could we do:\nif (g_debugAnnotator)  { g_debugAnnotator-\u003ebeginEvent... }\nThat might allow us to leave DebugAnnotatorVk alone.",
       "parentUuid": "05fd7d6a_7ff1e1bf",
+      "range": {
+        "startLine": 2516,
+        "startChar": 0,
+        "endLine": 2519,
+        "endChar": 6
+      },
+      "revId": "e66707b05063b09dd6d85c50a6925ba7d5a91f1d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b9a7381f_10a3056e",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2519,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-05T01:26:58Z",
+      "side": 1,
+      "message": "This CL is out-of-date.  We\u0027re plugging in LoggingAnnotator now in the \"else\" statement on line 2527.  That was so that VVL errors will cause tests to fail.  \n\nLoggingAnnotator has a beginEvent() method.  The problem with it is that it\u0027s getStatus() method returns false, meaning DebugAnnotationsActive() will return false, and ScopedPerfEventHelper::begin() will never get called.\n\nIMHO, the whole \"debug.cpp\" code is too complex/subtle.",
+      "parentUuid": "eb4c65b3_eec6c841",
       "range": {
         "startLine": 2516,
         "startChar": 0,
