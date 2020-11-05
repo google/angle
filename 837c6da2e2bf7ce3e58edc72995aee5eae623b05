@@ -52,6 +52,24 @@
       "parentUuid": "bbb18f66_0e450f83",
       "revId": "837c6da2e2bf7ce3e58edc72995aee5eae623b05",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1e58f42e_ab5416ea",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-05T21:36:50Z",
+      "side": 1,
+      "message": "DeletedImageWithSameSizeAndFormat ?",
+      "parentUuid": "115e40dc_1b1330fe",
+      "revId": "837c6da2e2bf7ce3e58edc72995aee5eae623b05",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
