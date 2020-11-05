@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "c6acf597_fde2e8bd",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-05T13:05:34Z",
+      "side": 1,
+      "message": "Probabaly.",
+      "parentUuid": "23d9f2cf_6940ffa1",
+      "range": {
+        "startLine": 11,
+        "startChar": 0,
+        "endLine": 11,
+        "endChar": 30
+      },
+      "revId": "4d9fa8d3e33b6e30b6baaebe86b03ac9fb7e8f68",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "2c0e8c90_5c7cd846",
@@ -106,6 +130,30 @@
       "writtenOn": "2020-11-05T01:30:29Z",
       "side": 1,
       "message": "Have you tested this on Android?  Performance test?\n\nI think this CL means that Android will always call ScopedPerfEventHelper::begin() and regress performance, unless we build with this new flag set.  From my previous measurements, with perftest and the NBA trace, most of the performance is lost by calling ScopedPerfEventHelper::begin().",
+      "range": {
+        "startLine": 97,
+        "startChar": 4,
+        "endLine": 97,
+        "endChar": 16
+      },
+      "revId": "4d9fa8d3e33b6e30b6baaebe86b03ac9fb7e8f68",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0924eb4d_42af2c7a",
+        "filename": "src/common/debug.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-05T13:05:34Z",
+      "side": 1,
+      "message": "The idea is you set the flag, yes. There\u0027s no way to avoid adding a new flag.",
+      "parentUuid": "40063a73_78c6c689",
       "range": {
         "startLine": 97,
         "startChar": 4,
