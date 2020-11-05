@@ -177,6 +177,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "c62ce6bb_6435866c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-05T21:08:25Z",
+      "side": 1,
+      "message": "\u003e so I could take care of it hopefully in no time.\n\ni think these 2 trace tests might also be impacted -\n- angle_restricted_trace_gold_tests.kartrider_rush\n- angle_restricted_trace_gold_tests.dragon_ball_legends\n\nyou can look at patchset 2 for all failures when i disabled just decode but not srgba/srgbr8",
+      "parentUuid": "70fa93f5_f86c222d",
+      "revId": "457f1bc84676b92ee9e362111983202fef3da82c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "56591154_1c7cfddb",
