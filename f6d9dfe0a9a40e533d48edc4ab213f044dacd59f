@@ -22,6 +22,30 @@
       },
       "revId": "f6d9dfe0a9a40e533d48edc4ab213f044dacd59f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "99995ecb_c27027d9",
+        "filename": "src/libANGLE/renderer/vulkan/ShaderVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-05T21:17:17Z",
+      "side": 1,
+      "message": "SH_USE_ROTATION_SPECCONST is not just for rotation, it is also used for flipXY. It is useful to have the ability to fall back to surfaceflinger for rotation for debug and performance investigation. But we can force enable it in TranslatorVulkan side and exclude Metal.",
+      "parentUuid": "2a6c9bda_9afc2050",
+      "range": {
+        "startLine": 77,
+        "startChar": 22,
+        "endLine": 77,
+        "endChar": 47
+      },
+      "revId": "f6d9dfe0a9a40e533d48edc4ab213f044dacd59f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
