@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "26b7f35e_1d060bca",
+        "filename": "util/posix/crash_handler_posix.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-05T04:41:59Z",
+      "side": 1,
+      "message": "What if it\u0027s `../foo`?\n\nMaybe you can write a utility function somewhere that gets these paths and produces the correct output, which both cleans this function up, and we can write unit tests for it.",
+      "range": {
+        "startLine": 142,
+        "startChar": 29,
+        "endLine": 142,
+        "endChar": 41
+      },
+      "revId": "182f0733fee63bc8dc9fbfb8cc7599435366823f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
