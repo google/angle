@@ -152,6 +152,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f80fa634_4bdaceb1",
+        "filename": "src/libANGLE/renderer/vulkan/DebugAnnotatorVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-11-05T01:10:45Z",
+      "side": 1,
+      "message": "I\u0027m also lost here.\nI see that DebugAnnotatorVk::beginEvent is called from ScopedPerfEventHelper::begin which was called from the EVENT() macro we have at the start of each entry point.\nWhat throws me off is the check for vkCmdBeginDebugUtilsLabelEXT, this should be non-null if the extension exists and null if it doesn\u0027t, right?\nIf it\u0027s null, our message won\u0027t get printed so how does this work with or without that extension?\nAh, this check simply to stop the DebugAnnotatorVk from doing anything if there is no debug extension. It\u0027s not what\u0027s sending the output to logcat. We just need to stop the EVENT() from dying here because there was no DebugUtils extension.",
+      "parentUuid": "77850053_25478f5d",
+      "revId": "e66707b05063b09dd6d85c50a6925ba7d5a91f1d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e9a38765_ccfcb5f3",
@@ -189,6 +207,30 @@
       "side": 1,
       "message": "Probably best discussed verbally.  DebugAnnotatorVk turns on various paths in \"debug.cpp\" that allow API commands to eventually get to Trace().\n\nCourtney\u0027s/my-earlier CLs hacked those paths, making them more complicated/fragile (why you saw a crash).  Turning on DebugAnnotatorVk allows those paths to work as-is.",
       "parentUuid": "e9a38765_ccfcb5f3",
+      "range": {
+        "startLine": 2516,
+        "startChar": 0,
+        "endLine": 2519,
+        "endChar": 6
+      },
+      "revId": "e66707b05063b09dd6d85c50a6925ba7d5a91f1d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "eb4c65b3_eec6c841",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2519,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-11-05T01:10:45Z",
+      "side": 1,
+      "message": "Similarly, we enable DebugAnnotatorVk so that g_debugAnnotator has a valid value for ScopedPerfEventHelper::begin. Could we do:\nif (g_debugAnnotator)  { g_debugAnnotator-\u003ebeginEvent... }\nThat might allow us to leave DebugAnnotatorVk alone.",
+      "parentUuid": "05fd7d6a_7ff1e1bf",
       "range": {
         "startLine": 2516,
         "startChar": 0,
