@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c7f2b115_ef861013",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 20
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1323708
+      },
+      "writtenOn": "2020-11-05T13:23:50Z",
+      "side": 1,
+      "message": "Hi Brandon\n\nDo you have Mali platform?\nThis causes all of dEQP-GLES31.functional.copy_image.*renderbuffer* to fail on Mali (and also a few non-renderbuffer failures)\nI don\u0027t know what diff is for \"renderbuffer\"\n",
+      "revId": "1e494cae8d48e3e82600dd538280938a5baa13ea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
