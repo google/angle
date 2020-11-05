@@ -18,6 +18,23 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7c61a9e5_d5d807f3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-05T15:05:20Z",
+      "side": 1,
+      "message": "I ",
+      "revId": "acfe86d6534f260b520592da7a6548f54836ddab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "91e206d8_d67f64a5",
@@ -55,6 +72,30 @@
       "side": 1,
       "message": "I was going to say the same thing. As long as we also print out the actual number of frames rendered, then it won\u0027t be too bad. But perhaps we should assert these options if we are doing an early exit.",
       "parentUuid": "91e206d8_d67f64a5",
+      "range": {
+        "startLine": 436,
+        "startChar": 8,
+        "endLine": 436,
+        "endChar": 45
+      },
+      "revId": "acfe86d6534f260b520592da7a6548f54836ddab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "aaa4eec7_dbf05bd2",
+        "filename": "src/tests/perf_tests/TracePerfTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 436,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-05T15:05:20Z",
+      "side": 1,
+      "message": "We use the step limit internally and in perf_test_runner.py with multiple trials. So ASSERTing naively will cause tests to fail when I try to land this.\n\nI thought about printf and decided against it because it will affect CPU time measurements. Printf is notoriously slow on the CPU.\n\nCody\u0027s options are still viable - make Reset callable from any frame. This has the utility of fixing this situation, and allowing us to loop on the first frame as well. Or on any sub-set of frames of a larger trace. Or we reset the whole GL state and call the Setup function again. This would slow down how the traces run on the bots so I didn\u0027t want to pursue it. We could also potentially track state during the run so we can reset it, but that would again affect CPU performance measurement.\n\nWe could also give a \"total max steps\" option, similar to gfxbench. We could also consider splitting out the trace tests from angle_perftests and having a separate set of options.\n\nAnyway seeing as my mind was spinning from all the options I uploaded this very small CL.",
+      "parentUuid": "87286223_7c499fe9",
       "range": {
         "startLine": 436,
         "startChar": 8,
