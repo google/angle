@@ -124,6 +124,24 @@
       "parentUuid": "4ffeda69_57c32a78",
       "revId": "8bfd4f800f0c115a70258cfe208d94c22f14a28a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "37931867_e577c6f3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-11-05T17:36:42Z",
+      "side": 1,
+      "message": "Yes, angle_end2end_tests: sample failure: https://ci.chromium.org/p/chromium/builders/try/android_angle_vk32_rel_ng/17394?\n\nLocally with the getprop calls I was seeing the shard take 148148ms on my pixel 2. Before it was 127398ms.\nChanging to the cached version got it to 130948ms.\nWe must be reusing something because most of the time we can get the answer from the processes environment which would indicate we didn\u0027t start a whole new process.",
+      "parentUuid": "4ffeda69_57c32a78",
+      "revId": "8bfd4f800f0c115a70258cfe208d94c22f14a28a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
