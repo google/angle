@@ -16,6 +16,69 @@
       "message": "Nice green run Charlie! Will review shortly.",
       "revId": "160c849bd4bcfd804a90d01a98b2ab33a341b4aa",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e7bae528_a02c06b9",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 3464,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-05T19:52:14Z",
+      "side": 1,
+      "message": "typo: changes",
+      "range": {
+        "startLine": 3464,
+        "startChar": 20,
+        "endLine": 3464,
+        "endChar": 26
+      },
+      "revId": "160c849bd4bcfd804a90d01a98b2ab33a341b4aa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ef395ccd_8716ca4d",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 480,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-05T19:52:14Z",
+      "side": 1,
+      "message": "You can also consider adding `struct DepthCompareOpAndSurfaceRotation` above, and add `DepthCompareOpAndSurfaceRotation compareOpAndSurfaceRotation;`. Then ANGLE_GET_TRANSITION_BIT would use compareOpAndSurfaceRotation. That\u0027s how these structs have managed so far to stay relatively clean.",
+      "range": {
+        "startLine": 466,
+        "startChar": 0,
+        "endLine": 480,
+        "endChar": 6
+      },
+      "revId": "160c849bd4bcfd804a90d01a98b2ab33a341b4aa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3ebe292d_b16dd6ec",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 687,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-05T19:52:14Z",
+      "side": 1,
+      "message": "Suggest enabling that warning that makes sure no padding is added.",
+      "revId": "160c849bd4bcfd804a90d01a98b2ab33a341b4aa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
