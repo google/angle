@@ -58,8 +58,8 @@ void Overlay::destroy(const gl::Context *context)
 
 void Overlay::enableOverlayWidgetsFromEnvironment()
 {
-    std::vector<std::string> enabledWidgets =
-        angle::GetStringsFromEnvironmentVar("ANGLE_OVERLAY", ":");
+    std::vector<std::string> enabledWidgets = angle::GetStringsFromEnvironmentVarOrAndroidProperty(
+        "ANGLE_OVERLAY", "debug.angle.overlay", ":");
 
     for (const std::pair<const char *, WidgetId> &widgetName : kWidgetNames)
     {

@@ -235,9 +235,11 @@ bool ReplaceSubstring(std::string *str,
     return true;
 }
 
-std::vector<std::string> GetStringsFromEnvironmentVar(const char *varName, const char *separator)
+std::vector<std::string> GetStringsFromEnvironmentVarOrAndroidProperty(const char *varName,
+                                                                       const char *propertyName,
+                                                                       const char *separator)
 {
-    std::string environment = GetEnvironmentVar(varName);
+    std::string environment = GetEnvironmentVarOrAndroidProperty(varName, propertyName);
     return SplitString(environment, separator, TRIM_WHITESPACE, SPLIT_WANT_NONEMPTY);
 }
 

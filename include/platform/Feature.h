@@ -188,6 +188,8 @@ struct FeatureSetBase
             features->push_back(it->second);
         }
     }
+
+    const FeatureMap &getFeatures() const { return members; }
 };
 
 inline FeatureSetBase::FeatureSetBase()  = default;
