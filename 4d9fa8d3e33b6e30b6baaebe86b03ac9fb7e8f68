@@ -1,6 +1,29 @@
 {
   "comments": [
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "23d9f2cf_6940ffa1",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-05T01:30:29Z",
+      "side": 1,
+      "message": "Is that what you were talking about when you say \"prior path\"?\n\nI kept asking for clarification because I always get the debug.txt output with only needing \"angle_enable_trace \u003d true\".\n\nIs it always working for me because I\u0027m always running from Visual Studio, and it is providing the Vulkan debug-utils extension?  I really want to understand what the difference is here.",
+      "range": {
+        "startLine": 11,
+        "startChar": 0,
+        "endLine": 11,
+        "endChar": 30
+      },
+      "revId": "4d9fa8d3e33b6e30b6baaebe86b03ac9fb7e8f68",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "2c0e8c90_5c7cd846",
@@ -14,6 +37,46 @@
       "writtenOn": "2020-11-05T01:00:18Z",
       "side": 1,
       "message": "PTAL",
+      "revId": "4d9fa8d3e33b6e30b6baaebe86b03ac9fb7e8f68",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3715fccd_159f2e5b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-05T01:30:29Z",
+      "side": 1,
+      "message": "I think there\u0027s a performance problem (why I did -1 for now).  I also ask some questions to try to understand your brief/previous comments about \"prior path\".",
+      "revId": "4d9fa8d3e33b6e30b6baaebe86b03ac9fb7e8f68",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "40063a73_78c6c689",
+        "filename": "src/common/debug.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-05T01:30:29Z",
+      "side": 1,
+      "message": "Have you tested this on Android?  Performance test?\n\nI think this CL means that Android will always call ScopedPerfEventHelper::begin() and regress performance, unless we build with this new flag set.  From my previous measurements, with perftest and the NBA trace, most of the performance is lost by calling ScopedPerfEventHelper::begin().",
+      "range": {
+        "startLine": 97,
+        "startChar": 4,
+        "endLine": 97,
+        "endChar": 16
+      },
       "revId": "4d9fa8d3e33b6e30b6baaebe86b03ac9fb7e8f68",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
