@@ -1310,6 +1310,74 @@ if (build_angle_deqp_tests && !is_fuchsia) {
     defines = [ "ANGLE_DEQP_KHR_GLES31_TESTS" ]
     mustpass_name = "gles31-khr-master.txt"
   }
+
+  template("angle_deqp_rotate_gtest") {
+    split_target = string_split(target_name, "_")
+    _api = split_target[0]
+    _rotate = split_target[1]
+    angle_deqp_gtest(target_name) {
+      forward_variables_from(invoker, "*")
+
+      if (_rotate == "rotate90") {
+        mustpass_suffix = "rotate-landscape"
+      } else if (_rotate == "rotate180") {
+        mustpass_suffix = "rotate-reverse-portrait"
+      } else if (_rotate == "rotate270") {
+        mustpass_suffix = "rotate-reverse-landscape"
+      } else {
+        assert(false)
+      }
+
+      mustpass_name = "${_api}-${mustpass_suffix}.txt"
+
+      deps = angle_deqp_data_copy_targets
+
+      data = []
+      if (_api == "gles3") {
+        data = angle_deqp_data_gles3
+      } else if (_api == "gles31") {
+        data = angle_deqp_data_gles31
+      } else {
+        assert(false)
+      }
+    }
+  }
+
+  angle_deqp_rotate_gtest("gles3_rotate90") {
+    defines = [ "ANGLE_DEQP_GLES3_ROTATE90_TESTS" ]
+    sources = deqp_gles3_sources
+    mustpass_dir = _aosp_mustpass
+  }
+
+  angle_deqp_rotate_gtest("gles3_rotate180") {
+    defines = [ "ANGLE_DEQP_GLES3_ROTATE180_TESTS" ]
+    sources = deqp_gles3_sources
+    mustpass_dir = _aosp_mustpass
+  }
+
+  angle_deqp_rotate_gtest("gles3_rotate270") {
+    defines = [ "ANGLE_DEQP_GLES3_ROTATE270_TESTS" ]
+    sources = deqp_gles3_sources
+    mustpass_dir = _aosp_mustpass
+  }
+
+  angle_deqp_rotate_gtest("gles31_rotate90") {
+    defines = [ "ANGLE_DEQP_GLES31_ROTATE90_TESTS" ]
+    sources = deqp_gles31_sources
+    mustpass_dir = _aosp_mustpass
+  }
+
+  angle_deqp_rotate_gtest("gles31_rotate180") {
+    defines = [ "ANGLE_DEQP_GLES31_ROTATE180_TESTS" ]
+    sources = deqp_gles31_sources
+    mustpass_dir = _aosp_mustpass
+  }
+
+  angle_deqp_rotate_gtest("gles31_rotate270") {
+    defines = [ "ANGLE_DEQP_GLES31_ROTATE270_TESTS" ]
+    sources = deqp_gles31_sources
+    mustpass_dir = _aosp_mustpass
+  }
 }
 
 group("angle_tests") {
