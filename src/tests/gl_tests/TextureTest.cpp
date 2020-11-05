@@ -2591,6 +2591,236 @@ TEST_P(Texture2DTest, TexImageWithRGBA5551PBO)
     EXPECT_PIXEL_EQ(width / 2 - 1, height / 2 - 1, 0, 255, 0, 255);
 }
 
+// Test that glTexSubImage2D combined with a PBO works properly when glTexStorage2D has
+// initialized the image with a depth-only format.
+TEST_P(Texture2DTestES3, TexImageWithDepthPBO)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_NV_pixel_buffer_object"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_storage"));
+
+    // http://anglebug.com/5315
+    ANGLE_SKIP_TEST_IF(IsOpenGL() && IsOSX());
+
+    // http://anglebug.com/5316
+    ANGLE_SKIP_TEST_IF(IsMetal() && IsOSX());
+
+    constexpr GLsizei kSize = 4;
+
+    // Set up the framebuffer.
+    GLTexture colorTexture;
+    glBindTexture(GL_TEXTURE_2D, colorTexture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    ASSERT_GL_NO_ERROR();
+
+    GLTexture depthTexture;
+    glBindTexture(GL_TEXTURE_2D, depthTexture);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_DEPTH_COMPONENT16, kSize, kSize);
+    ASSERT_GL_NO_ERROR();
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorTexture, 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthTexture, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    ASSERT_GL_NO_ERROR();
+
+    // Clear depth to 0, ensuring the texture's image is allocated.
+    glClearDepthf(0);
+    glClearColor(0, 0, 0, 1);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::black);
+
+    // Fill depth with 1.0f.
+    std::vector<GLushort> pixels(kSize * kSize);
+    for (size_t pixelId = 0; pixelId < pixels.size(); ++pixelId)
+    {
+        pixels[pixelId] = 0xFFFF;
+    }
+
+    GLuint pbo;
+    glGenBuffers(1, &pbo);
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, pbo);
+    glBufferData(GL_PIXEL_UNPACK_BUFFER, pixels.size() * sizeof(pixels[0]), pixels.data(),
+                 GL_STATIC_DRAW);
+    ASSERT_GL_NO_ERROR();
+
+    // Upload PBO data.
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, kSize, kSize, GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT,
+                    nullptr);
+
+    // If depth is not set to 1, rendering would fail.
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
+
+    // Draw red
+    ANGLE_GL_PROGRAM(drawRed, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
+    drawQuad(drawRed, essl1_shaders::PositionAttrib(), 0.95f);
+    ASSERT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_RECT_EQ(0, 0, kSize, kSize, GLColor::red);
+}
+
+// Test that glTexSubImage2D combined with a PBO works properly when glTexStorage2D has
+// initialized the image with a stencil-only format.
+TEST_P(Texture2DTestES3, TexImageWithStencilPBO)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_NV_pixel_buffer_object"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_storage"));
+
+    // http://anglebug.com/5313
+    ANGLE_SKIP_TEST_IF(IsVulkan() && (IsAndroid() || (IsWindows() && IsIntel())));
+
+    // http://anglebug.com/5315
+    ANGLE_SKIP_TEST_IF(IsOpenGL() && IsOSX());
+
+    // http://anglebug.com/5316
+    ANGLE_SKIP_TEST_IF(IsMetal() && IsOSX());
+
+    // http://anglebug.com/5317
+    ANGLE_SKIP_TEST_IF(IsWindows() && IsD3D());
+
+    constexpr GLsizei kSize = 4;
+
+    // Set up the framebuffer.
+    GLTexture colorTexture;
+    glBindTexture(GL_TEXTURE_2D, colorTexture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    ASSERT_GL_NO_ERROR();
+
+    GLTexture stencilTexture;
+    glBindTexture(GL_TEXTURE_2D, stencilTexture);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_STENCIL_INDEX8, kSize, kSize);
+    ASSERT_GL_NO_ERROR();
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorTexture, 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_TEXTURE_2D, stencilTexture, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    ASSERT_GL_NO_ERROR();
+
+    // Clear stencil to 0, ensuring the texture's image is allocated.
+    glClearStencil(0);
+    glClearColor(0, 0, 0, 1);
+    glClear(GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::black);
+
+    // Fill stencil with 0x4E
+    std::vector<GLubyte> pixels(kSize * kSize);
+    for (size_t pixelId = 0; pixelId < pixels.size(); ++pixelId)
+    {
+        pixels[pixelId] = 0x4E;
+    }
+
+    GLuint pbo;
+    glGenBuffers(1, &pbo);
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, pbo);
+    glBufferData(GL_PIXEL_UNPACK_BUFFER, pixels.size() * sizeof(pixels[0]), pixels.data(),
+                 GL_STATIC_DRAW);
+    ASSERT_GL_NO_ERROR();
+
+    // Upload PBO data.
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, kSize, kSize, GL_STENCIL_INDEX, GL_UNSIGNED_BYTE,
+                    nullptr);
+    ASSERT_GL_NO_ERROR();
+
+    // If stencil is not set to 0x4E, rendering would fail.
+    glEnable(GL_STENCIL_TEST);
+    glStencilFunc(GL_EQUAL, 0x4E, 0xFF);
+    glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+    glStencilMask(0xFF);
+
+    // Draw red
+    ANGLE_GL_PROGRAM(drawRed, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
+    drawQuad(drawRed, essl1_shaders::PositionAttrib(), 0.95f);
+    ASSERT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_RECT_EQ(0, 0, kSize, kSize, GLColor::red);
+}
+
+// Test that glTexSubImage2D combined with a PBO works properly when glTexStorage2D has
+// initialized the image with a depth/stencil format.
+TEST_P(Texture2DTestES3, TexImageWithDepthStencilPBO)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_NV_pixel_buffer_object"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_storage"));
+
+    // http://anglebug.com/5313
+    ANGLE_SKIP_TEST_IF(IsVulkan() && IsAndroid());
+
+    // http://anglebug.com/5315
+    ANGLE_SKIP_TEST_IF(IsOpenGL() && IsOSX());
+
+    // http://anglebug.com/5316
+    ANGLE_SKIP_TEST_IF(IsMetal() && IsOSX());
+
+    // http://anglebug.com/5317
+    ANGLE_SKIP_TEST_IF(IsWindows() && IsD3D());
+
+    constexpr GLsizei kSize = 4;
+
+    // Set up the framebuffer.
+    GLTexture colorTexture;
+    glBindTexture(GL_TEXTURE_2D, colorTexture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    ASSERT_GL_NO_ERROR();
+
+    GLTexture depthStencilTexture;
+    glBindTexture(GL_TEXTURE_2D, depthStencilTexture);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_DEPTH24_STENCIL8, kSize, kSize);
+    ASSERT_GL_NO_ERROR();
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorTexture, 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D,
+                           depthStencilTexture, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    ASSERT_GL_NO_ERROR();
+
+    // Clear depth and stencil to 0, ensuring the texture's image is allocated.
+    glClearDepthf(0);
+    glClearStencil(0);
+    glClearColor(0, 0, 0, 1);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::black);
+
+    // Fill depth with 1.0f and stencil with 0xD5
+    std::vector<GLuint> pixels(kSize * kSize);
+    for (size_t pixelId = 0; pixelId < pixels.size(); ++pixelId)
+    {
+        pixels[pixelId] = 0xFFFFFFD5;
+    }
+
+    GLuint pbo;
+    glGenBuffers(1, &pbo);
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, pbo);
+    glBufferData(GL_PIXEL_UNPACK_BUFFER, pixels.size() * sizeof(pixels[0]), pixels.data(),
+                 GL_STATIC_DRAW);
+    ASSERT_GL_NO_ERROR();
+
+    // Upload PBO data.
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, kSize, kSize, GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8,
+                    nullptr);
+
+    // If depth is not set to 1, rendering would fail.
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
+
+    // If stencil is not set to 0xD5, rendering would fail.
+    glEnable(GL_STENCIL_TEST);
+    glStencilFunc(GL_EQUAL, 0xD5, 0xFF);
+    glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+    glStencilMask(0xFF);
+
+    // Draw red
+    ANGLE_GL_PROGRAM(drawRed, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
+    drawQuad(drawRed, essl1_shaders::PositionAttrib(), 0.95f);
+    ASSERT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_RECT_EQ(0, 0, kSize, kSize, GLColor::red);
+}
+
 // Tests CopySubImage for float formats
 TEST_P(Texture2DTest, CopySubImageFloat_R_R)
 {

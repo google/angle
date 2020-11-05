@@ -325,7 +325,8 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
                                         uint32_t rowLength,
                                         uint32_t imageHeight,
                                         const gl::Box &sourceArea,
-                                        size_t offset);
+                                        size_t offset,
+                                        VkImageAspectFlags aspectFlags);
 
     // Called from syncState to prepare the image for mipmap generation.
     void prepareForGenerateMipmap(ContextVk *contextVk);

@@ -41,6 +41,9 @@ constexpr VkImageUsageFlags kTransferStagingImageFlags =
 constexpr VkFormatFeatureFlags kBlitFeatureFlags =
     VK_FORMAT_FEATURE_BLIT_SRC_BIT | VK_FORMAT_FEATURE_BLIT_DST_BIT;
 
+constexpr VkImageAspectFlags kDepthStencilAspects =
+    VK_IMAGE_ASPECT_STENCIL_BIT | VK_IMAGE_ASPECT_DEPTH_BIT;
+
 constexpr angle::SubjectIndex kTextureImageSubjectIndex = 0;
 
 // Test whether a texture level is within the range of levels for which the current image is
@@ -433,8 +436,14 @@ angle::Result TextureVk::setSubImageImpl(const gl::Context *context,
 
         size_t offsetBytes = static_cast<size_t>(offset + inputSkipBytes);
 
+        // Note: cannot directly copy from a depth/stencil PBO.  GL requires depth and stencil data
+        // to be packed, while Vulkan requires them to be separate.
+        const VkImageAspectFlags aspectFlags = vk::GetFormatAspectFlags(vkFormat.intendedFormat());
+        const bool isCombinedDepthStencil =
+            (aspectFlags & kDepthStencilAspects) == kDepthStencilAspects;
+
         if (!shouldUpdateBeStaged(gl::LevelIndex(index.getLevelIndex())) &&
-            isFastUnpackPossible(vkFormat, offsetBytes))
+            isFastUnpackPossible(vkFormat, offsetBytes) && !isCombinedDepthStencil)
         {
             GLuint pixelSize   = formatInfo.pixelBytes;
             GLuint blockWidth  = formatInfo.compressedBlockWidth;
@@ -451,7 +460,7 @@ angle::Result TextureVk::setSubImageImpl(const gl::Context *context,
             GLuint imageHeightPixels = inputDepthPitch / inputRowPitch * blockHeight;
 
             ANGLE_TRY(copyBufferDataToImage(contextVk, &bufferHelper, index, rowLengthPixels,
-                                            imageHeightPixels, area, offsetBytes));
+                                            imageHeightPixels, area, offsetBytes, aspectFlags));
         }
         else
         {
@@ -1547,7 +1556,8 @@ angle::Result TextureVk::copyBufferDataToImage(ContextVk *contextVk,
                                                uint32_t rowLength,
                                                uint32_t imageHeight,
                                                const gl::Box &sourceArea,
-                                               size_t offset)
+                                               size_t offset,
+                                               VkImageAspectFlags aspectFlags)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "TextureVk::copyBufferDataToImage");
 
@@ -1557,6 +1567,8 @@ angle::Result TextureVk::copyBufferDataToImage(ContextVk *contextVk,
     gl::LevelIndex level = gl::LevelIndex(index.getLevelIndex());
     GLuint layerCount    = index.getLayerCount();
     GLuint layerIndex    = 0;
+
+    ASSERT((aspectFlags & kDepthStencilAspects) != kDepthStencilAspects);
 
     VkBufferImageCopy region           = {};
     region.bufferOffset                = offset;
@@ -1568,7 +1580,7 @@ angle::Result TextureVk::copyBufferDataToImage(ContextVk *contextVk,
     region.imageOffset.x               = sourceArea.x;
     region.imageOffset.y               = sourceArea.y;
     region.imageOffset.z               = sourceArea.z;
-    region.imageSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+    region.imageSubresource.aspectMask = aspectFlags;
     region.imageSubresource.layerCount = layerCount;
     region.imageSubresource.mipLevel   = mImage->toVkLevel(level).get();
 
@@ -1585,7 +1597,7 @@ angle::Result TextureVk::copyBufferDataToImage(ContextVk *contextVk,
 
     ANGLE_TRY(contextVk->onBufferTransferRead(srcBuffer));
     ANGLE_TRY(contextVk->onImageTransferWrite(level, 1, layerIndex, layerCount,
-                                              VK_IMAGE_ASPECT_COLOR_BIT, mImage));
+                                              mImage->getAspectFlags(), mImage));
 
     vk::CommandBuffer &commandBuffer = contextVk->getOutsideRenderPassCommandBuffer();
 
