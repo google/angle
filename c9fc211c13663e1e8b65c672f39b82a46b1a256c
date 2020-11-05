@@ -94,6 +94,30 @@
       },
       "revId": "c9fc211c13663e1e8b65c672f39b82a46b1a256c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8f9c2dcf_f50cc716",
+        "filename": "src/libANGLE/renderer/metal/FrameBufferMtl.mm",
+        "patchSetId": 4
+      },
+      "lineNbr": 1028,
+      "author": {
+        "id": 1394635
+      },
+      "writtenOn": "2020-11-05T15:02:26Z",
+      "side": 1,
+      "message": "Opened I0e9c6ad4d19bbb7d691e46b7ec720e918b170371.",
+      "parentUuid": "c0b6b315_82c66aee",
+      "range": {
+        "startLine": 1028,
+        "startChar": 12,
+        "endLine": 1028,
+        "endChar": 20
+      },
+      "revId": "c9fc211c13663e1e8b65c672f39b82a46b1a256c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
