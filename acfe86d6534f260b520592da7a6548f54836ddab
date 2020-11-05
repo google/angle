@@ -180,6 +180,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "25a1f582_b71dd42f",
+        "filename": "src/tests/perf_tests/TracePerfTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 436,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-05T17:36:23Z",
+      "side": 1,
+      "message": "How about removing --steps and adding two new arguments:\n\n1. --min-steps-per-trial\n2. --max-steps-performed\n\n1. is the old \"steps\"\n2. is basically gfxbench\u0027s \"max-rendered-frames\"",
+      "parentUuid": "3a1c3a7f_7aea5092",
+      "range": {
+        "startLine": 436,
+        "startChar": 8,
+        "endLine": 436,
+        "endChar": 45
+      },
+      "revId": "acfe86d6534f260b520592da7a6548f54836ddab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "3582015b_64f4df12",
         "filename": "src/tests/perf_tests/TracePerfTest.cpp",
         "patchSetId": 3
