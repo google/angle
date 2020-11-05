@@ -90,6 +90,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "a01aab34_45b0da25",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-05T00:53:32Z",
+      "side": 1,
+      "message": "I still don\u0027t quite understand the situation you\u0027re describing.   Are you saying the bots put the test executables somewhere outside of where the ANGLE shared objects live?\n\nSo, something like:\n\nout/executables/angle_end2end_tests\nout/libraries/libGLESv2.so\n\n?",
+      "parentUuid": "258ddb7f_24e7b8a9",
+      "revId": "9c6b7b7cb6faead6935bbbcb948dfc11ff13750d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "129886b4_930a7d80",
         "filename": "infra/gn_isolate_map.pyl",
         "patchSetId": 1
@@ -101,6 +119,23 @@
       "writtenOn": "2020-11-03T03:54:22Z",
       "side": 1,
       "message": "What\u0027s this?",
+      "revId": "9c6b7b7cb6faead6935bbbcb948dfc11ff13750d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5a8c7b11_f6878849",
+        "filename": "util/posix/crash_handler_posix.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-05T00:53:32Z",
+      "side": 1,
+      "message": "Shabi - This conditional block is the new piece added to Jamie\u0027s CL.",
       "revId": "9c6b7b7cb6faead6935bbbcb948dfc11ff13750d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
@@ -130,6 +165,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "aed3f74e_fd5d60cc",
+        "filename": "util/posix/crash_handler_posix.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-05T00:53:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1e276c1b_3f3d1c6f",
+      "range": {
+        "startLine": 130,
+        "startChar": 12,
+        "endLine": 130,
+        "endChar": 16
+      },
+      "revId": "9c6b7b7cb6faead6935bbbcb948dfc11ff13750d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "ce7708fc_49cc4972",
         "filename": "util/posix/crash_handler_posix.cpp",
         "patchSetId": 1
@@ -141,6 +200,24 @@
       "writtenOn": "2020-11-03T03:54:22Z",
       "side": 1,
       "message": "If you can avoid strings, that would be preferable. Again, this is from a signal handler, so better not do memory allocations. You can also replace `system` with fork/execve/wait to avoid constructing a command line (which is also safer, for example `module` and `substring` above are not escaped).",
+      "revId": "9c6b7b7cb6faead6935bbbcb948dfc11ff13750d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f97d27ff_a23c0001",
+        "filename": "util/posix/crash_handler_posix.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-05T00:53:32Z",
+      "side": 1,
+      "message": "Ok, I\u0027ll take a look at that approach.",
+      "parentUuid": "ce7708fc_49cc4972",
       "revId": "9c6b7b7cb6faead6935bbbcb948dfc11ff13750d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
