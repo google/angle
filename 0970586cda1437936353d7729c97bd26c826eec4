@@ -18,6 +18,23 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7fb9530f_0a94496b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-05T04:09:17Z",
+      "side": 1,
+      "message": "This CL is not correctly handling depth/stencil PBO uploads. I actually had the fix by the time you notified me, but was writing tests. Please take a look here: https://chromium-review.googlesource.com/c/angle/angle/+/2520108\n\nGood find about the other functions, please file a separate bug.",
+      "revId": "0970586cda1437936353d7729c97bd26c826eec4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e0e9d791_c26b6b3b",
@@ -31,6 +48,30 @@
       "writtenOn": "2020-11-04T23:10:34Z",
       "side": 1,
       "message": "Does this method have the same problem as the method that is fixed by this CL?\n\nI think so because CanCopyWithTransfer() only ensures the same src/dst format, not color-only.",
+      "range": {
+        "startLine": 807,
+        "startChar": 45,
+        "endLine": 810,
+        "endChar": 71
+      },
+      "revId": "0970586cda1437936353d7729c97bd26c826eec4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e3ad9237_9b841a6a",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 810,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-05T04:09:17Z",
+      "side": 1,
+      "message": "Yes to all",
+      "parentUuid": "e0e9d791_c26b6b3b",
       "range": {
         "startLine": 807,
         "startChar": 45,
