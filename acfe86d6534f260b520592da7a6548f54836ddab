@@ -43,6 +43,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "87286223_7c499fe9",
+        "filename": "src/tests/perf_tests/TracePerfTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 436,
+      "author": {
+        "id": 1463997
+      },
+      "writtenOn": "2020-11-05T14:23:08Z",
+      "side": 1,
+      "message": "I was going to say the same thing. As long as we also print out the actual number of frames rendered, then it won\u0027t be too bad. But perhaps we should assert these options if we are doing an early exit.",
+      "parentUuid": "91e206d8_d67f64a5",
+      "range": {
+        "startLine": 436,
+        "startChar": 8,
+        "endLine": 436,
+        "endChar": 45
+      },
+      "revId": "acfe86d6534f260b520592da7a6548f54836ddab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "3582015b_64f4df12",
         "filename": "src/tests/perf_tests/TracePerfTest.cpp",
         "patchSetId": 3
