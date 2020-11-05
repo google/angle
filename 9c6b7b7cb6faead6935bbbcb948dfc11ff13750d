@@ -126,6 +126,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "f2ec1b10_fbc90b4d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-05T02:02:10Z",
+      "side": 1,
+      "message": "This gets complicated quickly.   For example, lets assume we have the following:\n\nout/Debug/angle_end2end_tests\nout/Debug/libraries/libGLESv2.so\nout/Other/libvk_swiftshader.so\n\nAssume the CWD is:\n/home/user/angle\n\nBuilding up the absolute path so we can get to the various libraries requires finding the longest common substring of the CWD and the various relative paths so we can put the pieces together to build a good path for addr2line.   While this is possible (and used for interview questions apparently), it\u0027s more than we want to do in a crash handler - especially if we\u0027re using char* rather than std::string because we\u0027re worried about stack space.\n\nHandling anything other than the libraries being next to the executables seems a esoteric to me.",
+      "parentUuid": "7dc496a4_116a5d42",
+      "revId": "9c6b7b7cb6faead6935bbbcb948dfc11ff13750d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "129886b4_930a7d80",
         "filename": "infra/gn_isolate_map.pyl",
         "patchSetId": 1
