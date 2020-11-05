@@ -144,6 +144,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "2250d7f3_44298b4b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-05T13:03:37Z",
+      "side": 1,
+      "message": "If you set the CWD back to where the app was run, the paths to all the modules are correct coming from the backtrace. You don\u0027t need absolute paths.",
+      "parentUuid": "f2ec1b10_fbc90b4d",
+      "revId": "9c6b7b7cb6faead6935bbbcb948dfc11ff13750d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "129886b4_930a7d80",
         "filename": "infra/gn_isolate_map.pyl",
         "patchSetId": 1
