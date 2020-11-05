@@ -214,6 +214,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "2b8d5d9b_9642e386",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 341,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-05T13:11:38Z",
+      "side": 1,
+      "message": "+1, was also going to suggest addressing dEQP instead of ANGLE.",
+      "parentUuid": "e3f3d469_fd676f5c",
+      "range": {
+        "startLine": 337,
+        "startChar": 0,
+        "endLine": 341,
+        "endChar": 5
+      },
+      "revId": "b38c705e12c2cd374c9b158247b0ef260e5139fa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "fa9eba25_edf0337e",
         "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
         "patchSetId": 4
