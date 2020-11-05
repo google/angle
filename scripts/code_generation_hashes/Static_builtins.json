@@ -18,7 +18,7 @@
   "src/compiler/translator/builtin_variables.json":
     "98d347a6ed181eca3d89bfd73193d787",
   "src/compiler/translator/gen_builtin_symbols.py":
-    "a538e53475983ae9643afd5b36056347",
+    "03bdb7260ac347f4be968229a6a97aab",
   "src/compiler/translator/tree_util/BuiltIn_ESSL_autogen.h":
     "359670b3327789b173bb961e3c66a19f",
   "src/compiler/translator/tree_util/BuiltIn_complete_autogen.h":
