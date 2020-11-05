@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2a6c9bda_9afc2050",
+        "filename": "src/libANGLE/renderer/vulkan/ShaderVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-05T21:08:51Z",
+      "side": 1,
+      "message": "Please remove this and make `SH_ADD_PRE_ROTATION` imply it.",
+      "range": {
+        "startLine": 77,
+        "startChar": 22,
+        "endLine": 77,
+        "endChar": 47
+      },
+      "revId": "f6d9dfe0a9a40e533d48edc4ab213f044dacd59f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}

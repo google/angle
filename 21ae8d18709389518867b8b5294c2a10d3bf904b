@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "18ac9a8a_ca0a1b6a",
+        "filename": "src/libANGLE/renderer/metal/ContextMtl.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 473,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-05T21:08:51Z",
+      "side": 0,
+      "message": "@Quyen, does metal support specialization constants? If not, changing specialization constants to normal constants in SPIR-V is really trivial. I can help you / provide a SPIR-V transformation for this (if necessary), but will you be willing to make the metal backend also deal with flipping the same way the Vulkan backend is doing now?\n\nI would really like to see the two backends unified here so we can clean this code up further.",
+      "revId": "21ae8d18709389518867b8b5294c2a10d3bf904b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
