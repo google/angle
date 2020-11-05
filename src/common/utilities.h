@@ -234,8 +234,8 @@ const char *GetDebugMessageSeverityString(GLenum severity);
 enum class SrgbOverride
 {
     Default = 0,
-    Linear,
-    SRGB
+    SRGB,
+    Linear
 };
 
 }  // namespace gl

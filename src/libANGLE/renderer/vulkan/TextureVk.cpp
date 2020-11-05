@@ -2247,9 +2247,14 @@ angle::Result TextureVk::syncState(const gl::Context *context,
     if (localBits.test(gl::Texture::DIRTY_BIT_SWIZZLE_RED) ||
         localBits.test(gl::Texture::DIRTY_BIT_SWIZZLE_GREEN) ||
         localBits.test(gl::Texture::DIRTY_BIT_SWIZZLE_BLUE) ||
-        localBits.test(gl::Texture::DIRTY_BIT_SWIZZLE_ALPHA) ||
-        localBits.test(gl::Texture::DIRTY_BIT_SRGB_OVERRIDE) ||
-        localBits.test(gl::Texture::DIRTY_BIT_SRGB_DECODE))
+        localBits.test(gl::Texture::DIRTY_BIT_SWIZZLE_ALPHA))
+    {
+        ANGLE_TRY(refreshImageViews(contextVk));
+    }
+
+    if (!renderer->getFeatures().supportsImageFormatList.enabled &&
+        (localBits.test(gl::Texture::DIRTY_BIT_SRGB_OVERRIDE) ||
+         localBits.test(gl::Texture::DIRTY_BIT_SRGB_DECODE)))
     {
         ANGLE_TRY(refreshImageViews(contextVk));
     }
@@ -2434,8 +2439,7 @@ angle::Result TextureVk::initImage(ContextVk *contextVk,
                                                                  : vk::ConvertToSRGB(imageFormat);
 
     VkImageFormatListCreateInfoKHR formatListInfo = {};
-    if (renderer->getFeatures().supportsImageFormatList.enabled &&
-        (imageListFormat != VK_FORMAT_UNDEFINED))
+    if (renderer->getFeatures().supportsImageFormatList.enabled)
     {
         mRequiresMutableStorage = true;
 
@@ -2702,12 +2706,17 @@ vk::ImageViewSubresourceSerial TextureVk::getImageViewSubresourceSerial(
     gl::LevelIndex baseLevel(mState.getEffectiveBaseLevel());
     // getMipmapMaxLevel will clamp to the max level if it is smaller than the number of mips.
     uint32_t levelCount               = gl::LevelIndex(mState.getMipmapMaxLevel()) - baseLevel + 1;
-    vk::SrgbDecodeMode srgbDecodeMode = (samplerState.getSRGBDecode() == GL_DECODE_EXT)
+    vk::SrgbDecodeMode srgbDecodeMode = (mImage->getFormat().actualImageFormat().isSRGB &&
+                                         (samplerState.getSRGBDecode() == GL_DECODE_EXT))
                                             ? vk::SrgbDecodeMode::SrgbDecode
                                             : vk::SrgbDecodeMode::SkipDecode;
+    gl::SrgbOverride srgbOverrideMode = (!mImage->getFormat().actualImageFormat().isSRGB &&
+                                         (mState.getSRGBOverride() == gl::SrgbOverride::SRGB))
+                                            ? gl::SrgbOverride::SRGB
+                                            : gl::SrgbOverride::Default;
 
     return getImageViews().getSubresourceSerial(baseLevel, levelCount, 0, vk::LayerMode::All,
-                                                srgbDecodeMode);
+                                                srgbDecodeMode, srgbOverrideMode);
 }
 
 angle::Result TextureVk::refreshImageViews(ContextVk *contextVk)
