@@ -159,6 +159,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "205f48e9_701ba297",
+        "filename": "src/common/system_utils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-11-05T22:17:26Z",
+      "side": 1,
+      "message": "I stuck it in Android only because that\u0027s the only case that will do the getprop. Otherwise it\u0027s just a getenv (or platform equivalent).\nGenerally ANGLE calls GetEnvironmentVar which will do the appropriate platform behavior. That may not be getenv, thus I limited this to Android where I know getenv is available.",
+      "parentUuid": "56a24add_760f829e",
+      "range": {
+        "startLine": 32,
+        "startChar": 0,
+        "endLine": 32,
+        "endChar": 60
+      },
+      "revId": "83c1448e671ba7a90351cd0fa84db153734c4f42",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "71a1a236_95f75a56",
         "filename": "src/common/system_utils.cpp",
         "patchSetId": 4
@@ -170,6 +194,30 @@
       "writtenOn": "2020-11-05T18:19:08Z",
       "side": 1,
       "message": "Might as well just assign this to a char* and return it in the block, rather than two calls to getenv.",
+      "range": {
+        "startLine": 35,
+        "startChar": 8,
+        "endLine": 35,
+        "endChar": 28
+      },
+      "revId": "83c1448e671ba7a90351cd0fa84db153734c4f42",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "08e24a50_bcecc9c9",
+        "filename": "src/common/system_utils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-11-05T22:17:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "71a1a236_95f75a56",
       "range": {
         "startLine": 35,
         "startChar": 8,
