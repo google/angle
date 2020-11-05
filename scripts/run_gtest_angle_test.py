@@ -60,13 +60,13 @@ def IsWindows():
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('executable', help='Test executable.')
-    parser.add_argument('--isolated-script-test-output', type=str, required=True)
-    parser.add_argument('--isolated-script-test-filter', type=str, required=False)
+    parser.add_argument('--isolated-script-test-output', type=str)
+    parser.add_argument('--isolated-script-test-filter', type=str)
     parser.add_argument('--xvfb', help='Start xvfb.', action='store_true')
 
     # Kept for compatiblity.
     # TODO(jmadill): Remove when removed from the recipes. http://crbug.com/954415
-    parser.add_argument('--isolated-script-test-perf-output', type=str, required=False)
+    parser.add_argument('--isolated-script-test-perf-output', type=str)
 
     args, extra_flags = parser.parse_known_args()
 

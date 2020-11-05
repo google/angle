@@ -8,6 +8,7 @@
 #   Helper script for triggering GPU tests on swarming.
 
 import argparse
+import json
 import hashlib
 import logging
 import os
@@ -29,6 +30,7 @@ def parse_args():
     parser.add_argument('-g', '--gpu', help='GPU dimension. (e.g. intel-hd-630-win10-stable)')
     parser.add_argument('-t', '--device-type', help='Android device type (e.g. bullhead)')
     parser.add_argument('-o', '--device-os', help='Android OS.')
+    parser.add_argument('-v', '--verbose', action='store_true', help='Verbose logging.')
     parser.add_argument(
         '--priority',
         help='Task priority. Default is %s. Use judiciously.' % DEFAULT_TASK_PRIORITY,
@@ -37,24 +39,36 @@ def parse_args():
     return parser.parse_known_args()
 
 
-def main():
-    args, unknown = parse_args()
-    path = args.gn_path.replace('\\', '/')
-    out_gn_path = '//' + path
-    out_file_path = os.path.join(*path.split('/'))
+def invoke_mb(args):
+    mb_script_path = os.path.join('tools', 'mb', 'mb.py')
+    mb_args = ['python', mb_script_path] + args
 
     # Attempt to detect standalone vs chromium component build.
     is_standalone = not os.path.isdir(os.path.join('third_party', 'angle'))
-
-    mb_script_path = os.path.join('tools', 'mb', 'mb.py')
-    mb_args = ['python', mb_script_path, 'isolate', out_gn_path, args.test]
 
     if is_standalone:
         logging.info('Standalone mode detected.')
         mb_args += ['-i', os.path.join('infra', 'gn_isolate_map.pyl')]
 
-    if subprocess.call(mb_args):
-        sys.exit('MB step failed, exiting')
+    logging.info('Invoking mb: %s' % ' '.join(mb_args))
+    return subprocess.check_output(mb_args)
+
+
+def main():
+    args, unknown = parse_args()
+
+    if args.verbose:
+        logging.basicConfig(level='INFO')
+
+    path = args.gn_path.replace('\\', '/')
+    out_gn_path = '//' + path
+    out_file_path = os.path.join(*path.split('/'))
+
+    get_command_output = invoke_mb(['get-swarming-command', out_gn_path, args.test, '--as-list'])
+    swarming_cmd = json.loads(get_command_output)
+    logging.info('Swarming command: %s' % ' '.join(swarming_cmd))
+
+    invoke_mb(['isolate', out_gn_path, args.test])
 
     isolate_cmd_path = os.path.join('tools', 'luci-go', 'isolate')
     isolate_file = os.path.join(out_file_path, '%s.isolate' % args.test)
@@ -64,6 +78,7 @@ def main():
         isolate_cmd_path, 'archive', '-I', 'https://isolateserver.appspot.com', '-i', isolate_file,
         '-s', isolated_file
     ]
+    logging.info('Invoking isolate: %s' % ' '.join(isolate_args))
     subprocess.check_call(isolate_args)
     with open(isolated_file, 'rb') as f:
         sha = hashlib.sha1(f.read()).hexdigest()
@@ -98,6 +113,10 @@ def main():
     if args.device_os:
         swarming_args += ['-d', 'device_os=' + args.device_os]
 
+    cmd_args = ['-relative-cwd', args.gn_path, '-raw-cmd', '--'] + swarming_cmd
+    if unknown:
+        cmd_args += unknown
+
     if args.shards > 1:
         for i in range(args.shards):
             shard_args = swarming_args[:]
@@ -107,14 +126,14 @@ def main():
                 '--env',
                 'GTEST_SHARD_INDEX=%d' % i,
             ])
-            if unknown:
-                shard_args += ["--"] + unknown
 
-            logging.info(' '.join(shard_args))
+            shard_args += cmd_args
+
+            logging.info('Invoking swarming: %s' % ' '.join(shard_args))
             subprocess.call(shard_args)
     else:
-        if unknown:
-            swarming_args += ["--"] + unknown
+        swarming_args += cmd_args
+        logging.info('Invoking swarming: %s' % ' '.join(swarming_args))
         subprocess.call(swarming_args)
     return 0
 
