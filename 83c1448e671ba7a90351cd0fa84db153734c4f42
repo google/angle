@@ -52,6 +52,23 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8fb6afc1_5c917f06",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-05T18:10:34Z",
+      "side": 1,
+      "message": "Courtney/cody: my suggestion here is to use this new \"cached\" path as the default, and use a different API for Capture/Replay.\n\nLong-term we should redo this anyway. Likely we can use sockets for real-time communication.",
+      "revId": "83c1448e671ba7a90351cd0fa84db153734c4f42",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "051a03c1_6ecc2511",
