@@ -37,6 +37,92 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "5aa05c07_ef774347",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3675,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2020-11-05T18:39:47Z",
+      "side": 1,
+      "message": "ES_3_2?",
+      "range": {
+        "startLine": 3675,
+        "startChar": 30,
+        "endLine": 3675,
+        "endChar": 36
+      },
+      "revId": "eb98c1a1f6ab7a5ce0374c019c8f00d93f827eed",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "63dd903d_5fe2c3cc",
+        "filename": "src/libANGLE/ErrorStrings.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 455,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2020-11-05T18:39:47Z",
+      "side": 1,
+      "message": "found",
+      "range": {
+        "startLine": 455,
+        "startChar": 79,
+        "endLine": 455,
+        "endChar": 83
+      },
+      "revId": "eb98c1a1f6ab7a5ce0374c019c8f00d93f827eed",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d6ef718c_b19b72c5",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 432,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2020-11-05T18:39:47Z",
+      "side": 1,
+      "message": "Shouldn\u0027t this also check for clientVersion \u003e\u003d Version(3, 2)?",
+      "revId": "eb98c1a1f6ab7a5ce0374c019c8f00d93f827eed",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d8ea4a40_b0a4844a",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1855,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2020-11-05T18:39:47Z",
+      "side": 1,
+      "message": "This was also set above, any need for a second?",
+      "range": {
+        "startLine": 1855,
+        "startChar": 4,
+        "endLine": 1855,
+        "endChar": 35
+      },
+      "revId": "eb98c1a1f6ab7a5ce0374c019c8f00d93f827eed",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "fdd120d7_b9d77ee0",
         "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
         "patchSetId": 1
@@ -66,6 +152,52 @@
       "side": 1,
       "message": "There\u0027s a large chunk of it missing actually. The shader compiler stuff is done in another CL. I\u0027ll upload shortly once I fix the bugs.",
       "parentUuid": "fdd120d7_b9d77ee0",
+      "revId": "eb98c1a1f6ab7a5ce0374c019c8f00d93f827eed",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d204ac00_2add44f8",
+        "filename": "src/libANGLE/validationES32.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 528,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2020-11-05T18:39:47Z",
+      "side": 1,
+      "message": "Should be \"\u003c\u003d Version(3,1)\" or \"\u003c Version(3,2)\"",
+      "range": {
+        "startLine": 528,
+        "startChar": 36,
+        "endLine": 528,
+        "endChar": 51
+      },
+      "revId": "eb98c1a1f6ab7a5ce0374c019c8f00d93f827eed",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b37c476c_0ceaacff",
+        "filename": "src/libANGLE/validationES32.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 544,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2020-11-05T18:39:47Z",
+      "side": 1,
+      "message": "Same here I believe.",
+      "range": {
+        "startLine": 544,
+        "startChar": 8,
+        "endLine": 544,
+        "endChar": 52
+      },
       "revId": "eb98c1a1f6ab7a5ce0374c019c8f00d93f827eed",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
