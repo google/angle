@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "aa9b0868_75ebe393",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-05T13:20:29Z",
+      "side": 1,
+      "message": "Maybe let\u0027s retry the gold failures a couple times just to make sure it\u0027s not flaky and it\u0027s the same 3 pixels that change.",
+      "revId": "f47be1b869f2238a72bb2eeaed9a26d4ac0ab9a8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
