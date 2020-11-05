@@ -50,6 +50,24 @@
       "message": "nit: Please group these 3 together in here:\n\n    bool hasStagedUpdatesForSubresource(gl::LevelIndex levelGL, uint32_t layer) const;\n    bool hasStagedUpdatesInAllocatedLevels() const;\n    bool hasStagedUpdatesInLevels(gl::LevelIndex levelStart, gl::LevelIndex levelEnd) const;",
       "revId": "9a5701b1ab86e5e4ce5b3192657e0f28c694be25",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "13d8c2ab_2207a4a5",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 1774,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-05T21:10:48Z",
+      "side": 1,
+      "message": "Nack. This one is private, the others are public.",
+      "parentUuid": "76a6ed28_d6441fe8",
+      "revId": "9a5701b1ab86e5e4ce5b3192657e0f28c694be25",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
