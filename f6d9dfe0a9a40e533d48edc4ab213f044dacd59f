@@ -46,6 +46,30 @@
       },
       "revId": "f6d9dfe0a9a40e533d48edc4ab213f044dacd59f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "27f139c2_877a5e2c",
+        "filename": "src/libANGLE/renderer/vulkan/ShaderVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-05T21:26:51Z",
+      "side": 1,
+      "message": "With this change we can unconditionally use SH_ADD_PRE_ROTATION since there is no runtime cost if the application is always in Identity/flippedIdentity.\n\nIn fact, since it can be specified unconditionally, even SH_ADD_PRE_ROTATION can be removed and TranslatorVulkan can assume it\u0027s there. Though maybe needs to be kept for Metal temporarily.\n\nThis feature has been there for a while now and I don\u0027t think we ever needed to disable it. As you said, in the worst case TranslatorVulkan can be modified to not emit this code for debugging purposes. I still prefer making things cleaner, but I won\u0027t block this change on it.",
+      "parentUuid": "99995ecb_c27027d9",
+      "range": {
+        "startLine": 77,
+        "startChar": 22,
+        "endLine": 77,
+        "endChar": 47
+      },
+      "revId": "f6d9dfe0a9a40e533d48edc4ab213f044dacd59f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
