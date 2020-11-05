@@ -16,6 +16,47 @@
       "message": "Hi Brandon\n\nDo you have Mali platform?\nThis causes all of dEQP-GLES31.functional.copy_image.*renderbuffer* to fail on Mali (and also a few non-renderbuffer failures)\nI don\u0027t know what diff is for \"renderbuffer\"\n",
       "revId": "1e494cae8d48e3e82600dd538280938a5baa13ea",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ee8d2069_b1c882f4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 20
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-05T13:27:40Z",
+      "side": 1,
+      "message": "Hey Sunny, there\u0027s a known issue with Renderbuffers that becomes a failure when this extension is enabled, see the code reference. I believe Brandon is working on a follow-up patch to fix this.",
+      "parentUuid": "c7f2b115_ef861013",
+      "revId": "1e494cae8d48e3e82600dd538280938a5baa13ea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7d97c7e5_b5ef11b8",
+        "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
+        "patchSetId": 20
+      },
+      "lineNbr": 280,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-05T13:27:40Z",
+      "side": 1,
+      "message": "see this reference.",
+      "range": {
+        "startLine": 277,
+        "startChar": 0,
+        "endLine": 280,
+        "endChar": 82
+      },
+      "revId": "1e494cae8d48e3e82600dd538280938a5baa13ea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
