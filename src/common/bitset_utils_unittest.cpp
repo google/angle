@@ -7,6 +7,8 @@
 //   Tests bitset helpers and custom classes.
 //
 
+#include <array>
+
 #include <gtest/gtest.h>
 
 #include "common/bitset_utils.h"
@@ -203,6 +205,28 @@ TYPED_TEST(BitSetIteratorTest, Iterator)
     }
 
     EXPECT_EQ(originalValues.size(), readValues.size());
+}
+
+// Ensure lsb->msb iteration order.
+TYPED_TEST(BitSetIteratorTest, IterationOrder)
+{
+    TypeParam mStateBits                   = this->mStateBits;
+    const std::array<size_t, 8> writeOrder = {20, 25, 16, 31, 10, 14, 36, 19};
+    const std::array<size_t, 8> fetchOrder = {10, 14, 16, 19, 20, 25, 31, 36};
+
+    for (size_t value : writeOrder)
+    {
+        mStateBits.set(value);
+    }
+    EXPECT_EQ(writeOrder.size(), mStateBits.count());
+
+    size_t i = 0;
+    for (size_t bit : mStateBits)
+    {
+        EXPECT_EQ(fetchOrder[i], bit);
+        i++;
+    }
+    EXPECT_EQ(fetchOrder.size(), mStateBits.count());
 }
 
 // Test an empty iterator.

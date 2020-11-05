@@ -1025,7 +1025,8 @@ angle::Result FramebufferMtl::clearWithDraw(const gl::Context *context,
     {
         if (drawbuffer >= mRenderPassDesc.numColorAttachments)
         {
-            continue;
+            // Iteration over drawbuffer indices always goes in ascending order
+            break;
         }
         RenderTargetMtl *renderTarget = mColorRenderTargets[drawbuffer];
         if (!renderTarget || !renderTarget->getTexture())
