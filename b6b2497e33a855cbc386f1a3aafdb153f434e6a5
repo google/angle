@@ -16,6 +16,23 @@
       "message": "PTAL Yuly (Dirk if you feel like it)",
       "revId": "b6b2497e33a855cbc386f1a3aafdb153f434e6a5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cad1e83b_10b8f4ce",
+        "filename": "scripts/trigger.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1003232
+      },
+      "writtenOn": "2020-11-05T21:21:00Z",
+      "side": 1,
+      "message": "Use the `--as-list` flag and it\u0027ll return a json-encoded list, that you can turn into a python list with json.loads() and not need lines 68-69.",
+      "revId": "b6b2497e33a855cbc386f1a3aafdb153f434e6a5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
