@@ -108,6 +108,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "7dc496a4_116a5d42",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-05T00:59:27Z",
+      "side": 1,
+      "message": "I\u0027m not making any claims about where shared objects are. Your solution relies on them being in the same folder, which seems like it would fail in some cases.\n\nI\u0027m suggesting a better approach is to remember the original CWD when we change the CWD and use that.",
+      "parentUuid": "a01aab34_45b0da25",
+      "revId": "9c6b7b7cb6faead6935bbbcb948dfc11ff13750d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "129886b4_930a7d80",
         "filename": "infra/gn_isolate_map.pyl",
         "patchSetId": 1
