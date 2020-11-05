@@ -96,6 +96,13 @@ bool ReplaceSubstring(std::string *str,
 // Split up a string parsed from an environment variable.
 std::vector<std::string> GetStringsFromEnvironmentVar(const char *varName, const char *separator);
 
+// Split up a string parsed from environment variable or via Android property, use cached result if
+// available.
+std::vector<std::string> GetCachedStringsFromEnvironmentVarOrAndroidProperty(
+    const char *varName,
+    const char *propertyName,
+    const char *separator);
+
 }  // namespace angle
 
 #endif  // LIBANGLE_STRING_UTILS_H_

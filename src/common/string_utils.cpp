@@ -240,4 +240,13 @@ std::vector<std::string> GetStringsFromEnvironmentVar(const char *varName, const
     std::string environment = GetEnvironmentVar(varName);
     return SplitString(environment, separator, TRIM_WHITESPACE, SPLIT_WANT_NONEMPTY);
 }
+
+std::vector<std::string> GetCachedStringsFromEnvironmentVarOrAndroidProperty(
+    const char *varName,
+    const char *propertyName,
+    const char *separator)
+{
+    std::string environment = GetEnvironmentVarOrAndroidProperty(varName, propertyName);
+    return SplitString(environment, separator, TRIM_WHITESPACE, SPLIT_WANT_NONEMPTY);
+}
 }  // namespace angle

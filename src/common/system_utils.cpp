@@ -26,9 +26,27 @@ std::string GetExecutableName()
 #endif  // ANGLE_PLATFORM_ANDROID
 }
 
+// On Android return value cached in the process environment, if none, call
+// GetEnvironmentVarOrUnCachedAndroidProperty if not in environment.
+std::string GetEnvironmentVarOrAndroidProperty(const char *variableName, const char *propertyName)
+{
+#if defined(ANGLE_PLATFORM_ANDROID) && __ANDROID_API__ >= 21
+    // Can't use GetEnvironmentVar here because that won't allow us to distinguish between the
+    // environment being set to an empty string vs. not set at all.
+    const char *variableValue = getenv(variableName);
+    if (variableValue != nullptr)
+    {
+        std::string value(variableValue);
+        return value;
+    }
+#endif
+    return GetEnvironmentVarOrUnCachedAndroidProperty(variableName, propertyName);
+}
+
 // Call out to 'getprop' on a shell to get an Android property.  If the value was set, set an
 // environment variable with that value.  Return the value of the environment variable.
-std::string GetEnvironmentVarOrAndroidProperty(const char *variableName, const char *propertyName)
+std::string GetEnvironmentVarOrUnCachedAndroidProperty(const char *variableName,
+                                                       const char *propertyName)
 {
 #if defined(ANGLE_PLATFORM_ANDROID) && __ANDROID_API__ >= 21
     std::string sanitizedPropertyName = propertyName;

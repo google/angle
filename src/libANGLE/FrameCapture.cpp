@@ -118,7 +118,8 @@ std::string GetDefaultOutDirectory()
 
 std::string GetCaptureTrigger()
 {
-    return GetEnvironmentVarOrAndroidProperty(kCaptureTriggerVarName, kAndroidCaptureTrigger);
+    return GetEnvironmentVarOrUnCachedAndroidProperty(kCaptureTriggerVarName,
+                                                      kAndroidCaptureTrigger);
 }
 
 std::ostream &operator<<(std::ostream &os, gl::ContextID contextId)
@@ -3565,14 +3566,14 @@ FrameCapture::FrameCapture()
     reset();
 
     std::string enabledFromEnv =
-        GetEnvironmentVarOrAndroidProperty(kEnabledVarName, kAndroidCaptureEnabled);
+        GetEnvironmentVarOrUnCachedAndroidProperty(kEnabledVarName, kAndroidCaptureEnabled);
     if (enabledFromEnv == "0")
     {
         mEnabled = false;
     }
 
     std::string pathFromEnv =
-        GetEnvironmentVarOrAndroidProperty(kOutDirectoryVarName, kAndroidOutDir);
+        GetEnvironmentVarOrUnCachedAndroidProperty(kOutDirectoryVarName, kAndroidOutDir);
     if (pathFromEnv.empty())
     {
         mOutDirectory = GetDefaultOutDirectory();
@@ -3589,20 +3590,21 @@ FrameCapture::FrameCapture()
     }
 
     std::string startFromEnv =
-        GetEnvironmentVarOrAndroidProperty(kFrameStartVarName, kAndroidFrameStart);
+        GetEnvironmentVarOrUnCachedAndroidProperty(kFrameStartVarName, kAndroidFrameStart);
     if (!startFromEnv.empty())
     {
         mCaptureStartFrame = atoi(startFromEnv.c_str());
     }
 
-    std::string endFromEnv = GetEnvironmentVarOrAndroidProperty(kFrameEndVarName, kAndroidFrameEnd);
+    std::string endFromEnv =
+        GetEnvironmentVarOrUnCachedAndroidProperty(kFrameEndVarName, kAndroidFrameEnd);
     if (!endFromEnv.empty())
     {
         mCaptureEndFrame = atoi(endFromEnv.c_str());
     }
 
     std::string captureTriggerFromEnv =
-        GetEnvironmentVarOrAndroidProperty(kCaptureTriggerVarName, kAndroidCaptureTrigger);
+        GetEnvironmentVarOrUnCachedAndroidProperty(kCaptureTriggerVarName, kAndroidCaptureTrigger);
     if (!captureTriggerFromEnv.empty())
     {
         mCaptureTrigger = atoi(captureTriggerFromEnv.c_str());
@@ -3614,7 +3616,7 @@ FrameCapture::FrameCapture()
     }
 
     std::string labelFromEnv =
-        GetEnvironmentVarOrAndroidProperty(kCaptureLabel, kAndroidCaptureLabel);
+        GetEnvironmentVarOrUnCachedAndroidProperty(kCaptureLabel, kAndroidCaptureLabel);
     if (!labelFromEnv.empty())
     {
         // Optional label to provide unique file names and namespaces
@@ -3622,7 +3624,7 @@ FrameCapture::FrameCapture()
     }
 
     std::string compressionFromEnv =
-        GetEnvironmentVarOrAndroidProperty(kCompression, kAndroidCompression);
+        GetEnvironmentVarOrUnCachedAndroidProperty(kCompression, kAndroidCompression);
     if (compressionFromEnv == "0")
     {
         mCompression = false;
