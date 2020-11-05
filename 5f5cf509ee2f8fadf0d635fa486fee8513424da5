@@ -93,6 +93,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "69a5fe18_39945455",
+        "filename": "src/libANGLE/Display.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 297,
+      "author": {
+        "id": 1117350
+      },
+      "writtenOn": "2020-11-05T18:25:37Z",
+      "side": 1,
+      "message": "Created DisplayApple_api.h/cpp.",
+      "parentUuid": "29a2d612_c63f6aa4",
+      "range": {
+        "startLine": 274,
+        "startChar": 0,
+        "endLine": 297,
+        "endChar": 14
+      },
+      "revId": "5f5cf509ee2f8fadf0d635fa486fee8513424da5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3109f005_ad5ff1e5",
@@ -303,6 +327,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1a7cb135_b387d944",
+        "filename": "src/libANGLE/renderer/gl/eagl/DeviceEAGL.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1117350
+      },
+      "writtenOn": "2020-11-05T18:25:37Z",
+      "side": 1,
+      "message": "Good idea. I renamed it to ANGLE_ENABLE_EAGL.",
+      "parentUuid": "97e215fc_50ce6ab6",
+      "range": {
+        "startLine": 14,
+        "startChar": 5,
+        "endLine": 15,
+        "endChar": 69
+      },
+      "revId": "5f5cf509ee2f8fadf0d635fa486fee8513424da5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e8783a0f_cc8cfd89",
@@ -446,6 +494,30 @@
       "side": 1,
       "message": "Ah, the issue is that our GPU info lib probably shouldn\u0027t be compiling sources in libANGLE. It\u0027s pretty fragile if those files need to include other parts of libANGLE.\n\nIn that case, my recommendation is to put these files in a place that is accessible to both the gpu info lib and libANGLE: angle_common.\n\nYou can put them in src/common/gl/cgl and src/common/apple and add them to the build files here: https://source.chromium.org/chromium/chromium/src/+/master:third_party/swiftshader/third_party/angle/angle/src/libGLESv2.gni;l\u003d85 . I believe both libANGLE and gpu info already depend on angle_common.\n\nSorry for the churn.",
       "parentUuid": "698ca57c_a24eede7",
+      "range": {
+        "startLine": 149,
+        "startChar": 0,
+        "endLine": 151,
+        "endChar": 48
+      },
+      "revId": "5f5cf509ee2f8fadf0d635fa486fee8513424da5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e88dd10f_337e2ab2",
+        "filename": "src/libGLESv2.gni",
+        "patchSetId": 3
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 1117350
+      },
+      "writtenOn": "2020-11-05T18:25:37Z",
+      "side": 1,
+      "message": "No problem, thanks for the guidance. Done.",
+      "parentUuid": "e7deb37a_e0dcc4b2",
       "range": {
         "startLine": 149,
         "startChar": 0,
