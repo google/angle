@@ -16,6 +16,23 @@
       "message": "PTAL",
       "revId": "b38c705e12c2cd374c9b158247b0ef260e5139fa",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ea5f3602_2f3b7530",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-05T00:33:20Z",
+      "side": 1,
+      "message": "jamie, we need a fix for this where traces skip if extension is not supported instead of failing -\n\nI  176.945s run_tests_on_device(HT7BG1A03523)  Skipping tests using configuration ES2_WGL because it is not available.\nI  176.945s run_tests_on_device(HT7BG1A03523)  Skipping tests using configuration ES3_OpenGL because it is not available.\nI  176.945s run_tests_on_device(HT7BG1A03523)  Skipping tests using configuration ES3_1_Vulkan_SwiftShader because it is not available.\nI  176.945s run_tests_on_device(HT7BG1A03523)  Note: Google Test filter \u003d TracePerfTest.Run/vulkan_dragon_ball_legends\nI  176.945s run_tests_on_device(HT7BG1A03523)  [\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d] Running 1 test from 1 test suite.\nI  176.945s run_tests_on_device(HT7BG1A03523)  [----------] Global test environment set-up.\nI  176.945s run_tests_on_device(HT7BG1A03523)  [----------] 1 test from TracePerfTest\nI  176.945s run_tests_on_device(HT7BG1A03523)  [ RUN      ] TracePerfTest.Run/vulkan_dragon_ball_legends\nI  176.945s run_tests_on_device(HT7BG1A03523)  API, Error, High: Extension is not enabled.\nI  176.945s run_tests_on_device(HT7BG1A03523)  API, Error, High: Extension is not enabled.\nI  176.945s run_tests_on_device(HT7BG1A03523)  API, Error, High: Extension is not enabled.",
+      "revId": "b38c705e12c2cd374c9b158247b0ef260e5139fa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
