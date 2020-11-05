@@ -367,11 +367,10 @@ rx::DisplayImpl *CreateDisplayFromAttribs(EGLAttrib displayType,
             {
                 impl = rx::CreateVulkanSimpleDisplay(state);
             }
-            else if (platformType == EGL_PLATFORM_VULKAN_DISPLAY_MODE_HEADLESS_ANGLE)
+            else if (platformType == EGL_PLATFORM_VULKAN_DISPLAY_MODE_HEADLESS_ANGLE &&
+                     rx::IsVulkanHeadlessDisplayAvailable())
             {
-                // TODO: anglebug.com/5260
-                // Add support for headless rendering
-                UNIMPLEMENTED();
+                impl = rx::CreateVulkanHeadlessDisplay(state);
             }
             else
             {
