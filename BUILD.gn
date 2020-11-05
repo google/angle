@@ -40,6 +40,9 @@ declare_args() {
   # Abseil has trouble supporting MSVC, particularly regarding component builds.
   # http://crbug.com/1126524
   angle_enable_abseil = angle_has_build && is_clang
+
+  # Adds run-time checks to filter out EVENT() messages when the debug annotator is disabled.
+  angle_enable_annotator_run_time_checks = false
 }
 
 if (angle_build_all) {
@@ -249,6 +252,9 @@ config("angle_disable_pool_alloc") {
 config("debug_annotations_config") {
   if (is_debug) {
     defines = [ "ANGLE_ENABLE_DEBUG_ANNOTATIONS" ]
+  }
+  if (angle_enable_annotator_run_time_checks) {
+    defines = [ "ANGLE_ENABLE_ANNOTATOR_RUN_TIME_CHECKS" ]
   }
 }
 

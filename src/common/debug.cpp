@@ -89,6 +89,15 @@ bool DebugAnnotationsActive()
 #endif
 }
 
+bool ShouldBeginScopedEvent()
+{
+#if defined(ANGLE_ENABLE_ANNOTATOR_RUN_TIME_CHECKS)
+    return DebugAnnotationsActive();
+#else
+    return true;
+#endif  // defined(ANGLE_ENABLE_ANNOTATOR_RUN_TIME_CHECKS)
+}
+
 bool DebugAnnotationsInitialized()
 {
     return g_debugAnnotator != nullptr;
@@ -145,8 +154,10 @@ void ScopedPerfEventHelper::begin(const char *format, ...)
     va_end(vararg);
 
     ANGLE_LOG(EVENT) << std::string(&buffer[0], len);
-    // Do not need to call DebugAnnotationsActive() here, because it was called in EVENT()
-    g_debugAnnotator->beginEvent(mContext, mEntryPoint, mFunctionName, buffer.data());
+    if (DebugAnnotationsInitialized())
+    {
+        g_debugAnnotator->beginEvent(mContext, mEntryPoint, mFunctionName, buffer.data());
+    }
 }
 
 LogMessage::LogMessage(const char *file, const char *function, int line, LogSeverity severity)
