@@ -159,6 +159,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "70fa93f5_f86c222d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-05T21:02:02Z",
+      "side": 1,
+      "message": "Skipping the tests is fine with me actually. Presumably it\u0027s only a subset of the platforms that don\u0027t have that extension.\n\nBesides, based on your comment it looks like fixing dEQP is a one-liner, so I could take care of it hopefully in no time.",
+      "parentUuid": "04019f09_5a430221",
+      "revId": "457f1bc84676b92ee9e362111983202fef3da82c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "56591154_1c7cfddb",
