@@ -1320,17 +1320,17 @@ angle::Result TextureMtl::bindToShader(const gl::Context *context,
              mFormat.swizzled) &&
             contextMtl->getDisplay()->getFeatures().hasTextureSwizzle.enabled)
         {
-            const gl::InternalFormat &glInternalForamt = *mState.getBaseLevelDesc().format.info;
+            const gl::InternalFormat &glInternalFormat = *mState.getBaseLevelDesc().format.info;
 
             MTLTextureSwizzleChannels swizzle = MTLTextureSwizzleChannelsMake(
                 mtl::GetTextureSwizzle(OverrideSwizzleValue(
-                    context, mState.getSwizzleState().swizzleRed, mFormat, glInternalForamt)),
+                    context, mState.getSwizzleState().swizzleRed, mFormat, glInternalFormat)),
                 mtl::GetTextureSwizzle(OverrideSwizzleValue(
-                    context, mState.getSwizzleState().swizzleGreen, mFormat, glInternalForamt)),
+                    context, mState.getSwizzleState().swizzleGreen, mFormat, glInternalFormat)),
                 mtl::GetTextureSwizzle(OverrideSwizzleValue(
-                    context, mState.getSwizzleState().swizzleBlue, mFormat, glInternalForamt)),
+                    context, mState.getSwizzleState().swizzleBlue, mFormat, glInternalFormat)),
                 mtl::GetTextureSwizzle(OverrideSwizzleValue(
-                    context, mState.getSwizzleState().swizzleAlpha, mFormat, glInternalForamt)));
+                    context, mState.getSwizzleState().swizzleAlpha, mFormat, glInternalFormat)));
 
             mNativeSwizzleSamplingView = mNativeTexture->createSwizzleView(swizzle);
         }
