@@ -69,6 +69,47 @@
       "parentUuid": "aa238d9b_e14de1e3",
       "revId": "457f1bc84676b92ee9e362111983202fef3da82c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5703be2a_807f927a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-05T19:26:54Z",
+      "side": 1,
+      "message": "That\u0027s ok Mohan, you don\u0027t need to deal with dEQP.\n\nPersonally I don\u0027t mind the fallback. VK_KHR_image_format_list is core in 1.2, but our bots are too old, so we can get some testing at least with the fallback in the meantime. Fallback can be removed in a year IMO.\n\nUnfortunately I have lost track of how all these sRGB extensions interact with each other, so if we can expose sRGB/sRGBR8 but not override/decode and that\u0027s fine, then not exposing override/decode is also ok with me too.",
+      "parentUuid": "7e225000_236c249c",
+      "revId": "457f1bc84676b92ee9e362111983202fef3da82c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d4c61bc3_4b92a3a8",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 432,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-05T19:26:54Z",
+      "side": 1,
+      "message": "Nit: no need to cache this, you can use renderer-\u003egetFeatures().supportsImageFormatList.enabled when needed.",
+      "range": {
+        "startLine": 432,
+        "startChar": 9,
+        "endLine": 432,
+        "endChar": 34
+      },
+      "revId": "457f1bc84676b92ee9e362111983202fef3da82c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
