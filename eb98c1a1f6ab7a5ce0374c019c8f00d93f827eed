@@ -50,6 +50,24 @@
       "message": "Wanna go ahead and enable the extension too? deqp could catch front end bugs earlier.",
       "revId": "eb98c1a1f6ab7a5ce0374c019c8f00d93f827eed",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "638a6c8b_19fedd68",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1567,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-05T13:21:47Z",
+      "side": 1,
+      "message": "There\u0027s a large chunk of it missing actually. The shader compiler stuff is done in another CL. I\u0027ll upload shortly once I fix the bugs.",
+      "parentUuid": "fdd120d7_b9d77ee0",
+      "revId": "eb98c1a1f6ab7a5ce0374c019c8f00d93f827eed",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
