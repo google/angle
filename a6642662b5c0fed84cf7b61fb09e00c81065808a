@@ -18,6 +18,46 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9bcae80f_eafd60e4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-05T13:59:53Z",
+      "side": 1,
+      "message": "Quick question ...",
+      "revId": "a6642662b5c0fed84cf7b61fb09e00c81065808a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "44512f8b_c1d9a848",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1507,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-05T13:59:53Z",
+      "side": 1,
+      "message": "Why not pass aspectFlags?",
+      "range": {
+        "startLine": 1507,
+        "startChar": 46,
+        "endLine": 1507,
+        "endChar": 70
+      },
+      "revId": "a6642662b5c0fed84cf7b61fb09e00c81065808a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b4c9ac9d_464aeac2",
