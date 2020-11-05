@@ -106,6 +106,24 @@
       "parentUuid": "e984ae92_acea9157",
       "revId": "8bfd4f800f0c115a70258cfe208d94c22f14a28a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0f0014fd_528086c0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-05T17:32:41Z",
+      "side": 1,
+      "message": "Another idea is to use gtest_filter to split out Vulkan and OpenGL tests into separate test suites. Yuly\u0027s want to do this for a long time.",
+      "parentUuid": "4ffeda69_57c32a78",
+      "revId": "8bfd4f800f0c115a70258cfe208d94c22f14a28a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
