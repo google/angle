@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "23cce7bb_f76cf201",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2020-11-05T14:35:54Z",
+      "side": 1,
+      "message": "This will break FrameCapture which checks trigger once at the beginning and once each frame.  If you want to go this direction, either restore the old FrameCapture code or create a new function.",
+      "revId": "8bfd4f800f0c115a70258cfe208d94c22f14a28a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
