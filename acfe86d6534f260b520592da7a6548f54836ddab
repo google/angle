@@ -108,6 +108,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "63a2135d_d0d3d2fd",
+        "filename": "src/tests/perf_tests/TracePerfTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 436,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2020-11-05T16:05:38Z",
+      "side": 1,
+      "message": "Hey Jamie, definitely appreciate the quick CL.  It looks functionally fine to me.  The only problem is it looks like a magic recipe to make it work.  Only special combinations of flags will allow exiting early.  I\u0027m just exploring ways to self reinforce that behavior or educate users (including us) on how to use it.  Maybe it could be printed during argument parsing, or as part of help?",
+      "parentUuid": "aaa4eec7_dbf05bd2",
+      "range": {
+        "startLine": 436,
+        "startChar": 8,
+        "endLine": 436,
+        "endChar": 45
+      },
+      "revId": "acfe86d6534f260b520592da7a6548f54836ddab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "3582015b_64f4df12",
         "filename": "src/tests/perf_tests/TracePerfTest.cpp",
         "patchSetId": 3
