@@ -34,6 +34,24 @@
       "parentUuid": "6000678f_d0cb0dca",
       "revId": "83a3740baaae1e40c2d55df77bf1ff02ff207c92",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5854f0cd_e7cf8554",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-05T00:46:24Z",
+      "side": 1,
+      "message": "Add VK_PIPELINE_STAGE_HOST_BIT doesn\u0027t help.   I think the VVL message is worded a bit awkwardly:\n\nHere is the spec language it\u0027s trying to quote:\n\n\u003e The first synchronization scope only includes event signal operations that operate on members of pEvents, and the operations that happened-before the event signal operations. Event signal operations performed by vkCmdSetEvent that occur earlier in submission order are included in the first synchronization scope, if the logically latest pipeline stage in their stageMask parameter is logically earlier than or equal to the logically latest pipeline stage in srcStageMask. Event signal operations performed by vkSetEvent are only included in the first synchronization scope if VK_PIPELINE_STAGE_HOST_BIT is included in srcStageMask.\n\nSo, instead, the VVL message should be something like:\n\nSubmitting cmdbuffer with call to VkCmdWaitEvents using srcStageMask 0x2000 which must be:\n- the bitwise OR of the stageMask parameters used in calls to vkCmdSetEvent\nor\n- VK_PIPELINE_STAGE_HOST_BIT if used with vkSetEvent\nbut instead is 0x0.\n\nThe part I don\u0027t understand is the \"but instead is 0x0\".   As you pointed out, but the vkCmdSetEvent() and vkCmdWaitEvents() are both using VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, so it seems like a bitwise OR would give the same VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT.   vkSetEvent() isn\u0027t being called here, since we aren\u0027t trying to signal the event with the CPU.\n\nI\u0027m not entirely convinced the Vulkan errors are the correct thing to be debugging either though, since I suspect my GLES code is probably not good to begin with.",
+      "parentUuid": "8c68ecc3_f1df6fa8",
+      "revId": "83a3740baaae1e40c2d55df77bf1ff02ff207c92",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
