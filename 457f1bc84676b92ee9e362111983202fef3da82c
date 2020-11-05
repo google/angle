@@ -89,6 +89,23 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a8e0d31a_6353bc4d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-05T19:31:44Z",
+      "side": 1,
+      "message": "OK OK, I think what we need to do here is only block the EGL_colorspace ext if we can\u0027t support format list. Can do that in a follow up if necessary.",
+      "revId": "457f1bc84676b92ee9e362111983202fef3da82c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d4c61bc3_4b92a3a8",
