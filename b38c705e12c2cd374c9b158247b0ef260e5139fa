@@ -54,6 +54,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "2ab00f1d_0ec58e1a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-05T02:16:13Z",
+      "side": 1,
+      "message": "will do",
+      "parentUuid": "0308a27e_d09539c3",
+      "revId": "b38c705e12c2cd374c9b158247b0ef260e5139fa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "a2951710_c804a2d7",
         "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
         "patchSetId": 4
@@ -65,6 +83,30 @@
       "writtenOn": "2020-11-05T00:35:23Z",
       "side": 1,
       "message": "nit: this should just be enabled or disabled. that\u0027s all the texture state has.",
+      "range": {
+        "startLine": 2659,
+        "startChar": 0,
+        "endLine": 2662,
+        "endChar": 75
+      },
+      "revId": "b38c705e12c2cd374c9b158247b0ef260e5139fa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f831aa9b_f2f197d5",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2662,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-05T02:16:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a2951710_c804a2d7",
       "range": {
         "startLine": 2659,
         "startChar": 0,
@@ -124,6 +166,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "39e51e72_bbcae643",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 341,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-05T02:16:13Z",
+      "side": 1,
+      "message": "\u003e you should be able to omit this, they default to false\n\nunfortunately no -\n\n sRGB                                \u003d DetermineSRGBTextureSupport(textureCaps);\n sRGBR8EXT                           \u003d DetermineSRGBR8TextureSupport(textureCaps);\n\n\u003e is this really necessary?\n\nyes, this is because of a deqp bug where they dont check the extensions correctly -\n\n // extension requirements for test\n\tif ( (glu::getInternalFormat(m_internalFormat) \u003d\u003d GL_SRGB8_ALPHA8) \u0026\u0026 !m_context.getContextInfo().isExtensionSupported(\"GL_EXT_texture_sRGB_decode\") )\n\t{\n\t\tthrow tcu::NotSupportedError(\"Test requires GL_EXT_texture_sRGB_decode extension\");\n\t}\n\n\tif ( (glu::getInternalFormat(m_internalFormat) \u003d\u003d GL_SR8_EXT) \u0026\u0026 !(m_context.getContextInfo().isExtensionSupported(\"GL_EXT_texture_sRGB_R8\")) )\n\t{\n\t\tthrow tcu::NotSupportedError(\"Test requires GL_EXT_texture_sRGB_R8 extension\");\n\t}\n\nit doesnt check for \"GL_EXT_texture_sRGB_decode\" if the format is \"GL_SR8_EXT\"",
+      "parentUuid": "944cfe67_ae239ff5",
+      "range": {
+        "startLine": 337,
+        "startChar": 0,
+        "endLine": 341,
+        "endChar": 5
+      },
+      "revId": "b38c705e12c2cd374c9b158247b0ef260e5139fa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "fa9eba25_edf0337e",
         "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
         "patchSetId": 4
@@ -135,6 +201,30 @@
       "writtenOn": "2020-11-05T00:35:23Z",
       "side": 1,
       "message": "see other comment.",
+      "range": {
+        "startLine": 1858,
+        "startChar": 0,
+        "endLine": 1863,
+        "endChar": 0
+      },
+      "revId": "b38c705e12c2cd374c9b158247b0ef260e5139fa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c211c2ef_440e20cd",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 1863,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-05T02:16:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fa9eba25_edf0337e",
       "range": {
         "startLine": 1858,
         "startChar": 0,
