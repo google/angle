@@ -35,6 +35,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4deab201_e7685148",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-05T15:34:45Z",
+      "side": 1,
+      "message": "Probably a missing extension check or something. Will fix.",
+      "parentUuid": "df4dc2b0_104a3a6a",
+      "revId": "a6642662b5c0fed84cf7b61fb09e00c81065808a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "44512f8b_c1d9a848",
@@ -48,6 +66,30 @@
       "writtenOn": "2020-11-05T13:59:53Z",
       "side": 1,
       "message": "Why not pass aspectFlags?",
+      "range": {
+        "startLine": 1507,
+        "startChar": 46,
+        "endLine": 1507,
+        "endChar": 70
+      },
+      "revId": "a6642662b5c0fed84cf7b61fb09e00c81065808a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a3675954_a94c5ce4",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1507,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-05T15:34:45Z",
+      "side": 1,
+      "message": "Because the PBO update may be depth-only, but to a depth/stencil image. We need to transition both aspects, regardless of which aspects are being written to.",
+      "parentUuid": "44512f8b_c1d9a848",
       "range": {
         "startLine": 1507,
         "startChar": 46,
