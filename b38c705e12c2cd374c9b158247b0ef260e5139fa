@@ -238,6 +238,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "66365d7a_1aebfcbb",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 341,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-05T14:29:48Z",
+      "side": 1,
+      "message": "\u003e better to keep exposing the sRGB extensions even without VK_KHR_image_format_list\n\ni am fine with that but will need to bracket calls to refreshImageViews with an if-check since we dont want to be doing that if we have image format ext available. I will cache ext support in a new bool member var and use that for the if-checks",
+      "parentUuid": "2b8d5d9b_9642e386",
+      "range": {
+        "startLine": 337,
+        "startChar": 0,
+        "endLine": 341,
+        "endChar": 5
+      },
+      "revId": "b38c705e12c2cd374c9b158247b0ef260e5139fa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "fa9eba25_edf0337e",
         "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
         "patchSetId": 4
