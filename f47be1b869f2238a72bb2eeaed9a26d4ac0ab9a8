@@ -16,6 +16,24 @@
       "message": "Maybe let\u0027s retry the gold failures a couple times just to make sure it\u0027s not flaky and it\u0027s the same 3 pixels that change.",
       "revId": "f47be1b869f2238a72bb2eeaed9a26d4ac0ab9a8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "20ab2b71_cba9d65f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-05T16:06:37Z",
+      "side": 1,
+      "message": "All 3 runs have the same triage link. I don\u0027t see more than one diff in that link. Either it\u0027s deduplicating identical failures (in which case, proof that this is not flaky) or something is broken.",
+      "parentUuid": "aa9b0868_75ebe393",
+      "revId": "f47be1b869f2238a72bb2eeaed9a26d4ac0ab9a8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
