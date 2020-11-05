@@ -28,7 +28,7 @@ vars = {
   'checkout_angle_internal': False,
 
   # Version of Chromium our Chromium-based DEPS are mirrored from.
-  'chromium_revision': '9c36b5262108479f0a56555e87aee11381c9ea47',
+  'chromium_revision': '3c7580ad595f65d42f762405a3d3efca81ad0452',
   # We never want to checkout chromium,
   # but need a dummy DEPS entry for the autoroller
   'dummy_checkout_chromium': False,
@@ -108,22 +108,22 @@ vars = {
 deps = {
 
   'build': {
-    'url': '{chromium_git}/chromium/src/build.git@465d72166f6de414596b0f877cd975ff0d5e7ce6',
+    'url': '{chromium_git}/chromium/src/build.git@01b3fe480eb42beec3d24d4cdfdfade8013c5d68',
     'condition': 'not build_with_chromium',
   },
 
   'buildtools': {
-    'url': '{chromium_git}/chromium/src/buildtools.git@95fa84e35d66ed7b0739a9d964e8f69f8b22de7e',
+    'url': '{chromium_git}/chromium/src/buildtools.git@b6526d9ad35619f95912a198cb2f69734a1a338b',
     'condition': 'not build_with_chromium',
   },
 
   'testing': {
-    'url': '{chromium_git}/chromium/src/testing@616adef0a3342a126a3c7effff30a04ac38cf5a1',
+    'url': '{chromium_git}/chromium/src/testing@f1516a7e596158711ac5bb30a3be10901bc4027e',
     'condition': 'not build_with_chromium',
   },
 
   'third_party/abseil-cpp': {
-    'url': '{chromium_git}/chromium/src/third_party/abseil-cpp@dbf05506939bd441433060d12ebe68ea6ac810b8',
+    'url': '{chromium_git}/chromium/src/third_party/abseil-cpp@2d8c1340f0350828f1287c4eaeebefcf317bcfc9',
     'condition': 'not build_with_chromium',
   },
 
@@ -198,7 +198,7 @@ deps = {
   },
 
   'third_party/protobuf': {
-    'url': '{chromium_git}/chromium/src/third_party/protobuf@d044036fd85e658918bf9fb58bc0f083945f952f',
+    'url': '{chromium_git}/chromium/src/third_party/protobuf@eedd6353ca8239f3bcefd1143b4a2cc4a0c3b9dd',
     'condition': 'not build_with_chromium',
   },
 
@@ -284,7 +284,7 @@ deps = {
   },
 
   'tools/clang': {
-    'url': '{chromium_git}/chromium/src/tools/clang.git@c37ae578a88ba521b039204504f7968a3c4a6ee7',
+    'url': '{chromium_git}/chromium/src/tools/clang.git@952382f2b0c632ca811a1b2692cd378dd98fe116',
     'condition': 'not build_with_chromium',
   },
 
@@ -319,7 +319,7 @@ deps = {
   },
 
   'tools/mb': {
-    'url': '{chromium_git}/chromium/src/tools/mb@28a51d0a2ee6f31f45f36e85f25f251d247a8e3e',
+    'url': '{chromium_git}/chromium/src/tools/mb@df439267251735b3fe8c3144e1e9cf45c6cd0d9b',
     'condition': 'not build_with_chromium',
   },
 
