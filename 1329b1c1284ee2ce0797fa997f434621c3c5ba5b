@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9d7a05d2_37b40e7f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-06T22:26:29Z",
+      "side": 1,
+      "message": "This change basically separates the part that decides to close the CBs with the part that issues barriers.",
+      "revId": "1329b1c1284ee2ce0797fa997f434621c3c5ba5b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
