@@ -46,6 +46,52 @@
       },
       "revId": "a124ee21d3cc4cfda912669c5733f27d8867b7e3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "aa7aba5f_c2f12317",
+        "filename": "src/compiler/translator/TranslatorMetal.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-06T17:54:51Z",
+      "side": 1,
+      "message": "nit: specialization",
+      "range": {
+        "startLine": 41,
+        "startChar": 24,
+        "endLine": 41,
+        "endChar": 35
+      },
+      "revId": "a124ee21d3cc4cfda912669c5733f27d8867b7e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dd682e62_5798f97f",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 1112,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-06T17:54:51Z",
+      "side": 1,
+      "message": "SH_USE_ROTATION_SPECCONST was removed, so this can be updated/removed too.",
+      "range": {
+        "startLine": 1111,
+        "startChar": 0,
+        "endLine": 1112,
+        "endChar": 60
+      },
+      "revId": "a124ee21d3cc4cfda912669c5733f27d8867b7e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
