@@ -1,6 +1,52 @@
 {
   "comments": [
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "bf55d641_d64296b0",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 18
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-06T17:39:43Z",
+      "side": 1,
+      "message": "typo",
+      "range": {
+        "startLine": 11,
+        "startChar": 20,
+        "endLine": 11,
+        "endChar": 28
+      },
+      "revId": "0b0d7a483a5edc5f8eaf492c3a9cc4198e7b498e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "950144c3_a978d954",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 18
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-06T17:39:43Z",
+      "side": 1,
+      "message": "nit: This allows the driver to optimize for the minimum instructions for rotation.",
+      "range": {
+        "startLine": 11,
+        "startChar": 31,
+        "endLine": 12,
+        "endChar": 41
+      },
+      "revId": "0b0d7a483a5edc5f8eaf492c3a9cc4198e7b498e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "b7e51c2d_6177e176",
@@ -14,6 +60,23 @@
       "writtenOn": "2020-11-06T16:07:40Z",
       "side": 1,
       "message": "LGTM modulo cleanups \u0026 other nits.",
+      "revId": "0b0d7a483a5edc5f8eaf492c3a9cc4198e7b498e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bdbd1220_eb5ae5e5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 18
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-06T17:39:43Z",
+      "side": 1,
+      "message": "Looks good, just some nits/typos.\n\nCan you attach a shader that\u0027s got all of this translation in it so we can see the new GLSL that\u0027s being generated?",
       "revId": "0b0d7a483a5edc5f8eaf492c3a9cc4198e7b498e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
@@ -36,6 +99,52 @@
         "startChar": 23,
         "endLine": 345,
         "endChar": 48
+      },
+      "revId": "0b0d7a483a5edc5f8eaf492c3a9cc4198e7b498e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "981e98c7_5cbf989c",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-06T17:39:43Z",
+      "side": 1,
+      "message": "typo",
+      "range": {
+        "startLine": 121,
+        "startChar": 22,
+        "endLine": 121,
+        "endChar": 23
+      },
+      "revId": "0b0d7a483a5edc5f8eaf492c3a9cc4198e7b498e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0de35117_85ef7e9a",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 225,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-06T17:39:43Z",
+      "side": 1,
+      "message": "typo",
+      "range": {
+        "startLine": 225,
+        "startChar": 69,
+        "endLine": 225,
+        "endChar": 70
       },
       "revId": "0b0d7a483a5edc5f8eaf492c3a9cc4198e7b498e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
@@ -66,6 +175,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "bcd6523f_9973f698",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 243,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-06T17:39:43Z",
+      "side": 1,
+      "message": "typo: multipliersArray",
+      "range": {
+        "startLine": 243,
+        "startChar": 18,
+        "endLine": 243,
+        "endChar": 33
+      },
+      "revId": "0b0d7a483a5edc5f8eaf492c3a9cc4198e7b498e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "71d6b950_6eafda06",
         "filename": "src/compiler/translator/tree_ops/RewriteDfdy.h",
         "patchSetId": 18
@@ -83,6 +215,52 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "4e45e623_c51938ee",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 3455,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-06T17:39:43Z",
+      "side": 1,
+      "message": "nit: specialization",
+      "range": {
+        "startLine": 3455,
+        "startChar": 23,
+        "endLine": 3455,
+        "endChar": 34
+      },
+      "revId": "0b0d7a483a5edc5f8eaf492c3a9cc4198e7b498e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ef4ac622_0914fe38",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 3456,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-06T17:39:43Z",
+      "side": 1,
+      "message": "nit: the shader does",
+      "range": {
+        "startLine": 3456,
+        "startChar": 35,
+        "endLine": 3456,
+        "endChar": 49
+      },
+      "revId": "0b0d7a483a5edc5f8eaf492c3a9cc4198e7b498e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "bf804728_c88be908",
         "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
         "patchSetId": 18
@@ -94,6 +272,30 @@
       "writtenOn": "2020-11-06T16:07:40Z",
       "side": 1,
       "message": "nit: uint32_t if these never need to be negative.",
+      "range": {
+        "startLine": 3460,
+        "startChar": 27,
+        "endLine": 3460,
+        "endChar": 34
+      },
+      "revId": "0b0d7a483a5edc5f8eaf492c3a9cc4198e7b498e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a10de554_343a9e5a",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 3460,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-06T17:39:43Z",
+      "side": 1,
+      "message": "ToUnderlying() should work for all of these too.",
+      "parentUuid": "bf804728_c88be908",
       "range": {
         "startLine": 3460,
         "startChar": 27,
