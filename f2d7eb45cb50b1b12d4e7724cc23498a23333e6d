@@ -33,6 +33,24 @@
       "message": "Bear with me for a while, let me try to figure out bot failure first. Will come back to all your awesome comments later.",
       "revId": "f2d7eb45cb50b1b12d4e7724cc23498a23333e6d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2179d2b4_c8ad9760",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 20
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-06T23:16:59Z",
+      "side": 1,
+      "message": "If you can build cts-tradefed in Android, you can use that to do all of the dEQP testing with rotation.   You may also be able to use Shabi\u0027s emulation stuff to test/debug on desktop.",
+      "parentUuid": "3a9a6dfb_83f2a850",
+      "revId": "f2d7eb45cb50b1b12d4e7724cc23498a23333e6d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
