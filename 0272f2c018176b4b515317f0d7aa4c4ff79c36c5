@@ -3,6 +3,29 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "17f4a56c_9bc88fd7",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1106289
+      },
+      "writtenOn": "2020-11-06T16:16:21Z",
+      "side": 1,
+      "message": "My name is Nicolas Capens and I approve this message.",
+      "range": {
+        "startLine": 7,
+        "startChar": 30,
+        "endLine": 7,
+        "endChar": 45
+      },
+      "revId": "0272f2c018176b4b515317f0d7aa4c4ff79c36c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "7faa6639_82b53673",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 2
