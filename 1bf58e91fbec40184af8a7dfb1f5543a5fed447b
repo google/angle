@@ -34,6 +34,69 @@
       "parentUuid": "52a97eeb_11bbeed0",
       "revId": "1bf58e91fbec40184af8a7dfb1f5543a5fed447b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "14e0709b_51e833cd",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-06T18:31:10Z",
+      "side": 1,
+      "message": "Nice testing. Just a few nit suggestions. There\u0027s quite a few reviewers in your list, so if you want to land this sooner I\u0027d suggest pruning it down.",
+      "revId": "1bf58e91fbec40184af8a7dfb1f5543a5fed447b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "581c2b1f_5b834580",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 653,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-06T18:31:10Z",
+      "side": 1,
+      "message": "This makes a related but somewhat separate change to only set incompatible samplers in WebGL. Can you at least leave a comment indicating this is safe and won\u0027t affect non-WebGL?",
+      "range": {
+        "startLine": 640,
+        "startChar": 0,
+        "endLine": 653,
+        "endChar": 9
+      },
+      "revId": "1bf58e91fbec40184af8a7dfb1f5543a5fed447b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e52cfda5_fa3ea35e",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1879,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-06T18:31:10Z",
+      "side": 1,
+      "message": "nit: getRequiredExternalTextureImageUnits if this is only for external.",
+      "range": {
+        "startLine": 1879,
+        "startChar": 21,
+        "endLine": 1879,
+        "endChar": 49
+      },
+      "revId": "1bf58e91fbec40184af8a7dfb1f5543a5fed447b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
