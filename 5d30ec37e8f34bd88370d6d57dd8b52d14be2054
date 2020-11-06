@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "769ea07f_c43811d5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-06T13:13:21Z",
+      "side": 1,
+      "message": "LGTM, this changes the Vulkan stream slightly?",
+      "revId": "5d30ec37e8f34bd88370d6d57dd8b52d14be2054",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
