@@ -16,6 +16,46 @@
       "message": "PTAL",
       "revId": "f110cb78d59b6a85c1ecd29ceefe728e671a9d01",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e8cce402_42f54e81",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 314,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-06T15:42:34Z",
+      "side": 1,
+      "message": "nit: {}",
+      "range": {
+        "startLine": 314,
+        "startChar": 8,
+        "endLine": 314,
+        "endChar": 20
+      },
+      "revId": "f110cb78d59b6a85c1ecd29ceefe728e671a9d01",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "49b471d2_54add731",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1580,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-06T15:42:34Z",
+      "side": 1,
+      "message": "nit: Duplicated line",
+      "revId": "f110cb78d59b6a85c1ecd29ceefe728e671a9d01",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
