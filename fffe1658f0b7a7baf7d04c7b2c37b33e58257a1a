@@ -16,6 +16,52 @@
       "message": "I changed the fix to be a workaround.",
       "revId": "fffe1658f0b7a7baf7d04c7b2c37b33e58257a1a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "932d44df_534b3f96",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1485,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-06T13:45:47Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 1485,
+        "startChar": 40,
+        "endLine": 1485,
+        "endChar": 49
+      },
+      "revId": "fffe1658f0b7a7baf7d04c7b2c37b33e58257a1a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1cbb1994_3a689b00",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 554,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-06T13:45:47Z",
+      "side": 1,
+      "message": "nit: use ANGLE style: const ContextVk *",
+      "range": {
+        "startLine": 554,
+        "startChar": 22,
+        "endLine": 554,
+        "endChar": 48
+      },
+      "revId": "fffe1658f0b7a7baf7d04c7b2c37b33e58257a1a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
