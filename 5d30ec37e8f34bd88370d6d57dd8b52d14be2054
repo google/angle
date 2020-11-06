@@ -34,6 +34,24 @@
       "parentUuid": "769ea07f_c43811d5",
       "revId": "5d30ec37e8f34bd88370d6d57dd8b52d14be2054",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2cd56175_cccf2343",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-06T15:43:53Z",
+      "side": 1,
+      "message": "I wasn\u0027t sure, because the gold image had imperceptible differences. Not sure if the gold image is wrong for Intel.",
+      "parentUuid": "8ecf3fc0_db118d78",
+      "revId": "5d30ec37e8f34bd88370d6d57dd8b52d14be2054",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
