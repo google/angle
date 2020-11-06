@@ -84,6 +84,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "c158ef53_446e0fa8",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 810,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-06T15:07:22Z",
+      "side": 1,
+      "message": "Looking back, maybe not. Neither glTex[Sub]Image nor glCopy[Sub]Texture work on depth/stencil textures.",
+      "parentUuid": "e3ad9237_9b841a6a",
+      "range": {
+        "startLine": 807,
+        "startChar": 45,
+        "endLine": 810,
+        "endChar": 71
+      },
+      "revId": "0970586cda1437936353d7729c97bd26c826eec4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "296a2662_57083b4f",
         "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
         "patchSetId": 1
