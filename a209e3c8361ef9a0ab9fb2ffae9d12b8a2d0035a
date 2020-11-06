@@ -16,6 +16,23 @@
       "message": "PTAL",
       "revId": "a209e3c8361ef9a0ab9fb2ffae9d12b8a2d0035a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "41e2127d_83ab434e",
+        "filename": "src/tests/perf_tests/ANGLEPerfTestArgs.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1463997
+      },
+      "writtenOn": "2020-11-06T17:43:19Z",
+      "side": 1,
+      "message": "Could we instead set to 0, and make it so when gTestTimeSeconds is 0, we have no time limit? I think some folks might want to run stuff very slowly and/or pause it in a debugger, etc., so this would be more robust.",
+      "revId": "a209e3c8361ef9a0ab9fb2ffae9d12b8a2d0035a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
