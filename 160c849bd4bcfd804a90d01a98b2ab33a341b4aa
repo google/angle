@@ -145,6 +145,24 @@
       "parentUuid": "3ebe292d_b16dd6ec",
       "revId": "160c849bd4bcfd804a90d01a98b2ab33a341b4aa",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d0b6004b_05e7255f",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 687,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-06T22:01:50Z",
+      "side": 1,
+      "message": "It does because you set specializationInfoOut-\u003epData to a pointer to this struct.",
+      "parentUuid": "8d73d028_cb0315d0",
+      "revId": "160c849bd4bcfd804a90d01a98b2ab33a341b4aa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
