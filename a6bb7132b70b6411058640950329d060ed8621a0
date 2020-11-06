@@ -106,6 +106,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "3476cdb1_77addf50",
+        "filename": "util/posix/crash_handler_posix.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-06T15:20:49Z",
+      "side": 1,
+      "message": "My recommendation. system() has to parse the command line argument, which 1) it doesn\u0027t have to, we have them split already, and 2) can get into all sorts of trouble with quotations.",
+      "parentUuid": "9b78c2c5_910bd8c5",
+      "range": {
+        "startLine": 132,
+        "startChar": 8,
+        "endLine": 142,
+        "endChar": 12
+      },
+      "revId": "a6bb7132b70b6411058640950329d060ed8621a0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "e34ab622_53bf5088",
         "filename": "util/posix/crash_handler_posix.cpp",
         "patchSetId": 4
