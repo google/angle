@@ -78,6 +78,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "b50fdbb2_5a82eb92",
+        "filename": "scripts/registry_xml.py",
+        "patchSetId": 9
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-06T18:46:14Z",
+      "side": 1,
+      "message": "It should yes, good catch.",
+      "parentUuid": "4823d1b2_1f0d1066",
+      "range": {
+        "startLine": 100,
+        "startChar": 5,
+        "endLine": 100,
+        "endChar": 22
+      },
+      "revId": "1bf58e91fbec40184af8a7dfb1f5543a5fed447b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "581c2b1f_5b834580",
         "filename": "src/libANGLE/State.cpp",
         "patchSetId": 9
