@@ -16,6 +16,52 @@
       "message": "PTAL\n\nThis version CDs back to the original CWD.",
       "revId": "a6bb7132b70b6411058640950329d060ed8621a0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "906aaf5b_b0a723c6",
+        "filename": "src/common/system_utils_posix.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-06T04:13:40Z",
+      "side": 1,
+      "message": "nit: \"\"",
+      "range": {
+        "startLine": 23,
+        "startChar": 37,
+        "endLine": 23,
+        "endChar": 43
+      },
+      "revId": "a6bb7132b70b6411058640950329d060ed8621a0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e34ab622_53bf5088",
+        "filename": "util/posix/crash_handler_posix.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 155,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-06T04:13:40Z",
+      "side": 1,
+      "message": "These are fixed-length arrays, so I suggest std::array instead of std::vector.",
+      "range": {
+        "startLine": 145,
+        "startChar": 0,
+        "endLine": 155,
+        "endChar": 37
+      },
+      "revId": "a6bb7132b70b6411058640950329d060ed8621a0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
