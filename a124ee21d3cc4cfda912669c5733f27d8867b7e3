@@ -22,6 +22,30 @@
       },
       "revId": "a124ee21d3cc4cfda912669c5733f27d8867b7e3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b371b174_5dc43065",
+        "filename": "src/compiler/translator/TranslatorMetal.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 244,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2020-11-06T10:22:03Z",
+      "side": 1,
+      "message": "i suggest using the old createAdditionalGraphicsDriverUniformFields() method to add flipping fields to the driver uniforms. Since these fields now are moved to the end of the driver uniforms struct, we need to update Metal backend also (ContextMtl.h).\nThis requires some minor changes in Metal backend but it is cleaner approach imo.",
+      "parentUuid": "ad48f375_9776becb",
+      "range": {
+        "startLine": 243,
+        "startChar": 0,
+        "endLine": 244,
+        "endChar": 94
+      },
+      "revId": "a124ee21d3cc4cfda912669c5733f27d8867b7e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
