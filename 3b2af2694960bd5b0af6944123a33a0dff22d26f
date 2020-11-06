@@ -39,6 +39,30 @@
       },
       "revId": "3b2af2694960bd5b0af6944123a33a0dff22d26f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "353fab0d_bb5823c2",
+        "filename": "src/tests/BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 1346,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-06T15:11:51Z",
+      "side": 1,
+      "message": "This will generate angle_deqp_rotate90_gles3_tests similarly to angle_deqp_khr_gles3_tests. It\u0027s consistent with the naming of the khr executables. Maybe you missed that it\u0027s using the `angle_deqp_core_gtest` template?",
+      "parentUuid": "182e6d2c_54970bec",
+      "range": {
+        "startLine": 1346,
+        "startChar": 25,
+        "endLine": 1346,
+        "endChar": 39
+      },
+      "revId": "3b2af2694960bd5b0af6944123a33a0dff22d26f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
