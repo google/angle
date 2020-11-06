@@ -87,6 +87,30 @@
       },
       "revId": "3b2af2694960bd5b0af6944123a33a0dff22d26f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "51d10a62_6fde4afb",
+        "filename": "src/tests/BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 1346,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-06T15:27:18Z",
+      "side": 1,
+      "message": "Yeap, that will be on the follow up change in chromium",
+      "parentUuid": "ba85d4f1_5e9f10ed",
+      "range": {
+        "startLine": 1346,
+        "startChar": 25,
+        "endLine": 1346,
+        "endChar": 39
+      },
+      "revId": "3b2af2694960bd5b0af6944123a33a0dff22d26f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
