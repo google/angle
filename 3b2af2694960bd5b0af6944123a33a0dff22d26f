@@ -111,6 +111,30 @@
       },
       "revId": "3b2af2694960bd5b0af6944123a33a0dff22d26f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7246ce74_c2067376",
+        "filename": "src/tests/BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 1346,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2020-11-06T15:30:43Z",
+      "side": 1,
+      "message": "Hmm, no clear direction to take here.\nTest names follow KHR-GLES32.* pattern, while mustpass files are named gles32-khr-master.\nAs long as we are consistent, I\u0027m fine either way.",
+      "parentUuid": "353fab0d_bb5823c2",
+      "range": {
+        "startLine": 1346,
+        "startChar": 25,
+        "endLine": 1346,
+        "endChar": 39
+      },
+      "revId": "3b2af2694960bd5b0af6944123a33a0dff22d26f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
