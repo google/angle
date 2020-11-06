@@ -22,6 +22,30 @@
       },
       "revId": "e70b1527e69f65af44044b4856761a9cb32df91e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ec17a564_8e49b860",
+        "filename": "scripts/roll_aosp.sh",
+        "patchSetId": 2
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2020-11-06T18:58:14Z",
+      "side": 1,
+      "message": "Have a suggestion on a better way to do it? We\u0027d have to check if each file exists before trying to remove it (possible) but also I find that rm\u0027ing .git directories requires a -f due to all the write protected files.",
+      "parentUuid": "bd20f207_c52da71a",
+      "range": {
+        "startLine": 59,
+        "startChar": 0,
+        "endLine": 60,
+        "endChar": 29
+      },
+      "revId": "e70b1527e69f65af44044b4856761a9cb32df91e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
