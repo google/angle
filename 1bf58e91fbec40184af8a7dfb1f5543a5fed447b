@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "52a97eeb_11bbeed0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-06T15:53:56Z",
+      "side": 1,
+      "message": "What API version is Pixel2? I wonder if we can just require API 29 (if P2 \u003e\u003d 29, for the bots) and avoid #if\u0027ing on the version.",
+      "revId": "1bf58e91fbec40184af8a7dfb1f5543a5fed447b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
