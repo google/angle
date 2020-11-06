@@ -106,6 +106,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "2a88a5ef_9f3e1550",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 480,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-06T15:59:33Z",
+      "side": 1,
+      "message": "three bits*",
+      "parentUuid": "d36222c9_487cd814",
+      "range": {
+        "startLine": 466,
+        "startChar": 0,
+        "endLine": 480,
+        "endChar": 6
+      },
+      "revId": "084645bf20512ef10997f16567eda08cae656db5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "36cbeb01_74eaf6cb",
         "filename": "src/libANGLE/renderer/vulkan/vk_utils.h",
         "patchSetId": 10
