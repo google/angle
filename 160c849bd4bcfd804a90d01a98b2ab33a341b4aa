@@ -41,6 +41,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c59b2112_05c1713e",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 3464,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-06T19:59:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e7bae528_a02c06b9",
+      "range": {
+        "startLine": 3464,
+        "startChar": 20,
+        "endLine": 3464,
+        "endChar": 26
+      },
+      "revId": "160c849bd4bcfd804a90d01a98b2ab33a341b4aa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ef395ccd_8716ca4d",
@@ -64,6 +88,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "724e636f_2d9dcb74",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 480,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-06T19:59:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ef395ccd_8716ca4d",
+      "range": {
+        "startLine": 466,
+        "startChar": 0,
+        "endLine": 480,
+        "endChar": 6
+      },
+      "revId": "160c849bd4bcfd804a90d01a98b2ab33a341b4aa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3ebe292d_b16dd6ec",
@@ -77,6 +125,24 @@
       "writtenOn": "2020-11-05T19:52:14Z",
       "side": 1,
       "message": "Suggest enabling that warning that makes sure no padding is added.",
+      "revId": "160c849bd4bcfd804a90d01a98b2ab33a341b4aa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8d73d028_cb0315d0",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 687,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-06T19:59:29Z",
+      "side": 1,
+      "message": "Padding really doesn\u0027t matter, since the offset calculation is using offsetof(). But I have added warning here.",
+      "parentUuid": "3ebe292d_b16dd6ec",
       "revId": "160c849bd4bcfd804a90d01a98b2ab33a341b4aa",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
