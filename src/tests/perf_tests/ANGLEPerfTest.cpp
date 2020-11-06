@@ -91,9 +91,12 @@ angle::TraceEventHandle AddPerfTraceEvent(angle::PlatformMethods *platform,
                   "|enabled| must be the first field of the TraceCategory class.");
     const TraceCategory *category = reinterpret_cast<const TraceCategory *>(categoryEnabledFlag);
 
-    ANGLERenderTest *renderTest     = static_cast<ANGLERenderTest *>(platform->context);
+    ANGLERenderTest *renderTest = static_cast<ANGLERenderTest *>(platform->context);
+
+    uint32_t tid = renderTest->getCurrentThreadSerial();
+
     std::vector<TraceEvent> &buffer = renderTest->getTraceEventBuffer();
-    buffer.emplace_back(phase, category->name, name, timestamp);
+    buffer.emplace_back(phase, category->name, name, timestamp, tid);
     return buffer.size();
 }
 
@@ -173,7 +176,7 @@ void DumpTraceEventsToJSONFile(const std::vector<TraceEvent> &traceEvents,
         value.AddMember("ph", std::string(1, traceEvent.phase), allocator);
         value.AddMember("ts", microseconds, allocator);
         value.AddMember("pid", pidName, allocator);
-        value.AddMember("tid", 1, allocator);
+        value.AddMember("tid", traceEvent.tid, allocator);
 
         events.PushBack(value, allocator);
     }
@@ -194,8 +197,9 @@ void DumpTraceEventsToJSONFile(const std::vector<TraceEvent> &traceEvents,
 TraceEvent::TraceEvent(char phaseIn,
                        const char *categoryNameIn,
                        const char *nameIn,
-                       double timestampIn)
-    : phase(phaseIn), categoryName(categoryNameIn), name{}, timestamp(timestampIn), tid(1)
+                       double timestampIn,
+                       uint32_t tidIn)
+    : phase(phaseIn), categoryName(categoryNameIn), name{}, timestamp(timestampIn), tid(tidIn)
 {
     ASSERT(strlen(nameIn) < kMaxNameLen);
     strcpy(name, nameIn);
@@ -745,7 +749,8 @@ void ANGLERenderTest::beginInternalTraceEvent(const char *name)
     if (gEnableTrace)
     {
         mTraceEventBuffer.emplace_back(TRACE_EVENT_PHASE_BEGIN, gTraceCategories[0].name, name,
-                                       MonotonicallyIncreasingTime(&mPlatformMethods));
+                                       MonotonicallyIncreasingTime(&mPlatformMethods),
+                                       getCurrentThreadSerial());
     }
 }
 
@@ -754,7 +759,8 @@ void ANGLERenderTest::endInternalTraceEvent(const char *name)
     if (gEnableTrace)
     {
         mTraceEventBuffer.emplace_back(TRACE_EVENT_PHASE_END, gTraceCategories[0].name, name,
-                                       MonotonicallyIncreasingTime(&mPlatformMethods));
+                                       MonotonicallyIncreasingTime(&mPlatformMethods),
+                                       getCurrentThreadSerial());
     }
 }
 
@@ -763,7 +769,7 @@ void ANGLERenderTest::beginGLTraceEvent(const char *name, double hostTimeSec)
     if (gEnableTrace)
     {
         mTraceEventBuffer.emplace_back(TRACE_EVENT_PHASE_BEGIN, gTraceCategories[1].name, name,
-                                       hostTimeSec);
+                                       hostTimeSec, getCurrentThreadSerial());
     }
 }
 
@@ -772,7 +778,7 @@ void ANGLERenderTest::endGLTraceEvent(const char *name, double hostTimeSec)
     if (gEnableTrace)
     {
         mTraceEventBuffer.emplace_back(TRACE_EVENT_PHASE_END, gTraceCategories[1].name, name,
-                                       hostTimeSec);
+                                       hostTimeSec, getCurrentThreadSerial());
     }
 }
 
@@ -916,6 +922,22 @@ void ANGLERenderTest::onErrorMessage(const char *errorMessage)
 {
     abortTest();
     FAIL() << "Failing test because of unexpected internal ANGLE error:\n" << errorMessage << "\n";
+}
+
+uint32_t ANGLERenderTest::getCurrentThreadSerial()
+{
+    std::thread::id id = std::this_thread::get_id();
+
+    for (uint32_t serial = 0; serial < static_cast<uint32_t>(mThreadIDs.size()); ++serial)
+    {
+        if (mThreadIDs[serial] == id)
+        {
+            return serial + 1;
+        }
+    }
+
+    mThreadIDs.push_back(id);
+    return static_cast<uint32_t>(mThreadIDs.size());
 }
 
 namespace angle

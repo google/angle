@@ -13,6 +13,7 @@
 #include <gtest/gtest.h>
 
 #include <string>
+#include <thread>
 #include <unordered_map>
 #include <vector>
 
@@ -43,7 +44,11 @@ class Event;
 struct TraceEvent final
 {
     TraceEvent() {}
-    TraceEvent(char phaseIn, const char *categoryNameIn, const char *nameIn, double timestampIn);
+    TraceEvent(char phaseIn,
+               const char *categoryNameIn,
+               const char *nameIn,
+               double timestampIn,
+               uint32_t tidIn);
 
     static constexpr uint32_t kMaxNameLen = 64;
 
@@ -165,6 +170,8 @@ class ANGLERenderTest : public ANGLEPerfTest
     virtual void overrideWorkaroundsD3D(angle::FeaturesD3D *featuresD3D) {}
     void onErrorMessage(const char *errorMessage);
 
+    uint32_t getCurrentThreadSerial();
+
   protected:
     const RenderTestParams &mTestParams;
 
@@ -215,6 +222,8 @@ class ANGLERenderTest : public ANGLEPerfTest
 
     // Handle to the entry point binding library.
     std::unique_ptr<angle::Library> mEntryPointsLib;
+
+    std::vector<std::thread::id> mThreadIDs;
 };
 
 // Mixins.
