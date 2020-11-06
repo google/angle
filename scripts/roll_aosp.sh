@@ -139,5 +139,3 @@ done
 
 # Done with depot_tools
 rm -rf $DEPOT_TOOLS_DIR
-
-git commit --amend --no-edit
