@@ -26,13 +26,17 @@
 #include <iostream>
 #include <sstream>
 
-#include <json/json.h>
+#include <rapidjson/document.h>
+#include <rapidjson/filewritestream.h>
+#include <rapidjson/istreamwrapper.h>
+#include <rapidjson/prettywriter.h>
 
 #if defined(ANGLE_USE_UTIL_LOADER) && defined(ANGLE_PLATFORM_WINDOWS)
 #    include "util/windows/WGLWindow.h"
 #endif  // defined(ANGLE_USE_UTIL_LOADER) &&defined(ANGLE_PLATFORM_WINDOWS)
 
 using namespace angle;
+namespace js = rapidjson;
 
 namespace
 {
@@ -124,39 +128,66 @@ double MonotonicallyIncreasingTime(angle::PlatformMethods *platform)
     return GetHostTimeSeconds();
 }
 
+bool WriteJsonFile(const std::string &outputFile, js::Document *doc)
+{
+    FILE *fp = fopen(outputFile.c_str(), "w");
+    if (!fp)
+    {
+        return false;
+    }
+
+    constexpr size_t kBufferSize = 0xFFFF;
+    std::vector<char> writeBuffer(kBufferSize);
+    js::FileWriteStream os(fp, writeBuffer.data(), kBufferSize);
+    js::PrettyWriter<js::FileWriteStream> writer(os);
+    if (!doc->Accept(writer))
+    {
+        fclose(fp);
+        return false;
+    }
+    fclose(fp);
+    return true;
+}
+
 void DumpTraceEventsToJSONFile(const std::vector<TraceEvent> &traceEvents,
                                const char *outputFileName)
 {
-    Json::Value eventsValue(Json::arrayValue);
+    js::Document doc(js::kObjectType);
+    js::Document::AllocatorType &allocator = doc.GetAllocator();
+
+    js::Value events(js::kArrayType);
 
     for (const TraceEvent &traceEvent : traceEvents)
     {
-        Json::Value value(Json::objectValue);
+        js::Value value(js::kObjectType);
 
-        const auto microseconds = static_cast<Json::LargestInt>(traceEvent.timestamp) * 1000 * 1000;
+        const uint64_t microseconds = static_cast<uint64_t>(traceEvent.timestamp * 1000.0 * 1000.0);
 
-        value["name"] = traceEvent.name;
-        value["cat"]  = traceEvent.categoryName;
-        value["ph"]   = std::string(1, traceEvent.phase);
-        value["ts"]   = microseconds;
-        value["pid"]  = strcmp(traceEvent.categoryName, "gpu.angle.gpu") == 0 ? "GPU" : "ANGLE";
-        value["tid"]  = 1;
+        js::Document::StringRefType eventName(traceEvent.name);
+        js::Document::StringRefType categoryName(traceEvent.categoryName);
+        js::Document::StringRefType pidName(
+            strcmp(traceEvent.categoryName, "gpu.angle.gpu") == 0 ? "GPU" : "ANGLE");
 
-        eventsValue.append(std::move(value));
+        value.AddMember("name", eventName, allocator);
+        value.AddMember("cat", categoryName, allocator);
+        value.AddMember("ph", std::string(1, traceEvent.phase), allocator);
+        value.AddMember("ts", microseconds, allocator);
+        value.AddMember("pid", pidName, allocator);
+        value.AddMember("tid", 1, allocator);
+
+        events.PushBack(value, allocator);
     }
 
-    Json::Value root(Json::objectValue);
-    root["traceEvents"] = eventsValue;
+    doc.AddMember("traceEvents", events, allocator);
 
-    std::ofstream outFile;
-    outFile.open(outputFileName);
-
-    Json::StreamWriterBuilder factory;
-    std::unique_ptr<Json::StreamWriter> const writer(factory.newStreamWriter());
-    std::ostringstream stream;
-    writer->write(root, &outFile);
-
-    outFile.close();
+    if (WriteJsonFile(outputFileName, &doc))
+    {
+        printf("Wrote trace file to %s\n", outputFileName);
+    }
+    else
+    {
+        printf("Error writing trace file to %s\n", outputFileName);
+    }
 }
 }  // anonymous namespace
 

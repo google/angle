@@ -249,7 +249,6 @@ template("angle_perftests_common") {
       "test_utils/runner/HistogramWriter.h",
       "test_utils/runner/TestSuite.h",
     ]
-    deps = [ "$angle_jsoncpp_dir:jsoncpp" ]
     public_deps = [
       "$angle_root/third_party/rapidjson:rapidjson",
       "${invoker.test_utils}",
