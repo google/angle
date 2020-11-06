@@ -6,6 +6,18 @@
 #
 # Generates a roll CL within the ANGLE repository of AOSP.
 
+# exit when any command fails
+set -e
+
+# Change the working directory to the script's directory
+cd "${0%/*}"
+
+# Check out depot_tools locally and add it to the path
+DEPOT_TOOLS_DIR=_depot_tools
+rm -rf ${DEPOT_TOOLS_DIR}
+git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git ${DEPOT_TOOLS_DIR}
+export PATH=`pwd`/${DEPOT_TOOLS_DIR}:$PATH
+
 GN_OUTPUT_DIRECTORY=out/Android
 
 deps=(
@@ -124,5 +136,8 @@ done
 for dep in ${deps[@]} ${add_only_deps[@]}; do
    git add -f $dep
 done
+
+# Done with depot_tools
+rm -rf $DEPOT_TOOLS_DIR
 
 git commit --amend --no-edit
