@@ -9,8 +9,8 @@
 # exit when any command fails
 set -e
 
-# Change the working directory to the script's directory
-cd "${0%/*}"
+# Change the working directory to the ANGLE root directory
+cd "${0%/*}/.."
 
 # Check out depot_tools locally and add it to the path
 DEPOT_TOOLS_DIR=_depot_tools
