@@ -16,6 +16,115 @@
       "message": "Thanks Shabi, will address the feedback after others commented.",
       "revId": "084645bf20512ef10997f16567eda08cae656db5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bd975687_35a185db",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 10
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-06T15:59:08Z",
+      "side": 1,
+      "message": "Looks good except the union \u0026 a few minor cleanups. If you get stuck on the union thing, let me know what the blocker is, I think we can resolve it.",
+      "revId": "084645bf20512ef10997f16567eda08cae656db5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a2f74e37_796158ec",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramExecutableVk.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-06T15:59:08Z",
+      "side": 1,
+      "message": "nit: avoid the anonymous struct. no need for it and it clashes with our other bit packing patterns.",
+      "range": {
+        "startLine": 53,
+        "startChar": 0,
+        "endLine": 59,
+        "endChar": 6
+      },
+      "revId": "084645bf20512ef10997f16567eda08cae656db5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "27ad9633_64232075",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramExecutableVk.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-06T15:59:08Z",
+      "side": 1,
+      "message": "nit: \"Program\" is redundant since you\u0027re always scoped to ProgramTransformOptions. can remove it.",
+      "range": {
+        "startLine": 60,
+        "startChar": 30,
+        "endLine": 60,
+        "endChar": 54
+      },
+      "revId": "084645bf20512ef10997f16567eda08cae656db5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d36222c9_487cd814",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 480,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-06T15:59:08Z",
+      "side": 1,
+      "message": "this clashes with ANGLE\u0027s code style. pull two bits off of the compare op instead of using a union. try to avoid unions if possible. don\u0027t worry about microscopic nano-optimizations for pulling bits off for the transition mask.",
+      "range": {
+        "startLine": 466,
+        "startChar": 0,
+        "endLine": 480,
+        "endChar": 6
+      },
+      "revId": "084645bf20512ef10997f16567eda08cae656db5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "36cbeb01_74eaf6cb",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 689,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-06T15:59:08Z",
+      "side": 1,
+      "message": "nit: either make these private or make this a struct. You can use inline init instead of the constructor.",
+      "range": {
+        "startLine": 688,
+        "startChar": 0,
+        "endLine": 689,
+        "endChar": 29
+      },
+      "revId": "084645bf20512ef10997f16567eda08cae656db5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
