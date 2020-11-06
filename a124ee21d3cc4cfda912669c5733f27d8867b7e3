@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ad48f375_9776becb",
+        "filename": "src/compiler/translator/TranslatorMetal.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 244,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2020-11-06T07:54:19Z",
+      "side": 1,
+      "message": "Why do you need to duplicate the whole TranslatorVulkan::AddGraphicsDriverUniformsToShader method?\nI would use the old createAdditionalGraphicsDriverUniformFields() and just add \"flipXY\" \u0026 \"negFlipXY\" to fieldsOut. createAdditionalGraphicsDriverUniformFields() adds Metal specific fields to driver uniforms. The rest of driver uniform fields can still be shared between vulkan and metal.\n\nIMO whatever fields are needed in TranslatorVulkan.cpp should be kept there, we shouldn\u0027t have a duplicated declaration here. Otherwise everytime you change some driver uniform specific code in TranslatorVulkan.cpp, you would have to change TranslatorMetal.cpp as well. For example, in future, some one might decide to remove `kViewport` and its related code from TranslatorVulkan.cpp, they would have to remove it from TranslatorMetal.cpp also.",
+      "range": {
+        "startLine": 243,
+        "startChar": 0,
+        "endLine": 244,
+        "endChar": 94
+      },
+      "revId": "a124ee21d3cc4cfda912669c5733f27d8867b7e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
