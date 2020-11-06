@@ -70,6 +70,30 @@
       },
       "revId": "e70b1527e69f65af44044b4856761a9cb32df91e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a8b6a680_0ea6afcd",
+        "filename": "scripts/roll_aosp.sh",
+        "patchSetId": 2
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2020-11-06T21:46:41Z",
+      "side": 1,
+      "message": "If the error is just non-existent files, not permissions problems, you can disable error checking before running rm, then restore it afterwards:\n\n set +e\n rm foo\n set -e\n\nYou can also run the command with `|| true` to avoid exiting:\n\n rm foo || true\n\nA couple more ideas in the thread below.\n* You could use find with the -delete option.\n* You could touch non-existent files before attempting to delete.\nhttps://unix.stackexchange.com/questions/280067/have-rm-not-report-when-a-file-is-missing",
+      "parentUuid": "8db95f47_57382b08",
+      "range": {
+        "startLine": 59,
+        "startChar": 0,
+        "endLine": 60,
+        "endChar": 29
+      },
+      "revId": "e70b1527e69f65af44044b4856761a9cb32df91e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
