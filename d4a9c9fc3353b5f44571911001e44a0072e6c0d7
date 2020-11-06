@@ -34,6 +34,24 @@
       "parentUuid": "1ec06f61_4f6979de",
       "revId": "d4a9c9fc3353b5f44571911001e44a0072e6c0d7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4972dab2_8cc84883",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-06T19:01:43Z",
+      "side": 1,
+      "message": "No luck:\n\n        static char resolvedPath[PATH_MAX];\n        realpath(module.c_str(), resolvedPath);\n        std::cout \u003c\u003c \"TIMTIM \u003e\u003e module.c_str() \u003d \u0027\" \u003c\u003c module.c_str() \u003c\u003c \"\u0027\" \u003c\u003c std::endl;\n        std::cout \u003c\u003c \"TIMTIM \u003e\u003e resolvedPath \u003d \u0027\" \u003c\u003c resolvedPath \u003c\u003c \"\u0027\" \u003c\u003c std::endl;\n\n...\n\n    TIMTIM \u003e\u003e module.c_str() \u003d \u0027././libvk_swiftshader.so\u0027\n    TIMTIM \u003e\u003e resolvedPath \u003d \u0027/home/timvp/code/angle/libvk_swiftshader.so\u0027\n    /usr/bin/addr2line: \u0027/home/timvp/code/angle/libvk_swiftshader.so\u0027: No such file\n\n    TIMTIM \u003e\u003e module.c_str() \u003d \u0027angledata/../libVkLayer_khronos_validation.so\u0027\n    TIMTIM \u003e\u003e resolvedPath \u003d \u0027/home/timvp/code/angle/angledata\u0027\n    /usr/bin/addr2line: \u0027/home/timvp/code/angle/angledata\u0027: No such file\n\n...\n\n    timvp@timvp-glaptop:~/code/angle$ fd libvk_swiftshader.so\n    out/LinuxDebug/libvk_swiftshader.so\n    timvp@timvp-glaptop:~/code/angle$ fd libVkLayer_khronos_validation.so\n    out/LinuxDebug/libVkLayer_khronos_validation.so\n\nSeems to be something special about when/how those libraries are loaded.",
+      "parentUuid": "2c8a0f1f_5cf3f69e",
+      "revId": "d4a9c9fc3353b5f44571911001e44a0072e6c0d7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
