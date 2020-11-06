@@ -87,6 +87,30 @@
       },
       "revId": "6598b09e957ea7002f0af2e7f73b99a25212e750",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c65dd958_4de154e5",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 2016,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-06T21:32:12Z",
+      "side": 1,
+      "message": "i changed the order of the \"SrgbOverride\" enum and restricted the bitfield to a subset of values of that class",
+      "parentUuid": "87c571ca_5f49a058",
+      "range": {
+        "startLine": 2016,
+        "startChar": 52,
+        "endLine": 2016,
+        "endChar": 76
+      },
+      "revId": "6598b09e957ea7002f0af2e7f73b99a25212e750",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
