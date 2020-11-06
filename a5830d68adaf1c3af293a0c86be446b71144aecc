@@ -33,6 +33,46 @@
       "message": "LGTM, this test causes the crash?\n\nYou can merge this CL with the fix if you like.",
       "revId": "a5830d68adaf1c3af293a0c86be446b71144aecc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5c0a8abe_62d28ac5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-06T18:11:38Z",
+      "side": 1,
+      "message": "LGTM, non-blocking nit.",
+      "revId": "a5830d68adaf1c3af293a0c86be446b71144aecc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4e6c7c02_96afb8eb",
+        "filename": "src/tests/gl_tests/ImageTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3088,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-06T18:11:38Z",
+      "side": 1,
+      "message": "nit: still would be good to verify the data has the expected colors.",
+      "range": {
+        "startLine": 3085,
+        "startChar": 0,
+        "endLine": 3088,
+        "endChar": 0
+      },
+      "revId": "a5830d68adaf1c3af293a0c86be446b71144aecc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
