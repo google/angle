@@ -88,6 +88,24 @@
       "parentUuid": "7d19c3c8_21eb2002",
       "revId": "83a3740baaae1e40c2d55df77bf1ff02ff207c92",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d3d5bbaa_7617aa15",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-06T04:18:43Z",
+      "side": 1,
+      "message": "Is that a GL requirement, or a VANGLE bug?",
+      "parentUuid": "a8299320_27a3041a",
+      "revId": "83a3740baaae1e40c2d55df77bf1ff02ff207c92",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
