@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "31f8126d_f8282f92",
+        "filename": "src/libANGLE/FrameCapture.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2393,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-11-06T16:20:00Z",
+      "side": 1,
+      "message": "Do we need to unbind anything?",
+      "revId": "c2c63187237982b65bcb256a2b898cbe7e3a901d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
