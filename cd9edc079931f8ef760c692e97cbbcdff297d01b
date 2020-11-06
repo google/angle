@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5a8e1ad8_7e9b23d4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1298773
+      },
+      "writtenOn": "2020-11-06T14:41:54Z",
+      "side": 1,
+      "message": "I think I know what the issue is. Turning on depth clamping will disable depth clipping.",
+      "revId": "cd9edc079931f8ef760c692e97cbbcdff297d01b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
