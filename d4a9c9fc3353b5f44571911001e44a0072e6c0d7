@@ -52,6 +52,24 @@
       "parentUuid": "2c8a0f1f_5cf3f69e",
       "revId": "d4a9c9fc3353b5f44571911001e44a0072e6c0d7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "678c34dc_d1bd7626",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-06T19:48:56Z",
+      "side": 1,
+      "message": "Argh, that\u0027s unfortunate. These are special in a sense that the vulkan loader loads them in a very particular way. Alright, going back to your original solution SGTM.\n\n\n.. and this is I didn\u0027t want to finish off this cl, lol. Thanks for taking it on.",
+      "parentUuid": "4972dab2_8cc84883",
+      "revId": "d4a9c9fc3353b5f44571911001e44a0072e6c0d7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
