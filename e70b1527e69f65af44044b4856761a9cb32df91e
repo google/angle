@@ -94,6 +94,30 @@
       },
       "revId": "e70b1527e69f65af44044b4856761a9cb32df91e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "19d6378c_fc6bfcef",
+        "filename": "scripts/roll_aosp.sh",
+        "patchSetId": 2
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-06T22:30:13Z",
+      "side": 1,
+      "message": "Also `test -f $file \u0026\u0026 rm $file` and `test -d $dir \u0026\u0026 rm -r $dir`",
+      "parentUuid": "a8b6a680_0ea6afcd",
+      "range": {
+        "startLine": 59,
+        "startChar": 0,
+        "endLine": 60,
+        "endChar": 29
+      },
+      "revId": "e70b1527e69f65af44044b4856761a9cb32df91e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
