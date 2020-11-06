@@ -16,6 +16,24 @@
       "message": "Do we need to unbind anything?",
       "revId": "c2c63187237982b65bcb256a2b898cbe7e3a901d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9246aef0_58ba1273",
+        "filename": "src/libANGLE/FrameCapture.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2393,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2020-11-06T18:05:01Z",
+      "side": 1,
+      "message": "Yeah, I think we do.  Will do that with a follow up.",
+      "parentUuid": "31f8126d_f8282f92",
+      "revId": "c2c63187237982b65bcb256a2b898cbe7e3a901d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
