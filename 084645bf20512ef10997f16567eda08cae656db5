@@ -35,6 +35,69 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "71a162a3_de7697c3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 10
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-06T16:56:19Z",
+      "side": 1,
+      "message": "LGTM with Jamie\u0027s comments.",
+      "revId": "084645bf20512ef10997f16567eda08cae656db5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "596ef21d_8821ce08",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramExecutableVk.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 163,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-06T16:56:19Z",
+      "side": 1,
+      "message": "Assuming we\u0027ll need a call for every specialization constant, including any new ones added in the future, can this just be a single setSpecializationConstants() that takes the full \u0027optionBits\u0027?   Then setSpecializationConstants() can be simplified to the following, and adding a new spec constant is just adding a single line there:\n\n    void ShaderProgramHelper::setSpecializationConstant(ProgramTransformOptions optionBits)\n    {\n        mSpecializationConstants.lineRasterEmulation \u003d optionBits.enableLineRasterEmulation;\n        mSpecializationConstants.surfaceRotation \u003d optionBits.surfaceRotation;\n    }",
+      "range": {
+        "startLine": 160,
+        "startChar": 0,
+        "endLine": 163,
+        "endChar": 73
+      },
+      "revId": "084645bf20512ef10997f16567eda08cae656db5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "afe7922a_bc503e6f",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramExecutableVk.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 677,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-06T16:56:19Z",
+      "side": 1,
+      "message": "nit: Pull these out of the local variable declarations to group them better:\n\n    const gl::State \u0026glState                    \u003d contextVk-\u003egetState();\n    ProgramInfo \u0026programInfo                    \u003d getGraphicsProgramInfo(mTransformOptions);\n    RendererVk *renderer                        \u003d contextVk-\u003egetRenderer();\n    vk::PipelineCache *pipelineCache            \u003d nullptr;\n\n    const gl::ProgramExecutable *glExecutable \u003d glState.getProgramExecutable();\n    ASSERT(glExecutable \u0026\u0026 !glExecutable-\u003eisCompute());\n\n    // Specialization Constants\n    mTransformOptions.enableLineRasterEmulation \u003d contextVk-\u003eisBresenhamEmulationEnabled(mode);\n    mTransformOptions.surfaceRotation           \u003d static_cast\u003cuint8_t\u003e(desc.getSurfaceRotation());",
+      "range": {
+        "startLine": 676,
+        "startChar": 0,
+        "endLine": 677,
+        "endChar": 98
+      },
+      "revId": "084645bf20512ef10997f16567eda08cae656db5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a2f74e37_796158ec",
@@ -76,6 +139,29 @@
         "startChar": 30,
         "endLine": 60,
         "endChar": 54
+      },
+      "revId": "084645bf20512ef10997f16567eda08cae656db5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e8ee750f_8a871df4",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramExecutableVk.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 272,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-06T16:56:19Z",
+      "side": 1,
+      "message": "nit: SPIR-V",
+      "range": {
+        "startLine": 272,
+        "startChar": 69,
+        "endLine": 272,
+        "endChar": 73
       },
       "revId": "084645bf20512ef10997f16567eda08cae656db5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
