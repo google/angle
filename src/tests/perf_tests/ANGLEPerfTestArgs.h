@@ -15,7 +15,8 @@
 namespace angle
 {
 extern bool gCalibration;
-extern int gStepsToRunOverride;
+extern int gStepsPerTrial;
+extern int gMaxStepsPerformed;
 extern bool gEnableTrace;
 extern const char *gTraceFile;
 extern const char *gScreenShotDir;
@@ -29,7 +30,7 @@ extern bool gStartTraceAfterSetup;
 
 inline bool OneFrame()
 {
-    return gStepsToRunOverride == 1;
+    return gStepsPerTrial == 1 || gMaxStepsPerformed == 1;
 }
 }  // namespace angle
 

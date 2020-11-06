@@ -89,7 +89,7 @@ class ANGLEPerfTest : public testing::Test, angle::NonCopyable
     // Call if the test step was aborted and the test should stop running.
     void abortTest() { mRunning = false; }
 
-    int getNumStepsPerformed() const { return mNumStepsPerformed; }
+    int getNumStepsPerformed() const { return mTrialNumStepsPerformed; }
 
     // Defaults to one step per run loop. Can be changed in any test.
     void setStepsPerRunLoopStep(int stepsPerRunLoop);
@@ -110,7 +110,8 @@ class ANGLEPerfTest : public testing::Test, angle::NonCopyable
     bool mSkipTest;
     std::unique_ptr<perf_test::PerfResultReporter> mReporter;
     int mStepsToRun;
-    int mNumStepsPerformed;
+    int mTrialNumStepsPerformed;
+    int mTotalNumStepsPerformed;
     int mStepsPerRunLoopStep;
     int mIterationsPerStep;
     bool mRunning;

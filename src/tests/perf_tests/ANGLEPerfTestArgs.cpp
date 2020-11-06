@@ -14,7 +14,8 @@
 namespace angle
 {
 bool gCalibration          = false;
-int gStepsToRunOverride    = -1;
+int gStepsPerTrial         = 0;
+int gMaxStepsPerformed     = 0;
 bool gEnableTrace          = false;
 const char *gTraceFile     = "ANGLETrace.json";
 const char *gScreenShotDir = nullptr;
@@ -56,8 +57,8 @@ void ANGLEProcessPerfTestArgs(int *argc, char **argv)
     {
         if (strcmp("--one-frame-only", argv[argIndex]) == 0)
         {
-            gStepsToRunOverride = 1;
-            gWarmupLoops        = 0;
+            gStepsPerTrial = 1;
+            gWarmupLoops   = 0;
         }
         else if (strcmp("--enable-trace", argv[argIndex]) == 0)
         {
@@ -73,9 +74,17 @@ void ANGLEProcessPerfTestArgs(int *argc, char **argv)
         {
             gCalibration = true;
         }
-        else if (strcmp("--steps", argv[argIndex]) == 0 && argIndex < *argc - 1)
+        else if (strcmp("--steps-per-trial", argv[argIndex]) == 0 && argIndex < *argc - 1)
         {
-            gStepsToRunOverride = ReadIntArgument(argv[argIndex + 1]);
+            gStepsPerTrial = ReadIntArgument(argv[argIndex + 1]);
+            // Skip an additional argument.
+            argIndex++;
+        }
+        else if (strcmp("--max-steps-performed", argv[argIndex]) == 0 && argIndex < *argc - 1)
+        {
+            gMaxStepsPerformed = ReadIntArgument(argv[argIndex + 1]);
+            gWarmupLoops       = 0;
+            gTestTrials        = 1;
             // Skip an additional argument.
             argIndex++;
         }
@@ -84,7 +93,8 @@ void ANGLEProcessPerfTestArgs(int *argc, char **argv)
             gScreenShotDir = argv[argIndex + 1];
             argIndex++;
         }
-        else if (strcmp("--verbose-logging", argv[argIndex]) == 0)
+        else if (strcmp("--verbose-logging", argv[argIndex]) == 0 ||
+                 strcmp("--verbose", argv[argIndex]) == 0 || strcmp("-v", argv[argIndex]) == 0)
         {
             gVerboseLogging = true;
         }

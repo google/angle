@@ -181,8 +181,9 @@ ANGLEPerfTest::ANGLEPerfTest(const std::string &name,
       mStory(story),
       mGPUTimeNs(0),
       mSkipTest(false),
-      mStepsToRun(gStepsToRunOverride),
-      mNumStepsPerformed(0),
+      mStepsToRun(std::max(gStepsPerTrial, gMaxStepsPerformed)),
+      mTrialNumStepsPerformed(0),
+      mTotalNumStepsPerformed(0),
       mStepsPerRunLoopStep(1),
       mIterationsPerStep(iterationsPerStep),
       mRunning(true)
@@ -198,7 +199,8 @@ ANGLEPerfTest::ANGLEPerfTest(const std::string &name,
     mReporter = std::make_unique<perf_test::PerfResultReporter>(mName + mBackend, mStory);
     mReporter->RegisterImportantMetric(".wall_time", units);
     mReporter->RegisterImportantMetric(".gpu_time", units);
-    mReporter->RegisterFyiMetric(".steps", "count");
+    mReporter->RegisterFyiMetric(".trial_steps", "count");
+    mReporter->RegisterFyiMetric(".total_steps", "count");
 }
 
 ANGLEPerfTest::~ANGLEPerfTest() {}
@@ -225,7 +227,7 @@ void ANGLEPerfTest::run()
             double trialTime = mTimer.getElapsedTime();
             printf("Trial %d time: %.2lf seconds.\n", trial + 1, trialTime);
 
-            double secondsPerStep      = trialTime / static_cast<double>(mNumStepsPerformed);
+            double secondsPerStep      = trialTime / static_cast<double>(mTrialNumStepsPerformed);
             double secondsPerIteration = secondsPerStep / static_cast<double>(mIterationsPerStep);
             mTestTrialResults.push_back(secondsPerIteration * 1000.0);
         }
@@ -265,9 +267,9 @@ void ANGLEPerfTest::setStepsPerRunLoopStep(int stepsPerRunLoop)
 
 void ANGLEPerfTest::doRunLoop(double maxRunTime, int maxStepsToRun, RunLoopPolicy runPolicy)
 {
-    mNumStepsPerformed = 0;
-    mRunning           = true;
-    mGPUTimeNs         = 0;
+    mTrialNumStepsPerformed = 0;
+    mRunning                = true;
+    mGPUTimeNs              = 0;
     mTimer.start();
     startTest();
 
@@ -282,12 +284,17 @@ void ANGLEPerfTest::doRunLoop(double maxRunTime, int maxStepsToRun, RunLoopPolic
 
         if (mRunning)
         {
-            mNumStepsPerformed += mStepsPerRunLoopStep;
+            mTrialNumStepsPerformed += mStepsPerRunLoopStep;
+            mTotalNumStepsPerformed += mStepsPerRunLoopStep;
             if (mTimer.getElapsedTime() > maxRunTime)
             {
                 mRunning = false;
             }
-            else if (mNumStepsPerformed >= maxStepsToRun)
+            else if (mTrialNumStepsPerformed >= maxStepsToRun)
+            {
+                mRunning = false;
+            }
+            else if (gMaxStepsPerformed > 0 && mTotalNumStepsPerformed >= gMaxStepsPerformed)
             {
                 mRunning = false;
             }
@@ -320,7 +327,8 @@ double ANGLEPerfTest::printResults()
     double retValue = 0.0;
     for (size_t i = 0; i < clocksToOutput; ++i)
     {
-        double secondsPerStep = elapsedTimeSeconds[i] / static_cast<double>(mNumStepsPerformed);
+        double secondsPerStep =
+            elapsedTimeSeconds[i] / static_cast<double>(mTrialNumStepsPerformed);
         double secondsPerIteration = secondsPerStep / static_cast<double>(mIterationsPerStep);
 
         perf_test::MetricInfo metricInfo;
@@ -355,13 +363,16 @@ double ANGLEPerfTest::printResults()
 
     if (gVerboseLogging)
     {
-        double fps =
-            static_cast<double>(mNumStepsPerformed * mIterationsPerStep) / elapsedTimeSeconds[0];
+        double fps = static_cast<double>(mTrialNumStepsPerformed * mIterationsPerStep) /
+                     elapsedTimeSeconds[0];
         printf("Ran %0.2lf iterations per second\n", fps);
     }
 
+    mReporter->AddResult(".trial_steps", static_cast<size_t>(mTrialNumStepsPerformed));
+    mReporter->AddResult(".total_steps", static_cast<size_t>(mTotalNumStepsPerformed));
+
     // Output histogram JSON set format if enabled.
-    double secondsPerStep      = elapsedTimeSeconds[0] / static_cast<double>(mNumStepsPerformed);
+    double secondsPerStep = elapsedTimeSeconds[0] / static_cast<double>(mTrialNumStepsPerformed);
     double secondsPerIteration = secondsPerStep / static_cast<double>(mIterationsPerStep);
     TestSuite::GetInstance()->addHistogramSample(
         mName + mBackend, mStory, secondsPerIteration * kMilliSecondsPerSecond, "msBestFitFormat");
@@ -370,7 +381,7 @@ double ANGLEPerfTest::printResults()
 
 double ANGLEPerfTest::normalizedTime(size_t value) const
 {
-    return static_cast<double>(value) / static_cast<double>(mNumStepsPerformed);
+    return static_cast<double>(value) / static_cast<double>(mTrialNumStepsPerformed);
 }
 
 void ANGLEPerfTest::calibrateStepsToRun()
@@ -381,7 +392,7 @@ void ANGLEPerfTest::calibrateStepsToRun()
 
     // Scale steps down according to the time that exeeded one second.
     double scale = gTestTimeSeconds / elapsedTime;
-    mStepsToRun  = static_cast<unsigned int>(static_cast<double>(mNumStepsPerformed) * scale);
+    mStepsToRun  = static_cast<unsigned int>(static_cast<double>(mTrialNumStepsPerformed) * scale);
     mStepsToRun  = std::max(1, mStepsToRun);
 
     if (gVerboseLogging)
@@ -390,7 +401,7 @@ void ANGLEPerfTest::calibrateStepsToRun()
             "Running %d steps (calibration took %.2lf seconds). Expecting trial time of %.2lf "
             "seconds.\n",
             mStepsToRun, elapsedTime,
-            mStepsToRun * (elapsedTime / static_cast<double>(mNumStepsPerformed)));
+            mStepsToRun * (elapsedTime / static_cast<double>(mTrialNumStepsPerformed)));
     }
 
     // Calibration allows the perf test runner script to save some time.
