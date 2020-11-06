@@ -18,6 +18,23 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "11bdb3b1_0679508b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-06T00:08:55Z",
+      "side": 1,
+      "message": "BTW Trevor, I recommend that you don\u0027t mark Code-Review on your own CLs unless you\u0027re trying to bypass the normal review process. I\u0027m not sure if we have our review process documented in the wiki. A bit of info here:\n\nhttps://chromium.googlesource.com/angle/angle/+/master/doc/ContributingCode.md#rules-for-submission",
+      "revId": "51b58daf0af7c2528e62a030f4b266bb472bcfb7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8c3b64a9_cf1ff79b",
