@@ -178,17 +178,17 @@ bool EGLWindow::initializeDisplay(OSWindow *osWindow,
 
     if (params.transformFeedbackFeature == EGL_FALSE)
     {
-        disabledFeatureOverrides.push_back("supports_transform_feedback_extension");
-        disabledFeatureOverrides.push_back("emulate_transform_feedback");
+        disabledFeatureOverrides.push_back("supportsTransformFeedbackExtension");
+        disabledFeatureOverrides.push_back("emulateTransformFeedback");
     }
 
     if (params.allocateNonZeroMemoryFeature == EGL_TRUE)
     {
-        enabledFeatureOverrides.push_back("allocate_non_zero_memory");
+        enabledFeatureOverrides.push_back("allocateNonZeroMemory");
     }
     else if (params.allocateNonZeroMemoryFeature == EGL_FALSE)
     {
-        disabledFeatureOverrides.push_back("allocate_non_zero_memory");
+        disabledFeatureOverrides.push_back("allocateNonZeroMemory");
     }
 
     if (params.emulateCopyTexImage2DFromRenderbuffers == EGL_TRUE)
@@ -209,13 +209,13 @@ bool EGLWindow::initializeDisplay(OSWindow *osWindow,
     switch (params.emulatedPrerotation)
     {
         case 90:
-            enabledFeatureOverrides.push_back("emulated_prerotation_90");
+            enabledFeatureOverrides.push_back("emulatedPrerotation90");
             break;
         case 180:
-            enabledFeatureOverrides.push_back("emulated_prerotation_180");
+            enabledFeatureOverrides.push_back("emulatedPrerotation180");
             break;
         case 270:
-            enabledFeatureOverrides.push_back("emulated_prerotation_270");
+            enabledFeatureOverrides.push_back("emulatedPrerotation270");
             break;
         default:
             break;
