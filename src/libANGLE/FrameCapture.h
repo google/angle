@@ -225,6 +225,8 @@ class ResourceTracker final : angle::NonCopyable
     BufferCalls &getBufferMapCalls() { return mBufferMapCalls; }
     BufferCalls &getBufferUnmapCalls() { return mBufferUnmapCalls; }
 
+    std::vector<CallCapture> &getBufferBindingCalls() { return mBufferBindingCalls; }
+
     BufferSet &getStartingBuffers() { return mStartingBuffers; }
     BufferSet &getNewBuffers() { return mNewBuffers; }
     BufferSet &getBuffersToRegen() { return mBuffersToRegen; }
@@ -265,6 +267,9 @@ class ResourceTracker final : angle::NonCopyable
     BufferCalls mBufferMapCalls;
     // Buffer unmap calls will bind and unmap a given buffer
     BufferCalls mBufferUnmapCalls;
+
+    // Buffer binding calls to restore bindings recorded during MEC
+    std::vector<CallCapture> mBufferBindingCalls;
 
     // Starting buffers include all the buffers created during setup for MEC
     BufferSet mStartingBuffers;

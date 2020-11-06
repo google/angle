@@ -909,6 +909,15 @@ void MaybeResetResources(std::stringstream &out,
                 }
             }
 
+            // Restore buffer bindings as seen during MEC
+            std::vector<CallCapture> &bufferBindingCalls = resourceTracker->getBufferBindingCalls();
+            for (CallCapture &call : bufferBindingCalls)
+            {
+                out << "    ";
+                WriteCppReplayForCall(call, dataTracker, out, header, binaryData);
+                out << ";\n";
+            }
+
             break;
         }
         default:
@@ -2210,6 +2219,15 @@ void CaptureBufferResetCalls(const gl::State &replayState,
             CaptureUnmapBuffer(replayState, true, gl::BufferBinding::Array, GL_TRUE));
 }
 
+void CaptureBufferBindingResetCalls(const gl::State &replayState,
+                                    ResourceTracker *resourceTracker,
+                                    gl::BufferBinding binding,
+                                    gl::BufferID id)
+{
+    std::vector<CallCapture> &bufferBindingCalls = resourceTracker->getBufferBindingCalls();
+    Capture(&bufferBindingCalls, CaptureBindBuffer(replayState, true, binding, id));
+}
+
 void CaptureMidExecutionSetup(const gl::Context *context,
                               std::vector<CallCapture> *setupCalls,
                               ResourceTracker *resourceTracker,
@@ -2369,6 +2387,12 @@ void CaptureMidExecutionSetup(const gl::Context *context,
             (!isArray && bufferID.value != 0))
         {
             cap(CaptureBindBuffer(replayState, true, binding, bufferID));
+        }
+
+        // Restore all buffer bindings for Reset
+        if (bufferID.value != 0)
+        {
+            CaptureBufferBindingResetCalls(replayState, resourceTracker, binding, bufferID);
         }
     }
 
