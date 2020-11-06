@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "08a92a73_a68f915f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 16
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-06T21:56:07Z",
+      "side": 1,
+      "message": "I did a first-pass review, but didn\u0027t look at the Metal changes much.  Will look at again after the test failures are addressed.",
+      "revId": "0fcb3fcbcddc45ebb3e7c1718a7a4160841bbbff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
