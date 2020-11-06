@@ -53,6 +53,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "dd883828_990cb7bd",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2020-11-06T19:18:53Z",
+      "side": 1,
+      "message": "Mohan and Courtney are just FYI, moved them to CC. If you\u0027re happy with it, +2.",
+      "parentUuid": "14e0709b_51e833cd",
+      "revId": "1bf58e91fbec40184af8a7dfb1f5543a5fed447b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "4823d1b2_1f0d1066",
@@ -100,6 +118,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a3e618a4_77208bbd",
+        "filename": "scripts/registry_xml.py",
+        "patchSetId": 9
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2020-11-06T19:18:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b50fdbb2_5a82eb92",
+      "range": {
+        "startLine": 100,
+        "startChar": 5,
+        "endLine": 100,
+        "endChar": 22
+      },
+      "revId": "1bf58e91fbec40184af8a7dfb1f5543a5fed447b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "581c2b1f_5b834580",
@@ -123,6 +165,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1484bb67_5a831cee",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 653,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2020-11-06T19:18:53Z",
+      "side": 1,
+      "message": "It\u0027s hard to tell from the diff but mTexturesIncompatibleWithSamplers was only referenced by one validation function in an if(webgl) block here: https://chromium-review.googlesource.com/c/angle/angle/+/2517562/9/src/libANGLE/validationES.cpp#3628\n\nThis CL makes it always validated but doesn\u0027t always incorporate the WebGL check.",
+      "parentUuid": "581c2b1f_5b834580",
+      "range": {
+        "startLine": 640,
+        "startChar": 0,
+        "endLine": 653,
+        "endChar": 9
+      },
+      "revId": "1bf58e91fbec40184af8a7dfb1f5543a5fed447b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e52cfda5_fa3ea35e",
@@ -136,6 +202,30 @@
       "writtenOn": "2020-11-06T18:31:10Z",
       "side": 1,
       "message": "nit: getRequiredExternalTextureImageUnits if this is only for external.",
+      "range": {
+        "startLine": 1879,
+        "startChar": 21,
+        "endLine": 1879,
+        "endChar": 49
+      },
+      "revId": "1bf58e91fbec40184af8a7dfb1f5543a5fed447b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "899bbb26_cbb259ad",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1879,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2020-11-06T19:18:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e52cfda5_fa3ea35e",
       "range": {
         "startLine": 1879,
         "startChar": 21,
