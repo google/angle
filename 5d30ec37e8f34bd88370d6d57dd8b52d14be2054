@@ -16,6 +16,24 @@
       "message": "LGTM, this changes the Vulkan stream slightly?",
       "revId": "5d30ec37e8f34bd88370d6d57dd8b52d14be2054",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8ecf3fc0_db118d78",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-06T15:25:16Z",
+      "side": 1,
+      "message": "Slightly as in correctly for depth/stencil PBOs. One of the gold tests shows a corruption though in a group of like 20 pixels. Intel/windows doesn\u0027t support STENCIL_INDEX8 natively, so I suspect it\u0027s affected by this: anglebug.com/5313.\n\nI may just have to fix that after all.",
+      "parentUuid": "769ea07f_c43811d5",
+      "revId": "5d30ec37e8f34bd88370d6d57dd8b52d14be2054",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
