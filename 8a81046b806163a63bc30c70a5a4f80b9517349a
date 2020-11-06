@@ -128,6 +128,29 @@
       },
       "revId": "8a81046b806163a63bc30c70a5a4f80b9517349a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "aa94e1a6_8b5b1160",
+        "filename": "src/libANGLE/FrameCapture.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 3545,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-06T16:51:26Z",
+      "side": 1,
+      "message": "nit: I think everything except the trigger can be cached.",
+      "range": {
+        "startLine": 3545,
+        "startChar": 8,
+        "endLine": 3545,
+        "endChar": 50
+      },
+      "revId": "8a81046b806163a63bc30c70a5a4f80b9517349a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
