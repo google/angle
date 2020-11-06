@@ -36,6 +36,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5bc23b62_b5acf8b9",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 346,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-06T02:17:27Z",
+      "side": 1,
+      "message": "Done in next CL.",
+      "parentUuid": "1f4ec5ff_1afbd4f5",
+      "revId": "21ae8d18709389518867b8b5294c2a10d3bf904b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7b43b3f9_f629e8b1",
@@ -59,6 +77,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "eb6cc588_219a9aa9",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-06T02:17:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7b43b3f9_f629e8b1",
+      "range": {
+        "startLine": 74,
+        "startChar": 24,
+        "endLine": 74,
+        "endChar": 27
+      },
+      "revId": "21ae8d18709389518867b8b5294c2a10d3bf904b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "919fbfe2_2bb59fb2",
@@ -72,6 +114,30 @@
       "writtenOn": "2020-11-05T20:06:09Z",
       "side": 1,
       "message": "Name is too generic",
+      "range": {
+        "startLine": 225,
+        "startChar": 14,
+        "endLine": 225,
+        "endChar": 30
+      },
+      "revId": "21ae8d18709389518867b8b5294c2a10d3bf904b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d9f7740c_8f086213",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 225,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-06T02:17:27Z",
+      "side": 1,
+      "message": "I agree. Just not sure whats the proper name for it. Will update once come up with a better name.",
+      "parentUuid": "919fbfe2_2bb59fb2",
       "range": {
         "startLine": 225,
         "startChar": 14,
@@ -152,6 +218,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b02dd026_9f60bfc0",
+        "filename": "src/compiler/translator/tree_ops/RewriteDfdy.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-06T02:17:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8d408526_3b69385b",
+      "range": {
+        "startLine": 134,
+        "startChar": 7,
+        "endLine": 135,
+        "endChar": 31
+      },
+      "revId": "21ae8d18709389518867b8b5294c2a10d3bf904b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "62bd672e_39b77675",
@@ -165,6 +255,24 @@
       "writtenOn": "2020-11-05T20:06:09Z",
       "side": 1,
       "message": "Some static_asserts could be nice.",
+      "revId": "21ae8d18709389518867b8b5294c2a10d3bf904b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "38076690_302892e6",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 3469,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-06T02:17:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "62bd672e_39b77675",
       "revId": "21ae8d18709389518867b8b5294c2a10d3bf904b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
