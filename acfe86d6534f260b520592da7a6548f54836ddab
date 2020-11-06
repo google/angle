@@ -226,6 +226,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d4492ccb_1be9eaba",
+        "filename": "src/tests/perf_tests/TracePerfTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 436,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-06T15:46:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c40640d2_547502b4",
+      "range": {
+        "startLine": 436,
+        "startChar": 8,
+        "endLine": 436,
+        "endChar": 45
+      },
+      "revId": "acfe86d6534f260b520592da7a6548f54836ddab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3582015b_64f4df12",
@@ -239,6 +263,30 @@
       "writtenOn": "2020-11-05T14:20:20Z",
       "side": 1,
       "message": "This makes sense.  ResetReplay is tailored to work with the state that exists at the end of the last frame.  We could change this to reset from any frame, but I don\u0027t know that there is much utility in that.  We could also make reset more expensive by redundantly reseting state that hasn\u0027t changed yet.",
+      "range": {
+        "startLine": 506,
+        "startChar": 12,
+        "endLine": 506,
+        "endChar": 30
+      },
+      "revId": "acfe86d6534f260b520592da7a6548f54836ddab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b016e985_229c9f10",
+        "filename": "src/tests/perf_tests/TracePerfTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 506,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-06T15:46:12Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "3582015b_64f4df12",
       "range": {
         "startLine": 506,
         "startChar": 12,
