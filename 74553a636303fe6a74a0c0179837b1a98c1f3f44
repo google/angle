@@ -16,6 +16,23 @@
       "message": "PTAL - fix for a image colorspace tests\n\nstill skipping a few tests related to renderbuffer",
       "revId": "74553a636303fe6a74a0c0179837b1a98c1f3f44",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "07646b9c_e99a1c30",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-06T21:36:53Z",
+      "side": 1,
+      "message": "Nice, LGTM if this passes bots.",
+      "revId": "74553a636303fe6a74a0c0179837b1a98c1f3f44",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
