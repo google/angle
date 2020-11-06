@@ -17117,7 +17117,7 @@ constexpr const TFunction imageStore_01a20D30B(
     TExtension::UNDEFINED,
     BuiltInParameters::p01a20D30B,
     3,
-    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
+    StaticType::Get<EbtVoid, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction imageStore_01b20D30D(
@@ -17126,7 +17126,7 @@ constexpr const TFunction imageStore_01b20D30D(
     TExtension::UNDEFINED,
     BuiltInParameters::p01b20D30D,
     3,
-    StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
+    StaticType::Get<EbtVoid, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction imageStore_01c20D30E(
@@ -17135,7 +17135,7 @@ constexpr const TFunction imageStore_01c20D30E(
     TExtension::UNDEFINED,
     BuiltInParameters::p01c20D30E,
     3,
-    StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
+    StaticType::Get<EbtVoid, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpCallBuiltInFunction,
     false);
 constexpr const TFunction imageStore_01g00D30B(

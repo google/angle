@@ -1048,7 +1048,7 @@ GROUP BEGIN Image {"queryFunction": true}
       // There's no way to mark alternative extensions for builtins, so these are marked with none.
       // TODO(anglebug.com/4589)
       DEFAULT METADATA {"essl_level": "ESSL3_1_BUILTINS", "op": "CallBuiltInFunction"}
-        gvec4 imageStore(gimageCubeArray, ivec3, gvec4);
+        void imageStore(gimageCubeArray, ivec3, gvec4);
 
       // These functions are part of OES/EXT_texture_buffer.
       // There's no way to mark alternative extensions for builtins, so these are marked with none.
