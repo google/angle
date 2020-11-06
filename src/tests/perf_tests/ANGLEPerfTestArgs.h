@@ -22,6 +22,7 @@ extern const char *gTraceFile;
 extern const char *gScreenShotDir;
 extern bool gVerboseLogging;
 extern int gWarmupLoops;
+extern double gCalibrationTimeSeconds;
 extern double gTestTimeSeconds;
 extern int gTestTrials;
 extern bool gNoFinish;

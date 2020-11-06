@@ -13,18 +13,19 @@
 
 namespace angle
 {
-bool gCalibration          = false;
-int gStepsPerTrial         = 0;
-int gMaxStepsPerformed     = 0;
-bool gEnableTrace          = false;
-const char *gTraceFile     = "ANGLETrace.json";
-const char *gScreenShotDir = nullptr;
-bool gVerboseLogging       = false;
-double gTestTimeSeconds    = 1.0;
-int gTestTrials            = 3;
-bool gNoFinish             = false;
-bool gEnableAllTraceTests  = false;
-bool gStartTraceAfterSetup = false;
+bool gCalibration              = false;
+int gStepsPerTrial             = 0;
+int gMaxStepsPerformed         = 0;
+bool gEnableTrace              = false;
+const char *gTraceFile         = "ANGLETrace.json";
+const char *gScreenShotDir     = nullptr;
+bool gVerboseLogging           = false;
+double gCalibrationTimeSeconds = 1.0;
+double gTestTimeSeconds        = 10.0;
+int gTestTrials                = 3;
+bool gNoFinish                 = false;
+bool gEnableAllTraceTests      = false;
+bool gStartTraceAfterSetup     = false;
 
 // Default to three warmup loops. There's no science to this. More than two loops was experimentally
 // helpful on a Windows NVIDIA setup when testing with Vulkan and native trace tests.
@@ -85,6 +86,7 @@ void ANGLEProcessPerfTestArgs(int *argc, char **argv)
             gMaxStepsPerformed = ReadIntArgument(argv[argIndex + 1]);
             gWarmupLoops       = 0;
             gTestTrials        = 1;
+            gTestTimeSeconds   = 36000;
             // Skip an additional argument.
             argIndex++;
         }
@@ -111,6 +113,12 @@ void ANGLEProcessPerfTestArgs(int *argc, char **argv)
         else if (strncmp(kRenderTestDirArg, argv[argIndex], strlen(kRenderTestDirArg)) == 0)
         {
             gScreenShotDir = argv[argIndex] + strlen(kRenderTestDirArg);
+        }
+        else if (strcmp("--calibration-time", argv[argIndex]) == 0)
+        {
+            gCalibrationTimeSeconds = ReadIntArgument(argv[argIndex + 1]);
+            // Skip an additional argument.
+            argIndex++;
         }
         else if (strcmp("--test-time", argv[argIndex]) == 0)
         {

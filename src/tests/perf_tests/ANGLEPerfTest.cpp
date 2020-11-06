@@ -40,7 +40,6 @@ constexpr size_t kInitialTraceEventBufferSize = 50000;
 constexpr double kMilliSecondsPerSecond       = 1e3;
 constexpr double kMicroSecondsPerSecond       = 1e6;
 constexpr double kNanoSecondsPerSecond        = 1e9;
-constexpr double kMaximumRunTimeSeconds       = 10.0;
 
 struct TraceCategory
 {
@@ -220,7 +219,7 @@ void ANGLEPerfTest::run()
 
     for (uint32_t trial = 0; trial < numTrials; ++trial)
     {
-        doRunLoop(kMaximumRunTimeSeconds, mStepsToRun, RunLoopPolicy::RunContinuously);
+        doRunLoop(gTestTimeSeconds, mStepsToRun, RunLoopPolicy::RunContinuously);
         printResults();
         if (gVerboseLogging)
         {
@@ -386,12 +385,13 @@ double ANGLEPerfTest::normalizedTime(size_t value) const
 
 void ANGLEPerfTest::calibrateStepsToRun()
 {
-    doRunLoop(gTestTimeSeconds, std::numeric_limits<int>::max(), RunLoopPolicy::FinishEveryStep);
+    doRunLoop(gCalibrationTimeSeconds, std::numeric_limits<int>::max(),
+              RunLoopPolicy::FinishEveryStep);
 
     double elapsedTime = mTimer.getElapsedTime();
 
     // Scale steps down according to the time that exeeded one second.
-    double scale = gTestTimeSeconds / elapsedTime;
+    double scale = gCalibrationTimeSeconds / elapsedTime;
     mStepsToRun  = static_cast<unsigned int>(static_cast<double>(mTrialNumStepsPerformed) * scale);
     mStepsToRun  = std::max(1, mStepsToRun);
 
@@ -667,7 +667,7 @@ void ANGLERenderTest::SetUp()
 
     for (int loopIndex = 0; loopIndex < gWarmupLoops; ++loopIndex)
     {
-        doRunLoop(gTestTimeSeconds, std::numeric_limits<int>::max(),
+        doRunLoop(gCalibrationTimeSeconds, std::numeric_limits<int>::max(),
                   RunLoopPolicy::FinishEveryStep);
         if (gVerboseLogging)
         {
