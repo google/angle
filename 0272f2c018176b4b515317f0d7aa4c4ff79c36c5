@@ -39,6 +39,24 @@
       "message": "LGTM. I would recommend trying this a bunch with scripts/trigger.py to ensure it\u0027s not flaky. Otherwise please monitor after it lands.",
       "revId": "0272f2c018176b4b515317f0d7aa4c4ff79c36c5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fd4fae62_f6e7b0d1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1369468
+      },
+      "writtenOn": "2020-11-06T16:17:40Z",
+      "side": 1,
+      "message": "I re-ran win-swangle-try-tot-angle-x86 three times on this CL, all three passed with no flakes. It\u0027s now being run a fourth time. Is that okay?",
+      "parentUuid": "7faa6639_82b53673",
+      "revId": "0272f2c018176b4b515317f0d7aa4c4ff79c36c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
