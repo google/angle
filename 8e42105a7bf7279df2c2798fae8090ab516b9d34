@@ -16,6 +16,24 @@
       "message": "This doesn\u0027t fail on my local machine.\n\nDoes it cause a problem to change a test in the same commit that fixes the crash?",
       "revId": "8e42105a7bf7279df2c2798fae8090ab516b9d34",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "21a357d3_737fd1d8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2020-11-06T20:22:02Z",
+      "side": 1,
+      "message": "No, it\u0027s good. You want to add test coverage as soon as possible when fixing a bug, in the same CL is the best.\n\nI was asking if the new test crashes without your fix.",
+      "parentUuid": "e168e18b_05610c64",
+      "revId": "8e42105a7bf7279df2c2798fae8090ab516b9d34",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
