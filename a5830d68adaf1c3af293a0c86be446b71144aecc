@@ -16,6 +16,23 @@
       "message": "Added asserts to code.",
       "revId": "a5830d68adaf1c3af293a0c86be446b71144aecc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "20950c31_15f51cf9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2020-11-06T17:55:53Z",
+      "side": 1,
+      "message": "LGTM, this test causes the crash?\n\nYou can merge this CL with the fix if you like.",
+      "revId": "a5830d68adaf1c3af293a0c86be446b71144aecc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
