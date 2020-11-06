@@ -58,6 +58,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "489e5c87_2f7cf83d",
+        "filename": "src/compiler/translator/builtin_function_declarations.txt",
+        "patchSetId": 5
+      },
+      "lineNbr": 676,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-06T17:10:59Z",
+      "side": 1,
+      "message": "Seems like. Issue 4589 tracks solving that issue.",
+      "parentUuid": "b180fbfa_8480ca2e",
+      "range": {
+        "startLine": 676,
+        "startChar": 35,
+        "endLine": 676,
+        "endChar": 51
+      },
+      "revId": "f110cb78d59b6a85c1ecd29ceefe728e671a9d01",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e8cce402_42f54e81",
@@ -81,6 +105,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e987e88c_4909c3f3",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 314,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-06T17:10:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e8cce402_42f54e81",
+      "range": {
+        "startLine": 314,
+        "startChar": 8,
+        "endLine": 314,
+        "endChar": 20
+      },
+      "revId": "f110cb78d59b6a85c1ecd29ceefe728e671a9d01",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "49b471d2_54add731",
@@ -94,6 +142,24 @@
       "writtenOn": "2020-11-06T15:42:34Z",
       "side": 1,
       "message": "nit: Duplicated line",
+      "revId": "f110cb78d59b6a85c1ecd29ceefe728e671a9d01",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f9d20190_e815cbf5",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1580,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-06T17:10:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "49b471d2_54add731",
       "revId": "f110cb78d59b6a85c1ecd29ceefe728e671a9d01",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
