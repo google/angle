@@ -394,6 +394,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "8ccd9907_554ab200",
+        "filename": "src/compiler/translator/tree_ops/RewriteDfdy.h",
+        "patchSetId": 18
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-06T22:10:46Z",
+      "side": 1,
+      "message": "I think I am going to split the flip/rotate specConst code into its own file under tree_util/FlipRotateSpecConst.cpp file (what Shabi suggested as well).",
+      "parentUuid": "12c3f421_2eec85cd",
+      "revId": "0b0d7a483a5edc5f8eaf492c3a9cc4198e7b498e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "4e45e623_c51938ee",
         "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
         "patchSetId": 18

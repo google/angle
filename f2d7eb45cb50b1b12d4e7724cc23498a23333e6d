@@ -16,6 +16,23 @@
       "message": "This is good work!  I did an initial review.  I\u0027d like to do another pass, and probably watch the code in a debugger before doing another pass.\n\nCharlie and I discussed testing via Chat.  This is a large enough change that we\u0027ll want to redo the pre-rotation testing that I used to do.  It basically involves running the ANGLE version of dEQP, end2end tests, etc. while forcing the device into all 4 rotations.  We have to run tests with Identity to establish a baseline, since Pixel 4 gets different results than Pixel 2.\n\n[ ] CHECK STILL: Probably answered in the next CL: do shaders ever need to be recompiled?  I see a flag for whether to compile them with/without the specialization constant.",
       "revId": "f2d7eb45cb50b1b12d4e7724cc23498a23333e6d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "237f339f_8ea08257",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 20
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-06T22:10:46Z",
+      "side": 1,
+      "message": "Bear with me for a while, let me try to figure out bot failure first. Will come back to all your awesome comments later.",
+      "revId": "f2d7eb45cb50b1b12d4e7724cc23498a23333e6d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
