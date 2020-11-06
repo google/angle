@@ -55,6 +55,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "4823d1b2_1f0d1066",
+        "filename": "scripts/registry_xml.py",
+        "patchSetId": 9
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1002562
+      },
+      "writtenOn": "2020-11-06T18:44:28Z",
+      "side": 1,
+      "message": "Shouldn\u0027t this match the registry\u0027s capitalization: GL_EXT_YUV_target? (https://www.khronos.org/registry/OpenGL/extensions/EXT/EXT_YUV_target.txt)",
+      "range": {
+        "startLine": 100,
+        "startChar": 5,
+        "endLine": 100,
+        "endChar": 22
+      },
+      "revId": "1bf58e91fbec40184af8a7dfb1f5543a5fed447b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "581c2b1f_5b834580",
         "filename": "src/libANGLE/State.cpp",
         "patchSetId": 9
