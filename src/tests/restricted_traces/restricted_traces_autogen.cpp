@@ -15,6 +15,7 @@
 #include "arena_of_valor/arena_of_valor_capture_context3.h"
 #include "brawl_stars/brawl_stars_capture_context2.h"
 #include "candy_crush_500/candy_crush_500_capture_context1.h"
+#include "clash_of_clans/clash_of_clans_capture_context2.h"
 #include "cod_mobile/cod_mobile_capture_context4.h"
 #include "dragon_ball_legends/dragon_ball_legends_capture_context3.h"
 #include "egypt_1500/egypt_1500_capture_context6.h"
@@ -50,6 +51,10 @@ constexpr angle::PackedEnumMap<RestrictedTraceID, TraceInfo> kTraceInfos = {
      {candy_crush_500::kReplayFrameStart, candy_crush_500::kReplayFrameEnd,
       candy_crush_500::kReplayDrawSurfaceWidth, candy_crush_500::kReplayDrawSurfaceHeight,
       "candy_crush_500"}},
+    {RestrictedTraceID::clash_of_clans,
+     {clash_of_clans::kReplayFrameStart, clash_of_clans::kReplayFrameEnd,
+      clash_of_clans::kReplayDrawSurfaceWidth, clash_of_clans::kReplayDrawSurfaceHeight,
+      "clash_of_clans"}},
     {RestrictedTraceID::cod_mobile,
      {cod_mobile::kReplayFrameStart, cod_mobile::kReplayFrameEnd,
       cod_mobile::kReplayDrawSurfaceWidth, cod_mobile::kReplayDrawSurfaceHeight, "cod_mobile"}},
@@ -124,6 +129,9 @@ void ReplayFrame(RestrictedTraceID traceID, uint32_t frameIndex)
         case RestrictedTraceID::candy_crush_500:
             candy_crush_500::ReplayContext1Frame(frameIndex);
             break;
+        case RestrictedTraceID::clash_of_clans:
+            clash_of_clans::ReplayContext2Frame(frameIndex);
+            break;
         case RestrictedTraceID::cod_mobile:
             cod_mobile::ReplayContext4Frame(frameIndex);
             break;
@@ -188,6 +196,9 @@ void ResetReplay(RestrictedTraceID traceID)
             break;
         case RestrictedTraceID::candy_crush_500:
             candy_crush_500::ResetContext1Replay();
+            break;
+        case RestrictedTraceID::clash_of_clans:
+            clash_of_clans::ResetContext2Replay();
             break;
         case RestrictedTraceID::cod_mobile:
             cod_mobile::ResetContext4Replay();
@@ -254,6 +265,9 @@ void SetupReplay(RestrictedTraceID traceID)
         case RestrictedTraceID::candy_crush_500:
             candy_crush_500::SetupContext1Replay();
             break;
+        case RestrictedTraceID::clash_of_clans:
+            clash_of_clans::SetupContext2Replay();
+            break;
         case RestrictedTraceID::cod_mobile:
             cod_mobile::SetupContext4Replay();
             break;
@@ -319,6 +333,9 @@ void SetBinaryDataDir(RestrictedTraceID traceID, const char *dataDir)
         case RestrictedTraceID::candy_crush_500:
             candy_crush_500::SetBinaryDataDir(dataDir);
             break;
+        case RestrictedTraceID::clash_of_clans:
+            clash_of_clans::SetBinaryDataDir(dataDir);
+            break;
         case RestrictedTraceID::cod_mobile:
             cod_mobile::SetBinaryDataDir(dataDir);
             break;
@@ -383,6 +400,9 @@ void SetBinaryDataDecompressCallback(RestrictedTraceID traceID, DecompressCallba
             break;
         case RestrictedTraceID::candy_crush_500:
             candy_crush_500::SetBinaryDataDecompressCallback(callback);
+            break;
+        case RestrictedTraceID::clash_of_clans:
+            clash_of_clans::SetBinaryDataDecompressCallback(callback);
             break;
         case RestrictedTraceID::cod_mobile:
             cod_mobile::SetBinaryDataDecompressCallback(callback);

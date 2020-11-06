@@ -1,6 +1,6 @@
 {
   "src/tests/restricted_traces/.gitignore":
-    "ddaa06125884442e2ed1d0885d9bdc02",
+    "737ec95dcd9772d5c3429da279f0e008",
   "src/tests/restricted_traces/angry_birds_2_1500.tar.gz.sha1":
     "44fc5437c4a84012e338b3da4b6fc28a",
   "src/tests/restricted_traces/arena_of_valor.tar.gz.sha1":
@@ -9,6 +9,8 @@
     "a6b023409f36ca174b890dbeb842da7e",
   "src/tests/restricted_traces/candy_crush_500.tar.gz.sha1":
     "55de8a400b02e570ff2380436bda269d",
+  "src/tests/restricted_traces/clash_of_clans.tar.gz.sha1":
+    "3005ccf17961e0fd2adb2ea43329a26a",
   "src/tests/restricted_traces/cod_mobile.tar.gz.sha1":
     "dffd3bed0d0e53481f43b414309bf152",
   "src/tests/restricted_traces/dragon_ball_legends.tar.gz.sha1":
@@ -34,13 +36,13 @@
   "src/tests/restricted_traces/pubg_mobile_lite.tar.gz.sha1":
     "07c3f467603d4d00bdae2bfed121da8d",
   "src/tests/restricted_traces/restricted_traces.json":
-    "1d885a202e69b31e10213da68979c539",
+    "2e5e53faaaffae07d60240b3623ab56b",
   "src/tests/restricted_traces/restricted_traces_autogen.cpp":
-    "8eeff2f2f4788b5f3764c3bcfa325285",
+    "43a0970260ded29d5fd80c5983ea3cdd",
   "src/tests/restricted_traces/restricted_traces_autogen.gni":
-    "cb1e3a2d827912765d824e99144ad70c",
+    "34974304d5e27cbd20d8d7f32ba3be89",
   "src/tests/restricted_traces/restricted_traces_autogen.h":
-    "d8e7c186631c9b35312c7a399862e332",
+    "51f08881bc37a651613c169f45559b93",
   "src/tests/restricted_traces/temple_run_300.tar.gz.sha1":
     "77475b0186ee0380eeb9db47433d0457",
   "src/tests/restricted_traces/trex_200.tar.gz.sha1":
