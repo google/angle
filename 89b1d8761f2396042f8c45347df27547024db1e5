@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "97606f6c_d3fecc7b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1452687
+      },
+      "writtenOn": "2020-11-06T18:36:15Z",
+      "side": 1,
+      "message": "Wasn\u0027t sure how to merge two commits within gerrit.\nJust did it with rebase --interactive on my side.\n\nPushed updated commit with test and fix to other CL.\n\nClosing out this CL.",
+      "revId": "89b1d8761f2396042f8c45347df27547024db1e5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
