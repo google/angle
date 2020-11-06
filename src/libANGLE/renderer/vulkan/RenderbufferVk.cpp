@@ -197,9 +197,10 @@ angle::Result RenderbufferVk::setStorageEGLImageTarget(const gl::Context *contex
     uint32_t rendererQueueFamilyIndex = contextVk->getRenderer()->getQueueFamilyIndex();
     if (mImage->isQueueChangeNeccesary(rendererQueueFamilyIndex))
     {
-        vk::CommandBuffer &commandBuffer = contextVk->getOutsideRenderPassCommandBuffer();
+        vk::CommandBuffer *commandBuffer;
+        ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer({}, &commandBuffer));
         mImage->changeLayoutAndQueue(aspect, vk::ImageLayout::ColorAttachment,
-                                     rendererQueueFamilyIndex, &commandBuffer);
+                                     rendererQueueFamilyIndex, commandBuffer);
     }
 
     gl::TextureType viewType = imageVk->getImageTextureType();

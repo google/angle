@@ -425,57 +425,7 @@ class ContextVk : public ContextImpl, public vk::Context
 
     vk::ResourceUseList &getResourceUseList() { return mResourceUseList; }
 
-    angle::Result onBufferTransferRead(vk::BufferHelper *buffer)
-    {
-        return onBufferRead(VK_ACCESS_TRANSFER_READ_BIT, vk::PipelineStage::Transfer, buffer);
-    }
-    angle::Result onBufferTransferWrite(vk::BufferHelper *buffer)
-    {
-        return onBufferWrite(VK_ACCESS_TRANSFER_WRITE_BIT, vk::PipelineStage::Transfer, buffer);
-    }
-    angle::Result onBufferSelfCopy(vk::BufferHelper *buffer)
-    {
-        return onBufferWrite(VK_ACCESS_TRANSFER_READ_BIT | VK_ACCESS_TRANSFER_WRITE_BIT,
-                             vk::PipelineStage::Transfer, buffer);
-    }
-    angle::Result onBufferComputeShaderRead(vk::BufferHelper *buffer)
-    {
-        return onBufferRead(VK_ACCESS_SHADER_READ_BIT, vk::PipelineStage::ComputeShader, buffer);
-    }
-    angle::Result onBufferComputeShaderWrite(vk::BufferHelper *buffer)
-    {
-        return onBufferWrite(VK_ACCESS_SHADER_WRITE_BIT, vk::PipelineStage::ComputeShader, buffer);
-    }
     angle::Result onBufferReleaseToExternal(const vk::BufferHelper &buffer);
-
-    angle::Result onImageTransferRead(VkImageAspectFlags aspectFlags, vk::ImageHelper *image)
-    {
-        return onImageRead(aspectFlags, vk::ImageLayout::TransferSrc, image);
-    }
-    angle::Result onImageTransferWrite(gl::LevelIndex levelStart,
-                                       uint32_t levelCount,
-                                       uint32_t layerStart,
-                                       uint32_t layerCount,
-                                       VkImageAspectFlags aspectFlags,
-                                       vk::ImageHelper *image)
-    {
-        return onImageWrite(levelStart, levelCount, layerStart, layerCount, aspectFlags,
-                            vk::ImageLayout::TransferDst, image);
-    }
-    angle::Result onImageComputeShaderRead(VkImageAspectFlags aspectFlags, vk::ImageHelper *image)
-    {
-        return onImageRead(aspectFlags, vk::ImageLayout::ComputeShaderReadOnly, image);
-    }
-    angle::Result onImageComputeShaderWrite(gl::LevelIndex levelStart,
-                                            uint32_t levelCount,
-                                            uint32_t layerStart,
-                                            uint32_t layerCount,
-                                            VkImageAspectFlags aspectFlags,
-                                            vk::ImageHelper *image)
-    {
-        return onImageWrite(levelStart, levelCount, layerStart, layerCount, aspectFlags,
-                            vk::ImageLayout::ComputeShaderWrite, image);
-    }
     angle::Result onImageReleaseToExternal(const vk::ImageHelper &image);
 
     void onImageRenderPassRead(VkImageAspectFlags aspectFlags,
@@ -516,10 +466,13 @@ class ContextVk : public ContextImpl, public vk::Context
         }
     }
 
-    vk::CommandBuffer &getOutsideRenderPassCommandBuffer()
+    angle::Result getOutsideRenderPassCommandBuffer(const vk::CommandBufferAccess &access,
+                                                    vk::CommandBuffer **commandBufferOut)
     {
         ASSERT(!mOutsideRenderPassCommands->hasRenderPass());
-        return mOutsideRenderPassCommands->getCommandBuffer();
+        ANGLE_TRY(onResourceAccess(access));
+        *commandBufferOut = &mOutsideRenderPassCommands->getCommandBuffer();
+        return angle::Result::Continue;
     }
 
     angle::Result beginNewRenderPass(const vk::Framebuffer &framebuffer,
@@ -881,27 +834,7 @@ class ContextVk : public ContextImpl, public vk::Context
 
     ANGLE_INLINE void onRenderPassFinished() { mRenderPassCommandBuffer = nullptr; }
 
-    angle::Result onBufferRead(VkAccessFlags readAccessType,
-                               vk::PipelineStage readStage,
-                               vk::BufferHelper *buffer);
-    angle::Result onBufferWrite(VkAccessFlags writeAccessType,
-                                vk::PipelineStage writeStage,
-                                vk::BufferHelper *buffer);
-
-    angle::Result onImageRead(VkImageAspectFlags aspectFlags,
-                              vk::ImageLayout imageLayout,
-                              vk::ImageHelper *image);
-    angle::Result onImageWrite(gl::LevelIndex levelStart,
-                               uint32_t levelCount,
-                               uint32_t layerStart,
-                               uint32_t layerCount,
-                               VkImageAspectFlags aspectFlags,
-                               vk::ImageLayout imageLayout,
-                               vk::ImageHelper *image);
-
     void initIndexTypeMap();
-
-    angle::Result endRenderPassIfImageUsed(const vk::ImageHelper &image);
 
     angle::Result endRenderPassIfTransformFeedbackBuffer(const vk::BufferHelper *buffer);
 
@@ -919,6 +852,9 @@ class ContextVk : public ContextImpl, public vk::Context
     angle::Result updateRenderPassDepthStencilAccess();
     bool shouldSwitchToReadOnlyDepthFeedbackLoopMode(const gl::Context *context,
                                                      gl::Texture *texture) const;
+
+    angle::Result onResourceAccess(const vk::CommandBufferAccess &access);
+    angle::Result flushCommandBuffersIfNecessary(const vk::CommandBufferAccess &access);
 
     void outputCumulativePerfCounters();
 

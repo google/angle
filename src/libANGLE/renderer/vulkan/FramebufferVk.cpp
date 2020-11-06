@@ -823,11 +823,12 @@ angle::Result FramebufferVk::blitWithCommand(ContextVk *contextVk,
         blitAspectMask &= ~VK_IMAGE_ASPECT_STENCIL_BIT;
     }
 
-    ANGLE_TRY(contextVk->onImageTransferRead(imageAspectMask, srcImage));
-    ANGLE_TRY(contextVk->onImageTransferWrite(drawRenderTarget->getLevelIndex(), 1,
-                                              drawRenderTarget->getLayerIndex(), 1, imageAspectMask,
-                                              dstImage));
-    vk::CommandBuffer &commandBuffer = contextVk->getOutsideRenderPassCommandBuffer();
+    vk::CommandBufferAccess access;
+    access.onImageTransferRead(imageAspectMask, srcImage);
+    access.onImageTransferWrite(drawRenderTarget->getLevelIndex(), 1,
+                                drawRenderTarget->getLayerIndex(), 1, imageAspectMask, dstImage);
+    vk::CommandBuffer *commandBuffer;
+    ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(access, &commandBuffer));
 
     VkImageBlit blit               = {};
     blit.srcSubresource.aspectMask = blitAspectMask;
@@ -843,9 +844,9 @@ angle::Result FramebufferVk::blitWithCommand(ContextVk *contextVk,
     blit.dstOffsets[0]                 = {destArea.x0(), destArea.y0(), 0};
     blit.dstOffsets[1]                 = {destArea.x1(), destArea.y1(), 1};
 
-    commandBuffer.blitImage(srcImage->getImage(), VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
-                            dstImage->getImage(), VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &blit,
-                            gl_vk::GetFilter(filter));
+    commandBuffer->blitImage(srcImage->getImage(), VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
+                             dstImage->getImage(), VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &blit,
+                             gl_vk::GetFilter(filter));
 
     return angle::Result::Continue;
 }
@@ -1339,7 +1340,21 @@ angle::Result FramebufferVk::resolveColorWithCommand(ContextVk *contextVk,
                                                      const UtilsVk::BlitResolveParameters &params,
                                                      vk::ImageHelper *srcImage)
 {
-    ANGLE_TRY(contextVk->onImageTransferRead(VK_IMAGE_ASPECT_COLOR_BIT, srcImage));
+    vk::CommandBufferAccess access;
+    access.onImageTransferRead(VK_IMAGE_ASPECT_COLOR_BIT, srcImage);
+
+    for (size_t colorIndexGL : mState.getEnabledDrawBuffers())
+    {
+        RenderTargetVk *drawRenderTarget = mRenderTargetCache.getColors()[colorIndexGL];
+        vk::ImageHelper &dstImage        = drawRenderTarget->getImageForWrite();
+
+        access.onImageTransferWrite(drawRenderTarget->getLevelIndex(), 1,
+                                    drawRenderTarget->getLayerIndex(), 1, VK_IMAGE_ASPECT_COLOR_BIT,
+                                    &dstImage);
+    }
+
+    vk::CommandBuffer *commandBuffer;
+    ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(access, &commandBuffer));
 
     VkImageResolve resolveRegion                = {};
     resolveRegion.srcSubresource.aspectMask     = VK_IMAGE_ASPECT_COLOR_BIT;
@@ -1362,18 +1377,13 @@ angle::Result FramebufferVk::resolveColorWithCommand(ContextVk *contextVk,
     for (size_t colorIndexGL : mState.getEnabledDrawBuffers())
     {
         RenderTargetVk *drawRenderTarget = mRenderTargetCache.getColors()[colorIndexGL];
-        ANGLE_TRY(contextVk->onImageTransferWrite(
-            drawRenderTarget->getLevelIndex(), 1, drawRenderTarget->getLayerIndex(), 1,
-            VK_IMAGE_ASPECT_COLOR_BIT, &drawRenderTarget->getImageForWrite()));
+        vk::ImageHelper &dstImage        = drawRenderTarget->getImageForWrite();
 
-        vk::CommandBuffer &commandBuffer = contextVk->getOutsideRenderPassCommandBuffer();
-
-        vk::ImageHelper &dstImage = drawRenderTarget->getImageForWrite();
-        vk::LevelIndex levelVk    = dstImage.toVkLevel(drawRenderTarget->getLevelIndex());
+        vk::LevelIndex levelVk = dstImage.toVkLevel(drawRenderTarget->getLevelIndex());
         resolveRegion.dstSubresource.mipLevel       = levelVk.get();
         resolveRegion.dstSubresource.baseArrayLayer = drawRenderTarget->getLayerIndex();
 
-        srcImage->resolve(&dstImage, resolveRegion, &commandBuffer);
+        srcImage->resolve(&dstImage, resolveRegion, commandBuffer);
 
         perfCounters.resolveImageCommands++;
     }

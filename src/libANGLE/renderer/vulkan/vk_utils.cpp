@@ -784,7 +784,6 @@ uint32_t ResourceSerialFactory::issueSerial()
     }
 
 ANGLE_VK_SERIAL_OP(ANGLE_DEFINE_GEN_VK_SERIAL)
-
 }  // namespace vk
 
 #if !defined(ANGLE_SHARED_LIBVULKAN)

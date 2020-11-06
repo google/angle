@@ -1291,15 +1291,18 @@ angle::Result WindowSurfaceVk::present(ContextVk *contextVk,
         contextVk->optimizeRenderPassForPresent(currentFramebuffer.getHandle());
     }
 
-    vk::CommandBuffer *commandBuffer = &contextVk->getOutsideRenderPassCommandBuffer();
+    vk::CommandBuffer *commandBuffer;
+    ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer({}, &commandBuffer));
 
     if (mColorImageMS.valid())
     {
         // Transition the multisampled image to TRANSFER_SRC for resolve.
-        ANGLE_TRY(contextVk->onImageTransferRead(VK_IMAGE_ASPECT_COLOR_BIT, &mColorImageMS));
-        ANGLE_TRY(contextVk->onImageTransferWrite(gl::LevelIndex(0), 1, 0, 1,
-                                                  VK_IMAGE_ASPECT_COLOR_BIT, &image.image));
-        commandBuffer = &contextVk->getOutsideRenderPassCommandBuffer();
+        vk::CommandBufferAccess access;
+        access.onImageTransferRead(VK_IMAGE_ASPECT_COLOR_BIT, &mColorImageMS);
+        access.onImageTransferWrite(gl::LevelIndex(0), 1, 0, 1, VK_IMAGE_ASPECT_COLOR_BIT,
+                                    &image.image);
+
+        ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(access, &commandBuffer));
 
         VkImageResolve resolveRegion                = {};
         resolveRegion.srcSubresource.aspectMask     = VK_IMAGE_ASPECT_COLOR_BIT;
@@ -1317,7 +1320,7 @@ angle::Result WindowSurfaceVk::present(ContextVk *contextVk,
     if (overlayHasWidget)
     {
         ANGLE_TRY(drawOverlay(contextVk, &image));
-        commandBuffer = &contextVk->getOutsideRenderPassCommandBuffer();
+        ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer({}, &commandBuffer));
     }
 
     // This does nothing if it's already in the requested layout

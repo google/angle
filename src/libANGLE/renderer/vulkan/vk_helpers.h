@@ -2245,6 +2245,120 @@ ANGLE_INLINE bool CommandBufferHelper::usesImageInRenderPass(const ImageHelper &
     ASSERT(mIsRenderPassCommandBuffer);
     return mRenderPassUsedImages.contains(image.getImageSerial().getValue());
 }
+
+// Sometimes ANGLE issues a command internally, such as copies, draws and dispatches that do not
+// directly correspond to the application draw/dispatch call.  Before the command is recorded in the
+// command buffer, the render pass may need to be broken and/or appropriate barriers may need to be
+// inserted.  The following struct aggregates all resources that such internal commands need.
+struct CommandBufferBufferAccess
+{
+    BufferHelper *buffer;
+    VkAccessFlags accessType;
+    PipelineStage stage;
+};
+struct CommandBufferImageAccess
+{
+    ImageHelper *image;
+    VkImageAspectFlags aspectFlags;
+    ImageLayout imageLayout;
+};
+struct CommandBufferImageWrite
+{
+    CommandBufferImageAccess access;
+    gl::LevelIndex levelStart;
+    uint32_t levelCount;
+    uint32_t layerStart;
+    uint32_t layerCount;
+};
+class CommandBufferAccess : angle::NonCopyable
+{
+  public:
+    CommandBufferAccess();
+    ~CommandBufferAccess();
+
+    void onBufferTransferRead(BufferHelper *buffer)
+    {
+        onBufferRead(VK_ACCESS_TRANSFER_READ_BIT, PipelineStage::Transfer, buffer);
+    }
+    void onBufferTransferWrite(BufferHelper *buffer)
+    {
+        onBufferWrite(VK_ACCESS_TRANSFER_WRITE_BIT, PipelineStage::Transfer, buffer);
+    }
+    void onBufferSelfCopy(BufferHelper *buffer)
+    {
+        onBufferWrite(VK_ACCESS_TRANSFER_READ_BIT | VK_ACCESS_TRANSFER_WRITE_BIT,
+                      PipelineStage::Transfer, buffer);
+    }
+    void onBufferComputeShaderRead(BufferHelper *buffer)
+    {
+        onBufferRead(VK_ACCESS_SHADER_READ_BIT, PipelineStage::ComputeShader, buffer);
+    }
+    void onBufferComputeShaderWrite(BufferHelper *buffer)
+    {
+        onBufferWrite(VK_ACCESS_SHADER_WRITE_BIT, PipelineStage::ComputeShader, buffer);
+    }
+
+    void onImageTransferRead(VkImageAspectFlags aspectFlags, ImageHelper *image)
+    {
+        onImageRead(aspectFlags, ImageLayout::TransferSrc, image);
+    }
+    void onImageTransferWrite(gl::LevelIndex levelStart,
+                              uint32_t levelCount,
+                              uint32_t layerStart,
+                              uint32_t layerCount,
+                              VkImageAspectFlags aspectFlags,
+                              ImageHelper *image)
+    {
+        onImageWrite(levelStart, levelCount, layerStart, layerCount, aspectFlags,
+                     ImageLayout::TransferDst, image);
+    }
+    void onImageComputeShaderRead(VkImageAspectFlags aspectFlags, ImageHelper *image)
+    {
+        onImageRead(aspectFlags, ImageLayout::ComputeShaderReadOnly, image);
+    }
+    void onImageComputeShaderWrite(gl::LevelIndex levelStart,
+                                   uint32_t levelCount,
+                                   uint32_t layerStart,
+                                   uint32_t layerCount,
+                                   VkImageAspectFlags aspectFlags,
+                                   ImageHelper *image)
+    {
+        onImageWrite(levelStart, levelCount, layerStart, layerCount, aspectFlags,
+                     ImageLayout::ComputeShaderWrite, image);
+    }
+
+    // The limits reflect the current maximum concurrent usage of each resource type.  ASSERTs will
+    // fire if this limit is exceeded in the future.
+    using ReadBuffers  = angle::FixedVector<CommandBufferBufferAccess, 2>;
+    using WriteBuffers = angle::FixedVector<CommandBufferBufferAccess, 2>;
+    using ReadImages   = angle::FixedVector<CommandBufferImageAccess, 2>;
+    using WriteImages  = angle::FixedVector<CommandBufferImageWrite, 1>;
+
+    const ReadBuffers &getReadBuffers() const { return mReadBuffers; }
+    const WriteBuffers &getWriteBuffers() const { return mWriteBuffers; }
+    const ReadImages &getReadImages() const { return mReadImages; }
+    const WriteImages &getWriteImages() const { return mWriteImages; }
+
+  private:
+    void onBufferRead(VkAccessFlags readAccessType, PipelineStage readStage, BufferHelper *buffer);
+    void onBufferWrite(VkAccessFlags writeAccessType,
+                       PipelineStage writeStage,
+                       BufferHelper *buffer);
+
+    void onImageRead(VkImageAspectFlags aspectFlags, ImageLayout imageLayout, ImageHelper *image);
+    void onImageWrite(gl::LevelIndex levelStart,
+                      uint32_t levelCount,
+                      uint32_t layerStart,
+                      uint32_t layerCount,
+                      VkImageAspectFlags aspectFlags,
+                      ImageLayout imageLayout,
+                      ImageHelper *image);
+
+    ReadBuffers mReadBuffers;
+    WriteBuffers mWriteBuffers;
+    ReadImages mReadImages;
+    WriteImages mWriteImages;
+};
 }  // namespace vk
 }  // namespace rx
 

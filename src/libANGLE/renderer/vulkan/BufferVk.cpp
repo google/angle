@@ -341,24 +341,26 @@ angle::Result BufferVk::copySubData(const gl::Context *context,
     }
 
     // Check for self-dependency.
+    vk::CommandBufferAccess access;
     if (sourceBuffer.getBufferSerial() == mBuffer->getBufferSerial())
     {
-        ANGLE_TRY(contextVk->onBufferSelfCopy(mBuffer));
+        access.onBufferSelfCopy(mBuffer);
     }
     else
     {
-        ANGLE_TRY(contextVk->onBufferTransferRead(&sourceBuffer));
-        ANGLE_TRY(contextVk->onBufferTransferWrite(mBuffer));
+        access.onBufferTransferRead(&sourceBuffer);
+        access.onBufferTransferWrite(mBuffer);
     }
 
-    vk::CommandBuffer &commandBuffer = contextVk->getOutsideRenderPassCommandBuffer();
+    vk::CommandBuffer *commandBuffer;
+    ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(access, &commandBuffer));
 
     // Enqueue a copy command on the GPU.
     const VkBufferCopy copyRegion = {static_cast<VkDeviceSize>(sourceOffset),
                                      static_cast<VkDeviceSize>(destOffset),
                                      static_cast<VkDeviceSize>(size)};
 
-    commandBuffer.copyBuffer(sourceBuffer.getBuffer(), mBuffer->getBuffer(), 1, &copyRegion);
+    commandBuffer->copyBuffer(sourceBuffer.getBuffer(), mBuffer->getBuffer(), 1, &copyRegion);
 
     // The new destination buffer data may require a conversion for the next draw, so mark it dirty.
     onDataChanged();
@@ -666,13 +668,14 @@ angle::Result BufferVk::copyToBufferImpl(ContextVk *contextVk,
                                          uint32_t copyCount,
                                          const VkBufferCopy *copies)
 {
+    vk::CommandBufferAccess access;
+    access.onBufferTransferWrite(destBuffer);
+    access.onBufferTransferRead(mBuffer);
 
-    ANGLE_TRY(contextVk->onBufferTransferWrite(destBuffer));
-    ANGLE_TRY(contextVk->onBufferTransferRead(mBuffer));
+    vk::CommandBuffer *commandBuffer;
+    ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(access, &commandBuffer));
 
-    vk::CommandBuffer &commandBuffer = contextVk->getOutsideRenderPassCommandBuffer();
-
-    commandBuffer.copyBuffer(mBuffer->getBuffer(), destBuffer->getBuffer(), copyCount, copies);
+    commandBuffer->copyBuffer(mBuffer->getBuffer(), destBuffer->getBuffer(), copyCount, copies);
 
     return angle::Result::Continue;
 }
