@@ -18,6 +18,23 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c2202c83_7c4a3493",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-06T13:08:21Z",
+      "side": 1,
+      "message": "Nice job Tim. New version looks good. You could consider making this a build flag instead of hard coded define like I did originally.",
+      "revId": "a6bb7132b70b6411058640950329d060ed8621a0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "906aaf5b_b0a723c6",
@@ -36,6 +53,52 @@
         "startChar": 37,
         "endLine": 23,
         "endChar": 43
+      },
+      "revId": "a6bb7132b70b6411058640950329d060ed8621a0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "14da70c5_413ab880",
+        "filename": "src/common/system_utils_posix.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-06T13:08:21Z",
+      "side": 1,
+      "message": "nit: just use 0, we use this everywhere already",
+      "range": {
+        "startLine": 39,
+        "startChar": 27,
+        "endLine": 39,
+        "endChar": 31
+      },
+      "revId": "a6bb7132b70b6411058640950329d060ed8621a0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9b78c2c5_910bd8c5",
+        "filename": "util/posix/crash_handler_posix.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-06T13:08:21Z",
+      "side": 1,
+      "message": "Can you add a comment why you had to go with fork() ? Is it faster/safer than system()?",
+      "range": {
+        "startLine": 132,
+        "startChar": 8,
+        "endLine": 142,
+        "endChar": 12
       },
       "revId": "a6bb7132b70b6411058640950329d060ed8621a0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
