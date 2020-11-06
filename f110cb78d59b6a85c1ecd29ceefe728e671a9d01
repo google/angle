@@ -18,6 +18,46 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "82c92962_95e5307b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2020-11-06T15:59:31Z",
+      "side": 1,
+      "message": "LGTM with Shabi\u0027s nits addressed.  Thanks for pushing on this Jamie.",
+      "revId": "f110cb78d59b6a85c1ecd29ceefe728e671a9d01",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b180fbfa_8480ca2e",
+        "filename": "src/compiler/translator/builtin_function_declarations.txt",
+        "patchSetId": 5
+      },
+      "lineNbr": 676,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2020-11-06T15:59:31Z",
+      "side": 1,
+      "message": "Does this (without extension) effectively make texture_buffer available in ES 3.1 with ANGLE?  There must be no negative tests for that.",
+      "range": {
+        "startLine": 676,
+        "startChar": 35,
+        "endLine": 676,
+        "endChar": 51
+      },
+      "revId": "f110cb78d59b6a85c1ecd29ceefe728e671a9d01",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e8cce402_42f54e81",
