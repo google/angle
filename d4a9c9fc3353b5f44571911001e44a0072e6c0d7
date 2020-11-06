@@ -70,6 +70,24 @@
       "parentUuid": "4972dab2_8cc84883",
       "revId": "d4a9c9fc3353b5f44571911001e44a0072e6c0d7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4da93058_d891f6a3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-06T21:54:05Z",
+      "side": 1,
+      "message": "You should probably restore CWD before generating the backtrace.",
+      "parentUuid": "678c34dc_d1bd7626",
+      "revId": "d4a9c9fc3353b5f44571911001e44a0072e6c0d7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
