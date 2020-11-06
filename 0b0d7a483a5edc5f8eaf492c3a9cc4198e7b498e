@@ -328,6 +328,30 @@
       },
       "revId": "0b0d7a483a5edc5f8eaf492c3a9cc4198e7b498e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2c62fdaf_85650f3b",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 3460,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-06T18:06:11Z",
+      "side": 1,
+      "message": "\u003e in the middle of a template\n\nWhat does that mean?\n\nWhy avoid ToUnderlying()?   It\u0027s just doing a static_cast also.",
+      "parentUuid": "2c7a6730_f84309ce",
+      "range": {
+        "startLine": 3460,
+        "startChar": 27,
+        "endLine": 3460,
+        "endChar": 34
+      },
+      "revId": "0b0d7a483a5edc5f8eaf492c3a9cc4198e7b498e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
