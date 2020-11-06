@@ -304,6 +304,30 @@
       },
       "revId": "0b0d7a483a5edc5f8eaf492c3a9cc4198e7b498e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2c7a6730_f84309ce",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 3460,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-06T17:43:05Z",
+      "side": 1,
+      "message": "Would recommend against ToUnderlying except when in the middle of a template.",
+      "parentUuid": "a10de554_343a9e5a",
+      "range": {
+        "startLine": 3460,
+        "startChar": 27,
+        "endLine": 3460,
+        "endChar": 34
+      },
+      "revId": "0b0d7a483a5edc5f8eaf492c3a9cc4198e7b498e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
