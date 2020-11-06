@@ -16,6 +16,24 @@
       "message": "What API version is Pixel2? I wonder if we can just require API 29 (if P2 \u003e\u003d 29, for the bots) and avoid #if\u0027ing on the version.",
       "revId": "1bf58e91fbec40184af8a7dfb1f5543a5fed447b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b109ef6c_7156cac8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2020-11-06T16:17:07Z",
+      "side": 1,
+      "message": "It depends on which OS version we currently have installed on those bots. I can try to change the bot config after this lands to see if we can get the tests to run.",
+      "parentUuid": "52a97eeb_11bbeed0",
+      "revId": "1bf58e91fbec40184af8a7dfb1f5543a5fed447b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
