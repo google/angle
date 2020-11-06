@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3372de53_3412785f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-06T16:18:09Z",
+      "side": 1,
+      "message": "LGTM. I would mildly prefer putting the rotate after the gles version (gles3-rotate90 instead of rotate90-gles), otherwise it\u0027s good to land. khr makes sense as a prefix, rotate as a suffix.",
+      "revId": "9c6af9e293c48d26bd1fa78407b0b8f8fa225d48",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
