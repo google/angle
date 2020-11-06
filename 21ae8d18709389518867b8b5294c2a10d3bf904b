@@ -70,6 +70,24 @@
       "parentUuid": "686d5412_0ba7f533",
       "revId": "21ae8d18709389518867b8b5294c2a10d3bf904b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4a76637e_b8cbd931",
+        "filename": "src/libANGLE/renderer/metal/ContextMtl.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 473,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-06T15:27:49Z",
+      "side": 0,
+      "message": "Shabi, we can take care of this ourselves. Quyen, thanks for your outstanding contributions to the project.",
+      "parentUuid": "09e3ffcf_e6c74881",
+      "revId": "21ae8d18709389518867b8b5294c2a10d3bf904b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
