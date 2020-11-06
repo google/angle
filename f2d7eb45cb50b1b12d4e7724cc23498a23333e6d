@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3a9a6dfb_83f2a850",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 20
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-06T21:30:32Z",
+      "side": 1,
+      "message": "This is good work!  I did an initial review.  I\u0027d like to do another pass, and probably watch the code in a debugger before doing another pass.\n\nCharlie and I discussed testing via Chat.  This is a large enough change that we\u0027ll want to redo the pre-rotation testing that I used to do.  It basically involves running the ANGLE version of dEQP, end2end tests, etc. while forcing the device into all 4 rotations.  We have to run tests with Identity to establish a baseline, since Pixel 4 gets different results than Pixel 2.\n\n[ ] CHECK STILL: Probably answered in the next CL: do shaders ever need to be recompiled?  I see a flag for whether to compile them with/without the specialization constant.",
+      "revId": "f2d7eb45cb50b1b12d4e7724cc23498a23333e6d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}

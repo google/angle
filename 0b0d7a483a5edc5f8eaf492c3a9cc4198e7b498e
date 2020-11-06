@@ -106,6 +106,52 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "5b3bc3f7_c8279df9",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 18
+      },
+      "lineNbr": 796,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-06T21:30:32Z",
+      "side": 1,
+      "message": "Please add a comment here and in \"src/libANGLE/renderer/renderer_utils.h\" that these values must be kept in sync.\n\nAlso, we should add a comment somewhere that pre-rotation only supports the 1st four values, and that the last four are being used to help with y-flip.  I added the four values because the Vulkan spec supports them for x-flip (mirror?).\n\nJamie, is there a way for both headers to share one declaration so that we\u0027re not duplicating them?",
+      "range": {
+        "startLine": 783,
+        "startChar": 0,
+        "endLine": 796,
+        "endChar": 2
+      },
+      "revId": "0b0d7a483a5edc5f8eaf492c3a9cc4198e7b498e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6224de2b_7ebaf920",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-06T21:30:32Z",
+      "side": 1,
+      "message": "Looks like these values are a repeat of the non-Flipped versions above.  Just checking that this is what\u0027s desired.\n\nBTW, I like storing them this way--much easier to see the matrix values than the way I stored them in ContextVk (formatted for fast memcpy).",
+      "range": {
+        "startLine": 58,
+        "startChar": 46,
+        "endLine": 61,
+        "endChar": 78
+      },
+      "revId": "0b0d7a483a5edc5f8eaf492c3a9cc4198e7b498e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "981e98c7_5cbf989c",
         "filename": "src/compiler/translator/TranslatorVulkan.cpp",
         "patchSetId": 18
@@ -122,6 +168,121 @@
         "startChar": 22,
         "endLine": 121,
         "endChar": 23
+      },
+      "revId": "0b0d7a483a5edc5f8eaf492c3a9cc4198e7b498e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "461cde73_0fc184d0",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-06T21:30:32Z",
+      "side": 1,
+      "message": "I NEED TO COME BACK TO THIS ... CHECK FOR HOW IT\u0027S USED ...\n\nThe y values look different than what I would think.  I\u0027m wondering if the idea is that an offscreen drawable (e.g. FBO) will use the first 4 values and an onscreen (i.e. swapchain image) will use the last 4 values (e.g. FlippedIdentity, FlippedRotated90Degrees)?\n\nIf so, then I\u0027m okay with the identity values, which matches what I generated.  The 90/180/270 values that I generated were based on the assumption that only onscreen drawables would ever have those rotations, in which case the values are wrong below.\n\nI\u0027ll point out specifics below.",
+      "range": {
+        "startLine": 123,
+        "startChar": 31,
+        "endLine": 123,
+        "endChar": 43
+      },
+      "revId": "0b0d7a483a5edc5f8eaf492c3a9cc4198e7b498e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f5589af4_b5cbb04d",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-06T21:30:32Z",
+      "side": 1,
+      "message": "Should be 1.0 for offscreen and -1.0 for onscreen.  Assuming this is for offscreen, this is correct.",
+      "range": {
+        "startLine": 124,
+        "startChar": 45,
+        "endLine": 124,
+        "endChar": 49
+      },
+      "revId": "0b0d7a483a5edc5f8eaf492c3a9cc4198e7b498e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2ca0a6b5_76d90676",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-06T21:30:32Z",
+      "side": 1,
+      "message": "This should be 1.0 for onscreen.  90-degrees is always onscreen.",
+      "range": {
+        "startLine": 129,
+        "startChar": 60,
+        "endLine": 129,
+        "endChar": 65
+      },
+      "revId": "0b0d7a483a5edc5f8eaf492c3a9cc4198e7b498e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "30c945b3_4042747f",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-06T21:30:32Z",
+      "side": 1,
+      "message": "This should be 1.0 for onscreen.  180-degrees is always onscreen.",
+      "range": {
+        "startLine": 130,
+        "startChar": 62,
+        "endLine": 130,
+        "endChar": 67
+      },
+      "revId": "0b0d7a483a5edc5f8eaf492c3a9cc4198e7b498e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f713a6de_0320a0cc",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-06T21:30:32Z",
+      "side": 1,
+      "message": "This should be -1.0 for onscreen.  270-degrees is always onscreen.",
+      "range": {
+        "startLine": 131,
+        "startChar": 62,
+        "endLine": 131,
+        "endChar": 66
       },
       "revId": "0b0d7a483a5edc5f8eaf492c3a9cc4198e7b498e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
@@ -209,6 +370,24 @@
       "writtenOn": "2020-11-06T16:07:40Z",
       "side": 1,
       "message": "for instance, you could merge your changes into this file, and make it generally handle rotation/y-flip.",
+      "revId": "0b0d7a483a5edc5f8eaf492c3a9cc4198e7b498e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "12c3f421_2eec85cd",
+        "filename": "src/compiler/translator/tree_ops/RewriteDfdy.h",
+        "patchSetId": 18
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-06T21:30:32Z",
+      "side": 1,
+      "message": "Jamie, do you mean put the header stuff in this file and the code in the .cpp file?  This header is #include\u0027d twice.",
+      "parentUuid": "71d6b950_6eafda06",
       "revId": "0b0d7a483a5edc5f8eaf492c3a9cc4198e7b498e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
@@ -373,6 +552,29 @@
         "startChar": 27,
         "endLine": 3460,
         "endChar": 34
+      },
+      "revId": "0b0d7a483a5edc5f8eaf492c3a9cc4198e7b498e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a861e3cd_620a45f6",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 3464,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-06T21:30:32Z",
+      "side": 1,
+      "message": "Charlie and I discussed this in Chat.  The goal to do less work in the shader, including WRT flipY.\n\nWe should add a comment somewhere that pre-rotation only supports the types of rotations that a normal Android user does (i.e. Identity and the Rotate* values, not the Flipped* values).\n\nWhile I added these flipped-rotation values into the enum, I never tested them nor tried to support them.  My goal was to make normal Android rotations work.  I think there are a lot of ANGLE paths that don\u0027t look for these values.  The bottom line is that I don\u0027t know whether this will or won\u0027t work.  I think we will need full testing with all rotations to ensure there are no regressions.  In other words, test all of dEQP, end2end tests, etc, each with the device forced into a given rotation.  It\u0027s a very manually-intensive effort.",
+      "range": {
+        "startLine": 3462,
+        "startChar": 8,
+        "endLine": 3464,
+        "endChar": 80
       },
       "revId": "0b0d7a483a5edc5f8eaf492c3a9cc4198e7b498e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
