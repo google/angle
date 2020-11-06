@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f2a763ca_573fcd49",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2020-11-06T15:00:39Z",
+      "side": 1,
+      "message": "PTAL!\n\nMohan, Courtney: I added YUV test coverage in our end2end tests many of the tests require compiling our test suite with Android API 29. The VK backend fails to sample from AHARDWAREBUFFER_FORMAT_Y8Cb8Cr8_420 currently.\n\nAlbert: I can\u0027t verify this CL with Chrome because I don\u0027t have a Chromecast setup, can you see if it works?",
+      "revId": "15c0fd99943fa060e985152c194cf0ae59c9b537",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
