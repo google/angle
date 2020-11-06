@@ -70,6 +70,24 @@
       "parentUuid": "5854f0cd_e7cf8554",
       "revId": "83a3740baaae1e40c2d55df77bf1ff02ff207c92",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a8299320_27a3041a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-06T01:56:55Z",
+      "side": 1,
+      "message": "Turns out a glFlush() is required after creating the glFenceSync(), to make sure the fence object (vulkan Event) is created.   With that added, things look good.",
+      "parentUuid": "7d19c3c8_21eb2002",
+      "revId": "83a3740baaae1e40c2d55df77bf1ff02ff207c92",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
