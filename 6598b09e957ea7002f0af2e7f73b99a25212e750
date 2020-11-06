@@ -39,6 +39,30 @@
       },
       "revId": "6598b09e957ea7002f0af2e7f73b99a25212e750",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b96876a8_1506e34d",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 2016,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-06T20:43:31Z",
+      "side": 1,
+      "message": "i had a 2 state enum but i removed it after your comment, do you want that back?",
+      "parentUuid": "e2b759fe_6315b6ea",
+      "range": {
+        "startLine": 2016,
+        "startChar": 52,
+        "endLine": 2016,
+        "endChar": 76
+      },
+      "revId": "6598b09e957ea7002f0af2e7f73b99a25212e750",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
