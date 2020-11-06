@@ -46,6 +46,30 @@
       },
       "revId": "e70b1527e69f65af44044b4856761a9cb32df91e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8db95f47_57382b08",
+        "filename": "scripts/roll_aosp.sh",
+        "patchSetId": 2
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-06T20:29:28Z",
+      "side": 1,
+      "message": "Does \u0027--preserve-root\u0027 work, to at least mitigate some of the risk?\n\nThere\u0027s also this idea:\nhttps://stackoverflow.com/a/1169300\n\u003e There is a set -u bash directive that will cause exit, when uninitialized variable is used.",
+      "parentUuid": "ec17a564_8e49b860",
+      "range": {
+        "startLine": 59,
+        "startChar": 0,
+        "endLine": 60,
+        "endChar": 29
+      },
+      "revId": "e70b1527e69f65af44044b4856761a9cb32df91e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
