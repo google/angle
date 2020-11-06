@@ -1302,6 +1302,16 @@ class ImageHelper final : public Resource, public angle::Subject
                                      uint32_t levelCount,
                                      uint32_t baseArrayLayer,
                                      uint32_t layerCount) const;
+    angle::Result initLayerImageViewWithFormat(Context *context,
+                                               gl::TextureType textureType,
+                                               const Format &format,
+                                               VkImageAspectFlags aspectMask,
+                                               const gl::SwizzleState &swizzleMap,
+                                               ImageView *imageViewOut,
+                                               LevelIndex baseMipLevelVk,
+                                               uint32_t levelCount,
+                                               uint32_t baseArrayLayer,
+                                               uint32_t layerCount) const;
     angle::Result initAliasedLayerImageView(Context *context,
                                             gl::TextureType textureType,
                                             VkImageAspectFlags aspectMask,
