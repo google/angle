@@ -34,6 +34,24 @@
       "parentUuid": "18ac9a8a_ca0a1b6a",
       "revId": "21ae8d18709389518867b8b5294c2a10d3bf904b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "686d5412_0ba7f533",
+        "filename": "src/libANGLE/renderer/metal/ContextMtl.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 473,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2020-11-06T10:30:07Z",
+      "side": 0,
+      "message": "Right now Metal reuse a lot of stuffs from TranslatorVulkan. So if there are significant behavior changes in the vulkan translator, the metal backend must be updated also. I understand it would be a pain some times.\n\nOne possible way is just making TranslatorMetal a copy of TranslatorVulkan. That way if there is breaking change in vulkan it won’t affect metal, though there would be duplicated code.\n\nIdeal method is creating Metal translator from scratch, translating directly to metal shader (bypassing spirv code). That would a giant task tbh.",
+      "parentUuid": "b932ff99_8e57ee6b",
+      "revId": "21ae8d18709389518867b8b5294c2a10d3bf904b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
