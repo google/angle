@@ -1,0 +1,107 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b7e51c2d_6177e176",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 18
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-06T16:07:40Z",
+      "side": 1,
+      "message": "LGTM modulo cleanups \u0026 other nits.",
+      "revId": "0b0d7a483a5edc5f8eaf492c3a9cc4198e7b498e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d2cef22f_33447f4b",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 18
+      },
+      "lineNbr": 345,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-06T16:07:40Z",
+      "side": 1,
+      "message": "nit: we allow these to be pretty long, so SH_USE_ROTATION_SPECIALIZATION_CONSTANT is great.",
+      "range": {
+        "startLine": 345,
+        "startChar": 23,
+        "endLine": 345,
+        "endChar": 48
+      },
+      "revId": "0b0d7a483a5edc5f8eaf492c3a9cc4198e7b498e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "93c6e1e1_8c32e61c",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 226,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-06T16:07:40Z",
+      "side": 1,
+      "message": "can you isolate all the rotation logic into a new separate source file and just expose key entry points to inject the transformation? this is getting to be a fair number of functions.",
+      "range": {
+        "startLine": 226,
+        "startChar": 0,
+        "endLine": 226,
+        "endChar": 31
+      },
+      "revId": "0b0d7a483a5edc5f8eaf492c3a9cc4198e7b498e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "71d6b950_6eafda06",
+        "filename": "src/compiler/translator/tree_ops/RewriteDfdy.h",
+        "patchSetId": 18
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-06T16:07:40Z",
+      "side": 1,
+      "message": "for instance, you could merge your changes into this file, and make it generally handle rotation/y-flip.",
+      "revId": "0b0d7a483a5edc5f8eaf492c3a9cc4198e7b498e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bf804728_c88be908",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 3460,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-06T16:07:40Z",
+      "side": 1,
+      "message": "nit: uint32_t if these never need to be negative.",
+      "range": {
+        "startLine": 3460,
+        "startChar": 27,
+        "endLine": 3460,
+        "endChar": 34
+      },
+      "revId": "0b0d7a483a5edc5f8eaf492c3a9cc4198e7b498e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
