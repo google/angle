@@ -1904,26 +1904,48 @@ void ContextVk::commandProcessorSyncErrorsAndQueueCommand(vk::CommandProcessorTa
     mRenderer->queueCommand(this, command);
 }
 
-angle::Result ContextVk::submitFrame(const vk::Semaphore *signalSemaphore,
-                                     vk::ResourceUseList *resourceList)
+angle::Result ContextVk::submitFrame(const vk::Semaphore *signalSemaphore)
 {
-    ASSERT(!getRenderer()->getFeatures().commandProcessor.enabled);
+    if (mCurrentWindowSurface)
+    {
+        vk::Semaphore waitSemaphore = mCurrentWindowSurface->getAcquireImageSemaphore();
+        if (waitSemaphore.valid())
+        {
+            addWaitSemaphore(waitSemaphore.getHandle(),
+                             VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT);
+            addGarbage(&waitSemaphore);
+        }
+    }
 
     if (vk::CommandBufferHelper::kEnableCommandStreamDiagnostics)
     {
         dumpCommandStreamDiagnostics();
     }
 
-    ANGLE_TRY(ensureSubmitFenceInitialized());
-    ANGLE_TRY(mCommandQueue.submitFrame(this, mContextPriority, mWaitSemaphores,
-                                        mWaitSemaphoreStageMasks, signalSemaphore, mSubmitFence,
-                                        resourceList, &mCurrentGarbage, &mCommandPool));
+    if (mRenderer->getFeatures().commandProcessor.enabled)
+    {
+        vk::CommandProcessorTask flushAndQueueSubmit;
+        flushAndQueueSubmit.initFlushAndQueueSubmit(
+            std::move(mWaitSemaphores), std::move(mWaitSemaphoreStageMasks), signalSemaphore,
+            mContextPriority, std::move(mCurrentGarbage), std::move(mResourceUseList));
+
+        commandProcessorSyncErrorsAndQueueCommand(&flushAndQueueSubmit);
+    }
+    else
+    {
+        ANGLE_TRY(ensureSubmitFenceInitialized());
+        ANGLE_TRY(mCommandQueue.submitFrame(this, mContextPriority, mWaitSemaphores,
+                                            mWaitSemaphoreStageMasks, signalSemaphore, mSubmitFence,
+                                            &mResourceUseList, &mCurrentGarbage, &mCommandPool));
+        // Make sure a new fence is created for the next submission.
+        mRenderer->resetSharedFence(&mSubmitFence);
+
+        mWaitSemaphores.clear();
+        mWaitSemaphoreStageMasks.clear();
+    }
 
     onRenderPassFinished();
     mComputeDirtyBits |= mNewComputeCommandBufferDirtyBits;
-
-    // Make sure a new fence is created for the next submission.
-    mRenderer->resetSharedFence(&mSubmitFence);
 
     if (mGpuEventsEnabled)
     {
@@ -4472,48 +4494,7 @@ angle::Result ContextVk::flushImpl(const vk::Semaphore *signalSemaphore)
     mDefaultUniformStorage.releaseInFlightBuffersToResourceUseList(this);
     mStagingBuffer.releaseInFlightBuffersToResourceUseList(this);
 
-    waitForSwapchainImageIfNecessary();
-
-    if (mRenderer->getFeatures().commandProcessor.enabled)
-    {
-        // Some tasks from ContextVk::submitFrame() that run before CommandQueue::submitFrame()
-        gl::RunningGraphWidget *renderPassCount =
-            mState.getOverlay()->getRunningGraphWidget(gl::WidgetId::VulkanRenderPassCount);
-        renderPassCount->add(mRenderPassCommands->getAndResetCounter());
-        renderPassCount->next();
-
-        if (vk::CommandBufferHelper::kEnableCommandStreamDiagnostics)
-        {
-            dumpCommandStreamDiagnostics();
-        }
-
-        // Send a flush command to worker thread that will:
-        // 1. Create submitInfo
-        // 2. Call submitFrame()
-        // 3. Allocate new primary command buffer
-        vk::CommandProcessorTask flushAndQueueSubmit;
-        flushAndQueueSubmit.initFlushAndQueueSubmit(
-            std::move(mWaitSemaphores), std::move(mWaitSemaphoreStageMasks), signalSemaphore,
-            mContextPriority, std::move(mCurrentGarbage), std::move(mResourceUseList));
-
-        commandProcessorSyncErrorsAndQueueCommand(&flushAndQueueSubmit);
-
-        // Some tasks from ContextVk::submitFrame() that run after CommandQueue::submitFrame()
-        onRenderPassFinished();
-        mComputeDirtyBits |= mNewComputeCommandBufferDirtyBits;
-
-        if (mGpuEventsEnabled)
-        {
-            ANGLE_TRY(checkCompletedGpuEvents());
-        }
-    }
-    else
-    {
-        ANGLE_TRY(submitFrame(signalSemaphore, &mResourceUseList));
-
-        mWaitSemaphores.clear();
-        mWaitSemaphoreStageMasks.clear();
-    }
+    ANGLE_TRY(submitFrame(signalSemaphore));
 
     mPerfCounters.renderPasses                           = 0;
     mPerfCounters.writeDescriptorSets                    = 0;
@@ -4771,20 +4752,6 @@ angle::Result ContextVk::updateDefaultAttribute(size_t attribIndex)
     return mVertexArray->updateDefaultAttrib(this, attribIndex, bufferHandle,
                                              defaultBuffer.getCurrentBuffer(),
                                              static_cast<uint32_t>(offset));
-}
-
-void ContextVk::waitForSwapchainImageIfNecessary()
-{
-    if (mCurrentWindowSurface)
-    {
-        vk::Semaphore waitSemaphore = mCurrentWindowSurface->getAcquireImageSemaphore();
-        if (waitSemaphore.valid())
-        {
-            addWaitSemaphore(waitSemaphore.getHandle(),
-                             VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT);
-            addGarbage(&waitSemaphore);
-        }
-    }
 }
 
 vk::DescriptorSetLayoutDesc ContextVk::getDriverUniformsDescriptorSetDesc(
