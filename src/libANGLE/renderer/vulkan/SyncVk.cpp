@@ -39,7 +39,6 @@ void SyncHelper::releaseToRenderer(RendererVk *renderer)
         ANGLE_TRACE_EVENT0("gpu.angle", "SyncHelper::releaseToRenderer");
         renderer->waitForCommandProcessorIdle(nullptr);
     }
-    mFence.reset(renderer->getDevice());
 }
 
 angle::Result SyncHelper::initialize(ContextVk *contextVk)
@@ -55,20 +54,6 @@ angle::Result SyncHelper::initialize(ContextVk *contextVk)
 
     DeviceScoped<Event> event(device);
     ANGLE_VK_TRY(contextVk, event.get().init(device, eventCreateInfo));
-    // TODO: https://issuetracker.google.com/170312581 - For now wait for worker thread to finish
-    // then get next fence from renderer
-    if (contextVk->getRenderer()->getFeatures().commandProcessor.enabled)
-    {
-        if (contextVk->getRenderer()->getFeatures().asynchronousCommandProcessing.enabled)
-        {
-            contextVk->getRenderer()->waitForCommandProcessorIdle(contextVk);
-        }
-        ANGLE_TRY(contextVk->getRenderer()->getNextSubmitFence(&mFence, false));
-    }
-    else
-    {
-        ANGLE_TRY(contextVk->getNextSubmitFence(&mFence));
-    }
 
     mEvent = event.release();
 
@@ -110,19 +95,18 @@ angle::Result SyncHelper::clientWait(Context *context,
         ANGLE_TRY(contextVk->flushImpl(nullptr));
     }
 
-    // TODO: https://issuetracker.google.com/170312581 - If we are using worker need to wait for the
-    // commands to be issued before waiting on the fence.
-    if (renderer->getFeatures().asynchronousCommandProcessing.enabled)
+    // Undefined behaviour. Early exit.
+    if (usedInRecordedCommands())
     {
-        ANGLE_TRACE_EVENT0("gpu.angle", "SyncHelper::clientWait");
-        renderer->waitForCommandProcessorIdle(contextVk);
+        WARN() << "Waiting on a sync that is not flushed";
+        *outResult = VK_TIMEOUT;
+        return angle::Result::Continue;
     }
 
-    // Wait on the fence that's expected to be signaled on the first vkQueueSubmit after
-    // `initialize` was called. The first fence is the fence created to signal this sync.
-    ASSERT(mFence.get().valid());
-    // TODO: https://issuetracker.google.com/170312581 - Wait could be command to worker
-    VkResult status = mFence.get().wait(renderer->getDevice(), timeout);
+    ASSERT(mUse.getSerial().valid());
+
+    VkResult status = VK_SUCCESS;
+    ANGLE_TRY(renderer->waitForSerialWithUserTimeout(context, mUse.getSerial(), timeout, &status));
 
     // Check for errors, but don't consider timeout as such.
     if (status != VK_TIMEOUT)
@@ -238,7 +222,7 @@ angle::Result SyncHelperNativeFence::initializeWithFd(ContextVk *contextVk, int 
             submitInfo.sType        = VK_STRUCTURE_TYPE_SUBMIT_INFO;
 
             ANGLE_TRY(renderer->queueSubmit(contextVk, contextVk->getPriority(), submitInfo,
-                                            nullptr, &fence.get(), &serialOut));
+                                            vk::ResourceUseList(), &fence.get(), &serialOut));
         }
 
         VkFenceGetFdInfoKHR fenceGetFdInfo = {};

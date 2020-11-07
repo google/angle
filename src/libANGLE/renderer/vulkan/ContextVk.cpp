@@ -507,14 +507,11 @@ void ContextVk::onDestroy(const gl::Context *context)
 
     ASSERT(mCurrentGarbage.empty());
 
-    mCommandQueue.destroy(device);
-
     mRenderer->releaseSharedResources(&mResourceUseList);
 
     mUtils.destroy(mRenderer);
 
     mRenderPassCache.destroy(device);
-    mSubmitFence.reset(device);
     mShaderLibrary.destroy(device);
     mGpuEventQueryPool.destroy(device);
     mCommandPool.destroy(device);
@@ -599,8 +596,6 @@ angle::Result ContextVk::initialize()
     {
         buffer.init(mRenderer, kVertexBufferUsage, 1, kDefaultBufferSize, true);
     }
-
-    ANGLE_TRY(mCommandQueue.init(this));
 
 #if ANGLE_ENABLE_VULKAN_GPU_TRACE_EVENTS
     angle::PlatformMethods *platform = ANGLEPlatformCurrent();
@@ -1500,24 +1495,6 @@ void ContextVk::addOverlayUsedBuffersCount(vk::CommandBufferHelper *commandBuffe
     }
 }
 
-void ContextVk::commandProcessorSyncErrors()
-{
-    while (mRenderer->hasPendingError())
-    {
-        vk::Error error = mRenderer->getAndClearPendingError();
-        if (error.mErrorCode != VK_SUCCESS)
-        {
-            handleError(error.mErrorCode, error.mFile, error.mFunction, error.mLine);
-        }
-    }
-}
-
-void ContextVk::commandProcessorSyncErrorsAndQueueCommand(vk::CommandProcessorTask *command)
-{
-    commandProcessorSyncErrors();
-    mRenderer->queueCommand(this, command);
-}
-
 angle::Result ContextVk::submitFrame(const vk::Semaphore *signalSemaphore)
 {
     if (mCurrentWindowSurface)
@@ -1536,27 +1513,9 @@ angle::Result ContextVk::submitFrame(const vk::Semaphore *signalSemaphore)
         dumpCommandStreamDiagnostics();
     }
 
-    if (mRenderer->getFeatures().commandProcessor.enabled)
-    {
-        vk::CommandProcessorTask flushAndQueueSubmit;
-        flushAndQueueSubmit.initFlushAndQueueSubmit(
-            std::move(mWaitSemaphores), std::move(mWaitSemaphoreStageMasks), signalSemaphore,
-            mContextPriority, std::move(mCurrentGarbage), std::move(mResourceUseList));
-
-        commandProcessorSyncErrorsAndQueueCommand(&flushAndQueueSubmit);
-    }
-    else
-    {
-        ANGLE_TRY(ensureSubmitFenceInitialized());
-        ANGLE_TRY(mCommandQueue.submitFrame(this, mContextPriority, mWaitSemaphores,
-                                            mWaitSemaphoreStageMasks, signalSemaphore, mSubmitFence,
-                                            &mResourceUseList, &mCurrentGarbage, &mCommandPool));
-        // Make sure a new fence is created for the next submission.
-        mRenderer->resetSharedFence(&mSubmitFence);
-
-        mWaitSemaphores.clear();
-        mWaitSemaphoreStageMasks.clear();
-    }
+    ANGLE_TRY(mRenderer->submitFrame(
+        this, mContextPriority, std::move(mWaitSemaphores), std::move(mWaitSemaphoreStageMasks),
+        signalSemaphore, std::move(mResourceUseList), std::move(mCurrentGarbage), &mCommandPool));
 
     onRenderPassFinished();
     mComputeDirtyBits |= mNewComputeCommandBufferDirtyBits;
@@ -1885,31 +1844,14 @@ void ContextVk::clearAllGarbage()
         garbage.destroy(mRenderer);
     }
     mCurrentGarbage.clear();
-    if (mRenderer->getFeatures().commandProcessor.enabled)
-    {
-        // Issue command to CommandProcessor to ensure all work is complete, which will return any
-        // garbage items as well.
-        mRenderer->finishAllWork(this);
-    }
-    else
-    {
-        mCommandQueue.clearAllGarbage(mRenderer);
-    }
+    mRenderer->clearAllGarbage(this);
 }
 
 void ContextVk::handleDeviceLost()
 {
     mOutsideRenderPassCommands->reset();
     mRenderPassCommands->reset();
-
-    if (mRenderer->getFeatures().commandProcessor.enabled)
-    {
-        mRenderer->handleDeviceLost();
-    }
-    else
-    {
-        mCommandQueue.handleDeviceLost(mRenderer);
-    }
+    mRenderer->handleDeviceLost();
     clearAllGarbage();
 
     mRenderer->notifyDeviceLost();
@@ -4136,16 +4078,7 @@ angle::Result ContextVk::finishImpl()
     ANGLE_TRACE_EVENT0("gpu.angle", "ContextVk::finishImpl");
 
     ANGLE_TRY(flushImpl(nullptr));
-
-    if (mRenderer->getFeatures().commandProcessor.enabled)
-    {
-        ANGLE_TRY(finishToSerial(getLastSubmittedQueueSerial()));
-    }
-    else
-    {
-        ANGLE_TRY(finishToSerial(getLastSubmittedQueueSerial()));
-        ASSERT(!mCommandQueue.hasInFlightCommands());
-    }
+    ANGLE_TRY(mRenderer->finish(this));
 
     clearAllGarbage();
 
@@ -4186,26 +4119,12 @@ bool ContextVk::isSerialInUse(Serial serial) const
 
 angle::Result ContextVk::checkCompletedCommands()
 {
-    if (mRenderer->getFeatures().commandProcessor.enabled)
-    {
-        // TODO: https://issuetracker.google.com/169788986 - would be better if we could just wait
-        // for the work we need but that requires QueryHelper to use the actual serial for the
-        // query.
-        mRenderer->checkCompletedCommands(this);
-        return angle::Result::Continue;
-    }
-
-    return mCommandQueue.checkCompletedCommands(this);
+    return mRenderer->checkCompletedCommands(this);
 }
 
 angle::Result ContextVk::finishToSerial(Serial serial)
 {
-    if (mRenderer->getFeatures().commandProcessor.enabled)
-    {
-        mRenderer->finishToSerial(this, serial);
-        return angle::Result::Continue;
-    }
-    return mCommandQueue.finishToSerial(this, serial, mRenderer->getMaxFenceWaitTimeNs());
+    return mRenderer->finishToSerial(this, serial);
 }
 
 angle::Result ContextVk::getCompatibleRenderPass(const vk::RenderPassDesc &desc,
@@ -4221,35 +4140,6 @@ angle::Result ContextVk::getRenderPassWithOps(const vk::RenderPassDesc &desc,
 {
     // Note: Each context has it's own RenderPassCache so no locking needed.
     return mRenderPassCache.getRenderPassWithOps(this, desc, ops, renderPassOut);
-}
-
-angle::Result ContextVk::ensureSubmitFenceInitialized()
-{
-    if (mSubmitFence.isReferenced())
-    {
-        return angle::Result::Continue;
-    }
-    return mRenderer->newSharedFence(this, &mSubmitFence);
-}
-
-angle::Result ContextVk::getNextSubmitFence(vk::Shared<vk::Fence> *sharedFenceOut)
-{
-    ASSERT(!getRenderer()->getFeatures().commandProcessor.enabled);
-
-    ANGLE_TRY(ensureSubmitFenceInitialized());
-
-    ASSERT(!sharedFenceOut->isReferenced());
-    sharedFenceOut->copy(getDevice(), mSubmitFence);
-    return angle::Result::Continue;
-}
-
-vk::Shared<vk::Fence> ContextVk::getLastSubmittedFence() const
-{
-    if (mRenderer->getFeatures().commandProcessor.enabled)
-    {
-        return mRenderer->getLastSubmittedFence(this);
-    }
-    return mCommandQueue.getLastSubmittedFence(this);
 }
 
 angle::Result ContextVk::getTimestamp(uint64_t *timestampOut)
@@ -4646,18 +4536,12 @@ angle::Result ContextVk::flushCommandsAndEndRenderPass()
     ANGLE_TRY(getRenderPassWithOps(mRenderPassCommands->getRenderPassDesc(),
                                    mRenderPassCommands->getAttachmentOps(), &renderPass));
 
-    if (mRenderer->getFeatures().commandProcessor.enabled)
+    ANGLE_TRY(mRenderer->flushRenderPassCommands(this, *renderPass, &mRenderPassCommands));
+
+    // TODO(jmadill): Manage in RendererVk. b/172678125
+    if (getFeatures().commandProcessor.enabled)
     {
-        mRenderPassCommands->markClosed();
-        vk::CommandProcessorTask flushToPrimary;
-        flushToPrimary.initProcessCommands(this, mRenderPassCommands, renderPass);
-        ANGLE_TRACE_EVENT0("gpu.angle", "ContextVk::flushInsideRenderPassCommands");
-        commandProcessorSyncErrorsAndQueueCommand(&flushToPrimary);
         getNextAvailableCommandBuffer(&mRenderPassCommands, true);
-    }
-    else
-    {
-        ANGLE_TRY(mCommandQueue.flushRenderPassCommands(this, *renderPass, mRenderPassCommands));
     }
 
     if (mGpuEventsEnabled)
@@ -4791,19 +4675,14 @@ angle::Result ContextVk::flushOutsideRenderPassCommands()
         mOutsideRenderPassCommands->addCommandDiagnostics(this);
     }
 
-    if (mRenderer->getFeatures().commandProcessor.enabled)
+    ANGLE_TRY(mRenderer->flushOutsideRPCommands(this, &mOutsideRenderPassCommands));
+
+    // TODO(jmadill): Manage in RendererVk. b/172678125
+    if (getFeatures().commandProcessor.enabled)
     {
-        mOutsideRenderPassCommands->markClosed();
-        vk::CommandProcessorTask flushToPrimary;
-        flushToPrimary.initProcessCommands(this, mOutsideRenderPassCommands, nullptr);
-        ANGLE_TRACE_EVENT0("gpu.angle", "ContextVk::flushOutsideRenderPassCommands");
-        commandProcessorSyncErrorsAndQueueCommand(&flushToPrimary);
         getNextAvailableCommandBuffer(&mOutsideRenderPassCommands, false);
     }
-    else
-    {
-        ANGLE_TRY(mCommandQueue.flushOutsideRPCommands(this, mOutsideRenderPassCommands));
-    }
+
     mPerfCounters.flushedOutsideRenderPassCommandBuffers++;
     return angle::Result::Continue;
 }

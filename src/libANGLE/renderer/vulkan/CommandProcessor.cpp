@@ -114,7 +114,7 @@ void CommandProcessorTask::initTask()
 // CommandProcessorTask implementation
 void CommandProcessorTask::initProcessCommands(ContextVk *contextVk,
                                                CommandBufferHelper *commandBuffer,
-                                               RenderPass *renderPass)
+                                               const RenderPass *renderPass)
 {
     mTask          = CustomTask::ProcessCommands;
     mContextVk     = contextVk;
@@ -562,19 +562,6 @@ angle::Result TaskProcessor::submitFrame(Context *context,
     return angle::Result::Continue;
 }
 
-Shared<Fence> TaskProcessor::getLastSubmittedFenceWithLock(VkDevice device) const
-{
-    Shared<Fence> fence;
-    std::lock_guard<std::mutex> inFlightLock(mInFlightCommandsMutex);
-
-    if (!mInFlightCommands.empty())
-    {
-        fence.copy(device, mInFlightCommands.back().fence);
-    }
-
-    return fence;
-}
-
 angle::Result TaskProcessor::queueSubmit(Context *context,
                                          VkQueue queue,
                                          const VkSubmitInfo &submitInfo,
@@ -926,21 +913,6 @@ void CommandProcessor::shutdown(std::thread *commandProcessorThread)
     }
 }
 
-// Return the fence for the last submit. This may mean waiting on the worker to process tasks to
-// actually get to the last submit
-Shared<Fence> CommandProcessor::getLastSubmittedFence(const Context *context) const
-{
-    ANGLE_TRACE_EVENT0("gpu.angle", "CommandProcessor::getLastSubmittedFence");
-    std::unique_lock<std::mutex> lock(mWorkerMutex);
-    if (context->getRenderer()->getFeatures().asynchronousCommandProcessing.enabled)
-    {
-        mWorkerIdleCondition.wait(lock, [this] { return (mTasks.empty() && mWorkerThreadIdle); });
-    }
-    // Worker thread is idle and command queue is empty so good to continue
-
-    return mTaskProcessor.getLastSubmittedFenceWithLock(getDevice());
-}
-
 Serial CommandProcessor::getLastSubmittedSerial()
 {
     std::lock_guard<std::mutex> lock(mCommandProcessorQueueSerialMutex);
@@ -1165,9 +1137,9 @@ void CommandQueue::handleDeviceLost(RendererVk *renderer)
     mInFlightCommands.clear();
 }
 
-bool CommandQueue::hasInFlightCommands() const
+bool CommandQueue::allInFlightCommandsAreAfterSerial(Serial serial) const
 {
-    return !mInFlightCommands.empty();
+    return mInFlightCommands.empty() || mInFlightCommands[0].serial > serial;
 }
 
 angle::Result CommandQueue::finishToSerial(Context *context, Serial finishSerial, uint64_t timeout)
@@ -1186,15 +1158,7 @@ angle::Result CommandQueue::finishToSerial(Context *context, Serial finishSerial
 
     size_t finishedCount = 0;
     while (finishedCount < mInFlightCommands.size() &&
-           mInFlightCommands[finishedCount].serial < finishSerial)
-    {
-        finishedCount++;
-    }
-
-    // This heuristic attempts to increase chances of success for shared resource scenarios.
-    // Ultimately as long as fences are managed by ContextVk there are edge case bugs here.
-    // TODO: http://anglebug.com/5217: fix this bug by moving it submit into RendererVk.
-    if (finishedCount < mInFlightCommands.size())
+           mInFlightCommands[finishedCount].serial <= finishSerial)
     {
         finishedCount++;
     }
@@ -1213,7 +1177,10 @@ angle::Result CommandQueue::finishToSerial(Context *context, Serial finishSerial
     ANGLE_VK_TRY(context, status);
 
     // Clean up finished batches.
-    return retireFinishedCommands(context, finishedCount);
+    ANGLE_TRY(retireFinishedCommands(context, finishedCount));
+    ASSERT(allInFlightCommandsAreAfterSerial(finishSerial));
+
+    return angle::Result::Continue;
 }
 
 angle::Result CommandQueue::submitFrame(
@@ -1222,9 +1189,9 @@ angle::Result CommandQueue::submitFrame(
     const std::vector<VkSemaphore> &waitSemaphores,
     const std::vector<VkPipelineStageFlags> &waitSemaphoreStageMasks,
     const Semaphore *signalSemaphore,
-    const Shared<Fence> &sharedFence,
-    ResourceUseList *resourceList,
-    GarbageList *currentGarbage,
+    Shared<Fence> &&sharedFence,
+    ResourceUseList &&resourceList,
+    GarbageList &&currentGarbage,
     CommandPool *commandPool)
 {
     // Start an empty primary buffer if we have an empty submit.
@@ -1243,14 +1210,14 @@ angle::Result CommandQueue::submitFrame(
 
     DeviceScoped<CommandBatch> scopedBatch(device);
     CommandBatch &batch = scopedBatch.get();
-    batch.fence.copy(device, sharedFence);
+    batch.fence         = std::move(sharedFence);
 
-    ANGLE_TRY(renderer->queueSubmit(context, priority, submitInfo, resourceList, &batch.fence.get(),
-                                    &batch.serial));
+    ANGLE_TRY(renderer->queueSubmit(context, priority, submitInfo, std::move(resourceList),
+                                    &batch.fence.get(), &batch.serial));
 
-    if (!currentGarbage->empty())
+    if (!currentGarbage.empty())
     {
-        mGarbageQueue.emplace_back(std::move(*currentGarbage), batch.serial);
+        mGarbageQueue.emplace_back(std::move(currentGarbage), batch.serial);
     }
 
     // Store the primary CommandBuffer and command pool used for secondary CommandBuffers
@@ -1272,17 +1239,52 @@ angle::Result CommandQueue::submitFrame(
     return angle::Result::Continue;
 }
 
-Shared<Fence> CommandQueue::getLastSubmittedFence(const Context *context) const
+angle::Result CommandQueue::waitForSerialWithUserTimeout(vk::Context *context,
+                                                         Serial serial,
+                                                         uint64_t timeout,
+                                                         VkResult *result)
 {
-    ASSERT(!context->getRenderer()->getFeatures().commandProcessor.enabled);
-
-    Shared<Fence> fence;
-    if (!mInFlightCommands.empty())
+    // No in-flight work. This indicates the serial is already complete.
+    if (mInFlightCommands.empty())
     {
-        fence.copy(context->getDevice(), mInFlightCommands.back().fence);
+        *result = VK_SUCCESS;
+        return angle::Result::Continue;
     }
 
-    return fence;
+    // Serial is already complete.
+    if (serial < mInFlightCommands[0].serial)
+    {
+        *result = VK_SUCCESS;
+        return angle::Result::Continue;
+    }
+
+    size_t batchIndex = 0;
+    while (batchIndex != mInFlightCommands.size() && mInFlightCommands[batchIndex].serial < serial)
+    {
+        batchIndex++;
+    }
+
+    // Serial is not yet submitted. This is undefined behaviour, so we can do anything.
+    if (batchIndex >= mInFlightCommands.size())
+    {
+        WARN() << "Waiting on an unsubmitted serial.";
+        *result = VK_TIMEOUT;
+        return angle::Result::Continue;
+    }
+
+    ASSERT(serial == mInFlightCommands[batchIndex].serial);
+
+    vk::Fence &fence = mInFlightCommands[batchIndex].fence.get();
+    ASSERT(fence.valid());
+    *result = fence.wait(context->getDevice(), timeout);
+
+    // Don't trigger an error on timeout.
+    if (*result != VK_TIMEOUT)
+    {
+        ANGLE_VK_TRY(context, *result);
+    }
+
+    return angle::Result::Continue;
 }
 
 angle::Result CommandQueue::ensurePrimaryCommandBufferValid(Context *context)

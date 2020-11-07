@@ -482,25 +482,6 @@ SwapchainImage::SwapchainImage(SwapchainImage &&other)
       presentHistory(std::move(other.presentHistory)),
       currentPresentHistoryIndex(other.currentPresentHistoryIndex)
 {}
-
-SwapHistory::SwapHistory() = default;
-
-SwapHistory::~SwapHistory() = default;
-
-void SwapHistory::destroy(RendererVk *renderer)
-{
-    renderer->resetSharedFence(&sharedFence);
-}
-
-angle::Result SwapHistory::waitFence(ContextVk *contextVk)
-{
-    ASSERT(sharedFence.isReferenced());
-    // TODO: https://issuetracker.google.com/170312581 - This wait needs to be synchronized with
-    // worker thread
-    ANGLE_VK_TRY(contextVk, sharedFence.get().wait(contextVk->getDevice(),
-                                                   std::numeric_limits<uint64_t>::max()));
-    return angle::Result::Continue;
-}
 }  // namespace impl
 
 using namespace impl;
@@ -549,11 +530,6 @@ void WindowSurfaceVk::destroy(const egl::Display *display)
     (void)renderer->deviceWaitIdle(displayVk);
 
     destroySwapChainImages(displayVk);
-
-    for (SwapHistory &swap : mSwapHistory)
-    {
-        swap.destroy(renderer);
-    }
 
     if (mSwapchain)
     {
@@ -1296,16 +1272,10 @@ angle::Result WindowSurfaceVk::present(ContextVk *contextVk,
     RendererVk *renderer = contextVk->getRenderer();
 
     // Throttle the submissions to avoid getting too far ahead of the GPU.
-    SwapHistory &swap = mSwapHistory[mCurrentSwapHistoryIndex];
+    Serial *swapSerial = &mSwapHistory[mCurrentSwapHistoryIndex];
     {
         ANGLE_TRACE_EVENT0("gpu.angle", "WindowSurfaceVk::present: Throttle CPU");
-        if (swap.sharedFence.isReferenced())
-        {
-            // TODO: https://issuetracker.google.com/170312581 - This wait needs to be sure to
-            // happen after work has submitted
-            ANGLE_TRY(swap.waitFence(contextVk));
-            swap.destroy(renderer);
-        }
+        ANGLE_TRY(renderer->finishToSerial(contextVk, *swapSerial));
     }
 
     SwapchainImage &image               = mSwapchainImages[mCurrentSwapchainImageIndex];
@@ -1425,10 +1395,8 @@ angle::Result WindowSurfaceVk::present(ContextVk *contextVk,
         presentInfo.pNext = &presentRegions;
     }
 
-    // Update the swap history for this presentation
-    // TODO: https://issuetracker.google.com/issues/170312581 - this will force us to flush worker
-    // queue to get the fence.
-    swap.sharedFence = contextVk->getLastSubmittedFence();
+    // TODO(jmadill): Fix potential serial race. b/172704839
+    *swapSerial = renderer->getLastSubmittedQueueSerial();
     ASSERT(!mAcquireImageSemaphore.valid());
 
     ++mCurrentSwapHistoryIndex;

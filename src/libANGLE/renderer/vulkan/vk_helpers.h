@@ -1105,6 +1105,8 @@ class CommandBufferHelper : angle::NonCopyable
     const RenderPassDesc &getRenderPassDesc() const { return mRenderPassDesc; }
     const AttachmentOpsArray &getAttachmentOps() const { return mAttachmentOps; }
 
+    bool hasRenderPass() const { return mIsRenderPassCommandBuffer; }
+
   private:
     bool onDepthStencilAccess(ResourceAccess access,
                               uint32_t *cmdCountInvalidated,

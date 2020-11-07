@@ -386,10 +386,6 @@ class ContextVk : public ContextImpl, public vk::Context
                                        const vk::AttachmentOpsArray &ops,
                                        vk::RenderPass **renderPassOut);
 
-    // Get (or allocate) the fence that will be signaled on next submission.
-    angle::Result getNextSubmitFence(vk::Shared<vk::Fence> *sharedFenceOut);
-    vk::Shared<vk::Fence> getLastSubmittedFence() const;
-
     vk::ShaderLibrary &getShaderLibrary() { return mShaderLibrary; }
     UtilsVk &getUtils() { return mUtils; }
 
@@ -522,6 +518,7 @@ class ContextVk : public ContextImpl, public vk::Context
 
     vk::CommandBuffer &getOutsideRenderPassCommandBuffer()
     {
+        ASSERT(!mOutsideRenderPassCommands->hasRenderPass());
         return mOutsideRenderPassCommands->getCommandBuffer();
     }
 
@@ -595,10 +592,6 @@ class ContextVk : public ContextImpl, public vk::Context
     void updateOverlayOnPresent();
     void addOverlayUsedBuffersCount(vk::CommandBufferHelper *commandBuffer);
 
-    // Sync any errors from the command processor
-    void commandProcessorSyncErrors();
-    // Sync any error from worker thread and queue up next command for processing
-    void commandProcessorSyncErrorsAndQueueCommand(vk::CommandProcessorTask *command);
     // When worker thread completes, it releases command buffers back to context queue
     void recycleCommandBuffer(vk::CommandBufferHelper *commandBuffer);
 
@@ -884,7 +877,6 @@ class ContextVk : public ContextImpl, public vk::Context
     bool shouldEmulateSeamfulCubeMapSampling() const;
     bool shouldUseOldRewriteStructSamplers() const;
     void clearAllGarbage();
-    angle::Result ensureSubmitFenceInitialized();
     bool hasRecordedCommands();
     void dumpCommandStreamDiagnostics();
     angle::Result flushOutsideRenderPassCommands();
@@ -1035,19 +1027,9 @@ class ContextVk : public ContextImpl, public vk::Context
     // We use a single pool for recording commands. We also keep a free list for pool recycling.
     vk::CommandPool mCommandPool;
 
-    // TODO: This can be killed once threading is enabled https://issuetracker.google.com/153666475
-    vk::CommandQueue mCommandQueue;
     vk::GarbageList mCurrentGarbage;
 
     RenderPassCache mRenderPassCache;
-
-    // mSubmitFence is the fence that's going to be signaled at the next submission.  This is used
-    // to support SyncVk objects, which may outlive the context (as EGLSync objects).
-    //
-    // TODO(geofflang): this is in preparation for moving RendererVk functionality to ContextVk, and
-    // is otherwise unnecessary as the SyncVk objects don't actually outlive the renderer currently.
-    // http://anglebug.com/2701
-    vk::Shared<vk::Fence> mSubmitFence;
 
     // We have a queue of CommandBufferHelpers (CBHs) that is drawn from for the two active command
     //  buffers in the main thread. The two active command buffers are the inside and outside

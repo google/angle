@@ -65,7 +65,7 @@ class CommandProcessorTask
 
     void initProcessCommands(ContextVk *contextVk,
                              CommandBufferHelper *commandBuffer,
-                             RenderPass *renderPass);
+                             const RenderPass *renderPass);
 
     void initPresent(egl::ContextPriority priority, VkPresentInfoKHR &presentInfo);
 
@@ -104,7 +104,7 @@ class CommandProcessorTask
     const VkCommandBuffer &getOneOffCommandBufferVk() const { return mOneOffCommandBufferVk; }
     const Fence *getOneOffFence() { return mOneOffFence; }
     const VkPresentInfoKHR &getPresentInfo() const { return mPresentInfo; }
-    RenderPass *getRenderPass() const { return mRenderPass; }
+    const RenderPass *getRenderPass() const { return mRenderPass; }
     CommandBufferHelper *getCommandBuffer() const { return mCommandBuffer; }
     ContextVk *getContextVk() const { return mContextVk; }
 
@@ -115,7 +115,7 @@ class CommandProcessorTask
 
     // ProcessCommands
     ContextVk *mContextVk;
-    RenderPass *mRenderPass;
+    const RenderPass *mRenderPass;
     CommandBufferHelper *mCommandBuffer;
 
     // Flush data
@@ -172,8 +172,6 @@ class CommandQueue final : angle::NonCopyable
     void destroy(VkDevice device);
     void handleDeviceLost(RendererVk *renderer);
 
-    bool hasInFlightCommands() const;
-
     void clearAllGarbage(RendererVk *renderer);
 
     angle::Result finishToSerial(Context *context, Serial finishSerial, uint64_t timeout);
@@ -183,12 +181,15 @@ class CommandQueue final : angle::NonCopyable
                               const std::vector<VkSemaphore> &waitSemaphores,
                               const std::vector<VkPipelineStageFlags> &waitSemaphoreStageMasks,
                               const Semaphore *signalSemaphore,
-                              const Shared<Fence> &sharedFence,
-                              ResourceUseList *resourceList,
-                              GarbageList *currentGarbage,
+                              Shared<Fence> &&sharedFence,
+                              ResourceUseList &&resourceList,
+                              GarbageList &&currentGarbage,
                               CommandPool *commandPool);
 
-    Shared<Fence> getLastSubmittedFence(const Context *context) const;
+    angle::Result waitForSerialWithUserTimeout(vk::Context *context,
+                                               Serial serial,
+                                               uint64_t timeout,
+                                               VkResult *result);
 
     // Check to see which batches have finished completion (forward progress for
     // mLastCompletedQueueSerial, for example for when the application busy waits on a query
@@ -212,6 +213,8 @@ class CommandQueue final : angle::NonCopyable
                                                PrimaryCommandBuffer *commandBufferOut);
     angle::Result releasePrimaryCommandBuffer(Context *context,
                                               PrimaryCommandBuffer &&commandBuffer);
+
+    bool allInFlightCommandsAreAfterSerial(Serial serial) const;
 
     GarbageQueue mGarbageQueue;
     std::vector<CommandBatch> mInFlightCommands;
@@ -251,8 +254,6 @@ class TaskProcessor : angle::NonCopyable
                               VkQueue queue,
                               const VkSubmitInfo &submitInfo,
                               const Fence *fence);
-
-    Shared<Fence> getLastSubmittedFenceWithLock(VkDevice device) const;
 
     void handleDeviceLost(Context *context);
 
@@ -320,7 +321,6 @@ class CommandProcessor : public Context
     // Wait until desired serial has been processed.
     void finishToSerial(Context *context, Serial serial);
 
-    Shared<Fence> getLastSubmittedFence(const Context *context) const;
     void handleDeviceLost();
 
     bool hasPendingError() const
