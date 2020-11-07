@@ -46,23 +46,19 @@ class CommandQueue final : angle::NonCopyable
 
     bool hasInFlightCommands() const;
 
-    angle::Result allocatePrimaryCommandBuffer(vk::Context *context,
-                                               vk::PrimaryCommandBuffer *commandBufferOut);
-    angle::Result releasePrimaryCommandBuffer(vk::Context *context,
-                                              vk::PrimaryCommandBuffer &&commandBuffer);
-
     void clearAllGarbage(RendererVk *renderer);
 
     angle::Result finishToSerial(vk::Context *context, Serial finishSerial, uint64_t timeout);
 
     angle::Result submitFrame(vk::Context *context,
                               egl::ContextPriority priority,
-                              const VkSubmitInfo &submitInfo,
+                              const std::vector<VkSemaphore> &waitSemaphores,
+                              const std::vector<VkPipelineStageFlags> &waitSemaphoreStageMasks,
+                              const vk::Semaphore *signalSemaphore,
                               const vk::Shared<vk::Fence> &sharedFence,
                               vk::ResourceUseList *resourceList,
                               vk::GarbageList *currentGarbage,
-                              vk::CommandPool *commandPool,
-                              vk::PrimaryCommandBuffer &&commandBuffer);
+                              vk::CommandPool *commandPool);
 
     vk::Shared<vk::Fence> getLastSubmittedFence(const vk::Context *context) const;
 
@@ -71,17 +67,33 @@ class CommandQueue final : angle::NonCopyable
     // result). It would be nice if we didn't have to expose this for QueryVk::getResult.
     angle::Result checkCompletedCommands(vk::Context *context);
 
+    angle::Result flushOutsideRPCommands(vk::Context *context,
+                                         vk::CommandBufferHelper *outsideRPCommands);
+
+    angle::Result flushRenderPassCommands(vk::Context *context,
+                                          const vk::RenderPass &renderPass,
+                                          vk::CommandBufferHelper *renderPassCommands);
+
+    // TODO(jmadill): Remove this. b/172704839
+    bool hasPrimaryCommands() const { return mPrimaryCommands.valid(); }
+
   private:
     angle::Result releaseToCommandBatch(vk::Context *context,
                                         vk::PrimaryCommandBuffer &&commandBuffer,
                                         vk::CommandPool *commandPool,
                                         vk::CommandBatch *batch);
     angle::Result retireFinishedCommands(vk::Context *context, size_t finishedCount);
+    angle::Result startPrimaryCommandBuffer(vk::Context *context);
+    angle::Result allocatePrimaryCommandBuffer(vk::Context *context,
+                                               vk::PrimaryCommandBuffer *commandBufferOut);
+    angle::Result releasePrimaryCommandBuffer(vk::Context *context,
+                                              vk::PrimaryCommandBuffer &&commandBuffer);
 
     vk::GarbageQueue mGarbageQueue;
     std::vector<vk::CommandBatch> mInFlightCommands;
 
     // Keeps a free list of reusable primary command buffers.
+    vk::PrimaryCommandBuffer mPrimaryCommands;
     vk::PersistentCommandPool mPrimaryCommandPool;
 };
 
@@ -922,9 +934,8 @@ class ContextVk : public ContextImpl, public vk::Context
 
     void writeAtomicCounterBufferDriverUniformOffsets(uint32_t *offsetsOut, size_t offsetsSize);
 
-    angle::Result submitFrame(const VkSubmitInfo &submitInfo,
-                              vk::ResourceUseList *resourceList,
-                              vk::PrimaryCommandBuffer &&commandBuffer);
+    angle::Result submitFrame(const vk::Semaphore *signalSemaphore,
+                              vk::ResourceUseList *resourceList);
     angle::Result memoryBarrierImpl(GLbitfield barriers, VkPipelineStageFlags stageMask);
 
     angle::Result synchronizeCpuGpuTime();
@@ -939,7 +950,6 @@ class ContextVk : public ContextImpl, public vk::Context
     bool shouldUseOldRewriteStructSamplers() const;
     void clearAllGarbage();
     angle::Result ensureSubmitFenceInitialized();
-    angle::Result startPrimaryCommandBuffer();
     bool hasRecordedCommands();
     void dumpCommandStreamDiagnostics();
     angle::Result flushOutsideRenderPassCommands();
@@ -1117,9 +1127,6 @@ class ContextVk : public ContextImpl, public vk::Context
 
     vk::CommandBufferHelper *mOutsideRenderPassCommands;
     vk::CommandBufferHelper *mRenderPassCommands;
-    vk::PrimaryCommandBuffer mPrimaryCommands;
-    // Function recycleCommandBuffer() is public above
-    bool mHasPrimaryCommands;
 
     // Transform feedback buffers.
     angle::FastUnorderedSet<const vk::BufferHelper *,

@@ -1250,20 +1250,9 @@ void CommandBufferHelper::invalidateRenderPassStencilAttachment(
     ExtendRenderPassInvalidateArea(invalidateArea, &mStencilInvalidateArea);
 }
 
-angle::Result CommandBufferHelper::getRenderPassWithOps(ContextVk *contextVk,
-                                                        RenderPass **renderPass)
-{
-    *renderPass = nullptr;
-    if (mIsRenderPassCommandBuffer)
-    {
-        ANGLE_TRY(contextVk->getRenderPassWithOps(mRenderPassDesc, mAttachmentOps, renderPass));
-    }
-    return angle::Result::Continue;
-}
-
 angle::Result CommandBufferHelper::flushToPrimary(const angle::FeaturesVk &features,
                                                   PrimaryCommandBuffer *primary,
-                                                  RenderPass *renderPass)
+                                                  const RenderPass *renderPass)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "CommandBufferHelper::flushToPrimary");
     ASSERT(!empty());

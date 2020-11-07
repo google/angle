@@ -954,10 +954,9 @@ class CommandBufferHelper : angle::NonCopyable
 
     CommandBuffer &getCommandBuffer() { return mCommandBuffer; }
 
-    angle::Result getRenderPassWithOps(ContextVk *contextVk, RenderPass **renderPass);
     angle::Result flushToPrimary(const angle::FeaturesVk &features,
                                  PrimaryCommandBuffer *primary,
-                                 RenderPass *renderPass);
+                                 const RenderPass *renderPass);
 
     void executeBarriers(const angle::FeaturesVk &features, PrimaryCommandBuffer *primary);
 
@@ -1102,6 +1101,9 @@ class CommandBufferHelper : angle::NonCopyable
     bool isReadOnlyDepthMode() const { return mReadOnlyDepthStencilMode; }
 
     void addCommandDiagnostics(ContextVk *contextVk);
+
+    const RenderPassDesc &getRenderPassDesc() const { return mRenderPassDesc; }
+    const AttachmentOpsArray &getAttachmentOps() const { return mAttachmentOps; }
 
   private:
     bool onDepthStencilAccess(ResourceAccess access,

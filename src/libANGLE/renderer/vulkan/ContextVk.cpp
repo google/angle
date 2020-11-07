@@ -382,6 +382,7 @@ CommandQueue::~CommandQueue() = default;
 
 void CommandQueue::destroy(VkDevice device)
 {
+    mPrimaryCommands.destroy(device);
     mPrimaryCommandPool.destroy(device);
     ASSERT(mInFlightCommands.empty() && mGarbageQueue.empty());
 }
@@ -604,15 +605,29 @@ angle::Result CommandQueue::finishToSerial(vk::Context *context,
     return retireFinishedCommands(context, finishedCount);
 }
 
-angle::Result CommandQueue::submitFrame(vk::Context *context,
-                                        egl::ContextPriority priority,
-                                        const VkSubmitInfo &submitInfo,
-                                        const vk::Shared<vk::Fence> &sharedFence,
-                                        vk::ResourceUseList *resourceList,
-                                        vk::GarbageList *currentGarbage,
-                                        vk::CommandPool *commandPool,
-                                        vk::PrimaryCommandBuffer &&commandBuffer)
+angle::Result CommandQueue::submitFrame(
+    vk::Context *context,
+    egl::ContextPriority priority,
+    const std::vector<VkSemaphore> &waitSemaphores,
+    const std::vector<VkPipelineStageFlags> &waitSemaphoreStageMasks,
+    const vk::Semaphore *signalSemaphore,
+    const vk::Shared<vk::Fence> &sharedFence,
+    vk::ResourceUseList *resourceList,
+    vk::GarbageList *currentGarbage,
+    vk::CommandPool *commandPool)
 {
+    // Start an empty primary buffer if we have an empty submit.
+    if (!hasPrimaryCommands())
+    {
+        ANGLE_TRY(startPrimaryCommandBuffer(context));
+    }
+
+    ANGLE_VK_TRY(context, mPrimaryCommands.end());
+
+    VkSubmitInfo submitInfo = {};
+    InitializeSubmitInfo(&submitInfo, mPrimaryCommands, waitSemaphores, waitSemaphoreStageMasks,
+                         signalSemaphore);
+
     ANGLE_TRACE_EVENT0("gpu.angle", "CommandQueue::submitFrame");
     ASSERT(!context->getRenderer()->getFeatures().commandProcessor.enabled);
 
@@ -633,7 +648,7 @@ angle::Result CommandQueue::submitFrame(vk::Context *context,
 
     // Store the primary CommandBuffer and command pool used for secondary CommandBuffers
     // in the in-flight list.
-    ANGLE_TRY(releaseToCommandBatch(context, std::move(commandBuffer), commandPool, &batch));
+    ANGLE_TRY(releaseToCommandBatch(context, std::move(mPrimaryCommands), commandPool, &batch));
 
     mInFlightCommands.emplace_back(scopedBatch.release());
 
@@ -661,6 +676,50 @@ vk::Shared<vk::Fence> CommandQueue::getLastSubmittedFence(const vk::Context *con
     }
 
     return fence;
+}
+
+angle::Result CommandQueue::startPrimaryCommandBuffer(vk::Context *context)
+{
+    ASSERT(!mPrimaryCommands.valid());
+
+    ANGLE_TRY(allocatePrimaryCommandBuffer(context, &mPrimaryCommands));
+
+    VkCommandBufferBeginInfo beginInfo = {};
+    beginInfo.sType                    = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+    beginInfo.flags                    = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
+    beginInfo.pInheritanceInfo         = nullptr;
+    ANGLE_VK_TRY(context, mPrimaryCommands.begin(beginInfo));
+
+    return angle::Result::Continue;
+}
+
+angle::Result CommandQueue::flushOutsideRPCommands(vk::Context *context,
+                                                   vk::CommandBufferHelper *outsideRPCommands)
+{
+    if (!mPrimaryCommands.valid())
+    {
+        ANGLE_TRY(startPrimaryCommandBuffer(context));
+    }
+
+    ANGLE_TRY(outsideRPCommands->flushToPrimary(context->getRenderer()->getFeatures(),
+                                                &mPrimaryCommands, nullptr));
+
+    return angle::Result::Continue;
+}
+
+angle::Result CommandQueue::flushRenderPassCommands(vk::Context *context,
+                                                    const vk::RenderPass &renderPass,
+                                                    vk::CommandBufferHelper *renderPassCommands)
+{
+    if (!mPrimaryCommands.valid())
+    {
+        ANGLE_TRY(startPrimaryCommandBuffer(context));
+    }
+
+    ANGLE_TRY(renderPassCommands->flushToPrimary(context->getRenderer()->getFeatures(),
+                                                 &mPrimaryCommands, &renderPass));
+
+    return angle::Result::Continue;
 }
 
 egl::ContextPriority GetContextPriority(const gl::State &state)
@@ -698,7 +757,6 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
       mUseOldRewriteStructSamplers(false),
       mOutsideRenderPassCommands(nullptr),
       mRenderPassCommands(nullptr),
-      mHasPrimaryCommands(false),
       mGpuEventsEnabled(false),
       mSyncObjectPendingFlush(false),
       mDeferredFlushCount(0),
@@ -846,7 +904,6 @@ void ContextVk::onDestroy(const gl::Context *context)
     mShaderLibrary.destroy(device);
     mGpuEventQueryPool.destroy(device);
     mCommandPool.destroy(device);
-    mPrimaryCommands.destroy(device);
 
     // This will clean up any outstanding buffer allocations
     (void)mRenderer->cleanupGarbage(false);
@@ -958,8 +1015,6 @@ angle::Result ContextVk::initialize()
     getNextAvailableCommandBuffer(&mOutsideRenderPassCommands, false);
     getNextAvailableCommandBuffer(&mRenderPassCommands, true);
 
-    ANGLE_TRY(startPrimaryCommandBuffer());
-
     if (mGpuEventsEnabled)
     {
         // GPU events should only be available if timestamp queries are available.
@@ -1008,20 +1063,6 @@ angle::Result ContextVk::initialize()
     // Add context into the share group
     mShareGroupVk->getShareContextSet()->insert(this);
 
-    return angle::Result::Continue;
-}
-
-angle::Result ContextVk::startPrimaryCommandBuffer()
-{
-    ANGLE_TRY(mCommandQueue.allocatePrimaryCommandBuffer(this, &mPrimaryCommands));
-
-    VkCommandBufferBeginInfo beginInfo = {};
-    beginInfo.sType                    = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-    beginInfo.flags                    = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
-    beginInfo.pInheritanceInfo         = nullptr;
-    ANGLE_VK_TRY(this, mPrimaryCommands.begin(beginInfo));
-
-    mHasPrimaryCommands = false;
     return angle::Result::Continue;
 }
 
@@ -1863,9 +1904,8 @@ void ContextVk::commandProcessorSyncErrorsAndQueueCommand(vk::CommandProcessorTa
     mRenderer->queueCommand(this, command);
 }
 
-angle::Result ContextVk::submitFrame(const VkSubmitInfo &submitInfo,
-                                     vk::ResourceUseList *resourceList,
-                                     vk::PrimaryCommandBuffer &&commandBuffer)
+angle::Result ContextVk::submitFrame(const vk::Semaphore *signalSemaphore,
+                                     vk::ResourceUseList *resourceList)
 {
     ASSERT(!getRenderer()->getFeatures().commandProcessor.enabled);
 
@@ -1875,9 +1915,9 @@ angle::Result ContextVk::submitFrame(const VkSubmitInfo &submitInfo,
     }
 
     ANGLE_TRY(ensureSubmitFenceInitialized());
-    ANGLE_TRY(mCommandQueue.submitFrame(this, mContextPriority, submitInfo, mSubmitFence,
-                                        resourceList, &mCurrentGarbage, &mCommandPool,
-                                        std::move(commandBuffer)));
+    ANGLE_TRY(mCommandQueue.submitFrame(this, mContextPriority, mWaitSemaphores,
+                                        mWaitSemaphoreStageMasks, signalSemaphore, mSubmitFence,
+                                        resourceList, &mCurrentGarbage, &mCommandPool));
 
     onRenderPassFinished();
     mComputeDirtyBits |= mNewComputeCommandBufferDirtyBits;
@@ -4377,7 +4417,7 @@ bool ContextVk::hasRecordedCommands()
 {
     ASSERT(mOutsideRenderPassCommands && mRenderPassCommands);
     return !mOutsideRenderPassCommands->empty() || mRenderPassCommands->started() ||
-           mHasPrimaryCommands;
+           mCommandQueue.hasPrimaryCommands();
 }
 
 angle::Result ContextVk::flushImpl(const vk::Semaphore *signalSemaphore)
@@ -4469,15 +4509,8 @@ angle::Result ContextVk::flushImpl(const vk::Semaphore *signalSemaphore)
     }
     else
     {
-        ANGLE_VK_TRY(this, mPrimaryCommands.end());
+        ANGLE_TRY(submitFrame(signalSemaphore, &mResourceUseList));
 
-        VkSubmitInfo submitInfo = {};
-        InitializeSubmitInfo(&submitInfo, mPrimaryCommands, mWaitSemaphores,
-                             mWaitSemaphoreStageMasks, signalSemaphore);
-
-        ANGLE_TRY(submitFrame(submitInfo, &mResourceUseList, std::move(mPrimaryCommands)));
-
-        ANGLE_TRY(startPrimaryCommandBuffer());
         mWaitSemaphores.clear();
         mWaitSemaphoreStageMasks.clear();
     }
@@ -5028,7 +5061,9 @@ angle::Result ContextVk::flushCommandsAndEndRenderPass()
     }
 
     vk::RenderPass *renderPass = nullptr;
-    ANGLE_TRY(mRenderPassCommands->getRenderPassWithOps(this, &renderPass));
+    ANGLE_TRY(getRenderPassWithOps(mRenderPassCommands->getRenderPassDesc(),
+                                   mRenderPassCommands->getAttachmentOps(), &renderPass));
+
     if (mRenderer->getFeatures().commandProcessor.enabled)
     {
         mRenderPassCommands->markClosed();
@@ -5040,11 +5075,8 @@ angle::Result ContextVk::flushCommandsAndEndRenderPass()
     }
     else
     {
-        ANGLE_TRY(mRenderPassCommands->flushToPrimary(this->getFeatures(), &mPrimaryCommands,
-                                                      renderPass));
+        ANGLE_TRY(mCommandQueue.flushRenderPassCommands(this, *renderPass, mRenderPassCommands));
     }
-
-    mHasPrimaryCommands = true;
 
     if (mGpuEventsEnabled)
     {
@@ -5177,23 +5209,19 @@ angle::Result ContextVk::flushOutsideRenderPassCommands()
         mOutsideRenderPassCommands->addCommandDiagnostics(this);
     }
 
-    vk::RenderPass *renderPass = nullptr;
-    ANGLE_TRY(mOutsideRenderPassCommands->getRenderPassWithOps(this, &renderPass));
     if (mRenderer->getFeatures().commandProcessor.enabled)
     {
         mOutsideRenderPassCommands->markClosed();
         vk::CommandProcessorTask flushToPrimary;
-        flushToPrimary.initProcessCommands(this, mOutsideRenderPassCommands, renderPass);
+        flushToPrimary.initProcessCommands(this, mOutsideRenderPassCommands, nullptr);
         ANGLE_TRACE_EVENT0("gpu.angle", "ContextVk::flushOutsideRenderPassCommands");
         commandProcessorSyncErrorsAndQueueCommand(&flushToPrimary);
         getNextAvailableCommandBuffer(&mOutsideRenderPassCommands, false);
     }
     else
     {
-        ANGLE_TRY(mOutsideRenderPassCommands->flushToPrimary(getFeatures(), &mPrimaryCommands,
-                                                             renderPass));
+        ANGLE_TRY(mCommandQueue.flushOutsideRPCommands(this, mOutsideRenderPassCommands));
     }
-    mHasPrimaryCommands = true;
     mPerfCounters.flushedOutsideRenderPassCommandBuffers++;
     return angle::Result::Continue;
 }
