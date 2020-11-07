@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2b8a23ff_5c80faaf",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.cpp",
+        "patchSetId": 32
+      },
+      "lineNbr": 758,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-07T03:08:22Z",
+      "side": 1,
+      "message": "See comment below. This should delay releasing the fence until it\u0027s verified that the command has finished on the GPU.",
+      "revId": "56e0a82d3f11eaeaf6354e23d19cbe5036ece769",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "89bf2fa9_97d3d1a2",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 32
+      },
+      "lineNbr": 4457,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-07T03:08:22Z",
+      "side": 1,
+      "message": "Do you mean QueuePresent?",
+      "range": {
+        "startLine": 4457,
+        "startChar": 59,
+        "endLine": 4457,
+        "endChar": 75
+      },
+      "revId": "56e0a82d3f11eaeaf6354e23d19cbe5036ece769",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "35670d3f_551d7cac",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 32
+      },
+      "lineNbr": 4630,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-07T03:08:22Z",
+      "side": 1,
+      "message": "Not sure if the logic here is right. Say flush() happens, which generates the fence, passes it to the command processor, and then releases its reference. The command processor issues a vkQueueSubmit and releases the reference as well. The fence is now lost. On next swap, SurfaceVk doesn\u0027t see a fence to use with QueuePresent.",
+      "revId": "56e0a82d3f11eaeaf6354e23d19cbe5036ece769",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
