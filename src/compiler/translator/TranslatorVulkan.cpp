@@ -25,6 +25,7 @@
 #include "compiler/translator/tree_ops/RewriteAtomicCounters.h"
 #include "compiler/translator/tree_ops/RewriteCubeMapSamplersAs2DArray.h"
 #include "compiler/translator/tree_ops/RewriteDfdy.h"
+#include "compiler/translator/tree_ops/RewriteInterpolateAtOffset.h"
 #include "compiler/translator/tree_ops/RewriteStructSamplers.h"
 #include "compiler/translator/tree_util/BuiltIn.h"
 #include "compiler/translator/tree_util/FindFunction.h"
@@ -1017,6 +1018,17 @@ bool TranslatorVulkan::translateImpl(TIntermBlock *root,
                 usePreRotation ? CreateDriverUniformRef(driverUniforms, kFragRotation) : nullptr;
             if (!RewriteDfdy(this, root, getSymbolTable(), getShaderVersion(), flipXY,
                              fragRotation))
+            {
+                return false;
+            }
+        }
+
+        {
+            TIntermBinary *flipXY = CreateDriverUniformRef(driverUniforms, kFlipXY);
+            TIntermBinary *fragRotation =
+                usePreRotation ? CreateDriverUniformRef(driverUniforms, kFragRotation) : nullptr;
+            if (!RewriteInterpolateAtOffset(this, root, getSymbolTable(), getShaderVersion(),
+                                            flipXY, fragRotation))
             {
                 return false;
             }

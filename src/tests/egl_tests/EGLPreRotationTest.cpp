@@ -2166,6 +2166,186 @@ TEST_P(EGLPreRotationBlitFramebufferTest, FboDestOutOfBoundsSourceAndDestBlitFra
 
     ASSERT_EGL_SUCCESS();
 }
+
+class EGLPreRotationInterpolateAtOffsetTest : public EGLPreRotationSurfaceTest
+{
+  protected:
+    EGLPreRotationInterpolateAtOffsetTest() {}
+
+    GLuint createProgram()
+    {
+        // Init program
+        constexpr char kVS[] =
+            "#version 310 es\n"
+            "#extension GL_OES_shader_multisample_interpolation : require\n"
+            "in highp vec2 position;\n"
+            "uniform float screen_width;\n"
+            "uniform float screen_height;\n"
+            "out highp vec2 v_screenPosition;\n"
+            "out highp vec2 v_offset;\n"
+            "void main (void)\n"
+            "{\n"
+            "   gl_Position = vec4(position, 0, 1);\n"
+            "   v_screenPosition = (position.xy + vec2(1.0, 1.0)) / 2.0 * vec2(screen_width, "
+            "screen_height);\n"
+            "   v_offset = position.xy * 0.5f;\n"
+            "}";
+
+        constexpr char kFS[] =
+            "#version 310 es\n"
+            "#extension GL_OES_shader_multisample_interpolation : require\n"
+            "in highp vec2 v_screenPosition;\n"
+            "in highp vec2 v_offset;\n"
+            "layout(location = 0) out mediump vec4 FragColor;\n"
+            "void main() {\n"
+            "   const highp float threshold = 0.15625; // 4 subpixel bits. Assume 3 accurate bits "
+            "+ 0.03125 for other errors\n"
+            "\n"
+            "   highp vec2 pixelCenter = floor(v_screenPosition) + vec2(0.5, 0.5);\n"
+            "   highp vec2 offsetValue = interpolateAtOffset(v_screenPosition, v_offset);\n"
+            "   highp vec2 refValue = pixelCenter + v_offset;\n"
+            "\n"
+            "   bool valuesEqual = all(lessThan(abs(offsetValue - refValue), vec2(threshold)));\n"
+            "   if (valuesEqual)\n"
+            "       FragColor = vec4(0.0, 1.0, 0.0, 1.0);\n"
+            "   else\n"
+            "       FragColor = vec4(1.0, 0.0, 0.0, 1.0);\n"
+            "}";
+
+        return CompileProgram(kVS, kFS);
+    }
+    void initializeGeometry(GLuint program,
+                            GLBuffer *indexBuffer,
+                            GLVertexArray *vertexArray,
+                            GLBuffer *vertexBuffers)
+    {
+        GLint positionLocation = glGetAttribLocation(program, "position");
+        ASSERT_NE(-1, positionLocation);
+
+        GLuint screenWidthId  = glGetUniformLocation(program, "screen_width");
+        GLuint screenHeightId = glGetUniformLocation(program, "screen_height");
+
+        glUniform1f(screenWidthId, (GLfloat)mSize);
+        glUniform1f(screenHeightId, (GLfloat)mSize);
+
+        glBindVertexArray(*vertexArray);
+
+        std::vector<GLushort> indices = {0, 1, 2, 2, 3, 0};
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, *indexBuffer);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLushort) * indices.size(), &indices[0],
+                     GL_STATIC_DRAW);
+
+        std::vector<GLfloat> positionData = {// quad vertices
+                                             -1.0f, 1.0f, -1.0f, -1.0f, 1.0f, -1.0f, 1.0f, 1.0f};
+
+        glBindBuffer(GL_ARRAY_BUFFER, vertexBuffers[0]);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * positionData.size(), &positionData[0],
+                     GL_STATIC_DRAW);
+        glVertexAttribPointer(positionLocation, 2, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 2,
+                              nullptr);
+        glEnableVertexAttribArray(positionLocation);
+    }
+};
+
+// Draw with interpolateAtOffset() builtin function to pre-rotated default FBO
+TEST_P(EGLPreRotationInterpolateAtOffsetTest, InterpolateAtOffsetWithDefaultFBO)
+{
+    // http://anglebug.com/4453
+    ANGLE_SKIP_TEST_IF(isVulkanRenderer() && IsLinux() && IsIntel());
+
+    // Flaky on Linux SwANGLE http://anglebug.com/4453
+    ANGLE_SKIP_TEST_IF(IsLinux() && isSwiftshader());
+
+    // To aid in debugging, we want this window visible
+    setWindowVisible(mOSWindow, true);
+
+    initializeDisplay();
+    initializeSurfaceWithRGBA8888Config();
+
+    eglMakeCurrent(mDisplay, mWindowSurface, mWindowSurface, mContext);
+    ASSERT_EGL_SUCCESS();
+
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_shader_multisample_interpolation"));
+
+    // Init program
+    GLuint program = createProgram();
+    ASSERT_NE(0u, program);
+    glUseProgram(program);
+
+    GLBuffer indexBuffer;
+    GLVertexArray vertexArray;
+    GLBuffer vertexBuffers;
+    initializeGeometry(program, &indexBuffer, &vertexArray, &vertexBuffers);
+    ASSERT_GL_NO_ERROR();
+
+    glViewport(0, 0, mSize, mSize);
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor(0, 255, 0, 255));
+    EXPECT_PIXEL_COLOR_EQ(mSize - 1, 0, GLColor(0, 255, 0, 255));
+    EXPECT_PIXEL_COLOR_EQ(0, mSize - 1, GLColor(0, 255, 0, 255));
+    EXPECT_PIXEL_COLOR_EQ(mSize - 1, mSize - 1, GLColor(0, 255, 0, 255));
+    ASSERT_GL_NO_ERROR();
+
+    // Make the image visible
+    eglSwapBuffers(mDisplay, mWindowSurface);
+    ASSERT_EGL_SUCCESS();
+}
+
+// Draw with interpolateAtOffset() builtin function to pre-rotated custom FBO
+TEST_P(EGLPreRotationInterpolateAtOffsetTest, InterpolateAtOffsetWithCustomFBO)
+{
+    // http://anglebug.com/4453
+    ANGLE_SKIP_TEST_IF(isVulkanRenderer() && IsLinux() && IsIntel());
+
+    // Flaky on Linux SwANGLE http://anglebug.com/4453
+    ANGLE_SKIP_TEST_IF(IsLinux() && isSwiftshader());
+
+    // To aid in debugging, we want this window visible
+    setWindowVisible(mOSWindow, true);
+
+    initializeDisplay();
+    initializeSurfaceWithRGBA8888Config();
+
+    eglMakeCurrent(mDisplay, mWindowSurface, mWindowSurface, mContext);
+    ASSERT_EGL_SUCCESS();
+
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_shader_multisample_interpolation"));
+
+    // Init program
+    GLuint program = createProgram();
+    ASSERT_NE(0u, program);
+    glUseProgram(program);
+
+    GLBuffer indexBuffer;
+    GLVertexArray vertexArray;
+    GLBuffer vertexBuffers;
+    initializeGeometry(program, &indexBuffer, &vertexArray, &vertexBuffers);
+    ASSERT_GL_NO_ERROR();
+
+    // Create a texture-backed FBO
+    GLFramebuffer fbo;
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, mSize, mSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
+    ASSERT_GL_NO_ERROR();
+
+    glViewport(0, 0, mSize, mSize);
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor(0, 255, 0, 255));
+    EXPECT_PIXEL_COLOR_EQ(mSize - 1, 0, GLColor(0, 255, 0, 255));
+    EXPECT_PIXEL_COLOR_EQ(0, mSize - 1, GLColor(0, 255, 0, 255));
+    EXPECT_PIXEL_COLOR_EQ(mSize - 1, mSize - 1, GLColor(0, 255, 0, 255));
+    ASSERT_GL_NO_ERROR();
+}
+
 }  // anonymous namespace
 
 #ifdef Bool
@@ -2173,6 +2353,10 @@ TEST_P(EGLPreRotationBlitFramebufferTest, FboDestOutOfBoundsSourceAndDestBlitFra
 #    undef Bool
 #endif
 
+ANGLE_INSTANTIATE_TEST_COMBINE_1(EGLPreRotationInterpolateAtOffsetTest,
+                                 PrintToStringParamName,
+                                 testing::Bool(),
+                                 WithNoFixture(ES31_VULKAN()));
 ANGLE_INSTANTIATE_TEST_COMBINE_1(EGLPreRotationSurfaceTest,
                                  PrintToStringParamName,
                                  testing::Bool(),
