@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "28298fa0_317e265d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-07T01:27:41Z",
+      "side": 1,
+      "message": "bot infra is down, will rerun bots tomorrow",
+      "revId": "3b0fd9288329cd04a7e59dbd579918bfdebce6e1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
