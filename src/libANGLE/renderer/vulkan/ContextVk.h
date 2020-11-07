@@ -34,69 +34,6 @@ class RendererVk;
 class WindowSurfaceVk;
 class ShareGroupVk;
 
-class CommandQueue final : angle::NonCopyable
-{
-  public:
-    CommandQueue();
-    ~CommandQueue();
-
-    angle::Result init(vk::Context *context);
-    void destroy(VkDevice device);
-    void handleDeviceLost(RendererVk *renderer);
-
-    bool hasInFlightCommands() const;
-
-    void clearAllGarbage(RendererVk *renderer);
-
-    angle::Result finishToSerial(vk::Context *context, Serial finishSerial, uint64_t timeout);
-
-    angle::Result submitFrame(vk::Context *context,
-                              egl::ContextPriority priority,
-                              const std::vector<VkSemaphore> &waitSemaphores,
-                              const std::vector<VkPipelineStageFlags> &waitSemaphoreStageMasks,
-                              const vk::Semaphore *signalSemaphore,
-                              const vk::Shared<vk::Fence> &sharedFence,
-                              vk::ResourceUseList *resourceList,
-                              vk::GarbageList *currentGarbage,
-                              vk::CommandPool *commandPool);
-
-    vk::Shared<vk::Fence> getLastSubmittedFence(const vk::Context *context) const;
-
-    // Check to see which batches have finished completion (forward progress for
-    // mLastCompletedQueueSerial, for example for when the application busy waits on a query
-    // result). It would be nice if we didn't have to expose this for QueryVk::getResult.
-    angle::Result checkCompletedCommands(vk::Context *context);
-
-    angle::Result flushOutsideRPCommands(vk::Context *context,
-                                         vk::CommandBufferHelper *outsideRPCommands);
-
-    angle::Result flushRenderPassCommands(vk::Context *context,
-                                          const vk::RenderPass &renderPass,
-                                          vk::CommandBufferHelper *renderPassCommands);
-
-    // TODO(jmadill): Remove this. b/172704839
-    bool hasPrimaryCommands() const { return mPrimaryCommands.valid(); }
-
-  private:
-    angle::Result releaseToCommandBatch(vk::Context *context,
-                                        vk::PrimaryCommandBuffer &&commandBuffer,
-                                        vk::CommandPool *commandPool,
-                                        vk::CommandBatch *batch);
-    angle::Result retireFinishedCommands(vk::Context *context, size_t finishedCount);
-    angle::Result startPrimaryCommandBuffer(vk::Context *context);
-    angle::Result allocatePrimaryCommandBuffer(vk::Context *context,
-                                               vk::PrimaryCommandBuffer *commandBufferOut);
-    angle::Result releasePrimaryCommandBuffer(vk::Context *context,
-                                              vk::PrimaryCommandBuffer &&commandBuffer);
-
-    vk::GarbageQueue mGarbageQueue;
-    std::vector<vk::CommandBatch> mInFlightCommands;
-
-    // Keeps a free list of reusable primary command buffers.
-    vk::PrimaryCommandBuffer mPrimaryCommands;
-    vk::PersistentCommandPool mPrimaryCommandPool;
-};
-
 static constexpr uint32_t kMaxGpuEventNameLen = 32;
 using EventName                               = std::array<char, kMaxGpuEventNameLen>;
 
@@ -1099,7 +1036,7 @@ class ContextVk : public ContextImpl, public vk::Context
     vk::CommandPool mCommandPool;
 
     // TODO: This can be killed once threading is enabled https://issuetracker.google.com/153666475
-    CommandQueue mCommandQueue;
+    vk::CommandQueue mCommandQueue;
     vk::GarbageList mCurrentGarbage;
 
     RenderPassCache mRenderPassCache;
