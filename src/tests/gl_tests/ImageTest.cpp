@@ -1510,6 +1510,115 @@ void ImageTest::Source2DTarget2D_helper(const EGLint *attribs)
     glDeleteTextures(1, &target);
 }
 
+// Create target texture from EGL image and then trigger texture respecification.
+TEST_P(ImageTest, Source2DTarget2DTargetTextureRespecifyColorspace)
+{
+    EGLWindow *window = getEGLWindow();
+    ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_sRGB_override"));
+
+    // Create the Image
+    GLuint source;
+    EGLImageKHR image;
+    createEGLImage2DTextureSource(1, 1, GL_RGBA, GL_UNSIGNED_BYTE, kDefaultAttribs,
+                                  static_cast<void *>(&kLinearColor), &source, &image);
+
+    // Create the target
+    GLuint target;
+    createEGLImageTargetTexture2D(image, &target);
+
+    // Expect that the target texture has the same color as the source texture
+    verifyResults2D(target, kLinearColor);
+
+    // Respecify texture colorspace and verify results
+    glBindTexture(GL_TEXTURE_2D, target);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_FORMAT_SRGB_OVERRIDE_EXT, GL_SRGB);
+    ASSERT_GL_NO_ERROR();
+    // Expect that the target texture has the corresponding sRGB color values
+    verifyResults2D(target, kSrgbColor);
+
+    // Reset texture parameter and verify results again
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_FORMAT_SRGB_OVERRIDE_EXT, GL_NONE);
+    ASSERT_GL_NO_ERROR();
+    // Expect that the target texture has the same color as the source texture
+    verifyResults2D(target, kLinearColor);
+
+    // Clean up
+    glDeleteTextures(1, &source);
+    eglDestroyImageKHR(window->getDisplay(), image);
+    glDeleteTextures(1, &target);
+}
+
+// Create target texture from EGL image and then trigger texture respecification.
+TEST_P(ImageTest, Source2DTarget2DTargetTextureRespecifySize)
+{
+    EGLWindow *window = getEGLWindow();
+    ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
+
+    // Create the Image
+    GLuint source;
+    EGLImageKHR image;
+    createEGLImage2DTextureSource(1, 1, GL_RGBA, GL_UNSIGNED_BYTE, kDefaultAttribs,
+                                  static_cast<void *>(&kLinearColor), &source, &image);
+
+    // Create the target
+    GLuint target;
+    createEGLImageTargetTexture2D(image, &target);
+
+    // Expect that the target texture has the same color as the source texture
+    verifyResults2D(target, kLinearColor);
+
+    // Respecify texture size and verify results
+    std::array<GLubyte, 16> referenceColor;
+    referenceColor.fill(127);
+    glBindTexture(GL_TEXTURE_2D, target);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 referenceColor.data());
+    ASSERT_GL_NO_ERROR();
+
+    // Expect that the target texture has the reference color values
+    verifyResults2D(target, referenceColor.data());
+
+    // Clean up
+    glDeleteTextures(1, &source);
+    eglDestroyImageKHR(window->getDisplay(), image);
+    glDeleteTextures(1, &target);
+}
+
+// Create target texture from EGL image and then trigger texture respecification.
+TEST_P(ImageTestES3, Source2DTarget2DTargetTextureRespecifyLevel)
+{
+    EGLWindow *window = getEGLWindow();
+    ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
+
+    // Create the Image
+    GLuint source;
+    EGLImageKHR image;
+    createEGLImage2DTextureSource(1, 1, GL_RGBA, GL_UNSIGNED_BYTE, kDefaultAttribs,
+                                  static_cast<void *>(&kLinearColor), &source, &image);
+
+    // Create the target
+    GLuint target;
+    createEGLImageTargetTexture2D(image, &target);
+
+    // Expect that the target texture has the same color as the source texture
+    verifyResults2D(target, kLinearColor);
+
+    // Respecify texture levels and verify results
+    glBindTexture(GL_TEXTURE_2D, target);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 4);
+    ASSERT_GL_NO_ERROR();
+
+    // Expect that the target texture has the reference color values
+    verifyResults2D(target, kLinearColor);
+
+    // Clean up
+    glDeleteTextures(1, &source);
+    eglDestroyImageKHR(window->getDisplay(), image);
+    glDeleteTextures(1, &target);
+}
+
 // Testing source 2D texture, target 2D array texture
 TEST_P(ImageTest, Source2DTarget2DArray)
 {
