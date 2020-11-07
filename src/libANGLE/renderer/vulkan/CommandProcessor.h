@@ -257,8 +257,7 @@ class TaskProcessor : angle::NonCopyable
 
     void handleDeviceLost(Context *context);
 
-    // Called by CommandProcessor to process any completed work
-    angle::Result lockAndCheckCompletedCommands(Context *context);
+    angle::Result checkCompletedCommands(Context *context);
 
     VkResult getLastAndClearPresentResult(VkSwapchainKHR swapchain);
 
@@ -270,14 +269,7 @@ class TaskProcessor : angle::NonCopyable
                                         CommandPool *commandPool,
                                         CommandBatch *batch);
 
-    // Check to see which batches have finished completion (forward progress for
-    // mLastCompletedQueueSerial, for example for when the application busy waits on a query
-    // result). It would be nice if we didn't have to expose this for QuerygetResult.
-    angle::Result checkCompletedCommandsNoLock(Context *context);
-
     GarbageQueue mGarbageQueue;
-
-    mutable std::mutex mInFlightCommandsMutex;
     std::vector<CommandBatch> mInFlightCommands;
 
     // Keeps a free list of reusable primary command buffers.

@@ -304,14 +304,6 @@ angle::Result TaskProcessor::init(Context *context, std::thread::id threadId)
     return angle::Result::Continue;
 }
 
-angle::Result TaskProcessor::lockAndCheckCompletedCommands(Context *context)
-{
-    ASSERT(isValidWorkerThread(context));
-    std::lock_guard<std::mutex> inFlightLock(mInFlightCommandsMutex);
-
-    return checkCompletedCommandsNoLock(context);
-}
-
 VkResult TaskProcessor::getLastAndClearPresentResult(VkSwapchainKHR swapchain)
 {
     std::unique_lock<std::mutex> lock(mSwapchainStatusMutex);
@@ -327,9 +319,9 @@ VkResult TaskProcessor::getLastAndClearPresentResult(VkSwapchainKHR swapchain)
     return result;
 }
 
-angle::Result TaskProcessor::checkCompletedCommandsNoLock(Context *context)
+angle::Result TaskProcessor::checkCompletedCommands(Context *context)
 {
-    ANGLE_TRACE_EVENT0("gpu.angle", "TaskProcessor::checkCompletedCommandsNoLock");
+    ANGLE_TRACE_EVENT0("gpu.angle", "TaskProcessor::checkCompletedCommands");
     VkDevice device        = context->getDevice();
     RendererVk *rendererVk = context->getRenderer();
 
@@ -434,7 +426,6 @@ void TaskProcessor::handleDeviceLost(Context *context)
     ASSERT(isValidWorkerThread(context));
     ANGLE_TRACE_EVENT0("gpu.angle", "TaskProcessor::handleDeviceLost");
     VkDevice device = context->getDevice();
-    std::lock_guard<std::mutex> inFlightLock(mInFlightCommandsMutex);
 
     for (CommandBatch &batch : mInFlightCommands)
     {
@@ -466,7 +457,6 @@ angle::Result TaskProcessor::finishToSerial(Context *context, Serial serial)
     ANGLE_TRACE_EVENT0("gpu.angle", "TaskProcessor::finishToSerial");
     RendererVk *rendererVk = context->getRenderer();
     uint64_t timeout       = rendererVk->getMaxFenceWaitTimeNs();
-    std::unique_lock<std::mutex> inFlightLock(mInFlightCommandsMutex);
 
     if (mInFlightCommands.empty())
     {
@@ -487,15 +477,12 @@ angle::Result TaskProcessor::finishToSerial(Context *context, Serial serial)
     }
     const CommandBatch &batch = mInFlightCommands[batchIndex];
 
-    // Don't need to hold the lock while waiting for the fence
-    inFlightLock.unlock();
-
     // Wait for it finish
     VkDevice device = context->getDevice();
     ANGLE_VK_TRY(context, batch.fence.get().wait(device, timeout));
 
     // Clean up finished batches.
-    return lockAndCheckCompletedCommands(context);
+    return checkCompletedCommands(context);
 }
 
 VkResult TaskProcessor::present(VkQueue queue, const VkPresentInfoKHR &presentInfo)
@@ -544,10 +531,9 @@ angle::Result TaskProcessor::submitFrame(Context *context,
     // in the in-flight list.
     ANGLE_TRY(releaseToCommandBatch(context, std::move(commandBuffer), commandPool, &batch));
 
-    std::unique_lock<std::mutex> inFlightLock(mInFlightCommandsMutex);
     mInFlightCommands.emplace_back(scopedBatch.release());
 
-    ANGLE_TRY(checkCompletedCommandsNoLock(context));
+    ANGLE_TRY(checkCompletedCommands(context));
 
     // CPU should be throttled to avoid mInFlightCommands from growing too fast. Important for
     // off-screen scenarios.
@@ -555,7 +541,6 @@ angle::Result TaskProcessor::submitFrame(Context *context,
     {
         size_t numCommandsToFinish = mInFlightCommands.size() - kInFlightCommandsLimit;
         Serial finishSerial        = mInFlightCommands[numCommandsToFinish].serial;
-        inFlightLock.unlock();
         return finishToSerial(context, finishSerial);
     }
 
@@ -816,7 +801,7 @@ angle::Result CommandProcessor::processTask(Context *context, CommandProcessorTa
             ANGLE_TRY(mTaskProcessor.queueSubmit(context,
                                                  getRenderer()->getVkQueue(task->getPriority()),
                                                  submitInfo, task->getOneOffFence()));
-            ANGLE_TRY(mTaskProcessor.lockAndCheckCompletedCommands(context));
+            ANGLE_TRY(mTaskProcessor.checkCompletedCommands(context));
             break;
         }
         case CustomTask::FinishToSerial:
@@ -853,7 +838,7 @@ angle::Result CommandProcessor::processTask(Context *context, CommandProcessorTa
         }
         case CustomTask::CheckCompletedCommands:
         {
-            ANGLE_TRY(mTaskProcessor.lockAndCheckCompletedCommands(this));
+            ANGLE_TRY(mTaskProcessor.checkCompletedCommands(this));
             break;
         }
         default:
