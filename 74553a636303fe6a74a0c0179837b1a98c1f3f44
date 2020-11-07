@@ -33,6 +33,23 @@
       "message": "Nice, LGTM if this passes bots.",
       "revId": "74553a636303fe6a74a0c0179837b1a98c1f3f44",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "253fd053_514865cd",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-07T00:01:34Z",
+      "side": 1,
+      "message": "looks like the pixel device has a driver bug, gonna skip them and land this",
+      "revId": "74553a636303fe6a74a0c0179837b1a98c1f3f44",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
