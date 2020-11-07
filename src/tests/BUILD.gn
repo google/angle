@@ -1189,8 +1189,12 @@ if (build_angle_deqp_tests && !is_fuchsia) {
         "deqp_support/angle_deqp_gtest.cpp",
       ]
 
+      expectations_file = "deqp_${_api}_test_expectations.txt"
+      if (defined(invoker.expectations_file)) {
+        expectations_file = invoker.expectations_file
+      }
       data = [
-        "deqp_support/deqp_${_api}_test_expectations.txt",
+        "deqp_support/${expectations_file}",
         "${invoker.mustpass_dir}/${invoker.mustpass_name}",
       ]
     }
@@ -1346,36 +1350,42 @@ if (build_angle_deqp_tests && !is_fuchsia) {
     defines = [ "ANGLE_DEQP_GLES3_ROTATE90_TESTS" ]
     sources = deqp_gles3_sources
     mustpass_dir = _aosp_mustpass
+    expectations_file = "deqp_gles3_rotate_test_expectations.txt"
   }
 
   angle_deqp_rotate_gtest("gles3_rotate180") {
     defines = [ "ANGLE_DEQP_GLES3_ROTATE180_TESTS" ]
     sources = deqp_gles3_sources
     mustpass_dir = _aosp_mustpass
+    expectations_file = "deqp_gles3_rotate_test_expectations.txt"
   }
 
   angle_deqp_rotate_gtest("gles3_rotate270") {
     defines = [ "ANGLE_DEQP_GLES3_ROTATE270_TESTS" ]
     sources = deqp_gles3_sources
     mustpass_dir = _aosp_mustpass
+    expectations_file = "deqp_gles3_rotate_test_expectations.txt"
   }
 
   angle_deqp_rotate_gtest("gles31_rotate90") {
     defines = [ "ANGLE_DEQP_GLES31_ROTATE90_TESTS" ]
     sources = deqp_gles31_sources
     mustpass_dir = _aosp_mustpass
+    expectations_file = "deqp_gles31_rotate_test_expectations.txt"
   }
 
   angle_deqp_rotate_gtest("gles31_rotate180") {
     defines = [ "ANGLE_DEQP_GLES31_ROTATE180_TESTS" ]
     sources = deqp_gles31_sources
     mustpass_dir = _aosp_mustpass
+    expectations_file = "deqp_gles31_rotate_test_expectations.txt"
   }
 
   angle_deqp_rotate_gtest("gles31_rotate270") {
     defines = [ "ANGLE_DEQP_GLES31_ROTATE270_TESTS" ]
     sources = deqp_gles31_sources
     mustpass_dir = _aosp_mustpass
+    expectations_file = "deqp_gles31_rotate_test_expectations.txt"
   }
 }
 
