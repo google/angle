@@ -221,6 +221,46 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7c0bad9b_877cd093",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-07T02:10:54Z",
+      "side": 1,
+      "message": "Fixed in CL: https://chromium-review.googlesource.com/c/angle/angle/+/2523912",
+      "revId": "4d9fa8d3e33b6e30b6baaebe86b03ac9fb7e8f68",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5ced144c_266f6d4b",
+        "filename": "BUILD.gn",
+        "patchSetId": 2
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-07T02:10:54Z",
+      "side": 1,
+      "message": "Typo that I fixed",
+      "range": {
+        "startLine": 44,
+        "startChar": 71,
+        "endLine": 44,
+        "endChar": 79
+      },
+      "revId": "4d9fa8d3e33b6e30b6baaebe86b03ac9fb7e8f68",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "40063a73_78c6c689",
@@ -268,6 +308,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "355faf63_07d298e3",
+        "filename": "src/common/debug.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-07T02:10:54Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "0924eb4d_42af2c7a",
+      "range": {
+        "startLine": 97,
+        "startChar": 4,
+        "endLine": 97,
+        "endChar": 16
+      },
+      "revId": "4d9fa8d3e33b6e30b6baaebe86b03ac9fb7e8f68",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "99758ec5_1555ba2a",
@@ -281,6 +345,30 @@
       "writtenOn": "2020-11-05T17:45:42Z",
       "side": 1,
       "message": "Need to replace the above code with the following, in order to avoid the crash.\n\n    if (g_debugAnnotator)\n    {\n        g_debugAnnotator-\u003ebeginEvent(mContext, mEntryPoint, mFunctionName, buffer.data());\n    }\n\nI think what\u0027s happening is that this is being called by EGL entrypoints, before the Vulkan back-end is started.  Nothing set g_debugAnnotator.",
+      "range": {
+        "startLine": 157,
+        "startChar": 0,
+        "endLine": 159,
+        "endChar": 0
+      },
+      "revId": "4d9fa8d3e33b6e30b6baaebe86b03ac9fb7e8f68",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9a6d5f03_2ec0b0c4",
+        "filename": "src/common/debug.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 159,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-07T02:10:54Z",
+      "side": 1,
+      "message": "I fixed it in the new CL",
+      "parentUuid": "99758ec5_1555ba2a",
       "range": {
         "startLine": 157,
         "startChar": 0,
