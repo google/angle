@@ -4061,20 +4061,12 @@ angle::Result ContextVk::updateActiveImages(const gl::Context *context,
 bool ContextVk::hasRecordedCommands()
 {
     ASSERT(mOutsideRenderPassCommands && mRenderPassCommands);
-    return !mOutsideRenderPassCommands->empty() || mRenderPassCommands->started() ||
-           mCommandQueue.hasPrimaryCommands();
+    return !mOutsideRenderPassCommands->empty() || mRenderPassCommands->started();
 }
 
 angle::Result ContextVk::flushImpl(const vk::Semaphore *signalSemaphore)
 {
-    bool hasPendingSemaphore = signalSemaphore || !mWaitSemaphores.empty();
-    if (!hasRecordedCommands() && !hasPendingSemaphore && !mGpuEventsEnabled)
-    {
-        ASSERT(!mDeferredFlushCount);
-        return angle::Result::Continue;
-    }
-
-    ANGLE_TRACE_EVENT0("gpu.angle", "ContextVk::flush");
+    ANGLE_TRACE_EVENT0("gpu.angle", "ContextVk::flushImpl");
 
     // We must set this to zero before calling flushCommandsAndEndRenderPass to prevent it from
     // calling back to flushImpl.
@@ -4141,7 +4133,7 @@ angle::Result ContextVk::flushImpl(const vk::Semaphore *signalSemaphore)
 
 angle::Result ContextVk::finishImpl()
 {
-    ANGLE_TRACE_EVENT0("gpu.angle", "ContextVk::finish");
+    ANGLE_TRACE_EVENT0("gpu.angle", "ContextVk::finishImpl");
 
     ANGLE_TRY(flushImpl(nullptr));
 

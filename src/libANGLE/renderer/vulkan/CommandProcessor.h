@@ -201,16 +201,13 @@ class CommandQueue final : angle::NonCopyable
                                           const RenderPass &renderPass,
                                           CommandBufferHelper *renderPassCommands);
 
-    // TODO(jmadill): Remove this. b/172678125
-    bool hasPrimaryCommands() const { return mPrimaryCommands.valid(); }
-
   private:
     angle::Result releaseToCommandBatch(Context *context,
                                         PrimaryCommandBuffer &&commandBuffer,
                                         CommandPool *commandPool,
                                         CommandBatch *batch);
     angle::Result retireFinishedCommands(Context *context, size_t finishedCount);
-    angle::Result startPrimaryCommandBuffer(Context *context);
+    angle::Result ensurePrimaryCommandBufferValid(Context *context);
     angle::Result allocatePrimaryCommandBuffer(Context *context,
                                                PrimaryCommandBuffer *commandBufferOut);
     angle::Result releasePrimaryCommandBuffer(Context *context,

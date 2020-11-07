@@ -1228,11 +1228,7 @@ angle::Result CommandQueue::submitFrame(
     CommandPool *commandPool)
 {
     // Start an empty primary buffer if we have an empty submit.
-    if (!hasPrimaryCommands())
-    {
-        ANGLE_TRY(startPrimaryCommandBuffer(context));
-    }
-
+    ANGLE_TRY(ensurePrimaryCommandBufferValid(context));
     ANGLE_VK_TRY(context, mPrimaryCommands.end());
 
     VkSubmitInfo submitInfo = {};
@@ -1289,9 +1285,12 @@ Shared<Fence> CommandQueue::getLastSubmittedFence(const Context *context) const
     return fence;
 }
 
-angle::Result CommandQueue::startPrimaryCommandBuffer(Context *context)
+angle::Result CommandQueue::ensurePrimaryCommandBufferValid(Context *context)
 {
-    ASSERT(!mPrimaryCommands.valid());
+    if (mPrimaryCommands.valid())
+    {
+        return angle::Result::Continue;
+    }
 
     ANGLE_TRY(allocatePrimaryCommandBuffer(context, &mPrimaryCommands));
 
@@ -1307,30 +1306,18 @@ angle::Result CommandQueue::startPrimaryCommandBuffer(Context *context)
 angle::Result CommandQueue::flushOutsideRPCommands(Context *context,
                                                    CommandBufferHelper *outsideRPCommands)
 {
-    if (!mPrimaryCommands.valid())
-    {
-        ANGLE_TRY(startPrimaryCommandBuffer(context));
-    }
-
-    ANGLE_TRY(outsideRPCommands->flushToPrimary(context->getRenderer()->getFeatures(),
-                                                &mPrimaryCommands, nullptr));
-
-    return angle::Result::Continue;
+    ANGLE_TRY(ensurePrimaryCommandBufferValid(context));
+    return outsideRPCommands->flushToPrimary(context->getRenderer()->getFeatures(),
+                                             &mPrimaryCommands, nullptr);
 }
 
 angle::Result CommandQueue::flushRenderPassCommands(Context *context,
                                                     const RenderPass &renderPass,
                                                     CommandBufferHelper *renderPassCommands)
 {
-    if (!mPrimaryCommands.valid())
-    {
-        ANGLE_TRY(startPrimaryCommandBuffer(context));
-    }
-
-    ANGLE_TRY(renderPassCommands->flushToPrimary(context->getRenderer()->getFeatures(),
-                                                 &mPrimaryCommands, &renderPass));
-
-    return angle::Result::Continue;
+    ANGLE_TRY(ensurePrimaryCommandBufferValid(context));
+    return renderPassCommands->flushToPrimary(context->getRenderer()->getFeatures(),
+                                              &mPrimaryCommands, &renderPass);
 }
 }  // namespace vk
 }  // namespace rx
