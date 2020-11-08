@@ -1403,23 +1403,7 @@ angle::Result WindowSurfaceVk::present(ContextVk *contextVk,
     mCurrentSwapHistoryIndex =
         mCurrentSwapHistoryIndex == mSwapHistory.size() ? 0 : mCurrentSwapHistoryIndex;
 
-    VkResult result;
-    if (renderer->getFeatures().asyncCommandQueue.enabled)
-    {
-        vk::CommandProcessorTask present;
-        present.initPresent(contextVk->getPriority(), presentInfo);
-
-        ANGLE_TRACE_EVENT0("gpu.angle", "WindowSurfaceVk::present");
-        renderer->queueCommand(contextVk, &present);
-        // Always return success, when we call acquireNextImage we'll check the return code. This
-        // allows the app to continue working until we really need to know the return code from
-        // present.
-        result = VK_SUCCESS;
-    }
-    else
-    {
-        result = renderer->queuePresent(contextVk->getPriority(), presentInfo);
-    }
+    VkResult result = renderer->queuePresent(contextVk, contextVk->getPriority(), presentInfo);
 
     ANGLE_TRY(computePresentOutOfDate(contextVk, result, presentOutOfDate));
 

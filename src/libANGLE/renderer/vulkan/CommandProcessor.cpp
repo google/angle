@@ -148,7 +148,8 @@ void CommandProcessorTask::copyPresentInfo(const VkPresentInfoKHR &other)
     }
 }
 
-void CommandProcessorTask::initPresent(egl::ContextPriority priority, VkPresentInfoKHR &presentInfo)
+void CommandProcessorTask::initPresent(egl::ContextPriority priority,
+                                       const VkPresentInfoKHR &presentInfo)
 {
     mTask     = CustomTask::Present;
     mPriority = priority;
@@ -303,8 +304,15 @@ void CommandProcessor::queueCommand(Context *context, CommandProcessorTask *task
     mWorkAvailableCondition.notify_one();
 }
 
-void CommandProcessor::processTasks()
+void CommandProcessor::processTasks(const DeviceQueueMap &queueMap)
 {
+    angle::Result initResult = mCommandQueue.init(this, queueMap);
+    if (initResult == angle::Result::Stop)
+    {
+        // TODO: https://issuetracker.google.com/issues/170311829 - error handling
+        UNREACHABLE();
+        return;
+    }
 
     while (true)
     {
@@ -328,8 +336,6 @@ void CommandProcessor::processTasks()
 
 angle::Result CommandProcessor::processTasksImpl(bool *exitThread)
 {
-    ANGLE_TRY(mCommandQueue.init(this));
-
     while (true)
     {
         std::unique_lock<std::mutex> lock(mWorkerMutex);
@@ -420,8 +426,7 @@ angle::Result CommandProcessor::processTask(CommandProcessorTask *task)
         }
         case CustomTask::Present:
         {
-            VkResult result =
-                present(mRenderer->getVkQueue(task->getPriority()), task->getPresentInfo());
+            VkResult result = present(task->getPriority(), task->getPresentInfo());
             if (ANGLE_UNLIKELY(result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR))
             {
                 // We get to ignore these as they are not fatal
@@ -579,11 +584,12 @@ VkResult CommandProcessor::getLastAndClearPresentResult(VkSwapchainKHR swapchain
     return result;
 }
 
-VkResult CommandProcessor::present(VkQueue queue, const VkPresentInfoKHR &presentInfo)
+VkResult CommandProcessor::present(egl::ContextPriority priority,
+                                   const VkPresentInfoKHR &presentInfo)
 {
     std::lock_guard<std::mutex> lock(mSwapchainStatusMutex);
     ANGLE_TRACE_EVENT0("gpu.angle", "vkQueuePresentKHR");
-    VkResult result = vkQueuePresentKHR(queue, &presentInfo);
+    VkResult result = mCommandQueue.queuePresent(priority, presentInfo);
 
     // Verify that we are presenting one and only one swapchain
     ASSERT(presentInfo.swapchainCount == 1);
@@ -602,6 +608,15 @@ CommandQueue::~CommandQueue() = default;
 
 void CommandQueue::destroy(RendererVk *renderer)
 {
+    // Force all commands to finish by flushing all queues.
+    for (VkQueue queue : mQueues)
+    {
+        if (queue != VK_NULL_HANDLE)
+        {
+            vkQueueWaitIdle(queue);
+        }
+    }
+
     mLastCompletedQueueSerial = Serial::Infinite();
     clearAllGarbage(renderer);
 
@@ -611,13 +626,15 @@ void CommandQueue::destroy(RendererVk *renderer)
     ASSERT(mInFlightCommands.empty() && mGarbageQueue.empty());
 }
 
-angle::Result CommandQueue::init(Context *context)
+angle::Result CommandQueue::init(Context *context, const DeviceQueueMap &queueMap)
 {
     RendererVk *renderer = context->getRenderer();
 
     // Initialize the command pool now that we know the queue family index.
     uint32_t queueFamilyIndex = renderer->getQueueFamilyIndex();
     ANGLE_TRY(mPrimaryCommandPool.init(context, queueFamilyIndex));
+
+    mQueues = queueMap;
 
     return angle::Result::Continue;
 }
@@ -966,13 +983,18 @@ angle::Result CommandQueue::queueSubmit(Context *context,
         renderer->outputVmaStatString();
     }
 
-    VkQueue queue       = renderer->getVkQueue(contextPriority);
     VkFence fenceHandle = fence ? fence->getHandle() : VK_NULL_HANDLE;
-    ANGLE_VK_TRY(context, vkQueueSubmit(queue, 1, &submitInfo, fenceHandle));
+    ANGLE_VK_TRY(context, vkQueueSubmit(mQueues[contextPriority], 1, &submitInfo, fenceHandle));
     mLastSubmittedQueueSerial = submitQueueSerial;
 
     // Now that we've submitted work, clean up RendererVk garbage
     return renderer->cleanupGarbage(mLastCompletedQueueSerial);
+}
+
+VkResult CommandQueue::queuePresent(egl::ContextPriority contextPriority,
+                                    const VkPresentInfoKHR &presentInfo)
+{
+    return vkQueuePresentKHR(mQueues[contextPriority], &presentInfo);
 }
 }  // namespace vk
 }  // namespace rx
