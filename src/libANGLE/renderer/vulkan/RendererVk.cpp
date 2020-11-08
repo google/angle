@@ -911,17 +911,11 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
 
     if (getFeatures().commandProcessor.enabled)
     {
-        if (getFeatures().asynchronousCommandProcessing.enabled)
-        {
-            ASSERT(getFeatures().commandProcessor.enabled);
-            mCommandProcessorThread =
-                std::thread(&vk::CommandProcessor::processTasks, &mCommandProcessor);
-            waitForCommandProcessorIdle(displayVk);
-        }
-        else
-        {
-            ANGLE_TRY(mCommandProcessor.initTaskProcessor(displayVk));
-        }
+        // TODO(jmadill): Clean up. b/172704839
+        ASSERT(mFeatures.asynchronousCommandProcessing.enabled);
+        mCommandProcessorThread =
+            std::thread(&vk::CommandProcessor::processTasks, &mCommandProcessor);
+        waitForCommandProcessorIdle(displayVk);
     }
     else
     {

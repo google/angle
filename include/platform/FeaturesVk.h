@@ -337,12 +337,11 @@ struct FeaturesVk : FeatureSetBase
     // Tell Vulkan back-end to use CommandProcessor class to dispatch work to the GPU. The work will
     // happen asynchronously in a different thread if asynchronousCommandProcessing is true.
     // Otherwise use Renderer::CommandQueue to dispatch work.
+    // TODO(jmadill): Merge these two features. b/172704839
     Feature commandProcessor = {"commandProcessor", FeatureCategory::VulkanFeatures,
                                 "Use CommandProcessor class to dispatch work to GPU.", &members,
                                 "http://anglebug.com/4324"};
 
-    // Enable parallel thread execution when commandProcessor is enabled.
-    // Currently off by default.
     Feature asynchronousCommandProcessing = {"asynchronousCommandProcessing",
                                              FeatureCategory::VulkanFeatures,
                                              "Enable/Disable parallel processing of worker thread",
