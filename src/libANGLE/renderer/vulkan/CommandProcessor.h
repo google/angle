@@ -63,9 +63,7 @@ class CommandProcessorTask
 
     void initTask(CustomTask command) { mTask = command; }
 
-    void initProcessCommands(ContextVk *contextVk,
-                             CommandBufferHelper *commandBuffer,
-                             const RenderPass *renderPass);
+    void initProcessCommands(CommandBufferHelper *commandBuffer, const RenderPass *renderPass);
 
     void initPresent(egl::ContextPriority priority, VkPresentInfoKHR &presentInfo);
 
@@ -106,7 +104,6 @@ class CommandProcessorTask
     const VkPresentInfoKHR &getPresentInfo() const { return mPresentInfo; }
     const RenderPass *getRenderPass() const { return mRenderPass; }
     CommandBufferHelper *getCommandBuffer() const { return mCommandBuffer; }
-    ContextVk *getContextVk() const { return mContextVk; }
 
   private:
     void copyPresentInfo(const VkPresentInfoKHR &other);
@@ -114,7 +111,6 @@ class CommandProcessorTask
     CustomTask mTask;
 
     // ProcessCommands
-    ContextVk *mContextVk;
     const RenderPass *mRenderPass;
     CommandBufferHelper *mCommandBuffer;
 

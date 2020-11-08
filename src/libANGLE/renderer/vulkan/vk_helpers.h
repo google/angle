@@ -974,7 +974,6 @@ class CommandBufferHelper : angle::NonCopyable
 #endif
 
     void reset();
-    void releaseToContextQueue(ContextVk *contextVk);
 
     // Returns true if we have no work to execute. For renderpass command buffer, even if the
     // underlying command buffer is empty, we may still have a renderpass with an empty command

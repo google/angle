@@ -811,7 +811,7 @@ class SecondaryCommandBuffer final : angle::NonCopyable
         return writePointer + sizeInBytes;
     }
 
-    // flag to indicate that commandBuffer is open for new commands
+    // Flag to indicate that commandBuffer is open for new commands. Initially open.
     bool mIsOpen;
 
     std::vector<CommandHeader *> mCommands;
@@ -827,8 +827,9 @@ class SecondaryCommandBuffer final : angle::NonCopyable
 };
 
 ANGLE_INLINE SecondaryCommandBuffer::SecondaryCommandBuffer()
-    : mAllocator(nullptr), mCurrentWritePointer(nullptr), mCurrentBytesRemaining(0)
+    : mIsOpen(true), mAllocator(nullptr), mCurrentWritePointer(nullptr), mCurrentBytesRemaining(0)
 {}
+
 ANGLE_INLINE SecondaryCommandBuffer::~SecondaryCommandBuffer() {}
 
 // begin and insert DebugUtilsLabelEXT funcs share this same function body

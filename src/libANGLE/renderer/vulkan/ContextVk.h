@@ -592,9 +592,6 @@ class ContextVk : public ContextImpl, public vk::Context
     void updateOverlayOnPresent();
     void addOverlayUsedBuffersCount(vk::CommandBufferHelper *commandBuffer);
 
-    // When worker thread completes, it releases command buffers back to context queue
-    void recycleCommandBuffer(vk::CommandBufferHelper *commandBuffer);
-
     // DescriptorSet writes
     VkDescriptorBufferInfo *allocDescriptorBufferInfos(size_t count);
     VkDescriptorImageInfo *allocDescriptorImageInfos(size_t count);
@@ -904,9 +901,6 @@ class ContextVk : public ContextImpl, public vk::Context
 
     void initIndexTypeMap();
 
-    // Pull an available CBH ptr from the CBH queue and set to specified hasRenderPass state
-    void getNextAvailableCommandBuffer(vk::CommandBufferHelper **commandBuffer, bool hasRenderPass);
-
     angle::Result endRenderPassIfImageUsed(const vk::ImageHelper &image);
 
     angle::Result endRenderPassIfTransformFeedbackBuffer(const vk::BufferHelper *buffer);
@@ -1030,17 +1024,6 @@ class ContextVk : public ContextImpl, public vk::Context
     vk::GarbageList mCurrentGarbage;
 
     RenderPassCache mRenderPassCache;
-
-    // We have a queue of CommandBufferHelpers (CBHs) that is drawn from for the two active command
-    //  buffers in the main thread. The two active command buffers are the inside and outside
-    //  RenderPass command buffers.
-    constexpr static size_t kNumCommandBuffers = 50;
-    std::array<vk::CommandBufferHelper, kNumCommandBuffers> mCommandBuffers;
-
-    // Lock access to the command buffer queue
-    std::mutex mCommandBufferQueueMutex;
-    std::queue<vk::CommandBufferHelper *> mAvailableCommandBuffers;
-    std::condition_variable mAvailableCommandBufferCondition;
 
     vk::CommandBufferHelper *mOutsideRenderPassCommands;
     vk::CommandBufferHelper *mRenderPassCommands;

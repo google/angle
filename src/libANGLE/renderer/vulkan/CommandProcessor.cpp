@@ -62,7 +62,6 @@ bool CommandsHaveValidOrdering(const std::vector<vk::CommandBatch> &commands)
 void CommandProcessorTask::initTask()
 {
     mTask                        = CustomTask::Invalid;
-    mContextVk                   = nullptr;
     mRenderPass                  = nullptr;
     mCommandBuffer               = nullptr;
     mSemaphore                   = nullptr;
@@ -77,12 +76,10 @@ void CommandProcessorTask::initTask()
 }
 
 // CommandProcessorTask implementation
-void CommandProcessorTask::initProcessCommands(ContextVk *contextVk,
-                                               CommandBufferHelper *commandBuffer,
+void CommandProcessorTask::initProcessCommands(CommandBufferHelper *commandBuffer,
                                                const RenderPass *renderPass)
 {
     mTask          = CustomTask::ProcessCommands;
-    mContextVk     = contextVk;
     mCommandBuffer = commandBuffer;
     mRenderPass    = renderPass;
 }
@@ -202,7 +199,6 @@ CommandProcessorTask &CommandProcessorTask::operator=(CommandProcessorTask &&rhs
         return *this;
     }
 
-    mContextVk     = rhs.mContextVk;
     mRenderPass    = rhs.mRenderPass;
     mCommandBuffer = rhs.mCommandBuffer;
     std::swap(mTask, rhs.mTask);
@@ -467,7 +463,7 @@ angle::Result CommandProcessor::processTask(CommandProcessorTask *task)
                 ANGLE_TRY(mCommandQueue.flushOutsideRPCommands(this, task->getCommandBuffer()));
             }
             ASSERT(task->getCommandBuffer()->empty());
-            task->getCommandBuffer()->releaseToContextQueue(task->getContextVk());
+            mRenderer->recycleCommandBufferHelper(task->getCommandBuffer());
             break;
         }
         case CustomTask::CheckCompletedCommands:

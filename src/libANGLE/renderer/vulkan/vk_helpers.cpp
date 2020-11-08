@@ -1305,6 +1305,7 @@ angle::Result CommandBufferHelper::flushToPrimary(const angle::FeaturesVk &featu
     {
         mCommandBuffer.executeCommands(primary->getHandle());
     }
+
     // Restart the command buffer.
     reset();
 
@@ -1440,11 +1441,6 @@ void CommandBufferHelper::reset()
     ASSERT(mValidTransformFeedbackBufferCount == 0);
     ASSERT(mRebindTransformFeedbackBuffers == false);
     ASSERT(mRenderPassUsedImages.empty());
-}
-
-void CommandBufferHelper::releaseToContextQueue(ContextVk *contextVk)
-{
-    contextVk->recycleCommandBuffer(this);
 }
 
 void CommandBufferHelper::resumeTransformFeedback()
