@@ -154,10 +154,10 @@ void SyncHelperNativeFence::releaseToRenderer(RendererVk *renderer)
     renderer->collectGarbageAndReinit(&mUse, &mFenceWithFd);
 }
 
-// Note: Having mFenceWithFd hold the FD, so that ownership is with ICD. Meanwhile store a dup
+// Note: We have mFenceWithFd hold the FD, so that ownership is with ICD. Meanwhile we store a dup
 // of FD in SyncHelperNativeFence for further reference, i.e. dup of FD. Any call to clientWait
 // or serverWait will ensure the FD or dup of FD goes to application or ICD. At release, above
-// it's Garbage collected/destroyed. Otherwise can't time when to close(fd);
+// it's Garbage collected/destroyed. Otherwise we can't time when to close(fd);
 angle::Result SyncHelperNativeFence::initializeWithFd(ContextVk *contextVk, int inFd)
 {
     ASSERT(inFd >= kInvalidFenceFd);
