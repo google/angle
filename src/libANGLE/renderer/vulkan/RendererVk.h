@@ -50,6 +50,9 @@ class FramebufferVk;
 namespace vk
 {
 struct Format;
+
+static constexpr size_t kMaxExtensionNames = 200;
+using ExtensionNameList                    = angle::FixedVector<const char *, kMaxExtensionNames>;
 }  // namespace vk
 
 // Supports one semaphore from current surface, and one semaphore passed to
@@ -233,9 +236,6 @@ class RendererVk : angle::NonCopyable
     }
     void handleDeviceLost() { mCommandProcessor.handleDeviceLost(); }
 
-    static constexpr size_t kMaxExtensionNames = 200;
-    using ExtensionNameList = angle::FixedVector<const char *, kMaxExtensionNames>;
-
     angle::Result getPipelineCache(vk::PipelineCache **pipelineCache);
     void onNewGraphicsPipeline()
     {
@@ -325,9 +325,9 @@ class RendererVk : angle::NonCopyable
     angle::Result initializeDevice(DisplayVk *displayVk, uint32_t queueFamilyIndex);
     void ensureCapsInitialized() const;
 
-    void queryDeviceExtensionFeatures(const ExtensionNameList &deviceExtensionNames);
+    void queryDeviceExtensionFeatures(const vk::ExtensionNameList &deviceExtensionNames);
 
-    void initFeatures(DisplayVk *display, const ExtensionNameList &extensions);
+    void initFeatures(DisplayVk *display, const vk::ExtensionNameList &extensions);
     void initPipelineCacheVkKey();
     angle::Result initPipelineCache(DisplayVk *display,
                                     vk::PipelineCache *pipelineCache,
