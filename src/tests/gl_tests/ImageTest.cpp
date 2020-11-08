@@ -741,7 +741,6 @@ class ImageTest : public ANGLETest
         {
             return false;
         }
-
         return IsEGLDisplayExtensionEnabled(getEGLWindow()->getDisplay(), kImageGLColorspaceExt);
     }
 
@@ -1605,9 +1604,6 @@ TEST_P(ImageTest, SourceAHBTarget2D_Colorspace)
     ANGLE_SKIP_TEST_IF(!IsAndroid());
     ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 && !IsGLExtensionEnabled("GL_EXT_sRGB"));
     ANGLE_SKIP_TEST_IF(!hasImageGLColorspaceExt());
-    // Need to add support for VK_KHR_image_format_list to AHB backed EGLImages:
-    // http://anglebug.com/5281
-    ANGLE_SKIP_TEST_IF(IsVulkan());
     SourceAHBTarget2D_helper(kColorspaceAttribs);
 }
 
@@ -1708,9 +1704,6 @@ TEST_P(ImageTest, SourceAHBTarget2DArray_Colorspace)
     ANGLE_SKIP_TEST_IF(!IsAndroid());
     ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 && !IsGLExtensionEnabled("GL_EXT_sRGB"));
     ANGLE_SKIP_TEST_IF(!hasImageGLColorspaceExt());
-    // Need to add support for VK_KHR_image_format_list to AHB backed EGLImages:
-    // http://anglebug.com/5281
-    ANGLE_SKIP_TEST_IF(IsVulkan());
     SourceAHBTarget2DArray_helper(kColorspaceAttribs);
 }
 
@@ -1763,9 +1756,6 @@ TEST_P(ImageTest, SourceAHBTargetExternal_Colorspace)
     ANGLE_SKIP_TEST_IF(!IsAndroid());
     ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 && !IsGLExtensionEnabled("GL_EXT_sRGB"));
     ANGLE_SKIP_TEST_IF(!hasImageGLColorspaceExt());
-    // Need to add support for VK_KHR_image_format_list to AHB backed EGLImages:
-    // http://anglebug.com/5281
-    ANGLE_SKIP_TEST_IF(IsVulkan());
     SourceAHBTargetExternal_helper(kColorspaceAttribs);
 }
 
@@ -1819,9 +1809,6 @@ TEST_P(ImageTestES3, SourceAHBTargetExternalESSL3_Colorspace)
     ANGLE_SKIP_TEST_IF(!IsAndroid());
     ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 && !IsGLExtensionEnabled("GL_EXT_sRGB"));
     ANGLE_SKIP_TEST_IF(!hasImageGLColorspaceExt());
-    // Need to add support for VK_KHR_image_format_list to AHB backed EGLImages:
-    // http://anglebug.com/5281
-    ANGLE_SKIP_TEST_IF(IsVulkan());
     SourceAHBTargetExternalESSL3_helper(kColorspaceAttribs);
 }
 

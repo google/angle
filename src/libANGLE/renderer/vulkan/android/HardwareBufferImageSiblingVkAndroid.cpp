@@ -190,6 +190,27 @@ angle::Result HardwareBufferImageSiblingVkAndroid::initImpl(DisplayVk *displayVk
         usage = VK_IMAGE_USAGE_SAMPLED_BIT;
     }
 
+    // With the introduction of sRGB related GLES extensions any texture could be respecified
+    // causing it to be interpreted in a different colorspace. Create the VkImage accordingly.
+    VkImageCreateFlags imageCreateFlags = vk::kVkImageCreateFlagsNone;
+    VkFormat vkImageFormat              = vkFormat.vkImageFormat;
+    VkFormat vkImageListFormat          = vkFormat.actualImageFormat().isSRGB
+                                     ? vk::ConvertToLinear(vkImageFormat)
+                                     : vk::ConvertToSRGB(vkImageFormat);
+
+    VkImageFormatListCreateInfoKHR formatListInfo = {};
+    if (renderer->getFeatures().supportsImageFormatList.enabled)
+    {
+        // Add VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT to VkImage create flag
+        imageCreateFlags |= VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT;
+
+        // There is just 1 additional format we might use to create a VkImageView for this VkImage
+        formatListInfo.sType           = VK_STRUCTURE_TYPE_IMAGE_FORMAT_LIST_CREATE_INFO_KHR;
+        formatListInfo.viewFormatCount = 1;
+        formatListInfo.pViewFormats    = &vkImageListFormat;
+        externalFormat.pNext           = &formatListInfo;
+    }
+
     VkExternalMemoryImageCreateInfo externalMemoryImageCreateInfo = {};
 
     externalMemoryImageCreateInfo.sType = VK_STRUCTURE_TYPE_EXTERNAL_MEMORY_IMAGE_CREATE_INFO;
@@ -209,7 +230,7 @@ angle::Result HardwareBufferImageSiblingVkAndroid::initImpl(DisplayVk *displayVk
     ANGLE_TRY(mImage->initExternal(
         displayVk, gl::TextureType::_2D, vkExtents,
         bufferFormatProperties.format == VK_FORMAT_UNDEFINED ? externalVkFormat : vkFormat, 1,
-        usage, vk::kVkImageCreateFlagsNone, vk::ImageLayout::ExternalPreInitialized,
+        usage, imageCreateFlags, vk::ImageLayout::ExternalPreInitialized,
         &externalMemoryImageCreateInfo, gl::LevelIndex(0), gl::LevelIndex(0), 1, 1,
         robustInitEnabled));
 
