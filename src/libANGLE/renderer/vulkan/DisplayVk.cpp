@@ -47,7 +47,7 @@ void DisplayVk::terminate()
     mRenderer->reloadVolkIfNeeded();
 
     ASSERT(mRenderer);
-    mRenderer->onDestroy();
+    mRenderer->onDestroy(this);
 }
 
 egl::Error DisplayVk::makeCurrent(egl::Display * /*display*/,

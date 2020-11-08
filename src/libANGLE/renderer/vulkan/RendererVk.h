@@ -83,7 +83,7 @@ class RendererVk : angle::NonCopyable
                              const char *wsiLayer);
     // Reload volk vk* function ptrs if needed for an already initialized RendererVk
     void reloadVolkIfNeeded() const;
-    void onDestroy();
+    void onDestroy(vk::Context *context);
 
     void notifyDeviceLost();
     bool isDeviceLost() const;
@@ -172,12 +172,6 @@ class RendererVk : angle::NonCopyable
     }
 
     // Queue submit that originates from the main thread
-    angle::Result queueSubmit(vk::Context *context,
-                              egl::ContextPriority priority,
-                              const VkSubmitInfo &submitInfo,
-                              vk::ResourceUseList &&resourceList,
-                              const vk::Fence *fence,
-                              Serial *serialOut);
     VkResult queuePresent(egl::ContextPriority priority, const VkPresentInfoKHR &presentInfo);
 
     // This command buffer should be submitted immediately via queueSubmitOneOff.
@@ -246,25 +240,38 @@ class RendererVk : angle::NonCopyable
         {
             return mCommandProcessor.getCurrentQueueSerial();
         }
-        std::lock_guard<std::mutex> lock(mQueueSerialMutex);
-        return mCurrentQueueSerial;
+        else
+        {
+            std::lock_guard<std::mutex> lock(mCommandQueueMutex);
+            return mCommandQueue.getCurrentQueueSerial();
+        }
     }
+
     ANGLE_INLINE Serial getLastSubmittedQueueSerial()
     {
         if (getFeatures().commandProcessor.enabled)
         {
-            return mCommandProcessor.getLastSubmittedSerial();
+            return mCommandProcessor.getLastSubmittedQueueSerial();
         }
-        std::lock_guard<std::mutex> lock(mQueueSerialMutex);
-        return mLastSubmittedQueueSerial;
-    }
-    ANGLE_INLINE Serial getLastCompletedQueueSerial()
-    {
-        std::lock_guard<std::mutex> lock(mQueueSerialMutex);
-        return mLastCompletedQueueSerial;
+        else
+        {
+            std::lock_guard<std::mutex> lock(mCommandQueueMutex);
+            return mCommandQueue.getLastSubmittedQueueSerial();
+        }
     }
 
-    void onCompletedSerial(Serial serial);
+    ANGLE_INLINE Serial getLastCompletedQueueSerial()
+    {
+        if (mFeatures.commandProcessor.enabled)
+        {
+            return mCommandProcessor.getLastCompletedQueueSerial();
+        }
+        else
+        {
+            std::lock_guard<std::mutex> lock(mCommandQueueMutex);
+            return mCommandQueue.getLastCompletedQueueSerial();
+        }
+    }
 
     VkResult getLastPresentResult(VkSwapchainKHR swapchain)
     {
@@ -301,7 +308,7 @@ class RendererVk : angle::NonCopyable
 
     void outputVmaStatString();
 
-    angle::Result cleanupGarbage(bool block);
+    angle::Result cleanupGarbage(Serial lastCompletedQueueSerial);
 
     angle::Result submitFrame(vk::Context *context,
                               egl::ContextPriority contextPriority,
@@ -396,13 +403,7 @@ class RendererVk : angle::NonCopyable
     VkDeviceSize mMinImportedHostPointerAlignment;
     uint32_t mDefaultUniformBufferSize;
     VkDevice mDevice;
-    AtomicSerialFactory mQueueSerialFactory;
     AtomicSerialFactory mShaderSerialFactory;
-
-    std::mutex mQueueSerialMutex;
-    Serial mLastCompletedQueueSerial;
-    Serial mLastSubmittedQueueSerial;
-    Serial mCurrentQueueSerial;
 
     bool mDeviceLost;
 

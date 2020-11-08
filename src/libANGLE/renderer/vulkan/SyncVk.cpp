@@ -202,28 +202,9 @@ angle::Result SyncHelperNativeFence::initializeWithFd(ContextVk *contextVk, int 
 
         retain(&contextVk->getResourceUseList());
 
-        if (renderer->getFeatures().commandProcessor.enabled)
-        {
-            CommandProcessorTask oneOffQueueSubmit;
-            oneOffQueueSubmit.initOneOffQueueSubmit(VK_NULL_HANDLE, contextVk->getPriority(),
-                                                    &fence.get());
-            renderer->queueCommand(contextVk, &oneOffQueueSubmit);
-            // TODO: https://issuetracker.google.com/170312581 - wait for now
-            if (renderer->getFeatures().asynchronousCommandProcessing.enabled)
-            {
-                ANGLE_TRACE_EVENT0("gpu.angle", "SyncHelperNativeFence::initializeWithFd");
-                renderer->waitForCommandProcessorIdle(contextVk);
-            }
-        }
-        else
-        {
-            Serial serialOut;
-            VkSubmitInfo submitInfo = {};
-            submitInfo.sType        = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-
-            ANGLE_TRY(renderer->queueSubmit(contextVk, contextVk->getPriority(), submitInfo,
-                                            vk::ResourceUseList(), &fence.get(), &serialOut));
-        }
+        Serial serialOut;
+        ANGLE_TRY(renderer->queueSubmitOneOff(contextVk, vk::PrimaryCommandBuffer(),
+                                              contextVk->getPriority(), &fence.get(), &serialOut));
 
         VkFenceGetFdInfoKHR fenceGetFdInfo = {};
         fenceGetFdInfo.sType               = VK_STRUCTURE_TYPE_FENCE_GET_FD_INFO_KHR;

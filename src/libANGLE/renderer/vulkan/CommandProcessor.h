@@ -76,11 +76,12 @@ class CommandProcessorTask
                                  const Semaphore *semaphore,
                                  egl::ContextPriority priority,
                                  GarbageList &&currentGarbage,
-                                 ResourceUseList &&currentResources);
+                                 Serial submitQueueSerial);
 
     void initOneOffQueueSubmit(VkCommandBuffer oneOffCommandBufferVk,
                                egl::ContextPriority priority,
-                               const Fence *fence);
+                               const Fence *fence,
+                               Serial submitQueueSerial);
 
     CommandProcessorTask &operator=(CommandProcessorTask &&rhs);
 
@@ -91,7 +92,6 @@ class CommandProcessorTask
 
     void setQueueSerial(Serial serial) { mSerial = serial; }
     Serial getQueueSerial() const { return mSerial; }
-    ResourceUseList &getResourceUseList() { return mResourceUseList; }
     CustomTask getTaskCommand() { return mTask; }
     std::vector<VkSemaphore> &getWaitSemaphores() { return mWaitSemaphores; }
     std::vector<VkPipelineStageFlags> &getWaitSemaphoreStageMasks()
@@ -123,7 +123,6 @@ class CommandProcessorTask
     std::vector<VkPipelineStageFlags> mWaitSemaphoreStageMasks;
     const Semaphore *mSemaphore;
     GarbageList mGarbage;
-    ResourceUseList mResourceUseList;
 
     // FinishToSerial & Flush command data
     Serial mSerial;
@@ -169,12 +168,14 @@ class CommandQueue final : angle::NonCopyable
     ~CommandQueue();
 
     angle::Result init(Context *context);
-    void destroy(VkDevice device);
+    void destroy(RendererVk *renderer);
     void handleDeviceLost(RendererVk *renderer);
 
     void clearAllGarbage(RendererVk *renderer);
 
     angle::Result finishToSerial(Context *context, Serial finishSerial, uint64_t timeout);
+
+    Serial reserveSubmitSerial();
 
     angle::Result submitFrame(Context *context,
                               egl::ContextPriority priority,
@@ -182,9 +183,15 @@ class CommandQueue final : angle::NonCopyable
                               const std::vector<VkPipelineStageFlags> &waitSemaphoreStageMasks,
                               const Semaphore *signalSemaphore,
                               Shared<Fence> &&sharedFence,
-                              ResourceUseList &&resourceList,
                               GarbageList &&currentGarbage,
-                              CommandPool *commandPool);
+                              CommandPool *commandPool,
+                              Serial submitQueueSerial);
+
+    angle::Result queueSubmit(Context *context,
+                              egl::ContextPriority contextPriority,
+                              const VkSubmitInfo &submitInfo,
+                              const Fence *fence,
+                              Serial submitQueueSerial);
 
     angle::Result waitForSerialWithUserTimeout(vk::Context *context,
                                                Serial serial,
@@ -201,6 +208,10 @@ class CommandQueue final : angle::NonCopyable
     angle::Result flushRenderPassCommands(Context *context,
                                           const RenderPass &renderPass,
                                           CommandBufferHelper *renderPassCommands);
+
+    ANGLE_INLINE Serial getLastSubmittedQueueSerial() const { return mLastSubmittedQueueSerial; }
+    ANGLE_INLINE Serial getLastCompletedQueueSerial() const { return mLastCompletedQueueSerial; }
+    ANGLE_INLINE Serial getCurrentQueueSerial() const { return mCurrentQueueSerial; }
 
   private:
     angle::Result releaseToCommandBatch(Context *context,
@@ -222,6 +233,12 @@ class CommandQueue final : angle::NonCopyable
     // Keeps a free list of reusable primary command buffers.
     PrimaryCommandBuffer mPrimaryCommands;
     PersistentCommandPool mPrimaryCommandPool;
+
+    // Queue serial management.
+    AtomicSerialFactory mQueueSerialFactory;
+    Serial mLastCompletedQueueSerial;
+    Serial mLastSubmittedQueueSerial;
+    Serial mCurrentQueueSerial;
 };
 
 class TaskProcessor : angle::NonCopyable
@@ -249,17 +266,24 @@ class TaskProcessor : angle::NonCopyable
                               GarbageList *currentGarbage,
                               CommandPool *commandPool,
                               PrimaryCommandBuffer &&commandBuffer,
-                              const Serial &queueSerial);
+                              Serial submitQueueSerial);
     angle::Result queueSubmit(Context *context,
                               VkQueue queue,
                               const VkSubmitInfo &submitInfo,
-                              const Fence *fence);
+                              const Fence *fence,
+                              Serial submitQueueSerial);
 
     void handleDeviceLost(Context *context);
 
     angle::Result checkCompletedCommands(Context *context);
 
     VkResult getLastAndClearPresentResult(VkSwapchainKHR swapchain);
+
+    Serial reserveSubmitSerial();
+
+    ANGLE_INLINE Serial getLastSubmittedQueueSerial() const { return mLastSubmittedQueueSerial; }
+    ANGLE_INLINE Serial getLastCompletedQueueSerial() const { return mLastCompletedQueueSerial; }
+    ANGLE_INLINE Serial getCurrentQueueSerial() const { return mCurrentQueueSerial; }
 
   private:
     bool isValidWorkerThread(Context *context) const;
@@ -276,12 +300,19 @@ class TaskProcessor : angle::NonCopyable
     PersistentCommandPool mPrimaryCommandPool;
     std::thread::id mThreadId;
 
+    // Queue serial management.
+    AtomicSerialFactory mQueueSerialFactory;
+    Serial mLastCompletedQueueSerial;
+    Serial mLastSubmittedQueueSerial;
+    Serial mCurrentQueueSerial;
+
     // Track present info
     std::mutex mSwapchainStatusMutex;
     std::condition_variable mSwapchainStatusCondition;
     std::map<VkSwapchainKHR, VkResult> mSwapchainStatus;
 };
 
+// TODO(jmadill): Give this the same API as CommandQueue. b/172704839
 class CommandProcessor : public Context
 {
   public:
@@ -307,8 +338,11 @@ class CommandProcessor : public Context
 
     // Used by main thread to wait for worker thread to complete all outstanding work.
     void waitForWorkComplete(Context *context);
+
+    Serial getLastCompletedQueueSerial();
+    Serial getLastSubmittedQueueSerial();
     Serial getCurrentQueueSerial();
-    Serial getLastSubmittedSerial();
+    Serial reserveSubmitSerial();
 
     // Wait until desired serial has been processed.
     void finishToSerial(Context *context, Serial serial);
@@ -353,10 +387,7 @@ class CommandProcessor : public Context
     PrimaryCommandBuffer mPrimaryCommandBuffer;
     TaskProcessor mTaskProcessor;
 
-    AtomicSerialFactory mQueueSerialFactory;
-    std::mutex mCommandProcessorQueueSerialMutex;
-    Serial mCommandProcessorLastSubmittedSerial;
-    Serial mCommandProcessorCurrentQueueSerial;
+    std::mutex mQueueSerialMutex;
 
     mutable std::mutex mErrorMutex;
     std::queue<Error> mErrors;

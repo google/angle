@@ -64,8 +64,6 @@ constexpr uint32_t kPipelineCacheVkUpdatePeriod = 60;
 // version of Vulkan.
 constexpr uint32_t kPreferredVulkanAPIVersion = VK_API_VERSION_1_1;
 
-constexpr bool kOutputVmaStatsString = false;
-
 angle::vk::ICD ChooseICDFromAttribs(const egl::AttributeMap &attribs)
 {
 #if !defined(ANGLE_PLATFORM_ANDROID)
@@ -465,8 +463,6 @@ RendererVk::RendererVk()
       mMinImportedHostPointerAlignment(1),
       mDefaultUniformBufferSize(kPreferredDefaultUniformBufferSize),
       mDevice(VK_NULL_HANDLE),
-      mLastCompletedQueueSerial(mQueueSerialFactory.generate()),
-      mCurrentQueueSerial(mQueueSerialFactory.generate()),
       mDeviceLost(false),
       mPipelineCacheVkUpdateTimeout(kPipelineCacheVkUpdatePeriod),
       mPipelineCacheDirty(false),
@@ -504,15 +500,8 @@ void RendererVk::releaseSharedResources(vk::ResourceUseList *resourceList)
     resourceList->releaseResourceUses();
 }
 
-void RendererVk::onDestroy()
+void RendererVk::onDestroy(vk::Context *context)
 {
-    if (getFeatures().commandProcessor.enabled)
-    {
-        // Shutdown worker thread
-        mCommandProcessor.shutdown(&mCommandProcessorThread);
-    }
-    mCommandQueue.destroy(mDevice);
-
     // Force all commands to finish by flushing all queues.
     for (VkQueue queue : mQueues)
     {
@@ -522,13 +511,19 @@ void RendererVk::onDestroy()
         }
     }
 
-    // Then assign an infinite "last completed" serial to force garbage to delete.
+    if (getFeatures().commandProcessor.enabled)
     {
-        std::lock_guard<std::mutex> lock(mQueueSerialMutex);
-        mLastCompletedQueueSerial = Serial::Infinite();
+        // Shutdown worker thread
+        mCommandProcessor.shutdown(&mCommandProcessorThread);
+    }
+    else
+    {
+        std::lock_guard<std::mutex> lock(mCommandQueueMutex);
+        mCommandQueue.destroy(this);
     }
 
-    (void)cleanupGarbage(true);
+    // Assigns an infinite "last completed" serial to force garbage to delete.
+    (void)cleanupGarbage(Serial::Infinite());
     ASSERT(!hasSharedGarbage());
 
     for (PendingOneOffCommands &pending : mPendingOneOffCommands)
@@ -588,10 +583,6 @@ void RendererVk::onDestroy()
 
 void RendererVk::notifyDeviceLost()
 {
-    {
-        std::lock_guard<std::mutex> lock(mQueueSerialMutex);
-        mLastCompletedQueueSerial = getLastSubmittedQueueSerial();
-    }
     mDeviceLost = true;
     mDisplay->notifyDeviceLost();
 }
@@ -2242,38 +2233,6 @@ void RendererVk::outputVmaStatString()
     mAllocator.freeStatsString(statsString);
 }
 
-angle::Result RendererVk::queueSubmit(vk::Context *context,
-                                      egl::ContextPriority priority,
-                                      const VkSubmitInfo &submitInfo,
-                                      vk::ResourceUseList &&resourceUseList,
-                                      const vk::Fence *fence,
-                                      Serial *serialOut)
-{
-    if (kOutputVmaStatsString)
-    {
-        outputVmaStatString();
-    }
-
-    ASSERT(!getFeatures().commandProcessor.enabled);
-
-    {
-        std::lock_guard<decltype(mQueueMutex)> lock(mQueueMutex);
-        std::lock_guard<std::mutex> serialLock(mQueueSerialMutex);
-        VkFence handle = fence ? fence->getHandle() : VK_NULL_HANDLE;
-        ANGLE_VK_TRY(context, vkQueueSubmit(mQueues[priority], 1, &submitInfo, handle));
-
-        resourceUseList.releaseResourceUsesAndUpdateSerials(mCurrentQueueSerial);
-
-        *serialOut                = mCurrentQueueSerial;
-        mLastSubmittedQueueSerial = mCurrentQueueSerial;
-        mCurrentQueueSerial       = mQueueSerialFactory.generate();
-    }
-
-    ANGLE_TRY(cleanupGarbage(false));
-
-    return angle::Result::Continue;
-}
-
 angle::Result RendererVk::queueSubmitOneOff(vk::Context *context,
                                             vk::PrimaryCommandBuffer &&primary,
                                             egl::ContextPriority priority,
@@ -2282,10 +2241,16 @@ angle::Result RendererVk::queueSubmitOneOff(vk::Context *context,
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "RendererVk::queueSubmitOneOff");
 
+    Serial submitQueueSerial;
+
     if (getFeatures().commandProcessor.enabled)
     {
+        std::lock_guard<std::mutex> commandQueueLock(mCommandQueueMutex);
+        submitQueueSerial = mCommandProcessor.reserveSubmitSerial();
+
         vk::CommandProcessorTask oneOffQueueSubmit;
-        oneOffQueueSubmit.initOneOffQueueSubmit(primary.getHandle(), priority, fence);
+        oneOffQueueSubmit.initOneOffQueueSubmit(primary.getHandle(), priority, fence,
+                                                submitQueueSerial);
         queueCommand(context, &oneOffQueueSubmit);
         // TODO: https://issuetracker.google.com/170312581 - should go away with improved fence
         // management
@@ -2293,20 +2258,32 @@ angle::Result RendererVk::queueSubmitOneOff(vk::Context *context,
         {
             waitForCommandProcessorIdle(context);
         }
-        *serialOut = getLastSubmittedQueueSerial();
     }
     else
     {
-        VkSubmitInfo submitInfo       = {};
-        submitInfo.sType              = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-        submitInfo.commandBufferCount = 1;
-        submitInfo.pCommandBuffers    = primary.ptr();
+        std::lock_guard<std::mutex> commandQueueLock(mCommandQueueMutex);
+        std::lock_guard<std::mutex> queueLock(mQueueMutex);
 
+        VkSubmitInfo submitInfo = {};
+        submitInfo.sType        = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+
+        if (primary.valid())
+        {
+            submitInfo.commandBufferCount = 1;
+            submitInfo.pCommandBuffers    = primary.ptr();
+        }
+
+        submitQueueSerial = mCommandQueue.reserveSubmitSerial();
         ANGLE_TRY(
-            queueSubmit(context, priority, submitInfo, vk::ResourceUseList(), fence, serialOut));
+            mCommandQueue.queueSubmit(context, priority, submitInfo, fence, submitQueueSerial));
     }
 
-    mPendingOneOffCommands.push_back({*serialOut, std::move(primary)});
+    *serialOut = submitQueueSerial;
+
+    if (primary.valid())
+    {
+        mPendingOneOffCommands.push_back({*serialOut, std::move(primary)});
+    }
 
     return angle::Result::Continue;
 }
@@ -2414,9 +2391,8 @@ bool RendererVk::hasFormatFeatureBits(VkFormat format, const VkFormatFeatureFlag
     return IsMaskFlagSet(getFormatFeatureBits<features>(format, featureBits), featureBits);
 }
 
-angle::Result RendererVk::cleanupGarbage(bool block)
+angle::Result RendererVk::cleanupGarbage(Serial lastCompletedQueueSerial)
 {
-    Serial lastCompletedQueueSerial = getLastCompletedQueueSerial();
     std::lock_guard<std::mutex> lock(mGarbageMutex);
 
     for (auto garbageIter = mSharedGarbage.begin(); garbageIter != mSharedGarbage.end();)
@@ -2455,15 +2431,6 @@ uint64_t RendererVk::getMaxFenceWaitTimeNs() const
     constexpr uint64_t kMaxFenceWaitTimeNs = 120'000'000'000llu;
 
     return kMaxFenceWaitTimeNs;
-}
-
-void RendererVk::onCompletedSerial(Serial serial)
-{
-    std::lock_guard<std::mutex> lock(mQueueSerialMutex);
-    if (serial > mLastCompletedQueueSerial)
-    {
-        mLastCompletedQueueSerial = serial;
-    }
 }
 
 void RendererVk::setGlobalDebugAnnotator()
@@ -2581,28 +2548,38 @@ angle::Result RendererVk::submitFrame(vk::Context *context,
                                       vk::GarbageList &&currentGarbage,
                                       vk::CommandPool *commandPool)
 {
+    Serial submitQueueSerial;
+
     if (mFeatures.commandProcessor.enabled)
     {
+        std::lock_guard<std::mutex> commandQueueLock(mCommandQueueMutex);
+        submitQueueSerial = mCommandProcessor.reserveSubmitSerial();
+
         vk::CommandProcessorTask flushAndQueueSubmit;
         flushAndQueueSubmit.initFlushAndQueueSubmit(
             std::move(waitSemaphores), std::move(waitSemaphoreStageMasks), signalSemaphore,
-            contextPriority, std::move(currentGarbage), std::move(resourceUseList));
+            contextPriority, std::move(currentGarbage), submitQueueSerial);
 
         commandProcessorSyncErrorsAndQueueCommand(context, &flushAndQueueSubmit);
     }
     else
     {
-        std::lock_guard<std::mutex> lock(mCommandQueueMutex);
+        std::lock_guard<std::mutex> commandQueueLock(mCommandQueueMutex);
+        std::lock_guard<std::mutex> queueLock(mQueueMutex);
+
+        submitQueueSerial = mCommandQueue.reserveSubmitSerial();
+
         vk::Shared<vk::Fence> submitFence;
         ANGLE_TRY(newSharedFence(context, &submitFence));
-        ANGLE_TRY(mCommandQueue.submitFrame(context, contextPriority, waitSemaphores,
-                                            waitSemaphoreStageMasks, signalSemaphore,
-                                            std::move(submitFence), std::move(resourceUseList),
-                                            std::move(currentGarbage), commandPool));
+        ANGLE_TRY(mCommandQueue.submitFrame(
+            context, contextPriority, waitSemaphores, waitSemaphoreStageMasks, signalSemaphore,
+            std::move(submitFence), std::move(currentGarbage), commandPool, submitQueueSerial));
 
         waitSemaphores.clear();
         waitSemaphoreStageMasks.clear();
     }
+
+    resourceUseList.releaseResourceUsesAndUpdateSerials(submitQueueSerial);
 
     return angle::Result::Continue;
 }
@@ -2672,8 +2649,7 @@ angle::Result RendererVk::waitForSerialWithUserTimeout(vk::Context *context,
 
 angle::Result RendererVk::finish(vk::Context *context)
 {
-    ANGLE_TRY(finishToSerial(context, mLastSubmittedQueueSerial));
-    return angle::Result::Continue;
+    return finishToSerial(context, getLastSubmittedQueueSerial());
 }
 
 angle::Result RendererVk::checkCompletedCommands(vk::Context *context)
