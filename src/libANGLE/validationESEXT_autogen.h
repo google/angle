@@ -890,6 +890,20 @@ bool ValidateMultiDrawElementsBaseVertexEXT(const Context *context,
                                             GLsizei primcount,
                                             const GLint *basevertex);
 
+// GL_EXT_external_buffer
+bool ValidateBufferStorageExternalEXT(const Context *context,
+                                      BufferBinding targetPacked,
+                                      GLintptr offset,
+                                      GLsizeiptr size,
+                                      GLeglClientBufferEXT clientBuffer,
+                                      GLbitfield flags);
+bool ValidateNamedBufferStorageExternalEXT(const Context *context,
+                                           GLuint buffer,
+                                           GLintptr offset,
+                                           GLsizeiptr size,
+                                           GLeglClientBufferEXT clientBuffer,
+                                           GLbitfield flags);
+
 // GL_EXT_geometry_shader
 bool ValidateFramebufferTextureEXT(const Context *context,
                                    GLenum target,

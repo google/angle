@@ -425,6 +425,7 @@ reinterpret_cast_to_dict = {
     "GLsync": "uintptr_t",
     "GLDEBUGPROC": "uintptr_t",
     "GLDEBUGPROCKHR": "uintptr_t",
+    "GLeglClientBufferEXT": "uintptr_t",
     "GLeglImageOES": "uintptr_t",
 }
 
@@ -436,6 +437,7 @@ format_dict = {
     "GLDEBUGPROC": "0x%016\" PRIxPTR \"",
     "GLDEBUGPROCKHR": "0x%016\" PRIxPTR \"",
     "GLdouble": "%f",
+    "GLeglClientBufferEXT": "0x%016\" PRIxPTR \"",
     "GLeglImageOES": "0x%016\" PRIxPTR \"",
     "GLenum": "%s",
     "GLfixed": "0x%X",

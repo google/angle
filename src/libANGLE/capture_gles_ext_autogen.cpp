@@ -5304,6 +5304,46 @@ CallCapture CaptureMultiDrawElementsBaseVertexEXT(const State &glState,
     return CallCapture(gl::EntryPoint::MultiDrawElementsBaseVertexEXT, std::move(paramBuffer));
 }
 
+CallCapture CaptureBufferStorageExternalEXT(const State &glState,
+                                            bool isCallValid,
+                                            BufferBinding targetPacked,
+                                            GLintptr offset,
+                                            GLsizeiptr size,
+                                            GLeglClientBufferEXT clientBuffer,
+                                            GLbitfield flags)
+{
+    ParamBuffer paramBuffer;
+
+    paramBuffer.addValueParam("targetPacked", ParamType::TBufferBinding, targetPacked);
+    paramBuffer.addValueParam("offset", ParamType::TGLintptr, offset);
+    paramBuffer.addValueParam("size", ParamType::TGLsizeiptr, size);
+    paramBuffer.addValueParam("clientBuffer", ParamType::TGLeglClientBufferEXT, clientBuffer);
+    paramBuffer.addEnumParam("flags", GLenumGroup::MapBufferUsageMask, ParamType::TGLbitfield,
+                             flags);
+
+    return CallCapture(gl::EntryPoint::BufferStorageExternalEXT, std::move(paramBuffer));
+}
+
+CallCapture CaptureNamedBufferStorageExternalEXT(const State &glState,
+                                                 bool isCallValid,
+                                                 GLuint buffer,
+                                                 GLintptr offset,
+                                                 GLsizeiptr size,
+                                                 GLeglClientBufferEXT clientBuffer,
+                                                 GLbitfield flags)
+{
+    ParamBuffer paramBuffer;
+
+    paramBuffer.addValueParam("buffer", ParamType::TGLuint, buffer);
+    paramBuffer.addValueParam("offset", ParamType::TGLintptr, offset);
+    paramBuffer.addValueParam("size", ParamType::TGLsizeiptr, size);
+    paramBuffer.addValueParam("clientBuffer", ParamType::TGLeglClientBufferEXT, clientBuffer);
+    paramBuffer.addEnumParam("flags", GLenumGroup::MapBufferUsageMask, ParamType::TGLbitfield,
+                             flags);
+
+    return CallCapture(gl::EntryPoint::NamedBufferStorageExternalEXT, std::move(paramBuffer));
+}
+
 CallCapture CaptureFramebufferTextureEXT(const State &glState,
                                          bool isCallValid,
                                          GLenum target,

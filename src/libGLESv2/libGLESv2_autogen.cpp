@@ -4005,6 +4005,25 @@ void GL_APIENTRY glMultiDrawElementsBaseVertexEXT(GLenum mode,
     return gl::MultiDrawElementsBaseVertexEXT(mode, count, type, indices, primcount, basevertex);
 }
 
+// GL_EXT_external_buffer
+void GL_APIENTRY glBufferStorageExternalEXT(GLenum target,
+                                            GLintptr offset,
+                                            GLsizeiptr size,
+                                            GLeglClientBufferEXT clientBuffer,
+                                            GLbitfield flags)
+{
+    return gl::BufferStorageExternalEXT(target, offset, size, clientBuffer, flags);
+}
+
+void GL_APIENTRY glNamedBufferStorageExternalEXT(GLuint buffer,
+                                                 GLintptr offset,
+                                                 GLsizeiptr size,
+                                                 GLeglClientBufferEXT clientBuffer,
+                                                 GLbitfield flags)
+{
+    return gl::NamedBufferStorageExternalEXT(buffer, offset, size, clientBuffer, flags);
+}
+
 // GL_EXT_geometry_shader
 void GL_APIENTRY glFramebufferTextureEXT(GLenum target,
                                          GLenum attachment,
@@ -5352,6 +5371,16 @@ void GL_APIENTRY glBufferStorageEXTContextANGLE(GLeglContext ctx,
                                                 GLbitfield flags)
 {
     return gl::BufferStorageEXTContextANGLE(ctx, target, size, data, flags);
+}
+
+void GL_APIENTRY glBufferStorageExternalEXTContextANGLE(GLeglContext ctx,
+                                                        GLenum target,
+                                                        GLintptr offset,
+                                                        GLsizeiptr size,
+                                                        GLeglClientBufferEXT clientBuffer,
+                                                        GLbitfield flags)
+{
+    return gl::BufferStorageExternalEXTContextANGLE(ctx, target, offset, size, clientBuffer, flags);
 }
 
 void GL_APIENTRY glBufferStorageMemEXTContextANGLE(GLeglContext ctx,
@@ -8004,6 +8033,17 @@ void GL_APIENTRY glMultiTexCoord4xContextANGLE(GLeglContext ctx,
                                                GLfixed q)
 {
     return gl::MultiTexCoord4xContextANGLE(ctx, texture, s, t, r, q);
+}
+
+void GL_APIENTRY glNamedBufferStorageExternalEXTContextANGLE(GLeglContext ctx,
+                                                             GLuint buffer,
+                                                             GLintptr offset,
+                                                             GLsizeiptr size,
+                                                             GLeglClientBufferEXT clientBuffer,
+                                                             GLbitfield flags)
+{
+    return gl::NamedBufferStorageExternalEXTContextANGLE(ctx, buffer, offset, size, clientBuffer,
+                                                         flags);
 }
 
 void GL_APIENTRY glNormal3fContextANGLE(GLeglContext ctx, GLfloat nx, GLfloat ny, GLfloat nz)

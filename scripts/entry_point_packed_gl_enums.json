@@ -108,6 +108,9 @@
     "glBufferStorage": {
         "target": "BufferBinding"
     },
+    "glBufferStorageExternal": {
+        "target": "BufferBinding"
+    },
     "glBufferStorageMem": {
         "memory": "MemoryObjectID",
         "target": "TextureType"

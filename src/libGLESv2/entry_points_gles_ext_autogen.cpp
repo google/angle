@@ -4646,6 +4646,75 @@ void GL_APIENTRY MultiDrawElementsBaseVertexEXT(GLenum mode,
     }
 }
 
+// GL_EXT_external_buffer
+void GL_APIENTRY BufferStorageExternalEXT(GLenum target,
+                                          GLintptr offset,
+                                          GLsizeiptr size,
+                                          GLeglClientBufferEXT clientBuffer,
+                                          GLbitfield flags)
+{
+    Context *context = GetValidGlobalContext();
+    EVENT(context, gl::EntryPoint::BufferStorageExternalEXT, "glBufferStorageExternalEXT",
+          "context = %d, target = %s, offset = %llu, size = %llu, clientBuffer = 0x%016" PRIxPTR
+          ", flags = %s",
+          CID(context), GLenumToString(GLenumGroup::DefaultGroup, target),
+          static_cast<unsigned long long>(offset), static_cast<unsigned long long>(size),
+          (uintptr_t)clientBuffer,
+          GLbitfieldToString(GLenumGroup::MapBufferUsageMask, flags).c_str());
+
+    if (context)
+    {
+        BufferBinding targetPacked                            = FromGL<BufferBinding>(target);
+        std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateBufferStorageExternalEXT(context, targetPacked, offset, size,
+                                                             clientBuffer, flags));
+        if (isCallValid)
+        {
+            context->bufferStorageExternal(targetPacked, offset, size, clientBuffer, flags);
+        }
+        ANGLE_CAPTURE(BufferStorageExternalEXT, isCallValid, context, targetPacked, offset, size,
+                      clientBuffer, flags);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
+}
+
+void GL_APIENTRY NamedBufferStorageExternalEXT(GLuint buffer,
+                                               GLintptr offset,
+                                               GLsizeiptr size,
+                                               GLeglClientBufferEXT clientBuffer,
+                                               GLbitfield flags)
+{
+    Context *context = GetValidGlobalContext();
+    EVENT(context, gl::EntryPoint::NamedBufferStorageExternalEXT, "glNamedBufferStorageExternalEXT",
+          "context = %d, buffer = %u, offset = %llu, size = %llu, clientBuffer = 0x%016" PRIxPTR
+          ", flags = %s",
+          CID(context), buffer, static_cast<unsigned long long>(offset),
+          static_cast<unsigned long long>(size), (uintptr_t)clientBuffer,
+          GLbitfieldToString(GLenumGroup::MapBufferUsageMask, flags).c_str());
+
+    if (context)
+    {
+        std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid =
+            (context->skipValidation() || ValidateNamedBufferStorageExternalEXT(
+                                              context, buffer, offset, size, clientBuffer, flags));
+        if (isCallValid)
+        {
+            context->namedBufferStorageExternal(buffer, offset, size, clientBuffer, flags);
+        }
+        ANGLE_CAPTURE(NamedBufferStorageExternalEXT, isCallValid, context, buffer, offset, size,
+                      clientBuffer, flags);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
+}
+
 // GL_EXT_geometry_shader
 void GL_APIENTRY FramebufferTextureEXT(GLenum target,
                                        GLenum attachment,
@@ -10061,6 +10130,43 @@ void GL_APIENTRY BufferStorageEXTContextANGLE(GLeglContext ctx,
             context->bufferStorage(targetPacked, size, data, flags);
         }
         ANGLE_CAPTURE(BufferStorageEXT, isCallValid, context, targetPacked, size, data, flags);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
+}
+
+void GL_APIENTRY BufferStorageExternalEXTContextANGLE(GLeglContext ctx,
+                                                      GLenum target,
+                                                      GLintptr offset,
+                                                      GLsizeiptr size,
+                                                      GLeglClientBufferEXT clientBuffer,
+                                                      GLbitfield flags)
+{
+    Context *context = static_cast<gl::Context *>(ctx);
+    EVENT(context, gl::EntryPoint::BufferStorageExternalEXT, "glBufferStorageExternalEXT",
+          "context = %d, target = %s, offset = %llu, size = %llu, clientBuffer = 0x%016" PRIxPTR
+          ", flags = %s",
+          CID(context), GLenumToString(GLenumGroup::DefaultGroup, target),
+          static_cast<unsigned long long>(offset), static_cast<unsigned long long>(size),
+          (uintptr_t)clientBuffer,
+          GLbitfieldToString(GLenumGroup::MapBufferUsageMask, flags).c_str());
+
+    if (context && !context->isContextLost())
+    {
+        ASSERT(context == GetValidGlobalContext());
+        BufferBinding targetPacked                            = FromGL<BufferBinding>(target);
+        std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateBufferStorageExternalEXT(context, targetPacked, offset, size,
+                                                             clientBuffer, flags));
+        if (isCallValid)
+        {
+            context->bufferStorageExternal(targetPacked, offset, size, clientBuffer, flags);
+        }
+        ANGLE_CAPTURE(BufferStorageExternalEXT, isCallValid, context, targetPacked, offset, size,
+                      clientBuffer, flags);
     }
     else
     {
@@ -20547,6 +20653,41 @@ void GL_APIENTRY MultiTexCoord4xContextANGLE(GLeglContext ctx,
             context->multiTexCoord4x(texture, s, t, r, q);
         }
         ANGLE_CAPTURE(MultiTexCoord4x, isCallValid, context, texture, s, t, r, q);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
+}
+
+void GL_APIENTRY NamedBufferStorageExternalEXTContextANGLE(GLeglContext ctx,
+                                                           GLuint buffer,
+                                                           GLintptr offset,
+                                                           GLsizeiptr size,
+                                                           GLeglClientBufferEXT clientBuffer,
+                                                           GLbitfield flags)
+{
+    Context *context = static_cast<gl::Context *>(ctx);
+    EVENT(context, gl::EntryPoint::NamedBufferStorageExternalEXT, "glNamedBufferStorageExternalEXT",
+          "context = %d, buffer = %u, offset = %llu, size = %llu, clientBuffer = 0x%016" PRIxPTR
+          ", flags = %s",
+          CID(context), buffer, static_cast<unsigned long long>(offset),
+          static_cast<unsigned long long>(size), (uintptr_t)clientBuffer,
+          GLbitfieldToString(GLenumGroup::MapBufferUsageMask, flags).c_str());
+
+    if (context && !context->isContextLost())
+    {
+        ASSERT(context == GetValidGlobalContext());
+        std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid =
+            (context->skipValidation() || ValidateNamedBufferStorageExternalEXT(
+                                              context, buffer, offset, size, clientBuffer, flags));
+        if (isCallValid)
+        {
+            context->namedBufferStorageExternal(buffer, offset, size, clientBuffer, flags);
+        }
+        ANGLE_CAPTURE(NamedBufferStorageExternalEXT, isCallValid, context, buffer, offset, size,
+                      clientBuffer, flags);
     }
     else
     {

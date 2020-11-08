@@ -567,6 +567,8 @@ ANGLE_UTIL_EXPORT PFNGLDRAWELEMENTSINSTANCEDBASEVERTEXEXTPROC
     l_glDrawElementsInstancedBaseVertexEXT;
 ANGLE_UTIL_EXPORT PFNGLDRAWRANGEELEMENTSBASEVERTEXEXTPROC l_glDrawRangeElementsBaseVertexEXT;
 ANGLE_UTIL_EXPORT PFNGLMULTIDRAWELEMENTSBASEVERTEXEXTPROC l_glMultiDrawElementsBaseVertexEXT;
+ANGLE_UTIL_EXPORT PFNGLBUFFERSTORAGEEXTERNALEXTPROC l_glBufferStorageExternalEXT;
+ANGLE_UTIL_EXPORT PFNGLNAMEDBUFFERSTORAGEEXTERNALEXTPROC l_glNamedBufferStorageExternalEXT;
 ANGLE_UTIL_EXPORT PFNGLFRAMEBUFFERTEXTUREEXTPROC l_glFramebufferTextureEXT;
 ANGLE_UTIL_EXPORT PFNGLDRAWARRAYSINSTANCEDEXTPROC l_glDrawArraysInstancedEXT;
 ANGLE_UTIL_EXPORT PFNGLDRAWELEMENTSINSTANCEDEXTPROC l_glDrawElementsInstancedEXT;
@@ -1386,6 +1388,10 @@ ANGLE_UTIL_EXPORT PFNGLDRAWRANGEELEMENTSBASEVERTEXEXTCONTEXTANGLEPROC
     l_glDrawRangeElementsBaseVertexEXTContextANGLE;
 ANGLE_UTIL_EXPORT PFNGLMULTIDRAWELEMENTSBASEVERTEXEXTCONTEXTANGLEPROC
     l_glMultiDrawElementsBaseVertexEXTContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLBUFFERSTORAGEEXTERNALEXTCONTEXTANGLEPROC
+    l_glBufferStorageExternalEXTContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLNAMEDBUFFERSTORAGEEXTERNALEXTCONTEXTANGLEPROC
+    l_glNamedBufferStorageExternalEXTContextANGLE;
 ANGLE_UTIL_EXPORT PFNGLFRAMEBUFFERTEXTUREEXTCONTEXTANGLEPROC l_glFramebufferTextureEXTContextANGLE;
 ANGLE_UTIL_EXPORT PFNGLDRAWARRAYSINSTANCEDEXTCONTEXTANGLEPROC
     l_glDrawArraysInstancedEXTContextANGLE;
@@ -2433,6 +2439,10 @@ void LoadGLES(LoadProc loadProc)
         loadProc("glDrawRangeElementsBaseVertexEXT"));
     l_glMultiDrawElementsBaseVertexEXT = reinterpret_cast<PFNGLMULTIDRAWELEMENTSBASEVERTEXEXTPROC>(
         loadProc("glMultiDrawElementsBaseVertexEXT"));
+    l_glBufferStorageExternalEXT =
+        reinterpret_cast<PFNGLBUFFERSTORAGEEXTERNALEXTPROC>(loadProc("glBufferStorageExternalEXT"));
+    l_glNamedBufferStorageExternalEXT = reinterpret_cast<PFNGLNAMEDBUFFERSTORAGEEXTERNALEXTPROC>(
+        loadProc("glNamedBufferStorageExternalEXT"));
     l_glFramebufferTextureEXT =
         reinterpret_cast<PFNGLFRAMEBUFFERTEXTUREEXTPROC>(loadProc("glFramebufferTextureEXT"));
     l_glDrawArraysInstancedEXT =
@@ -3952,6 +3962,12 @@ void LoadGLES(LoadProc loadProc)
     l_glMultiDrawElementsBaseVertexEXTContextANGLE =
         reinterpret_cast<PFNGLMULTIDRAWELEMENTSBASEVERTEXEXTCONTEXTANGLEPROC>(
             loadProc("glMultiDrawElementsBaseVertexEXTContextANGLE"));
+    l_glBufferStorageExternalEXTContextANGLE =
+        reinterpret_cast<PFNGLBUFFERSTORAGEEXTERNALEXTCONTEXTANGLEPROC>(
+            loadProc("glBufferStorageExternalEXTContextANGLE"));
+    l_glNamedBufferStorageExternalEXTContextANGLE =
+        reinterpret_cast<PFNGLNAMEDBUFFERSTORAGEEXTERNALEXTCONTEXTANGLEPROC>(
+            loadProc("glNamedBufferStorageExternalEXTContextANGLE"));
     l_glFramebufferTextureEXTContextANGLE =
         reinterpret_cast<PFNGLFRAMEBUFFERTEXTUREEXTCONTEXTANGLEPROC>(
             loadProc("glFramebufferTextureEXTContextANGLE"));

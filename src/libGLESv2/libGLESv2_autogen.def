@@ -665,6 +665,10 @@ EXPORTS
     glDrawRangeElementsBaseVertexEXT
     glMultiDrawElementsBaseVertexEXT
 
+    ; GL_EXT_external_buffer
+    glBufferStorageExternalEXT
+    glNamedBufferStorageExternalEXT
+
     ; GL_EXT_geometry_shader
     glFramebufferTextureEXT
 
@@ -954,6 +958,7 @@ EXPORTS
     glBlitFramebufferANGLEContextANGLE
     glBufferDataContextANGLE
     glBufferStorageEXTContextANGLE
+    glBufferStorageExternalEXTContextANGLE
     glBufferStorageMemEXTContextANGLE
     glBufferSubDataContextANGLE
     glCheckFramebufferStatusContextANGLE
@@ -1377,6 +1382,7 @@ EXPORTS
     glMultiDrawElementsInstancedBaseVertexBaseInstanceANGLEContextANGLE
     glMultiTexCoord4fContextANGLE
     glMultiTexCoord4xContextANGLE
+    glNamedBufferStorageExternalEXTContextANGLE
     glNormal3fContextANGLE
     glNormal3xContextANGLE
     glNormalPointerContextANGLE

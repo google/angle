@@ -152,6 +152,8 @@ const char *GetEntryPointName(EntryPoint ep)
             return "glBufferStorage";
         case EntryPoint::BufferStorageEXT:
             return "glBufferStorageEXT";
+        case EntryPoint::BufferStorageExternalEXT:
+            return "glBufferStorageExternalEXT";
         case EntryPoint::BufferStorageMemEXT:
             return "glBufferStorageMemEXT";
         case EntryPoint::BufferSubData:
@@ -1596,6 +1598,8 @@ const char *GetEntryPointName(EntryPoint ep)
             return "glNamedBufferData";
         case EntryPoint::NamedBufferStorage:
             return "glNamedBufferStorage";
+        case EntryPoint::NamedBufferStorageExternalEXT:
+            return "glNamedBufferStorageExternalEXT";
         case EntryPoint::NamedBufferSubData:
             return "glNamedBufferSubData";
         case EntryPoint::NamedFramebufferDrawBuffer:

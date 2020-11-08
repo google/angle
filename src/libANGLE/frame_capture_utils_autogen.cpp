@@ -128,6 +128,10 @@ void WriteParamCaptureReplay(std::ostream &os, const CallCapture &call, const Pa
             WriteParamValueReplay<ParamType::TvoidConstPointer>(os, call,
                                                                 param.value.voidConstPointerVal);
             break;
+        case ParamType::TGLeglClientBufferEXT:
+            WriteParamValueReplay<ParamType::TGLeglClientBufferEXT>(
+                os, call, param.value.GLeglClientBufferEXTVal);
+            break;
         case ParamType::TGLeglImageOES:
             WriteParamValueReplay<ParamType::TGLeglImageOES>(os, call,
                                                              param.value.GLeglImageOESVal);
@@ -535,6 +539,8 @@ const char *ParamTypeToString(ParamType paramType)
             return "const GLdouble *";
         case ParamType::TGLdoublePointer:
             return "GLdouble *";
+        case ParamType::TGLeglClientBufferEXT:
+            return "GLeglClientBufferEXT";
         case ParamType::TGLeglImageOES:
             return "GLeglImageOES";
         case ParamType::TGLenum:

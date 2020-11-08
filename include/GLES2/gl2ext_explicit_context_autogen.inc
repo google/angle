@@ -164,6 +164,7 @@ typedef void (GL_APIENTRYP PFNGLBLENDFUNCIEXTCONTEXTANGLEPROC)(GLeglContext ctx,
 typedef void (GL_APIENTRYP PFNGLBLENDFUNCIOESCONTEXTANGLEPROC)(GLeglContext ctx, GLuint buf, GLenum src, GLenum dst);
 typedef void (GL_APIENTRYP PFNGLBLITFRAMEBUFFERANGLECONTEXTANGLEPROC)(GLeglContext ctx, GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1, GLint dstX0, GLint dstY0, GLint dstX1, GLint dstY1, GLbitfield mask, GLenum filter);
 typedef void (GL_APIENTRYP PFNGLBUFFERSTORAGEEXTCONTEXTANGLEPROC)(GLeglContext ctx, GLenum target, GLsizeiptr size, const void *data, GLbitfield flags);
+typedef void (GL_APIENTRYP PFNGLBUFFERSTORAGEEXTERNALEXTCONTEXTANGLEPROC)(GLeglContext ctx, GLenum target, GLintptr offset, GLsizeiptr size, GLeglClientBufferEXT clientBuffer, GLbitfield flags);
 typedef void (GL_APIENTRYP PFNGLBUFFERSTORAGEMEMEXTCONTEXTANGLEPROC)(GLeglContext ctx, GLenum target, GLsizeiptr size, GLuint memory, GLuint64 offset);
 typedef void (GL_APIENTRYP PFNGLCOLORMASKIEXTCONTEXTANGLEPROC)(GLeglContext ctx, GLuint index, GLboolean r, GLboolean g, GLboolean b, GLboolean a);
 typedef void (GL_APIENTRYP PFNGLCOLORMASKIOESCONTEXTANGLEPROC)(GLeglContext ctx, GLuint index, GLboolean r, GLboolean g, GLboolean b, GLboolean a);
@@ -253,6 +254,7 @@ typedef void (GL_APIENTRYP PFNGLMAXSHADERCOMPILERTHREADSKHRCONTEXTANGLEPROC)(GLe
 typedef void (GL_APIENTRYP PFNGLMEMORYOBJECTPARAMETERIVEXTCONTEXTANGLEPROC)(GLeglContext ctx, GLuint memoryObject, GLenum pname, const GLint *params);
 typedef void (GL_APIENTRYP PFNGLMINSAMPLESHADINGOESCONTEXTANGLEPROC)(GLeglContext ctx, GLfloat value);
 typedef void (GL_APIENTRYP PFNGLMULTIDRAWELEMENTSBASEVERTEXEXTCONTEXTANGLEPROC)(GLeglContext ctx, GLenum mode, const GLsizei *count, GLenum type, const void *const*indices, GLsizei primcount, const GLint *basevertex);
+typedef void (GL_APIENTRYP PFNGLNAMEDBUFFERSTORAGEEXTERNALEXTCONTEXTANGLEPROC)(GLeglContext ctx, GLuint buffer, GLintptr offset, GLsizeiptr size, GLeglClientBufferEXT clientBuffer, GLbitfield flags);
 typedef void (GL_APIENTRYP PFNGLOBJECTLABELKHRCONTEXTANGLEPROC)(GLeglContext ctx, GLenum identifier, GLuint name, GLsizei length, const GLchar *label);
 typedef void (GL_APIENTRYP PFNGLOBJECTPTRLABELKHRCONTEXTANGLEPROC)(GLeglContext ctx, const void *ptr, GLsizei length, const GLchar *label);
 typedef void (GL_APIENTRYP PFNGLPOPDEBUGGROUPKHRCONTEXTANGLEPROC)(GLeglContext ctx);
@@ -545,6 +547,7 @@ GL_APICALL void GL_APIENTRY glBlendFunciEXTContextANGLE(GLeglContext ctx, GLuint
 GL_APICALL void GL_APIENTRY glBlendFunciOESContextANGLE(GLeglContext ctx, GLuint buf, GLenum src, GLenum dst);
 GL_APICALL void GL_APIENTRY glBlitFramebufferANGLEContextANGLE(GLeglContext ctx, GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1, GLint dstX0, GLint dstY0, GLint dstX1, GLint dstY1, GLbitfield mask, GLenum filter);
 GL_APICALL void GL_APIENTRY glBufferStorageEXTContextANGLE(GLeglContext ctx, GLenum target, GLsizeiptr size, const void *data, GLbitfield flags);
+GL_APICALL void GL_APIENTRY glBufferStorageExternalEXTContextANGLE(GLeglContext ctx, GLenum target, GLintptr offset, GLsizeiptr size, GLeglClientBufferEXT clientBuffer, GLbitfield flags);
 GL_APICALL void GL_APIENTRY glBufferStorageMemEXTContextANGLE(GLeglContext ctx, GLenum target, GLsizeiptr size, GLuint memory, GLuint64 offset);
 GL_APICALL void GL_APIENTRY glColorMaskiEXTContextANGLE(GLeglContext ctx, GLuint index, GLboolean r, GLboolean g, GLboolean b, GLboolean a);
 GL_APICALL void GL_APIENTRY glColorMaskiOESContextANGLE(GLeglContext ctx, GLuint index, GLboolean r, GLboolean g, GLboolean b, GLboolean a);
@@ -634,6 +637,7 @@ GL_APICALL void GL_APIENTRY glMaxShaderCompilerThreadsKHRContextANGLE(GLeglConte
 GL_APICALL void GL_APIENTRY glMemoryObjectParameterivEXTContextANGLE(GLeglContext ctx, GLuint memoryObject, GLenum pname, const GLint *params);
 GL_APICALL void GL_APIENTRY glMinSampleShadingOESContextANGLE(GLeglContext ctx, GLfloat value);
 GL_APICALL void GL_APIENTRY glMultiDrawElementsBaseVertexEXTContextANGLE(GLeglContext ctx, GLenum mode, const GLsizei *count, GLenum type, const void *const*indices, GLsizei primcount, const GLint *basevertex);
+GL_APICALL void GL_APIENTRY glNamedBufferStorageExternalEXTContextANGLE(GLeglContext ctx, GLuint buffer, GLintptr offset, GLsizeiptr size, GLeglClientBufferEXT clientBuffer, GLbitfield flags);
 GL_APICALL void GL_APIENTRY glObjectLabelKHRContextANGLE(GLeglContext ctx, GLenum identifier, GLuint name, GLsizei length, const GLchar *label);
 GL_APICALL void GL_APIENTRY glObjectPtrLabelKHRContextANGLE(GLeglContext ctx, const void *ptr, GLsizei length, const GLchar *label);
 GL_APICALL void GL_APIENTRY glPopDebugGroupKHRContextANGLE(GLeglContext ctx);

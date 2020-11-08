@@ -228,6 +228,8 @@ const ProcEntry g_procTable[] = {
     {"glBufferDataContextANGLE", P(gl::BufferDataContextANGLE)},
     {"glBufferStorageEXT", P(gl::BufferStorageEXT)},
     {"glBufferStorageEXTContextANGLE", P(gl::BufferStorageEXTContextANGLE)},
+    {"glBufferStorageExternalEXT", P(gl::BufferStorageExternalEXT)},
+    {"glBufferStorageExternalEXTContextANGLE", P(gl::BufferStorageExternalEXTContextANGLE)},
     {"glBufferStorageMemEXT", P(gl::BufferStorageMemEXT)},
     {"glBufferStorageMemEXTContextANGLE", P(gl::BufferStorageMemEXTContextANGLE)},
     {"glBufferSubData", P(gl::BufferSubData)},
@@ -1130,6 +1132,9 @@ const ProcEntry g_procTable[] = {
     {"glMultiTexCoord4fContextANGLE", P(gl::MultiTexCoord4fContextANGLE)},
     {"glMultiTexCoord4x", P(gl::MultiTexCoord4x)},
     {"glMultiTexCoord4xContextANGLE", P(gl::MultiTexCoord4xContextANGLE)},
+    {"glNamedBufferStorageExternalEXT", P(gl::NamedBufferStorageExternalEXT)},
+    {"glNamedBufferStorageExternalEXTContextANGLE",
+     P(gl::NamedBufferStorageExternalEXTContextANGLE)},
     {"glNormal3f", P(gl::Normal3f)},
     {"glNormal3fContextANGLE", P(gl::Normal3fContextANGLE)},
     {"glNormal3x", P(gl::Normal3x)},
@@ -1636,5 +1641,5 @@ const ProcEntry g_procTable[] = {
     {"glWeightPointerOES", P(gl::WeightPointerOES)},
     {"glWeightPointerOESContextANGLE", P(gl::WeightPointerOESContextANGLE)}};
 
-const size_t g_numProcs = 1539;
+const size_t g_numProcs = 1543;
 }  // namespace egl

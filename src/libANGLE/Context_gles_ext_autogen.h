@@ -321,6 +321,11 @@
     void multiDrawElementsBaseVertex(PrimitiveMode modePacked, const GLsizei *count,               \
                                      DrawElementsType typePacked, const void *const *indices,      \
                                      GLsizei primcount, const GLint *basevertex);                  \
+    /* GL_EXT_external_buffer */                                                                   \
+    void bufferStorageExternal(BufferBinding targetPacked, GLintptr offset, GLsizeiptr size,       \
+                               GLeglClientBufferEXT clientBuffer, GLbitfield flags);               \
+    void namedBufferStorageExternal(GLuint buffer, GLintptr offset, GLsizeiptr size,               \
+                                    GLeglClientBufferEXT clientBuffer, GLbitfield flags);          \
     /* GL_EXT_geometry_shader */                                                                   \
     /* GL_EXT_instanced_arrays */                                                                  \
     /* GL_EXT_map_buffer_range */                                                                  \

@@ -1074,6 +1074,22 @@ angle::CallCapture CaptureMultiDrawElementsBaseVertexEXT(const State &glState,
                                                          GLsizei primcount,
                                                          const GLint *basevertex);
 
+// GL_EXT_external_buffer
+angle::CallCapture CaptureBufferStorageExternalEXT(const State &glState,
+                                                   bool isCallValid,
+                                                   BufferBinding targetPacked,
+                                                   GLintptr offset,
+                                                   GLsizeiptr size,
+                                                   GLeglClientBufferEXT clientBuffer,
+                                                   GLbitfield flags);
+angle::CallCapture CaptureNamedBufferStorageExternalEXT(const State &glState,
+                                                        bool isCallValid,
+                                                        GLuint buffer,
+                                                        GLintptr offset,
+                                                        GLsizeiptr size,
+                                                        GLeglClientBufferEXT clientBuffer,
+                                                        GLbitfield flags);
+
 // GL_EXT_geometry_shader
 angle::CallCapture CaptureFramebufferTextureEXT(const State &glState,
                                                 bool isCallValid,

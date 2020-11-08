@@ -648,6 +648,9 @@ struct Extensions
     // GL_EXT_buffer_storage
     bool bufferStorageEXT = false;
 
+    // GL_EXT_external_buffer
+    bool externalBufferEXT = false;
+
     // GL_OES_texture_stencil8
     bool stencilIndex8 = false;
 

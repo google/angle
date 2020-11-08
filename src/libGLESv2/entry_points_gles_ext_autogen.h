@@ -754,6 +754,18 @@ ANGLE_EXPORT void GL_APIENTRY MultiDrawElementsBaseVertexEXT(GLenum mode,
                                                              GLsizei primcount,
                                                              const GLint *basevertex);
 
+// GL_EXT_external_buffer
+ANGLE_EXPORT void GL_APIENTRY BufferStorageExternalEXT(GLenum target,
+                                                       GLintptr offset,
+                                                       GLsizeiptr size,
+                                                       GLeglClientBufferEXT clientBuffer,
+                                                       GLbitfield flags);
+ANGLE_EXPORT void GL_APIENTRY NamedBufferStorageExternalEXT(GLuint buffer,
+                                                            GLintptr offset,
+                                                            GLsizeiptr size,
+                                                            GLeglClientBufferEXT clientBuffer,
+                                                            GLbitfield flags);
+
 // GL_EXT_geometry_shader
 ANGLE_EXPORT void GL_APIENTRY FramebufferTextureEXT(GLenum target,
                                                     GLenum attachment,
@@ -1441,6 +1453,13 @@ ANGLE_EXPORT void GL_APIENTRY BufferStorageEXTContextANGLE(GLeglContext ctx,
                                                            GLsizeiptr size,
                                                            const void *data,
                                                            GLbitfield flags);
+ANGLE_EXPORT void GL_APIENTRY
+BufferStorageExternalEXTContextANGLE(GLeglContext ctx,
+                                     GLenum target,
+                                     GLintptr offset,
+                                     GLsizeiptr size,
+                                     GLeglClientBufferEXT clientBuffer,
+                                     GLbitfield flags);
 ANGLE_EXPORT void GL_APIENTRY BufferStorageMemEXTContextANGLE(GLeglContext ctx,
                                                               GLenum target,
                                                               GLsizeiptr size,
@@ -2767,6 +2786,13 @@ ANGLE_EXPORT void GL_APIENTRY MultiTexCoord4xContextANGLE(GLeglContext ctx,
                                                           GLfixed t,
                                                           GLfixed r,
                                                           GLfixed q);
+ANGLE_EXPORT void GL_APIENTRY
+NamedBufferStorageExternalEXTContextANGLE(GLeglContext ctx,
+                                          GLuint buffer,
+                                          GLintptr offset,
+                                          GLsizeiptr size,
+                                          GLeglClientBufferEXT clientBuffer,
+                                          GLbitfield flags);
 ANGLE_EXPORT void GL_APIENTRY Normal3fContextANGLE(GLeglContext ctx,
                                                    GLfloat nx,
                                                    GLfloat ny,
