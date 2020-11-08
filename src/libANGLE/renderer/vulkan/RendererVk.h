@@ -178,8 +178,6 @@ class RendererVk : angle::NonCopyable
                               vk::ResourceUseList &&resourceList,
                               const vk::Fence *fence,
                               Serial *serialOut);
-    angle::Result queueWaitIdle(vk::Context *context, egl::ContextPriority priority);
-    angle::Result deviceWaitIdle(vk::Context *context);
     VkResult queuePresent(egl::ContextPriority priority, const VkPresentInfoKHR &presentInfo);
 
     // This command buffer should be submitted immediately via queueSubmitOneOff.

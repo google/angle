@@ -2311,43 +2311,6 @@ angle::Result RendererVk::queueSubmitOneOff(vk::Context *context,
     return angle::Result::Continue;
 }
 
-angle::Result RendererVk::queueWaitIdle(vk::Context *context, egl::ContextPriority priority)
-{
-    ANGLE_TRACE_EVENT0("gpu.angle", "RendererVk::queueWaitIdle");
-    if (getFeatures().asynchronousCommandProcessing.enabled)
-    {
-        // Wait for all pending commands to get sent before issuing vkQueueWaitIdle
-        waitForCommandProcessorIdle(context);
-    }
-    {
-        std::lock_guard<decltype(mQueueMutex)> lock(mQueueMutex);
-        ANGLE_VK_TRY(context, vkQueueWaitIdle(mQueues[priority]));
-    }
-
-    ANGLE_TRY(cleanupGarbage(false));
-
-    return angle::Result::Continue;
-}
-
-angle::Result RendererVk::deviceWaitIdle(vk::Context *context)
-{
-    ANGLE_TRACE_EVENT0("gpu.angle", "RendererVk::deviceWaitIdle");
-
-    if (getFeatures().asynchronousCommandProcessing.enabled)
-    {
-        // Wait for all pending commands to get sent before issuing vkQueueWaitIdle
-        waitForCommandProcessorIdle(context);
-    }
-    {
-        std::lock_guard<decltype(mQueueMutex)> lock(mQueueMutex);
-        ANGLE_VK_TRY(context, vkDeviceWaitIdle(mDevice));
-    }
-
-    ANGLE_TRY(cleanupGarbage(false));
-
-    return angle::Result::Continue;
-}
-
 VkResult RendererVk::queuePresent(egl::ContextPriority priority,
                                   const VkPresentInfoKHR &presentInfo)
 {
