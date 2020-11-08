@@ -513,7 +513,7 @@ void RendererVk::onDestroy(vk::Context *context)
         }
     }
 
-    if (getFeatures().commandProcessor.enabled)
+    if (getFeatures().asyncCommandQueue.enabled)
     {
         // Shutdown worker thread
         mCommandProcessor.shutdown(&mCommandProcessorThread);
@@ -915,10 +915,8 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
 
     setGlobalDebugAnnotator();
 
-    if (getFeatures().commandProcessor.enabled)
+    if (mFeatures.asyncCommandQueue.enabled)
     {
-        // TODO(jmadill): Clean up. b/172704839
-        ASSERT(mFeatures.asynchronousCommandProcessing.enabled);
         mCommandProcessorThread =
             std::thread(&vk::CommandProcessor::processTasks, &mCommandProcessor);
         waitForCommandProcessorIdle(displayVk);
@@ -1944,10 +1942,7 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
     ANGLE_FEATURE_CONDITION(&mFeatures, preferAggregateBarrierCalls, isNvidia || isAMD || isIntel);
 
     // Currently disabled by default: http://anglebug.com/4324
-    ANGLE_FEATURE_CONDITION(&mFeatures, commandProcessor, false);
-
-    // Currently disabled by default: http://anglebug.com/4324
-    ANGLE_FEATURE_CONDITION(&mFeatures, asynchronousCommandProcessing, false);
+    ANGLE_FEATURE_CONDITION(&mFeatures, asyncCommandQueue, false);
 
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsYUVSamplerConversion,
                             mSamplerYcbcrConversionFeatures.samplerYcbcrConversion != VK_FALSE);
@@ -2242,10 +2237,9 @@ angle::Result RendererVk::queueSubmitOneOff(vk::Context *context,
                                             Serial *serialOut)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "RendererVk::queueSubmitOneOff");
-
     Serial submitQueueSerial;
 
-    if (getFeatures().commandProcessor.enabled)
+    if (mFeatures.asyncCommandQueue.enabled)
     {
         std::lock_guard<std::mutex> commandQueueLock(mCommandQueueMutex);
         submitQueueSerial = mCommandProcessor.reserveSubmitSerial();
@@ -2256,10 +2250,7 @@ angle::Result RendererVk::queueSubmitOneOff(vk::Context *context,
         queueCommand(context, &oneOffQueueSubmit);
         // TODO: https://issuetracker.google.com/170312581 - should go away with improved fence
         // management
-        if (getFeatures().asynchronousCommandProcessing.enabled)
-        {
-            waitForCommandProcessorIdle(context);
-        }
+        waitForCommandProcessorIdle(context);
     }
     else
     {
@@ -2295,7 +2286,7 @@ VkResult RendererVk::queuePresent(egl::ContextPriority priority,
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "RendererVk::queuePresent");
 
-    ASSERT(!getFeatures().commandProcessor.enabled);
+    ASSERT(!mFeatures.asyncCommandQueue.enabled);
 
     std::lock_guard<decltype(mQueueMutex)> lock(mQueueMutex);
 
@@ -2552,7 +2543,7 @@ angle::Result RendererVk::submitFrame(vk::Context *context,
 {
     Serial submitQueueSerial;
 
-    if (mFeatures.commandProcessor.enabled)
+    if (mFeatures.asyncCommandQueue.enabled)
     {
         std::lock_guard<std::mutex> commandQueueLock(mCommandQueueMutex);
         submitQueueSerial = mCommandProcessor.reserveSubmitSerial();
@@ -2588,7 +2579,7 @@ angle::Result RendererVk::submitFrame(vk::Context *context,
 
 void RendererVk::clearAllGarbage(vk::Context *context)
 {
-    if (mFeatures.commandProcessor.enabled)
+    if (mFeatures.asyncCommandQueue.enabled)
     {
         // Issue command to CommandProcessor to ensure all work is complete, which will return any
         // garbage items as well.
@@ -2603,7 +2594,7 @@ void RendererVk::clearAllGarbage(vk::Context *context)
 
 void RendererVk::handleDeviceLost()
 {
-    if (mFeatures.commandProcessor.enabled)
+    if (mFeatures.asyncCommandQueue.enabled)
     {
         mCommandProcessor.handleDeviceLost();
     }
@@ -2616,7 +2607,7 @@ void RendererVk::handleDeviceLost()
 
 angle::Result RendererVk::finishToSerial(vk::Context *context, Serial serial)
 {
-    if (mFeatures.commandProcessor.enabled)
+    if (mFeatures.asyncCommandQueue.enabled)
     {
         mCommandProcessor.finishToSerial(context, serial);
     }
@@ -2635,7 +2626,7 @@ angle::Result RendererVk::waitForSerialWithUserTimeout(vk::Context *context,
                                                        VkResult *result)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "RendererVk::waitForSerialWithUserTimeout");
-    if (mFeatures.commandProcessor.enabled)
+    if (mFeatures.asyncCommandQueue.enabled)
     {
         // TODO: https://issuetracker.google.com/170312581 - Wait with timeout.
         mCommandProcessor.finishToSerial(context, serial);
@@ -2656,7 +2647,7 @@ angle::Result RendererVk::finish(vk::Context *context)
 
 angle::Result RendererVk::checkCompletedCommands(vk::Context *context)
 {
-    if (mFeatures.commandProcessor.enabled)
+    if (mFeatures.asyncCommandQueue.enabled)
     {
         // TODO: https://issuetracker.google.com/169788986 - would be better if we could just wait
         // for the work we need but that requires QueryHelper to use the actual serial for the
@@ -2677,7 +2668,7 @@ angle::Result RendererVk::flushRenderPassCommands(vk::Context *context,
                                                   vk::CommandBufferHelper **renderPassCommands)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "RendererVk::flushRenderPassCommands");
-    if (mFeatures.commandProcessor.enabled)
+    if (mFeatures.asyncCommandQueue.enabled)
     {
         (*renderPassCommands)->markClosed();
         vk::CommandProcessorTask flushToPrimary;
@@ -2698,7 +2689,7 @@ angle::Result RendererVk::flushOutsideRPCommands(vk::Context *context,
                                                  vk::CommandBufferHelper **outsideRPCommands)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "RendererVk::flushOutsideRPCommands");
-    if (mFeatures.commandProcessor.enabled)
+    if (mFeatures.asyncCommandQueue.enabled)
     {
         (*outsideRPCommands)->markClosed();
         vk::CommandProcessorTask flushToPrimary;

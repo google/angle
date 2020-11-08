@@ -1404,7 +1404,7 @@ angle::Result WindowSurfaceVk::present(ContextVk *contextVk,
         mCurrentSwapHistoryIndex == mSwapHistory.size() ? 0 : mCurrentSwapHistoryIndex;
 
     VkResult result;
-    if (renderer->getFeatures().commandProcessor.enabled)
+    if (renderer->getFeatures().asyncCommandQueue.enabled)
     {
         vk::CommandProcessorTask present;
         present.initPresent(contextVk->getPriority(), presentInfo);
@@ -1481,7 +1481,7 @@ angle::Result WindowSurfaceVk::doDeferredAcquireNextImage(const gl::Context *con
     ContextVk *contextVk = vk::GetImpl(context);
     DisplayVk *displayVk = vk::GetImpl(context->getDisplay());
 
-    if (contextVk->getFeatures().commandProcessor.enabled)
+    if (contextVk->getFeatures().asyncCommandQueue.enabled)
     {
         VkResult result = contextVk->getRenderer()->getLastPresentResult(mSwapchain);
 

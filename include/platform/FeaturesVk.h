@@ -334,18 +334,11 @@ struct FeaturesVk : FeatureSetBase
         "fine grained pipeline stage dependency information",
         &members, "http://anglebug.com/4633"};
 
-    // Tell Vulkan back-end to use CommandProcessor class to dispatch work to the GPU. The work will
-    // happen asynchronously in a different thread if asynchronousCommandProcessing is true.
-    // Otherwise use Renderer::CommandQueue to dispatch work.
-    // TODO(jmadill): Merge these two features. b/172704839
-    Feature commandProcessor = {"commandProcessor", FeatureCategory::VulkanFeatures,
-                                "Use CommandProcessor class to dispatch work to GPU.", &members,
-                                "http://anglebug.com/4324"};
-
-    Feature asynchronousCommandProcessing = {"asynchronousCommandProcessing",
-                                             FeatureCategory::VulkanFeatures,
-                                             "Enable/Disable parallel processing of worker thread",
-                                             &members, "http://anglebug.com/4324"};
+    // Tell the Vulkan back-end to use the async command queue to dispatch work to the GPU. Command
+    // buffer work will happened in a worker thread. Otherwise use Renderer::CommandQueue directly.
+    Feature asyncCommandQueue = {"asyncCommandQueue", FeatureCategory::VulkanFeatures,
+                                 "Use CommandQueue worker thread to dispatch work to GPU.",
+                                 &members, "http://anglebug.com/4324"};
 
     // Whether the VkDevice supports the VK_KHR_shader_float16_int8 extension and has the
     // shaderFloat16 feature.

@@ -34,7 +34,7 @@ void SyncHelper::releaseToRenderer(RendererVk *renderer)
     renderer->collectGarbageAndReinit(&mUse, &mEvent);
     // TODO: https://issuetracker.google.com/170312581 - Currently just stalling on worker thread
     // here to try and avoid race condition. If this works, need some alternate solution
-    if (renderer->getFeatures().asynchronousCommandProcessing.enabled)
+    if (renderer->getFeatures().asyncCommandQueue.enabled)
     {
         ANGLE_TRACE_EVENT0("gpu.angle", "SyncHelper::releaseToRenderer");
         renderer->waitForCommandProcessorIdle(nullptr);
@@ -267,7 +267,7 @@ angle::Result SyncHelperNativeFence::clientWait(Context *context,
 
     // TODO: https://issuetracker.google.com/170312581 - If we are using worker need to wait for the
     // commands to be issued before waiting on the fence.
-    if (contextVk->getRenderer()->getFeatures().asynchronousCommandProcessing.enabled)
+    if (contextVk->getRenderer()->getFeatures().asyncCommandQueue.enabled)
     {
         ANGLE_TRACE_EVENT0("gpu.angle", "SyncHelperNativeFence::clientWait");
         contextVk->getRenderer()->waitForCommandProcessorIdle(contextVk);

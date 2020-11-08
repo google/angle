@@ -299,22 +299,8 @@ void CommandProcessor::queueCommand(Context *context, CommandProcessorTask *task
     // serials.
     std::lock_guard<std::mutex> queueLock(mWorkerMutex);
 
-    if (context->getRenderer()->getFeatures().asynchronousCommandProcessing.enabled)
-    {
-        mTasks.emplace(std::move(*task));
-        mWorkAvailableCondition.notify_one();
-    }
-    else
-    {
-        angle::Result result = processTask(task);
-        if (ANGLE_UNLIKELY(IsError(result)))
-        {
-            // TODO: Ignore error, similar to ANGLE_CONTEXT_TRY.
-            // Vulkan errors will get passed back to the calling context. We are still in the
-            // context's thread so no mutex needed.
-            return;
-        }
-    }
+    mTasks.emplace(std::move(*task));
+    mWorkAvailableCondition.notify_one();
 }
 
 void CommandProcessor::processTasks()
@@ -488,7 +474,6 @@ void CommandProcessor::checkCompletedCommands(Context *context)
 
 void CommandProcessor::waitForWorkComplete(Context *context)
 {
-    ASSERT(getRenderer()->getFeatures().asynchronousCommandProcessing.enabled);
     ANGLE_TRACE_EVENT0("gpu.angle", "CommandProcessor::waitForWorkComplete");
     std::unique_lock<std::mutex> lock(mWorkerMutex);
     mWorkerIdleCondition.wait(lock, [this] { return (mTasks.empty() && mWorkerThreadIdle); });
@@ -518,13 +503,10 @@ void CommandProcessor::shutdown(std::thread *commandProcessorThread)
     CommandProcessorTask endTask;
     endTask.initTask(CustomTask::Exit);
     queueCommand(this, &endTask);
-    if (this->getRenderer()->getFeatures().asynchronousCommandProcessing.enabled)
+    waitForWorkComplete(nullptr);
+    if (commandProcessorThread->joinable())
     {
-        waitForWorkComplete(nullptr);
-        if (commandProcessorThread->joinable())
-        {
-            commandProcessorThread->join();
-        }
+        commandProcessorThread->join();
     }
 }
 
@@ -562,20 +544,14 @@ void CommandProcessor::finishToSerial(Context *context, Serial serial)
 
     // Wait until the worker is idle. At that point we know that the finishToSerial command has
     // completed executing, including any associated state cleanup.
-    if (context->getRenderer()->getFeatures().asynchronousCommandProcessing.enabled)
-    {
-        waitForWorkComplete(context);
-    }
+    waitForWorkComplete(context);
 }
 
 void CommandProcessor::handleDeviceLost()
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "CommandProcessor::handleDeviceLost");
     std::unique_lock<std::mutex> lock(mWorkerMutex);
-    if (getRenderer()->getFeatures().asynchronousCommandProcessing.enabled)
-    {
-        mWorkerIdleCondition.wait(lock, [this] { return (mTasks.empty() && mWorkerThreadIdle); });
-    }
+    mWorkerIdleCondition.wait(lock, [this] { return (mTasks.empty() && mWorkerThreadIdle); });
 
     // Worker thread is idle and command queue is empty so good to continue
     mCommandQueue.handleDeviceLost(mRenderer);

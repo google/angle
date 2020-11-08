@@ -187,10 +187,10 @@ angle::Result QueryVk::getResult(const gl::Context *context, bool wait)
     if (mQueryHelper.hasPendingWork(contextVk))
     {
         ANGLE_TRY(contextVk->flushImpl(nullptr));
-        if (contextVk->getRenderer()->getFeatures().asynchronousCommandProcessing.enabled)
+        if (renderer->getFeatures().asyncCommandQueue.enabled)
         {
             // TODO: https://issuetracker.google.com/170312581 - For now just stalling here
-            contextVk->getRenderer()->waitForCommandProcessorIdle(contextVk);
+            renderer->waitForCommandProcessorIdle(contextVk);
         }
 
         ASSERT(!mQueryHelperTimeElapsedBegin.hasPendingWork(contextVk));
