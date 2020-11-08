@@ -341,9 +341,7 @@ def main():
         sys.exit(1)
 
     results = {
-        'tests': {
-            'angle_restricted_trace_gold_tests': {}
-        },
+        'tests': {},
         'interrupted': False,
         'seconds_since_epoch': time.time(),
         'path_delimiter': '.',
@@ -355,7 +353,7 @@ def main():
         },
     }
 
-    result_tests = results['tests']['angle_restricted_trace_gold_tests']
+    result_tests = {}
 
     def run_tests(args, tests, extra_flags, env, screenshot_dir):
         keys = get_skia_gold_keys(args)
@@ -372,8 +370,8 @@ def main():
                 if args.isolated_script_test_filter:
                     full_name = 'angle_restricted_trace_gold_tests.%s' % test
                     if not fnmatch.fnmatch(full_name, args.isolated_script_test_filter):
-                        print('Skipping test %s because it does not match filter %s' %
-                              (full_name, args.isolated_script_test_filter))
+                        logging.info('Skipping test %s because it does not match filter %s' %
+                                     (full_name, args.isolated_script_test_filter))
                         continue
 
                 with common.temporary_file() as tempfile_path:
@@ -432,6 +430,9 @@ def main():
     except Exception:
         traceback.print_exc()
         rc = 1
+
+    if result_tests:
+        results['tests']['angle_restricted_trace_gold_tests'] = result_tests
 
     if args.isolated_script_test_output:
         with open(args.isolated_script_test_output, 'w') as out_file:
