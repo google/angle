@@ -39,6 +39,30 @@
       },
       "revId": "31a8f9a480264d3c115d079c5efd3598e457f70c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "762af172_de20cce0",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1889,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-09T21:59:05Z",
+      "side": 1,
+      "message": "Done, texture could be completely uninitialized in which case \"0\" is a also a valid value",
+      "parentUuid": "bae03b5c_2f5ce6f3",
+      "range": {
+        "startLine": 1888,
+        "startChar": 8,
+        "endLine": 1889,
+        "endChar": 50
+      },
+      "revId": "31a8f9a480264d3c115d079c5efd3598e457f70c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
