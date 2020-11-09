@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1fefe529_d41d4748",
+        "filename": "src/tests/gl_tests/ImageTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1554,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-09T19:04:42Z",
+      "side": 1,
+      "message": "Thanks for the test, but this doesn\u0027t actually result in a bit set in mRedefinedLevels. Only format changes and size changes do that. I mentioned GL_RGBA32UI for the redefinition before, but you could also just redefine the base level with a different size and that should work too.",
+      "revId": "80d504144fe015aba9254178382a7abc01a26f8f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
