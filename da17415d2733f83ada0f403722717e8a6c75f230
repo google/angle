@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2a796ff2_f7f1c5f3",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 4488,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-09T19:30:18Z",
+      "side": 0,
+      "message": "It looks like this work isn\u0027t being done anymore.   Will it be coming back later?",
+      "range": {
+        "startLine": 4479,
+        "startChar": 0,
+        "endLine": 4488,
+        "endChar": 9
+      },
+      "revId": "da17415d2733f83ada0f403722717e8a6c75f230",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7bdbd8e5_1ceca1b2",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 4508,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-09T19:30:18Z",
+      "side": 0,
+      "message": "Same as above.",
+      "range": {
+        "startLine": 4501,
+        "startChar": 0,
+        "endLine": 4508,
+        "endChar": 9
+      },
+      "revId": "da17415d2733f83ada0f403722717e8a6c75f230",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
