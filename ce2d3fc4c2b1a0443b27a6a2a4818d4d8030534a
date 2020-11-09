@@ -16,6 +16,52 @@
       "message": "Found by https://chromium-review.googlesource.com/c/chromium/src/+/2515093/2",
       "revId": "ce2d3fc4c2b1a0443b27a6a2a4818d4d8030534a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "de7f4a45_c09a6d09",
+        "filename": "src/tests/BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 1131,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-09T15:06:29Z",
+      "side": 1,
+      "message": "see variable default section.",
+      "range": {
+        "startLine": 1131,
+        "startChar": 4,
+        "endLine": 1131,
+        "endChar": 14
+      },
+      "revId": "ce2d3fc4c2b1a0443b27a6a2a4818d4d8030534a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "238b88d2_13e51c47",
+        "filename": "src/tests/BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 1205,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-09T15:06:29Z",
+      "side": 1,
+      "message": "Nice fix. I have a suggestion for how to make this more maintainable. Use an optional \"expectations_file\" variable to angle_deqp_test children that when not defined defaults to \"deqp_${_api}_test_expectations.txt\". Then specify this in the rotate template instantiations. This will make this code a lot simpler.\n\nYou may be able to default the variable to \"deqp_${_api}_test_expectations.txt\" but I\u0027m not sure if the substitutions are delayed or processed immediately.",
+      "range": {
+        "startLine": 1192,
+        "startChar": 0,
+        "endLine": 1205,
+        "endChar": 57
+      },
+      "revId": "ce2d3fc4c2b1a0443b27a6a2a4818d4d8030534a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
