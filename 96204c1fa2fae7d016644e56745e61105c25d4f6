@@ -41,6 +41,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "470afa1a_de8899c9",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-09T19:19:28Z",
+      "side": 1,
+      "message": "Ack, is it alright if I leave it? This is mainly for our reference, and these TODOs will all go away.",
+      "parentUuid": "08616474_3cd49d98",
+      "range": {
+        "startLine": 77,
+        "startChar": 35,
+        "endLine": 77,
+        "endChar": 46
+      },
+      "revId": "96204c1fa2fae7d016644e56745e61105c25d4f6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d107c7e2_ad6b7b13",
@@ -54,6 +78,24 @@
       "writtenOn": "2020-11-09T19:16:22Z",
       "side": 1,
       "message": "Can this be a reference now?",
+      "revId": "96204c1fa2fae7d016644e56745e61105c25d4f6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2db0a27d_42591565",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1255,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-09T19:19:28Z",
+      "side": 1,
+      "message": "Ack, it needs to be a pointer because it is called with nullptr for OutsideRP command buffers.",
+      "parentUuid": "d107c7e2_ad6b7b13",
       "revId": "96204c1fa2fae7d016644e56745e61105c25d4f6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
