@@ -148,6 +148,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f1481131_9e0f069f",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 225,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-09T17:50:31Z",
+      "side": 1,
+      "message": "Done. These are now moved to its own file and class",
+      "parentUuid": "d9f7740c_8f086213",
+      "range": {
+        "startLine": 225,
+        "startChar": 14,
+        "endLine": 225,
+        "endChar": 30
+      },
+      "revId": "21ae8d18709389518867b8b5294c2a10d3bf904b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e9b4712b_4e249780",
@@ -185,6 +209,30 @@
       "side": 1,
       "message": "I was thinking to move all driverUniform and rotationSpecConsts code to a class in the future clean up CL.",
       "parentUuid": "e9b4712b_4e249780",
+      "range": {
+        "startLine": 22,
+        "startChar": 0,
+        "endLine": 30,
+        "endChar": 68
+      },
+      "revId": "21ae8d18709389518867b8b5294c2a10d3bf904b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e9f48306_275c8f1e",
+        "filename": "src/compiler/translator/TranslatorVulkan.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-09T17:50:31Z",
+      "side": 1,
+      "message": "These are now moved to its own file and class.",
+      "parentUuid": "48d843a9_a54b8b73",
       "range": {
         "startLine": 22,
         "startChar": 0,

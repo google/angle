@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "bceebb29_40d83a45",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 18
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-09T17:50:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bf55d641_d64296b0",
+      "range": {
+        "startLine": 11,
+        "startChar": 20,
+        "endLine": 11,
+        "endChar": 28
+      },
+      "revId": "0b0d7a483a5edc5f8eaf492c3a9cc4198e7b498e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "950144c3_a978d954",
@@ -37,6 +61,30 @@
       "writtenOn": "2020-11-06T17:39:43Z",
       "side": 1,
       "message": "nit: This allows the driver to optimize for the minimum instructions for rotation.",
+      "range": {
+        "startLine": 11,
+        "startChar": 31,
+        "endLine": 12,
+        "endChar": 41
+      },
+      "revId": "0b0d7a483a5edc5f8eaf492c3a9cc4198e7b498e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c8ef9fb6_d6b88770",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 18
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-09T17:50:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "950144c3_a978d954",
       "range": {
         "startLine": 11,
         "startChar": 31,
@@ -104,6 +152,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a650b390_d73cb536",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 18
+      },
+      "lineNbr": 345,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-09T17:50:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d2cef22f_33447f4b",
+      "range": {
+        "startLine": 345,
+        "startChar": 23,
+        "endLine": 345,
+        "endChar": 48
+      },
+      "revId": "0b0d7a483a5edc5f8eaf492c3a9cc4198e7b498e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5b3bc3f7_c8279df9",
@@ -117,6 +189,30 @@
       "writtenOn": "2020-11-06T21:30:32Z",
       "side": 1,
       "message": "Please add a comment here and in \"src/libANGLE/renderer/renderer_utils.h\" that these values must be kept in sync.\n\nAlso, we should add a comment somewhere that pre-rotation only supports the 1st four values, and that the last four are being used to help with y-flip.  I added the four values because the Vulkan spec supports them for x-flip (mirror?).\n\nJamie, is there a way for both headers to share one declaration so that we\u0027re not duplicating them?",
+      "range": {
+        "startLine": 783,
+        "startChar": 0,
+        "endLine": 796,
+        "endChar": 2
+      },
+      "revId": "0b0d7a483a5edc5f8eaf492c3a9cc4198e7b498e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "75fda0bd_29a4b09f",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 18
+      },
+      "lineNbr": 796,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-09T17:50:31Z",
+      "side": 1,
+      "message": "Right. I intended to remove declaration from renderer_utils.h in the clean up CL.",
+      "parentUuid": "5b3bc3f7_c8279df9",
       "range": {
         "startLine": 783,
         "startChar": 0,
@@ -150,6 +246,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "fafa0ab9_74c38851",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-09T17:50:31Z",
+      "side": 1,
+      "message": "Right, that is what it is before this CL. Before my CL, we only using the first four enums (non-flipped), so only the first four matrices are used. I copied the non-flipped matrices to flipped matrices here so that we will get the exact same values.\n\nThe matrix padding was causing me trouble last time, so I am also very happy able to remove that.",
+      "parentUuid": "6224de2b_7ebaf920",
+      "range": {
+        "startLine": 58,
+        "startChar": 46,
+        "endLine": 61,
+        "endChar": 78
+      },
+      "revId": "0b0d7a483a5edc5f8eaf492c3a9cc4198e7b498e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "981e98c7_5cbf989c",
@@ -163,6 +283,30 @@
       "writtenOn": "2020-11-06T17:39:43Z",
       "side": 1,
       "message": "typo",
+      "range": {
+        "startLine": 121,
+        "startChar": 22,
+        "endLine": 121,
+        "endChar": 23
+      },
+      "revId": "0b0d7a483a5edc5f8eaf492c3a9cc4198e7b498e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8a3ee24e_b203417d",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-09T17:50:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "981e98c7_5cbf989c",
       "range": {
         "startLine": 121,
         "startChar": 22,
@@ -221,6 +365,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "07d2147c_1e136b9d",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-09T17:50:31Z",
+      "side": 1,
+      "message": "Because isViewportFlipEnabledForDrawFBO() is equivalent to the \"Flipped\" bit in the rotation enum in the shader\u0027s specialization constant. My intention here is not to change the actual math in this CL.",
+      "parentUuid": "f5589af4_b5cbb04d",
+      "range": {
+        "startLine": 124,
+        "startChar": 45,
+        "endLine": 124,
+        "endChar": 49
+      },
+      "revId": "0b0d7a483a5edc5f8eaf492c3a9cc4198e7b498e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "2ca0a6b5_76d90676",
         "filename": "src/compiler/translator/TranslatorVulkan.cpp",
         "patchSetId": 18
@@ -232,6 +400,30 @@
       "writtenOn": "2020-11-06T21:30:32Z",
       "side": 1,
       "message": "This should be 1.0 for onscreen.  90-degrees is always onscreen.",
+      "range": {
+        "startLine": 129,
+        "startChar": 60,
+        "endLine": 129,
+        "endChar": 65
+      },
+      "revId": "0b0d7a483a5edc5f8eaf492c3a9cc4198e7b498e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "336ab108_0b13eec7",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-09T17:50:31Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "2ca0a6b5_76d90676",
       "range": {
         "startLine": 129,
         "startChar": 60,
@@ -265,6 +457,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a9a7f06d_e9d50a13",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-09T17:50:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "30c945b3_4042747f",
+      "range": {
+        "startLine": 130,
+        "startChar": 62,
+        "endLine": 130,
+        "endChar": 67
+      },
+      "revId": "0b0d7a483a5edc5f8eaf492c3a9cc4198e7b498e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f713a6de_0320a0cc",
@@ -278,6 +494,30 @@
       "writtenOn": "2020-11-06T21:30:32Z",
       "side": 1,
       "message": "This should be -1.0 for onscreen.  270-degrees is always onscreen.",
+      "range": {
+        "startLine": 131,
+        "startChar": 62,
+        "endLine": 131,
+        "endChar": 66
+      },
+      "revId": "0b0d7a483a5edc5f8eaf492c3a9cc4198e7b498e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c6c22f83_3e16f030",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-09T17:50:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f713a6de_0320a0cc",
       "range": {
         "startLine": 131,
         "startChar": 62,
@@ -311,6 +551,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "349cd3e7_aa9894e0",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 225,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-09T17:50:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0de35117_85ef7e9a",
+      "range": {
+        "startLine": 225,
+        "startChar": 69,
+        "endLine": 225,
+        "endChar": 70
+      },
+      "revId": "0b0d7a483a5edc5f8eaf492c3a9cc4198e7b498e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "93c6e1e1_8c32e61c",
@@ -334,6 +598,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "54f9060d_f533c499",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 226,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-09T17:50:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "93c6e1e1_8c32e61c",
+      "range": {
+        "startLine": 226,
+        "startChar": 0,
+        "endLine": 226,
+        "endChar": 31
+      },
+      "revId": "0b0d7a483a5edc5f8eaf492c3a9cc4198e7b498e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "bcd6523f_9973f698",
@@ -347,6 +635,30 @@
       "writtenOn": "2020-11-06T17:39:43Z",
       "side": 1,
       "message": "typo: multipliersArray",
+      "range": {
+        "startLine": 243,
+        "startChar": 18,
+        "endLine": 243,
+        "endChar": 33
+      },
+      "revId": "0b0d7a483a5edc5f8eaf492c3a9cc4198e7b498e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2cbc87b5_479f8f95",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 243,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-09T17:50:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bcd6523f_9973f698",
       "range": {
         "startLine": 243,
         "startChar": 18,
@@ -410,6 +722,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "cca2d2e0_17b9b011",
+        "filename": "src/compiler/translator/tree_ops/RewriteDfdy.h",
+        "patchSetId": 18
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-09T17:50:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8ccd9907_554ab200",
+      "revId": "0b0d7a483a5edc5f8eaf492c3a9cc4198e7b498e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "4e45e623_c51938ee",
@@ -433,6 +763,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d0ad3350_8a3dda6d",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 3455,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-09T17:50:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4e45e623_c51938ee",
+      "range": {
+        "startLine": 3455,
+        "startChar": 23,
+        "endLine": 3455,
+        "endChar": 34
+      },
+      "revId": "0b0d7a483a5edc5f8eaf492c3a9cc4198e7b498e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ef4ac622_0914fe38",
@@ -446,6 +800,30 @@
       "writtenOn": "2020-11-06T17:39:43Z",
       "side": 1,
       "message": "nit: the shader does",
+      "range": {
+        "startLine": 3456,
+        "startChar": 35,
+        "endLine": 3456,
+        "endChar": 49
+      },
+      "revId": "0b0d7a483a5edc5f8eaf492c3a9cc4198e7b498e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d2430171_75292478",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 3456,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-09T17:50:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ef4ac622_0914fe38",
       "range": {
         "startLine": 3456,
         "startChar": 35,
@@ -565,6 +943,30 @@
       "side": 1,
       "message": "It\u0027s inconsistent with how we do casts in ANGLE.",
       "parentUuid": "2c62fdaf_85650f3b",
+      "range": {
+        "startLine": 3460,
+        "startChar": 27,
+        "endLine": 3460,
+        "endChar": 34
+      },
+      "revId": "0b0d7a483a5edc5f8eaf492c3a9cc4198e7b498e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "80c48cfa_2026c3b1",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 3460,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-09T17:50:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4c49628a_cd82fe7e",
       "range": {
         "startLine": 3460,
         "startChar": 27,
