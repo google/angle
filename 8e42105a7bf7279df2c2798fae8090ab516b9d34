@@ -52,6 +52,24 @@
       "parentUuid": "21a357d3_737fd1d8",
       "revId": "8e42105a7bf7279df2c2798fae8090ab516b9d34",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6a2816e2_70f4ca48",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-09T21:21:44Z",
+      "side": 1,
+      "message": "This new test is failing with (almost) all of the other backends:\n\nlinux:\nImageTest.DeletedImageWithSameSizeAndFormat/ES3_OpenGL\nImageTest.DeletedImageWithSameSizeAndFormat/ES2_OpenGL\n\nmac:\nImageTest.DeletedImageWithSameSizeAndFormat/ES3_OpenGL\nImageTest.DeletedImageWithSameSizeAndFormat/ES2_Metal\nImageTest.DeletedImageWithSameSizeAndFormat/ES3_Metal\nImageTest.DeletedImageWithSameSizeAndFormat/ES2_OpenGL\n\nwindows:\nImageTest.DeletedImageWithSameSizeAndFormat/ES2_OpenGLES\nImageTest.DeletedImageWithSameSizeAndFormat/ES3_OpenGLES\nImageTest.DeletedImageWithSameSizeAndFormat/ES3_OpenGL\nImageTest.DeletedImageWithSameSizeAndFormat/ES2_OpenGL\n\nAssuming the test is good, then those other backends are also buggy so just open a bug and skip the test for them.",
+      "parentUuid": "dc1aef21_dae2762e",
+      "revId": "8e42105a7bf7279df2c2798fae8090ab516b9d34",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
