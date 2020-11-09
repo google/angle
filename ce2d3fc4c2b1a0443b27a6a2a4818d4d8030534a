@@ -62,6 +62,30 @@
       },
       "revId": "ce2d3fc4c2b1a0443b27a6a2a4818d4d8030534a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "602a5612_173683cd",
+        "filename": "src/tests/BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 1205,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-09T16:53:07Z",
+      "side": 1,
+      "message": "Done. Tried setting the default using _api, but it gives error (Undefined identifier). Looks like substitutions are immediate.",
+      "parentUuid": "238b88d2_13e51c47",
+      "range": {
+        "startLine": 1192,
+        "startChar": 0,
+        "endLine": 1205,
+        "endChar": 57
+      },
+      "revId": "ce2d3fc4c2b1a0443b27a6a2a4818d4d8030534a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
