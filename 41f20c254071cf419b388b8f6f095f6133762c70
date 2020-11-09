@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2fb3d739_1981dc76",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 314,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-09T16:59:38Z",
+      "side": 0,
+      "message": "This has been missing since the command graph was removed!\n\nCan you instead add a call to this from: CommandBufferHelper::bufferWrite or equivalent? The logic should be:\n\n    if (buffer-\u003eisHostVisible())\n    {\n        onHostVisibleBufferWrite();\n    }",
+      "range": {
+        "startLine": 314,
+        "startChar": 9,
+        "endLine": 314,
+        "endChar": 33
+      },
+      "revId": "41f20c254071cf419b388b8f6f095f6133762c70",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
