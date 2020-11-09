@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b6c5c964_65f6a46b",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1721,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-09T19:21:18Z",
+      "side": 1,
+      "message": "nit: can you make this a private static non-member function in the anonymous namespace block at the top of the file?",
+      "range": {
+        "startLine": 1721,
+        "startChar": 25,
+        "endLine": 1721,
+        "endChar": 53
+      },
+      "revId": "a6b620049af703da8117b128551521483b68866b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
