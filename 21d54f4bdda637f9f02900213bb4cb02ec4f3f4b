@@ -1,0 +1,268 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dcd4a48a_f7b6a755",
+        "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 157,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-09T16:11:49Z",
+      "side": 1,
+      "message": "Comment unclear. It says it doesn\u0027t own mBufferPool, but then releases mBuffer",
+      "range": {
+        "startLine": 157,
+        "startChar": 35,
+        "endLine": 157,
+        "endChar": 46
+      },
+      "revId": "21d54f4bdda637f9f02900213bb4cb02ec4f3f4b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1252e1f2_8abd7bcc",
+        "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 265,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-09T16:11:49Z",
+      "side": 1,
+      "message": "nit: isE",
+      "range": {
+        "startLine": 265,
+        "startChar": 23,
+        "endLine": 265,
+        "endChar": 24
+      },
+      "revId": "21d54f4bdda637f9f02900213bb4cb02ec4f3f4b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e94ab563_867e736b",
+        "filename": "src/libANGLE/renderer/vulkan/android/android_vulkan_util.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-09T16:11:49Z",
+      "side": 1,
+      "message": "nit: cpp. Also same typo as .h",
+      "range": {
+        "startLine": 7,
+        "startChar": 23,
+        "endLine": 7,
+        "endChar": 24
+      },
+      "revId": "21d54f4bdda637f9f02900213bb4cb02ec4f3f4b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7082afe0_e97949f7",
+        "filename": "src/libANGLE/renderer/vulkan/android/android_vulkan_util.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-09T16:11:49Z",
+      "side": 1,
+      "message": "Maybe move to common/android_util.h and remove the duplicate logic. It\u0027s also replicated in ImageTest.cpp.\n\nAlso, even though EXT_external_buffer references Android, it seems like a generic API. Something you could do is call these functions InitExternalMemory and ReleaseExternalMemory, then have them defined in android/android_vulkan_util.* for Android (and conditionally build them on Android with gn), and then have some other null_external_memory.* (or something) files with an `UNIMPLEMENTED(); return Stop;` implementation that gn builds on other platforms. You wouldn\u0027t need `ANGLE_AHARDWARE_BUFFER_SUPPORT` then, and can also avoid all the `#if`s.",
+      "range": {
+        "startLine": 14,
+        "startChar": 0,
+        "endLine": 18,
+        "endChar": 6
+      },
+      "revId": "21d54f4bdda637f9f02900213bb4cb02ec4f3f4b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a53ce139_7da138ab",
+        "filename": "src/libANGLE/renderer/vulkan/android/android_vulkan_util.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-09T16:11:49Z",
+      "side": 1,
+      "message": "nit: Use \u003d {}. Also remove pNext \u003d nullptr.",
+      "range": {
+        "startLine": 31,
+        "startChar": 73,
+        "endLine": 31,
+        "endChar": 74
+      },
+      "revId": "21d54f4bdda637f9f02900213bb4cb02ec4f3f4b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a0a59801_648f65f0",
+        "filename": "src/libANGLE/renderer/vulkan/android/android_vulkan_util.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-09T16:11:49Z",
+      "side": 1,
+      "message": "typo",
+      "range": {
+        "startLine": 7,
+        "startChar": 47,
+        "endLine": 7,
+        "endChar": 51
+      },
+      "revId": "21d54f4bdda637f9f02900213bb4cb02ec4f3f4b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9f82fb1c_cf688288",
+        "filename": "src/libANGLE/renderer/vulkan/android/android_vulkan_util.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-09T16:11:49Z",
+      "side": 1,
+      "message": "No need to be in the header",
+      "revId": "21d54f4bdda637f9f02900213bb4cb02ec4f3f4b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5b728fb1_6fb05527",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 346,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-09T16:11:49Z",
+      "side": 1,
+      "message": "Should this also say API \u003e\u003d 26?",
+      "range": {
+        "startLine": 346,
+        "startChar": 42,
+        "endLine": 346,
+        "endChar": 51
+      },
+      "revId": "21d54f4bdda637f9f02900213bb4cb02ec4f3f4b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "418c2251_ed4c16b6",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 738,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-09T16:11:49Z",
+      "side": 1,
+      "message": "Why the split?",
+      "range": {
+        "startLine": 738,
+        "startChar": 6,
+        "endLine": 738,
+        "endChar": 18
+      },
+      "revId": "21d54f4bdda637f9f02900213bb4cb02ec4f3f4b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "439f2e57_b4196d85",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 774,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-09T16:11:49Z",
+      "side": 1,
+      "message": "nit: used* if* isExternalBuffer()* is false\n\nSame below",
+      "range": {
+        "startLine": 774,
+        "startChar": 38,
+        "endLine": 774,
+        "endChar": 70
+      },
+      "revId": "21d54f4bdda637f9f02900213bb4cb02ec4f3f4b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "52785007_aa1c2a73",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 843,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-09T16:11:49Z",
+      "side": 1,
+      "message": "Just `return mMemory.map()`",
+      "range": {
+        "startLine": 843,
+        "startChar": 8,
+        "endLine": 843,
+        "endChar": 18
+      },
+      "revId": "21d54f4bdda637f9f02900213bb4cb02ec4f3f4b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7c893301_78f18100",
+        "filename": "src/libANGLE/renderer/vulkan/vk_wrapper.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 1418,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-09T16:11:49Z",
+      "side": 1,
+      "message": "The wrappers are not expected to have logic. They are just a C to C++ rename. I see we violated this a few times, but let\u0027s try to avoid that. You can change these to take a VkMappedMemoryRange argument and call vk*MappedMemoryRanges, then move the logic to the caller.",
+      "revId": "21d54f4bdda637f9f02900213bb4cb02ec4f3f4b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
