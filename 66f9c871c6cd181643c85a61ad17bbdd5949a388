@@ -16,6 +16,46 @@
       "message": "PTAL",
       "revId": "66f9c871c6cd181643c85a61ad17bbdd5949a388",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6d608f8a_24f69235",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2020-11-09T21:04:28Z",
+      "side": 1,
+      "message": "LGTM, one nit.",
+      "revId": "66f9c871c6cd181643c85a61ad17bbdd5949a388",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "08adf12c_84f33204",
+        "filename": "src/tests/restricted_traces/BUILD.gn",
+        "patchSetId": 5
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2020-11-09T21:04:28Z",
+      "side": 1,
+      "message": "dead code?",
+      "range": {
+        "startLine": 26,
+        "startChar": 0,
+        "endLine": 26,
+        "endChar": 20
+      },
+      "revId": "66f9c871c6cd181643c85a61ad17bbdd5949a388",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
