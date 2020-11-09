@@ -16,6 +16,24 @@
       "message": "This seems like a potential perf issue.",
       "revId": "be6c225d8b6a02e5b41e523dc1713cc3d1e1ff64",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "aaec6d60_6a50135a",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 4062,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-09T21:00:33Z",
+      "side": 0,
+      "message": "I\u0027m also curious what type of impact this will have, and probably worth a TODO if it\u0027s not already addressed in a later CL in this chain.",
+      "parentUuid": "290255b9_40db9a2c",
+      "revId": "be6c225d8b6a02e5b41e523dc1713cc3d1e1ff64",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
