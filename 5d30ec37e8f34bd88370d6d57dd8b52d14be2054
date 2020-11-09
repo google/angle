@@ -192,6 +192,23 @@
       "message": "I noticed that somebody started the test again, and it passes now.  Does that mean that it was a flake?",
       "revId": "5d30ec37e8f34bd88370d6d57dd8b52d14be2054",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d5d9d10e_fa3421c4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-09T22:52:46Z",
+      "side": 1,
+      "message": "BTW, I tried to reproduce the \"marvel\" pixel differences on my Intel and NVIDIA devices and I do not see those pixels generated.",
+      "revId": "5d30ec37e8f34bd88370d6d57dd8b52d14be2054",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
