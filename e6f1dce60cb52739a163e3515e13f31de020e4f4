@@ -67,6 +67,24 @@
       "message": "I don\u0027t know how the reports were broken to begin with, but this code LGTM.",
       "revId": "e6f1dce60cb52739a163e3515e13f31de020e4f4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2a409452_0773a3e6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-09T18:15:03Z",
+      "side": 1,
+      "message": "Not sure when it regressed, but all events were outputting the same timestamp value because of integer/floating point math errors.",
+      "parentUuid": "a6eb9a7f_71cb7ba2",
+      "revId": "e6f1dce60cb52739a163e3515e13f31de020e4f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
