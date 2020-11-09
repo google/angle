@@ -16,6 +16,29 @@
       "message": "PTAL",
       "revId": "ddaf5047a14386c038a65f7ab16a3fb85f497ed7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "63df3faa_045efc6a",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 196,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-09T20:44:06Z",
+      "side": 1,
+      "message": "nit: Caps for static methods.",
+      "range": {
+        "startLine": 196,
+        "startChar": 14,
+        "endLine": 196,
+        "endChar": 42
+      },
+      "revId": "ddaf5047a14386c038a65f7ab16a3fb85f497ed7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
