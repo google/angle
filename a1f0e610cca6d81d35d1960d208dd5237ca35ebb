@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c5ab80d8_b267095d",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1924,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-09T20:48:19Z",
+      "side": 1,
+      "message": "see here.",
+      "range": {
+        "startLine": 1919,
+        "startChar": 0,
+        "endLine": 1924,
+        "endChar": 0
+      },
+      "revId": "a1f0e610cca6d81d35d1960d208dd5237ca35ebb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "16821874_0c85a3ba",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1954,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-09T20:48:19Z",
+      "side": 1,
+      "message": "and here.",
+      "range": {
+        "startLine": 1946,
+        "startChar": 0,
+        "endLine": 1954,
+        "endChar": 0
+      },
+      "revId": "a1f0e610cca6d81d35d1960d208dd5237ca35ebb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
