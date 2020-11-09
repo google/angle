@@ -29,11 +29,25 @@
 #    endif
 #endif  // !defined(ANGLE_TRACE_EXPORT)
 
+#if !defined(ANGLE_TRACE_LOADER_EXPORT)
+#    if defined(_WIN32)
+#        if defined(ANGLE_TRACE_LOADER_IMPLEMENTATION)
+#            define ANGLE_TRACE_LOADER_EXPORT __declspec(dllexport)
+#        else
+#            define ANGLE_TRACE_LOADER_EXPORT __declspec(dllimport)
+#        endif
+#    elif defined(__GNUC__)
+#        define ANGLE_TRACE_LOADER_EXPORT __attribute__((visibility("default")))
+#    else
+#        define ANGLE_TRACE_LOADER_EXPORT
+#    endif
+#endif  // !defined(ANGLE_TRACE_LOADER_EXPORT)
+
 namespace trace_angle
 {
 using GenericProc = void (*)();
 using LoadProc    = GenericProc(KHRONOS_APIENTRY *)(const char *);
-ANGLE_TRACE_EXPORT void LoadGLES(LoadProc loadProc);
+ANGLE_TRACE_LOADER_EXPORT void LoadGLES(LoadProc loadProc);
 }  // namespace trace_angle
 
 namespace angle

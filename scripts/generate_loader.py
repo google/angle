@@ -228,7 +228,7 @@ def gen_util_gles_and_egl_loaders():
 
 def gen_trace_gles_and_egl_loaders():
     path = os.path.join("..", "src", "tests", "restricted_traces")
-    export = "ANGLE_TRACE_EXPORT "
+    export = "ANGLE_TRACE_LOADER_EXPORT "
     lib = "ANGLE_RESTRICTED_TRACES"
     gen_gles_loader(trace_gles_preamble, path, lib, export, "t_", "trace_")
     gen_egl_loader(trace_egl_preamble, path, lib, export, "t_", "trace_")
