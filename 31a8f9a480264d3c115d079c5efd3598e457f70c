@@ -16,6 +16,29 @@
       "message": "PTAL",
       "revId": "31a8f9a480264d3c115d079c5efd3598e457f70c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bae03b5c_2f5ce6f3",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1889,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-09T21:46:06Z",
+      "side": 1,
+      "message": "shabi, this is asserting for test - SRGBTextureTestES3.SRGBDecodeOverridePriority\n\nis this what you expected? what fix did you have in mind for this?",
+      "range": {
+        "startLine": 1888,
+        "startChar": 8,
+        "endLine": 1889,
+        "endChar": 50
+      },
+      "revId": "31a8f9a480264d3c115d079c5efd3598e457f70c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
