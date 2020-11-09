@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e52332fe_c1230254",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 32
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-09T15:02:30Z",
+      "side": 1,
+      "message": "Hey Courtney + reviewers: I wrote quite a large stack that refactors the command queue classes and simplifies fence management so they are no longer shared ownership. If you like we can take a look at that alternative before working on this solution.",
+      "revId": "56e0a82d3f11eaeaf6354e23d19cbe5036ece769",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2b8a23ff_5c80faaf",
