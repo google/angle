@@ -34,6 +34,24 @@
       "parentUuid": "1fefe529_d41d4748",
       "revId": "80d504144fe015aba9254178382a7abc01a26f8f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "de207c27_f87385e3",
+        "filename": "src/tests/gl_tests/ImageTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1554,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-09T19:50:21Z",
+      "side": 1,
+      "message": "No. Changing base/max is good, it exercises some paths, but another test is necessary to exercise mRedefinedLevels. You can respecify the texture (with glTexImage2D) but with a size that\u0027s different from the EGL texture.",
+      "parentUuid": "0b838e28_32938e99",
+      "revId": "80d504144fe015aba9254178382a7abc01a26f8f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
