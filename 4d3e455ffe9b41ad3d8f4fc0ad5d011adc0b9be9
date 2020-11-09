@@ -58,6 +58,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5d3fc5c1_20663e30",
+        "filename": "src/compiler/translator/tree_ops/RewriteInterpolateAtOffset.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-09T16:46:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c17aaa56_289a9d60",
+      "range": {
+        "startLine": 95,
+        "startChar": 24,
+        "endLine": 95,
+        "endChar": 36
+      },
+      "revId": "4d3e455ffe9b41ad3d8f4fc0ad5d011adc0b9be9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a03655b4_954d86a8",
@@ -81,6 +105,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f8567df2_4e88d230",
+        "filename": "src/compiler/translator/tree_ops/RewriteInterpolateAtOffset.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-09T16:46:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a03655b4_954d86a8",
+      "range": {
+        "startLine": 132,
+        "startChar": 8,
+        "endLine": 132,
+        "endChar": 20
+      },
+      "revId": "4d3e455ffe9b41ad3d8f4fc0ad5d011adc0b9be9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "324dab39_5d14a7fc",
@@ -94,6 +142,30 @@
       "writtenOn": "2020-11-09T16:22:36Z",
       "side": 1,
       "message": "Did you maybe take this from RewriteDfdy.h? This is no longer true, we have prerotation too to take care of. That file needs to be updated too.",
+      "range": {
+        "startLine": 10,
+        "startChar": 60,
+        "endLine": 10,
+        "endChar": 74
+      },
+      "revId": "4d3e455ffe9b41ad3d8f4fc0ad5d011adc0b9be9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f5a8ff31_e5bb1bf0",
+        "filename": "src/compiler/translator/tree_ops/RewriteInterpolateAtOffset.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-09T16:46:05Z",
+      "side": 1,
+      "message": "\u003e Did you maybe take this from RewriteDfdy.h?\n\nyes, will modify the comment.",
+      "parentUuid": "324dab39_5d14a7fc",
       "range": {
         "startLine": 10,
         "startChar": 60,
