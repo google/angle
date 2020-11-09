@@ -1,0 +1,135 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f6ef8832_6ff2f4f7",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 1149,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-11-09T23:39:42Z",
+      "side": 1,
+      "message": "Now that we are in RendererVk it\u0027s possible for multiple contexts to call CommandQueue::finishToSerial which should then protect mInFlightCommands from threaded access.",
+      "revId": "3d659afa87ce83632a9c930368de4a9bff357f99",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "89fa0af0_0a81ef42",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 1245,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-11-09T23:39:42Z",
+      "side": 1,
+      "message": "mutex for mInFlightCommands?",
+      "revId": "3d659afa87ce83632a9c930368de4a9bff357f99",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "59d2fab3_16cfedb0",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 191,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-11-09T23:39:42Z",
+      "side": 1,
+      "message": "This removes the need for my CL to remove getLastSubmittedFence: https://chromium-review.googlesource.com/c/angle/angle/+/2491111/32\nI like moving to serials. Managing shared fences was very touchy.",
+      "revId": "3d659afa87ce83632a9c930368de4a9bff357f99",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a9640039_837b1629",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 2707,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-11-09T23:39:42Z",
+      "side": 1,
+      "message": "commandProcessor path is missing the wait.\nNeed a mCommandProcessor::waitForSerialWithUserTimeout",
+      "revId": "3d659afa87ce83632a9c930368de4a9bff357f99",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "aca71a73_d20cb62f",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 1370,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-11-09T23:39:42Z",
+      "side": 1,
+      "message": "Can remove the comment now that we are not calling getLastSubmitedFence.\nHowever, we are not necessarily getting the last serial that this context submitted so if we finish to this serial we would wait longer than necessary. Not an issue for most apps. Maybe interesting on apps that do work on multiple contexts.",
+      "range": {
+        "startLine": 1367,
+        "startChar": 0,
+        "endLine": 1370,
+        "endChar": 0
+      },
+      "revId": "3d659afa87ce83632a9c930368de4a9bff357f99",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "59dbe605_de8dcad6",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 305,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-11-09T23:39:42Z",
+      "side": 1,
+      "message": "serial corresponding to the submission fence",
+      "range": {
+        "startLine": 305,
+        "startChar": 41,
+        "endLine": 305,
+        "endChar": 57
+      },
+      "revId": "3d659afa87ce83632a9c930368de4a9bff357f99",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ae2b6c87_dd1cf5df",
+        "filename": "src/libANGLE/renderer/vulkan/SyncVk.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-11-09T23:39:42Z",
+      "side": 1,
+      "message": "I don\u0027t think this will work with async path.\nIIUC, we expect usedInRecordedCommands() to be false after the call to contextVk-\u003eflushImpl above, right?\nWhat happens if flushCommands is false? Is that still undefined behavior?",
+      "revId": "3d659afa87ce83632a9c930368de4a9bff357f99",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
