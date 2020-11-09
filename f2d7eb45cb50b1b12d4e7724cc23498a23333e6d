@@ -51,6 +51,24 @@
       "parentUuid": "3a9a6dfb_83f2a850",
       "revId": "f2d7eb45cb50b1b12d4e7724cc23498a23333e6d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "80eff7eb_8055a8f0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 20
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-09T16:31:32Z",
+      "side": 1,
+      "message": "I think that can partially test this (perhaps good to try before the exhaustive testing).  I found that running all tests at all rotations, including end2end, flushed out more bugs than the subset that cts-tradefed runs.",
+      "parentUuid": "2179d2b4_c8ad9760",
+      "revId": "f2d7eb45cb50b1b12d4e7724cc23498a23333e6d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
