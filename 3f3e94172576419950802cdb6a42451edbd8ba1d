@@ -16,6 +16,52 @@
       "message": "PTAL",
       "revId": "3f3e94172576419950802cdb6a42451edbd8ba1d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bd681aa0_0b81ffcd",
+        "filename": "src/libANGLE/renderer/vulkan/android/HardwareBufferImageSiblingVkAndroid.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 188,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-09T16:14:33Z",
+      "side": 1,
+      "message": "nit: you can remove this.",
+      "range": {
+        "startLine": 188,
+        "startChar": 23,
+        "endLine": 188,
+        "endChar": 49
+      },
+      "revId": "3f3e94172576419950802cdb6a42451edbd8ba1d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0b2367da_55a855aa",
+        "filename": "src/libANGLE/renderer/vulkan/android/HardwareBufferImageSiblingVkAndroid.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-09T16:14:33Z",
+      "side": 1,
+      "message": "nit: If you move this definition back up, you can directly have the `if` above set pNext, and remove the `additionalCreateInfo` variable.",
+      "range": {
+        "startLine": 194,
+        "startChar": 0,
+        "endLine": 197,
+        "endChar": 47
+      },
+      "revId": "3f3e94172576419950802cdb6a42451edbd8ba1d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
