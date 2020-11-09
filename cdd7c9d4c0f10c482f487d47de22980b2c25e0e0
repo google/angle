@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a4386b8d_bf367ee2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 28
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-09T16:28:53Z",
+      "side": 1,
+      "message": "Starting to look much cleaner!",
+      "revId": "cdd7c9d4c0f10c482f487d47de22980b2c25e0e0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f04328ce_6770e3ef",
+        "filename": "src/compiler/translator/TranslatorVulkan.h",
+        "patchSetId": 28
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-09T16:28:53Z",
+      "side": 1,
+      "message": "nit: capitalize for static functions",
+      "range": {
+        "startLine": 27,
+        "startChar": 25,
+        "endLine": 27,
+        "endChar": 26
+      },
+      "revId": "cdd7c9d4c0f10c482f487d47de22980b2c25e0e0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
