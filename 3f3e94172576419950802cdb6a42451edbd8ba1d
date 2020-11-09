@@ -18,6 +18,23 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ee92795f_3889633f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-09T16:22:07Z",
+      "side": 1,
+      "message": "Mohan: can you confirm the colorspace ext is disabled when the image format list ext is not available? If not please disable exposing the colorspace ext selectively.",
+      "revId": "3f3e94172576419950802cdb6a42451edbd8ba1d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "bd681aa0_0b81ffcd",
