@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "859b613c_8819beb0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-09T15:23:31Z",
+      "side": 1,
+      "message": "Courtney/Tim, here\u0027s the start of a large patch stack intended to clean up the TaskProcess/CommandQueue separation. I spoke to Courtney offline about this stack, will reach out to you as well Tim.\n\nGeoff FYI, also because this specific CL changes features names to be more consistent in the Vulkan back-end only.",
+      "revId": "b325ac791d9f2b64a58d1a0588a7e7e863836ed5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
