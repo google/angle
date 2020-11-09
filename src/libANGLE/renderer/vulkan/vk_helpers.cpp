@@ -4074,6 +4074,12 @@ void ImageHelper::barrierImpl(VkImageAspectFlags aspectMask,
     mCurrentQueueFamilyIndex = newQueueFamilyIndex;
 }
 
+template void ImageHelper::barrierImpl<rx::vk::priv::SecondaryCommandBuffer>(
+    VkImageAspectFlags aspectMask,
+    ImageLayout newLayout,
+    uint32_t newQueueFamilyIndex,
+    rx::vk::priv::SecondaryCommandBuffer *commandBuffer);
+
 bool ImageHelper::updateLayoutAndBarrier(VkImageAspectFlags aspectMask,
                                          ImageLayout newLayout,
                                          PipelineBarrier *barrier)
