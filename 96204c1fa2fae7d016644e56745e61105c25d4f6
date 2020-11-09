@@ -16,6 +16,46 @@
       "message": "Does that really happen?\nWhat can cause it?",
       "revId": "96204c1fa2fae7d016644e56745e61105c25d4f6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "08616474_3cd49d98",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-09T19:16:22Z",
+      "side": 1,
+      "message": "https://issuetracker.google.com/",
+      "range": {
+        "startLine": 77,
+        "startChar": 35,
+        "endLine": 77,
+        "endChar": 46
+      },
+      "revId": "96204c1fa2fae7d016644e56745e61105c25d4f6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d107c7e2_ad6b7b13",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1255,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-09T19:16:22Z",
+      "side": 1,
+      "message": "Can this be a reference now?",
+      "revId": "96204c1fa2fae7d016644e56745e61105c25d4f6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
