@@ -58,6 +58,7 @@ def main():
         '--directory',
         '--recursive',
         '--extract',
+        '--num_threads=4',
         '--bucket',
         'chrome-angle-capture-binaries',
         trace_dir,
