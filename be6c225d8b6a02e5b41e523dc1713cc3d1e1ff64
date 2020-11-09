@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "eb435d29_c327e1b5",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-09T20:47:06Z",
+      "side": 1,
+      "message": "issuetracker.google.com",
+      "range": {
+        "startLine": 57,
+        "startChar": 32,
+        "endLine": 57,
+        "endChar": 43
+      },
+      "revId": "be6c225d8b6a02e5b41e523dc1713cc3d1e1ff64",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8326f538_74c620c2",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 724,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-09T20:47:06Z",
+      "side": 1,
+      "message": "Need to revert this line.",
+      "revId": "be6c225d8b6a02e5b41e523dc1713cc3d1e1ff64",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d6e261e9_93ff5a15",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 912,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-09T20:47:06Z",
+      "side": 1,
+      "message": "Probably worth reverting this too, to clarify which Context the comment is referring to.",
+      "revId": "be6c225d8b6a02e5b41e523dc1713cc3d1e1ff64",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
