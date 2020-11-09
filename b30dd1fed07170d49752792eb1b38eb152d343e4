@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0e9f9296_8a14bca8",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-09T19:19:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "502ef2d6_ed08d43b",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 12,
+        "endChar": 48
+      },
+      "revId": "b30dd1fed07170d49752792eb1b38eb152d343e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "bc9cb87b_7fa422c0",
@@ -37,6 +61,30 @@
       "writtenOn": "2020-11-09T15:36:32Z",
       "side": 1,
       "message": "small nit: formatting got messed up here, maybe use\n\n\"Test: ImageTest.Source2DTarget2DTargetTextureRespecification*\"",
+      "range": {
+        "startLine": 17,
+        "startChar": 0,
+        "endLine": 18,
+        "endChar": 78
+      },
+      "revId": "b30dd1fed07170d49752792eb1b38eb152d343e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "46ddb7a3_b2eab134",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-09T19:19:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bc9cb87b_7fa422c0",
       "range": {
         "startLine": 17,
         "startChar": 0,
@@ -121,6 +169,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7b3e080b_01a08cc7",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1721,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-09T19:19:21Z",
+      "side": 1,
+      "message": "Done, had to remove reference to \"mState.getType()\" as well",
+      "parentUuid": "cbf054f6_a0f15ae4",
+      "range": {
+        "startLine": 1721,
+        "startChar": 25,
+        "endLine": 1721,
+        "endChar": 53
+      },
+      "revId": "b30dd1fed07170d49752792eb1b38eb152d343e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "dee25ce3_ea71dfa9",
@@ -134,6 +206,30 @@
       "writtenOn": "2020-11-09T15:39:11Z",
       "side": 1,
       "message": "This is resetting mRedefinedLevels, but CopyAndStageImageData needs it. However, I don\u0027t believe you can actually get to this path with mRedefinedLevels having any bits. Could you please add an `ASSERT(!mRedefinedLevels.any());` before this call? You can add a comment saying that if any level is redefined but the image is not owned by the Texture, it\u0027s already released and deleted by `TextureVk::redefineLevel`.",
+      "range": {
+        "startLine": 1904,
+        "startChar": 8,
+        "endLine": 1904,
+        "endChar": 20
+      },
+      "revId": "b30dd1fed07170d49752792eb1b38eb152d343e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9a764b13_e1898658",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1904,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-09T19:19:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dee25ce3_ea71dfa9",
       "range": {
         "startLine": 1904,
         "startChar": 8,
@@ -169,6 +265,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "131b3b81_cb579341",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1915,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-09T19:19:21Z",
+      "side": 1,
+      "message": "yes because `mImage` will be a nullptr after `releaseImage` if `ownsCurrentImage` is false",
+      "parentUuid": "b48d05b4_b2e6c92f",
+      "range": {
+        "startLine": 1909,
+        "startChar": 0,
+        "endLine": 1915,
+        "endChar": 0
+      },
+      "revId": "b30dd1fed07170d49752792eb1b38eb152d343e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "3b69aa48_fc328c39",
         "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
         "patchSetId": 1
@@ -180,6 +300,24 @@
       "writtenOn": "2020-11-09T15:39:11Z",
       "side": 1,
       "message": "This was done before the check for `mImage-\u003evalid()` so that ImageHelper:;mBaseLevel and ImageHelper::mMaxLevel are updated even if the image is not valid. Looking at the code again, looks like updateBaseMaxLevels is already checking for this. Could you ASSERT inside the if above (the one that says `!mImage-\u003evalid()`) that the base/max in the image are already baseLevel and maxLevel?",
+      "revId": "b30dd1fed07170d49752792eb1b38eb152d343e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ace1c3ee_394e6a25",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1922,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-09T19:19:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3b69aa48_fc328c39",
       "revId": "b30dd1fed07170d49752792eb1b38eb152d343e4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
@@ -197,6 +335,30 @@
       "writtenOn": "2020-11-09T15:39:11Z",
       "side": 1,
       "message": "typo",
+      "range": {
+        "startLine": 1929,
+        "startChar": 42,
+        "endLine": 1929,
+        "endChar": 46
+      },
+      "revId": "b30dd1fed07170d49752792eb1b38eb152d343e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4ab87ce8_c8b84113",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1929,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-09T19:19:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1f5253ce_7063caa5",
       "range": {
         "startLine": 1929,
         "startChar": 42,
@@ -230,6 +392,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "807e985b_0668a526",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 401,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-09T19:19:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "238602f3_671a8f2a",
+      "range": {
+        "startLine": 401,
+        "startChar": 18,
+        "endLine": 401,
+        "endChar": 39
+      },
+      "revId": "b30dd1fed07170d49752792eb1b38eb152d343e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "60fee91e_1070d892",
@@ -243,6 +429,24 @@
       "writtenOn": "2020-11-09T15:39:11Z",
       "side": 1,
       "message": "Could you please add a test that does the following?\n\n- Create EGL image with GL_RGBA\n- Verify results\n- Redefine level 0 incompatibly, like with GL_RGBA8UI.\n- Verify results\n\nJust to verify that ASSERT I mentioned above.",
+      "revId": "b30dd1fed07170d49752792eb1b38eb152d343e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9c7406ca_dcffc7dd",
+        "filename": "src/tests/gl_tests/ImageTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1551,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-09T19:19:21Z",
+      "side": 1,
+      "message": "Done, added explicit level respecification itself",
+      "parentUuid": "60fee91e_1070d892",
       "revId": "b30dd1fed07170d49752792eb1b38eb152d343e4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
