@@ -374,9 +374,20 @@ bool TextureVk::isFastUnpackPossible(const vk::Format &vkFormat, size_t offset) 
     // Conditions to determine if fast unpacking is possible
     // 1. Image must be well defined to unpack directly to it
     //    TODO(http://anglebug.com/4222) Create and stage a temp image instead
-    // 2. Can't perform a fast copy for emulated formats
+    // 2. Can't perform a fast copy for depth/stencil, except from non-emulated depth or stencil
+    //    to emulated depth/stencil.  GL requires depth and stencil data to be packed, while Vulkan
+    //    requires them to be separate.
+    // 2. Can't perform a fast copy for emulated formats, except from non-emulated depth or stencil
+    //    to emulated depth/stencil.
     // 3. vkCmdCopyBufferToImage requires byte offset to be a multiple of 4
-    return mImage->valid() && vkFormat.intendedFormatID == vkFormat.actualImageFormatID &&
+    const angle::Format &bufferFormat = vkFormat.actualBufferFormat(false);
+    const bool isCombinedDepthStencil = bufferFormat.depthBits > 0 && bufferFormat.stencilBits > 0;
+    const bool isDepthXorStencil = (bufferFormat.depthBits > 0 && bufferFormat.stencilBits == 0) ||
+                                   (bufferFormat.depthBits == 0 && bufferFormat.stencilBits > 0);
+    const bool isCompatibleDepth = vkFormat.intendedFormat().depthBits == bufferFormat.depthBits;
+    return mImage->valid() && !isCombinedDepthStencil &&
+           (vkFormat.intendedFormatID == vkFormat.actualImageFormatID ||
+            (isDepthXorStencil && isCompatibleDepth)) &&
            (offset & (kBufferOffsetMultiple - 1)) == 0;
 }
 
@@ -439,11 +450,9 @@ angle::Result TextureVk::setSubImageImpl(const gl::Context *context,
         // Note: cannot directly copy from a depth/stencil PBO.  GL requires depth and stencil data
         // to be packed, while Vulkan requires them to be separate.
         const VkImageAspectFlags aspectFlags = vk::GetFormatAspectFlags(vkFormat.intendedFormat());
-        const bool isCombinedDepthStencil =
-            (aspectFlags & kDepthStencilAspects) == kDepthStencilAspects;
 
         if (!shouldUpdateBeStaged(gl::LevelIndex(index.getLevelIndex())) &&
-            isFastUnpackPossible(vkFormat, offsetBytes) && !isCombinedDepthStencil)
+            isFastUnpackPossible(vkFormat, offsetBytes))
         {
             GLuint pixelSize   = formatInfo.pixelBytes;
             GLuint blockWidth  = formatInfo.compressedBlockWidth;
