@@ -2707,8 +2707,6 @@ TEST_P(ImageTest, SourceRenderbufferTargetTexture)
 TEST_P(ImageTest, SourceRenderbufferTargetTexture_Colorspace)
 {
     ANGLE_SKIP_TEST_IF(!hasImageGLColorspaceExt());
-    // Need to add support for VK_KHR_image_format_list to Renderbuffer: http://anglebug.com/5281
-    ANGLE_SKIP_TEST_IF(IsVulkan());
     SourceRenderbufferTargetTexture_helper(kColorspaceAttribs);
 }
 
@@ -2752,8 +2750,6 @@ TEST_P(ImageTest, SourceRenderbufferTargetTextureExternal)
 TEST_P(ImageTest, SourceRenderbufferTargetTextureExternal_Colorspace)
 {
     ANGLE_SKIP_TEST_IF(!hasImageGLColorspaceExt());
-    // Need to add support for VK_KHR_image_format_list to Renderbuffer: http://anglebug.com/5281
-    ANGLE_SKIP_TEST_IF(IsVulkan());
     SourceRenderbufferTargetTextureExternal_helper(kColorspaceAttribs);
 }
 
@@ -2800,8 +2796,6 @@ TEST_P(ImageTestES3, SourceRenderbufferTargetTextureExternalESSL3)
 TEST_P(ImageTestES3, SourceRenderbufferTargetTextureExternalESSL3_Colorspace)
 {
     ANGLE_SKIP_TEST_IF(!hasImageGLColorspaceExt());
-    // Need to add support for VK_KHR_image_format_list to Renderbuffer: http://anglebug.com/5281
-    ANGLE_SKIP_TEST_IF(IsVulkan());
     SourceRenderbufferTargetTextureExternalESSL3_helper(kColorspaceAttribs);
 }
 
