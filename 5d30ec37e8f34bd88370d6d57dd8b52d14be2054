@@ -317,6 +317,24 @@
       "parentUuid": "c8fb88e4_3805beb1",
       "revId": "5d30ec37e8f34bd88370d6d57dd8b52d14be2054",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b70b0cad_1758d231",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-10T15:34:14Z",
+      "side": 1,
+      "message": "Cody, press \"U\" in the zoom dialog and you\u0027ll see the glitchy pixels.",
+      "parentUuid": "c8fb88e4_3805beb1",
+      "revId": "5d30ec37e8f34bd88370d6d57dd8b52d14be2054",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
