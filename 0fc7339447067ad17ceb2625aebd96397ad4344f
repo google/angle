@@ -16,6 +16,24 @@
       "message": "Hey Anders, can you take a look at those triage results and let us know if they look correct? Moving Corentin to cc.",
       "revId": "0fc7339447067ad17ceb2625aebd96397ad4344f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f72833af_5f325d99",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1298773
+      },
+      "writtenOn": "2020-11-10T07:17:39Z",
+      "side": 1,
+      "message": "The first one looks bad.\n\nThere are some issues with the patch.\nSome tests are failing besides the golden images, so I\u0027ll see about those first.",
+      "parentUuid": "bd5d8c6a_519cb68f",
+      "revId": "0fc7339447067ad17ceb2625aebd96397ad4344f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
