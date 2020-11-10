@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "97209b16_12d42bed",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-10T18:32:46Z",
+      "side": 1,
+      "message": "Ack, I\u0027ll leave the b/ links if that\u0027s OK. These should hopefully clear up quickly. They also match the bug descriptions fwiw.",
+      "parentUuid": "eb435d29_c327e1b5",
+      "range": {
+        "startLine": 57,
+        "startChar": 32,
+        "endLine": 57,
+        "endChar": 43
+      },
+      "revId": "be6c225d8b6a02e5b41e523dc1713cc3d1e1ff64",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8326f538_74c620c2",
@@ -41,6 +65,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "43bfcce9_6a28327d",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 724,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-10T18:32:46Z",
+      "side": 1,
+      "message": "Done, thanks for catching.",
+      "parentUuid": "8326f538_74c620c2",
+      "revId": "be6c225d8b6a02e5b41e523dc1713cc3d1e1ff64",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d6e261e9_93ff5a15",
@@ -54,6 +96,24 @@
       "writtenOn": "2020-11-09T20:47:06Z",
       "side": 1,
       "message": "Probably worth reverting this too, to clarify which Context the comment is referring to.",
+      "revId": "be6c225d8b6a02e5b41e523dc1713cc3d1e1ff64",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "99561cff_8c5feade",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 912,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-10T18:32:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d6e261e9_93ff5a15",
       "revId": "be6c225d8b6a02e5b41e523dc1713cc3d1e1ff64",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
