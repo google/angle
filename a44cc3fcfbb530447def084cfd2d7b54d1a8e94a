@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8e28e96e_e5e2170e",
+        "filename": "src/tests/test_utils/ANGLETest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 343,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-10T13:29:53Z",
+      "side": 1,
+      "message": "nit: I\u0027d clarify this is an extra swap after each test.",
+      "range": {
+        "startLine": 343,
+        "startChar": 54,
+        "endLine": 343,
+        "endChar": 58
+      },
+      "revId": "a44cc3fcfbb530447def084cfd2d7b54d1a8e94a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ec53b302_3264c4db",
+        "filename": "src/tests/test_utils/ANGLETest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 635,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-10T13:29:53Z",
+      "side": 1,
+      "message": "swap here already.",
+      "range": {
+        "startLine": 627,
+        "startChar": 0,
+        "endLine": 635,
+        "endChar": 0
+      },
+      "revId": "a44cc3fcfbb530447def084cfd2d7b54d1a8e94a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "49bebf50_2acbe940",
+        "filename": "src/tests/test_utils/ANGLETest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 658,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-10T13:29:53Z",
+      "side": 1,
+      "message": "swap here already.",
+      "range": {
+        "startLine": 658,
+        "startChar": 0,
+        "endLine": 658,
+        "endChar": 18
+      },
+      "revId": "a44cc3fcfbb530447def084cfd2d7b54d1a8e94a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fd4eba27_eb52b74f",
+        "filename": "src/tests/test_utils/ANGLETest.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 612,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-10T13:29:53Z",
+      "side": 1,
+      "message": "is it possible to put this in ANGLETestSetUp?",
+      "range": {
+        "startLine": 608,
+        "startChar": 0,
+        "endLine": 612,
+        "endChar": 9
+      },
+      "revId": "a44cc3fcfbb530447def084cfd2d7b54d1a8e94a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "40af32ba_08690fdb",
+        "filename": "src/tests/test_utils/ANGLETest.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 621,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-10T13:29:53Z",
+      "side": 1,
+      "message": "is it really necessary to put this here? we already have a swap in the cpp, did you just need an extra swap? can you do it where we have existing swaps?",
+      "range": {
+        "startLine": 617,
+        "startChar": 0,
+        "endLine": 621,
+        "endChar": 9
+      },
+      "revId": "a44cc3fcfbb530447def084cfd2d7b54d1a8e94a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
