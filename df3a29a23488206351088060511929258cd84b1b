@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "97a25cdf_92f0c7d5",
+        "filename": "src/libANGLE/renderer/vulkan/SecondaryCommandBuffer.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 830,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-10T03:39:41Z",
+      "side": 1,
+      "message": "Should be false. open() will set it to true.",
+      "range": {
+        "startLine": 830,
+        "startChar": 14,
+        "endLine": 830,
+        "endChar": 18
+      },
+      "revId": "df3a29a23488206351088060511929258cd84b1b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
