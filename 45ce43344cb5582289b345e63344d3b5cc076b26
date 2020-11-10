@@ -16,6 +16,23 @@
       "message": "Phew, I just finished glossing over the whole stack. I think it\u0027s safe to say a design doc is in order!",
       "revId": "45ce43344cb5582289b345e63344d3b5cc076b26",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bc3ce030_4deb93f0",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 2699,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-11-10T16:44:32Z",
+      "side": 1,
+      "message": "Is there one more step coming?\nE.g. we\u0027d talked about a CommandProcessor implementation class that would allow us to get rid of this if by instantiating either a threaded or non-threaded CommandProcessor interface.",
+      "revId": "45ce43344cb5582289b345e63344d3b5cc076b26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
