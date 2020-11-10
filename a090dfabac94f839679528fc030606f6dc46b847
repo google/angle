@@ -22,6 +22,52 @@
       },
       "revId": "a090dfabac94f839679528fc030606f6dc46b847",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c0567e4a_deb5e6be",
+        "filename": "src/libANGLE/renderer/vulkan/QueryVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 190,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-11-10T16:30:16Z",
+      "side": 1,
+      "message": "looks like we have defined a renderer variable, line 179",
+      "range": {
+        "startLine": 190,
+        "startChar": 12,
+        "endLine": 190,
+        "endChar": 36
+      },
+      "revId": "a090dfabac94f839679528fc030606f6dc46b847",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "43db7583_e9d4aeb2",
+        "filename": "src/libANGLE/renderer/vulkan/QueryVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 193,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-11-10T16:30:16Z",
+      "side": 1,
+      "message": "renderer",
+      "range": {
+        "startLine": 193,
+        "startChar": 12,
+        "endLine": 193,
+        "endChar": 36
+      },
+      "revId": "a090dfabac94f839679528fc030606f6dc46b847",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
