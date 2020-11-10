@@ -245,6 +245,24 @@
       "parentUuid": "17dbdc10_b4887e0a",
       "revId": "5d30ec37e8f34bd88370d6d57dd8b52d14be2054",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "599c3ab2_b11d573b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2020-11-10T15:03:57Z",
+      "side": 1,
+      "message": "Maybe requiring pixel perfect results on each run even on the same hardware is not possible.  The pixel differences were very minor.  Even well behaving apps and drivers can have non-deterministic results.  We can either keep having developers verify the differences or automatically allow very small differences.  The question would be how small.",
+      "parentUuid": "286682ec_3224a8e3",
+      "revId": "5d30ec37e8f34bd88370d6d57dd8b52d14be2054",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
