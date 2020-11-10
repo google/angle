@@ -335,6 +335,24 @@
       "parentUuid": "c8fb88e4_3805beb1",
       "revId": "5d30ec37e8f34bd88370d6d57dd8b52d14be2054",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5579d022_b752f760",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-10T15:37:08Z",
+      "side": 1,
+      "message": "OK I verified Gold is still working:\n\nhttps://angle-gold.skia.org/search?issue\u003d2527728\u0026crs\u003dgerrit\u0026corpus\u003dangle\n\nNot sure what changed here. Anyway I\u0027m fine to let this drop and re-evaluate as new things come up.",
+      "parentUuid": "b70b0cad_1758d231",
+      "revId": "5d30ec37e8f34bd88370d6d57dd8b52d14be2054",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
