@@ -52,6 +52,23 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9896731d_ddee22e2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 30
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-10T01:10:53Z",
+      "side": 1,
+      "message": "I re-reviewed this CL and LGTM.\n\nCharlie and I have been communicating about testing.  I reproduced and investigated the EGLPreRotation failures that Charlie saw, and filed a bug.  I support the idea of dropping Pixel 2 in cases where the tests pass on Pixel 4.  I\u0027m happy to land this as soon as we believe test results indicate that no regressions are introduced (seems close).  I\u0027ll +2 contingent on good test results.\n\nGreat job!",
+      "revId": "2da337f067a035b54b6dded0ea626c5bfa3d0cc5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "54152c22_1095b804",

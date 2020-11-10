@@ -223,6 +223,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7bcb9b09_ead6f238",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 18
+      },
+      "lineNbr": 796,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-10T01:10:53Z",
+      "side": 1,
+      "message": "I\u0027m not sure that removing it from there is best, but we can discuss that on the other CL.",
+      "parentUuid": "75fda0bd_29a4b09f",
+      "range": {
+        "startLine": 783,
+        "startChar": 0,
+        "endLine": 796,
+        "endChar": 2
+      },
+      "revId": "0b0d7a483a5edc5f8eaf492c3a9cc4198e7b498e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6224de2b_7ebaf920",
@@ -340,6 +364,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f2f5be36_4c8d1d32",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-10T01:10:53Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "461cde73_0fc184d0",
+      "range": {
+        "startLine": 123,
+        "startChar": 31,
+        "endLine": 123,
+        "endChar": 43
+      },
+      "revId": "0b0d7a483a5edc5f8eaf492c3a9cc4198e7b498e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f5589af4_b5cbb04d",
@@ -377,6 +425,30 @@
       "side": 1,
       "message": "Because isViewportFlipEnabledForDrawFBO() is equivalent to the \"Flipped\" bit in the rotation enum in the shader\u0027s specialization constant. My intention here is not to change the actual math in this CL.",
       "parentUuid": "f5589af4_b5cbb04d",
+      "range": {
+        "startLine": 124,
+        "startChar": 45,
+        "endLine": 124,
+        "endChar": 49
+      },
+      "revId": "0b0d7a483a5edc5f8eaf492c3a9cc4198e7b498e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e802a776_b180765a",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-10T01:10:53Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "07d2147c_1e136b9d",
       "range": {
         "startLine": 124,
         "startChar": 45,
@@ -990,6 +1062,30 @@
       "writtenOn": "2020-11-06T21:30:32Z",
       "side": 1,
       "message": "Charlie and I discussed this in Chat.  The goal to do less work in the shader, including WRT flipY.\n\nWe should add a comment somewhere that pre-rotation only supports the types of rotations that a normal Android user does (i.e. Identity and the Rotate* values, not the Flipped* values).\n\nWhile I added these flipped-rotation values into the enum, I never tested them nor tried to support them.  My goal was to make normal Android rotations work.  I think there are a lot of ANGLE paths that don\u0027t look for these values.  The bottom line is that I don\u0027t know whether this will or won\u0027t work.  I think we will need full testing with all rotations to ensure there are no regressions.  In other words, test all of dEQP, end2end tests, etc, each with the device forced into a given rotation.  It\u0027s a very manually-intensive effort.",
+      "range": {
+        "startLine": 3462,
+        "startChar": 8,
+        "endLine": 3464,
+        "endChar": 80
+      },
+      "revId": "0b0d7a483a5edc5f8eaf492c3a9cc4198e7b498e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fbb8e142_17460232",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 3464,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-10T01:10:53Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "a861e3cd_620a45f6",
       "range": {
         "startLine": 3462,
         "startChar": 8,
