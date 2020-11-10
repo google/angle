@@ -209,6 +209,24 @@
       "message": "BTW, I tried to reproduce the \"marvel\" pixel differences on my Intel and NVIDIA devices and I do not see those pixels generated.",
       "revId": "5d30ec37e8f34bd88370d6d57dd8b52d14be2054",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "17dbdc10_b4887e0a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-10T02:26:08Z",
+      "side": 1,
+      "message": "Ok, could be the bots have older drivers. Jamie, is it possible that a recent change of yours broke error reporting? The previous two runs had identical results.\n\nBy the way, I realized I could optimize emulated depth/stencil as well, but since this is green, I\u0027m going to land this and make that a follow up.",
+      "parentUuid": "d5d9d10e_fa3421c4",
+      "revId": "5d30ec37e8f34bd88370d6d57dd8b52d14be2054",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
