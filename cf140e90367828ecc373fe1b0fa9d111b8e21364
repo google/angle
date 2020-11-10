@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "207f5d65_3efc8724",
+        "filename": "src/tests/test_utils/ANGLETest.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 218,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-10T17:23:37Z",
+      "side": 1,
+      "message": "nit: preference for not exposing this outside of ANGLETest.",
+      "range": {
+        "startLine": 216,
+        "startChar": 0,
+        "endLine": 218,
+        "endChar": 51
+      },
+      "revId": "cf140e90367828ecc373fe1b0fa9d111b8e21364",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
