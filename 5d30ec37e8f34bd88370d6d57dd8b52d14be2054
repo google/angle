@@ -299,6 +299,24 @@
       "parentUuid": "7433ea85_9bb4377c",
       "revId": "5d30ec37e8f34bd88370d6d57dd8b52d14be2054",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ab4ac646_e2314c6e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2020-11-10T15:29:12Z",
+      "side": 1,
+      "message": "How is this diff corruption vs a minor difference?  Do you mean because it only happened once?  Would like to understand how you are classifying it.\n\nhttps://angle-gold.skia.org/diff?test\u003dmarvel_contest_of_champions\u0026left\u003d734f0877e4ff92ab19c269a4ec685978\u0026right\u003dee5487926b82ed28f5075e2327be5516\u0026changelist_id\u003d2520108\u0026crs\u003dgerrit",
+      "parentUuid": "c8fb88e4_3805beb1",
+      "revId": "5d30ec37e8f34bd88370d6d57dd8b52d14be2054",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
