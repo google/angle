@@ -24,6 +24,23 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "44138381_adfaa1a5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 14
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-10T19:19:49Z",
+      "side": 1,
+      "message": "As I noted in one of the comments, I\u0027m concerned that the \u0027mFeatures.commandProcessor.enabled \u003d true\u0027 path isn\u0027t being tested with these CLs and some subtle bugs may be creeping in with each of these CLs.   Can you do a dry run with that enabled on some of these larger CLs to see how things look?",
+      "revId": "3d659afa87ce83632a9c930368de4a9bff357f99",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f6ef8832_6ff2f4f7",
@@ -83,6 +100,23 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "be9c85f6_55cb55bc",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 1264,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-10T19:19:49Z",
+      "side": 1,
+      "message": "Does this indicate a logic error within ANGLE or bad GLES?   Regardless, can we add an ASSERT() here to make it more obvious while debugging that things are going wrong, or are there tests that hit the issue?",
+      "revId": "3d659afa87ce83632a9c930368de4a9bff357f99",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "59d2fab3_16cfedb0",
         "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.h",
         "patchSetId": 14
@@ -94,6 +128,75 @@
       "writtenOn": "2020-11-09T23:39:42Z",
       "side": 1,
       "message": "This removes the need for my CL to remove getLastSubmittedFence: https://chromium-review.googlesource.com/c/angle/angle/+/2491111/32\nI like moving to serials. Managing shared fences was very touchy.",
+      "revId": "3d659afa87ce83632a9c930368de4a9bff357f99",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c2db2b1c_5694273a",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 4532,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-10T19:19:49Z",
+      "side": 1,
+      "message": "https://issuetracker.google.com/",
+      "range": {
+        "startLine": 4532,
+        "startChar": 44,
+        "endLine": 4532,
+        "endChar": 55
+      },
+      "revId": "3d659afa87ce83632a9c930368de4a9bff357f99",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fbbcdead_bff5390a",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 4671,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-10T19:19:49Z",
+      "side": 1,
+      "message": "https://issuetracker.google.com/",
+      "range": {
+        "startLine": 4671,
+        "startChar": 44,
+        "endLine": 4671,
+        "endChar": 55
+      },
+      "revId": "3d659afa87ce83632a9c930368de4a9bff357f99",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "91145cdb_e2ea0922",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 4674,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-10T19:19:49Z",
+      "side": 1,
+      "message": "mOutsideRenderPassCommands\n\nAssuming this line is necessary and since CQ is green with this bug, this is likely a sign that these CLs are only being half-tested since it\u0027s not being run with both the feature enabled and disabled.   With this many CLs, there\u0027s a good chance other bugs are sneaking in, so it\u0027s probably worth uploading a patchset that enables the feature to do a dry run and verify nothing is regressing.",
+      "range": {
+        "startLine": 4674,
+        "startChar": 39,
+        "endLine": 4674,
+        "endChar": 58
+      },
       "revId": "3d659afa87ce83632a9c930368de4a9bff357f99",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
@@ -140,6 +243,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "fc911015_bcc786e2",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 327,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-10T19:19:49Z",
+      "side": 1,
+      "message": "https://issuetracker.google.com/",
+      "range": {
+        "startLine": 327,
+        "startChar": 60,
+        "endLine": 327,
+        "endChar": 71
+      },
+      "revId": "3d659afa87ce83632a9c930368de4a9bff357f99",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "8431bc64_0f3de8aa",
         "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
         "patchSetId": 14
@@ -151,6 +277,30 @@
       "writtenOn": "2020-11-10T03:25:55Z",
       "side": 1,
       "message": "Can you make this a pointer instead? It looks fragile, like next time I see this I\u0027m gonna wanna remove the \u0026 impulsively.",
+      "range": {
+        "startLine": 1244,
+        "startChar": 11,
+        "endLine": 1244,
+        "endChar": 12
+      },
+      "revId": "3d659afa87ce83632a9c930368de4a9bff357f99",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "62bfb6fa_d5b5d69f",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 1244,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-10T19:19:49Z",
+      "side": 1,
+      "message": "What\u0027s fragile about it?",
+      "parentUuid": "8431bc64_0f3de8aa",
       "range": {
         "startLine": 1244,
         "startChar": 11,
@@ -209,6 +359,23 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "a5c09129_e9cbfe9a",
+        "filename": "src/libANGLE/renderer/vulkan/SyncVk.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-10T19:19:49Z",
+      "side": 1,
+      "message": "Similar to above, is it possible to ASSERT() here to make it more obvious things are in a bad state?",
+      "revId": "3d659afa87ce83632a9c930368de4a9bff357f99",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "ae2b6c87_dd1cf5df",
         "filename": "src/libANGLE/renderer/vulkan/SyncVk.cpp",
         "patchSetId": 14
@@ -220,6 +387,24 @@
       "writtenOn": "2020-11-09T23:39:42Z",
       "side": 1,
       "message": "I don\u0027t think this will work with async path.\nIIUC, we expect usedInRecordedCommands() to be false after the call to contextVk-\u003eflushImpl above, right?\nWhat happens if flushCommands is false? Is that still undefined behavior?",
+      "revId": "3d659afa87ce83632a9c930368de4a9bff357f99",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6648e878_0153bbb2",
+        "filename": "src/libANGLE/renderer/vulkan/SyncVk.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-10T19:19:49Z",
+      "side": 1,
+      "message": "It\u0027s a GL user error to not signal the flush, either with the flag or manually (though using GL_SYNC_FLUSH_COMMANDS_BIT is recommended since this command stalls the CPU).   For further details:\nhttps://www.khronos.org/opengl/wiki/Sync_Object\n\nIt looks like this should be safe, since commandProcessorSyncErrorsAndQueueCommand() calls releaseResourceUsesAndUpdateSerials() on the main thread, rather than the worker thread updating the resource list.",
+      "parentUuid": "ae2b6c87_dd1cf5df",
       "revId": "3d659afa87ce83632a9c930368de4a9bff357f99",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
