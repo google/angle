@@ -227,6 +227,24 @@
       "parentUuid": "d5d9d10e_fa3421c4",
       "revId": "5d30ec37e8f34bd88370d6d57dd8b52d14be2054",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "286682ec_3224a8e3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-10T13:39:35Z",
+      "side": 1,
+      "message": "I don\u0027t know what you mean by error reporting. I worry that the gold tests right now are totally broken.",
+      "parentUuid": "17dbdc10_b4887e0a",
+      "revId": "5d30ec37e8f34bd88370d6d57dd8b52d14be2054",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
