@@ -51,6 +51,23 @@
       "message": "Hmmm... Those tests aren\u0027t failing locally for me. (GTX 1080 and driver 457.09 on Windows.)\nMaybe the patch is fine.\n\nThe failing tests and gold images are on \"10de:1cb3-418.56\" i.e. Quadro P400 and driver 418.56, on Linux. I happen to have a Quadro P400 so I\u0027ll try to investigate a bit.",
       "revId": "0fc7339447067ad17ceb2625aebd96397ad4344f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a4243623_ff9a3d6c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1298773
+      },
+      "writtenOn": "2020-11-10T09:29:07Z",
+      "side": 1,
+      "message": "Not able to repro the failing tests on Linux with Quadro P400 and driver 440.100.\n\nI not able to install 418.56 driver due to installer failures. Maybe I\u0027ll troubleshoot that for a bit.",
+      "revId": "0fc7339447067ad17ceb2625aebd96397ad4344f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
