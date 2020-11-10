@@ -35,6 +35,23 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a2a7747f_cc027527",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 14
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-10T17:46:33Z",
+      "side": 1,
+      "message": "Thanks all for the review!",
+      "revId": "408e967255c5d79aa00d49a88652b74fd4f26835",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b4748705_3babf6a5",
@@ -48,6 +65,30 @@
       "writtenOn": "2020-11-10T13:36:59Z",
       "side": 1,
       "message": "usual nit",
+      "range": {
+        "startLine": 29,
+        "startChar": 25,
+        "endLine": 29,
+        "endChar": 28
+      },
+      "revId": "408e967255c5d79aa00d49a88652b74fd4f26835",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c4683f57_53e9fab4",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-10T17:46:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b4748705_3babf6a5",
       "range": {
         "startLine": 29,
         "startChar": 25,
@@ -81,6 +122,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "52adb98d_c6942c6d",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramExecutableVk.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 206,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-10T17:46:33Z",
+      "side": 1,
+      "message": "Done. C++ sometimes is pretty neat.",
+      "parentUuid": "317510b9_2632f379",
+      "range": {
+        "startLine": 203,
+        "startChar": 0,
+        "endLine": 206,
+        "endChar": 63
+      },
+      "revId": "408e967255c5d79aa00d49a88652b74fd4f26835",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7546b3d3_a4678af4",
@@ -94,6 +159,30 @@
       "writtenOn": "2020-11-10T13:36:59Z",
       "side": 1,
       "message": "nit: this uses potentially undefined AFAIK, use gl::BitCast.",
+      "range": {
+        "startLine": 126,
+        "startChar": 39,
+        "endLine": 126,
+        "endChar": 46
+      },
+      "revId": "408e967255c5d79aa00d49a88652b74fd4f26835",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e29db9bc_bfbe606d",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramExecutableVk.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-10T17:46:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7546b3d3_a4678af4",
       "range": {
         "startLine": 126,
         "startChar": 39,
@@ -127,6 +216,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3257e303_8de0f91e",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 161,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-10T17:46:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8746610d_ea2646c5",
+      "range": {
+        "startLine": 161,
+        "startChar": 42,
+        "endLine": 161,
+        "endChar": 55
+      },
+      "revId": "408e967255c5d79aa00d49a88652b74fd4f26835",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9db7972b_4c20eabe",
@@ -140,6 +253,30 @@
       "writtenOn": "2020-11-10T13:36:59Z",
       "side": 1,
       "message": "nit: here too, {} is fine and scales to any number of constants.",
+      "range": {
+        "startLine": 6501,
+        "startChar": 69,
+        "endLine": 6501,
+        "endChar": 75
+      },
+      "revId": "408e967255c5d79aa00d49a88652b74fd4f26835",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c08253aa_242d987f",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 6501,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-10T17:46:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9db7972b_4c20eabe",
       "range": {
         "startLine": 6501,
         "startChar": 69,
@@ -173,6 +310,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4e0de8b2_299f47c4",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 681,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-10T17:46:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4c37625a_328aabb2",
+      "range": {
+        "startLine": 681,
+        "startChar": 7,
+        "endLine": 681,
+        "endChar": 29
+      },
+      "revId": "408e967255c5d79aa00d49a88652b74fd4f26835",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "335c6c6f_b6eedd54",
@@ -186,6 +347,30 @@
       "writtenOn": "2020-11-10T13:36:59Z",
       "side": 1,
       "message": "nit: also \u003d {} is fine too to init to zero.",
+      "range": {
+        "startLine": 91,
+        "startChar": 48,
+        "endLine": 91,
+        "endChar": 55
+      },
+      "revId": "408e967255c5d79aa00d49a88652b74fd4f26835",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7edce34b_ae7215bb",
+        "filename": "src/tests/perf_tests/VulkanPipelineCachePerf.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-10T17:46:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "335c6c6f_b6eedd54",
       "range": {
         "startLine": 91,
         "startChar": 48,
