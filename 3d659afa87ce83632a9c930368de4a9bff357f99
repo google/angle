@@ -313,6 +313,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "9829b734_3d7d3afe",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 1244,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-10T21:16:11Z",
+      "side": 1,
+      "message": "That on first glance doesn\u0027t look like it needs \u0026, and if you remove it there\u0027s no complaint from the compiler.",
+      "parentUuid": "62bfb6fa_d5b5d69f",
+      "range": {
+        "startLine": 1244,
+        "startChar": 11,
+        "endLine": 1244,
+        "endChar": 12
+      },
+      "revId": "3d659afa87ce83632a9c930368de4a9bff357f99",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "aca71a73_d20cb62f",
         "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
         "patchSetId": 14
