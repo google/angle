@@ -69,6 +69,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "650603f1_c4731407",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 30
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-10T04:04:14Z",
+      "side": 1,
+      "message": "\"maximum number of literal constants\", that\u0027s so ugh. Sounds like it\u0027s not doing constant propagation when specialization constants are specified, which is just terrible.\n\nDoes the feature flag involve putting back the rotation driver uniforms? In that case, I\u0027d much rather see test suppression or disabling pre-rotation on Pixel 2 (preferably the former).",
+      "parentUuid": "d9dbe8e2_b544d218",
+      "revId": "2da337f067a035b54b6dded0ea626c5bfa3d0cc5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "54152c22_1095b804",
