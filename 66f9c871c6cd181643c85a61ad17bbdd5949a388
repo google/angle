@@ -73,6 +73,30 @@
       },
       "revId": "66f9c871c6cd181643c85a61ad17bbdd5949a388",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c948633b_5ff68613",
+        "filename": "src/tests/restricted_traces/BUILD.gn",
+        "patchSetId": 5
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-10T15:44:41Z",
+      "side": 1,
+      "message": "GN is funny here. It doesn\u0027t use a scoped variable. It uses the same variable for each foreach loop iteration and complains if we\u0027re replacing a non-empty list. Added a comment.",
+      "parentUuid": "08adf12c_84f33204",
+      "range": {
+        "startLine": 26,
+        "startChar": 0,
+        "endLine": 26,
+        "endChar": 20
+      },
+      "revId": "66f9c871c6cd181643c85a61ad17bbdd5949a388",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
