@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "56e9082c_55cc7b49",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 583,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-11-10T00:31:26Z",
+      "side": 1,
+      "message": "reserve makes me very nervous.\nHow do we make sure that commands are submitted in the right order if they are allocated and submitted in separate steps.\nI see you\u0027ve marked that as a TBD issue in a later file.",
+      "revId": "3f67a737eb336c3b17a3f89ad58a8ccea38e4945",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ad9c7bcb_a3f06b02",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1181,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-11-10T00:31:26Z",
+      "side": 1,
+      "message": "mutex?",
+      "revId": "3f67a737eb336c3b17a3f89ad58a8ccea38e4945",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c685cf02_a961a843",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 518,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-11-10T00:31:26Z",
+      "side": 1,
+      "message": "comment goes better above line 530",
+      "revId": "3f67a737eb336c3b17a3f89ad58a8ccea38e4945",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "be2d66df_c8830e02",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 2587,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-11-10T00:31:26Z",
+      "side": 1,
+      "message": "This is done by the worker thread when using the commandProcessor path, so should this inside the else clause?\nThat or we could move the waitSemaphore*.clear() calls outside the else as well.\nThey will all be no-ops when using the commandProcessor path since that transfers those resources.",
+      "revId": "3f67a737eb336c3b17a3f89ad58a8ccea38e4945",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
