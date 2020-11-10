@@ -65,6 +65,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "cf6787d5_61e2ff6c",
+        "filename": "src/tests/test_utils/ANGLETest.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 602,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-10T03:38:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "be8c7705_aab7965f",
+      "range": {
+        "startLine": 602,
+        "startChar": 8,
+        "endLine": 602,
+        "endChar": 14
+      },
+      "revId": "357b23a7e00fca85e574103d825f27720c2b92a3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "4626ed25_1bc2e853",
@@ -90,6 +114,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "508a53d3_99a23905",
+        "filename": "src/tests/test_utils/ANGLETest.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 611,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-10T03:38:45Z",
+      "side": 1,
+      "message": "How do I move these into the .cpp?   The class template is generating a lot of errors:\n\n    template \u003ctypename Params\u003e\n    void ANGLETestWithParam\u003cParams\u003e::SetUp()\n    {\n        ANGLETestBase::ANGLETestSetUp();\n        testSetUp();\n        // Delay test startup to allow a debugger to attach.\n        if (angle::GetTestStartDelaySeconds() !\u003d 0)\n        {\n            angle::Sleep(angle::GetTestStartDelaySeconds() * 1000);\n        }\n    }\n\nGives:\n\n    python \"../../build/toolchain/gcc_link_wrapper.py\" --output\u003d\"./angle_end2end_tests\" -- ../../third_party/llvm-build/Release+Asserts/bin/clang++ -Wl,--fatal-warnings -Wl,--build-id -fPIC -Wl,-z,noexecstack -Wl,-z,relro -Wl,-z,now -Wl,-z,defs -Wl,--as-needed -fuse-ld\u003dlld -Wl,--color-diagnostics -Wl,--no-call-graph-profile-sort -m64 -Werror -Wl,--gdb-index -rdynamic -nostdlib++ --sysroot\u003d../../build/linux/debian_sid_amd64-sysroot -L../../build/linux/debian_sid_amd64-sysroot/usr/local/lib/x86_64-linux-gnu -L../../build/linux/debian_sid_amd64-sysroot/lib/x86_64-linux-gnu -L../../build/linux/debian_sid_amd64-sysroot/usr/lib/x86_64-linux-gnu -pie -Wl,--disable-new-dtags -Wl,--export-dynamic -Wl,-rpath\u003d\\$ORIGIN -o \"./angle_end2end_tests\" -Wl,--start-group @\"./angle_end2end_tests.rsp\" ./libangle_util.so -Wl,--end-group  -ldl -lpthread -lrt -lX11 -lXi -lXext -lpci -lxcb\n    ld.lld: error: undefined symbol: ANGLETestWithParam\u003cangle::PlatformParameters\u003e::SetUp()\n    \u003e\u003e\u003e referenced by EGLAndroidFrameBufferTargetTest.cpp\n    \u003e\u003e\u003e               obj/src/tests/angle_end2end_tests/EGLAndroidFrameBufferTargetTest.o:(vtable for EGLAndroidFrameBufferTargetTest_MatchFramebufferTargetConfigs_Test)\n    \u003e\u003e\u003e referenced by EGLAndroidFrameBufferTargetTest.cpp\n    \u003e\u003e\u003e               obj/src/tests/angle_end2end_tests/EGLAndroidFrameBufferTargetTest.o:(vtable for EGLAndroidFrameBufferTargetTest)\n    \u003e\u003e\u003e referenced by EGLAndroidFrameBufferTargetTest.cpp\n    \u003e\u003e\u003e               obj/src/tests/angle_end2end_tests/EGLAndroidFrameBufferTargetTest.o:(vtable for ANGLETestWithParam\u003cangle::PlatformParameters\u003e)\n    \u003e\u003e\u003e referenced 2734 more times\n\n    ld.lld: error: undefined symbol: ANGLETestWithParam\u003cangle::PlatformParameters\u003e::TearDown()\n    \u003e\u003e\u003e referenced by EGLAndroidFrameBufferTargetTest.cpp\n    \u003e\u003e\u003e               obj/src/tests/angle_end2end_tests/EGLAndroidFrameBufferTargetTest.o:(vtable for EGLAndroidFrameBufferTargetTest_MatchFramebufferTargetConfigs_Test)\n    \u003e\u003e\u003e referenced by EGLAndroidFrameBufferTargetTest.cpp\n    \u003e\u003e\u003e               obj/src/tests/angle_end2end_tests/EGLAndroidFrameBufferTargetTest.o:(vtable for EGLAndroidFrameBufferTargetTest)\n    \u003e\u003e\u003e referenced by EGLAndroidFrameBufferTargetTest.cpp\n    \u003e\u003e\u003e               obj/src/tests/angle_end2end_tests/EGLAndroidFrameBufferTargetTest.o:(vtable for ANGLETestWithParam\u003cangle::PlatformParameters\u003e)\n    \u003e\u003e\u003e referenced 2734 more times\n\n\nI tried adding \"template \u003c\u003e\" versions of each too, but that doesn\u0027t help.   I don\u0027t see anywhere else in ANGLE that has a default template argument like ANGLETestWithParam is using which I can try and copy, and I\u0027m not having any luck with googling an answer.",
+      "parentUuid": "4626ed25_1bc2e853",
+      "range": {
+        "startLine": 607,
+        "startChar": 4,
+        "endLine": 611,
+        "endChar": 9
+      },
+      "revId": "357b23a7e00fca85e574103d825f27720c2b92a3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "0aae4592_ce23d566",
         "filename": "src/tests/test_utils/angle_test_instantiate.cpp",
         "patchSetId": 1
@@ -101,6 +149,30 @@
       "writtenOn": "2020-11-06T01:39:21Z",
       "side": 1,
       "message": "nit: put all this in angletest.cpp, no need to expose it to this file. it\u0027s sort of historical reasons why some stuff is in here.",
+      "range": {
+        "startLine": 157,
+        "startChar": 0,
+        "endLine": 159,
+        "endChar": 35
+      },
+      "revId": "357b23a7e00fca85e574103d825f27720c2b92a3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "64bdef78_a012a024",
+        "filename": "src/tests/test_utils/angle_test_instantiate.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 159,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-10T03:38:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0aae4592_ce23d566",
       "range": {
         "startLine": 157,
         "startChar": 0,
