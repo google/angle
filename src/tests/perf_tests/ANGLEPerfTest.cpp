@@ -93,6 +93,8 @@ angle::TraceEventHandle AddPerfTraceEvent(angle::PlatformMethods *platform,
 
     ANGLERenderTest *renderTest = static_cast<ANGLERenderTest *>(platform->context);
 
+    std::lock_guard<std::mutex> lock(renderTest->getTraceEventMutex());
+
     uint32_t tid = renderTest->getCurrentThreadSerial();
 
     std::vector<TraceEvent> &buffer = renderTest->getTraceEventBuffer();
