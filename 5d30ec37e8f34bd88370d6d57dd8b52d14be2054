@@ -353,6 +353,24 @@
       "parentUuid": "b70b0cad_1758d231",
       "revId": "5d30ec37e8f34bd88370d6d57dd8b52d14be2054",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c2597a9e_385189ba",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-10T15:38:08Z",
+      "side": 1,
+      "message": "I was testing GOLD at the same time, and confirm it\u0027s working: https://chromium-review.googlesource.com/c/angle/angle/+/2529191",
+      "parentUuid": "5579d022_b752f760",
+      "revId": "5d30ec37e8f34bd88370d6d57dd8b52d14be2054",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
