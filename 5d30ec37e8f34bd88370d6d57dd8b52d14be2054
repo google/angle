@@ -281,6 +281,24 @@
       "parentUuid": "599c3ab2_b11d573b",
       "revId": "5d30ec37e8f34bd88370d6d57dd8b52d14be2054",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c8fb88e4_3805beb1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-10T15:26:59Z",
+      "side": 1,
+      "message": "I think the marvel failure might have been a flake, because it didn\u0027t fail on subsequent runs. Like an actual driver error type flake. I\u0027m worried right now that gold just isn\u0027t working at all, will try to test that out. Like Shabi I\u0027m not worried about pixel differences we\u0027ve seen so far unless it becomes cumbersome with hundreds of traces.",
+      "parentUuid": "7433ea85_9bb4377c",
+      "revId": "5d30ec37e8f34bd88370d6d57dd8b52d14be2054",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
