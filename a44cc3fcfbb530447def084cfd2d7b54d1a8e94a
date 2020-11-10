@@ -26,6 +26,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "df0e89e5_f6fe75f8",
+        "filename": "src/tests/test_utils/ANGLETest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 343,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-10T16:52:23Z",
+      "side": 1,
+      "message": "Removed.",
+      "parentUuid": "8e28e96e_e5e2170e",
+      "range": {
+        "startLine": 343,
+        "startChar": 54,
+        "endLine": 343,
+        "endChar": 58
+      },
+      "revId": "a44cc3fcfbb530447def084cfd2d7b54d1a8e94a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "ec53b302_3264c4db",
         "filename": "src/tests/test_utils/ANGLETest.cpp",
         "patchSetId": 2
@@ -37,6 +61,30 @@
       "writtenOn": "2020-11-10T13:29:53Z",
       "side": 1,
       "message": "swap here already.",
+      "range": {
+        "startLine": 627,
+        "startChar": 0,
+        "endLine": 635,
+        "endChar": 0
+      },
+      "revId": "a44cc3fcfbb530447def084cfd2d7b54d1a8e94a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5f627ea4_adfd25e5",
+        "filename": "src/tests/test_utils/ANGLETest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 635,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-10T16:52:23Z",
+      "side": 1,
+      "message": "This is part of setting up the test.   We want the swapBuffers at the end of the test to indicate to Renderdoc that the test is over and the frame is \u0027done\u0027.",
+      "parentUuid": "ec53b302_3264c4db",
       "range": {
         "startLine": 627,
         "startChar": 0,
@@ -70,6 +118,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "01f83573_7431f997",
+        "filename": "src/tests/test_utils/ANGLETest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 658,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-10T16:52:23Z",
+      "side": 1,
+      "message": "This may be good enough.",
+      "parentUuid": "49bebf50_2acbe940",
+      "range": {
+        "startLine": 658,
+        "startChar": 0,
+        "endLine": 658,
+        "endChar": 18
+      },
+      "revId": "a44cc3fcfbb530447def084cfd2d7b54d1a8e94a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "fd4eba27_eb52b74f",
@@ -93,6 +165,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "69f029ad_8ead179f",
+        "filename": "src/tests/test_utils/ANGLETest.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 612,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-10T16:52:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fd4eba27_eb52b74f",
+      "range": {
+        "startLine": 608,
+        "startChar": 0,
+        "endLine": 612,
+        "endChar": 9
+      },
+      "revId": "a44cc3fcfbb530447def084cfd2d7b54d1a8e94a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "40af32ba_08690fdb",
@@ -106,6 +202,30 @@
       "writtenOn": "2020-11-10T13:29:53Z",
       "side": 1,
       "message": "is it really necessary to put this here? we already have a swap in the cpp, did you just need an extra swap? can you do it where we have existing swaps?",
+      "range": {
+        "startLine": 617,
+        "startChar": 0,
+        "endLine": 621,
+        "endChar": 9
+      },
+      "revId": "a44cc3fcfbb530447def084cfd2d7b54d1a8e94a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f723151f_f4ead222",
+        "filename": "src/tests/test_utils/ANGLETest.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 621,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-10T16:52:23Z",
+      "side": 1,
+      "message": "Shabi requested this:\n\n\u003e Shahbaz Youssefi, Thu 12:08 PM\n\u003e I noticed this too with recent renderdoc. If you add a swapBuffers() to the beginning of the test, it works with me\n\u003e \n\u003e Also if the test fails, sometimes it doesn\u0027t capture the last frame, in that case I add a swapBuffers() to the end of the test.\n\u003e \n\u003e You can try having your --renderdoc flag add that call before and after tests.\n\nSince (as you pointed out) there\u0027s already one in ANGLETestTearDown(), this may not work either.   \n\nShabi - Unless you object, I\u0027m going to remove this flag for now since I don\u0027t have a good way to prove this is actually helping.   It should be easy enough to follow what was done here to add it back once we\u0027ve got a good repro that shows its helpful though.   Let me know when you\u0027re seeing a case where this is helpful and we can get this back in.",
+      "parentUuid": "40af32ba_08690fdb",
       "range": {
         "startLine": 617,
         "startChar": 0,
