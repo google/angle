@@ -144,6 +144,30 @@
       },
       "revId": "2da337f067a035b54b6dded0ea626c5bfa3d0cc5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "94cc04c0_8771ed9c",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 30
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-10T23:24:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "54152c22_1095b804",
+      "range": {
+        "startLine": 29,
+        "startChar": 25,
+        "endLine": 29,
+        "endChar": 28
+      },
+      "revId": "2da337f067a035b54b6dded0ea626c5bfa3d0cc5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
