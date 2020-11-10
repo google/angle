@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "00c19f1f_affbcf90",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-10T02:56:56Z",
+      "side": 1,
+      "message": "PTAL\n\nI\u0027ve gone back to PS3, which works with the SwS/VVL libraries.",
+      "revId": "d08348ff5d78cfb616fb6b1d6d5910c7a6548eba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
