@@ -35,6 +35,23 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d9dbe8e2_b544d218",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 30
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-10T00:49:57Z",
+      "side": 1,
+      "message": "Thanks Courtney and Ian\u0027s help on helping out figure out the android bot failures. There are two category failures here. 1) there are 4 dEQP.GLES2 tests and dEQP.GLES3 tests are failing. I think what happened is that there is a limit on the number of literal constants the shader can use. Before this CL, these are uniforms. With this CL, we are using literal constants for the matrix and this pixel2\u0027s \n shader compiler might not doing enough optimization for to remove the literal constants. These tests already are using the maximum number of literal constants, adding more causing the to fail. But there is no error form compiler or angle, so I think there might be a bug in QC driver/compiler there. All these tests passes on pixel4. The second failure is that gles31 tests shard time out. Courtney is able to reproduce it on pixel2 as well. Before my CL, tests takes 228 seconds. With this CL, it takes 482 seconds on my Pixel 2. On my pixel4 devices, there is almost no difference on the test time, both finish around 46 seconds. Again, I believe this is pixel2 driver bug as well. In some way more compile time is expected since this optimization is try to shift the work from run time to compile time. Apparently some driver able to do better than others on the compile time. The tests are doing the opposite of the real apps, that real app spending more time on executing shaders, but bot tests are spending most of time compiling shaders and only draw a small quad. \n\nI am currently doing the full deqp test localy on the pixel4 device, before and after the CL, with the screen auto rotated. If results looks good, my intention is to add a feature flag and disable this on pixel2. If anyone has other ideas/feedback, please feel free to ping me.\n  ",
+      "revId": "2da337f067a035b54b6dded0ea626c5bfa3d0cc5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "54152c22_1095b804",
