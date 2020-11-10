@@ -263,6 +263,24 @@
       "parentUuid": "286682ec_3224a8e3",
       "revId": "5d30ec37e8f34bd88370d6d57dd8b52d14be2054",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7433ea85_9bb4377c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-10T15:11:06Z",
+      "side": 1,
+      "message": "s/error reporting/turning the bot red on error. GOLD being broken is what I\u0027m afraid of too.\n\n@Cody, so far it\u0027s been ok actually. Minor differences only seem to happen when the actual commands have changed. We (I at least) can live with that. But FYI, the GOLD failure with marvel was actual corruption, not a minor difference.",
+      "parentUuid": "599c3ab2_b11d573b",
+      "revId": "5d30ec37e8f34bd88370d6d57dd8b52d14be2054",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
