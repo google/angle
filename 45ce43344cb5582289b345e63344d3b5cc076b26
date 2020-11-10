@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "50d5872b_5d971ebf",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-10T03:43:00Z",
+      "side": 1,
+      "message": "Phew, I just finished glossing over the whole stack. I think it\u0027s safe to say a design doc is in order!",
+      "revId": "45ce43344cb5582289b345e63344d3b5cc076b26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
