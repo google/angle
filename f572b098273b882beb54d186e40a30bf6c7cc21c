@@ -50,6 +50,23 @@
       "message": "anything else shabi?",
       "revId": "f572b098273b882beb54d186e40a30bf6c7cc21c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0d16b9f3_3e63fb82",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-10T03:52:19Z",
+      "side": 1,
+      "message": "Thanks for working through the comments! Let\u0027s land it.",
+      "revId": "f572b098273b882beb54d186e40a30bf6c7cc21c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
