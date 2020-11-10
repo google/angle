@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "784ea0e7_3ac3550c",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 735,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-11-10T00:59:59Z",
+      "side": 0,
+      "message": "I passed in the Context here so that in the single threaded form of this code we would use the applications vk::Context. Simplifies error handling.\nIIRC, the main context does have a mutex around it\u0027s error processing so it might be okay to call it even from the worker thread which would simplify error handling.",
+      "revId": "3f67a737eb336c3b17a3f89ad58a8ccea38e4945",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
