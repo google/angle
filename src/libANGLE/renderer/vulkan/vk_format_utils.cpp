@@ -64,6 +64,12 @@ void FillTextureFormatCaps(RendererVk *renderer, VkFormat format, gl::TextureCap
 
 bool HasFullBufferFormatSupport(RendererVk *renderer, VkFormat vkFormat)
 {
+    // Note: GL_EXT_texture_buffer support uses the same vkBufferFormat that is determined by
+    // Format::initBufferFallback, which uses this function.  That relies on the fact that formats
+    // required for GL_EXT_texture_buffer all have mandatory VERTEX_BUFFER feature support in
+    // Vulkan.  If this function is changed to test for more features in such a way that makes any
+    // of those formats use a fallback format, the implementation of GL_EXT_texture_buffer must be
+    // modified not to use vkBufferFormat.
     return renderer->hasBufferFormatFeatureBits(vkFormat, VK_FORMAT_FEATURE_VERTEX_BUFFER_BIT);
 }
 

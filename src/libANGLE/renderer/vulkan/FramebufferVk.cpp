@@ -1278,7 +1278,7 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
 
 void FramebufferVk::updateColorResolveAttachment(
     uint32_t colorIndexGL,
-    vk::ImageViewSubresourceSerial resolveImageViewSerial)
+    vk::ImageOrBufferViewSubresourceSerial resolveImageViewSerial)
 {
     mCurrentFramebufferDesc.updateColorResolve(colorIndexGL, resolveImageViewSerial);
     mFramebuffer = nullptr;
@@ -1288,7 +1288,7 @@ void FramebufferVk::updateColorResolveAttachment(
 void FramebufferVk::removeColorResolveAttachment(uint32_t colorIndexGL)
 {
     mCurrentFramebufferDesc.updateColorResolve(colorIndexGL,
-                                               vk::kInvalidImageViewSubresourceSerial);
+                                               vk::kInvalidImageOrBufferViewSubresourceSerial);
     mFramebuffer = nullptr;
     mRenderPassDesc.removeColorResolveAttachment(colorIndexGL);
 }
@@ -1311,9 +1311,9 @@ angle::Result FramebufferVk::resolveColorWithSubpass(ContextVk *contextVk,
     // - Assign the draw FBO's color attachment Serial to the read FBO's resolve attachment
     // - Deactivate the source Framebuffer, since the description changed
     // - Update the renderpass description to indicate there's a resolve attachment
-    vk::ImageViewSubresourceSerial resolveImageViewSerial =
+    vk::ImageOrBufferViewSubresourceSerial resolveImageViewSerial =
         mCurrentFramebufferDesc.getColorImageViewSerial(drawColorIndexGL);
-    ASSERT(resolveImageViewSerial.imageViewSerial.valid());
+    ASSERT(resolveImageViewSerial.viewSerial.valid());
     srcFramebufferVk->updateColorResolveAttachment(readColorIndexGL, resolveImageViewSerial);
 
     // Since the source FBO was updated with a resolve attachment it didn't have when the render
@@ -1602,7 +1602,8 @@ angle::Result FramebufferVk::updateColorAttachment(const gl::Context *context,
     }
     else
     {
-        mCurrentFramebufferDesc.updateColor(colorIndexGL, vk::kInvalidImageViewSubresourceSerial);
+        mCurrentFramebufferDesc.updateColor(colorIndexGL,
+                                            vk::kInvalidImageOrBufferViewSubresourceSerial);
     }
 
     if (enabledResolve)
@@ -1613,7 +1614,7 @@ angle::Result FramebufferVk::updateColorAttachment(const gl::Context *context,
     else
     {
         mCurrentFramebufferDesc.updateColorResolve(colorIndexGL,
-                                                   vk::kInvalidImageViewSubresourceSerial);
+                                                   vk::kInvalidImageOrBufferViewSubresourceSerial);
     }
 
     return angle::Result::Continue;
@@ -1654,7 +1655,7 @@ void FramebufferVk::updateDepthStencilAttachmentSerial(ContextVk *contextVk)
     }
     else
     {
-        mCurrentFramebufferDesc.updateDepthStencil(vk::kInvalidImageViewSubresourceSerial);
+        mCurrentFramebufferDesc.updateDepthStencil(vk::kInvalidImageOrBufferViewSubresourceSerial);
     }
 
     if (depthStencilRT != nullptr && depthStencilRT->hasResolveAttachment())
@@ -1664,7 +1665,8 @@ void FramebufferVk::updateDepthStencilAttachmentSerial(ContextVk *contextVk)
     }
     else
     {
-        mCurrentFramebufferDesc.updateDepthStencilResolve(vk::kInvalidImageViewSubresourceSerial);
+        mCurrentFramebufferDesc.updateDepthStencilResolve(
+            vk::kInvalidImageOrBufferViewSubresourceSerial);
     }
 }
 

@@ -63,6 +63,13 @@ constexpr angle::PackedEnumMap<PipelineStage, VkPipelineStageFlagBits> kPipeline
     {PipelineStage::BottomOfPipe, VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT},
     {PipelineStage::Host, VK_PIPELINE_STAGE_HOST_BIT}};
 
+constexpr gl::ShaderMap<vk::PipelineStage> kPipelineStageShaderMap = {
+    {gl::ShaderType::Vertex, vk::PipelineStage::VertexShader},
+    {gl::ShaderType::Fragment, vk::PipelineStage::FragmentShader},
+    {gl::ShaderType::Geometry, vk::PipelineStage::GeometryShader},
+    {gl::ShaderType::Compute, vk::PipelineStage::ComputeShader},
+};
+
 constexpr size_t kDefaultPoolAllocatorPageSize = 16 * 1024;
 
 struct ImageMemoryBarrierData
@@ -2886,6 +2893,11 @@ void LineLoopHelper::Draw(uint32_t count, uint32_t baseVertex, CommandBuffer *co
     commandBuffer->drawIndexedBaseVertex(count, baseVertex);
 }
 
+PipelineStage GetPipelineStage(gl::ShaderType stage)
+{
+    return kPipelineStageShaderMap[stage];
+}
+
 // PipelineBarrier implementation.
 void PipelineBarrier::addDiagnosticsString(std::ostringstream &out) const
 {
@@ -2901,7 +2913,6 @@ BufferHelper::BufferHelper()
     : mMemoryPropertyFlags{},
       mSize(0),
       mMappedMemory(nullptr),
-      mViewFormat(nullptr),
       mCurrentQueueFamilyIndex(std::numeric_limits<uint32_t>::max()),
       mCurrentWriteAccess(0),
       mCurrentReadAccess(0),
@@ -3017,21 +3028,18 @@ void BufferHelper::destroy(RendererVk *renderer)
 {
     VkDevice device = renderer->getDevice();
     unmap(renderer);
-    mSize       = 0;
-    mViewFormat = nullptr;
+    mSize = 0;
 
     mBuffer.destroy(device);
-    mBufferView.destroy(device);
     mAllocation.destroy(renderer->getAllocator());
 }
 
 void BufferHelper::release(RendererVk *renderer)
 {
     unmap(renderer);
-    mSize       = 0;
-    mViewFormat = nullptr;
+    mSize = 0;
 
-    renderer->collectGarbageAndReinit(&mUse, &mBuffer, &mBufferView, &mAllocation);
+    renderer->collectGarbageAndReinit(&mUse, &mBuffer, &mAllocation);
 }
 
 angle::Result BufferHelper::copyFromBuffer(ContextVk *contextVk,
@@ -3047,29 +3055,6 @@ angle::Result BufferHelper::copyFromBuffer(ContextVk *contextVk,
     ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(access, &commandBuffer));
 
     commandBuffer->copyBuffer(srcBuffer->getBuffer(), mBuffer, regionCount, copyRegions);
-
-    return angle::Result::Continue;
-}
-
-angle::Result BufferHelper::initBufferView(ContextVk *contextVk, const Format &format)
-{
-    ASSERT(format.valid());
-
-    if (mBufferView.valid())
-    {
-        ASSERT(mViewFormat->vkBufferFormat == format.vkBufferFormat);
-        return angle::Result::Continue;
-    }
-
-    VkBufferViewCreateInfo viewCreateInfo = {};
-    viewCreateInfo.sType                  = VK_STRUCTURE_TYPE_BUFFER_VIEW_CREATE_INFO;
-    viewCreateInfo.buffer                 = mBuffer.getHandle();
-    viewCreateInfo.format                 = format.vkBufferFormat;
-    viewCreateInfo.offset                 = 0;
-    viewCreateInfo.range                  = mSize;
-
-    ANGLE_VK_TRY(contextVk, mBufferView.init(contextVk->getDevice(), viewCreateInfo));
-    mViewFormat = &format;
 
     return angle::Result::Continue;
 }
@@ -6175,6 +6160,8 @@ ImageViewHelper::ImageViewHelper() : mCurrentMaxLevel(0), mLinearColorspace(true
 
 ImageViewHelper::ImageViewHelper(ImageViewHelper &&other) : Resource(std::move(other))
 {
+    std::swap(mUse, other.mUse);
+
     std::swap(mCurrentMaxLevel, other.mCurrentMaxLevel);
     std::swap(mPerLevelLinearReadImageViews, other.mPerLevelLinearReadImageViews);
     std::swap(mPerLevelSRGBReadImageViews, other.mPerLevelSRGBReadImageViews);
@@ -6196,7 +6183,7 @@ void ImageViewHelper::init(RendererVk *renderer)
 {
     if (!mImageViewSerial.valid())
     {
-        mImageViewSerial = renderer->getResourceSerialFactory().generateImageViewSerial();
+        mImageViewSerial = renderer->getResourceSerialFactory().generateImageOrBufferViewSerial();
     }
 }
 
@@ -6238,7 +6225,7 @@ void ImageViewHelper::release(RendererVk *renderer)
     }
 
     // Update image view serial.
-    mImageViewSerial = renderer->getResourceSerialFactory().generateImageViewSerial();
+    mImageViewSerial = renderer->getResourceSerialFactory().generateImageOrBufferViewSerial();
 }
 
 void ImageViewHelper::destroy(VkDevice device)
@@ -6265,7 +6252,7 @@ void ImageViewHelper::destroy(VkDevice device)
     }
     mLayerLevelDrawImageViews.clear();
 
-    mImageViewSerial = kInvalidImageViewSerial;
+    mImageViewSerial = kInvalidImageOrBufferViewSerial;
 }
 
 angle::Result ImageViewHelper::initReadViews(ContextVk *contextVk,
@@ -6520,7 +6507,7 @@ angle::Result ImageViewHelper::getLevelLayerDrawImageView(ContextVk *contextVk,
                                     imageView, levelVk, 1, layer, 1);
 }
 
-ImageViewSubresourceSerial ImageViewHelper::getSubresourceSerial(
+ImageOrBufferViewSubresourceSerial ImageViewHelper::getSubresourceSerial(
     gl::LevelIndex levelGL,
     uint32_t levelCount,
     uint32_t layer,
@@ -6530,14 +6517,93 @@ ImageViewSubresourceSerial ImageViewHelper::getSubresourceSerial(
 {
     ASSERT(mImageViewSerial.valid());
 
-    ImageViewSubresourceSerial serial;
-    serial.imageViewSerial = mImageViewSerial;
+    ImageOrBufferViewSubresourceSerial serial;
+    serial.viewSerial = mImageViewSerial;
     SetBitField(serial.subresource.level, levelGL.get());
     SetBitField(serial.subresource.levelCount, levelCount);
     SetBitField(serial.subresource.layer, layer);
     SetBitField(serial.subresource.singleLayer, layerMode == LayerMode::Single ? 1 : 0);
     SetBitField(serial.subresource.srgbDecodeMode, srgbDecodeMode);
     SetBitField(serial.subresource.srgbOverrideMode, srgbOverrideMode);
+    return serial;
+}
+
+// BufferViewHelper implementation.
+BufferViewHelper::BufferViewHelper() {}
+
+BufferViewHelper::BufferViewHelper(BufferViewHelper &&other) : Resource(std::move(other))
+{
+    std::swap(mView, other.mView);
+    std::swap(mViewSerial, other.mViewSerial);
+}
+
+BufferViewHelper::~BufferViewHelper() {}
+
+void BufferViewHelper::init(RendererVk *renderer)
+{
+    if (!mViewSerial.valid())
+    {
+        mViewSerial = renderer->getResourceSerialFactory().generateImageOrBufferViewSerial();
+    }
+}
+
+void BufferViewHelper::release(RendererVk *renderer)
+{
+    if (mView.valid())
+    {
+        std::vector<GarbageObject> garbage;
+        garbage.emplace_back(GetGarbage(&mView));
+
+        renderer->collectGarbage(std::move(mUse), std::move(garbage));
+
+        // Ensure the resource use is always valid.
+        mUse.init();
+    }
+
+    // Update image view serial.
+    mViewSerial = renderer->getResourceSerialFactory().generateImageOrBufferViewSerial();
+}
+
+void BufferViewHelper::destroy(VkDevice device)
+{
+    mView.destroy(device);
+    mViewSerial = kInvalidImageOrBufferViewSerial;
+}
+
+angle::Result BufferViewHelper::initView(ContextVk *contextVk,
+                                         const BufferHelper &buffer,
+                                         const Format &format,
+                                         VkDeviceSize offset,
+                                         VkDeviceSize size)
+{
+    ASSERT(format.valid());
+    ASSERT(!mView.valid());
+
+    // If the size is not a multiple of pixelBytes, remove the extra bytes.  The last element cannot
+    // be read anyway, and this is a requirement of Vulkan (for size to be a multiple of format
+    // texel block size).
+    const angle::Format &bufferFormat = format.actualBufferFormat(false);
+    const GLuint pixelBytes           = bufferFormat.pixelBytes;
+    size -= size % pixelBytes;
+
+    VkBufferViewCreateInfo viewCreateInfo = {};
+    viewCreateInfo.sType                  = VK_STRUCTURE_TYPE_BUFFER_VIEW_CREATE_INFO;
+    viewCreateInfo.buffer                 = buffer.getBuffer().getHandle();
+    viewCreateInfo.format                 = format.vkBufferFormat;
+    viewCreateInfo.offset                 = offset;
+    viewCreateInfo.range                  = size;
+
+    ANGLE_VK_TRY(contextVk, mView.init(contextVk->getDevice(), viewCreateInfo));
+
+    return angle::Result::Continue;
+}
+
+ImageOrBufferViewSubresourceSerial BufferViewHelper::getSerial() const
+{
+    ASSERT(mViewSerial.valid());
+
+    ImageOrBufferViewSubresourceSerial serial = {};
+    serial.viewSerial                         = mViewSerial;
     return serial;
 }
 

@@ -1725,7 +1725,7 @@ angle::Result TextureGL::setSwizzle(const gl::Context *context, GLint swizzle[4]
 angle::Result TextureGL::setBuffer(const gl::Context *context, GLenum internalFormat)
 {
     const FunctionsGL *functions                              = GetFunctionsGL(context);
-    const gl::OffsetBindingPointer<gl::Buffer> &bufferBinding = mState.mBuffer;
+    const gl::OffsetBindingPointer<gl::Buffer> &bufferBinding = mState.getBuffer();
     const gl::Buffer *buffer                                  = bufferBinding.get();
     const GLintptr offset                                     = bufferBinding.getOffset();
     const GLsizeiptr size                                     = bufferBinding.getSize();
@@ -1946,7 +1946,7 @@ const LevelInfoGL &TextureGL::getBaseLevelInfo() const
 
 gl::TextureType TextureGL::getType() const
 {
-    return mState.mType;
+    return mState.getType();
 }
 
 angle::Result TextureGL::initializeContents(const gl::Context *context,

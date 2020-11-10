@@ -64,25 +64,25 @@ void RenderTargetVk::reset()
     mLayerIndex        = 0;
 }
 
-vk::ImageViewSubresourceSerial RenderTargetVk::getSubresourceSerialImpl(
+vk::ImageOrBufferViewSubresourceSerial RenderTargetVk::getSubresourceSerialImpl(
     vk::ImageViewHelper *imageViews) const
 {
     ASSERT(imageViews);
     ASSERT(mLayerIndex < std::numeric_limits<uint16_t>::max());
     ASSERT(mLevelIndexGL.get() < std::numeric_limits<uint16_t>::max());
 
-    vk::ImageViewSubresourceSerial imageViewSerial =
+    vk::ImageOrBufferViewSubresourceSerial imageViewSerial =
         imageViews->getSubresourceSerial(mLevelIndexGL, 1, mLayerIndex, vk::LayerMode::Single,
                                          vk::SrgbDecodeMode::SkipDecode, gl::SrgbOverride::Default);
     return imageViewSerial;
 }
 
-vk::ImageViewSubresourceSerial RenderTargetVk::getDrawSubresourceSerial() const
+vk::ImageOrBufferViewSubresourceSerial RenderTargetVk::getDrawSubresourceSerial() const
 {
     return getSubresourceSerialImpl(mImageViews);
 }
 
-vk::ImageViewSubresourceSerial RenderTargetVk::getResolveSubresourceSerial() const
+vk::ImageOrBufferViewSubresourceSerial RenderTargetVk::getResolveSubresourceSerial() const
 {
     return getSubresourceSerialImpl(mResolveImageViews);
 }

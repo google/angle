@@ -62,8 +62,8 @@ class RenderTargetVk final : public FramebufferAttachmentRenderTarget
               RenderTargetTransience transience);
     void reset();
 
-    vk::ImageViewSubresourceSerial getDrawSubresourceSerial() const;
-    vk::ImageViewSubresourceSerial getResolveSubresourceSerial() const;
+    vk::ImageOrBufferViewSubresourceSerial getDrawSubresourceSerial() const;
+    vk::ImageOrBufferViewSubresourceSerial getResolveSubresourceSerial() const;
 
     // Note: RenderTargets should be called in order, with the depth/stencil onRender last.
     void onColorDraw(ContextVk *contextVk);
@@ -131,7 +131,8 @@ class RenderTargetVk final : public FramebufferAttachmentRenderTarget
                                    vk::ImageViewHelper *imageViews,
                                    const vk::ImageView **imageViewOut) const;
 
-    vk::ImageViewSubresourceSerial getSubresourceSerialImpl(vk::ImageViewHelper *imageViews) const;
+    vk::ImageOrBufferViewSubresourceSerial getSubresourceSerialImpl(
+        vk::ImageViewHelper *imageViews) const;
 
     bool isResolveImageOwnerOfData() const;
     vk::ImageHelper *getOwnerOfData() const;

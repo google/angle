@@ -154,15 +154,40 @@ bool GetTextureSRGBOverrideSupport(const RendererVk *rendererVk,
 
     return true;
 }
+
+bool HasTextureBufferSupport(const RendererVk *rendererVk)
+{
+    // Only three formats don't have mandatory UNIFORM_TEXEL_BUFFER support in Vulkan.
+    const std::array<GLenum, 3> &optionalFormats = {
+        GL_RGB32F,
+        GL_RGB32I,
+        GL_RGB32UI,
+    };
+
+    for (GLenum formatGL : optionalFormats)
+    {
+        const vk::Format &formatVk = rendererVk->getFormat(formatGL);
+
+        if (!rendererVk->hasBufferFormatFeatureBits(formatVk.vkBufferFormat,
+                                                    VK_FORMAT_FEATURE_UNIFORM_TEXEL_BUFFER_BIT))
+        {
+            return false;
+        }
+    }
+    return true;
+}
 }  // namespace
 }  // namespace vk
 
-GLint LimitToInt(const uint32_t physicalDeviceValue)
+template <typename LargerInt>
+GLint LimitToInt(const LargerInt physicalDeviceValue)
 {
+    static_assert(sizeof(LargerInt) >= sizeof(int32_t), "Incorrect usage of LimitToInt");
+
     // Limit to INT_MAX / 2 instead of INT_MAX.  If the limit is queried as float, the imprecision
     // in floating point can cause the value to exceed INT_MAX.  This trips dEQP up.
-    return std::min(physicalDeviceValue,
-                    static_cast<uint32_t>(std::numeric_limits<int32_t>::max() / 2));
+    return static_cast<GLint>(std::min(
+        physicalDeviceValue, static_cast<LargerInt>(std::numeric_limits<int32_t>::max() / 2)));
 }
 
 void RendererVk::ensureCapsInitialized() const
@@ -738,6 +763,19 @@ void RendererVk::ensureCapsInitialized() const
 
     // Enable GL_EXT_copy_image
     mNativeExtensions.copyImageEXT = true;
+
+    // Enable GL_EXT_texture_buffer and OES variant.  Nearly all formats required for this extension
+    // are also required to have the UNIFORM_TEXEL_BUFFER feature bit in Vulkan, except for
+    // R32G32B32_SFLOAT/UINT/SINT which are optional.  This extension is exposed only if those
+    // formats support the necessary feature bit.
+    if (vk::HasTextureBufferSupport(this))
+    {
+        mNativeExtensions.textureBufferOES = true;
+        mNativeExtensions.textureBufferEXT = true;
+        mNativeCaps.maxTextureBufferSize   = LimitToInt(limitsVk.maxTexelBufferElements);
+        mNativeCaps.textureBufferOffsetAlignment =
+            LimitToInt(limitsVk.minTexelBufferOffsetAlignment);
+    }
 
     // Geometry shader is optional.
     if (mPhysicalDeviceFeatures.geometryShader)

@@ -2738,7 +2738,7 @@ void PipelineHelper::addTransition(GraphicsPipelineTransitionBits bits,
 
 TextureDescriptorDesc::TextureDescriptorDesc() : mMaxIndex(0)
 {
-    mSerials.fill({kInvalidImageViewSubresourceSerial, kInvalidSamplerSerial});
+    mSerials.fill({kInvalidImageOrBufferViewSubresourceSerial, kInvalidSamplerSerial});
 }
 
 TextureDescriptorDesc::~TextureDescriptorDesc()                                  = default;
@@ -2747,7 +2747,7 @@ TextureDescriptorDesc &TextureDescriptorDesc::operator=(const TextureDescriptorD
     default;
 
 void TextureDescriptorDesc::update(size_t index,
-                                   ImageViewSubresourceSerial imageViewSerial,
+                                   ImageOrBufferViewSubresourceSerial viewSerial,
                                    SamplerSerial samplerSerial)
 {
     if (index >= mMaxIndex)
@@ -2755,8 +2755,8 @@ void TextureDescriptorDesc::update(size_t index,
         mMaxIndex = static_cast<uint32_t>(index + 1);
     }
 
-    mSerials[index].imageView = imageViewSerial;
-    mSerials[index].sampler   = samplerSerial;
+    mSerials[index].view    = viewSerial;
+    mSerials[index].sampler = samplerSerial;
 }
 
 size_t TextureDescriptorDesc::hash() const
@@ -2823,24 +2823,24 @@ FramebufferDesc::~FramebufferDesc()                            = default;
 FramebufferDesc::FramebufferDesc(const FramebufferDesc &other) = default;
 FramebufferDesc &FramebufferDesc::operator=(const FramebufferDesc &other) = default;
 
-void FramebufferDesc::update(uint32_t index, ImageViewSubresourceSerial serial)
+void FramebufferDesc::update(uint32_t index, ImageOrBufferViewSubresourceSerial serial)
 {
     static_assert(kMaxFramebufferAttachments + 1 < std::numeric_limits<uint8_t>::max(),
                   "mMaxIndex size is too small");
     ASSERT(index < kMaxFramebufferAttachments);
     mSerials[index] = serial;
-    if (serial.imageViewSerial.valid())
+    if (serial.viewSerial.valid())
     {
         mMaxIndex = std::max(mMaxIndex, static_cast<uint16_t>(index + 1));
     }
 }
 
-void FramebufferDesc::updateColor(uint32_t index, ImageViewSubresourceSerial serial)
+void FramebufferDesc::updateColor(uint32_t index, ImageOrBufferViewSubresourceSerial serial)
 {
     update(kFramebufferDescColorIndexOffset + index, serial);
 }
 
-void FramebufferDesc::updateColorResolve(uint32_t index, ImageViewSubresourceSerial serial)
+void FramebufferDesc::updateColorResolve(uint32_t index, ImageOrBufferViewSubresourceSerial serial)
 {
     update(kFramebufferDescColorResolveIndexOffset + index, serial);
 }
@@ -2850,12 +2850,12 @@ void FramebufferDesc::updateUnresolveMask(FramebufferNonResolveAttachmentMask un
     mUnresolveAttachmentMask = unresolveMask;
 }
 
-void FramebufferDesc::updateDepthStencil(ImageViewSubresourceSerial serial)
+void FramebufferDesc::updateDepthStencil(ImageOrBufferViewSubresourceSerial serial)
 {
     update(kFramebufferDescDepthStencilIndex, serial);
 }
 
-void FramebufferDesc::updateDepthStencilResolve(ImageViewSubresourceSerial serial)
+void FramebufferDesc::updateDepthStencilResolve(ImageOrBufferViewSubresourceSerial serial)
 {
     update(kFramebufferDescDepthStencilResolveIndexOffset, serial);
 }
@@ -2887,9 +2887,9 @@ bool FramebufferDesc::operator==(const FramebufferDesc &other) const
 uint32_t FramebufferDesc::attachmentCount() const
 {
     uint32_t count = 0;
-    for (const ImageViewSubresourceSerial &serial : mSerials)
+    for (const ImageOrBufferViewSubresourceSerial &serial : mSerials)
     {
-        if (serial.imageViewSerial.valid())
+        if (serial.viewSerial.valid())
         {
             count++;
         }

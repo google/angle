@@ -22,12 +22,6 @@ namespace sh
 namespace
 {
 
-// gvec4 texelFetch(gsamplerXD sampler, ivecX P, int lod)
-constexpr uint32_t kTexelFetchSequenceLength = 3u;
-
-// gvec4 texelFetchOffset(gsamplerXD sampler, ivecX P, int lod, ivecX offset)
-constexpr uint32_t kTexelFetchOffsetSequenceLength = 4u;
-
 class FlagSamplersWithTexelFetchTraverser : public TIntermTraverser
 {
   public:
@@ -53,10 +47,7 @@ class FlagSamplersWithTexelFetchTraverser : public TIntermTraverser
 
         const TIntermSequence *sequence = node->getSequence();
 
-        // This must be a valid texelFetch invokation with the required number of arguments
-        ASSERT(sequence->size() == (node->getFunction()->name() == "texelFetch"
-                                        ? kTexelFetchSequenceLength
-                                        : kTexelFetchOffsetSequenceLength));
+        ASSERT(sequence->size() > 0);
 
         TIntermSymbol *samplerSymbol = sequence->at(0)->getAsSymbolNode();
         ASSERT(samplerSymbol != nullptr);

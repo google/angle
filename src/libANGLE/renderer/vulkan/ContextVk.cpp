@@ -1093,7 +1093,33 @@ ANGLE_INLINE angle::Result ContextVk::handleDirtyTexturesImpl(
     {
         const vk::TextureUnit &unit = mActiveTextures[textureUnit];
         TextureVk *textureVk        = unit.texture;
-        vk::ImageHelper &image      = textureVk->getImage();
+
+        // If it's a texture buffer, get the attached buffer.
+        if (textureVk->getBuffer().get() != nullptr)
+        {
+            BufferVk *bufferVk       = vk::GetImpl(textureVk->getBuffer().get());
+            vk::BufferHelper &buffer = bufferVk->getBuffer();
+
+            gl::ShaderBitSet stages =
+                executable->getSamplerShaderBitsForTextureUnitIndex(textureUnit);
+            ASSERT(stages.any());
+
+            // TODO: accept multiple stages in bufferRead.  http://anglebug.com/3573
+            for (gl::ShaderType stage : stages)
+            {
+                // Note: if another range of the same buffer is simultaneously used for storage,
+                // such as for transform feedback output, or SSBO, unnecessary barriers can be
+                // generated.
+                commandBufferHelper->bufferRead(&mResourceUseList, VK_ACCESS_SHADER_READ_BIT,
+                                                vk::GetPipelineStage(stage), &buffer);
+            }
+
+            textureVk->retainBufferView(&mResourceUseList);
+
+            continue;
+        }
+
+        vk::ImageHelper &image = textureVk->getImage();
 
         // The image should be flushed and ready to use at this point. There may still be
         // lingering staged updates in its staging buffer for unused texture mip levels or
@@ -3756,18 +3782,33 @@ angle::Result ContextVk::updateActiveTextures(const gl::Context *context)
     for (size_t textureUnit : activeTextures)
     {
         gl::Texture *texture        = textures[textureUnit];
-        gl::Sampler *sampler        = mState.getSampler(static_cast<uint32_t>(textureUnit));
         gl::TextureType textureType = textureTypes[textureUnit];
         ASSERT(textureType != gl::TextureType::InvalidEnum);
 
-        vk::TextureUnit &activeTexture = mActiveTextures[textureUnit];
+        const bool isIncompleteTexture = texture == nullptr;
 
         // Null textures represent incomplete textures.
-        if (texture == nullptr)
+        if (isIncompleteTexture)
         {
             ANGLE_TRY(getIncompleteTexture(context, textureType, &texture));
         }
-        else if (shouldSwitchToReadOnlyDepthFeedbackLoopMode(context, texture))
+
+        TextureVk *textureVk = vk::GetImpl(texture);
+        ASSERT(textureVk != nullptr);
+
+        vk::TextureUnit &activeTexture = mActiveTextures[textureUnit];
+
+        // Special handling of texture buffers.  They have a buffer attached instead of an image.
+        if (textureType == gl::TextureType::Buffer)
+        {
+            activeTexture.texture = textureVk;
+            mActiveTexturesDesc.update(textureUnit, textureVk->getBufferViewSerial(),
+                                       vk::SamplerSerial());
+
+            continue;
+        }
+
+        if (!isIncompleteTexture && shouldSwitchToReadOnlyDepthFeedbackLoopMode(context, texture))
         {
             // The "readOnlyDepthMode" feature enables read-only depth-stencil feedback loops. We
             // only switch to "read-only" mode when there's loop. We track the depth-stencil access
@@ -3796,9 +3837,7 @@ angle::Result ContextVk::updateActiveTextures(const gl::Context *context)
             mDrawFramebuffer->setReadOnlyDepthFeedbackLoopMode(true);
         }
 
-        TextureVk *textureVk = vk::GetImpl(texture);
-        ASSERT(textureVk != nullptr);
-
+        gl::Sampler *sampler       = mState.getSampler(static_cast<uint32_t>(textureUnit));
         const SamplerVk *samplerVk = sampler ? vk::GetImpl(sampler) : nullptr;
 
         const vk::SamplerHelper &samplerHelper =
@@ -3816,7 +3855,7 @@ angle::Result ContextVk::updateActiveTextures(const gl::Context *context)
             ANGLE_TRY(textureVk->ensureMutable(this));
         }
 
-        vk::ImageViewSubresourceSerial imageViewSerial =
+        vk::ImageOrBufferViewSubresourceSerial imageViewSerial =
             textureVk->getImageViewSubresourceSerial(samplerState);
         mActiveTexturesDesc.update(textureUnit, imageViewSerial, samplerHelper.getSamplerSerial());
 

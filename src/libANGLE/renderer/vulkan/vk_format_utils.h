@@ -69,7 +69,10 @@ struct Format final : private angle::NonCopyable
         return angle::Format::Get(actualImageFormatID);
     }
 
-    // The actual Buffer format is used to implement the front-end format for Buffers.
+    // The actual Buffer format is used to implement the front-end format for Buffers.  This format
+    // is used by vertex buffers as well as texture buffers.  Note that all formats required for
+    // GL_EXT_texture_buffer have mandatory support for vertex buffers in Vulkan, so they won't be
+    // using an emulated format.
     const angle::Format &actualBufferFormat(bool compressed) const
     {
         return angle::Format::Get(compressed ? actualCompressedBufferFormatID

@@ -31,7 +31,7 @@ namespace rx
 //   have needed to invalidateGraphicsDriverUniforms().
 // - Set 1 contains uniform blocks created to encompass default uniforms.  1 binding is used per
 //   pipeline stage.  Additionally, transform feedback buffers are bound from binding 2 and up.
-// - Set 2 contains all textures.
+// - Set 2 contains all textures (including texture buffers).
 // - Set 3 contains all other shader resources, such as uniform and storage blocks, atomic counter
 //   buffers and images.
 
@@ -1021,16 +1021,16 @@ static_assert(sizeof(ImageSubresourceRange) == sizeof(uint32_t), "Size mismatch"
 
 constexpr ImageSubresourceRange kInvalidImageSubresourceRange = {0, 0, 0, 0, 0, 0};
 
-struct ImageViewSubresourceSerial
+struct ImageOrBufferViewSubresourceSerial
 {
-    ImageViewSerial imageViewSerial;
+    ImageOrBufferViewSerial viewSerial;
     ImageSubresourceRange subresource;
 };
 
-static_assert(sizeof(ImageViewSubresourceSerial) == sizeof(uint64_t), "Size mismatch");
+static_assert(sizeof(ImageOrBufferViewSubresourceSerial) == sizeof(uint64_t), "Size mismatch");
 
-constexpr ImageViewSubresourceSerial kInvalidImageViewSubresourceSerial = {
-    kInvalidImageViewSerial, kInvalidImageSubresourceRange};
+constexpr ImageOrBufferViewSubresourceSerial kInvalidImageOrBufferViewSubresourceSerial = {
+    kInvalidImageOrBufferViewSerial, kInvalidImageSubresourceRange};
 
 class TextureDescriptorDesc
 {
@@ -1042,7 +1042,7 @@ class TextureDescriptorDesc
     TextureDescriptorDesc &operator=(const TextureDescriptorDesc &other);
 
     void update(size_t index,
-                ImageViewSubresourceSerial imageViewSerial,
+                ImageOrBufferViewSubresourceSerial viewSerial,
                 SamplerSerial samplerSerial);
     size_t hash() const;
     void reset();
@@ -1058,7 +1058,7 @@ class TextureDescriptorDesc
     ANGLE_ENABLE_STRUCT_PADDING_WARNINGS
     struct TexUnitSerials
     {
-        ImageViewSubresourceSerial imageView;
+        ImageOrBufferViewSubresourceSerial view;
         SamplerSerial sampler;
     };
     gl::ActiveTextureArray<TexUnitSerials> mSerials;
@@ -1127,18 +1127,18 @@ class FramebufferDesc
     FramebufferDesc(const FramebufferDesc &other);
     FramebufferDesc &operator=(const FramebufferDesc &other);
 
-    void updateColor(uint32_t index, ImageViewSubresourceSerial serial);
-    void updateColorResolve(uint32_t index, ImageViewSubresourceSerial serial);
+    void updateColor(uint32_t index, ImageOrBufferViewSubresourceSerial serial);
+    void updateColorResolve(uint32_t index, ImageOrBufferViewSubresourceSerial serial);
     void updateUnresolveMask(FramebufferNonResolveAttachmentMask unresolveMask);
-    void updateDepthStencil(ImageViewSubresourceSerial serial);
-    void updateDepthStencilResolve(ImageViewSubresourceSerial serial);
+    void updateDepthStencil(ImageOrBufferViewSubresourceSerial serial);
+    void updateDepthStencilResolve(ImageOrBufferViewSubresourceSerial serial);
     size_t hash() const;
 
     bool operator==(const FramebufferDesc &other) const;
 
     uint32_t attachmentCount() const;
 
-    ImageViewSubresourceSerial getColorImageViewSerial(uint32_t index)
+    ImageOrBufferViewSubresourceSerial getColorImageViewSerial(uint32_t index)
     {
         ASSERT(kFramebufferDescColorIndexOffset + index < mSerials.size());
         return mSerials[kFramebufferDescColorIndexOffset + index];
@@ -1148,7 +1148,7 @@ class FramebufferDesc
 
   private:
     void reset();
-    void update(uint32_t index, ImageViewSubresourceSerial serial);
+    void update(uint32_t index, ImageOrBufferViewSubresourceSerial serial);
 
     // Note: this is an exclusive index. If there is one index it will be "1".
     uint16_t mMaxIndex;
@@ -1158,7 +1158,7 @@ class FramebufferDesc
     // to be unresolved.  Includes both color and depth/stencil attachments.
     FramebufferNonResolveAttachmentMask mUnresolveAttachmentMask;
 
-    FramebufferAttachmentArray<ImageViewSubresourceSerial> mSerials;
+    FramebufferAttachmentArray<ImageOrBufferViewSubresourceSerial> mSerials;
 };
 
 // Disable warnings about struct padding.

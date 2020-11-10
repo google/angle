@@ -211,8 +211,9 @@ class FramebufferVk : public FramebufferImpl
     VkClearValue getCorrectedColorClearValue(size_t colorIndexGL,
                                              const VkClearColorValue &clearColor) const;
 
-    void updateColorResolveAttachment(uint32_t colorIndexGL,
-                                      vk::ImageViewSubresourceSerial resolveImageViewSerial);
+    void updateColorResolveAttachment(
+        uint32_t colorIndexGL,
+        vk::ImageOrBufferViewSubresourceSerial resolveImageViewSerial);
     void removeColorResolveAttachment(uint32_t colorIndexGL);
 
     WindowSurfaceVk *mBackbuffer;

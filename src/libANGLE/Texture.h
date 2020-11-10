@@ -171,11 +171,11 @@ class TextureState final : private angle::NonCopyable
 
     InitState getInitState() const { return mInitState; }
 
+    const OffsetBindingPointer<Buffer> &getBuffer() const { return mBuffer; }
+
   private:
     // Texture needs access to the ImageDesc functions.
     friend class Texture;
-    // TODO(jmadill): Remove TextureGL from friends.
-    friend class rx::TextureGL;
     friend bool operator==(const TextureState &a, const TextureState &b);
 
     bool computeSamplerCompleteness(const SamplerState &samplerState, const State &state) const;
