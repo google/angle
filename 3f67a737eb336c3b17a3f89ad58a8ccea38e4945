@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f779ffdd_ae3bc2fe",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-10T21:34:31Z",
+      "side": 1,
+      "message": "I don\u0027t think that reserving Serials is what we really want to be doing, since it breaks one of the design constraints that submissions are always done in order.   I\u0027m not sure what the right answer is yet, but I think we need to work through that issue before landing this.",
+      "revId": "3f67a737eb336c3b17a3f89ad58a8ccea38e4945",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "56e9082c_55cc7b49",
