@@ -16,6 +16,184 @@
       "message": "I\u0027ll leave it to Jamie to +2",
       "revId": "408e967255c5d79aa00d49a88652b74fd4f26835",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b0be8df1_e6541918",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 14
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-10T13:36:59Z",
+      "side": 1,
+      "message": "LGTM with remaining nits.",
+      "revId": "408e967255c5d79aa00d49a88652b74fd4f26835",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b4748705_3babf6a5",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-10T13:36:59Z",
+      "side": 1,
+      "message": "usual nit",
+      "range": {
+        "startLine": 29,
+        "startChar": 25,
+        "endLine": 29,
+        "endChar": 28
+      },
+      "revId": "408e967255c5d79aa00d49a88652b74fd4f26835",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "317510b9_2632f379",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramExecutableVk.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 206,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-10T13:36:59Z",
+      "side": 1,
+      "message": "nit: you should be able to just use \u003d {}",
+      "range": {
+        "startLine": 203,
+        "startChar": 0,
+        "endLine": 206,
+        "endChar": 63
+      },
+      "revId": "408e967255c5d79aa00d49a88652b74fd4f26835",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7546b3d3_a4678af4",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramExecutableVk.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-10T13:36:59Z",
+      "side": 1,
+      "message": "nit: this uses potentially undefined AFAIK, use gl::BitCast.",
+      "range": {
+        "startLine": 126,
+        "startChar": 39,
+        "endLine": 126,
+        "endChar": 46
+      },
+      "revId": "408e967255c5d79aa00d49a88652b74fd4f26835",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8746610d_ea2646c5",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 161,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-10T13:36:59Z",
+      "side": 1,
+      "message": "nit: I think you can just do \u003d {}. the extra 0s are unnecessary.",
+      "range": {
+        "startLine": 161,
+        "startChar": 42,
+        "endLine": 161,
+        "endChar": 55
+      },
+      "revId": "408e967255c5d79aa00d49a88652b74fd4f26835",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9db7972b_4c20eabe",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 6501,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-10T13:36:59Z",
+      "side": 1,
+      "message": "nit: here too, {} is fine and scales to any number of constants.",
+      "range": {
+        "startLine": 6501,
+        "startChar": 69,
+        "endLine": 6501,
+        "endChar": 75
+      },
+      "revId": "408e967255c5d79aa00d49a88652b74fd4f26835",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4c37625a_328aabb2",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 681,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-10T13:36:59Z",
+      "side": 1,
+      "message": "nit: pluralize since it\u0027s more than one constant.",
+      "range": {
+        "startLine": 681,
+        "startChar": 7,
+        "endLine": 681,
+        "endChar": 29
+      },
+      "revId": "408e967255c5d79aa00d49a88652b74fd4f26835",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "335c6c6f_b6eedd54",
+        "filename": "src/tests/perf_tests/VulkanPipelineCachePerf.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-10T13:36:59Z",
+      "side": 1,
+      "message": "nit: also \u003d {} is fine too to init to zero.",
+      "range": {
+        "startLine": 91,
+        "startChar": 48,
+        "endLine": 91,
+        "endChar": 55
+      },
+      "revId": "408e967255c5d79aa00d49a88652b74fd4f26835",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
