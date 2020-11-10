@@ -16,6 +16,23 @@
       "message": "jamie, can i get a +2?",
       "revId": "9ba32c12298f4b95511a5fce21bfe84194cd70e5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e11d142a_13cd3088",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-10T17:50:58Z",
+      "side": 1,
+      "message": "LGTM",
+      "revId": "9ba32c12298f4b95511a5fce21bfe84194cd70e5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
