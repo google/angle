@@ -16,6 +16,29 @@
       "message": "PTAL",
       "revId": "b42ef0bea7f27cc5699365aa44ebbc170e3c12dd",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "554a66f2_e8b4ce9f",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 2357,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-10T02:43:51Z",
+      "side": 1,
+      "message": "nit: need \u0027m\u0027 prefix for these guys.",
+      "range": {
+        "startLine": 2354,
+        "startChar": 0,
+        "endLine": 2357,
+        "endChar": 28
+      },
+      "revId": "b42ef0bea7f27cc5699365aa44ebbc170e3c12dd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
