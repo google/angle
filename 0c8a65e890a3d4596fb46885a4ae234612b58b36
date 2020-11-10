@@ -16,6 +16,47 @@
       "message": "+Charlie who added the early out path in flushImpl IIRC.",
       "revId": "0c8a65e890a3d4596fb46885a4ae234612b58b36",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "452f987e_c8f6d7a1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-10T15:54:04Z",
+      "side": 1,
+      "message": "I added this early exit path way back when we first set up these classes. Charlie\u0027s path is still intact, see reference.",
+      "parentUuid": "75606970_e8cc4f44",
+      "revId": "0c8a65e890a3d4596fb46885a4ae234612b58b36",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "287f6765_5f28ed2c",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 695,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-10T15:54:04Z",
+      "side": 1,
+      "message": "ref.",
+      "range": {
+        "startLine": 689,
+        "startChar": 0,
+        "endLine": 695,
+        "endChar": 0
+      },
+      "revId": "0c8a65e890a3d4596fb46885a4ae234612b58b36",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }

@@ -34,6 +34,24 @@
       "parentUuid": "290255b9_40db9a2c",
       "revId": "be6c225d8b6a02e5b41e523dc1713cc3d1e1ff64",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5aed5d8b_f4db0f8f",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 4062,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-10T15:54:04Z",
+      "side": 0,
+      "message": "Ack, I don\u0027t think this has any real perf impact. Previously we could no-op empty submissions which happen in test execution. In practice this doesn\u0027t affect any benchmarks or applications that I know of. We can revisit and implement an optimization here if we detect empty submissions happening in applications and this affects perf. Just to be clear: I don\u0027t expect to find that any time soon.",
+      "parentUuid": "aaec6d60_6a50135a",
+      "revId": "be6c225d8b6a02e5b41e523dc1713cc3d1e1ff64",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
