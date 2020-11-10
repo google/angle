@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3a959de9_1bc066db",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 326,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-10T21:19:27Z",
+      "side": 1,
+      "message": "For clarity, does it make sense for vk::Format to have methods that make it clear, in that struct, what is/isn\u0027t an emulated format?  Otherwise, that clarity seems hidden in this TextureVk method.",
+      "range": {
+        "startLine": 325,
+        "startChar": 10,
+        "endLine": 326,
+        "endChar": 35
+      },
+      "revId": "347ac925d3f8090662445d6d989fda4d62dcdf90",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b7cf97ca_93cbd2b1",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 335,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-10T21:19:27Z",
+      "side": 1,
+      "message": "Your previous CL added a check for \"isCombinedDepthStencil\" at the only place this function is called.  Does it make sense to move that check into this function?",
+      "revId": "347ac925d3f8090662445d6d989fda4d62dcdf90",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
