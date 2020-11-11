@@ -104,6 +104,24 @@
       "parentUuid": "486af368_eb1ff214",
       "revId": "0fc7339447067ad17ceb2625aebd96397ad4344f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6a2283b9_3d3888b3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-11T12:38:13Z",
+      "side": 1,
+      "message": "Is there a way you can keep the code path the same on this older driver so we can land this CL?",
+      "parentUuid": "186319e3_a85b6d00",
+      "revId": "0fc7339447067ad17ceb2625aebd96397ad4344f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
