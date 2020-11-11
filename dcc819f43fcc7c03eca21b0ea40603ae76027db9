@@ -1,6 +1,46 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d5fc7420_01c1f674",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 11
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-11T00:48:22Z",
+      "side": 1,
+      "message": "+2 pending Courtey\u0027s question about CommandProcessor::present() not being moved into TaskProcessor, since I had the same question.",
+      "revId": "dcc819f43fcc7c03eca21b0ea40603ae76027db9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9d764d30_381ab83a",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 368,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-11T00:48:22Z",
+      "side": 1,
+      "message": "ensurePrimaryCommandBufferValid",
+      "range": {
+        "startLine": 368,
+        "startChar": 52,
+        "endLine": 368,
+        "endChar": 80
+      },
+      "revId": "dcc819f43fcc7c03eca21b0ea40603ae76027db9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ac222dfc_64c8bf4e",
