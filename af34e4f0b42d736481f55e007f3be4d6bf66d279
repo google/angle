@@ -69,6 +69,23 @@
       "parentUuid": "b14b42f1_c02920dd",
       "revId": "af34e4f0b42d736481f55e007f3be4d6bf66d279",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "86381df4_46232884",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-11T21:39:47Z",
+      "side": 1,
+      "message": "Bug:\n\n[ RUN      ] dEQP.GLES31/functional_shaders_sample_variables_sample_pos_correctness_default_framebuffer\n\ndEQP-GLES31.functional.shaders.sample_variables.sample_pos.correctness.default_framebuffer\n\n../../third_party/angle/src/tests/deqp_support/angle_deqp_gtest.cpp(42): error: Failed\n\nRendererVk.cpp:343 (DebugUtilsMessenger): [ VUID-VkGraphicsPipelineCreateInfo-lineRasterizationMode-02766 ] Validation Error: [ VUID-VkGraphicsPipelineCreateInfo-lineRasterizationMode-02766 ] Object 0: handle \u003d 0x19a240e3e30, type \u003d VK_OBJECT_TYPE_DEVICE; | MessageID \u003d 0xede29e50 | vkCreateGraphicsPipelines(): Bresenham/Smooth line rasterization not supported with pCreateInfos[0].pMultisampleState-\u003esampleShadingEnable \u003d\u003d VK_TRUE. The Vulkan spec states: If the lineRasterizationMode member of a VkPipelineRasterizationLineStateCreateInfoEXT structure included in the pNext chain of pRasterizationState is VK_LINE_RASTERIZATION_MODE_BRESENHAM_EXT or VK_LINE_RASTERIZATION_MODE_RECTANGULAR_SMOOTH_EXT and if rasterization is enabled, then the alphaToCoverageEnable, alphaToOneEnable, and sampleShadingEnable members of pMultisampleState must all be VK_FALSE (https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VUID-VkGraphicsPipelineCreateInfo-lineRasterizationMode-02766)\n\n                            Object: 0x19a240e3e30 (type \u003d Device(3))\n\n\nSeems like a reasonable error.\n",
+      "revId": "af34e4f0b42d736481f55e007f3be4d6bf66d279",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
