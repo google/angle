@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b2bd1cde_4c95f72a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-11T20:08:50Z",
+      "side": 1,
+      "message": "Fran says that some games are generating GL_KHR_debug messages, and so I\u0027m going to try this CL again.",
+      "revId": "952fa09aaea0bce975a5985a76ac1ee8c0967153",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
