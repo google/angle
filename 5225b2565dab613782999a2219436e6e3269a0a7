@@ -1,0 +1,163 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "39818567_f9d073b4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-11T01:13:11Z",
+      "side": 1,
+      "message": "This should also have a CQ dry run with renderer-\u003egetFeatures().asynchronousCommandProcessing.enabled \u003d true to make sure the functionality of these two classes is the same.",
+      "revId": "5225b2565dab613782999a2219436e6e3269a0a7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0a4b1d05_9d7e664d",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 659,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-11T01:13:11Z",
+      "side": 1,
+      "message": "Remove",
+      "revId": "5225b2565dab613782999a2219436e6e3269a0a7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7a25e6c3_c5697f95",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 738,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-11T01:13:11Z",
+      "side": 1,
+      "message": "ANGLE_TRACE_EVENT0(\"gpu.angle\", \"CommandQueue::releaseToCommandBatch\");",
+      "revId": "5225b2565dab613782999a2219436e6e3269a0a7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "576994da_3a2cc3f8",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 772,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-11T01:13:11Z",
+      "side": 1,
+      "message": "ANGLE_TRACE_EVENT0(\"gpu.angle\", \"CommandQueue::handleDeviceLost\");",
+      "revId": "5225b2565dab613782999a2219436e6e3269a0a7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9fbea171_64b12c54",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 799,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-11T01:13:11Z",
+      "side": 1,
+      "message": "Remove",
+      "revId": "5225b2565dab613782999a2219436e6e3269a0a7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "63459482_5a922110",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 862,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-11T01:13:11Z",
+      "side": 1,
+      "message": "Remove",
+      "revId": "5225b2565dab613782999a2219436e6e3269a0a7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e87d9109_fbd24da6",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 893,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-11T01:13:11Z",
+      "side": 1,
+      "message": "Replace with the TaskProcessor version that doesn\u0027t use a loop:\n\n    // CPU should be throttled to avoid mInFlightCommands from growing too fast. Important for\n    // off-screen scenarios.\n    if (mInFlightCommands.size() \u003e kInFlightCommandsLimit)\n    {\n        size_t numCommandsToFinish \u003d mInFlightCommands.size() - kInFlightCommandsLimit;\n        Serial finishSerial        \u003d mInFlightCommands[numCommandsToFinish].serial;\n        return finishToSerial(context, finishSerial);\n    }",
+      "range": {
+        "startLine": 887,
+        "startChar": 0,
+        "endLine": 893,
+        "endChar": 5
+      },
+      "revId": "5225b2565dab613782999a2219436e6e3269a0a7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5717f45f_bdb446fa",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 946,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-11T01:13:11Z",
+      "side": 1,
+      "message": "ANGLE_TRACE_EVENT0(\"gpu.angle\", \"CommandQueue::ensurePrimaryCommandBufferValid\");",
+      "revId": "5225b2565dab613782999a2219436e6e3269a0a7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f764d2be_aebc49ce",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 985,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-11T01:13:11Z",
+      "side": 1,
+      "message": "ANGLE_TRACE_EVENT0(\"gpu.angle\", \"CommandQueue::queueSubmit\");",
+      "revId": "5225b2565dab613782999a2219436e6e3269a0a7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
