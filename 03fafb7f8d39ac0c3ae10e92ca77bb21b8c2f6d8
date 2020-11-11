@@ -16,6 +16,24 @@
       "message": "Missing actually waiting on the serial.\nIt used to wait on the fence:\n    // Wait on the fence that\u0027s expected to be signaled on the first vkQueueSubmit after\n    // `initialize` was called. The first fence is the fence created to signal this sync.\n    ASSERT(mFence.get().valid());\n    // TODO: https://issuetracker.google.com/170312581 - Wait could be command to worker\n    VkResult status \u003d mFence.get().wait(renderer-\u003egetDevice(), timeout);\n\nNow should call: mCommandProcessor.finishToSerial(context, serial);\nOr a new version that has a user provided timeout.",
       "revId": "03fafb7f8d39ac0c3ae10e92ca77bb21b8c2f6d8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "32c5d4e0_40acd434",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 2706,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-11T17:32:28Z",
+      "side": 1,
+      "message": "Ack, it finishes all commands, no need to wait on the serial.",
+      "parentUuid": "ae2a9d06_0341069e",
+      "revId": "03fafb7f8d39ac0c3ae10e92ca77bb21b8c2f6d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
