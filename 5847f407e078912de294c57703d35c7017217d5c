@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7314bd56_88c46735",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-11T12:47:07Z",
+      "side": 1,
+      "message": "Excellent, one last cleanup recommended.",
+      "revId": "5847f407e078912de294c57703d35c7017217d5c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d52f877e_f799f508",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 476,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-11T12:47:07Z",
+      "side": 1,
+      "message": "can you remove this and make the other API use the same name?",
+      "range": {
+        "startLine": 472,
+        "startChar": 0,
+        "endLine": 476,
+        "endChar": 5
+      },
+      "revId": "5847f407e078912de294c57703d35c7017217d5c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8987e2f8_b7811a4c",
+        "filename": "src/libANGLE/renderer/vulkan/README.md",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-11T12:47:07Z",
+      "side": 1,
+      "message": "Thanks for remembering to update this file.",
+      "revId": "5847f407e078912de294c57703d35c7017217d5c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
