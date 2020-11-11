@@ -34,6 +34,24 @@
       "parentUuid": "ae2a9d06_0341069e",
       "revId": "03fafb7f8d39ac0c3ae10e92ca77bb21b8c2f6d8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6594e4a3_2f5086b6",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 2706,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-11-11T18:38:01Z",
+      "side": 1,
+      "message": "waitForCommandProcessorIdle just waits for the worker queue to empty, not for the GPU work to finish. We aren\u0027t going to wait as long as the waitForSerial below.\nIs that sufficient for this function?",
+      "parentUuid": "32c5d4e0_40acd434",
+      "revId": "03fafb7f8d39ac0c3ae10e92ca77bb21b8c2f6d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
