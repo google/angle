@@ -33,6 +33,24 @@
       "message": "all failing tests are passing on AMD, we might have to restrict this feature to AMD",
       "revId": "03541f5340625993e12902877e128379142523e5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "56068845_b310f96b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-11T21:47:22Z",
+      "side": 1,
+      "message": "This change has a number of suppressions. I suggest suppressing the failing tests and see if they get fixed automatically by the time the rest of the failures are fixed.\n\nOn desktop bots by the way it looks like only Nvidia is failing some tests, and not intel.",
+      "parentUuid": "b0a30885_11c4839a",
+      "revId": "03541f5340625993e12902877e128379142523e5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
