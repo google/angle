@@ -2307,6 +2307,13 @@ bool ValidateTexBufferRangeBase(const Context *context,
         return false;
     }
     const Buffer *buffer = context->getBuffer(bufferPacked);
+
+    if (!buffer)
+    {
+        context->validationError(GL_INVALID_OPERATION, kBufferNotBound);
+        return false;
+    }
+
     if (offset + size > buffer->getSize())
     {
         context->validationError(GL_INVALID_VALUE, kTextureBufferSizeOffset);
