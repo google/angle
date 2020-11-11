@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2deb6734_8bc1d725",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-11T20:36:51Z",
+      "side": 1,
+      "message": "Another fix that needs to be reworked with anglebug.com/5334",
+      "revId": "9d22df122d1e0fc7599a78847aa2ea00b43492c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
