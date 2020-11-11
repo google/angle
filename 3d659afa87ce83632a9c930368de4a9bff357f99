@@ -26,6 +26,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "e806af6e_9718e292",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 14
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-11T13:51:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "022c4be7_a563542e",
+      "range": {
+        "startLine": 10,
+        "startChar": 31,
+        "endLine": 10,
+        "endChar": 41
+      },
+      "revId": "3d659afa87ce83632a9c930368de4a9bff357f99",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "44138381_adfaa1a5",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 14
@@ -58,6 +82,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "cbe075c4_124be6c3",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 1149,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-11T13:51:00Z",
+      "side": 1,
+      "message": "Ack, I do this in RendererVk::finishToSerial.",
+      "parentUuid": "f6ef8832_6ff2f4f7",
+      "revId": "3d659afa87ce83632a9c930368de4a9bff357f99",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "dd1743ee_78715ff2",
@@ -71,6 +113,30 @@
       "writtenOn": "2020-11-10T03:25:55Z",
       "side": 1,
       "message": "nit: I would just drop the User in the name.\n\nAlso, could you please deduplicate this and finishToSerial? They are logically doing the same thing, just with different timeouts.",
+      "range": {
+        "startLine": 1239,
+        "startChar": 28,
+        "endLine": 1239,
+        "endChar": 56
+      },
+      "revId": "3d659afa87ce83632a9c930368de4a9bff357f99",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9c6da289_4f38f581",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 1239,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-11T13:51:00Z",
+      "side": 1,
+      "message": "Ack, they are logically different things. If finishToSerial times out ANGLE must lose the device. This function is special because it does not produce an error on timeout.",
+      "parentUuid": "dd1743ee_78715ff2",
       "range": {
         "startLine": 1239,
         "startChar": 28,
@@ -98,6 +164,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0828c612_4877a94d",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 1245,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-11T13:51:00Z",
+      "side": 1,
+      "message": "Ack, some comment as above. We don\u0027t want to put a mutex in CommandQueue because this class will not need a mutex when it\u0027s used in the async queue.",
+      "parentUuid": "89fa0af0_0a81ef42",
+      "revId": "3d659afa87ce83632a9c930368de4a9bff357f99",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "be9c85f6_55cb55bc",
@@ -111,6 +195,24 @@
       "writtenOn": "2020-11-10T19:19:49Z",
       "side": 1,
       "message": "Does this indicate a logic error within ANGLE or bad GLES?   Regardless, can we add an ASSERT() here to make it more obvious while debugging that things are going wrong, or are there tests that hit the issue?",
+      "revId": "3d659afa87ce83632a9c930368de4a9bff357f99",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7705bd24_b8ee90fa",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 1264,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-11T13:51:00Z",
+      "side": 1,
+      "message": "Ack, I believe this is bad EGL so we cannot ASSERT this. Added a WARN().",
+      "parentUuid": "be9c85f6_55cb55bc",
       "revId": "3d659afa87ce83632a9c930368de4a9bff357f99",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
@@ -132,6 +234,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c3054859_0bb11898",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 191,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-11T13:51:00Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "59d2fab3_16cfedb0",
+      "revId": "3d659afa87ce83632a9c930368de4a9bff357f99",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c2db2b1c_5694273a",
@@ -145,6 +265,30 @@
       "writtenOn": "2020-11-10T19:19:49Z",
       "side": 1,
       "message": "https://issuetracker.google.com/",
+      "range": {
+        "startLine": 4532,
+        "startChar": 44,
+        "endLine": 4532,
+        "endChar": 55
+      },
+      "revId": "3d659afa87ce83632a9c930368de4a9bff357f99",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "83095205_e0839a47",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 4532,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-11T13:51:00Z",
+      "side": 1,
+      "message": "Ack, going to leave the b/ links in if that\u0027s okay as they are temporary and reflect what\u0027s in the commit message.",
+      "parentUuid": "c2db2b1c_5694273a",
       "range": {
         "startLine": 4532,
         "startChar": 44,
@@ -178,6 +322,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e9d35d50_c0fa837e",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 4671,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-11T13:51:00Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "fbbcdead_bff5390a",
+      "range": {
+        "startLine": 4671,
+        "startChar": 44,
+        "endLine": 4671,
+        "endChar": 55
+      },
+      "revId": "3d659afa87ce83632a9c930368de4a9bff357f99",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "91145cdb_e2ea0922",
@@ -191,6 +359,30 @@
       "writtenOn": "2020-11-10T19:19:49Z",
       "side": 1,
       "message": "mOutsideRenderPassCommands\n\nAssuming this line is necessary and since CQ is green with this bug, this is likely a sign that these CLs are only being half-tested since it\u0027s not being run with both the feature enabled and disabled.   With this many CLs, there\u0027s a good chance other bugs are sneaking in, so it\u0027s probably worth uploading a patchset that enables the feature to do a dry run and verify nothing is regressing.",
+      "range": {
+        "startLine": 4674,
+        "startChar": 39,
+        "endLine": 4674,
+        "endChar": 58
+      },
+      "revId": "3d659afa87ce83632a9c930368de4a9bff357f99",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e36e5137_cb248afe",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 4674,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-11T13:51:00Z",
+      "side": 1,
+      "message": "Done\n\nI uploaded a patch that enables simultaneous testing in angle_end2end_tests.",
+      "parentUuid": "91145cdb_e2ea0922",
       "range": {
         "startLine": 4674,
         "startChar": 39,
@@ -224,6 +416,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c6da0f06_78efb4fd",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 2694,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-11T13:51:00Z",
+      "side": 1,
+      "message": "Ack, same comment as above. This isn\u0027t a finish technically.",
+      "parentUuid": "e41cba0f_12715204",
+      "range": {
+        "startLine": 2694,
+        "startChar": 26,
+        "endLine": 2694,
+        "endChar": 30
+      },
+      "revId": "3d659afa87ce83632a9c930368de4a9bff357f99",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a9640039_837b1629",
@@ -241,6 +457,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2b329344_1f3b7e86",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 2707,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-11T13:51:00Z",
+      "side": 1,
+      "message": "Ack, that\u0027s a future optimization that\u0027s left for you to implement. waitForCommandProcessorIdle was in this path before so this code maintains the previous version. The TODO was even already there, I updated the comment.",
+      "parentUuid": "a9640039_837b1629",
+      "revId": "3d659afa87ce83632a9c930368de4a9bff357f99",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "fc911015_bcc786e2",
@@ -254,6 +488,30 @@
       "writtenOn": "2020-11-10T19:19:49Z",
       "side": 1,
       "message": "https://issuetracker.google.com/",
+      "range": {
+        "startLine": 327,
+        "startChar": 60,
+        "endLine": 327,
+        "endChar": 71
+      },
+      "revId": "3d659afa87ce83632a9c930368de4a9bff357f99",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e5b02b92_93bb6681",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 327,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-11T13:51:00Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "fc911015_bcc786e2",
       "range": {
         "startLine": 327,
         "startChar": 60,
@@ -335,6 +593,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "deeb5bb3_e7fbf196",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 1244,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-11T13:51:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9829b734_3d7d3afe",
+      "range": {
+        "startLine": 1244,
+        "startChar": 11,
+        "endLine": 1244,
+        "endChar": 12
+      },
+      "revId": "3d659afa87ce83632a9c930368de4a9bff357f99",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "aca71a73_d20cb62f",
@@ -348,6 +630,30 @@
       "writtenOn": "2020-11-09T23:39:42Z",
       "side": 1,
       "message": "Can remove the comment now that we are not calling getLastSubmitedFence.\nHowever, we are not necessarily getting the last serial that this context submitted so if we finish to this serial we would wait longer than necessary. Not an issue for most apps. Maybe interesting on apps that do work on multiple contexts.",
+      "range": {
+        "startLine": 1367,
+        "startChar": 0,
+        "endLine": 1370,
+        "endChar": 0
+      },
+      "revId": "3d659afa87ce83632a9c930368de4a9bff357f99",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8786fcdb_f8d9a05e",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 1370,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-11T13:51:00Z",
+      "side": 1,
+      "message": "Done on comment. Same problem with the fence technically. Left a TODO to fix this in a future patch.\n\nThe code seems weird actually, like it\u0027s updating the serial for the previous swap history before calling present, instead of updating the serial for the last submit after it calls present.",
+      "parentUuid": "aca71a73_d20cb62f",
       "range": {
         "startLine": 1367,
         "startChar": 0,
@@ -381,6 +687,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "588865e7_78d8e78f",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 305,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-11T13:51:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "59dbe605_de8dcad6",
+      "range": {
+        "startLine": 305,
+        "startChar": 41,
+        "endLine": 305,
+        "endChar": 57
+      },
+      "revId": "3d659afa87ce83632a9c930368de4a9bff357f99",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a5c09129_e9cbfe9a",
@@ -394,6 +724,24 @@
       "writtenOn": "2020-11-10T19:19:49Z",
       "side": 1,
       "message": "Similar to above, is it possible to ASSERT() here to make it more obvious things are in a bad state?",
+      "revId": "3d659afa87ce83632a9c930368de4a9bff357f99",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5206065f_95ea78fd",
+        "filename": "src/libANGLE/renderer/vulkan/SyncVk.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-11T13:51:00Z",
+      "side": 1,
+      "message": "Ack, don\u0027t think so. Added WARN().",
+      "parentUuid": "a5c09129_e9cbfe9a",
       "revId": "3d659afa87ce83632a9c930368de4a9bff357f99",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
@@ -429,6 +777,24 @@
       "side": 1,
       "message": "It\u0027s a GL user error to not signal the flush, either with the flag or manually (though using GL_SYNC_FLUSH_COMMANDS_BIT is recommended since this command stalls the CPU).   For further details:\nhttps://www.khronos.org/opengl/wiki/Sync_Object\n\nIt looks like this should be safe, since commandProcessorSyncErrorsAndQueueCommand() calls releaseResourceUsesAndUpdateSerials() on the main thread, rather than the worker thread updating the resource list.",
       "parentUuid": "ae2b6c87_dd1cf5df",
+      "revId": "3d659afa87ce83632a9c930368de4a9bff357f99",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "70508e32_d7f7253c",
+        "filename": "src/libANGLE/renderer/vulkan/SyncVk.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-11T13:51:00Z",
+      "side": 1,
+      "message": "Ack, it\u0027s safe I think b/c this is always done on a main thread, not on the async thread.",
+      "parentUuid": "6648e878_0153bbb2",
       "revId": "3d659afa87ce83632a9c930368de4a9bff357f99",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
