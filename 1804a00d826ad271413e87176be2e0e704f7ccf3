@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5d4a1982_20fbe2a8",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1080,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-11T21:41:32Z",
+      "side": 1,
+      "message": "Adding sample is only valid for per-sample shading. We can\u0027t add them unconditionally like this.\n\nWe most likely need to make the graphics pipeline recompiled when switching between per-sample shading and now. Then the SPIR-V transformer should add the Sample decoration accordingly.\n\nYou can take inspiration from early fragment tests regarding recompiling the graphics pipeline. About the SPIR-V transformation, check out how we add the Component decoration. Do reach out if you need help with that!",
+      "revId": "1804a00d826ad271413e87176be2e0e704f7ccf3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
