@@ -16,6 +16,41 @@
       "message": "PTAL",
       "revId": "af34e4f0b42d736481f55e007f3be4d6bf66d279",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b14b42f1_c02920dd",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-11T20:57:55Z",
+      "side": 1,
+      "message": "Isn\u0027t life more beautiful now that index is always 0?\n\nChange LGTM (with the bot failure cleared up). You could also make ANGLESampleMask* not an array at all, for even more simplification, but I\u0027m not blocking this change for that.",
+      "parentUuid": "0ad5a2c3_c0dbbdd0",
+      "revId": "af34e4f0b42d736481f55e007f3be4d6bf66d279",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bb773072_077e772e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-11T20:57:55Z",
+      "side": 1,
+      "message": "Re-LGTM",
+      "revId": "af34e4f0b42d736481f55e007f3be4d6bf66d279",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
