@@ -16,6 +16,29 @@
       "message": "Another fix that needs to be reworked with anglebug.com/5334",
       "revId": "9d22df122d1e0fc7599a78847aa2ea00b43492c5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1ae66e14_858552cc",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1915,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-11T20:39:46Z",
+      "side": 1,
+      "message": "good catch. we should use the subject/observer bindings.",
+      "range": {
+        "startLine": 1912,
+        "startChar": 0,
+        "endLine": 1915,
+        "endChar": 45
+      },
+      "revId": "9d22df122d1e0fc7599a78847aa2ea00b43492c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
