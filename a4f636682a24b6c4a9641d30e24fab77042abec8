@@ -383,6 +383,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0e9f8289_6f6e4a03",
+        "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-11T17:30:16Z",
+      "side": 1,
+      "message": "the new patch here -\u003e https://chromium-review.googlesource.com/c/angle/angle/+/2477908/\nassumes array size of 1",
+      "parentUuid": "c63b92aa_22b55caa",
+      "range": {
+        "startLine": 186,
+        "startChar": 3,
+        "endLine": 186,
+        "endChar": 86
+      },
+      "revId": "a4f636682a24b6c4a9641d30e24fab77042abec8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c846e699_524e00df",
@@ -477,6 +501,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "949281d3_b8b470b6",
+        "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 212,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-11T17:30:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "db26ecd2_09199ef5",
+      "range": {
+        "startLine": 212,
+        "startChar": 3,
+        "endLine": 212,
+        "endChar": 93
+      },
+      "revId": "a4f636682a24b6c4a9641d30e24fab77042abec8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0044d2e5_82041e3a",
@@ -514,6 +562,30 @@
       "side": 1,
       "message": "Error log -\n        No error log (tests just failed) \n\nCurrent root-cause for this -\n\n    9.2. Graphics Pipelines\n    ...\n    If the lineRasterizationMode member of a VkPipelineRasterizationLineStateCreateInfoEXT \n    structure included in the pNext chain of pRasterizationState \n    VK_LINE_RASTERIZATION_MODE_BRESENHAM_EXT is or \n    VK_LINE_RASTERIZATION_MODE_RECTANGULAR_SMOOTH_EXT and if rasterization is enabled,\n    then the alphaToCoverageEnable, alphaToOneEnable, and sampleShadingEnable members of\n    pMultisampleState must all be VK_FALSE.",
       "parentUuid": "0044d2e5_82041e3a",
+      "range": {
+        "startLine": 220,
+        "startChar": 3,
+        "endLine": 220,
+        "endChar": 80
+      },
+      "revId": "a4f636682a24b6c4a9641d30e24fab77042abec8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "628f1620_c321e44f",
+        "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 220,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-11T17:30:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ac920c36_e2189836",
       "range": {
         "startLine": 220,
         "startChar": 3,
@@ -571,6 +643,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "689b2d5c_068e58d7",
+        "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 235,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-11T17:30:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "254c5bd4_b70a15ab",
+      "range": {
+        "startLine": 235,
+        "startChar": 3,
+        "endLine": 235,
+        "endChar": 72
+      },
+      "revId": "a4f636682a24b6c4a9641d30e24fab77042abec8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "908b61b4_da4c3653",
@@ -602,6 +698,24 @@
       "side": 1,
       "message": "Ran the tests on a Geforce GT 730 and AMD Radeon RX 5700 XT card.\nThe run on Nvidia card had no issues with these tests but on the AMD card they failed.\n\nSuspecting a AMD driver bug.",
       "parentUuid": "908b61b4_da4c3653",
+      "revId": "a4f636682a24b6c4a9641d30e24fab77042abec8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9db473b7_5b18eae0",
+        "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 249,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-11T17:30:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "709a4275_ed90da16",
       "revId": "a4f636682a24b6c4a9641d30e24fab77042abec8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
