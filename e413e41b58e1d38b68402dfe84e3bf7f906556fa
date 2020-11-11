@@ -16,6 +16,24 @@
       "message": "Cool.\n\nIs there something similar for dEQP?   I\u0027d imagine the EGL multithreading tests would be a source of trouble for these CLs too with the feature enabled.",
       "revId": "e413e41b58e1d38b68402dfe84e3bf7f906556fa",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3f4a1bd8_d5e93dcb",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-11T16:49:28Z",
+      "side": 1,
+      "message": "Right now we can\u0027t easily add new test permutations because it has to go through chromium test specification. In my long term plan (http://go/angle-infra-needs for internal link) we would be able to specify the test sets in ANGLE\u0027s repo and that would make it much easier to add/remove permutations of the dEQP tests.",
+      "parentUuid": "df4cf431_4f99827f",
+      "revId": "e413e41b58e1d38b68402dfe84e3bf7f906556fa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
