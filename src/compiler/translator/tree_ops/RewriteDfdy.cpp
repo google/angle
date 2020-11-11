@@ -55,7 +55,7 @@ Traverser::Traverser(TSymbolTable *symbolTable,
     : TIntermTraverser(true, false, false, symbolTable),
       mRotationSpecConst(rotationSpecConst),
       mDriverUniforms(driverUniforms),
-      mUsePreRotation(compileOptions & SH_ADD_PRE_ROTATION)
+      mUsePreRotation((compileOptions & SH_ADD_PRE_ROTATION) != 0)
 {}
 
 // static

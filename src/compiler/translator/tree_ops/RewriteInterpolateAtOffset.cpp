@@ -11,6 +11,9 @@
 #include "common/angleutils.h"
 #include "compiler/translator/StaticType.h"
 #include "compiler/translator/SymbolTable.h"
+#include "compiler/translator/TranslatorVulkan.h"
+#include "compiler/translator/tree_util/DriverUniform.h"
+#include "compiler/translator/tree_util/FlipRotateSpecConst.h"
 #include "compiler/translator/tree_util/IntermNode_util.h"
 #include "compiler/translator/tree_util/IntermTraverse.h"
 
@@ -24,46 +27,53 @@ class Traverser : public TIntermTraverser
 {
   public:
     ANGLE_NO_DISCARD static bool Apply(TCompiler *compiler,
+                                       ShCompileOptions compileOptions,
                                        TIntermNode *root,
                                        const TSymbolTable &symbolTable,
-                                       TIntermBinary *flipXY,
-                                       TIntermTyped *fragRotation,
-                                       int ShaderVersion);
+                                       int ShaderVersion,
+                                       FlipRotateSpecConst *rotationSpecConst,
+                                       const DriverUniform *driverUniforms);
 
   private:
-    Traverser(TIntermBinary *flipXY,
-              TIntermTyped *fragRotation,
-              TSymbolTable *symbolTable,
-              int shaderVersion);
+    Traverser(TSymbolTable *symbolTable,
+              ShCompileOptions compileOptions,
+              int shaderVersion,
+              FlipRotateSpecConst *rotationSpecConst,
+              const DriverUniform *driverUniforms);
     bool visitAggregate(Visit visit, TIntermAggregate *node) override;
 
-    TIntermBinary *mFlipXY          = nullptr;
-    TIntermTyped *mFragRotation     = nullptr;
     const TSymbolTable *symbolTable = nullptr;
     const int shaderVersion;
+    FlipRotateSpecConst *mRotationSpecConst = nullptr;
+    const DriverUniform *mDriverUniforms    = nullptr;
+    bool mUsePreRotation                    = false;
 };
 
-Traverser::Traverser(TIntermBinary *flipXY,
-                     TIntermTyped *fragRotation,
-                     TSymbolTable *symbolTable,
-                     int shaderVersion)
+Traverser::Traverser(TSymbolTable *symbolTable,
+                     ShCompileOptions compileOptions,
+                     int shaderVersion,
+                     FlipRotateSpecConst *rotationSpecConst,
+                     const DriverUniform *driverUniforms)
     : TIntermTraverser(true, false, false, symbolTable),
-      mFlipXY(flipXY),
-      mFragRotation(fragRotation),
       symbolTable(symbolTable),
-      shaderVersion(shaderVersion)
+      shaderVersion(shaderVersion),
+      mRotationSpecConst(rotationSpecConst),
+      mDriverUniforms(driverUniforms),
+      mUsePreRotation((compileOptions & SH_ADD_PRE_ROTATION) != 0)
 {}
 
 // static
 bool Traverser::Apply(TCompiler *compiler,
+                      ShCompileOptions compileOptions,
                       TIntermNode *root,
                       const TSymbolTable &symbolTable,
-                      TIntermBinary *flipXY,
-                      TIntermTyped *fragRotation,
-                      int shaderVersion)
+                      int shaderVersion,
+                      FlipRotateSpecConst *rotationSpecConst,
+                      const DriverUniform *driverUniforms)
 {
     TSymbolTable *pSymbolTable = const_cast<TSymbolTable *>(&symbolTable);
-    Traverser traverser(flipXY, fragRotation, pSymbolTable, shaderVersion);
+    Traverser traverser(pSymbolTable, compileOptions, shaderVersion, rotationSpecConst,
+                        driverUniforms);
     root->traverse(&traverser);
     return traverser.updateTree(compiler, root);
 }
@@ -94,14 +104,23 @@ bool Traverser::visitAggregate(Visit visit, TIntermAggregate *node)
 
     // If pre-rotation is enabled apply the transformation else just flip the Y-coordinate
     TIntermTyped *rotatedXY;
-    if (mFragRotation)
+    if (mUsePreRotation)
     {
-        rotatedXY =
-            new TIntermBinary(EOpMatrixTimesVector, mFragRotation->deepCopy(), mFlipXY->deepCopy());
+        rotatedXY = mRotationSpecConst->getFragRotationMultiplyFlipXY();
+        if (!rotatedXY)
+        {
+            TIntermTyped *flipXY       = mDriverUniforms->getFlipXYRef();
+            TIntermTyped *fragRotation = mDriverUniforms->getFragRotationMatrixRef();
+            rotatedXY = new TIntermBinary(EOpMatrixTimesVector, fragRotation, flipXY);
+        }
     }
     else
     {
-        rotatedXY = mFlipXY->deepCopy();
+        rotatedXY = mRotationSpecConst->getFlipXY();
+        if (!rotatedXY)
+        {
+            rotatedXY = mDriverUniforms->getFlipXYRef();
+        }
     }
 
     TIntermBinary *correctedOffset = new TIntermBinary(EOpMul, offsetNode, rotatedXY);
@@ -121,11 +140,12 @@ bool Traverser::visitAggregate(Visit visit, TIntermAggregate *node)
 }  // anonymous namespace
 
 bool RewriteInterpolateAtOffset(TCompiler *compiler,
+                                ShCompileOptions compileOptions,
                                 TIntermNode *root,
                                 const TSymbolTable &symbolTable,
                                 int shaderVersion,
-                                TIntermBinary *flipXY,
-                                TIntermTyped *fragRotation)
+                                FlipRotateSpecConst *rotationSpecConst,
+                                const DriverUniform *driverUniforms)
 {
     // interpolateAtOffset is only valid in GLSL 3.0 and later.
     if (shaderVersion < 300)
@@ -133,7 +153,8 @@ bool RewriteInterpolateAtOffset(TCompiler *compiler,
         return true;
     }
 
-    return Traverser::Apply(compiler, root, symbolTable, flipXY, fragRotation, shaderVersion);
+    return Traverser::Apply(compiler, compileOptions, root, symbolTable, shaderVersion,
+                            rotationSpecConst, driverUniforms);
 }
 
 }  // namespace sh

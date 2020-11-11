@@ -914,15 +914,11 @@ bool TranslatorVulkan::translateImpl(TIntermBlock *root,
             return false;
         }
 
+        if (!RewriteInterpolateAtOffset(this, compileOptions, root, getSymbolTable(),
+                                        getShaderVersion(), &surfaceRotationSpecConst,
+                                        driverUniforms))
         {
-            TIntermBinary *flipXY = driverUniforms->getFlipXYRef();
-            TIntermBinary *fragRotation =
-                usePreRotation ? driverUniforms->getFragRotationMatrixRef() : nullptr;
-            if (!RewriteInterpolateAtOffset(this, root, getSymbolTable(), getShaderVersion(),
-                                            flipXY, fragRotation))
-            {
-                return false;
-            }
+            return false;
         }
 
         EmitEarlyFragmentTestsGLSL(*this, sink);

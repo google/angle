@@ -36,6 +36,7 @@ class FlipRotateSpecConst
     TIntermTyped *getNegFlipXY();
     TIntermTyped *getFlipY();
     TIntermTyped *getNegFlipY();
+    TIntermTyped *getFragRotationMultiplyFlipXY();
 
     void generateSymbol(TSymbolTable *symbolTable);
     void outputLayoutString(TInfoSinkBase &sink) const;

@@ -100,86 +100,96 @@ constexpr Vec2EnumMap kFlipXYValue = {
      {vk::SurfaceRotation::FlippedRotated180Degrees, {{1.0f, 1.0f}}},
      {vk::SurfaceRotation::FlippedRotated270Degrees, {{-1.0f, -1.0f}}}}};
 
-// Returns vec2(flip.x, flip.y) or vec2(flip.x, -flip.y) if negFlipY is true
-TIntermAggregate *CreateFlipXY(vk::SurfaceRotation rotation, float yscale)
+// Returns [[flipX*m0+flipY*m1]  [flipX*m2+flipY*m3]] where [m0 m1] is the first column of
+// kFragRotation matrix and [m2 m3] is the second column of kFragRotation matrix.
+constexpr Vec2 CalcFragRotationMultiplyFlipXY(vk::SurfaceRotation rotation)
+{
+    return Vec2({kFlipXYValue[rotation][0] * kFragRotationMatrices[rotation][0] +
+                     kFlipXYValue[rotation][1] * kFragRotationMatrices[rotation][1],
+                 kFlipXYValue[rotation][0] * kFragRotationMatrices[rotation][2] +
+                     kFlipXYValue[rotation][1] * kFragRotationMatrices[rotation][3]});
+}
+
+// Returns vec2(vec2Values.x, vec2Values.y*yscale)
+TIntermAggregate *CreateVec2(Vec2EnumMap vec2Values, float yscale, vk::SurfaceRotation rotation)
 {
     auto vec2Type             = new TType(EbtFloat, 2);
     TIntermSequence *vec2Args = new TIntermSequence();
-    vec2Args->push_back(CreateFloatNode(kFlipXYValue[rotation][0]));
-    vec2Args->push_back(CreateFloatNode(kFlipXYValue[rotation][1] * yscale));
+    vec2Args->push_back(CreateFloatNode(vec2Values[rotation][0]));
+    vec2Args->push_back(CreateFloatNode(vec2Values[rotation][1] * yscale));
     TIntermAggregate *constVarConstructor =
         TIntermAggregate::CreateConstructor(*vec2Type, vec2Args);
     return constVarConstructor;
 }
 
 // Generates an array of vec2 and then use rotation to retrieve the desired flipXY out.
-TIntermTyped *CreateFlipXYWithIndex(TIntermSymbol *rotationSpecConst, float yscale)
+TIntermTyped *CreateVec2ArrayWithIndex(Vec2EnumMap vec2Values,
+                                       float yscale,
+                                       TIntermSymbol *rotationSpecConst)
 {
     auto vec2Type        = new TType(EbtFloat, 2);
     TType *typeVec2Array = new TType(*vec2Type);
     typeVec2Array->makeArray(static_cast<unsigned int>(vk::SurfaceRotation::EnumCount));
 
     TIntermSequence *sequences;
-    sequences =
-        new TIntermSequence({CreateFlipXY(vk::SurfaceRotation::Identity, yscale),
-                             CreateFlipXY(vk::SurfaceRotation::Rotated90Degrees, yscale),
-                             CreateFlipXY(vk::SurfaceRotation::Rotated180Degrees, yscale),
-                             CreateFlipXY(vk::SurfaceRotation::Rotated270Degrees, yscale),
-                             CreateFlipXY(vk::SurfaceRotation::FlippedIdentity, yscale),
-                             CreateFlipXY(vk::SurfaceRotation::FlippedRotated90Degrees, yscale),
-                             CreateFlipXY(vk::SurfaceRotation::FlippedRotated180Degrees, yscale),
-                             CreateFlipXY(vk::SurfaceRotation::FlippedRotated270Degrees, yscale)});
+    sequences = new TIntermSequence(
+        {CreateVec2(vec2Values, yscale, vk::SurfaceRotation::Identity),
+         CreateVec2(vec2Values, yscale, vk::SurfaceRotation::Rotated90Degrees),
+         CreateVec2(vec2Values, yscale, vk::SurfaceRotation::Rotated180Degrees),
+         CreateVec2(vec2Values, yscale, vk::SurfaceRotation::Rotated270Degrees),
+         CreateVec2(vec2Values, yscale, vk::SurfaceRotation::FlippedIdentity),
+         CreateVec2(vec2Values, yscale, vk::SurfaceRotation::FlippedRotated90Degrees),
+         CreateVec2(vec2Values, yscale, vk::SurfaceRotation::FlippedRotated180Degrees),
+         CreateVec2(vec2Values, yscale, vk::SurfaceRotation::FlippedRotated270Degrees)});
     TIntermTyped *vec2Array = TIntermAggregate::CreateConstructor(*typeVec2Array, sequences);
     return new TIntermBinary(EOpIndexDirect, vec2Array, rotationSpecConst->deepCopy());
 }
 
 // Returns [flipX*m0, flipY*m1], where [m0 m1] is the first column of kFragRotation matrix.
-constexpr Vec2 CreateRotatedFlipXYValueForDFdx(vk::SurfaceRotation rotation)
+constexpr Vec2 CalcRotatedFlipXYValueForDFdx(vk::SurfaceRotation rotation)
 {
     return Vec2({kFlipXYValue[rotation][0] * kFragRotationMatrices[rotation][0],
                  kFlipXYValue[rotation][1] * kFragRotationMatrices[rotation][1]});
 }
 constexpr Vec2EnumMap kRotatedFlipXYForDFdx = {
-    {{vk::SurfaceRotation::Identity,
-      CreateRotatedFlipXYValueForDFdx(vk::SurfaceRotation::Identity)},
+    {{vk::SurfaceRotation::Identity, CalcRotatedFlipXYValueForDFdx(vk::SurfaceRotation::Identity)},
      {vk::SurfaceRotation::Rotated90Degrees,
-      CreateRotatedFlipXYValueForDFdx(vk::SurfaceRotation::Rotated90Degrees)},
+      CalcRotatedFlipXYValueForDFdx(vk::SurfaceRotation::Rotated90Degrees)},
      {vk::SurfaceRotation::Rotated180Degrees,
-      CreateRotatedFlipXYValueForDFdx(vk::SurfaceRotation::Rotated180Degrees)},
+      CalcRotatedFlipXYValueForDFdx(vk::SurfaceRotation::Rotated180Degrees)},
      {vk::SurfaceRotation::Rotated270Degrees,
-      CreateRotatedFlipXYValueForDFdx(vk::SurfaceRotation::Rotated270Degrees)},
+      CalcRotatedFlipXYValueForDFdx(vk::SurfaceRotation::Rotated270Degrees)},
      {vk::SurfaceRotation::FlippedIdentity,
-      CreateRotatedFlipXYValueForDFdx(vk::SurfaceRotation::FlippedIdentity)},
+      CalcRotatedFlipXYValueForDFdx(vk::SurfaceRotation::FlippedIdentity)},
      {vk::SurfaceRotation::FlippedRotated90Degrees,
-      CreateRotatedFlipXYValueForDFdx(vk::SurfaceRotation::FlippedRotated90Degrees)},
+      CalcRotatedFlipXYValueForDFdx(vk::SurfaceRotation::FlippedRotated90Degrees)},
      {vk::SurfaceRotation::FlippedRotated180Degrees,
-      CreateRotatedFlipXYValueForDFdx(vk::SurfaceRotation::FlippedRotated180Degrees)},
+      CalcRotatedFlipXYValueForDFdx(vk::SurfaceRotation::FlippedRotated180Degrees)},
      {vk::SurfaceRotation::FlippedRotated270Degrees,
-      CreateRotatedFlipXYValueForDFdx(vk::SurfaceRotation::FlippedRotated270Degrees)}}};
+      CalcRotatedFlipXYValueForDFdx(vk::SurfaceRotation::FlippedRotated270Degrees)}}};
 
 // Returns [flipX*m2, flipY*m3], where [m2 m3] is the second column of kFragRotation matrix.
-constexpr Vec2 CreateRotatedFlipXYValueForDFdy(vk::SurfaceRotation rotation)
+constexpr Vec2 CalcRotatedFlipXYValueForDFdy(vk::SurfaceRotation rotation)
 {
     return Vec2({kFlipXYValue[rotation][0] * kFragRotationMatrices[rotation][2],
                  kFlipXYValue[rotation][1] * kFragRotationMatrices[rotation][3]});
 }
 constexpr Vec2EnumMap kRotatedFlipXYForDFdy = {
-    {{vk::SurfaceRotation::Identity,
-      CreateRotatedFlipXYValueForDFdy(vk::SurfaceRotation::Identity)},
+    {{vk::SurfaceRotation::Identity, CalcRotatedFlipXYValueForDFdy(vk::SurfaceRotation::Identity)},
      {vk::SurfaceRotation::Rotated90Degrees,
-      CreateRotatedFlipXYValueForDFdy(vk::SurfaceRotation::Rotated90Degrees)},
+      CalcRotatedFlipXYValueForDFdy(vk::SurfaceRotation::Rotated90Degrees)},
      {vk::SurfaceRotation::Rotated180Degrees,
-      CreateRotatedFlipXYValueForDFdy(vk::SurfaceRotation::Rotated180Degrees)},
+      CalcRotatedFlipXYValueForDFdy(vk::SurfaceRotation::Rotated180Degrees)},
      {vk::SurfaceRotation::Rotated270Degrees,
-      CreateRotatedFlipXYValueForDFdy(vk::SurfaceRotation::Rotated270Degrees)},
+      CalcRotatedFlipXYValueForDFdy(vk::SurfaceRotation::Rotated270Degrees)},
      {vk::SurfaceRotation::FlippedIdentity,
-      CreateRotatedFlipXYValueForDFdy(vk::SurfaceRotation::FlippedIdentity)},
+      CalcRotatedFlipXYValueForDFdy(vk::SurfaceRotation::FlippedIdentity)},
      {vk::SurfaceRotation::FlippedRotated90Degrees,
-      CreateRotatedFlipXYValueForDFdy(vk::SurfaceRotation::FlippedRotated90Degrees)},
+      CalcRotatedFlipXYValueForDFdy(vk::SurfaceRotation::FlippedRotated90Degrees)},
      {vk::SurfaceRotation::FlippedRotated180Degrees,
-      CreateRotatedFlipXYValueForDFdy(vk::SurfaceRotation::FlippedRotated180Degrees)},
+      CalcRotatedFlipXYValueForDFdy(vk::SurfaceRotation::FlippedRotated180Degrees)},
      {vk::SurfaceRotation::FlippedRotated270Degrees,
-      CreateRotatedFlipXYValueForDFdy(vk::SurfaceRotation::FlippedRotated270Degrees)}}};
+      CalcRotatedFlipXYValueForDFdy(vk::SurfaceRotation::FlippedRotated270Degrees)}}};
 
 // Returns an array of float and then use rotation to retrieve the desired float value out.
 TIntermTyped *CreateFloatArrayWithRotationIndex(const Vec2EnumMap &valuesEnumMap,
@@ -306,7 +316,7 @@ TIntermTyped *FlipRotateSpecConst::getFlipXY()
         return nullptr;
     }
     mReferenced = true;
-    return CreateFlipXYWithIndex(mSpecConstSymbol, 1.0);
+    return CreateVec2ArrayWithIndex(kFlipXYValue, 1.0, mSpecConstSymbol);
 }
 
 TIntermTyped *FlipRotateSpecConst::getNegFlipXY()
@@ -316,7 +326,7 @@ TIntermTyped *FlipRotateSpecConst::getNegFlipXY()
         return nullptr;
     }
     mReferenced = true;
-    return CreateFlipXYWithIndex(mSpecConstSymbol, -1.0);
+    return CreateVec2ArrayWithIndex(kFlipXYValue, -1.0, mSpecConstSymbol);
 }
 
 TIntermTyped *FlipRotateSpecConst::getFlipY()
@@ -337,6 +347,35 @@ TIntermTyped *FlipRotateSpecConst::getNegFlipY()
     }
     mReferenced = true;
     return CreateFloatArrayWithRotationIndex(kFlipXYValue, 1, -1, mSpecConstSymbol);
+}
+
+TIntermTyped *FlipRotateSpecConst::getFragRotationMultiplyFlipXY()
+{
+    if (!mSpecConstSymbol)
+    {
+        return nullptr;
+    }
+
+    constexpr Vec2EnumMap kFragRotationMultiplyFlipXY = {
+        {{vk::SurfaceRotation::Identity,
+          CalcFragRotationMultiplyFlipXY(vk::SurfaceRotation::Identity)},
+         {vk::SurfaceRotation::Rotated90Degrees,
+          CalcFragRotationMultiplyFlipXY(vk::SurfaceRotation::Rotated90Degrees)},
+         {vk::SurfaceRotation::Rotated180Degrees,
+          CalcFragRotationMultiplyFlipXY(vk::SurfaceRotation::Rotated180Degrees)},
+         {vk::SurfaceRotation::Rotated270Degrees,
+          CalcFragRotationMultiplyFlipXY(vk::SurfaceRotation::Rotated270Degrees)},
+         {vk::SurfaceRotation::FlippedIdentity,
+          CalcFragRotationMultiplyFlipXY(vk::SurfaceRotation::FlippedIdentity)},
+         {vk::SurfaceRotation::FlippedRotated90Degrees,
+          CalcFragRotationMultiplyFlipXY(vk::SurfaceRotation::FlippedRotated90Degrees)},
+         {vk::SurfaceRotation::FlippedRotated180Degrees,
+          CalcFragRotationMultiplyFlipXY(vk::SurfaceRotation::FlippedRotated180Degrees)},
+         {vk::SurfaceRotation::FlippedRotated270Degrees,
+          CalcFragRotationMultiplyFlipXY(vk::SurfaceRotation::FlippedRotated270Degrees)}}};
+
+    mReferenced = true;
+    return CreateVec2ArrayWithIndex(kFragRotationMultiplyFlipXY, 1.0, mSpecConstSymbol);
 }
 
 }  // namespace sh

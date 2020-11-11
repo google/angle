@@ -27,11 +27,12 @@ class TSymbolTable;
 
 // If fragRotation = nullptr, no rotation will be applied.
 ANGLE_NO_DISCARD bool RewriteInterpolateAtOffset(TCompiler *compiler,
+                                                 ShCompileOptions compileOptions,
                                                  TIntermNode *root,
                                                  const TSymbolTable &symbolTable,
                                                  int shaderVersion,
-                                                 TIntermBinary *flipXY,
-                                                 TIntermTyped *fragRotation);
+                                                 FlipRotateSpecConst *rotationSpecConst,
+                                                 const DriverUniform *driverUniforms);
 
 }  // namespace sh
 
