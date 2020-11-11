@@ -34,6 +34,24 @@
       "parentUuid": "3db17efb_c43bcd26",
       "revId": "5225b2565dab613782999a2219436e6e3269a0a7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e12e443d_501014de",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-11T18:39:11Z",
+      "side": 0,
+      "message": "Ack, we can add a serial number to identify gl::Context/ContextVk owners if we need it for debugging. The idea is you don\u0027t allow calling back into the ContextVk.",
+      "parentUuid": "208d3d6f_c412535f",
+      "revId": "5225b2565dab613782999a2219436e6e3269a0a7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }

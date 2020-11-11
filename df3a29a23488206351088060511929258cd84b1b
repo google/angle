@@ -18,6 +18,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f81475cc_c829af2b",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 2738,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-11T18:39:11Z",
+      "side": 1,
+      "message": "Ack, this is unrelated to this CL. Ideally we could have a mechanism that flushes when there is significant outstanding work and throttles if we are too far behind the device. Currently we only have a throttle during Swap.",
+      "parentUuid": "d552b2de_9fdb8841",
+      "revId": "df3a29a23488206351088060511929258cd84b1b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "41bf01d2_da3643ef",
@@ -35,6 +53,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "adcb746e_7881ad64",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 2758,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-11T18:39:11Z",
+      "side": 1,
+      "message": "Ack, we can defend against this using the above technique of pre-emptive flushing/throttling. Feel free to file a bug. This seems like a low priority feature.",
+      "parentUuid": "41bf01d2_da3643ef",
+      "revId": "df3a29a23488206351088060511929258cd84b1b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "97a25cdf_92f0c7d5",
@@ -48,6 +84,30 @@
       "writtenOn": "2020-11-10T03:39:41Z",
       "side": 1,
       "message": "Should be false. open() will set it to true.",
+      "range": {
+        "startLine": 830,
+        "startChar": 14,
+        "endLine": 830,
+        "endChar": 18
+      },
+      "revId": "df3a29a23488206351088060511929258cd84b1b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "eab72c0c_e7ffe648",
+        "filename": "src/libANGLE/renderer/vulkan/SecondaryCommandBuffer.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 830,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-11T18:39:11Z",
+      "side": 1,
+      "message": "Ack, this is intentional. A newly created CB is open.",
+      "parentUuid": "97a25cdf_92f0c7d5",
       "range": {
         "startLine": 830,
         "startChar": 14,
