@@ -67,6 +67,24 @@
       "message": "Oh, Tim, one thing I recommend.\n\nOriginally I had added test_utils_unittest_helper to gn_isolate_map.pyl and triggered the crashing unittest using trigger.py to see that the crash stack works on the bots. Wouldn\u0027t be a bad idea.",
       "revId": "d08348ff5d78cfb616fb6b1d6d5910c7a6548eba",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cb4efa38_70112e9e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-11T13:41:04Z",
+      "side": 1,
+      "message": "Even better - you can add a unit test to that triggers the crash in another process, captures stdout/stderr and verifies that the stack trace has symbols. Note this won\u0027t work on SAN builds.",
+      "parentUuid": "c849b09b_6282818d",
+      "revId": "d08348ff5d78cfb616fb6b1d6d5910c7a6548eba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
