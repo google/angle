@@ -97,6 +97,30 @@
       },
       "revId": "170ed8fc8ca12838922385e4512e5005a3e6852f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e6f246d8_3d887f5b",
+        "filename": "src/compiler/translator/tree_ops/RewriteInterpolateAtOffset.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-11T21:48:49Z",
+      "side": 1,
+      "message": "What Jamie means is this: `(compileOptions \u0026 SH_ADD_PRE_ROTATION) !\u003d 0`.",
+      "parentUuid": "a5531709_d7166538",
+      "range": {
+        "startLine": 61,
+        "startChar": 20,
+        "endLine": 61,
+        "endChar": 59
+      },
+      "revId": "170ed8fc8ca12838922385e4512e5005a3e6852f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
