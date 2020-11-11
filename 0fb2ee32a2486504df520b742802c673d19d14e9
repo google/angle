@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a138af4d_c8032685",
+        "filename": "src/libGLESv2/global_state.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-11T01:22:04Z",
+      "side": 1,
+      "message": "nit: you can init it directly.",
+      "range": {
+        "startLine": 147,
+        "startChar": 9,
+        "endLine": 147,
+        "endChar": 20
+      },
+      "revId": "0fb2ee32a2486504df520b742802c673d19d14e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a1dd1d69_2a244aa6",
+        "filename": "src/libGLESv2/global_state.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-11T01:22:04Z",
+      "side": 1,
+      "message": "nit: this can go on one line.",
+      "range": {
+        "startLine": 150,
+        "startChar": 0,
+        "endLine": 151,
+        "endChar": 22
+      },
+      "revId": "0fb2ee32a2486504df520b742802c673d19d14e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f99551c3_46f1b037",
+        "filename": "src/libGLESv2/global_state.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 156,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-11T01:22:04Z",
+      "side": 1,
+      "message": "Ideally this should be happening in Context11 instead of in a global state header file. Did you already try out that approach?",
+      "range": {
+        "startLine": 152,
+        "startChar": 0,
+        "endLine": 156,
+        "endChar": 5
+      },
+      "revId": "0fb2ee32a2486504df520b742802c673d19d14e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
