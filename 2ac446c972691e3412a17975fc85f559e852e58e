@@ -195,6 +195,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4f029aba_be488f18",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1030,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-11T17:30:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fe7e8832_fd0a18cf",
+      "range": {
+        "startLine": 1030,
+        "startChar": 49,
+        "endLine": 1030,
+        "endChar": 60
+      },
+      "revId": "2ac446c972691e3412a17975fc85f559e852e58e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "61737bc3_16ef72c2",
@@ -279,6 +303,30 @@
       "writtenOn": "2020-10-19T20:50:30Z",
       "side": 1,
       "message": "Wrong name",
+      "range": {
+        "startLine": 6,
+        "startChar": 3,
+        "endLine": 6,
+        "endChar": 17
+      },
+      "revId": "2ac446c972691e3412a17975fc85f559e852e58e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "58af6237_fc447594",
+        "filename": "src/compiler/translator/tree_util/RunAtTheBeginOfShader.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-11T17:30:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b1c815a4_d49557e2",
       "range": {
         "startLine": 6,
         "startChar": 3,

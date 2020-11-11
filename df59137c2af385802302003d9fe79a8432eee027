@@ -41,6 +41,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "61da0628_5a64f8c0",
+        "filename": "src/compiler/translator/tree_util/ReplaceSampleMaskVariables.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-11T17:30:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4d33d1da_a521cdd4",
+      "range": {
+        "startLine": 27,
+        "startChar": 39,
+        "endLine": 27,
+        "endChar": 41
+      },
+      "revId": "df59137c2af385802302003d9fe79a8432eee027",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0e40df45_345ba9f1",
@@ -54,6 +78,30 @@
       "writtenOn": "2020-10-23T22:08:49Z",
       "side": 1,
       "message": "typo - With",
+      "range": {
+        "startLine": 31,
+        "startChar": 41,
+        "endLine": 31,
+        "endChar": 43
+      },
+      "revId": "df59137c2af385802302003d9fe79a8432eee027",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9f7a7a8a_ae3d380a",
+        "filename": "src/compiler/translator/tree_util/ReplaceSampleMaskVariables.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-11T17:30:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0e40df45_345ba9f1",
       "range": {
         "startLine": 31,
         "startChar": 41,

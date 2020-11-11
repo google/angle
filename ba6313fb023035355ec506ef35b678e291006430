@@ -58,6 +58,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "42423fce_f3771d55",
+        "filename": "src/compiler/translator/tree_util/ReplaceSampleMaskVariables.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-11T17:30:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3115e09c_97c3288e",
+      "range": {
+        "startLine": 54,
+        "startChar": 0,
+        "endLine": 59,
+        "endChar": 54
+      },
+      "revId": "ba6313fb023035355ec506ef35b678e291006430",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1a642943_32705a74",
@@ -71,6 +95,30 @@
       "writtenOn": "2020-10-26T13:55:54Z",
       "side": 1,
       "message": "nit: Replace \"With\" instead of Replace \"To\"",
+      "range": {
+        "startLine": 27,
+        "startChar": 22,
+        "endLine": 27,
+        "endChar": 56
+      },
+      "revId": "ba6313fb023035355ec506ef35b678e291006430",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "78e67a2d_c1839e8a",
+        "filename": "src/compiler/translator/tree_util/ReplaceSampleMaskVariables.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-11T17:30:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1a642943_32705a74",
       "range": {
         "startLine": 27,
         "startChar": 22,
