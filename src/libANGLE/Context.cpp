@@ -2099,8 +2099,11 @@ void Context::getRenderbufferParameterivRobust(GLenum target,
 
 void Context::texBuffer(TextureType target, GLenum internalformat, BufferID buffer)
 {
+    ASSERT(target == TextureType::Buffer);
+
+    Texture *texture  = getTextureByType(target);
     Buffer *bufferObj = mState.mBufferManager->getBuffer(buffer);
-    texBufferRange(target, internalformat, buffer, 0, clampCast<GLintptr>(bufferObj->getSize()));
+    ANGLE_CONTEXT_TRY(texture->setBuffer(this, bufferObj, internalformat));
 }
 
 void Context::texBufferRange(TextureType target,
@@ -2113,7 +2116,7 @@ void Context::texBufferRange(TextureType target,
 
     Texture *texture  = getTextureByType(target);
     Buffer *bufferObj = mState.mBufferManager->getBuffer(buffer);
-    ANGLE_CONTEXT_TRY(texture->setBuffer(this, bufferObj, internalformat, offset, size));
+    ANGLE_CONTEXT_TRY(texture->setBufferRange(this, bufferObj, internalformat, offset, size));
 }
 
 void Context::getTexParameterfv(TextureType target, GLenum pname, GLfloat *params)

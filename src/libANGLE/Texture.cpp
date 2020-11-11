@@ -1896,16 +1896,32 @@ GLenum Texture::getGenerateMipmapHint() const
 
 angle::Result Texture::setBuffer(const gl::Context *context,
                                  gl::Buffer *buffer,
-                                 GLenum internalFormat,
-                                 GLintptr offset,
-                                 GLsizeiptr size)
+                                 GLenum internalFormat)
+{
+    // Use UINT_MAX to indicate that the size is taken from whatever size the buffer has when the
+    // texture buffer is used.
+    return setBufferRange(context, buffer, internalFormat, 0,
+                          std::numeric_limits<GLsizeiptr>::max());
+}
+
+angle::Result Texture::setBufferRange(const gl::Context *context,
+                                      gl::Buffer *buffer,
+                                      GLenum internalFormat,
+                                      GLintptr offset,
+                                      GLsizeiptr size)
 {
     mState.mImmutableFormat = true;
     mState.mBuffer.set(context, buffer, offset, size);
     ANGLE_TRY(mTexture->setBuffer(context, internalFormat));
 
-    mState.mImmutableLevels = static_cast<GLuint>(1);
     mState.clearImageDescs();
+    if (buffer == nullptr)
+    {
+        signalDirtyStorage(InitState::MayNeedInit);
+        return angle::Result::Continue;
+    }
+
+    mState.mImmutableLevels           = static_cast<GLuint>(1);
     InternalFormat internalFormatInfo = GetSizedInternalFormatInfo(internalFormat);
     Format format(internalFormat);
     Extents extents(static_cast<GLuint>(size / internalFormatInfo.pixelBytes), 1, 1);

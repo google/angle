@@ -4,6 +4,8 @@
 
 // See README.md for format.
 
+3573 : dEQP-GLES31.functional.state_query.texture_level.texture_buffer.width_* = FAIL
+
 ////
 //// Desktop expectations
 ////
