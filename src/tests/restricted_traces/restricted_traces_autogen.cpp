@@ -27,6 +27,7 @@
 #include "mobile_legends/mobile_legends_capture_context1.h"
 #include "nba2k20_800/nba2k20_800_capture_context1.h"
 #include "pubg_mobile_lite/pubg_mobile_lite_capture_context1.h"
+#include "real_commando_secret_mission/real_commando_secret_mission_capture_context1.h"
 #include "temple_run_300/temple_run_300_capture_context1.h"
 #include "trex_200/trex_200_capture_context1.h"
 #include "world_of_tanks_blitz/world_of_tanks_blitz_capture_context1.h"
@@ -95,6 +96,11 @@ constexpr angle::PackedEnumMap<RestrictedTraceID, TraceInfo> kTraceInfos = {
      {pubg_mobile_lite::kReplayFrameStart, pubg_mobile_lite::kReplayFrameEnd,
       pubg_mobile_lite::kReplayDrawSurfaceWidth, pubg_mobile_lite::kReplayDrawSurfaceHeight,
       "pubg_mobile_lite"}},
+    {RestrictedTraceID::real_commando_secret_mission,
+     {real_commando_secret_mission::kReplayFrameStart,
+      real_commando_secret_mission::kReplayFrameEnd,
+      real_commando_secret_mission::kReplayDrawSurfaceWidth,
+      real_commando_secret_mission::kReplayDrawSurfaceHeight, "real_commando_secret_mission"}},
     {RestrictedTraceID::temple_run_300,
      {temple_run_300::kReplayFrameStart, temple_run_300::kReplayFrameEnd,
       temple_run_300::kReplayDrawSurfaceWidth, temple_run_300::kReplayDrawSurfaceHeight,
@@ -165,6 +171,9 @@ void ReplayFrame(RestrictedTraceID traceID, uint32_t frameIndex)
         case RestrictedTraceID::pubg_mobile_lite:
             pubg_mobile_lite::ReplayContext1Frame(frameIndex);
             break;
+        case RestrictedTraceID::real_commando_secret_mission:
+            real_commando_secret_mission::ReplayContext1Frame(frameIndex);
+            break;
         case RestrictedTraceID::temple_run_300:
             temple_run_300::ReplayContext1Frame(frameIndex);
             break;
@@ -232,6 +241,9 @@ void ResetReplay(RestrictedTraceID traceID)
             break;
         case RestrictedTraceID::pubg_mobile_lite:
             pubg_mobile_lite::ResetContext1Replay();
+            break;
+        case RestrictedTraceID::real_commando_secret_mission:
+            real_commando_secret_mission::ResetContext1Replay();
             break;
         case RestrictedTraceID::temple_run_300:
             temple_run_300::ResetContext1Replay();
@@ -301,6 +313,9 @@ void SetupReplay(RestrictedTraceID traceID)
         case RestrictedTraceID::pubg_mobile_lite:
             pubg_mobile_lite::SetupContext1Replay();
             break;
+        case RestrictedTraceID::real_commando_secret_mission:
+            real_commando_secret_mission::SetupContext1Replay();
+            break;
         case RestrictedTraceID::temple_run_300:
             temple_run_300::SetupContext1Replay();
             break;
@@ -369,6 +384,9 @@ void SetBinaryDataDir(RestrictedTraceID traceID, const char *dataDir)
         case RestrictedTraceID::pubg_mobile_lite:
             pubg_mobile_lite::SetBinaryDataDir(dataDir);
             break;
+        case RestrictedTraceID::real_commando_secret_mission:
+            real_commando_secret_mission::SetBinaryDataDir(dataDir);
+            break;
         case RestrictedTraceID::temple_run_300:
             temple_run_300::SetBinaryDataDir(dataDir);
             break;
@@ -436,6 +454,9 @@ void SetBinaryDataDecompressCallback(RestrictedTraceID traceID, DecompressCallba
             break;
         case RestrictedTraceID::pubg_mobile_lite:
             pubg_mobile_lite::SetBinaryDataDecompressCallback(callback);
+            break;
+        case RestrictedTraceID::real_commando_secret_mission:
+            real_commando_secret_mission::SetBinaryDataDecompressCallback(callback);
             break;
         case RestrictedTraceID::temple_run_300:
             temple_run_300::SetBinaryDataDecompressCallback(callback);

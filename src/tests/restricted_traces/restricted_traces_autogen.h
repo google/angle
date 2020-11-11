@@ -70,6 +70,7 @@ enum class RestrictedTraceID
     mobile_legends,
     nba2k20_800,
     pubg_mobile_lite,
+    real_commando_secret_mission,
     temple_run_300,
     trex_200,
     world_of_tanks_blitz,

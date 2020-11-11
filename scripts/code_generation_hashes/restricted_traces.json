@@ -1,6 +1,6 @@
 {
   "src/tests/restricted_traces/.gitignore":
-    "737ec95dcd9772d5c3429da279f0e008",
+    "d5726b6a94502ab787506adff19284ee",
   "src/tests/restricted_traces/angry_birds_2_1500.tar.gz.sha1":
     "2b5d6505d6a8b6f3bbfbad2c8405a89d",
   "src/tests/restricted_traces/arena_of_valor.tar.gz.sha1":
@@ -35,14 +35,16 @@
     "9a97bffd4c6c156a14308bb1c6f50a7e",
   "src/tests/restricted_traces/pubg_mobile_lite.tar.gz.sha1":
     "6a77372489ee4b43639b684a39ab8d71",
+  "src/tests/restricted_traces/real_commando_secret_mission.tar.gz.sha1":
+    "4b484dd9c53a79100ec13b6f1c86040d",
   "src/tests/restricted_traces/restricted_traces.json":
-    "2e5e53faaaffae07d60240b3623ab56b",
+    "409567d34961d31f9624ba43783fe2f3",
   "src/tests/restricted_traces/restricted_traces_autogen.cpp":
-    "59642dd94d215e99dc6a4218377e53ce",
+    "47e925e155579d8293858bee531aa3e3",
   "src/tests/restricted_traces/restricted_traces_autogen.gni":
-    "78f0f06f56b09719f72ce449f8ea86f0",
+    "217b5f08593e80c6d3beb9e8a88055cd",
   "src/tests/restricted_traces/restricted_traces_autogen.h":
-    "f4b0de9cf67a9366564fd29aebb945da",
+    "599c5bd34872a7ca9e70adb1d5bcd7ba",
   "src/tests/restricted_traces/temple_run_300.tar.gz.sha1":
     "0a08ce3df88cb358ccac3ac63ba04955",
   "src/tests/restricted_traces/trex_200.tar.gz.sha1":
