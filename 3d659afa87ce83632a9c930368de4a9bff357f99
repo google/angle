@@ -688,6 +688,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "cb0ef878_0a082f0a",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 1370,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-11T22:06:35Z",
+      "side": 1,
+      "message": "The swap history is a circular buffer. `mSwapHistory[mCurrentSwapHistoryIndex]` up there is the oldest entry. When you get here, it\u0027s the newest entry! Makes sense?\n\nIt doesn\u0027t matter if the update happens before or after present. Present is irrelevant as ANGLE can only wait on the submit fence, i.e. the GPU workload not the WSI\u0027s (there\u0027s no feedback from present).",
+      "parentUuid": "21f40984_ec07bd12",
+      "range": {
+        "startLine": 1367,
+        "startChar": 0,
+        "endLine": 1370,
+        "endChar": 0
+      },
+      "revId": "3d659afa87ce83632a9c930368de4a9bff357f99",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "59dbe605_de8dcad6",
