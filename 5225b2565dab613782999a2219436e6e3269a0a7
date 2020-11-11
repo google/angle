@@ -16,6 +16,24 @@
       "message": "Purely hypothetical, but since this could allow us to correlate commands to contexts, could this have had any potentially useful debugging information once we actually this multithreading work and start coming across more complex apps submitting commands with multiple contexts?\n\nIt\u0027s hard to know what information would be useful to debug an issue without having hit the issue yet, but I\u0027m wondering if we can do some pre-emptive work at least related to knowing which task was submitted by which context when things go wrong.   Is that something that\u0027s already supported with this version of code?",
       "revId": "5225b2565dab613782999a2219436e6e3269a0a7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "208d3d6f_c412535f",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-11-11T15:12:04Z",
+      "side": 0,
+      "message": "I had similar ideas, but I believe ANGLE discourages caching the context or renderer. That has potential issues with object lifetime.\nThe errors we could see in the worker should just be out of memory or device lost (or present related). The point being that they are not necessarily specific to the command / context that submitted the work.",
+      "parentUuid": "3db17efb_c43bcd26",
+      "revId": "5225b2565dab613782999a2219436e6e3269a0a7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
