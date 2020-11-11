@@ -664,6 +664,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "21f40984_ec07bd12",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 1370,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-11-11T17:10:47Z",
+      "side": 1,
+      "message": "Yeah does seem weird. We are just using this to throttle the CPU so having serial be for work sent so far is just as good as it being serial of the present we issue below. In either case if we get too far ahead we\u0027ll stall.",
+      "parentUuid": "8786fcdb_f8d9a05e",
+      "range": {
+        "startLine": 1367,
+        "startChar": 0,
+        "endLine": 1370,
+        "endChar": 0
+      },
+      "revId": "3d659afa87ce83632a9c930368de4a9bff357f99",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "59dbe605_de8dcad6",
