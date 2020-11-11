@@ -35,6 +35,23 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "60231250_0bc5ec66",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-11T17:00:33Z",
+      "side": 1,
+      "message": "LGTM but I want to do some testing before I +2 (was slowed by some infrastructure issues).  Question for Jamie.",
+      "revId": "170ed8fc8ca12838922385e4512e5005a3e6852f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "15708760_5a15a94c",
@@ -48,6 +65,30 @@
       "writtenOn": "2020-11-11T12:40:48Z",
       "side": 1,
       "message": "nit: explicitly cast to int per our usual style",
+      "range": {
+        "startLine": 61,
+        "startChar": 20,
+        "endLine": 61,
+        "endChar": 59
+      },
+      "revId": "170ed8fc8ca12838922385e4512e5005a3e6852f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a5531709_d7166538",
+        "filename": "src/compiler/translator/tree_ops/RewriteInterpolateAtOffset.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-11T17:00:33Z",
+      "side": 1,
+      "message": "Do we need a cast here?\n\nPerhaps I\u0027m missing something (why I\u0027m asking).  mUsePreRotation is a bool.  I see this same pattern (\"compileOptions \u0026 \u003cflag\u003e\") elsewhere in the shader translator code, including the following in \"TranslatorVulkan.cpp\":\n\n    bool usePreRotation \u003d compileOptions \u0026 SH_ADD_PRE_ROTATION;",
+      "parentUuid": "15708760_5a15a94c",
       "range": {
         "startLine": 61,
         "startChar": 20,
