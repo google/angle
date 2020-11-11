@@ -8584,6 +8584,44 @@ TEST_P(ETC1CompressedTextureTest, ETC1ShrinkThenGrowMaxLevels)
     ASSERT_GL_NO_ERROR();
 }
 
+class TextureBufferTestES31 : public ANGLETest
+{
+  protected:
+    TextureBufferTestES31() {}
+};
+
+// Test that mutating a buffer attached to a texture returns correct results in query.
+TEST_P(TextureBufferTestES31, QueryWidthAfterBufferResize)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_buffer"));
+
+    constexpr GLint kInitialSize                  = 128;
+    constexpr std::array<GLint, 4> kModifiedSizes = {96, 192, 32, 256};
+
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_BUFFER, texture);
+
+    GLBuffer buffer;
+    glBindBuffer(GL_TEXTURE_BUFFER, buffer);
+    glBufferData(GL_TEXTURE_BUFFER, kInitialSize, nullptr, GL_STATIC_DRAW);
+
+    glTexBufferEXT(GL_TEXTURE_BUFFER, GL_RGBA8, buffer);
+    ASSERT_GL_NO_ERROR();
+
+    GLint queryResult = 0;
+    glGetTexLevelParameteriv(GL_TEXTURE_BUFFER, 0, GL_TEXTURE_WIDTH, &queryResult);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_EQ(queryResult, kInitialSize / 4);
+
+    for (GLint modifiedSize : kModifiedSizes)
+    {
+        glBufferData(GL_TEXTURE_BUFFER, modifiedSize, nullptr, GL_STATIC_DRAW);
+        glGetTexLevelParameteriv(GL_TEXTURE_BUFFER, 0, GL_TEXTURE_WIDTH, &queryResult);
+        ASSERT_GL_NO_ERROR();
+        EXPECT_EQ(queryResult, modifiedSize / 4);
+    }
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against.
 #define ES2_EMULATE_COPY_TEX_IMAGE()                          \
@@ -8637,5 +8675,6 @@ ANGLE_INSTANTIATE_TEST_ES3(Texture3DIntegerTestES3);
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(Texture2DDepthTest);
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(PBOCompressedTextureTest);
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(ETC1CompressedTextureTest);
+ANGLE_INSTANTIATE_TEST_ES31(TextureBufferTestES31);
 
 }  // anonymous namespace
