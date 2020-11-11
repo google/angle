@@ -16,6 +16,23 @@
       "message": "PTAL",
       "revId": "03541f5340625993e12902877e128379142523e5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b0a30885_11c4839a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-11T18:47:25Z",
+      "side": 1,
+      "message": "all failing tests are passing on AMD, we might have to restrict this feature to AMD",
+      "revId": "03541f5340625993e12902877e128379142523e5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
