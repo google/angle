@@ -3127,23 +3127,13 @@ void ContextVk::updateSurfaceRotationDrawFramebuffer(const gl::State &glState)
     mCurrentRotationDrawFramebuffer =
         DetermineSurfaceRotation(drawFramebuffer, mCurrentWindowSurface);
 
-    // DetermineSurfaceRotation() does not encode yflip information. Shader code uses
-    // SurfaceRotation specialization constant to determine yflip as well. We add yflip information
-    // to the SurfaceRotation here so the shader does yflip properly.
-    SurfaceRotation rotationAndFlip = mCurrentRotationDrawFramebuffer;
-    if (isViewportFlipEnabledForDrawFBO())
-    {
-        ASSERT(ToUnderlying(rotationAndFlip) < ToUnderlying(SurfaceRotation::FlippedIdentity));
-        rotationAndFlip = static_cast<SurfaceRotation>(
-            ToUnderlying(SurfaceRotation::FlippedIdentity) + ToUnderlying(rotationAndFlip));
-    }
-
-    if (rotationAndFlip != mGraphicsPipelineDesc->getSurfaceRotation())
+    if (mCurrentRotationDrawFramebuffer != mGraphicsPipelineDesc->getSurfaceRotation())
     {
         // surface rotation are specialization constants, which affects program compilation. When
         // rotation changes, we need to update GraphicsPipelineDesc so that the correct pipeline
         // program object will be retrieved.
-        mGraphicsPipelineDesc->updateSurfaceRotation(&mGraphicsPipelineTransition, rotationAndFlip);
+        mGraphicsPipelineDesc->updateSurfaceRotation(&mGraphicsPipelineTransition,
+                                                     mCurrentRotationDrawFramebuffer);
     }
 }
 

@@ -64,7 +64,7 @@ TIntermBinary *CreateDriverUniformRef(const TVariable *driverUniforms, const cha
 ANGLE_NO_DISCARD bool AppendVertexShaderPositionYCorrectionToMain(TCompiler *compiler,
                                                                   TIntermBlock *root,
                                                                   TSymbolTable *symbolTable,
-                                                                  TIntermTyped *negFlipY)
+                                                                  TIntermSwizzle *negFlipY)
 {
     // Create a symbol reference to "gl_Position"
     const TVariable *position  = BuiltInVariable::gl_Position();
@@ -151,7 +151,7 @@ bool TranslatorMetal::translate(TIntermBlock *root,
 
     if (getShaderType() == GL_VERTEX_SHADER)
     {
-        TIntermTyped *negFlipY = GetDriverUniformNegFlipYRef(driverUniforms);
+        auto negFlipY = getDriverUniformNegFlipYRef(driverUniforms);
 
         // Append gl_Position.y correction to main
         if (!AppendVertexShaderPositionYCorrectionToMain(this, root, &getSymbolTable(), negFlipY))
