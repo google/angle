@@ -52,6 +52,24 @@
       "parentUuid": "32c5d4e0_40acd434",
       "revId": "03fafb7f8d39ac0c3ae10e92ca77bb21b8c2f6d8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fada3782_05fa4d99",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 2706,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-11T18:40:22Z",
+      "side": 1,
+      "message": "My bad, you were right. I added in a finishToSerial. This was the cause of the flaky failure. PTAL, still a TODO here to have a finer-grained wait.",
+      "parentUuid": "6594e4a3_2f5086b6",
+      "revId": "03fafb7f8d39ac0c3ae10e92ca77bb21b8c2f6d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
