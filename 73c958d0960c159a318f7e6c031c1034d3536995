@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7b78a283_9a99000e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-11T20:35:33Z",
+      "side": 1,
+      "message": "I did this, but I realize most of this needs to be undone when anglebug.com/5334 is done. Could potentially land to unblock the rest of the work.",
+      "revId": "73c958d0960c159a318f7e6c031c1034d3536995",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
