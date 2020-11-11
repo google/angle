@@ -36,6 +36,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b883624c_698d575b",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 2738,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-11T20:36:49Z",
+      "side": 1,
+      "message": "I\u0027m referring to catching leaking memory (which is related to this CL, since the \u0027new\u0027 is being added), not making sure the CPU doesn\u0027t get too far ahead of the GPU.   With this version, it\u0027s possible to silently allocate CBHs forever without any being recycled.",
+      "parentUuid": "f81475cc_c829af2b",
+      "revId": "df3a29a23488206351088060511929258cd84b1b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "41bf01d2_da3643ef",
@@ -67,6 +85,24 @@
       "side": 1,
       "message": "Ack, we can defend against this using the above technique of pre-emptive flushing/throttling. Feel free to file a bug. This seems like a low priority feature.",
       "parentUuid": "41bf01d2_da3643ef",
+      "revId": "df3a29a23488206351088060511929258cd84b1b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "44670786_3b2e977c",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 2758,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-11T20:36:49Z",
+      "side": 1,
+      "message": "anglebug.com/5335",
+      "parentUuid": "adcb746e_7881ad64",
       "revId": "df3a29a23488206351088060511929258cd84b1b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
