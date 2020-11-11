@@ -68,6 +68,24 @@
       "message": "Not able to repro the failing tests on Linux with Quadro P400 and driver 440.100.\n\nI not able to install 418.56 driver due to installer failures. Maybe I\u0027ll troubleshoot that for a bit.",
       "revId": "0fc7339447067ad17ceb2625aebd96397ad4344f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "486af368_eb1ff214",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-11T01:16:44Z",
+      "side": 1,
+      "message": "It\u0027s probably a bug in the older driver unfortunately. You might be able to install a similarly versioned driver if not that exact version. Our labs team has been very busy so driver upgrades have been very low priority for a while now. Not sure what we should do on this old config.",
+      "parentUuid": "a4243623_ff9a3d6c",
+      "revId": "0fc7339447067ad17ceb2625aebd96397ad4344f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
