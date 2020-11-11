@@ -16,6 +16,23 @@
       "message": "I wrote a CL to increase the Android test sharding to prevent the timeout flake.\n\nIntel Windows flake is tracked in anglebug.com/5328 \n\nI disabled Linux/Intel testing of the Async command buffer. b/173004081\n\nLinux NVIDIA timeouts I haven\u0027t seen before. Will try this again.",
       "revId": "fec82cbbb4382e4d8374b22546d605794c500479",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "08307362_6f77f7da",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 22
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-11T22:08:31Z",
+      "side": 1,
+      "message": "Submit away",
+      "revId": "fec82cbbb4382e4d8374b22546d605794c500479",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
