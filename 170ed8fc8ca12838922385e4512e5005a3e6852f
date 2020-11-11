@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "6436e1fd_c47e234c",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-11T15:28:19Z",
+      "side": 1,
+      "message": "charlie, for completeness can you add this bug tag as well -\n Bug: angleproject:3589",
+      "revId": "170ed8fc8ca12838922385e4512e5005a3e6852f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "c4cc6713_bab44232",
