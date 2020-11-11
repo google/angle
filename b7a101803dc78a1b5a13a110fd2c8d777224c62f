@@ -51,6 +51,24 @@
       "message": "Hold off on this temporarily. Something still seems incorrect to me.",
       "revId": "b7a101803dc78a1b5a13a110fd2c8d777224c62f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b605d7d8_0e5d8846",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-11T21:49:38Z",
+      "side": 1,
+      "message": "Doesn\u0027t Manhattan use glFlush() for offscreen too, which is why Charlie\u0027s CL couldn\u0027t defer the flushes forever (othewise he\u0027d hit the same issue of the GPU going idle)?",
+      "parentUuid": "38012620_d9d3a6f6",
+      "revId": "b7a101803dc78a1b5a13a110fd2c8d777224c62f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
