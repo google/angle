@@ -18,6 +18,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0d0b1837_6d522120",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 634,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-11T16:58:30Z",
+      "side": 0,
+      "message": "Ack",
+      "parentUuid": "e54edcd6_a85c60eb",
+      "revId": "3fcd8e11a9418402cb8d37b2334c0f0159436c6c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b269b508_c6b61929",
@@ -31,6 +49,24 @@
       "writtenOn": "2020-11-10T00:31:26Z",
       "side": 0,
       "message": "I believe I got a validation error when threaded if this wasn\u0027t before the vkQueueWaitIdle call.",
+      "revId": "3fcd8e11a9418402cb8d37b2334c0f0159436c6c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f8710ee9_2bbf7f74",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 513,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-11T16:58:30Z",
+      "side": 0,
+      "message": "Ack, will check on the bots.",
+      "parentUuid": "b269b508_c6b61929",
       "revId": "3fcd8e11a9418402cb8d37b2334c0f0159436c6c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }

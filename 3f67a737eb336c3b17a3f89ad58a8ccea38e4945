@@ -18,6 +18,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d398a9b8_0fbb9fd6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-11T16:58:30Z",
+      "side": 1,
+      "message": "Ack, see other comment.",
+      "parentUuid": "f779ffdd_ae3bc2fe",
+      "revId": "3f67a737eb336c3b17a3f89ad58a8ccea38e4945",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "56e9082c_55cc7b49",
@@ -31,6 +49,24 @@
       "writtenOn": "2020-11-10T00:31:26Z",
       "side": 1,
       "message": "reserve makes me very nervous.\nHow do we make sure that commands are submitted in the right order if they are allocated and submitted in separate steps.\nI see you\u0027ve marked that as a TBD issue in a later file.",
+      "revId": "3f67a737eb336c3b17a3f89ad58a8ccea38e4945",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7f25ce85_3802602c",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 583,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-11T16:58:30Z",
+      "side": 1,
+      "message": "Ack, going to explain in this comment because most of your concerns were around reserve.\n\nThe reserve/submit split is an accurate representation of what happens in the main thread/submit thread.\n\nWith main thread CommandQueue: we first reserve then submit\nWith submit thread CommandQueue: we reserve a serial on the main thread, then tell the thread to submit later with the reserved serial.\n\nI\u0027m trying to get the interface for all the classes to line up exactly so we can enforce a clean (non-leaky) abstraction. To that purpose we need the separation here because of how the submit thread works. Otherwise the async command queue class would have a different API from the command queue.\n\nI fixed the immediate problem by using a mutex. tl;dr, I\u0027ll clean this up once this patch series lands.",
+      "parentUuid": "56e9082c_55cc7b49",
       "revId": "3f67a737eb336c3b17a3f89ad58a8ccea38e4945",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
@@ -52,6 +88,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e3b8c4fe_c4da68c7",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1181,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-11T16:58:30Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "ad9c7bcb_a3f06b02",
+      "revId": "3f67a737eb336c3b17a3f89ad58a8ccea38e4945",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c685cf02_a961a843",
@@ -69,6 +123,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b8e6de25_8c07af98",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 518,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-11T16:58:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c685cf02_a961a843",
+      "revId": "3f67a737eb336c3b17a3f89ad58a8ccea38e4945",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "be2d66df_c8830e02",
@@ -82,6 +154,24 @@
       "writtenOn": "2020-11-10T00:31:26Z",
       "side": 1,
       "message": "This is done by the worker thread when using the commandProcessor path, so should this inside the else clause?\nThat or we could move the waitSemaphore*.clear() calls outside the else as well.\nThey will all be no-ops when using the commandProcessor path since that transfers those resources.",
+      "revId": "3f67a737eb336c3b17a3f89ad58a8ccea38e4945",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f3d2a4dd_9e1b5596",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 2587,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-11T16:58:30Z",
+      "side": 1,
+      "message": "I didn\u0027t mess with the wait semaphores because they use this std::move pattern. I\u0027ll clean this up in a later patch.",
+      "parentUuid": "be2d66df_c8830e02",
       "revId": "3f67a737eb336c3b17a3f89ad58a8ccea38e4945",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
