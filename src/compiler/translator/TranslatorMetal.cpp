@@ -20,6 +20,7 @@
 #include "compiler/translator/StaticType.h"
 #include "compiler/translator/tree_ops/InitializeVariables.h"
 #include "compiler/translator/tree_util/BuiltIn.h"
+#include "compiler/translator/tree_util/DriverUniform.h"
 #include "compiler/translator/tree_util/FindMain.h"
 #include "compiler/translator/tree_util/FindSymbolNode.h"
 #include "compiler/translator/tree_util/IntermNode_util.h"
@@ -40,22 +41,10 @@ const char kRasterizerDiscardEnabledConstName[] = "ANGLERasterizerDisabled";
 
 namespace
 {
+// Metal specific driver uniforms
+constexpr const char kCoverageMask[] = "coverageMask";
 
-constexpr ImmutableString kCoverageMaskField       = ImmutableString("coverageMask");
 constexpr ImmutableString kSampleMaskWriteFuncName = ImmutableString("ANGLEWriteSampleMask");
-
-TIntermBinary *CreateDriverUniformRef(const TVariable *driverUniforms, const char *fieldName)
-{
-    size_t fieldIndex =
-        FindFieldIndex(driverUniforms->getType().getInterfaceBlock()->fields(), fieldName);
-
-    TIntermSymbol *angleUniformsRef = new TIntermSymbol(driverUniforms);
-    TConstantUnion *uniformIndex    = new TConstantUnion;
-    uniformIndex->setIConst(static_cast<int>(fieldIndex));
-    TIntermConstantUnion *indexRef =
-        new TIntermConstantUnion(uniformIndex, *StaticType::GetBasic<EbtInt>());
-    return new TIntermBinary(EOpIndexDirectInterfaceBlock, angleUniformsRef, indexRef);
-}
 
 // Unlike Vulkan having auto viewport flipping extension, in Metal we have to flip gl_Position.y
 // manually.
@@ -120,8 +109,26 @@ ANGLE_NO_DISCARD bool InitializeUnusedOutputs(TIntermBlock *root,
 
     return true;
 }
-
 }  // anonymous namespace
+
+TFieldList *DriverUniformMetal::createUniformFields(TSymbolTable *symbolTable) const
+{
+    TFieldList *driverFieldList = DriverUniform::createUniformFields(symbolTable);
+
+    // Add coverage mask to driver uniform. Metal doesn't have built-in GL_SAMPLE_COVERAGE_VALUE
+    // equivalent functionality, needs to emulate it using fragment shader's [[sample_mask]] output
+    // value.
+    TField *coverageMaskField = new TField(new TType(EbtUInt), ImmutableString(kCoverageMask),
+                                           TSourceLoc(), SymbolType::AngleInternal);
+    driverFieldList->push_back(coverageMaskField);
+
+    return driverFieldList;
+}
+
+TIntermBinary *DriverUniformMetal::getCoverageMaskFieldRef() const
+{
+    return createDriverUniformRef(kCoverageMask);
+}
 
 TranslatorMetal::TranslatorMetal(sh::GLenum type, ShShaderSpec spec) : TranslatorVulkan(type, spec)
 {}
@@ -136,7 +143,7 @@ bool TranslatorMetal::translate(TIntermBlock *root,
                                  getNameMap(), &getSymbolTable(), getShaderType(),
                                  getShaderVersion(), getOutputType(), false, true, compileOptions);
 
-    const TVariable *driverUniforms = nullptr;
+    DriverUniformMetal driverUniforms;
     if (!TranslatorVulkan::translateImpl(root, compileOptions, perfDiagnostics, &driverUniforms,
                                          &outputGLSL))
     {
@@ -151,7 +158,7 @@ bool TranslatorMetal::translate(TIntermBlock *root,
 
     if (getShaderType() == GL_VERTEX_SHADER)
     {
-        auto negFlipY = getDriverUniformNegFlipYRef(driverUniforms);
+        auto negFlipY = driverUniforms.getNegFlipYRef();
 
         // Append gl_Position.y correction to main
         if (!AppendVertexShaderPositionYCorrectionToMain(this, root, &getSymbolTable(), negFlipY))
@@ -167,7 +174,7 @@ bool TranslatorMetal::translate(TIntermBlock *root,
     }
     else if (getShaderType() == GL_FRAGMENT_SHADER)
     {
-        if (!insertSampleMaskWritingLogic(root, driverUniforms))
+        if (!insertSampleMaskWritingLogic(root, &driverUniforms))
         {
             return false;
         }
@@ -203,7 +210,7 @@ bool TranslatorMetal::translate(TIntermBlock *root,
 // This is achieved by multiply the depth value with scale value stored in
 // driver uniform's depthRange.reserved
 bool TranslatorMetal::transformDepthBeforeCorrection(TIntermBlock *root,
-                                                     const TVariable *driverUniforms)
+                                                     const DriverUniform *driverUniforms)
 {
     // Create a symbol reference to "gl_Position"
     const TVariable *position  = BuiltInVariable::gl_Position();
@@ -214,7 +221,7 @@ bool TranslatorMetal::transformDepthBeforeCorrection(TIntermBlock *root,
     TIntermSwizzle *positionZ   = new TIntermSwizzle(positionRef, swizzleOffsetZ);
 
     // Create a ref to "depthRange.reserved"
-    TIntermBinary *viewportZScale = getDriverUniformDepthRangeReservedFieldRef(driverUniforms);
+    TIntermBinary *viewportZScale = driverUniforms->getDepthRangeReservedFieldRef();
 
     // Create the expression "gl_Position.z * depthRange.reserved".
     TIntermBinary *zScale = new TIntermBinary(EOpMul, positionZ->deepCopy(), viewportZScale);
@@ -227,20 +234,11 @@ bool TranslatorMetal::transformDepthBeforeCorrection(TIntermBlock *root,
     return RunAtTheEndOfShader(this, root, assignment, &getSymbolTable());
 }
 
-void TranslatorMetal::createAdditionalGraphicsDriverUniformFields(std::vector<TField *> *fieldsOut)
-{
-    // Add coverage mask to driver uniform. Metal doesn't have built-in GL_SAMPLE_COVERAGE_VALUE
-    // equivalent functionality, needs to emulate it using fragment shader's [[sample_mask]] output
-    // value.
-    TField *coverageMaskField =
-        new TField(new TType(EbtUInt), kCoverageMaskField, TSourceLoc(), SymbolType::AngleInternal);
-    fieldsOut->push_back(coverageMaskField);
-}
-
 // Add sample_mask writing to main, guarded by the specialization constant
 // kCoverageMaskEnabledConstName
-ANGLE_NO_DISCARD bool TranslatorMetal::insertSampleMaskWritingLogic(TIntermBlock *root,
-                                                                    const TVariable *driverUniforms)
+ANGLE_NO_DISCARD bool TranslatorMetal::insertSampleMaskWritingLogic(
+    TIntermBlock *root,
+    const DriverUniformMetal *driverUniforms)
 {
     TInfoSinkBase &sink       = getInfoSink().obj;
     TSymbolTable *symbolTable = &getSymbolTable();
@@ -273,7 +271,7 @@ ANGLE_NO_DISCARD bool TranslatorMetal::insertSampleMaskWritingLogic(TIntermBlock
     sampleMaskWriteFunc->addParameter(maskArg);
 
     // coverageMask
-    TIntermBinary *coverageMask = CreateDriverUniformRef(driverUniforms, kCoverageMaskField.data());
+    TIntermBinary *coverageMask = driverUniforms->getCoverageMaskFieldRef();
 
     // Insert this code to the end of main()
     // if (ANGLECoverageMaskEnabled)

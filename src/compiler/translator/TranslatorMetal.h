@@ -16,9 +16,22 @@
 #define LIBANGLE_RENDERER_METAL_TRANSLATORMETAL_H_
 
 #include "compiler/translator/TranslatorVulkan.h"
+#include "compiler/translator/tree_util/DriverUniform.h"
 
 namespace sh
 {
+
+class DriverUniformMetal : public DriverUniform
+{
+  public:
+    DriverUniformMetal() : DriverUniform() {}
+    ~DriverUniformMetal() override {}
+
+    TIntermBinary *getCoverageMaskFieldRef() const;
+
+  protected:
+    TFieldList *createUniformFields(TSymbolTable *symbolTable) const override;
+};
 
 class TranslatorMetal : public TranslatorVulkan
 {
@@ -30,13 +43,12 @@ class TranslatorMetal : public TranslatorVulkan
                                     ShCompileOptions compileOptions,
                                     PerformanceDiagnostics *perfDiagnostics) override;
 
-    ANGLE_NO_DISCARD bool transformDepthBeforeCorrection(TIntermBlock *root,
-                                                         const TVariable *driverUniforms) override;
-
-    void createAdditionalGraphicsDriverUniformFields(std::vector<TField *> *fieldsOut) override;
+    ANGLE_NO_DISCARD bool transformDepthBeforeCorrection(
+        TIntermBlock *root,
+        const DriverUniform *driverUniforms) override;
 
     ANGLE_NO_DISCARD bool insertSampleMaskWritingLogic(TIntermBlock *root,
-                                                       const TVariable *driverUniforms);
+                                                       const DriverUniformMetal *driverUniforms);
     ANGLE_NO_DISCARD bool insertRasterizerDiscardLogic(TIntermBlock *root);
 };
 

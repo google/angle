@@ -210,6 +210,8 @@ angle_translator_sources = [
   "src/compiler/translator/tree_util/BuiltIn.h",
   "src/compiler/translator/tree_util/BuiltIn_ESSL_autogen.h",
   "src/compiler/translator/tree_util/BuiltIn_complete_autogen.h",
+  "src/compiler/translator/tree_util/DriverUniform.cpp",
+  "src/compiler/translator/tree_util/DriverUniform.h",
   "src/compiler/translator/tree_util/FindFunction.cpp",
   "src/compiler/translator/tree_util/FindFunction.h",
   "src/compiler/translator/tree_util/FindMain.cpp",

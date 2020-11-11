@@ -18,6 +18,7 @@ namespace sh
 {
 
 class TOutputVulkanGLSL;
+class DriverUniform;
 
 class TranslatorVulkan : public TCompiler
 {
@@ -30,27 +31,22 @@ class TranslatorVulkan : public TCompiler
                                     PerformanceDiagnostics *perfDiagnostics) override;
     bool shouldFlattenPragmaStdglInvariantAll() override;
 
-    TIntermSwizzle *getDriverUniformNegFlipYRef(const TVariable *driverUniforms) const;
-    TIntermBinary *getDriverUniformDepthRangeReservedFieldRef(
-        const TVariable *driverUniforms) const;
     // Subclass can call this method to transform the AST before writing the final output.
     // See TranslatorMetal.cpp.
     ANGLE_NO_DISCARD bool translateImpl(TIntermBlock *root,
                                         ShCompileOptions compileOptions,
                                         PerformanceDiagnostics *perfDiagnostics,
-                                        const TVariable **driverUniformsOut,
+                                        DriverUniform *driverUniforms,
                                         TOutputVulkanGLSL *outputGLSL);
 
     // Give subclass such as TranslatorMetal a chance to do depth transform before
     // TranslatorVulkan apply its own transform.
-    ANGLE_NO_DISCARD virtual bool transformDepthBeforeCorrection(TIntermBlock *root,
-                                                                 const TVariable *driverUniforms)
+    ANGLE_NO_DISCARD virtual bool transformDepthBeforeCorrection(
+        TIntermBlock *root,
+        const DriverUniform *driverUniforms)
     {
         return true;
     }
-
-    // Back-end specific fields to be added to driver uniform. See TranslatorMetal.cpp.
-    virtual void createAdditionalGraphicsDriverUniformFields(std::vector<TField *> *fieldsOut) {}
 };
 
 }  // namespace sh
