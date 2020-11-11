@@ -47,6 +47,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "34455690_2b904726",
+        "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 265,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-11T19:17:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1252e1f2_8abd7bcc",
+      "range": {
+        "startLine": 265,
+        "startChar": 23,
+        "endLine": 265,
+        "endChar": 24
+      },
+      "revId": "21d54f4bdda637f9f02900213bb4cb02ec4f3f4b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e94ab563_867e736b",
@@ -60,6 +84,30 @@
       "writtenOn": "2020-11-09T16:11:49Z",
       "side": 1,
       "message": "nit: cpp. Also same typo as .h",
+      "range": {
+        "startLine": 7,
+        "startChar": 23,
+        "endLine": 7,
+        "endChar": 24
+      },
+      "revId": "21d54f4bdda637f9f02900213bb4cb02ec4f3f4b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c254dd99_e45d5fe4",
+        "filename": "src/libANGLE/renderer/vulkan/android/android_vulkan_util.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-11T19:17:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e94ab563_867e736b",
       "range": {
         "startLine": 7,
         "startChar": 23,
@@ -93,6 +141,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "fe8d7c29_5b35a065",
+        "filename": "src/libANGLE/renderer/vulkan/android/android_vulkan_util.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-11T19:17:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7082afe0_e97949f7",
+      "range": {
+        "startLine": 14,
+        "startChar": 0,
+        "endLine": 18,
+        "endChar": 6
+      },
+      "revId": "21d54f4bdda637f9f02900213bb4cb02ec4f3f4b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a53ce139_7da138ab",
@@ -106,6 +178,30 @@
       "writtenOn": "2020-11-09T16:11:49Z",
       "side": 1,
       "message": "nit: Use \u003d {}. Also remove pNext \u003d nullptr.",
+      "range": {
+        "startLine": 31,
+        "startChar": 73,
+        "endLine": 31,
+        "endChar": 74
+      },
+      "revId": "21d54f4bdda637f9f02900213bb4cb02ec4f3f4b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "059a8633_dcd0303d",
+        "filename": "src/libANGLE/renderer/vulkan/android/android_vulkan_util.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-11T19:17:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a53ce139_7da138ab",
       "range": {
         "startLine": 31,
         "startChar": 73,
@@ -139,6 +235,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8a21afb9_ae707770",
+        "filename": "src/libANGLE/renderer/vulkan/android/android_vulkan_util.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-11T19:17:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a0a59801_648f65f0",
+      "range": {
+        "startLine": 7,
+        "startChar": 47,
+        "endLine": 7,
+        "endChar": 51
+      },
+      "revId": "21d54f4bdda637f9f02900213bb4cb02ec4f3f4b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9f82fb1c_cf688288",
@@ -156,6 +276,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2fba7647_808a0423",
+        "filename": "src/libANGLE/renderer/vulkan/android/android_vulkan_util.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-11T19:17:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9f82fb1c_cf688288",
+      "revId": "21d54f4bdda637f9f02900213bb4cb02ec4f3f4b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5b728fb1_6fb05527",
@@ -169,6 +307,30 @@
       "writtenOn": "2020-11-09T16:11:49Z",
       "side": 1,
       "message": "Should this also say API \u003e\u003d 26?",
+      "range": {
+        "startLine": 346,
+        "startChar": 42,
+        "endLine": 346,
+        "endChar": 51
+      },
+      "revId": "21d54f4bdda637f9f02900213bb4cb02ec4f3f4b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "123a8a8b_9d8e1015",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 346,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-11T19:17:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5b728fb1_6fb05527",
       "range": {
         "startLine": 346,
         "startChar": 42,
@@ -261,6 +423,24 @@
       "writtenOn": "2020-11-09T16:11:49Z",
       "side": 1,
       "message": "The wrappers are not expected to have logic. They are just a C to C++ rename. I see we violated this a few times, but let\u0027s try to avoid that. You can change these to take a VkMappedMemoryRange argument and call vk*MappedMemoryRanges, then move the logic to the caller.",
+      "revId": "21d54f4bdda637f9f02900213bb4cb02ec4f3f4b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4f23f2ec_b5d803c1",
+        "filename": "src/libANGLE/renderer/vulkan/vk_wrapper.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 1418,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-11T19:17:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7c893301_78f18100",
       "revId": "21d54f4bdda637f9f02900213bb4cb02ec4f3f4b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
