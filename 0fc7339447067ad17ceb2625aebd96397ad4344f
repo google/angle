@@ -86,6 +86,24 @@
       "parentUuid": "a4243623_ff9a3d6c",
       "revId": "0fc7339447067ad17ceb2625aebd96397ad4344f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "186319e3_a85b6d00",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1298773
+      },
+      "writtenOn": "2020-11-11T07:26:35Z",
+      "side": 1,
+      "message": "Yeah I\u0027d guess the same.\n\nI experimented a bit and the lowest I was able to install was 440.100.\nI think it\u0027s my compiler version.\n\nI\u0027ll ask some people working on the Linux driver for some tips on that.\nI should maybe keep an older Ubuntu version installed as well, for this type of stuff.",
+      "parentUuid": "486af368_eb1ff214",
+      "revId": "0fc7339447067ad17ceb2625aebd96397ad4344f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
