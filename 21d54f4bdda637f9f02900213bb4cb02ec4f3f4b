@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1ad7352a_262d8717",
+        "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 157,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-11T19:36:01Z",
+      "side": 1,
+      "message": "Done, `mBufferPool.release(...)` will take care of `mBuffer` as well. no need to explicitly call it here",
+      "parentUuid": "dcd4a48a_f7b6a755",
+      "range": {
+        "startLine": 157,
+        "startChar": 35,
+        "endLine": 157,
+        "endChar": 46
+      },
+      "revId": "21d54f4bdda637f9f02900213bb4cb02ec4f3f4b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1252e1f2_8abd7bcc",
@@ -366,6 +390,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "dba5a1ce_ed154452",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 738,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-11T19:36:01Z",
+      "side": 1,
+      "message": "mirroring abstraction of `ImageMemory`",
+      "parentUuid": "418c2251_ed4c16b6",
+      "range": {
+        "startLine": 738,
+        "startChar": 6,
+        "endLine": 738,
+        "endChar": 18
+      },
+      "revId": "21d54f4bdda637f9f02900213bb4cb02ec4f3f4b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "439f2e57_b4196d85",
         "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
         "patchSetId": 1
@@ -377,6 +425,30 @@
       "writtenOn": "2020-11-09T16:11:49Z",
       "side": 1,
       "message": "nit: used* if* isExternalBuffer()* is false\n\nSame below",
+      "range": {
+        "startLine": 774,
+        "startChar": 38,
+        "endLine": 774,
+        "endChar": 70
+      },
+      "revId": "21d54f4bdda637f9f02900213bb4cb02ec4f3f4b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1ab03ddd_04d26330",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 774,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-11T19:36:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "439f2e57_b4196d85",
       "range": {
         "startLine": 774,
         "startChar": 38,
@@ -400,6 +472,30 @@
       "writtenOn": "2020-11-09T16:11:49Z",
       "side": 1,
       "message": "Just `return mMemory.map()`",
+      "range": {
+        "startLine": 843,
+        "startChar": 8,
+        "endLine": 843,
+        "endChar": 18
+      },
+      "revId": "21d54f4bdda637f9f02900213bb4cb02ec4f3f4b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2f94be0b_a4f79834",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 843,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-11T19:36:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "52785007_aa1c2a73",
       "range": {
         "startLine": 843,
         "startChar": 8,
