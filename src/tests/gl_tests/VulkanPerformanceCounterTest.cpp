@@ -1851,6 +1851,9 @@ TEST_P(VulkanPerformanceCounterTest, InRenderpassFlushShouldNotBreakRenderpass)
 // Tests that depth/stencil texture clear/load works correctly.
 TEST_P(VulkanPerformanceCounterTest, DepthStencilTextureClearAndLoad)
 {
+    // TODO: http://anglebug.com/5329 Flaky test
+    ANGLE_SKIP_TEST_IF(IsWindows() && IsAMD() && IsVulkan());
+
     const rx::vk::PerfCounters &counters = hackANGLE();
     uint32_t expectedDepthClearCount     = counters.depthClears + 1;
     uint32_t expectedDepthLoadCount      = counters.depthLoads + 3;
