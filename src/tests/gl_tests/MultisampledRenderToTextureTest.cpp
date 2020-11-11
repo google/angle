@@ -908,6 +908,9 @@ TEST_P(MultisampledRenderToTextureES3Test, BlitFramebufferTest)
 // BlitFramebuffer functionality test with renderbuffer. ES3+.
 TEST_P(MultisampledRenderToTextureES3Test, RenderbufferBlitFramebufferTest)
 {
+    // TODO: http://anglebug.com/5331: Generates VVL errors
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     blitFramebufferTestCommon(true);
 }
 
