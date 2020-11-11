@@ -3,6 +3,40 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "d552b2de_9fdb8841",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 2738,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-11T01:35:19Z",
+      "side": 1,
+      "message": "We may want some debug tracking here that makes sure we aren\u0027t exceeding some really high number of outstanding CBHs (1000?), which could point to a leak with CBHs getting lost.",
+      "revId": "df3a29a23488206351088060511929258cd84b1b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "41bf01d2_da3643ef",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 2758,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-11T01:35:19Z",
+      "side": 1,
+      "message": "I think we should have a threshold on the number of CBHs we keep in free list and SafeDelete() any that are recycled beyond that (that 50 count is probably safe to reuse here).   That should help the cases where there is some weird moment where we allocate a bunch of CBHs that are never used again and just eating memory.",
+      "revId": "df3a29a23488206351088060511929258cd84b1b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "97a25cdf_92f0c7d5",
         "filename": "src/libANGLE/renderer/vulkan/SecondaryCommandBuffer.h",
         "patchSetId": 8
