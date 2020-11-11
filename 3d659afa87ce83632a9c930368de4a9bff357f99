@@ -712,6 +712,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e2d7ebad_20e5d5b5",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 1370,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-11-11T23:50:12Z",
+      "side": 1,
+      "message": "Right! No serial from Present.",
+      "parentUuid": "cb0ef878_0a082f0a",
+      "range": {
+        "startLine": 1367,
+        "startChar": 0,
+        "endLine": 1370,
+        "endChar": 0
+      },
+      "revId": "3d659afa87ce83632a9c930368de4a9bff357f99",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "59dbe605_de8dcad6",
