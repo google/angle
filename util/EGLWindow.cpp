@@ -221,6 +221,13 @@ bool EGLWindow::initializeDisplay(OSWindow *osWindow,
             break;
     }
 
+    if (params.asyncCommandQueueFeatureVulkan == EGL_TRUE)
+    {
+        // TODO(jmadill): Update feature names. b/172704839
+        enabledFeatureOverrides.push_back("commandProcessor");
+        enabledFeatureOverrides.push_back("asynchronousCommandProcessing");
+    }
+
     if (params.hasExplicitMemBarrierFeatureMtl == EGL_FALSE)
     {
         disabledFeatureOverrides.push_back("has_explicit_mem_barrier_mtl");

@@ -512,6 +512,11 @@ class ANGLETestBase
                mCurrentParams->isSwiftshader();
     }
 
+    bool isAsyncCommandQueueFeatureEnabled() const
+    {
+        return mCurrentParams->eglParameters.asyncCommandQueueFeatureVulkan == EGL_TRUE;
+    }
+
     bool platformSupportsMultithreading() const;
 
   private:

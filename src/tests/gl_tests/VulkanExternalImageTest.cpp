@@ -758,6 +758,10 @@ TEST_P(VulkanExternalImageTest, ShouldClearOpaqueFdWithSemaphores)
 {
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_memory_object_fd"));
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_semaphore_fd"));
+
+    // http://issuetracker.google.com/173004081
+    ANGLE_SKIP_TEST_IF(IsVulkan() && IsIntel() && IsLinux() && isAsyncCommandQueueFeatureEnabled());
+
     RunShouldClearWithSemaphoresTest<OpaqueFdTraits>(false, kDefaultImageCreateFlags,
                                                      kDefaultImageUsageFlags, isSwiftshader(),
                                                      enableDebugLayers());
@@ -770,6 +774,10 @@ TEST_P(VulkanExternalImageTest, ShouldClearOpaqueFdWithSemaphoresWithFlags)
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_memory_object_fd"));
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_semaphore_fd"));
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_ANGLE_memory_object_flags"));
+
+    // http://issuetracker.google.com/173004081
+    ANGLE_SKIP_TEST_IF(IsVulkan() && IsIntel() && IsLinux() && isAsyncCommandQueueFeatureEnabled());
+
     RunShouldClearWithSemaphoresTest<OpaqueFdTraits>(true, kDefaultImageCreateFlags,
                                                      kDefaultImageUsageFlags, isSwiftshader(),
                                                      enableDebugLayers());
@@ -781,6 +789,10 @@ TEST_P(VulkanExternalImageTest, ShouldClearOpaqueFdWithSemaphoresNoStorage)
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_memory_object_fd"));
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_semaphore_fd"));
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_ANGLE_memory_object_flags"));
+
+    // http://issuetracker.google.com/173004081
+    ANGLE_SKIP_TEST_IF(IsVulkan() && IsIntel() && IsLinux() && isAsyncCommandQueueFeatureEnabled());
+
     RunShouldClearWithSemaphoresTest<OpaqueFdTraits>(true, kDefaultImageCreateFlags,
                                                      kNoStorageImageUsageFlags, isSwiftshader(),
                                                      enableDebugLayers());
@@ -793,6 +805,10 @@ TEST_P(VulkanExternalImageTest, ShouldClearOpaqueFdWithSemaphoresMutableNoStorag
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_memory_object_fd"));
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_semaphore_fd"));
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_ANGLE_memory_object_flags"));
+
+    // http://issuetracker.google.com/173004081
+    ANGLE_SKIP_TEST_IF(IsVulkan() && IsIntel() && IsLinux() && isAsyncCommandQueueFeatureEnabled());
+
     RunShouldClearWithSemaphoresTest<OpaqueFdTraits>(true, kMutableImageCreateFlags,
                                                      kNoStorageImageUsageFlags, isSwiftshader(),
                                                      enableDebugLayers());
@@ -978,6 +994,10 @@ TEST_P(VulkanExternalImageTest, ShouldDrawOpaqueFdWithSemaphores)
 {
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_memory_object_fd"));
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_semaphore_fd"));
+
+    // http://issuetracker.google.com/173004081
+    ANGLE_SKIP_TEST_IF(IsVulkan() && IsIntel() && IsLinux() && isAsyncCommandQueueFeatureEnabled());
+
     runShouldDrawTest<OpaqueFdTraits>(isSwiftshader(), enableDebugLayers());
 }
 
@@ -1143,6 +1163,10 @@ TEST_P(VulkanExternalImageTest, WaitSemaphoresRetainsContentOpaqueFd)
 {
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_memory_object_fd"));
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_semaphore_fd"));
+
+    // http://issuetracker.google.com/173004081
+    ANGLE_SKIP_TEST_IF(IsVulkan() && IsIntel() && IsLinux() && isAsyncCommandQueueFeatureEnabled());
+
     runWaitSemaphoresRetainsContentTest<OpaqueFdTraits>(isSwiftshader(), enableDebugLayers());
 }
 

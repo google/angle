@@ -271,6 +271,13 @@ inline PlatformParameters WithEmulatedPrerotation(const PlatformParameters &para
     prerotation.eglParameters.emulatedPrerotation = rotation;
     return prerotation;
 }
+
+inline PlatformParameters WithAsyncCommandQueueFeatureVulkan(const PlatformParameters &params)
+{
+    PlatformParameters withAsyncCommandQueue                           = params;
+    withAsyncCommandQueue.eglParameters.asyncCommandQueueFeatureVulkan = EGL_TRUE;
+    return withAsyncCommandQueue;
+}
 }  // namespace angle
 
 #endif  // ANGLE_TEST_CONFIGS_H_

@@ -133,18 +133,21 @@ struct CombinedPrintToStringParamName
     INSTANTIATE_TEST_SUITE_P(, testName, testing::ValuesIn(::angle::FilterTestParams(valuesin)), \
                              testing::PrintToStringParamName())
 
-#define ANGLE_ALL_TEST_PLATFORMS_ES1 \
-    ES1_D3D11(), ES1_OPENGL(), ES1_OPENGLES(), ES1_VULKAN(), ES1_VULKAN_SWIFTSHADER()
+#define ANGLE_ALL_TEST_PLATFORMS_ES1                                                   \
+    ES1_D3D11(), ES1_OPENGL(), ES1_OPENGLES(), ES1_VULKAN(), ES1_VULKAN_SWIFTSHADER(), \
+        WithAsyncCommandQueueFeatureVulkan(ES1_VULKAN())
 
 #define ANGLE_ALL_TEST_PLATFORMS_ES2                                                               \
     ES2_D3D9(), ES2_D3D11(), ES2_OPENGL(), ES2_OPENGLES(), ES2_VULKAN(), ES2_VULKAN_SWIFTSHADER(), \
-        ES2_METAL()
+        ES2_METAL(), WithAsyncCommandQueueFeatureVulkan(ES2_VULKAN())
 
-#define ANGLE_ALL_TEST_PLATFORMS_ES3 \
-    ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES(), ES3_VULKAN(), ES3_VULKAN_SWIFTSHADER(), ES3_METAL()
+#define ANGLE_ALL_TEST_PLATFORMS_ES3                                                   \
+    ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES(), ES3_VULKAN(), ES3_VULKAN_SWIFTSHADER(), \
+        ES3_METAL(), WithAsyncCommandQueueFeatureVulkan(ES3_VULKAN())
 
-#define ANGLE_ALL_TEST_PLATFORMS_ES31 \
-    ES31_D3D11(), ES31_OPENGL(), ES31_OPENGLES(), ES31_VULKAN(), ES31_VULKAN_SWIFTSHADER()
+#define ANGLE_ALL_TEST_PLATFORMS_ES31                                                       \
+    ES31_D3D11(), ES31_OPENGL(), ES31_OPENGLES(), ES31_VULKAN(), ES31_VULKAN_SWIFTSHADER(), \
+        WithAsyncCommandQueueFeatureVulkan(ES31_VULKAN())
 
 #define ANGLE_ALL_TEST_PLATFORMS_NULL ES2_NULL(), ES3_NULL(), ES31_NULL()
 

@@ -234,6 +234,11 @@ std::ostream &operator<<(std::ostream &stream, const PlatformParameters &pp)
             break;
     }
 
+    if (pp.eglParameters.asyncCommandQueueFeatureVulkan == EGL_TRUE)
+    {
+        stream << "_AsyncQueue";
+    }
+
     if (pp.eglParameters.hasExplicitMemBarrierFeatureMtl == EGL_FALSE)
     {
         stream << "_NoMetalExplicitMemoryBarrier";
