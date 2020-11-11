@@ -62,8 +62,9 @@ struct EGLPlatformParameters
                         debugLayersEnabled, contextVirtualization, transformFeedbackFeature,
                         allocateNonZeroMemoryFeature, emulateCopyTexImage2DFromRenderbuffers,
                         shaderStencilOutputFeature, genMultipleMipsPerPassFeature, platformMethods,
-                        robustness, emulatedPrerotation, hasExplicitMemBarrierFeatureMtl,
-                        hasCheapRenderPassFeatureMtl, forceBufferGPUStorageFeatureMtl);
+                        robustness, emulatedPrerotation, asyncCommandQueueFeatureVulkan,
+                        hasExplicitMemBarrierFeatureMtl, hasCheapRenderPassFeatureMtl,
+                        forceBufferGPUStorageFeatureMtl);
     }
 
     EGLint renderer                               = EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE;
