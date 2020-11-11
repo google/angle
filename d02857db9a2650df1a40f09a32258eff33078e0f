@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "25c966bc_045c3f78",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-11T00:33:05Z",
+      "side": 1,
+      "message": "PTAL - last AI related to VK_KHR_image_format_list support",
+      "revId": "d02857db9a2650df1a40f09a32258eff33078e0f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
