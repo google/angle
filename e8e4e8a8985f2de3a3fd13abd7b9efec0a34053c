@@ -16,6 +16,23 @@
       "message": "Nice, LGTM.",
       "revId": "e8e4e8a8985f2de3a3fd13abd7b9efec0a34053c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dd36f038_fd51c18c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-11T15:39:15Z",
+      "side": 1,
+      "message": "shabi - can i get a +2?",
+      "revId": "e8e4e8a8985f2de3a3fd13abd7b9efec0a34053c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
