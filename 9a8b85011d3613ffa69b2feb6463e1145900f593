@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0727fe41_055d4dac",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2104,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-12T19:49:41Z",
+      "side": 1,
+      "message": "nit: I\u0027d probably just make a separate EP for this than using a special value.",
+      "range": {
+        "startLine": 2104,
+        "startChar": 4,
+        "endLine": 2104,
+        "endChar": 18
+      },
+      "revId": "9a8b85011d3613ffa69b2feb6463e1145900f593",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a9375713_aeb344e5",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1920,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-12T19:49:41Z",
+      "side": 1,
+      "message": "nit: still need to signal dirty if the last buffer is now unbound.",
+      "range": {
+        "startLine": 1920,
+        "startChar": 4,
+        "endLine": 1920,
+        "endChar": 22
+      },
+      "revId": "9a8b85011d3613ffa69b2feb6463e1145900f593",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2f419f1c_e6df7df2",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 231,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-12T19:49:41Z",
+      "side": 1,
+      "message": "nit: cache this guy",
+      "range": {
+        "startLine": 231,
+        "startChar": 35,
+        "endLine": 231,
+        "endChar": 56
+      },
+      "revId": "9a8b85011d3613ffa69b2feb6463e1145900f593",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d54995bb_503bd5de",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 234,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-12T19:49:41Z",
+      "side": 1,
+      "message": "nit: buffer",
+      "range": {
+        "startLine": 234,
+        "startChar": 17,
+        "endLine": 234,
+        "endChar": 42
+      },
+      "revId": "9a8b85011d3613ffa69b2feb6463e1145900f593",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ad568462_b2ae7261",
+        "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1728,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-12T19:49:41Z",
+      "side": 1,
+      "message": "nit: bufferBinding",
+      "range": {
+        "startLine": 1728,
+        "startChar": 48,
+        "endLine": 1728,
+        "endChar": 62
+      },
+      "revId": "9a8b85011d3613ffa69b2feb6463e1145900f593",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
