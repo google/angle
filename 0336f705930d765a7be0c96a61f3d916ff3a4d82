@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7b8c11a4_13de89a3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-12T16:06:53Z",
+      "side": 1,
+      "message": "TBR\n\nLanding to try and get the VVL roll unblocked.",
+      "revId": "0336f705930d765a7be0c96a61f3d916ff3a4d82",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
