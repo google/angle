@@ -52,6 +52,24 @@
       "parentUuid": "84bc37e9_da11038a",
       "revId": "655fbcdbac4688b8e43fba37d67afcd6d90b2969",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e2c06d7a_582e6446",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-12T19:55:10Z",
+      "side": 1,
+      "message": "Right, it\u0027s a KHR test. See the commit message for which test it is. We don\u0027t run those.",
+      "parentUuid": "beeee0b9_4d842de8",
+      "revId": "655fbcdbac4688b8e43fba37d67afcd6d90b2969",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
