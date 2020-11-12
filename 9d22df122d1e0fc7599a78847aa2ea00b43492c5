@@ -39,6 +39,30 @@
       },
       "revId": "9d22df122d1e0fc7599a78847aa2ea00b43492c5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a724df2d_8be04fee",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1915,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-12T19:37:20Z",
+      "side": 1,
+      "message": "Done. PTAL again",
+      "parentUuid": "1ae66e14_858552cc",
+      "range": {
+        "startLine": 1912,
+        "startChar": 0,
+        "endLine": 1915,
+        "endChar": 45
+      },
+      "revId": "9d22df122d1e0fc7599a78847aa2ea00b43492c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
