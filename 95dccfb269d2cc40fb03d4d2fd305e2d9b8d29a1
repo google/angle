@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ccc720eb_60ed54f1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-12T21:32:27Z",
+      "side": 1,
+      "message": "My local test with \"autoninja -C out/Bot angle\" passes. So relanding it now. ",
+      "revId": "95dccfb269d2cc40fb03d4d2fd305e2d9b8d29a1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
