@@ -10,6 +10,7 @@
 
 #include "util/test_utils.h"
 
+#include "common/FixedVector.h"
 #include "common/angleutils.h"
 #include "common/system_utils.h"
 
@@ -111,6 +112,37 @@ static void Handler(int sig)
 // Can control this at a higher level if required.
 #        define ANGLE_HAS_ADDR2LINE
 
+#        if defined(ANGLE_HAS_ADDR2LINE)
+namespace
+{
+constexpr size_t kAddr2LineMaxParameters = 50;
+using Addr2LineCommandLine = angle::FixedVector<const char *, kAddr2LineMaxParameters>;
+void CallAddr2Line(const Addr2LineCommandLine &commandLine)
+{
+    pid_t pid = fork();
+    if (pid < 0)
+    {
+        std::cerr << "Error: Failed to fork()" << std::endl;
+    }
+    else if (pid > 0)
+    {
+        int status;
+        waitpid(pid, &status, 0);
+        // Ignore the status, since we aren't going to handle it anyway.
+    }
+    else
+    {
+        // Child process executes addr2line
+        //
+        // See comment in test_utils_posix.cpp::PosixProcess regarding const_cast.
+        execv(commandLine[0], const_cast<char *const *>(commandLine.data()));
+        std::cerr << "Error: Child process returned from exevc()" << std::endl;
+        _exit(EXIT_FAILURE);  // exec never returns
+    }
+}
+}  // anonymous namespace
+#        endif  // defined(ANGLE_HAS_ADDR2LINE)
+
 void PrintStackBacktrace()
 {
     printf("Backtrace:\n");
@@ -119,26 +151,77 @@ void PrintStackBacktrace()
     const int count = backtrace(stack, ArraySize(stack));
     char **symbols  = backtrace_symbols(stack, count);
 
+#        if defined(ANGLE_HAS_ADDR2LINE)
+    // Child process executes addr2line
+    constexpr size_t kAddr2LineFixedParametersCount = 6;
+    Addr2LineCommandLine commandLineArgs            = {
+        "/usr/bin/addr2line",  // execv requires an absolute path to find addr2line
+        "-s",
+        "-p",
+        "-f",
+        "-C",
+        "-e",
+    };
+    const char *currentModule = "";
+    std::string resolvedModule;
+
     for (int i = 0; i < count; i++)
     {
-#        if defined(ANGLE_HAS_ADDR2LINE)
-        std::string module(symbols[i], strchr(symbols[i], '('));
+        char *symbol = symbols[i];
+
+        // symbol looks like the following:
+        //
+        //     path/to/module(+address) [globalAddress]
+        //
+        // We are interested in module and address.  symbols[i] is modified in place to replace '('
+        // and ')' with 0, allowing c-strings to point to the module and address.  This allows
+        // accumulating addresses without having to create another storage for them.
+        //
+        // If module is not an absolute path, it needs to be resolved.
+
+        char *module  = symbol;
+        char *address = strchr(symbol, '+') + 1;
+
+        *strchr(module, '(')  = 0;
+        *strchr(address, ')') = 0;
+
+        // If module is the same as last, continue batching addresses.  If commandLineArgs has
+        // reached its capacity however, make the call to addr2line already.  Note that there should
+        // be one entry left for the terminating nullptr at the end of the command line args.
+        if (strcmp(module, currentModule) == 0 &&
+            commandLineArgs.size() + 1 < commandLineArgs.max_size())
+        {
+            commandLineArgs.push_back(address);
+            continue;
+        }
+
+        // If there's a command batched, execute it before modifying currentModule (a pointer to
+        // which is stored in the command line args).
+        if (currentModule[0] != 0)
+        {
+            commandLineArgs.push_back(nullptr);
+            CallAddr2Line(commandLineArgs);
+        }
+
+        // Reset the command line and remember this module as the current.
+        resolvedModule = currentModule = module;
+        commandLineArgs.resize(kAddr2LineFixedParametersCount);
 
         // We need an absolute path to get to the executable and all of the various shared objects,
         // but the caller may have used a relative path to launch the executable, so build one up if
         // we don't see a leading '/'.
-        if (module.at(0) != GetPathSeparator())
+        if (resolvedModule.at(0) != GetPathSeparator())
         {
             const Optional<std::string> &cwd = angle::GetCWD();
             if (!cwd.valid())
             {
-                std::cout << "Error getting CWD for Vulkan layers init." << std::endl;
+                std::cerr << "Error getting CWD to print the backtrace." << std::endl;
             }
             else
             {
                 std::string absolutePath = cwd.value();
-                size_t lastPathSepLoc    = module.find_last_of(GetPathSeparator());
-                std::string relativePath = module.substr(0, lastPathSepLoc);
+                size_t lastPathSepLoc    = resolvedModule.find_last_of(GetPathSeparator());
+                std::string relativePath = resolvedModule.substr(0, lastPathSepLoc);
 
                 // Remove "." from the relativePath path
                 // For example: ./out/LinuxDebug/angle_perftests
@@ -160,47 +243,23 @@ void PrintStackBacktrace()
                     // If found then erase it from string
                     absolutePath.erase(pos, relativePath.length());
                 }
-                module = absolutePath + GetPathSeparator() + module;
+                resolvedModule = absolutePath + GetPathSeparator() + resolvedModule;
             }
         }
 
-        std::string substring(strchr(symbols[i], '+') + 1, strchr(symbols[i], ')'));
+        commandLineArgs.push_back(resolvedModule.c_str());
+        commandLineArgs.push_back(address);
+    }
 
-        pid_t pid = fork();
-        if (pid < 0)
-        {
-            std::cout << "Error: Failed to fork()";
-        }
-        else if (pid > 0)
-        {
-            int status;
-            waitpid(pid, &status, 0);
-            // Ignore the status, since we aren't going to handle it anyway.
-        }
-        else
-        {
-            // Child process executes addr2line
-            const std::vector<const char *> &commandLineArgs = {
-                "/usr/bin/addr2line",  // execv requires an absolute path to find addr2line
-                "-s",
-                "-p",
-                "-f",
-                "-C",
-                "-e",
-                module.c_str(),
-                substring.c_str()};
-            // Taken from test_utils_posix.cpp::PosixProcess
-            std::vector<char *> argv;
-            for (const char *arg : commandLineArgs)
-            {
-                argv.push_back(const_cast<char *>(arg));
-            }
-            argv.push_back(nullptr);
-            execv(argv[0], argv.data());
-            std::cout << "Error: Child process returned from exevc()";
-            _exit(EXIT_FAILURE);  // exec never returns
-        }
+    // Call addr2line for the last batch of addresses.
+    if (currentModule[0] != 0)
+    {
+        commandLineArgs.push_back(nullptr);
+        CallAddr2Line(commandLineArgs);
+    }
 #        else
+    for (int i = 0; i < count; i++)
+    {
         Dl_info info;
         if (dladdr(stack[i], &info) && info.dli_sname)
         {
@@ -219,8 +278,8 @@ void PrintStackBacktrace()
             }
         }
         printf("    %s\n", symbols[i]);
-#        endif  // defined(ANGLE_HAS_ADDR2LINE)
     }
+#        endif  // defined(ANGLE_HAS_ADDR2LINE)
 }
 
 static void Handler(int sig)
