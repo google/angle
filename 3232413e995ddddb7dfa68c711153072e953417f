@@ -50,6 +50,46 @@
       "message": "As a bonus, if you could port a simplified version of some of these tests to BlitFramebufferANGLETest.cpp, similar to TEST_P(BlitFramebufferANGLETest, BlitColorToDefault) (in the same test suite), we could verify the fix with desktop GPUs too.\n\nNot a blocking request.",
       "revId": "3232413e995ddddb7dfa68c711153072e953417f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8a29e66d_7a75fa37",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-12T20:21:52Z",
+      "side": 1,
+      "message": "Ian did you want to sign off?",
+      "revId": "3232413e995ddddb7dfa68c711153072e953417f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "613e83ea_86a2667f",
+        "filename": "src/tests/egl_tests/EGLPreRotationTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1237,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-12T20:21:52Z",
+      "side": 1,
+      "message": "what\u0027s the intent behind the while loop? wondering if this can lead to odd behaviour. can you leave a comment?",
+      "range": {
+        "startLine": 1236,
+        "startChar": 0,
+        "endLine": 1237,
+        "endChar": 5
+      },
+      "revId": "3232413e995ddddb7dfa68c711153072e953417f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
