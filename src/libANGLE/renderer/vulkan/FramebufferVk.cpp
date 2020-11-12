@@ -156,8 +156,10 @@ void AdjustBlitAreaForPreRotation(SurfaceRotation framebufferAngle,
     }
 }
 
-void AdjustFramebufferDimensionsForPreRotation(SurfaceRotation framebufferAngle,
-                                               gl::Rectangle *framebufferDimensions)
+void AdjustDimensionsAndFlipForPreRotation(SurfaceRotation framebufferAngle,
+                                           gl::Rectangle *framebufferDimensions,
+                                           bool *flipX,
+                                           bool *flipY)
 {
     switch (framebufferAngle)
     {
@@ -166,11 +168,13 @@ void AdjustFramebufferDimensionsForPreRotation(SurfaceRotation framebufferAngle,
             break;
         case SurfaceRotation::Rotated90Degrees:
             std::swap(framebufferDimensions->width, framebufferDimensions->height);
+            std::swap(*flipX, *flipY);
             break;
         case SurfaceRotation::Rotated180Degrees:
             break;
         case SurfaceRotation::Rotated270Degrees:
             std::swap(framebufferDimensions->width, framebufferDimensions->height);
+            std::swap(*flipX, *flipY);
             break;
         default:
             UNREACHABLE();
@@ -228,17 +232,17 @@ void AdjustBlitResolveParametersForPreRotation(SurfaceRotation framebufferAngle,
             std::swap(params->stretch[0], params->stretch[1]);
             std::swap(params->srcOffset[0], params->srcOffset[1]);
             std::swap(params->rotatedOffsetFactor[0], params->rotatedOffsetFactor[1]);
+            std::swap(params->flipX, params->flipY);
             if (srcFramebufferAngle == framebufferAngle)
             {
                 std::swap(params->destOffset[0], params->destOffset[1]);
                 std::swap(params->stretch[0], params->stretch[1]);
-                std::swap(params->flipX, params->flipY);
             }
             break;
         case SurfaceRotation::Rotated180Degrees:
-            ASSERT(!params->flipX && params->flipY);
-            params->flipX = true;
-            params->flipY = false;
+            // Combine flip info with api flip.
+            params->flipX = !params->flipX;
+            params->flipY = !params->flipY;
             break;
         case SurfaceRotation::Rotated270Degrees:
             std::swap(params->stretch[0], params->stretch[1]);
@@ -248,9 +252,11 @@ void AdjustBlitResolveParametersForPreRotation(SurfaceRotation framebufferAngle,
             {
                 std::swap(params->stretch[0], params->stretch[1]);
             }
-            ASSERT(!params->flipX && !params->flipY);
-            params->flipX = true;
-            params->flipY = true;
+            // Combine flip info with api flip.
+            params->flipX = !params->flipX;
+            params->flipY = !params->flipY;
+            std::swap(params->flipX, params->flipY);
+
             break;
         default:
             UNREACHABLE();
@@ -1008,8 +1014,8 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
             destFramebufferDimensions.height - srcClippedDestArea.y - srcClippedDestArea.height;
     }
 
-    const bool flipX = sourceArea.isReversedX() != destArea.isReversedX();
-    const bool flipY = sourceArea.isReversedY() != destArea.isReversedY();
+    bool flipX = sourceArea.isReversedX() != destArea.isReversedX();
+    bool flipY = sourceArea.isReversedY() != destArea.isReversedY();
 
     // GLES doesn't allow flipping the parameters of glBlitFramebuffer if performing a resolve.
     ASSERT(!isResolve ||
@@ -1029,8 +1035,8 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
     {
         AdjustBlitAreaForPreRotation(srcFramebufferRotation, sourceAreaOld,
                                      srcFramebufferDimensions, &sourceArea);
-        AdjustFramebufferDimensionsForPreRotation(srcFramebufferRotation,
-                                                  &srcFramebufferDimensions);
+        AdjustDimensionsAndFlipForPreRotation(srcFramebufferRotation, &srcFramebufferDimensions,
+                                              &flipX, &flipY);
     }
     SurfaceRotation rememberDestFramebufferRotation = destFramebufferRotation;
     if (srcFramebufferRotation == SurfaceRotation::Rotated90Degrees)
