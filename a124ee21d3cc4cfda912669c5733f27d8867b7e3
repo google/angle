@@ -50,6 +50,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "528feb74_a45fd734",
+        "filename": "src/compiler/translator/TranslatorMetal.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 244,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-12T22:30:43Z",
+      "side": 1,
+      "message": "The problem with createAdditionalGraphicsDriverUniformFields is that it only able to handle adding new field at the end. In this case, we are removing some field in the middle of array. And there is on going effort to further reduce the number of driver uniforms and I don\u0027t want to touch Metal side for now since I can\u0027t test it. But with the latest CLs, this has been reworked a bit, now the duplicated code are much smaller now. so please take a look again to see if you like it or not.",
+      "parentUuid": "b371b174_5dc43065",
+      "range": {
+        "startLine": 243,
+        "startChar": 0,
+        "endLine": 244,
+        "endChar": 94
+      },
+      "revId": "a124ee21d3cc4cfda912669c5733f27d8867b7e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "aa7aba5f_c2f12317",
         "filename": "src/compiler/translator/TranslatorMetal.h",
         "patchSetId": 14
@@ -61,6 +85,30 @@
       "writtenOn": "2020-11-06T17:54:51Z",
       "side": 1,
       "message": "nit: specialization",
+      "range": {
+        "startLine": 41,
+        "startChar": 24,
+        "endLine": 41,
+        "endChar": 35
+      },
+      "revId": "a124ee21d3cc4cfda912669c5733f27d8867b7e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "79798773_64c82671",
+        "filename": "src/compiler/translator/TranslatorMetal.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-12T22:30:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "aa7aba5f_c2f12317",
       "range": {
         "startLine": 41,
         "startChar": 24,
@@ -84,6 +132,30 @@
       "writtenOn": "2020-11-06T17:54:51Z",
       "side": 1,
       "message": "SH_USE_ROTATION_SPECCONST was removed, so this can be updated/removed too.",
+      "range": {
+        "startLine": 1111,
+        "startChar": 0,
+        "endLine": 1112,
+        "endChar": 60
+      },
+      "revId": "a124ee21d3cc4cfda912669c5733f27d8867b7e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8719aa9f_be18e1ed",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 1112,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-12T22:30:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dd682e62_5798f97f",
       "range": {
         "startLine": 1111,
         "startChar": 0,
