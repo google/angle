@@ -33,6 +33,24 @@
       "message": "shabi, just curious if you are going to land this or have a different fix in mind?",
       "revId": "6bf3a7ce04793ee78fc20d77b1f9e1d1b7df1558",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "93e009bd_fea56ea5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-12T20:18:39Z",
+      "side": 1,
+      "message": "Gerrit at it again! It doesn\u0027t send notifications when there\u0027s a message on a WIP patch. Just confirmed with Kevin that this fix was actually correct, so yes we can land it.",
+      "parentUuid": "5a14d50c_d2a8054a",
+      "revId": "6bf3a7ce04793ee78fc20d77b1f9e1d1b7df1558",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
