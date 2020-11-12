@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b6e8b66a_22624c66",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-12T00:31:56Z",
+      "side": 1,
+      "message": "Intel gold failure is definitely a flake that we\u0027ve seen elsewhere.",
+      "revId": "edf5494c444bdf515459488440893e43a1071996",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
