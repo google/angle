@@ -16,6 +16,500 @@
       "message": "jamie, anything here? can we land this?",
       "revId": "c8611a53d9e0c5038b3d178dc2d50566988f214c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "46ddcbc4_67580af5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-12T21:33:37Z",
+      "side": 1,
+      "message": "Hey Mohan, I went through this pretty closely and found a number of small maintenance and consistency issues. PTAL at the comments below.",
+      "revId": "c8611a53d9e0c5038b3d178dc2d50566988f214c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4f279f47_7db24ac0",
+        "filename": "src/common/android_util.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-12T21:33:37Z",
+      "side": 1,
+      "message": "We should not expose this header to all of ANGLE. It looks like you\u0027re doing this mostly for convenience. To encapsulate the header better please remove this.",
+      "range": {
+        "startLine": 21,
+        "startChar": 0,
+        "endLine": 26,
+        "endChar": 0
+      },
+      "revId": "c8611a53d9e0c5038b3d178dc2d50566988f214c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d7151a0e_e8462463",
+        "filename": "src/libANGLE/Buffer.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-12T21:33:37Z",
+      "side": 1,
+      "message": "nit: need a new impl method for this guy, given the parameters. we should avoid squashing too many different GL methods into one entry point.",
+      "range": {
+        "startLine": 80,
+        "startChar": 11,
+        "endLine": 80,
+        "endChar": 25
+      },
+      "revId": "c8611a53d9e0c5038b3d178dc2d50566988f214c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7089a2b0_f1fc6e0a",
+        "filename": "src/libANGLE/Buffer.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-12T21:33:37Z",
+      "side": 1,
+      "message": "nit: setStorageExternal or bufferStorageExternal",
+      "range": {
+        "startLine": 85,
+        "startChar": 18,
+        "endLine": 85,
+        "endChar": 32
+      },
+      "revId": "c8611a53d9e0c5038b3d178dc2d50566988f214c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8b0ffb78_6912ede6",
+        "filename": "src/libANGLE/ErrorStrings.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-12T21:33:37Z",
+      "side": 1,
+      "message": "nit: \u0027parameter\u0027 or omit.",
+      "range": {
+        "startLine": 66,
+        "startChar": 33,
+        "endLine": 66,
+        "endChar": 38
+      },
+      "revId": "c8611a53d9e0c5038b3d178dc2d50566988f214c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e74cd13e_b4345bbb",
+        "filename": "src/libANGLE/ErrorStrings.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-12T21:33:37Z",
+      "side": 1,
+      "message": "nit: buffers",
+      "range": {
+        "startLine": 134,
+        "startChar": 69,
+        "endLine": 134,
+        "endChar": 75
+      },
+      "revId": "c8611a53d9e0c5038b3d178dc2d50566988f214c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7525b0d3_cc94f799",
+        "filename": "src/libANGLE/renderer/vulkan/BUILD.gn",
+        "patchSetId": 6
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-12T21:33:37Z",
+      "side": 1,
+      "message": "put these in (is_android)",
+      "range": {
+        "startLine": 87,
+        "startChar": 0,
+        "endLine": 88,
+        "endChar": 34
+      },
+      "revId": "c8611a53d9e0c5038b3d178dc2d50566988f214c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ffc8b79e_716db8ad",
+        "filename": "src/libANGLE/renderer/vulkan/android/android_vulkan_util.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-12T21:33:37Z",
+      "side": 1,
+      "message": "small nit: space between first #include and second #include in cpp files as the first is a special one.",
+      "range": {
+        "startLine": 10,
+        "startChar": 1,
+        "endLine": 10,
+        "endChar": 8
+      },
+      "revId": "c8611a53d9e0c5038b3d178dc2d50566988f214c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b448617a_b99ca5d0",
+        "filename": "src/libANGLE/renderer/vulkan/android/android_vulkan_util.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-12T21:33:37Z",
+      "side": 1,
+      "message": "with these moved, remove the #if defs.",
+      "range": {
+        "startLine": 22,
+        "startChar": 12,
+        "endLine": 22,
+        "endChar": 42
+      },
+      "revId": "c8611a53d9e0c5038b3d178dc2d50566988f214c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "96ff4129_3bc549fd",
+        "filename": "src/libANGLE/renderer/vulkan/android/android_vulkan_util.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-12T21:33:37Z",
+      "side": 1,
+      "message": "nit: vk_android_utils.cpp/h for maximum consistency with our other files.",
+      "revId": "c8611a53d9e0c5038b3d178dc2d50566988f214c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c94447b4_3fb2a452",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 2916,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-12T21:33:37Z",
+      "side": 1,
+      "message": "nit: never use \u003d\u003d or !\u003d with bool literals",
+      "range": {
+        "startLine": 2916,
+        "startChar": 31,
+        "endLine": 2916,
+        "endChar": 38
+      },
+      "revId": "c8611a53d9e0c5038b3d178dc2d50566988f214c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "22f97c03_b3fca682",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 2931,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-12T21:33:37Z",
+      "side": 1,
+      "message": "nit: never use \u003d\u003d or !\u003d with bool literals",
+      "range": {
+        "startLine": 2931,
+        "startChar": 25,
+        "endLine": 2931,
+        "endChar": 34
+      },
+      "revId": "c8611a53d9e0c5038b3d178dc2d50566988f214c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b8280875_edac5f96",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 2947,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-12T21:33:37Z",
+      "side": 1,
+      "message": "nit: never use \u003d\u003d or !\u003d with bool literals",
+      "range": {
+        "startLine": 2947,
+        "startChar": 26,
+        "endLine": 2947,
+        "endChar": 35
+      },
+      "revId": "c8611a53d9e0c5038b3d178dc2d50566988f214c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "73b79ec2_c03b44fe",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 2971,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-12T21:33:37Z",
+      "side": 1,
+      "message": "nit: never use \u003d\u003d or !\u003d with bool literals",
+      "range": {
+        "startLine": 2971,
+        "startChar": 26,
+        "endLine": 2971,
+        "endChar": 34
+      },
+      "revId": "c8611a53d9e0c5038b3d178dc2d50566988f214c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f4765ca6_2b7d5fc8",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 2992,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-12T21:33:37Z",
+      "side": 1,
+      "message": "nit: never use \u003d\u003d or !\u003d with bool literals",
+      "range": {
+        "startLine": 2992,
+        "startChar": 26,
+        "endLine": 2992,
+        "endChar": 35
+      },
+      "revId": "c8611a53d9e0c5038b3d178dc2d50566988f214c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "92017e04_ca8d7274",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 3084,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-12T21:33:37Z",
+      "side": 1,
+      "message": "nit: never use \u003d\u003d or !\u003d with bool literals.\n\nI\u0027d recommend you change this to an ASSERT anyway, just ASSERT(IsAndroid()). Don\u0027t add runtime checks in ANGLE code against implementation bugs as it\u0027s against our good practices.",
+      "range": {
+        "startLine": 3084,
+        "startChar": 18,
+        "endLine": 3084,
+        "endChar": 28
+      },
+      "revId": "c8611a53d9e0c5038b3d178dc2d50566988f214c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e2d53cdd_72ca684b",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 3165,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-12T21:33:37Z",
+      "side": 1,
+      "message": "nit: never use \u003d\u003d or !\u003d with bool literals\n\nhowever we should remove the \"if\" here and handle collecting garbage from mMemory directly. You should be able to use release() and valid() methods to BufferMemory for this to work seamlessly.",
+      "range": {
+        "startLine": 3165,
+        "startChar": 33,
+        "endLine": 3165,
+        "endChar": 43
+      },
+      "revId": "c8611a53d9e0c5038b3d178dc2d50566988f214c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "375cd71f_ab02343f",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 740,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-12T21:33:37Z",
+      "side": 1,
+      "message": "nit: We can get the same behaviour only using public methods, see cpp.",
+      "range": {
+        "startLine": 740,
+        "startChar": 0,
+        "endLine": 740,
+        "endChar": 30
+      },
+      "revId": "c8611a53d9e0c5038b3d178dc2d50566988f214c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "adf09a1e_9b146048",
+        "filename": "src/libANGLE/validationESEXT.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1124,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-12T21:33:37Z",
+      "side": 1,
+      "message": "nit: incorrect error message now. A regression test for this would be welcome.",
+      "range": {
+        "startLine": 1124,
+        "startChar": 51,
+        "endLine": 1124,
+        "endChar": 64
+      },
+      "revId": "c8611a53d9e0c5038b3d178dc2d50566988f214c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fbebcff7_be117b82",
+        "filename": "src/libANGLE/validationESEXT.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1175,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-12T21:33:37Z",
+      "side": 1,
+      "message": "nit: same as other nits.",
+      "range": {
+        "startLine": 1175,
+        "startChar": 78,
+        "endLine": 1175,
+        "endChar": 86
+      },
+      "revId": "c8611a53d9e0c5038b3d178dc2d50566988f214c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0f7f2b90_86daa22e",
+        "filename": "src/tests/gl_tests/ExternalBufferTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-12T21:33:37Z",
+      "side": 1,
+      "message": "nit: date",
+      "range": {
+        "startLine": 2,
+        "startChar": 13,
+        "endLine": 2,
+        "endChar": 17
+      },
+      "revId": "c8611a53d9e0c5038b3d178dc2d50566988f214c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "615d2e1a_a5908c6e",
+        "filename": "src/tests/gl_tests/ExternalBufferTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-12T21:33:37Z",
+      "side": 1,
+      "message": "nit: I recommend defining these inline instead of making them part of the fixture, and using the RAII Types.",
+      "range": {
+        "startLine": 119,
+        "startChar": 0,
+        "endLine": 121,
+        "endChar": 2
+      },
+      "revId": "c8611a53d9e0c5038b3d178dc2d50566988f214c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
