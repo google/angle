@@ -16,6 +16,24 @@
       "message": "I disabled the workaround on Linux for drivers with major version \u003c\u003d 418.\n\nI get test failures on Intel GPUs. That seems unexpected. Any ideas?",
       "revId": "1551f50cbdd00ef86ae8eb9985850728e06aec56",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ec4136af_1f46d756",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-12T14:29:08Z",
+      "side": 1,
+      "message": "Intel failures unrelated, tracked in http://crbug.com/1148269 .",
+      "parentUuid": "2084e359_16cd7d41",
+      "revId": "1551f50cbdd00ef86ae8eb9985850728e06aec56",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
