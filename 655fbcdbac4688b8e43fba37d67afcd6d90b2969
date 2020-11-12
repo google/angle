@@ -16,6 +16,24 @@
       "message": "LGTM - regression test?",
       "revId": "655fbcdbac4688b8e43fba37d67afcd6d90b2969",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "84bc37e9_da11038a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-12T19:50:20Z",
+      "side": 1,
+      "message": "Tested by dEQP. We don\u0027t run ES3.1 on GL on the bots, but will show up when the Vulkan changes land.",
+      "parentUuid": "6c1f61c8_43f71f4d",
+      "revId": "655fbcdbac4688b8e43fba37d67afcd6d90b2969",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
