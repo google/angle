@@ -45,10 +45,13 @@ struct SamplerBinding
 
 struct ImageBinding
 {
-    ImageBinding(size_t count);
-    ImageBinding(GLuint imageUnit, size_t count);
+    ImageBinding(size_t count, TextureType textureTypeIn);
+    ImageBinding(GLuint imageUnit, size_t count, TextureType textureTypeIn);
     ImageBinding(const ImageBinding &other);
     ~ImageBinding();
+
+    // Necessary for distinguishing between textures with images and texture buffers.
+    TextureType textureType;
 
     // List of all textures bound.
     // Cropped by the amount of unused elements reported by the driver.

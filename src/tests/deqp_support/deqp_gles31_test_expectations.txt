@@ -186,8 +186,8 @@
 // Cannot create 2D (array) view of 3D texture.
 3886 VULKAN : dEQP-GLES31.functional.image_load_store.3d.*layer = FAIL
 
-// Storage texel buffer support (part of EXT_texture_buffer)
-3573 VULKAN : dEQP-GLES31.functional.image_load_store.buffer.* = SKIP
+// Format reinterpretation support for storage texel buffers missing
+3573 VULKAN : dEQP-GLES31.functional.image_load_store.buffer.format_reinterpret.* = FAIL
 
 ////
 //// Android (i.e. Pixel*) Vulkan expectations

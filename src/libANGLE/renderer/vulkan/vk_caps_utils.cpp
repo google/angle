@@ -157,11 +157,57 @@ bool GetTextureSRGBOverrideSupport(const RendererVk *rendererVk,
 
 bool HasTextureBufferSupport(const RendererVk *rendererVk)
 {
-    // Only three formats don't have mandatory UNIFORM_TEXEL_BUFFER support in Vulkan.
-    const std::array<GLenum, 3> &optionalFormats = {
-        GL_RGB32F,
-        GL_RGB32I,
-        GL_RGB32UI,
+    // The following formats don't have mandatory UNIFORM_TEXEL_BUFFER support in Vulkan.
+    //
+    //     VK_FORMAT_R32G32B32_UINT
+    //     VK_FORMAT_R32G32B32_SINT
+    //     VK_FORMAT_R32G32B32_SFLOAT
+    //
+    // Additionally, the following formats don't have mandatory STORAGE_TEXEL_BUFFER support:
+    //
+    //     VK_FORMAT_R8_UINT
+    //     VK_FORMAT_R8_SINT
+    //     VK_FORMAT_R8_UNORM
+    //     VK_FORMAT_R8G8_UINT
+    //     VK_FORMAT_R8G8_SINT
+    //     VK_FORMAT_R8G8_UNORM
+    //     VK_FORMAT_R16_UINT
+    //     VK_FORMAT_R16_SINT
+    //     VK_FORMAT_R16_SFLOAT
+    //     VK_FORMAT_R16G16_UINT
+    //     VK_FORMAT_R16G16_SINT
+    //     VK_FORMAT_R16G16_SFLOAT
+    //     VK_FORMAT_R32G32B32_UINT
+    //     VK_FORMAT_R32G32B32_SINT
+    //     VK_FORMAT_R32G32B32_SFLOAT
+    //
+    // The formats that have mandatory support for both features (and don't need to be checked) are:
+    //
+    //     VK_FORMAT_R8G8B8A8_UINT
+    //     VK_FORMAT_R8G8B8A8_SINT
+    //     VK_FORMAT_R8G8B8A8_UNORM
+    //     VK_FORMAT_R16G16B16A16_UINT
+    //     VK_FORMAT_R16G16B16A16_SINT
+    //     VK_FORMAT_R16G16B16A16_SFLOAT
+    //     VK_FORMAT_R32_UINT
+    //     VK_FORMAT_R32_SINT
+    //     VK_FORMAT_R32_SFLOAT
+    //     VK_FORMAT_R32G32_UINT
+    //     VK_FORMAT_R32G32_SINT
+    //     VK_FORMAT_R32G32_SFLOAT
+    //     VK_FORMAT_R32G32B32A32_UINT
+    //     VK_FORMAT_R32G32B32A32_SINT
+    //     VK_FORMAT_R32G32B32A32_SFLOAT
+    //
+
+    // TODO: RGB32 formats currently don't have STORAGE_TEXEL_BUFFER support on any known platform.
+    // Despite this limitation, we expose EXT_texture_buffer.  http://anglebug.com/3573
+    const std::array<GLenum, 12> &optionalFormats = {
+        GL_R8,   GL_R8I,  GL_R8UI,  GL_RG8,   GL_RG8I,  GL_RG8UI,
+        GL_R16F, GL_R16I, GL_R16UI, GL_RG16F, GL_RG16I, GL_RG16UI,
+        // GL_RGB32F,
+        // GL_RGB32I,
+        // GL_RGB32UI,
     };
 
     for (GLenum formatGL : optionalFormats)
@@ -169,7 +215,8 @@ bool HasTextureBufferSupport(const RendererVk *rendererVk)
         const vk::Format &formatVk = rendererVk->getFormat(formatGL);
 
         if (!rendererVk->hasBufferFormatFeatureBits(formatVk.vkBufferFormat,
-                                                    VK_FORMAT_FEATURE_UNIFORM_TEXEL_BUFFER_BIT))
+                                                    VK_FORMAT_FEATURE_UNIFORM_TEXEL_BUFFER_BIT |
+                                                        VK_FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_BIT))
         {
             return false;
         }
@@ -773,8 +820,9 @@ void RendererVk::ensureCapsInitialized() const
 
     // Enable GL_EXT_texture_buffer and OES variant.  Nearly all formats required for this extension
     // are also required to have the UNIFORM_TEXEL_BUFFER feature bit in Vulkan, except for
-    // R32G32B32_SFLOAT/UINT/SINT which are optional.  This extension is exposed only if those
-    // formats support the necessary feature bit.
+    // R32G32B32_SFLOAT/UINT/SINT which are optional.  For many formats, the STORAGE_TEXEL_BUFFER
+    // feature is optional though.  This extension is exposed only if the formats specified in
+    // EXT_texture_buffer support the necessary feature bits.
     if (vk::HasTextureBufferSupport(this))
     {
         mNativeExtensions.textureBufferOES = true;

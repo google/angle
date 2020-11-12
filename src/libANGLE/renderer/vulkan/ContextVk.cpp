@@ -3906,10 +3906,51 @@ angle::Result ContextVk::updateActiveImages(const gl::Context *context,
             continue;
         }
 
-        TextureVk *textureVk   = vk::GetImpl(texture);
-        vk::ImageHelper *image = &textureVk->getImage();
-
+        TextureVk *textureVk          = vk::GetImpl(texture);
         mActiveImages[imageUnitIndex] = textureVk;
+
+        // The image should be flushed and ready to use at this point. There may still be
+        // lingering staged updates in its staging buffer for unused texture mip levels or
+        // layers. Therefore we can't verify it has no staged updates right here.
+        gl::ShaderBitSet shaderStages = activeImageShaderBits[imageUnitIndex];
+
+        // TODO: PPOs don't initialize mActiveImageShaderBits.  http://anglebug.com/5358
+        // Once that is fixed, the following if should be replaced with an assertion:
+        //
+        //     ASSERT(shaderStages.any());
+        if (shaderStages.none())
+        {
+            if (executable->isCompute())
+            {
+                shaderStages.set(gl::ShaderType::Compute);
+            }
+            else
+            {
+                shaderStages.set();
+                shaderStages.reset(gl::ShaderType::Compute);
+            }
+        }
+
+        // Special handling of texture buffers.  They have a buffer attached instead of an image.
+        if (texture->getType() == gl::TextureType::Buffer)
+        {
+            BufferVk *bufferVk       = vk::GetImpl(textureVk->getBuffer().get());
+            vk::BufferHelper &buffer = bufferVk->getBuffer();
+
+            // TODO: accept multiple stages in bufferWrite.  http://anglebug.com/3573
+            for (gl::ShaderType stage : shaderStages)
+            {
+                commandBufferHelper->bufferWrite(
+                    &mResourceUseList, VK_ACCESS_SHADER_READ_BIT | VK_ACCESS_SHADER_WRITE_BIT,
+                    vk::GetPipelineStage(stage), vk::AliasingMode::Disallowed, &buffer);
+            }
+
+            textureVk->retainBufferView(&mResourceUseList);
+
+            continue;
+        }
+
+        vk::ImageHelper *image = &textureVk->getImage();
 
         if (alreadyProcessed.find(image) != alreadyProcessed.end())
         {
@@ -3917,29 +3958,19 @@ angle::Result ContextVk::updateActiveImages(const gl::Context *context,
         }
         alreadyProcessed.insert(image);
 
-        // The image should be flushed and ready to use at this point. There may still be
-        // lingering staged updates in its staging buffer for unused texture mip levels or
-        // layers. Therefore we can't verify it has no staged updates right here.
         vk::ImageLayout imageLayout;
-        gl::ShaderBitSet shaderBits = activeImageShaderBits[imageUnitIndex];
-        if (shaderBits.any())
-        {
-            gl::ShaderType shader = static_cast<gl::ShaderType>(gl::ScanForward(shaderBits.bits()));
-            shaderBits.reset(shader);
-            // This is accessed by multiple shaders
-            if (shaderBits.any())
-            {
-                imageLayout = vk::ImageLayout::AllGraphicsShadersWrite;
-            }
-            else
-            {
-                imageLayout = kShaderWriteImageLayouts[shader];
-            }
-        }
-        else
+        gl::ShaderType shader = static_cast<gl::ShaderType>(gl::ScanForward(shaderStages.bits()));
+        shaderStages.reset(shader);
+        // This is accessed by multiple shaders
+        if (shaderStages.any())
         {
             imageLayout = vk::ImageLayout::AllGraphicsShadersWrite;
         }
+        else
+        {
+            imageLayout = kShaderWriteImageLayouts[shader];
+        }
+
         VkImageAspectFlags aspectFlags = image->getAspectFlags();
 
         uint32_t layerStart = 0;

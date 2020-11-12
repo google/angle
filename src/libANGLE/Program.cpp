@@ -1063,8 +1063,11 @@ ProgramAliasedBindings::const_iterator ProgramAliasedBindings::end() const
 }
 
 // ImageBinding implementation.
-ImageBinding::ImageBinding(size_t count) : boundImageUnits(count, 0) {}
-ImageBinding::ImageBinding(GLuint imageUnit, size_t count)
+ImageBinding::ImageBinding(size_t count, TextureType textureTypeIn)
+    : textureType(textureTypeIn), boundImageUnits(count, 0)
+{}
+ImageBinding::ImageBinding(GLuint imageUnit, size_t count, TextureType textureTypeIn)
+    : textureType(textureTypeIn)
 {
     for (size_t index = 0; index < count; ++index)
     {
@@ -3723,15 +3726,18 @@ void Program::linkSamplerAndImageBindings(GLuint *combinedImageUniforms)
         // cannot load values into a uniform defined as an image. if declare without a
         // binding qualifier, any uniform image variable (include all elements of
         // unbound image array) shoud be bound to unit zero.
-        auto &imageUniform = mState.mExecutable->getUniforms()[imageIndex];
+        auto &imageUniform      = mState.mExecutable->getUniforms()[imageIndex];
+        TextureType textureType = ImageTypeToTextureType(imageUniform.type);
         if (imageUniform.binding == -1)
         {
-            imageBindings.emplace_back(ImageBinding(imageUniform.getBasicTypeElementCount()));
+            imageBindings.emplace_back(
+                ImageBinding(imageUniform.getBasicTypeElementCount(), textureType));
         }
         else
         {
             imageBindings.emplace_back(ImageBinding(imageUniform.binding + arrayOffset,
-                                                    imageUniform.getBasicTypeElementCount()));
+                                                    imageUniform.getBasicTypeElementCount(),
+                                                    textureType));
         }
 
         GLuint arraySize = imageUniform.isArray() ? imageUniform.arraySizes[0] : 1u;
@@ -5308,6 +5314,7 @@ angle::Result Program::serialize(const Context *context, angle::MemoryBuffer *bi
     for (const auto &imageBinding : mState.getImageBindings())
     {
         stream.writeInt(imageBinding.boundImageUnits.size());
+        stream.writeInt(static_cast<unsigned int>(imageBinding.textureType));
         for (size_t i = 0; i < imageBinding.boundImageUnits.size(); ++i)
         {
             stream.writeInt(imageBinding.boundImageUnits[i]);
@@ -5558,8 +5565,9 @@ angle::Result Program::deserialize(const Context *context,
     size_t imageBindingCount               = stream.readInt<size_t>();
     for (size_t imageIndex = 0; imageIndex < imageBindingCount; ++imageIndex)
     {
-        size_t elementCount = stream.readInt<size_t>();
-        ImageBinding imageBinding(elementCount);
+        size_t elementCount     = stream.readInt<size_t>();
+        TextureType textureType = static_cast<TextureType>(stream.readInt<unsigned int>());
+        ImageBinding imageBinding(elementCount, textureType);
         for (size_t elementIndex = 0; elementIndex < elementCount; ++elementIndex)
         {
             imageBinding.boundImageUnits[elementIndex] = stream.readInt<unsigned int>();

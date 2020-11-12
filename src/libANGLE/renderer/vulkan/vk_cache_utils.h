@@ -33,7 +33,7 @@ namespace rx
 //   pipeline stage.  Additionally, transform feedback buffers are bound from binding 2 and up.
 // - Set 2 contains all textures (including texture buffers).
 // - Set 3 contains all other shader resources, such as uniform and storage blocks, atomic counter
-//   buffers and images.
+//   buffers, images and image buffers.
 
 // ANGLE driver uniforms set index (binding is always 0):
 enum DescriptorSetIndex : uint32_t

@@ -219,6 +219,7 @@ template <typename T>
 using ShaderMap = angle::PackedEnumMap<ShaderType, T>;
 
 TextureType SamplerTypeToTextureType(GLenum samplerType);
+TextureType ImageTypeToTextureType(GLenum imageType);
 
 bool IsMultisampled(gl::TextureType type);
 bool IsArrayTextureType(gl::TextureType type);

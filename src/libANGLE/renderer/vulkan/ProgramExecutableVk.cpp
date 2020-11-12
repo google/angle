@@ -508,8 +508,11 @@ void ProgramExecutableVk::addImageDescriptorSetDesc(const gl::ProgramExecutable 
             GetImageNameWithoutIndices(&imageName);
             ShaderInterfaceVariableInfo &info = mVariableInfoMap[shaderType][imageName];
             VkShaderStageFlags activeStages   = gl_vk::kShaderStageMap[shaderType];
-            descOut->update(info.binding, VK_DESCRIPTOR_TYPE_STORAGE_IMAGE, arraySize, activeStages,
-                            nullptr);
+
+            const VkDescriptorType descType = imageBinding.textureType == gl::TextureType::Buffer
+                                                  ? VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER
+                                                  : VK_DESCRIPTOR_TYPE_STORAGE_IMAGE;
+            descOut->update(info.binding, descType, arraySize, activeStages, nullptr);
         }
     }
 }
@@ -1205,7 +1208,7 @@ angle::Result ProgramExecutableVk::updateImagesDescriptorSet(
         std::string mappedImageName;
         if (!useOldRewriteStructSamplers)
         {
-            mappedImageName = GlslangGetMappedSamplerName(imageUniform.mappedName);
+            mappedImageName = GlslangGetMappedSamplerName(imageUniform.name);
         }
         else
         {
@@ -1225,8 +1228,34 @@ angle::Result ProgramExecutableVk::updateImagesDescriptorSet(
             mappedImageNameToArrayOffset[mappedImageName] += arraySize;
         }
 
+        VkWriteDescriptorSet *writeInfos = contextVk->allocWriteDescriptorSets(arraySize);
+
+        // Texture buffers use buffer views, so they are especially handled.
+        if (imageBinding.textureType == gl::TextureType::Buffer)
+        {
+            for (uint32_t arrayElement = 0; arrayElement < arraySize; ++arrayElement)
+            {
+                GLuint imageUnit           = imageBinding.boundImageUnits[arrayElement];
+                TextureVk *textureVk       = activeImages[imageUnit];
+                const vk::BufferView &view = textureVk->getBufferViewAndRecordUse(contextVk);
+
+                ShaderInterfaceVariableInfo &info = mVariableInfoMap[shaderType][mappedImageName];
+
+                writeInfos[arrayElement].sType            = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+                writeInfos[arrayElement].pNext            = nullptr;
+                writeInfos[arrayElement].dstSet           = descriptorSet;
+                writeInfos[arrayElement].dstBinding       = info.binding;
+                writeInfos[arrayElement].dstArrayElement  = arrayOffset + arrayElement;
+                writeInfos[arrayElement].descriptorCount  = 1;
+                writeInfos[arrayElement].descriptorType   = VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER;
+                writeInfos[arrayElement].pImageInfo       = nullptr;
+                writeInfos[arrayElement].pBufferInfo      = nullptr;
+                writeInfos[arrayElement].pTexelBufferView = view.ptr();
+            }
+            continue;
+        }
+
         VkDescriptorImageInfo *imageInfos = contextVk->allocDescriptorImageInfos(arraySize);
-        VkWriteDescriptorSet *writeInfos  = contextVk->allocWriteDescriptorSets(arraySize);
         for (uint32_t arrayElement = 0; arrayElement < arraySize; ++arrayElement)
         {
             GLuint imageUnit             = imageBinding.boundImageUnits[arrayElement];

@@ -185,6 +185,46 @@ TextureType SamplerTypeToTextureType(GLenum samplerType)
     }
 }
 
+TextureType ImageTypeToTextureType(GLenum imageType)
+{
+    switch (imageType)
+    {
+        case GL_IMAGE_2D:
+        case GL_INT_IMAGE_2D:
+        case GL_UNSIGNED_INT_IMAGE_2D:
+            return TextureType::_2D;
+
+        case GL_IMAGE_CUBE:
+        case GL_INT_IMAGE_CUBE:
+        case GL_UNSIGNED_INT_IMAGE_CUBE:
+            return TextureType::CubeMap;
+
+        case GL_IMAGE_CUBE_MAP_ARRAY:
+        case GL_INT_IMAGE_CUBE_MAP_ARRAY:
+        case GL_UNSIGNED_INT_IMAGE_CUBE_MAP_ARRAY:
+            return TextureType::CubeMapArray;
+
+        case GL_IMAGE_2D_ARRAY:
+        case GL_INT_IMAGE_2D_ARRAY:
+        case GL_UNSIGNED_INT_IMAGE_2D_ARRAY:
+            return TextureType::_2DArray;
+
+        case GL_IMAGE_3D:
+        case GL_INT_IMAGE_3D:
+        case GL_UNSIGNED_INT_IMAGE_3D:
+            return TextureType::_3D;
+
+        case GL_IMAGE_BUFFER:
+        case GL_INT_IMAGE_BUFFER:
+        case GL_UNSIGNED_INT_IMAGE_BUFFER:
+            return TextureType::Buffer;
+
+        default:
+            UNREACHABLE();
+            return TextureType::InvalidEnum;
+    }
+}
+
 bool IsMultisampled(TextureType type)
 {
     switch (type)
