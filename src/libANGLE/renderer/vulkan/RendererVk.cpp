@@ -155,7 +155,9 @@ constexpr const char *kSkippedMessages[] = {
     // http://anglebug.com/5309
     "VUID-VkImageViewCreateInfo-usage-02652",
     // http://anglebug.com/5336
-    "UNASSIGNED-BestPractices-vkCreateDevice-specialuse-extension"};
+    "UNASSIGNED-BestPractices-vkCreateDevice-specialuse-extension",
+    // http://anglebug.com/5331
+    "VUID-VkSubpassDescriptionDepthStencilResolve-stencilResolveMode-parameter"};
 
 // Suppress validation errors that are known
 //  return "true" if given code/prefix/message is known, else return "false"
