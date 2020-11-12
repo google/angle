@@ -902,9 +902,6 @@ void MultisampledRenderToTextureES3Test::blitFramebufferTestCommon(bool useRende
 // BlitFramebuffer functionality test. ES3+.
 TEST_P(MultisampledRenderToTextureES3Test, BlitFramebufferTest)
 {
-    // TODO: http://anglebug.com/5331: Generates VVL errors
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-
     blitFramebufferTestCommon(false);
 }
 
@@ -3573,18 +3570,12 @@ void MultisampledRenderToTextureES3Test::renderbufferUnresolveColorAndDepthStenc
 // depth/stencil textures as they are explicitly autoinvalidated between render passes.
 TEST_P(MultisampledRenderToTextureES3Test, RenderbufferUnresolveColorAndDepthThenTwoColors)
 {
-    // TODO: http://anglebug.com/5331: Generates VVL errors
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-
     renderbufferUnresolveColorAndDepthStencilThenTwoColors(true, false);
 }
 
 // Similar to RenderbufferUnresolveColorAndDepthThenTwoColors, but with stencil.
 TEST_P(MultisampledRenderToTextureES3Test, RenderbufferUnresolveColorAndStencilThenTwoColors)
 {
-    // TODO: http://anglebug.com/5331: Generates VVL errors
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-
     renderbufferUnresolveColorAndDepthStencilThenTwoColors(false, true);
 }
 
