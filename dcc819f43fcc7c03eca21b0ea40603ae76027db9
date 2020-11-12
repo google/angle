@@ -41,6 +41,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7d142894_ffe7fbf5",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 368,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-12T21:11:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9d764d30_381ab83a",
+      "range": {
+        "startLine": 368,
+        "startChar": 52,
+        "endLine": 368,
+        "endChar": 80
+      },
+      "revId": "dcc819f43fcc7c03eca21b0ea40603ae76027db9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ac222dfc_64c8bf4e",
@@ -72,6 +96,24 @@
       "side": 1,
       "message": "After reading the following CLs I believe it\u0027s here because TaskProcessor goes away (it became the same as CommandQueue after these refactors), so the only place for it is in CommandProcessor.",
       "parentUuid": "ac222dfc_64c8bf4e",
+      "revId": "dcc819f43fcc7c03eca21b0ea40603ae76027db9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f5dd8c69_3870d51e",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 922,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-12T21:11:37Z",
+      "side": 1,
+      "message": "Ack, indeed. The deferred swapchain status is what this function manages, and that\u0027s an async-only feature.",
+      "parentUuid": "801dc249_8eb1c647",
       "revId": "dcc819f43fcc7c03eca21b0ea40603ae76027db9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
