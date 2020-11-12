@@ -118,8 +118,19 @@ constexpr char kBatchIdString[]    = "--batch-id=";
 
 std::array<char, 500> gCaseStringBuffer;
 
+// For angle_deqp_gles3*_rotateN_tests, default gPreRotation to N.
+#if defined(ANGLE_DEQP_GLES3_ROTATE90_TESTS) || defined(ANGLE_DEQP_GLES31_ROTATE90_TESTS)
+constexpr uint32_t kDefaultPreRotation = 90;
+#elif defined(ANGLE_DEQP_GLES3_ROTATE180_TESTS) || defined(ANGLE_DEQP_GLES31_ROTATE180_TESTS)
+constexpr uint32_t kDefaultPreRotation = 180;
+#elif defined(ANGLE_DEQP_GLES3_ROTATE270_TESTS) || defined(ANGLE_DEQP_GLES31_ROTATE270_TESTS)
+constexpr uint32_t kDefaultPreRotation = 270;
+#else
+constexpr uint32_t kDefaultPreRotation = 0;
+#endif
+
 const APIInfo *gInitAPI = nullptr;
-uint32_t gPreRotation   = 0;
+uint32_t gPreRotation   = kDefaultPreRotation;
 
 constexpr const char *gdEQPEGLConfigNameString = "--deqp-gl-config-name=";
 
