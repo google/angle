@@ -41,6 +41,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6fd5122a_21b37ece",
+        "filename": "include/platform/FeaturesVk.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 338,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-12T21:58:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e46cd963_902e24e7",
+      "range": {
+        "startLine": 338,
+        "startChar": 24,
+        "endLine": 338,
+        "endChar": 31
+      },
+      "revId": "a090dfabac94f839679528fc030606f6dc46b847",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c0567e4a_deb5e6be",
@@ -64,6 +88,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f841b529_adc9e8d3",
+        "filename": "src/libANGLE/renderer/vulkan/QueryVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 190,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-12T21:58:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c0567e4a_deb5e6be",
+      "range": {
+        "startLine": 190,
+        "startChar": 12,
+        "endLine": 190,
+        "endChar": 36
+      },
+      "revId": "a090dfabac94f839679528fc030606f6dc46b847",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "43db7583_e9d4aeb2",
@@ -77,6 +125,30 @@
       "writtenOn": "2020-11-10T16:30:16Z",
       "side": 1,
       "message": "renderer",
+      "range": {
+        "startLine": 193,
+        "startChar": 12,
+        "endLine": 193,
+        "endChar": 36
+      },
+      "revId": "a090dfabac94f839679528fc030606f6dc46b847",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5bec0a54_3dd476bf",
+        "filename": "src/libANGLE/renderer/vulkan/QueryVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 193,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-12T21:58:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "43db7583_e9d4aeb2",
       "range": {
         "startLine": 193,
         "startChar": 12,
