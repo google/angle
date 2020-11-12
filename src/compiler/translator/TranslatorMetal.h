@@ -17,6 +17,7 @@
 
 #include "compiler/translator/TranslatorVulkan.h"
 #include "compiler/translator/tree_util/DriverUniform.h"
+#include "compiler/translator/tree_util/FlipRotateSpecConst.h"
 
 namespace sh
 {
@@ -27,10 +28,35 @@ class DriverUniformMetal : public DriverUniform
     DriverUniformMetal() : DriverUniform() {}
     ~DriverUniformMetal() override {}
 
+    TIntermBinary *getFlipXYRef() const;
+    TIntermBinary *getNegFlipXYRef() const;
+    TIntermSwizzle *getNegFlipYRef() const;
     TIntermBinary *getCoverageMaskFieldRef() const;
 
   protected:
     TFieldList *createUniformFields(TSymbolTable *symbolTable) const override;
+};
+
+// TODO: http://anglebug.com/5339 Implement it using actual specialization constant. For now we are
+// redirecting to driver uniforms
+class FlipRotateSpecConstMetal : public FlipRotateSpecConst
+{
+  public:
+    FlipRotateSpecConstMetal(DriverUniformMetal *driverUniform)
+        : FlipRotateSpecConst(), mDriverUniform(driverUniform)
+    {}
+    ~FlipRotateSpecConstMetal() override {}
+
+    TIntermTyped *getFlipXY() override;
+    TIntermTyped *getNegFlipXY() override;
+    TIntermTyped *getFlipY() override;
+    TIntermTyped *getNegFlipY() override;
+
+    void generateSymbol(TSymbolTable *symbolTable) override {}
+    void outputLayoutString(TInfoSinkBase &sink) const override {}
+
+  private:
+    DriverUniformMetal *mDriverUniform;
 };
 
 class TranslatorMetal : public TranslatorVulkan

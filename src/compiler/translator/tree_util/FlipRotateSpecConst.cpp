@@ -32,6 +32,7 @@ using Mat2x2 = std::array<float, 4>;
 using Mat2x2EnumMap =
     angle::PackedEnumMap<vk::SurfaceRotation, Mat2x2, angle::EnumSize<vk::SurfaceRotation>()>;
 
+// Used to pre-rotate gl_Position for swapchain images on Android.
 constexpr Mat2x2EnumMap kPreRotationMatrices = {
     {{vk::SurfaceRotation::Identity, {{1.0f, 0.0f, 0.0f, 1.0f}}},
      {vk::SurfaceRotation::Rotated90Degrees, {{0.0f, -1.0f, 1.0f, 0.0f}}},
@@ -42,6 +43,7 @@ constexpr Mat2x2EnumMap kPreRotationMatrices = {
      {vk::SurfaceRotation::FlippedRotated180Degrees, {{-1.0f, 0.0f, 0.0f, -1.0f}}},
      {vk::SurfaceRotation::FlippedRotated270Degrees, {{0.0f, 1.0f, -1.0f, 0.0f}}}}};
 
+// Used to pre-rotate gl_FragCoord for swapchain images on Android.
 constexpr Mat2x2EnumMap kFragRotationMatrices = {
     {{vk::SurfaceRotation::Identity, {{1.0f, 0.0f, 0.0f, 1.0f}}},
      {vk::SurfaceRotation::Rotated90Degrees, {{0.0f, 1.0f, 1.0f, 0.0f}}},
@@ -90,6 +92,12 @@ TIntermTyped *GenerateMat2x2ArrayWithIndex(const Mat2x2EnumMap &matrix, TIntermS
 using Vec2 = std::array<float, 2>;
 using Vec2EnumMap =
     angle::PackedEnumMap<vk::SurfaceRotation, Vec2, angle::EnumSize<vk::SurfaceRotation>()>;
+// Y-axis flipping only comes into play with the default framebuffer (i.e. a swapchain image).
+// For 0-degree rotation, an FBO or pbuffer could be the draw framebuffer, and so we must check
+// whether flipY should be positive or negative.  All other rotations, will be to the default
+// framebuffer, and so the value of isViewportFlipEnabledForDrawFBO() is assumed true; the
+// appropriate flipY value is chosen such that gl_FragCoord is positioned at the lower-left
+// corner of the window.
 constexpr Vec2EnumMap kFlipXYValue = {
     {{vk::SurfaceRotation::Identity, {{1.0f, 1.0f}}},
      {vk::SurfaceRotation::Rotated90Degrees, {{1.0f, 1.0f}}},

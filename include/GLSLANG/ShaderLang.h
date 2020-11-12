@@ -341,9 +341,6 @@ const ShCompileOptions SH_EARLY_FRAGMENT_TESTS_OPTIMIZATION = UINT64_C(1) << 55;
 // Allow compiler to insert Android pre-rotation code.
 const ShCompileOptions SH_ADD_PRE_ROTATION = UINT64_C(1) << 56;
 
-// Allow compiler to use specialization constant to do pre-rotation and y flip.
-const ShCompileOptions SH_USE_ROTATION_SPECIALIZATION_CONSTANT = UINT64_C(1) << 57;
-
 // Defines alternate strategies for implementing array index clamping.
 enum ShArrayIndexClampingStrategy
 {

@@ -32,15 +32,10 @@ class DriverUniform
     bool addComputeDriverUniformsToShader(TIntermBlock *root, TSymbolTable *symbolTable);
     bool addGraphicsDriverUniformsToShader(TIntermBlock *root, TSymbolTable *symbolTable);
 
-    TIntermBinary *getFlipXYRef() const;
-    TIntermBinary *getNegFlipXYRef() const;
-    TIntermBinary *getFragRotationMatrixRef() const;
-    TIntermBinary *getPreRotationMatrixRef() const;
     TIntermBinary *getViewportRef() const;
     TIntermBinary *getHalfRenderAreaRef() const;
     TIntermBinary *getAbcBufferOffsets() const;
     TIntermBinary *getClipDistancesEnabled() const;
-    TIntermSwizzle *getNegFlipYRef() const;
     TIntermBinary *getDepthRangeRef() const;
     TIntermBinary *getDepthRangeReservedFieldRef() const;
 

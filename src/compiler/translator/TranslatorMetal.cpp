@@ -42,9 +42,15 @@ const char kRasterizerDiscardEnabledConstName[] = "ANGLERasterizerDisabled";
 namespace
 {
 // Metal specific driver uniforms
+constexpr const char kFlipXY[]       = "flipXY";
+constexpr const char kNegFlipXY[]    = "negFlipXY";
 constexpr const char kCoverageMask[] = "coverageMask";
 
 constexpr ImmutableString kSampleMaskWriteFuncName = ImmutableString("ANGLEWriteSampleMask");
+
+constexpr size_t kNumMetalGraphicsDriverUniforms = 3;
+constexpr std::array<const char *, kNumMetalGraphicsDriverUniforms>
+    kMetalGraphicsDriverUniformNames = {{kFlipXY, kNegFlipXY, kCoverageMask}};
 
 // Unlike Vulkan having auto viewport flipping extension, in Metal we have to flip gl_Position.y
 // manually.
@@ -111,18 +117,37 @@ ANGLE_NO_DISCARD bool InitializeUnusedOutputs(TIntermBlock *root,
 }
 }  // anonymous namespace
 
+// class DriverUniformMetal
 TFieldList *DriverUniformMetal::createUniformFields(TSymbolTable *symbolTable) const
 {
     TFieldList *driverFieldList = DriverUniform::createUniformFields(symbolTable);
 
-    // Add coverage mask to driver uniform. Metal doesn't have built-in GL_SAMPLE_COVERAGE_VALUE
-    // equivalent functionality, needs to emulate it using fragment shader's [[sample_mask]] output
-    // value.
-    TField *coverageMaskField = new TField(new TType(EbtUInt), ImmutableString(kCoverageMask),
-                                           TSourceLoc(), SymbolType::AngleInternal);
-    driverFieldList->push_back(coverageMaskField);
+    const std::array<TType *, kNumMetalGraphicsDriverUniforms> kMetalDriverUniformTypes = {{
+        new TType(EbtFloat, 2),  // flipXY
+        new TType(EbtFloat, 2),  // negFlipXY
+        new TType(EbtUInt),      // kCoverageMask
+    }};
+
+    for (size_t uniformIndex = 0; uniformIndex < kNumMetalGraphicsDriverUniforms; ++uniformIndex)
+    {
+        TField *driverUniformField =
+            new TField(kMetalDriverUniformTypes[uniformIndex],
+                       ImmutableString(kMetalGraphicsDriverUniformNames[uniformIndex]),
+                       TSourceLoc(), SymbolType::AngleInternal);
+        driverFieldList->push_back(driverUniformField);
+    }
 
     return driverFieldList;
+}
+
+TIntermBinary *DriverUniformMetal::getFlipXYRef() const
+{
+    return createDriverUniformRef(kFlipXY);
+}
+
+TIntermBinary *DriverUniformMetal::getNegFlipXYRef() const
+{
+    return createDriverUniformRef(kNegFlipXY);
 }
 
 TIntermBinary *DriverUniformMetal::getCoverageMaskFieldRef() const
@@ -130,6 +155,35 @@ TIntermBinary *DriverUniformMetal::getCoverageMaskFieldRef() const
     return createDriverUniformRef(kCoverageMask);
 }
 
+TIntermSwizzle *DriverUniformMetal::getNegFlipYRef() const
+{
+    // Create a swizzle to "negFlipXY.y"
+    TIntermBinary *negFlipXY    = createDriverUniformRef(kNegFlipXY);
+    TVector<int> swizzleOffsetY = {1};
+    TIntermSwizzle *negFlipY    = new TIntermSwizzle(negFlipXY, swizzleOffsetY);
+    return negFlipY;
+}
+
+// class FlipRotateSpecConstMetal
+TIntermTyped *FlipRotateSpecConstMetal::getFlipXY()
+{
+    return mDriverUniform->getFlipXYRef();
+}
+TIntermTyped *FlipRotateSpecConstMetal::getNegFlipXY()
+{
+    return mDriverUniform->getNegFlipXYRef();
+}
+TIntermTyped *FlipRotateSpecConstMetal::getFlipY()
+{
+    TIntermTyped *flipXY = mDriverUniform->getFlipXYRef();
+    return new TIntermBinary(EOpIndexDirect, flipXY, CreateIndexNode(1));
+}
+TIntermTyped *FlipRotateSpecConstMetal::getNegFlipY()
+{
+    return mDriverUniform->getNegFlipYRef();
+}
+
+// class TranslaterMetal
 TranslatorMetal::TranslatorMetal(sh::GLenum type, ShShaderSpec spec) : TranslatorVulkan(type, spec)
 {}
 
@@ -144,8 +198,9 @@ bool TranslatorMetal::translate(TIntermBlock *root,
                                  getShaderVersion(), getOutputType(), false, true, compileOptions);
 
     DriverUniformMetal driverUniforms;
-    if (!TranslatorVulkan::translateImpl(root, compileOptions, perfDiagnostics, &driverUniforms,
-                                         &outputGLSL))
+    FlipRotateSpecConstMetal flipRotateSpecConst(&driverUniforms);
+    if (!TranslatorVulkan::translateImpl(root, compileOptions, perfDiagnostics,
+                                         &flipRotateSpecConst, &driverUniforms, &outputGLSL))
     {
         return false;
     }
@@ -338,5 +393,4 @@ ANGLE_NO_DISCARD bool TranslatorMetal::insertRasterizerDiscardLogic(TIntermBlock
 
     return RunAtTheEndOfShader(this, root, ifCall, symbolTable);
 }
-
 }  // namespace sh

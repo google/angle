@@ -15,6 +15,7 @@
 #include <limits>
 #include <map>
 
+#include "GLSLANG/ShaderLang.h"
 #include "common/angleutils.h"
 #include "common/utilities.h"
 #include "libANGLE/angletypes.h"
@@ -44,20 +45,21 @@ namespace rx
 class ContextImpl;
 
 // The possible rotations of the surface/draw framebuffer, particularly for the Vulkan back-end on
-// Android.
-enum class SurfaceRotation
+// Android. This is duplicate of ShaderLang.h declaration to avoid having to litter the renderer
+// code with sh::vk namespace string.
+enum class SurfaceRotation : uint32_t
 {
-    Identity,
-    Rotated90Degrees,
-    Rotated180Degrees,
-    Rotated270Degrees,
-    FlippedIdentity,
-    FlippedRotated90Degrees,
-    FlippedRotated180Degrees,
-    FlippedRotated270Degrees,
+    Identity                 = ToUnderlying(sh::vk::SurfaceRotation::Identity),
+    Rotated90Degrees         = ToUnderlying(sh::vk::SurfaceRotation::Rotated90Degrees),
+    Rotated180Degrees        = ToUnderlying(sh::vk::SurfaceRotation::Rotated180Degrees),
+    Rotated270Degrees        = ToUnderlying(sh::vk::SurfaceRotation::Rotated270Degrees),
+    FlippedIdentity          = ToUnderlying(sh::vk::SurfaceRotation::FlippedIdentity),
+    FlippedRotated90Degrees  = ToUnderlying(sh::vk::SurfaceRotation::FlippedRotated90Degrees),
+    FlippedRotated180Degrees = ToUnderlying(sh::vk::SurfaceRotation::FlippedRotated180Degrees),
+    FlippedRotated270Degrees = ToUnderlying(sh::vk::SurfaceRotation::FlippedRotated270Degrees),
 
-    InvalidEnum,
-    EnumCount = InvalidEnum,
+    InvalidEnum = ToUnderlying(sh::vk::SurfaceRotation::InvalidEnum),
+    EnumCount   = InvalidEnum,
 };
 
 void RotateRectangle(const SurfaceRotation rotation,

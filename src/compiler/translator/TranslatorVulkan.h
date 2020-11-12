@@ -19,6 +19,7 @@ namespace sh
 
 class TOutputVulkanGLSL;
 class DriverUniform;
+class FlipRotateSpecConst;
 
 class TranslatorVulkan : public TCompiler
 {
@@ -36,6 +37,7 @@ class TranslatorVulkan : public TCompiler
     ANGLE_NO_DISCARD bool translateImpl(TIntermBlock *root,
                                         ShCompileOptions compileOptions,
                                         PerformanceDiagnostics *perfDiagnostics,
+                                        FlipRotateSpecConst *flipRotateSpecConst,
                                         DriverUniform *driverUniforms,
                                         TOutputVulkanGLSL *outputGLSL);
 
