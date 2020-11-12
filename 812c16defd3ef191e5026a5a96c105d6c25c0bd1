@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b4c58add_2ae9426f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 24
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-12T00:47:58Z",
+      "side": 1,
+      "message": "Bots are explodey tonight. Filed http://crbug.com/1148101",
+      "revId": "812c16defd3ef191e5026a5a96c105d6c25c0bd1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
