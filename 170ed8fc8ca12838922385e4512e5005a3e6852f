@@ -20,6 +20,24 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "bb43a89a_3c710f91",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-12T02:15:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6436e1fd_c47e234c",
+      "revId": "170ed8fc8ca12838922385e4512e5005a3e6852f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "c4cc6713_bab44232",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 1
@@ -113,6 +131,30 @@
       "side": 1,
       "message": "What Jamie means is this: `(compileOptions \u0026 SH_ADD_PRE_ROTATION) !\u003d 0`.",
       "parentUuid": "a5531709_d7166538",
+      "range": {
+        "startLine": 61,
+        "startChar": 20,
+        "endLine": 61,
+        "endChar": 59
+      },
+      "revId": "170ed8fc8ca12838922385e4512e5005a3e6852f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8d830e82_c70a378a",
+        "filename": "src/compiler/translator/tree_ops/RewriteInterpolateAtOffset.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-12T02:15:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e6f246d8_3d887f5b",
       "range": {
         "startLine": 61,
         "startChar": 20,
