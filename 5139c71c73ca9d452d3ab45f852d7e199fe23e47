@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9657ce9e_da024e04",
+        "filename": "src/tests/gl_tests/ClearTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2447,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-12T20:23:05Z",
+      "side": 1,
+      "message": "there\u0027s really no way to test the programatically?",
+      "range": {
+        "startLine": 2427,
+        "startChar": 0,
+        "endLine": 2447,
+        "endChar": 1
+      },
+      "revId": "5139c71c73ca9d452d3ab45f852d7e199fe23e47",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
