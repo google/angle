@@ -88,6 +88,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "cf611ea2_615ba0db",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 738,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-12T19:08:19Z",
+      "side": 1,
+      "message": "I just grabbed these from the TaskProcessor.   Since Courtney added them, he may be able to chime in about how useful they are or not.",
+      "parentUuid": "72ae299f_82b347cb",
+      "revId": "5225b2565dab613782999a2219436e6e3269a0a7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "576994da_3a2cc3f8",
