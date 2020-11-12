@@ -22,6 +22,30 @@
       },
       "revId": "5139c71c73ca9d452d3ab45f852d7e199fe23e47",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0cc31234_1b492fc1",
+        "filename": "src/tests/gl_tests/ClearTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2447,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-12T20:33:58Z",
+      "side": 1,
+      "message": "There is, if we read back the window contents directly from the window system. IIRC I saw this was implemented on windows only, but not sure how reliable it is.",
+      "parentUuid": "9657ce9e_da024e04",
+      "range": {
+        "startLine": 2427,
+        "startChar": 0,
+        "endLine": 2447,
+        "endChar": 1
+      },
+      "revId": "5139c71c73ca9d452d3ab45f852d7e199fe23e47",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
