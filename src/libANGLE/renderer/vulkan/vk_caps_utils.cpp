@@ -370,6 +370,8 @@ void RendererVk::ensureCapsInitialized() const
     // maxInterpolationOffset is at least 0.5.
     mNativeExtensions.multisampleInterpolationOES =
         supportSampleRateShading && (mNativeCaps.maxInterpolationOffset >= 0.5);
+    // OES_shader_multisample_interpolation requires OES_sample_variables, disable for now
+    mNativeExtensions.multisampleInterpolationOES = false;
 
     mNativeExtensions.shaderImageAtomicOES =
         ((mPhysicalDeviceFeatures.vertexPipelineStoresAndAtomics == VK_TRUE) &&
