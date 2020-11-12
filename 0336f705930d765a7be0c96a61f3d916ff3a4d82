@@ -33,6 +33,24 @@
       "message": "Could you then please remove the test skips you added for this error?",
       "revId": "0336f705930d765a7be0c96a61f3d916ff3a4d82",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5b266fa5_4809dfc0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-12T17:14:48Z",
+      "side": 1,
+      "message": "They\u0027ve already been reverted.",
+      "parentUuid": "9f9f8580_326a2cc3",
+      "revId": "0336f705930d765a7be0c96a61f3d916ff3a4d82",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
