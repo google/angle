@@ -84,6 +84,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "6e93dfbf_5ef793b8",
+        "filename": "src/common/android_util.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-12T23:40:51Z",
+      "side": 1,
+      "message": "We try to isolate OS headers as much as possible to avoid namespace pollution. We don\u0027t have an official style guide rule for this. We could add one. Sorry to go against Shabi\u0027s suggestion, but could you revert to the old design? Code duplication is preferable to OS headers being in ANGLE headers.",
+      "parentUuid": "72cc686a_93e77076",
+      "range": {
+        "startLine": 21,
+        "startChar": 0,
+        "endLine": 26,
+        "endChar": 0
+      },
+      "revId": "c8611a53d9e0c5038b3d178dc2d50566988f214c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "d7151a0e_e8462463",
         "filename": "src/libANGLE/Buffer.cpp",
         "patchSetId": 6
