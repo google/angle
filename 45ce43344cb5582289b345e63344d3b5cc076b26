@@ -33,6 +33,24 @@
       "message": "Is there one more step coming?\nE.g. we\u0027d talked about a CommandProcessor implementation class that would allow us to get rid of this if by instantiating either a threaded or non-threaded CommandProcessor interface.",
       "revId": "45ce43344cb5582289b345e63344d3b5cc076b26",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0b0cc48d_672d06c6",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 2699,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-12T21:58:44Z",
+      "side": 1,
+      "message": "Ack, yeah, wanted to clean out most of this stack before making more CLs. The next step is to totally lock down the interface. There\u0027s a bunch of places where we check if the feature is enabled explicitly throughout the code- maybe you could help clean those out and we can then move to using an interface class.",
+      "parentUuid": "bc3ce030_4deb93f0",
+      "revId": "45ce43344cb5582289b345e63344d3b5cc076b26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
