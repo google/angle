@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5ce239fc_9b2b4d28",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 12
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-12T01:59:51Z",
+      "side": 1,
+      "message": "Looks good with the locks surrounding the reserve and submit.\n\nLooks like there are still some bot failures. +2\u0027ing assuming they aren\u0027t too bad.",
+      "revId": "90bff315add3772f0794e91809f38a1ffb104627",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
