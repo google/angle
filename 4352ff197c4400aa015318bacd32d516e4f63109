@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "65bc2340_b02282ae",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-12T21:09:48Z",
+      "side": 1,
+      "message": "Interesting result. Please re-try the failing test, seems to be a fairly consistent Gold failure on some Intel configs.",
+      "revId": "4352ff197c4400aa015318bacd32d516e4f63109",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
