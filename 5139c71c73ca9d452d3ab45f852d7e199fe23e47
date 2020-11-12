@@ -46,6 +46,30 @@
       },
       "revId": "5139c71c73ca9d452d3ab45f852d7e199fe23e47",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "34900125_a521729b",
+        "filename": "src/tests/gl_tests/ClearTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2447,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-12T21:52:30Z",
+      "side": 1,
+      "message": "Ack, no, I mean without using OS-level screenshotting.",
+      "parentUuid": "0cc31234_1b492fc1",
+      "range": {
+        "startLine": 2427,
+        "startChar": 0,
+        "endLine": 2447,
+        "endChar": 1
+      },
+      "revId": "5139c71c73ca9d452d3ab45f852d7e199fe23e47",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
