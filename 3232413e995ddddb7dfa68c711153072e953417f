@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1d332e7d_ccef09aa",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1393148
+      },
+      "writtenOn": "2020-11-12T10:05:30Z",
+      "side": 1,
+      "message": "Please review.\nBased on EGLPreRotationBlitFramebufferTest.BlitStencilWithFlip test which can\u0027t get right result on android and is skipped if it\u0027s android, this patch is used to fix two issue about FramebufferVk::blit().\n1: If there is flipx/y added by glBlitFramebuffer API, the blit implementation will lose the API flip because it sets the flipx/y to true/false forcely in AdjustBlitResolveParametersForPreRotation().\n2: If the src framebuffer is default framebuffer 0, the flip info will be wrong because {x,y} is equal to {y,x} of default dst framebuffer in 90/270 degree. So I add swap() in AdjustFramebufferDimensionsForPreRotation() and rename the function.\n\nThere are two new end2end to test colorBlit in x/y-flip. They can pass on my local android, if they get failures on other platform, SKIP code should be added.\n\nWithout the patch, the BlitStencilWithFlip test gets totally wrong results. With the patch, it still failed on the boundaries. So it\u0027s still skipped on android now.\nThe while() code added in tests is related to the reported issue: https://issuetracker.google.com/issues/172867704",
+      "revId": "3232413e995ddddb7dfa68c711153072e953417f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
