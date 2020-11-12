@@ -34,6 +34,23 @@
       "parentUuid": "2084e359_16cd7d41",
       "revId": "1551f50cbdd00ef86ae8eb9985850728e06aec56",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "41ab2bbe_e2e04e66",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1824,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-12T17:26:59Z",
+      "side": 1,
+      "message": "Technically ANGLE should check for the presence of and request this extension. See RendererVk regarding how we deal with extensions.  `depthClamping` can be made conditional to this extension existing as well.",
+      "revId": "1551f50cbdd00ef86ae8eb9985850728e06aec56",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
