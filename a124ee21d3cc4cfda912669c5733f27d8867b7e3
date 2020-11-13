@@ -74,6 +74,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "b02ed054_7b6c936b",
+        "filename": "src/compiler/translator/TranslatorMetal.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 244,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-13T00:43:36Z",
+      "side": 1,
+      "message": "How much work is it to just move those to the end of the struct so we can use createAdditionalGraphicsDriverUniformFields()?   That feels like the right approach if we can avoid the duplication.   As for testing, I believe parts of dEQP are enabled for the Metal backend, if you have a mac.\n\nIf this really is worth a separate CL, it should probably have a bug and TODO so we come back to it.",
+      "parentUuid": "528feb74_a45fd734",
+      "range": {
+        "startLine": 243,
+        "startChar": 0,
+        "endLine": 244,
+        "endChar": 94
+      },
+      "revId": "a124ee21d3cc4cfda912669c5733f27d8867b7e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "aa7aba5f_c2f12317",
         "filename": "src/compiler/translator/TranslatorMetal.h",
         "patchSetId": 14
