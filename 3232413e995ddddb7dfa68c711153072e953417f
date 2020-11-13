@@ -132,6 +132,30 @@
       },
       "revId": "3232413e995ddddb7dfa68c711153072e953417f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e7b94760_f3784657",
+        "filename": "src/tests/egl_tests/EGLPreRotationTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1237,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-13T12:28:06Z",
+      "side": 1,
+      "message": "Ack, mostly worried that the wait could lead to slow tests. Seems to pass on the bots though so I\u0027m fine if you want to leave it for now.",
+      "parentUuid": "976925ec_12d01a13",
+      "range": {
+        "startLine": 1236,
+        "startChar": 0,
+        "endLine": 1237,
+        "endChar": 5
+      },
+      "revId": "3232413e995ddddb7dfa68c711153072e953417f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
