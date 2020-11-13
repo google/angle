@@ -65,6 +65,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "53f06f7f_99ab9c7d",
+        "filename": "src/libANGLE/renderer/vulkan/QueryVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-13T20:46:39Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "2a323557_43b368a5",
+      "range": {
+        "startLine": 178,
+        "startChar": 18,
+        "endLine": 178,
+        "endChar": 40
+      },
+      "revId": "4814200dee07732d79e9191a92b3d1cccc0bfd69",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "afc43fab_354b66ac",
@@ -102,6 +126,30 @@
       "side": 1,
       "message": "As above, it\u0027s possible to get here with nothing to do for mQueryHelper but there could be something for one of the stashed queries.",
       "parentUuid": "afc43fab_354b66ac",
+      "range": {
+        "startLine": 219,
+        "startChar": 28,
+        "endLine": 219,
+        "endChar": 49
+      },
+      "revId": "4814200dee07732d79e9191a92b3d1cccc0bfd69",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2a5771d5_e17a7cb2",
+        "filename": "src/libANGLE/renderer/vulkan/QueryVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 219,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-13T20:46:39Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "41bbbdb9_3c44380d",
       "range": {
         "startLine": 219,
         "startChar": 28,
