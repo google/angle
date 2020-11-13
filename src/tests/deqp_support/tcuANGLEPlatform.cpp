@@ -42,13 +42,13 @@ ANGLEPlatform::ANGLEPlatform(angle::LogErrorFunc logErrorFunc, uint32_t preRotat
     switch (preRotation)
     {
         case 90:
-            mEnableFeatureOverrides.push_back("emulated_prerotation_90");
+            mEnableFeatureOverrides.push_back("emulatedPrerotation90");
             break;
         case 180:
-            mEnableFeatureOverrides.push_back("emulated_prerotation_180");
+            mEnableFeatureOverrides.push_back("emulatedPrerotation180");
             break;
         case 270:
-            mEnableFeatureOverrides.push_back("emulated_prerotation_270");
+            mEnableFeatureOverrides.push_back("emulatedPrerotation270");
             break;
         default:
             break;
