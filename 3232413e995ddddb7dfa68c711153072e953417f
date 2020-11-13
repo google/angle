@@ -87,6 +87,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "49cd631d_7e9b4a26",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-13T18:53:33Z",
+      "side": 1,
+      "message": "Yes.  Sorry, got distracted yesterday.",
+      "parentUuid": "8a29e66d_7a75fa37",
+      "revId": "3232413e995ddddb7dfa68c711153072e953417f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "613e83ea_86a2667f",
