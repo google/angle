@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "abb9c003_5c2b63ee",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-13T22:54:36Z",
+      "side": 1,
+      "message": "PTAL - jamie, there are 3 unresolved comments where i need more clarification from you. the rest have been addressed",
+      "revId": "c74f5c2ec62d568107630df8da14cb1cbc704812",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
