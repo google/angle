@@ -283,6 +283,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6fc06ea6_e411ea31",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2418,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-13T19:03:21Z",
+      "side": 1,
+      "message": "Won\u0027t isUsedInRecordedCommands return an incorrect result then for a begun query? What happens in that case?",
+      "parentUuid": "9f8d9b42_77956e5e",
+      "range": {
+        "startLine": 2418,
+        "startChar": 4,
+        "endLine": 2418,
+        "endChar": 10
+      },
+      "revId": "d16f7ff97e5dbbf26d8869a84637f03f444a6e38",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ecf13e0d_fd2093d6",
