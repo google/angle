@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "32e89534_4d44121d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-13T20:35:50Z",
+      "side": 1,
+      "message": "LGTM, once Shabi\u0027s nits are resolved. Nice stuff.",
+      "revId": "4814200dee07732d79e9191a92b3d1cccc0bfd69",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "67d748c9_d6c51c53",
