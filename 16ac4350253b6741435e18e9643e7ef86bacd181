@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b1076c15_3e2ca0ba",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-13T17:11:00Z",
+      "side": 1,
+      "message": "shabi, how will GLES apps know not to use the extension with vert/frag shaders? i also remember seeing validation errors in tests when we were not checking for vertexPipelineStoresAndAtomics and fragmentStoresAndAtomics",
+      "revId": "16ac4350253b6741435e18e9643e7ef86bacd181",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
