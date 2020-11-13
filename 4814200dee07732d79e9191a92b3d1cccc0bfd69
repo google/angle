@@ -43,6 +43,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "2a323557_43b368a5",
+        "filename": "src/libANGLE/renderer/vulkan/QueryVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-11-13T20:41:56Z",
+      "side": 1,
+      "message": "I don\u0027t think that\u0027s true. When the queryHelper gets stashed it gets reset - it\u0027s a new queryHelper and may not be used after that. There was at least one test where mQueryHelper.usedInRecordedCommands was false where one of the stashed helpers was true.",
+      "parentUuid": "67d748c9_d6c51c53",
+      "range": {
+        "startLine": 178,
+        "startChar": 18,
+        "endLine": 178,
+        "endChar": 40
+      },
+      "revId": "4814200dee07732d79e9191a92b3d1cccc0bfd69",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "afc43fab_354b66ac",
         "filename": "src/libANGLE/renderer/vulkan/QueryVk.cpp",
         "patchSetId": 3
@@ -54,6 +78,30 @@
       "writtenOn": "2020-11-13T20:31:55Z",
       "side": 1,
       "message": "Presumably the `finishRunningCommands` call on mQueryHelper should ensure these are all finished as well. You can just ASSERT that.",
+      "range": {
+        "startLine": 219,
+        "startChar": 28,
+        "endLine": 219,
+        "endChar": 49
+      },
+      "revId": "4814200dee07732d79e9191a92b3d1cccc0bfd69",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "41bbbdb9_3c44380d",
+        "filename": "src/libANGLE/renderer/vulkan/QueryVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 219,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-11-13T20:41:56Z",
+      "side": 1,
+      "message": "As above, it\u0027s possible to get here with nothing to do for mQueryHelper but there could be something for one of the stashed queries.",
+      "parentUuid": "afc43fab_354b66ac",
       "range": {
         "startLine": 219,
         "startChar": 28,
@@ -87,6 +135,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "77d3fd0b_6c0cd49c",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2410,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-11-13T20:41:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "75e18230_feaa24f5",
+      "range": {
+        "startLine": 2410,
+        "startChar": 84,
+        "endLine": 2410,
+        "endChar": 88
+      },
+      "revId": "4814200dee07732d79e9191a92b3d1cccc0bfd69",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "cc86a797_61b013c7",
@@ -110,6 +182,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "40332c5c_dd3b6cdc",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2428,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-11-13T20:41:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cc86a797_61b013c7",
+      "range": {
+        "startLine": 2428,
+        "startChar": 84,
+        "endLine": 2428,
+        "endChar": 88
+      },
+      "revId": "4814200dee07732d79e9191a92b3d1cccc0bfd69",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "619b3613_2b0cca88",
@@ -123,6 +219,30 @@
       "writtenOn": "2020-11-13T20:31:55Z",
       "side": 1,
       "message": "its",
+      "range": {
+        "startLine": 2461,
+        "startChar": 85,
+        "endLine": 2461,
+        "endChar": 89
+      },
+      "revId": "4814200dee07732d79e9191a92b3d1cccc0bfd69",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "98a54af8_425842ca",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2461,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-11-13T20:41:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "619b3613_2b0cca88",
       "range": {
         "startLine": 2461,
         "startChar": 85,
