@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9e5c1ce0_c7f7354a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-13T15:57:29Z",
+      "side": 1,
+      "message": "PTAL. Might fail CQ but wanted to give you guys a heads up in case Courtney was working on more changes.",
+      "revId": "0cdcceb09e9d7629a98a27dc6c7198cac8951c26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
