@@ -120,6 +120,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "be93e25c_672bc06d",
+        "filename": "src/compiler/translator/TranslatorMetal.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 244,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-13T02:34:22Z",
+      "side": 1,
+      "message": "Never mind, I just did it anyway.",
+      "parentUuid": "4838fd16_bc503baa",
+      "range": {
+        "startLine": 243,
+        "startChar": 0,
+        "endLine": 244,
+        "endChar": 94
+      },
+      "revId": "a124ee21d3cc4cfda912669c5733f27d8867b7e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "aa7aba5f_c2f12317",
