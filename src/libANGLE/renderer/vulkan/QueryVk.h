@@ -42,6 +42,10 @@ class QueryVk : public QueryImpl
   private:
     angle::Result getResult(const gl::Context *context, bool wait);
 
+    bool isUsedInRecordedCommands() const;
+    bool isCurrentlyInUse(Serial lastCompletedSerial) const;
+    angle::Result finishRunningCommands(ContextVk *contextVk);
+
     // Used for AnySamples, AnySamplesConservative, Timestamp and TimeElapsed (end).
     vk::QueryHelper mQueryHelper;
     // Used for occlusion query that we may end up with multiple outstanding query helper objects.

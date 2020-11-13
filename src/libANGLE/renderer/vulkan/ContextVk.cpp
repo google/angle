@@ -1638,6 +1638,8 @@ angle::Result ContextVk::synchronizeCpuGpuTime()
         vk::DeviceScoped<vk::PrimaryCommandBuffer> commandBatch(device);
         vk::PrimaryCommandBuffer &commandBuffer = commandBatch.get();
 
+        vk::ResourceUseList scratchResourceUseList;
+
         ANGLE_TRY(mRenderer->getCommandBufferOneOff(this, &commandBuffer));
 
         commandBuffer.setEvent(gpuReady.get().getHandle(), VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT);
@@ -1645,6 +1647,8 @@ angle::Result ContextVk::synchronizeCpuGpuTime()
                                  VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT, 0, nullptr, 0, nullptr, 0,
                                  nullptr);
         timestampQuery.writeTimestampToPrimary(this, &commandBuffer);
+        timestampQuery.retain(&scratchResourceUseList);
+
         commandBuffer.setEvent(gpuDone.get().getHandle(), VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT);
 
         ANGLE_VK_TRY(this, commandBuffer.end());
@@ -1652,6 +1656,7 @@ angle::Result ContextVk::synchronizeCpuGpuTime()
         Serial throwAwaySerial;
         ANGLE_TRY(mRenderer->queueSubmitOneOff(this, std::move(commandBuffer), mContextPriority,
                                                nullptr, &throwAwaySerial));
+        scratchResourceUseList.releaseResourceUsesAndUpdateSerials(throwAwaySerial);
 
         // Wait for GPU to be ready.  This is a short busy wait.
         VkResult result = VK_EVENT_RESET;
@@ -1753,7 +1758,7 @@ angle::Result ContextVk::checkCompletedGpuEvents()
     for (GpuEventQuery &eventQuery : mInFlightGpuEventQueries)
     {
         // Only check the timestamp query if the submission has finished.
-        if (eventQuery.queryHelper.getStoredQueueSerial() > lastCompletedSerial)
+        if (eventQuery.queryHelper.usedInRunningCommands(lastCompletedSerial))
         {
             break;
         }
@@ -4183,6 +4188,8 @@ angle::Result ContextVk::getTimestamp(uint64_t *timestampOut)
     ANGLE_TRY(timestampQueryPool.get().init(this, VK_QUERY_TYPE_TIMESTAMP, 1));
     ANGLE_TRY(timestampQueryPool.get().allocateQuery(this, &timestampQuery));
 
+    vk::ResourceUseList scratchResourceUseList;
+
     // Record the command buffer
     vk::DeviceScoped<vk::PrimaryCommandBuffer> commandBatch(device);
     vk::PrimaryCommandBuffer &commandBuffer = commandBatch.get();
@@ -4190,6 +4197,7 @@ angle::Result ContextVk::getTimestamp(uint64_t *timestampOut)
     ANGLE_TRY(mRenderer->getCommandBufferOneOff(this, &commandBuffer));
 
     timestampQuery.writeTimestampToPrimary(this, &commandBuffer);
+    timestampQuery.retain(&scratchResourceUseList);
     ANGLE_VK_TRY(this, commandBuffer.end());
 
     // Create fence for the submission
@@ -4218,6 +4226,7 @@ angle::Result ContextVk::getTimestamp(uint64_t *timestampOut)
     // Wait for the submission to finish.  Given no semaphores, there is hope that it would execute
     // in parallel with what's already running on the GPU.
     ANGLE_VK_TRY(this, fence.get().wait(device, mRenderer->getMaxFenceWaitTimeNs()));
+    scratchResourceUseList.releaseResourceUsesAndUpdateSerials(throwAwaySerial);
 
     // Get the query results
     ANGLE_TRY(timestampQuery.getUint64Result(this, timestampOut));
