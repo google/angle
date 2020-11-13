@@ -37,6 +37,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "266e5266_48418952",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-13T17:14:00Z",
+      "side": 1,
+      "message": "Maybe you misunderstood what\u0027s happening here. The wait semaphores vector is copied into the task, then the original vector is cleared. Pointers are not involved that I know of.",
+      "parentUuid": "c6f95ae6_44e71399",
+      "revId": "0cdcceb09e9d7629a98a27dc6c7198cac8951c26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "a0c4e607_a437629a",
         "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.cpp",
         "patchSetId": 1
@@ -48,6 +66,30 @@
       "writtenOn": "2020-11-13T16:50:30Z",
       "side": 1,
       "message": "can get rid of comment.",
+      "range": {
+        "startLine": 610,
+        "startChar": 0,
+        "endLine": 612,
+        "endChar": 0
+      },
+      "revId": "0cdcceb09e9d7629a98a27dc6c7198cac8951c26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "587a63d4_f368abf6",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 612,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-13T17:14:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a0c4e607_a437629a",
       "range": {
         "startLine": 610,
         "startChar": 0,
@@ -81,6 +123,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8895519b_a05b1ab6",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 671,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-13T17:14:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5e1b41e3_afda99ee",
+      "range": {
+        "startLine": 671,
+        "startChar": 35,
+        "endLine": 671,
+        "endChar": 44
+      },
+      "revId": "0cdcceb09e9d7629a98a27dc6c7198cac8951c26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e5b36b05_6683c50b",
@@ -94,6 +160,30 @@
       "writtenOn": "2020-11-13T16:50:30Z",
       "side": 1,
       "message": "Isn\u0027t this violating our code style?",
+      "range": {
+        "startLine": 263,
+        "startChar": 16,
+        "endLine": 263,
+        "endChar": 25
+      },
+      "revId": "0cdcceb09e9d7629a98a27dc6c7198cac8951c26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "19ad28a1_c832bec6",
+        "filename": "src/libANGLE/renderer/vulkan/DisplayVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 263,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-13T17:14:00Z",
+      "side": 1,
+      "message": "https://google.github.io/styleguide/cppguide.html#Variable_Names",
+      "parentUuid": "e5b36b05_6683c50b",
       "range": {
         "startLine": 263,
         "startChar": 16,
