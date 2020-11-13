@@ -69,6 +69,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "54efd4c9_c9b10675",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1393148
+      },
+      "writtenOn": "2020-11-13T10:06:22Z",
+      "side": 1,
+      "message": "Thanks Shahbaz. Excited to see the support of emulated pre-rotation, it\u0027ll help a lot to test implementation about pre-rotation.\nThe BlitFramebufferANGLETest.BlitColorWithFlip end2end has been added, I use glBlitFramebuffer() instead of glBlitFramebufferANGLE() which can\u0027t support flip.",
+      "parentUuid": "c0a4429e_9a5b2e2e",
+      "revId": "3232413e995ddddb7dfa68c711153072e953417f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "613e83ea_86a2667f",
@@ -82,6 +100,30 @@
       "writtenOn": "2020-11-12T20:21:52Z",
       "side": 1,
       "message": "what\u0027s the intent behind the while loop? wondering if this can lead to odd behaviour. can you leave a comment?",
+      "range": {
+        "startLine": 1236,
+        "startChar": 0,
+        "endLine": 1237,
+        "endChar": 5
+      },
+      "revId": "3232413e995ddddb7dfa68c711153072e953417f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "976925ec_12d01a13",
+        "filename": "src/tests/egl_tests/EGLPreRotationTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1237,
+      "author": {
+        "id": 1393148
+      },
+      "writtenOn": "2020-11-13T10:06:22Z",
+      "side": 1,
+      "message": "According to https://issuetracker.google.com/issues/172867704, angle::Sleep(1000) can\u0027t ensure that the window has been changed, so adding the while() function to wait might be necessary. But I think this hasn\u0027t been 100% confirmed. If you are worried that this can lead to odd behaviour, I\u0027ll delete this since it won\u0027t affect the local results.",
+      "parentUuid": "613e83ea_86a2667f",
       "range": {
         "startLine": 1236,
         "startChar": 0,
