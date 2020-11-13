@@ -16,6 +16,29 @@
       "message": "Noticed that long stack traces take like 5~10 seconds to slowly \"roll out\". With this change that takes about 1s.",
       "revId": "3d5552c363e96a2522e6fe1a4339ed894fda14a4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0172e374_20fb3578",
+        "filename": "util/posix/crash_handler_posix.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 218,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-13T00:24:17Z",
+      "side": 1,
+      "message": "Oops.   Copypasta.   Should probably be something like: \"to print the backtrace.\"",
+      "range": {
+        "startLine": 218,
+        "startChar": 48,
+        "endLine": 218,
+        "endChar": 70
+      },
+      "revId": "3d5552c363e96a2522e6fe1a4339ed894fda14a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
