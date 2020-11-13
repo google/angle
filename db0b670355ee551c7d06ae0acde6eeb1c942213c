@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "7bcb7b4b_c52270a5",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-13T15:20:18Z",
+      "side": 1,
+      "message": "nit: add a bug tag in the footer\n\nBug: angleproject:1944",
+      "revId": "db0b670355ee551c7d06ae0acde6eeb1c942213c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "880f6d24_9224b1d4",
@@ -14,6 +31,29 @@
       "writtenOn": "2020-11-13T14:36:28Z",
       "side": 1,
       "message": "Didn\u0027t realize this wouldn\u0027t squash with its relation.\n\nFeel free to review separately or I can squash if you like.",
+      "revId": "db0b670355ee551c7d06ae0acde6eeb1c942213c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "346a2310_ce3d9c9e",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-13T15:20:18Z",
+      "side": 1,
+      "message": "nit: if you feel like it, you can also make this paragraph wrap to 100 characters, because I\u0027m like that",
+      "range": {
+        "startLine": 107,
+        "startChar": 0,
+        "endLine": 107,
+        "endChar": 453
+      },
       "revId": "db0b670355ee551c7d06ae0acde6eeb1c942213c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
