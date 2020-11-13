@@ -16,6 +16,24 @@
       "message": "shabi, how will GLES apps know not to use the extension with vert/frag shaders? i also remember seeing validation errors in tests when we were not checking for vertexPipelineStoresAndAtomics and fragmentStoresAndAtomics",
       "revId": "16ac4350253b6741435e18e9643e7ef86bacd181",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e2e1ee2d_05c0e4fa",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-13T20:18:04Z",
+      "side": 1,
+      "message": "They query the number of image uniforms in VS and FS, and see that they are 0. If there are no images, there can\u0027t be atomic image operations :)\n\nRelevant code:\n\n    mNativeCaps.maxShaderImageUniforms[gl::ShaderType::Vertex] \u003d\n        mPhysicalDeviceFeatures.vertexPipelineStoresAndAtomics ? maxPerStageImages : 0;\n    mNativeCaps.maxShaderImageUniforms[gl::ShaderType::Fragment] \u003d\n        mPhysicalDeviceFeatures.fragmentStoresAndAtomics ? maxPerStageImages : 0;\n    mNativeCaps.maxShaderImageUniforms[gl::ShaderType::Geometry] \u003d\n        mPhysicalDeviceFeatures.vertexPipelineStoresAndAtomics ? maxPerStageImages : 0;\n    mNativeCaps.maxShaderImageUniforms[gl::ShaderType::Compute] \u003d maxPerStageImages;",
+      "parentUuid": "b1076c15_3e2ca0ba",
+      "revId": "16ac4350253b6741435e18e9643e7ef86bacd181",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
