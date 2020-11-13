@@ -190,8 +190,6 @@ class RendererVk : angle::NonCopyable
         sharedFenceIn->resetAndRecycle(&mFenceRecycler);
     }
 
-    angle::Result getNextSubmitFence(vk::Shared<vk::Fence> *sharedFenceOut, bool reset);
-
     template <typename... ArgsT>
     void collectGarbageAndReinit(vk::SharedResourceUse *use, ArgsT... garbageIn)
     {
@@ -450,10 +448,6 @@ class RendererVk : angle::NonCopyable
 
     // Async Command Queue
     vk::CommandProcessor mCommandProcessor;
-    // mNextSubmitFence is the fence that's going to be signaled at the next submission.  This is
-    // used to support SyncVk objects, which may outlive the context (as EGLSync objects).
-    vk::Shared<vk::Fence> mNextSubmitFence;
-    std::mutex mNextSubmitFenceMutex;
 
     // track whether we initialized (or released) glslang
     bool mGlslangInitialized;
