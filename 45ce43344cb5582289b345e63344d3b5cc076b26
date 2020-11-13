@@ -51,6 +51,24 @@
       "parentUuid": "bc3ce030_4deb93f0",
       "revId": "45ce43344cb5582289b345e63344d3b5cc076b26",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6de83a40_0b91d9c3",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 2699,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-11-13T15:51:19Z",
+      "side": 1,
+      "message": "I\u0027d be happy to.",
+      "parentUuid": "0b0cc48d_672d06c6",
+      "revId": "45ce43344cb5582289b345e63344d3b5cc076b26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
