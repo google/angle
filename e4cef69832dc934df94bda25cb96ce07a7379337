@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b658ea9a_66faea6c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1116015
+      },
+      "writtenOn": "2020-11-13T15:31:53Z",
+      "side": 1,
+      "message": "I seem to have lost the relation chain on squash. Still getting used to this workflow.\n\nWill dry run and see if it applies.",
+      "revId": "e4cef69832dc934df94bda25cb96ce07a7379337",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}

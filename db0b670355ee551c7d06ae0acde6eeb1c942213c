@@ -20,6 +20,24 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "41a9477f_b1ef23ce",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1116015
+      },
+      "writtenOn": "2020-11-13T15:31:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7bcb7b4b_c52270a5",
+      "revId": "db0b670355ee551c7d06ae0acde6eeb1c942213c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "880f6d24_9224b1d4",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 1
@@ -48,6 +66,30 @@
       "writtenOn": "2020-11-13T15:20:18Z",
       "side": 1,
       "message": "nit: if you feel like it, you can also make this paragraph wrap to 100 characters, because I\u0027m like that",
+      "range": {
+        "startLine": 107,
+        "startChar": 0,
+        "endLine": 107,
+        "endChar": 453
+      },
+      "revId": "db0b670355ee551c7d06ae0acde6eeb1c942213c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d27426f1_3c3fe009",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1116015
+      },
+      "writtenOn": "2020-11-13T15:31:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "346a2310_ce3d9c9e",
       "range": {
         "startLine": 107,
         "startChar": 0,
