@@ -160,7 +160,9 @@ angle::Result RenderbufferVk::setStorage(const gl::Context *context,
                                          GLsizei width,
                                          GLsizei height)
 {
-    return setStorageImpl(context, 1, internalformat, width, height,
+    // The ES 3.0 spec(section 4.4.2.1) states that RenderbufferStorage is equivalent to calling
+    // RenderbufferStorageMultisample with samples equal to zero.
+    return setStorageImpl(context, 0, internalformat, width, height,
                           gl::MultisamplingMode::Regular);
 }
 
