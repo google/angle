@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "30aeaf63_25a9465d",
+        "filename": "src/compiler/translator/TranslatorMetal.h",
+        "patchSetId": 28
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-13T18:54:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ab9c4a0f_05040506",
+      "range": {
+        "startLine": 40,
+        "startChar": 3,
+        "endLine": 40,
+        "endChar": 7
+      },
+      "revId": "03ce23f40b2decfd92d88b15bd473f6c16f98a7f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0550c2f5_54a65096",
@@ -37,6 +61,30 @@
       "writtenOn": "2020-11-13T12:33:24Z",
       "side": 1,
       "message": "you could probably make this a helper function, like\n\ntemplate \u003ctypename TypeA, typename TypeB\u003e\nconstexpr bool SameUnderlying(TypeA a, TypeB b)\n{\n   return ToUnderlying(a) \u003d\u003d ToUnderlying(b);\n}",
+      "range": {
+        "startLine": 65,
+        "startChar": 14,
+        "endLine": 66,
+        "endChar": 65
+      },
+      "revId": "03ce23f40b2decfd92d88b15bd473f6c16f98a7f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "40b22b23_243b3653",
+        "filename": "src/libANGLE/renderer/renderer_utils.h",
+        "patchSetId": 28
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-13T18:54:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0550c2f5_54a65096",
       "range": {
         "startLine": 65,
         "startChar": 14,
