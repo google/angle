@@ -307,6 +307,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2a7f0eaf_98476952",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2418,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-11-13T19:13:27Z",
+      "side": 1,
+      "message": "Great question. I don\u0027t think we want to consider a solitary begin counting for isUsedInRecordedCommands. The begin won\u0027t cause query results to happen and the places where we check isUsedInRecordedCommands are when we want to make sure the commands that will produce a query result need to be sent. So I think we are okay.",
+      "parentUuid": "6fc06ea6_e411ea31",
+      "range": {
+        "startLine": 2418,
+        "startChar": 4,
+        "endLine": 2418,
+        "endChar": 10
+      },
+      "revId": "d16f7ff97e5dbbf26d8869a84637f03f444a6e38",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ecf13e0d_fd2093d6",
