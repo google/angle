@@ -16,6 +16,75 @@
       "message": "PTAL",
       "revId": "062728bb0bf96ca29fa5fb3144b89b8ba13825dc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "474dc865_ab0c191c",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 643,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-13T23:56:32Z",
+      "side": 1,
+      "message": "CommandProcessor::queuePresent",
+      "range": {
+        "startLine": 643,
+        "startChar": 37,
+        "endLine": 643,
+        "endChar": 61
+      },
+      "revId": "062728bb0bf96ca29fa5fb3144b89b8ba13825dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "95d9c4c5_2105d7b5",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 658,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-13T23:56:32Z",
+      "side": 1,
+      "message": "Why doesn\u0027t this pass along \u0027timeout\u0027 (even though CommandProcessor::finishToSerial() doesn\u0027t use it yet)?",
+      "range": {
+        "startLine": 658,
+        "startChar": 43,
+        "endLine": 658,
+        "endChar": 77
+      },
+      "revId": "062728bb0bf96ca29fa5fb3144b89b8ba13825dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4ed6cd72_a91ae566",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 378,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-13T23:56:32Z",
+      "side": 1,
+      "message": "RendererVk::initializeDevice",
+      "range": {
+        "startLine": 378,
+        "startChar": 23,
+        "endLine": 378,
+        "endChar": 45
+      },
+      "revId": "062728bb0bf96ca29fa5fb3144b89b8ba13825dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
