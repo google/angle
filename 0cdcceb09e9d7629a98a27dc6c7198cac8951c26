@@ -71,6 +71,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ccd9d1de_ec68b6d0",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-13T21:57:32Z",
+      "side": 1,
+      "message": "tl;dr, it works better this way when using the sample API interface across the threaded / synchronous design. The RendererVk resets the lists and the command queue classes just process them immutably.",
+      "parentUuid": "4b072c1d_c3a87051",
+      "revId": "0cdcceb09e9d7629a98a27dc6c7198cac8951c26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a0c4e607_a437629a",
@@ -226,6 +244,30 @@
       "side": 1,
       "message": "Ah, struct. okay.\nIs that the right doc? We don\u0027t use the trailing underscore for class member names.",
       "parentUuid": "19ad28a1_c832bec6",
+      "range": {
+        "startLine": 263,
+        "startChar": 16,
+        "endLine": 263,
+        "endChar": 25
+      },
+      "revId": "0cdcceb09e9d7629a98a27dc6c7198cac8951c26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "20f4bef5_b6174bb7",
+        "filename": "src/libANGLE/renderer/vulkan/DisplayVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 263,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-13T21:57:32Z",
+      "side": 1,
+      "message": "https://chromium.googlesource.com/angle/angle/+/master/doc/CodingStandard.md\n\n\u003e We generally use the Google C++ Style Guide as a basis for our Coding Standard, however we will deviate from it in a few areas, as noted below.\n\nhttps://chromium.googlesource.com/angle/angle/+/master/doc/CodingStandard.md#variable-names\n\n{DEV} Class member variables: use an m prefix instead of trailing underscore and use CamelCase.",
+      "parentUuid": "caa5780a_e9e05ff1",
       "range": {
         "startLine": 263,
         "startChar": 16,
