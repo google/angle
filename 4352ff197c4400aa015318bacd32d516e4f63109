@@ -16,6 +16,24 @@
       "message": "Interesting result. Please re-try the failing test, seems to be a fairly consistent Gold failure on some Intel configs.",
       "revId": "4352ff197c4400aa015318bacd32d516e4f63109",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "56010dc7_96c0d8d8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-13T03:19:42Z",
+      "side": 1,
+      "message": "Looks like it was a flake",
+      "parentUuid": "65bc2340_b02282ae",
+      "revId": "4352ff197c4400aa015318bacd32d516e4f63109",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
