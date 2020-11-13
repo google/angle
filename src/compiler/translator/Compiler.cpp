@@ -31,6 +31,7 @@
 #include "compiler/translator/tree_ops/EmulateMultiDrawShaderBuiltins.h"
 #include "compiler/translator/tree_ops/EmulatePrecision.h"
 #include "compiler/translator/tree_ops/FoldExpressions.h"
+#include "compiler/translator/tree_ops/ForcePrecisionQualifier.h"
 #include "compiler/translator/tree_ops/InitializeVariables.h"
 #include "compiler/translator/tree_ops/PruneEmptyCases.h"
 #include "compiler/translator/tree_ops/PruneNoOps.h"
@@ -785,6 +786,14 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
     {
         if (!ScalarizeVecAndMatConstructorArgs(this, root, mShaderType, highPrecisionSupported,
                                                &mSymbolTable))
+        {
+            return false;
+        }
+    }
+
+    if (compileOptions & SH_FORCE_SHADER_PRECISION_HIGHP_TO_MEDIUMP)
+    {
+        if (!ForceShaderPrecisionToMediump(root, &mSymbolTable, mShaderType))
         {
             return false;
         }

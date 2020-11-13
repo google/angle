@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 240
+#define ANGLE_SH_VERSION 241
 
 enum ShShaderSpec
 {
@@ -340,6 +340,8 @@ const ShCompileOptions SH_EARLY_FRAGMENT_TESTS_OPTIMIZATION = UINT64_C(1) << 55;
 
 // Allow compiler to insert Android pre-rotation code.
 const ShCompileOptions SH_ADD_PRE_ROTATION = UINT64_C(1) << 56;
+
+const ShCompileOptions SH_FORCE_SHADER_PRECISION_HIGHP_TO_MEDIUMP = UINT64_C(1) << 57;
 
 // Defines alternate strategies for implementing array index clamping.
 enum ShArrayIndexClampingStrategy
