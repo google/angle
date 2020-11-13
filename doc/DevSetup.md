@@ -122,7 +122,11 @@ This sections describes how to use ANGLE to build an OpenGL ES application.
 ANGLE can use a variety of backing renderers based on platform.  On Windows, it defaults to D3D11 where it's available,
 or D3D9 otherwise.  On other desktop platforms, it defaults to GL.  On mobile, it defaults to GLES.
 
-ANGLE provides an EGL extension called `EGL_ANGLE_platform_angle` which allows uers to select which renderer to use at EGL initialization time by calling eglGetPlatformDisplayEXT with special enums. Details of the extension can be found in its specification in `extensions/EGL_ANGLE_platform_angle.txt` and `extensions/EGL_ANGLE_platform_angle_*.txt` and examples of its use can be seen in the ANGLE samples and tests, particularly `util/EGLWindow.cpp`.
+ANGLE provides an EGL extension called `EGL_ANGLE_platform_angle` which allows uers to select
+which renderer to use at EGL initialization time by calling eglGetPlatformDisplayEXT with special
+enums. Details of the extension can be found in its specification in
+`extensions/EGL_ANGLE_platform_angle.txt` and `extensions/EGL_ANGLE_platform_angle_*.txt` and
+examples of its use can be seen in the ANGLE samples and tests, particularly `util/EGLWindow.cpp`.
 
 To change the default D3D backend:
 
