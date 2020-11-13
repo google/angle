@@ -1793,6 +1793,9 @@ TEST_P(TransformFeedbackTest, BufferOutOfMemory)
     // The GL back-end throws an internal error that we can't deal with in this test.
     ANGLE_SKIP_TEST_IF(IsOpenGL());
 
+    // TODO: http://anglebug.com/5345: fails consistently on Mac FYI GPU ASAN Release bot
+    ANGLE_SKIP_TEST_IF(IsMetal() && (IsIntel() || IsAMD()));
+
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
