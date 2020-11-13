@@ -129,15 +129,19 @@ constexpr const char *kSkippedMessages[] = {
     "VUID-VkPipelineInputAssemblyStateCreateInfo-topology-00428",
     // http://anglebug.com/4063
     "VUID-VkDeviceCreateInfo-pNext-pNext",
-    "VUID-VkPipelineRasterizationStateCreateInfo-pNext-pNext", "VUID_Undefined",
+    "VUID-VkPipelineRasterizationStateCreateInfo-pNext-pNext",
+    "VUID_Undefined",
     // https://issuetracker.google.com/issues/159493191
-    "VUID-vkCmdDraw-None-02690", "VUID-vkCmdDrawIndexed-None-02690",
+    "VUID-vkCmdDraw-None-02690",
+    "VUID-vkCmdDrawIndexed-None-02690",
     // http://anglebug.com/4975
-    "VUID-vkCmdDraw-None-02687", "VUID-vkCmdDrawIndexed-None-02687",
+    "VUID-vkCmdDraw-None-02687",
+    "VUID-vkCmdDrawIndexed-None-02687",
     // Best Practices Skips https://issuetracker.google.com/issues/166641492
     // https://issuetracker.google.com/issues/166793850
     "UNASSIGNED-BestPractices-vkCreateCommandPool-command-buffer-reset",
-    "UNASSIGNED-BestPractices-pipeline-stage-flags", "UNASSIGNED-BestPractices-Error-Result",
+    "UNASSIGNED-BestPractices-pipeline-stage-flags",
+    "UNASSIGNED-BestPractices-Error-Result",
     "UNASSIGNED-BestPractices-vkAllocateMemory-small-allocation",
     "UNASSIGNED-BestPractices-vkBindMemory-small-dedicated-allocation",
     "UNASSIGNED-BestPractices-vkAllocateMemory-too-many-objects",
@@ -151,13 +155,16 @@ constexpr const char *kSkippedMessages[] = {
     // http://anglebug.com/5027
     "UNASSIGNED-CoreValidation-Shader-PushConstantOutOfRange",
     // http://anglebug.com/5304
-    "VUID-vkCmdDraw-magFilter-04553", "VUID-vkCmdDrawIndexed-magFilter-04553",
+    "VUID-vkCmdDraw-magFilter-04553",
+    "VUID-vkCmdDrawIndexed-magFilter-04553",
     // http://anglebug.com/5309
     "VUID-VkImageViewCreateInfo-usage-02652",
     // http://anglebug.com/5336
     "UNASSIGNED-BestPractices-vkCreateDevice-specialuse-extension",
     // http://anglebug.com/5331
-    "VUID-VkSubpassDescriptionDepthStencilResolve-stencilResolveMode-parameter"};
+    "VUID-VkSubpassDescriptionDepthStencilResolve-depthResolveMode-parameter",
+    "VUID-VkSubpassDescriptionDepthStencilResolve-stencilResolveMode-parameter",
+};
 
 // Suppress validation errors that are known
 //  return "true" if given code/prefix/message is known, else return "false"
