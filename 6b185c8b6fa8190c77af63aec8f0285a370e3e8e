@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ad394911_3e6495b3",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-13T23:32:12Z",
+      "side": 1,
+      "message": "angleproject",
+      "range": {
+        "startLine": 12,
+        "startChar": 5,
+        "endLine": 12,
+        "endChar": 13
+      },
+      "revId": "6b185c8b6fa8190c77af63aec8f0285a370e3e8e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "df0f097c_2699e269",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-13T23:32:12Z",
+      "side": 1,
+      "message": "Please update bug links before landing.",
+      "revId": "6b185c8b6fa8190c77af63aec8f0285a370e3e8e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2b11053e_cde49c52",
+        "filename": "src/tests/gl_tests/TransformFeedbackTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1796,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-13T23:32:12Z",
+      "side": 1,
+      "message": "anglebug.com",
+      "range": {
+        "startLine": 1796,
+        "startChar": 20,
+        "endLine": 1796,
+        "endChar": 25
+      },
+      "revId": "6b185c8b6fa8190c77af63aec8f0285a370e3e8e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
