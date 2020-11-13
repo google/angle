@@ -16,6 +16,23 @@
       "message": "Jamie: PTAL. Thanks!",
       "revId": "919729d52cea2bd83bf1a3b5dbeeeb85a7693f66",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d4873291_a7afce6f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-13T18:34:29Z",
+      "side": 1,
+      "message": "LGTM - says merge conflict so you might need to rebase.",
+      "revId": "919729d52cea2bd83bf1a3b5dbeeeb85a7693f66",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
