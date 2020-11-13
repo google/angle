@@ -98,6 +98,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "4838fd16_bc503baa",
+        "filename": "src/compiler/translator/TranslatorMetal.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 244,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-13T01:49:48Z",
+      "side": 1,
+      "message": "The work isn\u0027t much, but will have to change metal\u0027s context code as well which I am trying to avoid since if it fails, I don\u0027t have setup to debug locally. Once http://anglebug.com/5339 is fixed, these duplicated code will be deleted from Metal backend, so it is temporary. If people all feeling strongly on this, I will change it.",
+      "parentUuid": "b02ed054_7b6c936b",
+      "range": {
+        "startLine": 243,
+        "startChar": 0,
+        "endLine": 244,
+        "endChar": 94
+      },
+      "revId": "a124ee21d3cc4cfda912669c5733f27d8867b7e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "aa7aba5f_c2f12317",
         "filename": "src/compiler/translator/TranslatorMetal.h",
         "patchSetId": 14
