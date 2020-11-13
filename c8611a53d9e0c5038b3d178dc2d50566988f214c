@@ -389,6 +389,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3e9e3453_eaca2f8f",
+        "filename": "src/libANGLE/renderer/vulkan/BUILD.gn",
+        "patchSetId": 6
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-13T23:31:26Z",
+      "side": 1,
+      "message": "Ack, no, either way is fine. I was thinking you\u0027d make a stub implementation for non-Android. But it\u0027s not much different from what you have now.",
+      "parentUuid": "331f94bf_b8755a1c",
+      "range": {
+        "startLine": 87,
+        "startChar": 0,
+        "endLine": 88,
+        "endChar": 34
+      },
+      "revId": "c8611a53d9e0c5038b3d178dc2d50566988f214c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ffc8b79e_716db8ad",
@@ -473,6 +497,30 @@
       "side": 1,
       "message": "cant do that because CQ compiles code on bots that are not API \u003e\u003d 26 which will cause compiler errors",
       "parentUuid": "b448617a_b99ca5d0",
+      "range": {
+        "startLine": 22,
+        "startChar": 12,
+        "endLine": 22,
+        "endChar": 42
+      },
+      "revId": "c8611a53d9e0c5038b3d178dc2d50566988f214c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3286f362_ff5f8085",
+        "filename": "src/libANGLE/renderer/vulkan/android/android_vulkan_util.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-13T23:31:26Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "1f66b3e4_95e61c76",
       "range": {
         "startLine": 22,
         "startChar": 12,
@@ -837,6 +885,30 @@
       "side": 1,
       "message": "`collectGarbageAndReinit(...)` needs a `SharedResourceUse` that `BufferMemory` does not have. What did you have in mind?",
       "parentUuid": "e2d53cdd_72ca684b",
+      "range": {
+        "startLine": 3165,
+        "startChar": 33,
+        "endLine": 3165,
+        "endChar": 43
+      },
+      "revId": "c8611a53d9e0c5038b3d178dc2d50566988f214c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1a5b0212_2f1c555e",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 3165,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-13T23:31:26Z",
+      "side": 1,
+      "message": "I think you\u0027re holding it wrong. mBuffer and mBufferView also do not have a shared use and this line of code works fine. The use is the first argument, you implement release() on the objects that get passed in as the 2nd..Nth arguments.",
+      "parentUuid": "43b550ee_4312069e",
       "range": {
         "startLine": 3165,
         "startChar": 33,

@@ -16,6 +16,75 @@
       "message": "PTAL - jamie, there are 3 unresolved comments where i need more clarification from you. the rest have been addressed",
       "revId": "c74f5c2ec62d568107630df8da14cb1cbc704812",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7b33304f_714be83c",
+        "filename": "src/libANGLE/renderer/vulkan/android/vk_android_utils.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-13T23:31:26Z",
+      "side": 1,
+      "message": "please use ANGLE_VK_UNREACHABLE()",
+      "range": {
+        "startLine": 50,
+        "startChar": 26,
+        "endLine": 50,
+        "endChar": 30
+      },
+      "revId": "c74f5c2ec62d568107630df8da14cb1cbc704812",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d3de1790_dba88e2d",
+        "filename": "src/libANGLE/renderer/vulkan/android/vk_android_utils.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-13T23:31:26Z",
+      "side": 1,
+      "message": "please use ANGLE_VK_UNREACHABLE()",
+      "range": {
+        "startLine": 82,
+        "startChar": 26,
+        "endLine": 82,
+        "endChar": 30
+      },
+      "revId": "c74f5c2ec62d568107630df8da14cb1cbc704812",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c2473f16_6c6668d3",
+        "filename": "src/libANGLE/renderer/vulkan/android/vk_android_utils.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-13T23:31:26Z",
+      "side": 1,
+      "message": "same here, add an #else case.",
+      "range": {
+        "startLine": 91,
+        "startChar": 4,
+        "endLine": 91,
+        "endChar": 27
+      },
+      "revId": "c74f5c2ec62d568107630df8da14cb1cbc704812",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
