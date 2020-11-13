@@ -1,0 +1,211 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e5f25e5f_7e6cfe80",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 4225,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-13T17:21:47Z",
+      "side": 1,
+      "message": "humor me here and make this use the existing API - make a ResourceUseList, retain this one object, then release the resource uses with the new serial.",
+      "range": {
+        "startLine": 4225,
+        "startChar": 3,
+        "endLine": 4225,
+        "endChar": 55
+      },
+      "revId": "d16f7ff97e5dbbf26d8869a84637f03f444a6e38",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3c25a19b_91c79e7c",
+        "filename": "src/libANGLE/renderer/vulkan/QueryVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 180,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-13T17:21:47Z",
+      "side": 1,
+      "message": "nit: instead of storing the result temporary, just exit if you find it\n\nif (usedIn)\n  return true;\n\nfor (...)\n  if (usedIn)\n    return true;\n\nreturn false;",
+      "range": {
+        "startLine": 171,
+        "startChar": 0,
+        "endLine": 180,
+        "endChar": 18
+      },
+      "revId": "d16f7ff97e5dbbf26d8869a84637f03f444a6e38",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ba01df7e_55d6dc65",
+        "filename": "src/libANGLE/renderer/vulkan/QueryVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 191,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-13T17:21:47Z",
+      "side": 1,
+      "message": "nit: same",
+      "range": {
+        "startLine": 186,
+        "startChar": 0,
+        "endLine": 191,
+        "endChar": 18
+      },
+      "revId": "d16f7ff97e5dbbf26d8869a84637f03f444a6e38",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1b0afb5c_b9ff67e4",
+        "filename": "src/libANGLE/renderer/vulkan/QueryVk.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-13T17:21:47Z",
+      "side": 1,
+      "message": "nit: we\u0027re always a query, so you can remove the word \u0027Query\u0027 from these apis.",
+      "range": {
+        "startLine": 45,
+        "startChar": 9,
+        "endLine": 45,
+        "endChar": 38
+      },
+      "revId": "d16f7ff97e5dbbf26d8869a84637f03f444a6e38",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "be46a354_01bc269d",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2402,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-13T17:21:47Z",
+      "side": 1,
+      "message": "hm.. having both retain on begin \u0026 end suggests some issues with queries that span multiple submissions. what happens if a query is open and we flush out the command buffer? we definitely need to make sure that we don\u0027t assume the query is closed.",
+      "range": {
+        "startLine": 2402,
+        "startChar": 4,
+        "endLine": 2402,
+        "endChar": 45
+      },
+      "revId": "d16f7ff97e5dbbf26d8869a84637f03f444a6e38",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "71099193_58358afe",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2418,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-13T17:21:47Z",
+      "side": 1,
+      "message": "same here.",
+      "range": {
+        "startLine": 2418,
+        "startChar": 4,
+        "endLine": 2418,
+        "endChar": 10
+      },
+      "revId": "d16f7ff97e5dbbf26d8869a84637f03f444a6e38",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ecf13e0d_fd2093d6",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2432,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-13T17:21:47Z",
+      "side": 1,
+      "message": "nit: this will add the reference twice, since writeTimestamp already retains.",
+      "range": {
+        "startLine": 2432,
+        "startChar": 4,
+        "endLine": 2432,
+        "endChar": 45
+      },
+      "revId": "d16f7ff97e5dbbf26d8869a84637f03f444a6e38",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6262709b_e6fd8293",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2454,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-13T17:21:47Z",
+      "side": 1,
+      "message": "nit: remove this API and use usedInRecorded since they do the same thing.",
+      "range": {
+        "startLine": 2454,
+        "startChar": 18,
+        "endLine": 2454,
+        "endChar": 32
+      },
+      "revId": "d16f7ff97e5dbbf26d8869a84637f03f444a6e38",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bf1502ee_345751e2",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 430,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-13T17:21:47Z",
+      "side": 1,
+      "message": "nit: in cpp",
+      "range": {
+        "startLine": 424,
+        "startChar": 0,
+        "endLine": 430,
+        "endChar": 5
+      },
+      "revId": "d16f7ff97e5dbbf26d8869a84637f03f444a6e38",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
