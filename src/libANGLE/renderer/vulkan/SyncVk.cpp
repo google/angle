@@ -37,7 +37,7 @@ void SyncHelper::releaseToRenderer(RendererVk *renderer)
     if (renderer->getFeatures().asyncCommandQueue.enabled)
     {
         ANGLE_TRACE_EVENT0("gpu.angle", "SyncHelper::releaseToRenderer");
-        renderer->waitForCommandProcessorIdle(nullptr);
+        (void)renderer->waitForCommandProcessorIdle(nullptr);
     }
 }
 
@@ -272,7 +272,7 @@ angle::Result SyncHelperNativeFence::clientWait(Context *context,
     if (contextVk->getRenderer()->getFeatures().asyncCommandQueue.enabled)
     {
         ANGLE_TRACE_EVENT0("gpu.angle", "SyncHelperNativeFence::clientWait");
-        contextVk->getRenderer()->waitForCommandProcessorIdle(contextVk);
+        ANGLE_TRY(contextVk->getRenderer()->waitForCommandProcessorIdle(contextVk));
     }
 
     // Wait for mFenceWithFd to be signaled.

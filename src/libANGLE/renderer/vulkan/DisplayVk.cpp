@@ -260,10 +260,10 @@ void DisplayVk::handleError(VkResult result,
 {
     ASSERT(result != VK_SUCCESS);
 
-    mSavedError.mErrorCode = result;
-    mSavedError.mFile      = file;
-    mSavedError.mFunction  = function;
-    mSavedError.mLine      = line;
+    mSavedError.errorCode = result;
+    mSavedError.file      = file;
+    mSavedError.function  = function;
+    mSavedError.line      = line;
 
     if (result == VK_ERROR_DEVICE_LOST)
     {
@@ -277,10 +277,9 @@ void DisplayVk::handleError(VkResult result,
 egl::Error DisplayVk::getEGLError(EGLint errorCode)
 {
     std::stringstream errorStream;
-    errorStream << "Internal Vulkan error (" << mSavedError.mErrorCode
-                << "): " << VulkanResultString(mSavedError.mErrorCode) << ", in "
-                << mSavedError.mFile << ", " << mSavedError.mFunction << ":" << mSavedError.mLine
-                << ".";
+    errorStream << "Internal Vulkan error (" << mSavedError.errorCode
+                << "): " << VulkanResultString(mSavedError.errorCode) << ", in " << mSavedError.file
+                << ", " << mSavedError.function << ":" << mSavedError.line << ".";
     std::string errorString = errorStream.str();
 
     return egl::Error(errorCode, 0, std::move(errorString));

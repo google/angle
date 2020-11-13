@@ -156,10 +156,10 @@ void AddToPNextChain(VulkanStruct1 *chainStart, VulkanStruct2 *ptr)
 
 struct Error
 {
-    VkResult mErrorCode;
-    const char *mFile;
-    const char *mFunction;
-    unsigned int mLine;
+    VkResult errorCode;
+    const char *file;
+    const char *function;
+    uint32_t line;
 };
 
 // Abstracts error handling. Implemented by both ContextVk for GL and DisplayVk for EGL errors.

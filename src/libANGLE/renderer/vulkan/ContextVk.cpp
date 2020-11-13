@@ -527,9 +527,6 @@ void ContextVk::onDestroy(const gl::Context *context)
     mShaderLibrary.destroy(device);
     mGpuEventQueryPool.destroy(device);
     mCommandPool.destroy(device);
-
-    // This will clean up any outstanding buffer allocations
-    (void)mRenderer->clearAllGarbage(this);
 }
 
 angle::Result ContextVk::getIncompleteTexture(const gl::Context *context,
@@ -1842,13 +1839,12 @@ void ContextVk::flushGpuEvents(double nextSyncGpuTimestampS, double nextSyncCpuT
 
 void ContextVk::clearAllGarbage()
 {
-    ANGLE_TRACE_EVENT0("gpu.angle", "ContextVk::finishAllWork");
+    ANGLE_TRACE_EVENT0("gpu.angle", "ContextVk::clearAllGarbage");
     for (vk::GarbageObject &garbage : mCurrentGarbage)
     {
         garbage.destroy(mRenderer);
     }
     mCurrentGarbage.clear();
-    mRenderer->clearAllGarbage(this);
 }
 
 void ContextVk::handleDeviceLost()
@@ -3035,7 +3031,7 @@ angle::Result ContextVk::onUnMakeCurrent(const gl::Context *context)
     if (mRenderer->getFeatures().asyncCommandQueue.enabled)
     {
         ANGLE_TRACE_EVENT0("gpu.angle", "ContextVk::onUnMakeCurrent");
-        mRenderer->finishAllWork(this);
+        ANGLE_TRY(mRenderer->finishAllWork(this));
     }
     mCurrentWindowSurface = nullptr;
     return angle::Result::Continue;
