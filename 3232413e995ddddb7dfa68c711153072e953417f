@@ -192,6 +192,30 @@
       },
       "revId": "3232413e995ddddb7dfa68c711153072e953417f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0715d2c2_909f3b5e",
+        "filename": "src/tests/egl_tests/EGLPreRotationTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1237,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-13T21:26:30Z",
+      "side": 1,
+      "message": "I did some testing for this test.  I removed this while loop, and the test still passed.  I also removed the sleep and the test still passed.  Interesting.  I didn\u0027t use logcat debugging to check, just test passing.  It may be safe to remove.  I\u0027m not sure.",
+      "parentUuid": "e7b94760_f3784657",
+      "range": {
+        "startLine": 1236,
+        "startChar": 0,
+        "endLine": 1237,
+        "endChar": 5
+      },
+      "revId": "3232413e995ddddb7dfa68c711153072e953417f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }

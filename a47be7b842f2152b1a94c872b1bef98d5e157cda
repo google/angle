@@ -33,6 +33,46 @@
       "message": "Holding off landing this until I can review",
       "revId": "a47be7b842f2152b1a94c872b1bef98d5e157cda",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e0379eb6_5c47e284",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-13T21:26:30Z",
+      "side": 1,
+      "message": "LGTM.  Thank you Amy!  Sorry for not getting this reviewed earlier.\n\nI spent time trying to understand why some of the tests have expected pixel tests commented out (more below), and whether the while loop and sleep are needed (more below).  Jamie, I\u0027m concerned that the OSWindow methods that were created to change the size and rotation of a window may not provide us with a predictable/reliable foundation for writing many tests.",
+      "revId": "a47be7b842f2152b1a94c872b1bef98d5e157cda",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d3071412_422e906a",
+        "filename": "src/tests/egl_tests/EGLPreRotationTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1097,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-13T21:26:30Z",
+      "side": 1,
+      "message": "Here\u0027s some additional info Amy/others.  I don\u0027t know how this compares with your testing.\n\nI spent some time trying to look into these.  I was thinking it had to do with the lack of the while loop discussed in the bug I filed.  I was wrong.  Adding the while loop made no difference.\n\nWhat did make a difference was how I \"rotated\" the device (a Pixel 4 XL).  If I turned on \"auto rotate\" and manually turned the phone to 90 or 270, the tests passed with these lines un-commented.  Same with the previous test.  If I used that \"Rotation\" program that I mentioned in my bug, the tests failed with these lines un-commented.  This is the case with or without the while loop that tries to make sure the window is properly rotated before testing.\n\nI don\u0027t know what the Rotation program is doing vs auto-rotate, and so I don\u0027t understand why the difference in behavior.  I do know that the OSWindow methods that that allows these tests to change the size and orientation of the window are not using a supported native API.  I can see that multiple processes are involved, and that the size and rotation changes take effect asynchronously from each other.\n\nI have run out of time to look into this today.  I wonder if using RenderDoc would show what is different.\n\nIn the mean time, I am happy for this CL to land.",
+      "range": {
+        "startLine": 1090,
+        "startChar": 0,
+        "endLine": 1097,
+        "endChar": 0
+      },
+      "revId": "a47be7b842f2152b1a94c872b1bef98d5e157cda",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
