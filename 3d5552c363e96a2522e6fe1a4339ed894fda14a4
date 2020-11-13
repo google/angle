@@ -39,6 +39,30 @@
       },
       "revId": "3d5552c363e96a2522e6fe1a4339ed894fda14a4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "027bca0f_805ca5d7",
+        "filename": "util/posix/crash_handler_posix.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 218,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-13T02:41:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0172e374_20fb3578",
+      "range": {
+        "startLine": 218,
+        "startChar": 48,
+        "endLine": 218,
+        "endChar": 70
+      },
+      "revId": "3d5552c363e96a2522e6fe1a4339ed894fda14a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
