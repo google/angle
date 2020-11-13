@@ -50,6 +50,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "0c454cda_a8b69ef9",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2104,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-13T12:23:16Z",
+      "side": 1,
+      "message": "Yeah, my suggestion is to use a separate Impl function. Not a big deal either way.",
+      "parentUuid": "92c0aa45_be0399e4",
+      "range": {
+        "startLine": 2104,
+        "startChar": 4,
+        "endLine": 2104,
+        "endChar": 18
+      },
+      "revId": "9a8b85011d3613ffa69b2feb6463e1145900f593",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "a9375713_aeb344e5",
         "filename": "src/libANGLE/Texture.cpp",
         "patchSetId": 2
