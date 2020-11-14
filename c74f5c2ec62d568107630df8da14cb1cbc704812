@@ -157,6 +157,30 @@
       },
       "revId": "c74f5c2ec62d568107630df8da14cb1cbc704812",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d3566ca2_6d19cfc7",
+        "filename": "src/libANGLE/renderer/vulkan/android/vk_android_utils.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-14T00:11:34Z",
+      "side": 1,
+      "message": "void function cant return a value",
+      "parentUuid": "8727b53e_47810edc",
+      "range": {
+        "startLine": 91,
+        "startChar": 4,
+        "endLine": 91,
+        "endChar": 27
+      },
+      "revId": "c74f5c2ec62d568107630df8da14cb1cbc704812",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
