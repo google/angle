@@ -93,6 +93,30 @@
       },
       "revId": "03ce23f40b2decfd92d88b15bd473f6c16f98a7f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2e289a0a_01531802",
+        "filename": "src/libANGLE/renderer/renderer_utils.h",
+        "patchSetId": 28
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-14T01:01:32Z",
+      "side": 1,
+      "message": "I did it differently in patchset 30, hopefully you will like it as well.",
+      "parentUuid": "40b22b23_243b3653",
+      "range": {
+        "startLine": 65,
+        "startChar": 14,
+        "endLine": 66,
+        "endChar": 65
+      },
+      "revId": "03ce23f40b2decfd92d88b15bd473f6c16f98a7f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
