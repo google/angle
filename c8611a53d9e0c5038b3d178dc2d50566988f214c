@@ -991,6 +991,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9ba4ca03_f5f9ba2d",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 3165,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-14T17:15:38Z",
+      "side": 1,
+      "message": "FYI - we dont need any of that. CollectGarbage() takes care of cases where object is `!valid()`",
+      "parentUuid": "d4915cbb_f1fc71b6",
+      "range": {
+        "startLine": 3165,
+        "startChar": 33,
+        "endLine": 3165,
+        "endChar": 43
+      },
+      "revId": "c8611a53d9e0c5038b3d178dc2d50566988f214c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "375cd71f_ab02343f",
