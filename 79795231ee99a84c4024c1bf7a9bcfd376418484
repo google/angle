@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2fce8139_f0214be8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-14T05:28:44Z",
+      "side": 1,
+      "message": "Failure is due to another bug, will suppress in next iteration:\n\nWARN: ProgramGL.cpp:986 (checkLinkStatus): Program link or binary loading failed: Vertex info\n-----------\n0(4) : error C7592: ARB_separate_shader_objects requires built-in block gl_PerVertex to be redeclared before accessing its members\n0(5) : error C7592: ARB_separate_shader_objects requires built-in block gl_PerVertex to be redeclared before accessing its members\n",
+      "revId": "79795231ee99a84c4024c1bf7a9bcfd376418484",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
