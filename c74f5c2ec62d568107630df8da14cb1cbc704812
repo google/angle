@@ -205,6 +205,30 @@
       },
       "revId": "c74f5c2ec62d568107630df8da14cb1cbc704812",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "390f8716_4dc34da1",
+        "filename": "src/libANGLE/renderer/vulkan/android/vk_android_utils.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-14T00:33:10Z",
+      "side": 1,
+      "message": "\u003e \n\nReleaseAndroidExternalMemory() is called by BufferMemory::destroy() which is called by BufferHelper::destroy(). The entire chain is has void return type. need to modify entire chain, kinda tangential to this change though",
+      "parentUuid": "ec50ed1c_44e65dcf",
+      "range": {
+        "startLine": 91,
+        "startChar": 4,
+        "endLine": 91,
+        "endChar": 27
+      },
+      "revId": "c74f5c2ec62d568107630df8da14cb1cbc704812",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
