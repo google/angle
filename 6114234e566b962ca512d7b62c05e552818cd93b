@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b233a9f7_667d9d61",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-14T05:29:42Z",
+      "side": 1,
+      "message": "Other than RGB32 support not being checked, the work for this extension is done with this change.",
+      "revId": "6114234e566b962ca512d7b62c05e552818cd93b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
