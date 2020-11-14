@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6c90be91_82ee2baf",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-14T22:51:21Z",
+      "side": 1,
+      "message": "Something really bad is happening to the bots. Maybe hold off a sec until that gets sorted out.",
+      "revId": "cb06b1878680230e00ad29cc94e4f58a0e9a220b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
