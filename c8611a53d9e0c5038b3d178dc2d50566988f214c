@@ -945,6 +945,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "2aa027f3_244cefc3",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 3165,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-14T00:15:24Z",
+      "side": 1,
+      "message": "Try using vk::GarbageList in that case. See StagingBuffer::collectGarbage.",
+      "parentUuid": "34804ae6_e97c22b1",
+      "range": {
+        "startLine": 3165,
+        "startChar": 33,
+        "endLine": 3165,
+        "endChar": 43
+      },
+      "revId": "c8611a53d9e0c5038b3d178dc2d50566988f214c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "375cd71f_ab02343f",
         "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
         "patchSetId": 6
