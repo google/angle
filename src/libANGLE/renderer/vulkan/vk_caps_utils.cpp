@@ -31,6 +31,25 @@ namespace vk
 {
 namespace
 {
+bool HasShaderImageAtomicsSupport(const RendererVk *rendererVk,
+                                  const gl::Extensions &supportedExtensions)
+{
+    // Only VK_FORMAT_R32_SFLOAT doesn't have mandatory support for the STORAGE_IMAGE_ATOMIC and
+    // STORAGE_TEXEL_BUFFER_ATOMIC features.
+    const vk::Format &formatVk = rendererVk->getFormat(GL_R32F);
+
+    const bool hasImageAtomicSupport = rendererVk->hasImageFormatFeatureBits(
+        formatVk.vkImageFormat, VK_FORMAT_FEATURE_STORAGE_IMAGE_ATOMIC_BIT);
+    bool hasBufferAtomicSupport = true;
+    if (supportedExtensions.textureBufferAny())
+    {
+        hasBufferAtomicSupport = rendererVk->hasBufferFormatFeatureBits(
+            formatVk.vkBufferFormat, VK_FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_ATOMIC_BIT);
+    }
+
+    return hasImageAtomicSupport && hasBufferAtomicSupport;
+}
+
 bool FormatReinterpretationSupported(const std::vector<GLenum> &optionalSizedFormats,
                                      const RendererVk *rendererVk,
                                      bool checkLinearColorspace)
@@ -460,13 +479,6 @@ void RendererVk::ensureCapsInitialized() const
     mNativeExtensions.sampleVariablesOES =
         supportSampleRateShading && (vk_gl::GetMaxSampleCount(kNotSupportedSampleCounts) == 0);
 
-    // Atomic image operations in the vertex and fragment shaders require the
-    // vertexPipelineStoresAndAtomics and fragmentStoresAndAtomics Vulkan features respectively.
-    // If either of these features is not present, the number of image uniforms for that stage is
-    // advertized as zero, so image atomic operations support can be agnostic of shader stages.
-    mNativeExtensions.shaderImageAtomicOES =
-        getFeatures().supportsShaderImageFloat32Atomics.enabled;
-
     // https://vulkan.lunarg.com/doc/view/1.0.30.0/linux/vkspec.chunked/ch31s02.html
     mNativeCaps.maxElementIndex  = std::numeric_limits<GLuint>::max() - 1;
     mNativeCaps.max3DTextureSize = LimitToInt(limitsVk.maxImageDimension3D);
@@ -839,6 +851,19 @@ void RendererVk::ensureCapsInitialized() const
         mNativeCaps.textureBufferOffsetAlignment =
             LimitToInt(limitsVk.minTexelBufferOffsetAlignment);
     }
+
+    // Atomic image operations in the vertex and fragment shaders require the
+    // vertexPipelineStoresAndAtomics and fragmentStoresAndAtomics Vulkan features respectively.
+    // If either of these features is not present, the number of image uniforms for that stage is
+    // advertized as zero, so image atomic operations support can be agnostic of shader stages.
+    //
+    // GL_OES_shader_image_atomic requires that image atomic functions have support for r32i and
+    // r32ui formats.  These formats have mandatory support for STORAGE_IMAGE_ATOMIC and
+    // STORAGE_TEXEL_BUFFER_ATOMIC features in Vulkan.  Additionally, it requires that
+    // imageAtomicExchange supports r32f.  Exposing this extension is thus restricted to this format
+    // having support for the aforementioned features.
+    mNativeExtensions.shaderImageAtomicOES =
+        vk::HasShaderImageAtomicsSupport(this, mNativeExtensions);
 
     // Geometry shader is optional.
     if (mPhysicalDeviceFeatures.geometryShader)
