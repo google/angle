@@ -2162,23 +2162,29 @@ class BufferViewHelper final : public Resource
     BufferViewHelper(BufferViewHelper &&other);
     ~BufferViewHelper() override;
 
-    void init(RendererVk *renderer);
+    void init(RendererVk *renderer, VkDeviceSize offset, VkDeviceSize size);
     void release(RendererVk *renderer);
     void destroy(VkDevice device);
 
-    const BufferView &getView() const { return mView; }
-
-    angle::Result initView(ContextVk *contextVk,
-                           const BufferHelper &buffer,
-                           const Format &format,
-                           VkDeviceSize offset,
-                           VkDeviceSize size);
+    angle::Result getView(ContextVk *contextVk,
+                          const BufferHelper &buffer,
+                          const Format &format,
+                          const BufferView **viewOut);
 
     // Return unique Serial for a bufferView.
     ImageOrBufferViewSubresourceSerial getSerial() const;
 
   private:
-    BufferView mView;
+    // To support format reinterpretation, additional views for formats other than the one specified
+    // to glTexBuffer may need to be created.  On draw/dispatch, the format layout qualifier of the
+    // imageBuffer is used (if provided) to create a potentially different view of the buffer.
+    angle::HashMap<VkFormat, BufferView> mViews;
+
+    // View properties:
+    //
+    // Offset and size specified to glTexBufferRange
+    VkDeviceSize mOffset;
+    VkDeviceSize mSize;
 
     // Serial for the buffer view.  An ImageOrBufferViewSerial is used for texture buffers so that
     // they fit together with the other texture types.

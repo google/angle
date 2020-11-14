@@ -476,6 +476,7 @@ class FlattenUniformVisitor : public sh::VariableNameVisitor
             linkedUniform.staticUse           = mMarkStaticUse;
             linkedUniform.outerArraySizes     = arraySizes;
             linkedUniform.texelFetchStaticUse = variable.texelFetchStaticUse;
+            linkedUniform.imageUnitFormat     = variable.imageUnitFormat;
             if (variable.hasParentArrayIndex())
             {
                 linkedUniform.setParentArrayIndex(variable.parentArrayIndex());

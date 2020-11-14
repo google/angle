@@ -1114,7 +1114,7 @@ ANGLE_INLINE angle::Result ContextVk::handleDirtyTexturesImpl(
                                                 vk::GetPipelineStage(stage), &buffer);
             }
 
-            textureVk->retainBufferView(&mResourceUseList);
+            textureVk->retainBufferViews(&mResourceUseList);
 
             continue;
         }
@@ -3945,7 +3945,7 @@ angle::Result ContextVk::updateActiveImages(const gl::Context *context,
                     vk::GetPipelineStage(stage), vk::AliasingMode::Disallowed, &buffer);
             }
 
-            textureVk->retainBufferView(&mResourceUseList);
+            textureVk->retainBufferViews(&mResourceUseList);
 
             continue;
         }

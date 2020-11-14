@@ -1364,7 +1364,7 @@ void TextureVk::releaseAndDeleteImageAndViews(ContextVk *contextVk)
         mImageCreateFlags       = 0;
         SafeDelete(mImage);
     }
-    mBufferView.release(contextVk->getRenderer());
+    mBufferViews.release(contextVk->getRenderer());
     mRedefinedLevels.reset();
 }
 
@@ -2242,23 +2242,20 @@ angle::Result TextureVk::syncState(const gl::Context *context,
     ContextVk *contextVk = vk::GetImpl(context);
     RendererVk *renderer = contextVk->getRenderer();
 
-    // If this is a texture buffer, create the buffer view.  There's nothing else to sync.  The
+    // If this is a texture buffer, release buffer views.  There's nothing else to sync.  The
     // image must already be deleted, and the sampler reset.
     if (mState.getBuffer().get() != nullptr)
     {
         ASSERT(mImage == nullptr);
 
         const gl::OffsetBindingPointer<gl::Buffer> &bufferBinding = mState.getBuffer();
-        const vk::BufferHelper &buffer = vk::GetImpl(bufferBinding.get())->getBuffer();
-
-        const gl::ImageDesc &desc  = mState.getBaseLevelDesc();
-        const vk::Format &vkFormat = renderer->getFormat(desc.format.info->sizedInternalFormat);
 
         const VkDeviceSize offset = bufferBinding.getOffset();
         const VkDeviceSize size   = gl::GetBoundBufferAvailableSize(bufferBinding);
 
-        mBufferView.release(renderer);
-        return mBufferView.initView(contextVk, buffer, vkFormat, offset, size);
+        mBufferViews.release(renderer);
+        mBufferViews.init(renderer, offset, size);
+        return angle::Result::Continue;
     }
 
     VkImageUsageFlags oldUsageFlags   = mImageUsageFlags;
@@ -2542,13 +2539,26 @@ angle::Result TextureVk::getStorageImageView(ContextVk *contextVk,
         imageViewOut);
 }
 
-const vk::BufferView &TextureVk::getBufferViewAndRecordUse(ContextVk *contextVk) const
+angle::Result TextureVk::getBufferViewAndRecordUse(ContextVk *contextVk,
+                                                   const vk::Format *imageUniformFormat,
+                                                   const vk::BufferView **viewOut)
 {
-    ASSERT(mState.getBuffer().get() != nullptr);
-    ASSERT(mBufferView.getView().valid());
+    RendererVk *renderer = contextVk->getRenderer();
 
-    mBufferView.retain(&contextVk->getResourceUseList());
-    return mBufferView.getView();
+    ASSERT(mState.getBuffer().get() != nullptr);
+
+    // Use the format specified by glTexBuffer if no format specified by the shader.
+    if (imageUniformFormat == nullptr)
+    {
+        const gl::ImageDesc &baseLevelDesc = mState.getBaseLevelDesc();
+        imageUniformFormat = &renderer->getFormat(baseLevelDesc.format.info->sizedInternalFormat);
+    }
+
+    // Create a view for the required format.
+    const vk::BufferHelper &buffer = vk::GetImpl(mState.getBuffer().get())->getBuffer();
+
+    retainBufferViews(&contextVk->getResourceUseList());
+    return mBufferViews.getView(contextVk, buffer, *imageUniformFormat, viewOut);
 }
 
 angle::Result TextureVk::initImage(ContextVk *contextVk,
@@ -2854,7 +2864,7 @@ vk::ImageOrBufferViewSubresourceSerial TextureVk::getImageViewSubresourceSerial(
 
 vk::ImageOrBufferViewSubresourceSerial TextureVk::getBufferViewSerial() const
 {
-    return mBufferView.getSerial();
+    return mBufferViews.getSerial();
 }
 
 angle::Result TextureVk::refreshImageViews(ContextVk *contextVk)

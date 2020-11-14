@@ -202,9 +202,9 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
         getImageViews().retain(resourceUseList);
     }
 
-    void retainBufferView(vk::ResourceUseList *resourceUseList)
+    void retainBufferViews(vk::ResourceUseList *resourceUseList)
     {
-        mBufferView.retain(resourceUseList);
+        mBufferViews.retain(resourceUseList);
     }
 
     void releaseOwnershipOfImage(const gl::Context *context);
@@ -231,7 +231,9 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
         return mSampler.get();
     }
 
-    const vk::BufferView &getBufferViewAndRecordUse(ContextVk *contextVk) const;
+    angle::Result getBufferViewAndRecordUse(ContextVk *contextVk,
+                                            const vk::Format *imageUniformFormat,
+                                            const vk::BufferView **viewOut);
 
     // Normally, initialize the image with enabled mipmap level counts.
     angle::Result ensureImageInitialized(ContextVk *contextVk, ImageMipLevels mipLevels);
@@ -497,9 +499,9 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
     // - index N: views for mMultisampledImages[N]
     gl::RenderToTextureImageMap<vk::ImageViewHelper> mMultisampledImageViews;
 
-    // Texture buffers create a uniform texel buffer view instead.  |BufferViewHelper| contains the
-    // single view corresponding to the attached buffer range.
-    vk::BufferViewHelper mBufferView;
+    // Texture buffers create texel buffer views instead.  |BufferViewHelper| contains the views
+    // corresponding to the attached buffer range.
+    vk::BufferViewHelper mBufferViews;
 
     // Render targets stored as array of vector of vectors
     //

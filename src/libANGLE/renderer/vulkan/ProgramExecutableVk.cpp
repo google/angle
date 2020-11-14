@@ -1168,6 +1168,7 @@ angle::Result ProgramExecutableVk::updateImagesDescriptorSet(
     ContextVk *contextVk)
 {
     const gl::State &glState                           = contextVk->getState();
+    RendererVk *renderer                               = contextVk->getRenderer();
     const std::vector<gl::ImageBinding> &imageBindings = executable.getImageBindings();
     const std::vector<gl::LinkedUniform> &uniforms     = executable.getUniforms();
 
@@ -1233,11 +1234,21 @@ angle::Result ProgramExecutableVk::updateImagesDescriptorSet(
         // Texture buffers use buffer views, so they are especially handled.
         if (imageBinding.textureType == gl::TextureType::Buffer)
         {
+            // Handle format reinterpration by looking for a view with the format specified in
+            // the shader (if any, instead of the format specified to glTexBuffer).
+            const vk::Format *format = nullptr;
+            if (imageUniform.imageUnitFormat != GL_NONE)
+            {
+                format = &renderer->getFormat(imageUniform.imageUnitFormat);
+            }
+
             for (uint32_t arrayElement = 0; arrayElement < arraySize; ++arrayElement)
             {
-                GLuint imageUnit           = imageBinding.boundImageUnits[arrayElement];
-                TextureVk *textureVk       = activeImages[imageUnit];
-                const vk::BufferView &view = textureVk->getBufferViewAndRecordUse(contextVk);
+                GLuint imageUnit     = imageBinding.boundImageUnits[arrayElement];
+                TextureVk *textureVk = activeImages[imageUnit];
+
+                const vk::BufferView *view = nullptr;
+                ANGLE_TRY(textureVk->getBufferViewAndRecordUse(contextVk, format, &view));
 
                 ShaderInterfaceVariableInfo &info = mVariableInfoMap[shaderType][mappedImageName];
 
@@ -1250,7 +1261,7 @@ angle::Result ProgramExecutableVk::updateImagesDescriptorSet(
                 writeInfos[arrayElement].descriptorType   = VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER;
                 writeInfos[arrayElement].pImageInfo       = nullptr;
                 writeInfos[arrayElement].pBufferInfo      = nullptr;
-                writeInfos[arrayElement].pTexelBufferView = view.ptr();
+                writeInfos[arrayElement].pTexelBufferView = view->ptr();
             }
             continue;
         }
@@ -1484,7 +1495,8 @@ angle::Result ProgramExecutableVk::updateTexturesDescriptorSet(ContextVk *contex
                 {
                     GLuint textureUnit         = samplerBinding.boundTextureUnits[arrayElement];
                     TextureVk *textureVk       = activeTextures[textureUnit].texture;
-                    const vk::BufferView &view = textureVk->getBufferViewAndRecordUse(contextVk);
+                    const vk::BufferView *view = nullptr;
+                    ANGLE_TRY(textureVk->getBufferViewAndRecordUse(contextVk, nullptr, &view));
 
                     const std::string samplerName =
                         GlslangGetMappedSamplerName(samplerUniform.name);
@@ -1500,7 +1512,7 @@ angle::Result ProgramExecutableVk::updateTexturesDescriptorSet(ContextVk *contex
                         VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER;
                     writeInfos[arrayElement].pImageInfo       = nullptr;
                     writeInfos[arrayElement].pBufferInfo      = nullptr;
-                    writeInfos[arrayElement].pTexelBufferView = view.ptr();
+                    writeInfos[arrayElement].pTexelBufferView = view->ptr();
                 }
                 continue;
             }
