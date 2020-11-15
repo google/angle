@@ -2014,17 +2014,11 @@ bool ValidateGetProgramBinary(const Context *context,
     return ValidateGetProgramBinaryBase(context, program, bufSize, length, binaryFormat, binary);
 }
 
-bool ValidateProgramParameteri(const Context *context,
-                               ShaderProgramID program,
-                               GLenum pname,
-                               GLint value)
+bool ValidateProgramParameteriBase(const Context *context,
+                                   ShaderProgramID program,
+                                   GLenum pname,
+                                   GLint value)
 {
-    if (context->getClientMajorVersion() < 3)
-    {
-        context->validationError(GL_INVALID_OPERATION, kES3Required);
-        return false;
-    }
-
     if (GetValidProgram(context, program) == nullptr)
     {
         return false;
@@ -2060,6 +2054,20 @@ bool ValidateProgramParameteri(const Context *context,
     }
 
     return true;
+}
+
+bool ValidateProgramParameteri(const Context *context,
+                               ShaderProgramID program,
+                               GLenum pname,
+                               GLint value)
+{
+    if (context->getClientMajorVersion() < 3)
+    {
+        context->validationError(GL_INVALID_OPERATION, kES3Required);
+        return false;
+    }
+
+    return ValidateProgramParameteriBase(context, program, pname, value);
 }
 
 bool ValidateBlitFramebuffer(const Context *context,

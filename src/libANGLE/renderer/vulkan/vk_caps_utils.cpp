@@ -345,6 +345,9 @@ void RendererVk::ensureCapsInitialized() const
     // Implemented in the translator
     mNativeExtensions.shaderNonConstGlobalInitializersEXT = true;
 
+    // Implemented in the front end
+    mNativeExtensions.separateShaderObjects = true;
+
     // Vulkan has no restrictions of the format of cubemaps, so if the proper formats are supported,
     // creating a cube of any of these formats should be implicitly supported.
     mNativeExtensions.depthTextureCubeMapOES =

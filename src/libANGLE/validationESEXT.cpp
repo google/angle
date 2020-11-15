@@ -12,6 +12,8 @@
 #include "libANGLE/MemoryObject.h"
 #include "libANGLE/validationES.h"
 #include "libANGLE/validationES2.h"
+#include "libANGLE/validationES3.h"
+#include "libANGLE/validationES31.h"
 #include "libANGLE/validationES32.h"
 
 namespace gl
@@ -1192,14 +1194,24 @@ bool ValidateActiveShaderProgramEXT(const Context *context,
                                     ProgramPipelineID pipelinePacked,
                                     ShaderProgramID programPacked)
 {
-    UNIMPLEMENTED();
-    return false;
+    if (!context->getExtensions().separateShaderObjects)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    return ValidateActiveShaderProgramBase(context, pipelinePacked, programPacked);
 }
 
 bool ValidateBindProgramPipelineEXT(const Context *context, ProgramPipelineID pipelinePacked)
 {
-    UNIMPLEMENTED();
-    return false;
+    if (!context->getExtensions().separateShaderObjects)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    return ValidateBindProgramPipelineBase(context, pipelinePacked);
 }
 
 bool ValidateCreateShaderProgramvEXT(const Context *context,
@@ -1207,24 +1219,39 @@ bool ValidateCreateShaderProgramvEXT(const Context *context,
                                      GLsizei count,
                                      const GLchar **strings)
 {
-    UNIMPLEMENTED();
-    return false;
+    if (!context->getExtensions().separateShaderObjects)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    return ValidateCreateShaderProgramvBase(context, typePacked, count, strings);
 }
 
 bool ValidateDeleteProgramPipelinesEXT(const Context *context,
                                        GLsizei n,
                                        const ProgramPipelineID *pipelinesPacked)
 {
-    UNIMPLEMENTED();
-    return false;
+    if (!context->getExtensions().separateShaderObjects)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    return ValidateDeleteProgramPipelinesBase(context, n, pipelinesPacked);
 }
 
 bool ValidateGenProgramPipelinesEXT(const Context *context,
                                     GLsizei n,
                                     const ProgramPipelineID *pipelinesPacked)
 {
-    UNIMPLEMENTED();
-    return false;
+    if (!context->getExtensions().separateShaderObjects)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    return ValidateGenProgramPipelinesBase(context, n, pipelinesPacked);
 }
 
 bool ValidateGetProgramPipelineInfoLogEXT(const Context *context,
@@ -1233,8 +1260,13 @@ bool ValidateGetProgramPipelineInfoLogEXT(const Context *context,
                                           const GLsizei *length,
                                           const GLchar *infoLog)
 {
-    UNIMPLEMENTED();
-    return false;
+    if (!context->getExtensions().separateShaderObjects)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    return ValidateGetProgramPipelineInfoLogBase(context, pipelinePacked, bufSize, length, infoLog);
 }
 
 bool ValidateGetProgramPipelineivEXT(const Context *context,
@@ -1242,14 +1274,24 @@ bool ValidateGetProgramPipelineivEXT(const Context *context,
                                      GLenum pname,
                                      const GLint *params)
 {
-    UNIMPLEMENTED();
-    return false;
+    if (!context->getExtensions().separateShaderObjects)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    return ValidateGetProgramPipelineivBase(context, pipelinePacked, pname, params);
 }
 
 bool ValidateIsProgramPipelineEXT(const Context *context, ProgramPipelineID pipelinePacked)
 {
-    UNIMPLEMENTED();
-    return false;
+    if (!context->getExtensions().separateShaderObjects)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    return ValidateIsProgramPipelineBase(context, pipelinePacked);
 }
 
 bool ValidateProgramParameteriEXT(const Context *context,
@@ -1257,8 +1299,13 @@ bool ValidateProgramParameteriEXT(const Context *context,
                                   GLenum pname,
                                   GLint value)
 {
-    UNIMPLEMENTED();
-    return false;
+    if (!context->getExtensions().separateShaderObjects)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    return ValidateProgramParameteriBase(context, programPacked, pname, value);
 }
 
 bool ValidateProgramUniform1fEXT(const Context *context,
@@ -1266,8 +1313,13 @@ bool ValidateProgramUniform1fEXT(const Context *context,
                                  UniformLocation locationPacked,
                                  GLfloat v0)
 {
-    UNIMPLEMENTED();
-    return false;
+    if (!context->getExtensions().separateShaderObjects)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    return ValidateProgramUniform1fBase(context, programPacked, locationPacked, v0);
 }
 
 bool ValidateProgramUniform1fvEXT(const Context *context,
@@ -1276,8 +1328,13 @@ bool ValidateProgramUniform1fvEXT(const Context *context,
                                   GLsizei count,
                                   const GLfloat *value)
 {
-    UNIMPLEMENTED();
-    return false;
+    if (!context->getExtensions().separateShaderObjects)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    return ValidateProgramUniform1fvBase(context, programPacked, locationPacked, count, value);
 }
 
 bool ValidateProgramUniform1iEXT(const Context *context,
@@ -1285,8 +1342,13 @@ bool ValidateProgramUniform1iEXT(const Context *context,
                                  UniformLocation locationPacked,
                                  GLint v0)
 {
-    UNIMPLEMENTED();
-    return false;
+    if (!context->getExtensions().separateShaderObjects)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    return ValidateProgramUniform1iBase(context, programPacked, locationPacked, v0);
 }
 
 bool ValidateProgramUniform1ivEXT(const Context *context,
@@ -1295,8 +1357,13 @@ bool ValidateProgramUniform1ivEXT(const Context *context,
                                   GLsizei count,
                                   const GLint *value)
 {
-    UNIMPLEMENTED();
-    return false;
+    if (!context->getExtensions().separateShaderObjects)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    return ValidateProgramUniform1ivBase(context, programPacked, locationPacked, count, value);
 }
 
 bool ValidateProgramUniform1uiEXT(const Context *context,
@@ -1304,8 +1371,13 @@ bool ValidateProgramUniform1uiEXT(const Context *context,
                                   UniformLocation locationPacked,
                                   GLuint v0)
 {
-    UNIMPLEMENTED();
-    return false;
+    if (!context->getExtensions().separateShaderObjects)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    return ValidateProgramUniform1uiBase(context, programPacked, locationPacked, v0);
 }
 
 bool ValidateProgramUniform1uivEXT(const Context *context,
@@ -1314,8 +1386,13 @@ bool ValidateProgramUniform1uivEXT(const Context *context,
                                    GLsizei count,
                                    const GLuint *value)
 {
-    UNIMPLEMENTED();
-    return false;
+    if (!context->getExtensions().separateShaderObjects)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    return ValidateProgramUniform1uivBase(context, programPacked, locationPacked, count, value);
 }
 
 bool ValidateProgramUniform2fEXT(const Context *context,
@@ -1324,8 +1401,13 @@ bool ValidateProgramUniform2fEXT(const Context *context,
                                  GLfloat v0,
                                  GLfloat v1)
 {
-    UNIMPLEMENTED();
-    return false;
+    if (!context->getExtensions().separateShaderObjects)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    return ValidateProgramUniform2fBase(context, programPacked, locationPacked, v0, v1);
 }
 
 bool ValidateProgramUniform2fvEXT(const Context *context,
@@ -1334,8 +1416,13 @@ bool ValidateProgramUniform2fvEXT(const Context *context,
                                   GLsizei count,
                                   const GLfloat *value)
 {
-    UNIMPLEMENTED();
-    return false;
+    if (!context->getExtensions().separateShaderObjects)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    return ValidateProgramUniform2fvBase(context, programPacked, locationPacked, count, value);
 }
 
 bool ValidateProgramUniform2iEXT(const Context *context,
@@ -1344,8 +1431,13 @@ bool ValidateProgramUniform2iEXT(const Context *context,
                                  GLint v0,
                                  GLint v1)
 {
-    UNIMPLEMENTED();
-    return false;
+    if (!context->getExtensions().separateShaderObjects)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    return ValidateProgramUniform2iBase(context, programPacked, locationPacked, v0, v1);
 }
 
 bool ValidateProgramUniform2ivEXT(const Context *context,
@@ -1354,8 +1446,13 @@ bool ValidateProgramUniform2ivEXT(const Context *context,
                                   GLsizei count,
                                   const GLint *value)
 {
-    UNIMPLEMENTED();
-    return false;
+    if (!context->getExtensions().separateShaderObjects)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    return ValidateProgramUniform2ivBase(context, programPacked, locationPacked, count, value);
 }
 
 bool ValidateProgramUniform2uiEXT(const Context *context,
@@ -1364,8 +1461,13 @@ bool ValidateProgramUniform2uiEXT(const Context *context,
                                   GLuint v0,
                                   GLuint v1)
 {
-    UNIMPLEMENTED();
-    return false;
+    if (!context->getExtensions().separateShaderObjects)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    return ValidateProgramUniform2uiBase(context, programPacked, locationPacked, v0, v1);
 }
 
 bool ValidateProgramUniform2uivEXT(const Context *context,
@@ -1374,8 +1476,13 @@ bool ValidateProgramUniform2uivEXT(const Context *context,
                                    GLsizei count,
                                    const GLuint *value)
 {
-    UNIMPLEMENTED();
-    return false;
+    if (!context->getExtensions().separateShaderObjects)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    return ValidateProgramUniform2uivBase(context, programPacked, locationPacked, count, value);
 }
 
 bool ValidateProgramUniform3fEXT(const Context *context,
@@ -1385,8 +1492,13 @@ bool ValidateProgramUniform3fEXT(const Context *context,
                                  GLfloat v1,
                                  GLfloat v2)
 {
-    UNIMPLEMENTED();
-    return false;
+    if (!context->getExtensions().separateShaderObjects)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    return ValidateProgramUniform3fBase(context, programPacked, locationPacked, v0, v1, v2);
 }
 
 bool ValidateProgramUniform3fvEXT(const Context *context,
@@ -1395,8 +1507,13 @@ bool ValidateProgramUniform3fvEXT(const Context *context,
                                   GLsizei count,
                                   const GLfloat *value)
 {
-    UNIMPLEMENTED();
-    return false;
+    if (!context->getExtensions().separateShaderObjects)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    return ValidateProgramUniform3fvBase(context, programPacked, locationPacked, count, value);
 }
 
 bool ValidateProgramUniform3iEXT(const Context *context,
@@ -1406,8 +1523,13 @@ bool ValidateProgramUniform3iEXT(const Context *context,
                                  GLint v1,
                                  GLint v2)
 {
-    UNIMPLEMENTED();
-    return false;
+    if (!context->getExtensions().separateShaderObjects)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    return ValidateProgramUniform3iBase(context, programPacked, locationPacked, v0, v1, v2);
 }
 
 bool ValidateProgramUniform3ivEXT(const Context *context,
@@ -1416,8 +1538,13 @@ bool ValidateProgramUniform3ivEXT(const Context *context,
                                   GLsizei count,
                                   const GLint *value)
 {
-    UNIMPLEMENTED();
-    return false;
+    if (!context->getExtensions().separateShaderObjects)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    return ValidateProgramUniform3ivBase(context, programPacked, locationPacked, count, value);
 }
 
 bool ValidateProgramUniform3uiEXT(const Context *context,
@@ -1427,8 +1554,13 @@ bool ValidateProgramUniform3uiEXT(const Context *context,
                                   GLuint v1,
                                   GLuint v2)
 {
-    UNIMPLEMENTED();
-    return false;
+    if (!context->getExtensions().separateShaderObjects)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    return ValidateProgramUniform3uiBase(context, programPacked, locationPacked, v0, v1, v2);
 }
 
 bool ValidateProgramUniform3uivEXT(const Context *context,
@@ -1437,8 +1569,13 @@ bool ValidateProgramUniform3uivEXT(const Context *context,
                                    GLsizei count,
                                    const GLuint *value)
 {
-    UNIMPLEMENTED();
-    return false;
+    if (!context->getExtensions().separateShaderObjects)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    return ValidateProgramUniform3uivBase(context, programPacked, locationPacked, count, value);
 }
 
 bool ValidateProgramUniform4fEXT(const Context *context,
@@ -1449,8 +1586,13 @@ bool ValidateProgramUniform4fEXT(const Context *context,
                                  GLfloat v2,
                                  GLfloat v3)
 {
-    UNIMPLEMENTED();
-    return false;
+    if (!context->getExtensions().separateShaderObjects)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    return ValidateProgramUniform4fBase(context, programPacked, locationPacked, v0, v1, v2, v3);
 }
 
 bool ValidateProgramUniform4fvEXT(const Context *context,
@@ -1459,8 +1601,13 @@ bool ValidateProgramUniform4fvEXT(const Context *context,
                                   GLsizei count,
                                   const GLfloat *value)
 {
-    UNIMPLEMENTED();
-    return false;
+    if (!context->getExtensions().separateShaderObjects)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    return ValidateProgramUniform4fvBase(context, programPacked, locationPacked, count, value);
 }
 
 bool ValidateProgramUniform4iEXT(const Context *context,
@@ -1471,8 +1618,13 @@ bool ValidateProgramUniform4iEXT(const Context *context,
                                  GLint v2,
                                  GLint v3)
 {
-    UNIMPLEMENTED();
-    return false;
+    if (!context->getExtensions().separateShaderObjects)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    return ValidateProgramUniform4iBase(context, programPacked, locationPacked, v0, v1, v2, v3);
 }
 
 bool ValidateProgramUniform4ivEXT(const Context *context,
@@ -1481,8 +1633,7 @@ bool ValidateProgramUniform4ivEXT(const Context *context,
                                   GLsizei count,
                                   const GLint *value)
 {
-    UNIMPLEMENTED();
-    return false;
+    return ValidateProgramUniform4ivBase(context, programPacked, locationPacked, count, value);
 }
 
 bool ValidateProgramUniform4uiEXT(const Context *context,
@@ -1493,8 +1644,13 @@ bool ValidateProgramUniform4uiEXT(const Context *context,
                                   GLuint v2,
                                   GLuint v3)
 {
-    UNIMPLEMENTED();
-    return false;
+    if (!context->getExtensions().separateShaderObjects)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    return ValidateProgramUniform4uiBase(context, programPacked, locationPacked, v0, v1, v2, v3);
 }
 
 bool ValidateProgramUniform4uivEXT(const Context *context,
@@ -1503,8 +1659,7 @@ bool ValidateProgramUniform4uivEXT(const Context *context,
                                    GLsizei count,
                                    const GLuint *value)
 {
-    UNIMPLEMENTED();
-    return false;
+    return ValidateProgramUniform4uivBase(context, programPacked, locationPacked, count, value);
 }
 
 bool ValidateProgramUniformMatrix2fvEXT(const Context *context,
@@ -1514,8 +1669,14 @@ bool ValidateProgramUniformMatrix2fvEXT(const Context *context,
                                         GLboolean transpose,
                                         const GLfloat *value)
 {
-    UNIMPLEMENTED();
-    return false;
+    if (!context->getExtensions().separateShaderObjects)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    return ValidateProgramUniformMatrix2fvBase(context, programPacked, locationPacked, count,
+                                               transpose, value);
 }
 
 bool ValidateProgramUniformMatrix2x3fvEXT(const Context *context,
@@ -1525,8 +1686,14 @@ bool ValidateProgramUniformMatrix2x3fvEXT(const Context *context,
                                           GLboolean transpose,
                                           const GLfloat *value)
 {
-    UNIMPLEMENTED();
-    return false;
+    if (!context->getExtensions().separateShaderObjects)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    return ValidateProgramUniformMatrix2x3fvBase(context, programPacked, locationPacked, count,
+                                                 transpose, value);
 }
 
 bool ValidateProgramUniformMatrix2x4fvEXT(const Context *context,
@@ -1536,8 +1703,14 @@ bool ValidateProgramUniformMatrix2x4fvEXT(const Context *context,
                                           GLboolean transpose,
                                           const GLfloat *value)
 {
-    UNIMPLEMENTED();
-    return false;
+    if (!context->getExtensions().separateShaderObjects)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    return ValidateProgramUniformMatrix2x4fvBase(context, programPacked, locationPacked, count,
+                                                 transpose, value);
 }
 
 bool ValidateProgramUniformMatrix3fvEXT(const Context *context,
@@ -1547,8 +1720,14 @@ bool ValidateProgramUniformMatrix3fvEXT(const Context *context,
                                         GLboolean transpose,
                                         const GLfloat *value)
 {
-    UNIMPLEMENTED();
-    return false;
+    if (!context->getExtensions().separateShaderObjects)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    return ValidateProgramUniformMatrix3fvBase(context, programPacked, locationPacked, count,
+                                               transpose, value);
 }
 
 bool ValidateProgramUniformMatrix3x2fvEXT(const Context *context,
@@ -1558,8 +1737,14 @@ bool ValidateProgramUniformMatrix3x2fvEXT(const Context *context,
                                           GLboolean transpose,
                                           const GLfloat *value)
 {
-    UNIMPLEMENTED();
-    return false;
+    if (!context->getExtensions().separateShaderObjects)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    return ValidateProgramUniformMatrix3x2fvBase(context, programPacked, locationPacked, count,
+                                                 transpose, value);
 }
 
 bool ValidateProgramUniformMatrix3x4fvEXT(const Context *context,
@@ -1569,8 +1754,14 @@ bool ValidateProgramUniformMatrix3x4fvEXT(const Context *context,
                                           GLboolean transpose,
                                           const GLfloat *value)
 {
-    UNIMPLEMENTED();
-    return false;
+    if (!context->getExtensions().separateShaderObjects)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    return ValidateProgramUniformMatrix3x4fvBase(context, programPacked, locationPacked, count,
+                                                 transpose, value);
 }
 
 bool ValidateProgramUniformMatrix4fvEXT(const Context *context,
@@ -1580,8 +1771,14 @@ bool ValidateProgramUniformMatrix4fvEXT(const Context *context,
                                         GLboolean transpose,
                                         const GLfloat *value)
 {
-    UNIMPLEMENTED();
-    return false;
+    if (!context->getExtensions().separateShaderObjects)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    return ValidateProgramUniformMatrix4fvBase(context, programPacked, locationPacked, count,
+                                               transpose, value);
 }
 
 bool ValidateProgramUniformMatrix4x2fvEXT(const Context *context,
@@ -1591,8 +1788,14 @@ bool ValidateProgramUniformMatrix4x2fvEXT(const Context *context,
                                           GLboolean transpose,
                                           const GLfloat *value)
 {
-    UNIMPLEMENTED();
-    return false;
+    if (!context->getExtensions().separateShaderObjects)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    return ValidateProgramUniformMatrix4x2fvBase(context, programPacked, locationPacked, count,
+                                                 transpose, value);
 }
 
 bool ValidateProgramUniformMatrix4x3fvEXT(const Context *context,
@@ -1602,8 +1805,14 @@ bool ValidateProgramUniformMatrix4x3fvEXT(const Context *context,
                                           GLboolean transpose,
                                           const GLfloat *value)
 {
-    UNIMPLEMENTED();
-    return false;
+    if (!context->getExtensions().separateShaderObjects)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    return ValidateProgramUniformMatrix4x3fvBase(context, programPacked, locationPacked, count,
+                                                 transpose, value);
 }
 
 bool ValidateUseProgramStagesEXT(const Context *context,
@@ -1611,13 +1820,23 @@ bool ValidateUseProgramStagesEXT(const Context *context,
                                  GLbitfield stages,
                                  ShaderProgramID programPacked)
 {
-    UNIMPLEMENTED();
-    return false;
+    if (!context->getExtensions().separateShaderObjects)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    return ValidateUseProgramStagesBase(context, pipelinePacked, stages, programPacked);
 }
 
 bool ValidateValidateProgramPipelineEXT(const Context *context, ProgramPipelineID pipelinePacked)
 {
-    UNIMPLEMENTED();
-    return false;
+    if (!context->getExtensions().separateShaderObjects)
+    {
+        context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    return ValidateValidateProgramPipelineBase(context, pipelinePacked);
 }
 }  // namespace gl
