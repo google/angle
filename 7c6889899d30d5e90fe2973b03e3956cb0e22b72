@@ -16,6 +16,70 @@
       "message": "Mohan, do you want to confirm that this works for you? I think because of dependency to VK_EXT_shader_atomic_float none of the bots are running the relevant tests.",
       "revId": "7c6889899d30d5e90fe2973b03e3956cb0e22b72",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bf4d6a68_8e222b6c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-15T22:19:47Z",
+      "side": 1,
+      "message": "by force enabling the extension this is the result i see for -\n\n ./out/Debug/angle_deqp_gles31_tests.exe --use-angle\u003dvulkan --gtest_filter\u003ddEQP.GLES31/functional_*image_atomic*\n\n *RESULT: Total: 52\n *RESULT: Passed: 49\n *RESULT: Failed: 0\n *RESULT: Skipped: 0\n *RESULT: Not Supported: 3\n *RESULT: Exception: 0\n *RESULT: Crashed: 0",
+      "parentUuid": "8c6a9aa0_70e1397d",
+      "revId": "7c6889899d30d5e90fe2973b03e3956cb0e22b72",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "71b8c611_deb18d91",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 379,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-15T22:19:47Z",
+      "side": 1,
+      "message": "but it is only valid to use in compute shaders in such a case right?",
+      "range": {
+        "startLine": 379,
+        "startChar": 27,
+        "endLine": 379,
+        "endChar": 95
+      },
+      "revId": "7c6889899d30d5e90fe2973b03e3956cb0e22b72",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5f46c3a0_7c1505aa",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 379,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-15T22:19:47Z",
+      "side": 1,
+      "message": "advertized",
+      "range": {
+        "startLine": 379,
+        "startChar": 7,
+        "endLine": 379,
+        "endChar": 17
+      },
+      "revId": "7c6889899d30d5e90fe2973b03e3956cb0e22b72",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
