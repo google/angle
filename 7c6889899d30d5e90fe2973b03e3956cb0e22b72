@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8c6a9aa0_70e1397d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-15T02:46:17Z",
+      "side": 1,
+      "message": "Mohan, do you want to confirm that this works for you? I think because of dependency to VK_EXT_shader_atomic_float none of the bots are running the relevant tests.",
+      "revId": "7c6889899d30d5e90fe2973b03e3956cb0e22b72",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
