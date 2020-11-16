@@ -75,6 +75,24 @@
       "parentUuid": "422714c5_4e1af863",
       "revId": "130db3360fed1a89def4fa9ec3b24f6b6b7da0cc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8352a3f7_05632e37",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-16T15:58:41Z",
+      "side": 1,
+      "message": "\u003e You\u0027re working around a bug in gl.xml here\n\nindeed i am\n\n\u003e Please just remove the duplicate glProgramUniformMatrix4fvEXT from GL_EXT_separate_shader_objects in gl.xml\n\noh, i see. ok, will make local change for now and we can roll upstream when they fix it",
+      "parentUuid": "4586bec9_7f6adb7d",
+      "revId": "130db3360fed1a89def4fa9ec3b24f6b6b7da0cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
