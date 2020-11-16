@@ -35,6 +35,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d89b9305_1bc5bcab",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-16T21:18:15Z",
+      "side": 1,
+      "message": "no new addition of tests, whatever was the set that qualified for the GLES31-core feature add should be good for this as well. I wont be adding any new tests for now",
+      "parentUuid": "d2f22ef3_4b73b4b9",
+      "revId": "0b6e9094bbc9b58d1c5d72f2374227608c6ffc1c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "439ee181_8a2cabe0",
