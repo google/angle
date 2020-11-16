@@ -117,6 +117,30 @@
       },
       "revId": "03ce23f40b2decfd92d88b15bd473f6c16f98a7f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8fbf5e5c_21e9d52f",
+        "filename": "src/libANGLE/renderer/renderer_utils.h",
+        "patchSetId": 28
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-16T19:09:06Z",
+      "side": 1,
+      "message": "Yeah, looks good!",
+      "parentUuid": "2e289a0a_01531802",
+      "range": {
+        "startLine": 65,
+        "startChar": 14,
+        "endLine": 66,
+        "endChar": 65
+      },
+      "revId": "03ce23f40b2decfd92d88b15bd473f6c16f98a7f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
