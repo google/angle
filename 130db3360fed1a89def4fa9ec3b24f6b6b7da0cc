@@ -26,6 +26,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "56cf3082_d935f38b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-16T21:12:04Z",
+      "side": 1,
+      "message": "not needed anymore with latest patch",
+      "parentUuid": "6302038d_3b2db8f6",
+      "range": {
+        "startLine": 7,
+        "startChar": 12,
+        "endLine": 7,
+        "endChar": 25
+      },
+      "revId": "130db3360fed1a89def4fa9ec3b24f6b6b7da0cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "88d66bef_f8f07ca4",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 3
@@ -109,6 +133,24 @@
       "side": 1,
       "message": "Unresolving -\u003e was just replying to my own comment to remove the \"resolved\" checkmark.\n\n\u003e you mean in python code?\n\nyeah, if we can assert that somewhere to catch future errors earlier in the stack. not a necessary thing if it\u0027s hard to do, just nice to have to help diagnose this in the future.",
       "parentUuid": "8352a3f7_05632e37",
+      "revId": "130db3360fed1a89def4fa9ec3b24f6b6b7da0cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "eee54e7d_7fbd60e1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-16T21:12:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6bf3ebd2_a5515479",
       "revId": "130db3360fed1a89def4fa9ec3b24f6b6b7da0cc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
