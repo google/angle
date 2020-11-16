@@ -6,9 +6,9 @@
   "scripts/entry_point_packed_gl_enums.json":
     "846be5dc8cb36076207699b025633fcc",
   "scripts/generate_entry_points.py":
-    "3c9189cf4b265fc8ebc95d38c3e14572",
+    "f5a30660ec14edeff98a21a1038b02a7",
   "scripts/gl.xml":
-    "e74a595068cbdd6064300be1e71b7cc9",
+    "f66967f3f3d696b5d8306fd80bbd49a8",
   "scripts/gl_angle_ext.xml":
     "0b4f3476d76a5ccc40af342d6c08739d",
   "scripts/registry_xml.py":

@@ -161,6 +161,9 @@ def gen_gles_loader(gles_preamble, path, header_lib, export, internal_prefix, fi
     if registry_xml.support_EGL_ANGLE_explicit_context:
         all_cmds += [cmd + "ContextANGLE" for cmd in xml.all_cmd_names.get_all_commands()]
 
+    # Ensure there are no duplicates
+    assert (len(all_cmds) == len(set(all_cmds))), "Duplicate command names found"
+
     write_header(
         data_source_name,
         all_cmds,

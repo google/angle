@@ -2759,7 +2759,6 @@ void DispatchTableGL::initProcsSharedExtensions(const std::set<std::string> &ext
         ASSIGN("glProgramUniformMatrix3x2fvEXT", programUniformMatrix3x2fv);
         ASSIGN("glProgramUniformMatrix3x4fvEXT", programUniformMatrix3x4fv);
         ASSIGN("glProgramUniformMatrix4fvEXT", programUniformMatrix4fv);
-        ASSIGN("glProgramUniformMatrix4fvEXT", programUniformMatrix4fv);
         ASSIGN("glProgramUniformMatrix4x2fvEXT", programUniformMatrix4x2fv);
         ASSIGN("glProgramUniformMatrix4x3fvEXT", programUniformMatrix4x3fv);
         ASSIGN("glUseProgramStagesEXT", useProgramStages);
@@ -5528,7 +5527,6 @@ void DispatchTableGL::initProcsSharedExtensionsNULL(const std::set<std::string> 
         programUniformMatrix3fv   = &glProgramUniformMatrix3fvNULL;
         programUniformMatrix3x2fv = &glProgramUniformMatrix3x2fvNULL;
         programUniformMatrix3x4fv = &glProgramUniformMatrix3x4fvNULL;
-        programUniformMatrix4fv   = &glProgramUniformMatrix4fvNULL;
         programUniformMatrix4fv   = &glProgramUniformMatrix4fvNULL;
         programUniformMatrix4x2fv = &glProgramUniformMatrix4x2fvNULL;
         programUniformMatrix4x3fv = &glProgramUniformMatrix4x3fvNULL;

@@ -44254,7 +44254,6 @@ typedef unsigned int GLhandleARB;
                 <command name="glProgramUniform2uivEXT"/>
                 <command name="glProgramUniform3uivEXT"/>
                 <command name="glProgramUniform4uivEXT"/>
-                <command name="glProgramUniformMatrix4fvEXT"/>
                 <command name="glProgramUniformMatrix2x3fvEXT"/>
                 <command name="glProgramUniformMatrix3x2fvEXT"/>
                 <command name="glProgramUniformMatrix2x4fvEXT"/>

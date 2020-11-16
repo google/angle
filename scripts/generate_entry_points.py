@@ -2175,6 +2175,9 @@ def main():
     cmd_names.extend([cmd for cmd in gl_cmd_names if cmd not in cmd_names])
     sorted_cmd_names = sorted(cmd_names)
 
+    # Ensure there are no duplicates
+    assert (len(sorted_cmd_names) == len(set(sorted_cmd_names))), "Duplicate command names found"
+
     entry_points_enum_header = template_entry_points_enum_header.format(
         script_name=os.path.basename(sys.argv[0]),
         data_source_name="gl.xml and gl_angle_ext.xml",
