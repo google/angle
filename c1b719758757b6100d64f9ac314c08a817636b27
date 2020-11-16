@@ -140,6 +140,30 @@
       },
       "revId": "c1b719758757b6100d64f9ac314c08a817636b27",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "af215308_23fb4a2e",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-16T22:04:31Z",
+      "side": 1,
+      "message": "Ok, what does vulkaninfo --show-formats show for VK_FORMAT_R32_SFLOAT?\n\nIt\u0027s possible that your driver supports the features checked here, but it doesn\u0027t expose them by error. Either that or VK_FORMAT_FEATURE_STORAGE_IMAGE_ATOMIC_BIT/VK_FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_ATOMIC_BIT feature bit mean something more than support for imageAtomicExchange in core Vulkan. In that case, we may need to add a new feature bit so we can query this.",
+      "parentUuid": "901be1f8_1d0bbee5",
+      "range": {
+        "startLine": 40,
+        "startChar": 4,
+        "endLine": 42,
+        "endChar": 15
+      },
+      "revId": "c1b719758757b6100d64f9ac314c08a817636b27",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
