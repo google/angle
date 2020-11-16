@@ -302,6 +302,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "6eeeb87d_02830c32",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 502,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-16T22:21:13Z",
+      "side": 1,
+      "message": "I guess I could see it work in different ways. What happens when the buffer is recreated while a texture buffer uses that buffer?",
+      "parentUuid": "0f2333c4_954737c3",
+      "range": {
+        "startLine": 500,
+        "startChar": 0,
+        "endLine": 502,
+        "endChar": 37
+      },
+      "revId": "361df81ab3c2c3aeb45ce4c2545b23209bdd5e36",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "1b721c71_c3af3d6c",
         "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
         "patchSetId": 8
