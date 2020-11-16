@@ -408,5 +408,10 @@ EGLClientBuffer AHardwareBufferToClientBuffer(const AHardwareBuffer *hardwareBuf
                                           kAHardwareBufferToANativeWindowBufferOffset);
 }
 
+AHardwareBuffer *ClientBufferToAHardwareBuffer(EGLClientBuffer clientBuffer)
+{
+    return offsetPointer<AHardwareBuffer>(clientBuffer,
+                                          -kAHardwareBufferToANativeWindowBufferOffset);
+}
 }  // namespace android
 }  // namespace angle

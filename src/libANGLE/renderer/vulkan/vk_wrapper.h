@@ -461,6 +461,8 @@ class DeviceMemory final : public WrappedObject<DeviceMemory, VkDeviceMemory>
                  VkMemoryMapFlags flags,
                  uint8_t **mapPointer) const;
     void unmap(VkDevice device) const;
+    void flush(VkDevice device, VkMappedMemoryRange &memRange);
+    void invalidate(VkDevice device, VkMappedMemoryRange &memRange);
 };
 
 class Allocator : public WrappedObject<Allocator, VmaAllocator>
@@ -1401,6 +1403,16 @@ ANGLE_INLINE void DeviceMemory::unmap(VkDevice device) const
 {
     ASSERT(valid());
     vkUnmapMemory(device, mHandle);
+}
+
+ANGLE_INLINE void DeviceMemory::flush(VkDevice device, VkMappedMemoryRange &memRange)
+{
+    vkFlushMappedMemoryRanges(device, 1, &memRange);
+}
+
+ANGLE_INLINE void DeviceMemory::invalidate(VkDevice device, VkMappedMemoryRange &memRange)
+{
+    vkInvalidateMappedMemoryRanges(device, 1, &memRange);
 }
 
 // Allocator implementation.

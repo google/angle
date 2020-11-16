@@ -407,6 +407,14 @@ angle::Result AllocateImageMemoryWithRequirements(Context *context,
                                                   Image *image,
                                                   DeviceMemory *deviceMemoryOut);
 
+angle::Result AllocateBufferMemoryWithRequirements(vk::Context *context,
+                                                   VkMemoryPropertyFlags memoryPropertyFlags,
+                                                   const VkMemoryRequirements &memoryRequirements,
+                                                   const void *extraAllocationInfo,
+                                                   Buffer *buffer,
+                                                   VkMemoryPropertyFlags *memoryPropertyFlagsOut,
+                                                   DeviceMemory *deviceMemoryOut);
+
 using ShaderAndSerial = ObjectAndSerial<ShaderModule>;
 
 angle::Result InitShaderAndSerial(Context *context,

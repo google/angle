@@ -369,6 +369,10 @@ void RendererVk::ensureCapsInitialized() const
 
     mNativeExtensions.shadowSamplersEXT = true;
 
+    // Enable EXT_external_buffer on Andoid. External buffers are implemented using Android hadware
+    // buffer (struct AHardwareBuffer).
+    mNativeExtensions.externalBufferEXT = IsAndroid() && (GetAndroidSDKVersion() >= 26);
+
     // From the Vulkan specs:
     // sampleRateShading specifies whether Sample Shading and multisample interpolation are
     // supported. If this feature is not enabled, the sampleShadingEnable member of the

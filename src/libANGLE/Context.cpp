@@ -5611,13 +5611,16 @@ void Context::bufferStorage(BufferBinding target,
     ANGLE_CONTEXT_TRY(buffer->bufferStorage(this, target, size, data, flags));
 }
 
-void Context::bufferStorageExternal(BufferBinding targetPacked,
+void Context::bufferStorageExternal(BufferBinding target,
                                     GLintptr offset,
                                     GLsizeiptr size,
                                     GLeglClientBufferEXT clientBuffer,
                                     GLbitfield flags)
 {
-    UNIMPLEMENTED();
+    Buffer *buffer = mState.getTargetBuffer(target);
+    ASSERT(buffer);
+
+    ANGLE_CONTEXT_TRY(buffer->bufferStorageExternal(this, target, size, clientBuffer, flags));
 }
 
 void Context::namedBufferStorageExternal(GLuint buffer,

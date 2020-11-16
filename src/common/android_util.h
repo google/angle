@@ -30,6 +30,7 @@ constexpr std::array<GLenum, 3> kSupportedSizedInternalFormats = {GL_RGBA8, GL_R
 
 ANativeWindowBuffer *ClientBufferToANativeWindowBuffer(EGLClientBuffer clientBuffer);
 EGLClientBuffer AHardwareBufferToClientBuffer(const AHardwareBuffer *hardwareBuffer);
+AHardwareBuffer *ClientBufferToAHardwareBuffer(EGLClientBuffer clientBuffer);
 
 EGLClientBuffer CreateEGLClientBufferFromAHardwareBuffer(int width,
                                                          int height,

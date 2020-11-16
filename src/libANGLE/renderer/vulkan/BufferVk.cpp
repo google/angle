@@ -78,7 +78,8 @@ ANGLE_INLINE VkMemoryPropertyFlags GetPreferredMemoryType(gl::BufferBinding targ
     }
 }
 
-ANGLE_INLINE VkMemoryPropertyFlags GetStorageMemoryType(GLbitfield storageFlags)
+ANGLE_INLINE VkMemoryPropertyFlags GetStorageMemoryType(GLbitfield storageFlags,
+                                                        bool externalBuffer)
 {
     constexpr VkMemoryPropertyFlags kDeviceLocalHostVisibleFlags =
         (VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT | VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT);
@@ -87,7 +88,7 @@ ANGLE_INLINE VkMemoryPropertyFlags GetStorageMemoryType(GLbitfield storageFlags)
          VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
 
     if (((storageFlags & GL_MAP_COHERENT_BIT_EXT) != 0) ||
-        ((storageFlags & GL_MAP_PERSISTENT_BIT_EXT) != 0))
+        ((storageFlags & GL_MAP_PERSISTENT_BIT_EXT) != 0) || externalBuffer)
     {
         return kDeviceLocalHostCoherentFlags;
     }
@@ -153,6 +154,12 @@ void BufferVk::destroy(const gl::Context *context)
 void BufferVk::release(ContextVk *contextVk)
 {
     RendererVk *renderer = contextVk->getRenderer();
+    // For external buffers, mBuffer is not a reference to a chunk in mBufferPool.
+    // It was allocated explicitly and needs to be deallocated during release(...)
+    if (mBuffer && mBuffer->isExternalBuffer())
+    {
+        mBuffer->release(renderer);
+    }
     mShadowBuffer.release();
     mBufferPool.release(renderer);
     mBuffer = nullptr;
@@ -196,8 +203,52 @@ void BufferVk::updateShadowBuffer(const uint8_t *data, size_t size, size_t offse
     }
 }
 
+angle::Result BufferVk::setExternalBufferData(const gl::Context *context,
+                                              gl::BufferBinding target,
+                                              GLeglClientBufferEXT clientBuffer,
+                                              size_t size,
+                                              VkMemoryPropertyFlags memoryPropertyFlags)
+{
+    ContextVk *contextVk = vk::GetImpl(context);
+
+    // Release and re-create the memory and buffer.
+    release(contextVk);
+
+    // We could potentially use multiple backing buffers for different usages.
+    // For now keep a single buffer with all relevant usage flags.
+    VkImageUsageFlags usageFlags =
+        VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT |
+        VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_SRC_BIT |
+        VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT | VK_BUFFER_USAGE_STORAGE_BUFFER_BIT |
+        VK_BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT | VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT;
+
+    if (contextVk->getFeatures().supportsTransformFeedbackExtension.enabled)
+    {
+        usageFlags |= VK_BUFFER_USAGE_TRANSFORM_FEEDBACK_BUFFER_BIT_EXT;
+    }
+
+    std::unique_ptr<vk::BufferHelper> buffer = std::make_unique<vk::BufferHelper>();
+
+    VkBufferCreateInfo createInfo    = {};
+    createInfo.sType                 = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
+    createInfo.flags                 = 0;
+    createInfo.size                  = size;
+    createInfo.usage                 = usageFlags;
+    createInfo.sharingMode           = VK_SHARING_MODE_EXCLUSIVE;
+    createInfo.queueFamilyIndexCount = 0;
+    createInfo.pQueueFamilyIndices   = nullptr;
+
+    ANGLE_TRY(buffer->initExternal(contextVk, memoryPropertyFlags, createInfo, clientBuffer));
+
+    ASSERT(!mBuffer);
+    mBuffer = buffer.release();
+
+    return angle::Result::Continue;
+}
+
 angle::Result BufferVk::setDataWithUsageFlags(const gl::Context *context,
                                               gl::BufferBinding target,
+                                              GLeglClientBufferEXT clientBuffer,
                                               const void *data,
                                               size_t size,
                                               gl::BufferUsage usage,
@@ -205,13 +256,14 @@ angle::Result BufferVk::setDataWithUsageFlags(const gl::Context *context,
 {
     VkMemoryPropertyFlags memoryPropertyFlags = 0;
     bool persistentMapRequired                = false;
+    const bool isExternalBuffer               = clientBuffer != nullptr;
 
     switch (usage)
     {
         case gl::BufferUsage::InvalidEnum:
         {
             // glBufferStorage API call
-            memoryPropertyFlags   = GetStorageMemoryType(flags);
+            memoryPropertyFlags   = GetStorageMemoryType(flags, isExternalBuffer);
             persistentMapRequired = (flags & GL_MAP_PERSISTENT_BIT_EXT) != 0;
             break;
         }
@@ -223,6 +275,10 @@ angle::Result BufferVk::setDataWithUsageFlags(const gl::Context *context,
         }
     }
 
+    if (isExternalBuffer)
+    {
+        return setExternalBufferData(context, target, clientBuffer, size, memoryPropertyFlags);
+    }
     return setDataWithMemoryType(context, target, data, size, memoryPropertyFlags,
                                  persistentMapRequired);
 }
@@ -715,6 +771,9 @@ angle::Result BufferVk::acquireBufferHelper(ContextVk *contextVk,
                                             size_t sizeInBytes,
                                             vk::BufferHelper **bufferHelperOut)
 {
+    // This method should not be called if it is an ExternalBuffer
+    ASSERT(mBuffer == nullptr || mBuffer->isExternalBuffer() == false);
+
     bool needToReleasePreviousBuffers = false;
     size_t size                       = roundUpPow2(sizeInBytes, kBufferSizeGranularity);
 

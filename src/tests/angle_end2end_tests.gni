@@ -62,6 +62,7 @@ angle_end2end_tests_sources = [
   "gl_tests/DrawElementsTest.cpp",
   "gl_tests/ETCTextureTest.cpp",
   "gl_tests/ExplicitContextTest.cpp",
+  "gl_tests/ExternalBufferTest.cpp",
   "gl_tests/ExternalWrapTest.cpp",
   "gl_tests/FenceSyncTests.cpp",
   "gl_tests/FloatingPointSurfaceTest.cpp",

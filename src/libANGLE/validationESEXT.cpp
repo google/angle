@@ -1121,9 +1121,9 @@ bool ValidateBufferStorageEXT(const Context *context,
         return false;
     }
 
-    if (size < 0)
+    if (size <= 0)
     {
-        context->validationError(GL_INVALID_VALUE, kNegativeSize);
+        context->validationError(GL_INVALID_VALUE, kNonPositiveSize);
         return false;
     }
 
@@ -1174,8 +1174,24 @@ bool ValidateBufferStorageExternalEXT(const Context *context,
                                       GLeglClientBufferEXT clientBuffer,
                                       GLbitfield flags)
 {
-    UNIMPLEMENTED();
-    return false;
+    if (!ValidateBufferStorageEXT(context, targetPacked, size, nullptr, flags))
+    {
+        return false;
+    }
+
+    if (offset != 0)
+    {
+        context->validationError(GL_INVALID_VALUE, kExternalBufferInvalidOffset);
+        return false;
+    }
+
+    if (clientBuffer == nullptr && size > 0)
+    {
+        context->validationError(GL_INVALID_VALUE, kClientBufferInvalid);
+        return false;
+    }
+
+    return true;
 }
 
 bool ValidateNamedBufferStorageExternalEXT(const Context *context,

@@ -84,6 +84,8 @@ _vulkan_backend_sources = [
   "UtilsVk.h",
   "VertexArrayVk.cpp",
   "VertexArrayVk.h",
+  "android/vk_android_utils.cpp",
+  "android/vk_android_utils.h",
   "vk_cache_utils.cpp",
   "vk_cache_utils.h",
   "vk_caps_utils.cpp",

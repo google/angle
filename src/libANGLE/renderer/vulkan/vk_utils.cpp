@@ -562,6 +562,19 @@ angle::Result AllocateImageMemoryWithRequirements(vk::Context *context,
                                               deviceMemoryOut);
 }
 
+angle::Result AllocateBufferMemoryWithRequirements(vk::Context *context,
+                                                   VkMemoryPropertyFlags memoryPropertyFlags,
+                                                   const VkMemoryRequirements &memoryRequirements,
+                                                   const void *extraAllocationInfo,
+                                                   Buffer *buffer,
+                                                   VkMemoryPropertyFlags *memoryPropertyFlagsOut,
+                                                   DeviceMemory *deviceMemoryOut)
+{
+    return AllocateAndBindBufferOrImageMemory(context, memoryPropertyFlags, memoryPropertyFlagsOut,
+                                              memoryRequirements, extraAllocationInfo, buffer,
+                                              deviceMemoryOut);
+}
+
 angle::Result InitShaderAndSerial(Context *context,
                                   ShaderAndSerial *shaderAndSerial,
                                   const uint32_t *shaderCode,

@@ -734,6 +734,51 @@ using PipelineBarrierArray = angle::PackedEnumMap<PipelineStage, PipelineBarrier
 
 class FramebufferHelper;
 
+class BufferMemory : angle::NonCopyable
+{
+  public:
+    BufferMemory();
+    ~BufferMemory();
+    angle::Result initExternal(GLeglClientBufferEXT clientBuffer);
+    angle::Result init();
+
+    void destroy(RendererVk *renderer);
+
+    angle::Result map(ContextVk *contextVk, VkDeviceSize size, uint8_t **ptrOut)
+    {
+        if (mMappedMemory == nullptr)
+        {
+            ANGLE_TRY(mapImpl(contextVk, size));
+        }
+        *ptrOut = mMappedMemory;
+        return angle::Result::Continue;
+    }
+    void unmap(RendererVk *renderer);
+    void flush(RendererVk *renderer,
+               VkMemoryMapFlags memoryPropertyFlags,
+               VkDeviceSize offset,
+               VkDeviceSize size);
+    void invalidate(RendererVk *renderer,
+                    VkMemoryMapFlags memoryPropertyFlags,
+                    VkDeviceSize offset,
+                    VkDeviceSize size);
+
+    bool isExternalBuffer() const { return mClientBuffer != nullptr; }
+
+    uint8_t *getMappedMemory() const { return mMappedMemory; }
+    DeviceMemory *getExternalMemoryObject() { return &mExternalMemory; }
+    Allocation *getMemoryObject() { return &mAllocation; }
+
+  private:
+    angle::Result mapImpl(ContextVk *contextVk, VkDeviceSize size);
+
+    Allocation mAllocation;        // use mAllocation if isExternalBuffer() is false
+    DeviceMemory mExternalMemory;  // use mExternalMemory if isExternalBuffer() is true
+
+    GLeglClientBufferEXT mClientBuffer;
+    uint8_t *mMappedMemory;
+};
+
 class BufferHelper final : public Resource
 {
   public:
@@ -743,6 +788,10 @@ class BufferHelper final : public Resource
     angle::Result init(ContextVk *contextVk,
                        const VkBufferCreateInfo &createInfo,
                        VkMemoryPropertyFlags memoryPropertyFlags);
+    angle::Result initExternal(ContextVk *contextVk,
+                               VkMemoryPropertyFlags memoryProperties,
+                               const VkBufferCreateInfo &requestedCreateInfo,
+                               GLeglClientBufferEXT clientBuffer);
     void destroy(RendererVk *renderer);
 
     void release(RendererVk *renderer);
@@ -754,7 +803,7 @@ class BufferHelper final : public Resource
     uint8_t *getMappedMemory() const
     {
         ASSERT(isMapped());
-        return mMappedMemory;
+        return mMemory.getMappedMemory();
     }
     bool isHostVisible() const
     {
@@ -765,7 +814,8 @@ class BufferHelper final : public Resource
         return (mMemoryPropertyFlags & VK_MEMORY_PROPERTY_HOST_COHERENT_BIT) != 0;
     }
 
-    bool isMapped() const { return mMappedMemory != nullptr; }
+    bool isMapped() const { return mMemory.getMappedMemory() != nullptr; }
+    bool isExternalBuffer() const { return mMemory.isExternalBuffer(); }
 
     // Also implicitly sets up the correct barriers.
     angle::Result copyFromBuffer(ContextVk *contextVk,
@@ -775,18 +825,13 @@ class BufferHelper final : public Resource
 
     angle::Result map(ContextVk *contextVk, uint8_t **ptrOut)
     {
-        if (!mMappedMemory)
-        {
-            ANGLE_TRY(mapImpl(contextVk));
-        }
-        *ptrOut = mMappedMemory;
-        return angle::Result::Continue;
+        return mMemory.map(contextVk, mSize, ptrOut);
     }
 
     angle::Result mapWithOffset(ContextVk *contextVk, uint8_t **ptrOut, size_t offset)
     {
         uint8_t *mapBufPointer;
-        ANGLE_TRY(map(contextVk, &mapBufPointer));
+        ANGLE_TRY(mMemory.map(contextVk, mSize, &mapBufPointer));
         *ptrOut = mapBufPointer + offset;
         return angle::Result::Continue;
     }
@@ -825,17 +870,15 @@ class BufferHelper final : public Resource
                             PipelineBarrier *barrier);
 
   private:
-    angle::Result mapImpl(ContextVk *contextVk);
     angle::Result initializeNonZeroMemory(Context *context, VkDeviceSize size);
 
     // Vulkan objects.
     Buffer mBuffer;
-    Allocation mAllocation;
+    BufferMemory mMemory;
 
     // Cached properties.
     VkMemoryPropertyFlags mMemoryPropertyFlags;
     VkDeviceSize mSize;
-    uint8_t *mMappedMemory;
     uint32_t mCurrentQueueFamilyIndex;
 
     // For memory barriers.
