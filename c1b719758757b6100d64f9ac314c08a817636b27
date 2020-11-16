@@ -53,6 +53,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "71ebee5d_42762709",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-16T20:29:12Z",
+      "side": 1,
+      "message": "I tried locally adding support for this extension in the GL backend, and the same tests fail there too. Definitely an unrelated bug.",
+      "parentUuid": "5317e22f_72ab5b57",
+      "revId": "c1b719758757b6100d64f9ac314c08a817636b27",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "fb09f04b_6d3aacef",
