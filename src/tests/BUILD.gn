@@ -1206,6 +1206,30 @@ if (build_angle_deqp_tests && !is_fuchsia) {
   _khronos_mustpass =
       "$deqp_path/external/openglcts/data/mustpass/gles/khronos_mustpass/master"
 
+  angle_deqp_source_set("angle_deqp_gles2_common") {
+    sources = deqp_gles2_sources
+    public_deps = [
+      ":angle_deqp_framework_egl",
+      ":angle_deqp_glshared",
+    ]
+  }
+
+  angle_deqp_source_set("angle_deqp_gles3_common") {
+    sources = deqp_gles3_sources
+    public_deps = [
+      ":angle_deqp_framework_egl",
+      ":angle_deqp_glshared",
+    ]
+  }
+
+  angle_deqp_source_set("angle_deqp_gles31_common") {
+    sources = deqp_gles31_sources
+    public_deps = [
+      ":angle_deqp_framework_egl",
+      ":angle_deqp_glshared",
+    ]
+  }
+
   template("angle_deqp_core_gtest") {
     _api = target_name
     angle_deqp_gtest(target_name) {
@@ -1213,7 +1237,7 @@ if (build_angle_deqp_tests && !is_fuchsia) {
 
       mustpass_name = "${_api}-master.txt"
 
-      deps = angle_deqp_data_copy_targets
+      deps += angle_deqp_data_copy_targets
 
       data = []
       if (_api == "gles2") {
@@ -1231,19 +1255,19 @@ if (build_angle_deqp_tests && !is_fuchsia) {
 
   angle_deqp_core_gtest("gles2") {
     defines = [ "ANGLE_DEQP_GLES2_TESTS" ]
-    sources = deqp_gles2_sources
+    deps = [ ":angle_deqp_gles2_common" ]
     mustpass_dir = _aosp_mustpass
   }
 
   angle_deqp_core_gtest("gles3") {
     defines = [ "ANGLE_DEQP_GLES3_TESTS" ]
-    sources = deqp_gles3_sources
+    deps = [ ":angle_deqp_gles3_common" ]
     mustpass_dir = _aosp_mustpass
   }
 
   angle_deqp_core_gtest("gles31") {
     defines = [ "ANGLE_DEQP_GLES31_TESTS" ]
-    sources = deqp_gles31_sources
+    deps = [ ":angle_deqp_gles31_common" ]
     mustpass_dir = _aosp_mustpass
   }
 
@@ -1333,7 +1357,7 @@ if (build_angle_deqp_tests && !is_fuchsia) {
 
       mustpass_name = "${_api}-${mustpass_suffix}.txt"
 
-      deps = angle_deqp_data_copy_targets
+      deps += angle_deqp_data_copy_targets
 
       data = []
       if (_api == "gles3") {
@@ -1348,42 +1372,42 @@ if (build_angle_deqp_tests && !is_fuchsia) {
 
   angle_deqp_rotate_gtest("gles3_rotate90") {
     defines = [ "ANGLE_DEQP_GLES3_ROTATE90_TESTS" ]
-    sources = deqp_gles3_sources
+    deps = [ ":angle_deqp_gles3_common" ]
     mustpass_dir = _aosp_mustpass
     expectations_file = "deqp_gles3_rotate_test_expectations.txt"
   }
 
   angle_deqp_rotate_gtest("gles3_rotate180") {
     defines = [ "ANGLE_DEQP_GLES3_ROTATE180_TESTS" ]
-    sources = deqp_gles3_sources
+    deps = [ ":angle_deqp_gles3_common" ]
     mustpass_dir = _aosp_mustpass
     expectations_file = "deqp_gles3_rotate_test_expectations.txt"
   }
 
   angle_deqp_rotate_gtest("gles3_rotate270") {
     defines = [ "ANGLE_DEQP_GLES3_ROTATE270_TESTS" ]
-    sources = deqp_gles3_sources
+    deps = [ ":angle_deqp_gles3_common" ]
     mustpass_dir = _aosp_mustpass
     expectations_file = "deqp_gles3_rotate_test_expectations.txt"
   }
 
   angle_deqp_rotate_gtest("gles31_rotate90") {
     defines = [ "ANGLE_DEQP_GLES31_ROTATE90_TESTS" ]
-    sources = deqp_gles31_sources
+    deps = [ ":angle_deqp_gles31_common" ]
     mustpass_dir = _aosp_mustpass
     expectations_file = "deqp_gles31_rotate_test_expectations.txt"
   }
 
   angle_deqp_rotate_gtest("gles31_rotate180") {
     defines = [ "ANGLE_DEQP_GLES31_ROTATE180_TESTS" ]
-    sources = deqp_gles31_sources
+    deps = [ ":angle_deqp_gles31_common" ]
     mustpass_dir = _aosp_mustpass
     expectations_file = "deqp_gles31_rotate_test_expectations.txt"
   }
 
   angle_deqp_rotate_gtest("gles31_rotate270") {
     defines = [ "ANGLE_DEQP_GLES31_ROTATE270_TESTS" ]
-    sources = deqp_gles31_sources
+    deps = [ ":angle_deqp_gles31_common" ]
     mustpass_dir = _aosp_mustpass
     expectations_file = "deqp_gles31_rotate_test_expectations.txt"
   }
