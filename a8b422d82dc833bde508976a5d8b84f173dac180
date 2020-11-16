@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9765dce3_ad662b42",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-16T23:48:11Z",
+      "side": 1,
+      "message": "PTAL - added a simple new test as well",
+      "revId": "a8b422d82dc833bde508976a5d8b84f173dac180",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
