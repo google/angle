@@ -355,14 +355,14 @@ template_parameter_capture_value = """paramBuffer.addValueParam("{name}", ParamT
 template_parameter_capture_gl_enum = """paramBuffer.addEnumParam("{name}", GLenumGroup::{group}, ParamType::T{type}, {name});"""
 
 template_parameter_capture_pointer = """
-    if (isCallValid) 
+    if (isCallValid)
     {{
         ParamCapture {name}Param("{name}", ParamType::T{type});
         InitParamValue(ParamType::T{type}, {name}, &{name}Param.value);
         {capture_name}({params}, &{name}Param);
         paramBuffer.addParam(std::move({name}Param));
     }}
-    else 
+    else
     {{
         ParamCapture {name}Param("{name}", ParamType::T{type});
         InitParamValue(ParamType::T{type}, static_cast<{cast_type}>(nullptr), &{name}Param.value);
