@@ -58,6 +58,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d74f39ef_8a597695",
+        "filename": "src/libANGLE/ErrorStrings.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-16T21:13:32Z",
+      "side": 1,
+      "message": "not needed anymore with latest patch",
+      "parentUuid": "439ee181_8a2cabe0",
+      "range": {
+        "startLine": 107,
+        "startChar": 43,
+        "endLine": 107,
+        "endChar": 52
+      },
+      "revId": "0b6e9094bbc9b58d1c5d72f2374227608c6ffc1c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "58c4dfe5_da9bde6a",
@@ -71,6 +95,30 @@
       "writtenOn": "2020-11-16T13:48:33Z",
       "side": 1,
       "message": "for all these guys, you want to add the extension checks in here explicitly.\n\nWhat we ideally like to do in this case is split the original entry point into\n\nValidateActiveShaderProgramBase -\u003e the non-ES-version validation code\nValidateActiveShaderProgram -\u003e checks for ES 3.0 and calls ValidateActiveShaderProgramBase\nValidateActiveShaderProgramEXT -\u003e checks for the EXT and calls ValidateActiveShaderProgramBase \n\nAnd so on for the other EPs.",
+      "range": {
+        "startLine": 1196,
+        "startChar": 11,
+        "endLine": 1196,
+        "endChar": 38
+      },
+      "revId": "0b6e9094bbc9b58d1c5d72f2374227608c6ffc1c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4bf3b19e_d52e6a45",
+        "filename": "src/libANGLE/validationESEXT.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1196,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-16T21:13:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "58c4dfe5_da9bde6a",
       "range": {
         "startLine": 1196,
         "startChar": 11,
