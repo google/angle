@@ -20,6 +20,86 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "e28b5df5_8f7061ab",
+        "filename": "src/libANGLE/renderer/renderer_utils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 634,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-16T20:20:21Z",
+      "side": 1,
+      "message": "Why GL_RGBA8UI?",
+      "range": {
+        "startLine": 634,
+        "startChar": 76,
+        "endLine": 634,
+        "endChar": 86
+      },
+      "revId": "361df81ab3c2c3aeb45ce4c2545b23209bdd5e36",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8d90aac8_800b29d2",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1309,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-16T20:20:21Z",
+      "side": 1,
+      "message": "Why don\u0027t we need to checkout mOwnsImage here?",
+      "revId": "361df81ab3c2c3aeb45ce4c2545b23209bdd5e36",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "be8e90e2_47b15201",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1347,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-16T20:20:21Z",
+      "side": 1,
+      "message": "Should this be updated to releaseAndDeleteImageAndBuffer to make it clearer it\u0027s doing both now?",
+      "revId": "361df81ab3c2c3aeb45ce4c2545b23209bdd5e36",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9874908e_5bae8aa3",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 2251,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-16T20:20:21Z",
+      "side": 1,
+      "message": "Should this use GetShaderBufferBindingSize() instead?",
+      "range": {
+        "startLine": 2250,
+        "startChar": 0,
+        "endLine": 2251,
+        "endChar": 90
+      },
+      "revId": "361df81ab3c2c3aeb45ce4c2545b23209bdd5e36",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "83555cc3_4260256c",
         "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
         "patchSetId": 8
