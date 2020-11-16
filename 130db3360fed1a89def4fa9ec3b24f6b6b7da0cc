@@ -39,6 +39,24 @@
       "message": "You\u0027re working around a bug in gl.xml here. Please just remove the duplicate glProgramUniformMatrix4fvEXT from GL_EXT_separate_shader_objects in gl.xml. I filed:\n\nhttps://github.com/KhronosGroup/OpenGL-Registry/issues/443\n\nTo fix this upstream. Also it would be welcome if you could add assert checks for duplicate entries so we can detect this quickly in any future instance.\n",
       "revId": "130db3360fed1a89def4fa9ec3b24f6b6b7da0cc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "422714c5_4e1af863",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-16T13:45:30Z",
+      "side": 1,
+      "message": "Unresolving.",
+      "parentUuid": "88d66bef_f8f07ca4",
+      "revId": "130db3360fed1a89def4fa9ec3b24f6b6b7da0cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
