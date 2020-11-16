@@ -80,6 +80,54 @@
       },
       "revId": "7c6889899d30d5e90fe2973b03e3956cb0e22b72",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "634287ee_00e7f209",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 379,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-16T05:01:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5f46c3a0_7c1505aa",
+      "range": {
+        "startLine": 379,
+        "startChar": 7,
+        "endLine": 379,
+        "endChar": 17
+      },
+      "revId": "7c6889899d30d5e90fe2973b03e3956cb0e22b72",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cc2c7ad0_68ec385e",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 379,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-16T05:01:41Z",
+      "side": 1,
+      "message": "If both vertexPipelineStoresAndAtomics and fragmentStoresAndAtomics are missing, yes. If one is missing, it would be available in the other shader(s) as well.",
+      "parentUuid": "71b8c611_deb18d91",
+      "range": {
+        "startLine": 379,
+        "startChar": 27,
+        "endLine": 379,
+        "endChar": 95
+      },
+      "revId": "7c6889899d30d5e90fe2973b03e3956cb0e22b72",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
