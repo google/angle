@@ -22,6 +22,30 @@
       },
       "revId": "5c79613f8a35762435d165930e70f61c3800b11b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b826cf09_9624dd41",
+        "filename": "src/compiler/translator/OutputGLSLBase.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1334,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-16T23:11:58Z",
+      "side": 0,
+      "message": "Done",
+      "parentUuid": "f6efc830_a0966f86",
+      "range": {
+        "startLine": 1334,
+        "startChar": 12,
+        "endLine": 1334,
+        "endChar": 47
+      },
+      "revId": "5c79613f8a35762435d165930e70f61c3800b11b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
