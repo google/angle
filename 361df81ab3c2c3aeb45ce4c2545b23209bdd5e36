@@ -41,6 +41,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "88c5c366_c7cc9373",
+        "filename": "src/libANGLE/renderer/renderer_utils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 634,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-16T22:00:28Z",
+      "side": 1,
+      "message": "Could be anything, and it would still be incorrect: See anglebug.com/4432#c5\n\nThe format for every texture here would have to be int/uint/float based on the shader binding, and that would be a job for another time. Added a comment.",
+      "parentUuid": "e28b5df5_8f7061ab",
+      "range": {
+        "startLine": 634,
+        "startChar": 76,
+        "endLine": 634,
+        "endChar": 86
+      },
+      "revId": "361df81ab3c2c3aeb45ce4c2545b23209bdd5e36",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8d90aac8_800b29d2",
@@ -58,6 +82,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "be1a0b73_fd1a6d65",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1309,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-16T22:00:28Z",
+      "side": 1,
+      "message": "Because owned or not, there is not going to be an \"image\" anymore. Take TextureVk::setEGLImageTarget for example, no matter what the situation was before, this function needs to get rid of the previous image.",
+      "parentUuid": "8d90aac8_800b29d2",
+      "revId": "361df81ab3c2c3aeb45ce4c2545b23209bdd5e36",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "be8e90e2_47b15201",
@@ -71,6 +113,24 @@
       "writtenOn": "2020-11-16T20:20:21Z",
       "side": 1,
       "message": "Should this be updated to releaseAndDeleteImageAndBuffer to make it clearer it\u0027s doing both now?",
+      "revId": "361df81ab3c2c3aeb45ce4c2545b23209bdd5e36",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d0adc79a_6af950cd",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1347,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-16T22:00:28Z",
+      "side": 1,
+      "message": "Renamed to releaseAndDeleteImageAndViews.",
+      "parentUuid": "be8e90e2_47b15201",
       "revId": "361df81ab3c2c3aeb45ce4c2545b23209bdd5e36",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
@@ -98,6 +158,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "01e30962_1f78be9b",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 2251,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-16T22:00:28Z",
+      "side": 1,
+      "message": "Done. I changed the special value used here from UINT_MAX to 0 to support that.\n\nThere\u0027s actually GetBoundBufferAvailableSize in the front-end that does the same, so I removed GetShaderBufferBindingSize() in its favor.",
+      "parentUuid": "9874908e_5bae8aa3",
+      "range": {
+        "startLine": 2250,
+        "startChar": 0,
+        "endLine": 2251,
+        "endChar": 90
+      },
+      "revId": "361df81ab3c2c3aeb45ce4c2545b23209bdd5e36",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "83555cc3_4260256c",
@@ -111,6 +195,30 @@
       "writtenOn": "2020-11-16T19:35:34Z",
       "side": 1,
       "message": "I would store these in the BufferVk instead.",
+      "range": {
+        "startLine": 2254,
+        "startChar": 15,
+        "endLine": 2254,
+        "endChar": 26
+      },
+      "revId": "361df81ab3c2c3aeb45ce4c2545b23209bdd5e36",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9e2b49a0_cafba678",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 2254,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-16T22:00:28Z",
+      "side": 1,
+      "message": "See other comment.",
+      "parentUuid": "83555cc3_4260256c",
       "range": {
         "startLine": 2254,
         "startChar": 15,
@@ -146,6 +254,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "de72a06b_4205969b",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 502,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-16T22:00:28Z",
+      "side": 1,
+      "message": "BufferVk may be attached to multiple textures with different format/range. Putting this in BufferVk makes things more complicated.",
+      "parentUuid": "db09b887_ab2abbfc",
+      "range": {
+        "startLine": 500,
+        "startChar": 0,
+        "endLine": 502,
+        "endChar": 37
+      },
+      "revId": "361df81ab3c2c3aeb45ce4c2545b23209bdd5e36",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "1b721c71_c3af3d6c",
         "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
         "patchSetId": 8
@@ -157,6 +289,30 @@
       "writtenOn": "2020-11-16T19:35:34Z",
       "side": 1,
       "message": "nit: HasFull",
+      "range": {
+        "startLine": 158,
+        "startChar": 5,
+        "endLine": 158,
+        "endChar": 28
+      },
+      "revId": "361df81ab3c2c3aeb45ce4c2545b23209bdd5e36",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "501f812c_4d075d53",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-16T22:00:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1b721c71_c3af3d6c",
       "range": {
         "startLine": 158,
         "startChar": 5,
@@ -192,6 +348,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "24804abc_10d61b34",
+        "filename": "src/libANGLE/renderer/vulkan/vk_format_utils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-16T22:00:28Z",
+      "side": 1,
+      "message": "Left it here, but also added a comment in vk::Format. In particular, this comment says \"If this function is changed to test for more features ...\" so it should be right here for anyone who\u0027s modifying this function to see.",
+      "parentUuid": "015dc7e1_13cfbc6e",
+      "range": {
+        "startLine": 67,
+        "startChar": 0,
+        "endLine": 72,
+        "endChar": 42
+      },
+      "revId": "361df81ab3c2c3aeb45ce4c2545b23209bdd5e36",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "d88bd249_e87ce2ad",
         "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
         "patchSetId": 8
@@ -203,6 +383,30 @@
       "writtenOn": "2020-11-16T19:35:34Z",
       "side": 1,
       "message": "instead make this a vk::Resource, we\u0027re trying to avoid explicitly storing resource uses.",
+      "range": {
+        "startLine": 2137,
+        "startChar": 0,
+        "endLine": 2138,
+        "endChar": 27
+      },
+      "revId": "361df81ab3c2c3aeb45ce4c2545b23209bdd5e36",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f08b1dfa_d5dc6bd9",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 2138,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-16T22:00:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d88bd249_e87ce2ad",
       "range": {
         "startLine": 2137,
         "startChar": 0,
@@ -226,6 +430,30 @@
       "writtenOn": "2020-11-16T19:35:34Z",
       "side": 1,
       "message": "This definitely works so kudos on finding a solution. Can you make this work while still respecting that this is not an imageview ? i.e. use ImageOrBufferViewSerial as the simplest solution. Or use ImageViewSerial and BufferViewSerial and don\u0027t store a typed serial in the descirptor set helper, store a uint32_t instead.",
+      "range": {
+        "startLine": 2141,
+        "startChar": 0,
+        "endLine": 2144,
+        "endChar": 32
+      },
+      "revId": "361df81ab3c2c3aeb45ce4c2545b23209bdd5e36",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b5191fb0_0dd54d3e",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 2144,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-16T22:00:28Z",
+      "side": 1,
+      "message": "My preference is towards ImageOrBufferViewSerial, so the serial remains typed. I *think* separate serials would be ok because TexUnitSerials::sampler would be invalid for texture buffers and so there won\u0027t be a key collision in desc set cache, but I\u0027m not 100% sure.\n\nAlternatively we could name it TextureViewSerial, to encompass both texture images and texture buffers. WDYT?",
+      "parentUuid": "0e9fca4f_f6bfba69",
       "range": {
         "startLine": 2141,
         "startChar": 0,
