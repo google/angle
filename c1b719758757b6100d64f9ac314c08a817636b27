@@ -39,6 +39,30 @@
       },
       "revId": "c1b719758757b6100d64f9ac314c08a817636b27",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e8aa38aa_c1264e0a",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-16T19:09:20Z",
+      "side": 1,
+      "message": "Ah forgot I had this hear. I may do that as part of this CL in the end.\n\nYou mentioned in the other CL that you had to force enable shaderImageAtomicOES to test it. Could you please verify with this change that shaderImageAtomicOES is exposed on your platform automatically?",
+      "parentUuid": "fb09f04b_6d3aacef",
+      "range": {
+        "startLine": 40,
+        "startChar": 4,
+        "endLine": 42,
+        "endChar": 15
+      },
+      "revId": "c1b719758757b6100d64f9ac314c08a817636b27",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
