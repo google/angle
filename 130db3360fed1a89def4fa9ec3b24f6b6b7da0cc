@@ -57,6 +57,24 @@
       "parentUuid": "88d66bef_f8f07ca4",
       "revId": "130db3360fed1a89def4fa9ec3b24f6b6b7da0cc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4586bec9_7f6adb7d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-16T15:49:12Z",
+      "side": 1,
+      "message": "\u003e Unresolving\n\nim not sure i understand what \"unresolving\" means, should i wait until upstream fixes the issue?\n\n\u003e Also it would be welcome if you could add assert checks for duplicate entries\n\nyou mean in python code?",
+      "parentUuid": "422714c5_4e1af863",
+      "revId": "130db3360fed1a89def4fa9ec3b24f6b6b7da0cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
