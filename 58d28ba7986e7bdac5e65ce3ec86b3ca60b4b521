@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "94221825_97861e82",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1393148
+      },
+      "writtenOn": "2020-11-16T06:25:42Z",
+      "side": 1,
+      "message": "From the above, it seems better to delete the while loop.",
+      "revId": "58d28ba7986e7bdac5e65ce3ec86b3ca60b4b521",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
