@@ -1914,10 +1914,9 @@ angle::Result Texture::setBuffer(const gl::Context *context,
                                  gl::Buffer *buffer,
                                  GLenum internalFormat)
 {
-    // Use UINT_MAX to indicate that the size is taken from whatever size the buffer has when the
-    // texture buffer is used.
-    return setBufferRange(context, buffer, internalFormat, 0,
-                          std::numeric_limits<GLsizeiptr>::max());
+    // Use 0 to indicate that the size is taken from whatever size the buffer has when the texture
+    // buffer is used.
+    return setBufferRange(context, buffer, internalFormat, 0, 0);
 }
 
 angle::Result Texture::setBufferRange(const gl::Context *context,
@@ -1938,7 +1937,7 @@ angle::Result Texture::setBufferRange(const gl::Context *context,
         return angle::Result::Continue;
     }
 
-    size = std::min(size, static_cast<GLsizeiptr>(buffer->getSize()));
+    size = GetBoundBufferAvailableSize(mState.mBuffer);
 
     mState.mImmutableLevels           = static_cast<GLuint>(1);
     InternalFormat internalFormatInfo = GetSizedInternalFormatInfo(internalFormat);
@@ -2194,8 +2193,7 @@ void Texture::onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMess
                 ASSERT(buffer != nullptr);
 
                 // Update cached image desc based on buffer size.
-                GLsizeiptr size =
-                    std::min(mState.mBuffer.getSize(), static_cast<GLsizeiptr>(buffer->getSize()));
+                GLsizeiptr size = GetBoundBufferAvailableSize(mState.mBuffer);
 
                 ImageDesc desc          = mState.getImageDesc(TextureTarget::Buffer, 0);
                 const GLuint pixelBytes = desc.format.info->pixelBytes;

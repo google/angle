@@ -1731,17 +1731,18 @@ angle::Result TextureGL::setBuffer(const gl::Context *context, GLenum internalFo
     const GLsizeiptr size                                     = bufferBinding.getSize();
     const GLuint bufferID = buffer ? GetImplAs<BufferGL>(buffer)->getBufferID() : 0;
 
-    // If buffer is not bound, use texBuffer to unbind it.  If size is UINT_MAX, texBuffer was used
-    // to create this binding, so use the same function.  This will allow the implementation to take
+    // If buffer is not bound, use texBuffer to unbind it.  If size is 0, texBuffer was used to
+    // create this binding, so use the same function.  This will allow the implementation to take
     // the current size of the buffer on every draw/dispatch call even if the buffer size changes.
-    if (buffer == nullptr || size == std::numeric_limits<GLsizeiptr>::max())
+    if (buffer == nullptr || size == 0)
     {
         ANGLE_GL_TRY(context, functions->texBuffer(GL_TEXTURE_BUFFER, internalFormat, bufferID));
     }
     else
     {
-        ANGLE_GL_TRY(context, functions->texBufferRange(GL_TEXTURE_BUFFER, internalFormat, bufferID,
-                                                        offset, size));
+        ANGLE_GL_TRY(context,
+                     functions->texBufferRange(GL_TEXTURE_BUFFER, internalFormat, bufferID, offset,
+                                               GetBoundBufferAvailableSize(bufferBinding)));
     }
 
     return angle::Result::Continue;
