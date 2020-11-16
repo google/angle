@@ -415,7 +415,7 @@ class DynamicQueryPool final : public DynamicallyGrowingPool<QueryPool>
 // of a fixed size as needed and allocates indices within those pools.
 //
 // The QueryHelper class below keeps the pool and index pair together.
-class QueryHelper final : public vk::Resource
+class QueryHelper final : public Resource
 {
   public:
     QueryHelper();
@@ -1894,12 +1894,12 @@ enum class SrgbDecodeMode
     SrgbDecode
 };
 
-class ImageViewHelper : angle::NonCopyable
+class ImageViewHelper final : public Resource
 {
   public:
     ImageViewHelper();
     ImageViewHelper(ImageViewHelper &&other);
-    ~ImageViewHelper();
+    ~ImageViewHelper() override;
 
     void init(RendererVk *renderer);
     void release(RendererVk *renderer);
@@ -1985,9 +1985,6 @@ class ImageViewHelper : angle::NonCopyable
             return false;
         }
     }
-
-    // Store reference to usage in graph.
-    void retain(ResourceUseList *resourceUseList) const { resourceUseList->add(mUse); }
 
     // For applications that frequently switch a texture's max level, and make no other changes to
     // the texture, change the currently-used max level, and potentially create new "read views"
@@ -2093,9 +2090,6 @@ class ImageViewHelper : angle::NonCopyable
                                         uint32_t baseLayer,
                                         uint32_t layerCount,
                                         VkImageUsageFlags imageUsageFlags);
-
-    // Lifetime.
-    SharedResourceUse mUse;
 
     // For applications that frequently switch a texture's max level, and make no other changes to
     // the texture, keep track of the currently-used max level, and keep one "read view" per

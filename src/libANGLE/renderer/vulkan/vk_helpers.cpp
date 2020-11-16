@@ -6146,13 +6146,14 @@ FramebufferHelper::FramebufferHelper() = default;
 
 FramebufferHelper::~FramebufferHelper() = default;
 
-FramebufferHelper::FramebufferHelper(FramebufferHelper &&other)
+FramebufferHelper::FramebufferHelper(FramebufferHelper &&other) : Resource(std::move(other))
 {
     mFramebuffer = std::move(other.mFramebuffer);
 }
 
 FramebufferHelper &FramebufferHelper::operator=(FramebufferHelper &&other)
 {
+    std::swap(mUse, other.mUse);
     std::swap(mFramebuffer, other.mFramebuffer);
     return *this;
 }
@@ -6170,12 +6171,9 @@ void FramebufferHelper::release(ContextVk *contextVk)
 }
 
 // ImageViewHelper implementation.
-ImageViewHelper::ImageViewHelper() : mCurrentMaxLevel(0), mLinearColorspace(true)
-{
-    mUse.init();
-}
+ImageViewHelper::ImageViewHelper() : mCurrentMaxLevel(0), mLinearColorspace(true) {}
 
-ImageViewHelper::ImageViewHelper(ImageViewHelper &&other)
+ImageViewHelper::ImageViewHelper(ImageViewHelper &&other) : Resource(std::move(other))
 {
     std::swap(mCurrentMaxLevel, other.mCurrentMaxLevel);
     std::swap(mPerLevelLinearReadImageViews, other.mPerLevelLinearReadImageViews);
@@ -6192,10 +6190,7 @@ ImageViewHelper::ImageViewHelper(ImageViewHelper &&other)
     std::swap(mImageViewSerial, other.mImageViewSerial);
 }
 
-ImageViewHelper::~ImageViewHelper()
-{
-    mUse.release();
-}
+ImageViewHelper::~ImageViewHelper() {}
 
 void ImageViewHelper::init(RendererVk *renderer)
 {
