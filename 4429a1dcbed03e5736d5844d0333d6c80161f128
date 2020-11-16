@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ca54fe74_18fa88a0",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 6149,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-16T21:17:40Z",
+      "side": 1,
+      "message": "Random bug fix",
+      "range": {
+        "startLine": 6149,
+        "startChar": 66,
+        "endLine": 6149,
+        "endChar": 92
+      },
+      "revId": "4429a1dcbed03e5736d5844d0333d6c80161f128",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
