@@ -30,21 +30,6 @@ constexpr gl::ShaderMap<vk::PipelineStage> kPipelineStageShaderMap = {
     {gl::ShaderType::Compute, vk::PipelineStage::ComputeShader},
 };
 
-VkDeviceSize GetShaderBufferBindingSize(const gl::OffsetBindingPointer<gl::Buffer> &bufferBinding)
-{
-    if (bufferBinding.getSize() != 0)
-    {
-        return bufferBinding.getSize();
-    }
-    // If size is 0, we can't always use VK_WHOLE_SIZE (or bufferHelper.getSize()), as the
-    // backing buffer may be larger than max*BufferRange.  In that case, we use the backing
-    // buffer size (what's left after offset).
-    const gl::Buffer *bufferGL = bufferBinding.get();
-    ASSERT(bufferGL);
-    ASSERT(bufferGL->getSize() >= bufferBinding.getOffset());
-    return bufferGL->getSize() - bufferBinding.getOffset();
-}
-
 bool ValidateTransformedSpirV(ContextVk *contextVk,
                               const gl::ShaderBitSet &linkedShaderStages,
                               ProgramExecutableVk *executableVk,
@@ -1029,7 +1014,7 @@ angle::Result ProgramExecutableVk::updateBuffersDescriptorSet(
         }
         else
         {
-            size = GetShaderBufferBindingSize(bufferBinding);
+            size = gl::GetBoundBufferAvailableSize(bufferBinding);
         }
 
         // Make sure there's no possible under/overflow with binding size.
@@ -1133,7 +1118,7 @@ angle::Result ProgramExecutableVk::updateAtomicCounterBuffersDescriptorSet(
             descriptorSet = mDescriptorSets[ToUnderlying(DescriptorSetIndex::ShaderResource)];
         }
         ASSERT(descriptorSet != VK_NULL_HANDLE);
-        VkDeviceSize size = GetShaderBufferBindingSize(bufferBinding);
+        VkDeviceSize size = gl::GetBoundBufferAvailableSize(bufferBinding);
         WriteBufferDescriptorSetBinding(bufferHelper, bufferBinding.getOffset(), size,
                                         descriptorSet, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER,
                                         info.binding, binding, requiredOffsetAlignment, &bufferInfo,
