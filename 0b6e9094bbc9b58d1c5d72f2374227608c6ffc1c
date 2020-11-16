@@ -39,6 +39,29 @@
       },
       "revId": "0b6e9094bbc9b58d1c5d72f2374227608c6ffc1c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "58c4dfe5_da9bde6a",
+        "filename": "src/libANGLE/validationESEXT.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1196,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-16T13:48:33Z",
+      "side": 1,
+      "message": "for all these guys, you want to add the extension checks in here explicitly.\n\nWhat we ideally like to do in this case is split the original entry point into\n\nValidateActiveShaderProgramBase -\u003e the non-ES-version validation code\nValidateActiveShaderProgram -\u003e checks for ES 3.0 and calls ValidateActiveShaderProgramBase\nValidateActiveShaderProgramEXT -\u003e checks for the EXT and calls ValidateActiveShaderProgramBase \n\nAnd so on for the other EPs.",
+      "range": {
+        "startLine": 1196,
+        "startChar": 11,
+        "endLine": 1196,
+        "endChar": 38
+      },
+      "revId": "0b6e9094bbc9b58d1c5d72f2374227608c6ffc1c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
