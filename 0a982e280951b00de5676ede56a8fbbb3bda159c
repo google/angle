@@ -16,6 +16,23 @@
       "message": "Looks awesome!  Thanks Charlie!",
       "revId": "0a982e280951b00de5676ede56a8fbbb3bda159c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6fda86d8_ee5b6fc6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 30
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-16T20:28:28Z",
+      "side": 1,
+      "message": "Thanks all for the review. Submitting now.",
+      "revId": "0a982e280951b00de5676ede56a8fbbb3bda159c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
