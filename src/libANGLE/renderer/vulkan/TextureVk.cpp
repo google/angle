@@ -2520,18 +2520,23 @@ angle::Result TextureVk::getStorageImageView(ContextVk *contextVk,
     angle::FormatID formatID = angle::Format::InternalFormatToID(binding.format);
     const vk::Format &format = contextVk->getRenderer()->getFormat(formatID);
 
-    if (binding.layered != GL_TRUE)
-    {
-        return getLevelLayerImageView(contextVk, gl::LevelIndex(binding.level), binding.layer,
-                                      imageViewOut);
-    }
-
     gl::LevelIndex nativeLevelGL =
         getNativeImageLevel(gl::LevelIndex(static_cast<uint32_t>(binding.level)));
     vk::LevelIndex nativeLevelVk = mImage->toVkLevel(nativeLevelGL);
-    uint32_t nativeLayer         = getNativeImageLayer(0);
 
-    return getImageViews().getLevelDrawImageView(
+    if (binding.layered != GL_TRUE)
+    {
+        uint32_t nativeLayer = getNativeImageLayer(static_cast<uint32_t>(binding.layer));
+
+        return getImageViews().getLevelLayerStorageImageView(
+            contextVk, *mImage, nativeLevelVk, nativeLayer,
+            VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_STORAGE_BIT, format.vkImageFormat,
+            imageViewOut);
+    }
+
+    uint32_t nativeLayer = getNativeImageLayer(0);
+
+    return getImageViews().getLevelStorageImageView(
         contextVk, mState.getType(), *mImage, nativeLevelVk, nativeLayer,
         VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_STORAGE_BIT, format.vkImageFormat,
         imageViewOut);

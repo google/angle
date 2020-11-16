@@ -529,6 +529,24 @@ ImageView *GetLevelImageView(ImageViewVector *imageViews, LevelIndex levelVk, ui
     return &(*imageViews)[levelVk.get()];
 }
 
+ImageView *GetLevelLayerImageView(LayerLevelImageViewVector *imageViews,
+                                  LevelIndex levelVk,
+                                  uint32_t layer,
+                                  uint32_t levelCount,
+                                  uint32_t layerCount)
+{
+    // Lazily allocate the storage for image views. We allocate the full layer count because we
+    // don't want to trigger any std::vector reallocations. Reallocations could invalidate our
+    // view pointers.
+    if (imageViews->empty())
+    {
+        imageViews->resize(layerCount);
+    }
+    ASSERT(imageViews->size() > layer);
+
+    return GetLevelImageView(&(*imageViews)[layer], levelVk, levelCount);
+}
+
 // Special rules apply to VkBufferImageCopy with depth/stencil. The components are tightly packed
 // into a depth or stencil section of the destination buffer. See the spec:
 // https://www.khronos.org/registry/vulkan/specs/1.1-extensions/man/html/VkBufferImageCopy.html
@@ -6308,8 +6326,9 @@ ImageViewHelper::ImageViewHelper(ImageViewHelper &&other) : Resource(std::move(o
     std::swap(mLinearColorspace, other.mLinearColorspace);
 
     std::swap(mPerLevelStencilReadImageViews, other.mPerLevelStencilReadImageViews);
-    std::swap(mLevelDrawImageViews, other.mLevelDrawImageViews);
     std::swap(mLayerLevelDrawImageViews, other.mLayerLevelDrawImageViews);
+    std::swap(mLevelStorageImageViews, other.mLevelStorageImageViews);
+    std::swap(mLayerLevelStorageImageViews, other.mLayerLevelStorageImageViews);
     std::swap(mImageViewSerial, other.mImageViewSerial);
 }
 
@@ -6339,7 +6358,6 @@ void ImageViewHelper::release(RendererVk *renderer)
     ReleaseImageViews(&mPerLevelStencilReadImageViews, &garbage);
 
     // Release the draw views
-    ReleaseImageViews(&mLevelDrawImageViews, &garbage);
     for (ImageViewVector &layerViews : mLayerLevelDrawImageViews)
     {
         for (ImageView &imageView : layerViews)
@@ -6351,6 +6369,20 @@ void ImageViewHelper::release(RendererVk *renderer)
         }
     }
     mLayerLevelDrawImageViews.clear();
+
+    // Release the storage views
+    ReleaseImageViews(&mLevelStorageImageViews, &garbage);
+    for (ImageViewVector &layerViews : mLayerLevelStorageImageViews)
+    {
+        for (ImageView &imageView : layerViews)
+        {
+            if (imageView.valid())
+            {
+                garbage.emplace_back(GetGarbage(&imageView));
+            }
+        }
+    }
+    mLayerLevelStorageImageViews.clear();
 
     if (!garbage.empty())
     {
@@ -6378,7 +6410,6 @@ void ImageViewHelper::destroy(VkDevice device)
     DestroyImageViews(&mPerLevelStencilReadImageViews, device);
 
     // Release the draw views
-    DestroyImageViews(&mLevelDrawImageViews, device);
     for (ImageViewVector &layerViews : mLayerLevelDrawImageViews)
     {
         for (ImageView &imageView : layerViews)
@@ -6387,6 +6418,17 @@ void ImageViewHelper::destroy(VkDevice device)
         }
     }
     mLayerLevelDrawImageViews.clear();
+
+    // Release the storage views
+    DestroyImageViews(&mLevelStorageImageViews, device);
+    for (ImageViewVector &layerViews : mLayerLevelStorageImageViews)
+    {
+        for (ImageView &imageView : layerViews)
+        {
+            imageView.destroy(device);
+        }
+    }
+    mLayerLevelStorageImageViews.clear();
 
     mImageViewSerial = kInvalidImageOrBufferViewSerial;
 }
@@ -6578,20 +6620,21 @@ angle::Result ImageViewHelper::initSRGBReadViewsImpl(ContextVk *contextVk,
     return angle::Result::Continue;
 }
 
-angle::Result ImageViewHelper::getLevelDrawImageView(ContextVk *contextVk,
-                                                     gl::TextureType viewType,
-                                                     const ImageHelper &image,
-                                                     LevelIndex levelVk,
-                                                     uint32_t layer,
-                                                     VkImageUsageFlags imageUsageFlags,
-                                                     VkFormat vkImageFormat,
-                                                     const ImageView **imageViewOut)
+angle::Result ImageViewHelper::getLevelStorageImageView(ContextVk *contextVk,
+                                                        gl::TextureType viewType,
+                                                        const ImageHelper &image,
+                                                        LevelIndex levelVk,
+                                                        uint32_t layer,
+                                                        VkImageUsageFlags imageUsageFlags,
+                                                        VkFormat vkImageFormat,
+                                                        const ImageView **imageViewOut)
 {
     ASSERT(mImageViewSerial.valid());
 
     retain(&contextVk->getResourceUseList());
 
-    ImageView *imageView = GetLevelImageView(&mLevelDrawImageViews, levelVk, image.getLevelCount());
+    ImageView *imageView =
+        GetLevelImageView(&mLevelStorageImageViews, levelVk, image.getLevelCount());
 
     *imageViewOut = imageView;
     if (imageView->valid())
@@ -6603,6 +6646,37 @@ angle::Result ImageViewHelper::getLevelDrawImageView(ContextVk *contextVk,
     return image.initAliasedLayerImageView(contextVk, viewType, image.getAspectFlags(),
                                            gl::SwizzleState(), imageView, levelVk, 1, layer,
                                            image.getLayerCount(), imageUsageFlags, vkImageFormat);
+}
+
+angle::Result ImageViewHelper::getLevelLayerStorageImageView(ContextVk *contextVk,
+                                                             const ImageHelper &image,
+                                                             LevelIndex levelVk,
+                                                             uint32_t layer,
+                                                             VkImageUsageFlags imageUsageFlags,
+                                                             VkFormat vkImageFormat,
+                                                             const ImageView **imageViewOut)
+{
+    ASSERT(image.valid());
+    ASSERT(mImageViewSerial.valid());
+    ASSERT(!image.getFormat().actualImageFormat().isBlock);
+
+    retain(&contextVk->getResourceUseList());
+
+    ImageView *imageView =
+        GetLevelLayerImageView(&mLayerLevelStorageImageViews, levelVk, layer, image.getLevelCount(),
+                               GetImageLayerCountForView(image));
+    *imageViewOut = imageView;
+
+    if (imageView->valid())
+    {
+        return angle::Result::Continue;
+    }
+
+    // Create the view.  Note that storage images are not affected by swizzle parameters.
+    gl::TextureType viewType = Get2DTextureType(1, image.getSamples());
+    return image.initAliasedLayerImageView(contextVk, viewType, image.getAspectFlags(),
+                                           gl::SwizzleState(), imageView, levelVk, 1, layer, 1,
+                                           imageUsageFlags, vkImageFormat);
 }
 
 angle::Result ImageViewHelper::getLevelLayerDrawImageView(ContextVk *contextVk,
@@ -6617,17 +6691,10 @@ angle::Result ImageViewHelper::getLevelLayerDrawImageView(ContextVk *contextVk,
 
     retain(&contextVk->getResourceUseList());
 
-    uint32_t layerCount = GetImageLayerCountForView(image);
-
     // Lazily allocate the storage for image views
-    if (mLayerLevelDrawImageViews.empty())
-    {
-        mLayerLevelDrawImageViews.resize(layerCount);
-    }
-    ASSERT(mLayerLevelDrawImageViews.size() > layer);
-
     ImageView *imageView =
-        GetLevelImageView(&mLayerLevelDrawImageViews[layer], levelVk, image.getLevelCount());
+        GetLevelLayerImageView(&mLayerLevelDrawImageViews, levelVk, layer, image.getLevelCount(),
+                               GetImageLayerCountForView(image));
     *imageViewOut = imageView;
 
     if (imageView->valid())

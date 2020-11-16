@@ -4050,6 +4050,127 @@ void main() {
     glUnmapBuffer(GL_ATOMIC_COUNTER_BUFFER);
 }
 
+// Write to image array with an aliasing format.
+TEST_P(ComputeShaderTest, AliasingFormatForImageArray)
+{
+    // http://anglebug.com/5352
+    ANGLE_SKIP_TEST_IF(IsD3D11());
+
+    constexpr char kCS[] = R"(#version 310 es
+layout(local_size_x=1, local_size_y=1, local_size_z=2) in;
+layout(r32ui, binding = 0) writeonly uniform highp uimage2DArray image;
+void main()
+{
+    uint yellow = 0xFF00FFFFu;
+    imageStore(image, ivec3(gl_LocalInvocationID.xyz), uvec4(yellow, 0, 0, 0));
+})";
+
+    constexpr int kWidth = 1, kHeight = 1, kDepth = 2;
+
+    const std::vector<GLColor> kInitData(kWidth * kHeight * kDepth, GLColor::black);
+
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D_ARRAY, texture);
+    glTexStorage3D(GL_TEXTURE_2D_ARRAY, 1, GL_RGBA8, kWidth, kHeight, kDepth);
+    glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, 0, kWidth, kHeight, kDepth, GL_RGBA,
+                    GL_UNSIGNED_BYTE, kInitData.data());
+    EXPECT_GL_NO_ERROR();
+
+    ANGLE_GL_COMPUTE_PROGRAM(program, kCS);
+    glUseProgram(program);
+
+    // Output yellow to both layers.
+    glBindImageTexture(0, texture, 0, GL_TRUE, 0, GL_WRITE_ONLY, GL_R32UI);
+    glDispatchCompute(1, 1, 1);
+    EXPECT_GL_NO_ERROR();
+
+    // Verify results.
+    glMemoryBarrier(GL_FRAMEBUFFER_BARRIER_BIT);
+    EXPECT_GL_NO_ERROR();
+
+    GLFramebuffer framebuffer;
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer);
+    glFramebufferTextureLayer(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texture, 0, 0);
+    glFramebufferTextureLayer(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, texture, 0, 1);
+    EXPECT_GL_NO_ERROR();
+
+    glReadBuffer(GL_COLOR_ATTACHMENT0);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::yellow);
+
+    glReadBuffer(GL_COLOR_ATTACHMENT1);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::yellow);
+}
+
+// Write to one layer of image array with an aliasing format.
+TEST_P(ComputeShaderTest, AliasingFormatForOneLayerOfImageArray)
+{
+    // http://anglebug.com/5352
+    ANGLE_SKIP_TEST_IF(IsD3D11());
+
+    constexpr char kCS[] = R"(#version 310 es
+layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
+layout(r32ui, binding = 0) writeonly uniform highp uimage2D image;
+void main()
+{
+    uint yellow = 0xFF00FFFFu;
+    imageStore(image, ivec2(gl_LocalInvocationID.xy), uvec4(yellow, 0, 0, 0));
+})";
+
+    constexpr int kWidth = 1, kHeight = 1, kDepth = 2;
+
+    const std::vector<GLColor> kInitData(kWidth * kHeight * kDepth, GLColor::black);
+
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D_ARRAY, texture);
+    glTexStorage3D(GL_TEXTURE_2D_ARRAY, 1, GL_RGBA8, kWidth, kHeight, kDepth);
+    glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, 0, kWidth, kHeight, kDepth, GL_RGBA,
+                    GL_UNSIGNED_BYTE, kInitData.data());
+    EXPECT_GL_NO_ERROR();
+
+    GLFramebuffer framebuffer;
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer);
+    glFramebufferTextureLayer(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texture, 0, 0);
+    glFramebufferTextureLayer(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, texture, 0, 1);
+    EXPECT_GL_NO_ERROR();
+
+    ANGLE_GL_COMPUTE_PROGRAM(program, kCS);
+    glUseProgram(program);
+
+    // Output yellow to layer 0.
+    glBindImageTexture(0, texture, 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_R32UI);
+    glDispatchCompute(1, 1, 1);
+    EXPECT_GL_NO_ERROR();
+
+    // Verify that only layer 0 was changed.
+    glMemoryBarrier(GL_FRAMEBUFFER_BARRIER_BIT);
+    EXPECT_GL_NO_ERROR();
+
+    glReadBuffer(GL_COLOR_ATTACHMENT0);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::yellow);
+
+    glReadBuffer(GL_COLOR_ATTACHMENT1);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::black);
+
+    // Reset texture back to black.
+    glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, 0, kWidth, kHeight, kDepth, GL_RGBA,
+                    GL_UNSIGNED_BYTE, kInitData.data());
+
+    // Output yellow to layer 1.
+    glBindImageTexture(0, texture, 0, GL_FALSE, 1, GL_WRITE_ONLY, GL_R32UI);
+    glDispatchCompute(1, 1, 1);
+    EXPECT_GL_NO_ERROR();
+
+    // Verify that only layer 1 was changed.
+    glMemoryBarrier(GL_FRAMEBUFFER_BARRIER_BIT);
+    EXPECT_GL_NO_ERROR();
+
+    glReadBuffer(GL_COLOR_ATTACHMENT0);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::black);
+
+    glReadBuffer(GL_COLOR_ATTACHMENT1);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::yellow);
+}
+
 ANGLE_INSTANTIATE_TEST_ES31(ComputeShaderTest);
 ANGLE_INSTANTIATE_TEST_ES3(ComputeShaderTestES3);
 ANGLE_INSTANTIATE_TEST_ES31(WebGL2ComputeTest);

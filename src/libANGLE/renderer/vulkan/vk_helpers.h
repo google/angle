@@ -2029,17 +2029,26 @@ class ImageViewHelper final : public Resource
                                 bool requiresSRGBViews,
                                 VkImageUsageFlags imageUsageFlags);
 
-    // Creates a view with all layers of the level.
-    angle::Result getLevelDrawImageView(ContextVk *contextVk,
-                                        gl::TextureType viewType,
-                                        const ImageHelper &image,
-                                        LevelIndex levelVk,
-                                        uint32_t layer,
-                                        VkImageUsageFlags imageUsageFlags,
-                                        VkFormat vkImageFormat,
-                                        const ImageView **imageViewOut);
+    // Creates a storage view with all layers of the level.
+    angle::Result getLevelStorageImageView(ContextVk *contextVk,
+                                           gl::TextureType viewType,
+                                           const ImageHelper &image,
+                                           LevelIndex levelVk,
+                                           uint32_t layer,
+                                           VkImageUsageFlags imageUsageFlags,
+                                           VkFormat vkImageFormat,
+                                           const ImageView **imageViewOut);
 
-    // Creates a view with a single layer of the level.
+    // Creates a storage view with a single layer of the level.
+    angle::Result getLevelLayerStorageImageView(ContextVk *contextVk,
+                                                const ImageHelper &image,
+                                                LevelIndex levelVk,
+                                                uint32_t layer,
+                                                VkImageUsageFlags imageUsageFlags,
+                                                VkFormat vkImageFormat,
+                                                const ImageView **imageViewOut);
+
+    // Creates a draw view with a single layer of the level.
     angle::Result getLevelLayerDrawImageView(ContextVk *contextVk,
                                              const ImageHelper &image,
                                              LevelIndex levelVk,
@@ -2135,9 +2144,12 @@ class ImageViewHelper final : public Resource
 
     bool mLinearColorspace;
 
-    // Draw views.
-    ImageViewVector mLevelDrawImageViews;
+    // Draw views
     LayerLevelImageViewVector mLayerLevelDrawImageViews;
+
+    // Storage views
+    ImageViewVector mLevelStorageImageViews;
+    LayerLevelImageViewVector mLayerLevelStorageImageViews;
 
     // Serial for the image view set. getSubresourceSerial combines it with subresource info.
     ImageOrBufferViewSerial mImageViewSerial;
