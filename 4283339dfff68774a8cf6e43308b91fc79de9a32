@@ -16,6 +16,23 @@
       "message": "Anything else Ian?",
       "revId": "4283339dfff68774a8cf6e43308b91fc79de9a32",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e6caa6b5_bcecc5cf",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-16T20:32:00Z",
+      "side": 1,
+      "message": "LGTM, sorry I lost track of this CL!",
+      "revId": "4283339dfff68774a8cf6e43308b91fc79de9a32",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
