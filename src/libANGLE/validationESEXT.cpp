@@ -1186,4 +1186,438 @@ bool ValidateNamedBufferStorageExternalEXT(const Context *context,
     UNIMPLEMENTED();
     return false;
 }
+
+// GL_EXT_separate_shader_objects
+bool ValidateActiveShaderProgramEXT(const Context *context,
+                                    ProgramPipelineID pipelinePacked,
+                                    ShaderProgramID programPacked)
+{
+    UNIMPLEMENTED();
+    return false;
+}
+
+bool ValidateBindProgramPipelineEXT(const Context *context, ProgramPipelineID pipelinePacked)
+{
+    UNIMPLEMENTED();
+    return false;
+}
+
+bool ValidateCreateShaderProgramvEXT(const Context *context,
+                                     ShaderType typePacked,
+                                     GLsizei count,
+                                     const GLchar **strings)
+{
+    UNIMPLEMENTED();
+    return false;
+}
+
+bool ValidateDeleteProgramPipelinesEXT(const Context *context,
+                                       GLsizei n,
+                                       const ProgramPipelineID *pipelinesPacked)
+{
+    UNIMPLEMENTED();
+    return false;
+}
+
+bool ValidateGenProgramPipelinesEXT(const Context *context,
+                                    GLsizei n,
+                                    const ProgramPipelineID *pipelinesPacked)
+{
+    UNIMPLEMENTED();
+    return false;
+}
+
+bool ValidateGetProgramPipelineInfoLogEXT(const Context *context,
+                                          ProgramPipelineID pipelinePacked,
+                                          GLsizei bufSize,
+                                          const GLsizei *length,
+                                          const GLchar *infoLog)
+{
+    UNIMPLEMENTED();
+    return false;
+}
+
+bool ValidateGetProgramPipelineivEXT(const Context *context,
+                                     ProgramPipelineID pipelinePacked,
+                                     GLenum pname,
+                                     const GLint *params)
+{
+    UNIMPLEMENTED();
+    return false;
+}
+
+bool ValidateIsProgramPipelineEXT(const Context *context, ProgramPipelineID pipelinePacked)
+{
+    UNIMPLEMENTED();
+    return false;
+}
+
+bool ValidateProgramParameteriEXT(const Context *context,
+                                  ShaderProgramID programPacked,
+                                  GLenum pname,
+                                  GLint value)
+{
+    UNIMPLEMENTED();
+    return false;
+}
+
+bool ValidateProgramUniform1fEXT(const Context *context,
+                                 ShaderProgramID programPacked,
+                                 UniformLocation locationPacked,
+                                 GLfloat v0)
+{
+    UNIMPLEMENTED();
+    return false;
+}
+
+bool ValidateProgramUniform1fvEXT(const Context *context,
+                                  ShaderProgramID programPacked,
+                                  UniformLocation locationPacked,
+                                  GLsizei count,
+                                  const GLfloat *value)
+{
+    UNIMPLEMENTED();
+    return false;
+}
+
+bool ValidateProgramUniform1iEXT(const Context *context,
+                                 ShaderProgramID programPacked,
+                                 UniformLocation locationPacked,
+                                 GLint v0)
+{
+    UNIMPLEMENTED();
+    return false;
+}
+
+bool ValidateProgramUniform1ivEXT(const Context *context,
+                                  ShaderProgramID programPacked,
+                                  UniformLocation locationPacked,
+                                  GLsizei count,
+                                  const GLint *value)
+{
+    UNIMPLEMENTED();
+    return false;
+}
+
+bool ValidateProgramUniform1uiEXT(const Context *context,
+                                  ShaderProgramID programPacked,
+                                  UniformLocation locationPacked,
+                                  GLuint v0)
+{
+    UNIMPLEMENTED();
+    return false;
+}
+
+bool ValidateProgramUniform1uivEXT(const Context *context,
+                                   ShaderProgramID programPacked,
+                                   UniformLocation locationPacked,
+                                   GLsizei count,
+                                   const GLuint *value)
+{
+    UNIMPLEMENTED();
+    return false;
+}
+
+bool ValidateProgramUniform2fEXT(const Context *context,
+                                 ShaderProgramID programPacked,
+                                 UniformLocation locationPacked,
+                                 GLfloat v0,
+                                 GLfloat v1)
+{
+    UNIMPLEMENTED();
+    return false;
+}
+
+bool ValidateProgramUniform2fvEXT(const Context *context,
+                                  ShaderProgramID programPacked,
+                                  UniformLocation locationPacked,
+                                  GLsizei count,
+                                  const GLfloat *value)
+{
+    UNIMPLEMENTED();
+    return false;
+}
+
+bool ValidateProgramUniform2iEXT(const Context *context,
+                                 ShaderProgramID programPacked,
+                                 UniformLocation locationPacked,
+                                 GLint v0,
+                                 GLint v1)
+{
+    UNIMPLEMENTED();
+    return false;
+}
+
+bool ValidateProgramUniform2ivEXT(const Context *context,
+                                  ShaderProgramID programPacked,
+                                  UniformLocation locationPacked,
+                                  GLsizei count,
+                                  const GLint *value)
+{
+    UNIMPLEMENTED();
+    return false;
+}
+
+bool ValidateProgramUniform2uiEXT(const Context *context,
+                                  ShaderProgramID programPacked,
+                                  UniformLocation locationPacked,
+                                  GLuint v0,
+                                  GLuint v1)
+{
+    UNIMPLEMENTED();
+    return false;
+}
+
+bool ValidateProgramUniform2uivEXT(const Context *context,
+                                   ShaderProgramID programPacked,
+                                   UniformLocation locationPacked,
+                                   GLsizei count,
+                                   const GLuint *value)
+{
+    UNIMPLEMENTED();
+    return false;
+}
+
+bool ValidateProgramUniform3fEXT(const Context *context,
+                                 ShaderProgramID programPacked,
+                                 UniformLocation locationPacked,
+                                 GLfloat v0,
+                                 GLfloat v1,
+                                 GLfloat v2)
+{
+    UNIMPLEMENTED();
+    return false;
+}
+
+bool ValidateProgramUniform3fvEXT(const Context *context,
+                                  ShaderProgramID programPacked,
+                                  UniformLocation locationPacked,
+                                  GLsizei count,
+                                  const GLfloat *value)
+{
+    UNIMPLEMENTED();
+    return false;
+}
+
+bool ValidateProgramUniform3iEXT(const Context *context,
+                                 ShaderProgramID programPacked,
+                                 UniformLocation locationPacked,
+                                 GLint v0,
+                                 GLint v1,
+                                 GLint v2)
+{
+    UNIMPLEMENTED();
+    return false;
+}
+
+bool ValidateProgramUniform3ivEXT(const Context *context,
+                                  ShaderProgramID programPacked,
+                                  UniformLocation locationPacked,
+                                  GLsizei count,
+                                  const GLint *value)
+{
+    UNIMPLEMENTED();
+    return false;
+}
+
+bool ValidateProgramUniform3uiEXT(const Context *context,
+                                  ShaderProgramID programPacked,
+                                  UniformLocation locationPacked,
+                                  GLuint v0,
+                                  GLuint v1,
+                                  GLuint v2)
+{
+    UNIMPLEMENTED();
+    return false;
+}
+
+bool ValidateProgramUniform3uivEXT(const Context *context,
+                                   ShaderProgramID programPacked,
+                                   UniformLocation locationPacked,
+                                   GLsizei count,
+                                   const GLuint *value)
+{
+    UNIMPLEMENTED();
+    return false;
+}
+
+bool ValidateProgramUniform4fEXT(const Context *context,
+                                 ShaderProgramID programPacked,
+                                 UniformLocation locationPacked,
+                                 GLfloat v0,
+                                 GLfloat v1,
+                                 GLfloat v2,
+                                 GLfloat v3)
+{
+    UNIMPLEMENTED();
+    return false;
+}
+
+bool ValidateProgramUniform4fvEXT(const Context *context,
+                                  ShaderProgramID programPacked,
+                                  UniformLocation locationPacked,
+                                  GLsizei count,
+                                  const GLfloat *value)
+{
+    UNIMPLEMENTED();
+    return false;
+}
+
+bool ValidateProgramUniform4iEXT(const Context *context,
+                                 ShaderProgramID programPacked,
+                                 UniformLocation locationPacked,
+                                 GLint v0,
+                                 GLint v1,
+                                 GLint v2,
+                                 GLint v3)
+{
+    UNIMPLEMENTED();
+    return false;
+}
+
+bool ValidateProgramUniform4ivEXT(const Context *context,
+                                  ShaderProgramID programPacked,
+                                  UniformLocation locationPacked,
+                                  GLsizei count,
+                                  const GLint *value)
+{
+    UNIMPLEMENTED();
+    return false;
+}
+
+bool ValidateProgramUniform4uiEXT(const Context *context,
+                                  ShaderProgramID programPacked,
+                                  UniformLocation locationPacked,
+                                  GLuint v0,
+                                  GLuint v1,
+                                  GLuint v2,
+                                  GLuint v3)
+{
+    UNIMPLEMENTED();
+    return false;
+}
+
+bool ValidateProgramUniform4uivEXT(const Context *context,
+                                   ShaderProgramID programPacked,
+                                   UniformLocation locationPacked,
+                                   GLsizei count,
+                                   const GLuint *value)
+{
+    UNIMPLEMENTED();
+    return false;
+}
+
+bool ValidateProgramUniformMatrix2fvEXT(const Context *context,
+                                        ShaderProgramID programPacked,
+                                        UniformLocation locationPacked,
+                                        GLsizei count,
+                                        GLboolean transpose,
+                                        const GLfloat *value)
+{
+    UNIMPLEMENTED();
+    return false;
+}
+
+bool ValidateProgramUniformMatrix2x3fvEXT(const Context *context,
+                                          ShaderProgramID programPacked,
+                                          UniformLocation locationPacked,
+                                          GLsizei count,
+                                          GLboolean transpose,
+                                          const GLfloat *value)
+{
+    UNIMPLEMENTED();
+    return false;
+}
+
+bool ValidateProgramUniformMatrix2x4fvEXT(const Context *context,
+                                          ShaderProgramID programPacked,
+                                          UniformLocation locationPacked,
+                                          GLsizei count,
+                                          GLboolean transpose,
+                                          const GLfloat *value)
+{
+    UNIMPLEMENTED();
+    return false;
+}
+
+bool ValidateProgramUniformMatrix3fvEXT(const Context *context,
+                                        ShaderProgramID programPacked,
+                                        UniformLocation locationPacked,
+                                        GLsizei count,
+                                        GLboolean transpose,
+                                        const GLfloat *value)
+{
+    UNIMPLEMENTED();
+    return false;
+}
+
+bool ValidateProgramUniformMatrix3x2fvEXT(const Context *context,
+                                          ShaderProgramID programPacked,
+                                          UniformLocation locationPacked,
+                                          GLsizei count,
+                                          GLboolean transpose,
+                                          const GLfloat *value)
+{
+    UNIMPLEMENTED();
+    return false;
+}
+
+bool ValidateProgramUniformMatrix3x4fvEXT(const Context *context,
+                                          ShaderProgramID programPacked,
+                                          UniformLocation locationPacked,
+                                          GLsizei count,
+                                          GLboolean transpose,
+                                          const GLfloat *value)
+{
+    UNIMPLEMENTED();
+    return false;
+}
+
+bool ValidateProgramUniformMatrix4fvEXT(const Context *context,
+                                        ShaderProgramID programPacked,
+                                        UniformLocation locationPacked,
+                                        GLsizei count,
+                                        GLboolean transpose,
+                                        const GLfloat *value)
+{
+    UNIMPLEMENTED();
+    return false;
+}
+
+bool ValidateProgramUniformMatrix4x2fvEXT(const Context *context,
+                                          ShaderProgramID programPacked,
+                                          UniformLocation locationPacked,
+                                          GLsizei count,
+                                          GLboolean transpose,
+                                          const GLfloat *value)
+{
+    UNIMPLEMENTED();
+    return false;
+}
+
+bool ValidateProgramUniformMatrix4x3fvEXT(const Context *context,
+                                          ShaderProgramID programPacked,
+                                          UniformLocation locationPacked,
+                                          GLsizei count,
+                                          GLboolean transpose,
+                                          const GLfloat *value)
+{
+    UNIMPLEMENTED();
+    return false;
+}
+
+bool ValidateUseProgramStagesEXT(const Context *context,
+                                 ProgramPipelineID pipelinePacked,
+                                 GLbitfield stages,
+                                 ShaderProgramID programPacked)
+{
+    UNIMPLEMENTED();
+    return false;
+}
+
+bool ValidateValidateProgramPipelineEXT(const Context *context, ProgramPipelineID pipelinePacked)
+{
+    UNIMPLEMENTED();
+    return false;
+}
 }  // namespace gl

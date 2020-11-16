@@ -22,6 +22,8 @@ const char *GetEntryPointName(EntryPoint ep)
             return "glAccum";
         case EntryPoint::ActiveShaderProgram:
             return "glActiveShaderProgram";
+        case EntryPoint::ActiveShaderProgramEXT:
+            return "glActiveShaderProgramEXT";
         case EntryPoint::ActiveTexture:
             return "glActiveTexture";
         case EntryPoint::AlphaFunc:
@@ -76,6 +78,8 @@ const char *GetEntryPointName(EntryPoint ep)
             return "glBindImageTextures";
         case EntryPoint::BindProgramPipeline:
             return "glBindProgramPipeline";
+        case EntryPoint::BindProgramPipelineEXT:
+            return "glBindProgramPipelineEXT";
         case EntryPoint::BindRenderbuffer:
             return "glBindRenderbuffer";
         case EntryPoint::BindRenderbufferOES:
@@ -408,6 +412,8 @@ const char *GetEntryPointName(EntryPoint ep)
             return "glCreateShader";
         case EntryPoint::CreateShaderProgramv:
             return "glCreateShaderProgramv";
+        case EntryPoint::CreateShaderProgramvEXT:
+            return "glCreateShaderProgramvEXT";
         case EntryPoint::CreateTextures:
             return "glCreateTextures";
         case EntryPoint::CreateTransformFeedbacks:
@@ -446,6 +452,8 @@ const char *GetEntryPointName(EntryPoint ep)
             return "glDeleteProgram";
         case EntryPoint::DeleteProgramPipelines:
             return "glDeleteProgramPipelines";
+        case EntryPoint::DeleteProgramPipelinesEXT:
+            return "glDeleteProgramPipelinesEXT";
         case EntryPoint::DeleteQueries:
             return "glDeleteQueries";
         case EntryPoint::DeleteQueriesEXT:
@@ -736,6 +744,8 @@ const char *GetEntryPointName(EntryPoint ep)
             return "glGenLists";
         case EntryPoint::GenProgramPipelines:
             return "glGenProgramPipelines";
+        case EntryPoint::GenProgramPipelinesEXT:
+            return "glGenProgramPipelinesEXT";
         case EntryPoint::GenQueries:
             return "glGenQueries";
         case EntryPoint::GenQueriesEXT:
@@ -962,8 +972,12 @@ const char *GetEntryPointName(EntryPoint ep)
             return "glGetProgramInterfaceivRobustANGLE";
         case EntryPoint::GetProgramPipelineInfoLog:
             return "glGetProgramPipelineInfoLog";
+        case EntryPoint::GetProgramPipelineInfoLogEXT:
+            return "glGetProgramPipelineInfoLogEXT";
         case EntryPoint::GetProgramPipelineiv:
             return "glGetProgramPipelineiv";
+        case EntryPoint::GetProgramPipelineivEXT:
+            return "glGetProgramPipelineivEXT";
         case EntryPoint::GetProgramResourceIndex:
             return "glGetProgramResourceIndex";
         case EntryPoint::GetProgramResourceLocation:
@@ -1340,6 +1354,8 @@ const char *GetEntryPointName(EntryPoint ep)
             return "glIsProgram";
         case EntryPoint::IsProgramPipeline:
             return "glIsProgramPipeline";
+        case EntryPoint::IsProgramPipelineEXT:
+            return "glIsProgramPipelineEXT";
         case EntryPoint::IsQuery:
             return "glIsQuery";
         case EntryPoint::IsQueryEXT:
@@ -1742,106 +1758,174 @@ const char *GetEntryPointName(EntryPoint ep)
             return "glProgramBinaryOES";
         case EntryPoint::ProgramParameteri:
             return "glProgramParameteri";
+        case EntryPoint::ProgramParameteriEXT:
+            return "glProgramParameteriEXT";
         case EntryPoint::ProgramUniform1d:
             return "glProgramUniform1d";
         case EntryPoint::ProgramUniform1dv:
             return "glProgramUniform1dv";
         case EntryPoint::ProgramUniform1f:
             return "glProgramUniform1f";
+        case EntryPoint::ProgramUniform1fEXT:
+            return "glProgramUniform1fEXT";
         case EntryPoint::ProgramUniform1fv:
             return "glProgramUniform1fv";
+        case EntryPoint::ProgramUniform1fvEXT:
+            return "glProgramUniform1fvEXT";
         case EntryPoint::ProgramUniform1i:
             return "glProgramUniform1i";
+        case EntryPoint::ProgramUniform1iEXT:
+            return "glProgramUniform1iEXT";
         case EntryPoint::ProgramUniform1iv:
             return "glProgramUniform1iv";
+        case EntryPoint::ProgramUniform1ivEXT:
+            return "glProgramUniform1ivEXT";
         case EntryPoint::ProgramUniform1ui:
             return "glProgramUniform1ui";
+        case EntryPoint::ProgramUniform1uiEXT:
+            return "glProgramUniform1uiEXT";
         case EntryPoint::ProgramUniform1uiv:
             return "glProgramUniform1uiv";
+        case EntryPoint::ProgramUniform1uivEXT:
+            return "glProgramUniform1uivEXT";
         case EntryPoint::ProgramUniform2d:
             return "glProgramUniform2d";
         case EntryPoint::ProgramUniform2dv:
             return "glProgramUniform2dv";
         case EntryPoint::ProgramUniform2f:
             return "glProgramUniform2f";
+        case EntryPoint::ProgramUniform2fEXT:
+            return "glProgramUniform2fEXT";
         case EntryPoint::ProgramUniform2fv:
             return "glProgramUniform2fv";
+        case EntryPoint::ProgramUniform2fvEXT:
+            return "glProgramUniform2fvEXT";
         case EntryPoint::ProgramUniform2i:
             return "glProgramUniform2i";
+        case EntryPoint::ProgramUniform2iEXT:
+            return "glProgramUniform2iEXT";
         case EntryPoint::ProgramUniform2iv:
             return "glProgramUniform2iv";
+        case EntryPoint::ProgramUniform2ivEXT:
+            return "glProgramUniform2ivEXT";
         case EntryPoint::ProgramUniform2ui:
             return "glProgramUniform2ui";
+        case EntryPoint::ProgramUniform2uiEXT:
+            return "glProgramUniform2uiEXT";
         case EntryPoint::ProgramUniform2uiv:
             return "glProgramUniform2uiv";
+        case EntryPoint::ProgramUniform2uivEXT:
+            return "glProgramUniform2uivEXT";
         case EntryPoint::ProgramUniform3d:
             return "glProgramUniform3d";
         case EntryPoint::ProgramUniform3dv:
             return "glProgramUniform3dv";
         case EntryPoint::ProgramUniform3f:
             return "glProgramUniform3f";
+        case EntryPoint::ProgramUniform3fEXT:
+            return "glProgramUniform3fEXT";
         case EntryPoint::ProgramUniform3fv:
             return "glProgramUniform3fv";
+        case EntryPoint::ProgramUniform3fvEXT:
+            return "glProgramUniform3fvEXT";
         case EntryPoint::ProgramUniform3i:
             return "glProgramUniform3i";
+        case EntryPoint::ProgramUniform3iEXT:
+            return "glProgramUniform3iEXT";
         case EntryPoint::ProgramUniform3iv:
             return "glProgramUniform3iv";
+        case EntryPoint::ProgramUniform3ivEXT:
+            return "glProgramUniform3ivEXT";
         case EntryPoint::ProgramUniform3ui:
             return "glProgramUniform3ui";
+        case EntryPoint::ProgramUniform3uiEXT:
+            return "glProgramUniform3uiEXT";
         case EntryPoint::ProgramUniform3uiv:
             return "glProgramUniform3uiv";
+        case EntryPoint::ProgramUniform3uivEXT:
+            return "glProgramUniform3uivEXT";
         case EntryPoint::ProgramUniform4d:
             return "glProgramUniform4d";
         case EntryPoint::ProgramUniform4dv:
             return "glProgramUniform4dv";
         case EntryPoint::ProgramUniform4f:
             return "glProgramUniform4f";
+        case EntryPoint::ProgramUniform4fEXT:
+            return "glProgramUniform4fEXT";
         case EntryPoint::ProgramUniform4fv:
             return "glProgramUniform4fv";
+        case EntryPoint::ProgramUniform4fvEXT:
+            return "glProgramUniform4fvEXT";
         case EntryPoint::ProgramUniform4i:
             return "glProgramUniform4i";
+        case EntryPoint::ProgramUniform4iEXT:
+            return "glProgramUniform4iEXT";
         case EntryPoint::ProgramUniform4iv:
             return "glProgramUniform4iv";
+        case EntryPoint::ProgramUniform4ivEXT:
+            return "glProgramUniform4ivEXT";
         case EntryPoint::ProgramUniform4ui:
             return "glProgramUniform4ui";
+        case EntryPoint::ProgramUniform4uiEXT:
+            return "glProgramUniform4uiEXT";
         case EntryPoint::ProgramUniform4uiv:
             return "glProgramUniform4uiv";
+        case EntryPoint::ProgramUniform4uivEXT:
+            return "glProgramUniform4uivEXT";
         case EntryPoint::ProgramUniformMatrix2dv:
             return "glProgramUniformMatrix2dv";
         case EntryPoint::ProgramUniformMatrix2fv:
             return "glProgramUniformMatrix2fv";
+        case EntryPoint::ProgramUniformMatrix2fvEXT:
+            return "glProgramUniformMatrix2fvEXT";
         case EntryPoint::ProgramUniformMatrix2x3dv:
             return "glProgramUniformMatrix2x3dv";
         case EntryPoint::ProgramUniformMatrix2x3fv:
             return "glProgramUniformMatrix2x3fv";
+        case EntryPoint::ProgramUniformMatrix2x3fvEXT:
+            return "glProgramUniformMatrix2x3fvEXT";
         case EntryPoint::ProgramUniformMatrix2x4dv:
             return "glProgramUniformMatrix2x4dv";
         case EntryPoint::ProgramUniformMatrix2x4fv:
             return "glProgramUniformMatrix2x4fv";
+        case EntryPoint::ProgramUniformMatrix2x4fvEXT:
+            return "glProgramUniformMatrix2x4fvEXT";
         case EntryPoint::ProgramUniformMatrix3dv:
             return "glProgramUniformMatrix3dv";
         case EntryPoint::ProgramUniformMatrix3fv:
             return "glProgramUniformMatrix3fv";
+        case EntryPoint::ProgramUniformMatrix3fvEXT:
+            return "glProgramUniformMatrix3fvEXT";
         case EntryPoint::ProgramUniformMatrix3x2dv:
             return "glProgramUniformMatrix3x2dv";
         case EntryPoint::ProgramUniformMatrix3x2fv:
             return "glProgramUniformMatrix3x2fv";
+        case EntryPoint::ProgramUniformMatrix3x2fvEXT:
+            return "glProgramUniformMatrix3x2fvEXT";
         case EntryPoint::ProgramUniformMatrix3x4dv:
             return "glProgramUniformMatrix3x4dv";
         case EntryPoint::ProgramUniformMatrix3x4fv:
             return "glProgramUniformMatrix3x4fv";
+        case EntryPoint::ProgramUniformMatrix3x4fvEXT:
+            return "glProgramUniformMatrix3x4fvEXT";
         case EntryPoint::ProgramUniformMatrix4dv:
             return "glProgramUniformMatrix4dv";
         case EntryPoint::ProgramUniformMatrix4fv:
             return "glProgramUniformMatrix4fv";
+        case EntryPoint::ProgramUniformMatrix4fvEXT:
+            return "glProgramUniformMatrix4fvEXT";
         case EntryPoint::ProgramUniformMatrix4x2dv:
             return "glProgramUniformMatrix4x2dv";
         case EntryPoint::ProgramUniformMatrix4x2fv:
             return "glProgramUniformMatrix4x2fv";
+        case EntryPoint::ProgramUniformMatrix4x2fvEXT:
+            return "glProgramUniformMatrix4x2fvEXT";
         case EntryPoint::ProgramUniformMatrix4x3dv:
             return "glProgramUniformMatrix4x3dv";
         case EntryPoint::ProgramUniformMatrix4x3fv:
             return "glProgramUniformMatrix4x3fv";
+        case EntryPoint::ProgramUniformMatrix4x3fvEXT:
+            return "glProgramUniformMatrix4x3fvEXT";
         case EntryPoint::ProvokingVertex:
             return "glProvokingVertex";
         case EntryPoint::ProvokingVertexANGLE:
@@ -2468,10 +2552,14 @@ const char *GetEntryPointName(EntryPoint ep)
             return "glUseProgram";
         case EntryPoint::UseProgramStages:
             return "glUseProgramStages";
+        case EntryPoint::UseProgramStagesEXT:
+            return "glUseProgramStagesEXT";
         case EntryPoint::ValidateProgram:
             return "glValidateProgram";
         case EntryPoint::ValidateProgramPipeline:
             return "glValidateProgramPipeline";
+        case EntryPoint::ValidateProgramPipelineEXT:
+            return "glValidateProgramPipelineEXT";
         case EntryPoint::Vertex2d:
             return "glVertex2d";
         case EntryPoint::Vertex2dv:

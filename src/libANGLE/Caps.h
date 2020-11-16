@@ -571,6 +571,9 @@ struct Extensions
     // GL_KHR_parallel_shader_compile
     bool parallelShaderCompile = false;
 
+    // GL_EXT_separate_shader_objects
+    bool separateShaderObjects = false;
+
     // GL_OES_texture_storage_multisample_2d_array
     bool textureStorageMultisample2DArrayOES = false;
 

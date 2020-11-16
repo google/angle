@@ -3332,4 +3332,305 @@ void CaptureBufferStorageEXT_data(const State &glState,
 {
     UNIMPLEMENTED();
 }
+
+// GL_EXT_separate_shader_objects
+void CaptureCreateShaderProgramvEXT_strings(const State &glState,
+                                            bool isCallValid,
+                                            ShaderType typePacked,
+                                            GLsizei count,
+                                            const GLchar **strings,
+                                            angle::ParamCapture *paramCapture)
+{
+    UNIMPLEMENTED();
+}
+
+void CaptureDeleteProgramPipelinesEXT_pipelinesPacked(const State &glState,
+                                                      bool isCallValid,
+                                                      GLsizei n,
+                                                      const ProgramPipelineID *pipelinesPacked,
+                                                      angle::ParamCapture *paramCapture)
+{
+    UNIMPLEMENTED();
+}
+
+void CaptureGenProgramPipelinesEXT_pipelinesPacked(const State &glState,
+                                                   bool isCallValid,
+                                                   GLsizei n,
+                                                   ProgramPipelineID *pipelinesPacked,
+                                                   angle::ParamCapture *paramCapture)
+{
+    UNIMPLEMENTED();
+}
+
+void CaptureGetProgramPipelineInfoLogEXT_length(const State &glState,
+                                                bool isCallValid,
+                                                ProgramPipelineID pipelinePacked,
+                                                GLsizei bufSize,
+                                                GLsizei *length,
+                                                GLchar *infoLog,
+                                                angle::ParamCapture *paramCapture)
+{
+    UNIMPLEMENTED();
+}
+
+void CaptureGetProgramPipelineInfoLogEXT_infoLog(const State &glState,
+                                                 bool isCallValid,
+                                                 ProgramPipelineID pipelinePacked,
+                                                 GLsizei bufSize,
+                                                 GLsizei *length,
+                                                 GLchar *infoLog,
+                                                 angle::ParamCapture *paramCapture)
+{
+    UNIMPLEMENTED();
+}
+
+void CaptureGetProgramPipelineivEXT_params(const State &glState,
+                                           bool isCallValid,
+                                           ProgramPipelineID pipelinePacked,
+                                           GLenum pname,
+                                           GLint *params,
+                                           angle::ParamCapture *paramCapture)
+{
+    UNIMPLEMENTED();
+}
+
+void CaptureProgramUniform1fvEXT_value(const State &glState,
+                                       bool isCallValid,
+                                       ShaderProgramID programPacked,
+                                       UniformLocation locationPacked,
+                                       GLsizei count,
+                                       const GLfloat *value,
+                                       angle::ParamCapture *paramCapture)
+{
+    UNIMPLEMENTED();
+}
+
+void CaptureProgramUniform1ivEXT_value(const State &glState,
+                                       bool isCallValid,
+                                       ShaderProgramID programPacked,
+                                       UniformLocation locationPacked,
+                                       GLsizei count,
+                                       const GLint *value,
+                                       angle::ParamCapture *paramCapture)
+{
+    UNIMPLEMENTED();
+}
+
+void CaptureProgramUniform1uivEXT_value(const State &glState,
+                                        bool isCallValid,
+                                        ShaderProgramID programPacked,
+                                        UniformLocation locationPacked,
+                                        GLsizei count,
+                                        const GLuint *value,
+                                        angle::ParamCapture *paramCapture)
+{
+    UNIMPLEMENTED();
+}
+
+void CaptureProgramUniform2fvEXT_value(const State &glState,
+                                       bool isCallValid,
+                                       ShaderProgramID programPacked,
+                                       UniformLocation locationPacked,
+                                       GLsizei count,
+                                       const GLfloat *value,
+                                       angle::ParamCapture *paramCapture)
+{
+    UNIMPLEMENTED();
+}
+
+void CaptureProgramUniform2ivEXT_value(const State &glState,
+                                       bool isCallValid,
+                                       ShaderProgramID programPacked,
+                                       UniformLocation locationPacked,
+                                       GLsizei count,
+                                       const GLint *value,
+                                       angle::ParamCapture *paramCapture)
+{
+    UNIMPLEMENTED();
+}
+
+void CaptureProgramUniform2uivEXT_value(const State &glState,
+                                        bool isCallValid,
+                                        ShaderProgramID programPacked,
+                                        UniformLocation locationPacked,
+                                        GLsizei count,
+                                        const GLuint *value,
+                                        angle::ParamCapture *paramCapture)
+{
+    UNIMPLEMENTED();
+}
+
+void CaptureProgramUniform3fvEXT_value(const State &glState,
+                                       bool isCallValid,
+                                       ShaderProgramID programPacked,
+                                       UniformLocation locationPacked,
+                                       GLsizei count,
+                                       const GLfloat *value,
+                                       angle::ParamCapture *paramCapture)
+{
+    UNIMPLEMENTED();
+}
+
+void CaptureProgramUniform3ivEXT_value(const State &glState,
+                                       bool isCallValid,
+                                       ShaderProgramID programPacked,
+                                       UniformLocation locationPacked,
+                                       GLsizei count,
+                                       const GLint *value,
+                                       angle::ParamCapture *paramCapture)
+{
+    UNIMPLEMENTED();
+}
+
+void CaptureProgramUniform3uivEXT_value(const State &glState,
+                                        bool isCallValid,
+                                        ShaderProgramID programPacked,
+                                        UniformLocation locationPacked,
+                                        GLsizei count,
+                                        const GLuint *value,
+                                        angle::ParamCapture *paramCapture)
+{
+    UNIMPLEMENTED();
+}
+
+void CaptureProgramUniform4fvEXT_value(const State &glState,
+                                       bool isCallValid,
+                                       ShaderProgramID programPacked,
+                                       UniformLocation locationPacked,
+                                       GLsizei count,
+                                       const GLfloat *value,
+                                       angle::ParamCapture *paramCapture)
+{
+    UNIMPLEMENTED();
+}
+
+void CaptureProgramUniform4ivEXT_value(const State &glState,
+                                       bool isCallValid,
+                                       ShaderProgramID programPacked,
+                                       UniformLocation locationPacked,
+                                       GLsizei count,
+                                       const GLint *value,
+                                       angle::ParamCapture *paramCapture)
+{
+    UNIMPLEMENTED();
+}
+
+void CaptureProgramUniform4uivEXT_value(const State &glState,
+                                        bool isCallValid,
+                                        ShaderProgramID programPacked,
+                                        UniformLocation locationPacked,
+                                        GLsizei count,
+                                        const GLuint *value,
+                                        angle::ParamCapture *paramCapture)
+{
+    UNIMPLEMENTED();
+}
+
+void CaptureProgramUniformMatrix2fvEXT_value(const State &glState,
+                                             bool isCallValid,
+                                             ShaderProgramID programPacked,
+                                             UniformLocation locationPacked,
+                                             GLsizei count,
+                                             GLboolean transpose,
+                                             const GLfloat *value,
+                                             angle::ParamCapture *paramCapture)
+{
+    UNIMPLEMENTED();
+}
+
+void CaptureProgramUniformMatrix2x3fvEXT_value(const State &glState,
+                                               bool isCallValid,
+                                               ShaderProgramID programPacked,
+                                               UniformLocation locationPacked,
+                                               GLsizei count,
+                                               GLboolean transpose,
+                                               const GLfloat *value,
+                                               angle::ParamCapture *paramCapture)
+{
+    UNIMPLEMENTED();
+}
+
+void CaptureProgramUniformMatrix2x4fvEXT_value(const State &glState,
+                                               bool isCallValid,
+                                               ShaderProgramID programPacked,
+                                               UniformLocation locationPacked,
+                                               GLsizei count,
+                                               GLboolean transpose,
+                                               const GLfloat *value,
+                                               angle::ParamCapture *paramCapture)
+{
+    UNIMPLEMENTED();
+}
+
+void CaptureProgramUniformMatrix3fvEXT_value(const State &glState,
+                                             bool isCallValid,
+                                             ShaderProgramID programPacked,
+                                             UniformLocation locationPacked,
+                                             GLsizei count,
+                                             GLboolean transpose,
+                                             const GLfloat *value,
+                                             angle::ParamCapture *paramCapture)
+{
+    UNIMPLEMENTED();
+}
+
+void CaptureProgramUniformMatrix3x2fvEXT_value(const State &glState,
+                                               bool isCallValid,
+                                               ShaderProgramID programPacked,
+                                               UniformLocation locationPacked,
+                                               GLsizei count,
+                                               GLboolean transpose,
+                                               const GLfloat *value,
+                                               angle::ParamCapture *paramCapture)
+{
+    UNIMPLEMENTED();
+}
+
+void CaptureProgramUniformMatrix3x4fvEXT_value(const State &glState,
+                                               bool isCallValid,
+                                               ShaderProgramID programPacked,
+                                               UniformLocation locationPacked,
+                                               GLsizei count,
+                                               GLboolean transpose,
+                                               const GLfloat *value,
+                                               angle::ParamCapture *paramCapture)
+{
+    UNIMPLEMENTED();
+}
+
+void CaptureProgramUniformMatrix4fvEXT_value(const State &glState,
+                                             bool isCallValid,
+                                             ShaderProgramID programPacked,
+                                             UniformLocation locationPacked,
+                                             GLsizei count,
+                                             GLboolean transpose,
+                                             const GLfloat *value,
+                                             angle::ParamCapture *paramCapture)
+{
+    UNIMPLEMENTED();
+}
+
+void CaptureProgramUniformMatrix4x2fvEXT_value(const State &glState,
+                                               bool isCallValid,
+                                               ShaderProgramID programPacked,
+                                               UniformLocation locationPacked,
+                                               GLsizei count,
+                                               GLboolean transpose,
+                                               const GLfloat *value,
+                                               angle::ParamCapture *paramCapture)
+{
+    UNIMPLEMENTED();
+}
+
+void CaptureProgramUniformMatrix4x3fvEXT_value(const State &glState,
+                                               bool isCallValid,
+                                               ShaderProgramID programPacked,
+                                               UniformLocation locationPacked,
+                                               GLsizei count,
+                                               GLboolean transpose,
+                                               const GLfloat *value,
+                                               angle::ParamCapture *paramCapture)
+{
+    UNIMPLEMENTED();
+}
 }  // namespace gl

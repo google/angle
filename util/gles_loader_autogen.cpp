@@ -603,6 +603,50 @@ ANGLE_UTIL_EXPORT PFNGLSEMAPHOREPARAMETERUI64VEXTPROC l_glSemaphoreParameterui64
 ANGLE_UTIL_EXPORT PFNGLSIGNALSEMAPHOREEXTPROC l_glSignalSemaphoreEXT;
 ANGLE_UTIL_EXPORT PFNGLWAITSEMAPHOREEXTPROC l_glWaitSemaphoreEXT;
 ANGLE_UTIL_EXPORT PFNGLIMPORTSEMAPHOREFDEXTPROC l_glImportSemaphoreFdEXT;
+ANGLE_UTIL_EXPORT PFNGLACTIVESHADERPROGRAMEXTPROC l_glActiveShaderProgramEXT;
+ANGLE_UTIL_EXPORT PFNGLBINDPROGRAMPIPELINEEXTPROC l_glBindProgramPipelineEXT;
+ANGLE_UTIL_EXPORT PFNGLCREATESHADERPROGRAMVEXTPROC l_glCreateShaderProgramvEXT;
+ANGLE_UTIL_EXPORT PFNGLDELETEPROGRAMPIPELINESEXTPROC l_glDeleteProgramPipelinesEXT;
+ANGLE_UTIL_EXPORT PFNGLGENPROGRAMPIPELINESEXTPROC l_glGenProgramPipelinesEXT;
+ANGLE_UTIL_EXPORT PFNGLGETPROGRAMPIPELINEINFOLOGEXTPROC l_glGetProgramPipelineInfoLogEXT;
+ANGLE_UTIL_EXPORT PFNGLGETPROGRAMPIPELINEIVEXTPROC l_glGetProgramPipelineivEXT;
+ANGLE_UTIL_EXPORT PFNGLISPROGRAMPIPELINEEXTPROC l_glIsProgramPipelineEXT;
+ANGLE_UTIL_EXPORT PFNGLPROGRAMPARAMETERIEXTPROC l_glProgramParameteriEXT;
+ANGLE_UTIL_EXPORT PFNGLPROGRAMUNIFORM1FEXTPROC l_glProgramUniform1fEXT;
+ANGLE_UTIL_EXPORT PFNGLPROGRAMUNIFORM1FVEXTPROC l_glProgramUniform1fvEXT;
+ANGLE_UTIL_EXPORT PFNGLPROGRAMUNIFORM1IEXTPROC l_glProgramUniform1iEXT;
+ANGLE_UTIL_EXPORT PFNGLPROGRAMUNIFORM1IVEXTPROC l_glProgramUniform1ivEXT;
+ANGLE_UTIL_EXPORT PFNGLPROGRAMUNIFORM1UIEXTPROC l_glProgramUniform1uiEXT;
+ANGLE_UTIL_EXPORT PFNGLPROGRAMUNIFORM1UIVEXTPROC l_glProgramUniform1uivEXT;
+ANGLE_UTIL_EXPORT PFNGLPROGRAMUNIFORM2FEXTPROC l_glProgramUniform2fEXT;
+ANGLE_UTIL_EXPORT PFNGLPROGRAMUNIFORM2FVEXTPROC l_glProgramUniform2fvEXT;
+ANGLE_UTIL_EXPORT PFNGLPROGRAMUNIFORM2IEXTPROC l_glProgramUniform2iEXT;
+ANGLE_UTIL_EXPORT PFNGLPROGRAMUNIFORM2IVEXTPROC l_glProgramUniform2ivEXT;
+ANGLE_UTIL_EXPORT PFNGLPROGRAMUNIFORM2UIEXTPROC l_glProgramUniform2uiEXT;
+ANGLE_UTIL_EXPORT PFNGLPROGRAMUNIFORM2UIVEXTPROC l_glProgramUniform2uivEXT;
+ANGLE_UTIL_EXPORT PFNGLPROGRAMUNIFORM3FEXTPROC l_glProgramUniform3fEXT;
+ANGLE_UTIL_EXPORT PFNGLPROGRAMUNIFORM3FVEXTPROC l_glProgramUniform3fvEXT;
+ANGLE_UTIL_EXPORT PFNGLPROGRAMUNIFORM3IEXTPROC l_glProgramUniform3iEXT;
+ANGLE_UTIL_EXPORT PFNGLPROGRAMUNIFORM3IVEXTPROC l_glProgramUniform3ivEXT;
+ANGLE_UTIL_EXPORT PFNGLPROGRAMUNIFORM3UIEXTPROC l_glProgramUniform3uiEXT;
+ANGLE_UTIL_EXPORT PFNGLPROGRAMUNIFORM3UIVEXTPROC l_glProgramUniform3uivEXT;
+ANGLE_UTIL_EXPORT PFNGLPROGRAMUNIFORM4FEXTPROC l_glProgramUniform4fEXT;
+ANGLE_UTIL_EXPORT PFNGLPROGRAMUNIFORM4FVEXTPROC l_glProgramUniform4fvEXT;
+ANGLE_UTIL_EXPORT PFNGLPROGRAMUNIFORM4IEXTPROC l_glProgramUniform4iEXT;
+ANGLE_UTIL_EXPORT PFNGLPROGRAMUNIFORM4IVEXTPROC l_glProgramUniform4ivEXT;
+ANGLE_UTIL_EXPORT PFNGLPROGRAMUNIFORM4UIEXTPROC l_glProgramUniform4uiEXT;
+ANGLE_UTIL_EXPORT PFNGLPROGRAMUNIFORM4UIVEXTPROC l_glProgramUniform4uivEXT;
+ANGLE_UTIL_EXPORT PFNGLPROGRAMUNIFORMMATRIX2FVEXTPROC l_glProgramUniformMatrix2fvEXT;
+ANGLE_UTIL_EXPORT PFNGLPROGRAMUNIFORMMATRIX2X3FVEXTPROC l_glProgramUniformMatrix2x3fvEXT;
+ANGLE_UTIL_EXPORT PFNGLPROGRAMUNIFORMMATRIX2X4FVEXTPROC l_glProgramUniformMatrix2x4fvEXT;
+ANGLE_UTIL_EXPORT PFNGLPROGRAMUNIFORMMATRIX3FVEXTPROC l_glProgramUniformMatrix3fvEXT;
+ANGLE_UTIL_EXPORT PFNGLPROGRAMUNIFORMMATRIX3X2FVEXTPROC l_glProgramUniformMatrix3x2fvEXT;
+ANGLE_UTIL_EXPORT PFNGLPROGRAMUNIFORMMATRIX3X4FVEXTPROC l_glProgramUniformMatrix3x4fvEXT;
+ANGLE_UTIL_EXPORT PFNGLPROGRAMUNIFORMMATRIX4FVEXTPROC l_glProgramUniformMatrix4fvEXT;
+ANGLE_UTIL_EXPORT PFNGLPROGRAMUNIFORMMATRIX4X2FVEXTPROC l_glProgramUniformMatrix4x2fvEXT;
+ANGLE_UTIL_EXPORT PFNGLPROGRAMUNIFORMMATRIX4X3FVEXTPROC l_glProgramUniformMatrix4x3fvEXT;
+ANGLE_UTIL_EXPORT PFNGLUSEPROGRAMSTAGESEXTPROC l_glUseProgramStagesEXT;
+ANGLE_UTIL_EXPORT PFNGLVALIDATEPROGRAMPIPELINEEXTPROC l_glValidateProgramPipelineEXT;
 ANGLE_UTIL_EXPORT PFNGLTEXBUFFEREXTPROC l_glTexBufferEXT;
 ANGLE_UTIL_EXPORT PFNGLTEXBUFFERRANGEEXTPROC l_glTexBufferRangeEXT;
 ANGLE_UTIL_EXPORT PFNGLTEXSTORAGE1DEXTPROC l_glTexStorage1DEXT;
@@ -1440,6 +1484,67 @@ ANGLE_UTIL_EXPORT PFNGLSEMAPHOREPARAMETERUI64VEXTCONTEXTANGLEPROC
 ANGLE_UTIL_EXPORT PFNGLSIGNALSEMAPHOREEXTCONTEXTANGLEPROC l_glSignalSemaphoreEXTContextANGLE;
 ANGLE_UTIL_EXPORT PFNGLWAITSEMAPHOREEXTCONTEXTANGLEPROC l_glWaitSemaphoreEXTContextANGLE;
 ANGLE_UTIL_EXPORT PFNGLIMPORTSEMAPHOREFDEXTCONTEXTANGLEPROC l_glImportSemaphoreFdEXTContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLACTIVESHADERPROGRAMEXTCONTEXTANGLEPROC
+    l_glActiveShaderProgramEXTContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLBINDPROGRAMPIPELINEEXTCONTEXTANGLEPROC
+    l_glBindProgramPipelineEXTContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLCREATESHADERPROGRAMVEXTCONTEXTANGLEPROC
+    l_glCreateShaderProgramvEXTContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLDELETEPROGRAMPIPELINESEXTCONTEXTANGLEPROC
+    l_glDeleteProgramPipelinesEXTContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLGENPROGRAMPIPELINESEXTCONTEXTANGLEPROC
+    l_glGenProgramPipelinesEXTContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLGETPROGRAMPIPELINEINFOLOGEXTCONTEXTANGLEPROC
+    l_glGetProgramPipelineInfoLogEXTContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLGETPROGRAMPIPELINEIVEXTCONTEXTANGLEPROC
+    l_glGetProgramPipelineivEXTContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLISPROGRAMPIPELINEEXTCONTEXTANGLEPROC l_glIsProgramPipelineEXTContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLPROGRAMPARAMETERIEXTCONTEXTANGLEPROC l_glProgramParameteriEXTContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLPROGRAMUNIFORM1FEXTCONTEXTANGLEPROC l_glProgramUniform1fEXTContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLPROGRAMUNIFORM1FVEXTCONTEXTANGLEPROC l_glProgramUniform1fvEXTContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLPROGRAMUNIFORM1IEXTCONTEXTANGLEPROC l_glProgramUniform1iEXTContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLPROGRAMUNIFORM1IVEXTCONTEXTANGLEPROC l_glProgramUniform1ivEXTContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLPROGRAMUNIFORM1UIEXTCONTEXTANGLEPROC l_glProgramUniform1uiEXTContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLPROGRAMUNIFORM1UIVEXTCONTEXTANGLEPROC l_glProgramUniform1uivEXTContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLPROGRAMUNIFORM2FEXTCONTEXTANGLEPROC l_glProgramUniform2fEXTContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLPROGRAMUNIFORM2FVEXTCONTEXTANGLEPROC l_glProgramUniform2fvEXTContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLPROGRAMUNIFORM2IEXTCONTEXTANGLEPROC l_glProgramUniform2iEXTContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLPROGRAMUNIFORM2IVEXTCONTEXTANGLEPROC l_glProgramUniform2ivEXTContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLPROGRAMUNIFORM2UIEXTCONTEXTANGLEPROC l_glProgramUniform2uiEXTContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLPROGRAMUNIFORM2UIVEXTCONTEXTANGLEPROC l_glProgramUniform2uivEXTContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLPROGRAMUNIFORM3FEXTCONTEXTANGLEPROC l_glProgramUniform3fEXTContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLPROGRAMUNIFORM3FVEXTCONTEXTANGLEPROC l_glProgramUniform3fvEXTContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLPROGRAMUNIFORM3IEXTCONTEXTANGLEPROC l_glProgramUniform3iEXTContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLPROGRAMUNIFORM3IVEXTCONTEXTANGLEPROC l_glProgramUniform3ivEXTContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLPROGRAMUNIFORM3UIEXTCONTEXTANGLEPROC l_glProgramUniform3uiEXTContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLPROGRAMUNIFORM3UIVEXTCONTEXTANGLEPROC l_glProgramUniform3uivEXTContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLPROGRAMUNIFORM4FEXTCONTEXTANGLEPROC l_glProgramUniform4fEXTContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLPROGRAMUNIFORM4FVEXTCONTEXTANGLEPROC l_glProgramUniform4fvEXTContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLPROGRAMUNIFORM4IEXTCONTEXTANGLEPROC l_glProgramUniform4iEXTContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLPROGRAMUNIFORM4IVEXTCONTEXTANGLEPROC l_glProgramUniform4ivEXTContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLPROGRAMUNIFORM4UIEXTCONTEXTANGLEPROC l_glProgramUniform4uiEXTContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLPROGRAMUNIFORM4UIVEXTCONTEXTANGLEPROC l_glProgramUniform4uivEXTContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLPROGRAMUNIFORMMATRIX2FVEXTCONTEXTANGLEPROC
+    l_glProgramUniformMatrix2fvEXTContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLPROGRAMUNIFORMMATRIX2X3FVEXTCONTEXTANGLEPROC
+    l_glProgramUniformMatrix2x3fvEXTContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLPROGRAMUNIFORMMATRIX2X4FVEXTCONTEXTANGLEPROC
+    l_glProgramUniformMatrix2x4fvEXTContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLPROGRAMUNIFORMMATRIX3FVEXTCONTEXTANGLEPROC
+    l_glProgramUniformMatrix3fvEXTContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLPROGRAMUNIFORMMATRIX3X2FVEXTCONTEXTANGLEPROC
+    l_glProgramUniformMatrix3x2fvEXTContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLPROGRAMUNIFORMMATRIX3X4FVEXTCONTEXTANGLEPROC
+    l_glProgramUniformMatrix3x4fvEXTContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLPROGRAMUNIFORMMATRIX4FVEXTCONTEXTANGLEPROC
+    l_glProgramUniformMatrix4fvEXTContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLPROGRAMUNIFORMMATRIX4X2FVEXTCONTEXTANGLEPROC
+    l_glProgramUniformMatrix4x2fvEXTContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLPROGRAMUNIFORMMATRIX4X3FVEXTCONTEXTANGLEPROC
+    l_glProgramUniformMatrix4x3fvEXTContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLUSEPROGRAMSTAGESEXTCONTEXTANGLEPROC l_glUseProgramStagesEXTContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLVALIDATEPROGRAMPIPELINEEXTCONTEXTANGLEPROC
+    l_glValidateProgramPipelineEXTContextANGLE;
 ANGLE_UTIL_EXPORT PFNGLTEXBUFFEREXTCONTEXTANGLEPROC l_glTexBufferEXTContextANGLE;
 ANGLE_UTIL_EXPORT PFNGLTEXBUFFERRANGEEXTCONTEXTANGLEPROC l_glTexBufferRangeEXTContextANGLE;
 ANGLE_UTIL_EXPORT PFNGLTEXSTORAGE1DEXTCONTEXTANGLEPROC l_glTexStorage1DEXTContextANGLE;
@@ -2509,6 +2614,94 @@ void LoadGLES(LoadProc loadProc)
         reinterpret_cast<PFNGLWAITSEMAPHOREEXTPROC>(loadProc("glWaitSemaphoreEXT"));
     l_glImportSemaphoreFdEXT =
         reinterpret_cast<PFNGLIMPORTSEMAPHOREFDEXTPROC>(loadProc("glImportSemaphoreFdEXT"));
+    l_glActiveShaderProgramEXT =
+        reinterpret_cast<PFNGLACTIVESHADERPROGRAMEXTPROC>(loadProc("glActiveShaderProgramEXT"));
+    l_glBindProgramPipelineEXT =
+        reinterpret_cast<PFNGLBINDPROGRAMPIPELINEEXTPROC>(loadProc("glBindProgramPipelineEXT"));
+    l_glCreateShaderProgramvEXT =
+        reinterpret_cast<PFNGLCREATESHADERPROGRAMVEXTPROC>(loadProc("glCreateShaderProgramvEXT"));
+    l_glDeleteProgramPipelinesEXT = reinterpret_cast<PFNGLDELETEPROGRAMPIPELINESEXTPROC>(
+        loadProc("glDeleteProgramPipelinesEXT"));
+    l_glGenProgramPipelinesEXT =
+        reinterpret_cast<PFNGLGENPROGRAMPIPELINESEXTPROC>(loadProc("glGenProgramPipelinesEXT"));
+    l_glGetProgramPipelineInfoLogEXT = reinterpret_cast<PFNGLGETPROGRAMPIPELINEINFOLOGEXTPROC>(
+        loadProc("glGetProgramPipelineInfoLogEXT"));
+    l_glGetProgramPipelineivEXT =
+        reinterpret_cast<PFNGLGETPROGRAMPIPELINEIVEXTPROC>(loadProc("glGetProgramPipelineivEXT"));
+    l_glIsProgramPipelineEXT =
+        reinterpret_cast<PFNGLISPROGRAMPIPELINEEXTPROC>(loadProc("glIsProgramPipelineEXT"));
+    l_glProgramParameteriEXT =
+        reinterpret_cast<PFNGLPROGRAMPARAMETERIEXTPROC>(loadProc("glProgramParameteriEXT"));
+    l_glProgramUniform1fEXT =
+        reinterpret_cast<PFNGLPROGRAMUNIFORM1FEXTPROC>(loadProc("glProgramUniform1fEXT"));
+    l_glProgramUniform1fvEXT =
+        reinterpret_cast<PFNGLPROGRAMUNIFORM1FVEXTPROC>(loadProc("glProgramUniform1fvEXT"));
+    l_glProgramUniform1iEXT =
+        reinterpret_cast<PFNGLPROGRAMUNIFORM1IEXTPROC>(loadProc("glProgramUniform1iEXT"));
+    l_glProgramUniform1ivEXT =
+        reinterpret_cast<PFNGLPROGRAMUNIFORM1IVEXTPROC>(loadProc("glProgramUniform1ivEXT"));
+    l_glProgramUniform1uiEXT =
+        reinterpret_cast<PFNGLPROGRAMUNIFORM1UIEXTPROC>(loadProc("glProgramUniform1uiEXT"));
+    l_glProgramUniform1uivEXT =
+        reinterpret_cast<PFNGLPROGRAMUNIFORM1UIVEXTPROC>(loadProc("glProgramUniform1uivEXT"));
+    l_glProgramUniform2fEXT =
+        reinterpret_cast<PFNGLPROGRAMUNIFORM2FEXTPROC>(loadProc("glProgramUniform2fEXT"));
+    l_glProgramUniform2fvEXT =
+        reinterpret_cast<PFNGLPROGRAMUNIFORM2FVEXTPROC>(loadProc("glProgramUniform2fvEXT"));
+    l_glProgramUniform2iEXT =
+        reinterpret_cast<PFNGLPROGRAMUNIFORM2IEXTPROC>(loadProc("glProgramUniform2iEXT"));
+    l_glProgramUniform2ivEXT =
+        reinterpret_cast<PFNGLPROGRAMUNIFORM2IVEXTPROC>(loadProc("glProgramUniform2ivEXT"));
+    l_glProgramUniform2uiEXT =
+        reinterpret_cast<PFNGLPROGRAMUNIFORM2UIEXTPROC>(loadProc("glProgramUniform2uiEXT"));
+    l_glProgramUniform2uivEXT =
+        reinterpret_cast<PFNGLPROGRAMUNIFORM2UIVEXTPROC>(loadProc("glProgramUniform2uivEXT"));
+    l_glProgramUniform3fEXT =
+        reinterpret_cast<PFNGLPROGRAMUNIFORM3FEXTPROC>(loadProc("glProgramUniform3fEXT"));
+    l_glProgramUniform3fvEXT =
+        reinterpret_cast<PFNGLPROGRAMUNIFORM3FVEXTPROC>(loadProc("glProgramUniform3fvEXT"));
+    l_glProgramUniform3iEXT =
+        reinterpret_cast<PFNGLPROGRAMUNIFORM3IEXTPROC>(loadProc("glProgramUniform3iEXT"));
+    l_glProgramUniform3ivEXT =
+        reinterpret_cast<PFNGLPROGRAMUNIFORM3IVEXTPROC>(loadProc("glProgramUniform3ivEXT"));
+    l_glProgramUniform3uiEXT =
+        reinterpret_cast<PFNGLPROGRAMUNIFORM3UIEXTPROC>(loadProc("glProgramUniform3uiEXT"));
+    l_glProgramUniform3uivEXT =
+        reinterpret_cast<PFNGLPROGRAMUNIFORM3UIVEXTPROC>(loadProc("glProgramUniform3uivEXT"));
+    l_glProgramUniform4fEXT =
+        reinterpret_cast<PFNGLPROGRAMUNIFORM4FEXTPROC>(loadProc("glProgramUniform4fEXT"));
+    l_glProgramUniform4fvEXT =
+        reinterpret_cast<PFNGLPROGRAMUNIFORM4FVEXTPROC>(loadProc("glProgramUniform4fvEXT"));
+    l_glProgramUniform4iEXT =
+        reinterpret_cast<PFNGLPROGRAMUNIFORM4IEXTPROC>(loadProc("glProgramUniform4iEXT"));
+    l_glProgramUniform4ivEXT =
+        reinterpret_cast<PFNGLPROGRAMUNIFORM4IVEXTPROC>(loadProc("glProgramUniform4ivEXT"));
+    l_glProgramUniform4uiEXT =
+        reinterpret_cast<PFNGLPROGRAMUNIFORM4UIEXTPROC>(loadProc("glProgramUniform4uiEXT"));
+    l_glProgramUniform4uivEXT =
+        reinterpret_cast<PFNGLPROGRAMUNIFORM4UIVEXTPROC>(loadProc("glProgramUniform4uivEXT"));
+    l_glProgramUniformMatrix2fvEXT = reinterpret_cast<PFNGLPROGRAMUNIFORMMATRIX2FVEXTPROC>(
+        loadProc("glProgramUniformMatrix2fvEXT"));
+    l_glProgramUniformMatrix2x3fvEXT = reinterpret_cast<PFNGLPROGRAMUNIFORMMATRIX2X3FVEXTPROC>(
+        loadProc("glProgramUniformMatrix2x3fvEXT"));
+    l_glProgramUniformMatrix2x4fvEXT = reinterpret_cast<PFNGLPROGRAMUNIFORMMATRIX2X4FVEXTPROC>(
+        loadProc("glProgramUniformMatrix2x4fvEXT"));
+    l_glProgramUniformMatrix3fvEXT = reinterpret_cast<PFNGLPROGRAMUNIFORMMATRIX3FVEXTPROC>(
+        loadProc("glProgramUniformMatrix3fvEXT"));
+    l_glProgramUniformMatrix3x2fvEXT = reinterpret_cast<PFNGLPROGRAMUNIFORMMATRIX3X2FVEXTPROC>(
+        loadProc("glProgramUniformMatrix3x2fvEXT"));
+    l_glProgramUniformMatrix3x4fvEXT = reinterpret_cast<PFNGLPROGRAMUNIFORMMATRIX3X4FVEXTPROC>(
+        loadProc("glProgramUniformMatrix3x4fvEXT"));
+    l_glProgramUniformMatrix4fvEXT = reinterpret_cast<PFNGLPROGRAMUNIFORMMATRIX4FVEXTPROC>(
+        loadProc("glProgramUniformMatrix4fvEXT"));
+    l_glProgramUniformMatrix4x2fvEXT = reinterpret_cast<PFNGLPROGRAMUNIFORMMATRIX4X2FVEXTPROC>(
+        loadProc("glProgramUniformMatrix4x2fvEXT"));
+    l_glProgramUniformMatrix4x3fvEXT = reinterpret_cast<PFNGLPROGRAMUNIFORMMATRIX4X3FVEXTPROC>(
+        loadProc("glProgramUniformMatrix4x3fvEXT"));
+    l_glUseProgramStagesEXT =
+        reinterpret_cast<PFNGLUSEPROGRAMSTAGESEXTPROC>(loadProc("glUseProgramStagesEXT"));
+    l_glValidateProgramPipelineEXT = reinterpret_cast<PFNGLVALIDATEPROGRAMPIPELINEEXTPROC>(
+        loadProc("glValidateProgramPipelineEXT"));
     l_glTexBufferEXT = reinterpret_cast<PFNGLTEXBUFFEREXTPROC>(loadProc("glTexBufferEXT"));
     l_glTexBufferRangeEXT =
         reinterpret_cast<PFNGLTEXBUFFERRANGEEXTPROC>(loadProc("glTexBufferRangeEXT"));
@@ -4055,6 +4248,138 @@ void LoadGLES(LoadProc loadProc)
     l_glImportSemaphoreFdEXTContextANGLE =
         reinterpret_cast<PFNGLIMPORTSEMAPHOREFDEXTCONTEXTANGLEPROC>(
             loadProc("glImportSemaphoreFdEXTContextANGLE"));
+    l_glActiveShaderProgramEXTContextANGLE =
+        reinterpret_cast<PFNGLACTIVESHADERPROGRAMEXTCONTEXTANGLEPROC>(
+            loadProc("glActiveShaderProgramEXTContextANGLE"));
+    l_glBindProgramPipelineEXTContextANGLE =
+        reinterpret_cast<PFNGLBINDPROGRAMPIPELINEEXTCONTEXTANGLEPROC>(
+            loadProc("glBindProgramPipelineEXTContextANGLE"));
+    l_glCreateShaderProgramvEXTContextANGLE =
+        reinterpret_cast<PFNGLCREATESHADERPROGRAMVEXTCONTEXTANGLEPROC>(
+            loadProc("glCreateShaderProgramvEXTContextANGLE"));
+    l_glDeleteProgramPipelinesEXTContextANGLE =
+        reinterpret_cast<PFNGLDELETEPROGRAMPIPELINESEXTCONTEXTANGLEPROC>(
+            loadProc("glDeleteProgramPipelinesEXTContextANGLE"));
+    l_glGenProgramPipelinesEXTContextANGLE =
+        reinterpret_cast<PFNGLGENPROGRAMPIPELINESEXTCONTEXTANGLEPROC>(
+            loadProc("glGenProgramPipelinesEXTContextANGLE"));
+    l_glGetProgramPipelineInfoLogEXTContextANGLE =
+        reinterpret_cast<PFNGLGETPROGRAMPIPELINEINFOLOGEXTCONTEXTANGLEPROC>(
+            loadProc("glGetProgramPipelineInfoLogEXTContextANGLE"));
+    l_glGetProgramPipelineivEXTContextANGLE =
+        reinterpret_cast<PFNGLGETPROGRAMPIPELINEIVEXTCONTEXTANGLEPROC>(
+            loadProc("glGetProgramPipelineivEXTContextANGLE"));
+    l_glIsProgramPipelineEXTContextANGLE =
+        reinterpret_cast<PFNGLISPROGRAMPIPELINEEXTCONTEXTANGLEPROC>(
+            loadProc("glIsProgramPipelineEXTContextANGLE"));
+    l_glProgramParameteriEXTContextANGLE =
+        reinterpret_cast<PFNGLPROGRAMPARAMETERIEXTCONTEXTANGLEPROC>(
+            loadProc("glProgramParameteriEXTContextANGLE"));
+    l_glProgramUniform1fEXTContextANGLE =
+        reinterpret_cast<PFNGLPROGRAMUNIFORM1FEXTCONTEXTANGLEPROC>(
+            loadProc("glProgramUniform1fEXTContextANGLE"));
+    l_glProgramUniform1fvEXTContextANGLE =
+        reinterpret_cast<PFNGLPROGRAMUNIFORM1FVEXTCONTEXTANGLEPROC>(
+            loadProc("glProgramUniform1fvEXTContextANGLE"));
+    l_glProgramUniform1iEXTContextANGLE =
+        reinterpret_cast<PFNGLPROGRAMUNIFORM1IEXTCONTEXTANGLEPROC>(
+            loadProc("glProgramUniform1iEXTContextANGLE"));
+    l_glProgramUniform1ivEXTContextANGLE =
+        reinterpret_cast<PFNGLPROGRAMUNIFORM1IVEXTCONTEXTANGLEPROC>(
+            loadProc("glProgramUniform1ivEXTContextANGLE"));
+    l_glProgramUniform1uiEXTContextANGLE =
+        reinterpret_cast<PFNGLPROGRAMUNIFORM1UIEXTCONTEXTANGLEPROC>(
+            loadProc("glProgramUniform1uiEXTContextANGLE"));
+    l_glProgramUniform1uivEXTContextANGLE =
+        reinterpret_cast<PFNGLPROGRAMUNIFORM1UIVEXTCONTEXTANGLEPROC>(
+            loadProc("glProgramUniform1uivEXTContextANGLE"));
+    l_glProgramUniform2fEXTContextANGLE =
+        reinterpret_cast<PFNGLPROGRAMUNIFORM2FEXTCONTEXTANGLEPROC>(
+            loadProc("glProgramUniform2fEXTContextANGLE"));
+    l_glProgramUniform2fvEXTContextANGLE =
+        reinterpret_cast<PFNGLPROGRAMUNIFORM2FVEXTCONTEXTANGLEPROC>(
+            loadProc("glProgramUniform2fvEXTContextANGLE"));
+    l_glProgramUniform2iEXTContextANGLE =
+        reinterpret_cast<PFNGLPROGRAMUNIFORM2IEXTCONTEXTANGLEPROC>(
+            loadProc("glProgramUniform2iEXTContextANGLE"));
+    l_glProgramUniform2ivEXTContextANGLE =
+        reinterpret_cast<PFNGLPROGRAMUNIFORM2IVEXTCONTEXTANGLEPROC>(
+            loadProc("glProgramUniform2ivEXTContextANGLE"));
+    l_glProgramUniform2uiEXTContextANGLE =
+        reinterpret_cast<PFNGLPROGRAMUNIFORM2UIEXTCONTEXTANGLEPROC>(
+            loadProc("glProgramUniform2uiEXTContextANGLE"));
+    l_glProgramUniform2uivEXTContextANGLE =
+        reinterpret_cast<PFNGLPROGRAMUNIFORM2UIVEXTCONTEXTANGLEPROC>(
+            loadProc("glProgramUniform2uivEXTContextANGLE"));
+    l_glProgramUniform3fEXTContextANGLE =
+        reinterpret_cast<PFNGLPROGRAMUNIFORM3FEXTCONTEXTANGLEPROC>(
+            loadProc("glProgramUniform3fEXTContextANGLE"));
+    l_glProgramUniform3fvEXTContextANGLE =
+        reinterpret_cast<PFNGLPROGRAMUNIFORM3FVEXTCONTEXTANGLEPROC>(
+            loadProc("glProgramUniform3fvEXTContextANGLE"));
+    l_glProgramUniform3iEXTContextANGLE =
+        reinterpret_cast<PFNGLPROGRAMUNIFORM3IEXTCONTEXTANGLEPROC>(
+            loadProc("glProgramUniform3iEXTContextANGLE"));
+    l_glProgramUniform3ivEXTContextANGLE =
+        reinterpret_cast<PFNGLPROGRAMUNIFORM3IVEXTCONTEXTANGLEPROC>(
+            loadProc("glProgramUniform3ivEXTContextANGLE"));
+    l_glProgramUniform3uiEXTContextANGLE =
+        reinterpret_cast<PFNGLPROGRAMUNIFORM3UIEXTCONTEXTANGLEPROC>(
+            loadProc("glProgramUniform3uiEXTContextANGLE"));
+    l_glProgramUniform3uivEXTContextANGLE =
+        reinterpret_cast<PFNGLPROGRAMUNIFORM3UIVEXTCONTEXTANGLEPROC>(
+            loadProc("glProgramUniform3uivEXTContextANGLE"));
+    l_glProgramUniform4fEXTContextANGLE =
+        reinterpret_cast<PFNGLPROGRAMUNIFORM4FEXTCONTEXTANGLEPROC>(
+            loadProc("glProgramUniform4fEXTContextANGLE"));
+    l_glProgramUniform4fvEXTContextANGLE =
+        reinterpret_cast<PFNGLPROGRAMUNIFORM4FVEXTCONTEXTANGLEPROC>(
+            loadProc("glProgramUniform4fvEXTContextANGLE"));
+    l_glProgramUniform4iEXTContextANGLE =
+        reinterpret_cast<PFNGLPROGRAMUNIFORM4IEXTCONTEXTANGLEPROC>(
+            loadProc("glProgramUniform4iEXTContextANGLE"));
+    l_glProgramUniform4ivEXTContextANGLE =
+        reinterpret_cast<PFNGLPROGRAMUNIFORM4IVEXTCONTEXTANGLEPROC>(
+            loadProc("glProgramUniform4ivEXTContextANGLE"));
+    l_glProgramUniform4uiEXTContextANGLE =
+        reinterpret_cast<PFNGLPROGRAMUNIFORM4UIEXTCONTEXTANGLEPROC>(
+            loadProc("glProgramUniform4uiEXTContextANGLE"));
+    l_glProgramUniform4uivEXTContextANGLE =
+        reinterpret_cast<PFNGLPROGRAMUNIFORM4UIVEXTCONTEXTANGLEPROC>(
+            loadProc("glProgramUniform4uivEXTContextANGLE"));
+    l_glProgramUniformMatrix2fvEXTContextANGLE =
+        reinterpret_cast<PFNGLPROGRAMUNIFORMMATRIX2FVEXTCONTEXTANGLEPROC>(
+            loadProc("glProgramUniformMatrix2fvEXTContextANGLE"));
+    l_glProgramUniformMatrix2x3fvEXTContextANGLE =
+        reinterpret_cast<PFNGLPROGRAMUNIFORMMATRIX2X3FVEXTCONTEXTANGLEPROC>(
+            loadProc("glProgramUniformMatrix2x3fvEXTContextANGLE"));
+    l_glProgramUniformMatrix2x4fvEXTContextANGLE =
+        reinterpret_cast<PFNGLPROGRAMUNIFORMMATRIX2X4FVEXTCONTEXTANGLEPROC>(
+            loadProc("glProgramUniformMatrix2x4fvEXTContextANGLE"));
+    l_glProgramUniformMatrix3fvEXTContextANGLE =
+        reinterpret_cast<PFNGLPROGRAMUNIFORMMATRIX3FVEXTCONTEXTANGLEPROC>(
+            loadProc("glProgramUniformMatrix3fvEXTContextANGLE"));
+    l_glProgramUniformMatrix3x2fvEXTContextANGLE =
+        reinterpret_cast<PFNGLPROGRAMUNIFORMMATRIX3X2FVEXTCONTEXTANGLEPROC>(
+            loadProc("glProgramUniformMatrix3x2fvEXTContextANGLE"));
+    l_glProgramUniformMatrix3x4fvEXTContextANGLE =
+        reinterpret_cast<PFNGLPROGRAMUNIFORMMATRIX3X4FVEXTCONTEXTANGLEPROC>(
+            loadProc("glProgramUniformMatrix3x4fvEXTContextANGLE"));
+    l_glProgramUniformMatrix4fvEXTContextANGLE =
+        reinterpret_cast<PFNGLPROGRAMUNIFORMMATRIX4FVEXTCONTEXTANGLEPROC>(
+            loadProc("glProgramUniformMatrix4fvEXTContextANGLE"));
+    l_glProgramUniformMatrix4x2fvEXTContextANGLE =
+        reinterpret_cast<PFNGLPROGRAMUNIFORMMATRIX4X2FVEXTCONTEXTANGLEPROC>(
+            loadProc("glProgramUniformMatrix4x2fvEXTContextANGLE"));
+    l_glProgramUniformMatrix4x3fvEXTContextANGLE =
+        reinterpret_cast<PFNGLPROGRAMUNIFORMMATRIX4X3FVEXTCONTEXTANGLEPROC>(
+            loadProc("glProgramUniformMatrix4x3fvEXTContextANGLE"));
+    l_glUseProgramStagesEXTContextANGLE =
+        reinterpret_cast<PFNGLUSEPROGRAMSTAGESEXTCONTEXTANGLEPROC>(
+            loadProc("glUseProgramStagesEXTContextANGLE"));
+    l_glValidateProgramPipelineEXTContextANGLE =
+        reinterpret_cast<PFNGLVALIDATEPROGRAMPIPELINEEXTCONTEXTANGLEPROC>(
+            loadProc("glValidateProgramPipelineEXTContextANGLE"));
     l_glTexBufferEXTContextANGLE =
         reinterpret_cast<PFNGLTEXBUFFEREXTCONTEXTANGLEPROC>(loadProc("glTexBufferEXTContextANGLE"));
     l_glTexBufferRangeEXTContextANGLE = reinterpret_cast<PFNGLTEXBUFFERRANGEEXTCONTEXTANGLEPROC>(

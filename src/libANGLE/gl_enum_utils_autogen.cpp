@@ -819,6 +819,8 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_UNKNOWN_CONTEXT_RESET_EXT";
                 case 0x8256:
                     return "GL_RESET_NOTIFICATION_STRATEGY";
+                case 0x8258:
+                    return "GL_PROGRAM_SEPARABLE_EXT";
                 case 0x825A:
                     return "GL_PROGRAM_PIPELINE_BINDING";
                 case 0x825E:
@@ -1144,7 +1146,7 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                 case 0x8B4D:
                     return "GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS";
                 case 0x8B8D:
-                    return "GL_CURRENT_PROGRAM";
+                    return "GL_ACTIVE_PROGRAM_EXT";
                 case 0x8B9C:
                     return "GL_POINT_SIZE_ARRAY_OES";
                 case 0x8B9D:
