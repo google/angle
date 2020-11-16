@@ -16,6 +16,29 @@
       "message": "PTAL",
       "revId": "0b6e9094bbc9b58d1c5d72f2374227608c6ffc1c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "439ee181_8a2cabe0",
+        "filename": "src/libANGLE/ErrorStrings.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-16T04:57:53Z",
+      "side": 1,
+      "message": "nit: name the extension, otherwise the message is cryptic. You can accordingly change the variable name to be less generic.",
+      "range": {
+        "startLine": 107,
+        "startChar": 43,
+        "endLine": 107,
+        "endChar": 52
+      },
+      "revId": "0b6e9094bbc9b58d1c5d72f2374227608c6ffc1c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
