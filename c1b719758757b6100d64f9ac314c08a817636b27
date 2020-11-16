@@ -16,6 +16,29 @@
       "message": "Failures in PS#1 were due to another bug which is fixed in https://chromium-review.googlesource.com/c/angle/angle/+/2541182",
       "revId": "c1b719758757b6100d64f9ac314c08a817636b27",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fb09f04b_6d3aacef",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-16T18:02:30Z",
+      "side": 1,
+      "message": "anglebug link?",
+      "range": {
+        "startLine": 40,
+        "startChar": 4,
+        "endLine": 42,
+        "endChar": 15
+      },
+      "revId": "c1b719758757b6100d64f9ac314c08a817636b27",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
