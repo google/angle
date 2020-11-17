@@ -94,6 +94,30 @@
       },
       "revId": "41f20c254071cf419b388b8f6f095f6133762c70",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "988e4391_c7590e5d",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 314,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-17T17:23:42Z",
+      "side": 0,
+      "message": "No I haven\u0027t. I could write a test for it, but the symptom would basically be \"very rare flakes\".",
+      "parentUuid": "e2589eeb_3305dce7",
+      "range": {
+        "startLine": 314,
+        "startChar": 9,
+        "endLine": 314,
+        "endChar": 33
+      },
+      "revId": "41f20c254071cf419b388b8f6f095f6133762c70",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
