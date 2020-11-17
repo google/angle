@@ -88,6 +88,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8176b78d_ba9e99a5",
+        "filename": "src/common/PackedEnums.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 547,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-17T22:57:17Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "1433fe35_9949c835",
+      "revId": "cb06b1878680230e00ad29cc94e4f58a0e9a220b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "dbbc9c7c_20419837",
@@ -111,6 +129,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "cbeedec3_66d9765f",
+        "filename": "src/compiler/translator/glslang.l",
+        "patchSetId": 1
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-17T22:57:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dbbc9c7c_20419837",
+      "range": {
+        "startLine": 168,
+        "startChar": 37,
+        "endLine": 168,
+        "endChar": 40
+      },
+      "revId": "cb06b1878680230e00ad29cc94e4f58a0e9a220b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d16c2778_34c21be5",
@@ -124,6 +166,30 @@
       "writtenOn": "2020-11-15T02:44:42Z",
       "side": 1,
       "message": "3.1?",
+      "range": {
+        "startLine": 871,
+        "startChar": 8,
+        "endLine": 871,
+        "endChar": 11
+      },
+      "revId": "cb06b1878680230e00ad29cc94e4f58a0e9a220b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "76ccc073_7b17c138",
+        "filename": "src/compiler/translator/glslang.y",
+        "patchSetId": 1
+      },
+      "lineNbr": 871,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-17T22:57:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d16c2778_34c21be5",
       "range": {
         "startLine": 871,
         "startChar": 8,
