@@ -119,6 +119,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e96bcf53_3e27dfa2",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 347,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-17T18:13:59Z",
+      "side": 1,
+      "message": "Ah, this was more of an aside than an action item. You mean reuse #57?",
+      "parentUuid": "64e5afd8_1e136195",
+      "range": {
+        "startLine": 347,
+        "startChar": 60,
+        "endLine": 347,
+        "endChar": 68
+      },
+      "revId": "e88dad17205afedb4af7962d5e1b08621e9872ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "01f075ec_d37758be",
