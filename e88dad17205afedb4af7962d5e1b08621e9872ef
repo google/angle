@@ -143,6 +143,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d84e3802_be5af545",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 347,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-17T18:26:05Z",
+      "side": 1,
+      "message": "Right.",
+      "parentUuid": "e96bcf53_3e27dfa2",
+      "range": {
+        "startLine": 347,
+        "startChar": 60,
+        "endLine": 347,
+        "endChar": 68
+      },
+      "revId": "e88dad17205afedb4af7962d5e1b08621e9872ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "01f075ec_d37758be",
@@ -204,6 +228,30 @@
       "side": 1,
       "message": "ForceShaderPrecisionToMedium or Mediump sounds good. It should clarify what it is forcing the precision qualifiers to.",
       "parentUuid": "de2595f6_7209e971",
+      "range": {
+        "startLine": 796,
+        "startChar": 13,
+        "endLine": 796,
+        "endChar": 53
+      },
+      "revId": "e88dad17205afedb4af7962d5e1b08621e9872ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dec5dba3_e882ab12",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 796,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-17T18:26:05Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "8209bb46_2663f13a",
       "range": {
         "startLine": 796,
         "startChar": 13,
