@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "49a1175a_0bb5b984",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-17T19:13:42Z",
+      "side": 1,
+      "message": "I took a look at test_suites.pyl and AFAICT --use-angle\u003dX is always specified in the recipes, so this change shouldn\u0027t affect the bots.",
+      "revId": "068b71fdbcd4b76e62e0b28c6a46c29c7b984598",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
