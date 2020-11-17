@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "338afc98_ab1afca0",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-17T18:08:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "380b15c8_f849e6bb",
+      "range": {
+        "startLine": 29,
+        "startChar": 25,
+        "endLine": 29,
+        "endChar": 28
+      },
+      "revId": "e88dad17205afedb4af7962d5e1b08621e9872ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "046a8df1_5dc86e25",
@@ -71,6 +95,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "64e5afd8_1e136195",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 347,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-17T18:08:12Z",
+      "side": 1,
+      "message": "Done. I will reuse SH_USE_ROTATION_SPECIALIZATION_CONSTANT since that just got deleted in previous CL.",
+      "parentUuid": "28bf4567_3b4c0dfa",
+      "range": {
+        "startLine": 347,
+        "startChar": 60,
+        "endLine": 347,
+        "endChar": 68
+      },
+      "revId": "e88dad17205afedb4af7962d5e1b08621e9872ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "01f075ec_d37758be",
@@ -94,6 +142,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "de2595f6_7209e971",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 796,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-17T18:08:12Z",
+      "side": 1,
+      "message": "I actually also want to remove fragment shader form the name just in case we want to apply to VS in some cases. So ForceShaderPrecisionQulifiers() sounds good?",
+      "parentUuid": "01f075ec_d37758be",
+      "range": {
+        "startLine": 796,
+        "startChar": 13,
+        "endLine": 796,
+        "endChar": 53
+      },
+      "revId": "e88dad17205afedb4af7962d5e1b08621e9872ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c7c2c45b_f3e9a910",
@@ -107,6 +179,30 @@
       "writtenOn": "2020-11-16T20:18:23Z",
       "side": 1,
       "message": "might be shared",
+      "range": {
+        "startLine": 67,
+        "startChar": 41,
+        "endLine": 67,
+        "endChar": 53
+      },
+      "revId": "e88dad17205afedb4af7962d5e1b08621e9872ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "05f65fa4_118a346a",
+        "filename": "src/compiler/translator/tree_ops/RewritePrecisionQualifier.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-17T18:08:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c7c2c45b_f3e9a910",
       "range": {
         "startLine": 67,
         "startChar": 41,
