@@ -33,6 +33,46 @@
       "message": "Modifying attention set as I believe that\u0027s what Jamie relies on now to follow up on changes",
       "revId": "9282f59c791390a44f6bf3570e9cb65babc65a0b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0a946109_e5b13652",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 13
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-17T13:32:10Z",
+      "side": 1,
+      "message": "LGTM, one last nit. Nice work! BTW I also gave Hyunchang access to the try jobs.",
+      "revId": "9282f59c791390a44f6bf3570e9cb65babc65a0b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d3c6b028_aaea9bde",
+        "filename": "src/libANGLE/Buffer.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-17T13:32:10Z",
+      "side": 1,
+      "message": "nit: can you make these two methods private?",
+      "range": {
+        "startLine": 100,
+        "startChar": 0,
+        "endLine": 110,
+        "endChar": 59
+      },
+      "revId": "9282f59c791390a44f6bf3570e9cb65babc65a0b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
