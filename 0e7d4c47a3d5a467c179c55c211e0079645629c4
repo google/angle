@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b4bc28c5_144d03d3",
+        "filename": "src/tests/gl_tests/MipmapTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 612,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-17T19:06:51Z",
+      "side": 1,
+      "message": "nit: can you include a http://anglebug.com/#### or http://crbug.com/###### link in a comment before these suppressions?",
+      "range": {
+        "startLine": 612,
+        "startChar": 4,
+        "endLine": 612,
+        "endChar": 22
+      },
+      "revId": "0e7d4c47a3d5a467c179c55c211e0079645629c4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
