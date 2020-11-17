@@ -6870,7 +6870,7 @@ TEST_P(Texture2DFloatTestES2, TextureHalfFloatSampleLegacyTest)
 TEST_P(Texture2DFloatTestES3, TextureFloatLinearTest)
 {
     // TODO(crbug.com/1132295): Failing on Apple DTK.
-    ANGLE_SKIP_TEST_IF(IsOSX() && IsARM64() && IsDesktopOpenGL());
+    ANGLE_SKIP_TEST_IF(IsOSX() && IsARM64() && (IsDesktopOpenGL() || IsMetal()));
 
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_texture_float_linear"));
 
@@ -6909,7 +6909,7 @@ TEST_P(Texture2DFloatTestES2, TextureHalfFloatLinearTest)
 TEST_P(Texture2DFloatTestES3, TextureFloatLinearLegacyTest)
 {
     // TODO(crbug.com/1132295): Failing on Apple DTK.
-    ANGLE_SKIP_TEST_IF(IsOSX() && IsARM64() && IsDesktopOpenGL());
+    ANGLE_SKIP_TEST_IF(IsOSX() && IsARM64() && (IsDesktopOpenGL() || IsMetal()));
 
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_texture_float"));
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_texture_float_linear"));

@@ -273,6 +273,8 @@ TEST_P(BPTCCompressedTextureTestES3, CopyTexSubImage3DDisallowed)
 // Test uploading texture data from a PBO to a texture.
 TEST_P(BPTCCompressedTextureTestES3, PBOCompressedTexImage)
 {
+    ANGLE_SKIP_TEST_IF(IsOSX() && IsARM64() && IsMetal());
+
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_compression_bptc"));
 
     GLTexture texture;
@@ -324,6 +326,8 @@ TEST_P(BPTCCompressedTextureTestES3, PBOCompressedTexImage)
 // Test uploading texture data from a PBO to a non-zero base texture.
 TEST_P(BPTCCompressedTextureTestES3, PBOCompressedTexImageNonZeroBase)
 {
+    ANGLE_SKIP_TEST_IF(IsOSX() && IsARM64() && IsMetal());
+
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_compression_bptc"));
 
     GLTexture texture;

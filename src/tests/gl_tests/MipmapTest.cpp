@@ -609,6 +609,8 @@ TEST_P(MipmapTest, DISABLED_ThreeLevelsInitData)
 // conformance2/textures/misc/tex-mipmap-levels WebGL2 test.
 TEST_P(MipmapTestES3, GenerateMipmapPartialLevels)
 {
+    ANGLE_SKIP_TEST_IF(IsOSX() && IsARM64() && IsDesktopOpenGL());
+
     const std::vector<GLColor> kRedData(64, GLColor::red);
     const std::vector<GLColor> kGreenData(16, GLColor::green);
     const std::vector<GLColor> kBlueData(4, GLColor::blue);
