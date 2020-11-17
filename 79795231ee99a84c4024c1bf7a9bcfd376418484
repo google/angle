@@ -51,6 +51,29 @@
       "parentUuid": "57388b06_b8a187b6",
       "revId": "79795231ee99a84c4024c1bf7a9bcfd376418484",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "39bc0fa2_ff341cd8",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-17T16:20:57Z",
+      "side": 1,
+      "message": "nit: Has, should be fixed in rebase I think.",
+      "range": {
+        "startLine": 158,
+        "startChar": 5,
+        "endLine": 158,
+        "endChar": 28
+      },
+      "revId": "79795231ee99a84c4024c1bf7a9bcfd376418484",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
