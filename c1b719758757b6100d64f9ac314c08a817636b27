@@ -164,6 +164,30 @@
       },
       "revId": "c1b719758757b6100d64f9ac314c08a817636b27",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ea3d8eb8_4579d8c3",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-17T00:00:51Z",
+      "side": 1,
+      "message": "yup, VK_FORMAT_FEATURE_STORAGE_IMAGE_ATOMIC_BIT and VK_FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_ATOMIC_BIT are not being exposed, incorrectly i think, for VK_FORMAT_R32_SFLOAT.\n\nthis patch LGTM, thanks shabi",
+      "parentUuid": "af215308_23fb4a2e",
+      "range": {
+        "startLine": 40,
+        "startChar": 4,
+        "endLine": 42,
+        "endChar": 15
+      },
+      "revId": "c1b719758757b6100d64f9ac314c08a817636b27",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
