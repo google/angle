@@ -16,6 +16,23 @@
       "message": "LGTM, but if I enable Vulkan backend we crash.\n\nsignal 11 (SIGSEGV), code 1 (SEGV_MAPERR), fault addr 0x0\n\nStack Trace:\n  RELADDR   FUNCTION                                                                          FILE:LINE\n  v------\u003e  rx::vk::GraphicsPipelineTransitionMatch(angle::BitSetT\u003c64ul, unsigned long, unsigned long\u003e, angle::BitSetT\u003c64ul, unsigned long, unsigned long\u003e, rx::vk::GraphicsPipelineDesc const\u0026, rx::vk::GraphicsPipelineDesc const\u0026)  ../../third_party/angle/src/libANGLE/renderer/vulkan/vk_cache_utils.h:960:13\n  v------\u003e  rx::vk::PipelineHelper::findTransition(angle::BitSetT\u003c64ul, unsigned long, unsigned long\u003e, rx::vk::GraphicsPipelineDesc \nconst\u0026, rx::vk::PipelineHelper**) const  ../../third_party/angle/src/libANGLE/renderer/vulkan/vk_cache_utils.h:988:17\n  00000000002f40ac  rx::ContextVk::handleDirtyGraphicsPipeline(gl::Context const*, rx::vk::priv::SecondaryCommandBuffer*)  ../../third_party/angle/src/libANGLE/renderer/vulkan/ContextVk.cpp:1093:40\n",
       "revId": "19fb67eeeed2afca25dfc71bed0d639a758cbcdc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "80a51dc3_1acfa2b9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-11-17T21:24:58Z",
+      "side": 1,
+      "message": "Tried:\nout/Release64/bin/run_angle_end2end_tests -v -d 94KBA008TN --gtest_filter\u003dImageTest.SourceYUVAHBTargetExternalRGBSampleNoData/*\n\nIt crashes with all backends on my Pixel 4XL.",
+      "revId": "19fb67eeeed2afca25dfc71bed0d639a758cbcdc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
