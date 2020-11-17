@@ -1198,7 +1198,7 @@ TEST_P(EGLSurfaceTest, RobustResourceInitAndEmulatedAlpha)
     ANGLE_SKIP_TEST_IF(IsNVIDIA() && isGLRenderer() && IsLinux());
 
     // http://anglebug.com/5280
-    ANGLE_SKIP_TEST_IF(IsAndroid() && (IsNexus5X() || IsNexus6P()) && isGLESRenderer());
+    ANGLE_SKIP_TEST_IF(IsAndroid() && IsNexus5X() && isGLESRenderer());
 
     initializeDisplay();
     ASSERT_NE(mDisplay, EGL_NO_DISPLAY);

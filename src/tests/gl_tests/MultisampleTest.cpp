@@ -55,7 +55,7 @@ class MultisampleTest : public ANGLETestWithParam<MultisampleTestParams>
 
         // Nexus 5X and 6P fail to eglMakeCurrent with a config they advertise they support.
         // http://anglebug.com/3464
-        ANGLE_SKIP_TEST_IF(IsNexus5X() || IsNexus6P());
+        ANGLE_SKIP_TEST_IF(IsNexus5X());
 
         // Find a config that uses RGBA8 and allows 4x multisampling.
         const EGLint configAttributes[] = {EGL_SURFACE_TYPE,

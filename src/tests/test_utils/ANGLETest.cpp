@@ -518,14 +518,6 @@ void ANGLETestBase::ANGLETestSetUp()
     gPlatformContext.warningsAsErrors = false;
     gPlatformContext.currentTest      = this;
 
-    // TODO(geofflang): Nexus6P generates GL errors during initialization. Suppress error messages
-    // temporarily until enough logging is in place to figure out exactly which calls generate
-    // errors.  http://crbug.com/998503
-    if (IsNexus6P())
-    {
-        gPlatformContext.ignoreMessages = true;
-    }
-
     if (IsWindows())
     {
         const auto &info = testing::UnitTest::GetInstance()->current_test_info();

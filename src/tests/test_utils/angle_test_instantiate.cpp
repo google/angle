@@ -288,11 +288,6 @@ bool IsNexus5X()
     return IsAndroidDevice("Nexus 5X");
 }
 
-bool IsNexus6P()
-{
-    return IsAndroidDevice("Nexus 6P");
-}
-
 bool IsNexus9()
 {
     return IsAndroidDevice("Nexus 9");
@@ -531,7 +526,7 @@ bool IsConfigAllowlisted(const SystemInfo &systemInfo, const PlatformParameters 
         // Nexus Android devices don't support backing 3.2 contexts
         if (param.eglParameters.majorVersion == 3 && param.eglParameters.minorVersion == 2)
         {
-            if (IsNexus5X() || IsNexus6P())
+            if (IsNexus5X())
             {
                 return false;
             }

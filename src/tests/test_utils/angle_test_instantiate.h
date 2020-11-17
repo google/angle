@@ -33,7 +33,6 @@ bool IsARM64();
 
 // Android devices
 bool IsNexus5X();
-bool IsNexus6P();
 bool IsNexus9();
 bool IsPixelXL();
 bool IsPixel2();

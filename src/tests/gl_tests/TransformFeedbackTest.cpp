@@ -949,7 +949,7 @@ TEST_P(TransformFeedbackTest, OffsetResetOnBeginTransformFeedback)
     ANGLE_SKIP_TEST_IF(IsOpenGL() && IsOSX() && IsAMD());
 
     // http://anglebug.com/5069
-    ANGLE_SKIP_TEST_IF((IsNexus5X() || IsNexus6P()) && IsOpenGLES());
+    ANGLE_SKIP_TEST_IF(IsNexus5X() && IsOpenGLES());
 
     // TODO(anglebug.com/4533) This fails after the upgrade to the 26.20.100.7870 driver.
     ANGLE_SKIP_TEST_IF(IsWindows() && IsIntel() && IsVulkan());
