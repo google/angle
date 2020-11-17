@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "23f25e47_b8e099f1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-17T22:36:26Z",
+      "side": 1,
+      "message": "I expect this to fail on the ResetReplay tests. I\u0027ll address them in a second patch set. Wanted to show you want I was thinking of for the solution for maps.",
+      "revId": "7ababe3c284f68510933a48d0e9198f45dbf47d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
