@@ -16,6 +16,23 @@
       "message": "PTAL",
       "revId": "0d92c350a91a30a3c75e733535c420443b6d92bd",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "41415d7f_f07fc5ea",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-17T13:25:53Z",
+      "side": 1,
+      "message": "Looks like a couple compile errors and at least one failure:\n\ndEQP.KHR_GLES31/core_shader_storage_buffer_object_basicsyntaxcs",
+      "revId": "0d92c350a91a30a3c75e733535c420443b6d92bd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
