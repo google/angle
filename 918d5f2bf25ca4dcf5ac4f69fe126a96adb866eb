@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8310232a_775bfb78",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-17T14:30:58Z",
+      "side": 1,
+      "message": "These are still used by RenderDoc IIRC. Maybe we can just switch to a robust failure mode instead of blowing up.",
+      "revId": "918d5f2bf25ca4dcf5ac4f69fe126a96adb866eb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
