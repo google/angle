@@ -33,6 +33,24 @@
       "message": "Seeing failures, will wait until you have those resolved.",
       "revId": "79795231ee99a84c4024c1bf7a9bcfd376418484",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b7161b0d_469c304a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-17T15:40:40Z",
+      "side": 1,
+      "message": "The failure is an unrelated bug where the front-end shows no active stages for an image. The failing test is not a texture buffer test, but my clean up there which ASSERTs that every active image is active in some stage is catching this bug.\n\nI\u0027m fixing that, but it would be in a different CL. The change is good for review.",
+      "parentUuid": "57388b06_b8a187b6",
+      "revId": "79795231ee99a84c4024c1bf7a9bcfd376418484",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
