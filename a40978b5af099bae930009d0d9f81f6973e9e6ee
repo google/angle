@@ -60,6 +60,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "ca09a1c8_60c141cc",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2496,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-17T16:36:19Z",
+      "side": 1,
+      "message": "Thanks!\n\nI see that \"vk_utils.cpp\" has a global pointer that\u0027s initialized to nullptr and then given to GET_INSTANCE_FUNC().  I\u0027ll do this in the next patchset.",
+      "parentUuid": "5297cdf5_1a68f38b",
+      "range": {
+        "startLine": 2496,
+        "startChar": 7,
+        "endLine": 2496,
+        "endChar": 32
+      },
+      "revId": "a40978b5af099bae930009d0d9f81f6973e9e6ee",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "0f10a0a1_e6394076",
         "filename": "src/libANGLE/renderer/vulkan/RenderbufferVk.cpp",
         "patchSetId": 2
@@ -71,6 +95,30 @@
       "writtenOn": "2020-11-17T03:16:36Z",
       "side": 1,
       "message": "What exactly is not portable about this cast?",
+      "range": {
+        "startLine": 402,
+        "startChar": 39,
+        "endLine": 404,
+        "endChar": 76
+      },
+      "revId": "a40978b5af099bae930009d0d9f81f6973e9e6ee",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "462ec22b_afc0e4ee",
+        "filename": "src/libANGLE/renderer/vulkan/RenderbufferVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 404,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-17T16:36:19Z",
+      "side": 1,
+      "message": "MSVC on x86.\n\nHere are the bot results from one run: https://ci.chromium.org/p/angle/builders/try/win-msvc-x86-rel/16655?\n\nBufferVk.cpp(743): error C2440: \u0027reinterpret_cast\u0027: cannot convert from \u0027VkBuffer\u0027 to \u0027uint64_t\u0027\nBufferVk.cpp(743): note: Conversion is a valid standard conversion, which can be performed implicitly or by use of static_cast, C-style cast or function-style cast\n\nThe \"third_party/vulkan-validation-layers/src/layers/cast_utils.h\" goes through some push-ups to handle the casts on different compilers/platforms.",
+      "parentUuid": "0f10a0a1_e6394076",
       "range": {
         "startLine": 402,
         "startChar": 39,
