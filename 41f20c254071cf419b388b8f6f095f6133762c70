@@ -70,6 +70,30 @@
       },
       "revId": "41f20c254071cf419b388b8f6f095f6133762c70",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e2589eeb_3305dce7",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 314,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-17T17:04:33Z",
+      "side": 0,
+      "message": "My doubts are really around having a lack of any possibly means of verification. We should file a syncval bug if they don\u0027t have a VU for this. I\u0027m guessing it\u0027s pretty clear there isn\u0027t a syncval VU for this because you would have seen it in your testing?",
+      "parentUuid": "4061fd99_c2eef8f1",
+      "range": {
+        "startLine": 314,
+        "startChar": 9,
+        "endLine": 314,
+        "endChar": 33
+      },
+      "revId": "41f20c254071cf419b388b8f6f095f6133762c70",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
