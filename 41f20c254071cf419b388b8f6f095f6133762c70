@@ -190,6 +190,30 @@
       },
       "revId": "41f20c254071cf419b388b8f6f095f6133762c70",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1e1577f3_63d77a64",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 314,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-17T19:09:31Z",
+      "side": 0,
+      "message": "Yes I got that, and did: https://github.com/KhronosGroup/Vulkan-ValidationLayers/issues/2329",
+      "parentUuid": "356dfab8_c6ccf20a",
+      "range": {
+        "startLine": 314,
+        "startChar": 9,
+        "endLine": 314,
+        "endChar": 33
+      },
+      "revId": "41f20c254071cf419b388b8f6f095f6133762c70",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
