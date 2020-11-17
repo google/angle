@@ -53,6 +53,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "454980ad_231e04f4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-17T16:42:20Z",
+      "side": 1,
+      "message": "anglebug.com/5358. Not a trivial fix and low priority.\n\nI kept the workaround there was prior to this change (assume all stages if no active stages) for now.",
+      "parentUuid": "b7161b0d_469c304a",
+      "revId": "79795231ee99a84c4024c1bf7a9bcfd376418484",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "39bc0fa2_ff341cd8",
