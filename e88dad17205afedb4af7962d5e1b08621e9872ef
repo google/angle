@@ -49,6 +49,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "28bf4567_3b4c0dfa",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 347,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-17T04:11:41Z",
+      "side": 1,
+      "message": "struct of bool is good. At the same time, some of these flags can get consolidated. Like with:\n\n    if (context-\u003egetExtensions().webglCompatibility)\n    {\n        options |\u003d SH_INIT_GL_POSITION;\n        options |\u003d SH_LIMIT_CALL_STACK_DEPTH;\n        options |\u003d SH_LIMIT_EXPRESSION_COMPLEXITY;\n        options |\u003d SH_ENFORCE_PACKING_RESTRICTIONS;\n        options |\u003d SH_INIT_SHARED_VARIABLES;\n    }\n\nwe only really needed one flag.\n\nEdit: Surprisingly not many more places this can be done!",
+      "parentUuid": "046a8df1_5dc86e25",
+      "range": {
+        "startLine": 347,
+        "startChar": 60,
+        "endLine": 347,
+        "endChar": 68
+      },
+      "revId": "e88dad17205afedb4af7962d5e1b08621e9872ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "01f075ec_d37758be",
         "filename": "src/compiler/translator/Compiler.cpp",
         "patchSetId": 5
