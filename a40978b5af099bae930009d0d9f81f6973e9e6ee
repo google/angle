@@ -127,6 +127,30 @@
       },
       "revId": "a40978b5af099bae930009d0d9f81f6973e9e6ee",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6b5fe15e_1b0a01d8",
+        "filename": "src/libANGLE/renderer/vulkan/RenderbufferVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 404,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-17T17:18:54Z",
+      "side": 1,
+      "message": "https://imgflip.com/i/4mqotr\n\nBut seriously, all that to avoid `(uint64_t)handle` ...\n\nYou could probably make a much simpler version that checks if the type is integral, and if so use static_cast, otherwise reinterpret_cast.",
+      "parentUuid": "462ec22b_afc0e4ee",
+      "range": {
+        "startLine": 402,
+        "startChar": 39,
+        "endLine": 404,
+        "endChar": 76
+      },
+      "revId": "a40978b5af099bae930009d0d9f81f6973e9e6ee",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
