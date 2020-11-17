@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9a491012_ecbb207e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-17T20:20:12Z",
+      "side": 1,
+      "message": "Looks good, assuming the Android failures aren\u0027t a big deal.",
+      "revId": "d6105ff1d14308bdde99b0c8b329bddf32bd062c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b9c02ca6_af8fff6a",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-17T20:20:12Z",
+      "side": 1,
+      "message": "Why are the commented out formats being left in?",
+      "range": {
+        "startLine": 203,
+        "startChar": 0,
+        "endLine": 211,
+        "endChar": 6
+      },
+      "revId": "d6105ff1d14308bdde99b0c8b329bddf32bd062c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
