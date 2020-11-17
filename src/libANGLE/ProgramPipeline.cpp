@@ -156,6 +156,18 @@ void ProgramPipelineState::updateExecutableTextures()
     }
 }
 
+rx::SpecConstUsageBits ProgramPipelineState::getSpecConstUsageBits() const
+{
+    rx::SpecConstUsageBits specConstUsageBits;
+    for (const ShaderType shaderType : mExecutable->getLinkedShaderStages())
+    {
+        const Program *program = getShaderProgram(shaderType);
+        ASSERT(program);
+        specConstUsageBits |= program->getState().getSpecConstUsageBits();
+    }
+    return specConstUsageBits;
+}
+
 ProgramPipeline::ProgramPipeline(rx::GLImplFactory *factory, ProgramPipelineID handle)
     : RefCountObject(factory->generateSerial(), handle),
       mProgramPipelineImpl(factory->createProgramPipeline(mState)),

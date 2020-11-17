@@ -90,6 +90,7 @@ class ShaderState final : angle::NonCopyable
     const sh::WorkGroupSize &getLocalSize() const { return mLocalSize; }
 
     bool getEarlyFragmentTestsOptimization() const { return mEarlyFragmentTestsOptimization; }
+    rx::SpecConstUsageBits getSpecConstUsageBits() const { return mSpecConstUsageBits; }
 
     int getNumViews() const { return mNumViews; }
 
@@ -131,6 +132,7 @@ class ShaderState final : angle::NonCopyable
     std::vector<sh::ShaderVariable> mActiveOutputVariables;
 
     bool mEarlyFragmentTestsOptimization;
+    rx::SpecConstUsageBits mSpecConstUsageBits;
 
     // ANGLE_multiview.
     int mNumViews;
@@ -190,6 +192,7 @@ class Shader final : angle::NonCopyable, public LabeledObject
     {
         return mState.mEarlyFragmentTestsOptimization;
     }
+    rx::SpecConstUsageBits getSpecConstUsageBits() const { return mState.mSpecConstUsageBits; }
 
     int getShaderVersion();
 

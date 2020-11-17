@@ -323,6 +323,7 @@ class ProgramState final : angle::NonCopyable
 
     bool hasImages() const { return !getImageBindings().empty(); }
     bool hasEarlyFragmentTestsOptimization() const { return mEarlyFramentTestsOptimization; }
+    rx::SpecConstUsageBits getSpecConstUsageBits() const { return mSpecConstUsageBits; }
 
     bool isShaderMarkedForDetach(gl::ShaderType shaderType) const
     {
@@ -416,6 +417,7 @@ class ProgramState final : angle::NonCopyable
     bool mBinaryRetrieveableHint;
     bool mSeparable;
     bool mEarlyFramentTestsOptimization;
+    rx::SpecConstUsageBits mSpecConstUsageBits;
 
     // ANGLE_multiview.
     int mNumViews;

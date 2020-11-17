@@ -1577,6 +1577,7 @@ angle::Result Program::linkImpl(const Context *context)
         if (vertexShader)
         {
             mState.mNumViews = vertexShader->getNumViews();
+            mState.mSpecConstUsageBits |= vertexShader->getSpecConstUsageBits();
         }
 
         gl::Shader *fragmentShader = mState.mAttachedShaders[ShaderType::Fragment];
@@ -1584,6 +1585,7 @@ angle::Result Program::linkImpl(const Context *context)
         {
             mState.mEarlyFramentTestsOptimization =
                 fragmentShader->hasEarlyFragmentTestsOptimization();
+            mState.mSpecConstUsageBits |= fragmentShader->getSpecConstUsageBits();
         }
 
         InitUniformBlockLinker(mState, &mState.mExecutable->getResources().uniformBlockLinker);
@@ -1855,6 +1857,7 @@ void Program::unlink()
     mState.mCachedBaseVertex                  = 0;
     mState.mCachedBaseInstance                = 0;
     mState.mEarlyFramentTestsOptimization     = false;
+    mState.mSpecConstUsageBits.reset();
 
     mValidated = false;
 
@@ -5174,6 +5177,7 @@ angle::Result Program::serialize(const Context *context, angle::MemoryBuffer *bi
 
     stream.writeInt(mState.mNumViews);
     stream.writeBool(mState.mEarlyFramentTestsOptimization);
+    stream.writeInt(mState.mSpecConstUsageBits.bits());
 
     stream.writeInt(mState.getProgramInputs().size());
     for (const sh::ShaderVariable &attrib : mState.getProgramInputs())
@@ -5372,6 +5376,7 @@ angle::Result Program::deserialize(const Context *context,
 
     mState.mNumViews                      = stream.readInt<int>();
     mState.mEarlyFramentTestsOptimization = stream.readBool();
+    mState.mSpecConstUsageBits            = rx::SpecConstUsageBits(stream.readInt<uint32_t>());
 
     size_t attribCount = stream.readInt<size_t>();
     ASSERT(mState.mExecutable->getProgramInputs().empty());

@@ -181,6 +181,8 @@ class ProgramExecutableVk
 
     const PerfCounters getObjectPerfCounters() const { return mObjectPerfCounters; }
 
+    SpecConstUsageBits getSpecConstUsageBits() const;
+
   private:
     friend class ProgramVk;
     friend class ProgramPipelineVk;

@@ -16,6 +16,7 @@
 
 #include <GLSLANG/ShaderVars.h>
 
+#include "common/PackedEnums.h"
 #include "compiler/translator/BuiltInFunctionEmulator.h"
 #include "compiler/translator/CallDAG.h"
 #include "compiler/translator/Diagnostics.h"
@@ -35,6 +36,8 @@ class TParseContext;
 #ifdef ANGLE_ENABLE_HLSL
 class TranslatorHLSL;
 #endif  // ANGLE_ENABLE_HLSL
+
+using SpecConstUsageBits = angle::PackedEnumBitSet<vk::SpecConstUsage, uint32_t>;
 
 //
 // Helper function to check if the shader type is GLSL.
@@ -100,6 +103,7 @@ class TCompiler : public TShHandleBase
 
     bool isEarlyFragmentTestsSpecified() const { return mEarlyFragmentTestsSpecified; }
     bool isEarlyFragmentTestsOptimized() const { return mEarlyFragmentTestsOptimized; }
+    SpecConstUsageBits getSpecConstUsageBits() const { return mSpecConstUsageBits; }
 
     bool isComputeShaderLocalSizeDeclared() const { return mComputeShaderLocalSizeDeclared; }
     const sh::WorkGroupSize &getComputeShaderLocalSize() const { return mComputeShaderLocalSize; }
@@ -192,6 +196,9 @@ class TCompiler : public TShHandleBase
     std::vector<sh::InterfaceBlock> mUniformBlocks;
     std::vector<sh::InterfaceBlock> mShaderStorageBlocks;
     std::vector<sh::InterfaceBlock> mInBlocks;
+
+    // Specialization constant usage bits
+    SpecConstUsageBits mSpecConstUsageBits;
 
   private:
     // Initialize symbol-table with built-in symbols.

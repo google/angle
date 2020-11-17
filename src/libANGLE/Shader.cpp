@@ -319,6 +319,7 @@ void Shader::compile(const Context *context)
     mState.mGeometryShaderMaxVertices.reset();
     mState.mGeometryShaderInvocations      = 1;
     mState.mEarlyFragmentTestsOptimization = false;
+    mState.mSpecConstUsageBits.reset();
 
     mState.mCompileStatus = CompileStatus::COMPILE_REQUESTED;
     mBoundCompiler.set(context, context->getCompiler());
@@ -432,6 +433,8 @@ void Shader::resolveCompile()
     mState.mUniforms            = GetShaderVariables(sh::GetUniforms(compilerHandle));
     mState.mUniformBlocks       = GetShaderVariables(sh::GetUniformBlocks(compilerHandle));
     mState.mShaderStorageBlocks = GetShaderVariables(sh::GetShaderStorageBlocks(compilerHandle));
+    mState.mSpecConstUsageBits =
+        rx::SpecConstUsageBits(sh::GetShaderSpecConstUsageBits(compilerHandle));
 
     switch (mState.mShaderType)
     {

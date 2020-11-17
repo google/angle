@@ -538,5 +538,4 @@ bool ProgramExecutable::isYUVOutput() const
 {
     return !isCompute() && mYUVOutput;
 }
-
 }  // namespace gl

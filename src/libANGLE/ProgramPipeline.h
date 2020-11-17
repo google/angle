@@ -65,6 +65,8 @@ class ProgramPipelineState final : angle::NonCopyable
 
     void updateExecutableTextures();
 
+    rx::SpecConstUsageBits getSpecConstUsageBits() const;
+
   private:
     void useProgramStage(const Context *context,
                          ShaderType shaderType,

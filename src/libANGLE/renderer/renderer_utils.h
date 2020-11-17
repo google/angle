@@ -15,6 +15,7 @@
 #include <limits>
 #include <map>
 
+#include "GLSLANG/ShaderLang.h"
 #include "common/angleutils.h"
 #include "common/utilities.h"
 #include "libANGLE/angletypes.h"
@@ -59,6 +60,8 @@ enum class SurfaceRotation
     InvalidEnum,
     EnumCount = InvalidEnum,
 };
+
+using SpecConstUsageBits = angle::PackedEnumBitSet<sh::vk::SpecConstUsage, uint32_t>;
 
 void RotateRectangle(const SurfaceRotation rotation,
                      const bool flipY,

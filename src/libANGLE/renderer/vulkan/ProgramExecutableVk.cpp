@@ -288,6 +288,20 @@ ProgramVk *ProgramExecutableVk::getShaderProgram(const gl::State &glState,
     return nullptr;
 }
 
+SpecConstUsageBits ProgramExecutableVk::getSpecConstUsageBits() const
+{
+    if (mProgram)
+    {
+        return mProgram->getState().getSpecConstUsageBits();
+    }
+    else if (mProgramPipeline)
+    {
+        return mProgramPipeline->getState().getSpecConstUsageBits();
+    }
+
+    return SpecConstUsageBits();
+}
+
 // TODO: http://anglebug.com/3570: Move/Copy all of the necessary information into
 // the ProgramExecutable, so this function can be removed.
 void ProgramExecutableVk::fillProgramStateMap(
