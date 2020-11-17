@@ -140,12 +140,11 @@ const char *gEGLConfigName = "rgba8888d24s8";
 // Returns the default API for a platform.
 const char *GetDefaultAPIName()
 {
-#if defined(ANGLE_PLATFORM_WINDOWS)
-    return "angle-d3d11";
-#elif defined(ANGLE_PLATFORM_APPLE) || defined(ANGLE_PLATFORM_LINUX)
+#if defined(ANGLE_PLATFORM_ANDROID) || defined(ANGLE_PLATFORM_LINUX) || \
+    defined(ANGLE_PLATFORM_WINDOWS)
+    return "angle-vulkan";
+#elif defined(ANGLE_PLATFORM_APPLE)
     return "angle-gl";
-#elif defined(ANGLE_PLATFORM_ANDROID)
-    return "angle-gles";
 #else
 #    error Unknown platform.
 #endif
