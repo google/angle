@@ -699,6 +699,12 @@ void ANGLERenderTest::SetUp()
         // FAIL returns.
     }
 
+    if (gVerboseLogging)
+    {
+        printf("GL_RENDERER: %s\n", glGetString(GL_RENDERER));
+        printf("GL_VERSION: %s\n", glGetString(GL_VERSION));
+    }
+
     mTestTrialResults.reserve(gTestTrials);
 
     // Capture a screenshot if enabled.
