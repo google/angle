@@ -57,6 +57,30 @@
       },
       "revId": "0e7d4c47a3d5a467c179c55c211e0079645629c4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "25fec353_3f8e681d",
+        "filename": "src/tests/gl_tests/MipmapTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 612,
+      "author": {
+        "id": 1172235
+      },
+      "writtenOn": "2020-11-17T19:26:39Z",
+      "side": 1,
+      "message": "Oops I completely missed this until trawling my email somehow. Sorry about that. Will open a followup.",
+      "parentUuid": "b4bc28c5_144d03d3",
+      "range": {
+        "startLine": 612,
+        "startChar": 4,
+        "endLine": 612,
+        "endChar": 22
+      },
+      "revId": "0e7d4c47a3d5a467c179c55c211e0079645629c4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
