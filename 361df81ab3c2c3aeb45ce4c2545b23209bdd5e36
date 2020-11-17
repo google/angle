@@ -326,6 +326,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "6c714b6e_fedfb22b",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 502,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-17T03:38:57Z",
+      "side": 1,
+      "message": "It could work both ways, the current is a little more efficient as the key is smaller (see future CLs).\n\nThe buffer signals the texture, the texture syncs and the view is recreated.",
+      "parentUuid": "6eeeb87d_02830c32",
+      "range": {
+        "startLine": 500,
+        "startChar": 0,
+        "endLine": 502,
+        "endChar": 37
+      },
+      "revId": "361df81ab3c2c3aeb45ce4c2545b23209bdd5e36",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "1b721c71_c3af3d6c",
         "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
         "patchSetId": 8
@@ -432,6 +456,30 @@
       "side": 1,
       "message": "Well, what\u0027s our plan for that one format that doesn\u0027t have mandatory support? Maybe we\u0027ll need to resolve this comment in a follow-up.",
       "parentUuid": "24804abc_10d61b34",
+      "range": {
+        "startLine": 67,
+        "startChar": 0,
+        "endLine": 72,
+        "endChar": 42
+      },
+      "revId": "361df81ab3c2c3aeb45ce4c2545b23209bdd5e36",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "06aa484c_4607bc38",
+        "filename": "src/libANGLE/renderer/vulkan/vk_format_utils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-17T03:38:57Z",
+      "side": 1,
+      "message": "It (RGB32) *does* have mandatory support for vertex buffer which is what this function checks.\n\nIn other words, if format F needs texel buffer support, it already has mandatory vertex buffer support so vkBufferFormat is definitely not emulated and can be used for texel buffers.",
+      "parentUuid": "ba14e1e6_0a94ff06",
       "range": {
         "startLine": 67,
         "startChar": 0,
@@ -550,6 +598,30 @@
       "side": 1,
       "message": "Preference for ImageOrBufferViewSerial since that most accurately describes the object. SGTM if you want that approach.",
       "parentUuid": "b5191fb0_0dd54d3e",
+      "range": {
+        "startLine": 2141,
+        "startChar": 0,
+        "endLine": 2144,
+        "endChar": 32
+      },
+      "revId": "361df81ab3c2c3aeb45ce4c2545b23209bdd5e36",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "df044d29_f41d595d",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 2144,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-17T03:38:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b79192cb_563b1499",
       "range": {
         "startLine": 2141,
         "startChar": 0,
