@@ -78,6 +78,9 @@ class ANGLEPerfTest : public testing::Test, angle::NonCopyable
     virtual void finishTest() {}
     virtual void flush() {}
 
+    // Can be overridden in child tests that require a certain number of steps per trial.
+    virtual int getStepAlignment() const;
+
   protected:
     enum class RunLoopPolicy
     {
@@ -97,8 +100,6 @@ class ANGLEPerfTest : public testing::Test, angle::NonCopyable
 
     int getNumStepsPerformed() const { return mTrialNumStepsPerformed; }
 
-    // Defaults to one step per run loop. Can be changed in any test.
-    void setStepsPerRunLoopStep(int stepsPerRunLoop);
     void doRunLoop(double maxRunTime, int maxStepsToRun, RunLoopPolicy runPolicy);
 
     // Overriden in trace perf tests.
@@ -118,7 +119,6 @@ class ANGLEPerfTest : public testing::Test, angle::NonCopyable
     int mStepsToRun;
     int mTrialNumStepsPerformed;
     int mTotalNumStepsPerformed;
-    int mStepsPerRunLoopStep;
     int mIterationsPerStep;
     bool mRunning;
     std::vector<double> mTestTrialResults;
