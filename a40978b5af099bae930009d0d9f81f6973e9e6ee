@@ -16,6 +16,69 @@
       "message": "CC\u0027ing interested engineers.  I\u0027m going to put this CL on a shelf for the moment; the priority from AGI has lowered.\n\nI created a working implementation for renderbuffers, and discovered how to do that for buffers as well.  I have some hacked test code, with notes of how to clean it up.\n\nThere\u0027s a portability issue w.r.t. casting Vulkan handles to uint64_t, which is required by the Vulkan extension.  I found some LunarG code that seems to do the trick (see: third_party/vulkan-validation-layers/src/layers/cast_utils.h).",
       "revId": "a40978b5af099bae930009d0d9f81f6973e9e6ee",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "61c65729_3a21920a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-17T03:16:36Z",
+      "side": 1,
+      "message": "Awesome, I\u0027ve had this in my TODO list for about two years. In particular I really want to label internal objects ANGLE creates so it\u0027s obvious in RenderDoc etc what resource comes from the application and what comes from ANGLE internals.",
+      "revId": "a40978b5af099bae930009d0d9f81f6973e9e6ee",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5297cdf5_1a68f38b",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2496,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-17T03:16:36Z",
+      "side": 1,
+      "message": "grep for vkCmdInsertDebugUtilsLabelEXT and check out how that\u0027s handled!",
+      "range": {
+        "startLine": 2496,
+        "startChar": 7,
+        "endLine": 2496,
+        "endChar": 32
+      },
+      "revId": "a40978b5af099bae930009d0d9f81f6973e9e6ee",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0f10a0a1_e6394076",
+        "filename": "src/libANGLE/renderer/vulkan/RenderbufferVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 404,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-17T03:16:36Z",
+      "side": 1,
+      "message": "What exactly is not portable about this cast?",
+      "range": {
+        "startLine": 402,
+        "startChar": 39,
+        "endLine": 404,
+        "endChar": 76
+      },
+      "revId": "a40978b5af099bae930009d0d9f81f6973e9e6ee",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
