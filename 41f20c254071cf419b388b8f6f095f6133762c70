@@ -22,6 +22,30 @@
       },
       "revId": "41f20c254071cf419b388b8f6f095f6133762c70",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "295cefe8_580ec88f",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 314,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-17T16:08:47Z",
+      "side": 0,
+      "message": "Do you know why this isn\u0027t picked up by VVL? Is this a syncval issue?",
+      "parentUuid": "2fb3d739_1981dc76",
+      "range": {
+        "startLine": 314,
+        "startChar": 9,
+        "endLine": 314,
+        "endChar": 33
+      },
+      "revId": "41f20c254071cf419b388b8f6f095f6133762c70",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
