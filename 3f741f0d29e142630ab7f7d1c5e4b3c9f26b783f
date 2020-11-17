@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d1694ca0_e778deda",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1117350
+      },
+      "writtenOn": "2020-11-17T00:35:16Z",
+      "side": 1,
+      "message": "Thanks for the quick review Shahbaz!",
+      "revId": "3f741f0d29e142630ab7f7d1c5e4b3c9f26b783f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
