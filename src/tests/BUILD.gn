@@ -1338,6 +1338,11 @@ if (build_angle_deqp_tests && !is_fuchsia) {
     mustpass_name = "gles31-khr-master.txt"
   }
 
+  angle_deqp_khr_gtest("khr_gles32") {
+    defines = [ "ANGLE_DEQP_KHR_GLES32_TESTS" ]
+    mustpass_name = "gles32-khr-master.txt"
+  }
+
   template("angle_deqp_rotate_gtest") {
     split_target = string_split(target_name, "_")
     _api = split_target[0]

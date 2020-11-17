@@ -1484,7 +1484,7 @@ Error ValidateCreateContext(Display *display,
             }
             break;
         case 3:
-            if (clientMinorVersion != 0 && clientMinorVersion != 1)
+            if (clientMinorVersion < 0 || clientMinorVersion > 2)
             {
                 return EglBadAttribute();
             }

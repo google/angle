@@ -77,6 +77,7 @@ const char *gCaseListFiles[] = {
     OPENGL_CTS_DIR("khronos_mustpass/master/gles2-khr-master.txt"),
     OPENGL_CTS_DIR("khronos_mustpass/master/gles3-khr-master.txt"),
     OPENGL_CTS_DIR("khronos_mustpass/master/gles31-khr-master.txt"),
+    OPENGL_CTS_DIR("khronos_mustpass/master/gles32-khr-master.txt"),
     OPENGL_CTS_DIR("aosp_mustpass/master/gles3-rotate-landscape.txt"),
     OPENGL_CTS_DIR("aosp_mustpass/master/gles3-rotate-reverse-portrait.txt"),
     OPENGL_CTS_DIR("aosp_mustpass/master/gles3-rotate-reverse-landscape.txt"),
@@ -91,10 +92,10 @@ const char *gTestExpectationsFiles[] = {
     "deqp_gles2_test_expectations.txt",         "deqp_gles3_test_expectations.txt",
     "deqp_gles31_test_expectations.txt",        "deqp_egl_test_expectations.txt",
     "deqp_khr_gles2_test_expectations.txt",     "deqp_khr_gles3_test_expectations.txt",
-    "deqp_khr_gles31_test_expectations.txt",    "deqp_gles3_rotate_test_expectations.txt",
+    "deqp_khr_gles31_test_expectations.txt",    "deqp_khr_gles32_test_expectations.txt",
     "deqp_gles3_rotate_test_expectations.txt",  "deqp_gles3_rotate_test_expectations.txt",
+    "deqp_gles3_rotate_test_expectations.txt",  "deqp_gles31_rotate_test_expectations.txt",
     "deqp_gles31_rotate_test_expectations.txt", "deqp_gles31_rotate_test_expectations.txt",
-    "deqp_gles31_rotate_test_expectations.txt",
 };
 
 using APIInfo = std::pair<const char *, GPUTestConfig::API>;
@@ -617,28 +618,32 @@ ANGLE_INSTANTIATE_DEQP_TEST_CASE(KHR_GLES3, 5);
 ANGLE_INSTANTIATE_DEQP_TEST_CASE(KHR_GLES31, 6);
 #endif
 
+#ifdef ANGLE_DEQP_KHR_GLES32_TESTS
+ANGLE_INSTANTIATE_DEQP_TEST_CASE(KHR_GLES32, 7);
+#endif
+
 #ifdef ANGLE_DEQP_GLES3_ROTATE90_TESTS
-ANGLE_INSTANTIATE_DEQP_TEST_CASE(GLES3_ROTATE90, 7);
+ANGLE_INSTANTIATE_DEQP_TEST_CASE(GLES3_ROTATE90, 8);
 #endif
 
 #ifdef ANGLE_DEQP_GLES3_ROTATE180_TESTS
-ANGLE_INSTANTIATE_DEQP_TEST_CASE(GLES3_ROTATE180, 8);
+ANGLE_INSTANTIATE_DEQP_TEST_CASE(GLES3_ROTATE180, 9);
 #endif
 
 #ifdef ANGLE_DEQP_GLES3_ROTATE270_TESTS
-ANGLE_INSTANTIATE_DEQP_TEST_CASE(GLES3_ROTATE270, 9);
+ANGLE_INSTANTIATE_DEQP_TEST_CASE(GLES3_ROTATE270, 10);
 #endif
 
 #ifdef ANGLE_DEQP_GLES31_ROTATE90_TESTS
-ANGLE_INSTANTIATE_DEQP_TEST_CASE(GLES31_ROTATE90, 10);
+ANGLE_INSTANTIATE_DEQP_TEST_CASE(GLES31_ROTATE90, 11);
 #endif
 
 #ifdef ANGLE_DEQP_GLES31_ROTATE180_TESTS
-ANGLE_INSTANTIATE_DEQP_TEST_CASE(GLES31_ROTATE180, 11);
+ANGLE_INSTANTIATE_DEQP_TEST_CASE(GLES31_ROTATE180, 12);
 #endif
 
 #ifdef ANGLE_DEQP_GLES31_ROTATE270_TESTS
-ANGLE_INSTANTIATE_DEQP_TEST_CASE(GLES31_ROTATE270, 12);
+ANGLE_INSTANTIATE_DEQP_TEST_CASE(GLES31_ROTATE270, 13);
 #endif
 
 void HandleDisplayType(const char *displayTypeString)

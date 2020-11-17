@@ -37,13 +37,17 @@ ShShaderSpec SelectShaderSpec(GLint majorVersion,
 
     if (majorVersion >= 3)
     {
-        if (minorVersion == 1)
+        switch (minorVersion)
         {
-            return isWebGL ? SH_WEBGL3_SPEC : SH_GLES3_1_SPEC;
-        }
-        else
-        {
-            return isWebGL ? SH_WEBGL2_SPEC : SH_GLES3_SPEC;
+            case 2:
+                ASSERT(!isWebGL);
+                return SH_GLES3_2_SPEC;
+            case 1:
+                return isWebGL ? SH_WEBGL3_SPEC : SH_GLES3_1_SPEC;
+            case 0:
+                return isWebGL ? SH_WEBGL2_SPEC : SH_GLES3_SPEC;
+            default:
+                UNREACHABLE();
         }
     }
 

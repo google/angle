@@ -198,7 +198,8 @@ void TDirectiveHandler::handleVersion(const angle::pp::SourceLocation &loc,
                                       int version,
                                       ShShaderSpec spec)
 {
-    if (((version == 100 || version == 300 || version == 310) && !IsDesktopGLSpec(spec)) ||
+    if (((version == 100 || version == 300 || version == 310 || version == 320) &&
+         !IsDesktopGLSpec(spec)) ||
         IsDesktopGLSpec(spec))
     {
         mShaderVersion = version;

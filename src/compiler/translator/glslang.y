@@ -151,9 +151,9 @@ extern void yyerror(YYLTYPE* yylloc, TParseContext* context, void *scanner, cons
     }  \
 } while (0)
 
-#define ES3_1_ONLY(TOKEN, LINE, REASON) do {  \
-    if (context->getShaderVersion() != 310) {  \
-        context->error(LINE, REASON " supported in GLSL ES 3.10 only", TOKEN);  \
+#define ES3_1_OR_NEWER(TOKEN, LINE, REASON) do {  \
+    if (context->getShaderVersion() < 310) {  \
+        context->error(LINE, REASON " supported in GLSL ES 3.10 and above only", TOKEN);  \
     }  \
 } while (0)
 %}
@@ -868,14 +868,14 @@ storage_qualifier
         $$ = new TStorageQualifierWrapper(EvqCentroid, @1);
     }
     | PATCH {
-        ES3_1_ONLY("patch", @1, "storage qualifier");
+        ES3_1_OR_NEWER("patch", @1, "storage qualifier");
         $$ = new TStorageQualifierWrapper(EvqPatch, @1);
     }
     | UNIFORM {
         $$ = context->parseGlobalStorageQualifier(EvqUniform, @1);
     }
     | BUFFER {
-        ES3_1_ONLY("buffer", @1, "storage qualifier");
+        ES3_1_OR_NEWER("buffer", @1, "storage qualifier");
         $$ = context->parseGlobalStorageQualifier(EvqBuffer, @1);
     }
     | READONLY {
@@ -977,12 +977,12 @@ array_specifier
         $$->push_back(size);
     }
     | array_specifier LEFT_BRACKET RIGHT_BRACKET {
-        ES3_1_ONLY("[]", @2, "arrays of arrays");
+        ES3_1_OR_NEWER("[]", @2, "arrays of arrays");
         $$ = $1;
         $$->insert($$->begin(), 0u);
     }
     | array_specifier LEFT_BRACKET constant_expression RIGHT_BRACKET {
-        ES3_1_ONLY("[]", @2, "arrays of arrays");
+        ES3_1_OR_NEWER("[]", @2, "arrays of arrays");
         $$ = $1;
         unsigned int size = context->checkIsValidArraySize(@2, $3);
         // Make the type an array even if size check failed.

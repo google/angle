@@ -219,6 +219,8 @@ int GetMaxShaderVersionForSpec(ShShaderSpec spec)
         case SH_GLES3_1_SPEC:
         case SH_WEBGL3_SPEC:
             return 310;
+        case SH_GLES3_2_SPEC:
+            return 320;
         case SH_GL_CORE_SPEC:
         case SH_GL_COMPATIBILITY_SPEC:
             return 460;
@@ -452,7 +454,7 @@ bool TCompiler::checkShaderVersion(TParseContext *parseContext)
             }
             else
             {
-                ASSERT(mShaderVersion == 310);
+                ASSERT(mShaderVersion == 310 || mShaderVersion == 320);
                 if (!parseContext->checkCanUseExtension(sh::TSourceLoc(),
                                                         TExtension::EXT_geometry_shader))
                 {

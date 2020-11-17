@@ -1621,7 +1621,7 @@ std::string RendererVk::getRendererDescription() const
 gl::Version RendererVk::getMaxSupportedESVersion() const
 {
     // Current highest supported version
-    gl::Version maxVersion = gl::Version(3, 1);
+    gl::Version maxVersion = gl::Version(3, 2);
 
     // Early out without downgrading ES version if mock ICD enabled.
     // Mock ICD doesn't expose sufficient capabilities yet.
@@ -1636,6 +1636,8 @@ gl::Version RendererVk::getMaxSupportedESVersion() const
     {
         maxVersion = LimitVersionTo(maxVersion, {3, 1});
     }
+
+    // TODO: more extension checks for 3.2.  http://anglebug.com/5366
 
     // Limit to ES3.0 if there are any blockers for 3.1.
 
