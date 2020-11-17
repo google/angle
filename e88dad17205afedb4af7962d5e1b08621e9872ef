@@ -310,6 +310,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "cd2b6c3f_c81ce7d7",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 796,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-17T22:45:29Z",
+      "side": 1,
+      "message": "My bad. I was looking at the file name, which is more general. SGTM, sorry.",
+      "parentUuid": "55b1c44c_796f7d34",
+      "range": {
+        "startLine": 796,
+        "startChar": 13,
+        "endLine": 796,
+        "endChar": 53
+      },
+      "revId": "e88dad17205afedb4af7962d5e1b08621e9872ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c7c2c45b_f3e9a910",
