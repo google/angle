@@ -394,7 +394,7 @@ TEST_P(OcclusionQueriesTest, MultiQueries)
     // http://anglebug.com/4925
     ANGLE_SKIP_TEST_IF(IsMetal() && IsNVIDIA());
 
-    // TODO(crbug.com/1132295): Failing on Apple DTK.
+    // TODO(anglebug.com/5360): Failing on ARM-based Apple DTKs.
     ANGLE_SKIP_TEST_IF(IsOSX() && IsARM64() && IsDesktopOpenGL());
     ANGLE_SKIP_TEST_IF(IsOSX() && IsARM64() && IsMetal());
 

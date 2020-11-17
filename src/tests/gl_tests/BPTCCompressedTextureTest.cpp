@@ -273,6 +273,7 @@ TEST_P(BPTCCompressedTextureTestES3, CopyTexSubImage3DDisallowed)
 // Test uploading texture data from a PBO to a texture.
 TEST_P(BPTCCompressedTextureTestES3, PBOCompressedTexImage)
 {
+    // TODO(anglebug.com/5360): Failing on ARM-based Apple DTKs.
     ANGLE_SKIP_TEST_IF(IsOSX() && IsARM64() && IsMetal());
 
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_compression_bptc"));
@@ -326,6 +327,7 @@ TEST_P(BPTCCompressedTextureTestES3, PBOCompressedTexImage)
 // Test uploading texture data from a PBO to a non-zero base texture.
 TEST_P(BPTCCompressedTextureTestES3, PBOCompressedTexImageNonZeroBase)
 {
+    // TODO(anglebug.com/5360): Failing on ARM-based Apple DTKs.
     ANGLE_SKIP_TEST_IF(IsOSX() && IsARM64() && IsMetal());
 
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_compression_bptc"));
