@@ -46,6 +46,30 @@
       },
       "revId": "41f20c254071cf419b388b8f6f095f6133762c70",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4061fd99_c2eef8f1",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 314,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-17T16:57:07Z",
+      "side": 0,
+      "message": "If it *can* be caught at all, it would have to be syncval. I doubt they handle host access though.\n\nAre you having doubts about the necessity of this barrier?",
+      "parentUuid": "295cefe8_580ec88f",
+      "range": {
+        "startLine": 314,
+        "startChar": 9,
+        "endLine": 314,
+        "endChar": 33
+      },
+      "revId": "41f20c254071cf419b388b8f6f095f6133762c70",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
