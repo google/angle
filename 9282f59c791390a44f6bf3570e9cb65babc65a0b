@@ -16,6 +16,23 @@
       "message": "anything else here jamie?",
       "revId": "9282f59c791390a44f6bf3570e9cb65babc65a0b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "19300f7c_bb347c32",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 13
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-17T04:23:26Z",
+      "side": 1,
+      "message": "Modifying attention set as I believe that\u0027s what Jamie relies on now to follow up on changes",
+      "revId": "9282f59c791390a44f6bf3570e9cb65babc65a0b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
