@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3f10a010_79d67dfa",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-17T04:55:18Z",
+      "side": 1,
+      "message": "Looks good. Thanks for the cleanup.",
+      "revId": "0eaa19ebe369507ad9bffeb69b6d05ed193835e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
