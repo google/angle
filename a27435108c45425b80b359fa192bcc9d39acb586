@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "68332a8f_fea5f010",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2552,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-18T18:23:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e2883cdb_4b0aefbf",
+      "range": {
+        "startLine": 2552,
+        "startChar": 16,
+        "endLine": 2552,
+        "endChar": 24
+      },
+      "revId": "a27435108c45425b80b359fa192bcc9d39acb586",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ffa643c4_ec337965",
@@ -37,6 +61,30 @@
       "writtenOn": "2020-11-18T17:24:32Z",
       "side": 1,
       "message": "Use \u0027angle::HashMap\u0027 here instead.",
+      "range": {
+        "startLine": 2170,
+        "startChar": 4,
+        "endLine": 2170,
+        "endChar": 22
+      },
+      "revId": "a27435108c45425b80b359fa192bcc9d39acb586",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ab0186a0_020fc7b8",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 2170,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-18T18:23:44Z",
+      "side": 1,
+      "message": "Hah, I was looking for that. Done.",
+      "parentUuid": "ffa643c4_ec337965",
       "range": {
         "startLine": 2170,
         "startChar": 4,
