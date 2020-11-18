@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "36d7e63f_cefccf84",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 6541,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-18T19:25:35Z",
+      "side": 1,
+      "message": "They may or may not be aliased. This doesn\u0027t really change the usage flags. The usage flags are given to the view, so Vulkan doesn\u0027t complain that the format doesn\u0027t have the features we aren\u0027t using with the view. In other words, the usage flags passed here are a subset of the usage flags the image was created for.\n\nFYI, this is identical to getLevelDrawImageView (now called getLevelStorageImageView).",
+      "parentUuid": "00ba877a_8a7725ae",
+      "range": {
+        "startLine": 6541,
+        "startChar": 17,
+        "endLine": 6541,
+        "endChar": 42
+      },
+      "revId": "1e7b5c5282fd7127955d98d0b1351e734e99d05c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c1511e79_64575f2c",
@@ -41,6 +65,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a37ccbb1_81e4f613",
+        "filename": "src/tests/gl_tests/ComputeShaderTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 4070,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-18T19:25:35Z",
+      "side": 1,
+      "message": "That\u0027s the intention, black \u003d failure.",
+      "parentUuid": "c1511e79_64575f2c",
+      "revId": "1e7b5c5282fd7127955d98d0b1351e734e99d05c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "db74dc30_1af6ebfe",
@@ -54,6 +96,24 @@
       "writtenOn": "2020-11-18T19:18:18Z",
       "side": 1,
       "message": "same",
+      "revId": "1e7b5c5282fd7127955d98d0b1351e734e99d05c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dabdfb1f_23488064",
+        "filename": "src/tests/gl_tests/ComputeShaderTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 4121,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-18T19:25:35Z",
+      "side": 1,
+      "message": "same",
+      "parentUuid": "db74dc30_1af6ebfe",
       "revId": "1e7b5c5282fd7127955d98d0b1351e734e99d05c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
