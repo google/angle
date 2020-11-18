@@ -2333,6 +2333,26 @@ TEST_P(GLSLTest, ArrayOfStructContainingArrayOfSamplers)
     EXPECT_PIXEL_COLOR_EQ(0, 0, expected);
 }
 
+// Test that if a non-preprocessor token is seen in a disabled if-block then it does not disallow
+// extension pragmas later
+TEST_P(GLSLTest, NonPreprocessorTokensInIfBlocks)
+{
+    constexpr const char *kFS = R"(
+#if __VERSION__ >= 300
+    inout mediump vec4 fragData;
+#else
+    #extension GL_EXT_shader_texture_lod :enable
+#endif
+
+void main()
+{
+}
+    )";
+
+    GLuint shader = CompileShader(GL_FRAGMENT_SHADER, kFS);
+    EXPECT_NE(0u, shader);
+}
+
 // Test that two constructors which have vec4 and mat2 parameters get disambiguated (issue in
 // HLSL).
 TEST_P(GLSLTest_ES3, AmbiguousConstructorCall2x2)
