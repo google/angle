@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "efe1f87f_61a920c5",
+        "filename": "include/platform/FeaturesVk.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 451,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-18T22:45:11Z",
+      "side": 1,
+      "message": "Typo: s/sue/use/",
+      "revId": "182d917debd7b3a356f7c1f211b8851ed84b8fe9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
