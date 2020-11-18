@@ -28,10 +28,6 @@
 // Blend equations:
 3586 VULKAN : KHR-GLES31.core.blend_equation_advanced.* = SKIP
 
-// Limits:
-// GL_MIN/MAX_PROGRAM_TEXTURE_GATHER_OFFSET not set.
-3605 VULKAN : KHR-GLES31.core.texture_gather.* = FAIL
-
 // No known implementation supports STORAGE_TEXEL_BUFFER support for RGB32 formats
 3573 VULKAN : KHR-GLES31.core.texture_buffer.texture_buffer_texture_buffer_range = SKIP
 
