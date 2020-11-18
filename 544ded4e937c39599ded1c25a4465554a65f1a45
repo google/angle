@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "086a6479_a0935286",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-18T18:28:14Z",
+      "side": 1,
+      "message": "Nice, looks clea now. LGTM.",
+      "revId": "544ded4e937c39599ded1c25a4465554a65f1a45",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "02e5bfd6_61582374",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 2157,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-18T18:28:14Z",
+      "side": 1,
+      "message": "nit: you can omit this now.",
+      "range": {
+        "startLine": 2157,
+        "startChar": 0,
+        "endLine": 2157,
+        "endChar": 45
+      },
+      "revId": "544ded4e937c39599ded1c25a4465554a65f1a45",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
