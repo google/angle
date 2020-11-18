@@ -16,6 +16,24 @@
       "message": "Alright, I fixed the reset function not working in multiple trials and offscreen mode in this patch set.\n\nCody/Courtney PTAL. Paul FYI.",
       "revId": "6cc3bdc956ebc6dcb8eff478ea642eb81a53c576",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c2f90dbb_aa649bd6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2020-11-18T21:12:56Z",
+      "side": 1,
+      "message": "I can confirm this CL gives equivalent frame time results on angry_birds_2 trace, and if I add \"--steps-per-trial 300\" we make it all the way through the google_maps trace.  I think Jamie is going to take another pass that allows making it all the way through long traces with no additional options.",
+      "parentUuid": "86e62778_be1c2d05",
+      "revId": "6cc3bdc956ebc6dcb8eff478ea642eb81a53c576",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
