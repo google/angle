@@ -1393,6 +1393,8 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_MIN_PROGRAM_TEXTURE_GATHER_OFFSET";
                 case 0x8E5F:
                     return "GL_MAX_PROGRAM_TEXTURE_GATHER_OFFSET";
+                case 0x8E72:
+                    return "GL_PATCH_VERTICES_EXT";
                 case 0x8E75:
                     return "GL_TESS_CONTROL_OUTPUT_VERTICES";
                 case 0x8E76:
@@ -1429,6 +1431,10 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_MAX_TESS_CONTROL_TOTAL_OUTPUT_COMPONENTS";
                 case 0x8E86:
                     return "GL_MAX_TESS_EVALUATION_OUTPUT_COMPONENTS";
+                case 0x8E87:
+                    return "GL_TESS_EVALUATION_SHADER_EXT";
+                case 0x8E88:
+                    return "GL_TESS_CONTROL_SHADER_EXT";
                 case 0x8E89:
                     return "GL_MAX_TESS_CONTROL_UNIFORM_BLOCKS";
                 case 0x8E8A:

@@ -7083,6 +7083,31 @@ void GL_APIENTRY ValidateProgramPipelineEXT(GLuint pipeline)
     }
 }
 
+// GL_EXT_tessellation_shader
+void GL_APIENTRY PatchParameteriEXT(GLenum pname, GLint value)
+{
+    Context *context = GetValidGlobalContext();
+    EVENT(context, gl::EntryPoint::PatchParameteriEXT, "glPatchParameteriEXT",
+          "context = %d, pname = %s, value = %d", CID(context),
+          GLenumToString(GLenumGroup::PatchParameterName, pname), value);
+
+    if (context)
+    {
+        std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid =
+            (context->skipValidation() || ValidatePatchParameteriEXT(context, pname, value));
+        if (isCallValid)
+        {
+            context->patchParameteri(pname, value);
+        }
+        ANGLE_CAPTURE(PatchParameteriEXT, isCallValid, context, pname, value);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
+}
+
 // GL_EXT_texture_buffer
 void GL_APIENTRY TexBufferEXT(GLenum target, GLenum internalformat, GLuint buffer)
 {
@@ -22520,6 +22545,31 @@ void GL_APIENTRY PatchParameteriContextANGLE(GLeglContext ctx, GLenum pname, GLi
             context->patchParameteri(pname, value);
         }
         ANGLE_CAPTURE(PatchParameteri, isCallValid, context, pname, value);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
+}
+
+void GL_APIENTRY PatchParameteriEXTContextANGLE(GLeglContext ctx, GLenum pname, GLint value)
+{
+    Context *context = static_cast<gl::Context *>(ctx);
+    EVENT(context, gl::EntryPoint::PatchParameteriEXT, "glPatchParameteriEXT",
+          "context = %d, pname = %s, value = %d", CID(context),
+          GLenumToString(GLenumGroup::PatchParameterName, pname), value);
+
+    if (context && !context->isContextLost())
+    {
+        ASSERT(context == GetValidGlobalContext());
+        std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid =
+            (context->skipValidation() || ValidatePatchParameteriEXT(context, pname, value));
+        if (isCallValid)
+        {
+            context->patchParameteri(pname, value);
+        }
+        ANGLE_CAPTURE(PatchParameteriEXT, isCallValid, context, pname, value);
     }
     else
     {

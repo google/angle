@@ -164,7 +164,7 @@ extern void yyerror(YYLTYPE* yylloc, TParseContext* context, void *scanner, cons
 %token <lex> BVEC2 BVEC3 BVEC4 IVEC2 IVEC3 IVEC4 VEC2 VEC3 VEC4 UVEC2 UVEC3 UVEC4
 %token <lex> MATRIX2 MATRIX3 MATRIX4 IN_QUAL OUT_QUAL INOUT_QUAL UNIFORM BUFFER VARYING
 %token <lex> MATRIX2x3 MATRIX3x2 MATRIX2x4 MATRIX4x2 MATRIX3x4 MATRIX4x3
-%token <lex> SAMPLE CENTROID FLAT SMOOTH NOPERSPECTIVE
+%token <lex> SAMPLE CENTROID FLAT SMOOTH NOPERSPECTIVE PATCH
 %token <lex> READONLY WRITEONLY COHERENT RESTRICT VOLATILE SHARED
 %token <lex> STRUCT VOID_TYPE WHILE
 %token <lex> SAMPLER2D SAMPLERCUBE SAMPLER_EXTERNAL_OES SAMPLER2DRECT SAMPLER2DARRAY
@@ -866,6 +866,10 @@ storage_qualifier
     | CENTROID {
         ES3_OR_NEWER("centroid", @1, "storage qualifier");
         $$ = new TStorageQualifierWrapper(EvqCentroid, @1);
+    }
+    | PATCH {
+        ES3_1_ONLY("patch", @1, "storage qualifier");
+        $$ = new TStorageQualifierWrapper(EvqPatch, @1);
     }
     | UNIFORM {
         $$ = context->parseGlobalStorageQualifier(EvqUniform, @1);

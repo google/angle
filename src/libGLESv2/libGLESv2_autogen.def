@@ -774,6 +774,9 @@ EXPORTS
     glUseProgramStagesEXT
     glValidateProgramPipelineEXT
 
+    ; GL_EXT_tessellation_shader
+    glPatchParameteriEXT
+
     ; GL_EXT_texture_buffer
     glTexBufferEXT
     glTexBufferRangeEXT
@@ -1449,6 +1452,7 @@ EXPORTS
     glOrthofContextANGLE
     glOrthoxContextANGLE
     glPatchParameteriContextANGLE
+    glPatchParameteriEXTContextANGLE
     glPauseTransformFeedbackContextANGLE
     glPixelStoreiContextANGLE
     glPointParameterfContextANGLE

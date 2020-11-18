@@ -1054,6 +1054,9 @@ ANGLE_EXPORT void GL_APIENTRY UseProgramStagesEXT(GLuint pipeline,
                                                   GLuint program);
 ANGLE_EXPORT void GL_APIENTRY ValidateProgramPipelineEXT(GLuint pipeline);
 
+// GL_EXT_tessellation_shader
+ANGLE_EXPORT void GL_APIENTRY PatchParameteriEXT(GLenum pname, GLint value);
+
 // GL_EXT_texture_buffer
 ANGLE_EXPORT void GL_APIENTRY TexBufferEXT(GLenum target, GLenum internalformat, GLuint buffer);
 ANGLE_EXPORT void GL_APIENTRY TexBufferRangeEXT(GLenum target,
@@ -3007,6 +3010,9 @@ ANGLE_EXPORT void GL_APIENTRY OrthoxContextANGLE(GLeglContext ctx,
 ANGLE_EXPORT void GL_APIENTRY PatchParameteriContextANGLE(GLeglContext ctx,
                                                           GLenum pname,
                                                           GLint value);
+ANGLE_EXPORT void GL_APIENTRY PatchParameteriEXTContextANGLE(GLeglContext ctx,
+                                                             GLenum pname,
+                                                             GLint value);
 ANGLE_EXPORT void GL_APIENTRY PauseTransformFeedbackContextANGLE(GLeglContext ctx);
 ANGLE_EXPORT void GL_APIENTRY PixelStoreiContextANGLE(GLeglContext ctx, GLenum pname, GLint param);
 ANGLE_EXPORT void GL_APIENTRY PointParameterfContextANGLE(GLeglContext ctx,

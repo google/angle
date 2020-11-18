@@ -1171,6 +1171,8 @@ const ProcEntry g_procTable[] = {
     {"glOrthoxContextANGLE", P(gl::OrthoxContextANGLE)},
     {"glPatchParameteri", P(gl::PatchParameteri)},
     {"glPatchParameteriContextANGLE", P(gl::PatchParameteriContextANGLE)},
+    {"glPatchParameteriEXT", P(gl::PatchParameteriEXT)},
+    {"glPatchParameteriEXTContextANGLE", P(gl::PatchParameteriEXTContextANGLE)},
     {"glPauseTransformFeedback", P(gl::PauseTransformFeedback)},
     {"glPauseTransformFeedbackContextANGLE", P(gl::PauseTransformFeedbackContextANGLE)},
     {"glPixelStorei", P(gl::PixelStorei)},
@@ -1729,5 +1731,5 @@ const ProcEntry g_procTable[] = {
     {"glWeightPointerOES", P(gl::WeightPointerOES)},
     {"glWeightPointerOESContextANGLE", P(gl::WeightPointerOESContextANGLE)}};
 
-const size_t g_numProcs = 1631;
+const size_t g_numProcs = 1633;
 }  // namespace egl

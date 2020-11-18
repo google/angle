@@ -265,6 +265,7 @@ typedef void (GL_APIENTRYP PFNGLMULTIDRAWELEMENTSBASEVERTEXEXTCONTEXTANGLEPROC)(
 typedef void (GL_APIENTRYP PFNGLNAMEDBUFFERSTORAGEEXTERNALEXTCONTEXTANGLEPROC)(GLeglContext ctx, GLuint buffer, GLintptr offset, GLsizeiptr size, GLeglClientBufferEXT clientBuffer, GLbitfield flags);
 typedef void (GL_APIENTRYP PFNGLOBJECTLABELKHRCONTEXTANGLEPROC)(GLeglContext ctx, GLenum identifier, GLuint name, GLsizei length, const GLchar *label);
 typedef void (GL_APIENTRYP PFNGLOBJECTPTRLABELKHRCONTEXTANGLEPROC)(GLeglContext ctx, const void *ptr, GLsizei length, const GLchar *label);
+typedef void (GL_APIENTRYP PFNGLPATCHPARAMETERIEXTCONTEXTANGLEPROC)(GLeglContext ctx, GLenum pname, GLint value);
 typedef void (GL_APIENTRYP PFNGLPOPDEBUGGROUPKHRCONTEXTANGLEPROC)(GLeglContext ctx);
 typedef void (GL_APIENTRYP PFNGLPOPGROUPMARKEREXTCONTEXTANGLEPROC)(GLeglContext ctx);
 typedef void (GL_APIENTRYP PFNGLPROGRAMBINARYOESCONTEXTANGLEPROC)(GLeglContext ctx, GLuint program, GLenum binaryFormat, const void *binary, GLint length);
@@ -692,6 +693,7 @@ GL_APICALL void GL_APIENTRY glMultiDrawElementsBaseVertexEXTContextANGLE(GLeglCo
 GL_APICALL void GL_APIENTRY glNamedBufferStorageExternalEXTContextANGLE(GLeglContext ctx, GLuint buffer, GLintptr offset, GLsizeiptr size, GLeglClientBufferEXT clientBuffer, GLbitfield flags);
 GL_APICALL void GL_APIENTRY glObjectLabelKHRContextANGLE(GLeglContext ctx, GLenum identifier, GLuint name, GLsizei length, const GLchar *label);
 GL_APICALL void GL_APIENTRY glObjectPtrLabelKHRContextANGLE(GLeglContext ctx, const void *ptr, GLsizei length, const GLchar *label);
+GL_APICALL void GL_APIENTRY glPatchParameteriEXTContextANGLE(GLeglContext ctx, GLenum pname, GLint value);
 GL_APICALL void GL_APIENTRY glPopDebugGroupKHRContextANGLE(GLeglContext ctx);
 GL_APICALL void GL_APIENTRY glPopGroupMarkerEXTContextANGLE(GLeglContext ctx);
 GL_APICALL void GL_APIENTRY glProgramBinaryOESContextANGLE(GLeglContext ctx, GLuint program, GLenum binaryFormat, const void *binary, GLint length);

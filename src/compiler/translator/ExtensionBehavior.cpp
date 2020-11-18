@@ -28,6 +28,7 @@
     OP(EXT_shader_non_constant_global_initializers) \
     OP(EXT_shader_texture_lod)                      \
     OP(EXT_shadow_samplers)                         \
+    OP(EXT_tessellation_shader)                     \
     OP(EXT_texture_buffer)                          \
     OP(EXT_texture_cube_map_array)                  \
     OP(EXT_YUV_target)                              \

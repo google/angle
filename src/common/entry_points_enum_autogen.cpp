@@ -1686,6 +1686,8 @@ const char *GetEntryPointName(EntryPoint ep)
             return "glPatchParameterfv";
         case EntryPoint::PatchParameteri:
             return "glPatchParameteri";
+        case EntryPoint::PatchParameteriEXT:
+            return "glPatchParameteriEXT";
         case EntryPoint::PauseTransformFeedback:
             return "glPauseTransformFeedback";
         case EntryPoint::PixelMapfv:

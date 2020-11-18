@@ -210,7 +210,8 @@ struct AllShaderTypes
 constexpr size_t kGraphicsShaderCount = static_cast<size_t>(ShaderType::EnumCount) - 1u;
 // Arrange the shader types in the order of rendering pipeline
 constexpr std::array<ShaderType, kGraphicsShaderCount> kAllGraphicsShaderTypes = {
-    ShaderType::Vertex, ShaderType::Geometry, ShaderType::Fragment};
+    ShaderType::Vertex, ShaderType::TessControl, ShaderType::TessEvaluation, ShaderType::Geometry,
+    ShaderType::Fragment};
 
 using ShaderBitSet = angle::PackedEnumBitSet<ShaderType, uint8_t>;
 static_assert(sizeof(ShaderBitSet) == sizeof(uint8_t), "Unexpected size");
@@ -525,6 +526,84 @@ ANGLE_VALIDATE_PACKED_ENUM(VertexAttribType, Int1010102, GL_INT_10_10_10_2_OES);
 ANGLE_VALIDATE_PACKED_ENUM(VertexAttribType, UnsignedInt1010102, GL_UNSIGNED_INT_10_10_10_2_OES);
 
 std::ostream &operator<<(std::ostream &os, VertexAttribType value);
+
+enum class TessEvaluationType
+{
+    Triangles             = 0,
+    Quads                 = 1,
+    Isolines              = 2,
+    EqualSpacing          = 3,
+    FractionalEvenSpacing = 4,
+    FractionalOddSpacing  = 5,
+    Cw                    = 6,
+    Ccw                   = 7,
+    PointMode             = 8,
+    InvalidEnum           = 9,
+    EnumCount             = 9
+};
+
+template <>
+constexpr TessEvaluationType FromGLenum<TessEvaluationType>(GLenum from)
+{
+    if (from == GL_TRIANGLES)
+        return TessEvaluationType::Triangles;
+    if (from == GL_QUADS)
+        return TessEvaluationType::Quads;
+    if (from == GL_ISOLINES)
+        return TessEvaluationType::Isolines;
+    if (from == GL_EQUAL)
+        return TessEvaluationType::EqualSpacing;
+    if (from == GL_FRACTIONAL_EVEN)
+        return TessEvaluationType::FractionalEvenSpacing;
+    if (from == GL_FRACTIONAL_ODD)
+        return TessEvaluationType::FractionalOddSpacing;
+    if (from == GL_CW)
+        return TessEvaluationType::Cw;
+    if (from == GL_CCW)
+        return TessEvaluationType::Ccw;
+    if (from == GL_TESS_GEN_POINT_MODE)
+        return TessEvaluationType::PointMode;
+    return TessEvaluationType::InvalidEnum;
+}
+
+constexpr GLenum ToGLenum(TessEvaluationType from)
+{
+    switch (from)
+    {
+        case TessEvaluationType::Triangles:
+            return GL_TRIANGLES;
+        case TessEvaluationType::Quads:
+            return GL_QUADS;
+        case TessEvaluationType::Isolines:
+            return GL_ISOLINES;
+        case TessEvaluationType::EqualSpacing:
+            return GL_EQUAL;
+        case TessEvaluationType::FractionalEvenSpacing:
+            return GL_FRACTIONAL_EVEN;
+        case TessEvaluationType::FractionalOddSpacing:
+            return GL_FRACTIONAL_ODD;
+        case TessEvaluationType::Cw:
+            return GL_CW;
+        case TessEvaluationType::Ccw:
+            return GL_CCW;
+        case TessEvaluationType::PointMode:
+            return GL_TESS_GEN_POINT_MODE;
+        default:
+            return GL_INVALID_ENUM;
+    }
+}
+
+ANGLE_VALIDATE_PACKED_ENUM(TessEvaluationType, Triangles, GL_TRIANGLES);
+ANGLE_VALIDATE_PACKED_ENUM(TessEvaluationType, Quads, GL_QUADS);
+ANGLE_VALIDATE_PACKED_ENUM(TessEvaluationType, Isolines, GL_ISOLINES);
+ANGLE_VALIDATE_PACKED_ENUM(TessEvaluationType, EqualSpacing, GL_EQUAL);
+ANGLE_VALIDATE_PACKED_ENUM(TessEvaluationType, FractionalEvenSpacing, GL_FRACTIONAL_EVEN);
+ANGLE_VALIDATE_PACKED_ENUM(TessEvaluationType, FractionalOddSpacing, GL_FRACTIONAL_ODD);
+ANGLE_VALIDATE_PACKED_ENUM(TessEvaluationType, Cw, GL_CW);
+ANGLE_VALIDATE_PACKED_ENUM(TessEvaluationType, Ccw, GL_CCW);
+ANGLE_VALIDATE_PACKED_ENUM(TessEvaluationType, PointMode, GL_TESS_GEN_POINT_MODE);
+
+std::ostream &operator<<(std::ostream &os, TessEvaluationType value);
 
 // Typesafe object handles.
 

@@ -88,6 +88,7 @@ gles_extensions = [
     "GL_EXT_semaphore_fd",
     "GL_EXT_separate_shader_objects",
     "GL_EXT_sRGB",
+    "GL_EXT_tessellation_shader",
     "GL_EXT_texture_buffer",
     "GL_EXT_texture_compression_bptc",
     "GL_EXT_texture_compression_dxt1",

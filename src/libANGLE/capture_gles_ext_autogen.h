@@ -1581,6 +1581,12 @@ angle::CallCapture CaptureValidateProgramPipelineEXT(const State &glState,
                                                      bool isCallValid,
                                                      ProgramPipelineID pipelinePacked);
 
+// GL_EXT_tessellation_shader
+angle::CallCapture CapturePatchParameteriEXT(const State &glState,
+                                             bool isCallValid,
+                                             GLenum pname,
+                                             GLint value);
+
 // GL_EXT_texture_buffer
 angle::CallCapture CaptureTexBufferEXT(const State &glState,
                                        bool isCallValid,

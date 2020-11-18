@@ -1181,6 +1181,11 @@ GROUP BEGIN ESSL310CS {"shader_type": "COMPUTE"}
     void groupMemoryBarrier();
 GROUP END ESSL310CS
 
+GROUP BEGIN ESSL310TCS {"shader_type": "TESS_CONTROL_EXT"}
+  DEFAULT METADATA {"essl_level": "ESSL3_1_BUILTINS", "op": "auto", "essl_extension": "EXT_tessellation_shader", "hasSideEffects": true}
+    void barrier();
+GROUP END ESSL310TCS
+
 GROUP BEGIN ESSL310GS {"shader_type": "GEOMETRY_EXT"}
   DEFAULT METADATA {"essl_level": "ESSL3_1_BUILTINS", "op": "auto", "essl_extension": "EXT_geometry_shader", "hasSideEffects": true}
     void EmitVertex();

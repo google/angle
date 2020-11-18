@@ -476,6 +476,44 @@ std::ostream &operator<<(std::ostream &os, VertexAttribType value)
     }
     return os;
 }
+
+std::ostream &operator<<(std::ostream &os, TessEvaluationType value)
+{
+    switch (value)
+    {
+        case TessEvaluationType::Triangles:
+            os << "GL_TRIANGLES";
+            break;
+        case TessEvaluationType::Quads:
+            os << "GL_QUADS";
+            break;
+        case TessEvaluationType::Isolines:
+            os << "GL_ISOLINES";
+            break;
+        case TessEvaluationType::EqualSpacing:
+            os << "GL_EQUAL";
+            break;
+        case TessEvaluationType::FractionalEvenSpacing:
+            os << "GL_FRACTIONAL_EVEN";
+            break;
+        case TessEvaluationType::FractionalOddSpacing:
+            os << "GL_FRACTIONAL_ODD";
+            break;
+        case TessEvaluationType::Cw:
+            os << "GL_CW";
+            break;
+        case TessEvaluationType::Ccw:
+            os << "GL_CCW";
+            break;
+        case TessEvaluationType::PointMode:
+            os << "GL_TESS_GEN_POINT_MODE";
+            break;
+        default:
+            os << "GL_INVALID_ENUM";
+            break;
+    }
+    return os;
+}
 }  // namespace gl
 
 namespace egl

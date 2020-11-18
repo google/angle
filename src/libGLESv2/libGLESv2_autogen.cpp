@@ -4594,6 +4594,12 @@ void GL_APIENTRY glValidateProgramPipelineEXT(GLuint pipeline)
     return gl::ValidateProgramPipelineEXT(pipeline);
 }
 
+// GL_EXT_tessellation_shader
+void GL_APIENTRY glPatchParameteriEXT(GLenum pname, GLint value)
+{
+    return gl::PatchParameteriEXT(pname, value);
+}
+
 // GL_EXT_texture_buffer
 void GL_APIENTRY glTexBufferEXT(GLenum target, GLenum internalformat, GLuint buffer)
 {
@@ -8486,6 +8492,11 @@ void GL_APIENTRY glOrthoxContextANGLE(GLeglContext ctx,
 void GL_APIENTRY glPatchParameteriContextANGLE(GLeglContext ctx, GLenum pname, GLint value)
 {
     return gl::PatchParameteriContextANGLE(ctx, pname, value);
+}
+
+void GL_APIENTRY glPatchParameteriEXTContextANGLE(GLeglContext ctx, GLenum pname, GLint value)
+{
+    return gl::PatchParameteriEXTContextANGLE(ctx, pname, value);
 }
 
 void GL_APIENTRY glPauseTransformFeedbackContextANGLE(GLeglContext ctx)

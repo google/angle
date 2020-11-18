@@ -1303,6 +1303,9 @@ bool ValidateUseProgramStagesEXT(const Context *context,
                                  ShaderProgramID programPacked);
 bool ValidateValidateProgramPipelineEXT(const Context *context, ProgramPipelineID pipelinePacked);
 
+// GL_EXT_tessellation_shader
+bool ValidatePatchParameteriEXT(const Context *context, GLenum pname, GLint value);
+
 // GL_EXT_texture_buffer
 bool ValidateTexBufferEXT(const Context *context,
                           TextureType targetPacked,

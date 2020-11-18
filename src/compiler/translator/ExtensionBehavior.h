@@ -34,6 +34,7 @@ enum class TExtension : uint8_t
     EXT_shader_non_constant_global_initializers,
     EXT_shader_texture_lod,
     EXT_shadow_samplers,
+    EXT_tessellation_shader,
     EXT_texture_buffer,
     EXT_texture_cube_map_array,
     EXT_YUV_target,

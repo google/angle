@@ -165,6 +165,8 @@ O           [0-7]
 "smooth"        { return ES3_keyword(context, SMOOTH); }
 "noperspective" { return ES3_reserved_ES3_extension(context, TExtension::NV_shader_noperspective_interpolation, NOPERSPECTIVE); }
 
+"patch"        { return ES3_reserved_ES3_1_extension_ES3_2_keyword(context, TExtension::EXT_tessellation_shader, PATCH); }
+
 "in"           { return IN_QUAL; }
 "out"          { return OUT_QUAL; }
 "inout"        { return INOUT_QUAL; }
@@ -280,7 +282,6 @@ O           [0-7]
 
     /* Reserved keywords for GLSL ES 3.00 that are not reserved for GLSL ES 1.00 */
 "resource"          |
-"patch"             |
 "subroutine"        |
 "common"            |
 "partition"         |
