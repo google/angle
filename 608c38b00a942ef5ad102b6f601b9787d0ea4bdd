@@ -182,6 +182,30 @@
       },
       "revId": "608c38b00a942ef5ad102b6f601b9787d0ea4bdd",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "758da0f8_115612e3",
+        "filename": "src/tests/deqp_support/deqp_khr_gles32_test_expectations.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-18T18:44:36Z",
+      "side": 1,
+      "message": "Got it, thanks. I was scanning for \"Done\" and didn\u0027t comprehend the comment, sorry.",
+      "parentUuid": "087c45aa_27628c29",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 43,
+        "endChar": 0
+      },
+      "revId": "608c38b00a942ef5ad102b6f601b9787d0ea4bdd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }

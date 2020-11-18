@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8409a488_bd623a9b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-18T18:44:36Z",
+      "side": 1,
+      "message": "LGTM with the TODO removed. Thanks for pushing this very needed testing forward.",
+      "revId": "6d16ed6ab9ea121db52c80ed833f8fa54f4aa483",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
