@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1d9aa7b0_0175da1d",
+        "filename": "src/tests/deqp_support/deqp_khr_gles31_test_expectations.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2020-11-18T20:20:52Z",
+      "side": 0,
+      "message": "Doesn\u0027t look related.\nWould be inconvenient if this still fails on some platform and this CL will need to be reverted because of it.",
+      "range": {
+        "startLine": 33,
+        "startChar": 0,
+        "endLine": 33,
+        "endChar": 53
+      },
+      "revId": "a1912da23afc32e231be8b29b5abbbf6e487bec4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}

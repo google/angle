@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f224021b_d3e29a8e",
+        "filename": "src/tests/deqp_support/deqp_khr_gles32_test_expectations.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2020-11-18T20:20:52Z",
+      "side": 1,
+      "message": "Maybe SWIFTSHADER, too?",
+      "range": {
+        "startLine": 9,
+        "startChar": 5,
+        "endLine": 9,
+        "endChar": 12
+      },
+      "revId": "947c833d9e8f321dd83e2187676a833b40ff7255",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
