@@ -33,6 +33,24 @@
       "message": "Let\u0027s see those green runs!",
       "revId": "6114234e566b962ca512d7b62c05e552818cd93b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b62e696a_5e0de098",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-18T03:13:33Z",
+      "side": 1,
+      "message": "There you go. Nothing changed in this CL (all failures were in the previous CLs), except for a bug caught by a gles32 khr test (view map was not cleared on release)",
+      "parentUuid": "22d4f9f3_8e23905e",
+      "revId": "6114234e566b962ca512d7b62c05e552818cd93b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
