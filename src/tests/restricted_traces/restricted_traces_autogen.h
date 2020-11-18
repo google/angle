@@ -65,6 +65,7 @@ enum class RestrictedTraceID
     fate_grand_order,
     free_fire,
     kartrider_rush,
+    lego_legacy,
     manhattan_10,
     marvel_contest_of_champions,
     mobile_legends,
