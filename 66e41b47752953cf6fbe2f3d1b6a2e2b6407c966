@@ -103,6 +103,24 @@
       "message": "Ah, yeah we need to go back and diagnose the failure or else it\u0027ll just happen again. We\u0027re missing coverage for the bug on the ANGLE CQ. Can you go back to the original failure and track down the reproduction steps?",
       "revId": "66e41b47752953cf6fbe2f3d1b6a2e2b6407c966",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e6bd51d6_4e053a10",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1452687
+      },
+      "writtenOn": "2020-11-18T22:27:40Z",
+      "side": 1,
+      "message": "Which failure are you talking about?\nThe failure that caused the reversion, or the failure that this test is for?\n\nAs per the reproduction steps, I wrote a test for it. Do we need to add that test to dEQP (What exactly is the ANGLE CQ?)?",
+      "parentUuid": "1913c48a_35e819da",
+      "revId": "66e41b47752953cf6fbe2f3d1b6a2e2b6407c966",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
