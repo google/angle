@@ -41,6 +41,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7bfe25bc_70fc53cd",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1640,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-18T18:28:44Z",
+      "side": 1,
+      "message": "I plan to resolve this soon, but I\u0027ll switch to 3523. There will be lingering issues probably so some form of this TODO may remain for a long time.",
+      "parentUuid": "9a826ffe_63cd27d9",
+      "range": {
+        "startLine": 1640,
+        "startChar": 0,
+        "endLine": 1640,
+        "endChar": 69
+      },
+      "revId": "608c38b00a942ef5ad102b6f601b9787d0ea4bdd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "4b4cb3f8_935285a2",
@@ -54,6 +78,30 @@
       "writtenOn": "2020-11-18T13:37:07Z",
       "side": 1,
       "message": "How did you get these results? It is much safer to use * \u003d SKIP, enable these tests on the bots (SwANGLE + desktop Win + Linux, and possibly Pixel 2), then apply these detailed expectations.",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 43,
+        "endChar": 0
+      },
+      "revId": "608c38b00a942ef5ad102b6f601b9787d0ea4bdd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9983c7c1_b88de4d7",
+        "filename": "src/tests/deqp_support/deqp_khr_gles32_test_expectations.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-18T18:28:44Z",
+      "side": 1,
+      "message": "\u003e Expectations are set based on a local run on desktop. It\u0027s likely more need to be added as I attempt to run this on the bots.\n\nSure I can switch to *\u003dSKIP for the first commit. I can\u0027t say it\u0027s any \"safer\", but it would definitely makes it easier to update the expectations having trybot support landed in chromium.",
+      "parentUuid": "4b4cb3f8_935285a2",
       "range": {
         "startLine": 9,
         "startChar": 0,
