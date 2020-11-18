@@ -89,6 +89,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4f4c8044_f5a2f4f8",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1640,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-18T18:56:00Z",
+      "side": 1,
+      "message": "Created a tracking issue for this and tagged with that. Having all the necessary requirements somewhere is actually something I\u0027ve wanted.\n\nI expect the bug will end up containing more info like \"check for this format or feature\" because something sneaked in when the extensions got promoted to 3.2. Would be glad to be proven wrong there of course.",
+      "parentUuid": "8781a204_04c0a992",
+      "range": {
+        "startLine": 1640,
+        "startChar": 0,
+        "endLine": 1640,
+        "endChar": 69
+      },
+      "revId": "608c38b00a942ef5ad102b6f601b9787d0ea4bdd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "4b4cb3f8_935285a2",
