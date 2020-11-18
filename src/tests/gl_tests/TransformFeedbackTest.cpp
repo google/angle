@@ -746,6 +746,9 @@ TEST_P(TransformFeedbackTest, PackingBug)
     // TODO(anglebug.com/4533) This fails after the upgrade to the 26.20.100.7870 driver.
     ANGLE_SKIP_TEST_IF(IsWindows() && IsIntel() && IsVulkan());
 
+    // TODO(anglebug.com/5360): Timing out on ARM-based Apple DTKs.
+    ANGLE_SKIP_TEST_IF(IsOSX() && IsARM64() && IsDesktopOpenGL());
+
     // TODO(jmadill): With points and rasterizer discard?
     constexpr char kVS[] =
         "#version 300 es\n"
