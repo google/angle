@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "86e62778_be1c2d05",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-18T19:57:10Z",
+      "side": 1,
+      "message": "Alright, I fixed the reset function not working in multiple trials and offscreen mode in this patch set.\n\nCody/Courtney PTAL. Paul FYI.",
+      "revId": "6cc3bdc956ebc6dcb8eff478ea642eb81a53c576",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
