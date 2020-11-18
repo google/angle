@@ -33,6 +33,23 @@
       "message": "LGTM, if there\u0027s a regression test that catches the bug. If not, can you add one? Also curious to know what changed in the re-land.",
       "revId": "66e41b47752953cf6fbe2f3d1b6a2e2b6407c966",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e7bfb25b_e9cb0b8e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-18T17:28:33Z",
+      "side": 1,
+      "message": "CC\u0027ing Cody since he\u0027s Wrangling this week and this may cause issues in the Chromium CQ.   The previous CL was reverted for:\n\u003e Suspected for causing Dawn tests failure:\n\u003e SharedImageGLBackingProduceDawnTest.Basic\n\u003e \n\u003e https://chromium-review.googlesource.com/c/chromium/src/+/2530246\n\nWas the new version of this CL tested with Dawn to verify it works now?",
+      "revId": "66e41b47752953cf6fbe2f3d1b6a2e2b6407c966",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
