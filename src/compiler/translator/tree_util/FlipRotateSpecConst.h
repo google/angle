@@ -24,7 +24,7 @@ class FlipRotateSpecConst
 {
   public:
     FlipRotateSpecConst();
-    virtual ~FlipRotateSpecConst();
+    ~FlipRotateSpecConst();
 
     TIntermTyped *getMultiplierXForDFdx();
     TIntermTyped *getMultiplierYForDFdx();
@@ -32,16 +32,14 @@ class FlipRotateSpecConst
     TIntermTyped *getMultiplierYForDFdy();
     TIntermTyped *getPreRotationMatrix();
     TIntermTyped *getFragRotationMatrix();
+    TIntermTyped *getFlipXY();
+    TIntermTyped *getNegFlipXY();
+    TIntermTyped *getFlipY();
+    TIntermTyped *getNegFlipY();
     TIntermTyped *getFragRotationMultiplyFlipXY();
 
-    // Let Metal override until they provide specialized constant support
-    virtual TIntermTyped *getFlipXY();
-    virtual TIntermTyped *getNegFlipXY();
-    virtual TIntermTyped *getFlipY();
-    virtual TIntermTyped *getNegFlipY();
-
-    virtual void generateSymbol(TSymbolTable *symbolTable);
-    virtual void outputLayoutString(TInfoSinkBase &sink) const;
+    void generateSymbol(TSymbolTable *symbolTable);
+    void outputLayoutString(TInfoSinkBase &sink) const;
 
   private:
     TIntermSymbol *mSpecConstSymbol;
