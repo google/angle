@@ -16,6 +16,52 @@
       "message": "Expectations are set based on a local run on desktop. It\u0027s likely more need to be added as I attempt to run this on the bots.",
       "revId": "608c38b00a942ef5ad102b6f601b9787d0ea4bdd",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9a826ffe_63cd27d9",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1640,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-18T13:37:07Z",
+      "side": 1,
+      "message": "just to confirm: you plan to resolve this TODO in 3647?",
+      "range": {
+        "startLine": 1640,
+        "startChar": 0,
+        "endLine": 1640,
+        "endChar": 69
+      },
+      "revId": "608c38b00a942ef5ad102b6f601b9787d0ea4bdd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4b4cb3f8_935285a2",
+        "filename": "src/tests/deqp_support/deqp_khr_gles32_test_expectations.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-18T13:37:07Z",
+      "side": 1,
+      "message": "How did you get these results? It is much safer to use * \u003d SKIP, enable these tests on the bots (SwANGLE + desktop Win + Linux, and possibly Pixel 2), then apply these detailed expectations.",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 43,
+        "endChar": 0
+      },
+      "revId": "608c38b00a942ef5ad102b6f601b9787d0ea4bdd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
