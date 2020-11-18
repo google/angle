@@ -50,6 +50,42 @@
       "message": "CC\u0027ing Cody since he\u0027s Wrangling this week and this may cause issues in the Chromium CQ.   The previous CL was reverted for:\n\u003e Suspected for causing Dawn tests failure:\n\u003e SharedImageGLBackingProduceDawnTest.Basic\n\u003e \n\u003e https://chromium-review.googlesource.com/c/chromium/src/+/2530246\n\nWas the new version of this CL tested with Dawn to verify it works now?",
       "revId": "66e41b47752953cf6fbe2f3d1b6a2e2b6407c966",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8ed794f8_4e220380",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1452687
+      },
+      "writtenOn": "2020-11-18T21:51:53Z",
+      "side": 1,
+      "message": "AFAIK, this change was not causing the previous breakage.\nIf Dawn is not a part of CQ, then no, it hasn\u0027t been run.\n\nShould I set up a test under Dawn?",
+      "parentUuid": "e7bfb25b_e9cb0b8e",
+      "revId": "66e41b47752953cf6fbe2f3d1b6a2e2b6407c966",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "09cf1098_a066c1a3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1452687
+      },
+      "writtenOn": "2020-11-18T21:51:53Z",
+      "side": 1,
+      "message": "Nothing changed in the reland. It\u0027s the same code. It looks like all tests are passing, as well.",
+      "parentUuid": "78c76748_0b5adc37",
+      "revId": "66e41b47752953cf6fbe2f3d1b6a2e2b6407c966",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
