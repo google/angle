@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dfa7b9e3_00fe31f3",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2552,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-18T13:51:05Z",
+      "side": 1,
+      "message": "It would be cleaner to pull out the format from the image desc and pass it unconditionally and only use one \"get\" or \"init\" method. Then you don\u0027t need to track the \"Default\" format in BufferViewHelper, which is a concept that doesn\u0027t exist in Vulkan.",
+      "range": {
+        "startLine": 2552,
+        "startChar": 32,
+        "endLine": 2552,
+        "endChar": 46
+      },
+      "revId": "4564db05d8524e7e7d852193493ea53f637489c8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ff914aa5_b114c8c2",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 235,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-18T13:51:05Z",
+      "side": 1,
+      "message": "nit: I\u0027d call this imageUniformFormat to be clear",
+      "range": {
+        "startLine": 235,
+        "startChar": 62,
+        "endLine": 235,
+        "endChar": 68
+      },
+      "revId": "4564db05d8524e7e7d852193493ea53f637489c8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
