@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "fb2c1b00_c82158e7",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2552,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-18T16:16:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dfa7b9e3_00fe31f3",
+      "range": {
+        "startLine": 2552,
+        "startChar": 32,
+        "endLine": 2552,
+        "endChar": 46
+      },
+      "revId": "4564db05d8524e7e7d852193493ea53f637489c8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ff914aa5_b114c8c2",
@@ -37,6 +61,30 @@
       "writtenOn": "2020-11-18T13:51:05Z",
       "side": 1,
       "message": "nit: I\u0027d call this imageUniformFormat to be clear",
+      "range": {
+        "startLine": 235,
+        "startChar": 62,
+        "endLine": 235,
+        "endChar": 68
+      },
+      "revId": "4564db05d8524e7e7d852193493ea53f637489c8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "869ebf80_21a80a0a",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 235,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-18T16:16:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ff914aa5_b114c8c2",
       "range": {
         "startLine": 235,
         "startChar": 62,
