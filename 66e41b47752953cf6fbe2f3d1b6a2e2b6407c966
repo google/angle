@@ -16,6 +16,23 @@
       "message": "Any changes from the previous version?",
       "revId": "66e41b47752953cf6fbe2f3d1b6a2e2b6407c966",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "78c76748_0b5adc37",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-18T16:56:42Z",
+      "side": 1,
+      "message": "LGTM, if there\u0027s a regression test that catches the bug. If not, can you add one? Also curious to know what changed in the re-land.",
+      "revId": "66e41b47752953cf6fbe2f3d1b6a2e2b6407c966",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
