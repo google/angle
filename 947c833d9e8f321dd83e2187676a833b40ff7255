@@ -22,6 +22,30 @@
       },
       "revId": "947c833d9e8f321dd83e2187676a833b40ff7255",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "716eb779_3006f7e2",
+        "filename": "src/tests/deqp_support/deqp_khr_gles32_test_expectations.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-18T20:53:19Z",
+      "side": 1,
+      "message": "If I add `3523 SWIFTSHADER : * \u003d SKIP`, running with `--use-angle\u003dswiftshader` complains about duplicate suppressions. Without it, it skips all tests so looks like it also uses VULKAN.\n\nRegardless, it would be a loooong time before we can get 3.2 on swiftshader specifically due to geometry/tessellation support, so no real reason to start testing 3.2 on swiftshader yet.",
+      "parentUuid": "f224021b_d3e29a8e",
+      "range": {
+        "startLine": 9,
+        "startChar": 5,
+        "endLine": 9,
+        "endChar": 12
+      },
+      "revId": "947c833d9e8f321dd83e2187676a833b40ff7255",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
