@@ -37,7 +37,7 @@ DisplayImpl *CreateDisplayCGLOrEAGL(const egl::DisplayState &state)
         break;
     }
 
-    if (info.isiOSAppOnMac)
+    if (info.needsEAGLOnMac)
     {
         return new rx::DisplayEAGL(state);
     }
