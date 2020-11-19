@@ -84,6 +84,23 @@
       "message": "Thanks for this James. Please accept Apple\u0027s approval to take this patch from WebKit.",
       "revId": "e97a1ce97e7fb9b2a55a38873bde64bae9d80e60",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "04eb9ba4_b04cd255",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1390803
+      },
+      "writtenOn": "2020-11-19T19:06:44Z",
+      "side": 1,
+      "message": "Note that this code is still in flux in WebKit due to some underlying framework issues, but this shouldn\u0027t require large changes.",
+      "revId": "e97a1ce97e7fb9b2a55a38873bde64bae9d80e60",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
