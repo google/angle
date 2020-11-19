@@ -16,6 +16,23 @@
       "message": "Charlie: PTAL",
       "revId": "81f3404c4f82ff6eb86ff95d646deb8c19c301e8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bf2eda56_0d0cac7e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-19T17:46:54Z",
+      "side": 1,
+      "message": "Sorry missed this review. LGTM.",
+      "revId": "81f3404c4f82ff6eb86ff95d646deb8c19c301e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
