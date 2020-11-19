@@ -69,6 +69,24 @@
       "parentUuid": "0122c6c3_b341c7af",
       "revId": "ca100c2c24cb9c0d8a942cbae9a67e701f6848e8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "aa6f782b_3a9e056c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-11-19T18:17:59Z",
+      "side": 1,
+      "message": "Yeah, that should work.\nTim do you want to do that or should I?",
+      "parentUuid": "e9559978_c580136e",
+      "revId": "ca100c2c24cb9c0d8a942cbae9a67e701f6848e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
