@@ -22,6 +22,30 @@
       },
       "revId": "5b419533e5d1a73cd158a687ad17da76a1f3c777",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1b0a4a5c_5174e23b",
+        "filename": "src/gpu_info_util/SystemInfo_apple.mm",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1117350
+      },
+      "writtenOn": "2020-11-19T19:09:08Z",
+      "side": 0,
+      "message": "This is likely to change as Apple Silicon evolves. I\u0027ll continue to upstream any changes, until hopefully Apple eventually starts making changes in ANGLE upstream directly.",
+      "parentUuid": "334320ad_a4d3bb70",
+      "range": {
+        "startLine": 31,
+        "startChar": 0,
+        "endLine": 31,
+        "endChar": 32
+      },
+      "revId": "5b419533e5d1a73cd158a687ad17da76a1f3c777",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
