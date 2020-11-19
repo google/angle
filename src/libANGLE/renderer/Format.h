@@ -52,6 +52,7 @@ struct Format final : private angle::NonCopyable
 
     constexpr bool hasDepthOrStencilBits() const;
     constexpr bool isLUMA() const;
+    constexpr bool isBGRA() const;
 
     constexpr bool isSint() const;
     constexpr bool isUint() const;
@@ -187,6 +188,12 @@ constexpr bool Format::isLUMA() const
     // There's no format with G or B without R
     ASSERT(redBits > 0 || (greenBits == 0 && blueBits == 0));
     return redBits == 0 && (luminanceBits > 0 || alphaBits > 0);
+}
+
+constexpr bool Format::isBGRA() const
+{
+    return id == FormatID::B8G8R8A8_UNORM || id == FormatID::B8G8R8A8_UNORM_SRGB ||
+           id == FormatID::B8G8R8A8_TYPELESS || id == FormatID::B8G8R8A8_TYPELESS_SRGB;
 }
 
 constexpr bool Format::isSint() const
