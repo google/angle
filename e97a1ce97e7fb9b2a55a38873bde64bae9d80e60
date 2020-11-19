@@ -50,6 +50,23 @@
       "message": "LGTM",
       "revId": "e97a1ce97e7fb9b2a55a38873bde64bae9d80e60",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b416c0bf_e4cea377",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2020-11-19T18:03:54Z",
+      "side": 1,
+      "message": "lgtm\n\nI studied this change a bit downstream in WebKit and this upstreaming looks good. It sounds like the somewhat complicated app switching mechanism isn\u0027t needed yet.\n",
+      "revId": "e97a1ce97e7fb9b2a55a38873bde64bae9d80e60",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
