@@ -3512,9 +3512,6 @@ void Context::initCaps()
 
     ANGLE_LIMIT_CAP(mState.mCaps.maxSampleMaskWords, MAX_SAMPLE_MASK_WORDS);
 
-#undef ANGLE_LIMIT_CAP
-#undef ANGLE_LOG_CAP_LIMIT
-
     // WebGL compatibility
     mState.mExtensions.webglCompatibility = mWebGLContext;
     for (const auto &extensionInfo : GetExtensionInfoMap())
@@ -3535,6 +3532,11 @@ void Context::initCaps()
                << std::endl;
         mDisplay->overrideFrontendFeatures({"disable_program_binary"}, true);
 
+        constexpr GLint maxImageUnits = 20;
+        INFO() << "Limiting image unit count to " << maxImageUnits << " while FrameCapture enabled"
+               << std::endl;
+        ANGLE_LIMIT_CAP(mState.mCaps.maxImageUnits, maxImageUnits);
+
         INFO() << "Disabling GL_EXT_map_buffer_range and GL_OES_mapbuffer during capture, which "
                   "are not supported on some native drivers"
                << std::endl;
@@ -3549,6 +3551,9 @@ void Context::initCaps()
         mState.mCaps.shaderBinaryFormats.clear();
         mState.mCaps.programBinaryFormats.clear();
     }
+
+#undef ANGLE_LIMIT_CAP
+#undef ANGLE_LOG_CAP_LIMIT
 
     // Generate texture caps
     updateCaps();
