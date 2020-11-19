@@ -57,6 +57,30 @@
       },
       "revId": "ac1b5879a40e4405a2535366fe80572ea56b26bb",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "60525119_35678824",
+        "filename": "include/platform/FeaturesVk.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 451,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-19T18:46:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e1da22d6_16fea5e6",
+      "range": {
+        "startLine": 451,
+        "startChar": 29,
+        "endLine": 451,
+        "endChar": 72
+      },
+      "revId": "ac1b5879a40e4405a2535366fe80572ea56b26bb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
