@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e86f52a8_37ebe79f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-19T22:38:28Z",
+      "side": 1,
+      "message": "Change LGTM otherwise",
+      "revId": "0ea2ad9c8c2c282b69b2773dea458ff57935cc45",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "60bbdcd0_d9308c48",
