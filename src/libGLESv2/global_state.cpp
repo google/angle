@@ -12,6 +12,7 @@
 #include "common/platform.h"
 #include "common/system_utils.h"
 #include "libANGLE/ErrorStrings.h"
+#include "libANGLE/Thread.h"
 #include "libGLESv2/resource.h"
 
 #include <atomic>
@@ -20,8 +21,6 @@ namespace egl
 {
 namespace
 {
-Debug *g_Debug = nullptr;
-
 ANGLE_REQUIRE_CONSTANT_INIT std::atomic<angle::GlobalMutex *> g_Mutex(nullptr);
 static_assert(std::is_trivially_destructible<decltype(g_Mutex)>::value,
               "global mutex is not trivially destructible");
@@ -45,15 +44,6 @@ Thread *AllocateCurrentThread()
     gl::gCurrentValidContext = nullptr;
 
     return gCurrentThread;
-}
-
-void AllocateDebug()
-{
-    // All EGL calls use a global lock, this is thread safe
-    if (g_Debug == nullptr)
-    {
-        g_Debug = new Debug();
-    }
 }
 
 void AllocateMutex()
@@ -83,12 +73,6 @@ Thread *GetCurrentThread()
 {
     Thread *current = gCurrentThread;
     return (current ? current : AllocateCurrentThread());
-}
-
-Debug *GetDebug()
-{
-    AllocateDebug();
-    return g_Debug;
 }
 
 void SetContextCurrent(Thread *thread, gl::Context *context)
@@ -122,15 +106,9 @@ namespace egl
 
 namespace
 {
-
 void DeallocateCurrentThread()
 {
     SafeDelete(gCurrentThread);
-}
-
-void DeallocateDebug()
-{
-    SafeDelete(g_Debug);
 }
 
 void DeallocateMutex()
@@ -145,8 +123,7 @@ void DeallocateMutex()
 
 bool InitializeProcess()
 {
-    ASSERT(g_Debug == nullptr);
-    AllocateDebug();
+    EnsureDebugAllocated();
     AllocateMutex();
     return AllocateCurrentThread() != nullptr;
 }
