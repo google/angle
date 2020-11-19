@@ -34,6 +34,24 @@
       "parentUuid": "3c6e00ec_b09b5a27",
       "revId": "2e256d6c09c65a1832a8444be704a7ffd3a57973",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7e2b507e_454437a7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-19T22:38:12Z",
+      "side": 1,
+      "message": "Sunny, is it possible that your driver is exposing different features for the rgb16f and rgb16i formats?",
+      "parentUuid": "10ad5ca6_5a73268c",
+      "revId": "2e256d6c09c65a1832a8444be704a7ffd3a57973",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
