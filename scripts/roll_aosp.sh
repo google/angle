@@ -48,7 +48,7 @@ done
 
 # Sync all of ANGLE's deps so that 'gn gen' works
 python scripts/bootstrap.py
-gclient sync -D
+gclient sync --reset --force --ignore_locks --delete_unversioned_trees --break_repo_locks
 
 abis=(
     "arm"
