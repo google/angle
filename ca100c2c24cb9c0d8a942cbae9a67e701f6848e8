@@ -51,6 +51,24 @@
       "parentUuid": "5cffd257_685d9e69",
       "revId": "ca100c2c24cb9c0d8a942cbae9a67e701f6848e8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e9559978_c580136e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-19T18:12:21Z",
+      "side": 1,
+      "message": "Well, if you want to move the fence recycler to the CommandQueue class itself, that would completely obviate any need to pass fences around.",
+      "parentUuid": "0122c6c3_b341c7af",
+      "revId": "ca100c2c24cb9c0d8a942cbae9a67e701f6848e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
