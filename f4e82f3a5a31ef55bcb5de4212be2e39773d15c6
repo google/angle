@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c17aa41f_85519271",
+        "filename": "include/platform/FeaturesVk.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 453,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-19T18:29:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3bec6c86_646d9d8e",
+      "range": {
+        "startLine": 453,
+        "startChar": 12,
+        "endLine": 453,
+        "endChar": 44
+      },
+      "revId": "f4e82f3a5a31ef55bcb5de4212be2e39773d15c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "bb9d797c_2b38e5be",
@@ -37,6 +61,30 @@
       "writtenOn": "2020-11-19T03:00:51Z",
       "side": 1,
       "message": "http://issuetracker.google.com/173636783",
+      "range": {
+        "startLine": 456,
+        "startChar": 9,
+        "endLine": 456,
+        "endChar": 27
+      },
+      "revId": "f4e82f3a5a31ef55bcb5de4212be2e39773d15c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3c786b0a_f5a33a8e",
+        "filename": "include/platform/FeaturesVk.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 456,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-19T18:29:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bb9d797c_2b38e5be",
       "range": {
         "startLine": 456,
         "startChar": 9,
@@ -70,6 +118,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "42ac3ace_b837a479",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1935,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-19T18:29:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c538a3bd_5bc16b60",
+      "range": {
+        "startLine": 1932,
+        "startChar": 0,
+        "endLine": 1935,
+        "endChar": 90
+      },
+      "revId": "f4e82f3a5a31ef55bcb5de4212be2e39773d15c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e5f4dba1_da493494",
@@ -93,6 +165,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f36c8652_60512d74",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1951,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-19T18:29:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e5f4dba1_da493494",
+      "range": {
+        "startLine": 1951,
+        "startChar": 7,
+        "endLine": 1951,
+        "endChar": 25
+      },
+      "revId": "f4e82f3a5a31ef55bcb5de4212be2e39773d15c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "57018bbc_ce51f971",
@@ -106,6 +202,24 @@
       "writtenOn": "2020-11-19T03:00:51Z",
       "side": 1,
       "message": "Follow what kPixel2DriverWithRelaxedPrecision does and give this a descriptive name (and probably use a hex number):\n\n    constexpr uint32_t kPixel2DriverWithRelaxedPrecision \u003d 0x801EA000;\n\nAlso, how universal are these driver versions across Qualcomm devices?   Devices other than Pixel use Qualcomm, so this may or may not work for all \u0027isQualcomm\u0027 cases.\n\nWe may need an \u0027isQualcomm \u0026\u0026 IsPixelDevice()\u0027 type of function that checks against each of the Pixel deviceID values (similar to what enablePrecisionQualifiers checks).",
+      "revId": "f4e82f3a5a31ef55bcb5de4212be2e39773d15c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7020aa74_ae121bfa",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1954,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-19T18:29:57Z",
+      "side": 1,
+      "message": "I believe this is driver bug, not platform specific.",
+      "parentUuid": "57018bbc_ce51f971",
       "revId": "f4e82f3a5a31ef55bcb5de4212be2e39773d15c6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
