@@ -34,6 +34,24 @@
       "parentUuid": "3d4da73f_1c48238b",
       "revId": "78ba1c4286f61d4aba5ad02b21699f9c2904b002",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a312fb95_2a8b245b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2020-11-19T15:51:59Z",
+      "side": 1,
+      "message": "It looks like screenshots cause it to fail, but only using Vulkan on Qualcomm.  The following command renders one frame and stops:\n\n  ./out/Performance/angle_perftests --gtest_filter\u003dTracePerfTest.Run/*vulkan*maps* --verbose --local-output --screenshot-dir /sdcard/chromium_tests_root/third_party/angle/screenshots\n\nChecking logcat, I see:\n\n  E kgsl-3d0: st:test_process[20042]: gpu timeout ctx 24 ts 3\n  E kgsl-3d0: st:test_process[20042]: gpu fault ctx 24 ctx_type VK ts 3 status 00E79015 rb 09c0/0abd ib1 00000007D5A76000/02bd ib2 00000007D5F17000/0000\n  E kgsl-3d0: st:test_process[20042]: gpu fault rb 2 rb sw r/w 09c0/0abd\n  E platform 2c6a000.qcom,gmu: Suspended GMU \n  E kgsl-3d0: st:test_process[20042]: gpu failed ctx 24 ts 3\n\nIf I switch to the development driver, the problem goes away.  So this is probably running smack into b/173642448\n\nSo I think I can retry this once http://crrev/c/2547809 lands.",
+      "parentUuid": "0a8f311d_3615eb39",
+      "revId": "78ba1c4286f61d4aba5ad02b21699f9c2904b002",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
