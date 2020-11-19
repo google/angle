@@ -58,6 +58,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e37182d3_b52a9b6f",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1031,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-19T19:01:31Z",
+      "side": 1,
+      "message": "Yes, done",
+      "parentUuid": "9b09c1f3_e240e930",
+      "range": {
+        "startLine": 1031,
+        "startChar": 58,
+        "endLine": 1031,
+        "endChar": 94
+      },
+      "revId": "31bda4489ee88b53ed6d682757d506b20ad0e5c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "87efe161_a9615cf5",
@@ -71,6 +95,30 @@
       "writtenOn": "2020-11-19T18:12:52Z",
       "side": 1,
       "message": "you may want to wrap this block of code with if(!mReadOnlyDepthStencilMode).",
+      "range": {
+        "startLine": 1070,
+        "startChar": 3,
+        "endLine": 1084,
+        "endChar": 5
+      },
+      "revId": "31bda4489ee88b53ed6d682757d506b20ad0e5c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a48176f7_f03d6229",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1084,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-19T19:01:31Z",
+      "side": 1,
+      "message": "Makes sense, done",
+      "parentUuid": "87efe161_a9615cf5",
       "range": {
         "startLine": 1070,
         "startChar": 3,
