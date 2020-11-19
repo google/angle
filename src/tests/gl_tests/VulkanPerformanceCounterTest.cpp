@@ -2466,6 +2466,65 @@ TEST_P(VulkanPerformanceCounterTest, ReadOnlyDepthBufferLayout)
     EXPECT_EQ(expectedReadOnlyDepthStencilCount, actualReadOnlyDepthStencilCount);
 }
 
+// Ensures depth/stencil is not loaded after storeOp=DONT_CARE due to optimization (as opposed to
+// invalidate)
+TEST_P(VulkanPerformanceCounterTest, RenderPassAfterRenderPassWithoutDepthStencilWrite)
+{
+    const rx::vk::PerfCounters &counters = hackANGLE();
+    rx::vk::PerfCounters expected;
+
+    // Expect rpCount+1, depth(Clears+0, Loads+0, Stores+0), stencil(Clears+0, Load+0, Stores+0)
+    setExpectedCountersForInvalidateTest(counters, 1, 0, 0, 0, 0, 0, 0, &expected);
+
+    constexpr GLsizei kSize = 64;
+
+    // Create FBO with color, depth and stencil.  Leave depth/stencil uninitialized.
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    GLRenderbuffer renderbuffer;
+    glBindRenderbuffer(GL_RENDERBUFFER, renderbuffer);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, kSize, kSize);
+
+    GLFramebuffer framebuffer;
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER,
+                              renderbuffer);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    ASSERT_GL_NO_ERROR();
+
+    // Draw to the FBO, without enabling depth/stencil.
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Passthrough(), essl1_shaders::fs::UniformColor());
+    glUseProgram(program);
+    GLint colorUniformLocation =
+        glGetUniformLocation(program, angle::essl1_shaders::ColorUniform());
+    ASSERT_NE(-1, colorUniformLocation);
+    ASSERT_GL_NO_ERROR();
+
+    glViewport(0, 0, kSize, kSize);
+    glUniform4f(colorUniformLocation, 1.0f, 0.0f, 0.0f, 1.0f);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 1.0f);
+
+    // Break the render pass and ensure no depth/stencil load/store was done.
+    swapBuffers();
+    compareDepthStencilCountersForInvalidateTest(counters, expected);
+
+    // Expect rpCount+1, depth(Clears+0, Loads+0, Stores+0), stencil(Clears+0, Load+0, Stores+0)
+    setExpectedCountersForInvalidateTest(counters, 1, 0, 0, 0, 0, 0, 0, &expected);
+
+    // Draw again with similar conditions, and again make sure no load/store is done.
+    glUniform4f(colorUniformLocation, 0.0f, 1.0f, 0.0f, 1.0f);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 1.0f);
+
+    // Break the render pass and ensure no depth/stencil load/store was done.
+    swapBuffers();
+    compareDepthStencilCountersForInvalidateTest(counters, expected);
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
 // Ensures repeated clears of various kind (all attachments, some attachments, scissored, masked
 // etc) don't break the render pass.
 TEST_P(VulkanPerformanceCounterTest, ClearAfterClearDoesNotBreakRenderPass)

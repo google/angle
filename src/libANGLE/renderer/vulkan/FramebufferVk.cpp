@@ -2464,11 +2464,9 @@ angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
 
     if (depthStencilRenderTarget)
     {
-        // This must be called after hasDefined*Content() since it will set content to valid. We are
-        // tracking content valid very loosely here that as long as it is attached, it assumes will
-        // have valid content. The only time it has undefined content is between swap and
-        // startNewRenderPass
-        // The actual layout determination will be deferred until endRenderPass time
+        // This must be called after hasDefined*Content() since it will set content to valid.  If
+        // the attachment ends up not used in the render pass, contents will be marked undefined at
+        // endRenderPass.  The actual layout determination is also deferred until the same time.
         depthStencilRenderTarget->onDepthStencilDraw(contextVk);
     }
 
