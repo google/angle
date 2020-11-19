@@ -188,6 +188,30 @@
       },
       "revId": "c1b719758757b6100d64f9ac314c08a817636b27",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "375bdb56_b7b16059",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-19T19:03:54Z",
+      "side": 1,
+      "message": "Thank you Mohan. If in the process of enabling these features you learn that they are needed for something other than imageAtomicExchange, do let me know so we can figure out a solution.",
+      "parentUuid": "ea3d8eb8_4579d8c3",
+      "range": {
+        "startLine": 40,
+        "startChar": 4,
+        "endLine": 42,
+        "endChar": 15
+      },
+      "revId": "c1b719758757b6100d64f9ac314c08a817636b27",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
