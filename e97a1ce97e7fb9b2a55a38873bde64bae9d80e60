@@ -67,6 +67,23 @@
       "message": "lgtm\n\nI studied this change a bit downstream in WebKit and this upstreaming looks good. It sounds like the somewhat complicated app switching mechanism isn\u0027t needed yet.\n",
       "revId": "e97a1ce97e7fb9b2a55a38873bde64bae9d80e60",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "42baf31d_a9e2e71a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1390803
+      },
+      "writtenOn": "2020-11-19T19:04:53Z",
+      "side": 1,
+      "message": "Thanks for this James. Please accept Apple\u0027s approval to take this patch from WebKit.",
+      "revId": "e97a1ce97e7fb9b2a55a38873bde64bae9d80e60",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
