@@ -16,6 +16,23 @@
       "message": "Geoff, confirmed this fixes LEGO Legacy.  Thanks!",
       "revId": "f19ac17d3a65a6eba3a62e295bed037b46edd8f8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "397ac0b0_baaa1ae4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-19T18:23:45Z",
+      "side": 1,
+      "message": "Nice targeted fix!",
+      "revId": "f19ac17d3a65a6eba3a62e295bed037b46edd8f8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
