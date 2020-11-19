@@ -1,6 +1,29 @@
 {
   "comments": [
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "16728d36_835b6687",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-19T17:15:46Z",
+      "side": 1,
+      "message": "nit: image copies",
+      "range": {
+        "startLine": 7,
+        "startChar": 12,
+        "endLine": 7,
+        "endChar": 19
+      },
+      "revId": "63e56dc6a1f1698e0822f4e8fe3c044b7bf8888f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "1111a6dc_af0495b7",
@@ -14,6 +37,23 @@
       "writtenOn": "2020-11-19T16:57:31Z",
       "side": 1,
       "message": "PTAL",
+      "revId": "63e56dc6a1f1698e0822f4e8fe3c044b7bf8888f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "78a818a3_923d571f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-19T17:15:46Z",
+      "side": 1,
+      "message": "LGTM, thanks Brandon. And thank you Sunny for proactively verifying. We should land this fix and find an owner for the fallback path.",
       "revId": "63e56dc6a1f1698e0822f4e8fe3c044b7bf8888f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
