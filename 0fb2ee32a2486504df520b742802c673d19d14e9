@@ -68,6 +68,30 @@
       },
       "revId": "0fb2ee32a2486504df520b742802c673d19d14e9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "84aa3f0f_30242adc",
+        "filename": "src/libGLESv2/global_state.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 156,
+      "author": {
+        "id": 1452687
+      },
+      "writtenOn": "2020-11-19T17:20:53Z",
+      "side": 1,
+      "message": "This is just replacing the existing `GetShareGroupLock` function with a better named `GetContextLock`. For D3D11 builds, it will `define` to dirtying the state in addition to acquiring the lock.\n\nWe\u0027re taking advantage of the fact that gles functions already call into `GetShareGroupLock`. So we contain all of our changes there.\n\nI\u0027m not exactly sure what you\u0027re recommending?\nAre you recommending that `GetGlobalLastContext()`, `dirtyAllState()`, and `SetGlobalLastContext()` should all be contained within `Context11`?\n\nI implemented the design as outlined in the design doc.",
+      "parentUuid": "f99551c3_46f1b037",
+      "range": {
+        "startLine": 152,
+        "startChar": 0,
+        "endLine": 156,
+        "endChar": 5
+      },
+      "revId": "0fb2ee32a2486504df520b742802c673d19d14e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
