@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "334320ad_a4d3bb70",
+        "filename": "src/gpu_info_util/SystemInfo_apple.mm",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2020-11-19T15:35:34Z",
+      "side": 0,
+      "message": "I\u0027m just wondering in the future when GetSystemInfo_ios is more fleshed out, will we need to call that for apps where isiOSAppOnMac is true?",
+      "range": {
+        "startLine": 31,
+        "startChar": 0,
+        "endLine": 31,
+        "endChar": 32
+      },
+      "revId": "5b419533e5d1a73cd158a687ad17da76a1f3c777",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}

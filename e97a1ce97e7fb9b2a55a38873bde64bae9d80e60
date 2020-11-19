@@ -33,6 +33,23 @@
       "message": "Swapping reviewers to Jonah. I didn\u0027t spot anything wrong, but I also don\u0027t know what any of these means.",
       "revId": "e97a1ce97e7fb9b2a55a38873bde64bae9d80e60",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8b22941c_d44550b5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2020-11-19T15:35:34Z",
+      "side": 1,
+      "message": "LGTM",
+      "revId": "e97a1ce97e7fb9b2a55a38873bde64bae9d80e60",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
