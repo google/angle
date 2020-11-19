@@ -14,7 +14,7 @@
             <proto><ptype>EGLDeviceEXT</ptype> <name>eglCreateDeviceANGLE</name></proto>
             <param><ptype>EGLint</ptype> <name>device_type</name></param>
             <param>void *<name>native_device</name></param>
-            <param>const <ptype>EGLattrib</ptype> *<name>attrib_list</name></param>
+            <param>const <ptype>EGLAttrib</ptype> *<name>attrib_list</name></param>
         </command>
         <command>
             <proto><ptype>EGLBoolean</ptype> <name>eglReleaseDeviceANGLE</name></proto>
@@ -107,6 +107,12 @@
         <command>
             <proto><pytpe>void</pytpe> <name>eglHandleGPUSwitchANGLE</name></proto>
             <param><ptype>EGLDisplay</ptype> <name>dpy</name></param>
+        </command>
+        <command>
+            <proto><ptype>EGLBoolean</ptype> <name>eglQueryDisplayAttribANGLE</name></proto>
+            <param><ptype>EGLDisplay</ptype> <name>dpy</name></param>
+            <param><ptype>EGLint</ptype> <name>attribute</name></param>
+            <param><ptype>EGLAttrib *</ptype> <name>value</name></param>
         </command>
     </commands>
     <!-- SECTION: ANGLE extension interface definitions -->

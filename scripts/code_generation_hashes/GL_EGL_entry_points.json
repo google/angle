@@ -2,11 +2,13 @@
   "scripts/egl.xml":
     "4e5911cfe91274cc5112ff2f70092376",
   "scripts/egl_angle_ext.xml":
-    "087d6a3996a91fbb0b664cac57c50c4c",
+    "91f7718effe50d444f8d81ce285721db",
+  "scripts/entry_point_packed_egl_enums.json":
+    "7cb78d6bea4e0df9e74d3ce5faf824dc",
   "scripts/entry_point_packed_gl_enums.json":
     "846be5dc8cb36076207699b025633fcc",
   "scripts/generate_entry_points.py":
-    "bce338a2d1cae08cd5836405759107bc",
+    "ec6a54bce430567b493ac6a5ee145a7e",
   "scripts/gl.xml":
     "f66967f3f3d696b5d8306fd80bbd49a8",
   "scripts/gl_angle_ext.xml":
@@ -99,6 +101,8 @@
     "442ed8cd644833c56ff5e50083e3d94d",
   "src/libANGLE/frame_capture_utils_autogen.h":
     "652b821a877d6eb2c62ba8d151157eea",
+  "src/libANGLE/validationEGL_autogen.h":
+    "ecdb1d2c7cd19d2a4faeafb19de4d77e",
   "src/libANGLE/validationES1_autogen.h":
     "c8edb0a5b26303bf7c4692b9d0b05c1f",
   "src/libANGLE/validationES2_autogen.h":

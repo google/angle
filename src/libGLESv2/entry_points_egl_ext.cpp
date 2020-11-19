@@ -19,6 +19,7 @@
 #include "libANGLE/entry_points_utils.h"
 #include "libANGLE/queryutils.h"
 #include "libANGLE/validationEGL.h"
+#include "libANGLE/validationEGL_autogen.h"
 #include "libGLESv2/global_state.h"
 
 using namespace egl;
@@ -101,10 +102,10 @@ EGLDisplay EGLAPIENTRY EGL_GetPlatformDisplayEXT(EGLenum platform,
                platform, (uintptr_t)native_display, (uintptr_t)attrib_list);
     Thread *thread = egl::GetCurrentThread();
 
-    ANGLE_EGL_VALIDATE(thread, GetPlatformDisplayEXT, GetThreadIfValid(thread), EGL_NO_DISPLAY,
-                       platform, native_display, attrib_list);
-
     const auto &attribMap = AttributeMap::CreateFromIntArray(attrib_list);
+    ANGLE_EGL_VALIDATE(thread, GetPlatformDisplayEXT, GetThreadIfValid(thread), EGL_NO_DISPLAY,
+                       platform, native_display, attribMap);
+
     if (platform == EGL_PLATFORM_ANGLE_ANGLE)
     {
         return egl::Display::GetDisplayFromNativeDisplay(
@@ -138,13 +139,14 @@ EGLSurface EGLAPIENTRY EGL_CreatePlatformWindowSurfaceEXT(EGLDisplay dpy,
     egl::Display *display   = static_cast<egl::Display *>(dpy);
     Config *configuration   = static_cast<Config *>(config);
     AttributeMap attributes = AttributeMap::CreateFromIntArray(attrib_list);
+    EGLNativeWindowType win = reinterpret_cast<EGLNativeWindowType>(native_window);
 
     ANGLE_EGL_VALIDATE(thread, CreatePlatformWindowSurfaceEXT, GetDisplayIfValid(display),
-                       EGL_NO_SURFACE, display, configuration, native_window, attributes);
+                       EGL_NO_SURFACE, display, configuration, win, attributes);
     ANGLE_EGL_TRY_RETURN(thread, display->prepareForCall(), "eglCreatePlatformWindowSurfaceEXT",
                          GetDisplayIfValid(display), EGL_NO_SURFACE);
-    thread->setError(EglBadDisplay() << "CreatePlatformWindowSurfaceEXT unimplemented.",
-                     "eglCreatePlatformWindowSurfaceEXT", GetDisplayIfValid(display));
+    thread->setError(EGL_BAD_DISPLAY, "eglCreatePlatformWindowSurfaceEXT",
+                     GetDisplayIfValid(display), "CreatePlatformWindowSurfaceEXT unimplemented.");
     return EGL_NO_SURFACE;
 }
 
@@ -161,16 +163,17 @@ EGLSurface EGLAPIENTRY EGL_CreatePlatformPixmapSurfaceEXT(EGLDisplay dpy,
                (uintptr_t)dpy, (uintptr_t)config, (uintptr_t)native_pixmap, (uintptr_t)attrib_list);
     Thread *thread = egl::GetCurrentThread();
 
-    egl::Display *display   = static_cast<egl::Display *>(dpy);
-    Config *configuration   = static_cast<Config *>(config);
-    AttributeMap attributes = AttributeMap::CreateFromIntArray(attrib_list);
+    egl::Display *display      = static_cast<egl::Display *>(dpy);
+    Config *configuration      = static_cast<Config *>(config);
+    AttributeMap attributes    = AttributeMap::CreateFromIntArray(attrib_list);
+    EGLNativePixmapType pixmap = reinterpret_cast<EGLNativePixmapType>(native_pixmap);
 
     ANGLE_EGL_VALIDATE(thread, CreatePlatformPixmapSurfaceEXT, GetDisplayIfValid(display),
-                       EGL_NO_SURFACE, display, configuration, native_pixmap, attributes);
+                       EGL_NO_SURFACE, display, configuration, pixmap, attributes);
     ANGLE_EGL_TRY_RETURN(thread, display->prepareForCall(), "eglCreatePlatformPixmapSurfaceEXT",
                          GetDisplayIfValid(display), EGL_NO_SURFACE);
-    thread->setError(EglBadDisplay() << "CreatePlatformPixmapSurfaceEXT unimplemented.",
-                     "eglCreatePlatformPixmapSurfaceEXT", GetDisplayIfValid(display));
+    thread->setError(EGL_BAD_DISPLAY, "eglCreatePlatformPixmapSurfaceEXT",
+                     GetDisplayIfValid(display), "CreatePlatformPixmapSurfaceEXT unimplemented.");
     return EGL_NO_SURFACE;
 }
 
@@ -238,7 +241,7 @@ EGLBoolean EGLAPIENTRY EGL_QueryDisplayAttribEXT(EGLDisplay dpy, EGLint attribut
     Thread *thread        = egl::GetCurrentThread();
 
     ANGLE_EGL_VALIDATE(thread, QueryDisplayAttribEXT, GetDisplayIfValid(display), EGL_FALSE,
-                       display, attribute);
+                       display, attribute, value);
     ANGLE_EGL_TRY_RETURN(thread, display->prepareForCall(), "eglQueryDisplayAttribEXT",
                          GetDisplayIfValid(display), EGL_FALSE);
     *value = display->queryAttrib(attribute);
@@ -260,7 +263,7 @@ EGLBoolean EGLAPIENTRY EGL_QueryDisplayAttribANGLE(EGLDisplay dpy,
     Thread *thread        = egl::GetCurrentThread();
 
     ANGLE_EGL_VALIDATE(thread, QueryDisplayAttribANGLE, GetDisplayIfValid(display), EGL_FALSE,
-                       display, attribute);
+                       display, attribute, value);
     ANGLE_EGL_TRY_RETURN(thread, display->prepareForCall(), "eglQueryDisplayAttribANGLE",
                          GetDisplayIfValid(display), EGL_FALSE);
     *value = display->queryAttrib(attribute);
@@ -516,17 +519,15 @@ EGLBoolean EGLAPIENTRY EGL_StreamConsumerGLTextureExternalKHR(EGLDisplay dpy, EG
 
     egl::Display *display = static_cast<egl::Display *>(dpy);
     Stream *streamObject  = static_cast<Stream *>(stream);
-    gl::Context *context  = gl::GetValidGlobalContext();
 
     ANGLE_EGL_VALIDATE(thread, StreamConsumerGLTextureExternalKHR,
-                       GetStreamIfValid(display, streamObject), EGL_FALSE, display, context,
-                       streamObject);
+                       GetStreamIfValid(display, streamObject), EGL_FALSE, display, streamObject);
     ANGLE_EGL_TRY_RETURN(thread, display->prepareForCall(), "eglStreamConsumerGLTextureExternalKHR",
                          GetDisplayIfValid(display), EGL_FALSE);
-    ANGLE_EGL_TRY_RETURN(thread,
-                         streamObject->createConsumerGLTextureExternal(AttributeMap(), context),
-                         "eglStreamConsumerGLTextureExternalKHR",
-                         GetStreamIfValid(display, streamObject), EGL_FALSE);
+    ANGLE_EGL_TRY_RETURN(
+        thread, streamObject->createConsumerGLTextureExternal(AttributeMap(), thread->getContext()),
+        "eglStreamConsumerGLTextureExternalKHR", GetStreamIfValid(display, streamObject),
+        EGL_FALSE);
     thread->setSuccess();
     return EGL_TRUE;
 }
@@ -540,13 +541,12 @@ EGLBoolean EGLAPIENTRY EGL_StreamConsumerAcquireKHR(EGLDisplay dpy, EGLStreamKHR
 
     egl::Display *display = static_cast<egl::Display *>(dpy);
     Stream *streamObject  = static_cast<Stream *>(stream);
-    gl::Context *context  = gl::GetValidGlobalContext();
 
     ANGLE_EGL_VALIDATE(thread, StreamConsumerAcquireKHR, GetStreamIfValid(display, streamObject),
-                       EGL_FALSE, display, context, streamObject);
+                       EGL_FALSE, display, streamObject);
     ANGLE_EGL_TRY_RETURN(thread, display->prepareForCall(), "eglStreamConsumerAcquireKHR",
                          GetDisplayIfValid(display), EGL_FALSE);
-    ANGLE_EGL_TRY_RETURN(thread, streamObject->consumerAcquire(context),
+    ANGLE_EGL_TRY_RETURN(thread, streamObject->consumerAcquire(thread->getContext()),
                          "eglStreamConsumerAcquireKHR", GetStreamIfValid(display, streamObject),
                          EGL_FALSE);
     thread->setSuccess();
@@ -565,7 +565,7 @@ EGLBoolean EGLAPIENTRY EGL_StreamConsumerReleaseKHR(EGLDisplay dpy, EGLStreamKHR
     gl::Context *context  = gl::GetValidGlobalContext();
 
     ANGLE_EGL_VALIDATE(thread, StreamConsumerReleaseKHR, GetStreamIfValid(display, streamObject),
-                       EGL_FALSE, display, context, streamObject);
+                       EGL_FALSE, display, streamObject);
     ANGLE_EGL_TRY_RETURN(thread, display->prepareForCall(), "eglStreamConsumerReleaseKHR",
                          GetDisplayIfValid(display), EGL_FALSE);
     ANGLE_EGL_TRY_RETURN(thread, streamObject->consumerRelease(context),
@@ -591,8 +591,8 @@ EGLBoolean EGLAPIENTRY EGL_StreamConsumerGLTextureExternalAttribsNV(EGLDisplay d
     AttributeMap attributes = AttributeMap::CreateFromAttribArray(attrib_list);
 
     ANGLE_EGL_VALIDATE(thread, StreamConsumerGLTextureExternalAttribsNV,
-                       GetStreamIfValid(display, streamObject), EGL_FALSE, display, context,
-                       streamObject, attributes);
+                       GetStreamIfValid(display, streamObject), EGL_FALSE, display, streamObject,
+                       attributes);
     ANGLE_EGL_TRY_RETURN(thread, display->prepareForCall(),
                          "eglStreamConsumerGLTextureExternalAttribsNV", GetDisplayIfValid(display),
                          EGL_FALSE);
@@ -672,15 +672,13 @@ ANGLE_EXPORT EGLSync EGLAPIENTRY EGL_CreateSyncKHR(EGLDisplay dpy,
     egl::Display *display   = static_cast<egl::Display *>(dpy);
     AttributeMap attributes = AttributeMap::CreateFromIntArray(attrib_list);
 
-    gl::Context *currentContext  = thread->getContext();
-    egl::Display *currentDisplay = currentContext ? currentContext->getDisplay() : nullptr;
-
     ANGLE_EGL_VALIDATE(thread, CreateSyncKHR, GetDisplayIfValid(display), EGL_NO_SYNC, display,
-                       type, attributes, currentDisplay, currentContext);
+                       type, attributes);
     ANGLE_EGL_TRY_RETURN(thread, display->prepareForCall(), "eglCreateSync",
                          GetDisplayIfValid(display), EGL_NO_SYNC);
     egl::Sync *syncObject = nullptr;
-    ANGLE_EGL_TRY_RETURN(thread, display->createSync(currentContext, type, attributes, &syncObject),
+    ANGLE_EGL_TRY_RETURN(thread,
+                         display->createSync(thread->getContext(), type, attributes, &syncObject),
                          "eglCreateSync", GetDisplayIfValid(display), EGL_NO_SYNC);
 
     thread->setSuccess();
@@ -697,7 +695,7 @@ ANGLE_EXPORT EGLBoolean EGLAPIENTRY EGL_DestroySyncKHR(EGLDisplay dpy, EGLSync s
     egl::Display *display = static_cast<egl::Display *>(dpy);
     egl::Sync *syncObject = static_cast<Sync *>(sync);
 
-    ANGLE_EGL_VALIDATE(thread, DestroySync, GetDisplayIfValid(display), EGL_FALSE, display,
+    ANGLE_EGL_VALIDATE(thread, DestroySyncKHR, GetDisplayIfValid(display), EGL_FALSE, display,
                        syncObject);
     ANGLE_EGL_TRY_RETURN(thread, display->prepareForCall(), "eglDestroySync",
                          GetDisplayIfValid(display), EGL_FALSE);
@@ -722,7 +720,7 @@ ANGLE_EXPORT EGLint EGLAPIENTRY EGL_ClientWaitSyncKHR(EGLDisplay dpy,
     egl::Display *display = static_cast<egl::Display *>(dpy);
     egl::Sync *syncObject = static_cast<Sync *>(sync);
 
-    ANGLE_EGL_VALIDATE(thread, ClientWaitSync, GetSyncIfValid(display, syncObject), EGL_FALSE,
+    ANGLE_EGL_VALIDATE(thread, ClientWaitSyncKHR, GetSyncIfValid(display, syncObject), EGL_FALSE,
                        display, syncObject, flags, timeout);
     ANGLE_EGL_TRY_RETURN(thread, display->prepareForCall(), "eglClientWaitSync",
                          GetDisplayIfValid(display), EGL_FALSE);
@@ -772,11 +770,10 @@ ANGLE_EXPORT EGLBoolean EGLAPIENTRY EGL_WaitSyncKHR(EGLDisplay dpy, EGLSync sync
 
     Thread *thread        = egl::GetCurrentThread();
     egl::Display *display = static_cast<egl::Display *>(dpy);
-    gl::Context *context  = thread->getContext();
     egl::Sync *syncObject = static_cast<Sync *>(sync);
 
-    ANGLE_EGL_VALIDATE(thread, WaitSync, GetSyncIfValid(display, syncObject), EGL_FALSE, display,
-                       context, syncObject, flags);
+    ANGLE_EGL_VALIDATE(thread, WaitSyncKHR, GetSyncIfValid(display, syncObject), EGL_FALSE, display,
+                       syncObject, flags);
     ANGLE_EGL_TRY_RETURN(thread, display->prepareForCall(), "eglWaitSync",
                          GetDisplayIfValid(display), EGL_FALSE);
     gl::Context *currentContext = thread->getContext();
@@ -907,8 +904,8 @@ ANGLE_EXPORT void EGLAPIENTRY EGL_SetBlobCacheFuncsANDROID(EGLDisplay dpy,
 
     egl::Display *display = static_cast<egl::Display *>(dpy);
 
-    ANGLE_EGL_VALIDATE_VOID(thread, SetBlobCacheANDROID, GetDisplayIfValid(display), display, set,
-                            get);
+    ANGLE_EGL_VALIDATE_VOID(thread, SetBlobCacheFuncsANDROID, GetDisplayIfValid(display), display,
+                            set, get);
     ANGLE_EGL_TRY(thread, display->prepareForCall(), "eglSetBlobCacheFuncsANDROID",
                   GetDisplayIfValid(display));
     thread->setSuccess();
@@ -1072,7 +1069,7 @@ EGLint EGLAPIENTRY EGL_LabelObjectKHR(EGLDisplay dpy,
     ObjectType objectTypePacked = FromEGLenum<ObjectType>(objectType);
     ANGLE_EGL_VALIDATE(thread, LabelObjectKHR,
                        GetLabeledObjectIfValid(thread, display, objectTypePacked, object),
-                       thread->getError(), thread, display, objectTypePacked, object, label);
+                       thread->getError(), display, objectTypePacked, object, label);
 
     LabeledObject *labeledObject =
         GetLabeledObjectIfValid(thread, display, objectTypePacked, object);

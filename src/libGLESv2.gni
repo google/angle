@@ -325,6 +325,7 @@ libangle_headers = [
   "src/libANGLE/renderer/renderer_utils.h",
   "src/libANGLE/renderer/serial_utils.h",
   "src/libANGLE/validationEGL.h",
+  "src/libANGLE/validationEGL_autogen.h",
   "src/libANGLE/validationES.h",
   "src/libANGLE/validationES1.h",
   "src/libANGLE/validationES1_autogen.h",
