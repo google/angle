@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a38ad833_32f5a2e1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-19T19:11:07Z",
+      "side": 1,
+      "message": "Awesome, LGTM if it passes everywhere. Ian FYI.",
+      "revId": "a026f8285d9e996667fdc99fd43b7c46df9b9d33",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
