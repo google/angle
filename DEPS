@@ -20,7 +20,7 @@ vars = {
   'checkout_angle_internal': False,
 
   # Version of Chromium our Chromium-based DEPS are mirrored from.
-  'chromium_revision': '45b78e7b52a7900eccfb7108534894e44eb38c50',
+  'chromium_revision': '62214500294fa2ac3b972b8fcad6cee5022f1e95',
   # We never want to checkout chromium,
   # but need a dummy DEPS entry for the autoroller
   'dummy_checkout_chromium': False,
@@ -89,7 +89,7 @@ vars = {
   # Three lines of non-changing comments so that
   # the commit queue can handle CLs rolling catapult
   # and whatever else without interference from each other.
-  'catapult_revision': '309eb9b6720595a38b8517ae4f5043a90023c811',
+  'catapult_revision': '6e44bd85f3a3d28755833326fdc599afdc6b4274',
 
   # Three lines of non-changing comments so that
   # the commit queue can handle CLs rolling luci-go
@@ -100,7 +100,7 @@ vars = {
 deps = {
 
   'build': {
-    'url': '{chromium_git}/chromium/src/build.git@ec6d3bb29ad116678df46274ef7c6da13943bd03',
+    'url': '{chromium_git}/chromium/src/build.git@0e1eb49be66b859bf1cbbc4f08b971180c8bded6',
     'condition': 'not build_with_chromium',
   },
 
@@ -110,12 +110,12 @@ deps = {
   },
 
   'testing': {
-    'url': '{chromium_git}/chromium/src/testing@47e2c83db69c38a1d33ca282c6bfb0ccc876fef4',
+    'url': '{chromium_git}/chromium/src/testing@a71d13aa1cae3d3653f23abf7121fa061560b5d9',
     'condition': 'not build_with_chromium',
   },
 
   'third_party/abseil-cpp': {
-    'url': '{chromium_git}/chromium/src/third_party/abseil-cpp@e3626aae549c1ba4594f18e19258b90fce26b55b',
+    'url': '{chromium_git}/chromium/src/third_party/abseil-cpp@207d48e407ee041bb2254d8246cd2031aa5e83e1',
     'condition': 'not build_with_chromium',
   },
 
@@ -190,7 +190,7 @@ deps = {
   },
 
   'third_party/protobuf': {
-    'url': '{chromium_git}/chromium/src/third_party/protobuf@19bd888db3a065be6f2d013ee7dbb2fe67e25a66',
+    'url': '{chromium_git}/chromium/src/third_party/protobuf@d2979b278f4139434a2cc16d833da2b28af5a847',
     'condition': 'not build_with_chromium',
   },
 
@@ -276,7 +276,7 @@ deps = {
   },
 
   'tools/clang': {
-    'url': '{chromium_git}/chromium/src/tools/clang.git@1b039cb4bf5275bb1a092dc16ae00a4e307f5a7d',
+    'url': '{chromium_git}/chromium/src/tools/clang.git@2d30d8744f8824a7a7a26d726f16d2caf88be9f2',
     'condition': 'not build_with_chromium',
   },
 
@@ -311,7 +311,7 @@ deps = {
   },
 
   'tools/mb': {
-    'url': '{chromium_git}/chromium/src/tools/mb@8f0932038a829a6806641d3c12dfbc3de6c1cf5b',
+    'url': '{chromium_git}/chromium/src/tools/mb@a63101d578bdfeffa4c420d7d89a1bef54ce77b2',
     'condition': 'not build_with_chromium',
   },
 
