@@ -121,6 +121,42 @@
       "parentUuid": "1913c48a_35e819da",
       "revId": "66e41b47752953cf6fbe2f3d1b6a2e2b6407c966",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "67145fbe_3cfc21fa",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-19T02:47:23Z",
+      "side": 1,
+      "message": "The rolls were failing the test \u0027SharedImageGLBackingProduceDawnTest.Basic\u0027 until Jamie reverted the original version of this CL:\nhttps://ci.chromium.org/p/chromium/builders/try/win10_chromium_x64_rel_ng/712986\n\nI\u0027m not sure how to run that locally, but maybe it\u0027s as simple as building gl_tests_passthrough in Chromium and specifying that test with --gtest_filter.",
+      "parentUuid": "e6bd51d6_4e053a10",
+      "revId": "66e41b47752953cf6fbe2f3d1b6a2e2b6407c966",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "06ddbfd0_406c08d8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-19T02:47:23Z",
+      "side": 1,
+      "message": "Do we know what caused the breakage if it wasn\u0027t this CL, or what fixed it if it wasn\u0027t the revert?",
+      "parentUuid": "8ed794f8_4e220380",
+      "revId": "66e41b47752953cf6fbe2f3d1b6a2e2b6407c966",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
