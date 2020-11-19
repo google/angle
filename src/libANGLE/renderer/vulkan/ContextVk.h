@@ -861,6 +861,9 @@ class ContextVk : public ContextImpl, public vk::Context
     void updateSampleShadingWithRasterizationSamples(const uint32_t rasterizationSamples);
     void updateRasterizationSamples(const uint32_t rasterizationSamples);
 
+    SpecConstUsageBits getCurrentProgramSpecConstUsageBits() const;
+    void updateGraphicsPipelineDescWithSpecConstUsageBits(SpecConstUsageBits usageBits);
+
     std::array<DirtyBitHandler, DIRTY_BIT_MAX> mGraphicsDirtyBitHandlers;
     std::array<DirtyBitHandler, DIRTY_BIT_MAX> mComputeDirtyBitHandlers;
 

@@ -288,20 +288,6 @@ ProgramVk *ProgramExecutableVk::getShaderProgram(const gl::State &glState,
     return nullptr;
 }
 
-SpecConstUsageBits ProgramExecutableVk::getSpecConstUsageBits() const
-{
-    if (mProgram)
-    {
-        return mProgram->getState().getSpecConstUsageBits();
-    }
-    else if (mProgramPipeline)
-    {
-        return mProgramPipeline->getState().getSpecConstUsageBits();
-    }
-
-    return SpecConstUsageBits();
-}
-
 // TODO: http://anglebug.com/3570: Move/Copy all of the necessary information into
 // the ProgramExecutable, so this function can be removed.
 void ProgramExecutableVk::fillProgramStateMap(
@@ -677,11 +663,10 @@ angle::Result ProgramExecutableVk::getGraphicsPipeline(
     ASSERT(glExecutable && !glExecutable->isCompute());
 
     mTransformOptions.enableLineRasterEmulation = contextVk->isBresenhamEmulationEnabled(mode);
-    mTransformOptions.surfaceRotation           = static_cast<uint8_t>(desc.getSurfaceRotation());
+    mTransformOptions.surfaceRotation           = ToUnderlying(desc.getSurfaceRotation());
 
     // This must be called after mTransformOptions have been set.
     ProgramInfo &programInfo = getGraphicsProgramInfo(mTransformOptions);
-
     for (const gl::ShaderType shaderType : glExecutable->getLinkedShaderStages())
     {
         ProgramVk *programVk = getShaderProgram(glState, shaderType);

@@ -1085,6 +1085,11 @@ angle::Result ContextVk::handleDirtyGraphicsPipeline(const gl::Context *context,
     {
         const vk::GraphicsPipelineDesc *descPtr;
 
+        // The desc's surface rotation specialization constant depends on both program's
+        // specConstUsageBits and drawable. We need to update it if program has changed.
+        SpecConstUsageBits usageBits = getCurrentProgramSpecConstUsageBits();
+        updateGraphicsPipelineDescWithSpecConstUsageBits(usageBits);
+
         // Draw call shader patching, shader compilation, and pipeline cache query.
         ANGLE_TRY(mExecutable->getGraphicsPipeline(
             this, mCurrentDrawMode, *mGraphicsPipelineDesc,
@@ -3121,21 +3126,45 @@ void ContextVk::updateFlipViewportReadFramebuffer(const gl::State &glState)
     mFlipViewportForReadFramebuffer  = readFramebuffer->isDefault();
 }
 
-void ContextVk::updateSurfaceRotationDrawFramebuffer(const gl::State &glState)
+SpecConstUsageBits ContextVk::getCurrentProgramSpecConstUsageBits() const
 {
-    gl::Framebuffer *drawFramebuffer = glState.getDrawFramebuffer();
-    mCurrentRotationDrawFramebuffer =
-        DetermineSurfaceRotation(drawFramebuffer, mCurrentWindowSurface);
-
-    // DetermineSurfaceRotation() does not encode yflip information. Shader code uses
-    // SurfaceRotation specialization constant to determine yflip as well. We add yflip information
-    // to the SurfaceRotation here so the shader does yflip properly.
-    SurfaceRotation rotationAndFlip = mCurrentRotationDrawFramebuffer;
-    if (isViewportFlipEnabledForDrawFBO())
+    SpecConstUsageBits usageBits;
+    if (mState.getProgram())
     {
-        ASSERT(ToUnderlying(rotationAndFlip) < ToUnderlying(SurfaceRotation::FlippedIdentity));
+        usageBits = mState.getProgram()->getState().getSpecConstUsageBits();
+    }
+    else if (mState.getProgramPipeline())
+    {
+        usageBits = mState.getProgramPipeline()->getState().getSpecConstUsageBits();
+    }
+    return usageBits;
+}
+
+void ContextVk::updateGraphicsPipelineDescWithSpecConstUsageBits(SpecConstUsageBits usageBits)
+{
+    SurfaceRotation rotationAndFlip = mCurrentRotationDrawFramebuffer;
+    ASSERT(ToUnderlying(rotationAndFlip) < ToUnderlying(SurfaceRotation::FlippedIdentity));
+    bool yFlipped =
+        isViewportFlipEnabledForDrawFBO() && usageBits.test(sh::vk::SpecConstUsage::YFlip);
+
+    // If program is not using rotation at all, we force it to use the Identity or FlippedIdentity
+    // slot to improve the program cache hit rate
+    if (!usageBits.test(sh::vk::SpecConstUsage::Rotation))
+    {
+        rotationAndFlip = yFlipped ? SurfaceRotation::FlippedIdentity : SurfaceRotation::Identity;
+    }
+    else if (yFlipped)
+    {
+        // DetermineSurfaceRotation() does not encode yflip information. Shader code uses
+        // SurfaceRotation specialization constant to determine yflip as well. We add yflip
+        // information to the SurfaceRotation here so the shader does yflip properly.
         rotationAndFlip = static_cast<SurfaceRotation>(
             ToUnderlying(SurfaceRotation::FlippedIdentity) + ToUnderlying(rotationAndFlip));
+    }
+    else
+    {
+        // If program is not using yflip, then we just use the non-flipped slot to increase the
+        // chance of pipeline program cache hit even if drawable is yflipped.
     }
 
     if (rotationAndFlip != mGraphicsPipelineDesc->getSurfaceRotation())
@@ -3145,6 +3174,16 @@ void ContextVk::updateSurfaceRotationDrawFramebuffer(const gl::State &glState)
         // program object will be retrieved.
         mGraphicsPipelineDesc->updateSurfaceRotation(&mGraphicsPipelineTransition, rotationAndFlip);
     }
+}
+
+void ContextVk::updateSurfaceRotationDrawFramebuffer(const gl::State &glState)
+{
+    gl::Framebuffer *drawFramebuffer = glState.getDrawFramebuffer();
+    mCurrentRotationDrawFramebuffer =
+        DetermineSurfaceRotation(drawFramebuffer, mCurrentWindowSurface);
+
+    SpecConstUsageBits usageBits = getCurrentProgramSpecConstUsageBits();
+    updateGraphicsPipelineDescWithSpecConstUsageBits(usageBits);
 }
 
 void ContextVk::updateSurfaceRotationReadFramebuffer(const gl::State &glState)
