@@ -16,6 +16,24 @@
       "message": "Most of the tests can pass, but I still see such failures:\n\nTest case \u0027dEQP-GLES31.functional.copy_image.non_compressed.viewclass_48_bits.rgb16f_rgb16i.texture2d_to_texture2d\u0027..\nWARN: vk_helpers.cpp:4464 (CopyImageSubData):   ! Unimplemented: CopyImageSubData(../../src/libANGLE/renderer/vulkan/vk_helpers.cpp:4464)\nWARN: vk_helpers.cpp:4464 (CopyImageSubData):   ! Unimplemented: CopyImageSubData(../../src/libANGLE/renderer/vulkan/vk_helpers.cpp:4464)",
       "revId": "2e256d6c09c65a1832a8444be704a7ffd3a57973",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "10ad5ca6_5a73268c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1359667
+      },
+      "writtenOn": "2020-11-19T16:57:31Z",
+      "side": 1,
+      "message": "I\u0027m not sure what platform/hardware you are running on but it seems that it is running into an edge case. More info here: http://anglebug.com/5278",
+      "parentUuid": "3c6e00ec_b09b5a27",
+      "revId": "2e256d6c09c65a1832a8444be704a7ffd3a57973",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
