@@ -16,6 +16,24 @@
       "message": "jamie, shabi - i keep seeing errors in bots that go - \"shard #0 expired, not enough capacity\"\n\ndo you know what that means?",
       "revId": "2e8e51994b5a65a5e32efd09d84baebe289a85a2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f523207c_d43164ab",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-19T21:28:07Z",
+      "side": 1,
+      "message": "Yes. It means too many people are attempting to run tryjobs, and not enough devices are available. Usually happens with Android as we have a limited number of phones, and mostly during \"rush hour\". We have enough capacity to have 5, maybe 6, simultaneous tryjob runs.\n\nWhen this happens, please avoid rerunning jobs for a little bit for the bots to settle down. It\u0027s good practice to not run tryjobs on multiple of your CLs at the same time, in order to leave room for others. Obviously doesn\u0027t apply to off hours, like nights or weekends.\n\nYou can monitor the number of jobs here: https://ci.chromium.org/p/chromium/g/tryserver.chromium.angle/builders.  BEWARE that there\u0027s a bug currently affecting that page, where the numbers are offset and never reach zero. If you click on one of the numbers, you get to a page where you can actually see how many jobs are running, how many are queued, and which CLs are running those jobs, for example: https://ci.chromium.org/p/chromium/builders/try/android_angle_vk64_rel_ng",
+      "parentUuid": "131c5316_87fb4531",
+      "revId": "2e8e51994b5a65a5e32efd09d84baebe289a85a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
