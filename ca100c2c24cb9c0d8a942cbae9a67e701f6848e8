@@ -33,6 +33,24 @@
       "message": "Instead can you make the command processor take ownership of the fence? The goal here is to make the API contract virtual and remove the ifs.",
       "revId": "ca100c2c24cb9c0d8a942cbae9a67e701f6848e8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0122c6c3_b341c7af",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-11-19T18:06:37Z",
+      "side": 1,
+      "message": "That fence isn\u0027t used anywhere else. We ought to be able to move the call all the way to CommandQueue::submitFrame. Have it create the fence and then we don\u0027t have to pass one in.\nAll the users of CommandQueue::submitFrame just create the fence right before calling it.",
+      "parentUuid": "5cffd257_685d9e69",
+      "revId": "ca100c2c24cb9c0d8a942cbae9a67e701f6848e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
