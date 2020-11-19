@@ -170,6 +170,7 @@ class CollectVariablesTraverser : public TIntermTraverser
 
     // Shader uniforms
     bool mDepthRangeAdded;
+    bool mNumSamplesAdded;
 
     // Compute Shader builtins
     bool mNumWorkGroupsAdded;
@@ -202,6 +203,10 @@ class CollectVariablesTraverser : public TIntermTraverser
     bool mFragDepthAdded;
     bool mSecondaryFragColorEXTAdded;
     bool mSecondaryFragDataEXTAdded;
+    bool mSampleIDAdded;
+    bool mSamplePositionAdded;
+    bool mSampleMaskAdded;
+    bool mSampleMaskInAdded;
 
     // Geometry Shader builtins
     bool mPerVertexInAdded;
@@ -246,6 +251,7 @@ CollectVariablesTraverser::CollectVariablesTraverser(
       mShaderStorageBlocks(shaderStorageBlocks),
       mInBlocks(inBlocks),
       mDepthRangeAdded(false),
+      mNumSamplesAdded(false),
       mNumWorkGroupsAdded(false),
       mWorkGroupIDAdded(false),
       mLocalInvocationIDAdded(false),
@@ -270,6 +276,10 @@ CollectVariablesTraverser::CollectVariablesTraverser(
       mFragDepthAdded(false),
       mSecondaryFragColorEXTAdded(false),
       mSecondaryFragDataEXTAdded(false),
+      mSampleIDAdded(false),
+      mSamplePositionAdded(false),
+      mSampleMaskAdded(false),
+      mSampleMaskInAdded(false),
       mPerVertexInAdded(false),
       mPrimitiveIDInAdded(false),
       mInvocationIDAdded(false),
@@ -449,6 +459,25 @@ void CollectVariablesTraverser::visitSymbol(TIntermSymbol *symbol)
             mDepthRangeAdded = true;
         }
     }
+    else if (symbolName == "gl_NumSamples")
+    {
+        ASSERT(qualifier == EvqUniform);
+
+        if (!mNumSamplesAdded)
+        {
+            ShaderVariable info;
+            const char kName[] = "gl_NumSamples";
+            info.name          = kName;
+            info.mappedName    = kName;
+            info.type          = GL_INT;
+            info.precision     = GL_LOW_INT;
+            info.staticUse     = true;
+            info.active        = true;
+
+            mUniforms->push_back(info);
+            mNumSamplesAdded = true;
+        }
+    }
     else
     {
         switch (qualifier)
@@ -613,6 +642,18 @@ void CollectVariablesTraverser::visitSymbol(TIntermSymbol *symbol)
                 break;
             case EvqClipDistance:
                 recordBuiltInVaryingUsed(symbol->variable(), &mClipDistanceAdded, mOutputVaryings);
+                return;
+            case EvqSampleID:
+                recordBuiltInVaryingUsed(symbol->variable(), &mSampleIDAdded, mInputVaryings);
+                return;
+            case EvqSamplePosition:
+                recordBuiltInVaryingUsed(symbol->variable(), &mSamplePositionAdded, mInputVaryings);
+                return;
+            case EvqSampleMaskIn:
+                recordBuiltInVaryingUsed(symbol->variable(), &mSampleMaskInAdded, mInputVaryings);
+                return;
+            case EvqSampleMask:
+                recordBuiltInFragmentOutputUsed(symbol->variable(), &mSampleMaskAdded);
                 return;
             default:
                 break;

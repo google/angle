@@ -37,6 +37,7 @@
     OP(NV_shader_noperspective_interpolation)       \
     OP(OES_EGL_image_external)                      \
     OP(OES_EGL_image_external_essl3)                \
+    OP(OES_sample_variables)                        \
     OP(OES_shader_multisample_interpolation)        \
     OP(OES_shader_image_atomic)                     \
     OP(OES_standard_derivatives)                    \

@@ -1368,6 +1368,9 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
         enabledFeatures.features.inheritedQueries = mPhysicalDeviceFeatures.inheritedQueries;
     }
 
+    // Used to support OES_sample_variables
+    enabledFeatures.features.sampleRateShading = mPhysicalDeviceFeatures.sampleRateShading;
+
     // Setup device initialization struct
     VkDeviceCreateInfo createInfo = {};
 

@@ -43,6 +43,7 @@ class DriverUniform
     TIntermSwizzle *getNegFlipYRef() const;
     TIntermBinary *getDepthRangeRef() const;
     TIntermBinary *getDepthRangeReservedFieldRef() const;
+    TIntermBinary *getNumSamplesRef() const;
 
   protected:
     TIntermBinary *createDriverUniformRef(const char *fieldName) const;

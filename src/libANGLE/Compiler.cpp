@@ -162,6 +162,10 @@ Compiler::Compiler(rx::GLImplFactory *implFactory, const State &state, egl::Disp
     // APPLE_clip_distance/EXT_clip_cull_distance
     mResources.MaxClipDistances = caps.maxClipDistances;
 
+    // OES_sample_variables
+    mResources.OES_sample_variables = extensions.sampleVariablesOES;
+    mResources.MaxSamples           = caps.maxSamples;
+
     // GLSL ES 3.1 constants
     mResources.MaxProgramTextureGatherOffset    = caps.maxProgramTextureGatherOffset;
     mResources.MinProgramTextureGatherOffset    = caps.minProgramTextureGatherOffset;

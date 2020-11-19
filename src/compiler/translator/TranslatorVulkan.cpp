@@ -921,6 +921,16 @@ bool TranslatorVulkan::translateImpl(TIntermBlock *root,
             return false;
         }
 
+        {
+            const TVariable *numSamplesVar = static_cast<const TVariable *>(
+                getSymbolTable().findBuiltIn(ImmutableString("gl_NumSamples"), getShaderVersion()));
+            TIntermBinary *numSamples = driverUniforms->getNumSamplesRef();
+            if (!ReplaceVariableWithTyped(this, root, numSamplesVar, numSamples))
+            {
+                return false;
+            }
+        }
+
         EmitEarlyFragmentTestsGLSL(*this, sink);
     }
     else if (getShaderType() == GL_VERTEX_SHADER)

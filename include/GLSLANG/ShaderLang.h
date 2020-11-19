@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 243
+#define ANGLE_SH_VERSION 244
 
 enum ShShaderSpec
 {
@@ -417,6 +417,7 @@ struct ShBuiltInResources
     int EXT_tessellation_shader;
     int OES_texture_buffer;
     int EXT_texture_buffer;
+    int OES_sample_variables;
 
     // Set to 1 to enable replacing GL_EXT_draw_buffers #extension directives
     // with GL_NV_draw_buffers in ESSL output. This flag can be used to emulate
@@ -473,6 +474,10 @@ struct ShBuiltInResources
 
     // maximum number of available image units
     int MaxImageUnits;
+
+    // OES_sample_variables constant
+    // maximum number of available samples
+    int MaxSamples;
 
     // maximum number of image uniforms in a vertex shader
     int MaxVertexImageUniforms;

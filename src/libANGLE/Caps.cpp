@@ -1040,6 +1040,7 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["GL_OES_sample_shading"] = enableableExtension(&Extensions::sampleShadingOES);
         map["GL_OES_shader_multisample_interpolation"] = enableableExtension(&Extensions::multisampleInterpolationOES);
         map["GL_OES_shader_image_atomic"] = enableableExtension(&Extensions::shaderImageAtomicOES);
+        map["GL_OES_sample_variables"] = enableableExtension(&Extensions::sampleVariablesOES);
         map["GL_NV_robustness_video_memory_purge"] = esOnlyExtension(&Extensions::robustnessVideoMemoryPurgeNV);
         map["GL_ANGLE_get_tex_level_parameter"] = enableableExtension(&Extensions::getTexLevelParameterANGLE);
         map["GL_EXT_copy_image"] = enableableExtension(&Extensions::copyImageEXT);

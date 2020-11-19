@@ -62,6 +62,21 @@
                 "essl_level":"COMMON_BUILTINS",
                 "initDynamicType":"TType *{type_name} = new TType(gl_DepthRangeParameters, false); {type_name}->setQualifier(EvqUniform);"
             }
+        },
+        "subgroups":{
+            "OESSampleVariables":{
+                "variables":{
+                    "gl_NumSamples":{
+                        "essl_level":"ESSL3_BUILTINS",
+                        "essl_extension":"OES_sample_variables",
+                        "type":{
+                            "basic":"Int",
+                            "precision":"Low",
+                            "qualifier":"Uniform"
+                        }
+                    }
+                }
+            }
         }
     },
     "Constants":{
@@ -646,6 +661,20 @@
                         "value":"resources"
                     }
                 }
+            },
+            "OESSampleVariables":{
+                "variables":{
+                    "gl_MaxSamples":{
+                        "essl_level":"ESSL3_BUILTINS",
+                        "type":{
+                            "basic":"Int",
+                            "precision":"Medium",
+                            "qualifier":"Const"
+                        },
+                        "essl_extension":"OES_sample_variables",
+                        "value":"resources"
+                    }
+                }
             }
         }
     },
@@ -797,6 +826,39 @@
                             "precision":"High",
                             "qualifier":"Layer"
                         }
+                    }
+                }
+            },
+            "OESSampleVariables":{
+                "variables":{
+                    "gl_SampleID":{
+                        "essl_level":"ESSL3_BUILTINS",
+                        "essl_extension":"OES_sample_variables",
+                        "type":{
+                            "basic":"Int",
+                            "precision":"Low",
+                            "qualifier":"SampleID"
+                        }
+                    },
+                    "gl_SamplePosition":{
+                        "essl_level":"ESSL3_BUILTINS",
+                        "essl_extension":"OES_sample_variables",
+                        "type":{
+                            "basic":"Float",
+                            "precision":"Medium",
+                            "primarySize":2,
+                            "qualifier":"SamplePosition"
+                        }
+                    },
+                    "gl_SampleMaskIn":{
+                        "essl_level":"ESSL3_BUILTINS",
+                        "essl_extension":"OES_sample_variables",
+                        "initDynamicType":"TType *{type_name} = new TType(EbtInt, EbpHigh, EvqSampleMaskIn, 1); {type_name}->makeArray((resources.MaxSamples+31)/32);"
+                    },
+                    "gl_SampleMask":{
+                        "essl_level":"ESSL3_BUILTINS",
+                        "essl_extension":"OES_sample_variables",
+                        "initDynamicType":"TType *{type_name} = new TType(EbtInt, EbpHigh, EvqSampleMask, 1); {type_name}->makeArray((resources.MaxSamples+31)/32);"
                     }
                 }
             }

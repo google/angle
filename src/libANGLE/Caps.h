@@ -666,6 +666,9 @@ struct Extensions
     // GL_OES_shader_image_atomic
     bool shaderImageAtomicOES = false;
 
+    // GL_OES_sample_variables
+    bool sampleVariablesOES = false;
+
     // GL_NV_robustness_video_memory_purge
     bool robustnessVideoMemoryPurgeNV = false;
 

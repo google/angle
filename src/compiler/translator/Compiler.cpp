@@ -1105,9 +1105,11 @@ void TCompiler::setResourceString()
         << ":OES_shader_image_atomic:" << mResources.OES_shader_image_atomic
         << ":OES_texture_buffer:" << mResources.OES_texture_buffer
         << ":EXT_texture_buffer:" << mResources.EXT_texture_buffer
+        << ":OES_sample_variables:" << mResources.OES_sample_variables
         << ":MinProgramTextureGatherOffset:" << mResources.MinProgramTextureGatherOffset
         << ":MaxProgramTextureGatherOffset:" << mResources.MaxProgramTextureGatherOffset
         << ":MaxImageUnits:" << mResources.MaxImageUnits
+        << ":MaxSamples:" << mResources.MaxSamples
         << ":MaxVertexImageUniforms:" << mResources.MaxVertexImageUniforms
         << ":MaxFragmentImageUniforms:" << mResources.MaxFragmentImageUniforms
         << ":MaxComputeImageUniforms:" << mResources.MaxComputeImageUniforms

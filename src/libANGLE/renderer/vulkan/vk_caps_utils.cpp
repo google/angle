@@ -452,6 +452,14 @@ void RendererVk::ensureCapsInitialized() const
     // OES_shader_multisample_interpolation requires OES_sample_variables, disable for now
     mNativeExtensions.multisampleInterpolationOES = false;
 
+    // From the SPIR-V spec at 3.21. BuiltIn, SampleId and SamplePosition needs
+    // SampleRateShading. https://www.khronos.org/registry/spir-v/specs/unified1/SPIRV.html
+    // To replace non-constant index to constant 0 index, this extension assumes that ANGLE only
+    // supports the number of samples less than or equal to 32.
+    constexpr unsigned int kNotSupportedSampleCounts = VK_SAMPLE_COUNT_64_BIT;
+    mNativeExtensions.sampleVariablesOES =
+        supportSampleRateShading && (vk_gl::GetMaxSampleCount(kNotSupportedSampleCounts) == 0);
+
     // Atomic image operations in the vertex and fragment shaders require the
     // vertexPipelineStoresAndAtomics and fragmentStoresAndAtomics Vulkan features respectively.
     // If either of these features is not present, the number of image uniforms for that stage is

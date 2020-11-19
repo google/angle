@@ -620,6 +620,15 @@ bool TParseContext::checkCanBeLValue(const TSourceLoc &line, const char *op, TIn
                 message = "can't modify gl_Layer in a fragment shader";
             }
             break;
+        case EvqSampleID:
+            message = "can't modify gl_SampleID";
+            break;
+        case EvqSampleMaskIn:
+            message = "can't modify gl_SampleMaskIn";
+            break;
+        case EvqSamplePosition:
+            message = "can't modify gl_SamplePosition";
+            break;
         default:
             //
             // Type that can't be written to?
