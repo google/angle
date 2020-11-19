@@ -16,6 +16,23 @@
       "message": "I don\u0027t know why this wasn\u0027t caught by something else, but the GPU process was immediately crashing on this locally on my Mac with ANGLE.",
       "revId": "d6110aef83fa2146acb9973e504ad8d973177286",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bac55e19_99207175",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2051,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-19T03:34:06Z",
+      "side": 1,
+      "message": "nit: remember to remove before committing",
+      "revId": "d6110aef83fa2146acb9973e504ad8d973177286",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
