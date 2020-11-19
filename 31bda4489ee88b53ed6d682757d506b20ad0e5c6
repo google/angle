@@ -16,6 +16,69 @@
       "message": "Found this missed optimization opportunity while investigating a syncval issue.\n\nThere\u0027s a relevant bug in the following situation:\n\n- Have a read-only D/S RP with storeOp\u003dSTORE\n- Transition to DEPTH_STENCIL_ATTACHMENT_OPTIMAL\n\nThe transition will use srcAccess 0, but because of the STORE it should use DEPTH_STENCIL_WRITE.",
       "revId": "31bda4489ee88b53ed6d682757d506b20ad0e5c6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1bcf066c_94dbc163",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-19T18:12:52Z",
+      "side": 1,
+      "message": "Glad to see this change.",
+      "revId": "31bda4489ee88b53ed6d682757d506b20ad0e5c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9b09c1f3_e240e930",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1031,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-19T18:12:52Z",
+      "side": 1,
+      "message": "Can\u0027t you just use mAttachmentOps[mDepthStencilAttachmentIndex] instead of pass via the call argument?",
+      "range": {
+        "startLine": 1031,
+        "startChar": 58,
+        "endLine": 1031,
+        "endChar": 94
+      },
+      "revId": "31bda4489ee88b53ed6d682757d506b20ad0e5c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "87efe161_a9615cf5",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1084,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-19T18:12:52Z",
+      "side": 1,
+      "message": "you may want to wrap this block of code with if(!mReadOnlyDepthStencilMode).",
+      "range": {
+        "startLine": 1070,
+        "startChar": 3,
+        "endLine": 1084,
+        "endChar": 5
+      },
+      "revId": "31bda4489ee88b53ed6d682757d506b20ad0e5c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
