@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4c7cb9d5_d24e52b4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-19T05:31:30Z",
+      "side": 1,
+      "message": "Found this missed optimization opportunity while investigating a syncval issue.\n\nThere\u0027s a relevant bug in the following situation:\n\n- Have a read-only D/S RP with storeOp\u003dSTORE\n- Transition to DEPTH_STENCIL_ATTACHMENT_OPTIMAL\n\nThe transition will use srcAccess 0, but because of the STORE it should use DEPTH_STENCIL_WRITE.",
+      "revId": "31bda4489ee88b53ed6d682757d506b20ad0e5c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
