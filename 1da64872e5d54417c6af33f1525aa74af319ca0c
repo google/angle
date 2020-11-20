@@ -22,6 +22,30 @@
       },
       "revId": "1da64872e5d54417c6af33f1525aa74af319ca0c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ca005f48_6988319b",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-20T05:48:27Z",
+      "side": 1,
+      "message": "Well, indeed the bot failure turned out to be due to the texture setting the layout to DepthStencilReadOnly and endRP setting it to DepthStencilReadOnlyWithStore, which to ANGLE are different layouts, so it generates a duplicate barrier.\n\nA third alternative is to be conservative and make DepthStencilReadOnly have srcAccessMask \u003d VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT unconditionally. It will be unnecessary especially with storeOp\u003dNONE, but maybe the perf impact is negligible?",
+      "parentUuid": "78092fce_7b2d97e1",
+      "range": {
+        "startLine": 171,
+        "startChar": 28,
+        "endLine": 171,
+        "endChar": 36
+      },
+      "revId": "1da64872e5d54417c6af33f1525aa74af319ca0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
