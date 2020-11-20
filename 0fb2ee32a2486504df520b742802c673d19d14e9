@@ -92,6 +92,30 @@
       },
       "revId": "0fb2ee32a2486504df520b742802c673d19d14e9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "64721c4f_8d47e164",
+        "filename": "src/libGLESv2/global_state.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 156,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-20T18:23:43Z",
+      "side": 1,
+      "message": "Hey Trevor,\n\nThe comparison with the prior context and dirtying the state if so is a concern that seems more particular to D3D. I don\u0027t recall the design doc. Sorry if I didn\u0027t point out this observation during the design phase.\n\nWhat happens if you move the prior context comparison into StateManager11::onMakeCurrent?",
+      "parentUuid": "84aa3f0f_30242adc",
+      "range": {
+        "startLine": 152,
+        "startChar": 0,
+        "endLine": 156,
+        "endChar": 5
+      },
+      "revId": "0fb2ee32a2486504df520b742802c673d19d14e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
