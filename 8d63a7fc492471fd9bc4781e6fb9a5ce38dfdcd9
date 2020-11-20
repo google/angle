@@ -87,6 +87,24 @@
       "message": "Sunny or Shabi, can you file a bug for this? Probably in a CL isn\u0027t the best place to track this issue. It\u0027s probably not hard to add the required front-end state to make the state reset happy but we should track that outside this CL.",
       "revId": "8d63a7fc492471fd9bc4781e6fb9a5ce38dfdcd9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2a38743f_7a74c1e4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 11
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-20T16:38:35Z",
+      "side": 1,
+      "message": "anglebug.com/5375",
+      "parentUuid": "ffb35c44_6567eac5",
+      "revId": "8d63a7fc492471fd9bc4781e6fb9a5ce38dfdcd9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
