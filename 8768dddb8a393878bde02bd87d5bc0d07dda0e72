@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ee9fb660_23d495b2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-20T17:39:46Z",
+      "side": 1,
+      "message": "Thank you Anders for the fix. One last clean up and this should be good to go!",
+      "revId": "8768dddb8a393878bde02bd87d5bc0d07dda0e72",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c2c7e22e_43c01eb4",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1829,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-20T17:39:46Z",
+      "side": 1,
+      "message": "The conditions here and above don\u0027t match (and this function is using the extension without checking for its availability). How about this?\n\n- Add `\u0026\u0026 getFeatures().depthClamping.enabled` to this:\n\n    ANGLE_FEATURE_CONDITION(\n        \u0026mFeatures, depthClamping,\n        isNvidia \u0026\u0026 ExtensionFound(VK_EXT_DEPTH_CLIP_ENABLE_EXTENSION_NAME, deviceExtensionNames) \u0026\u0026\n            (!IsLinux() || nvidiaVersion.major \u003e 418u));\n\n- Then check `contextVk-\u003egetRenderer()-\u003egetPhysicalDeviceFeatures().depthClamp` both here and above when setting `depthClampEnable`.",
+      "revId": "8768dddb8a393878bde02bd87d5bc0d07dda0e72",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
