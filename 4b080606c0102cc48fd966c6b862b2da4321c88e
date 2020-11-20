@@ -16,6 +16,23 @@
       "message": "PTAL",
       "revId": "4b080606c0102cc48fd966c6b862b2da4321c88e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5749114f_3af16817",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-20T18:26:27Z",
+      "side": 1,
+      "message": "Are you intentionally not enabling any tests because it leaves some in a partially-regressed state? I wouldn\u0027t mind seeing some green testing with this feature turned on.",
+      "revId": "4b080606c0102cc48fd966c6b862b2da4321c88e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
