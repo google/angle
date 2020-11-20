@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7c0f65d9_40506b39",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-11-20T17:08:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1437fc1d_4aa707bf",
+      "range": {
+        "startLine": 30,
+        "startChar": 6,
+        "endLine": 30,
+        "endChar": 24
+      },
+      "revId": "b139a6f33dfc8637e2af1103561b72259c186f95",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "53e277a4_2756268f",
@@ -37,6 +61,30 @@
       "writtenOn": "2020-11-20T16:55:19Z",
       "side": 1,
       "message": "nit: missing mPrefix, mFenceRecycler.\n\nAlso please follow the style guide ordering rules:\n\nhttps://google.github.io/styleguide/cppguide.html#Declaration_Order",
+      "range": {
+        "startLine": 287,
+        "startChar": 23,
+        "endLine": 287,
+        "endChar": 35
+      },
+      "revId": "b139a6f33dfc8637e2af1103561b72259c186f95",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e65e5509_8827c615",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 287,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-11-20T17:08:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "53e277a4_2756268f",
       "range": {
         "startLine": 287,
         "startChar": 23,
