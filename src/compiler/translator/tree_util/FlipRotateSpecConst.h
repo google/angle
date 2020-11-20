@@ -38,12 +38,18 @@ class FlipRotateSpecConst
     TIntermTyped *getFlipY();
     TIntermTyped *getNegFlipY();
     TIntermTyped *getFragRotationMultiplyFlipXY();
+    TIntermBinary *getHalfRenderArea();
+    TIntermTyped *getHalfRenderAreaRotationMatrix();
 
     void generateSymbol(TSymbolTable *symbolTable);
     void outputLayoutString(TInfoSinkBase &sink) const;
     SpecConstUsageBits getSpecConstUsageBits() const { return mUsageBits; }
 
   private:
+    TIntermSymbol *getDrawableWidth();
+    TIntermSymbol *getDrawableHeight();
+
+    TSymbolTable *mSymbolTable;
     TIntermSymbol *mSpecConstSymbol;
     // Bit is set if YFlip or Rotation has been used
     SpecConstUsageBits mUsageBits;

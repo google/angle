@@ -6964,6 +6964,12 @@ void ShaderProgramHelper::setSpecializationConstant(sh::vk::SpecializationConsta
         case sh::vk::SpecializationConstantId::SurfaceRotation:
             mSpecializationConstants.surfaceRotation = value;
             break;
+        case sh::vk::SpecializationConstantId::DrawableWidth:
+            mSpecializationConstants.drawableWidth = value;
+            break;
+        case sh::vk::SpecializationConstantId::DrawableHeight:
+            mSpecializationConstants.drawableHeight = value;
+            break;
         default:
             UNREACHABLE();
             break;
