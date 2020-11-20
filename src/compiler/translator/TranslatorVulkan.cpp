@@ -941,9 +941,13 @@ bool TranslatorVulkan::translateImpl(TIntermBlock *root,
             return false;
         }
 
-        if (hasGLSampleMask && !RewriteSampleMask(this, root, &getSymbolTable()))
+        if (hasGLSampleMask)
         {
-            return false;
+            TIntermBinary *numSamples = driverUniforms->getNumSamplesRef();
+            if (!RewriteSampleMask(this, root, &getSymbolTable(), numSamples))
+            {
+                return false;
+            }
         }
 
         {

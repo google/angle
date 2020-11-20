@@ -338,7 +338,7 @@ class ContextVk : public ContextImpl, public vk::Context
                                        gl::TextureType type,
                                        gl::Texture **textureOut);
     void updateColorMasks(const gl::BlendStateExt &blendStateExt);
-    void updateSampleMask(const gl::State &glState);
+    void updateSampleMaskWithRasterizationSamples(const uint32_t rasterizationSamples);
 
     void handleError(VkResult errorCode,
                      const char *file,
@@ -857,6 +857,9 @@ class ContextVk : public ContextImpl, public vk::Context
     angle::Result flushCommandBuffersIfNecessary(const vk::CommandBufferAccess &access);
 
     void outputCumulativePerfCounters();
+
+    void updateSampleShadingWithRasterizationSamples(const uint32_t rasterizationSamples);
+    void updateRasterizationSamples(const uint32_t rasterizationSamples);
 
     std::array<DirtyBitHandler, DIRTY_BIT_MAX> mGraphicsDirtyBitHandlers;
     std::array<DirtyBitHandler, DIRTY_BIT_MAX> mComputeDirtyBitHandlers;

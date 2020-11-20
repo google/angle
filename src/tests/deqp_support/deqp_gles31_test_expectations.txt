@@ -186,26 +186,6 @@
 // Cannot create 2D (array) view of 3D texture.
 3886 VULKAN : dEQP-GLES31.functional.image_load_store.3d.*layer = FAIL
 
-// Cannot ignore multisampling-related operations when the target is a single-sampled target:
-3588 VULKAN : dEQP-GLES31.functional.shaders.sample_variables.sample_mask.discard_half_per_*.default_framebuffer = FAIL
-3588 VULKAN : dEQP-GLES31.functional.shaders.sample_variables.sample_mask.discard_half_per_*.singlesample_texture = FAIL
-3588 VULKAN : dEQP-GLES31.functional.shaders.sample_variables.sample_mask.discard_half_per_*.singlesample_rbo = FAIL
-3588 VULKAN : dEQP-GLES31.functional.shaders.sample_variables.sample_mask.inverse_per_*.default_framebuffer = FAIL
-3588 VULKAN : dEQP-GLES31.functional.shaders.sample_variables.sample_mask.inverse_per_*.singlesample_texture = FAIL
-3588 VULKAN : dEQP-GLES31.functional.shaders.sample_variables.sample_mask.inverse_per_*.singlesample_rbo = FAIL
-
-// Cannot ignore SampleShadingEnable when the target is a single-sampled target:
-3588 VULKAN : dEQP-GLES31.functional.shaders.sample_variables.sample_mask_in.bit_count_per_two_samples.default_framebuffer = FAIL
-3588 VULKAN : dEQP-GLES31.functional.shaders.sample_variables.sample_mask_in.bit_count_per_two_samples.singlesample_texture = FAIL
-3588 VULKAN : dEQP-GLES31.functional.shaders.sample_variables.sample_mask_in.bit_count_per_two_samples.singlesample_rbo = FAIL
-3588 VULKAN : dEQP-GLES31.functional.shaders.sample_variables.sample_mask_in.bits_unique_per_two_samples.singlesample_texture = FAIL
-3588 VULKAN : dEQP-GLES31.functional.shaders.sample_variables.sample_mask.*_per_two_samples.default_framebuffer = FAIL
-3588 VULKAN : dEQP-GLES31.functional.shaders.sample_variables.sample_mask.*_per_two_samples.singlesample_texture = FAIL
-3588 VULKAN : dEQP-GLES31.functional.shaders.sample_variables.sample_mask.*_per_two_samples.singlesample_rbo = FAIL
-3588 VULKAN : dEQP-GLES31.functional.shaders.sample_variables.sample_pos.correctness.default_framebuffer = FAIL
-3588 VULKAN : dEQP-GLES31.functional.shaders.sample_variables.sample_pos.correctness.singlesample_texture = FAIL
-3588 VULKAN : dEQP-GLES31.functional.shaders.sample_variables.sample_pos.correctness.singlesample_rbo = FAIL
-
 ////
 //// AMD Vulkan expectations
 ////

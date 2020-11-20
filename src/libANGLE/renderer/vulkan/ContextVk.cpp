@@ -2502,19 +2502,24 @@ void ContextVk::updateColorMasks(const gl::BlendStateExt &blendStateExt)
                                                  framebufferVk->getState().getEnabledDrawBuffers());
 }
 
-void ContextVk::updateSampleMask(const gl::State &glState)
+void ContextVk::updateSampleMaskWithRasterizationSamples(const uint32_t rasterizationSamples)
 {
+    // FramebufferVk::syncState could have been the origin for this call, at which point the
+    // draw FBO may have changed, retrieve the latest draw FBO.
+    FramebufferVk *drawFramebuffer = vk::GetImpl(mState.getDrawFramebuffer());
+
     // If sample coverage is enabled, emulate it by generating and applying a mask on top of the
     // sample mask.
-    uint32_t coverageSampleCount = GetCoverageSampleCount(glState, mDrawFramebuffer);
+    uint32_t coverageSampleCount = GetCoverageSampleCount(mState, drawFramebuffer);
 
     static_assert(sizeof(uint32_t) == sizeof(GLbitfield), "Vulkan assumes 32-bit sample masks");
-    for (uint32_t maskNumber = 0; maskNumber < glState.getMaxSampleMaskWords(); ++maskNumber)
+    for (uint32_t maskNumber = 0; maskNumber < mState.getMaxSampleMaskWords(); ++maskNumber)
     {
-        uint32_t mask = glState.isSampleMaskEnabled() ? glState.getSampleMaskWord(maskNumber)
-                                                      : std::numeric_limits<uint32_t>::max();
+        uint32_t mask = mState.isSampleMaskEnabled() && rasterizationSamples > 1
+                            ? mState.getSampleMaskWord(maskNumber)
+                            : std::numeric_limits<uint32_t>::max();
 
-        ApplySampleCoverage(glState, coverageSampleCount, maskNumber, &mask);
+        ApplySampleCoverage(mState, coverageSampleCount, maskNumber, &mask);
 
         mGraphicsPipelineDesc->updateSampleMask(&mGraphicsPipelineTransition, maskNumber, mask);
     }
@@ -2613,6 +2618,27 @@ void ContextVk::updateScissor(const gl::State &glState)
         ASSERT(mRenderPassCommands->started());
         mRenderPassCommands->growRenderArea(this, rotatedScissoredArea);
     }
+}
+
+// If the target is a single-sampled target, sampleShading should be disabled, to use Bresenham line
+// raterization feature.
+void ContextVk::updateSampleShadingWithRasterizationSamples(const uint32_t rasterizationSamples)
+{
+    bool sampleShadingEnable =
+        (rasterizationSamples <= 1 ? false : mState.isSampleShadingEnabled());
+
+    mGraphicsPipelineDesc->updateSampleShading(&mGraphicsPipelineTransition, sampleShadingEnable,
+                                               mState.getMinSampleShading());
+}
+
+// If the target is switched between a single-sampled and multisample, the dependency related to the
+// rasterization sample should be updated.
+void ContextVk::updateRasterizationSamples(const uint32_t rasterizationSamples)
+{
+    mGraphicsPipelineDesc->updateRasterizationSamples(&mGraphicsPipelineTransition,
+                                                      rasterizationSamples);
+    updateSampleShadingWithRasterizationSamples(rasterizationSamples);
+    updateSampleMaskWithRasterizationSamples(rasterizationSamples);
 }
 
 void ContextVk::invalidateProgramBindingHelper(const gl::State &glState)
@@ -2736,16 +2762,16 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 iter.setLaterBit(gl::State::DIRTY_BIT_PROGRAM_EXECUTABLE);
                 break;
             case gl::State::DIRTY_BIT_SAMPLE_COVERAGE_ENABLED:
-                updateSampleMask(glState);
+                updateSampleMaskWithRasterizationSamples(mDrawFramebuffer->getSamples());
                 break;
             case gl::State::DIRTY_BIT_SAMPLE_COVERAGE:
-                updateSampleMask(glState);
+                updateSampleMaskWithRasterizationSamples(mDrawFramebuffer->getSamples());
                 break;
             case gl::State::DIRTY_BIT_SAMPLE_MASK_ENABLED:
-                updateSampleMask(glState);
+                updateSampleMaskWithRasterizationSamples(mDrawFramebuffer->getSamples());
                 break;
             case gl::State::DIRTY_BIT_SAMPLE_MASK:
-                updateSampleMask(glState);
+                updateSampleMaskWithRasterizationSamples(mDrawFramebuffer->getSamples());
                 break;
             case gl::State::DIRTY_BIT_DEPTH_TEST_ENABLED:
             {
@@ -2884,9 +2910,7 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 updateViewport(mDrawFramebuffer, glState.getViewport(), glState.getNearPlane(),
                                glState.getFarPlane(), isViewportFlipEnabledForDrawFBO());
                 updateColorMasks(glState.getBlendStateExt());
-                updateSampleMask(glState);
-                mGraphicsPipelineDesc->updateRasterizationSamples(&mGraphicsPipelineTransition,
-                                                                  mDrawFramebuffer->getSamples());
+                updateRasterizationSamples(mDrawFramebuffer->getSamples());
                 mGraphicsPipelineDesc->updateFrontFace(&mGraphicsPipelineTransition,
                                                        glState.getRasterizerState(),
                                                        isViewportFlipEnabledForDrawFBO());
@@ -2972,9 +2996,7 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                                                               glState.isSampleAlphaToOneEnabled());
                 break;
             case gl::State::DIRTY_BIT_SAMPLE_SHADING:
-                mGraphicsPipelineDesc->updateSampleShading(&mGraphicsPipelineTransition,
-                                                           glState.isSampleShadingEnabled(),
-                                                           glState.getMinSampleShading());
+                updateSampleShadingWithRasterizationSamples(mDrawFramebuffer->getSamples());
                 break;
             case gl::State::DIRTY_BIT_COVERAGE_MODULATION:
                 break;
@@ -3309,8 +3331,7 @@ void ContextVk::onFramebufferChange(FramebufferVk *framebufferVk)
     if (mGraphicsPipelineDesc->getRasterizationSamples() !=
         static_cast<uint32_t>(framebufferVk->getSamples()))
     {
-        mGraphicsPipelineDesc->updateRasterizationSamples(&mGraphicsPipelineTransition,
-                                                          framebufferVk->getSamples());
+        updateRasterizationSamples(framebufferVk->getSamples());
     }
 
     // Update scissor.

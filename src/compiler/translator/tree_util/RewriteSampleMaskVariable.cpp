@@ -24,6 +24,7 @@ namespace sh
 namespace
 {
 constexpr int kMaxIndexForSampleMaskVar = 0;
+constexpr int kFullSampleMask           = 0xFFFFFFFF;
 
 // Traverse the tree and collect the redeclaration and replace all non constant index references of
 // gl_SampleMask or gl_SampleMaskIn with constant index references
@@ -102,7 +103,8 @@ class GLSampleMaskRelatedReferenceTraverser : public TIntermTraverser
 
 ANGLE_NO_DISCARD bool RewriteSampleMask(TCompiler *compiler,
                                         TIntermBlock *root,
-                                        TSymbolTable *symbolTable)
+                                        TSymbolTable *symbolTable,
+                                        const TIntermTyped *numSamplesUniform)
 {
     const TIntermSymbol *redeclaredGLSampleMask = nullptr;
     GLSampleMaskRelatedReferenceTraverser indexTraverser(&redeclaredGLSampleMask,
@@ -137,7 +139,28 @@ ANGLE_NO_DISCARD bool RewriteSampleMask(TCompiler *compiler,
     const unsigned int arraySizeOfSampleMask = glSampleMaskVar->getType().getOutermostArraySize();
     ASSERT(arraySizeOfSampleMask == 1);
 
-    return true;
+    TIntermSymbol *glSampleMaskSymbol = new TIntermSymbol(glSampleMaskVar);
+
+    // if (ANGLEUniforms.numSamples == 1)
+    // {
+    //     gl_SampleMask[0] = int(0xFFFFFFFF);
+    // }
+    TIntermConstantUnion *singleSampleCount = CreateUIntNode(1);
+    TIntermBinary *equalTo =
+        new TIntermBinary(EOpEqual, numSamplesUniform->deepCopy(), singleSampleCount);
+
+    TIntermBlock *trueBlock = new TIntermBlock();
+
+    TIntermBinary *sampleMaskVar = new TIntermBinary(EOpIndexDirect, glSampleMaskSymbol->deepCopy(),
+                                                     CreateIndexNode(kMaxIndexForSampleMaskVar));
+    TIntermConstantUnion *fullSampleMask = CreateIndexNode(kFullSampleMask);
+    TIntermBinary *assignment = new TIntermBinary(EOpAssign, sampleMaskVar, fullSampleMask);
+
+    trueBlock->appendStatement(assignment);
+
+    TIntermIfElse *multiSampleOrNot = new TIntermIfElse(equalTo, trueBlock, nullptr);
+
+    return RunAtTheEndOfShader(compiler, root, multiSampleOrNot, symbolTable);
 }
 
 ANGLE_NO_DISCARD bool RewriteSampleMaskIn(TCompiler *compiler,

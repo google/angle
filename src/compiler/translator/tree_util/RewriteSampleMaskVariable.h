@@ -26,7 +26,8 @@ class TIntermTyped;
 // array problem.
 ANGLE_NO_DISCARD bool RewriteSampleMask(TCompiler *compiler,
                                         TIntermBlock *root,
-                                        TSymbolTable *symbolTable);
+                                        TSymbolTable *symbolTable,
+                                        const TIntermTyped *numSamplesUniform);
 
 ANGLE_NO_DISCARD bool RewriteSampleMaskIn(TCompiler *compiler,
                                           TIntermBlock *root,
