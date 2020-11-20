@@ -14,7 +14,7 @@
 #    import <OpenGLES/EAGLDrawable.h>
 #    import <OpenGLES/EAGLIOSurface.h>
 
-#    include "libANGLE/renderer/gl/apple/SoftLinking.h"
+#    include "common/apple/SoftLinking.h"
 
 SOFT_LINK_FRAMEWORK_SOURCE(OpenGLES)
 

@@ -57,6 +57,7 @@ SOFT_LINK_FUNCTION_HEADER(OpenGL,
                           (GLuint display_mask, CGLRendererInfoObj *rend, GLint *nrend),
                           (display_mask, rend, nrend))
 SOFT_LINK_FUNCTION_HEADER(OpenGL, CGLReleaseContext, void, (CGLContextObj ctx), (ctx))
+SOFT_LINK_FUNCTION_HEADER(OpenGL, CGLGetCurrentContext, CGLContextObj, (void), ())
 SOFT_LINK_FUNCTION_HEADER(OpenGL, CGLSetCurrentContext, CGLError, (CGLContextObj ctx), (ctx))
 SOFT_LINK_FUNCTION_HEADER(OpenGL,
                           CGLSetVirtualScreen,

@@ -206,7 +206,10 @@ egl::Error IOSurfaceSurfaceEAGL::bindTexImage(const gl::Context *context,
         // TODO(kbr): possibly more state to be set here, including setting any
         // pixel unpack buffer to 0 when using ES 3.0 contexts.
         gl::PixelUnpackState defaultUnpackState;
-        stateManager->setPixelUnpackState(defaultUnpackState);
+        if (IsError(stateManager->setPixelUnpackState(context, defaultUnpackState)))
+        {
+            return egl::EglBadState() << "Failed to set pixel unpack state.";
+        }
         textureData = IOSurfaceGetBaseAddress(mIOSurface);
     }
 
@@ -238,7 +241,10 @@ egl::Error IOSurfaceSurfaceEAGL::releaseTexImage(const gl::Context *context, EGL
         gl::PixelPackState state;
         state.rowLength = mRowStrideInPixels;
         state.alignment = 1;
-        stateManager->setPixelPackState(state);
+        if (IsError(stateManager->setPixelPackState(context, state)))
+        {
+            return egl::EglBadState() << "Failed to set pixel pack state.";
+        }
         // TODO(kbr): possibly more state to be set here, including setting any
         // pixel pack buffer to 0 when using ES 3.0 contexts.
         const auto &format = kIOSurfaceFormats[mFormatIndex];
