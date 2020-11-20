@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8f1b2ca4_7f7f532f",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramExecutableVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 682,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-20T19:58:09Z",
+      "side": 1,
+      "message": "nit: can omit redundant rx namespace",
+      "range": {
+        "startLine": 682,
+        "startChar": 4,
+        "endLine": 682,
+        "endChar": 6
+      },
+      "revId": "8773287670da52f788590fed1b80b0da014bac3d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5202a5f6_783e132a",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramExecutableVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 704,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-20T19:58:09Z",
+      "side": 1,
+      "message": "nit: ToUnderlying?",
+      "range": {
+        "startLine": 704,
+        "startChar": 16,
+        "endLine": 704,
+        "endChar": 27
+      },
+      "revId": "8773287670da52f788590fed1b80b0da014bac3d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
