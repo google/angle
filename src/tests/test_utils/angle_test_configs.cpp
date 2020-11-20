@@ -795,6 +795,21 @@ PlatformParameters ES31_VULKAN_SWIFTSHADER()
     return PlatformParameters(3, 1, egl_platform::VULKAN_SWIFTSHADER());
 }
 
+PlatformParameters ES32_VULKAN()
+{
+    return PlatformParameters(3, 2, egl_platform::VULKAN());
+}
+
+PlatformParameters ES32_VULKAN_NULL()
+{
+    return PlatformParameters(3, 2, egl_platform::VULKAN_NULL());
+}
+
+PlatformParameters ES32_VULKAN_SWIFTSHADER()
+{
+    return PlatformParameters(3, 2, egl_platform::VULKAN_SWIFTSHADER());
+}
+
 PlatformParameters ES1_METAL()
 {
     return PlatformParameters(1, 0, egl_platform::METAL());

@@ -178,6 +178,9 @@ PlatformParameters ES3_VULKAN_SWIFTSHADER();
 PlatformParameters ES31_VULKAN();
 PlatformParameters ES31_VULKAN_NULL();
 PlatformParameters ES31_VULKAN_SWIFTSHADER();
+PlatformParameters ES32_VULKAN();
+PlatformParameters ES32_VULKAN_NULL();
+PlatformParameters ES32_VULKAN_SWIFTSHADER();
 
 PlatformParameters ES1_METAL();
 PlatformParameters ES2_METAL();

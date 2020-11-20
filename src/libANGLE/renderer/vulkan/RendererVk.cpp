@@ -1619,6 +1619,10 @@ gl::Version RendererVk::getMaxSupportedESVersion() const
     }
 
     // TODO: more extension checks for 3.2.  http://anglebug.com/5366
+    if (!mFeatures.exposeNonConformantExtensionsAndVersions.enabled)
+    {
+        maxVersion = LimitVersionTo(maxVersion, {3, 1});
+    }
 
     // Limit to ES3.0 if there are any blockers for 3.1.
 

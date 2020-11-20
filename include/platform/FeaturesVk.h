@@ -446,6 +446,14 @@ struct FeaturesVk : FeatureSetBase
         "forceDriverUniformOverSpecConst", FeatureCategory::VulkanWorkarounds,
         "Forces using driver uniforms instead of specialization constants.", &members,
         "http://issuetracker.google.com/173636783"};
+
+    // Whether non-conformant configurations and extensions should be exposed.  When an extension is
+    // in development, or a GLES version is not supported on a device, we may still want to expose
+    // them for partial testing.  This feature is enabled by our test harness.
+    Feature exposeNonConformantExtensionsAndVersions = {
+        "exposeNonConformantExtensionsAndVersions", FeatureCategory::VulkanWorkarounds,
+        "Expose GLES versions and extensions that are not conformant.", &members,
+        "http://anglebug.com/5375"};
 };
 
 inline FeaturesVk::FeaturesVk()  = default;

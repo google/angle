@@ -148,6 +148,8 @@ struct CombinedPrintToStringParamName
     ES31_D3D11(), ES31_OPENGL(), ES31_OPENGLES(), ES31_VULKAN(), ES31_VULKAN_SWIFTSHADER(), \
         WithAsyncCommandQueueFeatureVulkan(ES31_VULKAN())
 
+#define ANGLE_ALL_TEST_PLATFORMS_ES32 ES32_VULKAN(), ES32_VULKAN_SWIFTSHADER()
+
 #define ANGLE_ALL_TEST_PLATFORMS_NULL ES2_NULL(), ES3_NULL(), ES31_NULL()
 
 // Instantiate the test once for each GLES1 platform

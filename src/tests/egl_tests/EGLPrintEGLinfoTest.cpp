@@ -252,6 +252,9 @@ static void LogGles31Capabilities(std::ostream &stream)
 
 static void LogGles32Capabilities(std::ostream &stream)
 {
+    // Most of these capabilities are not implemented yet.
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     QUERY_AND_LOG_CAPABILITY(GL_MAX_COMBINED_GEOMETRY_UNIFORM_COMPONENTS, stream);
     QUERY_AND_LOG_CAPABILITY(GL_MAX_COMBINED_TESS_CONTROL_UNIFORM_COMPONENTS, stream);
     QUERY_AND_LOG_CAPABILITY(GL_MAX_COMBINED_TESS_EVALUATION_UNIFORM_COMPONENTS, stream);
@@ -483,4 +486,4 @@ TEST_P(EGLPrintEGLinfoTest, PrintConfigInfo)
     }
 }
 
-ANGLE_INSTANTIATE_TEST(EGLPrintEGLinfoTest, ES2_VULKAN(), ES3_VULKAN());
+ANGLE_INSTANTIATE_TEST(EGLPrintEGLinfoTest, ES2_VULKAN(), ES3_VULKAN(), ES32_VULKAN());

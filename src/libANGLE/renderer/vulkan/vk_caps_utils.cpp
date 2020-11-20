@@ -174,6 +174,15 @@ bool GetTextureSRGBOverrideSupport(const RendererVk *rendererVk,
     return true;
 }
 
+bool HasTexelBufferSupport(const RendererVk *rendererVk, GLenum formatGL)
+{
+    const vk::Format &formatVk = rendererVk->getFormat(formatGL);
+
+    return rendererVk->hasBufferFormatFeatureBits(
+        formatVk.vkBufferFormat,
+        VK_FORMAT_FEATURE_UNIFORM_TEXEL_BUFFER_BIT | VK_FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_BIT);
+}
+
 bool HasTextureBufferSupport(const RendererVk *rendererVk)
 {
     // The following formats don't have mandatory UNIFORM_TEXEL_BUFFER support in Vulkan.
@@ -219,27 +228,40 @@ bool HasTextureBufferSupport(const RendererVk *rendererVk)
     //     VK_FORMAT_R32G32B32A32_SFLOAT
     //
 
-    // TODO: RGB32 formats currently don't have STORAGE_TEXEL_BUFFER support on any known platform.
-    // Despite this limitation, we expose EXT_texture_buffer.  http://anglebug.com/3573
     const std::array<GLenum, 12> &optionalFormats = {
         GL_R8,   GL_R8I,  GL_R8UI,  GL_RG8,   GL_RG8I,  GL_RG8UI,
         GL_R16F, GL_R16I, GL_R16UI, GL_RG16F, GL_RG16I, GL_RG16UI,
-        // GL_RGB32F,
-        // GL_RGB32I,
-        // GL_RGB32UI,
     };
 
     for (GLenum formatGL : optionalFormats)
     {
-        const vk::Format &formatVk = rendererVk->getFormat(formatGL);
-
-        if (!rendererVk->hasBufferFormatFeatureBits(formatVk.vkBufferFormat,
-                                                    VK_FORMAT_FEATURE_UNIFORM_TEXEL_BUFFER_BIT |
-                                                        VK_FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_BIT))
+        if (!HasTexelBufferSupport(rendererVk, formatGL))
         {
             return false;
         }
     }
+
+    // TODO: RGB32 formats currently don't have STORAGE_TEXEL_BUFFER support on any known platform.
+    // Despite this limitation, we expose EXT_texture_buffer.  http://anglebug.com/3573
+    if (rendererVk->getFeatures().exposeNonConformantExtensionsAndVersions.enabled)
+    {
+        return true;
+    }
+
+    const std::array<GLenum, 3> &optionalFormats2 = {
+        GL_RGB32F,
+        GL_RGB32I,
+        GL_RGB32UI,
+    };
+
+    for (GLenum formatGL : optionalFormats2)
+    {
+        if (!HasTexelBufferSupport(rendererVk, formatGL))
+        {
+            return false;
+        }
+    }
+
     return true;
 }
 }  // namespace
