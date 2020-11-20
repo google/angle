@@ -70,6 +70,24 @@
       "parentUuid": "7e2b507e_454437a7",
       "revId": "2e256d6c09c65a1832a8444be704a7ffd3a57973",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "032d7b07_3ba4ac14",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-20T02:53:51Z",
+      "side": 1,
+      "message": "Thanks for confirming. The issue is indeed exactly that one of the two formats is emulated:\n\n(gdb) p destFormatActual\n ...  angle::FormatID::R16G16B16A16_SINT ...\n\nLuckily it shouldn\u0027t be so hard to emulate this feature with a compute call.",
+      "parentUuid": "388559e0_6cd7eab4",
+      "revId": "2e256d6c09c65a1832a8444be704a7ffd3a57973",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
