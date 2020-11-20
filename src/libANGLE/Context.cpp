@@ -3532,7 +3532,8 @@ void Context::initCaps()
                << std::endl;
         mDisplay->overrideFrontendFeatures({"disable_program_binary"}, true);
 
-        constexpr GLint maxImageUnits = 20;
+        // Set to the most common limit per gpuinfo.org. Required for several platforms we test.
+        constexpr GLint maxImageUnits = 8;
         INFO() << "Limiting image unit count to " << maxImageUnits << " while FrameCapture enabled"
                << std::endl;
         ANGLE_LIMIT_CAP(mState.mCaps.maxImageUnits, maxImageUnits);
