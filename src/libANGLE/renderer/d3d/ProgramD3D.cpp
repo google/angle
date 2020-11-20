@@ -2078,6 +2078,27 @@ std::unique_ptr<LinkEvent> ProgramD3D::link(const gl::Context *context,
                 shadersD3D[shaderType]->generateWorkarounds(&mShaderWorkarounds[shaderType]);
 
                 mShaderUniformsDirty.set(shaderType);
+
+                const std::set<std::string> &slowCompilingUniformBlockSet =
+                    shadersD3D[shaderType]->getSlowCompilingUniformBlockSet();
+                if (slowCompilingUniformBlockSet.size() > 0)
+                {
+                    std::ostringstream stream;
+                    stream << "You could get a better shader compiling performance if you re-write"
+                           << " the uniform block(s)\n[ ";
+                    for (const std::string &str : slowCompilingUniformBlockSet)
+                    {
+                        stream << str << " ";
+                    }
+                    stream << "]\nin the " << gl::GetShaderTypeString(shaderType) << " shader.\n";
+
+                    stream << "You could get more details from "
+                              "https://chromium.googlesource.com/angle/angle/+/refs/heads/master/"
+                              "src/libANGLE/renderer/d3d/d3d11/"
+                              "UniformBlockToStructuredBufferTranslation.md\n";
+                    ANGLE_PERF_WARNING(context->getState().getDebug(), GL_DEBUG_SEVERITY_MEDIUM,
+                                       stream.str().c_str());
+                }
             }
         }
 

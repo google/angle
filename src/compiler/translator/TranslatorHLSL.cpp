@@ -12,7 +12,7 @@
 #include "compiler/translator/tree_ops/BreakVariableAliasingInInnerLoops.h"
 #include "compiler/translator/tree_ops/ExpandIntegerPowExpressions.h"
 #include "compiler/translator/tree_ops/PruneEmptyCases.h"
-#include "compiler/translator/tree_ops/RecordUniformBlocksTranslatedToStructuredBuffers.h"
+#include "compiler/translator/tree_ops/RecordUniformBlocksWithLargeArrayMember.h"
 #include "compiler/translator/tree_ops/RemoveDynamicIndexing.h"
 #include "compiler/translator/tree_ops/RewriteAtomicFunctionExpressions.h"
 #include "compiler/translator/tree_ops/RewriteElseBlocks.h"
@@ -184,25 +184,26 @@ bool TranslatorHLSL::translate(TIntermBlock *root,
         }
     }
 
-    mUniformBlocksTranslatedToStructuredBuffers.clear();
+    mUniformBlockOptimizedMap.clear();
+    mSlowCompilingUniformBlockSet.clear();
     // In order to get the exact maximum of slots are available for shader resources, which would
     // been bound with StructuredBuffer, we only translate uniform block with a large array member
     // into StructuredBuffer when shader version is 300.
     if (getShaderVersion() == 300 &&
         (compileOptions & SH_ALLOW_TRANSLATE_UNIFORM_BLOCK_TO_STRUCTUREDBUFFER) != 0)
     {
-        if (!sh::RecordUniformBlocksTranslatedToStructuredBuffers(
-                root, mUniformBlocksTranslatedToStructuredBuffers))
+        if (!sh::RecordUniformBlocksWithLargeArrayMember(root, mUniformBlockOptimizedMap,
+                                                         mSlowCompilingUniformBlockSet))
         {
             return false;
         }
     }
 
-    sh::OutputHLSL outputHLSL(
-        getShaderType(), getShaderSpec(), getShaderVersion(), getExtensionBehavior(),
-        getSourcePath(), getOutputType(), numRenderTargets, maxDualSourceDrawBuffers, getUniforms(),
-        compileOptions, getComputeShaderLocalSize(), &getSymbolTable(), perfDiagnostics,
-        mUniformBlocksTranslatedToStructuredBuffers, mShaderStorageBlocks);
+    sh::OutputHLSL outputHLSL(getShaderType(), getShaderSpec(), getShaderVersion(),
+                              getExtensionBehavior(), getSourcePath(), getOutputType(),
+                              numRenderTargets, maxDualSourceDrawBuffers, getUniforms(),
+                              compileOptions, getComputeShaderLocalSize(), &getSymbolTable(),
+                              perfDiagnostics, mUniformBlockOptimizedMap, mShaderStorageBlocks);
 
     outputHLSL.output(root, getInfoSink().obj);
 
@@ -249,6 +250,11 @@ unsigned int TranslatorHLSL::getUniformBlockRegister(const std::string &uniformB
 const std::map<std::string, unsigned int> *TranslatorHLSL::getUniformRegisterMap() const
 {
     return &mUniformRegisterMap;
+}
+
+const std::set<std::string> *TranslatorHLSL::getSlowCompilingUniformBlockSet() const
+{
+    return &mSlowCompilingUniformBlockSet;
 }
 
 unsigned int TranslatorHLSL::getReadonlyImage2DRegisterIndex() const

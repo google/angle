@@ -697,7 +697,7 @@ void ResourcesHLSL::imageMetadataUniforms(TInfoSinkBase &out, unsigned int regIn
 
 TString ResourcesHLSL::uniformBlocksHeader(
     const ReferencedInterfaceBlocks &referencedInterfaceBlocks,
-    const std::map<int, const TInterfaceBlock *> &uniformBlockTranslatedToStructuredBuffer)
+    const std::map<int, const TInterfaceBlock *> &uniformBlockOptimizedMap)
 {
     TString interfaceBlocks;
 
@@ -712,7 +712,7 @@ TString ResourcesHLSL::uniformBlocksHeader(
 
         // In order to avoid compile performance issue, translate uniform block to structured
         // buffer. anglebug.com/3682.
-        if (uniformBlockTranslatedToStructuredBuffer.count(interfaceBlock.uniqueId().get()) != 0)
+        if (uniformBlockOptimizedMap.count(interfaceBlock.uniqueId().get()) != 0)
         {
             unsigned int structuredBufferRegister = mSRVRegister;
             if (instanceVariable != nullptr && instanceVariable->getType().isArray())

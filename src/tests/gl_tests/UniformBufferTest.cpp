@@ -3093,6 +3093,51 @@ void main(void){
     EXPECT_GL_NO_ERROR();
 }
 
+// Test to throw a warning if a uniform block with a large array member
+// fails to hit the optimization on D3D backend.
+TEST_P(UniformBlockWithOneLargeArrayMemberTest, ThrowPerfWarningInD3D)
+{
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+
+struct S1 {
+    vec2 a[2];
+};
+
+struct S2 {
+    mat2x4 b;
+};
+
+layout(std140, row_major) uniform UBO1{
+    mat3x2 buf1[128];
+};
+
+layout(std140, row_major) uniform UBO2{
+    mat4x3 buf2[128];
+} instance1;
+
+layout(std140, row_major) uniform UBO3{
+    S1 buf3[128];
+};
+
+layout(std140, row_major) uniform UBO4{
+    S2 buf4[128];
+} instance2[2];
+
+out vec4 my_FragColor;
+
+void main(void){
+    uvec2 coord = uvec2(floor(gl_FragCoord.xy));
+    uint x = coord.x % 64u;
+    uint y = coord.y;
+    my_FragColor = vec4(buf1[y]*instance1.buf2[y]*instance2[0].buf4[y].b*buf3[y].a[x], 0.0f, 1.0);
+
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    EXPECT_GL_NO_ERROR();
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against.
 ANGLE_INSTANTIATE_TEST_ES3(UniformBufferTest);
