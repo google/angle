@@ -46,6 +46,30 @@
       },
       "revId": "8bd196a883b6e88c5e2f454bb16e1edee114e438",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "32355483_796cc1ad",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 2642,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-20T17:33:04Z",
+      "side": 1,
+      "message": "\u003e have updateSampleMaskWithRasterizationSamples use vk::GetImpl(mState.getDrawFramebuffer()), and make this call unconditionally\n\ni like this, more coherent. will upload new patchset. thanks shabi!",
+      "parentUuid": "0b1eed5f_e6303fa0",
+      "range": {
+        "startLine": 2639,
+        "startChar": 4,
+        "endLine": 2642,
+        "endChar": 5
+      },
+      "revId": "8bd196a883b6e88c5e2f454bb16e1edee114e438",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
