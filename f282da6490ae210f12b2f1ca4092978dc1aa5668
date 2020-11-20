@@ -37,6 +37,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "bc04aed3_49bc4c3c",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 400,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-20T03:06:37Z",
+      "side": 1,
+      "message": "nit: Use %6s to print, and remove the space in the beginning. Same with \"  Free\"",
+      "range": {
+        "startLine": 400,
+        "startChar": 26,
+        "endLine": 400,
+        "endChar": 32
+      },
+      "revId": "f282da6490ae210f12b2f1ca4092978dc1aa5668",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "5d8aed93_1bc6398c",
         "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
         "patchSetId": 6
@@ -54,6 +77,46 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "925989a4_de0b5e39",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 450,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-20T03:06:37Z",
+      "side": 1,
+      "message": "Is there a reason this is limited to 6 characters? Why not \"AllocFail\" and \"UnImport\"?",
+      "range": {
+        "startLine": 450,
+        "startChar": 26,
+        "endLine": 450,
+        "endChar": 32
+      },
+      "revId": "f282da6490ae210f12b2f1ca4092978dc1aa5668",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "aa61b9fa_6e214955",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 470,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-20T03:06:37Z",
+      "side": 1,
+      "message": "How often do you get this message? It feels like something useful for debugging this function, but otherwise not something the reader of the logs is interested in. Is that right?",
+      "revId": "f282da6490ae210f12b2f1ca4092978dc1aa5668",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "2c78c394_964aa2d7",
         "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
         "patchSetId": 6
@@ -65,6 +128,46 @@
       "writtenOn": "2020-11-20T00:40:03Z",
       "side": 1,
       "message": "You\u0027ll probably want to put a mutex to protect access, to be safe. RendererVk can be called from multiple threads.",
+      "revId": "f282da6490ae210f12b2f1ca4092978dc1aa5668",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "141b6b06_63f5f040",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 347,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-20T03:06:37Z",
+      "side": 1,
+      "message": "That\u0027s a nice bunch of related yet isolated variables you got there. Would be a shame if they ended up in a separate class.\n\n* stares maliciously with a keyboard in hands",
+      "range": {
+        "startLine": 338,
+        "startChar": 0,
+        "endLine": 347,
+        "endChar": 54
+      },
+      "revId": "f282da6490ae210f12b2f1ca4092978dc1aa5668",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fc119993_2d529866",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1432,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-20T03:06:37Z",
+      "side": 1,
+      "message": "May want to do this after present(). It might make allocations?",
       "revId": "f282da6490ae210f12b2f1ca4092978dc1aa5668",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
