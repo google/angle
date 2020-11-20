@@ -34,6 +34,24 @@
       "parentUuid": "f1fac40b_923ea610",
       "revId": "8d63a7fc492471fd9bc4781e6fb9a5ce38dfdcd9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3c6e5b4f_570cc2e4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 11
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1323708
+      },
+      "writtenOn": "2020-11-20T06:24:34Z",
+      "side": 1,
+      "message": "We are using this one\nhttps://github.com/KhronosGroup/VK-GL-CTS\n\nAnd the test we are running are not 3.2, something like\ndEQP-GLES31.info.vendor\nI don\u0027t know if it will create 3.2 context",
+      "parentUuid": "b5e2814f_1227ec72",
+      "revId": "8d63a7fc492471fd9bc4781e6fb9a5ce38dfdcd9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
