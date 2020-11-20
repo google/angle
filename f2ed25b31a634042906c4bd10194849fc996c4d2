@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f43cf170_1b40dc5c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-20T13:48:57Z",
+      "side": 1,
+      "message": "PTAL Cody and Jonah. This is a necessary step for the auto-generating EGL entry points. Ken \u0026 James, FYI in case this affects the CGL integration on Safari.",
+      "revId": "f2ed25b31a634042906c4bd10194849fc996c4d2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
