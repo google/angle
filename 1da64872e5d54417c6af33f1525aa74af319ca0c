@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "78092fce_7b2d97e1",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-20T05:42:47Z",
+      "side": 1,
+      "message": "I\u0027m not entirely sure this is correct.\n\nThere\u0027s also the D/S feedback loop code that unconditionally uses the DepthStencilReadOnly layout for the texture. I _think_ that\u0027s fine because the layout will be correctly set to DepthStencilReadOnly or DepthStencilReadOnlyWithStore at the end of RP through the attachment. Not 100% sure either.\n\nThere\u0027s a failure with D/S feedback loop, so obviously something\u0027s not right. WDYT of any of this Charlie?\n\nAn alternative to this solution I can think of is a hacky ImageHelper::mExtraSrcAccessMask that would accumulate VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT despite the layout being DepthStencilReadOnly, and when transitioning out of the layout, add mExtraSrcAccessMask to the srcAccessMask.",
+      "range": {
+        "startLine": 171,
+        "startChar": 28,
+        "endLine": 171,
+        "endChar": 36
+      },
+      "revId": "1da64872e5d54417c6af33f1525aa74af319ca0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
