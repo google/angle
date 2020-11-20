@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0ca181bc_7d3c6fb3",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramExecutableVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 682,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-20T22:22:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8f1b2ca4_7f7f532f",
+      "range": {
+        "startLine": 682,
+        "startChar": 4,
+        "endLine": 682,
+        "endChar": 6
+      },
+      "revId": "8773287670da52f788590fed1b80b0da014bac3d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5202a5f6_783e132a",
@@ -37,6 +61,30 @@
       "writtenOn": "2020-11-20T19:58:09Z",
       "side": 1,
       "message": "nit: ToUnderlying?",
+      "range": {
+        "startLine": 704,
+        "startChar": 16,
+        "endLine": 704,
+        "endChar": 27
+      },
+      "revId": "8773287670da52f788590fed1b80b0da014bac3d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "505ce022_ac6233b7",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramExecutableVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 704,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-20T22:22:05Z",
+      "side": 1,
+      "message": "Done. I have moved this to GraphicsPipelineDesc in patchset8 so that the desc will have the corrected rotation value if it is not using yflip. That way, not just we will hit the right programInfo object, but if we have to use desc to look for a match, we will also have betetr chance find a match. Same thing if  we have to reach into driver to get the pipeline, they may have a better chance to find in the driver\u0027s cache as well.",
+      "parentUuid": "5202a5f6_783e132a",
       "range": {
         "startLine": 704,
         "startChar": 16,
