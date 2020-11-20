@@ -105,6 +105,23 @@
       "parentUuid": "aa6f782b_3a9e056c",
       "revId": "ca100c2c24cb9c0d8a942cbae9a67e701f6848e8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cefab340_1787d2ff",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-20T18:25:04Z",
+      "side": 1,
+      "message": "Tim, Courntey looks to have taken this over in another CL. Can you close this out?",
+      "revId": "ca100c2c24cb9c0d8a942cbae9a67e701f6848e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
