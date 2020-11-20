@@ -35,6 +35,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ecf44e8a_aa29649f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-20T23:14:40Z",
+      "side": 1,
+      "message": "The CL that actually uses the usage bits will really test it. For example, if we return Rotation not used, the next CL will force rotation flag to Identity or FlipIdentity. Any rotation related test will fail. I am not sure how we can do standalone test of this CL without using it.\nThe next CL is crrev.com:/c/2549538",
+      "parentUuid": "fafdd674_fb0223f4",
+      "revId": "4fe286c55378d80ad65ec6f64ae4683dd066860f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "eec3beec_c0fe5028",
