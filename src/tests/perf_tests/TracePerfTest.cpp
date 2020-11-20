@@ -112,6 +112,7 @@ class TracePerfTest : public ANGLERenderTest, public ::testing::WithParamInterfa
 
     void sampleTime();
     void saveScreenshot(const std::string &screenshotName) override;
+    void swap();
 
     // For tracking RenderPass/FBO change timing.
     QueryInfo mCurrentQuery = {};
@@ -129,6 +130,7 @@ class TracePerfTest : public ANGLERenderTest, public ::testing::WithParamInterfa
     GLuint mReadFramebufferBinding = 0;
     uint32_t mCurrentFrame         = 0;
     uint32_t mOffscreenFrameCount  = 0;
+    bool mScreenshotSaved          = false;
 };
 
 class TracePerfTest;
@@ -481,7 +483,7 @@ void TracePerfTest::drawBenchmark()
 
         if (frameX == kFramesPerX - 1 && frameY == kFramesPerY - 1)
         {
-            getGLWindow()->swap();
+            swap();
             glBindFramebuffer(GL_FRAMEBUFFER, 0);
             glClear(GL_COLOR_BUFFER_BIT);
             mOffscreenFrameCount = 0;
@@ -500,7 +502,7 @@ void TracePerfTest::drawBenchmark()
     }
     else
     {
-        getGLWindow()->swap();
+        swap();
     }
 
     endInternalTraceEvent(frameName);
@@ -773,12 +775,25 @@ void TracePerfTest::onReplayDiscardFramebufferEXT(GLenum target,
     }
 }
 
+void TracePerfTest::swap()
+{
+    // Capture a screenshot if enabled.
+    if (gScreenShotDir != nullptr && !mScreenshotSaved)
+    {
+        std::stringstream screenshotNameStr;
+        screenshotNameStr << gScreenShotDir << GetPathSeparator() << "angle" << mBackend << "_"
+                          << mStory << ".png";
+        std::string screenshotName = screenshotNameStr.str();
+        saveScreenshot(screenshotName);
+        mScreenshotSaved = true;
+    }
+
+    getGLWindow()->swap();
+}
+
 void TracePerfTest::saveScreenshot(const std::string &screenshotName)
 {
-    // Render a single frame.
-    RestrictedTraceID testID   = GetParam().testID;
-    const TraceInfo &traceInfo = GetTraceInfo(testID);
-    ReplayFrame(testID, traceInfo.startFrame);
+    // The frame is already rendered and is waiting in the default framebuffer.
 
     // RGBA 4-byte data.
     uint32_t pixelCount = mTestParams.windowWidth * mTestParams.windowHeight;
@@ -809,16 +824,6 @@ void TracePerfTest::saveScreenshot(const std::string &screenshotName)
     {
         printf("Saved screenshot: '%s'\n", screenshotName.c_str());
     }
-
-    // Finish the frame loop.
-    for (uint32_t nextFrame = traceInfo.startFrame + 1; nextFrame <= traceInfo.endFrame;
-         ++nextFrame)
-    {
-        ReplayFrame(testID, nextFrame);
-    }
-    ResetReplay(testID);
-    getGLWindow()->swap();
-    glFinish();
 }
 
 TEST_P(TracePerfTest, Run)

@@ -707,16 +707,6 @@ void ANGLERenderTest::SetUp()
 
     mTestTrialResults.reserve(gTestTrials);
 
-    // Capture a screenshot if enabled.
-    if (gScreenShotDir != nullptr)
-    {
-        std::stringstream screenshotNameStr;
-        screenshotNameStr << gScreenShotDir << GetPathSeparator() << "angle" << mBackend << "_"
-                          << mStory << ".png";
-        std::string screenshotName = screenshotNameStr.str();
-        saveScreenshot(screenshotName);
-    }
-
     for (int loopIndex = 0; loopIndex < gWarmupLoops; ++loopIndex)
     {
         doRunLoop(gCalibrationTimeSeconds, std::numeric_limits<int>::max(),
