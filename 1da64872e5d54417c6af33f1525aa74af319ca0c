@@ -46,6 +46,30 @@
       },
       "revId": "1da64872e5d54417c6af33f1525aa74af319ca0c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ceac1e9c_70bd2894",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-20T17:39:50Z",
+      "side": 1,
+      "message": "mExtraSrcAccessMask or the third alternative all sounds good to me. Maybe we should file a bug for Khronos that spec allows write access with readOnly layout. The NoStore seems makes more sense to me.",
+      "parentUuid": "ca005f48_6988319b",
+      "range": {
+        "startLine": 171,
+        "startChar": 28,
+        "endLine": 171,
+        "endChar": 36
+      },
+      "revId": "1da64872e5d54417c6af33f1525aa74af319ca0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
