@@ -258,6 +258,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "00aaf683_7f024263",
+        "filename": "src/libANGLE/Shader.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-20T22:07:15Z",
+      "side": 1,
+      "message": "Ack, no, you\u0027re correct. gl:: or rx:: namespace is fine, this is sort of an edge case where you\u0027re sharing between multiple layers.",
+      "parentUuid": "7561ec2f_7d124068",
+      "range": {
+        "startLine": 135,
+        "startChar": 4,
+        "endLine": 135,
+        "endChar": 6
+      },
+      "revId": "4fe286c55378d80ad65ec6f64ae4683dd066860f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0753fb70_dfda0dcc",
@@ -271,6 +295,30 @@
       "writtenOn": "2020-11-20T19:55:08Z",
       "side": 1,
       "message": "same",
+      "range": {
+        "startLine": 195,
+        "startChar": 4,
+        "endLine": 195,
+        "endChar": 6
+      },
+      "revId": "4fe286c55378d80ad65ec6f64ae4683dd066860f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4e41bffc_38488ec6",
+        "filename": "src/libANGLE/Shader.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 195,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-20T22:07:15Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "0753fb70_dfda0dcc",
       "range": {
         "startLine": 195,
         "startChar": 4,
@@ -412,6 +460,30 @@
       "side": 1,
       "message": "You mean ProgramPipeline.cpp? ProgramExecutable does not have easy access to program state object.",
       "parentUuid": "14cf242c_eeb5e26d",
+      "range": {
+        "startLine": 98,
+        "startChar": 0,
+        "endLine": 113,
+        "endChar": 0
+      },
+      "revId": "4fe286c55378d80ad65ec6f64ae4683dd066860f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d96ac92d_694528cd",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramPipelineVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-20T22:07:15Z",
+      "side": 1,
+      "message": "Pipeline.h / cpp is fine. Just in the front-end.",
+      "parentUuid": "2871a441_bc0943f2",
       "range": {
         "startLine": 98,
         "startChar": 0,
