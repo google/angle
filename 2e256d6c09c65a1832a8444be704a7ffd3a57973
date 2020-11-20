@@ -52,6 +52,24 @@
       "parentUuid": "10ad5ca6_5a73268c",
       "revId": "2e256d6c09c65a1832a8444be704a7ffd3a57973",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "388559e0_6cd7eab4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1323708
+      },
+      "writtenOn": "2020-11-20T00:39:40Z",
+      "side": 1,
+      "message": "yes, for rgb16i, we only expose transfer src \u0026 dst bits\nfor rgb16f, we expose transfer src \u0026 dst, blit dst, color attachment bits\nso that should be fine.\nThe actual problem is\n\nbool CanCopyWithTransferForCopyImage(RendererVk *renderer,\n{\n    // Transfers for copy image must have the source and destination formats be size compatible\n    const angle::Format \u0026srcFormatActual  \u003d srcFormat.actualImageFormat();\n    const angle::Format \u0026destFormatActual \u003d destFormat.actualImageFormat();\n\n    bool isFormatCompatible \u003d srcFormatActual.pixelBytes \u003d\u003d destFormatActual.pixelBytes;\n\nThe pixelBytes are different\n(gdb) p srcFormatActual\n$15 \u003d (const angle::Format \u0026) @0x7fb7872660: {\u003cangle::NonCopyable\u003e \u003d {\u003cNo data fields\u003e}, id \u003d angle::FormatID::R16G16B16_FLOAT,\n  glInternalFormat \u003d 34843, fboImplementationInternalFormat \u003d 34843,\n  mipGenerationFunction \u003d 0x7fb70f7738 \u003cangle::GenerateMip\u003cangle::R16G16B16F\u003e(unsigned long, unsigned long, unsigned long, unsigned char const*, unsigned long, unsigned long, unsigned char*, unsigned long, unsigned long)\u003e,\n  pixelReadFunction \u003d 0x7fb70f799c \u003cangle::ReadColor\u003cangle::R16G16B16F, float\u003e(unsigned char const*, unsigned char*)\u003e,\n  pixelWriteFunction \u003d 0x7fb70f79c8 \u003cangle::WriteColor\u003cangle::R16G16B16F, float\u003e(unsigned char const*, unsigned char*)\u003e,\n  fastCopyFunctions \u003d @0x7fb69acd50, componentType \u003d 5126, redBits \u003d 16, greenBits \u003d 16, blueBits \u003d 16, alphaBits \u003d 0, luminanceBits \u003d 0,\n  depthBits \u003d 0, stencilBits \u003d 0, pixelBytes \u003d 6, componentAlignmentMask \u003d 1, channelCount \u003d 3, isBlock \u003d false, isFixed \u003d false,\n  isScaled \u003d false, isSRGB \u003d false, vertexAttribType \u003d gl::VertexAttribType::HalfFloat}\n(gdb) p destFormatActual\n$16 \u003d (const angle::Format \u0026) @0x7fb78723f0: {\u003cangle::NonCopyable\u003e \u003d {\u003cNo data fields\u003e}, id \u003d angle::FormatID::R16G16B16A16_SINT,\n  glInternalFormat \u003d 36232, fboImplementationInternalFormat \u003d 36232,\n  mipGenerationFunction \u003d 0x7fb70f7110 \u003cangle::GenerateMip\u003cangle::R16G16B16A16S\u003e(unsigned long, unsigned long, unsigned long, unsigned char const*, unsigned long, unsigned long, unsigned char*, unsigned long, unsigned long)\u003e,\n  pixelReadFunction \u003d 0x7fb70f7374 \u003cangle::ReadColor\u003cangle::R16G16B16A16S, int\u003e(unsigned char const*, unsigned char*)\u003e,\n  pixelWriteFunction \u003d 0x7fb70f73a0 \u003cangle::WriteColor\u003cangle::R16G16B16A16S, int\u003e(unsigned char const*, unsigned char*)\u003e,\n  fastCopyFunctions \u003d @0x7fb69acd50, componentType \u003d 5124, redBits \u003d 16, greenBits \u003d 16, blueBits \u003d 16, alphaBits \u003d 16, luminanceBits \u003d 0,\n  depthBits \u003d 0, stencilBits \u003d 0, pixelBytes \u003d 8, componentAlignmentMask \u003d 1, channelCount \u003d 4, isBlock \u003d false, isFixed \u003d false,\n  isScaled \u003d false, isSRGB \u003d false, vertexAttribType \u003d gl::VertexAttribType::Short}",
+      "parentUuid": "7e2b507e_454437a7",
+      "revId": "2e256d6c09c65a1832a8444be704a7ffd3a57973",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
