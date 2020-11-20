@@ -116,6 +116,30 @@
       },
       "revId": "0fb2ee32a2486504df520b742802c673d19d14e9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e84474f7_11d20b59",
+        "filename": "src/libGLESv2/global_state.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 156,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-20T18:24:37Z",
+      "side": 1,
+      "message": "If you re-share the design doc with me I can surface this suggestion there. I lost the link.",
+      "parentUuid": "64721c4f_8d47e164",
+      "range": {
+        "startLine": 152,
+        "startChar": 0,
+        "endLine": 156,
+        "endChar": 5
+      },
+      "revId": "0fb2ee32a2486504df520b742802c673d19d14e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
