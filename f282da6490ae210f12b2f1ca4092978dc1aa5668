@@ -16,6 +16,40 @@
       "message": "Ready for review.  Aimed at Android (unless there are any desktop drivers that support the extension:-).",
       "revId": "f282da6490ae210f12b2f1ca4092978dc1aa5668",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5d8aed93_1bc6398c",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 418,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-11-20T00:40:03Z",
+      "side": 1,
+      "message": "ASSERT(rendererVk-\u003emUniqueIDCounts[callbackData-\u003ememoryObjectId] \u003e 0) ? to catch excess frees in case that\u0027s possible.",
+      "revId": "f282da6490ae210f12b2f1ca4092978dc1aa5668",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2c78c394_964aa2d7",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 338,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-11-20T00:40:03Z",
+      "side": 1,
+      "message": "You\u0027ll probably want to put a mutex to protect access, to be safe. RendererVk can be called from multiple threads.",
+      "revId": "f282da6490ae210f12b2f1ca4092978dc1aa5668",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
