@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f1fac40b_923ea610",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 11
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1323708
+      },
+      "writtenOn": "2020-11-20T05:48:33Z",
+      "side": 1,
+      "message": "Hi Shabi\n\nThis change caused some issues on CTS, the CTS has code here\nhttps://android.googlesource.com/platform/external/deqp/+/refs/heads/master/framework/opengl/gluStateReset.cpp#149\nwith your change supportsBorderClamp is set to true\nand then in line 182\nhttps://android.googlesource.com/platform/external/deqp/+/refs/heads/master/framework/opengl/gluStateReset.cpp#182\nit calls gl.texParameteri(GL_TEXTURE_CUBE_MAP, GL_DEPTH_STENCIL_TEXTURE_MODE, GL_DEPTH_COMPONENT);\nbut this call generates GL_INVALID_ENUM because context-\u003egetExtensions().textureBorderClampOES is false\n\n#0  gl::Debug::insertMessage (this\u003d0x31b68f0, source\u003d33350, type\u003d33356, id\u003d1280, severity\u003d37190, message\u003d..., logSeverity\u003d1)\n    at ../../src/libANGLE/Debug.cpp:183\n#1  0x0000007fb6e46704 in gl::ErrorSet::validationError (this\u003d0x31b6f70, errorCode\u003d1280, message\u003d0x7fb68c0246 \"Extension is not enabled.\")\n    at ../../src/libANGLE/Context.cpp:8727\n#2  0x0000007fb6e4657c in gl::Context::validationError (this\u003d0x31b4130, errorCode\u003d1280, message\u003d0x7fb68c0246 \"Extension is not enabled.\")\n    at ../../src/libANGLE/Context.cpp:2535\n#3  0x0000007fb715049c in gl::ValidateTexParameterBase\u003cfloat\u003e (context\u003d0x31b4130, target\u003dgl::TextureType::_2D, pname\u003d4100, bufSize\u003d-1,\n    vectorParams\u003dtrue, params\u003d0x7fffffee20) at ../../src/libANGLE/validationES.cpp:6937\n#4  0x0000007fb7167f28 in gl::ValidateTexParameterfv (context\u003d0x31b4130, target\u003dgl::TextureType::_2D, pname\u003d4100, params\u003d0x7fffffee20)\n    at ../../src/libANGLE/validationES2.cpp:5890\n#5  0x0000007fb6d222fc in gl::TexParameterfv (target\u003d3553, pname\u003d4100, params\u003d0x7fffffee20)\n    at ../../src/libGLESv2/entry_points_gles_2_0_autogen.cpp:2882\n#6  0x0000000001d91e30 in glu::resetStateES(glu::RenderContext const\u0026, glu::ContextInfo const\u0026) ()\n#7  0x0000000001d94c90 in glu::resetState(glu::RenderContext const\u0026, glu::ContextInfo const\u0026) ()\n#8  0x0000000001ec9500 in tcu::TestSessionExecutor::leaveTestCase(tcu::TestCase*) ()\n#9  0x0000000001eca688 in tcu::TestSessionExecutor::iterate() ()\n#10 0x0000000001ea034c in tcu::App::iterate() ()\n#11 0x00000000004225c8 in main ()",
+      "revId": "8d63a7fc492471fd9bc4781e6fb9a5ce38dfdcd9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
