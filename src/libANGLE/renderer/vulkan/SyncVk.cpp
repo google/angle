@@ -83,7 +83,7 @@ void SyncHelper::releaseToRenderer(RendererVk *renderer)
     renderer->collectGarbageAndReinit(&mUse, &mEvent);
 }
 
-angle::Result SyncHelper::initialize(ContextVk *contextVk)
+angle::Result SyncHelper::initialize(ContextVk *contextVk, bool isEglSyncObject)
 {
     ASSERT(!mEvent.valid());
 
@@ -108,7 +108,14 @@ angle::Result SyncHelper::initialize(ContextVk *contextVk)
     commandBuffer->setEvent(mEvent.getHandle(), VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT);
     retain(&contextVk->getResourceUseList());
 
-    contextVk->onSyncHelperInitialize();
+    if (isEglSyncObject)
+    {
+        contextVk->onEGLSyncHelperInitialize();
+    }
+    else
+    {
+        contextVk->onSyncHelperInitialize();
+    }
 
     return angle::Result::Continue;
 }
@@ -137,17 +144,11 @@ angle::Result SyncHelper::clientWait(Context *context,
         return angle::Result::Continue;
     }
 
-    if (flushCommands && contextVk)
+    // We defer (ignore) flushes, so it's possible that the glFence's signal operation is pending
+    // submission.
+    if ((flushCommands && contextVk) || usedInRecordedCommands())
     {
         ANGLE_TRY(contextVk->flushImpl(nullptr));
-    }
-
-    // Undefined behaviour. Early exit.
-    if (usedInRecordedCommands())
-    {
-        WARN() << "Waiting on a sync that is not flushed";
-        *outResult = VK_TIMEOUT;
-        return angle::Result::Continue;
     }
 
     ASSERT(mUse.getSerial().valid());
@@ -401,7 +402,7 @@ angle::Result SyncVk::set(const gl::Context *context, GLenum condition, GLbitfie
     ASSERT(condition == GL_SYNC_GPU_COMMANDS_COMPLETE);
     ASSERT(flags == 0);
 
-    return mSyncHelper.initialize(vk::GetImpl(context));
+    return mSyncHelper.initialize(vk::GetImpl(context), false);
 }
 
 angle::Result SyncVk::clientWait(const gl::Context *context,
@@ -484,7 +485,7 @@ egl::Error EGLSyncVk::initialize(const egl::Display *display,
         case EGL_SYNC_FENCE_KHR:
             ASSERT(mAttribs.isEmpty());
             mSyncHelper = new vk::SyncHelper();
-            if (mSyncHelper->initialize(vk::GetImpl(context)) == angle::Result::Stop)
+            if (mSyncHelper->initialize(vk::GetImpl(context), true) == angle::Result::Stop)
             {
                 return egl::Error(EGL_BAD_ALLOC, "eglCreateSyncKHR failed to create sync object");
             }

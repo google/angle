@@ -13,6 +13,7 @@
 #include "test_utils/gl_raii.h"
 #include "util/EGLWindow.h"
 
+#include <atomic>
 #include <condition_variable>
 #include <mutex>
 #include <thread>
@@ -360,6 +361,8 @@ TEST_P(EGLContextSharingTest, SamplerLifetime)
 TEST_P(EGLContextSharingTest, DeleteReaderOfSharedTexture)
 {
     ANGLE_SKIP_TEST_IF(!platformSupportsMultithreading());
+    // GL Fences require GLES 3.0+
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3);
 
     // Initialize contexts
     EGLWindow *window = getEGLWindow();
@@ -423,6 +426,8 @@ TEST_P(EGLContextSharingTest, DeleteReaderOfSharedTexture)
     // Synchronization tools to ensure the two threads are interleaved as designed by this test.
     std::mutex mutex;
     std::condition_variable condVar;
+    std::atomic<GLsync> deletingThreadSyncObj;
+    std::atomic<GLsync> continuingThreadSyncObj;
 
     enum class Step
     {
@@ -498,15 +503,24 @@ TEST_P(EGLContextSharingTest, DeleteReaderOfSharedTexture)
         // Draw using the shared texture.
         drawQuad(program[0].get(), essl1_shaders::PositionAttrib(), 0.5f);
 
+        deletingThreadSyncObj = glFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0);
+        ASSERT_GL_NO_ERROR();
+        // Force the fence to be created
+        glFlush();
+
         // Wait for the other thread to also draw using the shared texture.
         nextStep(Step::Thread0Draw);
         ASSERT_TRUE(waitForStep(Step::Thread1Draw));
 
+        ASSERT_TRUE(continuingThreadSyncObj != nullptr);
+        glWaitSync(continuingThreadSyncObj, 0, GL_TIMEOUT_IGNORED);
+        ASSERT_GL_NO_ERROR();
+        glDeleteSync(continuingThreadSyncObj);
+        ASSERT_GL_NO_ERROR();
+        continuingThreadSyncObj = nullptr;
+
         // Delete this thread's framebuffer (reader of the shared texture).
         fbo[0].reset();
-
-        // Flush to make sure the graph nodes associated with this context are deleted.
-        glFlush();
 
         // Wait for the other thread to use the shared texture again before unbinding the
         // context (so no implicit flush happens).
@@ -527,8 +541,20 @@ TEST_P(EGLContextSharingTest, DeleteReaderOfSharedTexture)
         // Wait for first thread to draw using the shared texture.
         ASSERT_TRUE(waitForStep(Step::Thread0Draw));
 
+        ASSERT_TRUE(deletingThreadSyncObj != nullptr);
+        glWaitSync(deletingThreadSyncObj, 0, GL_TIMEOUT_IGNORED);
+        ASSERT_GL_NO_ERROR();
+        glDeleteSync(deletingThreadSyncObj);
+        ASSERT_GL_NO_ERROR();
+        deletingThreadSyncObj = nullptr;
+
         // Draw using the shared texture.
         drawQuad(program[0].get(), essl1_shaders::PositionAttrib(), 0.5f);
+
+        continuingThreadSyncObj = glFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0);
+        ASSERT_GL_NO_ERROR();
+        // Force the fence to be created
+        glFlush();
 
         // Wait for the other thread to delete its framebuffer.
         nextStep(Step::Thread1Draw);

@@ -38,7 +38,7 @@ class SyncHelper : public vk::Resource
 
     virtual void releaseToRenderer(RendererVk *renderer);
 
-    virtual angle::Result initialize(ContextVk *contextVk);
+    virtual angle::Result initialize(ContextVk *contextVk, bool isEglSyncObject);
     virtual angle::Result clientWait(Context *context,
                                      ContextVk *contextVk,
                                      bool flushCommands,

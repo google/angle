@@ -214,17 +214,13 @@ TEST_P(EGLSyncTest, BasicOperations)
 
     glFlush();
 
-    EGLint value           = 0;
-    unsigned int loopCount = 0;
+    glClear(GL_COLOR_BUFFER_BIT);
 
-    // Use 'loopCount' to make sure the test doesn't get stuck in an infinite loop
-    while (value != EGL_SIGNALED_KHR && loopCount <= 1000000)
-    {
-        loopCount++;
-        EXPECT_EGL_TRUE(eglGetSyncAttribKHR(display, sync, EGL_SYNC_STATUS_KHR, &value));
-    }
-
-    ASSERT_EQ(value, EGL_SIGNALED_KHR);
+    // Don't wait forever to make sure the test terminates
+    constexpr GLuint64 kTimeout = 1'000'000'000;  // 1 second
+    EGLint value                = 0;
+    ASSERT_EQ(EGL_CONDITION_SATISFIED_KHR,
+              eglClientWaitSyncKHR(display, sync, EGL_SYNC_FLUSH_COMMANDS_BIT_KHR, kTimeout));
 
     for (size_t i = 0; i < 20; i++)
     {

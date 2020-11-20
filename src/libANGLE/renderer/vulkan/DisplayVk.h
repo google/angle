@@ -12,6 +12,7 @@
 
 #include "common/MemoryBuffer.h"
 #include "libANGLE/renderer/DisplayImpl.h"
+#include "libANGLE/renderer/vulkan/ResourceVk.h"
 #include "libANGLE/renderer/vulkan/vk_cache_utils.h"
 #include "libANGLE/renderer/vulkan/vk_utils.h"
 
@@ -34,6 +35,15 @@ class ShareGroupVk : public ShareGroupImpl
     DescriptorSetLayoutCache &getDescriptorSetLayoutCache() { return mDescriptorSetLayoutCache; }
     ShareContextSet *getShareContextSet() { return &mShareContextSet; }
 
+    std::vector<vk::ResourceUseList> &&releaseResourceUseLists()
+    {
+        return std::move(mResourceUseLists);
+    }
+    void acquireResourceUseList(vk::ResourceUseList &&resourceUseList)
+    {
+        mResourceUseLists.emplace_back(std::move(resourceUseList));
+    }
+
   private:
     // ANGLE uses a PipelineLayout cache to store compatible pipeline layouts.
     PipelineLayoutCache mPipelineLayoutCache;
@@ -43,6 +53,10 @@ class ShareGroupVk : public ShareGroupImpl
 
     // The list of contexts within the share group
     ShareContextSet mShareContextSet;
+
+    // List of resources currently used that need to be freed when any ContextVk in this
+    // ShareGroupVk submits the next command.
+    std::vector<vk::ResourceUseList> mResourceUseLists;
 };
 
 class DisplayVk : public DisplayImpl, public vk::Context
