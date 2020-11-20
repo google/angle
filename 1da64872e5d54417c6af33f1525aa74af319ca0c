@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f79fb1da_8a4e790d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-20T20:01:39Z",
+      "side": 1,
+      "message": "W",
+      "revId": "1da64872e5d54417c6af33f1525aa74af319ca0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "78092fce_7b2d97e1",
@@ -62,6 +79,30 @@
       "side": 1,
       "message": "mExtraSrcAccessMask or the third alternative all sounds good to me. Maybe we should file a bug for Khronos that spec allows write access with readOnly layout. The NoStore seems makes more sense to me.",
       "parentUuid": "ca005f48_6988319b",
+      "range": {
+        "startLine": 171,
+        "startChar": 28,
+        "endLine": 171,
+        "endChar": 36
+      },
+      "revId": "1da64872e5d54417c6af33f1525aa74af319ca0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a997706b_67f21579",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-20T20:01:39Z",
+      "side": 1,
+      "message": "Extra write bit SGTM for the time being. Can check with ARM/IMG to see if there\u0027s any real perf concern.",
+      "parentUuid": "ceac1e9c_70bd2894",
       "range": {
         "startLine": 171,
         "startChar": 28,
