@@ -58,6 +58,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a37092e8_0e2c0bec",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 309,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-20T22:01:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "eec3beec_c0fe5028",
+      "range": {
+        "startLine": 309,
+        "startChar": 4,
+        "endLine": 309,
+        "endChar": 32
+      },
+      "revId": "4fe286c55378d80ad65ec6f64ae4683dd066860f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "71c44a4e_63296148",
@@ -71,6 +95,30 @@
       "writtenOn": "2020-11-20T19:55:08Z",
       "side": 1,
       "message": "nit: \"\" braces for files that are the ANGLE repo. was this giving an include error?",
+      "range": {
+        "startLine": 19,
+        "startChar": 0,
+        "endLine": 19,
+        "endChar": 31
+      },
+      "revId": "4fe286c55378d80ad65ec6f64ae4683dd066860f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2169a8d0_22e269b4",
+        "filename": "src/compiler/translator/Compiler.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-20T22:01:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "71c44a4e_63296148",
       "range": {
         "startLine": 19,
         "startChar": 0,
@@ -98,6 +146,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2637b139_e3696ecb",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1028,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-20T22:01:13Z",
+      "side": 1,
+      "message": "Right, vertex shader always uses protation, so for android, Rotation bit is always inserted. But On other platform it is not. YFlip may not gets inserted even on adroid.\n\nPart of this is for the future CL that when we move halfRenderArea to use specConst, it only gets used for gl_FragCoord which is rather uncommon.",
+      "parentUuid": "817b4083_649c0460",
+      "revId": "4fe286c55378d80ad65ec6f64ae4683dd066860f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "841f4ed3_af5b616d",
@@ -121,6 +187,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9db37c57_78d075b0",
+        "filename": "src/libANGLE/Shader.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-20T22:01:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "841f4ed3_af5b616d",
+      "range": {
+        "startLine": 93,
+        "startChar": 4,
+        "endLine": 93,
+        "endChar": 6
+      },
+      "revId": "4fe286c55378d80ad65ec6f64ae4683dd066860f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f8c37862_e53aa2ec",
@@ -134,6 +224,30 @@
       "writtenOn": "2020-11-20T19:55:08Z",
       "side": 1,
       "message": "nit: same.",
+      "range": {
+        "startLine": 135,
+        "startChar": 4,
+        "endLine": 135,
+        "endChar": 6
+      },
+      "revId": "4fe286c55378d80ad65ec6f64ae4683dd066860f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7561ec2f_7d124068",
+        "filename": "src/libANGLE/Shader.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-20T22:01:13Z",
+      "side": 1,
+      "message": "This file does not have rx name space though. I have to use rx:: or maybe move the definition to gl:: namespace?",
+      "parentUuid": "f8c37862_e53aa2ec",
       "range": {
         "startLine": 135,
         "startChar": 4,
@@ -190,6 +304,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b792a9c2_9d99a003",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramExecutableVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 291,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-20T22:01:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f7bb658f_158e6c04",
+      "range": {
+        "startLine": 291,
+        "startChar": 0,
+        "endLine": 291,
+        "endChar": 4
+      },
+      "revId": "4fe286c55378d80ad65ec6f64ae4683dd066860f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "df0a6359_e38dbb41",
@@ -203,6 +341,30 @@
       "writtenOn": "2020-11-20T19:55:08Z",
       "side": 1,
       "message": "nit: omit redundant rx:: namespace.",
+      "range": {
+        "startLine": 242,
+        "startChar": 2,
+        "endLine": 242,
+        "endChar": 9
+      },
+      "revId": "4fe286c55378d80ad65ec6f64ae4683dd066860f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "73550564_1395af0b",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramExecutableVk.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 242,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-20T22:01:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "df0a6359_e38dbb41",
       "range": {
         "startLine": 242,
         "startChar": 2,
@@ -238,6 +400,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "2871a441_bc0943f2",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramPipelineVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-20T22:01:13Z",
+      "side": 1,
+      "message": "You mean ProgramPipeline.cpp? ProgramExecutable does not have easy access to program state object.",
+      "parentUuid": "14cf242c_eeb5e26d",
+      "range": {
+        "startLine": 98,
+        "startChar": 0,
+        "endLine": 113,
+        "endChar": 0
+      },
+      "revId": "4fe286c55378d80ad65ec6f64ae4683dd066860f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "db4f888e_40057836",
         "filename": "src/libANGLE/renderer/vulkan/ProgramPipelineVk.h",
         "patchSetId": 9
@@ -249,6 +435,30 @@
       "writtenOn": "2020-11-20T19:55:08Z",
       "side": 1,
       "message": "same",
+      "range": {
+        "startLine": 56,
+        "startChar": 4,
+        "endLine": 56,
+        "endChar": 6
+      },
+      "revId": "4fe286c55378d80ad65ec6f64ae4683dd066860f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3f5072a3_ab8320b5",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramPipelineVk.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-20T22:01:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "db4f888e_40057836",
       "range": {
         "startLine": 56,
         "startChar": 4,
