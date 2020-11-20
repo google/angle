@@ -166,6 +166,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "dc6f4ffb_87c1572d",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 450,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-20T05:11:02Z",
+      "side": 1,
+      "message": "Ok, how about s/\u003d /\u003d/ in your format string, as well as s/;// to shorten things a bit? Then 3 characters added here would still give you a net win.",
+      "parentUuid": "ad1cd679_09d876a1",
+      "range": {
+        "startLine": 450,
+        "startChar": 26,
+        "endLine": 450,
+        "endChar": 32
+      },
+      "revId": "f282da6490ae210f12b2f1ca4092978dc1aa5668",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "aa61b9fa_6e214955",
         "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
         "patchSetId": 6
