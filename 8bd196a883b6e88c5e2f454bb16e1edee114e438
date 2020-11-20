@@ -22,6 +22,30 @@
       },
       "revId": "8bd196a883b6e88c5e2f454bb16e1edee114e438",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0b1eed5f_e6303fa0",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 2642,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-20T17:22:08Z",
+      "side": 1,
+      "message": "This call may originate from FramebufferVk::syncState, at which point the draw FBO may have changed and mState.getDrawFramebuffer() would be different from mDrawFramebuffer.\n\nYou can either:\n\n- have updateSampleMaskWithRasterizationSamples use vk::GetImpl(mState.getDrawFramebuffer()), and make this call unconditionally\n- pass the FramebufferVk to this function, and then to updateSampleMaskWithRasterizationSamples, and again make this call unconditionally",
+      "parentUuid": "6068775b_d495b587",
+      "range": {
+        "startLine": 2639,
+        "startChar": 4,
+        "endLine": 2642,
+        "endChar": 5
+      },
+      "revId": "8bd196a883b6e88c5e2f454bb16e1edee114e438",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
