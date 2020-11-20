@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3138d721_df3491fa",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-20T18:29:23Z",
+      "side": 1,
+      "message": "LGTM.   I probably wouldn\u0027t have thought to put it into its own class, but I do think it\u0027s better that way to keep CommandQueue more focused.",
+      "revId": "ce3b9c95e3bd7e714d2301fec2a0f16cd31f4934",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7ab4ab2a_8dba9e6a",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-20T18:29:23Z",
+      "side": 1,
+      "message": "Since the full name is: FenceRecycler::mFenceRecyclerMutex, it can probably have the \u0027FenceRecycler\u0027 part removed and be called FenceRecycler::mMutex.",
+      "range": {
+        "startLine": 45,
+        "startChar": 16,
+        "endLine": 45,
+        "endChar": 29
+      },
+      "revId": "ce3b9c95e3bd7e714d2301fec2a0f16cd31f4934",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0d740e50_1708bbda",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-20T18:29:23Z",
+      "side": 1,
+      "message": "Similarly, call this mRecycler.   Otherwise it looks like it has itself as a member.",
+      "range": {
+        "startLine": 46,
+        "startChar": 28,
+        "endLine": 46,
+        "endChar": 42
+      },
+      "revId": "ce3b9c95e3bd7e714d2301fec2a0f16cd31f4934",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
