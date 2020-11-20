@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fafdd674_fb0223f4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-20T19:50:34Z",
+      "side": 1,
+      "message": "Can you add tests for this CL please?  It would be nice to guarantee that different types of shaders are returning the bits that we think they should (not just now, but in the future).",
+      "revId": "4fe286c55378d80ad65ec6f64ae4683dd066860f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "817b4083_649c0460",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1028,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-20T19:50:34Z",
+      "side": 1,
+      "message": "nit: Probably worth a comment (for future remembrance) that this may return vk::SpecConstUsage::YFlip and/or vk::SpecConstUsage::Rotation.\n\nSince compileOptions will generally have SH_ADD_PRE_ROTATION set, does that automatically mean that both vk::SpecConstUsage::YFlip and vk::SpecConstUsage::Rotation will always be returned?  Vertex shaders will always get Rotation, but I think that YFlip will only happen for shaders that need it.",
+      "revId": "4fe286c55378d80ad65ec6f64ae4683dd066860f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
