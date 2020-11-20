@@ -188,6 +188,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "31411c26_0b73f6fc",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 450,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-20T23:58:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dc6f4ffb_87c1572d",
+      "range": {
+        "startLine": 450,
+        "startChar": 26,
+        "endLine": 450,
+        "endChar": 32
+      },
+      "revId": "f282da6490ae210f12b2f1ca4092978dc1aa5668",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "aa61b9fa_6e214955",
@@ -319,6 +343,30 @@
       "side": 1,
       "message": "I agree with Shabi that these should be moved into their own struct, likely within RendererVk to make the grouping explicit.",
       "parentUuid": "863e5ed6_48b5989b",
+      "range": {
+        "startLine": 338,
+        "startChar": 0,
+        "endLine": 347,
+        "endChar": 54
+      },
+      "revId": "f282da6490ae210f12b2f1ca4092978dc1aa5668",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b85a74f3_e8d48463",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 347,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-20T23:58:39Z",
+      "side": 1,
+      "message": "Agreed.  Will get to this later tonight.",
+      "parentUuid": "66a36587_0c45c1fa",
       "range": {
         "startLine": 338,
         "startChar": 0,

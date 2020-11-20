@@ -18,6 +18,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e77df803_e16fb298",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 393,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-20T23:58:39Z",
+      "side": 1,
+      "message": "No.  It is a left-over from an attempt to get comma\u0027s on large decimal values.  Removed now.",
+      "parentUuid": "11242349_89ddb26f",
+      "revId": "292298372ae5f0e4ab0427f3a05e4d0409951462",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9c5e1ea5_cfb10d80",
@@ -31,6 +49,30 @@
       "writtenOn": "2020-11-20T17:56:47Z",
       "side": 1,
       "message": "Remove these leading spaces here and for \"Free\" and use \"%6s\" below to force padding.",
+      "range": {
+        "startLine": 401,
+        "startChar": 26,
+        "endLine": 401,
+        "endChar": 27
+      },
+      "revId": "292298372ae5f0e4ab0427f3a05e4d0409951462",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "83e70e7e_b81824a8",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 401,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-20T23:58:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9c5e1ea5_cfb10d80",
       "range": {
         "startLine": 401,
         "startChar": 26,
@@ -64,6 +106,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5623b486_a8e61314",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 467,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-20T23:58:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "07778738_982e637a",
+      "range": {
+        "startLine": 461,
+        "startChar": 0,
+        "endLine": 467,
+        "endChar": 81
+      },
+      "revId": "292298372ae5f0e4ab0427f3a05e4d0409951462",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "37223cac_7900da00",
@@ -81,6 +147,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7f3592d6_c4d63bf0",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2776,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-20T23:58:39Z",
+      "side": 1,
+      "message": "I see that you\u0027re using INFO(), which adds 37 characters to what logcat normally does (i.e. \"INFO: Debug.cpp:183 (insertMessage): \").  I originally bypassed ANGLE\u0027s mechanism and avoided that.  I settled on VERBOSE(), which only adds 7 characters (i.e. \"EVENT: \").  The downside is that I need to build with that turned on (which I could fix).  You might want to do the same.\n\nIt doesn\u0027t get rid of the timestamps and PID stuff, but there are logcat options for that.",
+      "parentUuid": "37223cac_7900da00",
+      "revId": "292298372ae5f0e4ab0427f3a05e4d0409951462",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f091facd_26506ec3",
@@ -94,6 +178,30 @@
       "writtenOn": "2020-11-20T17:56:47Z",
       "side": 1,
       "message": "Why the extra \"; \"?   These are all being output on to separate lines, so I don\u0027t think this is necessary to delineate entries.",
+      "range": {
+        "startLine": 2782,
+        "startChar": 15,
+        "endLine": 2782,
+        "endChar": 17
+      },
+      "revId": "292298372ae5f0e4ab0427f3a05e4d0409951462",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e9aa6a17_cd16cbb5",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2782,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-20T23:58:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f091facd_26506ec3",
       "range": {
         "startLine": 2782,
         "startChar": 15,
@@ -127,6 +235,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a472a3a7_47ffd801",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2787,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-20T23:58:39Z",
+      "side": 1,
+      "message": "I used to be very explicit, and IIRC Jamie asking me to use \"auto\".  I see this used elsewhere (e.g. \"formatutils.cpp\" and \"RewriteRowMajorMatrices.cpp\").",
+      "parentUuid": "fb0991b4_a1e27f24",
+      "range": {
+        "startLine": 2787,
+        "startChar": 9,
+        "endLine": 2787,
+        "endChar": 13
+      },
+      "revId": "292298372ae5f0e4ab0427f3a05e4d0409951462",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0e703fbd_fafbe1f7",
@@ -150,6 +282,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "827ac5a8_d654a909",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2790,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-20T23:58:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0e703fbd_fafbe1f7",
+      "range": {
+        "startLine": 2790,
+        "startChar": 37,
+        "endLine": 2790,
+        "endChar": 57
+      },
+      "revId": "292298372ae5f0e4ab0427f3a05e4d0409951462",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1c3533c7_4bc9c197",
@@ -163,6 +319,30 @@
       "writtenOn": "2020-11-20T17:56:47Z",
       "side": 1,
       "message": "Use angle::HashMap for all of these.",
+      "range": {
+        "startLine": 342,
+        "startChar": 4,
+        "endLine": 342,
+        "endChar": 22
+      },
+      "revId": "292298372ae5f0e4ab0427f3a05e4d0409951462",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "585b9bea_e60e6c38",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 342,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-20T23:58:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1c3533c7_4bc9c197",
       "range": {
         "startLine": 342,
         "startChar": 4,
