@@ -33,6 +33,121 @@
       "message": "Will do. FYI please add me to the attention set when you want a re-review.",
       "revId": "7dff8e72383660d5c83d4a91ddd698cc63fb967d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e3c1c895_f1f48e78",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-20T20:18:30Z",
+      "side": 1,
+      "message": "usual nit",
+      "range": {
+        "startLine": 29,
+        "startChar": 8,
+        "endLine": 29,
+        "endChar": 25
+      },
+      "revId": "7dff8e72383660d5c83d4a91ddd698cc63fb967d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d70a852b_6a55625a",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-20T20:18:30Z",
+      "side": 1,
+      "message": "thanks for the comment but I still don\u0027t get it. What is a duplicated member vs an interface member? Is this only for aggregate types?\n\nI don\u0027t get why the instance name is a shader variable. Does the instance name need precision, layout qualifers, etc? What decisions require the instance name to be a shader variable?",
+      "range": {
+        "startLine": 60,
+        "startChar": 0,
+        "endLine": 63,
+        "endChar": 86
+      },
+      "revId": "7dff8e72383660d5c83d4a91ddd698cc63fb967d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "499b633d_8a6c4ca9",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-20T20:18:30Z",
+      "side": 1,
+      "message": "nit: enum class",
+      "range": {
+        "startLine": 64,
+        "startChar": 0,
+        "endLine": 64,
+        "endChar": 5
+      },
+      "revId": "7dff8e72383660d5c83d4a91ddd698cc63fb967d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b72e888b_b92bbbde",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 180,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-20T20:18:30Z",
+      "side": 1,
+      "message": "nit: ordering\n\nhttps://google.github.io/styleguide/cppguide.html#Declaration_Order",
+      "range": {
+        "startLine": 179,
+        "startChar": 4,
+        "endLine": 180,
+        "endChar": 34
+      },
+      "revId": "7dff8e72383660d5c83d4a91ddd698cc63fb967d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "508b6ab6_de7a9c42",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 666,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-20T20:18:30Z",
+      "side": 1,
+      "message": "nit: code duplication with the above, can you make into a helper function?",
+      "range": {
+        "startLine": 642,
+        "startChar": 19,
+        "endLine": 666,
+        "endChar": 17
+      },
+      "revId": "7dff8e72383660d5c83d4a91ddd698cc63fb967d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }

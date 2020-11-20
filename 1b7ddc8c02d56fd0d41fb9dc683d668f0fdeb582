@@ -881,6 +881,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "bb358b52_0ac9a921",
+        "filename": "src/compiler/translator/util.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 656,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-20T20:18:30Z",
+      "side": 1,
+      "message": "Can you change the other function to accept the non in/out versions? It\u0027ll make it easier to maintain one copy. We don\u0027t rely on the UNREACHABLE for anything.",
+      "parentUuid": "f5070a9b_12eb0196",
+      "range": {
+        "startLine": 620,
+        "startChar": 0,
+        "endLine": 656,
+        "endChar": 5
+      },
+      "revId": "1b7ddc8c02d56fd0d41fb9dc683d668f0fdeb582",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "d155830a_e2c38eed",
         "filename": "src/libANGLE/Caps.h",
         "patchSetId": 1
