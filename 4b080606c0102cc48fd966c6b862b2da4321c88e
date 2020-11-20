@@ -33,6 +33,460 @@
       "message": "Are you intentionally not enabling any tests because it leaves some in a partially-regressed state? I wouldn\u0027t mind seeing some green testing with this feature turned on.",
       "revId": "4b080606c0102cc48fd966c6b862b2da4321c88e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2f5487d2_be12706c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-20T18:48:49Z",
+      "side": 1,
+      "message": "Fantastic Mohan. Really happy to see the progress here. Some initial comments.",
+      "revId": "4b080606c0102cc48fd966c6b862b2da4321c88e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "571b9404_de93f21a",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-20T18:48:49Z",
+      "side": 1,
+      "message": "usual nit",
+      "range": {
+        "startLine": 29,
+        "startChar": 25,
+        "endLine": 29,
+        "endChar": 28
+      },
+      "revId": "4b080606c0102cc48fd966c6b862b2da4321c88e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6ee40ca6_2b504291",
+        "filename": "src/compiler/translator/BaseTypes.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 1161,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-20T18:48:49Z",
+      "side": 1,
+      "message": "nit: see below.",
+      "range": {
+        "startLine": 1161,
+        "startChar": 4,
+        "endLine": 1161,
+        "endChar": 16
+      },
+      "revId": "4b080606c0102cc48fd966c6b862b2da4321c88e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d1626f94_d75c2a7a",
+        "filename": "src/compiler/translator/BaseTypes.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 1553,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-20T18:48:49Z",
+      "side": 1,
+      "message": "nit: EtetIsolines",
+      "range": {
+        "startLine": 1553,
+        "startChar": 13,
+        "endLine": 1553,
+        "endChar": 25
+      },
+      "revId": "4b080606c0102cc48fd966c6b862b2da4321c88e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0829ede1_12c696ac",
+        "filename": "src/compiler/translator/OutputGLSLBase.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1439,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-20T18:48:49Z",
+      "side": 1,
+      "message": "nit: this could be one line.",
+      "range": {
+        "startLine": 1437,
+        "startChar": 0,
+        "endLine": 1439,
+        "endChar": 26
+      },
+      "revId": "4b080606c0102cc48fd966c6b862b2da4321c88e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "92cd0728_d7a101c4",
+        "filename": "src/libANGLE/Caps.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1366,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-20T18:48:49Z",
+      "side": 1,
+      "message": "nit: \"Implementation Dependent Aggregate Shader Limits\"",
+      "range": {
+        "startLine": 1366,
+        "startChar": 23,
+        "endLine": 1366,
+        "endChar": 51
+      },
+      "revId": "4b080606c0102cc48fd966c6b862b2da4321c88e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d46feddf_bc814fd6",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 679,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-20T18:48:49Z",
+      "side": 1,
+      "message": "nit: add suffix",
+      "range": {
+        "startLine": 679,
+        "startChar": 9,
+        "endLine": 679,
+        "endChar": 28
+      },
+      "revId": "4b080606c0102cc48fd966c6b862b2da4321c88e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7e43de93_d6dc72b2",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 9116,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-20T18:48:49Z",
+      "side": 1,
+      "message": "nit: don\u0027t use this code pattern",
+      "range": {
+        "startLine": 9115,
+        "startChar": 26,
+        "endLine": 9116,
+        "endChar": 34
+      },
+      "revId": "4b080606c0102cc48fd966c6b862b2da4321c88e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6d8820d9_5711a8bc",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 9145,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-20T18:48:49Z",
+      "side": 1,
+      "message": "ditto",
+      "range": {
+        "startLine": 9144,
+        "startChar": 23,
+        "endLine": 9145,
+        "endChar": 30
+      },
+      "revId": "4b080606c0102cc48fd966c6b862b2da4321c88e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f90bfcf7_41a0c37d",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 5453,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-20T18:48:49Z",
+      "side": 1,
+      "message": "nit: GLenum for these",
+      "range": {
+        "startLine": 5453,
+        "startChar": 55,
+        "endLine": 5453,
+        "endChar": 67
+      },
+      "revId": "4b080606c0102cc48fd966c6b862b2da4321c88e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "08d4664c_ac0b0546",
+        "filename": "src/libANGLE/ProgramLinkedResources.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 501,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-20T18:48:49Z",
+      "side": 1,
+      "message": "this is weird. when can this occur? seems like a bug.",
+      "range": {
+        "startLine": 501,
+        "startChar": 21,
+        "endLine": 501,
+        "endChar": 45
+      },
+      "revId": "4b080606c0102cc48fd966c6b862b2da4321c88e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f75ec25b_f8e11a7c",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1159,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-20T18:48:49Z",
+      "side": 1,
+      "message": "this is not a \"set\" operation. it\u0027s a query only. please remove.",
+      "range": {
+        "startLine": 1157,
+        "startChar": 0,
+        "endLine": 1159,
+        "endChar": 19
+      },
+      "revId": "4b080606c0102cc48fd966c6b862b2da4321c88e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cab16817_36a51c09",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 2899,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-20T18:48:49Z",
+      "side": 1,
+      "message": "this needs to be exposed in gl::Caps or queried directly via a new impl method. Not sure which I prefer. Maybe an impl method that defaults to returning the caps mPrimitiveRestart value. Can you make that change?",
+      "range": {
+        "startLine": 2897,
+        "startChar": 0,
+        "endLine": 2899,
+        "endChar": 18
+      },
+      "revId": "4b080606c0102cc48fd966c6b862b2da4321c88e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bb4f7b5b_d44d66e8",
+        "filename": "src/libANGLE/TransformFeedback.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 213,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-20T18:48:49Z",
+      "side": 1,
+      "message": "I need to check here - what happens if we write XFB beyond the end of a buffer?",
+      "range": {
+        "startLine": 209,
+        "startChar": 0,
+        "endLine": 213,
+        "endChar": 5
+      },
+      "revId": "4b080606c0102cc48fd966c6b862b2da4321c88e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f5a5427a_7e1ee6bf",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 744,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-20T18:48:49Z",
+      "side": 1,
+      "message": "nit: don\u0027t use this code pattern.",
+      "range": {
+        "startLine": 744,
+        "startChar": 32,
+        "endLine": 744,
+        "endChar": 40
+      },
+      "revId": "4b080606c0102cc48fd966c6b862b2da4321c88e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "08584f63_10855bda",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 798,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-20T18:48:49Z",
+      "side": 1,
+      "message": "dit",
+      "range": {
+        "startLine": 798,
+        "startChar": 42,
+        "endLine": 798,
+        "endChar": 46
+      },
+      "revId": "4b080606c0102cc48fd966c6b862b2da4321c88e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d881126d_980eec31",
+        "filename": "src/libANGLE/renderer/vulkan/QueryVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-20T18:48:49Z",
+      "side": 1,
+      "message": "can we please make this a consistent path now that always uses the query?",
+      "range": {
+        "startLine": 75,
+        "startChar": 0,
+        "endLine": 79,
+        "endChar": 9
+      },
+      "revId": "4b080606c0102cc48fd966c6b862b2da4321c88e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "77fcb2e3_8a6622a2",
+        "filename": "src/libANGLE/renderer/vulkan/QueryVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-20T18:48:49Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 128,
+        "startChar": 0,
+        "endLine": 133,
+        "endChar": 9
+      },
+      "revId": "4b080606c0102cc48fd966c6b862b2da4321c88e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bd69a329_0552c8f3",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 514,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-20T18:48:49Z",
+      "side": 1,
+      "message": "what\u0027s the underlying limitation here?",
+      "range": {
+        "startLine": 514,
+        "startChar": 13,
+        "endLine": 514,
+        "endChar": 27
+      },
+      "revId": "4b080606c0102cc48fd966c6b862b2da4321c88e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4bf5c3d7_840ac4f2",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 1480,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-20T18:48:49Z",
+      "side": 1,
+      "message": "we should use a different requirement when this extension is not available. can you handle this conditionally? for 3.1 base functionality we don\u0027t need 5 bindings.",
+      "range": {
+        "startLine": 1480,
+        "startChar": 19,
+        "endLine": 1480,
+        "endChar": 63
+      },
+      "revId": "4b080606c0102cc48fd966c6b862b2da4321c88e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
