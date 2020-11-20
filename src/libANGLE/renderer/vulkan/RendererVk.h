@@ -183,13 +183,6 @@ class RendererVk : angle::NonCopyable
                                     const vk::Fence *fence,
                                     Serial *serialOut);
 
-    angle::Result newSharedFence(vk::Context *context, vk::Shared<vk::Fence> *sharedFenceOut);
-    inline void resetSharedFence(vk::Shared<vk::Fence> *sharedFenceIn)
-    {
-        std::lock_guard<std::mutex> lock(mFenceRecyclerMutex);
-        sharedFenceIn->resetAndRecycle(&mFenceRecycler);
-    }
-
     template <typename... ArgsT>
     void collectGarbageAndReinit(vk::SharedResourceUse *use, ArgsT... garbageIn)
     {
@@ -395,9 +388,6 @@ class RendererVk : angle::NonCopyable
     AtomicSerialFactory mShaderSerialFactory;
 
     bool mDeviceLost;
-
-    std::mutex mFenceRecyclerMutex;
-    vk::Recycler<vk::Fence> mFenceRecycler;
 
     std::mutex mGarbageMutex;
     vk::SharedGarbageList mSharedGarbage;

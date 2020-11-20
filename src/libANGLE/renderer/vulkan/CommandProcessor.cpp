@@ -59,6 +59,42 @@ bool CommandsHaveValidOrdering(const std::vector<vk::CommandBatch> &commands)
 }
 }  // namespace
 
+angle::Result FenceRecycler::newSharedFence(vk::Context *context,
+                                            vk::Shared<vk::Fence> *sharedFenceOut)
+{
+    bool gotRecycledFence = false;
+    vk::Fence fence;
+    {
+        std::lock_guard<std::mutex> lock(mMutex);
+        if (!mRecyler.empty())
+        {
+            mRecyler.fetch(&fence);
+            gotRecycledFence = true;
+        }
+    }
+
+    VkDevice device(context->getDevice());
+    if (gotRecycledFence)
+    {
+        ANGLE_VK_TRY(context, fence.reset(device));
+    }
+    else
+    {
+        VkFenceCreateInfo fenceCreateInfo = {};
+        fenceCreateInfo.sType             = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
+        fenceCreateInfo.flags             = 0;
+        ANGLE_VK_TRY(context, fence.init(device, fenceCreateInfo));
+    }
+    sharedFenceOut->assign(device, std::move(fence));
+    return angle::Result::Continue;
+}
+
+void FenceRecycler::destroy(vk::Context *context)
+{
+    std::lock_guard<std::mutex> lock(mMutex);
+    mRecyler.destroy(context->getDevice());
+}
+
 // CommandProcessorTask implementation
 void CommandProcessorTask::initTask()
 {
@@ -381,16 +417,10 @@ angle::Result CommandProcessor::processTask(CommandProcessorTask *task)
             ANGLE_TRACE_EVENT0("gpu.angle", "processTask::FlushAndQueueSubmit");
             // End command buffer
 
-            // Get shared submit fence. It's possible there are other users of this fence that
-            // must wait for the work to be submitted before waiting on the fence. Reset the fence
-            // immediately so we are sure to get a fresh one next time.
-            Shared<Fence> fence;
-            ANGLE_TRY(mRenderer->newSharedFence(this, &fence));
-
             // Call submitFrame()
             ANGLE_TRY(mCommandQueue.submitFrame(
                 this, task->getPriority(), task->getWaitSemaphores(),
-                task->getWaitSemaphoreStageMasks(), task->getSemaphore(), std::move(fence),
+                task->getWaitSemaphoreStageMasks(), task->getSemaphore(),
                 std::move(task->getGarbage()), &mCommandPool, task->getQueueSerial()));
 
             ASSERT(task->getGarbage().empty());
@@ -603,7 +633,6 @@ angle::Result CommandProcessor::submitFrame(
     const std::vector<VkSemaphore> &waitSemaphores,
     const std::vector<VkPipelineStageFlags> &waitSemaphoreStageMasks,
     const Semaphore *signalSemaphore,
-    Shared<Fence> &&sharedFence,
     GarbageList &&currentGarbage,
     CommandPool *commandPool,
     Serial submitQueueSerial)
@@ -711,6 +740,7 @@ void CommandQueue::destroy(Context *context)
 
     mPrimaryCommands.destroy(renderer->getDevice());
     mPrimaryCommandPool.destroy(renderer->getDevice());
+    mFenceRecycler.destroy(context);
 
     ASSERT(mInFlightCommands.empty() && mGarbageQueue.empty());
 }
@@ -767,7 +797,7 @@ angle::Result CommandQueue::retireFinishedCommands(Context *context, size_t fini
         CommandBatch &batch = mInFlightCommands[commandIndex];
 
         mLastCompletedQueueSerial = batch.serial;
-        renderer->resetSharedFence(&batch.fence);
+        mFenceRecycler.resetSharedFence(&batch.fence);
         ANGLE_TRACE_EVENT0("gpu.angle", "command buffer recycling");
         batch.commandPool.destroy(device);
         ANGLE_TRY(mPrimaryCommandPool.collect(context, std::move(batch.primaryCommands)));
@@ -924,7 +954,6 @@ angle::Result CommandQueue::submitFrame(
     const std::vector<VkSemaphore> &waitSemaphores,
     const std::vector<VkPipelineStageFlags> &waitSemaphoreStageMasks,
     const Semaphore *signalSemaphore,
-    Shared<Fence> &&sharedFence,
     GarbageList &&currentGarbage,
     CommandPool *commandPool,
     Serial submitQueueSerial)
@@ -944,8 +973,9 @@ angle::Result CommandQueue::submitFrame(
 
     DeviceScoped<CommandBatch> scopedBatch(device);
     CommandBatch &batch = scopedBatch.get();
-    batch.fence         = std::move(sharedFence);
-    batch.serial        = submitQueueSerial;
+
+    ANGLE_TRY(mFenceRecycler.newSharedFence(context, &batch.fence));
+    batch.serial = submitQueueSerial;
 
     ANGLE_TRY(queueSubmit(context, priority, submitInfo, &batch.fence.get(), batch.serial));
 

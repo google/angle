@@ -534,11 +534,6 @@ void RendererVk::onDestroy(vk::Context *context)
 
     mOneOffCommandPool.destroy(mDevice);
 
-    {
-        std::lock_guard<std::mutex> lock(mFenceRecyclerMutex);
-        mFenceRecycler.destroy(mDevice);
-    }
-
     mPipelineCache.destroy(mDevice);
     mSamplerCache.destroy(this);
     mYuvConversionCache.destroy(this);
@@ -2251,34 +2246,6 @@ angle::Result RendererVk::queueSubmitOneOff(vk::Context *context,
     return angle::Result::Continue;
 }
 
-angle::Result RendererVk::newSharedFence(vk::Context *context,
-                                         vk::Shared<vk::Fence> *sharedFenceOut)
-{
-    bool gotRecycledFence = false;
-    vk::Fence fence;
-    {
-        std::lock_guard<std::mutex> lock(mFenceRecyclerMutex);
-        if (!mFenceRecycler.empty())
-        {
-            mFenceRecycler.fetch(&fence);
-            gotRecycledFence = true;
-        }
-    }
-    if (gotRecycledFence)
-    {
-        ANGLE_VK_TRY(context, fence.reset(mDevice));
-    }
-    else
-    {
-        VkFenceCreateInfo fenceCreateInfo = {};
-        fenceCreateInfo.sType             = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
-        fenceCreateInfo.flags             = 0;
-        ANGLE_VK_TRY(context, fence.init(mDevice, fenceCreateInfo));
-    }
-    sharedFenceOut->assign(mDevice, std::move(fence));
-    return angle::Result::Continue;
-}
-
 template <VkFormatFeatureFlags VkFormatProperties::*features>
 VkFormatFeatureFlags RendererVk::getFormatFeatureBits(VkFormat format,
                                                       const VkFormatFeatureFlags featureBits) const
@@ -2455,9 +2422,6 @@ angle::Result RendererVk::submitFrame(vk::Context *context,
 {
     std::lock_guard<std::mutex> commandQueueLock(mCommandQueueMutex);
 
-    vk::Shared<vk::Fence> submitFence;
-    ANGLE_TRY(newSharedFence(context, &submitFence));
-
     Serial submitQueueSerial;
 
     if (mFeatures.asyncCommandQueue.enabled)
@@ -2466,7 +2430,7 @@ angle::Result RendererVk::submitFrame(vk::Context *context,
 
         ANGLE_TRY(mCommandProcessor.submitFrame(
             context, contextPriority, waitSemaphores, waitSemaphoreStageMasks, signalSemaphore,
-            std::move(submitFence), std::move(currentGarbage), commandPool, submitQueueSerial));
+            std::move(currentGarbage), commandPool, submitQueueSerial));
     }
     else
     {
@@ -2474,7 +2438,7 @@ angle::Result RendererVk::submitFrame(vk::Context *context,
 
         ANGLE_TRY(mCommandQueue.submitFrame(
             context, contextPriority, waitSemaphores, waitSemaphoreStageMasks, signalSemaphore,
-            std::move(submitFence), std::move(currentGarbage), commandPool, submitQueueSerial));
+            std::move(currentGarbage), commandPool, submitQueueSerial));
     }
 
     waitSemaphores.clear();
