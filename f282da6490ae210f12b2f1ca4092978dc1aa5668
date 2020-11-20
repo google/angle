@@ -58,6 +58,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "df8acc7c_ee13d4c1",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 400,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-20T04:45:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bc04aed3_49bc4c3c",
+      "range": {
+        "startLine": 400,
+        "startChar": 26,
+        "endLine": 400,
+        "endChar": 32
+      },
+      "revId": "f282da6490ae210f12b2f1ca4092978dc1aa5668",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5d8aed93_1bc6398c",
@@ -71,6 +95,24 @@
       "writtenOn": "2020-11-20T00:40:03Z",
       "side": 1,
       "message": "ASSERT(rendererVk-\u003emUniqueIDCounts[callbackData-\u003ememoryObjectId] \u003e 0) ? to catch excess frees in case that\u0027s possible.",
+      "revId": "f282da6490ae210f12b2f1ca4092978dc1aa5668",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9c8089cb_d4874694",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 418,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-20T04:45:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5d8aed93_1bc6398c",
       "revId": "f282da6490ae210f12b2f1ca4092978dc1aa5668",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
@@ -100,6 +142,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "ad1cd679_09d876a1",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 450,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-20T04:45:05Z",
+      "side": 1,
+      "message": "Screen real-estate.\n\nI was more generous at first.  I had longer descriptions in the printf format too.  Then, I kept adding more data.\n\nI\u0027m up to 161 characters (44 for logcat, 7 for ANGLE, and then what\u0027s left for the data I want to see).  It\u0027s getting difficult to look at it next to code on my 24\" monitor.  It also affects copying into bugs, chat, etc.",
+      "parentUuid": "925989a4_de0b5e39",
+      "range": {
+        "startLine": 450,
+        "startChar": 26,
+        "endLine": 450,
+        "endChar": 32
+      },
+      "revId": "f282da6490ae210f12b2f1ca4092978dc1aa5668",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "aa61b9fa_6e214955",
         "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
         "patchSetId": 6
@@ -111,6 +177,24 @@
       "writtenOn": "2020-11-20T03:06:37Z",
       "side": 1,
       "message": "How often do you get this message? It feels like something useful for debugging this function, but otherwise not something the reader of the logs is interested in. Is that right?",
+      "revId": "f282da6490ae210f12b2f1ca4092978dc1aa5668",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "22dd4bc9_014a4a47",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 470,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-20T04:45:05Z",
+      "side": 1,
+      "message": "Removed\n\n\u003e How often ...?\n\nI haven\u0027t seen it yet.\n\n\u003e  It feels like something useful for debugging this function\n\nYep.  I thought I was supposed to see it, but the Pixel 4 driver doesn\u0027t do it.",
+      "parentUuid": "aa61b9fa_6e214955",
       "revId": "f282da6490ae210f12b2f1ca4092978dc1aa5668",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
@@ -128,6 +212,24 @@
       "writtenOn": "2020-11-20T00:40:03Z",
       "side": 1,
       "message": "You\u0027ll probably want to put a mutex to protect access, to be safe. RendererVk can be called from multiple threads.",
+      "revId": "f282da6490ae210f12b2f1ca4092978dc1aa5668",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b396e3b5_de8f5afe",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 338,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-20T04:45:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2c78c394_964aa2d7",
       "revId": "f282da6490ae210f12b2f1ca4092978dc1aa5668",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
@@ -157,6 +259,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "863e5ed6_48b5989b",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 347,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-20T04:45:05Z",
+      "side": 1,
+      "message": "It\u0027s grown:-).  What is your suggestion?",
+      "parentUuid": "141b6b06_63f5f040",
+      "range": {
+        "startLine": 338,
+        "startChar": 0,
+        "endLine": 347,
+        "endChar": 54
+      },
+      "revId": "f282da6490ae210f12b2f1ca4092978dc1aa5668",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "fc119993_2d529866",
         "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
         "patchSetId": 6
@@ -168,6 +294,24 @@
       "writtenOn": "2020-11-20T03:06:37Z",
       "side": 1,
       "message": "May want to do this after present(). It might make allocations?",
+      "revId": "f282da6490ae210f12b2f1ca4092978dc1aa5668",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f7349225_be7cee3b",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1432,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-20T04:45:05Z",
+      "side": 1,
+      "message": "True.  I moved it there.  There are arguments for later because the swapchain might be re-created.",
+      "parentUuid": "fc119993_2d529866",
       "revId": "f282da6490ae210f12b2f1ca4092978dc1aa5668",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
