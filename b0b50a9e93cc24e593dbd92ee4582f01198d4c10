@@ -67,6 +67,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "f8605198_d8cdc36f",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-20T20:04:49Z",
+      "side": 1,
+      "message": "intended format is the texture\u0027s ANGLE format. ANGLE formats can be more specific because they identify exactly the format that\u0027s requested. internal format -\u003e GLenum format used when we talk to the GL application. sometimes ANGLE uses formats that don\u0027t map 1:1 with GL formats.\n\nANGLE formats are basically a union of {GL formats, Vulkan formats, D3D formats, Metal formats, ...} and can specifically refer to any format used in ANGLE.",
+      "parentUuid": "18f11dbc_0428685a",
+      "range": {
+        "startLine": 92,
+        "startChar": 29,
+        "endLine": 92,
+        "endChar": 84
+      },
+      "revId": "b0b50a9e93cc24e593dbd92ee4582f01198d4c10",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "f99375ea_fce4b311",
         "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
         "patchSetId": 3
