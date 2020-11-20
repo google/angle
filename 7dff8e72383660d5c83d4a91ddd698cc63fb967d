@@ -16,6 +16,23 @@
       "message": "PTAL - all bots green!",
       "revId": "7dff8e72383660d5c83d4a91ddd698cc63fb967d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "de292c50_0ec89c95",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-20T19:05:27Z",
+      "side": 1,
+      "message": "Will do. FYI please add me to the attention set when you want a re-review.",
+      "revId": "7dff8e72383660d5c83d4a91ddd698cc63fb967d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
