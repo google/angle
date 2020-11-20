@@ -37,6 +37,52 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "eec3beec_c0fe5028",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 309,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-20T19:55:08Z",
+      "side": 1,
+      "message": "nit: you can omit. will default-init to 0. see bitset_utils.h",
+      "range": {
+        "startLine": 309,
+        "startChar": 4,
+        "endLine": 309,
+        "endChar": 32
+      },
+      "revId": "4fe286c55378d80ad65ec6f64ae4683dd066860f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "71c44a4e_63296148",
+        "filename": "src/compiler/translator/Compiler.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-20T19:55:08Z",
+      "side": 1,
+      "message": "nit: \"\" braces for files that are the ANGLE repo. was this giving an include error?",
+      "range": {
+        "startLine": 19,
+        "startChar": 0,
+        "endLine": 19,
+        "endChar": 31
+      },
+      "revId": "4fe286c55378d80ad65ec6f64ae4683dd066860f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "817b4083_649c0460",
         "filename": "src/compiler/translator/TranslatorVulkan.cpp",
         "patchSetId": 9
@@ -48,6 +94,167 @@
       "writtenOn": "2020-11-20T19:50:34Z",
       "side": 1,
       "message": "nit: Probably worth a comment (for future remembrance) that this may return vk::SpecConstUsage::YFlip and/or vk::SpecConstUsage::Rotation.\n\nSince compileOptions will generally have SH_ADD_PRE_ROTATION set, does that automatically mean that both vk::SpecConstUsage::YFlip and vk::SpecConstUsage::Rotation will always be returned?  Vertex shaders will always get Rotation, but I think that YFlip will only happen for shaders that need it.",
+      "revId": "4fe286c55378d80ad65ec6f64ae4683dd066860f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "841f4ed3_af5b616d",
+        "filename": "src/libANGLE/Shader.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-20T19:55:08Z",
+      "side": 1,
+      "message": "nit: same",
+      "range": {
+        "startLine": 93,
+        "startChar": 4,
+        "endLine": 93,
+        "endChar": 6
+      },
+      "revId": "4fe286c55378d80ad65ec6f64ae4683dd066860f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f8c37862_e53aa2ec",
+        "filename": "src/libANGLE/Shader.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-20T19:55:08Z",
+      "side": 1,
+      "message": "nit: same.",
+      "range": {
+        "startLine": 135,
+        "startChar": 4,
+        "endLine": 135,
+        "endChar": 6
+      },
+      "revId": "4fe286c55378d80ad65ec6f64ae4683dd066860f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0753fb70_dfda0dcc",
+        "filename": "src/libANGLE/Shader.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 195,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-20T19:55:08Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 195,
+        "startChar": 4,
+        "endLine": 195,
+        "endChar": 6
+      },
+      "revId": "4fe286c55378d80ad65ec6f64ae4683dd066860f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f7bb658f_158e6c04",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramExecutableVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 291,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-20T19:55:08Z",
+      "side": 1,
+      "message": "nit: omit redundant rx:: namespace.",
+      "range": {
+        "startLine": 291,
+        "startChar": 0,
+        "endLine": 291,
+        "endChar": 4
+      },
+      "revId": "4fe286c55378d80ad65ec6f64ae4683dd066860f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "df0a6359_e38dbb41",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramExecutableVk.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 242,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-20T19:55:08Z",
+      "side": 1,
+      "message": "nit: omit redundant rx:: namespace.",
+      "range": {
+        "startLine": 242,
+        "startChar": 2,
+        "endLine": 242,
+        "endChar": 9
+      },
+      "revId": "4fe286c55378d80ad65ec6f64ae4683dd066860f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "14cf242c_eeb5e26d",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramPipelineVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-20T19:55:08Z",
+      "side": 1,
+      "message": "nit: can you put this in ProgramExecutable.h?",
+      "range": {
+        "startLine": 98,
+        "startChar": 0,
+        "endLine": 113,
+        "endChar": 0
+      },
+      "revId": "4fe286c55378d80ad65ec6f64ae4683dd066860f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "db4f888e_40057836",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramPipelineVk.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-20T19:55:08Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 56,
+        "startChar": 4,
+        "endLine": 56,
+        "endChar": 6
+      },
       "revId": "4fe286c55378d80ad65ec6f64ae4683dd066860f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
