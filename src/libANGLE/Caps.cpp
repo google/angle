@@ -1375,7 +1375,6 @@ std::vector<std::string> DisplayExtensions::getStrings() const
     InsertExtensionString("EGL_ANGLE_windows_ui_composition",                    windowsUIComposition,               &extensionStrings);
     InsertExtensionString("EGL_NV_post_sub_buffer",                              postSubBuffer,                      &extensionStrings);
     InsertExtensionString("EGL_KHR_create_context",                              createContext,                      &extensionStrings);
-    InsertExtensionString("EGL_EXT_device_query",                                deviceQuery,                        &extensionStrings);
     InsertExtensionString("EGL_KHR_image",                                       image,                              &extensionStrings);
     InsertExtensionString("EGL_KHR_image_base",                                  imageBase,                          &extensionStrings);
     InsertExtensionString("EGL_KHR_image_pixmap",                                imagePixmap,                        &extensionStrings);
@@ -1464,6 +1463,7 @@ std::vector<std::string> ClientExtensions::getStrings() const
     // clang-format off
     //                   | Extension name                                    | Supported flag                   | Output vector   |
     InsertExtensionString("EGL_EXT_client_extensions",                        clientExtensions,                   &extensionStrings);
+    InsertExtensionString("EGL_EXT_device_query",                             deviceQueryEXT,                        &extensionStrings);
     InsertExtensionString("EGL_EXT_platform_base",                            platformBase,                       &extensionStrings);
     InsertExtensionString("EGL_EXT_platform_device",                          platformDevice,                     &extensionStrings);
     InsertExtensionString("EGL_ANGLE_platform_angle",                         platformANGLE,                      &extensionStrings);

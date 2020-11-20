@@ -989,9 +989,6 @@ struct DisplayExtensions
     // EGL_KHR_create_context
     bool createContext = false;
 
-    // EGL_EXT_device_query
-    bool deviceQuery = false;
-
     // EGL_KHR_image
     bool image = false;
 
@@ -1266,6 +1263,9 @@ struct ClientExtensions
 
     // EGL_ANGLE_platform_angle_device_type_egl_angle
     bool platformANGLEDeviceTypeEGLANGLE = false;
+
+    // EGL_EXT_device_query
+    bool deviceQueryEXT = false;
 };
 
 }  // namespace egl

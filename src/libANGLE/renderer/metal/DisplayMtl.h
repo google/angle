@@ -48,8 +48,6 @@ class DisplayMtl : public DisplayImpl
 
     std::string getVendorString() const override;
 
-    DeviceImpl *createDevice() override;
-
     egl::Error waitClient(const gl::Context *context) override;
     egl::Error waitNative(const gl::Context *context, EGLint engine) override;
 

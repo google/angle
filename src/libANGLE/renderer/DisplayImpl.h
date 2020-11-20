@@ -96,7 +96,7 @@ class DisplayImpl : public EGLImplFactory, public angle::Subject
 
     virtual std::string getVendorString() const = 0;
 
-    virtual DeviceImpl *createDevice() = 0;
+    virtual DeviceImpl *createDevice();
 
     virtual egl::Error waitClient(const gl::Context *context)                = 0;
     virtual egl::Error waitNative(const gl::Context *context, EGLint engine) = 0;

@@ -80,37 +80,30 @@ class D3DTextureTest : public ANGLETest
         PFN_D3D11_CREATE_DEVICE createDeviceFunc = reinterpret_cast<PFN_D3D11_CREATE_DEVICE>(
             GetProcAddress(mD3D11Module, "D3D11CreateDevice"));
 
-        EGLWindow *window  = getEGLWindow();
-        EGLDisplay display = window->getDisplay();
-        if (IsEGLDisplayExtensionEnabled(display, "EGL_EXT_device_query"))
+        EGLWindow *window   = getEGLWindow();
+        EGLDisplay display  = window->getDisplay();
+        EGLDeviceEXT device = EGL_NO_DEVICE_EXT;
+        if (IsEGLClientExtensionEnabled("EGL_EXT_device_query"))
         {
-            PFNEGLQUERYDISPLAYATTRIBEXTPROC eglQueryDisplayAttribEXT =
-                reinterpret_cast<PFNEGLQUERYDISPLAYATTRIBEXTPROC>(
-                    eglGetProcAddress("eglQueryDisplayAttribEXT"));
-            PFNEGLQUERYDEVICEATTRIBEXTPROC eglQueryDeviceAttribEXT =
-                reinterpret_cast<PFNEGLQUERYDEVICEATTRIBEXTPROC>(
-                    eglGetProcAddress("eglQueryDeviceAttribEXT"));
+            EGLAttrib result = 0;
+            EXPECT_EGL_TRUE(eglQueryDisplayAttribEXT(display, EGL_DEVICE_EXT, &result));
+            device = reinterpret_cast<EGLDeviceEXT>(result);
+        }
 
-            EGLDeviceEXT device = 0;
+        ASSERT_NE(EGL_NO_DEVICE_EXT, device);
+
+        if (IsEGLDeviceExtensionEnabled(device, "EGL_ANGLE_device_d3d"))
+        {
+            EGLAttrib result = 0;
+            if (eglQueryDeviceAttribEXT(device, EGL_D3D11_DEVICE_ANGLE, &result))
             {
-                EGLAttrib result = 0;
-                EXPECT_EGL_TRUE(eglQueryDisplayAttribEXT(display, EGL_DEVICE_EXT, &result));
-                device = reinterpret_cast<EGLDeviceEXT>(result);
+                mD3D11Device = reinterpret_cast<ID3D11Device *>(result);
+                mD3D11Device->AddRef();
             }
-
-            if (IsEGLDeviceExtensionEnabled(device, "EGL_ANGLE_device_d3d"))
+            else if (eglQueryDeviceAttribEXT(device, EGL_D3D9_DEVICE_ANGLE, &result))
             {
-                EGLAttrib result = 0;
-                if (eglQueryDeviceAttribEXT(device, EGL_D3D11_DEVICE_ANGLE, &result))
-                {
-                    mD3D11Device = reinterpret_cast<ID3D11Device *>(result);
-                    mD3D11Device->AddRef();
-                }
-                else if (eglQueryDeviceAttribEXT(device, EGL_D3D9_DEVICE_ANGLE, &result))
-                {
-                    mD3D9Device = reinterpret_cast<IDirect3DDevice9 *>(result);
-                    mD3D9Device->AddRef();
-                }
+                mD3D9Device = reinterpret_cast<IDirect3DDevice9 *>(result);
+                mD3D9Device->AddRef();
             }
         }
         else

@@ -200,7 +200,6 @@ void DisplayNULL::generateExtensions(egl::DisplayExtensions *outExtensions) cons
     outExtensions->createContextRobustness            = true;
     outExtensions->postSubBuffer                      = true;
     outExtensions->createContext                      = true;
-    outExtensions->deviceQuery                        = true;
     outExtensions->image                              = true;
     outExtensions->imageBase                          = true;
     outExtensions->glTexture2DImage                   = true;

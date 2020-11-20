@@ -70,8 +70,6 @@ class DisplayGLX : public DisplayGL
 
     bool isValidNativeWindow(EGLNativeWindowType window) const override;
 
-    DeviceImpl *createDevice() override;
-
     std::string getVendorString() const override;
 
     egl::Error waitClient(const gl::Context *context) override;

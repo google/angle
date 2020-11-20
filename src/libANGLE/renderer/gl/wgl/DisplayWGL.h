@@ -63,8 +63,6 @@ class DisplayWGL : public DisplayGL
                                     EGLClientBuffer clientBuffer,
                                     const egl::AttributeMap &attribs) const override;
 
-    DeviceImpl *createDevice() override;
-
     std::string getVendorString() const override;
 
     egl::Error waitClient(const gl::Context *context) override;

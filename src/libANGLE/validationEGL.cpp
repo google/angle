@@ -4545,7 +4545,7 @@ Error ValidateQueryDisplayAttribBase(const Display *display, const EGLint attrib
     switch (attribute)
     {
         case EGL_DEVICE_EXT:
-            if (!display->getExtensions().deviceQuery)
+            if (!Display::GetClientExtensions().deviceQueryEXT)
             {
                 return EglBadDisplay() << "EGL_EXT_device_query extension is not available.";
             }

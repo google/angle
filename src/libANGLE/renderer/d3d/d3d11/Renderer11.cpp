@@ -1287,8 +1287,6 @@ void Renderer11::generateDisplayExtensions(egl::DisplayExtensions *outExtensions
     // D3D11 does not support present with dirty rectangles until DXGI 1.2.
     outExtensions->postSubBuffer = mRenderer11DeviceCaps.supportsDXGI1_2;
 
-    outExtensions->deviceQuery = true;
-
     outExtensions->image                 = true;
     outExtensions->imageBase             = true;
     outExtensions->glTexture2DImage      = true;

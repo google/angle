@@ -76,8 +76,6 @@ class DisplayEGL : public DisplayGL
 
     bool isValidNativeWindow(EGLNativeWindowType window) const override;
 
-    DeviceImpl *createDevice() override;
-
     egl::Error waitClient(const gl::Context *context) override;
     egl::Error waitNative(const gl::Context *context, EGLint engine) override;
 

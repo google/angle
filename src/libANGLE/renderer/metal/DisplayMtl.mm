@@ -24,7 +24,6 @@
 
 namespace rx
 {
-
 bool IsMetalDisplayAvailable()
 {
     // We only support macos 10.13+ and 11 for now. Since they are requirements for Metal 2.0.
@@ -151,12 +150,6 @@ std::string DisplayMtl::getVendorString() const
 
         return vendorString;
     }
-}
-
-DeviceImpl *DisplayMtl::createDevice()
-{
-    UNIMPLEMENTED();
-    return nullptr;
 }
 
 egl::Error DisplayMtl::waitClient(const gl::Context *context)

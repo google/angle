@@ -566,12 +566,6 @@ bool DisplayEGL::isValidNativeWindow(EGLNativeWindowType window) const
     return true;
 }
 
-DeviceImpl *DisplayEGL::createDevice()
-{
-    UNIMPLEMENTED();
-    return nullptr;
-}
-
 egl::Error DisplayEGL::waitClient(const gl::Context *context)
 {
     UNIMPLEMENTED();

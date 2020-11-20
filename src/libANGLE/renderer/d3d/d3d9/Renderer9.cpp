@@ -588,7 +588,6 @@ void Renderer9::generateDisplayExtensions(egl::DisplayExtensions *outExtensions)
     outExtensions->querySurfacePointer = true;
     outExtensions->windowFixedSize     = true;
     outExtensions->postSubBuffer       = true;
-    outExtensions->deviceQuery         = true;
 
     outExtensions->image               = true;
     outExtensions->imageBase           = true;

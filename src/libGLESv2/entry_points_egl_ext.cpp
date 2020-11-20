@@ -279,20 +279,10 @@ EGLBoolean EGLAPIENTRY EGL_QueryDeviceAttribEXT(EGLDeviceEXT device,
         thread->setError(error, GetDebug(), "eglQueryDeviceAttribEXT", GetDeviceIfValid(dev));
         return EGL_FALSE;
     }
-    egl::Display *owningDisplay = dev->getOwningDisplay();
-    if (owningDisplay)
+    if (!Display::GetClientExtensions().deviceQueryEXT)
     {
-        ANGLE_EGL_TRY_RETURN(thread, owningDisplay->prepareForCall(), "eglQueryDeviceAttribEXT",
-                             GetDisplayIfValid(owningDisplay), EGL_FALSE);
-    }
-    // If the device was created by (and is owned by) a display, and that display doesn't support
-    // device querying, then this call should fail
-    if (owningDisplay != nullptr && !owningDisplay->getExtensions().deviceQuery)
-    {
-        thread->setError(EglBadAccess() << "Device wasn't created using eglCreateDeviceANGLE, "
-                                           "and the egl::Display that created it doesn't support "
-                                           "device querying",
-                         GetDebug(), "eglQueryDeviceAttribEXT", GetDeviceIfValid(dev));
+        thread->setError(EglBadAccess() << "EGL_EXT_device_query not supported.", GetDebug(),
+                         "eglQueryDeviceAttribEXT", GetDeviceIfValid(dev));
         return EGL_FALSE;
     }
 

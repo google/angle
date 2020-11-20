@@ -495,12 +495,6 @@ ContextImpl *DisplayGLX::createContext(const gl::State &state,
     return new ContextGL(state, errorSet, mRenderer, robustnessVideoMemoryPurgeStatus);
 }
 
-DeviceImpl *DisplayGLX::createDevice()
-{
-    UNIMPLEMENTED();
-    return nullptr;
-}
-
 egl::Error DisplayGLX::initializeContext(glx::FBConfig config,
                                          const egl::AttributeMap &eglAttributes,
                                          glx::Context *context)

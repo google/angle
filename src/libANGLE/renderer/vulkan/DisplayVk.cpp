@@ -85,12 +85,6 @@ std::string DisplayVk::getVendorString() const
     return vendorString;
 }
 
-DeviceImpl *DisplayVk::createDevice()
-{
-    UNIMPLEMENTED();
-    return nullptr;
-}
-
 egl::Error DisplayVk::waitClient(const gl::Context *context)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "DisplayVk::waitClient");

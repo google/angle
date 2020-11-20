@@ -472,12 +472,6 @@ rx::ContextImpl *DisplayWGL::createContext(const gl::State &state,
     return new ContextWGL(state, errorSet, mRenderer);
 }
 
-DeviceImpl *DisplayWGL::createDevice()
-{
-    UNREACHABLE();
-    return nullptr;
-}
-
 egl::ConfigSet DisplayWGL::generateConfigs()
 {
     egl::ConfigSet configs;
