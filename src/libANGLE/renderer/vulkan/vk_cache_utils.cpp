@@ -1202,6 +1202,16 @@ void InitializeSpecializationInfo(
                     offsetof(SpecializationConstants, surfaceRotation);
                 (*specializationEntriesOut)[id].size = sizeof(specConsts.surfaceRotation);
                 break;
+            case sh::vk::SpecializationConstantId::DrawableWidth:
+                (*specializationEntriesOut)[id].offset =
+                    offsetof(vk::SpecializationConstants, drawableWidth);
+                (*specializationEntriesOut)[id].size = sizeof(specConsts.drawableWidth);
+                break;
+            case sh::vk::SpecializationConstantId::DrawableHeight:
+                (*specializationEntriesOut)[id].offset =
+                    offsetof(vk::SpecializationConstants, drawableHeight);
+                (*specializationEntriesOut)[id].size = sizeof(specConsts.drawableHeight);
+                break;
             default:
                 UNREACHABLE();
                 break;
@@ -1598,6 +1608,9 @@ void GraphicsPipelineDesc::initDefaults(const ContextVk *contextVk)
     mScissor.y      = 0;
     mScissor.width  = 0;
     mScissor.height = 0;
+
+    mDrawableSize.width  = 1;
+    mDrawableSize.height = 1;
 }
 
 angle::Result GraphicsPipelineDesc::initializePipeline(
@@ -1610,7 +1623,7 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
     const ShaderModule *vertexModule,
     const ShaderModule *fragmentModule,
     const ShaderModule *geometryModule,
-    const SpecializationConstants specConsts,
+    const SpecializationConstants &specConsts,
     Pipeline *pipelineOut) const
 {
     angle::FixedVector<VkPipelineShaderStageCreateInfo, 3> shaderStages;
@@ -2487,6 +2500,16 @@ void GraphicsPipelineDesc::updateScissor(GraphicsPipelineTransitionBits *transit
     transition->set(ANGLE_GET_TRANSITION_BIT(mScissor, height));
 }
 
+void GraphicsPipelineDesc::updateDrawableSize(GraphicsPipelineTransitionBits *transition,
+                                              uint32_t width,
+                                              uint32_t height)
+{
+    SetBitField(mDrawableSize.width, width);
+    SetBitField(mDrawableSize.height, height);
+    transition->set(ANGLE_GET_TRANSITION_BIT(mDrawableSize, width));
+    transition->set(ANGLE_GET_TRANSITION_BIT(mDrawableSize, height));
+}
+
 void GraphicsPipelineDesc::updateSubpass(GraphicsPipelineTransitionBits *transition,
                                          uint32_t subpass)
 {
@@ -3306,7 +3329,7 @@ angle::Result GraphicsPipelineCache::insertPipeline(
     const vk::ShaderModule *vertexModule,
     const vk::ShaderModule *fragmentModule,
     const vk::ShaderModule *geometryModule,
-    const vk::SpecializationConstants specConsts,
+    const vk::SpecializationConstants &specConsts,
     const vk::GraphicsPipelineDesc &desc,
     const vk::GraphicsPipelineDesc **descPtrOut,
     vk::PipelineHelper **pipelineOut)

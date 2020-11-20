@@ -1098,8 +1098,8 @@ angle::Result ContextVk::handleDirtyGraphicsPipeline(const gl::Context *context,
     {
         const vk::GraphicsPipelineDesc *descPtr;
 
-        // The desc's surface rotation specialization constant depends on both program's
-        // specConstUsageBits and drawable. We need to update it if program has changed.
+        // The desc's specialization constant depends on program's
+        // specConstUsageBits. We need to update it if program has changed.
         SpecConstUsageBits usageBits = getCurrentProgramSpecConstUsageBits();
         updateGraphicsPipelineDescWithSpecConstUsageBits(usageBits);
 
@@ -3204,6 +3204,19 @@ void ContextVk::updateGraphicsPipelineDescWithSpecConstUsageBits(SpecConstUsageB
         // program object will be retrieved.
         mGraphicsPipelineDesc->updateSurfaceRotation(&mGraphicsPipelineTransition, rotationAndFlip);
     }
+
+    if (usageBits.test(sh::vk::SpecConstUsage::DrawableSize))
+    {
+        const gl::Box &dimensions = getState().getDrawFramebuffer()->getDimensions();
+        mGraphicsPipelineDesc->updateDrawableSize(&mGraphicsPipelineTransition, dimensions.width,
+                                                  dimensions.height);
+    }
+    else
+    {
+        // Always set specialization constant to 1x1 if it is not used so that pipeline program with
+        // only drawable size difference will be able to be reused.
+        mGraphicsPipelineDesc->updateDrawableSize(&mGraphicsPipelineTransition, 1, 1);
+    }
 }
 
 void ContextVk::updateSurfaceRotationDrawFramebuffer(const gl::State &glState)
@@ -3411,6 +3424,9 @@ void ContextVk::onDrawFramebufferRenderPassDescChange(FramebufferVk *framebuffer
     invalidateCurrentGraphicsPipeline();
     mGraphicsPipelineDesc->updateRenderPassDesc(&mGraphicsPipelineTransition,
                                                 framebufferVk->getRenderPassDesc());
+    const gl::Box &dimensions = framebufferVk->getState().getDimensions();
+    mGraphicsPipelineDesc->updateDrawableSize(&mGraphicsPipelineTransition, dimensions.width,
+                                              dimensions.height);
 }
 
 void ContextVk::invalidateCurrentTransformFeedbackBuffers()

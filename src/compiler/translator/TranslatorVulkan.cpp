@@ -467,7 +467,13 @@ ANGLE_NO_DISCARD bool InsertFragCoordCorrection(TCompiler *compiler,
     {
         flipXY = driverUniforms->getFlipXYRef();
     }
-    TIntermBinary *pivot       = driverUniforms->getHalfRenderAreaRef();
+
+    TIntermBinary *pivot = rotationSpecConst->getHalfRenderArea();
+    if (!pivot)
+    {
+        pivot = driverUniforms->getHalfRenderAreaRef();
+    }
+
     TIntermTyped *fragRotation = nullptr;
     if (compileOptions & SH_ADD_PRE_ROTATION)
     {
