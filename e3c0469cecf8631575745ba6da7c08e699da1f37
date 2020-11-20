@@ -16,6 +16,24 @@
       "message": "Why?",
       "revId": "e3c0469cecf8631575745ba6da7c08e699da1f37",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cfbbdc84_e2ff1d49",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2020-11-20T02:53:16Z",
+      "side": 1,
+      "message": "So the trace is portable.",
+      "parentUuid": "8d6d5d99_d8c2a32e",
+      "revId": "e3c0469cecf8631575745ba6da7c08e699da1f37",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
