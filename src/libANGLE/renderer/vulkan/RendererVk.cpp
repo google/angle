@@ -2201,6 +2201,13 @@ bool RendererVk::hasLinearImageFormatFeatureBits(VkFormat format,
     return hasFormatFeatureBits<&VkFormatProperties::linearTilingFeatures>(format, featureBits);
 }
 
+VkFormatFeatureFlags RendererVk::getLinearImageFormatFeatureBits(
+    VkFormat format,
+    const VkFormatFeatureFlags featureBits) const
+{
+    return getFormatFeatureBits<&VkFormatProperties::linearTilingFeatures>(format, featureBits);
+}
+
 VkFormatFeatureFlags RendererVk::getImageFormatFeatureBits(
     VkFormat format,
     const VkFormatFeatureFlags featureBits) const
@@ -2299,6 +2306,26 @@ template <VkFormatFeatureFlags VkFormatProperties::*features>
 bool RendererVk::hasFormatFeatureBits(VkFormat format, const VkFormatFeatureFlags featureBits) const
 {
     return IsMaskFlagSet(getFormatFeatureBits<features>(format, featureBits), featureBits);
+}
+
+bool RendererVk::haveSameFormatFeatureBits(VkFormat fmt1, VkFormat fmt2) const
+{
+    if (fmt1 == VK_FORMAT_UNDEFINED || fmt2 == VK_FORMAT_UNDEFINED)
+    {
+        return false;
+    }
+
+    constexpr VkFormatFeatureFlags kImageUsageFeatureBits =
+        VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT | VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT |
+        VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT;
+
+    VkFormatFeatureFlags fmt1LinearFeatureBits =
+        getLinearImageFormatFeatureBits(fmt1, kImageUsageFeatureBits);
+    VkFormatFeatureFlags fmt1OptimalFeatureBits =
+        getImageFormatFeatureBits(fmt1, kImageUsageFeatureBits);
+
+    return hasLinearImageFormatFeatureBits(fmt2, fmt1LinearFeatureBits) &&
+           hasImageFormatFeatureBits(fmt2, fmt1OptimalFeatureBits);
 }
 
 angle::Result RendererVk::cleanupGarbage(Serial lastCompletedQueueSerial)

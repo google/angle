@@ -51,6 +51,9 @@ bool HasShaderImageAtomicsSupport(const RendererVk *rendererVk,
     return hasImageAtomicSupport && hasBufferAtomicSupport;
 }
 
+// Checks to see if each format can be reinterpreted to an equivalent format in a different
+// colorspace. If all supported formats can be reinterpreted, it returns true. Formats which are not
+// supported at all are ignored and not counted as failures.
 bool FormatReinterpretationSupported(const std::vector<GLenum> &optionalSizedFormats,
                                      const RendererVk *rendererVk,
                                      bool checkLinearColorspace)
@@ -65,18 +68,14 @@ bool FormatReinterpretationSupported(const std::vector<GLenum> &optionalSizedFor
             VkFormat reinterpretedFormat = checkLinearColorspace
                                                ? ConvertToLinear(vkFormat.vkImageFormat)
                                                : ConvertToSRGB(vkFormat.vkImageFormat);
-            ASSERT(reinterpretedFormat != VK_FORMAT_UNDEFINED);
 
-            constexpr uint32_t kBitsSampleFilter =
-                VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT |
-                VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT;
-
-            if (!rendererVk->hasImageFormatFeatureBits(reinterpretedFormat, kBitsSampleFilter))
+            if (!rendererVk->haveSameFormatFeatureBits(vkFormat.vkImageFormat, reinterpretedFormat))
             {
                 return false;
             }
         }
     }
+
     return true;
 }
 
