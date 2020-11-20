@@ -35,6 +35,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c27818b4_dc057af8",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-20T00:18:54Z",
+      "side": 1,
+      "message": "I folded this into the ANGLE mechanism with EVENT severity, and made that severity use Android\u0027s VERBOSE level.  It adds 7 characters per log entry, but that\u0027s better than 20-30.",
+      "parentUuid": "3387dd9a_f68be1f0",
+      "revId": "be9470f98c777bbeb349024deb845b4b3abb4000",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "924eb5cb_99aebb5f",
@@ -48,6 +66,30 @@
       "writtenOn": "2020-11-19T01:03:23Z",
       "side": 1,
       "message": "This looks for double-counting possibilities.  That is, whenever two outstanding allocations or imports use the same callbackData-\u003ememoryObjectId, the object is a duplicate.",
+      "range": {
+        "startLine": 408,
+        "startChar": 12,
+        "endLine": 411,
+        "endChar": 13
+      },
+      "revId": "be9470f98c777bbeb349024deb845b4b3abb4000",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "657d970e_860c81c4",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 411,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-20T00:18:54Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "924eb5cb_99aebb5f",
       "range": {
         "startLine": 408,
         "startChar": 12,
@@ -81,6 +123,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0c73c79f_ac1be2df",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 912,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-20T00:18:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9479d0df_57c271b5",
+      "range": {
+        "startLine": 912,
+        "startChar": 4,
+        "endLine": 912,
+        "endChar": 60
+      },
+      "revId": "be9470f98c777bbeb349024deb845b4b3abb4000",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ec7860b5_077ff367",
@@ -94,6 +160,30 @@
       "writtenOn": "2020-11-19T01:03:23Z",
       "side": 1,
       "message": "I\u0027m logging statistics before actually doing the swap.  If the swapchain needs to be re-created, it won\u0027t be counted until the next swap.  Any disagreement with this approach?",
+      "range": {
+        "startLine": 1430,
+        "startChar": 0,
+        "endLine": 1433,
+        "endChar": 5
+      },
+      "revId": "be9470f98c777bbeb349024deb845b4b3abb4000",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3d5a4ca1_0fbe7458",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1433,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-20T00:18:54Z",
+      "side": 1,
+      "message": "Hearing no disagreement, I\u0027ll leave it here (at least for now).",
+      "parentUuid": "ec7860b5_077ff367",
       "range": {
         "startLine": 1430,
         "startChar": 0,
