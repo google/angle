@@ -167,6 +167,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "df68bc65_e4b2edae",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2776,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-21T01:38:35Z",
+      "side": 1,
+      "message": "The point is to update this function to build up a single string to output and only do a single \u0027VERBOSE() \u003c\u003c\u0027 at the end.   Something like:\n\n    std::string statsString;\n    \u003cbuild up statsString\u003e\n    VERBOSE() \u003c\u003c std::endl \u003c\u003c statsString \u003c\u003c std::endl;\n\nThat will output:\n\n    11-20 17:30:02.507 12947 13000 I ANGLE   : \n    statsString line 1\n    statsString line 2\n    statsString line 3\n    ...\n    11-20 18:31:06.409   889 10849 D qc_adm  : ns 1667754 \u003e expected_ns 1000000 (skipped 80354)\n    11-20 18:31:06.882   917  1132 D VSC     : @ 4010.995: [WO] tilt angle 88\n\nSurrounding the \u0027statsString\u0027 with \u0027std::endl\u0027 puts all of the data onto lines without the preceding timestamp, module, verbosity, etc.   It also lets you use whatever verbosity you like, since all of that preceding stuff is more of a header than a prefix.\n\n\u003e It doesn\u0027t get rid of the timestamps and PID stuff, but there are logcat options for that.\nWhat I\u0027m describing here avoids it.",
+      "parentUuid": "7f3592d6_c4d63bf0",
+      "revId": "292298372ae5f0e4ab0427f3a05e4d0409951462",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "f091facd_26506ec3",
         "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
         "patchSetId": 7
