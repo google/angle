@@ -8619,6 +8619,79 @@ TEST_P(TextureBufferTestES31, QueryWidthAfterBufferResize)
     }
 }
 
+class CopyImageTestES31 : public ANGLETest
+{
+  protected:
+    CopyImageTestES31() {}
+};
+
+// Test that copies between RGB formats doesn't affect the emulated alpha channel, if any.
+TEST_P(CopyImageTestES31, PreserveEmulatedAlpha)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_copy_image"));
+
+    constexpr GLsizei kSize = 1;
+
+    GLTexture src, dst;
+
+    // Set up the textures
+    glBindTexture(GL_TEXTURE_2D, src);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGB8, kSize, kSize);
+
+    const GLColor kInitColor(50, 100, 150, 200);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, kSize, kSize, GL_RGB, GL_UNSIGNED_BYTE, &kInitColor);
+
+    glBindTexture(GL_TEXTURE_2D, dst);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGB8UI, kSize, kSize);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    // Copy from src to dst
+    glCopyImageSubDataEXT(src, GL_TEXTURE_2D, 0, 0, 0, 0, dst, GL_TEXTURE_2D, 0, 0, 0, 0, kSize,
+                          kSize, 1);
+
+    // Bind dst as image
+    glBindImageTexture(0, dst, 0, GL_FALSE, 0, GL_READ_ONLY, GL_RGBA8UI);
+
+    // Create a buffer for output
+    constexpr GLsizei kBufferSize = kSize * kSize * sizeof(uint32_t) * 4;
+    GLBuffer buffer;
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, buffer);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, kBufferSize, nullptr, GL_STATIC_DRAW);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, buffer);
+
+    constexpr char kCS[] = R"(#version 310 es
+layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
+layout(rgba8ui, binding = 0) readonly uniform highp uimage2D imageIn;
+ layout(std140, binding = 1) buffer dataOut {
+     uvec4 data[];
+ };
+void main()
+{
+    uvec4 color = imageLoad(imageIn, ivec2(0));
+    data[0] = color;
+})";
+
+    ANGLE_GL_COMPUTE_PROGRAM(program, kCS);
+    glUseProgram(program);
+    glDispatchCompute(1, 1, 1);
+    EXPECT_GL_NO_ERROR();
+
+    glMemoryBarrier(GL_BUFFER_UPDATE_BARRIER_BIT);
+
+    const uint32_t *ptr = reinterpret_cast<uint32_t *>(
+        glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, kBufferSize, GL_MAP_READ_BIT));
+
+    EXPECT_EQ(ptr[0], kInitColor.R);
+    EXPECT_EQ(ptr[1], kInitColor.G);
+    EXPECT_EQ(ptr[2], kInitColor.B);
+
+    // Expect alpha to be 1, even if the RGB format is emulated with RGBA.
+    EXPECT_EQ(ptr[3], 1u);
+
+    glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against.
 #define ES2_EMULATE_COPY_TEX_IMAGE()                          \
@@ -8673,5 +8746,6 @@ ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(Texture2DDepthTest);
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(PBOCompressedTextureTest);
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(ETC1CompressedTextureTest);
 ANGLE_INSTANTIATE_TEST_ES31(TextureBufferTestES31);
+ANGLE_INSTANTIATE_TEST_ES31(CopyImageTestES31);
 
 }  // anonymous namespace

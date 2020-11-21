@@ -639,11 +639,15 @@ bool CanCopyWithTransferForCopyImage(RendererVk *renderer,
                                      const vk::Format &destFormat,
                                      VkImageTiling destTilingMode)
 {
-    // Transfers for copy image must have the source and destination formats be size compatible
-    const angle::Format &srcFormatActual  = srcFormat.actualImageFormat();
-    const angle::Format &destFormatActual = destFormat.actualImageFormat();
+    // Neither source nor destination formats can be emulated for copy image through transfer,
+    // unless they are emualted with the same format!
+    bool isFormatCompatible =
+        (!srcFormat.hasEmulatedImageFormat() && !destFormat.hasEmulatedImageFormat()) ||
+        srcFormat.actualImageFormatID == destFormat.actualImageFormatID;
 
-    bool isFormatCompatible = srcFormatActual.pixelBytes == destFormatActual.pixelBytes;
+    // If neither formats are emulated, GL validation ensures that pixelBytes is the same for both.
+    ASSERT(!isFormatCompatible ||
+           srcFormat.actualImageFormat().pixelBytes == destFormat.actualImageFormat().pixelBytes);
 
     return isFormatCompatible &&
            CanCopyWithTransfer(renderer, srcFormat, srcTilingMode, destFormat, destTilingMode);
@@ -3923,17 +3927,17 @@ angle::Result ImageHelper::initLayerImageViewImpl(
     return angle::Result::Continue;
 }
 
-angle::Result ImageHelper::initAliasedLayerImageView(Context *context,
-                                                     gl::TextureType textureType,
-                                                     VkImageAspectFlags aspectMask,
-                                                     const gl::SwizzleState &swizzleMap,
-                                                     ImageView *imageViewOut,
-                                                     LevelIndex baseMipLevelVk,
-                                                     uint32_t levelCount,
-                                                     uint32_t baseArrayLayer,
-                                                     uint32_t layerCount,
-                                                     VkImageUsageFlags imageUsageFlags,
-                                                     VkFormat imageViewFormat) const
+angle::Result ImageHelper::initReinterpretedLayerImageView(Context *context,
+                                                           gl::TextureType textureType,
+                                                           VkImageAspectFlags aspectMask,
+                                                           const gl::SwizzleState &swizzleMap,
+                                                           ImageView *imageViewOut,
+                                                           LevelIndex baseMipLevelVk,
+                                                           uint32_t levelCount,
+                                                           uint32_t baseArrayLayer,
+                                                           uint32_t layerCount,
+                                                           VkImageUsageFlags imageUsageFlags,
+                                                           VkFormat imageViewFormat) const
 {
     VkImageViewUsageCreateInfo imageViewUsageCreateInfo = {};
     imageViewUsageCreateInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_USAGE_CREATE_INFO;
@@ -4466,13 +4470,14 @@ angle::Result ImageHelper::CopyImageSubData(const gl::Context *context,
     const vk::Format &destVkFormat   = dstImage->getFormat();
     VkImageTiling destTilingMode     = dstImage->getTilingMode();
 
+    const gl::LevelIndex srcLevelGL = gl::LevelIndex(srcLevel);
+    const gl::LevelIndex dstLevelGL = gl::LevelIndex(dstLevel);
+
     if (CanCopyWithTransferForCopyImage(contextVk->getRenderer(), sourceVkFormat, srcTilingMode,
                                         destVkFormat, destTilingMode))
     {
-        bool isSrc3D                    = (srcImage->getType() == VK_IMAGE_TYPE_3D);
-        bool isDst3D                    = (dstImage->getType() == VK_IMAGE_TYPE_3D);
-        const gl::LevelIndex srcLevelGL = gl::LevelIndex(srcLevel);
-        const gl::LevelIndex dstLevelGL = gl::LevelIndex(dstLevel);
+        bool isSrc3D = srcImage->getType() == VK_IMAGE_TYPE_3D;
+        bool isDst3D = dstImage->getType() == VK_IMAGE_TYPE_3D;
 
         srcImage->retain(&contextVk->getResourceUseList());
         dstImage->retain(&contextVk->getResourceUseList());
@@ -4515,12 +4520,30 @@ angle::Result ImageHelper::CopyImageSubData(const gl::Context *context,
         commandBuffer->copyImage(srcImage->getImage(), srcImage->getCurrentLayout(),
                                  dstImage->getImage(), dstImage->getCurrentLayout(), 1, &region);
     }
+    else if (!sourceVkFormat.intendedFormat().isBlock && !destVkFormat.intendedFormat().isBlock)
+    {
+        // The source and destination image formats may be using a fallback in the case of RGB
+        // images.  A compute shader is used in such a case to perform the copy.
+        UtilsVk &utilsVk = contextVk->getUtils();
+
+        UtilsVk::CopyImageBitsParameters params;
+        params.srcOffset[0]   = srcX;
+        params.srcOffset[1]   = srcY;
+        params.srcOffset[2]   = srcZ;
+        params.srcLevel       = srcLevelGL;
+        params.dstOffset[0]   = dstX;
+        params.dstOffset[1]   = dstY;
+        params.dstOffset[2]   = dstZ;
+        params.dstLevel       = dstLevelGL;
+        params.copyExtents[0] = srcWidth;
+        params.copyExtents[1] = srcHeight;
+        params.copyExtents[2] = srcDepth;
+
+        ANGLE_TRY(utilsVk.copyImageBits(contextVk, dstImage, srcImage, params));
+    }
     else
     {
-        // TODO (anglebug.com/5278) - implement fallback path
-        // There is a possibility for the underlying source and destination VK image formats to be
-        // incompatible. An example scenario would be if the source image (RGB8UI) falls back
-        // to an emulated format(RGBA8UI) but the destination image is natively supported(RGB8I).
+        // No support for emulated compressed formats.
         UNIMPLEMENTED();
         ANGLE_VK_CHECK(contextVk, false, VK_ERROR_FEATURE_NOT_PRESENT);
     }
@@ -6604,7 +6627,7 @@ angle::Result ImageViewHelper::initSRGBReadViewsImpl(ContextVk *contextVk,
 
     if (!mPerLevelLinearReadImageViews[mCurrentMaxLevel.get()].valid())
     {
-        ANGLE_TRY(image.initAliasedLayerImageView(
+        ANGLE_TRY(image.initReinterpretedLayerImageView(
             contextVk, viewType, aspectFlags, readSwizzle,
             &mPerLevelLinearReadImageViews[mCurrentMaxLevel.get()], baseLevel, levelCount,
             baseLayer, layerCount, imageUsageFlags, linearFormat));
@@ -6612,7 +6635,7 @@ angle::Result ImageViewHelper::initSRGBReadViewsImpl(ContextVk *contextVk,
     if (srgbOverrideFormat != VK_FORMAT_UNDEFINED &&
         !mPerLevelSRGBReadImageViews[mCurrentMaxLevel.get()].valid())
     {
-        ANGLE_TRY(image.initAliasedLayerImageView(
+        ANGLE_TRY(image.initReinterpretedLayerImageView(
             contextVk, viewType, aspectFlags, readSwizzle,
             &mPerLevelSRGBReadImageViews[mCurrentMaxLevel.get()], baseLevel, levelCount, baseLayer,
             layerCount, imageUsageFlags, srgbOverrideFormat));
@@ -6628,7 +6651,7 @@ angle::Result ImageViewHelper::initSRGBReadViewsImpl(ContextVk *contextVk,
         if (!mPerLevelLinearFetchImageViews[mCurrentMaxLevel.get()].valid())
         {
 
-            ANGLE_TRY(image.initAliasedLayerImageView(
+            ANGLE_TRY(image.initReinterpretedLayerImageView(
                 contextVk, fetchType, aspectFlags, readSwizzle,
                 &mPerLevelLinearFetchImageViews[mCurrentMaxLevel.get()], baseLevel, levelCount,
                 baseLayer, layerCount, imageUsageFlags, linearFormat));
@@ -6636,7 +6659,7 @@ angle::Result ImageViewHelper::initSRGBReadViewsImpl(ContextVk *contextVk,
         if (srgbOverrideFormat != VK_FORMAT_UNDEFINED &&
             !mPerLevelSRGBFetchImageViews[mCurrentMaxLevel.get()].valid())
         {
-            ANGLE_TRY(image.initAliasedLayerImageView(
+            ANGLE_TRY(image.initReinterpretedLayerImageView(
                 contextVk, fetchType, aspectFlags, readSwizzle,
                 &mPerLevelSRGBFetchImageViews[mCurrentMaxLevel.get()], baseLevel, levelCount,
                 baseLayer, layerCount, imageUsageFlags, srgbOverrideFormat));
@@ -6645,7 +6668,7 @@ angle::Result ImageViewHelper::initSRGBReadViewsImpl(ContextVk *contextVk,
 
     if (!mPerLevelLinearCopyImageViews[mCurrentMaxLevel.get()].valid())
     {
-        ANGLE_TRY(image.initAliasedLayerImageView(
+        ANGLE_TRY(image.initReinterpretedLayerImageView(
             contextVk, fetchType, aspectFlags, formatSwizzle,
             &mPerLevelLinearCopyImageViews[mCurrentMaxLevel.get()], baseLevel, levelCount,
             baseLayer, layerCount, imageUsageFlags, linearFormat));
@@ -6653,7 +6676,7 @@ angle::Result ImageViewHelper::initSRGBReadViewsImpl(ContextVk *contextVk,
     if (srgbOverrideFormat != VK_FORMAT_UNDEFINED &&
         !mPerLevelSRGBCopyImageViews[mCurrentMaxLevel.get()].valid())
     {
-        ANGLE_TRY(image.initAliasedLayerImageView(
+        ANGLE_TRY(image.initReinterpretedLayerImageView(
             contextVk, fetchType, aspectFlags, formatSwizzle,
             &mPerLevelSRGBCopyImageViews[mCurrentMaxLevel.get()], baseLevel, levelCount, baseLayer,
             layerCount, imageUsageFlags, srgbOverrideFormat));
@@ -6685,9 +6708,9 @@ angle::Result ImageViewHelper::getLevelStorageImageView(ContextVk *contextVk,
     }
 
     // Create the view.  Note that storage images are not affected by swizzle parameters.
-    return image.initAliasedLayerImageView(contextVk, viewType, image.getAspectFlags(),
-                                           gl::SwizzleState(), imageView, levelVk, 1, layer,
-                                           image.getLayerCount(), imageUsageFlags, vkImageFormat);
+    return image.initReinterpretedLayerImageView(
+        contextVk, viewType, image.getAspectFlags(), gl::SwizzleState(), imageView, levelVk, 1,
+        layer, image.getLayerCount(), imageUsageFlags, vkImageFormat);
 }
 
 angle::Result ImageViewHelper::getLevelLayerStorageImageView(ContextVk *contextVk,
@@ -6716,9 +6739,9 @@ angle::Result ImageViewHelper::getLevelLayerStorageImageView(ContextVk *contextV
 
     // Create the view.  Note that storage images are not affected by swizzle parameters.
     gl::TextureType viewType = Get2DTextureType(1, image.getSamples());
-    return image.initAliasedLayerImageView(contextVk, viewType, image.getAspectFlags(),
-                                           gl::SwizzleState(), imageView, levelVk, 1, layer, 1,
-                                           imageUsageFlags, vkImageFormat);
+    return image.initReinterpretedLayerImageView(contextVk, viewType, image.getAspectFlags(),
+                                                 gl::SwizzleState(), imageView, levelVk, 1, layer,
+                                                 1, imageUsageFlags, vkImageFormat);
 }
 
 angle::Result ImageViewHelper::getLevelLayerDrawImageView(ContextVk *contextVk,
