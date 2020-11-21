@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5846f6af_d34f4ab3",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1911,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-21T04:30:32Z",
+      "side": 0,
+      "message": "Is this removed because I/O blocks are never pruned? Could you add a comment?",
+      "range": {
+        "startLine": 1911,
+        "startChar": 32,
+        "endLine": 1911,
+        "endChar": 49
+      },
+      "revId": "7784fce44d7b02b849b1e72a830296356f2d5791",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}

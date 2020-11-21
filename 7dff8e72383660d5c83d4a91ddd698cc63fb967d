@@ -100,6 +100,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "e5232252_5accee50",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-21T04:30:32Z",
+      "side": 1,
+      "message": "+1 I also don\u0027t get it. A few example I/O blocks could go a long way",
+      "parentUuid": "d70a852b_6a55625a",
+      "range": {
+        "startLine": 60,
+        "startChar": 0,
+        "endLine": 63,
+        "endChar": 86
+      },
+      "revId": "7dff8e72383660d5c83d4a91ddd698cc63fb967d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "499b633d_8a6c4ca9",
         "filename": "include/GLSLANG/ShaderVars.h",
         "patchSetId": 9
@@ -116,6 +140,29 @@
         "startChar": 0,
         "endLine": 64,
         "endChar": 5
+      },
+      "revId": "7dff8e72383660d5c83d4a91ddd698cc63fb967d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3dac0813_e45b703b",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-21T04:30:32Z",
+      "side": 1,
+      "message": "Not a fan of the name. \"Implicit\" sound like the same as location\u003d\u003d-1, but this is used especially for I/O blocks. I\u0027m not sure I understood what exactly it does either. Could you add a comment here with an example I/O block and tell what is implicit and what\u0027s not?",
+      "range": {
+        "startLine": 178,
+        "startChar": 12,
+        "endLine": 178,
+        "endChar": 20
       },
       "revId": "7dff8e72383660d5c83d4a91ddd698cc63fb967d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
@@ -146,6 +193,299 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "17e6896b_bceb7f3f",
+        "filename": "src/compiler/translator/CollectVariables.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 686,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-21T04:30:32Z",
+      "side": 1,
+      "message": "Cache `const TStructure *structure \u003d type.getStruct();` above",
+      "range": {
+        "startLine": 686,
+        "startChar": 12,
+        "endLine": 686,
+        "endChar": 28
+      },
+      "revId": "7dff8e72383660d5c83d4a91ddd698cc63fb967d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "19090e7e_f773cebe",
+        "filename": "src/compiler/translator/CollectVariables.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 702,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-21T04:30:32Z",
+      "side": 1,
+      "message": "cache this",
+      "range": {
+        "startLine": 702,
+        "startChar": 13,
+        "endLine": 702,
+        "endChar": 37
+      },
+      "revId": "7dff8e72383660d5c83d4a91ddd698cc63fb967d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e566223f_3a20798d",
+        "filename": "src/compiler/translator/CollectVariables.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 826,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-21T04:30:32Z",
+      "side": 1,
+      "message": "nit: GL",
+      "range": {
+        "startLine": 826,
+        "startChar": 17,
+        "endLine": 826,
+        "endChar": 19
+      },
+      "revId": "7dff8e72383660d5c83d4a91ddd698cc63fb967d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c06da979_5733211c",
+        "filename": "src/compiler/translator/CollectVariables.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 895,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-21T04:30:32Z",
+      "side": 1,
+      "message": "I\u0027m not really following the logic of isBlockImplicitLocation here. If `isBlockImplicitLocation` is true, and fieldLocation \u003e\u003d 0, then fieldVariable.hasImplicitLocation is never initialized. Is that intentional? Why not do something like this:\n\n- Replace this with `fieldVariable.hasImplicitLocation \u003d isBlockImplicitLocation;`\n- Remove the if (isBlockImplicitLocation) in the else below\n- Add `fieldVariable.hasImplicitLocation \u003d false;` in the `if (fieldLocation \u003e\u003d 0)` block.",
+      "range": {
+        "startLine": 892,
+        "startChar": 0,
+        "endLine": 895,
+        "endChar": 9
+      },
+      "revId": "7dff8e72383660d5c83d4a91ddd698cc63fb967d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8958177d_948773e6",
+        "filename": "src/compiler/translator/OutputGLSLBase.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1334,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-21T04:30:32Z",
+      "side": 1,
+      "message": "Use IsShaderIoBlock for future geometry/tessellation work",
+      "range": {
+        "startLine": 1334,
+        "startChar": 8,
+        "endLine": 1334,
+        "endChar": 63
+      },
+      "revId": "7dff8e72383660d5c83d4a91ddd698cc63fb967d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fa0633e9_849888d3",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 3908,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-21T04:30:32Z",
+      "side": 1,
+      "message": "Use IsShaderIoBlock",
+      "range": {
+        "startLine": 3908,
+        "startChar": 8,
+        "endLine": 3908,
+        "endChar": 91
+      },
+      "revId": "7dff8e72383660d5c83d4a91ddd698cc63fb967d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b323b670_c0925941",
+        "filename": "src/compiler/translator/ShaderVars.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 387,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-21T04:30:32Z",
+      "side": 1,
+      "message": "reset?",
+      "range": {
+        "startLine": 387,
+        "startChar": 21,
+        "endLine": 387,
+        "endChar": 27
+      },
+      "revId": "7dff8e72383660d5c83d4a91ddd698cc63fb967d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "eb1bdba0_8565c6ce",
+        "filename": "src/compiler/translator/tree_ops/RemoveInactiveInterfaceVariables.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-21T04:30:32Z",
+      "side": 1,
+      "message": "typo",
+      "range": {
+        "startLine": 102,
+        "startChar": 29,
+        "endLine": 102,
+        "endChar": 30
+      },
+      "revId": "7dff8e72383660d5c83d4a91ddd698cc63fb967d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a2bb7e84_6f7f31c1",
+        "filename": "src/compiler/translator/tree_ops/RemoveInactiveInterfaceVariables.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-21T04:30:32Z",
+      "side": 1,
+      "message": "This code is not actually checking members for explicit locations. I guess this just simply never removes inactive I/O blocks? That\u0027s fine TBH, just asking.",
+      "revId": "7dff8e72383660d5c83d4a91ddd698cc63fb967d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d545e5db_982485c6",
+        "filename": "src/compiler/translator/tree_ops/RemoveInactiveInterfaceVariables.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-21T04:30:32Z",
+      "side": 1,
+      "message": "Use IsShaderIoBlock",
+      "range": {
+        "startLine": 105,
+        "startChar": 12,
+        "endLine": 105,
+        "endChar": 87
+      },
+      "revId": "7dff8e72383660d5c83d4a91ddd698cc63fb967d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "df16ac85_ba02a44b",
+        "filename": "src/compiler/translator/util.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 672,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-21T04:30:32Z",
+      "side": 1,
+      "message": "Suggest:\n\n    switch (qualifier)\n    {\n        case EvqFlat:\n            return INTERPOLATION_FLAT;\n\n        case EvqNoPerspective:\n            return INTERPOLATION_NOPERSPECTIVE;\n\n        case EvqSmooth:\n            return INTERPOLATION_SMOOTH;\n\n        case EvqCentroid:\n            return INTERPOLATION_CENTROID;\n\n        default:\n            return GetInterpolationType(qualifier);\n    }",
+      "range": {
+        "startLine": 636,
+        "startChar": 0,
+        "endLine": 672,
+        "endChar": 5
+      },
+      "revId": "7dff8e72383660d5c83d4a91ddd698cc63fb967d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "12363534_88fc72c4",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1851,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-21T04:30:32Z",
+      "side": 1,
+      "message": "You can refactor this duplicate code. The helper function can be passed mExecutable-\u003emOutputVariables or mExecutable-\u003emProgramInputs",
+      "range": {
+        "startLine": 1824,
+        "startChar": 0,
+        "endLine": 1851,
+        "endChar": 9
+      },
+      "revId": "7dff8e72383660d5c83d4a91ddd698cc63fb967d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "72cdb1c0_9d65c1ee",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 4193,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-21T04:30:32Z",
+      "side": 1,
+      "message": "Please specify which version",
+      "range": {
+        "startLine": 4193,
+        "startChar": 54,
+        "endLine": 4193,
+        "endChar": 80
+      },
+      "revId": "7dff8e72383660d5c83d4a91ddd698cc63fb967d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "508b6ab6_de7a9c42",
         "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
         "patchSetId": 9
@@ -162,6 +502,52 @@
         "startChar": 19,
         "endLine": 666,
         "endChar": 17
+      },
+      "revId": "7dff8e72383660d5c83d4a91ddd698cc63fb967d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4c6c0e6f_6fb35cf7",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1568,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-21T04:30:32Z",
+      "side": 1,
+      "message": "typo\n\nWhat\u0027s the storage class of I/O blocks? You can probably make `isInterfaceBlockVariable` include I/O blocks, instead of doing a name comparison here.\n\nFYI, gl_PerVertex also has an empty name.",
+      "range": {
+        "startLine": 1568,
+        "startChar": 49,
+        "endLine": 1568,
+        "endChar": 57
+      },
+      "revId": "7dff8e72383660d5c83d4a91ddd698cc63fb967d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2bceb07b_36b80ae6",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1984,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-21T04:30:32Z",
+      "side": 1,
+      "message": "sentence cut off?",
+      "range": {
+        "startLine": 1984,
+        "startChar": 68,
+        "endLine": 1984,
+        "endChar": 81
       },
       "revId": "7dff8e72383660d5c83d4a91ddd698cc63fb967d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
