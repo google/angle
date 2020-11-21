@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "739f340e_73d5608d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-21T03:23:21Z",
+      "side": 1,
+      "message": "LGTM after moving the struct functions to cpp",
+      "revId": "3509cfa103a9035a9430f334830b76e04c504a2f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f3b994bf_cd7352e3",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 2767,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-21T03:23:21Z",
+      "side": 1,
+      "message": "Can drop the ;s if you are concerned with line length",
+      "range": {
+        "startLine": 2767,
+        "startChar": 44,
+        "endLine": 2767,
+        "endChar": 45
+      },
+      "revId": "3509cfa103a9035a9430f334830b76e04c504a2f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1223fb61_8305f402",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-21T03:23:21Z",
+      "side": 1,
+      "message": "The functions don\u0027t need to be part of the struct. They should be anonymous in the cpp file that get passed a const \u0026.",
+      "revId": "3509cfa103a9035a9430f334830b76e04c504a2f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
