@@ -185,6 +185,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "afb5549b_647fd932",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2776,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-21T02:18:40Z",
+      "side": 1,
+      "message": "It didn\u0027t for me.  Sorry I wasn\u0027t clearer.  I did what you suggested Tim.  I deleted my results from my comment before I sent it.  I don\u0027t know why, but I still got the date, time, PID, etc.  Using your strings, I got:\n\n 11-20 17:30:02.507 12947 13000 I ANGLE   : \n 11-20 17:30:02.507 12947 13000 I ANGLE   :     statsString line 1\n 11-20 17:30:02.507 12947 13000 I ANGLE   :     statsString line 2\n 11-20 17:30:02.507 12947 13000 I ANGLE   :     statsString line 3\n 11-20 17:30:02.507 12947 13000 I ANGLE   :     ...\n 11-20 18:31:06.409   889 10849 D qc_adm  : ns 1667754 \u003e expected_ns 1000000 (skipped 80354)\n 11-20 18:31:06.882   917  1132 D VSC     : @ 4010.995: [WO] tilt angle 88",
+      "parentUuid": "df68bc65_e4b2edae",
+      "revId": "292298372ae5f0e4ab0427f3a05e4d0409951462",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "f091facd_26506ec3",
         "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
         "patchSetId": 7
