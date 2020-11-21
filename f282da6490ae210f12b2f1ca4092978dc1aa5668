@@ -377,6 +377,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "cf1ec272_0add856e",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 347,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-21T03:08:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b85a74f3_e8d48463",
+      "range": {
+        "startLine": 338,
+        "startChar": 0,
+        "endLine": 347,
+        "endChar": 54
+      },
+      "revId": "f282da6490ae210f12b2f1ca4092978dc1aa5668",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "fc119993_2d529866",

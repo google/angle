@@ -203,6 +203,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "15a27dc2_114683d4",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2776,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-21T03:08:32Z",
+      "side": 1,
+      "message": "Could this be a difference with Android S logcat?",
+      "parentUuid": "afb5549b_647fd932",
+      "revId": "292298372ae5f0e4ab0427f3a05e4d0409951462",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "f091facd_26506ec3",
         "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
         "patchSetId": 7
