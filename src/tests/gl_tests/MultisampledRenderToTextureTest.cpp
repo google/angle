@@ -587,6 +587,10 @@ TEST_P(MultisampledRenderToTextureTest, RenderbufferColorAttachmentMultisampleDr
 TEST_P(MultisampledRenderToTextureTest, 2DColorDepthMultisampleDrawTest)
 {
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_multisampled_render_to_texture"));
+
+    // http://anglebug.com/5380
+    ANGLE_SKIP_TEST_IF(IsLinux() && IsAMD() && IsVulkan());
+
     constexpr GLsizei kSize = 6;
     // create complete framebuffer with depth buffer
     GLTexture texture;
@@ -1139,6 +1143,10 @@ TEST_P(MultisampledRenderToTextureES3Test,
        RenderbufferClearDrawCopyThenBlendWithDepthStencilSameProgram)
 {
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_multisampled_render_to_texture"));
+
+    // http://anglebug.com/5380
+    ANGLE_SKIP_TEST_IF(IsLinux() && IsAMD() && IsVulkan());
+
     constexpr GLsizei kSize = 64;
 
     setupCopyTexProgram();
@@ -1846,6 +1854,9 @@ TEST_P(MultisampledRenderToTextureES3Test, RenderbufferDepthStencilClearDrawCopy
     // http://anglebug.com/5096
     ANGLE_SKIP_TEST_IF(IsLinux() && IsIntel() && IsVulkan());
 
+    // http://anglebug.com/5380
+    ANGLE_SKIP_TEST_IF(IsLinux() && IsAMD() && IsVulkan());
+
     constexpr GLsizei kSize = 64;
 
     setupCopyTexProgram();
@@ -1937,6 +1948,9 @@ TEST_P(MultisampledRenderToTextureES3Test, RenderbufferDepthStencilDrawCopyClear
 
     // http://anglebug.com/5096
     ANGLE_SKIP_TEST_IF(IsLinux() && IsIntel() && IsVulkan());
+
+    // http://anglebug.com/5380
+    ANGLE_SKIP_TEST_IF(IsLinux() && IsAMD() && IsVulkan());
 
     constexpr GLsizei kSize = 64;
 
@@ -2433,6 +2447,10 @@ TEST_P(MultisampledRenderToTextureES3Test, RenderbufferDrawThenBlitDepthStencilO
 TEST_P(MultisampledRenderToTextureTest, DepthReadWriteToggleWithStartedRenderPass)
 {
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_multisampled_render_to_texture"));
+
+    // http://anglebug.com/5380
+    ANGLE_SKIP_TEST_IF(IsLinux() && IsAMD() && IsVulkan());
+
     constexpr GLsizei kSize = 64;
 
     setupCopyTexProgram();
@@ -3398,6 +3416,9 @@ void MultisampledRenderToTextureES3Test::renderbufferUnresolveColorAndDepthStenc
 
     // http://anglebug.com/5096
     ANGLE_SKIP_TEST_IF(IsLinux() && IsIntel() && IsVulkan());
+
+    // http://anglebug.com/5380
+    ANGLE_SKIP_TEST_IF(IsLinux() && IsAMD() && IsVulkan());
 
     constexpr GLsizei kSize = 64;
 

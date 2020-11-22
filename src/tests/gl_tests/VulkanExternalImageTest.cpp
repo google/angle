@@ -761,6 +761,8 @@ TEST_P(VulkanExternalImageTest, ShouldClearOpaqueFdWithSemaphores)
 
     // http://issuetracker.google.com/173004081
     ANGLE_SKIP_TEST_IF(IsVulkan() && IsIntel() && IsLinux() && isAsyncCommandQueueFeatureEnabled());
+    // http://anglebug.com/5383
+    ANGLE_SKIP_TEST_IF(IsLinux() && IsAMD() && IsDesktopOpenGL());
 
     RunShouldClearWithSemaphoresTest<OpaqueFdTraits>(false, kDefaultImageCreateFlags,
                                                      kDefaultImageUsageFlags, isSwiftshader(),
@@ -997,6 +999,8 @@ TEST_P(VulkanExternalImageTest, ShouldDrawOpaqueFdWithSemaphores)
 
     // http://issuetracker.google.com/173004081
     ANGLE_SKIP_TEST_IF(IsVulkan() && IsIntel() && IsLinux() && isAsyncCommandQueueFeatureEnabled());
+    // http://anglebug.com/5383
+    ANGLE_SKIP_TEST_IF(IsLinux() && IsAMD() && IsDesktopOpenGL());
 
     runShouldDrawTest<OpaqueFdTraits>(isSwiftshader(), enableDebugLayers());
 }
@@ -1166,6 +1170,8 @@ TEST_P(VulkanExternalImageTest, WaitSemaphoresRetainsContentOpaqueFd)
 
     // http://issuetracker.google.com/173004081
     ANGLE_SKIP_TEST_IF(IsVulkan() && IsIntel() && IsLinux() && isAsyncCommandQueueFeatureEnabled());
+    // http://anglebug.com/5383
+    ANGLE_SKIP_TEST_IF(IsLinux() && IsAMD() && IsDesktopOpenGL());
 
     runWaitSemaphoresRetainsContentTest<OpaqueFdTraits>(isSwiftshader(), enableDebugLayers());
 }

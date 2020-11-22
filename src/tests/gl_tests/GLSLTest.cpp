@@ -8441,6 +8441,8 @@ TEST_P(GLSLTest_ES31, MixedRowAndColumnMajorMatrices_WriteSideEffect)
 
     // Fails on windows AMD on GL: http://anglebug.com/3838
     ANGLE_SKIP_TEST_IF(IsWindows() && IsOpenGL() && IsAMD());
+    // http://anglebug.com/5384
+    ANGLE_SKIP_TEST_IF(IsLinux() && IsAMD() && IsDesktopOpenGL());
 
     // Fails on D3D due to mistranslation: http://anglebug.com/3841
     ANGLE_SKIP_TEST_IF(IsD3D11());
@@ -8523,6 +8525,8 @@ TEST_P(GLSLTest_ES31, MixedRowAndColumnMajorMatrices_WriteArrayOfArray)
 {
     // Fails on windows AMD on GL: http://anglebug.com/3838
     ANGLE_SKIP_TEST_IF(IsWindows() && IsOpenGL() && IsAMD());
+    // http://anglebug.com/5384
+    ANGLE_SKIP_TEST_IF(IsLinux() && IsAMD() && IsDesktopOpenGL());
 
     // Fails on D3D due to mistranslation: http://anglebug.com/3841
     ANGLE_SKIP_TEST_IF(IsD3D11());

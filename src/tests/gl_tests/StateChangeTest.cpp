@@ -387,6 +387,8 @@ TEST_P(StateChangeTestES3, DrawPausedXfbThenNonXfbLines)
     // glTransformFeedbackVaryings for program2 returns GL_INVALID_OPERATION on both Linux and
     // windows.  http://anglebug.com/4265
     ANGLE_SKIP_TEST_IF(IsIntel() && IsOpenGL());
+    // http://anglebug.com/5388
+    ANGLE_SKIP_TEST_IF(IsLinux() && IsAMD() && IsDesktopOpenGL());
 
     std::vector<std::string> tfVaryings = {"gl_Position"};
     ANGLE_GL_PROGRAM_TRANSFORM_FEEDBACK(program1, essl1_shaders::vs::Simple(),
@@ -2751,6 +2753,8 @@ TEST_P(SimpleStateChangeTestES31, InvalidateThenStorageWriteThenBlend)
 {
     // Fails on AMD OpenGL Windows. This configuration isn't maintained.
     ANGLE_SKIP_TEST_IF(IsWindows() && IsAMD() && IsOpenGL());
+    // http://anglebug.com/5387
+    ANGLE_SKIP_TEST_IF(IsLinux() && IsAMD() && IsDesktopOpenGL());
 
     constexpr char kCS[] = R"(#version 310 es
 layout(local_size_x=1, local_size_y=1) in;
@@ -5273,6 +5277,9 @@ TEST_P(SimpleStateChangeTest, FboLateCullFaceBackCWState)
 // binding back to the previous buffer.
 TEST_P(SimpleStateChangeTest, RebindTranslatedAttribute)
 {
+    // http://anglebug.com/5379
+    ANGLE_SKIP_TEST_IF(IsLinux() && IsAMD() && IsVulkan());
+
     constexpr char kVS[] = R"(attribute vec4 a_position;
 attribute float a_attrib;
 varying float v_attrib;

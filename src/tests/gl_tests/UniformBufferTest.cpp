@@ -1520,6 +1520,8 @@ TEST_P(UniformBufferTest, SizeOverMaxBlockSize)
 {
     // Test crashes on Windows AMD OpenGL
     ANGLE_SKIP_TEST_IF(IsAMD() && IsWindows() && IsOpenGL());
+    // http://anglebug.com/5382
+    ANGLE_SKIP_TEST_IF(IsLinux() && IsAMD() && IsDesktopOpenGL());
 
     ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFragmentShader);
 
