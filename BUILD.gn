@@ -1048,7 +1048,7 @@ angle_shared_library("libEGL") {
   }
 
   if (is_win) {
-    sources += [ "src/libEGL/libEGL.def" ]
+    sources += [ "src/libEGL/libEGL_autogen.def" ]
   }
 
   deps = [

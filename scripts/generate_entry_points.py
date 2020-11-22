@@ -2008,6 +2008,7 @@ def main():
             '../src/libANGLE/validationGL45_autogen.h',
             '../src/libANGLE/validationGL46_autogen.h',
             '../src/libEGL/libEGL_autogen.cpp',
+            '../src/libEGL/libEGL_autogen.def',
             '../src/libGLESv2/entry_points_egl_autogen.h',
             '../src/libGLESv2/entry_points_egl_ext_autogen.h',
             '../src/libGLESv2/entry_points_gles_1_0_autogen.cpp',
@@ -2363,6 +2364,7 @@ def main():
     egl_decls = []
     egl_defs = []
     libegl_ep_defs = []
+    libegl_windows_def_exports = []
 
     for major_version, minor_version in [[1, 0], [1, 1], [1, 2], [1, 3], [1, 4], [1, 5]]:
         version = "%d_%d" % (major_version, minor_version)
@@ -2385,11 +2387,13 @@ def main():
             cmd_packed_egl_enums, EGL_PACKED_TYPES)
 
         comment = "\n// EGL %d.%d" % (major_version, minor_version)
+        win_def_comment = "\n    ; EGL %d.%d" % (major_version, minor_version)
 
         egl_validation_protos += [comment] + validation_protos
         egl_decls += [comment] + decls
         egl_defs += [comment] + defs
         libegl_ep_defs += [comment] + export_defs
+        libegl_windows_def_exports += [win_def_comment] + get_exports(eglxml.commands[version])
 
     write_file("egl", "EGL", TEMPLATE_ENTRY_POINT_HEADER, "\n".join(egl_decls), "h",
                EGL_HEADER_INCLUDES, "libGLESv2", "egl.xml", "extern \"C\"")
@@ -2415,11 +2419,13 @@ def main():
             defs.append(msg)
 
         comment = "\n// %s" % extension_name
+        win_def_comment = "\n    ; %s" % (extension_name)
 
         egl_validation_protos += [comment] + validation_protos
         egl_ext_decls += [comment] + decls
         egl_ext_defs += [comment] + defs
         libegl_ep_defs += [comment] + export_defs
+        libegl_windows_def_exports += [win_def_comment] + get_exports(ext_cmd_names)
 
     write_file("egl_ext", "EGL Extension", TEMPLATE_ENTRY_POINT_HEADER, "\n".join(egl_ext_decls),
                "h", EGL_EXT_HEADER_INCLUDES, "libGLESv2", "egl.xml and egl_angle_ext.xml",
@@ -2541,6 +2547,8 @@ def main():
     for lib in ["libGLESv2" + suffix for suffix in ["", "_no_capture", "_with_capture"]]:
         write_windows_def_file(everything, lib, lib, "libGLESv2", libgles_ep_exports)
     write_windows_def_file(everything, "libGL", "openGL32", "libGL", libgl_ep_exports)
+    write_windows_def_file("egl.xml and egl_angle_ext.xml", "libEGL", "libEGL", "libEGL",
+                           libegl_windows_def_exports)
 
     all_gles_param_types = sorted(all_gles_param_types)
     write_capture_helper_header(all_gles_param_types)
