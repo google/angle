@@ -149,7 +149,7 @@ TEMPLATE_LIB_ENTRY_POINT_SOURCE = """\
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-// {lib_name}.cpp: Implements the exported {lib_description} functions.
+// {lib_name}_autogen.cpp: Implements the exported {lib_description} functions.
 
 {includes}
 extern "C" {{

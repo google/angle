@@ -5,7 +5,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-// libGL.cpp: Implements the exported Windows GL functions.
+// libGL_autogen.cpp: Implements the exported Windows GL functions.
 
 #include "angle_gl.h"
 
