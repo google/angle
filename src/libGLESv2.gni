@@ -566,9 +566,9 @@ if (is_win) {
 
 libglesv2_sources = [
   "src/libGLESv2/entry_points_egl.cpp",
-  "src/libGLESv2/entry_points_egl.h",
+  "src/libGLESv2/entry_points_egl_autogen.h",
   "src/libGLESv2/entry_points_egl_ext.cpp",
-  "src/libGLESv2/entry_points_egl_ext.h",
+  "src/libGLESv2/entry_points_egl_ext_autogen.h",
   "src/libGLESv2/entry_points_gles_1_0_autogen.cpp",
   "src/libGLESv2/entry_points_gles_1_0_autogen.h",
   "src/libGLESv2/entry_points_gles_2_0_autogen.cpp",
@@ -606,8 +606,8 @@ libegl_sources = [
   "src/libEGL/egl_loader_autogen.h",
   "src/libEGL/libEGL.cpp",
   "src/libEGL/resource.h",
-  "src/libGLESv2/entry_points_egl.h",
-  "src/libGLESv2/entry_points_egl_ext.h",
+  "src/libGLESv2/entry_points_egl_autogen.h",
+  "src/libGLESv2/entry_points_egl_ext_autogen.h",
 ]
 
 if (is_win) {

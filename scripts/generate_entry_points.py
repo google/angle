@@ -55,10 +55,10 @@ TEMPLATE_ENTRY_POINT_HEADER = """\
 
 {includes}
 
-namespace gl
+{ns}
 {{
 {entry_points}
-}}  // namespace gl
+}}  // {ns}
 
 #endif  // {lib}_ENTRY_POINTS_{annotation_upper}_AUTOGEN_H_
 """
@@ -76,9 +76,9 @@ TEMPLATE_ENTRY_POINT_SOURCE = """\
 
 {includes}
 
-namespace gl
+{ns}
 {{
-{entry_points}}}  // namespace gl
+{entry_points}}}  // {ns}
 """
 
 TEMPLATE_ENTRY_POINTS_ENUM_HEADER = """\
@@ -157,7 +157,7 @@ extern "C" {{
 }} // extern "C"
 """
 
-TEMPLATE_ENTRY_POINT_DECL = """ANGLE_EXPORT {return_type}GL_APIENTRY {name}{explicit_context_suffix}({explicit_context_param}{explicit_context_comma}{params});"""
+TEMPLATE_ENTRY_POINT_DECL = """ANGLE_EXPORT {return_type}{api}APIENTRY {name}{explicit_context_suffix}({explicit_context_param}{explicit_context_comma}{params});"""
 
 TEMPLATE_ENTRY_POINT_NO_RETURN = """\
 void GL_APIENTRY {name}{explicit_context_suffix}({explicit_context_param}{explicit_context_comma}{params})
@@ -571,6 +571,17 @@ TEMPLATE_SOURCES_INCLUDES_GL32 = """\
 #include "libGLESv2/global_state.h"
 """
 
+EGL_HEADER_INCLUDES = """\
+#include <EGL/egl.h>
+#include <export.h>
+"""
+
+EGL_EXT_HEADER_INCLUDES = """\
+#include <EGL/egl.h>
+#include <EGL/eglext.h>
+#include <export.h>
+"""
+
 TEMPLATE_EVENT_COMMENT = """\
     // Don't run the EVENT() macro on the EXT_debug_marker entry points.
     // It can interfere with the debug events being set by the caller.
@@ -809,10 +820,12 @@ def strip_api_prefix(cmd_name):
     return cmd_name.lstrip("egl")
 
 
-def format_entry_point_decl(cmd_name, proto, params, is_explicit_context):
+def format_entry_point_decl(api, cmd_name, proto, params, is_explicit_context):
     comma_if_needed = ", " if len(params) > 0 else ""
+    stripped = strip_api_prefix(cmd_name)
     return TEMPLATE_ENTRY_POINT_DECL.format(
-        name=strip_api_prefix(cmd_name),
+        api="EGL" if api == EGL else "GL_",
+        name="EGL_%s" % stripped if api == EGL else stripped,
         return_type=proto[:-len(cmd_name)],
         params=", ".join(params),
         comma_if_needed=comma_if_needed,
@@ -1248,7 +1261,7 @@ def get_entry_points(api,
         param_text = ["".join(param.itertext()) for param in command.findall('param')]
         proto_text = "".join(proto.itertext())
         decls.append(
-            format_entry_point_decl(cmd_name, proto_text, param_text, is_explicit_context))
+            format_entry_point_decl(api, cmd_name, proto_text, param_text, is_explicit_context))
         defs.append(
             format_entry_point_def(api, command, cmd_name, proto_text, param_text,
                                    is_explicit_context, cmd_packed_gl_enums, packed_param_types))
@@ -1336,7 +1349,7 @@ def get_glext_decls(all_commands, gles_commands, version, is_explicit_context):
     return glext_ptrs, glext_protos
 
 
-def write_file(annotation, comment, template, entry_points, suffix, includes, lib, file):
+def write_file(annotation, comment, template, entry_points, suffix, includes, lib, file, ns):
 
     content = template.format(
         script_name=os.path.basename(sys.argv[0]),
@@ -1346,7 +1359,8 @@ def write_file(annotation, comment, template, entry_points, suffix, includes, li
         comment=comment,
         lib=lib.upper(),
         includes=includes,
-        entry_points=entry_points)
+        entry_points=entry_points,
+        ns=ns)
 
     path = path_to(lib, "entry_points_{}_autogen.{}".format(annotation.lower(), suffix))
 
@@ -1890,6 +1904,8 @@ def main():
             '../src/libANGLE/validationGL44_autogen.h',
             '../src/libANGLE/validationGL45_autogen.h',
             '../src/libANGLE/validationGL46_autogen.h',
+            '../src/libGLESv2/entry_points_egl_autogen.h',
+            '../src/libGLESv2/entry_points_egl_ext_autogen.h',
             '../src/libGLESv2/entry_points_gles_1_0_autogen.cpp',
             '../src/libGLESv2/entry_points_gles_1_0_autogen.h',
             '../src/libGLESv2/entry_points_gles_2_0_autogen.cpp',
@@ -2024,9 +2040,9 @@ def main():
             header_version=annotation.lower(), validation_header_version="ES" + version_annotation)
 
         write_file(annotation, "GLES " + comment, TEMPLATE_ENTRY_POINT_HEADER, "\n".join(decls),
-                   "h", header_includes, "libGLESv2", "gl.xml")
+                   "h", header_includes, "libGLESv2", "gl.xml", "namespace gl")
         write_file(annotation, "GLES " + comment, TEMPLATE_ENTRY_POINT_SOURCE, "\n".join(defs),
-                   "cpp", source_includes, "libGLESv2", "gl.xml")
+                   "cpp", source_includes, "libGLESv2", "gl.xml", "namespace gl")
 
         glesdecls['core'][(major_version,
                            minor_version)] = get_decls(GLES, CONTEXT_DECL_FORMAT, all_commands,
@@ -2218,9 +2234,9 @@ def main():
 
         # Entry point files
         write_file(annotation, "GL " + comment, TEMPLATE_ENTRY_POINT_HEADER, "\n".join(decls_gl),
-                   "h", header_includes, "libGL", "gl.xml")
+                   "h", header_includes, "libGL", "gl.xml", "namespace gl")
         write_file(annotation, "GL " + comment, TEMPLATE_ENTRY_POINT_SOURCE, "\n".join(defs_gl),
-                   "cpp", source_includes, "libGL", "gl.xml")
+                   "cpp", source_includes, "libGL", "gl.xml", "namespace gl")
 
         gldecls['core'][(major_version,
                          minor_version)] = get_decls(GL, CONTEXT_DECL_FORMAT, all_commands32,
@@ -2240,6 +2256,8 @@ def main():
         cmd_packed_egl_enums = json.loads(f.read())
 
     egl_validation_protos = []
+    egl_decls = []
+    egl_defs = []
 
     for major_version, minor_version in [[1, 0], [1, 1], [1, 2], [1, 3], [1, 4], [1, 5]]:
         version = "%d_%d" % (major_version, minor_version)
@@ -2257,17 +2275,22 @@ def main():
         if not egl_version_commands:
             continue
 
-        _, _, _, validation_protos, _, _, _ = get_entry_points(EGL, eglxml.all_commands,
-                                                               egl_version_commands, False,
-                                                               egl_param_types,
-                                                               cmd_packed_egl_enums,
-                                                               EGL_PACKED_TYPES)
+        decls, defs, _, validation_protos, _, _, _ = get_entry_points(
+            EGL, eglxml.all_commands, egl_version_commands, False, egl_param_types,
+            cmd_packed_egl_enums, EGL_PACKED_TYPES)
 
         comment = "\n// EGL %d.%d" % (major_version, minor_version)
 
         egl_validation_protos += [comment] + validation_protos
+        egl_decls += [comment] + decls
+        egl_defs += [comment] + defs
+
+    write_file("egl", "EGL", TEMPLATE_ENTRY_POINT_HEADER, "\n".join(egl_decls), "h",
+               EGL_HEADER_INCLUDES, "libGLESv2", "egl.xml", "extern \"C\"")
 
     eglxml.AddExtensionCommands(registry_xml.supported_egl_extensions, ['egl'])
+    egl_ext_decls = []
+    egl_ext_defs = []
 
     for extension_name, ext_cmd_names in sorted(eglxml.ext_data.iteritems()):
 
@@ -2276,22 +2299,24 @@ def main():
             continue
 
         # Detect and filter duplicate extensions.
-        _, _, _, validation_protos, _, _, _ = get_entry_points(EGL, eglxml.all_commands,
-                                                               ext_cmd_names, False,
-                                                               egl_param_types,
-                                                               cmd_packed_egl_enums,
-                                                               EGL_PACKED_TYPES)
+        decls, defs, _, validation_protos, _, _, _ = get_entry_points(
+            EGL, eglxml.all_commands, ext_cmd_names, False, egl_param_types, cmd_packed_egl_enums,
+            EGL_PACKED_TYPES)
 
         # Avoid writing out entry points defined by a prior extension.
         for dupe in eglxml.ext_dupes[extension_name]:
             msg = "// %s is already defined.\n" % strip_api_prefix(dupe)
             defs.append(msg)
 
-        # Write the extension name as a comment before the first EP.
         comment = "\n// %s" % extension_name
 
         egl_validation_protos += [comment] + validation_protos
+        egl_ext_decls += [comment] + decls
+        egl_ext_defs += [comment] + defs
 
+    write_file("egl_ext", "EGL Extension", TEMPLATE_ENTRY_POINT_HEADER, "\n".join(egl_ext_decls),
+               "h", EGL_EXT_HEADER_INCLUDES, "libGLESv2", "egl.xml and egl_angle_ext.xml",
+               "extern \"C\"")
     write_validation_header("EGL", "EGL", egl_validation_protos, "egl.xml and egl_angle_ext.xml",
                             TEMPLATE_EGL_VALIDATION_HEADER)
 
@@ -2346,10 +2371,10 @@ def main():
 
     write_file("gles_ext", "GLES extension", TEMPLATE_ENTRY_POINT_HEADER,
                "\n".join([item for item in extension_decls]), "h", header_includes, "libGLESv2",
-               "gl.xml and gl_angle_ext.xml")
+               "gl.xml and gl_angle_ext.xml", "namespace gl")
     write_file("gles_ext", "GLES extension", TEMPLATE_ENTRY_POINT_SOURCE,
                "\n".join([item for item in extension_defs]), "cpp", source_includes, "libGLESv2",
-               "gl.xml and gl_angle_ext.xml")
+               "gl.xml and gl_angle_ext.xml", "namespace gl")
 
     write_gl_validation_header("ESEXT", "ES extension", ext_validation_protos,
                                "gl.xml and gl_angle_ext.xml")

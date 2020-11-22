@@ -6,7 +6,7 @@
 
 // entry_points_egl.cpp : Implements the EGL entry points.
 
-#include "libGLESv2/entry_points_egl.h"
+#include "libGLESv2/entry_points_egl_autogen.h"
 
 #include "common/angle_version.h"
 #include "common/debug.h"

@@ -14,8 +14,8 @@
 #if defined(ANGLE_USE_EGL_LOADER)
 #    include "libEGL/egl_loader_autogen.h"
 #else
-#    include "libGLESv2/entry_points_egl.h"
-#    include "libGLESv2/entry_points_egl_ext.h"
+#    include "libGLESv2/entry_points_egl_autogen.h"
+#    include "libGLESv2/entry_points_egl_ext_autogen.h"
 #endif  // defined(ANGLE_USE_EGL_LOADER)
 
 namespace

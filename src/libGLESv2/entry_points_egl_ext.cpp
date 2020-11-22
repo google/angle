@@ -6,7 +6,7 @@
 
 // entry_points_ext.cpp : Implements the EGL extension entry points.
 
-#include "libGLESv2/entry_points_egl_ext.h"
+#include "libGLESv2/entry_points_egl_ext_autogen.h"
 
 #include "common/debug.h"
 #include "libANGLE/Context.h"
@@ -685,7 +685,7 @@ ANGLE_EXPORT EGLSync EGLAPIENTRY EGL_CreateSyncKHR(EGLDisplay dpy,
     return static_cast<EGLSync>(syncObject);
 }
 
-ANGLE_EXPORT EGLBoolean EGLAPIENTRY EGL_DestroySyncKHR(EGLDisplay dpy, EGLSync sync)
+ANGLE_EXPORT EGLBoolean EGLAPIENTRY EGL_DestroySyncKHR(EGLDisplay dpy, EGLSyncKHR sync)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
     FUNC_EVENT("EGLDisplay dpy = 0x%016" PRIxPTR ", EGLSync sync = 0x%016" PRIxPTR, (uintptr_t)dpy,
@@ -706,9 +706,9 @@ ANGLE_EXPORT EGLBoolean EGLAPIENTRY EGL_DestroySyncKHR(EGLDisplay dpy, EGLSync s
 }
 
 ANGLE_EXPORT EGLint EGLAPIENTRY EGL_ClientWaitSyncKHR(EGLDisplay dpy,
-                                                      EGLSync sync,
+                                                      EGLSyncKHR sync,
                                                       EGLint flags,
-                                                      EGLTime timeout)
+                                                      EGLTimeKHR timeout)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
     FUNC_EVENT("EGLDisplay dpy = 0x%016" PRIxPTR ", EGLSync sync = 0x%016" PRIxPTR
@@ -735,7 +735,7 @@ ANGLE_EXPORT EGLint EGLAPIENTRY EGL_ClientWaitSyncKHR(EGLDisplay dpy,
 }
 
 ANGLE_EXPORT EGLBoolean EGLAPIENTRY EGL_GetSyncAttribKHR(EGLDisplay dpy,
-                                                         EGLSync sync,
+                                                         EGLSyncKHR sync,
                                                          EGLint attribute,
                                                          EGLint *value)
 {
@@ -761,7 +761,7 @@ ANGLE_EXPORT EGLBoolean EGLAPIENTRY EGL_GetSyncAttribKHR(EGLDisplay dpy,
 }
 
 // EGL_KHR_wait_sync
-ANGLE_EXPORT EGLBoolean EGLAPIENTRY EGL_WaitSyncKHR(EGLDisplay dpy, EGLSync sync, EGLint flags)
+ANGLE_EXPORT EGLint EGLAPIENTRY EGL_WaitSyncKHR(EGLDisplay dpy, EGLSyncKHR sync, EGLint flags)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
     FUNC_EVENT("EGLDisplay dpy = 0x%016" PRIxPTR "p, EGLSync sync = 0x%016" PRIxPTR
@@ -980,7 +980,7 @@ void EGLAPIENTRY EGL_ProgramCachePopulateANGLE(EGLDisplay dpy,
     thread->setSuccess();
 }
 
-EGLint EGLAPIENTRY EGL_ProgramCacheResizeANGLE(EGLDisplay dpy, EGLint limit, EGLenum mode)
+EGLint EGLAPIENTRY EGL_ProgramCacheResizeANGLE(EGLDisplay dpy, EGLint limit, EGLint mode)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
     FUNC_EVENT("EGLDisplay dpy = 0x%016" PRIxPTR ", EGLint limit = %d, EGLenum mode = 0x%X",
@@ -1374,7 +1374,7 @@ void EGLAPIENTRY EGL_HandleGPUSwitchANGLE(EGLDisplay dpy)
 }
 
 // EGL_KHR_reusable_sync
-ANGLE_EXPORT EGLBoolean EGLAPIENTRY EGL_SignalSyncKHR(EGLDisplay dpy, EGLSync sync, EGLenum mode)
+ANGLE_EXPORT EGLBoolean EGLAPIENTRY EGL_SignalSyncKHR(EGLDisplay dpy, EGLSyncKHR sync, EGLenum mode)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
     FUNC_EVENT("EGLDisplay dpy = 0x%016" PRIxPTR ", EGLSync sync = 0x%016" PRIxPTR
