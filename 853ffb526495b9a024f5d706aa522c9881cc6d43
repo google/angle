@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "830cd8aa_7d8ed5c1",
+        "filename": "src/libANGLE/Error.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 198,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-22T06:28:07Z",
+      "side": 1,
+      "message": "Suggest surrounding with `do { } while (0);` (I realize it\u0027s copy paste)",
+      "range": {
+        "startLine": 197,
+        "startChar": 0,
+        "endLine": 198,
+        "endChar": 16
+      },
+      "revId": "853ffb526495b9a024f5d706aa522c9881cc6d43",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
