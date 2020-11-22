@@ -604,7 +604,7 @@ if (is_win) {
 
 libegl_sources = [
   "src/libEGL/egl_loader_autogen.h",
-  "src/libEGL/libEGL.cpp",
+  "src/libEGL/libEGL_autogen.cpp",
   "src/libEGL/resource.h",
   "src/libGLESv2/entry_points_egl_autogen.h",
   "src/libGLESv2/entry_points_egl_ext_autogen.h",

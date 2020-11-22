@@ -233,10 +233,18 @@ CONTEXT_HEADER = """\
 
 CONTEXT_DECL_FORMAT = """    {return_type} {name_lower_no_suffix}({internal_params}){maybe_const}; \\"""
 
-LIBGLES_ENTRY_POINT_DEF = """\
+TEMPLATE_GL_ENTRY_POINT_EXPORT = """\
 {return_type}GL_APIENTRY gl{name}{explicit_context_suffix}({explicit_context_param}{explicit_context_comma}{params})
 {{
     return gl::{name}{explicit_context_suffix}({explicit_context_internal_param}{explicit_context_comma}{internal_params});
+}}
+"""
+
+TEMPLATE_EGL_ENTRY_POINT_EXPORT = """\
+{return_type}EGLAPIENTRY egl{name}({params})
+{{
+    EnsureEGLLoaded();
+    return EGL_{name}({internal_params});
 }}
 """
 
@@ -580,6 +588,99 @@ EGL_EXT_HEADER_INCLUDES = """\
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
 #include <export.h>
+"""
+
+LIBGLESV2_EXPORT_INCLUDES = """
+#include "angle_gl.h"
+
+#include "libGLESv2/entry_points_gles_1_0_autogen.h"
+#include "libGLESv2/entry_points_gles_2_0_autogen.h"
+#include "libGLESv2/entry_points_gles_3_0_autogen.h"
+#include "libGLESv2/entry_points_gles_3_1_autogen.h"
+#include "libGLESv2/entry_points_gles_3_2_autogen.h"
+#include "libGLESv2/entry_points_gles_ext_autogen.h"
+
+#include "common/event_tracer.h"
+"""
+
+LIBGL_EXPORT_INCLUDES = """
+#include "angle_gl.h"
+
+#include "libGL/entry_points_gl_1_0_autogen.h"
+#include "libGL/entry_points_gl_1_1_autogen.h"
+#include "libGL/entry_points_gl_1_2_autogen.h"
+#include "libGL/entry_points_gl_1_3_autogen.h"
+#include "libGL/entry_points_gl_1_4_autogen.h"
+#include "libGL/entry_points_gl_1_5_autogen.h"
+#include "libGL/entry_points_gl_2_0_autogen.h"
+#include "libGL/entry_points_gl_2_1_autogen.h"
+#include "libGL/entry_points_gl_3_0_autogen.h"
+#include "libGL/entry_points_gl_3_1_autogen.h"
+#include "libGL/entry_points_gl_3_2_autogen.h"
+#include "libGL/entry_points_gl_3_3_autogen.h"
+#include "libGL/entry_points_gl_4_0_autogen.h"
+#include "libGL/entry_points_gl_4_1_autogen.h"
+#include "libGL/entry_points_gl_4_2_autogen.h"
+#include "libGL/entry_points_gl_4_3_autogen.h"
+#include "libGL/entry_points_gl_4_4_autogen.h"
+#include "libGL/entry_points_gl_4_5_autogen.h"
+#include "libGL/entry_points_gl_4_6_autogen.h"
+
+#include "common/event_tracer.h"
+"""
+
+LIBEGL_EXPORT_INCLUDES_AND_PREAMBLE = """
+#include "anglebase/no_destructor.h"
+#include "common/system_utils.h"
+
+#include <memory>
+
+#if defined(ANGLE_USE_EGL_LOADER)
+#    include "libEGL/egl_loader_autogen.h"
+#else
+#    include "libGLESv2/entry_points_egl_autogen.h"
+#    include "libGLESv2/entry_points_egl_ext_autogen.h"
+#endif  // defined(ANGLE_USE_EGL_LOADER)
+
+namespace
+{
+#if defined(ANGLE_USE_EGL_LOADER)
+bool gLoaded = false;
+
+std::unique_ptr<angle::Library> &EntryPointsLib()
+{
+    static angle::base::NoDestructor<std::unique_ptr<angle::Library>> sEntryPointsLib;
+    return *sEntryPointsLib;
+}
+
+angle::GenericProc KHRONOS_APIENTRY GlobalLoad(const char *symbol)
+{
+    return reinterpret_cast<angle::GenericProc>(EntryPointsLib()->getSymbol(symbol));
+}
+
+void EnsureEGLLoaded()
+{
+    if (gLoaded)
+    {
+        return;
+    }
+
+    EntryPointsLib().reset(
+        angle::OpenSharedLibrary(ANGLE_GLESV2_LIBRARY_NAME, angle::SearchType::ApplicationDir));
+    angle::LoadEGL_EGL(GlobalLoad);
+    if (!EGL_GetPlatformDisplay)
+    {
+        fprintf(stderr, "Error loading EGL entry points.\\n");
+    }
+    else
+    {
+        gLoaded = true;
+    }
+}
+#else
+void EnsureEGLLoaded() {}
+#endif  // defined(ANGLE_USE_EGL_LOADER)
+}  // anonymous namespace
 """
 
 TEMPLATE_EVENT_COMMENT = """\
@@ -1192,11 +1293,11 @@ def format_context_decl(api, cmd_name, proto, params, template, cmd_packed_gl_en
         maybe_const=maybe_const)
 
 
-def format_libgles_entry_point_def(cmd_name, proto, params, is_explicit_context):
+def format_entry_point_export(cmd_name, proto, params, is_explicit_context, template):
     internal_params = [just_the_name(param) for param in params]
     return_type = proto[:-len(cmd_name)]
 
-    return LIBGLES_ENTRY_POINT_DEF.format(
+    return template.format(
         name=strip_api_prefix(cmd_name),
         return_type=return_type,
         params=", ".join(params),
@@ -1266,8 +1367,10 @@ def get_entry_points(api,
             format_entry_point_def(api, command, cmd_name, proto_text, param_text,
                                    is_explicit_context, cmd_packed_gl_enums, packed_param_types))
 
+        export_template = TEMPLATE_EGL_ENTRY_POINT_EXPORT if api == "EGL" else TEMPLATE_GL_ENTRY_POINT_EXPORT
         export_defs.append(
-            format_libgles_entry_point_def(cmd_name, proto_text, param_text, is_explicit_context))
+            format_entry_point_export(cmd_name, proto_text, param_text, is_explicit_context,
+                                      export_template))
 
         validation_protos.append(
             format_validation_proto(api, cmd_name, param_text, cmd_packed_gl_enums,
@@ -1904,6 +2007,7 @@ def main():
             '../src/libANGLE/validationGL44_autogen.h',
             '../src/libANGLE/validationGL45_autogen.h',
             '../src/libANGLE/validationGL46_autogen.h',
+            '../src/libEGL/libEGL_autogen.cpp',
             '../src/libGLESv2/entry_points_egl_autogen.h',
             '../src/libGLESv2/entry_points_egl_ext_autogen.h',
             '../src/libGLESv2/entry_points_gles_1_0_autogen.cpp',
@@ -2258,6 +2362,7 @@ def main():
     egl_validation_protos = []
     egl_decls = []
     egl_defs = []
+    libegl_ep_defs = []
 
     for major_version, minor_version in [[1, 0], [1, 1], [1, 2], [1, 3], [1, 4], [1, 5]]:
         version = "%d_%d" % (major_version, minor_version)
@@ -2275,7 +2380,7 @@ def main():
         if not egl_version_commands:
             continue
 
-        decls, defs, _, validation_protos, _, _, _ = get_entry_points(
+        decls, defs, export_defs, validation_protos, _, _, _ = get_entry_points(
             EGL, eglxml.all_commands, egl_version_commands, False, egl_param_types,
             cmd_packed_egl_enums, EGL_PACKED_TYPES)
 
@@ -2284,6 +2389,7 @@ def main():
         egl_validation_protos += [comment] + validation_protos
         egl_decls += [comment] + decls
         egl_defs += [comment] + defs
+        libegl_ep_defs += [comment] + export_defs
 
     write_file("egl", "EGL", TEMPLATE_ENTRY_POINT_HEADER, "\n".join(egl_decls), "h",
                EGL_HEADER_INCLUDES, "libGLESv2", "egl.xml", "extern \"C\"")
@@ -2299,7 +2405,7 @@ def main():
             continue
 
         # Detect and filter duplicate extensions.
-        decls, defs, _, validation_protos, _, _, _ = get_entry_points(
+        decls, defs, export_defs, validation_protos, _, _, _ = get_entry_points(
             EGL, eglxml.all_commands, ext_cmd_names, False, egl_param_types, cmd_packed_egl_enums,
             EGL_PACKED_TYPES)
 
@@ -2313,6 +2419,7 @@ def main():
         egl_validation_protos += [comment] + validation_protos
         egl_ext_decls += [comment] + decls
         egl_ext_defs += [comment] + defs
+        libegl_ep_defs += [comment] + export_defs
 
     write_file("egl_ext", "EGL Extension", TEMPLATE_ENTRY_POINT_HEADER, "\n".join(egl_ext_decls),
                "h", EGL_EXT_HEADER_INCLUDES, "libGLESv2", "egl.xml and egl_angle_ext.xml",
@@ -2419,50 +2526,13 @@ def main():
         out.write(entry_points_enum_source)
         out.close()
 
-    source_includes = """
-    #include "angle_gl.h"
-
-    #include "libGLESv2/entry_points_gles_1_0_autogen.h"
-    #include "libGLESv2/entry_points_gles_2_0_autogen.h"
-    #include "libGLESv2/entry_points_gles_3_0_autogen.h"
-    #include "libGLESv2/entry_points_gles_3_1_autogen.h"
-    #include "libGLESv2/entry_points_gles_3_2_autogen.h"
-    #include "libGLESv2/entry_points_gles_ext_autogen.h"
-
-    #include "common/event_tracer.h"
-    """
-
-    write_export_files("\n".join([item for item in libgles_ep_defs]), source_includes,
+    write_export_files("\n".join([item for item in libgles_ep_defs]), LIBGLESV2_EXPORT_INCLUDES,
                        "gl.xml and gl_angle_ext.xml", "libGLESv2", "OpenGL ES")
-
-    source_includes = """
-    #include "angle_gl.h"
-
-    #include "libGL/entry_points_gl_1_0_autogen.h"
-    #include "libGL/entry_points_gl_1_1_autogen.h"
-    #include "libGL/entry_points_gl_1_2_autogen.h"
-    #include "libGL/entry_points_gl_1_3_autogen.h"
-    #include "libGL/entry_points_gl_1_4_autogen.h"
-    #include "libGL/entry_points_gl_1_5_autogen.h"
-    #include "libGL/entry_points_gl_2_0_autogen.h"
-    #include "libGL/entry_points_gl_2_1_autogen.h"
-    #include "libGL/entry_points_gl_3_0_autogen.h"
-    #include "libGL/entry_points_gl_3_1_autogen.h"
-    #include "libGL/entry_points_gl_3_2_autogen.h"
-    #include "libGL/entry_points_gl_3_3_autogen.h"
-    #include "libGL/entry_points_gl_4_0_autogen.h"
-    #include "libGL/entry_points_gl_4_1_autogen.h"
-    #include "libGL/entry_points_gl_4_2_autogen.h"
-    #include "libGL/entry_points_gl_4_3_autogen.h"
-    #include "libGL/entry_points_gl_4_4_autogen.h"
-    #include "libGL/entry_points_gl_4_5_autogen.h"
-    #include "libGL/entry_points_gl_4_6_autogen.h"
-
-    #include "common/event_tracer.h"
-    """
-
-    write_export_files("\n".join([item for item in libgl_ep_defs]), source_includes,
+    write_export_files("\n".join([item for item in libgl_ep_defs]), LIBGL_EXPORT_INCLUDES,
                        "gl.xml and wgl.xml", "libGL", "Windows GL")
+    write_export_files("\n".join([item for item in libegl_ep_defs]),
+                       LIBEGL_EXPORT_INCLUDES_AND_PREAMBLE, "egl.xml and egl_angle_ext.xml",
+                       "libEGL", "EGL")
 
     libgles_ep_exports += get_egl_exports()
 
