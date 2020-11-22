@@ -90,7 +90,7 @@ class DisplayImpl : public EGLImplFactory, public angle::Subject
                                                  EGLenum target,
                                                  EGLClientBuffer clientBuffer,
                                                  const egl::AttributeMap &attribs) const;
-    virtual egl::Error validatePixmap(egl::Config *config,
+    virtual egl::Error validatePixmap(const egl::Config *config,
                                       EGLNativePixmapType pixmap,
                                       const egl::AttributeMap &attributes) const;
 

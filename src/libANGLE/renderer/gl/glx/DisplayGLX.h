@@ -53,7 +53,7 @@ class DisplayGLX : public DisplayGL
                                      NativePixmapType nativePixmap,
                                      const egl::AttributeMap &attribs) override;
 
-    egl::Error validatePixmap(egl::Config *config,
+    egl::Error validatePixmap(const egl::Config *config,
                               EGLNativePixmapType pixmap,
                               const egl::AttributeMap &attributes) const override;
 

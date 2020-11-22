@@ -478,7 +478,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     void setContextLost();
 
     GLenum getGraphicsResetStrategy() const { return mResetStrategy; }
-    bool isResetNotificationEnabled();
+    bool isResetNotificationEnabled() const;
 
     const egl::Config *getConfig() const;
     EGLenum getClientType() const;

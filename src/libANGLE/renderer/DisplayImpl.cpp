@@ -92,7 +92,7 @@ egl::Error DisplayImpl::validateImageClientBuffer(const gl::Context *context,
     return egl::EglBadDisplay() << "DisplayImpl::validateImageClientBuffer unimplemented.";
 }
 
-egl::Error DisplayImpl::validatePixmap(egl::Config *config,
+egl::Error DisplayImpl::validatePixmap(const egl::Config *config,
                                        EGLNativePixmapType pixmap,
                                        const egl::AttributeMap &attributes) const
 {
