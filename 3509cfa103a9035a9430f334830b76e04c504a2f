@@ -322,6 +322,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "49821803_7485a97c",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-23T19:21:38Z",
+      "side": 1,
+      "message": "Let\u0027s go with class. I didn\u0027t pay attention to the actual members (including the mutex)",
+      "parentUuid": "159ddf40_2465a2cb",
+      "revId": "3509cfa103a9035a9430f334830b76e04c504a2f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "cf066ef9_399cebab",
         "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
         "patchSetId": 9
