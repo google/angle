@@ -52,6 +52,24 @@
       "parentUuid": "eedffc53_660cd065",
       "revId": "a6503d5bc931e08220b8d2673323d76c409d01a4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d5ed88b7_d30b0810",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-23T17:26:30Z",
+      "side": 1,
+      "message": "You can always run \u0027git log\u0027 on a file to see its entire update history.\n\nThis is motivated by adhering to the coding standard we maintain across the repository, and avoiding having to maintain a date in our auto-generation scripts (right now you can get unexpected updates when the year changes on your machine and you didn\u0027t change any of the auto-gen). It\u0027s an important feature that the auto-generation doesn\u0027t depend on anything not specified in the json hash dictionaries, and adding the year to those dictionaries is not worth it IMO given our the code standard linked above.",
+      "parentUuid": "c07c20d2_25eb14a1",
+      "revId": "a6503d5bc931e08220b8d2673323d76c409d01a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
