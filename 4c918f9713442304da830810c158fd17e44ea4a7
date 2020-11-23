@@ -16,6 +16,23 @@
       "message": "Think we might want to re-evaluate this if you need to put a VkExtent2D in the pipeline desc. ",
       "revId": "4c918f9713442304da830810c158fd17e44ea4a7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9d689197_30814c9f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 14
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-23T23:00:06Z",
+      "side": 1,
+      "message": "Sorry for the curt reply, will take a close look tomorrow.",
+      "revId": "4c918f9713442304da830810c158fd17e44ea4a7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
