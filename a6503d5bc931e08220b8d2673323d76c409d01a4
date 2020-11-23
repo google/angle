@@ -34,6 +34,24 @@
       "parentUuid": "d72e7b06_b99210d8",
       "revId": "a6503d5bc931e08220b8d2673323d76c409d01a4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c07c20d2_25eb14a1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2020-11-23T17:14:57Z",
+      "side": 1,
+      "message": "There is a benefit to knowing when a file was updated. We autogenerate the date in headers in a bunch of places AFAICT. Rather than locking on the old date, updating the range would be more valuable, i.e. 2016-2020.\n\nBut if you want to strictly adhere to the coding standard (https://chromium.googlesource.com/angle/angle/+/HEAD/doc/CodingStandard.md#comments), then they shouldn\u0027t be updated.",
+      "parentUuid": "eedffc53_660cd065",
+      "revId": "a6503d5bc931e08220b8d2673323d76c409d01a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
