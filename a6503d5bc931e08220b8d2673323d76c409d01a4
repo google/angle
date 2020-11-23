@@ -16,6 +16,24 @@
       "message": "I kind of like the auto-generated date.  What problem is it causing?",
       "revId": "a6503d5bc931e08220b8d2673323d76c409d01a4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "eedffc53_660cd065",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-23T16:49:31Z",
+      "side": 1,
+      "message": "Using a dynamic year isn\u0027t fully supported as it makes the auto-\ngeneration depend on the date. Also we do not need to update the\nyear in the copyright notices for any files in ANGLE.\n\nIt causes a maintenance burden. We explicitly enforce a style policy to not auto-update copyright dates because it provides exactly 0 benefit to us and causes maintenance churn.",
+      "parentUuid": "d72e7b06_b99210d8",
+      "revId": "a6503d5bc931e08220b8d2673323d76c409d01a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
