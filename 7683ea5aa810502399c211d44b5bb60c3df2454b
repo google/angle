@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9761f008_9e607353",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2020-11-23T14:33:24Z",
+      "side": 1,
+      "message": "preparation",
+      "range": {
+        "startLine": 9,
+        "startChar": 11,
+        "endLine": 9,
+        "endChar": 22
+      },
+      "revId": "7683ea5aa810502399c211d44b5bb60c3df2454b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d25e6783_8760ef66",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StreamProducerD3DTexture.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2020-11-23T14:33:24Z",
+      "side": 1,
+      "message": "Why bother modifying this one if you just have to const_cast it away?",
+      "range": {
+        "startLine": 119,
+        "startChar": 65,
+        "endLine": 119,
+        "endChar": 75
+      },
+      "revId": "7683ea5aa810502399c211d44b5bb60c3df2454b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
