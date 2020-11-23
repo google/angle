@@ -8,8 +8,8 @@
 // capture_gles_ext_autogen.h:
 //   Capture functions for the OpenGL ES extension entry points.
 
-#ifndef LIBANGLE_CAPTURE_GLES_ext_AUTOGEN_H_
-#define LIBANGLE_CAPTURE_GLES_ext_AUTOGEN_H_
+#ifndef LIBANGLE_CAPTURE_GLES_EXT_AUTOGEN_H_
+#define LIBANGLE_CAPTURE_GLES_EXT_AUTOGEN_H_
 
 #include "common/PackedEnums.h"
 #include "libANGLE/FrameCapture.h"
@@ -4474,4 +4474,4 @@ void CaptureGenVertexArraysOES_arraysPacked(const State &glState,
                                             angle::ParamCapture *paramCapture);
 }  // namespace gl
 
-#endif  // LIBANGLE_CAPTURE_GLES_ext_AUTOGEN_H_
+#endif  // LIBANGLE_CAPTURE_GLES_EXT_AUTOGEN_H_

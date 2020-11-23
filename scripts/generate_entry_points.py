@@ -326,11 +326,11 @@ TEMPLATE_CAPTURE_HEADER = """\
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-// capture_gles_{annotation}_autogen.h:
+// capture_gles_{annotation_lower}_autogen.h:
 //   Capture functions for the OpenGL ES {comment} entry points.
 
-#ifndef LIBANGLE_CAPTURE_GLES_{annotation}_AUTOGEN_H_
-#define LIBANGLE_CAPTURE_GLES_{annotation}_AUTOGEN_H_
+#ifndef LIBANGLE_CAPTURE_GLES_{annotation_upper}_AUTOGEN_H_
+#define LIBANGLE_CAPTURE_GLES_{annotation_upper}_AUTOGEN_H_
 
 #include "common/PackedEnums.h"
 #include "libANGLE/FrameCapture.h"
@@ -340,7 +340,7 @@ namespace gl
 {prototypes}
 }}  // namespace gl
 
-#endif  // LIBANGLE_CAPTURE_GLES_{annotation}_AUTOGEN_H_
+#endif  // LIBANGLE_CAPTURE_GLES_{annotation_upper}_AUTOGEN_H_
 """
 
 TEMPLATE_CAPTURE_SOURCE = """\
@@ -553,6 +553,28 @@ TEMPLATE_SOURCES_INCLUDES = """\
 #include "libANGLE/validation{validation_header_version}.h"
 #include "libANGLE/entry_points_utils.h"
 #include "libGLESv2/global_state.h"
+"""
+
+GLES_EXT_HEADER_INCLUDES = TEMPLATE_HEADER_INCLUDES.format(
+    major="", minor="") + """
+#include <GLES/glext.h>
+#include <GLES2/gl2.h>
+#include <GLES2/gl2ext.h>
+#include <GLES3/gl32.h>
+"""
+
+GLES_EXT_SOURCE_INCLUDES = TEMPLATE_SOURCES_INCLUDES.format(
+    header_version="gles_ext", validation_header_version="ESEXT") + """
+#include "libANGLE/capture_gles_1_0_autogen.h"
+#include "libANGLE/capture_gles_2_0_autogen.h"
+#include "libANGLE/capture_gles_3_0_autogen.h"
+#include "libANGLE/capture_gles_3_1_autogen.h"
+#include "libANGLE/capture_gles_3_2_autogen.h"
+#include "libANGLE/validationES1.h"
+#include "libANGLE/validationES2.h"
+#include "libANGLE/validationES3.h"
+#include "libANGLE/validationES31.h"
+#include "libANGLE/validationES32.h"
 """
 
 TEMPLATE_HEADER_INCLUDES_GL32 = """#include <export.h>
@@ -1580,7 +1602,8 @@ def write_capture_header(annotation, comment, protos, capture_pointer_funcs):
     content = TEMPLATE_CAPTURE_HEADER.format(
         script_name=os.path.basename(sys.argv[0]),
         data_source_name="gl.xml and gl_angle_ext.xml",
-        annotation=annotation,
+        annotation_lower=annotation.lower(),
+        annotation_upper=annotation.upper(),
         comment=comment,
         prototypes="\n".join(["\n// Method Captures\n"] + protos + ["\n// Parameter Captures\n"] +
                              capture_pointer_funcs))
@@ -2459,35 +2482,12 @@ def main():
 
     libgl_ep_exports += get_exports(wgl_commands)
 
-    header_includes = TEMPLATE_HEADER_INCLUDES.format(major="", minor="")
-    header_includes += """
-    #include <GLES/glext.h>
-    #include <GLES2/gl2.h>
-    #include <GLES2/gl2ext.h>
-    #include <GLES3/gl32.h>
-    """
-
-    source_includes = TEMPLATE_SOURCES_INCLUDES.format(
-        header_version="gles_ext", validation_header_version="ESEXT")
-    source_includes += """
-    #include "libANGLE/capture_gles_1_0_autogen.h"
-    #include "libANGLE/capture_gles_2_0_autogen.h"
-    #include "libANGLE/capture_gles_3_0_autogen.h"
-    #include "libANGLE/capture_gles_3_1_autogen.h"
-    #include "libANGLE/capture_gles_3_2_autogen.h"
-    #include "libANGLE/validationES1.h"
-    #include "libANGLE/validationES2.h"
-    #include "libANGLE/validationES3.h"
-    #include "libANGLE/validationES31.h"
-    #include "libANGLE/validationES32.h"
-    """
-
     write_file("gles_ext", "GLES extension", TEMPLATE_ENTRY_POINT_HEADER,
-               "\n".join([item for item in extension_decls]), "h", header_includes, "libGLESv2",
-               "gl.xml and gl_angle_ext.xml", "namespace gl")
+               "\n".join([item for item in extension_decls]), "h", GLES_EXT_HEADER_INCLUDES,
+               "libGLESv2", "gl.xml and gl_angle_ext.xml", "namespace gl")
     write_file("gles_ext", "GLES extension", TEMPLATE_ENTRY_POINT_SOURCE,
-               "\n".join([item for item in extension_defs]), "cpp", source_includes, "libGLESv2",
-               "gl.xml and gl_angle_ext.xml", "namespace gl")
+               "\n".join([item for item in extension_defs]), "cpp", GLES_EXT_SOURCE_INCLUDES,
+               "libGLESv2", "gl.xml and gl_angle_ext.xml", "namespace gl")
 
     write_gl_validation_header("ESEXT", "ES extension", ext_validation_protos,
                                "gl.xml and gl_angle_ext.xml")
