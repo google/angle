@@ -16,6 +16,80 @@
       "message": "Please take a look, thank you.",
       "revId": "8110084212de191a1509416bac1cd74b86d6fc81",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ddf291db_6eb71bb8",
+        "filename": "src/compiler/translator/tree_ops/RecordUniformBlocksTranslatedToStructuredBuffers.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-23T04:38:38Z",
+      "side": 1,
+      "message": "nit: unnecessary change. Is `git cl format` doing this? It shouldn\u0027t. If you are using another tool to format, its textwidth limit may be off by 1 or 2.",
+      "revId": "8110084212de191a1509416bac1cd74b86d6fc81",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a7eb5924_3f65b6e8",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2093,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-23T04:38:38Z",
+      "side": 1,
+      "message": "common practice is to just say \"block(s)\"",
+      "range": {
+        "startLine": 2088,
+        "startChar": 48,
+        "endLine": 2093,
+        "endChar": 21
+      },
+      "revId": "8110084212de191a1509416bac1cd74b86d6fc81",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "42b3927c_c04a0f10",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2116,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-23T04:38:38Z",
+      "side": 1,
+      "message": "This is quite a long message. I suggest entering this exact information somewhere, like a comment on the bug that discusses this, then output a message like this:\n\n    Slow shader compilation due to the following uniform block(s): x y z, see anglebug.com/NNNN#cMM for workaround",
+      "revId": "8110084212de191a1509416bac1cd74b86d6fc81",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "452aeaa6_4f1edf07",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2581,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-23T04:38:38Z",
+      "side": 1,
+      "message": "nit: unnecessary changes from here on",
+      "revId": "8110084212de191a1509416bac1cd74b86d6fc81",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
