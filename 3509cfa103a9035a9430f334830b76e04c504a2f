@@ -37,6 +37,46 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "434fc69e_747ac159",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-23T17:53:57Z",
+      "side": 1,
+      "message": "Some stuff got missed so adding myself to the review.",
+      "revId": "3509cfa103a9035a9430f334830b76e04c504a2f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6e75e28e_20a267e0",
+        "filename": "src/common/debug.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 251,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-23T17:53:57Z",
+      "side": 1,
+      "message": "can you get the same result without adding a new logging level?",
+      "range": {
+        "startLine": 251,
+        "startChar": 0,
+        "endLine": 251,
+        "endChar": 34
+      },
+      "revId": "3509cfa103a9035a9430f334830b76e04c504a2f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "f3b994bf_cd7352e3",
         "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
         "patchSetId": 9
@@ -60,6 +100,75 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "49eadbab_2f1035bb",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 2785,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-23T17:53:57Z",
+      "side": 1,
+      "message": "nit: also follow the style guide for type inference\n\nalso this can be const",
+      "range": {
+        "startLine": 2785,
+        "startChar": 9,
+        "endLine": 2785,
+        "endChar": 14
+      },
+      "revId": "3509cfa103a9035a9430f334830b76e04c504a2f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6b38a958_9f275d51",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 2794,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-23T17:53:57Z",
+      "side": 1,
+      "message": "nit: also follow the style guide for type inference\n\nalso this can be const",
+      "range": {
+        "startLine": 2794,
+        "startChar": 9,
+        "endLine": 2794,
+        "endChar": 14
+      },
+      "revId": "3509cfa103a9035a9430f334830b76e04c504a2f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "92f00c98_5bc17d88",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-23T17:53:57Z",
+      "side": 1,
+      "message": "nit: don\u0027t use the vk suffix. also you should probably just make this a class instead of a struct and make the members private, something like MemoryTracker.",
+      "range": {
+        "startLine": 75,
+        "startChar": 7,
+        "endLine": 75,
+        "endChar": 22
+      },
+      "revId": "3509cfa103a9035a9430f334830b76e04c504a2f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "1223fb61_8305f402",
         "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
         "patchSetId": 9
@@ -71,6 +180,52 @@
       "writtenOn": "2020-11-21T03:23:21Z",
       "side": 1,
       "message": "The functions don\u0027t need to be part of the struct. They should be anonymous in the cpp file that get passed a const \u0026.",
+      "revId": "3509cfa103a9035a9430f334830b76e04c504a2f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cf066ef9_399cebab",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-23T17:53:57Z",
+      "side": 1,
+      "message": "nit: please follow the google c++ naming guide here. (can check on google), don\u0027t need to do this if you make this a proper class.",
+      "range": {
+        "startLine": 81,
+        "startChar": 15,
+        "endLine": 81,
+        "endChar": 33
+      },
+      "revId": "3509cfa103a9035a9430f334830b76e04c504a2f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3fc81552_f9c2f73f",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 358,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-23T17:53:57Z",
+      "side": 1,
+      "message": "don\u0027t expose this data, make it private.",
+      "range": {
+        "startLine": 358,
+        "startChar": 4,
+        "endLine": 358,
+        "endChar": 33
+      },
       "revId": "3509cfa103a9035a9430f334830b76e04c504a2f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
