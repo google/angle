@@ -4516,7 +4516,7 @@ bool ValidateGetPlatformDisplayEXT(const ValidationContext *val,
 bool ValidateCreatePlatformWindowSurfaceEXT(const ValidationContext *val,
                                             const Display *display,
                                             const Config *configuration,
-                                            EGLNativeWindowType nativeWindow,
+                                            const void *nativeWindow,
                                             const AttributeMap &attributes)
 {
     if (!Display::GetClientExtensions().platformBase)
@@ -4534,7 +4534,7 @@ bool ValidateCreatePlatformWindowSurfaceEXT(const ValidationContext *val,
 bool ValidateCreatePlatformPixmapSurfaceEXT(const ValidationContext *val,
                                             const Display *display,
                                             const Config *configuration,
-                                            EGLNativePixmapType nativePixmap,
+                                            const void *nativePixmap,
                                             const AttributeMap &attributes)
 {
     if (!Display::GetClientExtensions().platformBase)
@@ -5296,6 +5296,12 @@ bool ValidateGetNativeClientBufferANDROID(const ValidationContext *val,
 bool ValidateCreateNativeClientBufferANDROID(const ValidationContext *val,
                                              const egl::AttributeMap &attribMap)
 {
+    if (attribMap.isEmpty() || attribMap.begin()->second == EGL_NONE)
+    {
+        val->setError(EGL_BAD_PARAMETER, "invalid attribute list.");
+        return false;
+    }
+
     int width     = attribMap.getAsInt(EGL_WIDTH, 0);
     int height    = attribMap.getAsInt(EGL_HEIGHT, 0);
     int redSize   = attribMap.getAsInt(EGL_RED_SIZE, 0);
@@ -5646,20 +5652,24 @@ bool ValidateGetCurrentContext(const ValidationContext *val)
 bool ValidateCreatePlatformPixmapSurface(const ValidationContext *val,
                                          const Display *dpyPacked,
                                          const Config *configPacked,
-                                         EGLNativePixmapType native_pixmap,
+                                         const void *native_pixmap,
                                          const AttributeMap &attrib_listPacked)
 {
-    return ValidateCreatePixmapSurface(val, dpyPacked, configPacked, native_pixmap,
+    EGLNativePixmapType nativePixmap =
+        reinterpret_cast<EGLNativePixmapType>(const_cast<void *>(native_pixmap));
+    return ValidateCreatePixmapSurface(val, dpyPacked, configPacked, nativePixmap,
                                        attrib_listPacked);
 }
 
 bool ValidateCreatePlatformWindowSurface(const ValidationContext *val,
                                          const Display *dpyPacked,
                                          const Config *configPacked,
-                                         EGLNativeWindowType native_window,
+                                         const void *native_window,
                                          const AttributeMap &attrib_listPacked)
 {
-    return ValidateCreateWindowSurface(val, dpyPacked, configPacked, native_window,
+    EGLNativeWindowType nativeWindow =
+        reinterpret_cast<EGLNativeWindowType>(const_cast<void *>(native_window));
+    return ValidateCreateWindowSurface(val, dpyPacked, configPacked, nativeWindow,
                                        attrib_listPacked);
 }
 

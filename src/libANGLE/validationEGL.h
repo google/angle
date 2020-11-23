@@ -11,7 +11,7 @@
 
 #include "common/PackedEnums.h"
 #include "libANGLE/Error.h"
-#include "libANGLE/Texture.h"
+#include "libANGLE/Thread.h"
 
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
@@ -76,18 +76,78 @@ LabeledObject *GetLabeledObjectIfValid(Thread *thread,
                                        ObjectType objectType,
                                        EGLObjectKHR object);
 
+// A template struct for determining the default value to return for each entry point.
+template <angle::EntryPoint EP, typename ReturnType>
+struct DefaultReturnValue
+{
+    static constexpr ReturnType kValue = static_cast<ReturnType>(0);
+};
+
+template <angle::EntryPoint EP, typename ReturnType>
+ReturnType GetDefaultReturnValue(Thread *thread);
+
+template <>
+ANGLE_INLINE EGLint
+GetDefaultReturnValue<angle::EntryPoint::EGLLabelObjectKHR, EGLint>(Thread *thread)
+{
+    return thread->getError();
+}
+
+template <angle::EntryPoint EP, typename ReturnType>
+ANGLE_INLINE ReturnType GetDefaultReturnValue(Thread *thread)
+{
+    return DefaultReturnValue<EP, ReturnType>::kValue;
+}
+
+// First case: handling packed enums.
+template <typename PackedT, typename FromT>
+typename std::enable_if<std::is_enum<PackedT>::value, PackedT>::type PackParam(FromT from)
+{
+    return FromEGLenum<PackedT>(from);
+}
+
+// Second case: handling other types.
+template <typename PackedT, typename FromT>
+typename std::enable_if<!std::is_enum<PackedT>::value,
+                        typename std::remove_reference<PackedT>::type>::type
+PackParam(FromT from);
+
+template <>
+inline const AttributeMap PackParam<const AttributeMap &, const EGLint *>(const EGLint *attribs)
+{
+    return AttributeMap::CreateFromIntArray(attribs);
+}
+
+// In a 32-bit environment the EGLAttrib and EGLint types are the same. We need to mask out one of
+// the two specializations to avoid having an override ambiguity.
+#if defined(ANGLE_IS_64_BIT_CPU)
+template <>
+inline const AttributeMap PackParam<const AttributeMap &, const EGLAttrib *>(
+    const EGLAttrib *attribs)
+{
+    return AttributeMap::CreateFromAttribArray(attribs);
+}
+#endif  // defined(ANGLE_IS_64_BIT_CPU)
+
+template <typename PackedT, typename FromT>
+inline typename std::enable_if<!std::is_enum<PackedT>::value,
+                               typename std::remove_reference<PackedT>::type>::type
+PackParam(FromT from)
+{
+    return static_cast<PackedT>(from);
+}
 }  // namespace egl
 
-#define ANGLE_EGL_VALIDATE(THREAD, EP, OBJ, RETVAL, ...)             \
-    do                                                               \
-    {                                                                \
-        const char *epname = "egl" #EP;                              \
-        ValidationContext vctx(THREAD, epname, OBJ);                 \
-        auto ANGLE_LOCAL_VAR = (Validate##EP(&vctx, ##__VA_ARGS__)); \
-        if (!ANGLE_LOCAL_VAR)                                        \
-        {                                                            \
-            return RETVAL;                                           \
-        }                                                            \
+#define ANGLE_EGL_VALIDATE(THREAD, EP, OBJ, RETURN_TYPE, ...)                              \
+    do                                                                                     \
+    {                                                                                      \
+        const char *epname = "egl" #EP;                                                    \
+        ValidationContext vctx(THREAD, epname, OBJ);                                       \
+        auto ANGLE_LOCAL_VAR = (Validate##EP(&vctx, ##__VA_ARGS__));                       \
+        if (!ANGLE_LOCAL_VAR)                                                              \
+        {                                                                                  \
+            return GetDefaultReturnValue<angle::EntryPoint::EGL##EP, RETURN_TYPE>(THREAD); \
+        }                                                                                  \
     } while (0)
 
 #define ANGLE_EGL_VALIDATE_VOID(THREAD, EP, OBJ, ...)                \

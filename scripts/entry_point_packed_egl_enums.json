@@ -31,11 +31,9 @@
         "attrib_list": "const AttributeMap &"
     },
     "eglCreatePlatformPixmapSurface": {
-        "native_pixmap": "EGLNativePixmapType",
         "attrib_list": "const AttributeMap &"
     },
     "eglCreatePlatformWindowSurface": {
-        "native_window": "EGLNativeWindowType",
         "attrib_list": "const AttributeMap &"
     },
     "eglCreateStream": {
