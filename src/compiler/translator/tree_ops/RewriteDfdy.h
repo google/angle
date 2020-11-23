@@ -26,7 +26,7 @@ class TIntermBinary;
 class TIntermTyped;
 class TSymbolTable;
 class TVariable;
-class FlipRotateSpecConst;
+class SpecConst;
 class DriverUniform;
 
 // If fragRotation = nullptr, no rotation will be applied.
@@ -35,7 +35,7 @@ ANGLE_NO_DISCARD bool RewriteDfdy(TCompiler *compiler,
                                   TIntermNode *root,
                                   const TSymbolTable &symbolTable,
                                   int shaderVersion,
-                                  FlipRotateSpecConst *rotationSpecConst,
+                                  SpecConst *specConst,
                                   const DriverUniform *driverUniforms);
 
 }  // namespace sh

@@ -31,7 +31,7 @@ ANGLE_NO_DISCARD bool RewriteInterpolateAtOffset(TCompiler *compiler,
                                                  TIntermNode *root,
                                                  const TSymbolTable &symbolTable,
                                                  int shaderVersion,
-                                                 FlipRotateSpecConst *rotationSpecConst,
+                                                 SpecConst *specConst,
                                                  const DriverUniform *driverUniforms);
 
 }  // namespace sh

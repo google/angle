@@ -346,7 +346,7 @@ const ShCompileOptions SH_ADD_PRE_ROTATION = UINT64_C(1) << 56;
 const ShCompileOptions SH_FORCE_SHADER_PRECISION_HIGHP_TO_MEDIUMP = UINT64_C(1) << 57;
 
 // Allow compiler to use specialization constant to do pre-rotation and y flip.
-const ShCompileOptions SH_USE_ROTATION_SPECIALIZATION_CONSTANT = UINT64_C(1) << 58;
+const ShCompileOptions SH_USE_SPECIALIZATION_CONSTANT = UINT64_C(1) << 58;
 
 // Defines alternate strategies for implementing array index clamping.
 enum ShArrayIndexClampingStrategy

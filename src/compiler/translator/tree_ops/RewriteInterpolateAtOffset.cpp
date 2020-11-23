@@ -13,9 +13,9 @@
 #include "compiler/translator/SymbolTable.h"
 #include "compiler/translator/TranslatorVulkan.h"
 #include "compiler/translator/tree_util/DriverUniform.h"
-#include "compiler/translator/tree_util/FlipRotateSpecConst.h"
 #include "compiler/translator/tree_util/IntermNode_util.h"
 #include "compiler/translator/tree_util/IntermTraverse.h"
+#include "compiler/translator/tree_util/SpecializationConstant.h"
 
 namespace sh
 {
@@ -31,33 +31,33 @@ class Traverser : public TIntermTraverser
                                        TIntermNode *root,
                                        const TSymbolTable &symbolTable,
                                        int ShaderVersion,
-                                       FlipRotateSpecConst *rotationSpecConst,
+                                       SpecConst *specConst,
                                        const DriverUniform *driverUniforms);
 
   private:
     Traverser(TSymbolTable *symbolTable,
               ShCompileOptions compileOptions,
               int shaderVersion,
-              FlipRotateSpecConst *rotationSpecConst,
+              SpecConst *specConst,
               const DriverUniform *driverUniforms);
     bool visitAggregate(Visit visit, TIntermAggregate *node) override;
 
     const TSymbolTable *symbolTable = nullptr;
     const int shaderVersion;
-    FlipRotateSpecConst *mRotationSpecConst = nullptr;
-    const DriverUniform *mDriverUniforms    = nullptr;
-    bool mUsePreRotation                    = false;
+    SpecConst *mRotationSpecConst        = nullptr;
+    const DriverUniform *mDriverUniforms = nullptr;
+    bool mUsePreRotation                 = false;
 };
 
 Traverser::Traverser(TSymbolTable *symbolTable,
                      ShCompileOptions compileOptions,
                      int shaderVersion,
-                     FlipRotateSpecConst *rotationSpecConst,
+                     SpecConst *specConst,
                      const DriverUniform *driverUniforms)
     : TIntermTraverser(true, false, false, symbolTable),
       symbolTable(symbolTable),
       shaderVersion(shaderVersion),
-      mRotationSpecConst(rotationSpecConst),
+      mRotationSpecConst(specConst),
       mDriverUniforms(driverUniforms),
       mUsePreRotation((compileOptions & SH_ADD_PRE_ROTATION) != 0)
 {}
@@ -68,12 +68,11 @@ bool Traverser::Apply(TCompiler *compiler,
                       TIntermNode *root,
                       const TSymbolTable &symbolTable,
                       int shaderVersion,
-                      FlipRotateSpecConst *rotationSpecConst,
+                      SpecConst *specConst,
                       const DriverUniform *driverUniforms)
 {
     TSymbolTable *pSymbolTable = const_cast<TSymbolTable *>(&symbolTable);
-    Traverser traverser(pSymbolTable, compileOptions, shaderVersion, rotationSpecConst,
-                        driverUniforms);
+    Traverser traverser(pSymbolTable, compileOptions, shaderVersion, specConst, driverUniforms);
     root->traverse(&traverser);
     return traverser.updateTree(compiler, root);
 }
@@ -144,7 +143,7 @@ bool RewriteInterpolateAtOffset(TCompiler *compiler,
                                 TIntermNode *root,
                                 const TSymbolTable &symbolTable,
                                 int shaderVersion,
-                                FlipRotateSpecConst *rotationSpecConst,
+                                SpecConst *specConst,
                                 const DriverUniform *driverUniforms)
 {
     // interpolateAtOffset is only valid in GLSL 3.0 and later.
@@ -153,8 +152,8 @@ bool RewriteInterpolateAtOffset(TCompiler *compiler,
         return true;
     }
 
-    return Traverser::Apply(compiler, compileOptions, root, symbolTable, shaderVersion,
-                            rotationSpecConst, driverUniforms);
+    return Traverser::Apply(compiler, compileOptions, root, symbolTable, shaderVersion, specConst,
+                            driverUniforms);
 }
 
 }  // namespace sh

@@ -143,9 +143,10 @@ bool TranslatorMetal::translate(TIntermBlock *root,
                                  getNameMap(), &getSymbolTable(), getShaderType(),
                                  getShaderVersion(), getOutputType(), false, true, compileOptions);
 
+    SpecConstMetal specConst(&getSymbolTable(), compileOptions);
     DriverUniformMetal driverUniforms;
-    if (!TranslatorVulkan::translateImpl(root, compileOptions, perfDiagnostics, &driverUniforms,
-                                         &outputGLSL))
+    if (!TranslatorVulkan::translateImpl(root, compileOptions, perfDiagnostics, &specConst,
+                                         &driverUniforms, &outputGLSL))
     {
         return false;
     }

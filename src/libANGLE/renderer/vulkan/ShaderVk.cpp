@@ -75,7 +75,7 @@ std::shared_ptr<WaitableCompileEvent> ShaderVk::compile(const gl::Context *conte
     // Let compiler use specialized constant for pre-rotation.
     if (!contextVk->getFeatures().forceDriverUniformOverSpecConst.enabled)
     {
-        compileOptions |= SH_USE_ROTATION_SPECIALIZATION_CONSTANT;
+        compileOptions |= SH_USE_SPECIALIZATION_CONSTANT;
     }
 
     if (contextVk->getFeatures().enablePreRotateSurfaces.enabled ||

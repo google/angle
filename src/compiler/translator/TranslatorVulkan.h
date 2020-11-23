@@ -18,6 +18,7 @@ namespace sh
 {
 
 class TOutputVulkanGLSL;
+class SpecConst;
 class DriverUniform;
 
 class TranslatorVulkan : public TCompiler
@@ -36,6 +37,7 @@ class TranslatorVulkan : public TCompiler
     ANGLE_NO_DISCARD bool translateImpl(TIntermBlock *root,
                                         ShCompileOptions compileOptions,
                                         PerformanceDiagnostics *perfDiagnostics,
+                                        SpecConst *specConst,
                                         DriverUniform *driverUniforms,
                                         TOutputVulkanGLSL *outputGLSL);
 
