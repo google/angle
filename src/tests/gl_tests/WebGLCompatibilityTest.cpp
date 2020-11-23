@@ -3234,9 +3234,6 @@ TEST_P(WebGLCompatibilityTest, RG32FTextures)
 
 TEST_P(WebGLCompatibilityTest, RGB32FTextures)
 {
-    // TODO(syoussefi): Missing format support.  http://anglebug.com/2898
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-
     constexpr float data[] = {1000.0f, -500.0f, 10.0f, 1.0f};
 
     for (auto extension : FloatingPointTextureExtensions)
@@ -3273,9 +3270,6 @@ TEST_P(WebGLCompatibilityTest, RGBA32FTextures)
 {
     // http://anglebug.com/5357
     ANGLE_SKIP_TEST_IF(IsOpenGL() && IsOSX());
-
-    // TODO(syoussefi): Missing format support.  http://anglebug.com/2898
-    ANGLE_SKIP_TEST_IF(IsVulkan());
 
     constexpr float data[] = {7000.0f, 100.0f, 33.0f, -1.0f};
 
@@ -3716,9 +3710,6 @@ TEST_P(WebGLCompatibilityTest, RGB16FTextures)
 {
     // http://anglebug.com/5357
     ANGLE_SKIP_TEST_IF(IsOpenGL() && IsOSX());
-
-    // TODO(syoussefi): Missing format support.  http://anglebug.com/2898
-    ANGLE_SKIP_TEST_IF(IsVulkan());
 
     ANGLE_SKIP_TEST_IF(IsOzone() && IsIntel());
 
