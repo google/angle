@@ -33,7 +33,7 @@ void GL_APIENTRY UniformMatrix2x3fv(GLint location,
                                     const GLfloat *value)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, gl::EntryPoint::UniformMatrix2x3fv, "glUniformMatrix2x3fv",
+    EVENT(context, GLUniformMatrix2x3fv,
           "context = %d, location = %d, count = %d, transpose = %s, value = 0x%016" PRIxPTR "",
           CID(context), location, count, GLbooleanToString(transpose), (uintptr_t)value);
 
@@ -63,7 +63,7 @@ void GL_APIENTRY UniformMatrix2x4fv(GLint location,
                                     const GLfloat *value)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, gl::EntryPoint::UniformMatrix2x4fv, "glUniformMatrix2x4fv",
+    EVENT(context, GLUniformMatrix2x4fv,
           "context = %d, location = %d, count = %d, transpose = %s, value = 0x%016" PRIxPTR "",
           CID(context), location, count, GLbooleanToString(transpose), (uintptr_t)value);
 
@@ -93,7 +93,7 @@ void GL_APIENTRY UniformMatrix3x2fv(GLint location,
                                     const GLfloat *value)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, gl::EntryPoint::UniformMatrix3x2fv, "glUniformMatrix3x2fv",
+    EVENT(context, GLUniformMatrix3x2fv,
           "context = %d, location = %d, count = %d, transpose = %s, value = 0x%016" PRIxPTR "",
           CID(context), location, count, GLbooleanToString(transpose), (uintptr_t)value);
 
@@ -123,7 +123,7 @@ void GL_APIENTRY UniformMatrix3x4fv(GLint location,
                                     const GLfloat *value)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, gl::EntryPoint::UniformMatrix3x4fv, "glUniformMatrix3x4fv",
+    EVENT(context, GLUniformMatrix3x4fv,
           "context = %d, location = %d, count = %d, transpose = %s, value = 0x%016" PRIxPTR "",
           CID(context), location, count, GLbooleanToString(transpose), (uintptr_t)value);
 
@@ -153,7 +153,7 @@ void GL_APIENTRY UniformMatrix4x2fv(GLint location,
                                     const GLfloat *value)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, gl::EntryPoint::UniformMatrix4x2fv, "glUniformMatrix4x2fv",
+    EVENT(context, GLUniformMatrix4x2fv,
           "context = %d, location = %d, count = %d, transpose = %s, value = 0x%016" PRIxPTR "",
           CID(context), location, count, GLbooleanToString(transpose), (uintptr_t)value);
 
@@ -183,7 +183,7 @@ void GL_APIENTRY UniformMatrix4x3fv(GLint location,
                                     const GLfloat *value)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, gl::EntryPoint::UniformMatrix4x3fv, "glUniformMatrix4x3fv",
+    EVENT(context, GLUniformMatrix4x3fv,
           "context = %d, location = %d, count = %d, transpose = %s, value = 0x%016" PRIxPTR "",
           CID(context), location, count, GLbooleanToString(transpose), (uintptr_t)value);
 

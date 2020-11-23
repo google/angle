@@ -196,7 +196,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
 
     // Record GL API calls for debuggers
     void logEvent(const char *eventString);
-    void endEventLog(gl::EntryPoint entryPoint);
+    void endEventLog(angle::EntryPoint entryPoint);
 
     bool isViewportFlipEnabledForDrawFBO() const;
     bool isViewportFlipEnabledForReadFBO() const;

@@ -52,6 +52,8 @@ void ClipConfigs(const std::vector<const Config *> &filteredConfigs,
 }
 }  // anonymous namespace
 
+#define WGL_EVENT(EP, FMT, ...) EVENT(nullptr, WGL##EP, FMT, __VA_ARGS__)
+
 extern "C" {
 
 // WGL 1.0
@@ -222,7 +224,7 @@ wglGetLayerPaletteEntries(HDC hdc, int iLayerPlane, int iStart, int cEntries, CO
 PROC GL_APIENTRY wglGetProcAddress(LPCSTR lpszProc)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
-    FUNC_EVENT("const char *procname = \"%s\"", lpszProc);
+    WGL_EVENT(GetProcAddress, "const char *procname = \"%s\"", lpszProc);
     egl::Thread *thread = egl::GetCurrentThread();
 
     const ProcEntry *entry =

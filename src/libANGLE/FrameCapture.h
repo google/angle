@@ -96,7 +96,7 @@ class ParamBuffer final : angle::NonCopyable
 
 struct CallCapture
 {
-    CallCapture(gl::EntryPoint entryPointIn, ParamBuffer &&paramsIn);
+    CallCapture(EntryPoint entryPointIn, ParamBuffer &&paramsIn);
     CallCapture(const std::string &customFunctionNameIn, ParamBuffer &&paramsIn);
     ~CallCapture();
 
@@ -105,7 +105,7 @@ struct CallCapture
 
     const char *name() const;
 
-    gl::EntryPoint entryPoint;
+    EntryPoint entryPoint;
     std::string customFunctionName;
     ParamBuffer params;
 };
@@ -171,11 +171,11 @@ class DataCounters final : angle::NonCopyable
     DataCounters();
     ~DataCounters();
 
-    int getAndIncrement(gl::EntryPoint entryPoint, const std::string &paramName);
+    int getAndIncrement(EntryPoint entryPoint, const std::string &paramName);
 
   private:
     // <CallName, ParamName>
-    using Counter = std::pair<gl::EntryPoint, std::string>;
+    using Counter = std::pair<EntryPoint, std::string>;
     std::map<Counter, int> mData;
 };
 

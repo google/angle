@@ -129,7 +129,7 @@ std::mutex &GetDebugMutex()
     return *g_debugMutex;
 }
 
-ScopedPerfEventHelper::ScopedPerfEventHelper(gl::Context *context, gl::EntryPoint entryPoint)
+ScopedPerfEventHelper::ScopedPerfEventHelper(gl::Context *context, angle::EntryPoint entryPoint)
     : mContext(context), mEntryPoint(entryPoint), mFunctionName(nullptr)
 {}
 

@@ -30,7 +30,7 @@ namespace gl
 void GL_APIENTRY BindBuffersBase(GLenum target, GLuint first, GLsizei count, const GLuint *buffers)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, gl::EntryPoint::BindBuffersBase, "glBindBuffersBase",
+    EVENT(context, GLBindBuffersBase,
           "context = %d, target = %s, first = %u, count = %d, buffers = 0x%016" PRIxPTR "",
           CID(context), GLenumToString(GLenumGroup::BufferTargetARB, target), first, count,
           (uintptr_t)buffers);
@@ -61,7 +61,7 @@ void GL_APIENTRY BindBuffersRange(GLenum target,
                                   const GLsizeiptr *sizes)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, gl::EntryPoint::BindBuffersRange, "glBindBuffersRange",
+    EVENT(context, GLBindBuffersRange,
           "context = %d, target = %s, first = %u, count = %d, buffers = 0x%016" PRIxPTR
           ", offsets = 0x%016" PRIxPTR ", sizes = 0x%016" PRIxPTR "",
           CID(context), GLenumToString(GLenumGroup::BufferTargetARB, target), first, count,
@@ -90,7 +90,7 @@ void GL_APIENTRY BindBuffersRange(GLenum target,
 void GL_APIENTRY BindImageTextures(GLuint first, GLsizei count, const GLuint *textures)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, gl::EntryPoint::BindImageTextures, "glBindImageTextures",
+    EVENT(context, GLBindImageTextures,
           "context = %d, first = %u, count = %d, textures = 0x%016" PRIxPTR "", CID(context), first,
           count, (uintptr_t)textures);
 
@@ -114,7 +114,7 @@ void GL_APIENTRY BindImageTextures(GLuint first, GLsizei count, const GLuint *te
 void GL_APIENTRY BindSamplers(GLuint first, GLsizei count, const GLuint *samplers)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, gl::EntryPoint::BindSamplers, "glBindSamplers",
+    EVENT(context, GLBindSamplers,
           "context = %d, first = %u, count = %d, samplers = 0x%016" PRIxPTR "", CID(context), first,
           count, (uintptr_t)samplers);
 
@@ -138,7 +138,7 @@ void GL_APIENTRY BindSamplers(GLuint first, GLsizei count, const GLuint *sampler
 void GL_APIENTRY BindTextures(GLuint first, GLsizei count, const GLuint *textures)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, gl::EntryPoint::BindTextures, "glBindTextures",
+    EVENT(context, GLBindTextures,
           "context = %d, first = %u, count = %d, textures = 0x%016" PRIxPTR "", CID(context), first,
           count, (uintptr_t)textures);
 
@@ -166,7 +166,7 @@ void GL_APIENTRY BindVertexBuffers(GLuint first,
                                    const GLsizei *strides)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, gl::EntryPoint::BindVertexBuffers, "glBindVertexBuffers",
+    EVENT(context, GLBindVertexBuffers,
           "context = %d, first = %u, count = %d, buffers = 0x%016" PRIxPTR
           ", offsets = 0x%016" PRIxPTR ", strides = 0x%016" PRIxPTR "",
           CID(context), first, count, (uintptr_t)buffers, (uintptr_t)offsets, (uintptr_t)strides);
@@ -194,7 +194,7 @@ void GL_APIENTRY BindVertexBuffers(GLuint first,
 void GL_APIENTRY BufferStorage(GLenum target, GLsizeiptr size, const void *data, GLbitfield flags)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, gl::EntryPoint::BufferStorage, "glBufferStorage",
+    EVENT(context, GLBufferStorage,
           "context = %d, target = %s, size = %llu, data = 0x%016" PRIxPTR ", flags = %s",
           CID(context), GLenumToString(GLenumGroup::BufferStorageTarget, target),
           static_cast<unsigned long long>(size), (uintptr_t)data,
@@ -222,7 +222,7 @@ void GL_APIENTRY
 ClearTexImage(GLuint texture, GLint level, GLenum format, GLenum type, const void *data)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, gl::EntryPoint::ClearTexImage, "glClearTexImage",
+    EVENT(context, GLClearTexImage,
           "context = %d, texture = %u, level = %d, format = %s, type = %s, data = 0x%016" PRIxPTR
           "",
           CID(context), texture, level, GLenumToString(GLenumGroup::PixelFormat, format),
@@ -261,7 +261,7 @@ void GL_APIENTRY ClearTexSubImage(GLuint texture,
                                   const void *data)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, gl::EntryPoint::ClearTexSubImage, "glClearTexSubImage",
+    EVENT(context, GLClearTexSubImage,
           "context = %d, texture = %u, level = %d, xoffset = %d, yoffset = %d, zoffset = %d, width "
           "= %d, height = %d, depth = %d, format = %s, type = %s, data = 0x%016" PRIxPTR "",
           CID(context), texture, level, xoffset, yoffset, zoffset, width, height, depth,

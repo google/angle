@@ -34,7 +34,7 @@ void GL_APIENTRY MultiDrawArraysIndirectCount(GLenum mode,
                                               GLsizei stride)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, gl::EntryPoint::MultiDrawArraysIndirectCount, "glMultiDrawArraysIndirectCount",
+    EVENT(context, GLMultiDrawArraysIndirectCount,
           "context = %d, mode = %s, indirect = 0x%016" PRIxPTR
           ", drawcount = %llu, maxdrawcount = %d, stride = %d",
           CID(context), GLenumToString(GLenumGroup::PrimitiveType, mode), (uintptr_t)indirect,
@@ -67,8 +67,7 @@ void GL_APIENTRY MultiDrawElementsIndirectCount(GLenum mode,
                                                 GLsizei stride)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, gl::EntryPoint::MultiDrawElementsIndirectCount,
-          "glMultiDrawElementsIndirectCount",
+    EVENT(context, GLMultiDrawElementsIndirectCount,
           "context = %d, mode = %s, type = %s, indirect = 0x%016" PRIxPTR
           ", drawcount = %llu, maxdrawcount = %d, stride = %d",
           CID(context), GLenumToString(GLenumGroup::PrimitiveType, mode),
@@ -98,8 +97,8 @@ void GL_APIENTRY MultiDrawElementsIndirectCount(GLenum mode,
 void GL_APIENTRY PolygonOffsetClamp(GLfloat factor, GLfloat units, GLfloat clamp)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, gl::EntryPoint::PolygonOffsetClamp, "glPolygonOffsetClamp",
-          "context = %d, factor = %f, units = %f, clamp = %f", CID(context), factor, units, clamp);
+    EVENT(context, GLPolygonOffsetClamp, "context = %d, factor = %f, units = %f, clamp = %f",
+          CID(context), factor, units, clamp);
 
     if (context)
     {
@@ -125,7 +124,7 @@ void GL_APIENTRY SpecializeShader(GLuint shader,
                                   const GLuint *pConstantValue)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, gl::EntryPoint::SpecializeShader, "glSpecializeShader",
+    EVENT(context, GLSpecializeShader,
           "context = %d, shader = %u, pEntryPoint = 0x%016" PRIxPTR
           ", numSpecializationConstants = %u, pConstantIndex = 0x%016" PRIxPTR
           ", pConstantValue = 0x%016" PRIxPTR "",

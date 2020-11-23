@@ -527,14 +527,14 @@ void WriteCppReplayForCall(const CallCapture &call,
 {
     std::ostringstream callOut;
 
-    if (call.entryPoint == gl::EntryPoint::CreateShader ||
-        call.entryPoint == gl::EntryPoint::CreateProgram)
+    if (call.entryPoint == EntryPoint::GLCreateShader ||
+        call.entryPoint == EntryPoint::GLCreateProgram)
     {
         GLuint id = call.params.getReturnValue().value.GLuintVal;
         callOut << "gShaderProgramMap[" << id << "] = ";
     }
 
-    if (call.entryPoint == gl::EntryPoint::FenceSync)
+    if (call.entryPoint == EntryPoint::GLFenceSync)
     {
         GLsync sync = call.params.getReturnValue().value.GLsyncVal;
         callOut << "gSyncMap[" << SyncIndexValue(sync) << "] = ";
@@ -543,8 +543,8 @@ void WriteCppReplayForCall(const CallCapture &call,
     // Depending on how a buffer is mapped, we may need to track its location for readback
     bool trackBufferPointer = false;
 
-    if (call.entryPoint == gl::EntryPoint::MapBufferRange ||
-        call.entryPoint == gl::EntryPoint::MapBufferRangeEXT)
+    if (call.entryPoint == EntryPoint::GLMapBufferRange ||
+        call.entryPoint == EntryPoint::GLMapBufferRangeEXT)
     {
         GLbitfield access =
             call.params.getParam("access", ParamType::TGLbitfield, 3).value.GLbitfieldVal;
@@ -552,8 +552,7 @@ void WriteCppReplayForCall(const CallCapture &call,
         trackBufferPointer = access & GL_MAP_WRITE_BIT;
     }
 
-    if (call.entryPoint == gl::EntryPoint::MapBuffer ||
-        call.entryPoint == gl::EntryPoint::MapBufferOES)
+    if (call.entryPoint == EntryPoint::GLMapBuffer || call.entryPoint == EntryPoint::GLMapBufferOES)
     {
         GLenum access = call.params.getParam("access", ParamType::TGLenum, 1).value.GLenumVal;
 
@@ -1616,7 +1615,7 @@ void MaybeCaptureUpdateResourceIDs(std::vector<CallCapture> *callsOut)
 
     switch (call.entryPoint)
     {
-        case gl::EntryPoint::GenBuffers:
+        case EntryPoint::GLGenBuffers:
         {
             const ParamCapture &buffers =
                 call.params.getParam("buffersPacked", ParamType::TBufferIDPointer, 1);
@@ -1624,7 +1623,7 @@ void MaybeCaptureUpdateResourceIDs(std::vector<CallCapture> *callsOut)
             break;
         }
 
-        case gl::EntryPoint::GenFencesNV:
+        case EntryPoint::GLGenFencesNV:
         {
             const ParamCapture &fences =
                 call.params.getParam("fencesPacked", ParamType::TFenceNVIDPointer, 1);
@@ -1632,8 +1631,8 @@ void MaybeCaptureUpdateResourceIDs(std::vector<CallCapture> *callsOut)
             break;
         }
 
-        case gl::EntryPoint::GenFramebuffers:
-        case gl::EntryPoint::GenFramebuffersOES:
+        case EntryPoint::GLGenFramebuffers:
+        case EntryPoint::GLGenFramebuffersOES:
         {
             const ParamCapture &framebuffers =
                 call.params.getParam("framebuffersPacked", ParamType::TFramebufferIDPointer, 1);
@@ -1641,7 +1640,7 @@ void MaybeCaptureUpdateResourceIDs(std::vector<CallCapture> *callsOut)
             break;
         }
 
-        case gl::EntryPoint::GenProgramPipelines:
+        case EntryPoint::GLGenProgramPipelines:
         {
             const ParamCapture &pipelines =
                 call.params.getParam("pipelinesPacked", ParamType::TProgramPipelineIDPointer, 1);
@@ -1649,8 +1648,8 @@ void MaybeCaptureUpdateResourceIDs(std::vector<CallCapture> *callsOut)
             break;
         }
 
-        case gl::EntryPoint::GenQueries:
-        case gl::EntryPoint::GenQueriesEXT:
+        case EntryPoint::GLGenQueries:
+        case EntryPoint::GLGenQueriesEXT:
         {
             const ParamCapture &queries =
                 call.params.getParam("idsPacked", ParamType::TQueryIDPointer, 1);
@@ -1658,8 +1657,8 @@ void MaybeCaptureUpdateResourceIDs(std::vector<CallCapture> *callsOut)
             break;
         }
 
-        case gl::EntryPoint::GenRenderbuffers:
-        case gl::EntryPoint::GenRenderbuffersOES:
+        case EntryPoint::GLGenRenderbuffers:
+        case EntryPoint::GLGenRenderbuffersOES:
         {
             const ParamCapture &renderbuffers =
                 call.params.getParam("renderbuffersPacked", ParamType::TRenderbufferIDPointer, 1);
@@ -1667,7 +1666,7 @@ void MaybeCaptureUpdateResourceIDs(std::vector<CallCapture> *callsOut)
             break;
         }
 
-        case gl::EntryPoint::GenSamplers:
+        case EntryPoint::GLGenSamplers:
         {
             const ParamCapture &samplers =
                 call.params.getParam("samplersPacked", ParamType::TSamplerIDPointer, 1);
@@ -1675,7 +1674,7 @@ void MaybeCaptureUpdateResourceIDs(std::vector<CallCapture> *callsOut)
             break;
         }
 
-        case gl::EntryPoint::GenSemaphoresEXT:
+        case EntryPoint::GLGenSemaphoresEXT:
         {
             const ParamCapture &semaphores =
                 call.params.getParam("semaphoresPacked", ParamType::TSemaphoreIDPointer, 1);
@@ -1683,7 +1682,7 @@ void MaybeCaptureUpdateResourceIDs(std::vector<CallCapture> *callsOut)
             break;
         }
 
-        case gl::EntryPoint::GenTextures:
+        case EntryPoint::GLGenTextures:
         {
             const ParamCapture &textures =
                 call.params.getParam("texturesPacked", ParamType::TTextureIDPointer, 1);
@@ -1691,7 +1690,7 @@ void MaybeCaptureUpdateResourceIDs(std::vector<CallCapture> *callsOut)
             break;
         }
 
-        case gl::EntryPoint::GenTransformFeedbacks:
+        case EntryPoint::GLGenTransformFeedbacks:
         {
             const ParamCapture &xfbs =
                 call.params.getParam("idsPacked", ParamType::TTransformFeedbackIDPointer, 1);
@@ -1699,8 +1698,8 @@ void MaybeCaptureUpdateResourceIDs(std::vector<CallCapture> *callsOut)
             break;
         }
 
-        case gl::EntryPoint::GenVertexArrays:
-        case gl::EntryPoint::GenVertexArraysOES:
+        case EntryPoint::GLGenVertexArrays:
+        case EntryPoint::GLGenVertexArraysOES:
         {
             const ParamCapture &vertexArrays =
                 call.params.getParam("arraysPacked", ParamType::TVertexArrayIDPointer, 1);
@@ -3351,28 +3350,28 @@ void CaptureMidExecutionSetup(const gl::Context *context,
     replayState.setBufferBinding(context, gl::BufferBinding::Array, nullptr);
 }
 
-bool SkipCall(gl::EntryPoint entryPoint)
+bool SkipCall(EntryPoint entryPoint)
 {
     switch (entryPoint)
     {
-        case gl::EntryPoint::DebugMessageCallback:
-        case gl::EntryPoint::DebugMessageCallbackKHR:
-        case gl::EntryPoint::DebugMessageControl:
-        case gl::EntryPoint::DebugMessageControlKHR:
-        case gl::EntryPoint::DebugMessageInsert:
-        case gl::EntryPoint::DebugMessageInsertKHR:
-        case gl::EntryPoint::GetDebugMessageLog:
-        case gl::EntryPoint::GetDebugMessageLogKHR:
-        case gl::EntryPoint::GetObjectLabelKHR:
-        case gl::EntryPoint::GetObjectPtrLabelKHR:
-        case gl::EntryPoint::GetPointervKHR:
-        case gl::EntryPoint::InsertEventMarkerEXT:
-        case gl::EntryPoint::ObjectLabelKHR:
-        case gl::EntryPoint::ObjectPtrLabelKHR:
-        case gl::EntryPoint::PopDebugGroupKHR:
-        case gl::EntryPoint::PopGroupMarkerEXT:
-        case gl::EntryPoint::PushDebugGroupKHR:
-        case gl::EntryPoint::PushGroupMarkerEXT:
+        case EntryPoint::GLDebugMessageCallback:
+        case EntryPoint::GLDebugMessageCallbackKHR:
+        case EntryPoint::GLDebugMessageControl:
+        case EntryPoint::GLDebugMessageControlKHR:
+        case EntryPoint::GLDebugMessageInsert:
+        case EntryPoint::GLDebugMessageInsertKHR:
+        case EntryPoint::GLGetDebugMessageLog:
+        case EntryPoint::GLGetDebugMessageLogKHR:
+        case EntryPoint::GLGetObjectLabelKHR:
+        case EntryPoint::GLGetObjectPtrLabelKHR:
+        case EntryPoint::GLGetPointervKHR:
+        case EntryPoint::GLInsertEventMarkerEXT:
+        case EntryPoint::GLObjectLabelKHR:
+        case EntryPoint::GLObjectPtrLabelKHR:
+        case EntryPoint::GLPopDebugGroupKHR:
+        case EntryPoint::GLPopGroupMarkerEXT:
+        case EntryPoint::GLPushDebugGroupKHR:
+        case EntryPoint::GLPushGroupMarkerEXT:
             // Purposefully skip KHR_debug and EXT_debug_marker entry points
             // There is no need to capture these for replaying a trace in our harness
             return true;
@@ -3502,12 +3501,12 @@ ParamCapture &ParamBuffer::getClientArrayPointerParameter()
     return mParamCaptures[mClientArrayDataParam];
 }
 
-CallCapture::CallCapture(gl::EntryPoint entryPointIn, ParamBuffer &&paramsIn)
+CallCapture::CallCapture(EntryPoint entryPointIn, ParamBuffer &&paramsIn)
     : entryPoint(entryPointIn), params(std::move(paramsIn))
 {}
 
 CallCapture::CallCapture(const std::string &customFunctionNameIn, ParamBuffer &&paramsIn)
-    : entryPoint(gl::EntryPoint::Invalid),
+    : entryPoint(EntryPoint::GLInvalid),
       customFunctionName(customFunctionNameIn),
       params(std::move(paramsIn))
 {}
@@ -3529,13 +3528,13 @@ CallCapture &CallCapture::operator=(CallCapture &&other)
 
 const char *CallCapture::name() const
 {
-    if (entryPoint == gl::EntryPoint::Invalid)
+    if (entryPoint == EntryPoint::GLInvalid)
     {
         ASSERT(!customFunctionName.empty());
         return customFunctionName.c_str();
     }
 
-    return gl::GetEntryPointName(entryPoint);
+    return angle::GetEntryPointName(entryPoint);
 }
 
 ReplayContext::ReplayContext(size_t readBufferSizebytes,
@@ -3656,7 +3655,7 @@ void FrameCapture::captureCompressedTextureData(const gl::Context *context, cons
     int depthParamOffset   = -1;
     switch (call.entryPoint)
     {
-        case gl::EntryPoint::CompressedTexSubImage3D:
+        case EntryPoint::GLCompressedTexSubImage3D:
             xoffsetParamOffset = 2;
             yoffsetParamOffset = 3;
             zoffsetParamOffset = 4;
@@ -3665,20 +3664,20 @@ void FrameCapture::captureCompressedTextureData(const gl::Context *context, cons
             depthParamOffset   = 7;
             dataParamOffset    = 10;
             break;
-        case gl::EntryPoint::CompressedTexImage3D:
+        case EntryPoint::GLCompressedTexImage3D:
             widthParamOffset  = 3;
             heightParamOffset = 4;
             depthParamOffset  = 5;
             dataParamOffset   = 8;
             break;
-        case gl::EntryPoint::CompressedTexSubImage2D:
+        case EntryPoint::GLCompressedTexSubImage2D:
             xoffsetParamOffset = 2;
             yoffsetParamOffset = 3;
             widthParamOffset   = 4;
             heightParamOffset  = 5;
             dataParamOffset    = 8;
             break;
-        case gl::EntryPoint::CompressedTexImage2D:
+        case EntryPoint::GLCompressedTexImage2D:
             widthParamOffset  = 3;
             heightParamOffset = 4;
             dataParamOffset   = 7;
@@ -3847,7 +3846,7 @@ void FrameCapture::maybeOverrideEntryPoint(const gl::Context *context, CallCaptu
 {
     switch (call.entryPoint)
     {
-        case gl::EntryPoint::EGLImageTargetTexture2DOES:
+        case EntryPoint::GLEGLImageTargetTexture2DOES:
         {
             // We don't support reading EGLImages. Instead, just pull from a tiny null texture.
             // TODO (anglebug.com/4964): Read back the image data and populate the texture.
@@ -3856,7 +3855,7 @@ void FrameCapture::maybeOverrideEntryPoint(const gl::Context *context, CallCaptu
                                         1, 1, GL_RGBA, GL_UNSIGNED_BYTE, pixelData.data());
             break;
         }
-        case gl::EntryPoint::EGLImageTargetRenderbufferStorageOES:
+        case EntryPoint::GLEGLImageTargetRenderbufferStorageOES:
         {
             UNIMPLEMENTED();
             break;
@@ -3870,7 +3869,7 @@ void FrameCapture::maybeCapturePreCallUpdates(const gl::Context *context, CallCa
 {
     switch (call.entryPoint)
     {
-        case gl::EntryPoint::VertexAttribPointer:
+        case EntryPoint::GLVertexAttribPointer:
         {
             // Get array location
             GLuint index = call.params.getParam("index", ParamType::TGLuint, 0).value.GLuintVal;
@@ -3886,7 +3885,7 @@ void FrameCapture::maybeCapturePreCallUpdates(const gl::Context *context, CallCa
             break;
         }
 
-        case gl::EntryPoint::DeleteBuffers:
+        case EntryPoint::GLDeleteBuffers:
         {
             GLsizei count = call.params.getParam("n", ParamType::TGLsizei, 0).value.GLsizeiVal;
             const gl::BufferID *bufferIDs =
@@ -3909,7 +3908,7 @@ void FrameCapture::maybeCapturePreCallUpdates(const gl::Context *context, CallCa
             break;
         }
 
-        case gl::EntryPoint::GenBuffers:
+        case EntryPoint::GLGenBuffers:
         {
             GLsizei count = call.params.getParam("n", ParamType::TGLsizei, 0).value.GLsizeiVal;
             const gl::BufferID *bufferIDs =
@@ -3926,7 +3925,7 @@ void FrameCapture::maybeCapturePreCallUpdates(const gl::Context *context, CallCa
             break;
         }
 
-        case gl::EntryPoint::DrawArrays:
+        case EntryPoint::GLDrawArrays:
         {
             if (context->getStateCache().hasAnyActiveClientAttrib())
             {
@@ -3940,7 +3939,7 @@ void FrameCapture::maybeCapturePreCallUpdates(const gl::Context *context, CallCa
             break;
         }
 
-        case gl::EntryPoint::DrawElements:
+        case EntryPoint::GLDrawElements:
         {
             if (context->getStateCache().hasAnyActiveClientAttrib())
             {
@@ -3976,7 +3975,7 @@ void FrameCapture::maybeCapturePreCallUpdates(const gl::Context *context, CallCa
             break;
         }
 
-        case gl::EntryPoint::CompileShader:
+        case EntryPoint::GLCompileShader:
         {
             // Refresh the cached shader sources.
             gl::ShaderProgramID shaderID =
@@ -3988,7 +3987,7 @@ void FrameCapture::maybeCapturePreCallUpdates(const gl::Context *context, CallCa
             break;
         }
 
-        case gl::EntryPoint::LinkProgram:
+        case EntryPoint::GLLinkProgram:
         {
             // Refresh the cached program sources.
             gl::ShaderProgramID programID =
@@ -4000,23 +3999,23 @@ void FrameCapture::maybeCapturePreCallUpdates(const gl::Context *context, CallCa
             break;
         }
 
-        case gl::EntryPoint::CompressedTexImage1D:
-        case gl::EntryPoint::CompressedTexSubImage1D:
+        case EntryPoint::GLCompressedTexImage1D:
+        case EntryPoint::GLCompressedTexSubImage1D:
         {
             UNIMPLEMENTED();
             break;
         }
 
-        case gl::EntryPoint::CompressedTexImage2D:
-        case gl::EntryPoint::CompressedTexImage3D:
-        case gl::EntryPoint::CompressedTexSubImage2D:
-        case gl::EntryPoint::CompressedTexSubImage3D:
+        case EntryPoint::GLCompressedTexImage2D:
+        case EntryPoint::GLCompressedTexImage3D:
+        case EntryPoint::GLCompressedTexSubImage2D:
+        case EntryPoint::GLCompressedTexSubImage3D:
         {
             captureCompressedTextureData(context, call);
             break;
         }
 
-        case gl::EntryPoint::DeleteTextures:
+        case EntryPoint::GLDeleteTextures:
         {
             // Free any TextureLevelDataMap entries being tracked for this texture
             // This is to cover the scenario where a texture has been created, its
@@ -4040,8 +4039,8 @@ void FrameCapture::maybeCapturePreCallUpdates(const gl::Context *context, CallCa
             break;
         }
 
-        case gl::EntryPoint::MapBuffer:
-        case gl::EntryPoint::MapBufferOES:
+        case EntryPoint::GLMapBuffer:
+        case EntryPoint::GLMapBufferOES:
         {
             gl::BufferBinding target =
                 call.params.getParam("targetPacked", ParamType::TBufferBinding, 0)
@@ -4062,14 +4061,14 @@ void FrameCapture::maybeCapturePreCallUpdates(const gl::Context *context, CallCa
             break;
         }
 
-        case gl::EntryPoint::UnmapNamedBuffer:
+        case EntryPoint::GLUnmapNamedBuffer:
         {
             UNIMPLEMENTED();
             break;
         }
 
-        case gl::EntryPoint::MapBufferRange:
-        case gl::EntryPoint::MapBufferRangeEXT:
+        case EntryPoint::GLMapBufferRange:
+        case EntryPoint::GLMapBufferRangeEXT:
         {
             GLintptr offset =
                 call.params.getParam("offset", ParamType::TGLintptr, 1).value.GLintptrVal;
@@ -4087,8 +4086,8 @@ void FrameCapture::maybeCapturePreCallUpdates(const gl::Context *context, CallCa
             break;
         }
 
-        case gl::EntryPoint::UnmapBuffer:
-        case gl::EntryPoint::UnmapBufferOES:
+        case EntryPoint::GLUnmapBuffer:
+        case EntryPoint::GLUnmapBufferOES:
         {
             // See if we need to capture the buffer contents
             captureMappedBufferSnapshot(context, call);
@@ -4102,8 +4101,8 @@ void FrameCapture::maybeCapturePreCallUpdates(const gl::Context *context, CallCa
             break;
         }
 
-        case gl::EntryPoint::BufferData:
-        case gl::EntryPoint::BufferSubData:
+        case EntryPoint::GLBufferData:
+        case EntryPoint::GLBufferSubData:
         {
             gl::BufferBinding target =
                 call.params.getParam("targetPacked", ParamType::TBufferBinding, 0)
@@ -4160,7 +4159,7 @@ void FrameCapture::maybeCapturePostCallUpdates(const gl::Context *context)
     const CallCapture &lastCall = mFrameCalls.back();
     switch (lastCall.entryPoint)
     {
-        case gl::EntryPoint::LinkProgram:
+        case EntryPoint::GLLinkProgram:
         {
             const ParamCapture &param =
                 lastCall.params.getParam("programPacked", ParamType::TShaderProgramID, 0);
@@ -4169,10 +4168,10 @@ void FrameCapture::maybeCapturePostCallUpdates(const gl::Context *context)
             CaptureUpdateUniformLocations(program, &mFrameCalls);
             break;
         }
-        case gl::EntryPoint::UseProgram:
+        case EntryPoint::GLUseProgram:
             CaptureUpdateCurrentProgram(lastCall, &mFrameCalls);
             break;
-        case gl::EntryPoint::DeleteProgram:
+        case EntryPoint::GLDeleteProgram:
         {
             const ParamCapture &param =
                 lastCall.params.getParam("programPacked", ParamType::TShaderProgramID, 0);
@@ -4421,7 +4420,7 @@ DataCounters::DataCounters() = default;
 
 DataCounters::~DataCounters() = default;
 
-int DataCounters::getAndIncrement(gl::EntryPoint entryPoint, const std::string &paramName)
+int DataCounters::getAndIncrement(EntryPoint entryPoint, const std::string &paramName)
 {
     Counter counterKey = {entryPoint, paramName};
     return mData[counterKey]++;
@@ -4546,7 +4545,7 @@ void FrameCapture::replay(gl::Context *context)
     {
         INFO() << "frame index: " << mFrameIndex << " " << call.name();
 
-        if (call.entryPoint == gl::EntryPoint::Invalid)
+        if (call.entryPoint == EntryPoint::GLInvalid)
         {
             if (call.customFunctionName == "UpdateClientArrayPointer")
             {

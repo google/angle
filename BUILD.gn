@@ -289,13 +289,6 @@ config("angle_no_cfi_unrelated_cast") {
   }
 }
 
-angle_source_set("angle_system_utils") {
-  sources = angle_system_utils_sources
-  if (is_linux || is_chromeos) {
-    libs = [ "dl" ]
-  }
-}
-
 angle_source_set("xxhash") {
   sources = xxhash_sources
   if (is_clang) {
@@ -322,13 +315,16 @@ angle_static_library("angle_common") {
 
   public_deps = [
     ":angle_abseil",
-    ":angle_system_utils",
     ":angle_version",
     ":includes",
   ]
   public_configs += [ ":angle_common_config" ]
   if (angle_has_build && use_fuzzing_engine) {
     all_dependent_configs = [ ":angle_disable_pool_alloc" ]
+  }
+
+  if (is_linux || is_chromeos) {
+    libs = [ "dl" ]
   }
 
   if (is_android && (angle_enable_gl || angle_enable_vulkan)) {
@@ -1053,7 +1049,6 @@ angle_shared_library("libEGL") {
 
   deps = [
     ":angle_common",
-    ":angle_system_utils",
     ":angle_version",
     ":libEGL_egl_loader",
   ]

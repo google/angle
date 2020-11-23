@@ -741,7 +741,8 @@ angle::Result Context11::insertEventMarker(GLsizei length, const char *marker)
 
 angle::Result Context11::pushGroupMarker(GLsizei length, const char *marker)
 {
-    mRenderer->getAnnotator()->beginEvent(nullptr, gl::EntryPoint::Begin, marker, marker);
+    mRenderer->getAnnotator()->beginEvent(nullptr, angle::EntryPoint::GLPushGroupMarkerEXT, marker,
+                                          marker);
     mMarkerStack.push(std::string(marker));
     return angle::Result::Continue;
 }
@@ -753,7 +754,8 @@ angle::Result Context11::popGroupMarker()
     {
         marker = mMarkerStack.top().c_str();
         mMarkerStack.pop();
-        mRenderer->getAnnotator()->endEvent(nullptr, marker, gl::EntryPoint::Begin);
+        mRenderer->getAnnotator()->endEvent(nullptr, marker,
+                                            angle::EntryPoint::GLPopGroupMarkerEXT);
     }
     return angle::Result::Continue;
 }

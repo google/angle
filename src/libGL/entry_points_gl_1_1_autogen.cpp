@@ -30,7 +30,7 @@ namespace gl
 GLboolean GL_APIENTRY AreTexturesResident(GLsizei n, const GLuint *textures, GLboolean *residences)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, gl::EntryPoint::AreTexturesResident, "glAreTexturesResident",
+    EVENT(context, GLAreTexturesResident,
           "context = %d, n = %d, textures = 0x%016" PRIxPTR ", residences = 0x%016" PRIxPTR "",
           CID(context), n, (uintptr_t)textures, (uintptr_t)residences);
 
@@ -46,7 +46,8 @@ GLboolean GL_APIENTRY AreTexturesResident(GLsizei n, const GLuint *textures, GLb
         }
         else
         {
-            returnValue = GetDefaultReturnValue<EntryPoint::AreTexturesResident, GLboolean>();
+            returnValue =
+                GetDefaultReturnValue<angle::EntryPoint::GLAreTexturesResident, GLboolean>();
         }
         ANGLE_CAPTURE(AreTexturesResident, isCallValid, context, n, textures, residences,
                       returnValue);
@@ -54,7 +55,7 @@ GLboolean GL_APIENTRY AreTexturesResident(GLsizei n, const GLuint *textures, GLb
     else
     {
         GenerateContextLostErrorOnCurrentGlobalContext();
-        returnValue = GetDefaultReturnValue<EntryPoint::AreTexturesResident, GLboolean>();
+        returnValue = GetDefaultReturnValue<angle::EntryPoint::GLAreTexturesResident, GLboolean>();
     }
     return returnValue;
 }
@@ -62,8 +63,7 @@ GLboolean GL_APIENTRY AreTexturesResident(GLsizei n, const GLuint *textures, GLb
 void GL_APIENTRY ArrayElement(GLint i)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, gl::EntryPoint::ArrayElement, "glArrayElement", "context = %d, i = %d",
-          CID(context), i);
+    EVENT(context, GLArrayElement, "context = %d, i = %d", CID(context), i);
 
     if (context)
     {
@@ -84,8 +84,7 @@ void GL_APIENTRY ArrayElement(GLint i)
 void GL_APIENTRY BindTexture(GLenum target, GLuint texture)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, gl::EntryPoint::BindTexture, "glBindTexture",
-          "context = %d, target = %s, texture = %u", CID(context),
+    EVENT(context, GLBindTexture, "context = %d, target = %s, texture = %u", CID(context),
           GLenumToString(GLenumGroup::TextureTarget, target), texture);
 
     if (context)
@@ -110,7 +109,7 @@ void GL_APIENTRY BindTexture(GLenum target, GLuint texture)
 void GL_APIENTRY ColorPointer(GLint size, GLenum type, GLsizei stride, const void *pointer)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, gl::EntryPoint::ColorPointer, "glColorPointer",
+    EVENT(context, GLColorPointer,
           "context = %d, size = %d, type = %s, stride = %d, pointer = 0x%016" PRIxPTR "",
           CID(context), size, GLenumToString(GLenumGroup::ColorPointerType, type), stride,
           (uintptr_t)pointer);
@@ -142,7 +141,7 @@ void GL_APIENTRY CopyTexImage1D(GLenum target,
                                 GLint border)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, gl::EntryPoint::CopyTexImage1D, "glCopyTexImage1D",
+    EVENT(context, GLCopyTexImage1D,
           "context = %d, target = %s, level = %d, internalformat = %s, x = %d, y = %d, width = %d, "
           "border = %d",
           CID(context), GLenumToString(GLenumGroup::TextureTarget, target), level,
@@ -177,7 +176,7 @@ void GL_APIENTRY CopyTexImage2D(GLenum target,
                                 GLint border)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, gl::EntryPoint::CopyTexImage2D, "glCopyTexImage2D",
+    EVENT(context, GLCopyTexImage2D,
           "context = %d, target = %s, level = %d, internalformat = %s, x = %d, y = %d, width = %d, "
           "height = %d, border = %d",
           CID(context), GLenumToString(GLenumGroup::TextureTarget, target), level,
@@ -208,7 +207,7 @@ void GL_APIENTRY
 CopyTexSubImage1D(GLenum target, GLint level, GLint xoffset, GLint x, GLint y, GLsizei width)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, gl::EntryPoint::CopyTexSubImage1D, "glCopyTexSubImage1D",
+    EVENT(context, GLCopyTexSubImage1D,
           "context = %d, target = %s, level = %d, xoffset = %d, x = %d, y = %d, width = %d",
           CID(context), GLenumToString(GLenumGroup::TextureTarget, target), level, xoffset, x, y,
           width);
@@ -241,7 +240,7 @@ void GL_APIENTRY CopyTexSubImage2D(GLenum target,
                                    GLsizei height)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, gl::EntryPoint::CopyTexSubImage2D, "glCopyTexSubImage2D",
+    EVENT(context, GLCopyTexSubImage2D,
           "context = %d, target = %s, level = %d, xoffset = %d, yoffset = %d, x = %d, y = %d, "
           "width = %d, height = %d",
           CID(context), GLenumToString(GLenumGroup::TextureTarget, target), level, xoffset, yoffset,
@@ -270,9 +269,8 @@ void GL_APIENTRY CopyTexSubImage2D(GLenum target,
 void GL_APIENTRY DeleteTextures(GLsizei n, const GLuint *textures)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, gl::EntryPoint::DeleteTextures, "glDeleteTextures",
-          "context = %d, n = %d, textures = 0x%016" PRIxPTR "", CID(context), n,
-          (uintptr_t)textures);
+    EVENT(context, GLDeleteTextures, "context = %d, n = %d, textures = 0x%016" PRIxPTR "",
+          CID(context), n, (uintptr_t)textures);
 
     if (context)
     {
@@ -295,8 +293,8 @@ void GL_APIENTRY DeleteTextures(GLsizei n, const GLuint *textures)
 void GL_APIENTRY DisableClientState(GLenum array)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, gl::EntryPoint::DisableClientState, "glDisableClientState",
-          "context = %d, array = %s", CID(context), GLenumToString(GLenumGroup::EnableCap, array));
+    EVENT(context, GLDisableClientState, "context = %d, array = %s", CID(context),
+          GLenumToString(GLenumGroup::EnableCap, array));
 
     if (context)
     {
@@ -319,8 +317,7 @@ void GL_APIENTRY DisableClientState(GLenum array)
 void GL_APIENTRY DrawArrays(GLenum mode, GLint first, GLsizei count)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, gl::EntryPoint::DrawArrays, "glDrawArrays",
-          "context = %d, mode = %s, first = %d, count = %d", CID(context),
+    EVENT(context, GLDrawArrays, "context = %d, mode = %s, first = %d, count = %d", CID(context),
           GLenumToString(GLenumGroup::PrimitiveType, mode), first, count);
 
     if (context)
@@ -344,7 +341,7 @@ void GL_APIENTRY DrawArrays(GLenum mode, GLint first, GLsizei count)
 void GL_APIENTRY DrawElements(GLenum mode, GLsizei count, GLenum type, const void *indices)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, gl::EntryPoint::DrawElements, "glDrawElements",
+    EVENT(context, GLDrawElements,
           "context = %d, mode = %s, count = %d, type = %s, indices = 0x%016" PRIxPTR "",
           CID(context), GLenumToString(GLenumGroup::PrimitiveType, mode), count,
           GLenumToString(GLenumGroup::DrawElementsType, type), (uintptr_t)indices);
@@ -371,9 +368,8 @@ void GL_APIENTRY DrawElements(GLenum mode, GLsizei count, GLenum type, const voi
 void GL_APIENTRY EdgeFlagPointer(GLsizei stride, const void *pointer)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, gl::EntryPoint::EdgeFlagPointer, "glEdgeFlagPointer",
-          "context = %d, stride = %d, pointer = 0x%016" PRIxPTR "", CID(context), stride,
-          (uintptr_t)pointer);
+    EVENT(context, GLEdgeFlagPointer, "context = %d, stride = %d, pointer = 0x%016" PRIxPTR "",
+          CID(context), stride, (uintptr_t)pointer);
 
     if (context)
     {
@@ -395,8 +391,8 @@ void GL_APIENTRY EdgeFlagPointer(GLsizei stride, const void *pointer)
 void GL_APIENTRY EnableClientState(GLenum array)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, gl::EntryPoint::EnableClientState, "glEnableClientState",
-          "context = %d, array = %s", CID(context), GLenumToString(GLenumGroup::EnableCap, array));
+    EVENT(context, GLEnableClientState, "context = %d, array = %s", CID(context),
+          GLenumToString(GLenumGroup::EnableCap, array));
 
     if (context)
     {
@@ -419,9 +415,8 @@ void GL_APIENTRY EnableClientState(GLenum array)
 void GL_APIENTRY GenTextures(GLsizei n, GLuint *textures)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, gl::EntryPoint::GenTextures, "glGenTextures",
-          "context = %d, n = %d, textures = 0x%016" PRIxPTR "", CID(context), n,
-          (uintptr_t)textures);
+    EVENT(context, GLGenTextures, "context = %d, n = %d, textures = 0x%016" PRIxPTR "",
+          CID(context), n, (uintptr_t)textures);
 
     if (context)
     {
@@ -444,9 +439,8 @@ void GL_APIENTRY GenTextures(GLsizei n, GLuint *textures)
 void GL_APIENTRY GetPointerv(GLenum pname, void **params)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, gl::EntryPoint::GetPointerv, "glGetPointerv",
-          "context = %d, pname = %s, params = 0x%016" PRIxPTR "", CID(context),
-          GLenumToString(GLenumGroup::GetPointervPName, pname), (uintptr_t)params);
+    EVENT(context, GLGetPointerv, "context = %d, pname = %s, params = 0x%016" PRIxPTR "",
+          CID(context), GLenumToString(GLenumGroup::GetPointervPName, pname), (uintptr_t)params);
 
     if (context)
     {
@@ -468,7 +462,7 @@ void GL_APIENTRY GetPointerv(GLenum pname, void **params)
 void GL_APIENTRY IndexPointer(GLenum type, GLsizei stride, const void *pointer)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, gl::EntryPoint::IndexPointer, "glIndexPointer",
+    EVENT(context, GLIndexPointer,
           "context = %d, type = %s, stride = %d, pointer = 0x%016" PRIxPTR "", CID(context),
           GLenumToString(GLenumGroup::IndexPointerType, type), stride, (uintptr_t)pointer);
 
@@ -492,7 +486,7 @@ void GL_APIENTRY IndexPointer(GLenum type, GLsizei stride, const void *pointer)
 void GL_APIENTRY Indexub(GLubyte c)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, gl::EntryPoint::Indexub, "glIndexub", "context = %d, c = %d", CID(context), c);
+    EVENT(context, GLIndexub, "context = %d, c = %d", CID(context), c);
 
     if (context)
     {
@@ -513,8 +507,7 @@ void GL_APIENTRY Indexub(GLubyte c)
 void GL_APIENTRY Indexubv(const GLubyte *c)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, gl::EntryPoint::Indexubv, "glIndexubv", "context = %d, c = 0x%016" PRIxPTR "",
-          CID(context), (uintptr_t)c);
+    EVENT(context, GLIndexubv, "context = %d, c = 0x%016" PRIxPTR "", CID(context), (uintptr_t)c);
 
     if (context)
     {
@@ -535,7 +528,7 @@ void GL_APIENTRY Indexubv(const GLubyte *c)
 void GL_APIENTRY InterleavedArrays(GLenum format, GLsizei stride, const void *pointer)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, gl::EntryPoint::InterleavedArrays, "glInterleavedArrays",
+    EVENT(context, GLInterleavedArrays,
           "context = %d, format = %s, stride = %d, pointer = 0x%016" PRIxPTR "", CID(context),
           GLenumToString(GLenumGroup::InterleavedArrayFormat, format), stride, (uintptr_t)pointer);
 
@@ -559,8 +552,7 @@ void GL_APIENTRY InterleavedArrays(GLenum format, GLsizei stride, const void *po
 GLboolean GL_APIENTRY IsTexture(GLuint texture)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, gl::EntryPoint::IsTexture, "glIsTexture", "context = %d, texture = %u",
-          CID(context), texture);
+    EVENT(context, GLIsTexture, "context = %d, texture = %u", CID(context), texture);
 
     GLboolean returnValue;
     if (context)
@@ -574,14 +566,14 @@ GLboolean GL_APIENTRY IsTexture(GLuint texture)
         }
         else
         {
-            returnValue = GetDefaultReturnValue<EntryPoint::IsTexture, GLboolean>();
+            returnValue = GetDefaultReturnValue<angle::EntryPoint::GLIsTexture, GLboolean>();
         }
         ANGLE_CAPTURE(IsTexture, isCallValid, context, texturePacked, returnValue);
     }
     else
     {
         GenerateContextLostErrorOnCurrentGlobalContext();
-        returnValue = GetDefaultReturnValue<EntryPoint::IsTexture, GLboolean>();
+        returnValue = GetDefaultReturnValue<angle::EntryPoint::GLIsTexture, GLboolean>();
     }
     return returnValue;
 }
@@ -589,7 +581,7 @@ GLboolean GL_APIENTRY IsTexture(GLuint texture)
 void GL_APIENTRY NormalPointer(GLenum type, GLsizei stride, const void *pointer)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, gl::EntryPoint::NormalPointer, "glNormalPointer",
+    EVENT(context, GLNormalPointer,
           "context = %d, type = %s, stride = %d, pointer = 0x%016" PRIxPTR "", CID(context),
           GLenumToString(GLenumGroup::NormalPointerType, type), stride, (uintptr_t)pointer);
 
@@ -614,8 +606,8 @@ void GL_APIENTRY NormalPointer(GLenum type, GLsizei stride, const void *pointer)
 void GL_APIENTRY PolygonOffset(GLfloat factor, GLfloat units)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, gl::EntryPoint::PolygonOffset, "glPolygonOffset",
-          "context = %d, factor = %f, units = %f", CID(context), factor, units);
+    EVENT(context, GLPolygonOffset, "context = %d, factor = %f, units = %f", CID(context), factor,
+          units);
 
     if (context)
     {
@@ -637,8 +629,7 @@ void GL_APIENTRY PolygonOffset(GLfloat factor, GLfloat units)
 void GL_APIENTRY PopClientAttrib()
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, gl::EntryPoint::PopClientAttrib, "glPopClientAttrib", "context = %d",
-          CID(context));
+    EVENT(context, GLPopClientAttrib, "context = %d", CID(context));
 
     if (context)
     {
@@ -659,7 +650,7 @@ void GL_APIENTRY PopClientAttrib()
 void GL_APIENTRY PrioritizeTextures(GLsizei n, const GLuint *textures, const GLfloat *priorities)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, gl::EntryPoint::PrioritizeTextures, "glPrioritizeTextures",
+    EVENT(context, GLPrioritizeTextures,
           "context = %d, n = %d, textures = 0x%016" PRIxPTR ", priorities = 0x%016" PRIxPTR "",
           CID(context), n, (uintptr_t)textures, (uintptr_t)priorities);
 
@@ -683,8 +674,7 @@ void GL_APIENTRY PrioritizeTextures(GLsizei n, const GLuint *textures, const GLf
 void GL_APIENTRY PushClientAttrib(GLbitfield mask)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, gl::EntryPoint::PushClientAttrib, "glPushClientAttrib",
-          "context = %d, mask = %s", CID(context),
+    EVENT(context, GLPushClientAttrib, "context = %d, mask = %s", CID(context),
           GLbitfieldToString(GLenumGroup::ClientAttribMask, mask).c_str());
 
     if (context)
@@ -706,7 +696,7 @@ void GL_APIENTRY PushClientAttrib(GLbitfield mask)
 void GL_APIENTRY TexCoordPointer(GLint size, GLenum type, GLsizei stride, const void *pointer)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, gl::EntryPoint::TexCoordPointer, "glTexCoordPointer",
+    EVENT(context, GLTexCoordPointer,
           "context = %d, size = %d, type = %s, stride = %d, pointer = 0x%016" PRIxPTR "",
           CID(context), size, GLenumToString(GLenumGroup::TexCoordPointerType, type), stride,
           (uintptr_t)pointer);
@@ -738,7 +728,7 @@ void GL_APIENTRY TexSubImage1D(GLenum target,
                                const void *pixels)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, gl::EntryPoint::TexSubImage1D, "glTexSubImage1D",
+    EVENT(context, GLTexSubImage1D,
           "context = %d, target = %s, level = %d, xoffset = %d, width = %d, format = %s, type = "
           "%s, pixels = 0x%016" PRIxPTR "",
           CID(context), GLenumToString(GLenumGroup::TextureTarget, target), level, xoffset, width,
@@ -775,7 +765,7 @@ void GL_APIENTRY TexSubImage2D(GLenum target,
                                const void *pixels)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, gl::EntryPoint::TexSubImage2D, "glTexSubImage2D",
+    EVENT(context, GLTexSubImage2D,
           "context = %d, target = %s, level = %d, xoffset = %d, yoffset = %d, width = %d, height = "
           "%d, format = %s, type = %s, pixels = 0x%016" PRIxPTR "",
           CID(context), GLenumToString(GLenumGroup::TextureTarget, target), level, xoffset, yoffset,
@@ -806,7 +796,7 @@ void GL_APIENTRY TexSubImage2D(GLenum target,
 void GL_APIENTRY VertexPointer(GLint size, GLenum type, GLsizei stride, const void *pointer)
 {
     Context *context = GetValidGlobalContext();
-    EVENT(context, gl::EntryPoint::VertexPointer, "glVertexPointer",
+    EVENT(context, GLVertexPointer,
           "context = %d, size = %d, type = %s, stride = %d, pointer = 0x%016" PRIxPTR "",
           CID(context), size, GLenumToString(GLenumGroup::VertexPointerType, type), stride,
           (uintptr_t)pointer);

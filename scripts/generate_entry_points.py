@@ -95,7 +95,7 @@ TEMPLATE_ENTRY_POINTS_ENUM_HEADER = """\
 #ifndef COMMON_ENTRYPOINTSENUM_AUTOGEN_H_
 #define COMMON_ENTRYPOINTSENUM_AUTOGEN_H_
 
-namespace gl
+namespace angle
 {{
 enum class EntryPoint
 {{
@@ -103,13 +103,13 @@ enum class EntryPoint
 }};
 
 const char *GetEntryPointName(EntryPoint ep);
-}}  // namespace gl
+}}  // namespace angle
 #endif  // COMMON_ENTRY_POINTS_ENUM_AUTOGEN_H_
 """
 
 TEMPLATE_ENTRY_POINTS_NAME_CASE = """\
         case EntryPoint::{enum}:
-            return "gl{enum}";"""
+            return "{cmd}";"""
 
 TEMPLATE_ENTRY_POINTS_ENUM_SOURCE = """\
 // GENERATED FILE - DO NOT EDIT.
@@ -126,7 +126,7 @@ TEMPLATE_ENTRY_POINTS_ENUM_SOURCE = """\
 
 #include "common/debug.h"
 
-namespace gl
+namespace angle
 {{
 const char *GetEntryPointName(EntryPoint ep)
 {{
@@ -138,7 +138,7 @@ const char *GetEntryPointName(EntryPoint ep)
             return "error";
     }}
 }}
-}}  // namespace gl
+}}  // namespace angle
 """
 
 TEMPLATE_LIB_ENTRY_POINT_SOURCE = """\
@@ -163,7 +163,7 @@ TEMPLATE_ENTRY_POINT_NO_RETURN = """\
 void GL_APIENTRY {name}{explicit_context_suffix}({explicit_context_param}{explicit_context_comma}{params})
 {{
     Context *context = {context_getter};
-    {event_comment}EVENT(context, gl::EntryPoint::{name}, "gl{name}", "context = %d{comma_if_needed}{format_params}", CID(context){comma_if_needed}{pass_params});
+    {event_comment}EVENT(context, GL{name}, "context = %d{comma_if_needed}{format_params}", CID(context){comma_if_needed}{pass_params});
 
     if ({valid_context_check})
     {{{assert_explicit_context}{packed_gl_enum_conversions}
@@ -186,7 +186,7 @@ TEMPLATE_ENTRY_POINT_WITH_RETURN = """\
 {return_type}GL_APIENTRY {name}{explicit_context_suffix}({explicit_context_param}{explicit_context_comma}{params})
 {{
     Context *context = {context_getter};
-    {event_comment}EVENT(context, gl::EntryPoint::{name}, "gl{name}", "context = %d{comma_if_needed}{format_params}", CID(context){comma_if_needed}{pass_params});
+    {event_comment}EVENT(context, GL{name}, "context = %d{comma_if_needed}{format_params}", CID(context){comma_if_needed}{pass_params});
 
     {return_type} returnValue;
     if ({valid_context_check})
@@ -199,14 +199,14 @@ TEMPLATE_ENTRY_POINT_WITH_RETURN = """\
         }}
         else
         {{
-            returnValue = GetDefaultReturnValue<EntryPoint::{name}, {return_type}>();
-        }}
+            returnValue = GetDefaultReturnValue<angle::EntryPoint::GL{name}, {return_type}>();
+    }}
         ANGLE_CAPTURE({name}, isCallValid, {validate_params}, returnValue);
     }}
     else
     {{
         {constext_lost_error_generator}
-        returnValue = GetDefaultReturnValue<EntryPoint::{name}, {return_type}>();
+        returnValue = GetDefaultReturnValue<angle::EntryPoint::GL{name}, {return_type}>();
     }}
     return returnValue;
 }}
@@ -380,7 +380,7 @@ CallCapture Capture{short_name}({params_with_type}, {return_value_type_original}
     InitParamValue(ParamType::T{return_value_type_custom}, returnValue, &returnValueCapture.value);
     paramBuffer.addReturnValue(std::move(returnValueCapture));
 
-    return CallCapture(gl::EntryPoint::{short_name}, std::move(paramBuffer));
+    return CallCapture(angle::EntryPoint::GL{short_name}, std::move(paramBuffer));
 }}
 """
 
@@ -391,7 +391,7 @@ CallCapture Capture{short_name}({params_with_type})
 
     {parameter_captures}
 
-    return CallCapture(gl::EntryPoint::{short_name}, std::move(paramBuffer));
+    return CallCapture(angle::EntryPoint::GL{short_name}, std::move(paramBuffer));
 }}
 """
 
@@ -458,7 +458,7 @@ void FrameCapture::ReplayCall(gl::Context *context,
 
 """
 
-TEMPLATE_CAPTURE_REPLAY_CALL_CASE = """case gl::EntryPoint::{entry_point}:
+TEMPLATE_CAPTURE_REPLAY_CALL_CASE = """case angle::EntryPoint::GL{entry_point}:
     context->{context_call}({param_value_access});break;"""
 
 STATIC_CAST_TO_DICT = {
@@ -940,7 +940,7 @@ def script_relative(path):
 
 
 def strip_api_prefix(cmd_name):
-    return cmd_name.lstrip("egl")
+    return cmd_name.lstrip("wegl")
 
 
 def format_entry_point_decl(api, cmd_name, proto, params, is_explicit_context):
@@ -2498,20 +2498,21 @@ def main():
     write_context_api_decls(CONTEXT_HEADER, gldecls, "gl")
 
     # Entry point enum
-    cmd_names = ["Invalid"
-                ] + [strip_api_prefix(cmd) for cmd in xml.all_cmd_names.get_all_commands()]
+    egl_cmd_names = [strip_api_prefix(cmd) for cmd in eglxml.all_cmd_names.get_all_commands()]
+    gles_cmd_names = ["Invalid"
+                     ] + [strip_api_prefix(cmd) for cmd in xml.all_cmd_names.get_all_commands()]
     gl_cmd_names = [strip_api_prefix(cmd) for cmd in glxml.all_cmd_names.get_all_commands()]
-    cmd_names.extend([cmd for cmd in gl_cmd_names if cmd not in cmd_names])
-    sorted_cmd_names = sorted(cmd_names)
-
-    # Ensure there are no duplicates
-    assert (len(sorted_cmd_names) == len(set(sorted_cmd_names))), "Duplicate command names found"
+    wgl_cmd_names = [strip_api_prefix(cmd) for cmd in wglxml.all_cmd_names.get_all_commands()]
+    unsorted_enums = [("EGL%s" % cmd, "egl%s" % cmd) for cmd in egl_cmd_names] + [
+        ("GL%s" % cmd, "gl%s" % cmd) for cmd in set(gles_cmd_names + gl_cmd_names)
+    ] + [("WGL%s" % cmd, "wgl%s" % cmd) for cmd in wgl_cmd_names]
+    all_enums = sorted(unsorted_enums)
 
     entry_points_enum_header = TEMPLATE_ENTRY_POINTS_ENUM_HEADER.format(
         script_name=os.path.basename(sys.argv[0]),
         data_source_name="gl.xml and gl_angle_ext.xml",
         lib="GL/GLES",
-        entry_points_list=",\n".join(["    " + cmd for cmd in sorted_cmd_names]))
+        entry_points_list=",\n".join(["    " + enum for (enum, _) in all_enums]))
 
     entry_points_enum_header_path = path_to("common", "entry_points_enum_autogen.h")
     with open(entry_points_enum_header_path, "w") as out:
@@ -2519,7 +2520,7 @@ def main():
         out.close()
 
     entry_points_cases = [
-        TEMPLATE_ENTRY_POINTS_NAME_CASE.format(enum=cmd) for cmd in sorted_cmd_names
+        TEMPLATE_ENTRY_POINTS_NAME_CASE.format(enum=enum, cmd=cmd) for (enum, cmd) in all_enums
     ]
     entry_points_enum_source = TEMPLATE_ENTRY_POINTS_ENUM_SOURCE.format(
         script_name=os.path.basename(sys.argv[0]),

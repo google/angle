@@ -2465,7 +2465,7 @@ void ContextVk::logEvent(const char *eventString)
     mComputeDirtyBits.set(DIRTY_BIT_EVENT_LOG);
 }
 
-void ContextVk::endEventLog(gl::EntryPoint entryPoint)
+void ContextVk::endEventLog(angle::EntryPoint entryPoint)
 {
     ASSERT(mRenderPassCommands);
     mRenderPassCommands->getCommandBuffer().endDebugUtilsLabelEXT();

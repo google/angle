@@ -41,6 +41,8 @@ libangle_common_sources = [
   "src/common/platform.h",
   "src/common/string_utils.cpp",
   "src/common/string_utils.h",
+  "src/common/system_utils.cpp",
+  "src/common/system_utils.h",
   "src/common/third_party/base/anglebase/base_export.h",
   "src/common/third_party/base/anglebase/containers/mru_cache.h",
   "src/common/third_party/base/anglebase/logging.h",
@@ -68,24 +70,15 @@ xxhash_sources = [
   "src/common/third_party/xxhash/xxhash.h",
 ]
 
-angle_system_utils_sources = [
-  "src/common/Optional.h",
-  "src/common/angleutils.h",
-  "src/common/debug.h",
-  "src/common/platform.h",
-  "src/common/system_utils.cpp",
-  "src/common/system_utils.h",
-]
-
 if (is_linux || is_chromeos || is_android || is_fuchsia) {
-  angle_system_utils_sources += [
+  libangle_common_sources += [
     "src/common/system_utils_linux.cpp",
     "src/common/system_utils_posix.cpp",
   ]
 }
 
 if (is_mac) {
-  angle_system_utils_sources += [
+  libangle_common_sources += [
     "src/common/apple/SoftLinking.h",
     "src/common/gl/cgl/FunctionsCGL.cpp",
     "src/common/gl/cgl/FunctionsCGL.h",
@@ -95,11 +88,11 @@ if (is_mac) {
 }
 
 if (is_win) {
-  angle_system_utils_sources += [ "src/common/system_utils_win.cpp" ]
+  libangle_common_sources += [ "src/common/system_utils_win.cpp" ]
   if (current_os == "winuwp") {
-    angle_system_utils_sources += [ "src/common/system_utils_winuwp.cpp" ]
+    libangle_common_sources += [ "src/common/system_utils_winuwp.cpp" ]
   } else {
-    angle_system_utils_sources += [ "src/common/system_utils_win32.cpp" ]
+    libangle_common_sources += [ "src/common/system_utils_win32.cpp" ]
   }
 }
 
