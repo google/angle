@@ -269,6 +269,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "b18cf0a0_2a5d5898",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-23T19:32:39Z",
+      "side": 1,
+      "message": "Oh, and suggest putting this in the vk namespace in lieu of the Vk suffix. (Vk suffix is really just for Impl classes like BufferVk that inherits from BufferImpl, etc, RendererVk is an anomaly and I\u0027ll eventually merge it with DisplayVk)",
+      "parentUuid": "92f00c98_5bc17d88",
+      "range": {
+        "startLine": 75,
+        "startChar": 7,
+        "endLine": 75,
+        "endChar": 22
+      },
+      "revId": "3509cfa103a9035a9430f334830b76e04c504a2f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "1223fb61_8305f402",
         "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
         "patchSetId": 9
