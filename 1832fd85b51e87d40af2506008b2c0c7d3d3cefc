@@ -20,6 +20,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "8faad250_94323e59",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 3139,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-23T17:48:33Z",
+      "side": 1,
+      "message": "Previously it was in ProgramExecutableVk, which had a problem when it get called from updateSurfaceRotationDrawFramebuffer that backend state has not synced with front end, and leading to a crash. We could move the implementtaion to ProgramExecutable, but from what I have tried, not simpler at all. ProgramExecutable does not have access to program state that has the usage bit information, unless I cache it there at link time (if people has no objection to cache it there, I am totally happy to do it that way too).",
+      "parentUuid": "c2b52baf_e4ae23ed",
+      "revId": "1832fd85b51e87d40af2506008b2c0c7d3d3cefc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "38ac921a_00d1778c",
         "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
         "patchSetId": 14
@@ -31,6 +49,24 @@
       "writtenOn": "2020-11-23T05:02:31Z",
       "side": 1,
       "message": "Is this an optimization for desktop? It seems to me like this bit is always set given that SH_ADD_PRE_ROTATION is always specified on Android.",
+      "revId": "1832fd85b51e87d40af2506008b2c0c7d3d3cefc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6f4420ee_d78d01e7",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 3152,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-23T17:48:33Z",
+      "side": 1,
+      "message": "Right, it always set on Android, but other platform does not (depends on emulated rotation enabled or not).  You need some kind of rotation check here anyway.",
+      "parentUuid": "38ac921a_00d1778c",
       "revId": "1832fd85b51e87d40af2506008b2c0c7d3d3cefc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
