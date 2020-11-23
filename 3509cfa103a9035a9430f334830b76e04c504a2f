@@ -133,6 +133,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "ae5997cc_c200c44f",
+        "filename": "src/common/debug.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 251,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-23T18:33:01Z",
+      "side": 1,
+      "message": "Let\u0027s remove the extra characters from INFO instead, sound good?",
+      "parentUuid": "dd0f5536_2cae7dc4",
+      "range": {
+        "startLine": 251,
+        "startChar": 0,
+        "endLine": 251,
+        "endChar": 34
+      },
+      "revId": "3509cfa103a9035a9430f334830b76e04c504a2f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "f3b994bf_cd7352e3",
@@ -256,6 +280,24 @@
       "side": 1,
       "message": "Sounds like you and Jamie aren\u0027t on the same page on where this code belongs.  I was almost done with this when he reviewed this.",
       "parentUuid": "1223fb61_8305f402",
+      "revId": "3509cfa103a9035a9430f334830b76e04c504a2f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "159ddf40_2465a2cb",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-23T18:33:01Z",
+      "side": 1,
+      "message": "Well, it\u0027s a fairly tricky class that stores a mutex so I was thinking class. If it weren\u0027t for the mutex it\u0027d be mostly POD.",
+      "parentUuid": "5b3b8d19_1ae8f5fc",
       "revId": "3509cfa103a9035a9430f334830b76e04c504a2f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
