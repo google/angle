@@ -336,10 +336,6 @@
 5370 VULKAN PIXEL2ORXL : dEQP-GLES31.functional.copy_image.non_compressed.*rgba8ui_srgb8_alpha8.*to_renderbuffer = FAIL
 5370 VULKAN PIXEL2ORXL : dEQP-GLES31.functional.copy_image.non_compressed.*srgb8_alpha8_rgba8.*to_renderbuffer = FAIL
 
-// Skip on Pixel2 to reduce the bots test time so that it won't timeout
-172936025 VULKAN PIXEL2ORXL : dEQP-GLES31.functional.copy_image.mixed.viewclass_128_bits_mixed.*.* = SKIP
-172936025 VULKAN PIXEL2ORXL : dEQP-GLES31.functional.copy_image.compressed.viewclass_astc*.*.* = SKIP
-
 // Cannot support a seperate set of fragment shader input when per-sample shading:
 3588 VULKAN ANDROID : dEQP-GLES31.functional.shaders.sample_variables.sample_pos.correctness.multisample_*_1 = FAIL
 3588 VULKAN ANDROID : dEQP-GLES31.functional.shaders.sample_variables.sample_pos.correctness.multisample_*_2 = FAIL

@@ -642,14 +642,6 @@
 // 161540999 PIXEL2ORXL VULKAN : dEQP-GLES3.functional.fragment_ops.random.35 = FAIL
 4344 VULKAN ANDROID : dEQP-GLES3.functional.fragment_ops.random.73 = FAIL
 
-// Failing on the Pixel2.
-172932466 VULKAN PIXEL2ORXL : dEQP-GLES3.functional.shaders.large_constant_arrays.indexing.float_128_vertex = FAIL
-172932466 VULKAN PIXEL2ORXL : dEQP-GLES3.functional.shaders.large_constant_arrays.indexing.float_64_vertex = FAIL
-172932466 VULKAN PIXEL2ORXL : dEQP-GLES3.functional.shaders.large_constant_arrays.indexing.vec4_128_vertex = FAIL
-172932466 VULKAN PIXEL2ORXL : dEQP-GLES3.functional.shaders.large_constant_arrays.indexing.vec4_16_vertex = FAIL
-172932466 VULKAN PIXEL2ORXL : dEQP-GLES3.functional.shaders.large_constant_arrays.indexing.vec4_32_vertex = FAIL
-172932466 VULKAN PIXEL2ORXL : dEQP-GLES3.functional.shaders.large_constant_arrays.indexing.vec4_64_vertex = FAIL
-
 // Fails only with SwiftShader:
 
 // These only fail for a 565 config
