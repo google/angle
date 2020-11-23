@@ -75,6 +75,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "61c4d6c3_5cf1a3f2",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 897,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-23T18:11:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "be0dcf00_16823cea",
+      "range": {
+        "startLine": 897,
+        "startChar": 17,
+        "endLine": 897,
+        "endChar": 20
+      },
+      "revId": "7f56743a4ccf5af6461477a73789b26d2c2d7225",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "da9c1733_561ce88a",
@@ -88,6 +112,30 @@
       "writtenOn": "2020-11-23T17:30:06Z",
       "side": 1,
       "message": "can you place this in RendererVk.cpp? Don\u0027t see why you needed it here.",
+      "range": {
+        "startLine": 897,
+        "startChar": 0,
+        "endLine": 915,
+        "endChar": 1
+      },
+      "revId": "7f56743a4ccf5af6461477a73789b26d2c2d7225",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "edf19e49_4ff80657",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 915,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-23T18:11:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "da9c1733_561ce88a",
       "range": {
         "startLine": 897,
         "startChar": 0,
