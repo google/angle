@@ -35,6 +35,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0ed98896_6e26a91e",
+        "filename": "src/libANGLE/Thread.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-23T13:35:58Z",
+      "side": 1,
+      "message": "Static. We use this in a few places. It\u0027s not in the style guide yet that I can see.",
+      "parentUuid": "c8f5bc42_db5ccf6c",
+      "revId": "598fd02b14f6c471e596528cc108e5b5509dce79",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8947767a_b7ddcbcf",
@@ -48,6 +66,30 @@
       "writtenOn": "2020-11-21T00:16:54Z",
       "side": 1,
       "message": "This looks to be unnecessary since vsnprintf() will null-terminate on its own.",
+      "range": {
+        "startLine": 1119,
+        "startChar": 33,
+        "endLine": 1119,
+        "endChar": 37
+      },
+      "revId": "598fd02b14f6c471e596528cc108e5b5509dce79",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2626e385_a55faa25",
+        "filename": "src/libANGLE/validationEGL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1119,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-23T13:35:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8947767a_b7ddcbcf",
       "range": {
         "startLine": 1119,
         "startChar": 33,
