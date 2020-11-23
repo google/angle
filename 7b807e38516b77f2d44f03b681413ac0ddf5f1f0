@@ -16,6 +16,29 @@
       "message": "I plan to follow up with a clean up CL to rename FlipRotateSpeConst.cpp to SpecializationConst.cpp.\n",
       "revId": "7b807e38516b77f2d44f03b681413ac0ddf5f1f0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "924a0b45_13a17479",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 960,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-23T21:31:28Z",
+      "side": 1,
+      "message": "I have changed transition bit from covering 4 bytes to 8 bytes. Not sure whats the better approach here. Let me know if I should do differently. Maybe I should split it to a separate CL.",
+      "range": {
+        "startLine": 951,
+        "startChar": 4,
+        "endLine": 960,
+        "endChar": 55
+      },
+      "revId": "7b807e38516b77f2d44f03b681413ac0ddf5f1f0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
