@@ -237,6 +237,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c4924880_ef5321a9",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2776,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-23T18:25:29Z",
+      "side": 1,
+      "message": "Yeah, I thought it used to work too, exactly as you described it.",
+      "parentUuid": "a8e5408d_c531a89a",
+      "revId": "292298372ae5f0e4ab0427f3a05e4d0409951462",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f091facd_26506ec3",

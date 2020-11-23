@@ -69,6 +69,23 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5737cc3a_88f03b0d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-23T18:25:29Z",
+      "side": 1,
+      "message": "It was minutes away from landing.  I\u0027m on vacation, but this seemed so close).\n\nI\u0027d like agreement from Jamie and Shabi on whether to use a class with the methods in the class, or a struct accessed by anonymous functions in the cpp file.",
+      "revId": "3509cfa103a9035a9430f334830b76e04c504a2f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6e75e28e_20a267e0",
@@ -82,6 +99,30 @@
       "writtenOn": "2020-11-23T17:53:57Z",
       "side": 1,
       "message": "can you get the same result without adding a new logging level?",
+      "range": {
+        "startLine": 251,
+        "startChar": 0,
+        "endLine": 251,
+        "endChar": 34
+      },
+      "revId": "3509cfa103a9035a9430f334830b76e04c504a2f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dd0f5536_2cae7dc4",
+        "filename": "src/common/debug.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 251,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-23T18:25:29Z",
+      "side": 1,
+      "message": "No.  This has been discussed in other comments.  Two issues:\n\n1) In the Android world, this is \"verbose\" data.\n\n2) Too many characters added to the output.  By default, Android prefixes every line of every message with 44 characters.  ANGLE\u0027s INFO adds another 37 characters (always the following, which is useless in Android logcat: \"INFO: Debug.cpp:183 (insertMessage): \").  EVENT only adds 7.  I\u0027m adding around 80 characters per callback.  I\u0027m also trying to look at code next to the logcat output.\n\nI originally bypassed ANGLE\u0027s mechanism all together.  I almost added another severity (VERBOSE) that would add 0 characters.  I tried to compromise by using the VERBOSE() macro with the EVENT severity.",
+      "parentUuid": "6e75e28e_20a267e0",
       "range": {
         "startLine": 251,
         "startChar": 0,
@@ -197,6 +238,24 @@
       "writtenOn": "2020-11-21T03:23:21Z",
       "side": 1,
       "message": "The functions don\u0027t need to be part of the struct. They should be anonymous in the cpp file that get passed a const \u0026.",
+      "revId": "3509cfa103a9035a9430f334830b76e04c504a2f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5b3b8d19_1ae8f5fc",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-23T18:25:29Z",
+      "side": 1,
+      "message": "Sounds like you and Jamie aren\u0027t on the same page on where this code belongs.  I was almost done with this when he reviewed this.",
+      "parentUuid": "1223fb61_8305f402",
       "revId": "3509cfa103a9035a9430f334830b76e04c504a2f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
