@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "72982c01_c60eee36",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2020-11-24T04:02:10Z",
+      "side": 1,
+      "message": "TBR\n\nPassing runs:\nperf - https://chromium-swarm.appspot.com/task?id\u003d5010f5ef20465310\nwhite_box - https://chromium-swarm.appspot.com/task?id\u003d50113126cfecbd10",
+      "revId": "3714d58e3041329e8751a4da9e91a7a6f25a9701",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
