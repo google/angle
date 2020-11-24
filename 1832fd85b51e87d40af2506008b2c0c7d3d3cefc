@@ -18,6 +18,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6c05d908_09f88ecc",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 14
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-24T17:39:31Z",
+      "side": 1,
+      "message": "The rotation specConst is not just for rotation, it also encoded YFlip information there as well. The yFlip is not that niche though. If shader is not using gl_FragCoord/gl_PointCoord/dFdx, then yFlip is doesn\u0027t matter. Then if you use the program on FBO and backbuffer, before this CL, it will miss the ANGLE\u0027s cache and ask driver for a pipeline recompile, versus with this CL it will have identical desc and avoid calling into driver.",
+      "parentUuid": "98bf63f8_d371873e",
+      "revId": "1832fd85b51e87d40af2506008b2c0c7d3d3cefc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c2b52baf_e4ae23ed",
