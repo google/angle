@@ -16,6 +16,52 @@
       "message": "Correctness: Checking mPhysicalDeviceFeatures.depthClamp before enabling the workaround, since that\u0027s a prerequisite.\n\nClarity: There is now more checking when using the workaround. Those checks are redundant as far as I can tell, but maybe they help with code clarity?\n",
       "revId": "81c3b2c65018dad2b8c27a45424bd80a53fe7a74",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d4f865af_1077932c",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1511,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-24T17:32:50Z",
+      "side": 1,
+      "message": "You can remove this now :)",
+      "range": {
+        "startLine": 1511,
+        "startChar": 10,
+        "endLine": 1511,
+        "endChar": 73
+      },
+      "revId": "81c3b2c65018dad2b8c27a45424bd80a53fe7a74",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fcc163fc_0b111fe4",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1829,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-24T17:32:50Z",
+      "side": 1,
+      "message": "and this",
+      "range": {
+        "startLine": 1829,
+        "startChar": 8,
+        "endLine": 1829,
+        "endChar": 72
+      },
+      "revId": "81c3b2c65018dad2b8c27a45424bd80a53fe7a74",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }

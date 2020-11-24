@@ -51,6 +51,24 @@
       "parentUuid": "c2c7e22e_43c01eb4",
       "revId": "8768dddb8a393878bde02bd87d5bc0d07dda0e72",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0ae30439_83cb7258",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1829,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-24T17:32:50Z",
+      "side": 1,
+      "message": "1. Yes. mPhysicalDeviceFeatures.depthClamp is correct, getFeatures().depthClamping.enabled was nonesense!\n\n2. No need for redundant checks!",
+      "parentUuid": "dd498b0f_f589d167",
+      "revId": "8768dddb8a393878bde02bd87d5bc0d07dda0e72",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
