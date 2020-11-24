@@ -51,6 +51,41 @@
       "parentUuid": "e13d160b_98c13d67",
       "revId": "4c918f9713442304da830810c158fd17e44ea4a7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a9a00ce8_ce4e7af0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 14
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-24T01:08:12Z",
+      "side": 1,
+      "message": "Yeah I was thinking the same thing. Viewport and scissor we could probably always treat as dynamic state and that would free up a lot of bits.\n\nI was also thinking that maybe we could use 16-bit ints for some of these values as it may be impossible to overflow MAX_USHORT.",
+      "parentUuid": "deb4bb3a_0935f8b1",
+      "revId": "4c918f9713442304da830810c158fd17e44ea4a7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "186a244f_92da5c80",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 14
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-24T01:08:12Z",
+      "side": 1,
+      "message": "The VkFramebuffer is already ",
+      "revId": "4c918f9713442304da830810c158fd17e44ea4a7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
