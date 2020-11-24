@@ -199,7 +199,14 @@ Error Surface::initialize(const Display *display)
     {
         GLenum internalFormat =
             static_cast<GLenum>(mState.attributes.get(EGL_TEXTURE_INTERNAL_FORMAT_ANGLE));
-        GLenum type  = static_cast<GLenum>(mState.attributes.get(EGL_TEXTURE_TYPE_ANGLE));
+        GLenum type = static_cast<GLenum>(mState.attributes.get(EGL_TEXTURE_TYPE_ANGLE));
+
+        // GL_RGBA + GL_HALF_FLOAT is not a valid format/type combination in GLES like it is in
+        // desktop GL. Adjust the frontend format to be sized RGBA16F.
+        if (internalFormat == GL_RGBA && type == GL_HALF_FLOAT)
+        {
+            internalFormat = GL_RGBA16F;
+        }
         mColorFormat = gl::Format(internalFormat, type);
     }
     if (mBuftype == EGL_D3D_TEXTURE_ANGLE)
