@@ -135,6 +135,30 @@
       },
       "revId": "1da64872e5d54417c6af33f1525aa74af319ca0c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5e946a96_2eb170b7",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-24T21:17:48Z",
+      "side": 1,
+      "message": "I think you might be worrying too much about the read-only case. We will define a NONE store op for this case in the extension IIRC. Right now we technically emit invalid Vulkan for read-only loops.\n\nMaybe what we should investigate is a way to suppress VVL warnings for these cases?",
+      "parentUuid": "09eea04b_b2084b3f",
+      "range": {
+        "startLine": 171,
+        "startChar": 28,
+        "endLine": 171,
+        "endChar": 36
+      },
+      "revId": "1da64872e5d54417c6af33f1525aa74af319ca0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
