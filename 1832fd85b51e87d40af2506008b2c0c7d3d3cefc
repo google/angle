@@ -53,6 +53,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3aa42683_5fd93ebc",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 3139,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-24T05:55:39Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "8faad250_94323e59",
+      "revId": "1832fd85b51e87d40af2506008b2c0c7d3d3cefc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "38ac921a_00d1778c",
@@ -84,6 +102,24 @@
       "side": 1,
       "message": "Right, it always set on Android, but other platform does not (depends on emulated rotation enabled or not).  You need some kind of rotation check here anyway.",
       "parentUuid": "38ac921a_00d1778c",
+      "revId": "1832fd85b51e87d40af2506008b2c0c7d3d3cefc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f24d7518_ac2debd6",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 3152,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-24T05:55:39Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "6f4420ee_d78d01e7",
       "revId": "1832fd85b51e87d40af2506008b2c0c7d3d3cefc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
