@@ -112,6 +112,14 @@ MultisampledRenderToTextureBenchmark::MultisampledRenderToTextureBenchmark()
     {
         mSkipTest = true;
     }
+
+    // http://anglebug.com/5380
+    if (IsLinux() && IsAMD() &&
+        GetParam().eglParameters.renderer == EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE &&
+        GetParam().multiplePasses && GetParam().withDepthStencil)
+    {
+        mSkipTest = true;
+    }
 }
 
 void MultisampledRenderToTextureBenchmark::initializeBenchmark()

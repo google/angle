@@ -2083,6 +2083,8 @@ TEST_P(VulkanPerformanceCounterTest, RenderToTextureDepthStencilRenderbufferShou
 {
     // http://anglebug.com/5083
     ANGLE_SKIP_TEST_IF(IsWindows() && IsAMD() && IsVulkan());
+    // http://anglebug.com/5380
+    ANGLE_SKIP_TEST_IF(IsLinux() && IsAMD() && IsVulkan());
 
     // http://crbug.com/1134286
     ANGLE_SKIP_TEST_IF(IsWindows7() && IsNVIDIA() && IsVulkan());
