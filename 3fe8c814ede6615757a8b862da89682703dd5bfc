@@ -16,6 +16,29 @@
       "message": "Run should be green. See PS#3, which has one Android failure due to a driver bug, which is worked around (and incidentally optimized) in PS#5.",
       "revId": "3fe8c814ede6615757a8b862da89682703dd5bfc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cf236e75_fc86b4a4",
+        "filename": "src/libANGLE/renderer/vulkan/UtilsVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2481,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-24T21:23:27Z",
+      "side": 1,
+      "message": "It\u0027d be nice if you could express these barriers via the resource access APIs you added, for maximal consistency.",
+      "range": {
+        "startLine": 2481,
+        "startChar": 19,
+        "endLine": 2481,
+        "endChar": 32
+      },
+      "revId": "3fe8c814ede6615757a8b862da89682703dd5bfc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
