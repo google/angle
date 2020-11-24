@@ -31,12 +31,9 @@ namespace vk
 
 namespace
 {
-
-constexpr int32_t kDynamicScissorSentinel = std::numeric_limits<int32_t>::min();
-
-bool IsScissorStateDynamic(const VkRect2D &scissor)
+bool IsScissorStateDynamic(const PackedScissor &scissor)
 {
-    return scissor.offset.x == kDynamicScissorSentinel;
+    return scissor.x == kDynamicScissorSentinel;
 }
 
 uint8_t PackGLBlendOp(GLenum blendOp)
@@ -1596,10 +1593,10 @@ void GraphicsPipelineDesc::initDefaults()
     mViewport.minDepth = 0.0f;
     mViewport.maxDepth = 1.0f;
 
-    mScissor.offset.x      = 0;
-    mScissor.offset.y      = 0;
-    mScissor.extent.width  = 0;
-    mScissor.extent.height = 0;
+    mScissor.x      = 0;
+    mScissor.y      = 0;
+    mScissor.width  = 0;
+    mScissor.height = 0;
 }
 
 angle::Result GraphicsPipelineDesc::initializePipeline(
@@ -1771,8 +1768,21 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
     viewportState.flags         = 0;
     viewportState.viewportCount = 1;
     viewportState.pViewports    = &viewport;
-    viewportState.scissorCount  = 1;
-    viewportState.pScissors     = IsScissorStateDynamic(mScissor) ? nullptr : &mScissor;
+
+    viewportState.scissorCount = 1;
+    VkRect2D scissor;
+    if (IsScissorStateDynamic(mScissor))
+    {
+        viewportState.pScissors = nullptr;
+    }
+    else
+    {
+        viewportState.pScissors = &scissor;
+        scissor.offset.x        = mScissor.x;
+        scissor.offset.y        = mScissor.y;
+        scissor.extent.width    = mScissor.width;
+        scissor.extent.height   = mScissor.height;
+    }
 
     const PackedRasterizationAndMultisampleStateInfo &rasterAndMS =
         mRasterizationAndMultisampleStateInfo;
@@ -2433,25 +2443,32 @@ void GraphicsPipelineDesc::updateDepthRange(GraphicsPipelineTransitionBits *tran
 
 void GraphicsPipelineDesc::setDynamicScissor()
 {
-    mScissor.offset.x      = kDynamicScissorSentinel;
-    mScissor.offset.y      = 0;
-    mScissor.extent.width  = 0;
-    mScissor.extent.height = 0;
+    mScissor.x      = kDynamicScissorSentinel;
+    mScissor.y      = 0;
+    mScissor.width  = 0;
+    mScissor.height = 0;
 }
 
 void GraphicsPipelineDesc::setScissor(const VkRect2D &scissor)
 {
-    mScissor = scissor;
+    ASSERT(scissor.offset.x < kDynamicScissorSentinel &&
+           scissor.offset.y < kDynamicScissorSentinel &&
+           scissor.extent.width < kDynamicScissorSentinel &&
+           scissor.extent.height < kDynamicScissorSentinel);
+    SetBitField(mScissor.x, scissor.offset.x);
+    SetBitField(mScissor.y, scissor.offset.y);
+    SetBitField(mScissor.width, scissor.extent.width);
+    SetBitField(mScissor.height, scissor.extent.height);
 }
 
 void GraphicsPipelineDesc::updateScissor(GraphicsPipelineTransitionBits *transition,
                                          const VkRect2D &scissor)
 {
-    mScissor = scissor;
-    transition->set(ANGLE_GET_TRANSITION_BIT(mScissor, offset.x));
-    transition->set(ANGLE_GET_TRANSITION_BIT(mScissor, offset.y));
-    transition->set(ANGLE_GET_TRANSITION_BIT(mScissor, extent.width));
-    transition->set(ANGLE_GET_TRANSITION_BIT(mScissor, extent.height));
+    setScissor(scissor);
+    transition->set(ANGLE_GET_TRANSITION_BIT(mScissor, x));
+    transition->set(ANGLE_GET_TRANSITION_BIT(mScissor, y));
+    transition->set(ANGLE_GET_TRANSITION_BIT(mScissor, width));
+    transition->set(ANGLE_GET_TRANSITION_BIT(mScissor, height));
 }
 
 void GraphicsPipelineDesc::updateSubpass(GraphicsPipelineTransitionBits *transition,
