@@ -61,7 +61,7 @@ class UniformBlockTranslatedToStructuredBufferTraverser : public TIntermTraverse
 
 UniformBlockTranslatedToStructuredBufferTraverser::
     UniformBlockTranslatedToStructuredBufferTraverser()
-    : TIntermTraverser(true, false, false)
+    : TIntermTraverser(true, true, false)
 {}
 
 static bool IsSupportedTypeForStructuredBuffer(const TType &type)

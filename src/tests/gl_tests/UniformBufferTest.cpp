@@ -3002,19 +3002,25 @@ TEST_P(UniformBlockWithOneLargeArrayMemberTest, MemberTypeIsFloat)
 // Test to transfer a uniform block large array member as an actual parameter to a function.
 TEST_P(UniformBlockWithOneLargeArrayMemberTest, MemberAsActualParameter)
 {
+    ANGLE_SKIP_TEST_IF(IsAdreno());
+
     constexpr char kVS[] = R"(#version 300 es
 layout(location=0) in vec3 a_position;
 
-uniform UBO{
-    mat4x4 buf[90];
+layout(std140) uniform UBO1{
+    mat4x4 buf1[90];
 } instance;
 
-vec4 test(mat4x4[90] para, vec3 pos){
-    return para[0] * vec4(pos, 1.0);
+layout(std140) uniform UBO2{
+    mat4x4 buf2[90];
+};
+
+vec4 test(mat4x4[90] para1, mat4x4[90] para2, vec3 pos){
+    return para1[0] * para2[0] * vec4(pos, 1.0);
 }
 
 void main(void){
-    gl_Position = test(instance.buf, a_position);
+    gl_Position = test(instance.buf1, buf2, a_position);
 })";
 
     constexpr char kFS[] = R"(#version 300 es
@@ -3039,15 +3045,15 @@ TEST_P(UniformBlockWithOneLargeArrayMemberTest, MemberArrayOperations)
     constexpr char kVS[] = R"(#version 300 es
 layout(location=0) in vec3 a_position;
 
-uniform UBO1{
+layout(std140) uniform UBO1{
     mat4x4 buf1[90];
 };
 
-uniform UBO2{
+layout(std140) uniform UBO2{
     mat4x4 buf2[90];
 };
 
-uniform UBO3{
+layout(std140) uniform UBO3{
     mat4x4 buf[90];
 } instance;
 
