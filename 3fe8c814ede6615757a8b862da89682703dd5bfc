@@ -1,6 +1,46 @@
 {
   "comments": [
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "e1b7e5f6_33cd4165",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1359667
+      },
+      "writtenOn": "2020-11-24T23:26:45Z",
+      "side": 1,
+      "message": "this",
+      "range": {
+        "startLine": 17,
+        "startChar": 11,
+        "endLine": 17,
+        "endChar": 15
+      },
+      "revId": "3fe8c814ede6615757a8b862da89682703dd5bfc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dd4f925e_26688f96",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1359667
+      },
+      "writtenOn": "2020-11-24T23:26:45Z",
+      "side": 1,
+      "message": "Any tests for this change? Maybe the deqp expectations file needs to be updated as well?",
+      "revId": "3fe8c814ede6615757a8b862da89682703dd5bfc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "3ea337b0_f5bdfc9a",
@@ -14,6 +54,52 @@
       "writtenOn": "2020-11-24T19:57:04Z",
       "side": 1,
       "message": "Run should be green. See PS#3, which has one Android failure due to a driver bug, which is worked around (and incidentally optimized) in PS#5.",
+      "revId": "3fe8c814ede6615757a8b862da89682703dd5bfc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4996c15d_4a8b2d2e",
+        "filename": "src/libANGLE/renderer/vulkan/UtilsVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2323,
+      "author": {
+        "id": 1359667
+      },
+      "writtenOn": "2020-11-24T23:26:45Z",
+      "side": 1,
+      "message": "Why do we need to align it to 4? Won\u0027t the bufferhelper do this for us when calling vkGetBufferMemoryRequirements to get requirements?",
+      "range": {
+        "startLine": 2323,
+        "startChar": 84,
+        "endLine": 2323,
+        "endChar": 86
+      },
+      "revId": "3fe8c814ede6615757a8b862da89682703dd5bfc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1d56d18d_5e333ca4",
+        "filename": "src/libANGLE/renderer/vulkan/UtilsVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2384,
+      "author": {
+        "id": 1359667
+      },
+      "writtenOn": "2020-11-24T23:26:45Z",
+      "side": 1,
+      "message": "Should we assert that the intended src and dst formats are one of these?",
+      "range": {
+        "startLine": 2383,
+        "startChar": 68,
+        "endLine": 2384,
+        "endChar": 19
+      },
       "revId": "3fe8c814ede6615757a8b862da89682703dd5bfc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
