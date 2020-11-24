@@ -1429,6 +1429,9 @@ TEST_P(VertexAttributeTest, DrawArraysWithUnalignedShortBufferOffset)
 // draw.
 TEST_P(VertexAttributeTest, DrawArraysWithShortBufferOffsetNotMultipleOf4)
 {
+    // http://anglebug.com/5399
+    ANGLE_SKIP_TEST_IF(IsWindows() && IsAMD() && IsVulkan());
+
     initBasicProgram();
     glUseProgram(mProgram);
 

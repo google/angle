@@ -921,6 +921,9 @@ TEST_P(BlitFramebufferANGLETest, BlitStencil)
     // http://anglebug.com/4919
     ANGLE_SKIP_TEST_IF(IsIntel() && IsMetal());
 
+    // http://anglebug.com/5396
+    ANGLE_SKIP_TEST_IF(IsAMD() && IsD3D9());
+
     glBindFramebuffer(GL_FRAMEBUFFER, mUserFBO);
 
     glClearColor(0.0, 1.0, 0.0, 1.0);

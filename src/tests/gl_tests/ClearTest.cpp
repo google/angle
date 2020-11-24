@@ -1897,6 +1897,8 @@ TEST_P(ClearTestES3, ClearMaxAttachments)
 {
     // http://anglebug.com/4612
     ANGLE_SKIP_TEST_IF(IsOSX() && IsDesktopOpenGL());
+    // http://anglebug.com/5397
+    ANGLE_SKIP_TEST_IF(IsAMD() && IsD3D11());
 
     constexpr GLsizei kSize = 16;
 

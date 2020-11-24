@@ -940,6 +940,8 @@ TEST_P(RobustResourceInitTestES3, MultisampledDepthInitializedCorrectly)
 
     // http://anglebug.com/2407
     ANGLE_SKIP_TEST_IF(IsAndroid() && IsOpenGLES());
+    // http://anglebug.com/5398
+    ANGLE_SKIP_TEST_IF(IsAMD() && IsD3D11());
 
     ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
 
@@ -1112,6 +1114,9 @@ void RobustResourceInitTestES3::testIntegerTextureInit(const char *samplerType,
 TEST_P(RobustResourceInitTestES3, TextureInit_UIntRGB8)
 {
     ANGLE_SKIP_TEST_IF(!hasGLExtension());
+    // http://anglebug.com/5398
+    ANGLE_SKIP_TEST_IF(IsAMD() && IsD3D11());
+
     testIntegerTextureInit<uint8_t>("u", GL_RGBA8UI, GL_RGB8UI, GL_UNSIGNED_BYTE);
 }
 
@@ -1124,6 +1129,9 @@ TEST_P(RobustResourceInitTestES3, TextureInit_UIntRGB32)
 TEST_P(RobustResourceInitTestES3, TextureInit_IntRGB8)
 {
     ANGLE_SKIP_TEST_IF(!hasGLExtension());
+    // http://anglebug.com/5398
+    ANGLE_SKIP_TEST_IF(IsAMD() && IsD3D11());
+
     testIntegerTextureInit<int8_t>("i", GL_RGBA8I, GL_RGB8I, GL_BYTE);
 }
 
@@ -1476,6 +1484,8 @@ TEST_P(RobustResourceInitTest, MaskedDepthClear)
 
     // http://anglebug.com/2407
     ANGLE_SKIP_TEST_IF(IsAndroid() && IsOpenGLES());
+    // http://anglebug.com/5398
+    ANGLE_SKIP_TEST_IF(IsAMD() && IsD3D11());
 
     auto clearFunc = [](float depth) {
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -1493,6 +1503,8 @@ TEST_P(RobustResourceInitTestES3, MaskedDepthClearBuffer)
 
     // http://anglebug.com/2407
     ANGLE_SKIP_TEST_IF(IsAndroid() && IsOpenGLES());
+    // http://anglebug.com/5398
+    ANGLE_SKIP_TEST_IF(IsAMD() && IsD3D11());
 
     auto clearFunc = [](float depth) {
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -2098,6 +2110,9 @@ TEST_P(RobustResourceInitTestES3, InitializeMultisampledDepthRenderbufferAfterCo
 {
     ANGLE_SKIP_TEST_IF(!hasGLExtension());
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_CHROMIUM_copy_texture"));
+
+    // http://anglebug.com/5398
+    ANGLE_SKIP_TEST_IF(IsAMD() && IsD3D11());
 
     // Call glCopyTextureCHROMIUM to set destTexture as the color attachment of the internal
     // framebuffer mScratchFBO.
