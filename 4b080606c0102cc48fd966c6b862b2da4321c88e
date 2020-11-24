@@ -75,6 +75,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "635b23a7_7054eb56",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-24T20:29:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "571b9404_de93f21a",
+      "range": {
+        "startLine": 29,
+        "startChar": 25,
+        "endLine": 29,
+        "endChar": 28
+      },
+      "revId": "4b080606c0102cc48fd966c6b862b2da4321c88e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6ee40ca6_2b504291",
@@ -88,6 +112,30 @@
       "writtenOn": "2020-11-20T18:48:49Z",
       "side": 1,
       "message": "nit: see below.",
+      "range": {
+        "startLine": 1161,
+        "startChar": 4,
+        "endLine": 1161,
+        "endChar": 16
+      },
+      "revId": "4b080606c0102cc48fd966c6b862b2da4321c88e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cce8f958_5186b669",
+        "filename": "src/compiler/translator/BaseTypes.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 1161,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-24T20:29:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6ee40ca6_2b504291",
       "range": {
         "startLine": 1161,
         "startChar": 4,
@@ -121,6 +169,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5eb7bef1_4ccc4dd6",
+        "filename": "src/compiler/translator/BaseTypes.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 1553,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-24T20:29:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d1626f94_d75c2a7a",
+      "range": {
+        "startLine": 1553,
+        "startChar": 13,
+        "endLine": 1553,
+        "endChar": 25
+      },
+      "revId": "4b080606c0102cc48fd966c6b862b2da4321c88e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0829ede1_12c696ac",
@@ -134,6 +206,30 @@
       "writtenOn": "2020-11-20T18:48:49Z",
       "side": 1,
       "message": "nit: this could be one line.",
+      "range": {
+        "startLine": 1437,
+        "startChar": 0,
+        "endLine": 1439,
+        "endChar": 26
+      },
+      "revId": "4b080606c0102cc48fd966c6b862b2da4321c88e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b46e20ab_b137c705",
+        "filename": "src/compiler/translator/OutputGLSLBase.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1439,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-24T20:29:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0829ede1_12c696ac",
       "range": {
         "startLine": 1437,
         "startChar": 0,
@@ -167,6 +263,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1dadd3b4_af5acd4c",
+        "filename": "src/libANGLE/Caps.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1366,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-24T20:29:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "92cd0728_d7a101c4",
+      "range": {
+        "startLine": 1366,
+        "startChar": 23,
+        "endLine": 1366,
+        "endChar": 51
+      },
+      "revId": "4b080606c0102cc48fd966c6b862b2da4321c88e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d46feddf_bc814fd6",
@@ -180,6 +300,30 @@
       "writtenOn": "2020-11-20T18:48:49Z",
       "side": 1,
       "message": "nit: add suffix",
+      "range": {
+        "startLine": 679,
+        "startChar": 9,
+        "endLine": 679,
+        "endChar": 28
+      },
+      "revId": "4b080606c0102cc48fd966c6b862b2da4321c88e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4dd8149b_9eaedae5",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 679,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-24T20:29:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d46feddf_bc814fd6",
       "range": {
         "startLine": 679,
         "startChar": 9,
@@ -213,6 +357,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1ca4d7df_e313f9a1",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 9116,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-24T20:29:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7e43de93_d6dc72b2",
+      "range": {
+        "startLine": 9115,
+        "startChar": 26,
+        "endLine": 9116,
+        "endChar": 34
+      },
+      "revId": "4b080606c0102cc48fd966c6b862b2da4321c88e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6d8820d9_5711a8bc",
@@ -226,6 +394,30 @@
       "writtenOn": "2020-11-20T18:48:49Z",
       "side": 1,
       "message": "ditto",
+      "range": {
+        "startLine": 9144,
+        "startChar": 23,
+        "endLine": 9145,
+        "endChar": 30
+      },
+      "revId": "4b080606c0102cc48fd966c6b862b2da4321c88e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "69193a52_8f62f216",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 9145,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-24T20:29:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6d8820d9_5711a8bc",
       "range": {
         "startLine": 9144,
         "startChar": 23,
@@ -259,6 +451,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5bbf8983_0fffd6c6",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 5453,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-24T20:29:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f90bfcf7_41a0c37d",
+      "range": {
+        "startLine": 5453,
+        "startChar": 55,
+        "endLine": 5453,
+        "endChar": 67
+      },
+      "revId": "4b080606c0102cc48fd966c6b862b2da4321c88e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "08d4664c_ac0b0546",
@@ -272,6 +488,30 @@
       "writtenOn": "2020-11-20T18:48:49Z",
       "side": 1,
       "message": "this is weird. when can this occur? seems like a bug.",
+      "range": {
+        "startLine": 501,
+        "startChar": 21,
+        "endLine": 501,
+        "endChar": 45
+      },
+      "revId": "4b080606c0102cc48fd966c6b862b2da4321c88e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "11f59313_2aa3a596",
+        "filename": "src/libANGLE/ProgramLinkedResources.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 501,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-24T20:29:26Z",
+      "side": 1,
+      "message": "it is related to array size of tessellation in/out varying, which will be enabled in a follow up patch. removed it here",
+      "parentUuid": "08d4664c_ac0b0546",
       "range": {
         "startLine": 501,
         "startChar": 21,
@@ -305,6 +545,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3c451577_17fd36c9",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1159,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-24T20:29:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f75ec25b_f8e11a7c",
+      "range": {
+        "startLine": 1157,
+        "startChar": 0,
+        "endLine": 1159,
+        "endChar": 19
+      },
+      "revId": "4b080606c0102cc48fd966c6b862b2da4321c88e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "cab16817_36a51c09",
@@ -318,6 +582,30 @@
       "writtenOn": "2020-11-20T18:48:49Z",
       "side": 1,
       "message": "this needs to be exposed in gl::Caps or queried directly via a new impl method. Not sure which I prefer. Maybe an impl method that defaults to returning the caps mPrimitiveRestart value. Can you make that change?",
+      "range": {
+        "startLine": 2897,
+        "startChar": 0,
+        "endLine": 2899,
+        "endChar": 18
+      },
+      "revId": "4b080606c0102cc48fd966c6b862b2da4321c88e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dd92bc0f_9bcd4eb0",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 2899,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-24T20:29:26Z",
+      "side": 1,
+      "message": "Query is \"Whether primitive restart support is available for a GL_PATCHES primitive.\"\n\nNow modified to check for (primRestart AND tessellation support)",
+      "parentUuid": "cab16817_36a51c09",
       "range": {
         "startLine": 2897,
         "startChar": 0,
@@ -353,6 +641,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "dceed817_ec0732af",
+        "filename": "src/libANGLE/TransformFeedback.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 213,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-24T20:29:26Z",
+      "side": 1,
+      "message": "in spec Section 11.1ts.2, Tessellation Primitive Generation. A patch is discarded by the tessellation primitive generator if any relevant outer tessellation level is less than or equal to zero.\n\nIn discard tests such as dEQP-GLES31.functional.tessellation.primitive_discard.triangles_equal_spacing_ccw, application can use fixed sized memory. It means discarded primitives will not be included when tests calculate memory allocation size. In this case, count of vertices can be bigger than mVertexCapacity. so checkBufferSpaceForDraw will return false and it will not draw patches.",
+      "parentUuid": "bb4f7b5b_d44d66e8",
+      "range": {
+        "startLine": 209,
+        "startChar": 0,
+        "endLine": 213,
+        "endChar": 5
+      },
+      "revId": "4b080606c0102cc48fd966c6b862b2da4321c88e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "f5a5427a_7e1ee6bf",
         "filename": "src/libANGLE/queryutils.cpp",
         "patchSetId": 8
@@ -364,6 +676,30 @@
       "writtenOn": "2020-11-20T18:48:49Z",
       "side": 1,
       "message": "nit: don\u0027t use this code pattern.",
+      "range": {
+        "startLine": 744,
+        "startChar": 32,
+        "endLine": 744,
+        "endChar": 40
+      },
+      "revId": "4b080606c0102cc48fd966c6b862b2da4321c88e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2dae8cb9_a537374a",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 744,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-24T20:29:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f5a5427a_7e1ee6bf",
       "range": {
         "startLine": 744,
         "startChar": 32,
@@ -397,6 +733,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ba29a628_6499a7d5",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 798,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-24T20:29:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "08584f63_10855bda",
+      "range": {
+        "startLine": 798,
+        "startChar": 42,
+        "endLine": 798,
+        "endChar": 46
+      },
+      "revId": "4b080606c0102cc48fd966c6b862b2da4321c88e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d881126d_980eec31",
@@ -410,6 +770,30 @@
       "writtenOn": "2020-11-20T18:48:49Z",
       "side": 1,
       "message": "can we please make this a consistent path now that always uses the query?",
+      "range": {
+        "startLine": 75,
+        "startChar": 0,
+        "endLine": 79,
+        "endChar": 9
+      },
+      "revId": "4b080606c0102cc48fd966c6b862b2da4321c88e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "01340f57_b49d8004",
+        "filename": "src/libANGLE/renderer/vulkan/QueryVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-24T20:29:26Z",
+      "side": 1,
+      "message": "we need to check support for transformfeedbackExtension. some device such as pixel2 do not support TransformFeedbackExtension. For such devices we can not use query.",
+      "parentUuid": "d881126d_980eec31",
       "range": {
         "startLine": 75,
         "startChar": 0,
@@ -443,6 +827,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "85e19a9e_4c18a07b",
+        "filename": "src/libANGLE/renderer/vulkan/QueryVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-24T20:29:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "77fcb2e3_8a6622a2",
+      "range": {
+        "startLine": 128,
+        "startChar": 0,
+        "endLine": 133,
+        "endChar": 9
+      },
+      "revId": "4b080606c0102cc48fd966c6b862b2da4321c88e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "bd69a329_0552c8f3",
@@ -466,6 +874,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "83fa9ce7_f3a6d1f1",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 514,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-24T20:29:26Z",
+      "side": 1,
+      "message": "patchVertices can be 1 to 32. so we need 6bits",
+      "parentUuid": "bd69a329_0552c8f3",
+      "range": {
+        "startLine": 514,
+        "startChar": 13,
+        "endLine": 514,
+        "endChar": 27
+      },
+      "revId": "4b080606c0102cc48fd966c6b862b2da4321c88e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "4bf5c3d7_840ac4f2",
@@ -479,6 +911,30 @@
       "writtenOn": "2020-11-20T18:48:49Z",
       "side": 1,
       "message": "we should use a different requirement when this extension is not available. can you handle this conditionally? for 3.1 base functionality we don\u0027t need 5 bindings.",
+      "range": {
+        "startLine": 1480,
+        "startChar": 19,
+        "endLine": 1480,
+        "endChar": 63
+      },
+      "revId": "4b080606c0102cc48fd966c6b862b2da4321c88e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3d069729_90de1244",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 1480,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-24T20:29:26Z",
+      "side": 1,
+      "message": "Done, now handled in RendererVk::ensureCapsInitialized",
+      "parentUuid": "4bf5c3d7_840ac4f2",
       "range": {
         "startLine": 1480,
         "startChar": 19,
