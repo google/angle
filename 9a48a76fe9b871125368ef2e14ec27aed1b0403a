@@ -61,6 +61,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "ed7d0976_588e0806",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2464,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-24T17:49:05Z",
+      "side": 1,
+      "message": "I was gonna say, but the ASSERT is good regardless. The sentinel is within the uint16_t range, so SetBitField won\u0027t catch that.",
+      "parentUuid": "769fd6f5_263fa324",
+      "range": {
+        "startLine": 2460,
+        "startChar": 0,
+        "endLine": 2464,
+        "endChar": 67
+      },
+      "revId": "9a48a76fe9b871125368ef2e14ec27aed1b0403a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "630deb0f_6950048b",
         "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
         "patchSetId": 2
