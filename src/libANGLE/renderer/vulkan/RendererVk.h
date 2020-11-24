@@ -161,9 +161,6 @@ class RendererVk : angle::NonCopyable
     // device (first time only).
     bool hasLinearImageFormatFeatureBits(VkFormat format,
                                          const VkFormatFeatureFlags featureBits) const;
-    VkFormatFeatureFlags getLinearImageFormatFeatureBits(
-        VkFormat format,
-        const VkFormatFeatureFlags featureBits) const;
     VkFormatFeatureFlags getImageFormatFeatureBits(VkFormat format,
                                                    const VkFormatFeatureFlags featureBits) const;
     bool hasImageFormatFeatureBits(VkFormat format, const VkFormatFeatureFlags featureBits) const;
@@ -296,8 +293,6 @@ class RendererVk : angle::NonCopyable
     void setGlobalDebugAnnotator();
 
     void outputVmaStatString();
-
-    bool haveSameFormatFeatureBits(VkFormat fmt1, VkFormat fmt2) const;
 
     angle::Result cleanupGarbage(Serial lastCompletedQueueSerial);
 

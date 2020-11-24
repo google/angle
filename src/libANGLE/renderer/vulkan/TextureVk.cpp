@@ -2582,8 +2582,7 @@ angle::Result TextureVk::initImage(ContextVk *contextVk,
                                                                  : vk::ConvertToSRGB(imageFormat);
 
     VkImageFormatListCreateInfoKHR formatListInfo = {};
-    if (renderer->getFeatures().supportsImageFormatList.enabled &&
-        renderer->haveSameFormatFeatureBits(imageFormat, imageListFormat))
+    if (renderer->getFeatures().supportsImageFormatList.enabled)
     {
         mRequiresMutableStorage = true;
 
