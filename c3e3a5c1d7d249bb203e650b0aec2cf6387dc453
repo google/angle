@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8509f36f_f7172c58",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 10
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-24T21:26:42Z",
+      "side": 1,
+      "message": "Mohan: Shabi added a way to enable WIP features. Can you use that to enable some tests with the CL?",
+      "revId": "c3e3a5c1d7d249bb203e650b0aec2cf6387dc453",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
