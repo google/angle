@@ -120,6 +120,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3e5fa15c_ff7263ce",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-24T20:07:53Z",
+      "side": 1,
+      "message": "I also reduced the assertion to only assert x, since only x is used for the special purpose.",
+      "parentUuid": "f37428da_8eec5d93",
+      "range": {
+        "startLine": 35,
+        "startChar": 64,
+        "endLine": 35,
+        "endChar": 72
+      },
+      "revId": "1ba30644f4d2cbb87c71030c3a43fc23cede2a38",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "886babb6_f68de08d",
@@ -143,6 +167,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d449774b_95e4e449",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 261,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-24T20:07:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "886babb6_f68de08d",
+      "range": {
+        "startLine": 261,
+        "startChar": 76,
+        "endLine": 261,
+        "endChar": 86
+      },
+      "revId": "1ba30644f4d2cbb87c71030c3a43fc23cede2a38",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "bfad7a33_57c21d71",
@@ -156,6 +204,30 @@
       "writtenOn": "2020-11-24T19:25:33Z",
       "side": 1,
       "message": "While this function is returning a value that\u0027s being limited to UINT16_MAX-1, this isn\u0027t intended to be used by generically, but is instead targeting only the width/height caps values.   To reflect that, I think this should:\n\n1. Use kDynamicScissorSentinel directly here, so the math here is always correct regardless of what kDynamicScissorSentinel actually is.\n2. Update the name of this function to something like: LimitToDynamicScissorSentinelMinusOne() to make it clear that this isn\u0027t intended for general use.\n\nThis also makes sure that if the sentinel does ever go away, this function is updated appropriately.",
+      "range": {
+        "startLine": 266,
+        "startChar": 52,
+        "endLine": 266,
+        "endChar": 88
+      },
+      "revId": "1ba30644f4d2cbb87c71030c3a43fc23cede2a38",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "74c8150a_d2fea724",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 266,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-24T20:07:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bfad7a33_57c21d71",
       "range": {
         "startLine": 266,
         "startChar": 52,
