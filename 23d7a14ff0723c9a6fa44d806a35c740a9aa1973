@@ -33,6 +33,24 @@
       "message": "Shouldn\u0027t both versions be exposed if the backend can support it?",
       "revId": "23d7a14ff0723c9a6fa44d806a35c740a9aa1973",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cfe9e670_651885ae",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1257,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-24T05:12:11Z",
+      "side": 1,
+      "message": "Shrug. What if the driver only exposes EXT, but ANGLE exposes OES and application uses that? I don\u0027t know what happens in the GL backend.",
+      "parentUuid": "14636f55_63c7281a",
+      "revId": "23d7a14ff0723c9a6fa44d806a35c740a9aa1973",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
