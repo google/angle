@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d4196229_bda95096",
+        "filename": "src/libANGLE/renderer/vulkan/UtilsVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1353,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-24T20:07:36Z",
+      "side": 1,
+      "message": "I don\u0027t know what values srcValueBits can have, but based on how srcValueMask is determined above, how is this statement always true?   If srcValueBits !\u003d 32, srcValueMask will not be 0xFFFFFFFF, so srcValueMask\u003e\u003e1 will not be 0x7FFFFFFF.\n\nIf all you want here is the largest signed number, why not just set that directly rather than shifting srcValueMask?",
+      "range": {
+        "startLine": 1352,
+        "startChar": 0,
+        "endLine": 1353,
+        "endChar": 62
+      },
+      "revId": "0d47ae5ae6ae0b239ac83a345ccdaa109931ae09",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6d8b551e_69b6518b",
+        "filename": "src/libANGLE/renderer/vulkan/UtilsVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1358,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-24T20:07:36Z",
+      "side": 1,
+      "message": "Same.   Why not just shaderParams.srcEmulatedAlpha \u003d 0xFFFFFFFF?",
+      "range": {
+        "startLine": 1357,
+        "startChar": 0,
+        "endLine": 1358,
+        "endChar": 57
+      },
+      "revId": "0d47ae5ae6ae0b239ac83a345ccdaa109931ae09",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
