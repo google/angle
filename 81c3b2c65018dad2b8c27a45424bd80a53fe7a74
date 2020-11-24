@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6a8383e4_cf2f38d1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1298773
+      },
+      "writtenOn": "2020-11-24T09:45:18Z",
+      "side": 1,
+      "message": "Correctness: Checking mPhysicalDeviceFeatures.depthClamp before enabling the workaround, since that\u0027s a prerequisite.\n\nClarity: There is now more checking when using the workaround. Those checks are redundant as far as I can tell, but maybe they help with code clarity?\n",
+      "revId": "81c3b2c65018dad2b8c27a45424bd80a53fe7a74",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}

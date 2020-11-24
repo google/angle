@@ -33,6 +33,24 @@
       "message": "The conditions here and above don\u0027t match (and this function is using the extension without checking for its availability). How about this?\n\n- Add `\u0026\u0026 getFeatures().depthClamping.enabled` to this:\n\n    ANGLE_FEATURE_CONDITION(\n        \u0026mFeatures, depthClamping,\n        isNvidia \u0026\u0026 ExtensionFound(VK_EXT_DEPTH_CLIP_ENABLE_EXTENSION_NAME, deviceExtensionNames) \u0026\u0026\n            (!IsLinux() || nvidiaVersion.major \u003e 418u));\n\n- Then check `contextVk-\u003egetRenderer()-\u003egetPhysicalDeviceFeatures().depthClamp` both here and above when setting `depthClampEnable`.",
       "revId": "8768dddb8a393878bde02bd87d5bc0d07dda0e72",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dd498b0f_f589d167",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1829,
+      "author": {
+        "id": 1298773
+      },
+      "writtenOn": "2020-11-24T09:45:18Z",
+      "side": 1,
+      "message": "I\u0027m thinking that getFeatures().depthClamping.enabled could be assumed to imply that the required extension and physical device feature would be available. However I guess it doesn\u0027t hurt to add checks here as well, for clarity.\n\n\nFirst bullet point: the code you quoted is the code that initializes getFeatures().depthClamping.enabled in the first place, isn\u0027t it? I added mPhysicalDeviceFeatures.depthClamp instead, since the workaround depends on that.\nLet me know if I\u0027ve misunderstood.\n\n\nSecond bullet point:\nThe extension is implicitly available if getFeatures().depthClamping.enabled is true.\nI added a check for the physical device feature to mFeatures.depthClamping.\nI then added added a redundant check for the physical device feature here as well, for clarity.\n\nI would happily also add a redundant check for the extension here, for clarity, but RendererVk::initializeDevice does not seem to record the enabledDeviceExtensions anywhere, so how do I check explicitly at this point? (Note: there is still an implicit check.)",
+      "parentUuid": "c2c7e22e_43c01eb4",
+      "revId": "8768dddb8a393878bde02bd87d5bc0d07dda0e72",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
