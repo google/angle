@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cc88d255_cb1ffeb5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-24T17:28:24Z",
+      "side": 1,
+      "message": "Reminder to limit viewport size to 64k in vk_caps_utils.cpp",
+      "revId": "9a48a76fe9b871125368ef2e14ec27aed1b0403a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "630deb0f_6950048b",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2473,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-24T17:28:24Z",
+      "side": 1,
+      "message": "Call setScissor to use the same implementation + get the ASSERT",
+      "range": {
+        "startLine": 2470,
+        "startChar": 0,
+        "endLine": 2473,
+        "endChar": 67
+      },
+      "revId": "9a48a76fe9b871125368ef2e14ec27aed1b0403a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
