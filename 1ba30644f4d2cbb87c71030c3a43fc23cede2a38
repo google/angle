@@ -144,6 +144,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "45627863_d8894255",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-24T20:11:33Z",
+      "side": 1,
+      "message": "NM. Entire assertion removed, given that we reported max size to kDynamicScissorSentinel-1, front end should have catched the error if user uses the invalid value.",
+      "parentUuid": "3e5fa15c_ff7263ce",
+      "range": {
+        "startLine": 35,
+        "startChar": 64,
+        "endLine": 35,
+        "endChar": 72
+      },
+      "revId": "1ba30644f4d2cbb87c71030c3a43fc23cede2a38",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "886babb6_f68de08d",
