@@ -20,7 +20,7 @@ vars = {
   'checkout_angle_internal': False,
 
   # Version of Chromium our Chromium-based DEPS are mirrored from.
-  'chromium_revision': 'a41860e83258c028984842145b7129e4b76df33d',
+  'chromium_revision': '013c962f863f6d491e2096c47b3f21b9bacbd2e8',
   # We never want to checkout chromium,
   # but need a dummy DEPS entry for the autoroller
   'dummy_checkout_chromium': False,
@@ -89,18 +89,18 @@ vars = {
   # Three lines of non-changing comments so that
   # the commit queue can handle CLs rolling catapult
   # and whatever else without interference from each other.
-  'catapult_revision': '91c1a7c2dc0a8c9442d3d5786c424593eef45cae',
+  'catapult_revision': 'a629d81faa7aca80572b7a45df4589d952509664',
 
   # Three lines of non-changing comments so that
   # the commit queue can handle CLs rolling luci-go
   # and whatever else without interference from each other.
-  'luci_go': 'git_revision:6cbe3f56e9f00b8f65eae21f01838a8b58191a47',
+  'luci_go': 'git_revision:1a022d3a4c50be4207ee93451255d71896416596',
 }
 
 deps = {
 
   'build': {
-    'url': '{chromium_git}/chromium/src/build.git@fe03ecff2c5136516888e0a95e5c0d3f486be4e0',
+    'url': '{chromium_git}/chromium/src/build.git@356ef25e240c8a55a8fb486455365491ed225a65',
     'condition': 'not build_with_chromium',
   },
 
@@ -110,12 +110,12 @@ deps = {
   },
 
   'testing': {
-    'url': '{chromium_git}/chromium/src/testing@5da61f6a14c9032da646030f9e020d6f95183321',
+    'url': '{chromium_git}/chromium/src/testing@ae656081dc9d0d3b41a31a1515f3f3c9e9d88110',
     'condition': 'not build_with_chromium',
   },
 
   'third_party/abseil-cpp': {
-    'url': '{chromium_git}/chromium/src/third_party/abseil-cpp@207d48e407ee041bb2254d8246cd2031aa5e83e1',
+    'url': '{chromium_git}/chromium/src/third_party/abseil-cpp@dea56e139b070eadc46ec29038de04d3ad8c37a8',
     'condition': 'not build_with_chromium',
   },
 
@@ -190,7 +190,7 @@ deps = {
   },
 
   'third_party/protobuf': {
-    'url': '{chromium_git}/chromium/src/third_party/protobuf@d685b9def83a884803a77f306825e5477af64147',
+    'url': '{chromium_git}/chromium/src/third_party/protobuf@1be42a5a07c0702a3944f3a11958ff5125e17996',
     'condition': 'not build_with_chromium',
   },
 
