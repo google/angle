@@ -33,6 +33,24 @@
       "message": "Thanks Shabi and Sunny! Please feel free to send an email update to other non-cced partners to let them know about this change.\n\nCan you also update end2end_tests and white_box_tests to enable this feature?",
       "revId": "a6dc880b84709cb68928a2d1cc122a4aa3b49a09",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2dd549e2_0384434f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-24T05:50:08Z",
+      "side": 1,
+      "message": "Oops, yeah done.\n\nAlso enabled one end2end test on ES3.2 for sanity check",
+      "parentUuid": "76235f14_0aac6ed3",
+      "revId": "a6dc880b84709cb68928a2d1cc122a4aa3b49a09",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
