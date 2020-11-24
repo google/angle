@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "21209e15_0f509116",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 10
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-24T19:45:02Z",
+      "side": 1,
+      "message": "nit: auto-generating",
+      "range": {
+        "startLine": 9,
+        "startChar": 29,
+        "endLine": 9,
+        "endChar": 39
+      },
+      "revId": "bb2d5dc43dd1aad3af85a594d7116739709c0a1d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "16ff3dc6_72d18da0",
+        "filename": "scripts/generate_entry_points.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 808,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-24T19:45:02Z",
+      "side": 1,
+      "message": "nit: strip_egl_prefix, since there are a lot of APIs being referenced in here.\n\nAlternatively, pass in the API string like strip_suffix() below.",
+      "range": {
+        "startLine": 808,
+        "startChar": 4,
+        "endLine": 808,
+        "endChar": 20
+      },
+      "revId": "bb2d5dc43dd1aad3af85a594d7116739709c0a1d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
