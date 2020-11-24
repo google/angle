@@ -33,6 +33,24 @@
       "message": "Sorry for the curt reply, will take a close look tomorrow.",
       "revId": "4c918f9713442304da830810c158fd17e44ea4a7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "deb4bb3a_0935f8b1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 14
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-24T00:55:39Z",
+      "side": 1,
+      "message": "I think most time viewport and scissor is going to the same as drawable size, so the desc hit rate should not change. The question is we are expanding the desc size a bit (which may exceeds cache line) and run out of transition bit. Right now I am expanding the bit coverage from 4 byte to 8, but I am open to other solutions. The alternative solution (which I like better) is get rid of mScissor from desc and use dynamic state for scissor when scissor is not the same as drawable size. I think Shabi has made some changes in this area, so might not a hard one to tackle.",
+      "parentUuid": "e13d160b_98c13d67",
+      "revId": "4c918f9713442304da830810c158fd17e44ea4a7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
