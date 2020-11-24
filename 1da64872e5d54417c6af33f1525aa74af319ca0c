@@ -159,6 +159,30 @@
       },
       "revId": "1da64872e5d54417c6af33f1525aa74af319ca0c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b6ebc572_bda28976",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-24T21:52:24Z",
+      "side": 1,
+      "message": "I will eventually add suppressions, but I was hoping to fix any issue that _can_ be fixed at least.",
+      "parentUuid": "5e946a96_2eb170b7",
+      "range": {
+        "startLine": 171,
+        "startChar": 28,
+        "endLine": 171,
+        "endChar": 36
+      },
+      "revId": "1da64872e5d54417c6af33f1525aa74af319ca0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
