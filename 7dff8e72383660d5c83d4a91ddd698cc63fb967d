@@ -20,6 +20,24 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "8a908625_3dddd20f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 9
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-24T21:32:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "19c00b1b_9467ffb8",
+      "revId": "7dff8e72383660d5c83d4a91ddd698cc63fb967d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "02f7f764_64d176bf",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 9
@@ -65,6 +83,30 @@
       "writtenOn": "2020-11-20T20:18:30Z",
       "side": 1,
       "message": "usual nit",
+      "range": {
+        "startLine": 29,
+        "startChar": 8,
+        "endLine": 29,
+        "endChar": 25
+      },
+      "revId": "7dff8e72383660d5c83d4a91ddd698cc63fb967d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a7884a46_7250befc",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-24T21:32:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e3c1c895_f1f48e78",
       "range": {
         "startLine": 29,
         "startChar": 8,
@@ -124,6 +166,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "c76f5191_05546444",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-24T21:32:34Z",
+      "side": 1,
+      "message": "expanded the comment but will add an example",
+      "parentUuid": "e5232252_5accee50",
+      "range": {
+        "startLine": 60,
+        "startChar": 0,
+        "endLine": 63,
+        "endChar": 86
+      },
+      "revId": "7dff8e72383660d5c83d4a91ddd698cc63fb967d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "499b633d_8a6c4ca9",
         "filename": "include/GLSLANG/ShaderVars.h",
         "patchSetId": 9
@@ -135,6 +201,30 @@
       "writtenOn": "2020-11-20T20:18:30Z",
       "side": 1,
       "message": "nit: enum class",
+      "range": {
+        "startLine": 64,
+        "startChar": 0,
+        "endLine": 64,
+        "endChar": 5
+      },
+      "revId": "7dff8e72383660d5c83d4a91ddd698cc63fb967d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b910d531_f73dceda",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-24T21:32:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "499b633d_8a6c4ca9",
       "range": {
         "startLine": 64,
         "startChar": 0,
@@ -170,6 +260,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "7d961198_e8be12e5",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-24T21:32:34Z",
+      "side": 1,
+      "message": "added comment clarifying intent.\n\nupdated method names, will update the member var name in the next patch",
+      "parentUuid": "3dac0813_e45b703b",
+      "range": {
+        "startLine": 178,
+        "startChar": 12,
+        "endLine": 178,
+        "endChar": 20
+      },
+      "revId": "7dff8e72383660d5c83d4a91ddd698cc63fb967d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "b72e888b_b92bbbde",
         "filename": "include/GLSLANG/ShaderVars.h",
         "patchSetId": 9
@@ -181,6 +295,30 @@
       "writtenOn": "2020-11-20T20:18:30Z",
       "side": 1,
       "message": "nit: ordering\n\nhttps://google.github.io/styleguide/cppguide.html#Declaration_Order",
+      "range": {
+        "startLine": 179,
+        "startChar": 4,
+        "endLine": 180,
+        "endChar": 34
+      },
+      "revId": "7dff8e72383660d5c83d4a91ddd698cc63fb967d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2e2b8c4b_86e331b8",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 180,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-24T21:32:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b72e888b_b92bbbde",
       "range": {
         "startLine": 179,
         "startChar": 4,
@@ -260,6 +398,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a59cdcaf_f476c5b8",
+        "filename": "src/compiler/translator/CollectVariables.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 826,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-24T21:32:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e566223f_3a20798d",
+      "range": {
+        "startLine": 826,
+        "startChar": 17,
+        "endLine": 826,
+        "endChar": 19
+      },
+      "revId": "7dff8e72383660d5c83d4a91ddd698cc63fb967d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c06da979_5733211c",
@@ -273,6 +435,30 @@
       "writtenOn": "2020-11-21T04:30:32Z",
       "side": 1,
       "message": "I\u0027m not really following the logic of isBlockImplicitLocation here. If `isBlockImplicitLocation` is true, and fieldLocation \u003e\u003d 0, then fieldVariable.hasImplicitLocation is never initialized. Is that intentional? Why not do something like this:\n\n- Replace this with `fieldVariable.hasImplicitLocation \u003d isBlockImplicitLocation;`\n- Remove the if (isBlockImplicitLocation) in the else below\n- Add `fieldVariable.hasImplicitLocation \u003d false;` in the `if (fieldLocation \u003e\u003d 0)` block.",
+      "range": {
+        "startLine": 892,
+        "startChar": 0,
+        "endLine": 895,
+        "endChar": 9
+      },
+      "revId": "7dff8e72383660d5c83d4a91ddd698cc63fb967d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "edfe2c72_6b9316f2",
+        "filename": "src/compiler/translator/CollectVariables.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 895,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-24T21:32:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c06da979_5733211c",
       "range": {
         "startLine": 892,
         "startChar": 0,
@@ -306,6 +492,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e1a3b34e_28f8596c",
+        "filename": "src/compiler/translator/OutputGLSLBase.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1334,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-24T21:32:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8958177d_948773e6",
+      "range": {
+        "startLine": 1334,
+        "startChar": 8,
+        "endLine": 1334,
+        "endChar": 63
+      },
+      "revId": "7dff8e72383660d5c83d4a91ddd698cc63fb967d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "fa0633e9_849888d3",
@@ -329,6 +539,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "08b5c2be_13f57823",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 3908,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-24T21:32:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fa0633e9_849888d3",
+      "range": {
+        "startLine": 3908,
+        "startChar": 8,
+        "endLine": 3908,
+        "endChar": 91
+      },
+      "revId": "7dff8e72383660d5c83d4a91ddd698cc63fb967d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b323b670_c0925941",
@@ -342,6 +576,30 @@
       "writtenOn": "2020-11-21T04:30:32Z",
       "side": 1,
       "message": "reset?",
+      "range": {
+        "startLine": 387,
+        "startChar": 21,
+        "endLine": 387,
+        "endChar": 27
+      },
+      "revId": "7dff8e72383660d5c83d4a91ddd698cc63fb967d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9822d326_aef4f280",
+        "filename": "src/compiler/translator/ShaderVars.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 387,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-24T21:32:34Z",
+      "side": 1,
+      "message": "Done, changed name to effective location, added comment in header file.",
+      "parentUuid": "b323b670_c0925941",
       "range": {
         "startLine": 387,
         "startChar": 21,
@@ -377,6 +635,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "fc271694_919487d2",
+        "filename": "src/compiler/translator/tree_ops/RemoveInactiveInterfaceVariables.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-24T21:32:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "eb1bdba0_8565c6ce",
+      "range": {
+        "startLine": 102,
+        "startChar": 29,
+        "endLine": 102,
+        "endChar": 30
+      },
+      "revId": "7dff8e72383660d5c83d4a91ddd698cc63fb967d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "a2bb7e84_6f7f31c1",
         "filename": "src/compiler/translator/tree_ops/RemoveInactiveInterfaceVariables.cpp",
         "patchSetId": 9
@@ -388,6 +670,24 @@
       "writtenOn": "2020-11-21T04:30:32Z",
       "side": 1,
       "message": "This code is not actually checking members for explicit locations. I guess this just simply never removes inactive I/O blocks? That\u0027s fine TBH, just asking.",
+      "revId": "7dff8e72383660d5c83d4a91ddd698cc63fb967d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "83c69c87_0befb3e0",
+        "filename": "src/compiler/translator/tree_ops/RemoveInactiveInterfaceVariables.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-24T21:32:34Z",
+      "side": 1,
+      "message": "Ack.",
+      "parentUuid": "a2bb7e84_6f7f31c1",
       "revId": "7dff8e72383660d5c83d4a91ddd698cc63fb967d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
@@ -405,6 +705,30 @@
       "writtenOn": "2020-11-21T04:30:32Z",
       "side": 1,
       "message": "Use IsShaderIoBlock",
+      "range": {
+        "startLine": 105,
+        "startChar": 12,
+        "endLine": 105,
+        "endChar": 87
+      },
+      "revId": "7dff8e72383660d5c83d4a91ddd698cc63fb967d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b0244738_bbf3b7f1",
+        "filename": "src/compiler/translator/tree_ops/RemoveInactiveInterfaceVariables.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-24T21:32:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d545e5db_982485c6",
       "range": {
         "startLine": 105,
         "startChar": 12,
@@ -438,6 +762,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "960d4025_d0e3a9cf",
+        "filename": "src/compiler/translator/util.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 672,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-24T21:32:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "df16ac85_ba02a44b",
+      "range": {
+        "startLine": 636,
+        "startChar": 0,
+        "endLine": 672,
+        "endChar": 5
+      },
+      "revId": "7dff8e72383660d5c83d4a91ddd698cc63fb967d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "12363534_88fc72c4",
@@ -451,6 +799,30 @@
       "writtenOn": "2020-11-21T04:30:32Z",
       "side": 1,
       "message": "You can refactor this duplicate code. The helper function can be passed mExecutable-\u003emOutputVariables or mExecutable-\u003emProgramInputs",
+      "range": {
+        "startLine": 1824,
+        "startChar": 0,
+        "endLine": 1851,
+        "endChar": 9
+      },
+      "revId": "7dff8e72383660d5c83d4a91ddd698cc63fb967d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b292ff00_19c74c0c",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1851,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-24T21:32:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "12363534_88fc72c4",
       "range": {
         "startLine": 1824,
         "startChar": 0,
@@ -484,6 +856,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7615b22d_54e453af",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 4193,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-24T21:32:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "72cdb1c0_9d65c1ee",
+      "range": {
+        "startLine": 4193,
+        "startChar": 54,
+        "endLine": 4193,
+        "endChar": 80
+      },
+      "revId": "7dff8e72383660d5c83d4a91ddd698cc63fb967d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "508b6ab6_de7a9c42",
@@ -497,6 +893,30 @@
       "writtenOn": "2020-11-20T20:18:30Z",
       "side": 1,
       "message": "nit: code duplication with the above, can you make into a helper function?",
+      "range": {
+        "startLine": 642,
+        "startChar": 19,
+        "endLine": 666,
+        "endChar": 17
+      },
+      "revId": "7dff8e72383660d5c83d4a91ddd698cc63fb967d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "900485a7_f9ca08f1",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 666,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-24T21:32:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "508b6ab6_de7a9c42",
       "range": {
         "startLine": 642,
         "startChar": 19,
@@ -530,6 +950,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "669c9821_af8ed578",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1568,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-24T21:32:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4c6c0e6f_6fb35cf7",
+      "range": {
+        "startLine": 1568,
+        "startChar": 49,
+        "endLine": 1568,
+        "endChar": 57
+      },
+      "revId": "7dff8e72383660d5c83d4a91ddd698cc63fb967d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2bceb07b_36b80ae6",
@@ -543,6 +987,30 @@
       "writtenOn": "2020-11-21T04:30:32Z",
       "side": 1,
       "message": "sentence cut off?",
+      "range": {
+        "startLine": 1984,
+        "startChar": 68,
+        "endLine": 1984,
+        "endChar": 81
+      },
+      "revId": "7dff8e72383660d5c83d4a91ddd698cc63fb967d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "feeb2712_e35deb9e",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1984,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-24T21:32:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2bceb07b_36b80ae6",
       "range": {
         "startLine": 1984,
         "startChar": 68,
