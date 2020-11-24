@@ -168,6 +168,53 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f62eaeb0_ba0aecac",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-24T21:07:15Z",
+      "side": 1,
+      "message": "Ahh, sorry, I misunderstood about the sentinel value. Ack.",
+      "parentUuid": "45627863_d8894255",
+      "range": {
+        "startLine": 35,
+        "startChar": 64,
+        "endLine": 35,
+        "endChar": 72
+      },
+      "revId": "1ba30644f4d2cbb87c71030c3a43fc23cede2a38",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e1b4e8a7_c4b3fbb5",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2457,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-24T21:07:15Z",
+      "side": 1,
+      "message": "I might be tempted to keep the ASSERT here as well just for safety. Sorry for the back and forth.",
+      "range": {
+        "startLine": 2457,
+        "startChar": 4,
+        "endLine": 2457,
+        "endChar": 10
+      },
+      "revId": "1ba30644f4d2cbb87c71030c3a43fc23cede2a38",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "886babb6_f68de08d",
