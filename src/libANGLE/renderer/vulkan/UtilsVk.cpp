@@ -52,6 +52,19 @@ constexpr uint32_t kOverlayDrawFontBinding                   = 4;
 constexpr uint32_t kGenerateMipmapDestinationBinding         = 0;
 constexpr uint32_t kGenerateMipmapSourceBinding              = 1;
 
+constexpr uint32_t kFloatOneAsUint = 0x3F80'0000u;
+
+bool ValidateFloatOneAsUint()
+{
+    union
+    {
+        uint32_t asUint;
+        float asFloat;
+    } one;
+    one.asUint = kFloatOneAsUint;
+    return one.asFloat == 1.0f;
+}
+
 uint32_t GetConvertVertexFlags(const UtilsVk::ConvertVertexParameters &params)
 {
     bool srcIsSint      = params.srcFormat->isSint();
@@ -89,43 +102,43 @@ uint32_t GetConvertVertexFlags(const UtilsVk::ConvertVertexParameters &params)
     if (srcIsHalfFloat && destIsHalfFloat)
     {
         // Note that HalfFloat conversion uses the same shader as Uint.
-        flags |= ConvertVertex_comp::kUintToUint;
+        flags = ConvertVertex_comp::kUintToUint;
     }
     else if (srcIsFloat && destIsHalfFloat)
     {
-        flags |= ConvertVertex_comp::kFloatToHalf;
+        flags = ConvertVertex_comp::kFloatToHalf;
     }
     else if (srcIsSint && destIsSint)
     {
-        flags |= ConvertVertex_comp::kSintToSint;
+        flags = ConvertVertex_comp::kSintToSint;
     }
     else if (srcIsUint && destIsUint)
     {
-        flags |= ConvertVertex_comp::kUintToUint;
+        flags = ConvertVertex_comp::kUintToUint;
     }
     else if (srcIsSint)
     {
-        flags |= ConvertVertex_comp::kSintToFloat;
+        flags = ConvertVertex_comp::kSintToFloat;
     }
     else if (srcIsUint)
     {
-        flags |= ConvertVertex_comp::kUintToFloat;
+        flags = ConvertVertex_comp::kUintToFloat;
     }
     else if (srcIsSnorm)
     {
-        flags |= ConvertVertex_comp::kSnormToFloat;
+        flags = ConvertVertex_comp::kSnormToFloat;
     }
     else if (srcIsUnorm)
     {
-        flags |= ConvertVertex_comp::kUnormToFloat;
+        flags = ConvertVertex_comp::kUnormToFloat;
     }
     else if (srcIsFixed)
     {
-        flags |= ConvertVertex_comp::kFixedToFloat;
+        flags = ConvertVertex_comp::kFixedToFloat;
     }
     else if (srcIsFloat)
     {
-        flags |= ConvertVertex_comp::kFloatToFloat;
+        flags = ConvertVertex_comp::kFloatToFloat;
     }
     else
     {
@@ -1320,6 +1333,47 @@ angle::Result UtilsVk::convertVertexBuffer(ContextVk *contextVk,
     shaderParams.isSrcA2BGR10 = isSrcA2BGR10;
 
     uint32_t flags = GetConvertVertexFlags(params);
+
+    // See GLES3.0 section 2.9.1 Transferring Array Elements
+    const uint32_t srcValueBits = shaderParams.isSrcHDR ? 2 : shaderParams.Bs * 8;
+    const uint32_t srcValueMask =
+        srcValueBits == 32 ? 0xFFFFFFFFu : angle::Bit<uint32_t>(srcValueBits) - 1;
+    switch (flags)
+    {
+        case ConvertVertex_comp::kSintToSint:
+        case ConvertVertex_comp::kUintToUint:
+        case ConvertVertex_comp::kSintToFloat:
+        case ConvertVertex_comp::kUintToFloat:
+            // For integers, alpha should take a value of 1.
+            shaderParams.srcEmulatedAlpha = 1;
+            break;
+
+        case ConvertVertex_comp::kSnormToFloat:
+            // The largest signed number with as many bits as the alpha channel of the source is
+            // 0b011...1 which is srcValueMask >> 1
+            shaderParams.srcEmulatedAlpha = srcValueMask >> 1;
+            break;
+
+        case ConvertVertex_comp::kUnormToFloat:
+            // The largest unsigned number with as many bits as the alpha channel of the source is
+            // 0b11...1 which is srcValueMask
+            shaderParams.srcEmulatedAlpha = srcValueMask;
+            break;
+
+        case ConvertVertex_comp::kFixedToFloat:
+            // 1.0 in fixed point is 0x10000
+            shaderParams.srcEmulatedAlpha = 0x10000;
+            break;
+
+        case ConvertVertex_comp::kFloatToHalf:
+        case ConvertVertex_comp::kFloatToFloat:
+            ASSERT(ValidateFloatOneAsUint());
+            shaderParams.srcEmulatedAlpha = kFloatOneAsUint;
+            break;
+
+        default:
+            UNREACHABLE();
+    }
 
     VkDescriptorSet descriptorSet;
     vk::RefCountedDescriptorPoolBinding descriptorPoolBinding;

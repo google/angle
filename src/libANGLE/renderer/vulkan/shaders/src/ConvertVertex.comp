@@ -129,6 +129,11 @@ layout (push_constant) uniform PushConstants
     uint Sd;       // Precalculated Nd*Bd
     uint Ed;       // Precalculated 4/Bd
 
+    // uint representation of src emulated alpha.  If destination has alpha and source doesn't,
+    // this value is used as src alpha, which is then converted to destination format the same way
+    // other data from source is.
+    uint srcEmulatedAlpha;
+
     bool isSrcHDR; // Whether source is either of A2BGR10 or RGB10A2
     bool isSrcA2BGR10;  // Whether source is A2BGR10
 } params;
@@ -245,24 +250,7 @@ SrcType loadSourceComponent(uint cd)
 
     if (component >= Ns && component == 3)
     {
-        // See GLES3.0 section 2.9.1 Transferring Array Elements
-#if SintToSint || SintToFloat || UintToUint || UintToFloat
-        // For integers, alpha should take a value of 1.
-        valueAsUint = 1;
-#elif SnormToFloat
-        // The largest signed number is 0b011...1 which is valueMask >> 1
-        valueAsUint = valueMask >> 1;
-#elif UnormToFloat
-        // The largest unsigned number is 0b11...1 which is valueMask
-        valueAsUint = valueMask;
-#elif FixedToFloat
-        // 1.0 in fixed point is 0x10000
-        valueAsUint = 0x10000;
-#elif FloatToFloat || FloatToHalf
-        valueAsUint = floatBitsToUint(1.0);
-#else
-#error "Not all conversions are accounted for"
-#endif
+        valueAsUint = params.srcEmulatedAlpha;
     }
     else
     {

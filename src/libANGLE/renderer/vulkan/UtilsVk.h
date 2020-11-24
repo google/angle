@@ -309,21 +309,22 @@ class UtilsVk : angle::NonCopyable
         ConvertVertexShaderParams();
 
         // Structure matching PushConstants in ConvertVertex.comp
-        uint32_t outputCount    = 0;
-        uint32_t componentCount = 0;
-        uint32_t srcOffset      = 0;
-        uint32_t destOffset     = 0;
-        uint32_t Ns             = 0;
-        uint32_t Bs             = 0;
-        uint32_t Ss             = 0;
-        uint32_t Es             = 0;
-        uint32_t Nd             = 0;
-        uint32_t Bd             = 0;
-        uint32_t Sd             = 0;
-        uint32_t Ed             = 0;
-        uint32_t isSrcHDR       = 0;
-        uint32_t isSrcA2BGR10   = 0;
-        uint32_t _padding[2]    = {};
+        uint32_t outputCount      = 0;
+        uint32_t componentCount   = 0;
+        uint32_t srcOffset        = 0;
+        uint32_t destOffset       = 0;
+        uint32_t Ns               = 0;
+        uint32_t Bs               = 0;
+        uint32_t Ss               = 0;
+        uint32_t Es               = 0;
+        uint32_t Nd               = 0;
+        uint32_t Bd               = 0;
+        uint32_t Sd               = 0;
+        uint32_t Ed               = 0;
+        uint32_t srcEmulatedAlpha = 0;
+        uint32_t isSrcHDR         = 0;
+        uint32_t isSrcA2BGR10     = 0;
+        uint32_t _padding         = 0;
     };
 
     struct ImageClearShaderParams
