@@ -73,6 +73,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "4f7ec973_4d4018a8",
+        "filename": "src/libANGLE/renderer/vulkan/UtilsVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-24T15:58:02Z",
+      "side": 1,
+      "message": "Ah, I see. I\u0027m not sure if there\u0027s a weird c++ corner case with the constexpr union here. Personally I would just add a second entry in the uniforms map and not worry about the extra slot. I\u0027m fine also if you want to use the hard-coded IEEE encoding. Maybe with a run-time ASSERT that the \"bitCast\" works out to the same value as 1.0f.",
+      "parentUuid": "0c7a79f2_c2e7add7",
+      "range": {
+        "startLine": 55,
+        "startChar": 0,
+        "endLine": 60,
+        "endChar": 0
+      },
+      "revId": "37bff10170e327537146143d4656cd450a23fd1a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "02ada0b6_42f70db8",
         "filename": "src/libANGLE/renderer/vulkan/UtilsVk.cpp",
         "patchSetId": 3
