@@ -16,6 +16,23 @@
       "message": "Please take a look, thank you.",
       "revId": "32b12fa0e1beb3766bf5851ebfc07acc2ad3a382",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "173a72cf_1b623fab",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2020-11-24T09:31:33Z",
+      "side": 1,
+      "message": "LGTM. But it seems your new test triggers a gles issue on android.\n\n+Jamie/Geoff review.",
+      "revId": "32b12fa0e1beb3766bf5851ebfc07acc2ad3a382",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
