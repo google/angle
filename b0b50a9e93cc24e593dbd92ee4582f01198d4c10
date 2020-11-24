@@ -91,6 +91,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "49f96c72_7af1f123",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-24T04:57:30Z",
+      "side": 1,
+      "message": "Say two different IDs have the same internalFormat. What\u0027s wrong with allowing transfer between them?\n\nI admit this was unintended, but now that you mentioned it, it seems like it was a happy accident.",
+      "parentUuid": "f8605198_d8cdc36f",
+      "range": {
+        "startLine": 92,
+        "startChar": 29,
+        "endLine": 92,
+        "endChar": 84
+      },
+      "revId": "b0b50a9e93cc24e593dbd92ee4582f01198d4c10",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "f99375ea_fce4b311",
         "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
         "patchSetId": 3
