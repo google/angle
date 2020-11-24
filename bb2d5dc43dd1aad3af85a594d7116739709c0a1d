@@ -26,6 +26,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "03c85565_0c47ff3d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 10
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-24T21:12:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "21209e15_0f509116",
+      "range": {
+        "startLine": 9,
+        "startChar": 29,
+        "endLine": 9,
+        "endChar": 39
+      },
+      "revId": "bb2d5dc43dd1aad3af85a594d7116739709c0a1d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "acbefe72_04661893",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 10
@@ -88,6 +112,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9a279c5d_74769a53",
+        "filename": "scripts/generate_entry_points.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 808,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-24T21:12:08Z",
+      "side": 1,
+      "message": "Ack, Cody is correct.",
+      "parentUuid": "c2463b54_11df9493",
+      "range": {
+        "startLine": 808,
+        "startChar": 4,
+        "endLine": 808,
+        "endChar": 20
+      },
+      "revId": "bb2d5dc43dd1aad3af85a594d7116739709c0a1d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "aa3bd29c_c08aa6ea",
@@ -101,6 +149,30 @@
       "writtenOn": "2020-11-24T20:10:20Z",
       "side": 1,
       "message": "Ohh, default arguments. Yay!",
+      "range": {
+        "startLine": 1446,
+        "startChar": 28,
+        "endLine": 1446,
+        "endChar": 66
+      },
+      "revId": "bb2d5dc43dd1aad3af85a594d7116739709c0a1d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0566d466_e4776aa1",
+        "filename": "scripts/generate_entry_points.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 1446,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-24T21:12:08Z",
+      "side": 1,
+      "message": "Ack, I removed it. Was definitely getting lazy with the Python.",
+      "parentUuid": "aa3bd29c_c08aa6ea",
       "range": {
         "startLine": 1446,
         "startChar": 28,
