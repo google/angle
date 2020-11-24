@@ -111,6 +111,30 @@
       },
       "revId": "1da64872e5d54417c6af33f1525aa74af319ca0c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "09eea04b_b2084b3f",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-24T16:58:16Z",
+      "side": 1,
+      "message": "Done. (although :barf:)\n\nThere\u0027s another sync with read-only D/S that I don\u0027t think can be fixed at all if NONE is not available:\n\n- Start RP\n- Draw with read-only depth attachment\n- Draw with read-only depth texture\n- End RP, storeOp!\u003dNONE\n\nsyncval complains that the second draw is doing read-after-write because of the storeOp.",
+      "parentUuid": "a997706b_67f21579",
+      "range": {
+        "startLine": 171,
+        "startChar": 28,
+        "endLine": 171,
+        "endChar": 36
+      },
+      "revId": "1da64872e5d54417c6af33f1525aa74af319ca0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
