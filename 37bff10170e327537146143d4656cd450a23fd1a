@@ -45,6 +45,53 @@
       },
       "revId": "37bff10170e327537146143d4656cd450a23fd1a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0c7a79f2_c2e7add7",
+        "filename": "src/libANGLE/renderer/vulkan/UtilsVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-24T15:47:49Z",
+      "side": 1,
+      "message": "See context below.\n\nI could also just do `uint32_t kFloatOne \u003d 0x3F800000u`",
+      "parentUuid": "617ce87d_8ee31dc9",
+      "range": {
+        "startLine": 55,
+        "startChar": 0,
+        "endLine": 60,
+        "endChar": 0
+      },
+      "revId": "37bff10170e327537146143d4656cd450a23fd1a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "02ada0b6_42f70db8",
+        "filename": "src/libANGLE/renderer/vulkan/UtilsVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1361,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-24T15:47:49Z",
+      "side": 1,
+      "message": "Context",
+      "range": {
+        "startLine": 1361,
+        "startChar": 44,
+        "endLine": 1361,
+        "endChar": 60
+      },
+      "revId": "37bff10170e327537146143d4656cd450a23fd1a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
