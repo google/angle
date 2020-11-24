@@ -18,6 +18,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "fb15f2f1_f192cab0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-24T17:44:20Z",
+      "side": 1,
+      "message": "I think you can actually use a bigger viewport size as long as your texture size is below 64k. I would have to check but I think our max texture size is already under that.\n\nNot sure how this plays with sparse textures.",
+      "parentUuid": "cc88d255_cb1ffeb5",
+      "revId": "9a48a76fe9b871125368ef2e14ec27aed1b0403a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "769fd6f5_263fa324",
