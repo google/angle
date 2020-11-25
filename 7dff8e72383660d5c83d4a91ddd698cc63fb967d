@@ -354,6 +354,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "dc822538_6d6d88e6",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-25T18:54:54Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "9e5c1b82_4cff586e",
+      "range": {
+        "startLine": 178,
+        "startChar": 12,
+        "endLine": 178,
+        "endChar": 20
+      },
+      "revId": "7dff8e72383660d5c83d4a91ddd698cc63fb967d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b72e888b_b92bbbde",
@@ -1180,6 +1204,30 @@
       "side": 1,
       "message": "input or output storage class is need for shader io block. but only unnamed needs typeid, in/out varying (not shader io block) with typeid causes assertion. but have not identified the root cause.",
       "parentUuid": "999fafcb_46135484",
+      "range": {
+        "startLine": 1568,
+        "startChar": 49,
+        "endLine": 1568,
+        "endChar": 57
+      },
+      "revId": "7dff8e72383660d5c83d4a91ddd698cc63fb967d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b16a4747_13731ffe",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1568,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-25T18:54:54Z",
+      "side": 1,
+      "message": "Thanks for clarification",
+      "parentUuid": "448a81ad_f39e2060",
       "range": {
         "startLine": 1568,
         "startChar": 49,

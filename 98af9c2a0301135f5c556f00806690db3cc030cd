@@ -39,6 +39,29 @@
       "message": "will refine comment as needed",
       "revId": "98af9c2a0301135f5c556f00806690db3cc030cd",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "53a5af59_f91b35d1",
+        "filename": "src/compiler/translator/CollectVariables.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 1025,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-25T18:54:54Z",
+      "side": 1,
+      "message": "!",
+      "range": {
+        "startLine": 1025,
+        "startChar": 12,
+        "endLine": 1025,
+        "endChar": 15
+      },
+      "revId": "98af9c2a0301135f5c556f00806690db3cc030cd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
