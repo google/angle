@@ -1313,10 +1313,12 @@ TEST_P(FramebufferTest_ES31, MultisampleResolveWithBlit)
     ASSERT_GL_NO_ERROR();
 
     glBindFramebuffer(GL_READ_FRAMEBUFFER, resolveFBO);
-    EXPECT_PIXEL_NEAR(0, 0, 0, 0, 0, 255, 1.0);                      // Black
-    EXPECT_PIXEL_NEAR(kSize - 1, 1, 239, 0, 0, 255, 1.0);            // Red
-    EXPECT_PIXEL_NEAR(0, kSize - 1, 0, 239, 0, 255, 1.0);            // Green
-    EXPECT_PIXEL_NEAR(kSize - 1, kSize - 1, 239, 239, 0, 255, 1.0);  // Yellow
+    constexpr uint8_t kHalfPixelGradient = 256 / kSize / 2;
+    EXPECT_PIXEL_NEAR(0, 0, kHalfPixelGradient, kHalfPixelGradient, 0, 255, 1.0);
+    EXPECT_PIXEL_NEAR(kSize - 1, 0, 255 - kHalfPixelGradient, kHalfPixelGradient, 0, 255, 1.0);
+    EXPECT_PIXEL_NEAR(0, kSize - 1, kHalfPixelGradient, 255 - kHalfPixelGradient, 0, 255, 1.0);
+    EXPECT_PIXEL_NEAR(kSize - 1, kSize - 1, 255 - kHalfPixelGradient, 255 - kHalfPixelGradient, 0,
+                      255, 1.0);
 }
 
 // Test resolving a multisampled texture with blit to a different format
@@ -1359,10 +1361,12 @@ TEST_P(FramebufferTest_ES31, MultisampleResolveWithBlitDifferentFormats)
     ASSERT_GL_NO_ERROR();
 
     glBindFramebuffer(GL_READ_FRAMEBUFFER, resolveFBO);
-    EXPECT_PIXEL_NEAR(0, 0, 0, 0, 0, 255, 1.0);                      // Black
-    EXPECT_PIXEL_NEAR(kSize - 1, 1, 239, 0, 0, 255, 1.0);            // Red
-    EXPECT_PIXEL_NEAR(0, kSize - 1, 0, 239, 0, 255, 1.0);            // Green
-    EXPECT_PIXEL_NEAR(kSize - 1, kSize - 1, 239, 239, 0, 255, 1.0);  // Yellow
+    constexpr uint8_t kHalfPixelGradient = 256 / kSize / 2;
+    EXPECT_PIXEL_NEAR(0, 0, kHalfPixelGradient, kHalfPixelGradient, 0, 255, 1.0);
+    EXPECT_PIXEL_NEAR(kSize - 1, 0, 255 - kHalfPixelGradient, kHalfPixelGradient, 0, 255, 1.0);
+    EXPECT_PIXEL_NEAR(0, kSize - 1, kHalfPixelGradient, 255 - kHalfPixelGradient, 0, 255, 1.0);
+    EXPECT_PIXEL_NEAR(kSize - 1, kSize - 1, 255 - kHalfPixelGradient, 255 - kHalfPixelGradient, 0,
+                      255, 1.0);
 }
 
 // Test resolving a multisampled texture with blit after drawing to mulitiple FBOs.
@@ -1546,10 +1550,12 @@ TEST_P(FramebufferTest_ES31, MultisampleResolveWithBlitDifferentReadDrawBuffers)
 
     glBindFramebuffer(GL_READ_FRAMEBUFFER, resolveFBO);
     glReadBuffer(GL_COLOR_ATTACHMENT1);
-    EXPECT_PIXEL_NEAR(0, 0, 0, 0, 0, 255, 1.0);                      // Black
-    EXPECT_PIXEL_NEAR(kSize - 1, 1, 239, 0, 0, 255, 1.0);            // Red
-    EXPECT_PIXEL_NEAR(0, kSize - 1, 0, 239, 0, 255, 1.0);            // Green
-    EXPECT_PIXEL_NEAR(kSize - 1, kSize - 1, 239, 239, 0, 255, 1.0);  // Yellow
+    constexpr uint8_t kHalfPixelGradient = 256 / kSize / 2;
+    EXPECT_PIXEL_NEAR(0, 0, kHalfPixelGradient, kHalfPixelGradient, 0, 255, 1.0);
+    EXPECT_PIXEL_NEAR(kSize - 1, 0, 255 - kHalfPixelGradient, kHalfPixelGradient, 0, 255, 1.0);
+    EXPECT_PIXEL_NEAR(0, kSize - 1, kHalfPixelGradient, 255 - kHalfPixelGradient, 0, 255, 1.0);
+    EXPECT_PIXEL_NEAR(kSize - 1, kSize - 1, 255 - kHalfPixelGradient, 255 - kHalfPixelGradient, 0,
+                      255, 1.0);
 }
 
 // Test resolving a multisampled texture into a mipmaped texture with blit
@@ -1598,10 +1604,12 @@ TEST_P(FramebufferTest_ES31, MultisampleResolveIntoMipMapWithBlit)
     ASSERT_GL_NO_ERROR();
 
     glBindFramebuffer(GL_READ_FRAMEBUFFER, resolveFBO);
-    EXPECT_PIXEL_NEAR(0, 0, 0, 0, 0, 255, 1.0);                      // Black
-    EXPECT_PIXEL_NEAR(kSize - 1, 1, 251, 0, 0, 255, 1.0);            // Red
-    EXPECT_PIXEL_NEAR(0, kSize - 1, 0, 251, 0, 255, 1.0);            // Green
-    EXPECT_PIXEL_NEAR(kSize - 1, kSize - 1, 251, 251, 0, 255, 1.0);  // Yellow
+    constexpr uint8_t kHalfPixelGradient = 256 / kSize / 2;
+    EXPECT_PIXEL_NEAR(0, 0, kHalfPixelGradient, kHalfPixelGradient, 0, 255, 1.0);
+    EXPECT_PIXEL_NEAR(kSize - 1, 0, 255 - kHalfPixelGradient, kHalfPixelGradient, 0, 255, 1.0);
+    EXPECT_PIXEL_NEAR(0, kSize - 1, kHalfPixelGradient, 255 - kHalfPixelGradient, 0, 255, 1.0);
+    EXPECT_PIXEL_NEAR(kSize - 1, kSize - 1, 255 - kHalfPixelGradient, 255 - kHalfPixelGradient, 0,
+                      255, 1.0);
 }
 
 // Test resolving a multisampled texture with blit after drawing to multiple FBOs.
@@ -1802,10 +1810,12 @@ TEST_P(FramebufferTest_ES31, MultisampleResolveWithBlitThenDraw)
     ASSERT_GL_NO_ERROR();
 
     glBindFramebuffer(GL_READ_FRAMEBUFFER, resolveFBO);
-    EXPECT_PIXEL_NEAR(0, 0, 0, 0, 0, 255, 1.0);                      // Black
-    EXPECT_PIXEL_NEAR(kSize - 1, 1, 239, 0, 0, 255, 1.0);            // Red
-    EXPECT_PIXEL_NEAR(0, kSize - 1, 0, 239, 0, 255, 1.0);            // Green
-    EXPECT_PIXEL_NEAR(kSize - 1, kSize - 1, 239, 239, 0, 255, 1.0);  // Yellow
+    constexpr uint8_t kHalfPixelGradient = 256 / kSize / 2;
+    EXPECT_PIXEL_NEAR(0, 0, kHalfPixelGradient, kHalfPixelGradient, 0, 255, 1.0);
+    EXPECT_PIXEL_NEAR(kSize - 1, 0, 255 - kHalfPixelGradient, kHalfPixelGradient, 0, 255, 1.0);
+    EXPECT_PIXEL_NEAR(0, kSize - 1, kHalfPixelGradient, 255 - kHalfPixelGradient, 0, 255, 1.0);
+    EXPECT_PIXEL_NEAR(kSize - 1, kSize - 1, 255 - kHalfPixelGradient, 255 - kHalfPixelGradient, 0,
+                      255, 1.0);
 
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, msaaFBO);
     ANGLE_GL_PROGRAM(blueProgram, essl3_shaders::vs::Passthrough(), essl3_shaders::fs::Blue());
@@ -1813,10 +1823,11 @@ TEST_P(FramebufferTest_ES31, MultisampleResolveWithBlitThenDraw)
     ASSERT_GL_NO_ERROR();
 
     // The resolved FBO should be unaffected by the last draw call.
-    EXPECT_PIXEL_NEAR(0, 0, 0, 0, 0, 255, 1.0);                      // Black
-    EXPECT_PIXEL_NEAR(kSize - 1, 1, 239, 0, 0, 255, 1.0);            // Red
-    EXPECT_PIXEL_NEAR(0, kSize - 1, 0, 239, 0, 255, 1.0);            // Green
-    EXPECT_PIXEL_NEAR(kSize - 1, kSize - 1, 239, 239, 0, 255, 1.0);  // Yellow
+    EXPECT_PIXEL_NEAR(0, 0, kHalfPixelGradient, kHalfPixelGradient, 0, 255, 1.0);
+    EXPECT_PIXEL_NEAR(kSize - 1, 0, 255 - kHalfPixelGradient, kHalfPixelGradient, 0, 255, 1.0);
+    EXPECT_PIXEL_NEAR(0, kSize - 1, kHalfPixelGradient, 255 - kHalfPixelGradient, 0, 255, 1.0);
+    EXPECT_PIXEL_NEAR(kSize - 1, kSize - 1, 255 - kHalfPixelGradient, 255 - kHalfPixelGradient, 0,
+                      255, 1.0);
 }
 
 // Test resolving a multisampled texture with blit, then drawing multisampled again.  The latter
@@ -1927,10 +1938,12 @@ TEST_P(FramebufferTest_ES31, MultisampleResolveWithBlitThenDrawThenResolveAgain)
     ASSERT_GL_NO_ERROR();
 
     glBindFramebuffer(GL_READ_FRAMEBUFFER, resolveFBO);
-    EXPECT_PIXEL_NEAR(0, 0, 0, 0, 0, 255, 1.0);                      // Black
-    EXPECT_PIXEL_NEAR(kSize - 1, 1, 239, 0, 0, 255, 1.0);            // Red
-    EXPECT_PIXEL_NEAR(0, kSize - 1, 0, 239, 0, 255, 1.0);            // Green
-    EXPECT_PIXEL_NEAR(kSize - 1, kSize - 1, 239, 239, 0, 255, 1.0);  // Yellow
+    constexpr uint8_t kHalfPixelGradient = 256 / kSize / 2;
+    EXPECT_PIXEL_NEAR(0, 0, kHalfPixelGradient, kHalfPixelGradient, 0, 255, 1.0);
+    EXPECT_PIXEL_NEAR(kSize - 1, 0, 255 - kHalfPixelGradient, kHalfPixelGradient, 0, 255, 1.0);
+    EXPECT_PIXEL_NEAR(0, kSize - 1, kHalfPixelGradient, 255 - kHalfPixelGradient, 0, 255, 1.0);
+    EXPECT_PIXEL_NEAR(kSize - 1, kSize - 1, 255 - kHalfPixelGradient, 255 - kHalfPixelGradient, 0,
+                      255, 1.0);
 
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, msaaFBO);
     ANGLE_GL_PROGRAM(blueProgram, essl3_shaders::vs::Passthrough(), essl3_shaders::fs::Blue());
@@ -1988,10 +2001,12 @@ TEST_P(FramebufferTest_ES31, MultisampleResolveWithBlitThenDrawThenResolveAgainT
     ASSERT_GL_NO_ERROR();
 
     glBindFramebuffer(GL_READ_FRAMEBUFFER, resolveFBO1);
-    EXPECT_PIXEL_NEAR(0, 0, 0, 0, 0, 255, 1.0);                      // Black
-    EXPECT_PIXEL_NEAR(kSize - 1, 1, 239, 0, 0, 255, 1.0);            // Red
-    EXPECT_PIXEL_NEAR(0, kSize - 1, 0, 239, 0, 255, 1.0);            // Green
-    EXPECT_PIXEL_NEAR(kSize - 1, kSize - 1, 239, 239, 0, 255, 1.0);  // Yellow
+    constexpr uint8_t kHalfPixelGradient = 256 / kSize / 2;
+    EXPECT_PIXEL_NEAR(0, 0, kHalfPixelGradient, kHalfPixelGradient, 0, 255, 1.0);
+    EXPECT_PIXEL_NEAR(kSize - 1, 0, 255 - kHalfPixelGradient, kHalfPixelGradient, 0, 255, 1.0);
+    EXPECT_PIXEL_NEAR(0, kSize - 1, kHalfPixelGradient, 255 - kHalfPixelGradient, 0, 255, 1.0);
+    EXPECT_PIXEL_NEAR(kSize - 1, kSize - 1, 255 - kHalfPixelGradient, 255 - kHalfPixelGradient, 0,
+                      255, 1.0);
 
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, msaaFBO);
     ANGLE_GL_PROGRAM(blueProgram, essl3_shaders::vs::Passthrough(), essl3_shaders::fs::Blue());
@@ -2021,10 +2036,11 @@ TEST_P(FramebufferTest_ES31, MultisampleResolveWithBlitThenDrawThenResolveAgainT
 
     // The first resolve FBO should be untouched.
     glBindFramebuffer(GL_READ_FRAMEBUFFER, resolveFBO1);
-    EXPECT_PIXEL_NEAR(0, 0, 0, 0, 0, 255, 1.0);                      // Black
-    EXPECT_PIXEL_NEAR(kSize - 1, 1, 239, 0, 0, 255, 1.0);            // Red
-    EXPECT_PIXEL_NEAR(0, kSize - 1, 0, 239, 0, 255, 1.0);            // Green
-    EXPECT_PIXEL_NEAR(kSize - 1, kSize - 1, 239, 239, 0, 255, 1.0);  // Yellow
+    EXPECT_PIXEL_NEAR(0, 0, kHalfPixelGradient, kHalfPixelGradient, 0, 255, 1.0);
+    EXPECT_PIXEL_NEAR(kSize - 1, 0, 255 - kHalfPixelGradient, kHalfPixelGradient, 0, 255, 1.0);
+    EXPECT_PIXEL_NEAR(0, kSize - 1, kHalfPixelGradient, 255 - kHalfPixelGradient, 0, 255, 1.0);
+    EXPECT_PIXEL_NEAR(kSize - 1, kSize - 1, 255 - kHalfPixelGradient, 255 - kHalfPixelGradient, 0,
+                      255, 1.0);
 }
 
 // If there are no attachments, rendering will be limited to a rectangle having a lower left of

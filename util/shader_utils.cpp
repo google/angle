@@ -705,7 +705,7 @@ out vec4 my_FragColor;
 
 void main()
 {
-    my_FragColor = vec4(v_position.x, v_position.y, 0.0, 1.0);
+    my_FragColor = vec4(v_position.xy * 0.5 + vec2(0.5), 0.0, 1.0);
 })";
 }
 
