@@ -141,6 +141,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "7bdaf20e_c239e367",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 695,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-25T19:23:19Z",
+      "side": 1,
+      "message": "The vkEvent objects are never freed without calling releaseResourcesToCurrentSerial(), which eventually leads to a crash due to running out of memory.\n\nWe never make it to submitFrame() inside flushCommandsAndEndRenderPass() (and we don\u0027t want to since that results the vkQueueSubmit that I\u0027m trying to remove with this CL), so the resources are never freed.\n\nThis seems to be a problem with multithreaded/multi-context rendering in general with this type of change.   The threads that are drawing to their own attachments, which the main thread later samples from, will never call vkQueueSubmit so they never have a chance to release their resources.   This version seems to be working, but as Charlie is pointing out below, it does introduce other issues related to Resource::waitForIdle() and making sure the work is submitted before waiting on it.",
+      "parentUuid": "a95dd181_10de1be5",
+      "range": {
+        "startLine": 695,
+        "startChar": 8,
+        "endLine": 695,
+        "endChar": 80
+      },
+      "revId": "dc198256042ed7e9c1f831f36bb7766a2c3af59a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "c85b4f94_994de48e",
         "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
         "patchSetId": 9
