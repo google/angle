@@ -52,6 +52,24 @@
       "parentUuid": "e5be8317_07642769",
       "revId": "f69966861211a8d394b0e3bb5b97e6f305988288",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "99055c6a_2b6d6e3a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-25T18:05:16Z",
+      "side": 1,
+      "message": "Glad to here this is a non issue. Feel free to remove the suppressions when they pass on AMD, or change the bug number to a new one that specifies they fail due to a driver bug (so that we can close the bug that adds sample shading support)",
+      "parentUuid": "30e08716_8bb5091a",
+      "revId": "f69966861211a8d394b0e3bb5b97e6f305988288",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
