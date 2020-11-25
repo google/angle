@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c85b4f94_994de48e",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 697,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-25T00:29:18Z",
+      "side": 1,
+      "message": "Correct me if I am wrong here. What you did here is that the commands before and after this point will tagged with the same queueSerial number, but the resources before this point will be released early (i.e, before vkQUeueSubmit). What if somebody called glFlush and you come here. Resources appears have submitted (but not actually submitted). Now if someone calls an API and end up in usedInRecordedCommands(), the answer will be \"no\", and it think command already submitted and will just sit there waiting for GPU to finish. Because comamnds never actually submit, you end up deadlock. If you search usedInRecordedCommands() and see where it could get called, I think you could create a test case. Can you achieve what you want without release resources early?",
+      "range": {
+        "startLine": 691,
+        "startChar": 7,
+        "endLine": 697,
+        "endChar": 39
+      },
+      "revId": "dc198256042ed7e9c1f831f36bb7766a2c3af59a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
