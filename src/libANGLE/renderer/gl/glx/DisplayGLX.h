@@ -125,7 +125,7 @@ class DisplayGLX : public DisplayGL
     XVisualInfo *mVisuals;
     glx::Context mContext;
     glx::Context mSharedContext;
-    std::unordered_map<std::thread::id, glx::Context> mCurrentContexts;
+    angle::HashMap<std::thread::id, glx::Context> mCurrentContexts;
     // A pbuffer the context is current on during ANGLE initialization
     glx::Pbuffer mInitPbuffer;
 

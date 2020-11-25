@@ -475,7 +475,7 @@ class RenderPipelineCache final : angle::NonCopyable
     bool hasDefaultAttribs(const RenderPipelineDesc &desc) const;
 
     // One table with default attrib and one table without.
-    std::unordered_map<RenderPipelineDesc, AutoObjCPtr<id<MTLRenderPipelineState>>>
+    angle::HashMap<RenderPipelineDesc, AutoObjCPtr<id<MTLRenderPipelineState>>>
         mRenderPipelineStates[2];
 
     RenderPipelineCacheSpecializeShaderFactory *mSpecializedShaderFactory;
@@ -503,8 +503,8 @@ class StateCache final : angle::NonCopyable
 
   private:
     AutoObjCPtr<id<MTLDepthStencilState>> mNullDepthStencilState = nil;
-    std::unordered_map<DepthStencilDesc, AutoObjCPtr<id<MTLDepthStencilState>>> mDepthStencilStates;
-    std::unordered_map<SamplerDesc, AutoObjCPtr<id<MTLSamplerState>>> mSamplerStates;
+    angle::HashMap<DepthStencilDesc, AutoObjCPtr<id<MTLDepthStencilState>>> mDepthStencilStates;
+    angle::HashMap<SamplerDesc, AutoObjCPtr<id<MTLSamplerState>>> mSamplerStates;
 };
 
 }  // namespace mtl

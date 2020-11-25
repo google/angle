@@ -118,7 +118,7 @@ class DisplayWGL : public DisplayGL
         HDC dc     = nullptr;
         HGLRC glrc = nullptr;
     };
-    std::unordered_map<std::thread::id, CurrentNativeContext> mCurrentData;
+    angle::HashMap<std::thread::id, CurrentNativeContext> mCurrentData;
 
     HMODULE mOpenGLModule;
 

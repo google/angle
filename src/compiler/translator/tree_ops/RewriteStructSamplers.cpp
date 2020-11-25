@@ -191,7 +191,7 @@ struct InstantiationHash
 typedef std::map<ImmutableString, std::unordered_map<Instantiation, TFunction *, InstantiationHash>>
     FunctionInstantiations;
 
-typedef std::unordered_map<const TFunction *, const TFunction *> FunctionMap;
+typedef angle::HashMap<const TFunction *, const TFunction *> FunctionMap;
 
 // Generates a new function from the given function using the given
 // instantiation; generatedInstantiations can be null.
@@ -299,9 +299,9 @@ struct VariableExtraData
 {
     // The value consists of strides, starting from the outermost array.
     // For example, with sampler2D foo[3][6], we would have {1, 6, 18}.
-    std::unordered_map<const TVariable *, std::vector<size_t>> arrayStrideMap;
+    angle::HashMap<const TVariable *, std::vector<size_t>> arrayStrideMap;
     // For each generated array parameter, holds the offset parameter.
-    std::unordered_map<const TVariable *, const TVariable *> paramOffsetMap;
+    angle::HashMap<const TVariable *, const TVariable *> paramOffsetMap;
 };
 
 class Traverser final : public TIntermTraverser, public ArrayTraverser
@@ -489,10 +489,7 @@ class Traverser final : public TIntermTraverser, public ArrayTraverser
 
     FunctionInstantiations *getFunctionInstantiations() { return &mFunctionInstantiations; }
 
-    std::unordered_map<const TFunction *, const TFunction *> *getFunctionMap()
-    {
-        return &mFunctionMap;
-    }
+    angle::HashMap<const TFunction *, const TFunction *> *getFunctionMap() { return &mFunctionMap; }
 
   private:
     // This returns the name of a struct sampler reference. References are always TIntermBinary.
@@ -1024,13 +1021,13 @@ class Traverser final : public TIntermTraverser, public ArrayTraverser
 class MonomorphizeTraverser final : public TIntermTraverser
 {
   public:
-    typedef std::unordered_map<const TVariable *, const TVariable *> VariableReplacementMap;
+    typedef angle::HashMap<const TVariable *, const TVariable *> VariableReplacementMap;
 
     explicit MonomorphizeTraverser(
         TCompiler *compiler,
         TSymbolTable *symbolTable,
         FunctionInstantiations *functionInstantiations,
-        std::unordered_map<const TFunction *, const TFunction *> *functionMap)
+        angle::HashMap<const TFunction *, const TFunction *> *functionMap)
         : TIntermTraverser(true, false, true, symbolTable),
           mFunctionInstantiations(*functionInstantiations),
           mFunctionMap(functionMap),
@@ -1131,7 +1128,7 @@ class MonomorphizeTraverser final : public TIntermTraverser
     FunctionInstantiations mGeneratedInstantiations;
     // New instantiations caused by other instantiations.
     FunctionInstantiations mPendingInstantiations;
-    std::unordered_map<const TFunction *, const TFunction *> *mFunctionMap;
+    angle::HashMap<const TFunction *, const TFunction *> *mFunctionMap;
     TIntermSequence mReplacementPrototypes;
     TCompiler *mCompiler;
     bool mSubpassesSucceeded;
@@ -1166,7 +1163,7 @@ class MonomorphizeTraverser final : public TIntermTraverser
             TSymbolTable *symbolTable,
             FunctionInstantiations *pendingInstantiations,
             FunctionInstantiations *generatedInstantiations,
-            std::unordered_map<const TFunction *, const TFunction *> *functionMap)
+            angle::HashMap<const TFunction *, const TFunction *> *functionMap)
             : TIntermTraverser(true, false, false, symbolTable),
               mPendingInstantiations(pendingInstantiations),
               mGeneratedInstantiations(generatedInstantiations),
@@ -1198,7 +1195,7 @@ class MonomorphizeTraverser final : public TIntermTraverser
       private:
         FunctionInstantiations *mPendingInstantiations;
         FunctionInstantiations *mGeneratedInstantiations;
-        std::unordered_map<const TFunction *, const TFunction *> *mFunctionMap;
+        angle::HashMap<const TFunction *, const TFunction *> *mFunctionMap;
     };
 };
 }  // anonymous namespace

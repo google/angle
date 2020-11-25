@@ -399,9 +399,9 @@ bool ProgramExecutable::linkValidateGlobalNames(
     InfoLog &infoLog,
     const ShaderMap<const ProgramState *> &programStates) const
 {
-    std::unordered_map<std::string, const sh::ShaderVariable *> uniformMap;
+    angle::HashMap<std::string, const sh::ShaderVariable *> uniformMap;
     using BlockAndFieldPair = std::pair<const sh::InterfaceBlock *, const sh::ShaderVariable *>;
-    std::unordered_map<std::string, std::vector<BlockAndFieldPair>> uniformBlockFieldMap;
+    angle::HashMap<std::string, std::vector<BlockAndFieldPair>> uniformBlockFieldMap;
 
     for (ShaderType shaderType : kAllGraphicsShaderTypes)
     {

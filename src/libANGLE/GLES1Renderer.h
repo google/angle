@@ -66,7 +66,7 @@ class GLES1Renderer final : angle::NonCopyable
                               State *glState,
                               ShaderProgramID vshader,
                               ShaderProgramID fshader,
-                              const std::unordered_map<GLint, std::string> &attribLocs,
+                              const angle::HashMap<GLint, std::string> &attribLocs,
                               ShaderProgramID *programOut);
     angle::Result initializeRendererProgram(Context *context, State *glState);
 

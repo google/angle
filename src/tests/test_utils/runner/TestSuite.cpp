@@ -742,7 +742,7 @@ std::string GetConfigNameFromTestIdentifier(const TestIdentifier &id)
 TestQueue BatchTests(const std::vector<TestIdentifier> &tests, int batchSize)
 {
     // First sort tests by configuration.
-    std::unordered_map<std::string, std::vector<TestIdentifier>> testsSortedByConfig;
+    angle::HashMap<std::string, std::vector<TestIdentifier>> testsSortedByConfig;
     for (const TestIdentifier &id : tests)
     {
         std::string config = GetConfigNameFromTestIdentifier(id);

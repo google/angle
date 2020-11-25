@@ -98,7 +98,7 @@ struct ShaderInterfaceVariableInfo
 
 // TODO: http://anglebug.com/4524: Need a different hash key than a string, since
 // that's slow to calculate.
-using ShaderInterfaceVariableInfoMap = std::unordered_map<std::string, ShaderInterfaceVariableInfo>;
+using ShaderInterfaceVariableInfoMap    = angle::HashMap<std::string, ShaderInterfaceVariableInfo>;
 using ShaderMapInterfaceVariableInfoMap = gl::ShaderMap<ShaderInterfaceVariableInfoMap>;
 
 void GlslangInitialize();

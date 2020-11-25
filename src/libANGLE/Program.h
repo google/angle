@@ -192,12 +192,12 @@ class ProgramAliasedBindings final : angle::NonCopyable
     int getBindingByLocation(GLuint location) const;
     int getBinding(const sh::ShaderVariable &variable) const;
 
-    using const_iterator = std::unordered_map<std::string, ProgramBinding>::const_iterator;
+    using const_iterator = angle::HashMap<std::string, ProgramBinding>::const_iterator;
     const_iterator begin() const;
     const_iterator end() const;
 
   private:
-    std::unordered_map<std::string, ProgramBinding> mBindings;
+    angle::HashMap<std::string, ProgramBinding> mBindings;
 };
 
 class ProgramState final : angle::NonCopyable

@@ -124,18 +124,18 @@ class RetypeOpaqueVariablesHelper
 
   private:
     // A map from the old global variable to the new one.
-    std::unordered_map<const TVariable *, TVariable *> mReplacedGlobalVariables;
+    angle::HashMap<const TVariable *, TVariable *> mReplacedGlobalVariables;
 
     // A map from functions with old type parameters to one where that's replaced with the new type.
-    std::unordered_map<const TFunction *, TFunction *> mReplacedFunctions;
+    angle::HashMap<const TFunction *, TFunction *> mReplacedFunctions;
 
     // A map from function old type parameters to their replacement new type parameter for the
     // current function definition.
-    std::unordered_map<const TVariable *, TVariable *> mReplacedFunctionParams;
+    angle::HashMap<const TVariable *, TVariable *> mReplacedFunctionParams;
 
     // A map from function call old type arguments to their replacement for the current function
     // call.
-    std::stack<std::unordered_map<const TIntermNode *, TIntermTyped *>> mReplacedFunctionCallArgs;
+    std::stack<angle::HashMap<const TIntermNode *, TIntermTyped *>> mReplacedFunctionCallArgs;
 };
 
 }  // namespace sh
