@@ -34,6 +34,24 @@
       "parentUuid": "6250f164_03919ac5",
       "revId": "f69966861211a8d394b0e3bb5b97e6f305988288",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "30e08716_8bb5091a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-25T17:34:44Z",
+      "side": 1,
+      "message": "thanks for the test shabi. spec interpretation was lacking from our side -\n\ntl;dr - I think we just need to update the expectations file.\n\ndetails -\n\nOES_shader_multisample_interpolation spec -\n When interpolating variables declared using \"sample in\" when the value of\n SAMPLE_BUFFERS is one, the fragment shader will be invoked separately for each\n covered sample and the variable will be sampled at the corresponding sample\n point.\n\nVulkan 1.2.136 spec\n For fragment shader input variables decorated with neither Centroid nor Sample,\n the assigned variable may be interpolated anywhere within the fragment and a\n single value may be assigned to each sample within the fragment.\n\nthis led us to believe that the \"Sample\" keyword is necessary since spec says -\n If a fragment shader input is decorated with Sample, a separate value must be\n assigned to that variable for each covered sample in the fragment, and that\n value must be sampled at the location of the individual sample.\n\nHowever, even if OES_shader_multisample_interpolation is not supported, the\nsupport of OES_sample_shading is enough to assign a separate value to the\nfragment shader input.",
+      "parentUuid": "e5be8317_07642769",
+      "revId": "f69966861211a8d394b0e3bb5b97e6f305988288",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
