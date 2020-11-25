@@ -16,6 +16,24 @@
       "message": "{}",
       "revId": "720e310902b437479294153781bd3821f68b9a53",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d8632b81_b8568db1",
+        "filename": "scripts/generate_entry_points.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 664,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-25T13:52:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "315d3854_9cf03171",
+      "revId": "720e310902b437479294153781bd3821f68b9a53",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
