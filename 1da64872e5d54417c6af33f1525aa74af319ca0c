@@ -207,6 +207,30 @@
       },
       "revId": "1da64872e5d54417c6af33f1525aa74af319ca0c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6be01a26_e0a0549d",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-25T17:54:14Z",
+      "side": 1,
+      "message": "Yeah, I\u0027m not really keen on submitting this.\n\nThinking about it again, making DepthStencilReadOnly a ResourceAccess::Write with VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT may be good enough. I\u0027ll whip something up and see if any partner sees a regression.",
+      "parentUuid": "2591dee1_353f826b",
+      "range": {
+        "startLine": 171,
+        "startChar": 28,
+        "endLine": 171,
+        "endChar": 36
+      },
+      "revId": "1da64872e5d54417c6af33f1525aa74af319ca0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
