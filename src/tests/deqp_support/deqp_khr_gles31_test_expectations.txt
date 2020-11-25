@@ -66,6 +66,10 @@
 // Incompatible between incomplete texture and sampler format (isampler2D or usampler2D):
 3588 VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8*i.* = SKIP
 
+// Geometry shader support
+5406 VULKAN : KHR-GLES31.core.draw_indirect.basic-mode-*adjacency = SKIP
+3571 VULKAN : KHR-GLES31.core.draw_indirect.negative-xfb = SKIP
+
 ////
 //// Desktop Vulkan expectations
 ////

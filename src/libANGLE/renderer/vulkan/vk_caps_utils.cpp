@@ -906,8 +906,9 @@ void RendererVk::ensureCapsInitialized() const
     // Geometry shader is optional.
     if (mPhysicalDeviceFeatures.geometryShader)
     {
-        // TODO : Remove below comment when http://anglebug.com/3571 will be completed
-        // mNativeExtensions.geometryShader = true;
+        // TODO: geometry shader support is incomplete.  http://anglebug.com/3571
+        mNativeExtensions.geometryShader =
+            getFeatures().exposeNonConformantExtensionsAndVersions.enabled;
         mNativeCaps.maxFramebufferLayers = LimitToInt(limitsVk.maxFramebufferLayers);
         mNativeCaps.layerProvokingVertex = GL_LAST_VERTEX_CONVENTION_EXT;
 

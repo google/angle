@@ -186,6 +186,31 @@
 // Cannot create 2D (array) view of 3D texture.
 3886 VULKAN : dEQP-GLES31.functional.image_load_store.3d.*layer = FAIL
 
+// Geometry shader support:
+5403 VULKAN : dEQP-GLES31.functional.shaders.linkage.es31.geometry.varying.rules.output_different_precision = FAIL
+5403 VULKAN : dEQP-GLES31.functional.geometry_shading.* = FAIL
+3580 VULKAN : dEQP-GLES31.functional.shaders.linkage.es31.geometry.varying.types.float_struct = SKIP
+5404 VULKAN : dEQP-GLES31.functional.geometry_shading.query.primitives_generated* = SKIP
+5405 VULKAN : dEQP-GLES31.functional.geometry_shading.basic.*128 = FAIL
+5406 VULKAN : dEQP-GLES31.functional.geometry_shading.input.*adjacency* = SKIP
+5407 VULKAN : dEQP-GLES31.functional.geometry_shading.layered.* = SKIP
+5407 VULKAN : dEQP-GLES31.functional.geometry_shading.instanced.invocation_per_layer* = SKIP
+5407 VULKAN : dEQP-GLES31.functional.geometry_shading.instanced.multiple_layers_per_invocation* = SKIP
+3571 VULKAN : dEQP-GLES31.functional.geometry_shading.*transform_feedback* = SKIP
+3571 VULKAN : dEQP-GLES31.functional.program_interface_query.transform_feedback_varying.*geo* = SKIP
+5409 VULKAN : dEQP-GLES31.functional.program_interface_query.*separable_geometry* = FAIL
+5409 VULKAN : dEQP-GLES31.functional.program_interface_query.buffer_variable.random.41 = FAIL
+5409 VULKAN : dEQP-GLES31.functional.program_interface_query.buffer_variable.random.44 = FAIL
+5409 VULKAN : dEQP-GLES31.functional.program_interface_query.buffer_variable.random.48 = FAIL
+5409 VULKAN : dEQP-GLES31.functional.program_interface_query.buffer_variable.random.51 = FAIL
+5409 VULKAN : dEQP-GLES31.functional.program_interface_query.buffer_variable.random.55 = FAIL
+5409 VULKAN : dEQP-GLES31.functional.program_interface_query.uniform.random.41 = FAIL
+5409 VULKAN : dEQP-GLES31.functional.program_interface_query.uniform.random.44 = FAIL
+5409 VULKAN : dEQP-GLES31.functional.program_interface_query.uniform.random.48 = FAIL
+5409 VULKAN : dEQP-GLES31.functional.program_interface_query.uniform.random.51 = FAIL
+5409 VULKAN : dEQP-GLES31.functional.program_interface_query.uniform.random.55 = FAIL
+
+
 ////
 //// AMD Vulkan expectations
 ////
