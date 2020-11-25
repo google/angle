@@ -16,6 +16,29 @@
       "message": "Actually Jonah I\u0027m going to turn this into WIP. I forgot to add the extension to registry.xml which is why there are test failures, but adding that generates a lot of duplicate code (with EXT instead of OES), and I don\u0027t believe it\u0027s worth it.\n\nI did this quickly for another change that I\u0027m no longer going to pursue, so I don\u0027t really need this.",
       "revId": "e7e32021e796d487a5fd6cbc854897320f5b1cf1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "29ad92fa_000e248b",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1262,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2020-11-25T15:43:35Z",
+      "side": 1,
+      "message": "I think we can expose both extensions if any of these backing extensions are present. Especially since there are no shading language changes needed.",
+      "range": {
+        "startLine": 1257,
+        "startChar": 0,
+        "endLine": 1262,
+        "endChar": 66
+      },
+      "revId": "e7e32021e796d487a5fd6cbc854897320f5b1cf1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
