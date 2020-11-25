@@ -1,0 +1,113 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dd217175_c99170de",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 11
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-25T16:01:04Z",
+      "side": 1,
+      "message": "Glad to see this was less complicated than I had convinced myself!\n\nIf transform feedback is causing trouble, you could split that change as a follow up",
+      "revId": "9e5d365498403a63e17ecae4bdff85c819f16735",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c7bea113_c2c0d4ea",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 3451,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-25T16:01:04Z",
+      "side": 1,
+      "message": "nit: \"and after\". I\u0027d appreciate it if you could fix that throughout this function",
+      "range": {
+        "startLine": 3451,
+        "startChar": 84,
+        "endLine": 3451,
+        "endChar": 88
+      },
+      "revId": "9e5d365498403a63e17ecae4bdff85c819f16735",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f591c510_4265b0bb",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 4821,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-25T16:01:04Z",
+      "side": 1,
+      "message": "nit:\n\n    else if (mShaderType \u003d\u003d GL_TESS_EVALUATION_SHADER_EXT)\n    {\n        if (qualifierType \u003d\u003d \"triangles\" \u0026\u0026\n             checkCanUseExtension(qualifierTypeLine, TExtension::EXT_tessellation_shader)\n        {\n            ...\n        }\n        else if ...\n        ...\n    }\n\nAgain, you could potentially clean up the code above to check for GEOMETRY once only.",
+      "range": {
+        "startLine": 4766,
+        "startChar": 0,
+        "endLine": 4821,
+        "endChar": 5
+      },
+      "revId": "9e5d365498403a63e17ecae4bdff85c819f16735",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f5df1b9e_798bb76c",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1389,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-25T16:01:04Z",
+      "side": 1,
+      "message": "nit: at this point you can use an if else:\n\n    ShaderType tfStage \u003d ShaderType::Vertex;\n    if (mState.mAttachedShaders[ShaderType::Geometry])\n        ...\n    else if ...",
+      "range": {
+        "startLine": 1384,
+        "startChar": 1,
+        "endLine": 1389,
+        "endChar": 56
+      },
+      "revId": "9e5d365498403a63e17ecae4bdff85c819f16735",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "11d22a57_96b911c2",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1589,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-25T16:01:04Z",
+      "side": 1,
+      "message": "Use SetBitField for these two",
+      "range": {
+        "startLine": 1588,
+        "startChar": 0,
+        "endLine": 1589,
+        "endChar": 69
+      },
+      "revId": "9e5d365498403a63e17ecae4bdff85c819f16735",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
