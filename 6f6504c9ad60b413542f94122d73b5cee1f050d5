@@ -22,6 +22,30 @@
       },
       "revId": "6f6504c9ad60b413542f94122d73b5cee1f050d5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "de071cd0_2f907a59",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 4518,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-25T03:37:35Z",
+      "side": 0,
+      "message": "I can\u0027t remember why, but I was hitting this assert when playing around.   I\u0027ll try adding it back to see where things were going wrong.",
+      "parentUuid": "2bf74100_70cfb507",
+      "range": {
+        "startLine": 4518,
+        "startChar": 16,
+        "endLine": 4518,
+        "endChar": 35
+      },
+      "revId": "6f6504c9ad60b413542f94122d73b5cee1f050d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }

@@ -22,6 +22,30 @@
       },
       "revId": "dc198256042ed7e9c1f831f36bb7766a2c3af59a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1de3071c_1fbd5954",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 697,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-25T03:37:35Z",
+      "side": 1,
+      "message": "Looking at reserveSubmitSerial(), I think this is working correctly - at least in terms of making sure things are getting the correct Serial values:\n\n    Serial CommandQueue::reserveSubmitSerial()\n    {\n        Serial returnSerial \u003d mCurrentQueueSerial;\n        mCurrentQueueSerial \u003d mQueueSerialFactory.generate();\n        return returnSerial;\n    }\n\ngetCurrentQueueSerial() will return the Serial that will be used for the next vkQueueSubmit(), which is what we want to wait for during a Sync event, as well as any Buffer/Query commands that may also call usedInRecordedCommands().   \n\n\u003e Resources appears have submitted (but not actually submitted). \n\nI\u0027m not sure I agree with this statement.   The command buffer has been \u0027closed\u0027 by the flushCommandsAndEndRenderPass(), so any resources calling that will correctly get a \u0027false\u0027 value returned, since any new commands using that resource will be in a new command buffer.   If a caller really wants to know if a resource is used in any commands that haven\u0027t completed yet, they should instead be calling isCurrentlyInUse(), since that will tell you if it\u0027s used in any commands that are still being recorded or haven\u0027t been submitted yet.\n\n    ANGLE_INLINE bool usedInRecordedCommands() const\n    {\n        ASSERT(valid());\n        return mUse-\u003ecounter \u003e 1;\n    }\n\n    ANGLE_INLINE bool usedInRunningCommands(Serial lastCompletedSerial) const\n    {\n        ASSERT(valid());\n        return mUse-\u003eserial \u003e lastCompletedSerial;\n    }\n\n    ANGLE_INLINE bool isCurrentlyInUse(Serial lastCompletedSerial) const\n    {\n        return usedInRecordedCommands() || usedInRunningCommands(lastCompletedSerial);\n    }\n\nLooking at the uses of usedInRecordedCommands(), they typically seem to follow the pattern:\n\n    if (usedInRecordedCommands())\n    {\n        ANGLE_TRY(contextVk-\u003eflushImpl(nullptr));\n    }\n\nOne of the first things flushImpl() does is call flushCommandsAndEndRenderPass(), which this code just did, so I don\u0027t think anything unexpected is going on there either.\n\nIf you can think of with a sequence of events that you think could hit the hang you\u0027re describing, I can try and put something together, but buffer copies are tested pretty well, which is one of the main users of usedInRecordedCommands().   The others are queries (not sure how well tested) and SyncHelper, which I did run into issues with and eventually led me to this version.   Admittedly, I\u0027m leaning pretty hard on CQ in this area to give me some confidence I\u0027m not doing anything too crazy here.\n\nAll that said, the reason the call to releaseResourcesToCurrentSerial() is here in the first place is to fix a leak of vkEvent objects.   Without this call, the vkEvents are never freed and we eventually run out of memory and crash (at least during Asphalt 9), which may be pointing to another bug somewhere else.",
+      "parentUuid": "c85b4f94_994de48e",
+      "range": {
+        "startLine": 691,
+        "startChar": 7,
+        "endLine": 697,
+        "endChar": 39
+      },
+      "revId": "dc198256042ed7e9c1f831f36bb7766a2c3af59a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
