@@ -46,6 +46,9 @@ TEST_P(OcclusionQueriesTest, IsOccluded)
     ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 &&
                        !IsGLExtensionEnabled("GL_EXT_occlusion_query_boolean"));
 
+    // http://anglebug.com/5400
+    ANGLE_SKIP_TEST_IF(IsOSX() && IsMetal());
+
     glDepthMask(GL_TRUE);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
@@ -93,6 +96,9 @@ TEST_P(OcclusionQueriesTest, IsNotOccluded)
     // TODO(syoussefi): Using render pass ops to clear the framebuffer attachment results in
     // AMD/Windows misbehaving in this test.  http://anglebug.com/3286
     ANGLE_SKIP_TEST_IF(IsWindows() && IsAMD() && IsVulkan());
+
+    // http://anglebug.com/5400
+    ANGLE_SKIP_TEST_IF(IsOSX() && IsMetal());
 
     glDepthMask(GL_TRUE);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
@@ -392,7 +398,8 @@ TEST_P(OcclusionQueriesTest, MultiQueries)
     ANGLE_SKIP_TEST_IF(IsOpenGL() || IsD3D11());
 
     // http://anglebug.com/4925
-    ANGLE_SKIP_TEST_IF(IsMetal() && IsNVIDIA());
+    // http://anglebug.com/5400
+    ANGLE_SKIP_TEST_IF(IsOSX() && IsMetal());
 
     // TODO(anglebug.com/5360): Failing on ARM-based Apple DTKs.
     ANGLE_SKIP_TEST_IF(IsOSX() && IsARM64() && IsDesktopOpenGL());
@@ -582,6 +589,9 @@ TEST_P(OcclusionQueriesTest, MultiContext)
 
     // http://anglebug.com/4092
     ANGLE_SKIP_TEST_IF(IsVulkan());
+
+    // http://anglebug.com/5400
+    ANGLE_SKIP_TEST_IF(IsOSX() && IsMetal());
 
     glDepthMask(GL_TRUE);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
