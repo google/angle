@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "fba94baf_72effbe7",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-25T03:53:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e1b7e5f6_33cd4165",
+      "range": {
+        "startLine": 17,
+        "startChar": 11,
+        "endLine": 17,
+        "endChar": 15
+      },
+      "revId": "3fe8c814ede6615757a8b862da89682703dd5bfc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "dd4f925e_26688f96",
@@ -55,6 +79,24 @@
       "side": 1,
       "message": "+1 Same question.",
       "parentUuid": "dd4f925e_26688f96",
+      "revId": "3fe8c814ede6615757a8b862da89682703dd5bfc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "84e72ed5_bfc1ba26",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-25T03:53:48Z",
+      "side": 1,
+      "message": "Some tests are already using this, for example copy between emulated RGB8 and emulated RGB8UI was previously doing a direct copy, but that was wrong as it was making the emulated alpha channel of the destination incorrect. Those copies use this shader now. Added a test for this.\n\nOther cases where only src or dst is emulated depends on hardware capabilities. I don\u0027t know if any of our bots have support for any RGB images. My desktop Nvidia driver doesn\u0027t for example. ARM brought up a situation with their driver (where RGB16F is texturable, but RGB16UI isn\u0027t) so they can verify this change.",
+      "parentUuid": "09c80672_660c6a20",
       "revId": "3fe8c814ede6615757a8b862da89682703dd5bfc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
@@ -93,6 +135,41 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "72c8f9dc_5666fe72",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-25T03:53:48Z",
+      "side": 1,
+      "message": "Yes, on ARM!",
+      "parentUuid": "8237ed62_1321aa5c",
+      "revId": "3fe8c814ede6615757a8b862da89682703dd5bfc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4c1db83e_4c95ff0e",
+        "filename": "src/libANGLE/renderer/vulkan/UtilsVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2309,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-25T03:53:48Z",
+      "side": 1,
+      "message": "ref",
+      "revId": "3fe8c814ede6615757a8b862da89682703dd5bfc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "4996c15d_4a8b2d2e",
@@ -106,6 +183,30 @@
       "writtenOn": "2020-11-24T23:26:45Z",
       "side": 1,
       "message": "Why do we need to align it to 4? Won\u0027t the bufferhelper do this for us when calling vkGetBufferMemoryRequirements to get requirements?",
+      "range": {
+        "startLine": 2323,
+        "startChar": 84,
+        "endLine": 2323,
+        "endChar": 86
+      },
+      "revId": "3fe8c814ede6615757a8b862da89682703dd5bfc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b78f1bd4_4737a3f0",
+        "filename": "src/libANGLE/renderer/vulkan/UtilsVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2323,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-25T03:53:48Z",
+      "side": 1,
+      "message": "Because the compute shader works with uints. Added a comment.",
+      "parentUuid": "4996c15d_4a8b2d2e",
       "range": {
         "startLine": 2323,
         "startChar": 84,
@@ -139,6 +240,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d935c359_49cd0b0d",
+        "filename": "src/libANGLE/renderer/vulkan/UtilsVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2384,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-25T03:53:48Z",
+      "side": 1,
+      "message": "See ref",
+      "parentUuid": "1d56d18d_5e333ca4",
+      "range": {
+        "startLine": 2383,
+        "startChar": 68,
+        "endLine": 2384,
+        "endChar": 19
+      },
+      "revId": "3fe8c814ede6615757a8b862da89682703dd5bfc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "cf236e75_fc86b4a4",
@@ -152,6 +277,30 @@
       "writtenOn": "2020-11-24T21:23:27Z",
       "side": 1,
       "message": "It\u0027d be nice if you could express these barriers via the resource access APIs you added, for maximal consistency.",
+      "range": {
+        "startLine": 2481,
+        "startChar": 19,
+        "endLine": 2481,
+        "endChar": 32
+      },
+      "revId": "3fe8c814ede6615757a8b862da89682703dd5bfc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "55c882da_42bfc144",
+        "filename": "src/libANGLE/renderer/vulkan/UtilsVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2481,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-25T03:53:48Z",
+      "side": 1,
+      "message": "I\u0027ll do that as a follow up. There are other instances of this in UtilsVk. Sounds good?",
+      "parentUuid": "cf236e75_fc86b4a4",
       "range": {
         "startLine": 2481,
         "startChar": 19,
