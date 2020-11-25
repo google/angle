@@ -43,6 +43,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "49e384fd_44c6fa25",
+        "filename": "src/compiler/translator/CollectVariables.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 980,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-25T22:07:18Z",
+      "side": 1,
+      "message": "Can you help me clarify what this extra shadow variable is used for? Is it just for validation and matching? What tests fail if we take it out?",
+      "parentUuid": "af9eda42_4191d7e3",
+      "revId": "98af9c2a0301135f5c556f00806690db3cc030cd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "53a5af59_f91b35d1",
         "filename": "src/compiler/translator/CollectVariables.cpp",
         "patchSetId": 12
