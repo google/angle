@@ -689,6 +689,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "799095a6_3320651b",
+        "filename": "src/libANGLE/TransformFeedback.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 213,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-25T18:02:15Z",
+      "side": 1,
+      "message": "if we capture with a small buffer, primitives will not be drawn.\nIt\u0027ll return -\n GL_INVALID_OPERATION with \"Not enough space in bound transform feedback buffers.\"",
+      "parentUuid": "0f8c292a_03f31291",
+      "range": {
+        "startLine": 209,
+        "startChar": 0,
+        "endLine": 213,
+        "endChar": 5
+      },
+      "revId": "4b080606c0102cc48fd966c6b862b2da4321c88e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "f5a5427a_7e1ee6bf",
         "filename": "src/libANGLE/queryutils.cpp",
         "patchSetId": 8
