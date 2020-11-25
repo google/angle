@@ -172,6 +172,30 @@
       },
       "revId": "417c723402f5e97103a9685550743e6cd5fc39da",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "df6ac576_2e6497e7",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 744,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-25T22:29:28Z",
+      "side": 1,
+      "message": "Yes you can. I kept it 32 bit mainly thinking that we will eventually move viewport and scissor all to dynamic state when they are different from drawable size, and then we will have more than enough bits, so why not just keep it 32 bit.",
+      "parentUuid": "a92e7e07_2b3aa42c",
+      "range": {
+        "startLine": 744,
+        "startChar": 15,
+        "endLine": 744,
+        "endChar": 28
+      },
+      "revId": "417c723402f5e97103a9685550743e6cd5fc39da",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
