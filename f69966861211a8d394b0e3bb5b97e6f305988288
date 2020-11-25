@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6250f164_03919ac5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-25T04:54:55Z",
+      "side": 1,
+      "message": "Proof that you don\u0027t to add `sample` when sample shading is enabled through pipeline state.",
+      "revId": "f69966861211a8d394b0e3bb5b97e6f305988288",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
