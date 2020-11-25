@@ -18,6 +18,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "844159ef_1ad7799a",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-25T18:37:10Z",
+      "side": 1,
+      "message": "changing approach, removed enum and moved comment to CollectVariables.cpp with example.\nwill refine comment as necessary",
+      "parentUuid": "6ef1c8bb_bb1f3f96",
+      "revId": "20a79d9c789aaee377b1c9cdd27fad638ebc760a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "328595a8_61388398",
@@ -41,6 +59,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "79195eac_26a25d83",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 262,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-25T18:37:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "328595a8_61388398",
+      "range": {
+        "startLine": 262,
+        "startChar": 5,
+        "endLine": 262,
+        "endChar": 8
+      },
+      "revId": "20a79d9c789aaee377b1c9cdd27fad638ebc760a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e0d16090_d559301f",
@@ -54,6 +96,30 @@
       "writtenOn": "2020-11-25T04:32:38Z",
       "side": 1,
       "message": "Did this meant to say \"I/O blocks\"?",
+      "range": {
+        "startLine": 1548,
+        "startChar": 82,
+        "endLine": 1548,
+        "endChar": 84
+      },
+      "revId": "20a79d9c789aaee377b1c9cdd27fad638ebc760a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9be7a184_7df876cf",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1548,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-25T18:37:10Z",
+      "side": 1,
+      "message": "Done, updated comment",
+      "parentUuid": "e0d16090_d559301f",
       "range": {
         "startLine": 1548,
         "startChar": 82,
