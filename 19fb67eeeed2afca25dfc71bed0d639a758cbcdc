@@ -33,6 +33,41 @@
       "message": "Tried:\nout/Release64/bin/run_angle_end2end_tests -v -d 94KBA008TN --gtest_filter\u003dImageTest.SourceYUVAHBTargetExternalRGBSampleNoData/*\n\nIt crashes with all backends on my Pixel 4XL.",
       "revId": "19fb67eeeed2afca25dfc71bed0d639a758cbcdc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "63a29ea0_1772a695",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2020-11-25T17:09:19Z",
+      "side": 1,
+      "message": "Got a chance to re-run this and it passes for me on our GLES backend and hits asserts and validation failures in our Vulkan backend which we should fix.\n\nThere is lots of good debug output when I ran it with:\n\nangle_end2end_tests --fast-local-dev --local-output --gtest_filter\u003d*SourceYUVAHBTargetExternalRGBSampleNoData*",
+      "parentUuid": "80a51dc3_1acfa2b9",
+      "revId": "19fb67eeeed2afca25dfc71bed0d639a758cbcdc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3e121b58_e5330876",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2020-11-25T17:09:19Z",
+      "side": 1,
+      "message": "Let\u0027s land this so we can enable the VK test when it is fixed.\n\nSimultaneously working on updating our bots to API 29.",
+      "revId": "19fb67eeeed2afca25dfc71bed0d639a758cbcdc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
