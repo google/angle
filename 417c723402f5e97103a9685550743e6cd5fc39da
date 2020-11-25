@@ -16,6 +16,138 @@
       "message": "PTAL",
       "revId": "417c723402f5e97103a9685550743e6cd5fc39da",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1369982d_1dd1e6cf",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 16
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-25T21:52:24Z",
+      "side": 1,
+      "message": "LGTM",
+      "revId": "417c723402f5e97103a9685550743e6cd5fc39da",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "18e601ef_07a899e4",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 3182,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-25T21:52:24Z",
+      "side": 1,
+      "message": "nit: same as below",
+      "range": {
+        "startLine": 3182,
+        "startChar": 50,
+        "endLine": 3182,
+        "endChar": 82
+      },
+      "revId": "417c723402f5e97103a9685550743e6cd5fc39da",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bc67a02e_bfe521c4",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 3402,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-25T21:52:24Z",
+      "side": 1,
+      "message": "nit: can cache this in a temporary to simplify the call",
+      "range": {
+        "startLine": 3402,
+        "startChar": 46,
+        "endLine": 3402,
+        "endChar": 87
+      },
+      "revId": "417c723402f5e97103a9685550743e6cd5fc39da",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "44838bde_f666031b",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramExecutableVk.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 688,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-25T21:52:24Z",
+      "side": 1,
+      "message": "nit: same",
+      "range": {
+        "startLine": 688,
+        "startChar": 45,
+        "endLine": 688,
+        "endChar": 73
+      },
+      "revId": "417c723402f5e97103a9685550743e6cd5fc39da",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "088ec194_da395a75",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 729,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-25T21:52:24Z",
+      "side": 1,
+      "message": "nit: would expand this to \u0027width\u0027 and \u0027height\u0027 for consistency.",
+      "range": {
+        "startLine": 729,
+        "startChar": 81,
+        "endLine": 729,
+        "endChar": 82
+      },
+      "revId": "417c723402f5e97103a9685550743e6cd5fc39da",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7ac45ae3_9dddfdd1",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 744,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-25T21:52:24Z",
+      "side": 1,
+      "message": "nit: make sure this gets initialized appropriately.",
+      "range": {
+        "startLine": 744,
+        "startChar": 15,
+        "endLine": 744,
+        "endChar": 28
+      },
+      "revId": "417c723402f5e97103a9685550743e6cd5fc39da",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
