@@ -68,6 +68,23 @@
       "message": "Let\u0027s land this so we can enable the VK test when it is fixed.\n\nSimultaneously working on updating our bots to API 29.",
       "revId": "19fb67eeeed2afca25dfc71bed0d639a758cbcdc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "98f8b494_804635e0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-25T17:14:57Z",
+      "side": 1,
+      "message": "LGTM. We should consider upgrading to API 29 when we get the P4s.",
+      "revId": "19fb67eeeed2afca25dfc71bed0d639a758cbcdc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
