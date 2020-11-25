@@ -183,6 +183,30 @@
       },
       "revId": "1da64872e5d54417c6af33f1525aa74af319ca0c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2591dee1_353f826b",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-25T17:27:10Z",
+      "side": 1,
+      "message": "I think it\u0027s a non-issue really. Seems like you\u0027re trying to work around a lack of extension that is required to be conformant, right?",
+      "parentUuid": "b6ebc572_bda28976",
+      "range": {
+        "startLine": 171,
+        "startChar": 28,
+        "endLine": 171,
+        "endChar": 36
+      },
+      "revId": "1da64872e5d54417c6af33f1525aa74af319ca0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
