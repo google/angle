@@ -3,6 +3,144 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "1615ccbc_6ce2617b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 9
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-25T17:39:09Z",
+      "side": 1,
+      "message": "nit: can you include some context about which app you\u0027re optimizing?",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 24
+      },
+      "revId": "dc198256042ed7e9c1f831f36bb7766a2c3af59a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "371b1fa3_b58ad67b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 9
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-25T17:39:09Z",
+      "side": 1,
+      "message": "what if an image is shared a la EGLImage or via BindTexImage?",
+      "range": {
+        "startLine": 17,
+        "startChar": 0,
+        "endLine": 17,
+        "endChar": 27
+      },
+      "revId": "dc198256042ed7e9c1f831f36bb7766a2c3af59a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c795dadb_86f6727d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 9
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-25T17:39:09Z",
+      "side": 1,
+      "message": "Is this an app detect thing? Then can we make sure we make a note of this? It\u0027s definitely suspicious to have this very conditional behaviour so related to a specific app depend on a device.",
+      "range": {
+        "startLine": 28,
+        "startChar": 0,
+        "endLine": 30,
+        "endChar": 54
+      },
+      "revId": "dc198256042ed7e9c1f831f36bb7766a2c3af59a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "63c52c60_4779f0cd",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 278,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-25T17:39:09Z",
+      "side": 1,
+      "message": "?",
+      "range": {
+        "startLine": 278,
+        "startChar": 11,
+        "endLine": 278,
+        "endChar": 32
+      },
+      "revId": "dc198256042ed7e9c1f831f36bb7766a2c3af59a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f4f5c037_74248e63",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 388,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-25T17:39:09Z",
+      "side": 1,
+      "message": "?",
+      "range": {
+        "startLine": 388,
+        "startChar": 11,
+        "endLine": 388,
+        "endChar": 32
+      },
+      "revId": "dc198256042ed7e9c1f831f36bb7766a2c3af59a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a95dd181_10de1be5",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 695,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-25T17:39:09Z",
+      "side": 1,
+      "message": "I don\u0027t quite understand why you\u0027re managing the resource use list explicitly here. The call chain from flushCommandsAndEndRenderPass will do this when we hit ContextVk::submitFrame. Can you clarify what breaks when you remove this?",
+      "range": {
+        "startLine": 695,
+        "startChar": 8,
+        "endLine": 695,
+        "endChar": 80
+      },
+      "revId": "dc198256042ed7e9c1f831f36bb7766a2c3af59a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "c85b4f94_994de48e",
         "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
         "patchSetId": 9
@@ -50,6 +188,52 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "ba2b70d2_c240458b",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 699,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-25T17:39:09Z",
+      "side": 1,
+      "message": "nit: you can omit this since the earlier if statement returns.",
+      "range": {
+        "startLine": 699,
+        "startChar": 4,
+        "endLine": 699,
+        "endChar": 9
+      },
+      "revId": "dc198256042ed7e9c1f831f36bb7766a2c3af59a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "514a1ec2_7441aaba",
+        "filename": "src/libANGLE/renderer/vulkan/FenceNVVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-25T17:39:09Z",
+      "side": 1,
+      "message": "with later comments we can revert this.",
+      "range": {
+        "startLine": 47,
+        "startChar": 23,
+        "endLine": 49,
+        "endChar": 57
+      },
+      "revId": "dc198256042ed7e9c1f831f36bb7766a2c3af59a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "4948fb42_b8931c7b",
         "filename": "src/libANGLE/renderer/vulkan/SyncVk.cpp",
         "patchSetId": 9
@@ -89,6 +273,52 @@
         "startChar": 74,
         "endLine": 101,
         "endChar": 75
+      },
+      "revId": "dc198256042ed7e9c1f831f36bb7766a2c3af59a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "705de46f_e0402625",
+        "filename": "src/libANGLE/renderer/vulkan/SyncVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-25T17:39:09Z",
+      "side": 1,
+      "message": "You\u0027re doing extra work here to solve undefined behaviour. Can you split out this change? This is not required by the GL spec so we shouldn\u0027t even bother unless the app in question relies on this undefined behaviour.",
+      "range": {
+        "startLine": 103,
+        "startChar": 2,
+        "endLine": 104,
+        "endChar": 71
+      },
+      "revId": "dc198256042ed7e9c1f831f36bb7766a2c3af59a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e42f506e_31527c53",
+        "filename": "src/libANGLE/renderer/vulkan/SyncVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-25T17:39:09Z",
+      "side": 1,
+      "message": "instead of passing down the gl context, expose isShared in ContextVk. You can move variables in the front-end around if necessary.",
+      "range": {
+        "startLine": 105,
+        "startChar": 8,
+        "endLine": 105,
+        "endChar": 42
       },
       "revId": "dc198256042ed7e9c1f831f36bb7766a2c3af59a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
@@ -147,6 +377,30 @@
       "writtenOn": "2020-11-25T04:53:37Z",
       "side": 1,
       "message": "Why the cast?",
+      "range": {
+        "startLine": 383,
+        "startChar": 59,
+        "endLine": 383,
+        "endChar": 84
+      },
+      "revId": "dc198256042ed7e9c1f831f36bb7766a2c3af59a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bc24c251_b6d9597f",
+        "filename": "src/libANGLE/renderer/vulkan/SyncVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 383,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-25T17:39:09Z",
+      "side": 1,
+      "message": "Should be able to revert this change, see comment above.",
+      "parentUuid": "621242c3_81f16406",
       "range": {
         "startLine": 383,
         "startChar": 59,
