@@ -46,6 +46,161 @@
       },
       "revId": "dc198256042ed7e9c1f831f36bb7766a2c3af59a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4948fb42_b8931c7b",
+        "filename": "src/libANGLE/renderer/vulkan/SyncVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-25T04:53:37Z",
+      "side": 1,
+      "message": "nit: suggest checking contextVk",
+      "range": {
+        "startLine": 96,
+        "startChar": 26,
+        "endLine": 96,
+        "endChar": 35
+      },
+      "revId": "dc198256042ed7e9c1f831f36bb7766a2c3af59a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "905b0b06_3424a61b",
+        "filename": "src/libANGLE/renderer/vulkan/SyncVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-25T04:53:37Z",
+      "side": 1,
+      "message": "typo",
+      "range": {
+        "startLine": 101,
+        "startChar": 74,
+        "endLine": 101,
+        "endChar": 75
+      },
+      "revId": "dc198256042ed7e9c1f831f36bb7766a2c3af59a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "78421e2a_510dcdf9",
+        "filename": "src/libANGLE/renderer/vulkan/SyncVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-25T04:53:37Z",
+      "side": 1,
+      "message": "Can EGL sync objects cross share group boundaries? The ones that are imported from fds at least can.\n\nYou would likely need to make this change conditional to GL sync objects, and keep the old behavior (flush on sync) for the rest of the sync objects.",
+      "revId": "dc198256042ed7e9c1f831f36bb7766a2c3af59a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1d2989f7_efb327f0",
+        "filename": "src/libANGLE/renderer/vulkan/SyncVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 272,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-25T04:53:37Z",
+      "side": 1,
+      "message": "nit: contextVk",
+      "range": {
+        "startLine": 272,
+        "startChar": 25,
+        "endLine": 272,
+        "endChar": 34
+      },
+      "revId": "dc198256042ed7e9c1f831f36bb7766a2c3af59a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "621242c3_81f16406",
+        "filename": "src/libANGLE/renderer/vulkan/SyncVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 383,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-25T04:53:37Z",
+      "side": 1,
+      "message": "Why the cast?",
+      "range": {
+        "startLine": 383,
+        "startChar": 59,
+        "endLine": 383,
+        "endChar": 84
+      },
+      "revId": "dc198256042ed7e9c1f831f36bb7766a2c3af59a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2caf40fe_0aad6db6",
+        "filename": "src/tests/egl_tests/EGLSyncTest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 233,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-25T04:53:37Z",
+      "side": 1,
+      "message": "I\u0027d say just delete this. Then instead of using EGL_FOREVER_KHR, use a timeout to get the same effect (\"make sure the test doesn\u0027t get stuck in an infinite loop\")",
+      "range": {
+        "startLine": 220,
+        "startChar": 0,
+        "endLine": 233,
+        "endChar": 5
+      },
+      "revId": "dc198256042ed7e9c1f831f36bb7766a2c3af59a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9b5ce46a_3792b669",
+        "filename": "src/tests/gl_tests/FenceSyncTests.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 263,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-25T04:53:37Z",
+      "side": 1,
+      "message": "Same here",
+      "range": {
+        "startLine": 247,
+        "startChar": 0,
+        "endLine": 263,
+        "endChar": 0
+      },
+      "revId": "dc198256042ed7e9c1f831f36bb7766a2c3af59a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
