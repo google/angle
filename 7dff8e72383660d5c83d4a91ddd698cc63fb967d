@@ -612,6 +612,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "c64cdefe_f4ffb2a2",
+        "filename": "src/compiler/translator/ShaderVars.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 387,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-25T04:32:38Z",
+      "side": 1,
+      "message": "I would still call it reset, that\u0027s what it does (and avoids overloading the function name)",
+      "parentUuid": "9822d326_aef4f280",
+      "range": {
+        "startLine": 387,
+        "startChar": 21,
+        "endLine": 387,
+        "endChar": 27
+      },
+      "revId": "7dff8e72383660d5c83d4a91ddd698cc63fb967d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "eb1bdba0_8565c6ce",
         "filename": "src/compiler/translator/tree_ops/RemoveInactiveInterfaceVariables.cpp",
         "patchSetId": 9
@@ -964,6 +988,30 @@
       "side": 1,
       "message": "Done",
       "parentUuid": "4c6c0e6f_6fb35cf7",
+      "range": {
+        "startLine": 1568,
+        "startChar": 49,
+        "endLine": 1568,
+        "endChar": 57
+      },
+      "revId": "7dff8e72383660d5c83d4a91ddd698cc63fb967d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "999fafcb_46135484",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1568,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-25T04:32:38Z",
+      "side": 1,
+      "message": "I\u0027m trying to understand why `isInterfaceBlockVariable` not sufficient here.\n\nWhat\u0027s the storage class of I/O blocks?",
+      "parentUuid": "669c9821_af8ed578",
       "range": {
         "startLine": 1568,
         "startChar": 49,

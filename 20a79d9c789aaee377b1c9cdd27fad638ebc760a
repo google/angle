@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6ef1c8bb_bb1f3f96",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-25T04:32:38Z",
+      "side": 1,
+      "message": "I\u0027m not really convinced this is necessary, but it\u0027s hard to tell just looking at the review what difficulty you faced without this. Like what happens if you simply don\u0027t add the duplicates in the first place? Perhaps we could talk about it in our next meeting.\n\nThat said, in the interest of moving forward, I\u0027d be ok with working towards removing this in a separate change.",
+      "revId": "20a79d9c789aaee377b1c9cdd27fad638ebc760a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "328595a8_61388398",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 262,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-25T04:32:38Z",
+      "side": 1,
+      "message": "nit: avoid overloading functions. You can call this `AddVaryingLocationInfo`.",
+      "range": {
+        "startLine": 262,
+        "startChar": 5,
+        "endLine": 262,
+        "endChar": 8
+      },
+      "revId": "20a79d9c789aaee377b1c9cdd27fad638ebc760a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e0d16090_d559301f",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1548,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-25T04:32:38Z",
+      "side": 1,
+      "message": "Did this meant to say \"I/O blocks\"?",
+      "range": {
+        "startLine": 1548,
+        "startChar": 82,
+        "endLine": 1548,
+        "endChar": 84
+      },
+      "revId": "20a79d9c789aaee377b1c9cdd27fad638ebc760a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
