@@ -16,6 +16,23 @@
       "message": "TBR",
       "revId": "4510604b598944726b750a9824e9c48de2be5613",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f409edda_4329bafc",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-25T15:25:26Z",
+      "side": 1,
+      "message": "Thanks Jamie",
+      "revId": "4510604b598944726b750a9824e9c48de2be5613",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
