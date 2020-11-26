@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3d5be323_83b00813",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-26T22:12:53Z",
+      "side": 1,
+      "message": "Sigh, looks like the P2s don\u0027t support GS. Back to WIP until we get P4s.",
+      "revId": "6fc05c2230554f0235b395dd3caa932a82db7c37",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
