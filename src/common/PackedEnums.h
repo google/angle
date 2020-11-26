@@ -730,7 +730,7 @@ inline GLuint GetIDValue(ResourceIDType id)
 
 // First case: handling packed enums.
 template <typename EnumT, typename FromT>
-typename std::enable_if<std::is_enum<EnumT>::value, EnumT>::type FromGL(FromT from)
+typename std::enable_if<std::is_enum<EnumT>::value, EnumT>::type PackParam(FromT from)
 {
     return FromGLenum<EnumT>(from);
 }
@@ -738,7 +738,7 @@ typename std::enable_if<std::is_enum<EnumT>::value, EnumT>::type FromGL(FromT fr
 // Second case: handling non-pointer resource ids.
 template <typename EnumT, typename FromT>
 typename std::enable_if<!std::is_pointer<FromT>::value && !std::is_enum<EnumT>::value, EnumT>::type
-FromGL(FromT from)
+PackParam(FromT from)
 {
     return {from};
 }
@@ -746,7 +746,7 @@ FromGL(FromT from)
 // Third case: handling pointer resource ids.
 template <typename EnumT, typename FromT>
 typename std::enable_if<std::is_pointer<FromT>::value && !std::is_enum<EnumT>::value, EnumT>::type
-FromGL(FromT from)
+PackParam(FromT from)
 {
     return reinterpret_cast<EnumT>(from);
 }

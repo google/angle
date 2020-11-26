@@ -37,7 +37,7 @@ void GL_APIENTRY BindBuffersBase(GLenum target, GLuint first, GLsizei count, con
 
     if (context)
     {
-        const BufferID *buffersPacked                         = FromGL<const BufferID *>(buffers);
+        const BufferID *buffersPacked = PackParam<const BufferID *>(buffers);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
                             ValidateBindBuffersBase(context, target, first, count, buffersPacked));
@@ -69,7 +69,7 @@ void GL_APIENTRY BindBuffersRange(GLenum target,
 
     if (context)
     {
-        const BufferID *buffersPacked                         = FromGL<const BufferID *>(buffers);
+        const BufferID *buffersPacked = PackParam<const BufferID *>(buffers);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid =
             (context->skipValidation() || ValidateBindBuffersRange(context, target, first, count,
@@ -173,7 +173,7 @@ void GL_APIENTRY BindVertexBuffers(GLuint first,
 
     if (context)
     {
-        const BufferID *buffersPacked                         = FromGL<const BufferID *>(buffers);
+        const BufferID *buffersPacked = PackParam<const BufferID *>(buffers);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid =
             (context->skipValidation() ||
@@ -202,7 +202,7 @@ void GL_APIENTRY BufferStorage(GLenum target, GLsizeiptr size, const void *data,
 
     if (context)
     {
-        BufferBinding targetPacked                            = FromGL<BufferBinding>(target);
+        BufferBinding targetPacked                            = PackParam<BufferBinding>(target);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
                             ValidateBufferStorage(context, targetPacked, size, data, flags));
@@ -230,7 +230,7 @@ ClearTexImage(GLuint texture, GLint level, GLenum format, GLenum type, const voi
 
     if (context)
     {
-        TextureID texturePacked                               = FromGL<TextureID>(texture);
+        TextureID texturePacked                               = PackParam<TextureID>(texture);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid =
             (context->skipValidation() ||
@@ -270,7 +270,7 @@ void GL_APIENTRY ClearTexSubImage(GLuint texture,
 
     if (context)
     {
-        TextureID texturePacked                               = FromGL<TextureID>(texture);
+        TextureID texturePacked                               = PackParam<TextureID>(texture);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid =
             (context->skipValidation() ||

@@ -29,7 +29,7 @@ void GL_APIENTRY AlphaFunc(GLenum func, GLfloat ref)
 
     if (context)
     {
-        AlphaTestFunc funcPacked                              = FromGL<AlphaTestFunc>(func);
+        AlphaTestFunc funcPacked                              = PackParam<AlphaTestFunc>(func);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid =
             (context->skipValidation() || ValidateAlphaFunc(context, funcPacked, ref));
@@ -53,7 +53,7 @@ void GL_APIENTRY AlphaFuncx(GLenum func, GLfixed ref)
 
     if (context)
     {
-        AlphaTestFunc funcPacked                              = FromGL<AlphaTestFunc>(func);
+        AlphaTestFunc funcPacked                              = PackParam<AlphaTestFunc>(func);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid =
             (context->skipValidation() || ValidateAlphaFuncx(context, funcPacked, ref));
@@ -261,7 +261,7 @@ void GL_APIENTRY ColorPointer(GLint size, GLenum type, GLsizei stride, const voi
 
     if (context)
     {
-        VertexAttribType typePacked                           = FromGL<VertexAttribType>(type);
+        VertexAttribType typePacked                           = PackParam<VertexAttribType>(type);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
                             ValidateColorPointer(context, size, typePacked, stride, pointer));
@@ -306,7 +306,7 @@ void GL_APIENTRY DisableClientState(GLenum array)
 
     if (context)
     {
-        ClientVertexArrayType arrayPacked = FromGL<ClientVertexArrayType>(array);
+        ClientVertexArrayType arrayPacked = PackParam<ClientVertexArrayType>(array);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid =
             (context->skipValidation() || ValidateDisableClientState(context, arrayPacked));
@@ -330,7 +330,7 @@ void GL_APIENTRY EnableClientState(GLenum array)
 
     if (context)
     {
-        ClientVertexArrayType arrayPacked = FromGL<ClientVertexArrayType>(array);
+        ClientVertexArrayType arrayPacked = PackParam<ClientVertexArrayType>(array);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid =
             (context->skipValidation() || ValidateEnableClientState(context, arrayPacked));
@@ -558,7 +558,7 @@ void GL_APIENTRY GetLightfv(GLenum light, GLenum pname, GLfloat *params)
 
     if (context)
     {
-        LightParameter pnamePacked                            = FromGL<LightParameter>(pname);
+        LightParameter pnamePacked                            = PackParam<LightParameter>(pname);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid =
             (context->skipValidation() || ValidateGetLightfv(context, light, pnamePacked, params));
@@ -583,7 +583,7 @@ void GL_APIENTRY GetLightxv(GLenum light, GLenum pname, GLfixed *params)
 
     if (context)
     {
-        LightParameter pnamePacked                            = FromGL<LightParameter>(pname);
+        LightParameter pnamePacked                            = PackParam<LightParameter>(pname);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid =
             (context->skipValidation() || ValidateGetLightxv(context, light, pnamePacked, params));
@@ -609,7 +609,7 @@ void GL_APIENTRY GetMaterialfv(GLenum face, GLenum pname, GLfloat *params)
 
     if (context)
     {
-        MaterialParameter pnamePacked                         = FromGL<MaterialParameter>(pname);
+        MaterialParameter pnamePacked                         = PackParam<MaterialParameter>(pname);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
                             ValidateGetMaterialfv(context, face, pnamePacked, params));
@@ -635,7 +635,7 @@ void GL_APIENTRY GetMaterialxv(GLenum face, GLenum pname, GLfixed *params)
 
     if (context)
     {
-        MaterialParameter pnamePacked                         = FromGL<MaterialParameter>(pname);
+        MaterialParameter pnamePacked                         = PackParam<MaterialParameter>(pname);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
                             ValidateGetMaterialxv(context, face, pnamePacked, params));
@@ -661,8 +661,8 @@ void GL_APIENTRY GetTexEnvfv(GLenum target, GLenum pname, GLfloat *params)
 
     if (context)
     {
-        TextureEnvTarget targetPacked                         = FromGL<TextureEnvTarget>(target);
-        TextureEnvParameter pnamePacked                       = FromGL<TextureEnvParameter>(pname);
+        TextureEnvTarget targetPacked   = PackParam<TextureEnvTarget>(target);
+        TextureEnvParameter pnamePacked = PackParam<TextureEnvParameter>(pname);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
                             ValidateGetTexEnvfv(context, targetPacked, pnamePacked, params));
@@ -688,8 +688,8 @@ void GL_APIENTRY GetTexEnviv(GLenum target, GLenum pname, GLint *params)
 
     if (context)
     {
-        TextureEnvTarget targetPacked                         = FromGL<TextureEnvTarget>(target);
-        TextureEnvParameter pnamePacked                       = FromGL<TextureEnvParameter>(pname);
+        TextureEnvTarget targetPacked   = PackParam<TextureEnvTarget>(target);
+        TextureEnvParameter pnamePacked = PackParam<TextureEnvParameter>(pname);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
                             ValidateGetTexEnviv(context, targetPacked, pnamePacked, params));
@@ -715,8 +715,8 @@ void GL_APIENTRY GetTexEnvxv(GLenum target, GLenum pname, GLfixed *params)
 
     if (context)
     {
-        TextureEnvTarget targetPacked                         = FromGL<TextureEnvTarget>(target);
-        TextureEnvParameter pnamePacked                       = FromGL<TextureEnvParameter>(pname);
+        TextureEnvTarget targetPacked   = PackParam<TextureEnvTarget>(target);
+        TextureEnvParameter pnamePacked = PackParam<TextureEnvParameter>(pname);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
                             ValidateGetTexEnvxv(context, targetPacked, pnamePacked, params));
@@ -742,7 +742,7 @@ void GL_APIENTRY GetTexParameterxv(GLenum target, GLenum pname, GLfixed *params)
 
     if (context)
     {
-        TextureType targetPacked                              = FromGL<TextureType>(target);
+        TextureType targetPacked                              = PackParam<TextureType>(target);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
                             ValidateGetTexParameterxv(context, targetPacked, pname, params));
@@ -859,7 +859,7 @@ void GL_APIENTRY Lightf(GLenum light, GLenum pname, GLfloat param)
 
     if (context)
     {
-        LightParameter pnamePacked                            = FromGL<LightParameter>(pname);
+        LightParameter pnamePacked                            = PackParam<LightParameter>(pname);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid =
             (context->skipValidation() || ValidateLightf(context, light, pnamePacked, param));
@@ -884,7 +884,7 @@ void GL_APIENTRY Lightfv(GLenum light, GLenum pname, const GLfloat *params)
 
     if (context)
     {
-        LightParameter pnamePacked                            = FromGL<LightParameter>(pname);
+        LightParameter pnamePacked                            = PackParam<LightParameter>(pname);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid =
             (context->skipValidation() || ValidateLightfv(context, light, pnamePacked, params));
@@ -909,7 +909,7 @@ void GL_APIENTRY Lightx(GLenum light, GLenum pname, GLfixed param)
 
     if (context)
     {
-        LightParameter pnamePacked                            = FromGL<LightParameter>(pname);
+        LightParameter pnamePacked                            = PackParam<LightParameter>(pname);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid =
             (context->skipValidation() || ValidateLightx(context, light, pnamePacked, param));
@@ -934,7 +934,7 @@ void GL_APIENTRY Lightxv(GLenum light, GLenum pname, const GLfixed *params)
 
     if (context)
     {
-        LightParameter pnamePacked                            = FromGL<LightParameter>(pname);
+        LightParameter pnamePacked                            = PackParam<LightParameter>(pname);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid =
             (context->skipValidation() || ValidateLightxv(context, light, pnamePacked, params));
@@ -1044,7 +1044,7 @@ void GL_APIENTRY LogicOp(GLenum opcode)
 
     if (context)
     {
-        LogicalOperation opcodePacked                         = FromGL<LogicalOperation>(opcode);
+        LogicalOperation opcodePacked                         = PackParam<LogicalOperation>(opcode);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid = (context->skipValidation() || ValidateLogicOp(context, opcodePacked));
         if (isCallValid)
@@ -1068,7 +1068,7 @@ void GL_APIENTRY Materialf(GLenum face, GLenum pname, GLfloat param)
 
     if (context)
     {
-        MaterialParameter pnamePacked                         = FromGL<MaterialParameter>(pname);
+        MaterialParameter pnamePacked                         = PackParam<MaterialParameter>(pname);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid =
             (context->skipValidation() || ValidateMaterialf(context, face, pnamePacked, param));
@@ -1093,7 +1093,7 @@ void GL_APIENTRY Materialfv(GLenum face, GLenum pname, const GLfloat *params)
 
     if (context)
     {
-        MaterialParameter pnamePacked                         = FromGL<MaterialParameter>(pname);
+        MaterialParameter pnamePacked                         = PackParam<MaterialParameter>(pname);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid =
             (context->skipValidation() || ValidateMaterialfv(context, face, pnamePacked, params));
@@ -1118,7 +1118,7 @@ void GL_APIENTRY Materialx(GLenum face, GLenum pname, GLfixed param)
 
     if (context)
     {
-        MaterialParameter pnamePacked                         = FromGL<MaterialParameter>(pname);
+        MaterialParameter pnamePacked                         = PackParam<MaterialParameter>(pname);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid =
             (context->skipValidation() || ValidateMaterialx(context, face, pnamePacked, param));
@@ -1143,7 +1143,7 @@ void GL_APIENTRY Materialxv(GLenum face, GLenum pname, const GLfixed *param)
 
     if (context)
     {
-        MaterialParameter pnamePacked                         = FromGL<MaterialParameter>(pname);
+        MaterialParameter pnamePacked                         = PackParam<MaterialParameter>(pname);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid =
             (context->skipValidation() || ValidateMaterialxv(context, face, pnamePacked, param));
@@ -1167,7 +1167,7 @@ void GL_APIENTRY MatrixMode(GLenum mode)
 
     if (context)
     {
-        MatrixType modePacked                                 = FromGL<MatrixType>(mode);
+        MatrixType modePacked                                 = PackParam<MatrixType>(mode);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid = (context->skipValidation() || ValidateMatrixMode(context, modePacked));
         if (isCallValid)
@@ -1325,7 +1325,7 @@ void GL_APIENTRY NormalPointer(GLenum type, GLsizei stride, const void *pointer)
 
     if (context)
     {
-        VertexAttribType typePacked                           = FromGL<VertexAttribType>(type);
+        VertexAttribType typePacked                           = PackParam<VertexAttribType>(type);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
                             ValidateNormalPointer(context, typePacked, stride, pointer));
@@ -1394,7 +1394,7 @@ void GL_APIENTRY PointParameterf(GLenum pname, GLfloat param)
 
     if (context)
     {
-        PointParameter pnamePacked                            = FromGL<PointParameter>(pname);
+        PointParameter pnamePacked                            = PackParam<PointParameter>(pname);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid =
             (context->skipValidation() || ValidatePointParameterf(context, pnamePacked, param));
@@ -1418,7 +1418,7 @@ void GL_APIENTRY PointParameterfv(GLenum pname, const GLfloat *params)
 
     if (context)
     {
-        PointParameter pnamePacked                            = FromGL<PointParameter>(pname);
+        PointParameter pnamePacked                            = PackParam<PointParameter>(pname);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid =
             (context->skipValidation() || ValidatePointParameterfv(context, pnamePacked, params));
@@ -1442,7 +1442,7 @@ void GL_APIENTRY PointParameterx(GLenum pname, GLfixed param)
 
     if (context)
     {
-        PointParameter pnamePacked                            = FromGL<PointParameter>(pname);
+        PointParameter pnamePacked                            = PackParam<PointParameter>(pname);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid =
             (context->skipValidation() || ValidatePointParameterx(context, pnamePacked, param));
@@ -1466,7 +1466,7 @@ void GL_APIENTRY PointParameterxv(GLenum pname, const GLfixed *params)
 
     if (context)
     {
-        PointParameter pnamePacked                            = FromGL<PointParameter>(pname);
+        PointParameter pnamePacked                            = PackParam<PointParameter>(pname);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid =
             (context->skipValidation() || ValidatePointParameterxv(context, pnamePacked, params));
@@ -1706,7 +1706,7 @@ void GL_APIENTRY ShadeModel(GLenum mode)
 
     if (context)
     {
-        ShadingModel modePacked                               = FromGL<ShadingModel>(mode);
+        ShadingModel modePacked                               = PackParam<ShadingModel>(mode);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid = (context->skipValidation() || ValidateShadeModel(context, modePacked));
         if (isCallValid)
@@ -1731,7 +1731,7 @@ void GL_APIENTRY TexCoordPointer(GLint size, GLenum type, GLsizei stride, const 
 
     if (context)
     {
-        VertexAttribType typePacked                           = FromGL<VertexAttribType>(type);
+        VertexAttribType typePacked                           = PackParam<VertexAttribType>(type);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
                             ValidateTexCoordPointer(context, size, typePacked, stride, pointer));
@@ -1756,8 +1756,8 @@ void GL_APIENTRY TexEnvf(GLenum target, GLenum pname, GLfloat param)
 
     if (context)
     {
-        TextureEnvTarget targetPacked                         = FromGL<TextureEnvTarget>(target);
-        TextureEnvParameter pnamePacked                       = FromGL<TextureEnvParameter>(pname);
+        TextureEnvTarget targetPacked   = PackParam<TextureEnvTarget>(target);
+        TextureEnvParameter pnamePacked = PackParam<TextureEnvParameter>(pname);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
                             ValidateTexEnvf(context, targetPacked, pnamePacked, param));
@@ -1782,8 +1782,8 @@ void GL_APIENTRY TexEnvfv(GLenum target, GLenum pname, const GLfloat *params)
 
     if (context)
     {
-        TextureEnvTarget targetPacked                         = FromGL<TextureEnvTarget>(target);
-        TextureEnvParameter pnamePacked                       = FromGL<TextureEnvParameter>(pname);
+        TextureEnvTarget targetPacked   = PackParam<TextureEnvTarget>(target);
+        TextureEnvParameter pnamePacked = PackParam<TextureEnvParameter>(pname);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
                             ValidateTexEnvfv(context, targetPacked, pnamePacked, params));
@@ -1808,8 +1808,8 @@ void GL_APIENTRY TexEnvi(GLenum target, GLenum pname, GLint param)
 
     if (context)
     {
-        TextureEnvTarget targetPacked                         = FromGL<TextureEnvTarget>(target);
-        TextureEnvParameter pnamePacked                       = FromGL<TextureEnvParameter>(pname);
+        TextureEnvTarget targetPacked   = PackParam<TextureEnvTarget>(target);
+        TextureEnvParameter pnamePacked = PackParam<TextureEnvParameter>(pname);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
                             ValidateTexEnvi(context, targetPacked, pnamePacked, param));
@@ -1834,8 +1834,8 @@ void GL_APIENTRY TexEnviv(GLenum target, GLenum pname, const GLint *params)
 
     if (context)
     {
-        TextureEnvTarget targetPacked                         = FromGL<TextureEnvTarget>(target);
-        TextureEnvParameter pnamePacked                       = FromGL<TextureEnvParameter>(pname);
+        TextureEnvTarget targetPacked   = PackParam<TextureEnvTarget>(target);
+        TextureEnvParameter pnamePacked = PackParam<TextureEnvParameter>(pname);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
                             ValidateTexEnviv(context, targetPacked, pnamePacked, params));
@@ -1860,8 +1860,8 @@ void GL_APIENTRY TexEnvx(GLenum target, GLenum pname, GLfixed param)
 
     if (context)
     {
-        TextureEnvTarget targetPacked                         = FromGL<TextureEnvTarget>(target);
-        TextureEnvParameter pnamePacked                       = FromGL<TextureEnvParameter>(pname);
+        TextureEnvTarget targetPacked   = PackParam<TextureEnvTarget>(target);
+        TextureEnvParameter pnamePacked = PackParam<TextureEnvParameter>(pname);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
                             ValidateTexEnvx(context, targetPacked, pnamePacked, param));
@@ -1886,8 +1886,8 @@ void GL_APIENTRY TexEnvxv(GLenum target, GLenum pname, const GLfixed *params)
 
     if (context)
     {
-        TextureEnvTarget targetPacked                         = FromGL<TextureEnvTarget>(target);
-        TextureEnvParameter pnamePacked                       = FromGL<TextureEnvParameter>(pname);
+        TextureEnvTarget targetPacked   = PackParam<TextureEnvTarget>(target);
+        TextureEnvParameter pnamePacked = PackParam<TextureEnvParameter>(pname);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
                             ValidateTexEnvxv(context, targetPacked, pnamePacked, params));
@@ -1912,7 +1912,7 @@ void GL_APIENTRY TexParameterx(GLenum target, GLenum pname, GLfixed param)
 
     if (context)
     {
-        TextureType targetPacked                              = FromGL<TextureType>(target);
+        TextureType targetPacked                              = PackParam<TextureType>(target);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
                             ValidateTexParameterx(context, targetPacked, pname, param));
@@ -1938,7 +1938,7 @@ void GL_APIENTRY TexParameterxv(GLenum target, GLenum pname, const GLfixed *para
 
     if (context)
     {
-        TextureType targetPacked                              = FromGL<TextureType>(target);
+        TextureType targetPacked                              = PackParam<TextureType>(target);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
                             ValidateTexParameterxv(context, targetPacked, pname, params));
@@ -2007,7 +2007,7 @@ void GL_APIENTRY VertexPointer(GLint size, GLenum type, GLsizei stride, const vo
 
     if (context)
     {
-        VertexAttribType typePacked                           = FromGL<VertexAttribType>(type);
+        VertexAttribType typePacked                           = PackParam<VertexAttribType>(type);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
                             ValidateVertexPointer(context, size, typePacked, stride, pointer));

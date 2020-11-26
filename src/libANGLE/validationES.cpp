@@ -2633,7 +2633,7 @@ bool ValidateCopyImageSubDataTarget(const Context *context, GLuint name, GLenum 
     {
         case GL_RENDERBUFFER:
         {
-            RenderbufferID renderbuffer = FromGL<RenderbufferID>(name);
+            RenderbufferID renderbuffer = PackParam<RenderbufferID>(name);
             if (!context->isRenderbuffer(renderbuffer))
             {
                 context->validationError(GL_INVALID_VALUE, kInvalidRenderbufferName);
@@ -2647,7 +2647,7 @@ bool ValidateCopyImageSubDataTarget(const Context *context, GLuint name, GLenum 
         case GL_TEXTURE_CUBE_MAP:
         case GL_TEXTURE_CUBE_MAP_ARRAY_EXT:
         {
-            TextureID texture = FromGL<TextureID>(name);
+            TextureID texture = PackParam<TextureID>(name);
             if (!context->isTexture(texture))
             {
                 context->validationError(GL_INVALID_VALUE, kInvalidTextureName);
@@ -2655,7 +2655,7 @@ bool ValidateCopyImageSubDataTarget(const Context *context, GLuint name, GLenum 
             }
 
             Texture *textureObject = context->getTexture(texture);
-            if (textureObject && textureObject->getType() != FromGL<TextureType>(target))
+            if (textureObject && textureObject->getType() != PackParam<TextureType>(target))
             {
                 context->validationError(GL_INVALID_VALUE, err::kTextureTypeMismatch);
                 return false;
@@ -2701,7 +2701,7 @@ bool ValidateCopyImageSubDataTargetRegion(const Context *context,
 
         // INVALID_VALUE is generated if the dimensions of the either subregion exceeds the
         // boundaries of the corresponding image object
-        Renderbuffer *buffer = context->getRenderbuffer(FromGL<RenderbufferID>(name));
+        Renderbuffer *buffer = context->getRenderbuffer(PackParam<RenderbufferID>(name));
         if ((buffer->getWidth() - offsetX < width) || (buffer->getHeight() - offsetY < height))
         {
             context->validationError(GL_INVALID_VALUE, kSourceTextureTooSmall);
@@ -2711,13 +2711,13 @@ bool ValidateCopyImageSubDataTargetRegion(const Context *context,
     else
     {
         // INVALID_VALUE is generated if the specified level is not a valid level for the image
-        if (!ValidMipLevel(context, FromGL<TextureType>(target), level))
+        if (!ValidMipLevel(context, PackParam<TextureType>(target), level))
         {
             context->validationError(GL_INVALID_VALUE, kInvalidMipLevel);
             return false;
         }
 
-        Texture *texture = context->getTexture(FromGL<TextureID>(name));
+        Texture *texture = context->getTexture(PackParam<TextureID>(name));
 
         // INVALID_OPERATION is generated if either object is a texture and the texture is not
         // complete
@@ -2737,9 +2737,9 @@ bool ValidateCopyImageSubDataTargetRegion(const Context *context,
         }
 
         const GLsizei textureWidth = static_cast<GLsizei>(
-            texture->getWidth(FromGL<TextureTarget>(textureTargetToUse), level));
+            texture->getWidth(PackParam<TextureTarget>(textureTargetToUse), level));
         const GLsizei textureHeight = static_cast<GLsizei>(
-            texture->getHeight(FromGL<TextureTarget>(textureTargetToUse), level));
+            texture->getHeight(PackParam<TextureTarget>(textureTargetToUse), level));
 
         // INVALID_VALUE is generated if the dimensions of the either subregion exceeds the
         // boundaries of the corresponding image object
@@ -2749,7 +2749,7 @@ bool ValidateCopyImageSubDataTargetRegion(const Context *context,
             return false;
         }
 
-        *samples = texture->getSamples(FromGL<TextureTarget>(textureTargetToUse), level);
+        *samples = texture->getSamples(PackParam<TextureTarget>(textureTargetToUse), level);
         *samples = (*samples == 0) ? 1 : *samples;
     }
 
@@ -2787,7 +2787,7 @@ const InternalFormat &GetTargetFormatInfo(const Context *context,
     {
         case GL_RENDERBUFFER:
         {
-            Renderbuffer *buffer = context->getRenderbuffer(FromGL<RenderbufferID>(name));
+            Renderbuffer *buffer = context->getRenderbuffer(PackParam<RenderbufferID>(name));
             return *buffer->getFormat().info;
             break;
         }
@@ -2797,7 +2797,7 @@ const InternalFormat &GetTargetFormatInfo(const Context *context,
         case GL_TEXTURE_CUBE_MAP:
         case GL_TEXTURE_CUBE_MAP_ARRAY_EXT:
         {
-            Texture *texture          = context->getTexture(FromGL<TextureID>(name));
+            Texture *texture          = context->getTexture(PackParam<TextureID>(name));
             GLenum textureTargetToUse = target;
 
             if (target == GL_TEXTURE_CUBE_MAP)
@@ -2806,7 +2806,7 @@ const InternalFormat &GetTargetFormatInfo(const Context *context,
                 // textureWidth/textureHeight
                 textureTargetToUse = GL_TEXTURE_CUBE_MAP_POSITIVE_X;
             }
-            return *texture->getFormat(FromGL<TextureTarget>(textureTargetToUse), level).info;
+            return *texture->getFormat(PackParam<TextureTarget>(textureTargetToUse), level).info;
         }
         default:
             context->validationError(GL_INVALID_ENUM, kInvalidTarget);

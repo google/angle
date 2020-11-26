@@ -1131,8 +1131,8 @@ def format_entry_point_def(api, command_node, cmd_name, proto, params, is_explic
             internal_name = name + "Packed"
             internal_type = packed_gl_enums[name]
             packed_gl_enum_conversions += [
-                "\n        " + internal_type + " " + internal_name + " = FromGL<" + internal_type +
-                ">(" + name + ");"
+                "\n        " + internal_type + " " + internal_name + " = PackParam<" +
+                internal_type + ">(" + name + ");"
             ]
 
     pass_params = [param_print_argument(command_node, param) for param in params]

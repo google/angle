@@ -33,7 +33,7 @@ template <typename ResourceType, typename IDType>
 IDType AllocateEmptyObject(HandleAllocator *handleAllocator,
                            ResourceMap<ResourceType, IDType> *objectMap)
 {
-    IDType handle = FromGL<IDType>(handleAllocator->allocate());
+    IDType handle = PackParam<IDType>(handleAllocator->allocate());
     objectMap->assign(handle, nullptr);
     return handle;
 }

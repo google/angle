@@ -228,7 +228,7 @@ void GL_APIENTRY MultiDrawArrays(GLenum mode,
 
     if (context)
     {
-        PrimitiveMode modePacked                              = FromGL<PrimitiveMode>(mode);
+        PrimitiveMode modePacked                              = PackParam<PrimitiveMode>(mode);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
                             ValidateMultiDrawArrays(context, modePacked, first, count, drawcount));
@@ -259,8 +259,8 @@ void GL_APIENTRY MultiDrawElements(GLenum mode,
 
     if (context)
     {
-        PrimitiveMode modePacked                              = FromGL<PrimitiveMode>(mode);
-        DrawElementsType typePacked                           = FromGL<DrawElementsType>(type);
+        PrimitiveMode modePacked                              = PackParam<PrimitiveMode>(mode);
+        DrawElementsType typePacked                           = PackParam<DrawElementsType>(type);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid =
             (context->skipValidation() ||
@@ -286,7 +286,7 @@ void GL_APIENTRY PointParameterf(GLenum pname, GLfloat param)
 
     if (context)
     {
-        PointParameter pnamePacked                            = FromGL<PointParameter>(pname);
+        PointParameter pnamePacked                            = PackParam<PointParameter>(pname);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid =
             (context->skipValidation() || ValidatePointParameterf(context, pnamePacked, param));
@@ -310,7 +310,7 @@ void GL_APIENTRY PointParameterfv(GLenum pname, const GLfloat *params)
 
     if (context)
     {
-        PointParameter pnamePacked                            = FromGL<PointParameter>(pname);
+        PointParameter pnamePacked                            = PackParam<PointParameter>(pname);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
         bool isCallValid =
             (context->skipValidation() || ValidatePointParameterfv(context, pnamePacked, params));
