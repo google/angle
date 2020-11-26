@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e94600b2_5f81fffa",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-26T13:59:34Z",
+      "side": 1,
+      "message": "LGTM. I\u0027m not sure this is preamble if it happens in the middle of a shader. Maybe another word here would be more appropriate.",
+      "revId": "115c5138a0f462b4e244994b3cc85f68385db8eb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
