@@ -22,6 +22,30 @@
       },
       "revId": "471504e25c818fbf5bfe5871f283a854841f1660",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c080b7e1_6992d14a",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-26T18:46:04Z",
+      "side": 1,
+      "message": "Yes. That\u0027s how it was done for d3d (which was the only user of this)",
+      "parentUuid": "27f912c6_7b48c475",
+      "range": {
+        "startLine": 40,
+        "startChar": 58,
+        "endLine": 40,
+        "endChar": 94
+      },
+      "revId": "471504e25c818fbf5bfe5871f283a854841f1660",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
