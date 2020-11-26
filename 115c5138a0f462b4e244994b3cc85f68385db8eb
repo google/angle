@@ -16,6 +16,24 @@
       "message": "LGTM. I\u0027m not sure this is preamble if it happens in the middle of a shader. Maybe another word here would be more appropriate.",
       "revId": "115c5138a0f462b4e244994b3cc85f68385db8eb",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c6b699b4_c63d741b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-26T15:29:38Z",
+      "side": 1,
+      "message": "Isn\u0027t this a \"preamble to the output\"? This generates code \"right before\" output, be it EmitVertex or main\u0027s return.",
+      "parentUuid": "e94600b2_5f81fffa",
+      "revId": "115c5138a0f462b4e244994b3cc85f68385db8eb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
