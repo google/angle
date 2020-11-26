@@ -61,6 +61,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "f8cbb135_129bd3f7",
+        "filename": "src/compiler/translator/CollectVariables.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 980,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-26T19:37:54Z",
+      "side": 1,
+      "message": "Yes, it is only for validation and matching. two different failures could occur without shadow variable -\n1. interface matching\n2. test case for resource list\n\ntests that fail -\n1. dEQP-GLES31.functional.shaders.linkage.es31.io_block.with_and_without_instance_name\n2. dEQP-GLES31.functional.program_interface_query.program_output.resource_list.interface_blocks.out.unnamed_block.var_struct",
+      "parentUuid": "49e384fd_44c6fa25",
+      "revId": "98af9c2a0301135f5c556f00806690db3cc030cd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "53a5af59_f91b35d1",
         "filename": "src/compiler/translator/CollectVariables.cpp",
         "patchSetId": 12
@@ -72,6 +90,30 @@
       "writtenOn": "2020-11-25T18:54:54Z",
       "side": 1,
       "message": "!",
+      "range": {
+        "startLine": 1025,
+        "startChar": 12,
+        "endLine": 1025,
+        "endChar": 15
+      },
+      "revId": "98af9c2a0301135f5c556f00806690db3cc030cd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ed51afa5_f5acf85d",
+        "filename": "src/compiler/translator/CollectVariables.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 1025,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-26T19:37:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "53a5af59_f91b35d1",
       "range": {
         "startLine": 1025,
         "startChar": 12,
