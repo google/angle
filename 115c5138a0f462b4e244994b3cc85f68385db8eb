@@ -34,6 +34,24 @@
       "parentUuid": "e94600b2_5f81fffa",
       "revId": "115c5138a0f462b4e244994b3cc85f68385db8eb",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bfd8192f_fde80f30",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-26T15:38:49Z",
+      "side": 1,
+      "message": "That\u0027s not conventionally how preamble is used. Think of \"introduction\", like the first part of a whole thing, rather than something that\u0027s before another section in the middle of the whole thing.",
+      "parentUuid": "c6b699b4_c63d741b",
+      "revId": "115c5138a0f462b4e244994b3cc85f68385db8eb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
