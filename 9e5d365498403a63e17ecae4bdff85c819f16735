@@ -41,6 +41,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "32fde765_a42afd6e",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 3451,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-26T19:33:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c7bea113_c2c0d4ea",
+      "range": {
+        "startLine": 3451,
+        "startChar": 84,
+        "endLine": 3451,
+        "endChar": 88
+      },
+      "revId": "9e5d365498403a63e17ecae4bdff85c819f16735",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f591c510_4265b0bb",
@@ -64,6 +88,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8823eab3_dc5b36ef",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 4821,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-26T19:33:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f591c510_4265b0bb",
+      "range": {
+        "startLine": 4766,
+        "startChar": 0,
+        "endLine": 4821,
+        "endChar": 5
+      },
+      "revId": "9e5d365498403a63e17ecae4bdff85c819f16735",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f5df1b9e_798bb76c",
@@ -77,6 +125,30 @@
       "writtenOn": "2020-11-25T16:01:04Z",
       "side": 1,
       "message": "nit: at this point you can use an if else:\n\n    ShaderType tfStage \u003d ShaderType::Vertex;\n    if (mState.mAttachedShaders[ShaderType::Geometry])\n        ...\n    else if ...",
+      "range": {
+        "startLine": 1384,
+        "startChar": 1,
+        "endLine": 1389,
+        "endChar": 56
+      },
+      "revId": "9e5d365498403a63e17ecae4bdff85c819f16735",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c6014ab1_792111cb",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1389,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-26T19:33:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f5df1b9e_798bb76c",
       "range": {
         "startLine": 1384,
         "startChar": 1,
