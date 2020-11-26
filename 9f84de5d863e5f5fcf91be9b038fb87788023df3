@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9614d137_c8f9af94",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-26T02:38:29Z",
+      "side": 1,
+      "message": "Sunny, this should fix the RGB16F to RGB16UI failure you saw on your platform. I don\u0027t believe any of our bots actually support any RGB formats, so please give it a shot to make sure it works as intended.",
+      "revId": "9f84de5d863e5f5fcf91be9b038fb87788023df3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
