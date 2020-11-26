@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "fad26c09_11c4db66",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2020-11-26T09:05:11Z",
+      "side": 1,
+      "message": "Use a meaningful name. For example \u0027Add doc for the translation from uniform block to StructuredBuffer\u0027",
+      "revId": "4bed8da32cddc43b886b151894eb682be459501c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "fde6e19f_bd7a629a",
@@ -14,6 +31,167 @@
       "writtenOn": "2020-11-26T08:33:11Z",
       "side": 1,
       "message": "Please take a look, thank you.",
+      "revId": "4bed8da32cddc43b886b151894eb682be459501c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3d674a86_072a4dd5",
+        "filename": "doc/UniformBlockTranslateToStructuredBuffer.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2020-11-26T09:05:11Z",
+      "side": 1,
+      "message": "Solution",
+      "range": {
+        "startLine": 6,
+        "startChar": 3,
+        "endLine": 6,
+        "endChar": 13
+      },
+      "revId": "4bed8da32cddc43b886b151894eb682be459501c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fc819880_28cdd7c6",
+        "filename": "doc/UniformBlockTranslateToStructuredBuffer.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2020-11-26T09:05:11Z",
+      "side": 1,
+      "message": "Delete \u003e\u003e",
+      "range": {
+        "startLine": 20,
+        "startChar": 0,
+        "endLine": 20,
+        "endChar": 19
+      },
+      "revId": "4bed8da32cddc43b886b151894eb682be459501c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "64b8bf50_7a49b3ac",
+        "filename": "doc/UniformBlockTranslateToStructuredBuffer.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2020-11-26T09:05:11Z",
+      "side": 1,
+      "message": "Remove the space.",
+      "range": {
+        "startLine": 33,
+        "startChar": 54,
+        "endLine": 33,
+        "endChar": 55
+      },
+      "revId": "4bed8da32cddc43b886b151894eb682be459501c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e0bd56f2_5ca00270",
+        "filename": "doc/UniformBlockTranslateToStructuredBuffer.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2020-11-26T09:05:11Z",
+      "side": 1,
+      "message": "TRANSLATED HLSL TYPE?",
+      "range": {
+        "startLine": 59,
+        "startChar": 116,
+        "endLine": 59,
+        "endChar": 131
+      },
+      "revId": "4bed8da32cddc43b886b151894eb682be459501c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a4f2973c_e6b03722",
+        "filename": "doc/UniformBlockTranslateToStructuredBuffer.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2020-11-26T09:05:11Z",
+      "side": 1,
+      "message": "GLSL TYPE? Please change all related places.",
+      "range": {
+        "startLine": 62,
+        "startChar": 10,
+        "endLine": 62,
+        "endChar": 22
+      },
+      "revId": "4bed8da32cddc43b886b151894eb682be459501c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f16a0b25_d8df62ad",
+        "filename": "doc/UniformBlockTranslateToStructuredBuffer.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2020-11-26T09:05:11Z",
+      "side": 1,
+      "message": "Delete \u003e\u003e",
+      "range": {
+        "startLine": 104,
+        "startChar": 0,
+        "endLine": 104,
+        "endChar": 18
+      },
+      "revId": "4bed8da32cddc43b886b151894eb682be459501c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b57ae2b8_88a92a69",
+        "filename": "doc/UniformBlockTranslateToStructuredBuffer.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2020-11-26T09:05:11Z",
+      "side": 1,
+      "message": "Use `` instead of \"\" for code variable or snippet.",
+      "range": {
+        "startLine": 114,
+        "startChar": 34,
+        "endLine": 114,
+        "endChar": 39
+      },
       "revId": "4bed8da32cddc43b886b151894eb682be459501c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
