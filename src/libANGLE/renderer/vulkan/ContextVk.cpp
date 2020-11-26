@@ -364,7 +364,7 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
       mCurrentWindowSurface(nullptr),
       mCurrentRotationDrawFramebuffer(SurfaceRotation::Identity),
       mCurrentRotationReadFramebuffer(SurfaceRotation::Identity),
-      mRenderPassQueries{},
+      mActiveRenderPassQueries{},
       mVertexArray(nullptr),
       mDrawFramebuffer(nullptr),
       mProgram(nullptr),
@@ -4515,7 +4515,7 @@ angle::Result ContextVk::startRenderPass(gl::Rectangle renderArea,
 
     ANGLE_TRY(mDrawFramebuffer->startNewRenderPass(this, renderArea, &mRenderPassCommandBuffer));
 
-    resumeRenderPassQueryIfActive();
+    ANGLE_TRY(resumeRenderPassQueriesIfActive());
 
     const gl::DepthStencilState &dsState = mState.getDepthStencilState();
     vk::ResourceAccess depthAccess       = GetDepthAccess(dsState);
@@ -4582,7 +4582,7 @@ angle::Result ContextVk::flushCommandsAndEndRenderPass()
         return angle::Result::Continue;
     }
 
-    ANGLE_TRY(pauseRenderPassQueryIfActive());
+    ANGLE_TRY(pauseRenderPassQueriesIfActive());
 
     mCurrentTransformFeedbackBuffers.clear();
     mCurrentIndirectBuffer = nullptr;
@@ -4739,40 +4739,48 @@ angle::Result ContextVk::flushOutsideRenderPassCommands()
     return angle::Result::Continue;
 }
 
-void ContextVk::beginRenderPassQuery(QueryVk *queryVk)
+angle::Result ContextVk::beginRenderPassQuery(QueryVk *queryVk)
 {
-    // To avoid complexity, we always start and end occlusion query inside renderpass. if renderpass
-    // not yet started, we just remember it and defer the start call.
-    if (mRenderPassCommands->started())
+    // To avoid complexity, we always start and end these queries inside the render pass.  If the
+    // render pass has not yet started, the query is deferred until it does.
+    if (mRenderPassCommandBuffer)
     {
-        queryVk->getQueryHelper()->beginRenderPassQuery(this, mRenderPassCommandBuffer);
+        ANGLE_TRY(queryVk->getQueryHelper()->beginRenderPassQuery(this));
     }
 
-    mRenderPassQueries[queryVk->getType()] = queryVk;
+    gl::QueryType type = queryVk->getType();
+
+    ASSERT(mActiveRenderPassQueries[type] == nullptr);
+    mActiveRenderPassQueries[type] = queryVk;
+
+    return angle::Result::Continue;
 }
 
 void ContextVk::endRenderPassQuery(QueryVk *queryVk)
 {
-    if (mRenderPassCommands->started() && mRenderPassCommandBuffer)
+    if (mRenderPassCommandBuffer)
     {
-        queryVk->getQueryHelper()->endRenderPassQuery(this, mRenderPassCommandBuffer);
+        queryVk->getQueryHelper()->endRenderPassQuery(this);
     }
 
-    mRenderPassQueries[queryVk->getType()] = nullptr;
+    gl::QueryType type = queryVk->getType();
+
+    ASSERT(mActiveRenderPassQueries[type] == queryVk);
+    mActiveRenderPassQueries[type] = nullptr;
 }
 
-angle::Result ContextVk::pauseRenderPassQueryIfActive()
+angle::Result ContextVk::pauseRenderPassQueriesIfActive()
 {
     if (mRenderPassCommandBuffer == nullptr)
     {
         return angle::Result::Continue;
     }
 
-    for (QueryVk *activeQuery : mRenderPassQueries)
+    for (QueryVk *activeQuery : mActiveRenderPassQueries)
     {
         if (activeQuery)
         {
-            activeQuery->getQueryHelper()->endRenderPassQuery(this, mRenderPassCommandBuffer);
+            activeQuery->getQueryHelper()->endRenderPassQuery(this);
             ANGLE_TRY(activeQuery->stashQueryHelper(this));
         }
     }
@@ -4780,15 +4788,17 @@ angle::Result ContextVk::pauseRenderPassQueryIfActive()
     return angle::Result::Continue;
 }
 
-void ContextVk::resumeRenderPassQueryIfActive()
+angle::Result ContextVk::resumeRenderPassQueriesIfActive()
 {
-    for (QueryVk *activeQuery : mRenderPassQueries)
+    for (QueryVk *activeQuery : mActiveRenderPassQueries)
     {
         if (activeQuery)
         {
-            activeQuery->getQueryHelper()->beginRenderPassQuery(this, mRenderPassCommandBuffer);
+            ANGLE_TRY(activeQuery->getQueryHelper()->beginRenderPassQuery(this));
         }
     }
+
+    return angle::Result::Continue;
 }
 
 bool ContextVk::isRobustResourceInitEnabled() const

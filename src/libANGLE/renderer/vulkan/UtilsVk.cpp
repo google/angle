@@ -1598,10 +1598,10 @@ angle::Result UtilsVk::clearFramebuffer(ContextVk *contextVk,
                            sizeof(shaderParams), commandBuffer));
 
     // Make sure this draw call doesn't count towards occlusion query results.
-    ANGLE_TRY(contextVk->pauseRenderPassQueryIfActive());
+    ANGLE_TRY(contextVk->pauseRenderPassQueriesIfActive());
     commandBuffer->setScissor(0, 1, &scissor);
     commandBuffer->draw(3, 0);
-    contextVk->resumeRenderPassQueryIfActive();
+    ANGLE_TRY(contextVk->resumeRenderPassQueriesIfActive());
 
     // Make sure what's bound here is correctly reverted on the next draw.
     contextVk->invalidateGraphicsPipelineAndDescriptorSets();

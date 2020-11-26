@@ -38,8 +38,6 @@ class QueryVk : public QueryImpl
     vk::QueryHelper *getQueryHelper() { return &mQueryHelper; }
     angle::Result stashQueryHelper(ContextVk *contextVk);
 
-    bool isRenderPassQuery(ContextVk *contextVk) const;
-
   private:
     angle::Result getResult(const gl::Context *context, bool wait);
 
@@ -49,9 +47,10 @@ class QueryVk : public QueryImpl
     uint32_t getQueryResultCount() const;
     angle::Result accumulateStashedQueryResult(ContextVk *contextVk, vk::QueryResult *result);
 
-    // Used for AnySamples, AnySamplesConservative, Timestamp and TimeElapsed (end).
+    // Used for all queries, except TimeElapsed (begin) or those that are emulated.
     vk::QueryHelper mQueryHelper;
-    // Used for occlusion query that we may end up with multiple outstanding query helper objects.
+    // Used for queries that may end up with multiple outstanding query helper objects as they end
+    // and begin again with render passes.
     std::vector<vk::QueryHelper> mStashedQueryHelpers;
     // An additional query used for TimeElapsed (begin), as it is implemented using Timestamp.
     vk::QueryHelper mQueryHelperTimeElapsedBegin;

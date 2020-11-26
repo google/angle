@@ -536,11 +536,11 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     bool isRobustResourceInitEnabled() const;
 
     // occlusion query
-    void beginRenderPassQuery(QueryVk *queryVk);
+    angle::Result beginRenderPassQuery(QueryVk *queryVk);
     void endRenderPassQuery(QueryVk *queryVk);
 
-    angle::Result pauseRenderPassQueryIfActive();
-    void resumeRenderPassQueryIfActive();
+    angle::Result pauseRenderPassQueriesIfActive();
+    angle::Result resumeRenderPassQueriesIfActive();
 
     void updateOverlayOnPresent();
     void addOverlayUsedBuffersCount(vk::CommandBufferHelper *commandBuffer);
@@ -895,8 +895,11 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     angle::PackedEnumMap<PipelineType, vk::DynamicDescriptorPool> mDriverUniformsDescriptorPools;
     gl::QueryTypeMap<vk::DynamicQueryPool> mQueryPools;
 
-    // Saved queries run in the RenderPass.
-    gl::QueryTypeMap<QueryVk *> mRenderPassQueries;
+    // Queries that need to be closed and reopened with the render pass:
+    //
+    // - Occlusion queries
+    // - Transform feedback queries, if not emulated
+    gl::QueryTypeMap<QueryVk *> mActiveRenderPassQueries;
 
     // Dirty bits.
     DirtyBits mGraphicsDirtyBits;

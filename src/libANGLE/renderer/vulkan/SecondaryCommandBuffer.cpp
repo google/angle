@@ -136,16 +136,6 @@ ANGLE_INLINE const CommandHeader *NextCommand(const CommandHeader *command)
                                                    command->size);
 }
 
-// Add any queued resetQueryPool commands to the given cmdBuffer
-void SecondaryCommandBuffer::executeQueuedResetQueryPoolCommands(VkCommandBuffer cmdBuffer)
-{
-    for (const ResetQueryPoolParams &queryParams : mResetQueryQueue)
-    {
-        vkCmdResetQueryPool(cmdBuffer, queryParams.queryPool, queryParams.firstQuery,
-                            queryParams.queryCount);
-    }
-}
-
 // Parse the cmds in this cmd buffer into given primary cmd buffer
 void SecondaryCommandBuffer::executeCommands(VkCommandBuffer cmdBuffer)
 {
