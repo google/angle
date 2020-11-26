@@ -16,6 +16,23 @@
       "message": "The code is now checking for the required extension and device feature before enabling the workaround, so the workaround can just assume they are present without double-checking.",
       "revId": "d30d666b53a3c1ab7552bc039247f1c00bd41a2a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "680255e2_fd5ca01a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-26T15:16:07Z",
+      "side": 1,
+      "message": "Thank you Anders for working through the feedback! Let\u0027s land this",
+      "revId": "d30d666b53a3c1ab7552bc039247f1c00bd41a2a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
