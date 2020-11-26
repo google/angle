@@ -16,6 +16,75 @@
       "message": "PTAL",
       "revId": "f8975205baf2f270640f7ea07e807325beb1c233",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a65011ed_06e3aead",
+        "filename": "src/libANGLE/validationES1.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1550,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-26T19:31:04Z",
+      "side": 1,
+      "message": "for all these entry points, can you please add validation the extension is enabled?",
+      "range": {
+        "startLine": 1550,
+        "startChar": 5,
+        "endLine": 1550,
+        "endChar": 31
+      },
+      "revId": "f8975205baf2f270640f7ea07e807325beb1c233",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fa1cdc42_a862475d",
+        "filename": "src/libANGLE/validationES1.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1592,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-26T19:31:04Z",
+      "side": 1,
+      "message": "I\u0027m getting all this code is duplicated with the ES 2.0 entry points. Can you instead refactor the code to use common helper methods like \"Base\" functions where appropriate? You might be able to call the ES 2.0 function directly for some of these.",
+      "range": {
+        "startLine": 1580,
+        "startChar": 0,
+        "endLine": 1592,
+        "endChar": 0
+      },
+      "revId": "f8975205baf2f270640f7ea07e807325beb1c233",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fdd136d6_bc485be5",
+        "filename": "src/libANGLE/validationES1.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1656,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-26T19:31:04Z",
+      "side": 1,
+      "message": "nit: I think you can take this out.",
+      "range": {
+        "startLine": 1656,
+        "startChar": 8,
+        "endLine": 1656,
+        "endChar": 45
+      },
+      "revId": "f8975205baf2f270640f7ea07e807325beb1c233",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
