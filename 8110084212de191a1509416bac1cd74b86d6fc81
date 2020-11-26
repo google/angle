@@ -37,6 +37,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "a5a1167c_ecadcaf6",
+        "filename": "src/compiler/translator/ShaderLang.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 630,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2020-11-26T06:30:13Z",
+      "side": 1,
+      "message": "How about using \u0027GetUnoptimizedUniformBlockNameSet\u0027?",
+      "range": {
+        "startLine": 630,
+        "startChar": 29,
+        "endLine": 630,
+        "endChar": 77
+      },
+      "revId": "8110084212de191a1509416bac1cd74b86d6fc81",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "ddf291db_6eb71bb8",
         "filename": "src/compiler/translator/tree_ops/RecordUniformBlocksTranslatedToStructuredBuffers.cpp",
         "patchSetId": 2
@@ -48,6 +71,23 @@
       "writtenOn": "2020-11-23T04:38:38Z",
       "side": 1,
       "message": "nit: unnecessary change. Is `git cl format` doing this? It shouldn\u0027t. If you are using another tool to format, its textwidth limit may be off by 1 or 2.",
+      "revId": "8110084212de191a1509416bac1cd74b86d6fc81",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ed658df0_a22a720e",
+        "filename": "src/compiler/translator/tree_ops/RecordUniformBlocksTranslatedToStructuredBuffers.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2020-11-26T06:30:13Z",
+      "side": 1,
+      "message": "Will it hit slow compiling path if the uniform block has a large array field but it\u0027s used as whole entity not indexing? If not, you shouldn\u0027t throw a warning for such kind of uniform blocks.",
       "revId": "8110084212de191a1509416bac1cd74b86d6fc81",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
@@ -88,6 +128,24 @@
       "writtenOn": "2020-11-23T04:38:38Z",
       "side": 1,
       "message": "This is quite a long message. I suggest entering this exact information somewhere, like a comment on the bug that discusses this, then output a message like this:\n\n    Slow shader compilation due to the following uniform block(s): x y z, see anglebug.com/NNNN#cMM for workaround",
+      "revId": "8110084212de191a1509416bac1cd74b86d6fc81",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "006aa23a_85660aeb",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2116,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2020-11-26T06:30:13Z",
+      "side": 1,
+      "message": "+1",
+      "parentUuid": "42b3927c_c04a0f10",
       "revId": "8110084212de191a1509416bac1cd74b86d6fc81",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
