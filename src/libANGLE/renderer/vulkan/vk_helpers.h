@@ -1014,7 +1014,7 @@ class CommandBufferHelper : angle::NonCopyable
         return mRenderPassStarted;
     }
 
-    void onImageHelperRelease(const vk::ImageHelper *image);
+    void onImageHelperRelease(const ImageHelper *image);
 
     void beginRenderPass(const Framebuffer &framebuffer,
                          const gl::Rectangle &renderArea,
@@ -1110,8 +1110,8 @@ class CommandBufferHelper : angle::NonCopyable
     void onDepthAccess(ResourceAccess access);
     void onStencilAccess(ResourceAccess access);
 
-    void updateRenderPassForResolve(vk::Framebuffer *newFramebuffer,
-                                    const vk::RenderPassDesc &renderPassDesc);
+    void updateRenderPassForResolve(Framebuffer *newFramebuffer,
+                                    const RenderPassDesc &renderPassDesc);
 
     bool hasDepthStencilWriteOrClear() const
     {
@@ -1267,9 +1267,9 @@ bool FormatHasNecessaryFeature(RendererVk *renderer,
                                VkFormatFeatureFlags featureBits);
 
 bool CanCopyWithTransfer(RendererVk *renderer,
-                         const vk::Format &srcFormat,
+                         const Format &srcFormat,
                          VkImageTiling srcTilingMode,
-                         const vk::Format &destFormat,
+                         const Format &destFormat,
                          VkImageTiling destTilingMode);
 
 class ImageHelper final : public Resource, public angle::Subject
@@ -1446,12 +1446,12 @@ class ImageHelper final : public Resource, public angle::Subject
                      CommandBuffer *commandBuffer);
 
     static angle::Result CopyImageSubData(const gl::Context *context,
-                                          vk::ImageHelper *srcImage,
+                                          ImageHelper *srcImage,
                                           GLint srcLevel,
                                           GLint srcX,
                                           GLint srcY,
                                           GLint srcZ,
-                                          vk::ImageHelper *dstImage,
+                                          ImageHelper *dstImage,
                                           GLint dstLevel,
                                           GLint dstX,
                                           GLint dstY,

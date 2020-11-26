@@ -65,11 +65,11 @@ constexpr angle::PackedEnumMap<PipelineStage, VkPipelineStageFlagBits> kPipeline
     {PipelineStage::BottomOfPipe, VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT},
     {PipelineStage::Host, VK_PIPELINE_STAGE_HOST_BIT}};
 
-constexpr gl::ShaderMap<vk::PipelineStage> kPipelineStageShaderMap = {
-    {gl::ShaderType::Vertex, vk::PipelineStage::VertexShader},
-    {gl::ShaderType::Fragment, vk::PipelineStage::FragmentShader},
-    {gl::ShaderType::Geometry, vk::PipelineStage::GeometryShader},
-    {gl::ShaderType::Compute, vk::PipelineStage::ComputeShader},
+constexpr gl::ShaderMap<PipelineStage> kPipelineStageShaderMap = {
+    {gl::ShaderType::Vertex, PipelineStage::VertexShader},
+    {gl::ShaderType::Fragment, PipelineStage::FragmentShader},
+    {gl::ShaderType::Geometry, PipelineStage::GeometryShader},
+    {gl::ShaderType::Compute, PipelineStage::ComputeShader},
 };
 
 constexpr size_t kDefaultPoolAllocatorPageSize = 16 * 1024;
@@ -634,9 +634,9 @@ void ExtendRenderPassInvalidateArea(const gl::Rectangle &invalidateArea, gl::Rec
 }
 
 bool CanCopyWithTransferForCopyImage(RendererVk *renderer,
-                                     const vk::Format &srcFormat,
+                                     const Format &srcFormat,
                                      VkImageTiling srcTilingMode,
-                                     const vk::Format &destFormat,
+                                     const Format &destFormat,
                                      VkImageTiling destTilingMode)
 {
     // Neither source nor destination formats can be emulated for copy image through transfer,
@@ -674,9 +674,9 @@ bool FormatHasNecessaryFeature(RendererVk *renderer,
 }
 
 bool CanCopyWithTransfer(RendererVk *renderer,
-                         const vk::Format &srcFormat,
+                         const Format &srcFormat,
                          VkImageTiling srcTilingMode,
-                         const vk::Format &destFormat,
+                         const Format &destFormat,
                          VkImageTiling destTilingMode)
 {
     // Checks that the formats in the copy transfer have the appropriate tiling and transfer bits
@@ -943,7 +943,7 @@ bool CommandBufferHelper::onDepthStencilAccess(ResourceAccess access,
         // If never invalidated or no longer invalidated, return early.
         return false;
     }
-    if (access == vk::ResourceAccess::Write)
+    if (access == ResourceAccess::Write)
     {
         // Drawing to this attachment is being enabled.  Assume that drawing will immediately occur
         // after this attachment is enabled, and that means that the attachment will no longer be
@@ -1137,7 +1137,7 @@ void CommandBufferHelper::finalizeDepthStencilResolveImageLayout()
     }
 }
 
-void CommandBufferHelper::onImageHelperRelease(const vk::ImageHelper *image)
+void CommandBufferHelper::onImageHelperRelease(const ImageHelper *image)
 {
     ASSERT(mIsRenderPassCommandBuffer);
 
@@ -1285,7 +1285,7 @@ void CommandBufferHelper::endTransformFeedback()
 void CommandBufferHelper::invalidateRenderPassColorAttachment(PackedAttachmentIndex attachmentIndex)
 {
     ASSERT(mIsRenderPassCommandBuffer);
-    SetBitField(mAttachmentOps[attachmentIndex].storeOp, vk::RenderPassStoreOp::DontCare);
+    SetBitField(mAttachmentOps[attachmentIndex].storeOp, RenderPassStoreOp::DontCare);
     mAttachmentOps[attachmentIndex].isInvalidated = true;
 }
 
@@ -1385,8 +1385,8 @@ angle::Result CommandBufferHelper::flushToPrimary(const angle::FeaturesVk &featu
     return angle::Result::Continue;
 }
 
-void CommandBufferHelper::updateRenderPassForResolve(vk::Framebuffer *newFramebuffer,
-                                                     const vk::RenderPassDesc &renderPassDesc)
+void CommandBufferHelper::updateRenderPassForResolve(Framebuffer *newFramebuffer,
+                                                     const RenderPassDesc &renderPassDesc)
 {
     ASSERT(newFramebuffer);
     mFramebuffer.setHandle(newFramebuffer->getHandle());
@@ -3259,11 +3259,11 @@ angle::Result BufferHelper::copyFromBuffer(ContextVk *contextVk,
                                            uint32_t regionCount,
                                            const VkBufferCopy *copyRegions)
 {
-    vk::CommandBufferAccess access;
+    CommandBufferAccess access;
     access.onBufferTransferRead(srcBuffer);
     access.onBufferTransferWrite(this);
 
-    vk::CommandBuffer *commandBuffer;
+    CommandBuffer *commandBuffer;
     ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(access, &commandBuffer));
 
     commandBuffer->copyBuffer(srcBuffer->getBuffer(), mBuffer, regionCount, copyRegions);
@@ -4270,11 +4270,11 @@ void ImageHelper::barrierImpl(VkImageAspectFlags aspectMask,
     mCurrentQueueFamilyIndex = newQueueFamilyIndex;
 }
 
-template void ImageHelper::barrierImpl<rx::vk::priv::SecondaryCommandBuffer>(
+template void ImageHelper::barrierImpl<priv::SecondaryCommandBuffer>(
     VkImageAspectFlags aspectMask,
     ImageLayout newLayout,
     uint32_t newQueueFamilyIndex,
-    rx::vk::priv::SecondaryCommandBuffer *commandBuffer);
+    priv::SecondaryCommandBuffer *commandBuffer);
 
 bool ImageHelper::updateLayoutAndBarrier(VkImageAspectFlags aspectMask,
                                          ImageLayout newLayout,
@@ -4449,12 +4449,12 @@ void ImageHelper::Copy(ImageHelper *srcImage,
 
 // static
 angle::Result ImageHelper::CopyImageSubData(const gl::Context *context,
-                                            vk::ImageHelper *srcImage,
+                                            ImageHelper *srcImage,
                                             GLint srcLevel,
                                             GLint srcX,
                                             GLint srcY,
                                             GLint srcZ,
-                                            vk::ImageHelper *dstImage,
+                                            ImageHelper *dstImage,
                                             GLint dstLevel,
                                             GLint dstX,
                                             GLint dstY,
@@ -4463,12 +4463,12 @@ angle::Result ImageHelper::CopyImageSubData(const gl::Context *context,
                                             GLsizei srcHeight,
                                             GLsizei srcDepth)
 {
-    ContextVk *contextVk = vk::GetImpl(context);
+    ContextVk *contextVk = GetImpl(context);
 
-    const vk::Format &sourceVkFormat = srcImage->getFormat();
-    VkImageTiling srcTilingMode      = srcImage->getTilingMode();
-    const vk::Format &destVkFormat   = dstImage->getFormat();
-    VkImageTiling destTilingMode     = dstImage->getTilingMode();
+    const Format &sourceVkFormat = srcImage->getFormat();
+    VkImageTiling srcTilingMode  = srcImage->getTilingMode();
+    const Format &destVkFormat   = dstImage->getFormat();
+    VkImageTiling destTilingMode = dstImage->getTilingMode();
 
     const gl::LevelIndex srcLevelGL = gl::LevelIndex(srcLevel);
     const gl::LevelIndex dstLevelGL = gl::LevelIndex(dstLevel);
@@ -4504,13 +4504,13 @@ angle::Result ImageHelper::CopyImageSubData(const gl::Context *context,
         region.extent.height = srcHeight;
         region.extent.depth  = (isSrc3D || isDst3D) ? srcDepth : 1;
 
-        vk::CommandBufferAccess access;
+        CommandBufferAccess access;
         access.onImageTransferRead(VK_IMAGE_ASPECT_COLOR_BIT, srcImage);
         access.onImageTransferWrite(dstLevelGL, 1, region.dstSubresource.baseArrayLayer,
                                     region.dstSubresource.layerCount, VK_IMAGE_ASPECT_COLOR_BIT,
                                     dstImage);
 
-        vk::CommandBuffer *commandBuffer;
+        CommandBuffer *commandBuffer;
         ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(access, &commandBuffer));
 
         ASSERT(srcImage->valid() && dstImage->valid());
@@ -4553,11 +4553,11 @@ angle::Result ImageHelper::CopyImageSubData(const gl::Context *context,
 
 angle::Result ImageHelper::generateMipmapsWithBlit(ContextVk *contextVk, LevelIndex maxLevel)
 {
-    vk::CommandBufferAccess access;
+    CommandBufferAccess access;
     access.onImageTransferWrite(mBaseLevel + 1, maxLevel.get(), 0, mLayerCount,
                                 VK_IMAGE_ASPECT_COLOR_BIT, this);
 
-    vk::CommandBuffer *commandBuffer;
+    CommandBuffer *commandBuffer;
     ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(access, &commandBuffer));
 
     // We are able to use blitImage since the image format we are using supports it.
@@ -5395,7 +5395,7 @@ void ImageHelper::stageSelfForBaseLevel()
     const gl::ImageIndex baseLevelIndex =
         gl::ImageIndex::Make2DArrayRange(mBaseLevel.get(), 0, mLayerCount);
     stageSubresourceUpdateFromImage(prevImage.release(), baseLevelIndex, gl::kOffsetZero,
-                                    getLevelExtents(vk::LevelIndex(0)), mImageType);
+                                    getLevelExtents(LevelIndex(0)), mImageType);
 }
 
 angle::Result ImageHelper::flushSingleSubresourceStagedUpdates(ContextVk *contextVk,
@@ -5511,10 +5511,10 @@ angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
     // Start in TransferDst.  Don't yet mark any subresource as having defined contents; that is
     // done with fine granularity as updates are applied.  This is achieved by specifying a layer
     // that is outside the tracking range.
-    vk::CommandBufferAccess access;
+    CommandBufferAccess access;
     access.onImageTransferWrite(mBaseLevel, 1, kMaxContentDefinedLayerCount, 0, aspectFlags, this);
 
-    vk::CommandBuffer *commandBuffer;
+    CommandBuffer *commandBuffer;
     ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(access, &commandBuffer));
 
     for (gl::LevelIndex updateMipLevelGL = levelGLStart; updateMipLevelGL < levelGLEnd;
@@ -5565,7 +5565,7 @@ angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
 
             // The updates were holding gl::LevelIndex values so that they would not need
             // modification when the base level of the texture changes.  Now that the update is
-            // about to take effect, we need to change miplevel to vk::LevelIndex.
+            // about to take effect, we need to change miplevel to LevelIndex.
             if (update.updateSource == UpdateSource::Clear)
             {
                 update.clear.levelIndex = updateMipLevelVk.get();
@@ -5621,7 +5621,7 @@ angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
                 BufferHelper *currentBuffer = bufferUpdate.bufferHelper;
                 ASSERT(currentBuffer && currentBuffer->valid());
 
-                vk::CommandBufferAccess bufferAccess;
+                CommandBufferAccess bufferAccess;
                 bufferAccess.onBufferTransferRead(currentBuffer);
                 ANGLE_TRY(
                     contextVk->getOutsideRenderPassCommandBuffer(bufferAccess, &commandBuffer));
@@ -5633,7 +5633,7 @@ angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
             }
             else
             {
-                vk::CommandBufferAccess imageAccess;
+                CommandBufferAccess imageAccess;
                 imageAccess.onImageTransferRead(aspectFlags, update.image.image);
                 ANGLE_TRY(
                     contextVk->getOutsideRenderPassCommandBuffer(imageAccess, &commandBuffer));
@@ -5917,11 +5917,11 @@ angle::Result ImageHelper::copyImageDataToBuffer(ContextVk *contextVk,
         regions[1].imageSubresource.aspectMask = VK_IMAGE_ASPECT_STENCIL_BIT;
     }
 
-    vk::CommandBufferAccess access;
+    CommandBufferAccess access;
     access.onBufferTransferWrite(*bufferOut);
     access.onImageTransferRead(aspectFlags, this);
 
-    vk::CommandBuffer *commandBuffer;
+    CommandBuffer *commandBuffer;
     ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(access, &commandBuffer));
 
     commandBuffer->copyImageToBuffer(mImage, getCurrentLayout(), bufferHandle, 1, regions);
@@ -6067,7 +6067,7 @@ angle::Result ImageHelper::readPixels(ContextVk *contextVk,
     VkImageAspectFlags layoutChangeAspectFlags = src->getAspectFlags();
 
     // Note that although we're reading from the image, we need to update the layout below.
-    vk::CommandBufferAccess access;
+    CommandBufferAccess access;
     access.onImageTransferRead(layoutChangeAspectFlags, this);
     if (isMultisampled)
     {
@@ -6075,7 +6075,7 @@ angle::Result ImageHelper::readPixels(ContextVk *contextVk,
                                     &resolvedImage.get());
     }
 
-    vk::CommandBuffer *commandBuffer;
+    CommandBuffer *commandBuffer;
     ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(access, &commandBuffer));
 
     const angle::Format *readFormat = &mFormat->actualImageFormat();
@@ -6120,7 +6120,7 @@ angle::Result ImageHelper::readPixels(ContextVk *contextVk,
 
         resolve(&resolvedImage.get(), resolveRegion, commandBuffer);
 
-        vk::CommandBufferAccess readAccess;
+        CommandBufferAccess readAccess;
         readAccess.onImageTransferRead(layoutChangeAspectFlags, &resolvedImage.get());
         ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(readAccess, &commandBuffer));
 

@@ -149,9 +149,9 @@ VkCompareOp PackGLCompareFunc(GLenum compareFunc)
 }
 
 void UnpackAttachmentDesc(VkAttachmentDescription *desc,
-                          const vk::Format &format,
+                          const Format &format,
                           uint8_t samples,
-                          const vk::PackedAttachmentOpsDesc &ops)
+                          const PackedAttachmentOpsDesc &ops)
 {
     // We would only need this flag for duplicated attachments. Apply it conservatively.
     desc->flags   = VK_ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT;
@@ -170,7 +170,7 @@ void UnpackAttachmentDesc(VkAttachmentDescription *desc,
 }
 
 void UnpackColorResolveAttachmentDesc(VkAttachmentDescription *desc,
-                                      const vk::Format &format,
+                                      const Format &format,
                                       bool usedAsInputAttachment,
                                       bool isInvalidated)
 {
@@ -203,7 +203,7 @@ void UnpackColorResolveAttachmentDesc(VkAttachmentDescription *desc,
 }
 
 void UnpackDepthStencilResolveAttachmentDesc(VkAttachmentDescription *desc,
-                                             const vk::Format &format,
+                                             const Format &format,
                                              bool usedAsDepthInputAttachment,
                                              bool usedAsStencilInputAttachment,
                                              bool isDepthInvalidated,
@@ -238,7 +238,7 @@ void UnpackDepthStencilResolveAttachmentDesc(VkAttachmentDescription *desc,
     desc->finalLayout   = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
 }
 
-void UnpackStencilState(const vk::PackedStencilOpState &packedState,
+void UnpackStencilState(const PackedStencilOpState &packedState,
                         uint8_t stencilReference,
                         VkStencilOpState *stateOut)
 {
@@ -251,7 +251,7 @@ void UnpackStencilState(const vk::PackedStencilOpState &packedState,
     stateOut->reference   = stencilReference;
 }
 
-void UnpackBlendAttachmentState(const vk::PackedColorBlendAttachmentState &packedState,
+void UnpackBlendAttachmentState(const PackedColorBlendAttachmentState &packedState,
                                 VkPipelineColorBlendAttachmentState *stateOut)
 {
     stateOut->srcColorBlendFactor = static_cast<VkBlendFactor>(packedState.srcColorBlendFactor);
@@ -746,7 +746,7 @@ angle::Result CreateRenderPass2(Context *context,
 
 void UpdateRenderPassColorPerfCounters(const VkRenderPassCreateInfo &createInfo,
                                        const VkSubpassDescription &subpass,
-                                       vk::RenderPassPerfCounters *countersOut)
+                                       RenderPassPerfCounters *countersOut)
 {
     // Color resolve counters.
     if (subpass.pResolveAttachments == nullptr)
@@ -770,7 +770,7 @@ void UpdateRenderPassColorPerfCounters(const VkRenderPassCreateInfo &createInfo,
 
 void UpdateRenderPassDepthStencilPerfCounters(const VkRenderPassCreateInfo &createInfo,
                                               size_t renderPassIndex,
-                                              vk::RenderPassPerfCounters *countersOut)
+                                              RenderPassPerfCounters *countersOut)
 {
     ASSERT(renderPassIndex != VK_ATTACHMENT_UNUSED);
 
@@ -795,7 +795,7 @@ void UpdateRenderPassDepthStencilPerfCounters(const VkRenderPassCreateInfo &crea
 void UpdateRenderPassDepthStencilResolvePerfCounters(
     const VkRenderPassCreateInfo &createInfo,
     const VkSubpassDescriptionDepthStencilResolve &depthStencilResolve,
-    vk::RenderPassPerfCounters *countersOut)
+    RenderPassPerfCounters *countersOut)
 {
     if (depthStencilResolve.pDepthStencilResolveAttachment == nullptr)
     {
@@ -834,11 +834,11 @@ void UpdateRenderPassPerfCounters(
     const RenderPassDesc &desc,
     const VkRenderPassCreateInfo &createInfo,
     const VkSubpassDescriptionDepthStencilResolve &depthStencilResolve,
-    vk::RenderPassPerfCounters *countersOut)
+    RenderPassPerfCounters *countersOut)
 {
     // Accumulate depth/stencil attachment indices in all subpasses to avoid double-counting
     // counters.
-    vk::FramebufferAttachmentMask depthStencilAttachmentIndices;
+    FramebufferAttachmentMask depthStencilAttachmentIndices;
 
     for (uint32_t subpassIndex = 0; subpassIndex < createInfo.subpassCount; ++subpassIndex)
     {
@@ -880,7 +880,7 @@ void UpdateRenderPassPerfCounters(
 angle::Result InitializeRenderPassFromDesc(ContextVk *contextVk,
                                            const RenderPassDesc &desc,
                                            const AttachmentOpsArray &ops,
-                                           vk::RenderPassHelper *renderPassHelper)
+                                           RenderPassHelper *renderPassHelper)
 {
     RendererVk *renderer = contextVk->getRenderer();
 
@@ -930,7 +930,7 @@ angle::Result InitializeRenderPassFromDesc(ContextVk *contextVk,
 
         angle::FormatID formatID = desc[colorIndexGL];
         ASSERT(formatID != angle::FormatID::NONE);
-        const vk::Format &format = renderer->getFormat(formatID);
+        const Format &format = renderer->getFormat(formatID);
 
         VkAttachmentReference colorRef;
         colorRef.attachment = attachmentCount.get();
@@ -953,7 +953,7 @@ angle::Result InitializeRenderPassFromDesc(ContextVk *contextVk,
 
         angle::FormatID formatID = desc[depthStencilIndexGL];
         ASSERT(formatID != angle::FormatID::NONE);
-        const vk::Format &format = renderer->getFormat(formatID);
+        const Format &format = renderer->getFormat(formatID);
 
         depthStencilAttachmentRef.attachment = attachmentCount.get();
         depthStencilAttachmentRef.layout     = ConvertImageLayoutToVkImageLayout(
@@ -980,7 +980,7 @@ angle::Result InitializeRenderPassFromDesc(ContextVk *contextVk,
 
         ASSERT(desc.isColorAttachmentEnabled(colorIndexGL));
 
-        const vk::Format &format = renderer->getFormat(desc[colorIndexGL]);
+        const Format &format = renderer->getFormat(desc[colorIndexGL]);
 
         VkAttachmentReference colorRef;
         colorRef.attachment = attachmentCount.get();
@@ -1010,7 +1010,7 @@ angle::Result InitializeRenderPassFromDesc(ContextVk *contextVk,
 
         uint32_t depthStencilIndexGL = static_cast<uint32_t>(desc.depthStencilAttachmentIndex());
 
-        const vk::Format &format         = renderer->getFormat(desc[depthStencilIndexGL]);
+        const Format &format             = renderer->getFormat(desc[depthStencilIndexGL]);
         const angle::Format &angleFormat = format.intendedFormat();
 
         // Treat missing aspect as invalidated for the purpose of the resolve attachment.
@@ -1155,8 +1155,8 @@ angle::Result InitializeRenderPassFromDesc(ContextVk *contextVk,
 
 void GetRenderPassAndUpdateCounters(ContextVk *contextVk,
                                     bool updatePerfCounters,
-                                    vk::RenderPassHelper *renderPassHelper,
-                                    vk::RenderPass **renderPassOut)
+                                    RenderPassHelper *renderPassHelper,
+                                    RenderPass **renderPassOut)
 {
     *renderPassOut = &renderPassHelper->getRenderPass();
     if (updatePerfCounters)
@@ -1181,8 +1181,8 @@ void GetRenderPassAndUpdateCounters(ContextVk *contextVk,
 }
 
 void InitializeSpecializationInfo(
-    const vk::SpecializationConstants &specConsts,
-    vk::SpecializationConstantMap<VkSpecializationMapEntry> *specializationEntriesOut,
+    const SpecializationConstants &specConsts,
+    SpecializationConstantMap<VkSpecializationMapEntry> *specializationEntriesOut,
     VkSpecializationInfo *specializationInfoOut)
 {
     // Collect specialization constants.
@@ -1194,12 +1194,12 @@ void InitializeSpecializationInfo(
         {
             case sh::vk::SpecializationConstantId::LineRasterEmulation:
                 (*specializationEntriesOut)[id].offset =
-                    offsetof(vk::SpecializationConstants, lineRasterEmulation);
+                    offsetof(SpecializationConstants, lineRasterEmulation);
                 (*specializationEntriesOut)[id].size = sizeof(specConsts.lineRasterEmulation);
                 break;
             case sh::vk::SpecializationConstantId::SurfaceRotation:
                 (*specializationEntriesOut)[id].offset =
-                    offsetof(vk::SpecializationConstants, surfaceRotation);
+                    offsetof(SpecializationConstants, surfaceRotation);
                 (*specializationEntriesOut)[id].size = sizeof(specConsts.surfaceRotation);
                 break;
             default:
@@ -1602,7 +1602,7 @@ void GraphicsPipelineDesc::initDefaults(const ContextVk *contextVk)
 
 angle::Result GraphicsPipelineDesc::initializePipeline(
     ContextVk *contextVk,
-    const vk::PipelineCache &pipelineCacheVk,
+    const PipelineCache &pipelineCacheVk,
     const RenderPass &compatibleRenderPass,
     const PipelineLayout &pipelineLayout,
     const gl::AttributesMask &activeAttribLocationsMask,
@@ -1610,7 +1610,7 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
     const ShaderModule *vertexModule,
     const ShaderModule *fragmentModule,
     const ShaderModule *geometryModule,
-    const vk::SpecializationConstants specConsts,
+    const SpecializationConstants specConsts,
     Pipeline *pipelineOut) const
 {
     angle::FixedVector<VkPipelineShaderStageCreateInfo, 3> shaderStages;
@@ -1625,7 +1625,7 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
     VkSpecializationInfo specializationInfo        = {};
     VkGraphicsPipelineCreateInfo createInfo        = {};
 
-    vk::SpecializationConstantMap<VkSpecializationMapEntry> specializationEntries;
+    SpecializationConstantMap<VkSpecializationMapEntry> specializationEntries;
     InitializeSpecializationInfo(specConsts, &specializationEntries, &specializationInfo);
 
     // Vertex shader is always expected to be present.
@@ -1697,7 +1697,7 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
 
         // Get the corresponding VkFormat for the attrib's format.
         angle::FormatID formatID         = static_cast<angle::FormatID>(packedAttrib.format);
-        const vk::Format &format         = contextVk->getRenderer()->getFormat(formatID);
+        const Format &format             = contextVk->getRenderer()->getFormat(formatID);
         const angle::Format &angleFormat = format.intendedFormat();
         VkFormat vkFormat =
             packedAttrib.compressed ? format.vkCompressedBufferFormat : format.vkBufferFormat;
@@ -1978,7 +1978,7 @@ void GraphicsPipelineDesc::updateVertexInput(GraphicsPipelineTransitionBits *tra
                                              bool compressed,
                                              GLuint relativeOffset)
 {
-    vk::PackedAttribDesc &packedAttrib = mVertexInputAttribs.attribs[attribIndex];
+    PackedAttribDesc &packedAttrib = mVertexInputAttribs.attribs[attribIndex];
 
     SetBitField(packedAttrib.stride, stride);
     SetBitField(packedAttrib.divisor, divisor);
@@ -2566,7 +2566,7 @@ void AttachmentOpsArray::initWithLoadStore(PackedAttachmentIndex index,
                                            ImageLayout finalLayout)
 {
     setLayouts(index, initialLayout, finalLayout);
-    setOps(index, VK_ATTACHMENT_LOAD_OP_LOAD, vk::RenderPassStoreOp::Store);
+    setOps(index, VK_ATTACHMENT_LOAD_OP_LOAD, RenderPassStoreOp::Store);
     setStencilOps(index, VK_ATTACHMENT_LOAD_OP_LOAD, RenderPassStoreOp::Store);
 }
 
@@ -2646,7 +2646,7 @@ void DescriptorSetLayoutDesc::update(uint32_t bindingIndex,
                                      VkDescriptorType type,
                                      uint32_t count,
                                      VkShaderStageFlags stages,
-                                     const vk::Sampler *immutableSampler)
+                                     const Sampler *immutableSampler)
 {
     ASSERT(static_cast<size_t>(type) < std::numeric_limits<uint16_t>::max());
     ASSERT(count < std::numeric_limits<uint16_t>::max());
@@ -3026,7 +3026,7 @@ void SamplerDesc::update(const angle::FeaturesVk &featuresVk,
     mReserved[2] = 0;
 }
 
-angle::Result SamplerDesc::init(ContextVk *contextVk, vk::Sampler *sampler) const
+angle::Result SamplerDesc::init(ContextVk *contextVk, Sampler *sampler) const
 {
     const gl::Extensions &extensions = contextVk->getExtensions();
 
@@ -3062,7 +3062,7 @@ angle::Result SamplerDesc::init(ContextVk *contextVk, vk::Sampler *sampler) cons
         filteringInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_FILTERING_PRECISION_GOOGLE;
         filteringInfo.samplerFilteringPrecisionMode =
             VK_SAMPLER_FILTERING_PRECISION_MODE_HIGH_GOOGLE;
-        vk::AddToPNextChain(&createInfo, &filteringInfo);
+        AddToPNextChain(&createInfo, &filteringInfo);
     }
 
     VkSamplerYcbcrConversionInfo yuvConversionInfo = {};
@@ -3074,7 +3074,7 @@ angle::Result SamplerDesc::init(ContextVk *contextVk, vk::Sampler *sampler) cons
         yuvConversionInfo.conversion =
             contextVk->getRenderer()->getYuvConversionCache().getYuvConversionFromExternalFormat(
                 mExternalFormat);
-        vk::AddToPNextChain(&createInfo, &yuvConversionInfo);
+        AddToPNextChain(&createInfo, &yuvConversionInfo);
 
         // Vulkan spec requires these settings:
         createInfo.addressModeU            = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;

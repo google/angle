@@ -257,7 +257,7 @@ void FormatTable::initialize(RendererVk *renderer,
 {
     for (size_t formatIndex = 0; formatIndex < angle::kNumANGLEFormats; ++formatIndex)
     {
-        vk::Format &format               = mFormatData[formatIndex];
+        Format &format                   = mFormatData[formatIndex];
         const auto formatID              = static_cast<angle::FormatID>(formatIndex);
         const angle::Format &angleFormat = angle::Format::Get(formatID);
 

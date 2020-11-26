@@ -437,8 +437,8 @@ angle::Result StagingBuffer::init(Context *context, VkDeviceSize size, StagingUs
     VkMemoryPropertyFlags requiredFlags =
         VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT;
 
-    RendererVk *renderer           = context->getRenderer();
-    const vk::Allocator &allocator = renderer->getAllocator();
+    RendererVk *renderer       = context->getRenderer();
+    const Allocator &allocator = renderer->getAllocator();
 
     uint32_t memoryTypeIndex = 0;
     ANGLE_VK_TRY(context,
@@ -451,8 +451,8 @@ angle::Result StagingBuffer::init(Context *context, VkDeviceSize size, StagingUs
     // invalid values ensures our testing doesn't assume zero-initialized memory.
     if (renderer->getFeatures().allocateNonZeroMemory.enabled)
     {
-        ANGLE_TRY(vk::InitMappableAllocation(context, allocator, &mAllocation, size,
-                                             kNonZeroInitValue, requiredFlags));
+        ANGLE_TRY(InitMappableAllocation(context, allocator, &mAllocation, size, kNonZeroInitValue,
+                                         requiredFlags));
     }
 
     return angle::Result::Continue;
@@ -466,18 +466,18 @@ void StagingBuffer::release(ContextVk *contextVk)
 
 void StagingBuffer::collectGarbage(RendererVk *renderer, Serial serial)
 {
-    vk::GarbageList garbageList;
-    garbageList.emplace_back(vk::GetGarbage(&mBuffer));
-    garbageList.emplace_back(vk::GetGarbage(&mAllocation));
+    GarbageList garbageList;
+    garbageList.emplace_back(GetGarbage(&mBuffer));
+    garbageList.emplace_back(GetGarbage(&mAllocation));
 
-    vk::SharedResourceUse sharedUse;
+    SharedResourceUse sharedUse;
     sharedUse.init();
     sharedUse.updateSerialOneOff(serial);
     renderer->collectGarbage(std::move(sharedUse), std::move(garbageList));
 }
 
 angle::Result InitMappableAllocation(Context *context,
-                                     const vk::Allocator &allocator,
+                                     const Allocator &allocator,
                                      Allocation *allocation,
                                      VkDeviceSize size,
                                      int value,
@@ -524,7 +524,7 @@ angle::Result InitMappableDeviceMemory(Context *context,
     return angle::Result::Continue;
 }
 
-angle::Result AllocateBufferMemory(vk::Context *context,
+angle::Result AllocateBufferMemory(Context *context,
                                    VkMemoryPropertyFlags requestedMemoryPropertyFlags,
                                    VkMemoryPropertyFlags *memoryPropertyFlagsOut,
                                    const void *extraAllocationInfo,
@@ -537,7 +537,7 @@ angle::Result AllocateBufferMemory(vk::Context *context,
                                        deviceMemoryOut, sizeOut);
 }
 
-angle::Result AllocateImageMemory(vk::Context *context,
+angle::Result AllocateImageMemory(Context *context,
                                   VkMemoryPropertyFlags memoryPropertyFlags,
                                   VkMemoryPropertyFlags *memoryPropertyFlagsOut,
                                   const void *extraAllocationInfo,
@@ -549,7 +549,7 @@ angle::Result AllocateImageMemory(vk::Context *context,
                                        extraAllocationInfo, image, deviceMemoryOut, sizeOut);
 }
 
-angle::Result AllocateImageMemoryWithRequirements(vk::Context *context,
+angle::Result AllocateImageMemoryWithRequirements(Context *context,
                                                   VkMemoryPropertyFlags memoryPropertyFlags,
                                                   const VkMemoryRequirements &memoryRequirements,
                                                   const void *extraAllocationInfo,
@@ -562,7 +562,7 @@ angle::Result AllocateImageMemoryWithRequirements(vk::Context *context,
                                               deviceMemoryOut);
 }
 
-angle::Result AllocateBufferMemoryWithRequirements(vk::Context *context,
+angle::Result AllocateBufferMemoryWithRequirements(Context *context,
                                                    VkMemoryPropertyFlags memoryPropertyFlags,
                                                    const VkMemoryRequirements &memoryRequirements,
                                                    const void *extraAllocationInfo,

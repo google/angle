@@ -584,7 +584,7 @@ class GraphicsPipelineDesc final
     }
 
     angle::Result initializePipeline(ContextVk *contextVk,
-                                     const vk::PipelineCache &pipelineCacheVk,
+                                     const PipelineCache &pipelineCacheVk,
                                      const RenderPass &compatibleRenderPass,
                                      const PipelineLayout &pipelineLayout,
                                      const gl::AttributesMask &activeAttribLocationsMask,
@@ -592,7 +592,7 @@ class GraphicsPipelineDesc final
                                      const ShaderModule *vertexModule,
                                      const ShaderModule *fragmentModule,
                                      const ShaderModule *geometryModule,
-                                     const vk::SpecializationConstants specConsts,
+                                     const SpecializationConstants specConsts,
                                      Pipeline *pipelineOut) const;
 
     // Vertex input state. For ES 3.1 this should be separated into binding and attribute.
@@ -772,7 +772,7 @@ class DescriptorSetLayoutDesc final
                 VkDescriptorType type,
                 uint32_t count,
                 VkShaderStageFlags stages,
-                const vk::Sampler *immutableSampler);
+                const Sampler *immutableSampler);
 
     void unpackBindings(DescriptorSetLayoutBindingVector *bindings,
                         std::vector<VkSampler> *immutableSamplers) const;
@@ -870,7 +870,7 @@ class SamplerDesc final
                 bool stencilMode,
                 uint64_t externalFormat);
     void reset();
-    angle::Result init(ContextVk *contextVk, vk::Sampler *sampler) const;
+    angle::Result init(ContextVk *contextVk, Sampler *sampler) const;
 
     size_t hash() const;
     bool operator==(const SamplerDesc &other) const;

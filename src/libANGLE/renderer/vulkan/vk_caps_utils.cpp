@@ -37,7 +37,7 @@ bool HasShaderImageAtomicsSupport(const RendererVk *rendererVk,
 {
     // Only VK_FORMAT_R32_SFLOAT doesn't have mandatory support for the STORAGE_IMAGE_ATOMIC and
     // STORAGE_TEXEL_BUFFER_ATOMIC features.
-    const vk::Format &formatVk = rendererVk->getFormat(GL_R32F);
+    const Format &formatVk = rendererVk->getFormat(GL_R32F);
 
     const bool hasImageAtomicSupport = rendererVk->hasImageFormatFeatureBits(
         formatVk.vkImageFormat, VK_FORMAT_FEATURE_STORAGE_IMAGE_ATOMIC_BIT);
@@ -60,11 +60,11 @@ bool FormatReinterpretationSupported(const std::vector<GLenum> &optionalSizedFor
         const gl::TextureCaps &baseCaps = rendererVk->getNativeTextureCaps().get(glFormat);
         if (baseCaps.texturable && baseCaps.filterable)
         {
-            const vk::Format &vkFormat = rendererVk->getFormat(glFormat);
+            const Format &vkFormat = rendererVk->getFormat(glFormat);
 
             VkFormat reinterpretedFormat = checkLinearColorspace
-                                               ? vk::ConvertToLinear(vkFormat.vkImageFormat)
-                                               : vk::ConvertToSRGB(vkFormat.vkImageFormat);
+                                               ? ConvertToLinear(vkFormat.vkImageFormat)
+                                               : ConvertToSRGB(vkFormat.vkImageFormat);
             ASSERT(reinterpretedFormat != VK_FORMAT_UNDEFINED);
 
             constexpr uint32_t kBitsSampleFilter =
@@ -137,16 +137,15 @@ bool GetTextureSRGBOverrideSupport(const RendererVk *rendererVk,
     std::vector<GLenum> optionalR8LinearFormats   = {GL_R8};
     std::vector<GLenum> optionalBPTCLinearFormats = {GL_COMPRESSED_RGBA_BPTC_UNORM_EXT};
 
-    if (!vk::FormatReinterpretationSupported(optionalLinearFormats, rendererVk,
-                                             kNonLinearColorspace))
+    if (!FormatReinterpretationSupported(optionalLinearFormats, rendererVk, kNonLinearColorspace))
     {
         return false;
     }
 
     if (supportedExtensions.textureCompressionS3TCsRGB == true)
     {
-        if (!vk::FormatReinterpretationSupported(optionalS3TCLinearFormats, rendererVk,
-                                                 kNonLinearColorspace))
+        if (!FormatReinterpretationSupported(optionalS3TCLinearFormats, rendererVk,
+                                             kNonLinearColorspace))
         {
             return false;
         }
@@ -154,8 +153,8 @@ bool GetTextureSRGBOverrideSupport(const RendererVk *rendererVk,
 
     if (supportedExtensions.sRGBR8EXT == true)
     {
-        if (!vk::FormatReinterpretationSupported(optionalR8LinearFormats, rendererVk,
-                                                 kNonLinearColorspace))
+        if (!FormatReinterpretationSupported(optionalR8LinearFormats, rendererVk,
+                                             kNonLinearColorspace))
         {
             return false;
         }
@@ -165,8 +164,8 @@ bool GetTextureSRGBOverrideSupport(const RendererVk *rendererVk,
 
     if (supportedExtensions.textureCompressionBPTC == true)
     {
-        if (!vk::FormatReinterpretationSupported(optionalBPTCLinearFormats, rendererVk,
-                                                 kNonLinearColorspace))
+        if (!FormatReinterpretationSupported(optionalBPTCLinearFormats, rendererVk,
+                                             kNonLinearColorspace))
         {
             return false;
         }
@@ -177,7 +176,7 @@ bool GetTextureSRGBOverrideSupport(const RendererVk *rendererVk,
 
 bool HasTexelBufferSupport(const RendererVk *rendererVk, GLenum formatGL)
 {
-    const vk::Format &formatVk = rendererVk->getFormat(formatGL);
+    const Format &formatVk = rendererVk->getFormat(formatGL);
 
     return rendererVk->hasBufferFormatFeatureBits(
         formatVk.vkBufferFormat,
