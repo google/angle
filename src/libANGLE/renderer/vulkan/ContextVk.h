@@ -37,7 +37,7 @@ class ShareGroupVk;
 static constexpr uint32_t kMaxGpuEventNameLen = 32;
 using EventName                               = std::array<char, kMaxGpuEventNameLen>;
 
-class ContextVk : public ContextImpl, public vk::Context
+class ContextVk : public ContextImpl, public vk::Context, public MultisampleTextureInitializer
 {
   public:
     ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk *renderer);
@@ -569,6 +569,10 @@ class ContextVk : public ContextImpl, public vk::Context
     // When UtilsVk issues a draw call on the currently running render pass, the pipelines and
     // descriptor sets it binds need to be undone.
     void invalidateGraphicsPipelineAndDescriptorSets();
+
+    // Implementation of MultisampleTextureInitializer
+    angle::Result initializeMultisampleTextureToBlack(const gl::Context *context,
+                                                      gl::Texture *glTexture) override;
 
   private:
     // Dirty bits.

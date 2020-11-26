@@ -59,12 +59,8 @@
 4723 VULKAN NVIDIA : KHR-GLES31.core.shader_image_size.advanced-nonMS-vs-uint = SKIP
 4723 VULKAN NVIDIA : KHR-GLES31.core.program_interface_query.transform-feedback-types = SKIP
 
-// Cannot support incomplete multisample texture:
-3588 VULKAN : KHR-GLES31.core.sample_variables*samples_0* = SKIP
-
-// These test are failed, but the fault about incomplete multisample texture, these tests need to be SKIP.
 // Incompatible between incomplete texture and sampler format (isampler2D or usampler2D):
-3588 VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8*i.* = SKIP
+3588 VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8*i.* = FAIL
 
 // Geometry shader support
 5406 VULKAN : KHR-GLES31.core.draw_indirect.basic-mode-*adjacency = SKIP
@@ -106,8 +102,7 @@
 4159 VULKAN PIXEL2ORXL : KHR-GLES31.core.draw_indirect.advanced-twoPass-transformFeedback-arrays = FAIL
 
 // Fails to link the shader program on Pixel2 and Pixel2 XL
-// These test are failed, but the fault about incomplete multisample texture, these tests need to be SKIP.
-3588 VULKAN PIXEL2ORXL : KHR-GLES31.core.sample_variables.mask.rgba8.samples_*.mask_* = SKIP
+3588 VULKAN PIXEL2ORXL : KHR-GLES31.core.sample_variables.mask.rgba8.samples_*.mask_* = FAIL
 
 // Android uses "old" sampler rewrite that doesn't support array of arrays
 2703 VULKAN ANDROID : KHR-GLES31.core.arrays_of_arrays.* = SKIP

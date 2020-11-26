@@ -537,9 +537,7 @@ angle::Result ContextVk::getIncompleteTexture(const gl::Context *context,
                                               gl::TextureType type,
                                               gl::Texture **textureOut)
 {
-    // At some point, we'll need to support multisample and we'll pass "this" instead of nullptr
-    // and implement the necessary interface.
-    return mIncompleteTextures.getIncompleteTexture(context, type, nullptr, textureOut);
+    return mIncompleteTextures.getIncompleteTexture(context, type, this, textureOut);
 }
 
 angle::Result ContextVk::initialize()
@@ -4872,6 +4870,15 @@ void ContextVk::invalidateGraphicsPipelineAndDescriptorSets()
 {
     mGraphicsDirtyBits.set(DIRTY_BIT_PIPELINE);
     mGraphicsDirtyBits.set(DIRTY_BIT_DESCRIPTOR_SETS);
+}
+
+angle::Result ContextVk::initializeMultisampleTextureToBlack(const gl::Context *context,
+                                                             gl::Texture *glTexture)
+{
+    ASSERT(glTexture->getType() == gl::TextureType::_2DMultisample);
+    TextureVk *textureVk = vk::GetImpl(glTexture);
+
+    return textureVk->initializeContents(context, gl::ImageIndex::Make2DMultisample());
 }
 
 angle::Result ContextVk::updateRenderPassDepthStencilAccess()
