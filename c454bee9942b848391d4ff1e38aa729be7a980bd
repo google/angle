@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ed2f35cc_633f3107",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 17
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-26T02:35:55Z",
+      "side": 1,
+      "message": "LGTM, but letting Tim +2 as the main reviewer.\n\nPer chance, do you have any data on how much this improves applications / benchmarks? Any idea how much more (like percentage) graphics pipelines are created because of this?",
+      "revId": "c454bee9942b848391d4ff1e38aa729be7a980bd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
