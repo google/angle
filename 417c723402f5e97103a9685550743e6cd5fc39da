@@ -58,6 +58,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8b93de1c_7b5d534d",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 3182,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-26T02:18:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "18e601ef_07a899e4",
+      "range": {
+        "startLine": 3182,
+        "startChar": 50,
+        "endLine": 3182,
+        "endChar": 82
+      },
+      "revId": "417c723402f5e97103a9685550743e6cd5fc39da",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "bc67a02e_bfe521c4",
@@ -71,6 +95,30 @@
       "writtenOn": "2020-11-25T21:52:24Z",
       "side": 1,
       "message": "nit: can cache this in a temporary to simplify the call",
+      "range": {
+        "startLine": 3402,
+        "startChar": 46,
+        "endLine": 3402,
+        "endChar": 87
+      },
+      "revId": "417c723402f5e97103a9685550743e6cd5fc39da",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "438fb2a5_ff0f0441",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 3402,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-26T02:18:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bc67a02e_bfe521c4",
       "range": {
         "startLine": 3402,
         "startChar": 46,
@@ -104,6 +152,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6e2f9815_46e12843",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramExecutableVk.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 688,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-26T02:18:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "44838bde_f666031b",
+      "range": {
+        "startLine": 688,
+        "startChar": 45,
+        "endLine": 688,
+        "endChar": 73
+      },
+      "revId": "417c723402f5e97103a9685550743e6cd5fc39da",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "088ec194_da395a75",
@@ -117,6 +189,30 @@
       "writtenOn": "2020-11-25T21:52:24Z",
       "side": 1,
       "message": "nit: would expand this to \u0027width\u0027 and \u0027height\u0027 for consistency.",
+      "range": {
+        "startLine": 729,
+        "startChar": 81,
+        "endLine": 729,
+        "endChar": 82
+      },
+      "revId": "417c723402f5e97103a9685550743e6cd5fc39da",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6f69ff1d_c74964e5",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 729,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-26T02:18:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "088ec194_da395a75",
       "range": {
         "startLine": 729,
         "startChar": 81,
@@ -188,6 +284,30 @@
       "side": 1,
       "message": "Yes you can. I kept it 32 bit mainly thinking that we will eventually move viewport and scissor all to dynamic state when they are different from drawable size, and then we will have more than enough bits, so why not just keep it 32 bit.",
       "parentUuid": "a92e7e07_2b3aa42c",
+      "range": {
+        "startLine": 744,
+        "startChar": 15,
+        "endLine": 744,
+        "endChar": 28
+      },
+      "revId": "417c723402f5e97103a9685550743e6cd5fc39da",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8996eeca_f0bb3bbb",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 744,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-26T02:18:00Z",
+      "side": 1,
+      "message": "Changed to uint16_t as well.",
+      "parentUuid": "df6ac576_2e6497e7",
       "range": {
         "startLine": 744,
         "startChar": 15,
