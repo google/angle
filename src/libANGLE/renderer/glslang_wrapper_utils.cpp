@@ -1064,6 +1064,22 @@ class SpirvTransformerBase : angle::NonCopyable
     size_t copyInstruction(const uint32_t *instruction, size_t wordCount);
     uint32_t getNewId();
 
+    // Instruction generators:
+    void writeCopyObject(uint32_t id, uint32_t typeId, uint32_t operandId);
+    void writeCompositeConstruct(uint32_t id,
+                                 uint32_t typeId,
+                                 const angle::FixedVector<uint32_t, 4> &constituents);
+    void writeCompositeExtract(uint32_t id, uint32_t typeId, uint32_t compositeId, uint32_t field);
+    void writeLoad(uint32_t id, uint32_t typeId, uint32_t tempVarId);
+    void writeStore(uint32_t pointerId, uint32_t objectId);
+    void writeTypePointer(uint32_t id, uint32_t storageClass, uint32_t typeId);
+    void writeVariable(uint32_t id, uint32_t typeId, uint32_t storageClass);
+    void writeVectorShuffle(uint32_t id,
+                            uint32_t typeId,
+                            uint32_t vec1Id,
+                            uint32_t vec2Id,
+                            const angle::FixedVector<uint32_t, 4> &fields);
+
     // SPIR-V to transform:
     const std::vector<uint32_t> &mSpirvBlobIn;
     const gl::ShaderType mShaderType;
@@ -1134,6 +1150,195 @@ uint32_t SpirvTransformerBase::getNewId()
     return (*mSpirvBlobOut)[kHeaderIndexIndexBound]++;
 }
 
+void SpirvTransformerBase::writeCopyObject(uint32_t id, uint32_t typeId, uint32_t operandId)
+{
+    // SPIR-V 1.0 Section 3.32 Instructions, OpCopyObject
+    constexpr size_t kTypeIdIndex                 = 1;
+    constexpr size_t kIdIndex                     = 2;
+    constexpr size_t kOperandIdIndex              = 3;
+    constexpr size_t kCopyObjectInstructionLength = 4;
+
+    std::array<uint32_t, kCopyObjectInstructionLength> copyObject = {};
+
+    // Fill the fields.
+    SetSpirvInstructionOp(copyObject.data(), spv::OpCopyObject);
+    SetSpirvInstructionLength(copyObject.data(), kCopyObjectInstructionLength);
+    copyObject[kTypeIdIndex]    = typeId;
+    copyObject[kIdIndex]        = id;
+    copyObject[kOperandIdIndex] = operandId;
+
+    copyInstruction(copyObject.data(), kCopyObjectInstructionLength);
+}
+
+void SpirvTransformerBase::writeCompositeConstruct(
+    uint32_t id,
+    uint32_t typeId,
+    const angle::FixedVector<uint32_t, 4> &constituents)
+{
+    // SPIR-V 1.0 Section 3.32 Instructions, OpCompositeConstruct
+    constexpr size_t kTypeIdIndex                             = 1;
+    constexpr size_t kIdIndex                                 = 2;
+    constexpr size_t kConstituentsIndexStart                  = 3;
+    constexpr size_t kConstituentsMaxCount                    = 4;
+    constexpr size_t kCompositeConstructInstructionBaseLength = 3;
+
+    ASSERT(kConstituentsMaxCount == constituents.max_size());
+    std::array<uint32_t, kCompositeConstructInstructionBaseLength + kConstituentsMaxCount>
+        compositeConstruct = {};
+
+    // Fill the fields.
+    SetSpirvInstructionOp(compositeConstruct.data(), spv::OpCompositeConstruct);
+    SetSpirvInstructionLength(compositeConstruct.data(),
+                              kCompositeConstructInstructionBaseLength + constituents.size());
+    compositeConstruct[kTypeIdIndex] = typeId;
+    compositeConstruct[kIdIndex]     = id;
+
+    for (size_t constituentIndex = 0; constituentIndex < constituents.size(); ++constituentIndex)
+    {
+        compositeConstruct[kConstituentsIndexStart + constituentIndex] =
+            constituents[constituentIndex];
+    }
+
+    copyInstruction(compositeConstruct.data(),
+                    kCompositeConstructInstructionBaseLength + constituents.size());
+}
+
+void SpirvTransformerBase::writeCompositeExtract(uint32_t id,
+                                                 uint32_t typeId,
+                                                 uint32_t compositeId,
+                                                 uint32_t field)
+{
+    // SPIR-V 1.0 Section 3.32 Instructions, OpCompositeExtract
+    constexpr size_t kTypeIdIndex                       = 1;
+    constexpr size_t kIdIndex                           = 2;
+    constexpr size_t kCompositeIdIndex                  = 3;
+    constexpr size_t kFieldIndex                        = 4;
+    constexpr size_t kCompositeExtractInstructionLength = 5;
+
+    std::array<uint32_t, kCompositeExtractInstructionLength> compositeExtract = {};
+
+    // Fill the fields.
+    SetSpirvInstructionOp(compositeExtract.data(), spv::OpCompositeExtract);
+    SetSpirvInstructionLength(compositeExtract.data(), kCompositeExtractInstructionLength);
+    compositeExtract[kTypeIdIndex]      = typeId;
+    compositeExtract[kIdIndex]          = id;
+    compositeExtract[kCompositeIdIndex] = compositeId;
+    compositeExtract[kFieldIndex]       = field;
+
+    copyInstruction(compositeExtract.data(), kCompositeExtractInstructionLength);
+}
+
+void SpirvTransformerBase::writeLoad(uint32_t pointerId, uint32_t typeId, uint32_t resultId)
+{
+    // SPIR-V 1.0 Section 3.32 Instructions, OpLoad
+    constexpr size_t kResultTypeIndex         = 1;
+    constexpr size_t kResultIdIndex           = 2;
+    constexpr size_t kPointerIdIndex          = 3;
+    constexpr size_t kOpLoadInstructionLength = 4;
+
+    std::array<uint32_t, kOpLoadInstructionLength> load = {};
+
+    SetSpirvInstructionOp(load.data(), spv::OpLoad);
+    SetSpirvInstructionLength(load.data(), kOpLoadInstructionLength);
+    load[kResultTypeIndex] = typeId;
+    load[kResultIdIndex]   = resultId;
+    load[kPointerIdIndex]  = pointerId;
+    copyInstruction(load.data(), kOpLoadInstructionLength);
+}
+
+void SpirvTransformerBase::writeStore(uint32_t pointerId, uint32_t objectId)
+{
+    // SPIR-V 1.0 Section 3.32 Instructions, OpStore
+    constexpr size_t kPointerIdIndex         = 1;
+    constexpr size_t kObjectIdIndex          = 2;
+    constexpr size_t kStoreInstructionLength = 3;
+
+    std::array<uint32_t, kStoreInstructionLength> store = {};
+
+    // Fill the fields.
+    SetSpirvInstructionOp(store.data(), spv::OpStore);
+    SetSpirvInstructionLength(store.data(), kStoreInstructionLength);
+    store[kPointerIdIndex] = pointerId;
+    store[kObjectIdIndex]  = objectId;
+
+    copyInstruction(store.data(), kStoreInstructionLength);
+}
+
+void SpirvTransformerBase::writeTypePointer(uint32_t id, uint32_t storageClass, uint32_t typeId)
+{
+    // SPIR-V 1.0 Section 3.32 Instructions, OpTypePointer
+    constexpr size_t kIdIndex                      = 1;
+    constexpr size_t kStorageClassIndex            = 2;
+    constexpr size_t kTypeIdIndex                  = 3;
+    constexpr size_t kTypePointerInstructionLength = 4;
+
+    std::array<uint32_t, kTypePointerInstructionLength> typePointer = {};
+
+    // Fill the fields.
+    SetSpirvInstructionOp(typePointer.data(), spv::OpTypePointer);
+    SetSpirvInstructionLength(typePointer.data(), kTypePointerInstructionLength);
+    typePointer[kIdIndex]           = id;
+    typePointer[kStorageClassIndex] = storageClass;
+    typePointer[kTypeIdIndex]       = typeId;
+
+    copyInstruction(typePointer.data(), kTypePointerInstructionLength);
+}
+
+void SpirvTransformerBase::writeVariable(uint32_t id, uint32_t typeId, uint32_t storageClass)
+{
+    // SPIR-V 1.0 Section 3.32 Instructions, OpVariable
+    constexpr size_t kTypeIdIndex               = 1;
+    constexpr size_t kIdIndex                   = 2;
+    constexpr size_t kStorageClassIndex         = 3;
+    constexpr size_t kVariableInstructionLength = 4;
+
+    std::array<uint32_t, kVariableInstructionLength> variable = {};
+
+    // Fill the fields.
+    SetSpirvInstructionOp(variable.data(), spv::OpVariable);
+    SetSpirvInstructionLength(variable.data(), kVariableInstructionLength);
+    variable[kTypeIdIndex]       = typeId;
+    variable[kIdIndex]           = id;
+    variable[kStorageClassIndex] = storageClass;
+
+    copyInstruction(variable.data(), kVariableInstructionLength);
+}
+
+void SpirvTransformerBase::writeVectorShuffle(uint32_t id,
+                                              uint32_t typeId,
+                                              uint32_t vec1Id,
+                                              uint32_t vec2Id,
+                                              const angle::FixedVector<uint32_t, 4> &fields)
+{
+    // SPIR-V 1.0 Section 3.32 Instructions, OpVectorShuffle
+    constexpr size_t kTypeIdIndex                        = 1;
+    constexpr size_t kIdIndex                            = 2;
+    constexpr size_t kVec1IdIndex                        = 3;
+    constexpr size_t kVec2IdIndex                        = 4;
+    constexpr size_t kFieldsIndexStart                   = 5;
+    constexpr size_t kFieldsMaxCount                     = 4;
+    constexpr size_t kVectorShuffleInstructionBaseLength = 5;
+
+    ASSERT(kFieldsMaxCount == fields.max_size());
+    std::array<uint32_t, kVectorShuffleInstructionBaseLength + kFieldsMaxCount> vectorShuffle = {};
+
+    // Fill the fields.
+    SetSpirvInstructionOp(vectorShuffle.data(), spv::OpVectorShuffle);
+    SetSpirvInstructionLength(vectorShuffle.data(),
+                              kVectorShuffleInstructionBaseLength + fields.size());
+    vectorShuffle[kTypeIdIndex] = typeId;
+    vectorShuffle[kIdIndex]     = id;
+    vectorShuffle[kVec1IdIndex] = vec1Id;
+    vectorShuffle[kVec2IdIndex] = vec2Id;
+
+    for (size_t fieldIndex = 0; fieldIndex < fields.size(); ++fieldIndex)
+    {
+        vectorShuffle[kFieldsIndexStart + fieldIndex] = fields[fieldIndex];
+    }
+
+    copyInstruction(vectorShuffle.data(), kVectorShuffleInstructionBaseLength + fields.size());
+}
+
 // A SPIR-V transformer.  It walks the instructions and modifies them as necessary, for example to
 // assign bindings or locations.
 class SpirvTransformer final : public SpirvTransformerBase
@@ -1178,11 +1383,8 @@ class SpirvTransformer final : public SpirvTransformerBase
     bool transformVariable(const uint32_t *instruction, size_t wordCount);
     bool transformExecutionMode(const uint32_t *instruction, size_t wordCount);
 
-    // Any other instructions:
+    // Helpers:
     void writeInputPreamble();
-    void writeOpLoad(uint32_t id, uint32_t typeId, uint32_t tempVarId);
-    void writeOpStore(uint32_t tempVarId, uint32_t destId);
-    void writeOpVariable(uint32_t id, uint32_t typeId, uint32_t storageClassId);
 
     // Special flags:
     bool mHasTransformFeedbackOutput;
@@ -1409,14 +1611,18 @@ void SpirvTransformer::writeInputPreamble()
         {
             // This is an input varying, need to cast the mediump value that came from
             // the previous stage into a highp value that the code wants to work with.
+            ASSERT(mFixedVaryingTypeId[id] != 0);
 
             // Build OpLoad instruction to load the mediump value into a temporary
-            uint32_t tempVar = getNewId();
-            writeOpLoad(mFixedVaryingId[id], mFixedVaryingTypeId[id], tempVar);
+            uint32_t tempVar     = getNewId();
+            uint32_t tempVarType = mTypePointerTransformedId[mFixedVaryingTypeId[id]].typeID;
+            ASSERT(tempVarType != 0);
+
+            writeLoad(mFixedVaryingId[id], tempVarType, tempVar);
 
             // Build OpStore instruction to cast the mediump value to highp for use in
             // the function
-            writeOpStore(tempVar, id);
+            writeStore(id, tempVar);
         }
     }
 }
@@ -1875,12 +2081,17 @@ bool SpirvTransformer::transformReturn(const uint32_t *instruction, size_t wordC
         if (info && info->useRelaxedPrecision && info->activeStages[mShaderType] &&
             info->varyingIsOutput)
         {
+            ASSERT(mFixedVaryingTypeId[id] != 0);
+
             // Build OpLoad instruction to load the highp value into a temporary
-            uint32_t tempVar = getNewId();
-            writeOpLoad(id, mFixedVaryingTypeId[id], tempVar);
+            uint32_t tempVar     = getNewId();
+            uint32_t tempVarType = mTypePointerTransformedId[mFixedVaryingTypeId[id]].typeID;
+            ASSERT(tempVarType != 0);
+
+            writeLoad(id, tempVarType, tempVar);
 
             // Build OpStore instruction to cast the highp value to mediump for output
-            writeOpStore(tempVar, mFixedVaryingId[id]);
+            writeStore(mFixedVaryingId[id], tempVar);
         }
     }
     return false;
@@ -1921,8 +2132,8 @@ bool SpirvTransformer::transformVariable(const uint32_t *instruction, size_t wor
 
             // Make original variable a private global
             ASSERT(mTypePointerTransformedId[typeId].privateID != 0);
-            writeOpVariable(id, mTypePointerTransformedId[typeId].privateID,
-                            spv::StorageClassPrivate);
+            writeVariable(id, mTypePointerTransformedId[typeId].privateID,
+                          spv::StorageClassPrivate);
 
             return true;
         }
@@ -1992,56 +2203,6 @@ bool SpirvTransformer::transformExecutionMode(const uint32_t *instruction, size_
         return true;
     }
     return false;
-}
-
-void SpirvTransformer::writeOpStore(uint32_t tempVarId, uint32_t destId)
-{
-    constexpr size_t kIdIndex                  = 1;
-    constexpr size_t kObjectIndex              = 2;
-    constexpr size_t kOpStoreInstructionLength = 3;
-
-    uint32_t opStore[kOpStoreInstructionLength];
-    SetSpirvInstructionOp(opStore, spv::OpStore);
-    SetSpirvInstructionLength(opStore, kOpStoreInstructionLength);
-    opStore[kIdIndex]     = destId;
-    opStore[kObjectIndex] = tempVarId;
-    copyInstruction(opStore, kOpStoreInstructionLength);
-}
-
-void SpirvTransformer::writeOpLoad(uint32_t id, uint32_t typeId, uint32_t tempVarId)
-{
-    constexpr size_t kResultTypeIndex         = 1;
-    constexpr size_t kResultIdIndex           = 2;
-    constexpr size_t kLoadIdIndex             = 3;
-    constexpr size_t kOpLoadInstructionLength = 4;
-
-    // Build OpLoad instruction
-    ASSERT(typeId != 0);
-    ASSERT(mTypePointerTransformedId[typeId].typeID != 0);
-
-    uint32_t opLoad[kOpLoadInstructionLength];
-    SetSpirvInstructionOp(opLoad, spv::OpLoad);
-    SetSpirvInstructionLength(opLoad, kOpLoadInstructionLength);
-    opLoad[kResultTypeIndex] = mTypePointerTransformedId[typeId].typeID;
-    opLoad[kResultIdIndex]   = tempVarId;
-    opLoad[kLoadIdIndex]     = id;
-    copyInstruction(opLoad, kOpLoadInstructionLength);
-}
-
-void SpirvTransformer::writeOpVariable(uint32_t id, uint32_t typeId, uint32_t storageClassId)
-{
-    constexpr size_t kResultTypeIndex             = 1;
-    constexpr size_t kResultIdIndex               = 2;
-    constexpr size_t kStorageClassIdIndex         = 3;
-    constexpr size_t kOpVariableInstructionLength = 4;
-
-    uint32_t opVariable[kOpVariableInstructionLength];
-    SetSpirvInstructionOp(opVariable, spv::OpVariable);
-    SetSpirvInstructionLength(opVariable, kOpVariableInstructionLength);
-    opVariable[kResultTypeIndex]     = typeId;
-    opVariable[kResultIdIndex]       = id;
-    opVariable[kStorageClassIdIndex] = storageClassId;
-    copyInstruction(opVariable, kOpVariableInstructionLength);
 }
 
 struct AliasingAttributeMap
@@ -2120,21 +2281,6 @@ class SpirvVertexAttributeAliasingTransformer final : public SpirvTransformerBas
                              uint32_t replacementId,
                              uint32_t resultId);
     bool transformLoad(const uint32_t *instruction, size_t wordCount);
-
-    // Generated instructions:
-    void writeCopyObject(uint32_t id, uint32_t typeId, uint32_t operandId);
-    void writeCompositeConstruct(uint32_t id,
-                                 uint32_t typeId,
-                                 const angle::FixedVector<uint32_t, 4> &constituents);
-    void writeCompositeExtract(uint32_t id, uint32_t typeId, uint32_t compositeId, uint32_t field);
-    void writeStore(uint32_t pointerId, uint32_t objectId);
-    void writeTypePointer(uint32_t id, uint32_t storageClass, uint32_t typeId);
-    void writeVariable(uint32_t id, uint32_t typeId, uint32_t storageClass);
-    void writeVectorShuffle(uint32_t id,
-                            uint32_t typeId,
-                            uint32_t vec1Id,
-                            uint32_t vec2Id,
-                            const angle::FixedVector<uint32_t, 4> &fields);
 
     void declareExpandedMatrixVectors();
     void writeExpandedMatrixInitialization();
@@ -2926,184 +3072,6 @@ bool SpirvVertexAttributeAliasingTransformer::transformLoad(const uint32_t *inst
     }
 
     return true;
-}
-
-void SpirvVertexAttributeAliasingTransformer::writeCopyObject(uint32_t id,
-                                                              uint32_t typeId,
-                                                              uint32_t operandId)
-{
-    // SPIR-V 1.0 Section 3.32 Instructions, OpCopyObject
-    constexpr size_t kTypeIdIndex                 = 1;
-    constexpr size_t kIdIndex                     = 2;
-    constexpr size_t kOperandIdIndex              = 3;
-    constexpr size_t kCopyObjectInstructionLength = 4;
-
-    std::array<uint32_t, kCopyObjectInstructionLength> copyObject = {};
-
-    // Fill the fields.
-    SetSpirvInstructionOp(copyObject.data(), spv::OpCopyObject);
-    SetSpirvInstructionLength(copyObject.data(), kCopyObjectInstructionLength);
-    copyObject[kTypeIdIndex]    = typeId;
-    copyObject[kIdIndex]        = id;
-    copyObject[kOperandIdIndex] = operandId;
-
-    copyInstruction(copyObject.data(), kCopyObjectInstructionLength);
-}
-
-void SpirvVertexAttributeAliasingTransformer::writeCompositeConstruct(
-    uint32_t id,
-    uint32_t typeId,
-    const angle::FixedVector<uint32_t, 4> &constituents)
-{
-    // SPIR-V 1.0 Section 3.32 Instructions, OpCompositeConstruct
-    constexpr size_t kTypeIdIndex                             = 1;
-    constexpr size_t kIdIndex                                 = 2;
-    constexpr size_t kConstituentsIndexStart                  = 3;
-    constexpr size_t kConstituentsMaxCount                    = 4;
-    constexpr size_t kCompositeConstructInstructionBaseLength = 3;
-
-    ASSERT(kConstituentsMaxCount == constituents.max_size());
-    std::array<uint32_t, kCompositeConstructInstructionBaseLength + kConstituentsMaxCount>
-        compositeConstruct = {};
-
-    // Fill the fields.
-    SetSpirvInstructionOp(compositeConstruct.data(), spv::OpCompositeConstruct);
-    SetSpirvInstructionLength(compositeConstruct.data(),
-                              kCompositeConstructInstructionBaseLength + constituents.size());
-    compositeConstruct[kTypeIdIndex] = typeId;
-    compositeConstruct[kIdIndex]     = id;
-
-    for (size_t constituentIndex = 0; constituentIndex < constituents.size(); ++constituentIndex)
-    {
-        compositeConstruct[kConstituentsIndexStart + constituentIndex] =
-            constituents[constituentIndex];
-    }
-
-    copyInstruction(compositeConstruct.data(),
-                    kCompositeConstructInstructionBaseLength + constituents.size());
-}
-
-void SpirvVertexAttributeAliasingTransformer::writeCompositeExtract(uint32_t id,
-                                                                    uint32_t typeId,
-                                                                    uint32_t compositeId,
-                                                                    uint32_t field)
-{
-    // SPIR-V 1.0 Section 3.32 Instructions, OpCompositeExtract
-    constexpr size_t kTypeIdIndex                       = 1;
-    constexpr size_t kIdIndex                           = 2;
-    constexpr size_t kCompositeIdIndex                  = 3;
-    constexpr size_t kFieldIndex                        = 4;
-    constexpr size_t kCompositeExtractInstructionLength = 5;
-
-    std::array<uint32_t, kCompositeExtractInstructionLength> compositeExtract = {};
-
-    // Fill the fields.
-    SetSpirvInstructionOp(compositeExtract.data(), spv::OpCompositeExtract);
-    SetSpirvInstructionLength(compositeExtract.data(), kCompositeExtractInstructionLength);
-    compositeExtract[kTypeIdIndex]      = typeId;
-    compositeExtract[kIdIndex]          = id;
-    compositeExtract[kCompositeIdIndex] = compositeId;
-    compositeExtract[kFieldIndex]       = field;
-
-    copyInstruction(compositeExtract.data(), kCompositeExtractInstructionLength);
-}
-
-void SpirvVertexAttributeAliasingTransformer::writeStore(uint32_t pointerId, uint32_t objectId)
-{
-    // SPIR-V 1.0 Section 3.32 Instructions, OpStore
-    constexpr size_t kPointerIdIndex         = 1;
-    constexpr size_t kObjectIdIndex          = 2;
-    constexpr size_t kStoreInstructionLength = 3;
-
-    std::array<uint32_t, kStoreInstructionLength> store = {};
-
-    // Fill the fields.
-    SetSpirvInstructionOp(store.data(), spv::OpStore);
-    SetSpirvInstructionLength(store.data(), kStoreInstructionLength);
-    store[kPointerIdIndex] = pointerId;
-    store[kObjectIdIndex]  = objectId;
-
-    copyInstruction(store.data(), kStoreInstructionLength);
-}
-
-void SpirvVertexAttributeAliasingTransformer::writeTypePointer(uint32_t id,
-                                                               uint32_t storageClass,
-                                                               uint32_t typeId)
-{
-    // SPIR-V 1.0 Section 3.32 Instructions, OpTypePointer
-    constexpr size_t kIdIndex                      = 1;
-    constexpr size_t kStorageClassIndex            = 2;
-    constexpr size_t kTypeIdIndex                  = 3;
-    constexpr size_t kTypePointerInstructionLength = 4;
-
-    std::array<uint32_t, kTypePointerInstructionLength> typePointer = {};
-
-    // Fill the fields.
-    SetSpirvInstructionOp(typePointer.data(), spv::OpTypePointer);
-    SetSpirvInstructionLength(typePointer.data(), kTypePointerInstructionLength);
-    typePointer[kIdIndex]           = id;
-    typePointer[kStorageClassIndex] = storageClass;
-    typePointer[kTypeIdIndex]       = typeId;
-
-    copyInstruction(typePointer.data(), kTypePointerInstructionLength);
-}
-
-void SpirvVertexAttributeAliasingTransformer::writeVariable(uint32_t id,
-                                                            uint32_t typeId,
-                                                            uint32_t storageClass)
-{
-    // SPIR-V 1.0 Section 3.32 Instructions, OpVariable
-    constexpr size_t kTypeIdIndex               = 1;
-    constexpr size_t kIdIndex                   = 2;
-    constexpr size_t kStorageClassIndex         = 3;
-    constexpr size_t kVariableInstructionLength = 4;
-
-    std::array<uint32_t, kVariableInstructionLength> variable = {};
-
-    // Fill the fields.
-    SetSpirvInstructionOp(variable.data(), spv::OpVariable);
-    SetSpirvInstructionLength(variable.data(), kVariableInstructionLength);
-    variable[kTypeIdIndex]       = typeId;
-    variable[kIdIndex]           = id;
-    variable[kStorageClassIndex] = storageClass;
-
-    copyInstruction(variable.data(), kVariableInstructionLength);
-}
-
-void SpirvVertexAttributeAliasingTransformer::writeVectorShuffle(
-    uint32_t id,
-    uint32_t typeId,
-    uint32_t vec1Id,
-    uint32_t vec2Id,
-    const angle::FixedVector<uint32_t, 4> &fields)
-{
-    // SPIR-V 1.0 Section 3.32 Instructions, OpVectorShuffle
-    constexpr size_t kTypeIdIndex                        = 1;
-    constexpr size_t kIdIndex                            = 2;
-    constexpr size_t kVec1IdIndex                        = 3;
-    constexpr size_t kVec2IdIndex                        = 4;
-    constexpr size_t kFieldsIndexStart                   = 5;
-    constexpr size_t kFieldsMaxCount                     = 4;
-    constexpr size_t kVectorShuffleInstructionBaseLength = 5;
-
-    ASSERT(kFieldsMaxCount == fields.max_size());
-    std::array<uint32_t, kVectorShuffleInstructionBaseLength + kFieldsMaxCount> vectorShuffle = {};
-
-    // Fill the fields.
-    SetSpirvInstructionOp(vectorShuffle.data(), spv::OpVectorShuffle);
-    SetSpirvInstructionLength(vectorShuffle.data(),
-                              kVectorShuffleInstructionBaseLength + fields.size());
-    vectorShuffle[kTypeIdIndex] = typeId;
-    vectorShuffle[kIdIndex]     = id;
-    vectorShuffle[kVec1IdIndex] = vec1Id;
-    vectorShuffle[kVec2IdIndex] = vec2Id;
-
-    for (size_t fieldIndex = 0; fieldIndex < fields.size(); ++fieldIndex)
-    {
-        vectorShuffle[kFieldsIndexStart + fieldIndex] = fields[fieldIndex];
-    }
-
-    copyInstruction(vectorShuffle.data(), kVectorShuffleInstructionBaseLength + fields.size());
 }
 
 void SpirvVertexAttributeAliasingTransformer::declareExpandedMatrixVectors()
