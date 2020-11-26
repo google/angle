@@ -187,11 +187,10 @@
 3886 VULKAN : dEQP-GLES31.functional.image_load_store.3d.*layer = FAIL
 
 // Geometry shader support:
-5403 VULKAN : dEQP-GLES31.functional.shaders.linkage.es31.geometry.varying.rules.output_different_precision = FAIL
-5403 VULKAN : dEQP-GLES31.functional.geometry_shading.* = FAIL
 3580 VULKAN : dEQP-GLES31.functional.shaders.linkage.es31.geometry.varying.types.float_struct = SKIP
 5404 VULKAN : dEQP-GLES31.functional.geometry_shading.query.primitives_generated* = SKIP
-5405 VULKAN : dEQP-GLES31.functional.geometry_shading.basic.*128 = FAIL
+5405 VULKAN : dEQP-GLES31.functional.geometry_shading.basic.output_* = FAIL
+5405 VULKAN : dEQP-GLES31.functional.geometry_shading.instanced.invocation_output_vary_by_* = FAIL
 5406 VULKAN : dEQP-GLES31.functional.geometry_shading.input.*adjacency* = SKIP
 5407 VULKAN : dEQP-GLES31.functional.geometry_shading.layered.* = SKIP
 5407 VULKAN : dEQP-GLES31.functional.geometry_shading.instanced.invocation_per_layer* = SKIP
@@ -209,6 +208,7 @@
 5409 VULKAN : dEQP-GLES31.functional.program_interface_query.uniform.random.48 = FAIL
 5409 VULKAN : dEQP-GLES31.functional.program_interface_query.uniform.random.51 = FAIL
 5409 VULKAN : dEQP-GLES31.functional.program_interface_query.uniform.random.55 = FAIL
+5411 VULKAN : dEQP-GLES31.functional.geometry_shading.emit.*_emit_0_end_* = FAIL
 
 
 ////

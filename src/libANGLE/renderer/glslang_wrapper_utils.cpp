@@ -1376,6 +1376,7 @@ class SpirvTransformer final : public SpirvTransformerBase
     // transformed.  If false is returned, the instruction should be copied as-is.
     bool transformAccessChain(const uint32_t *instruction, size_t wordCount);
     bool transformCapability(const uint32_t *instruction, size_t wordCount);
+    bool transformEmitVertex(const uint32_t *instruction, size_t wordCount);
     bool transformEntryPoint(const uint32_t *instruction, size_t wordCount);
     bool transformDecorate(const uint32_t *instruction, size_t wordCount);
     bool transformTypePointer(const uint32_t *instruction, size_t wordCount);
@@ -1385,6 +1386,7 @@ class SpirvTransformer final : public SpirvTransformerBase
 
     // Helpers:
     void writeInputPreamble();
+    void writeOutputPrologue();
 
     // Special flags:
     bool mHasTransformFeedbackOutput;
@@ -1540,6 +1542,9 @@ void SpirvTransformer::transformInstruction()
                 transformed = transformAccessChain(instruction, wordCount);
                 break;
 
+            case spv::OpEmitVertex:
+                transformed = transformEmitVertex(instruction, wordCount);
+                break;
             case spv::OpReturn:
                 transformed = transformReturn(instruction, wordCount);
                 break;
@@ -1627,6 +1632,29 @@ void SpirvTransformer::writeInputPreamble()
     }
 }
 
+// Called by transformInstruction to insert necessary instructions for casting varying
+void SpirvTransformer::writeOutputPrologue()
+{
+    for (uint32_t id = 0; id < mVariableInfoById.size(); id++)
+    {
+        const ShaderInterfaceVariableInfo *info = mVariableInfoById[id];
+        if (info && info->useRelaxedPrecision && info->activeStages[mShaderType] &&
+            info->varyingIsOutput)
+        {
+            ASSERT(mFixedVaryingTypeId[id] != 0);
+
+            // Build OpLoad instruction to load the highp value into a temporary
+            uint32_t tempVar     = getNewId();
+            uint32_t tempVarType = mTypePointerTransformedId[mFixedVaryingTypeId[id]].typeID;
+            ASSERT(tempVarType != 0);
+
+            writeLoad(id, tempVarType, tempVar);
+
+            // Build OpStore instruction to cast the highp value to mediump for output
+            writeStore(mFixedVaryingId[id], tempVar);
+        }
+    }
+}
 void SpirvTransformer::visitName(const uint32_t *instruction)
 {
     // We currently don't have any big-endian devices in the list of supported platforms.  Literal
@@ -1939,6 +1967,17 @@ bool SpirvTransformer::transformCapability(const uint32_t *instruction, size_t w
     return true;
 }
 
+bool SpirvTransformer::transformEmitVertex(const uint32_t *instruction, size_t wordCount)
+{
+    // This is only possible in geometry shaders.
+    ASSERT(mShaderType == gl::ShaderType::Geometry);
+
+    // Write the temporary variables that hold varyings data before EmitVertex().
+    writeOutputPrologue();
+
+    return false;
+}
+
 bool SpirvTransformer::transformEntryPoint(const uint32_t *instruction, size_t wordCount)
 {
     // Remove inactive varyings from the shader interface declaration.
@@ -2075,25 +2114,16 @@ bool SpirvTransformer::transformReturn(const uint32_t *instruction, size_t wordC
         return false;
     }
 
-    for (uint32_t id = 0; id < mVariableInfoById.size(); id++)
+    // For geometry shaders, this operations is done before every EmitVertex() instead.
+    // Additionally, this transformation (which affects output varyings) doesn't apply to fragment
+    // shaders.
+    if (mShaderType == gl::ShaderType::Geometry || mShaderType == gl::ShaderType::Fragment)
     {
-        const ShaderInterfaceVariableInfo *info = mVariableInfoById[id];
-        if (info && info->useRelaxedPrecision && info->activeStages[mShaderType] &&
-            info->varyingIsOutput)
-        {
-            ASSERT(mFixedVaryingTypeId[id] != 0);
-
-            // Build OpLoad instruction to load the highp value into a temporary
-            uint32_t tempVar     = getNewId();
-            uint32_t tempVarType = mTypePointerTransformedId[mFixedVaryingTypeId[id]].typeID;
-            ASSERT(tempVarType != 0);
-
-            writeLoad(id, tempVarType, tempVar);
-
-            // Build OpStore instruction to cast the highp value to mediump for output
-            writeStore(mFixedVaryingId[id], tempVar);
-        }
+        return false;
     }
+
+    writeOutputPrologue();
+
     return false;
 }
 
