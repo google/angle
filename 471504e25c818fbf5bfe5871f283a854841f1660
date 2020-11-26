@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "27f912c6_7b48c475",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-26T17:59:49Z",
+      "side": 1,
+      "message": "im sure there is a good reason but a context inheriting from a texture initializer looks off. was the design intended to be this way?",
+      "range": {
+        "startLine": 40,
+        "startChar": 58,
+        "endLine": 40,
+        "endChar": 94
+      },
+      "revId": "471504e25c818fbf5bfe5871f283a854841f1660",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
