@@ -18,6 +18,23 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "eff09a17_d9e0336e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2020-11-26T05:11:19Z",
+      "side": 1,
+      "message": "Hi, Jiajia \u0026 Jiawei, this patch is ready, please start to review it, thank you.",
+      "revId": "8110084212de191a1509416bac1cd74b86d6fc81",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ddf291db_6eb71bb8",
