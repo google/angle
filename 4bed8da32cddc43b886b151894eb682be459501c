@@ -35,6 +35,23 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3a1df483_530e22d5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-26T15:19:19Z",
+      "side": 1,
+      "message": "Note: one of the tables has broken formatting. You can see this by clicking on the git hash next to the Patchset drop downs (also next to \"NO PATCHSET DESCRIPTION\"), which takes you here: https://chromium.googlesource.com/angle/angle/+/4bed8da32cddc43b886b151894eb682be459501c and then click on the markdown file to see it rendered: https://chromium.googlesource.com/angle/angle/+/4bed8da32cddc43b886b151894eb682be459501c/doc/UniformBlockTranslateToStructuredBuffer.md",
+      "revId": "4bed8da32cddc43b886b151894eb682be459501c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3d674a86_072a4dd5",
