@@ -41,6 +41,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1c7579d1_d9808af2",
+        "filename": "src/libANGLE/validationES1.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1550,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-27T19:21:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a65011ed_06e3aead",
+      "range": {
+        "startLine": 1550,
+        "startChar": 5,
+        "endLine": 1550,
+        "endChar": 31
+      },
+      "revId": "f8975205baf2f270640f7ea07e807325beb1c233",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "fa1cdc42_a862475d",
@@ -64,6 +88,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f0e16bd1_402c861f",
+        "filename": "src/libANGLE/validationES1.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1592,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-27T19:21:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fa1cdc42_a862475d",
+      "range": {
+        "startLine": 1580,
+        "startChar": 0,
+        "endLine": 1592,
+        "endChar": 0
+      },
+      "revId": "f8975205baf2f270640f7ea07e807325beb1c233",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "fdd136d6_bc485be5",
@@ -77,6 +125,30 @@
       "writtenOn": "2020-11-26T19:31:04Z",
       "side": 1,
       "message": "nit: I think you can take this out.",
+      "range": {
+        "startLine": 1656,
+        "startChar": 8,
+        "endLine": 1656,
+        "endChar": 45
+      },
+      "revId": "f8975205baf2f270640f7ea07e807325beb1c233",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "42ff20e1_5460dfad",
+        "filename": "src/libANGLE/validationES1.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1656,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-27T19:21:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fdd136d6_bc485be5",
       "range": {
         "startLine": 1656,
         "startChar": 8,
