@@ -70,6 +70,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "44cffff7_009871dc",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2020-11-27T08:44:13Z",
+      "side": 1,
+      "message": "Hi,Shahbaz, thank you that you found this issue.\nBut I don\u0027t know the root-cause why the table breaks. Do you know the cause?\nI edit the markdown on vs code tool, and preview it and it shows normally. I also copy this file content to https://pandao.github.io/editor.md/index.html, it also shows normally.",
+      "parentUuid": "3a1df483_530e22d5",
+      "revId": "4bed8da32cddc43b886b151894eb682be459501c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3d674a86_072a4dd5",
