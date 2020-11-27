@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ccc04251_6457cc6c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-27T21:34:53Z",
+      "side": 1,
+      "message": "PTAL. Still need to work this through the bots but wanted to share what I had because this impacts both your tasks (GS \u0026 TS).",
+      "revId": "629f03fb440e4ec4f7901ef003bbad1bc3b1cf4e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
