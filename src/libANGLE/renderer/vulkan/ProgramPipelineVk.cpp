@@ -67,6 +67,7 @@ angle::Result ProgramPipelineVk::link(const gl::Context *glContext,
 
     // Now that the program pipeline has all of the programs attached, the various descriptor
     // set/binding locations need to be re-assigned to their correct values.
+    gl::ShaderType frontShaderType = gl::ShaderType::InvalidEnum;
     for (const gl::ShaderType shaderType : glPipeline->getExecutable().getLinkedShaderStages())
     {
         gl::Program *glProgram =
@@ -82,8 +83,9 @@ angle::Result ProgramPipelineVk::link(const gl::Context *glContext,
                 programProgramInterfaceInfo.locationsUsedForXfbExtension;
 
             GlslangAssignLocations(options, glProgram->getState().getExecutable(), shaderType,
-                                   &glslangProgramInterfaceInfo,
+                                   frontShaderType, &glslangProgramInterfaceInfo,
                                    &mExecutable.getShaderInterfaceVariableInfoMap());
+            frontShaderType = shaderType;
         }
     }
 

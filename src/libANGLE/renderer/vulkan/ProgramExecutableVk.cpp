@@ -227,6 +227,7 @@ std::unique_ptr<rx::LinkEvent> ProgramExecutableVk::load(gl::BinaryInputStream *
             info->xfbOffset               = stream->readInt<uint32_t>();
             info->xfbStride               = stream->readInt<uint32_t>();
             info->useRelaxedPrecision     = stream->readBool();
+            info->varyingIsInput          = stream->readBool();
             info->varyingIsOutput         = stream->readBool();
             info->attributeComponentCount = stream->readInt<uint8_t>();
             info->attributeLocationCount  = stream->readInt<uint8_t>();
@@ -254,6 +255,7 @@ void ProgramExecutableVk::save(gl::BinaryOutputStream *stream)
             stream->writeInt(it.second.xfbOffset);
             stream->writeInt(it.second.xfbStride);
             stream->writeBool(it.second.useRelaxedPrecision);
+            stream->writeBool(it.second.varyingIsInput);
             stream->writeBool(it.second.varyingIsOutput);
             stream->writeInt(it.second.attributeComponentCount);
             stream->writeInt(it.second.attributeLocationCount);
@@ -923,7 +925,7 @@ void ProgramExecutableVk::resolvePrecisionMismatch(const gl::ProgramMergedVaryin
                     // The output is lower precision than the input, adjust the input
                     info = &mVariableInfoMap[mergedVarying.backShaderStage]
                                             [mergedVarying.backShader->mappedName];
-                    info->varyingIsOutput     = false;
+                    info->varyingIsInput      = true;
                     info->useRelaxedPrecision = true;
                 }
             }

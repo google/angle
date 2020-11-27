@@ -432,7 +432,8 @@ void GlslangGetShaderSource(const gl::ProgramState &programState,
             &xfbOnlyVariableMaps[gl::ShaderType::Vertex]);
 
         GlslangAssignLocations(options, programState.getExecutable(), gl::ShaderType::Vertex,
-                               &xfbOnlyInterfaceInfo, &xfbOnlyVariableMaps);
+                               gl::ShaderType::InvalidEnum, &xfbOnlyInterfaceInfo,
+                               &xfbOnlyVariableMaps);
         *xfbOnlyVSVariableInfoMapOut = std::move(xfbOnlyVariableMaps[gl::ShaderType::Vertex]);
     }
 }

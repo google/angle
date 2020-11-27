@@ -189,8 +189,6 @@
 // Geometry shader support:
 3580 VULKAN : dEQP-GLES31.functional.shaders.linkage.es31.geometry.varying.types.float_struct = SKIP
 5404 VULKAN : dEQP-GLES31.functional.geometry_shading.query.primitives_generated* = SKIP
-5405 VULKAN : dEQP-GLES31.functional.geometry_shading.basic.output_* = FAIL
-5405 VULKAN : dEQP-GLES31.functional.geometry_shading.instanced.invocation_output_vary_by_* = FAIL
 5406 VULKAN : dEQP-GLES31.functional.geometry_shading.input.*adjacency* = SKIP
 5407 VULKAN : dEQP-GLES31.functional.geometry_shading.layered.* = SKIP
 5407 VULKAN : dEQP-GLES31.functional.geometry_shading.instanced.invocation_per_layer* = SKIP

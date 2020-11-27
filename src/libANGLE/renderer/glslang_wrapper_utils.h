@@ -86,7 +86,9 @@ struct ShaderInterfaceVariableInfo
     // mismatch between the shaders. For example, either the VS casts highp->mediump
     // or the FS casts mediump->highp.
     bool useRelaxedPrecision = false;
-    // Indicate if varying is input or output
+    // Indicate if varying is input or output, or both (in case of for example gl_Position in a
+    // geometry shader)
+    bool varyingIsInput  = false;
     bool varyingIsOutput = false;
     // For vertex attributes, this is the number of components / locations.  These are used by the
     // vertex attribute aliasing transformation only.
@@ -120,6 +122,7 @@ void GlslangGenTransformFeedbackEmulationOutputs(
 void GlslangAssignLocations(const GlslangSourceOptions &options,
                             const gl::ProgramExecutable &programExecutable,
                             const gl::ShaderType shaderType,
+                            const gl::ShaderType frontShaderType,
                             GlslangProgramInterfaceInfo *programInterfaceInfo,
                             gl::ShaderMap<ShaderInterfaceVariableInfoMap> *variableInfoMapOut);
 
