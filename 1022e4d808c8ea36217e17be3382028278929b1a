@@ -47,6 +47,54 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "55e5455a_c1b778de",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 457,
+      "author": {
+        "id": 1002745
+      },
+      "writtenOn": "2020-11-27T19:52:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "08978834_3c056767",
+      "range": {
+        "startLine": 457,
+        "startChar": 16,
+        "endLine": 457,
+        "endChar": 54
+      },
+      "revId": "1022e4d808c8ea36217e17be3382028278929b1a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9958ead6_9e471c39",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 457,
+      "author": {
+        "id": 1002745
+      },
+      "writtenOn": "2020-11-27T19:52:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5d72836a_a12daf16",
+      "range": {
+        "startLine": 457,
+        "startChar": 0,
+        "endLine": 457,
+        "endChar": 7
+      },
+      "revId": "1022e4d808c8ea36217e17be3382028278929b1a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "57c2e9ee_70398887",
@@ -70,6 +118,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a1529303_28b887ff",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 463,
+      "author": {
+        "id": 1002745
+      },
+      "writtenOn": "2020-11-27T19:52:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "57c2e9ee_70398887",
+      "range": {
+        "startLine": 460,
+        "startChar": 0,
+        "endLine": 463,
+        "endChar": 6
+      },
+      "revId": "1022e4d808c8ea36217e17be3382028278929b1a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ef05f504_ed879acb",
@@ -83,6 +155,30 @@
       "writtenOn": "2020-11-27T18:16:03Z",
       "side": 1,
       "message": "We should fix this before landing, this is a much more severe leak.",
+      "range": {
+        "startLine": 55,
+        "startChar": 0,
+        "endLine": 59,
+        "endChar": 6
+      },
+      "revId": "1022e4d808c8ea36217e17be3382028278929b1a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "283112e7_4edf6b8d",
+        "filename": "src/libANGLE/renderer/vulkan/ResourceVk.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1002745
+      },
+      "writtenOn": "2020-11-27T19:52:21Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "ef05f504_ed879acb",
       "range": {
         "startLine": 55,
         "startChar": 0,
