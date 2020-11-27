@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "35e984c0_56d32d85",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 17
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-27T20:45:52Z",
+      "side": 1,
+      "message": "Hey Mohan: I\u0027m going to help out here and pull out the QueryVk XFB changes.",
+      "revId": "febfccd7fe59c739fee911b09fc7923774a4bce6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
