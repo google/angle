@@ -536,11 +536,11 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     bool isRobustResourceInitEnabled() const;
 
     // occlusion query
-    void beginOcclusionQuery(QueryVk *queryVk);
-    void endOcclusionQuery(QueryVk *queryVk);
+    void beginRenderPassQuery(QueryVk *queryVk);
+    void endRenderPassQuery(QueryVk *queryVk);
 
-    angle::Result pauseOcclusionQueryIfActive();
-    angle::Result resumeOcclusionQueryIfActive();
+    angle::Result pauseRenderPassQueryIfActive();
+    void resumeRenderPassQueryIfActive();
 
     void updateOverlayOnPresent();
     void addOverlayUsedBuffersCount(vk::CommandBufferHelper *commandBuffer);
@@ -893,7 +893,10 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     // Note that this implementation would need to change in shared resource scenarios. Likely
     // we'd instead share a single set of pools between the share groups.
     angle::PackedEnumMap<PipelineType, vk::DynamicDescriptorPool> mDriverUniformsDescriptorPools;
-    angle::PackedEnumMap<gl::QueryType, vk::DynamicQueryPool> mQueryPools;
+    gl::QueryTypeMap<vk::DynamicQueryPool> mQueryPools;
+
+    // Saved queries run in the RenderPass.
+    gl::QueryTypeMap<QueryVk *> mRenderPassQueries;
 
     // Dirty bits.
     DirtyBits mGraphicsDirtyBits;
@@ -909,10 +912,6 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     ProgramVk *mProgram;
     ProgramPipelineVk *mProgramPipeline;
     ProgramExecutableVk *mExecutable;
-
-    // occlusion query
-    QueryVk *mActiveQueryAnySamples;
-    QueryVk *mActiveQueryAnySamplesConservative;
 
     // The offset we had the last time we bound the index buffer.
     const GLvoid *mLastIndexBufferOffset;

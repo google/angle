@@ -60,7 +60,6 @@ StandardQueryGL::StandardQueryGL(gl::QueryType type,
                                  const FunctionsGL *functions,
                                  StateManagerGL *stateManager)
     : QueryGL(type),
-      mType(type),
       mFunctions(functions),
       mStateManager(stateManager),
       mActiveQuery(0),

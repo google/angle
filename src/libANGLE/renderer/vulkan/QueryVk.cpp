@@ -41,24 +41,22 @@ void QueryVk::onDestroy(const gl::Context *context)
 
 angle::Result QueryVk::stashQueryHelper(ContextVk *contextVk)
 {
-    ASSERT(isOcclusionQuery());
+    ASSERT(isRenderPassQuery(contextVk));
     mStashedQueryHelpers.emplace_back(std::move(mQueryHelper));
     mQueryHelper.deinit();
     ANGLE_TRY(contextVk->getQueryPool(getType())->allocateQuery(contextVk, &mQueryHelper));
     return angle::Result::Continue;
 }
 
-angle::Result QueryVk::retrieveStashedQueryResult(ContextVk *contextVk, uint64_t *result)
+angle::Result QueryVk::accumulateStashedQueryResult(ContextVk *contextVk, vk::QueryResult *result)
 {
-    uint64_t total = 0;
     for (vk::QueryHelper &query : mStashedQueryHelpers)
     {
-        uint64_t v;
+        vk::QueryResult v(getQueryResultCount());
         ANGLE_TRY(query.getUint64Result(contextVk, &v));
-        total += v;
+        *result += v;
     }
     mStashedQueryHelpers.clear();
-    *result = total;
     return angle::Result::Continue;
 }
 
@@ -68,12 +66,16 @@ angle::Result QueryVk::begin(const gl::Context *context)
 
     mCachedResultValid = false;
 
-    // Transform feedback query is a handled by a CPU-calculated value when emulated.
-    if (getType() == gl::QueryType::TransformFeedbackPrimitivesWritten)
+    if (isTransformFeedbackQuery())
     {
         mTransformFeedbackPrimitivesDrawn = 0;
-        // We could consider using VK_QUERY_TYPE_TRANSFORM_FEEDBACK_STREAM_EXT.
-        return angle::Result::Continue;
+
+        // Transform feedback query is a handled by a CPU-calculated value when emulated.
+        if (contextVk->getFeatures().emulateTransformFeedback.enabled)
+        {
+            ASSERT(!contextVk->getFeatures().supportsTransformFeedbackExtension.enabled);
+            return angle::Result::Continue;
+        }
     }
 
     if (!mQueryHelper.valid())
@@ -81,7 +83,7 @@ angle::Result QueryVk::begin(const gl::Context *context)
         ANGLE_TRY(contextVk->getQueryPool(getType())->allocateQuery(contextVk, &mQueryHelper));
     }
 
-    if (isOcclusionQuery())
+    if (isRenderPassQuery(contextVk))
     {
         // For pathological usage case where begin/end is called back to back without flush and get
         // result, we have to force flush so that the same mQueryHelper will not encoded in the same
@@ -95,7 +97,7 @@ angle::Result QueryVk::begin(const gl::Context *context)
             mQueryHelper.deinit();
             ANGLE_TRY(contextVk->getQueryPool(getType())->allocateQuery(contextVk, &mQueryHelper));
         }
-        contextVk->beginOcclusionQuery(this);
+        contextVk->beginRenderPassQuery(this);
     }
     else if (getType() == gl::QueryType::TimeElapsed)
     {
@@ -120,12 +122,18 @@ angle::Result QueryVk::end(const gl::Context *context)
 {
     ContextVk *contextVk = vk::GetImpl(context);
 
-    if (getType() == gl::QueryType::TransformFeedbackPrimitivesWritten)
+    if (isRenderPassQuery(contextVk))
     {
+        contextVk->endRenderPassQuery(this);
+    }
+    else if (isTransformFeedbackQuery())
+    {
+        // Transform feedback query is a handled by a CPU-calculated value when emulated.
+        ASSERT(contextVk->getFeatures().emulateTransformFeedback.enabled);
         mCachedResult = mTransformFeedbackPrimitivesDrawn;
 
-        // There could be transform feedback in progress, so add the primitives drawn so far from
-        // the current transform feedback object.
+        // There could be transform feedback in progress, so add the primitives drawn so far
+        // from the current transform feedback object.
         gl::TransformFeedback *transformFeedback =
             context->getState().getCurrentTransformFeedback();
         if (transformFeedback)
@@ -133,11 +141,6 @@ angle::Result QueryVk::end(const gl::Context *context)
             mCachedResult += transformFeedback->getPrimitivesDrawn();
         }
         mCachedResultValid = true;
-        // We could consider using VK_QUERY_TYPE_TRANSFORM_FEEDBACK_STREAM_EXT.
-    }
-    else if (isOcclusionQuery())
-    {
-        contextVk->endOcclusionQuery(this);
     }
     else if (getType() == gl::QueryType::TimeElapsed)
     {
@@ -268,25 +271,23 @@ angle::Result QueryVk::getResult(const gl::Context *context, bool wait)
         ANGLE_TRY(finishRunningCommands(contextVk));
     }
 
+    vk::QueryResult result(getQueryResultCount());
+
     if (wait)
     {
-        ANGLE_TRY(mQueryHelper.getUint64Result(contextVk, &mCachedResult));
-        uint64_t v;
-        ANGLE_TRY(retrieveStashedQueryResult(contextVk, &v));
-        mCachedResult += v;
+        ANGLE_TRY(mQueryHelper.getUint64Result(contextVk, &result));
+        ANGLE_TRY(accumulateStashedQueryResult(contextVk, &result));
     }
     else
     {
         bool available = false;
-        ANGLE_TRY(mQueryHelper.getUint64ResultNonBlocking(contextVk, &mCachedResult, &available));
+        ANGLE_TRY(mQueryHelper.getUint64ResultNonBlocking(contextVk, &result, &available));
         if (!available)
         {
             // If the results are not ready, do nothing.  mCachedResultValid remains false.
             return angle::Result::Continue;
         }
-        uint64_t v;
-        ANGLE_TRY(retrieveStashedQueryResult(contextVk, &v));
-        mCachedResult += v;
+        ANGLE_TRY(accumulateStashedQueryResult(contextVk, &result));
     }
 
     double timestampPeriod = renderer->getPhysicalDeviceProperties().limits.timestampPeriod;
@@ -297,24 +298,26 @@ angle::Result QueryVk::getResult(const gl::Context *context, bool wait)
         case gl::QueryType::AnySamples:
         case gl::QueryType::AnySamplesConservative:
             // OpenGL query result in these cases is binary
-            mCachedResult = !!mCachedResult;
+            mCachedResult = !!result.getResult();
             break;
         case gl::QueryType::Timestamp:
-            mCachedResult = static_cast<uint64_t>(mCachedResult * timestampPeriod);
+            mCachedResult = static_cast<uint64_t>(result.getResult() * timestampPeriod);
             break;
         case gl::QueryType::TimeElapsed:
         {
-            uint64_t timeElapsedEnd = mCachedResult;
+            vk::QueryResult timeElapsedBegin(1);
 
             // Since the result of the end query of time-elapsed is already available, the
             // result of begin query must be available too.
-            ANGLE_TRY(mQueryHelperTimeElapsedBegin.getUint64Result(contextVk, &mCachedResult));
+            ANGLE_TRY(mQueryHelperTimeElapsedBegin.getUint64Result(contextVk, &timeElapsedBegin));
 
-            mCachedResult = timeElapsedEnd - mCachedResult;
-            mCachedResult = static_cast<uint64_t>(mCachedResult * timestampPeriod);
-
+            uint64_t delta = result.getResult() - timeElapsedBegin.getResult();
+            mCachedResult  = static_cast<uint64_t>(delta * timestampPeriod);
             break;
         }
+        case gl::QueryType::TransformFeedbackPrimitivesWritten:
+            mCachedResult = result.getResult();
+            break;
         default:
             UNREACHABLE();
             break;
@@ -362,5 +365,17 @@ angle::Result QueryVk::isResultAvailable(const gl::Context *context, bool *avail
 void QueryVk::onTransformFeedbackEnd(GLsizeiptr primitivesDrawn)
 {
     mTransformFeedbackPrimitivesDrawn += primitivesDrawn;
+}
+
+bool QueryVk::isRenderPassQuery(ContextVk *contextVk) const
+{
+    return isOcclusionQuery() ||
+           (isTransformFeedbackQuery() &&
+            contextVk->getFeatures().supportsTransformFeedbackExtension.enabled);
+}
+
+uint32_t QueryVk::getQueryResultCount() const
+{
+    return isTransformFeedbackQuery() ? 2 : 1;
 }
 }  // namespace rx

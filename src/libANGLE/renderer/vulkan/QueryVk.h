@@ -37,7 +37,8 @@ class QueryVk : public QueryImpl
     void onTransformFeedbackEnd(GLsizeiptr primitivesDrawn);
     vk::QueryHelper *getQueryHelper() { return &mQueryHelper; }
     angle::Result stashQueryHelper(ContextVk *contextVk);
-    angle::Result retrieveStashedQueryResult(ContextVk *contextVk, uint64_t *result);
+
+    bool isRenderPassQuery(ContextVk *contextVk) const;
 
   private:
     angle::Result getResult(const gl::Context *context, bool wait);
@@ -45,6 +46,8 @@ class QueryVk : public QueryImpl
     bool isUsedInRecordedCommands() const;
     bool isCurrentlyInUse(Serial lastCompletedSerial) const;
     angle::Result finishRunningCommands(ContextVk *contextVk);
+    uint32_t getQueryResultCount() const;
+    angle::Result accumulateStashedQueryResult(ContextVk *contextVk, vk::QueryResult *result);
 
     // Used for AnySamples, AnySamplesConservative, Timestamp and TimeElapsed (end).
     vk::QueryHelper mQueryHelper;

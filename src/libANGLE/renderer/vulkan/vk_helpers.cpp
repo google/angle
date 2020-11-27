@@ -2487,14 +2487,14 @@ angle::Result QueryHelper::endQuery(ContextVk *contextVk)
     return angle::Result::Continue;
 }
 
-void QueryHelper::beginOcclusionQuery(ContextVk *contextVk, CommandBuffer *renderPassCommandBuffer)
+void QueryHelper::beginRenderPassQuery(ContextVk *contextVk, CommandBuffer *renderPassCommandBuffer)
 {
     const QueryPool &queryPool = getQueryPool();
     renderPassCommandBuffer->queueResetQueryPool(queryPool.getHandle(), mQuery, 1);
     renderPassCommandBuffer->beginQuery(queryPool.getHandle(), mQuery, 0);
 }
 
-void QueryHelper::endOcclusionQuery(ContextVk *contextVk, CommandBuffer *renderPassCommandBuffer)
+void QueryHelper::endRenderPassQuery(ContextVk *contextVk, CommandBuffer *renderPassCommandBuffer)
 {
     renderPassCommandBuffer->endQuery(getQueryPool().getHandle(), mQuery);
 
@@ -2537,7 +2537,7 @@ void QueryHelper::writeTimestamp(ContextVk *contextVk, CommandBuffer *commandBuf
 }
 
 angle::Result QueryHelper::getUint64ResultNonBlocking(ContextVk *contextVk,
-                                                      uint64_t *resultOut,
+                                                      QueryResult *resultOut,
                                                       bool *availableOut)
 {
     ASSERT(valid());
@@ -2549,8 +2549,9 @@ angle::Result QueryHelper::getUint64ResultNonBlocking(ContextVk *contextVk,
     {
         VkDevice device                     = contextVk->getDevice();
         constexpr VkQueryResultFlags kFlags = VK_QUERY_RESULT_64_BIT;
-        result = getQueryPool().getResults(device, mQuery, 1, sizeof(uint64_t), resultOut,
-                                           sizeof(uint64_t), kFlags);
+        result =
+            getQueryPool().getResults(device, mQuery, 1, resultOut->getDataSize(),
+                                      resultOut->getPointerToResults(), sizeof(uint64_t), kFlags);
     }
     else
     {
@@ -2571,15 +2572,16 @@ angle::Result QueryHelper::getUint64ResultNonBlocking(ContextVk *contextVk,
     return angle::Result::Continue;
 }
 
-angle::Result QueryHelper::getUint64Result(ContextVk *contextVk, uint64_t *resultOut)
+angle::Result QueryHelper::getUint64Result(ContextVk *contextVk, QueryResult *resultOut)
 {
     ASSERT(valid());
     if (mUse.getSerial().valid())
     {
         VkDevice device                     = contextVk->getDevice();
         constexpr VkQueryResultFlags kFlags = VK_QUERY_RESULT_64_BIT | VK_QUERY_RESULT_WAIT_BIT;
-        ANGLE_VK_TRY(contextVk, getQueryPool().getResults(device, mQuery, 1, sizeof(uint64_t),
-                                                          resultOut, sizeof(uint64_t), kFlags));
+        ANGLE_VK_TRY(contextVk, getQueryPool().getResults(
+                                    device, mQuery, 1, resultOut->getDataSize(),
+                                    resultOut->getPointerToResults(), sizeof(uint64_t), kFlags));
     }
     else
     {

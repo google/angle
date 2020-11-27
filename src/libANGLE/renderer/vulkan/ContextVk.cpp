@@ -364,12 +364,11 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
       mCurrentWindowSurface(nullptr),
       mCurrentRotationDrawFramebuffer(SurfaceRotation::Identity),
       mCurrentRotationReadFramebuffer(SurfaceRotation::Identity),
+      mRenderPassQueries{},
       mVertexArray(nullptr),
       mDrawFramebuffer(nullptr),
       mProgram(nullptr),
       mExecutable(nullptr),
-      mActiveQueryAnySamples(nullptr),
-      mActiveQueryAnySamplesConservative(nullptr),
       mLastIndexBufferOffset(0),
       mCurrentDrawElementsType(gl::DrawElementsType::InvalidEnum),
       mXfbBaseVertex(0),
@@ -556,6 +555,13 @@ angle::Result ContextVk::initialize()
                                                              vk::kDefaultTimestampQueryPoolSize));
         ANGLE_TRY(mQueryPools[gl::QueryType::TimeElapsed].init(this, VK_QUERY_TYPE_TIMESTAMP,
                                                                vk::kDefaultTimestampQueryPoolSize));
+    }
+
+    if (getFeatures().supportsTransformFeedbackExtension.enabled)
+    {
+        ANGLE_TRY(mQueryPools[gl::QueryType::TransformFeedbackPrimitivesWritten].init(
+            this, VK_QUERY_TYPE_TRANSFORM_FEEDBACK_STREAM_EXT,
+            vk::kDefaultTransformFeedbackQueryPoolSize));
     }
 
     // Init gles to vulkan index type map
@@ -1725,13 +1731,13 @@ angle::Result ContextVk::synchronizeCpuGpuTime()
         // another thread had submitted work.
         ANGLE_TRY(finishToSerial(getLastSubmittedQueueSerial()));
 
-        uint64_t gpuTimestampCycles = 0;
+        vk::QueryResult gpuTimestampCycles(1);
         ANGLE_TRY(timestampQuery.getUint64Result(this, &gpuTimestampCycles));
 
         // Use the first timestamp queried as origin.
         if (mGpuEventTimestampOrigin == 0)
         {
-            mGpuEventTimestampOrigin = gpuTimestampCycles;
+            mGpuEventTimestampOrigin = gpuTimestampCycles.getResult();
         }
 
         // Take these CPU and GPU timestamps if there is better confidence.
@@ -1740,7 +1746,7 @@ angle::Result ContextVk::synchronizeCpuGpuTime()
         {
             tightestRangeS = confidenceRangeS;
             TcpuS          = cpuTimestampS;
-            TgpuCycles     = gpuTimestampCycles;
+            TgpuCycles     = gpuTimestampCycles.getResult();
         }
     }
 
@@ -1797,8 +1803,8 @@ angle::Result ContextVk::checkCompletedGpuEvents()
         }
 
         // See if the results are available.
-        uint64_t gpuTimestampCycles = 0;
-        bool available              = false;
+        vk::QueryResult gpuTimestampCycles(1);
+        bool available = false;
         ANGLE_TRY(eventQuery.queryHelper.getUint64ResultNonBlocking(this, &gpuTimestampCycles,
                                                                     &available));
         if (!available)
@@ -1809,7 +1815,7 @@ angle::Result ContextVk::checkCompletedGpuEvents()
         mGpuEventQueryPool.freeQuery(this, &eventQuery.queryHelper);
 
         GpuEvent gpuEvent;
-        gpuEvent.gpuTimestampCycles = gpuTimestampCycles;
+        gpuEvent.gpuTimestampCycles = gpuTimestampCycles.getResult();
         gpuEvent.name               = eventQuery.name;
         gpuEvent.phase              = eventQuery.phase;
 
@@ -3589,6 +3595,7 @@ vk::DynamicQueryPool *ContextVk::getQueryPool(gl::QueryType queryType)
 {
     ASSERT(queryType == gl::QueryType::AnySamples ||
            queryType == gl::QueryType::AnySamplesConservative ||
+           queryType == gl::QueryType::TransformFeedbackPrimitivesWritten ||
            queryType == gl::QueryType::Timestamp || queryType == gl::QueryType::TimeElapsed);
 
     // Assert that timestamp extension is available if needed.
@@ -4363,7 +4370,9 @@ angle::Result ContextVk::getTimestamp(uint64_t *timestampOut)
     scratchResourceUseList.releaseResourceUsesAndUpdateSerials(throwAwaySerial);
 
     // Get the query results
-    ANGLE_TRY(timestampQuery.getUint64Result(this, timestampOut));
+    vk::QueryResult result(1);
+    ANGLE_TRY(timestampQuery.getUint64Result(this, &result));
+    *timestampOut = result.getResult();
     timestampQueryPool.get().freeQuery(this, &timestampQuery);
 
     // Convert results to nanoseconds.
@@ -4490,7 +4499,7 @@ angle::Result ContextVk::startRenderPass(gl::Rectangle renderArea,
 
     ANGLE_TRY(mDrawFramebuffer->startNewRenderPass(this, renderArea, &mRenderPassCommandBuffer));
 
-    ANGLE_TRY(resumeOcclusionQueryIfActive());
+    resumeRenderPassQueryIfActive();
 
     const gl::DepthStencilState &dsState = mState.getDepthStencilState();
     vk::ResourceAccess depthAccess       = GetDepthAccess(dsState);
@@ -4557,7 +4566,7 @@ angle::Result ContextVk::flushCommandsAndEndRenderPass()
         return angle::Result::Continue;
     }
 
-    ANGLE_TRY(pauseOcclusionQueryIfActive());
+    ANGLE_TRY(pauseRenderPassQueryIfActive());
 
     mCurrentTransformFeedbackBuffers.clear();
     mCurrentIndirectBuffer = nullptr;
@@ -4714,88 +4723,56 @@ angle::Result ContextVk::flushOutsideRenderPassCommands()
     return angle::Result::Continue;
 }
 
-void ContextVk::beginOcclusionQuery(QueryVk *queryVk)
+void ContextVk::beginRenderPassQuery(QueryVk *queryVk)
 {
     // To avoid complexity, we always start and end occlusion query inside renderpass. if renderpass
     // not yet started, we just remember it and defer the start call.
     if (mRenderPassCommands->started())
     {
-        queryVk->getQueryHelper()->beginOcclusionQuery(this, mRenderPassCommandBuffer);
+        queryVk->getQueryHelper()->beginRenderPassQuery(this, mRenderPassCommandBuffer);
     }
-    if (queryVk->isAnySamplesQuery())
-    {
-        ASSERT(mActiveQueryAnySamples == nullptr);
-        mActiveQueryAnySamples = queryVk;
-    }
-    else if (queryVk->isAnySamplesConservativeQuery())
-    {
-        ASSERT(mActiveQueryAnySamplesConservative == nullptr);
-        mActiveQueryAnySamplesConservative = queryVk;
-    }
-    else
-    {
-        UNREACHABLE();
-    }
+
+    mRenderPassQueries[queryVk->getType()] = queryVk;
 }
 
-void ContextVk::endOcclusionQuery(QueryVk *queryVk)
+void ContextVk::endRenderPassQuery(QueryVk *queryVk)
 {
     if (mRenderPassCommands->started() && mRenderPassCommandBuffer)
     {
-        queryVk->getQueryHelper()->endOcclusionQuery(this, mRenderPassCommandBuffer);
+        queryVk->getQueryHelper()->endRenderPassQuery(this, mRenderPassCommandBuffer);
     }
-    if (queryVk->isAnySamplesQuery())
-    {
-        ASSERT(mActiveQueryAnySamples == queryVk);
-        mActiveQueryAnySamples = nullptr;
-    }
-    else if (queryVk->isAnySamplesConservativeQuery())
-    {
-        ASSERT(mActiveQueryAnySamplesConservative == queryVk);
-        mActiveQueryAnySamplesConservative = nullptr;
-    }
-    else
-    {
-        UNREACHABLE();
-    }
+
+    mRenderPassQueries[queryVk->getType()] = nullptr;
 }
 
-angle::Result ContextVk::pauseOcclusionQueryIfActive()
+angle::Result ContextVk::pauseRenderPassQueryIfActive()
 {
     if (mRenderPassCommandBuffer == nullptr)
     {
         return angle::Result::Continue;
     }
 
-    if (mActiveQueryAnySamples)
+    for (QueryVk *activeQuery : mRenderPassQueries)
     {
-        mActiveQueryAnySamples->getQueryHelper()->endOcclusionQuery(this, mRenderPassCommandBuffer);
-        ANGLE_TRY(mActiveQueryAnySamples->stashQueryHelper(this));
-    }
-    if (mActiveQueryAnySamplesConservative)
-    {
-        mActiveQueryAnySamplesConservative->getQueryHelper()->endOcclusionQuery(
-            this, mRenderPassCommandBuffer);
-        ANGLE_TRY(mActiveQueryAnySamplesConservative->stashQueryHelper(this));
+        if (activeQuery)
+        {
+            activeQuery->getQueryHelper()->endRenderPassQuery(this, mRenderPassCommandBuffer);
+            ANGLE_TRY(activeQuery->stashQueryHelper(this));
+        }
     }
 
     return angle::Result::Continue;
 }
 
-angle::Result ContextVk::resumeOcclusionQueryIfActive()
+void ContextVk::resumeRenderPassQueryIfActive()
 {
-    if (mActiveQueryAnySamples)
+    for (QueryVk *activeQuery : mRenderPassQueries)
     {
-        mActiveQueryAnySamples->getQueryHelper()->beginOcclusionQuery(this,
-                                                                      mRenderPassCommandBuffer);
+        if (activeQuery)
+        {
+            activeQuery->getQueryHelper()->beginRenderPassQuery(this, mRenderPassCommandBuffer);
+        }
     }
-    if (mActiveQueryAnySamplesConservative)
-    {
-        mActiveQueryAnySamplesConservative->getQueryHelper()->beginOcclusionQuery(
-            this, mRenderPassCommandBuffer);
-    }
-
-    return angle::Result::Continue;
 }
 
 bool ContextVk::isRobustResourceInitEnabled() const

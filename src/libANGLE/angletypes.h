@@ -848,6 +848,9 @@ template <typename T>
 using TransformFeedbackBuffersArray =
     std::array<T, gl::IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_BUFFERS>;
 
+template <typename T>
+using QueryTypeMap = angle::PackedEnumMap<QueryType, T>;
+
 constexpr size_t kBarrierVectorDefaultSize = 16;
 
 template <typename T>
