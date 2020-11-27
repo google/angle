@@ -143,6 +143,13 @@ class ShaderState final : angle::NonCopyable
     Optional<GLint> mGeometryShaderMaxVertices;
     int mGeometryShaderInvocations;
 
+    // Tessellation Shader
+    int mTessControlShaderVertices;
+    GLenum mTessGenMode;
+    GLenum mTessGenSpacing;
+    GLenum mTessGenVertexOrder;
+    GLenum mTessGenPointMode;
+
     // Indicates if this shader has been successfully compiled
     CompileStatus mCompileStatus;
 };
@@ -218,6 +225,11 @@ class Shader final : angle::NonCopyable, public LabeledObject
     Optional<PrimitiveMode> getGeometryShaderOutputPrimitiveType();
     int getGeometryShaderInvocations();
     Optional<GLint> getGeometryShaderMaxVertices();
+    int getTessControlShaderVertices();
+    GLenum getTessGenMode();
+    GLenum getTessGenSpacing();
+    GLenum getTessGenVertexOrder();
+    GLenum getTessGenPointMode();
 
     const std::string &getCompilerResourcesString() const;
 

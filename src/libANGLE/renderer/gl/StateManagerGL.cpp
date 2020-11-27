@@ -2075,6 +2075,9 @@ angle::Result StateManagerGL::syncState(const gl::Context *context,
             case gl::State::DIRTY_BIT_SAMPLE_SHADING:
                 // Nothing to do until OES_sample_shading is implemented.
                 break;
+            case gl::State::DIRTY_BIT_PATCH_VERTICES:
+                // Nothing to do until EXT_tessellation_shader is implemented.
+                break;
             default:
                 UNREACHABLE();
                 break;

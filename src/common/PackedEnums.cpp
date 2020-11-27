@@ -514,6 +514,18 @@ std::ostream &operator<<(std::ostream &os, TessEvaluationType value)
     }
     return os;
 }
+
+const char *ShaderTypeToString(ShaderType shaderType)
+{
+    constexpr ShaderMap<const char *> kShaderTypeNameMap = {
+        {ShaderType::Vertex, "Vertex"},
+        {ShaderType::TessControl, "Tessellation control"},
+        {ShaderType::TessEvaluation, "Tessellation evaluation"},
+        {ShaderType::Geometry, "Geometry"},
+        {ShaderType::Fragment, "Fragment"},
+        {ShaderType::Compute, "Compute"}};
+    return kShaderTypeNameMap[shaderType];
+}
 }  // namespace gl
 
 namespace egl
@@ -599,5 +611,4 @@ gl::TextureType EGLTextureTargetToTextureType(EGLenum eglTarget)
             return gl::TextureType::InvalidEnum;
     }
 }
-
 }  // namespace egl_gl

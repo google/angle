@@ -916,7 +916,7 @@ void RendererVk::ensureCapsInitialized() const
         getFeatures().exposeNonConformantExtensionsAndVersions.enabled;
 
     // Geometry shaders are required for ES 3.2.
-    // We can't support GS when we are emulating line raster due to the tricky position varying.
+    // We don't support GS when we are emulating line raster due to the tricky position varying.
     if (mPhysicalDeviceFeatures.geometryShader && !mFeatures.basicGLLineRasterization.enabled)
     {
         // TODO: geometry shader support is incomplete.  http://anglebug.com/3571
@@ -939,6 +939,37 @@ void RendererVk::ensureCapsInitialized() const
             maxCombinedAtomicCounterBuffers;
         mNativeCaps.maxGeometryShaderInvocations =
             LimitToInt(limitsVk.maxGeometryShaderInvocations);
+    }
+
+    // We don't support TS when we are emulating line raster due to the tricky position varying.
+    if (mPhysicalDeviceFeatures.tessellationShader && !mFeatures.basicGLLineRasterization.enabled)
+    {
+        constexpr uint32_t kReservedTessellationDefaultUniformBindingCount = 2;
+
+        // TODO: tessellation shader support is incomplete.  http://anglebug.com/3572
+        mNativeExtensions.tessellationShaderEXT =
+            getFeatures().exposeNonConformantExtensionsAndVersions.enabled;
+        mNativeCaps.maxPatchVertices = LimitToInt(limitsVk.maxTessellationPatchSize);
+        mNativeCaps.maxTessPatchComponents =
+            LimitToInt(limitsVk.maxTessellationControlPerPatchOutputComponents);
+        mNativeCaps.maxTessGenLevel = LimitToInt(limitsVk.maxTessellationGenerationLevel);
+
+        mNativeCaps.maxTessControlInputComponents =
+            LimitToInt(limitsVk.maxTessellationControlPerVertexInputComponents);
+        mNativeCaps.maxTessControlOutputComponents =
+            LimitToInt(limitsVk.maxTessellationControlPerVertexOutputComponents);
+        mNativeCaps.maxTessControlTotalOutputComponents =
+            LimitToInt(limitsVk.maxTessellationControlTotalOutputComponents);
+        mNativeCaps.maxTessEvaluationInputComponents =
+            LimitToInt(limitsVk.maxTessellationEvaluationInputComponents);
+        mNativeCaps.maxTessEvaluationOutputComponents =
+            LimitToInt(limitsVk.maxTessellationEvaluationOutputComponents);
+
+        // There is 1 default uniform binding used per tessellation stages.
+        mNativeCaps.maxCombinedUniformBlocks = LimitToInt(
+            mNativeCaps.maxCombinedUniformBlocks + kReservedTessellationDefaultUniformBindingCount);
+        mNativeCaps.maxUniformBufferBindings = LimitToInt(
+            mNativeCaps.maxUniformBufferBindings + kReservedTessellationDefaultUniformBindingCount);
     }
 
     // GL_APPLE_clip_distance/GL_EXT_clip_cull_distance

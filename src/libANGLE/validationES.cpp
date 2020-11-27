@@ -727,7 +727,7 @@ bool ValidateTransformFeedbackPrimitiveMode(const Context *context,
 {
     ASSERT(context);
 
-    if (!context->getExtensions().geometryShader)
+    if (!context->getExtensions().geometryShader || !context->getExtensions().tessellationShaderEXT)
     {
         // It is an invalid operation to call DrawArrays or DrawArraysInstanced with a draw mode
         // that does not match the current transform feedback object's draw mode (if transform
@@ -748,6 +748,8 @@ bool ValidateTransformFeedbackPrimitiveMode(const Context *context,
         case PrimitiveMode::TriangleFan:
         case PrimitiveMode::TriangleStrip:
             return transformFeedbackPrimitiveMode == PrimitiveMode::Triangles;
+        case PrimitiveMode::Patches:
+            return transformFeedbackPrimitiveMode == PrimitiveMode::Patches;
         default:
             UNREACHABLE();
             return false;
@@ -3748,8 +3750,9 @@ const char *ValidateDrawStates(const Context *context)
     // If we are running GLES1, there is no current program.
     if (context->getClientVersion() >= Version(2, 0))
     {
-        Program *program                 = state.getLinkedProgram(context);
-        ProgramPipeline *programPipeline = state.getProgramPipeline();
+        Program *program                    = state.getLinkedProgram(context);
+        ProgramPipeline *programPipeline    = state.getProgramPipeline();
+        const ProgramExecutable *executable = state.getProgramExecutable();
 
         bool programIsYUVOutput = false;
 
@@ -3793,13 +3796,27 @@ const char *ValidateDrawStates(const Context *context)
             //  of vertex and fragment shader execution will respectively be undefined. However,
             //  this is not an error, so ANGLE only signals PPO link failures if both VS and FS
             //  stages are present.
-            const ProgramExecutable &executable = programPipeline->getExecutable();
-            if (!goodResult && executable.hasVertexAndFragmentShader())
+            ASSERT(executable);
+            if (!goodResult && executable->hasVertexAndFragmentShader())
             {
-                return err::kProgramPipelineLinkFailed;
+                return kProgramPipelineLinkFailed;
             }
 
-            programIsYUVOutput = executable.isYUVOutput();
+            programIsYUVOutput = executable->isYUVOutput();
+        }
+
+        if (executable && executable->hasLinkedTessellationShader())
+        {
+            if (!executable->hasLinkedShaderStage(ShaderType::Vertex))
+            {
+                return kTessellationShaderRequiresVertexShader;
+            }
+
+            if (!executable->hasLinkedShaderStage(ShaderType::TessControl) ||
+                !executable->hasLinkedShaderStage(ShaderType::TessEvaluation))
+            {
+                return kTessellationShaderRequiresBothControlAndEvaluation;
+            }
         }
 
         if (programIsYUVOutput != framebufferIsYUV)
@@ -3899,6 +3916,15 @@ void RecordDrawModeError(const Context *context, PrimitiveMode mode)
                 return;
             }
             break;
+
+        case PrimitiveMode::Patches:
+            if (!extensions.tessellationShaderEXT && context->getClientVersion() < ES_3_2)
+            {
+                context->validationError(GL_INVALID_ENUM, kTessellationShaderExtensionNotEnabled);
+                return;
+            }
+            break;
+
         default:
             context->validationError(GL_INVALID_ENUM, kInvalidDrawMode);
             return;
@@ -3920,6 +3946,22 @@ void RecordDrawModeError(const Context *context, PrimitiveMode mode)
                                          kIncompatibleDrawModeAgainstGeometryShader);
                 return;
             }
+        }
+
+        if (program->getExecutable().hasLinkedTessellationShader() &&
+            mode != PrimitiveMode::Patches)
+        {
+            context->validationError(GL_INVALID_OPERATION,
+                                     kIncompatibleDrawModeWithTessellationShader);
+            return;
+        }
+
+        if (!program->getExecutable().hasLinkedTessellationShader() &&
+            mode == PrimitiveMode::Patches)
+        {
+            context->validationError(GL_INVALID_OPERATION,
+                                     kIncompatibleDrawModeWithoutTessellationShader);
+            return;
         }
     }
 
@@ -5390,7 +5432,22 @@ bool ValidateGetProgramivBase(const Context *context,
                 return false;
             }
             break;
-
+        case GL_TESS_CONTROL_OUTPUT_VERTICES_EXT:
+        case GL_TESS_GEN_MODE_EXT:
+        case GL_TESS_GEN_SPACING_EXT:
+        case GL_TESS_GEN_VERTEX_ORDER_EXT:
+        case GL_TESS_GEN_POINT_MODE_EXT:
+            if (!context->getExtensions().tessellationShaderEXT)
+            {
+                context->validationError(GL_INVALID_ENUM, kTessellationShaderExtensionNotEnabled);
+                return false;
+            }
+            if (!programObject->isLinked())
+            {
+                context->validationError(GL_INVALID_OPERATION, kProgramNotLinked);
+                return false;
+            }
+            break;
         default:
             context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
             return false;

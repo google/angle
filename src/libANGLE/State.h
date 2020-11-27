@@ -560,6 +560,10 @@ class State : angle::NonCopyable
     void setMaxShaderCompilerThreads(GLuint count);
     GLuint getMaxShaderCompilerThreads() const { return mMaxShaderCompilerThreads; }
 
+    // GL_EXT_tessellation_shader
+    void setPatchVertices(GLuint value);
+    GLuint getPatchVertices() const { return mPatchVertices; }
+
     // State query functions
     void getBooleanv(GLenum pname, GLboolean *params) const;
     void getFloatv(GLenum pname, GLfloat *params) const;
@@ -646,6 +650,7 @@ class State : angle::NonCopyable
         DIRTY_BIT_CURRENT_VALUES,
         DIRTY_BIT_PROVOKING_VERTEX,
         DIRTY_BIT_SAMPLE_SHADING,
+        DIRTY_BIT_PATCH_VERTICES,
         DIRTY_BIT_EXTENDED,  // clip distances, mipmap generation hint, derivative hint.
         DIRTY_BIT_INVALID,
         DIRTY_BIT_MAX = DIRTY_BIT_INVALID,
@@ -1066,6 +1071,9 @@ class State : angle::NonCopyable
 
     // GL_APPLE_clip_distance/GL_EXT_clip_cull_distance
     ClipDistanceEnableBits mClipDistancesEnabled;
+
+    // GL_EXT_tessellation_shader
+    GLuint mPatchVertices;
 
     // GLES1 emulation: state specific to GLES1
     GLES1State mGLES1State;

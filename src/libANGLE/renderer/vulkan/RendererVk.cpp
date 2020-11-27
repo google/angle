@@ -1390,6 +1390,8 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
     enabledFeatures.features.depthClamp = mPhysicalDeviceFeatures.depthClamp;
     // Used to support EXT_clip_cull_distance
     enabledFeatures.features.shaderCullDistance = mPhysicalDeviceFeatures.shaderCullDistance;
+    // Used to support tessellation Shader:
+    enabledFeatures.features.tessellationShader = mPhysicalDeviceFeatures.tessellationShader;
 
     if (!vk::CommandBuffer::ExecutesInline())
     {

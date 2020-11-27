@@ -114,6 +114,10 @@ GLint GetMaxShaderInputVectors(const Caps &caps, ShaderType shaderStage)
 {
     switch (shaderStage)
     {
+        case ShaderType::TessControl:
+            return caps.maxTessControlInputComponents / 4;
+        case ShaderType::TessEvaluation:
+            return caps.maxTessEvaluationInputComponents / 4;
         case ShaderType::Geometry:
             return caps.maxGeometryInputComponents / 4;
         case ShaderType::Fragment:
@@ -129,11 +133,53 @@ GLint GetMaxShaderOutputVectors(const Caps &caps, ShaderType shaderStage)
     {
         case ShaderType::Vertex:
             return caps.maxVertexOutputComponents / 4;
+        case ShaderType::TessControl:
+            return caps.maxTessControlOutputComponents / 4;
+        case ShaderType::TessEvaluation:
+            return caps.maxTessEvaluationOutputComponents / 4;
         case ShaderType::Geometry:
             return caps.maxGeometryOutputComponents / 4;
         default:
             return std::numeric_limits<GLint>::max();
     }
+}
+
+bool ShouldSkipPackedVarying(const sh::ShaderVariable &varying, PackMode packMode)
+{
+    // Don't pack gl_Position. Also don't count gl_PointSize for D3D9.
+    return varying.name == "gl_Position" ||
+           (varying.name == "gl_PointSize" && packMode == PackMode::ANGLE_NON_CONFORMANT_D3D9);
+}
+
+std::vector<unsigned int> StripVaryingArrayDimension(const sh::ShaderVariable *frontVarying,
+                                                     ShaderType frontShaderStage,
+                                                     const sh::ShaderVariable *backVarying,
+                                                     ShaderType backShaderStage,
+                                                     bool isStructField)
+{
+    // "Geometry shader inputs, tessellation control shader inputs and outputs, and tessellation
+    // evaluation inputs all have an additional level of arrayness relative to other shader inputs
+    // and outputs. This outer array level is removed from the type before considering how many
+    // locations the type consumes."
+
+    if (backVarying && backVarying->isArray() && !backVarying->isPatch && !isStructField &&
+        (backShaderStage == ShaderType::Geometry || backShaderStage == ShaderType::TessEvaluation ||
+         backShaderStage == ShaderType::TessControl))
+    {
+        std::vector<unsigned int> arr = backVarying->arraySizes;
+        arr.pop_back();
+        return arr;
+    }
+
+    if (frontVarying && frontVarying->isArray() && !frontVarying->isPatch && !isStructField &&
+        frontShaderStage == ShaderType::TessControl)
+    {
+        std::vector<unsigned int> arr = frontVarying->arraySizes;
+        arr.pop_back();
+        return arr;
+    }
+
+    return frontVarying ? frontVarying->arraySizes : backVarying->arraySizes;
 }
 }  // anonymous namespace
 
@@ -213,6 +259,18 @@ PackedVarying &PackedVarying::operator=(PackedVarying &&other)
     return *this;
 }
 
+unsigned int PackedVarying::getBasicTypeElementCount() const
+{
+    // "Geometry shader inputs, tessellation control shader inputs and outputs, and tessellation
+    // evaluation inputs all have an additional level of arrayness relative to other shader inputs
+    // and outputs. This outer array level is removed from the type before considering how many
+    // locations the type consumes."
+    std::vector<unsigned int> arr =
+        StripVaryingArrayDimension(frontVarying.varying, frontVarying.stage, backVarying.varying,
+                                   backVarying.stage, isStructField());
+    return arr.empty() ? 1u : arr.back();
+}
+
 // Implementation of VaryingPacking
 VaryingPacking::VaryingPacking() = default;
 
@@ -275,7 +333,7 @@ bool VaryingPacking::packVaryingIntoRegisterMap(PackMode packMode,
     // "Arrays of size N are assumed to take N times the size of the base type"
     // GLSL ES 3.10 section 4.3.6: Output variables cannot be arrays of arrays or arrays of
     // structures, so we may use getBasicTypeElementCount().
-    const unsigned int elementCount = varying.getBasicTypeElementCount();
+    const unsigned int elementCount = packedVarying.getBasicTypeElementCount();
     varyingRows *= (packedVarying.isTransformFeedbackArrayElement() ? 1 : elementCount);
 
     unsigned int maxVaryingVectors = static_cast<unsigned int>(mRegisterMap.size());
@@ -294,7 +352,7 @@ bool VaryingPacking::packVaryingIntoRegisterMap(PackMode packMode,
         {
             if (isRegisterRangeFree(row, 0, varyingRows, varyingColumns))
             {
-                insertVaryingIntoRegisterMap(row, 0, packedVarying);
+                insertVaryingIntoRegisterMap(row, 0, varyingColumns, packedVarying);
                 return true;
             }
         }
@@ -308,7 +366,7 @@ bool VaryingPacking::packVaryingIntoRegisterMap(PackMode packMode,
             {
                 if (isRegisterRangeFree(r, 2, varyingRows, 2))
                 {
-                    insertVaryingIntoRegisterMap(r, 2, packedVarying);
+                    insertVaryingIntoRegisterMap(r, 2, varyingColumns, packedVarying);
                     return true;
                 }
             }
@@ -414,16 +472,15 @@ bool VaryingPacking::isRegisterRangeFree(unsigned int registerRow,
 
 void VaryingPacking::insertVaryingIntoRegisterMap(unsigned int registerRow,
                                                   unsigned int registerColumn,
+                                                  unsigned int varyingColumns,
                                                   const PackedVarying &packedVarying)
 {
-    unsigned int varyingRows    = 0;
-    unsigned int varyingColumns = 0;
+    unsigned int varyingRows = 0;
 
     const sh::ShaderVariable &varying = packedVarying.varying();
     ASSERT(!varying.isStruct());
     GLenum transposedType = gl::TransposeMatrixType(varying.type);
     varyingRows           = gl::VariableRowCount(transposedType);
-    varyingColumns        = gl::VariableColumnCount(transposedType);
 
     PackedVaryingRegister registerInfo;
     registerInfo.packedVarying  = &packedVarying;
@@ -431,7 +488,7 @@ void VaryingPacking::insertVaryingIntoRegisterMap(unsigned int registerRow,
 
     // GLSL ES 3.10 section 4.3.6: Output variables cannot be arrays of arrays or arrays of
     // structures, so we may use getBasicTypeElementCount().
-    const unsigned int arrayElementCount = varying.getBasicTypeElementCount();
+    const unsigned int arrayElementCount = packedVarying.getBasicTypeElementCount();
     for (unsigned int arrayElement = 0; arrayElement < arrayElementCount; ++arrayElement)
     {
         if (packedVarying.isTransformFeedbackArrayElement() &&
@@ -601,6 +658,7 @@ void VaryingPacking::collectUserVaryingFieldTF(const ProgramVaryingRef &ref,
 
 void VaryingPacking::collectVarying(const sh::ShaderVariable &varying,
                                     const ProgramVaryingRef &ref,
+                                    PackMode packMode,
                                     VaryingUniqueFullNames *uniqueFullNames)
 {
     const sh::ShaderVariable *input  = ref.frontShader;
@@ -608,19 +666,9 @@ void VaryingPacking::collectVarying(const sh::ShaderVariable &varying,
 
     if (varying.isStruct())
     {
-        const std::vector<unsigned int> &arraySizes = varying.arraySizes;
-        size_t arrayDimensions                      = arraySizes.size();
-
-        // Geometry shader inputs have an extra level of array-ness that should be
-        // removed.
-        if (&varying == output && ref.backShaderStage == ShaderType::Geometry)
-        {
-            ASSERT(arrayDimensions > 0);
-            --arrayDimensions;
-        }
-
-        ASSERT(arrayDimensions <= 1);
-        const bool isArray     = arrayDimensions > 0;
+        std::vector<unsigned int> arraySizes = StripVaryingArrayDimension(
+            ref.frontShader, ref.frontShaderStage, ref.backShader, ref.backShaderStage, false);
+        const bool isArray     = !arraySizes.empty();
         const GLuint arraySize = isArray ? arraySizes[0] : 1;
 
         for (GLuint arrayIndex = 0; arrayIndex < arraySize; ++arrayIndex)
@@ -628,14 +676,36 @@ void VaryingPacking::collectVarying(const sh::ShaderVariable &varying,
             const GLuint effectiveArrayIndex = isArray ? arrayIndex : GL_INVALID_INDEX;
             for (GLuint fieldIndex = 0; fieldIndex < varying.fields.size(); ++fieldIndex)
             {
-                if (varying.fields[fieldIndex].isStruct())
+                const sh::ShaderVariable &fieldVarying = varying.fields[fieldIndex];
+                if (ShouldSkipPackedVarying(fieldVarying, packMode))
                 {
+                    continue;
+                }
 
-                    for (GLuint nestedIndex = 0;
-                         nestedIndex < varying.fields[fieldIndex].fields.size(); nestedIndex++)
+                if (fieldVarying.isStruct())
+                {
+                    if (fieldVarying.isArray())
                     {
-                        collectUserVaryingField(ref, effectiveArrayIndex, fieldIndex, nestedIndex,
-                                                uniqueFullNames);
+                        unsigned int structFieldArraySize = fieldVarying.arraySizes[0];
+                        for (unsigned int fieldArrayIndex = 0;
+                             fieldArrayIndex < structFieldArraySize; ++fieldArrayIndex)
+                        {
+                            for (GLuint nestedIndex = 0; nestedIndex < fieldVarying.fields.size();
+                                 nestedIndex++)
+                            {
+                                collectUserVaryingField(ref, effectiveArrayIndex, fieldIndex,
+                                                        nestedIndex, uniqueFullNames);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        for (GLuint nestedIndex = 0; nestedIndex < fieldVarying.fields.size();
+                             nestedIndex++)
+                        {
+                            collectUserVaryingField(ref, effectiveArrayIndex, fieldIndex,
+                                                    nestedIndex, uniqueFullNames);
+                        }
                     }
                 }
                 else
@@ -787,12 +857,9 @@ bool VaryingPacking::collectAndPackUserVaryings(gl::InfoLog &infoLog,
         {
             const sh::ShaderVariable *varying = output ? output : input;
 
-            // Don't count gl_Position. Also don't count gl_PointSize for D3D9.
-            if (varying->name != "gl_Position" &&
-                !(varying->name == "gl_PointSize" &&
-                  packMode == PackMode::ANGLE_NON_CONFORMANT_D3D9))
+            if (!ShouldSkipPackedVarying(*varying, packMode))
             {
-                collectVarying(*varying, ref, &uniqueFullNames);
+                collectVarying(*varying, ref, packMode, &uniqueFullNames);
                 continue;
             }
         }

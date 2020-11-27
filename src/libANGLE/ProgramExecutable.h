@@ -157,6 +157,13 @@ class ProgramExecutable final : public angle::Subject
         return isCompute() ? mLinkedComputeShaderStages.count()
                            : mLinkedGraphicsShaderStages.count();
     }
+    bool hasLinkedTessellationShader() const
+    {
+        return mLinkedGraphicsShaderStages[ShaderType::TessControl] ||
+               mLinkedGraphicsShaderStages[ShaderType::TessEvaluation];
+    }
+
+    ShaderType getTransformFeedbackStage() const;
 
     ShaderType getLinkedTransformFeedbackStage() const;
 
@@ -443,6 +450,13 @@ class ProgramExecutable final : public angle::Subject
     PrimitiveMode mGeometryShaderOutputPrimitiveType;
     int mGeometryShaderInvocations;
     int mGeometryShaderMaxVertices;
+
+    // GL_EXT_tessellation_shader
+    int mTessControlShaderVertices;
+    GLenum mTessGenMode;
+    GLenum mTessGenSpacing;
+    GLenum mTessGenVertexOrder;
+    GLenum mTessGenPointMode;
 };
 }  // namespace gl
 

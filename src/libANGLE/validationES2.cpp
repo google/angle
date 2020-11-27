@@ -3755,6 +3755,23 @@ bool ValidateCreateShader(const Context *context, ShaderType type)
                 return false;
             }
             break;
+
+        case ShaderType::TessControl:
+            if (!context->getExtensions().tessellationShaderEXT)
+            {
+                context->validationError(GL_INVALID_ENUM, kInvalidShaderType);
+                return false;
+            }
+            break;
+
+        case ShaderType::TessEvaluation:
+            if (!context->getExtensions().tessellationShaderEXT)
+            {
+                context->validationError(GL_INVALID_ENUM, kInvalidShaderType);
+                return false;
+            }
+            break;
+
         default:
             context->validationError(GL_INVALID_ENUM, kInvalidShaderType);
             return false;

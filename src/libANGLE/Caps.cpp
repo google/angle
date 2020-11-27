@@ -1065,6 +1065,7 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["GL_OES_texture_cube_map_array"] = enableableExtension(&Extensions::textureCubeMapArrayOES);
         map["GL_EXT_texture_cube_map_array"] = enableableExtension(&Extensions::textureCubeMapArrayEXT);
         map["GL_EXT_shadow_samplers"] = enableableExtension(&Extensions::shadowSamplersEXT);
+        map["GL_EXT_tessellation_shader"] = enableableExtension(&Extensions::tessellationShaderEXT);
         // clang-format on
 
 #if defined(ANGLE_ENABLE_ASSERTS)
@@ -1343,6 +1344,36 @@ Caps GenerateMinimumCaps(const Version &clientVersion, const Extensions &extensi
         caps.maxUniformBufferBindings     = 48;
         caps.maxCombinedUniformBlocks     = 36;
         caps.maxCombinedTextureImageUnits = 64;
+    }
+
+    if (extensions.tessellationShaderEXT)
+    {
+        // Table 20.43 "Implementation Dependent Tessellation Shader Limits"
+        caps.maxTessControlInputComponents                          = 64;
+        caps.maxTessControlOutputComponents                         = 64;
+        caps.maxShaderTextureImageUnits[ShaderType::TessControl]    = 16;
+        caps.maxShaderUniformComponents[ShaderType::TessControl]    = 1024;
+        caps.maxTessControlTotalOutputComponents                    = 2048;
+        caps.maxShaderImageUniforms[ShaderType::TessControl]        = 0;
+        caps.maxShaderAtomicCounters[ShaderType::TessControl]       = 0;
+        caps.maxShaderAtomicCounterBuffers[ShaderType::TessControl] = 0;
+
+        caps.maxTessPatchComponents = 120;
+        caps.maxPatchVertices       = 32;
+        caps.maxTessGenLevel        = 64;
+
+        caps.maxTessEvaluationInputComponents                          = 64;
+        caps.maxTessEvaluationOutputComponents                         = 64;
+        caps.maxShaderTextureImageUnits[ShaderType::TessEvaluation]    = 16;
+        caps.maxShaderUniformComponents[ShaderType::TessEvaluation]    = 1024;
+        caps.maxShaderImageUniforms[ShaderType::TessEvaluation]        = 0;
+        caps.maxShaderAtomicCounters[ShaderType::TessEvaluation]       = 0;
+        caps.maxShaderAtomicCounterBuffers[ShaderType::TessEvaluation] = 0;
+
+        // Table 20.46 "Implementation Dependent Aggregate Shader Limits"
+        caps.maxUniformBufferBindings     = 72;
+        caps.maxCombinedUniformBlocks     = 60;
+        caps.maxCombinedTextureImageUnits = 96;
     }
 
     for (ShaderType shaderType : AllShaderTypes())

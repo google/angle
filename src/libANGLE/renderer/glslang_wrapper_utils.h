@@ -24,6 +24,8 @@ enum class GlslangError
 
 constexpr gl::ShaderMap<const char *> kDefaultUniformNames = {
     {gl::ShaderType::Vertex, sh::vk::kDefaultUniformsNameVS},
+    {gl::ShaderType::TessControl, sh::vk::kDefaultUniformsNameTCS},
+    {gl::ShaderType::TessEvaluation, sh::vk::kDefaultUniformsNameTES},
     {gl::ShaderType::Geometry, sh::vk::kDefaultUniformsNameGS},
     {gl::ShaderType::Fragment, sh::vk::kDefaultUniformsNameFS},
     {gl::ShaderType::Compute, sh::vk::kDefaultUniformsNameCS},

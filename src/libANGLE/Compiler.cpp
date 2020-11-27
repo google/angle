@@ -236,6 +236,37 @@ Compiler::Compiler(rx::GLImplFactory *implFactory, const State &state, egl::Disp
     mResources.MaxGeometryShaderInvocations   = caps.maxGeometryShaderInvocations;
     mResources.MaxGeometryImageUniforms       = caps.maxShaderImageUniforms[ShaderType::Geometry];
 
+    // Tessellation Shader constants
+    mResources.EXT_tessellation_shader        = extensions.tessellationShaderEXT;
+    mResources.MaxTessControlInputComponents  = caps.maxTessControlInputComponents;
+    mResources.MaxTessControlOutputComponents = caps.maxTessControlOutputComponents;
+    mResources.MaxTessControlTextureImageUnits =
+        caps.maxShaderTextureImageUnits[ShaderType::TessControl];
+    mResources.MaxTessControlUniformComponents =
+        caps.maxShaderUniformComponents[ShaderType::TessControl];
+    mResources.MaxTessControlTotalOutputComponents = caps.maxTessControlTotalOutputComponents;
+    mResources.MaxTessControlImageUniforms  = caps.maxShaderImageUniforms[ShaderType::TessControl];
+    mResources.MaxTessControlAtomicCounters = caps.maxShaderAtomicCounters[ShaderType::TessControl];
+    mResources.MaxTessControlAtomicCounterBuffers =
+        caps.maxShaderAtomicCounterBuffers[ShaderType::TessControl];
+
+    mResources.MaxTessPatchComponents = caps.maxTessPatchComponents;
+    mResources.MaxPatchVertices       = caps.maxPatchVertices;
+    mResources.MaxTessGenLevel        = caps.maxTessGenLevel;
+
+    mResources.MaxTessEvaluationInputComponents  = caps.maxTessEvaluationInputComponents;
+    mResources.MaxTessEvaluationOutputComponents = caps.maxTessEvaluationOutputComponents;
+    mResources.MaxTessEvaluationTextureImageUnits =
+        caps.maxShaderTextureImageUnits[ShaderType::TessEvaluation];
+    mResources.MaxTessEvaluationUniformComponents =
+        caps.maxShaderUniformComponents[ShaderType::TessEvaluation];
+    mResources.MaxTessEvaluationImageUniforms =
+        caps.maxShaderImageUniforms[ShaderType::TessEvaluation];
+    mResources.MaxTessEvaluationAtomicCounters =
+        caps.maxShaderAtomicCounters[ShaderType::TessEvaluation];
+    mResources.MaxTessEvaluationAtomicCounterBuffers =
+        caps.maxShaderAtomicCounterBuffers[ShaderType::TessEvaluation];
+
     // Subpixel bits.
     mResources.SubPixelBits = static_cast<int>(caps.subPixelBits);
 }

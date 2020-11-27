@@ -173,15 +173,18 @@
 //// General Vulkan expectations
 ////
 
-// Tessellation geometry interaction:
-3572 VULKAN : dEQP-GLES31.functional.tessellation_geometry_interaction.* = FAIL
-
 // Cannot create 2D (array) view of 3D texture.
 3886 VULKAN : dEQP-GLES31.functional.image_load_store.3d.*layer = FAIL
 
 // Geometry shader support:
 5430 VULKAN : dEQP-GLES31.functional.geometry_shading.query.primitives_generated_* = FAIL
 5452 VULKAN : dEQP-GLES31.functional.geometry_shading.layered.layer_provoking_vertex_* = FAIL
+
+// Tessellation shader support:
+5557 VULKAN : dEQP-GLES31.functional.shaders.linkage.es31.tessellation.varying.rules.unspecified_vertex_count = FAIL
+5557 VULKAN : dEQP-GLES31.functional.shaders.linkage.es31.tessellation.varying.rules.unspecified_primitive_mode = FAIL
+5557 VULKAN : dEQP-GLES31.functional.tessellation.shader_input_output.barrier = FAIL
+5557 VULKAN : dEQP-GLES31.functional.tessellation.shader_input_output.gl_position_tcs_to_tes = FAIL
 
 ////
 //// AMD Vulkan expectations

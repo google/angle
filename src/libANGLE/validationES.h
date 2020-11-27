@@ -360,12 +360,6 @@ const char *ValidateDrawElementsStates(const Context *context);
 
 ANGLE_INLINE bool ValidateDrawBase(const Context *context, PrimitiveMode mode)
 {
-    if (!context->getStateCache().isValidDrawMode(mode))
-    {
-        RecordDrawModeError(context, mode);
-        return false;
-    }
-
     intptr_t drawStatesError = context->getStateCache().getBasicDrawStatesError(context);
     if (drawStatesError)
     {
@@ -377,6 +371,12 @@ ANGLE_INLINE bool ValidateDrawBase(const Context *context, PrimitiveMode mode)
         GLenum errorCode =
             isFramebufferIncomplete ? GL_INVALID_FRAMEBUFFER_OPERATION : GL_INVALID_OPERATION;
         context->validationError(errorCode, errorMessage);
+        return false;
+    }
+
+    if (!context->getStateCache().isValidDrawMode(mode))
+    {
+        RecordDrawModeError(context, mode);
         return false;
     }
 
@@ -859,7 +859,8 @@ ANGLE_INLINE bool ValidateDrawArraysCommon(const Context *context,
         return false;
     }
 
-    if (context->getStateCache().isTransformFeedbackActiveUnpaused())
+    if (context->getStateCache().isTransformFeedbackActiveUnpaused() &&
+        !context->supportsGeometryOrTesselation())
     {
         const State &state                      = context->getState();
         TransformFeedback *curTransformFeedback = state.getCurrentTransformFeedback();

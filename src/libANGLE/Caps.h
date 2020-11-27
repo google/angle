@@ -695,6 +695,9 @@ struct Extensions
     // GL_ANGLE_get_tex_level_parameter
     bool getTexLevelParameterANGLE = false;
 
+    // GL_EXT_tessellation_shader
+    bool tessellationShaderEXT = false;
+
     // GL_EXT_copy_image
     bool copyImageEXT = false;
 
@@ -934,6 +937,18 @@ struct Caps
     GLint maxGeometryOutputVertices        = 0;
     GLint maxGeometryTotalOutputComponents = 0;
     GLint maxGeometryShaderInvocations     = 0;
+
+    // GL_EXT_tessellation_shader
+    GLint maxTessControlInputComponents       = 0;
+    GLint maxTessControlOutputComponents      = 0;
+    GLint maxTessControlTotalOutputComponents = 0;
+
+    GLint maxTessPatchComponents = 0;
+    GLint maxPatchVertices       = 0;
+    GLint maxTessGenLevel        = 0;
+
+    GLint maxTessEvaluationInputComponents  = 0;
+    GLint maxTessEvaluationOutputComponents = 0;
 
     GLuint subPixelBits = 4;
 

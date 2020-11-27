@@ -735,6 +735,13 @@ GLint GetInputResourceProperty(const Program *program, GLuint index, GLenum prop
             return program->getState().getFirstAttachedShaderStageType() == ShaderType::Compute;
         case GL_REFERENCED_BY_GEOMETRY_SHADER_EXT:
             return program->getState().getFirstAttachedShaderStageType() == ShaderType::Geometry;
+        case GL_REFERENCED_BY_TESS_CONTROL_SHADER_EXT:
+            return program->getState().getFirstAttachedShaderStageType() == ShaderType::TessControl;
+        case GL_REFERENCED_BY_TESS_EVALUATION_SHADER_EXT:
+            return program->getState().getFirstAttachedShaderStageType() ==
+                   ShaderType::TessEvaluation;
+        case GL_IS_PER_PATCH_EXT:
+            return variable.isPatch;
 
         default:
             UNREACHABLE();
@@ -778,6 +785,13 @@ GLint GetOutputResourceProperty(const Program *program, GLuint index, const GLen
             return program->getState().getLastAttachedShaderStageType() == ShaderType::Compute;
         case GL_REFERENCED_BY_GEOMETRY_SHADER_EXT:
             return program->getState().getLastAttachedShaderStageType() == ShaderType::Geometry;
+        case GL_REFERENCED_BY_TESS_CONTROL_SHADER_EXT:
+            return program->getState().getLastAttachedShaderStageType() == ShaderType::TessControl;
+        case GL_REFERENCED_BY_TESS_EVALUATION_SHADER_EXT:
+            return program->getState().getLastAttachedShaderStageType() ==
+                   ShaderType::TessEvaluation;
+        case GL_IS_PER_PATCH_EXT:
+            return outputVariable.isPatch;
 
         default:
             UNREACHABLE();
@@ -1005,6 +1019,14 @@ void GetShaderVariableBufferResourceProperty(const ShaderVariableBuffer &buffer,
             break;
         case GL_REFERENCED_BY_GEOMETRY_SHADER_EXT:
             params[(*outputPosition)++] = static_cast<GLint>(buffer.isActive(ShaderType::Geometry));
+            break;
+        case GL_REFERENCED_BY_TESS_CONTROL_SHADER_EXT:
+            params[(*outputPosition)++] =
+                static_cast<GLint>(buffer.isActive(ShaderType::TessControl));
+            break;
+        case GL_REFERENCED_BY_TESS_EVALUATION_SHADER_EXT:
+            params[(*outputPosition)++] =
+                static_cast<GLint>(buffer.isActive(ShaderType::TessEvaluation));
             break;
         default:
             UNREACHABLE();
@@ -1346,6 +1368,21 @@ void QueryProgramiv(Context *context, const Program *program, GLenum pname, GLin
             break;
         case GL_GEOMETRY_SHADER_INVOCATIONS_EXT:
             *params = program->getGeometryShaderInvocations();
+            break;
+        case GL_TESS_CONTROL_OUTPUT_VERTICES_EXT:
+            *params = program->getTessControlShaderVertices();
+            break;
+        case GL_TESS_GEN_MODE_EXT:
+            *params = program->getTessGenMode();
+            break;
+        case GL_TESS_GEN_SPACING_EXT:
+            *params = program->getTessGenSpacing() ? program->getTessGenSpacing() : GL_EQUAL;
+            break;
+        case GL_TESS_GEN_VERTEX_ORDER:
+            *params = program->getTessGenVertexOrder() ? program->getTessGenVertexOrder() : GL_CCW;
+            break;
+        case GL_TESS_GEN_POINT_MODE_EXT:
+            *params = program->getTessGenPointMode() ? GL_TRUE : GL_FALSE;
             break;
         default:
             UNREACHABLE();
@@ -1866,6 +1903,12 @@ GLint GetUniformResourceProperty(const Program *program, GLuint index, const GLe
         case GL_REFERENCED_BY_GEOMETRY_SHADER_EXT:
             return uniform.isActive(ShaderType::Geometry);
 
+        case GL_REFERENCED_BY_TESS_CONTROL_SHADER_EXT:
+            return uniform.isActive(ShaderType::TessControl);
+
+        case GL_REFERENCED_BY_TESS_EVALUATION_SHADER_EXT:
+            return uniform.isActive(ShaderType::TessEvaluation);
+
         case GL_ATOMIC_COUNTER_BUFFER_INDEX:
             return (uniform.isAtomicCounter() ? uniform.bufferIndex : -1);
 
@@ -1911,6 +1954,12 @@ GLint GetBufferVariableResourceProperty(const Program *program, GLuint index, co
 
         case GL_REFERENCED_BY_GEOMETRY_SHADER_EXT:
             return bufferVariable.isActive(ShaderType::Geometry);
+
+        case GL_REFERENCED_BY_TESS_CONTROL_SHADER_EXT:
+            return bufferVariable.isActive(ShaderType::TessControl);
+
+        case GL_REFERENCED_BY_TESS_EVALUATION_SHADER_EXT:
+            return bufferVariable.isActive(ShaderType::TessEvaluation);
 
         case GL_TOP_LEVEL_ARRAY_SIZE:
             return bufferVariable.topLevelArraySize;
@@ -3781,6 +3830,45 @@ bool GetQueryParameterInfo(const State &glState,
             case GL_MAX_GEOMETRY_ATOMIC_COUNTERS_EXT:
             case GL_MAX_GEOMETRY_IMAGE_UNIFORMS_EXT:
             case GL_MAX_GEOMETRY_SHADER_STORAGE_BLOCKS_EXT:
+                *type      = GL_INT;
+                *numParams = 1;
+                return true;
+        }
+    }
+
+    if (extensions.tessellationShaderEXT)
+    {
+        switch (pname)
+        {
+            case GL_PRIMITIVE_RESTART_FOR_PATCHES_SUPPORTED:
+                *type      = GL_BOOL;
+                *numParams = 1;
+                return true;
+            case GL_PATCH_VERTICES:
+            case GL_MAX_PATCH_VERTICES_EXT:
+            case GL_MAX_TESS_GEN_LEVEL_EXT:
+            case GL_MAX_TESS_CONTROL_UNIFORM_COMPONENTS_EXT:
+            case GL_MAX_TESS_EVALUATION_UNIFORM_COMPONENTS_EXT:
+            case GL_MAX_TESS_CONTROL_TEXTURE_IMAGE_UNITS_EXT:
+            case GL_MAX_TESS_EVALUATION_TEXTURE_IMAGE_UNITS_EXT:
+            case GL_MAX_TESS_CONTROL_OUTPUT_COMPONENTS_EXT:
+            case GL_MAX_TESS_PATCH_COMPONENTS_EXT:
+            case GL_MAX_TESS_CONTROL_TOTAL_OUTPUT_COMPONENTS_EXT:
+            case GL_MAX_TESS_EVALUATION_OUTPUT_COMPONENTS_EXT:
+            case GL_MAX_TESS_CONTROL_UNIFORM_BLOCKS_EXT:
+            case GL_MAX_TESS_EVALUATION_UNIFORM_BLOCKS_EXT:
+            case GL_MAX_TESS_CONTROL_INPUT_COMPONENTS_EXT:
+            case GL_MAX_TESS_EVALUATION_INPUT_COMPONENTS_EXT:
+            case GL_MAX_COMBINED_TESS_CONTROL_UNIFORM_COMPONENTS_EXT:
+            case GL_MAX_COMBINED_TESS_EVALUATION_UNIFORM_COMPONENTS_EXT:
+            case GL_MAX_TESS_CONTROL_ATOMIC_COUNTER_BUFFERS_EXT:
+            case GL_MAX_TESS_EVALUATION_ATOMIC_COUNTER_BUFFERS_EXT:
+            case GL_MAX_TESS_CONTROL_ATOMIC_COUNTERS_EXT:
+            case GL_MAX_TESS_EVALUATION_ATOMIC_COUNTERS_EXT:
+            case GL_MAX_TESS_CONTROL_IMAGE_UNIFORMS_EXT:
+            case GL_MAX_TESS_EVALUATION_IMAGE_UNIFORMS_EXT:
+            case GL_MAX_TESS_CONTROL_SHADER_STORAGE_BLOCKS_EXT:
+            case GL_MAX_TESS_EVALUATION_SHADER_STORAGE_BLOCKS_EXT:
                 *type      = GL_INT;
                 *numParams = 1;
                 return true;

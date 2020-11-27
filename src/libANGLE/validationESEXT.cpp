@@ -1145,6 +1145,30 @@ bool ValidateFramebufferFetchBarrierEXT(const Context *context)
 
 bool ValidatePatchParameteriEXT(const Context *context, GLenum pname, GLint value)
 {
+    if (!context->getExtensions().tessellationShaderEXT)
+    {
+        context->validationError(GL_INVALID_OPERATION, kTessellationShaderExtensionNotEnabled);
+        return false;
+    }
+
+    if (pname != GL_PATCH_VERTICES)
+    {
+        context->validationError(GL_INVALID_ENUM, kInvalidPname);
+        return false;
+    }
+
+    if (value <= 0)
+    {
+        context->validationError(GL_INVALID_VALUE, kInvalidValueNonPositive);
+        return false;
+    }
+
+    if (value > context->getCaps().maxPatchVertices)
+    {
+        context->validationError(GL_INVALID_VALUE, kInvalidValueExceedsMaxPatchSize);
+        return false;
+    }
+
     return true;
 }
 

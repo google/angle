@@ -59,7 +59,7 @@ LinkMismatchError LinkValidateUniforms(const sh::ShaderVariable &uniform1,
     // Validate precision match of uniforms iff they are statically used
     bool validatePrecision = uniform1.staticUse && uniform2.staticUse && validatePrecisionFeature;
     LinkMismatchError linkError = LinkValidateProgramVariables(
-        uniform1, uniform2, validatePrecision, true, mismatchedStructFieldName);
+        uniform1, uniform2, validatePrecision, false, false, mismatchedStructFieldName);
     if (linkError != LinkMismatchError::NO_MISMATCH)
     {
         return linkError;
@@ -131,6 +131,8 @@ GLuint GetMaximumShaderUniformVectors(ShaderType shaderType, const Caps &caps)
 
         case ShaderType::Compute:
         case ShaderType::Geometry:
+        case ShaderType::TessControl:
+        case ShaderType::TessEvaluation:
             return static_cast<GLuint>(caps.maxShaderUniformComponents[shaderType]) / 4;
 
         default:
@@ -678,35 +680,29 @@ void GetFilteredVaryings(const std::vector<sh::ShaderVariable> &varyings,
 LinkMismatchError LinkValidateVaryings(const sh::ShaderVariable &outputVarying,
                                        const sh::ShaderVariable &inputVarying,
                                        int shaderVersion,
-                                       bool validateGeometryShaderInputVarying,
+                                       ShaderType frontShaderType,
+                                       ShaderType backShaderType,
                                        bool isSeparable,
                                        std::string *mismatchedStructFieldName)
 {
-    if (validateGeometryShaderInputVarying)
-    {
-        // [GL_EXT_geometry_shader] Section 11.1gs.4.3:
-        // The OpenGL ES Shading Language doesn't support multi-dimensional arrays as shader inputs
-        // or outputs.
-        ASSERT(inputVarying.arraySizes.size() == 1u);
-
-        // Geometry shader input varyings are not treated as arrays, so a vertex array output
-        // varying cannot match a geometry shader input varying.
-        // [GL_EXT_geometry_shader] Section 7.4.1:
-        // Geometry shader per-vertex input variables and blocks are required to be declared as
-        // arrays, with each element representing input or output values for a single vertex of a
-        // multi-vertex primitive. For the purposes of interface matching, such variables and blocks
-        // are treated as though they were not declared as arrays.
-        if (outputVarying.isArray())
-        {
-            return LinkMismatchError::ARRAY_SIZE_MISMATCH;
-        }
-    }
+    // [ES 3.2 spec] 7.4.1 Shader Interface Matching:
+    // Tessellation control shader per-vertex output variables and blocks and tessellation control,
+    // tessellation evaluation, and geometry shader per-vertex input variables and blocks are
+    // required to be declared as arrays, with each element representing input or output values for
+    // a single vertex of a multi-vertex primitive. For the purposes of interface matching, such
+    // variables and blocks are treated as though they were not declared as arrays.
+    bool treatOutputAsNonArray =
+        (frontShaderType == ShaderType::TessControl && !outputVarying.isPatch);
+    bool treatInputAsNonArray =
+        ((backShaderType == ShaderType::TessControl ||
+          backShaderType == ShaderType::TessEvaluation || backShaderType == ShaderType::Geometry) &&
+         !inputVarying.isPatch);
 
     // Skip the validation on the array sizes between a vertex output varying and a geometry input
     // varying as it has been done before.
     bool validatePrecision      = isSeparable && (shaderVersion > 100);
     LinkMismatchError linkError = LinkValidateProgramVariables(
-        outputVarying, inputVarying, validatePrecision, !validateGeometryShaderInputVarying,
+        outputVarying, inputVarying, validatePrecision, treatOutputAsNonArray, treatInputAsNonArray,
         mismatchedStructFieldName);
     if (linkError != LinkMismatchError::NO_MISMATCH)
     {
@@ -733,12 +729,11 @@ LinkMismatchError LinkValidateVaryings(const sh::ShaderVariable &outputVarying,
     return LinkMismatchError::NO_MISMATCH;
 }
 
-bool DoShaderVariablesMatch(int outputShaderVersion,
-                            ShaderType outputShaderType,
-                            ShaderType inputShaderType,
+bool DoShaderVariablesMatch(int frontShaderVersion,
+                            ShaderType frontShaderType,
+                            ShaderType backShaderType,
                             const sh::ShaderVariable &input,
                             const sh::ShaderVariable &output,
-                            bool validateGeometryShaderInputs,
                             bool isSeparable,
                             gl::InfoLog &infoLog)
 {
@@ -768,12 +763,12 @@ bool DoShaderVariablesMatch(int outputShaderVersion,
     {
         std::string mismatchedStructFieldName;
         LinkMismatchError linkError =
-            LinkValidateVaryings(output, input, outputShaderVersion, validateGeometryShaderInputs,
+            LinkValidateVaryings(output, input, frontShaderVersion, frontShaderType, backShaderType,
                                  isSeparable, &mismatchedStructFieldName);
         if (linkError != LinkMismatchError::NO_MISMATCH)
         {
             LogLinkMismatch(infoLog, input.name, "varying", linkError, mismatchedStructFieldName,
-                            outputShaderType, inputShaderType);
+                            frontShaderType, backShaderType);
             return false;
         }
 
@@ -1608,18 +1603,17 @@ bool LinkValidateProgramGlobalNames(InfoLog &infoLog, const HasAttachedShaders &
 // [OpenGL ES 3.2] Chapter 7.4.1 "Shader Interface Matching"
 bool LinkValidateShaderInterfaceMatching(const std::vector<sh::ShaderVariable> &outputVaryings,
                                          const std::vector<sh::ShaderVariable> &inputVaryings,
-                                         ShaderType outputShaderType,
-                                         ShaderType inputShaderType,
-                                         int outputShaderVersion,
-                                         int inputShaderVersion,
+                                         ShaderType frontShaderType,
+                                         ShaderType backShaderType,
+                                         int frontShaderVersion,
+                                         int backShaderVersion,
                                          bool isSeparable,
                                          gl::InfoLog &infoLog)
 {
-    ASSERT(outputShaderVersion == inputShaderVersion);
+    ASSERT(frontShaderVersion == backShaderVersion);
 
     std::vector<const sh::ShaderVariable *> filteredInputVaryings;
     std::vector<const sh::ShaderVariable *> filteredOutputVaryings;
-    bool validateGeometryShaderInputs = inputShaderType == ShaderType::Geometry;
 
     GetFilteredVaryings(inputVaryings, &filteredInputVaryings);
     GetFilteredVaryings(outputVaryings, &filteredOutputVaryings);
@@ -1627,16 +1621,16 @@ bool LinkValidateShaderInterfaceMatching(const std::vector<sh::ShaderVariable> &
     // Separable programs require the number of inputs and outputs match
     if (isSeparable && filteredInputVaryings.size() < filteredOutputVaryings.size())
     {
-        infoLog << GetShaderTypeString(inputShaderType)
+        infoLog << GetShaderTypeString(backShaderType)
                 << " does not consume all varyings generated by "
-                << GetShaderTypeString(outputShaderType);
+                << GetShaderTypeString(frontShaderType);
         return false;
     }
     if (isSeparable && filteredInputVaryings.size() > filteredOutputVaryings.size())
     {
-        infoLog << GetShaderTypeString(outputShaderType)
+        infoLog << GetShaderTypeString(frontShaderType)
                 << " does not generate all varyings consumed by "
-                << GetShaderTypeString(inputShaderType);
+                << GetShaderTypeString(backShaderType);
         return false;
     }
 
@@ -1646,9 +1640,8 @@ bool LinkValidateShaderInterfaceMatching(const std::vector<sh::ShaderVariable> &
         bool match = false;
         for (const sh::ShaderVariable *output : filteredOutputVaryings)
         {
-            if (DoShaderVariablesMatch(outputShaderVersion, outputShaderType, inputShaderType,
-                                       *input, *output, validateGeometryShaderInputs, isSeparable,
-                                       infoLog))
+            if (DoShaderVariablesMatch(frontShaderVersion, frontShaderType, backShaderType, *input,
+                                       *output, isSeparable, infoLog))
             {
                 match = true;
                 break;
@@ -1661,9 +1654,8 @@ bool LinkValidateShaderInterfaceMatching(const std::vector<sh::ShaderVariable> &
         if (!match && input->staticUse)
         {
             const std::string &name = input->isShaderIOBlock ? input->structName : input->name;
-            infoLog << GetShaderTypeString(inputShaderType) << " varying " << name
-                    << " does not match any " << GetShaderTypeString(outputShaderType)
-                    << " varying";
+            infoLog << GetShaderTypeString(backShaderType) << " varying " << name
+                    << " does not match any " << GetShaderTypeString(frontShaderType) << " varying";
             return false;
         }
     }
@@ -1674,14 +1666,34 @@ bool LinkValidateShaderInterfaceMatching(const std::vector<sh::ShaderVariable> &
 LinkMismatchError LinkValidateProgramVariables(const sh::ShaderVariable &variable1,
                                                const sh::ShaderVariable &variable2,
                                                bool validatePrecision,
-                                               bool validateArraySize,
+                                               bool treatVariable1AsNonArray,
+                                               bool treatVariable2AsNonArray,
                                                std::string *mismatchedStructOrBlockMemberName)
 {
     if (variable1.type != variable2.type)
     {
         return LinkMismatchError::TYPE_MISMATCH;
     }
-    if (validateArraySize && variable1.arraySizes != variable2.arraySizes)
+
+    bool variable1IsArray = variable1.isArray();
+    bool variable2IsArray = variable2.isArray();
+    if (treatVariable1AsNonArray)
+    {
+        ASSERT(variable1IsArray);
+        variable1IsArray = false;
+    }
+    if (treatVariable2AsNonArray)
+    {
+        ASSERT(variable2IsArray);
+        variable2IsArray = false;
+    }
+    // TODO(anglebug.com/5557): Investigate interactions with arrays-of-arrays.
+    if (variable1IsArray != variable2IsArray)
+    {
+        return LinkMismatchError::ARRAYNESS_MISMATCH;
+    }
+    if (!treatVariable1AsNonArray && !treatVariable2AsNonArray &&
+        variable1.arraySizes != variable2.arraySizes)
     {
         return LinkMismatchError::ARRAY_SIZE_MISMATCH;
     }
@@ -1733,7 +1745,7 @@ LinkMismatchError LinkValidateProgramVariables(const sh::ShaderVariable &variabl
         }
 
         LinkMismatchError linkErrorOnField = LinkValidateProgramVariables(
-            member1, member2, validatePrecision, true, mismatchedStructOrBlockMemberName);
+            member1, member2, validatePrecision, false, false, mismatchedStructOrBlockMemberName);
         if (linkErrorOnField != LinkMismatchError::NO_MISMATCH)
         {
             AddProgramVariableParentPrefix(member1.name, mismatchedStructOrBlockMemberName);

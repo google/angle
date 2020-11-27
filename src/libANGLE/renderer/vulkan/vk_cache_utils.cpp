@@ -1593,7 +1593,8 @@ void GraphicsPipelineDesc::initDefaults(const ContextVk *contextVk)
               &inputAndBlend.attachments[gl::IMPLEMENTATION_MAX_DRAW_BUFFERS],
               blendAttachmentState);
 
-    inputAndBlend.primitive.topology = static_cast<uint16_t>(VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST);
+    SetBitField(inputAndBlend.primitive.topology, VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST);
+    SetBitField(inputAndBlend.primitive.patchVertices, 3);
     inputAndBlend.primitive.restartEnable = 0;
 
     // Viewport and scissor will be set to valid values when framebuffer being binded
@@ -1623,10 +1624,12 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
     const ShaderModule *vertexModule,
     const ShaderModule *fragmentModule,
     const ShaderModule *geometryModule,
+    const ShaderModule *tessControlModule,
+    const ShaderModule *tessEvaluationModule,
     const SpecializationConstants &specConsts,
     Pipeline *pipelineOut) const
 {
-    angle::FixedVector<VkPipelineShaderStageCreateInfo, 3> shaderStages;
+    angle::FixedVector<VkPipelineShaderStageCreateInfo, 5> shaderStages;
     VkPipelineVertexInputStateCreateInfo vertexInputState     = {};
     VkPipelineInputAssemblyStateCreateInfo inputAssemblyState = {};
     VkPipelineViewportStateCreateInfo viewportState           = {};
@@ -1634,9 +1637,11 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
     VkPipelineMultisampleStateCreateInfo multisampleState     = {};
     VkPipelineDepthStencilStateCreateInfo depthStencilState   = {};
     gl::DrawBuffersArray<VkPipelineColorBlendAttachmentState> blendAttachmentState;
-    VkPipelineColorBlendStateCreateInfo blendState = {};
-    VkSpecializationInfo specializationInfo        = {};
-    VkGraphicsPipelineCreateInfo createInfo        = {};
+    VkPipelineTessellationStateCreateInfo tessellationState             = {};
+    VkPipelineTessellationDomainOriginStateCreateInfo domainOriginState = {};
+    VkPipelineColorBlendStateCreateInfo blendState                      = {};
+    VkSpecializationInfo specializationInfo                             = {};
+    VkGraphicsPipelineCreateInfo createInfo                             = {};
 
     SpecializationConstantMap<VkSpecializationMapEntry> specializationEntries;
     InitializeSpecializationInfo(specConsts, &specializationEntries, &specializationInfo);
@@ -1648,6 +1653,26 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
                                VK_SHADER_STAGE_VERTEX_BIT, vertexModule->getHandle(),
                                specializationInfo, &vertexStage);
     shaderStages.push_back(vertexStage);
+
+    if (tessControlModule)
+    {
+        VkPipelineShaderStageCreateInfo tessControlStage = {};
+        SetPipelineShaderStageInfo(VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO,
+                                   VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT,
+                                   tessControlModule->getHandle(), specializationInfo,
+                                   &tessControlStage);
+        shaderStages.push_back(tessControlStage);
+    }
+
+    if (tessEvaluationModule)
+    {
+        VkPipelineShaderStageCreateInfo tessEvaluationStage = {};
+        SetPipelineShaderStageInfo(VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO,
+                                   VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT,
+                                   tessEvaluationModule->getHandle(), specializationInfo,
+                                   &tessEvaluationStage);
+        shaderStages.push_back(tessEvaluationStage);
+    }
 
     if (geometryModule)
     {
@@ -1678,8 +1703,8 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
     size_t unpackedSize = sizeof(shaderStages) + sizeof(vertexInputState) +
                           sizeof(inputAssemblyState) + sizeof(viewportState) + sizeof(rasterState) +
                           sizeof(multisampleState) + sizeof(depthStencilState) +
-                          sizeof(blendAttachmentState) + sizeof(blendState) + sizeof(bindingDescs) +
-                          sizeof(attributeDescs);
+                          sizeof(tessellationState) + sizeof(blendAttachmentState) +
+                          sizeof(blendState) + sizeof(bindingDescs) + sizeof(attributeDescs);
     ANGLE_UNUSED_VARIABLE(unpackedSize);
 
     gl::AttribArray<VkVertexInputBindingDivisorDescriptionEXT> divisorDesc;
@@ -1958,13 +1983,28 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
     dynamicState.dynamicStateCount = static_cast<uint32_t>(dynamicStateList.size());
     dynamicState.pDynamicStates    = dynamicStateList.data();
 
+    // tessellation State
+    if (tessControlModule && tessEvaluationModule)
+    {
+        domainOriginState.sType =
+            VK_STRUCTURE_TYPE_PIPELINE_TESSELLATION_DOMAIN_ORIGIN_STATE_CREATE_INFO;
+        domainOriginState.pNext        = NULL;
+        domainOriginState.domainOrigin = VK_TESSELLATION_DOMAIN_ORIGIN_LOWER_LEFT;
+
+        tessellationState.sType = VK_STRUCTURE_TYPE_PIPELINE_TESSELLATION_STATE_CREATE_INFO;
+        tessellationState.flags = 0;
+        tessellationState.pNext = &domainOriginState;
+        tessellationState.patchControlPoints =
+            static_cast<uint32_t>(inputAndBlend.primitive.patchVertices);
+    }
+
     createInfo.sType               = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
     createInfo.flags               = 0;
     createInfo.stageCount          = static_cast<uint32_t>(shaderStages.size());
     createInfo.pStages             = shaderStages.data();
     createInfo.pVertexInputState   = &vertexInputState;
     createInfo.pInputAssemblyState = &inputAssemblyState;
-    createInfo.pTessellationState  = nullptr;
+    createInfo.pTessellationState  = &tessellationState;
     createInfo.pViewportState      = &viewportState;
     createInfo.pRasterizationState = &rasterState;
     createInfo.pMultisampleState   = &multisampleState;
@@ -2517,6 +2557,14 @@ void GraphicsPipelineDesc::updateSubpass(GraphicsPipelineTransitionBits *transit
         SetBitField(mRasterizationAndMultisampleStateInfo.bits.subpass, subpass);
         transition->set(ANGLE_GET_TRANSITION_BIT(mRasterizationAndMultisampleStateInfo, bits));
     }
+}
+
+void GraphicsPipelineDesc::updatePatchVertices(GraphicsPipelineTransitionBits *transition,
+                                               GLuint value)
+{
+    SetBitField(mInputAssemblyAndColorBlendStateInfo.primitive.patchVertices, value);
+
+    transition->set(ANGLE_GET_TRANSITION_BIT(mInputAssemblyAndColorBlendStateInfo, primitive));
 }
 
 void GraphicsPipelineDesc::resetSubpass(GraphicsPipelineTransitionBits *transition)
@@ -3348,6 +3396,8 @@ angle::Result GraphicsPipelineCache::insertPipeline(
     const vk::ShaderModule *vertexModule,
     const vk::ShaderModule *fragmentModule,
     const vk::ShaderModule *geometryModule,
+    const vk::ShaderModule *tessControlModule,
+    const vk::ShaderModule *tessEvaluationModule,
     const vk::SpecializationConstants &specConsts,
     const vk::GraphicsPipelineDesc &desc,
     const vk::GraphicsPipelineDesc **descPtrOut,
@@ -3359,10 +3409,10 @@ angle::Result GraphicsPipelineCache::insertPipeline(
     if (contextVk != nullptr)
     {
         contextVk->getRenderer()->onNewGraphicsPipeline();
-        ANGLE_TRY(desc.initializePipeline(contextVk, pipelineCacheVk, compatibleRenderPass,
-                                          pipelineLayout, activeAttribLocationsMask,
-                                          programAttribsTypeMask, vertexModule, fragmentModule,
-                                          geometryModule, specConsts, &newPipeline));
+        ANGLE_TRY(desc.initializePipeline(
+            contextVk, pipelineCacheVk, compatibleRenderPass, pipelineLayout,
+            activeAttribLocationsMask, programAttribsTypeMask, vertexModule, fragmentModule,
+            geometryModule, tessControlModule, tessEvaluationModule, specConsts, &newPipeline));
     }
 
     // The Serial will be updated outside of this query.

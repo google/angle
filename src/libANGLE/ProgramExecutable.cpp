@@ -94,7 +94,12 @@ ProgramExecutable::ProgramExecutable()
       mGeometryShaderInputPrimitiveType(PrimitiveMode::Triangles),
       mGeometryShaderOutputPrimitiveType(PrimitiveMode::TriangleStrip),
       mGeometryShaderInvocations(1),
-      mGeometryShaderMaxVertices(0)
+      mGeometryShaderMaxVertices(0),
+      mTessControlShaderVertices(0),
+      mTessGenMode(GL_NONE),
+      mTessGenSpacing(GL_NONE),
+      mTessGenVertexOrder(GL_NONE),
+      mTessGenPointMode(GL_NONE)
 {
     reset();
 }
@@ -194,6 +199,12 @@ void ProgramExecutable::reset()
     mGeometryShaderOutputPrimitiveType = PrimitiveMode::TriangleStrip;
     mGeometryShaderInvocations         = 1;
     mGeometryShaderMaxVertices         = 0;
+
+    mTessControlShaderVertices = 0;
+    mTessGenMode               = GL_NONE;
+    mTessGenSpacing            = GL_NONE;
+    mTessGenVertexOrder        = GL_NONE;
+    mTessGenPointMode          = GL_NONE;
 }
 
 void ProgramExecutable::load(gl::BinaryInputStream *stream)
@@ -225,6 +236,12 @@ void ProgramExecutable::load(gl::BinaryInputStream *stream)
     mGeometryShaderOutputPrimitiveType = stream->readEnum<PrimitiveMode>();
     mGeometryShaderInvocations         = stream->readInt<int>();
     mGeometryShaderMaxVertices         = stream->readInt<int>();
+
+    mTessControlShaderVertices = stream->readInt<int>();
+    mTessGenMode               = stream->readInt<GLenum>();
+    mTessGenSpacing            = stream->readInt<GLenum>();
+    mTessGenVertexOrder        = stream->readInt<GLenum>();
+    mTessGenPointMode          = stream->readInt<GLenum>();
 }
 
 void ProgramExecutable::save(gl::BinaryOutputStream *stream) const
@@ -256,6 +273,12 @@ void ProgramExecutable::save(gl::BinaryOutputStream *stream) const
     stream->writeEnum(mGeometryShaderOutputPrimitiveType);
     stream->writeInt(mGeometryShaderInvocations);
     stream->writeInt(mGeometryShaderMaxVertices);
+
+    stream->writeInt(mTessControlShaderVertices);
+    stream->writeInt(mTessGenMode);
+    stream->writeInt(mTessGenSpacing);
+    stream->writeInt(mTessGenVertexOrder);
+    stream->writeInt(mTessGenPointMode);
 }
 
 int ProgramExecutable::getInfoLogLength() const
@@ -500,9 +523,7 @@ bool ProgramExecutable::linkMergedVaryings(
     bool isSeparable,
     ProgramVaryingPacking *varyingPacking)
 {
-    ShaderType tfStage = programOrPipeline.getAttachedShader(ShaderType::Geometry)
-                             ? ShaderType::Geometry
-                             : ShaderType::Vertex;
+    ShaderType tfStage = programOrPipeline.getTransformFeedbackStage();
 
     if (!linkValidateTransformFeedback(context, mergedVaryings, tfStage,
                                        transformFeedbackVaryingNames))
