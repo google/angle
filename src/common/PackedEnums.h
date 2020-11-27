@@ -187,15 +187,8 @@ struct AllCubeFaceTextureTargets
     angle::EnumIterator<TextureTarget> end() const { return kAfterCubeMapTextureTargetMax; }
 };
 
-constexpr ShaderType kGLES2ShaderTypeMin = ShaderType::Vertex;
-constexpr ShaderType kGLES2ShaderTypeMax = ShaderType::Fragment;
-constexpr ShaderType kAfterGLES2ShaderTypeMax =
-    static_cast<ShaderType>(static_cast<uint8_t>(kGLES2ShaderTypeMax) + 1);
-struct AllGLES2ShaderTypes
-{
-    angle::EnumIterator<ShaderType> begin() const { return kGLES2ShaderTypeMin; }
-    angle::EnumIterator<ShaderType> end() const { return kAfterGLES2ShaderTypeMax; }
-};
+constexpr std::array<ShaderType, 2> kAllGLES2ShaderTypes = {ShaderType::Vertex,
+                                                            ShaderType::Fragment};
 
 constexpr ShaderType kShaderTypeMin = ShaderType::Vertex;
 constexpr ShaderType kShaderTypeMax = ShaderType::Compute;

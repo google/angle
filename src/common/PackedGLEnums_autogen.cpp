@@ -1392,14 +1392,14 @@ ShaderType FromGLenum<ShaderType>(GLenum from)
     {
         case GL_VERTEX_SHADER:
             return ShaderType::Vertex;
-        case GL_FRAGMENT_SHADER:
-            return ShaderType::Fragment;
-        case GL_GEOMETRY_SHADER_EXT:
-            return ShaderType::Geometry;
         case GL_TESS_CONTROL_SHADER_EXT:
             return ShaderType::TessControl;
         case GL_TESS_EVALUATION_SHADER_EXT:
             return ShaderType::TessEvaluation;
+        case GL_GEOMETRY_SHADER_EXT:
+            return ShaderType::Geometry;
+        case GL_FRAGMENT_SHADER:
+            return ShaderType::Fragment;
         case GL_COMPUTE_SHADER:
             return ShaderType::Compute;
         default:
@@ -1413,14 +1413,14 @@ GLenum ToGLenum(ShaderType from)
     {
         case ShaderType::Vertex:
             return GL_VERTEX_SHADER;
-        case ShaderType::Fragment:
-            return GL_FRAGMENT_SHADER;
-        case ShaderType::Geometry:
-            return GL_GEOMETRY_SHADER_EXT;
         case ShaderType::TessControl:
             return GL_TESS_CONTROL_SHADER_EXT;
         case ShaderType::TessEvaluation:
             return GL_TESS_EVALUATION_SHADER_EXT;
+        case ShaderType::Geometry:
+            return GL_GEOMETRY_SHADER_EXT;
+        case ShaderType::Fragment:
+            return GL_FRAGMENT_SHADER;
         case ShaderType::Compute:
             return GL_COMPUTE_SHADER;
         default:
@@ -1436,17 +1436,17 @@ std::ostream &operator<<(std::ostream &os, ShaderType value)
         case ShaderType::Vertex:
             os << "GL_VERTEX_SHADER";
             break;
-        case ShaderType::Fragment:
-            os << "GL_FRAGMENT_SHADER";
-            break;
-        case ShaderType::Geometry:
-            os << "GL_GEOMETRY_SHADER_EXT";
-            break;
         case ShaderType::TessControl:
             os << "GL_TESS_CONTROL_SHADER_EXT";
             break;
         case ShaderType::TessEvaluation:
             os << "GL_TESS_EVALUATION_SHADER_EXT";
+            break;
+        case ShaderType::Geometry:
+            os << "GL_GEOMETRY_SHADER_EXT";
+            break;
+        case ShaderType::Fragment:
+            os << "GL_FRAGMENT_SHADER";
             break;
         case ShaderType::Compute:
             os << "GL_COMPUTE_SHADER";

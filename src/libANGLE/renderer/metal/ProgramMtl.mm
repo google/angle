@@ -346,7 +346,7 @@ angle::Result ProgramMtl::linkImpl(const gl::Context *glContext,
                                   &xfbOnlyShaderCodes[gl::ShaderType::Vertex],
                                   &mMslShaderTranslateInfo, &mMslXfbOnlyVertexShaderInfo));
 
-    for (gl::ShaderType shaderType : gl::AllGLES2ShaderTypes())
+    for (gl::ShaderType shaderType : gl::kAllGLES2ShaderTypes)
     {
         // Create actual Metal shader library
         ANGLE_TRY(createMslShaderLib(contextMtl, shaderType, infoLog,
@@ -373,7 +373,7 @@ angle::Result ProgramMtl::initDefaultUniformBlocks(const gl::Context *glContext)
     gl::ShaderMap<size_t> requiredBufferSize;
     requiredBufferSize.fill(0);
 
-    for (gl::ShaderType shaderType : gl::AllGLES2ShaderTypes())
+    for (gl::ShaderType shaderType : gl::kAllGLES2ShaderTypes)
     {
         gl::Shader *shader = mState.getAttachedShader(shaderType);
         if (shader)
@@ -406,7 +406,7 @@ angle::Result ProgramMtl::initDefaultUniformBlocks(const gl::Context *glContext)
 
                 bool found = false;
 
-                for (gl::ShaderType shaderType : gl::AllGLES2ShaderTypes())
+                for (gl::ShaderType shaderType : gl::kAllGLES2ShaderTypes)
                 {
                     auto it = layoutMap[shaderType].find(uniformName);
                     if (it != layoutMap[shaderType].end())
@@ -420,13 +420,13 @@ angle::Result ProgramMtl::initDefaultUniformBlocks(const gl::Context *glContext)
             }
         }
 
-        for (gl::ShaderType shaderType : gl::AllGLES2ShaderTypes())
+        for (gl::ShaderType shaderType : gl::kAllGLES2ShaderTypes)
         {
             mDefaultUniformBlocks[shaderType].uniformLayout.push_back(layoutInfo[shaderType]);
         }
     }
 
-    for (gl::ShaderType shaderType : gl::AllGLES2ShaderTypes())
+    for (gl::ShaderType shaderType : gl::kAllGLES2ShaderTypes)
     {
         if (requiredBufferSize[shaderType] > 0)
         {
@@ -613,7 +613,7 @@ void ProgramMtl::setUniformImpl(GLint location, GLsizei count, const T *v, GLenu
 
     if (linkedUniform.typeInfo->type == entryPointType)
     {
-        for (gl::ShaderType shaderType : gl::AllGLES2ShaderTypes())
+        for (gl::ShaderType shaderType : gl::kAllGLES2ShaderTypes)
         {
             DefaultUniformBlock &uniformBlock     = mDefaultUniformBlocks[shaderType];
             const sh::BlockMemberInfo &layoutInfo = uniformBlock.uniformLayout[location];
@@ -632,7 +632,7 @@ void ProgramMtl::setUniformImpl(GLint location, GLsizei count, const T *v, GLenu
     }
     else
     {
-        for (gl::ShaderType shaderType : gl::AllGLES2ShaderTypes())
+        for (gl::ShaderType shaderType : gl::kAllGLES2ShaderTypes)
         {
             DefaultUniformBlock &uniformBlock     = mDefaultUniformBlocks[shaderType];
             const sh::BlockMemberInfo &layoutInfo = uniformBlock.uniformLayout[location];
@@ -766,7 +766,7 @@ void ProgramMtl::setUniformMatrixfv(GLint location,
     const gl::VariableLocation &locationInfo = mState.getUniformLocations()[location];
     const gl::LinkedUniform &linkedUniform   = mState.getUniforms()[locationInfo.index];
 
-    for (gl::ShaderType shaderType : gl::AllGLES2ShaderTypes())
+    for (gl::ShaderType shaderType : gl::kAllGLES2ShaderTypes)
     {
         DefaultUniformBlock &uniformBlock     = mDefaultUniformBlocks[shaderType];
         const sh::BlockMemberInfo &layoutInfo = uniformBlock.uniformLayout[location];
@@ -923,7 +923,7 @@ angle::Result ProgramMtl::setupDraw(const gl::Context *glContext,
 
 angle::Result ProgramMtl::commitUniforms(ContextMtl *context, mtl::RenderCommandEncoder *cmdEncoder)
 {
-    for (gl::ShaderType shaderType : gl::AllGLES2ShaderTypes())
+    for (gl::ShaderType shaderType : gl::kAllGLES2ShaderTypes)
     {
         if (!mDefaultUniformBlocksDirty[shaderType] || !mCurrentShaderVariants[shaderType])
         {
@@ -953,7 +953,7 @@ angle::Result ProgramMtl::updateTextures(const gl::Context *glContext,
 
     const gl::ActiveTexturesCache &completeTextures = glState.getActiveTexturesCache();
 
-    for (gl::ShaderType shaderType : gl::AllGLES2ShaderTypes())
+    for (gl::ShaderType shaderType : gl::kAllGLES2ShaderTypes)
     {
         if ((!mSamplerBindingsDirty[shaderType] && !forceUpdate) ||
             !mCurrentShaderVariants[shaderType])
@@ -1038,7 +1038,7 @@ angle::Result ProgramMtl::updateUniformBuffers(ContextMtl *context,
 
     const gl::State &glState = context->getState();
 
-    for (gl::ShaderType shaderType : gl::AllGLES2ShaderTypes())
+    for (gl::ShaderType shaderType : gl::kAllGLES2ShaderTypes)
     {
         if (!mCurrentShaderVariants[shaderType])
         {
@@ -1199,12 +1199,12 @@ angle::Result ProgramMtl::encodeUniformBuffersInfoArgumentBuffer(
     [bufferEncoder.metalArgBufferEncoder setArgumentBuffer:argumentBuffer->get()
                                                     offset:argumentBufferOffset];
 
-    static_assert(MTLRenderStageVertex == (0x1 << static_cast<uint32_t>(gl::ShaderType::Vertex)),
-                  "Expected gl ShaderType enum and Metal enum to relative to each other");
-    static_assert(
-        MTLRenderStageFragment == (0x1 << static_cast<uint32_t>(gl::ShaderType::Fragment)),
-        "Expected gl ShaderType enum and Metal enum to relative to each other");
-    auto mtlRenderStage = static_cast<MTLRenderStages>(0x1 << static_cast<uint32_t>(shaderType));
+    constexpr gl::ShaderMap<MTLRenderStages> kShaderStageMap = {
+        {gl::ShaderType::Vertex, mtl::kRenderStageVertex},
+        {gl::ShaderType::Fragment, mtl::kRenderStageFragment},
+    };
+
+    auto mtlRenderStage = kShaderStageMap[shaderType];
 
     for (uint32_t bufferIndex = 0; bufferIndex < blocks.size(); ++bufferIndex)
     {

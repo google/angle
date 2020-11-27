@@ -360,10 +360,10 @@ std::ostream &operator<<(std::ostream &os, QueryType value);
 enum class ShaderType : uint8_t
 {
     Vertex         = 0,
-    Fragment       = 1,
-    Geometry       = 2,
-    TessControl    = 3,
-    TessEvaluation = 4,
+    TessControl    = 1,
+    TessEvaluation = 2,
+    Geometry       = 3,
+    Fragment       = 4,
     Compute        = 5,
 
     InvalidEnum = 6,

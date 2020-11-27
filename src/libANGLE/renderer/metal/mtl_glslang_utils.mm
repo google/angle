@@ -515,7 +515,7 @@ angle::Result SpirvCodeToMsl(Context *context,
     }
 
     // Do the actual translation
-    for (gl::ShaderType shaderType : gl::AllGLES2ShaderTypes())
+    for (gl::ShaderType shaderType : gl::kAllGLES2ShaderTypes)
     {
         std::vector<uint32_t> &sprivCode = spirvShaderCode->at(shaderType);
         ANGLE_TRY(ConvertSpirvToMsl(context, shaderType, uboOriginalBindings, xfbOriginalBindings,
