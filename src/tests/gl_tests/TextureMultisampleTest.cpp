@@ -1083,6 +1083,8 @@ TEST_P(TextureSampleShadingTest, Basic)
 
     // http://anglebug.com/5410
     ANGLE_SKIP_TEST_IF(IsWindows() && IsIntel() && IsVulkan());
+    // http://anglebug.com/5412
+    ANGLE_SKIP_TEST_IF(IsAMD() && IsVulkan());
 
     constexpr GLsizei kSize        = 1;
     constexpr GLsizei kSampleCount = 4;
