@@ -5,12 +5,12 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-// Context_gl_1_0_autogen.h: Creates a macro for interfaces in Context.
+// Context_gl_1_autogen.h: Creates a macro for interfaces in Context.
 
-#ifndef ANGLE_CONTEXT_GL_1_0_AUTOGEN_H_
-#define ANGLE_CONTEXT_GL_1_0_AUTOGEN_H_
+#ifndef ANGLE_CONTEXT_GL_1_AUTOGEN_H_
+#define ANGLE_CONTEXT_GL_1_AUTOGEN_H_
 
-#define ANGLE_GL_1_0_CONTEXT_API                                                                   \
+#define ANGLE_GL_1_CONTEXT_API                                                                     \
     void accum(GLenum op, GLfloat value);                                                          \
     void begin(GLenum mode);                                                                       \
     void bitmap(GLsizei width, GLsizei height, GLfloat xorig, GLfloat yorig, GLfloat xmove,        \
@@ -248,6 +248,103 @@
     void vertex4i(GLint x, GLint y, GLint z, GLint w);                                             \
     void vertex4iv(const GLint *v);                                                                \
     void vertex4s(GLshort x, GLshort y, GLshort z, GLshort w);                                     \
-    void vertex4sv(const GLshort *v);
+    void vertex4sv(const GLshort *v);                                                              \
+    GLboolean areTexturesResident(GLsizei n, const GLuint *textures, GLboolean *residences);       \
+    void arrayElement(GLint i);                                                                    \
+    void copyTexImage1D(GLenum target, GLint level, GLenum internalformat, GLint x, GLint y,       \
+                        GLsizei width, GLint border);                                              \
+    void copyTexSubImage1D(GLenum target, GLint level, GLint xoffset, GLint x, GLint y,            \
+                           GLsizei width);                                                         \
+    void edgeFlagPointer(GLsizei stride, const void *pointer);                                     \
+    void indexPointer(GLenum type, GLsizei stride, const void *pointer);                           \
+    void indexub(GLubyte c);                                                                       \
+    void indexubv(const GLubyte *c);                                                               \
+    void interleavedArrays(GLenum format, GLsizei stride, const void *pointer);                    \
+    void popClientAttrib();                                                                        \
+    void prioritizeTextures(GLsizei n, const GLuint *textures, const GLfloat *priorities);         \
+    void pushClientAttrib(GLbitfield mask);                                                        \
+    void texSubImage1D(GLenum target, GLint level, GLint xoffset, GLsizei width, GLenum format,    \
+                       GLenum type, const void *pixels);                                           \
+    void compressedTexImage1D(GLenum target, GLint level, GLenum internalformat, GLsizei width,    \
+                              GLint border, GLsizei imageSize, const void *data);                  \
+    void compressedTexSubImage1D(GLenum target, GLint level, GLint xoffset, GLsizei width,         \
+                                 GLenum format, GLsizei imageSize, const void *data);              \
+    void getCompressedTexImage(GLenum target, GLint level, void *img);                             \
+    void loadTransposeMatrixd(const GLdouble *m);                                                  \
+    void loadTransposeMatrixf(const GLfloat *m);                                                   \
+    void multTransposeMatrixd(const GLdouble *m);                                                  \
+    void multTransposeMatrixf(const GLfloat *m);                                                   \
+    void multiTexCoord1d(GLenum target, GLdouble s);                                               \
+    void multiTexCoord1dv(GLenum target, const GLdouble *v);                                       \
+    void multiTexCoord1f(GLenum target, GLfloat s);                                                \
+    void multiTexCoord1fv(GLenum target, const GLfloat *v);                                        \
+    void multiTexCoord1i(GLenum target, GLint s);                                                  \
+    void multiTexCoord1iv(GLenum target, const GLint *v);                                          \
+    void multiTexCoord1s(GLenum target, GLshort s);                                                \
+    void multiTexCoord1sv(GLenum target, const GLshort *v);                                        \
+    void multiTexCoord2d(GLenum target, GLdouble s, GLdouble t);                                   \
+    void multiTexCoord2dv(GLenum target, const GLdouble *v);                                       \
+    void multiTexCoord2f(GLenum target, GLfloat s, GLfloat t);                                     \
+    void multiTexCoord2fv(GLenum target, const GLfloat *v);                                        \
+    void multiTexCoord2i(GLenum target, GLint s, GLint t);                                         \
+    void multiTexCoord2iv(GLenum target, const GLint *v);                                          \
+    void multiTexCoord2s(GLenum target, GLshort s, GLshort t);                                     \
+    void multiTexCoord2sv(GLenum target, const GLshort *v);                                        \
+    void multiTexCoord3d(GLenum target, GLdouble s, GLdouble t, GLdouble r);                       \
+    void multiTexCoord3dv(GLenum target, const GLdouble *v);                                       \
+    void multiTexCoord3f(GLenum target, GLfloat s, GLfloat t, GLfloat r);                          \
+    void multiTexCoord3fv(GLenum target, const GLfloat *v);                                        \
+    void multiTexCoord3i(GLenum target, GLint s, GLint t, GLint r);                                \
+    void multiTexCoord3iv(GLenum target, const GLint *v);                                          \
+    void multiTexCoord3s(GLenum target, GLshort s, GLshort t, GLshort r);                          \
+    void multiTexCoord3sv(GLenum target, const GLshort *v);                                        \
+    void multiTexCoord4d(GLenum target, GLdouble s, GLdouble t, GLdouble r, GLdouble q);           \
+    void multiTexCoord4dv(GLenum target, const GLdouble *v);                                       \
+    void multiTexCoord4fv(GLenum target, const GLfloat *v);                                        \
+    void multiTexCoord4i(GLenum target, GLint s, GLint t, GLint r, GLint q);                       \
+    void multiTexCoord4iv(GLenum target, const GLint *v);                                          \
+    void multiTexCoord4s(GLenum target, GLshort s, GLshort t, GLshort r, GLshort q);               \
+    void multiTexCoord4sv(GLenum target, const GLshort *v);                                        \
+    void fogCoordPointer(GLenum type, GLsizei stride, const void *pointer);                        \
+    void fogCoordd(GLdouble coord);                                                                \
+    void fogCoorddv(const GLdouble *coord);                                                        \
+    void fogCoordf(GLfloat coord);                                                                 \
+    void fogCoordfv(const GLfloat *coord);                                                         \
+    void pointParameteri(GLenum pname, GLint param);                                               \
+    void pointParameteriv(GLenum pname, const GLint *params);                                      \
+    void secondaryColor3b(GLbyte red, GLbyte green, GLbyte blue);                                  \
+    void secondaryColor3bv(const GLbyte *v);                                                       \
+    void secondaryColor3d(GLdouble red, GLdouble green, GLdouble blue);                            \
+    void secondaryColor3dv(const GLdouble *v);                                                     \
+    void secondaryColor3f(GLfloat red, GLfloat green, GLfloat blue);                               \
+    void secondaryColor3fv(const GLfloat *v);                                                      \
+    void secondaryColor3i(GLint red, GLint green, GLint blue);                                     \
+    void secondaryColor3iv(const GLint *v);                                                        \
+    void secondaryColor3s(GLshort red, GLshort green, GLshort blue);                               \
+    void secondaryColor3sv(const GLshort *v);                                                      \
+    void secondaryColor3ub(GLubyte red, GLubyte green, GLubyte blue);                              \
+    void secondaryColor3ubv(const GLubyte *v);                                                     \
+    void secondaryColor3ui(GLuint red, GLuint green, GLuint blue);                                 \
+    void secondaryColor3uiv(const GLuint *v);                                                      \
+    void secondaryColor3us(GLushort red, GLushort green, GLushort blue);                           \
+    void secondaryColor3usv(const GLushort *v);                                                    \
+    void secondaryColorPointer(GLint size, GLenum type, GLsizei stride, const void *pointer);      \
+    void windowPos2d(GLdouble x, GLdouble y);                                                      \
+    void windowPos2dv(const GLdouble *v);                                                          \
+    void windowPos2f(GLfloat x, GLfloat y);                                                        \
+    void windowPos2fv(const GLfloat *v);                                                           \
+    void windowPos2i(GLint x, GLint y);                                                            \
+    void windowPos2iv(const GLint *v);                                                             \
+    void windowPos2s(GLshort x, GLshort y);                                                        \
+    void windowPos2sv(const GLshort *v);                                                           \
+    void windowPos3d(GLdouble x, GLdouble y, GLdouble z);                                          \
+    void windowPos3dv(const GLdouble *v);                                                          \
+    void windowPos3f(GLfloat x, GLfloat y, GLfloat z);                                             \
+    void windowPos3fv(const GLfloat *v);                                                           \
+    void windowPos3i(GLint x, GLint y, GLint z);                                                   \
+    void windowPos3iv(const GLint *v);                                                             \
+    void windowPos3s(GLshort x, GLshort y, GLshort z);                                             \
+    void windowPos3sv(const GLshort *v);                                                           \
+    void getBufferSubData(GLenum target, GLintptr offset, GLsizeiptr size, void *data);
 
-#endif  // ANGLE_CONTEXT_API_1_0_AUTOGEN_H_
+#endif  // ANGLE_CONTEXT_API_1_AUTOGEN_H_

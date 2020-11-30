@@ -644,12 +644,12 @@ GLES_EXT_SOURCE_INCLUDES = TEMPLATE_SOURCES_INCLUDES.format(
 #include "libANGLE/validationES32.h"
 """
 
-TEMPLATE_HEADER_INCLUDES_GL32 = """#include <export.h>
+DESKTOP_GL_HEADER_INCLUDES = """\
+#include <export.h>
 #include "angle_gl.h"
-
 """
 
-TEMPLATE_SOURCES_INCLUDES_GL32 = """\
+TEMPLATE_DESKTOP_GL_SOURCE_INCLUDES = """\
 #include "libGL/entry_points_{}_autogen.h"
 
 #include "libANGLE/Context.h"
@@ -663,7 +663,7 @@ TEMPLATE_SOURCES_INCLUDES_GL32 = """\
 #include "libANGLE/validationES31.h"
 #include "libANGLE/validationES32.h"
 #include "libANGLE/validationESEXT.h"
-#include "libANGLE/validationGL{}{}_autogen.h"
+#include "libANGLE/validationGL{}_autogen.h"
 #include "libANGLE/entry_points_utils.h"
 #include "libGLESv2/global_state.h"
 """
@@ -717,25 +717,10 @@ LIBGLESV2_EXPORT_INCLUDES = """
 LIBGL_EXPORT_INCLUDES = """
 #include "angle_gl.h"
 
-#include "libGL/entry_points_gl_1_0_autogen.h"
-#include "libGL/entry_points_gl_1_1_autogen.h"
-#include "libGL/entry_points_gl_1_2_autogen.h"
-#include "libGL/entry_points_gl_1_3_autogen.h"
-#include "libGL/entry_points_gl_1_4_autogen.h"
-#include "libGL/entry_points_gl_1_5_autogen.h"
-#include "libGL/entry_points_gl_2_0_autogen.h"
-#include "libGL/entry_points_gl_2_1_autogen.h"
-#include "libGL/entry_points_gl_3_0_autogen.h"
-#include "libGL/entry_points_gl_3_1_autogen.h"
-#include "libGL/entry_points_gl_3_2_autogen.h"
-#include "libGL/entry_points_gl_3_3_autogen.h"
-#include "libGL/entry_points_gl_4_0_autogen.h"
-#include "libGL/entry_points_gl_4_1_autogen.h"
-#include "libGL/entry_points_gl_4_2_autogen.h"
-#include "libGL/entry_points_gl_4_3_autogen.h"
-#include "libGL/entry_points_gl_4_4_autogen.h"
-#include "libGL/entry_points_gl_4_5_autogen.h"
-#include "libGL/entry_points_gl_4_6_autogen.h"
+#include "libGL/entry_points_gl_1_autogen.h"
+#include "libGL/entry_points_gl_2_autogen.h"
+#include "libGL/entry_points_gl_3_autogen.h"
+#include "libGL/entry_points_gl_4_autogen.h"
 
 #include "common/event_tracer.h"
 """
@@ -1608,23 +1593,21 @@ def write_export_files(entry_points, includes, source, lib_name, lib_description
         out.close()
 
 
-def write_context_api_decls(template, decls, api):
-    for ver in decls['core'].keys():
-        interface_lines = []
-
-        for i in decls['core'][ver]:
-            interface_lines.append(i)
-
-        annotation = '{}_{}_{}'.format(api, ver[0], ver[1])
-        version = '{}_{}'.format(ver[0], ver[1])
-
-        content = template.format(
+def write_context_api_decls(decls, api):
+    for (major, minor), version_decls in sorted(decls['core'].items()):
+        if minor == "X":
+            annotation = '{}_{}'.format(api, major)
+            version = str(major)
+        else:
+            annotation = '{}_{}_{}'.format(api, major, minor)
+            version = '{}_{}'.format(major, minor)
+        content = CONTEXT_HEADER.format(
             annotation_lower=annotation.lower(),
             annotation_upper=annotation.upper(),
             script_name=os.path.basename(sys.argv[0]),
             data_source_name="gl.xml",
             version=version,
-            interface="\n".join(interface_lines))
+            interface="\n".join(version_decls))
 
         path = path_to("libANGLE", "Context_%s_autogen.h" % annotation.lower())
 
@@ -1641,7 +1624,7 @@ def write_context_api_decls(template, decls, api):
                 interface_lines.append("    /* " + extname + " */ \\")
                 interface_lines.extend(decls['exts'][annotation][extname])
 
-        content = template.format(
+        content = CONTEXT_HEADER.format(
             annotation_lower='gles_ext',
             annotation_upper='GLES_EXT',
             script_name=os.path.basename(sys.argv[0]),
@@ -2162,25 +2145,10 @@ def main():
             EGL_EXT_STUBS_HEADER_PATH,
             '../src/common/entry_points_enum_autogen.cpp',
             '../src/common/entry_points_enum_autogen.h',
-            '../src/libANGLE/Context_gl_1_0_autogen.h',
-            '../src/libANGLE/Context_gl_1_1_autogen.h',
-            '../src/libANGLE/Context_gl_1_2_autogen.h',
-            '../src/libANGLE/Context_gl_1_3_autogen.h',
-            '../src/libANGLE/Context_gl_1_4_autogen.h',
-            '../src/libANGLE/Context_gl_1_5_autogen.h',
-            '../src/libANGLE/Context_gl_2_0_autogen.h',
-            '../src/libANGLE/Context_gl_2_1_autogen.h',
-            '../src/libANGLE/Context_gl_3_0_autogen.h',
-            '../src/libANGLE/Context_gl_3_1_autogen.h',
-            '../src/libANGLE/Context_gl_3_2_autogen.h',
-            '../src/libANGLE/Context_gl_3_3_autogen.h',
-            '../src/libANGLE/Context_gl_4_0_autogen.h',
-            '../src/libANGLE/Context_gl_4_1_autogen.h',
-            '../src/libANGLE/Context_gl_4_2_autogen.h',
-            '../src/libANGLE/Context_gl_4_3_autogen.h',
-            '../src/libANGLE/Context_gl_4_4_autogen.h',
-            '../src/libANGLE/Context_gl_4_5_autogen.h',
-            '../src/libANGLE/Context_gl_4_6_autogen.h',
+            '../src/libANGLE/Context_gl_1_autogen.h',
+            '../src/libANGLE/Context_gl_2_autogen.h',
+            '../src/libANGLE/Context_gl_3_autogen.h',
+            '../src/libANGLE/Context_gl_4_autogen.h',
             '../src/libANGLE/Context_gles_1_0_autogen.h',
             '../src/libANGLE/Context_gles_2_0_autogen.h',
             '../src/libANGLE/Context_gles_3_0_autogen.h',
@@ -2213,21 +2181,6 @@ def main():
             '../src/libANGLE/validationGL2_autogen.h',
             '../src/libANGLE/validationGL3_autogen.h',
             '../src/libANGLE/validationGL4_autogen.h',
-            '../src/libANGLE/validationGL11_autogen.h',
-            '../src/libANGLE/validationGL12_autogen.h',
-            '../src/libANGLE/validationGL13_autogen.h',
-            '../src/libANGLE/validationGL14_autogen.h',
-            '../src/libANGLE/validationGL15_autogen.h',
-            '../src/libANGLE/validationGL21_autogen.h',
-            '../src/libANGLE/validationGL31_autogen.h',
-            '../src/libANGLE/validationGL32_autogen.h',
-            '../src/libANGLE/validationGL33_autogen.h',
-            '../src/libANGLE/validationGL41_autogen.h',
-            '../src/libANGLE/validationGL42_autogen.h',
-            '../src/libANGLE/validationGL43_autogen.h',
-            '../src/libANGLE/validationGL44_autogen.h',
-            '../src/libANGLE/validationGL45_autogen.h',
-            '../src/libANGLE/validationGL46_autogen.h',
             '../src/libEGL/libEGL_autogen.cpp',
             '../src/libEGL/libEGL_autogen.def',
             '../src/libGLESv2/entry_points_egl_autogen.cpp',
@@ -2250,44 +2203,14 @@ def main():
             '../src/libGLESv2/libGLESv2_autogen.def',
             '../src/libGLESv2/libGLESv2_no_capture_autogen.def',
             '../src/libGLESv2/libGLESv2_with_capture_autogen.def',
-            '../src/libGL/entry_points_gl_1_0_autogen.cpp',
-            '../src/libGL/entry_points_gl_1_0_autogen.h',
-            '../src/libGL/entry_points_gl_1_1_autogen.cpp',
-            '../src/libGL/entry_points_gl_1_1_autogen.h',
-            '../src/libGL/entry_points_gl_1_2_autogen.cpp',
-            '../src/libGL/entry_points_gl_1_2_autogen.h',
-            '../src/libGL/entry_points_gl_1_3_autogen.cpp',
-            '../src/libGL/entry_points_gl_1_3_autogen.h',
-            '../src/libGL/entry_points_gl_1_4_autogen.cpp',
-            '../src/libGL/entry_points_gl_1_4_autogen.h',
-            '../src/libGL/entry_points_gl_1_5_autogen.cpp',
-            '../src/libGL/entry_points_gl_1_5_autogen.h',
-            '../src/libGL/entry_points_gl_2_0_autogen.cpp',
-            '../src/libGL/entry_points_gl_2_0_autogen.h',
-            '../src/libGL/entry_points_gl_2_1_autogen.cpp',
-            '../src/libGL/entry_points_gl_2_1_autogen.h',
-            '../src/libGL/entry_points_gl_3_0_autogen.cpp',
-            '../src/libGL/entry_points_gl_3_0_autogen.h',
-            '../src/libGL/entry_points_gl_3_1_autogen.cpp',
-            '../src/libGL/entry_points_gl_3_1_autogen.h',
-            '../src/libGL/entry_points_gl_3_2_autogen.cpp',
-            '../src/libGL/entry_points_gl_3_2_autogen.h',
-            '../src/libGL/entry_points_gl_3_3_autogen.cpp',
-            '../src/libGL/entry_points_gl_3_3_autogen.h',
-            '../src/libGL/entry_points_gl_4_0_autogen.cpp',
-            '../src/libGL/entry_points_gl_4_0_autogen.h',
-            '../src/libGL/entry_points_gl_4_1_autogen.cpp',
-            '../src/libGL/entry_points_gl_4_1_autogen.h',
-            '../src/libGL/entry_points_gl_4_2_autogen.cpp',
-            '../src/libGL/entry_points_gl_4_2_autogen.h',
-            '../src/libGL/entry_points_gl_4_3_autogen.cpp',
-            '../src/libGL/entry_points_gl_4_3_autogen.h',
-            '../src/libGL/entry_points_gl_4_4_autogen.cpp',
-            '../src/libGL/entry_points_gl_4_4_autogen.h',
-            '../src/libGL/entry_points_gl_4_5_autogen.cpp',
-            '../src/libGL/entry_points_gl_4_5_autogen.h',
-            '../src/libGL/entry_points_gl_4_6_autogen.cpp',
-            '../src/libGL/entry_points_gl_4_6_autogen.h',
+            '../src/libGL/entry_points_gl_1_autogen.cpp',
+            '../src/libGL/entry_points_gl_1_autogen.h',
+            '../src/libGL/entry_points_gl_2_autogen.cpp',
+            '../src/libGL/entry_points_gl_2_autogen.h',
+            '../src/libGL/entry_points_gl_3_autogen.cpp',
+            '../src/libGL/entry_points_gl_3_autogen.h',
+            '../src/libGL/entry_points_gl_4_autogen.cpp',
+            '../src/libGL/entry_points_gl_4_autogen.h',
             '../src/libGL/libGL_autogen.cpp',
             '../src/libGL/libGL_autogen.def',
         ]
@@ -2503,75 +2426,83 @@ def main():
                                              "\n".join(glext_protos))
 
     # Now we generate entry points for the desktop implementation
-    gldecls = {}
-    gldecls['core'] = {}
-    for ver in registry_xml.DESKTOP_GL_VERSIONS:
-        gldecls['core'][ver] = []
+    desktop_gl_decls = {}
+    desktop_gl_decls['core'] = {}
+    for major, _ in registry_xml.DESKTOP_GL_VERSIONS:
+        desktop_gl_decls['core'][(major, "X")] = []
 
     libgl_ep_defs = []
     libgl_ep_exports = []
 
     glxml = registry_xml.RegistryXML('gl.xml')
 
-    for major_version, minor_version in registry_xml.DESKTOP_GL_VERSIONS:
-        version = "{}_{}".format(major_version, minor_version)
-        annotation = "GL_{}".format(version)
-        name_prefix = "GL_VERSION_"
+    for major_version in sorted(
+            set([major for (major, minor) in registry_xml.DESKTOP_GL_VERSIONS])):
+        is_major = lambda ver: ver[0] == major_version
 
-        comment = version.replace("_", ".")
-        feature_name = "{}{}".format(name_prefix, version)
+        ver_decls = []
+        ver_defs = []
+        validation_protos = []
 
-        glxml.AddCommands(feature_name, version)
+        for _, minor_version in filter(is_major, registry_xml.DESKTOP_GL_VERSIONS):
+            version = "{}_{}".format(major_version, minor_version)
+            annotation = "GL_{}".format(version)
+            name_prefix = "GL_VERSION_"
 
-        all_libgl_commands = glxml.commands[version]
+            comment = version.replace("_", ".")
+            feature_name = "{}{}".format(name_prefix, version)
 
-        just_libgl_commands = [
-            cmd for cmd in all_libgl_commands if cmd not in all_commands_no_suffix
-        ]
-        just_libgl_commands_suffix = [
-            cmd for cmd in all_libgl_commands if cmd not in all_commands_with_suffix
-        ]
+            glxml.AddCommands(feature_name, version)
 
-        all_commands32 = glxml.all_commands
+            all_libgl_commands = glxml.commands[version]
 
-        # Validation duplicates handled with suffix
-        _, _, _, validation_protos32, _, _, _ = get_entry_points(GL, all_commands32,
-                                                                 just_libgl_commands_suffix, False,
-                                                                 all_gles_param_types,
-                                                                 cmd_packed_gl_enums, [], {})
-        decls_gl, defs_gl, libgl_defs, _, _, _, _ = get_entry_points(GL, all_commands32,
-                                                                     all_libgl_commands, False,
-                                                                     all_gles_param_types,
-                                                                     cmd_packed_gl_enums, [], {})
+            just_libgl_commands = [
+                cmd for cmd in all_libgl_commands if cmd not in all_commands_no_suffix
+            ]
+            just_libgl_commands_suffix = [
+                cmd for cmd in all_libgl_commands if cmd not in all_commands_with_suffix
+            ]
 
-        # Write the version as a comment before the first EP.
-        libgl_defs.insert(0, "\n// GL %s" % comment)
-        libgl_ep_exports.append("\n    ; GL %s" % comment)
+            all_commands32 = glxml.all_commands
 
-        libgl_ep_defs += libgl_defs
-        libgl_ep_exports += get_exports(all_libgl_commands)
+            # Validation duplicates handled with suffix
+            _, _, _, protos, _, _, _ = get_entry_points(GL, all_commands32,
+                                                        just_libgl_commands_suffix, False,
+                                                        all_gles_param_types, cmd_packed_gl_enums,
+                                                        [], {})
+            decls, defs, libgl_defs, _, _, _, _ = get_entry_points(GL, all_commands32,
+                                                                   all_libgl_commands, False,
+                                                                   all_gles_param_types,
+                                                                   cmd_packed_gl_enums, [], {})
 
-        minor_if_not_zero = minor_version if minor_version != 0 else ""
+            desktop_gl_decls['core'][(major_version, "X")] += get_decls(
+                GL, CONTEXT_DECL_FORMAT, all_commands32, just_libgl_commands,
+                all_commands_no_suffix, cmd_packed_gl_enums)
 
-        header_includes = TEMPLATE_HEADER_INCLUDES_GL32
-        source_includes = TEMPLATE_SOURCES_INCLUDES_GL32.format(annotation.lower(), major_version,
-                                                                minor_if_not_zero)
+            # Write the version as a comment before the first EP.
+            cpp_comment = "\n// GL %s" % comment
+            def_comment = "\n    ; GL %s" % comment
+
+            libgl_ep_defs += [cpp_comment] + libgl_defs
+            libgl_ep_exports += [def_comment] + get_exports(all_libgl_commands)
+            validation_protos += [cpp_comment] + protos
+            ver_decls += [cpp_comment] + decls
+            ver_defs += [cpp_comment] + defs
+
+        annotation = "GL_%d" % major_version
+        name = "Desktop GL %s.x" % major_version
+
+        source_includes = TEMPLATE_DESKTOP_GL_SOURCE_INCLUDES.format(annotation.lower(),
+                                                                     major_version)
 
         # Entry point files
-        write_file(annotation, "GL " + comment, TEMPLATE_ENTRY_POINT_HEADER, "\n".join(decls_gl),
-                   "h", header_includes, "libGL", "gl.xml", "namespace gl")
-        write_file(annotation, "GL " + comment, TEMPLATE_ENTRY_POINT_SOURCE, "\n".join(defs_gl),
-                   "cpp", source_includes, "libGL", "gl.xml", "namespace gl")
-
-        gldecls['core'][(major_version,
-                         minor_version)] = get_decls(GL, CONTEXT_DECL_FORMAT, all_commands32,
-                                                     just_libgl_commands, all_commands_no_suffix,
-                                                     cmd_packed_gl_enums)
+        write_file(annotation, name, TEMPLATE_ENTRY_POINT_HEADER, "\n".join(ver_decls), "h",
+                   DESKTOP_GL_HEADER_INCLUDES, "libGL", "gl.xml", "namespace gl")
+        write_file(annotation, name, TEMPLATE_ENTRY_POINT_SOURCE, "\n".join(ver_defs), "cpp",
+                   source_includes, "libGL", "gl.xml", "namespace gl")
 
         # Validation files
-        validation_annotation = "GL%s%s" % (major_version, minor_if_not_zero)
-        write_gl_validation_header(validation_annotation, "%s" % comment, validation_protos32,
-                                   "gl.xml and wgl.xml")
+        write_gl_validation_header("GL%s" % major_version, name, validation_protos, "gl.xml")
 
     # EGL
     eglxml = registry_xml.RegistryXML('egl.xml', 'egl_angle_ext.xml')
@@ -2707,8 +2638,8 @@ def main():
     write_capture_header("ext", "extension", ext_capture_protos, ext_capture_param_funcs)
     write_capture_source("ext", "ESEXT", "extension", ext_capture_methods)
 
-    write_context_api_decls(CONTEXT_HEADER, glesdecls, "gles")
-    write_context_api_decls(CONTEXT_HEADER, gldecls, "gl")
+    write_context_api_decls(glesdecls, "gles")
+    write_context_api_decls(desktop_gl_decls, "gl")
 
     # Entry point enum
     egl_cmd_names = [strip_api_prefix(cmd) for cmd in eglxml.all_cmd_names.get_all_commands()]

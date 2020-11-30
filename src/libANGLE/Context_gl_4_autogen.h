@@ -5,12 +5,162 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-// Context_gl_4_5_autogen.h: Creates a macro for interfaces in Context.
+// Context_gl_4_autogen.h: Creates a macro for interfaces in Context.
 
-#ifndef ANGLE_CONTEXT_GL_4_5_AUTOGEN_H_
-#define ANGLE_CONTEXT_GL_4_5_AUTOGEN_H_
+#ifndef ANGLE_CONTEXT_GL_4_AUTOGEN_H_
+#define ANGLE_CONTEXT_GL_4_AUTOGEN_H_
 
-#define ANGLE_GL_4_5_CONTEXT_API                                                                   \
+#define ANGLE_GL_4_CONTEXT_API                                                                     \
+    void beginQueryIndexed(GLenum target, GLuint index, QueryID idPacked);                         \
+    void drawTransformFeedback(GLenum mode, TransformFeedbackID idPacked);                         \
+    void drawTransformFeedbackStream(GLenum mode, TransformFeedbackID idPacked, GLuint stream);    \
+    void endQueryIndexed(GLenum target, GLuint index);                                             \
+    void getActiveSubroutineName(ShaderProgramID programPacked, GLenum shadertype, GLuint index,   \
+                                 GLsizei bufsize, GLsizei *length, GLchar *name);                  \
+    void getActiveSubroutineUniformName(ShaderProgramID programPacked, GLenum shadertype,          \
+                                        GLuint index, GLsizei bufsize, GLsizei *length,            \
+                                        GLchar *name);                                             \
+    void getActiveSubroutineUniformiv(ShaderProgramID programPacked, GLenum shadertype,            \
+                                      GLuint index, GLenum pname, GLint *values);                  \
+    void getProgramStageiv(ShaderProgramID programPacked, GLenum shadertype, GLenum pname,         \
+                           GLint *values);                                                         \
+    void getQueryIndexediv(GLenum target, GLuint index, GLenum pname, GLint *params);              \
+    GLuint getSubroutineIndex(ShaderProgramID programPacked, GLenum shadertype,                    \
+                              const GLchar *name);                                                 \
+    GLint getSubroutineUniformLocation(ShaderProgramID programPacked, GLenum shadertype,           \
+                                       const GLchar *name);                                        \
+    void getUniformSubroutineuiv(GLenum shadertype, GLint location, GLuint *params);               \
+    void getUniformdv(ShaderProgramID programPacked, UniformLocation locationPacked,               \
+                      GLdouble *params);                                                           \
+    void patchParameterfv(GLenum pname, const GLfloat *values);                                    \
+    void uniform1d(UniformLocation locationPacked, GLdouble x);                                    \
+    void uniform1dv(UniformLocation locationPacked, GLsizei count, const GLdouble *value);         \
+    void uniform2d(UniformLocation locationPacked, GLdouble x, GLdouble y);                        \
+    void uniform2dv(UniformLocation locationPacked, GLsizei count, const GLdouble *value);         \
+    void uniform3d(UniformLocation locationPacked, GLdouble x, GLdouble y, GLdouble z);            \
+    void uniform3dv(UniformLocation locationPacked, GLsizei count, const GLdouble *value);         \
+    void uniform4d(UniformLocation locationPacked, GLdouble x, GLdouble y, GLdouble z,             \
+                   GLdouble w);                                                                    \
+    void uniform4dv(UniformLocation locationPacked, GLsizei count, const GLdouble *value);         \
+    void uniformMatrix2dv(UniformLocation locationPacked, GLsizei count, GLboolean transpose,      \
+                          const GLdouble *value);                                                  \
+    void uniformMatrix2x3dv(UniformLocation locationPacked, GLsizei count, GLboolean transpose,    \
+                            const GLdouble *value);                                                \
+    void uniformMatrix2x4dv(UniformLocation locationPacked, GLsizei count, GLboolean transpose,    \
+                            const GLdouble *value);                                                \
+    void uniformMatrix3dv(UniformLocation locationPacked, GLsizei count, GLboolean transpose,      \
+                          const GLdouble *value);                                                  \
+    void uniformMatrix3x2dv(UniformLocation locationPacked, GLsizei count, GLboolean transpose,    \
+                            const GLdouble *value);                                                \
+    void uniformMatrix3x4dv(UniformLocation locationPacked, GLsizei count, GLboolean transpose,    \
+                            const GLdouble *value);                                                \
+    void uniformMatrix4dv(UniformLocation locationPacked, GLsizei count, GLboolean transpose,      \
+                          const GLdouble *value);                                                  \
+    void uniformMatrix4x2dv(UniformLocation locationPacked, GLsizei count, GLboolean transpose,    \
+                            const GLdouble *value);                                                \
+    void uniformMatrix4x3dv(UniformLocation locationPacked, GLsizei count, GLboolean transpose,    \
+                            const GLdouble *value);                                                \
+    void uniformSubroutinesuiv(GLenum shadertype, GLsizei count, const GLuint *indices);           \
+    void depthRangeArrayv(GLuint first, GLsizei count, const GLdouble *v);                         \
+    void depthRangeIndexed(GLuint index, GLdouble n, GLdouble f);                                  \
+    void getDoublei_v(GLenum target, GLuint index, GLdouble *data);                                \
+    void getFloati_v(GLenum target, GLuint index, GLfloat *data);                                  \
+    void getVertexAttribLdv(GLuint index, GLenum pname, GLdouble *params);                         \
+    void programUniform1d(ShaderProgramID programPacked, UniformLocation locationPacked,           \
+                          GLdouble v0);                                                            \
+    void programUniform1dv(ShaderProgramID programPacked, UniformLocation locationPacked,          \
+                           GLsizei count, const GLdouble *value);                                  \
+    void programUniform2d(ShaderProgramID programPacked, UniformLocation locationPacked,           \
+                          GLdouble v0, GLdouble v1);                                               \
+    void programUniform2dv(ShaderProgramID programPacked, UniformLocation locationPacked,          \
+                           GLsizei count, const GLdouble *value);                                  \
+    void programUniform3d(ShaderProgramID programPacked, UniformLocation locationPacked,           \
+                          GLdouble v0, GLdouble v1, GLdouble v2);                                  \
+    void programUniform3dv(ShaderProgramID programPacked, UniformLocation locationPacked,          \
+                           GLsizei count, const GLdouble *value);                                  \
+    void programUniform4d(ShaderProgramID programPacked, UniformLocation locationPacked,           \
+                          GLdouble v0, GLdouble v1, GLdouble v2, GLdouble v3);                     \
+    void programUniform4dv(ShaderProgramID programPacked, UniformLocation locationPacked,          \
+                           GLsizei count, const GLdouble *value);                                  \
+    void programUniformMatrix2dv(ShaderProgramID programPacked, UniformLocation locationPacked,    \
+                                 GLsizei count, GLboolean transpose, const GLdouble *value);       \
+    void programUniformMatrix2x3dv(ShaderProgramID programPacked, UniformLocation locationPacked,  \
+                                   GLsizei count, GLboolean transpose, const GLdouble *value);     \
+    void programUniformMatrix2x4dv(ShaderProgramID programPacked, UniformLocation locationPacked,  \
+                                   GLsizei count, GLboolean transpose, const GLdouble *value);     \
+    void programUniformMatrix3dv(ShaderProgramID programPacked, UniformLocation locationPacked,    \
+                                 GLsizei count, GLboolean transpose, const GLdouble *value);       \
+    void programUniformMatrix3x2dv(ShaderProgramID programPacked, UniformLocation locationPacked,  \
+                                   GLsizei count, GLboolean transpose, const GLdouble *value);     \
+    void programUniformMatrix3x4dv(ShaderProgramID programPacked, UniformLocation locationPacked,  \
+                                   GLsizei count, GLboolean transpose, const GLdouble *value);     \
+    void programUniformMatrix4dv(ShaderProgramID programPacked, UniformLocation locationPacked,    \
+                                 GLsizei count, GLboolean transpose, const GLdouble *value);       \
+    void programUniformMatrix4x2dv(ShaderProgramID programPacked, UniformLocation locationPacked,  \
+                                   GLsizei count, GLboolean transpose, const GLdouble *value);     \
+    void programUniformMatrix4x3dv(ShaderProgramID programPacked, UniformLocation locationPacked,  \
+                                   GLsizei count, GLboolean transpose, const GLdouble *value);     \
+    void scissorArrayv(GLuint first, GLsizei count, const GLint *v);                               \
+    void scissorIndexed(GLuint index, GLint left, GLint bottom, GLsizei width, GLsizei height);    \
+    void scissorIndexedv(GLuint index, const GLint *v);                                            \
+    void vertexAttribL1d(GLuint index, GLdouble x);                                                \
+    void vertexAttribL1dv(GLuint index, const GLdouble *v);                                        \
+    void vertexAttribL2d(GLuint index, GLdouble x, GLdouble y);                                    \
+    void vertexAttribL2dv(GLuint index, const GLdouble *v);                                        \
+    void vertexAttribL3d(GLuint index, GLdouble x, GLdouble y, GLdouble z);                        \
+    void vertexAttribL3dv(GLuint index, const GLdouble *v);                                        \
+    void vertexAttribL4d(GLuint index, GLdouble x, GLdouble y, GLdouble z, GLdouble w);            \
+    void vertexAttribL4dv(GLuint index, const GLdouble *v);                                        \
+    void vertexAttribLPointer(GLuint index, GLint size, GLenum type, GLsizei stride,               \
+                              const void *pointer);                                                \
+    void viewportArrayv(GLuint first, GLsizei count, const GLfloat *v);                            \
+    void viewportIndexedf(GLuint index, GLfloat x, GLfloat y, GLfloat w, GLfloat h);               \
+    void viewportIndexedfv(GLuint index, const GLfloat *v);                                        \
+    void drawElementsInstancedBaseInstance(GLenum mode, GLsizei count, GLenum type,                \
+                                           const void *indices, GLsizei instancecount,             \
+                                           GLuint baseinstance);                                   \
+    void drawTransformFeedbackInstanced(GLenum mode, TransformFeedbackID idPacked,                 \
+                                        GLsizei instancecount);                                    \
+    void drawTransformFeedbackStreamInstanced(GLenum mode, TransformFeedbackID idPacked,           \
+                                              GLuint stream, GLsizei instancecount);               \
+    void getActiveAtomicCounterBufferiv(ShaderProgramID programPacked, GLuint bufferIndex,         \
+                                        GLenum pname, GLint *params);                              \
+    void clearBufferData(GLenum target, GLenum internalformat, GLenum format, GLenum type,         \
+                         const void *data);                                                        \
+    void clearBufferSubData(GLenum target, GLenum internalformat, GLintptr offset,                 \
+                            GLsizeiptr size, GLenum format, GLenum type, const void *data);        \
+    void getInternalformati64v(GLenum target, GLenum internalformat, GLenum pname,                 \
+                               GLsizei bufSize, GLint64 *params);                                  \
+    void invalidateBufferData(BufferID bufferPacked);                                              \
+    void invalidateBufferSubData(BufferID bufferPacked, GLintptr offset, GLsizeiptr length);       \
+    void invalidateTexImage(TextureID texturePacked, GLint level);                                 \
+    void invalidateTexSubImage(TextureID texturePacked, GLint level, GLint xoffset, GLint yoffset, \
+                               GLint zoffset, GLsizei width, GLsizei height, GLsizei depth);       \
+    void multiDrawArraysIndirect(GLenum mode, const void *indirect, GLsizei drawcount,             \
+                                 GLsizei stride);                                                  \
+    void multiDrawElementsIndirect(GLenum mode, GLenum type, const void *indirect,                 \
+                                   GLsizei drawcount, GLsizei stride);                             \
+    void shaderStorageBlockBinding(ShaderProgramID programPacked, GLuint storageBlockIndex,        \
+                                   GLuint storageBlockBinding);                                    \
+    void textureView(TextureID texturePacked, GLenum target, GLuint origtexture,                   \
+                     GLenum internalformat, GLuint minlevel, GLuint numlevels, GLuint minlayer,    \
+                     GLuint numlayers);                                                            \
+    void vertexAttribLFormat(GLuint attribindex, GLint size, GLenum type, GLuint relativeoffset);  \
+    void bindBuffersBase(GLenum target, GLuint first, GLsizei count,                               \
+                         const BufferID *buffersPacked);                                           \
+    void bindBuffersRange(GLenum target, GLuint first, GLsizei count,                              \
+                          const BufferID *buffersPacked, const GLintptr *offsets,                  \
+                          const GLsizeiptr *sizes);                                                \
+    void bindImageTextures(GLuint first, GLsizei count, const GLuint *textures);                   \
+    void bindSamplers(GLuint first, GLsizei count, const GLuint *samplers);                        \
+    void bindTextures(GLuint first, GLsizei count, const GLuint *textures);                        \
+    void bindVertexBuffers(GLuint first, GLsizei count, const BufferID *buffersPacked,             \
+                           const GLintptr *offsets, const GLsizei *strides);                       \
+    void clearTexImage(TextureID texturePacked, GLint level, GLenum format, GLenum type,           \
+                       const void *data);                                                          \
+    void clearTexSubImage(TextureID texturePacked, GLint level, GLint xoffset, GLint yoffset,      \
+                          GLint zoffset, GLsizei width, GLsizei height, GLsizei depth,             \
+                          GLenum format, GLenum type, const void *data);                           \
     void bindTextureUnit(GLuint unit, TextureID texturePacked);                                    \
     void blitNamedFramebuffer(GLuint readFramebuffer, GLuint drawFramebuffer, GLint srcX0,         \
                               GLint srcY0, GLint srcX1, GLint srcY1, GLint dstX0, GLint dstY0,     \
@@ -203,6 +353,14 @@
                                  BufferID bufferPacked, GLintptr offset, GLsizei stride);          \
     void vertexArrayVertexBuffers(VertexArrayID vaobjPacked, GLuint first, GLsizei count,          \
                                   const BufferID *buffersPacked, const GLintptr *offsets,          \
-                                  const GLsizei *strides);
+                                  const GLsizei *strides);                                         \
+    void multiDrawArraysIndirectCount(GLenum mode, const void *indirect, GLintptr drawcount,       \
+                                      GLsizei maxdrawcount, GLsizei stride);                       \
+    void multiDrawElementsIndirectCount(GLenum mode, GLenum type, const void *indirect,            \
+                                        GLintptr drawcount, GLsizei maxdrawcount, GLsizei stride); \
+    void polygonOffsetClamp(GLfloat factor, GLfloat units, GLfloat clamp);                         \
+    void specializeShader(GLuint shader, const GLchar *pEntryPoint,                                \
+                          GLuint numSpecializationConstants, const GLuint *pConstantIndex,         \
+                          const GLuint *pConstantValue);
 
-#endif  // ANGLE_CONTEXT_API_4_5_AUTOGEN_H_
+#endif  // ANGLE_CONTEXT_API_4_AUTOGEN_H_

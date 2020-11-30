@@ -5,12 +5,12 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-// Context_gl_2_0_autogen.h: Creates a macro for interfaces in Context.
+// Context_gl_2_autogen.h: Creates a macro for interfaces in Context.
 
-#ifndef ANGLE_CONTEXT_GL_2_0_AUTOGEN_H_
-#define ANGLE_CONTEXT_GL_2_0_AUTOGEN_H_
+#ifndef ANGLE_CONTEXT_GL_2_AUTOGEN_H_
+#define ANGLE_CONTEXT_GL_2_AUTOGEN_H_
 
-#define ANGLE_GL_2_0_CONTEXT_API                                                       \
+#define ANGLE_GL_2_CONTEXT_API                                                         \
     void getVertexAttribdv(GLuint index, GLenum pname, GLdouble *params);              \
     void vertexAttrib1d(GLuint index, GLdouble x);                                     \
     void vertexAttrib1dv(GLuint index, const GLdouble *v);                             \
@@ -41,4 +41,4 @@
     void vertexAttrib4uiv(GLuint index, const GLuint *v);                              \
     void vertexAttrib4usv(GLuint index, const GLushort *v);
 
-#endif  // ANGLE_CONTEXT_API_2_0_AUTOGEN_H_
+#endif  // ANGLE_CONTEXT_API_2_AUTOGEN_H_

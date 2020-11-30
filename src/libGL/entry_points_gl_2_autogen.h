@@ -5,17 +5,19 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-// entry_points_gl_2_0_autogen.h:
-//   Defines the GL 2.0 entry points.
+// entry_points_gl_2_autogen.h:
+//   Defines the Desktop GL 2.x entry points.
 
-#ifndef LIBGL_ENTRY_POINTS_GL_2_0_AUTOGEN_H_
-#define LIBGL_ENTRY_POINTS_GL_2_0_AUTOGEN_H_
+#ifndef LIBGL_ENTRY_POINTS_GL_2_AUTOGEN_H_
+#define LIBGL_ENTRY_POINTS_GL_2_AUTOGEN_H_
 
 #include <export.h>
 #include "angle_gl.h"
 
 namespace gl
 {
+
+// GL 2.0
 ANGLE_EXPORT void GL_APIENTRY AttachShader(GLuint program, GLuint shader);
 ANGLE_EXPORT void GL_APIENTRY BindAttribLocation(GLuint program, GLuint index, const GLchar *name);
 ANGLE_EXPORT void GL_APIENTRY BlendEquationSeparate(GLenum modeRGB, GLenum modeAlpha);
@@ -158,6 +160,32 @@ ANGLE_EXPORT void GL_APIENTRY VertexAttribPointer(GLuint index,
                                                   GLboolean normalized,
                                                   GLsizei stride,
                                                   const void *pointer);
+
+// GL 2.1
+ANGLE_EXPORT void GL_APIENTRY UniformMatrix2x3fv(GLint location,
+                                                 GLsizei count,
+                                                 GLboolean transpose,
+                                                 const GLfloat *value);
+ANGLE_EXPORT void GL_APIENTRY UniformMatrix2x4fv(GLint location,
+                                                 GLsizei count,
+                                                 GLboolean transpose,
+                                                 const GLfloat *value);
+ANGLE_EXPORT void GL_APIENTRY UniformMatrix3x2fv(GLint location,
+                                                 GLsizei count,
+                                                 GLboolean transpose,
+                                                 const GLfloat *value);
+ANGLE_EXPORT void GL_APIENTRY UniformMatrix3x4fv(GLint location,
+                                                 GLsizei count,
+                                                 GLboolean transpose,
+                                                 const GLfloat *value);
+ANGLE_EXPORT void GL_APIENTRY UniformMatrix4x2fv(GLint location,
+                                                 GLsizei count,
+                                                 GLboolean transpose,
+                                                 const GLfloat *value);
+ANGLE_EXPORT void GL_APIENTRY UniformMatrix4x3fv(GLint location,
+                                                 GLsizei count,
+                                                 GLboolean transpose,
+                                                 const GLfloat *value);
 }  // namespace gl
 
-#endif  // LIBGL_ENTRY_POINTS_GL_2_0_AUTOGEN_H_
+#endif  // LIBGL_ENTRY_POINTS_GL_2_AUTOGEN_H_

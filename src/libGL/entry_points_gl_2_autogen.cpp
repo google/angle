@@ -5,10 +5,10 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-// entry_points_gl_2_0_autogen.cpp:
-//   Defines the GL 2.0 entry points.
+// entry_points_gl_2_autogen.cpp:
+//   Defines the Desktop GL 2.x entry points.
 
-#include "libGL/entry_points_gl_2_0_autogen.h"
+#include "libGL/entry_points_gl_2_autogen.h"
 
 #include "libANGLE/Context.h"
 #include "libANGLE/Context.inl.h"
@@ -27,6 +27,8 @@
 
 namespace gl
 {
+
+// GL 2.0
 void GL_APIENTRY AttachShader(GLuint program, GLuint shader)
 {
     Context *context = GetValidGlobalContext();
@@ -2322,6 +2324,187 @@ void GL_APIENTRY VertexAttribPointer(GLuint index,
         }
         ANGLE_CAPTURE(VertexAttribPointer, isCallValid, context, index, size, typePacked,
                       normalized, stride, pointer);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
+}
+
+// GL 2.1
+void GL_APIENTRY UniformMatrix2x3fv(GLint location,
+                                    GLsizei count,
+                                    GLboolean transpose,
+                                    const GLfloat *value)
+{
+    Context *context = GetValidGlobalContext();
+    EVENT(context, GLUniformMatrix2x3fv,
+          "context = %d, location = %d, count = %d, transpose = %s, value = 0x%016" PRIxPTR "",
+          CID(context), location, count, GLbooleanToString(transpose), (uintptr_t)value);
+
+    if (context)
+    {
+        UniformLocation locationPacked = PackParam<UniformLocation>(location);
+        std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateUniformMatrix2x3fv(context, locationPacked, count, transpose, value));
+        if (isCallValid)
+        {
+            context->uniformMatrix2x3fv(locationPacked, count, transpose, value);
+        }
+        ANGLE_CAPTURE(UniformMatrix2x3fv, isCallValid, context, locationPacked, count, transpose,
+                      value);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
+}
+
+void GL_APIENTRY UniformMatrix2x4fv(GLint location,
+                                    GLsizei count,
+                                    GLboolean transpose,
+                                    const GLfloat *value)
+{
+    Context *context = GetValidGlobalContext();
+    EVENT(context, GLUniformMatrix2x4fv,
+          "context = %d, location = %d, count = %d, transpose = %s, value = 0x%016" PRIxPTR "",
+          CID(context), location, count, GLbooleanToString(transpose), (uintptr_t)value);
+
+    if (context)
+    {
+        UniformLocation locationPacked = PackParam<UniformLocation>(location);
+        std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateUniformMatrix2x4fv(context, locationPacked, count, transpose, value));
+        if (isCallValid)
+        {
+            context->uniformMatrix2x4fv(locationPacked, count, transpose, value);
+        }
+        ANGLE_CAPTURE(UniformMatrix2x4fv, isCallValid, context, locationPacked, count, transpose,
+                      value);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
+}
+
+void GL_APIENTRY UniformMatrix3x2fv(GLint location,
+                                    GLsizei count,
+                                    GLboolean transpose,
+                                    const GLfloat *value)
+{
+    Context *context = GetValidGlobalContext();
+    EVENT(context, GLUniformMatrix3x2fv,
+          "context = %d, location = %d, count = %d, transpose = %s, value = 0x%016" PRIxPTR "",
+          CID(context), location, count, GLbooleanToString(transpose), (uintptr_t)value);
+
+    if (context)
+    {
+        UniformLocation locationPacked = PackParam<UniformLocation>(location);
+        std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateUniformMatrix3x2fv(context, locationPacked, count, transpose, value));
+        if (isCallValid)
+        {
+            context->uniformMatrix3x2fv(locationPacked, count, transpose, value);
+        }
+        ANGLE_CAPTURE(UniformMatrix3x2fv, isCallValid, context, locationPacked, count, transpose,
+                      value);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
+}
+
+void GL_APIENTRY UniformMatrix3x4fv(GLint location,
+                                    GLsizei count,
+                                    GLboolean transpose,
+                                    const GLfloat *value)
+{
+    Context *context = GetValidGlobalContext();
+    EVENT(context, GLUniformMatrix3x4fv,
+          "context = %d, location = %d, count = %d, transpose = %s, value = 0x%016" PRIxPTR "",
+          CID(context), location, count, GLbooleanToString(transpose), (uintptr_t)value);
+
+    if (context)
+    {
+        UniformLocation locationPacked = PackParam<UniformLocation>(location);
+        std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateUniformMatrix3x4fv(context, locationPacked, count, transpose, value));
+        if (isCallValid)
+        {
+            context->uniformMatrix3x4fv(locationPacked, count, transpose, value);
+        }
+        ANGLE_CAPTURE(UniformMatrix3x4fv, isCallValid, context, locationPacked, count, transpose,
+                      value);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
+}
+
+void GL_APIENTRY UniformMatrix4x2fv(GLint location,
+                                    GLsizei count,
+                                    GLboolean transpose,
+                                    const GLfloat *value)
+{
+    Context *context = GetValidGlobalContext();
+    EVENT(context, GLUniformMatrix4x2fv,
+          "context = %d, location = %d, count = %d, transpose = %s, value = 0x%016" PRIxPTR "",
+          CID(context), location, count, GLbooleanToString(transpose), (uintptr_t)value);
+
+    if (context)
+    {
+        UniformLocation locationPacked = PackParam<UniformLocation>(location);
+        std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateUniformMatrix4x2fv(context, locationPacked, count, transpose, value));
+        if (isCallValid)
+        {
+            context->uniformMatrix4x2fv(locationPacked, count, transpose, value);
+        }
+        ANGLE_CAPTURE(UniformMatrix4x2fv, isCallValid, context, locationPacked, count, transpose,
+                      value);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
+}
+
+void GL_APIENTRY UniformMatrix4x3fv(GLint location,
+                                    GLsizei count,
+                                    GLboolean transpose,
+                                    const GLfloat *value)
+{
+    Context *context = GetValidGlobalContext();
+    EVENT(context, GLUniformMatrix4x3fv,
+          "context = %d, location = %d, count = %d, transpose = %s, value = 0x%016" PRIxPTR "",
+          CID(context), location, count, GLbooleanToString(transpose), (uintptr_t)value);
+
+    if (context)
+    {
+        UniformLocation locationPacked = PackParam<UniformLocation>(location);
+        std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateUniformMatrix4x3fv(context, locationPacked, count, transpose, value));
+        if (isCallValid)
+        {
+            context->uniformMatrix4x3fv(locationPacked, count, transpose, value);
+        }
+        ANGLE_CAPTURE(UniformMatrix4x3fv, isCallValid, context, locationPacked, count, transpose,
+                      value);
     }
     else
     {
