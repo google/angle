@@ -16,6 +16,40 @@
       "message": "LGTM, but letting Tim +2 as the main reviewer.\n\nPer chance, do you have any data on how much this improves applications / benchmarks? Any idea how much more (like percentage) graphics pipelines are created because of this?",
       "revId": "c454bee9942b848391d4ff1e38aa729be7a980bd",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c345466f_6d6c0f62",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 17
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-30T16:13:52Z",
+      "side": 1,
+      "message": "LGTM, assuming the windows failures aren\u0027t a big deal.",
+      "revId": "c454bee9942b848391d4ff1e38aa729be7a980bd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4cbb952f_1d758b77",
+        "filename": "src/compiler/translator/tree_util/FlipRotateSpecConst.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 244,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-30T16:13:52Z",
+      "side": 1,
+      "message": "use SafeDelete() here.",
+      "revId": "c454bee9942b848391d4ff1e38aa729be7a980bd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
