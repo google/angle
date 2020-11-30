@@ -94,6 +94,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3f7a4c2d_5dfc0b40",
+        "filename": "src/libANGLE/validationEGL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 5303,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-30T19:14:02Z",
+      "side": 1,
+      "message": "It is relocated from the entry point file.",
+      "parentUuid": "6144f499_30ff4389",
+      "range": {
+        "startLine": 5299,
+        "startChar": 0,
+        "endLine": 5303,
+        "endChar": 5
+      },
+      "revId": "81ad2e52d769da70e270ba49543e80276e9e8e90",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e483c4d2_adbb8a0d",
