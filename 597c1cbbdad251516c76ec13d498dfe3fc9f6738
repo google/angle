@@ -16,6 +16,24 @@
       "message": "FYI - shabi i will be uploading a change adding support for EXT_clip_cull_distance shortly. will this change have any impact on the extension support i am about to add?",
       "revId": "597c1cbbdad251516c76ec13d498dfe3fc9f6738",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3d4f7650_9b504c30",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-30T16:59:46Z",
+      "side": 1,
+      "message": "It shouldn\u0027t as long as the front-end sees those new builtins in the list of shader outputs and they are marked active. See VaryingPacking::collectAndPackUserVaryings:\n\n    // Keep track of output builtins that are used by the shader, such as gl_Position,\n    // gl_PointSize etc.\n    if (isActiveBuiltInInput)\n    {\n        mActiveOutputBuiltIns[ref.frontShaderStage].push_back(input-\u003ename);\n    }\n\nYou can try your change on top of this, and if gl_ClipDistance and gl_CullDistance don\u0027t make it inside the if, your implementation is missing something (probably in the translator\u0027s CollectVariables).",
+      "parentUuid": "22404ee1_a4120e73",
+      "revId": "597c1cbbdad251516c76ec13d498dfe3fc9f6738",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
