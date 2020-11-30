@@ -26,6 +26,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "62cd9053_edb40781",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 17
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-30T22:55:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "39931715_f081201c",
+      "range": {
+        "startLine": 7,
+        "startChar": 12,
+        "endLine": 7,
+        "endChar": 24
+      },
+      "revId": "c454bee9942b848391d4ff1e38aa729be7a980bd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "ed2f35cc_633f3107",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 17
@@ -89,6 +113,24 @@
       "side": 1,
       "message": "Better yet, use unique_ptr.",
       "parentUuid": "4cbb952f_1d758b77",
+      "revId": "c454bee9942b848391d4ff1e38aa729be7a980bd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "23b6abb3_03ad731a",
+        "filename": "src/compiler/translator/tree_util/FlipRotateSpecConst.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 244,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-30T22:55:13Z",
+      "side": 1,
+      "message": "I will fix this in the next CL (which is primary for specialization constant clean up)",
+      "parentUuid": "959e3185_70f4534b",
       "revId": "c454bee9942b848391d4ff1e38aa729be7a980bd",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
