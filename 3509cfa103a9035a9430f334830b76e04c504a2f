@@ -177,6 +177,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "ebabb510_ce369006",
+        "filename": "src/common/debug.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 251,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-30T22:30:26Z",
+      "side": 1,
+      "message": "SGTM",
+      "parentUuid": "ae5997cc_c200c44f",
+      "range": {
+        "startLine": 251,
+        "startChar": 0,
+        "endLine": 251,
+        "endChar": 34
+      },
+      "revId": "3509cfa103a9035a9430f334830b76e04c504a2f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "f3b994bf_cd7352e3",
         "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
         "patchSetId": 9
@@ -221,6 +245,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "94f2e51c_e60b2489",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 2785,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-30T22:30:26Z",
+      "side": 1,
+      "message": "tl;dr: I made const, and I seem to be following the Google C++ style guide by using typed variables for it.first and it.second (quoted below).\n\nI don\u0027t know what you\u0027re after.  I\u0027ve searched ANGLE source \u0026 Googled, which all seem to point to what I\u0027m doing.  All uses of angle::HashMap from code search use this same approach (most without the typed variables within the for loop).\n \nFrom the Google C++ style guide:\n\nTypes sometimes contain a mixture of useful information and boilerplate, such as it in the example above: it\u0027s obvious that the type is an iterator, and in many contexts the container type and even the key type aren\u0027t relevant, but the type of the values is probably useful. In such situations, it\u0027s often possible to define local variables with explicit types that convey the relevant information:\n\nif (auto it \u003d my_map_.find(key); it !\u003d my_map_.end()) {\n  WidgetWithBellsAndWhistles\u0026 widget \u003d *it-\u003esecond;\n  // Do stuff with `widget`\n}",
+      "parentUuid": "49eadbab_2f1035bb",
+      "range": {
+        "startLine": 2785,
+        "startChar": 9,
+        "endLine": 2785,
+        "endChar": 14
+      },
+      "revId": "3509cfa103a9035a9430f334830b76e04c504a2f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6b38a958_9f275d51",
@@ -234,6 +282,30 @@
       "writtenOn": "2020-11-23T17:53:57Z",
       "side": 1,
       "message": "nit: also follow the style guide for type inference\n\nalso this can be const",
+      "range": {
+        "startLine": 2794,
+        "startChar": 9,
+        "endLine": 2794,
+        "endChar": 14
+      },
+      "revId": "3509cfa103a9035a9430f334830b76e04c504a2f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "04ae7490_8720d60e",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 2794,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-30T22:30:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6b38a958_9f275d51",
       "range": {
         "startLine": 2794,
         "startChar": 9,
@@ -281,6 +353,30 @@
       "side": 1,
       "message": "Oh, and suggest putting this in the vk namespace in lieu of the Vk suffix. (Vk suffix is really just for Impl classes like BufferVk that inherits from BufferImpl, etc, RendererVk is an anomaly and I\u0027ll eventually merge it with DisplayVk)",
       "parentUuid": "92f00c98_5bc17d88",
+      "range": {
+        "startLine": 75,
+        "startChar": 7,
+        "endLine": 75,
+        "endChar": 22
+      },
+      "revId": "3509cfa103a9035a9430f334830b76e04c504a2f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "59c14b43_2ae7f7c6",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-30T22:30:26Z",
+      "side": 1,
+      "message": "I made it a class, took off \"Vk\" suffix, and put it in the \"vk\" namespace.  I started to rename it, but it seems to confuse things, as this is the \"memory report\" extension (i.e.  VK_EXT_device_memory_report) with \"report\" in types.  Hope that\u0027s okay.",
+      "parentUuid": "b18cf0a0_2a5d5898",
       "range": {
         "startLine": 75,
         "startChar": 7,
@@ -362,6 +458,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "fd510459_957ec2c2",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-30T22:30:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "49821803_7485a97c",
+      "revId": "3509cfa103a9035a9430f334830b76e04c504a2f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "cf066ef9_399cebab",
@@ -385,6 +499,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5415d59e_98145e0c",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-30T22:30:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cf066ef9_399cebab",
+      "range": {
+        "startLine": 81,
+        "startChar": 15,
+        "endLine": 81,
+        "endChar": 33
+      },
+      "revId": "3509cfa103a9035a9430f334830b76e04c504a2f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3fc81552_f9c2f73f",
@@ -398,6 +536,30 @@
       "writtenOn": "2020-11-23T17:53:57Z",
       "side": 1,
       "message": "don\u0027t expose this data, make it private.",
+      "range": {
+        "startLine": 358,
+        "startChar": 4,
+        "endLine": 358,
+        "endChar": 33
+      },
+      "revId": "3509cfa103a9035a9430f334830b76e04c504a2f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "608e84b7_52486c29",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 358,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-11-30T22:30:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3fc81552_f9c2f73f",
       "range": {
         "startLine": 358,
         "startChar": 4,
