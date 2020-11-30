@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "516d5d4f_2e5939a0",
+        "filename": "scripts/generate_entry_points.py",
+        "patchSetId": 9
+      },
+      "lineNbr": 280,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-30T17:42:17Z",
+      "side": 1,
+      "message": "nit: sort",
+      "revId": "81ad2e52d769da70e270ba49543e80276e9e8e90",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fdffe513_f4fd67ee",
+        "filename": "scripts/generate_entry_points.py",
+        "patchSetId": 9
+      },
+      "lineNbr": 2058,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-30T17:42:17Z",
+      "side": 1,
+      "message": "It\u0027s probably a good idea to get in the habit of using the pattern you have here to make it more obvious when we hit bad JSON:\n\n2564000: code gen: Be more robust to dirty hashes. | https://chromium-review.googlesource.com/c/angle/angle/+/2564000",
+      "revId": "81ad2e52d769da70e270ba49543e80276e9e8e90",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e483c4d2_adbb8a0d",
+        "filename": "src/libANGLE/validationEGL.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-11-30T17:42:17Z",
+      "side": 1,
+      "message": "Why is this necessary?",
+      "revId": "81ad2e52d769da70e270ba49543e80276e9e8e90",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
