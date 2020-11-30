@@ -3994,38 +3994,12 @@ bool ValidateBindAttribLocation(const Context *context,
 
 bool ValidateBindFramebuffer(const Context *context, GLenum target, FramebufferID framebuffer)
 {
-    if (!ValidFramebufferTarget(context, target))
-    {
-        context->validationError(GL_INVALID_ENUM, kInvalidFramebufferTarget);
-        return false;
-    }
-
-    if (!context->getState().isBindGeneratesResourceEnabled() &&
-        !context->isFramebufferGenerated(framebuffer))
-    {
-        context->validationError(GL_INVALID_OPERATION, kObjectNotGenerated);
-        return false;
-    }
-
-    return true;
+    return ValidateBindFramebufferBase(context, target, framebuffer);
 }
 
 bool ValidateBindRenderbuffer(const Context *context, GLenum target, RenderbufferID renderbuffer)
 {
-    if (target != GL_RENDERBUFFER)
-    {
-        context->validationError(GL_INVALID_ENUM, kInvalidRenderbufferTarget);
-        return false;
-    }
-
-    if (!context->getState().isBindGeneratesResourceEnabled() &&
-        !context->isRenderbufferGenerated(renderbuffer))
-    {
-        context->validationError(GL_INVALID_OPERATION, kObjectNotGenerated);
-        return false;
-    }
-
-    return true;
+    return ValidateBindRenderbufferBase(context, target, renderbuffer);
 }
 
 static bool ValidBlendEquationMode(const Context *context, GLenum mode)
@@ -5397,20 +5371,8 @@ bool ValidateFramebufferRenderbuffer(const Context *context,
                                      GLenum renderbuffertarget,
                                      RenderbufferID renderbuffer)
 {
-    if (!ValidFramebufferTarget(context, target))
-    {
-        context->validationError(GL_INVALID_ENUM, kInvalidFramebufferTarget);
-        return false;
-    }
-
-    if (renderbuffertarget != GL_RENDERBUFFER && renderbuffer.value != 0)
-    {
-        context->validationError(GL_INVALID_ENUM, kInvalidRenderbufferTarget);
-        return false;
-    }
-
-    return ValidateFramebufferRenderbufferParameters(context, target, attachment,
-                                                     renderbuffertarget, renderbuffer);
+    return ValidateFramebufferRenderbufferBase(context, target, attachment, renderbuffertarget,
+                                               renderbuffer);
 }
 
 bool ValidateFramebufferTexture2D(const Context *context,
@@ -5638,95 +5600,7 @@ bool ValidateGenTextures(const Context *context, GLint n, const TextureID *textu
 
 bool ValidateGenerateMipmap(const Context *context, TextureType target)
 {
-    if (!ValidTextureTarget(context, target))
-    {
-        context->validationError(GL_INVALID_ENUM, kInvalidTextureTarget);
-        return false;
-    }
-
-    Texture *texture = context->getTextureByType(target);
-
-    if (texture == nullptr)
-    {
-        context->validationError(GL_INVALID_OPERATION, kTextureNotBound);
-        return false;
-    }
-
-    const GLuint effectiveBaseLevel = texture->getTextureState().getEffectiveBaseLevel();
-
-    // This error isn't spelled out in the spec in a very explicit way, but we interpret the spec so
-    // that out-of-range base level has a non-color-renderable / non-texture-filterable format.
-    if (effectiveBaseLevel >= IMPLEMENTATION_MAX_TEXTURE_LEVELS)
-    {
-        context->validationError(GL_INVALID_OPERATION, kBaseLevelOutOfRange);
-        return false;
-    }
-
-    TextureTarget baseTarget = (target == TextureType::CubeMap)
-                                   ? TextureTarget::CubeMapPositiveX
-                                   : NonCubeTextureTypeToTarget(target);
-    const auto &format = *(texture->getFormat(baseTarget, effectiveBaseLevel).info);
-    if (format.sizedInternalFormat == GL_NONE || format.compressed || format.depthBits > 0 ||
-        format.stencilBits > 0)
-    {
-        context->validationError(GL_INVALID_OPERATION, kGenerateMipmapNotAllowed);
-        return false;
-    }
-
-    // GenerateMipmap accepts formats that are unsized or both color renderable and filterable.
-    bool formatUnsized = !format.sized;
-    bool formatColorRenderableAndFilterable =
-        format.filterSupport(context->getClientVersion(), context->getExtensions()) &&
-        format.textureAttachmentSupport(context->getClientVersion(), context->getExtensions());
-    if (!formatUnsized && !formatColorRenderableAndFilterable)
-    {
-        context->validationError(GL_INVALID_OPERATION, kGenerateMipmapNotAllowed);
-        return false;
-    }
-
-    // GL_EXT_sRGB adds an unsized SRGB (no alpha) format which has explicitly disabled mipmap
-    // generation
-    if (format.colorEncoding == GL_SRGB && format.format == GL_RGB)
-    {
-        context->validationError(GL_INVALID_OPERATION, kGenerateMipmapNotAllowed);
-        return false;
-    }
-
-    // According to the OpenGL extension spec EXT_sRGB.txt, EXT_SRGB is based on ES 2.0 and
-    // generateMipmap is not allowed if texture format is SRGB_EXT or SRGB_ALPHA_EXT.
-    if (context->getClientVersion() < Version(3, 0) && format.colorEncoding == GL_SRGB)
-    {
-        context->validationError(GL_INVALID_OPERATION, kGenerateMipmapNotAllowed);
-        return false;
-    }
-
-    // Non-power of 2 ES2 check
-    if (context->getClientVersion() < Version(3, 0) && !context->getExtensions().textureNPOTOES &&
-        (!isPow2(static_cast<int>(texture->getWidth(baseTarget, 0))) ||
-         !isPow2(static_cast<int>(texture->getHeight(baseTarget, 0)))))
-    {
-        ASSERT(target == TextureType::_2D || target == TextureType::Rectangle ||
-               target == TextureType::CubeMap);
-        context->validationError(GL_INVALID_OPERATION, kTextureNotPow2);
-        return false;
-    }
-
-    // Cube completeness check
-    if (target == TextureType::CubeMap && !texture->getTextureState().isCubeComplete())
-    {
-        context->validationError(GL_INVALID_OPERATION, kCubemapIncomplete);
-        return false;
-    }
-
-    if (context->getExtensions().webglCompatibility &&
-        (texture->getWidth(baseTarget, effectiveBaseLevel) == 0 ||
-         texture->getHeight(baseTarget, effectiveBaseLevel) == 0))
-    {
-        context->validationError(GL_INVALID_OPERATION, kGenerateMipmapZeroSize);
-        return false;
-    }
-
-    return true;
+    return ValidateGenerateMipmapBase(context, target);
 }
 
 bool ValidateGetBufferParameteriv(const Context *context,

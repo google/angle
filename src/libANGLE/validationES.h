@@ -101,17 +101,6 @@ Program *GetValidProgram(const Context *context, ShaderProgramID id);
 Shader *GetValidShader(const Context *context, ShaderProgramID id);
 
 bool ValidateAttachmentTarget(const Context *context, GLenum attachment);
-bool ValidateRenderbufferStorageParametersBase(const Context *context,
-                                               GLenum target,
-                                               GLsizei samples,
-                                               GLenum internalformat,
-                                               GLsizei width,
-                                               GLsizei height);
-bool ValidateFramebufferRenderbufferParameters(const Context *context,
-                                               GLenum target,
-                                               GLenum attachment,
-                                               GLenum renderbuffertarget,
-                                               RenderbufferID renderbuffer);
 
 bool ValidateBlitFramebufferParameters(const Context *context,
                                        GLint srcX0,
@@ -124,6 +113,29 @@ bool ValidateBlitFramebufferParameters(const Context *context,
                                        GLint dstY1,
                                        GLbitfield mask,
                                        GLenum filter);
+
+bool ValidateBindFramebufferBase(const Context *context, GLenum target, FramebufferID framebuffer);
+bool ValidateBindRenderbufferBase(const Context *context,
+                                  GLenum target,
+                                  RenderbufferID renderbuffer);
+bool ValidateFramebufferRenderbufferBase(const Context *context,
+                                         GLenum target,
+                                         GLenum attachment,
+                                         GLenum renderbuffertarget,
+                                         RenderbufferID renderbuffer);
+bool ValidateFramebufferTextureBase(const Context *context,
+                                    GLenum target,
+                                    GLenum attachment,
+                                    TextureID texture,
+                                    GLint level);
+bool ValidateGenerateMipmapBase(const Context *context, TextureType target);
+
+bool ValidateRenderbufferStorageParametersBase(const Context *context,
+                                               GLenum target,
+                                               GLsizei samples,
+                                               GLenum internalformat,
+                                               GLsizei width,
+                                               GLsizei height);
 
 bool ValidatePixelPack(const Context *context,
                        GLenum format,
@@ -407,12 +419,6 @@ bool ValidateDrawElementsInstancedEXT(const Context *context,
                                       GLsizei primcount);
 
 bool ValidateDrawInstancedANGLE(const Context *context);
-
-bool ValidateFramebufferTextureBase(const Context *context,
-                                    GLenum target,
-                                    GLenum attachment,
-                                    TextureID texture,
-                                    GLint level);
 
 bool ValidateGetUniformBase(const Context *context,
                             ShaderProgramID program,

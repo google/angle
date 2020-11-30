@@ -562,6 +562,9 @@ struct Extensions
     // GL_OES_draw_texture
     bool drawTextureOES = false;
 
+    // GL_OES_framebuffer_object
+    bool framebufferObjectOES = false;
+
     // EGL_ANGLE_explicit_context GL subextensions
     // GL_ANGLE_explicit_context_gles1
     bool explicitContextGles1 = false;

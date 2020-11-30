@@ -3179,6 +3179,7 @@ Extensions Context::generateSupportedExtensions() const
         supportedExtensions.textureCubeMapOES     = true;
         supportedExtensions.pointSpriteOES        = true;
         supportedExtensions.drawTextureOES        = true;
+        supportedExtensions.framebufferObjectOES  = true;
         supportedExtensions.parallelShaderCompile = false;
         supportedExtensions.texture3DOES          = false;
     }

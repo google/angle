@@ -1052,6 +1052,7 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["GL_OES_texture_cube_map"] = enableableExtension(&Extensions::textureCubeMapOES);
         map["GL_OES_point_sprite"] = enableableExtension(&Extensions::pointSpriteOES);
         map["GL_OES_draw_texture"] = enableableExtension(&Extensions::drawTextureOES);
+        map["GL_OES_framebuffer_object"] = enableableExtension(&Extensions::framebufferObjectOES);
         map["GL_ANGLE_memory_size"] = enableableExtension(&Extensions::memorySize);
         map["GL_EXT_shader_non_constant_global_initializers"] = enableableExtension(&Extensions::shaderNonConstGlobalInitializersEXT);
         map["GL_WEBGL_video_texture"] = enableableExtension(&Extensions::webglVideoTexture);
