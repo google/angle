@@ -16,6 +16,24 @@
       "message": "nit - QueryResult class doesnt have comment/doc\n\nwould be helpful to add a couple of lines noting what count and data is supposed to be",
       "revId": "1fd890ee5c4e4bcb746fcd6dae6db9b2d7b0f846",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cb397188_e0a64b52",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 419,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-30T17:41:51Z",
+      "side": 1,
+      "message": "Sure, I can add that. If there\u0027s no other comments feel free to sign off and I\u0027ll land with the fix.",
+      "parentUuid": "1dd532af_833c7bfc",
+      "revId": "1fd890ee5c4e4bcb746fcd6dae6db9b2d7b0f846",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
