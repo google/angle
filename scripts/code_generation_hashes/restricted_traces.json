@@ -1,6 +1,6 @@
 {
   "src/tests/restricted_traces/.gitignore":
-    "054f342c8cdd27f56ef17ab2b5948bc8",
+    "01e347f5fab1e4160328dc53fd14bba1",
   "src/tests/restricted_traces/angry_birds_2_1500.tar.gz.sha1":
     "2b5d6505d6a8b6f3bbfbad2c8405a89d",
   "src/tests/restricted_traces/arena_of_valor.tar.gz.sha1":
@@ -42,17 +42,19 @@
   "src/tests/restricted_traces/real_commando_secret_mission.tar.gz.sha1":
     "4b484dd9c53a79100ec13b6f1c86040d",
   "src/tests/restricted_traces/restricted_traces.json":
-    "dafaefb78963b377f2d54c97b12cc9fe",
+    "64dc4eb7406274b240d4fd7d62c8d999",
   "src/tests/restricted_traces/restricted_traces_autogen.cpp":
-    "18a6d71981b5dbe98bd96f1717fb1868",
+    "f48a37690e1595b744648151143c6921",
   "src/tests/restricted_traces/restricted_traces_autogen.gni":
-    "d28f9ac1b9e3285c57f491fea58395af",
+    "2ce04e7f9dabb575c030cb554bc01ca8",
   "src/tests/restricted_traces/restricted_traces_autogen.h":
-    "3f2c22b74d3d8ccea5ff3000115c88c9",
+    "07bdf473e90380c6f7b5c6e4238e1683",
   "src/tests/restricted_traces/temple_run_300.tar.gz.sha1":
     "0a08ce3df88cb358ccac3ac63ba04955",
   "src/tests/restricted_traces/trex_200.tar.gz.sha1":
     "c57dc6e28b1eaa1b3bb5dae54847966a",
+  "src/tests/restricted_traces/whatsapp.tar.gz.sha1":
+    "52603d1a43f9e501205d381c9254c07e",
   "src/tests/restricted_traces/world_of_tanks_blitz.tar.gz.sha1":
     "6cba9bb8542b71443f107952faddbe64"
 }

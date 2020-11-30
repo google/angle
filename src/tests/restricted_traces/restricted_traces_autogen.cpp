@@ -32,6 +32,7 @@
 #include "real_commando_secret_mission/real_commando_secret_mission_capture_context1.h"
 #include "temple_run_300/temple_run_300_capture_context1.h"
 #include "trex_200/trex_200_capture_context1.h"
+#include "whatsapp/whatsapp_capture_context1.h"
 #include "world_of_tanks_blitz/world_of_tanks_blitz_capture_context1.h"
 
 namespace angle
@@ -116,6 +117,9 @@ constexpr angle::PackedEnumMap<RestrictedTraceID, TraceInfo> kTraceInfos = {
     {RestrictedTraceID::trex_200,
      {trex_200::kReplayFrameStart, trex_200::kReplayFrameEnd, trex_200::kReplayDrawSurfaceWidth,
       trex_200::kReplayDrawSurfaceHeight, "trex_200"}},
+    {RestrictedTraceID::whatsapp,
+     {whatsapp::kReplayFrameStart, whatsapp::kReplayFrameEnd, whatsapp::kReplayDrawSurfaceWidth,
+      whatsapp::kReplayDrawSurfaceHeight, "whatsapp"}},
     {RestrictedTraceID::world_of_tanks_blitz,
      {world_of_tanks_blitz::kReplayFrameStart, world_of_tanks_blitz::kReplayFrameEnd,
       world_of_tanks_blitz::kReplayDrawSurfaceWidth, world_of_tanks_blitz::kReplayDrawSurfaceHeight,
@@ -194,6 +198,9 @@ void ReplayFrame(RestrictedTraceID traceID, uint32_t frameIndex)
         case RestrictedTraceID::trex_200:
             trex_200::ReplayContext1Frame(frameIndex);
             break;
+        case RestrictedTraceID::whatsapp:
+            whatsapp::ReplayContext1Frame(frameIndex);
+            break;
         case RestrictedTraceID::world_of_tanks_blitz:
             world_of_tanks_blitz::ReplayContext1Frame(frameIndex);
             break;
@@ -270,6 +277,9 @@ void ResetReplay(RestrictedTraceID traceID)
             break;
         case RestrictedTraceID::trex_200:
             trex_200::ResetContext1Replay();
+            break;
+        case RestrictedTraceID::whatsapp:
+            whatsapp::ResetContext1Replay();
             break;
         case RestrictedTraceID::world_of_tanks_blitz:
             world_of_tanks_blitz::ResetContext1Replay();
@@ -348,6 +358,9 @@ void SetupReplay(RestrictedTraceID traceID)
         case RestrictedTraceID::trex_200:
             trex_200::SetupContext1Replay();
             break;
+        case RestrictedTraceID::whatsapp:
+            whatsapp::SetupContext1Replay();
+            break;
         case RestrictedTraceID::world_of_tanks_blitz:
             world_of_tanks_blitz::SetupContext1Replay();
             break;
@@ -425,6 +438,9 @@ void SetBinaryDataDir(RestrictedTraceID traceID, const char *dataDir)
         case RestrictedTraceID::trex_200:
             trex_200::SetBinaryDataDir(dataDir);
             break;
+        case RestrictedTraceID::whatsapp:
+            whatsapp::SetBinaryDataDir(dataDir);
+            break;
         case RestrictedTraceID::world_of_tanks_blitz:
             world_of_tanks_blitz::SetBinaryDataDir(dataDir);
             break;
@@ -501,6 +517,9 @@ void SetBinaryDataDecompressCallback(RestrictedTraceID traceID, DecompressCallba
             break;
         case RestrictedTraceID::trex_200:
             trex_200::SetBinaryDataDecompressCallback(callback);
+            break;
+        case RestrictedTraceID::whatsapp:
+            whatsapp::SetBinaryDataDecompressCallback(callback);
             break;
         case RestrictedTraceID::world_of_tanks_blitz:
             world_of_tanks_blitz::SetBinaryDataDecompressCallback(callback);
