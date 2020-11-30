@@ -358,8 +358,8 @@ class TParseContext : angle::NonCopyable
                                           TFieldList *fieldList,
                                           const ImmutableString &instanceName,
                                           const TSourceLoc &instanceLine,
-                                          TIntermTyped *arrayIndex,
-                                          const TSourceLoc &arrayIndexLine);
+                                          const TVector<unsigned int> *arraySizes,
+                                          const TSourceLoc &arraySizesLine);
 
     void parseLocalSize(const ImmutableString &qualifierType,
                         const TSourceLoc &qualifierTypeLine,
@@ -674,6 +674,7 @@ class TParseContext : angle::NonCopyable
     int mGeometryShaderMaxVertices;
     int mMaxGeometryShaderInvocations;
     int mMaxGeometryShaderMaxVertices;
+    unsigned int mGeometryInputArraySize;
 
     // Track when we add new scope for func body in ESSL 1.00 spec
     bool mFunctionBodyNewScope;

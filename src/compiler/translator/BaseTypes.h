@@ -1097,8 +1097,14 @@ inline bool IsShaderIoBlock(TQualifier qualifier)
 {
     switch (qualifier)
     {
-        case EvqFragmentIn:
         case EvqVertexOut:
+        case EvqTessControlIn:
+        case EvqTessControlOut:
+        case EvqTessEvaluationIn:
+        case EvqTessEvaluationOut:
+        case EvqGeometryIn:
+        case EvqGeometryOut:
+        case EvqFragmentIn:
             return true;
         default:
             return false;

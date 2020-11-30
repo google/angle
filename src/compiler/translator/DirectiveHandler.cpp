@@ -167,12 +167,22 @@ void TDirectiveHandler::handleExtension(const angle::pp::SourceLocation &loc,
         // OVR_multiview is implicitly enabled when OVR_multiview2 is enabled
         if (name == "GL_OVR_multiview2")
         {
-            const std::string multiview = "GL_OVR_multiview";
-            TExtensionBehavior::iterator iterMultiview =
-                mExtensionBehavior.find(GetExtensionByName(multiview.c_str()));
-            if (iterMultiview != mExtensionBehavior.end())
+            constexpr char kMultiviewExtName[] = "GL_OVR_multiview";
+            iter = mExtensionBehavior.find(GetExtensionByName(kMultiviewExtName));
+            if (iter != mExtensionBehavior.end())
             {
-                iterMultiview->second = behaviorVal;
+                iter->second = behaviorVal;
+            }
+        }
+        // EXT_shader_io_blocks is implicitly enabled when EXT_geometry_shader or
+        // EXT_tessellation_shader is enabled.
+        if (name == "GL_EXT_geometry_shader" || name == "GL_EXT_tessellation_shader")
+        {
+            constexpr char kIOBlocksExtName[] = "GL_EXT_shader_io_blocks";
+            iter = mExtensionBehavior.find(GetExtensionByName(kIOBlocksExtName));
+            if (iter != mExtensionBehavior.end())
+            {
+                iter->second = behaviorVal;
             }
         }
         return;

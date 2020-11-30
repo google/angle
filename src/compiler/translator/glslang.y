@@ -618,9 +618,9 @@ declaration
         ES3_OR_NEWER(ImmutableString($2.string), @1, "interface blocks");
         $$ = context->addInterfaceBlock(*$1, @2, ImmutableString($2.string), $3, ImmutableString($5.string), @5, NULL, @$);
     }
-    | type_qualifier enter_struct struct_declaration_list RIGHT_BRACE IDENTIFIER LEFT_BRACKET constant_expression RIGHT_BRACKET SEMICOLON {
+    | type_qualifier enter_struct struct_declaration_list RIGHT_BRACE IDENTIFIER array_specifier SEMICOLON {
         ES3_OR_NEWER(ImmutableString($2.string), @1, "interface blocks");
-        $$ = context->addInterfaceBlock(*$1, @2, ImmutableString($2.string), $3, ImmutableString($5.string), @5, $7, @6);
+        $$ = context->addInterfaceBlock(*$1, @2, ImmutableString($2.string), $3, ImmutableString($5.string), @5, $6, @6);
     }
     | type_qualifier SEMICOLON {
         context->parseGlobalLayoutQualifier(*$1);

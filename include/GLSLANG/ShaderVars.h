@@ -53,7 +53,7 @@ enum class BlockType
     BLOCK_BUFFER,
 
     // TODO: Remove gl_in from interface blocks and place it in varyings with the rest of shader I/O
-    // blocks, then remove GetInBlocks and getInBlocks everywhere.  http://anglebug.com/NNNN
+    // blocks, then remove GetInBlocks and getInBlocks everywhere.  http://anglebug.com/5423
     BLOCK_IN
 };
 

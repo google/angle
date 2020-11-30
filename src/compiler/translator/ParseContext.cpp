@@ -240,6 +240,7 @@ TParseContext::TParseContext(TSymbolTable &symt,
       mGeometryShaderMaxVertices(-1),
       mMaxGeometryShaderInvocations(resources.MaxGeometryShaderInvocations),
       mMaxGeometryShaderMaxVertices(resources.MaxGeometryOutputVertices),
+      mGeometryInputArraySize(0),
       mFunctionBodyNewScope(false),
       mOutputType(outputType)
 {}
@@ -3071,6 +3072,7 @@ void TParseContext::setGeometryShaderInputArraySize(unsigned int inputArraySize,
               "array inputs.",
               "layout");
     }
+    mGeometryInputArraySize = inputArraySize;
 }
 
 bool TParseContext::parseGeometryShaderInputLayoutQualifier(const TTypeQualifier &typeQualifier)
@@ -3837,12 +3839,16 @@ TIntermDeclaration *TParseContext::addInterfaceBlock(
     TFieldList *fieldList,
     const ImmutableString &instanceName,
     const TSourceLoc &instanceLine,
-    TIntermTyped *arrayIndex,
-    const TSourceLoc &arrayIndexLine)
+    const TVector<unsigned int> *arraySizes,
+    const TSourceLoc &arraySizesLine)
 {
     checkIsNotReserved(nameLine, blockName);
 
     TTypeQualifier typeQualifier = typeQualifierBuilder.getVariableTypeQualifier(mDiagnostics);
+
+    const bool isUniformOrBuffer =
+        typeQualifier.qualifier == EvqUniform || typeQualifier.qualifier == EvqBuffer;
+    const bool isShaderIoBlock = IsShaderIoBlock(typeQualifier.qualifier);
 
     if (mShaderVersion < 310 && typeQualifier.qualifier != EvqUniform)
     {
@@ -3853,7 +3859,7 @@ TIntermDeclaration *TParseContext::addInterfaceBlock(
     }
     else if (typeQualifier.qualifier != EvqUniform && typeQualifier.qualifier != EvqBuffer)
     {
-        if (IsShaderIoBlock(typeQualifier.qualifier))
+        if (isShaderIoBlock)
         {
             if (!isExtensionEnabled(TExtension::OES_shader_io_blocks) &&
                 !isExtensionEnabled(TExtension::EXT_shader_io_blocks))
@@ -3881,11 +3887,52 @@ TIntermDeclaration *TParseContext::addInterfaceBlock(
         checkMemoryQualifierIsNotSpecified(typeQualifier.memoryQualifier, typeQualifier.line);
     }
 
-    // add array index
-    unsigned int arraySize = 0;
-    if (arrayIndex != nullptr)
+    // Verify array sizes
+    if (arraySizes)
     {
-        arraySize = checkIsValidArraySize(arrayIndexLine, arrayIndex);
+        if (isUniformOrBuffer)
+        {
+            if (arraySizes->size() == 0)
+            {
+                error(arraySizesLine, "unsized arrays are not allowed with interface blocks", "");
+            }
+            if (arraySizes->size() > 1)
+            {
+                error(arraySizesLine, "array of arrays are not allowed with interface blocks", "");
+            }
+        }
+        else if (isShaderIoBlock)
+        {
+            size_t arrayDimensions = arraySizes->size();
+
+            // Geometry shader inputs have a level arrayness that must be ignored.
+            if (mShaderType == GL_GEOMETRY_SHADER_EXT && IsVaryingIn(typeQualifier.qualifier))
+            {
+                ASSERT(arrayDimensions > 0);
+                --arrayDimensions;
+
+                // Validate that the array size of input matches the geometry layout
+                // declaration, if not automatic (specified as []).
+                const unsigned int geometryDim = arraySizes->back();
+                if (geometryDim > 0 && geometryDim != mGeometryInputArraySize)
+                {
+                    error(arraySizesLine,
+                          "geometry shader input block array size inconsistent "
+                          "with primitive",
+                          "");
+                }
+            }
+
+            if (arrayDimensions > 1)
+            {
+                error(arraySizesLine, "array of arrays are not allowed with I/O blocks", "");
+            }
+        }
+    }
+    else if (isShaderIoBlock && mShaderType == GL_GEOMETRY_SHADER_EXT &&
+             IsVaryingIn(typeQualifier.qualifier))
+    {
+        error(arraySizesLine, "geometry shader input blocks must be an array", "");
     }
 
     checkIndexIsNotSpecified(typeQualifier.line, typeQualifier.layoutQualifier.index);
@@ -3896,6 +3943,8 @@ TIntermDeclaration *TParseContext::addInterfaceBlock(
     }
     else
     {
+        unsigned int arraySize =
+            arraySizes == nullptr || arraySizes->empty() ? 0 : (*arraySizes)[0];
         checkBlockBindingIsValid(typeQualifier.line, typeQualifier.qualifier,
                                  typeQualifier.layoutQualifier.binding, arraySize);
     }
@@ -4066,9 +4115,9 @@ TIntermDeclaration *TParseContext::addInterfaceBlock(
 
     TType *interfaceBlockType =
         new TType(interfaceBlock, typeQualifier.qualifier, blockLayoutQualifier);
-    if (arrayIndex != nullptr)
+    if (arraySizes)
     {
-        interfaceBlockType->makeArray(arraySize);
+        interfaceBlockType->makeArrays(*arraySizes);
     }
 
     // The instance variable gets created to refer to the interface block type from the AST
@@ -4240,8 +4289,12 @@ TIntermTyped *TParseContext::addIndexExpression(TIntermTyped *baseExpression,
                           "[");
                     break;
                 default:
-                    // We can reach here only in error cases.
-                    ASSERT(mDiagnostics->numErrors() > 0);
+                    // It's ok for shader I/O blocks to be dynamically indexed
+                    if (!IsShaderIoBlock(baseExpression->getQualifier()))
+                    {
+                        // We can reach here only in error cases.
+                        ASSERT(mDiagnostics->numErrors() > 0);
+                    }
                     break;
             }
         }

@@ -551,6 +551,8 @@ bool IsVaryingOut(TQualifier qualifier)
         case EvqCentroidOut:
         case EvqVertexOut:
         case EvqGeometryOut:
+        case EvqTessControlOut:
+        case EvqTessEvaluationOut:
         case EvqSampleOut:
             return true;
 
@@ -572,6 +574,8 @@ bool IsVaryingIn(TQualifier qualifier)
         case EvqCentroidIn:
         case EvqFragmentIn:
         case EvqGeometryIn:
+        case EvqTessControlIn:
+        case EvqTessEvaluationIn:
         case EvqSampleIn:
             return true;
 
