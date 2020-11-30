@@ -52,6 +52,24 @@
       "parentUuid": "d297686d_315c992e",
       "revId": "2550ae8f42443cf268ebc384f165711e7eaad7f2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e4503698_0366b0e8",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 290,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-30T17:57:16Z",
+      "side": 1,
+      "message": "Unsigned I/O block arrays are also not handled. I\u0027m going to take the change and just fix everything as I encounter them.",
+      "parentUuid": "87c17b7a_69b7f489",
+      "revId": "2550ae8f42443cf268ebc384f165711e7eaad7f2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
