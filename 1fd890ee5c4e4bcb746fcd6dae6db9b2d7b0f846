@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1dd532af_833c7bfc",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 419,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-30T17:39:17Z",
+      "side": 1,
+      "message": "nit - QueryResult class doesnt have comment/doc\n\nwould be helpful to add a couple of lines noting what count and data is supposed to be",
+      "revId": "1fd890ee5c4e4bcb746fcd6dae6db9b2d7b0f846",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
