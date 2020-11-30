@@ -3568,6 +3568,11 @@ void Context::initCaps()
                << std::endl;
         mState.mExtensions.mapBufferRange = false;
         mState.mExtensions.mapBufferOES   = false;
+
+        INFO() << "Disabling GL_CHROMIUM_bind_uniform_location during capture, which is not "
+                  "supported on native drivers"
+               << std::endl;
+        mState.mExtensions.bindUniformLocation = false;
     }
 
     // Disable support for OES_get_program_binary
