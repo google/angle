@@ -2024,7 +2024,7 @@ def get_egl_exports():
 
     capser = lambda fn: "EGL_" + fn[3:]
 
-    for major, minor in [[1, 0], [1, 1], [1, 2], [1, 3], [1, 4], [1, 5]]:
+    for major, minor in registry_xml.EGL_VERSIONS:
         annotation = "{}_{}".format(major, minor)
         name_prefix = "EGL_VERSION_"
 
@@ -2307,7 +2307,7 @@ def main():
     glesdecls = {}
     glesdecls['core'] = {}
     glesdecls['exts'] = {}
-    for ver in [(1, 0), (2, 0), (3, 0), (3, 1), (3, 2)]:
+    for ver in registry_xml.GLES_VERSIONS:
         glesdecls['core'][ver] = []
     for ver in ['GLES1 Extensions', 'GLES2+ Extensions', 'ANGLE Extensions']:
         glesdecls['exts'][ver] = {}
@@ -2324,8 +2324,7 @@ def main():
 
     # First run through the main GLES entry points.  Since ES2+ is the primary use
     # case, we go through those first and then add ES1-only APIs at the end.
-    versions = [[2, 0], [3, 0], [3, 1], [3, 2], [1, 0]]
-    for major_version, minor_version in versions:
+    for major_version, minor_version in registry_xml.GLES_VERSIONS:
         version = "{}_{}".format(major_version, minor_version)
         annotation = "GLES_{}".format(version)
         name_prefix = "GL_ES_VERSION_"
@@ -2475,7 +2474,7 @@ def main():
         libgles_ep_exports += get_exports(cmds, lambda x: "%sContextANGLE" % x)
 
         # Generate .inc files for extension function pointers and declarations
-        for major, minor in versions:
+        for major, minor in registry_xml.GLES_VERSIONS:
             annotation = "{}_{}".format(major, minor)
 
             major_if_not_one = major if major != 1 else ""
@@ -2506,8 +2505,7 @@ def main():
     # Now we generate entry points for the desktop implementation
     gldecls = {}
     gldecls['core'] = {}
-    for ver in [(1, 0), (1, 1), (1, 2), (1, 3), (1, 4), (1, 5), (2, 0), (2, 1), (3, 0), (3, 1),
-                (3, 2), (3, 3), (4, 0), (4, 1), (4, 2), (4, 3), (4, 4), (4, 5), (4, 6)]:
+    for ver in registry_xml.DESKTOP_GL_VERSIONS:
         gldecls['core'][ver] = []
 
     libgl_ep_defs = []
@@ -2515,9 +2513,7 @@ def main():
 
     glxml = registry_xml.RegistryXML('gl.xml')
 
-    for major_version, minor_version in [[1, 0], [1, 1], [1, 2], [1, 3], [1, 4], [1, 5], [2, 0],
-                                         [2, 1], [3, 0], [3, 1], [3, 2], [3, 3], [4, 0], [4, 1],
-                                         [4, 2], [4, 3], [4, 4], [4, 5], [4, 6]]:
+    for major_version, minor_version in registry_xml.DESKTOP_GL_VERSIONS:
         version = "{}_{}".format(major_version, minor_version)
         annotation = "GL_{}".format(version)
         name_prefix = "GL_VERSION_"
@@ -2592,7 +2588,7 @@ def main():
     egl_ep_to_object = get_egl_object_category_map()
     egl_commands = []
 
-    for major_version, minor_version in [[1, 0], [1, 1], [1, 2], [1, 3], [1, 4], [1, 5]]:
+    for major_version, minor_version in registry_xml.EGL_VERSIONS:
         version = "%d_%d" % (major_version, minor_version)
         annotation = "EGL_%s" % version
         name_prefix = "EGL_VERSION_"
