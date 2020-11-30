@@ -18,6 +18,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "cd6c26af_fa7c0ce1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 15
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-30T18:22:04Z",
+      "side": 1,
+      "message": "I did consider it. It makes a few things work better to keep them in the same namespace. For instance we don\u0027t need to store multiple member variables for the entry point enum in angle::CallCapture.",
+      "parentUuid": "59dac2d2_3b14d400",
+      "revId": "8d8f7ef56950b33d3e1378a3b13a746868a8c74f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5a6c6934_dcea3f20",
@@ -31,6 +49,30 @@
       "writtenOn": "2020-11-30T17:50:02Z",
       "side": 1,
       "message": "nit: Can this be accomplished with lstrip(\"wegl\")?  Makes it even clearer what the helper does.",
+      "range": {
+        "startLine": 943,
+        "startChar": 11,
+        "endLine": 943,
+        "endChar": 47
+      },
+      "revId": "8d8f7ef56950b33d3e1378a3b13a746868a8c74f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "71ef288e_7f32ffab",
+        "filename": "scripts/generate_entry_points.py",
+        "patchSetId": 15
+      },
+      "lineNbr": 943,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-30T18:22:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5a6c6934_dcea3f20",
       "range": {
         "startLine": 943,
         "startChar": 11,
