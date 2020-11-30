@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "22404ee1_a4120e73",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-30T16:44:05Z",
+      "side": 1,
+      "message": "FYI - shabi i will be uploading a change adding support for EXT_clip_cull_distance shortly. will this change have any impact on the extension support i am about to add?",
+      "revId": "597c1cbbdad251516c76ec13d498dfe3fc9f6738",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
