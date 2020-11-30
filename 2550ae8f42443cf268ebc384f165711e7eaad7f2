@@ -16,6 +16,24 @@
       "message": "Mohan, there\u0027s likely a bug here where I suspect OpMemberDecorate is used in SPIR-V to set the location of each field of the I/O block, but currently the SPIR-V transformer doesn\u0027t handle that instruction.\n\nIf you don\u0027t mind, I\u0027m going to take this change and add that missing piece.",
       "revId": "2550ae8f42443cf268ebc384f165711e7eaad7f2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d297686d_315c992e",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 290,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-30T16:48:18Z",
+      "side": 1,
+      "message": "\u003e If you don\u0027t mind, I\u0027m going to take this change and add that missing piece.\n\nthats fine shabi. i will wait for your change to merge before working on this",
+      "parentUuid": "0c1d20c0_1b2259d3",
+      "revId": "2550ae8f42443cf268ebc384f165711e7eaad7f2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
