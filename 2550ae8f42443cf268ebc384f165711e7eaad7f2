@@ -34,6 +34,24 @@
       "parentUuid": "0c1d20c0_1b2259d3",
       "revId": "2550ae8f42443cf268ebc384f165711e7eaad7f2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "87c17b7a_69b7f489",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 290,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-11-30T17:48:09Z",
+      "side": 1,
+      "message": "Am I right to understand that this change doesn\u0027t handle location qualifiers in the middle of the block declaration? Example from spec (see f and h):\n\n      layout(location \u003d 4) in block {\n          vec4 d;                         // gets location 4\n          vec4 e;                         // gets location 5\n          layout(location \u003d 7) vec4 f;    // gets location 7\n          vec4 g;                         // gets location 8\n          layout (location \u003d 1) vec4 h;   // gets location 1\n          vec4 i;                         // gets location 2\n          vec4 j;                         // gets location 3\n          vec4 k;                         // ERROR, location 4 already used\n      };",
+      "parentUuid": "d297686d_315c992e",
+      "revId": "2550ae8f42443cf268ebc384f165711e7eaad7f2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
