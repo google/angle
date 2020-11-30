@@ -16,6 +16,24 @@
       "message": "Hey Mohan: I\u0027m going to help out here and pull out the QueryVk XFB changes.",
       "revId": "febfccd7fe59c739fee911b09fc7923774a4bce6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0f3c5a71_9e7739c9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 17
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-11-30T16:49:02Z",
+      "side": 1,
+      "message": "\u003e  I\u0027m going to help out here and pull out the QueryVk XFB changes.\n\nthanks jamie. i will wait for your change to merge before working on this",
+      "parentUuid": "35e984c0_56d32d85",
+      "revId": "febfccd7fe59c739fee911b09fc7923774a4bce6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
