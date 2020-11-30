@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b44d7c61_f6ae552f",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 4722,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-30T20:12:20Z",
+      "side": 1,
+      "message": "I guess the difference between these two are angle internal renderpass (like blit/clear?), which should not count toward the query?",
+      "range": {
+        "startLine": 4721,
+        "startChar": 8,
+        "endLine": 4722,
+        "endChar": 42
+      },
+      "revId": "f80819305e01e3cbe72eb9ee61e9f8855e171b18",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c2e9b37c_cb73319f",
+        "filename": "src/libANGLE/renderer/vulkan/QueryVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-11-30T20:12:20Z",
+      "side": 1,
+      "message": "Not sure if I understand this correctly. If you are trying to switch other query into this OC code path, shouldn\u0027t you add XFB etc to the \"case\" here? Instead these will not get to Unreachable()?",
+      "range": {
+        "startLine": 85,
+        "startChar": 8,
+        "endLine": 86,
+        "endChar": 51
+      },
+      "revId": "f80819305e01e3cbe72eb9ee61e9f8855e171b18",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
