@@ -1,6 +1,29 @@
 {
   "comments": [
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "39931715_f081201c",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 17
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-30T16:19:35Z",
+      "side": 1,
+      "message": "nit: specialization, the term is always \"specialization constant\"",
+      "range": {
+        "startLine": 7,
+        "startChar": 12,
+        "endLine": 7,
+        "endChar": 24
+      },
+      "revId": "c454bee9942b848391d4ff1e38aa729be7a980bd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "ed2f35cc_633f3107",
@@ -48,6 +71,24 @@
       "writtenOn": "2020-11-30T16:13:52Z",
       "side": 1,
       "message": "use SafeDelete() here.",
+      "revId": "c454bee9942b848391d4ff1e38aa729be7a980bd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "959e3185_70f4534b",
+        "filename": "src/compiler/translator/tree_util/FlipRotateSpecConst.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 244,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-30T16:19:35Z",
+      "side": 1,
+      "message": "Better yet, use unique_ptr.",
+      "parentUuid": "4cbb952f_1d758b77",
       "revId": "c454bee9942b848391d4ff1e38aa729be7a980bd",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
