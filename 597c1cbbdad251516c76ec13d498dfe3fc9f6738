@@ -38,6 +38,75 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "bd40068f_8d8d7b0a",
+        "filename": "src/libANGLE/VaryingPacking.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-30T20:03:02Z",
+      "side": 1,
+      "message": "should you also clear the outer maps?",
+      "range": {
+        "startLine": 127,
+        "startChar": 64,
+        "endLine": 127,
+        "endChar": 91
+      },
+      "revId": "597c1cbbdad251516c76ec13d498dfe3fc9f6738",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ebe031d9_1c9baadb",
+        "filename": "src/libANGLE/VaryingPacking.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-30T20:03:02Z",
+      "side": 1,
+      "message": "whoops.",
+      "range": {
+        "startLine": 127,
+        "startChar": 34,
+        "endLine": 127,
+        "endChar": 35
+      },
+      "revId": "597c1cbbdad251516c76ec13d498dfe3fc9f6738",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f6446ab9_20ffb4af",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 562,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-30T20:03:02Z",
+      "side": 1,
+      "message": "inputShaderType I think is usually how we define these, right? or previousStagesShaderType. Usually we say input though.",
+      "range": {
+        "startLine": 562,
+        "startChar": 49,
+        "endLine": 562,
+        "endChar": 67
+      },
+      "revId": "597c1cbbdad251516c76ec13d498dfe3fc9f6738",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "11b19d0b_c4373e63",
         "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
         "patchSetId": 5
@@ -54,6 +123,29 @@
         "startChar": 0,
         "endLine": 647,
         "endChar": 82
+      },
+      "revId": "597c1cbbdad251516c76ec13d498dfe3fc9f6738",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "12ffc8ad_c40d70fa",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 650,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-30T20:03:02Z",
+      "side": 1,
+      "message": "I think we have a helper for this somewhere. if we don\u0027t we should. but really you\u0027re just asserting int.isint()",
+      "range": {
+        "startLine": 650,
+        "startChar": 15,
+        "endLine": 650,
+        "endChar": 52
       },
       "revId": "597c1cbbdad251516c76ec13d498dfe3fc9f6738",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
@@ -123,6 +215,29 @@
         "startChar": 75,
         "endLine": 2295,
         "endChar": 78
+      },
+      "revId": "597c1cbbdad251516c76ec13d498dfe3fc9f6738",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2f5039b0_49f83980",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramPipelineVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-11-30T20:03:02Z",
+      "side": 1,
+      "message": "same comment here.",
+      "range": {
+        "startLine": 70,
+        "startChar": 19,
+        "endLine": 70,
+        "endChar": 37
       },
       "revId": "597c1cbbdad251516c76ec13d498dfe3fc9f6738",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
