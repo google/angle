@@ -258,15 +258,13 @@ void WriteResultsFile(bool interrupted,
 
         actualResult += ResultTypeToString(result.type);
 
-        std::string expectedResult;
-        if (result.flakyFailures > 0)
+        std::string expectedResult = "PASS";
+
+        // Handle flaky passing tests.
+        if (result.flakyFailures > 0 && result.type == TestResultType::Pass)
         {
             expectedResult = "FAIL PASS";
             jsResult.AddMember("is_flaky", true, allocator);
-        }
-        else
-        {
-            expectedResult = "PASS";
         }
 
         jsResult.AddMember("actual", actualResult, allocator);
@@ -659,6 +657,8 @@ bool MergeTestResults(TestResults *input, TestResults *output, int flakyRetries)
             if (inputResult.type != TestResultType::Pass &&
                 runCount < static_cast<uint32_t>(flakyRetries))
             {
+                printf("Retrying flaky test: %s.%s.\n", id.testSuiteName.c_str(),
+                       id.testName.c_str());
                 inputResult.type = TestResultType::NoResult;
                 outputResult.flakyFailures++;
             }
