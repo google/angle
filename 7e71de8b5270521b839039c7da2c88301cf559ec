@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c7cfee2c_dc91b6bb",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-01T14:50:26Z",
+      "side": 1,
+      "message": "PTAL. Still need a green run, but should fix the leak problems we were seeing with DynamicBuffer.",
+      "revId": "7e71de8b5270521b839039c7da2c88301cf559ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
