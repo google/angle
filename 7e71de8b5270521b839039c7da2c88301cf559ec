@@ -89,6 +89,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "237b34df_e3df32c1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-01T16:55:48Z",
+      "side": 1,
+      "message": "Thinking about this more, we already have this ASSERT in vk::BufferHelper::~BufferHelper, which invokes vk::Buffer::~Buffer which calls vk::WrappedObject::~WrappedObject which calls ASSERT(!valid()). So even ASSERTing the lists are empty is technically not necessary.",
+      "parentUuid": "3fd6f00e_6a39e06e",
+      "revId": "7e71de8b5270521b839039c7da2c88301cf559ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "04dc5019_f265fcd0",
