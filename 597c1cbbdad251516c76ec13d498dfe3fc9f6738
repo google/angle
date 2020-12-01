@@ -82,6 +82,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "61970945_3a8235cc",
+        "filename": "src/libANGLE/VaryingPacking.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-01T21:25:05Z",
+      "side": 1,
+      "message": "They are ShaderMaps",
+      "parentUuid": "bd40068f_8d8d7b0a",
+      "range": {
+        "startLine": 127,
+        "startChar": 64,
+        "endLine": 127,
+        "endChar": 91
+      },
+      "revId": "597c1cbbdad251516c76ec13d498dfe3fc9f6738",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f6446ab9_20ffb4af",
@@ -95,6 +119,30 @@
       "writtenOn": "2020-11-30T20:03:02Z",
       "side": 1,
       "message": "inputShaderType I think is usually how we define these, right? or previousStagesShaderType. Usually we say input though.",
+      "range": {
+        "startLine": 562,
+        "startChar": 49,
+        "endLine": 562,
+        "endChar": 67
+      },
+      "revId": "597c1cbbdad251516c76ec13d498dfe3fc9f6738",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d485a387_2bd19678",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 562,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-01T21:25:05Z",
+      "side": 1,
+      "message": "Done, renamed to frontShaderType.",
+      "parentUuid": "f6446ab9_20ffb4af",
       "range": {
         "startLine": 562,
         "startChar": 49,
@@ -128,6 +176,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3abee6ee_3c23f68f",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 647,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-01T21:25:05Z",
+      "side": 1,
+      "message": "The translator does not provide the necessary information for input builtins. For example with geometry shaders, the translator needs to parse `gl_in[0].gl_Position` to know that gl_Position is an active input varying.\n\nIt could be done, but it\u0027s not really necessary anyways. We can\u0027t rely on what the translator provides as active inputs, since the gl_PerVertex declarations in consequent stages need to match, so for example if VS outputs gl_Position and gl_PointSize, but geometry only consumes gl_Position, we should still have the geometry declare both.\n\nThis change takes the output of VS in the example above, and makes the input of GS match that.",
+      "parentUuid": "11b19d0b_c4373e63",
+      "range": {
+        "startLine": 646,
+        "startChar": 0,
+        "endLine": 647,
+        "endChar": 82
+      },
+      "revId": "597c1cbbdad251516c76ec13d498dfe3fc9f6738",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "12ffc8ad_c40d70fa",
@@ -141,6 +213,30 @@
       "writtenOn": "2020-11-30T20:03:02Z",
       "side": 1,
       "message": "I think we have a helper for this somewhere. if we don\u0027t we should. but really you\u0027re just asserting int.isint()",
+      "range": {
+        "startLine": 650,
+        "startChar": 15,
+        "endLine": 650,
+        "endChar": 52
+      },
+      "revId": "597c1cbbdad251516c76ec13d498dfe3fc9f6738",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6b901422_2bbf4a54",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 650,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-01T21:25:05Z",
+      "side": 1,
+      "message": "Done (helper, in follow up to keep this change simpler). It\u0027s asserting that non builtins didn\u0027t sneak in this list by mistake.",
+      "parentUuid": "12ffc8ad_c40d70fa",
       "range": {
         "startLine": 650,
         "startChar": 15,
@@ -174,6 +270,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "59c30831_a5594373",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1461,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-01T21:25:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7fd602a2_3e151e4e",
+      "range": {
+        "startLine": 1453,
+        "startChar": 0,
+        "endLine": 1461,
+        "endChar": 44
+      },
+      "revId": "597c1cbbdad251516c76ec13d498dfe3fc9f6738",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "43a77e66_90b317dc",
@@ -187,6 +307,30 @@
       "writtenOn": "2020-11-30T18:45:07Z",
       "side": 1,
       "message": "Since the rest of this function is specific to handling \u0027gl_PerVertex\u0027, I think it would be helpful to move the code into a helper function that indicates this.   Something like:\n\n    if (strcmp(mNamesById[id], \"gl_PerVertex\") \u003d\u003d 0)\n    {\n        visitGlPerVertex();\n    }\n\nYou probably want a better name, but that would make adding new handlers here cleaner and keep visitMemberName() more generic.",
+      "range": {
+        "startLine": 1743,
+        "startChar": 0,
+        "endLine": 1746,
+        "endChar": 5
+      },
+      "revId": "597c1cbbdad251516c76ec13d498dfe3fc9f6738",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "96b05a13_99a085b8",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1746,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-01T21:25:05Z",
+      "side": 1,
+      "message": "I will soon need to work on this for shader I/O blocks, and what this needs to say is really `if (!isShaderIOBlock) return`. There\u0027s no other usage for OpMemberDecorate other than for I/O blocks.",
+      "parentUuid": "43a77e66_90b317dc",
       "range": {
         "startLine": 1743,
         "startChar": 0,
@@ -220,6 +364,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "90a5fba9_95776813",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2295,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-01T21:25:05Z",
+      "side": 1,
+      "message": "In [0, max], count \u003d\u003d max + 1\n\nAdded a helper variable to make this clear.",
+      "parentUuid": "87fd1106_561fb7ff",
+      "range": {
+        "startLine": 2295,
+        "startChar": 75,
+        "endLine": 2295,
+        "endChar": 78
+      },
+      "revId": "597c1cbbdad251516c76ec13d498dfe3fc9f6738",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2f5039b0_49f83980",
@@ -233,6 +401,30 @@
       "writtenOn": "2020-11-30T20:03:02Z",
       "side": 1,
       "message": "same comment here.",
+      "range": {
+        "startLine": 70,
+        "startChar": 19,
+        "endLine": 70,
+        "endChar": 37
+      },
+      "revId": "597c1cbbdad251516c76ec13d498dfe3fc9f6738",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4362aea6_92735861",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramPipelineVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-01T21:25:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2f5039b0_49f83980",
       "range": {
         "startLine": 70,
         "startChar": 19,
