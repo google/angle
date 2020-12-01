@@ -121,6 +121,30 @@
       },
       "revId": "2b2915093e982d836c60b414e444d31c3594dc25",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c1997fb9_1b03c0b6",
+        "filename": "src/compiler/translator/CollectVariables.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1085,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-01T21:08:13Z",
+      "side": 1,
+      "message": "Ack, ok.",
+      "parentUuid": "49cc06b8_0efe026b",
+      "range": {
+        "startLine": 1077,
+        "startChar": 0,
+        "endLine": 1085,
+        "endChar": 21
+      },
+      "revId": "2b2915093e982d836c60b414e444d31c3594dc25",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
