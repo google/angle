@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f95312ad_29ae567c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2020-12-01T23:25:11Z",
+      "side": 1,
+      "message": "Going to land this as-is because it affects this Chromium issue as well: https://chromium-review.googlesource.com/c/chromium/src/+/2560552\n\nShabi, let me know if there are any changes you\u0027d like and I can follow up",
+      "revId": "274ea0e8d02bf83500d480612996e7e5856312f2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
