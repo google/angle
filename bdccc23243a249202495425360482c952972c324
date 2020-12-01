@@ -123,6 +123,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "99bb93d4_33c59254",
+        "filename": "src/tests/test_utils/runner/TestSuite.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 268,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2020-12-01T20:00:48Z",
+      "side": 1,
+      "message": "In my crbug.com/1152515#c13 example, it also shows as\n* Flaky: 1 (1 expected, 0 unexpected)\nwith just\n       \"expected\": \"PASS\",\n\n(The step is red due to other failures).\n\nSo, you should just be able to drop the whole if() clause and it would still work like you want it it.",
+      "parentUuid": "f8edb281_fa8afb76",
+      "range": {
+        "startLine": 266,
+        "startChar": 0,
+        "endLine": 268,
+        "endChar": 0
+      },
+      "revId": "bdccc23243a249202495425360482c952972c324",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "213e5c77_eb5e33d4",
