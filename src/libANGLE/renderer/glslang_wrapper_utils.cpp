@@ -636,7 +636,7 @@ void AssignVaryingLocations(const GlslangSourceOptions &options,
         programExecutable.getResources().varyingPacking.getInactiveVaryingMappedNames();
     for (const std::string &varyingName : inactiveVaryingMappedNames[shaderType])
     {
-        ASSERT(!angle::BeginsWith(varyingName, "gl_"));
+        ASSERT(!gl::IsBuiltInName(varyingName));
 
         // If name is already in the map, it will automatically have marked all other stages
         // inactive.
@@ -657,7 +657,7 @@ void AssignVaryingLocations(const GlslangSourceOptions &options,
         programExecutable.getResources().varyingPacking.getActiveOutputBuiltIns();
     for (const std::string &builtInName : activeOutputBuiltIns[shaderType])
     {
-        ASSERT(angle::BeginsWith(builtInName, "gl_"));
+        ASSERT(gl::IsBuiltInName(builtInName));
 
         ShaderInterfaceVariableInfo *info = &(*variableInfoMapOut)[shaderType][builtInName];
         info->activeStages.set(shaderType);
@@ -670,7 +670,7 @@ void AssignVaryingLocations(const GlslangSourceOptions &options,
     {
         for (const std::string &builtInName : activeOutputBuiltIns[frontShaderType])
         {
-            ASSERT(angle::BeginsWith(builtInName, "gl_"));
+            ASSERT(gl::IsBuiltInName(builtInName));
 
             ShaderInterfaceVariableInfo *info = &(*variableInfoMapOut)[shaderType][builtInName];
             info->activeStages.set(shaderType);
@@ -1922,9 +1922,9 @@ void SpirvTransformer::visitVariable(const uint32_t *instruction)
     // Handle builtins, which all start with "gl_".  Either the variable name could be an indication
     // of a builtin variable (such as with gl_FragCoord) or the type name (such as with
     // gl_PerVertex).
-    const bool isNameBuiltin = isInOut && angle::BeginsWith(name, "gl_");
+    const bool isNameBuiltin = isInOut && gl::IsBuiltInName(name);
     const bool isTypeBuiltin =
-        isInOut && mNamesById[typeId] != nullptr && angle::BeginsWith(mNamesById[typeId], "gl_");
+        isInOut && mNamesById[typeId] != nullptr && gl::IsBuiltInName(mNamesById[typeId]);
     if (isNameBuiltin || isTypeBuiltin)
     {
         // Make all builtins point to this no-op info.  Adding this entry allows us to ASSERT that
@@ -2294,7 +2294,7 @@ bool SpirvTransformer::transformTypePointer(const uint32_t *instruction, size_t 
     // storage class, in case it may be necessary later.
 
     // Cannot create a Private type declaration from builtins such as gl_PerVertex.
-    if (mNamesById[typeId] != nullptr && angle::BeginsWith(mNamesById[typeId], "gl_"))
+    if (mNamesById[typeId] != nullptr && gl::IsBuiltInName(mNamesById[typeId]))
     {
         return false;
     }

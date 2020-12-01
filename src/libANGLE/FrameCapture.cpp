@@ -2819,7 +2819,7 @@ void CaptureMidExecutionSetup(const gl::Context *context,
         {
             ASSERT(attrib.location != -1);
 
-            if (angle::BeginsWith(attrib.name, "gl_"))
+            if (gl::IsBuiltInName(attrib.name))
             {
                 // Don't try to bind built-in attributes
                 continue;

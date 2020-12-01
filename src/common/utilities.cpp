@@ -10,6 +10,7 @@
 #include "GLES3/gl3.h"
 #include "common/mathutil.h"
 #include "common/platform.h"
+#include "common/string_utils.h"
 
 #include <set>
 
@@ -918,6 +919,11 @@ std::string ParseResourceName(const std::string &name, std::vector<unsigned int>
     }
 
     return name.substr(0, baseNameLength);
+}
+
+bool IsBuiltInName(const char *name)
+{
+    return angle::BeginsWith(name, "gl_");
 }
 
 std::string StripLastArrayIndex(const std::string &name)
