@@ -679,6 +679,17 @@ angle::Result ProgramExecutableVk::getGraphicsPipeline(
 
     vk::ShaderProgramHelper *shaderProgram = programInfo.getShaderProgram();
     ASSERT(shaderProgram);
+
+    // Drawable size is part of specialization constant, but does not have its own dedicated
+    // programInfo entry. We pick the programInfo entry based on the mTransformOptions and then
+    // update drawable width/height specialization constant. It will go through desc matching and if
+    // spec constant does not match, it will recompile pipeline program.
+    const vk::PackedExtent &dimensions = desc.getDrawableSize();
+    shaderProgram->setSpecializationConstant(sh::vk::SpecializationConstantId::DrawableWidth,
+                                             dimensions.width);
+    shaderProgram->setSpecializationConstant(sh::vk::SpecializationConstantId::DrawableHeight,
+                                             dimensions.height);
+
     ANGLE_TRY(renderer->getPipelineCache(&pipelineCache));
     return shaderProgram->getGraphicsPipeline(
         contextVk, &contextVk->getRenderPassCache(), *pipelineCache, getPipelineLayout(), desc,

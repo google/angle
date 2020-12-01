@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 245
+#define ANGLE_SH_VERSION 246
 
 enum ShShaderSpec
 {
@@ -813,8 +813,10 @@ enum class SpecializationConstantId : uint32_t
 {
     LineRasterEmulation = 0,
     SurfaceRotation     = 1,
+    DrawableWidth       = 2,
+    DrawableHeight      = 3,
 
-    InvalidEnum = 2,
+    InvalidEnum = 4,
     EnumCount   = InvalidEnum,
 };
 
@@ -838,8 +840,9 @@ enum class SpecConstUsage : uint32_t
     LineRasterEmulation = 0,
     YFlip               = 1,
     Rotation            = 2,
+    DrawableSize        = 3,
 
-    InvalidEnum = 3,
+    InvalidEnum = 4,
     EnumCount   = InvalidEnum,
 };
 
