@@ -60,6 +60,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "79856eeb_8d9ddd34",
+        "filename": "src/tests/test_utils/runner/TestSuite.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 268,
+      "author": {
+        "id": 1003232
+      },
+      "writtenOn": "2020-12-01T19:34:25Z",
+      "side": 1,
+      "message": "Right.",
+      "parentUuid": "bf667b17_fa498014",
+      "range": {
+        "startLine": 266,
+        "startChar": 0,
+        "endLine": 268,
+        "endChar": 0
+      },
+      "revId": "bdccc23243a249202495425360482c952972c324",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "213e5c77_eb5e33d4",
         "filename": "src/tests/test_utils/runner/TestSuite.cpp",
         "patchSetId": 1
@@ -71,6 +95,30 @@
       "writtenOn": "2020-12-01T19:00:18Z",
       "side": 1,
       "message": "Also, seems to work well without is_unexpected for telemetry GPU tests.",
+      "range": {
+        "startLine": 275,
+        "startChar": 0,
+        "endLine": 275,
+        "endChar": 65
+      },
+      "revId": "bdccc23243a249202495425360482c952972c324",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "426c71ca_09e9d053",
+        "filename": "src/tests/test_utils/runner/TestSuite.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 275,
+      "author": {
+        "id": 1003232
+      },
+      "writtenOn": "2020-12-01T19:34:25Z",
+      "side": 1,
+      "message": "It probably works without it, but you should have it.",
+      "parentUuid": "213e5c77_eb5e33d4",
       "range": {
         "startLine": 275,
         "startChar": 0,
