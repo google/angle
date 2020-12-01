@@ -627,6 +627,9 @@ void MultithreadingTestES3::mainThreadDraw(bool useDraw)
 // application.
 TEST_P(MultithreadingTestES3, MultithreadFenceDraw)
 {
+    // http://anglebug.com/5418
+    ANGLE_SKIP_TEST_IF(IsLinux() && IsIntel() && IsVulkan());
+
     // Have the secondary thread use glDrawArrays()
     mainThreadDraw(true);
 }
@@ -635,6 +638,9 @@ TEST_P(MultithreadingTestES3, MultithreadFenceDraw)
 // glDrawArrays.
 TEST_P(MultithreadingTestES3, MultithreadFenceTexImage)
 {
+    // http://anglebug.com/5418
+    ANGLE_SKIP_TEST_IF(IsLinux() && IsIntel() && IsVulkan());
+
     // Have the secondary thread use glTexImage2D()
     mainThreadDraw(false);
 }
