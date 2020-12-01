@@ -105,7 +105,7 @@ python scripts/generate_android_bp.py \
     ${GN_OUTPUT_DIRECTORY}/desc.arm.json \
     ${GN_OUTPUT_DIRECTORY}/desc.arm64.json \
     ${GN_OUTPUT_DIRECTORY}/desc.x86.json \
-    ${GN_OUTPUT_DIRECTORY}/desc.x64.json > Android.bp
+    ${GN_OUTPUT_DIRECTORY}/desc.x64.json $@ > Android.bp
 
 rm -rf ${GN_OUTPUT_DIRECTORY}
 git add Android.bp

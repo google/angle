@@ -312,7 +312,7 @@ def merge_bps(bps_for_abis):
     return common_bp
 
 
-def library_target_to_blueprint(target, build_info):
+def library_target_to_blueprint(target, build_info, copy_to_vendor, relative_install_path):
     bps_for_abis = {}
     blueprint_type = ""
     for abi in abi_targets:
@@ -339,6 +339,11 @@ def library_target_to_blueprint(target, build_info):
 
         bp['sdk_version'] = sdk_version
         bp['stl'] = stl
+        if copy_to_vendor:
+            bp['vendor'] = True
+        if relative_install_path is not None:
+            assert copy_to_vendor
+            bp['target'] = {'android': {'relative_install_path': relative_install_path}}
         bps_for_abis[abi] = bp
 
     common_bp = merge_bps(bps_for_abis)
@@ -441,11 +446,14 @@ def action_target_to_blueprint(target, build_info):
     return blueprint_type, bp
 
 
-def gn_target_to_blueprint(target, build_info):
+def gn_target_to_blueprint(target, build_info, copy_to_vendor, relative_install_path):
     for abi in abi_targets:
         gn_type = build_info[abi][target]['type']
         if gn_type in blueprint_library_target_types:
-            return library_target_to_blueprint(target, build_info)
+            if copy_to_vendor and gn_type == 'shared_library':
+                return library_target_to_blueprint(target, build_info, True, relative_install_path)
+            else:
+                return library_target_to_blueprint(target, build_info, False, None)
         elif gn_type in blueprint_gen_types:
             return action_target_to_blueprint(target, build_info[abi])
         else:
@@ -481,7 +489,13 @@ def main():
             'gn_json_' + fixed_abi,
             help=fixed_abi +
             'gn desc in json format. Generated with \'gn desc <out_dir> --format=json "*"\'.')
+    parser.add_argument(
+        '--copy-to-vendor-partition',
+        help='whether the shared library target will copy to the vendor partition',
+        action='store_true',
+        default=False)
     args = vars(parser.parse_args())
+    copy_to_vendor = args['copy_to_vendor_partition']
 
     build_info = {}
     for abi in abi_targets:
@@ -498,7 +512,13 @@ def main():
 
     blueprint_targets = []
     for target in targets_to_write:
-        blueprint_targets.append(gn_target_to_blueprint(target, build_info))
+        blueprint_targets.append(
+            gn_target_to_blueprint(
+                target,
+                build_info,
+                copy_to_vendor,
+                relative_install_path='egl' if copy_to_vendor and
+                (target in root_targets) else None))
 
     # Add APKs with all of the root libraries
     blueprint_targets.append(('filegroup', {
