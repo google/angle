@@ -16,6 +16,69 @@
       "message": "PTAL Yuly, Dirk as well if you feel so inclined.",
       "revId": "bdccc23243a249202495425360482c952972c324",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4496ac14_2f4e2271",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2020-12-01T19:00:18Z",
+      "side": 1,
+      "message": "This is not how I understood it, but also no harm trying.\nMaybe Dirk can give his insight.",
+      "revId": "bdccc23243a249202495425360482c952972c324",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bf667b17_fa498014",
+        "filename": "src/tests/test_utils/runner/TestSuite.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 268,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2020-12-01T19:00:18Z",
+      "side": 1,
+      "message": "Per my understanding in crbug.com/1152515#c13, this is always supposed to be PASS, and there is no need for is_flaky.",
+      "range": {
+        "startLine": 266,
+        "startChar": 0,
+        "endLine": 268,
+        "endChar": 0
+      },
+      "revId": "bdccc23243a249202495425360482c952972c324",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "213e5c77_eb5e33d4",
+        "filename": "src/tests/test_utils/runner/TestSuite.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 275,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2020-12-01T19:00:18Z",
+      "side": 1,
+      "message": "Also, seems to work well without is_unexpected for telemetry GPU tests.",
+      "range": {
+        "startLine": 275,
+        "startChar": 0,
+        "endLine": 275,
+        "endChar": 65
+      },
+      "revId": "bdccc23243a249202495425360482c952972c324",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
