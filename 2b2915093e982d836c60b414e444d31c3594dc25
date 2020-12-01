@@ -35,6 +35,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0d21656c_4432139e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-01T20:51:52Z",
+      "side": 1,
+      "message": "What makes you say that? See ref.",
+      "parentUuid": "9fa8fdc8_bf930aa5",
+      "revId": "2b2915093e982d836c60b414e444d31c3594dc25",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c27f8a6a_bedac037",
@@ -53,6 +71,53 @@
         "startChar": 0,
         "endLine": 161,
         "endChar": 33
+      },
+      "revId": "2b2915093e982d836c60b414e444d31c3594dc25",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ce6e738d_06738fa0",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 161,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-01T20:51:52Z",
+      "side": 1,
+      "message": "Yeah these can be renamed, I didn\u0027t want to clutter the review with a bunch of name changes though. I clarified in the comment, then sed as a follow up (see follow up in chain).",
+      "parentUuid": "c27f8a6a_bedac037",
+      "range": {
+        "startLine": 160,
+        "startChar": 0,
+        "endLine": 161,
+        "endChar": 33
+      },
+      "revId": "2b2915093e982d836c60b414e444d31c3594dc25",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "49cc06b8_0efe026b",
+        "filename": "src/compiler/translator/CollectVariables.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1085,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-01T20:51:52Z",
+      "side": 1,
+      "message": "Ref: each shader I/O block generates one varying per this code.",
+      "range": {
+        "startLine": 1077,
+        "startChar": 0,
+        "endLine": 1085,
+        "endChar": 21
       },
       "revId": "2b2915093e982d836c60b414e444d31c3594dc25",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
