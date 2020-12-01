@@ -3830,8 +3830,6 @@ TIntermTyped *TParseContext::addConstructor(TFunctionLookup *fnCall, const TSour
 
 //
 // Interface/uniform blocks
-// TODO(jiawei.shao@intel.com): implement GL_EXT_shader_io_blocks.
-//
 TIntermDeclaration *TParseContext::addInterfaceBlock(
     const TTypeQualifierBuilder &typeQualifierBuilder,
     const TSourceLoc &nameLine,
@@ -3855,8 +3853,22 @@ TIntermDeclaration *TParseContext::addInterfaceBlock(
     }
     else if (typeQualifier.qualifier != EvqUniform && typeQualifier.qualifier != EvqBuffer)
     {
-        error(typeQualifier.line, "invalid qualifier: interface blocks must be uniform or buffer",
-              getQualifierString(typeQualifier.qualifier));
+        if (IsShaderIoBlock(typeQualifier.qualifier))
+        {
+            if (!isExtensionEnabled(TExtension::OES_shader_io_blocks) &&
+                !isExtensionEnabled(TExtension::EXT_shader_io_blocks))
+            {
+                error(typeQualifier.line,
+                      "invalid qualifier: interface blocks need shader io block extension",
+                      getQualifierString(typeQualifier.qualifier));
+            }
+        }
+        else
+        {
+            error(typeQualifier.line,
+                  "invalid qualifier: interface blocks must be uniform or buffer",
+                  getQualifierString(typeQualifier.qualifier));
+        }
     }
 
     if (typeQualifier.invariant)
@@ -3893,7 +3905,10 @@ TIntermDeclaration *TParseContext::addInterfaceBlock(
                                           typeQualifier.layoutQualifier.earlyFragmentTests);
 
     TLayoutQualifier blockLayoutQualifier = typeQualifier.layoutQualifier;
-    checkLocationIsNotSpecified(typeQualifier.line, blockLayoutQualifier);
+    if (!IsShaderIoBlock(typeQualifier.qualifier))
+    {
+        checkLocationIsNotSpecified(typeQualifier.line, blockLayoutQualifier);
+    }
     checkStd430IsForShaderStorageBlock(typeQualifier.line, blockLayoutQualifier.blockStorage,
                                        typeQualifier.qualifier);
 
@@ -3957,6 +3972,28 @@ TIntermDeclaration *TParseContext::addInterfaceBlock(
                           getQualifierString(qualifier));
                 }
                 break;
+            // a member variable in io block may have different interpolation.
+            case EvqFlatIn:
+            case EvqFlatOut:
+            case EvqNoPerspectiveIn:
+            case EvqNoPerspectiveOut:
+            case EvqSmoothIn:
+            case EvqSmoothOut:
+            case EvqCentroidIn:
+            case EvqCentroidOut:
+                break;
+            // a member variable can have an incomplete qualifier because shader io block has either
+            // in or out.
+            case EvqSmooth:
+            case EvqFlat:
+            case EvqNoPerspective:
+            case EvqCentroid:
+                if (!IsShaderIoBlock(typeQualifier.qualifier))
+                {
+                    error(field->line(), "invalid qualifier on interface block member",
+                          getQualifierString(qualifier));
+                }
+                break;
             default:
                 error(field->line(), "invalid qualifier on interface block member",
                       getQualifierString(qualifier));
@@ -3970,7 +4007,6 @@ TIntermDeclaration *TParseContext::addInterfaceBlock(
 
         // check layout qualifiers
         TLayoutQualifier fieldLayoutQualifier = fieldType->getLayoutQualifier();
-        checkLocationIsNotSpecified(field->line(), fieldLayoutQualifier);
         checkIndexIsNotSpecified(field->line(), fieldLayoutQualifier.index);
         checkBindingIsNotSpecified(field->line(), fieldLayoutQualifier.binding);
 
@@ -4184,7 +4220,6 @@ TIntermTyped *TParseContext::addIndexExpression(TIntermTyped *baseExpression,
     {
         if (baseExpression->isInterfaceBlock())
         {
-            // TODO(jiawei.shao@intel.com): implement GL_EXT_shader_io_blocks.
             switch (baseExpression->getQualifier())
             {
                 case EvqPerVertexIn:

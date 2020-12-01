@@ -630,6 +630,13 @@ struct Extensions
     // GL_EXT_shader_non_constant_global_initializers
     bool shaderNonConstGlobalInitializersEXT = false;
 
+    // GL_OES_shader_io_blocks
+    bool shaderIoBlocksOES = false;
+    // GL_EXT_shader_io_blocks
+    bool shaderIoBlocksEXT = false;
+    // Any version of shader io block extension
+    bool shaderIoBlocksAny() const { return (shaderIoBlocksOES || shaderIoBlocksEXT); }
+
     // GL_EXT_gpu_shader5
     bool gpuShader5EXT = false;
     // WEBGL_video_texture

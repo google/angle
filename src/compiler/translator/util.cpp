@@ -630,6 +630,24 @@ InterpolationType GetInterpolationType(TQualifier qualifier)
     }
 }
 
+// a field may not have qualifer without in or out.
+InterpolationType GetFieldInterpolationType(TQualifier qualifier)
+{
+    switch (qualifier)
+    {
+        case EvqFlat:
+            return INTERPOLATION_FLAT;
+        case EvqNoPerspective:
+            return INTERPOLATION_NOPERSPECTIVE;
+        case EvqSmooth:
+            return INTERPOLATION_SMOOTH;
+        case EvqCentroid:
+            return INTERPOLATION_CENTROID;
+        default:
+            return GetInterpolationType(qualifier);
+    }
+}
+
 TType GetShaderVariableBasicType(const sh::ShaderVariable &var)
 {
     switch (var.type)

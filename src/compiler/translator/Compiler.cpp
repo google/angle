@@ -1085,6 +1085,8 @@ void TCompiler::setResourceString()
         << ":OVR_multiview:" << mResources.OVR_multiview
         << ":EXT_YUV_target:" << mResources.EXT_YUV_target
         << ":EXT_geometry_shader:" << mResources.EXT_geometry_shader
+        << ":OES_shader_io_blocks:" << mResources.OES_shader_io_blocks
+        << ":EXT_shader_io_blocks:" << mResources.EXT_shader_io_blocks
         << ":EXT_gpu_shader5:" << mResources.EXT_gpu_shader5
         << ":OES_texture_3D:" << mResources.OES_texture_3D
         << ":MaxVertexOutputVectors:" << mResources.MaxVertexOutputVectors

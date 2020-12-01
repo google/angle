@@ -386,6 +386,7 @@
     /* GL_EXT_semaphore_fd */                                                                      \
     void importSemaphoreFd(SemaphoreID semaphorePacked, HandleType handleTypePacked, GLint fd);    \
     /* GL_EXT_separate_shader_objects */                                                           \
+    /* GL_EXT_shader_io_blocks */                                                                  \
     /* GL_EXT_tessellation_shader */                                                               \
     /* GL_EXT_texture_buffer */                                                                    \
     /* GL_EXT_texture_compression_bptc */                                                          \
@@ -422,6 +423,7 @@
     /* GL_OES_mapbuffer */                                                                         \
     void *mapBuffer(BufferBinding targetPacked, GLenum access);                                    \
     /* GL_OES_sample_shading */                                                                    \
+    /* GL_OES_shader_io_blocks */                                                                  \
     /* GL_OES_texture_3D */                                                                        \
     void framebufferTexture3D(GLenum target, GLenum attachment, TextureTarget textargetPacked,     \
                               TextureID texturePacked, GLint level, GLint zoffset);                \

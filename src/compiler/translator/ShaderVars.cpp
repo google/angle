@@ -40,6 +40,7 @@ ShaderVariable::ShaderVariable(GLenum typeIn)
       active(false),
       isRowMajorLayout(false),
       location(-1),
+      hasImplicitLocation(false),
       binding(-1),
       imageUnitFormat(GL_NONE),
       offset(-1),
@@ -49,6 +50,7 @@ ShaderVariable::ShaderVariable(GLenum typeIn)
       yuv(false),
       interpolation(INTERPOLATION_SMOOTH),
       isInvariant(false),
+      isShaderIOBlock(false),
       texelFetchStaticUse(false),
       flattenedOffsetInParentArrays(-1)
 {}
@@ -71,8 +73,10 @@ ShaderVariable::ShaderVariable(const ShaderVariable &other)
       active(other.active),
       fields(other.fields),
       structName(other.structName),
+      mappedStructName(other.mappedStructName),
       isRowMajorLayout(other.isRowMajorLayout),
       location(other.location),
+      hasImplicitLocation(other.hasImplicitLocation),
       binding(other.binding),
       imageUnitFormat(other.imageUnitFormat),
       offset(other.offset),
@@ -82,6 +86,7 @@ ShaderVariable::ShaderVariable(const ShaderVariable &other)
       yuv(other.yuv),
       interpolation(other.interpolation),
       isInvariant(other.isInvariant),
+      isShaderIOBlock(other.isShaderIOBlock),
       texelFetchStaticUse(other.texelFetchStaticUse),
       flattenedOffsetInParentArrays(other.flattenedOffsetInParentArrays)
 {}
@@ -97,9 +102,11 @@ ShaderVariable &ShaderVariable::operator=(const ShaderVariable &other)
     active                        = other.active;
     fields                        = other.fields;
     structName                    = other.structName;
+    mappedStructName              = other.mappedStructName;
     isRowMajorLayout              = other.isRowMajorLayout;
     flattenedOffsetInParentArrays = other.flattenedOffsetInParentArrays;
     location                      = other.location;
+    hasImplicitLocation           = other.hasImplicitLocation;
     binding                       = other.binding;
     imageUnitFormat               = other.imageUnitFormat;
     offset                        = other.offset;
@@ -109,6 +116,7 @@ ShaderVariable &ShaderVariable::operator=(const ShaderVariable &other)
     yuv                           = other.yuv;
     interpolation                 = other.interpolation;
     isInvariant                   = other.isInvariant;
+    isShaderIOBlock               = other.isShaderIOBlock;
     texelFetchStaticUse           = other.texelFetchStaticUse;
     return *this;
 }
@@ -119,11 +127,13 @@ bool ShaderVariable::operator==(const ShaderVariable &other) const
         mappedName != other.mappedName || arraySizes != other.arraySizes ||
         staticUse != other.staticUse || active != other.active ||
         fields.size() != other.fields.size() || structName != other.structName ||
-        isRowMajorLayout != other.isRowMajorLayout || location != other.location ||
+        mappedStructName != other.mappedStructName || isRowMajorLayout != other.isRowMajorLayout ||
+        location != other.location || hasImplicitLocation != other.hasImplicitLocation ||
         binding != other.binding || imageUnitFormat != other.imageUnitFormat ||
         offset != other.offset || readonly != other.readonly || writeonly != other.writeonly ||
         index != other.index || yuv != other.yuv || interpolation != other.interpolation ||
-        isInvariant != other.isInvariant || texelFetchStaticUse != other.texelFetchStaticUse)
+        isInvariant != other.isInvariant || isShaderIOBlock != other.isShaderIOBlock ||
+        texelFetchStaticUse != other.texelFetchStaticUse)
     {
         return false;
     }
@@ -359,9 +369,25 @@ bool ShaderVariable::isSameVariableAtLinkTime(const ShaderVariable &other,
             return false;
         }
     }
-    if (structName != other.structName)
+    if (structName != other.structName || mappedStructName != other.mappedStructName)
         return false;
     return true;
+}
+
+void ShaderVariable::updateEffectiveLocation(const sh::ShaderVariable &parent)
+{
+    if ((location < 0 || hasImplicitLocation) && !parent.hasImplicitLocation)
+    {
+        location = parent.location;
+    }
+}
+
+void ShaderVariable::resetEffectiveLocation()
+{
+    if (hasImplicitLocation)
+    {
+        location = -1;
+    }
 }
 
 bool ShaderVariable::isSameUniformAtLinkTime(const ShaderVariable &other) const
@@ -403,11 +429,28 @@ bool ShaderVariable::isSameVaryingAtLinkTime(const ShaderVariable &other) const
 
 bool ShaderVariable::isSameVaryingAtLinkTime(const ShaderVariable &other, int shaderVersion) const
 {
-    return (ShaderVariable::isSameVariableAtLinkTime(other, false, false) &&
-            InterpolationTypesMatch(interpolation, other.interpolation) &&
-            (shaderVersion >= 300 || isInvariant == other.isInvariant) &&
-            (location == other.location) &&
-            (name == other.name || (shaderVersion >= 310 && location >= 0)));
+    return ShaderVariable::isSameVariableAtLinkTime(other, false, false) &&
+           InterpolationTypesMatch(interpolation, other.interpolation) &&
+           (shaderVersion >= 300 || isInvariant == other.isInvariant) &&
+           location == other.location &&
+           (isSameNameAtLinkTime(other) || (shaderVersion >= 310 && location >= 0));
+}
+
+bool ShaderVariable::isSameNameAtLinkTime(const ShaderVariable &other) const
+{
+    if (isShaderIOBlock != other.isShaderIOBlock)
+    {
+        return false;
+    }
+
+    if (isShaderIOBlock)
+    {
+        // Shader I/O blocks match by block name.
+        return structName == other.structName;
+    }
+
+    // Otherwise match by name.
+    return name == other.name;
 }
 
 InterfaceBlock::InterfaceBlock()

@@ -587,6 +587,7 @@ void SerializeShaderVariable(gl::BinaryOutputStream *bos, const sh::ShaderVariab
         SerializeShaderVariable(bos, field);
     }
     bos->writeString(shaderVariable.structName);
+    bos->writeString(shaderVariable.mappedStructName);
     bos->writeBool(shaderVariable.isRowMajorLayout);
     bos->writeInt(shaderVariable.location);
     bos->writeInt(shaderVariable.binding);

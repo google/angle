@@ -23,6 +23,8 @@
     OP(EXT_draw_buffers)                            \
     OP(EXT_frag_depth)                              \
     OP(EXT_geometry_shader)                         \
+    OP(OES_shader_io_blocks)                        \
+    OP(EXT_shader_io_blocks)                        \
     OP(EXT_gpu_shader5)                             \
     OP(EXT_shader_framebuffer_fetch)                \
     OP(EXT_shader_non_constant_global_initializers) \

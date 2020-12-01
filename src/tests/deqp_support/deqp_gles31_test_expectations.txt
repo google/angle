@@ -177,9 +177,6 @@
 //// General Vulkan expectations
 ////
 
-// Block name matching failure:
-3459 VULKAN : dEQP-GLES31.functional.shaders.linkage.es31.shader_storage_block.mismatch_with_and_without_instance_name = FAIL
-
 // Tessellation geometry interaction:
 3572 VULKAN : dEQP-GLES31.functional.tessellation_geometry_interaction.* = FAIL
 
@@ -207,6 +204,21 @@
 5409 VULKAN : dEQP-GLES31.functional.program_interface_query.uniform.random.51 = FAIL
 5409 VULKAN : dEQP-GLES31.functional.program_interface_query.uniform.random.55 = FAIL
 5411 VULKAN : dEQP-GLES31.functional.geometry_shading.emit.*_emit_0_end_* = FAIL
+
+// Shader I/O blocks:
+// Missing matching of block names with unnamed SSBOs with the same member variable
+3580 VULKAN : dEQP-GLES31.functional.shaders.linkage.es31.shader_storage_block.ambiguous_variable_name_3 = FAIL
+// Missing support for unsized geometry shader input I/O block arrays
+3580 VULKAN : dEQP-GLES31.functional.shaders.linkage.es31.geometry.varying.rules.input_block = FAIL
+3580 VULKAN : dEQP-GLES31.functional.shaders.linkage.es31.geometry.varying.types.float_array = FAIL
+// Incorrect error regarding interface block being in/out
+3580 VULKAN : dEQP-GLES31.functional.shaders.linkage.es31.geometry.varying.rules.input_block_explicit_size = FAIL
+3580 VULKAN : dEQP-GLES31.functional.shaders.linkage.es31.geometry.varying.rules.output_block* = FAIL
+// Missing matching of struct name in member fields of matching nameless I/O blocks
+3580 VULKAN : dEQP-GLES31.functional.separate_shader.validation.es31.io_blocks.mismatch_different_member_struct_names = FAIL
+// Failed by glslang errors (matrix or packing qualifiers can only be used on a uniform or buffer)
+3580 VULKAN : dEQP-GLES31.functional.program_interface_query.program_input.type.interface_blocks.in.*.mat3x2 = FAIL
+3580 VULKAN : dEQP-GLES31.functional.program_interface_query.program_output.type.interface_blocks.out.*.mat3x2 = FAIL
 
 
 ////

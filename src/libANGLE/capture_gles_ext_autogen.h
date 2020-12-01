@@ -1581,6 +1581,8 @@ angle::CallCapture CaptureValidateProgramPipelineEXT(const State &glState,
                                                      bool isCallValid,
                                                      ProgramPipelineID pipelinePacked);
 
+// GL_EXT_shader_io_blocks
+
 // GL_EXT_tessellation_shader
 angle::CallCapture CapturePatchParameteriEXT(const State &glState,
                                              bool isCallValid,
@@ -2025,6 +2027,8 @@ angle::CallCapture CaptureQueryMatrixxOES(const State &glState,
 angle::CallCapture CaptureMinSampleShadingOES(const State &glState,
                                               bool isCallValid,
                                               GLfloat value);
+
+// GL_OES_shader_io_blocks
 
 // GL_OES_texture_3D
 angle::CallCapture CaptureCompressedTexImage3DOES(const State &glState,

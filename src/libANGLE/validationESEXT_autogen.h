@@ -1303,6 +1303,8 @@ bool ValidateUseProgramStagesEXT(const Context *context,
                                  ShaderProgramID programPacked);
 bool ValidateValidateProgramPipelineEXT(const Context *context, ProgramPipelineID pipelinePacked);
 
+// GL_EXT_shader_io_blocks
+
 // GL_EXT_tessellation_shader
 bool ValidatePatchParameteriEXT(const Context *context, GLenum pname, GLint value);
 
@@ -1629,6 +1631,8 @@ bool ValidateQueryMatrixxOES(const Context *context,
 
 // GL_OES_sample_shading
 bool ValidateMinSampleShadingOES(const Context *context, GLfloat value);
+
+// GL_OES_shader_io_blocks
 
 // GL_OES_texture_3D
 bool ValidateCompressedTexImage3DOES(const Context *context,

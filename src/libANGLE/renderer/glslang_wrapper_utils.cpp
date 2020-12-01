@@ -258,6 +258,17 @@ ShaderInterfaceVariableInfo *AddLocationInfo(ShaderInterfaceVariableInfoMap *inf
     return info;
 }
 
+// Add location information for an in/out variable
+void AddVaryingLocationInfo(ShaderInterfaceVariableInfoMap &infoMap,
+                            const gl::VaryingInShaderRef &ref,
+                            const bool isStructField,
+                            const uint32_t location,
+                            const uint32_t component)
+{
+    const std::string &name = isStructField ? ref.parentStructMappedName : ref.varying->mappedName;
+    AddLocationInfo(&infoMap, name, location, component, ref.stage, 0, 0);
+}
+
 // Modify an existing out variable and add transform feedback information.
 ShaderInterfaceVariableInfo *SetXfbInfo(ShaderInterfaceVariableInfoMap *infoMap,
                                         const std::string &varName,
@@ -425,7 +436,7 @@ bool IsFirstRegisterOfVarying(const gl::PackedVaryingRegister &varyingReg)
 
     // In Vulkan GLSL, struct fields are not allowed to have location assignments.  The varying of a
     // struct type is thus given a location equal to the one assigned to its first field.
-    if (varying.isStructField() && varying.fieldIndex > 0)
+    if (varying.isStructField() && (varying.fieldIndex > 0 || varying.secondaryFieldIndex > 0))
     {
         return false;
     }
@@ -605,19 +616,18 @@ void AssignVaryingLocations(const GlslangSourceOptions &options,
         // being "_ufield".  In such a case, use |parentStructMappedName|.
         if (varying.frontVarying.varying && (varying.frontVarying.stage == shaderType))
         {
-            const std::string &name = varying.isStructField()
-                                          ? varying.frontVarying.parentStructMappedName
-                                          : varying.frontVarying.varying->mappedName;
-            AddLocationInfo(&(*variableInfoMapOut)[varying.frontVarying.stage], name, location,
-                            component, varying.frontVarying.stage, 0, 0);
+            ShaderInterfaceVariableInfoMap &infoMap =
+                (*variableInfoMapOut)[varying.frontVarying.stage];
+            AddVaryingLocationInfo(infoMap, varying.frontVarying, varying.isStructField(), location,
+                                   component);
         }
+
         if (varying.backVarying.varying && (varying.backVarying.stage == shaderType))
         {
-            const std::string &name = varying.isStructField()
-                                          ? varying.backVarying.parentStructMappedName
-                                          : varying.backVarying.varying->mappedName;
-            AddLocationInfo(&(*variableInfoMapOut)[varying.backVarying.stage], name, location,
-                            component, varying.backVarying.stage, 0, 0);
+            ShaderInterfaceVariableInfoMap &infoMap =
+                (*variableInfoMapOut)[varying.backVarying.stage];
+            AddVaryingLocationInfo(infoMap, varying.backVarying, varying.isStructField(), location,
+                                   component);
         }
     }
 
@@ -1392,6 +1402,7 @@ class SpirvTransformer final : public SpirvTransformerBase
     void transformInstruction();
 
     // Instructions that are purely informational:
+    void visitDecorate(const uint32_t *instruction);
     void visitName(const uint32_t *instruction);
     void visitMemberName(const uint32_t *instruction);
     void visitTypeHelper(const uint32_t *instruction, size_t idIndex, size_t typeIdIndex);
@@ -1435,6 +1446,12 @@ class SpirvTransformer final : public SpirvTransformerBase
     // declaration is met (OpVariable), the variable info is matched with the corresponding id's
     // name based on the Storage Class.
     std::vector<const char *> mNamesById;
+
+    // Tracks whether a given type is an I/O block.  I/O blocks are identified by their type name
+    // instead of variable name, but otherwise look like varyings of struct type (which are
+    // identified by their instance name).  To disambiguate them, the `OpDecorate %N Block`
+    // instruction is used which decorates I/O block types.
+    std::vector<bool> mIsIOBlockById;
 
     // Each OpTypePointer instruction that defines a type with the Output storage class is
     // duplicated with a similar instruction but which defines a type with the Private storage
@@ -1487,6 +1504,10 @@ void SpirvTransformer::resolveVariableIds()
     // variable.
     mNamesById.resize(indexBound, nullptr);
 
+    // Allocate storage for id-to-flag map.  Used to disambiguate I/O blocks instances from varyings
+    // of struct type.
+    mIsIOBlockById.resize(indexBound, false);
+
     // Allocate storage for id-to-info map.  If %i is the id of a name in mVariableInfoMap, index i
     // in this vector will hold a pointer to the ShaderInterfaceVariableInfo object associated with
     // that name in mVariableInfoMap.
@@ -1510,6 +1531,9 @@ void SpirvTransformer::resolveVariableIds()
 
         switch (opCode)
         {
+            case spv::OpDecorate:
+                visitDecorate(instruction);
+                break;
             case spv::OpName:
                 visitName(instruction);
                 break;
@@ -1703,6 +1727,21 @@ void SpirvTransformer::writeOutputPrologue()
     }
 }
 
+void SpirvTransformer::visitDecorate(const uint32_t *instruction)
+{
+    // SPIR-V 1.0 Section 3.32 Instructions, OpDecorate
+    constexpr size_t kIdIndex         = 1;
+    constexpr size_t kDecorationIndex = 2;
+
+    const uint32_t id   = instruction[kIdIndex];
+    uint32_t decoration = instruction[kDecorationIndex];
+
+    if (decoration == spv::DecorationBlock)
+    {
+        mIsIOBlockById[id] = true;
+    }
+}
+
 void SpirvTransformer::visitName(const uint32_t *instruction)
 {
     // We currently don't have any big-endian devices in the list of supported platforms.  Literal
@@ -1791,6 +1830,8 @@ void SpirvTransformer::visitTypeHelper(const uint32_t *instruction,
     // Every type id is declared only once.
     ASSERT(id < mNamesById.size());
     ASSERT(mNamesById[id] == nullptr);
+    ASSERT(id < mIsIOBlockById.size());
+    ASSERT(!mIsIOBlockById[id]);
 
     // Carry the name forward from the base type.  This is only necessary for interface blocks,
     // as the variable info is associated with the block name instead of the variable name (to
@@ -1798,8 +1839,11 @@ void SpirvTransformer::visitTypeHelper(const uint32_t *instruction,
     // type name or the variable name is used to associate with info based on the variable's
     // storage class.
     ASSERT(typeId < mNamesById.size());
-
     mNamesById[id] = mNamesById[typeId];
+
+    // Similarly, carry forward the information regarding whether this type is an I/O block.
+    ASSERT(typeId < mIsIOBlockById.size());
+    mIsIOBlockById[id] = mIsIOBlockById[typeId];
 }
 
 void SpirvTransformer::visitTypeArray(const uint32_t *instruction)
@@ -1850,6 +1894,7 @@ void SpirvTransformer::visitVariable(const uint32_t *instruction)
 
     ASSERT(typeId < mNamesById.size());
     ASSERT(id < mNamesById.size());
+    ASSERT(typeId < mIsIOBlockById.size());
 
     // If storage class indicates that this is not a shader interface variable, ignore it.
     const bool isInterfaceBlockVariable =
@@ -1869,7 +1914,9 @@ void SpirvTransformer::visitVariable(const uint32_t *instruction)
 
     // For interface block variables, the name that's used to associate info is the block name
     // rather than the variable name.
-    const char *name = mNamesById[isInterfaceBlockVariable ? typeId : id];
+    const bool isIOBlock = mIsIOBlockById[typeId];
+    const char *name     = mNamesById[isInterfaceBlockVariable || isIOBlock ? typeId : id];
+
     ASSERT(name != nullptr);
 
     // Handle builtins, which all start with "gl_".  Either the variable name could be an indication
@@ -2346,7 +2393,8 @@ bool SpirvTransformer::transformVariable(const uint32_t *instruction, size_t wor
 
     // Furthermore, if it's not an inactive varying output, there's nothing to do.  Note that
     // inactive varying inputs are already pruned by the translator.
-    ASSERT(storageClass != spv::StorageClassInput || info->activeStages[mShaderType]);
+    // However, input or output storage class for interface block will not be pruned when a shader
+    // is compiled separately.
     if (info->activeStages[mShaderType])
     {
         if (info->useRelaxedPrecision &&
@@ -2367,7 +2415,8 @@ bool SpirvTransformer::transformVariable(const uint32_t *instruction, size_t wor
         return false;
     }
 
-    ASSERT(storageClass == spv::StorageClassOutput);
+    // Copy the declaration even though the variable is inactive for the separately compiled shader.
+    ASSERT(storageClass == spv::StorageClassOutput || storageClass == spv::StorageClassInput);
 
     // Copy the variable declaration for modification.  Change its type to the corresponding type
     // with the Private storage class, as well as changing the storage class respecified in this

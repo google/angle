@@ -1093,6 +1093,18 @@ inline bool IsShaderOut(TQualifier qualifier)
     }
 }
 
+inline bool IsShaderIoBlock(TQualifier qualifier)
+{
+    switch (qualifier)
+    {
+        case EvqFragmentIn:
+        case EvqVertexOut:
+            return true;
+        default:
+            return false;
+    }
+}
+
 enum TLayoutImageInternalFormat
 {
     EiifUnspecified,

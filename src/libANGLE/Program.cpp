@@ -651,6 +651,49 @@ bool ValidateInterfaceBlocksMatch(
     return true;
 }
 
+void UpdateInterfaceVariable(std::vector<sh::ShaderVariable> &block, sh::ShaderVariable &var)
+{
+    if (!var.isStruct())
+    {
+        var.resetEffectiveLocation();
+        block.emplace_back(var);
+    }
+
+    for (sh::ShaderVariable &field : var.fields)
+    {
+        ASSERT(!var.name.empty() || var.isShaderIOBlock);
+
+        // Shader I/O block naming is similar to UBOs and SSBOs:
+        //
+        //     in Block
+        //     {
+        //         type field;  // produces "field"
+        //     };
+        //
+        //     in Block2
+        //     {
+        //         type field;  // produces "Block2.field"
+        //     } block2;
+        //
+        const std::string &baseName = var.isShaderIOBlock ? var.structName : var.name;
+        const std::string prefix    = var.name.empty() ? "" : baseName + ".";
+
+        if (!field.isStruct())
+        {
+            field.updateEffectiveLocation(var);
+            field.name = prefix + field.name;
+            block.emplace_back(field);
+        }
+
+        for (sh::ShaderVariable &nested : field.fields)
+        {
+            nested.updateEffectiveLocation(field);
+            nested.name = prefix + field.name + "." + nested.name;
+            block.emplace_back(nested);
+        }
+    }
+}
+
 void WriteShaderVariableBuffer(BinaryOutputStream *stream, const ShaderVariableBuffer &var)
 {
     stream->writeInt(var.binding);
@@ -883,6 +926,7 @@ void WriteShaderVar(BinaryOutputStream *stream, const sh::ShaderVariable &var)
     stream->writeBool(var.active);
     stream->writeInt(var.binding);
     stream->writeString(var.structName);
+    stream->writeString(var.mappedStructName);
     stream->writeInt(var.hasParentArrayIndex() ? var.parentArrayIndex() : -1);
 
     stream->writeInt(var.imageUnitFormat);
@@ -901,10 +945,11 @@ void LoadShaderVar(BinaryInputStream *stream, sh::ShaderVariable *var)
     var->name       = stream->readString();
     var->mappedName = stream->readString();
     stream->readIntVector<unsigned int>(&var->arraySizes);
-    var->staticUse  = stream->readBool();
-    var->active     = stream->readBool();
-    var->binding    = stream->readInt<int>();
-    var->structName = stream->readString();
+    var->staticUse        = stream->readBool();
+    var->active           = stream->readBool();
+    var->binding          = stream->readInt<int>();
+    var->structName       = stream->readString();
+    var->mappedStructName = stream->readString();
     var->setParentArrayIndex(stream->readInt<int>());
 
     var->imageUnitFormat     = stream->readInt<GLenum>();
@@ -1770,20 +1815,8 @@ void ProgramState::updateProgramInterfaceInputs()
     {
         for (const sh::ShaderVariable &varying : shader->getInputVaryings())
         {
-            if (varying.isStruct())
-            {
-                for (const sh::ShaderVariable &field : varying.fields)
-                {
-                    sh::ShaderVariable fieldVarying = sh::ShaderVariable(field);
-                    fieldVarying.location           = varying.location;
-                    fieldVarying.name               = varying.name + "." + field.name;
-                    mExecutable->mProgramInputs.emplace_back(fieldVarying);
-                }
-            }
-            else
-            {
-                mExecutable->mProgramInputs.emplace_back(varying);
-            }
+            sh::ShaderVariable var = sh::ShaderVariable(varying);
+            UpdateInterfaceVariable(mExecutable->mProgramInputs, var);
         }
     }
 }
@@ -1809,20 +1842,8 @@ void ProgramState::updateProgramInterfaceOutputs()
     // Copy over each output varying, since the Shader could go away
     for (const sh::ShaderVariable &varying : shader->getOutputVaryings())
     {
-        if (varying.isStruct())
-        {
-            for (const sh::ShaderVariable &field : varying.fields)
-            {
-                sh::ShaderVariable fieldVarying = sh::ShaderVariable(field);
-                fieldVarying.location           = varying.location;
-                fieldVarying.name               = varying.name + "." + field.name;
-                mExecutable->mOutputVariables.emplace_back(fieldVarying);
-            }
-        }
-        else
-        {
-            mExecutable->mOutputVariables.emplace_back(varying);
-        }
+        sh::ShaderVariable var = sh::ShaderVariable(varying);
+        UpdateInterfaceVariable(mExecutable->mOutputVariables, var);
     }
 }
 
@@ -3549,8 +3570,8 @@ bool Program::doShaderVariablesMatch(int outputShaderVersion,
                                      bool isSeparable,
                                      gl::InfoLog &infoLog)
 {
-    bool namesMatch     = input.name == output.name;
-    bool locationsMatch = (input.location != -1) && (input.location == output.location);
+    bool namesMatch     = input.isSameNameAtLinkTime(output);
+    bool locationsMatch = input.location != -1 && input.location == output.location;
 
     // An output variable is considered to match an input variable in the subsequent
     // shader if:
@@ -3634,7 +3655,8 @@ bool Program::linkValidateShaderInterfaceMatching(
         // if it is not active. GLSL ES 3.00.6 section 4.3.10.
         if (!match && input->staticUse)
         {
-            infoLog << GetShaderTypeString(inputShaderType) << " varying " << input->name
+            const std::string &name = input->isShaderIOBlock ? input->structName : input->name;
+            infoLog << GetShaderTypeString(inputShaderType) << " varying " << name
                     << " does not match any " << GetShaderTypeString(outputShaderType)
                     << " varying";
             return false;
@@ -4097,7 +4119,8 @@ LinkMismatchError Program::LinkValidateVariablesBase(const sh::ShaderVariable &v
     {
         return LinkMismatchError::PRECISION_MISMATCH;
     }
-    if (variable1.structName != variable2.structName)
+    if (!variable1.isShaderIOBlock && !variable2.isShaderIOBlock &&
+        variable1.structName != variable2.structName)
     {
         return LinkMismatchError::STRUCT_NAME_MISMATCH;
     }
@@ -4119,6 +4142,11 @@ LinkMismatchError Program::LinkValidateVariablesBase(const sh::ShaderVariable &v
         if (member1.name != member2.name)
         {
             return LinkMismatchError::FIELD_NAME_MISMATCH;
+        }
+
+        if (member1.interpolation != member2.interpolation)
+        {
+            return LinkMismatchError::INTERPOLATION_TYPE_MISMATCH;
         }
 
         LinkMismatchError linkErrorOnField = LinkValidateVariablesBase(
@@ -4172,8 +4200,8 @@ LinkMismatchError Program::LinkValidateVaryings(const sh::ShaderVariable &output
     }
 
     // Explicit locations must match if the names match.
-    if ((outputVarying.name == inputVarying.name) &&
-        (outputVarying.location != inputVarying.location))
+    if (outputVarying.isSameNameAtLinkTime(inputVarying) &&
+        outputVarying.location != inputVarying.location)
     {
         return LinkMismatchError::LOCATION_MISMATCH;
     }
@@ -4443,6 +4471,9 @@ ProgramMergedVaryings Program::getMergedVaryings() const
 
     // First, go through output varyings and create two maps (one by name, one by location) for
     // faster lookup when matching input varyings.
+    //
+    // Note that shader I/O blocks may or may not provide a name, and matching would be done by
+    // block name instead if either of the shader stages doesn't provide an instance name.
 
     ShaderMap<std::map<std::string, size_t>> outputVaryingNameToIndex;
     ShaderMap<std::map<int, size_t>> outputVaryingLocationToIndex;
@@ -4466,9 +4497,18 @@ ProgramMergedVaryings Program::getMergedVaryings() const
             ref->frontShader      = &varying;
             ref->frontShaderStage = stage;
 
-            // Always map by name.  Even if location is provided in this stage, it may not be in the
-            // paired stage.
-            outputVaryingNameToIndex[stage][varying.name] = merged.size() - 1;
+            ASSERT(!varying.name.empty() || varying.isShaderIOBlock);
+
+            // Map by name, or if shader I/O block, block name.  Even if location is provided in
+            // this stage, it may not be in the paired stage.
+            if (varying.isShaderIOBlock)
+            {
+                outputVaryingNameToIndex[stage][varying.structName] = merged.size() - 1;
+            }
+            else
+            {
+                outputVaryingNameToIndex[stage][varying.name] = merged.size() - 1;
+            }
 
             // If location is provided, also keep it in a map by location.
             if (varying.location != -1)
@@ -4507,7 +4547,11 @@ ProgramMergedVaryings Program::getMergedVaryings() const
                 // If not found, try to match by name.
                 if (mergedIndex == merged.size())
                 {
-                    auto byNameIter = outputVaryingNameToIndex[previousStage].find(varying.name);
+                    ASSERT(varying.isShaderIOBlock || !varying.name.empty());
+                    const std::string &name =
+                        varying.isShaderIOBlock ? varying.structName : varying.name;
+
+                    auto byNameIter = outputVaryingNameToIndex[previousStage].find(name);
                     if (byNameIter != outputVaryingNameToIndex[previousStage].end())
                     {
                         mergedIndex = byNameIter->second;

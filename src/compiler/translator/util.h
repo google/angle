@@ -56,6 +56,7 @@ bool IsVaryingOut(TQualifier qualifier);
 bool IsVarying(TQualifier qualifier);
 bool IsGeometryShaderInput(GLenum shaderType, TQualifier qualifier);
 InterpolationType GetInterpolationType(TQualifier qualifier);
+InterpolationType GetFieldInterpolationType(TQualifier qualifier);
 
 // Returns array brackets including size with outermost array size first, as specified in GLSL ES
 // 3.10 section 4.1.9.

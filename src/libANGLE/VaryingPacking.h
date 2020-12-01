@@ -66,7 +66,9 @@ struct PackedVarying : angle::NonCopyable
     PackedVarying(VaryingInShaderRef &&frontVaryingIn,
                   VaryingInShaderRef &&backVaryingIn,
                   sh::InterpolationType interpolationIn,
-                  GLuint fieldIndexIn);
+                  GLuint arrayIndexIn,
+                  GLuint fieldIndexIn,
+                  GLuint secondaryFieldIndexIn);
     PackedVarying(PackedVarying &&other);
     ~PackedVarying();
 
@@ -119,11 +121,13 @@ struct PackedVarying : angle::NonCopyable
     // Cached so we can store sh::ShaderVariable to point to varying fields.
     sh::InterpolationType interpolation;
 
+    // Used by varyings that are captured with transform feedback, xor arrays of shader I/O blocks.
     GLuint arrayIndex;
 
     // Field index in the struct.  In Vulkan, this is used to assign a
     // struct-typed varying location to the location of its first field.
     GLuint fieldIndex;
+    GLuint secondaryFieldIndex;
 };
 
 struct PackedVaryingRegister final
@@ -241,7 +245,9 @@ class VaryingPacking final : angle::NonCopyable
     using VaryingUniqueFullNames = ShaderMap<std::set<std::string>>;
     void packUserVarying(const ProgramVaryingRef &ref, VaryingUniqueFullNames *uniqueFullNames);
     void packUserVaryingField(const ProgramVaryingRef &ref,
+                              GLuint arrayIndex,
                               GLuint fieldIndex,
+                              GLuint secondaryFieldIndex,
                               VaryingUniqueFullNames *uniqueFullNames);
     void packUserVaryingTF(const ProgramVaryingRef &ref, size_t subscript);
     void packUserVaryingFieldTF(const ProgramVaryingRef &ref,
