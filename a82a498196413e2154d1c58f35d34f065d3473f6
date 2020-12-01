@@ -39,6 +39,30 @@
       },
       "revId": "a82a498196413e2154d1c58f35d34f065d3473f6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "19ae1787_cef048b5",
+        "filename": "src/libGLESv2/entry_points_egl_autogen.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-01T16:13:53Z",
+      "side": 1,
+      "message": "Done, nope. Thanks for noticing.",
+      "parentUuid": "41b50058_4c84d115",
+      "range": {
+        "startLine": 41,
+        "startChar": 45,
+        "endLine": 41,
+        "endChar": 52
+      },
+      "revId": "a82a498196413e2154d1c58f35d34f065d3473f6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
