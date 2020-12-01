@@ -35,6 +35,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f286bef0_08811b0a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-01T15:49:58Z",
+      "side": 1,
+      "message": "In this leak the Device memory was unallocated and the CPU memory was allocated. In any case device memory is managed entirely by the VMA so no real leaks are possible.\n\nDo you have a concreate counter-proposal? Including a super-smart pointer is both tricky to implement and causes too much unwanted overhead. The price ANGLE pays for low overhead is this manual management which relies on good programming practice to protect against leaks.",
+      "parentUuid": "9c4abf8d_21a75aab",
+      "revId": "7e71de8b5270521b839039c7da2c88301cf559ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "04dc5019_f265fcd0",
@@ -48,6 +66,47 @@
       "writtenOn": "2020-12-01T15:16:58Z",
       "side": 1,
       "message": "ASSERT that the two lists are empty",
+      "revId": "7e71de8b5270521b839039c7da2c88301cf559ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3b1e16bf_aa2b38f8",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1680,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-01T15:49:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "04dc5019_f265fcd0",
+      "revId": "7e71de8b5270521b839039c7da2c88301cf559ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "22ada8b9_eca4ee9d",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1865,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-01T15:49:58Z",
+      "side": 1,
+      "message": "Other one was here. This was the one that was showing up.",
+      "range": {
+        "startLine": 1865,
+        "startChar": 26,
+        "endLine": 1865,
+        "endChar": 33
+      },
       "revId": "7e71de8b5270521b839039c7da2c88301cf559ec",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
