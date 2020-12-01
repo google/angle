@@ -16,6 +16,46 @@
       "message": "PS1 is Mohan\u0027s current CL. See diff with that for what I changed. In summary:\n\n- Got rid of the duplicate ShaderVariables\n- I/O blocks are no longer tracked both as interface blocks and varyings.  They are now just varyings.\n- Removed some unnecessary code\n\nSome failures are addressed in the next change in this chain. There are a few corner cases that need further investigation.",
       "revId": "2b2915093e982d836c60b414e444d31c3594dc25",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9fa8fdc8_bf930aa5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-01T20:29:57Z",
+      "side": 1,
+      "message": "LGTM. How come you went with a bunch of varyings instead of an aggregate type? Feels like the way it is here is maybe not the most organized solution.",
+      "revId": "2b2915093e982d836c60b414e444d31c3594dc25",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c27f8a6a_bedac037",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 161,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-01T20:29:57Z",
+      "side": 1,
+      "message": "IO blocks aren\u0027t structs, can you clarify that in the variable name or by using a new variable?",
+      "range": {
+        "startLine": 160,
+        "startChar": 0,
+        "endLine": 161,
+        "endChar": 33
+      },
+      "revId": "2b2915093e982d836c60b414e444d31c3594dc25",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
