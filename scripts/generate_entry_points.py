@@ -995,7 +995,8 @@ EGL_PACKED_TYPES = {
     "EGLContext": "gl::Context *",
     "EGLConfig": "Config *",
     "EGLDeviceEXT": "Device *",
-    "EGLDisplay": "Display *",
+    # Needs an explicit namespace to avoid an X11 namespace collision.
+    "EGLDisplay": "egl::Display *",
     "EGLImage": "Image *",
     "EGLImageKHR": "Image *",
     "EGLStreamKHR": "Stream *",
@@ -2068,7 +2069,7 @@ def get_egl_entry_point_labeled_object(ep_to_object, cmd_stripped, params, packe
                 return just_the_name_packed(param, packed_enums)
         return None
 
-    display_param = find_param(params, "Display", packed_enums)
+    display_param = find_param(params, "egl::Display", packed_enums)
 
     # For entry points not listed in the JSON file, they default to an EGLDisplay or nothing.
     if cmd_stripped not in ep_to_object:
