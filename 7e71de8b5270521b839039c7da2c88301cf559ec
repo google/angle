@@ -16,6 +16,40 @@
       "message": "PTAL. Still need a green run, but should fix the leak problems we were seeing with DynamicBuffer.",
       "revId": "7e71de8b5270521b839039c7da2c88301cf559ec",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9c4abf8d_21a75aab",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-01T15:16:58Z",
+      "side": 1,
+      "message": "Isn\u0027t this just hiding the problem? If the BufferHelper * was not deleted, it means its resources were probably not released either. `unique_ptr` will make sure the CPU memory is always freed, but what about the GPU memory?\n\nAt least before this we could detect potential GPU memory leaks with LSAN.",
+      "revId": "7e71de8b5270521b839039c7da2c88301cf559ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "04dc5019_f265fcd0",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1680,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-01T15:16:58Z",
+      "side": 1,
+      "message": "ASSERT that the two lists are empty",
+      "revId": "7e71de8b5270521b839039c7da2c88301cf559ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }

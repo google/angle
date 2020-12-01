@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f558f054_17da2262",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1748,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-01T15:16:58Z",
+      "side": 0,
+      "message": "The leak was here, right?",
+      "revId": "df873e5fa6d33d5d402cf90dc6106e6812bc71f7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
