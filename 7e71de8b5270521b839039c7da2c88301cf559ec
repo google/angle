@@ -71,6 +71,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3fd6f00e_6a39e06e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-01T16:03:31Z",
+      "side": 1,
+      "message": "Feel free to implement that as a follow up. Could we please proceed with landing this CL?",
+      "parentUuid": "858e1cf1_894239bb",
+      "revId": "7e71de8b5270521b839039c7da2c88301cf559ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "04dc5019_f265fcd0",
