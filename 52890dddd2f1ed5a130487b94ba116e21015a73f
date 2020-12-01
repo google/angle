@@ -16,6 +16,23 @@
       "message": "PTAL",
       "revId": "52890dddd2f1ed5a130487b94ba116e21015a73f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8cdc9a56_68bbdb14",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2020-12-01T15:43:52Z",
+      "side": 1,
+      "message": "The python changes are difficult to read, but the output LGTM.",
+      "revId": "52890dddd2f1ed5a130487b94ba116e21015a73f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
