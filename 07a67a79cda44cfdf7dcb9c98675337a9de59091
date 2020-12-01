@@ -51,6 +51,29 @@
       "parentUuid": "989e9a4b_73345ce7",
       "revId": "07a67a79cda44cfdf7dcb9c98675337a9de59091",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7988ff61_4af82a05",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-01T16:34:49Z",
+      "side": 1,
+      "message": "Mohan: if these formats are not supported (e.g. not texturable), shouldn\u0027t this method be returning false?",
+      "range": {
+        "startLine": 63,
+        "startChar": 8,
+        "endLine": 63,
+        "endChar": 55
+      },
+      "revId": "07a67a79cda44cfdf7dcb9c98675337a9de59091",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
