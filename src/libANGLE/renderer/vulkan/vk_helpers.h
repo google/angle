@@ -59,6 +59,8 @@ struct TextureUnit final
 // currently active VkBuffer we keep it until it is no longer in use. We then mark it available
 // for future allocations in a free list.
 class BufferHelper;
+using BufferHelperPointerVector = std::vector<std::unique_ptr<BufferHelper>>;
+
 class DynamicBuffer : angle::NonCopyable
 {
   public:
@@ -127,7 +129,7 @@ class DynamicBuffer : angle::NonCopyable
     // This frees resources immediately.
     void destroy(RendererVk *renderer);
 
-    BufferHelper *getCurrentBuffer() const { return mBuffer; }
+    BufferHelper *getCurrentBuffer() const { return mBuffer.get(); }
 
     // **Accumulate** an alignment requirement.  A dynamic buffer is used as the staging buffer for
     // image uploads, which can contain updates to unrelated mips, possibly with different formats.
@@ -147,21 +149,19 @@ class DynamicBuffer : angle::NonCopyable
   private:
     void reset();
     angle::Result allocateNewBuffer(ContextVk *contextVk);
-    void releaseBufferListToRenderer(RendererVk *renderer, std::vector<BufferHelper *> *buffers);
-    void destroyBufferList(RendererVk *renderer, std::vector<BufferHelper *> *buffers);
 
     VkBufferUsageFlags mUsage;
     bool mHostVisible;
     size_t mInitialSize;
-    BufferHelper *mBuffer;
+    std::unique_ptr<BufferHelper> mBuffer;
     uint32_t mNextAllocationOffset;
     uint32_t mLastFlushOrInvalidateOffset;
     size_t mSize;
     size_t mAlignment;
     VkMemoryPropertyFlags mMemoryPropertyFlags;
 
-    std::vector<BufferHelper *> mInFlightBuffers;
-    std::vector<BufferHelper *> mBufferFreeList;
+    BufferHelperPointerVector mInFlightBuffers;
+    BufferHelperPointerVector mBufferFreeList;
 };
 
 // Based off of the DynamicBuffer class, DynamicShadowBuffer provides

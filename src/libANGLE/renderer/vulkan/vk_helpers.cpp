@@ -652,6 +652,24 @@ bool CanCopyWithTransferForCopyImage(RendererVk *renderer,
     return isFormatCompatible &&
            CanCopyWithTransfer(renderer, srcFormat, srcTilingMode, destFormat, destTilingMode);
 }
+
+void ReleaseBufferListToRenderer(RendererVk *renderer, BufferHelperPointerVector *buffers)
+{
+    for (std::unique_ptr<BufferHelper> &toFree : *buffers)
+    {
+        toFree->release(renderer);
+    }
+    buffers->clear();
+}
+
+void DestroyBufferList(RendererVk *renderer, BufferHelperPointerVector *buffers)
+{
+    for (std::unique_ptr<BufferHelper> &toDestroy : *buffers)
+    {
+        toDestroy->destroy(renderer);
+    }
+    buffers->clear();
+}
 }  // anonymous namespace
 
 // This is an arbitrary max. We can change this later if necessary.
@@ -1598,7 +1616,6 @@ DynamicBuffer::DynamicBuffer()
     : mUsage(0),
       mHostVisible(false),
       mInitialSize(0),
-      mBuffer(nullptr),
       mNextAllocationOffset(0),
       mLastFlushOrInvalidateOffset(0),
       mSize(0),
@@ -1610,16 +1627,14 @@ DynamicBuffer::DynamicBuffer(DynamicBuffer &&other)
     : mUsage(other.mUsage),
       mHostVisible(other.mHostVisible),
       mInitialSize(other.mInitialSize),
-      mBuffer(other.mBuffer),
+      mBuffer(std::move(other.mBuffer)),
       mNextAllocationOffset(other.mNextAllocationOffset),
       mLastFlushOrInvalidateOffset(other.mLastFlushOrInvalidateOffset),
       mSize(other.mSize),
       mAlignment(other.mAlignment),
       mMemoryPropertyFlags(other.mMemoryPropertyFlags),
       mInFlightBuffers(std::move(other.mInFlightBuffers))
-{
-    other.mBuffer = nullptr;
-}
+{}
 
 void DynamicBuffer::init(RendererVk *renderer,
                          VkBufferUsageFlags usage,
@@ -1663,11 +1678,14 @@ void DynamicBuffer::initWithFlags(RendererVk *renderer,
 DynamicBuffer::~DynamicBuffer()
 {
     ASSERT(mBuffer == nullptr);
+    ASSERT(mInFlightBuffers.empty());
+    ASSERT(mBufferFreeList.empty());
 }
 
 angle::Result DynamicBuffer::allocateNewBuffer(ContextVk *contextVk)
 {
-    std::unique_ptr<BufferHelper> buffer = std::make_unique<BufferHelper>();
+    ASSERT(!mBuffer);
+    mBuffer = std::make_unique<BufferHelper>();
 
     VkBufferCreateInfo createInfo    = {};
     createInfo.sType                 = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
@@ -1678,12 +1696,7 @@ angle::Result DynamicBuffer::allocateNewBuffer(ContextVk *contextVk)
     createInfo.queueFamilyIndexCount = 0;
     createInfo.pQueueFamilyIndices   = nullptr;
 
-    ANGLE_TRY(buffer->init(contextVk, createInfo, mMemoryPropertyFlags));
-
-    ASSERT(!mBuffer);
-    mBuffer = buffer.release();
-
-    return angle::Result::Continue;
+    return mBuffer->init(contextVk, createInfo, mMemoryPropertyFlags);
 }
 
 bool DynamicBuffer::allocateFromCurrentBuffer(size_t sizeInBytes,
@@ -1734,8 +1747,8 @@ angle::Result DynamicBuffer::allocateWithAlignment(ContextVk *contextVk,
             ANGLE_TRY(flush(contextVk));
             mBuffer->unmap(contextVk->getRenderer());
 
-            mInFlightBuffers.push_back(mBuffer);
-            mBuffer = nullptr;
+            mInFlightBuffers.push_back(std::move(mBuffer));
+            ASSERT(!mBuffer);
         }
 
         if (sizeToAllocate > mSize)
@@ -1743,7 +1756,7 @@ angle::Result DynamicBuffer::allocateWithAlignment(ContextVk *contextVk,
             mSize = std::max(mInitialSize, sizeToAllocate);
 
             // Clear the free list since the free buffers are now too small.
-            for (BufferHelper *toFree : mBufferFreeList)
+            for (std::unique_ptr<BufferHelper> &toFree : mBufferFreeList)
             {
                 toFree->release(contextVk->getRenderer());
             }
@@ -1759,7 +1772,7 @@ angle::Result DynamicBuffer::allocateWithAlignment(ContextVk *contextVk,
         }
         else
         {
-            mBuffer = mBufferFreeList.front();
+            mBuffer = std::move(mBufferFreeList.front());
             mBufferFreeList.erase(mBufferFreeList.begin());
         }
 
@@ -1827,47 +1840,24 @@ angle::Result DynamicBuffer::invalidate(ContextVk *contextVk)
     return angle::Result::Continue;
 }
 
-void DynamicBuffer::releaseBufferListToRenderer(RendererVk *renderer,
-                                                std::vector<BufferHelper *> *buffers)
-{
-    for (BufferHelper *toFree : *buffers)
-    {
-        toFree->release(renderer);
-        delete toFree;
-    }
-
-    buffers->clear();
-}
-
-void DynamicBuffer::destroyBufferList(RendererVk *renderer, std::vector<BufferHelper *> *buffers)
-{
-    for (BufferHelper *toFree : *buffers)
-    {
-        toFree->destroy(renderer);
-        delete toFree;
-    }
-
-    buffers->clear();
-}
-
 void DynamicBuffer::release(RendererVk *renderer)
 {
     reset();
 
-    releaseBufferListToRenderer(renderer, &mInFlightBuffers);
-    releaseBufferListToRenderer(renderer, &mBufferFreeList);
+    ReleaseBufferListToRenderer(renderer, &mInFlightBuffers);
+    ReleaseBufferListToRenderer(renderer, &mBufferFreeList);
 
     if (mBuffer)
     {
         mBuffer->release(renderer);
-        SafeDelete(mBuffer);
+        mBuffer.reset(nullptr);
     }
 }
 
 void DynamicBuffer::releaseInFlightBuffersToResourceUseList(ContextVk *contextVk)
 {
     ResourceUseList *resourceUseList = &contextVk->getResourceUseList();
-    for (BufferHelper *bufferHelper : mInFlightBuffers)
+    for (std::unique_ptr<BufferHelper> &bufferHelper : mInFlightBuffers)
     {
         bufferHelper->retain(resourceUseList);
 
@@ -1878,7 +1868,7 @@ void DynamicBuffer::releaseInFlightBuffersToResourceUseList(ContextVk *contextVk
         }
         else
         {
-            mBufferFreeList.push_back(bufferHelper);
+            mBufferFreeList.push_back(std::move(bufferHelper));
         }
     }
     mInFlightBuffers.clear();
@@ -1886,7 +1876,7 @@ void DynamicBuffer::releaseInFlightBuffersToResourceUseList(ContextVk *contextVk
 
 void DynamicBuffer::releaseInFlightBuffers(ContextVk *contextVk)
 {
-    for (BufferHelper *toRelease : mInFlightBuffers)
+    for (std::unique_ptr<BufferHelper> &toRelease : mInFlightBuffers)
     {
         // If the dynamic buffer was resized we cannot reuse the retained buffer.
         if (toRelease->getSize() < mSize)
@@ -1895,7 +1885,7 @@ void DynamicBuffer::releaseInFlightBuffers(ContextVk *contextVk)
         }
         else
         {
-            mBufferFreeList.push_back(toRelease);
+            mBufferFreeList.push_back(std::move(toRelease));
         }
     }
 
@@ -1906,15 +1896,14 @@ void DynamicBuffer::destroy(RendererVk *renderer)
 {
     reset();
 
-    destroyBufferList(renderer, &mInFlightBuffers);
-    destroyBufferList(renderer, &mBufferFreeList);
+    DestroyBufferList(renderer, &mInFlightBuffers);
+    DestroyBufferList(renderer, &mBufferFreeList);
 
     if (mBuffer)
     {
         mBuffer->unmap(renderer);
         mBuffer->destroy(renderer);
-        delete mBuffer;
-        mBuffer = nullptr;
+        mBuffer.reset(nullptr);
     }
 }
 
