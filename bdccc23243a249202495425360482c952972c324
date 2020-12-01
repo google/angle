@@ -147,6 +147,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "bf17f7f8_45cafbab",
+        "filename": "src/tests/test_utils/runner/TestSuite.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 268,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-01T20:15:44Z",
+      "side": 1,
+      "message": "If both work it\u0027s safer to stick with the version that is closer to the spec in case the result interpretation changes on the bots.",
+      "parentUuid": "99bb93d4_33c59254",
+      "range": {
+        "startLine": 266,
+        "startChar": 0,
+        "endLine": 268,
+        "endChar": 0
+      },
+      "revId": "bdccc23243a249202495425360482c952972c324",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "213e5c77_eb5e33d4",
