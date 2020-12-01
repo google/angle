@@ -53,6 +53,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "858e1cf1_894239bb",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-01T16:00:37Z",
+      "side": 1,
+      "message": "No I was thinking of a combination of ASSERTs and relying on LSAN. GPU mem leaks would lead to holes in VMA buffers so they can\u0027t be claimed back, it\u0027s not really solving the problem.\n\nI understand your point. How about something like \"unique_ptr_that_asserts_that_object_is_released_in_destructor\"? I.e. a simple class that inherits from unique_ptr, but whose destructor has an ASSERT.",
+      "parentUuid": "f286bef0_08811b0a",
+      "revId": "7e71de8b5270521b839039c7da2c88301cf559ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "04dc5019_f265fcd0",
