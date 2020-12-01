@@ -708,8 +708,8 @@ std::string Shader::getTransformFeedbackVaryingMappedName(const std::string &tfV
                 // If it's an I/O block without an instance name, don't include the block name.
                 if (!varying.isShaderIOBlock || !varying.name.empty())
                 {
-                    mappedName =
-                        varying.isShaderIOBlock ? varying.mappedStructName : varying.mappedName;
+                    mappedName = varying.isShaderIOBlock ? varying.mappedStructOrBlockName
+                                                         : varying.mappedName;
                     mappedName += '.';
                 }
                 return mappedName + field->mappedName;

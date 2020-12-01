@@ -797,7 +797,7 @@ void AssignTransformFeedbackExtensionQualifiers(const gl::ProgramExecutable &pro
 
                 if (tfVarying.isShaderIOBlock)
                 {
-                    if (varying->frontVarying.parentStructName == tfVarying.structName)
+                    if (varying->frontVarying.parentStructName == tfVarying.structOrBlockName)
                     {
                         size_t pos            = tfVarying.name.find_first_of(".");
                         std::string fieldName = pos == std::string::npos

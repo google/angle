@@ -673,7 +673,7 @@ void PrintVariable(const std::string &prefix, size_t index, const sh::ShaderVari
         std::string structPrefix;
         for (size_t i = 0; i < prefix.size(); ++i)
             structPrefix += ' ';
-        printf("%s  struct %s\n", structPrefix.c_str(), var.structName.c_str());
+        printf("%s  struct %s\n", structPrefix.c_str(), var.structOrBlockName.c_str());
         structPrefix += "    field";
         for (size_t i = 0; i < var.fields.size(); ++i)
             PrintVariable(structPrefix, i, var.fields[i]);

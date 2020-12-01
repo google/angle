@@ -101,7 +101,7 @@ ShaderVariable *FindShaderIOBlockVariable(const ImmutableString &blockName,
 {
     for (size_t index = 0; index < infoList->size(); ++index)
     {
-        if (blockName == (*infoList)[index].structName)
+        if (blockName == (*infoList)[index].structOrBlockName)
             return &(*infoList)[index];
     }
 
@@ -755,7 +755,7 @@ void CollectVariablesTraverser::setFieldOrVariableProperties(const TType &type,
         variableOut->type = GL_NONE;
         if (structure->symbolType() != SymbolType::Empty)
         {
-            variableOut->structName = structure->name().data();
+            variableOut->structOrBlockName = structure->name().data();
         }
 
         const TFieldList &fields = structure->fields();
@@ -775,8 +775,8 @@ void CollectVariablesTraverser::setFieldOrVariableProperties(const TType &type,
         variableOut->type = GL_NONE;
         if (interfaceBlock->symbolType() != SymbolType::Empty)
         {
-            variableOut->structName = interfaceBlock->name().data();
-            variableOut->mappedStructName =
+            variableOut->structOrBlockName = interfaceBlock->name().data();
+            variableOut->mappedStructOrBlockName =
                 HashName(interfaceBlock->name(), mHashFunction, nullptr).data();
         }
         const TFieldList &fields = interfaceBlock->fields();
@@ -859,16 +859,16 @@ void CollectVariablesTraverser::setCommonVariableProperties(const TType &type,
         variableOut->mappedName = getMappedName(&variable);
     }
 
-    // For I/O blocks, additionally store the name of the block as structName.  If the variable is
+    // For I/O blocks, additionally store the name of the block as blockName.  If the variable is
     // unnamed, this name will be used instead for the purpose of interface matching.
     if (isShaderIOBlock)
     {
         const TInterfaceBlock *interfaceBlock = type.getInterfaceBlock();
         ASSERT(interfaceBlock);
 
-        variableOut->structName.assign(interfaceBlock->name().data(),
-                                       interfaceBlock->name().length());
-        variableOut->mappedStructName =
+        variableOut->structOrBlockName.assign(interfaceBlock->name().data(),
+                                              interfaceBlock->name().length());
+        variableOut->mappedStructOrBlockName =
             HashName(interfaceBlock->name(), mHashFunction, nullptr).data();
         variableOut->isShaderIOBlock = true;
     }

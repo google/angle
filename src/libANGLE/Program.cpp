@@ -685,7 +685,7 @@ void UpdateInterfaceVariable(std::vector<sh::ShaderVariable> *block, const sh::S
         //         type field;  // produces "Block2.field"
         //     } block2;
         //
-        const std::string &baseName = var.isShaderIOBlock ? var.structName : var.name;
+        const std::string &baseName = var.isShaderIOBlock ? var.structOrBlockName : var.name;
         const std::string prefix    = var.name.empty() ? "" : baseName + ".";
 
         if (!field.isStruct())
@@ -936,8 +936,8 @@ void WriteShaderVar(BinaryOutputStream *stream, const sh::ShaderVariable &var)
     stream->writeBool(var.staticUse);
     stream->writeBool(var.active);
     stream->writeInt(var.binding);
-    stream->writeString(var.structName);
-    stream->writeString(var.mappedStructName);
+    stream->writeString(var.structOrBlockName);
+    stream->writeString(var.mappedStructOrBlockName);
     stream->writeInt(var.hasParentArrayIndex() ? var.parentArrayIndex() : -1);
 
     stream->writeInt(var.imageUnitFormat);
@@ -956,11 +956,11 @@ void LoadShaderVar(BinaryInputStream *stream, sh::ShaderVariable *var)
     var->name       = stream->readString();
     var->mappedName = stream->readString();
     stream->readIntVector<unsigned int>(&var->arraySizes);
-    var->staticUse        = stream->readBool();
-    var->active           = stream->readBool();
-    var->binding          = stream->readInt<int>();
-    var->structName       = stream->readString();
-    var->mappedStructName = stream->readString();
+    var->staticUse               = stream->readBool();
+    var->active                  = stream->readBool();
+    var->binding                 = stream->readInt<int>();
+    var->structOrBlockName       = stream->readString();
+    var->mappedStructOrBlockName = stream->readString();
     var->setParentArrayIndex(stream->readInt<int>());
 
     var->imageUnitFormat     = stream->readInt<GLenum>();

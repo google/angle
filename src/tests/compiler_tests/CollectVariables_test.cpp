@@ -863,7 +863,7 @@ TEST_F(CollectHashedVertexVariablesTest, StructUniform)
     EXPECT_FALSE(uniform.isArray());
     EXPECT_EQ("u", uniform.name);
     EXPECT_EQ("webgl_1", uniform.mappedName);
-    EXPECT_EQ("sType", uniform.structName);
+    EXPECT_EQ("sType", uniform.structOrBlockName);
     EXPECT_TRUE(uniform.staticUse);
     EXPECT_TRUE(uniform.active);
 
@@ -907,7 +907,7 @@ TEST_F(CollectHashedVertexVariablesTest, NamelessStructUniform)
     EXPECT_FALSE(uniform.isArray());
     EXPECT_EQ("u", uniform.name);
     EXPECT_EQ("webgl_1", uniform.mappedName);
-    EXPECT_EQ("", uniform.structName);
+    EXPECT_EQ("", uniform.structOrBlockName);
     EXPECT_TRUE(uniform.staticUse);
     EXPECT_TRUE(uniform.active);
 
@@ -1044,7 +1044,7 @@ TEST_F(CollectGeometryVariablesTest, CollectGLInFields)
 
     const ShaderVariable &glIn = inVaryings[0];
     EXPECT_EQ("gl_in", glIn.name);
-    EXPECT_EQ("gl_PerVertex", glIn.structName);
+    EXPECT_EQ("gl_PerVertex", glIn.structOrBlockName);
     EXPECT_TRUE(glIn.staticUse);
     EXPECT_TRUE(glIn.active);
     EXPECT_TRUE(glIn.isBuiltIn());
@@ -1184,7 +1184,7 @@ TEST_F(CollectGeometryVariablesTest, CollectGLInIndexedByExpression)
         {
             foundGLIn = true;
             EXPECT_TRUE(varying.isShaderIOBlock);
-            EXPECT_EQ("gl_PerVertex", varying.structName);
+            EXPECT_EQ("gl_PerVertex", varying.structOrBlockName);
         }
         else if (varying.name == "gl_InvocationID")
         {

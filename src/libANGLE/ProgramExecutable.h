@@ -81,8 +81,8 @@ struct TransformFeedbackVarying : public sh::ShaderVariable
             name       = parent.name + "." + name;
             mappedName = parent.mappedName + "." + mappedName;
         }
-        structName       = parent.structName;
-        mappedStructName = parent.mappedStructName;
+        structOrBlockName       = parent.structOrBlockName;
+        mappedStructOrBlockName = parent.mappedStructOrBlockName;
     }
 
     std::string nameWithArrayIndex() const
