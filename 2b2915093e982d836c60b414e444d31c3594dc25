@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "52fcf770_843431de",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-01T20:22:06Z",
+      "side": 1,
+      "message": "PS1 is Mohan\u0027s current CL. See diff with that for what I changed. In summary:\n\n- Got rid of the duplicate ShaderVariables\n- I/O blocks are no longer tracked both as interface blocks and varyings.  They are now just varyings.\n- Removed some unnecessary code\n\nSome failures are addressed in the next change in this chain. There are a few corner cases that need further investigation.",
+      "revId": "2b2915093e982d836c60b414e444d31c3594dc25",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
