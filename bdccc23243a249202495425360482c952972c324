@@ -171,6 +171,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6c24a683_5fc59a73",
+        "filename": "src/tests/test_utils/runner/TestSuite.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 268,
+      "author": {
+        "id": 1003232
+      },
+      "writtenOn": "2020-12-01T20:32:33Z",
+      "side": 1,
+      "message": "I worry that we\u0027re not on the same page here.\n\n\"expected\" should be something you know ahead of time. Normally, all gtest-based tests only have an expected value of \"PASS\", since they don\u0027t use test expectation files.\n\nIf your expected value is \"FAIL PASS\", that means that you are expecting the test to either pass or fail, and that should be acceptable. If you get a failure, you would not retry the test, and is_unexpected would always be false.\n\nAlso, in case this is not clear: the order of the values is not supposed to be significant. It\u0027s an unordered list, i.e., it should have the same meaning as \"PASS FAIL\".",
+      "parentUuid": "bf17f7f8_45cafbab",
+      "range": {
+        "startLine": 266,
+        "startChar": 0,
+        "endLine": 268,
+        "endChar": 0
+      },
+      "revId": "bdccc23243a249202495425360482c952972c324",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "213e5c77_eb5e33d4",
