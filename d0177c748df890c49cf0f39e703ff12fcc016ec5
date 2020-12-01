@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "022d5f60_e76bd9cd",
+        "filename": "src/common/utilities.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-01T21:34:43Z",
+      "side": 1,
+      "message": "The translator has:\n\n    bool ShaderVariable::isBuiltIn() const\n    {\n        return (name.size() \u003e\u003d 4 \u0026\u0026 name[0] \u003d\u003d \u0027g\u0027 \u0026\u0026 name[1] \u003d\u003d \u0027l\u0027 \u0026\u0026 name[2] \u003d\u003d \u0027_\u0027);\n    }\n\nIn addition to InterfaceBlock::isBuiltIn(), which is exactly the same.\n\nCan you replace those with this implementation as well, as part of this refactor?",
+      "range": {
+        "startLine": 65,
+        "startChar": 0,
+        "endLine": 69,
+        "endChar": 1
+      },
+      "revId": "d0177c748df890c49cf0f39e703ff12fcc016ec5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
