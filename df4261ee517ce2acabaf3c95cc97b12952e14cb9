@@ -16,6 +16,29 @@
       "message": "Rebased on top of Jamie\u0027s changes",
       "revId": "df4261ee517ce2acabaf3c95cc97b12952e14cb9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c80787dd_0e2cf8bb",
+        "filename": "src/libANGLE/renderer/vulkan/QueryVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-01T22:06:20Z",
+      "side": 1,
+      "message": "nit: use a helper",
+      "range": {
+        "startLine": 87,
+        "startChar": 9,
+        "endLine": 88,
+        "endChar": 66
+      },
+      "revId": "df4261ee517ce2acabaf3c95cc97b12952e14cb9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
