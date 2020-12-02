@@ -711,6 +711,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "874dab4d_cf702dbe",
+        "filename": "src/libANGLE/TransformFeedback.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 213,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-02T16:55:46Z",
+      "side": 1,
+      "message": "Just a follow-up here. The small primitives are still drawn but not captured. The second new transform feedback query allows the app to detect how many primitives actually got captured.",
+      "parentUuid": "799095a6_3320651b",
+      "range": {
+        "startLine": 209,
+        "startChar": 0,
+        "endLine": 213,
+        "endChar": 5
+      },
+      "revId": "4b080606c0102cc48fd966c6b862b2da4321c88e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f5a5427a_7e1ee6bf",
