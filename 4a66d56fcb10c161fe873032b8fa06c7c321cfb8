@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "00df54f5_8d456297",
+        "filename": "src/common/angleutils.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 304,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-02T16:44:17Z",
+      "side": 1,
+      "message": "Can you replace this with a macro that wraps just __lsan::ScopedDisabler?\n\nSo in the code it would become\n\n\n{\n   ANGLE_SCOPED_DISBLE_LSAN();\n   vkDoWhatever();\n}",
+      "range": {
+        "startLine": 304,
+        "startChar": 12,
+        "endLine": 304,
+        "endChar": 30
+      },
+      "revId": "4a66d56fcb10c161fe873032b8fa06c7c321cfb8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "01a11d5c_61d70845",
+        "filename": "src/libANGLE/renderer/vulkan/ResourceVk.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-02T16:44:17Z",
+      "side": 1,
+      "message": "should be fixed by http://crrev.com/c/2567641",
+      "range": {
+        "startLine": 52,
+        "startChar": 8,
+        "endLine": 52,
+        "endChar": 26
+      },
+      "revId": "4a66d56fcb10c161fe873032b8fa06c7c321cfb8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ec512b92_b9ee795c",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1672,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-02T16:44:17Z",
+      "side": 1,
+      "message": "should be fixed by http://crrev.com/c/2567641",
+      "range": {
+        "startLine": 1672,
+        "startChar": 4,
+        "endLine": 1672,
+        "endChar": 22
+      },
+      "revId": "4a66d56fcb10c161fe873032b8fa06c7c321cfb8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a57c0121_5ea7caf3",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 975,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-02T16:44:17Z",
+      "side": 1,
+      "message": "Can you instead manually indent the scope and use the scoped LSAN disabler?",
+      "range": {
+        "startLine": 975,
+        "startChar": 8,
+        "endLine": 975,
+        "endChar": 28
+      },
+      "revId": "4a66d56fcb10c161fe873032b8fa06c7c321cfb8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
