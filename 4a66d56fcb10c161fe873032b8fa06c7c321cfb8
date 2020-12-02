@@ -91,6 +91,30 @@
       },
       "revId": "4a66d56fcb10c161fe873032b8fa06c7c321cfb8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8c7ca0b8_0518585c",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 975,
+      "author": {
+        "id": 1002745
+      },
+      "writtenOn": "2020-12-02T17:10:15Z",
+      "side": 1,
+      "message": "Do you mean:\n1) Do not add this macro at all and do this change locally everywhere\nOR\n2) manually indent inside this new macro\n?\nWithout adding this macro, the scoped LSAN disabler will include the whole do/while statement, which is probably fine, but I\u0027m making sure this is clear.",
+      "parentUuid": "a57c0121_5ea7caf3",
+      "range": {
+        "startLine": 975,
+        "startChar": 8,
+        "endLine": 975,
+        "endChar": 28
+      },
+      "revId": "4a66d56fcb10c161fe873032b8fa06c7c321cfb8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
