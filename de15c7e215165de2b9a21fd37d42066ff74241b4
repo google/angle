@@ -22,6 +22,30 @@
       },
       "revId": "de15c7e215165de2b9a21fd37d42066ff74241b4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f5a15d1e_e6d3a775",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-12-02T22:05:13Z",
+      "side": 1,
+      "message": "Correct.  I processed some of your comments in the wrong order:-)",
+      "parentUuid": "c19941f5_25b70e99",
+      "range": {
+        "startLine": 76,
+        "startChar": 4,
+        "endLine": 76,
+        "endChar": 11
+      },
+      "revId": "de15c7e215165de2b9a21fd37d42066ff74241b4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
