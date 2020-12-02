@@ -93,6 +93,30 @@
       },
       "revId": "3bb35cd5ab8257201982c33c5e53a658bb2a8f4b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ccc8671d_b1702560",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 844,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-02T19:09:43Z",
+      "side": 1,
+      "message": "See \"some systems\". I have a Mesa layer on my system that had a leak.",
+      "parentUuid": "a179b6f0_226b77be",
+      "range": {
+        "startLine": 844,
+        "startChar": 28,
+        "endLine": 844,
+        "endChar": 54
+      },
+      "revId": "3bb35cd5ab8257201982c33c5e53a658bb2a8f4b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
