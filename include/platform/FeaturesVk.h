@@ -300,6 +300,17 @@ struct FeaturesVk : FeatureSetBase
         "Fill new allocations with non-zero values to flush out errors.", &members,
         "http://anglebug.com/4384"};
 
+    // Whether to log each callback from the VK_EXT_device_memory_report extension.  This feature is
+    // used for trying to debug GPU memory leaks.
+    Feature logMemoryReportCallbacks = {"logMemoryReportCallbacks", FeatureCategory::VulkanFeatures,
+                                        "Log each callback from VK_EXT_device_memory_report",
+                                        &members};
+
+    // Whether to log statistics from the VK_EXT_device_memory_report extension each eglSwapBuffer.
+    Feature logMemoryReportStats = {"logMemoryReportStats", FeatureCategory::VulkanFeatures,
+                                    "Log stats from VK_EXT_device_memory_report each swap",
+                                    &members};
+
     // Allocate a "shadow" buffer for GL buffer objects. For GPU-read only buffers
     // glMap* latency can be reduced by maintaining a copy of the buffer which is
     // writeable only by the CPU. We then return this shadow buffer on glMap* calls.

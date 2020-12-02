@@ -163,8 +163,8 @@ void ScopedPerfEventHelper::begin(const char *format, ...)
 LogMessage::LogMessage(const char *file, const char *function, int line, LogSeverity severity)
     : mFile(file), mFunction(function), mLine(line), mSeverity(severity)
 {
-    // EVENT() does not require additional function(line) info.
-    if (mSeverity != LOG_EVENT)
+    // INFO() and EVENT() do not require additional function(line) info.
+    if (mSeverity > LOG_INFO)
     {
         const char *slash = std::max(strrchr(mFile, '/'), strrchr(mFile, '\\'));
         mStream << (slash ? (slash + 1) : mFile) << ":" << mLine << " (" << mFunction << "): ";
@@ -179,7 +179,7 @@ LogMessage::~LogMessage()
         lock = std::unique_lock<std::mutex>(*g_debugMutex);
     }
 
-    if (DebugAnnotationsInitialized() && (mSeverity >= LOG_INFO))
+    if (DebugAnnotationsInitialized() && (mSeverity > LOG_INFO))
     {
         g_debugAnnotator->logMessage(*this);
     }
