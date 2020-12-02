@@ -735,6 +735,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3e88c8e3_a91d7200",
+        "filename": "src/libANGLE/TransformFeedback.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 213,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-12-02T16:57:11Z",
+      "side": 1,
+      "message": "Ack. thanks for the clarification",
+      "parentUuid": "874dab4d_cf702dbe",
+      "range": {
+        "startLine": 209,
+        "startChar": 0,
+        "endLine": 213,
+        "endChar": 5
+      },
+      "revId": "4b080606c0102cc48fd966c6b862b2da4321c88e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f5a5427a_7e1ee6bf",
