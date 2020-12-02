@@ -22,6 +22,30 @@
       },
       "revId": "d0177c748df890c49cf0f39e703ff12fcc016ec5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6e3d820c_ee6f41b1",
+        "filename": "src/common/utilities.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-02T16:43:21Z",
+      "side": 1,
+      "message": "Good find, I was grepping for \"gl_\". Done.",
+      "parentUuid": "022d5f60_e76bd9cd",
+      "range": {
+        "startLine": 65,
+        "startChar": 0,
+        "endLine": 69,
+        "endChar": 1
+      },
+      "revId": "d0177c748df890c49cf0f39e703ff12fcc016ec5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }

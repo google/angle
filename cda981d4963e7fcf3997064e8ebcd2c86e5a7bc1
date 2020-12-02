@@ -22,6 +22,30 @@
       },
       "revId": "cda981d4963e7fcf3997064e8ebcd2c86e5a7bc1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c2a5cf27_9c513321",
+        "filename": "src/compiler/translator/ShaderVars.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 326,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-02T16:43:21Z",
+      "side": 1,
+      "message": "Yes it\u0027s gl:: (typo)",
+      "parentUuid": "72ab0057_7e14c53e",
+      "range": {
+        "startLine": 326,
+        "startChar": 11,
+        "endLine": 326,
+        "endChar": 16
+      },
+      "revId": "cda981d4963e7fcf3997064e8ebcd2c86e5a7bc1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
