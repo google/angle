@@ -343,3 +343,7 @@
 3588 VULKAN ANDROID : dEQP-GLES31.functional.shaders.sample_variables.sample_pos.correctness.multisample_*_1 = FAIL
 3588 VULKAN ANDROID : dEQP-GLES31.functional.shaders.sample_variables.sample_pos.correctness.multisample_*_2 = FAIL
 3588 VULKAN ANDROID : dEQP-GLES31.functional.shaders.sample_variables.sample_pos.correctness.multisample_*_4 = FAIL
+
+// When ANGLE allows non-conformant features, imageAtomicExchange with r32f fails
+5503 VULKAN ANDROID : dEQP-GLES31.functional.image_load_store.*.atomic.exchange_r32f* = FAIL
+5503 SWIFTSHADER : dEQP-GLES31.functional.image_load_store.*.atomic.exchange_r32f* = SKIP
