@@ -68,6 +68,24 @@
       "parentUuid": "179aab1f_34e46c22",
       "revId": "06dd76d55059a2609417d2e484a7117e52039a37",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "41c4d15f_72935a9d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 18
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-02T05:18:33Z",
+      "side": 1,
+      "message": "\u003e the second XFB query that gets added\n\nAre you talking about PrimitivesGenerated? I was about to add support for that for GS, just want to make sure there\u0027s no duplicate work.",
+      "parentUuid": "b63583e3_f2a59cef",
+      "revId": "06dd76d55059a2609417d2e484a7117e52039a37",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
