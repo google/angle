@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4e2ff717_f23e0c07",
+        "filename": "include/platform/FeaturesVk.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 303,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-12-02T20:32:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2bff2773_7e6a44b3",
+      "range": {
+        "startLine": 303,
+        "startChar": 7,
+        "endLine": 303,
+        "endChar": 15
+      },
+      "revId": "3ead0d714e823c5ef1150a024c3b80a0fbb4cbdc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e5518ed1_ab7ca6c1",
@@ -37,6 +61,30 @@
       "writtenOn": "2020-12-01T16:49:19Z",
       "side": 1,
       "message": "nit: you don\u0027t need to pass this since you\u0027re calling RendererVk.",
+      "range": {
+        "startLine": 394,
+        "startChar": 4,
+        "endLine": 394,
+        "endChar": 88
+      },
+      "revId": "3ead0d714e823c5ef1150a024c3b80a0fbb4cbdc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "32846ef4_bff2509c",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 394,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-12-02T20:32:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e5518ed1_ab7ca6c1",
       "range": {
         "startLine": 394,
         "startChar": 4,
@@ -93,6 +141,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "54bf5fce_8b9fe3e2",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-12-02T20:32:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6c64d443_ef8909d9",
+      "range": {
+        "startLine": 58,
+        "startChar": 6,
+        "endLine": 58,
+        "endChar": 19
+      },
+      "revId": "3ead0d714e823c5ef1150a024c3b80a0fbb4cbdc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b5664eb6_dcd9da3f",
@@ -106,6 +178,30 @@
       "writtenOn": "2020-12-01T16:49:19Z",
       "side": 1,
       "message": "nit: can be const \u0026",
+      "range": {
+        "startLine": 62,
+        "startChar": 31,
+        "endLine": 62,
+        "endChar": 66
+      },
+      "revId": "3ead0d714e823c5ef1150a024c3b80a0fbb4cbdc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8f984238_d2f5fcdf",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-12-02T20:32:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b5664eb6_dcd9da3f",
       "range": {
         "startLine": 62,
         "startChar": 31,
@@ -139,6 +235,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "269fccb1_b79d4b42",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-12-02T20:32:39Z",
+      "side": 1,
+      "message": "This caused trouble, but I did it.",
+      "parentUuid": "448c2c79_7b6077fe",
+      "range": {
+        "startLine": 63,
+        "startChar": 9,
+        "endLine": 63,
+        "endChar": 29
+      },
+      "revId": "3ead0d714e823c5ef1150a024c3b80a0fbb4cbdc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0477a5bf_0eab7448",
@@ -152,6 +272,30 @@
       "writtenOn": "2020-12-01T16:49:19Z",
       "side": 1,
       "message": "nit: can we merge the hashmaps into one with one sub-struct with the four members?",
+      "range": {
+        "startLine": 69,
+        "startChar": 0,
+        "endLine": 74,
+        "endChar": 66
+      },
+      "revId": "3ead0d714e823c5ef1150a024c3b80a0fbb4cbdc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "41ff8b1e_c2308e50",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-12-02T20:32:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0477a5bf_0eab7448",
       "range": {
         "startLine": 69,
         "startChar": 0,
@@ -185,6 +329,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "703903b9_abff148d",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 352,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-12-02T20:32:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "53b93a1d_b6f0cb20",
+      "range": {
+        "startLine": 352,
+        "startChar": 9,
+        "endLine": 352,
+        "endChar": 29
+      },
+      "revId": "3ead0d714e823c5ef1150a024c3b80a0fbb4cbdc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d1ad8c2a_e3d2c50b",
@@ -208,6 +376,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "cb594637_daaf1cb5",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 353,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-12-02T20:32:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d1ad8c2a_e3d2c50b",
+      "range": {
+        "startLine": 353,
+        "startChar": 9,
+        "endLine": 353,
+        "endChar": 24
+      },
+      "revId": "3ead0d714e823c5ef1150a024c3b80a0fbb4cbdc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d18979cb_312656fc",
@@ -221,6 +413,30 @@
       "writtenOn": "2020-12-01T16:49:19Z",
       "side": 1,
       "message": "nit: can we put this in RendererVk::queuePresent and then we don\u0027t need to expose this function.",
+      "range": {
+        "startLine": 1441,
+        "startChar": 0,
+        "endLine": 1445,
+        "endChar": 0
+      },
+      "revId": "3ead0d714e823c5ef1150a024c3b80a0fbb4cbdc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "daeddbc1_a4f293aa",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1445,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-12-02T20:32:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d18979cb_312656fc",
       "range": {
         "startLine": 1441,
         "startChar": 0,
