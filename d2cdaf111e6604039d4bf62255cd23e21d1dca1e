@@ -41,6 +41,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c203bb6f_95ab93fb",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-02T20:09:44Z",
+      "side": 1,
+      "message": "Just created one: anglebug.com/5423\n\nWill submit with the next change.",
+      "parentUuid": "dba36c88_df5836ac",
+      "range": {
+        "startLine": 56,
+        "startChar": 88,
+        "endLine": 56,
+        "endChar": 92
+      },
+      "revId": "d2cdaf111e6604039d4bf62255cd23e21d1dca1e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "fd1b67bb_96c8aa72",
@@ -54,6 +78,30 @@
       "writtenOn": "2020-12-02T18:57:23Z",
       "side": 1,
       "message": "shouldnt input parameters be references?",
+      "range": {
+        "startLine": 102,
+        "startChar": 42,
+        "endLine": 102,
+        "endChar": 79
+      },
+      "revId": "d2cdaf111e6604039d4bf62255cd23e21d1dca1e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "52910abe_9670eba1",
+        "filename": "src/compiler/translator/CollectVariables.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-02T20:09:44Z",
+      "side": 1,
+      "message": "Style guide forbids non-const reference parameters",
+      "parentUuid": "fd1b67bb_96c8aa72",
       "range": {
         "startLine": 102,
         "startChar": 42,
@@ -87,6 +135,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8fdb04d1_0e698278",
+        "filename": "src/compiler/translator/ShaderVars.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 373,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-02T20:09:44Z",
+      "side": 1,
+      "message": "Ack. The whole function is missing braces.",
+      "parentUuid": "a258a32a_6b31fdf3",
+      "range": {
+        "startLine": 372,
+        "startChar": 4,
+        "endLine": 373,
+        "endChar": 21
+      },
+      "revId": "d2cdaf111e6604039d4bf62255cd23e21d1dca1e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "13e1378f_3ac23c65",
@@ -100,6 +172,30 @@
       "writtenOn": "2020-12-02T18:57:23Z",
       "side": 1,
       "message": "typo?",
+      "range": {
+        "startLine": 124,
+        "startChar": 67,
+        "endLine": 124,
+        "endChar": 70
+      },
+      "revId": "d2cdaf111e6604039d4bf62255cd23e21d1dca1e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1aa00e21_f1df06fc",
+        "filename": "src/libANGLE/VaryingPacking.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-02T20:09:44Z",
+      "side": 1,
+      "message": "Nope. It\u0027s used by one xor the other.",
+      "parentUuid": "13e1378f_3ac23c65",
       "range": {
         "startLine": 124,
         "startChar": 67,
