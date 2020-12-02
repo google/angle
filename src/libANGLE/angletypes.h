@@ -287,49 +287,49 @@ class SamplerState final
 
     GLenum getMinFilter() const { return mMinFilter; }
 
-    void setMinFilter(GLenum minFilter);
+    bool setMinFilter(GLenum minFilter);
 
     GLenum getMagFilter() const { return mMagFilter; }
 
-    void setMagFilter(GLenum magFilter);
+    bool setMagFilter(GLenum magFilter);
 
     GLenum getWrapS() const { return mWrapS; }
 
-    void setWrapS(GLenum wrapS);
+    bool setWrapS(GLenum wrapS);
 
     GLenum getWrapT() const { return mWrapT; }
 
-    void setWrapT(GLenum wrapT);
+    bool setWrapT(GLenum wrapT);
 
     GLenum getWrapR() const { return mWrapR; }
 
-    void setWrapR(GLenum wrapR);
+    bool setWrapR(GLenum wrapR);
 
     float getMaxAnisotropy() const { return mMaxAnisotropy; }
 
-    void setMaxAnisotropy(float maxAnisotropy);
+    bool setMaxAnisotropy(float maxAnisotropy);
 
     GLfloat getMinLod() const { return mMinLod; }
 
-    void setMinLod(GLfloat minLod);
+    bool setMinLod(GLfloat minLod);
 
     GLfloat getMaxLod() const { return mMaxLod; }
 
-    void setMaxLod(GLfloat maxLod);
+    bool setMaxLod(GLfloat maxLod);
 
     GLenum getCompareMode() const { return mCompareMode; }
 
-    void setCompareMode(GLenum compareMode);
+    bool setCompareMode(GLenum compareMode);
 
     GLenum getCompareFunc() const { return mCompareFunc; }
 
-    void setCompareFunc(GLenum compareFunc);
+    bool setCompareFunc(GLenum compareFunc);
 
     GLenum getSRGBDecode() const { return mSRGBDecode; }
 
-    void setSRGBDecode(GLenum sRGBDecode);
+    bool setSRGBDecode(GLenum sRGBDecode);
 
-    void setBorderColor(const ColorGeneric &color);
+    bool setBorderColor(const ColorGeneric &color);
 
     const ColorGeneric &getBorderColor() const { return mBorderColor; }
 

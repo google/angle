@@ -813,8 +813,10 @@ GLenum Texture::getSwizzleAlpha() const
 
 void Texture::setMinFilter(const Context *context, GLenum minFilter)
 {
-    mState.mSamplerState.setMinFilter(minFilter);
-    signalDirtyState(DIRTY_BIT_MIN_FILTER);
+    if (mState.mSamplerState.setMinFilter(minFilter))
+    {
+        signalDirtyState(DIRTY_BIT_MIN_FILTER);
+    }
 }
 
 GLenum Texture::getMinFilter() const
@@ -824,8 +826,10 @@ GLenum Texture::getMinFilter() const
 
 void Texture::setMagFilter(const Context *context, GLenum magFilter)
 {
-    mState.mSamplerState.setMagFilter(magFilter);
-    signalDirtyState(DIRTY_BIT_MAG_FILTER);
+    if (mState.mSamplerState.setMagFilter(magFilter))
+    {
+        signalDirtyState(DIRTY_BIT_MAG_FILTER);
+    }
 }
 
 GLenum Texture::getMagFilter() const
@@ -835,8 +839,10 @@ GLenum Texture::getMagFilter() const
 
 void Texture::setWrapS(const Context *context, GLenum wrapS)
 {
-    mState.mSamplerState.setWrapS(wrapS);
-    signalDirtyState(DIRTY_BIT_WRAP_S);
+    if (mState.mSamplerState.setWrapS(wrapS))
+    {
+        signalDirtyState(DIRTY_BIT_WRAP_S);
+    }
 }
 
 GLenum Texture::getWrapS() const
@@ -846,8 +852,12 @@ GLenum Texture::getWrapS() const
 
 void Texture::setWrapT(const Context *context, GLenum wrapT)
 {
-    mState.mSamplerState.setWrapT(wrapT);
-    signalDirtyState(DIRTY_BIT_WRAP_T);
+    if (mState.mSamplerState.getWrapT() == wrapT)
+        return;
+    if (mState.mSamplerState.setWrapT(wrapT))
+    {
+        signalDirtyState(DIRTY_BIT_WRAP_T);
+    }
 }
 
 GLenum Texture::getWrapT() const
@@ -857,8 +867,10 @@ GLenum Texture::getWrapT() const
 
 void Texture::setWrapR(const Context *context, GLenum wrapR)
 {
-    mState.mSamplerState.setWrapR(wrapR);
-    signalDirtyState(DIRTY_BIT_WRAP_R);
+    if (mState.mSamplerState.setWrapR(wrapR))
+    {
+        signalDirtyState(DIRTY_BIT_WRAP_R);
+    }
 }
 
 GLenum Texture::getWrapR() const
@@ -868,8 +880,10 @@ GLenum Texture::getWrapR() const
 
 void Texture::setMaxAnisotropy(const Context *context, float maxAnisotropy)
 {
-    mState.mSamplerState.setMaxAnisotropy(maxAnisotropy);
-    signalDirtyState(DIRTY_BIT_MAX_ANISOTROPY);
+    if (mState.mSamplerState.setMaxAnisotropy(maxAnisotropy))
+    {
+        signalDirtyState(DIRTY_BIT_MAX_ANISOTROPY);
+    }
 }
 
 float Texture::getMaxAnisotropy() const
@@ -879,8 +893,10 @@ float Texture::getMaxAnisotropy() const
 
 void Texture::setMinLod(const Context *context, GLfloat minLod)
 {
-    mState.mSamplerState.setMinLod(minLod);
-    signalDirtyState(DIRTY_BIT_MIN_LOD);
+    if (mState.mSamplerState.setMinLod(minLod))
+    {
+        signalDirtyState(DIRTY_BIT_MIN_LOD);
+    }
 }
 
 GLfloat Texture::getMinLod() const
@@ -890,8 +906,10 @@ GLfloat Texture::getMinLod() const
 
 void Texture::setMaxLod(const Context *context, GLfloat maxLod)
 {
-    mState.mSamplerState.setMaxLod(maxLod);
-    signalDirtyState(DIRTY_BIT_MAX_LOD);
+    if (mState.mSamplerState.setMaxLod(maxLod))
+    {
+        signalDirtyState(DIRTY_BIT_MAX_LOD);
+    }
 }
 
 GLfloat Texture::getMaxLod() const
@@ -901,8 +919,10 @@ GLfloat Texture::getMaxLod() const
 
 void Texture::setCompareMode(const Context *context, GLenum compareMode)
 {
-    mState.mSamplerState.setCompareMode(compareMode);
-    signalDirtyState(DIRTY_BIT_COMPARE_MODE);
+    if (mState.mSamplerState.setCompareMode(compareMode))
+    {
+        signalDirtyState(DIRTY_BIT_COMPARE_MODE);
+    }
 }
 
 GLenum Texture::getCompareMode() const
@@ -912,8 +932,10 @@ GLenum Texture::getCompareMode() const
 
 void Texture::setCompareFunc(const Context *context, GLenum compareFunc)
 {
-    mState.mSamplerState.setCompareFunc(compareFunc);
-    signalDirtyState(DIRTY_BIT_COMPARE_FUNC);
+    if (mState.mSamplerState.setCompareFunc(compareFunc))
+    {
+        signalDirtyState(DIRTY_BIT_COMPARE_FUNC);
+    }
 }
 
 GLenum Texture::getCompareFunc() const
@@ -923,8 +945,10 @@ GLenum Texture::getCompareFunc() const
 
 void Texture::setSRGBDecode(const Context *context, GLenum sRGBDecode)
 {
-    mState.mSamplerState.setSRGBDecode(sRGBDecode);
-    signalDirtyState(DIRTY_BIT_SRGB_DECODE);
+    if (mState.mSamplerState.setSRGBDecode(sRGBDecode))
+    {
+        signalDirtyState(DIRTY_BIT_SRGB_DECODE);
+    }
 }
 
 GLenum Texture::getSRGBDecode() const

@@ -1645,12 +1645,11 @@ angle::Result TextureGL::setMaxLevel(const gl::Context *context, GLuint maxLevel
 
 angle::Result TextureGL::setMinFilter(const gl::Context *context, GLenum filter)
 {
-    if (filter != mAppliedSampler.getMinFilter())
+    if (mAppliedSampler.setMinFilter(filter))
     {
         const FunctionsGL *functions = GetFunctionsGL(context);
         StateManagerGL *stateManager = GetStateManagerGL(context);
 
-        mAppliedSampler.setMinFilter(filter);
         mLocalDirtyBits.set(gl::Texture::DIRTY_BIT_MIN_FILTER);
 
         // Signal to the GL layer that the Impl has dirty bits.
@@ -1664,12 +1663,11 @@ angle::Result TextureGL::setMinFilter(const gl::Context *context, GLenum filter)
 }
 angle::Result TextureGL::setMagFilter(const gl::Context *context, GLenum filter)
 {
-    if (filter != mAppliedSampler.getMagFilter())
+    if (mAppliedSampler.setMagFilter(filter))
     {
         const FunctionsGL *functions = GetFunctionsGL(context);
         StateManagerGL *stateManager = GetStateManagerGL(context);
 
-        mAppliedSampler.setMagFilter(filter);
         mLocalDirtyBits.set(gl::Texture::DIRTY_BIT_MAG_FILTER);
 
         // Signal to the GL layer that the Impl has dirty bits.

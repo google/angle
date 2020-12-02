@@ -198,69 +198,129 @@ SamplerState SamplerState::CreateDefaultForTarget(TextureType type)
     return state;
 }
 
-void SamplerState::setMinFilter(GLenum minFilter)
+bool SamplerState::setMinFilter(GLenum minFilter)
 {
-    mMinFilter                    = minFilter;
-    mCompleteness.typed.minFilter = static_cast<uint8_t>(FromGLenum<FilterMode>(minFilter));
+    if (mMinFilter != minFilter)
+    {
+        mMinFilter                    = minFilter;
+        mCompleteness.typed.minFilter = static_cast<uint8_t>(FromGLenum<FilterMode>(minFilter));
+        return true;
+    }
+    return false;
 }
 
-void SamplerState::setMagFilter(GLenum magFilter)
+bool SamplerState::setMagFilter(GLenum magFilter)
 {
-    mMagFilter                    = magFilter;
-    mCompleteness.typed.magFilter = static_cast<uint8_t>(FromGLenum<FilterMode>(magFilter));
+    if (mMagFilter != magFilter)
+    {
+        mMagFilter                    = magFilter;
+        mCompleteness.typed.magFilter = static_cast<uint8_t>(FromGLenum<FilterMode>(magFilter));
+        return true;
+    }
+    return false;
 }
 
-void SamplerState::setWrapS(GLenum wrapS)
+bool SamplerState::setWrapS(GLenum wrapS)
 {
-    mWrapS                    = wrapS;
-    mCompleteness.typed.wrapS = static_cast<uint8_t>(FromGLenum<WrapMode>(wrapS));
+    if (mWrapS != wrapS)
+    {
+        mWrapS                    = wrapS;
+        mCompleteness.typed.wrapS = static_cast<uint8_t>(FromGLenum<WrapMode>(wrapS));
+        return true;
+    }
+    return false;
 }
 
-void SamplerState::setWrapT(GLenum wrapT)
+bool SamplerState::setWrapT(GLenum wrapT)
 {
-    mWrapT = wrapT;
-    updateWrapTCompareMode();
+    if (mWrapT != wrapT)
+    {
+        mWrapT = wrapT;
+        updateWrapTCompareMode();
+        return true;
+    }
+    return false;
 }
 
-void SamplerState::setWrapR(GLenum wrapR)
+bool SamplerState::setWrapR(GLenum wrapR)
 {
-    mWrapR = wrapR;
+    if (mWrapR != wrapR)
+    {
+        mWrapR = wrapR;
+        return true;
+    }
+    return false;
 }
 
-void SamplerState::setMaxAnisotropy(float maxAnisotropy)
+bool SamplerState::setMaxAnisotropy(float maxAnisotropy)
 {
-    mMaxAnisotropy = maxAnisotropy;
+    if (mMaxAnisotropy != maxAnisotropy)
+    {
+        mMaxAnisotropy = maxAnisotropy;
+        return true;
+    }
+    return false;
 }
 
-void SamplerState::setMinLod(GLfloat minLod)
+bool SamplerState::setMinLod(GLfloat minLod)
 {
-    mMinLod = minLod;
+    if (mMinLod != minLod)
+    {
+        mMinLod = minLod;
+        return true;
+    }
+    return false;
 }
 
-void SamplerState::setMaxLod(GLfloat maxLod)
+bool SamplerState::setMaxLod(GLfloat maxLod)
 {
-    mMaxLod = maxLod;
+    if (mMaxLod != maxLod)
+    {
+        mMaxLod = maxLod;
+        return true;
+    }
+    return false;
 }
 
-void SamplerState::setCompareMode(GLenum compareMode)
+bool SamplerState::setCompareMode(GLenum compareMode)
 {
-    mCompareMode = compareMode;
-    updateWrapTCompareMode();
+    if (mCompareMode != compareMode)
+    {
+        mCompareMode = compareMode;
+        updateWrapTCompareMode();
+        return true;
+    }
+    return false;
 }
 
-void SamplerState::setCompareFunc(GLenum compareFunc)
+bool SamplerState::setCompareFunc(GLenum compareFunc)
 {
-    mCompareFunc = compareFunc;
+    if (mCompareFunc != compareFunc)
+    {
+        mCompareFunc = compareFunc;
+        return true;
+    }
+    return false;
 }
 
-void SamplerState::setSRGBDecode(GLenum sRGBDecode)
+bool SamplerState::setSRGBDecode(GLenum sRGBDecode)
 {
-    mSRGBDecode = sRGBDecode;
+    if (mSRGBDecode != sRGBDecode)
+    {
+        mSRGBDecode = sRGBDecode;
+        return true;
+    }
+    return false;
 }
 
-void SamplerState::setBorderColor(const ColorGeneric &color)
+bool SamplerState::setBorderColor(const ColorGeneric &color)
 {
-    mBorderColor = color;
+    if (mBorderColor != color)
+    {
+        mBorderColor = color;
+        return true;
+    }
+    return false;
 }
 
 void SamplerState::updateWrapTCompareMode()
