@@ -51,6 +51,24 @@
       "parentUuid": "829467db_e6472803",
       "revId": "8c495c3e8ffb92ca9dc6e23c2380994487fc4038",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "534e6099_98302abb",
+        "filename": "doc/UniformBlockTranslateToStructuredBuffer.md",
+        "patchSetId": 5
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-02T15:44:17Z",
+      "side": 1,
+      "message": "New format LGTM",
+      "parentUuid": "1584e905_5cfe8cbc",
+      "revId": "8c495c3e8ffb92ca9dc6e23c2380994487fc4038",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }

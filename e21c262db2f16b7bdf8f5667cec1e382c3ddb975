@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0db08471_d11e9060",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 12
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-02T15:44:17Z",
+      "side": 1,
+      "message": "Going to leave +2 to Jamie who had feedback",
+      "revId": "e21c262db2f16b7bdf8f5667cec1e382c3ddb975",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}

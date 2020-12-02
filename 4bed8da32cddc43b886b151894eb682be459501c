@@ -106,6 +106,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "357bf33e_d8e3c7e3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-02T15:44:17Z",
+      "side": 1,
+      "message": "1) Not sure how you copied PS6 of this change, but all empty lines are removed in PS41 of the test change, which is why it got messed up. The text is not the same.\n2) Patchset 44 and 53 aren\u0027t the same, there\u0027s a new line before the table in PS44, without which markdown doesn\u0027t know that the previous paragraph had ended.\n\nI made a couple of quick experiments, and I got it fixed in PS5 here: https://chromium-review.googlesource.com/c/angle/angle/+/2568902/5\n\n- I aligned the |s\n- Expanded :- to cover the whole width of the cells\n\nI then continued experimenting, and I found out the whole issue was that :- is too short, and there should be at least 3 dashes. See PS11 which uses :-- and fails to render, and PS13 that uses :--- and renders correctly. Spacing around | was irrelevant.\n\n-------\n\nThe current table LGTM, the one in PS5 in https://chromium-review.googlesource.com/c/angle/angle/+/2568902/5 (which is what the original meant to be) also LGTM (I chose PS5 because it looks better in .md text itself). Your choice.",
+      "parentUuid": "8a422d6d_0c602b38",
+      "revId": "4bed8da32cddc43b886b151894eb682be459501c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3d674a86_072a4dd5",
