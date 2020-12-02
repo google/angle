@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "89539bfc_e03dbb93",
+        "filename": "src/common/angleutils.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 304,
+      "author": {
+        "id": 1002745
+      },
+      "writtenOn": "2020-12-02T18:26:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "267c2b04_d9d61bc9",
+      "range": {
+        "startLine": 304,
+        "startChar": 75,
+        "endLine": 304,
+        "endChar": 76
+      },
+      "revId": "3bb35cd5ab8257201982c33c5e53a658bb2a8f4b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d6a59d68_0cdd1c14",
@@ -37,6 +61,30 @@
       "writtenOn": "2020-12-02T18:08:27Z",
       "side": 1,
       "message": "ISTR you need it around these as well for some systems. unless we can figure out how to disable implicit layers. would need to double check.",
+      "range": {
+        "startLine": 844,
+        "startChar": 28,
+        "endLine": 844,
+        "endChar": 54
+      },
+      "revId": "3bb35cd5ab8257201982c33c5e53a658bb2a8f4b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a179b6f0_226b77be",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 844,
+      "author": {
+        "id": 1002745
+      },
+      "writtenOn": "2020-12-02T18:26:07Z",
+      "side": 1,
+      "message": "I\u0027ve only seen the offending code (loader_platform_open_library) inside these functions:\nvkEnumerateInstanceLayerProperties\nvkEnumerateInstanceVersion\nvkEnumerateInstanceExtensionProperties\nSee:\nhttps://github.com/KhronosGroup/Vulkan-Loader/blob/7c07085ad1cc5b8b79c14d460d4f02b6cac3a193/loader/trampoline.c\n\nIf there are more LSAN issues, they might be different than what I\u0027m currently trying to silence.",
+      "parentUuid": "d6a59d68_0cdd1c14",
       "range": {
         "startLine": 844,
         "startChar": 28,
