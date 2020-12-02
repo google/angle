@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d7afbb20_6a2c7444",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 15
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-02T05:39:52Z",
+      "side": 1,
+      "message": "You can abandon this change Mohan in favor of https://chromium-review.googlesource.com/c/angle/angle/+/2567645",
+      "revId": "2550ae8f42443cf268ebc384f165711e7eaad7f2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0c1d20c0_1b2259d3",
