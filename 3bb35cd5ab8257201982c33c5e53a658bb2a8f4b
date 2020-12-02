@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "267c2b04_d9d61bc9",
+        "filename": "src/common/angleutils.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 304,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-02T18:08:27Z",
+      "side": 1,
+      "message": "please omit this semi so we require it in the code",
+      "range": {
+        "startLine": 304,
+        "startChar": 75,
+        "endLine": 304,
+        "endChar": 76
+      },
+      "revId": "3bb35cd5ab8257201982c33c5e53a658bb2a8f4b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d6a59d68_0cdd1c14",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 844,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-02T18:08:27Z",
+      "side": 1,
+      "message": "ISTR you need it around these as well for some systems. unless we can figure out how to disable implicit layers. would need to double check.",
+      "range": {
+        "startLine": 844,
+        "startChar": 28,
+        "endLine": 844,
+        "endChar": 54
+      },
+      "revId": "3bb35cd5ab8257201982c33c5e53a658bb2a8f4b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
