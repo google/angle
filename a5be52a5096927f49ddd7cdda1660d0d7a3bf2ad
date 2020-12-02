@@ -41,6 +41,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3f5c33d3_dd112737",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1067,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-12-02T22:49:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "38915178_e7c28430",
+      "range": {
+        "startLine": 1066,
+        "startChar": 0,
+        "endLine": 1067,
+        "endChar": 51
+      },
+      "revId": "a5be52a5096927f49ddd7cdda1660d0d7a3bf2ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "56346602_40d6ebfd",
@@ -54,6 +78,30 @@
       "writtenOn": "2020-12-02T17:30:16Z",
       "side": 1,
       "message": "same as below for all the types of back-end.",
+      "range": {
+        "startLine": 83,
+        "startChar": 16,
+        "endLine": 83,
+        "endChar": 26
+      },
+      "revId": "a5be52a5096927f49ddd7cdda1660d0d7a3bf2ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ac847f2c_3f73e491",
+        "filename": "src/libANGLE/renderer/null/ContextNULL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-12-02T22:49:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "56346602_40d6ebfd",
       "range": {
         "startLine": 83,
         "startChar": 16,
@@ -87,6 +135,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "fa8b4727_529c34a5",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 349,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-12-02T22:49:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c4e75616_6ee30a70",
+      "range": {
+        "startLine": 349,
+        "startChar": 4,
+        "endLine": 349,
+        "endChar": 21
+      },
+      "revId": "a5be52a5096927f49ddd7cdda1660d0d7a3bf2ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f2500ba5_69ba24d3",
@@ -100,6 +172,30 @@
       "writtenOn": "2020-12-02T17:30:16Z",
       "side": 1,
       "message": "nit: can you place in the anonymous block at the top of the file? just to match our usual style.",
+      "range": {
+        "startLine": 1864,
+        "startChar": 0,
+        "endLine": 1864,
+        "endChar": 6
+      },
+      "revId": "a5be52a5096927f49ddd7cdda1660d0d7a3bf2ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "efbe383b_d857b4c6",
+        "filename": "src/libANGLE/validationESEXT.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1864,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-12-02T22:49:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f2500ba5_69ba24d3",
       "range": {
         "startLine": 1864,
         "startChar": 0,
@@ -133,6 +229,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f05c50a6_60a98dbd",
+        "filename": "src/libANGLE/validationESEXT.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1879,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-12-02T22:49:13Z",
+      "side": 1,
+      "message": "cant do that, there is a specific dependency on GLES1.1 -\n\n Interactions with OpenGL ES 1.1 and OES_framebuffer_object\n If the GL is OpenGL ES 1.1, mentions of SHADER_OBJECT_EXT and\n PROGRAM_OBJECT_EXT as types accepted by LabelObjectEXT and\n GetObjectLabelEXT are omitted.",
+      "parentUuid": "ec8ba1ae_aa25d149",
+      "range": {
+        "startLine": 1879,
+        "startChar": 25,
+        "endLine": 1879,
+        "endChar": 41
+      },
+      "revId": "a5be52a5096927f49ddd7cdda1660d0d7a3bf2ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "25ec7fdb_ec1b3cd6",
@@ -146,6 +266,30 @@
       "writtenOn": "2020-12-02T17:30:16Z",
       "side": 1,
       "message": "same",
+      "range": {
+        "startLine": 1892,
+        "startChar": 25,
+        "endLine": 1892,
+        "endChar": 41
+      },
+      "revId": "a5be52a5096927f49ddd7cdda1660d0d7a3bf2ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "16bd662b_816ba7d2",
+        "filename": "src/libANGLE/validationESEXT.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1892,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-12-02T22:49:13Z",
+      "side": 1,
+      "message": "same response above",
+      "parentUuid": "25ec7fdb_ec1b3cd6",
       "range": {
         "startLine": 1892,
         "startChar": 25,
@@ -179,6 +323,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a8a2d271_821c285c",
+        "filename": "src/libANGLE/validationESEXT.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1905,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-12-02T22:49:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2ece14a6_48a46e92",
+      "range": {
+        "startLine": 1905,
+        "startChar": 42,
+        "endLine": 1905,
+        "endChar": 62
+      },
+      "revId": "a5be52a5096927f49ddd7cdda1660d0d7a3bf2ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a388387d_3f76bdd0",
@@ -192,6 +360,30 @@
       "writtenOn": "2020-12-02T17:30:16Z",
       "side": 1,
       "message": "also allow 3.0+",
+      "range": {
+        "startLine": 1918,
+        "startChar": 42,
+        "endLine": 1918,
+        "endChar": 63
+      },
+      "revId": "a5be52a5096927f49ddd7cdda1660d0d7a3bf2ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "252dc881_510f2601",
+        "filename": "src/libANGLE/validationESEXT.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1918,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-12-02T22:49:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a388387d_3f76bdd0",
       "range": {
         "startLine": 1918,
         "startChar": 42,
@@ -225,6 +417,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f5cc3ccf_c3c6f191",
+        "filename": "src/libANGLE/validationESEXT.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1944,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-12-02T22:49:13Z",
+      "side": 1,
+      "message": "I dont think so, core in GLES3",
+      "parentUuid": "2aa0ee3a_6d9670ab",
+      "range": {
+        "startLine": 1944,
+        "startChar": 25,
+        "endLine": 1944,
+        "endChar": 41
+      },
+      "revId": "a5be52a5096927f49ddd7cdda1660d0d7a3bf2ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d29652c2_9441215a",
@@ -248,6 +464,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "04065c04_1378cd2d",
+        "filename": "src/libANGLE/validationESEXT.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1981,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-12-02T22:49:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d29652c2_9441215a",
+      "range": {
+        "startLine": 1981,
+        "startChar": 42,
+        "endLine": 1981,
+        "endChar": 63
+      },
+      "revId": "a5be52a5096927f49ddd7cdda1660d0d7a3bf2ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6eb826d1_c73d159e",
@@ -261,6 +501,30 @@
       "writtenOn": "2020-12-02T17:30:16Z",
       "side": 1,
       "message": "why are you instantiating an ES2 test with ES3? also usually we omit ES2 and only add ES3 or ES31.",
+      "range": {
+        "startLine": 556,
+        "startChar": 0,
+        "endLine": 556,
+        "endChar": 34
+      },
+      "revId": "a5be52a5096927f49ddd7cdda1660d0d7a3bf2ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ed78cf96_d8abf62e",
+        "filename": "src/tests/gl_tests/DebugTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 556,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-12-02T22:49:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6eb826d1_c73d159e",
       "range": {
         "startLine": 556,
         "startChar": 0,
