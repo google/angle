@@ -117,6 +117,30 @@
       },
       "revId": "3bb35cd5ab8257201982c33c5e53a658bb2a8f4b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "770a2bb0_659715f4",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 844,
+      "author": {
+        "id": 1002745
+      },
+      "writtenOn": "2020-12-02T19:14:07Z",
+      "side": 1,
+      "message": "Right, but since it\u0027s probably a different kind of leak, it might be fixable and may not require being silenced. I haven\u0027t reproduced this locally, though.",
+      "parentUuid": "ccc8671d_b1702560",
+      "range": {
+        "startLine": 844,
+        "startChar": 28,
+        "endLine": 844,
+        "endChar": 54
+      },
+      "revId": "3bb35cd5ab8257201982c33c5e53a658bb2a8f4b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
