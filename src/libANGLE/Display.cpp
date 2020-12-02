@@ -2042,10 +2042,8 @@ void Display::returnScratchBufferImpl(angle::ScratchBuffer scratchBuffer,
     bufferVector->push_back(std::move(scratchBuffer));
 }
 
-Error Display::handleGPUSwitch()
+egl::Error Display::handleGPUSwitch()
 {
-    ANGLE_TRY(mImplementation->handleGPUSwitch());
-    initVendorString();
-    return NoError();
+    return mImplementation->handleGPUSwitch();
 }
 }  // namespace egl
