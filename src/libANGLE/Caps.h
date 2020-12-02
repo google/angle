@@ -397,6 +397,9 @@ struct Extensions
     // EXT_debug_marker
     bool debugMarker = false;
 
+    // EXT_debug_label
+    bool debugLabel = false;
+
     // GL_OES_EGL_image
     bool eglImageOES = false;
 

@@ -3820,6 +3820,61 @@ void GL_APIENTRY CopyImageSubDataEXT(GLuint srcName,
     }
 }
 
+// GL_EXT_debug_label
+void GL_APIENTRY
+GetObjectLabelEXT(GLenum type, GLuint object, GLsizei bufSize, GLsizei *length, GLchar *label)
+{
+    Context *context = GetValidGlobalContext();
+    EVENT(context, GLGetObjectLabelEXT,
+          "context = %d, type = %s, object = %u, bufSize = %d, length = 0x%016" PRIxPTR
+          ", label = 0x%016" PRIxPTR "",
+          CID(context), GLenumToString(GLenumGroup::DefaultGroup, type), object, bufSize,
+          (uintptr_t)length, (uintptr_t)label);
+
+    if (context)
+    {
+        std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateGetObjectLabelEXT(context, type, object, bufSize, length, label));
+        if (isCallValid)
+        {
+            context->getObjectLabel(type, object, bufSize, length, label);
+        }
+        ANGLE_CAPTURE(GetObjectLabelEXT, isCallValid, context, type, object, bufSize, length,
+                      label);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
+}
+
+void GL_APIENTRY LabelObjectEXT(GLenum type, GLuint object, GLsizei length, const GLchar *label)
+{
+    Context *context = GetValidGlobalContext();
+    EVENT(context, GLLabelObjectEXT,
+          "context = %d, type = %s, object = %u, length = %d, label = 0x%016" PRIxPTR "",
+          CID(context), GLenumToString(GLenumGroup::DefaultGroup, type), object, length,
+          (uintptr_t)label);
+
+    if (context)
+    {
+        std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateLabelObjectEXT(context, type, object, length, label));
+        if (isCallValid)
+        {
+            context->labelObject(type, object, length, label);
+        }
+        ANGLE_CAPTURE(LabelObjectEXT, isCallValid, context, type, object, length, label);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
+}
+
 // GL_EXT_debug_marker
 void GL_APIENTRY InsertEventMarkerEXT(GLsizei length, const GLchar *marker)
 {
@@ -17737,6 +17792,40 @@ void GL_APIENTRY GetObjectLabelContextANGLE(GLeglContext ctx,
     }
 }
 
+void GL_APIENTRY GetObjectLabelEXTContextANGLE(GLeglContext ctx,
+                                               GLenum type,
+                                               GLuint object,
+                                               GLsizei bufSize,
+                                               GLsizei *length,
+                                               GLchar *label)
+{
+    Context *context = static_cast<gl::Context *>(ctx);
+    EVENT(context, GLGetObjectLabelEXT,
+          "context = %d, type = %s, object = %u, bufSize = %d, length = 0x%016" PRIxPTR
+          ", label = 0x%016" PRIxPTR "",
+          CID(context), GLenumToString(GLenumGroup::DefaultGroup, type), object, bufSize,
+          (uintptr_t)length, (uintptr_t)label);
+
+    if (context && !context->isContextLost())
+    {
+        ASSERT(context == GetValidGlobalContext());
+        std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateGetObjectLabelEXT(context, type, object, bufSize, length, label));
+        if (isCallValid)
+        {
+            context->getObjectLabel(type, object, bufSize, length, label);
+        }
+        ANGLE_CAPTURE(GetObjectLabelEXT, isCallValid, context, type, object, bufSize, length,
+                      label);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
+}
+
 void GL_APIENTRY GetObjectLabelKHRContextANGLE(GLeglContext ctx,
                                                GLenum identifier,
                                                GLuint name,
@@ -21056,6 +21145,36 @@ GLboolean GL_APIENTRY IsVertexArrayOESContextANGLE(GLeglContext ctx, GLuint arra
         returnValue = GetDefaultReturnValue<angle::EntryPoint::GLIsVertexArrayOES, GLboolean>();
     }
     return returnValue;
+}
+
+void GL_APIENTRY LabelObjectEXTContextANGLE(GLeglContext ctx,
+                                            GLenum type,
+                                            GLuint object,
+                                            GLsizei length,
+                                            const GLchar *label)
+{
+    Context *context = static_cast<gl::Context *>(ctx);
+    EVENT(context, GLLabelObjectEXT,
+          "context = %d, type = %s, object = %u, length = %d, label = 0x%016" PRIxPTR "",
+          CID(context), GLenumToString(GLenumGroup::DefaultGroup, type), object, length,
+          (uintptr_t)label);
+
+    if (context && !context->isContextLost())
+    {
+        ASSERT(context == GetValidGlobalContext());
+        std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateLabelObjectEXT(context, type, object, length, label));
+        if (isCallValid)
+        {
+            context->labelObject(type, object, length, label);
+        }
+        ANGLE_CAPTURE(LabelObjectEXT, isCallValid, context, type, object, length, label);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY LightModelfContextANGLE(GLeglContext ctx, GLenum pname, GLfloat param)

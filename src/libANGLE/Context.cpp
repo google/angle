@@ -999,14 +999,19 @@ gl::LabeledObject *Context::getLabeledObject(GLenum identifier, GLuint name) con
     switch (identifier)
     {
         case GL_BUFFER:
+        case GL_BUFFER_OBJECT_EXT:
             return getBuffer({name});
         case GL_SHADER:
+        case GL_SHADER_OBJECT_EXT:
             return getShader({name});
         case GL_PROGRAM:
+        case GL_PROGRAM_OBJECT_EXT:
             return getProgramNoResolveLink({name});
         case GL_VERTEX_ARRAY:
+        case GL_VERTEX_ARRAY_OBJECT_EXT:
             return getVertexArray({name});
         case GL_QUERY:
+        case GL_QUERY_OBJECT_EXT:
             return getQuery({name});
         case GL_TRANSFORM_FEEDBACK:
             return getTransformFeedback({name});
@@ -1019,6 +1024,7 @@ gl::LabeledObject *Context::getLabeledObject(GLenum identifier, GLuint name) con
         case GL_FRAMEBUFFER:
             return getFramebuffer({name});
         case GL_PROGRAM_PIPELINE:
+        case GL_PROGRAM_PIPELINE_OBJECT_EXT:
             return getProgramPipeline({name});
         default:
             UNREACHABLE();
@@ -1042,6 +1048,21 @@ void Context::objectLabel(GLenum identifier, GLuint name, GLsizei length, const 
     // TODO(jmadill): Determine if the object is dirty based on 'name'. Conservatively assume the
     // specified object is active until we do this.
     mState.setObjectDirty(identifier);
+}
+
+void Context::labelObject(GLenum type, GLuint object, GLsizei length, const GLchar *label)
+{
+    gl::LabeledObject *obj = getLabeledObject(type, object);
+    ASSERT(obj != nullptr);
+
+    std::string labelName = "";
+    if (label != nullptr)
+    {
+        size_t labelLength = length == 0 ? strlen(label) : length;
+        labelName          = std::string(label, labelLength);
+    }
+    obj->setLabel(this, labelName);
+    mState.setObjectDirty(type);
 }
 
 void Context::objectPtrLabel(const void *ptr, GLsizei length, const GLchar *label)
@@ -3288,6 +3309,9 @@ Extensions Context::generateSupportedExtensions() const
     supportedExtensions.maxDebugLoggedMessages  = 1024;
     supportedExtensions.maxDebugGroupStackDepth = 1024;
     supportedExtensions.maxLabelLength          = 1024;
+
+    // Explicitly enable GL_EXT_debug_label
+    supportedExtensions.debugLabel = true;
 
     // Explicitly enable GL_ANGLE_robust_client_memory if the context supports validation.
     supportedExtensions.robustClientMemory = !mSkipValidation;

@@ -6,9 +6,9 @@
   "scripts/gl_angle_ext.xml":
     "0b4f3476d76a5ccc40af342d6c08739d",
   "scripts/registry_xml.py":
-    "0058f2d8ea65a736d6bd201f6d579090",
+    "c0e4f66d64c111c8600770dc79bc50f9",
   "src/libANGLE/gl_enum_utils_autogen.cpp":
-    "30ac2050cdc2b7fa0a42acc457e57059",
+    "f77ddeb3af9f5cea20ae7f0efb0a3ddc",
   "src/libANGLE/gl_enum_utils_autogen.h":
     "dd54f34be733affcb994fc315c3b972d"
 }

@@ -921,6 +921,21 @@ angle::CallCapture CaptureCopyImageSubDataEXT(const State &glState,
                                               GLsizei srcHeight,
                                               GLsizei srcDepth);
 
+// GL_EXT_debug_label
+angle::CallCapture CaptureGetObjectLabelEXT(const State &glState,
+                                            bool isCallValid,
+                                            GLenum type,
+                                            GLuint object,
+                                            GLsizei bufSize,
+                                            GLsizei *length,
+                                            GLchar *label);
+angle::CallCapture CaptureLabelObjectEXT(const State &glState,
+                                         bool isCallValid,
+                                         GLenum type,
+                                         GLuint object,
+                                         GLsizei length,
+                                         const GLchar *label);
+
 // GL_EXT_debug_marker
 angle::CallCapture CaptureInsertEventMarkerEXT(const State &glState,
                                                bool isCallValid,
@@ -3559,6 +3574,29 @@ void CaptureBufferStorageEXT_data(const State &glState,
                                   const void *data,
                                   GLbitfield flags,
                                   angle::ParamCapture *paramCapture);
+void CaptureGetObjectLabelEXT_length(const State &glState,
+                                     bool isCallValid,
+                                     GLenum type,
+                                     GLuint object,
+                                     GLsizei bufSize,
+                                     GLsizei *length,
+                                     GLchar *label,
+                                     angle::ParamCapture *paramCapture);
+void CaptureGetObjectLabelEXT_label(const State &glState,
+                                    bool isCallValid,
+                                    GLenum type,
+                                    GLuint object,
+                                    GLsizei bufSize,
+                                    GLsizei *length,
+                                    GLchar *label,
+                                    angle::ParamCapture *paramCapture);
+void CaptureLabelObjectEXT_label(const State &glState,
+                                 bool isCallValid,
+                                 GLenum type,
+                                 GLuint object,
+                                 GLsizei length,
+                                 const GLchar *label,
+                                 angle::ParamCapture *paramCapture);
 void CaptureInsertEventMarkerEXT_marker(const State &glState,
                                         bool isCallValid,
                                         GLsizei length,

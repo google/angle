@@ -4618,6 +4618,86 @@ CallCapture CaptureCopyImageSubDataEXT(const State &glState,
     return CallCapture(angle::EntryPoint::GLCopyImageSubDataEXT, std::move(paramBuffer));
 }
 
+CallCapture CaptureGetObjectLabelEXT(const State &glState,
+                                     bool isCallValid,
+                                     GLenum type,
+                                     GLuint object,
+                                     GLsizei bufSize,
+                                     GLsizei *length,
+                                     GLchar *label)
+{
+    ParamBuffer paramBuffer;
+
+    paramBuffer.addEnumParam("type", GLenumGroup::DefaultGroup, ParamType::TGLenum, type);
+    paramBuffer.addValueParam("object", ParamType::TGLuint, object);
+    paramBuffer.addValueParam("bufSize", ParamType::TGLsizei, bufSize);
+
+    if (isCallValid)
+    {
+        ParamCapture lengthParam("length", ParamType::TGLsizeiPointer);
+        InitParamValue(ParamType::TGLsizeiPointer, length, &lengthParam.value);
+        CaptureGetObjectLabelEXT_length(glState, isCallValid, type, object, bufSize, length, label,
+                                        &lengthParam);
+        paramBuffer.addParam(std::move(lengthParam));
+    }
+    else
+    {
+        ParamCapture lengthParam("length", ParamType::TGLsizeiPointer);
+        InitParamValue(ParamType::TGLsizeiPointer, static_cast<GLsizei *>(nullptr),
+                       &lengthParam.value);
+        paramBuffer.addParam(std::move(lengthParam));
+    }
+
+    if (isCallValid)
+    {
+        ParamCapture labelParam("label", ParamType::TGLcharPointer);
+        InitParamValue(ParamType::TGLcharPointer, label, &labelParam.value);
+        CaptureGetObjectLabelEXT_label(glState, isCallValid, type, object, bufSize, length, label,
+                                       &labelParam);
+        paramBuffer.addParam(std::move(labelParam));
+    }
+    else
+    {
+        ParamCapture labelParam("label", ParamType::TGLcharPointer);
+        InitParamValue(ParamType::TGLcharPointer, static_cast<GLchar *>(nullptr),
+                       &labelParam.value);
+        paramBuffer.addParam(std::move(labelParam));
+    }
+
+    return CallCapture(angle::EntryPoint::GLGetObjectLabelEXT, std::move(paramBuffer));
+}
+
+CallCapture CaptureLabelObjectEXT(const State &glState,
+                                  bool isCallValid,
+                                  GLenum type,
+                                  GLuint object,
+                                  GLsizei length,
+                                  const GLchar *label)
+{
+    ParamBuffer paramBuffer;
+
+    paramBuffer.addEnumParam("type", GLenumGroup::DefaultGroup, ParamType::TGLenum, type);
+    paramBuffer.addValueParam("object", ParamType::TGLuint, object);
+    paramBuffer.addValueParam("length", ParamType::TGLsizei, length);
+
+    if (isCallValid)
+    {
+        ParamCapture labelParam("label", ParamType::TGLcharConstPointer);
+        InitParamValue(ParamType::TGLcharConstPointer, label, &labelParam.value);
+        CaptureLabelObjectEXT_label(glState, isCallValid, type, object, length, label, &labelParam);
+        paramBuffer.addParam(std::move(labelParam));
+    }
+    else
+    {
+        ParamCapture labelParam("label", ParamType::TGLcharConstPointer);
+        InitParamValue(ParamType::TGLcharConstPointer, static_cast<const GLchar *>(nullptr),
+                       &labelParam.value);
+        paramBuffer.addParam(std::move(labelParam));
+    }
+
+    return CallCapture(angle::EntryPoint::GLLabelObjectEXT, std::move(paramBuffer));
+}
+
 CallCapture CaptureInsertEventMarkerEXT(const State &glState,
                                         bool isCallValid,
                                         GLsizei length,

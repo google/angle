@@ -223,6 +223,7 @@ typedef GLint (GL_APIENTRYP PFNGLGETFRAGDATAINDEXEXTCONTEXTANGLEPROC)(GLeglConte
 typedef GLenum (GL_APIENTRYP PFNGLGETGRAPHICSRESETSTATUSEXTCONTEXTANGLEPROC)(GLeglContext ctx);
 typedef void (GL_APIENTRYP PFNGLGETINTEGER64VEXTCONTEXTANGLEPROC)(GLeglContext ctx, GLenum pname, GLint64 *data);
 typedef void (GL_APIENTRYP PFNGLGETMEMORYOBJECTPARAMETERIVEXTCONTEXTANGLEPROC)(GLeglContext ctx, GLuint memoryObject, GLenum pname, GLint *params);
+typedef void (GL_APIENTRYP PFNGLGETOBJECTLABELEXTCONTEXTANGLEPROC)(GLeglContext ctx, GLenum type, GLuint object, GLsizei bufSize, GLsizei *length, GLchar *label);
 typedef void (GL_APIENTRYP PFNGLGETOBJECTLABELKHRCONTEXTANGLEPROC)(GLeglContext ctx, GLenum identifier, GLuint name, GLsizei bufSize, GLsizei *length, GLchar *label);
 typedef void (GL_APIENTRYP PFNGLGETOBJECTPTRLABELKHRCONTEXTANGLEPROC)(GLeglContext ctx, const void *ptr, GLsizei bufSize, GLsizei *length, GLchar *label);
 typedef void (GL_APIENTRYP PFNGLGETPOINTERVKHRCONTEXTANGLEPROC)(GLeglContext ctx, GLenum pname, void **params);
@@ -256,6 +257,7 @@ typedef GLboolean (GL_APIENTRYP PFNGLISPROGRAMPIPELINEEXTCONTEXTANGLEPROC)(GLegl
 typedef GLboolean (GL_APIENTRYP PFNGLISQUERYEXTCONTEXTANGLEPROC)(GLeglContext ctx, GLuint id);
 typedef GLboolean (GL_APIENTRYP PFNGLISSEMAPHOREEXTCONTEXTANGLEPROC)(GLeglContext ctx, GLuint semaphore);
 typedef GLboolean (GL_APIENTRYP PFNGLISVERTEXARRAYOESCONTEXTANGLEPROC)(GLeglContext ctx, GLuint array);
+typedef void (GL_APIENTRYP PFNGLLABELOBJECTEXTCONTEXTANGLEPROC)(GLeglContext ctx, GLenum type, GLuint object, GLsizei length, const GLchar *label);
 typedef void *(GL_APIENTRYP PFNGLMAPBUFFEROESCONTEXTANGLEPROC)(GLeglContext ctx, GLenum target, GLenum access);
 typedef void *(GL_APIENTRYP PFNGLMAPBUFFERRANGEEXTCONTEXTANGLEPROC)(GLeglContext ctx, GLenum target, GLintptr offset, GLsizeiptr length, GLbitfield access);
 typedef void (GL_APIENTRYP PFNGLMAXSHADERCOMPILERTHREADSKHRCONTEXTANGLEPROC)(GLeglContext ctx, GLuint count);
@@ -651,6 +653,7 @@ GL_APICALL GLint GL_APIENTRY glGetFragDataIndexEXTContextANGLE(GLeglContext ctx,
 GL_APICALL GLenum GL_APIENTRY glGetGraphicsResetStatusEXTContextANGLE(GLeglContext ctx);
 GL_APICALL void GL_APIENTRY glGetInteger64vEXTContextANGLE(GLeglContext ctx, GLenum pname, GLint64 *data);
 GL_APICALL void GL_APIENTRY glGetMemoryObjectParameterivEXTContextANGLE(GLeglContext ctx, GLuint memoryObject, GLenum pname, GLint *params);
+GL_APICALL void GL_APIENTRY glGetObjectLabelEXTContextANGLE(GLeglContext ctx, GLenum type, GLuint object, GLsizei bufSize, GLsizei *length, GLchar *label);
 GL_APICALL void GL_APIENTRY glGetObjectLabelKHRContextANGLE(GLeglContext ctx, GLenum identifier, GLuint name, GLsizei bufSize, GLsizei *length, GLchar *label);
 GL_APICALL void GL_APIENTRY glGetObjectPtrLabelKHRContextANGLE(GLeglContext ctx, const void *ptr, GLsizei bufSize, GLsizei *length, GLchar *label);
 GL_APICALL void GL_APIENTRY glGetPointervKHRContextANGLE(GLeglContext ctx, GLenum pname, void **params);
@@ -684,6 +687,7 @@ GL_APICALL GLboolean GL_APIENTRY glIsProgramPipelineEXTContextANGLE(GLeglContext
 GL_APICALL GLboolean GL_APIENTRY glIsQueryEXTContextANGLE(GLeglContext ctx, GLuint id);
 GL_APICALL GLboolean GL_APIENTRY glIsSemaphoreEXTContextANGLE(GLeglContext ctx, GLuint semaphore);
 GL_APICALL GLboolean GL_APIENTRY glIsVertexArrayOESContextANGLE(GLeglContext ctx, GLuint array);
+GL_APICALL void GL_APIENTRY glLabelObjectEXTContextANGLE(GLeglContext ctx, GLenum type, GLuint object, GLsizei length, const GLchar *label);
 GL_APICALL void *GL_APIENTRY glMapBufferOESContextANGLE(GLeglContext ctx, GLenum target, GLenum access);
 GL_APICALL void *GL_APIENTRY glMapBufferRangeEXTContextANGLE(GLeglContext ctx, GLenum target, GLintptr offset, GLsizeiptr length, GLbitfield access);
 GL_APICALL void GL_APIENTRY glMaxShaderCompilerThreadsKHRContextANGLE(GLeglContext ctx, GLuint count);

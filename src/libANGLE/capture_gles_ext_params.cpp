@@ -2758,6 +2758,41 @@ void CaptureGetObjectLabelKHR_label(const State &glState,
     // Skipped
 }
 
+void CaptureGetObjectLabelEXT_length(const State &glState,
+                                     bool isCallValid,
+                                     GLenum type,
+                                     GLuint object,
+                                     GLsizei bufSize,
+                                     GLsizei *length,
+                                     GLchar *label,
+                                     angle::ParamCapture *paramCapture)
+{
+    // Skipped
+}
+
+void CaptureGetObjectLabelEXT_label(const State &glState,
+                                    bool isCallValid,
+                                    GLenum type,
+                                    GLuint object,
+                                    GLsizei bufSize,
+                                    GLsizei *length,
+                                    GLchar *label,
+                                    angle::ParamCapture *paramCapture)
+{
+    // Skipped
+}
+
+void CaptureLabelObjectEXT_label(const State &glState,
+                                 bool isCallValid,
+                                 GLenum type,
+                                 GLuint object,
+                                 GLsizei length,
+                                 const GLchar *label,
+                                 angle::ParamCapture *paramCapture)
+{
+    // Skipped
+}
+
 void CaptureGetObjectPtrLabelKHR_ptr(const State &glState,
                                      bool isCallValid,
                                      const void *ptr,

@@ -1138,6 +1138,8 @@ const char *GetEntryPointName(EntryPoint ep)
             return "glGetNamedRenderbufferParameteriv";
         case EntryPoint::GLGetObjectLabel:
             return "glGetObjectLabel";
+        case EntryPoint::GLGetObjectLabelEXT:
+            return "glGetObjectLabelEXT";
         case EntryPoint::GLGetObjectLabelKHR:
             return "glGetObjectLabelKHR";
         case EntryPoint::GLGetObjectPtrLabel:
@@ -1578,6 +1580,8 @@ const char *GetEntryPointName(EntryPoint ep)
             return "glIsVertexArray";
         case EntryPoint::GLIsVertexArrayOES:
             return "glIsVertexArrayOES";
+        case EntryPoint::GLLabelObjectEXT:
+            return "glLabelObjectEXT";
         case EntryPoint::GLLightModelf:
             return "glLightModelf";
         case EntryPoint::GLLightModelfv:

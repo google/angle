@@ -796,6 +796,19 @@ bool ValidateCopyImageSubDataEXT(const Context *context,
                                  GLsizei srcHeight,
                                  GLsizei srcDepth);
 
+// GL_EXT_debug_label
+bool ValidateGetObjectLabelEXT(const Context *context,
+                               GLenum type,
+                               GLuint object,
+                               GLsizei bufSize,
+                               const GLsizei *length,
+                               const GLchar *label);
+bool ValidateLabelObjectEXT(const Context *context,
+                            GLenum type,
+                            GLuint object,
+                            GLsizei length,
+                            const GLchar *label);
+
 // GL_EXT_debug_marker
 bool ValidateInsertEventMarkerEXT(const Context *context, GLsizei length, const GLchar *marker);
 bool ValidatePopGroupMarkerEXT(const Context *context);

@@ -1135,6 +1135,12 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_MAX_COMBINED_FRAGMENT_UNIFORM_COMPONENTS";
                 case 0x8A34:
                     return "GL_UNIFORM_BUFFER_OFFSET_ALIGNMENT";
+                case 0x8A4F:
+                    return "GL_PROGRAM_PIPELINE_OBJECT_EXT";
+                case 0x8B40:
+                    return "GL_PROGRAM_OBJECT_EXT";
+                case 0x8B48:
+                    return "GL_SHADER_OBJECT_EXT";
                 case 0x8B49:
                     return "GL_MAX_FRAGMENT_UNIFORM_COMPONENTS";
                 case 0x8B4A:
@@ -1621,6 +1627,12 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_DEBUG_SEVERITY_MEDIUM_KHR";
                 case 0x9148:
                     return "GL_DEBUG_SEVERITY_LOW_KHR";
+                case 0x9151:
+                    return "GL_BUFFER_OBJECT_EXT";
+                case 0x9153:
+                    return "GL_QUERY_OBJECT_EXT";
+                case 0x9154:
+                    return "GL_VERTEX_ARRAY_OBJECT_EXT";
                 case 0x919D:
                     return "GL_TEXTURE_BUFFER_OFFSET";
                 case 0x919E:

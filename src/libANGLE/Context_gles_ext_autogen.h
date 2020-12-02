@@ -305,6 +305,8 @@
                        GLbitfield flags);                                                          \
     /* GL_EXT_compressed_ETC1_RGB8_sub_texture */                                                  \
     /* GL_EXT_copy_image */                                                                        \
+    /* GL_EXT_debug_label */                                                                       \
+    void labelObject(GLenum type, GLuint object, GLsizei length, const GLchar *label);             \
     /* GL_EXT_debug_marker */                                                                      \
     void insertEventMarker(GLsizei length, const GLchar *marker);                                  \
     void popGroupMarker();                                                                         \

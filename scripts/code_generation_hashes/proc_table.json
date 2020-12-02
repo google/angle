@@ -10,11 +10,11 @@
   "scripts/gl_angle_ext.xml":
     "0b4f3476d76a5ccc40af342d6c08739d",
   "scripts/registry_xml.py":
-    "0058f2d8ea65a736d6bd201f6d579090",
+    "c0e4f66d64c111c8600770dc79bc50f9",
   "scripts/wgl.xml":
     "c36001431919e1c435f1215a85f7e1db",
   "src/libGL/proc_table_wgl_autogen.cpp":
     "d13cce0ddbd844c0b4812000c4f998f0",
   "src/libGLESv2/proc_table_egl_autogen.cpp":
-    "922f96df0bb5f90381cd8f2b496c54d3"
+    "18ef1c3470fc6af55b14fdd2b998c571"
 }
