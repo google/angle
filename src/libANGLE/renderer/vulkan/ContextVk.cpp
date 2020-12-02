@@ -1742,7 +1742,8 @@ angle::Result ContextVk::synchronizeCpuGpuTime()
         // Use the first timestamp queried as origin.
         if (mGpuEventTimestampOrigin == 0)
         {
-            mGpuEventTimestampOrigin = gpuTimestampCycles.getResult();
+            mGpuEventTimestampOrigin =
+                gpuTimestampCycles.getResult(vk::QueryResult::kDefaultResultIndex);
         }
 
         // Take these CPU and GPU timestamps if there is better confidence.
@@ -1751,7 +1752,7 @@ angle::Result ContextVk::synchronizeCpuGpuTime()
         {
             tightestRangeS = confidenceRangeS;
             TcpuS          = cpuTimestampS;
-            TgpuCycles     = gpuTimestampCycles.getResult();
+            TgpuCycles     = gpuTimestampCycles.getResult(vk::QueryResult::kDefaultResultIndex);
         }
     }
 
@@ -1820,9 +1821,10 @@ angle::Result ContextVk::checkCompletedGpuEvents()
         mGpuEventQueryPool.freeQuery(this, &eventQuery.queryHelper);
 
         GpuEvent gpuEvent;
-        gpuEvent.gpuTimestampCycles = gpuTimestampCycles.getResult();
-        gpuEvent.name               = eventQuery.name;
-        gpuEvent.phase              = eventQuery.phase;
+        gpuEvent.gpuTimestampCycles =
+            gpuTimestampCycles.getResult(vk::QueryResult::kDefaultResultIndex);
+        gpuEvent.name  = eventQuery.name;
+        gpuEvent.phase = eventQuery.phase;
 
         mGpuEvents.emplace_back(gpuEvent);
 
@@ -3600,8 +3602,16 @@ vk::DynamicQueryPool *ContextVk::getQueryPool(gl::QueryType queryType)
 {
     ASSERT(queryType == gl::QueryType::AnySamples ||
            queryType == gl::QueryType::AnySamplesConservative ||
+           queryType == gl::QueryType::PrimitivesGenerated ||
            queryType == gl::QueryType::TransformFeedbackPrimitivesWritten ||
            queryType == gl::QueryType::Timestamp || queryType == gl::QueryType::TimeElapsed);
+
+    // For PrimitivesGenerated queries, use the same pool as TransformFeedbackPrimitivesWritten.
+    // They are served with the same Vulkan query.
+    if (queryType == gl::QueryType::PrimitivesGenerated)
+    {
+        queryType = gl::QueryType::TransformFeedbackPrimitivesWritten;
+    }
 
     // Assert that timestamp extension is available if needed.
     ASSERT(queryType != gl::QueryType::Timestamp && queryType != gl::QueryType::TimeElapsed ||
@@ -4389,7 +4399,7 @@ angle::Result ContextVk::getTimestamp(uint64_t *timestampOut)
     // Get the query results
     vk::QueryResult result(1);
     ANGLE_TRY(timestampQuery.getUint64Result(this, &result));
-    *timestampOut = result.getResult();
+    *timestampOut = result.getResult(vk::QueryResult::kDefaultResultIndex);
     timestampQueryPool.get().freeQuery(this, &timestampQuery);
 
     // Convert results to nanoseconds.
@@ -4583,7 +4593,7 @@ angle::Result ContextVk::flushCommandsAndEndRenderPass()
         return angle::Result::Continue;
     }
 
-    ANGLE_TRY(pauseRenderPassQueriesIfActive());
+    pauseRenderPassQueriesIfActive();
 
     mCurrentTransformFeedbackBuffers.clear();
     mCurrentIndirectBuffer = nullptr;
@@ -4770,36 +4780,41 @@ void ContextVk::endRenderPassQuery(QueryVk *queryVk)
     mActiveRenderPassQueries[type] = nullptr;
 }
 
-angle::Result ContextVk::pauseRenderPassQueriesIfActive()
+void ContextVk::pauseRenderPassQueriesIfActive()
 {
     if (mRenderPassCommandBuffer == nullptr)
     {
-        return angle::Result::Continue;
+        return;
     }
 
     for (QueryVk *activeQuery : mActiveRenderPassQueries)
     {
         if (activeQuery)
         {
-            activeQuery->getQueryHelper()->endRenderPassQuery(this);
-            ANGLE_TRY(activeQuery->stashQueryHelper(this));
+            activeQuery->onRenderPassEnd(this);
+        }
+    }
+}
+
+angle::Result ContextVk::resumeRenderPassQueriesIfActive()
+{
+    ASSERT(mRenderPassCommandBuffer);
+
+    // Note: these queries should be processed in order.  See comment in QueryVk::onRenderPassStart.
+    for (QueryVk *activeQuery : mActiveRenderPassQueries)
+    {
+        if (activeQuery)
+        {
+            ANGLE_TRY(activeQuery->onRenderPassStart(this));
         }
     }
 
     return angle::Result::Continue;
 }
 
-angle::Result ContextVk::resumeRenderPassQueriesIfActive()
+QueryVk *ContextVk::getActiveRenderPassQuery(gl::QueryType queryType) const
 {
-    for (QueryVk *activeQuery : mActiveRenderPassQueries)
-    {
-        if (activeQuery)
-        {
-            ANGLE_TRY(activeQuery->getQueryHelper()->beginRenderPassQuery(this));
-        }
-    }
-
-    return angle::Result::Continue;
+    return mActiveRenderPassQueries[queryType];
 }
 
 bool ContextVk::isRobustResourceInitEnabled() const

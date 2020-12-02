@@ -179,7 +179,7 @@ void ValidateShaderInterface(TDiagnostics *diagnostics,
         // A varying is either:
         //
         // - A vector or matrix, which can take a number of contiguous locations
-        // - A struct, which also takes a number of contiquous locations
+        // - A struct, which also takes a number of contiguous locations
         // - An interface block.
         //
         // Interface blocks can assign arbitrary locations to their fields, for example:

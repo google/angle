@@ -536,12 +536,14 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
 
     bool isRobustResourceInitEnabled() const;
 
-    // occlusion query
+    // Queries that begin and end automatically with render pass start and end
     angle::Result beginRenderPassQuery(QueryVk *queryVk);
     void endRenderPassQuery(QueryVk *queryVk);
-
-    angle::Result pauseRenderPassQueriesIfActive();
+    void pauseRenderPassQueriesIfActive();
     angle::Result resumeRenderPassQueriesIfActive();
+
+    // Used by QueryVk to share query helpers between transform feedback queries.
+    QueryVk *getActiveRenderPassQuery(gl::QueryType queryType) const;
 
     void updateOverlayOnPresent();
     void addOverlayUsedBuffersCount(vk::CommandBufferHelper *commandBuffer);

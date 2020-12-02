@@ -2533,6 +2533,11 @@ void QueryHelper::writeTimestamp(ContextVk *contextVk, CommandBuffer *commandBuf
     retain(&contextVk->getResourceUseList());
 }
 
+bool QueryHelper::hasSubmittedCommands() const
+{
+    return mUse.getSerial().valid();
+}
+
 angle::Result QueryHelper::getUint64ResultNonBlocking(ContextVk *contextVk,
                                                       QueryResult *resultOut,
                                                       bool *availableOut)
@@ -2542,7 +2547,7 @@ angle::Result QueryHelper::getUint64ResultNonBlocking(ContextVk *contextVk,
 
     // Ensure that we only wait if we have inserted a query in command buffer. Otherwise you will
     // wait forever and trigger GPU timeout.
-    if (mUse.getSerial().valid())
+    if (hasSubmittedCommands())
     {
         VkDevice device                     = contextVk->getDevice();
         constexpr VkQueryResultFlags kFlags = VK_QUERY_RESULT_64_BIT;
@@ -2572,7 +2577,7 @@ angle::Result QueryHelper::getUint64ResultNonBlocking(ContextVk *contextVk,
 angle::Result QueryHelper::getUint64Result(ContextVk *contextVk, QueryResult *resultOut)
 {
     ASSERT(valid());
-    if (mUse.getSerial().valid())
+    if (hasSubmittedCommands())
     {
         VkDevice device                     = contextVk->getDevice();
         constexpr VkQueryResultFlags kFlags = VK_QUERY_RESULT_64_BIT | VK_QUERY_RESULT_WAIT_BIT;

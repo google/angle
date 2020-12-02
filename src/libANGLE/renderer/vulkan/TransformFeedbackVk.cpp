@@ -135,17 +135,18 @@ angle::Result TransformFeedbackVk::begin(const gl::Context *context,
 
 angle::Result TransformFeedbackVk::end(const gl::Context *context)
 {
+    ContextVk *contextVk = vk::GetImpl(context);
+
     // If there's an active transform feedback query, accumulate the primitives drawn.
     const gl::State &glState = context->getState();
     gl::Query *transformFeedbackQuery =
         glState.getActiveQuery(gl::QueryType::TransformFeedbackPrimitivesWritten);
 
-    if (transformFeedbackQuery)
+    if (transformFeedbackQuery && contextVk->getFeatures().emulateTransformFeedback.enabled)
     {
         vk::GetImpl(transformFeedbackQuery)->onTransformFeedbackEnd(mState.getPrimitivesDrawn());
     }
 
-    ContextVk *contextVk = vk::GetImpl(context);
     contextVk->onEndTransformFeedback();
     return angle::Result::Continue;
 }

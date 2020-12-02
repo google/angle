@@ -420,8 +420,16 @@ class QueryResult final
     }
 
     size_t getDataSize() const { return mIntsPerResult * sizeof(uint64_t); }
-    uint64_t getResult() const { return mResults[0]; }
+    uint64_t getResult(size_t index) const
+    {
+        ASSERT(index < mIntsPerResult);
+        return mResults[index];
+    }
     uint64_t *getPointerToResults() { return mResults.data(); }
+
+    static constexpr size_t kDefaultResultIndex                      = 0;
+    static constexpr size_t kTransformFeedbackPrimitivesWrittenIndex = 0;
+    static constexpr size_t kPrimitivesGeneratedIndex                = 1;
 
   private:
     uint32_t mIntsPerResult;
@@ -463,6 +471,9 @@ class QueryHelper final : public Resource
     void writeTimestampToPrimary(ContextVk *contextVk, PrimaryCommandBuffer *primary);
     // All other timestamp accesses should be made on outsideRenderPassCommandBuffer
     void writeTimestamp(ContextVk *contextVk, CommandBuffer *outsideRenderPassCommandBuffer);
+
+    // Whether this query helper has generated and submitted any commands.
+    bool hasSubmittedCommands() const;
 
     angle::Result getUint64ResultNonBlocking(ContextVk *contextVk,
                                              QueryResult *resultOut,

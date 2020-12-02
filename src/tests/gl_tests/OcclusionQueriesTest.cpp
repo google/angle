@@ -583,12 +583,9 @@ TEST_P(OcclusionQueriesTest, MultiContext)
     ANGLE_SKIP_TEST_IF(IsWindows() && IsNVIDIA() && IsVulkan());
 
     // Test skipped because the D3D backends cannot support simultaneous queries on multiple
-    // contexts yet.  Same with the Vulkan backend.
+    // contexts yet.
     ANGLE_SKIP_TEST_IF(GetParam() == ES2_D3D9() || GetParam() == ES2_D3D11() ||
-                       GetParam() == ES3_D3D11() || GetParam() == ES2_VULKAN());
-
-    // http://anglebug.com/4092
-    ANGLE_SKIP_TEST_IF(IsVulkan());
+                       GetParam() == ES3_D3D11());
 
     // http://anglebug.com/5400
     ANGLE_SKIP_TEST_IF(IsOSX() && IsMetal());

@@ -148,7 +148,8 @@ struct CombinedPrintToStringParamName
     ES31_D3D11(), ES31_OPENGL(), ES31_OPENGLES(), ES31_VULKAN(), ES31_VULKAN_SWIFTSHADER(), \
         WithAsyncCommandQueueFeatureVulkan(ES31_VULKAN())
 
-#define ANGLE_ALL_TEST_PLATFORMS_ES32 ES32_VULKAN(), ES32_VULKAN_SWIFTSHADER()
+#define ANGLE_ALL_TEST_PLATFORMS_ES32 \
+    ES32_VULKAN(), WithAsyncCommandQueueFeatureVulkan(ES32_VULKAN())
 
 #define ANGLE_ALL_TEST_PLATFORMS_NULL ES2_NULL(), ES3_NULL(), ES31_NULL()
 
@@ -183,6 +184,17 @@ struct CombinedPrintToStringParamName
 
 #define ANGLE_INSTANTIATE_TEST_ES31_AND(testName, ...)                                          \
     const PlatformParameters testName##params[] = {ANGLE_ALL_TEST_PLATFORMS_ES31, __VA_ARGS__}; \
+    INSTANTIATE_TEST_SUITE_P(, testName, ANGLE_INSTANTIATE_TEST_PLATFORMS(testName),            \
+                             testing::PrintToStringParamName())
+
+// Instantiate the test once for each GLES32 platform
+#define ANGLE_INSTANTIATE_TEST_ES32(testName)                                        \
+    const PlatformParameters testName##params[] = {ANGLE_ALL_TEST_PLATFORMS_ES32};   \
+    INSTANTIATE_TEST_SUITE_P(, testName, ANGLE_INSTANTIATE_TEST_PLATFORMS(testName), \
+                             testing::PrintToStringParamName())
+
+#define ANGLE_INSTANTIATE_TEST_ES32_AND(testName, ...)                                          \
+    const PlatformParameters testName##params[] = {ANGLE_ALL_TEST_PLATFORMS_ES32, __VA_ARGS__}; \
     INSTANTIATE_TEST_SUITE_P(, testName, ANGLE_INSTANTIATE_TEST_PLATFORMS(testName),            \
                              testing::PrintToStringParamName())
 
