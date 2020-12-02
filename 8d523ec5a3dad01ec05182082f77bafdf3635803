@@ -48,6 +48,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4e2383ac_608e86a6",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-02T05:38:50Z",
+      "side": 1,
+      "message": "Correction, it returns [\u0027angleproject:3580\u0027]. Looking at depot_tools, it looks like BugsFromDescription() only inspects the first commit so the rest of the changes in a chain are never validated.",
+      "parentUuid": "05e172e9_6abba15d",
+      "range": {
+        "startLine": 9,
+        "startChar": 5,
+        "endLine": 9,
+        "endChar": 9
+      },
+      "revId": "8d523ec5a3dad01ec05182082f77bafdf3635803",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "02747042_67b8ed99",
