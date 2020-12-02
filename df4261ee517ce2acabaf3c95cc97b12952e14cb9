@@ -56,6 +56,30 @@
       },
       "revId": "df4261ee517ce2acabaf3c95cc97b12952e14cb9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3f621ddb_c2f8b82b",
+        "filename": "src/libANGLE/renderer/vulkan/QueryVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-02T17:01:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c80787dd_0e2cf8bb",
+      "range": {
+        "startLine": 87,
+        "startChar": 9,
+        "endLine": 88,
+        "endChar": 66
+      },
+      "revId": "df4261ee517ce2acabaf3c95cc97b12952e14cb9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
