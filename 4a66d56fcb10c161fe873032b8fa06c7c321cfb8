@@ -115,6 +115,30 @@
       },
       "revId": "4a66d56fcb10c161fe873032b8fa06c7c321cfb8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "82c037f6_abc06049",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 975,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-02T17:16:11Z",
+      "side": 1,
+      "message": "To clarify: please remove the macro and use the manual code indentation.",
+      "parentUuid": "8c7ca0b8_0518585c",
+      "range": {
+        "startLine": 975,
+        "startChar": 8,
+        "endLine": 975,
+        "endChar": 28
+      },
+      "revId": "4a66d56fcb10c161fe873032b8fa06c7c321cfb8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
