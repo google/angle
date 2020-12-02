@@ -86,6 +86,24 @@
       "parentUuid": "b63583e3_f2a59cef",
       "revId": "06dd76d55059a2609417d2e484a7117e52039a37",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f19b33e8_bc6b31a2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 18
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-02T16:12:25Z",
+      "side": 1,
+      "message": "Yeah I am. Can you do that as a split CL? Maybe we should land that, then land this, then land the GS work since this is already mostly reviewed.",
+      "parentUuid": "41c4d15f_72935a9d",
+      "revId": "06dd76d55059a2609417d2e484a7117e52039a37",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
