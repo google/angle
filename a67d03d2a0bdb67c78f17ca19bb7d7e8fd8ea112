@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "802e4283_d96adb12",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 11
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-02T16:04:55Z",
+      "side": 1,
+      "message": "Nice cleanup!\n\nSomething else I was just thinking about regarding minimizing driver uniforms (in favor of spec consts) is that we could split them in two, so use two bindings. The first binding would be the driver uniforms, the second binding would be for spec consts when we can\u0027t use them (driver bug workaround and metal). If we _can_ use spec consts, drop the second binding. So for most Vulkan drivers we have smaller driver uniform allocations.",
+      "revId": "a67d03d2a0bdb67c78f17ca19bb7d7e8fd8ea112",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
