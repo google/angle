@@ -16,6 +16,24 @@
       "message": "would appreciate a brief description in commit message, if possible",
       "revId": "dbfa24ab8445eb454d7454df02aa0f13b1ceccaf",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7c3ac878_f6da83f0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-02T21:20:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3595539f_26912b7d",
+      "revId": "dbfa24ab8445eb454d7454df02aa0f13b1ceccaf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
