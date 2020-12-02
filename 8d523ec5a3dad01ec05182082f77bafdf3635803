@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "05e172e9_6abba15d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-02T04:21:31Z",
+      "side": 1,
+      "message": "Oops\n\nAlso, debugged it. If you have two changes, the first having say `angleproject:3580` and the next `garbage`, then PRESUBMIT.py sees `bugs` as [\u0027angleproject:3580\u0027,\u0027angleproject:3580\u0027]!",
+      "parentUuid": "f99b4778_d93e9585",
+      "range": {
+        "startLine": 9,
+        "startChar": 5,
+        "endLine": 9,
+        "endChar": 9
+      },
+      "revId": "8d523ec5a3dad01ec05182082f77bafdf3635803",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "02747042_67b8ed99",
