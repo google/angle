@@ -33,6 +33,24 @@
       "message": "I\u0027m not sure what\u0027s processing these files under https://chromium.googlesource.com/, but my guess here would be spacing. All the other tables have spaces both before and after | (except first and last of course).",
       "revId": "8c495c3e8ffb92ca9dc6e23c2380994487fc4038",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1584e905_5cfe8cbc",
+        "filename": "doc/UniformBlockTranslateToStructuredBuffer.md",
+        "patchSetId": 5
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2020-12-02T08:21:24Z",
+      "side": 1,
+      "message": "I had tried many solutions to fix or work around it, but they did not work correctly. So I changed the table\u0027s format.",
+      "parentUuid": "829467db_e6472803",
+      "revId": "8c495c3e8ffb92ca9dc6e23c2380994487fc4038",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
