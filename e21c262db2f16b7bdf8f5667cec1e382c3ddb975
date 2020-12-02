@@ -16,6 +16,23 @@
       "message": "Going to leave +2 to Jamie who had feedback",
       "revId": "e21c262db2f16b7bdf8f5667cec1e382c3ddb975",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "74488e08_83843db6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 12
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-02T16:14:05Z",
+      "side": 1,
+      "message": "Thanks for the doc!",
+      "revId": "e21c262db2f16b7bdf8f5667cec1e382c3ddb975",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
