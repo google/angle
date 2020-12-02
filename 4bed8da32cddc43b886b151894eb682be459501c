@@ -90,6 +90,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "8a422d6d_0c602b38",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1171626
+      },
+      "writtenOn": "2020-12-02T08:25:26Z",
+      "side": 1,
+      "message": "I did many tests at https://chromium-review.googlesource.com/c/angle/angle/+/2565158/, which made me think it\u0027s an issue of the tool that coverts the markdown file. \nFor example:\n1) I copied the exact code of patchset 6 of this thread to patchset 41 in https://chromium-review.googlesource.com/c/angle/angle/+/2565158/41, and I got different rendering results. \n2) In https://chromium-review.googlesource.com/c/angle/angle/+/2565158/, patchset 44 and 53 are the same, but I got different results (patchset 44 can be rendered correctly, while 53 can\u0027t).",
+      "parentUuid": "44cffff7_009871dc",
+      "revId": "4bed8da32cddc43b886b151894eb682be459501c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "3d674a86_072a4dd5",
         "filename": "doc/UniformBlockTranslateToStructuredBuffer.md",
         "patchSetId": 1
