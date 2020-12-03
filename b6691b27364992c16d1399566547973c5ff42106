@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c14c4b7e_77cb7087",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-12-03T18:11:01Z",
+      "side": 1,
+      "message": "FYI - I saw other setters (e.g. TextureState::setBaseLevel) that checked for redundancy in the setter and thought I\u0027d follow that example.",
+      "revId": "b6691b27364992c16d1399566547973c5ff42106",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
