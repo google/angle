@@ -1811,7 +1811,7 @@ void ProgramState::updateProgramInterfaceInputs()
             mExecutable->mProgramInputs.emplace_back(attribute);
         }
     }
-    else if (shader->getType() == ShaderType::Fragment)
+    else
     {
         for (const sh::ShaderVariable &varying : shader->getInputVaryings())
         {
