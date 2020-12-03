@@ -119,6 +119,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a92f2d37_3b169061",
+        "filename": "src/compiler/translator/tree_util/SpecializationConst.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 460,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-12-03T21:30:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e11d408c_2ba1a52c",
+      "range": {
+        "startLine": 460,
+        "startChar": 28,
+        "endLine": 460,
+        "endChar": 67
+      },
+      "revId": "7ad4f0afbda890a2b9e255cab6962a27669c0320",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "754c4639_4c484a17",
