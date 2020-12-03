@@ -26,6 +26,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "06e12032_2bffa961",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 317,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-12-03T17:56:03Z",
+      "side": 1,
+      "message": "Its one specConst object, but itself contains multiple constants. The same is true for driver uniforms. I basically followed driverUniforms example here. But I do agree that this is a bit debatable.",
+      "parentUuid": "ddac87df_93d29018",
+      "range": {
+        "startLine": 317,
+        "startChar": 51,
+        "endLine": 317,
+        "endChar": 61
+      },
+      "revId": "7ad4f0afbda890a2b9e255cab6962a27669c0320",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "ce45a4e6_e82da0cd",
         "filename": "src/compiler/translator/tree_util/SpecializationConst.cpp",
         "patchSetId": 12
@@ -49,6 +73,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "e11d408c_2ba1a52c",
+        "filename": "src/compiler/translator/tree_util/SpecializationConst.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 460,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-12-03T17:56:03Z",
+      "side": 1,
+      "message": "SH_USE_SPECIALIZATION_CONSTANT will be too general. For example line raster emulation is controlled by its own flag. My own preference is just wait out until we have new QC driver and then we can reland the CL that remove the flag entirely.",
+      "parentUuid": "ce45a4e6_e82da0cd",
+      "range": {
+        "startLine": 460,
+        "startChar": 28,
+        "endLine": 460,
+        "endChar": 67
+      },
+      "revId": "7ad4f0afbda890a2b9e255cab6962a27669c0320",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "754c4639_4c484a17",
         "filename": "src/compiler/translator/tree_util/SpecializationConst.h",
         "patchSetId": 12
@@ -60,6 +108,24 @@
       "writtenOn": "2020-12-03T01:40:27Z",
       "side": 1,
       "message": "I\u0027d prefer renaming the file and class to the full \"SpecializationConstant\" to be entirely explicit.   The variables/parameters can stick with the truncated \"specConst\".",
+      "revId": "7ad4f0afbda890a2b9e255cab6962a27669c0320",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2e88e81b_88b423a8",
+        "filename": "src/compiler/translator/tree_util/SpecializationConst.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-12-03T17:56:03Z",
+      "side": 1,
+      "message": "Will do in next update.",
+      "parentUuid": "754c4639_4c484a17",
       "revId": "7ad4f0afbda890a2b9e255cab6962a27669c0320",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
