@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "412ff138_f7c199d0",
+        "filename": "src/libANGLE/renderer/gl/eagl/IOSurfaceSurfaceEAGL.mm",
+        "patchSetId": 3
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-03T14:13:13Z",
+      "side": 1,
+      "message": "nit: ANGLE_UNUSED_VARIABLE",
+      "range": {
+        "startLine": 116,
+        "startChar": 5,
+        "endLine": 116,
+        "endChar": 9
+      },
+      "revId": "3ea202c9f6e1348db325aa2153e49c9d8d9a323d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8c07b353_08875a76",
+        "filename": "src/tests/BUILD.gn",
+        "patchSetId": 3
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-03T14:13:13Z",
+      "side": 1,
+      "message": "can you leave a comment here as to why you\u0027re limiting this to 64-bit? seems unexpected.",
+      "range": {
+        "startLine": 148,
+        "startChar": 29,
+        "endLine": 148,
+        "endChar": 48
+      },
+      "revId": "3ea202c9f6e1348db325aa2153e49c9d8d9a323d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
