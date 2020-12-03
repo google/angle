@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ddac87df_93d29018",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 317,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-03T01:40:27Z",
+      "side": 1,
+      "message": "nit: \u0027specConst\u0027 for the rest of these parameters in this file, since it\u0027s a single instance of SpecConst.",
+      "range": {
+        "startLine": 317,
+        "startChar": 51,
+        "endLine": 317,
+        "endChar": 61
+      },
+      "revId": "7ad4f0afbda890a2b9e255cab6962a27669c0320",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ce45a4e6_e82da0cd",
+        "filename": "src/compiler/translator/tree_util/SpecializationConst.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 460,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-03T01:40:27Z",
+      "side": 1,
+      "message": "Looks like this flag should be updated to remove the \"ROTATION\" portion also, since the half render area isn\u0027t totally related to rotation (even though it is affected by it).",
+      "range": {
+        "startLine": 460,
+        "startChar": 28,
+        "endLine": 460,
+        "endChar": 67
+      },
+      "revId": "7ad4f0afbda890a2b9e255cab6962a27669c0320",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "754c4639_4c484a17",
+        "filename": "src/compiler/translator/tree_util/SpecializationConst.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-03T01:40:27Z",
+      "side": 1,
+      "message": "I\u0027d prefer renaming the file and class to the full \"SpecializationConstant\" to be entirely explicit.   The variables/parameters can stick with the truncated \"specConst\".",
+      "revId": "7ad4f0afbda890a2b9e255cab6962a27669c0320",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
