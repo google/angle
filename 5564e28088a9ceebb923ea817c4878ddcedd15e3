@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f84b54f8_23f1cc9e",
+        "filename": "src/libANGLE/renderer/vulkan/vk_mandatory_format_support_data.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 440,
+      "author": {
+        "id": 1106289
+      },
+      "writtenOn": "2020-12-03T02:23:40Z",
+      "side": 1,
+      "message": "I don\u0027t think any driver supports that. Rendering is done to the individual planes instead (see https://chromium-review.googlesource.com/c/angle/angle/+/2568554/1/src/libANGLE/renderer/vulkan/vk_mandatory_format_support_data.json#23).",
+      "range": {
+        "startLine": 440,
+        "startChar": 9,
+        "endLine": 440,
+        "endChar": 47
+      },
+      "revId": "5564e28088a9ceebb923ea817c4878ddcedd15e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "903552c4_80f0bdd9",
+        "filename": "src/libANGLE/renderer/vulkan/vk_mandatory_format_support_data.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 441,
+      "author": {
+        "id": 1106289
+      },
+      "writtenOn": "2020-12-03T02:23:40Z",
+      "side": 1,
+      "message": "Definitely not a depth format.",
+      "range": {
+        "startLine": 441,
+        "startChar": 9,
+        "endLine": 441,
+        "endChar": 55
+      },
+      "revId": "5564e28088a9ceebb923ea817c4878ddcedd15e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
