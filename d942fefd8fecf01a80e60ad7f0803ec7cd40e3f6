@@ -16,6 +16,24 @@
       "message": "Dry run only failed because of flakes, it actually past, so PTAL.",
       "revId": "d942fefd8fecf01a80e60ad7f0803ec7cd40e3f6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3b72525c_946f98bc",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002745
+      },
+      "writtenOn": "2020-12-03T21:25:31Z",
+      "side": 1,
+      "message": "it actually *PASSED*",
+      "parentUuid": "f36e0933_da431a07",
+      "revId": "d942fefd8fecf01a80e60ad7f0803ec7cd40e3f6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
