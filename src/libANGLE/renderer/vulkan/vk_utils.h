@@ -690,8 +690,6 @@ struct SpecializationConstants final
 {
     VkBool32 lineRasterEmulation;
     uint32_t surfaceRotation;
-    uint32_t drawableWidth;
-    uint32_t drawableHeight;
 };
 ANGLE_DISABLE_STRUCT_PADDING_WARNINGS
 
