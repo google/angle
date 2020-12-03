@@ -845,7 +845,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     void populateTransformFeedbackBufferSet(
         size_t bufferCount,
         const gl::TransformFeedbackBuffersArray<vk::BufferHelper *> &buffers);
-    void resumeTransformFeedbackIfStarted();
+    void pauseTransformFeedbackIfStarted(DirtyBits onResumeOps);
 
     // DescriptorSet writes
     template <typename T, const T *VkWriteDescriptorSet::*pInfo>

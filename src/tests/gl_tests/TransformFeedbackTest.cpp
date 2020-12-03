@@ -280,6 +280,103 @@ TEST_P(TransformFeedbackTest, RecordAndDraw)
     EXPECT_GL_NO_ERROR();
 }
 
+// Test that transform feedback can cover multiple render passes.
+TEST_P(TransformFeedbackTest, SpanMultipleRenderPasses)
+{
+    // TODO(anglebug.com/4533) This fails after the upgrade to the 26.20.100.7870 driver.
+    ANGLE_SKIP_TEST_IF(IsWindows() && IsIntel() && IsVulkan());
+
+    // Fails on Mac GL drivers. http://anglebug.com/4992
+    ANGLE_SKIP_TEST_IF(IsOpenGL() && IsOSX());
+
+    // anglebug.com/5428
+    ANGLE_SKIP_TEST_IF(IsLinux() && IsIntel() && IsVulkan());
+
+    // anglebug.com/5429
+    ANGLE_SKIP_TEST_IF(IsAndroid() && IsOpenGLES());
+
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    // Set the program's transform feedback varyings (just gl_Position)
+    std::vector<std::string> tfVaryings;
+    tfVaryings.push_back("gl_Position");
+    compileDefaultProgram(tfVaryings, GL_INTERLEAVED_ATTRIBS);
+
+    glUseProgram(mProgram);
+
+    GLint positionLocation = glGetAttribLocation(mProgram, essl1_shaders::PositionAttrib());
+
+    const GLfloat vertices[] = {
+        -0.5f, 0.5f, 0.5f, -0.5f, -0.5f, 0.5f, 0.5f, -0.5f, 0.5f,
+        -0.5f, 0.5f, 0.5f, 0.5f,  -0.5f, 0.5f, 0.5f, 0.5f,  0.5f,
+    };
+
+    glVertexAttribPointer(positionLocation, 3, GL_FLOAT, GL_FALSE, 0, vertices);
+    glEnableVertexAttribArray(positionLocation);
+
+    // Bind the buffer for transform feedback output and start transform feedback
+    glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, mTransformFeedbackBuffer);
+    glBeginTransformFeedback(GL_POINTS);
+
+    // Create a query to check how many primitives were written
+    GLuint primitivesWrittenQuery = 0;
+    glGenQueries(1, &primitivesWrittenQuery);
+    glBeginQuery(GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN, primitivesWrittenQuery);
+
+    // Draw the first set of three points
+    glDrawArrays(GL_POINTS, 0, 3);
+
+    // Break the render pass
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::black);
+
+    // Draw the second set of three points
+    glVertexAttribPointer(positionLocation, 3, GL_FLOAT, GL_FALSE, 0, vertices + 9);
+    glDrawArrays(GL_POINTS, 0, 3);
+
+    glDisableVertexAttribArray(positionLocation);
+    glVertexAttribPointer(positionLocation, 4, GL_FLOAT, GL_FALSE, 0, nullptr);
+    // End the query and transform feedback
+    glEndQuery(GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN);
+    glEndTransformFeedback();
+
+    glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, 0);
+
+    // Verify the number of primitives written
+    GLuint primitivesWritten = 0;
+    glGetQueryObjectuiv(primitivesWrittenQuery, GL_QUERY_RESULT_EXT, &primitivesWritten);
+    EXPECT_GL_NO_ERROR();
+
+    EXPECT_EQ(6u, primitivesWritten);
+
+    // Verify the captured buffer.
+
+    glBindBuffer(GL_ARRAY_BUFFER, mTransformFeedbackBuffer);
+    glVertexAttribPointer(positionLocation, 4, GL_FLOAT, GL_FALSE, 0, 0);
+    glEnableVertexAttribArray(positionLocation);
+
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+
+    const int w = getWindowWidth();
+    const int h = getWindowHeight();
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::black);
+    EXPECT_PIXEL_COLOR_EQ(w - 1, 0, GLColor::black);
+    EXPECT_PIXEL_COLOR_EQ(0, h - 1, GLColor::black);
+    EXPECT_PIXEL_COLOR_EQ(w - 1, h - 1, GLColor::black);
+
+    EXPECT_PIXEL_COLOR_EQ(w / 4 + 1, h / 4 + 1, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(3 * w / 4 - 1, h / 4 + 1, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(w / 4 + 1, 3 * h / 4 - 1, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(3 * w / 4 - 1, 3 * h / 4 - 1, GLColor::red);
+
+    EXPECT_PIXEL_COLOR_EQ(w / 2, h / 2, GLColor::red);
+
+    EXPECT_GL_NO_ERROR();
+}
+
 // Test that XFB does not allow writing more vertices than fit in the bound buffers.
 // TODO(jmadill): Enable this test after fixing the last case where the buffer size changes after
 // calling glBeginTransformFeedback.
