@@ -16,6 +16,52 @@
       "message": "FYI - I saw other setters (e.g. TextureState::setBaseLevel) that checked for redundancy in the setter and thought I\u0027d follow that example.",
       "revId": "b6691b27364992c16d1399566547973c5ff42106",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "423c7763_04da50eb",
+        "filename": "src/libANGLE/angletypes.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-03T18:17:32Z",
+      "side": 1,
+      "message": "nit: you can omit all this.",
+      "range": {
+        "startLine": 168,
+        "startChar": 4,
+        "endLine": 168,
+        "endChar": 8
+      },
+      "revId": "b6691b27364992c16d1399566547973c5ff42106",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2b595639_c176eb9c",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1709,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-03T18:17:32Z",
+      "side": 1,
+      "message": "ditto",
+      "range": {
+        "startLine": 1709,
+        "startChar": 5,
+        "endLine": 1709,
+        "endChar": 9
+      },
+      "revId": "b6691b27364992c16d1399566547973c5ff42106",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
