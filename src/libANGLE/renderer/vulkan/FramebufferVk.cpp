@@ -913,9 +913,9 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
     destArea   = destArea.removeReversal();
 
     // Calculate the stretch factor prior to any clipping, as it needs to remain constant.
-    const float stretch[2] = {
-        std::abs(sourceArea.width / static_cast<float>(destArea.width)),
-        std::abs(sourceArea.height / static_cast<float>(destArea.height)),
+    const double stretch[2] = {
+        std::abs(sourceArea.width / static_cast<double>(destArea.width)),
+        std::abs(sourceArea.height / static_cast<double>(destArea.height)),
     };
 
     // Potentially make adjustments for pre-rotatation.  To handle various cases (e.g. clipping)
@@ -962,11 +962,12 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
     else
     {
         // Shift dest area's x0,y0,x1,y1 by as much as the source area's got shifted (taking
-        // stretching into account)
-        float x0Shift = std::round((clippedSourceArea.x - absSourceArea.x) / stretch[0]);
-        float y0Shift = std::round((clippedSourceArea.y - absSourceArea.y) / stretch[1]);
-        float x1Shift = std::round((absSourceArea.x1() - clippedSourceArea.x1()) / stretch[0]);
-        float y1Shift = std::round((absSourceArea.y1() - clippedSourceArea.y1()) / stretch[1]);
+        // stretching into account).  Note that double is used as float doesn't have enough
+        // precision near the end of int range.
+        double x0Shift = std::round((clippedSourceArea.x - absSourceArea.x) / stretch[0]);
+        double y0Shift = std::round((clippedSourceArea.y - absSourceArea.y) / stretch[1]);
+        double x1Shift = std::round((absSourceArea.x1() - clippedSourceArea.x1()) / stretch[0]);
+        double y1Shift = std::round((absSourceArea.y1() - clippedSourceArea.y1()) / stretch[1]);
 
         // If the source area was reversed in any direction, the shift should be applied in the
         // opposite direction as well.
@@ -1068,8 +1069,8 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
     commonParams.destOffset[1]          = destArea.y;
     commonParams.rotatedOffsetFactor[0] = std::abs(sourceArea.width);
     commonParams.rotatedOffsetFactor[1] = std::abs(sourceArea.height);
-    commonParams.stretch[0]             = stretch[0];
-    commonParams.stretch[1]             = stretch[1];
+    commonParams.stretch[0]             = static_cast<float>(stretch[0]);
+    commonParams.stretch[1]             = static_cast<float>(stretch[1]);
     commonParams.srcExtents[0]          = srcFramebufferDimensions.width;
     commonParams.srcExtents[1]          = srcFramebufferDimensions.height;
     commonParams.blitArea               = blitArea;
