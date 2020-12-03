@@ -18,6 +18,23 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "74cd25c4_ebb88b04",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2020-12-03T18:22:58Z",
+      "side": 1,
+      "message": "Good fix, thanks Courtney.  LGTM with Jamie\u0027s nits handled.",
+      "revId": "b6691b27364992c16d1399566547973c5ff42106",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "423c7763_04da50eb",
