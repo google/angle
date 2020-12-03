@@ -896,6 +896,7 @@ void DisplayGLX::generateExtensions(egl::DisplayExtensions *outExtensions) const
     outExtensions->displaySemaphoreShareGroup = true;
 
     outExtensions->surfacelessContext = true;
+    outExtensions->windowFixedSize    = true;
 
     if (!mRenderer->getFeatures().disableSyncControlSupport.enabled)
     {

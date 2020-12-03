@@ -56,6 +56,9 @@ class WindowSurfaceGLX : public SurfaceGLX
     egl::Error checkForResize() override;
     glx::Drawable getDrawable() const override;
 
+    void setFixedWidth(EGLint width) override;
+    void setFixedHeight(EGLint height) override;
+
     egl::Error getSyncValues(EGLuint64KHR *ust, EGLuint64KHR *msc, EGLuint64KHR *sbc) override;
     egl::Error getMscRate(EGLint *numerator, EGLint *denominator) override;
 

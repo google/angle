@@ -10,6 +10,7 @@
 
 #include "common/debug.h"
 
+#include "libANGLE/Surface.h"
 #include "libANGLE/renderer/gl/glx/DisplayGLX.h"
 #include "libANGLE/renderer/gl/glx/FunctionsGLX.h"
 
@@ -140,10 +141,13 @@ egl::Error WindowSurfaceGLX::swap(const gl::Context *context)
     mGLXDisplay->setSwapInterval(mGLXWindow, &mSwapControl);
     mGLX.swapBuffers(mGLXWindow);
 
-    egl::Error error = checkForResize();
-    if (error.isError())
+    if (!mState.isFixedSize)
     {
-        return error;
+        egl::Error error = checkForResize();
+        if (error.isError())
+        {
+            return error;
+        }
     }
 
     return egl::NoError();
@@ -233,6 +237,24 @@ egl::Error WindowSurfaceGLX::checkForResize()
 glx::Drawable WindowSurfaceGLX::getDrawable() const
 {
     return mGLXWindow;
+}
+
+void WindowSurfaceGLX::setFixedWidth(EGLint width)
+{
+    mParentWidth = width;
+    mGLX.waitGL();
+    XResizeWindow(mDisplay, mWindow, mParentWidth, mParentHeight);
+    mGLX.waitX();
+    XSync(mDisplay, False);
+}
+
+void WindowSurfaceGLX::setFixedHeight(EGLint height)
+{
+    mParentHeight = height;
+    mGLX.waitGL();
+    XResizeWindow(mDisplay, mWindow, mParentWidth, mParentHeight);
+    mGLX.waitX();
+    XSync(mDisplay, False);
 }
 
 bool WindowSurfaceGLX::getWindowDimensions(Window window,
