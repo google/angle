@@ -128,7 +128,10 @@ config("internal_config") {
   }
 
   if (angle_use_vulkan_display) {
-    defines += [ "ANGLE_USE_VULKAN_DISPLAY" ]
+    defines += [
+      "ANGLE_USE_VULKAN_DISPLAY",
+      "EGL_NO_X11",
+    ]
     if (angle_vulkan_display_mode == "simple") {
       defines += [ "ANGLE_VULKAN_DISPLAY_MODE_SIMPLE" ]
     } else if (angle_vulkan_display_mode == "headless") {
