@@ -320,6 +320,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
         const gl::TransformFeedbackBuffersArray<vk::BufferHelper *> &buffers);
     void onEndTransformFeedback();
     angle::Result onPauseTransformFeedback();
+    void pauseTransformFeedbackIfStartedAndRebindBuffersOnResume();
 
     // When UtilsVk issues draw or dispatch calls, it binds descriptor sets that the context is not
     // aware of.  This function is called to make sure affected descriptor set bindings are dirtied

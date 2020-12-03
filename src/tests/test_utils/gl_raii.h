@@ -133,6 +133,7 @@ class GLQueryEXT : public GLWrapper
   public:
     GLQueryEXT() : GLWrapper(&glGenQueriesEXT, &glDeleteQueriesEXT) {}
 };
+using GLQuery = GLQueryEXT;
 
 class GLShader : angle::NonCopyable
 {

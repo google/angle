@@ -1597,6 +1597,9 @@ angle::Result UtilsVk::clearFramebuffer(ContextVk *contextVk,
                            imageClearProgram, &pipelineDesc, VK_NULL_HANDLE, &shaderParams,
                            sizeof(shaderParams), commandBuffer));
 
+    // Make sure transform feedback is paused
+    contextVk->pauseTransformFeedbackIfStartedAndRebindBuffersOnResume();
+
     // Make sure this draw call doesn't count towards occlusion query results.
     ANGLE_TRY(contextVk->pauseRenderPassQueriesIfActive());
     commandBuffer->setScissor(0, 1, &scissor);
@@ -1605,6 +1608,14 @@ angle::Result UtilsVk::clearFramebuffer(ContextVk *contextVk,
 
     // Make sure what's bound here is correctly reverted on the next draw.
     contextVk->invalidateGraphicsPipelineAndDescriptorSets();
+
+    // If transform feedback was active, we can't pause and resume it in the same render pass
+    // because we can't insert a memory barrier for the counter buffers.  In that case, break the
+    // render pass.
+    if (contextVk->getStartedRenderPassCommands().isTransformFeedbackStarted())
+    {
+        ANGLE_TRY(contextVk->flushCommandsAndEndRenderPass());
+    }
 
     return angle::Result::Continue;
 }

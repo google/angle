@@ -100,8 +100,7 @@ TEST_P(TransformFeedbackTest, ZeroSizedViewport)
     glBeginTransformFeedback(GL_TRIANGLES);
 
     // Create a query to check how many primitives were written
-    GLuint primitivesWrittenQuery = 0;
-    glGenQueries(1, &primitivesWrittenQuery);
+    GLQuery primitivesWrittenQuery;
     glBeginQuery(GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN, primitivesWrittenQuery);
 
     // Set a viewport that would result in no pixels being written to the framebuffer and draw
@@ -148,8 +147,7 @@ TEST_P(TransformFeedbackTest, BufferRebinding)
                  GL_STATIC_DRAW);
 
     // Create a query to check how many primitives were written
-    GLuint primitivesWrittenQuery = 0;
-    glGenQueries(1, &primitivesWrittenQuery);
+    GLQuery primitivesWrittenQuery;
     glBeginQuery(GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN, primitivesWrittenQuery);
 
     const float finalZ = 0.95f;
@@ -241,8 +239,7 @@ TEST_P(TransformFeedbackTest, RecordAndDraw)
     glBeginTransformFeedback(GL_POINTS);
 
     // Create a query to check how many primitives were written
-    GLuint primitivesWrittenQuery = 0;
-    glGenQueries(1, &primitivesWrittenQuery);
+    GLQuery primitivesWrittenQuery;
     glBeginQuery(GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN, primitivesWrittenQuery);
 
     glDrawArrays(GL_POINTS, 0, 6);
@@ -320,8 +317,7 @@ TEST_P(TransformFeedbackTest, SpanMultipleRenderPasses)
     glBeginTransformFeedback(GL_POINTS);
 
     // Create a query to check how many primitives were written
-    GLuint primitivesWrittenQuery = 0;
-    glGenQueries(1, &primitivesWrittenQuery);
+    GLQuery primitivesWrittenQuery;
     glBeginQuery(GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN, primitivesWrittenQuery);
 
     // Draw the first set of three points
@@ -373,6 +369,101 @@ TEST_P(TransformFeedbackTest, SpanMultipleRenderPasses)
     EXPECT_PIXEL_COLOR_EQ(3 * w / 4 - 1, 3 * h / 4 - 1, GLColor::red);
 
     EXPECT_PIXEL_COLOR_EQ(w / 2, h / 2, GLColor::red);
+
+    EXPECT_GL_NO_ERROR();
+}
+
+// Test that draw-based clear between draws does not contribute to transform feedback.
+TEST_P(TransformFeedbackTest, ClearWhileRecordingDoesNotContribute)
+{
+    // TODO(anglebug.com/4533) This fails after the upgrade to the 26.20.100.7870 driver.
+    ANGLE_SKIP_TEST_IF(IsWindows() && IsIntel() && IsVulkan());
+
+    // Fails on Mac GL drivers. http://anglebug.com/4992
+    ANGLE_SKIP_TEST_IF(IsOpenGL() && IsOSX());
+
+    // anglebug.com/5434
+    ANGLE_SKIP_TEST_IF(IsAndroid() && IsOpenGLES());
+
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    // Set the program's transform feedback varyings (just gl_Position)
+    std::vector<std::string> tfVaryings;
+    tfVaryings.push_back("gl_Position");
+    compileDefaultProgram(tfVaryings, GL_INTERLEAVED_ATTRIBS);
+
+    glUseProgram(mProgram);
+
+    GLint positionLocation = glGetAttribLocation(mProgram, essl1_shaders::PositionAttrib());
+
+    const GLfloat vertices[] = {
+        -0.5f, 0.5f, 0.5f, -0.5f, -0.5f, 0.5f, 0.5f, -0.5f, 0.5f,
+        -0.5f, 0.5f, 0.5f, 0.5f,  -0.5f, 0.5f, 0.5f, 0.5f,  0.5f,
+    };
+
+    glVertexAttribPointer(positionLocation, 3, GL_FLOAT, GL_FALSE, 0, vertices);
+    glEnableVertexAttribArray(positionLocation);
+
+    // Bind the buffer for transform feedback output and start transform feedback
+    glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, mTransformFeedbackBuffer);
+    glBeginTransformFeedback(GL_POINTS);
+
+    // Create a query to check how many primitives were written
+    GLQuery primitivesWrittenQuery;
+    glBeginQuery(GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN, primitivesWrittenQuery);
+
+    // Draw the first set of three points
+    glDrawArrays(GL_POINTS, 0, 3);
+
+    glColorMask(GL_FALSE, GL_FALSE, GL_TRUE, GL_FALSE);
+    glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    glColorMask(GL_TRUE, GL_TRUE, GL_FALSE, GL_TRUE);
+
+    // Draw the second set of three points
+    glVertexAttribPointer(positionLocation, 3, GL_FLOAT, GL_FALSE, 0, vertices + 9);
+    glDrawArrays(GL_POINTS, 0, 3);
+
+    glDisableVertexAttribArray(positionLocation);
+    glVertexAttribPointer(positionLocation, 4, GL_FLOAT, GL_FALSE, 0, nullptr);
+    // End the query and transform feedback
+    glEndQuery(GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN);
+    glEndTransformFeedback();
+
+    glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, 0);
+
+    // Verify the number of primitives written
+    GLuint primitivesWritten = 0;
+    glGetQueryObjectuiv(primitivesWrittenQuery, GL_QUERY_RESULT_EXT, &primitivesWritten);
+    EXPECT_GL_NO_ERROR();
+
+    EXPECT_EQ(6u, primitivesWritten);
+
+    // Verify the captured buffer.
+
+    glBindBuffer(GL_ARRAY_BUFFER, mTransformFeedbackBuffer);
+    glVertexAttribPointer(positionLocation, 4, GL_FLOAT, GL_FALSE, 0, 0);
+    glEnableVertexAttribArray(positionLocation);
+
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+
+    const int w = getWindowWidth();
+    const int h = getWindowHeight();
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
+    EXPECT_PIXEL_COLOR_EQ(w - 1, 0, GLColor::blue);
+    EXPECT_PIXEL_COLOR_EQ(0, h - 1, GLColor::blue);
+    EXPECT_PIXEL_COLOR_EQ(w - 1, h - 1, GLColor::blue);
+
+    EXPECT_PIXEL_COLOR_EQ(w / 4 + 1, h / 4 + 1, GLColor::magenta);
+    EXPECT_PIXEL_COLOR_EQ(3 * w / 4 - 1, h / 4 + 1, GLColor::magenta);
+    EXPECT_PIXEL_COLOR_EQ(w / 4 + 1, 3 * h / 4 - 1, GLColor::magenta);
+    EXPECT_PIXEL_COLOR_EQ(3 * w / 4 - 1, 3 * h / 4 - 1, GLColor::magenta);
+
+    EXPECT_PIXEL_COLOR_EQ(w / 2, h / 2, GLColor::magenta);
 
     EXPECT_GL_NO_ERROR();
 }
@@ -2343,8 +2434,7 @@ TEST_P(TransformFeedbackTest, RecordAndDrawWithScissorTest)
     glBeginTransformFeedback(GL_POINTS);
 
     // Create a query to check how many primitives were written
-    GLuint primitivesWrittenQuery = 0;
-    glGenQueries(1, &primitivesWrittenQuery);
+    GLQuery primitivesWrittenQuery;
     glBeginQuery(GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN, primitivesWrittenQuery);
 
     glDrawArrays(GL_POINTS, 0, 3);
@@ -2421,8 +2511,7 @@ TEST_P(TransformFeedbackWithDepthBufferTest, RecordAndDrawWithDepthWriteEnabled)
     glBeginTransformFeedback(GL_POINTS);
 
     // Create a query to check how many primitives were written
-    GLuint primitivesWrittenQuery = 0;
-    glGenQueries(1, &primitivesWrittenQuery);
+    GLQuery primitivesWrittenQuery;
     glBeginQuery(GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN, primitivesWrittenQuery);
 
     glDrawArrays(GL_POINTS, 0, 3);
