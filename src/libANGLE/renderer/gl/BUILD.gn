@@ -178,7 +178,7 @@ if (is_android) {
   ]
 }
 
-if (is_mac) {
+if (angle_enable_cgl) {
   _gl_backend_sources += [
     "cgl/ContextCGL.cpp",
     "cgl/ContextCGL.h",
@@ -197,6 +197,27 @@ if (is_mac) {
   ]
 }
 
+if (angle_enable_eagl) {
+  _gl_backend_sources += [
+    "eagl/ContextEAGL.cpp",
+    "eagl/ContextEAGL.h",
+    "eagl/DeviceEAGL.cpp",
+    "eagl/DeviceEAGL.h",
+    "eagl/DisplayEAGL.h",
+    "eagl/DisplayEAGL.mm",
+    "eagl/FunctionsEAGL.h",
+    "eagl/FunctionsEAGL.mm",
+    "eagl/IOSurfaceSurfaceEAGL.h",
+    "eagl/IOSurfaceSurfaceEAGL.mm",
+    "eagl/PbufferSurfaceEAGL.cpp",
+    "eagl/PbufferSurfaceEAGL.h",
+    "eagl/RendererEAGL.cpp",
+    "eagl/RendererEAGL.h",
+    "eagl/WindowSurfaceEAGL.h",
+    "eagl/WindowSurfaceEAGL.mm",
+  ]
+}
+
 if (angle_enable_gl_null) {
   _gl_backend_sources += [
     "null_functions.cpp",
@@ -208,6 +229,9 @@ config("angle_gl_backend_config") {
   defines = [ "ANGLE_ENABLE_OPENGL" ]
   if (angle_enable_gl_null) {
     defines += [ "ANGLE_ENABLE_OPENGL_NULL" ]
+  }
+  if (is_mac || is_ios) {
+    defines += [ "GL_SILENCE_DEPRECATION" ]
   }
   include_dirs = [ "../../../third_party/khronos" ]
 }
@@ -235,13 +259,19 @@ angle_source_set("angle_gl_backend") {
       "Xext",
     ]
   }
-  if (is_mac) {
+  if (is_mac || is_ios) {
     frameworks = [
-      "Cocoa.framework",
       "IOSurface.framework",
-      "OpenGL.framework",
       "QuartzCore.framework",
     ]
+    if (angle_enable_eagl) {
+      frameworks += [ "OpenGLES.framework" ]
+    } else if (angle_enable_cgl) {
+      frameworks += [ "OpenGL.framework" ]
+    }
+    if (is_mac) {
+      frameworks += [ "Cocoa.framework" ]
+    }
   }
   if (ozone_platform_gbm) {
     configs += [ ":libdrm" ]

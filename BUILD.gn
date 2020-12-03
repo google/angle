@@ -169,7 +169,6 @@ config("extra_warnings") {
     cflags += [
       "-Wbad-function-cast",
       "-Wconditional-uninitialized",
-      "-Wdeprecated-copy",
       "-Wextra-semi-stmt",
       "-Wfloat-conversion",
       "-Winconsistent-missing-destructor-override",
@@ -179,8 +178,6 @@ config("extra_warnings") {
       "-Wredundant-parens",
       "-Wreturn-std-move-in-c++11",
       "-Wshadow-field",
-      "-Wsuggest-destructor-override",
-      "-Wsuggest-override",
       "-Wtautological-type-limit-compare",
       "-Wundefined-reinterpret-cast",
       "-Wunneeded-internal-declaration",
@@ -194,6 +191,14 @@ config("extra_warnings") {
       "-Wunreachable-code",
       "-Wshorten-64-to-32",
     ]
+    if (!use_xcode_clang) {
+      # Mac catalyst uses a clang version that doesn't have these.
+      cflags += [
+        "-Wdeprecated-copy",
+        "-Wsuggest-destructor-override",
+        "-Wsuggest-override",
+      ]
+    }
   }
 
   if (angle_is_winuwp) {
@@ -435,14 +440,23 @@ angle_static_library("angle_gpu_info_util") {
     libs += [ "pci" ]
   }
 
-  if (is_mac) {
-    sources += libangle_gpu_info_util_mac_sources
+  if (is_mac || is_ios) {
     frameworks = [
       "IOKit.framework",
       "CoreFoundation.framework",
       "CoreGraphics.framework",
-      "OpenGL.framework",
     ]
+    if (angle_enable_eagl) {
+      frameworks += [ "OpenGLES.framework" ]
+    } else if (angle_enable_cgl) {
+      frameworks += [ "OpenGL.framework" ]
+    }
+    if (is_mac || angle_enable_cgl) {
+      sources += libangle_gpu_info_util_mac_sources
+    }
+    if (is_ios && !angle_enable_cgl) {
+      sources += libangle_gpu_info_util_ios_sources
+    }
   }
 }
 
@@ -732,11 +746,11 @@ angle_source_set("libANGLE_base") {
   }
 
   # Enable extra Chromium style warnings for libANGLE.
-  if (is_clang && angle_has_build) {
+  if (is_clang && angle_has_build && !use_xcode_clang) {
     suppressed_configs -= [ "//build/config/clang:find_bad_constructs" ]
   }
 
-  if (is_mac) {
+  if (is_mac || is_ios) {
     sources += libangle_mac_sources
   }
 
@@ -835,7 +849,7 @@ angle_source_set("libANGLE_with_capture") {
 }
 
 config("shared_library_public_config") {
-  if (is_mac && !is_component_build) {
+  if ((is_ios || is_mac) && !is_component_build) {
     # Executable targets that depend on the shared libraries below need to have
     # the rpath setup in non-component build configurations.
     ldflags = [
@@ -1125,7 +1139,7 @@ if (angle_has_build) {
       "${angle_jsoncpp_dir}:jsoncpp_config",
     ]
 
-    if (is_mac && !is_component_build) {
+    if ((is_ios || is_mac) && !is_component_build) {
       ldflags = [
         "-install_name",
         "@rpath/${target_name}.dylib",

@@ -309,7 +309,6 @@ void DisplayEAGL::generateExtensions(egl::DisplayExtensions *outExtensions) cons
 {
     outExtensions->iosurfaceClientBuffer = true;
     outExtensions->surfacelessContext    = true;
-    outExtensions->deviceQuery           = true;
 
     // Contexts are virtualized so textures ans semaphores can be shared globally
     outExtensions->displayTextureShareGroup   = true;

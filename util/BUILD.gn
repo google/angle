@@ -184,11 +184,11 @@ foreach(is_shared_library,
       ]
     }
 
-    if (is_mac) {
-      frameworks = [
-        "AppKit.framework",
-        "QuartzCore.framework",
-      ]
+    if (is_mac || is_ios) {
+      frameworks = [ "QuartzCore.framework" ]
+      if (is_mac) {
+        frameworks += [ "AppKit.framework" ]
+      }
     }
 
     if (is_android) {
@@ -221,7 +221,7 @@ foreach(is_shared_library,
 
       public_deps += [ ":angle_util_loader" ]
 
-      if (is_mac && !is_component_build) {
+      if ((is_ios || is_mac) && !is_component_build) {
         ldflags = [
           "-install_name",
           "@rpath/libangle_util.dylib",
