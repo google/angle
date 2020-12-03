@@ -16,6 +16,23 @@
       "message": "PTAL. Tests passed in an earlier patch set.",
       "revId": "ea665da944432838537c2b72c4415d40b5c35a19",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e0f6048a_705997a3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-03T20:26:27Z",
+      "side": 1,
+      "message": "If it workz, it landz",
+      "revId": "ea665da944432838537c2b72c4415d40b5c35a19",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }

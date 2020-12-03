@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "46cbab4e_6892dc21",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-03T20:26:27Z",
+      "side": 0,
+      "message": "Hurray!",
+      "revId": "19a302fca592e3825998b78b7d7d075c51f3c4f6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
