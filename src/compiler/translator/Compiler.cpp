@@ -806,8 +806,8 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
         ASSERT(!mVariablesCollected);
         CollectVariables(root, &mAttributes, &mOutputVariables, &mUniforms, &mInputVaryings,
                          &mOutputVaryings, &mSharedVariables, &mUniformBlocks,
-                         &mShaderStorageBlocks, &mInBlocks, mResources.HashFunction, &mSymbolTable,
-                         mShaderType, mExtensionBehavior);
+                         &mShaderStorageBlocks, mResources.HashFunction, &mSymbolTable, mShaderType,
+                         mExtensionBehavior);
         collectInterfaceBlocks();
         mVariablesCollected = true;
         if (compileOptions & SH_USE_UNUSED_STANDARD_SHARED_BLOCKS)
@@ -1156,12 +1156,10 @@ void TCompiler::setResourceString()
 void TCompiler::collectInterfaceBlocks()
 {
     ASSERT(mInterfaceBlocks.empty());
-    mInterfaceBlocks.reserve(mUniformBlocks.size() + mShaderStorageBlocks.size() +
-                             mInBlocks.size());
+    mInterfaceBlocks.reserve(mUniformBlocks.size() + mShaderStorageBlocks.size());
     mInterfaceBlocks.insert(mInterfaceBlocks.end(), mUniformBlocks.begin(), mUniformBlocks.end());
     mInterfaceBlocks.insert(mInterfaceBlocks.end(), mShaderStorageBlocks.begin(),
                             mShaderStorageBlocks.end());
-    mInterfaceBlocks.insert(mInterfaceBlocks.end(), mInBlocks.begin(), mInBlocks.end());
 }
 
 bool TCompiler::emulatePrecisionIfNeeded(TIntermBlock *root,
@@ -1201,7 +1199,6 @@ void TCompiler::clearResults()
     mInterfaceBlocks.clear();
     mUniformBlocks.clear();
     mShaderStorageBlocks.clear();
-    mInBlocks.clear();
     mVariablesCollected    = false;
     mGLPositionInitialized = false;
 
@@ -1249,7 +1246,7 @@ bool TCompiler::checkCallDepth()
         int depth                     = 0;
         const CallDAG::Record &record = mCallDag.getRecordFromIndex(i);
 
-        for (const int &calleeIndex : record.callees)
+        for (int calleeIndex : record.callees)
         {
             depth = std::max(depth, depths[calleeIndex] + 1);
         }

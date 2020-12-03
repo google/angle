@@ -123,7 +123,6 @@ class TCompiler : public TShHandleBase
     {
         return mShaderStorageBlocks;
     }
-    const std::vector<sh::InterfaceBlock> &getInBlocks() const { return mInBlocks; }
 
     ShHashFunction64 getHashFunction() const { return mResources.HashFunction; }
     NameMap &getNameMap() { return mNameMap; }
@@ -195,7 +194,6 @@ class TCompiler : public TShHandleBase
     std::vector<sh::InterfaceBlock> mInterfaceBlocks;
     std::vector<sh::InterfaceBlock> mUniformBlocks;
     std::vector<sh::InterfaceBlock> mShaderStorageBlocks;
-    std::vector<sh::InterfaceBlock> mInBlocks;
 
     // Specialization constant usage bits
     SpecConstUsageBits mSpecConstUsageBits;

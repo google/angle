@@ -46,8 +46,6 @@ BlockType GetBlockType(TQualifier qualifier)
             return BlockType::BLOCK_UNIFORM;
         case EvqBuffer:
             return BlockType::BLOCK_BUFFER;
-        case EvqPerVertexIn:
-            return BlockType::BLOCK_IN;
         default:
             UNREACHABLE();
             return BlockType::BLOCK_UNIFORM;
@@ -123,7 +121,6 @@ class CollectVariablesTraverser : public TIntermTraverser
                               std::vector<ShaderVariable> *sharedVariables,
                               std::vector<InterfaceBlock> *uniformBlocks,
                               std::vector<InterfaceBlock> *shaderStorageBlocks,
-                              std::vector<InterfaceBlock> *inBlocks,
                               ShHashFunction64 hashFunction,
                               TSymbolTable *symbolTable,
                               GLenum shaderType,
@@ -166,7 +163,6 @@ class CollectVariablesTraverser : public TIntermTraverser
                                   std::vector<ShaderVariable> *varyings);
     void recordBuiltInFragmentOutputUsed(const TVariable &variable, bool *addedFlag);
     void recordBuiltInAttributeUsed(const TVariable &variable, bool *addedFlag);
-    InterfaceBlock *recordGLInUsed(const TType &glInType);
     InterfaceBlock *findNamedInterfaceBlock(const ImmutableString &name) const;
 
     std::vector<ShaderVariable> *mAttribs;
@@ -177,7 +173,6 @@ class CollectVariablesTraverser : public TIntermTraverser
     std::vector<ShaderVariable> *mSharedVariables;
     std::vector<InterfaceBlock> *mUniformBlocks;
     std::vector<InterfaceBlock> *mShaderStorageBlocks;
-    std::vector<InterfaceBlock> *mInBlocks;
 
     std::map<std::string, ShaderVariable *> mInterfaceBlockFields;
 
@@ -248,7 +243,6 @@ CollectVariablesTraverser::CollectVariablesTraverser(
     std::vector<sh::ShaderVariable> *sharedVariables,
     std::vector<sh::InterfaceBlock> *uniformBlocks,
     std::vector<sh::InterfaceBlock> *shaderStorageBlocks,
-    std::vector<sh::InterfaceBlock> *inBlocks,
     ShHashFunction64 hashFunction,
     TSymbolTable *symbolTable,
     GLenum shaderType,
@@ -262,7 +256,6 @@ CollectVariablesTraverser::CollectVariablesTraverser(
       mSharedVariables(sharedVariables),
       mUniformBlocks(uniformBlocks),
       mShaderStorageBlocks(shaderStorageBlocks),
-      mInBlocks(inBlocks),
       mDepthRangeAdded(false),
       mNumSamplesAdded(false),
       mNumWorkGroupsAdded(false),
@@ -317,7 +310,10 @@ void CollectVariablesTraverser::setBuiltInInfoFromSymbol(const TVariable &variab
     info->name       = variable.name().data();
     info->mappedName = variable.name().data();
 
-    setFieldOrVariableProperties(type, true, false, info);
+    bool isShaderIOBlock =
+        IsShaderIoBlock(type.getQualifier()) && type.getInterfaceBlock() != nullptr;
+
+    setFieldOrVariableProperties(type, true, isShaderIOBlock, info);
 }
 
 void CollectVariablesTraverser::recordBuiltInVaryingUsed(const TVariable &variable,
@@ -361,24 +357,6 @@ void CollectVariablesTraverser::recordBuiltInAttributeUsed(const TVariable &vari
         info.location = -1;
         mAttribs->push_back(info);
         (*addedFlag) = true;
-    }
-}
-
-InterfaceBlock *CollectVariablesTraverser::recordGLInUsed(const TType &glInType)
-{
-    if (!mPerVertexInAdded)
-    {
-        ASSERT(glInType.getQualifier() == EvqPerVertexIn);
-        InterfaceBlock info;
-        recordInterfaceBlock("gl_in", glInType, &info);
-
-        mPerVertexInAdded = true;
-        mInBlocks->push_back(info);
-        return &mInBlocks->back();
-    }
-    else
-    {
-        return FindVariable(ImmutableString("gl_PerVertex"), mInBlocks);
     }
 }
 
@@ -724,10 +702,8 @@ void CollectVariablesTraverser::setFieldOrVariableProperties(const TType &type,
             variableOut->fields.push_back(fieldVariable);
         }
     }
-    else if (interfaceBlock && interfaceBlock->symbolType() != SymbolType::BuiltIn)
+    else if (interfaceBlock && isShaderIOBlock)
     {
-        ASSERT(isShaderIOBlock);
-
         variableOut->type = GL_NONE;
         if (interfaceBlock->symbolType() != SymbolType::Empty)
         {
@@ -1119,31 +1095,28 @@ bool CollectVariablesTraverser::visitBinary(Visit, TIntermBinary *binaryNode)
 
         bool traverseIndexExpression         = false;
         TIntermBinary *interfaceIndexingNode = blockNode->getAsBinaryNode();
-        TIntermTyped *interfaceNode          = blockNode;
         if (interfaceIndexingNode)
         {
-            interfaceNode = interfaceIndexingNode->getLeft()->getAsTyped();
-            ASSERT(interfaceNode);
-
-            const TType &interfaceType = interfaceNode->getType();
-            if (interfaceType.getQualifier() == EvqPerVertexIn)
-            {
-                namedBlock = recordGLInUsed(interfaceType);
-                ASSERT(namedBlock);
-            }
-
-            // We need to continue traversing to collect useful variables in the index expression
-            // of the interface block array or gl_in in the case of the if above.
+            ASSERT(interfaceIndexingNode->getOp() == EOpIndexDirect ||
+                   interfaceIndexingNode->getOp() == EOpIndexIndirect);
             traverseIndexExpression = true;
+            blockNode               = interfaceIndexingNode->getLeft();
         }
 
-        const TType &interfaceNodeType        = interfaceNode->getType();
+        const TType &interfaceNodeType        = blockNode->getType();
         const TInterfaceBlock *interfaceBlock = interfaceNodeType.getInterfaceBlock();
         const TQualifier qualifier            = interfaceNodeType.getQualifier();
 
         // If it's a shader I/O block, look in varyings
         ShaderVariable *ioBlockVar = nullptr;
-        if (IsVaryingIn(qualifier))
+        if (qualifier == EvqPerVertexIn)
+        {
+            TIntermSymbol *symbolNode = blockNode->getAsSymbolNode();
+            ASSERT(symbolNode);
+            recordBuiltInVaryingUsed(symbolNode->variable(), &mPerVertexInAdded, mInputVaryings);
+            ioBlockVar = FindShaderIOBlockVariable(interfaceBlock->name(), mInputVaryings);
+        }
+        else if (IsVaryingIn(qualifier))
         {
             ioBlockVar = FindShaderIOBlockVariable(interfaceBlock->name(), mInputVaryings);
         }
@@ -1196,7 +1169,6 @@ void CollectVariables(TIntermBlock *root,
                       std::vector<ShaderVariable> *sharedVariables,
                       std::vector<InterfaceBlock> *uniformBlocks,
                       std::vector<InterfaceBlock> *shaderStorageBlocks,
-                      std::vector<InterfaceBlock> *inBlocks,
                       ShHashFunction64 hashFunction,
                       TSymbolTable *symbolTable,
                       GLenum shaderType,
@@ -1204,8 +1176,8 @@ void CollectVariables(TIntermBlock *root,
 {
     CollectVariablesTraverser collect(attributes, outputVariables, uniforms, inputVaryings,
                                       outputVaryings, sharedVariables, uniformBlocks,
-                                      shaderStorageBlocks, inBlocks, hashFunction, symbolTable,
-                                      shaderType, extensionBehavior);
+                                      shaderStorageBlocks, hashFunction, symbolTable, shaderType,
+                                      extensionBehavior);
     root->traverse(&collect);
 }
 

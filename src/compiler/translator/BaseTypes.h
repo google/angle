@@ -1097,6 +1097,8 @@ inline bool IsShaderIoBlock(TQualifier qualifier)
 {
     switch (qualifier)
     {
+        case EvqPerVertexIn:
+        case EvqPerVertexOut:
         case EvqVertexOut:
         case EvqTessControlIn:
         case EvqTessControlOut:

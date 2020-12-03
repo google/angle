@@ -51,10 +51,6 @@ enum class BlockType
 {
     BLOCK_UNIFORM,
     BLOCK_BUFFER,
-
-    // TODO: Remove gl_in from interface blocks and place it in varyings with the rest of shader I/O
-    // blocks, then remove GetInBlocks and getInBlocks everywhere.  http://anglebug.com/5423
-    BLOCK_IN
 };
 
 // Base class for all variables defined in shaders, including Varyings, Uniforms, etc
