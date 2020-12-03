@@ -16,6 +16,24 @@
       "message": "nit: {}",
       "revId": "2c8c837d6c22054093ff87de9797bc32772ef6fa",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "37a052c1_4be85ce3",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 839,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-12-03T18:39:44Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "c9b6a71c_6690c993",
+      "revId": "2c8c837d6c22054093ff87de9797bc32772ef6fa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
