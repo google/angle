@@ -1018,9 +1018,14 @@ bool TranslatorVulkan::translateImpl(TIntermBlock *root,
     }
     else if (getShaderType() == GL_GEOMETRY_SHADER)
     {
-        WriteGeometryShaderLayoutQualifiers(
-            sink, getGeometryShaderInputPrimitiveType(), getGeometryShaderInvocations(),
-            getGeometryShaderOutputPrimitiveType(), getGeometryShaderMaxVertices());
+        int maxVertices = getGeometryShaderMaxVertices();
+
+        // max_vertices=0 is not valid in Vulkan
+        maxVertices = std::max(1, maxVertices);
+
+        WriteGeometryShaderLayoutQualifiers(sink, getGeometryShaderInputPrimitiveType(),
+                                            getGeometryShaderInvocations(),
+                                            getGeometryShaderOutputPrimitiveType(), maxVertices);
     }
     else
     {

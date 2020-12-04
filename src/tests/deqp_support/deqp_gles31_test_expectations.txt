@@ -202,7 +202,6 @@
 5409 VULKAN : dEQP-GLES31.functional.program_interface_query.uniform.random.48 = FAIL
 5409 VULKAN : dEQP-GLES31.functional.program_interface_query.uniform.random.51 = FAIL
 5409 VULKAN : dEQP-GLES31.functional.program_interface_query.uniform.random.55 = FAIL
-5411 VULKAN : dEQP-GLES31.functional.geometry_shading.emit.*_emit_0_end_* = FAIL
 
 // Shader I/O blocks:
 // Missing matching of block names with unnamed SSBOs with the same member variable
