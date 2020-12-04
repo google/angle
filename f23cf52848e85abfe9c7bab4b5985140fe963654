@@ -20,6 +20,24 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "e568bd4a_e9437ccb",
+        "filename": "src/libANGLE/renderer/vulkan/QueryVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-12-04T22:44:08Z",
+      "side": 0,
+      "message": "Thanks for fixing it. I somehow had impression that these query objects are reused in the pool so that don\u0027t need to be freed.",
+      "parentUuid": "17fa23a3_02f2a689",
+      "revId": "f23cf52848e85abfe9c7bab4b5985140fe963654",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "f1b6a330_46e7a61c",
         "filename": "src/libANGLE/renderer/vulkan/QueryVk.cpp",
         "patchSetId": 4

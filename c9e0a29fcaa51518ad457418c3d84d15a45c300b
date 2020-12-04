@@ -33,6 +33,52 @@
       "message": "Bots are green short of some GL suppressions and a VK Android one due to lack of ES3.2 context.",
       "revId": "c9e0a29fcaa51518ad457418c3d84d15a45c300b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e619e97b_66c76281",
+        "filename": "src/libANGLE/renderer/vulkan/QueryVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-12-04T22:44:08Z",
+      "side": 1,
+      "message": "I am a bit confused by the complexity of shareQuery part, maybe I am not understand this yet. Would it simpler (or even possible) to let COntextVK only know one query type? Let\u0027s say contextVK only knows TransformFeedbackPrimitivesWritten. Then QueryVk will be responsible to convert the GL\u0027s queryType to TransformFeedbackPrimitivesWritten? That way ContextVK side is consistent with vulkan and only QueryVk will be dealing with juggling of two types of query?",
+      "range": {
+        "startLine": 45,
+        "startChar": 9,
+        "endLine": 45,
+        "endChar": 22
+      },
+      "revId": "c9e0a29fcaa51518ad457418c3d84d15a45c300b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "262ed6a7_85851a79",
+        "filename": "src/libANGLE/renderer/vulkan/doc/Queries.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-12-04T22:44:08Z",
+      "side": 1,
+      "message": "If one VK query maps to two GL queries, are the GL_PRIMITIVES_GENERATED and GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN results the same, or the VK query always have both data? I somehow can\u0027t find the part of spec that details the query result.",
+      "range": {
+        "startLine": 60,
+        "startChar": 27,
+        "endLine": 61,
+        "endChar": 29
+      },
+      "revId": "c9e0a29fcaa51518ad457418c3d84d15a45c300b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
