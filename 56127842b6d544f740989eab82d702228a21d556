@@ -69,6 +69,24 @@
       "parentUuid": "9db93eec_0c7049cc",
       "revId": "56127842b6d544f740989eab82d702228a21d556",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "95f84f74_88593b06",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1463997
+      },
+      "writtenOn": "2020-12-04T17:06:25Z",
+      "side": 1,
+      "message": "OK I have added a comment to the issue.",
+      "parentUuid": "fc0e4c94_b27b98e2",
+      "revId": "56127842b6d544f740989eab82d702228a21d556",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
