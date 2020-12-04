@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9b4012df_0f176dc5",
+        "filename": "src/tests/restricted_traces/restricted_traces.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-04T17:04:06Z",
+      "side": 1,
+      "message": "nit: probably can omit the \u0027trace\u0027 since this is redundant (these are all traces)",
+      "range": {
+        "startLine": 32,
+        "startChar": 5,
+        "endLine": 32,
+        "endChar": 26
+      },
+      "revId": "c9482644758b9dae96d967aa6c45a68f07258809",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}

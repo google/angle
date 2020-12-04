@@ -34,6 +34,24 @@
       "parentUuid": "eef8c1ac_18114a4e",
       "revId": "750557835a3d9aa68f4e4f9b6e21ecffe1c13ad9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "71609607_26c4fde5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-04T17:04:06Z",
+      "side": 1,
+      "message": "What did Paul do wrong here? Did he manually create the sha1?",
+      "parentUuid": "09f442c7_89468297",
+      "revId": "750557835a3d9aa68f4e4f9b6e21ecffe1c13ad9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
