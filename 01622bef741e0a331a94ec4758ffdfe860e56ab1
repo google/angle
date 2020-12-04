@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bc98c8ce_51935be5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2020-12-04T09:25:34Z",
+      "side": 1,
+      "message": "Hi, Shahbaz \u0026 Jiajia, I had addressed your comments, and also fixed an issue about matrix packing, refactored code for reducing long file/variable/function names, added a test to throw a warning.\nPlease take a look again, thank you.",
+      "revId": "01622bef741e0a331a94ec4758ffdfe860e56ab1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7df0ea1f_2ef5db95",
+        "filename": "src/compiler/translator/tree_ops/RecordUniformBlocksWithLargeArrayMember.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2020-12-04T09:25:34Z",
+      "side": 1,
+      "message": "fieldType\u0027s matrixPacking is always undefined, its matrixPacking is by type\u0027s matrixPacking.",
+      "range": {
+        "startLine": 85,
+        "startChar": 17,
+        "endLine": 87,
+        "endChar": 81
+      },
+      "revId": "01622bef741e0a331a94ec4758ffdfe860e56ab1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e4222c61_53224dc1",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 2095,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2020-12-04T09:25:34Z",
+      "side": 1,
+      "message": "\"Y\"",
+      "range": {
+        "startLine": 2095,
+        "startChar": 31,
+        "endLine": 2095,
+        "endChar": 32
+      },
+      "revId": "01622bef741e0a331a94ec4758ffdfe860e56ab1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}

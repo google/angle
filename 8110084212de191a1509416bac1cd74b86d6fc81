@@ -58,6 +58,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "00256cce_fa065906",
+        "filename": "src/compiler/translator/ShaderLang.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 630,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2020-12-04T09:25:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a5a1167c_ecadcaf6",
+      "range": {
+        "startLine": 630,
+        "startChar": 29,
+        "endLine": 630,
+        "endChar": 77
+      },
+      "revId": "8110084212de191a1509416bac1cd74b86d6fc81",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ddf291db_6eb71bb8",
@@ -71,6 +95,24 @@
       "writtenOn": "2020-11-23T04:38:38Z",
       "side": 1,
       "message": "nit: unnecessary change. Is `git cl format` doing this? It shouldn\u0027t. If you are using another tool to format, its textwidth limit may be off by 1 or 2.",
+      "revId": "8110084212de191a1509416bac1cd74b86d6fc81",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ea70ba43_ea5c0a0a",
+        "filename": "src/compiler/translator/tree_ops/RecordUniformBlocksTranslatedToStructuredBuffers.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2020-12-04T09:25:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ddf291db_6eb71bb8",
       "revId": "8110084212de191a1509416bac1cd74b86d6fc81",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
@@ -94,6 +136,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "fa1d9669_5a9e297d",
+        "filename": "src/compiler/translator/tree_ops/RecordUniformBlocksTranslatedToStructuredBuffers.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2020-12-04T09:25:34Z",
+      "side": 1,
+      "message": "I had changed the code, throw a warning when shader exists indexing operator on uniform blocks.",
+      "parentUuid": "ed658df0_a22a720e",
+      "revId": "8110084212de191a1509416bac1cd74b86d6fc81",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "a7eb5924_3f65b6e8",
         "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
         "patchSetId": 2
@@ -105,6 +165,30 @@
       "writtenOn": "2020-11-23T04:38:38Z",
       "side": 1,
       "message": "common practice is to just say \"block(s)\"",
+      "range": {
+        "startLine": 2088,
+        "startChar": 48,
+        "endLine": 2093,
+        "endChar": 21
+      },
+      "revId": "8110084212de191a1509416bac1cd74b86d6fc81",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1e08f2d1_5cc27b14",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2093,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2020-12-04T09:25:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a7eb5924_3f65b6e8",
       "range": {
         "startLine": 2088,
         "startChar": 48,
@@ -150,6 +234,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "96f31b79_b4f0e47d",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2116,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2020-12-04T09:25:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "006aa23a_85660aeb",
+      "revId": "8110084212de191a1509416bac1cd74b86d6fc81",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "452aeaa6_4f1edf07",
@@ -163,6 +265,24 @@
       "writtenOn": "2020-11-23T04:38:38Z",
       "side": 1,
       "message": "nit: unnecessary changes from here on",
+      "revId": "8110084212de191a1509416bac1cd74b86d6fc81",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5f3cb74d_024dc944",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2581,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2020-12-04T09:25:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "452aeaa6_4f1edf07",
       "revId": "8110084212de191a1509416bac1cd74b86d6fc81",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
