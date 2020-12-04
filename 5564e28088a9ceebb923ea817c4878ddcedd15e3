@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "37d67e16_b8f69fb2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1379716
+      },
+      "writtenOn": "2020-12-04T21:02:34Z",
+      "side": 1,
+      "message": "Updated version at https://chromium-review.googlesource.com/c/angle/angle/+/2575736 (didn\u0027t have permission to add fresh patch set to this one).",
+      "revId": "5564e28088a9ceebb923ea817c4878ddcedd15e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f84b54f8_23f1cc9e",
