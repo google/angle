@@ -46,6 +46,30 @@
       },
       "revId": "6f6504c9ad60b413542f94122d73b5cee1f050d5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "603c3c73_1b410457",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 4518,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-04T01:26:24Z",
+      "side": 0,
+      "message": "This assertion is hit since we are able to defer a glFlush regardless of whether the render pass has been started or not.   If we restrict deferring glFlush to only when the render pass has been started, then we issue all of the vkQueueSubmits that this CL is attempting to avoid.",
+      "parentUuid": "de071cd0_2f907a59",
+      "range": {
+        "startLine": 4518,
+        "startChar": 16,
+        "endLine": 4518,
+        "endChar": 35
+      },
+      "revId": "6f6504c9ad60b413542f94122d73b5cee1f050d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
