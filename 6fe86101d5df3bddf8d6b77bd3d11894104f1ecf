@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fd0de3ca_8e0e5241",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-04T03:24:38Z",
+      "side": 1,
+      "message": "PTAL\n\nThis is essentially a find/replace of std::unordered_map to angle::HashMap in src.   This isn\u0027t replacing everything though, since some conversions resulted in asserts/crashes being hit.   We can revisit those later and see if there\u0027s a different Abseil data structure that would work, or just leave them.",
+      "revId": "6fe86101d5df3bddf8d6b77bd3d11894104f1ecf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
