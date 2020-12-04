@@ -60,6 +60,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "15e8a34c_1f62bac7",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 691,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-04T23:57:07Z",
+      "side": 1,
+      "message": "Reworded it a little bit to try and clarify things.",
+      "parentUuid": "e7bb556e_19e850ab",
+      "range": {
+        "startLine": 690,
+        "startChar": 83,
+        "endLine": 691,
+        "endChar": 35
+      },
+      "revId": "a814137c9ef8fb1841ac56c48afb8f0c69922755",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "14a1d54f_a89677ce",
         "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
         "patchSetId": 22
@@ -105,6 +129,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "fd4ec4dd_29a69d92",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 693,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-04T23:57:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9ff66124_4002a72c",
+      "range": {
+        "startLine": 693,
+        "startChar": 8,
+        "endLine": 693,
+        "endChar": 55
+      },
+      "revId": "a814137c9ef8fb1841ac56c48afb8f0c69922755",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "18097b67_0550faad",
@@ -118,6 +166,30 @@
       "writtenOn": "2020-12-04T20:34:59Z",
       "side": 1,
       "message": "nit: can you use a verb that identifies the ownership transfer? like collectResourceUseList or acquireResourceUseList?",
+      "range": {
+        "startLine": 700,
+        "startChar": 27,
+        "endLine": 700,
+        "endChar": 33
+      },
+      "revId": "a814137c9ef8fb1841ac56c48afb8f0c69922755",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c9ecb122_6fd7f7e6",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 700,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-04T23:57:07Z",
+      "side": 1,
+      "message": "I went with acquireResourceUseList().",
+      "parentUuid": "18097b67_0550faad",
       "range": {
         "startLine": 700,
         "startChar": 27,
@@ -153,6 +225,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "a08f8a2b_41fc44b9",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 705,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-04T23:57:07Z",
+      "side": 1,
+      "message": "Everything seems happy without that check, and not having it means we can ignore even more glFlush calls (which seems like it should help performance).\n\nIs there something in particular you\u0027re worried about that would require that checking?",
+      "parentUuid": "eb0c55b3_0835e3bf",
+      "range": {
+        "startLine": 705,
+        "startChar": 8,
+        "endLine": 705,
+        "endChar": 69
+      },
+      "revId": "a814137c9ef8fb1841ac56c48afb8f0c69922755",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "3d70c488_3e3c93b5",
         "filename": "src/libANGLE/renderer/vulkan/DisplayVk.h",
         "patchSetId": 22
@@ -164,6 +260,30 @@
       "writtenOn": "2020-12-04T20:34:59Z",
       "side": 1,
       "message": "suggestion: return rvalue reference (releaseResourceUseLists()) or add the action command to ShareGroupVk, passing in the needed extra members.",
+      "range": {
+        "startLine": 38,
+        "startChar": 38,
+        "endLine": 38,
+        "endChar": 57
+      },
+      "revId": "a814137c9ef8fb1841ac56c48afb8f0c69922755",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a098453a_788def5d",
+        "filename": "src/libANGLE/renderer/vulkan/DisplayVk.h",
+        "patchSetId": 22
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-04T23:57:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3d70c488_3e3c93b5",
       "range": {
         "startLine": 38,
         "startChar": 38,
@@ -197,6 +317,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e7a4cecf_ccd07812",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 2466,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-04T23:57:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f0686286_f58d382b",
+      "range": {
+        "startLine": 2466,
+        "startChar": 73,
+        "endLine": 2466,
+        "endChar": 98
+      },
+      "revId": "a814137c9ef8fb1841ac56c48afb8f0c69922755",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "be4c450f_bf6fef4a",
@@ -210,6 +354,30 @@
       "writtenOn": "2020-12-04T20:34:59Z",
       "side": 1,
       "message": "nit: don\u0027t need auto here, can use the explicit type (vk::ResourceUseList \u0026)",
+      "range": {
+        "startLine": 2494,
+        "startChar": 9,
+        "endLine": 2494,
+        "endChar": 14
+      },
+      "revId": "a814137c9ef8fb1841ac56c48afb8f0c69922755",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "01e4ae6d_39102e51",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 2494,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-04T23:57:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "be4c450f_bf6fef4a",
       "range": {
         "startLine": 2494,
         "startChar": 9,
@@ -243,6 +411,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2baa6832_a7d2c0d7",
+        "filename": "src/libANGLE/renderer/vulkan/ResourceVk.h",
+        "patchSetId": 22
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-04T23:57:07Z",
+      "side": 1,
+      "message": "Oops, good catch. Forgot to clean up after experimenting with how the refactor should look.",
+      "parentUuid": "1bb54174_5fe5c547",
+      "range": {
+        "startLine": 144,
+        "startChar": 0,
+        "endLine": 147,
+        "endChar": 5
+      },
+      "revId": "a814137c9ef8fb1841ac56c48afb8f0c69922755",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "aa1de140_def365fd",
@@ -256,6 +448,30 @@
       "writtenOn": "2020-12-04T20:34:59Z",
       "side": 1,
       "message": "not referenced",
+      "range": {
+        "startLine": 152,
+        "startChar": 0,
+        "endLine": 152,
+        "endChar": 79
+      },
+      "revId": "a814137c9ef8fb1841ac56c48afb8f0c69922755",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d28b4772_3554b12a",
+        "filename": "src/libANGLE/renderer/vulkan/ResourceVk.h",
+        "patchSetId": 22
+      },
+      "lineNbr": 152,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-04T23:57:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "aa1de140_def365fd",
       "range": {
         "startLine": 152,
         "startChar": 0,
@@ -289,6 +505,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "db4327b6_c560f60f",
+        "filename": "src/libANGLE/renderer/vulkan/SyncVk.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-04T23:57:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f87a9627_e0ff2fc9",
+      "range": {
+        "startLine": 94,
+        "startChar": 51,
+        "endLine": 94,
+        "endChar": 99
+      },
+      "revId": "a814137c9ef8fb1841ac56c48afb8f0c69922755",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f3113dba_e498a433",
@@ -312,6 +552,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "058d2b72_ba7e11b8",
+        "filename": "src/tests/egl_tests/EGLSyncTest.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 223,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-04T23:57:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f3113dba_e498a433",
+      "range": {
+        "startLine": 223,
+        "startChar": 34,
+        "endLine": 223,
+        "endChar": 41
+      },
+      "revId": "a814137c9ef8fb1841ac56c48afb8f0c69922755",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "081897cd_3f3d6cd2",
@@ -325,6 +589,24 @@
       "writtenOn": "2020-12-04T16:42:13Z",
       "side": 1,
       "message": "Same. I have a feeling the clear/wait loop is a regression test for something that\u0027s not documented.",
+      "revId": "a814137c9ef8fb1841ac56c48afb8f0c69922755",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "757499b5_956abd95",
+        "filename": "src/tests/gl_tests/FenceSyncTests.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 250,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-04T23:57:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "081897cd_3f3d6cd2",
       "revId": "a814137c9ef8fb1841ac56c48afb8f0c69922755",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
