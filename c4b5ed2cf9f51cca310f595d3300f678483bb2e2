@@ -16,6 +16,24 @@
       "message": "Thanks for starting this (I keep getting pulled in directions and not coming back to this).\n\nAre the compilation failures the result of a new header change that\u0027s needed?",
       "revId": "c4b5ed2cf9f51cca310f595d3300f678483bb2e2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d2a65491_8de6202c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-04T20:24:00Z",
+      "side": 1,
+      "message": "Was missing the SPIRV-Headers roll. It\u0027s usually automatically included in the Tools roll and I forgot that manual rolls don\u0027t have that implicit connnection.",
+      "parentUuid": "80f8c40a_4a518120",
+      "revId": "c4b5ed2cf9f51cca310f595d3300f678483bb2e2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
