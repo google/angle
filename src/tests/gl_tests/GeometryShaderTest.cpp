@@ -819,6 +819,42 @@ TEST_P(GeometryShaderTest, NegativeLayeredFramebufferCompletenessWithCubeMapText
     EXPECT_GLENUM_EQ(GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT, status);
 }
 
+// Verify that we can use default interpolation in the GS.
+TEST_P(GeometryShaderTest, FlatQualifierNotRequired)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_geometry_shader"));
+
+    constexpr char kGS[] = R"(#version 310 es
+#extension GL_EXT_geometry_shader : require
+layout(points) in;
+layout(points, max_vertices=1) out;
+
+in highp int target[];
+highp uniform vec4 dummyZero; // Default value is vec4(0.0).
+
+void main()
+{
+    highp vec4 retValue = dummyZero;
+    retValue += vec4(float(target[0]));
+    retValue += gl_in[0].gl_Position;
+    gl_Position = retValue;
+    EmitVertex();
+})";
+
+    GLuint geometryShader = CompileShader(GL_GEOMETRY_SHADER_EXT, kGS);
+
+    EXPECT_NE(0u, geometryShader);
+
+    GLuint programID = glCreateProgram();
+    glAttachShader(programID, geometryShader);
+
+    glDetachShader(programID, geometryShader);
+    glDeleteShader(geometryShader);
+    glDeleteProgram(programID);
+
+    EXPECT_GL_NO_ERROR();
+}
+
 ANGLE_INSTANTIATE_TEST_ES3(GeometryShaderTestES3);
 ANGLE_INSTANTIATE_TEST_ES31(GeometryShaderTest);
 }  // namespace

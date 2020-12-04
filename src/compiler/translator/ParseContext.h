@@ -616,8 +616,8 @@ class TParseContext : angle::NonCopyable
     // followed by a declarator.
     bool mDeferredNonEmptyDeclarationErrorCheck;
 
-    sh::GLenum mShaderType;    // vertex or fragment language (future: pack or unpack)
-    ShShaderSpec mShaderSpec;  // The language specification compiler conforms to - GLES2 or WebGL.
+    sh::GLenum mShaderType;    // vertex/fragment/geometry/etc shader
+    ShShaderSpec mShaderSpec;  // The language specification compiler conforms to - GLES/WebGL/etc.
     ShCompileOptions mCompileOptions;  // Options passed to TCompiler
     int mShaderVersion;
     TIntermBlock *mTreeRoot;  // root of parse tree being created

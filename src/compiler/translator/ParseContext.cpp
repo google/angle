@@ -2445,7 +2445,10 @@ void TParseContext::checkInputOutputTypeIsValidES3(const TQualifier qualifier,
     bool typeContainsIntegers =
         (type.getBasicType() == EbtInt || type.getBasicType() == EbtUInt ||
          type.isStructureContainingType(EbtInt) || type.isStructureContainingType(EbtUInt));
-    if (typeContainsIntegers && qualifier != EvqFlatIn && qualifier != EvqFlatOut)
+    bool extendedShaderTypes =
+        mShaderVersion == 320 || isExtensionEnabled(TExtension::EXT_geometry_shader);
+    if (typeContainsIntegers && qualifier != EvqFlatIn && qualifier != EvqFlatOut &&
+        (!extendedShaderTypes || mShaderType == GL_FRAGMENT_SHADER))
     {
         error(qualifierLocation, "must use 'flat' interpolation here",
               getQualifierString(qualifier));
