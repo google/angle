@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0c1bb162_b733cc37",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002745
+      },
+      "writtenOn": "2020-12-04T20:00:12Z",
+      "side": 1,
+      "message": "Ok, seems like it compiles properly now. Still waiting for the asan bots to succeed, but at least they go further than before.",
+      "revId": "35651873cb2ef0bebee4da995f6d6cb9e5f789ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
