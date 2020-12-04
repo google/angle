@@ -135,6 +135,10 @@ config("internal_config") {
       defines += [ "ANGLE_VULKAN_DISPLAY_MODE_HEADLESS" ]
     }
   }
+
+  if (is_lsan) {
+    defines += [ "ANGLE_WITH_LSAN" ]
+  }
 }
 
 config("constructor_and_destructor_warnings") {

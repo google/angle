@@ -36,6 +36,7 @@ if (angle_has_build) {
     is_ubsan = false
     is_tsan = false
     is_asan = false
+    is_lsan = false
     build_with_chromium = false
     dcheck_always_on = false
     angle_use_x11 = (is_linux || is_chromeos) && !is_ggp

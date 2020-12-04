@@ -616,11 +616,15 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
 
     // Gather global layer properties.
     uint32_t instanceLayerCount = 0;
-    ANGLE_VK_TRY(displayVk, vkEnumerateInstanceLayerProperties(&instanceLayerCount, nullptr));
+    {
+        ANGLE_SCOPED_DISABLE_LSAN();
+        ANGLE_VK_TRY(displayVk, vkEnumerateInstanceLayerProperties(&instanceLayerCount, nullptr));
+    }
 
     std::vector<VkLayerProperties> instanceLayerProps(instanceLayerCount);
     if (instanceLayerCount > 0)
     {
+        ANGLE_SCOPED_DISABLE_LSAN();
         ANGLE_VK_TRY(displayVk, vkEnumerateInstanceLayerProperties(&instanceLayerCount,
                                                                    instanceLayerProps.data()));
     }
@@ -642,12 +646,16 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
     // Enumerate instance extensions that are provided by the vulkan
     // implementation and implicit layers.
     uint32_t instanceExtensionCount = 0;
-    ANGLE_VK_TRY(displayVk,
-                 vkEnumerateInstanceExtensionProperties(nullptr, &instanceExtensionCount, nullptr));
+    {
+        ANGLE_SCOPED_DISABLE_LSAN();
+        ANGLE_VK_TRY(displayVk, vkEnumerateInstanceExtensionProperties(
+                                    nullptr, &instanceExtensionCount, nullptr));
+    }
 
     std::vector<VkExtensionProperties> instanceExtensionProps(instanceExtensionCount);
     if (instanceExtensionCount > 0)
     {
+        ANGLE_SCOPED_DISABLE_LSAN();
         ANGLE_VK_TRY(displayVk,
                      vkEnumerateInstanceExtensionProperties(nullptr, &instanceExtensionCount,
                                                             instanceExtensionProps.data()));
@@ -658,12 +666,18 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
     {
         uint32_t previousExtensionCount      = static_cast<uint32_t>(instanceExtensionProps.size());
         uint32_t instanceLayerExtensionCount = 0;
-        ANGLE_VK_TRY(displayVk, vkEnumerateInstanceExtensionProperties(
-                                    layerName, &instanceLayerExtensionCount, nullptr));
+        {
+            ANGLE_SCOPED_DISABLE_LSAN();
+            ANGLE_VK_TRY(displayVk, vkEnumerateInstanceExtensionProperties(
+                                        layerName, &instanceLayerExtensionCount, nullptr));
+        }
         instanceExtensionProps.resize(previousExtensionCount + instanceLayerExtensionCount);
-        ANGLE_VK_TRY(displayVk, vkEnumerateInstanceExtensionProperties(
-                                    layerName, &instanceLayerExtensionCount,
-                                    instanceExtensionProps.data() + previousExtensionCount));
+        {
+            ANGLE_SCOPED_DISABLE_LSAN();
+            ANGLE_VK_TRY(displayVk, vkEnumerateInstanceExtensionProperties(
+                                        layerName, &instanceLayerExtensionCount,
+                                        instanceExtensionProps.data() + previousExtensionCount));
+        }
     }
 
     vk::ExtensionNameList instanceExtensionNames;
@@ -730,7 +744,10 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
     else
     {
         uint32_t apiVersion = VK_API_VERSION_1_0;
-        ANGLE_VK_TRY(displayVk, enumerateInstanceVersion(&apiVersion));
+        {
+            ANGLE_SCOPED_DISABLE_LSAN();
+            ANGLE_VK_TRY(displayVk, enumerateInstanceVersion(&apiVersion));
+        }
         if ((VK_VERSION_MAJOR(apiVersion) > 1) || (VK_VERSION_MINOR(apiVersion) >= 1))
         {
             // This is the highest version of core Vulkan functionality that ANGLE uses.

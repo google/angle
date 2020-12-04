@@ -15,6 +15,10 @@
 #    include "absl/container/flat_hash_map.h"
 #endif  // defined(ANGLE_USE_ABSEIL)
 
+#if defined(ANGLE_WITH_LSAN)
+#    include <sanitizer/lsan_interface.h>
+#endif  // defined(ANGLE_WITH_LSAN)
+
 #include <climits>
 #include <cstdarg>
 #include <cstddef>
@@ -295,6 +299,12 @@ inline bool IsLittleEndian()
 #define ANGLE_GL_UNREACHABLE(context) \
     UNREACHABLE();                    \
     ANGLE_CHECK(context, false, "Unreachable Code.", GL_INVALID_OPERATION)
+
+#if defined(ANGLE_WITH_LSAN)
+#    define ANGLE_SCOPED_DISABLE_LSAN() __lsan::ScopedDisabler lsanDisabler
+#else
+#    define ANGLE_SCOPED_DISABLE_LSAN()
+#endif
 
 // The below inlining code lifted from V8.
 #if defined(__clang__) || (defined(__GNUC__) && defined(__has_attribute))
