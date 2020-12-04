@@ -20,6 +20,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "e7bb556e_19e850ab",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 691,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-04T16:42:13Z",
+      "side": 1,
+      "message": "Looks like you meant to delete part of this phrase",
+      "range": {
+        "startLine": 690,
+        "startChar": 83,
+        "endLine": 691,
+        "endChar": 35
+      },
+      "revId": "a814137c9ef8fb1841ac56c48afb8f0c69922755",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "14a1d54f_a89677ce",
         "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
         "patchSetId": 22
@@ -31,6 +54,30 @@
       "writtenOn": "2020-12-04T01:49:50Z",
       "side": 1,
       "message": "I am wondering if this should be more restrictive that instead of \"||\", it should be \"\u0026\u0026\". What you are doing here right now, as long as it is a shared context, you will always get down to defer case, which seems a bit risky to me (risky in terms of I am not sure there is no bug here).",
+      "range": {
+        "startLine": 693,
+        "startChar": 8,
+        "endLine": 693,
+        "endChar": 55
+      },
+      "revId": "a814137c9ef8fb1841ac56c48afb8f0c69922755",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9ff66124_4002a72c",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 693,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-04T16:42:13Z",
+      "side": 1,
+      "message": "+1, if only the context is shared, then at least we should check for deferFlushUntilEndRenderPass before deferring flush (i.e. take the usual path)",
+      "parentUuid": "14a1d54f_a89677ce",
       "range": {
         "startLine": 693,
         "startChar": 8,
@@ -60,6 +107,69 @@
         "endLine": 705,
         "endChar": 69
       },
+      "revId": "a814137c9ef8fb1841ac56c48afb8f0c69922755",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f87a9627_e0ff2fc9",
+        "filename": "src/libANGLE/renderer/vulkan/SyncVk.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-04T16:42:13Z",
+      "side": 1,
+      "message": "nit: that the glFence\u0027s signal operation is pending submission",
+      "range": {
+        "startLine": 94,
+        "startChar": 51,
+        "endLine": 94,
+        "endChar": 99
+      },
+      "revId": "a814137c9ef8fb1841ac56c48afb8f0c69922755",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f3113dba_e498a433",
+        "filename": "src/tests/egl_tests/EGLSyncTest.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 223,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-04T16:42:13Z",
+      "side": 1,
+      "message": "Ok I take back my previous comment. I hadn\u0027t noticed the glClear call in the second loop.\n\nCould you partially revert this? Basically the first loop can be replaced with a timed wait, but the second loop can remain as is (for whatever reason it was doing clear/wait in loop):\n\n    // Don\u0027t wait forever to make sure the test terminates\n    constexpr GLuint64 kTimeout \u003d 1\u0027000\u0027000\u0027000;  // 1 second\n    ASSERT_EQ(\n            EGL_CONDITION_SATISFIED_KHR,\n            eglClientWaitSyncKHR(display, sync, EGL_SYNC_FLUSH_COMMANDS_BIT_KHR, kTimeout));\n\n    for (size_t i \u003d 0; i \u003c 20; i++)\n    {\n        glClear(GL_COLOR_BUFFER_BIT);\n        EXPECT_EQ(\n            EGL_CONDITION_SATISFIED_KHR,\n            eglClientWaitSyncKHR(display, sync, EGL_SYNC_FLUSH_COMMANDS_BIT_KHR, EGL_FOREVER_KHR));\n        EXPECT_EGL_TRUE(eglGetSyncAttribKHR(display, sync, EGL_SYNC_STATUS_KHR, \u0026value));\n        EXPECT_EQ(value, EGL_SIGNALED_KHR);\n    }",
+      "range": {
+        "startLine": 223,
+        "startChar": 34,
+        "endLine": 223,
+        "endChar": 41
+      },
+      "revId": "a814137c9ef8fb1841ac56c48afb8f0c69922755",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "081897cd_3f3d6cd2",
+        "filename": "src/tests/gl_tests/FenceSyncTests.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 250,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-04T16:42:13Z",
+      "side": 1,
+      "message": "Same. I have a feeling the clear/wait loop is a regression test for something that\u0027s not documented.",
       "revId": "a814137c9ef8fb1841ac56c48afb8f0c69922755",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
