@@ -26,6 +26,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "9c108a96_c5cf06b8",
+        "filename": "src/libANGLE/renderer/vulkan/vk_mandatory_format_support_data.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 440,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-04T15:53:35Z",
+      "side": 1,
+      "message": "None of these bits are mandatory. The spec:\n\nFormat features marked † must be supported for optimalTilingFeatures with VkImageType VK_IMAGE_TYPE_2D if the VkPhysicalDevice supports the VkPhysicalDeviceSamplerYcbcrConversionFeatures feature.\n\nThe bits are VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT, VK_FORMAT_FEATURE_TRANSFER_SRC_BIT, VK_FORMAT_FEATURE_TRANSFER_DST_BIT and VK_FORMAT_FEATURE_COSITED_CHROMA_SAMPLES_BIT. I don\u0027t think we should be using the mandatory table for this and likely we should be using the vk format table.\n\nSee the Vulkan mandatory format table in the spec.",
+      "parentUuid": "f84b54f8_23f1cc9e",
+      "range": {
+        "startLine": 440,
+        "startChar": 9,
+        "endLine": 440,
+        "endChar": 47
+      },
+      "revId": "5564e28088a9ceebb923ea817c4878ddcedd15e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "903552c4_80f0bdd9",
         "filename": "src/libANGLE/renderer/vulkan/vk_mandatory_format_support_data.json",
         "patchSetId": 1
