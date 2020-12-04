@@ -1,6 +1,29 @@
 {
   "comments": [
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "6e66b93e_dd958412",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-04T18:42:27Z",
+      "side": 1,
+      "message": "nit: for integer inputs",
+      "range": {
+        "startLine": 7,
+        "startChar": 52,
+        "endLine": 7,
+        "endChar": 53
+      },
+      "revId": "1c1dd3cce1160072d880ffd6b4007c988760b637",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "78f0b4cc_da457c43",
@@ -14,6 +37,29 @@
       "writtenOn": "2020-12-04T17:51:59Z",
       "side": 1,
       "message": "PTAL",
+      "revId": "1c1dd3cce1160072d880ffd6b4007c988760b637",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "abe06d7b_4fbcbd92",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2451,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-04T18:42:27Z",
+      "side": 1,
+      "message": "This restriction is there in ES3.2, ES3.1 and ES3 (ES2 doesn\u0027t have int varyings). Looks to me like this should simply say:\n\n    if (typeContainsIntegers \u0026\u0026 qualifier !\u003d EvqFlatIn \u0026\u0026 qualifier !\u003d EvqFlatOut \u0026\u0026\n        mShaderType \u003d\u003d GL_FRAGMENT_SHADER)\n\nAnd actually it shouldn\u0027t check for `qualifier !\u003d EvqFlatOut` either I believe, the linker would have to make sure they match.",
+      "range": {
+        "startLine": 2448,
+        "startChar": 0,
+        "endLine": 2451,
+        "endChar": 68
+      },
       "revId": "1c1dd3cce1160072d880ffd6b4007c988760b637",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
