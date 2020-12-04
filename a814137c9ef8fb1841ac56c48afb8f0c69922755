@@ -16,6 +16,52 @@
       "message": "PTAL.",
       "revId": "a814137c9ef8fb1841ac56c48afb8f0c69922755",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "14a1d54f_a89677ce",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 693,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-12-04T01:49:50Z",
+      "side": 1,
+      "message": "I am wondering if this should be more restrictive that instead of \"||\", it should be \"\u0026\u0026\". What you are doing here right now, as long as it is a shared context, you will always get down to defer case, which seems a bit risky to me (risky in terms of I am not sure there is no bug here).",
+      "range": {
+        "startLine": 693,
+        "startChar": 8,
+        "endLine": 693,
+        "endChar": 55
+      },
+      "revId": "a814137c9ef8fb1841ac56c48afb8f0c69922755",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "eb0c55b3_0835e3bf",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 705,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-12-04T01:49:50Z",
+      "side": 1,
+      "message": "Should you leave hasStartedRenderPass() check here since you only care about the abobve two conditions?",
+      "range": {
+        "startLine": 705,
+        "startChar": 8,
+        "endLine": 705,
+        "endChar": 69
+      },
+      "revId": "a814137c9ef8fb1841ac56c48afb8f0c69922755",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
