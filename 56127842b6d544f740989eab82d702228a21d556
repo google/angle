@@ -87,6 +87,24 @@
       "parentUuid": "fc0e4c94_b27b98e2",
       "revId": "56127842b6d544f740989eab82d702228a21d556",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c6d27d8c_2bcaa7b9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-04T17:07:09Z",
+      "side": 1,
+      "message": "Sorry, my bad. I meant the CL description not the bug. Though it doesn\u0027t hurt to have both.",
+      "parentUuid": "95f84f74_88593b06",
+      "revId": "56127842b6d544f740989eab82d702228a21d556",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
