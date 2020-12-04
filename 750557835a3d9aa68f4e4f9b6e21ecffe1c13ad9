@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "eef8c1ac_18114a4e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2020-12-04T16:49:38Z",
+      "side": 1,
+      "message": "Hey Paul, this is awesome! Even though we touch it for local development, when ready to upload, that sha1 needs to be the value returned by our upload scripts:\nhttps://source.chromium.org/chromium/chromium/src/+/master:third_party/angle/src/tests/restricted_traces/README.md;l\u003d93",
+      "revId": "750557835a3d9aa68f4e4f9b6e21ecffe1c13ad9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
