@@ -20,7 +20,7 @@ vars = {
   'checkout_angle_internal': False,
 
   # Version of Chromium our Chromium-based DEPS are mirrored from.
-  'chromium_revision': '78187c025ba60ec4baae5a0ec6d7b54193b1372c',
+  'chromium_revision': '6991410be08cc856f8d644621113459e04a41220',
   # We never want to checkout chromium,
   # but need a dummy DEPS entry for the autoroller
   'dummy_checkout_chromium': False,
@@ -89,7 +89,7 @@ vars = {
   # Three lines of non-changing comments so that
   # the commit queue can handle CLs rolling catapult
   # and whatever else without interference from each other.
-  'catapult_revision': 'd1cf5db4152d162ef170c43626872c897625cc9f',
+  'catapult_revision': '88efddc6a162994babc45a2d28bb5f4f9867c2f1',
 
   # Three lines of non-changing comments so that
   # the commit queue can handle CLs rolling luci-go
@@ -100,7 +100,7 @@ vars = {
 deps = {
 
   'build': {
-    'url': '{chromium_git}/chromium/src/build.git@b85da6c93196418a5802b3c89e9dd3edc44b0fce',
+    'url': '{chromium_git}/chromium/src/build.git@33d5eb7739531ae630f8c6cf1d6df37d6c04c651',
     'condition': 'not build_with_chromium',
   },
 
@@ -110,7 +110,7 @@ deps = {
   },
 
   'testing': {
-    'url': '{chromium_git}/chromium/src/testing@cd2895768de86fba3a6eb247122b845f0cbcb6d8',
+    'url': '{chromium_git}/chromium/src/testing@a2515f6c44c3022eb1ed50c479b1abcaa9541f47',
     'condition': 'not build_with_chromium',
   },
 
@@ -170,7 +170,7 @@ deps = {
 
   # libjpeg_turbo is used by glmark2.
   'third_party/libjpeg_turbo': {
-    'url': '{chromium_git}/chromium/deps/libjpeg_turbo.git@d5148db386ceb4a608058320071cbed890bd6ad2',
+    'url': '{chromium_git}/chromium/deps/libjpeg_turbo.git@bbb828223e9c8f83f0e84db1e98b116029e62765',
     'condition': 'not build_with_chromium',
   },
 
@@ -190,7 +190,7 @@ deps = {
   },
 
   'third_party/protobuf': {
-    'url': '{chromium_git}/chromium/src/third_party/protobuf@1be42a5a07c0702a3944f3a11958ff5125e17996',
+    'url': '{chromium_git}/chromium/src/third_party/protobuf@500b2c2243e5430af1d64394eecc12282c9a9150',
     'condition': 'not build_with_chromium',
   },
 
@@ -271,7 +271,7 @@ deps = {
   },
 
   'third_party/zlib': {
-    'url': '{chromium_git}/chromium/src/third_party/zlib@9893e506b3a7ea4ec68e1fcd9a374e849945f405',
+    'url': '{chromium_git}/chromium/src/third_party/zlib@c29ee8c9c3824ca013479bf8115035527967fe02',
     'condition': 'not build_with_chromium',
   },
 
