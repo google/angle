@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "952fc27f_b1c0a763",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-04T23:15:19Z",
+      "side": 1,
+      "message": "Looks like Shabi and the bots are happy, so +1 from me.",
+      "revId": "dd4b695595d0f65c41923b6ec8650409737467ea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
