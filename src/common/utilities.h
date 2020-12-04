@@ -245,6 +245,8 @@ enum class SrgbOverride
     Linear
 };
 
+ShaderType GetShaderTypeFromBitfield(size_t singleShaderType);
+
 }  // namespace gl
 
 namespace egl

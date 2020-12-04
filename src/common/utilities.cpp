@@ -1129,6 +1129,27 @@ const char *GetDebugMessageSeverityString(GLenum severity)
             return "Unknown Severity";
     }
 }
+
+ShaderType GetShaderTypeFromBitfield(size_t singleShaderType)
+{
+    switch (singleShaderType)
+    {
+        case GL_VERTEX_SHADER_BIT:
+            return ShaderType::Vertex;
+        case GL_FRAGMENT_SHADER_BIT:
+            return ShaderType::Fragment;
+        case GL_COMPUTE_SHADER_BIT:
+            return ShaderType::Compute;
+        case GL_GEOMETRY_SHADER_BIT:
+            return ShaderType::Geometry;
+        case GL_TESS_CONTROL_SHADER_BIT:
+            return ShaderType::TessControl;
+        case GL_TESS_EVALUATION_SHADER_BIT:
+            return ShaderType::TessEvaluation;
+        default:
+            return ShaderType::InvalidEnum;
+    }
+}
 }  // namespace gl
 
 namespace egl

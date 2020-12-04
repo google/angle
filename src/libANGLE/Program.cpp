@@ -3323,7 +3323,7 @@ bool Program::linkValidateShaders(InfoLog &infoLog)
     {
         if (isSeparable())
         {
-            if (!fragmentShader && !vertexShader)
+            if (!fragmentShader && !vertexShader && !geometryShader)
             {
                 infoLog << "No compiled shaders.";
                 return false;
@@ -3340,6 +3340,13 @@ bool Program::linkValidateShaders(InfoLog &infoLog)
             if (vertexShader && !vertexShader->isCompiled())
             {
                 infoLog << "Vertex shader is not compiled.";
+                return false;
+            }
+
+            ASSERT(!geometryShader || geometryShader->getType() == ShaderType::Geometry);
+            if (geometryShader && !geometryShader->isCompiled())
+            {
+                infoLog << "Geometry shader is not compiled.";
                 return false;
             }
         }
