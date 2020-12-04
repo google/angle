@@ -839,7 +839,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     angle::Result flushOutsideRenderPassCommands();
     void flushDescriptorSetUpdates();
 
-    ANGLE_INLINE void onRenderPassFinished() { mRenderPassCommandBuffer = nullptr; }
+    void onRenderPassFinished();
 
     void initIndexTypeMap();
 

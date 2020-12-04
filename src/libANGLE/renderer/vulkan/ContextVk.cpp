@@ -317,6 +317,13 @@ ANGLE_INLINE void ContextVk::flushDescriptorSetUpdates()
     mDescriptorImageInfos.clear();
 }
 
+ANGLE_INLINE void ContextVk::onRenderPassFinished()
+{
+    pauseRenderPassQueriesIfActive();
+
+    mRenderPassCommandBuffer = nullptr;
+}
+
 // ContextVk::ScopedDescriptorSetUpdates implementation.
 class ContextVk::ScopedDescriptorSetUpdates final : angle::NonCopyable
 {
@@ -4592,8 +4599,6 @@ angle::Result ContextVk::flushCommandsAndEndRenderPass()
         onRenderPassFinished();
         return angle::Result::Continue;
     }
-
-    pauseRenderPassQueriesIfActive();
 
     mCurrentTransformFeedbackBuffers.clear();
     mCurrentIndirectBuffer = nullptr;

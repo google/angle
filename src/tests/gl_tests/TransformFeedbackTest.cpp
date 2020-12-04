@@ -82,6 +82,8 @@ class TransformFeedbackTest : public TransformFeedbackTestBase
     }
 
     void setupOverrunTest(const std::vector<GLfloat> &vertices);
+
+    void midRecordOpDoesNotContributeTest(std::function<void()> op);
 };
 
 TEST_P(TransformFeedbackTest, ZeroSizedViewport)
@@ -374,18 +376,8 @@ TEST_P(TransformFeedbackTest, SpanMultipleRenderPasses)
     EXPECT_GL_NO_ERROR();
 }
 
-// Test that draw-based clear between draws does not contribute to transform feedback.
-TEST_P(TransformFeedbackTest, ClearWhileRecordingDoesNotContribute)
+void TransformFeedbackTest::midRecordOpDoesNotContributeTest(std::function<void()> op)
 {
-    // TODO(anglebug.com/4533) This fails after the upgrade to the 26.20.100.7870 driver.
-    ANGLE_SKIP_TEST_IF(IsWindows() && IsIntel() && IsVulkan());
-
-    // Fails on Mac GL drivers. http://anglebug.com/4992
-    ANGLE_SKIP_TEST_IF(IsOpenGL() && IsOSX());
-
-    // anglebug.com/5434
-    ANGLE_SKIP_TEST_IF(IsAndroid() && IsOpenGLES());
-
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
@@ -417,10 +409,8 @@ TEST_P(TransformFeedbackTest, ClearWhileRecordingDoesNotContribute)
     // Draw the first set of three points
     glDrawArrays(GL_POINTS, 0, 3);
 
-    glColorMask(GL_FALSE, GL_FALSE, GL_TRUE, GL_FALSE);
-    glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
-    glColorMask(GL_TRUE, GL_TRUE, GL_FALSE, GL_TRUE);
+    // Perform the operation in the middle of recording
+    op();
 
     // Draw the second set of three points
     glVertexAttribPointer(positionLocation, 3, GL_FLOAT, GL_FALSE, 0, vertices + 9);
@@ -442,7 +432,6 @@ TEST_P(TransformFeedbackTest, ClearWhileRecordingDoesNotContribute)
     EXPECT_EQ(6u, primitivesWritten);
 
     // Verify the captured buffer.
-
     glBindBuffer(GL_ARRAY_BUFFER, mTransformFeedbackBuffer);
     glVertexAttribPointer(positionLocation, 4, GL_FLOAT, GL_FALSE, 0, 0);
     glEnableVertexAttribArray(positionLocation);
@@ -450,6 +439,28 @@ TEST_P(TransformFeedbackTest, ClearWhileRecordingDoesNotContribute)
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
     glDrawArrays(GL_TRIANGLES, 0, 6);
+}
+
+// Test that draw-based clear between draws does not contribute to transform feedback.
+TEST_P(TransformFeedbackTest, ClearWhileRecordingDoesNotContribute)
+{
+    // TODO(anglebug.com/4533) This fails after the upgrade to the 26.20.100.7870 driver.
+    ANGLE_SKIP_TEST_IF(IsWindows() && IsIntel() && IsVulkan());
+
+    // Fails on Mac GL drivers. http://anglebug.com/4992
+    ANGLE_SKIP_TEST_IF(IsOpenGL() && IsOSX());
+
+    // anglebug.com/5434
+    ANGLE_SKIP_TEST_IF(IsAndroid() && IsOpenGLES());
+
+    auto clear = []() {
+        glColorMask(GL_FALSE, GL_FALSE, GL_TRUE, GL_FALSE);
+        glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+        glColorMask(GL_TRUE, GL_TRUE, GL_FALSE, GL_TRUE);
+    };
+
+    midRecordOpDoesNotContributeTest(clear);
 
     const int w = getWindowWidth();
     const int h = getWindowHeight();
@@ -465,6 +476,89 @@ TEST_P(TransformFeedbackTest, ClearWhileRecordingDoesNotContribute)
     EXPECT_PIXEL_COLOR_EQ(3 * w / 4 - 1, 3 * h / 4 - 1, GLColor::magenta);
 
     EXPECT_PIXEL_COLOR_EQ(w / 2, h / 2, GLColor::magenta);
+
+    EXPECT_GL_NO_ERROR();
+}
+
+// Test that copy in the middle of rendering doesn't contribute to transform feedback.
+TEST_P(TransformFeedbackTest, CopyWhileRecordingDoesNotContribute)
+{
+    // TODO(anglebug.com/4533) This fails after the upgrade to the 26.20.100.7870 driver.
+    ANGLE_SKIP_TEST_IF(IsWindows() && IsIntel() && IsVulkan());
+
+    // Fails on Mac GL drivers. http://anglebug.com/4992
+    ANGLE_SKIP_TEST_IF(IsOpenGL() && IsOSX());
+
+    // anglebug.com/5434
+    ANGLE_SKIP_TEST_IF(IsAndroid() && IsOpenGLES());
+
+    auto copy = []() {
+        GLTexture texture;
+        glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 0, 0, 1, 1, 0);
+    };
+
+    midRecordOpDoesNotContributeTest(copy);
+
+    const int w = getWindowWidth();
+    const int h = getWindowHeight();
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::black);
+    EXPECT_PIXEL_COLOR_EQ(w - 1, 0, GLColor::black);
+    EXPECT_PIXEL_COLOR_EQ(0, h - 1, GLColor::black);
+    EXPECT_PIXEL_COLOR_EQ(w - 1, h - 1, GLColor::black);
+
+    EXPECT_PIXEL_COLOR_EQ(w / 4 + 1, h / 4 + 1, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(3 * w / 4 - 1, h / 4 + 1, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(w / 4 + 1, 3 * h / 4 - 1, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(3 * w / 4 - 1, 3 * h / 4 - 1, GLColor::red);
+
+    EXPECT_PIXEL_COLOR_EQ(w / 2, h / 2, GLColor::red);
+
+    EXPECT_GL_NO_ERROR();
+}
+
+// Test that blit in the middle of rendering doesn't contribute to transform feedback.
+TEST_P(TransformFeedbackTest, BlitWhileRecordingDoesNotContribute)
+{
+    // TODO(anglebug.com/4533) This fails after the upgrade to the 26.20.100.7870 driver.
+    ANGLE_SKIP_TEST_IF(IsWindows() && IsIntel() && IsVulkan());
+
+    // Fails on Mac GL drivers. http://anglebug.com/4992
+    ANGLE_SKIP_TEST_IF(IsOpenGL() && IsOSX());
+
+    // anglebug.com/5434
+    ANGLE_SKIP_TEST_IF(IsAndroid() && IsOpenGLES());
+
+    auto blit = []() {
+        GLFramebuffer dstFbo;
+        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, dstFbo);
+
+        GLTexture dstTex;
+        glBindTexture(GL_TEXTURE_2D, dstTex);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 1, 1, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
+        glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, dstTex, 0);
+
+        glBlitFramebuffer(0, 0, 1, 1, 1, 1, 0, 0, GL_COLOR_BUFFER_BIT, GL_LINEAR);
+
+        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+    };
+
+    midRecordOpDoesNotContributeTest(blit);
+
+    const int w = getWindowWidth();
+    const int h = getWindowHeight();
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::black);
+    EXPECT_PIXEL_COLOR_EQ(w - 1, 0, GLColor::black);
+    EXPECT_PIXEL_COLOR_EQ(0, h - 1, GLColor::black);
+    EXPECT_PIXEL_COLOR_EQ(w - 1, h - 1, GLColor::black);
+
+    EXPECT_PIXEL_COLOR_EQ(w / 4 + 1, h / 4 + 1, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(3 * w / 4 - 1, h / 4 + 1, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(w / 4 + 1, 3 * h / 4 - 1, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(3 * w / 4 - 1, 3 * h / 4 - 1, GLColor::red);
+
+    EXPECT_PIXEL_COLOR_EQ(w / 2, h / 2, GLColor::red);
 
     EXPECT_GL_NO_ERROR();
 }

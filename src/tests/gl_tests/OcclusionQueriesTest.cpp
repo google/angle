@@ -60,8 +60,7 @@ TEST_P(OcclusionQueriesTest, IsOccluded)
 
     EXPECT_GL_NO_ERROR();
 
-    GLuint query = 0;
-    glGenQueriesEXT(1, &query);
+    GLQueryEXT query;
     glBeginQueryEXT(GL_ANY_SAMPLES_PASSED_EXT, query);
     drawQuad(mProgram, essl1_shaders::PositionAttrib(),
              0.8f);  // this quad should be occluded by first quad
@@ -83,8 +82,6 @@ TEST_P(OcclusionQueriesTest, IsOccluded)
 
     EXPECT_GL_NO_ERROR();
 
-    glDeleteQueriesEXT(1, &query);
-
     EXPECT_GL_FALSE(result);
 }
 
@@ -105,8 +102,7 @@ TEST_P(OcclusionQueriesTest, IsNotOccluded)
 
     EXPECT_GL_NO_ERROR();
 
-    GLuint query = 0;
-    glGenQueriesEXT(1, &query);
+    GLQueryEXT query;
     glBeginQueryEXT(GL_ANY_SAMPLES_PASSED_EXT, query);
     drawQuad(mProgram, essl1_shaders::PositionAttrib(), 0.8f);  // this quad should not be occluded
     glEndQueryEXT(GL_ANY_SAMPLES_PASSED_EXT);
@@ -119,8 +115,6 @@ TEST_P(OcclusionQueriesTest, IsNotOccluded)
     glGetQueryObjectuivEXT(query, GL_QUERY_RESULT_EXT, &result);  // will block waiting for result
 
     EXPECT_GL_NO_ERROR();
-
-    glDeleteQueriesEXT(1, &query);
 
     EXPECT_GL_TRUE(result);
 }
@@ -146,8 +140,7 @@ TEST_P(OcclusionQueriesTest, ClearNotCounted)
 
     EXPECT_GL_NO_ERROR();
 
-    GLuint query[2] = {0};
-    glGenQueriesEXT(2, query);
+    GLQueryEXT query[2];
 
     // First query
     glBeginQueryEXT(GL_ANY_SAMPLES_PASSED_EXT, query[0]);
@@ -198,8 +191,6 @@ TEST_P(OcclusionQueriesTest, ClearNotCounted)
                            &result[1]);  // will block waiting for result
     EXPECT_GL_NO_ERROR();
 
-    glDeleteQueriesEXT(2, query);
-
     EXPECT_GL_FALSE(result[0]);
     EXPECT_GL_TRUE(result[1]);
 }
@@ -213,8 +204,7 @@ TEST_P(OcclusionQueriesTest, MaskedClearNotCounted)
     // http://anglebug.com/4925
     ANGLE_SKIP_TEST_IF(IsD3D());
 
-    GLuint query = 0;
-    glGenQueriesEXT(1, &query);
+    GLQueryEXT query;
 
     // Masked clear
     glBeginQueryEXT(GL_ANY_SAMPLES_PASSED_EXT, query);
@@ -229,8 +219,6 @@ TEST_P(OcclusionQueriesTest, MaskedClearNotCounted)
     glGetQueryObjectuivEXT(query, GL_QUERY_RESULT_EXT,
                            &result);  // will block waiting for result
     EXPECT_GL_NO_ERROR();
-
-    glDeleteQueriesEXT(1, &query);
 
     EXPECT_GL_FALSE(result);
 }
@@ -247,8 +235,7 @@ TEST_P(OcclusionQueriesTest, CopyNotCounted)
     // http://anglebug.com/5100
     ANGLE_SKIP_TEST_IF(IsMetal() && IsNVIDIA());
 
-    GLuint query = 0;
-    glGenQueriesEXT(1, &query);
+    GLQueryEXT query;
 
     // Unrelated draw before the query starts.
     drawQuad(mProgram, essl1_shaders::PositionAttrib(), 0.8f, 0.5f);
@@ -268,8 +255,6 @@ TEST_P(OcclusionQueriesTest, CopyNotCounted)
                            &result);  // will block waiting for result
     EXPECT_GL_NO_ERROR();
 
-    glDeleteQueriesEXT(1, &query);
-
     EXPECT_GL_FALSE(result);
 }
 
@@ -281,6 +266,9 @@ TEST_P(OcclusionQueriesTestES3, BlitNotCounted)
 
     // http://anglebug.com/5101
     ANGLE_SKIP_TEST_IF(IsWindows() && IsAMD() && IsVulkan());
+
+    // http://anglebug.com/5443
+    ANGLE_SKIP_TEST_IF(IsOSX() && IsMetal() && IsNVIDIA());
 
     constexpr GLuint kSize = 64;
 
@@ -300,8 +288,7 @@ TEST_P(OcclusionQueriesTestES3, BlitNotCounted)
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, kSize, kSize, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
     glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, dstTex, 0);
 
-    GLuint query = 0;
-    glGenQueriesEXT(1, &query);
+    GLQueryEXT query;
 
     // Unrelated draw before the query starts.
     drawQuad(mProgram, essl1_shaders::PositionAttrib(), 0.8f, 0.5f);
@@ -318,8 +305,6 @@ TEST_P(OcclusionQueriesTestES3, BlitNotCounted)
     glGetQueryObjectuivEXT(query, GL_QUERY_RESULT_EXT,
                            &result);  // will block waiting for result
     EXPECT_GL_NO_ERROR();
-
-    glDeleteQueriesEXT(1, &query);
 
     EXPECT_GL_FALSE(result);
 }
@@ -360,8 +345,7 @@ TEST_P(OcclusionQueriesTestES3, UnresolveNotCounted)
     glBindTexture(GL_TEXTURE_2D, texture);
     glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 0, 0, kSize, kSize, 0);
 
-    GLuint query = 0;
-    glGenQueriesEXT(1, &query);
+    GLQueryEXT query;
 
     // Make a draw call that will fail the depth test, and therefore shouldn't contribute to
     // occlusion query.
@@ -379,9 +363,59 @@ TEST_P(OcclusionQueriesTestES3, UnresolveNotCounted)
                            &result);  // will block waiting for result
     EXPECT_GL_NO_ERROR();
 
-    glDeleteQueriesEXT(1, &query);
-
     EXPECT_GL_FALSE(result);
+}
+
+// Test that changing framebuffers work
+TEST_P(OcclusionQueriesTest, FramebufferBindingChange)
+{
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 &&
+                       !IsGLExtensionEnabled("GL_EXT_occlusion_query_boolean"));
+
+    constexpr GLsizei kSize = 4;
+
+    // Create two framebuffers, and make sure they are synced.
+    GLFramebuffer fbo[2];
+    GLTexture color[2];
+
+    for (size_t index = 0; index < 2; ++index)
+    {
+        glBindTexture(GL_TEXTURE_2D, color[index]);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                     nullptr);
+
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo[index]);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color[index],
+                               0);
+
+        glClearColor(0, index, 1 - index, 1);
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        EXPECT_PIXEL_COLOR_EQ(0, 0, index ? GLColor::green : GLColor::blue);
+    }
+    EXPECT_GL_NO_ERROR();
+
+    glViewport(0, 0, kSize, kSize);
+
+    // Start an occlusion query and issue a draw call to each framebuffer.
+    GLQueryEXT query;
+
+    glBeginQueryEXT(GL_ANY_SAMPLES_PASSED_EXT, query);
+
+    for (size_t index = 0; index < 2; ++index)
+    {
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo[index]);
+        drawQuad(mProgram, essl1_shaders::PositionAttrib(), 0.5f);
+    }
+
+    glEndQueryEXT(GL_ANY_SAMPLES_PASSED_EXT);
+    EXPECT_GL_NO_ERROR();
+
+    GLuint result = GL_FALSE;
+    glGetQueryObjectuivEXT(query, GL_QUERY_RESULT_EXT, &result);
+    EXPECT_GL_NO_ERROR();
+
+    EXPECT_GL_TRUE(result);
 }
 
 // Test multiple occlusion queries.
@@ -405,8 +439,7 @@ TEST_P(OcclusionQueriesTest, MultiQueries)
     ANGLE_SKIP_TEST_IF(IsOSX() && IsARM64() && IsDesktopOpenGL());
     ANGLE_SKIP_TEST_IF(IsOSX() && IsARM64() && IsMetal());
 
-    GLuint query[5] = {};
-    glGenQueriesEXT(5, query);
+    GLQueryEXT query[5];
 
     // First query
     glBeginQueryEXT(GL_ANY_SAMPLES_PASSED_EXT, query[0]);
@@ -504,8 +537,6 @@ TEST_P(OcclusionQueriesTest, MultiQueries)
                            &result);  // will block waiting for result
     EXPECT_GL_NO_ERROR();
     EXPECT_GL_TRUE(result);
-
-    glDeleteQueriesEXT(5, query);
 }
 
 TEST_P(OcclusionQueriesTest, Errors)
