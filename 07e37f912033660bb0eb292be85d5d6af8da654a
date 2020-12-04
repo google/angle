@@ -16,6 +16,23 @@
       "message": "PTAL",
       "revId": "07e37f912033660bb0eb292be85d5d6af8da654a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "29c861ae_a631ee1f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-04T15:46:00Z",
+      "side": 1,
+      "message": "There are a number of suppressions in deqp_gles31_test_expectations.txt tagged with this bug. Can you try lifting them as validation that this is enough? There may be more work necessary here. Also, feel free to own the bug.",
+      "revId": "07e37f912033660bb0eb292be85d5d6af8da654a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
