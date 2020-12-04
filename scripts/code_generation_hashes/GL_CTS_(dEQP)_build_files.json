@@ -44,7 +44,7 @@
   "third_party/VK-GL-CTS/src/external/vulkancts/framework/vulkan/CMakeLists.txt":
     "7f90f08bea39abbd86db1503b716a536",
   "third_party/VK-GL-CTS/src/external/vulkancts/modules/vulkan/CMakeLists.txt":
-    "98f3ffc2ceaa64400cb02afd29a2d9c2",
+    "b6caf8c115087a940131e083047acd44",
   "third_party/VK-GL-CTS/src/external/vulkancts/modules/vulkan/amber/CMakeLists.txt":
     "e5a1fa5b0692ef46bd627cd1b35a9da6",
   "third_party/VK-GL-CTS/src/external/vulkancts/modules/vulkan/api/CMakeLists.txt":
@@ -84,7 +84,7 @@
   "third_party/VK-GL-CTS/src/external/vulkancts/modules/vulkan/multiview/CMakeLists.txt":
     "16a341e4f08e85adad6dbf0309883f5b",
   "third_party/VK-GL-CTS/src/external/vulkancts/modules/vulkan/pipeline/CMakeLists.txt":
-    "d6c5f7539eefcbf9615e5bb50d81a368",
+    "e0fca38f3aa8ab3e94fb0c8ff079aa4c",
   "third_party/VK-GL-CTS/src/external/vulkancts/modules/vulkan/postmortem/CMakeLists.txt":
     "7b1092fbc97773d8c7d2d3b56971f877",
   "third_party/VK-GL-CTS/src/external/vulkancts/modules/vulkan/protected_memory/CMakeLists.txt":
@@ -93,6 +93,10 @@
     "8eb77c8b1ebe7d533eee1404022da713",
   "third_party/VK-GL-CTS/src/external/vulkancts/modules/vulkan/rasterization/CMakeLists.txt":
     "13850a7e8d1f12fc9d1ba5b3314c54eb",
+  "third_party/VK-GL-CTS/src/external/vulkancts/modules/vulkan/ray_query/CMakeLists.txt":
+    "6f897d277516ca1a256b93f0c3b43b84",
+  "third_party/VK-GL-CTS/src/external/vulkancts/modules/vulkan/ray_tracing/CMakeLists.txt":
+    "bbbd0bf4d438eeefc323c416e257ac66",
   "third_party/VK-GL-CTS/src/external/vulkancts/modules/vulkan/renderpass/CMakeLists.txt":
     "154254ec9d21124a3ef46ad9e5cb1829",
   "third_party/VK-GL-CTS/src/external/vulkancts/modules/vulkan/robustness/CMakeLists.txt":
@@ -120,7 +124,7 @@
   "third_party/VK-GL-CTS/src/external/vulkancts/modules/vulkan/ubo/CMakeLists.txt":
     "566bed92705fb01686aea784e4d058d3",
   "third_party/VK-GL-CTS/src/external/vulkancts/modules/vulkan/util/CMakeLists.txt":
-    "fd82e3334d71e2b6ad9b126e7a910623",
+    "2304ee1e79f5e37035308f14191153c3",
   "third_party/VK-GL-CTS/src/external/vulkancts/modules/vulkan/wsi/CMakeLists.txt":
     "b1e33f9691258814d9a81dfd57faad13",
   "third_party/VK-GL-CTS/src/external/vulkancts/modules/vulkan/ycbcr/CMakeLists.txt":
