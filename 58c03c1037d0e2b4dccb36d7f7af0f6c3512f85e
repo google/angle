@@ -16,6 +16,46 @@
       "message": "Again, good for review even though test suppressions due to driver bugs may end up being necessary.",
       "revId": "58c03c1037d0e2b4dccb36d7f7af0f6c3512f85e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7af7ec79_ef06efeb",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-12-04T22:50:43Z",
+      "side": 1,
+      "message": "Looks reasonable to me with one comment",
+      "revId": "58c03c1037d0e2b4dccb36d7f7af0f6c3512f85e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b21920e3_69aa62c1",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 320,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-12-04T22:50:43Z",
+      "side": 1,
+      "message": "Could it possible to restructure flushCommandsAndEndRenderPass() a bit so that flushCommandsAndEndRenderPass does not need to call pauseRenderPassQueriesIfActive? If not, then maybe just call pauseRenderPassQueriesIfActive from DIRTY_BIT_DRAW_FRAMEBUFFER_BINDING code is simpler, IMO.",
+      "range": {
+        "startLine": 320,
+        "startChar": 29,
+        "endLine": 320,
+        "endChar": 49
+      },
+      "revId": "58c03c1037d0e2b4dccb36d7f7af0f6c3512f85e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
