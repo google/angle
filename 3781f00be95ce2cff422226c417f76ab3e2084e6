@@ -34,6 +34,24 @@
       "parentUuid": "c35c50e7_0e9fd678",
       "revId": "3781f00be95ce2cff422226c417f76ab3e2084e6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dc8c4f43_2d1255ef",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1379716
+      },
+      "writtenOn": "2020-12-04T21:27:53Z",
+      "side": 1,
+      "message": "I dropped the added mandatory bits for the YUV format (no changes to vk_mandatory_format_support_data.json in this CL) as you correctly pointed out that they are not mandatory. This change just updates the mandatory format table to be a HashMap instead of a std::array so that GetMandatoryFormatSupport() can handle format parameters outside of linear first 185 formats. Before this change, GetMandatoryFormatSupport() would go out of bounds trying to look at index 1000156002 of the std::array\u003cVkFormatProperties, kNumVkFormats\u003e for VK_FORMAT_G8_B8_R8_3PLANE_420_UNORM.\n\n\nFor indexing by angle::Format, there is no angle::FormatID for YUV and, if I understood correctly, the FormatID autogen required there to be a GL format equivalent.",
+      "parentUuid": "208dc402_5d0508c0",
+      "revId": "3781f00be95ce2cff422226c417f76ab3e2084e6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
