@@ -50,6 +50,29 @@
       "message": "looks reasonable to me.",
       "revId": "f23cf52848e85abfe9c7bab4b5985140fe963654",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e8c95a1d_19d4e8ba",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 323,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-04T21:24:01Z",
+      "side": 1,
+      "message": "might need a rebase fix, regarding prior comments.",
+      "range": {
+        "startLine": 323,
+        "startChar": 46,
+        "endLine": 323,
+        "endChar": 67
+      },
+      "revId": "f23cf52848e85abfe9c7bab4b5985140fe963654",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
