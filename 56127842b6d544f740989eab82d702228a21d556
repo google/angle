@@ -33,6 +33,24 @@
       "message": "This is required for the following CL to be portable.",
       "revId": "56127842b6d544f740989eab82d702228a21d556",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9db93eec_0c7049cc",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1463997
+      },
+      "writtenOn": "2020-12-04T16:53:54Z",
+      "side": 1,
+      "message": "Some apps (possibly Skia code) make use of GL_CHROMIUM_bind_uniform_location, which is provided by ANGLE. But the native GLES driver does not necessarily provide this extension. So a trace that gets captured from this app cannot be replayed on the native GLES driver because some of the extension functions are called in the trace.",
+      "parentUuid": "620c04f4_ac07ae37",
+      "revId": "56127842b6d544f740989eab82d702228a21d556",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
