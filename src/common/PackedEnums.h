@@ -236,9 +236,10 @@ enum class PrimitiveMode : uint8_t
     LineStripAdjacency     = 0xB,
     TrianglesAdjacency     = 0xC,
     TriangleStripAdjacency = 0xD,
+    Patches                = 0xE,
 
-    InvalidEnum = 0xE,
-    EnumCount   = 0xE,
+    InvalidEnum = 0xF,
+    EnumCount   = 0xF,
 };
 
 template <>
