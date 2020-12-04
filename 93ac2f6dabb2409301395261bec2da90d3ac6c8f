@@ -1,6 +1,29 @@
 {
   "comments": [
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "8ce76aa4_8322af8a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2020-12-04T22:28:22Z",
+      "side": 1,
+      "message": "Courtney, do these comments still apply to the CL?  Looks like you are enabling a different test and keeping ndk level the same.",
+      "range": {
+        "startLine": 12,
+        "startChar": 0,
+        "endLine": 20,
+        "endChar": 26
+      },
+      "revId": "93ac2f6dabb2409301395261bec2da90d3ac6c8f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "76073458_7486a74c",
@@ -14,6 +37,23 @@
       "writtenOn": "2020-12-04T22:22:41Z",
       "side": 1,
       "message": "Geoff was going to incorporate this into his YUV WIP but didn\u0027t quite get to it, so submitting separately.",
+      "revId": "93ac2f6dabb2409301395261bec2da90d3ac6c8f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7e8b83a8_5421e6ae",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2020-12-04T22:28:22Z",
+      "side": 1,
+      "message": "Tested locally with Fortnite, it corrects the cutscenes.",
       "revId": "93ac2f6dabb2409301395261bec2da90d3ac6c8f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
