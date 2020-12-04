@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fbfe9be9_38a22251",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1117350
+      },
+      "writtenOn": "2020-12-04T00:58:25Z",
+      "side": 1,
+      "message": "I\u0027ve updated this to support iOS device builds and Mac Catalyst builds in addition to the original iOS simulator support.",
+      "revId": "daf74430f0e27ea845d7f3089a012bd05ebb6a7d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
