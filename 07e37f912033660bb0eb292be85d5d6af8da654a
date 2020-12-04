@@ -33,6 +33,24 @@
       "message": "There are a number of suppressions in deqp_gles31_test_expectations.txt tagged with this bug. Can you try lifting them as validation that this is enough? There may be more work necessary here. Also, feel free to own the bug.",
       "revId": "07e37f912033660bb0eb292be85d5d6af8da654a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9a28f146_ea8aea39",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-04T17:51:47Z",
+      "side": 1,
+      "message": "Done in a follow up, PTAL. Any other comments that need to be addressed before landing?",
+      "parentUuid": "29c861ae_a631ee1f",
+      "revId": "07e37f912033660bb0eb292be85d5d6af8da654a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
