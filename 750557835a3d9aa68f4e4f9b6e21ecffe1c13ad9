@@ -52,6 +52,24 @@
       "parentUuid": "09f442c7_89468297",
       "revId": "750557835a3d9aa68f4e4f9b6e21ecffe1c13ad9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b2ff05b7_573d5cc0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2020-12-04T17:07:42Z",
+      "side": 1,
+      "message": "Yeah, that\u0027s what you have to do to compile traces locally now until they\u0027ve been uploaded.",
+      "parentUuid": "71609607_26c4fde5",
+      "revId": "750557835a3d9aa68f4e4f9b6e21ecffe1c13ad9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }

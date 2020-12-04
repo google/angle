@@ -22,6 +22,30 @@
       },
       "revId": "c9482644758b9dae96d967aa6c45a68f07258809",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "32581955_3833cbec",
+        "filename": "src/tests/restricted_traces/restricted_traces.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2020-12-04T17:07:42Z",
+      "side": 1,
+      "message": "With the exception of the traces that include starting frame number, they are all directly named after the app.  Probably fine to go with just whatsapp unless you plan to upload multiple. Also bump it up one line to alphabetize.",
+      "parentUuid": "9b4012df_0f176dc5",
+      "range": {
+        "startLine": 32,
+        "startChar": 5,
+        "endLine": 32,
+        "endChar": 26
+      },
+      "revId": "c9482644758b9dae96d967aa6c45a68f07258809",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
