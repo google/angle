@@ -26,6 +26,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "038f2b94_45ec1add",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-04T21:24:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6e66b93e_dd958412",
+      "range": {
+        "startLine": 7,
+        "startChar": 52,
+        "endLine": 7,
+        "endChar": 53
+      },
+      "revId": "1c1dd3cce1160072d880ffd6b4007c988760b637",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "78f0b4cc_da457c43",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 1
@@ -54,6 +78,30 @@
       "writtenOn": "2020-12-04T18:42:27Z",
       "side": 1,
       "message": "This restriction is there in ES3.2, ES3.1 and ES3 (ES2 doesn\u0027t have int varyings). Looks to me like this should simply say:\n\n    if (typeContainsIntegers \u0026\u0026 qualifier !\u003d EvqFlatIn \u0026\u0026 qualifier !\u003d EvqFlatOut \u0026\u0026\n        mShaderType \u003d\u003d GL_FRAGMENT_SHADER)\n\nAnd actually it shouldn\u0027t check for `qualifier !\u003d EvqFlatOut` either I believe, the linker would have to make sure they match.",
+      "range": {
+        "startLine": 2448,
+        "startChar": 0,
+        "endLine": 2451,
+        "endChar": 68
+      },
+      "revId": "1c1dd3cce1160072d880ffd6b4007c988760b637",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2f909a8f_77c46dc0",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2451,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-04T21:24:38Z",
+      "side": 1,
+      "message": "Ack, chatted offline, think we can go with this and solve any edge cases as they come up. This is definitely an improvement.",
+      "parentUuid": "abe06d7b_4fbcbd92",
       "range": {
         "startLine": 2448,
         "startChar": 0,
