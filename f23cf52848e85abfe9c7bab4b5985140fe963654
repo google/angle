@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "524df861_a2db95a4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-04T15:42:59Z",
+      "side": 1,
+      "message": "Good for review. Will suppress failing tests alongside review feedback.",
+      "revId": "f23cf52848e85abfe9c7bab4b5985140fe963654",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
