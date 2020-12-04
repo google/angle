@@ -16,6 +16,23 @@
       "message": "How come this breaks things Paul?",
       "revId": "56127842b6d544f740989eab82d702228a21d556",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "645f8d12_d991c9b4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2020-12-04T16:51:41Z",
+      "side": 1,
+      "message": "This is required for the following CL to be portable.",
+      "revId": "56127842b6d544f740989eab82d702228a21d556",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
