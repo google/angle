@@ -16,6 +16,23 @@
       "message": "\u003e Patch Set 4:\n\u003e \n\u003e Gold has detected about 1 untriaged digest(s) on patchset 4.\n\u003e \n\u003e Please triage them at https://angle-gold.skia.org/cl/gerrit/2574837.\n\nHey Paul, for this step, inspect the image generated on each platform.  If it looks good, click the check mark next to it.  Once you have checked them all, retry the failed jobs and your CL can land.",
       "revId": "fd6ea9b7398efa2e533f75984d9b8d1c63cfd950",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c55e5ee6_804ab953",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-04T20:04:30Z",
+      "side": 1,
+      "message": "Still some failures, but generally LGTM.",
+      "revId": "fd6ea9b7398efa2e533f75984d9b8d1c63cfd950",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
