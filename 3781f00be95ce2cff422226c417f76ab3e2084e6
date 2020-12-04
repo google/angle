@@ -52,6 +52,24 @@
       "parentUuid": "208dc402_5d0508c0",
       "revId": "3781f00be95ce2cff422226c417f76ab3e2084e6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5a404e0a_9b836d27",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-04T21:34:24Z",
+      "side": 1,
+      "message": "`if (bounds check fail) return no_support;` is faster than turning the array into a hash map. There won\u0027t be mandatory support for anything beyond what we already have anyway.",
+      "parentUuid": "dc8c4f43_2d1255ef",
+      "revId": "3781f00be95ce2cff422226c417f76ab3e2084e6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
