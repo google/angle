@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "69d870fc_ac2311a6",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3676,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-04T15:49:23Z",
+      "side": 1,
+      "message": "nit: would be nice to use an enum here instead of a bool, like XFBPausePolicy::SetStateDirty / ::NoDirty , something like that.",
+      "range": {
+        "startLine": 3676,
+        "startChar": 66,
+        "endLine": 3676,
+        "endChar": 87
+      },
+      "revId": "0fcafa61f90c7f04a3f02a1e7364b51347ec6a1f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
