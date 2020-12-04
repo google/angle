@@ -16,6 +16,24 @@
       "message": "Looks like the Chromium roll has to go in first.",
       "revId": "08cbe34ee4fc293f7a940f7e0e5f7e9f283f9709",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2e5d5160_b2ad65e9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-12-04T23:16:18Z",
+      "side": 1,
+      "message": "I kicked off a manual Chromium roll, so that I could start this again.",
+      "parentUuid": "aadf9bd9_9479b630",
+      "revId": "08cbe34ee4fc293f7a940f7e0e5f7e9f283f9709",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
