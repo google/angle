@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "17fa23a3_02f2a689",
+        "filename": "src/libANGLE/renderer/vulkan/QueryVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-04T15:39:45Z",
+      "side": 0,
+      "message": "Fixed a leak here",
+      "revId": "f23cf52848e85abfe9c7bab4b5985140fe963654",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f1b6a330_46e7a61c",
+        "filename": "src/libANGLE/renderer/vulkan/QueryVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-04T15:39:45Z",
+      "side": 0,
+      "message": "And a leak here",
+      "revId": "f23cf52848e85abfe9c7bab4b5985140fe963654",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ecd3a7d8_cb1c47d2",
+        "filename": "src/libANGLE/renderer/vulkan/QueryVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-04T15:39:45Z",
+      "side": 0,
+      "message": "Got rid of the flush. `setupBegin()` now simply calls `releaseQueries()` if mQueryHelper is not nullptr (which means the query was previously used, no matter if it\u0027s in this frame or any in the past).",
+      "revId": "f23cf52848e85abfe9c7bab4b5985140fe963654",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "888c6bff_f889594f",
+        "filename": "src/libANGLE/renderer/vulkan/QueryVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 317,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-04T15:39:45Z",
+      "side": 0,
+      "message": "Bug fix: if RP is closed when we get here, previously `mQueryHelper` would be a fresh never-used one, so this always returned `available \u003d true`. Functionally this was fine because the `accumulateStashedQueryResult` below would still wait for the queries, but it means that the application\u0027s desired \"no wait\" was not respected.",
+      "revId": "f23cf52848e85abfe9c7bab4b5985140fe963654",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
