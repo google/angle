@@ -16,6 +16,24 @@
       "message": "Jason: thanks for bringing this onto the ANGLE Gerrit. See my comments in Courtney\u0027s CL: the new format bits you\u0027re adding are feature dependent, not sure if the mandatory table is the best fit for them.\n",
       "revId": "3781f00be95ce2cff422226c417f76ab3e2084e6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "208dc402_5d0508c0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-04T21:16:34Z",
+      "side": 1,
+      "message": "Also to add, if we need to reconfigure our table to index by format ID, we should switch to using angle::Format everywhere as that is guaranteed to be nicely packed.",
+      "parentUuid": "c35c50e7_0e9fd678",
+      "revId": "3781f00be95ce2cff422226c417f76ab3e2084e6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
