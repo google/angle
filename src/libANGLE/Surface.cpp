@@ -297,7 +297,7 @@ Error Surface::swap(const gl::Context *context)
     return NoError();
 }
 
-Error Surface::swapWithDamage(const gl::Context *context, EGLint *rects, EGLint n_rects)
+Error Surface::swapWithDamage(const gl::Context *context, const EGLint *rects, EGLint n_rects)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "egl::Surface::swapWithDamage");
     context->onPreSwap();

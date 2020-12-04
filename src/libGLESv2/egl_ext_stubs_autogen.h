@@ -167,7 +167,7 @@ EGLBoolean StreamConsumerReleaseKHR(Thread *thread, egl::Display *dpyPacked, Str
 EGLBoolean SwapBuffersWithDamageKHR(Thread *thread,
                                     egl::Display *dpyPacked,
                                     Surface *surfacePacked,
-                                    EGLint *rects,
+                                    const EGLint *rects,
                                     EGLint n_rects);
 EGLint WaitSyncKHR(Thread *thread, egl::Display *dpyPacked, Sync *syncPacked, EGLint flags);
 EGLDeviceEXT CreateDeviceANGLE(Thread *thread,

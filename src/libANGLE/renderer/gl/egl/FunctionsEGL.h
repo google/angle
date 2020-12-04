@@ -78,7 +78,9 @@ class FunctionsEGL
 
     EGLint waitSyncKHR(EGLSyncKHR sync, EGLint flags) const;
 
-    EGLBoolean swapBuffersWithDamageKHR(EGLSurface surface, EGLint *rects, EGLint n_rects) const;
+    EGLBoolean swapBuffersWithDamageKHR(EGLSurface surface,
+                                        const EGLint *rects,
+                                        EGLint n_rects) const;
 
     EGLBoolean presentationTimeANDROID(EGLSurface surface, EGLnsecsANDROID time) const;
 

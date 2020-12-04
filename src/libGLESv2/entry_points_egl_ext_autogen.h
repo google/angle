@@ -217,7 +217,7 @@ ANGLE_EXPORT EGLBoolean EGLAPIENTRY EGL_StreamConsumerReleaseKHR(EGLDisplay dpy,
 // EGL_KHR_swap_buffers_with_damage
 ANGLE_EXPORT EGLBoolean EGLAPIENTRY EGL_SwapBuffersWithDamageKHR(EGLDisplay dpy,
                                                                  EGLSurface surface,
-                                                                 EGLint *rects,
+                                                                 const EGLint *rects,
                                                                  EGLint n_rects);
 
 // EGL_KHR_wait_sync

@@ -574,7 +574,7 @@ EGLBoolean StreamConsumerReleaseKHR(Thread *thread, Display *display, Stream *st
 EGLBoolean SwapBuffersWithDamageKHR(Thread *thread,
                                     Display *display,
                                     Surface *eglSurface,
-                                    EGLint *rects,
+                                    const EGLint *rects,
                                     EGLint n_rects)
 {
     ANGLE_EGL_TRY_RETURN(thread, display->prepareForCall(), "eglSwapBuffersWithDamageEXT",

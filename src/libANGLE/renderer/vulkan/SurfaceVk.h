@@ -188,7 +188,9 @@ class WindowSurfaceVk : public SurfaceVk
     FramebufferImpl *createDefaultFramebuffer(const gl::Context *context,
                                               const gl::FramebufferState &state) override;
     egl::Error swap(const gl::Context *context) override;
-    egl::Error swapWithDamage(const gl::Context *context, EGLint *rects, EGLint n_rects) override;
+    egl::Error swapWithDamage(const gl::Context *context,
+                              const EGLint *rects,
+                              EGLint n_rects) override;
     egl::Error postSubBuffer(const gl::Context *context,
                              EGLint x,
                              EGLint y,
@@ -241,7 +243,7 @@ class WindowSurfaceVk : public SurfaceVk
 
   protected:
     angle::Result swapImpl(const gl::Context *context,
-                           EGLint *rects,
+                           const EGLint *rects,
                            EGLint n_rects,
                            const void *pNextChain);
 
@@ -278,7 +280,7 @@ class WindowSurfaceVk : public SurfaceVk
                                           VkResult result,
                                           bool *presentOutOfDate);
     angle::Result present(ContextVk *contextVk,
-                          EGLint *rects,
+                          const EGLint *rects,
                           EGLint n_rects,
                           const void *pNextChain,
                           bool *presentOutOfDate);

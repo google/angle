@@ -797,7 +797,7 @@ EGLBoolean EGLAPIENTRY eglStreamConsumerReleaseKHR(EGLDisplay dpy, EGLStreamKHR 
 // EGL_KHR_swap_buffers_with_damage
 EGLBoolean EGLAPIENTRY eglSwapBuffersWithDamageKHR(EGLDisplay dpy,
                                                    EGLSurface surface,
-                                                   EGLint *rects,
+                                                   const EGLint *rects,
                                                    EGLint n_rects)
 {
     EnsureEGLLoaded();

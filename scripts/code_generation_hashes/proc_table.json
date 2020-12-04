@@ -1,8 +1,8 @@
 {
   "scripts/egl.xml":
-    "4e5911cfe91274cc5112ff2f70092376",
+    "013c552e6c523abdcf268268ea47e9fe",
   "scripts/egl_angle_ext.xml":
-    "91f7718effe50d444f8d81ce285721db",
+    "5bcc01462b355d933cf3ada15198fb68",
   "scripts/gen_proc_table.py":
     "1843f52355a9c573a4e39e33e3505c71",
   "scripts/gl.xml":

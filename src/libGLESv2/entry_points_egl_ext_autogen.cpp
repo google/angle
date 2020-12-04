@@ -1036,7 +1036,7 @@ EGLBoolean EGLAPIENTRY EGL_StreamConsumerReleaseKHR(EGLDisplay dpy, EGLStreamKHR
 // EGL_KHR_swap_buffers_with_damage
 EGLBoolean EGLAPIENTRY EGL_SwapBuffersWithDamageKHR(EGLDisplay dpy,
                                                     EGLSurface surface,
-                                                    EGLint *rects,
+                                                    const EGLint *rects,
                                                     EGLint n_rects)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();

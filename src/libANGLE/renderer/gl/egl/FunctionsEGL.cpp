@@ -441,7 +441,7 @@ EGLint FunctionsEGL::waitSyncKHR(EGLSyncKHR sync, EGLint flags) const
 }
 
 EGLBoolean FunctionsEGL::swapBuffersWithDamageKHR(EGLSurface surface,
-                                                  EGLint *rects,
+                                                  const EGLint *rects,
                                                   EGLint n_rects) const
 {
     return mFnPtrs->swapBuffersWithDamageKHRPtr(mEGLDisplay, surface, rects, n_rects);

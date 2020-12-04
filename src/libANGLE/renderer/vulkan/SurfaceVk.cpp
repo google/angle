@@ -1218,7 +1218,7 @@ FramebufferImpl *WindowSurfaceVk::createDefaultFramebuffer(const gl::Context *co
 }
 
 egl::Error WindowSurfaceVk::swapWithDamage(const gl::Context *context,
-                                           EGLint *rects,
+                                           const EGLint *rects,
                                            EGLint n_rects)
 {
     DisplayVk *displayVk = vk::GetImpl(context->getDisplay());
@@ -1263,7 +1263,7 @@ angle::Result WindowSurfaceVk::computePresentOutOfDate(vk::Context *context,
 }
 
 angle::Result WindowSurfaceVk::present(ContextVk *contextVk,
-                                       EGLint *rects,
+                                       const EGLint *rects,
                                        EGLint n_rects,
                                        const void *pNextChain,
                                        bool *presentOutOfDate)
@@ -1373,7 +1373,7 @@ angle::Result WindowSurfaceVk::present(ContextVk *contextVk,
         EGLint width  = getWidth();
         EGLint height = getHeight();
 
-        EGLint *eglRects             = rects;
+        const EGLint *eglRects       = rects;
         presentRegion.rectangleCount = n_rects;
         vkRects.resize(n_rects);
         for (EGLint i = 0; i < n_rects; i++)
@@ -1418,7 +1418,7 @@ angle::Result WindowSurfaceVk::present(ContextVk *contextVk,
 }
 
 angle::Result WindowSurfaceVk::swapImpl(const gl::Context *context,
-                                        EGLint *rects,
+                                        const EGLint *rects,
                                         EGLint n_rects,
                                         const void *pNextChain)
 {
