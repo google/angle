@@ -155,6 +155,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "41609968_e6ebfe2a",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 693,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-05T01:05:34Z",
+      "side": 1,
+      "message": "Unresolving, to bring this back to everyone\u0027s attention.\n\n\"mSyncObjectPendingFlush \u0026\u0026 context-\u003eisShared()\" fails the following test:\n\nhttps://ci.chromium.org/ui/p/chromium/builders/try/linux-angle-rel/14145/overview\n    EGLContextSharingTest.DeleteReaderOfSharedTexture/*_Vulkan\n\nI\u0027m not sure how \"|| (context-\u003eisShared() \u0026\u0026 deferFlushUntilEndRenderPass)\" would help, since that would imply there\u0027s only a bug on certain platforms.\n\nI\u0027m going to keep this as:\n    if (mSyncObjectPendingFlush || context-\u003eisShared())\n\nCQ and a handful of apps (Asphalt 8 and 9, candy crush, call of duty mobile) all seem happy so far (admittedly, there aren\u0027t many apps that use multithreaded multicontext rendering).   We can look at restricting this further if we find there are issues in a particular app once we know what conditions lead to it so we can keep everyone happy.\n\nWe aren\u0027t skipping the flush entirely, we\u0027re just flushing the commands and closing the render pass rather than submitting the work to the renderer.\n\nCharlie - Can you describe the issue you\u0027re worried about?",
+      "parentUuid": "fd4ec4dd_29a69d92",
+      "range": {
+        "startLine": 693,
+        "startChar": 8,
+        "endLine": 693,
+        "endChar": 55
+      },
+      "revId": "a814137c9ef8fb1841ac56c48afb8f0c69922755",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "18097b67_0550faad",
         "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
         "patchSetId": 22
