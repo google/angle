@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "905f2c11_aaf767ee",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2020-12-05T01:55:51Z",
+      "side": 1,
+      "message": "Is it OK to make this change on behalf of the WinCairo / WebKit folks?\n",
+      "revId": "d6719519e525236f271e14380cbfa0ec158f2f3a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
