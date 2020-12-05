@@ -15,7 +15,7 @@
 namespace rx
 {
 
-class WindowSurfaceVkHeadless : public WindowSurfaceVk
+class WindowSurfaceVkHeadless final : public WindowSurfaceVk
 {
   public:
     WindowSurfaceVkHeadless(const egl::SurfaceState &surfaceState, EGLNativeWindowType window);
