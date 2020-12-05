@@ -16,6 +16,40 @@
       "message": "I\u0027ve updated this to support iOS device builds and Mac Catalyst builds in addition to the original iOS simulator support.",
       "revId": "daf74430f0e27ea845d7f3089a012bd05ebb6a7d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "00fa2480_daa8cf4d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2020-12-05T01:01:53Z",
+      "side": 1,
+      "message": "lgtm!\n",
+      "revId": "daf74430f0e27ea845d7f3089a012bd05ebb6a7d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5efc0343_0bf18861",
+        "filename": "BUILD.gn",
+        "patchSetId": 5
+      },
+      "lineNbr": 448,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2020-12-05T01:01:53Z",
+      "side": 1,
+      "message": "A little surprised that even the gpu_info_util code is still linking against these frameworks instead of using the soft linking mechanism.",
+      "revId": "daf74430f0e27ea845d7f3089a012bd05ebb6a7d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }

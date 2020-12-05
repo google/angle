@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "60c85f20_9d8e0021",
+        "filename": "src/libANGLE/renderer/gl/eagl/DisplayEAGL.mm",
+        "patchSetId": 5
+      },
+      "lineNbr": 312,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2020-12-05T01:01:53Z",
+      "side": 0,
+      "message": "Did we lose support for this extension? Was it subsumed by Jamie\u0027s patch which moved it to an EGL client extension?",
+      "range": {
+        "startLine": 312,
+        "startChar": 30,
+        "endLine": 312,
+        "endChar": 41
+      },
+      "revId": "968fccb20047d528c6ab82fe23e6365a6d9c5b99",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
