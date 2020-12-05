@@ -60,6 +60,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "10235049_c3b06d3a",
+        "filename": "src/libANGLE/renderer/vulkan/QueryVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-05T03:07:51Z",
+      "side": 1,
+      "message": "Well TransformFeedbackPrimitivesWritten is a GL query. Did you mean the VK transform feedback query? If so, this change does exactly what you described:\n\n- ContextVk only knows about the VK transform feedback query\n- The QueryVk for GL query TransformFeedbackPrimitivesWritten uses that VK query\n- The QueryVk for GL query PrimitivesGenerated uses that same VK query\n- Since Vulkan doesn\u0027t allow more than one query of any type to be used simultaneously, then when both the above GL queries are active they share the same VK query and its result.\n\nI wrote a doc on this in the change, let me know which parts need more detail.",
+      "parentUuid": "e619e97b_66c76281",
+      "range": {
+        "startLine": 45,
+        "startChar": 9,
+        "endLine": 45,
+        "endChar": 22
+      },
+      "revId": "c9e0a29fcaa51518ad457418c3d84d15a45c300b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "262ed6a7_85851a79",
         "filename": "src/libANGLE/renderer/vulkan/doc/Queries.md",
         "patchSetId": 4
@@ -71,6 +95,30 @@
       "writtenOn": "2020-12-04T22:44:08Z",
       "side": 1,
       "message": "If one VK query maps to two GL queries, are the GL_PRIMITIVES_GENERATED and GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN results the same, or the VK query always have both data? I somehow can\u0027t find the part of spec that details the query result.",
+      "range": {
+        "startLine": 60,
+        "startChar": 27,
+        "endLine": 61,
+        "endChar": 29
+      },
+      "revId": "c9e0a29fcaa51518ad457418c3d84d15a45c300b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "423c7b74_daab3402",
+        "filename": "src/libANGLE/renderer/vulkan/doc/Queries.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-05T03:07:51Z",
+      "side": 1,
+      "message": "The VK query always produces both data. See QueryResult that Jamie recently added (and slightly modified in this change), it can have 2 integers (for XFB in particular).",
+      "parentUuid": "262ed6a7_85851a79",
       "range": {
         "startLine": 60,
         "startChar": 27,

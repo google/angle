@@ -38,6 +38,24 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "48376704_9b75d639",
+        "filename": "src/libANGLE/renderer/vulkan/QueryVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-05T03:07:51Z",
+      "side": 0,
+      "message": "They are, but the pool is not freed until every query is returned. So basically the pools themselves were leaked.",
+      "parentUuid": "e568bd4a_e9437ccb",
+      "revId": "f23cf52848e85abfe9c7bab4b5985140fe963654",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "f1b6a330_46e7a61c",
         "filename": "src/libANGLE/renderer/vulkan/QueryVk.cpp",
         "patchSetId": 4
