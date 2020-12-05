@@ -297,6 +297,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "dcae81b4_f6e5d5ee",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 705,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-05T03:35:28Z",
+      "side": 1,
+      "message": "I think not checking for hasStartedRenderPass() means that the flush is deferred instead of \"until the RP is closed\" to \"until the next RP is started and then closed\". If that is desirable, why not wait for 2 RPs to start and close? Why not 3?\n\nWith the check for hasStartedRenderPass() at least we are trying to respect the application\u0027s desire as closely as possible. Without it, it\u0027s just a random delay and I don\u0027t believe we have data on whether delaying by one RP is the optimal.\n\nDelaying flushes by N render passes could be a legitimate intervention nevertheless but needs investigation",
+      "parentUuid": "a08f8a2b_41fc44b9",
+      "range": {
+        "startLine": 705,
+        "startChar": 8,
+        "endLine": 705,
+        "endChar": 69
+      },
+      "revId": "a814137c9ef8fb1841ac56c48afb8f0c69922755",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "3d70c488_3e3c93b5",
         "filename": "src/libANGLE/renderer/vulkan/DisplayVk.h",
         "patchSetId": 22
