@@ -56,6 +56,30 @@
       },
       "revId": "58c03c1037d0e2b4dccb36d7f7af0f6c3512f85e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "611d59c5_baad6bb4",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 320,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-05T03:11:59Z",
+      "side": 1,
+      "message": "There are many instances where flushCommandsAndEndRenderPass() needs to pause queries. In fact, every instance of flushCommandsAndEndRenderPass() should also pause queries. flushCommandsAndEndRenderPass() calls onRenderPassFinished() so this change is a noop from that perspective.\n\nThe only ugliness comes from DIRTY_BIT_DRAW_FRAMEBUFFER_BINDING which calls onRenderPassFinished() before the render pass is closed. This change is basically adding pauseRenderPassQueriesIfActive() for that particular case, but the code is refactored to prevent errors in the future.\n\n---\n\nWhy on earth does DIRTY_BIT_DRAW_FRAMEBUFFER_BINDING not call flushCommandsAndEndRenderPass() directly is unknown to me. Some optimization?",
+      "parentUuid": "b21920e3_69aa62c1",
+      "range": {
+        "startLine": 320,
+        "startChar": 29,
+        "endLine": 320,
+        "endChar": 49
+      },
+      "revId": "58c03c1037d0e2b4dccb36d7f7af0f6c3512f85e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
