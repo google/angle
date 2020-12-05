@@ -179,6 +179,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "63034fc9_d3b7b6cd",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 693,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-05T03:28:14Z",
+      "side": 1,
+      "message": "Oh I see, wait on the sync flushes anyway, so there\u0027s no risk of deferral here.",
+      "parentUuid": "41609968_e6ebfe2a",
+      "range": {
+        "startLine": 693,
+        "startChar": 8,
+        "endLine": 693,
+        "endChar": 55
+      },
+      "revId": "a814137c9ef8fb1841ac56c48afb8f0c69922755",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "18097b67_0550faad",
         "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
         "patchSetId": 22

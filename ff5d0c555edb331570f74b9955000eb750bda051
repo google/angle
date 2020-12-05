@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cefcfc7a_da9a9710",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 692,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-05T03:28:14Z",
+      "side": 1,
+      "message": "There\u0027s still a bug here. There should be two flags now:\n\n- mSyncObjectPendingFlush: only gets set when the sync object is a GL sync object\n- mEGLSyncObjectPendingFlush: gets set for sync objects that can cross the share group boundaries\n\nThen the `if (deferFlushUntilEndRenderPass)` below should also be changed to at least check for `\u0026\u0026 !mEGLSyncObjectPendingFlush`. Bug scenario is:\n\n- Context from share group 1: signal EGL sync (flush gets deferred), don\u0027t do anything else\n- Context from share group 2: wait on EGL sync, get stuck forever",
+      "range": {
+        "startLine": 692,
+        "startChar": 8,
+        "endLine": 692,
+        "endChar": 31
+      },
+      "revId": "ff5d0c555edb331570f74b9955000eb750bda051",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
