@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4794a978_34d4ecdb",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1170114
+      },
+      "writtenOn": "2020-12-05T00:35:37Z",
+      "side": 1,
+      "message": "Also, I\u0027m not familiar with how angle gets rolled into chrome. Is there an additional uprev step needed? This one I think is the last CL blocking this https://chromium-review.googlesource.com/c/chromium/src/+/2466964/6",
+      "revId": "426f22bc558e5ac62194cebe12f8719bf16a49ee",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
