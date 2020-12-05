@@ -16,6 +16,23 @@
       "message": "Is it OK to make this change on behalf of the WinCairo / WebKit folks?\n",
       "revId": "d6719519e525236f271e14380cbfa0ec158f2f3a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "940cfb0c_3e41a50c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-05T03:39:10Z",
+      "side": 1,
+      "message": "LGTM, I actually prefer one log stream so the messages can\u0027t get interleaved (however unlikely that may be)",
+      "revId": "d6719519e525236f271e14380cbfa0ec158f2f3a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
