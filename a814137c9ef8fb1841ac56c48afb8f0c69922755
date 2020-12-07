@@ -203,6 +203,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "2462b0d3_7ba8315f",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 693,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-12-07T20:10:02Z",
+      "side": 1,
+      "message": "My main concern is that skipping flush is tricky that in some cases you may put GPU in starvation. With this, if a context is shared, all glFlush call is going to be deferred. glFlush behaves different because the context is shared or not. \nNot sure why test fail with \"\u0026\u0026\" though (could it because of some where lack of forced flush?), seems to me worth root cause it.",
+      "parentUuid": "63034fc9_d3b7b6cd",
+      "range": {
+        "startLine": 693,
+        "startChar": 8,
+        "endLine": 693,
+        "endChar": 55
+      },
+      "revId": "a814137c9ef8fb1841ac56c48afb8f0c69922755",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "18097b67_0550faad",
         "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
         "patchSetId": 22
@@ -309,6 +333,30 @@
       "side": 1,
       "message": "I think not checking for hasStartedRenderPass() means that the flush is deferred instead of \"until the RP is closed\" to \"until the next RP is started and then closed\". If that is desirable, why not wait for 2 RPs to start and close? Why not 3?\n\nWith the check for hasStartedRenderPass() at least we are trying to respect the application\u0027s desire as closely as possible. Without it, it\u0027s just a random delay and I don\u0027t believe we have data on whether delaying by one RP is the optimal.\n\nDelaying flushes by N render passes could be a legitimate intervention nevertheless but needs investigation",
       "parentUuid": "a08f8a2b_41fc44b9",
+      "range": {
+        "startLine": 705,
+        "startChar": 8,
+        "endLine": 705,
+        "endChar": 69
+      },
+      "revId": "a814137c9ef8fb1841ac56c48afb8f0c69922755",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0f15c92c_8d91142c",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 705,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-12-07T20:10:02Z",
+      "side": 1,
+      "message": "Yea, as I explained above, skip glFlush a bit tricky performance wise in that some cases you might get into GPU starvation and hurt performance. The original intent is that we avoid breaking RP because of glFlush, that is why we have that check. Other driver does skip flush also make up the flush at FBO boundary, for example. Similar to what Shabi described above, I am more in the more conservative camp here.",
+      "parentUuid": "dcae81b4_f6e5d5ee",
       "range": {
         "startLine": 705,
         "startChar": 8,
