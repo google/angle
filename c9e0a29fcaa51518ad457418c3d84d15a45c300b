@@ -84,6 +84,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "86fdc82d_991fa0c3",
+        "filename": "src/libANGLE/renderer/vulkan/QueryVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-12-07T19:47:34Z",
+      "side": 1,
+      "message": "Yea, I think I understand this more now. looks reasonable to me.",
+      "parentUuid": "10235049_c3b06d3a",
+      "range": {
+        "startLine": 45,
+        "startChar": 9,
+        "endLine": 45,
+        "endChar": 22
+      },
+      "revId": "c9e0a29fcaa51518ad457418c3d84d15a45c300b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "262ed6a7_85851a79",
         "filename": "src/libANGLE/renderer/vulkan/doc/Queries.md",
         "patchSetId": 4
@@ -119,6 +143,30 @@
       "side": 1,
       "message": "The VK query always produces both data. See QueryResult that Jamie recently added (and slightly modified in this change), it can have 2 integers (for XFB in particular).",
       "parentUuid": "262ed6a7_85851a79",
+      "range": {
+        "startLine": 60,
+        "startChar": 27,
+        "endLine": 61,
+        "endChar": 29
+      },
+      "revId": "c9e0a29fcaa51518ad457418c3d84d15a45c300b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "97b5d1a2_245b53a4",
+        "filename": "src/libANGLE/renderer/vulkan/doc/Queries.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-12-07T19:47:34Z",
+      "side": 1,
+      "message": "I see. So the VK query always have both results anyway. Its just we need to ensure we break the query if needed and accumulate them to the right QueryVk object(s).",
+      "parentUuid": "423c7b74_daab3402",
       "range": {
         "startLine": 60,
         "startChar": 27,
