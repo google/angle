@@ -85,6 +85,24 @@
       "parentUuid": "e8d3c5d5_d493ec41",
       "revId": "d6719519e525236f271e14380cbfa0ec158f2f3a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "339e2081_634ba464",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-07T18:48:56Z",
+      "side": 1,
+      "message": "We don\u0027t. This only happens when ASSERT is enabled, i.e. in debug builds.",
+      "parentUuid": "a27ce760_36d59737",
+      "revId": "d6719519e525236f271e14380cbfa0ec158f2f3a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
