@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ef64dfcf_7f292634",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-07T19:33:11Z",
+      "side": 1,
+      "message": "I can take a crack at this if you\u0027re unable to help here. Or maybe Courtney. Adding new formats without corresponding ANGLE formats can cause problems down the line.",
+      "revId": "da5b0113526c3c8cd16dbda35c1913f6b732ec08",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
