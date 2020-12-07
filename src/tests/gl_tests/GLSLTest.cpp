@@ -8778,6 +8778,144 @@ void main()
     program = CompileProgram(kVSStaticUse, kFSStaticUse);
     EXPECT_EQ(0u, program);
 }
+
+// Verify I/O block array locations:
+TEST_P(GLSLTest_ES31, IOBlockLocations)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_io_blocks"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_geometry_shader"));
+
+    // http://anglebug.com/5444
+    ANGLE_SKIP_TEST_IF(IsIntel() && IsOpenGL() && IsWindows());
+
+    // Incorrect SPIR-V transformation and possibly varying packing of I/O blocks with location
+    // qualifier on fields.
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
+    constexpr char kVS[] = R"(#version 310 es
+#extension GL_EXT_shader_io_blocks : require
+
+in highp vec4 position;
+
+layout(location = 0) out vec4 aOut;
+
+layout(location = 6) out VSBlock
+{
+    vec4 b;     // location 6
+    vec4 c;     // location 7
+    layout(location = 1) vec4 d;
+    vec4 e;     // location 2
+    vec4 f[2];  // locations 3 and 4
+} blockOut;
+
+layout(location = 5) out vec4 gOut;
+
+void main()
+{
+    aOut = vec4(0.03, 0.06, 0.09, 0.12);
+    blockOut.b = vec4(0.15, 0.18, 0.21, 0.24);
+    blockOut.c = vec4(0.27, 0.30, 0.33, 0.36);
+    blockOut.d = vec4(0.39, 0.42, 0.45, 0.48);
+    blockOut.e = vec4(0.51, 0.54, 0.57, 0.6);
+    blockOut.f[0] = vec4(0.63, 0.66, 0.66, 0.69);
+    blockOut.f[1] = vec4(0.72, 0.75, 0.78, 0.81);
+    gOut = vec4(0.84, 0.87, 0.9, 0.93);
+    gl_Position = position;
+})";
+
+    constexpr char kGS[] = R"(#version 310 es
+#extension GL_EXT_geometry_shader : require
+layout (invocations = 3, triangles) in;
+layout (triangle_strip, max_vertices = 3) out;
+
+// Input varyings
+layout(location = 0) in vec4 aIn[];
+
+layout(location = 6) in VSBlock
+{
+    vec4 b;
+    vec4 c;
+    layout(location = 1) vec4 d;
+    vec4 e;
+    vec4 f[2];
+} blockIn[];
+
+layout(location = 5) in vec4 gIn[];
+
+// Output varyings
+layout(location = 1) out vec4 aOut;
+
+layout(location = 0) out GSBlock
+{
+    vec4 b;     // location 0
+    layout(location = 3) vec4 c;
+    layout(location = 7) vec4 d;
+    layout(location = 5) vec4 e[2];
+    layout(location = 4) vec4 f;
+} blockOut;
+
+layout(location = 2) out vec4 gOut;
+
+void main()
+{
+    int n;
+    for (n = 0; n < gl_in.length(); n++)
+    {
+        gl_Position = gl_in[n].gl_Position;
+
+        aOut = aIn[n];
+        blockOut.b = blockIn[n].b;
+        blockOut.c = blockIn[n].c;
+        blockOut.d = blockIn[n].d;
+        blockOut.e[0] = blockIn[n].e;
+        blockOut.e[1] = blockIn[n].f[0];
+        blockOut.f = blockIn[n].f[1];
+        gOut = gIn[n];
+
+        EmitVertex();
+    }
+    EndPrimitive();
+})";
+
+    constexpr char kFS[] = R"(#version 310 es
+#extension GL_EXT_shader_io_blocks : require
+precision mediump float;
+
+layout(location = 0) out mediump vec4 color;
+
+layout(location = 1) in vec4 aIn;
+
+layout(location = 0) in GSBlock
+{
+    vec4 b;
+    layout(location = 3) vec4 c;
+    layout(location = 7) vec4 d;
+    layout(location = 5) vec4 e[2];
+    layout(location = 4) vec4 f;
+} blockIn;
+
+layout(location = 2) in vec4 gIn;
+
+bool isEq(vec4 a, vec4 b) { return all(lessThan(abs(a-b), vec4(0.001))); }
+
+void main()
+{
+    bool passR = isEq(aIn, vec4(0.03, 0.06, 0.09, 0.12));
+    bool passG = isEq(blockIn.b, vec4(0.15, 0.18, 0.21, 0.24)) &&
+                 isEq(blockIn.c, vec4(0.27, 0.30, 0.33, 0.36)) &&
+                 isEq(blockIn.d, vec4(0.39, 0.42, 0.45, 0.48)) &&
+                 isEq(blockIn.e[0], vec4(0.51, 0.54, 0.57, 0.6)) &&
+                 isEq(blockIn.e[1], vec4(0.63, 0.66, 0.66, 0.69)) &&
+                 isEq(blockIn.f, vec4(0.72, 0.75, 0.78, 0.81));
+    bool passB = isEq(gIn, vec4(0.84, 0.87, 0.9, 0.93));
+
+    color = vec4(passR, passG, passB, 1.0);
+
+})";
+
+    ANGLE_GL_PROGRAM_WITH_GS(program, kVS, kGS, kFS);
+    EXPECT_GL_NO_ERROR();
+}
 }  // anonymous namespace
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these

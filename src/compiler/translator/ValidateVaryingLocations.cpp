@@ -64,9 +64,26 @@ int GetStructLocationCount(const TStructure *structure)
     return totalLocation;
 }
 
+int GetInterfaceBlockLocationCount(const TType &varyingType, bool ignoreVaryingArraySize)
+{
+    int totalLocation = 0;
+    for (const TField *field : varyingType.getInterfaceBlock()->fields())
+    {
+        totalLocation += GetFieldLocationCount(field);
+    }
+
+    if (!ignoreVaryingArraySize && varyingType.isArray())
+    {
+        totalLocation *= varyingType.getArraySizeProduct();
+    }
+    return totalLocation;
+}
+
 int GetLocationCount(const TIntermSymbol *varying, bool ignoreVaryingArraySize)
 {
     const TType &varyingType = varying->getType();
+    ASSERT(!varyingType.isInterfaceBlock());
+
     if (varyingType.getStruct() != nullptr)
     {
         int totalLocation = 0;
@@ -76,22 +93,6 @@ int GetLocationCount(const TIntermSymbol *varying, bool ignoreVaryingArraySize)
             ASSERT(fieldType->getStruct() == nullptr && !fieldType->isArray());
 
             totalLocation += GetFieldLocationCount(field);
-        }
-        return totalLocation;
-    }
-
-    if (varyingType.isInterfaceBlock())
-    {
-        unsigned int totalLocation = 0;
-        for (const TField *field : varyingType.getInterfaceBlock()->fields())
-        {
-            totalLocation += GetFieldLocationCount(field);
-        }
-
-        ASSERT(!varyingType.isArrayOfArrays() || ignoreVaryingArraySize);
-        if (!ignoreVaryingArraySize && varyingType.isArray())
-        {
-            totalLocation *= varyingType.getArraySizeProduct();
         }
         return totalLocation;
     }
@@ -115,6 +116,47 @@ int GetLocationCount(const TIntermSymbol *varying, bool ignoreVaryingArraySize)
     return elementLocationCount * varyingType.getArraySizeProduct();
 }
 
+struct SymbolAndField
+{
+    const TIntermSymbol *symbol;
+    const TField *field;
+};
+using LocationMap = std::map<int, SymbolAndField>;
+
+void MarkVaryingLocations(TDiagnostics *diagnostics,
+                          const TIntermSymbol *varying,
+                          const TField *field,
+                          int location,
+                          int elementCount,
+                          LocationMap *locationMap)
+{
+    for (int elementIndex = 0; elementIndex < elementCount; ++elementIndex)
+    {
+        const int offsetLocation = location + elementIndex;
+        auto conflict            = locationMap->find(offsetLocation);
+        if (conflict != locationMap->end())
+        {
+            std::stringstream strstr = sh::InitializeStream<std::stringstream>();
+            strstr << "'" << varying->getName();
+            if (field)
+            {
+                strstr << "." << field->name();
+            }
+            strstr << "' conflicting location with '" << conflict->second.symbol->getName();
+            if (conflict->second.field)
+            {
+                strstr << "." << conflict->second.field->name();
+            }
+            strstr << "'";
+            error(*varying, strstr.str().c_str(), diagnostics);
+        }
+        else
+        {
+            (*locationMap)[offsetLocation] = {varying, field};
+        }
+    }
+}
+
 using VaryingVector = std::vector<const TIntermSymbol *>;
 
 void ValidateShaderInterface(TDiagnostics *diagnostics,
@@ -127,28 +169,88 @@ void ValidateShaderInterface(TDiagnostics *diagnostics,
         return;
     }
 
-    std::map<int, const TIntermSymbol *> locationMap;
+    LocationMap locationMap;
     for (const TIntermSymbol *varying : varyingVector)
     {
-        const int location = varying->getType().getLayoutQualifier().location;
+        const TType &varyingType = varying->getType();
+        const int location       = varyingType.getLayoutQualifier().location;
         ASSERT(location >= 0);
 
-        const int elementCount = GetLocationCount(varying, ignoreVaryingArraySize);
-        for (int elementIndex = 0; elementIndex < elementCount; ++elementIndex)
+        // A varying is either:
+        //
+        // - A vector or matrix, which can take a number of contiguous locations
+        // - A struct, which also takes a number of contiquous locations
+        // - An interface block.
+        //
+        // Interface blocks can assign arbitrary locations to their fields, for example:
+        //
+        //     layout(location = 4) in block {
+        //         vec4 a;                         // gets location 4
+        //         vec4 b;                         // gets location 5
+        //         layout(location = 7) vec4 c;    // gets location 7
+        //         vec4 d;                         // gets location 8
+        //         layout (location = 1) vec4 e;   // gets location 1
+        //         vec4 f;                         // gets location 2
+        //     };
+        //
+        // The following code therefore takes two paths.  For non-interface-block types, the number
+        // of locations for the varying is calculated (elementCount), and all locations in
+        // [location, location + elementCount) are marked as occupied.
+        //
+        // For interface blocks, a similar algorithm is implemented except each field is
+        // individually marked with the location either advancing automatically or taking its value
+        // from the field's layout qualifier.
+
+        if (varyingType.isInterfaceBlock())
         {
-            const int offsetLocation = location + elementIndex;
-            if (locationMap.find(offsetLocation) != locationMap.end())
+            int currentLocation       = location;
+            bool anyFieldWithLocation = false;
+
+            for (const TField *field : varyingType.getInterfaceBlock()->fields())
             {
-                std::stringstream strstr = sh::InitializeStream<std::stringstream>();
-                strstr << "'" << varying->getName()
-                       << "' conflicting location with previously defined '"
-                       << locationMap[offsetLocation]->getName() << "'";
-                error(*varying, strstr.str().c_str(), diagnostics);
+                const int fieldLocation = field->type()->getLayoutQualifier().location;
+                if (fieldLocation >= 0)
+                {
+                    currentLocation      = fieldLocation;
+                    anyFieldWithLocation = true;
+                }
+
+                const int fieldLocationCount = GetFieldLocationCount(field);
+                MarkVaryingLocations(diagnostics, varying, field, currentLocation,
+                                     fieldLocationCount, &locationMap);
+
+                currentLocation += fieldLocationCount;
             }
-            else
+
+            // Array interface blocks can't have location qualifiers on fields.
+            ASSERT(ignoreVaryingArraySize || !anyFieldWithLocation || !varyingType.isArray());
+
+            if (!ignoreVaryingArraySize && varyingType.isArray())
             {
-                locationMap[offsetLocation] = varying;
+                // This is only reached if the varying is an array of interface blocks, with only a
+                // layout qualifier on the block itself, for example:
+                //
+                //     layout(location = 4) in block {
+                //         vec4 a;
+                //         vec4 b;
+                //         vec4 c;
+                //         vec4 d;
+                //     } instance[N];
+                //
+                // The locations for instance[0] are already marked by the above code, so we need to
+                // further mark locations occupied by instances [1, N).  |currentLocation| is
+                // already just past the end of instance[0], which is the beginning of instance[1].
+                //
+                int remainingLocations = currentLocation * (varyingType.getArraySizeProduct() - 1);
+                MarkVaryingLocations(diagnostics, varying, nullptr, currentLocation,
+                                     remainingLocations, &locationMap);
             }
+        }
+        else
+        {
+            const int elementCount = GetLocationCount(varying, ignoreVaryingArraySize);
+            MarkVaryingLocations(diagnostics, varying, nullptr, location, elementCount,
+                                 &locationMap);
         }
     }
 }
@@ -225,9 +327,16 @@ void ValidateVaryingLocationsTraverser::validate(TDiagnostics *diagnostics)
 
 unsigned int CalculateVaryingLocationCount(TIntermSymbol *varying, GLenum shaderType)
 {
-    const TQualifier qualifier        = varying->getType().getQualifier();
+    const TType &varyingType          = varying->getType();
+    const TQualifier qualifier        = varyingType.getQualifier();
     const bool isShaderIn             = IsShaderIn(qualifier);
     const bool ignoreVaryingArraySize = isShaderIn && shaderType == GL_GEOMETRY_SHADER_EXT;
+
+    if (varyingType.isInterfaceBlock())
+    {
+        return GetInterfaceBlockLocationCount(varyingType, ignoreVaryingArraySize);
+    }
+
     return GetLocationCount(varying, ignoreVaryingArraySize);
 }
 
