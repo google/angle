@@ -80,6 +80,30 @@
       },
       "revId": "58c03c1037d0e2b4dccb36d7f7af0f6c3512f85e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a8e57b0b_3942b4c1",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 320,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-07T17:04:24Z",
+      "side": 1,
+      "message": "We rely on FramebufferVk::syncState() to do that for us if necessary.   We don\u0027t always want to do it when the draw framebuffer changes though.   For example, the MSAA optimization to convert a \u0027blit to resolve\u0027 to using resolve attachments relies on *not* calling flushCommandsAndEndRenderPass().",
+      "parentUuid": "611d59c5_baad6bb4",
+      "range": {
+        "startLine": 320,
+        "startChar": 29,
+        "endLine": 320,
+        "endChar": 49
+      },
+      "revId": "58c03c1037d0e2b4dccb36d7f7af0f6c3512f85e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
