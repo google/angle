@@ -50,6 +50,23 @@
       "message": "Instead I think we should probably turn off the WARN() on resolveCompile errors.",
       "revId": "d6719519e525236f271e14380cbfa0ec158f2f3a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e8d3c5d5_d493ec41",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-07T18:30:19Z",
+      "side": 1,
+      "message": "Reasoning being that we shouldn\u0027t be printing INFO/EVENT, maybe WARN too, to stderr. Though WARN could go either way. Other solutions welcome.",
+      "revId": "d6719519e525236f271e14380cbfa0ec158f2f3a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
