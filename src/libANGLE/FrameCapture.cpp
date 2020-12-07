@@ -3362,17 +3362,22 @@ bool SkipCall(EntryPoint entryPoint)
         case EntryPoint::GLDebugMessageInsertKHR:
         case EntryPoint::GLGetDebugMessageLog:
         case EntryPoint::GLGetDebugMessageLogKHR:
+        case EntryPoint::GLGetObjectLabelEXT:
         case EntryPoint::GLGetObjectLabelKHR:
         case EntryPoint::GLGetObjectPtrLabelKHR:
         case EntryPoint::GLGetPointervKHR:
         case EntryPoint::GLInsertEventMarkerEXT:
+        case EntryPoint::GLLabelObjectEXT:
         case EntryPoint::GLObjectLabelKHR:
         case EntryPoint::GLObjectPtrLabelKHR:
         case EntryPoint::GLPopDebugGroupKHR:
         case EntryPoint::GLPopGroupMarkerEXT:
         case EntryPoint::GLPushDebugGroupKHR:
         case EntryPoint::GLPushGroupMarkerEXT:
-            // Purposefully skip KHR_debug and EXT_debug_marker entry points
+            // Purposefully skip entry points from:
+            // - KHR_debug
+            // - EXT_debug_label
+            // - EXT_debug_marker
             // There is no need to capture these for replaying a trace in our harness
             return true;
 
