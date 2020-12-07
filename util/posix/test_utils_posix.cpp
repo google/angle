@@ -24,15 +24,26 @@
 
 #include "common/debug.h"
 #include "common/platform.h"
+#include "common/system_utils.h"
 
 #if !defined(ANGLE_PLATFORM_FUCHSIA)
 #    include <sys/resource.h>
+#endif
+
+#if defined(ANGLE_PLATFORM_MACOS)
+#    include <crt_externs.h>
 #endif
 
 namespace angle
 {
 namespace
 {
+
+#if defined(ANGLE_PLATFORM_MACOS)
+// Argument to skip the file hooking step. Might be automatically added by InitMetalFileAPIHooking()
+constexpr char kSkipFileHookingArg[] = "--skip-file-hooking";
+#endif
+
 struct ScopedPipe
 {
     ~ScopedPipe()
@@ -447,4 +458,77 @@ const char *GetNativeEGLLibraryNameWithExtension()
     return "unknown_libegl";
 #endif
 }
+
+#if defined(ANGLE_PLATFORM_MACOS)
+void InitMetalFileAPIHooking(int argc, char **argv)
+{
+    if (argc < 1)
+    {
+        return;
+    }
+
+    for (int i = 0; i < argc; ++i)
+    {
+        if (strncmp(argv[i], kSkipFileHookingArg, strlen(kSkipFileHookingArg)) == 0)
+        {
+            return;
+        }
+    }
+
+    constexpr char kInjectLibVarName[]    = "DYLD_INSERT_LIBRARIES";
+    constexpr size_t kInjectLibVarNameLen = sizeof(kInjectLibVarName) - 1;
+
+    std::string exeDir = GetExecutableDirectory();
+    if (!exeDir.empty() && exeDir.back() != '/')
+    {
+        exeDir += "/";
+    }
+
+#    if !defined(NDEBUG)
+    std::cerr << "Preloading " << exeDir << "libmetal_shader_cache_file_hooking.dylib" << std::endl;
+#    endif
+
+    // Intercept Metal shader cache access and return as if the cache doesn't exist.
+    // This is to avoid slow shader cache mechanism that caused the test timeout in the past.
+    // In order to do that, we need to hook the file API functions by making sure
+    // libmetal_shader_cache_file_hooking.dylib library is loaded first before any other libraries.
+    std::string injectLibsVar =
+        std::string(kInjectLibVarName) + "=" + exeDir + "libmetal_shader_cache_file_hooking.dylib";
+
+    char skipHookOption[sizeof(kSkipFileHookingArg)];
+    memcpy(skipHookOption, kSkipFileHookingArg, sizeof(kSkipFileHookingArg));
+
+    // Construct environment variables
+    std::vector<char *> newEnv;
+    char **environ = *_NSGetEnviron();
+    for (int i = 0; environ[i]; ++i)
+    {
+        if (strncmp(environ[i], kInjectLibVarName, kInjectLibVarNameLen) == 0)
+        {
+            injectLibsVar += ':';
+            injectLibsVar += environ[i] + kInjectLibVarNameLen + 1;
+        }
+        else
+        {
+            newEnv.push_back(environ[i]);
+        }
+    }
+    newEnv.push_back(strdup(injectLibsVar.data()));
+    newEnv.push_back(nullptr);
+
+    // Construct arguments with kSkipFileHookingArg flag to skip the hooking after re-launching.
+    std::vector<char *> newArgs;
+    newArgs.push_back(argv[0]);
+    newArgs.push_back(skipHookOption);
+    for (int i = 1; i < argc; ++i)
+    {
+        newArgs.push_back(argv[i]);
+    }
+    newArgs.push_back(nullptr);
+
+    // Re-launch the app with file API hooked.
+    ASSERT(-1 != execve(argv[0], newArgs.data(), newEnv.data()));
+}
+#endif
+
 }  // namespace angle

@@ -903,6 +903,12 @@ TestSuite::TestSuite(int *argc, char **argv)
     Optional<int> filterArgIndex;
     bool alsoRunDisabledTests = false;
 
+#if defined(ANGLE_PLATFORM_MACOS)
+    // By default, we should hook file API functions on macOS to avoid slow Metal shader caching
+    // file access.
+    angle::InitMetalFileAPIHooking(*argc, argv);
+#endif
+
 #if defined(ANGLE_PLATFORM_WINDOWS)
     testing::GTEST_FLAG(catch_exceptions) = false;
 #endif
