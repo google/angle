@@ -1554,6 +1554,11 @@ void GenerateCaps(const FunctionsGL *functions,
                                 functions->isAtLeastGLES(gl::Version(3, 2)) ||
                                 functions->hasGLExtension("GL_ARB_gpu_shader5") ||
                                 functions->hasGLESExtension("GL_EXT_gpu_shader5");
+    extensions->shaderIoBlocksOES = functions->isAtLeastGL(gl::Version(3, 2)) ||
+                                    functions->isAtLeastGLES(gl::Version(3, 2)) ||
+                                    functions->hasGLESExtension("GL_OES_shader_io_blocks") ||
+                                    functions->hasGLESExtension("GL_EXT_shader_io_blocks");
+    extensions->shaderIoBlocksEXT = extensions->shaderIoBlocksOES;
 
     extensions->shadowSamplersEXT = functions->isAtLeastGL(gl::Version(2, 0)) ||
                                     functions->isAtLeastGLES(gl::Version(3, 0)) ||

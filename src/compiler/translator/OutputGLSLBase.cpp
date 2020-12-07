@@ -258,8 +258,7 @@ void TOutputGLSLBase::writeLayoutQualifier(TIntermTyped *variable)
 
     if (type.getBasicType() == EbtInterfaceBlock)
     {
-        const TInterfaceBlock *interfaceBlock = type.getInterfaceBlock();
-        declareInterfaceBlockLayout(interfaceBlock);
+        declareInterfaceBlockLayout(type);
         return;
     }
 
@@ -1321,42 +1320,45 @@ void TOutputGLSLBase::declareStruct(const TStructure *structure)
     }
 }
 
-void TOutputGLSLBase::declareInterfaceBlockLayout(const TInterfaceBlock *interfaceBlock)
+void TOutputGLSLBase::declareInterfaceBlockLayout(const TType &type)
 {
-    TInfoSinkBase &out = objSink();
-
-    out << "layout(";
-
-    const TQualifier &qualifier = interfaceBlock->fields().front()->type()->getQualifier();
     // 4.4.5 Uniform and Shader Storage Block Layout Qualifiers in GLSL 4.5 spec.
     // Layout qualifiers can be used for uniform and shader storage blocks,
     // but not for non-block uniform declarations.
-    if (!IsShaderIoBlock(qualifier))
+    if (IsShaderIoBlock(type.getQualifier()))
     {
-        switch (interfaceBlock->blockStorage())
-        {
-            case EbsUnspecified:
-            case EbsShared:
-                // Default block storage is shared.
-                out << "shared";
-                break;
+        return;
+    }
 
-            case EbsPacked:
-                out << "packed";
-                break;
+    const TInterfaceBlock *interfaceBlock = type.getInterfaceBlock();
+    TInfoSinkBase &out                    = objSink();
 
-            case EbsStd140:
-                out << "std140";
-                break;
+    out << "layout(";
 
-            case EbsStd430:
-                out << "std430";
-                break;
+    switch (interfaceBlock->blockStorage())
+    {
+        case EbsUnspecified:
+        case EbsShared:
+            // Default block storage is shared.
+            fprintf(stderr, "\n\n\nHERE\n\n\n");
+            out << "shared";
+            break;
 
-            default:
-                UNREACHABLE();
-                break;
-        }
+        case EbsPacked:
+            out << "packed";
+            break;
+
+        case EbsStd140:
+            out << "std140";
+            break;
+
+        case EbsStd430:
+            out << "std430";
+            break;
+
+        default:
+            UNREACHABLE();
+            break;
     }
 
     if (interfaceBlock->blockBinding() >= 0)
