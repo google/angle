@@ -69,6 +69,24 @@
       "message": "Since Geoff is out, I\u0027ll go ahead and +2 this for now and we can clean anything up if/when he has a chance to look at it in the future.",
       "revId": "f33601eb61596c966922cf960645933abc53d110",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c6af7d42_4b04c369",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1377582
+      },
+      "writtenOn": "2020-12-07T18:06:36Z",
+      "side": 1,
+      "message": "Hi, Tim. It seems that I don\u0027t have the permission to submit the change. Can you submit the change for me? Thanks!",
+      "parentUuid": "f2bdc3ca_809410fb",
+      "revId": "f33601eb61596c966922cf960645933abc53d110",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
