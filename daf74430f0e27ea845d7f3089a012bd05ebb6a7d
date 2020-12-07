@@ -50,6 +50,24 @@
       "message": "A little surprised that even the gpu_info_util code is still linking against these frameworks instead of using the soft linking mechanism.",
       "revId": "daf74430f0e27ea845d7f3089a012bd05ebb6a7d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5192b685_25f1d821",
+        "filename": "BUILD.gn",
+        "patchSetId": 5
+      },
+      "lineNbr": 448,
+      "author": {
+        "id": 1117350
+      },
+      "writtenOn": "2020-12-07T19:55:10Z",
+      "side": 1,
+      "message": "For now, Apple isn\u0027t actually using the soft linking stuff they added. I haven\u0027t been able to run these binaries after building so while they link I\u0027m not 100% sure they work. I\u0027m going to work on running tests next (if it doesn\u0027t look like it will take too long).",
+      "parentUuid": "5efc0343_0bf18861",
+      "revId": "daf74430f0e27ea845d7f3089a012bd05ebb6a7d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
