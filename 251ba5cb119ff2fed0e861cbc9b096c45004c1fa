@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bdfa3a93_0225a6fa",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1474623
+      },
+      "writtenOn": "2020-12-07T14:43:00Z",
+      "side": 1,
+      "message": "how may bots here?",
+      "revId": "251ba5cb119ff2fed0e861cbc9b096c45004c1fa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
