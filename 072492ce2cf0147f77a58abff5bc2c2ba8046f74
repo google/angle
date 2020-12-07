@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fa9d8699_83fc8842",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1557,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-07T21:49:02Z",
+      "side": 1,
+      "message": "Couldn\u0027t find any information on which GL extension got this into the spec.",
+      "range": {
+        "startLine": 1557,
+        "startChar": 36,
+        "endLine": 1557,
+        "endChar": 77
+      },
+      "revId": "072492ce2cf0147f77a58abff5bc2c2ba8046f74",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
