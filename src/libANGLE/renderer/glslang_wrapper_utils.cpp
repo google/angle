@@ -50,6 +50,11 @@ ANGLE_REENABLE_EXTRA_SEMI_WARNING
                                                  \
     } while (0)
 
+// Enable this for debug logging of pre-transform SPIR-V:
+#if !defined(ANGLE_DEBUG_SPIRV_TRANSFORMER)
+#    define ANGLE_DEBUG_SPIRV_TRANSFORMER 0
+#endif  // !defined(ANGLE_DEBUG_SPIRV_TRANSFORMER)
+
 namespace rx
 {
 namespace
@@ -3740,6 +3745,14 @@ angle::Result GlslangTransformSpirvCode(const GlslangErrorCallback &callback,
     {
         return angle::Result::Continue;
     }
+
+#if defined(ANGLE_DEBUG_SPIRV_TRANSFORMER) && ANGLE_DEBUG_SPIRV_TRANSFORMER
+    spvtools::SpirvTools spirvTools(SPV_ENV_VULKAN_1_1);
+    spirvTools.SetMessageConsumer(ValidateSpirvMessage);
+    std::string readableSpirv;
+    spirvTools.Disassemble(initialSpirvBlob, &readableSpirv, 0);
+    fprintf(stderr, "%s\n", readableSpirv.c_str());
+#endif  // defined(ANGLE_DEBUG_SPIRV_TRANSFORMER) && ANGLE_DEBUG_SPIRV_TRANSFORMER
 
     // Transform the SPIR-V code by assigning location/set/binding values.
     SpirvTransformer transformer(initialSpirvBlob, removeEarlyFragmentTestsOptimization,
