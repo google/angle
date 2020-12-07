@@ -22,6 +22,30 @@
       },
       "revId": "968fccb20047d528c6ab82fe23e6365a6d9c5b99",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2225fdcf_39ce2b34",
+        "filename": "src/libANGLE/renderer/gl/eagl/DisplayEAGL.mm",
+        "patchSetId": 5
+      },
+      "lineNbr": 312,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-07T15:56:29Z",
+      "side": 0,
+      "message": "It\u0027s a compile error that James is fixing. The code was broken and I didn\u0027t detect it when I made my original CL.",
+      "parentUuid": "60c85f20_9d8e0021",
+      "range": {
+        "startLine": 312,
+        "startChar": 30,
+        "endLine": 312,
+        "endChar": 41
+      },
+      "revId": "968fccb20047d528c6ab82fe23e6365a6d9c5b99",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
