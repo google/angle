@@ -50,6 +50,23 @@
       "message": "Oops, Shabi is correct.",
       "revId": "29cfb61a1d5b08cfa173653fb3967ccc5e7b6eb6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0bea25c5_23436a28",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-07T15:53:13Z",
+      "side": 1,
+      "message": "Actually, the test failing on 6286 and passed on 8141. I think Jie was just running the test before/after the upgrade. Shabi can you re-review/",
+      "revId": "29cfb61a1d5b08cfa173653fb3967ccc5e7b6eb6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
