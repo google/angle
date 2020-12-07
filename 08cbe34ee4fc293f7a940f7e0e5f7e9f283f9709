@@ -34,6 +34,23 @@
       "parentUuid": "aadf9bd9_9479b630",
       "revId": "08cbe34ee4fc293f7a940f7e0e5f7e9f283f9709",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0fac826e_66331051",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-12-07T18:58:27Z",
+      "side": 1,
+      "message": "After rolling glslang",
+      "revId": "08cbe34ee4fc293f7a940f7e0e5f7e9f283f9709",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
