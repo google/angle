@@ -88,6 +88,24 @@
       "parentUuid": "5a404e0a_9b836d27",
       "revId": "3781f00be95ce2cff422226c417f76ab3e2084e6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "315d193d_a6ca4365",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1379716
+      },
+      "writtenOn": "2020-12-07T19:12:10Z",
+      "side": 1,
+      "message": "\u003e `if (bounds check fail) return no_support;` is faster than turning the array into a hash map. There won\u0027t be mandatory support for anything beyond what we already have anyway.\n\nDone.\n\n\u003e angle::Format is a union of GL format | D3D formats | Vulkan formats. So if we\u0027re missing an ANGLE format then that\u0027s a bug. There\u0027s no requirement for a GL format for angle Formats.\n\nFiled https://bugs.chromium.org/p/angleproject/issues/detail?id\u003d5438 .",
+      "parentUuid": "be5cf629_46666d29",
+      "revId": "3781f00be95ce2cff422226c417f76ab3e2084e6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
