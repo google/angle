@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "e5b66501_753dda3a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-12-07T15:14:15Z",
+      "side": 1,
+      "message": "I don\u0027t update args.gn in this CL. The CI bots do not have Android 29 NDK on them so can\u0027t run this tests. This is for local testing until the bots are updated.",
+      "parentUuid": "8ce76aa4_8322af8a",
+      "range": {
+        "startLine": 12,
+        "startChar": 0,
+        "endLine": 20,
+        "endChar": 26
+      },
+      "revId": "93ac2f6dabb2409301395261bec2da90d3ac6c8f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "76073458_7486a74c",
