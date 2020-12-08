@@ -41,6 +41,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a7016b8d_a8a41a7a",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 692,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-08T21:48:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cefcfc7a_da9a9710",
+      "range": {
+        "startLine": 692,
+        "startChar": 8,
+        "endLine": 692,
+        "endChar": 31
+      },
+      "revId": "ff5d0c555edb331570f74b9955000eb750bda051",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "da92d0b1_bd92770c",
@@ -54,6 +78,30 @@
       "writtenOn": "2020-12-08T14:04:25Z",
       "side": 1,
       "message": "nit: can just call this resourceUseLists",
+      "range": {
+        "startLine": 309,
+        "startChar": 65,
+        "endLine": 309,
+        "endChar": 90
+      },
+      "revId": "ff5d0c555edb331570f74b9955000eb750bda051",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "72e4f6c9_8b54c5bf",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
+        "patchSetId": 24
+      },
+      "lineNbr": 309,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-08T21:48:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "da92d0b1_bd92770c",
       "range": {
         "startLine": 309,
         "startChar": 65,

@@ -227,6 +227,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "c41cbd2a_f9679454",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 693,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-08T21:48:27Z",
+      "side": 1,
+      "message": "Regarding the test failure, it looks like it\u0027s relying entirely on glFlush() to ensure that draws to a texture shared between contexts are completed, rather than using a sync object.   Instead, it should be doing something like the MultithreadingTestES3::MultithreadFenceDraw() test I wrote, so that GL context synchronization is enforced with GL sync objects.\n\nFixing up the test seems to let it pass when updating ContextVk::flush() to use \u0027mSyncObjectPendingFlush \u0026\u0026 context-\u003eisShared\u0027.",
+      "parentUuid": "2462b0d3_7ba8315f",
+      "range": {
+        "startLine": 693,
+        "startChar": 8,
+        "endLine": 693,
+        "endChar": 55
+      },
+      "revId": "a814137c9ef8fb1841ac56c48afb8f0c69922755",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "18097b67_0550faad",
         "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
         "patchSetId": 22
@@ -357,6 +381,30 @@
       "side": 1,
       "message": "Yea, as I explained above, skip glFlush a bit tricky performance wise in that some cases you might get into GPU starvation and hurt performance. The original intent is that we avoid breaking RP because of glFlush, that is why we have that check. Other driver does skip flush also make up the flush at FBO boundary, for example. Similar to what Shabi described above, I am more in the more conservative camp here.",
       "parentUuid": "dcae81b4_f6e5d5ee",
+      "range": {
+        "startLine": 705,
+        "startChar": 8,
+        "endLine": 705,
+        "endChar": 69
+      },
+      "revId": "a814137c9ef8fb1841ac56c48afb8f0c69922755",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ca6308d8_05b5c800",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 705,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-08T21:48:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0f15c92c_8d91142c",
       "range": {
         "startLine": 705,
         "startChar": 8,
