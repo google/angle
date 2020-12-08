@@ -35,6 +35,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0aea64ef_9b3d95f9",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-08T16:37:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2c267564_64ea55f8",
+      "revId": "e1e64ff6a69979e8affd98df4479bf81e47a995d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7da418e0_db87376d",
@@ -48,6 +66,24 @@
       "writtenOn": "2020-12-08T16:05:26Z",
       "side": 1,
       "message": "I personally use `fprintf(stderr` as a habit, but feel free to switch to whatever",
+      "revId": "e1e64ff6a69979e8affd98df4479bf81e47a995d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9895df32_0d809ad7",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3752,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-08T16:37:41Z",
+      "side": 1,
+      "message": "Ack, this is fine for now. Anyone who uses it can feel free to update it.",
+      "parentUuid": "7da418e0_db87376d",
       "revId": "e1e64ff6a69979e8affd98df4479bf81e47a995d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
