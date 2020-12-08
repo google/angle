@@ -22,6 +22,30 @@
       },
       "revId": "072492ce2cf0147f77a58abff5bc2c2ba8046f74",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2413f8e3_0fb0d392",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1557,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2020-12-08T01:11:20Z",
+      "side": 1,
+      "message": "Yeah normally I search one of the keywords defined in the extension but that\u0027s not going to work here. I see an example on the internet where this is exposed with 3.2 so this it at least a subset of the right version",
+      "parentUuid": "fa9d8699_83fc8842",
+      "range": {
+        "startLine": 1557,
+        "startChar": 36,
+        "endLine": 1557,
+        "endChar": 77
+      },
+      "revId": "072492ce2cf0147f77a58abff5bc2c2ba8046f74",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
