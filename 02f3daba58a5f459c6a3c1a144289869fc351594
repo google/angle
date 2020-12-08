@@ -16,6 +16,29 @@
       "message": "ping - Jamie",
       "revId": "02f3daba58a5f459c6a3c1a144289869fc351594",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b5bd7850_1f168434",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 3925,
+      "author": {
+        "id": 1106289
+      },
+      "writtenOn": "2020-12-08T08:14:37Z",
+      "side": 1,
+      "message": "Could you elaborate on that? How should the driver know the actual format?",
+      "range": {
+        "startLine": 3925,
+        "startChar": 59,
+        "endLine": 3925,
+        "endChar": 63
+      },
+      "revId": "02f3daba58a5f459c6a3c1a144289869fc351594",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
