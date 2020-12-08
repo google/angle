@@ -25,32 +25,41 @@ void error(const TIntermSymbol &symbol, const char *reason, TDiagnostics *diagno
     diagnostics->error(symbol.getLine(), reason, symbol.getName().data());
 }
 
-int GetLocationCount(const TStructure *structure)
+int GetStructLocationCount(const TStructure *structure);
+
+int GetFieldLocationCount(const TField *field)
+{
+    int field_size         = 0;
+    const TType *fieldType = field->type();
+
+    if (fieldType->getStruct() != nullptr)
+    {
+        field_size = GetStructLocationCount(fieldType->getStruct());
+    }
+    else if (fieldType->isMatrix())
+    {
+        field_size = fieldType->getNominalSize();
+    }
+    else
+    {
+        ASSERT(fieldType->getSecondarySize() == 1);
+        field_size = 1;
+    }
+
+    if (fieldType->isArray())
+    {
+        field_size *= fieldType->getArraySizeProduct();
+    }
+
+    return field_size;
+}
+
+int GetStructLocationCount(const TStructure *structure)
 {
     int totalLocation = 0;
     for (const TField *field : structure->fields())
     {
-        int field_size         = 0;
-        const TType *fieldType = field->type();
-
-        if (fieldType->getStruct() != nullptr)
-        {
-            field_size = GetLocationCount(fieldType->getStruct());
-        }
-        else if (fieldType->isMatrix())
-        {
-            field_size = fieldType->getNominalSize();
-        }
-        else
-        {
-            field_size = 1;
-        }
-
-        if (fieldType->isArray())
-        {
-            field_size *= fieldType->getArraySizeProduct();
-        }
-        totalLocation += field_size;
+        totalLocation += GetFieldLocationCount(field);
     }
     return totalLocation;
 }
@@ -66,65 +75,44 @@ int GetLocationCount(const TIntermSymbol *varying, bool ignoreVaryingArraySize)
             const TType *fieldType = field->type();
             ASSERT(fieldType->getStruct() == nullptr && !fieldType->isArray());
 
-            totalLocation +=
-                fieldType->isMatrix() ? fieldType->getNominalSize() : fieldType->getSecondarySize();
+            totalLocation += GetFieldLocationCount(field);
         }
         return totalLocation;
     }
-    // [GL_EXT_shader_io_blocks SPEC Chapter 4.4.1]
-    // Geometry shader inputs, tessellation control shader inputs and outputs, and tessellation
-    // evaluation inputs all have an additional level of arrayness relative to other shader inputs
-    // and outputs. This outer array level is removed from the type before considering how many
-    // locations the type consumes.
-    else if (ignoreVaryingArraySize)
-    {
-        // Array-of-arrays cannot be inputs or outputs of a geometry shader.
-        // (GL_EXT_geometry_shader SPEC issues(5))
-        ASSERT(!varyingType.isArrayOfArrays());
-        return varyingType.getSecondarySize();
-    }
-    else if (varyingType.isInterfaceBlock())
+
+    if (varyingType.isInterfaceBlock())
     {
         unsigned int totalLocation = 0;
         for (const TField *field : varyingType.getInterfaceBlock()->fields())
         {
-            int field_size         = 0;
-            const TType *fieldType = field->type();
-
-            if (fieldType->getStruct() != nullptr)
-            {
-                field_size = GetLocationCount(fieldType->getStruct());
-            }
-            else if (fieldType->isMatrix())
-            {
-                field_size = fieldType->getNominalSize() * fieldType->getArraySizeProduct();
-            }
-            else
-            {
-                field_size = fieldType->getLocationCount();
-            }
-
-            if (fieldType->isArray())
-            {
-                field_size *= fieldType->getArraySizeProduct();
-            }
-            totalLocation += field_size;
+            totalLocation += GetFieldLocationCount(field);
         }
 
-        if (varyingType.isArray())
+        ASSERT(!varyingType.isArrayOfArrays() || ignoreVaryingArraySize);
+        if (!ignoreVaryingArraySize && varyingType.isArray())
         {
             totalLocation *= varyingType.getArraySizeProduct();
         }
         return totalLocation;
     }
-    else if (varyingType.isMatrix())
+
+    ASSERT(varyingType.isMatrix() || varyingType.getSecondarySize() == 1);
+    int elementLocationCount = varyingType.isMatrix() ? varyingType.getNominalSize() : 1;
+
+    // [GL_EXT_shader_io_blocks SPEC Chapter 4.4.1]
+    // Geometry shader inputs, tessellation control shader inputs and outputs, and tessellation
+    // evaluation inputs all have an additional level of arrayness relative to other shader inputs
+    // and outputs. This outer array level is removed from the type before considering how many
+    // locations the type consumes.
+    if (ignoreVaryingArraySize)
     {
-        return varyingType.getNominalSize() * varyingType.getArraySizeProduct();
+        // Array-of-arrays cannot be inputs or outputs of a geometry shader.
+        // (GL_EXT_geometry_shader SPEC issues(5))
+        ASSERT(!varyingType.isArrayOfArrays());
+        return elementLocationCount;
     }
-    else
-    {
-        return varyingType.getArraySizeProduct();
-    }
+
+    return elementLocationCount * varyingType.getArraySizeProduct();
 }
 
 using VaryingVector = std::vector<const TIntermSymbol *>;
@@ -237,7 +225,10 @@ void ValidateVaryingLocationsTraverser::validate(TDiagnostics *diagnostics)
 
 unsigned int CalculateVaryingLocationCount(TIntermSymbol *varying, GLenum shaderType)
 {
-    return GetLocationCount(varying, shaderType == GL_GEOMETRY_SHADER_EXT);
+    const TQualifier qualifier        = varying->getType().getQualifier();
+    const bool isShaderIn             = IsShaderIn(qualifier);
+    const bool ignoreVaryingArraySize = isShaderIn && shaderType == GL_GEOMETRY_SHADER_EXT;
+    return GetLocationCount(varying, ignoreVaryingArraySize);
 }
 
 bool ValidateVaryingLocations(TIntermBlock *root, TDiagnostics *diagnostics, GLenum shaderType)
