@@ -1005,10 +1005,12 @@ bool TranslatorVulkan::translateImpl(TIntermBlock *root,
                 }
             }
 
-            bool hasGLFragColor  = false;
-            bool hasGLFragData   = false;
-            bool usePreRotation  = (compileOptions & SH_ADD_PRE_ROTATION) != 0;
-            bool hasGLSampleMask = false;
+            bool hasGLFragColor          = false;
+            bool hasGLFragData           = false;
+            bool usePreRotation          = (compileOptions & SH_ADD_PRE_ROTATION) != 0;
+            bool hasGLSampleMask         = false;
+            bool hasGLSecondaryFragColor = false;
+            bool hasGLSecondaryFragData  = false;
 
             for (const ShaderVariable &outputVar : mOutputVariables)
             {
@@ -1030,11 +1032,24 @@ bool TranslatorVulkan::translateImpl(TIntermBlock *root,
                     hasGLSampleMask = true;
                     continue;
                 }
+                else if (outputVar.name == "gl_SecondaryFragColorEXT")
+                {
+                    ASSERT(!hasGLSecondaryFragColor);
+                    hasGLSecondaryFragColor = true;
+                    continue;
+                }
+                else if (outputVar.name == "gl_SecondaryFragDataEXT")
+                {
+                    ASSERT(!hasGLSecondaryFragData);
+                    hasGLSecondaryFragData = true;
+                    continue;
+                }
             }
 
             // Declare gl_FragColor and glFragData as webgl_FragColor and webgl_FragData
             // if it's core profile shaders and they are used.
-            ASSERT(!(hasGLFragColor && hasGLFragData));
+            ASSERT(!((hasGLFragColor || hasGLSecondaryFragColor) &&
+                     (hasGLFragData || hasGLSecondaryFragData)));
             if (hasGLFragColor)
             {
                 sink << "layout(location = 0) out vec4 webgl_FragColor;\n";
@@ -1042,6 +1057,15 @@ bool TranslatorVulkan::translateImpl(TIntermBlock *root,
             if (hasGLFragData)
             {
                 sink << "layout(location = 0) out vec4 webgl_FragData[gl_MaxDrawBuffers];\n";
+            }
+            if (hasGLSecondaryFragColor)
+            {
+                sink << "layout(location = 0, index = 1) out vec4 angle_SecondaryFragColor;\n";
+            }
+            if (hasGLSecondaryFragData)
+            {
+                sink << "layout(location = 0, index = 1) out vec4 angle_SecondaryFragData["
+                     << getResources().MaxDualSourceDrawBuffers << "];\n";
             }
 
             if (usesPointCoord)

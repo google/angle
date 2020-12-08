@@ -97,6 +97,7 @@ struct ShaderInterfaceVariableInfo
     // locations in their respective slots.
     uint32_t location  = kInvalid;
     uint32_t component = kInvalid;
+    uint32_t index     = kInvalid;
     // The stages this shader interface variable is active.
     gl::ShaderBitSet activeStages;
     // Used for transform feedback extension to decorate vertex shader output.

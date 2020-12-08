@@ -122,6 +122,7 @@ ProgramExecutable::ProgramExecutable(const ProgramExecutable &other)
       mCanDrawWith(other.mCanDrawWith),
       mOutputVariables(other.mOutputVariables),
       mOutputLocations(other.mOutputLocations),
+      mSecondaryOutputLocations(other.mSecondaryOutputLocations),
       mYUVOutput(other.mYUVOutput),
       mProgramInputs(other.mProgramInputs),
       mLinkedTransformFeedbackVaryings(other.mLinkedTransformFeedbackVaryings),
@@ -131,6 +132,7 @@ ProgramExecutable::ProgramExecutable(const ProgramExecutable &other)
       mDefaultUniformRange(other.mDefaultUniformRange),
       mSamplerUniformRange(other.mSamplerUniformRange),
       mUniformBlocks(other.mUniformBlocks),
+      mActiveUniformBlockBindings(other.mActiveUniformBlockBindings),
       mAtomicCounterBuffers(other.mAtomicCounterBuffers),
       mImageUniformRange(other.mImageUniformRange),
       mComputeShaderStorageBlocks(other.mComputeShaderStorageBlocks),
@@ -174,11 +176,13 @@ void ProgramExecutable::reset()
     mLinkedTransformFeedbackVaryings.clear();
     mUniforms.clear();
     mUniformBlocks.clear();
+    mActiveUniformBlockBindings.reset();
     mComputeShaderStorageBlocks.clear();
     mGraphicsShaderStorageBlocks.clear();
     mAtomicCounterBuffers.clear();
     mOutputVariables.clear();
     mOutputLocations.clear();
+    mSecondaryOutputLocations.clear();
     mYUVOutput = false;
     mSamplerBindings.clear();
     mComputeImageBindings.clear();
@@ -242,6 +246,170 @@ void ProgramExecutable::load(gl::BinaryInputStream *stream)
     mTessGenSpacing            = stream->readInt<GLenum>();
     mTessGenVertexOrder        = stream->readInt<GLenum>();
     mTessGenPointMode          = stream->readInt<GLenum>();
+
+    size_t attribCount = stream->readInt<size_t>();
+    ASSERT(getProgramInputs().empty());
+    for (size_t attribIndex = 0; attribIndex < attribCount; ++attribIndex)
+    {
+        sh::ShaderVariable attrib;
+        LoadShaderVar(stream, &attrib);
+        attrib.location = stream->readInt<int>();
+        mProgramInputs.push_back(attrib);
+    }
+
+    size_t uniformCount = stream->readInt<size_t>();
+    ASSERT(getUniforms().empty());
+    for (size_t uniformIndex = 0; uniformIndex < uniformCount; ++uniformIndex)
+    {
+        LinkedUniform uniform;
+        LoadShaderVar(stream, &uniform);
+
+        uniform.bufferIndex = stream->readInt<int>();
+        LoadBlockMemberInfo(stream, &uniform.blockInfo);
+
+        stream->readIntVector<unsigned int>(&uniform.outerArraySizes);
+
+        uniform.typeInfo = &GetUniformTypeInfo(uniform.type);
+
+        // Active shader info
+        for (ShaderType shaderType : gl::AllShaderTypes())
+        {
+            uniform.setActive(shaderType, stream->readBool());
+        }
+
+        mUniforms.push_back(uniform);
+    }
+
+    size_t uniformBlockCount = stream->readInt<size_t>();
+    ASSERT(getUniformBlocks().empty());
+    for (size_t uniformBlockIndex = 0; uniformBlockIndex < uniformBlockCount; ++uniformBlockIndex)
+    {
+        InterfaceBlock uniformBlock;
+        LoadInterfaceBlock(stream, &uniformBlock);
+        mUniformBlocks.push_back(uniformBlock);
+
+        mActiveUniformBlockBindings.set(uniformBlockIndex, uniformBlock.binding != 0);
+    }
+
+    size_t shaderStorageBlockCount = stream->readInt<size_t>();
+    ASSERT(getShaderStorageBlocks().empty());
+    for (size_t shaderStorageBlockIndex = 0; shaderStorageBlockIndex < shaderStorageBlockCount;
+         ++shaderStorageBlockIndex)
+    {
+        InterfaceBlock shaderStorageBlock;
+        LoadInterfaceBlock(stream, &shaderStorageBlock);
+        if (isCompute())
+        {
+            mComputeShaderStorageBlocks.push_back(shaderStorageBlock);
+        }
+        else
+        {
+            mGraphicsShaderStorageBlocks.push_back(shaderStorageBlock);
+        }
+    }
+
+    size_t atomicCounterBufferCount = stream->readInt<size_t>();
+    ASSERT(getAtomicCounterBuffers().empty());
+    for (size_t bufferIndex = 0; bufferIndex < atomicCounterBufferCount; ++bufferIndex)
+    {
+        AtomicCounterBuffer atomicCounterBuffer;
+        LoadShaderVariableBuffer(stream, &atomicCounterBuffer);
+
+        mAtomicCounterBuffers.push_back(atomicCounterBuffer);
+    }
+
+    size_t transformFeedbackVaryingCount = stream->readInt<size_t>();
+    ASSERT(mLinkedTransformFeedbackVaryings.empty());
+    for (size_t transformFeedbackVaryingIndex = 0;
+         transformFeedbackVaryingIndex < transformFeedbackVaryingCount;
+         ++transformFeedbackVaryingIndex)
+    {
+        sh::ShaderVariable varying;
+        stream->readIntVector<unsigned int>(&varying.arraySizes);
+        stream->readInt(&varying.type);
+        stream->readString(&varying.name);
+
+        GLuint arrayIndex = stream->readInt<GLuint>();
+
+        mLinkedTransformFeedbackVaryings.emplace_back(varying, arrayIndex);
+    }
+
+    mTransformFeedbackBufferMode = stream->readInt<GLint>();
+
+    size_t outputCount = stream->readInt<size_t>();
+    ASSERT(getOutputVariables().empty());
+    for (size_t outputIndex = 0; outputIndex < outputCount; ++outputIndex)
+    {
+        sh::ShaderVariable output;
+        LoadShaderVar(stream, &output);
+        output.location = stream->readInt<int>();
+        output.index    = stream->readInt<int>();
+        mOutputVariables.push_back(output);
+    }
+
+    size_t outputVarCount = stream->readInt<size_t>();
+    ASSERT(getOutputLocations().empty());
+    for (size_t outputIndex = 0; outputIndex < outputVarCount; ++outputIndex)
+    {
+        VariableLocation locationData;
+        stream->readInt(&locationData.arrayIndex);
+        stream->readInt(&locationData.index);
+        stream->readBool(&locationData.ignored);
+        mOutputLocations.push_back(locationData);
+    }
+
+    size_t secondaryOutputVarCount = stream->readInt<size_t>();
+    ASSERT(getSecondaryOutputLocations().empty());
+    for (size_t outputIndex = 0; outputIndex < secondaryOutputVarCount; ++outputIndex)
+    {
+        VariableLocation locationData;
+        stream->readInt(&locationData.arrayIndex);
+        stream->readInt(&locationData.index);
+        stream->readBool(&locationData.ignored);
+        mSecondaryOutputLocations.push_back(locationData);
+    }
+
+    unsigned int defaultUniformRangeLow  = stream->readInt<unsigned int>();
+    unsigned int defaultUniformRangeHigh = stream->readInt<unsigned int>();
+    mDefaultUniformRange                 = RangeUI(defaultUniformRangeLow, defaultUniformRangeHigh);
+
+    unsigned int samplerRangeLow  = stream->readInt<unsigned int>();
+    unsigned int samplerRangeHigh = stream->readInt<unsigned int>();
+    mSamplerUniformRange          = RangeUI(samplerRangeLow, samplerRangeHigh);
+
+    size_t samplerCount = stream->readInt<size_t>();
+    for (size_t samplerIndex = 0; samplerIndex < samplerCount; ++samplerIndex)
+    {
+        TextureType textureType = stream->readEnum<TextureType>();
+        GLenum samplerType      = stream->readInt<GLenum>();
+        SamplerFormat format    = stream->readEnum<SamplerFormat>();
+        size_t bindingCount     = stream->readInt<size_t>();
+        mSamplerBindings.emplace_back(textureType, samplerType, format, bindingCount);
+    }
+
+    unsigned int imageRangeLow  = stream->readInt<unsigned int>();
+    unsigned int imageRangeHigh = stream->readInt<unsigned int>();
+    mImageUniformRange          = RangeUI(imageRangeLow, imageRangeHigh);
+
+    size_t imageBindingCount = stream->readInt<size_t>();
+    for (size_t imageIndex = 0; imageIndex < imageBindingCount; ++imageIndex)
+    {
+        size_t elementCount     = stream->readInt<size_t>();
+        TextureType textureType = static_cast<TextureType>(stream->readInt<unsigned int>());
+        ImageBinding imageBinding(elementCount, textureType);
+        for (size_t elementIndex = 0; elementIndex < elementCount; ++elementIndex)
+        {
+            imageBinding.boundImageUnits[elementIndex] = stream->readInt<unsigned int>();
+        }
+        if (isCompute())
+        {
+            mComputeImageBindings.emplace_back(imageBinding);
+        }
+        else
+        {
+            mGraphicsImageBindings.emplace_back(imageBinding);
+        }
+    }
 }
 
 void ProgramExecutable::save(gl::BinaryOutputStream *stream) const
@@ -279,6 +447,115 @@ void ProgramExecutable::save(gl::BinaryOutputStream *stream) const
     stream->writeInt(mTessGenSpacing);
     stream->writeInt(mTessGenVertexOrder);
     stream->writeInt(mTessGenPointMode);
+
+    stream->writeInt(getProgramInputs().size());
+    for (const sh::ShaderVariable &attrib : getProgramInputs())
+    {
+        WriteShaderVar(stream, attrib);
+        stream->writeInt(attrib.location);
+    }
+
+    stream->writeInt(getUniforms().size());
+    for (const LinkedUniform &uniform : getUniforms())
+    {
+        WriteShaderVar(stream, uniform);
+
+        // FIXME: referenced
+
+        stream->writeInt(uniform.bufferIndex);
+        WriteBlockMemberInfo(stream, uniform.blockInfo);
+
+        stream->writeIntVector(uniform.outerArraySizes);
+
+        // Active shader info
+        for (ShaderType shaderType : gl::AllShaderTypes())
+        {
+            stream->writeBool(uniform.isActive(shaderType));
+        }
+    }
+
+    stream->writeInt(getUniformBlocks().size());
+    for (const InterfaceBlock &uniformBlock : getUniformBlocks())
+    {
+        WriteInterfaceBlock(stream, uniformBlock);
+    }
+
+    stream->writeInt(getShaderStorageBlocks().size());
+    for (const InterfaceBlock &shaderStorageBlock : getShaderStorageBlocks())
+    {
+        WriteInterfaceBlock(stream, shaderStorageBlock);
+    }
+
+    stream->writeInt(mAtomicCounterBuffers.size());
+    for (const AtomicCounterBuffer &atomicCounterBuffer : getAtomicCounterBuffers())
+    {
+        WriteShaderVariableBuffer(stream, atomicCounterBuffer);
+    }
+
+    stream->writeInt(getLinkedTransformFeedbackVaryings().size());
+    for (const auto &var : getLinkedTransformFeedbackVaryings())
+    {
+        stream->writeIntVector(var.arraySizes);
+        stream->writeInt(var.type);
+        stream->writeString(var.name);
+
+        stream->writeIntOrNegOne(var.arrayIndex);
+    }
+
+    stream->writeInt(getTransformFeedbackBufferMode());
+
+    stream->writeInt(getOutputVariables().size());
+    for (const sh::ShaderVariable &output : getOutputVariables())
+    {
+        WriteShaderVar(stream, output);
+        stream->writeInt(output.location);
+        stream->writeInt(output.index);
+    }
+
+    stream->writeInt(getOutputLocations().size());
+    for (const auto &outputVar : getOutputLocations())
+    {
+        stream->writeInt(outputVar.arrayIndex);
+        stream->writeIntOrNegOne(outputVar.index);
+        stream->writeBool(outputVar.ignored);
+    }
+
+    stream->writeInt(getSecondaryOutputLocations().size());
+    for (const auto &outputVar : getSecondaryOutputLocations())
+    {
+        stream->writeInt(outputVar.arrayIndex);
+        stream->writeIntOrNegOne(outputVar.index);
+        stream->writeBool(outputVar.ignored);
+    }
+
+    stream->writeInt(getDefaultUniformRange().low());
+    stream->writeInt(getDefaultUniformRange().high());
+
+    stream->writeInt(getSamplerUniformRange().low());
+    stream->writeInt(getSamplerUniformRange().high());
+
+    stream->writeInt(getSamplerBindings().size());
+    for (const auto &samplerBinding : getSamplerBindings())
+    {
+        stream->writeEnum(samplerBinding.textureType);
+        stream->writeInt(samplerBinding.samplerType);
+        stream->writeEnum(samplerBinding.format);
+        stream->writeInt(samplerBinding.boundTextureUnits.size());
+    }
+
+    stream->writeInt(getImageUniformRange().low());
+    stream->writeInt(getImageUniformRange().high());
+
+    stream->writeInt(getImageBindings().size());
+    for (const auto &imageBinding : getImageBindings())
+    {
+        stream->writeInt(imageBinding.boundImageUnits.size());
+        stream->writeInt(static_cast<unsigned int>(imageBinding.textureType));
+        for (size_t i = 0; i < imageBinding.boundImageUnits.size(); ++i)
+        {
+            stream->writeInt(imageBinding.boundImageUnits[i]);
+        }
+    }
 }
 
 int ProgramExecutable::getInfoLogLength() const

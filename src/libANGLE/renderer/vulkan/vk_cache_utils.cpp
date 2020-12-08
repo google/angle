@@ -90,6 +90,14 @@ uint8_t PackGLBlendFactor(GLenum blendFactor)
             return static_cast<uint8_t>(VK_BLEND_FACTOR_ONE_MINUS_CONSTANT_COLOR);
         case GL_ONE_MINUS_CONSTANT_ALPHA:
             return static_cast<uint8_t>(VK_BLEND_FACTOR_ONE_MINUS_CONSTANT_ALPHA);
+        case GL_SRC1_COLOR_EXT:
+            return static_cast<uint8_t>(VK_BLEND_FACTOR_SRC1_COLOR);
+        case GL_SRC1_ALPHA_EXT:
+            return static_cast<uint8_t>(VK_BLEND_FACTOR_SRC1_ALPHA);
+        case GL_ONE_MINUS_SRC1_COLOR_EXT:
+            return static_cast<uint8_t>(VK_BLEND_FACTOR_ONE_MINUS_SRC1_COLOR);
+        case GL_ONE_MINUS_SRC1_ALPHA_EXT:
+            return static_cast<uint8_t>(VK_BLEND_FACTOR_ONE_MINUS_SRC1_ALPHA);
         default:
             UNREACHABLE();
             return 0;

@@ -539,13 +539,70 @@ void AssignAttributeLocations(const gl::ProgramExecutable &programExecutable,
     }
 }
 
-void AssignOutputLocations(const gl::ProgramExecutable &programExecutable,
+void AssignSecondaryOutputLocations(const gl::ProgramState &programState,
+                                    ShaderInterfaceVariableInfoMap *variableInfoMapOut)
+{
+    const auto &secondaryOutputLocations =
+        programState.getExecutable().getSecondaryOutputLocations();
+    const auto &outputVariables = programState.getExecutable().getOutputVariables();
+
+    // Handle EXT_blend_func_extended secondary outputs (ones with index=1)
+    for (const gl::VariableLocation &outputLocation : secondaryOutputLocations)
+    {
+        if (outputLocation.arrayIndex == 0 && outputLocation.used() && !outputLocation.ignored)
+        {
+            const sh::ShaderVariable &outputVar = outputVariables[outputLocation.index];
+
+            uint32_t location = 0;
+            if (outputVar.location != -1)
+            {
+                location = outputVar.location;
+            }
+
+            ShaderInterfaceVariableInfo *info =
+                AddLocationInfo(variableInfoMapOut, gl::ShaderType::Fragment, outputVar.mappedName,
+                                location, ShaderInterfaceVariableInfo::kInvalid, 0, 0);
+
+            // If the shader source has not specified the index, specify it here.
+            if (outputVar.index == -1)
+            {
+                // Index 1 is used to specify that the color be used as the second color input to
+                // the blend equation
+                info->index = 1;
+            }
+        }
+    }
+    // Handle secondary outputs for ESSL version less than 3.00
+    gl::Shader *fragmentShader = programState.getAttachedShader(gl::ShaderType::Fragment);
+    if (fragmentShader && fragmentShader->getShaderVersion() == 100)
+    {
+        const auto &shaderOutputs = fragmentShader->getActiveOutputVariables();
+        for (const auto &outputVar : shaderOutputs)
+        {
+            if (outputVar.name == "gl_SecondaryFragColorEXT")
+            {
+                AddLocationInfo(variableInfoMapOut, gl::ShaderType::Fragment,
+                                "angle_SecondaryFragColor", 0,
+                                ShaderInterfaceVariableInfo::kInvalid, 0, 0);
+            }
+            else if (outputVar.name == "gl_SecondaryFragDataEXT")
+            {
+                AddLocationInfo(variableInfoMapOut, gl::ShaderType::Fragment,
+                                "angle_SecondaryFragData", 0, ShaderInterfaceVariableInfo::kInvalid,
+                                0, 0);
+            }
+        }
+    }
+}
+
+void AssignOutputLocations(const gl::ProgramState &programState,
                            const gl::ShaderType shaderType,
                            ShaderInterfaceVariableInfoMap *variableInfoMapOut)
 {
     // Assign output locations for the fragment shader.
     ASSERT(shaderType == gl::ShaderType::Fragment);
-    // TODO(syoussefi): Add support for EXT_blend_func_extended.  http://anglebug.com/3385
+
+    const gl::ProgramExecutable &programExecutable   = programState.getExecutable();
     const auto &outputLocations                      = programExecutable.getOutputLocations();
     const auto &outputVariables                      = programExecutable.getOutputVariables();
     const std::array<std::string, 3> implicitOutputs = {"gl_FragDepth", "gl_SampleMask",
@@ -575,6 +632,8 @@ void AssignOutputLocations(const gl::ProgramExecutable &programExecutable,
                             ShaderInterfaceVariableInfo::kInvalid, 0, 0);
         }
     }
+
+    AssignSecondaryOutputLocations(programState, variableInfoMapOut);
 
     // When no fragment output is specified by the shader, the translator outputs webgl_FragColor or
     // webgl_FragData.  Add an entry for these.  Even though the translator is already assigning
@@ -2223,6 +2282,13 @@ bool SpirvTransformer::transformDecorate(const uint32_t *instruction)
                              {spirv::LiteralInteger(info->component)});
     }
 
+    // Add index decoration, if any.
+    if (info->index != ShaderInterfaceVariableInfo::kInvalid)
+    {
+        spirv::WriteDecorate(mSpirvBlobOut, id, spv::DecorationIndex,
+                             {spirv::LiteralInteger(info->index)});
+    }
+
     // Add Xfb decorations, if any.
     if (mOptions.isTransformFeedbackStage &&
         info->xfb.buffer != ShaderInterfaceVariableXfbInfo::kInvalid)
@@ -3743,7 +3809,7 @@ void GlslangAssignLocations(const GlslangSourceOptions &options,
     if ((shaderType == gl::ShaderType::Fragment) &&
         programExecutable.hasLinkedShaderStage(gl::ShaderType::Fragment))
     {
-        AssignOutputLocations(programExecutable, gl::ShaderType::Fragment, variableInfoMapOut);
+        AssignOutputLocations(programState, gl::ShaderType::Fragment, variableInfoMapOut);
     }
 
     // Assign attributes to the vertex shader, if any.

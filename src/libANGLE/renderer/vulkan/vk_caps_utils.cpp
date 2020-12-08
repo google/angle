@@ -997,6 +997,10 @@ void RendererVk::ensureCapsInitialized() const
             mNativeCaps.maxCombinedClipAndCullDistances = limitsVk.maxCombinedClipAndCullDistances;
         }
     }
+
+    // GL_EXT_blend_func_extended
+    mNativeExtensions.blendFuncExtended        = (mPhysicalDeviceFeatures.dualSrcBlend == VK_TRUE);
+    mNativeExtensions.maxDualSourceDrawBuffers = LimitToInt(limitsVk.maxFragmentDualSrcAttachments);
 }
 
 namespace vk

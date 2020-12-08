@@ -233,8 +233,16 @@ class ProgramExecutable final : public angle::Subject
     const std::vector<sh::ShaderVariable> &getProgramInputs() const { return mProgramInputs; }
     const std::vector<sh::ShaderVariable> &getOutputVariables() const { return mOutputVariables; }
     const std::vector<VariableLocation> &getOutputLocations() const { return mOutputLocations; }
+    const std::vector<VariableLocation> &getSecondaryOutputLocations() const
+    {
+        return mSecondaryOutputLocations;
+    }
     const std::vector<LinkedUniform> &getUniforms() const { return mUniforms; }
     const std::vector<InterfaceBlock> &getUniformBlocks() const { return mUniformBlocks; }
+    const UniformBlockBindingMask &getActiveUniformBlockBindings() const
+    {
+        return mActiveUniformBlockBindings;
+    }
     const std::vector<SamplerBinding> &getSamplerBindings() const { return mSamplerBindings; }
     const std::vector<ImageBinding> &getImageBindings() const
     {
@@ -392,6 +400,8 @@ class ProgramExecutable final : public angle::Subject
     // to uniforms.
     std::vector<sh::ShaderVariable> mOutputVariables;
     std::vector<VariableLocation> mOutputLocations;
+    // EXT_blend_func_extended secondary outputs (ones with index 1)
+    std::vector<VariableLocation> mSecondaryOutputLocations;
     bool mYUVOutput;
     // Vertex attributes, Fragment input varyings, etc.
     std::vector<sh::ShaderVariable> mProgramInputs;
@@ -414,6 +424,10 @@ class ProgramExecutable final : public angle::Subject
     RangeUI mDefaultUniformRange;
     RangeUI mSamplerUniformRange;
     std::vector<InterfaceBlock> mUniformBlocks;
+
+    // For faster iteration on the blocks currently being bound.
+    UniformBlockBindingMask mActiveUniformBlockBindings;
+
     std::vector<AtomicCounterBuffer> mAtomicCounterBuffers;
     RangeUI mImageUniformRange;
     std::vector<InterfaceBlock> mComputeShaderStorageBlocks;

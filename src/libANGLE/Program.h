@@ -108,6 +108,12 @@ void LoadBlockMemberInfo(BinaryInputStream *stream, sh::BlockMemberInfo *var);
 void WriteShaderVar(BinaryOutputStream *stream, const sh::ShaderVariable &var);
 void LoadShaderVar(BinaryInputStream *stream, sh::ShaderVariable *var);
 
+void WriteInterfaceBlock(BinaryOutputStream *stream, const InterfaceBlock &block);
+void LoadInterfaceBlock(BinaryInputStream *stream, InterfaceBlock *block);
+
+void WriteShaderVariableBuffer(BinaryOutputStream *stream, const ShaderVariableBuffer &var);
+void LoadShaderVariableBuffer(BinaryInputStream *stream, ShaderVariableBuffer *var);
+
 // Struct used for correlating uniforms/elements of uniform arrays to handles
 struct VariableLocation
 {
@@ -233,7 +239,7 @@ class ProgramState final : angle::NonCopyable
     }
     const UniformBlockBindingMask &getActiveUniformBlockBindingsMask() const
     {
-        return mActiveUniformBlockBindings;
+        return mExecutable->getActiveUniformBlockBindings();
     }
     const std::vector<sh::ShaderVariable> &getProgramInputs() const
     {
@@ -250,7 +256,7 @@ class ProgramState final : angle::NonCopyable
     }
     const std::vector<VariableLocation> &getSecondaryOutputLocations() const
     {
-        return mSecondaryOutputLocations;
+        return mExecutable->getSecondaryOutputLocations();
     }
     const std::vector<LinkedUniform> &getUniforms() const { return mExecutable->getUniforms(); }
     const std::vector<VariableLocation> &getUniformLocations() const { return mUniformLocations; }
@@ -386,15 +392,9 @@ class ProgramState final : angle::NonCopyable
     uint32_t mLocationsUsedForXfbExtension;
     std::vector<std::string> mTransformFeedbackVaryingNames;
 
-    // For faster iteration on the blocks currently being bound.
-    UniformBlockBindingMask mActiveUniformBlockBindings;
-
     std::vector<VariableLocation> mUniformLocations;
     std::vector<BufferVariable> mBufferVariables;
     RangeUI mAtomicCounterUniformRange;
-
-    // EXT_blend_func_extended secondary outputs (ones with index 1) in ESSL 3.00 shaders.
-    std::vector<VariableLocation> mSecondaryOutputLocations;
 
     DrawBufferMask mActiveOutputVariables;
 
