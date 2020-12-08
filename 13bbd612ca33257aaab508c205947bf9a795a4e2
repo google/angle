@@ -16,6 +16,161 @@
       "message": "@Jamie, ICYMI",
       "revId": "13bbd612ca33257aaab508c205947bf9a795a4e2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6305116e_73c5f29c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-08T14:00:42Z",
+      "side": 1,
+      "message": "Nice work. Some suggestions on a couple points.",
+      "revId": "13bbd612ca33257aaab508c205947bf9a795a4e2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7ac91466_87e8575c",
+        "filename": "src/libANGLE/renderer/vulkan/QueryVk.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-08T14:00:42Z",
+      "side": 1,
+      "message": "nit: please use vk::Shared. It\u0027s designed specifically for this use case.",
+      "range": {
+        "startLine": 74,
+        "startChar": 20,
+        "endLine": 74,
+        "endChar": 41
+      },
+      "revId": "13bbd612ca33257aaab508c205947bf9a795a4e2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "de6bcbfb_937fbd80",
+        "filename": "src/libANGLE/renderer/vulkan/doc/Queries.md",
+        "patchSetId": 6
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-08T14:00:42Z",
+      "side": 1,
+      "message": "in general there is a mapping between types of query in the two APIs. the impedance mismatch for XFB is the exception rather than the rule.",
+      "range": {
+        "startLine": 3,
+        "startChar": 0,
+        "endLine": 3,
+        "endChar": 70
+      },
+      "revId": "13bbd612ca33257aaab508c205947bf9a795a4e2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b43994ac_38c011a8",
+        "filename": "src/libANGLE/renderer/vulkan/doc/Queries.md",
+        "patchSetId": 6
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-08T14:00:42Z",
+      "side": 1,
+      "message": "nit: shared",
+      "range": {
+        "startLine": 65,
+        "startChar": 47,
+        "endLine": 65,
+        "endChar": 58
+      },
+      "revId": "13bbd612ca33257aaab508c205947bf9a795a4e2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e47e134d_7100c3cf",
+        "filename": "src/libANGLE/renderer/vulkan/doc/Queries.md",
+        "patchSetId": 6
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-08T14:00:42Z",
+      "side": 1,
+      "message": "nit: s/VK/Vulkan for readability",
+      "range": {
+        "startLine": 65,
+        "startChar": 59,
+        "endLine": 65,
+        "endChar": 62
+      },
+      "revId": "13bbd612ca33257aaab508c205947bf9a795a4e2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7e769b0b_b073fd82",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 2536,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-08T14:00:42Z",
+      "side": 1,
+      "message": "nit: the queryvk doesn\u0027t own commands per se. A more accurate name would be \"hasBeenSubmitted\" or something like that.",
+      "range": {
+        "startLine": 2536,
+        "startChar": 18,
+        "endLine": 2536,
+        "endChar": 29
+      },
+      "revId": "13bbd612ca33257aaab508c205947bf9a795a4e2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9347d73d_b7dbb3a6",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 424,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-08T14:00:42Z",
+      "side": 1,
+      "message": "nit: please update getResult to take an index and remove this API",
+      "range": {
+        "startLine": 424,
+        "startChar": 13,
+        "endLine": 424,
+        "endChar": 31
+      },
+      "revId": "13bbd612ca33257aaab508c205947bf9a795a4e2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
