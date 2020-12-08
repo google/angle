@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "42594fd7_ec82efac",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2020-12-08T08:07:32Z",
+      "side": 1,
+      "message": "Please take another look. I\u0027ll confirm with the Sony folks that this also addresses their problem.\n",
+      "revId": "c737238d37ff076f9ad36584ccd2d80cdc80d46c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
