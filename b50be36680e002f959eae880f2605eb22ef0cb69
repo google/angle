@@ -79,6 +79,30 @@
       },
       "revId": "b50be36680e002f959eae880f2605eb22ef0cb69",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "916c32ac_76e05126",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2097,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2020-12-08T21:34:51Z",
+      "side": 1,
+      "message": "To be precise:\nhttps://chromium.googlesource.com/angle/angle/+/refs/heads/master/src/libANGLE/renderer/d3d/d3d11/UniformBlockToStructuredBufferTranslation.md",
+      "parentUuid": "1fe9cfe8_c6eda480",
+      "range": {
+        "startLine": 2096,
+        "startChar": 31,
+        "endLine": 2097,
+        "endChar": 85
+      },
+      "revId": "b50be36680e002f959eae880f2605eb22ef0cb69",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
