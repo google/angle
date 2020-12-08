@@ -250,7 +250,16 @@ template("angle_executable") {
 }
 
 template("angle_shared_library") {
-  shared_library(target_name) {
+  # On ios, define an ios_framework_bundle instead of a shared library.
+  # ios_framework_bundle doesn't automatically link, so we have to create
+  # a group that links and bundles the framework as well.
+  target_type = "shared_library"
+  internal_target_name = target_name
+  if (is_ios) {
+    target_type = "ios_framework_bundle"
+    internal_target_name = target_name + "_framework"
+  }
+  target(target_type, internal_target_name) {
     forward_variables_from(invoker,
                            "*",
                            [
@@ -270,6 +279,22 @@ template("angle_shared_library") {
     if (is_android) {
       configs += [ angle_root + ":build_id_config" ]
       configs -= [ "//build/config/android:hide_all_but_jni_onload" ]
+    }
+    if (is_ios) {
+      info_plist = "$angle_root/util/ios/Info.plist"
+    }
+  }
+  if (is_ios) {
+    group(target_name) {
+      forward_variables_from(invoker,
+                             [
+                               "testonly",
+                               "visibility",
+                             ])
+      public_deps = [
+        ":${internal_target_name}+bundle",
+        ":${internal_target_name}+link",
+      ]
     }
   }
 }
@@ -379,6 +404,14 @@ template("angle_test") {
       } else {
         use_raw_android_executable = true
       }
+    }
+    if (is_ios) {
+      # We use a special main function on iOS to initialize UIKit before the normal main runs.
+      ldflags = [
+        "-e",
+        "_ios_main",
+      ]
+      sources += [ "$angle_root/util/ios/ios_main.mm" ]
     }
   }
 }

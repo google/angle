@@ -86,6 +86,15 @@ if (is_mac) {
   ]
 }
 
+if (is_ios) {
+  _util_sources += [
+    "ios/IOSPixmap.h",
+    "ios/IOSPixmap.mm",
+    "ios/IOSWindow.h",
+    "ios/IOSWindow.mm",
+  ]
+}
+
 if (is_android) {
   _util_sources += [
     "android/AndroidPixmap.cpp",
@@ -189,6 +198,9 @@ foreach(is_shared_library,
       if (is_mac) {
         frameworks += [ "AppKit.framework" ]
       }
+      if (is_ios) {
+        frameworks += [ "UIKit.framework" ]
+      }
     }
 
     if (is_android) {
@@ -221,7 +233,7 @@ foreach(is_shared_library,
 
       public_deps += [ ":angle_util_loader" ]
 
-      if ((is_ios || is_mac) && !is_component_build) {
+      if (is_mac && !is_component_build) {
         ldflags = [
           "-install_name",
           "@rpath/libangle_util.dylib",

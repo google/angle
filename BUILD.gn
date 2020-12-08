@@ -852,7 +852,7 @@ angle_source_set("libANGLE_with_capture") {
 }
 
 config("shared_library_public_config") {
-  if ((is_ios || is_mac) && !is_component_build) {
+  if (is_mac && !is_component_build) {
     # Executable targets that depend on the shared libraries below need to have
     # the rpath setup in non-component build configurations.
     ldflags = [

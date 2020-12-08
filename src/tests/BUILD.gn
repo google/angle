@@ -48,6 +48,12 @@ angle_static_library("angle_test_expectations") {
     sources += test_expectations_sources_mac
     frameworks = [ "Cocoa.framework" ]
   }
+  if (is_ios) {
+    sources += [
+      "test_expectations/GPUTestConfig_ios.h",
+      "test_expectations/GPUTestConfig_ios.mm",
+    ]
+  }
 }
 
 config("angle_common_test_utils_config") {
@@ -188,6 +194,19 @@ if (is_win || is_linux || is_chromeos || is_mac || is_android || is_fuchsia ||
 
     if (is_fuchsia) {
       manifest = "//build/config/fuchsia/gfx_tests.cmx"
+    }
+
+    if (is_ios) {
+      xcode_extra_attributes = {
+        SUPPORTS_MACCATALYST = "YES"
+      }
+
+      # Need to bundle the libraries inside the .app.
+      deps += [
+        "$angle_root:libEGL",
+        "$angle_root:libGLESv1_CM",
+        "$angle_root:libGLESv2",
+      ]
     }
   }
 }

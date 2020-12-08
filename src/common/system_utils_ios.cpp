@@ -21,8 +21,10 @@
 
 namespace angle
 {
+
 const char *GetSharedLibraryExtension()
 {
-    return "dylib";
+    return "framework";
 }
+
 }  // namespace angle
