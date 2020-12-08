@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "289a7862_3822d5f6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-08T20:05:14Z",
+      "side": 1,
+      "message": "Generally LGTM",
+      "revId": "60e4860705754b826bfbd7bb946a77310bbf54dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a590c823_1b6db03f",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 648,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-08T20:05:14Z",
+      "side": 1,
+      "message": "nit: I think you can make this a const \u0026 and it\u0027ll help. or you could use a template instead of std::function. std::function is actually banned:\n\nhttps://chromium-cpp.appspot.com/",
+      "range": {
+        "startLine": 648,
+        "startChar": 25,
+        "endLine": 648,
+        "endChar": 50
+      },
+      "revId": "60e4860705754b826bfbd7bb946a77310bbf54dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
