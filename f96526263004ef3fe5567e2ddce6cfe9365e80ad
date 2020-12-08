@@ -34,6 +34,24 @@
       "parentUuid": "114878de_814335fa",
       "revId": "f96526263004ef3fe5567e2ddce6cfe9365e80ad",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "58d035a2_cf93b67a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-08T17:11:55Z",
+      "side": 1,
+      "message": "This function is a bit of an odd one. I recall it getting called a lot and being a CPU-affecting hotspot. The code might have changed since then. Anyway LGTM, as I don\u0027t really know if it\u0027s still the case.",
+      "parentUuid": "ba5231be_7bc2c992",
+      "revId": "f96526263004ef3fe5567e2ddce6cfe9365e80ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
