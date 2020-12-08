@@ -205,8 +205,13 @@ angle::Result SyncHelperNativeFence::initializeWithFd(ContextVk *contextVk, int 
         retain(&contextVk->getResourceUseList());
 
         Serial serialOut;
+        // exportFd is exporting VK_EXTERNAL_FENCE_HANDLE_TYPE_SYNC_FD_BIT_KHR type handle which
+        // obeys copy semantics. This means that the fence must already be signaled or the work to
+        // signal in the graphics pipeline at the time we export the fd. Thus we need to
+        // ensureSubmission here.
         ANGLE_TRY(renderer->queueSubmitOneOff(contextVk, vk::PrimaryCommandBuffer(),
-                                              contextVk->getPriority(), &fence.get(), &serialOut));
+                                              contextVk->getPriority(), &fence.get(),
+                                              vk::SubmitPolicy::EnsureSubmitted, &serialOut));
 
         VkFenceGetFdInfoKHR fenceGetFdInfo = {};
         fenceGetFdInfo.sType               = VK_STRUCTURE_TYPE_FENCE_GET_FD_INFO_KHR;
@@ -219,7 +224,7 @@ angle::Result SyncHelperNativeFence::initializeWithFd(ContextVk *contextVk, int 
     // descriptor from the application to the Vulkan implementation. The application must not
     // perform any operations on the file descriptor after a successful import.
 
-    // Make a dup of importFenceFd before tranfering ownership to created fence.
+    // Make a dup of importFenceFd before transferring ownership to created fence.
     mNativeFenceFd = dup(importFenceFd);
 
     // Import FD - after creating fence.

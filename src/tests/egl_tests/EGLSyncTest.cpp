@@ -479,14 +479,4 @@ TEST_P(EGLSyncTest, AndroidNativeFence_withFences)
     EXPECT_EGL_TRUE(eglDestroySyncKHR(display, syncWithGeneratedFD));
 }
 
-ANGLE_INSTANTIATE_TEST(EGLSyncTest,
-                       ES2_D3D9(),
-                       ES2_D3D11(),
-                       ES2_METAL(),
-                       ES3_D3D11(),
-                       ES2_OPENGL(),
-                       ES3_OPENGL(),
-                       ES2_OPENGLES(),
-                       ES3_OPENGLES(),
-                       ES2_VULKAN(),
-                       ES3_VULKAN());
+ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(EGLSyncTest);

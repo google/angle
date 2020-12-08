@@ -432,7 +432,7 @@ angle::Result CommandProcessor::processTask(CommandProcessorTask *task)
 
             ANGLE_TRY(mCommandQueue.queueSubmitOneOff(
                 this, task->getPriority(), task->getOneOffCommandBufferVk(), task->getOneOffFence(),
-                task->getQueueSerial()));
+                SubmitPolicy::EnsureSubmitted, task->getQueueSerial()));
             ANGLE_TRY(mCommandQueue.checkCompletedCommands(this));
             break;
         }
@@ -652,6 +652,7 @@ angle::Result CommandProcessor::queueSubmitOneOff(Context *context,
                                                   egl::ContextPriority contextPriority,
                                                   VkCommandBuffer commandBufferHandle,
                                                   const Fence *fence,
+                                                  SubmitPolicy submitPolicy,
                                                   Serial submitQueueSerial)
 {
     ANGLE_TRY(checkAndPopPendingError(context));
@@ -659,6 +660,12 @@ angle::Result CommandProcessor::queueSubmitOneOff(Context *context,
     CommandProcessorTask task;
     task.initOneOffQueueSubmit(commandBufferHandle, contextPriority, fence, submitQueueSerial);
     queueCommand(std::move(task));
+    if (submitPolicy == SubmitPolicy::EnsureSubmitted)
+    {
+        // Caller has synchronization requirement to have work in GPU pipe when returning from this
+        // function.
+        ANGLE_TRY(waitForWorkComplete(context));
+    }
 
     return angle::Result::Continue;
 }
@@ -1091,6 +1098,7 @@ angle::Result CommandQueue::queueSubmitOneOff(Context *context,
                                               egl::ContextPriority contextPriority,
                                               VkCommandBuffer commandBufferHandle,
                                               const Fence *fence,
+                                              SubmitPolicy submitPolicy,
                                               Serial submitQueueSerial)
 {
     VkSubmitInfo submitInfo = {};
