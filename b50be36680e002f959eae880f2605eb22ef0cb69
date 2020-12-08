@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "73e030b1_9169054b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2020-12-08T04:54:28Z",
+      "side": 1,
+      "message": "Thank you for implementing this warning! I defer to Shabi\u0027s and Jamie\u0027s review.\n",
+      "revId": "b50be36680e002f959eae880f2605eb22ef0cb69",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
