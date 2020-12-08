@@ -641,6 +641,9 @@ TEST_P(MultithreadingTestES3, MultithreadFenceTexImage)
     // http://anglebug.com/5418
     ANGLE_SKIP_TEST_IF(IsLinux() && IsIntel() && IsVulkan());
 
+    // http://anglebug.com/5439
+    ANGLE_SKIP_TEST_IF(IsLinux() && isSwiftshader());
+
     // Have the secondary thread use glTexImage2D()
     mainThreadDraw(false);
 }
