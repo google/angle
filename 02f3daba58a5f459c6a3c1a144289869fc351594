@@ -182,6 +182,30 @@
       },
       "revId": "02f3daba58a5f459c6a3c1a144289869fc351594",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f9bb1934_3534e68d",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 3925,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-12-08T16:55:53Z",
+      "side": 1,
+      "message": "Yes, validation layer complains if I don\u0027t do that. Not to mention things don\u0027t work as well.\nA prior CL added support for YUV which covers this. Somehow we missed this case (or it got broken since). Testing is tricky here as we require a more recent SDK/NDK than is currently being used by chromium build infrastructure and it only applies to Android. Thus we don\u0027t have CI running yet and have to test manually.",
+      "parentUuid": "6ecff2ad_24d15524",
+      "range": {
+        "startLine": 3925,
+        "startChar": 59,
+        "endLine": 3925,
+        "endChar": 63
+      },
+      "revId": "02f3daba58a5f459c6a3c1a144289869fc351594",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
