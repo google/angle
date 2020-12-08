@@ -95,6 +95,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b3d9a97c_aa048cb1",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 655,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-12-08T18:09:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cf66c847_a88dfd04",
+      "range": {
+        "startLine": 655,
+        "startChar": 55,
+        "endLine": 655,
+        "endChar": 60
+      },
+      "revId": "aa2e47b7f41b2797e99320add0cc8c9428bf3910",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2d09a1d2_0004b34b",
