@@ -16,6 +16,69 @@
       "message": "Thank you for implementing this warning! I defer to Shabi\u0027s and Jamie\u0027s review.\n",
       "revId": "b50be36680e002f959eae880f2605eb22ef0cb69",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bc5409d7_6db1ca1f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-08T14:08:56Z",
+      "side": 1,
+      "message": "LGTM, two suggestions.",
+      "revId": "b50be36680e002f959eae880f2605eb22ef0cb69",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6bac5e92_47975830",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2082,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-08T14:08:56Z",
+      "side": 1,
+      "message": "nit: in general we try to avoid names with \"not\" in them, e.g. \"slowCompilingUniformBlockSet\". This applies to the other places where you use this term as well.",
+      "range": {
+        "startLine": 2082,
+        "startChar": 45,
+        "endLine": 2082,
+        "endChar": 76
+      },
+      "revId": "b50be36680e002f959eae880f2605eb22ef0cb69",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1fe9cfe8_c6eda480",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2097,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-08T14:08:56Z",
+      "side": 1,
+      "message": "nit: can you link to the main gitiles site instead of github?",
+      "range": {
+        "startLine": 2096,
+        "startChar": 31,
+        "endLine": 2097,
+        "endChar": 85
+      },
+      "revId": "b50be36680e002f959eae880f2605eb22ef0cb69",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
