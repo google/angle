@@ -60,6 +60,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "2b3e80e8_5f148e34",
+        "filename": "src/libANGLE/renderer/vulkan/QueryVk.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-08T17:30:46Z",
+      "side": 1,
+      "message": "Problem with vk::Shared is that it \"destroy\"s instead of \"release\".",
+      "parentUuid": "7ac91466_87e8575c",
+      "range": {
+        "startLine": 74,
+        "startChar": 20,
+        "endLine": 74,
+        "endChar": 41
+      },
+      "revId": "13bbd612ca33257aaab508c205947bf9a795a4e2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "de6bcbfb_937fbd80",
         "filename": "src/libANGLE/renderer/vulkan/doc/Queries.md",
         "patchSetId": 6
