@@ -20,6 +20,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "96ee7f53_fab81dae",
+        "filename": "src/libANGLE/renderer/vulkan/android/HardwareBufferImageSiblingVkAndroid.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-08T13:46:58Z",
+      "side": 1,
+      "message": "I\u0027d suggest you make this a ANGLE_VK_CHECK since it\u0027s not an implementation error, it\u0027s a driver bug.",
+      "range": {
+        "startLine": 186,
+        "startChar": 8,
+        "endLine": 186,
+        "endChar": 59
+      },
+      "revId": "02f3daba58a5f459c6a3c1a144289869fc351594",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "b5bd7850_1f168434",
         "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
         "patchSetId": 6
@@ -31,6 +54,30 @@
       "writtenOn": "2020-12-08T08:14:37Z",
       "side": 1,
       "message": "Could you elaborate on that? How should the driver know the actual format?",
+      "range": {
+        "startLine": 3925,
+        "startChar": 59,
+        "endLine": 3925,
+        "endChar": 63
+      },
+      "revId": "02f3daba58a5f459c6a3c1a144289869fc351594",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b82956ff_961fb568",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 3925,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-08T13:46:58Z",
+      "side": 1,
+      "message": "+1",
+      "parentUuid": "b5bd7850_1f168434",
       "range": {
         "startLine": 3925,
         "startChar": 59,
