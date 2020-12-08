@@ -16,6 +16,24 @@
       "message": "Is there another solution? This function is called a lot IIRC so this will inflate overhead.",
       "revId": "f96526263004ef3fe5567e2ddce6cfe9365e80ad",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ba5231be_7bc2c992",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-08T16:15:00Z",
+      "side": 1,
+      "message": "Call sites are:\n\n- ContextVk::submitFrame (not a bottleneck)\n- ContextVk::flushCommandsAndEndRenderPass when no RP active, yes this addition is unnecessary\n- ContextVk::flushCommandsAndEndRenderPass with RP active, this function call was already there in the caller\n- case gl::State::DIRTY_BIT_DRAW_FRAMEBUFFER_BINDING in syncState, this was missing this call which this change is fixing.\n\nOnly place I could remove this call from is the second case. Was that your concern?",
+      "parentUuid": "114878de_814335fa",
+      "revId": "f96526263004ef3fe5567e2ddce6cfe9365e80ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
