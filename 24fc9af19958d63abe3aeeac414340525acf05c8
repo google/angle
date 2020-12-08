@@ -36,6 +36,29 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "c393434a_46e00bd8",
+        "filename": "src/compiler/translator/ValidateVaryingLocations.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-08T20:23:43Z",
+      "side": 1,
+      "message": "typo: \u0027g\u0027",
+      "range": {
+        "startLine": 182,
+        "startChar": 57,
+        "endLine": 182,
+        "endChar": 58
+      },
+      "revId": "24fc9af19958d63abe3aeeac414340525acf05c8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "465fa26d_d2ce92ad",
