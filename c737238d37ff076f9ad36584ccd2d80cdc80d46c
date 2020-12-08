@@ -34,6 +34,24 @@
       "parentUuid": "42594fd7_ec82efac",
       "revId": "c737238d37ff076f9ad36584ccd2d80cdc80d46c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6b9c9855_1d34f5b4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2020-12-08T20:40:37Z",
+      "side": 1,
+      "message": "Thanks for testing! Thanks Jamie, James and Shabi for reviews and discussion. CQ\u0027ing.",
+      "parentUuid": "30115d0f_322521aa",
+      "revId": "c737238d37ff076f9ad36584ccd2d80cdc80d46c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
