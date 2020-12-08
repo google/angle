@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "114878de_814335fa",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-08T14:01:51Z",
+      "side": 1,
+      "message": "Is there another solution? This function is called a lot IIRC so this will inflate overhead.",
+      "revId": "f96526263004ef3fe5567e2ddce6cfe9365e80ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
