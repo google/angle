@@ -16,6 +16,23 @@
       "message": "I tested this by first proving to myself that the checkForResize path was hit when a webgl canvas was resized (it was)\nAnd then when I added this extension to the GLX backend, this path is no longer hit but resizes seem to work fine. I also assume that the webgl 1\u00262 tests have some resize tests.\nDoes this seem fair?",
       "revId": "a0bd24da20fe8c6b56b657181ff5ff003862a39c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9697ca66_7e11783f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-08T20:07:20Z",
+      "side": 1,
+      "message": "Nice!\n\nWas this the reason some people saw chrome being super slow?",
+      "revId": "a0bd24da20fe8c6b56b657181ff5ff003862a39c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
