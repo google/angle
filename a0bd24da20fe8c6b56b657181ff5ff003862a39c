@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f51d3ddf_506ace1a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2020-12-08T17:35:49Z",
+      "side": 1,
+      "message": "I tested this by first proving to myself that the checkForResize path was hit when a webgl canvas was resized (it was)\nAnd then when I added this extension to the GLX backend, this path is no longer hit but resizes seem to work fine. I also assume that the webgl 1\u00262 tests have some resize tests.\nDoes this seem fair?",
+      "revId": "a0bd24da20fe8c6b56b657181ff5ff003862a39c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
