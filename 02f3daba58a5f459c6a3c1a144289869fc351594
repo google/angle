@@ -41,6 +41,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8d252219_dc5b9e03",
+        "filename": "src/libANGLE/renderer/vulkan/android/HardwareBufferImageSiblingVkAndroid.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-12-08T15:37:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "96ee7f53_fab81dae",
+      "range": {
+        "startLine": 186,
+        "startChar": 8,
+        "endLine": 186,
+        "endChar": 59
+      },
+      "revId": "02f3daba58a5f459c6a3c1a144289869fc351594",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b5bd7850_1f168434",
@@ -78,6 +102,30 @@
       "side": 1,
       "message": "+1",
       "parentUuid": "b5bd7850_1f168434",
+      "range": {
+        "startLine": 3925,
+        "startChar": 59,
+        "endLine": 3925,
+        "endChar": 63
+      },
+      "revId": "02f3daba58a5f459c6a3c1a144289869fc351594",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e991a0e1_83ad4d36",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 3925,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-12-08T15:37:50Z",
+      "side": 1,
+      "message": "This is a validation requirement for VkImageViewCreateInfo:\nVUID-VkImageViewCreateInfo-image-02399\nIf image has an external format, format must be VK_FORMAT_UNDEFINED",
+      "parentUuid": "b82956ff_961fb568",
       "range": {
         "startLine": 3925,
         "startChar": 59,
