@@ -158,6 +158,30 @@
       },
       "revId": "02f3daba58a5f459c6a3c1a144289869fc351594",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b1596625_6e8b88bb",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 3925,
+      "author": {
+        "id": 1106289
+      },
+      "writtenOn": "2020-12-08T16:52:16Z",
+      "side": 1,
+      "message": "Never mind. Since you\u0027re hitting a validation error for VUID-VkImageViewCreateInfo-image-02399, it must be the case that VkExternalFormatANDROID is used so it considers it an \u0027external format\u0027, despite being a format which does have a Vukan equivalent.\n\nIt\u0027s a bit confusing that the wording that I quoted makes it appears that external formats are only ones that don\u0027t have a Vulkan equivalent. The second paragraph clarifies that it\u0027s also valid to specify an external format for known Vulkan equivalent formats.",
+      "parentUuid": "6ecff2ad_24d15524",
+      "range": {
+        "startLine": 3925,
+        "startChar": 59,
+        "endLine": 3925,
+        "endChar": 63
+      },
+      "revId": "02f3daba58a5f459c6a3c1a144289869fc351594",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
