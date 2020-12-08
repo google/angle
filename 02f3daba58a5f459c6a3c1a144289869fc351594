@@ -134,6 +134,30 @@
       },
       "revId": "02f3daba58a5f459c6a3c1a144289869fc351594",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6ecff2ad_24d15524",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 3925,
+      "author": {
+        "id": 1106289
+      },
+      "writtenOn": "2020-12-08T16:38:08Z",
+      "side": 1,
+      "message": "Thanks for the reference, but according to https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-external-android-hardware-buffer-external-formats \"Android hardware buffers may represent images using implementation-specific formats, layouts, color models, etc., which do not have Vulkan equivalents. Such external formats ...\" \n\nThe next paragraph clarifies that the VkExternalFormatANDROID extension structure can be used to provide the driver with the external format. Is that taken care of in this change?\n\nIt\u0027s not clear to me yet that using an external format disallows setting the Vulkan format if it\u0027s equivalent. Does the validation layer demand that it\u0027s VK_FORMAT_UNDEFINED, or that it matches the external format if provided?",
+      "parentUuid": "e991a0e1_83ad4d36",
+      "range": {
+        "startLine": 3925,
+        "startChar": 59,
+        "endLine": 3925,
+        "endChar": 63
+      },
+      "revId": "02f3daba58a5f459c6a3c1a144289869fc351594",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
