@@ -50,6 +50,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "5d75c389_2d4414cd",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 655,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-08T17:41:53Z",
+      "side": 1,
+      "message": "nit: flush is heavily overloaded, how about an enum like\n\nenum class SubmitPolicy\n{\n   AllowDeferred,\n   EnsureSubmitted,\n};",
+      "range": {
+        "startLine": 655,
+        "startChar": 55,
+        "endLine": 655,
+        "endChar": 60
+      },
+      "revId": "aa2e47b7f41b2797e99320add0cc8c9428bf3910",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "2d09a1d2_0004b34b",
         "filename": "src/libANGLE/renderer/vulkan/SyncVk.cpp",
         "patchSetId": 1
