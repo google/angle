@@ -51,6 +51,24 @@
       "message": "Regression test",
       "revId": "24fc9af19958d63abe3aeeac414340525acf05c8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0bfd28b5_009fca76",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 8783,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-12-08T19:58:17Z",
+      "side": 1,
+      "message": "missed this, thanks",
+      "parentUuid": "465fa26d_d2ce92ad",
+      "revId": "24fc9af19958d63abe3aeeac414340525acf05c8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
