@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d1075e50_909c354d",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 693,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-08T21:57:54Z",
+      "side": 1,
+      "message": "\u0026\u0026 !mEGLSyncObjectPendingFlush",
+      "revId": "d10920a75dd73dbd351af6919bae959aa1e75eda",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1b15d528_4e43e1df",
+        "filename": "src/tests/egl_tests/EGLContextSharingTest.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 508,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-08T21:57:54Z",
+      "side": 1,
+      "message": "This doesn\u0027t sound right. Why is flush needed for fence creation?",
+      "range": {
+        "startLine": 507,
+        "startChar": 8,
+        "endLine": 508,
+        "endChar": 18
+      },
+      "revId": "d10920a75dd73dbd351af6919bae959aa1e75eda",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
