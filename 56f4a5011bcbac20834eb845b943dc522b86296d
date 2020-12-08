@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "72ebe8cd_b2c3f4d0",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 3749,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-08T19:10:38Z",
+      "side": 1,
+      "message": "FYI, `#if X` behaves identically for both `#define X 0` and `#undef X`, so this check was unnecessary.",
+      "range": {
+        "startLine": 3749,
+        "startChar": 4,
+        "endLine": 3749,
+        "endChar": 46
+      },
+      "revId": "56f4a5011bcbac20834eb845b943dc522b86296d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
