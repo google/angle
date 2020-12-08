@@ -404,8 +404,7 @@ void TOutputGLSLBase::writeVariableType(const TType &type,
     }
     else if (type.getBasicType() == EbtInterfaceBlock)
     {
-        const TInterfaceBlock *interfaceBlock = type.getInterfaceBlock();
-        declareInterfaceBlock(interfaceBlock);
+        declareInterfaceBlock(type);
     }
     else
     {
@@ -1396,15 +1395,19 @@ const char *getVariableInterpolation(TQualifier qualifier)
     return nullptr;
 }
 
-void TOutputGLSLBase::declareInterfaceBlock(const TInterfaceBlock *interfaceBlock)
+void TOutputGLSLBase::declareInterfaceBlock(const TType &type)
 {
-    TInfoSinkBase &out = objSink();
+    const TInterfaceBlock *interfaceBlock = type.getInterfaceBlock();
+    TInfoSinkBase &out                    = objSink();
 
     out << hashName(interfaceBlock) << "{\n";
     const TFieldList &fields = interfaceBlock->fields();
     for (const TField *field : fields)
     {
-        writeFieldLayoutQualifier(field);
+        if (!IsShaderIoBlock(type.getQualifier()))
+        {
+            writeFieldLayoutQualifier(field);
+        }
         out << getMemoryQualifiers(*field->type());
         if (writeVariablePrecision(field->type()->getPrecision()))
             out << " ";

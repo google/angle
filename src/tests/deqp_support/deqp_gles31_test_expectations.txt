@@ -184,7 +184,6 @@
 3886 VULKAN : dEQP-GLES31.functional.image_load_store.3d.*layer = FAIL
 
 // Geometry shader support:
-3580 VULKAN : dEQP-GLES31.functional.shaders.linkage.es31.geometry.varying.types.float_struct = SKIP
 5430 VULKAN : dEQP-GLES31.functional.geometry_shading.query.primitives_generated_* = FAIL
 5407 VULKAN : dEQP-GLES31.functional.geometry_shading.layered.* = SKIP
 5407 VULKAN : dEQP-GLES31.functional.geometry_shading.instanced.invocation_per_layer* = SKIP
@@ -197,10 +196,6 @@
 3580 VULKAN : dEQP-GLES31.functional.shaders.linkage.es31.shader_storage_block.ambiguous_variable_name_3 = FAIL
 // Missing matching of struct name in member fields of matching nameless I/O blocks
 3580 VULKAN : dEQP-GLES31.functional.separate_shader.validation.es31.io_blocks.mismatch_different_member_struct_names = FAIL
-// Failed by glslang errors (matrix or packing qualifiers can only be used on a uniform or buffer)
-3580 VULKAN : dEQP-GLES31.functional.program_interface_query.program_input.type.interface_blocks.in.*.mat3x2 = FAIL
-3580 VULKAN : dEQP-GLES31.functional.program_interface_query.program_output.type.interface_blocks.out.*.mat3x2 = FAIL
-
 
 ////
 //// AMD Vulkan expectations
