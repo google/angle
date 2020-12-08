@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "dfdcfba6_433c8473",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 24
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-08T14:04:25Z",
+      "side": 1,
+      "message": "Charlie and Shabi seem on top of the remaining issues so I\u0027ll sign off and let you finish up with their reviews. Thanks all.",
+      "revId": "ff5d0c555edb331570f74b9955000eb750bda051",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "cefcfc7a_da9a9710",
@@ -19,6 +36,29 @@
         "startChar": 8,
         "endLine": 692,
         "endChar": 31
+      },
+      "revId": "ff5d0c555edb331570f74b9955000eb750bda051",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "da92d0b1_bd92770c",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
+        "patchSetId": 24
+      },
+      "lineNbr": 309,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-08T14:04:25Z",
+      "side": 1,
+      "message": "nit: can just call this resourceUseLists",
+      "range": {
+        "startLine": 309,
+        "startChar": 65,
+        "endLine": 309,
+        "endChar": 90
       },
       "revId": "ff5d0c555edb331570f74b9955000eb750bda051",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
