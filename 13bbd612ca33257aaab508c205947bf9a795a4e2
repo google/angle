@@ -108,6 +108,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "9676fb7a_6126fc76",
+        "filename": "src/libANGLE/renderer/vulkan/QueryVk.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-08T19:52:04Z",
+      "side": 1,
+      "message": "I misspoke, we don\u0027t need \"release\", but rather \"release to pool\":\n\n    queryPool-\u003efreeQuery(contextVk, \u0026mQueryHelper-\u003eget());\n\nI was going to go with a specific vk::Shared::resetAndReleaseToPool, but between it being a template and circular header dependencies it didn\u0027t work out. I added a generic vk::Shared::resetAndRelease that takes a lambda, let me know what you think.",
+      "parentUuid": "c8dd8792_c6493e37",
+      "range": {
+        "startLine": 74,
+        "startChar": 20,
+        "endLine": 74,
+        "endChar": 41
+      },
+      "revId": "13bbd612ca33257aaab508c205947bf9a795a4e2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "de6bcbfb_937fbd80",
         "filename": "src/libANGLE/renderer/vulkan/doc/Queries.md",
         "patchSetId": 6
@@ -119,6 +143,30 @@
       "writtenOn": "2020-12-08T14:00:42Z",
       "side": 1,
       "message": "in general there is a mapping between types of query in the two APIs. the impedance mismatch for XFB is the exception rather than the rule.",
+      "range": {
+        "startLine": 3,
+        "startChar": 0,
+        "endLine": 3,
+        "endChar": 70
+      },
+      "revId": "13bbd612ca33257aaab508c205947bf9a795a4e2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8448df1a_32daddc0",
+        "filename": "src/libANGLE/renderer/vulkan/doc/Queries.md",
+        "patchSetId": 6
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-08T19:52:04Z",
+      "side": 1,
+      "message": "Reworded.",
+      "parentUuid": "de6bcbfb_937fbd80",
       "range": {
         "startLine": 3,
         "startChar": 0,
@@ -175,6 +223,54 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "266e8c9d_30cde404",
+        "filename": "src/libANGLE/renderer/vulkan/doc/Queries.md",
+        "patchSetId": 6
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-08T19:52:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e47e134d_7100c3cf",
+      "range": {
+        "startLine": 65,
+        "startChar": 59,
+        "endLine": 65,
+        "endChar": 62
+      },
+      "revId": "13bbd612ca33257aaab508c205947bf9a795a4e2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bcfef680_00d3a97a",
+        "filename": "src/libANGLE/renderer/vulkan/doc/Queries.md",
+        "patchSetId": 6
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-08T19:52:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b43994ac_38c011a8",
+      "range": {
+        "startLine": 65,
+        "startChar": 47,
+        "endLine": 65,
+        "endChar": 58
+      },
+      "revId": "13bbd612ca33257aaab508c205947bf9a795a4e2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7e769b0b_b073fd82",
@@ -198,6 +294,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "afb28354_7a8bde41",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 2536,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-08T19:52:04Z",
+      "side": 1,
+      "message": "Changed to hasSubmittedCommands",
+      "parentUuid": "7e769b0b_b073fd82",
+      "range": {
+        "startLine": 2536,
+        "startChar": 18,
+        "endLine": 2536,
+        "endChar": 29
+      },
+      "revId": "13bbd612ca33257aaab508c205947bf9a795a4e2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9347d73d_b7dbb3a6",
@@ -211,6 +331,30 @@
       "writtenOn": "2020-12-08T14:00:42Z",
       "side": 1,
       "message": "nit: please update getResult to take an index and remove this API",
+      "range": {
+        "startLine": 424,
+        "startChar": 13,
+        "endLine": 424,
+        "endChar": 31
+      },
+      "revId": "13bbd612ca33257aaab508c205947bf9a795a4e2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e0dedbc3_1b1b9e9b",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 424,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-08T19:52:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9347d73d_b7dbb3a6",
       "range": {
         "startLine": 424,
         "startChar": 13,
