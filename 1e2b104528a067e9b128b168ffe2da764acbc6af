@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3714ad06_206d5acc",
+        "filename": "src/libANGLE/renderer/vulkan/SyncVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 317,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-09T20:43:12Z",
+      "side": 1,
+      "message": "nit: maybe do this in SyncWait",
+      "range": {
+        "startLine": 311,
+        "startChar": 5,
+        "endLine": 317,
+        "endChar": 9
+      },
+      "revId": "1e2b104528a067e9b128b168ffe2da764acbc6af",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8473af25_695d7c45",
+        "filename": "src/libANGLE/renderer/vulkan/SyncVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 318,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-09T20:43:12Z",
+      "side": 1,
+      "message": "nit: might as well make this return VkResult and process the result as with the prior case.",
+      "range": {
+        "startLine": 318,
+        "startChar": 21,
+        "endLine": 318,
+        "endChar": 29
+      },
+      "revId": "1e2b104528a067e9b128b168ffe2da764acbc6af",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
