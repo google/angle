@@ -129,6 +129,30 @@
       },
       "revId": "d10920a75dd73dbd351af6919bae959aa1e75eda",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8c196ab8_f7474017",
+        "filename": "src/tests/egl_tests/EGLContextSharingTest.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 508,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-12-09T04:41:40Z",
+      "side": 1,
+      "message": "I mean before you wait the fence on other thread/context, you must call glFlush on the previous context that inserts the fence. Otherwise the wait might stuck before no one does the flush/submit. That flush has to be called by app, not driver.",
+      "parentUuid": "b04a61e8_d4f47fc4",
+      "range": {
+        "startLine": 507,
+        "startChar": 8,
+        "endLine": 508,
+        "endChar": 18
+      },
+      "revId": "d10920a75dd73dbd351af6919bae959aa1e75eda",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
