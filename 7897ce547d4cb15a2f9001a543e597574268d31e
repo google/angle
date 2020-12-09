@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d845f9b1_2560205a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2020-12-09T00:32:41Z",
+      "side": 1,
+      "message": "I can\u0027t imagine this being controversial. LGTM and +2 to help you get this in faster.\n",
+      "revId": "7897ce547d4cb15a2f9001a543e597574268d31e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
