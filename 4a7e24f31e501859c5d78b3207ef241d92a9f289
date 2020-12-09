@@ -34,6 +34,24 @@
       "parentUuid": "5cbcf200_c54975ae",
       "revId": "4a7e24f31e501859c5d78b3207ef241d92a9f289",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "448db239_0f6f6035",
+        "filename": "scripts/egl.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 574,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-09T05:07:42Z",
+      "side": 1,
+      "message": "Yes, you could bring it to their attention. Not likely to cause any issues though.",
+      "parentUuid": "aca58012_e19e92fc",
+      "revId": "4a7e24f31e501859c5d78b3207ef241d92a9f289",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
