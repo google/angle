@@ -177,6 +177,30 @@
       },
       "revId": "d10920a75dd73dbd351af6919bae959aa1e75eda",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "07eb9865_16eb2d03",
+        "filename": "src/tests/egl_tests/EGLContextSharingTest.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 508,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-09T15:32:30Z",
+      "side": 1,
+      "message": "Oops, I forgot to add the difference in behavior between removing the two glFlushes.   Without the glFlush on line 509, lots of validation layer errors are generated:\n\n    RendererVk.cpp:346 (DebugUtilsMessenger): [ VUID-VkDescriptorImageInfo-imageLayout-00344 ] Validation Error: [ VUID-VkDescriptorImageInfo-imageLayout-00344 ] Object 0: handle \u003d 0x55a52b3ce020, type \u003d VK_OBJECT_TYPE_COMMAND_BUFFER; | MessageID \u003d 0xde55a405 | vkCmdDraw(): Cannot use VkImage 0x590000000059[] (layer\u003d0 mip\u003d0) with specific layout VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL that doesn\u0027t match the previous known layout VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL. The Vulkan spec states: imageLayout must match the actual VkImageLayout of each subresource accessible from imageView at the time this descriptor is accessed as defined by the image layout matching rules (https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VUID-VkDescriptorImageInfo-imageLayout-00344)\n    RendererVk.cpp:346 (DebugUtilsMessenger): [ VUID-vkCmdDraw-None-02699 ] Validation Error: [ VUID-vkCmdDraw-None-02699 ] Object 0: handle \u003d 0x880000000088, type \u003d VK_OBJECT_TYPE_DESCRIPTOR_SET; | MessageID \u003d 0x1608dec0 | VkDescriptorSet 0x880000000088[] encountered the following validation error at vkCmdDraw() time: Image layout specified at vkUpdateDescriptorSet* or vkCmdPushDescriptorSet* time doesn\u0027t match actual image layout at time descriptor is used. See previous error callback for specific details. The Vulkan spec states: Descriptors in each bound descriptor set, specified via vkCmdBindDescriptorSets, must be valid if they are statically used by the VkPipeline bound to the pipeline bind point used by this command (https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VUID-vkCmdDraw-None-02699)\n    RendererVk.cpp:346 (DebugUtilsMessenger): [ VUID-vkCmdWaitEvents-srcStageMask-parameter ] Validation Error: [ VUID-vkCmdWaitEvents-srcStageMask-parameter ] Object 0: handle \u003d 0x55a52b3ce020, type \u003d VK_OBJECT_TYPE_COMMAND_BUFFER; | MessageID \u003d 0x3cbdb1db | Submitting cmdbuffer with call to VkCmdWaitEvents using srcStageMask 0x2000 which must be the bitwise OR of the stageMask parameters used in calls to vkCmdSetEvent and VK_PIPELINE_STAGE_HOST_BIT if used with vkSetEvent but instead is 0x0. The Vulkan spec states: srcStageMask must be a valid combination of VkPipelineStageFlagBits values (https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VUID-vkCmdWaitEvents-srcStageMask-parameter)\n\nWhile, as you can see, the second glFlush (that was on line 526) can be safely removed.\n\n\u003e It _is_ recording the command. Are you saying that command should reach the primary command buffer right away? That makes sense actually. You can add a call to ContextVk::flushCommandsAndEndRenderPass() automatically after the above setEvent() call.\n\nRight, we need the fence creation and wait events to land in the primary command buffer (command stream) immediately when they are called.   With all of the playing around and reading, I do think Charlie and Shabi are both right:\n\nglFenceSync — create a new sync object and insert it into the GL command stream\nglWaitSync — instruct the GL server to block until the specified sync object becomes signaled\n\nThe key different between the two is glFenceSync() stating \"and insert it into the GL command stream\".   So, when a glFenceSync() is issued, we should flushCommandsAndEndRenderPass() to make sure the command lands in the correct place within the command stream relative to all GL commands within the context\u0027s share group.\n\nHowever, when a glWaitSync() is issued, it\u0027s up to the app to issue a glFlush() to ensure the command lands in the command stream at the same point.\n\nI think that change warrants its own CL though, so I\u0027ll open a bug and put that together before landing this to see how things look and that we have the necessary glFlush() calls in these tests.",
+      "parentUuid": "a7c46049_c7f0847f",
+      "range": {
+        "startLine": 507,
+        "startChar": 8,
+        "endLine": 508,
+        "endChar": 18
+      },
+      "revId": "d10920a75dd73dbd351af6919bae959aa1e75eda",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
