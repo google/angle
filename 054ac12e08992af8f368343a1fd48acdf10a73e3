@@ -55,6 +55,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "c73b84a0_97b6bafe",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3089,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-09T15:51:28Z",
+      "side": 1,
+      "message": "Actually I was wrong, since the RP is broken, the bindings dirty bits should be already set.\n\n@Jamie, less efficient? Though it\u0027s make current, so who cares.",
+      "parentUuid": "5dc04ea5_aa0c273e",
+      "revId": "054ac12e08992af8f368343a1fd48acdf10a73e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "6dec7cb9_6d15107a",
         "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
         "patchSetId": 2
