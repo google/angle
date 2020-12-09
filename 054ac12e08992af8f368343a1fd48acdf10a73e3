@@ -26,6 +26,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "33b9a9c5_8423c477",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-12-09T19:12:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "89cd476f_7f22f74d",
+      "range": {
+        "startLine": 11,
+        "startChar": 14,
+        "endLine": 11,
+        "endChar": 20
+      },
+      "revId": "054ac12e08992af8f368343a1fd48acdf10a73e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "9b149511_bde77769",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 2
@@ -37,6 +61,24 @@
       "writtenOn": "2020-12-09T15:44:59Z",
       "side": 1,
       "message": "LGTM but you can probably just remove the if.",
+      "revId": "054ac12e08992af8f368343a1fd48acdf10a73e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6a4adf01_64357aed",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-12-09T19:12:59Z",
+      "side": 1,
+      "message": "I think so, but I am trying not touch it for now. It should be removed when we remove the driver uniform path when we have new QC drivers.\n\nI think this makeCUrrent call might be re-visited at some time. It really should be doing very minimal things. Likely only check relevant surface properties and set needed dirty bits (like framebuffer bind bit) if changed.",
+      "parentUuid": "9b149511_bde77769",
       "revId": "054ac12e08992af8f368343a1fd48acdf10a73e3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
@@ -144,6 +186,24 @@
       "side": 1,
       "message": "Is this question resolved now?  Looks like it.",
       "parentUuid": "d32b0958_d318ea33",
+      "revId": "054ac12e08992af8f368343a1fd48acdf10a73e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "df4992eb_150a3d81",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3089,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-12-09T19:12:59Z",
+      "side": 1,
+      "message": "I believe so.",
+      "parentUuid": "9860aedb_72dc12a1",
       "revId": "054ac12e08992af8f368343a1fd48acdf10a73e3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
