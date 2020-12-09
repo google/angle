@@ -92,6 +92,7 @@ We also use additional auto-rollers to roll third party libraries into ANGLE onc
  * [Vulkan-Loader into ANGLE](https://autoroll.skia.org/r/vulkan-loader-angle-autoroll)
  * [Vulkan-Headers into ANGLE](https://autoroll.skia.org/r/vulkan-headers-angle-autoroll)
  * [Vulkan-ValidationLayers into ANGLE](https://autoroll.skia.org/r/vulkan-validation-layers-angle-autoroll)
+ * [VK-GL-CTS into ANGLE](https://autoroll.skia.org/r/vk-gl-cts-angle-autoroll?tab=status)
 
 Please ensure these rollers are also healthy and unblocked. You can trigger manual rolls using the
 dashboards to land high-priority changes.
