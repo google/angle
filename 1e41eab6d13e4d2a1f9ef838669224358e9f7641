@@ -33,6 +33,24 @@
       "message": "Thanks for addressing this Quyen. This is also a problem with other test suites like angle_end2end_tests. Is there a way we can expose this as an ANGLE feature?",
       "revId": "1e41eab6d13e4d2a1f9ef838669224358e9f7641",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a118ea58_04cd724c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2020-12-09T18:11:21Z",
+      "side": 1,
+      "message": "The suspected root cause of 20 seconds+ timeout is the shader caching happening inside Metal framework (well, I think it is kinda confirmed at this point as this CL made the dEQP bot green compare the next CL where the changes are reverted. I did run the dEQP multiple times (3 times in latest patchset) and it all passed).\n\nUnfortunately, the shader caching mechanism inside Metal framework is completely black-box to outsider and there is no way to disable it. I have to bypass it by hooking the \"fopen\" function and deny access to the caching files. The hooking library must be preloaded first (via DYLD_INSERT_LIBRARIES) before any other libraries in order for the \"fopen\" symbol to be interposed.\n\nI don\u0027t think this hooking could be done by ANGLE as a library\u0027s feature alone (not that I\u0027m aware of). Since ANGLE as a library cannot control the environment variables before the process is loaded.",
+      "parentUuid": "3a337583_c8324e6d",
+      "revId": "1e41eab6d13e4d2a1f9ef838669224358e9f7641",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
