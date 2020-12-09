@@ -3507,8 +3507,8 @@ TEST_P(ComputeShaderTest, DrawDispatchDispatchDraw)
     // http://anglebug.com/5072
     ANGLE_SKIP_TEST_IF(IsIntel() && IsLinux() && IsOpenGL());
 
-    // Fails on Intel and AMD windows drivers.  http://anglebug.com/3871
-    ANGLE_SKIP_TEST_IF(IsWindows() && (IsIntel() || IsAMD()) && IsVulkan());
+    // Fails on AMD windows drivers.  http://anglebug.com/3871
+    ANGLE_SKIP_TEST_IF(IsWindows() && IsAMD() && IsVulkan());
 
     const char kCSSource[] = R"(#version 310 es
 layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
