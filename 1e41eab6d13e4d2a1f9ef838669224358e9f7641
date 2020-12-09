@@ -51,6 +51,70 @@
       "parentUuid": "3a337583_c8324e6d",
       "revId": "1e41eab6d13e4d2a1f9ef838669224358e9f7641",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5cae5026_862cea8e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-09T19:28:40Z",
+      "side": 1,
+      "message": "OK, I understand better now. Could we set up this hooking for angle_end2end_tests as well? This is a pretty cool trick.",
+      "parentUuid": "a118ea58_04cd724c",
+      "revId": "1e41eab6d13e4d2a1f9ef838669224358e9f7641",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0fd4f774_522b8a27",
+        "filename": "src/tests/BUILD.gn",
+        "patchSetId": 5
+      },
+      "lineNbr": 1187,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-09T19:28:40Z",
+      "side": 1,
+      "message": "could you add a comment here as to what\u0027s going on?\n\nmaybe we should put this in the angle_test template in angle.gni and it would propagate.",
+      "range": {
+        "startLine": 1187,
+        "startChar": 6,
+        "endLine": 1187,
+        "endChar": 9
+      },
+      "revId": "1e41eab6d13e4d2a1f9ef838669224358e9f7641",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e2991cab_36c551b6",
+        "filename": "src/tests/deqp_support/angle_deqp_gtest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 731,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-09T19:28:40Z",
+      "side": 1,
+      "message": "maybe we can put this in test_utils.h ?",
+      "range": {
+        "startLine": 731,
+        "startChar": 5,
+        "endLine": 731,
+        "endChar": 25
+      },
+      "revId": "1e41eab6d13e4d2a1f9ef838669224358e9f7641",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
