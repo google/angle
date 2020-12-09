@@ -16,6 +16,40 @@
       "message": "PTAL",
       "revId": "2854a3b8ccfe0200d5a28a85ec0440d881ef050a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "56d9fe36_5bdc8d90",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-09T21:18:51Z",
+      "side": 1,
+      "message": "Nice. I imagine this doesn\u0027t work for xfb capture of I/O block fields, but that\u0027s on me.",
+      "revId": "2854a3b8ccfe0200d5a28a85ec0440d881ef050a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0ce70974_c3315196",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3712,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-09T21:18:51Z",
+      "side": 1,
+      "message": "Metal is not happy about this ASSERT",
+      "revId": "2854a3b8ccfe0200d5a28a85ec0440d881ef050a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
