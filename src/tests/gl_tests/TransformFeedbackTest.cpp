@@ -2655,9 +2655,10 @@ TEST_P(TransformFeedbackTestES32, PrimitivesWrittenAndGenerated)
     // No ES3.2 support on out bots.  http://anglebug.com/5435
     ANGLE_SKIP_TEST_IF(IsPixel2() && IsVulkan());
 
-    // No VK_EXT_transform_feedback support on the following configuration.
+    // No VK_EXT_transform_feedback support on the following configurations.
     // http://anglebug.com/5435
     ANGLE_SKIP_TEST_IF(IsVulkan() && IsAMD() && IsWindows());
+    ANGLE_SKIP_TEST_IF(IsVulkan() && IsNVIDIA() && IsWindows7());
 
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT);
