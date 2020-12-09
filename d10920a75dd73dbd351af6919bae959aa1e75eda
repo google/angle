@@ -153,6 +153,30 @@
       },
       "revId": "d10920a75dd73dbd351af6919bae959aa1e75eda",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a7c46049_c7f0847f",
+        "filename": "src/tests/egl_tests/EGLContextSharingTest.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 508,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-09T05:12:58Z",
+      "side": 1,
+      "message": "@Charlie, we\u0027re on the same thread, but we are having two independent conversations with Tim :D My comment was not directed at yours.",
+      "parentUuid": "8c196ab8_f7474017",
+      "range": {
+        "startLine": 507,
+        "startChar": 8,
+        "endLine": 508,
+        "endChar": 18
+      },
+      "revId": "d10920a75dd73dbd351af6919bae959aa1e75eda",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
