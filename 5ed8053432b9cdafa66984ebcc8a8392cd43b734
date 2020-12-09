@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "fc6241f8_e03d95f5",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-12-09T17:14:11Z",
+      "side": 1,
+      "message": "This is the sequence I commented out of the trace:\n    gShaderProgramMap[289] \u003d glCreateProgram();                                                   \n    gShaderProgramMap[1088] \u003d glCreateShader(GL_VERTEX_SHADER);                                   \n    glShaderSource(gShaderProgramMap[1088], 1, glShaderSource_string_138, nullptr);               \n    glCompileShader(gShaderProgramMap[1088]);                                                     \n    glAttachShader(gShaderProgramMap[289], gShaderProgramMap[1088]);                              \n    glDeleteShader(gShaderProgramMap[1088]);                                                      \n    gShaderProgramMap[1088] \u003d glCreateShader(GL_FRAGMENT_SHADER);                                 \n    glShaderSource(gShaderProgramMap[1088], 1, glShaderSource_string_139, nullptr);               \n    glCompileShader(gShaderProgramMap[1088]);                                                     \n    glAttachShader(gShaderProgramMap[289], gShaderProgramMap[1088]);                              \n    glDeleteShader(gShaderProgramMap[1088]);                                                      \n    glBindAttribLocation(gShaderProgramMap[289], 0, \"_glesVertex\");                               \n    glBindAttribLocation(gShaderProgramMap[289], 1, \"_glesMultiTexCoord0\");                       \n    glLinkProgram(gShaderProgramMap[289]);                                                        \n    UpdateUniformLocation(gShaderProgramMap[289], \"unity_ObjectToWorld\", 0);                      \n    UpdateUniformLocation(gShaderProgramMap[289], \"unity_MatrixVP\", 1);                           \n    UpdateUniformLocation(gShaderProgramMap[289], \"_MainTex_ST\", 2);                              \n    UpdateUniformLocation(gShaderProgramMap[289], \"_MainTex\", 3);                                 \n    glUseProgram(gShaderProgramMap[289]);                                                         \n\nSo it did call glUserProgram but then it immediately setup another program and never called glUseProgram on that shader again.",
+      "parentUuid": "0ece4c2e_43126610",
+      "range": {
+        "startLine": 11,
+        "startChar": 26,
+        "endLine": 12,
+        "endChar": 52
+      },
+      "revId": "5ed8053432b9cdafa66984ebcc8a8392cd43b734",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "328e8c34_547bf725",
