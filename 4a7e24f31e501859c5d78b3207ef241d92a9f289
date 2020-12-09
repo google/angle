@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5cbcf200_c54975ae",
+        "filename": "scripts/egl.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 574,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-09T04:15:28Z",
+      "side": 1,
+      "message": "Is this the upstream egl.xml unmodified? Is it normal that the 0x31D9 to 0x31DB range is not marked as unused?",
+      "revId": "4a7e24f31e501859c5d78b3207ef241d92a9f289",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}

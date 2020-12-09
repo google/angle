@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "946f0c97_13962ac6",
+        "filename": "scripts/egl.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 2144,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-09T04:15:28Z",
+      "side": 0,
+      "message": "This was a local modification to this file that is now lost. Please restore.",
+      "revId": "e59d8716b300902259f1cef7992eddc2444a7d6f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
