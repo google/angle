@@ -16,6 +16,24 @@
       "message": "LGTM but I question if this actually fixes the problem of matrix layout qualifiers :S",
       "revId": "e540cb5658d709b7c1619d039e681c2ec9e1f5e3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4fc8a36e_0f3a371c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-09T04:02:49Z",
+      "side": 1,
+      "message": "GLSL ES 320 spec, the table in section 4.4:\n\n    Layout           ...    Allowed\n    Qualifier               Interfaces\n\n    row_major        ...    uniform /\n    column_major            buffer\n\nSo these qualifiers are not valid for I/O blocks. It makes sense I guess, varyings are not stored in application-accessible memory, so they shouldn\u0027t care how they are laid out.",
+      "parentUuid": "832ff0b1_e4bfb8c5",
+      "revId": "e540cb5658d709b7c1619d039e681c2ec9e1f5e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
