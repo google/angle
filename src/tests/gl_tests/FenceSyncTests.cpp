@@ -292,8 +292,6 @@ TEST_P(FenceSyncTest, MultipleFenceDraw)
         {
             GLsync sync = glFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0);
             ASSERT_GL_NO_ERROR();
-            // Force the fence to be created
-            glFlush();
 
             drawGreen      = !drawGreen;
             GLuint program = 0;

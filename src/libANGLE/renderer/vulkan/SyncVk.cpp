@@ -87,6 +87,10 @@ angle::Result SyncHelper::initialize(ContextVk *contextVk)
 {
     ASSERT(!mEvent.valid());
 
+    // Break the current render pass to ensure the proper ordering of the sync object in the
+    // commands.
+    ANGLE_TRY(contextVk->flushCommandsAndEndRenderPass());
+
     RendererVk *renderer = contextVk->getRenderer();
     VkDevice device      = renderer->getDevice();
 
