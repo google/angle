@@ -53,6 +53,41 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0a07479c_130bb60d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-12-09T21:14:45Z",
+      "side": 1,
+      "message": "modified it along the lines of your suggestion tim with more encapsulation. PTAL",
+      "revId": "63f10706c7f4eb0cc1a876d9f14e04ca39566242",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4f51f778_0c5d3ee6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-12-09T21:14:45Z",
+      "side": 1,
+      "message": "I wanted to tackle how/where to output this in a follow up change. Once the basic functionality is added here we can hook into any place to output the hit ratio",
+      "parentUuid": "3f384bd4_28332e11",
+      "revId": "63f10706c7f4eb0cc1a876d9f14e04ca39566242",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a83291ef_64f19d77",
@@ -66,6 +101,24 @@
       "writtenOn": "2020-12-09T03:07:00Z",
       "side": 1,
       "message": "I think this is big enough to move into the .cpp.",
+      "revId": "63f10706c7f4eb0cc1a876d9f14e04ca39566242",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "102db1bc_b6de4e1c",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 570,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-12-09T21:14:45Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "a83291ef_64f19d77",
       "revId": "63f10706c7f4eb0cc1a876d9f14e04ca39566242",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
@@ -87,6 +140,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "aa4dec56_0631f2ac",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 576,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-12-09T21:14:45Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "e66b91c2_eaad679b",
+      "revId": "63f10706c7f4eb0cc1a876d9f14e04ca39566242",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "db9515c3_b1138389",
@@ -100,6 +171,30 @@
       "writtenOn": "2020-12-09T03:07:00Z",
       "side": 1,
       "message": "Should be able to replace all of this with:\n\n    ++cacheCounts[ToUnderlying(cacheQueryResult)];",
+      "range": {
+        "startLine": 581,
+        "startChar": 0,
+        "endLine": 586,
+        "endChar": 29
+      },
+      "revId": "63f10706c7f4eb0cc1a876d9f14e04ca39566242",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4c9905a8_f920ed1b",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 586,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-12-09T21:14:45Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "db9515c3_b1138389",
       "range": {
         "startLine": 581,
         "startChar": 0,
@@ -133,6 +228,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c46806c4_4407d01b",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1280,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-12-09T21:14:45Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "0ad57031_b85e65ef",
+      "range": {
+        "startLine": 1280,
+        "startChar": 46,
+        "endLine": 1280,
+        "endChar": 65
+      },
+      "revId": "63f10706c7f4eb0cc1a876d9f14e04ca39566242",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ce0001e0_a7cc1abb",
@@ -146,6 +265,24 @@
       "writtenOn": "2020-12-09T03:07:00Z",
       "side": 1,
       "message": "While it\u0027s true the inner cache will miss if the outer cache misses first, it\u0027s also possible to miss the inner if the outer hits, so this can miss some inner cache misses.\n\nMove this outside of the \u0027else\u0027 block entirely to catch all inner cache misses.",
+      "revId": "63f10706c7f4eb0cc1a876d9f14e04ca39566242",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bfece46c_8f435e57",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3268,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-12-09T21:14:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ce0001e0_a7cc1abb",
       "revId": "63f10706c7f4eb0cc1a876d9f14e04ca39566242",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
@@ -196,6 +333,54 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ae4d7e50_54c65f85",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-12-09T21:14:45Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "de5368ce_010ec76d",
+      "range": {
+        "startLine": 55,
+        "startChar": 49,
+        "endLine": 55,
+        "endChar": 61
+      },
+      "revId": "63f10706c7f4eb0cc1a876d9f14e04ca39566242",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9e27c02b_40c5f648",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-12-09T21:14:45Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "5f62174f_1ba10131",
+      "range": {
+        "startLine": 55,
+        "startChar": 3,
+        "endLine": 55,
+        "endChar": 9
+      },
+      "revId": "63f10706c7f4eb0cc1a876d9f14e04ca39566242",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9ac01708_ba4b2331",
@@ -219,6 +404,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5703bc47_bea6c0b5",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 878,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-12-09T21:14:45Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "9ac01708_ba4b2331",
+      "range": {
+        "startLine": 878,
+        "startChar": 14,
+        "endLine": 878,
+        "endChar": 19
+      },
+      "revId": "63f10706c7f4eb0cc1a876d9f14e04ca39566242",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8fbe7a5b_cd0f7f06",
@@ -232,6 +441,30 @@
       "writtenOn": "2020-12-09T03:07:00Z",
       "side": 1,
       "message": "nit: Similar to above, remove the \"Cache\" portion from these names.",
+      "range": {
+        "startLine": 890,
+        "startChar": 4,
+        "endLine": 890,
+        "endChar": 12
+      },
+      "revId": "63f10706c7f4eb0cc1a876d9f14e04ca39566242",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "89cff7ee_f394e111",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 890,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-12-09T21:14:45Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "8fbe7a5b_cd0f7f06",
       "range": {
         "startLine": 890,
         "startChar": 4,
@@ -288,6 +521,54 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "af81a66d_1fd96233",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 895,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-12-09T21:14:45Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "11cd6a1a_c42d8420",
+      "range": {
+        "startLine": 895,
+        "startChar": 38,
+        "endLine": 895,
+        "endChar": 39
+      },
+      "revId": "63f10706c7f4eb0cc1a876d9f14e04ca39566242",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cdf7fadd_ea141a1a",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 895,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-12-09T21:14:45Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "040bff29_f2f2eb93",
+      "range": {
+        "startLine": 895,
+        "startChar": 20,
+        "endLine": 895,
+        "endChar": 26
+      },
+      "revId": "63f10706c7f4eb0cc1a876d9f14e04ca39566242",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3339f6fb_fc07403a",
@@ -311,6 +592,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f20ab3aa_89e83612",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 896,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-12-09T21:14:45Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "3339f6fb_fc07403a",
+      "range": {
+        "startLine": 896,
+        "startChar": 57,
+        "endLine": 896,
+        "endChar": 58
+      },
+      "revId": "63f10706c7f4eb0cc1a876d9f14e04ca39566242",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c2367a9f_8bc86f4a",
@@ -324,6 +629,24 @@
       "writtenOn": "2020-12-09T03:07:00Z",
       "side": 1,
       "message": "Since the number of entries in InternalCaches is known ahead of time, this can be an array so it can be indexed into directly.   That will allow for removing the .find(), which should help speed things up.",
+      "revId": "63f10706c7f4eb0cc1a876d9f14e04ca39566242",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "da5774d9_9f7620c1",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 897,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-12-09T21:14:45Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "c2367a9f_8bc86f4a",
       "revId": "63f10706c7f4eb0cc1a876d9f14e04ca39566242",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
