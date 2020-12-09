@@ -33,6 +33,23 @@
       "message": "Sorry, clicked on the CQ button rather than the Code-Review button.",
       "revId": "2e722bc75a417bcb9b76c3770cd1551c9507be18",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6d1031b7_0c7b328f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-12-09T20:52:03Z",
+      "side": 1,
+      "message": "Thank you all!",
+      "revId": "2e722bc75a417bcb9b76c3770cd1551c9507be18",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
