@@ -1,6 +1,29 @@
 {
   "comments": [
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "0ece4c2e_43126610",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-09T16:55:27Z",
+      "side": 1,
+      "message": "Are the shaders just compiled, but never called with glUseProgram()\u0027ed?   If so, is it possible for the capture tool to remove shaders that are just compiled but never drawn with?\n\nOr is the app still doing a glUseProgram() with those shaders, but never actually drawing with them (may still be possible for the capture code to detect this, but more difficult)?",
+      "range": {
+        "startLine": 11,
+        "startChar": 26,
+        "endLine": 12,
+        "endChar": 52
+      },
+      "revId": "5ed8053432b9cdafa66984ebcc8a8392cd43b734",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "328e8c34_547bf725",
