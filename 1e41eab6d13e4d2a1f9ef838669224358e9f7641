@@ -16,6 +16,23 @@
       "message": "This CL makes \"gpu-fyi-try-mac-amd-dqp\" bot green again by denying access to shader caching database files (\".*com\\.apple\\.metal.*(libraries|functions).*\\.(maps|data)\").\n\nFurther testament is that the next CL https://chromium-review.googlesource.com/c/angle/angle/+/2580919 that reverts this CL has red \"gpu-fyi-try-mac-amd-dqp\" bot (timeout issues).\n\nThis also confirms Apple\u0027s underlying shader caching mechanism has intermittent deadlock issues when accessing files.",
       "revId": "1e41eab6d13e4d2a1f9ef838669224358e9f7641",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3a337583_c8324e6d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-09T15:13:13Z",
+      "side": 1,
+      "message": "Thanks for addressing this Quyen. This is also a problem with other test suites like angle_end2end_tests. Is there a way we can expose this as an ANGLE feature?",
+      "revId": "1e41eab6d13e4d2a1f9ef838669224358e9f7641",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
