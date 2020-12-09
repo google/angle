@@ -372,6 +372,8 @@ class ProgramState final : angle::NonCopyable
 
     int getBaseInstanceLocation() const { return mBaseInstanceLocation; }
 
+    ShaderType getAttachedTransformFeedbackStage() const;
+
   private:
     friend class MemoryProgramCache;
     friend class Program;

@@ -1150,6 +1150,19 @@ ShaderType GetShaderTypeFromBitfield(size_t singleShaderType)
             return ShaderType::InvalidEnum;
     }
 }
+
+bool ShaderTypeSupportsTransformFeedback(ShaderType shaderType)
+{
+    switch (shaderType)
+    {
+        case ShaderType::Vertex:
+        case ShaderType::Geometry:
+        case ShaderType::TessEvaluation:
+            return true;
+        default:
+            return false;
+    }
+}
 }  // namespace gl
 
 namespace egl

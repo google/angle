@@ -466,7 +466,7 @@ bool IsFirstRegisterOfVarying(const gl::PackedVaryingRegister &varyingReg)
 // values for the SPIR-V transformation.
 void GenerateTransformFeedbackExtensionOutputs(const gl::ProgramState &programState,
                                                const gl::ProgramLinkedResources &resources,
-                                               std::string *vertexShader,
+                                               std::string *xfbShaderSource,
                                                uint32_t *locationsUsedForXfbExtensionOut)
 {
     const std::vector<gl::TransformFeedbackVarying> &tfVaryings =
@@ -502,7 +502,7 @@ void GenerateTransformFeedbackExtensionOutputs(const gl::ProgramState &programSt
         }
     }
 
-    *vertexShader = SubstituteTransformFeedbackMarkers(*vertexShader, xfbDecl, xfbOut);
+    *xfbShaderSource = SubstituteTransformFeedbackMarkers(*xfbShaderSource, xfbDecl, xfbOut);
 }
 
 void AssignAttributeLocations(const gl::ProgramExecutable &programExecutable,
@@ -3664,11 +3664,12 @@ void GlslangAssignLocations(const GlslangSourceOptions &options,
                                programInterfaceInfo, variableInfoMapOut);
 
         if (!programExecutable.getLinkedTransformFeedbackVaryings().empty() &&
-            options.supportsTransformFeedbackExtension && (shaderType == gl::ShaderType::Vertex))
+            options.supportsTransformFeedbackExtension &&
+            (shaderType == programExecutable.getLinkedTransformFeedbackStage()))
         {
             AssignTransformFeedbackExtensionQualifiers(
-                programExecutable, programInterfaceInfo->locationsUsedForXfbExtension,
-                gl::ShaderType::Vertex, &(*variableInfoMapOut)[gl::ShaderType::Vertex]);
+                programExecutable, programInterfaceInfo->locationsUsedForXfbExtension, shaderType,
+                &(*variableInfoMapOut)[shaderType]);
         }
     }
 
@@ -3693,34 +3694,48 @@ void GlslangGetShaderSource(const GlslangSourceOptions &options,
         (*shaderSourcesOut)[shaderType] = glShader ? glShader->getTranslatedSource() : "";
     }
 
-    std::string *vertexSource = &(*shaderSourcesOut)[gl::ShaderType::Vertex];
+    gl::ShaderType xfbStage = programState.getAttachedTransformFeedbackStage();
+    std::string *xfbSource  = &(*shaderSourcesOut)[xfbStage];
 
     // Write transform feedback output code.
-    if (!vertexSource->empty())
+    if (!xfbSource->empty())
     {
-        if (programState.getLinkedTransformFeedbackVaryings().empty())
-        {
-            *vertexSource = SubstituteTransformFeedbackMarkers(*vertexSource, "", "");
-        }
-        else
+        if (!programState.getLinkedTransformFeedbackVaryings().empty())
         {
             if (options.supportsTransformFeedbackExtension)
             {
                 GenerateTransformFeedbackExtensionOutputs(
-                    programState, resources, vertexSource,
+                    programState, resources, xfbSource,
                     &programInterfaceInfo->locationsUsedForXfbExtension);
             }
             else if (options.emulateTransformFeedback)
             {
-                GenerateTransformFeedbackEmulationOutputs(
-                    options, programState, programInterfaceInfo, vertexSource,
-                    &(*variableInfoMapOut)[gl::ShaderType::Vertex]);
+                ASSERT(xfbStage == gl::ShaderType::Vertex);
+                GenerateTransformFeedbackEmulationOutputs(options, programState,
+                                                          programInterfaceInfo, xfbSource,
+                                                          &(*variableInfoMapOut)[xfbStage]);
             }
             else
             {
-                *vertexSource = SubstituteTransformFeedbackMarkers(*vertexSource, "", "");
+                *xfbSource = SubstituteTransformFeedbackMarkers(*xfbSource, "", "");
             }
         }
+        else
+        {
+            *xfbSource = SubstituteTransformFeedbackMarkers(*xfbSource, "", "");
+        }
+    }
+
+    std::string *tessEvalSources = &(*shaderSourcesOut)[gl::ShaderType::TessEvaluation];
+    if (xfbStage > gl::ShaderType::TessEvaluation && !tessEvalSources->empty())
+    {
+        *tessEvalSources = SubstituteTransformFeedbackMarkers(*tessEvalSources, "", "");
+    }
+
+    std::string *vertexSource = &(*shaderSourcesOut)[gl::ShaderType::Vertex];
+    if (xfbStage > gl::ShaderType::Vertex && !vertexSource->empty())
+    {
+        *vertexSource = SubstituteTransformFeedbackMarkers(*vertexSource, "", "");
     }
 
     gl::ShaderType frontShaderType = gl::ShaderType::InvalidEnum;

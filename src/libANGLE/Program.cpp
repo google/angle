@@ -1276,6 +1276,19 @@ ShaderType ProgramState::getLastAttachedShaderStageType() const
     return ShaderType::InvalidEnum;
 }
 
+ShaderType ProgramState::getAttachedTransformFeedbackStage() const
+{
+    if (mAttachedShaders[ShaderType::Geometry])
+    {
+        return ShaderType::Geometry;
+    }
+    if (mAttachedShaders[ShaderType::TessEvaluation])
+    {
+        return ShaderType::TessEvaluation;
+    }
+    return ShaderType::Vertex;
+}
+
 Program::Program(rx::GLImplFactory *factory, ShaderProgramManager *manager, ShaderProgramID handle)
     : mSerial(factory->generateSerial()),
       mProgram(factory->createProgram(mState)),

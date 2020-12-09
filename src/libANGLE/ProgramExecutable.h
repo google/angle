@@ -152,6 +152,8 @@ class ProgramExecutable final : public angle::Subject
                            : mLinkedGraphicsShaderStages.count();
     }
 
+    ShaderType getLinkedTransformFeedbackStage() const;
+
     // A PPO can have both graphics and compute programs attached, so
     // we don't know if the PPO is a 'graphics' or 'compute' PPO until the
     // actual draw/dispatch call.

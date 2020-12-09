@@ -538,4 +538,17 @@ bool ProgramExecutable::isYUVOutput() const
 {
     return !isCompute() && mYUVOutput;
 }
+
+ShaderType ProgramExecutable::getLinkedTransformFeedbackStage() const
+{
+    if (mLinkedGraphicsShaderStages[ShaderType::Geometry])
+    {
+        return ShaderType::Geometry;
+    }
+    if (mLinkedGraphicsShaderStages[ShaderType::TessEvaluation])
+    {
+        return ShaderType::TessEvaluation;
+    }
+    return ShaderType::Vertex;
+}
 }  // namespace gl

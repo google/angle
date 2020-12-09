@@ -246,6 +246,7 @@ enum class SrgbOverride
 };
 
 ShaderType GetShaderTypeFromBitfield(size_t singleShaderType);
+bool ShaderTypeSupportsTransformFeedback(ShaderType shaderType);
 
 }  // namespace gl
 

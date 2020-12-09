@@ -341,9 +341,9 @@ ANGLE_NO_DISCARD bool AppendPreRotation(TCompiler *compiler,
     return RunAtTheEndOfShader(compiler, root, assignment, symbolTable);
 }
 
-ANGLE_NO_DISCARD bool AppendVertexShaderTransformFeedbackOutputToMain(TCompiler *compiler,
-                                                                      TIntermBlock *root,
-                                                                      TSymbolTable *symbolTable)
+ANGLE_NO_DISCARD bool AppendTransformFeedbackOutputToMain(TCompiler *compiler,
+                                                          TIntermBlock *root,
+                                                          TSymbolTable *symbolTable)
 {
     TVariable *xfbPlaceholder = new TVariable(symbolTable, ImmutableString("@@ XFB-OUT @@"),
                                               new TType(), SymbolType::AngleInternal);
@@ -745,11 +745,12 @@ bool TranslatorVulkan::translateImpl(TIntermBlock *root,
         return false;
     }
 
+    gl::ShaderType packedShaderType = gl::FromGLenum<gl::ShaderType>(getShaderType());
+
     if (defaultUniformCount > 0)
     {
-        gl::ShaderType shaderType = gl::FromGLenum<gl::ShaderType>(getShaderType());
         sink << "\nlayout(set=0, binding=" << outputGLSL->nextUnusedBinding()
-             << ", std140) uniform " << kDefaultUniformNames[shaderType] << "\n{\n";
+             << ", std140) uniform " << kDefaultUniformNames[packedShaderType] << "\n{\n";
 
         DeclareDefaultUniformsTraverser defaultTraverser(&sink, getHashFunction(), &getNameMap());
         root->traverse(&defaultTraverser);
@@ -797,7 +798,7 @@ bool TranslatorVulkan::translateImpl(TIntermBlock *root,
         }
     }
 
-    if (getShaderType() != GL_COMPUTE_SHADER)
+    if (packedShaderType != gl::ShaderType::Compute)
     {
         if (!ReplaceGLDepthRangeWithDriverUniform(this, root, driverUniforms, &getSymbolTable()))
         {
@@ -814,229 +815,249 @@ bool TranslatorVulkan::translateImpl(TIntermBlock *root,
         }
     }
 
-    // Declare gl_FragColor and glFragData as webgl_FragColor and webgl_FragData
-    // if it's core profile shaders and they are used.
-    if (getShaderType() == GL_FRAGMENT_SHADER)
+    if (gl::ShaderTypeSupportsTransformFeedback(packedShaderType))
     {
-        bool usesPointCoord   = false;
-        bool usesFragCoord    = false;
-        bool usesSampleMaskIn = false;
-
-        // Search for the gl_PointCoord usage, if its used, we need to flip the y coordinate.
-        for (const ShaderVariable &inputVarying : mInputVaryings)
-        {
-            if (!inputVarying.isBuiltIn())
-            {
-                continue;
-            }
-
-            if (inputVarying.name == "gl_SampleMaskIn")
-            {
-                usesSampleMaskIn = true;
-                continue;
-            }
-
-            if (inputVarying.name == "gl_PointCoord")
-            {
-                usesPointCoord = true;
-                break;
-            }
-
-            if (inputVarying.name == "gl_FragCoord")
-            {
-                usesFragCoord = true;
-                break;
-            }
-        }
-
-        if (compileOptions & SH_ADD_BRESENHAM_LINE_RASTER_EMULATION)
-        {
-            if (!AddBresenhamEmulationFS(this, compileOptions, sink, root, &getSymbolTable(),
-                                         &surfaceRotationSpecConst, driverUniforms, usesFragCoord))
-            {
-                return false;
-            }
-            mSpecConstUsageBits.set(vk::SpecConstUsage::LineRasterEmulation);
-        }
-
-        bool hasGLFragColor  = false;
-        bool hasGLFragData   = false;
-        bool usePreRotation  = compileOptions & SH_ADD_PRE_ROTATION;
-        bool hasGLSampleMask = false;
-
-        for (const ShaderVariable &outputVar : mOutputVariables)
-        {
-            if (outputVar.name == "gl_FragColor")
-            {
-                ASSERT(!hasGLFragColor);
-                hasGLFragColor = true;
-                continue;
-            }
-            else if (outputVar.name == "gl_FragData")
-            {
-                ASSERT(!hasGLFragData);
-                hasGLFragData = true;
-                continue;
-            }
-            else if (outputVar.name == "gl_SampleMask")
-            {
-                ASSERT(!hasGLSampleMask);
-                hasGLSampleMask = true;
-                continue;
-            }
-        }
-        ASSERT(!(hasGLFragColor && hasGLFragData));
-        if (hasGLFragColor)
-        {
-            sink << "layout(location = 0) out vec4 webgl_FragColor;\n";
-        }
-        if (hasGLFragData)
-        {
-            sink << "layout(location = 0) out vec4 webgl_FragData[gl_MaxDrawBuffers];\n";
-        }
-
-        if (usesPointCoord)
-        {
-            TIntermTyped *flipNegXY = surfaceRotationSpecConst.getNegFlipXY();
-            if (!flipNegXY)
-            {
-                flipNegXY = driverUniforms->getNegFlipXYRef();
-            }
-            TIntermConstantUnion *pivot = CreateFloatNode(0.5f);
-            TIntermTyped *fragRotation  = nullptr;
-            if (usePreRotation)
-            {
-                fragRotation = surfaceRotationSpecConst.getFragRotationMatrix();
-                if (!fragRotation)
-                {
-                    fragRotation = driverUniforms->getFragRotationMatrixRef();
-                }
-            }
-            if (!RotateAndFlipBuiltinVariable(this, root, GetMainSequence(root), flipNegXY,
-                                              &getSymbolTable(), BuiltInVariable::gl_PointCoord(),
-                                              kFlippedPointCoordName, pivot, fragRotation))
-            {
-                return false;
-            }
-        }
-
-        if (usesFragCoord)
-        {
-            if (!InsertFragCoordCorrection(this, compileOptions, root, GetMainSequence(root),
-                                           &getSymbolTable(), &surfaceRotationSpecConst,
-                                           driverUniforms))
-            {
-                return false;
-            }
-        }
-
-        if (!RewriteDfdy(this, compileOptions, root, getSymbolTable(), getShaderVersion(),
-                         &surfaceRotationSpecConst, driverUniforms))
-        {
-            return false;
-        }
-
-        if (!RewriteInterpolateAtOffset(this, compileOptions, root, getSymbolTable(),
-                                        getShaderVersion(), &surfaceRotationSpecConst,
-                                        driverUniforms))
-        {
-            return false;
-        }
-
-        if (usesSampleMaskIn && !RewriteSampleMaskIn(this, root, &getSymbolTable()))
-        {
-            return false;
-        }
-
-        if (hasGLSampleMask)
-        {
-            TIntermBinary *numSamples = driverUniforms->getNumSamplesRef();
-            if (!RewriteSampleMask(this, root, &getSymbolTable(), numSamples))
-            {
-                return false;
-            }
-        }
-
-        {
-            const TVariable *numSamplesVar = static_cast<const TVariable *>(
-                getSymbolTable().findBuiltIn(ImmutableString("gl_NumSamples"), getShaderVersion()));
-            TIntermBinary *numSamples = driverUniforms->getNumSamplesRef();
-            if (!ReplaceVariableWithTyped(this, root, numSamplesVar, numSamples))
-            {
-                return false;
-            }
-        }
-
-        EmitEarlyFragmentTestsGLSL(*this, sink);
-    }
-    else if (getShaderType() == GL_VERTEX_SHADER)
-    {
-        if (compileOptions & SH_ADD_BRESENHAM_LINE_RASTER_EMULATION)
-        {
-            if (!AddBresenhamEmulationVS(this, root, &getSymbolTable(), driverUniforms))
-            {
-                return false;
-            }
-            mSpecConstUsageBits.set(vk::SpecConstUsage::LineRasterEmulation);
-        }
-
         // Add a macro to declare transform feedback buffers.
         sink << "@@ XFB-DECL @@\n\n";
 
         // Append a macro for transform feedback substitution prior to modifying depth.
-        if (!AppendVertexShaderTransformFeedbackOutputToMain(this, root, &getSymbolTable()))
+        if (!AppendTransformFeedbackOutputToMain(this, root, &getSymbolTable()))
         {
             return false;
         }
+    }
 
-        // Search for the gl_ClipDistance usage, if its used, we need to do some replacements.
-        bool useClipDistance = false;
-        for (const ShaderVariable &outputVarying : mOutputVaryings)
+    switch (packedShaderType)
+    {
+        case gl::ShaderType::Fragment:
         {
-            if (outputVarying.name == "gl_ClipDistance")
+            bool usesPointCoord   = false;
+            bool usesFragCoord    = false;
+            bool usesSampleMaskIn = false;
+
+            // Search for the gl_PointCoord usage, if its used, we need to flip the y coordinate.
+            for (const ShaderVariable &inputVarying : mInputVaryings)
             {
-                useClipDistance = true;
-                break;
+                if (!inputVarying.isBuiltIn())
+                {
+                    continue;
+                }
+
+                if (inputVarying.name == "gl_SampleMaskIn")
+                {
+                    usesSampleMaskIn = true;
+                    continue;
+                }
+
+                if (inputVarying.name == "gl_PointCoord")
+                {
+                    usesPointCoord = true;
+                    break;
+                }
+
+                if (inputVarying.name == "gl_FragCoord")
+                {
+                    usesFragCoord = true;
+                    break;
+                }
             }
-        }
-        if (useClipDistance &&
-            !ReplaceClipDistanceAssignments(this, root, &getSymbolTable(),
-                                            driverUniforms->getClipDistancesEnabled()))
-        {
-            return false;
+
+            if (compileOptions & SH_ADD_BRESENHAM_LINE_RASTER_EMULATION)
+            {
+                if (!AddBresenhamEmulationFS(this, compileOptions, sink, root, &getSymbolTable(),
+                                             &surfaceRotationSpecConst, driverUniforms,
+                                             usesFragCoord))
+                {
+                    return false;
+                }
+                mSpecConstUsageBits.set(vk::SpecConstUsage::LineRasterEmulation);
+            }
+
+            bool hasGLFragColor  = false;
+            bool hasGLFragData   = false;
+            bool usePreRotation  = compileOptions & SH_ADD_PRE_ROTATION;
+            bool hasGLSampleMask = false;
+
+            for (const ShaderVariable &outputVar : mOutputVariables)
+            {
+                if (outputVar.name == "gl_FragColor")
+                {
+                    ASSERT(!hasGLFragColor);
+                    hasGLFragColor = true;
+                    continue;
+                }
+                else if (outputVar.name == "gl_FragData")
+                {
+                    ASSERT(!hasGLFragData);
+                    hasGLFragData = true;
+                    continue;
+                }
+                else if (outputVar.name == "gl_SampleMask")
+                {
+                    ASSERT(!hasGLSampleMask);
+                    hasGLSampleMask = true;
+                    continue;
+                }
+            }
+
+            // Declare gl_FragColor and glFragData as webgl_FragColor and webgl_FragData
+            // if it's core profile shaders and they are used.
+            ASSERT(!(hasGLFragColor && hasGLFragData));
+            if (hasGLFragColor)
+            {
+                sink << "layout(location = 0) out vec4 webgl_FragColor;\n";
+            }
+            if (hasGLFragData)
+            {
+                sink << "layout(location = 0) out vec4 webgl_FragData[gl_MaxDrawBuffers];\n";
+            }
+
+            if (usesPointCoord)
+            {
+                TIntermTyped *flipNegXY = surfaceRotationSpecConst.getNegFlipXY();
+                if (!flipNegXY)
+                {
+                    flipNegXY = driverUniforms->getNegFlipXYRef();
+                }
+                TIntermConstantUnion *pivot = CreateFloatNode(0.5f);
+                TIntermTyped *fragRotation  = nullptr;
+                if (usePreRotation)
+                {
+                    fragRotation = surfaceRotationSpecConst.getFragRotationMatrix();
+                    if (!fragRotation)
+                    {
+                        fragRotation = driverUniforms->getFragRotationMatrixRef();
+                    }
+                }
+                if (!RotateAndFlipBuiltinVariable(this, root, GetMainSequence(root), flipNegXY,
+                                                  &getSymbolTable(),
+                                                  BuiltInVariable::gl_PointCoord(),
+                                                  kFlippedPointCoordName, pivot, fragRotation))
+                {
+                    return false;
+                }
+            }
+
+            if (usesFragCoord)
+            {
+                if (!InsertFragCoordCorrection(this, compileOptions, root, GetMainSequence(root),
+                                               &getSymbolTable(), &surfaceRotationSpecConst,
+                                               driverUniforms))
+                {
+                    return false;
+                }
+            }
+
+            if (!RewriteDfdy(this, compileOptions, root, getSymbolTable(), getShaderVersion(),
+                             &surfaceRotationSpecConst, driverUniforms))
+            {
+                return false;
+            }
+
+            if (!RewriteInterpolateAtOffset(this, compileOptions, root, getSymbolTable(),
+                                            getShaderVersion(), &surfaceRotationSpecConst,
+                                            driverUniforms))
+            {
+                return false;
+            }
+
+            if (usesSampleMaskIn && !RewriteSampleMaskIn(this, root, &getSymbolTable()))
+            {
+                return false;
+            }
+
+            if (hasGLSampleMask)
+            {
+                TIntermBinary *numSamples = driverUniforms->getNumSamplesRef();
+                if (!RewriteSampleMask(this, root, &getSymbolTable(), numSamples))
+                {
+                    return false;
+                }
+            }
+
+            {
+                const TVariable *numSamplesVar =
+                    static_cast<const TVariable *>(getSymbolTable().findBuiltIn(
+                        ImmutableString("gl_NumSamples"), getShaderVersion()));
+                TIntermBinary *numSamples = driverUniforms->getNumSamplesRef();
+                if (!ReplaceVariableWithTyped(this, root, numSamplesVar, numSamples))
+                {
+                    return false;
+                }
+            }
+
+            EmitEarlyFragmentTestsGLSL(*this, sink);
+            break;
         }
 
-        // Append depth range translation to main.
-        if (!transformDepthBeforeCorrection(root, driverUniforms))
+        case gl::ShaderType::Vertex:
         {
-            return false;
-        }
-        if (!AppendVertexShaderDepthCorrectionToMain(this, root, &getSymbolTable()))
-        {
-            return false;
-        }
-        if ((compileOptions & SH_ADD_PRE_ROTATION) != 0 &&
-            !AppendPreRotation(this, root, &getSymbolTable(), &surfaceRotationSpecConst,
-                               driverUniforms))
-        {
-            return false;
-        }
-    }
-    else if (getShaderType() == GL_GEOMETRY_SHADER)
-    {
-        int maxVertices = getGeometryShaderMaxVertices();
+            if (compileOptions & SH_ADD_BRESENHAM_LINE_RASTER_EMULATION)
+            {
+                if (!AddBresenhamEmulationVS(this, root, &getSymbolTable(), driverUniforms))
+                {
+                    return false;
+                }
+                mSpecConstUsageBits.set(vk::SpecConstUsage::LineRasterEmulation);
+            }
 
-        // max_vertices=0 is not valid in Vulkan
-        maxVertices = std::max(1, maxVertices);
+            // Search for the gl_ClipDistance usage, if its used, we need to do some replacements.
+            bool useClipDistance = false;
+            for (const ShaderVariable &outputVarying : mOutputVaryings)
+            {
+                if (outputVarying.name == "gl_ClipDistance")
+                {
+                    useClipDistance = true;
+                    break;
+                }
+            }
+            if (useClipDistance &&
+                !ReplaceClipDistanceAssignments(this, root, &getSymbolTable(),
+                                                driverUniforms->getClipDistancesEnabled()))
+            {
+                return false;
+            }
 
-        WriteGeometryShaderLayoutQualifiers(sink, getGeometryShaderInputPrimitiveType(),
-                                            getGeometryShaderInvocations(),
-                                            getGeometryShaderOutputPrimitiveType(), maxVertices);
-    }
-    else
-    {
-        ASSERT(getShaderType() == GL_COMPUTE_SHADER);
-        EmitWorkGroupSizeGLSL(*this, sink);
+            // Append depth range translation to main.
+            if (!transformDepthBeforeCorrection(root, driverUniforms))
+            {
+                return false;
+            }
+            if (!AppendVertexShaderDepthCorrectionToMain(this, root, &getSymbolTable()))
+            {
+                return false;
+            }
+            if ((compileOptions & SH_ADD_PRE_ROTATION) != 0 &&
+                !AppendPreRotation(this, root, &getSymbolTable(), &surfaceRotationSpecConst,
+                                   driverUniforms))
+            {
+                return false;
+            }
+            break;
+        }
+
+        case gl::ShaderType::Geometry:
+        {
+            int maxVertices = getGeometryShaderMaxVertices();
+
+            // max_vertices=0 is not valid in Vulkan
+            maxVertices = std::max(1, maxVertices);
+
+            WriteGeometryShaderLayoutQualifiers(
+                sink, getGeometryShaderInputPrimitiveType(), getGeometryShaderInvocations(),
+                getGeometryShaderOutputPrimitiveType(), maxVertices);
+            break;
+        }
+
+        case gl::ShaderType::Compute:
+        {
+            EmitWorkGroupSizeGLSL(*this, sink);
+            break;
+        }
+
+        default:
+            UNREACHABLE();
+            break;
     }
 
     surfaceRotationSpecConst.outputLayoutString(sink);
