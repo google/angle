@@ -158,6 +158,30 @@
       },
       "revId": "054ac12e08992af8f368343a1fd48acdf10a73e3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7f2a0e8f_dee284df",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3095,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-09T16:26:36Z",
+      "side": 1,
+      "message": "We don\u0027t need to make compute uniforms dirty. Whatever values they had before are unchanged, and the buffer that was allocated for it doesn\u0027t need to be updated. We also don\u0027t need to do it for graphics if spec consts are used because we aren\u0027t changing anything here that isn\u0027t spec const.",
+      "parentUuid": "dd074664_effcdfe4",
+      "range": {
+        "startLine": 3093,
+        "startChar": 0,
+        "endLine": 3095,
+        "endChar": 44
+      },
+      "revId": "054ac12e08992af8f368343a1fd48acdf10a73e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
