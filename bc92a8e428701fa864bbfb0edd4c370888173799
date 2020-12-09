@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "547ccfa3_11399acc",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2020-12-09T18:36:12Z",
+      "side": 1,
+      "message": "also 5435",
+      "range": {
+        "startLine": 9,
+        "startChar": 18,
+        "endLine": 9,
+        "endChar": 22
+      },
+      "revId": "bc92a8e428701fa864bbfb0edd4c370888173799",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "37f10a11_6167e7e8",
+        "filename": "src/tests/gl_tests/TransformFeedbackTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2658,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2020-12-09T18:36:12Z",
+      "side": 1,
+      "message": "Does it make sense to detect this lack of support and handle it properly, like SW emulation?",
+      "range": {
+        "startLine": 2658,
+        "startChar": 0,
+        "endLine": 2658,
+        "endChar": 76
+      },
+      "revId": "bc92a8e428701fa864bbfb0edd4c370888173799",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "361ebec7_fcb84931",
+        "filename": "src/tests/gl_tests/TransformFeedbackTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2659,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2020-12-09T18:36:12Z",
+      "side": 1,
+      "message": "Will you merge anglebug.com/5450 into it?",
+      "range": {
+        "startLine": 2659,
+        "startChar": 7,
+        "endLine": 2659,
+        "endChar": 31
+      },
+      "revId": "bc92a8e428701fa864bbfb0edd4c370888173799",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
