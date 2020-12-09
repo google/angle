@@ -18,6 +18,23 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "400cd48e_c5c512fd",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-12-09T16:35:56Z",
+      "side": 1,
+      "message": "thanks for the early feedback tim, appreciate it. yes, im still working on it and looking at the android bot failures it reminded me that there could be situations where we might access the cache without an active context. i was thinking of moving the cachecounter member to the renderer class instead and make it an app-lifetime thing instead of per-context. WDYT?",
+      "revId": "63f10706c7f4eb0cc1a876d9f14e04ca39566242",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a83291ef_64f19d77",
