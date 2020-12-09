@@ -105,6 +105,30 @@
       },
       "revId": "d10920a75dd73dbd351af6919bae959aa1e75eda",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b04a61e8_d4f47fc4",
+        "filename": "src/tests/egl_tests/EGLContextSharingTest.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 508,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-09T04:09:15Z",
+      "side": 1,
+      "message": "That would be a pretty bad bug.\n\n    angle::Result SyncHelper::initialize(ContextVk *contextVk)\n    {\n        ...\n        ANGLE_VK_TRY(contextVk, event.get().init(device, eventCreateInfo));\n\n        mEvent \u003d event.release();\n\n        vk::CommandBuffer *commandBuffer;\n        ANGLE_TRY(contextVk-\u003egetOutsideRenderPassCommandBuffer({}, \u0026commandBuffer));\n        commandBuffer-\u003esetEvent(mEvent.getHandle(), VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT);\n        retain(\u0026contextVk-\u003egetResourceUseList());\n\n        ...\n    }\n\nIt _is_ recording the command. Are you saying that command should reach the primary command buffer right away? That makes sense actually. You can add a call to ContextVk::flushCommandsAndEndRenderPass() automatically after the above setEvent() call.",
+      "parentUuid": "0aabd912_16dc8db3",
+      "range": {
+        "startLine": 507,
+        "startChar": 8,
+        "endLine": 508,
+        "endChar": 18
+      },
+      "revId": "d10920a75dd73dbd351af6919bae959aa1e75eda",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
