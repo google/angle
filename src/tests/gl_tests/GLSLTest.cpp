@@ -8779,7 +8779,7 @@ void main()
     EXPECT_EQ(0u, program);
 }
 
-// Verify I/O block array locations:
+// Verify I/O block array locations
 TEST_P(GLSLTest_ES31, IOBlockLocations)
 {
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_io_blocks"));
@@ -8787,10 +8787,6 @@ TEST_P(GLSLTest_ES31, IOBlockLocations)
 
     // http://anglebug.com/5444
     ANGLE_SKIP_TEST_IF(IsIntel() && IsOpenGL() && IsWindows());
-
-    // Incorrect SPIR-V transformation and possibly varying packing of I/O blocks with location
-    // qualifier on fields.
-    ANGLE_SKIP_TEST_IF(IsVulkan());
 
     constexpr char kVS[] = R"(#version 310 es
 #extension GL_EXT_shader_io_blocks : require
@@ -8910,12 +8906,81 @@ void main()
     bool passB = isEq(gIn, vec4(0.84, 0.87, 0.9, 0.93));
 
     color = vec4(passR, passG, passB, 1.0);
-
 })";
 
     ANGLE_GL_PROGRAM_WITH_GS(program, kVS, kGS, kFS);
     EXPECT_GL_NO_ERROR();
 }
+
+// Test varying packing in presence of multiple I/O blocks
+TEST_P(GLSLTest_ES31, MultipleIOBlocks)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_io_blocks"));
+
+    constexpr char kVS[] = R"(#version 310 es
+#extension GL_EXT_shader_io_blocks : require
+
+in highp vec4 position;
+
+out VSBlock1
+{
+    vec4 a;
+    vec4 b[2];
+} blockOut1;
+
+out VSBlock2
+{
+    vec4 c[2];
+    vec4 d;
+} blockOut2;
+
+void main()
+{
+    blockOut1.a = vec4(0.15, 0.18, 0.21, 0.24);
+    blockOut1.b[0] = vec4(0.27, 0.30, 0.33, 0.36);
+    blockOut1.b[1] = vec4(0.39, 0.42, 0.45, 0.48);
+    blockOut2.c[0] = vec4(0.51, 0.54, 0.57, 0.6);
+    blockOut2.c[1] = vec4(0.63, 0.66, 0.66, 0.69);
+    blockOut2.d = vec4(0.72, 0.75, 0.78, 0.81);
+    gl_Position = position;
+})";
+
+    constexpr char kFS[] = R"(#version 310 es
+#extension GL_EXT_shader_io_blocks : require
+precision mediump float;
+
+layout(location = 0) out mediump vec4 color;
+
+in VSBlock1
+{
+    vec4 a;
+    vec4 b[2];
+} blockIn1;
+
+in VSBlock2
+{
+    vec4 c[2];
+    vec4 d;
+} blockIn2;
+
+bool isEq(vec4 a, vec4 b) { return all(lessThan(abs(a-b), vec4(0.001))); }
+
+void main()
+{
+    bool passR = isEq(blockIn1.a, vec4(0.15, 0.18, 0.21, 0.24));
+    bool passG = isEq(blockIn1.b[0], vec4(0.27, 0.30, 0.33, 0.36)) &&
+                 isEq(blockIn1.b[1], vec4(0.39, 0.42, 0.45, 0.48));
+    bool passB = isEq(blockIn2.c[0], vec4(0.51, 0.54, 0.57, 0.6)) &&
+                 isEq(blockIn2.c[1], vec4(0.63, 0.66, 0.66, 0.69));
+    bool passA = isEq(blockIn2.d, vec4(0.72, 0.75, 0.78, 0.81));
+
+    color = vec4(passR, passG, passB, passA);
+})";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    EXPECT_GL_NO_ERROR();
+}
+
 }  // anonymous namespace
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these

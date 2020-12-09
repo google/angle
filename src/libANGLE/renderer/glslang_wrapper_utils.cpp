@@ -447,7 +447,8 @@ bool IsFirstRegisterOfVarying(const gl::PackedVaryingRegister &varyingReg)
     }
 
     // Similarly, assign array varying locations to the assigned location of the first element.
-    if (varyingReg.varyingArrayIndex != 0 || (varying.isArrayElement() && varying.arrayIndex != 0))
+    if (varyingReg.varyingArrayIndex != 0 ||
+        (varying.arrayIndex != GL_INVALID_INDEX && varying.arrayIndex != 0))
     {
         return false;
     }

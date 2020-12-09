@@ -24,28 +24,67 @@ namespace
 // true if varying x has a higher priority in packing than y
 bool ComparePackedVarying(const PackedVarying &x, const PackedVarying &y)
 {
-    // If the PackedVarying 'x' or 'y' to be compared is an array element, this clones an equivalent
-    // non-array shader variable 'vx' or 'vy' for actual comparison instead.
+    // If the PackedVarying 'x' or 'y' to be compared is an array element for transform feedback,
+    // this clones an equivalent non-array shader variable 'vx' or 'vy' for actual comparison
+    // instead.  For I/O block arrays, the array index is used in the comparison.
     sh::ShaderVariable vx, vy;
     const sh::ShaderVariable *px, *py;
 
     px = &x.varying();
     py = &y.varying();
 
-    if (x.isArrayElement())
+    if (x.isTransformFeedbackArrayElement())
     {
         vx = *px;
         vx.arraySizes.clear();
         px = &vx;
     }
 
-    if (y.isArrayElement())
+    if (y.isTransformFeedbackArrayElement())
     {
         vy = *py;
         vy.arraySizes.clear();
         py = &vy;
     }
 
+    // Make sure struct fields end up together.
+    if (x.isStructField() != y.isStructField())
+    {
+        return x.isStructField();
+    }
+
+    if (x.isStructField())
+    {
+        ASSERT(y.isStructField());
+
+        if (x.getParentStructName() != y.getParentStructName())
+        {
+            return x.getParentStructName() < y.getParentStructName();
+        }
+    }
+
+    // For I/O block fields, order first by array index:
+    if (!x.isTransformFeedbackArrayElement() && !y.isTransformFeedbackArrayElement())
+    {
+        if (x.arrayIndex != y.arrayIndex)
+        {
+            return x.arrayIndex < y.arrayIndex;
+        }
+    }
+
+    // Then order by field index
+    if (x.fieldIndex != y.fieldIndex)
+    {
+        return x.fieldIndex < y.fieldIndex;
+    }
+
+    // Then order by secondary field index
+    if (x.secondaryFieldIndex != y.secondaryFieldIndex)
+    {
+        return x.secondaryFieldIndex < y.secondaryFieldIndex;
+    }
+
+    // Otherwise order by variable
     return gl::CompareShaderVar(*px, *py);
 }
 
@@ -95,6 +134,7 @@ PackedVarying::PackedVarying(VaryingInShaderRef &&frontVaryingIn,
       backVarying(std::move(backVaryingIn)),
       interpolation(interpolationIn),
       arrayIndex(arrayIndexIn),
+      isTransformFeedback(false),
       fieldIndex(fieldIndexIn),
       secondaryFieldIndex(secondaryFieldIndexIn)
 {}
@@ -114,6 +154,7 @@ PackedVarying &PackedVarying::operator=(PackedVarying &&other)
     std::swap(backVarying, other.backVarying);
     std::swap(interpolation, other.interpolation);
     std::swap(arrayIndex, other.arrayIndex);
+    std::swap(isTransformFeedback, other.isTransformFeedback);
     std::swap(fieldIndex, other.fieldIndex);
     std::swap(secondaryFieldIndex, other.secondaryFieldIndex);
 
@@ -184,7 +225,7 @@ bool VaryingPacking::packVarying(const PackedVarying &packedVarying)
     // GLSL ES 3.10 section 4.3.6: Output variables cannot be arrays of arrays or arrays of
     // structures, so we may use getBasicTypeElementCount().
     const unsigned int elementCount = varying.getBasicTypeElementCount();
-    varyingRows *= (packedVarying.isArrayElement() ? 1 : elementCount);
+    varyingRows *= (packedVarying.isTransformFeedbackArrayElement() ? 1 : elementCount);
 
     unsigned int maxVaryingVectors = static_cast<unsigned int>(mRegisterMap.size());
 
@@ -279,7 +320,8 @@ bool VaryingPacking::packVarying(const PackedVarying &packedVarying)
                     registerInfo.registerRow    = row + arrayIndex;
                     registerInfo.registerColumn = bestColumn;
                     registerInfo.varyingArrayIndex =
-                        (packedVarying.isArrayElement() ? packedVarying.arrayIndex : arrayIndex);
+                        (packedVarying.isTransformFeedbackArrayElement() ? packedVarying.arrayIndex
+                                                                         : arrayIndex);
                     registerInfo.varyingRowIndex = 0;
                     // Do not record register info for builtins.
                     // TODO(jmadill): Clean this up.
@@ -341,7 +383,8 @@ void VaryingPacking::insert(unsigned int registerRow,
     const unsigned int arrayElementCount = varying.getBasicTypeElementCount();
     for (unsigned int arrayElement = 0; arrayElement < arrayElementCount; ++arrayElement)
     {
-        if (packedVarying.isArrayElement() && arrayElement != packedVarying.arrayIndex)
+        if (packedVarying.isTransformFeedbackArrayElement() &&
+            arrayElement != packedVarying.arrayIndex)
         {
             continue;
         }
@@ -468,7 +511,8 @@ void VaryingPacking::packUserVaryingTF(const ProgramVaryingRef &ref, size_t subs
 
     mPackedVaryings.emplace_back(std::move(frontVarying), std::move(backVarying),
                                  input->interpolation);
-    mPackedVaryings.back().arrayIndex = static_cast<GLuint>(subscript);
+    mPackedVaryings.back().arrayIndex          = static_cast<GLuint>(subscript);
+    mPackedVaryings.back().isTransformFeedback = true;
 }
 
 void VaryingPacking::packUserVaryingFieldTF(const ProgramVaryingRef &ref,
