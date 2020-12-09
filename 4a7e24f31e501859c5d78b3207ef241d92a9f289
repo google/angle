@@ -16,6 +16,24 @@
       "message": "Is this the upstream egl.xml unmodified? Is it normal that the 0x31D9 to 0x31DB range is not marked as unused?",
       "revId": "4a7e24f31e501859c5d78b3207ef241d92a9f289",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "aca58012_e19e92fc",
+        "filename": "scripts/egl.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 574,
+      "author": {
+        "id": 1382541
+      },
+      "writtenOn": "2020-12-09T04:28:08Z",
+      "side": 1,
+      "message": "Good question!\n\nDouble checked the Khronos github, also missing the 0x31D9-0x31DB part: https://github.com/KhronosGroup/EGL-Registry/blob/master/api/egl.xml#L574\n\nMaybe we should raise an bug to them...",
+      "parentUuid": "5cbcf200_c54975ae",
+      "revId": "4a7e24f31e501859c5d78b3207ef241d92a9f289",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
