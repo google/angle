@@ -47,6 +47,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9f142110_64c61469",
+        "filename": "src/tests/gl_tests/TransformFeedbackTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2658,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-09T19:04:19Z",
+      "side": 1,
+      "message": "It\u0027s kind of an odd situation. There a number of features we expose in tests that are not entirely conformant. We technically shouldn\u0027t expose ES3.2 on these configs, but we do anyway to get as much testing as we can get for the parts of the extension that _are_ implemented.\n\nSo far I only had to make a handful of this kind of suppressions, but maybe we can think of a mechanism down the line. Something like reading back the ANGLE features and seeing what\u0027s enabled could work.",
+      "parentUuid": "37f10a11_6167e7e8",
+      "range": {
+        "startLine": 2658,
+        "startChar": 0,
+        "endLine": 2658,
+        "endChar": 76
+      },
+      "revId": "bc92a8e428701fa864bbfb0edd4c370888173799",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "361ebec7_fcb84931",
@@ -60,6 +84,30 @@
       "writtenOn": "2020-12-09T18:36:12Z",
       "side": 1,
       "message": "Will you merge anglebug.com/5450 into it?",
+      "range": {
+        "startLine": 2659,
+        "startChar": 7,
+        "endLine": 2659,
+        "endChar": 31
+      },
+      "revId": "bc92a8e428701fa864bbfb0edd4c370888173799",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dfe9556d_1a4c64dd",
+        "filename": "src/tests/gl_tests/TransformFeedbackTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2659,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-09T19:04:19Z",
+      "side": 1,
+      "message": "Sure. I need to 5435 more generic actually, but I should do that either way.",
+      "parentUuid": "361ebec7_fcb84931",
       "range": {
         "startLine": 2659,
         "startChar": 7,
