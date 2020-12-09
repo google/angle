@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b049472f_d1484404",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 8793,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-09T16:12:53Z",
+      "side": 0,
+      "message": "nice",
+      "revId": "f0f79e08366208f15f05c909bc7b81a1198e261f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
