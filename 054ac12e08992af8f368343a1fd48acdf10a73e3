@@ -134,6 +134,30 @@
       },
       "revId": "054ac12e08992af8f368343a1fd48acdf10a73e3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dd074664_effcdfe4",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3095,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-09T15:58:49Z",
+      "side": 1,
+      "message": "Sure, but now we aren\u0027t marking uniforms dirty for compute at all during onMakeCurrent().   I\u0027m not sure if it\u0027s entirely necessary (since CQ is green), just that it\u0027s a behavior change from what was being done before and I\u0027m assuming there\u0027s a reason it was done before.",
+      "parentUuid": "24b58a47_0c615b29",
+      "range": {
+        "startLine": 3093,
+        "startChar": 0,
+        "endLine": 3095,
+        "endChar": 44
+      },
+      "revId": "054ac12e08992af8f368343a1fd48acdf10a73e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
