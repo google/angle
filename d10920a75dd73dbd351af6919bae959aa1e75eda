@@ -18,6 +18,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "eff893d6_aac427fc",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 693,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-09T01:09:41Z",
+      "side": 1,
+      "message": "Oops, missed it. Done.",
+      "parentUuid": "d1075e50_909c354d",
+      "revId": "d10920a75dd73dbd351af6919bae959aa1e75eda",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1b15d528_4e43e1df",
@@ -31,6 +49,30 @@
       "writtenOn": "2020-12-08T21:57:54Z",
       "side": 1,
       "message": "This doesn\u0027t sound right. Why is flush needed for fence creation?",
+      "range": {
+        "startLine": 507,
+        "startChar": 8,
+        "endLine": 508,
+        "endChar": 18
+      },
+      "revId": "d10920a75dd73dbd351af6919bae959aa1e75eda",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c591f23f_9f9bb51d",
+        "filename": "src/tests/egl_tests/EGLContextSharingTest.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 508,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-09T01:09:41Z",
+      "side": 1,
+      "message": "\u003e glFenceSync — create a new sync object and insert it into the GL command stream\n\nThe flush forces the sync to land in ANGLE\u0027s command stream in the correct place when multiple contexts are generating commands.   I discovered this is necessary with the tests MultithreadingTestES3::MultithreadFenceDraw() and MultithreadFenceTexImage().\n\nIt\u0027s possible ANGLE\u0027s glFenceSync() implementation should include a flush internally, since it only creates the sync object today.   I can open a bug to fix that with a separate CL if you think this is a bug.",
+      "parentUuid": "1b15d528_4e43e1df",
       "range": {
         "startLine": 507,
         "startChar": 8,
