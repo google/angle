@@ -16,6 +16,23 @@
       "message": "PTAL",
       "revId": "40a73f2c28ff04f43c65d1044c4b7d8b3b9b000a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7e4b5ac2_05e769c0",
+        "filename": "src/libANGLE/renderer/vulkan/SyncVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-09T21:11:07Z",
+      "side": 1,
+      "message": "This should go above the `getOutsideRenderPassCommandBuffer()` call. Otherwise the event is set before the current render pass.",
+      "revId": "40a73f2c28ff04f43c65d1044c4b7d8b3b9b000a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
