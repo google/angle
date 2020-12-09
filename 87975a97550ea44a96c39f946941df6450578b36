@@ -93,6 +93,23 @@
       },
       "revId": "87975a97550ea44a96c39f946941df6450578b36",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5d0b1192_fd50bd2f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-09T15:46:18Z",
+      "side": 1,
+      "message": "Xiaoxuan: could you please move the local modifications to egl.xml into egl_angle_ext.xml? That will make it easier to maintain for future updates.",
+      "revId": "87975a97550ea44a96c39f946941df6450578b36",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
