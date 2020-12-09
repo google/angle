@@ -3,6 +3,86 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "a2a705e2_bd660ac8",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-09T21:08:06Z",
+      "side": 1,
+      "message": "nit: need to mention Native",
+      "range": {
+        "startLine": 7,
+        "startChar": 34,
+        "endLine": 7,
+        "endChar": 40
+      },
+      "revId": "1e2b104528a067e9b128b168ffe2da764acbc6af",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f40088d0_afd1ca05",
+        "filename": "src/libANGLE/renderer/vulkan/SyncVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-09T21:08:06Z",
+      "side": 1,
+      "message": "+1 to what Jamie said. This should be `uint64_t timeout`. I would call it `timeoutNs` to be clear it\u0027s in nanoseconds.",
+      "range": {
+        "startLine": 28,
+        "startChar": 25,
+        "endLine": 28,
+        "endChar": 32
+      },
+      "revId": "1e2b104528a067e9b128b168ffe2da764acbc6af",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5de94594_6faaedc6",
+        "filename": "src/libANGLE/renderer/vulkan/SyncVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-09T21:08:06Z",
+      "side": 1,
+      "message": "Should this be an ASSERT instead?",
+      "revId": "1e2b104528a067e9b128b168ffe2da764acbc6af",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7b028b09_dc47d1d0",
+        "filename": "src/libANGLE/renderer/vulkan/SyncVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-09T21:08:06Z",
+      "side": 1,
+      "message": "Don\u0027t set errno if you\u0027re not going to use it later.",
+      "revId": "1e2b104528a067e9b128b168ffe2da764acbc6af",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "3714ad06_206d5acc",
         "filename": "src/libANGLE/renderer/vulkan/SyncVk.cpp",
         "patchSetId": 6
@@ -43,6 +123,23 @@
         "endLine": 318,
         "endChar": 29
       },
+      "revId": "1e2b104528a067e9b128b168ffe2da764acbc6af",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9f28f31b_dc1c4c33",
+        "filename": "src/libANGLE/renderer/vulkan/SyncVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 371,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-09T21:08:06Z",
+      "side": 1,
+      "message": "This is not correct. -1 is overloaded for both the error case and the timeout case. In this function timeout is not an error.\n\nIf you return a VkResult per Jamie\u0027s suggestion, you could make this function look like what it did before.",
       "revId": "1e2b104528a067e9b128b168ffe2da764acbc6af",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
