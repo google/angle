@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "70354a1a_756502d1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2020-12-09T06:16:53Z",
+      "side": 1,
+      "message": "This CL makes \"gpu-fyi-try-mac-amd-dqp\" bot green again by denying access to shader caching database files (\".*com\\.apple\\.metal.*(libraries|functions).*\\.(maps|data)\").\n\nFurther testament is that the next CL https://chromium-review.googlesource.com/c/angle/angle/+/2580919 that reverts this CL has red \"gpu-fyi-try-mac-amd-dqp\" bot (timeout issues).\n\nThis also confirms Apple\u0027s underlying shader caching mechanism has intermittent deadlock issues when accessing files.",
+      "revId": "1e41eab6d13e4d2a1f9ef838669224358e9f7641",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
