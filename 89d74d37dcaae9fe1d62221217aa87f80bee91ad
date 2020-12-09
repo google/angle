@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d3280b13_fc8023a8",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-09T05:44:37Z",
+      "side": 1,
+      "message": "For posterity, you could mention that some local modifications to the file were preserved.",
+      "revId": "89d74d37dcaae9fe1d62221217aa87f80bee91ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3c29dfab_5bc76309",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-09T05:44:37Z",
+      "side": 1,
+      "message": "Re-LGTM",
+      "revId": "89d74d37dcaae9fe1d62221217aa87f80bee91ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
