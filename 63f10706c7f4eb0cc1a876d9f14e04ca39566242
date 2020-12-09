@@ -1,0 +1,296 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3f384bd4_28332e11",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-09T03:07:00Z",
+      "side": 1,
+      "message": "Thanks for putting this together.   We\u0027ve talked about doing this for a while, so it\u0027ll be good to see that these caches are working as intended.\n\nI know this is still being worked on, but I\u0027ve got a few questions/comments:\n1.) What\u0027s your plan for outputting these values?\n  - I think it would be good to add the current hit ratio values to ContextVk::PerfCounters.   That will also allow for outputting the values when kOutputCumulativePerfCounters is enabled in ContextVk::outputCumulativePerfCounters().\n2.) There some other caches that are missed, like some descriptor set caches:\n  - ProgramExecutableVk::mUniformsAndXfbDescriptorSetCache\n  - ProgramExecutableVk::mTextureDescriptorsCache\n  - ContextVk::DriverUniformsDescriptorSet::descriptorSetCache",
+      "revId": "63f10706c7f4eb0cc1a876d9f14e04ca39566242",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a83291ef_64f19d77",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 570,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-09T03:07:00Z",
+      "side": 1,
+      "message": "I think this is big enough to move into the .cpp.",
+      "revId": "63f10706c7f4eb0cc1a876d9f14e04ca39566242",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e66b91c2_eaad679b",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 576,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-09T03:07:00Z",
+      "side": 1,
+      "message": "ref. CacheQueryResult::EnumCount",
+      "revId": "63f10706c7f4eb0cc1a876d9f14e04ca39566242",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "db9515c3_b1138389",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 586,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-09T03:07:00Z",
+      "side": 1,
+      "message": "Should be able to replace all of this with:\n\n    ++cacheCounts[ToUnderlying(cacheQueryResult)];",
+      "range": {
+        "startLine": 581,
+        "startChar": 0,
+        "endLine": 586,
+        "endChar": 29
+      },
+      "revId": "63f10706c7f4eb0cc1a876d9f14e04ca39566242",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0ad57031_b85e65ef",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1280,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-09T03:07:00Z",
+      "side": 1,
+      "message": "typo: bookkeeping utility",
+      "range": {
+        "startLine": 1280,
+        "startChar": 46,
+        "endLine": 1280,
+        "endChar": 65
+      },
+      "revId": "63f10706c7f4eb0cc1a876d9f14e04ca39566242",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ce0001e0_a7cc1abb",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3268,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-09T03:07:00Z",
+      "side": 1,
+      "message": "While it\u0027s true the inner cache will miss if the outer cache misses first, it\u0027s also possible to miss the inner if the outer hits, so this can miss some inner cache misses.\n\nMove this outside of the \u0027else\u0027 block entirely to catch all inner cache misses.",
+      "revId": "63f10706c7f4eb0cc1a876d9f14e04ca39566242",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5f62174f_1ba10131",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-09T03:07:00Z",
+      "side": 1,
+      "message": "typo",
+      "range": {
+        "startLine": 55,
+        "startChar": 3,
+        "endLine": 55,
+        "endChar": 9
+      },
+      "revId": "63f10706c7f4eb0cc1a876d9f14e04ca39566242",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "de5368ce_010ec76d",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-09T03:07:00Z",
+      "side": 1,
+      "message": "typo: bookkeeping",
+      "range": {
+        "startLine": 55,
+        "startChar": 49,
+        "endLine": 55,
+        "endChar": 61
+      },
+      "revId": "63f10706c7f4eb0cc1a876d9f14e04ca39566242",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9ac01708_ba4b2331",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 878,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-09T03:07:00Z",
+      "side": 1,
+      "message": "nit: Remove the \"Cache\" portion from these names, since that\u0027s implied by the enum name.",
+      "range": {
+        "startLine": 878,
+        "startChar": 14,
+        "endLine": 878,
+        "endChar": 19
+      },
+      "revId": "63f10706c7f4eb0cc1a876d9f14e04ca39566242",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8fbe7a5b_cd0f7f06",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 890,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-09T03:07:00Z",
+      "side": 1,
+      "message": "nit: Similar to above, remove the \"Cache\" portion from these names.",
+      "range": {
+        "startLine": 890,
+        "startChar": 4,
+        "endLine": 890,
+        "endChar": 12
+      },
+      "revId": "63f10706c7f4eb0cc1a876d9f14e04ca39566242",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "11cd6a1a_c42d8420",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 895,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-09T03:07:00Z",
+      "side": 1,
+      "message": "These \"0\" and \"1\" magic numbers don\u0027t really mean anything.   Use Hit/Miss to make it clearer.",
+      "range": {
+        "startLine": 895,
+        "startChar": 38,
+        "endLine": 895,
+        "endChar": 39
+      },
+      "revId": "63f10706c7f4eb0cc1a876d9f14e04ca39566242",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "040bff29_f2f2eb93",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 895,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-09T03:07:00Z",
+      "side": 1,
+      "message": "This looks unnecessary.",
+      "range": {
+        "startLine": 895,
+        "startChar": 20,
+        "endLine": 895,
+        "endChar": 26
+      },
+      "revId": "63f10706c7f4eb0cc1a876d9f14e04ca39566242",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3339f6fb_fc07403a",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 896,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-09T03:07:00Z",
+      "side": 1,
+      "message": "Add an EnumCount to avoid this magic number, and above in updateInternalCacheCounters().",
+      "range": {
+        "startLine": 896,
+        "startChar": 57,
+        "endLine": 896,
+        "endChar": 58
+      },
+      "revId": "63f10706c7f4eb0cc1a876d9f14e04ca39566242",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c2367a9f_8bc86f4a",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 897,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-09T03:07:00Z",
+      "side": 1,
+      "message": "Since the number of entries in InternalCaches is known ahead of time, this can be an array so it can be indexed into directly.   That will allow for removing the .find(), which should help speed things up.",
+      "revId": "63f10706c7f4eb0cc1a876d9f14e04ca39566242",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
