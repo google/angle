@@ -45,6 +45,54 @@
       },
       "revId": "87975a97550ea44a96c39f946941df6450578b36",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c4536637_e4985a66",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-09T15:42:46Z",
+      "side": 1,
+      "message": "See this diff: https://chromium-review.googlesource.com/c/angle/angle/+/2576314/2..5/scripts/egl.xml",
+      "parentUuid": "2ccb5a59_81369e20",
+      "range": {
+        "startLine": 17,
+        "startChar": 16,
+        "endLine": 17,
+        "endChar": 23
+      },
+      "revId": "87975a97550ea44a96c39f946941df6450578b36",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "433ef8d1_d05007f1",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-09T15:42:46Z",
+      "side": 1,
+      "message": "I don\u0027t believe there were any in eglext.h. If so, please remove mention of that.",
+      "parentUuid": "0f74ea5d_b57b7f89",
+      "range": {
+        "startLine": 17,
+        "startChar": 3,
+        "endLine": 17,
+        "endChar": 11
+      },
+      "revId": "87975a97550ea44a96c39f946941df6450578b36",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
