@@ -35,6 +35,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "240f0e66_0c802a9a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-09T17:17:02Z",
+      "side": 1,
+      "message": "Jamie likely has some input here too, but I\u0027ll give my initial thoughts.\n\nIt may be worth looking at what I did for the descriptor pool counts:\nhttps://chromium-review.googlesource.com/c/angle/angle/+/2429487\n\nI added a PerfCounters struct to each of the classes that allocates descriptor pools so they can track their own counts, and then its up to them to output their values when it\u0027s appropriate.   In the case of the descriptor pools, that\u0027s object destruction since we\u0027re interested in the total number of pools for the lifetime of the app/test/trace/etc.\n\nYou could do something similar for the cache counters by adding the cache counters to the PerfCounters if they exist (adding a PerfCounters struct if not).   Rather than having a single array of cache hit counters and an enum to index into it, you\u0027d just list them directly in each class.   For example, for FramebufferVk, add PerfCounters:\n\n    class FramebufferVk : public FramebufferImpl\n    {\n        struct PerfCounters\n        {\n            // Framebuffer cache counts\n            uint64_t framebufferCacheHits;\n            uint64_t framebufferCacheMisses;\n        };\n        ...\n        PerfCounters mObjectPerfCounters;\n    };\n\nThen, FramebufferVk::getFramebuffer() is updated to just do:\n\n    if (iter !\u003d mFramebufferCache.end())\n    {\n        if (contextVk-\u003egetRenderer()-\u003egetFeatures().enableFramebufferVkCache.enabled)\n        {\n            *framebufferOut \u003d \u0026iter-\u003esecond.getFramebuffer();\n            ++mObjectPerfCounters.framebufferCacheHits;  \u003c\u003c--- we hit\n            return angle::Result::Continue;\n        }\n        else\n        {\n            // When cache is off just release previous entry, it will be recreated below\n            iter-\u003esecond.release(contextVk);\n        }\n    }\n    ++mObjectPerfCounters.framebufferCacheMisses;   \u003c\u003c--- we missed\n\nI\u0027m not sure what the best way to output the values is and whether these values are interesting while running the app or just at the end.   Outputting the hit rate at the end like ContextVk::outputCumulativePerfCounters() would be the easiest place to start.   Later, we could add calculated values to vk::PerfCounters which each object updates (somehow) and is output periodically by the ContextVk.",
+      "parentUuid": "400cd48e_c5c512fd",
+      "revId": "63f10706c7f4eb0cc1a876d9f14e04ca39566242",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a83291ef_64f19d77",
