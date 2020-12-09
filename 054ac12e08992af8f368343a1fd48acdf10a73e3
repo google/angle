@@ -1,6 +1,29 @@
 {
   "comments": [
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "89cd476f_7f22f74d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-12-09T17:53:50Z",
+      "side": 1,
+      "message": "nit/typo: \"in sync\"",
+      "range": {
+        "startLine": 11,
+        "startChar": 14,
+        "endLine": 11,
+        "endChar": 20
+      },
+      "revId": "054ac12e08992af8f368343a1fd48acdf10a73e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "9b149511_bde77769",
@@ -103,6 +126,24 @@
       "side": 1,
       "message": "Agree. This shouldn\u0027t be perf sensitive anyway.",
       "parentUuid": "cc8b4b43_fca8df77",
+      "revId": "054ac12e08992af8f368343a1fd48acdf10a73e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9860aedb_72dc12a1",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3089,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-12-09T17:53:50Z",
+      "side": 1,
+      "message": "Is this question resolved now?  Looks like it.",
+      "parentUuid": "d32b0958_d318ea33",
       "revId": "054ac12e08992af8f368343a1fd48acdf10a73e3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
