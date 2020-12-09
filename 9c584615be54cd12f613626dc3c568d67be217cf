@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ec5ac693_981ed76c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-12-09T16:41:56Z",
+      "side": 1,
+      "message": "Cody, this may be something we want. It requires a newer Android so wasn\u0027t useful on current Pixel 2s.\nI\u0027ll leave it to you to decide whether to pursue or not.",
+      "revId": "9c584615be54cd12f613626dc3c568d67be217cf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
