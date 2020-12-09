@@ -81,6 +81,30 @@
       },
       "revId": "d10920a75dd73dbd351af6919bae959aa1e75eda",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0aabd912_16dc8db3",
+        "filename": "src/tests/egl_tests/EGLContextSharingTest.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 508,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-12-09T01:21:06Z",
+      "side": 1,
+      "message": "Not sure flush at line 508 and line 526 both required, but I can see you do need one flush (likely keep line 526 one) there since continuingThread will not issue flush for deletingThread before wait.",
+      "parentUuid": "c591f23f_9f9bb51d",
+      "range": {
+        "startLine": 507,
+        "startChar": 8,
+        "endLine": 508,
+        "endChar": 18
+      },
+      "revId": "d10920a75dd73dbd351af6919bae959aa1e75eda",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
