@@ -20,7 +20,7 @@ vars = {
   'checkout_angle_internal': False,
 
   # Version of Chromium our Chromium-based DEPS are mirrored from.
-  'chromium_revision': 'a3984b7ec4aeffd722e85675646286022191fdcb',
+  'chromium_revision': '3fc522ff6579772f4d48f6be18d3cebab33ba4ff',
   # We never want to checkout chromium,
   # but need a dummy DEPS entry for the autoroller
   'dummy_checkout_chromium': False,
@@ -89,7 +89,7 @@ vars = {
   # Three lines of non-changing comments so that
   # the commit queue can handle CLs rolling catapult
   # and whatever else without interference from each other.
-  'catapult_revision': '4565794f5eda08cefef9bf842e16249fc8aeb5bc',
+  'catapult_revision': 'e43bd0925d7649a96737a4cfbb38de543c83a8ec',
 
   # Three lines of non-changing comments so that
   # the commit queue can handle CLs rolling luci-go
@@ -100,17 +100,17 @@ vars = {
 deps = {
 
   'build': {
-    'url': '{chromium_git}/chromium/src/build.git@115823df498dc216a4167523e2a41be1ba009489',
+    'url': '{chromium_git}/chromium/src/build.git@7c664f9cb50a4308933bc44d0ada2e7516f4f095',
     'condition': 'not build_with_chromium',
   },
 
   'buildtools': {
-    'url': '{chromium_git}/chromium/src/buildtools.git@6302c1175607a436e18947a5abe9df2209e845fc',
+    'url': '{chromium_git}/chromium/src/buildtools.git@86a7f72ab16ed4796fb73d1575bc2e329be58ae8',
     'condition': 'not build_with_chromium',
   },
 
   'testing': {
-    'url': '{chromium_git}/chromium/src/testing@baeb2e9897cc343767ac1a246364b6f3f327b9dc',
+    'url': '{chromium_git}/chromium/src/testing@7534b563e9eb34398858d54474f9c2d5813983d2',
     'condition': 'not build_with_chromium',
   },
 
@@ -170,7 +170,7 @@ deps = {
 
   # libjpeg_turbo is used by glmark2.
   'third_party/libjpeg_turbo': {
-    'url': '{chromium_git}/chromium/deps/libjpeg_turbo.git@bbb828223e9c8f83f0e84db1e98b116029e62765',
+    'url': '{chromium_git}/chromium/deps/libjpeg_turbo.git@e9a659a09e9600883e499c06ede04ba514d7f942',
     'condition': 'not build_with_chromium',
   },
 
@@ -311,7 +311,7 @@ deps = {
   },
 
   'tools/mb': {
-    'url': '{chromium_git}/chromium/src/tools/mb@dddd39ba5ac85802da26c0b40f4621721f3a803e',
+    'url': '{chromium_git}/chromium/src/tools/mb@1424e1194eca38f54dd7d308011f4bc305f71814',
     'condition': 'not build_with_chromium',
   },
 
