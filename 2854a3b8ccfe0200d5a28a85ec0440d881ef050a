@@ -50,6 +50,24 @@
       "message": "Metal is not happy about this ASSERT",
       "revId": "2854a3b8ccfe0200d5a28a85ec0440d881ef050a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bd35f63d_6e0203d2",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3712,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-09T21:59:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0ce70974_c3315196",
+      "revId": "2854a3b8ccfe0200d5a28a85ec0440d881ef050a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
