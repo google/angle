@@ -16,6 +16,29 @@
       "message": "The else case should at least dirty desc set bindings, don\u0027t you think?",
       "revId": "054ac12e08992af8f368343a1fd48acdf10a73e3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6dec7cb9_6d15107a",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3095,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-09T15:16:16Z",
+      "side": 1,
+      "message": "What about compute?",
+      "range": {
+        "startLine": 3093,
+        "startChar": 0,
+        "endLine": 3095,
+        "endChar": 44
+      },
+      "revId": "054ac12e08992af8f368343a1fd48acdf10a73e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
