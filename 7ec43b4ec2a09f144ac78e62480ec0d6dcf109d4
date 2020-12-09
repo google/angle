@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1b065b57_2e4f53d4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-09T15:46:46Z",
+      "side": 1,
+      "message": "Amazingly, I didn\u0027t need to modify the SPIR-V transformer at all. Just ensuring that the varying packing code packs the whole I/O block contiguously allows the Location decoration to stay on the variable itself and be unnecessary on its fields.",
+      "revId": "7ec43b4ec2a09f144ac78e62480ec0d6dcf109d4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
