@@ -38,7 +38,9 @@ enum
     IMPLEMENTATION_MAX_FRAGMENT_SHADER_UNIFORM_BUFFERS = 16,
     IMPLEMENTATION_MAX_COMPUTE_SHADER_UNIFORM_BUFFERS  = 16,
     // GL_EXT_geometry_shader increases the minimum value of GL_MAX_COMBINED_UNIFORM_BLOCKS to 36.
-    IMPLEMENTATION_MAX_COMBINED_SHADER_UNIFORM_BUFFERS = 36,
+    // GL_EXT_tessellation_shader increases the minimum value of GL_MAX_COMBINED_UNIFORM_BLOCKS
+    // to 60.
+    IMPLEMENTATION_MAX_COMBINED_SHADER_UNIFORM_BUFFERS = 60,
 
     // GL_EXT_geometry_shader increases the minimum value of GL_MAX_UNIFORM_BUFFER_BINDINGS to 48.
     // Vulkan's minimum value for maxDescriptorSetUniformBuffers is 72 so allow exposing up to that
