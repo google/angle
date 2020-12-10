@@ -35,6 +35,23 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ce412c3e_ee871fdb",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 10
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-10T17:21:42Z",
+      "side": 1,
+      "message": "I might have skimmed this too fast but I didn\u0027t see where this cache info gets reported.",
+      "revId": "e5d9ffefb038ffea921e6b58ea1a29426d5b888b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c6395161_c784135e",
@@ -71,6 +88,116 @@
       "writtenOn": "2020-12-10T16:51:53Z",
       "side": 1,
       "message": "Add virtual get(), insert(), and clear() functions so that each cache implements the same API.   This should also help push developers to add the onCacheHit(), and onCacheMiss() calls correctly too when new caches are added and they are looking at how other Caches are implemented.",
+      "revId": "e5d9ffefb038ffea921e6b58ea1a29426d5b888b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5557e4f4_47c54c7b",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 1310,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-10T17:21:42Z",
+      "side": 1,
+      "message": "I\u0027d call this HasCacheStats instead of Base to be more descriptive. can always rename it later. -1 to virtual functions, it shouldn\u0027t be necessary to go that far into OOP and virtual has both design and performance pitfalls.\n\nActually let\u0027s call this CacheStats and use composition rather than inheritance. Composition is much preferred in ANGLE for a very stable and intuitive design.",
+      "parentUuid": "df39f50e_6a3aa51f",
+      "revId": "e5d9ffefb038ffea921e6b58ea1a29426d5b888b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "07cee40e_83818338",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 1318,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-10T17:21:42Z",
+      "side": 1,
+      "message": "using composition you can just call these hit() and miss() and you can make getHitRatio public.",
+      "range": {
+        "startLine": 1317,
+        "startChar": 0,
+        "endLine": 1318,
+        "endChar": 58
+      },
+      "revId": "e5d9ffefb038ffea921e6b58ea1a29426d5b888b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "49f12f3f_25f30be8",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 1319,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-10T17:21:42Z",
+      "side": 1,
+      "message": "nit: const",
+      "range": {
+        "startLine": 1319,
+        "startChar": 24,
+        "endLine": 1319,
+        "endChar": 40
+      },
+      "revId": "e5d9ffefb038ffea921e6b58ea1a29426d5b888b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "126d6b20_0dcf2e2f",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 1323,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-10T17:21:42Z",
+      "side": 1,
+      "message": "nit: if (...)\n{\n  return 0;\n}\n\nreturn ... ; // nonzero",
+      "range": {
+        "startLine": 1321,
+        "startChar": 8,
+        "endLine": 1323,
+        "endChar": 81
+      },
+      "revId": "e5d9ffefb038ffea921e6b58ea1a29426d5b888b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "98c4c3af_1de313e8",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 1323,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-10T17:21:42Z",
+      "side": 1,
+      "message": "static_cast\u003cdouble\u003e, the 1.0 * trick is unintuitive.",
+      "range": {
+        "startLine": 1323,
+        "startChar": 21,
+        "endLine": 1323,
+        "endChar": 43
+      },
       "revId": "e5d9ffefb038ffea921e6b58ea1a29426d5b888b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
