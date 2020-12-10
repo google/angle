@@ -80,6 +80,30 @@
       },
       "revId": "b1858e8265b9ceb3eaba45a3c490ccc613f86b82",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4883a862_949b2ef9",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 3739,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-10T17:01:24Z",
+      "side": 1,
+      "message": "Ah, right, for some reason I was thinking this was like GlslangAssignLocations(), but this is only called once with all shader stages.",
+      "parentUuid": "4cf34122_37db4746",
+      "range": {
+        "startLine": 3729,
+        "startChar": 0,
+        "endLine": 3739,
+        "endChar": 5
+      },
+      "revId": "b1858e8265b9ceb3eaba45a3c490ccc613f86b82",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
