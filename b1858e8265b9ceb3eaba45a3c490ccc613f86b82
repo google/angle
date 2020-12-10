@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "222f095d_c18cb591",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-10T17:12:06Z",
+      "side": 1,
+      "message": "Tim, following up.",
+      "revId": "b1858e8265b9ceb3eaba45a3c490ccc613f86b82",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "4d20ecee_9f05b87b",
@@ -20,6 +37,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "6dc8eb04_7848a093",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1289,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-10T17:12:06Z",
+      "side": 1,
+      "message": "I don\u0027t think this ASSERTion would be valid. Maybe the function name could be more specific in that it defaults to vertex if there is no attached XFB stage. Or it could return invalid enum. I\u0027m happy with leaving it as is.",
+      "parentUuid": "4d20ecee_9f05b87b",
+      "revId": "b1858e8265b9ceb3eaba45a3c490ccc613f86b82",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "3a47b10d_cdf841ab",
         "filename": "src/libANGLE/ProgramExecutable.cpp",
         "patchSetId": 4
@@ -31,6 +66,24 @@
       "writtenOn": "2020-12-10T16:22:14Z",
       "side": 1,
       "message": "same",
+      "revId": "b1858e8265b9ceb3eaba45a3c490ccc613f86b82",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3274b628_409f7d0a",
+        "filename": "src/libANGLE/ProgramExecutable.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 552,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-10T17:12:06Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "3a47b10d_cdf841ab",
       "revId": "b1858e8265b9ceb3eaba45a3c490ccc613f86b82",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
