@@ -69,6 +69,24 @@
       "parentUuid": "a427e862_3e307206",
       "revId": "1aa8fbd88c47d3f0200ce0b8bd8158e6e54507c5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "14db1cb1_7dd93117",
+        "filename": "doc/DevSetupAndroid.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2020-12-10T20:23:28Z",
+      "side": 1,
+      "message": "Filed a bug (internal) and added it to the CL description.  I\u0027ve got developers looking at this documentation, so I want it to work with today\u0027s Android.",
+      "parentUuid": "3f5c6a4c_2bb85c86",
+      "revId": "1aa8fbd88c47d3f0200ce0b8bd8158e6e54507c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
