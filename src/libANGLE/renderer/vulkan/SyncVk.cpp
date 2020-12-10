@@ -25,7 +25,7 @@
 namespace
 {
 // Wait for file descriptor to be signaled
-VkResult SyncWait(int fd, uint64_t timeoutNs)
+VkResult SyncWaitFd(int fd, uint64_t timeoutNs)
 {
 #if !defined(ANGLE_PLATFORM_WINDOWS)
     struct pollfd fds;
@@ -64,7 +64,7 @@ VkResult SyncWait(int fd, uint64_t timeoutNs)
     return VK_ERROR_UNKNOWN;
 #else
     UNREACHABLE();
-    return VK_TIMEOUT;
+    return VK_ERROR_UNKNOWN;
 #endif
 }
 
@@ -254,8 +254,8 @@ angle::Result SyncHelperNativeFence::initializeWithFd(ContextVk *contextVk, int 
     Serial serialOut;
     // exportFd is exporting VK_EXTERNAL_FENCE_HANDLE_TYPE_SYNC_FD_BIT_KHR type handle which
     // obeys copy semantics. This means that the fence must already be signaled or the work to
-    // signal in the graphics pipeline at the time we export the fd. Thus we need to
-    // ensureSubmission here.
+    // signal it is in the graphics pipeline at the time we export the fd. Thus we need to
+    // EnsureSubmitted here.
     ANGLE_TRY(renderer->queueSubmitOneOff(contextVk, vk::PrimaryCommandBuffer(),
                                           contextVk->getPriority(), &fence.get(),
                                           vk::SubmitPolicy::EnsureSubmitted, &serialOut));
@@ -311,7 +311,7 @@ angle::Result SyncHelperNativeFence::clientWait(Context *context,
     {
         // We need to wait on the file descriptor
 
-        status = SyncWait(mNativeFenceFd, timeout);
+        status = SyncWaitFd(mNativeFenceFd, timeout);
         if (status != VK_TIMEOUT)
         {
             ANGLE_VK_TRY(contextVk, status);
@@ -360,7 +360,7 @@ angle::Result SyncHelperNativeFence::getStatus(Context *context, bool *signaled)
     }
 
     // We don't have a serial, check status of the file descriptor
-    VkResult result = SyncWait(mNativeFenceFd, 0);
+    VkResult result = SyncWaitFd(mNativeFenceFd, 0);
     if (result != VK_TIMEOUT)
     {
         ANGLE_VK_TRY(context, result);
