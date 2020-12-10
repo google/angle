@@ -51,6 +51,24 @@
       "parentUuid": "ce7223fa_01410428",
       "revId": "1aa8fbd88c47d3f0200ce0b8bd8158e6e54507c5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3f5c6a4c_2bb85c86",
+        "filename": "doc/DevSetupAndroid.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-10T19:06:51Z",
+      "side": 1,
+      "message": "Weird.   I wonder if this was always the case or if it broke during the refactor work that happened a few months ago.\n\nRegardless, I\u0027d prefer if we fixed Android to allow this behavior (rooted or debuggable) so both settings behave similarly.   I\u0027m fine with the note for now, but can you also open a buganizer to get this fixed too?\n\nIf a CL in AOSP is enough to avoid updating the docs (to add this note and then remove it later once the fix lands), that would be best.   I don\u0027t know if whoever hit this was someone internal or external though, so that may not be good enough if they are on Android 10/11 and would need to wait for Android 12 to see the fix shipped.",
+      "parentUuid": "a427e862_3e307206",
+      "revId": "1aa8fbd88c47d3f0200ce0b8bd8158e6e54507c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
