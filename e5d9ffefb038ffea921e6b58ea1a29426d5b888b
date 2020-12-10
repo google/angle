@@ -16,6 +16,126 @@
       "message": "PTAL, i think the mac failure is a flaky one",
       "revId": "e5d9ffefb038ffea921e6b58ea1a29426d5b888b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3e29a0bd_17e21722",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 10
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-10T16:51:53Z",
+      "side": 1,
+      "message": "I like the idea of converting the various caches to the CacheBase.   Using the caches looks cleaner, and it should be easier to find all of the various caches in the future (which you\u0027re finding isn\u0027t easy) by just searching for what inherits from CacheBase.\n\nAny ideas on when/how the data will be output?   My concern about deferring that work is if it has any implications on where the data is collected so it can be output correctly.",
+      "revId": "e5d9ffefb038ffea921e6b58ea1a29426d5b888b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c6395161_c784135e",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 3281,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-10T16:51:53Z",
+      "side": 1,
+      "message": "Move into get().\n\nThis applies to the rest of these caches that have onCacheHit()/onCacheMiss() added below.",
+      "range": {
+        "startLine": 3260,
+        "startChar": 0,
+        "endLine": 3281,
+        "endChar": 18
+      },
+      "revId": "e5d9ffefb038ffea921e6b58ea1a29426d5b888b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "df39f50e_6a3aa51f",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 1310,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-10T16:51:53Z",
+      "side": 1,
+      "message": "Add virtual get(), insert(), and clear() functions so that each cache implements the same API.   This should also help push developers to add the onCacheHit(), and onCacheMiss() calls correctly too when new caches are added and they are looking at how other Caches are implemented.",
+      "revId": "e5d9ffefb038ffea921e6b58ea1a29426d5b888b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "81fe0194_6c675814",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 1519,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-10T16:51:53Z",
+      "side": 1,
+      "message": "To match the others:\n    FramebufferCache() \u003d default;\n    ~FramebufferCache() { ASSERT(mPayload.empty()); }",
+      "range": {
+        "startLine": 1518,
+        "startChar": 0,
+        "endLine": 1519,
+        "endChar": 24
+      },
+      "revId": "e5d9ffefb038ffea921e6b58ea1a29426d5b888b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2d790ef1_cd87705b",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 1526,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-10T16:51:53Z",
+      "side": 1,
+      "message": "nit: These can just be \u0027get\u0027, \u0027insert\u0027, and \u0027clear\u0027 to match the others.",
+      "range": {
+        "startLine": 1521,
+        "startChar": 0,
+        "endLine": 1526,
+        "endChar": 42
+      },
+      "revId": "e5d9ffefb038ffea921e6b58ea1a29426d5b888b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "06eebd9a_43c7e774",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 1562,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-10T16:51:53Z",
+      "side": 1,
+      "message": "Since TextureDescriptorsCache and UniformsAndXfbDescriptorSetCache are essentially duplicates, can this be a templated \u0027DescriptorSetCache\u003cDesc\u003e\u0027?",
+      "revId": "e5d9ffefb038ffea921e6b58ea1a29426d5b888b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
