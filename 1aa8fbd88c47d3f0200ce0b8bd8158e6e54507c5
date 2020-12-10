@@ -16,6 +16,24 @@
       "message": "What about if the app is marked \u0027debuggable\u0027?   \n\nI haven\u0027t looked at the framework code in a while, but I\u0027d expect this to send us down the same path as angle_gl_driver_selection_[pkgs|values], meaning the same rooted/debuggable restrictions, so a version of this NOTE would apply to those settings also.   If that\u0027s the case, then this should probably be moved to under the \"## ANGLE driver choices\" header to try an indicate this applies to everything.",
       "revId": "1aa8fbd88c47d3f0200ce0b8bd8158e6e54507c5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a427e862_3e307206",
+        "filename": "doc/DevSetupAndroid.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2020-12-10T18:59:16Z",
+      "side": 1,
+      "message": "No, even debuggable apps can\u0027t use ANGLE via this specific setting unless the device is rooted.  This was reported to me over email and I verified locally.",
+      "parentUuid": "ce7223fa_01410428",
+      "revId": "1aa8fbd88c47d3f0200ce0b8bd8158e6e54507c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
