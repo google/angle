@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "84121331_a1ff52f0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-10T18:59:47Z",
+      "side": 1,
+      "message": "Too bad. Would be nice if we could get system integration again.",
+      "revId": "1aa8fbd88c47d3f0200ce0b8bd8158e6e54507c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ce7223fa_01410428",
