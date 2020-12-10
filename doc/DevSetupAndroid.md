@@ -121,6 +121,8 @@ adb shell settings put global angle_gl_driver_selection_pkgs <package name 1>,<p
 adb shell settings put global angle_gl_driver_selection_values <driver 1>,<driver 2>,<driver 3>,...
 ```
 ## ANGLE for *all* OpenGL ES apps
+`Note: This method only works on a device with root access.`
+
 Enable:
 ```
 adb shell settings put global angle_gl_driver_all_angle 1
