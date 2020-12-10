@@ -71,6 +71,23 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3267ef61_16d77a1a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2020-12-10T20:35:51Z",
+      "side": 1,
+      "message": "Looks great overall Quyen. Fantastic work tracking this down and working around it. I\u0027ve alerted the engineers who have run into hangs compiling Metal shaders in http://crbug.com/974219 (restricted view, sorry) to your workaround here.\n\nLGTM modulo Jamie\u0027s feedback. A couple of other small suggestions.\n",
+      "revId": "1e41eab6d13e4d2a1f9ef838669224358e9f7641",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0fd4f774_522b8a27",
@@ -96,6 +113,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "53d57510_8d9bbaad",
+        "filename": "src/tests/deqp_support/angle_deqp_gtest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2020-12-10T20:35:51Z",
+      "side": 1,
+      "message": "Consider calling this --skip-file-hooking. Then the comment could say \"added automatically when needed\" or similar.",
+      "range": {
+        "startLine": 124,
+        "startChar": 37,
+        "endLine": 124,
+        "endChar": 41
+      },
+      "revId": "1e41eab6d13e4d2a1f9ef838669224358e9f7641",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "e2991cab_36c551b6",
         "filename": "src/tests/deqp_support/angle_deqp_gtest.cpp",
         "patchSetId": 5
@@ -113,6 +153,23 @@
         "endLine": 731,
         "endChar": 25
       },
+      "revId": "1e41eab6d13e4d2a1f9ef838669224358e9f7641",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9e389bc1_51365e18",
+        "filename": "src/tests/deqp_support/angle_deqp_gtest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 769,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2020-12-10T20:35:51Z",
+      "side": 1,
+      "message": "Please handle execve\u0027s failure mode - by crashing if needed.",
       "revId": "1e41eab6d13e4d2a1f9ef838669224358e9f7641",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
