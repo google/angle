@@ -58,6 +58,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1c5dd700_934baef6",
+        "filename": "src/libANGLE/renderer/vulkan/SyncVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-12-10T23:07:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bb60e295_dcdb0d32",
+      "range": {
+        "startLine": 28,
+        "startChar": 9,
+        "endLine": 28,
+        "endChar": 17
+      },
+      "revId": "cd9811d7d303e34994cb885dab44ceef6f48e157",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "210dea07_8b397404",
@@ -71,6 +95,24 @@
       "writtenOn": "2020-12-10T16:07:25Z",
       "side": 1,
       "message": "Since SyncHelperNativeFence::clientWait() ignores VK_TIMEOUT, would it be better for this to return VK_ERROR_UNKNOWN to really make it clear that this type of synchronization is unsupported?",
+      "revId": "cd9811d7d303e34994cb885dab44ceef6f48e157",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6d361b22_d00531bb",
+        "filename": "src/libANGLE/renderer/vulkan/SyncVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-12-10T23:07:21Z",
+      "side": 1,
+      "message": "Does it matter? It should die when it hits UNREACHABLE()",
+      "parentUuid": "210dea07_8b397404",
       "revId": "cd9811d7d303e34994cb885dab44ceef6f48e157",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
@@ -112,6 +154,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "f4400261_22e5b95a",
+        "filename": "src/libANGLE/renderer/vulkan/SyncVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 250,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-12-10T23:07:21Z",
+      "side": 1,
+      "message": "Any pending work must be submitted (vkQueueSubmit) before we call queueSubmitOneOff below, so I really need it to flush.",
+      "parentUuid": "fb5a862e_9a45b8c1",
+      "revId": "cd9811d7d303e34994cb885dab44ceef6f48e157",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "efc973fc_3bdb714a",
         "filename": "src/libANGLE/renderer/vulkan/SyncVk.cpp",
         "patchSetId": 7
@@ -123,6 +183,30 @@
       "writtenOn": "2020-12-10T16:07:25Z",
       "side": 1,
       "message": "nit: signal it is in",
+      "range": {
+        "startLine": 257,
+        "startChar": 7,
+        "endLine": 257,
+        "endChar": 16
+      },
+      "revId": "cd9811d7d303e34994cb885dab44ceef6f48e157",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e0a39cd5_a6ae7ab3",
+        "filename": "src/libANGLE/renderer/vulkan/SyncVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 257,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-12-10T23:07:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "efc973fc_3bdb714a",
       "range": {
         "startLine": 257,
         "startChar": 7,
@@ -146,6 +230,30 @@
       "writtenOn": "2020-12-10T16:07:25Z",
       "side": 1,
       "message": "nit: EnsureSubmitted",
+      "range": {
+        "startLine": 258,
+        "startChar": 7,
+        "endLine": 258,
+        "endChar": 23
+      },
+      "revId": "cd9811d7d303e34994cb885dab44ceef6f48e157",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "32eed66d_e9055e64",
+        "filename": "src/libANGLE/renderer/vulkan/SyncVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 258,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-12-10T23:07:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "791e2121_019aa390",
       "range": {
         "startLine": 258,
         "startChar": 7,

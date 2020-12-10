@@ -16,6 +16,24 @@
       "message": "Comment says Done, but no ASSERT added!",
       "revId": "067a12f059511ead6e91ab9e91af1d180ad9c144",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a9d0a7c6_3e4b8c11",
+        "filename": "src/libANGLE/renderer/vulkan/SyncVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 298,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-12-10T23:07:21Z",
+      "side": 0,
+      "message": "This code was removed / no longer applies so I marked it as done.\nWe do not use mFenceWithFd so no need to check that it\u0027s valid. We just need an fd to fill in importFdInfo.",
+      "parentUuid": "bc330e3c_8fb43efe",
+      "revId": "067a12f059511ead6e91ab9e91af1d180ad9c144",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
