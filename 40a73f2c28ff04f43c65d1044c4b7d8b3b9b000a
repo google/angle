@@ -33,6 +33,29 @@
       "message": "This should go above the `getOutsideRenderPassCommandBuffer()` call. Otherwise the event is set before the current render pass.",
       "revId": "40a73f2c28ff04f43c65d1044c4b7d8b3b9b000a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b0e18572_ee75c8c2",
+        "filename": "src/libANGLE/renderer/vulkan/SyncVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-12-10T00:43:15Z",
+      "side": 1,
+      "message": "I am not convinced why you to flush to primary commands in order to insert a fence. The spec says \"insert it into GL command stream\", and we did insert it into command stream here by calling commandBuffer-\u003esetEvent() at line 62. We must break RP to insert a fence object, in order to ensure the GL commands are properly ordered. I am wondering the real bug here is that we are not breaking the renderpass here, maybe?",
+      "range": {
+        "startLine": 66,
+        "startChar": 25,
+        "endLine": 66,
+        "endChar": 54
+      },
+      "revId": "40a73f2c28ff04f43c65d1044c4b7d8b3b9b000a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
