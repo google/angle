@@ -71,6 +71,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8b7bad38_b463ce93",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1289,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-10T18:00:50Z",
+      "side": 1,
+      "message": "Ack, I left it to go faster and also to distinguish the two helper functions (attached vs linked)",
+      "parentUuid": "ed8777b6_0ba46787",
+      "revId": "b1858e8265b9ceb3eaba45a3c490ccc613f86b82",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3a47b10d_cdf841ab",
