@@ -94,6 +94,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "fb5a862e_9a45b8c1",
+        "filename": "src/libANGLE/renderer/vulkan/SyncVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 250,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-10T16:40:21Z",
+      "side": 1,
+      "message": "This should likely be flushCommandsAndEndRenderPass() as we discovered in your change Tim, good catch!\n\nThis change is keeping the old behavior. I suggest fixing this in a separate CL (maybe you can incorporate it in your change Tim)",
+      "parentUuid": "cfebf9a7_b90b6292",
+      "revId": "cd9811d7d303e34994cb885dab44ceef6f48e157",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "efc973fc_3bdb714a",
         "filename": "src/libANGLE/renderer/vulkan/SyncVk.cpp",
         "patchSetId": 7
