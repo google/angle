@@ -33,6 +33,109 @@
       "message": "LGTM once shabi\u0027s nits are fixed.",
       "revId": "cd9811d7d303e34994cb885dab44ceef6f48e157",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bb60e295_dcdb0d32",
+        "filename": "src/libANGLE/renderer/vulkan/SyncVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-10T16:07:25Z",
+      "side": 1,
+      "message": "nit: I think it would be helpful to make this \"SyncWaitFd\" to make it a bit more descriptive on what it\u0027s waiting on, especially with all the clientWait and syncWait and other \u0027wait\u0027 functions in here.",
+      "range": {
+        "startLine": 28,
+        "startChar": 9,
+        "endLine": 28,
+        "endChar": 17
+      },
+      "revId": "cd9811d7d303e34994cb885dab44ceef6f48e157",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "210dea07_8b397404",
+        "filename": "src/libANGLE/renderer/vulkan/SyncVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-10T16:07:25Z",
+      "side": 1,
+      "message": "Since SyncHelperNativeFence::clientWait() ignores VK_TIMEOUT, would it be better for this to return VK_ERROR_UNKNOWN to really make it clear that this type of synchronization is unsupported?",
+      "revId": "cd9811d7d303e34994cb885dab44ceef6f48e157",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cfebf9a7_b90b6292",
+        "filename": "src/libANGLE/renderer/vulkan/SyncVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 250,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-10T16:07:25Z",
+      "side": 1,
+      "message": "Is a full flushImpl() required here, or would flushCommandsAndEndRenderPass() be sufficient since all we\u0027re trying to do is make sure the current command are flushed?",
+      "revId": "cd9811d7d303e34994cb885dab44ceef6f48e157",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "efc973fc_3bdb714a",
+        "filename": "src/libANGLE/renderer/vulkan/SyncVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 257,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-10T16:07:25Z",
+      "side": 1,
+      "message": "nit: signal it is in",
+      "range": {
+        "startLine": 257,
+        "startChar": 7,
+        "endLine": 257,
+        "endChar": 16
+      },
+      "revId": "cd9811d7d303e34994cb885dab44ceef6f48e157",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "791e2121_019aa390",
+        "filename": "src/libANGLE/renderer/vulkan/SyncVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 258,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-10T16:07:25Z",
+      "side": 1,
+      "message": "nit: EnsureSubmitted",
+      "range": {
+        "startLine": 258,
+        "startChar": 7,
+        "endLine": 258,
+        "endChar": 23
+      },
+      "revId": "cd9811d7d303e34994cb885dab44ceef6f48e157",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
