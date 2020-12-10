@@ -80,6 +80,9 @@ enum
 
     // Implementation upper limits of max number of clip distances
     IMPLEMENTATION_MAX_CLIP_DISTANCES = 32,
+
+    // Implementation upper limit for layered framebuffer layer count
+    IMPLEMENTATION_MAX_FRAMEBUFFER_LAYERS = 256,
 };
 
 namespace limits

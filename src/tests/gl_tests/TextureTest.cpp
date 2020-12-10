@@ -1140,7 +1140,7 @@ class Texture3DTestES2 : public TexCoordDrawTest
     bool hasTexture3DExt() const
     {
         // http://anglebug.com/4927
-        if (IsPixel2() || IsOpenGLES())
+        if ((IsPixel2() || IsNexus5X()) && IsOpenGLES())
         {
             return false;
         }

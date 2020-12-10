@@ -521,7 +521,7 @@ TEST_P(CopyTexImageTest, CopyTexSubImageFrom3DTexureOES)
     ANGLE_SKIP_TEST_IF(IsD3D11() & IsWindows());
 
     // http://anglebug.com/4927
-    ANGLE_SKIP_TEST_IF(IsPixel2() || IsOpenGLES());
+    ANGLE_SKIP_TEST_IF((IsPixel2() || IsNexus5X()) && IsOpenGLES());
 
     constexpr GLsizei kDepth = 6;
 

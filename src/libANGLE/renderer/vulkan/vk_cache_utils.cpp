@@ -2887,7 +2887,7 @@ void FramebufferDesc::update(uint32_t index, ImageOrBufferViewSubresourceSerial 
     mSerials[index] = serial;
     if (serial.viewSerial.valid())
     {
-        mMaxIndex = std::max(mMaxIndex, static_cast<uint16_t>(index + 1));
+        SetBitField(mMaxIndex, std::max(mMaxIndex, static_cast<uint16_t>(index + 1)));
     }
 }
 
@@ -2919,19 +2919,21 @@ void FramebufferDesc::updateDepthStencilResolve(ImageOrBufferViewSubresourceSeri
 size_t FramebufferDesc::hash() const
 {
     return angle::ComputeGenericHash(&mSerials, sizeof(mSerials[0]) * mMaxIndex) ^
-           mUnresolveAttachmentMask.bits();
+           mLayerCount << 16 ^ mUnresolveAttachmentMask.bits();
 }
 
 void FramebufferDesc::reset()
 {
-    mMaxIndex = 0;
+    mMaxIndex   = 0;
+    mLayerCount = 0;
     mUnresolveAttachmentMask.reset();
     memset(&mSerials, 0, sizeof(mSerials));
 }
 
 bool FramebufferDesc::operator==(const FramebufferDesc &other) const
 {
-    if (mMaxIndex != other.mMaxIndex || mUnresolveAttachmentMask != other.mUnresolveAttachmentMask)
+    if (mMaxIndex != other.mMaxIndex || mLayerCount != other.mLayerCount ||
+        mUnresolveAttachmentMask != other.mUnresolveAttachmentMask)
     {
         return false;
     }
@@ -2956,6 +2958,11 @@ uint32_t FramebufferDesc::attachmentCount() const
 FramebufferNonResolveAttachmentMask FramebufferDesc::getUnresolveAttachmentMask() const
 {
     return mUnresolveAttachmentMask;
+}
+
+void FramebufferDesc::updateLayerCount(uint32_t layerCount)
+{
+    SetBitField(mLayerCount, layerCount);
 }
 
 // SamplerDesc implementation.

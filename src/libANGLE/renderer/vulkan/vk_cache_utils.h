@@ -1168,12 +1168,18 @@ class FramebufferDesc
 
     FramebufferNonResolveAttachmentMask getUnresolveAttachmentMask() const;
 
+    void updateLayerCount(uint32_t layerCount);
+    uint32_t getLayerCount() const { return mLayerCount; }
+
   private:
     void reset();
     void update(uint32_t index, ImageOrBufferViewSubresourceSerial serial);
 
     // Note: this is an exclusive index. If there is one index it will be "1".
-    uint16_t mMaxIndex;
+    uint16_t mMaxIndex : 7;
+    static_assert(gl::IMPLEMENTATION_MAX_FRAMEBUFFER_LAYERS < (1 << 9) - 1,
+                  "Not enough bits for mLayerCount");
+    uint16_t mLayerCount : 9;
 
     // If the render pass contains an initial subpass to unresolve a number of attachments, the
     // subpass description is derived from the following mask, specifying which attachments need

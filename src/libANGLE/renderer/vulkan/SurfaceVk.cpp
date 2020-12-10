@@ -275,10 +275,10 @@ OffscreenSurfaceVk::OffscreenSurfaceVk(const egl::SurfaceState &surfaceState, Re
       mDepthStencilAttachment(this)
 {
     mColorRenderTarget.init(&mColorAttachment.image, &mColorAttachment.imageViews, nullptr, nullptr,
-                            gl::LevelIndex(0), 0, RenderTargetTransience::Default);
+                            gl::LevelIndex(0), 0, 1, RenderTargetTransience::Default);
     mDepthStencilRenderTarget.init(&mDepthStencilAttachment.image,
                                    &mDepthStencilAttachment.imageViews, nullptr, nullptr,
-                                   gl::LevelIndex(0), 0, RenderTargetTransience::Default);
+                                   gl::LevelIndex(0), 0, 1, RenderTargetTransience::Default);
 }
 
 OffscreenSurfaceVk::~OffscreenSurfaceVk() {}
@@ -308,7 +308,7 @@ angle::Result OffscreenSurfaceVk::initializeImpl(DisplayVk *displayVk)
                                               renderer->getFormat(config->renderTargetFormat),
                                               samples, robustInit));
         mColorRenderTarget.init(&mColorAttachment.image, &mColorAttachment.imageViews, nullptr,
-                                nullptr, gl::LevelIndex(0), 0, RenderTargetTransience::Default);
+                                nullptr, gl::LevelIndex(0), 0, 1, RenderTargetTransience::Default);
     }
 
     if (config->depthStencilFormat != GL_NONE)
@@ -318,7 +318,7 @@ angle::Result OffscreenSurfaceVk::initializeImpl(DisplayVk *displayVk)
             robustInit));
         mDepthStencilRenderTarget.init(&mDepthStencilAttachment.image,
                                        &mDepthStencilAttachment.imageViews, nullptr, nullptr,
-                                       gl::LevelIndex(0), 0, RenderTargetTransience::Default);
+                                       gl::LevelIndex(0), 0, 1, RenderTargetTransience::Default);
     }
 
     return angle::Result::Continue;
@@ -506,9 +506,9 @@ WindowSurfaceVk::WindowSurfaceVk(const egl::SurfaceState &surfaceState, EGLNativ
     // Initialize the color render target with the multisampled targets.  If not multisampled, the
     // render target will be updated to refer to a swapchain image on every acquire.
     mColorRenderTarget.init(&mColorImageMS, &mColorImageMSViews, nullptr, nullptr,
-                            gl::LevelIndex(0), 0, RenderTargetTransience::Default);
+                            gl::LevelIndex(0), 0, 1, RenderTargetTransience::Default);
     mDepthStencilRenderTarget.init(&mDepthStencilImage, &mDepthStencilImageViews, nullptr, nullptr,
-                                   gl::LevelIndex(0), 0, RenderTargetTransience::Default);
+                                   gl::LevelIndex(0), 0, 1, RenderTargetTransience::Default);
     mDepthStencilImageBinding.bind(&mDepthStencilImage);
     mColorImageMSBinding.bind(&mColorImageMS);
 }
@@ -1024,7 +1024,7 @@ angle::Result WindowSurfaceVk::createSwapChain(vk::Context *context,
         // Initialize the color render target with the multisampled targets.  If not multisampled,
         // the render target will be updated to refer to a swapchain image on every acquire.
         mColorRenderTarget.init(&mColorImageMS, &mColorImageMSViews, nullptr, nullptr,
-                                gl::LevelIndex(0), 0, RenderTargetTransience::Default);
+                                gl::LevelIndex(0), 0, 1, RenderTargetTransience::Default);
     }
 
     ANGLE_TRY(resizeSwapchainImages(context, imageCount));
@@ -1051,7 +1051,7 @@ angle::Result WindowSurfaceVk::createSwapChain(vk::Context *context,
                                                 VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
 
         mDepthStencilRenderTarget.init(&mDepthStencilImage, &mDepthStencilImageViews, nullptr,
-                                       nullptr, gl::LevelIndex(0), 0,
+                                       nullptr, gl::LevelIndex(0), 0, 1,
                                        RenderTargetTransience::Default);
 
         // We will need to pass depth/stencil image views to the RenderTargetVk in the future.

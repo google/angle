@@ -144,11 +144,11 @@ angle::Result RenderbufferVk::setStorageImpl(const gl::Context *context,
             robustInit));
 
         mRenderTarget.init(&mMultisampledImage, &mMultisampledImageViews, mImage, &mImageViews,
-                           gl::LevelIndex(0), 0, RenderTargetTransience::MultisampledTransient);
+                           gl::LevelIndex(0), 0, 1, RenderTargetTransience::MultisampledTransient);
     }
     else
     {
-        mRenderTarget.init(mImage, &mImageViews, nullptr, nullptr, gl::LevelIndex(0), 0,
+        mRenderTarget.init(mImage, &mImageViews, nullptr, nullptr, gl::LevelIndex(0), 0, 1,
                            RenderTargetTransience::Default);
     }
 
@@ -214,7 +214,7 @@ angle::Result RenderbufferVk::setStorageEGLImageTarget(const gl::Context *contex
     }
 
     mRenderTarget.init(mImage, &mImageViews, nullptr, nullptr, imageVk->getImageLevel(),
-                       imageVk->getImageLayer(), RenderTargetTransience::Default);
+                       imageVk->getImageLayer(), 1, RenderTargetTransience::Default);
 
     return angle::Result::Continue;
 }

@@ -59,6 +59,7 @@ class RenderTargetVk final : public FramebufferAttachmentRenderTarget
               vk::ImageViewHelper *resolveImageViews,
               gl::LevelIndex levelIndexGL,
               uint32_t layerIndex,
+              uint32_t layerCount,
               RenderTargetTransience transience);
     void reset();
 
@@ -66,8 +67,8 @@ class RenderTargetVk final : public FramebufferAttachmentRenderTarget
     vk::ImageOrBufferViewSubresourceSerial getResolveSubresourceSerial() const;
 
     // Note: RenderTargets should be called in order, with the depth/stencil onRender last.
-    void onColorDraw(ContextVk *contextVk);
-    void onDepthStencilDraw(ContextVk *contextVk);
+    void onColorDraw(ContextVk *contextVk, uint32_t framebufferLayerCount);
+    void onDepthStencilDraw(ContextVk *contextVk, uint32_t framebufferLayerCount);
 
     vk::ImageHelper &getImageForRenderPass();
     const vk::ImageHelper &getImageForRenderPass() const;
@@ -92,8 +93,9 @@ class RenderTargetVk final : public FramebufferAttachmentRenderTarget
     gl::Extents getExtents() const;
     gl::LevelIndex getLevelIndex() const { return mLevelIndexGL; }
     uint32_t getLayerIndex() const { return mLayerIndex; }
+    uint32_t getLayerCount() const { return mLayerCount; }
 
-    gl::ImageIndex getImageIndex() const;
+    gl::ImageIndex getImageIndexForClear(uint32_t layerCount) const;
 
     // Special mutator for Surface RenderTargets. Allows the Framebuffer to keep a single
     // RenderTargetVk pointer.
@@ -104,7 +106,8 @@ class RenderTargetVk final : public FramebufferAttachmentRenderTarget
 
     angle::Result flushStagedUpdates(ContextVk *contextVk,
                                      vk::ClearValuesArray *deferredClears,
-                                     uint32_t deferredClearIndex);
+                                     uint32_t deferredClearIndex,
+                                     uint32_t framebufferLayerCount);
 
     void retainImageViews(ContextVk *contextVk) const;
 
@@ -151,9 +154,14 @@ class RenderTargetVk final : public FramebufferAttachmentRenderTarget
     vk::ImageHelper *mResolveImage;
     vk::ImageViewHelper *mResolveImageViews;
 
-    // Which subresource of the image is used as render target.
+    // Which subresource of the image is used as render target.  For single-layer render targets,
+    // |mLayerIndex| will contain the layer index and |mLayerCount| will be 1.  For layered render
+    // targets, |mLayerIndex| will be 0 and |mLayerCount| will be the number of layers in the image
+    // (or level depth, if image is 3D).  Note that blit and other functions that read or write to
+    // the render target always use layer 0, so this works out for users of |getLayerIndex()|.
     gl::LevelIndex mLevelIndexGL;
     uint32_t mLayerIndex;
+    uint32_t mLayerCount;
 
     // If resolve attachment exists, |mTransience| could be *Transient if the multisampled results
     // need to be discarded.

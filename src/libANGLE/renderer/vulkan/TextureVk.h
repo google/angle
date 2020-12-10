@@ -507,7 +507,9 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
     //
     // - First dimension: index N contains render targets with views from mMultisampledImageViews[N]
     // - Second dimension: level
-    // - Third dimension: layer
+    // - Third dimension: layer.  If there are M layers:
+    //   * Indices [0, M-1] are single-layer render targets
+    //   * Index M is a layered render target
     gl::RenderToTextureImageMap<std::vector<RenderTargetVector>> mRenderTargets;
 
     // |mImage| wraps a VkImage and VkDeviceMemory that represents the gl::Texture. |mOwnsImage|

@@ -933,8 +933,7 @@ void RendererVk::ensureCapsInitialized() const
     if (mPhysicalDeviceFeatures.shaderClipDistance && limitsVk.maxClipDistances >= 8)
     {
         mNativeExtensions.clipDistanceAPPLE = true;
-        mNativeCaps.maxClipDistances =
-            std::min<GLuint>(limitsVk.maxClipDistances, gl::IMPLEMENTATION_MAX_CLIP_DISTANCES);
+        mNativeCaps.maxClipDistances        = limitsVk.maxClipDistances;
     }
 }
 

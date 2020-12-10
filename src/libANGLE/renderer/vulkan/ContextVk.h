@@ -450,13 +450,14 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     }
 
     void onDepthStencilDraw(gl::LevelIndex level,
-                            uint32_t layer,
+                            uint32_t layerStart,
+                            uint32_t layerCount,
                             vk::ImageHelper *image,
                             vk::ImageHelper *resolveImage)
     {
         ASSERT(mRenderPassCommands->started());
-        mRenderPassCommands->depthStencilImagesDraw(&mResourceUseList, level, layer, image,
-                                                    resolveImage);
+        mRenderPassCommands->depthStencilImagesDraw(&mResourceUseList, level, layerStart,
+                                                    layerCount, image, resolveImage);
     }
 
     void onImageHelperRelease(const vk::ImageHelper *image)

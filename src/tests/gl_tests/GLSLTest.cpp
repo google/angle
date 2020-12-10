@@ -8849,7 +8849,7 @@ void main()
 
     constexpr char kGS[] = R"(#version 310 es
 #extension GL_EXT_geometry_shader : require
-layout (invocations = 3, triangles) in;
+layout (triangles) in;
 layout (triangle_strip, max_vertices = 3) out;
 
 // Input varyings

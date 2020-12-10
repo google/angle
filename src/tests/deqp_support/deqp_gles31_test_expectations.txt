@@ -185,9 +185,7 @@
 
 // Geometry shader support:
 5430 VULKAN : dEQP-GLES31.functional.geometry_shading.query.primitives_generated_* = FAIL
-5407 VULKAN : dEQP-GLES31.functional.geometry_shading.layered.* = SKIP
-5407 VULKAN : dEQP-GLES31.functional.geometry_shading.instanced.invocation_per_layer* = SKIP
-5407 VULKAN : dEQP-GLES31.functional.geometry_shading.instanced.multiple_layers_per_invocation* = SKIP
+5452 VULKAN : dEQP-GLES31.functional.geometry_shading.layered.layer_provoking_vertex_* = FAIL
 3571 VULKAN : dEQP-GLES31.functional.geometry_shading.*transform_feedback* = SKIP
 3571 VULKAN : dEQP-GLES31.functional.program_interface_query.transform_feedback_varying.*geo* = SKIP
 

@@ -3535,6 +3535,10 @@ void Context::initCaps()
     ANGLE_LIMIT_CAP(mState.mCaps.maxCombinedShaderStorageBlocks,
                     IMPLEMENTATION_MAX_SHADER_STORAGE_BUFFER_BINDINGS);
 
+    ANGLE_LIMIT_CAP(mState.mCaps.maxClipDistances, IMPLEMENTATION_MAX_CLIP_DISTANCES);
+
+    ANGLE_LIMIT_CAP(mState.mCaps.maxFramebufferLayers, IMPLEMENTATION_MAX_FRAMEBUFFER_LAYERS);
+
     ANGLE_LIMIT_CAP(mState.mCaps.maxSampleMaskWords, MAX_SAMPLE_MASK_WORDS);
 
     // WebGL compatibility

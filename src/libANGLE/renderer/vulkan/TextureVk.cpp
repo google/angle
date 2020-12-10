@@ -203,29 +203,36 @@ void GetRenderTargetLayerCountAndIndex(vk::ImageHelper *image,
                                        GLuint *layerCount,
                                        GLuint *layerIndex)
 {
+    // If the render target is to a single layer (usual case), index.hasLayer() is true.  If the
+    // render target is layered (used with geometry shaders), it would be false.  In the latter
+    // case, layerIndex is given the value of layerCount to signify this.  The arrays indexed by
+    // layerIndex therefore contain the layered render target as the last element.
     switch (index.getType())
     {
         case gl::TextureType::_2D:
         case gl::TextureType::_2DMultisample:
-            *layerIndex = 0;
             *layerCount = 1;
+            *layerIndex = 0;
             return;
 
         case gl::TextureType::CubeMap:
-            *layerIndex = index.cubeMapFaceIndex();
             *layerCount = gl::kCubeFaceCount;
+            *layerIndex = index.hasLayer() ? index.cubeMapFaceIndex() : *layerCount;
             return;
 
         case gl::TextureType::_3D:
-            *layerIndex = index.hasLayer() ? index.getLayerIndex() : 0;
-            *layerCount = index.hasLayer() ? image->getExtents().depth : 1;
+        {
+            gl::LevelIndex levelGL(index.getLevelIndex());
+            *layerCount = image->getLevelExtents(image->toVkLevel(levelGL)).depth;
+            *layerIndex = index.hasLayer() ? index.getLayerIndex() : *layerCount;
             return;
+        }
 
         case gl::TextureType::_2DArray:
         case gl::TextureType::_2DMultisampleArray:
         case gl::TextureType::CubeMapArray:
-            *layerIndex = index.hasLayer() ? index.getLayerIndex() : 0;
-            *layerCount = index.hasLayer() ? image->getLayerCount() : 1;
+            *layerCount = image->getLayerCount();
+            *layerIndex = index.hasLayer() ? index.getLayerIndex() : *layerCount;
             return;
 
         default:
@@ -1524,7 +1531,8 @@ angle::Result TextureVk::redefineLevel(const gl::Context *context,
         // override them with this call.
         gl::LevelIndex levelIndexGL(index.getLevelIndex());
         uint32_t layerIndex = index.hasLayer() ? index.getLayerIndex() : 0;
-        mImage->removeSingleSubresourceStagedUpdates(contextVk, levelIndexGL, layerIndex);
+        mImage->removeSingleSubresourceStagedUpdates(contextVk, levelIndexGL, layerIndex,
+                                                     index.getLayerCount());
 
         if (mImage->valid())
         {
@@ -1946,11 +1954,11 @@ angle::Result TextureVk::copyAndStageImageData(ContextVk *contextVk,
             {
                 // Note: if this level is incompatibly redefined, there will necessarily be a
                 // staged update, and the contents of the image are to be thrown away.
-                ASSERT(srcImage->hasStagedUpdatesForSubresource(levelGL, layer));
+                ASSERT(srcImage->hasStagedUpdatesForSubresource(levelGL, layer, 1));
                 continue;
             }
 
-            ASSERT(!srcImage->hasStagedUpdatesForSubresource(levelGL, layer));
+            ASSERT(!srcImage->hasStagedUpdatesForSubresource(levelGL, layer, 1));
 
             // Pull data from the current image and stage it as an update for the new image
 
@@ -2193,7 +2201,12 @@ angle::Result TextureVk::initRenderTargets(ContextVk *contextVk,
         return angle::Result::Continue;
     }
 
-    renderTargets.resize(layerCount);
+    // There are |layerCount| render targets, one for each layer.  There is also one render target
+    // viewing all layers.
+    renderTargets.resize(layerCount + 1);
+
+    const bool isMultisampledRenderToTexture =
+        renderToTextureIndex != gl::RenderToTextureImageIndex::Default;
 
     for (uint32_t layerIndex = 0; layerIndex < layerCount; ++layerIndex)
     {
@@ -2202,8 +2215,6 @@ angle::Result TextureVk::initRenderTargets(ContextVk *contextVk,
         vk::ImageHelper *resolveImage          = nullptr;
         vk::ImageViewHelper *resolveImageViews = nullptr;
 
-        const bool isMultisampledRenderToTexture =
-            renderToTextureIndex != gl::RenderToTextureImageIndex::Default;
         RenderTargetTransience transience = isMultisampledRenderToTexture
                                                 ? RenderTargetTransience::MultisampledTransient
                                                 : RenderTargetTransience::Default;
@@ -2230,8 +2241,18 @@ angle::Result TextureVk::initRenderTargets(ContextVk *contextVk,
 
         renderTargets[layerIndex].init(drawImage, drawImageViews, resolveImage, resolveImageViews,
                                        getNativeImageLevel(levelIndex),
-                                       getNativeImageLayer(layerIndex), transience);
+                                       getNativeImageLayer(layerIndex), 1, transience);
     }
+
+    // Create the layered render target.  Note that multisampled render to texture is not allowed
+    // with layered render targets.
+    if (!isMultisampledRenderToTexture)
+    {
+        renderTargets[layerCount].init(mImage, &getImageViews(), nullptr, nullptr,
+                                       getNativeImageLevel(levelIndex), getNativeImageLayer(0),
+                                       layerCount, RenderTargetTransience::Default);
+    }
+
     return angle::Result::Continue;
 }
 
