@@ -16,6 +16,24 @@
       "message": "ASSERT instead?",
       "revId": "fdca2f677119f708da7afa40ed79e0568224a7fb",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "04a2df88_1852c6d8",
+        "filename": "src/libANGLE/renderer/vulkan/SyncVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 298,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-12-10T00:29:33Z",
+      "side": 0,
+      "message": "Ack",
+      "parentUuid": "ff8d2d14_d4cfd78c",
+      "revId": "fdca2f677119f708da7afa40ed79e0568224a7fb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }

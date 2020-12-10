@@ -47,6 +47,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a978c3a9_b29abc7a",
+        "filename": "src/libANGLE/renderer/vulkan/SyncVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-12-10T00:29:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f40088d0_afd1ca05",
+      "range": {
+        "startLine": 28,
+        "startChar": 25,
+        "endLine": 28,
+        "endChar": 32
+      },
+      "revId": "1e2b104528a067e9b128b168ffe2da764acbc6af",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5de94594_6faaedc6",
@@ -60,6 +84,24 @@
       "writtenOn": "2020-12-09T21:08:06Z",
       "side": 1,
       "message": "Should this be an ASSERT instead?",
+      "revId": "1e2b104528a067e9b128b168ffe2da764acbc6af",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cdf8f31e_bbb1cd92",
+        "filename": "src/libANGLE/renderer/vulkan/SyncVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-12-10T00:29:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5de94594_6faaedc6",
       "revId": "1e2b104528a067e9b128b168ffe2da764acbc6af",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
@@ -81,6 +123,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2c9d4bab_7b5967b7",
+        "filename": "src/libANGLE/renderer/vulkan/SyncVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-12-10T00:29:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7b028b09_dc47d1d0",
+      "revId": "1e2b104528a067e9b128b168ffe2da764acbc6af",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3714ad06_206d5acc",
@@ -94,6 +154,30 @@
       "writtenOn": "2020-12-09T20:43:12Z",
       "side": 1,
       "message": "nit: maybe do this in SyncWait",
+      "range": {
+        "startLine": 311,
+        "startChar": 5,
+        "endLine": 317,
+        "endChar": 9
+      },
+      "revId": "1e2b104528a067e9b128b168ffe2da764acbc6af",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bc7b321c_9c2d043d",
+        "filename": "src/libANGLE/renderer/vulkan/SyncVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 317,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-12-10T00:29:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3714ad06_206d5acc",
       "range": {
         "startLine": 311,
         "startChar": 5,
@@ -127,6 +211,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "13d1f95e_d56a59ba",
+        "filename": "src/libANGLE/renderer/vulkan/SyncVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 318,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-12-10T00:29:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8473af25_695d7c45",
+      "range": {
+        "startLine": 318,
+        "startChar": 21,
+        "endLine": 318,
+        "endChar": 29
+      },
+      "revId": "1e2b104528a067e9b128b168ffe2da764acbc6af",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9f28f31b_dc1c4c33",
@@ -140,6 +248,24 @@
       "writtenOn": "2020-12-09T21:08:06Z",
       "side": 1,
       "message": "This is not correct. -1 is overloaded for both the error case and the timeout case. In this function timeout is not an error.\n\nIf you return a VkResult per Jamie\u0027s suggestion, you could make this function look like what it did before.",
+      "revId": "1e2b104528a067e9b128b168ffe2da764acbc6af",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bf2f4ae0_fc250c20",
+        "filename": "src/libANGLE/renderer/vulkan/SyncVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 371,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-12-10T00:29:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9f28f31b_dc1c4c33",
       "revId": "1e2b104528a067e9b128b168ffe2da764acbc6af",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
