@@ -16,6 +16,23 @@
       "message": "Nice trick by the way",
       "revId": "cd9811d7d303e34994cb885dab44ceef6f48e157",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "efe831f8_9ff2efa6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-10T14:45:49Z",
+      "side": 1,
+      "message": "LGTM once shabi\u0027s nits are fixed.",
+      "revId": "cd9811d7d303e34994cb885dab44ceef6f48e157",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
