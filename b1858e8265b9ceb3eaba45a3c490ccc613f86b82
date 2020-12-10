@@ -55,6 +55,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "ed8777b6_0ba46787",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1289,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-10T17:57:59Z",
+      "side": 1,
+      "message": "Yeah, defaulting to vertex should be safe based on how it\u0027s used.   Returning InvalidEnum may be tough/ugly since you\u0027d need to make sure not to index into the gl::ShaderMap with it.\n\nAs far as naming, maybe dropping the \"Attached\" part would be enough, since that\u0027s not necessarily true every time.   Up to you.",
+      "parentUuid": "6dc8eb04_7848a093",
+      "revId": "b1858e8265b9ceb3eaba45a3c490ccc613f86b82",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "3a47b10d_cdf841ab",
         "filename": "src/libANGLE/ProgramExecutable.cpp",
         "patchSetId": 4
