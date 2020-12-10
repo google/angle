@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4f3808f4_bb426120",
+        "filename": "src/tests/gl_tests/MultithreadingTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 573,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-12-10T01:01:05Z",
+      "side": 0,
+      "message": "In all cases, app should not need to call glFlush to create/insert a fence. Driver also should not need to issue flush, but driver has to create a clear boundary in the command buffer so that commands before and after are executed in the order.\n\nIn single context case, app also do not need to issue a flush before wait for fence. Driver is expected to issue the flush before wait, if needed.\n\nIn multi-context case, app is required to issue a flush before second thread try to wait for the fence, because driver is unable to issue the flush for other context.\n\nThis usage case is multi-context usage case, so I think flush is required, because the wait is in a separate thread.",
+      "range": {
+        "startLine": 573,
+        "startChar": 12,
+        "endLine": 573,
+        "endChar": 22
+      },
+      "revId": "2c90a90a76699d18ba5d7b61d29ef0cada221129",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
