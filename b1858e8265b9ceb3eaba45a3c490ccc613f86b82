@@ -56,6 +56,30 @@
       },
       "revId": "b1858e8265b9ceb3eaba45a3c490ccc613f86b82",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4cf34122_37db4746",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 3739,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-10T16:43:36Z",
+      "side": 1,
+      "message": "GS is not processed twice, it\u0027s VS and TES that are processed if the xfb stage is after them.",
+      "parentUuid": "f826df8c_a80c0b51",
+      "range": {
+        "startLine": 3729,
+        "startChar": 0,
+        "endLine": 3739,
+        "endChar": 5
+      },
+      "revId": "b1858e8265b9ceb3eaba45a3c490ccc613f86b82",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
