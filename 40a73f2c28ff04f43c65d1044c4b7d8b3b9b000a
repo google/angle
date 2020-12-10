@@ -80,6 +80,30 @@
       },
       "revId": "40a73f2c28ff04f43c65d1044c4b7d8b3b9b000a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "37aed7e5_bafb71ea",
+        "filename": "src/libANGLE/renderer/vulkan/SyncVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-10T23:43:00Z",
+      "side": 1,
+      "message": "So it sounds like I should abandon this CL and continue calling glFlush in the tests?",
+      "parentUuid": "cff581b9_67932f1a",
+      "range": {
+        "startLine": 66,
+        "startChar": 25,
+        "endLine": 66,
+        "endChar": 54
+      },
+      "revId": "40a73f2c28ff04f43c65d1044c4b7d8b3b9b000a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
