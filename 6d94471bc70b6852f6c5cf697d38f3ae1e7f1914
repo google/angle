@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "66ed6c0c_5f6285cc",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1263724
+      },
+      "writtenOn": "2020-12-10T20:27:14Z",
+      "side": 1,
+      "message": "Sorry, saw +2 so hit submit, then noticed some comments...\nWill post follow-up if needed.",
+      "revId": "6d94471bc70b6852f6c5cf697d38f3ae1e7f1914",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
