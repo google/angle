@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b66aa64b_59c11733",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-10T17:21:13Z",
+      "side": 1,
+      "message": "Kaiji - Presubmit is failing with:\n\n\u003e ERROR\n\u003e The angle directory requires source formatting. Please run: git cl format\n\u003e To see notifications and warnings, look at the stdout of the presubmit step.\n\nPlease run \u0027git cl format\u0027 in your source directory and re-upload the CL.",
+      "revId": "21592fad4f567cff0f9c7857828a318ddb34ef11",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
