@@ -56,6 +56,30 @@
       },
       "revId": "40a73f2c28ff04f43c65d1044c4b7d8b3b9b000a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cff581b9_67932f1a",
+        "filename": "src/libANGLE/renderer/vulkan/SyncVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-10T03:39:08Z",
+      "side": 1,
+      "message": "Charlie is right that flush to primary is unnecessary, and that the application should issue a glFlush. We were wrong to assume glFlush is not necessary. GLES3.2 spec says:\n\n\u003e If the sync object being blocked upon will not be signaled in finite time (for\nexample, by an associated fence command issued previously, but not yet flushed\nto the graphics pipeline), then ClientWaitSync may hang forever.\n\nSo there is such a thing as a fence that is issued but not flushed.\n\n---\n\nThere is one exception; this follows the previous quote immediately in the spec:\n\n\u003e  To help prevent this behavior3, if ClientWaitSync is called and all of the following are true:\n\u003e \n\u003e • the SYNC_FLUSH_COMMANDS_BIT bit is set in flags,\n\u003e • sync is unsignaled when ClientWaitSync is called,\n\u003e • and the calls to ClientWaitSync and FenceSync were issued from the same context,\n\u003e \n\u003e then the GL will behave as if the equivalent of Flush were inserted immediately after the creation of sync.\n\nHowever, I think this is automatically taken care of because the flush is on the same context that recorded the setEvent(), so it should all work.",
+      "parentUuid": "b0e18572_ee75c8c2",
+      "range": {
+        "startLine": 66,
+        "startChar": 25,
+        "endLine": 66,
+        "endChar": 54
+      },
+      "revId": "40a73f2c28ff04f43c65d1044c4b7d8b3b9b000a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
