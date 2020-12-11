@@ -159,6 +159,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "da1d24a1_fb689c1c",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 577,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-11T21:53:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "97cdce8b_6571c2ac",
+      "range": {
+        "startLine": 577,
+        "startChar": 94,
+        "endLine": 577,
+        "endChar": 99
+      },
+      "revId": "b7fd0b8c549c00271535a0c99128ff9b0090d036",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "aa89eb5b_da9fbe06",
@@ -172,6 +196,30 @@
       "writtenOn": "2020-12-11T19:40:00Z",
       "side": 1,
       "message": "nit: These names should (mostly) match since they\u0027re describing the same thing.   Personally, I\u0027d prefer the function name be updated to \u0027IsAnyAttachment3DWithoutAllLayers()\u0027, since that sounds clearer to me.",
+      "range": {
+        "startLine": 580,
+        "startChar": 17,
+        "endLine": 580,
+        "endChar": 85
+      },
+      "revId": "b7fd0b8c549c00271535a0c99128ff9b0090d036",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d1f2b70e_644096bf",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 580,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-11T21:53:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "aa89eb5b_da9fbe06",
       "range": {
         "startLine": 580,
         "startChar": 17,
