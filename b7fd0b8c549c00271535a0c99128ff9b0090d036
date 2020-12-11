@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9611c037_09528137",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-11T17:21:30Z",
+      "side": 1,
+      "message": "this doesn\u0027t seem to be a GL term. the GL 3.2 spec says:\n\n\"To render directly into a texture image, a specified level of a texture object can be attached as one of the logical buffers of a framebuffer object with the command FramebufferTexture\"\n\nvs\n\n\"Additionally, a specified image from a texture object can be attached as one of the logical buffers of a framebuffer object with the command void FramebufferTexture2D\"\n\nSo nominally we can refer to level vs image attachments.\n\nI also don\u0027t see implementation for FramebufferTexture. Looks like maybe Intel added that in the initial GS implementation?",
+      "range": {
+        "startLine": 7,
+        "startChar": 7,
+        "endLine": 7,
+        "endChar": 36
+      },
+      "revId": "b7fd0b8c549c00271535a0c99128ff9b0090d036",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7edd7d7e_eeca2a9f",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 576,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-11T17:21:30Z",
+      "side": 1,
+      "message": "nit: I\u0027m suggest we refer to the framebuffer having whole level attachments rather than \"layered framebuffers\"",
+      "range": {
+        "startLine": 576,
+        "startChar": 51,
+        "endLine": 576,
+        "endChar": 58
+      },
+      "revId": "b7fd0b8c549c00271535a0c99128ff9b0090d036",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ae790f0c_4f734c8d",
+        "filename": "src/libANGLE/renderer/vulkan/RenderTargetVk.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-11T17:21:30Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 158,
+        "startChar": 84,
+        "endLine": 158,
+        "endChar": 91
+      },
+      "revId": "b7fd0b8c549c00271535a0c99128ff9b0090d036",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "959cab1b_5055c81d",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 207,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-11T17:21:30Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 207,
+        "startChar": 24,
+        "endLine": 207,
+        "endChar": 31
+      },
+      "revId": "b7fd0b8c549c00271535a0c99128ff9b0090d036",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
