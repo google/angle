@@ -85,6 +85,10 @@ enum class LinkMismatchError
     // Interface block specific
     LAYOUT_QUALIFIER_MISMATCH,
     MATRIX_PACKING_MISMATCH,
+
+    // I/O block specific
+    FIELD_LOCATION_MISMATCH,
+    FIELD_STRUCT_NAME_MISMATCH,
 };
 
 void LogLinkMismatch(InfoLog &infoLog,

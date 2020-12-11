@@ -9009,6 +9009,362 @@ void main()
     EXPECT_GL_NO_ERROR();
 }
 
+// Validate that link fails with I/O block member name mismatches.
+TEST_P(GLSLTest_ES31, NegativeIOBlocksLinkMemberNameMismatch)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_io_blocks"));
+
+    constexpr char kVS[] = R"(#version 310 es
+#extension GL_EXT_shader_io_blocks : require
+in highp vec4 position;
+out VSBlock { vec4 a; vec4 b[2]; } blockOut1;
+void main()
+{
+    blockOut1.a = vec4(0);
+    blockOut1.b[0] = vec4(0);
+    blockOut1.b[1] = vec4(0);
+    gl_Position = position;
+})";
+
+    constexpr char kFS[] = R"(#version 310 es
+#extension GL_EXT_shader_io_blocks : require
+precision mediump float;
+layout(location = 0) out mediump vec4 color;
+in VSBlock { vec4 c; vec4 b[2]; } blockIn1;
+void main()
+{
+    color = vec4(blockIn1.c.x, blockIn1.b[0].y, blockIn1.b[1].z, 1.0);
+})";
+
+    GLuint program = CompileProgram(kVS, kFS);
+    EXPECT_EQ(0u, program);
+}
+
+// Validate that link fails with I/O block member array size mismatches.
+TEST_P(GLSLTest_ES31, NegativeIOBlocksLinkMemberArraySizeMismatch)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_io_blocks"));
+
+    constexpr char kVS[] = R"(#version 310 es
+#extension GL_EXT_shader_io_blocks : require
+in highp vec4 position;
+out VSBlock { vec4 a; vec4 b[2]; } blockOut1;
+void main()
+{
+    blockOut1.a = vec4(0);
+    blockOut1.b[0] = vec4(0);
+    blockOut1.b[1] = vec4(0);
+    gl_Position = position;
+})";
+
+    constexpr char kFS[] = R"(#version 310 es
+#extension GL_EXT_shader_io_blocks : require
+precision mediump float;
+layout(location = 0) out mediump vec4 color;
+in VSBlock { vec4 a; vec4 b[3]; } blockIn1;
+void main()
+{
+    color = vec4(blockIn1.a.x, blockIn1.b[0].y, blockIn1.b[1].z, 1.0);
+})";
+
+    GLuint program = CompileProgram(kVS, kFS);
+    EXPECT_EQ(0u, program);
+}
+
+// Validate that link fails with I/O block member type mismatches.
+TEST_P(GLSLTest_ES31, NegativeIOBlocksLinkMemberTypeMismatch)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_io_blocks"));
+
+    constexpr char kVS[] = R"(#version 310 es
+#extension GL_EXT_shader_io_blocks : require
+in highp vec4 position;
+out VSBlock { vec4 a; vec4 b[2]; } blockOut1;
+void main()
+{
+    blockOut1.a = vec4(0);
+    blockOut1.b[0] = vec4(0);
+    blockOut1.b[1] = vec4(0);
+    gl_Position = position;
+})";
+
+    constexpr char kFS[] = R"(#version 310 es
+#extension GL_EXT_shader_io_blocks : require
+precision mediump float;
+layout(location = 0) out mediump vec4 color;
+in VSBlock { vec3 a; vec4 b[2]; } blockIn1;
+void main()
+{
+    color = vec4(blockIn1.a.x, blockIn1.b[0].y, blockIn1.b[1].z, 1.0);
+})";
+
+    GLuint program = CompileProgram(kVS, kFS);
+    EXPECT_EQ(0u, program);
+}
+
+// Validate that link fails with I/O block location mismatches
+TEST_P(GLSLTest_ES31, NegativeIOBlocksLinkLocationMismatch)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_io_blocks"));
+
+    constexpr char kVS[] = R"(#version 310 es
+#extension GL_EXT_shader_io_blocks : require
+in highp vec4 position;
+layout(location = 2) out VSBlock { vec4 a; vec4 b[2]; } blockOut1;
+void main()
+{
+    blockOut1.a = vec4(0);
+    blockOut1.b[0] = vec4(0);
+    blockOut1.b[1] = vec4(0);
+    gl_Position = position;
+})";
+
+    constexpr char kFS[] = R"(#version 310 es
+#extension GL_EXT_shader_io_blocks : require
+precision mediump float;
+layout(location = 0) out mediump vec4 color;
+layout(location = 1) in VSBlock { vec4 a; vec4 b[2]; } blockIn1;
+void main()
+{
+    color = vec4(blockIn1.a.x, blockIn1.b[0].y, blockIn1.b[1].z, 1.0);
+})";
+
+    GLuint program = CompileProgram(kVS, kFS);
+    EXPECT_EQ(0u, program);
+}
+
+// Validate that link fails with I/O block member location mismatches
+TEST_P(GLSLTest_ES31, NegativeIOBlocksLinkMemberLocationMismatch)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_io_blocks"));
+
+    constexpr char kVS[] = R"(#version 310 es
+#extension GL_EXT_shader_io_blocks : require
+in highp vec4 position;
+out VSBlock { vec4 a; layout(location = 2) vec4 b[2]; } blockOut1;
+void main()
+{
+    blockOut1.a = vec4(0);
+    blockOut1.b[0] = vec4(0);
+    blockOut1.b[1] = vec4(0);
+    gl_Position = position;
+})";
+
+    constexpr char kFS[] = R"(#version 310 es
+#extension GL_EXT_shader_io_blocks : require
+precision mediump float;
+layout(location = 0) out mediump vec4 color;
+in VSBlock { vec4 a; layout(location = 3) vec4 b[2]; } blockIn1;
+void main()
+{
+    color = vec4(blockIn1.a.x, blockIn1.b[0].y, blockIn1.b[1].z, 1.0);
+})";
+
+    GLuint program = CompileProgram(kVS, kFS);
+    EXPECT_EQ(0u, program);
+}
+
+// Validate that link fails with I/O block member struct name mismatches.
+TEST_P(GLSLTest_ES31, NegativeIOBlocksLinkMemberStructNameMismatch)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_io_blocks"));
+
+    constexpr char kVS[] = R"(#version 310 es
+#extension GL_EXT_shader_io_blocks : require
+in highp vec4 position;
+struct S1 { vec4 a; vec4 b[2]; };
+out VSBlock { S1 s; } blockOut1;
+void main()
+{
+    blockOut1.s.a = vec4(0);
+    blockOut1.s.b[0] = vec4(0);
+    blockOut1.s.b[1] = vec4(0);
+    gl_Position = position;
+})";
+
+    constexpr char kFS[] = R"(#version 310 es
+#extension GL_EXT_shader_io_blocks : require
+precision mediump float;
+layout(location = 0) out mediump vec4 color;
+struct S2 { vec4 a; vec4 b[2]; };
+in VSBlock { S2 s; } blockIn1;
+void main()
+{
+    color = vec4(blockIn1.s.a.x, blockIn1.s.b[0].y, blockIn1.s.b[1].z, 1.0);
+})";
+
+    GLuint program = CompileProgram(kVS, kFS);
+    EXPECT_EQ(0u, program);
+}
+
+// Validate that link fails with I/O block member struct member name mismatches.
+TEST_P(GLSLTest_ES31, NegativeIOBlocksLinkMemberStructMemberNameMismatch)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_io_blocks"));
+
+    constexpr char kVS[] = R"(#version 310 es
+#extension GL_EXT_shader_io_blocks : require
+in highp vec4 position;
+struct S { vec4 c; vec4 b[2]; };
+out VSBlock { S s; } blockOut1;
+void main()
+{
+    blockOut1.s.c = vec4(0);
+    blockOut1.s.b[0] = vec4(0);
+    blockOut1.s.b[1] = vec4(0);
+    gl_Position = position;
+})";
+
+    constexpr char kFS[] = R"(#version 310 es
+#extension GL_EXT_shader_io_blocks : require
+precision mediump float;
+layout(location = 0) out mediump vec4 color;
+struct S { vec4 a; vec4 b[2]; };
+in VSBlock { S s; } blockIn1;
+void main()
+{
+    color = vec4(blockIn1.s.a.x, blockIn1.s.b[0].y, blockIn1.s.b[1].z, 1.0);
+})";
+
+    GLuint program = CompileProgram(kVS, kFS);
+    EXPECT_EQ(0u, program);
+}
+
+// Validate that link fails with I/O block member struct member type mismatches.
+TEST_P(GLSLTest_ES31, NegativeIOBlocksLinkMemberStructMemberTypeMismatch)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_io_blocks"));
+
+    constexpr char kVS[] = R"(#version 310 es
+#extension GL_EXT_shader_io_blocks : require
+in highp vec4 position;
+struct S { vec4 a; vec4 b[2]; };
+out VSBlock { S s; } blockOut1;
+void main()
+{
+    blockOut1.s.a = vec4(0);
+    blockOut1.s.b[0] = vec4(0);
+    blockOut1.s.b[1] = vec4(0);
+    gl_Position = position;
+})";
+
+    constexpr char kFS[] = R"(#version 310 es
+#extension GL_EXT_shader_io_blocks : require
+precision mediump float;
+layout(location = 0) out mediump vec4 color;
+struct S { vec3 a; vec4 b[2]; };
+in VSBlock { S s; } blockIn1;
+void main()
+{
+    color = vec4(blockIn1.s.a.x, blockIn1.s.b[0].y, blockIn1.s.b[1].z, 1.0);
+})";
+
+    GLuint program = CompileProgram(kVS, kFS);
+    EXPECT_EQ(0u, program);
+}
+
+// Validate that link fails with I/O block member struct member array size mismatches.
+TEST_P(GLSLTest_ES31, NegativeIOBlocksLinkMemberStructMemberArraySizeMismatch)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_io_blocks"));
+
+    constexpr char kVS[] = R"(#version 310 es
+#extension GL_EXT_shader_io_blocks : require
+in highp vec4 position;
+struct S { vec4 a; vec4 b[3]; };
+out VSBlock { S s; } blockOut1;
+void main()
+{
+    blockOut1.s.a = vec4(0);
+    blockOut1.s.b[0] = vec4(0);
+    blockOut1.s.b[1] = vec4(0);
+    gl_Position = position;
+})";
+
+    constexpr char kFS[] = R"(#version 310 es
+#extension GL_EXT_shader_io_blocks : require
+precision mediump float;
+layout(location = 0) out mediump vec4 color;
+struct S { vec4 a; vec4 b[2]; };
+in VSBlock { S s; } blockIn1;
+void main()
+{
+    color = vec4(blockIn1.s.a.x, blockIn1.s.b[0].y, blockIn1.s.b[1].z, 1.0);
+})";
+
+    GLuint program = CompileProgram(kVS, kFS);
+    EXPECT_EQ(0u, program);
+}
+
+// Validate that link fails with I/O block member struct member count mismatches.
+TEST_P(GLSLTest_ES31, NegativeIOBlocksLinkMemberStructMemberCountMismatch)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_io_blocks"));
+
+    constexpr char kVS[] = R"(#version 310 es
+#extension GL_EXT_shader_io_blocks : require
+in highp vec4 position;
+struct S { vec4 a; vec4 b[2]; vec4 c; };
+out VSBlock { S s; } blockOut1;
+void main()
+{
+    blockOut1.s.c = vec4(0);
+    blockOut1.s.b[0] = vec4(0);
+    blockOut1.s.b[1] = vec4(0);
+    gl_Position = position;
+})";
+
+    constexpr char kFS[] = R"(#version 310 es
+#extension GL_EXT_shader_io_blocks : require
+precision mediump float;
+layout(location = 0) out mediump vec4 color;
+struct S { vec4 a; vec4 b[2]; };
+in VSBlock { S s; } blockIn1;
+void main()
+{
+    color = vec4(blockIn1.s.a.x, blockIn1.s.b[0].y, blockIn1.s.b[1].z, 1.0);
+})";
+
+    GLuint program = CompileProgram(kVS, kFS);
+    EXPECT_EQ(0u, program);
+}
+
+// Validate that link fails with I/O block member nested struct mismatches.
+TEST_P(GLSLTest_ES31, NegativeIOBlocksLinkMemberNestedStructMismatch)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_io_blocks"));
+
+    constexpr char kVS[] = R"(#version 310 es
+#extension GL_EXT_shader_io_blocks : require
+in highp vec4 position;
+struct S1 { vec4 c; vec4 b[2]; };
+struct S2 { S1 s; };
+struct S3 { S2 s; };
+out VSBlock { S3 s; } blockOut1;
+void main()
+{
+    blockOut1.s.s.s.c = vec4(0);
+    blockOut1.s.s.s.b[0] = vec4(0);
+    blockOut1.s.s.s.b[1] = vec4(0);
+    gl_Position = position;
+})";
+
+    constexpr char kFS[] = R"(#version 310 es
+#extension GL_EXT_shader_io_blocks : require
+precision mediump float;
+layout(location = 0) out mediump vec4 color;
+struct S1 { vec4 a; vec4 b[2]; };
+struct S2 { S1 s; };
+struct S3 { S2 s; };
+in VSBlock { S3 s; } blockIn1;
+void main()
+{
+    color = vec4(blockIn1.s.s.s.a.x, blockIn1.s.s.s.b[0].y, blockIn1.s.s.s.b[1].z, 1.0);
+})";
+
+    GLuint program = CompileProgram(kVS, kFS);
+    EXPECT_EQ(0u, program);
+}
 }  // anonymous namespace
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these

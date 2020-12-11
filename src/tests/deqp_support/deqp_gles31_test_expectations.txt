@@ -189,10 +189,6 @@
 3571 VULKAN : dEQP-GLES31.functional.geometry_shading.*transform_feedback* = SKIP
 3571 VULKAN : dEQP-GLES31.functional.program_interface_query.transform_feedback_varying.*geo* = SKIP
 
-// Shader I/O blocks:
-// Missing matching of struct name in member fields of matching nameless I/O blocks
-3580 VULKAN : dEQP-GLES31.functional.separate_shader.validation.es31.io_blocks.mismatch_different_member_struct_names = FAIL
-
 ////
 //// AMD Vulkan expectations
 ////

@@ -486,6 +486,11 @@ const char *GetLinkMismatchErrorString(LinkMismatchError linkError)
             return "Layout qualifier";
         case LinkMismatchError::MATRIX_PACKING_MISMATCH:
             return "Matrix Packing";
+
+        case LinkMismatchError::FIELD_LOCATION_MISMATCH:
+            return "Field location";
+        case LinkMismatchError::FIELD_STRUCT_NAME_MISMATCH:
+            return "Field structure name";
         default:
             UNREACHABLE();
             return "";
@@ -3656,8 +3661,21 @@ bool Program::doShaderVariablesMatch(int outputShaderVersion,
     bool namesMatch     = input.isSameNameAtLinkTime(output);
     bool locationsMatch = input.location != -1 && input.location == output.location;
 
+    // An output block is considered to match an input block in the subsequent
+    // shader if the two blocks have the same block name, and the members of the
+    // block match exactly in name, type, qualification, and declaration order.
+    //
+    // - For the purposes of shader interface matching, the gl_PointSize
+    //   member of the intrinsically declared gl_PerVertex shader interface
+    //   block is ignored.
+    // - Output blocks that do not match in name, but have a location and match
+    //   in every other way listed above may be considered to match by some
+    //   implementations, but not all - so this behaviour should not be relied
+    //   upon.
+
     // An output variable is considered to match an input variable in the subsequent
     // shader if:
+    //
     // - the two variables match in name, type, and qualification; or
     // - the two variables are declared with the same location qualifier and
     //   match in type and qualification.
@@ -3681,8 +3699,7 @@ bool Program::doShaderVariablesMatch(int outputShaderVersion,
     return false;
 }
 
-// [OpenGL ES 3.1] Chapter 7.4.1 "Shader Interface Matching" Page 91
-// TODO(jiawei.shao@intel.com): add validation on input/output blocks matching
+// [OpenGL ES 3.2] Chapter 7.4.1 "Shader Interface Matching"
 bool Program::linkValidateShaderInterfaceMatching(
     const std::vector<sh::ShaderVariable> &outputVaryings,
     const std::vector<sh::ShaderVariable> &inputVaryings,
@@ -4233,6 +4250,19 @@ LinkMismatchError Program::LinkValidateVariablesBase(const sh::ShaderVariable &v
         if (member1.interpolation != member2.interpolation)
         {
             return LinkMismatchError::INTERPOLATION_TYPE_MISMATCH;
+        }
+
+        if (variable1.isShaderIOBlock && variable2.isShaderIOBlock)
+        {
+            if (member1.location != member2.location)
+            {
+                return LinkMismatchError::FIELD_LOCATION_MISMATCH;
+            }
+
+            if (member1.structName != member2.structName)
+            {
+                return LinkMismatchError::FIELD_STRUCT_NAME_MISMATCH;
+            }
         }
 
         LinkMismatchError linkErrorOnField = LinkValidateVariablesBase(
