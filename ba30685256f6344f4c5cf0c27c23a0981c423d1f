@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "73b019c0_bcce32fc",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 11
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-12-11T18:10:42Z",
+      "side": 1,
+      "message": "PTAL - as discussed, centralization and tying into output flag will be in a follow up change",
+      "revId": "ba30685256f6344f4c5cf0c27c23a0981c423d1f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}

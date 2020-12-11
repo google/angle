@@ -75,6 +75,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "afdf0484_ec7e4f98",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 3281,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-12-11T18:10:42Z",
+      "side": 1,
+      "message": "with the -1 on OOP design this is moot?",
+      "parentUuid": "c6395161_c784135e",
+      "range": {
+        "startLine": 3260,
+        "startChar": 0,
+        "endLine": 3281,
+        "endChar": 18
+      },
+      "revId": "e5d9ffefb038ffea921e6b58ea1a29426d5b888b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "df39f50e_6a3aa51f",
@@ -110,6 +134,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "012e6d1a_261d85c3",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 1310,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-12-11T18:10:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5557e4f4_47c54c7b",
+      "revId": "e5d9ffefb038ffea921e6b58ea1a29426d5b888b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "07cee40e_83818338",
@@ -133,6 +175,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d6f6b568_02cac078",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 1318,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-12-11T18:10:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "07cee40e_83818338",
+      "range": {
+        "startLine": 1317,
+        "startChar": 0,
+        "endLine": 1318,
+        "endChar": 58
+      },
+      "revId": "e5d9ffefb038ffea921e6b58ea1a29426d5b888b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "49f12f3f_25f30be8",
@@ -146,6 +212,30 @@
       "writtenOn": "2020-12-10T17:21:42Z",
       "side": 1,
       "message": "nit: const",
+      "range": {
+        "startLine": 1319,
+        "startChar": 24,
+        "endLine": 1319,
+        "endChar": 40
+      },
+      "revId": "e5d9ffefb038ffea921e6b58ea1a29426d5b888b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "455bf0d5_1386c29e",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 1319,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-12-11T18:10:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "49f12f3f_25f30be8",
       "range": {
         "startLine": 1319,
         "startChar": 24,
@@ -202,6 +292,54 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "10258eb1_bc6d8dbc",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 1323,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-12-11T18:10:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "98c4c3af_1de313e8",
+      "range": {
+        "startLine": 1323,
+        "startChar": 21,
+        "endLine": 1323,
+        "endChar": 43
+      },
+      "revId": "e5d9ffefb038ffea921e6b58ea1a29426d5b888b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "12a4b6f3_bff0e396",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 1323,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-12-11T18:10:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "126d6b20_0dcf2e2f",
+      "range": {
+        "startLine": 1321,
+        "startChar": 8,
+        "endLine": 1323,
+        "endChar": 81
+      },
+      "revId": "e5d9ffefb038ffea921e6b58ea1a29426d5b888b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "81fe0194_6c675814",
@@ -215,6 +353,30 @@
       "writtenOn": "2020-12-10T16:51:53Z",
       "side": 1,
       "message": "To match the others:\n    FramebufferCache() \u003d default;\n    ~FramebufferCache() { ASSERT(mPayload.empty()); }",
+      "range": {
+        "startLine": 1518,
+        "startChar": 0,
+        "endLine": 1519,
+        "endChar": 24
+      },
+      "revId": "e5d9ffefb038ffea921e6b58ea1a29426d5b888b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "47f72218_1e758fff",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 1519,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-12-11T18:10:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "81fe0194_6c675814",
       "range": {
         "startLine": 1518,
         "startChar": 0,
@@ -248,6 +410,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3b893c97_6aa6aea4",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 1526,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-12-11T18:10:42Z",
+      "side": 1,
+      "message": "-1 on OOP design makes this moot?",
+      "parentUuid": "2d790ef1_cd87705b",
+      "range": {
+        "startLine": 1521,
+        "startChar": 0,
+        "endLine": 1526,
+        "endChar": 42
+      },
+      "revId": "e5d9ffefb038ffea921e6b58ea1a29426d5b888b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "06eebd9a_43c7e774",
@@ -261,6 +447,24 @@
       "writtenOn": "2020-12-10T16:51:53Z",
       "side": 1,
       "message": "Since TextureDescriptorsCache and UniformsAndXfbDescriptorSetCache are essentially duplicates, can this be a templated \u0027DescriptorSetCache\u003cDesc\u003e\u0027?",
+      "revId": "e5d9ffefb038ffea921e6b58ea1a29426d5b888b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "05d0617e_904d9d31",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 1562,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-12-11T18:10:42Z",
+      "side": 1,
+      "message": "Nice, done",
+      "parentUuid": "06eebd9a_43c7e774",
       "revId": "e5d9ffefb038ffea921e6b58ea1a29426d5b888b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
