@@ -314,6 +314,24 @@
       "message": "Why always 1, rather than layerCount?   Is this a 3D restriction (I can\u0027t find it in the spec for vkCmdClearColorImage or VkImageSubresourceRange, though I may be missing it).",
       "revId": "b7fd0b8c549c00271535a0c99128ff9b0090d036",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "66a9caa5_eaf4b1ff",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 4399,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-11T19:55:33Z",
+      "side": 1,
+      "message": "3D restriction. It\u0027s annoying how depth and layer really mean the same thing, but the spec requires one or the other for 3D and 2D array images.\n\nvkCmdClearColorImage says:\n\n\u003e pRanges is a pointer to an array of VkImageSubresourceRange structures describing a range of mipmap levels, array layers, and aspects to be cleared, as described in Image Views.\n\nAnd there is a table in VkImageViewCreateInfo [1] that says 3D images should have layerCount 1.\n\nI got a validation error here, but I agree it\u0027s not super clear from the spec.",
+      "parentUuid": "6ed1955b_fa3c7477",
+      "revId": "b7fd0b8c549c00271535a0c99128ff9b0090d036",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
