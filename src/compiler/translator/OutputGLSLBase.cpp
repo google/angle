@@ -1339,7 +1339,6 @@ void TOutputGLSLBase::declareInterfaceBlockLayout(const TType &type)
         case EbsUnspecified:
         case EbsShared:
             // Default block storage is shared.
-            fprintf(stderr, "\n\n\nHERE\n\n\n");
             out << "shared";
             break;
 

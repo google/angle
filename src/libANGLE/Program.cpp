@@ -609,12 +609,75 @@ bool ValidateGraphicsInterfaceBlocksPerShader(
     return true;
 }
 
+void LogAmbiguousFieldLinkMismatch(InfoLog &infoLog,
+                                   const std::string &blockName1,
+                                   const std::string &blockName2,
+                                   const std::string &fieldName,
+                                   ShaderType shaderType1,
+                                   ShaderType shaderType2)
+{
+    infoLog << "Ambiguous field '" << fieldName << "' in blocks '" << blockName1 << "' ("
+            << GetShaderTypeString(shaderType1) << " shader) and '" << blockName2 << "' ("
+            << GetShaderTypeString(shaderType2) << " shader) which don't have instance names.";
+}
+
+bool ValidateInstancelessGraphicsInterfaceBlocksPerShader(
+    const std::vector<sh::InterfaceBlock> &interfaceBlocks,
+    ShaderType shaderType,
+    InterfaceBlockMap *instancelessBlocksFields,
+    InfoLog &infoLog)
+{
+    ASSERT(instancelessBlocksFields);
+
+    for (const sh::InterfaceBlock &block : interfaceBlocks)
+    {
+        if (!block.instanceName.empty())
+        {
+            continue;
+        }
+
+        for (const sh::ShaderVariable &field : block.fields)
+        {
+            const auto &entry = instancelessBlocksFields->find(field.name);
+            if (entry != instancelessBlocksFields->end())
+            {
+                const sh::InterfaceBlock &linkedBlock = *(entry->second.second);
+                if (block.name != linkedBlock.name)
+                {
+                    LogAmbiguousFieldLinkMismatch(infoLog, block.name, linkedBlock.name, field.name,
+                                                  entry->second.first, shaderType);
+                    return false;
+                }
+            }
+            else
+            {
+                (*instancelessBlocksFields)[field.name] = std::make_pair(shaderType, &block);
+            }
+        }
+    }
+
+    return true;
+}
+
 bool ValidateInterfaceBlocksMatch(
     GLuint numShadersHasInterfaceBlocks,
     const ShaderMap<const std::vector<sh::InterfaceBlock> *> &shaderInterfaceBlocks,
     InfoLog &infoLog,
-    bool webglCompatibility)
+    bool webglCompatibility,
+    InterfaceBlockMap *instancelessInterfaceBlocksFields)
 {
+    for (ShaderType shaderType : kAllGraphicsShaderTypes)
+    {
+        // Validate that instanceless blocks of different names don't have fields of the same name.
+        if (shaderInterfaceBlocks[shaderType] &&
+            !ValidateInstancelessGraphicsInterfaceBlocksPerShader(
+                *shaderInterfaceBlocks[shaderType], shaderType, instancelessInterfaceBlocksFields,
+                infoLog))
+        {
+            return false;
+        }
+    }
+
     if (numShadersHasInterfaceBlocks < 2u)
     {
         return true;
@@ -4036,6 +4099,8 @@ bool Program::linkInterfaceBlocks(const Caps &caps,
     GLuint combinedUniformBlocksCount                                         = 0u;
     GLuint numShadersHasUniformBlocks                                         = 0u;
     ShaderMap<const std::vector<sh::InterfaceBlock> *> allShaderUniformBlocks = {};
+    InterfaceBlockMap instancelessInterfaceBlocksFields;
+
     for (ShaderType shaderType : AllShaderTypes())
     {
         Shader *shader = mState.mAttachedShaders[shaderType];
@@ -4068,7 +4133,7 @@ bool Program::linkInterfaceBlocks(const Caps &caps,
     }
 
     if (!ValidateInterfaceBlocksMatch(numShadersHasUniformBlocks, allShaderUniformBlocks, infoLog,
-                                      webglCompatibility))
+                                      webglCompatibility, &instancelessInterfaceBlocksFields))
     {
         return false;
     }
@@ -4112,7 +4177,8 @@ bool Program::linkInterfaceBlocks(const Caps &caps,
         }
 
         if (!ValidateInterfaceBlocksMatch(numShadersHasShaderStorageBlocks, allShaderStorageBlocks,
-                                          infoLog, webglCompatibility))
+                                          infoLog, webglCompatibility,
+                                          &instancelessInterfaceBlocksFields))
         {
             return false;
         }

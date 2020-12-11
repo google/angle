@@ -8779,6 +8779,34 @@ void main()
     EXPECT_EQ(0u, program);
 }
 
+// Validate that link fails when two instanceless interface blocks with different block names but
+// same field names are present.
+TEST_P(GLSLTest_ES31, AmbiguousInstancelessInterfaceBlockFields)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_io_blocks"));
+
+    constexpr char kVS[] = R"(#version 310 es
+in highp vec4 position;
+layout(binding = 0) buffer BlockA { mediump float a; };
+void main()
+{
+    a = 0.0;
+    gl_Position = position;
+})";
+
+    constexpr char kFS[] = R"(#version 310 es
+precision mediump float;
+layout(location = 0) out mediump vec4 color;
+uniform BlockB { float a; };
+void main()
+{
+    color = vec4(a, a, a, 1.0);
+})";
+
+    GLuint program = CompileProgram(kVS, kFS);
+    EXPECT_EQ(0u, program);
+}
+
 // Verify I/O block array locations
 TEST_P(GLSLTest_ES31, IOBlockLocations)
 {
