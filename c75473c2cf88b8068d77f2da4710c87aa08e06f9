@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1de79551_9654e3cc",
+        "filename": "src/tests/gl_tests/MultithreadingTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 457,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-11T16:17:49Z",
+      "side": 0,
+      "message": "I think you still need these flushes in the multi-threaded scenario. (You wouldn\u0027t need it in FenceSyncTests.cpp because it\u0027s the same thread creating and waiting, there\u0027s spec language about this being ok without flush).\n\nIt works in VANGLE due to the way contexts flush their command buffers to the shared renderer, but doesn\u0027t necessarily work in other GL implementations.",
+      "revId": "c75473c2cf88b8068d77f2da4710c87aa08e06f9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
