@@ -16,6 +16,57 @@
       "message": "PTAL - as discussed, centralization and tying into output flag will be in a follow up change",
       "revId": "ba30685256f6344f4c5cf0c27c23a0981c423d1f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c30a5477_72a604b8",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1837,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-11T22:01:06Z",
+      "side": 1,
+      "message": "This could seems to be crashing on mac.",
+      "revId": "ba30685256f6344f4c5cf0c27c23a0981c423d1f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f0916e88_39297049",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1953,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-11T22:01:06Z",
+      "side": 1,
+      "message": "Or maybe this",
+      "revId": "ba30685256f6344f4c5cf0c27c23a0981c423d1f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "361122a2_b54064c6",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 1360,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-11T22:01:06Z",
+      "side": 1,
+      "message": "Do we want two stats for RP? Like what was the hit ratio for compatible RPs vs the hit ratio for actual RPs?\n\nThen we could tell for example how much of the miss comes from real RPs instead of compatible ones. Or if compatible hit is high and real hit is low, we could try to optimize the default ops we set in the `addRenderPass` call below so that we create fewer RPs.",
+      "revId": "ba30685256f6344f4c5cf0c27c23a0981c423d1f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
