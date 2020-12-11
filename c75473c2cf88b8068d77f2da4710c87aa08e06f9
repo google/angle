@@ -34,6 +34,24 @@
       "parentUuid": "1de79551_9654e3cc",
       "revId": "c75473c2cf88b8068d77f2da4710c87aa08e06f9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "061e75ef_5d4d473b",
+        "filename": "src/tests/gl_tests/MultithreadingTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 457,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-12-11T17:48:08Z",
+      "side": 0,
+      "message": "If I read it correctly, between textureThread and mainThread there is no primtive guaranttee that glFenceSync and glFlush will be executed before waitFence in the mainThread. IMO, glFlush is needed here, and you also need thread primitive to ensure mainThread will not try to wait until this glFlush is called.",
+      "parentUuid": "afcaa454_b717baaf",
+      "revId": "c75473c2cf88b8068d77f2da4710c87aa08e06f9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
