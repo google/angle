@@ -3501,8 +3501,17 @@ void Context::initCaps()
     ANGLE_LIMIT_CAP(mState.mCaps.maxTransformFeedbackSeparateComponents,
                     IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_SEPARATE_COMPONENTS);
 
-    // Limit textures as well, so we can use fast bitsets with texture bindings.
-    ANGLE_LIMIT_CAP(mState.mCaps.maxCombinedTextureImageUnits, IMPLEMENTATION_MAX_ACTIVE_TEXTURES);
+    if (getClientVersion() < ES_3_2)
+    {
+        ANGLE_LIMIT_CAP(mState.mCaps.maxCombinedTextureImageUnits,
+                        IMPLEMENTATION_MAX_ES31_ACTIVE_TEXTURES);
+    }
+    else
+    {
+        ANGLE_LIMIT_CAP(mState.mCaps.maxCombinedTextureImageUnits,
+                        IMPLEMENTATION_MAX_ACTIVE_TEXTURES);
+    }
+
     for (ShaderType shaderType : AllShaderTypes())
     {
         ANGLE_LIMIT_CAP(mState.mCaps.maxShaderTextureImageUnits[shaderType],

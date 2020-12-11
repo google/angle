@@ -67,9 +67,13 @@ enum
     // 1+log2 of max of MAX_*_TEXTURE_SIZE
     IMPLEMENTATION_MAX_TEXTURE_LEVELS = 16,
 
-    // Limit active textures so we can use fast bitsets.
     IMPLEMENTATION_MAX_SHADER_TEXTURES = 32,
-    IMPLEMENTATION_MAX_ACTIVE_TEXTURES = IMPLEMENTATION_MAX_SHADER_TEXTURES * 2,
+
+    // In ES 3.1 and below, the limit for active textures is 64.
+    IMPLEMENTATION_MAX_ES31_ACTIVE_TEXTURES = 64,
+
+    // In ES 3.2 we need to support a minimum of 96 maximum textures.
+    IMPLEMENTATION_MAX_ACTIVE_TEXTURES = 96,
     IMPLEMENTATION_MAX_IMAGE_UNITS     = IMPLEMENTATION_MAX_ACTIVE_TEXTURES,
 
     // Maximum number of slots allocated for atomic counter buffers.
