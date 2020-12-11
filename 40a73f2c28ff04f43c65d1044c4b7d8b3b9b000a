@@ -176,6 +176,30 @@
       },
       "revId": "40a73f2c28ff04f43c65d1044c4b7d8b3b9b000a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "43487430_38fd4cde",
+        "filename": "src/libANGLE/renderer/vulkan/SyncVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-11T18:41:48Z",
+      "side": 1,
+      "message": "There\u0027s no such thing as endRenderPass, only flushCommandsAndEndRenderPass() 😊",
+      "parentUuid": "901d3d41_286d65c6",
+      "range": {
+        "startLine": 66,
+        "startChar": 25,
+        "endLine": 66,
+        "endChar": 54
+      },
+      "revId": "40a73f2c28ff04f43c65d1044c4b7d8b3b9b000a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
