@@ -1,0 +1,170 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "97f264c9_3e23ce2f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-11T04:44:35Z",
+      "side": 1,
+      "message": "Nice tests!",
+      "revId": "ce6b95aed35e2e70ec9ac046f679a75d458ab627",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6d7dc456_b859d2a2",
+        "filename": "src/tests/gl_tests/ClipDistanceTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 433,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-11T04:44:35Z",
+      "side": 1,
+      "message": "as (copy-pasted further on)",
+      "range": {
+        "startLine": 433,
+        "startChar": 82,
+        "endLine": 433,
+        "endChar": 84
+      },
+      "revId": "ce6b95aed35e2e70ec9ac046f679a75d458ab627",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bb438144_7b855ae4",
+        "filename": "src/tests/gl_tests/ClipDistanceTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 434,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-11T04:44:35Z",
+      "side": 1,
+      "message": "operated? (copy-pasted further on)",
+      "range": {
+        "startLine": 434,
+        "startChar": 7,
+        "endLine": 434,
+        "endChar": 15
+      },
+      "revId": "ce6b95aed35e2e70ec9ac046f679a75d458ab627",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c2dead80_b59e733d",
+        "filename": "src/tests/gl_tests/ClipDistanceTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 547,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-11T04:44:35Z",
+      "side": 1,
+      "message": "Please use EXPECT_PIXEL_RECT_EQ to avoid a million glReadPixels calls. Same throughout this CL.",
+      "range": {
+        "startLine": 541,
+        "startChar": 0,
+        "endLine": 547,
+        "endChar": 5
+      },
+      "revId": "ce6b95aed35e2e70ec9ac046f679a75d458ab627",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3b673ad1_7eb2a294",
+        "filename": "src/tests/gl_tests/ClipDistanceTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 681,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-11T04:44:35Z",
+      "side": 1,
+      "message": "Could use one glReadPixels call that reads into a std::vector\u003cGLColor\u003e and then use EXPECT_EQ on the elements, to avoid excessive calls to glReadPixels (every EXPECT_PIXEL_COLOR_EQ is calling glReadPixels once).\n\nSame throughout this CL.",
+      "range": {
+        "startLine": 666,
+        "startChar": 0,
+        "endLine": 681,
+        "endChar": 5
+      },
+      "revId": "ce6b95aed35e2e70ec9ac046f679a75d458ab627",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "262b9eec_c8c1bb13",
+        "filename": "src/tests/gl_tests/ClipDistanceTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 732,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-11T04:44:35Z",
+      "side": 1,
+      "message": "typo",
+      "range": {
+        "startLine": 732,
+        "startChar": 44,
+        "endLine": 732,
+        "endChar": 53
+      },
+      "revId": "ce6b95aed35e2e70ec9ac046f679a75d458ab627",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f569015e_dc738c54",
+        "filename": "src/tests/gl_tests/ClipDistanceTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1083,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-11T04:44:35Z",
+      "side": 1,
+      "message": "nit: Suggest a new bug for this interaction.",
+      "revId": "ce6b95aed35e2e70ec9ac046f679a75d458ab627",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "09f139ab_7538e18a",
+        "filename": "src/tests/gl_tests/ClipDistanceTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1233,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-11T04:44:35Z",
+      "side": 1,
+      "message": "Same",
+      "revId": "ce6b95aed35e2e70ec9ac046f679a75d458ab627",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
