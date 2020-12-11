@@ -111,6 +111,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c9b874cc_a9c64c2e",
+        "filename": "src/tests/BUILD.gn",
+        "patchSetId": 5
+      },
+      "lineNbr": 1187,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2020-12-11T18:36:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0fd4f774_522b8a27",
+      "range": {
+        "startLine": 1187,
+        "startChar": 6,
+        "endLine": 1187,
+        "endChar": 9
+      },
+      "revId": "1e41eab6d13e4d2a1f9ef838669224358e9f7641",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "53d57510_8d9bbaad",
@@ -124,6 +148,30 @@
       "writtenOn": "2020-12-10T20:35:51Z",
       "side": 1,
       "message": "Consider calling this --skip-file-hooking. Then the comment could say \"added automatically when needed\" or similar.",
+      "range": {
+        "startLine": 124,
+        "startChar": 37,
+        "endLine": 124,
+        "endChar": 41
+      },
+      "revId": "1e41eab6d13e4d2a1f9ef838669224358e9f7641",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0c1f6b6d_50716d35",
+        "filename": "src/tests/deqp_support/angle_deqp_gtest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2020-12-11T18:36:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "53d57510_8d9bbaad",
       "range": {
         "startLine": 124,
         "startChar": 37,
@@ -157,6 +205,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c997df57_224493ef",
+        "filename": "src/tests/deqp_support/angle_deqp_gtest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 731,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2020-12-11T18:36:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e2991cab_36c551b6",
+      "range": {
+        "startLine": 731,
+        "startChar": 5,
+        "endLine": 731,
+        "endChar": 25
+      },
+      "revId": "1e41eab6d13e4d2a1f9ef838669224358e9f7641",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9e389bc1_51365e18",
@@ -170,6 +242,24 @@
       "writtenOn": "2020-12-10T20:35:51Z",
       "side": 1,
       "message": "Please handle execve\u0027s failure mode - by crashing if needed.",
+      "revId": "1e41eab6d13e4d2a1f9ef838669224358e9f7641",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fba180f7_15488463",
+        "filename": "src/tests/deqp_support/angle_deqp_gtest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 769,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2020-12-11T18:36:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9e389bc1_51365e18",
       "revId": "1e41eab6d13e4d2a1f9ef838669224358e9f7641",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
