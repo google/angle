@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ea9edf56_508d5f56",
+        "filename": "src/compiler/translator/OutputGLSLBase.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1342,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-11T20:10:24Z",
+      "side": 0,
+      "message": "um, ok",
+      "range": {
+        "startLine": 1342,
+        "startChar": 34,
+        "endLine": 1342,
+        "endChar": 39
+      },
+      "revId": "d9318acc24b0b0f870b61ca82c8b7b517e7c5385",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
