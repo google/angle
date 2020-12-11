@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a4a1b446_9c860507",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-11T04:45:55Z",
+      "side": 1,
+      "message": "Please split the autogen stuff so we can land it faster and avoid merge conflicts!",
+      "revId": "03f37bcb44f218372f91c3db2ba149ea0991038b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
