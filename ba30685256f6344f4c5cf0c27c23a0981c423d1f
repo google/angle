@@ -54,6 +54,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "202d7c13_503b8156",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1953,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-12T02:29:43Z",
+      "side": 1,
+      "message": "Definitely this one:\n\n    [11587:775:1211/113444.860283:ERROR:angle_platform_impl.cc(43)] FramebufferVk.cpp:1953 (getFramebuffer): \t! Assert failed in getFramebuffer (../../third_party/angle/src/libANGLE/renderer/vulkan/FramebufferVk.cpp:1953): result\n\n\nThe problem is the call to FramebufferCache::getFramebuffer():\n    bool FramebufferCache::getFramebuffer(ContextVk *contextVk,\n                                          const vk::FramebufferDesc \u0026desc,\n                                          vk::FramebufferHelper **framebufferHelperOut)\n    {\n        auto iter \u003d mPayload.find(desc);\n        if (iter !\u003d mPayload.end())\n        {\n            [[[   Only use the cache if it\u0027s enabled ]]]\n            if (contextVk-\u003egetRenderer()-\u003egetFeatures().enableFramebufferVkCache.enabled)\n            {\n                *framebufferHelperOut \u003d \u0026iter-\u003esecond;\n                mCacheStats.hit();\n                return true;\n            }\n\nHowever, that feature is disabled on Apple:\n    void RendererVk::initFeatures(DisplayVk *displayVk,\n                                  const vk::ExtensionNameList \u0026deviceExtensionNames)\n    {\n        // Currently disable FramebufferVk cache on Apple: http://anglebug.com/4442\n        ANGLE_FEATURE_CONDITION(\u0026mFeatures, enableFramebufferVkCache, !IsApple());\n\nIt would be nice to get that fixed rather than more enableFramebufferVkCache checking here, but I\u0027m not sure how broken the framebuffer cache is on Mac.   May be worth turning it on again and seeing how things go since that bug is from Feb 27, 2020 and a lot has changed since then.",
+      "parentUuid": "f0916e88_39297049",
+      "revId": "ba30685256f6344f4c5cf0c27c23a0981c423d1f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "361122a2_b54064c6",
         "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
         "patchSetId": 11
