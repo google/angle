@@ -72,6 +72,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "9857e59f_8b4fbaa6",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1953,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-12T18:16:56Z",
+      "side": 1,
+      "message": "Yes, we should draft a CL to remove this feature and just turn it on. There have been several fixes to the FB cache that could have resolved this bug.",
+      "parentUuid": "202d7c13_503b8156",
+      "revId": "ba30685256f6344f4c5cf0c27c23a0981c423d1f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "361122a2_b54064c6",
         "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
         "patchSetId": 11
