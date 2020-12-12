@@ -204,8 +204,6 @@ class FramebufferVk : public FramebufferImpl
                                  const GLenum *attachments,
                                  bool isSubInvalidate,
                                  const gl::Rectangle &invalidateArea);
-    // Release all FramebufferVk objects in the cache and clear cache
-    void clearCache(ContextVk *contextVk);
 
     RenderTargetVk *getReadPixelsRenderTarget(GLenum format) const;
     VkImageAspectFlagBits getReadPixelsAspectFlags(GLenum format) const;
@@ -238,7 +236,7 @@ class FramebufferVk : public FramebufferImpl
     gl::DrawBufferMask mEmulatedAlphaAttachmentMask;
 
     vk::FramebufferDesc mCurrentFramebufferDesc;
-    angle::HashMap<vk::FramebufferDesc, vk::FramebufferHelper> mFramebufferCache;
+    FramebufferCache mFramebufferCache;
 
     vk::ClearValuesArray mDeferredClears;
 

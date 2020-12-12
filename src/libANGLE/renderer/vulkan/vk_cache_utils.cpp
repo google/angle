@@ -3275,6 +3275,7 @@ angle::Result RenderPassCache::getRenderPassWithOpsImpl(ContextVk *contextVk,
             // TODO(jmadill): Could possibly use an MRU cache here.
             vk::GetRenderPassAndUpdateCounters(contextVk, updatePerfCounters, &innerIt->second,
                                                renderPassOut);
+            mRenderPassWithOpsCacheStats.hit();
             return angle::Result::Continue;
         }
     }
@@ -3284,6 +3285,7 @@ angle::Result RenderPassCache::getRenderPassWithOpsImpl(ContextVk *contextVk,
         outerIt            = emplaceResult.first;
     }
 
+    mRenderPassWithOpsCacheStats.miss();
     vk::RenderPassHelper newRenderPass;
     ANGLE_TRY(vk::InitializeRenderPassFromDesc(contextVk, desc, attachmentOps, &newRenderPass));
 
@@ -3402,9 +3404,11 @@ angle::Result DescriptorSetLayoutCache::getDescriptorSetLayout(
     {
         vk::RefCountedDescriptorSetLayout &layout = iter->second;
         descriptorSetLayoutOut->set(&layout);
+        mCacheStats.hit();
         return angle::Result::Continue;
     }
 
+    mCacheStats.miss();
     // We must unpack the descriptor set layout description.
     vk::DescriptorSetLayoutBindingVector bindingVector;
     std::vector<VkSampler> immutableSamplers;
@@ -3457,9 +3461,11 @@ angle::Result PipelineLayoutCache::getPipelineLayout(
     {
         vk::RefCountedPipelineLayout &layout = iter->second;
         pipelineLayoutOut->set(&layout);
+        mCacheStats.hit();
         return angle::Result::Continue;
     }
 
+    mCacheStats.miss();
     // Note this does not handle gaps in descriptor set layouts gracefully.
     angle::FixedVector<VkDescriptorSetLayout, vk::kMaxDescriptorSetLayouts> setLayoutHandles;
     for (const vk::BindingPointer<vk::DescriptorSetLayout> &layoutPtr : descriptorSetLayouts)
@@ -3547,9 +3553,11 @@ angle::Result SamplerYcbcrConversionCache::getYuvConversion(
     {
         vk::RefCountedSamplerYcbcrConversion &yuvConversion = iter->second;
         yuvConversionOut->set(&yuvConversion);
+        mCacheStats.hit();
         return angle::Result::Continue;
     }
 
+    mCacheStats.miss();
     vk::SamplerYcbcrConversion wrappedYuvConversion;
     ANGLE_VK_TRY(context, wrappedYuvConversion.init(context->getDevice(), yuvConversionCreateInfo));
 
@@ -3612,9 +3620,11 @@ angle::Result SamplerCache::getSampler(ContextVk *contextVk,
     {
         vk::RefCountedSampler &sampler = iter->second;
         samplerOut->set(&sampler);
+        mCacheStats.hit();
         return angle::Result::Continue;
     }
 
+    mCacheStats.miss();
     vk::SamplerHelper samplerHelper(contextVk);
     ANGLE_TRY(desc.init(contextVk, &samplerHelper.get()));
 
@@ -3626,5 +3636,38 @@ angle::Result SamplerCache::getSampler(ContextVk *contextVk,
     contextVk->getRenderer()->getActiveHandleCounts().onAllocate(vk::HandleType::Sampler);
 
     return angle::Result::Continue;
+}
+
+// FramebufferCache implementation.
+bool FramebufferCache::get(ContextVk *contextVk,
+                           const vk::FramebufferDesc &desc,
+                           vk::FramebufferHelper **framebufferHelperOut)
+{
+    auto iter = mPayload.find(desc);
+    if (iter != mPayload.end())
+    {
+        *framebufferHelperOut = &iter->second;
+        mCacheStats.hit();
+        return true;
+    }
+
+    mCacheStats.miss();
+    return false;
+}
+
+void FramebufferCache::insert(const vk::FramebufferDesc &desc,
+                              vk::FramebufferHelper &&framebufferHelper)
+{
+    mPayload.emplace(desc, std::move(framebufferHelper));
+}
+
+void FramebufferCache::clear(ContextVk *contextVk)
+{
+    for (auto &entry : mPayload)
+    {
+        vk::FramebufferHelper &tmpFB = entry.second;
+        tmpFB.release(contextVk);
+    }
+    mPayload.clear();
 }
 }  // namespace rx

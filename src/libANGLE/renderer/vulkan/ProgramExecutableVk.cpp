@@ -357,11 +357,11 @@ angle::Result ProgramExecutableVk::allocUniformAndXfbDescriptorSet(
     mCurrentDefaultUniformBufferSerial = xfbBufferDesc.getDefaultUniformBufferSerial();
 
     // Look up in the cache first
-    auto iter = mUniformsAndXfbDescriptorSetCache.find(xfbBufferDesc);
-    if (iter != mUniformsAndXfbDescriptorSetCache.end())
+    VkDescriptorSet descriptorSet = VK_NULL_HANDLE;
+    if (mUniformsAndXfbDescriptorSetCache.get(xfbBufferDesc, &descriptorSet))
     {
         *newDescriptorSetAllocated                                        = false;
-        mDescriptorSets[ToUnderlying(DescriptorSetIndex::UniformsAndXfb)] = iter->second;
+        mDescriptorSets[ToUnderlying(DescriptorSetIndex::UniformsAndXfb)] = descriptorSet;
         // The descriptor pool that this descriptor set was allocated from needs to be retained each
         // time the descriptor set is used in a new command.
         mDescriptorPoolBindings[ToUnderlying(DescriptorSetIndex::UniformsAndXfb)].get().retain(
@@ -380,7 +380,7 @@ angle::Result ProgramExecutableVk::allocUniformAndXfbDescriptorSet(
     }
 
     // Add the descriptor set into cache
-    mUniformsAndXfbDescriptorSetCache.emplace(
+    mUniformsAndXfbDescriptorSetCache.insert(
         xfbBufferDesc, mDescriptorSets[ToUnderlying(DescriptorSetIndex::UniformsAndXfb)]);
     *newDescriptorSetAllocated = true;
 
@@ -1427,11 +1427,10 @@ angle::Result ProgramExecutableVk::updateTexturesDescriptorSet(ContextVk *contex
     }
 
     const vk::TextureDescriptorDesc &texturesDesc = contextVk->getActiveTexturesDesc();
-
-    auto iter = mTextureDescriptorsCache.find(texturesDesc);
-    if (iter != mTextureDescriptorsCache.end())
+    VkDescriptorSet descriptorSet                 = VK_NULL_HANDLE;
+    if (mTextureDescriptorsCache.get(texturesDesc, &descriptorSet))
     {
-        mDescriptorSets[ToUnderlying(DescriptorSetIndex::Texture)] = iter->second;
+        mDescriptorSets[ToUnderlying(DescriptorSetIndex::Texture)] = descriptorSet;
         // The descriptor pool that this descriptor set was allocated from needs to be retained each
         // time the descriptor set is used in a new command.
         mDescriptorPoolBindings[ToUnderlying(DescriptorSetIndex::Texture)].get().retain(
@@ -1439,10 +1438,7 @@ angle::Result ProgramExecutableVk::updateTexturesDescriptorSet(ContextVk *contex
         return angle::Result::Continue;
     }
 
-    VkDescriptorSet descriptorSet = VK_NULL_HANDLE;
-
     const gl::ActiveTextureArray<vk::TextureUnit> &activeTextures = contextVk->getActiveTextures();
-
     bool emulateSeamfulCubeMapSampling = contextVk->emulateSeamfulCubeMapSampling();
     bool useOldRewriteStructSamplers   = contextVk->useOldRewriteStructSamplers();
 
@@ -1483,7 +1479,7 @@ angle::Result ProgramExecutableVk::updateTexturesDescriptorSet(ContextVk *contex
                 }
 
                 descriptorSet = mDescriptorSets[ToUnderlying(DescriptorSetIndex::Texture)];
-                mTextureDescriptorsCache.emplace(texturesDesc, descriptorSet);
+                mTextureDescriptorsCache.insert(texturesDesc, descriptorSet);
             }
             ASSERT(descriptorSet != VK_NULL_HANDLE);
 

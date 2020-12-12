@@ -347,22 +347,12 @@ FramebufferVk::FramebufferVk(RendererVk *renderer,
 
 FramebufferVk::~FramebufferVk() = default;
 
-void FramebufferVk::clearCache(ContextVk *contextVk)
-{
-    for (auto &entry : mFramebufferCache)
-    {
-        vk::FramebufferHelper &tmpFB = entry.second;
-        tmpFB.release(contextVk);
-    }
-    mFramebufferCache.clear();
-}
-
 void FramebufferVk::destroy(const gl::Context *context)
 {
     ContextVk *contextVk = vk::GetImpl(context);
 
     mReadPixelBuffer.release(contextVk->getRenderer());
-    clearCache(contextVk);
+    mFramebufferCache.clear(contextVk);
 }
 
 angle::Result FramebufferVk::discard(const gl::Context *context,
@@ -1797,7 +1787,7 @@ angle::Result FramebufferVk::syncState(const gl::Context *context,
             case gl::Framebuffer::DIRTY_BIT_DEFAULT_FIXED_SAMPLE_LOCATIONS:
                 // Invalidate the cache. If we have performance critical code hitting this path we
                 // can add related data (such as width/height) to the cache
-                clearCache(contextVk);
+                mFramebufferCache.clear(contextVk);
                 break;
             case gl::Framebuffer::DIRTY_BIT_DEFAULT_LAYERS:
                 shouldUpdateLayerCount = true;
@@ -1951,10 +1941,10 @@ angle::Result FramebufferVk::getFramebuffer(ContextVk *contextVk,
         return angle::Result::Continue;
     }
     // No current FB, so now check for previously cached Framebuffer
-    auto iter = mFramebufferCache.find(mCurrentFramebufferDesc);
-    if (iter != mFramebufferCache.end())
+    vk::FramebufferHelper *framebufferHelper = nullptr;
+    if (mFramebufferCache.get(contextVk, mCurrentFramebufferDesc, &framebufferHelper))
     {
-        *framebufferOut = &iter->second.getFramebuffer();
+        *framebufferOut = &framebufferHelper->getFramebuffer();
         return angle::Result::Continue;
     }
 
@@ -2065,9 +2055,11 @@ angle::Result FramebufferVk::getFramebuffer(ContextVk *contextVk,
     // Check that our description matches our attachments. Can catch implementation bugs.
     ASSERT(static_cast<uint32_t>(attachments.size()) == mCurrentFramebufferDesc.attachmentCount());
 
-    mFramebufferCache[mCurrentFramebufferDesc] = std::move(newFramebuffer);
-    mFramebuffer                               = &mFramebufferCache[mCurrentFramebufferDesc];
-    *framebufferOut                            = &mFramebuffer->getFramebuffer();
+    mFramebufferCache.insert(mCurrentFramebufferDesc, std::move(newFramebuffer));
+    bool result = mFramebufferCache.get(contextVk, mCurrentFramebufferDesc, &mFramebuffer);
+    ASSERT(result);
+
+    *framebufferOut = &mFramebuffer->getFramebuffer();
     return angle::Result::Continue;
 }
 
