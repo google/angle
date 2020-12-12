@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ca091e38_dab3c0b1",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 9288,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-12T00:27:31Z",
+      "side": 1,
+      "message": "Should be vec4 so only the array size mismatches.",
+      "range": {
+        "startLine": 9288,
+        "startChar": 11,
+        "endLine": 9288,
+        "endChar": 15
+      },
+      "revId": "afcf37d021010a04b80f6b2539c42a94702f40db",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "218f32f9_7734ee7c",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 9321,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-12T00:27:31Z",
+      "side": 1,
+      "message": "Same, vec4.",
+      "range": {
+        "startLine": 9321,
+        "startChar": 11,
+        "endLine": 9321,
+        "endChar": 15
+      },
+      "revId": "afcf37d021010a04b80f6b2539c42a94702f40db",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
