@@ -7044,10 +7044,10 @@ bool ShaderProgramHelper::valid(const gl::ShaderType shaderType) const
     return mShaders[shaderType].valid();
 }
 
-void ShaderProgramHelper::destroy(VkDevice device)
+void ShaderProgramHelper::destroy(RendererVk *rendererVk)
 {
-    mGraphicsPipelines.destroy(device);
-    mComputePipeline.destroy(device);
+    mGraphicsPipelines.destroy(rendererVk);
+    mComputePipeline.destroy(rendererVk->getDevice());
     for (BindingPointer<ShaderAndSerial> &shader : mShaders)
     {
         shader.reset();

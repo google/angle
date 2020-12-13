@@ -190,11 +190,12 @@ void ProgramExecutableVk::reset(ContextVk *contextVk)
         descriptorPool.release(contextVk);
     }
 
-    mTextureDescriptorsCache.clear();
-    mUniformsAndXfbDescriptorSetCache.clear();
+    RendererVk *rendererVk = contextVk->getRenderer();
+    mTextureDescriptorsCache.destroy(rendererVk);
+    mUniformsAndXfbDescriptorSetCache.destroy(rendererVk);
 
     // Initialize with a unique BufferSerial
-    vk::ResourceSerialFactory &factory = contextVk->getRenderer()->getResourceSerialFactory();
+    vk::ResourceSerialFactory &factory = rendererVk->getResourceSerialFactory();
     mCurrentDefaultUniformBufferSerial = factory.generateBufferSerial();
 
     for (ProgramInfo &programInfo : mGraphicsProgramInfos)
@@ -376,7 +377,7 @@ angle::Result ProgramExecutableVk::allocUniformAndXfbDescriptorSet(
     // Clear descriptor set cache. It may no longer be valid.
     if (newPoolAllocated)
     {
-        mUniformsAndXfbDescriptorSetCache.clear();
+        mUniformsAndXfbDescriptorSetCache.destroy(contextVk->getRenderer());
     }
 
     // Add the descriptor set into cache
@@ -1475,7 +1476,7 @@ angle::Result ProgramExecutableVk::updateTexturesDescriptorSet(ContextVk *contex
                 // Clear descriptor set cache. It may no longer be valid.
                 if (newPoolAllocated)
                 {
-                    mTextureDescriptorsCache.clear();
+                    mTextureDescriptorsCache.destroy(contextVk->getRenderer());
                 }
 
                 descriptorSet = mDescriptorSets[ToUnderlying(DescriptorSetIndex::Texture)];

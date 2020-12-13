@@ -573,54 +573,54 @@ void UtilsVk::destroy(RendererVk *renderer)
 
     for (vk::ShaderProgramHelper &program : mConvertIndexPrograms)
     {
-        program.destroy(device);
+        program.destroy(renderer);
     }
     for (vk::ShaderProgramHelper &program : mConvertIndirectLineLoopPrograms)
     {
-        program.destroy(device);
+        program.destroy(renderer);
     }
     for (vk::ShaderProgramHelper &program : mConvertIndexIndirectLineLoopPrograms)
     {
-        program.destroy(device);
+        program.destroy(renderer);
     }
     for (vk::ShaderProgramHelper &program : mConvertVertexPrograms)
     {
-        program.destroy(device);
+        program.destroy(renderer);
     }
-    mImageClearProgramVSOnly.destroy(device);
+    mImageClearProgramVSOnly.destroy(renderer);
     for (vk::ShaderProgramHelper &program : mImageClearProgram)
     {
-        program.destroy(device);
+        program.destroy(renderer);
     }
     for (vk::ShaderProgramHelper &program : mImageCopyPrograms)
     {
-        program.destroy(device);
+        program.destroy(renderer);
     }
     for (vk::ShaderProgramHelper &program : mBlitResolvePrograms)
     {
-        program.destroy(device);
+        program.destroy(renderer);
     }
     for (vk::ShaderProgramHelper &program : mBlitResolveStencilNoExportPrograms)
     {
-        program.destroy(device);
+        program.destroy(renderer);
     }
     for (vk::ShaderProgramHelper &program : mOverlayCullPrograms)
     {
-        program.destroy(device);
+        program.destroy(renderer);
     }
     for (vk::ShaderProgramHelper &program : mOverlayDrawPrograms)
     {
-        program.destroy(device);
+        program.destroy(renderer);
     }
     for (vk::ShaderProgramHelper &program : mGenerateMipmapPrograms)
     {
-        program.destroy(device);
+        program.destroy(renderer);
     }
 
     for (auto &programIter : mUnresolvePrograms)
     {
         vk::ShaderProgramHelper &program = programIter.second;
-        program.destroy(device);
+        program.destroy(renderer);
     }
     mUnresolvePrograms.clear();
 

@@ -365,6 +365,14 @@ class RendererVk : angle::NonCopyable
         mMemoryReport.processCallback(callbackData, logCallback);
     }
 
+    // Accumulate cache stats for a specific cache
+    void accumulateCacheStats(VulkanCacheType cache, const CacheStats &stats)
+    {
+        mVulkanCacheStats[cache].accumulate(stats);
+    }
+    // Log cache stats for all caches
+    void logCacheStats() const;
+
   private:
     angle::Result initializeDevice(DisplayVk *displayVk, uint32_t queueFamilyIndex);
     void ensureCapsInitialized() const;
@@ -491,6 +499,10 @@ class RendererVk : angle::NonCopyable
 
     // Process GPU memory reports
     vk::MemoryReport mMemoryReport;
+
+    // Stats about all Vulkan object caches
+    using VulkanCacheStats = angle::PackedEnumMap<VulkanCacheType, CacheStats>;
+    VulkanCacheStats mVulkanCacheStats;
 };
 
 }  // namespace rx

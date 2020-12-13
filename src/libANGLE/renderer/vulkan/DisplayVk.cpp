@@ -288,7 +288,7 @@ void ShareGroupVk::onDestroy(const egl::Display *display)
 {
     DisplayVk *displayVk = vk::GetImpl(display);
 
-    mPipelineLayoutCache.destroy(displayVk->getDevice());
-    mDescriptorSetLayoutCache.destroy(displayVk->getDevice());
+    mPipelineLayoutCache.destroy(displayVk->getRenderer());
+    mDescriptorSetLayoutCache.destroy(displayVk->getRenderer());
 }
 }  // namespace rx
