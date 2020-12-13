@@ -74,6 +74,30 @@
       },
       "revId": "8e225d6476888ab08b403f0e6db37ce03c23b7db",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1a14bbe1_db3fc03d",
+        "filename": "src/tests/angle_deqp_tests_main.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2020-12-13T08:20:04Z",
+      "side": 1,
+      "message": "since the process is going to be relaunched by this function. I want it to be called first otherwise some code would be unnecessarily executed twice.\nPutting it into TestSuite wouldn’t guarantee that.\n\nIn this case, for example, InitTestHarness() would be called first -\u003e the process would be restarted by hooking initialisation inside TestSuite::TestSuite() -\u003e InitTestHarness() would be executed again.",
+      "parentUuid": "04837ff3_3364897a",
+      "range": {
+        "startLine": 25,
+        "startChar": 11,
+        "endLine": 25,
+        "endChar": 34
+      },
+      "revId": "8e225d6476888ab08b403f0e6db37ce03c23b7db",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
