@@ -41,6 +41,10 @@ class DriverUniformMetal : public DriverUniform
     DriverUniformMetal() : DriverUniform() {}
     ~DriverUniformMetal() override {}
 
+    TIntermBinary *getHalfRenderAreaRef() const override;
+    TIntermBinary *getFlipXYRef() const override;
+    TIntermBinary *getNegFlipXYRef() const override;
+    TIntermSwizzle *getNegFlipYRef() const override;
     TIntermBinary *getCoverageMaskFieldRef() const;
 
   protected:

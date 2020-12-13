@@ -32,18 +32,19 @@ class DriverUniform
     bool addComputeDriverUniformsToShader(TIntermBlock *root, TSymbolTable *symbolTable);
     bool addGraphicsDriverUniformsToShader(TIntermBlock *root, TSymbolTable *symbolTable);
 
-    TIntermBinary *getFlipXYRef() const;
-    TIntermBinary *getNegFlipXYRef() const;
-    TIntermBinary *getFragRotationMatrixRef() const;
-    TIntermBinary *getPreRotationMatrixRef() const;
     TIntermBinary *getViewportRef() const;
-    TIntermBinary *getHalfRenderAreaRef() const;
     TIntermBinary *getAbcBufferOffsets() const;
     TIntermBinary *getClipDistancesEnabled() const;
-    TIntermSwizzle *getNegFlipYRef() const;
     TIntermBinary *getDepthRangeRef() const;
     TIntermBinary *getDepthRangeReservedFieldRef() const;
     TIntermBinary *getNumSamplesRef() const;
+
+    virtual TIntermBinary *getFlipXYRef() const { return nullptr; }
+    virtual TIntermBinary *getNegFlipXYRef() const { return nullptr; }
+    virtual TIntermBinary *getFragRotationMatrixRef() const { return nullptr; }
+    virtual TIntermBinary *getPreRotationMatrixRef() const { return nullptr; }
+    virtual TIntermBinary *getHalfRenderAreaRef() const { return nullptr; }
+    virtual TIntermSwizzle *getNegFlipYRef() const { return nullptr; }
 
   protected:
     TIntermBinary *createDriverUniformRef(const char *fieldName) const;
@@ -51,6 +52,23 @@ class DriverUniform
     TType *createEmulatedDepthRangeType(TSymbolTable *symbolTable) const;
 
     const TVariable *mDriverUniforms;
+};
+
+class DriverUniformExtended : public DriverUniform
+{
+  public:
+    DriverUniformExtended() : DriverUniform() {}
+    virtual ~DriverUniformExtended() override {}
+
+    TIntermBinary *getFlipXYRef() const override;
+    TIntermBinary *getNegFlipXYRef() const override;
+    TIntermBinary *getFragRotationMatrixRef() const override;
+    TIntermBinary *getPreRotationMatrixRef() const override;
+    TIntermBinary *getHalfRenderAreaRef() const override;
+    TIntermSwizzle *getNegFlipYRef() const override;
+
+  protected:
+    virtual TFieldList *createUniformFields(TSymbolTable *symbolTable) const override;
 };
 
 }  // namespace sh

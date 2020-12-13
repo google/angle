@@ -42,7 +42,10 @@ const char kRasterizerDiscardEnabledConstName[] = "ANGLERasterizerDisabled";
 namespace
 {
 // Metal specific driver uniforms
-constexpr const char kCoverageMask[] = "coverageMask";
+constexpr const char kHalfRenderArea[] = "halfRenderArea";
+constexpr const char kFlipXY[]         = "flipXY";
+constexpr const char kNegFlipXY[]      = "negFlipXY";
+constexpr const char kCoverageMask[]   = "coverageMask";
 
 constexpr ImmutableString kSampleMaskWriteFuncName = ImmutableString("ANGLEWriteSampleMask");
 
@@ -111,18 +114,56 @@ ANGLE_NO_DISCARD bool InitializeUnusedOutputs(TIntermBlock *root,
 }
 }  // anonymous namespace
 
+// class DriverUniformMetal
 TFieldList *DriverUniformMetal::createUniformFields(TSymbolTable *symbolTable) const
 {
     TFieldList *driverFieldList = DriverUniform::createUniformFields(symbolTable);
 
-    // Add coverage mask to driver uniform. Metal doesn't have built-in GL_SAMPLE_COVERAGE_VALUE
-    // equivalent functionality, needs to emulate it using fragment shader's [[sample_mask]] output
-    // value.
-    TField *coverageMaskField = new TField(new TType(EbtUInt), ImmutableString(kCoverageMask),
-                                           TSourceLoc(), SymbolType::AngleInternal);
-    driverFieldList->push_back(coverageMaskField);
+    constexpr size_t kNumGraphicsDriverUniformsMetal = 4;
+    constexpr std::array<const char *, kNumGraphicsDriverUniformsMetal>
+        kGraphicsDriverUniformNamesMetal = {{kHalfRenderArea, kFlipXY, kNegFlipXY, kCoverageMask}};
+
+    const std::array<TType *, kNumGraphicsDriverUniformsMetal> kDriverUniformTypesMetal = {{
+        new TType(EbtFloat, 2),  // halfRenderArea
+        new TType(EbtFloat, 2),  // flipXY
+        new TType(EbtFloat, 2),  // negFlipXY
+        new TType(EbtUInt),      // kCoverageMask
+    }};
+
+    for (size_t uniformIndex = 0; uniformIndex < kNumGraphicsDriverUniformsMetal; ++uniformIndex)
+    {
+        TField *driverUniformField =
+            new TField(kDriverUniformTypesMetal[uniformIndex],
+                       ImmutableString(kGraphicsDriverUniformNamesMetal[uniformIndex]),
+                       TSourceLoc(), SymbolType::AngleInternal);
+        driverFieldList->push_back(driverUniformField);
+    }
 
     return driverFieldList;
+}
+
+TIntermBinary *DriverUniformMetal::getHalfRenderAreaRef() const
+{
+    return createDriverUniformRef(kHalfRenderArea);
+}
+
+TIntermBinary *DriverUniformMetal::getFlipXYRef() const
+{
+    return createDriverUniformRef(kFlipXY);
+}
+
+TIntermBinary *DriverUniformMetal::getNegFlipXYRef() const
+{
+    return createDriverUniformRef(kNegFlipXY);
+}
+
+TIntermSwizzle *DriverUniformMetal::getNegFlipYRef() const
+{
+    // Create a swizzle to "negFlipXY.y"
+    TIntermBinary *negFlipXY    = createDriverUniformRef(kNegFlipXY);
+    TVector<int> swizzleOffsetY = {1};
+    TIntermSwizzle *negFlipY    = new TIntermSwizzle(negFlipXY, swizzleOffsetY);
+    return negFlipY;
 }
 
 TIntermBinary *DriverUniformMetal::getCoverageMaskFieldRef() const

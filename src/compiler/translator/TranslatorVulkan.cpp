@@ -1061,11 +1061,24 @@ bool TranslatorVulkan::translate(TIntermBlock *root,
                                  enablePrecision, compileOptions);
 
     SpecConst specConst(&getSymbolTable(), compileOptions);
-    DriverUniform driverUniforms;
-    if (!translateImpl(root, compileOptions, perfDiagnostics, &specConst, &driverUniforms,
-                       &outputGLSL))
+
+    if (compileOptions & SH_USE_SPECIALIZATION_CONSTANT)
     {
-        return false;
+        DriverUniform driverUniforms;
+        if (!translateImpl(root, compileOptions, perfDiagnostics, &specConst, &driverUniforms,
+                           &outputGLSL))
+        {
+            return false;
+        }
+    }
+    else
+    {
+        DriverUniformExtended driverUniformsExt;
+        if (!translateImpl(root, compileOptions, perfDiagnostics, &specConst, &driverUniformsExt,
+                           &outputGLSL))
+        {
+            return false;
+        }
     }
 
     // Write translated shader.

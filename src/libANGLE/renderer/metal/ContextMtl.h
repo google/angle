@@ -478,17 +478,13 @@ class ContextMtl : public ContextImpl, public mtl::Context
     {
         float viewport[4];
 
-        float halfRenderArea[2];
-        float flipXY[2];
-        float negFlipXY[2];
-
         // 32 bits for 32 clip distances
         uint32_t enabledClipDistances;
 
         uint32_t xfbActiveUnpaused;
         uint32_t xfbVerticesPerDraw;
-        // NOTE: Explicit padding. Fill in with useful data when needed in the future.
-        int32_t padding[3];
+
+        int32_t numSamples;
 
         int32_t xfbBufferOffsets[4];
         uint32_t acbBufferOffsets[4];
@@ -496,19 +492,12 @@ class ContextMtl : public ContextImpl, public mtl::Context
         // We'll use x, y, z, w for near / far / diff / zscale respectively.
         float depthRange[4];
 
-        // Used to pre-rotate gl_Position for Vulkan swapchain images on Android (a mat2, which is
-        // padded to the size of two vec4's).
-        // Unused in Metal.
-        float preRotation[8] = {};
-
-        // Used to pre-rotate gl_FragCoord for Vulkan swapchain images on Android (a mat2, which is
-        // padded to the size of two vec4's).
-        // Unused in Metal.
-        float fragRotation[8] = {};
-
+        // Metal specific
+        float halfRenderArea[2];
+        float flipXY[2];
+        float negFlipXY[2];
         uint32_t coverageMask;
-
-        float padding2[3];
+        uint32_t padding;
     };
 
     struct DefaultAttribute
