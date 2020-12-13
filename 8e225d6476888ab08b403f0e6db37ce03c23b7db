@@ -98,6 +98,30 @@
       },
       "revId": "8e225d6476888ab08b403f0e6db37ce03c23b7db",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "eda762e1_6fd66863",
+        "filename": "src/tests/angle_deqp_tests_main.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2020-12-13T10:11:44Z",
+      "side": 1,
+      "message": "Done. I added the call to TestSuite::TestSuite(). However, I would like to keep the function call here as well since it would prevent redundant code execution.\nFor deqp test, calling InitMetalFileAPIHooking() here will let TestSuite::TestSuite() ignore the hooking call again and avoid InitTestHarness()\u0027s execution twice.\n\nFor other tests, the hooking initialisation will be done inside TestSuite::TestSuite() by default.",
+      "parentUuid": "1a14bbe1_db3fc03d",
+      "range": {
+        "startLine": 25,
+        "startChar": 11,
+        "endLine": 25,
+        "endChar": 34
+      },
+      "revId": "8e225d6476888ab08b403f0e6db37ce03c23b7db",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
