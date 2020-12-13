@@ -1954,16 +1954,8 @@ angle::Result FramebufferVk::getFramebuffer(ContextVk *contextVk,
     auto iter = mFramebufferCache.find(mCurrentFramebufferDesc);
     if (iter != mFramebufferCache.end())
     {
-        if (contextVk->getRenderer()->getFeatures().enableFramebufferVkCache.enabled)
-        {
-            *framebufferOut = &iter->second.getFramebuffer();
-            return angle::Result::Continue;
-        }
-        else
-        {
-            // When cache is off just release previous entry, it will be recreated below
-            iter->second.release(contextVk);
-        }
+        *framebufferOut = &iter->second.getFramebuffer();
+        return angle::Result::Continue;
     }
 
     vk::RenderPass *compatibleRenderPass = nullptr;

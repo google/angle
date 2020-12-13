@@ -1979,9 +1979,6 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
     // Android pre-rotation support can be disabled.
     ANGLE_FEATURE_CONDITION(&mFeatures, enablePreRotateSurfaces, IsAndroid());
 
-    // Currently disable FramebufferVk cache on Apple: http://anglebug.com/4442
-    ANGLE_FEATURE_CONDITION(&mFeatures, enableFramebufferVkCache, !IsApple());
-
     // Currently disabled by default: http://anglebug.com/3078
     ANGLE_FEATURE_CONDITION(
         &mFeatures, enablePrecisionQualifiers,
