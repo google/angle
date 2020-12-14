@@ -89,7 +89,7 @@ def main():
 
     input_file_name = 'vk_mandatory_format_support_data.json'
     out_file_name = 'vk_mandatory_format_support_table_autogen.cpp'
-    vk_xml_file = '../../../../third_party/vulkan-headers/src/registry/vk.xml'
+    vk_xml_file = '../../../../third_party/vulkan-deps/vulkan-headers/src/registry/vk.xml'
 
     # auto_script parameters.
     if len(sys.argv) > 1:

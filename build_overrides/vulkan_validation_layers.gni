@@ -5,8 +5,8 @@
 import("//gni/angle.gni")
 
 vulkan_headers_dir = angle_vulkan_headers_dir
-vvl_spirv_tools_dir = "//third_party/spirv-tools/src"
-vvl_glslang_dir = "//third_party/glslang/src"
+vvl_spirv_tools_dir = "//third_party/vulkan-deps/spirv-tools/src"
+vvl_glslang_dir = "//third_party/vulkan-deps/glslang/src"
 
 vulkan_data_subdir = angle_data_dir
 vulkan_gen_subdir = "angle/vulkan"

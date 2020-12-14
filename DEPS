@@ -28,9 +28,6 @@ vars = {
   # Current revision of VK-GL-CTS (a.k.a dEQP).
   'vk_gl_cts_revision': '54509765b18dae2b4836073f538b3a32667b97b6',
 
-  # Current revision of glslang, the Khronos SPIRV compiler.
-  'glslang_revision': '6d5916d4a91eb9c3b3be377382e2c1c12443fa11',
-
   # Current revision of googletest.
   # Note: this dep cannot be auto-rolled b/c of nesting.
   'googletest_revision': '4fe018038f87675c083d0cfb6a6b57c274fb1753',
@@ -64,27 +61,6 @@ vars = {
   # Current revision of patched-yasm.
   # Note: this dep cannot be auto-rolled b/c of nesting.
   'patched_yasm_revision': '720b70524a4424b15fc57e82263568c8ba0496ad',
-
-  # Current revision of spirv-cross, the Khronos SPIRV cross compiler.
-  'spirv_cross_revision': 'be527632a6c80291ab012a79758e0e41224ad5e2',
-
-  # Current revision fo the SPIRV-Headers Vulkan support library.
-  'spirv_headers_revision': '05836bdba63e7debce9fa9feaed42f20cd43af9d',
-
-  # Current revision of SPIRV-Tools for Vulkan.
-  'spirv_tools_revision': '671914c28e8249f0a555726a0f3f38691fe5c1df',
-
-  # Current revision of Khronos Vulkan-Headers.
-  'vulkan_headers_revision': '30e70cbd9850560cb55bffadb8017e90c04c42f5',
-
-  # Current revision of Khronos Vulkan-Loader.
-  'vulkan_loader_revision': '02a49daeeeceb077e5ab8c80e87c22dcbb4a102b',
-
-  # Current revision of Khronos Vulkan-Tools.
-  'vulkan_tools_revision': '0e8c2a5ca5f302f0137550bca1d8557cbaf87ad7',
-
-  # Current revision of Khronos Vulkan-ValidationLayers.
-  'vulkan_validation_revision': 'ce0450b9e8e54f0b8c6fff185166e1e42e0cf7c2',
 
   # Three lines of non-changing comments so that
   # the commit queue can handle CLs rolling catapult
@@ -158,11 +134,6 @@ deps = {
     'url': '{chromium_git}/external/github.com/glmark2/glmark2@9e01aef1a786b28aca73135a5b00f85c357e8f5e',
   },
 
-  'third_party/glslang/src': {
-    'url': '{chromium_git}/external/github.com/KhronosGroup/glslang@{glslang_revision}',
-    'condition': 'not build_with_chromium',
-  },
-
   'third_party/googletest': {
     'url': '{chromium_git}/chromium/src/third_party/googletest@{chromium_googletest_revision}',
     'condition': 'not build_with_chromium',
@@ -225,21 +196,6 @@ deps = {
     'url': '{chromium_git}/external/github.com/Tencent/rapidjson@7484e06c589873e1ed80382d262087e4fa80fb63',
   },
 
-  'third_party/spirv-cross/src': {
-    'url': '{chromium_git}/external/github.com/KhronosGroup/SPIRV-Cross@{spirv_cross_revision}',
-    'condition': 'not build_with_chromium',
-  },
-
-  'third_party/spirv-headers/src': {
-    'url': '{chromium_git}/external/github.com/KhronosGroup/SPIRV-Headers@{spirv_headers_revision}',
-    'condition': 'not build_with_chromium',
-  },
-
-  'third_party/spirv-tools/src': {
-    'url': '{chromium_git}/external/github.com/KhronosGroup/SPIRV-Tools@{spirv_tools_revision}',
-    'condition': 'not build_with_chromium',
-  },
-
   'third_party/SwiftShader': {
     'url': '{swiftshader_git}/SwiftShader@1cc5b3357d2ff3c81ef7ec0b07a6660796bde5cd',
     'condition': 'not build_with_chromium',
@@ -249,25 +205,14 @@ deps = {
     'url': '{chromium_git}/external/github.com/KhronosGroup/VK-GL-CTS@{vk_gl_cts_revision}',
   },
 
-  'third_party/vulkan-headers/src': {
-    'url': '{chromium_git}/external/github.com/KhronosGroup/Vulkan-Headers@{vulkan_headers_revision}',
-  },
-
-  'third_party/vulkan-loader/src': {
-    'url': '{chromium_git}/external/github.com/KhronosGroup/Vulkan-Loader@{vulkan_loader_revision}',
+  'third_party/vulkan-deps': {
+    'url': '{chromium_git}/vulkan-deps@b08eace32e9cb8dd7dce9866f051558ac57acb15',
+    'condition': 'not build_with_chromium',
   },
 
   'third_party/vulkan_memory_allocator': {
     'url': '{chromium_git}/external/github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator@065e739079d9d58bef28ccd793cbf512261f09ed',
     'condition': 'not build_with_chromium',
-  },
-
-  'third_party/vulkan-tools/src': {
-    'url': '{chromium_git}/external/github.com/KhronosGroup/Vulkan-Tools@{vulkan_tools_revision}',
-  },
-
-  'third_party/vulkan-validation-layers/src': {
-    'url': '{chromium_git}/external/github.com/KhronosGroup/Vulkan-ValidationLayers@{vulkan_validation_revision}',
   },
 
   'third_party/zlib': {
@@ -544,4 +489,5 @@ recursedeps = [
   'buildtools',
   'third_party/googletest',
   'third_party/jsoncpp',
+  'third_party/vulkan-deps',
 ]
