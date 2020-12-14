@@ -41,6 +41,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b310be05_b9f6969f",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2715,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-12-14T19:46:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c1a4e353_9e3565ff",
+      "range": {
+        "startLine": 2715,
+        "startChar": 17,
+        "endLine": 2715,
+        "endChar": 41
+      },
+      "revId": "294de236c034a51dd9f8fd6b97d37c07e21f7baa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "29e7b8ea_82a2b28d",
@@ -54,6 +78,30 @@
       "writtenOn": "2020-12-14T18:16:33Z",
       "side": 1,
       "message": "I don\u0027t know if I like this averaging approach. Why not accumulate hits and misses? The averaging will weight infrequently used objects equally as the most frequently used.",
+      "range": {
+        "startLine": 2724,
+        "startChar": 12,
+        "endLine": 2724,
+        "endChar": 35
+      },
+      "revId": "294de236c034a51dd9f8fd6b97d37c07e21f7baa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "403e646a_99712b19",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2724,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-12-14T19:46:04Z",
+      "side": 1,
+      "message": "\u003e Why not accumulate hits and misses?\n\nhitRatio needs to be \u003c\u003d 1?\n\n\u003e The averaging will weight infrequently used objects equally as the most frequently used.\n\nnot sure i understand what you mean, this is a hit ratio of the cache, so a miss means a new object was created. Whether a particular object was frequently used or not makes not difference to the hit/miss ration. what am i missing?",
+      "parentUuid": "29e7b8ea_82a2b28d",
       "range": {
         "startLine": 2724,
         "startChar": 12,
@@ -87,6 +135,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "90e42b6d_a6e90a3a",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2733,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-12-14T19:46:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f2127063_958ac3f7",
+      "range": {
+        "startLine": 2733,
+        "startChar": 17,
+        "endLine": 2733,
+        "endChar": 38
+      },
+      "revId": "294de236c034a51dd9f8fd6b97d37c07e21f7baa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "074705d2_da2002fb",
@@ -100,6 +172,30 @@
       "writtenOn": "2020-12-14T18:16:33Z",
       "side": 1,
       "message": "nit: VulkanCacheType\n\nInternal is too general a term.",
+      "range": {
+        "startLine": 1316,
+        "startChar": 11,
+        "endLine": 1316,
+        "endChar": 29
+      },
+      "revId": "294de236c034a51dd9f8fd6b97d37c07e21f7baa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2d19de16_5106566b",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 1316,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-12-14T19:46:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "074705d2_da2002fb",
       "range": {
         "startLine": 1316,
         "startChar": 11,
