@@ -122,6 +122,30 @@
       },
       "revId": "8e225d6476888ab08b403f0e6db37ce03c23b7db",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "896eb7cc_2e53a90a",
+        "filename": "src/tests/angle_deqp_tests_main.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-14T14:38:32Z",
+      "side": 1,
+      "message": "Ah, if you check inside the TestSuite one for the \"kBatchId\" flag you can detect if you\u0027re in a child process instantiation. That way you can guarantee you only run the flag one time. Can you centralize everything using this technique? Or were there other redundant calls?",
+      "parentUuid": "eda762e1_6fd66863",
+      "range": {
+        "startLine": 25,
+        "startChar": 11,
+        "endLine": 25,
+        "endChar": 34
+      },
+      "revId": "8e225d6476888ab08b403f0e6db37ce03c23b7db",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
