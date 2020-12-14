@@ -170,6 +170,30 @@
       },
       "revId": "8e225d6476888ab08b403f0e6db37ce03c23b7db",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "47939ca6_9a04eb3d",
+        "filename": "src/tests/angle_deqp_tests_main.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-14T20:42:23Z",
+      "side": 1,
+      "message": "Ack, I see. I see why you\u0027d get a duplicate call. Anyway not a big deal unless it causes test behaviour changes. LGTM.",
+      "parentUuid": "f04a6a45_0b1f8a2c",
+      "range": {
+        "startLine": 25,
+        "startChar": 11,
+        "endLine": 25,
+        "endChar": 34
+      },
+      "revId": "8e225d6476888ab08b403f0e6db37ce03c23b7db",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }

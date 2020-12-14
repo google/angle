@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0d25d5c3_01fadb75",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-14T20:42:23Z",
+      "side": 1,
+      "message": "re-lgtm, feel free to land.",
+      "revId": "4faf01e80cf1f294c9e75222271c7d5e54629f17",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "97c91aa6_a12292ba",
+        "filename": "src/libANGLE/renderer/metal/file_hooking/shader_cache_file_hooking.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-14T20:42:23Z",
+      "side": 1,
+      "message": "nit: Caps for static members",
+      "range": {
+        "startLine": 25,
+        "startChar": 4,
+        "endLine": 25,
+        "endChar": 14
+      },
+      "revId": "4faf01e80cf1f294c9e75222271c7d5e54629f17",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
