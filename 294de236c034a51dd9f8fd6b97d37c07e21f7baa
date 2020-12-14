@@ -16,6 +16,98 @@
       "message": "PTAL",
       "revId": "294de236c034a51dd9f8fd6b97d37c07e21f7baa",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c1a4e353_9e3565ff",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2715,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-14T18:16:33Z",
+      "side": 1,
+      "message": "nit: accumulateCacheStats",
+      "range": {
+        "startLine": 2715,
+        "startChar": 17,
+        "endLine": 2715,
+        "endChar": 41
+      },
+      "revId": "294de236c034a51dd9f8fd6b97d37c07e21f7baa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "29e7b8ea_82a2b28d",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2724,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-14T18:16:33Z",
+      "side": 1,
+      "message": "I don\u0027t know if I like this averaging approach. Why not accumulate hits and misses? The averaging will weight infrequently used objects equally as the most frequently used.",
+      "range": {
+        "startLine": 2724,
+        "startChar": 12,
+        "endLine": 2724,
+        "endChar": 35
+      },
+      "revId": "294de236c034a51dd9f8fd6b97d37c07e21f7baa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f2127063_958ac3f7",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2733,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-14T18:16:33Z",
+      "side": 1,
+      "message": "nit: logCacheStats, const",
+      "range": {
+        "startLine": 2733,
+        "startChar": 17,
+        "endLine": 2733,
+        "endChar": 38
+      },
+      "revId": "294de236c034a51dd9f8fd6b97d37c07e21f7baa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "074705d2_da2002fb",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 1316,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-14T18:16:33Z",
+      "side": 1,
+      "message": "nit: VulkanCacheType\n\nInternal is too general a term.",
+      "range": {
+        "startLine": 1316,
+        "startChar": 11,
+        "endLine": 1316,
+        "endChar": 29
+      },
+      "revId": "294de236c034a51dd9f8fd6b97d37c07e21f7baa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
