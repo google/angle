@@ -114,6 +114,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "365a45f1_37495430",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2724,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-14T19:58:38Z",
+      "side": 1,
+      "message": "If you have two caches, one with 1 hit, and the second with 1000000000 misses, your net ratio will be 50%. If you instead accumulate 1 hit and 1x misses, your net ratio is basically 100% miss.",
+      "parentUuid": "403e646a_99712b19",
+      "range": {
+        "startLine": 2724,
+        "startChar": 12,
+        "endLine": 2724,
+        "endChar": 35
+      },
+      "revId": "294de236c034a51dd9f8fd6b97d37c07e21f7baa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "f2127063_958ac3f7",
         "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
         "patchSetId": 3
