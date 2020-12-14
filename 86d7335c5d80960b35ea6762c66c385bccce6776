@@ -22,6 +22,30 @@
       },
       "revId": "86d7335c5d80960b35ea6762c66c385bccce6776",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "733bfce0_39c9e999",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 1335,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-12-14T17:47:22Z",
+      "side": 1,
+      "message": "Done, i added it since it was trivial but i cant think of a scenario where these counters could become critical sections with current ANGLE design.",
+      "parentUuid": "8271b86e_d190017f",
+      "range": {
+        "startLine": 1335,
+        "startChar": 9,
+        "endLine": 1335,
+        "endChar": 15
+      },
+      "revId": "86d7335c5d80960b35ea6762c66c385bccce6776",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
