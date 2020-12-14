@@ -16,6 +16,46 @@
       "message": "PTAL",
       "revId": "5969a4dbe1843a9b38b6c444c8460dff73abf8c4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "71438ecc_2a98dbc8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 15
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-14T18:03:13Z",
+      "side": 1,
+      "message": "lgtm",
+      "revId": "5969a4dbe1843a9b38b6c444c8460dff73abf8c4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "81470a44_d3215965",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 1538,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-14T18:03:13Z",
+      "side": 1,
+      "message": "nit: to be consistent you can rename these just get/insert/clear",
+      "range": {
+        "startLine": 1538,
+        "startChar": 9,
+        "endLine": 1538,
+        "endChar": 23
+      },
+      "revId": "5969a4dbe1843a9b38b6c444c8460dff73abf8c4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
