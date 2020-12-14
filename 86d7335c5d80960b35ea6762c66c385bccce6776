@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8271b86e_d190017f",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 1335,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-14T02:51:56Z",
+      "side": 1,
+      "message": "I suspect most users will not need this to be atomic (maybe none? Haven\u0027t checked). If there are any that definitely need to be atomic, I suggest making this a template so only those would pay the cost.",
+      "range": {
+        "startLine": 1335,
+        "startChar": 9,
+        "endLine": 1335,
+        "endChar": 15
+      },
+      "revId": "86d7335c5d80960b35ea6762c66c385bccce6776",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
