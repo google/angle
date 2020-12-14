@@ -16,6 +16,46 @@
       "message": "PTAL",
       "revId": "8282cc917bb8e550671080109dc34cc772e56c04",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "40689e50_cd828344",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2725,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-14T03:03:09Z",
+      "side": 1,
+      "message": "nit: I\u0027d be interested in a log of hiRatio data for different caches. mix(current, new, 0.5) is a simple implementation, but is most likely not the best filter.",
+      "revId": "8282cc917bb8e550671080109dc34cc772e56c04",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9a3cfd5f_e82d8f7d",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 501,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-14T03:03:09Z",
+      "side": 1,
+      "message": "Use `angle::PackedEnumMap` which is made for this very purpose.",
+      "range": {
+        "startLine": 501,
+        "startChar": 35,
+        "endLine": 501,
+        "endChar": 98
+      },
+      "revId": "8282cc917bb8e550671080109dc34cc772e56c04",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
