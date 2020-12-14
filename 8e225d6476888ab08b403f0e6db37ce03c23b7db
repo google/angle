@@ -146,6 +146,30 @@
       },
       "revId": "8e225d6476888ab08b403f0e6db37ce03c23b7db",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f04a6a45_0b1f8a2c",
+        "filename": "src/tests/angle_deqp_tests_main.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2020-12-14T15:22:38Z",
+      "side": 1,
+      "message": "Sorry, my statement was a bit confusing. My concern was not that the current process is a child process or not.\nThe trick I did in this CL is using execve() inside \"angle::InitMetalFileAPIHooking\" which will relaunch the current process with the same arguments and one additional environment variable DYLD_INSERT_LIBRARIES to preload the hooking library.\n\nThe redundant call here is \"angle::InitTestHarness\".\n\nTo illustrate this redundant issue, imagine \"angle::InitMetalFileAPIHooking\" is not inserted at this line then the main function flow is like this:\n1. call angle::InitTestHarness\n2. call TestSuite constructor\n2.1. call angle::InitMetalFileAPIHooking\n2.1.1. call execve -\u003e the process is relaunched.\n3. Due to execve, the process is re-launched and we are back to main() again:\n4. call angle::InitTestHarness again ---\u003e this is redundant call of step 1.\n5. call TestSuite constructor:\n5.1. call angle::InitMetalFileAPIHooking: this time the process won\u0027t be relaunched due to \"--skip-file-hooking\" argument.\n\nNote: execve doesn\u0027t spawn any new process, it just replaces the current process\u0027s image and memory.\n\nIf I insert \"angle::InitMetalFileAPIHooking\" before \"angle::InitTestHarness\" then the process is re-launched before the latter is called and the redundant issue is avoided.\n\nanw, this is just a minor issue. If you think it is ok for \"angle::InitTestHarness\" call to be redundant then I can remove \"angle::InitMetalFileAPIHooking\" from this file.",
+      "parentUuid": "896eb7cc_2e53a90a",
+      "range": {
+        "startLine": 25,
+        "startChar": 11,
+        "endLine": 25,
+        "endChar": 34
+      },
+      "revId": "8e225d6476888ab08b403f0e6db37ce03c23b7db",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
