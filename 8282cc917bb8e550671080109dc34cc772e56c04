@@ -35,6 +35,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "cd8e6114_208d82a2",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2725,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-12-14T17:47:53Z",
+      "side": 1,
+      "message": "this is just a first pass / basic implementation. We can tweak it later with any filter we find to be more informative/useful",
+      "parentUuid": "40689e50_cd828344",
+      "revId": "8282cc917bb8e550671080109dc34cc772e56c04",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9a3cfd5f_e82d8f7d",
@@ -48,6 +66,30 @@
       "writtenOn": "2020-12-14T03:03:09Z",
       "side": 1,
       "message": "Use `angle::PackedEnumMap` which is made for this very purpose.",
+      "range": {
+        "startLine": 501,
+        "startChar": 35,
+        "endLine": 501,
+        "endChar": 98
+      },
+      "revId": "8282cc917bb8e550671080109dc34cc772e56c04",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cf624986_15c41a53",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 501,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-12-14T17:47:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9a3cfd5f_e82d8f7d",
       "range": {
         "startLine": 501,
         "startChar": 35,
