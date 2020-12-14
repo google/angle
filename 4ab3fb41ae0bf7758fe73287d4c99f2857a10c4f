@@ -46,6 +46,30 @@
       },
       "revId": "4ab3fb41ae0bf7758fe73287d4c99f2857a10c4f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c5e0c082_69748f28",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-14T03:08:58Z",
+      "side": 1,
+      "message": "It\u0027s a good day when the only comment is something like that :)\n\nLanding this, thanks for the fix.",
+      "parentUuid": "52818d58_02fac350",
+      "range": {
+        "startLine": 14,
+        "startChar": 43,
+        "endLine": 14,
+        "endChar": 50
+      },
+      "revId": "4ab3fb41ae0bf7758fe73287d4c99f2857a10c4f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
