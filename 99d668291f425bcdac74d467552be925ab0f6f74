@@ -53,6 +53,46 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d7957e92_e9e41351",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-14T19:58:58Z",
+      "side": 1,
+      "message": "Will the CLs from Apple allow all of this Metal stuff to go away too?\n\n\u003e Apple has uploaded their major revision to ANGLE\u0027s Metal backend to the WebKit code review system: https://bugs.webkit.org/show_bug.cgi?id\u003d219759.\n\u003e This removes the SPIRV-cross dependency with their own GLSL -\u003e MSL compiler.",
+      "revId": "99d668291f425bcdac74d467552be925ab0f6f74",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4c43903f_e95fecc3",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-14T19:58:58Z",
+      "side": 1,
+      "message": "How do we make sure any new fields added to GraphicsDriverUniforms don\u0027t require any starting padding to GraphicsDriverUniformsExtended?   There should probably at least be something like:\n\n    static_assert(sizeof(GraphicsDriverUniforms) % 4 \u003d\u003d 0, \"GraphicsDriverUniforms requires aligned types\");\n\nFor example, if a uint8_t or uint16_6 is added to the end of GraphicsDriverUniforms, there will be padding between \u0027common\u0027 and \u0027halfRenderArea\u0027.",
+      "range": {
+        "startLine": 87,
+        "startChar": 0,
+        "endLine": 90,
+        "endChar": 40
+      },
+      "revId": "99d668291f425bcdac74d467552be925ab0f6f74",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ee490b39_02df0c6a",
