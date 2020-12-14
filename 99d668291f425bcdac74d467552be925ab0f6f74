@@ -72,6 +72,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "ee3553dd_2a1b3b13",
+        "filename": "src/compiler/translator/tree_util/DriverUniform.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-14T21:46:54Z",
+      "side": 1,
+      "message": "please put in a todo with a bug link to remove this to associate it with the ongoing tracked issue",
+      "range": {
+        "startLine": 57,
+        "startChar": 6,
+        "endLine": 57,
+        "endChar": 28
+      },
+      "revId": "99d668291f425bcdac74d467552be925ab0f6f74",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "4c43903f_e95fecc3",
         "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
         "patchSetId": 2
