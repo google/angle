@@ -1316,6 +1316,9 @@ bool ValidateUseProgramStagesEXT(const Context *context,
                                  ShaderProgramID programPacked);
 bool ValidateValidateProgramPipelineEXT(const Context *context, ProgramPipelineID pipelinePacked);
 
+// GL_EXT_shader_framebuffer_fetch_non_coherent
+bool ValidateFramebufferFetchBarrierEXT(const Context *context);
+
 // GL_EXT_shader_io_blocks
 
 // GL_EXT_tessellation_shader

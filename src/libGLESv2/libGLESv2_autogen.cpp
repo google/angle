@@ -4606,6 +4606,12 @@ void GL_APIENTRY glValidateProgramPipelineEXT(GLuint pipeline)
     return gl::ValidateProgramPipelineEXT(pipeline);
 }
 
+// GL_EXT_shader_framebuffer_fetch_non_coherent
+void GL_APIENTRY glFramebufferFetchBarrierEXT()
+{
+    return gl::FramebufferFetchBarrierEXT();
+}
+
 // GL_EXT_shader_io_blocks
 
 // GL_EXT_tessellation_shader
@@ -6820,6 +6826,11 @@ void GL_APIENTRY glFogxContextANGLE(GLeglContext ctx, GLenum pname, GLfixed para
 void GL_APIENTRY glFogxvContextANGLE(GLeglContext ctx, GLenum pname, const GLfixed *param)
 {
     return gl::FogxvContextANGLE(ctx, pname, param);
+}
+
+void GL_APIENTRY glFramebufferFetchBarrierEXTContextANGLE(GLeglContext ctx)
+{
+    return gl::FramebufferFetchBarrierEXTContextANGLE(ctx);
 }
 
 void GL_APIENTRY glFramebufferParameteriContextANGLE(GLeglContext ctx,

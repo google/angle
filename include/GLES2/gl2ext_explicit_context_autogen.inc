@@ -207,6 +207,7 @@ typedef void (GL_APIENTRYP PFNGLENABLEIOESCONTEXTANGLEPROC)(GLeglContext ctx, GL
 typedef void (GL_APIENTRYP PFNGLENDQUERYEXTCONTEXTANGLEPROC)(GLeglContext ctx, GLenum target);
 typedef void (GL_APIENTRYP PFNGLFINISHFENCENVCONTEXTANGLEPROC)(GLeglContext ctx, GLuint fence);
 typedef void (GL_APIENTRYP PFNGLFLUSHMAPPEDBUFFERRANGEEXTCONTEXTANGLEPROC)(GLeglContext ctx, GLenum target, GLintptr offset, GLsizeiptr length);
+typedef void (GL_APIENTRYP PFNGLFRAMEBUFFERFETCHBARRIEREXTCONTEXTANGLEPROC)(GLeglContext ctx);
 typedef void (GL_APIENTRYP PFNGLFRAMEBUFFERTEXTURE2DMULTISAMPLEEXTCONTEXTANGLEPROC)(GLeglContext ctx, GLenum target, GLenum attachment, GLenum textarget, GLuint texture, GLint level, GLsizei samples);
 typedef void (GL_APIENTRYP PFNGLFRAMEBUFFERTEXTURE3DOESCONTEXTANGLEPROC)(GLeglContext ctx, GLenum target, GLenum attachment, GLenum textarget, GLuint texture, GLint level, GLint zoffset);
 typedef void (GL_APIENTRYP PFNGLFRAMEBUFFERTEXTUREEXTCONTEXTANGLEPROC)(GLeglContext ctx, GLenum target, GLenum attachment, GLuint texture, GLint level);
@@ -637,6 +638,7 @@ GL_APICALL void GL_APIENTRY glEnableiOESContextANGLE(GLeglContext ctx, GLenum ta
 GL_APICALL void GL_APIENTRY glEndQueryEXTContextANGLE(GLeglContext ctx, GLenum target);
 GL_APICALL void GL_APIENTRY glFinishFenceNVContextANGLE(GLeglContext ctx, GLuint fence);
 GL_APICALL void GL_APIENTRY glFlushMappedBufferRangeEXTContextANGLE(GLeglContext ctx, GLenum target, GLintptr offset, GLsizeiptr length);
+GL_APICALL void GL_APIENTRY glFramebufferFetchBarrierEXTContextANGLE(GLeglContext ctx);
 GL_APICALL void GL_APIENTRY glFramebufferTexture2DMultisampleEXTContextANGLE(GLeglContext ctx, GLenum target, GLenum attachment, GLenum textarget, GLuint texture, GLint level, GLsizei samples);
 GL_APICALL void GL_APIENTRY glFramebufferTexture3DOESContextANGLE(GLeglContext ctx, GLenum target, GLenum attachment, GLenum textarget, GLuint texture, GLint level, GLint zoffset);
 GL_APICALL void GL_APIENTRY glFramebufferTextureEXTContextANGLE(GLeglContext ctx, GLenum target, GLenum attachment, GLuint texture, GLint level);

@@ -7521,6 +7521,13 @@ CallCapture CaptureValidateProgramPipelineEXT(const State &glState,
     return CallCapture(angle::EntryPoint::GLValidateProgramPipelineEXT, std::move(paramBuffer));
 }
 
+CallCapture CaptureFramebufferFetchBarrierEXT(const State &glState, bool isCallValid)
+{
+    ParamBuffer paramBuffer;
+
+    return CallCapture(angle::EntryPoint::GLFramebufferFetchBarrierEXT, std::move(paramBuffer));
+}
+
 CallCapture CapturePatchParameteriEXT(const State &glState,
                                       bool isCallValid,
                                       GLenum pname,

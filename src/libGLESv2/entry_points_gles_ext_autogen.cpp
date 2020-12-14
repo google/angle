@@ -7074,6 +7074,29 @@ void GL_APIENTRY ValidateProgramPipelineEXT(GLuint pipeline)
     }
 }
 
+// GL_EXT_shader_framebuffer_fetch_non_coherent
+void GL_APIENTRY FramebufferFetchBarrierEXT()
+{
+    Context *context = GetValidGlobalContext();
+    EVENT(context, GLFramebufferFetchBarrierEXT, "context = %d", CID(context));
+
+    if (context)
+    {
+        std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid =
+            (context->skipValidation() || ValidateFramebufferFetchBarrierEXT(context));
+        if (isCallValid)
+        {
+            context->framebufferFetchBarrier();
+        }
+        ANGLE_CAPTURE(FramebufferFetchBarrierEXT, isCallValid, context);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
+}
+
 // GL_EXT_shader_io_blocks
 
 // GL_EXT_tessellation_shader
@@ -15591,6 +15614,29 @@ void GL_APIENTRY FogxvContextANGLE(GLeglContext ctx, GLenum pname, const GLfixed
             context->fogxv(pname, param);
         }
         ANGLE_CAPTURE(Fogxv, isCallValid, context, pname, param);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
+}
+
+void GL_APIENTRY FramebufferFetchBarrierEXTContextANGLE(GLeglContext ctx)
+{
+    Context *context = static_cast<gl::Context *>(ctx);
+    EVENT(context, GLFramebufferFetchBarrierEXT, "context = %d", CID(context));
+
+    if (context && !context->isContextLost())
+    {
+        ASSERT(context == GetValidGlobalContext());
+        std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid =
+            (context->skipValidation() || ValidateFramebufferFetchBarrierEXT(context));
+        if (isCallValid)
+        {
+            context->framebufferFetchBarrier();
+        }
+        ANGLE_CAPTURE(FramebufferFetchBarrierEXT, isCallValid, context);
     }
     else
     {

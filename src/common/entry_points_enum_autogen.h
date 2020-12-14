@@ -454,6 +454,7 @@ enum class EntryPoint
     GLFogiv,
     GLFogx,
     GLFogxv,
+    GLFramebufferFetchBarrierEXT,
     GLFramebufferParameteri,
     GLFramebufferRenderbuffer,
     GLFramebufferRenderbufferOES,

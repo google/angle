@@ -1138,6 +1138,11 @@ bool ValidateImportSemaphoreZirconHandleANGLE(const Context *context,
     return true;
 }
 
+bool ValidateFramebufferFetchBarrierEXT(const Context *context)
+{
+    return true;
+}
+
 bool ValidatePatchParameteriEXT(const Context *context, GLenum pname, GLint value)
 {
     return true;

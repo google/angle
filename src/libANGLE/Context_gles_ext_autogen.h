@@ -388,6 +388,8 @@
     /* GL_EXT_semaphore_fd */                                                                      \
     void importSemaphoreFd(SemaphoreID semaphorePacked, HandleType handleTypePacked, GLint fd);    \
     /* GL_EXT_separate_shader_objects */                                                           \
+    /* GL_EXT_shader_framebuffer_fetch_non_coherent */                                             \
+    void framebufferFetchBarrier();                                                                \
     /* GL_EXT_shader_io_blocks */                                                                  \
     /* GL_EXT_tessellation_shader */                                                               \
     /* GL_EXT_texture_buffer */                                                                    \

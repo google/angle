@@ -8311,6 +8311,11 @@ void Context::eGLImageTargetRenderbufferStorage(GLenum target, GLeglImageOES ima
     ANGLE_CONTEXT_TRY(renderbuffer->setStorageEGLImageTarget(this, imageObject));
 }
 
+void Context::framebufferFetchBarrier()
+{
+    UNIMPLEMENTED();
+}
+
 void Context::texStorage1D(GLenum target, GLsizei levels, GLenum internalformat, GLsizei width)
 {
     UNIMPLEMENTED();

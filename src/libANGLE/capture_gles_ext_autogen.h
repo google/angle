@@ -1596,6 +1596,9 @@ angle::CallCapture CaptureValidateProgramPipelineEXT(const State &glState,
                                                      bool isCallValid,
                                                      ProgramPipelineID pipelinePacked);
 
+// GL_EXT_shader_framebuffer_fetch_non_coherent
+angle::CallCapture CaptureFramebufferFetchBarrierEXT(const State &glState, bool isCallValid);
+
 // GL_EXT_shader_io_blocks
 
 // GL_EXT_tessellation_shader

@@ -896,6 +896,8 @@ const char *GetEntryPointName(EntryPoint ep)
             return "glFogx";
         case EntryPoint::GLFogxv:
             return "glFogxv";
+        case EntryPoint::GLFramebufferFetchBarrierEXT:
+            return "glFramebufferFetchBarrierEXT";
         case EntryPoint::GLFramebufferParameteri:
             return "glFramebufferParameteri";
         case EntryPoint::GLFramebufferRenderbuffer:

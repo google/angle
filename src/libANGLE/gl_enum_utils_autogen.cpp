@@ -1137,6 +1137,8 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_UNIFORM_BUFFER_OFFSET_ALIGNMENT";
                 case 0x8A4F:
                     return "GL_PROGRAM_PIPELINE_OBJECT_EXT";
+                case 0x8A52:
+                    return "GL_FRAGMENT_SHADER_DISCARDS_SAMPLES_EXT";
                 case 0x8B40:
                     return "GL_PROGRAM_OBJECT_EXT";
                 case 0x8B48:

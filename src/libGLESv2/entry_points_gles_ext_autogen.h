@@ -1062,6 +1062,9 @@ ANGLE_EXPORT void GL_APIENTRY UseProgramStagesEXT(GLuint pipeline,
                                                   GLuint program);
 ANGLE_EXPORT void GL_APIENTRY ValidateProgramPipelineEXT(GLuint pipeline);
 
+// GL_EXT_shader_framebuffer_fetch_non_coherent
+ANGLE_EXPORT void GL_APIENTRY FramebufferFetchBarrierEXT();
+
 // GL_EXT_shader_io_blocks
 
 // GL_EXT_tessellation_shader
@@ -2177,6 +2180,7 @@ ANGLE_EXPORT void GL_APIENTRY FogxContextANGLE(GLeglContext ctx, GLenum pname, G
 ANGLE_EXPORT void GL_APIENTRY FogxvContextANGLE(GLeglContext ctx,
                                                 GLenum pname,
                                                 const GLfixed *param);
+ANGLE_EXPORT void GL_APIENTRY FramebufferFetchBarrierEXTContextANGLE(GLeglContext ctx);
 ANGLE_EXPORT void GL_APIENTRY FramebufferParameteriContextANGLE(GLeglContext ctx,
                                                                 GLenum target,
                                                                 GLenum pname,
