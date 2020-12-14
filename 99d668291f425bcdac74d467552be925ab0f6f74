@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "08687754_b49568e7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-14T03:07:49Z",
+      "side": 1,
+      "message": "I gave it a quick look. I\u0027ll be off this week, so swapping reviewers.",
+      "revId": "99d668291f425bcdac74d467552be925ab0f6f74",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ee490b39_02df0c6a",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3830,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-14T03:07:49Z",
+      "side": 1,
+      "message": "This is destroying the previously written fields",
+      "range": {
+        "startLine": 3830,
+        "startChar": 20,
+        "endLine": 3830,
+        "endChar": 23
+      },
+      "revId": "99d668291f425bcdac74d467552be925ab0f6f74",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
