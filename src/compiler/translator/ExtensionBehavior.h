@@ -26,6 +26,7 @@ enum class TExtension : uint8_t
     ARB_texture_rectangle,
     ARM_shader_framebuffer_fetch,
     EXT_blend_func_extended,
+    EXT_clip_cull_distance,
     EXT_draw_buffers,
     EXT_frag_depth,
     EXT_geometry_shader,

@@ -675,6 +675,47 @@
                         "value":"resources"
                     }
                 }
+            },
+            "APPLEClipDistance":{
+                "variables":{
+                    "gl_MaxClipDistances":{
+                        "essl_level":"COMMON_BUILTINS",
+                        "type":{
+                            "basic":"Int",
+                            "precision":"Medium",
+                            "qualifier":"Const"
+                        },
+                        "essl_extension":"APPLE_clip_distance",
+                        "value":"resources",
+                        "suffix": "APPLE"
+                    }
+                }
+            },
+            "EXTClipCullDistance":{
+                "variables":{
+                    "gl_MaxCullDistances":{
+                        "essl_level":"ESSL3_BUILTINS",
+                        "type":{
+                            "basic":"Int",
+                            "precision":"Medium",
+                            "qualifier":"Const"
+                        },
+                        "essl_extension":"EXT_clip_cull_distance",
+                        "value":"resources",
+                        "suffix": "EXT"
+                    },
+                    "gl_MaxCombinedClipAndCullDistances":{
+                        "essl_level":"ESSL3_BUILTINS",
+                        "type":{
+                            "basic":"Int",
+                            "precision":"Medium",
+                            "qualifier":"Const"
+                        },
+                        "essl_extension":"EXT_clip_cull_distance",
+                        "value":"resources",
+                        "suffix": "EXT"
+                    }
+                }
             }
         }
     },
@@ -861,6 +902,20 @@
                         "initDynamicType":"TType *{type_name} = new TType(EbtInt, EbpHigh, EvqSampleMask, 1); {type_name}->makeArray((resources.MaxSamples+31)/32);"
                     }
                 }
+            },
+            "EXTClipCullDistance":{
+                "variables":{
+                    "gl_CullDistance":{
+                        "essl_level":"ESSL3_BUILTINS",
+                        "essl_extension":"EXT_clip_cull_distance",
+                        "initDynamicType":"TType *{type_name} = new TType(EbtFloat, EbpHigh, EvqCullDistance, 1); {type_name}->makeArray(resources.MaxCullDistances);"
+                    },
+                    "gl_ClipDistance":{
+                        "essl_level":"ESSL3_BUILTINS",
+                        "essl_extension":"EXT_clip_cull_distance",
+                        "initDynamicType":"TType *{type_name} = new TType(EbtFloat, EbpHigh, EvqClipDistance, 1); {type_name}->makeArray(resources.MaxClipDistances);"
+                    }
+                }
             }
         }
     },
@@ -1005,17 +1060,18 @@
                     "gl_ClipDistance":{
                         "essl_level":"COMMON_BUILTINS",
                         "essl_extension":"APPLE_clip_distance",
-                        "initDynamicType":"TType *{type_name} = new TType(EbtFloat, EbpHigh, EvqClipDistance, 1); {type_name}->makeArray(resources.MaxClipDistances);"
-                    },
-                    "gl_MaxClipDistances":{
-                        "essl_level":"COMMON_BUILTINS",
-                        "type":{
-                            "basic":"Int",
-                            "precision":"Medium",
-                            "qualifier":"Const"
-                        },
-                        "essl_extension":"APPLE_clip_distance",
-                        "value":"resources"
+                        "initDynamicType":"TType *{type_name} = new TType(EbtFloat, EbpHigh, EvqClipDistance, 1); {type_name}->makeArray(resources.MaxClipDistances);",
+                        "suffix": "APPLE"
+                    }
+                }
+            },
+            "EXTClipCullDistance":{
+                "variables":{
+                    "gl_CullDistance":{
+                        "essl_level":"ESSL3_BUILTINS",
+                        "essl_extension":"EXT_clip_cull_distance",
+                        "initDynamicType":"TType *{type_name} = new TType(EbtFloat, EbpHigh, EvqCullDistance, 1); {type_name}->makeArray(resources.MaxCullDistances);",
+                        "suffix": "EXT"
                     }
                 }
             }

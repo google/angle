@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 246
+#define ANGLE_SH_VERSION 247
 
 enum ShShaderSpec
 {
@@ -420,6 +420,7 @@ struct ShBuiltInResources
     int OES_texture_buffer;
     int EXT_texture_buffer;
     int OES_sample_variables;
+    int EXT_clip_cull_distance;
 
     // Set to 1 to enable replacing GL_EXT_draw_buffers #extension directives
     // with GL_NV_draw_buffers in ESSL output. This flag can be used to emulate
@@ -590,6 +591,8 @@ struct ShBuiltInResources
 
     // APPLE_clip_distance/EXT_clip_cull_distance constant
     int MaxClipDistances;
+    int MaxCullDistances;
+    int MaxCombinedClipAndCullDistances;
 };
 
 //

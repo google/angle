@@ -82,6 +82,9 @@ class TSymbolTableBase
     TSymbol *m_gl_MaxTessEvaluationAtomicCounters       = nullptr;
     TSymbol *m_gl_MaxTessEvaluationAtomicCounterBuffers = nullptr;
     TSymbol *m_gl_MaxSamples                            = nullptr;
+    TSymbol *m_gl_MaxClipDistancesAPPLE                 = nullptr;
+    TSymbol *m_gl_MaxCullDistancesEXT                   = nullptr;
+    TSymbol *m_gl_MaxCombinedClipAndCullDistancesEXT    = nullptr;
     TSymbol *m_gl_FragData                              = nullptr;
     TSymbol *m_gl_SecondaryFragDataEXT                  = nullptr;
     TSymbol *m_gl_FragDepthEXT                          = nullptr;
@@ -89,8 +92,10 @@ class TSymbolTableBase
     TSymbol *m_gl_LastFragDataNV                        = nullptr;
     TSymbol *m_gl_SampleMaskIn                          = nullptr;
     TSymbol *m_gl_SampleMask                            = nullptr;
+    TSymbol *m_gl_CullDistance                          = nullptr;
     TSymbol *m_gl_ClipDistance                          = nullptr;
-    TSymbol *m_gl_MaxClipDistances                      = nullptr;
+    TSymbol *m_gl_ClipDistanceAPPLE                     = nullptr;
+    TSymbol *m_gl_CullDistanceEXT                       = nullptr;
     TSymbol *m_gl_PerVertex                             = nullptr;
     TSymbol *m_gl_in                                    = nullptr;
     TSymbol *m_gl_PositionGS                            = nullptr;
