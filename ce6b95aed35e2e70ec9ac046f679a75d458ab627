@@ -41,6 +41,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e673de92_8532136c",
+        "filename": "src/tests/gl_tests/ClipDistanceTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 433,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-12-14T22:30:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6d7dc456_b859d2a2",
+      "range": {
+        "startLine": 433,
+        "startChar": 82,
+        "endLine": 433,
+        "endChar": 84
+      },
+      "revId": "ce6b95aed35e2e70ec9ac046f679a75d458ab627",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "bb438144_7b855ae4",
@@ -54,6 +78,30 @@
       "writtenOn": "2020-12-11T04:44:35Z",
       "side": 1,
       "message": "operated? (copy-pasted further on)",
+      "range": {
+        "startLine": 434,
+        "startChar": 7,
+        "endLine": 434,
+        "endChar": 15
+      },
+      "revId": "ce6b95aed35e2e70ec9ac046f679a75d458ab627",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e8ed7b70_d7c4dbf2",
+        "filename": "src/tests/gl_tests/ClipDistanceTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 434,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-12-14T22:30:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bb438144_7b855ae4",
       "range": {
         "startLine": 434,
         "startChar": 7,
@@ -87,6 +135,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8a85199a_8b7603f3",
+        "filename": "src/tests/gl_tests/ClipDistanceTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 547,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-12-14T22:30:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c2dead80_b59e733d",
+      "range": {
+        "startLine": 541,
+        "startChar": 0,
+        "endLine": 547,
+        "endChar": 5
+      },
+      "revId": "ce6b95aed35e2e70ec9ac046f679a75d458ab627",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3b673ad1_7eb2a294",
@@ -100,6 +172,30 @@
       "writtenOn": "2020-12-11T04:44:35Z",
       "side": 1,
       "message": "Could use one glReadPixels call that reads into a std::vector\u003cGLColor\u003e and then use EXPECT_EQ on the elements, to avoid excessive calls to glReadPixels (every EXPECT_PIXEL_COLOR_EQ is calling glReadPixels once).\n\nSame throughout this CL.",
+      "range": {
+        "startLine": 666,
+        "startChar": 0,
+        "endLine": 681,
+        "endChar": 5
+      },
+      "revId": "ce6b95aed35e2e70ec9ac046f679a75d458ab627",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1f7d000b_dd886395",
+        "filename": "src/tests/gl_tests/ClipDistanceTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 681,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-12-14T22:30:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3b673ad1_7eb2a294",
       "range": {
         "startLine": 666,
         "startChar": 0,
@@ -133,6 +229,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "662edecf_442a3160",
+        "filename": "src/tests/gl_tests/ClipDistanceTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 732,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-12-14T22:30:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "262b9eec_c8c1bb13",
+      "range": {
+        "startLine": 732,
+        "startChar": 44,
+        "endLine": 732,
+        "endChar": 53
+      },
+      "revId": "ce6b95aed35e2e70ec9ac046f679a75d458ab627",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f569015e_dc738c54",
@@ -150,6 +270,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "633d71b1_51d7f01d",
+        "filename": "src/tests/gl_tests/ClipDistanceTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1083,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-12-14T22:30:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f569015e_dc738c54",
+      "revId": "ce6b95aed35e2e70ec9ac046f679a75d458ab627",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "09f139ab_7538e18a",
@@ -163,6 +301,24 @@
       "writtenOn": "2020-12-11T04:44:35Z",
       "side": 1,
       "message": "Same",
+      "revId": "ce6b95aed35e2e70ec9ac046f679a75d458ab627",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "87192009_579b8de1",
+        "filename": "src/tests/gl_tests/ClipDistanceTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1233,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-12-14T22:30:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "09f139ab_7538e18a",
       "revId": "ce6b95aed35e2e70ec9ac046f679a75d458ab627",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
