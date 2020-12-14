@@ -35,6 +35,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "68a7d277_37fb8424",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-12-14T17:33:15Z",
+      "side": 1,
+      "message": "We can\u0027t get rid of the old one because of QC driver bug on specialization constant https://issuetracker.google.com/173642448. We could wait until their fix is out to public and then remove the old path. But I don\u0027t know when that will happen. This gives us a better separation of two cases, and make it easier to delete the old struct once we are ready to remove, as well as let us start use reduced structure with pre-release drivers and other GPUs.",
+      "parentUuid": "632e26ae_1f35d396",
+      "revId": "99d668291f425bcdac74d467552be925ab0f6f74",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ee490b39_02df0c6a",
