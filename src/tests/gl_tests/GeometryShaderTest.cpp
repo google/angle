@@ -1161,7 +1161,7 @@ TEST_P(GeometryShaderTest, LayeredFramebufferClear3DColor)
 {
     // Mesa considers the framebuffer with mixed 3D and 2D array attachments to be incomplete.
     // http://anglebug.com/5463
-    ANGLE_SKIP_TEST_IF(IsIntel() && IsOpenGL() && IsLinux());
+    ANGLE_SKIP_TEST_IF((IsAMD() || IsIntel()) && IsOpenGL() && IsLinux());
 
     layeredFramebufferClearTest(GL_TEXTURE_3D);
 }
@@ -1235,7 +1235,7 @@ TEST_P(GeometryShaderTest, LayeredFramebufferPreRenderClear3DColor)
 {
     // Mesa considers the framebuffer with mixed 3D and 2D array attachments to be incomplete.
     // http://anglebug.com/5463
-    ANGLE_SKIP_TEST_IF(IsIntel() && IsOpenGL() && IsLinux());
+    ANGLE_SKIP_TEST_IF((IsAMD() || IsIntel()) && IsOpenGL() && IsLinux());
 
     layeredFramebufferPreRenderClearTest(GL_TEXTURE_3D);
 }
@@ -1317,7 +1317,7 @@ TEST_P(GeometryShaderTest, LayeredFramebufferMidRenderClear3DColor)
 {
     // Mesa considers the framebuffer with mixed 3D and 2D array attachments to be incomplete.
     // http://anglebug.com/5463
-    ANGLE_SKIP_TEST_IF(IsIntel() && IsOpenGL() && IsLinux());
+    ANGLE_SKIP_TEST_IF((IsAMD() || IsIntel()) && IsOpenGL() && IsLinux());
 
     layeredFramebufferMidRenderClearTest(GL_TEXTURE_3D);
 }
