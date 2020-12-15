@@ -484,10 +484,6 @@ void InitMetalFileAPIHooking(int argc, char **argv)
         exeDir += "/";
     }
 
-#    if !defined(NDEBUG)
-    std::cerr << "Preloading " << exeDir << "libmetal_shader_cache_file_hooking.dylib" << std::endl;
-#    endif
-
     // Intercept Metal shader cache access and return as if the cache doesn't exist.
     // This is to avoid slow shader cache mechanism that caused the test timeout in the past.
     // In order to do that, we need to hook the file API functions by making sure
