@@ -136,6 +136,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "947caa6e_2e7dc69c",
+        "filename": "src/tests/gl_tests/ClipDistanceTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 434,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-12-15T17:32:32Z",
+      "side": 1,
+      "message": "Done, reworded to better reflect intent",
+      "parentUuid": "7d05073b_473397fd",
+      "range": {
+        "startLine": 434,
+        "startChar": 7,
+        "endLine": 434,
+        "endChar": 15
+      },
+      "revId": "ce6b95aed35e2e70ec9ac046f679a75d458ab627",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c2dead80_b59e733d",
