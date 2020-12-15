@@ -70,6 +70,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3c474194_71325e0c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-12-15T02:47:19Z",
+      "side": 1,
+      "message": "I am not sure about that, will see once their change land",
+      "parentUuid": "d7957e92_e9e41351",
+      "revId": "99d668291f425bcdac74d467552be925ab0f6f74",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ee3553dd_2a1b3b13",
@@ -93,6 +111,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0b660871_586331d1",
+        "filename": "src/compiler/translator/tree_util/DriverUniform.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-12-15T02:47:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ee3553dd_2a1b3b13",
+      "range": {
+        "startLine": 57,
+        "startChar": 6,
+        "endLine": 57,
+        "endChar": 28
+      },
+      "revId": "99d668291f425bcdac74d467552be925ab0f6f74",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "4c43903f_e95fecc3",
@@ -106,6 +148,30 @@
       "writtenOn": "2020-12-14T19:58:58Z",
       "side": 1,
       "message": "How do we make sure any new fields added to GraphicsDriverUniforms don\u0027t require any starting padding to GraphicsDriverUniformsExtended?   There should probably at least be something like:\n\n    static_assert(sizeof(GraphicsDriverUniforms) % 4 \u003d\u003d 0, \"GraphicsDriverUniforms requires aligned types\");\n\nFor example, if a uint8_t or uint16_6 is added to the end of GraphicsDriverUniforms, there will be padding between \u0027common\u0027 and \u0027halfRenderArea\u0027.",
+      "range": {
+        "startLine": 87,
+        "startChar": 0,
+        "endLine": 90,
+        "endChar": 40
+      },
+      "revId": "99d668291f425bcdac74d467552be925ab0f6f74",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "490a09d6_54d44506",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-12-15T02:47:19Z",
+      "side": 1,
+      "message": "Good point. Added.",
+      "parentUuid": "4c43903f_e95fecc3",
       "range": {
         "startLine": 87,
         "startChar": 0,
@@ -153,6 +219,30 @@
       "side": 1,
       "message": "Actually no. Line 3754 to 3804 only update the extended part, it does not update the common part. Here (line 3830 to 3839) is updating the common part of structure.",
       "parentUuid": "ee490b39_02df0c6a",
+      "range": {
+        "startLine": 3830,
+        "startChar": 20,
+        "endLine": 3830,
+        "endChar": 23
+      },
+      "revId": "99d668291f425bcdac74d467552be925ab0f6f74",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "815aadd3_1ff6db1b",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3830,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-12-15T02:47:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4f327447_570c8a81",
       "range": {
         "startLine": 3830,
         "startChar": 20,
