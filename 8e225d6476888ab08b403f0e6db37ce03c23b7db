@@ -194,6 +194,30 @@
       },
       "revId": "8e225d6476888ab08b403f0e6db37ce03c23b7db",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "873cff9d_efcd9563",
+        "filename": "src/tests/angle_deqp_tests_main.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2020-12-15T09:10:15Z",
+      "side": 1,
+      "message": "btw, I used execve but alternative option is explicitly add environment variable to the bot\u0027s commands.\nSince I don\u0027t want to change the bot\u0027s commands and thus it would take longer to be approved, using execve to re-launch the app within itself is a viable option atm,\n\nBut if you need a cleaner approach, explicitly adding DYLD_INSERT_LIBRARIES environment variable to bots\u0027 commands in future would be a better option.",
+      "parentUuid": "47939ca6_9a04eb3d",
+      "range": {
+        "startLine": 25,
+        "startChar": 11,
+        "endLine": 25,
+        "endChar": 34
+      },
+      "revId": "8e225d6476888ab08b403f0e6db37ce03c23b7db",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }

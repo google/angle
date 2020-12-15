@@ -39,6 +39,30 @@
       },
       "revId": "4faf01e80cf1f294c9e75222271c7d5e54629f17",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "986a843f_9757d9c8",
+        "filename": "src/libANGLE/renderer/metal/file_hooking/shader_cache_file_hooking.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2020-12-15T09:10:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "97c91aa6_a12292ba",
+      "range": {
+        "startLine": 25,
+        "startChar": 4,
+        "endLine": 25,
+        "endChar": 14
+      },
+      "revId": "4faf01e80cf1f294c9e75222271c7d5e54629f17",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
