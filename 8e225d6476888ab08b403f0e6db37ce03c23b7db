@@ -53,6 +53,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0825d796_99d42556",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2020-12-15T09:31:36Z",
+      "side": 1,
+      "message": "I\u0027m just curious, are you going to add similar work-around to Chrome also?\nSince WebGL testing might encounter the same hanging issues using Metal back-end in future.",
+      "parentUuid": "d564281a_1fcf1e8a",
+      "revId": "8e225d6476888ab08b403f0e6db37ce03c23b7db",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "04837ff3_3364897a",
