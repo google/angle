@@ -166,6 +166,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f0114564_79aa1460",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 3721,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-12-15T20:58:58Z",
+      "side": 1,
+      "message": "yes indeed",
+      "parentUuid": "48c01f61_12ff0f64",
+      "range": {
+        "startLine": 3718,
+        "startChar": 0,
+        "endLine": 3721,
+        "endChar": 82
+      },
+      "revId": "596defbe2d1511b4df671bdb0813c64210801603",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "07e79ab1_8d898374",
@@ -215,6 +239,24 @@
       "side": 1,
       "message": "I\u0027m not really seeing any functional difference between reset and destroy, since every destroy() and this reset() is doing:\n\n    rendererVk-\u003eaccumulateCacheStats\n    mPayload.clear()\n\nFor consistency, I think this should either be destroy() or clear() to match the others.\n\nBit of bikeshedding, so not a huge deal either way though.",
       "parentUuid": "15ad3f98_ff88eabf",
+      "revId": "596defbe2d1511b4df671bdb0813c64210801603",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a52557a7_2d559ad8",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 1632,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-12-15T20:58:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cafa7038_622286f5",
       "revId": "596defbe2d1511b4df671bdb0813c64210801603",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
