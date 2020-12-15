@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "463c14b7_1a5f9aa7",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 2726,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-12-15T18:39:15Z",
+      "side": 1,
+      "message": "copy-pasta - https://github.com/google/angle/blob/master/src/libANGLE/renderer/vulkan/ContextVk.cpp#L5097",
+      "parentUuid": "5ad9fcf3_cc55d972",
+      "range": {
+        "startLine": 2719,
+        "startChar": 0,
+        "endLine": 2726,
+        "endChar": 5
+      },
+      "revId": "596defbe2d1511b4df671bdb0813c64210801603",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "882029a3_36467113",
@@ -37,6 +61,30 @@
       "writtenOn": "2020-12-15T01:39:59Z",
       "side": 1,
       "message": "nit: vk_cache_utils.h",
+      "range": {
+        "startLine": 3716,
+        "startChar": 50,
+        "endLine": 3716,
+        "endChar": 61
+      },
+      "revId": "596defbe2d1511b4df671bdb0813c64210801603",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fb33b1f2_e1121a30",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 3716,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-12-15T18:39:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "882029a3_36467113",
       "range": {
         "startLine": 3716,
         "startChar": 50,
@@ -72,6 +120,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "edbbf09a_dfb171d0",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 3721,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-12-15T18:39:15Z",
+      "side": 1,
+      "message": "this is not a templated reset() method, this is just how it needs to be defined. Since this is a member of a templated class being defined in a different compilation unit than the template instantiation, these declarations are necessary otherwise it results in a linker error -\u003e https://www.codeproject.com/Articles/48575/How-to-Define-a-Template-Class-in-a-h-File-and-Imp\n\nwhat am i missing here?",
+      "parentUuid": "6fb0301c_89fea1a6",
+      "range": {
+        "startLine": 3718,
+        "startChar": 0,
+        "endLine": 3721,
+        "endChar": 82
+      },
+      "revId": "596defbe2d1511b4df671bdb0813c64210801603",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "07e79ab1_8d898374",
         "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
         "patchSetId": 8
@@ -83,6 +155,24 @@
       "writtenOn": "2020-12-15T01:39:59Z",
       "side": 1,
       "message": "All of the other functions are named \u0027destroy\u0027.   Why \u0027reset\u0027 for this one?",
+      "revId": "596defbe2d1511b4df671bdb0813c64210801603",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "15ad3f98_ff88eabf",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 1632,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-12-15T18:39:15Z",
+      "side": 1,
+      "message": "the way ProgramExecutableVk uses the 2 members is not in a destroy method. The intent is not to destroy the caches but reset them for reuse. That was my read on the code, is that not the case?",
+      "parentUuid": "07e79ab1_8d898374",
       "revId": "596defbe2d1511b4df671bdb0813c64210801603",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
