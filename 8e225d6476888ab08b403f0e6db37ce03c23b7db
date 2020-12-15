@@ -71,6 +71,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c9775c68_7bbea02c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2020-12-15T20:49:30Z",
+      "side": 1,
+      "message": "Yes, we definitely want to do this. Sorry for the restricted view bug, but I filed http://crbug.com/1159113 which you\u0027re CC\u0027d on about adding the workaround to Chrome\u0027s Mac sandbox.",
+      "parentUuid": "0825d796_99d42556",
+      "revId": "8e225d6476888ab08b403f0e6db37ce03c23b7db",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "04837ff3_3364897a",
