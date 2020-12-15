@@ -3577,6 +3577,11 @@ void Context::initCaps()
                   "supported on native drivers"
                << std::endl;
         mState.mExtensions.bindUniformLocation = false;
+
+        INFO() << "Disabling GL_NV_shader_noperspective_interpolation during capture, which is not "
+                  "supported on some native drivers"
+               << std::endl;
+        mState.mExtensions.noperspectiveInterpolationNV = false;
     }
 
     // Disable support for OES_get_program_binary
