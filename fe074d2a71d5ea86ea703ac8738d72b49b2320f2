@@ -1,0 +1,84 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3b818986_661b83d1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 17
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-15T01:18:40Z",
+      "side": 1,
+      "message": "Looks good.   Just some nits.",
+      "revId": "fe074d2a71d5ea86ea703ac8738d72b49b2320f2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0329242c_b4c7e317",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 353,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-15T01:18:40Z",
+      "side": 1,
+      "message": "This is a private function, so it can be removed now and replaced with calls to mFramebufferCache.clear() directly.",
+      "range": {
+        "startLine": 350,
+        "startChar": 0,
+        "endLine": 353,
+        "endChar": 1
+      },
+      "revId": "fe074d2a71d5ea86ea703ac8738d72b49b2320f2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7070945a_95ec2b24",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 1550,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-15T01:18:40Z",
+      "side": 1,
+      "message": "nit: The naming between DescriptorSetCache and BaseDescriptorsCache is a bit vague.\n\n- DescriptorSetCache is only used by DriverUniformsDescriptorSet.\n- BaseDescriptorsCache isn\u0027t inherited by anything, so it\u0027s not really a \u0027base\u0027.   Instead, it\u0027s a generic descriptor set cache type.\n\nI think it would be better to do:\n\n    DescriptorSetCache -\u003e DriverUniformsDescriptorSetCache\n    BaseDescriptorsCache -\u003e DescriptorSetCache",
+      "revId": "fe074d2a71d5ea86ea703ac8738d72b49b2320f2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1f320880_6f8bfc24",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 1615,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-15T01:18:40Z",
+      "side": 1,
+      "message": "I\u0027m not sure these are really helping.   Instead, just use the templated types in ProgramExecutableVk.h:\n\n    DescriptorSetCache\u003cvk::UniformsAndXfbDesc\u003e mUniformsAndXfbDescriptorSetCache;\n    DescriptorSetCache\u003cvk::TextureDescriptorDesc\u003e mTextureDescriptorsCache;",
+      "range": {
+        "startLine": 1612,
+        "startChar": 0,
+        "endLine": 1615,
+        "endChar": 86
+      },
+      "revId": "fe074d2a71d5ea86ea703ac8738d72b49b2320f2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
