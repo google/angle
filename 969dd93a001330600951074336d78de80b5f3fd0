@@ -16,6 +16,23 @@
       "message": "Folks, can I get a +2 on this CL so that it can land?",
       "revId": "969dd93a001330600951074336d78de80b5f3fd0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "15fe3e46_faca56fd",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-12-15T22:06:55Z",
+      "side": 1,
+      "message": "Thank!",
+      "revId": "969dd93a001330600951074336d78de80b5f3fd0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
