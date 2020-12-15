@@ -39,6 +39,30 @@
       },
       "revId": "c88c526fd0223e32c0ac075ba7fc6846370d9b80",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b52d8fa0_18f6089c",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 376,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2020-12-15T17:19:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5e775317_c8f42650",
+      "range": {
+        "startLine": 376,
+        "startChar": 9,
+        "endLine": 376,
+        "endChar": 44
+      },
+      "revId": "c88c526fd0223e32c0ac075ba7fc6846370d9b80",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
