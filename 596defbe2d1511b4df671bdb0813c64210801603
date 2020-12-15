@@ -142,6 +142,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "48c01f61_12ff0f64",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 3721,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-15T19:19:19Z",
+      "side": 1,
+      "message": "Ah, so this isn\u0027t due to DescriptorSetCache::reset() being templated, but the class DescriptorSetCache itself being templated and reset() having to be out here since we can\u0027t call RendererVk methods in the header file (presumably due to circular includes).\n\nThis is unfortunate, since it\u0027s not very pretty, but seems necessary.",
+      "parentUuid": "edbbf09a_dfb171d0",
+      "range": {
+        "startLine": 3718,
+        "startChar": 0,
+        "endLine": 3721,
+        "endChar": 82
+      },
+      "revId": "596defbe2d1511b4df671bdb0813c64210801603",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "07e79ab1_8d898374",
@@ -173,6 +197,24 @@
       "side": 1,
       "message": "the way ProgramExecutableVk uses the 2 members is not in a destroy method. The intent is not to destroy the caches but reset them for reuse. That was my read on the code, is that not the case?",
       "parentUuid": "07e79ab1_8d898374",
+      "revId": "596defbe2d1511b4df671bdb0813c64210801603",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cafa7038_622286f5",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 1632,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-15T19:19:19Z",
+      "side": 1,
+      "message": "I\u0027m not really seeing any functional difference between reset and destroy, since every destroy() and this reset() is doing:\n\n    rendererVk-\u003eaccumulateCacheStats\n    mPayload.clear()\n\nFor consistency, I think this should either be destroy() or clear() to match the others.\n\nBit of bikeshedding, so not a huge deal either way though.",
+      "parentUuid": "15ad3f98_ff88eabf",
       "revId": "596defbe2d1511b4df671bdb0813c64210801603",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
