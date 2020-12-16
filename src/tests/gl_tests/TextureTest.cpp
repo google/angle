@@ -1989,9 +1989,6 @@ TEST_P(TextureCubeTest, CubeMapFBO)
     // http://anglebug.com/3145
     ANGLE_SKIP_TEST_IF(IsFuchsia() && IsIntel() && IsVulkan());
 
-    // http://anglebug.com/2822
-    ANGLE_SKIP_TEST_IF(IsWindows() && IsIntel() && IsVulkan());
-
     GLFramebuffer fbo;
     glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 
@@ -2031,9 +2028,6 @@ TEST_P(TextureCubeTest, CubeMapFBO)
 // Tests clearing a cube map with a scissor enabled.
 TEST_P(TextureCubeTest, CubeMapFBOScissoredClear)
 {
-    // TODO(jie.a.chen): Diagnose and fix. http://anglebug.com/2822
-    ANGLE_SKIP_TEST_IF(IsVulkan() && IsIntel() && IsWindows());
-
     // http://anglebug.com/3145
     ANGLE_SKIP_TEST_IF(IsFuchsia() && IsIntel() && IsVulkan());
 
