@@ -16,6 +16,24 @@
       "message": "Tim, in the future please follow this process for re-lands:\n\nhttps://chromium.googlesource.com/angle/angle/+/master/doc/ContributingCode.md#relanding-a-reverted-cl",
       "revId": "92e5b3f49f6d36b4df44463bbb59e3b89b1f661b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4122bbc5_1b600187",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-16T17:34:19Z",
+      "side": 1,
+      "message": "I clicked \"Re-land\" and uploaded the change as a new patchset (PS1 vs PS2).\n\nIf the Gerrit Re-land button is not safe to use, we should request that it\u0027s removed.",
+      "parentUuid": "cd8ffd80_0dd32839",
+      "revId": "92e5b3f49f6d36b4df44463bbb59e3b89b1f661b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
