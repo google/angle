@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "515ff1cc_1c030e48",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1116015
+      },
+      "writtenOn": "2020-12-16T22:07:35Z",
+      "side": 1,
+      "message": "uNit: overridden",
+      "revId": "4798c8cf20edf858bbeb9ff203b7bc6c52d0268a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "20690517_72f27d9e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1116015
+      },
+      "writtenOn": "2020-12-16T22:07:35Z",
+      "side": 1,
+      "message": "Post-landing LGTM",
+      "revId": "4798c8cf20edf858bbeb9ff203b7bc6c52d0268a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
