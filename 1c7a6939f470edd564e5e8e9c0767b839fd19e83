@@ -16,6 +16,24 @@
       "message": "Why did the first run fail but the 2nd one seems to have passed the analyze step?",
       "revId": "1c7a6939f470edd564e5e8e9c0767b839fd19e83",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a9dafbad_f030914d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-16T01:06:35Z",
+      "side": 1,
+      "message": "The revert landed in between. I was missing one other location, added in the latest patch set.",
+      "parentUuid": "13ed067d_48d7fa36",
+      "revId": "1c7a6939f470edd564e5e8e9c0767b839fd19e83",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
