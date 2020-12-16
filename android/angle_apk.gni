@@ -61,10 +61,9 @@ if (enable_java_templates) {
           }
           if (angle_enable_vulkan_validation_layers) {
             foreach(_layer, vulkan_validation_layers) {
-              secondary_abi_shared_libraries += [
-                "$angle_root/third_party/vulkan-validation-layers:${_layer}" +
-                    "($android_secondary_abi_toolchain)",
-              ]
+              secondary_abi_shared_libraries +=
+                  [ "$angle_vulkan_validation_layers_dir:${_layer}" +
+                    "($android_secondary_abi_toolchain)" ]
             }
           }
         } else {
@@ -92,7 +91,7 @@ if (enable_java_templates) {
         if (angle_enable_vulkan_validation_layers) {
           foreach(_layer, vulkan_validation_layers) {
             shared_libraries +=
-                [ "$angle_root/third_party/vulkan-validation-layers:${_layer}" ]
+                [ "$angle_vulkan_validation_layers_dir:${_layer}" ]
           }
         }
       } else {

@@ -1183,9 +1183,7 @@ if (!is_component_build && is_android && symbol_level != 0) {
 
     if (angle_enable_vulkan_validation_layers) {
       foreach(_layer, vulkan_validation_layers) {
-        deps += [
-          "${angle_root}/third_party/vulkan-validation-layers/src:${_layer}",
-        ]
+        deps += [ "$angle_vulkan_validation_layers_dir:${_layer}" ]
       }
     }
 
