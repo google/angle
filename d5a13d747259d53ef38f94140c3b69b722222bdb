@@ -16,6 +16,23 @@
       "message": "PTAL\n\nThe difference is between PS1 and PS2:\nhttps://chromium-review.googlesource.com/c/angle/angle/+/2595811/1..2\n\nFor a slightly fuller description of this fix:\nhttps://bugs.chromium.org/p/angleproject/issues/detail?id\u003d5470#c3",
       "revId": "d5a13d747259d53ef38f94140c3b69b722222bdb",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "648a6338_0759d59c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-12-16T19:28:21Z",
+      "side": 1,
+      "message": "Oops, so we never clera mResourceUseLists? That is a good finding.",
+      "revId": "d5a13d747259d53ef38f94140c3b69b722222bdb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
