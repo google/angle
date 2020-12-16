@@ -397,8 +397,7 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
       mRenderPassCommands(nullptr),
       mGpuEventsEnabled(false),
       mSyncObjectPendingFlush(false),
-      mEGLSyncObjectPendingFlush(false),
-      mHasDeferredFlush(false),
+      mDeferredFlushCount(0),
       mGpuClockSync{std::numeric_limits<double>::max(), std::numeric_limits<double>::max()},
       mGpuEventTimestampOrigin(0),
       mPerfCounters{},
@@ -702,29 +701,14 @@ angle::Result ContextVk::initialize()
 
 angle::Result ContextVk::flush(const gl::Context *context)
 {
-    // If a sync object has been used or this is a shared context, then we need to flush the
-    // commands and end the render pass to make sure the sync object (and any preceding commands)
-    // lands in the correct place within the command stream.
-    // EGL sync objects can span across context share groups, so don't defer flushes if there's one
-    // pending a flush.
-    if (mSyncObjectPendingFlush && context->isShared() && !mEGLSyncObjectPendingFlush)
+    // If we are in middle of renderpass and it is not a shared context, then we will defer the
+    // glFlush call here until the renderpass ends. If sync object has been used, we must respect
+    // glFlush call, otherwise we a wait for sync object without GL_SYNC_FLUSH_COMMANDS_BIT may
+    // never come back.
+    if (mRenderer->getFeatures().deferFlushUntilEndRenderPass.enabled && !context->isShared() &&
+        !mSyncObjectPendingFlush && hasStartedRenderPass())
     {
-        // Flush the commands to create a sync point in the command stream.
-        ANGLE_TRY(flushCommandsAndEndRenderPass());
-        // Move the resources to the share group, so they are released during the next vkQueueSubmit
-        // performed by any context in the share group. Note that this relies heavily on the global
-        // mutex to guarantee that no two contexts are modifying the lists at the same time.
-        getShareGroupVk()->acquireResourceUseList(std::move(mResourceUseList));
-        mHasDeferredFlush = true;
-        return angle::Result::Continue;
-    }
-
-    // EGL sync objects can span across context share groups, so don't defer flushes if there's one
-    // pending a flush.
-    if (!mEGLSyncObjectPendingFlush &&
-        mRenderer->getFeatures().deferFlushUntilEndRenderPass.enabled && hasStartedRenderPass())
-    {
-        mHasDeferredFlush = true;
+        mDeferredFlushCount++;
         return angle::Result::Continue;
     }
 
@@ -1586,11 +1570,9 @@ angle::Result ContextVk::submitFrame(const vk::Semaphore *signalSemaphore)
         dumpCommandStreamDiagnostics();
     }
 
-    getShareGroupVk()->acquireResourceUseList(std::move(mResourceUseList));
-    ANGLE_TRY(mRenderer->submitFrame(this, mContextPriority, std::move(mWaitSemaphores),
-                                     std::move(mWaitSemaphoreStageMasks), signalSemaphore,
-                                     getShareGroupVk()->releaseResourceUseLists(),
-                                     std::move(mCurrentGarbage), &mCommandPool));
+    ANGLE_TRY(mRenderer->submitFrame(
+        this, mContextPriority, std::move(mWaitSemaphores), std::move(mWaitSemaphoreStageMasks),
+        signalSemaphore, std::move(mResourceUseList), std::move(mCurrentGarbage), &mCommandPool));
 
     onRenderPassFinished();
     mComputeDirtyBits |= mNewComputeCommandBufferDirtyBits;
@@ -4275,9 +4257,9 @@ angle::Result ContextVk::flushImpl(const vk::Semaphore *signalSemaphore)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "ContextVk::flushImpl");
 
-    // We must set this to false before calling flushCommandsAndEndRenderPass to prevent it from
+    // We must set this to zero before calling flushCommandsAndEndRenderPass to prevent it from
     // calling back to flushImpl.
-    mHasDeferredFlush       = false;
+    mDeferredFlushCount     = 0;
     mSyncObjectPendingFlush = false;
 
     ANGLE_TRY(flushCommandsAndEndRenderPass());
@@ -4670,6 +4652,7 @@ angle::Result ContextVk::flushCommandsAndEndRenderPass()
 
     if (!mRenderPassCommands->started())
     {
+        ASSERT(!mDeferredFlushCount);
         onRenderPassFinished();
         return angle::Result::Continue;
     }
@@ -4725,7 +4708,7 @@ angle::Result ContextVk::flushCommandsAndEndRenderPass()
         ANGLE_TRY(flushOutsideRenderPassCommands());
     }
 
-    if (mHasDeferredFlush)
+    if (mDeferredFlushCount > 0)
     {
         // If we have deferred glFlush call in the middle of renderpass, flush them now.
         ANGLE_TRY(flushImpl(nullptr));

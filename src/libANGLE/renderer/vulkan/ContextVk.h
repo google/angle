@@ -569,7 +569,6 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     vk::PerfCounters &getPerfCounters() { return mPerfCounters; }
 
     void onSyncHelperInitialize() { mSyncObjectPendingFlush = true; }
-    void onEGLSyncHelperInitialize() { mEGLSyncObjectPendingFlush = true; }
 
     // When UtilsVk issues a draw call on the currently running render pass, the pipelines and
     // descriptor sets it binds need to be undone.
@@ -1001,8 +1000,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     // Track SyncHelper object been added into secondary command buffer that has not been flushed to
     // vulkan.
     bool mSyncObjectPendingFlush;
-    bool mEGLSyncObjectPendingFlush;
-    bool mHasDeferredFlush;
+    uint32_t mDeferredFlushCount;
 
     // Semaphores that must be waited on in the next submission.
     std::vector<VkSemaphore> mWaitSemaphores;

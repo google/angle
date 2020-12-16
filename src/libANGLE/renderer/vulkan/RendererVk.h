@@ -332,7 +332,7 @@ class RendererVk : angle::NonCopyable
                               std::vector<VkSemaphore> &&waitSemaphores,
                               std::vector<VkPipelineStageFlags> &&waitSemaphoreStageMasks,
                               const vk::Semaphore *signalSemaphore,
-                              std::vector<vk::ResourceUseList> &&resourceUseLists,
+                              vk::ResourceUseList &&resourceUseList,
                               vk::GarbageList &&currentGarbage,
                               vk::CommandPool *commandPool);
 
