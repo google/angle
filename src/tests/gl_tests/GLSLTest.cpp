@@ -5081,15 +5081,10 @@ TEST_P(GLSLTest_ES3, VaryingStructUsedInFragmentShader)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
-// This test demonstrates an issue with shaders on the Pixel device's vulkan backend.
-// This test should render a red quad without issues but on a Pixel4XL this test causes
-// vkCreateGraphicPipelines to return VK_INCOMPLETE. logcat shows these messages:
-//   > Adreno  : Failed to link shaders.
-//   > Internal Vulkan error: A return array was too small for the result
+// This is a regression test to make sure a red quad is rendered without issues
+// when a passthrough function with a vec3 input parameter is used in the fragment shader.
 TEST_P(GLSLTest_ES31, SamplerPassthroughFailedLink)
 {
-    // TODO: (anglebug.com/5457)
-    ANGLE_SKIP_TEST_IF(IsAndroid() && (IsPixel2() || IsPixel2XL()) && IsVulkan());
     constexpr char kVS[] =
         "precision mediump float;\n"
         "attribute vec4 inputAttribute;\n"
@@ -5125,13 +5120,10 @@ TEST_P(GLSLTest_ES31, SamplerPassthroughFailedLink)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
 }
 
-// This test demonstrates issues with shaders on the Pixel device's vulkan backend.
-// This test should render a red quad without issues but on a Pixel4XL it renders
-// a black quad
+// This is a regression test to make sure a red quad is rendered without issues
+// when a passthrough function with a vec4 input parameter is used in the fragment shader.
 TEST_P(GLSLTest_ES31, SamplerPassthroughIncorrectColor)
 {
-    // TODO: (anglebug.com/5457)
-    ANGLE_SKIP_TEST_IF(IsAndroid() && (IsPixel2() || IsPixel2XL()) && IsVulkan());
     constexpr char kVS[] =
         "precision mediump float;\n"
         "attribute vec4 inputAttribute;\n"
