@@ -16,6 +16,29 @@
       "message": "Jonah, Jamie: please review.\n\nThis fix is low-hanging fruit, so seems worth doing separately. The remaining failures on the bug look harder.\n",
       "revId": "ecae41b5085ce1f62ce063ba7cb8b9cb04a22919",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "22774463_7ce8f218",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1886,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2020-12-17T21:34:25Z",
+      "side": 1,
+      "message": "Is it worth following up to use this for other AMD workarounds too?",
+      "range": {
+        "startLine": 1886,
+        "startChar": 89,
+        "endLine": 1886,
+        "endChar": 95
+      },
+      "revId": "ecae41b5085ce1f62ce063ba7cb8b9cb04a22919",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
