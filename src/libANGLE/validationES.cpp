@@ -3625,7 +3625,7 @@ const char *ValidateDrawStates(const Context *context)
     VertexArray *vertexArray = state.getVertexArray();
     ASSERT(vertexArray);
 
-    if (!extensions.webglCompatibility && vertexArray->hasMappedEnabledArrayBuffer())
+    if (!extensions.webglCompatibility && vertexArray->hasInvalidMappedArrayBuffer())
     {
         return kBufferMapped;
     }
