@@ -457,7 +457,17 @@ angle::Result BufferVk::mapRangeImpl(ContextVk *contextVk,
     {
         ASSERT(mBuffer && mBuffer->valid());
 
-        if ((access & GL_MAP_UNSYNCHRONIZED_BIT) == 0)
+        if ((access & GL_MAP_INVALIDATE_BUFFER_BIT) != 0 &&
+            mBuffer->isCurrentlyInUse(contextVk->getLastCompletedQueueSerial()))
+        {
+            // We try to map buffer, but buffer is busy. Caller has told us it doesn't care about
+            // previous content. Instead of wait for GPU to finish, we just allocate a new buffer.
+            RendererVk *renderer = contextVk->getRenderer();
+            mBuffer->release(renderer);
+            ANGLE_TRY(
+                acquireBufferHelper(contextVk, static_cast<size_t>(mState.getSize()), &mBuffer));
+        }
+        else if ((access & GL_MAP_UNSYNCHRONIZED_BIT) == 0)
         {
             ANGLE_TRY(mBuffer->waitForIdle(contextVk,
                                            "GPU stall due to mapping buffer in use by the GPU"));
