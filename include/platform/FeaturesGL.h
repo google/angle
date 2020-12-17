@@ -505,6 +505,13 @@ struct FeaturesGL : FeatureSetBase
         "set_zero_level_before_generating_mipmap", FeatureCategory::OpenGLWorkarounds,
         "glGenerateMipmap fails if the zero texture level is not set on some Mac drivers.",
         &members};
+
+    // On macOS with AMD GPUs, packed color formats like RGB565 and RGBA4444 are buggy. Promote them
+    // to 8 bit per channel formats.
+    Feature promotePackedFormatsTo8BitPerChannel = {
+        "promote_packed_formats_to_8_bit_per_channel", FeatureCategory::OpenGLWorkarounds,
+        "Packed color formats are buggy on Macs with AMD GPUs", &members,
+        "http://anglebug.com/5469"};
 };
 
 inline FeaturesGL::FeaturesGL()  = default;
