@@ -34,6 +34,24 @@
       "parentUuid": "cd8ffd80_0dd32839",
       "revId": "92e5b3f49f6d36b4df44463bbb59e3b89b1f661b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c538e185_a7698f67",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-17T04:49:48Z",
+      "side": 1,
+      "message": "Oh I see. The issue I think was that I reviewed the change before you updated the patch set. The re-land button is \"safe\" just not sufficient on its own.",
+      "parentUuid": "4122bbc5_1b600187",
+      "revId": "92e5b3f49f6d36b4df44463bbb59e3b89b1f661b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
