@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2349bb8a_e03e0a77",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2020-12-17T01:47:02Z",
+      "side": 1,
+      "message": "Jonah, Jamie: please review.\n\nThis fix is low-hanging fruit, so seems worth doing separately. The remaining failures on the bug look harder.\n",
+      "revId": "ecae41b5085ce1f62ce063ba7cb8b9cb04a22919",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
