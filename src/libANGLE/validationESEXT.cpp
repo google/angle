@@ -1274,7 +1274,7 @@ bool ValidateBufferStorageEXT(const Context *context,
 
     constexpr GLbitfield kAllUsageFlags =
         (GL_DYNAMIC_STORAGE_BIT_EXT | GL_MAP_READ_BIT | GL_MAP_WRITE_BIT |
-         GL_MAP_PERSISTENT_BIT_EXT | GL_MAP_PERSISTENT_BIT_EXT | GL_CLIENT_STORAGE_BIT_EXT);
+         GL_MAP_PERSISTENT_BIT_EXT | GL_MAP_COHERENT_BIT_EXT | GL_CLIENT_STORAGE_BIT_EXT);
     if ((flags & ~kAllUsageFlags) != 0)
     {
         context->validationError(GL_INVALID_VALUE, kInvalidBufferUsageFlags);

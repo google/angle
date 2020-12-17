@@ -836,6 +836,21 @@ TEST_P(BufferStorageTestES3, BufferStorageInvalidSize)
     EXPECT_GL_ERROR(GL_INVALID_VALUE);
 }
 
+// Tests that buffer storage can be allocated with the GL_MAP_PERSISTENT_BIT_EXT and
+// GL_MAP_COHERENT_BIT_EXT flags
+TEST_P(BufferStorageTestES3, BufferStorageFlagsPersistentCoherentWrite)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_buffer_storage"));
+
+    std::vector<GLfloat> data(6, 1.0f);
+
+    GLBuffer buffer;
+    glBindBuffer(GL_ARRAY_BUFFER, buffer);
+    glBufferStorageEXT(GL_ARRAY_BUFFER, data.size(), data.data(),
+                       GL_MAP_WRITE_BIT | GL_MAP_PERSISTENT_BIT_EXT | GL_MAP_COHERENT_BIT_EXT);
+    ASSERT_GL_NO_ERROR();
+}
+
 // Verify that glBufferStorage makes a buffer immutable
 TEST_P(BufferStorageTestES3, StorageBufferBufferData)
 {
