@@ -34,11 +34,9 @@ SurfaceState::SurfaceState(const egl::Config *configIn, const AttributeMap &attr
       config((configIn != nullptr) ? new egl::Config(*configIn) : nullptr),
       attributes(attributesIn),
       timestampsEnabled(false),
-      directComposition(false),
-      isFixedSize(false)
+      directComposition(false)
 {
     directComposition = attributes.get(EGL_DIRECT_COMPOSITION_ANGLE, EGL_FALSE) == EGL_TRUE;
-    isFixedSize       = attributes.get(EGL_FIXED_SIZE_ANGLE, EGL_FALSE) == EGL_TRUE;
 }
 
 SurfaceState::~SurfaceState()
@@ -72,6 +70,7 @@ Surface::Surface(EGLint surfaceType,
       mHorizontalResolution(EGL_UNKNOWN),
       mVerticalResolution(EGL_UNKNOWN),
       mMultisampleResolve(EGL_MULTISAMPLE_RESOLVE_DEFAULT),
+      mFixedSize(false),
       mFixedWidth(0),
       mFixedHeight(0),
       mTextureFormat(TextureFormat::NoTexture),
@@ -116,7 +115,8 @@ Surface::Surface(EGLint surfaceType,
         mInitState = gl::InitState::MayNeedInit;
     }
 
-    if (mState.isFixedSize)
+    mFixedSize = (attributes.get(EGL_FIXED_SIZE_ANGLE, EGL_FALSE) == EGL_TRUE);
+    if (mFixedSize)
     {
         mFixedWidth  = static_cast<size_t>(attributes.get(EGL_WIDTH, 0));
         mFixedHeight = static_cast<size_t>(attributes.get(EGL_HEIGHT, 0));
@@ -469,22 +469,22 @@ EGLenum Surface::getMultisampleResolve() const
 
 EGLint Surface::isFixedSize() const
 {
-    return mState.isFixedSize;
+    return mFixedSize;
 }
 
 EGLint Surface::getWidth() const
 {
-    return mState.isFixedSize ? static_cast<EGLint>(mFixedWidth) : mImplementation->getWidth();
+    return mFixedSize ? static_cast<EGLint>(mFixedWidth) : mImplementation->getWidth();
 }
 
 EGLint Surface::getHeight() const
 {
-    return mState.isFixedSize ? static_cast<EGLint>(mFixedHeight) : mImplementation->getHeight();
+    return mFixedSize ? static_cast<EGLint>(mFixedHeight) : mImplementation->getHeight();
 }
 
 egl::Error Surface::getUserWidth(const egl::Display *display, EGLint *value) const
 {
-    if (mState.isFixedSize)
+    if (mFixedSize)
     {
         *value = static_cast<EGLint>(mFixedWidth);
         return NoError();
@@ -497,7 +497,7 @@ egl::Error Surface::getUserWidth(const egl::Display *display, EGLint *value) con
 
 egl::Error Surface::getUserHeight(const egl::Display *display, EGLint *value) const
 {
-    if (mState.isFixedSize)
+    if (mFixedSize)
     {
         *value = static_cast<EGLint>(mFixedHeight);
         return NoError();

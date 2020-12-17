@@ -58,7 +58,6 @@ struct SurfaceState final : private angle::NonCopyable
     SupportedCompositorTiming supportedCompositorTimings;
     SupportedTimestamps supportedTimestamps;
     bool directComposition;
-    bool isFixedSize;
 };
 
 class Surface : public LabeledObject, public gl::FramebufferAttachmentObject
