@@ -1826,6 +1826,26 @@ void CaptureUpdateUniformValues(const gl::State &replayState,
         if (readLoc.value == -1)
             continue;
 
+        // Image uniforms are special and cannot be set this way
+        if (typeInfo->isImageType)
+            continue;
+
+        // Samplers should be populated with GL_INT, regardless of return type
+        if (typeInfo->isSampler)
+        {
+            std::vector<GLint> uniformBuffer(uniformSize);
+            for (int index = 0; index < uniformCount; index++, readLoc.value++)
+            {
+                program->getUniformiv(context, readLoc,
+                                      uniformBuffer.data() + index * componentCount);
+            }
+
+            Capture(callsOut, CaptureUniform1iv(replayState, true, uniformLoc, uniformCount,
+                                                uniformBuffer.data()));
+
+            continue;
+        }
+
         switch (typeInfo->componentType)
         {
             case GL_FLOAT:
