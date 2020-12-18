@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "659416bd_77a34495",
+        "filename": "src/libANGLE/VertexArray.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 466,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-18T15:25:32Z",
+      "side": 1,
+      "message": "You can eliminate the for loop by caching \"non-persistent and mapped\" the combining this with \u0026 mEnabled. This will trade off adding another cache variable for flattening the for loop.",
+      "range": {
+        "startLine": 463,
+        "startChar": 0,
+        "endLine": 466,
+        "endChar": 5
+      },
+      "revId": "e94b238168b9f897cd4fe1835acacd4d0cb0de26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
