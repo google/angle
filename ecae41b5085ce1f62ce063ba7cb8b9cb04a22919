@@ -18,6 +18,23 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8b8f8af3_701f0f74",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2020-12-18T00:18:49Z",
+      "side": 1,
+      "message": "Per http://crbug.com/1159258 we think the random shard timeouts on macOS have been fixed. Retrying.\n",
+      "revId": "ecae41b5085ce1f62ce063ba7cb8b9cb04a22919",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "22774463_7ce8f218",
