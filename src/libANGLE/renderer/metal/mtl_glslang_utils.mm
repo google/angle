@@ -278,6 +278,7 @@ class SpirvToMslCompiler : public spirv_cross::CompilerMSL
                    const angle::HashMap<std::string, uint32_t> &uboOriginalBindings,
                    const angle::HashMap<uint32_t, uint32_t> &xfbOriginalBindings,
                    const OriginalSamplerBindingMap &originalSamplerBindings,
+                   bool disableRasterization,
                    TranslatedShaderInfo *mslShaderInfoOut)
     {
         spirv_cross::CompilerMSL::Options compOpt;
@@ -300,6 +301,7 @@ class SpirvToMslCompiler : public spirv_cross::CompilerMSL
         }
 
         compOpt.pad_fragment_output_components = true;
+        compOpt.disable_rasterization          = disableRasterization;
 
         // Tell spirv-cross to map default & driver uniform & storage blocks as we want
         spirv_cross::ShaderResources mslRes = spirv_cross::CompilerMSL::get_shader_resources();
@@ -355,6 +357,7 @@ angle::Result ConvertSpirvToMsl(Context *context,
                                 const angle::HashMap<std::string, uint32_t> &uboOriginalBindings,
                                 const angle::HashMap<uint32_t, uint32_t> &xfbOriginalBindings,
                                 const OriginalSamplerBindingMap &originalSamplerBindings,
+                                bool disableRasterization,
                                 std::vector<uint32_t> *sprivCode,
                                 TranslatedShaderInfo *translatedShaderInfoOut)
 {
@@ -368,7 +371,7 @@ angle::Result ConvertSpirvToMsl(Context *context,
     // NOTE(hqle): spirv-cross uses exceptions to report error, what should we do here
     // in case of error?
     compilerMsl.compileEx(shaderType, uboOriginalBindings, xfbOriginalBindings,
-                          originalSamplerBindings, translatedShaderInfoOut);
+                          originalSamplerBindings, disableRasterization, translatedShaderInfoOut);
     if (translatedShaderInfoOut->metalShaderSource.size() == 0)
     {
         ANGLE_MTL_CHECK(context, false, GL_INVALID_OPERATION);
@@ -519,15 +522,16 @@ angle::Result SpirvCodeToMsl(Context *context,
     {
         std::vector<uint32_t> &sprivCode = spirvShaderCode->at(shaderType);
         ANGLE_TRY(ConvertSpirvToMsl(context, shaderType, uboOriginalBindings, xfbOriginalBindings,
-                                    originalSamplerBindings, &sprivCode,
-                                    &mslShaderInfoOut->at(shaderType)));
+                                    originalSamplerBindings, /* disableRasterization */ false,
+                                    &sprivCode, &mslShaderInfoOut->at(shaderType)));
     }  // for (gl::ShaderType shaderType
 
     // Special version of XFB only
     if (xfbOnlySpirvCode && !programState.getLinkedTransformFeedbackVaryings().empty())
     {
         ANGLE_TRY(ConvertSpirvToMsl(context, gl::ShaderType::Vertex, uboOriginalBindings,
-                                    xfbOriginalBindings, originalSamplerBindings, xfbOnlySpirvCode,
+                                    xfbOriginalBindings, originalSamplerBindings,
+                                    /* disableRasterization */ true, xfbOnlySpirvCode,
                                     mslXfbOnlyShaderInfoOut));
     }
 
