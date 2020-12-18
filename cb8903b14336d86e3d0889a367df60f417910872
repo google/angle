@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dbf315f2_41f3b928",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1894,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-18T15:19:09Z",
+      "side": 0,
+      "message": "nit: leave the ANGLE_FEATURE_CONDITION statement as false",
+      "range": {
+        "startLine": 1894,
+        "startChar": 4,
+        "endLine": 1894,
+        "endChar": 27
+      },
+      "revId": "cb8903b14336d86e3d0889a367df60f417910872",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
