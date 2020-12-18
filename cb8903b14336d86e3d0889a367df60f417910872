@@ -22,6 +22,30 @@
       },
       "revId": "cb8903b14336d86e3d0889a367df60f417910872",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "80e96687_30f2bf04",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1813,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2020-12-18T03:06:48Z",
+      "side": 0,
+      "message": "Done, thanks!\nHappy holiday!",
+      "parentUuid": "04ba8b9d_b100769c",
+      "range": {
+        "startLine": 1813,
+        "startChar": 69,
+        "endLine": 1813,
+        "endChar": 90
+      },
+      "revId": "cb8903b14336d86e3d0889a367df60f417910872",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
