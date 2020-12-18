@@ -26,6 +26,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "89c78809_06960caf",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-18T01:29:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "db3b6761_c6821737",
+      "range": {
+        "startLine": 10,
+        "startChar": 0,
+        "endLine": 15,
+        "endChar": 21
+      },
+      "revId": "cf7679a8709d232f20c99c7dc53e8fe3581186f5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "5d19242f_204c782f",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 4
@@ -54,6 +78,30 @@
       "writtenOn": "2020-12-17T14:06:39Z",
       "side": 1,
       "message": "can you cache this into a single mask? so as to not regress cpu overhead on draw call state changes?",
+      "range": {
+        "startLine": 256,
+        "startChar": 8,
+        "endLine": 267,
+        "endChar": 21
+      },
+      "revId": "cf7679a8709d232f20c99c7dc53e8fe3581186f5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f4a70b60_0d882454",
+        "filename": "src/libANGLE/VertexArray.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 267,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-18T01:29:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2753ea10_99503b3c",
       "range": {
         "startLine": 256,
         "startChar": 8,
