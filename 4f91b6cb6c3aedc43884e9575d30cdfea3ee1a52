@@ -18,6 +18,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4e17365b_0e7cfd21",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-18T06:47:47Z",
+      "side": 1,
+      "message": "Seems I forgot to finish my thought here.\n\nThe names are getting kind of long and wordy, but they\u0027re also describing pretty niche members/functions.   I\u0027m open to suggestions though.",
+      "parentUuid": "dbb4b58c_07c0347d",
+      "revId": "4f91b6cb6c3aedc43884e9575d30cdfea3ee1a52",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c29db1c4_26db7638",
@@ -31,6 +49,30 @@
       "writtenOn": "2020-12-18T02:41:11Z",
       "side": 1,
       "message": "Appears to be repeated several times, so should go to a helper.",
+      "range": {
+        "startLine": 463,
+        "startChar": 0,
+        "endLine": 469,
+        "endChar": 67
+      },
+      "revId": "4f91b6cb6c3aedc43884e9575d30cdfea3ee1a52",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c29c6087_5c0c0132",
+        "filename": "src/libANGLE/VertexArray.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 469,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-18T06:47:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c29db1c4_26db7638",
       "range": {
         "startLine": 463,
         "startChar": 0,
@@ -64,6 +106,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f9989bea_c4e0708c",
+        "filename": "src/tests/gl_tests/StateChangeTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 4293,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-18T06:47:47Z",
+      "side": 1,
+      "message": "Oops, missed updating those to \"succeed\", since we don\u0027t want any API errors generated.   Fixed.",
+      "parentUuid": "36ab946a_cb587fd2",
+      "range": {
+        "startLine": 4293,
+        "startChar": 5,
+        "endLine": 4293,
+        "endChar": 49
+      },
+      "revId": "4f91b6cb6c3aedc43884e9575d30cdfea3ee1a52",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "55e4aff2_74bca2ec",
@@ -77,6 +143,30 @@
       "writtenOn": "2020-12-18T02:41:11Z",
       "side": 1,
       "message": "Same here.",
+      "range": {
+        "startLine": 4303,
+        "startChar": 37,
+        "endLine": 4303,
+        "endChar": 49
+      },
+      "revId": "4f91b6cb6c3aedc43884e9575d30cdfea3ee1a52",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b2bf2987_0e971538",
+        "filename": "src/tests/gl_tests/StateChangeTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 4303,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-18T06:47:47Z",
+      "side": 1,
+      "message": "Same.",
+      "parentUuid": "55e4aff2_74bca2ec",
       "range": {
         "startLine": 4303,
         "startChar": 37,
