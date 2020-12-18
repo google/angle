@@ -16,6 +16,29 @@
       "message": "PTAL Cody/Jonah, hypan@ fyi",
       "revId": "25080bbde8047ca4611dd852c79453e5fc4c2956",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a819b91c_a6194c3e",
+        "filename": "util/test_utils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2020-12-18T00:37:09Z",
+      "side": 1,
+      "message": "is this used?",
+      "range": {
+        "startLine": 11,
+        "startChar": 0,
+        "endLine": 11,
+        "endChar": 32
+      },
+      "revId": "25080bbde8047ca4611dd852c79453e5fc4c2956",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
