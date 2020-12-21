@@ -98,9 +98,11 @@ VaryingInShaderRef::VaryingInShaderRef(ShaderType stageIn, const sh::ShaderVaria
 VaryingInShaderRef::~VaryingInShaderRef() = default;
 
 VaryingInShaderRef::VaryingInShaderRef(VaryingInShaderRef &&other)
-{
-    *this = std::move(other);
-}
+    : varying(other.varying),
+      stage(other.stage),
+      parentStructName(std::move(other.parentStructName)),
+      parentStructMappedName(std::move(other.parentStructMappedName))
+{}
 
 VaryingInShaderRef &VaryingInShaderRef::operator=(VaryingInShaderRef &&other)
 {
@@ -142,11 +144,14 @@ PackedVarying::PackedVarying(VaryingInShaderRef &&frontVaryingIn,
 PackedVarying::~PackedVarying() = default;
 
 PackedVarying::PackedVarying(PackedVarying &&other)
-    : frontVarying(other.frontVarying.stage, other.frontVarying.varying),
-      backVarying(other.backVarying.stage, other.backVarying.varying)
-{
-    *this = std::move(other);
-}
+    : frontVarying(std::move(other.frontVarying)),
+      backVarying(std::move(other.backVarying)),
+      interpolation(other.interpolation),
+      arrayIndex(other.arrayIndex),
+      isTransformFeedback(other.isTransformFeedback),
+      fieldIndex(other.fieldIndex),
+      secondaryFieldIndex(other.secondaryFieldIndex)
+{}
 
 PackedVarying &PackedVarying::operator=(PackedVarying &&other)
 {
