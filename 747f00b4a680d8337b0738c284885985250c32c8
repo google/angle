@@ -1,0 +1,135 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7237213e_3908766c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 11
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-21T22:35:13Z",
+      "side": 1,
+      "message": "The code seems reasonable, though the JNI stuff is all black magic.   Should be pretty obvious in CQ if it\u0027s wrong and can\u0027t find anything though.",
+      "revId": "747f00b4a680d8337b0738c284885985250c32c8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7aa4de74_b1c6c86a",
+        "filename": "src/tests/perf_tests/TracePerfTest.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 323,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-21T22:35:13Z",
+      "side": 1,
+      "message": "Update to use INFO() or something similar.",
+      "revId": "747f00b4a680d8337b0738c284885985250c32c8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cf398ce3_8cf400ee",
+        "filename": "util/OSWindow.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 472,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-21T22:35:13Z",
+      "side": 1,
+      "message": "INFO()",
+      "revId": "747f00b4a680d8337b0738c284885985250c32c8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "386a89e6_6b513303",
+        "filename": "util/OSWindow.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 474,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-21T22:35:13Z",
+      "side": 1,
+      "message": "It\u0027s possible to return a bad path if it\u0027s larger than maxDataPathOutLen.\n\nThese should check that the constructed string can fit before returning true, and ERR() and return false otherwise.",
+      "range": {
+        "startLine": 473,
+        "startChar": 0,
+        "endLine": 474,
+        "endChar": 51
+      },
+      "revId": "747f00b4a680d8337b0738c284885985250c32c8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "30c2c6eb_5b1ba93e",
+        "filename": "util/OSWindow.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 481,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-21T22:35:13Z",
+      "side": 1,
+      "message": "INFO()",
+      "revId": "747f00b4a680d8337b0738c284885985250c32c8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3e1d7358_f9269339",
+        "filename": "util/OSWindow.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 487,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-21T22:35:13Z",
+      "side": 1,
+      "message": "ERR()",
+      "revId": "747f00b4a680d8337b0738c284885985250c32c8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6438c9c6_8a616b9e",
+        "filename": "util/android/AndroidWindow.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 193,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-21T22:35:13Z",
+      "side": 1,
+      "message": "Why is this in the AndroidWindow class?   This doesn\u0027t seem related to the \"implementation of OSWindow for Android\".",
+      "range": {
+        "startLine": 193,
+        "startChar": 12,
+        "endLine": 193,
+        "endChar": 25
+      },
+      "revId": "747f00b4a680d8337b0738c284885985250c32c8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
