@@ -39,6 +39,30 @@
       },
       "revId": "7cb9b8ef1c200b4fce5a7722bfece868451fdc3c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8c50b721_f8966c6c",
+        "filename": "gni/angle.gni",
+        "patchSetId": 3
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1116015
+      },
+      "writtenOn": "2020-12-21T19:36:52Z",
+      "side": 1,
+      "message": "Done. (I had to move it down to the next declare_args section to get access to build_with_chromium.)\n\nI\u0027d rather not add dawn_standalone here, since ANGLE is a leaf-node dependency of Dawn, so there\u0027s no reason to add depdencies (even in name) to ANGLE.",
+      "parentUuid": "9decbadf_643d125c",
+      "range": {
+        "startLine": 17,
+        "startChar": 21,
+        "endLine": 17,
+        "endChar": 25
+      },
+      "revId": "7cb9b8ef1c200b4fce5a7722bfece868451fdc3c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
