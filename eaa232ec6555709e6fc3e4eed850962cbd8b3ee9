@@ -16,6 +16,24 @@
       "message": "Could you take `std::string *dataPathOut` and `*dataPathOut \u003d std::move(candidatePath);` instead? You can get rid of one or two copies, and more importantly the magic 1000 length limit. You would also not be affected by a missing \u0027\\0\u0027 because strncpy doesn\u0027t add that on overflow.",
       "revId": "eaa232ec6555709e6fc3e4eed850962cbd8b3ee9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d4b5e79d_cc5498c3",
+        "filename": "util/OSWindow.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 473,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-21T21:15:57Z",
+      "side": 1,
+      "message": "I had this before and it fails because of memory allocation issues. This is quite deliberately designed to use c strings and no cross-module allocation.",
+      "parentUuid": "29c49b15_910fd919",
+      "revId": "eaa232ec6555709e6fc3e4eed850962cbd8b3ee9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
