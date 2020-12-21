@@ -110,6 +110,23 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d916b802_50876fd0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1323708
+      },
+      "writtenOn": "2020-12-21T05:05:14Z",
+      "side": 1,
+      "message": "As Jamie commented in\nhttps://bugs.chromium.org/p/angleproject/issues/detail?id\u003d4631#c10\nCheryl will workaround the validation error in glReadPixels. So ANGLE will not expose non-conformant configs",
+      "revId": "7f8b67b2d003c15d71c999f11212110d1545179d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "4831d665_3532eab7",
