@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "29c49b15_910fd919",
+        "filename": "util/OSWindow.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 473,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-21T20:58:50Z",
+      "side": 1,
+      "message": "Could you take `std::string *dataPathOut` and `*dataPathOut \u003d std::move(candidatePath);` instead? You can get rid of one or two copies, and more importantly the magic 1000 length limit. You would also not be affected by a missing \u0027\\0\u0027 because strncpy doesn\u0027t add that on overflow.",
+      "revId": "eaa232ec6555709e6fc3e4eed850962cbd8b3ee9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
