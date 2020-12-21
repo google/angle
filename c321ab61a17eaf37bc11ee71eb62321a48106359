@@ -33,6 +33,52 @@
       "message": "LGTM, nice targeted fix.",
       "revId": "c321ab61a17eaf37bc11ee71eb62321a48106359",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f4fb19bd_c50914c0",
+        "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 460,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-21T04:48:00Z",
+      "side": 1,
+      "message": "nit: `!\u003d 0` to be explicit.",
+      "range": {
+        "startLine": 460,
+        "startChar": 51,
+        "endLine": 460,
+        "endChar": 52
+      },
+      "revId": "c321ab61a17eaf37bc11ee71eb62321a48106359",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c1efcf64_eebc0a88",
+        "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 471,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-21T04:48:00Z",
+      "side": 1,
+      "message": "Can now be `else if`.",
+      "range": {
+        "startLine": 471,
+        "startChar": 8,
+        "endLine": 471,
+        "endChar": 10
+      },
+      "revId": "c321ab61a17eaf37bc11ee71eb62321a48106359",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
