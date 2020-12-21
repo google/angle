@@ -3,6 +3,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "52ea9da9_7ecd08ba",
+        "filename": "src/libANGLE/VertexArray.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-21T04:56:42Z",
+      "side": 1,
+      "message": "nit: Suggest MutableOrNonPersistent everywhere. It reads like MutableAndNonPersistent otherwise.\n\nIs there no briefer way to refer to these?",
+      "range": {
+        "startLine": 106,
+        "startChar": 8,
+        "endLine": 106,
+        "endChar": 95
+      },
+      "revId": "e94b238168b9f897cd4fe1835acacd4d0cb0de26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "659416bd_77a34495",
         "filename": "src/libANGLE/VertexArray.cpp",
         "patchSetId": 8
