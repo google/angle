@@ -63,6 +63,7 @@ enum class RestrictedTraceID
     dragon_ball_legends,
     egypt_1500,
     fate_grand_order,
+    fifa_mobile,
     free_fire,
     google_maps,
     kartrider_rush,

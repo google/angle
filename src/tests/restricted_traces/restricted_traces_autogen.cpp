@@ -20,6 +20,7 @@
 #include "dragon_ball_legends/dragon_ball_legends_capture_context1.h"
 #include "egypt_1500/egypt_1500_capture_context1.h"
 #include "fate_grand_order/fate_grand_order_capture_context1.h"
+#include "fifa_mobile/fifa_mobile_capture_context2.h"
 #include "free_fire/free_fire_capture_context1.h"
 #include "google_maps/google_maps_capture_context3.h"
 #include "kartrider_rush/kartrider_rush_capture_context1.h"
@@ -73,6 +74,9 @@ constexpr angle::PackedEnumMap<RestrictedTraceID, TraceInfo> kTraceInfos = {
      {fate_grand_order::kReplayFrameStart, fate_grand_order::kReplayFrameEnd,
       fate_grand_order::kReplayDrawSurfaceWidth, fate_grand_order::kReplayDrawSurfaceHeight,
       "fate_grand_order"}},
+    {RestrictedTraceID::fifa_mobile,
+     {fifa_mobile::kReplayFrameStart, fifa_mobile::kReplayFrameEnd,
+      fifa_mobile::kReplayDrawSurfaceWidth, fifa_mobile::kReplayDrawSurfaceHeight, "fifa_mobile"}},
     {RestrictedTraceID::free_fire,
      {free_fire::kReplayFrameStart, free_fire::kReplayFrameEnd, free_fire::kReplayDrawSurfaceWidth,
       free_fire::kReplayDrawSurfaceHeight, "free_fire"}},
@@ -162,6 +166,9 @@ void ReplayFrame(RestrictedTraceID traceID, uint32_t frameIndex)
         case RestrictedTraceID::fate_grand_order:
             fate_grand_order::ReplayContext1Frame(frameIndex);
             break;
+        case RestrictedTraceID::fifa_mobile:
+            fifa_mobile::ReplayContext2Frame(frameIndex);
+            break;
         case RestrictedTraceID::free_fire:
             free_fire::ReplayContext1Frame(frameIndex);
             break;
@@ -241,6 +248,9 @@ void ResetReplay(RestrictedTraceID traceID)
             break;
         case RestrictedTraceID::fate_grand_order:
             fate_grand_order::ResetContext1Replay();
+            break;
+        case RestrictedTraceID::fifa_mobile:
+            fifa_mobile::ResetContext2Replay();
             break;
         case RestrictedTraceID::free_fire:
             free_fire::ResetContext1Replay();
@@ -322,6 +332,9 @@ void SetupReplay(RestrictedTraceID traceID)
         case RestrictedTraceID::fate_grand_order:
             fate_grand_order::SetupContext1Replay();
             break;
+        case RestrictedTraceID::fifa_mobile:
+            fifa_mobile::SetupContext2Replay();
+            break;
         case RestrictedTraceID::free_fire:
             free_fire::SetupContext1Replay();
             break;
@@ -402,6 +415,9 @@ void SetBinaryDataDir(RestrictedTraceID traceID, const char *dataDir)
         case RestrictedTraceID::fate_grand_order:
             fate_grand_order::SetBinaryDataDir(dataDir);
             break;
+        case RestrictedTraceID::fifa_mobile:
+            fifa_mobile::SetBinaryDataDir(dataDir);
+            break;
         case RestrictedTraceID::free_fire:
             free_fire::SetBinaryDataDir(dataDir);
             break;
@@ -481,6 +497,9 @@ void SetBinaryDataDecompressCallback(RestrictedTraceID traceID, DecompressCallba
             break;
         case RestrictedTraceID::fate_grand_order:
             fate_grand_order::SetBinaryDataDecompressCallback(callback);
+            break;
+        case RestrictedTraceID::fifa_mobile:
+            fifa_mobile::SetBinaryDataDecompressCallback(callback);
             break;
         case RestrictedTraceID::free_fire:
             free_fire::SetBinaryDataDecompressCallback(callback);
