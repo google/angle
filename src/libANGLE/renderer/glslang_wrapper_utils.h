@@ -53,6 +53,13 @@ struct GlslangSourceOptions
     bool emulateBresenhamLines              = false;
 };
 
+struct GlslangSpirvOptions
+{
+    gl::ShaderType shaderType                 = gl::ShaderType::InvalidEnum;
+    bool removeEarlyFragmentTestsOptimization = false;
+    bool removeDebugInfo                      = false;
+};
+
 using SpirvBlob = std::vector<uint32_t>;
 
 using GlslangErrorCallback = std::function<angle::Result(GlslangError)>;
@@ -138,9 +145,7 @@ void GlslangGetShaderSource(const GlslangSourceOptions &options,
                             ShaderMapInterfaceVariableInfoMap *variableInfoMapOut);
 
 angle::Result GlslangTransformSpirvCode(const GlslangErrorCallback &callback,
-                                        const gl::ShaderType shaderType,
-                                        bool removeEarlyFragmentTestsOptimization,
-                                        bool removeDebugInfo,
+                                        const GlslangSpirvOptions &options,
                                         const ShaderInterfaceVariableInfoMap &variableInfoMap,
                                         const SpirvBlob &initialSpirvBlob,
                                         SpirvBlob *spirvBlobOut);

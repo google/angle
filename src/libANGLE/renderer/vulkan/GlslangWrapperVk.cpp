@@ -84,18 +84,14 @@ angle::Result GlslangWrapperVk::GetShaderCode(vk::Context *context,
 // static
 angle::Result GlslangWrapperVk::TransformSpirV(
     vk::Context *context,
-    const gl::ShaderType shaderType,
-    bool removeEarlyFragmentTestsOptimization,
+    const GlslangSpirvOptions &options,
     const ShaderInterfaceVariableInfoMap &variableInfoMap,
     const SpirvBlob &initialSpirvBlob,
     SpirvBlob *shaderCodeOut)
 {
-    const bool removeDebugInfo = !context->getRenderer()->getEnableValidationLayers();
-
     return GlslangTransformSpirvCode(
-        [context](GlslangError error) { return ErrorHandler(context, error); }, shaderType,
-        removeEarlyFragmentTestsOptimization, removeDebugInfo, variableInfoMap, initialSpirvBlob,
-        shaderCodeOut);
+        [context](GlslangError error) { return ErrorHandler(context, error); }, options,
+        variableInfoMap, initialSpirvBlob, shaderCodeOut);
 }
 
 // static

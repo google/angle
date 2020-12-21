@@ -455,13 +455,12 @@ angle::Result GlslangGetShaderSpirvCode(ErrorHandler *context,
 
     for (const gl::ShaderType shaderType : linkedShaderStages)
     {
-        // we pass in false here to skip modifications related to  early fragment tests
-        // optimizations and line rasterization. These are done in the initProgram time since they
-        // are related to context state. We must keep original untouched spriv blobs here because we
-        // do not have ability to add back in at initProgram time.
+        GlslangSpirvOptions options;
+        options.shaderType = shaderType;
+
         angle::Result status = GlslangTransformSpirvCode(
-            [context](GlslangError error) { return HandleError(context, error); }, shaderType,
-            false, false, variableInfoMap[shaderType], initialSpirvBlobs[shaderType],
+            [context](GlslangError error) { return HandleError(context, error); }, options,
+            variableInfoMap[shaderType], initialSpirvBlobs[shaderType],
             &(*shaderCodeOut)[shaderType]);
         if (status != angle::Result::Continue)
         {

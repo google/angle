@@ -30,10 +30,13 @@ bool ValidateTransformedSpirV(ContextVk *contextVk,
 {
     for (gl::ShaderType shaderType : linkedShaderStages)
     {
+        GlslangSpirvOptions options;
+        options.shaderType      = shaderType;
+        options.removeDebugInfo = true;
+
         SpirvBlob transformed;
         if (GlslangWrapperVk::TransformSpirV(
-                contextVk, shaderType, false,
-                executableVk->getShaderInterfaceVariableInfoMap()[shaderType],
+                contextVk, options, executableVk->getShaderInterfaceVariableInfoMap()[shaderType],
                 spirvBlobs[shaderType], &transformed) != angle::Result::Continue)
         {
             return false;
@@ -121,14 +124,17 @@ angle::Result ProgramInfo::initProgram(ContextVk *contextVk,
         executableVk->getShaderInterfaceVariableInfoMap();
     const gl::ShaderMap<SpirvBlob> &originalSpirvBlobs = shaderInfo.getSpirvBlobs();
     const SpirvBlob &originalSpirvBlob                 = originalSpirvBlobs[shaderType];
-    bool removeEarlyFragmentTestsOptimization =
-        (shaderType == gl::ShaderType::Fragment && optionBits.removeEarlyFragmentTestsOptimization);
     gl::ShaderMap<SpirvBlob> transformedSpirvBlobs;
     SpirvBlob &transformedSpirvBlob = transformedSpirvBlobs[shaderType];
 
-    ANGLE_TRY(GlslangWrapperVk::TransformSpirV(
-        contextVk, shaderType, removeEarlyFragmentTestsOptimization, variableInfoMap[shaderType],
-        originalSpirvBlob, &transformedSpirvBlob));
+    GlslangSpirvOptions options;
+    options.shaderType = shaderType;
+    options.removeEarlyFragmentTestsOptimization =
+        shaderType == gl::ShaderType::Fragment && optionBits.removeEarlyFragmentTestsOptimization;
+    options.removeDebugInfo = !contextVk->getRenderer()->getEnableValidationLayers();
+
+    ANGLE_TRY(GlslangWrapperVk::TransformSpirV(contextVk, options, variableInfoMap[shaderType],
+                                               originalSpirvBlob, &transformedSpirvBlob));
     ANGLE_TRY(vk::InitShaderAndSerial(contextVk, &mShaders[shaderType].get(),
                                       transformedSpirvBlob.data(),
                                       transformedSpirvBlob.size() * sizeof(uint32_t)));

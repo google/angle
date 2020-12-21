@@ -1069,12 +1069,8 @@ class SpirvTransformerBase : angle::NonCopyable
   public:
     SpirvTransformerBase(const std::vector<uint32_t> &spirvBlobIn,
                          const ShaderInterfaceVariableInfoMap &variableInfoMap,
-                         gl::ShaderType shaderType,
                          SpirvBlob *spirvBlobOut)
-        : mSpirvBlobIn(spirvBlobIn),
-          mShaderType(shaderType),
-          mVariableInfoMap(variableInfoMap),
-          mSpirvBlobOut(spirvBlobOut)
+        : mSpirvBlobIn(spirvBlobIn), mVariableInfoMap(variableInfoMap), mSpirvBlobOut(spirvBlobOut)
     {
         gl::ShaderBitSet allStages;
         allStages.set();
@@ -1122,7 +1118,6 @@ class SpirvTransformerBase : angle::NonCopyable
 
     // SPIR-V to transform:
     const std::vector<uint32_t> &mSpirvBlobIn;
-    const gl::ShaderType mShaderType;
 
     // Input shader variable info map:
     const ShaderInterfaceVariableInfoMap &mVariableInfoMap;
@@ -1385,15 +1380,12 @@ class SpirvTransformer final : public SpirvTransformerBase
 {
   public:
     SpirvTransformer(const std::vector<uint32_t> &spirvBlobIn,
-                     bool removeEarlyFragmentTestsOptimization,
-                     bool removeDebugInfo,
+                     GlslangSpirvOptions options,
                      const ShaderInterfaceVariableInfoMap &variableInfoMap,
-                     gl::ShaderType shaderType,
                      SpirvBlob *spirvBlobOut)
-        : SpirvTransformerBase(spirvBlobIn, variableInfoMap, shaderType, spirvBlobOut),
+        : SpirvTransformerBase(spirvBlobIn, variableInfoMap, spirvBlobOut),
+          mOptions(options),
           mHasTransformFeedbackOutput(false),
-          mRemoveEarlyFragmentTestsOptimization(removeEarlyFragmentTestsOptimization),
-          mRemoveDebugInfo(removeDebugInfo),
           mOutputPerVertex{},
           mInputPerVertex{}
     {}
@@ -1436,9 +1428,8 @@ class SpirvTransformer final : public SpirvTransformerBase
     void writeOutputPrologue();
 
     // Special flags:
+    GlslangSpirvOptions mOptions;
     bool mHasTransformFeedbackOutput;
-    bool mRemoveEarlyFragmentTestsOptimization;
-    bool mRemoveDebugInfo;
 
     // Traversal state:
     bool mInsertFunctionVariables = false;
@@ -1587,7 +1578,7 @@ void SpirvTransformer::transformInstruction()
 
         // Only write function variables for the EntryPoint function for non-compute shaders
         mInsertFunctionVariables =
-            mOpFunctionId == mEntryPointId && mShaderType != gl::ShaderType::Compute;
+            mOpFunctionId == mEntryPointId && mOptions.shaderType != gl::ShaderType::Compute;
     }
 
     // Only look at interesting instructions.
@@ -1688,7 +1679,7 @@ void SpirvTransformer::writeInputPreamble()
     for (uint32_t id = 0; id < mVariableInfoById.size(); id++)
     {
         const ShaderInterfaceVariableInfo *info = mVariableInfoById[id];
-        if (info && info->useRelaxedPrecision && info->activeStages[mShaderType] &&
+        if (info && info->useRelaxedPrecision && info->activeStages[mOptions.shaderType] &&
             info->varyingIsInput)
         {
             // This is an input varying, need to cast the mediump value that came from
@@ -1715,7 +1706,7 @@ void SpirvTransformer::writeOutputPrologue()
     for (uint32_t id = 0; id < mVariableInfoById.size(); id++)
     {
         const ShaderInterfaceVariableInfo *info = mVariableInfoById[id];
-        if (info && info->useRelaxedPrecision && info->activeStages[mShaderType] &&
+        if (info && info->useRelaxedPrecision && info->activeStages[mOptions.shaderType] &&
             info->varyingIsOutput)
         {
             ASSERT(mFixedVaryingTypeId[id] != 0);
@@ -1949,7 +1940,7 @@ void SpirvTransformer::visitVariable(const uint32_t *instruction)
     // Associate the id of this name with its info.
     mVariableInfoById[id] = info;
 
-    if (info && info->useRelaxedPrecision && info->activeStages[mShaderType] &&
+    if (info && info->useRelaxedPrecision && info->activeStages[mOptions.shaderType] &&
         mFixedVaryingId[id] == 0)
     {
         mFixedVaryingId[id]     = getNewId();
@@ -1958,8 +1949,9 @@ void SpirvTransformer::visitVariable(const uint32_t *instruction)
 
     // Note if the variable is captured by transform feedback.  In that case, the TransformFeedback
     // capability needs to be added.
-    if (mShaderType != gl::ShaderType::Fragment &&
-        info->xfbBuffer != ShaderInterfaceVariableInfo::kInvalid && info->activeStages[mShaderType])
+    if (mOptions.shaderType != gl::ShaderType::Fragment &&
+        info->xfbBuffer != ShaderInterfaceVariableInfo::kInvalid &&
+        info->activeStages[mOptions.shaderType])
     {
         mHasTransformFeedbackOutput = true;
     }
@@ -1986,7 +1978,7 @@ bool SpirvTransformer::transformDecorate(const uint32_t *instruction, size_t wor
     }
 
     // If it's an inactive varying, remove the decoration altogether.
-    if (!info->activeStages[mShaderType])
+    if (!info->activeStages[mOptions.shaderType])
     {
         return true;
     }
@@ -2063,7 +2055,7 @@ bool SpirvTransformer::transformDecorate(const uint32_t *instruction, size_t wor
     }
 
     // Add Xfb decorations, if any.
-    if (mShaderType != gl::ShaderType::Fragment &&
+    if (mOptions.shaderType != gl::ShaderType::Fragment &&
         info->xfbBuffer != ShaderInterfaceVariableInfo::kInvalid)
     {
         ASSERT(info->xfbStride != ShaderInterfaceVariableInfo::kInvalid);
@@ -2166,7 +2158,7 @@ bool SpirvTransformer::transformCapability(const uint32_t *instruction, size_t w
 
 bool SpirvTransformer::transformDebugInfo(const uint32_t *instruction, size_t wordCount)
 {
-    if (mRemoveDebugInfo)
+    if (mOptions.removeDebugInfo)
     {
         // Strip debug info to reduce binary size.
         return true;
@@ -2193,7 +2185,7 @@ bool SpirvTransformer::transformDebugInfo(const uint32_t *instruction, size_t wo
 bool SpirvTransformer::transformEmitVertex(const uint32_t *instruction, size_t wordCount)
 {
     // This is only possible in geometry shaders.
-    ASSERT(mShaderType == gl::ShaderType::Geometry);
+    ASSERT(mOptions.shaderType == gl::ShaderType::Geometry);
 
     // Write the temporary variables that hold varyings data before EmitVertex().
     writeOutputPrologue();
@@ -2234,7 +2226,7 @@ bool SpirvTransformer::transformEntryPoint(const uint32_t *instruction, size_t w
 
         ASSERT(info);
 
-        if (!info->activeStages[mShaderType])
+        if (!info->activeStages[mOptions.shaderType])
         {
             continue;
         }
@@ -2367,7 +2359,8 @@ bool SpirvTransformer::transformReturn(const uint32_t *instruction, size_t wordC
     // For geometry shaders, this operations is done before every EmitVertex() instead.
     // Additionally, this transformation (which affects output varyings) doesn't apply to fragment
     // shaders.
-    if (mShaderType == gl::ShaderType::Geometry || mShaderType == gl::ShaderType::Fragment)
+    if (mOptions.shaderType == gl::ShaderType::Geometry ||
+        mOptions.shaderType == gl::ShaderType::Fragment)
     {
         return false;
     }
@@ -2401,7 +2394,7 @@ bool SpirvTransformer::transformVariable(const uint32_t *instruction, size_t wor
     // inactive varying inputs are already pruned by the translator.
     // However, input or output storage class for interface block will not be pruned when a shader
     // is compiled separately.
-    if (info->activeStages[mShaderType])
+    if (info->activeStages[mOptions.shaderType])
     {
         if (info->useRelaxedPrecision &&
             (storageClass == spv::StorageClassOutput || storageClass == spv::StorageClassInput))
@@ -2456,7 +2449,7 @@ bool SpirvTransformer::transformAccessChain(const uint32_t *instruction, size_t 
         return false;
     }
 
-    if (info->activeStages[mShaderType] && !info->useRelaxedPrecision)
+    if (info->activeStages[mOptions.shaderType] && !info->useRelaxedPrecision)
     {
         return false;
     }
@@ -2479,7 +2472,7 @@ bool SpirvTransformer::transformExecutionMode(const uint32_t *instruction, size_
     const uint32_t executionMode = instruction[kModeIndex];
 
     if (executionMode == spv::ExecutionModeEarlyFragmentTests &&
-        mRemoveEarlyFragmentTestsOptimization)
+        mOptions.removeEarlyFragmentTestsOptimization)
     {
         // skip the copy
         return true;
@@ -2525,7 +2518,7 @@ class SpirvVertexAttributeAliasingTransformer final : public SpirvTransformerBas
         const ShaderInterfaceVariableInfoMap &variableInfoMap,
         std::vector<const ShaderInterfaceVariableInfo *> &&variableInfoById,
         SpirvBlob *spirvBlobOut)
-        : SpirvTransformerBase(spirvBlobIn, variableInfoMap, gl::ShaderType::Vertex, spirvBlobOut)
+        : SpirvTransformerBase(spirvBlobIn, variableInfoMap, spirvBlobOut)
     {
         mVariableInfoById = std::move(variableInfoById);
     }
@@ -3750,9 +3743,7 @@ void GlslangGetShaderSource(const GlslangSourceOptions &options,
 }
 
 angle::Result GlslangTransformSpirvCode(const GlslangErrorCallback &callback,
-                                        const gl::ShaderType shaderType,
-                                        bool removeEarlyFragmentTestsOptimization,
-                                        bool removeDebugInfo,
+                                        const GlslangSpirvOptions &options,
                                         const ShaderInterfaceVariableInfoMap &variableInfoMap,
                                         const SpirvBlob &initialSpirvBlob,
                                         SpirvBlob *spirvBlobOut)
@@ -3771,12 +3762,11 @@ angle::Result GlslangTransformSpirvCode(const GlslangErrorCallback &callback,
 #endif  // defined(ANGLE_DEBUG_SPIRV_TRANSFORMER) && ANGLE_DEBUG_SPIRV_TRANSFORMER
 
     // Transform the SPIR-V code by assigning location/set/binding values.
-    SpirvTransformer transformer(initialSpirvBlob, removeEarlyFragmentTestsOptimization,
-                                 removeDebugInfo, variableInfoMap, shaderType, spirvBlobOut);
+    SpirvTransformer transformer(initialSpirvBlob, options, variableInfoMap, spirvBlobOut);
     ANGLE_GLSLANG_CHECK(callback, transformer.transform(), GlslangError::InvalidSpirv);
 
     // If there are aliasing vertex attributes, transform the SPIR-V again to remove them.
-    if (shaderType == gl::ShaderType::Vertex && HasAliasingAttributes(variableInfoMap))
+    if (options.shaderType == gl::ShaderType::Vertex && HasAliasingAttributes(variableInfoMap))
     {
         SpirvBlob preTransformBlob = std::move(*spirvBlobOut);
         SpirvVertexAttributeAliasingTransformer aliasingTransformer(
