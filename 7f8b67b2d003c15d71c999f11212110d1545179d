@@ -1,0 +1,159 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8a3a9a09_e443a388",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-21T03:45:02Z",
+      "side": 1,
+      "message": "typo: \"format, this causes\"",
+      "range": {
+        "startLine": 9,
+        "startChar": 47,
+        "endLine": 9,
+        "endChar": 64
+      },
+      "revId": "7f8b67b2d003c15d71c999f11212110d1545179d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1dd0afb5_b93751bf",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-21T03:45:02Z",
+      "side": 1,
+      "message": "Do you mean \"window system\"? Please include the complete wording instead of the shorthand.",
+      "range": {
+        "startLine": 9,
+        "startChar": 5,
+        "endLine": 9,
+        "endChar": 11
+      },
+      "revId": "7f8b67b2d003c15d71c999f11212110d1545179d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e6678c4a_0e7b8394",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-21T03:45:02Z",
+      "side": 1,
+      "message": "typo: \"to fail\"",
+      "range": {
+        "startLine": 10,
+        "startChar": 10,
+        "endLine": 10,
+        "endChar": 16
+      },
+      "revId": "7f8b67b2d003c15d71c999f11212110d1545179d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c68888a2_35ef7dff",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-21T03:45:02Z",
+      "side": 1,
+      "message": "nit: \". This\"",
+      "range": {
+        "startLine": 11,
+        "startChar": 8,
+        "endLine": 11,
+        "endChar": 10
+      },
+      "revId": "7f8b67b2d003c15d71c999f11212110d1545179d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6009f6fd_6c344658",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-21T03:45:02Z",
+      "side": 1,
+      "message": "LGTM with a handful of nits.",
+      "revId": "7f8b67b2d003c15d71c999f11212110d1545179d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4831d665_3532eab7",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1048,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-21T03:45:02Z",
+      "side": 1,
+      "message": "nit: comma is followed by a space: \"... format, set ...\"",
+      "range": {
+        "startLine": 1048,
+        "startChar": 51,
+        "endLine": 1048,
+        "endChar": 52
+      },
+      "revId": "7f8b67b2d003c15d71c999f11212110d1545179d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3b19af18_c33e9fa9",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1048,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-21T03:45:02Z",
+      "side": 1,
+      "message": "typo: Currently",
+      "range": {
+        "startLine": 1048,
+        "startChar": 7,
+        "endLine": 1048,
+        "endChar": 14
+      },
+      "revId": "7f8b67b2d003c15d71c999f11212110d1545179d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
