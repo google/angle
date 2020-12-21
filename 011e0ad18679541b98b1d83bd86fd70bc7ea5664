@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ccb31273_9fda4d8b",
+        "filename": "include/platform/FeaturesGL.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 513,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-21T05:01:29Z",
+      "side": 1,
+      "message": "Post review comment: we tend to avoid specifying the condition in the description. chrome://gpu shows the condition based on what exactly enabled it anyway, and this will likely be incorrect at some point in the future when the condition changes (and this is not updated).\n\nMy go-to phrase instead is \"on some drivers\" or \"on some hardware\"",
+      "range": {
+        "startLine": 513,
+        "startChar": 40,
+        "endLine": 513,
+        "endChar": 61
+      },
+      "revId": "011e0ad18679541b98b1d83bd86fd70bc7ea5664",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
