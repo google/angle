@@ -16,6 +16,29 @@
       "message": "Jamie: PTAL. Thanks!",
       "revId": "7cb9b8ef1c200b4fce5a7722bfece868451fdc3c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9decbadf_643d125c",
+        "filename": "gni/angle.gni",
+        "patchSetId": 3
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-21T17:07:10Z",
+      "side": 1,
+      "message": "I\u0027d default this to !build_with_chromium instead of \"true\" to make it work more seamlessly. I\u0027d You could also define a Dawn variable in our .gn file (e.g. \"dawn_standalone \u003d false\") and change this condition to !build_with_chromium \u0026\u0026 !dawn_standalone",
+      "range": {
+        "startLine": 17,
+        "startChar": 21,
+        "endLine": 17,
+        "endChar": 25
+      },
+      "revId": "7cb9b8ef1c200b4fce5a7722bfece868451fdc3c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
