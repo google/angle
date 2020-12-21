@@ -63,6 +63,30 @@
       },
       "revId": "7cb9b8ef1c200b4fce5a7722bfece868451fdc3c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3d54e2fa_f5a7fe80",
+        "filename": "gni/angle.gni",
+        "patchSetId": 3
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-21T19:45:10Z",
+      "side": 1,
+      "message": "That\u0027s fine. If you want to define angle_standalone in Dawn\u0027s .gn that achieves the same purpose.",
+      "parentUuid": "8c50b721_f8966c6c",
+      "range": {
+        "startLine": 17,
+        "startChar": 21,
+        "endLine": 17,
+        "endChar": 25
+      },
+      "revId": "7cb9b8ef1c200b4fce5a7722bfece868451fdc3c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
