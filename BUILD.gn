@@ -1118,7 +1118,7 @@ angle_executable("angle_shader_translator") {
   deps = [ ":translator" ]
 }
 
-if (angle_has_build) {
+if (angle_standalone || build_with_chromium) {
   config("angle_feature_support_config") {
     include_dirs = [
       "include",
