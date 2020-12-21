@@ -17,6 +17,18 @@ namespace
 class GeometryShaderTest : public ANGLETest
 {
   protected:
+    GeometryShaderTest()
+    {
+        setWindowWidth(64);
+        setWindowHeight(32);
+        setConfigRedBits(8);
+        setConfigGreenBits(8);
+        setConfigBlueBits(8);
+        setConfigAlphaBits(8);
+        setConfigDepthBits(24);
+        setConfigStencilBits(8);
+    }
+
     static std::string CreateEmptyGeometryShader(const std::string &inputPrimitive,
                                                  const std::string &outputPrimitive,
                                                  int invocations,
@@ -1328,6 +1340,158 @@ TEST_P(GeometryShaderTest, LayeredFramebufferMidRenderClear2DArrayColor)
     layeredFramebufferMidRenderClearTest(GL_TEXTURE_2D_ARRAY);
 }
 
+// Verify that prerotation applies to the geometry shader stage if present.
+TEST_P(GeometryShaderTest, Prerotation)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_geometry_shader"));
+
+    // http://anglebug.com/5478
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
+    constexpr char kVS[] = R"(#version 310 es
+void main()
+{
+    // Geometry shader will output fixed positions, so this is ignored.
+    gl_Position = vec4(0);
+})";
+
+    constexpr char kGS[] = R"(#version 310 es
+#extension GL_EXT_geometry_shader : require
+layout (triangles) in;
+layout (triangle_strip, max_vertices = 4) out;
+
+void main()
+{
+    // Generate two triangles to cover the lower-left quarter of the screen.
+    gl_Position = vec4(0, -1, 0, 1);
+    EmitVertex();
+
+    gl_Position = vec4(0, 0, 0, 1);
+    EmitVertex();
+
+    gl_Position = vec4(-1, -1, 0, 1);
+    EmitVertex();
+
+    gl_Position = vec4(-1, 0, 0, 1);
+    EmitVertex();
+
+    EndPrimitive();
+})";
+
+    constexpr char kFS[] = R"(#version 310 es
+#extension GL_EXT_shader_io_blocks : require
+precision mediump float;
+
+layout(location = 0) out mediump vec4 color;
+
+void main()
+{
+    // Output solid green
+    color = vec4(0, 1.0, 0, 1.0);
+})";
+
+    ANGLE_GL_PROGRAM_WITH_GS(program, kVS, kGS, kFS);
+    EXPECT_GL_NO_ERROR();
+
+    glClearColor(1.0, 0, 0, 1.0);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    glUseProgram(program);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    const int w = getWindowWidth();
+    const int h = getWindowHeight();
+
+    EXPECT_PIXEL_RECT_EQ(0, 0, w / 2, h / 2, GLColor::green);
+    EXPECT_PIXEL_RECT_EQ(0, h / 2, w, h / 2, GLColor::red);
+    EXPECT_PIXEL_RECT_EQ(w / 2, 0, w / 2, h / 2, GLColor::red);
+}
+
+// Verify that depth viewport transform applies to the geometry shader stage if present.
+TEST_P(GeometryShaderTest, DepthViewportTransform)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_geometry_shader"));
+
+    // http://anglebug.com/5479
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
+    constexpr char kVS[] = R"(#version 310 es
+void main()
+{
+    // Geometry shader will output fixed positions, so this is ignored.
+    gl_Position = vec4(0);
+})";
+
+    constexpr char kGS[] = R"(#version 310 es
+#extension GL_EXT_geometry_shader : require
+layout (triangles) in;
+layout (triangle_strip, max_vertices = 4) out;
+
+void main()
+{
+    // Generate two triangles to cover the whole screen, with depth at -0.5.  After viewport
+    // transformation, the depth buffer should contain 0.25.
+    gl_Position = vec4(1, -1, -0.5, 1);
+    EmitVertex();
+
+    gl_Position = vec4(1, 1, -0.5, 1);
+    EmitVertex();
+
+    gl_Position = vec4(-1, -1, -0.5, 1);
+    EmitVertex();
+
+    gl_Position = vec4(-1, 1, -0.5, 1);
+    EmitVertex();
+
+    EndPrimitive();
+})";
+
+    constexpr char kFS[] = R"(#version 310 es
+#extension GL_EXT_shader_io_blocks : require
+precision mediump float;
+
+layout(location = 0) out mediump vec4 color;
+
+void main()
+{
+    // Output solid green
+    color = vec4(0, 1.0, 0, 1.0);
+})";
+
+    ANGLE_GL_PROGRAM_WITH_GS(program, kVS, kGS, kFS);
+    EXPECT_GL_NO_ERROR();
+
+    glClearColor(1.0, 0, 0, 1.0);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_ALWAYS);
+
+    glUseProgram(program);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    const int w = getWindowWidth();
+    const int h = getWindowHeight();
+
+    EXPECT_PIXEL_RECT_EQ(0, 0, w, h, GLColor::green);
+
+    // Verify depth
+    glDepthFunc(GL_LESS);
+
+    // An epsilon below the depth value should pass the depth test
+    ANGLE_GL_PROGRAM(drawBlue, essl1_shaders::vs::Simple(), essl1_shaders::fs::Blue());
+    drawQuad(drawBlue, essl1_shaders::PositionAttrib(), -0.5f - 0.01f);
+
+    // An epsilon above the depth value should fail the depth test
+    ANGLE_GL_PROGRAM(drawRed, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
+    drawQuad(drawRed, essl1_shaders::PositionAttrib(), -0.5f + 0.01f);
+
+    EXPECT_PIXEL_RECT_EQ(0, 0, w, h, GLColor::blue);
+}
+
 ANGLE_INSTANTIATE_TEST_ES3(GeometryShaderTestES3);
-ANGLE_INSTANTIATE_TEST_ES31(GeometryShaderTest);
+ANGLE_INSTANTIATE_TEST_ES31_AND(GeometryShaderTest,
+                                WithEmulatedPrerotation(ES31_VULKAN(), 90),
+                                WithEmulatedPrerotation(ES31_VULKAN(), 180),
+                                WithEmulatedPrerotation(ES31_VULKAN(), 270));
 }  // namespace
