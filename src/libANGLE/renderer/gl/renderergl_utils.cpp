@@ -1765,7 +1765,8 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
                             IsApple() && isIntel && GetMacOSVersion() < OSVersion(10, 12, 6));
 
     ANGLE_FEATURE_CONDITION(features, adjustSrcDstRegionBlitFramebuffer,
-                            IsLinux() || (IsAndroid() && isNvidia) || (IsWindows() && isNvidia));
+                            IsLinux() || (IsAndroid() && isNvidia) || (IsWindows() && isNvidia) ||
+                                (IsApple() && functions->standard == STANDARD_GL_ES));
 
     ANGLE_FEATURE_CONDITION(features, clipSrcRegionBlitFramebuffer,
                             IsApple() || (IsLinux() && isAMD));
