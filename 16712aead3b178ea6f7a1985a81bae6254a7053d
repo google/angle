@@ -52,6 +52,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "de524726_efc9bdfc",
+        "filename": "src/tests/test_expectations/GPUTestConfig_ios.mm",
+        "patchSetId": 2
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1117350
+      },
+      "writtenOn": "2020-12-22T20:08:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "291abad0_d6df8961",
+      "revId": "16712aead3b178ea6f7a1985a81bae6254a7053d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f460e4ea_f0568e98",
@@ -65,6 +83,24 @@
       "writtenOn": "2020-12-22T19:35:18Z",
       "side": 1,
       "message": "Just to understand: returning from this early still allows the correct exit code to be generated from the process because runMain calls exit()?",
+      "revId": "16712aead3b178ea6f7a1985a81bae6254a7053d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "48e379b0_5b93d9d7",
+        "filename": "util/ios/ios_main.mm",
+        "patchSetId": 2
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1117350
+      },
+      "writtenOn": "2020-12-22T20:08:12Z",
+      "side": 1,
+      "message": "That\u0027s right.",
+      "parentUuid": "f460e4ea_f0568e98",
       "revId": "16712aead3b178ea6f7a1985a81bae6254a7053d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
