@@ -16,6 +16,47 @@
       "message": "The trace runs fine for me locally, but CQ is upset because it can\u0027t find the tar.gz.   I don\u0027t see tar files in any of the other trace CLs that have been submitted either though and it\u0027s not mentioned in the \"Generating ANGLE App Traces\" doc.\n\nWhere/How do I upload that?",
       "revId": "3e958b185df8dac81655d4468d0d450df6dacea1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "85c31e13_b6169f7a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-22T18:36:15Z",
+      "side": 1,
+      "message": "Use this document as your workflow:\n\nhttps://chromium.googlesource.com/angle/angle/+/refs/heads/master/src/tests/restricted_traces/README.md\n\nIf you ever see an internal document that you use as a workflow, please make that documentation public and part of our wiki. That\u0027s the source of truth.",
+      "parentUuid": "ac62decb_c64106cb",
+      "revId": "3e958b185df8dac81655d4468d0d450df6dacea1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "379acb77_9aa15d6f",
+        "filename": "src/tests/restricted_traces/restricted_traces.json",
+        "patchSetId": 3
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-22T18:36:15Z",
+      "side": 1,
+      "message": "nit: sort",
+      "range": {
+        "startLine": 33,
+        "startChar": 5,
+        "endLine": 33,
+        "endChar": 16
+      },
+      "revId": "3e958b185df8dac81655d4468d0d450df6dacea1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
