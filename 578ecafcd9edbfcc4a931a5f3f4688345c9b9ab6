@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "07c054c1_92b650d5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-22T04:16:25Z",
+      "side": 1,
+      "message": "We could potentially do the FS pre-rotation stuff in SPIR-V too, and remove the spec constants for that. That should work around the QC bug with constants, and simply other bits too (like remove a handful of translator transformations). In many cases applying the pre-rotation in SPIR-V is as simple as changing the Op (like OpDPDx to OpDPDy) maybe followed by an OpFNegate, or reordering the parameters (again, maybe after an OpFNegate).\n\nOther than as a workaround to the driver bug, not really a big deal though.",
+      "revId": "578ecafcd9edbfcc4a931a5f3f4688345c9b9ab6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
