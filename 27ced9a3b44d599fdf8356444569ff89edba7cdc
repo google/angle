@@ -22,6 +22,30 @@
       },
       "revId": "27ced9a3b44d599fdf8356444569ff89edba7cdc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ffbe59ed_3816d611",
+        "filename": "src/tests/gl_tests/TransformFeedbackTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2337,
+      "author": {
+        "id": 1117350
+      },
+      "writtenOn": "2020-12-22T22:34:14Z",
+      "side": 1,
+      "message": "Yeah, I was hopeful this would fix Mac but unfortunately not. The reason I made the fix was for iOS, and it works there. I\u0027ve restored the test skip for Mac Intel.",
+      "parentUuid": "77f3034b_72e42b45",
+      "range": {
+        "startLine": 2337,
+        "startChar": 25,
+        "endLine": 2337,
+        "endChar": 39
+      },
+      "revId": "27ced9a3b44d599fdf8356444569ff89edba7cdc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
