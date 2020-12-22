@@ -69,6 +69,24 @@
       "parentUuid": "afb376b1_bfd01813",
       "revId": "88e2be891c38fbaa80e3fcad911b54ad34749658",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "816dfcaa_740ce1a4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2020-12-22T19:41:06Z",
+      "side": 1,
+      "message": "That is also the exact point argues the other way. Its the chain of CLs that will pile more and more onto spir-v transform, if we pick this direction. The question to ask is if the follow on changes can do in shader instead (for the same reason)? Can you implement XFB in shader and controlled by specialization constant as well? No doubt you are one of the top experts on spir-v, but most people won\u0027t really able to decode it easily. So unless there is material runtime perf benefit, I would vote for modification at GLSL level.",
+      "parentUuid": "71990f0a_f4208f2a",
+      "revId": "88e2be891c38fbaa80e3fcad911b54ad34749658",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
