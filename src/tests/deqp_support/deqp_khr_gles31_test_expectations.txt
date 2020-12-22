@@ -63,8 +63,7 @@
 3588 VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8*i.* = FAIL
 
 // Geometry shader support
-5406 VULKAN : KHR-GLES31.core.draw_indirect.basic-mode-*adjacency = SKIP
-3571 VULKAN : KHR-GLES31.core.draw_indirect.negative-xfb = SKIP
+5483 VULKAN : KHR-GLES31.core.draw_indirect.basic-mode-*adjacency = SKIP
 
 ////
 //// Desktop Vulkan expectations

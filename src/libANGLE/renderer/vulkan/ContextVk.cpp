@@ -798,8 +798,11 @@ angle::Result ContextVk::setupDraw(const gl::Context *context,
         mGraphicsDirtyBits.set(DIRTY_BIT_DESCRIPTOR_SETS);
     }
 
-    // Update transform feedback offsets on every draw call.
-    if (mState.isTransformFeedbackActiveUnpaused())
+    // Update transform feedback offsets on every draw call when emulating transform feedback.  This
+    // relies on the fact that no geometry/tessellation, indirect or indexed calls are supported in
+    // ES3.1 (and emulation is not done for ES3.2).
+    if (getFeatures().emulateTransformFeedback.enabled &&
+        mState.isTransformFeedbackActiveUnpaused())
     {
         ASSERT(firstVertexOrInvalid != -1);
         mXfbBaseVertex             = firstVertexOrInvalid;
