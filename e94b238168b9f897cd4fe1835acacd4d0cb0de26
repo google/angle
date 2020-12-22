@@ -26,6 +26,53 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "52c8f7d0_e3b58983",
+        "filename": "src/libANGLE/VertexArray.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-22T06:42:42Z",
+      "side": 1,
+      "message": "Added the \"Or\".\n\nI\u0027m open to suggestions on better names, but I haven\u0027t seen a special term for these types of buffers.   I simplified it to just hasInvalidMappedArrayBuffer() when being called by ValidateDrawStates() though.",
+      "parentUuid": "52ea9da9_7ecd08ba",
+      "range": {
+        "startLine": 106,
+        "startChar": 8,
+        "endLine": 106,
+        "endChar": 95
+      },
+      "revId": "e94b238168b9f897cd4fe1835acacd4d0cb0de26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "416270b1_14ddb150",
+        "filename": "src/libANGLE/VertexArray.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 272,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-22T06:42:42Z",
+      "side": 1,
+      "message": "We\u0027re stuck with this loop, since BufferState::mAccessFlags isn\u0027t updated until Buffer::mapRange() is called, which ends up here via onStateChange().   Since the access flag changes as part of mapping the buffer, but we don\u0027t know the index that changed, we need to loop through and update them all.",
+      "range": {
+        "startLine": 268,
+        "startChar": 0,
+        "endLine": 272,
+        "endChar": 5
+      },
+      "revId": "e94b238168b9f897cd4fe1835acacd4d0cb0de26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "659416bd_77a34495",
         "filename": "src/libANGLE/VertexArray.cpp",
         "patchSetId": 8
@@ -37,6 +84,30 @@
       "writtenOn": "2020-12-18T15:25:32Z",
       "side": 1,
       "message": "You can eliminate the for loop by caching \"non-persistent and mapped\" the combining this with \u0026 mEnabled. This will trade off adding another cache variable for flattening the for loop.",
+      "range": {
+        "startLine": 463,
+        "startChar": 0,
+        "endLine": 466,
+        "endChar": 5
+      },
+      "revId": "e94b238168b9f897cd4fe1835acacd4d0cb0de26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "44bdb0e3_45d362c4",
+        "filename": "src/libANGLE/VertexArray.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 466,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-22T06:42:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "659416bd_77a34495",
       "range": {
         "startLine": 463,
         "startChar": 0,
