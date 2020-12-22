@@ -50,6 +50,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "2774c06a_ee525c90",
+        "filename": "src/libANGLE/VertexArray.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 273,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-22T18:33:06Z",
+      "side": 1,
+      "message": "How about if we keep a mapping like we did for mState.mCachedEnabledMappedArrayBuffers, mCachedPersistentArrayBuffers (or the inverse) like we did for the mapped buffers.",
+      "parentUuid": "7e29fd2b_65a5e98e",
+      "range": {
+        "startLine": 270,
+        "startChar": 0,
+        "endLine": 273,
+        "endChar": 5
+      },
+      "revId": "62c8b0e390d59996d4863ba6a65acc7720301228",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "88056755_1676a45c",
         "filename": "src/libANGLE/VertexArray.h",
         "patchSetId": 10
