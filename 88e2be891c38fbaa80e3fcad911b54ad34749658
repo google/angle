@@ -87,6 +87,24 @@
       "parentUuid": "71990f0a_f4208f2a",
       "revId": "88e2be891c38fbaa80e3fcad911b54ad34749658",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c00542f9_25d75e76",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-22T21:01:13Z",
+      "side": 1,
+      "message": "Not with the emulation path for transform feedback, at least.\n\nLet me clarify more how the future looks like around here. The translator will at some point (soonish) generate SPIR-V directly from the AST. So we have two possibilities:\n\n1. Fewer transforms in AST, more transforms in SPIR-V\n2. More transforms in AST, fewer transforms in SPIR-V\n\n**There will no longer be an intermediary source code to look at for debugging either way.**\n\nWith option 1, you can see the SPIR-V before and after transformation. That would be the tool to use for debugging pre-rotation for example. With option 2, you would need to look at the AST for the same purpose. The AST is also assembly-like (there\u0027s a node for every little thing), so in terms of complexity is not that different from SPIR-V. Except you can easily dump SPIR-V and look at text (instead of looking at the AST with a debugger and navigating nodes who are all of the base-class pointer type) and it has a spec you can refer to understand it (unlike the AST).\n\nKnowing that you won\u0027t have source code post-translate to look at, do you still believe it\u0027s easier to debug transformations on the AST rather than SPIR-V?",
+      "parentUuid": "816dfcaa_740ce1a4",
+      "revId": "88e2be891c38fbaa80e3fcad911b54ad34749658",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
