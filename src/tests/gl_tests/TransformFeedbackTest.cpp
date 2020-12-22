@@ -2431,20 +2431,20 @@ void main() {
     GLBuffer vertexBuffer, indexBuffer, xfbBuffer;
     GLVertexArray vao;
 
-    constexpr std::array<float, 4> kAttribInitData = {1, 2, 3, 4};
-    constexpr std::array<float, 4> kIndexInitData  = {0, 1, 2, 3};
-    constexpr std::array<float, 4> kXfbInitData    = {0, 0, 0, 0};
+    constexpr std::array<float, 4> kAttribInitData         = {1, 2, 3, 4};
+    constexpr std::array<unsigned short, 4> kIndexInitData = {0, 1, 2, 3};
+    constexpr std::array<float, 4> kXfbInitData            = {0, 0, 0, 0};
 
     // Initialize buffers.
     glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-    glBufferData(GL_ARRAY_BUFFER, kAttribInitData.size() * sizeof(float), kAttribInitData.data(),
-                 GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, kAttribInitData.size() * sizeof(kAttribInitData[0]),
+                 kAttribInitData.data(), GL_STATIC_DRAW);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, kIndexInitData.size() * sizeof(float),
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, kIndexInitData.size() * sizeof(kIndexInitData[0]),
                  kIndexInitData.data(), GL_STATIC_DRAW);
     glBindBuffer(GL_ARRAY_BUFFER, xfbBuffer);
-    glBufferData(GL_ARRAY_BUFFER, kXfbInitData.size() * sizeof(float), kXfbInitData.data(),
-                 GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, kXfbInitData.size() * sizeof(kXfbInitData[0]),
+                 kXfbInitData.data(), GL_STATIC_DRAW);
 
     // This tests that having a transform feedback buffer bound in an unbound VAO
     // does not affect anything.
