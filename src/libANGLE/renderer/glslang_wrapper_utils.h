@@ -58,6 +58,7 @@ struct GlslangSpirvOptions
 {
     gl::ShaderType shaderType                 = gl::ShaderType::InvalidEnum;
     SurfaceRotation preRotation               = SurfaceRotation::Identity;
+    bool transformPositionToVulkanClipSpace   = false;
     bool removeEarlyFragmentTestsOptimization = false;
     bool removeDebugInfo                      = false;
     bool isTransformFeedbackStage             = false;
