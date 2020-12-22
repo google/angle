@@ -176,6 +176,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7e565668_03f22223",
+        "filename": "util/OSWindow.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 474,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-22T17:10:27Z",
+      "side": 1,
+      "message": "strncpy_s is a windows function.\n\nmemcpy with a copy of \u0027\\0\u0027 works, but `snprintf` is clearer IMO. In this case, since you already checked the size `strcpy` works too (but my preference is still `snprintf`).",
+      "parentUuid": "d7406f4b_eab13617",
+      "range": {
+        "startLine": 473,
+        "startChar": 0,
+        "endLine": 474,
+        "endChar": 51
+      },
+      "revId": "747f00b4a680d8337b0738c284885985250c32c8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "30c2c6eb_5b1ba93e",
