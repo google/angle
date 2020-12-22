@@ -3015,7 +3015,7 @@ bool GetQueryParameterInfo(const State &glState,
         case GL_NUM_COMPRESSED_TEXTURE_FORMATS:
         case GL_ARRAY_BUFFER_BINDING:
         case GL_FRAMEBUFFER_BINDING:  // GL_FRAMEBUFFER_BINDING now equivalent to
-                                      // GL_DRAW_FRAMEBUFFER_BINDING_ANGLE
+                                      // GL_DRAW_FRAMEBUFFER_BINDING
         case GL_RENDERBUFFER_BINDING:
         case GL_CURRENT_PROGRAM:
         case GL_PACK_ALIGNMENT:
@@ -3333,9 +3333,9 @@ bool GetQueryParameterInfo(const State &glState,
     // Check for ES3.0+ parameter names which are also exposed as ES2 extensions
     switch (pname)
     {
-        // GL_DRAW_FRAMEBUFFER_BINDING_ANGLE equivalent to FRAMEBUFFER_BINDING
-        case GL_READ_FRAMEBUFFER_BINDING_ANGLE:
-            if ((clientMajorVersion < 3) && !extensions.framebufferBlit)
+        // GL_DRAW_FRAMEBUFFER_BINDING equivalent to GL_FRAMEBUFFER_BINDING
+        case GL_READ_FRAMEBUFFER_BINDING:
+            if ((clientMajorVersion < 3) && !extensions.framebufferBlitAny())
             {
                 return false;
             }

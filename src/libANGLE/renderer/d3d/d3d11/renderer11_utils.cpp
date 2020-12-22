@@ -1600,7 +1600,7 @@ void GenerateCaps(ID3D11Device *device,
     extensions->blendMinMax                = true;
     // https://docs.microsoft.com/en-us/windows/desktop/direct3ddxgi/format-support-for-direct3d-11-0-feature-level-hardware
     extensions->floatBlend             = true;
-    extensions->framebufferBlit        = GetFramebufferBlitSupport(featureLevel);
+    extensions->framebufferBlitANGLE   = GetFramebufferBlitSupport(featureLevel);
     extensions->framebufferMultisample = GetFramebufferMultisampleSupport(featureLevel);
     extensions->instancedArraysANGLE   = GetInstancingSupport(featureLevel);
     extensions->instancedArraysEXT     = GetInstancingSupport(featureLevel);

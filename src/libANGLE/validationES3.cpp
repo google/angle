@@ -2082,7 +2082,7 @@ bool ValidateBlitFramebuffer(const Context *context,
                              GLbitfield mask,
                              GLenum filter)
 {
-    if (context->getClientMajorVersion() < 3)
+    if (context->getClientMajorVersion() < 3 && !context->getExtensions().framebufferBlitNV)
     {
         context->validationError(GL_INVALID_OPERATION, kES3Required);
         return false;

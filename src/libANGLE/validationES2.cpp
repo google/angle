@@ -2741,7 +2741,7 @@ bool ValidateBlitFramebufferANGLE(const Context *context,
                                   GLbitfield mask,
                                   GLenum filter)
 {
-    if (!context->getExtensions().framebufferBlit)
+    if (!context->getExtensions().framebufferBlitANGLE)
     {
         context->validationError(GL_INVALID_OPERATION, kBlitExtensionNotAvailable);
         return false;
@@ -2874,8 +2874,14 @@ bool ValidateBlitFramebufferNV(const Context *context,
                                GLbitfield mask,
                                GLenum filter)
 {
-    UNIMPLEMENTED();
-    return false;
+    if (!context->getExtensions().framebufferBlitANGLE)
+    {
+        context->validationError(GL_INVALID_OPERATION, kBlitExtensionNotAvailable);
+        return false;
+    }
+
+    return ValidateBlitFramebufferParameters(context, srcX0, srcY0, srcX1, srcY1, dstX0, dstY0,
+                                             dstX1, dstY1, mask, filter);
 }
 
 bool ValidateClear(const Context *context, GLbitfield mask)

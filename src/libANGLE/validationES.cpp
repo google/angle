@@ -902,7 +902,7 @@ bool ValidFramebufferTarget(const Context *context, GLenum target)
 
         case GL_READ_FRAMEBUFFER:
         case GL_DRAW_FRAMEBUFFER:
-            return (context->getExtensions().framebufferBlit ||
+            return (context->getExtensions().framebufferBlitAny() ||
                     context->getClientMajorVersion() >= 3);
 
         default:

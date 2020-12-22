@@ -68,7 +68,8 @@ ContextNULL::ContextNULL(const gl::State &state,
 
     mExtensions                        = gl::Extensions();
     mExtensions.fenceNV                = true;
-    mExtensions.framebufferBlit        = true;
+    mExtensions.framebufferBlitANGLE   = true;
+    mExtensions.framebufferBlitNV      = true;
     mExtensions.instancedArraysANGLE   = true;
     mExtensions.instancedArraysEXT     = true;
     mExtensions.pixelBufferObjectNV    = true;

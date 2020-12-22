@@ -345,7 +345,11 @@ struct Extensions
     bool blendMinMax = false;
 
     // GL_ANGLE_framebuffer_blit
-    bool framebufferBlit = false;
+    bool framebufferBlitANGLE = false;
+    // GL_NV_framebuffer_blit
+    bool framebufferBlitNV = false;
+    // Any version of the framebuffer_blit extension
+    bool framebufferBlitAny() const { return (framebufferBlitANGLE || framebufferBlitNV); }
 
     // GL_ANGLE_framebuffer_multisample
     bool framebufferMultisample = false;

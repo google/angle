@@ -418,9 +418,9 @@ TEST_P(BlitFramebufferANGLETest, BlitColorToDefault)
 // Blit color to/from default framebuffer with Flip-X/Flip-Y.
 TEST_P(BlitFramebufferANGLETest, BlitColorWithFlip)
 {
-    // OpenGL ES 3.0 Required.
-    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 ||
-                       !IsGLExtensionEnabled("GL_ANGLE_framebuffer_blit"));
+    // OpenGL ES 3.0 / GL_NV_framebuffer_blit required for flip.
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 &&
+                       !IsGLExtensionEnabled("GL_NV_framebuffer_blit"));
 
     glBindFramebuffer(GL_FRAMEBUFFER, mUserFBO);
 
