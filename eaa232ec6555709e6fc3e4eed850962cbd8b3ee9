@@ -52,6 +52,24 @@
       "parentUuid": "d4b5e79d_cc5498c3",
       "revId": "eaa232ec6555709e6fc3e4eed850962cbd8b3ee9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e3529042_1bd6e3d5",
+        "filename": "util/OSWindow.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 473,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-22T02:39:45Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "81f1c8f1_58b452ee",
+      "revId": "eaa232ec6555709e6fc3e4eed850962cbd8b3ee9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
