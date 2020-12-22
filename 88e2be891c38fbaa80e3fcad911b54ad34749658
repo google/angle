@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "36c6bada_08cab184",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2020-12-22T18:17:45Z",
+      "side": 1,
+      "message": "I did an initial/partial review (e.g. I didn\u0027t try to follow the SPIR-V changes) and it LGTM.",
+      "revId": "88e2be891c38fbaa80e3fcad911b54ad34749658",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
