@@ -58,6 +58,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c771fb78_25570afd",
+        "filename": "gni/angle.gni",
+        "patchSetId": 3
+      },
+      "lineNbr": 285,
+      "author": {
+        "id": 1117350
+      },
+      "writtenOn": "2020-12-22T22:31:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "63877969_12b398f7",
+      "range": {
+        "startLine": 285,
+        "startChar": 8,
+        "endLine": 285,
+        "endChar": 45
+      },
+      "revId": "e9e9eed921b7f5d8a203de9b8b9690d4925e6025",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "546a0722_c7b07aa1",
@@ -71,6 +95,30 @@
       "writtenOn": "2020-12-22T20:14:07Z",
       "side": 1,
       "message": "nit: comment for posterity?",
+      "range": {
+        "startLine": 16,
+        "startChar": 12,
+        "endLine": 16,
+        "endChar": 36
+      },
+      "revId": "e9e9eed921b7f5d8a203de9b8b9690d4925e6025",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "75e8c254_5c9bb41a",
+        "filename": "src/libANGLE/renderer/gl/eagl/FunctionsEAGL.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1117350
+      },
+      "writtenOn": "2020-12-22T22:31:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "546a0722_c7b07aa1",
       "range": {
         "startLine": 16,
         "startChar": 12,
@@ -104,6 +152,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4ad09229_408a0142",
+        "filename": "src/libANGLE/renderer/gl/eagl/FunctionsEAGL.mm",
+        "patchSetId": 3
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1117350
+      },
+      "writtenOn": "2020-12-22T22:31:39Z",
+      "side": 1,
+      "message": "I just tried it. Unfortunately it causes a compile error to have the SOFT_LINK_CLASS_HEADER and SOFT_LINK_CLASS declarations in the same translation unit. Probably an issue with common/apple/SoftLinking.h. I think it is not worth the effort to diagnose and fix. We can probably remove the soft linking stuff altogether later on. I don\u0027t think Apple ended up using it after all and they certainly won\u0027t need it after they switch to Metal.",
+      "parentUuid": "d5bfcf4b_e3829613",
+      "range": {
+        "startLine": 13,
+        "startChar": 12,
+        "endLine": 13,
+        "endChar": 36
+      },
+      "revId": "e9e9eed921b7f5d8a203de9b8b9690d4925e6025",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "86726985_3e7ae7f2",
@@ -117,6 +189,30 @@
       "writtenOn": "2020-12-22T20:14:07Z",
       "side": 1,
       "message": "nit: http not https for anglebug.com",
+      "range": {
+        "startLine": 11,
+        "startChar": 0,
+        "endLine": 12,
+        "endChar": 28
+      },
+      "revId": "e9e9eed921b7f5d8a203de9b8b9690d4925e6025",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "099e45eb_f57d5fca",
+        "filename": "util/ios/IOSPixmap.mm",
+        "patchSetId": 3
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1117350
+      },
+      "writtenOn": "2020-12-22T22:31:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "86726985_3e7ae7f2",
       "range": {
         "startLine": 11,
         "startChar": 0,
