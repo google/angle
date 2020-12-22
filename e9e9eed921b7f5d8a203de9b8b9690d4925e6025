@@ -16,6 +16,115 @@
       "message": "After a couple of fixes angle_end2end_tests runs to completion!\n\nOther fixes are here:\nhttps://chromium-review.googlesource.com/c/angle/angle/+/2601162\nhttps://chromium-review.googlesource.com/c/angle/angle/+/2601106\n\nTest results:\n[\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d] 4035 tests from 290 test suites ran. (88603 ms total)\n[  PASSED  ] 3937 tests.\n[  FAILED  ] 98 tests, listed below:\n[  FAILED  ] EGLSurfaceTest.MessageLoopBug/ES2_OpenGL_NoFixture, where GetParam() \u003d ES2_OpenGL_NoFixture\n[  FAILED  ] EGLSurfaceTest.MessageLoopBug/ES3_OpenGL_NoFixture, where GetParam() \u003d ES3_OpenGL_NoFixture\n[  FAILED  ] EGLSurfaceTest.MessageLoopBugContext/ES2_OpenGL_NoFixture, where GetParam() \u003d ES2_OpenGL_NoFixture\n[  FAILED  ] EGLSurfaceTest.MessageLoopBugContext/ES3_OpenGL_NoFixture, where GetParam() \u003d ES3_OpenGL_NoFixture\n[  FAILED  ] EGLSurfaceTest.ResizeWindow/ES2_OpenGL_NoFixture, where GetParam() \u003d ES2_OpenGL_NoFixture\n[  FAILED  ] EGLSurfaceTest.ResizeWindow/ES3_OpenGL_NoFixture, where GetParam() \u003d ES3_OpenGL_NoFixture\n[  FAILED  ] EGLSurfaceTest.ResizeWindowWithDraw/ES2_OpenGL_NoFixture, where GetParam() \u003d ES2_OpenGL_NoFixture\n[  FAILED  ] EGLSurfaceTest.ResizeWindowWithDraw/ES3_OpenGL_NoFixture, where GetParam() \u003d ES3_OpenGL_NoFixture\n[  FAILED  ] BlendMinMaxTest.RGBA16F/ES3_OpenGL, where GetParam() \u003d ES3_OpenGL\n[  FAILED  ] BlitFramebufferANGLETest.BlitColorToDefault/ES2_OpenGL, where GetParam() \u003d ES2_OpenGL\n[  FAILED  ] BlitFramebufferANGLETest.BlitColorToDefault/ES3_OpenGL, where GetParam() \u003d ES3_OpenGL\n[  FAILED  ] BlitFramebufferANGLETest.BlitColorWithFlip/ES2_OpenGL, where GetParam() \u003d ES2_OpenGL\n[  FAILED  ] BlitFramebufferANGLETest.BlitColorWithFlip/ES3_OpenGL, where GetParam() \u003d ES3_OpenGL\n[  FAILED  ] BlitFramebufferANGLETest.ReverseColorBlit/ES2_OpenGL, where GetParam() \u003d ES2_OpenGL\n[  FAILED  ] BlitFramebufferANGLETest.ReverseColorBlit/ES3_OpenGL, where GetParam() \u003d ES3_OpenGL\n[  FAILED  ] BlitFramebufferANGLETest.ScissoredBlit/ES2_OpenGL, where GetParam() \u003d ES2_OpenGL\n[  FAILED  ] BlitFramebufferANGLETest.ScissoredBlit/ES3_OpenGL, where GetParam() \u003d ES3_OpenGL\n[  FAILED  ] BlitFramebufferANGLETest.ReverseScissoredBlit/ES2_OpenGL, where GetParam() \u003d ES2_OpenGL\n[  FAILED  ] BlitFramebufferANGLETest.ReverseScissoredBlit/ES3_OpenGL, where GetParam() \u003d ES3_OpenGL\n[  FAILED  ] BlitFramebufferANGLETest.OversizedBlit/ES2_OpenGL, where GetParam() \u003d ES2_OpenGL\n[  FAILED  ] BlitFramebufferANGLETest.OversizedBlit/ES3_OpenGL, where GetParam() \u003d ES3_OpenGL\n[  FAILED  ] BlitFramebufferANGLETest.ReverseOversizedBlit/ES2_OpenGL, where GetParam() \u003d ES2_OpenGL\n[  FAILED  ] BlitFramebufferANGLETest.ReverseOversizedBlit/ES3_OpenGL, where GetParam() \u003d ES3_OpenGL\n[  FAILED  ] BlitFramebufferANGLETest.BlitWithDepthUserToDefault/ES2_OpenGL, where GetParam() \u003d ES2_OpenGL\n[  FAILED  ] BlitFramebufferANGLETest.BlitWithDepthUserToDefault/ES3_OpenGL, where GetParam() \u003d ES3_OpenGL\n[  FAILED  ] BlitFramebufferANGLETest.BlitWithDepthDefaultToUser/ES2_OpenGL, where GetParam() \u003d ES2_OpenGL\n[  FAILED  ] BlitFramebufferANGLETest.BlitWithDepthDefaultToUser/ES3_OpenGL, where GetParam() \u003d ES3_OpenGL\n[  FAILED  ] BlitFramebufferANGLETest.BlitSameBufferOriginal/ES2_OpenGL, where GetParam() \u003d ES2_OpenGL\n[  FAILED  ] BlitFramebufferANGLETest.BlitSameBufferOriginal/ES3_OpenGL, where GetParam() \u003d ES3_OpenGL\n[  FAILED  ] BlitFramebufferANGLETest.BlitSameBufferUser/ES2_OpenGL, where GetParam() \u003d ES2_OpenGL\n[  FAILED  ] BlitFramebufferANGLETest.BlitSameBufferUser/ES3_OpenGL, where GetParam() \u003d ES3_OpenGL\n[  FAILED  ] BlitFramebufferANGLETest.BlitPartialColor/ES2_OpenGL, where GetParam() \u003d ES2_OpenGL\n[  FAILED  ] BlitFramebufferANGLETest.BlitPartialColor/ES3_OpenGL, where GetParam() \u003d ES3_OpenGL\n[  FAILED  ] BlitFramebufferANGLETest.BlitDifferentSizes/ES2_OpenGL, where GetParam() \u003d ES2_OpenGL\n[  FAILED  ] BlitFramebufferANGLETest.BlitDifferentSizes/ES3_OpenGL, where GetParam() \u003d ES3_OpenGL\n[  FAILED  ] BlitFramebufferANGLETest.BlitWithMissingAttachments/ES2_OpenGL, where GetParam() \u003d ES2_OpenGL\n[  FAILED  ] BlitFramebufferANGLETest.BlitWithMissingAttachments/ES3_OpenGL, where GetParam() \u003d ES3_OpenGL\n[  FAILED  ] BlitFramebufferANGLETest.BlitStencil/ES2_OpenGL, where GetParam() \u003d ES2_OpenGL\n[  FAILED  ] BlitFramebufferANGLETest.BlitStencil/ES3_OpenGL, where GetParam() \u003d ES3_OpenGL\n[  FAILED  ] BlitFramebufferANGLETest.BlitPartialDepthStencil/ES2_OpenGL, where GetParam() \u003d ES2_OpenGL\n[  FAILED  ] BlitFramebufferANGLETest.BlitPartialDepthStencil/ES3_OpenGL, where GetParam() \u003d ES3_OpenGL\n[  FAILED  ] BlitFramebufferANGLETest.BlitMRT/ES2_OpenGL, where GetParam() \u003d ES2_OpenGL\n[  FAILED  ] BlitFramebufferANGLETest.BlitMRT/ES3_OpenGL, where GetParam() \u003d ES3_OpenGL\n[  FAILED  ] BlitFramebufferANGLETest.MultisampledRGBAToRGBA/ES2_OpenGL, where GetParam() \u003d ES2_OpenGL\n[  FAILED  ] BlitFramebufferANGLETest.MultisampledRGBAToRGBA/ES3_OpenGL, where GetParam() \u003d ES3_OpenGL\n[  FAILED  ] BlitFramebufferANGLETest.MultisampledRGBAToBGRA/ES2_OpenGL, where GetParam() \u003d ES2_OpenGL\n[  FAILED  ] BlitFramebufferANGLETest.MultisampledRGBAToBGRA/ES3_OpenGL, where GetParam() \u003d ES3_OpenGL\n[  FAILED  ] BlitFramebufferANGLETest.MultisampledBGRAToRGBA/ES2_OpenGL, where GetParam() \u003d ES2_OpenGL\n[  FAILED  ] BlitFramebufferANGLETest.MultisampledBGRAToRGBA/ES3_OpenGL, where GetParam() \u003d ES3_OpenGL\n[  FAILED  ] BlitFramebufferANGLETest.MultisampledBGRAToBGRA/ES2_OpenGL, where GetParam() \u003d ES2_OpenGL\n[  FAILED  ] BlitFramebufferANGLETest.MultisampledBGRAToBGRA/ES3_OpenGL, where GetParam() \u003d ES3_OpenGL\n[  FAILED  ] BlitFramebufferANGLETest.ErrorStretching/ES2_OpenGL, where GetParam() \u003d ES2_OpenGL\n[  FAILED  ] BlitFramebufferANGLETest.ErrorStretching/ES3_OpenGL, where GetParam() \u003d ES3_OpenGL\n[  FAILED  ] BlitFramebufferANGLETest.ErrorFlipping/ES2_OpenGL, where GetParam() \u003d ES2_OpenGL\n[  FAILED  ] BlitFramebufferANGLETest.ErrorFlipping/ES3_OpenGL, where GetParam() \u003d ES3_OpenGL\n[  FAILED  ] BlitFramebufferANGLETest.Errors/ES2_OpenGL, where GetParam() \u003d ES2_OpenGL\n[  FAILED  ] BlitFramebufferANGLETest.Errors/ES3_OpenGL, where GetParam() \u003d ES3_OpenGL\n[  FAILED  ] ClearTestES3.MaskedClearHeterogeneousAttachments/ES3_OpenGL, where GetParam() \u003d ES3_OpenGL\n[  FAILED  ] ClearTestES3.ScissoredClearHeterogeneousAttachments/ES3_OpenGL, where GetParam() \u003d ES3_OpenGL\n[  FAILED  ] CopyTexImageTestES3.3DSubImageDrawMismatchedTextureTypes/ES3_OpenGL, where GetParam() \u003d ES3_OpenGL\n[  FAILED  ] CopyTexImageTestES3.3DSubImageDrawMismatchedTextureTypes/ES3_OpenGL_EmulateCopyTexImage2DFromRenderbuffers, where GetParam() \u003d ES3_OpenGL_EmulateCopyTexImage2DFromRenderbuffers\n[  FAILED  ] TinyDepthStencilWorkaroundTest.DepthTexturesStick/ES3_OpenGL, where GetParam() \u003d ES3_OpenGL\n[  FAILED  ] GLSLTest_ES3.GLVertexIDIntegerTextureDrawArrays/ES3_OpenGL, where GetParam() \u003d ES3_OpenGL\n[  FAILED  ] GLSLTest_ES3.CentroidVaryingMatrixArray/ES3_OpenGL, where GetParam() \u003d ES3_OpenGL\n[  FAILED  ] GLSLTest_ES3.VaryingStructUsedInFragmentShader/ES3_OpenGL, where GetParam() \u003d ES3_OpenGL\n[  FAILED  ] GLSLTest_ES3.ComplexVaryingStructsUsedInFragmentShader/ES3_OpenGL, where GetParam() \u003d ES3_OpenGL\n[  FAILED  ] GLSLTest_ES3.InactiveVaryingStructUnusedInFragmentShader/ES3_OpenGL, where GetParam() \u003d ES3_OpenGL\n[  FAILED  ] GLSLTest_ES3.VaryingStructWithInlineDefinition/ES3_OpenGL, where GetParam() \u003d ES3_OpenGL\n[  FAILED  ] WebGL2GLSLTest.VaryingStructNotInitializedInVertexShader/ES3_OpenGL, where GetParam() \u003d ES3_OpenGL\n[  FAILED  ] MipmapTestES3.BaseLevelTextureBug/ES3_OpenGL, where GetParam() \u003d ES3_OpenGL\n[  FAILED  ] PackUnpackTest.PackUnpackSnormNormal/ES3_OpenGL, where GetParam() \u003d ES3_OpenGL\n[  FAILED  ] PackUnpackTest.PackUnpackUnormNormal/ES3_OpenGL, where GetParam() \u003d ES3_OpenGL\n[  FAILED  ] PackUnpackTest.PackUnpackHalfNormal/ES3_OpenGL, where GetParam() \u003d ES3_OpenGL\n[  FAILED  ] PackUnpackTest.PackUnpackSnormSubnormal/ES3_OpenGL, where GetParam() \u003d ES3_OpenGL\n[  FAILED  ] PackUnpackTest.PackUnpackUnormSubnormal/ES3_OpenGL, where GetParam() \u003d ES3_OpenGL\n[  FAILED  ] PackUnpackTest.PackUnpackHalfSubnormal/ES3_OpenGL, where GetParam() \u003d ES3_OpenGL\n[  FAILED  ] PackUnpackTest.PackUnpackSnormZero/ES3_OpenGL, where GetParam() \u003d ES3_OpenGL\n[  FAILED  ] PackUnpackTest.PackUnpackUnormZero/ES3_OpenGL, where GetParam() \u003d ES3_OpenGL\n[  FAILED  ] PackUnpackTest.PackUnpackHalfZero/ES3_OpenGL, where GetParam() \u003d ES3_OpenGL\n[  FAILED  ] PackUnpackTest.PackUnpackUnormOverflow/ES3_OpenGL, where GetParam() \u003d ES3_OpenGL\n[  FAILED  ] PackUnpackTest.PackUnpackSnormOverflow/ES3_OpenGL, where GetParam() \u003d ES3_OpenGL\n[  FAILED  ] PointSpritesTest.PointSizeAboveMaxIsClamped/ES2_OpenGL, where GetParam() \u003d ES2_OpenGL\n[  FAILED  ] ProvokingVertexTest.FlatTriangle/ES3_OpenGL, where GetParam() \u003d ES3_OpenGL\n[  FAILED  ] ProvokingVertexTest.FlatTriWithTransformFeedback/ES3_OpenGL, where GetParam() \u003d ES3_OpenGL\n[  FAILED  ] ProvokingVertexTest.FlatLine/ES3_OpenGL, where GetParam() \u003d ES3_OpenGL\n[  FAILED  ] ProvokingVertexTest.FlatTriStrip/ES3_OpenGL, where GetParam() \u003d ES3_OpenGL\n[  FAILED  ] ProvokingVertexTest.FlatTriStripPrimitiveRestart/ES3_OpenGL, where GetParam() \u003d ES3_OpenGL\n[  FAILED  ] ProvokingVertexTest.ANGLEProvokingVertex/ES3_OpenGL, where GetParam() \u003d ES3_OpenGL\n[  FAILED  ] RobustResourceInitTestES3.TextureInit_UIntRGB8/ES3_OpenGL, where GetParam() \u003d ES3_OpenGL\n[  FAILED  ] RobustResourceInitTestES3.TextureInit_IntRGB8/ES3_OpenGL, where GetParam() \u003d ES3_OpenGL\n[  FAILED  ] SRGBTextureTestES3.GenerateMipmaps/ES3_OpenGL, where GetParam() \u003d ES3_OpenGL\n[  FAILED  ] ShaderInterpTest.Smooth/ES3_OpenGL, where GetParam() \u003d ES3_OpenGL\n[  FAILED  ] StateChangeTestES3.SamplerMetadataUpdateOnSetProgram/ES3_OpenGL, where GetParam() \u003d ES3_OpenGL\n[  FAILED  ] UniformBufferTest.LargeArrayOfStructs/ES3_OpenGL, where GetParam() \u003d ES3_OpenGL\n[  FAILED  ] WebGLCompatibilityTest.GenerateMipmapUnsizedFloatingPointTexture/ES2_OpenGL, where GetParam() \u003d ES2_OpenGL\n[  FAILED  ] WebGLCompatibilityTest.GenerateMipmapUnsizedFloatingPointTexture/ES3_OpenGL, where GetParam() \u003d ES3_OpenGL\n[  FAILED  ] EGLContextCompatibilityTest.WindowSameConfig/OpenGL_R8G8B8A8D24S8\n[  FAILED  ] EGLContextCompatibilityTest.WindowDifferentConfig/OpenGL_R8G8B8A8D24S8_R8G8B8A8D24S8",
       "revId": "e9e9eed921b7f5d8a203de9b8b9690d4925e6025",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "406c83d1_16ef93e4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-22T20:14:07Z",
+      "side": 1,
+      "message": "+1 to fantastic job.",
+      "revId": "e9e9eed921b7f5d8a203de9b8b9690d4925e6025",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "63877969_12b398f7",
+        "filename": "gni/angle.gni",
+        "patchSetId": 3
+      },
+      "lineNbr": 285,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-22T20:14:07Z",
+      "side": 1,
+      "message": "nit: you can go \":$internal_target_name+link\" or if that doesn\u0027t work, \"${internal_target_name}+link\"\n\nsame for the bundle",
+      "range": {
+        "startLine": 285,
+        "startChar": 8,
+        "endLine": 285,
+        "endChar": 45
+      },
+      "revId": "e9e9eed921b7f5d8a203de9b8b9690d4925e6025",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "546a0722_c7b07aa1",
+        "filename": "src/libANGLE/renderer/gl/eagl/FunctionsEAGL.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-22T20:14:07Z",
+      "side": 1,
+      "message": "nit: comment for posterity?",
+      "range": {
+        "startLine": 16,
+        "startChar": 12,
+        "endLine": 16,
+        "endChar": 36
+      },
+      "revId": "e9e9eed921b7f5d8a203de9b8b9690d4925e6025",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d5bfcf4b_e3829613",
+        "filename": "src/libANGLE/renderer/gl/eagl/FunctionsEAGL.mm",
+        "patchSetId": 3
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-22T20:14:07Z",
+      "side": 1,
+      "message": "is this necessary? it\u0027s in the header. can we include the header instead?",
+      "range": {
+        "startLine": 13,
+        "startChar": 12,
+        "endLine": 13,
+        "endChar": 36
+      },
+      "revId": "e9e9eed921b7f5d8a203de9b8b9690d4925e6025",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "86726985_3e7ae7f2",
+        "filename": "util/ios/IOSPixmap.mm",
+        "patchSetId": 3
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-22T20:14:07Z",
+      "side": 1,
+      "message": "nit: http not https for anglebug.com",
+      "range": {
+        "startLine": 11,
+        "startChar": 0,
+        "endLine": 12,
+        "endChar": 28
+      },
+      "revId": "e9e9eed921b7f5d8a203de9b8b9690d4925e6025",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
