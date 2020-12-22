@@ -33,6 +33,24 @@
       "message": "Overall the change itself looks ok to me. My main concern doing in spir-v level is hard to debug. Its like doing it in C versus assembly. If possible, you want to do it in C and let compiler handle for you, avoid coding in assembly. So IMO, using specialization constant is a better choice that has less work (although yu already did spir-v work), better main tenability. The \"unnecessary modifications to early stage\" part is not a real issue, since they will get removed by compiler. The only real issue is the shader size, which is also not a big issue.",
       "revId": "88e2be891c38fbaa80e3fcad911b54ad34749658",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "afb376b1_bfd01813",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-22T18:36:32Z",
+      "side": 1,
+      "message": "I agree with Charlie.   I\u0027d much prefer using specialization constants that are easier to debug/maintain.   Especially with all of the corner cases related to pre-rotation that have been exposed, debugging/maintaining/improving this SPIR-V will essentially be impossible, or at least take much longer than it would with a higher level language.",
+      "parentUuid": "e4e19bd9_4fccc3a3",
+      "revId": "88e2be891c38fbaa80e3fcad911b54ad34749658",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
