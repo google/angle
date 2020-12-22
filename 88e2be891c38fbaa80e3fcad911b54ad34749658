@@ -123,6 +123,24 @@
       "parentUuid": "c00542f9_25d75e76",
       "revId": "88e2be891c38fbaa80e3fcad911b54ad34749658",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c2b19cc0_bfb38ca8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-22T21:44:19Z",
+      "side": 1,
+      "message": "Charlie\u0027s point is not on the direction you quoted, but I\u0027ll answer both.\n\nFor this particular set of changes: In the short term, conformance. This change is fixing bugs. In the long term, maintainability in conjunction with the other work (yeap, despite Charlie\u0027s and Tim\u0027s comments, this is more maintainable than AST changes IMO, especially when there\u0027s no intermediary readable GLSL to look at).\n\nRegarding AST to SPIR-V translation, there are numerous reasons:\n\n1. The double-compilation (going through ANGLE\u0027s translator, to source code and then again to glslang) is costly.\n - This has significant performance downsides which shows on low-end hardware like Fuchsia, but I recall another partner had also expressed concern\n - Bundling glslang with ANGLE significantly increases the binary footprint, which again hurts especially on embedded devices like Fuchsia.\n2. Despite my previous efforts to speed up glslang\u0027s warm up time for ANGLE, it is still significant, leading to a start up delay.\n - Removing dependency to glslang would also mean reverting my changes there and reducing clutter in glslang\n3. Arguably the most complex part of the SPIR-V transformer is its discovery of SPIR-V ids corresponding to shader variables.\n - Generating SPIR-V directly by ANGLE means the IDs can be remembered and forwarded to the transformer, significantly cleaning the SPIR-V transformer up\n - All the string-keyed maps revolving around the SPIR-V transformer can become integer-keyed",
+      "parentUuid": "44aaec51_fcaa24f4",
+      "revId": "88e2be891c38fbaa80e3fcad911b54ad34749658",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
