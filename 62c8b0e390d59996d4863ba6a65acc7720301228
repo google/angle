@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "48757b60_0e9f25a1",
+        "filename": "src/libANGLE/VertexArray.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 273,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-22T15:48:57Z",
+      "side": 1,
+      "message": "Can we get rid of this for loop as well? Ideally we\u0027d just set the masks as they change.",
+      "range": {
+        "startLine": 270,
+        "startChar": 0,
+        "endLine": 273,
+        "endChar": 5
+      },
+      "revId": "62c8b0e390d59996d4863ba6a65acc7720301228",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "88056755_1676a45c",
+        "filename": "src/libANGLE/VertexArray.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-22T15:48:57Z",
+      "side": 1,
+      "message": "can you remove this cache variable? We might not need it since we already have cached mapped and cached enabled.",
+      "range": {
+        "startLine": 106,
+        "startChar": 19,
+        "endLine": 106,
+        "endChar": 51
+      },
+      "revId": "62c8b0e390d59996d4863ba6a65acc7720301228",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
