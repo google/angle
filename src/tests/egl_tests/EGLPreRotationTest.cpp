@@ -109,11 +109,11 @@ class EGLPreRotationSurfaceTest : public ANGLETestWithParam<EGLPreRotationSurfac
         std::vector<const char *> disabledFeatures;
         if (::testing::get<1>(GetParam()))
         {
-            enabledFeatures.push_back("enable_pre_rotation_surfaces");
+            enabledFeatures.push_back("enablePreRotateSurfaces");
         }
         else
         {
-            disabledFeatures.push_back("enable_pre_rotation_surfaces");
+            disabledFeatures.push_back("enablePreRotateSurfaces");
         }
         enabledFeatures.push_back(nullptr);
         disabledFeatures.push_back(nullptr);
