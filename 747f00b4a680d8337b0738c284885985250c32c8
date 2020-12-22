@@ -200,6 +200,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3bc08221_c6967fa5",
+        "filename": "util/OSWindow.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 474,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-22T17:31:52Z",
+      "side": 1,
+      "message": "strncpy_s is a standard function and was available on my linux machine:\n\nhttps://en.cppreference.com/w/c/string/byte/strncpy\n\nI chose to use memcpy because of what a post said about libc maintainers:\n\nhttps://stackoverflow.com/a/4570369",
+      "parentUuid": "7e565668_03f22223",
+      "range": {
+        "startLine": 473,
+        "startChar": 0,
+        "endLine": 474,
+        "endChar": 51
+      },
+      "revId": "747f00b4a680d8337b0738c284885985250c32c8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "30c2c6eb_5b1ba93e",
