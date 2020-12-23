@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5ef0f0cf_3863cf06",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2020-12-23T00:03:26Z",
+      "side": 1,
+      "message": "lgtm\n\nVery nice find and fix James! I wonder how this went undetected for so long!\n",
+      "revId": "a1668be293feef20be57cdc92a2ec4ab1392c2af",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
