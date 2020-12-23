@@ -18,6 +18,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "20bb7932_e98037ee",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2020-12-23T19:57:54Z",
+      "side": 1,
+      "message": "Done.\nDid you see the comments I left on the previous patchset? I have a few questions.",
+      "parentUuid": "2ce3dd5e_c3ad8160",
+      "revId": "6e2a29753b2d829b069bce12c287fa755bd84b7e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "03f88ad2_0b39bfef",
