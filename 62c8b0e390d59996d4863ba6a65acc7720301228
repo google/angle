@@ -72,6 +72,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0efcd2cb_3d1445ec",
+        "filename": "src/libANGLE/VertexArray.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 273,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-23T19:55:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2774c06a_ee525c90",
+      "range": {
+        "startLine": 270,
+        "startChar": 0,
+        "endLine": 273,
+        "endChar": 5
+      },
+      "revId": "62c8b0e390d59996d4863ba6a65acc7720301228",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "88056755_1676a45c",
