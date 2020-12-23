@@ -81,7 +81,7 @@ class BlitFramebufferANGLETest : public ANGLETest
             mOriginalFBO = (GLuint)originalFBO;
         }
 
-        GLenum format = GL_BGRA_EXT;
+        GLenum format = GL_RGBA;
 
         glGenFramebuffers(1, &mUserFBO);
         glBindFramebuffer(GL_FRAMEBUFFER, mUserFBO);
