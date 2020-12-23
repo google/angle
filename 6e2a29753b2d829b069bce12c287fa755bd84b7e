@@ -104,6 +104,30 @@
       },
       "revId": "6e2a29753b2d829b069bce12c287fa755bd84b7e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "076b19bc_0df4fc05",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1440,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-23T21:09:32Z",
+      "side": 1,
+      "message": "Generally the core extensions are the way to go. They add stuff the extensions \"forget\" to add when they\u0027re drafted. And the extensions often aren\u0027t updated after they\u0027re written. So yeah, agree with Shabi. I\u0027d put this in a common location.",
+      "parentUuid": "869c83a4_4954022c",
+      "range": {
+        "startLine": 1436,
+        "startChar": 0,
+        "endLine": 1440,
+        "endChar": 13
+      },
+      "revId": "6e2a29753b2d829b069bce12c287fa755bd84b7e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
