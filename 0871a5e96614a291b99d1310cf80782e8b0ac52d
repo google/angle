@@ -16,6 +16,24 @@
       "message": "Please don\u0027t bypass the presubmit check. A Bug: tag is missing before this line.",
       "revId": "0871a5e96614a291b99d1310cf80782e8b0ac52d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3809b4f2_b6207b55",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1000050
+      },
+      "writtenOn": "2020-12-23T18:54:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "22fabe09_5f26834e",
+      "revId": "0871a5e96614a291b99d1310cf80782e8b0ac52d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
