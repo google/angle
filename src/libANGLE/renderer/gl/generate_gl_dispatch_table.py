@@ -112,8 +112,7 @@ dispatch_table_source_template = """// GENERATED FILE - DO NOT EDIT.
 #include "libANGLE/renderer/gl/null_functions.h"
 #endif  // defined(ANGLE_ENABLE_OPENGL_NULL)
 
-// Check for nullptr so extensions do not overwrite core imports.
-#define ASSIGN(NAME, FP) if (!FP) FP = reinterpret_cast<decltype(FP)>(loadProcAddress(NAME))
+#define ASSIGN(NAME, FP) do {{ FP = reinterpret_cast<decltype(FP)>(loadProcAddress(NAME)); }} while (0)
 
 namespace rx
 {{
@@ -122,17 +121,17 @@ DispatchTableGL::DispatchTableGL() = default;
 void DispatchTableGL::initProcsDesktopGL(const gl::Version &version, const std::set<std::string> &extensions)
 {{
 #if defined(ANGLE_ENABLE_OPENGL_DESKTOP)
-{gl_data}
-
 {gl_extensions_data}
+
+{gl_data}
 #endif  // defined(ANGLE_ENABLE_OPENGL_DESKTOP)
 }}
 
 void DispatchTableGL::initProcsGLES(const gl::Version &version, const std::set<std::string> &extensions)
 {{
-{gles2_data}
-
 {gles2_extensions_data}
+
+{gles2_data}
 }}
 
 void DispatchTableGL::initProcsSharedExtensions(const std::set<std::string> &extensions)
@@ -144,17 +143,17 @@ void DispatchTableGL::initProcsSharedExtensions(const std::set<std::string> &ext
 void DispatchTableGL::initProcsDesktopGLNULL(const gl::Version &version, const std::set<std::string> &extensions)
 {{
 #if defined(ANGLE_ENABLE_OPENGL_DESKTOP)
-{gl_null_data}
-
 {gl_null_extensions_data}
+
+{gl_null_data}
 #endif  // defined(ANGLE_ENABLE_OPENGL_DESKTOP)
 }}
 
 void DispatchTableGL::initProcsGLESNULL(const gl::Version &version, const std::set<std::string> &extensions)
 {{
-{gles2_null_data}
-
 {gles2_null_extensions_data}
+
+{gles2_null_data}
 }}
 
 void DispatchTableGL::initProcsSharedExtensionsNULL(const std::set<std::string> &extensions)
