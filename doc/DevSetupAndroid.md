@@ -84,7 +84,7 @@ autoninja -C out/Debug angle_apks
 ```
 ## Install the ANGLE APK
 ```
-adb install out/Debug/apks/AngleLibraries.apk
+adb install -r -d --force-queryable out/Debug/apks/AngleLibraries.apk
 ```
 You can verify installation by looking for the package name:
 ```
