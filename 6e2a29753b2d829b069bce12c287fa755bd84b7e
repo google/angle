@@ -80,6 +80,30 @@
       },
       "revId": "6e2a29753b2d829b069bce12c287fa755bd84b7e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "869c83a4_4954022c",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1440,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-23T20:22:43Z",
+      "side": 1,
+      "message": "Keep the error for NV_framebuffer_blit too. First, if linear blit of int doesn\u0027t work in ES3, it won\u0027t work on any ES2 extensions even if not specified. More importantly, int formats aren\u0027t there in ES2 IIRC, which is why the extension doesn\u0027t talk about it.",
+      "parentUuid": "7c901fcd_c1c6832e",
+      "range": {
+        "startLine": 1436,
+        "startChar": 0,
+        "endLine": 1440,
+        "endChar": 13
+      },
+      "revId": "6e2a29753b2d829b069bce12c287fa755bd84b7e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
