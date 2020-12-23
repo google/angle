@@ -83,6 +83,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0c5f8ad7_ecb954b3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-23T22:18:32Z",
+      "side": 1,
+      "message": "Sorry, this was meant for another CL. Not sure how I ended up making this comment here.",
+      "parentUuid": "8b48f886_44cb8193",
+      "revId": "a55e4a09d55f574c4b21cf76f7d0d3f98beeb6ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "94c85c60_efb02024",
@@ -214,6 +232,30 @@
       "side": 1,
       "message": "It\u0027s that the \"Changes with EXT_color_buffer_float always apply with NV_framebuffer_blit - if the read buffer is fixed or float, the draw buffer is fixed or float.\n\nBut I think this is another case where I should just use the core spec and forget about this validation. Let me know otherwise",
       "parentUuid": "bea87aba_4bd8fd3d",
+      "range": {
+        "startLine": 2884,
+        "startChar": 0,
+        "endLine": 2891,
+        "endChar": 13
+      },
+      "revId": "a55e4a09d55f574c4b21cf76f7d0d3f98beeb6ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "306f6719_5f26d1db",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2891,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-23T22:18:32Z",
+      "side": 1,
+      "message": "Yeah, I\u0027m not sure exactly where the ext spec differs here. Using core SGTM.",
+      "parentUuid": "74dcf94e_4503f9a2",
       "range": {
         "startLine": 2884,
         "startChar": 0,
