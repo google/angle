@@ -101,9 +101,6 @@ declare_args() {
   # worker thread pool.
   angle_delegate_workers = build_with_chromium
 
-  # True if we are building inside an ANGLE checkout.
-  angle_standalone = !build_with_chromium
-
   angle_enable_d3d9 = is_win && !angle_is_winuwp
   angle_enable_d3d11 = is_win
   angle_enable_gl = (ozone_platform_gbm || (!is_linux && !is_chromeos) ||
@@ -313,76 +310,74 @@ template("angle_static_library") {
   }
 }
 
-if (angle_standalone || build_with_chromium) {
-  template("angle_test") {
-    test(target_name) {
-      forward_variables_from(invoker,
-                             "*",
-                             [
-                               "configs",
-                               "data",
-                               "public_deps",
-                             ])
+template("angle_test") {
+  test(target_name) {
+    forward_variables_from(invoker,
+                           "*",
+                           [
+                             "configs",
+                             "data",
+                             "public_deps",
+                           ])
 
-      configs += invoker.configs
-      configs -= invoker.suppressed_configs
+    configs += invoker.configs
+    configs -= invoker.suppressed_configs
 
-      public_deps = invoker.public_deps + [
-                      "$angle_root:angle_common",
-                      "$angle_root:includes",
-                      "$angle_root/util:angle_test_utils",
-                      "$angle_root/third_party/rapidjson:rapidjson",
-                      "//testing/gmock",
-                      "//testing/gtest",
-                      "//third_party/googletest:gmock",
-                      "//third_party/googletest:gtest",
-                    ]
+    public_deps = invoker.public_deps + [
+                    "$angle_root:angle_common",
+                    "$angle_root:includes",
+                    "$angle_root/util:angle_test_utils",
+                    "$angle_root/third_party/rapidjson:rapidjson",
+                    "//testing/gmock",
+                    "//testing/gtest",
+                    "//third_party/googletest:gmock",
+                    "//third_party/googletest:gtest",
+                  ]
 
-      data = invoker.data + [
-               "$angle_root/scripts/run_gtest_angle_test.py",
-               "//testing/scripts/common.py",
-               "//testing/xvfb.py",
-             ]
+    data = invoker.data + [
+             "$angle_root/scripts/run_gtest_angle_test.py",
+             "//testing/scripts/common.py",
+             "//testing/xvfb.py",
+           ]
 
-      sources += [
-        "$angle_root/src/tests/test_utils/runner/HistogramWriter.h",
-        "$angle_root/src/tests/test_utils/runner/TestSuite.cpp",
-        "$angle_root/src/tests/test_utils/runner/TestSuite.h",
+    sources += [
+      "$angle_root/src/tests/test_utils/runner/HistogramWriter.h",
+      "$angle_root/src/tests/test_utils/runner/TestSuite.cpp",
+      "$angle_root/src/tests/test_utils/runner/TestSuite.h",
+    ]
+
+    if (angle_has_histograms) {
+      sources +=
+          [ "$angle_root/src/tests/test_utils/runner/HistogramWriter.cpp" ]
+      deps += [
+        "//third_party/catapult/tracing/tracing:histogram",
+        "//third_party/catapult/tracing/tracing:reserved_infos",
       ]
+    }
 
-      if (angle_has_histograms) {
-        sources +=
-            [ "$angle_root/src/tests/test_utils/runner/HistogramWriter.cpp" ]
-        deps += [
-          "//third_party/catapult/tracing/tracing:histogram",
-          "//third_party/catapult/tracing/tracing:reserved_infos",
-        ]
-      }
+    if (is_mac && angle_enable_metal) {
+      # On macOS, compiling Metal shader sometimes takes very long time due to internal caching
+      # mechanism. This hooking library is a way to bypass this caching mechanism.
+      deps += [ "$angle_root/src/libANGLE/renderer/metal/file_hooking:metal_shader_cache_file_hooking" ]
+    }
 
-      if (is_mac && angle_enable_metal) {
-        # On macOS, compiling Metal shader sometimes takes very long time due to internal caching
-        # mechanism. This hooking library is a way to bypass this caching mechanism.
-        deps += [ "$angle_root/src/libANGLE/renderer/metal/file_hooking:metal_shader_cache_file_hooking" ]
-      }
+    if ((is_linux && !is_chromeos) ||
+        (build_with_chromium && chromeos_is_browser_only)) {
+      use_xvfb = true
+    }
 
-      if ((is_linux && !is_chromeos) ||
-          (build_with_chromium && chromeos_is_browser_only)) {
-        use_xvfb = true
-      }
+    if ((is_linux || is_chromeos) && !is_component_build) {
+      # Set rpath to find shared libs in a non-component build.
+      configs += [ "//build/config/gcc:rpath_for_built_shared_libraries" ]
+    }
 
-      if ((is_linux || is_chromeos) && !is_component_build) {
-        # Set rpath to find shared libs in a non-component build.
-        configs += [ "//build/config/gcc:rpath_for_built_shared_libraries" ]
-      }
-
-      if (is_android) {
-        public_configs += [ "$angle_root:build_id_config" ]
-        if (build_with_chromium) {
-          use_native_activity = true
-          configs -= [ "//build/config/android:hide_all_but_jni" ]
-        } else {
-          use_raw_android_executable = true
-        }
+    if (is_android) {
+      public_configs += [ "$angle_root:build_id_config" ]
+      if (build_with_chromium) {
+        use_native_activity = true
+        configs -= [ "//build/config/android:hide_all_but_jni" ]
+      } else {
+        use_raw_android_executable = true
       }
     }
   }
