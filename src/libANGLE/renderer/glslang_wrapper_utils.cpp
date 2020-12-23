@@ -277,19 +277,30 @@ void AddVaryingLocationInfo(ShaderInterfaceVariableInfoMap &infoMap,
 // Modify an existing out variable and add transform feedback information.
 ShaderInterfaceVariableInfo *SetXfbInfo(ShaderInterfaceVariableInfoMap *infoMap,
                                         const std::string &varName,
+                                        int fieldIndex,
                                         uint32_t xfbBuffer,
                                         uint32_t xfbOffset,
                                         uint32_t xfbStride)
 {
-    ShaderInterfaceVariableInfo *info = GetShaderInterfaceVariable(infoMap, varName);
+    ShaderInterfaceVariableInfo *info   = GetShaderInterfaceVariable(infoMap, varName);
+    ShaderInterfaceVariableXfbInfo *xfb = &info->xfb;
 
-    ASSERT(info->xfbBuffer == ShaderInterfaceVariableInfo::kInvalid);
-    ASSERT(info->xfbOffset == ShaderInterfaceVariableInfo::kInvalid);
-    ASSERT(info->xfbStride == ShaderInterfaceVariableInfo::kInvalid);
+    if (fieldIndex >= 0)
+    {
+        if (info->fieldXfb.size() <= static_cast<size_t>(fieldIndex))
+        {
+            info->fieldXfb.resize(fieldIndex + 1);
+        }
+        xfb = &info->fieldXfb[fieldIndex];
+    }
 
-    info->xfbBuffer = xfbBuffer;
-    info->xfbOffset = xfbOffset;
-    info->xfbStride = xfbStride;
+    ASSERT(xfb->buffer == ShaderInterfaceVariableXfbInfo::kInvalid);
+    ASSERT(xfb->offset == ShaderInterfaceVariableXfbInfo::kInvalid);
+    ASSERT(xfb->stride == ShaderInterfaceVariableXfbInfo::kInvalid);
+
+    xfb->buffer = xfbBuffer;
+    xfb->offset = xfbOffset;
+    xfb->stride = xfbStride;
     return info;
 }
 
@@ -435,13 +446,16 @@ void GenerateTransformFeedbackEmulationOutputs(const GlslangSourceOptions &optio
     *vertexShader = SubstituteTransformFeedbackMarkers(*vertexShader, xfbDecl, xfbOut);
 }
 
-bool IsFirstRegisterOfVarying(const gl::PackedVaryingRegister &varyingReg)
+bool IsFirstRegisterOfVarying(const gl::PackedVaryingRegister &varyingReg, bool allowFields)
 {
     const gl::PackedVarying &varying = *varyingReg.packedVarying;
 
     // In Vulkan GLSL, struct fields are not allowed to have location assignments.  The varying of a
-    // struct type is thus given a location equal to the one assigned to its first field.
-    if (varying.isStructField() && (varying.fieldIndex > 0 || varying.secondaryFieldIndex > 0))
+    // struct type is thus given a location equal to the one assigned to its first field.  With I/O
+    // blocks, transform feedback can capture an arbitrary field.  In that case, we need to look at
+    // every field, not just the first one.
+    if (!allowFields && varying.isStructField() &&
+        (varying.fieldIndex > 0 || varying.secondaryFieldIndex > 0))
     {
         return false;
     }
@@ -597,7 +611,7 @@ void AssignVaryingLocations(const GlslangSourceOptions &options,
     for (const gl::PackedVaryingRegister &varyingReg :
          programExecutable.getResources().varyingPacking.getRegisterList())
     {
-        if (!IsFirstRegisterOfVarying(varyingReg))
+        if (!IsFirstRegisterOfVarying(varyingReg, false))
         {
             continue;
         }
@@ -725,42 +739,59 @@ void AssignTransformFeedbackExtensionQualifiers(const gl::ProgramExecutable &pro
         }
 
         const gl::TransformFeedbackVarying &tfVarying = tfVaryings[varyingIndex];
-        const std::string &tfVaryingName              = tfVarying.mappedName;
 
         if (tfVarying.isBuiltIn())
         {
             uint32_t xfbVaryingLocation = currentBuiltinLocation++;
-            std::string xfbVaryingName  = kXfbBuiltInPrefix + tfVaryingName;
+            std::string xfbVaryingName  = kXfbBuiltInPrefix + tfVarying.mappedName;
 
             ASSERT(xfbVaryingLocation < locationsUsedForXfbExtension);
 
             AddLocationInfo(variableInfoMapOut, xfbVaryingName, xfbVaryingLocation,
                             ShaderInterfaceVariableInfo::kInvalid, shaderType, 0, 0);
-            SetXfbInfo(variableInfoMapOut, xfbVaryingName, bufferIndex, currentOffset,
+            SetXfbInfo(variableInfoMapOut, xfbVaryingName, -1, bufferIndex, currentOffset,
                        currentStride);
         }
         else if (!tfVarying.isArray() || tfVarying.arrayIndex == GL_INVALID_INDEX)
         {
             // Note: capturing individual array elements using the Vulkan transform feedback
-            // extension is not supported, and it unlikely to be ever supported (on the contrary, it
+            // extension is not supported, and is unlikely to be ever supported (on the contrary, it
             // may be removed from the GLES spec).  http://anglebug.com/4140
             // ANGLE should support capturing the whole array.
 
             // Find the varying with this name.  If a struct is captured, we would be iterating over
-            // its fields, and the name of the varying is found through parentStructMappedName.  Not
-            // only that, but also we should only do this for the first field of the struct.
+            // its fields, and the name of the varying is found through parentStructMappedName.
+            // This should only be done for the first field of the struct.  For I/O blocks on the
+            // other hand, we need to decorate the exact member that is captured (as whole-block
+            // capture is not supported).
             const gl::PackedVarying *originalVarying = nullptr;
             for (const gl::PackedVaryingRegister &varyingReg :
                  programExecutable.getResources().varyingPacking.getRegisterList())
             {
-                if (!IsFirstRegisterOfVarying(varyingReg))
+                if (!IsFirstRegisterOfVarying(varyingReg, tfVarying.isShaderIOBlock))
                 {
                     continue;
                 }
 
                 const gl::PackedVarying *varying = varyingReg.packedVarying;
 
-                if (varying->frontVarying.varying->name == tfVarying.name)
+                if (tfVarying.isShaderIOBlock)
+                {
+                    if (varying->frontVarying.parentStructName == tfVarying.structName)
+                    {
+                        size_t pos            = tfVarying.name.find_first_of(".");
+                        std::string fieldName = pos == std::string::npos
+                                                    ? tfVarying.name
+                                                    : tfVarying.name.substr(pos + 1);
+
+                        if (fieldName == varying->frontVarying.varying->name.c_str())
+                        {
+                            originalVarying = varying;
+                            break;
+                        }
+                    }
+                }
+                else if (varying->frontVarying.varying->name == tfVarying.name)
                 {
                     originalVarying = varying;
                     break;
@@ -774,9 +805,11 @@ void AssignTransformFeedbackExtensionQualifiers(const gl::ProgramExecutable &pro
                         ? originalVarying->frontVarying.parentStructMappedName
                         : originalVarying->frontVarying.varying->mappedName;
 
+                const int fieldIndex = tfVarying.isShaderIOBlock ? originalVarying->fieldIndex : -1;
+
                 // Set xfb info for this varying.  AssignVaryingLocations should have already added
                 // location information for these varyings.
-                SetXfbInfo(variableInfoMapOut, mappedName, bufferIndex, currentOffset,
+                SetXfbInfo(variableInfoMapOut, mappedName, fieldIndex, bufferIndex, currentOffset,
                            currentStride);
             }
         }
@@ -1107,6 +1140,7 @@ class SpirvTransformerBase : angle::NonCopyable
                                  const angle::FixedVector<uint32_t, 4> &constituents);
     void writeCompositeExtract(uint32_t id, uint32_t typeId, uint32_t compositeId, uint32_t field);
     void writeLoad(uint32_t id, uint32_t typeId, uint32_t tempVarId);
+    void writeMemberDecorate(uint32_t typeId, uint32_t member, uint32_t decoration, uint32_t value);
     void writeStore(uint32_t pointerId, uint32_t objectId);
     void writeTypePointer(uint32_t id, uint32_t storageClass, uint32_t typeId);
     void writeVariable(uint32_t id, uint32_t typeId, uint32_t storageClass);
@@ -1279,6 +1313,29 @@ void SpirvTransformerBase::writeLoad(uint32_t pointerId, uint32_t typeId, uint32
     load[kResultIdIndex]   = resultId;
     load[kPointerIdIndex]  = pointerId;
     copyInstruction(load.data(), kOpLoadInstructionLength);
+}
+
+void SpirvTransformerBase::writeMemberDecorate(uint32_t typeId,
+                                               uint32_t member,
+                                               uint32_t decoration,
+                                               uint32_t value)
+{
+    // SPIR-V 1.0 Section 3.32 Instructions, OpMemberDecorate
+    constexpr size_t kTypeIdIndex                       = 1;
+    constexpr size_t kMemberIndex                       = 2;
+    constexpr size_t kDecorationIndex                   = 3;
+    constexpr size_t kValueIndex                        = 4;
+    constexpr size_t kOpMemberDecorateInstructionLength = 5;
+
+    std::array<uint32_t, kOpMemberDecorateInstructionLength> memberDecorate = {};
+
+    SetSpirvInstructionOp(memberDecorate.data(), spv::OpMemberDecorate);
+    SetSpirvInstructionLength(memberDecorate.data(), kOpMemberDecorateInstructionLength);
+    memberDecorate[kTypeIdIndex]     = typeId;
+    memberDecorate[kMemberIndex]     = member;
+    memberDecorate[kDecorationIndex] = decoration;
+    memberDecorate[kValueIndex]      = value;
+    copyInstruction(memberDecorate.data(), kOpMemberDecorateInstructionLength);
 }
 
 void SpirvTransformerBase::writeStore(uint32_t pointerId, uint32_t objectId)
@@ -1736,6 +1793,22 @@ void SpirvTransformer::visitDecorate(const uint32_t *instruction)
     if (decoration == spv::DecorationBlock)
     {
         mIsIOBlockById[id] = true;
+
+        // For I/O blocks, associate the type with the info, which is used to decorate its members
+        // with transform feedback if any.
+        const char *name = mNamesById[id];
+        ASSERT(name != nullptr);
+
+        // TODO: decorate gl_PerVertex members for transform feedback similarly to I/O blocks
+        // http://anglebug.com/3606
+        if (strcmp(name, "gl_PerVertex") != 0)
+        {
+            auto infoIter = mVariableInfoMap.find(name);
+            ASSERT(infoIter != mVariableInfoMap.end());
+
+            const ShaderInterfaceVariableInfo *info = &infoIter->second;
+            mVariableInfoById[id]                   = info;
+        }
     }
 }
 
@@ -1950,7 +2023,7 @@ void SpirvTransformer::visitVariable(const uint32_t *instruction)
     // Note if the variable is captured by transform feedback.  In that case, the TransformFeedback
     // capability needs to be added.
     if (mOptions.shaderType != gl::ShaderType::Fragment &&
-        info->xfbBuffer != ShaderInterfaceVariableInfo::kInvalid &&
+        (info->xfb.buffer != ShaderInterfaceVariableInfo::kInvalid || !info->fieldXfb.empty()) &&
         info->activeStages[mOptions.shaderType])
     {
         mHasTransformFeedbackOutput = true;
@@ -1981,6 +2054,50 @@ bool SpirvTransformer::transformDecorate(const uint32_t *instruction, size_t wor
     if (!info->activeStages[mOptions.shaderType])
     {
         return true;
+    }
+
+    // If this is the Block decoration of a shader I/O block, add the transform feedback decorations
+    // to its members right away.
+    constexpr size_t kXfbDecorationCount                    = 3;
+    constexpr uint32_t kXfbDecorations[kXfbDecorationCount] = {
+        spv::DecorationXfbBuffer,
+        spv::DecorationXfbStride,
+        spv::DecorationOffset,
+    };
+
+    if (mOptions.shaderType != gl::ShaderType::Fragment && decoration == spv::DecorationBlock &&
+        !info->fieldXfb.empty())
+    {
+        for (uint32_t fieldIndex = 0; fieldIndex < info->fieldXfb.size(); ++fieldIndex)
+        {
+            const ShaderInterfaceVariableXfbInfo &xfb = info->fieldXfb[fieldIndex];
+
+            if (xfb.buffer == ShaderInterfaceVariableXfbInfo::kInvalid)
+            {
+                continue;
+            }
+
+            ASSERT(xfb.stride != ShaderInterfaceVariableXfbInfo::kInvalid);
+            ASSERT(xfb.offset != ShaderInterfaceVariableXfbInfo::kInvalid);
+
+            const uint32_t xfbDecorationValues[kXfbDecorationCount] = {
+                xfb.buffer,
+                xfb.stride,
+                xfb.offset,
+            };
+
+            // Generate the following three instructions:
+            //
+            //     OpMemberDecorate %id fieldIndex XfbBuffer xfb.buffer
+            //     OpMemberDecorate %id fieldIndex XfbStride xfb.stride
+            //     OpMemberDecorate %id fieldIndex Offset xfb.offset
+            for (size_t i = 0; i < kXfbDecorationCount; ++i)
+            {
+                writeMemberDecorate(id, fieldIndex, kXfbDecorations[i], xfbDecorationValues[i]);
+            }
+        }
+
+        return false;
     }
 
     uint32_t newDecorationValue = ShaderInterfaceVariableInfo::kInvalid;
@@ -2056,21 +2173,15 @@ bool SpirvTransformer::transformDecorate(const uint32_t *instruction, size_t wor
 
     // Add Xfb decorations, if any.
     if (mOptions.shaderType != gl::ShaderType::Fragment &&
-        info->xfbBuffer != ShaderInterfaceVariableInfo::kInvalid)
+        info->xfb.buffer != ShaderInterfaceVariableXfbInfo::kInvalid)
     {
-        ASSERT(info->xfbStride != ShaderInterfaceVariableInfo::kInvalid);
-        ASSERT(info->xfbOffset != ShaderInterfaceVariableInfo::kInvalid);
+        ASSERT(info->xfb.stride != ShaderInterfaceVariableXfbInfo::kInvalid);
+        ASSERT(info->xfb.offset != ShaderInterfaceVariableXfbInfo::kInvalid);
 
-        constexpr size_t kXfbDecorationCount                   = 3;
-        constexpr uint32_t xfbDecorations[kXfbDecorationCount] = {
-            spv::DecorationXfbBuffer,
-            spv::DecorationXfbStride,
-            spv::DecorationOffset,
-        };
         const uint32_t xfbDecorationValues[kXfbDecorationCount] = {
-            info->xfbBuffer,
-            info->xfbStride,
-            info->xfbOffset,
+            info->xfb.buffer,
+            info->xfb.stride,
+            info->xfb.offset,
         };
 
         // Copy the location decoration declaration three times, and modify them to contain the
@@ -2083,7 +2194,7 @@ bool SpirvTransformer::transformDecorate(const uint32_t *instruction, size_t wor
                 // Change the id to replacement variable
                 (*mSpirvBlobOut)[xfbInstructionOffset + kIdIndex] = mFixedVaryingId[id];
             }
-            (*mSpirvBlobOut)[xfbInstructionOffset + kDecorationIndex]      = xfbDecorations[i];
+            (*mSpirvBlobOut)[xfbInstructionOffset + kDecorationIndex]      = kXfbDecorations[i];
             (*mSpirvBlobOut)[xfbInstructionOffset + kDecorationValueIndex] = xfbDecorationValues[i];
         }
     }

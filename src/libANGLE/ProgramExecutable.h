@@ -75,8 +75,14 @@ struct TransformFeedbackVarying : public sh::ShaderVariable
         *thisVar                    = field;
         interpolation               = parent.interpolation;
         isInvariant                 = parent.isInvariant;
-        name                        = parent.name + "." + name;
-        mappedName                  = parent.mappedName + "." + mappedName;
+        ASSERT(parent.isShaderIOBlock || !parent.name.empty());
+        if (!parent.name.empty())
+        {
+            name       = parent.name + "." + name;
+            mappedName = parent.mappedName + "." + mappedName;
+        }
+        structName       = parent.structName;
+        mappedStructName = parent.mappedStructName;
     }
 
     std::string nameWithArrayIndex() const

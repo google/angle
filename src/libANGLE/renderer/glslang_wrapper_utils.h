@@ -64,6 +64,15 @@ using SpirvBlob = std::vector<uint32_t>;
 
 using GlslangErrorCallback = std::function<angle::Result(GlslangError)>;
 
+struct ShaderInterfaceVariableXfbInfo
+{
+    static constexpr uint32_t kInvalid = std::numeric_limits<uint32_t>::max();
+
+    uint32_t buffer = kInvalid;
+    uint32_t offset = kInvalid;
+    uint32_t stride = kInvalid;
+};
+
 // Information for each shader interface variable.  Not all fields are relevant to each shader
 // interface variable.  For example opaque uniforms require a set and binding index, while vertex
 // attributes require a location.
@@ -85,9 +94,8 @@ struct ShaderInterfaceVariableInfo
     // The stages this shader interface variable is active.
     gl::ShaderBitSet activeStages;
     // Used for transform feedback extension to decorate vertex shader output.
-    uint32_t xfbBuffer = kInvalid;
-    uint32_t xfbOffset = kInvalid;
-    uint32_t xfbStride = kInvalid;
+    ShaderInterfaceVariableXfbInfo xfb;
+    std::vector<ShaderInterfaceVariableXfbInfo> fieldXfb;
     // Indicates that the precision needs to be modified in the generated SPIR-V
     // to support only transferring medium precision data when there's a precision
     // mismatch between the shaders. For example, either the VS casts highp->mediump

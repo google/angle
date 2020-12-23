@@ -2809,9 +2809,6 @@ TEST_P(TransformFeedbackTestES31, IOBlocksInterleaved)
     // http://anglebug.com/5488
     ANGLE_SKIP_TEST_IF(IsQualcomm() && IsOpenGLES());
 
-    // Not supported in Vulkan yet.  http://anglebug.com/3606
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-
     constexpr char kVS[] = R"(#version 310 es
 #extension GL_EXT_shader_io_blocks : require
 
@@ -2919,9 +2916,6 @@ TEST_P(TransformFeedbackTestES31, IOBlocksSeparate)
 
     // http://anglebug.com/5488
     ANGLE_SKIP_TEST_IF(IsQualcomm() && IsOpenGLES());
-
-    // Not supported in Vulkan yet.  http://anglebug.com/3606
-    ANGLE_SKIP_TEST_IF(IsVulkan());
 
     constexpr char kVS[] = R"(#version 310 es
 #extension GL_EXT_shader_io_blocks : require

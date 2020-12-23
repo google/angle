@@ -229,10 +229,17 @@ std::unique_ptr<rx::LinkEvent> ProgramExecutableVk::load(gl::BinaryInputStream *
             info->location      = stream->readInt<uint32_t>();
             info->component     = stream->readInt<uint32_t>();
             // PackedEnumBitSet uses uint8_t
-            info->activeStages            = gl::ShaderBitSet(stream->readInt<uint8_t>());
-            info->xfbBuffer               = stream->readInt<uint32_t>();
-            info->xfbOffset               = stream->readInt<uint32_t>();
-            info->xfbStride               = stream->readInt<uint32_t>();
+            info->activeStages = gl::ShaderBitSet(stream->readInt<uint8_t>());
+            info->xfb.buffer   = stream->readInt<uint32_t>();
+            info->xfb.offset   = stream->readInt<uint32_t>();
+            info->xfb.stride   = stream->readInt<uint32_t>();
+            info->fieldXfb.resize(stream->readInt<size_t>());
+            for (ShaderInterfaceVariableXfbInfo &xfb : info->fieldXfb)
+            {
+                xfb.buffer = stream->readInt<uint32_t>();
+                xfb.offset = stream->readInt<uint32_t>();
+                xfb.stride = stream->readInt<uint32_t>();
+            }
             info->useRelaxedPrecision     = stream->readBool();
             info->varyingIsInput          = stream->readBool();
             info->varyingIsOutput         = stream->readBool();
@@ -258,9 +265,16 @@ void ProgramExecutableVk::save(gl::BinaryOutputStream *stream)
             stream->writeInt(it.second.component);
             // PackedEnumBitSet uses uint8_t
             stream->writeInt(it.second.activeStages.bits());
-            stream->writeInt(it.second.xfbBuffer);
-            stream->writeInt(it.second.xfbOffset);
-            stream->writeInt(it.second.xfbStride);
+            stream->writeInt(it.second.xfb.buffer);
+            stream->writeInt(it.second.xfb.offset);
+            stream->writeInt(it.second.xfb.stride);
+            stream->writeInt(it.second.fieldXfb.size());
+            for (const ShaderInterfaceVariableXfbInfo &xfb : it.second.fieldXfb)
+            {
+                stream->writeInt(xfb.buffer);
+                stream->writeInt(xfb.offset);
+                stream->writeInt(xfb.stride);
+            }
             stream->writeBool(it.second.useRelaxedPrecision);
             stream->writeBool(it.second.varyingIsInput);
             stream->writeBool(it.second.varyingIsOutput);

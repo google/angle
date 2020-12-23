@@ -522,18 +522,35 @@ void VaryingPacking::packUserVaryingTF(const ProgramVaryingRef &ref, size_t subs
 
 void VaryingPacking::packUserVaryingFieldTF(const ProgramVaryingRef &ref,
                                             const sh::ShaderVariable &field,
-                                            GLuint fieldIndex)
+                                            GLuint fieldIndex,
+                                            GLuint secondaryFieldIndex)
 {
     const sh::ShaderVariable *input = ref.frontShader;
 
-    VaryingInShaderRef frontVarying(ref.frontShaderStage, &field);
+    const sh::ShaderVariable *frontField = &field;
+    if (secondaryFieldIndex != GL_INVALID_INDEX)
+    {
+        frontField = &frontField->fields[secondaryFieldIndex];
+    }
+
+    VaryingInShaderRef frontVarying(ref.frontShaderStage, frontField);
     VaryingInShaderRef backVarying(ref.backShaderStage, nullptr);
 
-    frontVarying.parentStructName       = input->name;
-    frontVarying.parentStructMappedName = input->mappedName;
+    if (frontField->isShaderIOBlock)
+    {
+        frontVarying.parentStructName       = input->structName;
+        frontVarying.parentStructMappedName = input->mappedStructName;
+    }
+    else
+    {
+        ASSERT(!frontField->isStruct() && !frontField->isArray());
+        frontVarying.parentStructName       = input->name;
+        frontVarying.parentStructMappedName = input->mappedName;
+    }
 
     mPackedVaryings.emplace_back(std::move(frontVarying), std::move(backVarying),
-                                 input->interpolation, GL_INVALID_INDEX, fieldIndex, 0);
+                                 input->interpolation, GL_INVALID_INDEX, fieldIndex,
+                                 secondaryFieldIndex == GL_INVALID_INDEX ? 0 : secondaryFieldIndex);
 }
 
 bool VaryingPacking::collectAndPackUserVaryings(gl::InfoLog &infoLog,
@@ -620,6 +637,10 @@ bool VaryingPacking::collectAndPackUserVaryings(gl::InfoLog &infoLog,
                     if (input)
                     {
                         uniqueFullNames[ref.frontShaderStage].insert(input->name);
+                        if (input->isShaderIOBlock)
+                        {
+                            uniqueFullNames[ref.frontShaderStage].insert(input->structName);
+                        }
                     }
                     if (output)
                     {
@@ -655,9 +676,11 @@ bool VaryingPacking::collectAndPackUserVaryings(gl::InfoLog &infoLog,
             {
                 subscript = subscripts.back();
             }
-            // Already packed for fragment shader.
+            // Already packed as active varying.
             if (uniqueFullNames[ref.frontShaderStage].count(tfVarying) > 0 ||
-                uniqueFullNames[ref.frontShaderStage].count(baseName) > 0)
+                uniqueFullNames[ref.frontShaderStage].count(baseName) > 0 ||
+                (input->isShaderIOBlock &&
+                 uniqueFullNames[ref.frontShaderStage].count(input->structName) > 0))
             {
                 continue;
             }
@@ -667,9 +690,38 @@ bool VaryingPacking::collectAndPackUserVaryings(gl::InfoLog &infoLog,
                 const sh::ShaderVariable *field = input->findField(tfVarying, &fieldIndex);
                 if (field != nullptr)
                 {
-                    ASSERT(!field->isStruct() && (!field->isArray() || input->isShaderIOBlock));
+                    ASSERT(input->isShaderIOBlock || (!field->isStruct() && !field->isArray()));
 
-                    packUserVaryingFieldTF(ref, *field, fieldIndex);
+                    // If it's an I/O block whose member is being captured, pack every member of the
+                    // block.  Currently, we pack either all or none of an I/O block.
+                    if (input->isShaderIOBlock)
+                    {
+                        for (fieldIndex = 0; fieldIndex < input->fields.size(); ++fieldIndex)
+                        {
+                            if (input->fields[fieldIndex].isStruct())
+                            {
+
+                                for (GLuint nestedIndex = 0;
+                                     nestedIndex < input->fields[fieldIndex].fields.size();
+                                     nestedIndex++)
+                                {
+                                    packUserVaryingFieldTF(ref, input->fields[fieldIndex],
+                                                           fieldIndex, nestedIndex);
+                                }
+                            }
+                            else
+                            {
+                                packUserVaryingFieldTF(ref, input->fields[fieldIndex], fieldIndex,
+                                                       GL_INVALID_INDEX);
+                            }
+                        }
+
+                        uniqueFullNames[ref.frontShaderStage].insert(input->structName);
+                    }
+                    else
+                    {
+                        packUserVaryingFieldTF(ref, *field, fieldIndex, GL_INVALID_INDEX);
+                    }
                     uniqueFullNames[ref.frontShaderStage].insert(tfVarying);
                 }
                 uniqueFullNames[ref.frontShaderStage].insert(input->name);

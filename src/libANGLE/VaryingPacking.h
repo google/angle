@@ -263,7 +263,8 @@ class VaryingPacking final : angle::NonCopyable
     void packUserVaryingTF(const ProgramVaryingRef &ref, size_t subscript);
     void packUserVaryingFieldTF(const ProgramVaryingRef &ref,
                                 const sh::ShaderVariable &field,
-                                GLuint fieldIndex);
+                                GLuint fieldIndex,
+                                GLuint secondaryFieldIndex);
 
     void clearRegisterMap();
 
