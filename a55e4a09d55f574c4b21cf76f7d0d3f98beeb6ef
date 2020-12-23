@@ -48,6 +48,23 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "37f2d4a9_73149ed9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-23T21:17:43Z",
+      "side": 1,
+      "message": "The Android failures make me think we might need to fix the core/ext ordering issue to preserve existing behaviour. Unless we do get the \"nullptr\" pointers, which might be happening.",
+      "revId": "a55e4a09d55f574c4b21cf76f7d0d3f98beeb6ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "94c85c60_efb02024",
