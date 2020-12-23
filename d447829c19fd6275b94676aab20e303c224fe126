@@ -22,6 +22,30 @@
       },
       "revId": "d447829c19fd6275b94676aab20e303c224fe126",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1a16e32a_1906af79",
+        "filename": "src/libANGLE/renderer/gl/DispatchTableGL_autogen.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1000050
+      },
+      "writtenOn": "2020-12-23T18:52:17Z",
+      "side": 0,
+      "message": "I think the both orders should be fine, since we check the GL version or extension existing before querying address for a method. Probably we should add DCHECK() to make sure getAddrProc() never returns nullptr?",
+      "parentUuid": "fb17fdfd_3f85d760",
+      "range": {
+        "startLine": 20,
+        "startChar": 0,
+        "endLine": 20,
+        "endChar": 65
+      },
+      "revId": "d447829c19fd6275b94676aab20e303c224fe126",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
