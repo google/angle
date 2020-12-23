@@ -119,9 +119,11 @@ DispatchTableGL::DispatchTableGL() = default;
 
 void DispatchTableGL::initProcsDesktopGL(const gl::Version &version, const std::set<std::string> &extensions)
 {{
+#if defined(ANGLE_ENABLE_OPENGL_DESKTOP)
 {gl_data}
 
 {gl_extensions_data}
+#endif  // defined(ANGLE_ENABLE_OPENGL_DESKTOP)
 }}
 
 void DispatchTableGL::initProcsGLES(const gl::Version &version, const std::set<std::string> &extensions)
@@ -139,9 +141,11 @@ void DispatchTableGL::initProcsSharedExtensions(const std::set<std::string> &ext
 #if defined(ANGLE_ENABLE_OPENGL_NULL)
 void DispatchTableGL::initProcsDesktopGLNULL(const gl::Version &version, const std::set<std::string> &extensions)
 {{
+#if defined(ANGLE_ENABLE_OPENGL_DESKTOP)
 {gl_null_data}
 
 {gl_null_extensions_data}
+#endif  // defined(ANGLE_ENABLE_OPENGL_DESKTOP)
 }}
 
 void DispatchTableGL::initProcsGLESNULL(const gl::Version &version, const std::set<std::string> &extensions)

@@ -119,6 +119,7 @@ declare_args() {
   angle_enable_null = true
   angle_enable_essl = true
   angle_enable_glsl = true
+  angle_enable_gl_desktop = !is_android && !is_ios
 
   # http://anglebug.com/2634
   angle_enable_metal = is_mac

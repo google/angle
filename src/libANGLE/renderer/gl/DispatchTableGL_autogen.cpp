@@ -29,6 +29,7 @@ DispatchTableGL::DispatchTableGL() = default;
 void DispatchTableGL::initProcsDesktopGL(const gl::Version &version,
                                          const std::set<std::string> &extensions)
 {
+#if defined(ANGLE_ENABLE_OPENGL_DESKTOP)
     if (version >= gl::Version(1, 0))
     {
         ASSIGN("glBlendFunc", blendFunc);
@@ -1915,6 +1916,7 @@ void DispatchTableGL::initProcsDesktopGL(const gl::Version &version,
         ASSIGN("glClearDepthfOES", clearDepthf);
         ASSIGN("glDepthRangefOES", depthRangef);
     }
+#endif  // defined(ANGLE_ENABLE_OPENGL_DESKTOP)
 }
 
 void DispatchTableGL::initProcsGLES(const gl::Version &version,
@@ -2801,6 +2803,7 @@ void DispatchTableGL::initProcsSharedExtensions(const std::set<std::string> &ext
 void DispatchTableGL::initProcsDesktopGLNULL(const gl::Version &version,
                                              const std::set<std::string> &extensions)
 {
+#    if defined(ANGLE_ENABLE_OPENGL_DESKTOP)
     if (version >= gl::Version(1, 0))
     {
         blendFunc              = &glBlendFuncNULL;
@@ -4684,6 +4687,7 @@ void DispatchTableGL::initProcsDesktopGLNULL(const gl::Version &version,
         clearDepthf = &glClearDepthfNULL;
         depthRangef = &glDepthRangefNULL;
     }
+#    endif  // defined(ANGLE_ENABLE_OPENGL_DESKTOP)
 }
 
 void DispatchTableGL::initProcsGLESNULL(const gl::Version &version,
