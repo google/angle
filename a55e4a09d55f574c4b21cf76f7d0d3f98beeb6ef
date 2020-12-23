@@ -50,6 +50,98 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "94c85c60_efb02024",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2744,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-23T21:11:37Z",
+      "side": 1,
+      "message": "nit: this should be ANGLE only, since it\u0027s the ANGLE extension entry point.",
+      "range": {
+        "startLine": 2744,
+        "startChar": 34,
+        "endLine": 2744,
+        "endChar": 52
+      },
+      "revId": "a55e4a09d55f574c4b21cf76f7d0d3f98beeb6ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "650cb60b_26630898",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2865,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-23T21:11:37Z",
+      "side": 1,
+      "message": "this guy should check for the NV EP",
+      "range": {
+        "startLine": 2865,
+        "startChar": 5,
+        "endLine": 2865,
+        "endChar": 30
+      },
+      "revId": "a55e4a09d55f574c4b21cf76f7d0d3f98beeb6ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bea87aba_4bd8fd3d",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2891,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-23T21:11:37Z",
+      "side": 1,
+      "message": "this is a specific NV validation? I\u0027m surprised if there\u0027s any specific validations for the NV ext that don\u0027t apply to \"core\" as well.",
+      "range": {
+        "startLine": 2884,
+        "startChar": 0,
+        "endLine": 2891,
+        "endChar": 13
+      },
+      "revId": "a55e4a09d55f574c4b21cf76f7d0d3f98beeb6ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7cee0303_353c0665",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2085,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-23T21:11:37Z",
+      "side": 1,
+      "message": "I think you should probably leave this out as well.",
+      "range": {
+        "startLine": 2085,
+        "startChar": 48,
+        "endLine": 2085,
+        "endChar": 91
+      },
+      "revId": "a55e4a09d55f574c4b21cf76f7d0d3f98beeb6ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "55f80f22_41345b7f",
         "filename": "src/tests/gl_tests/BlitFramebufferANGLETest.cpp",
         "patchSetId": 5
