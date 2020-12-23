@@ -16,6 +16,24 @@
       "message": "Not sure what the deal with presubmit is. It\u0027s perfectly fine to have a Bug: tag with chromium:NNNNN, you shouldn\u0027t need to create an angle bug for it.\n\nRemoving the Bug: angleproject:5490 line and running presubmit locally doesn\u0027t produce an error :/",
       "revId": "352faec7658d6ba14ddb100a5067f3770f99b891",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c866b60f_116f25bf",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1000050
+      },
+      "writtenOn": "2020-12-23T19:46:53Z",
+      "side": 1,
+      "message": "Yeah. Not sure why the presubmit bot is not happy with chromium:NNNN.",
+      "parentUuid": "5429df40_d11aaba5",
+      "revId": "352faec7658d6ba14ddb100a5067f3770f99b891",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
