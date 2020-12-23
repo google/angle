@@ -318,11 +318,11 @@ angle::Result ProgramMtl::linkImpl(const gl::Context *glContext,
     // Gather variable info and transform sources.
     gl::ShaderMap<std::string> shaderSources;
     gl::ShaderMap<std::string> xfbOnlyShaderSources;
-    ShaderMapInterfaceVariableInfoMap variableInfoMap;
-    ShaderMapInterfaceVariableInfoMap xfbOnlyVariableInfoMap;
+    ShaderInterfaceVariableInfoMap variableInfoMap;
+    ShaderInterfaceVariableInfoMap xfbOnlyVariableInfoMap;
     mtl::GlslangGetShaderSource(mState, resources, &shaderSources,
                                 &xfbOnlyShaderSources[gl::ShaderType::Vertex], &variableInfoMap,
-                                &xfbOnlyVariableInfoMap[gl::ShaderType::Vertex]);
+                                &xfbOnlyVariableInfoMap);
 
     // Convert GLSL to spirv code
     gl::ShaderMap<std::vector<uint32_t>> shaderCodes;
@@ -341,8 +341,7 @@ angle::Result ProgramMtl::linkImpl(const gl::Context *glContext,
     }
 
     // Convert spirv code to MSL
-    ANGLE_TRY(mtl::SpirvCodeToMsl(contextMtl, mState,
-                                  xfbOnlyVariableInfoMap[gl::ShaderType::Vertex], &shaderCodes,
+    ANGLE_TRY(mtl::SpirvCodeToMsl(contextMtl, mState, xfbOnlyVariableInfoMap, &shaderCodes,
                                   &xfbOnlyShaderCodes[gl::ShaderType::Vertex],
                                   &mMslShaderTranslateInfo, &mMslXfbOnlyVertexShaderInfo));
 

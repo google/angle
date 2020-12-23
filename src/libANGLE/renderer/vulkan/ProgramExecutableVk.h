@@ -32,7 +32,7 @@ class ShaderInfo final : angle::NonCopyable
     angle::Result initShaders(ContextVk *contextVk,
                               const gl::ShaderBitSet &linkedShaderStages,
                               const gl::ShaderMap<std::string> &shaderSources,
-                              ProgramExecutableVk *executableVk);
+                              const ShaderInterfaceVariableInfoMap &variableInfoMap);
     void release(ContextVk *contextVk);
 
     ANGLE_INLINE bool valid() const { return mIsInitialized; }
@@ -69,7 +69,7 @@ class ProgramInfo final : angle::NonCopyable
                               const gl::ShaderType shaderType,
                               const ShaderInfo &shaderInfo,
                               ProgramTransformOptions optionBits,
-                              ProgramExecutableVk *executableVk);
+                              const ShaderInterfaceVariableInfoMap &variableInfoMap);
     void release(ContextVk *contextVk);
 
     ANGLE_INLINE bool valid(const gl::ShaderType shaderType) const
@@ -110,10 +110,6 @@ class ProgramExecutableVk
     std::unique_ptr<rx::LinkEvent> load(gl::BinaryInputStream *stream);
 
     void clearVariableInfoMap();
-    ShaderMapInterfaceVariableInfoMap &getShaderInterfaceVariableInfoMap()
-    {
-        return mVariableInfoMap;
-    }
 
     ProgramVk *getShaderProgram(const gl::State &glState, gl::ShaderType shaderType) const;
 
@@ -229,9 +225,9 @@ class ProgramExecutableVk
         ContextVk *contextVk,
         vk::ResourceUseList *resourceUseList,
         vk::CommandBufferHelper *commandBufferHelper);
-    angle::Result updateImagesDescriptorSet(const gl::ProgramExecutable &executable,
-                                            const gl::ShaderType shaderType,
-                                            ContextVk *contextVk);
+    angle::Result updateImagesDescriptorSet(ContextVk *contextVk,
+                                            const gl::ProgramExecutable &executable,
+                                            const gl::ShaderType shaderType);
     angle::Result initDynamicDescriptorPools(ContextVk *contextVk,
                                              vk::DescriptorSetLayoutDesc &descriptorSetLayoutDesc,
                                              DescriptorSetIndex descriptorSetIndex,
@@ -268,7 +264,7 @@ class ProgramExecutableVk
 
     // TODO: http://anglebug.com/4524: Need a different hash key than a string,
     // since that's slow to calculate.
-    ShaderMapInterfaceVariableInfoMap mVariableInfoMap;
+    ShaderInterfaceVariableInfoMap mVariableInfoMap;
 
     // We store all permutations of surface rotation and transformed SPIR-V programs here. We may
     // need some LRU algorithm to free least used programs to reduce the number of programs.

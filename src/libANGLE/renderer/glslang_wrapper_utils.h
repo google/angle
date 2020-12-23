@@ -111,10 +111,46 @@ struct ShaderInterfaceVariableInfo
     uint8_t attributeLocationCount  = 0;
 };
 
-// TODO: http://anglebug.com/4524: Need a different hash key than a string, since
-// that's slow to calculate.
-using ShaderInterfaceVariableInfoMap    = angle::HashMap<std::string, ShaderInterfaceVariableInfo>;
-using ShaderMapInterfaceVariableInfoMap = gl::ShaderMap<ShaderInterfaceVariableInfoMap>;
+// TODO: http://anglebug.com/4524: Need a different hash key than a string, since that's slow to
+// calculate.
+class ShaderInterfaceVariableInfoMap final : angle::NonCopyable
+{
+  public:
+    ShaderInterfaceVariableInfoMap();
+    ~ShaderInterfaceVariableInfoMap();
+
+    void clear();
+    bool contains(gl::ShaderType shaderType, const std::string &variableName) const;
+    const ShaderInterfaceVariableInfo &get(gl::ShaderType shaderType,
+                                           const std::string &variableName) const;
+    ShaderInterfaceVariableInfo &get(gl::ShaderType shaderType, const std::string &variableName);
+    ShaderInterfaceVariableInfo &add(gl::ShaderType shaderType, const std::string &variableName);
+    ShaderInterfaceVariableInfo &addOrGet(gl::ShaderType shaderType,
+                                          const std::string &variableName);
+    size_t variableCount(gl::ShaderType shaderType) const { return mData[shaderType].size(); }
+
+    using VariableNameToInfoMap = angle::HashMap<std::string, ShaderInterfaceVariableInfo>;
+
+    class Iterator final
+    {
+      public:
+        Iterator(VariableNameToInfoMap::const_iterator beginIt,
+                 VariableNameToInfoMap::const_iterator endIt)
+            : mBeginIt(beginIt), mEndIt(endIt)
+        {}
+        VariableNameToInfoMap::const_iterator begin() { return mBeginIt; }
+        VariableNameToInfoMap::const_iterator end() { return mEndIt; }
+
+      private:
+        VariableNameToInfoMap::const_iterator mBeginIt;
+        VariableNameToInfoMap::const_iterator mEndIt;
+    };
+
+    Iterator getIterator(gl::ShaderType shaderType) const;
+
+  private:
+    gl::ShaderMap<VariableNameToInfoMap> mData;
+};
 
 void GlslangInitialize();
 void GlslangRelease();
@@ -139,7 +175,7 @@ void GlslangAssignLocations(const GlslangSourceOptions &options,
                             const gl::ShaderType shaderType,
                             const gl::ShaderType frontShaderType,
                             GlslangProgramInterfaceInfo *programInterfaceInfo,
-                            gl::ShaderMap<ShaderInterfaceVariableInfoMap> *variableInfoMapOut);
+                            ShaderInterfaceVariableInfoMap *variableInfoMapOut);
 
 // Transform the source to include actual binding points for various shader resources (textures,
 // buffers, xfb, etc).  For some variables, these values are instead output to the variableInfoMap
@@ -150,10 +186,11 @@ void GlslangGetShaderSource(const GlslangSourceOptions &options,
                             const gl::ProgramLinkedResources &resources,
                             GlslangProgramInterfaceInfo *programInterfaceInfo,
                             gl::ShaderMap<std::string> *shaderSourcesOut,
-                            ShaderMapInterfaceVariableInfoMap *variableInfoMapOut);
+                            ShaderInterfaceVariableInfoMap *variableInfoMapOut);
 
 angle::Result GlslangTransformSpirvCode(const GlslangErrorCallback &callback,
                                         const GlslangSpirvOptions &options,
+                                        gl::ShaderType shaderType,
                                         const ShaderInterfaceVariableInfoMap &variableInfoMap,
                                         const SpirvBlob &initialSpirvBlob,
                                         SpirvBlob *spirvBlobOut);

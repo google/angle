@@ -145,22 +145,24 @@ class ProgramVk : public ProgramImpl
                                           const gl::ProgramExecutable &glExecutable,
                                           gl::ShaderMap<VkDeviceSize> &uniformOffsets) const;
 
-    ANGLE_INLINE angle::Result initGraphicsShaderProgram(ContextVk *contextVk,
-                                                         const gl::ShaderType shaderType,
-                                                         ProgramTransformOptions optionBits,
-                                                         ProgramInfo *programInfo,
-                                                         ProgramExecutableVk *executableVk)
+    ANGLE_INLINE angle::Result initGraphicsShaderProgram(
+        ContextVk *contextVk,
+        const gl::ShaderType shaderType,
+        ProgramTransformOptions optionBits,
+        ProgramInfo *programInfo,
+        const ShaderInterfaceVariableInfoMap &variableInfoMap)
     {
-        return initProgram(contextVk, shaderType, optionBits, programInfo, executableVk);
+        return initProgram(contextVk, shaderType, optionBits, programInfo, variableInfoMap);
     }
 
-    ANGLE_INLINE angle::Result initComputeProgram(ContextVk *contextVk,
-                                                  ProgramInfo *programInfo,
-                                                  ProgramExecutableVk *executableVk)
+    ANGLE_INLINE angle::Result initComputeProgram(
+        ContextVk *contextVk,
+        ProgramInfo *programInfo,
+        const ShaderInterfaceVariableInfoMap &variableInfoMap)
     {
         ProgramTransformOptions optionBits = {};
         return initProgram(contextVk, gl::ShaderType::Compute, optionBits, programInfo,
-                           executableVk);
+                           variableInfoMap);
     }
 
     GlslangProgramInterfaceInfo &getGlslangProgramInterfaceInfo()
@@ -194,7 +196,7 @@ class ProgramVk : public ProgramImpl
                                            const gl::ShaderType shaderType,
                                            ProgramTransformOptions optionBits,
                                            ProgramInfo *programInfo,
-                                           ProgramExecutableVk *executableVk)
+                                           const ShaderInterfaceVariableInfoMap &variableInfoMap)
     {
         ASSERT(mOriginalShaderInfo.valid());
 
@@ -203,7 +205,7 @@ class ProgramVk : public ProgramImpl
         if (!programInfo->valid(shaderType))
         {
             ANGLE_TRY(programInfo->initProgram(contextVk, shaderType, mOriginalShaderInfo,
-                                               optionBits, executableVk));
+                                               optionBits, variableInfoMap));
         }
         ASSERT(programInfo->valid(shaderType));
 

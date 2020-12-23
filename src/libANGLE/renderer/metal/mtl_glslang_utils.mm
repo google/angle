@@ -407,7 +407,7 @@ void GlslangGetShaderSource(const gl::ProgramState &programState,
                             const gl::ProgramLinkedResources &resources,
                             gl::ShaderMap<std::string> *shaderSourcesOut,
                             std::string *xfbOnlyShaderSourceOut,
-                            ShaderMapInterfaceVariableInfoMap *variableInfoMapOut,
+                            ShaderInterfaceVariableInfoMap *variableInfoMapOut,
                             ShaderInterfaceVariableInfoMap *xfbOnlyVSVariableInfoMapOut)
 {
     GlslangSourceOptions options = CreateSourceOptions();
@@ -425,18 +425,16 @@ void GlslangGetShaderSource(const gl::ProgramState &programState,
 
         GlslangProgramInterfaceInfo xfbOnlyInterfaceInfo;
         ResetGlslangProgramInterfaceInfo(&xfbOnlyInterfaceInfo);
-        ShaderMapInterfaceVariableInfoMap xfbOnlyVariableMaps;
 
         options.emulateTransformFeedback = true;
 
         rx::GlslangGenTransformFeedbackEmulationOutputs(
             options, programState, &xfbOnlyInterfaceInfo, xfbOnlyShaderSourceOut,
-            &xfbOnlyVariableMaps[gl::ShaderType::Vertex]);
+            xfbOnlyVSVariableInfoMapOut);
 
         GlslangAssignLocations(options, programState.getExecutable(), gl::ShaderType::Vertex,
                                gl::ShaderType::InvalidEnum, &xfbOnlyInterfaceInfo,
-                               &xfbOnlyVariableMaps);
-        *xfbOnlyVSVariableInfoMapOut = std::move(xfbOnlyVariableMaps[gl::ShaderType::Vertex]);
+                               xfbOnlyVSVariableInfoMapOut);
     }
 }
 
@@ -444,7 +442,7 @@ angle::Result GlslangGetShaderSpirvCode(ErrorHandler *context,
                                         const gl::ShaderBitSet &linkedShaderStages,
                                         const gl::Caps &glCaps,
                                         const gl::ShaderMap<std::string> &shaderSources,
-                                        const ShaderMapInterfaceVariableInfoMap &variableInfoMap,
+                                        const ShaderInterfaceVariableInfoMap &variableInfoMap,
                                         gl::ShaderMap<std::vector<uint32_t>> *shaderCodeOut)
 {
     gl::ShaderMap<SpirvBlob> initialSpirvBlobs;
@@ -460,7 +458,7 @@ angle::Result GlslangGetShaderSpirvCode(ErrorHandler *context,
 
         angle::Result status = GlslangTransformSpirvCode(
             [context](GlslangError error) { return HandleError(context, error); }, options,
-            variableInfoMap[shaderType], initialSpirvBlobs[shaderType],
+            shaderType, variableInfoMap, initialSpirvBlobs[shaderType],
             &(*shaderCodeOut)[shaderType]);
         if (status != angle::Result::Continue)
         {
@@ -495,9 +493,11 @@ angle::Result SpirvCodeToMsl(Context *context,
     for (uint32_t bufferIdx = 0; bufferIdx < kMaxShaderXFBs; ++bufferIdx)
     {
         std::string bufferName = rx::GetXfbBufferName(bufferIdx);
-        if (xfbVSVariableInfoMap.count(bufferName))
+        if (xfbVSVariableInfoMap.contains(gl::ShaderType::Vertex, bufferName))
         {
-            xfbOriginalBindings[xfbVSVariableInfoMap.at(bufferName).binding] = bufferIdx;
+            const ShaderInterfaceVariableInfo &info =
+                xfbVSVariableInfoMap.get(gl::ShaderType::Vertex, bufferName);
+            xfbOriginalBindings[info.binding] = bufferIdx;
         }
     }
 

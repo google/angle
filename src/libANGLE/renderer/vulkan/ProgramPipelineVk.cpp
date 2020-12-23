@@ -84,7 +84,7 @@ angle::Result ProgramPipelineVk::link(const gl::Context *glContext,
 
             GlslangAssignLocations(options, glProgram->getState().getExecutable(), shaderType,
                                    frontShaderType, &glslangProgramInterfaceInfo,
-                                   &mExecutable.getShaderInterfaceVariableInfoMap());
+                                   &mExecutable.mVariableInfoMap);
             frontShaderType = shaderType;
         }
     }

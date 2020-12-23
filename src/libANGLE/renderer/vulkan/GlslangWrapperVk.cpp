@@ -62,7 +62,7 @@ void GlslangWrapperVk::GetShaderSource(const angle::FeaturesVk &features,
                                        const gl::ProgramLinkedResources &resources,
                                        GlslangProgramInterfaceInfo *programInterfaceInfo,
                                        gl::ShaderMap<std::string> *shaderSourcesOut,
-                                       ShaderMapInterfaceVariableInfoMap *variableInfoMapOut)
+                                       ShaderInterfaceVariableInfoMap *variableInfoMapOut)
 {
     GlslangSourceOptions options = CreateSourceOptions(features);
     GlslangGetShaderSource(options, programState, resources, programInterfaceInfo, shaderSourcesOut,
@@ -85,12 +85,13 @@ angle::Result GlslangWrapperVk::GetShaderCode(vk::Context *context,
 angle::Result GlslangWrapperVk::TransformSpirV(
     vk::Context *context,
     const GlslangSpirvOptions &options,
+    gl::ShaderType shaderType,
     const ShaderInterfaceVariableInfoMap &variableInfoMap,
     const SpirvBlob &initialSpirvBlob,
     SpirvBlob *shaderCodeOut)
 {
     return GlslangTransformSpirvCode(
-        [context](GlslangError error) { return ErrorHandler(context, error); }, options,
+        [context](GlslangError error) { return ErrorHandler(context, error); }, options, shaderType,
         variableInfoMap, initialSpirvBlob, shaderCodeOut);
 }
 

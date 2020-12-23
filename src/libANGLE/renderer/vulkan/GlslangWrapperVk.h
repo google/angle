@@ -35,7 +35,7 @@ class GlslangWrapperVk
                                 const gl::ProgramLinkedResources &resources,
                                 GlslangProgramInterfaceInfo *programInterfaceInfo,
                                 gl::ShaderMap<std::string> *shaderSourcesOut,
-                                ShaderMapInterfaceVariableInfoMap *variableInfoMapOut);
+                                ShaderInterfaceVariableInfoMap *variableInfoMapOut);
 
     static angle::Result GetShaderCode(vk::Context *context,
                                        const gl::ShaderBitSet &linkedShaderStages,
@@ -45,6 +45,7 @@ class GlslangWrapperVk
 
     static angle::Result TransformSpirV(vk::Context *context,
                                         const GlslangSpirvOptions &options,
+                                        gl::ShaderType shaderType,
                                         const ShaderInterfaceVariableInfoMap &variableInfoMap,
                                         const SpirvBlob &initialSpirvBlob,
                                         SpirvBlob *shaderCodeOut);

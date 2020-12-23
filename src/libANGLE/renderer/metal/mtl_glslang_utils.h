@@ -47,14 +47,14 @@ void GlslangGetShaderSource(const gl::ProgramState &programState,
                             const gl::ProgramLinkedResources &resources,
                             gl::ShaderMap<std::string> *shaderSourcesOut,
                             std::string *xfbOnlyShaderSourceOut,
-                            ShaderMapInterfaceVariableInfoMap *variableInfoMapOut,
+                            ShaderInterfaceVariableInfoMap *variableInfoMapOut,
                             ShaderInterfaceVariableInfoMap *xfbOnlyVSVariableInfoMapOut);
 
 angle::Result GlslangGetShaderSpirvCode(ErrorHandler *context,
                                         const gl::ShaderBitSet &linkedShaderStages,
                                         const gl::Caps &glCaps,
                                         const gl::ShaderMap<std::string> &shaderSources,
-                                        const ShaderMapInterfaceVariableInfoMap &variableInfoMap,
+                                        const ShaderInterfaceVariableInfoMap &variableInfoMap,
                                         gl::ShaderMap<std::vector<uint32_t>> *shaderCodeOut);
 
 // Translate from SPIR-V code to Metal shader source code.
