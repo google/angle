@@ -46,6 +46,30 @@
       },
       "revId": "d447829c19fd6275b94676aab20e303c224fe126",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9e622324_7d77f9e7",
+        "filename": "src/libANGLE/renderer/gl/DispatchTableGL_autogen.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-23T19:00:11Z",
+      "side": 0,
+      "message": "\"EXT\" versions might behave slightly differently. If we have a choice between EXT and core, we should use core to be safe. Validation rules are sometimes different. Which makes me think putting the exts first would preserve the current behaviour.\n\nAdding a check for non-nullptr sounds good. ANGLE uses \"ASSERT\" instead of \"DCHECK\".",
+      "parentUuid": "1a16e32a_1906af79",
+      "range": {
+        "startLine": 20,
+        "startChar": 0,
+        "endLine": 20,
+        "endChar": 65
+      },
+      "revId": "d447829c19fd6275b94676aab20e303c224fe126",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
