@@ -56,6 +56,30 @@
       },
       "revId": "3ff5d437fb8f2f9693bb8447e24346592dcb0f21",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bedb50c7_053e81b5",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 5421,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-23T22:12:07Z",
+      "side": 1,
+      "message": "Here are snippets of the GL calls that FIFA makes, along with some extra TIMTIM logging showing the value of VertexArrayState::mCachedInvalidMappedArrayBuffer.   We need the value to be \u00270\u0027, so that the draw call will succeed.   Otherwise, if any bit is set in VertexArrayState::mCachedInvalidMappedArrayBuffer, then ValidateDrawStates() generates the error \"An active buffer is mapped\", which can be seen at the end of the \"BAD - Without buffer-\u003eonStateChange in Context::vertexAttribPointer\" snippet.\n\nGOOD\nhttps://paste.googleplex.com/5750416563240960\nBAD\nhttps://paste.googleplex.com/5570053236850688\n\nIn particular, note that the difference between good vs bad is that with this call, VertexArray::updateCachedMappedArrayBuffers() is called for every vertex binding (index) rather than just the first binding.   This is effectively doing what the for loop was accomplishing.",
+      "parentUuid": "a2a3c8fe_62f2262e",
+      "range": {
+        "startLine": 5417,
+        "startChar": 0,
+        "endLine": 5421,
+        "endChar": 5
+      },
+      "revId": "3ff5d437fb8f2f9693bb8447e24346592dcb0f21",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
