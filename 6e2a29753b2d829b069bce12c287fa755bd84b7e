@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "03f88ad2_0b39bfef",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1401,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2020-12-23T18:30:45Z",
+      "side": 1,
+      "message": "I would probably clean up and refactor this so it\u0027s not duplicating so much, but I want to hear some opinions on my second comment first.",
+      "range": {
+        "startLine": 1384,
+        "startChar": 4,
+        "endLine": 1401,
+        "endChar": 0
+      },
+      "revId": "6e2a29753b2d829b069bce12c287fa755bd84b7e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7c901fcd_c1c6832e",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1440,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2020-12-23T18:30:45Z",
+      "side": 1,
+      "message": "Here\u0027s something I\u0027m unsure about.\n\nI don\u0027t see this error condition in NV_framebuffer_blit, but it does exist for ES3 BlitFramebuffer.\n\nShould this be checked only if the user calls the core BlitFramebuffer and not if they call BlitFramebufferNV (like I have it)?\n\nAlso, what about in the backend, if I were to call BlitFramebufferNV on the frontend with a linear filter for an integer read format, and ANGLE was running on ES3 it would produce a driver error. I\u0027m not sure what the best thing to do here is.",
+      "range": {
+        "startLine": 1436,
+        "startChar": 0,
+        "endLine": 1440,
+        "endChar": 13
+      },
+      "revId": "6e2a29753b2d829b069bce12c287fa755bd84b7e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
