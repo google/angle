@@ -80,6 +80,53 @@
       },
       "revId": "3ff5d437fb8f2f9693bb8447e24346592dcb0f21",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9a521eaf_708b551e",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 5421,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-23T22:30:30Z",
+      "side": 1,
+      "message": "Can you debug it? I was looking through it a bit, and didn\u0027t quite spot it. I think it\u0027s a small bug in your implementation that you\u0027re working around using a broader dirty bit swab. GL is a bit tricky... if not we can resume next week and I can help pinpoint it.\n\nIf it\u0027s an existing bug in the prior mapped approach it would be good to pinpoint as well.",
+      "parentUuid": "bedb50c7_053e81b5",
+      "range": {
+        "startLine": 5417,
+        "startChar": 0,
+        "endLine": 5421,
+        "endChar": 5
+      },
+      "revId": "3ff5d437fb8f2f9693bb8447e24346592dcb0f21",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "03d93f8a_f1726338",
+        "filename": "src/libANGLE/VertexArray.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 253,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-23T22:30:30Z",
+      "side": 1,
+      "message": "this name is no longer correct.",
+      "range": {
+        "startLine": 253,
+        "startChar": 31,
+        "endLine": 253,
+        "endChar": 61
+      },
+      "revId": "3ff5d437fb8f2f9693bb8447e24346592dcb0f21",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
