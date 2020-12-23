@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c17b6257_6d5b1976",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 455,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-23T17:06:59Z",
+      "side": 1,
+      "message": "I don\u0027t quite understand this part.   Why does this conditional require not allowing field members, but then continue checking struct fields?   To me, this reads like: \"don\u0027t check struct fields, but also struct fields need these properties\", which seems contradictory.\n\nAlso, what\u0027s the difference between a field and a member, since they sound the same to me?",
+      "range": {
+        "startLine": 455,
+        "startChar": 8,
+        "endLine": 455,
+        "endChar": 29
+      },
+      "revId": "a1e7b8ad6af467964c2ba1339877dedf93be9632",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
