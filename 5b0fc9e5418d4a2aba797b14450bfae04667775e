@@ -3,6 +3,23 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "714f3dfc_6b296278",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2020-12-23T23:14:18Z",
+      "side": 1,
+      "message": "BlitFramebufferANGLETest.BlitColorWithFlip/ES2_OpenGL is failing because it\u0027s taking the BlitFramebufferANGLE path, even though the test calls glBlitFrameBuffer (core)\n\nIf I change the test to use glBlitFramebufferNV it passes -- however what would be the best way to ensure ANGLE uses the core/NV entry point instead of the ANGLE one when available by default?",
+      "revId": "5b0fc9e5418d4a2aba797b14450bfae04667775e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "dbc2c621_45ad87ee",
         "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
         "patchSetId": 6
