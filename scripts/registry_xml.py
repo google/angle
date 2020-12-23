@@ -107,6 +107,7 @@ gles_extensions = [
     "GL_KHR_debug",
     "GL_KHR_parallel_shader_compile",
     "GL_NV_fence",
+    "GL_NV_framebuffer_blit",
     "GL_OES_compressed_ETC1_RGB8_texture",
     "GL_EXT_compressed_ETC1_RGB8_sub_texture",
     "GL_OES_copy_image",

@@ -2862,6 +2862,22 @@ bool ValidateBlitFramebufferANGLE(const Context *context,
                                              dstX1, dstY1, mask, filter);
 }
 
+bool ValidateBlitFramebufferNV(const Context *context,
+                               GLint srcX0,
+                               GLint srcY0,
+                               GLint srcX1,
+                               GLint srcY1,
+                               GLint dstX0,
+                               GLint dstY0,
+                               GLint dstX1,
+                               GLint dstY1,
+                               GLbitfield mask,
+                               GLenum filter)
+{
+    UNIMPLEMENTED();
+    return false;
+}
+
 bool ValidateClear(const Context *context, GLbitfield mask)
 {
     Framebuffer *fbo             = context->getState().getDrawFramebuffer();

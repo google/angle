@@ -229,6 +229,19 @@ void FrameCapture::ReplayCall(gl::Context *context,
                 params.getParam("mask", ParamType::TGLbitfield, 8).value.GLbitfieldVal,
                 params.getParam("filter", ParamType::TGLenum, 9).value.GLenumVal);
             break;
+        case angle::EntryPoint::GLBlitFramebufferNV:
+            context->blitFramebufferNV(
+                params.getParam("srcX0", ParamType::TGLint, 0).value.GLintVal,
+                params.getParam("srcY0", ParamType::TGLint, 1).value.GLintVal,
+                params.getParam("srcX1", ParamType::TGLint, 2).value.GLintVal,
+                params.getParam("srcY1", ParamType::TGLint, 3).value.GLintVal,
+                params.getParam("dstX0", ParamType::TGLint, 4).value.GLintVal,
+                params.getParam("dstY0", ParamType::TGLint, 5).value.GLintVal,
+                params.getParam("dstX1", ParamType::TGLint, 6).value.GLintVal,
+                params.getParam("dstY1", ParamType::TGLint, 7).value.GLintVal,
+                params.getParam("mask", ParamType::TGLbitfield, 8).value.GLbitfieldVal,
+                params.getParam("filter", ParamType::TGLenum, 9).value.GLenumVal);
+            break;
         case angle::EntryPoint::GLBufferData:
             context->bufferData(
                 params.getParam("targetPacked", ParamType::TBufferBinding, 0)

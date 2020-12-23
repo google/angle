@@ -179,6 +179,7 @@ enum class EntryPoint
     GLBlendFunciOES,
     GLBlitFramebuffer,
     GLBlitFramebufferANGLE,
+    GLBlitFramebufferNV,
     GLBlitNamedFramebuffer,
     GLBufferData,
     GLBufferStorage,

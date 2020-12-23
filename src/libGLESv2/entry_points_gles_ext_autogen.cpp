@@ -7813,6 +7813,46 @@ GLboolean GL_APIENTRY TestFenceNV(GLuint fence)
     return returnValue;
 }
 
+// GL_NV_framebuffer_blit
+void GL_APIENTRY BlitFramebufferNV(GLint srcX0,
+                                   GLint srcY0,
+                                   GLint srcX1,
+                                   GLint srcY1,
+                                   GLint dstX0,
+                                   GLint dstY0,
+                                   GLint dstX1,
+                                   GLint dstY1,
+                                   GLbitfield mask,
+                                   GLenum filter)
+{
+    Context *context = GetValidGlobalContext();
+    EVENT(context, GLBlitFramebufferNV,
+          "context = %d, srcX0 = %d, srcY0 = %d, srcX1 = %d, srcY1 = %d, dstX0 = %d, dstY0 = %d, "
+          "dstX1 = %d, dstY1 = %d, mask = %s, filter = %s",
+          CID(context), srcX0, srcY0, srcX1, srcY1, dstX0, dstY0, dstX1, dstY1,
+          GLbitfieldToString(GLenumGroup::ClearBufferMask, mask).c_str(),
+          GLenumToString(GLenumGroup::BlitFramebufferFilter, filter));
+
+    if (context)
+    {
+        std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateBlitFramebufferNV(context, srcX0, srcY0, srcX1, srcY1, dstX0,
+                                                      dstY0, dstX1, dstY1, mask, filter));
+        if (isCallValid)
+        {
+            context->blitFramebufferNV(srcX0, srcY0, srcX1, srcY1, dstX0, dstY0, dstX1, dstY1, mask,
+                                       filter);
+        }
+        ANGLE_CAPTURE(BlitFramebufferNV, isCallValid, context, srcX0, srcY0, srcX1, srcY1, dstX0,
+                      dstY0, dstX1, dstY1, mask, filter);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
+}
+
 // GL_OES_EGL_image
 void GL_APIENTRY EGLImageTargetRenderbufferStorageOES(GLenum target, GLeglImageOES image)
 {
@@ -11418,6 +11458,47 @@ void GL_APIENTRY BlitFramebufferANGLEContextANGLE(GLeglContext ctx,
                                      filter);
         }
         ANGLE_CAPTURE(BlitFramebufferANGLE, isCallValid, context, srcX0, srcY0, srcX1, srcY1, dstX0,
+                      dstY0, dstX1, dstY1, mask, filter);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
+}
+
+void GL_APIENTRY BlitFramebufferNVContextANGLE(GLeglContext ctx,
+                                               GLint srcX0,
+                                               GLint srcY0,
+                                               GLint srcX1,
+                                               GLint srcY1,
+                                               GLint dstX0,
+                                               GLint dstY0,
+                                               GLint dstX1,
+                                               GLint dstY1,
+                                               GLbitfield mask,
+                                               GLenum filter)
+{
+    Context *context = static_cast<gl::Context *>(ctx);
+    EVENT(context, GLBlitFramebufferNV,
+          "context = %d, srcX0 = %d, srcY0 = %d, srcX1 = %d, srcY1 = %d, dstX0 = %d, dstY0 = %d, "
+          "dstX1 = %d, dstY1 = %d, mask = %s, filter = %s",
+          CID(context), srcX0, srcY0, srcX1, srcY1, dstX0, dstY0, dstX1, dstY1,
+          GLbitfieldToString(GLenumGroup::ClearBufferMask, mask).c_str(),
+          GLenumToString(GLenumGroup::BlitFramebufferFilter, filter));
+
+    if (context && !context->isContextLost())
+    {
+        ASSERT(context == GetValidGlobalContext());
+        std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidateBlitFramebufferNV(context, srcX0, srcY0, srcX1, srcY1, dstX0,
+                                                      dstY0, dstX1, dstY1, mask, filter));
+        if (isCallValid)
+        {
+            context->blitFramebufferNV(srcX0, srcY0, srcX1, srcY1, dstX0, dstY0, dstX1, dstY1, mask,
+                                       filter);
+        }
+        ANGLE_CAPTURE(BlitFramebufferNV, isCallValid, context, srcX0, srcY0, srcX1, srcY1, dstX0,
                       dstY0, dstX1, dstY1, mask, filter);
     }
     else

@@ -838,6 +838,9 @@ EXPORTS
     glSetFenceNV
     glTestFenceNV
 
+    ; GL_NV_framebuffer_blit
+    glBlitFramebufferNV
+
     ; GL_OES_EGL_image
     glEGLImageTargetRenderbufferStorageOES
     glEGLImageTargetTexture2DOES
@@ -1020,6 +1023,7 @@ EXPORTS
     glBlendFunciOESContextANGLE
     glBlitFramebufferContextANGLE
     glBlitFramebufferANGLEContextANGLE
+    glBlitFramebufferNVContextANGLE
     glBufferDataContextANGLE
     glBufferStorageEXTContextANGLE
     glBufferStorageExternalEXTContextANGLE

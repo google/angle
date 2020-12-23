@@ -346,6 +346,8 @@ const char *GetEntryPointName(EntryPoint ep)
             return "glBlitFramebuffer";
         case EntryPoint::GLBlitFramebufferANGLE:
             return "glBlitFramebufferANGLE";
+        case EntryPoint::GLBlitFramebufferNV:
+            return "glBlitFramebufferNV";
         case EntryPoint::GLBlitNamedFramebuffer:
             return "glBlitNamedFramebuffer";
         case EntryPoint::GLBufferData:

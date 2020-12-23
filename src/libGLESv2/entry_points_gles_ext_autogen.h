@@ -1168,6 +1168,18 @@ ANGLE_EXPORT GLboolean GL_APIENTRY IsFenceNV(GLuint fence);
 ANGLE_EXPORT void GL_APIENTRY SetFenceNV(GLuint fence, GLenum condition);
 ANGLE_EXPORT GLboolean GL_APIENTRY TestFenceNV(GLuint fence);
 
+// GL_NV_framebuffer_blit
+ANGLE_EXPORT void GL_APIENTRY BlitFramebufferNV(GLint srcX0,
+                                                GLint srcY0,
+                                                GLint srcX1,
+                                                GLint srcY1,
+                                                GLint dstX0,
+                                                GLint dstY0,
+                                                GLint dstX1,
+                                                GLint dstY1,
+                                                GLbitfield mask,
+                                                GLenum filter);
+
 // GL_OES_EGL_image
 ANGLE_EXPORT void GL_APIENTRY EGLImageTargetRenderbufferStorageOES(GLenum target,
                                                                    GLeglImageOES image);
@@ -1607,6 +1619,17 @@ ANGLE_EXPORT void GL_APIENTRY BlitFramebufferANGLEContextANGLE(GLeglContext ctx,
                                                                GLint dstY1,
                                                                GLbitfield mask,
                                                                GLenum filter);
+ANGLE_EXPORT void GL_APIENTRY BlitFramebufferNVContextANGLE(GLeglContext ctx,
+                                                            GLint srcX0,
+                                                            GLint srcY0,
+                                                            GLint srcX1,
+                                                            GLint srcY1,
+                                                            GLint dstX0,
+                                                            GLint dstY0,
+                                                            GLint dstX1,
+                                                            GLint dstY1,
+                                                            GLbitfield mask,
+                                                            GLenum filter);
 ANGLE_EXPORT void GL_APIENTRY BufferDataContextANGLE(GLeglContext ctx,
                                                      GLenum target,
                                                      GLsizeiptr size,

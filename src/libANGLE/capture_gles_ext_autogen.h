@@ -1765,6 +1765,20 @@ angle::CallCapture CaptureTestFenceNV(const State &glState,
                                       FenceNVID fencePacked,
                                       GLboolean returnValue);
 
+// GL_NV_framebuffer_blit
+angle::CallCapture CaptureBlitFramebufferNV(const State &glState,
+                                            bool isCallValid,
+                                            GLint srcX0,
+                                            GLint srcY0,
+                                            GLint srcX1,
+                                            GLint srcY1,
+                                            GLint dstX0,
+                                            GLint dstY0,
+                                            GLint dstX1,
+                                            GLint dstY1,
+                                            GLbitfield mask,
+                                            GLenum filter);
+
 // GL_OES_EGL_image
 angle::CallCapture CaptureEGLImageTargetRenderbufferStorageOES(const State &glState,
                                                                bool isCallValid,

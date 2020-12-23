@@ -228,6 +228,8 @@ const ProcEntry g_procTable[] = {
     {"glBlitFramebufferANGLE", P(gl::BlitFramebufferANGLE)},
     {"glBlitFramebufferANGLEContextANGLE", P(gl::BlitFramebufferANGLEContextANGLE)},
     {"glBlitFramebufferContextANGLE", P(gl::BlitFramebufferContextANGLE)},
+    {"glBlitFramebufferNV", P(gl::BlitFramebufferNV)},
+    {"glBlitFramebufferNVContextANGLE", P(gl::BlitFramebufferNVContextANGLE)},
     {"glBufferData", P(gl::BufferData)},
     {"glBufferDataContextANGLE", P(gl::BufferDataContextANGLE)},
     {"glBufferStorageEXT", P(gl::BufferStorageEXT)},
@@ -1737,5 +1739,5 @@ const ProcEntry g_procTable[] = {
     {"glWeightPointerOES", P(gl::WeightPointerOES)},
     {"glWeightPointerOESContextANGLE", P(gl::WeightPointerOESContextANGLE)}};
 
-const size_t g_numProcs = 1639;
+const size_t g_numProcs = 1641;
 }  // namespace egl

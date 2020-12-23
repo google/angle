@@ -4807,6 +4807,22 @@ GLboolean GL_APIENTRY glTestFenceNV(GLuint fence)
     return gl::TestFenceNV(fence);
 }
 
+// GL_NV_framebuffer_blit
+void GL_APIENTRY glBlitFramebufferNV(GLint srcX0,
+                                     GLint srcY0,
+                                     GLint srcX1,
+                                     GLint srcY1,
+                                     GLint dstX0,
+                                     GLint dstY0,
+                                     GLint dstX1,
+                                     GLint dstY1,
+                                     GLbitfield mask,
+                                     GLenum filter)
+{
+    return gl::BlitFramebufferNV(srcX0, srcY0, srcX1, srcY1, dstX0, dstY0, dstX1, dstY1, mask,
+                                 filter);
+}
+
 // GL_OES_EGL_image
 void GL_APIENTRY glEGLImageTargetRenderbufferStorageOES(GLenum target, GLeglImageOES image)
 {
@@ -5700,6 +5716,22 @@ void GL_APIENTRY glBlitFramebufferANGLEContextANGLE(GLeglContext ctx,
 {
     return gl::BlitFramebufferANGLEContextANGLE(ctx, srcX0, srcY0, srcX1, srcY1, dstX0, dstY0,
                                                 dstX1, dstY1, mask, filter);
+}
+
+void GL_APIENTRY glBlitFramebufferNVContextANGLE(GLeglContext ctx,
+                                                 GLint srcX0,
+                                                 GLint srcY0,
+                                                 GLint srcX1,
+                                                 GLint srcY1,
+                                                 GLint dstX0,
+                                                 GLint dstY0,
+                                                 GLint dstX1,
+                                                 GLint dstY1,
+                                                 GLbitfield mask,
+                                                 GLenum filter)
+{
+    return gl::BlitFramebufferNVContextANGLE(ctx, srcX0, srcY0, srcX1, srcY1, dstX0, dstY0, dstX1,
+                                             dstY1, mask, filter);
 }
 
 void GL_APIENTRY glBufferDataContextANGLE(GLeglContext ctx,
