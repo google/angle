@@ -628,9 +628,8 @@ const std::vector<sh::ShaderVariable> &Shader::getActiveOutputVariables()
 
 std::string Shader::getTransformFeedbackVaryingMappedName(const std::string &tfVaryingName)
 {
-    // TODO(jiawei.shao@intel.com): support transform feedback on geometry shader.
-    ASSERT(mState.getShaderType() == ShaderType::Vertex ||
-           mState.getShaderType() == ShaderType::Geometry);
+    ASSERT(mState.getShaderType() != ShaderType::Fragment &&
+           mState.getShaderType() != ShaderType::Compute);
     const auto &varyings = getOutputVaryings();
     auto bracketPos      = tfVaryingName.find("[");
     if (bracketPos != std::string::npos)
@@ -658,8 +657,21 @@ std::string Shader::getTransformFeedbackVaryingMappedName(const std::string &tfV
             {
                 GLuint fieldIndex = 0;
                 const auto *field = varying.findField(tfVaryingName, &fieldIndex);
-                ASSERT(field != nullptr && !field->isStruct() && !field->isArray());
-                return varying.mappedName + "." + field->mappedName;
+                if (field == nullptr)
+                {
+                    continue;
+                }
+                ASSERT(field != nullptr && !field->isStruct() &&
+                       (!field->isArray() || varying.isShaderIOBlock));
+                std::string mappedName;
+                // If it's an I/O block without an instance name, don't include the block name.
+                if (!varying.isShaderIOBlock || !varying.name.empty())
+                {
+                    mappedName =
+                        varying.isShaderIOBlock ? varying.mappedStructName : varying.mappedName;
+                    mappedName += '.';
+                }
+                return mappedName + field->mappedName;
             }
         }
     }

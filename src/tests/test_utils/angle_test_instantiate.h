@@ -44,6 +44,7 @@ bool IsIntel();
 bool IsAMD();
 bool IsARM();
 bool IsNVIDIA();
+bool IsQualcomm();
 
 // GPU devices.
 bool IsSwiftshaderDevice();

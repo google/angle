@@ -306,16 +306,28 @@ const sh::ShaderVariable *ShaderVariable::findField(const std::string &fullName,
         return nullptr;
     }
     size_t pos = fullName.find_first_of(".");
+    std::string topName, fieldName;
     if (pos == std::string::npos)
     {
-        return nullptr;
+        // If this is a shader I/O block without an instance name, return the field given only the
+        // field name.
+        if (!isShaderIOBlock || !name.empty())
+        {
+            return nullptr;
+        }
+
+        fieldName = fullName;
     }
-    std::string topName = fullName.substr(0, pos);
-    if (topName != name)
+    else
     {
-        return nullptr;
+        std::string baseName = isShaderIOBlock ? structName : name;
+        topName              = fullName.substr(0, pos);
+        if (topName != baseName)
+        {
+            return nullptr;
+        }
+        fieldName = fullName.substr(pos + 1);
     }
-    std::string fieldName = fullName.substr(pos + 1);
     if (fieldName.empty())
     {
         return nullptr;

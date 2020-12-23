@@ -667,7 +667,7 @@ bool VaryingPacking::collectAndPackUserVaryings(gl::InfoLog &infoLog,
                 const sh::ShaderVariable *field = input->findField(tfVarying, &fieldIndex);
                 if (field != nullptr)
                 {
-                    ASSERT(!field->isStruct() && !field->isArray());
+                    ASSERT(!field->isStruct() && (!field->isArray() || input->isShaderIOBlock));
 
                     packUserVaryingFieldTF(ref, *field, fieldIndex);
                     uniqueFullNames[ref.frontShaderStage].insert(tfVarying);
