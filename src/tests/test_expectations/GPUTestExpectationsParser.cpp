@@ -53,6 +53,7 @@ enum Token
     kConfigMacHighSierra,
     kConfigMacMojave,
     kConfigMac,
+    kConfigIOS,
     kConfigLinux,
     kConfigChromeOS,
     kConfigAndroid,
@@ -153,6 +154,7 @@ constexpr TokenInfo kTokenData[kNumberOfTokens] = {
     {"highsierra", GPUTestConfig::kConditionMacHighSierra},
     {"mojave", GPUTestConfig::kConditionMacMojave},
     {"mac", GPUTestConfig::kConditionMac},
+    {"ios", GPUTestConfig::kConditionIOS},
     {"linux", GPUTestConfig::kConditionLinux},
     {"chromeos", GPUTestConfig::kConditionNone},  // https://anglebug.com/3363 CrOS not supported
     {"android", GPUTestConfig::kConditionAndroid},
@@ -428,6 +430,7 @@ bool GPUTestExpectationsParser::parseLine(const GPUTestConfig &config,
             case kConfigMacHighSierra:
             case kConfigMacMojave:
             case kConfigMac:
+            case kConfigIOS:
             case kConfigLinux:
             case kConfigChromeOS:
             case kConfigAndroid:

@@ -23,6 +23,7 @@ struct PlatformParameters;
 bool IsAndroid();
 bool IsLinux();
 bool IsOSX();
+bool IsIOS();
 bool IsOzone();
 bool IsWindows();
 bool IsWindows7();

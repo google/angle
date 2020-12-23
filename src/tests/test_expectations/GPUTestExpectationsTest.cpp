@@ -24,6 +24,7 @@ class GPUTestConfigTest : public ANGLETest
     {
         EXPECT_EQ(IsWindows(), config.getConditions()[GPUTestConfig::kConditionWin]);
         EXPECT_EQ(IsOSX(), config.getConditions()[GPUTestConfig::kConditionMac]);
+        EXPECT_EQ(IsIOS(), config.getConditions()[GPUTestConfig::kConditionIOS]);
         EXPECT_EQ(IsLinux(), config.getConditions()[GPUTestConfig::kConditionLinux]);
         EXPECT_EQ(IsAndroid(), config.getConditions()[GPUTestConfig::kConditionAndroid]);
         EXPECT_EQ(IsNexus5X(), config.getConditions()[GPUTestConfig::kConditionNexus5X]);

@@ -160,10 +160,20 @@ inline bool IsWin10()
     return false;
 }
 
+// Check if the OS is any version of iOS
+inline bool IsIOS()
+{
+#if defined(ANGLE_PLATFORM_IOS)
+    return true;
+#else
+    return false;
+#endif
+}
+
 // Check if the OS is any version of OSX
 inline bool IsMac()
 {
-#if defined(ANGLE_PLATFORM_APPLE)
+#if defined(ANGLE_PLATFORM_MACOS)
     return true;
 #else
     return false;
@@ -547,6 +557,7 @@ GPUTestConfig::GPUTestConfig()
     mConditions[kConditionMacHighSierra]   = IsMacHighSierra();
     mConditions[kConditionMacMojave]       = IsMacMojave();
     mConditions[kConditionMac]             = IsMac();
+    mConditions[kConditionIOS]             = IsIOS();
     mConditions[kConditionLinux]           = IsLinux();
     mConditions[kConditionAndroid]         = IsAndroid();
     mConditions[kConditionNVIDIA]          = IsNVIDIA();
