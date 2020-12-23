@@ -67,6 +67,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "8b48f886_44cb8193",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2020-12-23T21:58:06Z",
+      "side": 1,
+      "message": "Which android failures are you talking about?",
+      "parentUuid": "37f2d4a9_73149ed9",
+      "revId": "a55e4a09d55f574c4b21cf76f7d0d3f98beeb6ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "94c85c60_efb02024",
         "filename": "src/libANGLE/validationES2.cpp",
         "patchSetId": 5
@@ -78,6 +96,30 @@
       "writtenOn": "2020-12-23T21:11:37Z",
       "side": 1,
       "message": "nit: this should be ANGLE only, since it\u0027s the ANGLE extension entry point.",
+      "range": {
+        "startLine": 2744,
+        "startChar": 34,
+        "endLine": 2744,
+        "endChar": 52
+      },
+      "revId": "a55e4a09d55f574c4b21cf76f7d0d3f98beeb6ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1f7707dd_8491031e",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2744,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2020-12-23T21:58:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "94c85c60_efb02024",
       "range": {
         "startLine": 2744,
         "startChar": 34,
@@ -111,6 +153,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "af08207e_f72912c1",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2865,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2020-12-23T21:58:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "650cb60b_26630898",
+      "range": {
+        "startLine": 2865,
+        "startChar": 5,
+        "endLine": 2865,
+        "endChar": 30
+      },
+      "revId": "a55e4a09d55f574c4b21cf76f7d0d3f98beeb6ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "bea87aba_4bd8fd3d",
@@ -124,6 +190,30 @@
       "writtenOn": "2020-12-23T21:11:37Z",
       "side": 1,
       "message": "this is a specific NV validation? I\u0027m surprised if there\u0027s any specific validations for the NV ext that don\u0027t apply to \"core\" as well.",
+      "range": {
+        "startLine": 2884,
+        "startChar": 0,
+        "endLine": 2891,
+        "endChar": 13
+      },
+      "revId": "a55e4a09d55f574c4b21cf76f7d0d3f98beeb6ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "74dcf94e_4503f9a2",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2891,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2020-12-23T21:58:06Z",
+      "side": 1,
+      "message": "It\u0027s that the \"Changes with EXT_color_buffer_float always apply with NV_framebuffer_blit - if the read buffer is fixed or float, the draw buffer is fixed or float.\n\nBut I think this is another case where I should just use the core spec and forget about this validation. Let me know otherwise",
+      "parentUuid": "bea87aba_4bd8fd3d",
       "range": {
         "startLine": 2884,
         "startChar": 0,
@@ -157,6 +247,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0128b7c6_c99b52c6",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2085,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2020-12-23T21:58:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7cee0303_353c0665",
+      "range": {
+        "startLine": 2085,
+        "startChar": 48,
+        "endLine": 2085,
+        "endChar": 91
+      },
+      "revId": "a55e4a09d55f574c4b21cf76f7d0d3f98beeb6ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "55f80f22_41345b7f",
@@ -170,6 +284,30 @@
       "writtenOn": "2020-12-23T20:26:08Z",
       "side": 1,
       "message": "\u0026\u0026",
+      "range": {
+        "startLine": 422,
+        "startChar": 51,
+        "endLine": 422,
+        "endChar": 53
+      },
+      "revId": "a55e4a09d55f574c4b21cf76f7d0d3f98beeb6ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "20f7e0a7_9b1c470a",
+        "filename": "src/tests/gl_tests/BlitFramebufferANGLETest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 422,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2020-12-23T21:58:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "55f80f22_41345b7f",
       "range": {
         "startLine": 422,
         "startChar": 51,
