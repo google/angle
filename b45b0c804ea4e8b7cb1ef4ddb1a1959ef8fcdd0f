@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4a2cac0d_12215962",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-23T17:15:31Z",
+      "side": 1,
+      "message": "Tim/Shabi PTAL. CQ might shake out some run-time bugs. It does compile for me locally and is mostly a refactoring change.",
+      "revId": "b45b0c804ea4e8b7cb1ef4ddb1a1959ef8fcdd0f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
