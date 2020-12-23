@@ -16,6 +16,23 @@
       "message": "Hi Jamie, PTAL. Thanks",
       "revId": "22172f9a8a7533928edad317fb826318548e09ae",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "727a0284_3e6eea37",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-23T18:09:21Z",
+      "side": 1,
+      "message": "Peng: please use scripts/run_code_generation.py to refresh generated code. Otherwise we can watch how the bots do with this CL.",
+      "revId": "22172f9a8a7533928edad317fb826318548e09ae",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
