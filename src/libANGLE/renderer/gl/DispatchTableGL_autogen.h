@@ -741,6 +741,9 @@ class DispatchTableGL : angle::NonCopyable
     // GL_EXT_discard_framebuffer
     PFNGLDISCARDFRAMEBUFFEREXTPROC discardFramebufferEXT = nullptr;
 
+    // GL_EXT_framebuffer_blit
+    PFNGLBLITFRAMEBUFFEREXTPROC blitFramebufferEXT = nullptr;
+
     // GL_EXT_memory_object
     PFNGLBUFFERSTORAGEMEMEXTPROC bufferStorageMemEXT = nullptr;
     PFNGLCREATEMEMORYOBJECTSEXTPROC createMemoryObjectsEXT = nullptr;
@@ -789,6 +792,9 @@ class DispatchTableGL : angle::NonCopyable
 
     // GL_KHR_parallel_shader_compile
     PFNGLMAXSHADERCOMPILERTHREADSKHRPROC maxShaderCompilerThreadsKHR = nullptr;
+
+    // GL_NV_framebuffer_blit
+    PFNGLBLITFRAMEBUFFERNVPROC blitFramebufferNV = nullptr;
 
     // GL_NV_internalformat_sample_query
     PFNGLGETINTERNALFORMATSAMPLEIVNVPROC getInternalformatSampleivNV = nullptr;

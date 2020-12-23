@@ -844,5 +844,15 @@
     [
         "TexBufferEXT",
         "TexBufferRangeEXT"
+    ],
+
+    "GL_EXT_framebuffer_blit":
+    [
+        "BlitFramebufferEXT"
+    ],
+
+    "GL_NV_framebuffer_blit":
+    [
+        "BlitFramebufferNV"
     ]
 }

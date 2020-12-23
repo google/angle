@@ -1714,6 +1714,7 @@ void DispatchTableGL::initProcsDesktopGL(const gl::Version &version,
     if (extensions.count("GL_EXT_framebuffer_blit") != 0)
     {
         ASSIGN("glBlitFramebufferEXT", blitFramebuffer);
+        ASSIGN("glBlitFramebufferEXT", blitFramebufferEXT);
     }
 
     if (extensions.count("GL_EXT_framebuffer_multisample") != 0)
@@ -2503,6 +2504,11 @@ void DispatchTableGL::initProcsGLES(const gl::Version &version,
         ASSIGN("glGetnUniformivKHR", getnUniformiv);
         ASSIGN("glGetnUniformuivKHR", getnUniformuiv);
         ASSIGN("glReadnPixelsKHR", readnPixels);
+    }
+
+    if (extensions.count("GL_NV_framebuffer_blit") != 0)
+    {
+        ASSIGN("glBlitFramebufferNV", blitFramebufferNV);
     }
 
     if (extensions.count("GL_OES_EGL_image") != 0)
@@ -4484,7 +4490,8 @@ void DispatchTableGL::initProcsDesktopGLNULL(const gl::Version &version,
 
     if (extensions.count("GL_EXT_framebuffer_blit") != 0)
     {
-        blitFramebuffer = &glBlitFramebufferNULL;
+        blitFramebuffer    = &glBlitFramebufferNULL;
+        blitFramebufferEXT = &glBlitFramebufferEXTNULL;
     }
 
     if (extensions.count("GL_EXT_framebuffer_multisample") != 0)
@@ -5274,6 +5281,11 @@ void DispatchTableGL::initProcsGLESNULL(const gl::Version &version,
         getnUniformiv          = &glGetnUniformivNULL;
         getnUniformuiv         = &glGetnUniformuivNULL;
         readnPixels            = &glReadnPixelsNULL;
+    }
+
+    if (extensions.count("GL_NV_framebuffer_blit") != 0)
+    {
+        blitFramebufferNV = &glBlitFramebufferNVNULL;
     }
 
     if (extensions.count("GL_OES_EGL_image") != 0)

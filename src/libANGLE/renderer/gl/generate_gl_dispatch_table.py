@@ -19,6 +19,8 @@ os.chdir(os.path.dirname(os.path.abspath(sys.argv[0])))
 sys.path.append('..')
 import angle_format
 
+generation_year = 2020  # Hard-code year to prevent yearly changes.
+
 
 def safe_append(the_dict, key, element):
     if key not in the_dict:
@@ -410,7 +412,7 @@ def main():
     dispatch_table_header = dispatch_table_header_template.format(
         script_name=os.path.basename(sys.argv[0]),
         data_source_name=data_source_name,
-        year=date.today().year,
+        year=generation_year,
         file_name=dispatch_header_path,
         table_data="\n\n".join(table_data))
 
@@ -443,7 +445,7 @@ def main():
     dispatch_table_source = dispatch_table_source_template.format(
         script_name=os.path.basename(sys.argv[0]),
         data_source_name=data_source_name,
-        year=date.today().year,
+        year=generation_year,
         file_name=dispatch_source_path,
         gl_data="\n\n".join(gl_data),
         gl_extensions_data="\n\n".join(gl_extensions_data),
@@ -490,7 +492,7 @@ def main():
     null_functions_header = null_functions_header_template.format(
         script_name=os.path.basename(sys.argv[0]),
         data_source_name=data_source_name,
-        year=date.today().year,
+        year=generation_year,
         file_name=null_functions_header_path,
         table_data="\n".join(null_decls))
 
@@ -500,7 +502,7 @@ def main():
     null_functions_source = null_functions_source_template.format(
         script_name=os.path.basename(sys.argv[0]),
         data_source_name=data_source_name,
-        year=date.today().year,
+        year=generation_year,
         file_name=null_functions_source_path,
         table_data="\n\n".join(null_stubs))
 
