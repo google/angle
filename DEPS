@@ -20,7 +20,7 @@ vars = {
   'checkout_angle_internal': False,
 
   # Version of Chromium our Chromium-based DEPS are mirrored from.
-  'chromium_revision': '78f4bbcd4cb1d702c106a1378bfb60c72c9075dd',
+  'chromium_revision': 'a5e4417becc29528f09144839829148e7360a506',
   # We never want to checkout chromium,
   # but need a dummy DEPS entry for the autoroller
   'dummy_checkout_chromium': False,
@@ -65,7 +65,7 @@ vars = {
   # Three lines of non-changing comments so that
   # the commit queue can handle CLs rolling catapult
   # and whatever else without interference from each other.
-  'catapult_revision': '8d43e589947e9279336118ca568525261849f886',
+  'catapult_revision': '2752abe7e2cd73f22c2d10a464748fd293b73b05',
 
   # Three lines of non-changing comments so that
   # the commit queue can handle CLs rolling luci-go
@@ -76,7 +76,7 @@ vars = {
 deps = {
 
   'build': {
-    'url': '{chromium_git}/chromium/src/build.git@b4b7adbdc2257c1666e33cdac351fbc5e6bf316e',
+    'url': '{chromium_git}/chromium/src/build.git@d4fcf57b4e9a6f0245a49370568ea4140860e9ce',
     'condition': 'not build_with_chromium',
   },
 
@@ -86,12 +86,12 @@ deps = {
   },
 
   'testing': {
-    'url': '{chromium_git}/chromium/src/testing@9d83fdb696865a8f23e715b5c1b9314d783e89d7',
+    'url': '{chromium_git}/chromium/src/testing@36d8b4b88328e9e41489cc31c7a3a0ec9167d1a4',
     'condition': 'not build_with_chromium',
   },
 
   'third_party/abseil-cpp': {
-    'url': '{chromium_git}/chromium/src/third_party/abseil-cpp@3b78ceeade26a1deeda016c82df78a4de1032797',
+    'url': '{chromium_git}/chromium/src/third_party/abseil-cpp@ea63baff1484ff3e9c12c6d851ec216a665f4858',
     'condition': 'not build_with_chromium',
   },
 
@@ -141,7 +141,7 @@ deps = {
 
   # libjpeg_turbo is used by glmark2.
   'third_party/libjpeg_turbo': {
-    'url': '{chromium_git}/chromium/deps/libjpeg_turbo.git@e9a659a09e9600883e499c06ede04ba514d7f942',
+    'url': '{chromium_git}/chromium/deps/libjpeg_turbo.git@09efc26aff7983f4377a1743a197ca3d74796d7d',
     'condition': 'not build_with_chromium',
   },
 
