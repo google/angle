@@ -16,6 +16,46 @@
       "message": "PTAL",
       "revId": "3ff5d437fb8f2f9693bb8447e24346592dcb0f21",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b41a8c65_79fc6b43",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 12
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-23T21:14:52Z",
+      "side": 1,
+      "message": "Almost there - one question left.",
+      "revId": "3ff5d437fb8f2f9693bb8447e24346592dcb0f21",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a2a3c8fe_62f2262e",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 5421,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-23T21:14:52Z",
+      "side": 1,
+      "message": "this doesn\u0027t seem quite right - what caches are dirty when you leave this out? the vertex array cache should be updated directly instead of needing a callback.",
+      "range": {
+        "startLine": 5417,
+        "startChar": 0,
+        "endLine": 5421,
+        "endChar": 5
+      },
+      "revId": "3ff5d437fb8f2f9693bb8447e24346592dcb0f21",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
