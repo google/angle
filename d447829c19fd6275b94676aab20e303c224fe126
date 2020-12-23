@@ -70,6 +70,30 @@
       },
       "revId": "d447829c19fd6275b94676aab20e303c224fe126",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d5e4e2c8_ce9a3b21",
+        "filename": "src/libANGLE/renderer/gl/DispatchTableGL_autogen.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1000050
+      },
+      "writtenOn": "2020-12-23T19:21:10Z",
+      "side": 0,
+      "message": "I see. Done",
+      "parentUuid": "9e622324_7d77f9e7",
+      "range": {
+        "startLine": 20,
+        "startChar": 0,
+        "endLine": 20,
+        "endChar": 65
+      },
+      "revId": "d447829c19fd6275b94676aab20e303c224fe126",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
