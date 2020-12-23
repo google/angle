@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5f3c9206_7522286f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2020-12-23T23:44:22Z",
+      "side": 1,
+      "message": "lgtm\n\nWas there any good reason this was used on all other platforms?\n",
+      "revId": "8a0f3d371e86d2a8b4be0452b1970f76849f5467",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
