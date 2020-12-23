@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dbc2c621_45ad87ee",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1223,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2020-12-23T21:59:46Z",
+      "side": 1,
+      "message": "Also this seems odd to me even though I left it how it is.\nI could make it:\n\u003d functions-\u003ehasGLESExtension(\"GL_ANGLE_framebuffer_blit\") || extensions-\u003eframebufferBlitNV;\nand put it below?",
+      "range": {
+        "startLine": 1223,
+        "startChar": 39,
+        "endLine": 1223,
+        "endChar": 79
+      },
+      "revId": "5b0fc9e5418d4a2aba797b14450bfae04667775e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
