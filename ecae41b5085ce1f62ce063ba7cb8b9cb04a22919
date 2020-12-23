@@ -56,6 +56,30 @@
       },
       "revId": "ecae41b5085ce1f62ce063ba7cb8b9cb04a22919",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7ccf0858_4b6f9dfb",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1886,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2020-12-23T00:41:16Z",
+      "side": 1,
+      "message": "Good point - I revisited all of the other driver bug workarounds in this file. The main concerning one is addBaseVertexToVertexID, which must take effect only when the AMD GPU is active and not when the Intel GPU is active in dual-GPU MacBook Pros. All of the others are OK as written - several apply to non-Apple OSs.\n\nI\u0027m inclined to leave them alone at this point - tests are passing, and it\u0027s in our own best interests to help Apple to finish the Metal backend as soon as possible and switch to it, rather than continuing to invest engineering time maintaining fragile workarounds for the OpenGL backend on macOS.",
+      "parentUuid": "22774463_7ce8f218",
+      "range": {
+        "startLine": 1886,
+        "startChar": 89,
+        "endLine": 1886,
+        "endChar": 95
+      },
+      "revId": "ecae41b5085ce1f62ce063ba7cb8b9cb04a22919",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
