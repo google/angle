@@ -58,6 +58,7 @@ struct GlslangSpirvOptions
     gl::ShaderType shaderType                 = gl::ShaderType::InvalidEnum;
     bool removeEarlyFragmentTestsOptimization = false;
     bool removeDebugInfo                      = false;
+    bool isTransformFeedbackStage             = false;
 };
 
 using SpirvBlob = std::vector<uint32_t>;

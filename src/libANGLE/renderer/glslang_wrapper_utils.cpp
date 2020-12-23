@@ -483,15 +483,15 @@ void GenerateTransformFeedbackExtensionOutputs(const gl::ProgramState &programSt
         const gl::TransformFeedbackVarying &tfVarying = tfVaryings[varyingIndex];
         const std::string &tfVaryingName              = tfVarying.mappedName;
 
-        if (tfVarying.isBuiltIn())
+        if (tfVaryingName == "gl_Position")
         {
-            // For simplicity, create a copy of every builtin that's captured so xfb qualifiers
-            // could be added to that instead.  This allows the SPIR-V transformation to ignore
-            // OpMemberName and OpMemberDecorate instructions.  Note that capturing gl_Position
-            // already requires such a copy, since the translator modifies this value at the end of
-            // main.  Capturing the rest of the built-ins are niche enough that the inefficiency
-            // involved in doing this is not a concern.
+            ASSERT(tfVarying.isBuiltIn());
 
+            // For gl_Position, create a copy of the builtin so xfb qualifiers could be added to
+            // that instead.  gl_Position is modified by the shader (to account for Vulkan depth
+            // clip space and prerotation), so it cannot be captured directly.
+            //
+            // The rest of the builtins are captured by decorating gl_PerVertex directly.
             uint32_t xfbVaryingLocation = resources.varyingPacking.getMaxSemanticIndex() +
                                           ++(*locationsUsedForXfbExtensionOut);
 
@@ -681,6 +681,10 @@ void AssignVaryingLocations(const GlslangSourceOptions &options,
             info.varyingIsInput = true;
         }
     }
+
+    // Add an entry for gl_PerVertex, for use with transform feedback capture of built-ins.
+    ShaderInterfaceVariableInfo &info = variableInfoMapOut->add(shaderType, "gl_PerVertex");
+    info.activeStages.set(shaderType);
 }
 
 // Calculates XFB layout qualifier arguments for each tranform feedback varying.  Stores calculated
@@ -726,15 +730,50 @@ void AssignTransformFeedbackExtensionQualifiers(const gl::ProgramExecutable &pro
 
         if (tfVarying.isBuiltIn())
         {
-            uint32_t xfbVaryingLocation = currentBuiltinLocation++;
-            std::string xfbVaryingName  = kXfbBuiltInPrefix + tfVarying.mappedName;
+            if (tfVarying.name == "gl_Position")
+            {
+                uint32_t xfbVaryingLocation = currentBuiltinLocation++;
+                std::string xfbVaryingName  = kXfbBuiltInPrefix + tfVarying.mappedName;
 
-            ASSERT(xfbVaryingLocation < locationsUsedForXfbExtension);
+                ASSERT(xfbVaryingLocation < locationsUsedForXfbExtension);
 
-            AddLocationInfo(variableInfoMapOut, shaderType, xfbVaryingName, xfbVaryingLocation,
-                            ShaderInterfaceVariableInfo::kInvalid, 0, 0);
-            SetXfbInfo(variableInfoMapOut, shaderType, xfbVaryingName, -1, bufferIndex,
-                       currentOffset, currentStride);
+                AddLocationInfo(variableInfoMapOut, shaderType, xfbVaryingName, xfbVaryingLocation,
+                                ShaderInterfaceVariableInfo::kInvalid, 0, 0);
+                SetXfbInfo(variableInfoMapOut, shaderType, xfbVaryingName, -1, bufferIndex,
+                           currentOffset, currentStride);
+            }
+            else
+            {
+                // gl_PerVertex is always defined as:
+                //
+                //    Field 0: gl_Position
+                //    Field 1: gl_PointSize
+                //    Field 2: gl_ClipDistance
+                //    Field 3: gl_CullDistance
+                //
+                // All fields except gl_Position can be captured directly by decorating gl_PerVertex
+                // fields.
+                int fieldIndex                                                              = -1;
+                constexpr int kPerVertexMemberCount                                         = 4;
+                constexpr std::array<const char *, kPerVertexMemberCount> kPerVertexMembers = {
+                    "gl_Position",
+                    "gl_PointSize",
+                    "gl_ClipDistance",
+                    "gl_CullDistance",
+                };
+                for (int index = 1; index < kPerVertexMemberCount; ++index)
+                {
+                    if (tfVarying.name == kPerVertexMembers[index])
+                    {
+                        fieldIndex = index;
+                        break;
+                    }
+                }
+                ASSERT(fieldIndex != -1);
+
+                SetXfbInfo(variableInfoMapOut, shaderType, "gl_PerVertex", fieldIndex, bufferIndex,
+                           currentOffset, currentStride);
+            }
         }
         else if (!tfVarying.isArray() || tfVarying.arrayIndex == GL_INVALID_INDEX)
         {
@@ -1784,13 +1823,8 @@ void SpirvTransformer::visitDecorate(const uint32_t *instruction)
         const char *name = mNamesById[id];
         ASSERT(name != nullptr);
 
-        // TODO: decorate gl_PerVertex members for transform feedback similarly to I/O blocks
-        // http://anglebug.com/3606
-        if (strcmp(name, "gl_PerVertex") != 0)
-        {
-            const ShaderInterfaceVariableInfo &info = mVariableInfoMap.get(mShaderType, name);
-            mVariableInfoById[id]                   = &info;
-        }
+        const ShaderInterfaceVariableInfo &info = mVariableInfoMap.get(mShaderType, name);
+        mVariableInfoById[id]                   = &info;
     }
 }
 
@@ -1971,13 +2005,12 @@ void SpirvTransformer::visitVariable(const uint32_t *instruction)
 
     ASSERT(name != nullptr);
 
-    // Handle builtins, which all start with "gl_".  Either the variable name could be an indication
-    // of a builtin variable (such as with gl_FragCoord) or the type name (such as with
-    // gl_PerVertex).
-    const bool isNameBuiltin = isInOut && gl::IsBuiltInName(name);
-    const bool isTypeBuiltin =
-        isInOut && mNamesById[typeId] != nullptr && gl::IsBuiltInName(mNamesById[typeId]);
-    if (isNameBuiltin || isTypeBuiltin)
+    // Handle builtins, which all start with "gl_".  The variable name could be an indication of a
+    // builtin variable (such as with gl_FragCoord).  gl_PerVertex is the only builtin whose "type"
+    // name starts with gl_.  However, gl_PerVertex has its own entry in the info map for its
+    // potential use with transform feedback.
+    const bool isNameBuiltin = isInOut && !isIOBlock && gl::IsBuiltInName(name);
+    if (isNameBuiltin)
     {
         // Make all builtins point to this no-op info.  Adding this entry allows us to ASSERT that
         // every shader interface variable is processed during the SPIR-V transformation.  This is
@@ -2001,7 +2034,7 @@ void SpirvTransformer::visitVariable(const uint32_t *instruction)
 
     // Note if the variable is captured by transform feedback.  In that case, the TransformFeedback
     // capability needs to be added.
-    if (mOptions.shaderType != gl::ShaderType::Fragment &&
+    if (mOptions.isTransformFeedbackStage &&
         (info.xfb.buffer != ShaderInterfaceVariableInfo::kInvalid || !info.fieldXfb.empty()) &&
         info.activeStages[mOptions.shaderType])
     {
@@ -2044,7 +2077,7 @@ bool SpirvTransformer::transformDecorate(const uint32_t *instruction, size_t wor
         spv::DecorationOffset,
     };
 
-    if (mOptions.shaderType != gl::ShaderType::Fragment && decoration == spv::DecorationBlock &&
+    if (mOptions.isTransformFeedbackStage && decoration == spv::DecorationBlock &&
         !info->fieldXfb.empty())
     {
         for (uint32_t fieldIndex = 0; fieldIndex < info->fieldXfb.size(); ++fieldIndex)
@@ -2151,7 +2184,7 @@ bool SpirvTransformer::transformDecorate(const uint32_t *instruction, size_t wor
     }
 
     // Add Xfb decorations, if any.
-    if (mOptions.shaderType != gl::ShaderType::Fragment &&
+    if (mOptions.isTransformFeedbackStage &&
         info->xfb.buffer != ShaderInterfaceVariableXfbInfo::kInvalid)
     {
         ASSERT(info->xfb.stride != ShaderInterfaceVariableXfbInfo::kInvalid);
