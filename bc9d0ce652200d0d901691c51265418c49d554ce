@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "27e07bd0_4534dc1c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2020-12-23T23:50:14Z",
+      "side": 1,
+      "message": "lgtm\n",
+      "revId": "bc9d0ce652200d0d901691c51265418c49d554ce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "59eb4f8c_c43be182",
+        "filename": "src/tests/test_utils/angle_test_instantiate.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 215,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2020-12-23T23:50:14Z",
+      "side": 1,
+      "message": "I wonder whether it would be clearer - or not - if this were renamed \"IsMac\" to match the GPU test expectations. Definitely not for this little CL because it\u0027d cause a lot of churn.",
+      "range": {
+        "startLine": 215,
+        "startChar": 5,
+        "endLine": 215,
+        "endChar": 10
+      },
+      "revId": "bc9d0ce652200d0d901691c51265418c49d554ce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
