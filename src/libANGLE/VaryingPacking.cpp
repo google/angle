@@ -167,11 +167,15 @@ PackedVarying &PackedVarying::operator=(PackedVarying &&other)
 }
 
 // Implementation of VaryingPacking
-VaryingPacking::VaryingPacking(GLuint maxVaryingVectors, PackMode packMode)
-    : mRegisterMap(maxVaryingVectors), mPackMode(packMode)
-{}
+VaryingPacking::VaryingPacking() = default;
 
 VaryingPacking::~VaryingPacking() = default;
+
+void VaryingPacking::init(GLuint maxVaryingVectors, PackMode packMode)
+{
+    mRegisterMap.resize(maxVaryingVectors);
+    mPackMode = packMode;
+}
 
 void VaryingPacking::reset()
 {

@@ -500,9 +500,9 @@ class Program final : public LabeledObject, public angle::Subject
     void bindFragmentOutputLocation(GLuint index, const char *name);
     void bindFragmentOutputIndex(GLuint index, const char *name);
 
-    angle::Result linkMergedVaryings(const Context *context,
-                                     const ProgramExecutable &executable,
-                                     const ProgramMergedVaryings &mergedVaryings);
+    bool linkMergedVaryings(const Context *context,
+                            const ProgramMergedVaryings &mergedVaryings,
+                            VaryingPacking *varyingPacking);
 
     // KHR_parallel_shader_compile
     // Try to link the program asynchrously. As a result, background threads may be launched to

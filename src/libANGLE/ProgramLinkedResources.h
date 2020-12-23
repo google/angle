@@ -112,8 +112,9 @@ class InterfaceBlockLinker : angle::NonCopyable
                     const GetBlockMemberInfoFunc &getMemberInfo) const;
 
   protected:
-    InterfaceBlockLinker(std::vector<InterfaceBlock> *blocksOut,
-                         std::vector<std::string> *unusedInterfaceBlocksOut);
+    InterfaceBlockLinker();
+    void init(std::vector<InterfaceBlock> *blocksOut,
+              std::vector<std::string> *unusedInterfaceBlocksOut);
     void defineInterfaceBlock(const GetBlockSizeFunc &getBlockSize,
                               const GetBlockMemberInfoFunc &getMemberInfo,
                               const sh::InterfaceBlock &interfaceBlock,
@@ -121,25 +122,27 @@ class InterfaceBlockLinker : angle::NonCopyable
 
     virtual size_t getCurrentBlockMemberIndex() const = 0;
 
-    ShaderMap<const std::vector<sh::InterfaceBlock> *> mShaderBlocks;
-
-    std::vector<InterfaceBlock> *mBlocksOut;
-    std::vector<std::string> *mUnusedInterfaceBlocksOut;
-
     virtual sh::ShaderVariableVisitor *getVisitor(const GetBlockMemberInfoFunc &getMemberInfo,
                                                   const std::string &namePrefix,
                                                   const std::string &mappedNamePrefix,
                                                   ShaderType shaderType,
                                                   int blockIndex) const = 0;
+
+    ShaderMap<const std::vector<sh::InterfaceBlock> *> mShaderBlocks = {};
+
+    std::vector<InterfaceBlock> *mBlocksOut             = nullptr;
+    std::vector<std::string> *mUnusedInterfaceBlocksOut = nullptr;
 };
 
 class UniformBlockLinker final : public InterfaceBlockLinker
 {
   public:
-    UniformBlockLinker(std::vector<InterfaceBlock> *blocksOut,
-                       std::vector<LinkedUniform> *uniformsOut,
-                       std::vector<std::string> *unusedInterfaceBlocksOut);
+    UniformBlockLinker();
     ~UniformBlockLinker() override;
+
+    void init(std::vector<InterfaceBlock> *blocksOut,
+              std::vector<LinkedUniform> *uniformsOut,
+              std::vector<std::string> *unusedInterfaceBlocksOut);
 
   private:
     size_t getCurrentBlockMemberIndex() const override;
@@ -150,16 +153,18 @@ class UniformBlockLinker final : public InterfaceBlockLinker
                                           ShaderType shaderType,
                                           int blockIndex) const override;
 
-    std::vector<LinkedUniform> *mUniformsOut;
+    std::vector<LinkedUniform> *mUniformsOut = nullptr;
 };
 
 class ShaderStorageBlockLinker final : public InterfaceBlockLinker
 {
   public:
-    ShaderStorageBlockLinker(std::vector<InterfaceBlock> *blocksOut,
-                             std::vector<BufferVariable> *bufferVariablesOut,
-                             std::vector<std::string> *unusedInterfaceBlocksOut);
+    ShaderStorageBlockLinker();
     ~ShaderStorageBlockLinker() override;
+
+    void init(std::vector<InterfaceBlock> *blocksOut,
+              std::vector<BufferVariable> *bufferVariablesOut,
+              std::vector<std::string> *unusedInterfaceBlocksOut);
 
   private:
     size_t getCurrentBlockMemberIndex() const override;
@@ -170,19 +175,20 @@ class ShaderStorageBlockLinker final : public InterfaceBlockLinker
                                           ShaderType shaderType,
                                           int blockIndex) const override;
 
-    std::vector<BufferVariable> *mBufferVariablesOut;
+    std::vector<BufferVariable> *mBufferVariablesOut = nullptr;
 };
 
 class AtomicCounterBufferLinker final : angle::NonCopyable
 {
   public:
-    AtomicCounterBufferLinker(std::vector<AtomicCounterBuffer> *atomicCounterBuffersOut);
+    AtomicCounterBufferLinker();
     ~AtomicCounterBufferLinker();
 
+    void init(std::vector<AtomicCounterBuffer> *atomicCounterBuffersOut);
     void link(const std::map<int, unsigned int> &sizeMap) const;
 
   private:
-    std::vector<AtomicCounterBuffer> *mAtomicCounterBuffersOut;
+    std::vector<AtomicCounterBuffer> *mAtomicCounterBuffersOut = nullptr;
 };
 
 // The link operation is responsible for finishing the link of uniform and interface blocks.
@@ -206,14 +212,14 @@ struct UnusedUniform
 
 struct ProgramLinkedResources
 {
-    ProgramLinkedResources(GLuint maxVaryingVectors,
-                           PackMode packMode,
-                           std::vector<InterfaceBlock> *uniformBlocksOut,
-                           std::vector<LinkedUniform> *uniformsOut,
-                           std::vector<InterfaceBlock> *shaderStorageBlocksOut,
-                           std::vector<BufferVariable> *bufferVariablesOut,
-                           std::vector<AtomicCounterBuffer> *atomicCounterBuffersOut);
+    ProgramLinkedResources();
     ~ProgramLinkedResources();
+
+    void init(std::vector<InterfaceBlock> *uniformBlocksOut,
+              std::vector<LinkedUniform> *uniformsOut,
+              std::vector<InterfaceBlock> *shaderStorageBlocksOut,
+              std::vector<BufferVariable> *bufferVariablesOut,
+              std::vector<AtomicCounterBuffer> *atomicCounterBuffersOut);
 
     VaryingPacking varyingPacking;
     UniformBlockLinker uniformBlockLinker;

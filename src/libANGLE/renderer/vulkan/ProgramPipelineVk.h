@@ -46,7 +46,8 @@ class ProgramPipelineVk : public ProgramPipelineImpl
                              gl::ShaderMap<const gl::ProgramState *> *programStatesOut);
 
     angle::Result link(const gl::Context *glContext,
-                       const gl::ProgramMergedVaryings &mergedVaryings) override;
+                       const gl::ProgramMergedVaryings &mergedVaryings,
+                       const gl::VaryingPacking &varyingPacking) override;
 
     angle::Result updateUniforms(ContextVk *contextVk);
 

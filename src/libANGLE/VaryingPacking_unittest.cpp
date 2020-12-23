@@ -46,14 +46,16 @@ class VaryingPackingTest : public ::testing::TestWithParam<GLuint>
     // Uses the "relaxed" ANGLE packing mode.
     bool packVaryings(GLuint maxVaryings, const std::vector<sh::ShaderVariable> &shVaryings)
     {
-        VaryingPacking varyingPacking(maxVaryings, PackMode::ANGLE_RELAXED);
+        VaryingPacking varyingPacking;
+        varyingPacking.init(maxVaryings, PackMode::ANGLE_RELAXED);
         return testVaryingPacking(shVaryings, &varyingPacking);
     }
 
     // Uses the stricter WebGL style packing rules.
     bool packVaryingsStrict(GLuint maxVaryings, const std::vector<sh::ShaderVariable> &shVaryings)
     {
-        VaryingPacking varyingPacking(maxVaryings, PackMode::WEBGL_STRICT);
+        VaryingPacking varyingPacking;
+        varyingPacking.init(maxVaryings, PackMode::WEBGL_STRICT);
         return testVaryingPacking(shVaryings, &varyingPacking);
     }
 

@@ -1051,12 +1051,16 @@ bool UniformLinker::checkMaxCombinedAtomicCounters(const Caps &caps, InfoLog &in
 }
 
 // InterfaceBlockLinker implementation.
-InterfaceBlockLinker::InterfaceBlockLinker(std::vector<InterfaceBlock> *blocksOut,
-                                           std::vector<std::string> *unusedInterfaceBlocksOut)
-    : mShaderBlocks({}), mBlocksOut(blocksOut), mUnusedInterfaceBlocksOut(unusedInterfaceBlocksOut)
-{}
+InterfaceBlockLinker::InterfaceBlockLinker() = default;
 
-InterfaceBlockLinker::~InterfaceBlockLinker() {}
+InterfaceBlockLinker::~InterfaceBlockLinker() = default;
+
+void InterfaceBlockLinker::init(std::vector<InterfaceBlock> *blocksOut,
+                                std::vector<std::string> *unusedInterfaceBlocksOut)
+{
+    mBlocksOut                = blocksOut;
+    mUnusedInterfaceBlocksOut = unusedInterfaceBlocksOut;
+}
 
 void InterfaceBlockLinker::addShaderBlocks(ShaderType shaderType,
                                            const std::vector<sh::InterfaceBlock> *blocks)
@@ -1181,13 +1185,17 @@ void InterfaceBlockLinker::defineInterfaceBlock(const GetBlockSizeFunc &getBlock
 }
 
 // UniformBlockLinker implementation.
-UniformBlockLinker::UniformBlockLinker(std::vector<InterfaceBlock> *blocksOut,
-                                       std::vector<LinkedUniform> *uniformsOut,
-                                       std::vector<std::string> *unusedInterfaceBlocksOut)
-    : InterfaceBlockLinker(blocksOut, unusedInterfaceBlocksOut), mUniformsOut(uniformsOut)
-{}
+UniformBlockLinker::UniformBlockLinker() = default;
 
 UniformBlockLinker::~UniformBlockLinker() {}
+
+void UniformBlockLinker::init(std::vector<InterfaceBlock> *blocksOut,
+                              std::vector<LinkedUniform> *uniformsOut,
+                              std::vector<std::string> *unusedInterfaceBlocksOut)
+{
+    InterfaceBlockLinker::init(blocksOut, unusedInterfaceBlocksOut);
+    mUniformsOut = uniformsOut;
+}
 
 size_t UniformBlockLinker::getCurrentBlockMemberIndex() const
 {
@@ -1206,15 +1214,17 @@ sh::ShaderVariableVisitor *UniformBlockLinker::getVisitor(
 }
 
 // ShaderStorageBlockLinker implementation.
-ShaderStorageBlockLinker::ShaderStorageBlockLinker(
-    std::vector<InterfaceBlock> *blocksOut,
-    std::vector<BufferVariable> *bufferVariablesOut,
-    std::vector<std::string> *unusedInterfaceBlocksOut)
-    : InterfaceBlockLinker(blocksOut, unusedInterfaceBlocksOut),
-      mBufferVariablesOut(bufferVariablesOut)
-{}
+ShaderStorageBlockLinker::ShaderStorageBlockLinker() = default;
 
-ShaderStorageBlockLinker::~ShaderStorageBlockLinker() {}
+ShaderStorageBlockLinker::~ShaderStorageBlockLinker() = default;
+
+void ShaderStorageBlockLinker::init(std::vector<InterfaceBlock> *blocksOut,
+                                    std::vector<BufferVariable> *bufferVariablesOut,
+                                    std::vector<std::string> *unusedInterfaceBlocksOut)
+{
+    InterfaceBlockLinker::init(blocksOut, unusedInterfaceBlocksOut);
+    mBufferVariablesOut = bufferVariablesOut;
+}
 
 size_t ShaderStorageBlockLinker::getCurrentBlockMemberIndex() const
 {
@@ -1233,12 +1243,14 @@ sh::ShaderVariableVisitor *ShaderStorageBlockLinker::getVisitor(
 }
 
 // AtomicCounterBufferLinker implementation.
-AtomicCounterBufferLinker::AtomicCounterBufferLinker(
-    std::vector<AtomicCounterBuffer> *atomicCounterBuffersOut)
-    : mAtomicCounterBuffersOut(atomicCounterBuffersOut)
-{}
+AtomicCounterBufferLinker::AtomicCounterBufferLinker() = default;
 
-AtomicCounterBufferLinker::~AtomicCounterBufferLinker() {}
+AtomicCounterBufferLinker::~AtomicCounterBufferLinker() = default;
+
+void AtomicCounterBufferLinker::init(std::vector<AtomicCounterBuffer> *atomicCounterBuffersOut)
+{
+    mAtomicCounterBuffersOut = atomicCounterBuffersOut;
+}
 
 void AtomicCounterBufferLinker::link(const std::map<int, unsigned int> &sizeMap) const
 {
@@ -1250,21 +1262,21 @@ void AtomicCounterBufferLinker::link(const std::map<int, unsigned int> &sizeMap)
     }
 }
 
-ProgramLinkedResources::ProgramLinkedResources(
-    GLuint maxVaryingVectors,
-    PackMode packMode,
-    std::vector<InterfaceBlock> *uniformBlocksOut,
-    std::vector<LinkedUniform> *uniformsOut,
-    std::vector<InterfaceBlock> *shaderStorageBlocksOut,
-    std::vector<BufferVariable> *bufferVariablesOut,
-    std::vector<AtomicCounterBuffer> *atomicCounterBuffersOut)
-    : varyingPacking(maxVaryingVectors, packMode),
-      uniformBlockLinker(uniformBlocksOut, uniformsOut, &unusedInterfaceBlocks),
-      shaderStorageBlockLinker(shaderStorageBlocksOut, bufferVariablesOut, &unusedInterfaceBlocks),
-      atomicCounterBufferLinker(atomicCounterBuffersOut)
-{}
+ProgramLinkedResources::ProgramLinkedResources() = default;
 
 ProgramLinkedResources::~ProgramLinkedResources() = default;
+
+void ProgramLinkedResources::init(std::vector<InterfaceBlock> *uniformBlocksOut,
+                                  std::vector<LinkedUniform> *uniformsOut,
+                                  std::vector<InterfaceBlock> *shaderStorageBlocksOut,
+                                  std::vector<BufferVariable> *bufferVariablesOut,
+                                  std::vector<AtomicCounterBuffer> *atomicCounterBuffersOut)
+{
+    uniformBlockLinker.init(uniformBlocksOut, uniformsOut, &unusedInterfaceBlocks);
+    shaderStorageBlockLinker.init(shaderStorageBlocksOut, bufferVariablesOut,
+                                  &unusedInterfaceBlocks);
+    atomicCounterBufferLinker.init(atomicCounterBuffersOut);
+}
 
 void ProgramLinkedResourcesLinker::linkResources(const ProgramState &programState,
                                                  const ProgramLinkedResources &resources) const
@@ -1294,7 +1306,7 @@ void ProgramLinkedResourcesLinker::linkResources(const ProgramState &programStat
     // Link uniform interface blocks.
     resources.uniformBlockLinker.linkBlocks(getUniformBlockSize, getUniformBlockMemberInfo);
 
-    // Gather storage bufer interface block info.
+    // Gather storage buffer interface block info.
     InterfaceBlockInfo shaderStorageBlockInfo(mCustomEncoderFactory);
     for (const ShaderType shaderType : AllShaderTypes())
     {

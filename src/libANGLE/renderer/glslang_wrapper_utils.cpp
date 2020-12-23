@@ -576,7 +576,7 @@ void AssignOutputLocations(const gl::ProgramExecutable &programExecutable,
 }
 
 void AssignVaryingLocations(const GlslangSourceOptions &options,
-                            const gl::ProgramExecutable &programExecutable,
+                            const gl::VaryingPacking &varyingPacking,
                             const gl::ShaderType shaderType,
                             const gl::ShaderType frontShaderType,
                             GlslangProgramInterfaceInfo *programInterfaceInfo,
@@ -596,8 +596,7 @@ void AssignVaryingLocations(const GlslangSourceOptions &options,
     }
 
     // Assign varying locations.
-    for (const gl::PackedVaryingRegister &varyingReg :
-         programExecutable.getResources().varyingPacking.getRegisterList())
+    for (const gl::PackedVaryingRegister &varyingReg : varyingPacking.getRegisterList())
     {
         if (!IsFirstRegisterOfVarying(varyingReg, false))
         {
@@ -637,7 +636,7 @@ void AssignVaryingLocations(const GlslangSourceOptions &options,
 
     // Add an entry for inactive varyings.
     const gl::ShaderMap<std::vector<std::string>> &inactiveVaryingMappedNames =
-        programExecutable.getResources().varyingPacking.getInactiveVaryingMappedNames();
+        varyingPacking.getInactiveVaryingMappedNames();
     for (const std::string &varyingName : inactiveVaryingMappedNames[shaderType])
     {
         ASSERT(!gl::IsBuiltInName(varyingName));
@@ -657,7 +656,7 @@ void AssignVaryingLocations(const GlslangSourceOptions &options,
     // Add an entry for active builtins varyings.  This will allow inactive builtins, such as
     // gl_PointSize, gl_ClipDistance etc to be removed.
     const gl::ShaderMap<std::vector<std::string>> &activeOutputBuiltIns =
-        programExecutable.getResources().varyingPacking.getActiveOutputBuiltIns();
+        varyingPacking.getActiveOutputBuiltIns();
     for (const std::string &builtInName : activeOutputBuiltIns[shaderType])
     {
         ASSERT(gl::IsBuiltInName(builtInName));
@@ -690,6 +689,7 @@ void AssignVaryingLocations(const GlslangSourceOptions &options,
 // Calculates XFB layout qualifier arguments for each tranform feedback varying.  Stores calculated
 // values for the SPIR-V transformation.
 void AssignTransformFeedbackExtensionQualifiers(const gl::ProgramExecutable &programExecutable,
+                                                const gl::VaryingPacking &varyingPacking,
                                                 uint32_t locationsUsedForXfbExtension,
                                                 const gl::ShaderType shaderType,
                                                 ShaderInterfaceVariableInfoMap *variableInfoMapOut)
@@ -788,8 +788,7 @@ void AssignTransformFeedbackExtensionQualifiers(const gl::ProgramExecutable &pro
             // other hand, we need to decorate the exact member that is captured (as whole-block
             // capture is not supported).
             const gl::PackedVarying *originalVarying = nullptr;
-            for (const gl::PackedVaryingRegister &varyingReg :
-                 programExecutable.getResources().varyingPacking.getRegisterList())
+            for (const gl::PackedVaryingRegister &varyingReg : varyingPacking.getRegisterList())
             {
                 if (!IsFirstRegisterOfVarying(varyingReg, tfVarying.isShaderIOBlock))
                 {
@@ -3806,6 +3805,7 @@ void GlslangGenTransformFeedbackEmulationOutputs(const GlslangSourceOptions &opt
 
 void GlslangAssignLocations(const GlslangSourceOptions &options,
                             const gl::ProgramExecutable &programExecutable,
+                            const gl::VaryingPacking &varyingPacking,
                             const gl::ShaderType shaderType,
                             const gl::ShaderType frontShaderType,
                             GlslangProgramInterfaceInfo *programInterfaceInfo,
@@ -3828,7 +3828,7 @@ void GlslangAssignLocations(const GlslangSourceOptions &options,
     if (!programExecutable.hasLinkedShaderStage(gl::ShaderType::Compute))
     {
         // Assign varying locations.
-        AssignVaryingLocations(options, programExecutable, shaderType, frontShaderType,
+        AssignVaryingLocations(options, varyingPacking, shaderType, frontShaderType,
                                programInterfaceInfo, variableInfoMapOut);
 
         if (!programExecutable.getLinkedTransformFeedbackVaryings().empty() &&
@@ -3836,8 +3836,8 @@ void GlslangAssignLocations(const GlslangSourceOptions &options,
             (shaderType == programExecutable.getLinkedTransformFeedbackStage()))
         {
             AssignTransformFeedbackExtensionQualifiers(
-                programExecutable, programInterfaceInfo->locationsUsedForXfbExtension, shaderType,
-                variableInfoMapOut);
+                programExecutable, varyingPacking,
+                programInterfaceInfo->locationsUsedForXfbExtension, shaderType, variableInfoMapOut);
         }
     }
 
@@ -3910,8 +3910,9 @@ void GlslangGetShaderSource(const GlslangSourceOptions &options,
 
     for (const gl::ShaderType shaderType : programState.getExecutable().getLinkedShaderStages())
     {
-        GlslangAssignLocations(options, programState.getExecutable(), shaderType, frontShaderType,
-                               programInterfaceInfo, variableInfoMapOut);
+        GlslangAssignLocations(options, programState.getExecutable(), resources.varyingPacking,
+                               shaderType, frontShaderType, programInterfaceInfo,
+                               variableInfoMapOut);
 
         frontShaderType = shaderType;
     }

@@ -202,8 +202,10 @@ enum class PackMode
 class VaryingPacking final : angle::NonCopyable
 {
   public:
-    VaryingPacking(GLuint maxVaryingVectors, PackMode packMode);
+    VaryingPacking();
     ~VaryingPacking();
+
+    void init(GLuint maxVaryingVectors, PackMode packMode);
 
     bool packUserVaryings(gl::InfoLog &infoLog, const std::vector<PackedVarying> &packedVaryings);
 
@@ -274,7 +276,7 @@ class VaryingPacking final : angle::NonCopyable
     ShaderMap<std::vector<std::string>> mInactiveVaryingMappedNames;
     ShaderMap<std::vector<std::string>> mActiveOutputBuiltIns;
 
-    PackMode mPackMode;
+    PackMode mPackMode = PackMode::ANGLE_RELAXED;
 };
 
 }  // namespace gl
