@@ -2808,6 +2808,8 @@ TEST_P(TransformFeedbackTestES31, IOBlocksInterleaved)
 
     // http://anglebug.com/5488
     ANGLE_SKIP_TEST_IF(IsQualcomm() && IsOpenGLES());
+    // http://anglebug.com/5493
+    ANGLE_SKIP_TEST_IF(IsLinux() && IsAMD() && IsVulkan());
 
     constexpr char kVS[] = R"(#version 310 es
 #extension GL_EXT_shader_io_blocks : require
@@ -2916,6 +2918,9 @@ TEST_P(TransformFeedbackTestES31, IOBlocksSeparate)
 
     // http://anglebug.com/5488
     ANGLE_SKIP_TEST_IF(IsQualcomm() && IsOpenGLES());
+
+    // http://anglebug.com/5493
+    ANGLE_SKIP_TEST_IF(IsLinux() && IsAMD() && IsVulkan());
 
     constexpr char kVS[] = R"(#version 310 es
 #extension GL_EXT_shader_io_blocks : require
