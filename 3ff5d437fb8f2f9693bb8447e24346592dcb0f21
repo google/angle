@@ -106,6 +106,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "cd29b8c1_769239e7",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 5421,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-24T02:31:31Z",
+      "side": 1,
+      "message": "Ok, digging in a bit deeper, it was a bug in VertexArray::bindVertexBufferImpl():\n\nBAD:\n        bool isPersistent \u003d (boundBuffer-\u003egetAccessFlags() \u0026 GL_MAP_PERSISTENT_BIT_EXT) \u003d\u003d 0;\n\nGOOD:\n        bool isPersistent \u003d (boundBuffer-\u003egetAccessFlags() \u0026 GL_MAP_PERSISTENT_BIT_EXT) !\u003d 0;\n\nThis was doing a roundabout way of calling the correct version in VertexArray::updateCachedMappedArrayBuffersBinding().\n\nShould be good now.",
+      "parentUuid": "a2a3c8fe_62f2262e",
+      "range": {
+        "startLine": 5417,
+        "startChar": 0,
+        "endLine": 5421,
+        "endChar": 5
+      },
+      "revId": "3ff5d437fb8f2f9693bb8447e24346592dcb0f21",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "03d93f8a_f1726338",
@@ -119,6 +143,30 @@
       "writtenOn": "2020-12-23T22:30:30Z",
       "side": 1,
       "message": "this name is no longer correct.",
+      "range": {
+        "startLine": 253,
+        "startChar": 31,
+        "endLine": 253,
+        "endChar": 61
+      },
+      "revId": "3ff5d437fb8f2f9693bb8447e24346592dcb0f21",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "61309b93_4fffa7eb",
+        "filename": "src/libANGLE/VertexArray.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 253,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-24T02:31:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "03d93f8a_f1726338",
       "range": {
         "startLine": 253,
         "startChar": 31,
