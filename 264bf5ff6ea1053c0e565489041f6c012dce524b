@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bd9df66a_d0e9cce8",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-24T03:59:26Z",
+      "side": 1,
+      "message": "This can become a bool now, isn\u0027t that right?\n\nDefinitely a follow up change, if you are interested at all.",
+      "range": {
+        "startLine": 95,
+        "startChar": 4,
+        "endLine": 95,
+        "endChar": 34
+      },
+      "revId": "264bf5ff6ea1053c0e565489041f6c012dce524b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
