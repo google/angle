@@ -36,6 +36,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "07963332_24fdaa83",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2020-12-24T00:03:24Z",
+      "side": 1,
+      "message": "I was wrong about it taking the ANGLE path.\nBut I think the issue is that we should expose the core path when NV path is exposed because they\u0027re essentially the same",
+      "parentUuid": "cca47a57_7eb60d49",
+      "revId": "5b0fc9e5418d4a2aba797b14450bfae04667775e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "dbc2c621_45ad87ee",
