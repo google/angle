@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8a0e4a18_4ef804e9",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 587,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-24T04:19:36Z",
+      "side": 1,
+      "message": "Is the opposite possible? Maybe you can just ASSERT this because it looks like only gl_SecondaryFrag*EXT has the decoration, and that is specially handled.",
+      "revId": "f84e7b8f910caf749faa278a3b363616a0c68b8d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
