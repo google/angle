@@ -20,6 +20,23 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "305ed98a_a6e5c915",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2020-12-24T00:46:41Z",
+      "side": 1,
+      "message": "LGTM\nThe GPUTestExpectationsParser changes are technically irrelevant to the end2end tests, but may be helpful if we\u0027re/somebody\u0027s planning to build and test dEQP on iOS",
+      "revId": "bc9d0ce652200d0d901691c51265418c49d554ce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "59eb4f8c_c43be182",
         "filename": "src/tests/test_utils/angle_test_instantiate.cpp",
         "patchSetId": 4
