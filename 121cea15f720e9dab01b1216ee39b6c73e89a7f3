@@ -16,6 +16,23 @@
       "message": "jonahr@ ptal and cq+2 if lg",
       "revId": "121cea15f720e9dab01b1216ee39b6c73e89a7f3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a17abd0a_01ebfb04",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2020-12-24T00:39:08Z",
+      "side": 1,
+      "message": "LGTM, it seems like this works fine with your changes. Are you able to verify that this doesn\u0027t regress this [1] issue on i3wm?\n[1] https://bugs.chromium.org/p/chromium/issues/detail?id\u003d991577",
+      "revId": "121cea15f720e9dab01b1216ee39b6c73e89a7f3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
