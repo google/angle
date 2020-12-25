@@ -2914,7 +2914,7 @@ TEST_P(TransformFeedbackTestES31, IOBlocksSeparate)
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_io_blocks"));
 
     // http://anglebug.com/5487
-    ANGLE_SKIP_TEST_IF(IsLinux() && IsIntel() && IsOpenGL());
+    ANGLE_SKIP_TEST_IF(IsLinux() && (IsIntel() || IsAMD()) && IsOpenGL());
 
     // http://anglebug.com/5488
     ANGLE_SKIP_TEST_IF(IsQualcomm() && IsOpenGLES());
