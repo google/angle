@@ -119,6 +119,17 @@ angle_test("angle_system_info_test") {
 angle_test("angle_unittests") {
   sources = angle_unittests_sources + [ "angle_unittest_main.cpp" ]
 
+  if (angle_enable_essl) {
+    sources += angle_unittests_essl_sources
+  }
+
+  if (angle_enable_glsl) {
+    sources += angle_unittests_glsl_sources
+    if (is_mac || is_ios) {
+      sources += angle_unittests_glsl_mac_sources
+    }
+  }
+
   if (angle_enable_hlsl) {
     sources += angle_unittests_hlsl_sources
     defines = [ "ANGLE_ENABLE_HLSL" ]

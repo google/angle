@@ -21,12 +21,9 @@
 #include "compiler/translator/ValidateOutputs.h"
 #include "compiler/translator/ValidateVaryingLocations.h"
 #include "compiler/translator/VariablePacker.h"
-#include "compiler/translator/tree_ops/AddAndTrueToLoopCondition.h"
-#include "compiler/translator/tree_ops/ClampFragDepth.h"
 #include "compiler/translator/tree_ops/ClampPointSize.h"
 #include "compiler/translator/tree_ops/DeclareAndInitBuiltinsForInstancedMultiview.h"
 #include "compiler/translator/tree_ops/DeferGlobalInitializers.h"
-#include "compiler/translator/tree_ops/EarlyFragmentTestsOptimization.h"
 #include "compiler/translator/tree_ops/EmulateGLFragColorBroadcast.h"
 #include "compiler/translator/tree_ops/EmulateMultiDrawShaderBuiltins.h"
 #include "compiler/translator/tree_ops/EmulatePrecision.h"
@@ -35,21 +32,24 @@
 #include "compiler/translator/tree_ops/InitializeVariables.h"
 #include "compiler/translator/tree_ops/PruneEmptyCases.h"
 #include "compiler/translator/tree_ops/PruneNoOps.h"
-#include "compiler/translator/tree_ops/RegenerateStructNames.h"
 #include "compiler/translator/tree_ops/RemoveArrayLengthMethod.h"
 #include "compiler/translator/tree_ops/RemoveDynamicIndexing.h"
 #include "compiler/translator/tree_ops/RemoveInvariantDeclaration.h"
 #include "compiler/translator/tree_ops/RemovePow.h"
 #include "compiler/translator/tree_ops/RemoveUnreferencedVariables.h"
-#include "compiler/translator/tree_ops/RewriteDoWhile.h"
-#include "compiler/translator/tree_ops/RewriteRepeatedAssignToSwizzled.h"
 #include "compiler/translator/tree_ops/ScalarizeVecAndMatConstructorArgs.h"
 #include "compiler/translator/tree_ops/SeparateDeclarations.h"
 #include "compiler/translator/tree_ops/SimplifyLoopConditions.h"
 #include "compiler/translator/tree_ops/SplitSequenceOperator.h"
-#include "compiler/translator/tree_ops/UnfoldShortCircuitAST.h"
-#include "compiler/translator/tree_ops/UseInterfaceBlockFields.h"
-#include "compiler/translator/tree_ops/VectorizeVectorScalarArithmetic.h"
+#include "compiler/translator/tree_ops/gl/ClampFragDepth.h"
+#include "compiler/translator/tree_ops/gl/RewriteRepeatedAssignToSwizzled.h"
+#include "compiler/translator/tree_ops/gl/UseInterfaceBlockFields.h"
+#include "compiler/translator/tree_ops/gl/VectorizeVectorScalarArithmetic.h"
+#include "compiler/translator/tree_ops/gl/mac/AddAndTrueToLoopCondition.h"
+#include "compiler/translator/tree_ops/gl/mac/RegenerateStructNames.h"
+#include "compiler/translator/tree_ops/gl/mac/RewriteDoWhile.h"
+#include "compiler/translator/tree_ops/gl/mac/UnfoldShortCircuitAST.h"
+#include "compiler/translator/tree_ops/vulkan/EarlyFragmentTestsOptimization.h"
 #include "compiler/translator/tree_util/BuiltIn.h"
 #include "compiler/translator/tree_util/IntermNodePatternMatcher.h"
 #include "compiler/translator/tree_util/ReplaceShadowingVariables.h"
@@ -679,9 +679,7 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
 
     if (compileOptions & SH_REGENERATE_STRUCT_NAMES)
     {
-        RegenerateStructNames gen(&mSymbolTable);
-        root->traverse(&gen);
-        if (!validateAST(root))
+        if (!RegenerateStructNames(this, root, &mSymbolTable))
         {
             return false;
         }

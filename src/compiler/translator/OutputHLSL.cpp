@@ -24,7 +24,7 @@
 #include "compiler/translator/TranslatorHLSL.h"
 #include "compiler/translator/UtilsHLSL.h"
 #include "compiler/translator/blocklayout.h"
-#include "compiler/translator/tree_ops/RemoveSwitchFallThrough.h"
+#include "compiler/translator/tree_ops/d3d/RemoveSwitchFallThrough.h"
 #include "compiler/translator/tree_util/FindSymbolNode.h"
 #include "compiler/translator/tree_util/NodeSearch.h"
 #include "compiler/translator/util.h"

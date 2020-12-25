@@ -472,13 +472,22 @@ angle_static_library("translator") {
   sources = angle_translator_sources
   defines = []
 
+  _needs_glsl_base = false
+  needs_glsl_and_vulkan_base = false
+
   if (angle_enable_essl || use_fuzzing_engine) {
+    _needs_glsl_base = true
     sources += angle_translator_essl_sources
     defines += [ "ANGLE_ENABLE_ESSL" ]
   }
 
   if (angle_enable_glsl || use_fuzzing_engine) {
+    _needs_glsl_base = true
+    needs_glsl_and_vulkan_base = true
     sources += angle_translator_glsl_sources
+    if (is_mac || is_ios) {
+      sources += angle_translator_glsl_mac_sources
+    }
     defines += [ "ANGLE_ENABLE_GLSL" ]
   }
 
@@ -488,8 +497,18 @@ angle_static_library("translator") {
   }
 
   if (angle_enable_vulkan || use_fuzzing_engine || angle_enable_metal) {
+    _needs_glsl_base = true
+    needs_glsl_and_vulkan_base = true
+
     # This translator is needed by metal backend also.
     sources += angle_translator_lib_vulkan_sources
+  }
+
+  if (_needs_glsl_base) {
+    sources += angle_translator_glsl_base_sources
+  }
+  if (needs_glsl_and_vulkan_base) {
+    sources += angle_translator_glsl_and_vulkan_base_sources
   }
 
   if (angle_enable_vulkan || use_fuzzing_engine) {

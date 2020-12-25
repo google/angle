@@ -92,11 +92,8 @@ angle_unittests_sources = [
   "compiler_tests/PruneUnusedFunctions_test.cpp",
   "compiler_tests/QualificationOrderESSL31_test.cpp",
   "compiler_tests/QualificationOrder_test.cpp",
-  "compiler_tests/RecordConstantPrecision_test.cpp",
-  "compiler_tests/RegenerateStructNames_test.cpp",
   "compiler_tests/RemovePow_test.cpp",
   "compiler_tests/RemoveUnreferencedVariables_test.cpp",
-  "compiler_tests/RewriteDoWhile_test.cpp",
   "compiler_tests/SamplerMultisample_test.cpp",
   "compiler_tests/SamplerVideoWEBGL_test.cpp",
   "compiler_tests/ScalarizeVecAndMatConstructorArgs_test.cpp",
@@ -107,9 +104,7 @@ angle_unittests_sources = [
   "compiler_tests/TextureFunction_test.cpp",
   "compiler_tests/TypeTracking_test.cpp",
   "compiler_tests/Type_test.cpp",
-  "compiler_tests/UnfoldShortCircuitAST_test.cpp",
   "compiler_tests/VariablePacker_test.cpp",
-  "compiler_tests/VectorizeVectorScalarArithmetic_test.cpp",
   "compiler_tests/WorkGroupSize_test.cpp",
   "preprocessor_tests/MockDiagnostics.h",
   "preprocessor_tests/MockDirectiveHandler.h",
@@ -139,6 +134,18 @@ angle_unittests_sources = [
   "test_utils/angle_test_instantiate.h",
   "test_utils/compiler_test.cpp",
   "test_utils/compiler_test.h",
+]
+
+angle_unittests_essl_sources =
+    [ "compiler_tests/RecordConstantPrecision_test.cpp" ]
+
+angle_unittests_glsl_sources =
+    [ "compiler_tests/VectorizeVectorScalarArithmetic_test.cpp" ]
+
+angle_unittests_glsl_mac_sources = [
+  "compiler_tests/RegenerateStructNames_test.cpp",
+  "compiler_tests/RewriteDoWhile_test.cpp",
+  "compiler_tests/UnfoldShortCircuitAST_test.cpp",
 ]
 
 # TODO(jmadill): should probably call this windows sources

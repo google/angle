@@ -9,7 +9,7 @@
 #include "angle_gl.h"
 #include "compiler/translator/BuiltInFunctionEmulatorGLSL.h"
 #include "compiler/translator/OutputESSL.h"
-#include "compiler/translator/tree_ops/RecordConstantPrecision.h"
+#include "compiler/translator/tree_ops/gl/RecordConstantPrecision.h"
 
 namespace sh
 {
