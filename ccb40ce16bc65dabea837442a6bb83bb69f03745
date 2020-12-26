@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ac790e2a_eab62c0b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2020-12-26T18:59:38Z",
+      "side": 1,
+      "message": "I was hoping for about 200KB on each platform, but that\u0027s life. A little surprising that the gl-only build is reduced by 60KB on Linux, but only 27KB on Android, so maybe the win on Fuchsia would also be smaller.\n\nStill, it\u0027s honest work.",
+      "revId": "ccb40ce16bc65dabea837442a6bb83bb69f03745",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
