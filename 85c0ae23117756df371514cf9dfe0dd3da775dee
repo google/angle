@@ -16,6 +16,24 @@
       "message": "How much does this actually save by the way?",
       "revId": "85c0ae23117756df371514cf9dfe0dd3da775dee",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "432660af_c2a7bc5a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 11
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000050
+      },
+      "writtenOn": "2020-12-27T15:54:51Z",
+      "side": 1,
+      "message": "https://chrome-supersize.firebaseapp.com/viewer.html?load_url\u003dhttps%3A%2F%2Fstorage.googleapis.com%2Fchromium-binary-size-trybot-results%2Fandroid-binary-size%2F2020%2F12%2F23%2F696261%2Fsupersize_diff.sizediff\u0026diff_mode\u003don\n\nIt saves 21.KB",
+      "parentUuid": "87821468_a30650f8",
+      "revId": "85c0ae23117756df371514cf9dfe0dd3da775dee",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
