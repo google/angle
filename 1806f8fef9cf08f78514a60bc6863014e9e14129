@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ea5d9a9d_6fd3ca0c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-28T17:58:20Z",
+      "side": 1,
+      "message": "Have you verified that this doesn\u0027t hurt benchmark performance?   Seems like the extra allocations and map/unmap/flush may hurt things if the same buffers were ever being used before.",
+      "revId": "1806f8fef9cf08f78514a60bc6863014e9e14129",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
