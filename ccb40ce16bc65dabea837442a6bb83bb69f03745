@@ -79,6 +79,75 @@
       },
       "revId": "ccb40ce16bc65dabea837442a6bb83bb69f03745",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "129d0a08_5bfcc268",
+        "filename": "src/compiler/translator/tree_ops/gl/mac/RegenerateStructNames.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-28T18:18:53Z",
+      "side": 1,
+      "message": "nit: \"struct is\", to remove the possessive form.",
+      "range": {
+        "startLine": 41,
+        "startChar": 12,
+        "endLine": 41,
+        "endChar": 20
+      },
+      "revId": "ccb40ce16bc65dabea837442a6bb83bb69f03745",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8026864a_accf0c05",
+        "filename": "src/compiler/translator/tree_ops/gl/mac/RewriteDoWhile.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-28T18:18:53Z",
+      "side": 1,
+      "message": "nit: There are a few copyrights in here that should be updated.",
+      "range": {
+        "startLine": 2,
+        "startChar": 3,
+        "endLine": 2,
+        "endChar": 17
+      },
+      "revId": "ccb40ce16bc65dabea837442a6bb83bb69f03745",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "98b89df8_26409f30",
+        "filename": "src/tests/BUILD.gn",
+        "patchSetId": 3
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-28T18:18:53Z",
+      "side": 1,
+      "message": "Can you use \u0027is_apple\u0027 here?",
+      "range": {
+        "startLine": 128,
+        "startChar": 8,
+        "endLine": 128,
+        "endChar": 24
+      },
+      "revId": "ccb40ce16bc65dabea837442a6bb83bb69f03745",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
