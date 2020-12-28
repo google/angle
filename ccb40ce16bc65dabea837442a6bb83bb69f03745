@@ -16,6 +16,69 @@
       "message": "I was hoping for about 200KB on each platform, but that\u0027s life. A little surprising that the gl-only build is reduced by 60KB on Linux, but only 27KB on Android, so maybe the win on Fuchsia would also be smaller.\n\nStill, it\u0027s honest work.",
       "revId": "ccb40ce16bc65dabea837442a6bb83bb69f03745",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "66939988_3451481a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-28T16:27:23Z",
+      "side": 1,
+      "message": "LGTM",
+      "revId": "ccb40ce16bc65dabea837442a6bb83bb69f03745",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8b54d2bb_041c0bb4",
+        "filename": "BUILD.gn",
+        "patchSetId": 3
+      },
+      "lineNbr": 475,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-28T16:27:23Z",
+      "side": 1,
+      "message": "nit: you should prefix these with \"_\" so they don\u0027t persist out of the scope.",
+      "range": {
+        "startLine": 475,
+        "startChar": 2,
+        "endLine": 475,
+        "endChar": 18
+      },
+      "revId": "ccb40ce16bc65dabea837442a6bb83bb69f03745",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6b5f02db_72a5b13a",
+        "filename": "gni/angle.gni",
+        "patchSetId": 3
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-28T16:27:23Z",
+      "side": 1,
+      "message": "should we just force enable angle_enable_gl when use_ozone instead? any way is fine, just asking.",
+      "range": {
+        "startLine": 133,
+        "startChar": 0,
+        "endLine": 134,
+        "endChar": 50
+      },
+      "revId": "ccb40ce16bc65dabea837442a6bb83bb69f03745",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
