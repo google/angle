@@ -1,0 +1,84 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1f54c33b_b125879b",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 704,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-28T17:53:00Z",
+      "side": 1,
+      "message": "Can/Should this be under a check that XFB is active and \"gl_PerVertex\" is being captured?",
+      "range": {
+        "startLine": 701,
+        "startChar": 0,
+        "endLine": 704,
+        "endChar": 39
+      },
+      "revId": "25a0078aa02adfe237f1e4d88984c44109addb39",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "188afe41_f16453b1",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 769,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-28T17:53:00Z",
+      "side": 1,
+      "message": "I only see this defined as part of EXT_clip_cull_distance, which we don\u0027t fully support yet.   Probably shouldn\u0027t hurt to include it here though.",
+      "revId": "25a0078aa02adfe237f1e4d88984c44109addb39",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "716ec206_9d822d8f",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 788,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-28T17:53:00Z",
+      "side": 1,
+      "message": "If all 4 of these are captured by the caller, this will loop 4 times to find each index value.   Can this be a map of strings to index values instead?",
+      "range": {
+        "startLine": 773,
+        "startChar": 0,
+        "endLine": 788,
+        "endChar": 17
+      },
+      "revId": "25a0078aa02adfe237f1e4d88984c44109addb39",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "84ac7398_f33b04ed",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramExecutableVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-28T17:53:00Z",
+      "side": 1,
+      "message": "What about GS/TS?",
+      "revId": "25a0078aa02adfe237f1e4d88984c44109addb39",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
