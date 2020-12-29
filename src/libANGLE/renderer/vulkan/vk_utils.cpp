@@ -989,7 +989,7 @@ void InitExternalSemaphoreCapabilitiesFunctions(VkInstance instance)
 GLenum CalculateGenerateMipmapFilter(ContextVk *contextVk, const vk::Format &format)
 {
     const bool formatSupportsLinearFiltering = contextVk->getRenderer()->hasImageFormatFeatureBits(
-        format.vkImageFormat, VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT);
+        format.actualImageVkFormat, VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT);
     const bool hintFastest = contextVk->getState().getGenerateMipmapHint() == GL_FASTEST;
 
     return formatSupportsLinearFiltering && !hintFastest ? GL_LINEAR : GL_NEAREST;

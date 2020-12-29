@@ -199,7 +199,7 @@ angle::Result HardwareBufferImageSiblingVkAndroid::initImpl(DisplayVk *displayVk
     // With the introduction of sRGB related GLES extensions any texture could be respecified
     // causing it to be interpreted in a different colorspace. Create the VkImage accordingly.
     VkImageCreateFlags imageCreateFlags = vk::kVkImageCreateFlagsNone;
-    VkFormat vkImageFormat              = vkFormat.vkImageFormat;
+    VkFormat vkImageFormat              = vkFormat.actualImageVkFormat;
     VkFormat vkImageListFormat          = vkFormat.actualImageFormat().isSRGB
                                      ? vk::ConvertToLinear(vkImageFormat)
                                      : vk::ConvertToSRGB(vkImageFormat);
@@ -290,15 +290,15 @@ angle::Result HardwareBufferImageSiblingVkAndroid::initImpl(DisplayVk *displayVk
 
     constexpr uint32_t kColorRenderableRequiredBits        = VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT;
     constexpr uint32_t kDepthStencilRenderableRequiredBits = VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT;
-    mRenderable =
-        renderer->hasImageFormatFeatureBits(vkFormat.vkImageFormat, kColorRenderableRequiredBits) ||
-        renderer->hasImageFormatFeatureBits(vkFormat.vkImageFormat,
-                                            kDepthStencilRenderableRequiredBits);
+    mRenderable = renderer->hasImageFormatFeatureBits(vkFormat.actualImageVkFormat,
+                                                      kColorRenderableRequiredBits) ||
+                  renderer->hasImageFormatFeatureBits(vkFormat.actualImageVkFormat,
+                                                      kDepthStencilRenderableRequiredBits);
 
     constexpr uint32_t kTextureableRequiredBits =
         VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT | VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT;
     mTextureable =
-        renderer->hasImageFormatFeatureBits(vkFormat.vkImageFormat, kTextureableRequiredBits);
+        renderer->hasImageFormatFeatureBits(vkFormat.actualImageVkFormat, kTextureableRequiredBits);
 
     return angle::Result::Continue;
 }

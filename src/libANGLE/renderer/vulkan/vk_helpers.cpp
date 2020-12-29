@@ -711,9 +711,10 @@ bool CanCopyWithTransfer(RendererVk *renderer,
     // Checks that the formats in the copy transfer have the appropriate tiling and transfer bits
     bool isTilingCompatible           = srcTilingMode == destTilingMode;
     bool srcFormatHasNecessaryFeature = FormatHasNecessaryFeature(
-        renderer, srcFormat.vkImageFormat, srcTilingMode, VK_FORMAT_FEATURE_TRANSFER_SRC_BIT);
-    bool dstFormatHasNecessaryFeature = FormatHasNecessaryFeature(
-        renderer, destFormat.vkImageFormat, destTilingMode, VK_FORMAT_FEATURE_TRANSFER_DST_BIT);
+        renderer, srcFormat.actualImageVkFormat, srcTilingMode, VK_FORMAT_FEATURE_TRANSFER_SRC_BIT);
+    bool dstFormatHasNecessaryFeature =
+        FormatHasNecessaryFeature(renderer, destFormat.actualImageVkFormat, destTilingMode,
+                                  VK_FORMAT_FEATURE_TRANSFER_DST_BIT);
 
     return isTilingCompatible && srcFormatHasNecessaryFeature && dstFormatHasNecessaryFeature;
 }
@@ -3619,7 +3620,7 @@ angle::Result ImageHelper::initExternal(Context *context,
     imageInfo.pNext                 = externalImageCreateInfo;
     imageInfo.flags                 = GetImageCreateFlags(textureType) | additionalCreateFlags;
     imageInfo.imageType             = mImageType;
-    imageInfo.format                = format.vkImageFormat;
+    imageInfo.format                = format.actualImageVkFormat;
     imageInfo.extent                = mExtents;
     imageInfo.mipLevels             = mipLevels;
     imageInfo.arrayLayers           = mLayerCount;
@@ -3871,7 +3872,7 @@ angle::Result ImageHelper::initLayerImageView(Context *context,
 {
     return initLayerImageViewImpl(context, textureType, aspectMask, swizzleMap, imageViewOut,
                                   baseMipLevelVk, levelCount, baseArrayLayer, layerCount,
-                                  mFormat->vkImageFormat, nullptr);
+                                  mFormat->actualImageVkFormat, nullptr);
 }
 
 angle::Result ImageHelper::initLayerImageViewWithFormat(Context *context,
@@ -3887,7 +3888,7 @@ angle::Result ImageHelper::initLayerImageViewWithFormat(Context *context,
 {
     return initLayerImageViewImpl(context, textureType, aspectMask, swizzleMap, imageViewOut,
                                   baseMipLevelVk, levelCount, baseArrayLayer, layerCount,
-                                  format.vkImageFormat, nullptr);
+                                  format.actualImageVkFormat, nullptr);
 }
 
 angle::Result ImageHelper::initLayerImageViewImpl(
@@ -4038,7 +4039,7 @@ angle::Result ImageHelper::init2DStaging(Context *context,
     imageInfo.sType                 = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
     imageInfo.flags                 = 0;
     imageInfo.imageType             = mImageType;
-    imageInfo.format                = format.vkImageFormat;
+    imageInfo.format                = format.actualImageVkFormat;
     imageInfo.extent                = mExtents;
     imageInfo.mipLevels             = 1;
     imageInfo.arrayLayers           = mLayerCount;
@@ -5944,7 +5945,7 @@ angle::Result ImageHelper::copyImageDataToBuffer(ContextVk *contextVk,
     //  per pixel which is sufficient to contain its depth aspect (no stencil aspect).
     uint32_t pixelBytes         = imageFormat.pixelBytes;
     uint32_t depthBytesPerPixel = imageFormat.depthBits >> 3;
-    if (mFormat->vkImageFormat == VK_FORMAT_D24_UNORM_S8_UINT)
+    if (mFormat->actualImageVkFormat == VK_FORMAT_D24_UNORM_S8_UINT)
     {
         pixelBytes         = 5;
         depthBytesPerPixel = 4;
@@ -6701,16 +6702,17 @@ angle::Result ImageViewHelper::initSRGBReadViewsImpl(ContextVk *contextVk,
     // When we select the linear/srgb counterpart formats, we must first make sure they're
     // actually supported by the ICD. If they are not supported by the ICD, then we treat that as if
     // there is no counterpart format. (In this case, the relevant extension should not be exposed)
-    VkFormat srgbOverrideFormat = ConvertToSRGB(image.getFormat().vkImageFormat);
+    VkFormat srgbOverrideFormat = ConvertToSRGB(image.getFormat().actualImageVkFormat);
     ASSERT((srgbOverrideFormat == VK_FORMAT_UNDEFINED) ||
            (HasNonRenderableTextureFormatSupport(contextVk->getRenderer(), srgbOverrideFormat)));
 
-    VkFormat linearOverrideFormat = ConvertToLinear(image.getFormat().vkImageFormat);
+    VkFormat linearOverrideFormat = ConvertToLinear(image.getFormat().actualImageVkFormat);
     ASSERT((linearOverrideFormat == VK_FORMAT_UNDEFINED) ||
            (HasNonRenderableTextureFormatSupport(contextVk->getRenderer(), linearOverrideFormat)));
 
-    VkFormat linearFormat =
-        (linearOverrideFormat != VK_FORMAT_UNDEFINED) ? linearOverrideFormat : format.vkImageFormat;
+    VkFormat linearFormat = (linearOverrideFormat != VK_FORMAT_UNDEFINED)
+                                ? linearOverrideFormat
+                                : format.actualImageVkFormat;
     ASSERT(linearFormat != VK_FORMAT_UNDEFINED);
 
     const VkImageAspectFlags aspectFlags = GetFormatAspectFlags(format.intendedFormat());
@@ -6993,7 +6995,7 @@ angle::Result BufferViewHelper::getView(ContextVk *contextVk,
 {
     ASSERT(format.valid());
 
-    auto iter = mViews.find(format.vkBufferFormat);
+    auto iter = mViews.find(format.actualBufferVkFormat);
     if (iter != mViews.end())
     {
         *viewOut = &iter->second;
@@ -7010,7 +7012,7 @@ angle::Result BufferViewHelper::getView(ContextVk *contextVk,
     VkBufferViewCreateInfo viewCreateInfo = {};
     viewCreateInfo.sType                  = VK_STRUCTURE_TYPE_BUFFER_VIEW_CREATE_INFO;
     viewCreateInfo.buffer                 = buffer.getBuffer().getHandle();
-    viewCreateInfo.format                 = format.vkBufferFormat;
+    viewCreateInfo.format                 = format.actualBufferVkFormat;
     viewCreateInfo.offset                 = mOffset;
     viewCreateInfo.range                  = size;
 
@@ -7018,7 +7020,7 @@ angle::Result BufferViewHelper::getView(ContextVk *contextVk,
     ANGLE_VK_TRY(contextVk, view.init(contextVk->getDevice(), viewCreateInfo));
 
     // Cache the view
-    auto insertIter = mViews.insert({format.vkBufferFormat, std::move(view)});
+    auto insertIter = mViews.insert({format.actualBufferVkFormat, std::move(view)});
     *viewOut        = &insertIter.first->second;
     ASSERT(insertIter.second);
 

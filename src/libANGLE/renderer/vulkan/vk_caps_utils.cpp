@@ -40,12 +40,12 @@ bool HasShaderImageAtomicsSupport(const RendererVk *rendererVk,
     const Format &formatVk = rendererVk->getFormat(GL_R32F);
 
     const bool hasImageAtomicSupport = rendererVk->hasImageFormatFeatureBits(
-        formatVk.vkImageFormat, VK_FORMAT_FEATURE_STORAGE_IMAGE_ATOMIC_BIT);
+        formatVk.actualImageVkFormat, VK_FORMAT_FEATURE_STORAGE_IMAGE_ATOMIC_BIT);
     bool hasBufferAtomicSupport = true;
     if (supportedExtensions.textureBufferAny())
     {
         hasBufferAtomicSupport = rendererVk->hasBufferFormatFeatureBits(
-            formatVk.vkBufferFormat, VK_FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_ATOMIC_BIT);
+            formatVk.actualBufferVkFormat, VK_FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_ATOMIC_BIT);
     }
 
     return hasImageAtomicSupport && hasBufferAtomicSupport;
@@ -66,10 +66,11 @@ bool FormatReinterpretationSupported(const std::vector<GLenum> &optionalSizedFor
             const Format &vkFormat = rendererVk->getFormat(glFormat);
 
             VkFormat reinterpretedFormat = checkLinearColorspace
-                                               ? ConvertToLinear(vkFormat.vkImageFormat)
-                                               : ConvertToSRGB(vkFormat.vkImageFormat);
+                                               ? ConvertToLinear(vkFormat.actualImageVkFormat)
+                                               : ConvertToSRGB(vkFormat.actualImageVkFormat);
 
-            if (!rendererVk->haveSameFormatFeatureBits(vkFormat.vkImageFormat, reinterpretedFormat))
+            if (!rendererVk->haveSameFormatFeatureBits(vkFormat.actualImageVkFormat,
+                                                       reinterpretedFormat))
             {
                 return false;
             }
@@ -178,7 +179,7 @@ bool HasTexelBufferSupport(const RendererVk *rendererVk, GLenum formatGL)
     const Format &formatVk = rendererVk->getFormat(formatGL);
 
     return rendererVk->hasBufferFormatFeatureBits(
-        formatVk.vkBufferFormat,
+        formatVk.actualBufferVkFormat,
         VK_FORMAT_FEATURE_UNIFORM_TEXEL_BUFFER_BIT | VK_FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_BIT);
 }
 

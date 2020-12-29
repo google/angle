@@ -2134,9 +2134,9 @@ angle::Result UtilsVk::copyImage(ContextVk *contextVk,
     shaderParams.rotateXY                = 0;
 
     shaderParams.srcIsSRGB =
-        gl::GetSizedInternalFormatInfo(srcFormat.internalFormat).colorEncoding == GL_SRGB;
+        gl::GetSizedInternalFormatInfo(srcFormat.intendedGLFormat).colorEncoding == GL_SRGB;
     shaderParams.destIsSRGB =
-        gl::GetSizedInternalFormatInfo(dstFormat.internalFormat).colorEncoding == GL_SRGB;
+        gl::GetSizedInternalFormatInfo(dstFormat.intendedGLFormat).colorEncoding == GL_SRGB;
 
     // If both src and dest are sRGB, and there is no alpha multiplication/division necessary, then
     // the shader can work with sRGB data and pretend they are linear.

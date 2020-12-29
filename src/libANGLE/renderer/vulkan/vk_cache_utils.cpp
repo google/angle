@@ -155,7 +155,7 @@ void UnpackAttachmentDesc(VkAttachmentDescription *desc,
 {
     // We would only need this flag for duplicated attachments. Apply it conservatively.
     desc->flags   = VK_ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT;
-    desc->format  = format.vkImageFormat;
+    desc->format  = format.actualImageVkFormat;
     desc->samples = gl_vk::GetSamples(samples);
     desc->loadOp  = static_cast<VkAttachmentLoadOp>(ops.loadOp);
     desc->storeOp =
@@ -179,7 +179,7 @@ void UnpackColorResolveAttachmentDesc(VkAttachmentDescription *desc,
     // attachments simultaneously, so this flag can likely be removed without any issue if it incurs
     // a performance penalty.
     desc->flags  = VK_ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT;
-    desc->format = format.vkImageFormat;
+    desc->format = format.actualImageVkFormat;
 
     // This function is for color resolve attachments.
     const angle::Format &angleFormat = format.actualImageFormat();
@@ -212,7 +212,7 @@ void UnpackDepthStencilResolveAttachmentDesc(VkAttachmentDescription *desc,
     // There cannot be simultaneous usages of the depth/stencil resolve image, as depth/stencil
     // resolve currently only comes from depth/stencil renderbuffers.
     desc->flags  = 0;
-    desc->format = format.vkImageFormat;
+    desc->format = format.actualImageVkFormat;
 
     // This function is for depth/stencil resolve attachment.
     const angle::Format &angleFormat = format.intendedFormat();
@@ -1712,8 +1712,8 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
         angle::FormatID formatID         = static_cast<angle::FormatID>(packedAttrib.format);
         const Format &format             = contextVk->getRenderer()->getFormat(formatID);
         const angle::Format &angleFormat = format.intendedFormat();
-        VkFormat vkFormat =
-            packedAttrib.compressed ? format.vkCompressedBufferFormat : format.vkBufferFormat;
+        VkFormat vkFormat = packedAttrib.compressed ? format.actualCompressedBufferVkFormat
+                                                    : format.actualBufferVkFormat;
 
         gl::ComponentType attribType =
             GetVertexAttributeComponentType(angleFormat.isPureInt(), angleFormat.vertexAttribType);

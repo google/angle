@@ -56,7 +56,7 @@ struct Format final : private angle::NonCopyable
 {
     Format();
 
-    bool valid() const { return internalFormat != 0; }
+    bool valid() const { return intendedGLFormat != 0; }
 
     // The intended format is the front-end format. For Textures this usually correponds to a
     // GLenum in the headers. Buffer formats don't always have a corresponding GLenum type.
@@ -89,11 +89,11 @@ struct Format final : private angle::NonCopyable
         return compressed ? compressedVertexLoadRequiresConversion : vertexLoadRequiresConversion;
     }
 
-    // The |internalFormat| always correponds to a valid GLenum type. For types that don't have a
+    // |intendedGLFormat| always correponds to a valid GLenum type. For types that don't have a
     // corresponding GLenum we do our best to specify a GLenum that is "close".
     const gl::InternalFormat &getInternalFormatInfo(GLenum type) const
     {
-        return gl::GetInternalFormatInfo(internalFormat, type);
+        return gl::GetInternalFormatInfo(intendedGLFormat, type);
     }
 
     // Returns buffer alignment for image-copy operations (to or from a buffer).
@@ -117,13 +117,13 @@ struct Format final : private angle::NonCopyable
                             int compressedStartIndex);
 
     angle::FormatID intendedFormatID;
-    GLenum internalFormat;
+    GLenum intendedGLFormat;
     angle::FormatID actualImageFormatID;
-    VkFormat vkImageFormat;
+    VkFormat actualImageVkFormat;
     angle::FormatID actualBufferFormatID;
-    VkFormat vkBufferFormat;
+    VkFormat actualBufferVkFormat;
     angle::FormatID actualCompressedBufferFormatID;
-    VkFormat vkCompressedBufferFormat;
+    VkFormat actualCompressedBufferVkFormat;
 
     InitializeTextureDataFunction imageInitializerFunction;
     LoadFunctionMap textureLoadFunctions;

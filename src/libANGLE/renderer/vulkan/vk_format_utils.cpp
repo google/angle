@@ -111,13 +111,13 @@ namespace vk
 // Format implementation.
 Format::Format()
     : intendedFormatID(angle::FormatID::NONE),
-      internalFormat(GL_NONE),
+      intendedGLFormat(GL_NONE),
       actualImageFormatID(angle::FormatID::NONE),
-      vkImageFormat(VK_FORMAT_UNDEFINED),
+      actualImageVkFormat(VK_FORMAT_UNDEFINED),
       actualBufferFormatID(angle::FormatID::NONE),
-      vkBufferFormat(VK_FORMAT_UNDEFINED),
+      actualBufferVkFormat(VK_FORMAT_UNDEFINED),
       actualCompressedBufferFormatID(angle::FormatID::NONE),
-      vkCompressedBufferFormat(VK_FORMAT_UNDEFINED),
+      actualCompressedBufferVkFormat(VK_FORMAT_UNDEFINED),
       imageInitializerFunction(nullptr),
       textureLoadFunctions(),
       vertexLoadFunction(nullptr),
@@ -152,7 +152,7 @@ void Format::initImageFallback(RendererVk *renderer, const ImageFormatInitInfo *
     int i = FindSupportedFormat(renderer, info, skip, static_cast<uint32_t>(numInfo), testFunction);
 
     actualImageFormatID      = info[i].format;
-    vkImageFormat            = info[i].vkFormat;
+    actualImageVkFormat      = info[i].vkFormat;
     imageInitializerFunction = info[i].initializer;
 }
 
@@ -167,7 +167,7 @@ void Format::initBufferFallback(RendererVk *renderer,
                                     HasFullBufferFormatSupport);
 
         actualBufferFormatID         = info[i].format;
-        vkBufferFormat               = info[i].vkFormat;
+        actualBufferVkFormat         = info[i].vkFormat;
         vkBufferFormatIsPacked       = info[i].vkFormatIsPacked;
         vertexLoadFunction           = info[i].vertexLoadFunction;
         vertexLoadRequiresConversion = info[i].vertexLoadRequiresConversion;
@@ -179,7 +179,7 @@ void Format::initBufferFallback(RendererVk *renderer,
                                     HasFullBufferFormatSupport);
 
         actualCompressedBufferFormatID         = info[i].format;
-        vkCompressedBufferFormat               = info[i].vkFormat;
+        actualCompressedBufferVkFormat         = info[i].vkFormat;
         vkCompressedBufferFormatIsPacked       = info[i].vkFormatIsPacked;
         compressedVertexLoadFunction           = info[i].vertexLoadFunction;
         compressedVertexLoadRequiresConversion = info[i].vertexLoadRequiresConversion;
@@ -262,8 +262,7 @@ void FormatTable::initialize(RendererVk *renderer,
         const angle::Format &angleFormat = angle::Format::Get(formatID);
 
         format.initialize(renderer, angleFormat);
-        const GLenum internalFormat = format.internalFormat;
-        format.intendedFormatID     = formatID;
+        format.intendedFormatID = formatID;
 
         if (!format.valid())
         {
@@ -271,18 +270,18 @@ void FormatTable::initialize(RendererVk *renderer,
         }
 
         gl::TextureCaps textureCaps;
-        FillTextureFormatCaps(renderer, format.vkImageFormat, &textureCaps);
+        FillTextureFormatCaps(renderer, format.actualImageVkFormat, &textureCaps);
         outTextureCapsMap->set(formatID, textureCaps);
 
         if (textureCaps.texturable)
         {
             format.textureLoadFunctions =
-                GetLoadFunctionsMap(internalFormat, format.actualImageFormatID);
+                GetLoadFunctionsMap(format.intendedGLFormat, format.actualImageFormatID);
         }
 
         if (angleFormat.isBlock)
         {
-            outCompressedTextureFormats->push_back(internalFormat);
+            outCompressedTextureFormats->push_back(format.intendedGLFormat);
         }
     }
 }

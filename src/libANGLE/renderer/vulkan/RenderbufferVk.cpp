@@ -82,7 +82,7 @@ angle::Result RenderbufferVk::setStorageImpl(const gl::Context *context,
     // causing it to be interpreted in a different colorspace. Create the VkImage accordingly.
     VkImageCreateFlags imageCreateFlags                  = vk::kVkImageCreateFlagsNone;
     VkImageFormatListCreateInfoKHR *additionalCreateInfo = nullptr;
-    VkFormat vkImageFormat                               = vkFormat.vkImageFormat;
+    VkFormat vkImageFormat                               = vkFormat.actualImageVkFormat;
     VkFormat vkImageListFormat                           = vkFormat.actualImageFormat().isSRGB
                                      ? vk::ConvertToLinear(vkImageFormat)
                                      : vk::ConvertToSRGB(vkImageFormat);
