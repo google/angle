@@ -1067,9 +1067,9 @@ layout(binding = 0) uniform atomic_uint ac2;
 
 void main()
 {
-    atomicCounter(acbase);
-    atomicCounter(ac[0]);
-    atomicCounter(ac2);
+    atomicCounterIncrement(acbase);
+    atomicCounterIncrement(ac[0]);
+    atomicCounterIncrement(ac2);
 })";
 
     ANGLE_GL_COMPUTE_PROGRAM(program, kCSSource);
