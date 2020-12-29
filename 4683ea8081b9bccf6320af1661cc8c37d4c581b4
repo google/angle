@@ -16,6 +16,29 @@
       "message": "LGTM",
       "revId": "4683ea8081b9bccf6320af1661cc8c37d4c581b4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2f47c865_a8de62d0",
+        "filename": "gni/angle.gni",
+        "patchSetId": 13
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-29T17:32:10Z",
+      "side": 1,
+      "message": "this should be \u0026\u0026, otherwise it\u0027s always true.",
+      "range": {
+        "startLine": 122,
+        "startChar": 40,
+        "endLine": 122,
+        "endChar": 42
+      },
+      "revId": "4683ea8081b9bccf6320af1661cc8c37d4c581b4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
