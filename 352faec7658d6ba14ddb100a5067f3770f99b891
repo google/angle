@@ -34,6 +34,24 @@
       "parentUuid": "5429df40_d11aaba5",
       "revId": "352faec7658d6ba14ddb100a5067f3770f99b891",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "542be7e9_a53bb9c0",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-29T20:43:22Z",
+      "side": 1,
+      "message": "Because ANGLE uses no-squash, there maybe weird behaviour if you edit the commit message in gerrit vs locally in your CL and re-upload. Your commit message gets synced with your CL when you re-upload.",
+      "parentUuid": "c866b60f_116f25bf",
+      "revId": "352faec7658d6ba14ddb100a5067f3770f99b891",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }

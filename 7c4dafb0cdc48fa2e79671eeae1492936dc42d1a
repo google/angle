@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6a3f2983_b4c87ac7",
+        "filename": "src/libANGLE/renderer/gl/DispatchTableGL_autogen.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-29T20:43:22Z",
+      "side": 1,
+      "message": "small nit: while(0) to match the style in debug.h",
+      "range": {
+        "startLine": 25,
+        "startChar": 13,
+        "endLine": 25,
+        "endChar": 18
+      },
+      "revId": "7c4dafb0cdc48fa2e79671eeae1492936dc42d1a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
