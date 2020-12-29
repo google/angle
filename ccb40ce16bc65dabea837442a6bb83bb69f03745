@@ -129,6 +129,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "0a14391d_46df2da3",
+        "filename": "src/compiler/translator/tree_ops/gl/mac/RewriteDoWhile.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-29T15:52:47Z",
+      "side": 1,
+      "message": "I\u0027d say that moving/renaming files does not really count as a new file being created. We don\u0027t enforce copyright updates on renames in other cases in ANGLE so no need to start now.",
+      "parentUuid": "8026864a_accf0c05",
+      "range": {
+        "startLine": 2,
+        "startChar": 3,
+        "endLine": 2,
+        "endChar": 17
+      },
+      "revId": "ccb40ce16bc65dabea837442a6bb83bb69f03745",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "98b89df8_26409f30",
         "filename": "src/tests/BUILD.gn",
         "patchSetId": 3
