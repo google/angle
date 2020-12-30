@@ -207,8 +207,6 @@ class VaryingPacking final : angle::NonCopyable
 
     void init(GLuint maxVaryingVectors, PackMode packMode);
 
-    bool packUserVaryings(gl::InfoLog &infoLog, const std::vector<PackedVarying> &packedVaryings);
-
     bool collectAndPackUserVaryings(gl::InfoLog &infoLog,
                                     const ProgramMergedVaryings &mergedVaryings,
                                     const std::vector<std::string> &tfVaryings,
@@ -246,29 +244,38 @@ class VaryingPacking final : angle::NonCopyable
     void reset();
 
   private:
-    bool packVarying(const PackedVarying &packedVarying);
-    bool isFree(unsigned int registerRow,
-                unsigned int registerColumn,
-                unsigned int varyingRows,
-                unsigned int varyingColumns) const;
-    void insert(unsigned int registerRow,
-                unsigned int registerColumn,
-                const PackedVarying &packedVarying);
-
     using VaryingUniqueFullNames = ShaderMap<std::set<std::string>>;
-    void packUserVarying(const ProgramVaryingRef &ref, VaryingUniqueFullNames *uniqueFullNames);
-    void packUserVaryingField(const ProgramVaryingRef &ref,
-                              GLuint arrayIndex,
-                              GLuint fieldIndex,
-                              GLuint secondaryFieldIndex,
-                              VaryingUniqueFullNames *uniqueFullNames);
-    void packUserVaryingTF(const ProgramVaryingRef &ref, size_t subscript);
-    void packUserVaryingFieldTF(const ProgramVaryingRef &ref,
-                                const sh::ShaderVariable &field,
-                                GLuint fieldIndex,
-                                GLuint secondaryFieldIndex);
 
+    // Register map functions.
+    bool packUserVaryings(gl::InfoLog &infoLog, const std::vector<PackedVarying> &packedVaryings);
+    bool packVaryingIntoRegisterMap(const PackedVarying &packedVarying);
+    bool isRegisterRangeFree(unsigned int registerRow,
+                             unsigned int registerColumn,
+                             unsigned int varyingRows,
+                             unsigned int varyingColumns) const;
+    void insertVaryingIntoRegisterMap(unsigned int registerRow,
+                                      unsigned int registerColumn,
+                                      const PackedVarying &packedVarying);
     void clearRegisterMap();
+
+    // Collection functions.
+    void collectUserVarying(const ProgramVaryingRef &ref, VaryingUniqueFullNames *uniqueFullNames);
+    void collectUserVaryingField(const ProgramVaryingRef &ref,
+                                 GLuint arrayIndex,
+                                 GLuint fieldIndex,
+                                 GLuint secondaryFieldIndex,
+                                 VaryingUniqueFullNames *uniqueFullNames);
+    void collectUserVaryingTF(const ProgramVaryingRef &ref, size_t subscript);
+    void collectUserVaryingFieldTF(const ProgramVaryingRef &ref,
+                                   const sh::ShaderVariable &field,
+                                   GLuint fieldIndex,
+                                   GLuint secondaryFieldIndex);
+    void collectVarying(const sh::ShaderVariable &varying,
+                        const ProgramVaryingRef &ref,
+                        VaryingUniqueFullNames *uniqueFullNames);
+    void collectTFVarying(const std::string &tfVarying,
+                          const ProgramVaryingRef &ref,
+                          VaryingUniqueFullNames *uniqueFullNames);
 
     std::vector<Register> mRegisterMap;
     std::vector<PackedVaryingRegister> mRegisterList;

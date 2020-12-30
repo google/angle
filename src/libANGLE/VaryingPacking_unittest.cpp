@@ -29,18 +29,22 @@ class VaryingPackingTest : public ::testing::TestWithParam<GLuint>
     bool testVaryingPacking(const std::vector<sh::ShaderVariable> &shVaryings,
                             VaryingPacking *varyingPacking)
     {
-        std::vector<PackedVarying> packedVaryings;
+        ProgramMergedVaryings mergedVaryings;
         for (const sh::ShaderVariable &shVarying : shVaryings)
         {
-            packedVaryings.push_back(PackedVarying(
-                VaryingInShaderRef(ShaderType::Vertex, &shVarying),
-                VaryingInShaderRef(ShaderType::Fragment, &shVarying), shVarying.interpolation));
+            ProgramVaryingRef ref;
+            ref.frontShader      = &shVarying;
+            ref.backShader       = &shVarying;
+            ref.frontShaderStage = ShaderType::Vertex;
+            ref.backShaderStage  = ShaderType::Fragment;
+            mergedVaryings.push_back(ref);
         }
 
         InfoLog infoLog;
         std::vector<std::string> transformFeedbackVaryings;
 
-        return varyingPacking->packUserVaryings(infoLog, packedVaryings);
+        return varyingPacking->collectAndPackUserVaryings(infoLog, mergedVaryings,
+                                                          transformFeedbackVaryings, false);
     }
 
     // Uses the "relaxed" ANGLE packing mode.
