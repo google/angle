@@ -1,0 +1,170 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5bba3f76_69499418",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2020-12-30T06:29:37Z",
+      "side": 1,
+      "message": "Fantastic work James getting these working!\n\nJust a few relatively minor comments. lgtm to get started!\n",
+      "revId": "ffa33997b7d0f88ec206258439d53a27b53b647f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f147d2c6_6e568d54",
+        "filename": "src/tests/gl_tests/BlendMinMaxTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 200,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2020-12-30T06:29:37Z",
+      "side": 1,
+      "message": "I thought we resolved that issue earlier in order to expose EXT_color_buffer_half_float on WebGL 2.0 contexts? Maybe not for pure ES 3.0 contexts?",
+      "range": {
+        "startLine": 200,
+        "startChar": 18,
+        "endLine": 200,
+        "endChar": 25
+      },
+      "revId": "ffa33997b7d0f88ec206258439d53a27b53b647f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2be01fd0_ce2b6271",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2883,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2020-12-30T06:29:37Z",
+      "side": 1,
+      "message": "If we think we might revisit this then please add a TODO(anglebug.com/5491).",
+      "revId": "ffa33997b7d0f88ec206258439d53a27b53b647f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e698fc23_318ae33e",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 5024,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2020-12-30T06:29:37Z",
+      "side": 1,
+      "message": "http:// prefix probably not necessary here and throughout.",
+      "revId": "ffa33997b7d0f88ec206258439d53a27b53b647f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1678b09a_b74f6b0f",
+        "filename": "src/tests/gl_tests/PackUnpackTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2020-12-30T06:29:37Z",
+      "side": 1,
+      "message": "TODO? Here and below where missing.",
+      "range": {
+        "startLine": 114,
+        "startChar": 26,
+        "endLine": 114,
+        "endChar": 27
+      },
+      "revId": "ffa33997b7d0f88ec206258439d53a27b53b647f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b5b03cc8_6ac3c497",
+        "filename": "src/tests/gl_tests/ProvokingVertexTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2020-12-30T06:29:37Z",
+      "side": 1,
+      "message": "Here and below: was this a workaround for a driver bug? Please add comment if so.",
+      "range": {
+        "startLine": 129,
+        "startChar": 29,
+        "endLine": 129,
+        "endChar": 44
+      },
+      "revId": "ffa33997b7d0f88ec206258439d53a27b53b647f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "44e7f813_5a157796",
+        "filename": "src/tests/gl_tests/RobustResourceInitTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1119,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2020-12-30T06:29:37Z",
+      "side": 1,
+      "message": "TODO?",
+      "range": {
+        "startLine": 1119,
+        "startChar": 11,
+        "endLine": 1119,
+        "endChar": 12
+      },
+      "revId": "ffa33997b7d0f88ec206258439d53a27b53b647f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5e3ab787_c446cb36",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3145,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2020-12-30T06:29:37Z",
+      "side": 1,
+      "message": "TODO, and brief description of what\u0027s going wrong?",
+      "range": {
+        "startLine": 3145,
+        "startChar": 11,
+        "endLine": 3145,
+        "endChar": 12
+      },
+      "revId": "ffa33997b7d0f88ec206258439d53a27b53b647f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
