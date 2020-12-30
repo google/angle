@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b34fa0a6_5e662ca5",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-30T17:29:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ae021e97_eeab2500",
+      "range": {
+        "startLine": 7,
+        "startChar": 48,
+        "endLine": 7,
+        "endChar": 53
+      },
+      "revId": "54b301a97f05381878560c397fd480f2545d41cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "fc970c19_9d1741bf",
@@ -47,6 +71,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ee7f9831_1213a99e",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-30T17:29:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fc970c19_9d1741bf",
+      "range": {
+        "startLine": 12,
+        "startChar": 23,
+        "endLine": 12,
+        "endChar": 28
+      },
+      "revId": "54b301a97f05381878560c397fd480f2545d41cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9719a976_44fd549c",
@@ -60,6 +108,30 @@
       "writtenOn": "2020-12-30T15:26:19Z",
       "side": 1,
       "message": "same",
+      "range": {
+        "startLine": 18,
+        "startChar": 32,
+        "endLine": 18,
+        "endChar": 37
+      },
+      "revId": "54b301a97f05381878560c397fd480f2545d41cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d8e286d5_138892df",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-30T17:29:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9719a976_44fd549c",
       "range": {
         "startLine": 18,
         "startChar": 32,
@@ -110,6 +182,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "aaaab4ab_6a4f429d",
+        "filename": "src/libANGLE/FrameCapture.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2231,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-30T17:29:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0a959afb_aaa7f7eb",
+      "range": {
+        "startLine": 2231,
+        "startChar": 5,
+        "endLine": 2231,
+        "endChar": 25
+      },
+      "revId": "54b301a97f05381878560c397fd480f2545d41cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "257b3eb1_bf474d6b",
@@ -123,6 +219,30 @@
       "writtenOn": "2020-12-30T15:26:19Z",
       "side": 1,
       "message": "Can you also check for a \"size\" range upper bound, and call BindBufferRange instead if one is not binding the whole buffer range?",
+      "range": {
+        "startLine": 2244,
+        "startChar": 16,
+        "endLine": 2244,
+        "endChar": 37
+      },
+      "revId": "54b301a97f05381878560c397fd480f2545d41cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ddcf318d_ee9ff63b",
+        "filename": "src/libANGLE/FrameCapture.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2244,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-30T17:29:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "257b3eb1_bf474d6b",
       "range": {
         "startLine": 2244,
         "startChar": 16,
@@ -156,6 +276,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1c9bf456_b7879314",
+        "filename": "src/libANGLE/FrameCapture.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2424,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-30T17:29:37Z",
+      "side": 1,
+      "message": "Looks like it\u0027s handled in the transform feedback section below, so I\u0027ll remove it from here.\n\n            cap(CaptureBindBufferRange(replayState, true, gl::BufferBinding::TransformFeedback, 0,\n                                       xfbBuffer.id(), xfbBuffer.getOffset(), xfbBuffer.getSize()));",
+      "parentUuid": "a708ef04_3ead4fd1",
+      "range": {
+        "startLine": 2424,
+        "startChar": 40,
+        "endLine": 2424,
+        "endChar": 57
+      },
+      "revId": "54b301a97f05381878560c397fd480f2545d41cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "36b410b5_85a94865",
@@ -169,6 +313,30 @@
       "writtenOn": "2020-12-30T15:26:19Z",
       "side": 1,
       "message": "nit: be consistent with the {}",
+      "range": {
+        "startLine": 2429,
+        "startChar": 16,
+        "endLine": 2429,
+        "endChar": 17
+      },
+      "revId": "54b301a97f05381878560c397fd480f2545d41cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d78b7624_ea4f9257",
+        "filename": "src/libANGLE/FrameCapture.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2429,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-30T17:29:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "36b410b5_85a94865",
       "range": {
         "startLine": 2429,
         "startChar": 16,
