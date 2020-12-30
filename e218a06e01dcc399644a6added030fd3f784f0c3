@@ -33,6 +33,24 @@
       "message": "It would be better to disable it in official builds. We might use the null backend on some android testing integrations. Can you also comment how much space this saves in the description?",
       "revId": "e218a06e01dcc399644a6added030fd3f784f0c3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d54768b0_d365711c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000050
+      },
+      "writtenOn": "2020-12-30T16:53:09Z",
+      "side": 1,
+      "message": "Change it to \nangle_enable_null \u003d !(is_android \u0026\u0026 is_offical_build \u0026\u0026 build_with_chromium). Does it exclude all builds which need null backend?",
+      "parentUuid": "99ec0b2c_dc64903f",
+      "revId": "e218a06e01dcc399644a6added030fd3f784f0c3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
