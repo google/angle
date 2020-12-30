@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "898e8530_6fe76bc5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2020-12-30T06:31:56Z",
+      "side": 1,
+      "message": "lgtm\n\nI\u0027ve been wanting to make this change since seeing it downstream in WebKit.\n",
+      "revId": "e0d4b567441528f947ef546c693b4b4426a7a641",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
