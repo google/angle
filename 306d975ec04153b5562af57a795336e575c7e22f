@@ -39,6 +39,30 @@
       },
       "revId": "306d975ec04153b5562af57a795336e575c7e22f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f13a652b_e2b9f98c",
+        "filename": "src/libANGLE/renderer/vulkan/vk_format_utils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-30T15:17:52Z",
+      "side": 1,
+      "message": "Hey Tim, it\u0027s important that we both be consistent and clear. \"intended\" and \"actual\" don\u0027t mean much in isolation. They mean a lot when paired together - actual is the format we use with Vulkan and Intended is the format we use with GL. We also use this naming scheme in the Metal back-end. So it would be good to keep this pattern. Is that OK with you?",
+      "parentUuid": "e66a6955_91294ae0",
+      "range": {
+        "startLine": 121,
+        "startChar": 0,
+        "endLine": 126,
+        "endChar": 44
+      },
+      "revId": "306d975ec04153b5562af57a795336e575c7e22f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
