@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "febabf24_1583bf49",
+        "filename": "gni/angle.gni",
+        "patchSetId": 2
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-30T17:17:56Z",
+      "side": 1,
+      "message": "I\u0027d suggest just making this !is_official_build and leaving a comment this is disabled to save space. It will make it easier to debug \u0026 maintain if there condition is as simple as possible and consistent between platforms. Note that you\u0027re missing an \u0027i\u0027 in official.",
+      "range": {
+        "startLine": 119,
+        "startChar": 21,
+        "endLine": 119,
+        "endChar": 78
+      },
+      "revId": "acbd72c7648d58d4682221ec2b2c5fe004b0ab8b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
