@@ -2817,13 +2817,13 @@ void CaptureMidExecutionSetup(const gl::Context *context,
         // This can affect attributes that are optimized out in some implementations.
         for (const sh::ShaderVariable &attrib : program->getState().getProgramInputs())
         {
-            ASSERT(attrib.location != -1);
-
             if (gl::IsBuiltInName(attrib.name))
             {
                 // Don't try to bind built-in attributes
                 continue;
             }
+
+            ASSERT(attrib.location != -1);
 
             cap(CaptureBindAttribLocation(
                 replayState, true, id, static_cast<GLuint>(attrib.location), attrib.name.c_str()));
