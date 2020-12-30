@@ -50,6 +50,24 @@
       "message": "Do we need this copy still?\n\nIt looks like this member wasn\u0027t used at all before this change, and it\u0027s now only used during Program::linkImpl(), but never referenced again.   Can it be just a local variable in Program::linkImpl()?",
       "revId": "8117d00676a44572686b878cfc4610062d39514f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c860a899_6890a163",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 852,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2020-12-30T15:19:31Z",
+      "side": 1,
+      "message": "Yes, it\u0027s needed for asynchronous linking. The design is a bit obtuse. If we remove it from this structure because of the way the lambda capture works in ProgramGL, we\u0027ll reference freed local memory when the link completes. Making the design clearer is a bit out of scope for this CL.",
+      "parentUuid": "b9822dc0_6270539c",
+      "revId": "8117d00676a44572686b878cfc4610062d39514f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
