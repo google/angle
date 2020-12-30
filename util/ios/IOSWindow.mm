@@ -22,6 +22,7 @@ static CALayer *rootLayer()
 
 bool IOSWindow::initializeImpl(const std::string &name, int width, int height)
 {
+    resize(width, height);
     return true;
 }
 

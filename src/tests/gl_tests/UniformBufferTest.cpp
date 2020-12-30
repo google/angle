@@ -1602,13 +1602,11 @@ TEST_P(UniformBufferTest, SizeOverMaxBlockSize)
 // Compile uniform buffer with large array member.
 TEST_P(UniformBufferTest, LargeArrayOfStructs)
 {
-    constexpr char kVertexShader[] = R"(#version 300 es
+    constexpr char kVertexShader[] = R"(
         struct InstancingData
         {
             mat4 transformation;
         };
-
-        #define MAX_INSTANCE_COUNT 800
 
         layout(std140) uniform InstanceBlock
         {
@@ -1628,7 +1626,13 @@ TEST_P(UniformBufferTest, LargeArrayOfStructs)
             outFragColor = vec4(0.0);
         })";
 
-    ANGLE_GL_PROGRAM(program, kVertexShader, kFragmentShader);
+    int maxUniformBlockSize;
+    glGetIntegerv(GL_MAX_UNIFORM_BLOCK_SIZE, &maxUniformBlockSize);
+
+    std::string vs = "#version 300 es\n#define MAX_INSTANCE_COUNT " +
+                     std::to_string(std::min(800, maxUniformBlockSize / 64)) + kVertexShader;
+
+    ANGLE_GL_PROGRAM(program, vs.c_str(), kFragmentShader);
     // Add a draw call for the sake of the Vulkan backend that currently really builds shaders at
     // draw time.
     drawQuad(program.get(), essl3_shaders::PositionAttrib(), 0.5f);

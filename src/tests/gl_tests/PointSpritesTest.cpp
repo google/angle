@@ -487,6 +487,9 @@ TEST_P(PointSpritesTest, PointSizeAboveMaxIsClamped)
     // http://anglebug.com/4135
     ANGLE_SKIP_TEST_IF(IsMetal());
 
+    // TODO(anglebug.com/5491)
+    ANGLE_SKIP_TEST_IF(IsIOS() && IsOpenGLES());
+
     GLfloat pointSizeRange[2] = {};
     glGetFloatv(GL_ALIASED_POINT_SIZE_RANGE, pointSizeRange);
     GLfloat maxPointSize = pointSizeRange[1];

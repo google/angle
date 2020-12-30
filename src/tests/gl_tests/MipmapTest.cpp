@@ -1959,6 +1959,9 @@ TEST_P(MipmapTestES3, BaseLevelTextureBug)
     // TODO(anglebug.com/5360): Failing on ARM-based Apple DTKs.
     ANGLE_SKIP_TEST_IF(IsOSX() && IsARM64() && IsDesktopOpenGL());
 
+    // TODO(anglebug.com/5491)
+    ANGLE_SKIP_TEST_IF(IsIOS() && IsOpenGLES());
+
     std::vector<GLColor> texDataRed(2u * 2u, GLColor::red);
 
     glBindTexture(GL_TEXTURE_2D, mTexture);

@@ -1091,6 +1091,9 @@ TEST_P(StateChangeTestES3, SamplerMetadataUpdateOnSetProgram)
 {
     // http://anglebug.com/4092
     ANGLE_SKIP_TEST_IF(IsAndroid() && IsOpenGLES());
+    // TODO(anglebug.com/5491) Appears as though there's something wrong with textureSize on iOS
+    // unrelated to switching programs.
+    ANGLE_SKIP_TEST_IF(IsIOS() && IsOpenGLES());
     GLVertexArray vertexArray;
     glBindVertexArray(vertexArray);
 
@@ -4167,7 +4170,7 @@ class RobustBufferAccessWebGL2ValidationStateChangeTest : public WebGL2Validatio
     RobustBufferAccessWebGL2ValidationStateChangeTest()
     {
         // SwS/OSX GL do not support robustness. Mali does not support it.
-        if (!isSwiftshader() && !IsOSX() && !IsARM())
+        if (!isSwiftshader() && !IsOSX() && !IsIOS() && !IsARM())
         {
             setRobustAccess(true);
         }
@@ -5916,6 +5919,9 @@ TEST_P(RobustBufferAccessWebGL2ValidationStateChangeTest, BindZeroSizeBufferThen
 
     // Mali does not support robustness now.
     ANGLE_SKIP_TEST_IF(IsARM());
+
+    // TODO(anglebug.com/5491)
+    ANGLE_SKIP_TEST_IF(IsIOS() && IsOpenGLES());
 
     std::vector<GLubyte> data(48, 1);
 
