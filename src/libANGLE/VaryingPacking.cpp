@@ -88,6 +88,27 @@ bool ComparePackedVarying(const PackedVarying &x, const PackedVarying &y)
     return gl::CompareShaderVar(*px, *py);
 }
 
+bool InterfaceVariablesMatch(const sh::ShaderVariable &front, const sh::ShaderVariable &back)
+{
+    // Matching ruels from 7.4.1 Shader Interface Matching from the GLES 3.2 spec:
+    // - the two variables match in name, type, and qualification; or
+    // - the two variables are declared with the same location qualifier and match in type and
+    // qualification. Note that we use a more permissive check here thanks to front-end validation.
+    if (back.location != -1 && back.location == front.location)
+    {
+        return true;
+    }
+
+    if (front.isShaderIOBlock != back.isShaderIOBlock)
+    {
+        return false;
+    }
+
+    // Compare names, or if shader I/O blocks, block names.
+    const std::string &backName  = back.isShaderIOBlock ? back.structName : back.name;
+    const std::string &frontName = front.isShaderIOBlock ? front.structName : front.name;
+    return backName == frontName;
+}
 }  // anonymous namespace
 
 // Implementation of VaryingInShaderRef
@@ -811,5 +832,78 @@ bool VaryingPacking::packUserVaryings(gl::InfoLog &infoLog,
     std::sort(mRegisterList.begin(), mRegisterList.end());
 
     return true;
+}
+
+ProgramMergedVaryings GetMergedVaryingsFromShaders(const HasAttachedShaders &programOrPipeline)
+{
+    Shader *frontShader = nullptr;
+    ProgramMergedVaryings merged;
+
+    for (ShaderType shaderType : kAllGraphicsShaderTypes)
+    {
+        Shader *backShader = programOrPipeline.getAttachedShader(shaderType);
+        if (!backShader)
+        {
+            continue;
+        }
+
+        ASSERT(backShader->getType() != ShaderType::Compute);
+
+        // Add outputs. These are always unmatched since we walk shader stages sequentially.
+        for (const sh::ShaderVariable &frontVarying : backShader->getOutputVaryings())
+        {
+            ProgramVaryingRef ref;
+            ref.frontShader      = &frontVarying;
+            ref.frontShaderStage = backShader->getType();
+            merged.push_back(ref);
+        }
+
+        if (!frontShader)
+        {
+            // If this is our first shader stage, and not a VS, we might have unmatched inputs.
+            for (const sh::ShaderVariable &backVarying : backShader->getInputVaryings())
+            {
+                ProgramVaryingRef ref;
+                ref.backShader      = &backVarying;
+                ref.backShaderStage = backShader->getType();
+                merged.push_back(ref);
+            }
+        }
+        else
+        {
+            // Match inputs with the prior shader stage outputs.
+            for (const sh::ShaderVariable &backVarying : backShader->getInputVaryings())
+            {
+                bool found = false;
+                for (ProgramVaryingRef &ref : merged)
+                {
+                    if (ref.frontShader && ref.frontShaderStage == frontShader->getType() &&
+                        InterfaceVariablesMatch(*ref.frontShader, backVarying))
+                    {
+                        ASSERT(ref.backShader == nullptr);
+
+                        ref.backShader      = &backVarying;
+                        ref.backShaderStage = backShader->getType();
+                        found               = true;
+                        break;
+                    }
+                }
+
+                // Some outputs are never matched, e.g. some builtin variables.
+                if (!found)
+                {
+                    ProgramVaryingRef ref;
+                    ref.backShader      = &backVarying;
+                    ref.backShaderStage = backShader->getType();
+                    merged.push_back(ref);
+                }
+            }
+        }
+
+        // Save the current back shader to use as the next front shader.
+        frontShader = backShader;
+    }
+
+    return merged;
 }
 }  // namespace gl

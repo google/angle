@@ -202,27 +202,7 @@ void ProgramPipelineTest31::drawQuadWithPPO(const std::string &positionAttribNam
                                             const GLfloat positionAttribZ,
                                             const GLfloat positionAttribXYScale)
 {
-    glUseProgram(0);
-
-    std::array<Vector3, 6> quadVertices = ANGLETestBase::GetQuadVertices();
-
-    for (Vector3 &vertex : quadVertices)
-    {
-        vertex.x() *= positionAttribXYScale;
-        vertex.y() *= positionAttribXYScale;
-        vertex.z() = positionAttribZ;
-    }
-
-    GLint positionLocation = glGetAttribLocation(mVertProg, positionAttribName.c_str());
-
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glVertexAttribPointer(positionLocation, 3, GL_FLOAT, GL_FALSE, 0, quadVertices.data());
-    glEnableVertexAttribArray(positionLocation);
-
-    glDrawArrays(GL_TRIANGLES, 0, 6);
-
-    glDisableVertexAttribArray(positionLocation);
-    glVertexAttribPointer(positionLocation, 4, GL_FLOAT, GL_FALSE, 0, nullptr);
+    return drawQuadPPO(mVertProg, positionAttribName, positionAttribZ, positionAttribXYScale);
 }
 
 // Test glUseProgramStages
@@ -591,6 +571,83 @@ void main()
     ASSERT_GL_NO_ERROR();
     drawQuadWithPPO(essl1_shaders::PositionAttrib(), 0.5f, 1.0f);
     ASSERT_GL_ERROR(GL_INVALID_OPERATION);
+}
+
+// Tests creating two program pipelines with a common shader and a varying location mismatch.
+TEST_P(ProgramPipelineTest31, VaryingLocationMismatch)
+{
+    // Only the Vulkan backend supports PPOs
+    ANGLE_SKIP_TEST_IF(!IsVulkan());
+
+    // http://anglebug.com/5506
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
+    // Create a fragment shader using the varying location "5".
+    const char *kFS = R"(#version 310 es
+precision mediump float;
+layout(location = 5) in vec4 color;
+out vec4 colorOut;
+void main()
+{
+    colorOut = color;
+})";
+
+    // Create a pipeline with a vertex shader using varying location "5". Should succeed.
+    const char *kVSGood = R"(#version 310 es
+precision mediump float;
+layout(location = 5) out vec4 color;
+in vec4 position;
+uniform float uniOne;
+void main()
+{
+    gl_Position = position;
+    color = vec4(0, uniOne, 0, 1);
+})";
+
+    mVertProg = glCreateShaderProgramv(GL_VERTEX_SHADER, 1, &kVSGood);
+    ASSERT_NE(mVertProg, 0u);
+    mFragProg = glCreateShaderProgramv(GL_FRAGMENT_SHADER, 1, &kFS);
+    ASSERT_NE(mFragProg, 0u);
+
+    // Generate a program pipeline and attach the programs to their respective stages
+    glGenProgramPipelines(1, &mPipeline);
+    glUseProgramStages(mPipeline, GL_VERTEX_SHADER_BIT, mVertProg);
+    glUseProgramStages(mPipeline, GL_FRAGMENT_SHADER_BIT, mFragProg);
+    glBindProgramPipeline(mPipeline);
+    ASSERT_GL_NO_ERROR();
+
+    GLint location = glGetUniformLocation(mVertProg, "uniOne");
+    ASSERT_NE(-1, location);
+    glActiveShaderProgram(mPipeline, mVertProg);
+    glUniform1f(location, 1.0);
+    ASSERT_GL_NO_ERROR();
+
+    drawQuadWithPPO("position", 0.5f, 1.0f);
+    ASSERT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+    // Create a pipeline with a vertex shader using varying location "3". Should fail.
+    const char *kVSBad = R"(#version 310 es
+precision mediump float;
+layout(location = 3) out vec4 color;
+in vec4 position;
+uniform float uniOne;
+void main()
+{
+    gl_Position = position;
+    color = vec4(0, uniOne, 0, 1);
+})";
+
+    glDeleteProgram(mVertProg);
+    mVertProg = glCreateShaderProgramv(GL_VERTEX_SHADER, 1, &kVSBad);
+    ASSERT_NE(mVertProg, 0u);
+
+    glUseProgramStages(mPipeline, GL_VERTEX_SHADER_BIT, mVertProg);
+    ASSERT_GL_NO_ERROR();
+
+    drawQuadWithPPO("position", 0.5f, 1.0f);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 }
 
 ANGLE_INSTANTIATE_TEST_ES3_AND_ES31(ProgramPipelineTest);

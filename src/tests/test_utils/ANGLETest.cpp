@@ -856,6 +856,34 @@ void ANGLETestBase::drawQuad(GLuint program,
     }
 }
 
+void ANGLETestBase::drawQuadPPO(GLuint vertProgram,
+                                const std::string &positionAttribName,
+                                const GLfloat positionAttribZ,
+                                const GLfloat positionAttribXYScale)
+{
+    glUseProgram(0);
+
+    std::array<Vector3, 6> quadVertices = GetQuadVertices();
+
+    for (Vector3 &vertex : quadVertices)
+    {
+        vertex.x() *= positionAttribXYScale;
+        vertex.y() *= positionAttribXYScale;
+        vertex.z() = positionAttribZ;
+    }
+
+    GLint positionLocation = glGetAttribLocation(vertProgram, positionAttribName.c_str());
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glVertexAttribPointer(positionLocation, 3, GL_FLOAT, GL_FALSE, 0, quadVertices.data());
+    glEnableVertexAttribArray(positionLocation);
+
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+
+    glDisableVertexAttribArray(positionLocation);
+    glVertexAttribPointer(positionLocation, 4, GL_FLOAT, GL_FALSE, 0, nullptr);
+}
+
 void ANGLETestBase::drawIndexedQuad(GLuint program,
                                     const std::string &positionAttribName,
                                     GLfloat positionAttribZ)

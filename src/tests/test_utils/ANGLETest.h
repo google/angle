@@ -395,6 +395,11 @@ class ANGLETestBase
                            bool useVertexBuffer,
                            GLuint numInstances);
 
+    void drawQuadPPO(GLuint vertProgram,
+                     const std::string &positionAttribName,
+                     const GLfloat positionAttribZ,
+                     const GLfloat positionAttribXYScale);
+
     static std::array<angle::Vector3, 6> GetQuadVertices();
     static std::array<GLushort, 6> GetQuadIndices();
     static std::array<angle::Vector3, 4> GetIndexedQuadVertices();

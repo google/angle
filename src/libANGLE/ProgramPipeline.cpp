@@ -409,123 +409,6 @@ void ProgramPipeline::updateExecutable()
     updateHasBooleans();
 }
 
-ProgramMergedVaryings ProgramPipeline::getMergedVaryings() const
-{
-    ASSERT(!mState.mExecutable->isCompute());
-
-    // Varyings are matched between pairs of consecutive stages, by location if assigned or
-    // by name otherwise.  Note that it's possible for one stage to specify location and the other
-    // not: https://cvs.khronos.org/bugzilla/show_bug.cgi?id=16261
-
-    // Map stages to the previous active stage in the rendering pipeline.  When looking at input
-    // varyings of a stage, this is used to find the stage whose output varyings are being linked
-    // with them.
-    ShaderMap<ShaderType> previousActiveStage;
-
-    // Note that kAllGraphicsShaderTypes is sorted according to the rendering pipeline.
-    ShaderType lastActiveStage = ShaderType::InvalidEnum;
-    for (ShaderType shaderType : getExecutable().getLinkedShaderStages())
-    {
-        previousActiveStage[shaderType] = lastActiveStage;
-
-        const Program *program = getShaderProgram(shaderType);
-        ASSERT(program);
-        lastActiveStage = shaderType;
-    }
-
-    // First, go through output varyings and create two maps (one by name, one by location) for
-    // faster lookup when matching input varyings.
-
-    ShaderMap<std::map<std::string, size_t>> outputVaryingNameToIndexShaderMap;
-    ShaderMap<std::map<int, size_t>> outputVaryingLocationToIndexShaderMap;
-
-    ProgramMergedVaryings merged;
-
-    // Gather output varyings.
-    for (ShaderType shaderType : getExecutable().getLinkedShaderStages())
-    {
-        const Program *program = getShaderProgram(shaderType);
-        ASSERT(program);
-        Shader *shader = program->getState().getAttachedShader(shaderType);
-        ASSERT(shader);
-
-        for (const sh::ShaderVariable &varying : shader->getOutputVaryings())
-        {
-            merged.push_back({});
-            ProgramVaryingRef *ref = &merged.back();
-
-            ref->frontShader      = &varying;
-            ref->frontShaderStage = shaderType;
-
-            // Always map by name.  Even if location is provided in this stage, it may not be in the
-            // paired stage.
-            outputVaryingNameToIndexShaderMap[shaderType][varying.name] = merged.size() - 1;
-
-            // If location is provided, also keep it in a map by location.
-            if (varying.location != -1)
-            {
-                outputVaryingLocationToIndexShaderMap[shaderType][varying.location] =
-                    merged.size() - 1;
-            }
-        }
-    }
-
-    // Gather input varyings, and match them with output varyings of the previous stage.
-    for (ShaderType shaderType : getExecutable().getLinkedShaderStages())
-    {
-        const Program *program = getShaderProgram(shaderType);
-        ASSERT(program);
-        Shader *shader = program->getState().getAttachedShader(shaderType);
-        ASSERT(shader);
-        ShaderType previousStage = previousActiveStage[shaderType];
-
-        for (const sh::ShaderVariable &varying : shader->getInputVaryings())
-        {
-            size_t mergedIndex = merged.size();
-            if (previousStage != ShaderType::InvalidEnum)
-            {
-                // If location is provided, see if we can match by location.
-                if (varying.location != -1)
-                {
-                    std::map<int, size_t> outputVaryingLocationToIndex =
-                        outputVaryingLocationToIndexShaderMap[previousStage];
-                    auto byLocationIter = outputVaryingLocationToIndex.find(varying.location);
-                    if (byLocationIter != outputVaryingLocationToIndex.end())
-                    {
-                        mergedIndex = byLocationIter->second;
-                    }
-                }
-
-                // If not found, try to match by name.
-                if (mergedIndex == merged.size())
-                {
-                    std::map<std::string, size_t> outputVaryingNameToIndex =
-                        outputVaryingNameToIndexShaderMap[previousStage];
-                    auto byNameIter = outputVaryingNameToIndex.find(varying.name);
-                    if (byNameIter != outputVaryingNameToIndex.end())
-                    {
-                        mergedIndex = byNameIter->second;
-                    }
-                }
-            }
-
-            // If no previous stage, or not matched by location or name, create a new entry for it.
-            if (mergedIndex == merged.size())
-            {
-                merged.push_back({});
-                mergedIndex = merged.size() - 1;
-            }
-
-            ProgramVaryingRef *ref = &merged[mergedIndex];
-
-            ref->backShader      = &varying;
-            ref->backShaderStage = shaderType;
-        }
-    }
-
-    return merged;
-}
-
 // The attached shaders are checked for linking errors by matching up their variables.
 // Uniform, input and output variables get collected.
 // The code gets compiled into binaries.
@@ -556,7 +439,7 @@ angle::Result ProgramPipeline::link(const Context *context)
             return angle::Result::Stop;
         }
 
-        mergedVaryings = getMergedVaryings();
+        mergedVaryings = GetMergedVaryingsFromShaders(*this);
         for (ShaderType shaderType : getExecutable().getLinkedShaderStages())
         {
             Program *program = mState.mPrograms[shaderType];
@@ -707,4 +590,9 @@ void ProgramPipeline::fillProgramStateMap(ShaderMap<const ProgramState *> *progr
     }
 }
 
+Shader *ProgramPipeline::getAttachedShader(ShaderType shaderType) const
+{
+    const Program *program = mState.mPrograms[shaderType];
+    return program ? program->getAttachedShader(shaderType) : nullptr;
+}
 }  // namespace gl

@@ -91,7 +91,8 @@ class ProgramPipelineState final : angle::NonCopyable
 
 class ProgramPipeline final : public RefCountObject<ProgramPipelineID>,
                               public LabeledObject,
-                              public angle::ObserverInterface
+                              public angle::ObserverInterface,
+                              public HasAttachedShaders
 {
   public:
     ProgramPipeline(rx::GLImplFactory *factory, ProgramPipelineID handle);
@@ -127,7 +128,6 @@ class ProgramPipeline final : public RefCountObject<ProgramPipelineID>,
     Program *getShaderProgram(ShaderType shaderType) const { return mState.mPrograms[shaderType]; }
 
     void resetIsLinked() { mState.mIsLinked = false; }
-    ProgramMergedVaryings getMergedVaryings() const;
     angle::Result link(const gl::Context *context);
     bool linkVaryings(InfoLog &infoLog) const;
     void validate(const gl::Context *context);
@@ -144,6 +144,8 @@ class ProgramPipeline final : public RefCountObject<ProgramPipelineID>,
     void onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMessage message) override;
 
     void fillProgramStateMap(gl::ShaderMap<const gl::ProgramState *> *programStatesOut);
+
+    Shader *getAttachedShader(ShaderType shaderType) const override;
 
   private:
     void updateLinkedShaderStages();

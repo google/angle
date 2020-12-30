@@ -48,7 +48,7 @@ class HashStream final : angle::NonCopyable
     std::ostringstream mStringStream;
 };
 
-HashStream &operator<<(HashStream &stream, const Shader *shader)
+HashStream &operator<<(HashStream &stream, Shader *shader)
 {
     if (shader)
     {

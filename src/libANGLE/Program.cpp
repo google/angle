@@ -1471,7 +1471,7 @@ int Program::getAttachedShadersCount() const
     return numAttachedShaders;
 }
 
-const Shader *Program::getAttachedShader(ShaderType shaderType) const
+Shader *Program::getAttachedShader(ShaderType shaderType) const
 {
     ASSERT(!mLinkingState);
     return mState.getAttachedShader(shaderType);
@@ -1715,15 +1715,7 @@ angle::Result Program::linkImpl(const Context *context)
         InitUniformBlockLinker(mState, &resources.uniformBlockLinker);
         InitShaderStorageBlockLinker(mState, &resources.shaderStorageBlockLinker);
 
-        ProgramPipeline *programPipeline = context->getState().getProgramPipeline();
-        if (programPipeline && programPipeline->usesShaderProgram(id()))
-        {
-            mergedVaryings = context->getState().getProgramPipeline()->getMergedVaryings();
-        }
-        else
-        {
-            mergedVaryings = getMergedVaryings();
-        }
+        mergedVaryings = GetMergedVaryingsFromShaders(*this);
         if (!linkMergedVaryings(context, mergedVaryings, &resources.varyingPacking))
         {
             return angle::Result::Continue;
@@ -4560,137 +4552,6 @@ void Program::gatherTransformFeedbackVaryings(const ProgramMergedVaryings &varyi
     }
 }
 
-ProgramMergedVaryings Program::getMergedVaryings() const
-{
-    ASSERT(mState.mAttachedShaders[ShaderType::Compute] == nullptr);
-
-    // Varyings are matched between pairs of consecutive stages, by location if assigned or
-    // by name otherwise.  Note that it's possible for one stage to specify location and the other
-    // not: https://cvs.khronos.org/bugzilla/show_bug.cgi?id=16261
-
-    // Map stages to the previous active stage in the rendering pipeline.  When looking at input
-    // varyings of a stage, this is used to find the stage whose output varyings are being linked
-    // with them.
-    ShaderMap<ShaderType> previousActiveStage;
-
-    // Note that kAllGraphicsShaderTypes is sorted according to the rendering pipeline.
-    ShaderType lastActiveStage = ShaderType::InvalidEnum;
-    for (ShaderType stage : kAllGraphicsShaderTypes)
-    {
-        previousActiveStage[stage] = lastActiveStage;
-        if (mState.mAttachedShaders[stage])
-        {
-            lastActiveStage = stage;
-        }
-    }
-
-    // First, go through output varyings and create two maps (one by name, one by location) for
-    // faster lookup when matching input varyings.
-    //
-    // Note that shader I/O blocks may or may not provide a name, and matching would be done by
-    // block name instead if either of the shader stages doesn't provide an instance name.
-
-    ShaderMap<std::map<std::string, size_t>> outputVaryingNameToIndex;
-    ShaderMap<std::map<int, size_t>> outputVaryingLocationToIndex;
-
-    ProgramMergedVaryings merged;
-
-    // Gather output varyings.
-    for (Shader *shader : mState.mAttachedShaders)
-    {
-        if (!shader)
-        {
-            continue;
-        }
-        ShaderType stage = shader->getType();
-
-        for (const sh::ShaderVariable &varying : shader->getOutputVaryings())
-        {
-            merged.push_back({});
-            ProgramVaryingRef *ref = &merged.back();
-
-            ref->frontShader      = &varying;
-            ref->frontShaderStage = stage;
-
-            ASSERT(!varying.name.empty() || varying.isShaderIOBlock);
-
-            // Map by name, or if shader I/O block, block name.  Even if location is provided in
-            // this stage, it may not be in the paired stage.
-            if (varying.isShaderIOBlock)
-            {
-                outputVaryingNameToIndex[stage][varying.structName] = merged.size() - 1;
-            }
-            else
-            {
-                outputVaryingNameToIndex[stage][varying.name] = merged.size() - 1;
-            }
-
-            // If location is provided, also keep it in a map by location.
-            if (varying.location != -1)
-            {
-                outputVaryingLocationToIndex[stage][varying.location] = merged.size() - 1;
-            }
-        }
-    }
-
-    // Gather input varyings, and match them with output varyings of the previous stage.
-    for (Shader *shader : mState.mAttachedShaders)
-    {
-        if (!shader)
-        {
-            continue;
-        }
-        ShaderType stage         = shader->getType();
-        ShaderType previousStage = previousActiveStage[stage];
-
-        for (const sh::ShaderVariable &varying : shader->getInputVaryings())
-        {
-            size_t mergedIndex = merged.size();
-            if (previousStage != ShaderType::InvalidEnum)
-            {
-                // If location is provided, see if we can match by location.
-                if (varying.location != -1)
-                {
-                    auto byLocationIter =
-                        outputVaryingLocationToIndex[previousStage].find(varying.location);
-                    if (byLocationIter != outputVaryingLocationToIndex[previousStage].end())
-                    {
-                        mergedIndex = byLocationIter->second;
-                    }
-                }
-
-                // If not found, try to match by name.
-                if (mergedIndex == merged.size())
-                {
-                    ASSERT(varying.isShaderIOBlock || !varying.name.empty());
-                    const std::string &name =
-                        varying.isShaderIOBlock ? varying.structName : varying.name;
-
-                    auto byNameIter = outputVaryingNameToIndex[previousStage].find(name);
-                    if (byNameIter != outputVaryingNameToIndex[previousStage].end())
-                    {
-                        mergedIndex = byNameIter->second;
-                    }
-                }
-            }
-
-            // If no previous stage, or not matched by location or name, create a new entry for it.
-            if (mergedIndex == merged.size())
-            {
-                merged.push_back({});
-                mergedIndex = merged.size() - 1;
-            }
-
-            ProgramVaryingRef *ref = &merged[mergedIndex];
-
-            ref->backShader      = &varying;
-            ref->backShaderStage = stage;
-        }
-    }
-
-    return merged;
-}
-
 bool CompareOutputVariable(const sh::ShaderVariable &a, const sh::ShaderVariable &b)
 {
     return a.getArraySizeProduct() > b.getArraySizeProduct();
@@ -5795,5 +5656,4 @@ void Program::fillProgramStateMap(ShaderMap<const ProgramState *> *programStates
         }
     }
 }
-
 }  // namespace gl
