@@ -205,9 +205,9 @@ class VaryingPacking final : angle::NonCopyable
     VaryingPacking();
     ~VaryingPacking();
 
-    void init(GLuint maxVaryingVectors, PackMode packMode);
-
-    bool collectAndPackUserVaryings(gl::InfoLog &infoLog,
+    bool collectAndPackUserVaryings(InfoLog &infoLog,
+                                    GLint maxVaryingVectors,
+                                    PackMode packMode,
                                     const ProgramMergedVaryings &mergedVaryings,
                                     const std::vector<std::string> &tfVaryings,
                                     const bool isSeparableProgram);
@@ -247,8 +247,11 @@ class VaryingPacking final : angle::NonCopyable
     using VaryingUniqueFullNames = ShaderMap<std::set<std::string>>;
 
     // Register map functions.
-    bool packUserVaryings(gl::InfoLog &infoLog, const std::vector<PackedVarying> &packedVaryings);
-    bool packVaryingIntoRegisterMap(const PackedVarying &packedVarying);
+    bool packUserVaryings(InfoLog &infoLog,
+                          GLint maxVaryingVectors,
+                          PackMode packMode,
+                          const std::vector<PackedVarying> &packedVaryings);
+    bool packVaryingIntoRegisterMap(PackMode packMode, const PackedVarying &packedVarying);
     bool isRegisterRangeFree(unsigned int registerRow,
                              unsigned int registerColumn,
                              unsigned int varyingRows,
@@ -282,8 +285,6 @@ class VaryingPacking final : angle::NonCopyable
     std::vector<PackedVarying> mPackedVaryings;
     ShaderMap<std::vector<std::string>> mInactiveVaryingMappedNames;
     ShaderMap<std::vector<std::string>> mActiveOutputBuiltIns;
-
-    PackMode mPackMode = PackMode::ANGLE_RELAXED;
 };
 
 }  // namespace gl

@@ -543,20 +543,6 @@ angle::Result ProgramPipeline::link(const Context *context)
     {
         InfoLog &infoLog = mState.mExecutable->getInfoLog();
         infoLog.reset();
-        const State &state = context->getState();
-
-        // Map the varyings to the register file
-        gl::PackMode packMode = PackMode::ANGLE_RELAXED;
-        if (state.getLimitations().noFlexibleVaryingPacking)
-        {
-            // D3D9 pack mode is strictly more strict than WebGL, so takes priority.
-            packMode = PackMode::ANGLE_NON_CONFORMANT_D3D9;
-        }
-        else if (state.getExtensions().webglCompatibility)
-        {
-            // In WebGL, we use a slightly different handling for packing variables.
-            packMode = PackMode::WEBGL_STRICT;
-        }
 
         if (!linkVaryings(infoLog))
         {
@@ -570,10 +556,6 @@ angle::Result ProgramPipeline::link(const Context *context)
             return angle::Result::Stop;
         }
 
-        GLuint maxVaryingVectors =
-            static_cast<GLuint>(context->getState().getCaps().maxVaryingVectors);
-        varyingPacking.init(maxVaryingVectors, packMode);
-
         mergedVaryings = getMergedVaryings();
         for (ShaderType shaderType : getExecutable().getLinkedShaderStages())
         {
@@ -584,10 +566,6 @@ angle::Result ProgramPipeline::link(const Context *context)
                 return angle::Result::Stop;
             }
         }
-    }
-    else
-    {
-        varyingPacking.init(0, gl::PackMode::ANGLE_RELAXED);
     }
 
     ANGLE_TRY(getImplementation()->link(context, mergedVaryings, varyingPacking));

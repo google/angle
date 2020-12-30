@@ -1513,8 +1513,22 @@ bool Program::linkMergedVaryings(const Context *context,
         return false;
     }
 
+    // Map the varyings to the register file
+    // In WebGL, we use a slightly different handling for packing variables.
+    gl::PackMode packMode = PackMode::ANGLE_RELAXED;
+    if (context->getLimitations().noFlexibleVaryingPacking)
+    {
+        // D3D9 pack mode is strictly more strict than WebGL, so takes priority.
+        packMode = PackMode::ANGLE_NON_CONFORMANT_D3D9;
+    }
+    else if (context->getExtensions().webglCompatibility)
+    {
+        packMode = PackMode::WEBGL_STRICT;
+    }
+
     if (!varyingPacking->collectAndPackUserVaryings(
-            infoLog, mergedVaryings, mState.getTransformFeedbackVaryingNames(), isSeparable()))
+            infoLog, context->getCaps().maxVaryingVectors, packMode, mergedVaryings,
+            mState.getTransformFeedbackVaryingNames(), isSeparable()))
     {
         return false;
     }
@@ -1547,7 +1561,6 @@ angle::Result Program::linkImpl(const Context *context)
     ASSERT(!mLinkingState);
     // Don't make any local variables pointing to anything within the ProgramExecutable, since
     // unlink() could make a new ProgramExecutable making any references/pointers invalid.
-    const auto &data = context->getState();
     auto *platform   = ANGLEPlatformCurrent();
     double startTime = platform->currentTime(platform);
 
@@ -1599,7 +1612,6 @@ angle::Result Program::linkImpl(const Context *context)
 
     if (mState.mAttachedShaders[ShaderType::Compute])
     {
-        resources.varyingPacking.init(0, PackMode::ANGLE_RELAXED);
         resources.init(&mState.mExecutable->mUniformBlocks, &mState.mExecutable->mUniforms,
                        &mState.mExecutable->mComputeShaderStorageBlocks, &mState.mBufferVariables,
                        &mState.mExecutable->mAtomicCounterBuffers);
@@ -1641,21 +1653,6 @@ angle::Result Program::linkImpl(const Context *context)
     }
     else
     {
-        // Map the varyings to the register file
-        // In WebGL, we use a slightly different handling for packing variables.
-        gl::PackMode packMode = PackMode::ANGLE_RELAXED;
-        if (data.getLimitations().noFlexibleVaryingPacking)
-        {
-            // D3D9 pack mode is strictly more strict than WebGL, so takes priority.
-            packMode = PackMode::ANGLE_NON_CONFORMANT_D3D9;
-        }
-        else if (data.getExtensions().webglCompatibility)
-        {
-            packMode = PackMode::WEBGL_STRICT;
-        }
-
-        resources.varyingPacking.init(static_cast<GLuint>(data.getCaps().maxVaryingVectors),
-                                      packMode);
         resources.init(&mState.mExecutable->mUniformBlocks, &mState.mExecutable->mUniforms,
                        &mState.mExecutable->mGraphicsShaderStorageBlocks, &mState.mBufferVariables,
                        &mState.mExecutable->mAtomicCounterBuffers);

@@ -171,12 +171,6 @@ VaryingPacking::VaryingPacking() = default;
 
 VaryingPacking::~VaryingPacking() = default;
 
-void VaryingPacking::init(GLuint maxVaryingVectors, PackMode packMode)
-{
-    mRegisterMap.resize(maxVaryingVectors);
-    mPackMode = packMode;
-}
-
 void VaryingPacking::reset()
 {
     clearRegisterMap();
@@ -203,7 +197,8 @@ void VaryingPacking::clearRegisterMap()
 // See [OpenGL ES Shading Language 1.00 rev. 17] appendix A section 7 page 111
 // Also [OpenGL ES Shading Language 3.00 rev. 4] Section 11 page 119
 // Returns false if unsuccessful.
-bool VaryingPacking::packVaryingIntoRegisterMap(const PackedVarying &packedVarying)
+bool VaryingPacking::packVaryingIntoRegisterMap(PackMode packMode,
+                                                const PackedVarying &packedVarying)
 {
     const sh::ShaderVariable &varying = packedVarying.varying();
 
@@ -218,14 +213,14 @@ bool VaryingPacking::packVaryingIntoRegisterMap(const PackedVarying &packedVaryi
 
     // Special pack mode for D3D9. Each varying takes a full register, no sharing.
     // TODO(jmadill): Implement more sophisticated component packing in D3D9.
-    if (mPackMode == PackMode::ANGLE_NON_CONFORMANT_D3D9)
+    if (packMode == PackMode::ANGLE_NON_CONFORMANT_D3D9)
     {
         varyingColumns = 4;
     }
 
     // "Variables of type mat2 occupies 2 complete rows."
     // For non-WebGL contexts, we allow mat2 to occupy only two columns per row.
-    else if (mPackMode == PackMode::WEBGL_STRICT && varying.type == GL_FLOAT_MAT2)
+    else if (packMode == PackMode::WEBGL_STRICT && varying.type == GL_FLOAT_MAT2)
     {
         varyingColumns = 4;
     }
@@ -701,6 +696,8 @@ void VaryingPacking::collectTFVarying(const std::string &tfVarying,
 }
 
 bool VaryingPacking::collectAndPackUserVaryings(gl::InfoLog &infoLog,
+                                                GLint maxVaryingVectors,
+                                                PackMode packMode,
                                                 const ProgramMergedVaryings &mergedVaryings,
                                                 const std::vector<std::string> &tfVaryings,
                                                 const bool isSeparableProgram)
@@ -738,7 +735,7 @@ bool VaryingPacking::collectAndPackUserVaryings(gl::InfoLog &infoLog,
             // Don't count gl_Position. Also don't count gl_PointSize for D3D9.
             if (varying->name != "gl_Position" &&
                 !(varying->name == "gl_PointSize" &&
-                  mPackMode == PackMode::ANGLE_NON_CONFORMANT_D3D9))
+                  packMode == PackMode::ANGLE_NON_CONFORMANT_D3D9))
             {
                 collectVarying(*varying, ref, &uniqueFullNames);
                 continue;
@@ -776,18 +773,23 @@ bool VaryingPacking::collectAndPackUserVaryings(gl::InfoLog &infoLog,
 
     std::sort(mPackedVaryings.begin(), mPackedVaryings.end(), ComparePackedVarying);
 
-    return packUserVaryings(infoLog, mPackedVaryings);
+    return packUserVaryings(infoLog, maxVaryingVectors, packMode, mPackedVaryings);
 }
 
 // See comment on packVarying.
 bool VaryingPacking::packUserVaryings(gl::InfoLog &infoLog,
+                                      GLint maxVaryingVectors,
+                                      PackMode packMode,
                                       const std::vector<PackedVarying> &packedVaryings)
 {
+    clearRegisterMap();
+    mRegisterMap.resize(maxVaryingVectors);
+
     // "Variables are packed into the registers one at a time so that they each occupy a contiguous
     // subrectangle. No splitting of variables is permitted."
     for (const PackedVarying &packedVarying : packedVaryings)
     {
-        if (!packVaryingIntoRegisterMap(packedVarying))
+        if (!packVaryingIntoRegisterMap(packMode, packedVarying))
         {
             ShaderType eitherStage = packedVarying.frontVarying.varying
                                          ? packedVarying.frontVarying.stage
@@ -795,7 +797,7 @@ bool VaryingPacking::packUserVaryings(gl::InfoLog &infoLog,
             infoLog << "Could not pack varying " << packedVarying.fullName(eitherStage);
 
             // TODO(jmadill): Implement more sophisticated component packing in D3D9.
-            if (mPackMode == PackMode::ANGLE_NON_CONFORMANT_D3D9)
+            if (packMode == PackMode::ANGLE_NON_CONFORMANT_D3D9)
             {
                 infoLog << "Note: Additional non-conformant packing restrictions are enforced on "
                            "D3D9.";
