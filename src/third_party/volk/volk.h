@@ -11,7 +11,7 @@
 #define VOLK_H_
 
 #if defined(VULKAN_H_) && !defined(VK_NO_PROTOTYPES)
-#	error To use volk, you need to define VK_NO_PROTOTYPES before including vulkan.h
+#   error To use volk, you need to define VK_NO_PROTOTYPES before including vulkan.h
 #endif
 
 /* VOLK_GENERATE_VERSION_DEFINE */
@@ -19,32 +19,32 @@
 /* VOLK_GENERATE_VERSION_DEFINE */
 
 #ifndef VK_NO_PROTOTYPES
-#	define VK_NO_PROTOTYPES
+#   define VK_NO_PROTOTYPES
 #endif
 
 #ifndef VULKAN_H_
 #       ifdef VOLK_VULKAN_H_PATH
 #               include VOLK_VULKAN_H_PATH
-#	elif defined(VK_USE_PLATFORM_WIN32_KHR)
-#		include <vulkan/vk_platform.h>
-#		include <vulkan/vulkan_core.h>
+#   elif defined(VK_USE_PLATFORM_WIN32_KHR)
+#       include <vulkan/vk_platform.h>
+#       include <vulkan/vulkan_core.h>
 
-		/* When VK_USE_PLATFORM_WIN32_KHR is defined, instead of including vulkan.h directly, we include individual parts of the SDK
-		 * This is necessary to avoid including <windows.h> which is very heavy - it takes 200ms to parse without WIN32_LEAN_AND_MEAN
-		 * and 100ms to parse with it. vulkan_win32.h only needs a few symbols that are easy to redefine ourselves.
-		 */
-		typedef unsigned long DWORD;
-		typedef const wchar_t* LPCWSTR;
-		typedef void* HANDLE;
-		typedef struct HINSTANCE__* HINSTANCE;
-		typedef struct HWND__* HWND;
-		typedef struct HMONITOR__* HMONITOR;
-		typedef struct _SECURITY_ATTRIBUTES SECURITY_ATTRIBUTES;
+        /* When VK_USE_PLATFORM_WIN32_KHR is defined, instead of including vulkan.h directly, we include individual parts of the SDK
+         * This is necessary to avoid including <windows.h> which is very heavy - it takes 200ms to parse without WIN32_LEAN_AND_MEAN
+         * and 100ms to parse with it. vulkan_win32.h only needs a few symbols that are easy to redefine ourselves.
+         */
+        typedef unsigned long DWORD;
+        typedef const wchar_t* LPCWSTR;
+        typedef void* HANDLE;
+        typedef struct HINSTANCE__* HINSTANCE;
+        typedef struct HWND__* HWND;
+        typedef struct HMONITOR__* HMONITOR;
+        typedef struct _SECURITY_ATTRIBUTES SECURITY_ATTRIBUTES;
 
-#		include <vulkan/vulkan_win32.h>
-#	else
-#		include <vulkan/vulkan.h>
-#	endif
+#       include <vulkan/vulkan_win32.h>
+#   else
+#       include <vulkan/vulkan.h>
+#   endif
 #endif
 
 #ifdef __cplusplus
@@ -111,403 +111,403 @@ void volkLoadDeviceTable(struct VolkDeviceTable* table, VkDevice device);
  */
 struct VolkDeviceTable
 {
-	/* VOLK_GENERATE_DEVICE_TABLE */
+    /* VOLK_GENERATE_DEVICE_TABLE */
 #if defined(VK_VERSION_1_0)
-	PFN_vkAllocateCommandBuffers vkAllocateCommandBuffers;
-	PFN_vkAllocateDescriptorSets vkAllocateDescriptorSets;
-	PFN_vkAllocateMemory vkAllocateMemory;
-	PFN_vkBeginCommandBuffer vkBeginCommandBuffer;
-	PFN_vkBindBufferMemory vkBindBufferMemory;
-	PFN_vkBindImageMemory vkBindImageMemory;
-	PFN_vkCmdBeginQuery vkCmdBeginQuery;
-	PFN_vkCmdBeginRenderPass vkCmdBeginRenderPass;
-	PFN_vkCmdBindDescriptorSets vkCmdBindDescriptorSets;
-	PFN_vkCmdBindIndexBuffer vkCmdBindIndexBuffer;
-	PFN_vkCmdBindPipeline vkCmdBindPipeline;
-	PFN_vkCmdBindVertexBuffers vkCmdBindVertexBuffers;
-	PFN_vkCmdBlitImage vkCmdBlitImage;
-	PFN_vkCmdClearAttachments vkCmdClearAttachments;
-	PFN_vkCmdClearColorImage vkCmdClearColorImage;
-	PFN_vkCmdClearDepthStencilImage vkCmdClearDepthStencilImage;
-	PFN_vkCmdCopyBuffer vkCmdCopyBuffer;
-	PFN_vkCmdCopyBufferToImage vkCmdCopyBufferToImage;
-	PFN_vkCmdCopyImage vkCmdCopyImage;
-	PFN_vkCmdCopyImageToBuffer vkCmdCopyImageToBuffer;
-	PFN_vkCmdCopyQueryPoolResults vkCmdCopyQueryPoolResults;
-	PFN_vkCmdDispatch vkCmdDispatch;
-	PFN_vkCmdDispatchIndirect vkCmdDispatchIndirect;
-	PFN_vkCmdDraw vkCmdDraw;
-	PFN_vkCmdDrawIndexed vkCmdDrawIndexed;
-	PFN_vkCmdDrawIndexedIndirect vkCmdDrawIndexedIndirect;
-	PFN_vkCmdDrawIndirect vkCmdDrawIndirect;
-	PFN_vkCmdEndQuery vkCmdEndQuery;
-	PFN_vkCmdEndRenderPass vkCmdEndRenderPass;
-	PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
-	PFN_vkCmdFillBuffer vkCmdFillBuffer;
-	PFN_vkCmdNextSubpass vkCmdNextSubpass;
-	PFN_vkCmdPipelineBarrier vkCmdPipelineBarrier;
-	PFN_vkCmdPushConstants vkCmdPushConstants;
-	PFN_vkCmdResetEvent vkCmdResetEvent;
-	PFN_vkCmdResetQueryPool vkCmdResetQueryPool;
-	PFN_vkCmdResolveImage vkCmdResolveImage;
-	PFN_vkCmdSetBlendConstants vkCmdSetBlendConstants;
-	PFN_vkCmdSetDepthBias vkCmdSetDepthBias;
-	PFN_vkCmdSetDepthBounds vkCmdSetDepthBounds;
-	PFN_vkCmdSetEvent vkCmdSetEvent;
-	PFN_vkCmdSetLineWidth vkCmdSetLineWidth;
-	PFN_vkCmdSetScissor vkCmdSetScissor;
-	PFN_vkCmdSetStencilCompareMask vkCmdSetStencilCompareMask;
-	PFN_vkCmdSetStencilReference vkCmdSetStencilReference;
-	PFN_vkCmdSetStencilWriteMask vkCmdSetStencilWriteMask;
-	PFN_vkCmdSetViewport vkCmdSetViewport;
-	PFN_vkCmdUpdateBuffer vkCmdUpdateBuffer;
-	PFN_vkCmdWaitEvents vkCmdWaitEvents;
-	PFN_vkCmdWriteTimestamp vkCmdWriteTimestamp;
-	PFN_vkCreateBuffer vkCreateBuffer;
-	PFN_vkCreateBufferView vkCreateBufferView;
-	PFN_vkCreateCommandPool vkCreateCommandPool;
-	PFN_vkCreateComputePipelines vkCreateComputePipelines;
-	PFN_vkCreateDescriptorPool vkCreateDescriptorPool;
-	PFN_vkCreateDescriptorSetLayout vkCreateDescriptorSetLayout;
-	PFN_vkCreateEvent vkCreateEvent;
-	PFN_vkCreateFence vkCreateFence;
-	PFN_vkCreateFramebuffer vkCreateFramebuffer;
-	PFN_vkCreateGraphicsPipelines vkCreateGraphicsPipelines;
-	PFN_vkCreateImage vkCreateImage;
-	PFN_vkCreateImageView vkCreateImageView;
-	PFN_vkCreatePipelineCache vkCreatePipelineCache;
-	PFN_vkCreatePipelineLayout vkCreatePipelineLayout;
-	PFN_vkCreateQueryPool vkCreateQueryPool;
-	PFN_vkCreateRenderPass vkCreateRenderPass;
-	PFN_vkCreateSampler vkCreateSampler;
-	PFN_vkCreateSemaphore vkCreateSemaphore;
-	PFN_vkCreateShaderModule vkCreateShaderModule;
-	PFN_vkDestroyBuffer vkDestroyBuffer;
-	PFN_vkDestroyBufferView vkDestroyBufferView;
-	PFN_vkDestroyCommandPool vkDestroyCommandPool;
-	PFN_vkDestroyDescriptorPool vkDestroyDescriptorPool;
-	PFN_vkDestroyDescriptorSetLayout vkDestroyDescriptorSetLayout;
-	PFN_vkDestroyDevice vkDestroyDevice;
-	PFN_vkDestroyEvent vkDestroyEvent;
-	PFN_vkDestroyFence vkDestroyFence;
-	PFN_vkDestroyFramebuffer vkDestroyFramebuffer;
-	PFN_vkDestroyImage vkDestroyImage;
-	PFN_vkDestroyImageView vkDestroyImageView;
-	PFN_vkDestroyPipeline vkDestroyPipeline;
-	PFN_vkDestroyPipelineCache vkDestroyPipelineCache;
-	PFN_vkDestroyPipelineLayout vkDestroyPipelineLayout;
-	PFN_vkDestroyQueryPool vkDestroyQueryPool;
-	PFN_vkDestroyRenderPass vkDestroyRenderPass;
-	PFN_vkDestroySampler vkDestroySampler;
-	PFN_vkDestroySemaphore vkDestroySemaphore;
-	PFN_vkDestroyShaderModule vkDestroyShaderModule;
-	PFN_vkDeviceWaitIdle vkDeviceWaitIdle;
-	PFN_vkEndCommandBuffer vkEndCommandBuffer;
-	PFN_vkFlushMappedMemoryRanges vkFlushMappedMemoryRanges;
-	PFN_vkFreeCommandBuffers vkFreeCommandBuffers;
-	PFN_vkFreeDescriptorSets vkFreeDescriptorSets;
-	PFN_vkFreeMemory vkFreeMemory;
-	PFN_vkGetBufferMemoryRequirements vkGetBufferMemoryRequirements;
-	PFN_vkGetDeviceMemoryCommitment vkGetDeviceMemoryCommitment;
-	PFN_vkGetDeviceQueue vkGetDeviceQueue;
-	PFN_vkGetEventStatus vkGetEventStatus;
-	PFN_vkGetFenceStatus vkGetFenceStatus;
-	PFN_vkGetImageMemoryRequirements vkGetImageMemoryRequirements;
-	PFN_vkGetImageSparseMemoryRequirements vkGetImageSparseMemoryRequirements;
-	PFN_vkGetImageSubresourceLayout vkGetImageSubresourceLayout;
-	PFN_vkGetPipelineCacheData vkGetPipelineCacheData;
-	PFN_vkGetQueryPoolResults vkGetQueryPoolResults;
-	PFN_vkGetRenderAreaGranularity vkGetRenderAreaGranularity;
-	PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
-	PFN_vkMapMemory vkMapMemory;
-	PFN_vkMergePipelineCaches vkMergePipelineCaches;
-	PFN_vkQueueBindSparse vkQueueBindSparse;
-	PFN_vkQueueSubmit vkQueueSubmit;
-	PFN_vkQueueWaitIdle vkQueueWaitIdle;
-	PFN_vkResetCommandBuffer vkResetCommandBuffer;
-	PFN_vkResetCommandPool vkResetCommandPool;
-	PFN_vkResetDescriptorPool vkResetDescriptorPool;
-	PFN_vkResetEvent vkResetEvent;
-	PFN_vkResetFences vkResetFences;
-	PFN_vkSetEvent vkSetEvent;
-	PFN_vkUnmapMemory vkUnmapMemory;
-	PFN_vkUpdateDescriptorSets vkUpdateDescriptorSets;
-	PFN_vkWaitForFences vkWaitForFences;
+    PFN_vkAllocateCommandBuffers vkAllocateCommandBuffers;
+    PFN_vkAllocateDescriptorSets vkAllocateDescriptorSets;
+    PFN_vkAllocateMemory vkAllocateMemory;
+    PFN_vkBeginCommandBuffer vkBeginCommandBuffer;
+    PFN_vkBindBufferMemory vkBindBufferMemory;
+    PFN_vkBindImageMemory vkBindImageMemory;
+    PFN_vkCmdBeginQuery vkCmdBeginQuery;
+    PFN_vkCmdBeginRenderPass vkCmdBeginRenderPass;
+    PFN_vkCmdBindDescriptorSets vkCmdBindDescriptorSets;
+    PFN_vkCmdBindIndexBuffer vkCmdBindIndexBuffer;
+    PFN_vkCmdBindPipeline vkCmdBindPipeline;
+    PFN_vkCmdBindVertexBuffers vkCmdBindVertexBuffers;
+    PFN_vkCmdBlitImage vkCmdBlitImage;
+    PFN_vkCmdClearAttachments vkCmdClearAttachments;
+    PFN_vkCmdClearColorImage vkCmdClearColorImage;
+    PFN_vkCmdClearDepthStencilImage vkCmdClearDepthStencilImage;
+    PFN_vkCmdCopyBuffer vkCmdCopyBuffer;
+    PFN_vkCmdCopyBufferToImage vkCmdCopyBufferToImage;
+    PFN_vkCmdCopyImage vkCmdCopyImage;
+    PFN_vkCmdCopyImageToBuffer vkCmdCopyImageToBuffer;
+    PFN_vkCmdCopyQueryPoolResults vkCmdCopyQueryPoolResults;
+    PFN_vkCmdDispatch vkCmdDispatch;
+    PFN_vkCmdDispatchIndirect vkCmdDispatchIndirect;
+    PFN_vkCmdDraw vkCmdDraw;
+    PFN_vkCmdDrawIndexed vkCmdDrawIndexed;
+    PFN_vkCmdDrawIndexedIndirect vkCmdDrawIndexedIndirect;
+    PFN_vkCmdDrawIndirect vkCmdDrawIndirect;
+    PFN_vkCmdEndQuery vkCmdEndQuery;
+    PFN_vkCmdEndRenderPass vkCmdEndRenderPass;
+    PFN_vkCmdExecuteCommands vkCmdExecuteCommands;
+    PFN_vkCmdFillBuffer vkCmdFillBuffer;
+    PFN_vkCmdNextSubpass vkCmdNextSubpass;
+    PFN_vkCmdPipelineBarrier vkCmdPipelineBarrier;
+    PFN_vkCmdPushConstants vkCmdPushConstants;
+    PFN_vkCmdResetEvent vkCmdResetEvent;
+    PFN_vkCmdResetQueryPool vkCmdResetQueryPool;
+    PFN_vkCmdResolveImage vkCmdResolveImage;
+    PFN_vkCmdSetBlendConstants vkCmdSetBlendConstants;
+    PFN_vkCmdSetDepthBias vkCmdSetDepthBias;
+    PFN_vkCmdSetDepthBounds vkCmdSetDepthBounds;
+    PFN_vkCmdSetEvent vkCmdSetEvent;
+    PFN_vkCmdSetLineWidth vkCmdSetLineWidth;
+    PFN_vkCmdSetScissor vkCmdSetScissor;
+    PFN_vkCmdSetStencilCompareMask vkCmdSetStencilCompareMask;
+    PFN_vkCmdSetStencilReference vkCmdSetStencilReference;
+    PFN_vkCmdSetStencilWriteMask vkCmdSetStencilWriteMask;
+    PFN_vkCmdSetViewport vkCmdSetViewport;
+    PFN_vkCmdUpdateBuffer vkCmdUpdateBuffer;
+    PFN_vkCmdWaitEvents vkCmdWaitEvents;
+    PFN_vkCmdWriteTimestamp vkCmdWriteTimestamp;
+    PFN_vkCreateBuffer vkCreateBuffer;
+    PFN_vkCreateBufferView vkCreateBufferView;
+    PFN_vkCreateCommandPool vkCreateCommandPool;
+    PFN_vkCreateComputePipelines vkCreateComputePipelines;
+    PFN_vkCreateDescriptorPool vkCreateDescriptorPool;
+    PFN_vkCreateDescriptorSetLayout vkCreateDescriptorSetLayout;
+    PFN_vkCreateEvent vkCreateEvent;
+    PFN_vkCreateFence vkCreateFence;
+    PFN_vkCreateFramebuffer vkCreateFramebuffer;
+    PFN_vkCreateGraphicsPipelines vkCreateGraphicsPipelines;
+    PFN_vkCreateImage vkCreateImage;
+    PFN_vkCreateImageView vkCreateImageView;
+    PFN_vkCreatePipelineCache vkCreatePipelineCache;
+    PFN_vkCreatePipelineLayout vkCreatePipelineLayout;
+    PFN_vkCreateQueryPool vkCreateQueryPool;
+    PFN_vkCreateRenderPass vkCreateRenderPass;
+    PFN_vkCreateSampler vkCreateSampler;
+    PFN_vkCreateSemaphore vkCreateSemaphore;
+    PFN_vkCreateShaderModule vkCreateShaderModule;
+    PFN_vkDestroyBuffer vkDestroyBuffer;
+    PFN_vkDestroyBufferView vkDestroyBufferView;
+    PFN_vkDestroyCommandPool vkDestroyCommandPool;
+    PFN_vkDestroyDescriptorPool vkDestroyDescriptorPool;
+    PFN_vkDestroyDescriptorSetLayout vkDestroyDescriptorSetLayout;
+    PFN_vkDestroyDevice vkDestroyDevice;
+    PFN_vkDestroyEvent vkDestroyEvent;
+    PFN_vkDestroyFence vkDestroyFence;
+    PFN_vkDestroyFramebuffer vkDestroyFramebuffer;
+    PFN_vkDestroyImage vkDestroyImage;
+    PFN_vkDestroyImageView vkDestroyImageView;
+    PFN_vkDestroyPipeline vkDestroyPipeline;
+    PFN_vkDestroyPipelineCache vkDestroyPipelineCache;
+    PFN_vkDestroyPipelineLayout vkDestroyPipelineLayout;
+    PFN_vkDestroyQueryPool vkDestroyQueryPool;
+    PFN_vkDestroyRenderPass vkDestroyRenderPass;
+    PFN_vkDestroySampler vkDestroySampler;
+    PFN_vkDestroySemaphore vkDestroySemaphore;
+    PFN_vkDestroyShaderModule vkDestroyShaderModule;
+    PFN_vkDeviceWaitIdle vkDeviceWaitIdle;
+    PFN_vkEndCommandBuffer vkEndCommandBuffer;
+    PFN_vkFlushMappedMemoryRanges vkFlushMappedMemoryRanges;
+    PFN_vkFreeCommandBuffers vkFreeCommandBuffers;
+    PFN_vkFreeDescriptorSets vkFreeDescriptorSets;
+    PFN_vkFreeMemory vkFreeMemory;
+    PFN_vkGetBufferMemoryRequirements vkGetBufferMemoryRequirements;
+    PFN_vkGetDeviceMemoryCommitment vkGetDeviceMemoryCommitment;
+    PFN_vkGetDeviceQueue vkGetDeviceQueue;
+    PFN_vkGetEventStatus vkGetEventStatus;
+    PFN_vkGetFenceStatus vkGetFenceStatus;
+    PFN_vkGetImageMemoryRequirements vkGetImageMemoryRequirements;
+    PFN_vkGetImageSparseMemoryRequirements vkGetImageSparseMemoryRequirements;
+    PFN_vkGetImageSubresourceLayout vkGetImageSubresourceLayout;
+    PFN_vkGetPipelineCacheData vkGetPipelineCacheData;
+    PFN_vkGetQueryPoolResults vkGetQueryPoolResults;
+    PFN_vkGetRenderAreaGranularity vkGetRenderAreaGranularity;
+    PFN_vkInvalidateMappedMemoryRanges vkInvalidateMappedMemoryRanges;
+    PFN_vkMapMemory vkMapMemory;
+    PFN_vkMergePipelineCaches vkMergePipelineCaches;
+    PFN_vkQueueBindSparse vkQueueBindSparse;
+    PFN_vkQueueSubmit vkQueueSubmit;
+    PFN_vkQueueWaitIdle vkQueueWaitIdle;
+    PFN_vkResetCommandBuffer vkResetCommandBuffer;
+    PFN_vkResetCommandPool vkResetCommandPool;
+    PFN_vkResetDescriptorPool vkResetDescriptorPool;
+    PFN_vkResetEvent vkResetEvent;
+    PFN_vkResetFences vkResetFences;
+    PFN_vkSetEvent vkSetEvent;
+    PFN_vkUnmapMemory vkUnmapMemory;
+    PFN_vkUpdateDescriptorSets vkUpdateDescriptorSets;
+    PFN_vkWaitForFences vkWaitForFences;
 #endif /* defined(VK_VERSION_1_0) */
 #if defined(VK_VERSION_1_1)
-	PFN_vkBindBufferMemory2 vkBindBufferMemory2;
-	PFN_vkBindImageMemory2 vkBindImageMemory2;
-	PFN_vkCmdDispatchBase vkCmdDispatchBase;
-	PFN_vkCmdSetDeviceMask vkCmdSetDeviceMask;
-	PFN_vkCreateDescriptorUpdateTemplate vkCreateDescriptorUpdateTemplate;
-	PFN_vkCreateSamplerYcbcrConversion vkCreateSamplerYcbcrConversion;
-	PFN_vkDestroyDescriptorUpdateTemplate vkDestroyDescriptorUpdateTemplate;
-	PFN_vkDestroySamplerYcbcrConversion vkDestroySamplerYcbcrConversion;
-	PFN_vkGetBufferMemoryRequirements2 vkGetBufferMemoryRequirements2;
-	PFN_vkGetDescriptorSetLayoutSupport vkGetDescriptorSetLayoutSupport;
-	PFN_vkGetDeviceGroupPeerMemoryFeatures vkGetDeviceGroupPeerMemoryFeatures;
-	PFN_vkGetDeviceQueue2 vkGetDeviceQueue2;
-	PFN_vkGetImageMemoryRequirements2 vkGetImageMemoryRequirements2;
-	PFN_vkGetImageSparseMemoryRequirements2 vkGetImageSparseMemoryRequirements2;
-	PFN_vkTrimCommandPool vkTrimCommandPool;
-	PFN_vkUpdateDescriptorSetWithTemplate vkUpdateDescriptorSetWithTemplate;
+    PFN_vkBindBufferMemory2 vkBindBufferMemory2;
+    PFN_vkBindImageMemory2 vkBindImageMemory2;
+    PFN_vkCmdDispatchBase vkCmdDispatchBase;
+    PFN_vkCmdSetDeviceMask vkCmdSetDeviceMask;
+    PFN_vkCreateDescriptorUpdateTemplate vkCreateDescriptorUpdateTemplate;
+    PFN_vkCreateSamplerYcbcrConversion vkCreateSamplerYcbcrConversion;
+    PFN_vkDestroyDescriptorUpdateTemplate vkDestroyDescriptorUpdateTemplate;
+    PFN_vkDestroySamplerYcbcrConversion vkDestroySamplerYcbcrConversion;
+    PFN_vkGetBufferMemoryRequirements2 vkGetBufferMemoryRequirements2;
+    PFN_vkGetDescriptorSetLayoutSupport vkGetDescriptorSetLayoutSupport;
+    PFN_vkGetDeviceGroupPeerMemoryFeatures vkGetDeviceGroupPeerMemoryFeatures;
+    PFN_vkGetDeviceQueue2 vkGetDeviceQueue2;
+    PFN_vkGetImageMemoryRequirements2 vkGetImageMemoryRequirements2;
+    PFN_vkGetImageSparseMemoryRequirements2 vkGetImageSparseMemoryRequirements2;
+    PFN_vkTrimCommandPool vkTrimCommandPool;
+    PFN_vkUpdateDescriptorSetWithTemplate vkUpdateDescriptorSetWithTemplate;
 #endif /* defined(VK_VERSION_1_1) */
 #if defined(VK_AMD_buffer_marker)
-	PFN_vkCmdWriteBufferMarkerAMD vkCmdWriteBufferMarkerAMD;
+    PFN_vkCmdWriteBufferMarkerAMD vkCmdWriteBufferMarkerAMD;
 #endif /* defined(VK_AMD_buffer_marker) */
 #if defined(VK_AMD_display_native_hdr)
-	PFN_vkSetLocalDimmingAMD vkSetLocalDimmingAMD;
+    PFN_vkSetLocalDimmingAMD vkSetLocalDimmingAMD;
 #endif /* defined(VK_AMD_display_native_hdr) */
 #if defined(VK_AMD_draw_indirect_count)
-	PFN_vkCmdDrawIndexedIndirectCountAMD vkCmdDrawIndexedIndirectCountAMD;
-	PFN_vkCmdDrawIndirectCountAMD vkCmdDrawIndirectCountAMD;
+    PFN_vkCmdDrawIndexedIndirectCountAMD vkCmdDrawIndexedIndirectCountAMD;
+    PFN_vkCmdDrawIndirectCountAMD vkCmdDrawIndirectCountAMD;
 #endif /* defined(VK_AMD_draw_indirect_count) */
 #if defined(VK_AMD_shader_info)
-	PFN_vkGetShaderInfoAMD vkGetShaderInfoAMD;
+    PFN_vkGetShaderInfoAMD vkGetShaderInfoAMD;
 #endif /* defined(VK_AMD_shader_info) */
 #if defined(VK_ANDROID_external_memory_android_hardware_buffer)
-	PFN_vkGetAndroidHardwareBufferPropertiesANDROID vkGetAndroidHardwareBufferPropertiesANDROID;
-	PFN_vkGetMemoryAndroidHardwareBufferANDROID vkGetMemoryAndroidHardwareBufferANDROID;
+    PFN_vkGetAndroidHardwareBufferPropertiesANDROID vkGetAndroidHardwareBufferPropertiesANDROID;
+    PFN_vkGetMemoryAndroidHardwareBufferANDROID vkGetMemoryAndroidHardwareBufferANDROID;
 #endif /* defined(VK_ANDROID_external_memory_android_hardware_buffer) */
 #if defined(VK_EXT_buffer_device_address)
-	PFN_vkGetBufferDeviceAddressEXT vkGetBufferDeviceAddressEXT;
+    PFN_vkGetBufferDeviceAddressEXT vkGetBufferDeviceAddressEXT;
 #endif /* defined(VK_EXT_buffer_device_address) */
 #if defined(VK_EXT_calibrated_timestamps)
-	PFN_vkGetCalibratedTimestampsEXT vkGetCalibratedTimestampsEXT;
+    PFN_vkGetCalibratedTimestampsEXT vkGetCalibratedTimestampsEXT;
 #endif /* defined(VK_EXT_calibrated_timestamps) */
 #if defined(VK_EXT_conditional_rendering)
-	PFN_vkCmdBeginConditionalRenderingEXT vkCmdBeginConditionalRenderingEXT;
-	PFN_vkCmdEndConditionalRenderingEXT vkCmdEndConditionalRenderingEXT;
+    PFN_vkCmdBeginConditionalRenderingEXT vkCmdBeginConditionalRenderingEXT;
+    PFN_vkCmdEndConditionalRenderingEXT vkCmdEndConditionalRenderingEXT;
 #endif /* defined(VK_EXT_conditional_rendering) */
 #if defined(VK_EXT_debug_marker)
-	PFN_vkCmdDebugMarkerBeginEXT vkCmdDebugMarkerBeginEXT;
-	PFN_vkCmdDebugMarkerEndEXT vkCmdDebugMarkerEndEXT;
-	PFN_vkCmdDebugMarkerInsertEXT vkCmdDebugMarkerInsertEXT;
-	PFN_vkDebugMarkerSetObjectNameEXT vkDebugMarkerSetObjectNameEXT;
-	PFN_vkDebugMarkerSetObjectTagEXT vkDebugMarkerSetObjectTagEXT;
+    PFN_vkCmdDebugMarkerBeginEXT vkCmdDebugMarkerBeginEXT;
+    PFN_vkCmdDebugMarkerEndEXT vkCmdDebugMarkerEndEXT;
+    PFN_vkCmdDebugMarkerInsertEXT vkCmdDebugMarkerInsertEXT;
+    PFN_vkDebugMarkerSetObjectNameEXT vkDebugMarkerSetObjectNameEXT;
+    PFN_vkDebugMarkerSetObjectTagEXT vkDebugMarkerSetObjectTagEXT;
 #endif /* defined(VK_EXT_debug_marker) */
 #if defined(VK_EXT_discard_rectangles)
-	PFN_vkCmdSetDiscardRectangleEXT vkCmdSetDiscardRectangleEXT;
+    PFN_vkCmdSetDiscardRectangleEXT vkCmdSetDiscardRectangleEXT;
 #endif /* defined(VK_EXT_discard_rectangles) */
 #if defined(VK_EXT_display_control)
-	PFN_vkDisplayPowerControlEXT vkDisplayPowerControlEXT;
-	PFN_vkGetSwapchainCounterEXT vkGetSwapchainCounterEXT;
-	PFN_vkRegisterDeviceEventEXT vkRegisterDeviceEventEXT;
-	PFN_vkRegisterDisplayEventEXT vkRegisterDisplayEventEXT;
+    PFN_vkDisplayPowerControlEXT vkDisplayPowerControlEXT;
+    PFN_vkGetSwapchainCounterEXT vkGetSwapchainCounterEXT;
+    PFN_vkRegisterDeviceEventEXT vkRegisterDeviceEventEXT;
+    PFN_vkRegisterDisplayEventEXT vkRegisterDisplayEventEXT;
 #endif /* defined(VK_EXT_display_control) */
 #if defined(VK_EXT_external_memory_host)
-	PFN_vkGetMemoryHostPointerPropertiesEXT vkGetMemoryHostPointerPropertiesEXT;
+    PFN_vkGetMemoryHostPointerPropertiesEXT vkGetMemoryHostPointerPropertiesEXT;
 #endif /* defined(VK_EXT_external_memory_host) */
 #if defined(VK_EXT_full_screen_exclusive)
-	PFN_vkAcquireFullScreenExclusiveModeEXT vkAcquireFullScreenExclusiveModeEXT;
-	PFN_vkReleaseFullScreenExclusiveModeEXT vkReleaseFullScreenExclusiveModeEXT;
+    PFN_vkAcquireFullScreenExclusiveModeEXT vkAcquireFullScreenExclusiveModeEXT;
+    PFN_vkReleaseFullScreenExclusiveModeEXT vkReleaseFullScreenExclusiveModeEXT;
 #endif /* defined(VK_EXT_full_screen_exclusive) */
 #if defined(VK_EXT_hdr_metadata)
-	PFN_vkSetHdrMetadataEXT vkSetHdrMetadataEXT;
+    PFN_vkSetHdrMetadataEXT vkSetHdrMetadataEXT;
 #endif /* defined(VK_EXT_hdr_metadata) */
 #if defined(VK_EXT_host_query_reset)
-	PFN_vkResetQueryPoolEXT vkResetQueryPoolEXT;
+    PFN_vkResetQueryPoolEXT vkResetQueryPoolEXT;
 #endif /* defined(VK_EXT_host_query_reset) */
 #if defined(VK_EXT_image_drm_format_modifier)
-	PFN_vkGetImageDrmFormatModifierPropertiesEXT vkGetImageDrmFormatModifierPropertiesEXT;
+    PFN_vkGetImageDrmFormatModifierPropertiesEXT vkGetImageDrmFormatModifierPropertiesEXT;
 #endif /* defined(VK_EXT_image_drm_format_modifier) */
 #if defined(VK_EXT_line_rasterization)
-	PFN_vkCmdSetLineStippleEXT vkCmdSetLineStippleEXT;
+    PFN_vkCmdSetLineStippleEXT vkCmdSetLineStippleEXT;
 #endif /* defined(VK_EXT_line_rasterization) */
 #if defined(VK_EXT_sample_locations)
-	PFN_vkCmdSetSampleLocationsEXT vkCmdSetSampleLocationsEXT;
+    PFN_vkCmdSetSampleLocationsEXT vkCmdSetSampleLocationsEXT;
 #endif /* defined(VK_EXT_sample_locations) */
 #if defined(VK_EXT_transform_feedback)
-	PFN_vkCmdBeginQueryIndexedEXT vkCmdBeginQueryIndexedEXT;
-	PFN_vkCmdBeginTransformFeedbackEXT vkCmdBeginTransformFeedbackEXT;
-	PFN_vkCmdBindTransformFeedbackBuffersEXT vkCmdBindTransformFeedbackBuffersEXT;
-	PFN_vkCmdDrawIndirectByteCountEXT vkCmdDrawIndirectByteCountEXT;
-	PFN_vkCmdEndQueryIndexedEXT vkCmdEndQueryIndexedEXT;
-	PFN_vkCmdEndTransformFeedbackEXT vkCmdEndTransformFeedbackEXT;
+    PFN_vkCmdBeginQueryIndexedEXT vkCmdBeginQueryIndexedEXT;
+    PFN_vkCmdBeginTransformFeedbackEXT vkCmdBeginTransformFeedbackEXT;
+    PFN_vkCmdBindTransformFeedbackBuffersEXT vkCmdBindTransformFeedbackBuffersEXT;
+    PFN_vkCmdDrawIndirectByteCountEXT vkCmdDrawIndirectByteCountEXT;
+    PFN_vkCmdEndQueryIndexedEXT vkCmdEndQueryIndexedEXT;
+    PFN_vkCmdEndTransformFeedbackEXT vkCmdEndTransformFeedbackEXT;
 #endif /* defined(VK_EXT_transform_feedback) */
 #if defined(VK_EXT_validation_cache)
-	PFN_vkCreateValidationCacheEXT vkCreateValidationCacheEXT;
-	PFN_vkDestroyValidationCacheEXT vkDestroyValidationCacheEXT;
-	PFN_vkGetValidationCacheDataEXT vkGetValidationCacheDataEXT;
-	PFN_vkMergeValidationCachesEXT vkMergeValidationCachesEXT;
+    PFN_vkCreateValidationCacheEXT vkCreateValidationCacheEXT;
+    PFN_vkDestroyValidationCacheEXT vkDestroyValidationCacheEXT;
+    PFN_vkGetValidationCacheDataEXT vkGetValidationCacheDataEXT;
+    PFN_vkMergeValidationCachesEXT vkMergeValidationCachesEXT;
 #endif /* defined(VK_EXT_validation_cache) */
 #if defined(VK_GOOGLE_display_timing)
-	PFN_vkGetPastPresentationTimingGOOGLE vkGetPastPresentationTimingGOOGLE;
-	PFN_vkGetRefreshCycleDurationGOOGLE vkGetRefreshCycleDurationGOOGLE;
+    PFN_vkGetPastPresentationTimingGOOGLE vkGetPastPresentationTimingGOOGLE;
+    PFN_vkGetRefreshCycleDurationGOOGLE vkGetRefreshCycleDurationGOOGLE;
 #endif /* defined(VK_GOOGLE_display_timing) */
 #if defined(VK_INTEL_performance_query)
-	PFN_vkAcquirePerformanceConfigurationINTEL vkAcquirePerformanceConfigurationINTEL;
-	PFN_vkCmdSetPerformanceMarkerINTEL vkCmdSetPerformanceMarkerINTEL;
-	PFN_vkCmdSetPerformanceOverrideINTEL vkCmdSetPerformanceOverrideINTEL;
-	PFN_vkCmdSetPerformanceStreamMarkerINTEL vkCmdSetPerformanceStreamMarkerINTEL;
-	PFN_vkGetPerformanceParameterINTEL vkGetPerformanceParameterINTEL;
-	PFN_vkInitializePerformanceApiINTEL vkInitializePerformanceApiINTEL;
-	PFN_vkQueueSetPerformanceConfigurationINTEL vkQueueSetPerformanceConfigurationINTEL;
-	PFN_vkReleasePerformanceConfigurationINTEL vkReleasePerformanceConfigurationINTEL;
-	PFN_vkUninitializePerformanceApiINTEL vkUninitializePerformanceApiINTEL;
+    PFN_vkAcquirePerformanceConfigurationINTEL vkAcquirePerformanceConfigurationINTEL;
+    PFN_vkCmdSetPerformanceMarkerINTEL vkCmdSetPerformanceMarkerINTEL;
+    PFN_vkCmdSetPerformanceOverrideINTEL vkCmdSetPerformanceOverrideINTEL;
+    PFN_vkCmdSetPerformanceStreamMarkerINTEL vkCmdSetPerformanceStreamMarkerINTEL;
+    PFN_vkGetPerformanceParameterINTEL vkGetPerformanceParameterINTEL;
+    PFN_vkInitializePerformanceApiINTEL vkInitializePerformanceApiINTEL;
+    PFN_vkQueueSetPerformanceConfigurationINTEL vkQueueSetPerformanceConfigurationINTEL;
+    PFN_vkReleasePerformanceConfigurationINTEL vkReleasePerformanceConfigurationINTEL;
+    PFN_vkUninitializePerformanceApiINTEL vkUninitializePerformanceApiINTEL;
 #endif /* defined(VK_INTEL_performance_query) */
 #if defined(VK_KHR_bind_memory2)
-	PFN_vkBindBufferMemory2KHR vkBindBufferMemory2KHR;
-	PFN_vkBindImageMemory2KHR vkBindImageMemory2KHR;
+    PFN_vkBindBufferMemory2KHR vkBindBufferMemory2KHR;
+    PFN_vkBindImageMemory2KHR vkBindImageMemory2KHR;
 #endif /* defined(VK_KHR_bind_memory2) */
 #if defined(VK_KHR_buffer_device_address)
-	PFN_vkGetBufferDeviceAddressKHR vkGetBufferDeviceAddressKHR;
-	PFN_vkGetBufferOpaqueCaptureAddressKHR vkGetBufferOpaqueCaptureAddressKHR;
-	PFN_vkGetDeviceMemoryOpaqueCaptureAddressKHR vkGetDeviceMemoryOpaqueCaptureAddressKHR;
+    PFN_vkGetBufferDeviceAddressKHR vkGetBufferDeviceAddressKHR;
+    PFN_vkGetBufferOpaqueCaptureAddressKHR vkGetBufferOpaqueCaptureAddressKHR;
+    PFN_vkGetDeviceMemoryOpaqueCaptureAddressKHR vkGetDeviceMemoryOpaqueCaptureAddressKHR;
 #endif /* defined(VK_KHR_buffer_device_address) */
 #if defined(VK_KHR_create_renderpass2)
-	PFN_vkCmdBeginRenderPass2KHR vkCmdBeginRenderPass2KHR;
-	PFN_vkCmdEndRenderPass2KHR vkCmdEndRenderPass2KHR;
-	PFN_vkCmdNextSubpass2KHR vkCmdNextSubpass2KHR;
-	PFN_vkCreateRenderPass2KHR vkCreateRenderPass2KHR;
+    PFN_vkCmdBeginRenderPass2KHR vkCmdBeginRenderPass2KHR;
+    PFN_vkCmdEndRenderPass2KHR vkCmdEndRenderPass2KHR;
+    PFN_vkCmdNextSubpass2KHR vkCmdNextSubpass2KHR;
+    PFN_vkCreateRenderPass2KHR vkCreateRenderPass2KHR;
 #endif /* defined(VK_KHR_create_renderpass2) */
 #if defined(VK_KHR_descriptor_update_template)
-	PFN_vkCreateDescriptorUpdateTemplateKHR vkCreateDescriptorUpdateTemplateKHR;
-	PFN_vkDestroyDescriptorUpdateTemplateKHR vkDestroyDescriptorUpdateTemplateKHR;
-	PFN_vkUpdateDescriptorSetWithTemplateKHR vkUpdateDescriptorSetWithTemplateKHR;
+    PFN_vkCreateDescriptorUpdateTemplateKHR vkCreateDescriptorUpdateTemplateKHR;
+    PFN_vkDestroyDescriptorUpdateTemplateKHR vkDestroyDescriptorUpdateTemplateKHR;
+    PFN_vkUpdateDescriptorSetWithTemplateKHR vkUpdateDescriptorSetWithTemplateKHR;
 #endif /* defined(VK_KHR_descriptor_update_template) */
 #if defined(VK_KHR_device_group)
-	PFN_vkCmdDispatchBaseKHR vkCmdDispatchBaseKHR;
-	PFN_vkCmdSetDeviceMaskKHR vkCmdSetDeviceMaskKHR;
-	PFN_vkGetDeviceGroupPeerMemoryFeaturesKHR vkGetDeviceGroupPeerMemoryFeaturesKHR;
+    PFN_vkCmdDispatchBaseKHR vkCmdDispatchBaseKHR;
+    PFN_vkCmdSetDeviceMaskKHR vkCmdSetDeviceMaskKHR;
+    PFN_vkGetDeviceGroupPeerMemoryFeaturesKHR vkGetDeviceGroupPeerMemoryFeaturesKHR;
 #endif /* defined(VK_KHR_device_group) */
 #if defined(VK_KHR_display_swapchain)
-	PFN_vkCreateSharedSwapchainsKHR vkCreateSharedSwapchainsKHR;
+    PFN_vkCreateSharedSwapchainsKHR vkCreateSharedSwapchainsKHR;
 #endif /* defined(VK_KHR_display_swapchain) */
 #if defined(VK_KHR_draw_indirect_count)
-	PFN_vkCmdDrawIndexedIndirectCountKHR vkCmdDrawIndexedIndirectCountKHR;
-	PFN_vkCmdDrawIndirectCountKHR vkCmdDrawIndirectCountKHR;
+    PFN_vkCmdDrawIndexedIndirectCountKHR vkCmdDrawIndexedIndirectCountKHR;
+    PFN_vkCmdDrawIndirectCountKHR vkCmdDrawIndirectCountKHR;
 #endif /* defined(VK_KHR_draw_indirect_count) */
 #if defined(VK_KHR_external_fence_fd)
-	PFN_vkGetFenceFdKHR vkGetFenceFdKHR;
-	PFN_vkImportFenceFdKHR vkImportFenceFdKHR;
+    PFN_vkGetFenceFdKHR vkGetFenceFdKHR;
+    PFN_vkImportFenceFdKHR vkImportFenceFdKHR;
 #endif /* defined(VK_KHR_external_fence_fd) */
 #if defined(VK_KHR_external_fence_win32)
-	PFN_vkGetFenceWin32HandleKHR vkGetFenceWin32HandleKHR;
-	PFN_vkImportFenceWin32HandleKHR vkImportFenceWin32HandleKHR;
+    PFN_vkGetFenceWin32HandleKHR vkGetFenceWin32HandleKHR;
+    PFN_vkImportFenceWin32HandleKHR vkImportFenceWin32HandleKHR;
 #endif /* defined(VK_KHR_external_fence_win32) */
 #if defined(VK_KHR_external_memory_fd)
-	PFN_vkGetMemoryFdKHR vkGetMemoryFdKHR;
-	PFN_vkGetMemoryFdPropertiesKHR vkGetMemoryFdPropertiesKHR;
+    PFN_vkGetMemoryFdKHR vkGetMemoryFdKHR;
+    PFN_vkGetMemoryFdPropertiesKHR vkGetMemoryFdPropertiesKHR;
 #endif /* defined(VK_KHR_external_memory_fd) */
 #if defined(VK_KHR_external_memory_win32)
-	PFN_vkGetMemoryWin32HandleKHR vkGetMemoryWin32HandleKHR;
-	PFN_vkGetMemoryWin32HandlePropertiesKHR vkGetMemoryWin32HandlePropertiesKHR;
+    PFN_vkGetMemoryWin32HandleKHR vkGetMemoryWin32HandleKHR;
+    PFN_vkGetMemoryWin32HandlePropertiesKHR vkGetMemoryWin32HandlePropertiesKHR;
 #endif /* defined(VK_KHR_external_memory_win32) */
 #if defined(VK_KHR_external_semaphore_fd)
-	PFN_vkGetSemaphoreFdKHR vkGetSemaphoreFdKHR;
-	PFN_vkImportSemaphoreFdKHR vkImportSemaphoreFdKHR;
+    PFN_vkGetSemaphoreFdKHR vkGetSemaphoreFdKHR;
+    PFN_vkImportSemaphoreFdKHR vkImportSemaphoreFdKHR;
 #endif /* defined(VK_KHR_external_semaphore_fd) */
 #if defined(VK_KHR_external_semaphore_win32)
-	PFN_vkGetSemaphoreWin32HandleKHR vkGetSemaphoreWin32HandleKHR;
-	PFN_vkImportSemaphoreWin32HandleKHR vkImportSemaphoreWin32HandleKHR;
+    PFN_vkGetSemaphoreWin32HandleKHR vkGetSemaphoreWin32HandleKHR;
+    PFN_vkImportSemaphoreWin32HandleKHR vkImportSemaphoreWin32HandleKHR;
 #endif /* defined(VK_KHR_external_semaphore_win32) */
 #if defined(VK_KHR_get_memory_requirements2)
-	PFN_vkGetBufferMemoryRequirements2KHR vkGetBufferMemoryRequirements2KHR;
-	PFN_vkGetImageMemoryRequirements2KHR vkGetImageMemoryRequirements2KHR;
-	PFN_vkGetImageSparseMemoryRequirements2KHR vkGetImageSparseMemoryRequirements2KHR;
+    PFN_vkGetBufferMemoryRequirements2KHR vkGetBufferMemoryRequirements2KHR;
+    PFN_vkGetImageMemoryRequirements2KHR vkGetImageMemoryRequirements2KHR;
+    PFN_vkGetImageSparseMemoryRequirements2KHR vkGetImageSparseMemoryRequirements2KHR;
 #endif /* defined(VK_KHR_get_memory_requirements2) */
 #if defined(VK_KHR_maintenance1)
-	PFN_vkTrimCommandPoolKHR vkTrimCommandPoolKHR;
+    PFN_vkTrimCommandPoolKHR vkTrimCommandPoolKHR;
 #endif /* defined(VK_KHR_maintenance1) */
 #if defined(VK_KHR_maintenance3)
-	PFN_vkGetDescriptorSetLayoutSupportKHR vkGetDescriptorSetLayoutSupportKHR;
+    PFN_vkGetDescriptorSetLayoutSupportKHR vkGetDescriptorSetLayoutSupportKHR;
 #endif /* defined(VK_KHR_maintenance3) */
 #if defined(VK_KHR_performance_query)
-	PFN_vkAcquireProfilingLockKHR vkAcquireProfilingLockKHR;
-	PFN_vkReleaseProfilingLockKHR vkReleaseProfilingLockKHR;
+    PFN_vkAcquireProfilingLockKHR vkAcquireProfilingLockKHR;
+    PFN_vkReleaseProfilingLockKHR vkReleaseProfilingLockKHR;
 #endif /* defined(VK_KHR_performance_query) */
 #if defined(VK_KHR_pipeline_executable_properties)
-	PFN_vkGetPipelineExecutableInternalRepresentationsKHR vkGetPipelineExecutableInternalRepresentationsKHR;
-	PFN_vkGetPipelineExecutablePropertiesKHR vkGetPipelineExecutablePropertiesKHR;
-	PFN_vkGetPipelineExecutableStatisticsKHR vkGetPipelineExecutableStatisticsKHR;
+    PFN_vkGetPipelineExecutableInternalRepresentationsKHR vkGetPipelineExecutableInternalRepresentationsKHR;
+    PFN_vkGetPipelineExecutablePropertiesKHR vkGetPipelineExecutablePropertiesKHR;
+    PFN_vkGetPipelineExecutableStatisticsKHR vkGetPipelineExecutableStatisticsKHR;
 #endif /* defined(VK_KHR_pipeline_executable_properties) */
 #if defined(VK_KHR_push_descriptor)
-	PFN_vkCmdPushDescriptorSetKHR vkCmdPushDescriptorSetKHR;
+    PFN_vkCmdPushDescriptorSetKHR vkCmdPushDescriptorSetKHR;
 #endif /* defined(VK_KHR_push_descriptor) */
 #if defined(VK_KHR_sampler_ycbcr_conversion)
-	PFN_vkCreateSamplerYcbcrConversionKHR vkCreateSamplerYcbcrConversionKHR;
-	PFN_vkDestroySamplerYcbcrConversionKHR vkDestroySamplerYcbcrConversionKHR;
+    PFN_vkCreateSamplerYcbcrConversionKHR vkCreateSamplerYcbcrConversionKHR;
+    PFN_vkDestroySamplerYcbcrConversionKHR vkDestroySamplerYcbcrConversionKHR;
 #endif /* defined(VK_KHR_sampler_ycbcr_conversion) */
 #if defined(VK_KHR_shared_presentable_image)
-	PFN_vkGetSwapchainStatusKHR vkGetSwapchainStatusKHR;
+    PFN_vkGetSwapchainStatusKHR vkGetSwapchainStatusKHR;
 #endif /* defined(VK_KHR_shared_presentable_image) */
 #if defined(VK_KHR_swapchain)
-	PFN_vkAcquireNextImageKHR vkAcquireNextImageKHR;
-	PFN_vkCreateSwapchainKHR vkCreateSwapchainKHR;
-	PFN_vkDestroySwapchainKHR vkDestroySwapchainKHR;
-	PFN_vkGetSwapchainImagesKHR vkGetSwapchainImagesKHR;
-	PFN_vkQueuePresentKHR vkQueuePresentKHR;
+    PFN_vkAcquireNextImageKHR vkAcquireNextImageKHR;
+    PFN_vkCreateSwapchainKHR vkCreateSwapchainKHR;
+    PFN_vkDestroySwapchainKHR vkDestroySwapchainKHR;
+    PFN_vkGetSwapchainImagesKHR vkGetSwapchainImagesKHR;
+    PFN_vkQueuePresentKHR vkQueuePresentKHR;
 #endif /* defined(VK_KHR_swapchain) */
 #if defined(VK_KHR_timeline_semaphore)
-	PFN_vkGetSemaphoreCounterValueKHR vkGetSemaphoreCounterValueKHR;
-	PFN_vkSignalSemaphoreKHR vkSignalSemaphoreKHR;
-	PFN_vkWaitSemaphoresKHR vkWaitSemaphoresKHR;
+    PFN_vkGetSemaphoreCounterValueKHR vkGetSemaphoreCounterValueKHR;
+    PFN_vkSignalSemaphoreKHR vkSignalSemaphoreKHR;
+    PFN_vkWaitSemaphoresKHR vkWaitSemaphoresKHR;
 #endif /* defined(VK_KHR_timeline_semaphore) */
 #if defined(VK_NVX_device_generated_commands)
-	PFN_vkCmdProcessCommandsNVX vkCmdProcessCommandsNVX;
-	PFN_vkCmdReserveSpaceForCommandsNVX vkCmdReserveSpaceForCommandsNVX;
-	PFN_vkCreateIndirectCommandsLayoutNVX vkCreateIndirectCommandsLayoutNVX;
-	PFN_vkCreateObjectTableNVX vkCreateObjectTableNVX;
-	PFN_vkDestroyIndirectCommandsLayoutNVX vkDestroyIndirectCommandsLayoutNVX;
-	PFN_vkDestroyObjectTableNVX vkDestroyObjectTableNVX;
-	PFN_vkRegisterObjectsNVX vkRegisterObjectsNVX;
-	PFN_vkUnregisterObjectsNVX vkUnregisterObjectsNVX;
+    PFN_vkCmdProcessCommandsNVX vkCmdProcessCommandsNVX;
+    PFN_vkCmdReserveSpaceForCommandsNVX vkCmdReserveSpaceForCommandsNVX;
+    PFN_vkCreateIndirectCommandsLayoutNVX vkCreateIndirectCommandsLayoutNVX;
+    PFN_vkCreateObjectTableNVX vkCreateObjectTableNVX;
+    PFN_vkDestroyIndirectCommandsLayoutNVX vkDestroyIndirectCommandsLayoutNVX;
+    PFN_vkDestroyObjectTableNVX vkDestroyObjectTableNVX;
+    PFN_vkRegisterObjectsNVX vkRegisterObjectsNVX;
+    PFN_vkUnregisterObjectsNVX vkUnregisterObjectsNVX;
 #endif /* defined(VK_NVX_device_generated_commands) */
 #if defined(VK_NVX_image_view_handle)
-	PFN_vkGetImageViewHandleNVX vkGetImageViewHandleNVX;
+    PFN_vkGetImageViewHandleNVX vkGetImageViewHandleNVX;
 #endif /* defined(VK_NVX_image_view_handle) */
 #if defined(VK_NV_clip_space_w_scaling)
-	PFN_vkCmdSetViewportWScalingNV vkCmdSetViewportWScalingNV;
+    PFN_vkCmdSetViewportWScalingNV vkCmdSetViewportWScalingNV;
 #endif /* defined(VK_NV_clip_space_w_scaling) */
 #if defined(VK_NV_device_diagnostic_checkpoints)
-	PFN_vkCmdSetCheckpointNV vkCmdSetCheckpointNV;
-	PFN_vkGetQueueCheckpointDataNV vkGetQueueCheckpointDataNV;
+    PFN_vkCmdSetCheckpointNV vkCmdSetCheckpointNV;
+    PFN_vkGetQueueCheckpointDataNV vkGetQueueCheckpointDataNV;
 #endif /* defined(VK_NV_device_diagnostic_checkpoints) */
 #if defined(VK_NV_external_memory_win32)
-	PFN_vkGetMemoryWin32HandleNV vkGetMemoryWin32HandleNV;
+    PFN_vkGetMemoryWin32HandleNV vkGetMemoryWin32HandleNV;
 #endif /* defined(VK_NV_external_memory_win32) */
 #if defined(VK_NV_mesh_shader)
-	PFN_vkCmdDrawMeshTasksIndirectCountNV vkCmdDrawMeshTasksIndirectCountNV;
-	PFN_vkCmdDrawMeshTasksIndirectNV vkCmdDrawMeshTasksIndirectNV;
-	PFN_vkCmdDrawMeshTasksNV vkCmdDrawMeshTasksNV;
+    PFN_vkCmdDrawMeshTasksIndirectCountNV vkCmdDrawMeshTasksIndirectCountNV;
+    PFN_vkCmdDrawMeshTasksIndirectNV vkCmdDrawMeshTasksIndirectNV;
+    PFN_vkCmdDrawMeshTasksNV vkCmdDrawMeshTasksNV;
 #endif /* defined(VK_NV_mesh_shader) */
 #if defined(VK_NV_ray_tracing)
-	PFN_vkBindAccelerationStructureMemoryNV vkBindAccelerationStructureMemoryNV;
-	PFN_vkCmdBuildAccelerationStructureNV vkCmdBuildAccelerationStructureNV;
-	PFN_vkCmdCopyAccelerationStructureNV vkCmdCopyAccelerationStructureNV;
-	PFN_vkCmdTraceRaysNV vkCmdTraceRaysNV;
-	PFN_vkCmdWriteAccelerationStructuresPropertiesNV vkCmdWriteAccelerationStructuresPropertiesNV;
-	PFN_vkCompileDeferredNV vkCompileDeferredNV;
-	PFN_vkCreateAccelerationStructureNV vkCreateAccelerationStructureNV;
-	PFN_vkCreateRayTracingPipelinesNV vkCreateRayTracingPipelinesNV;
-	PFN_vkDestroyAccelerationStructureNV vkDestroyAccelerationStructureNV;
-	PFN_vkGetAccelerationStructureHandleNV vkGetAccelerationStructureHandleNV;
-	PFN_vkGetAccelerationStructureMemoryRequirementsNV vkGetAccelerationStructureMemoryRequirementsNV;
-	PFN_vkGetRayTracingShaderGroupHandlesNV vkGetRayTracingShaderGroupHandlesNV;
+    PFN_vkBindAccelerationStructureMemoryNV vkBindAccelerationStructureMemoryNV;
+    PFN_vkCmdBuildAccelerationStructureNV vkCmdBuildAccelerationStructureNV;
+    PFN_vkCmdCopyAccelerationStructureNV vkCmdCopyAccelerationStructureNV;
+    PFN_vkCmdTraceRaysNV vkCmdTraceRaysNV;
+    PFN_vkCmdWriteAccelerationStructuresPropertiesNV vkCmdWriteAccelerationStructuresPropertiesNV;
+    PFN_vkCompileDeferredNV vkCompileDeferredNV;
+    PFN_vkCreateAccelerationStructureNV vkCreateAccelerationStructureNV;
+    PFN_vkCreateRayTracingPipelinesNV vkCreateRayTracingPipelinesNV;
+    PFN_vkDestroyAccelerationStructureNV vkDestroyAccelerationStructureNV;
+    PFN_vkGetAccelerationStructureHandleNV vkGetAccelerationStructureHandleNV;
+    PFN_vkGetAccelerationStructureMemoryRequirementsNV vkGetAccelerationStructureMemoryRequirementsNV;
+    PFN_vkGetRayTracingShaderGroupHandlesNV vkGetRayTracingShaderGroupHandlesNV;
 #endif /* defined(VK_NV_ray_tracing) */
 #if defined(VK_NV_scissor_exclusive)
-	PFN_vkCmdSetExclusiveScissorNV vkCmdSetExclusiveScissorNV;
+    PFN_vkCmdSetExclusiveScissorNV vkCmdSetExclusiveScissorNV;
 #endif /* defined(VK_NV_scissor_exclusive) */
 #if defined(VK_NV_shading_rate_image)
-	PFN_vkCmdBindShadingRateImageNV vkCmdBindShadingRateImageNV;
-	PFN_vkCmdSetCoarseSampleOrderNV vkCmdSetCoarseSampleOrderNV;
-	PFN_vkCmdSetViewportShadingRatePaletteNV vkCmdSetViewportShadingRatePaletteNV;
+    PFN_vkCmdBindShadingRateImageNV vkCmdBindShadingRateImageNV;
+    PFN_vkCmdSetCoarseSampleOrderNV vkCmdSetCoarseSampleOrderNV;
+    PFN_vkCmdSetViewportShadingRatePaletteNV vkCmdSetViewportShadingRatePaletteNV;
 #endif /* defined(VK_NV_shading_rate_image) */
 #if (defined(VK_EXT_full_screen_exclusive) && defined(VK_KHR_device_group)) || (defined(VK_EXT_full_screen_exclusive) && defined(VK_VERSION_1_1))
-	PFN_vkGetDeviceGroupSurfacePresentModes2EXT vkGetDeviceGroupSurfacePresentModes2EXT;
+    PFN_vkGetDeviceGroupSurfacePresentModes2EXT vkGetDeviceGroupSurfacePresentModes2EXT;
 #endif /* (defined(VK_EXT_full_screen_exclusive) && defined(VK_KHR_device_group)) || (defined(VK_EXT_full_screen_exclusive) && defined(VK_VERSION_1_1)) */
 #if (defined(VK_KHR_descriptor_update_template) && defined(VK_KHR_push_descriptor)) || (defined(VK_KHR_push_descriptor) && defined(VK_VERSION_1_1))
-	PFN_vkCmdPushDescriptorSetWithTemplateKHR vkCmdPushDescriptorSetWithTemplateKHR;
+    PFN_vkCmdPushDescriptorSetWithTemplateKHR vkCmdPushDescriptorSetWithTemplateKHR;
 #endif /* (defined(VK_KHR_descriptor_update_template) && defined(VK_KHR_push_descriptor)) || (defined(VK_KHR_push_descriptor) && defined(VK_VERSION_1_1)) */
 #if (defined(VK_KHR_device_group) && defined(VK_KHR_surface)) || (defined(VK_KHR_swapchain) && defined(VK_VERSION_1_1))
-	PFN_vkGetDeviceGroupPresentCapabilitiesKHR vkGetDeviceGroupPresentCapabilitiesKHR;
-	PFN_vkGetDeviceGroupSurfacePresentModesKHR vkGetDeviceGroupSurfacePresentModesKHR;
+    PFN_vkGetDeviceGroupPresentCapabilitiesKHR vkGetDeviceGroupPresentCapabilitiesKHR;
+    PFN_vkGetDeviceGroupSurfacePresentModesKHR vkGetDeviceGroupSurfacePresentModesKHR;
 #endif /* (defined(VK_KHR_device_group) && defined(VK_KHR_surface)) || (defined(VK_KHR_swapchain) && defined(VK_VERSION_1_1)) */
 #if (defined(VK_KHR_device_group) && defined(VK_KHR_swapchain)) || (defined(VK_KHR_swapchain) && defined(VK_VERSION_1_1))
-	PFN_vkAcquireNextImage2KHR vkAcquireNextImage2KHR;
+    PFN_vkAcquireNextImage2KHR vkAcquireNextImage2KHR;
 #endif /* (defined(VK_KHR_device_group) && defined(VK_KHR_swapchain)) || (defined(VK_KHR_swapchain) && defined(VK_VERSION_1_1)) */
-	/* VOLK_GENERATE_DEVICE_TABLE */
+    /* VOLK_GENERATE_DEVICE_TABLE */
 };
 
 /* VOLK_GENERATE_PROTOTYPES_H */
