@@ -46,7 +46,8 @@ class VaryingPackingTest : public ::testing::TestWithParam<GLuint>
 
         VaryingPacking varyingPacking;
         return varyingPacking.collectAndPackUserVaryings(
-            infoLog, maxVaryings, packMode, mergedVaryings, transformFeedbackVaryings, false);
+            infoLog, maxVaryings, packMode, ShaderType::Vertex, ShaderType::Fragment,
+            mergedVaryings, transformFeedbackVaryings, false);
     }
 
     // Uses the "relaxed" ANGLE packing mode.

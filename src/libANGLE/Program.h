@@ -368,7 +368,6 @@ class ProgramState final : angle::NonCopyable
     friend class MemoryProgramCache;
     friend class Program;
 
-    void updateTransformFeedbackStrides();
     void updateActiveSamplers();
     void updateProgramInterfaceInputs();
     void updateProgramInterfaceOutputs();
@@ -489,10 +488,6 @@ class Program final : public LabeledObject, public angle::Subject, public HasAtt
     // EXT_blend_func_extended
     void bindFragmentOutputLocation(GLuint index, const char *name);
     void bindFragmentOutputIndex(GLuint index, const char *name);
-
-    bool linkMergedVaryings(const Context *context,
-                            const ProgramMergedVaryings &mergedVaryings,
-                            VaryingPacking *varyingPacking);
 
     // KHR_parallel_shader_compile
     // Try to link the program asynchrously. As a result, background threads may be launched to
@@ -867,14 +862,6 @@ class Program final : public LabeledObject, public angle::Subject, public HasAtt
     bool linkAtomicCounterBuffers();
 
     void updateLinkedShaderStages();
-
-    bool linkValidateTransformFeedback(const Version &version,
-                                       InfoLog &infoLog,
-                                       const ProgramMergedVaryings &linkedVaryings,
-                                       ShaderType stage,
-                                       const Caps &caps) const;
-
-    void gatherTransformFeedbackVaryings(const ProgramMergedVaryings &varyings, ShaderType stage);
 
     int getOutputLocationForLink(const sh::ShaderVariable &outputVariable) const;
     bool isOutputSecondaryForLink(const sh::ShaderVariable &outputVariable) const;

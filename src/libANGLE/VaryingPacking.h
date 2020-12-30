@@ -24,6 +24,7 @@ namespace gl
 {
 class HasAttachedShaders;
 class InfoLog;
+struct Caps;
 struct ProgramVaryingRef;
 
 using ProgramMergedVaryings = std::vector<ProgramVaryingRef>;
@@ -206,12 +207,14 @@ class VaryingPacking final : angle::NonCopyable
     VaryingPacking();
     ~VaryingPacking();
 
-    bool collectAndPackUserVaryings(InfoLog &infoLog,
-                                    GLint maxVaryingVectors,
-                                    PackMode packMode,
-                                    const ProgramMergedVaryings &mergedVaryings,
-                                    const std::vector<std::string> &tfVaryings,
-                                    const bool isSeparableProgram);
+    ANGLE_NO_DISCARD bool collectAndPackUserVaryings(InfoLog &infoLog,
+                                                     GLint maxVaryingVectors,
+                                                     PackMode packMode,
+                                                     ShaderType frontShaderStage,
+                                                     ShaderType backShaderStage,
+                                                     const ProgramMergedVaryings &mergedVaryings,
+                                                     const std::vector<std::string> &tfVaryings,
+                                                     const bool isSeparableProgram);
 
     struct Register
     {
@@ -237,7 +240,7 @@ class VaryingPacking final : angle::NonCopyable
         return mInactiveVaryingMappedNames;
     }
 
-    const ShaderMap<std::vector<std::string>> &getActiveOutputBuiltIns() const
+    const ShaderMap<std::vector<std::string>> &getActiveOutputBuiltInNames() const
     {
         return mActiveOutputBuiltIns;
     }
@@ -286,6 +289,31 @@ class VaryingPacking final : angle::NonCopyable
     std::vector<PackedVarying> mPackedVaryings;
     ShaderMap<std::vector<std::string>> mInactiveVaryingMappedNames;
     ShaderMap<std::vector<std::string>> mActiveOutputBuiltIns;
+};
+
+class ProgramVaryingPacking final : angle::NonCopyable
+{
+  public:
+    ProgramVaryingPacking();
+    ~ProgramVaryingPacking();
+
+    const VaryingPacking &getInputPacking(ShaderType backShaderStage) const;
+    const VaryingPacking &getOutputPacking(ShaderType frontShaderStage) const;
+
+    ANGLE_NO_DISCARD bool collectAndPackUserVaryings(InfoLog &infoLog,
+                                                     const Caps &caps,
+                                                     PackMode packMode,
+                                                     const ShaderBitSet &attachedShadersMask,
+                                                     const ProgramMergedVaryings &mergedVaryings,
+                                                     const std::vector<std::string> &tfVaryings,
+                                                     bool isSeparableProgram);
+
+  private:
+    // Indexed by the front shader.
+    ShaderMap<VaryingPacking> mVaryingPackings;
+
+    // Looks up the front stage from the back stage.
+    ShaderMap<ShaderType> mBackToFrontStageMap;
 };
 
 // Takes an abstract handle to a program or pipeline.

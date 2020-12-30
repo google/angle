@@ -420,7 +420,7 @@ angle::Result ProgramPipeline::link(const Context *context)
     }
 
     ProgramMergedVaryings mergedVaryings;
-    VaryingPacking varyingPacking;
+    ProgramVaryingPacking varyingPacking;
 
     if (!getExecutable().isCompute())
     {
@@ -438,14 +438,22 @@ angle::Result ProgramPipeline::link(const Context *context)
         }
 
         mergedVaryings = GetMergedVaryingsFromShaders(*this);
-        for (ShaderType shaderType : getExecutable().getLinkedShaderStages())
+        // If separable program objects are in use, the set of attributes captured is taken
+        // from the program object active on the last vertex processing stage.
+        Program *tfProgram = mState.mPrograms[ShaderType::Geometry];
+        if (!tfProgram)
         {
-            Program *program = mState.mPrograms[shaderType];
-            ASSERT(program);
-            if (!program->linkMergedVaryings(context, mergedVaryings, &varyingPacking))
-            {
-                return angle::Result::Stop;
-            }
+            tfProgram = mState.mPrograms[ShaderType::Vertex];
+        }
+
+        const std::vector<std::string> &transformFeedbackVaryingNames =
+            tfProgram->getState().getTransformFeedbackVaryingNames();
+
+        if (!mState.mExecutable->linkMergedVaryings(context, *this, mergedVaryings,
+                                                    transformFeedbackVaryingNames, false,
+                                                    &varyingPacking))
+        {
+            return angle::Result::Stop;
         }
     }
 

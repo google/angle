@@ -221,7 +221,7 @@ struct ProgramLinkedResources
               std::vector<BufferVariable> *bufferVariablesOut,
               std::vector<AtomicCounterBuffer> *atomicCounterBuffersOut);
 
-    VaryingPacking varyingPacking;
+    ProgramVaryingPacking varyingPacking;
     UniformBlockLinker uniformBlockLinker;
     ShaderStorageBlockLinker shaderStorageBlockLinker;
     AtomicCounterBufferLinker atomicCounterBufferLinker;

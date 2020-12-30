@@ -173,7 +173,7 @@ void GlslangGenTransformFeedbackEmulationOutputs(
 
 void GlslangAssignLocations(const GlslangSourceOptions &options,
                             const gl::ProgramExecutable &programExecutable,
-                            const gl::VaryingPacking &varyingPacking,
+                            const gl::ProgramVaryingPacking &varyingPacking,
                             const gl::ShaderType shaderType,
                             const gl::ShaderType frontShaderType,
                             GlslangProgramInterfaceInfo *programInterfaceInfo,

@@ -232,23 +232,6 @@ void CopyStringToBuffer(GLchar *buffer,
     }
 }
 
-bool IncludeSameArrayElement(const std::set<std::string> &nameSet, const std::string &name)
-{
-    std::vector<unsigned int> subscripts;
-    std::string baseName = ParseResourceName(name, &subscripts);
-    for (const std::string &nameInSet : nameSet)
-    {
-        std::vector<unsigned int> arrayIndices;
-        std::string arrayName = ParseResourceName(nameInSet, &arrayIndices);
-        if (baseName == arrayName &&
-            (subscripts.empty() || arrayIndices.empty() || subscripts == arrayIndices))
-        {
-            return true;
-        }
-    }
-    return false;
-}
-
 std::string GetInterfaceBlockLimitName(ShaderType shaderType, sh::BlockType blockType)
 {
     std::ostringstream stream;
@@ -404,35 +387,7 @@ void InitShaderStorageBlockLinker(const ProgramState &state, ShaderStorageBlockL
         }
     }
 }
-
-// Find the matching varying or field by name.
-const sh::ShaderVariable *FindOutputVaryingOrField(const ProgramMergedVaryings &varyings,
-                                                   ShaderType stage,
-                                                   const std::string &name)
-{
-    const sh::ShaderVariable *var = nullptr;
-    for (const ProgramVaryingRef &ref : varyings)
-    {
-        if (ref.frontShaderStage != stage)
-        {
-            continue;
-        }
-
-        const sh::ShaderVariable *varying = ref.get(stage);
-        if (varying->name == name)
-        {
-            var = varying;
-            break;
-        }
-        GLuint fieldIndex = 0;
-        var               = varying->findField(name, &fieldIndex);
-        if (var != nullptr)
-        {
-            break;
-        }
-    }
-    return var;
-}
+}  // anonymous namespace
 
 const char *GetLinkMismatchErrorString(LinkMismatchError linkError)
 {
@@ -828,7 +783,6 @@ void LoadInterfaceBlock(BinaryInputStream *stream, InterfaceBlock *block)
 
     LoadShaderVariableBuffer(stream, block);
 }
-}  // anonymous namespace
 
 // Saves the linking context for later use in resolveLink().
 struct Program::LinkingState
@@ -1479,46 +1433,6 @@ void Program::bindFragmentOutputIndex(GLuint index, const char *name)
     mFragmentOutputIndexes.bindLocation(index, name);
 }
 
-bool Program::linkMergedVaryings(const Context *context,
-                                 const ProgramMergedVaryings &mergedVaryings,
-                                 VaryingPacking *varyingPacking)
-{
-    ShaderType tfStage =
-        mState.mAttachedShaders[ShaderType::Geometry] ? ShaderType::Geometry : ShaderType::Vertex;
-    InfoLog &infoLog = getExecutable().getInfoLog();
-
-    if (!linkValidateTransformFeedback(context->getClientVersion(), infoLog, mergedVaryings,
-                                       tfStage, context->getCaps()))
-    {
-        return false;
-    }
-
-    // Map the varyings to the register file
-    // In WebGL, we use a slightly different handling for packing variables.
-    gl::PackMode packMode = PackMode::ANGLE_RELAXED;
-    if (context->getLimitations().noFlexibleVaryingPacking)
-    {
-        // D3D9 pack mode is strictly more strict than WebGL, so takes priority.
-        packMode = PackMode::ANGLE_NON_CONFORMANT_D3D9;
-    }
-    else if (context->getExtensions().webglCompatibility)
-    {
-        packMode = PackMode::WEBGL_STRICT;
-    }
-
-    if (!varyingPacking->collectAndPackUserVaryings(
-            infoLog, context->getCaps().maxVaryingVectors, packMode, mergedVaryings,
-            mState.getTransformFeedbackVaryingNames(), isSeparable()))
-    {
-        return false;
-    }
-
-    gatherTransformFeedbackVaryings(mergedVaryings, tfStage);
-    mState.updateTransformFeedbackStrides();
-
-    return true;
-}
-
 angle::Result Program::link(const Context *context)
 {
     angle::Result result = linkImpl(context);
@@ -1694,7 +1608,9 @@ angle::Result Program::linkImpl(const Context *context)
         InitShaderStorageBlockLinker(mState, &resources.shaderStorageBlockLinker);
 
         mergedVaryings = GetMergedVaryingsFromShaders(*this);
-        if (!linkMergedVaryings(context, mergedVaryings, &resources.varyingPacking))
+        if (!mState.mExecutable->linkMergedVaryings(context, *this, mergedVaryings,
+                                                    mState.mTransformFeedbackVaryingNames,
+                                                    isSeparable(), &resources.varyingPacking))
         {
             return angle::Result::Continue;
         }
@@ -1797,32 +1713,6 @@ void Program::updateLinkedShaderStages()
     else
     {
         mState.mExecutable->setIsCompute(false);
-    }
-}
-
-void ProgramState::updateTransformFeedbackStrides()
-{
-    if (mExecutable->mTransformFeedbackBufferMode == GL_INTERLEAVED_ATTRIBS)
-    {
-        mExecutable->mTransformFeedbackStrides.resize(1);
-        size_t totalSize = 0;
-        for (const TransformFeedbackVarying &varying :
-             mExecutable->mLinkedTransformFeedbackVaryings)
-        {
-            totalSize += varying.size() * VariableExternalSize(varying.type);
-        }
-        mExecutable->mTransformFeedbackStrides[0] = static_cast<GLsizei>(totalSize);
-    }
-    else
-    {
-        mExecutable->mTransformFeedbackStrides.resize(
-            mExecutable->mLinkedTransformFeedbackVaryings.size());
-        for (size_t i = 0; i < mExecutable->mLinkedTransformFeedbackVaryings.size(); i++)
-        {
-            TransformFeedbackVarying &varying = mExecutable->mLinkedTransformFeedbackVaryings[i];
-            mExecutable->mTransformFeedbackStrides[i] =
-                static_cast<GLsizei>(varying.size() * VariableExternalSize(varying.type));
-        }
     }
 }
 
@@ -4038,169 +3928,6 @@ bool Program::linkInterfaceBlocks(const Caps &caps,
     return true;
 }
 
-bool Program::linkValidateTransformFeedback(const Version &version,
-                                            InfoLog &infoLog,
-                                            const ProgramMergedVaryings &varyings,
-                                            ShaderType stage,
-                                            const Caps &caps) const
-{
-
-    // Validate the tf names regardless of the actual program varyings.
-    std::set<std::string> uniqueNames;
-    for (const std::string &tfVaryingName : mState.mTransformFeedbackVaryingNames)
-    {
-        if (version < Version(3, 1) && tfVaryingName.find('[') != std::string::npos)
-        {
-            infoLog << "Capture of array elements is undefined and not supported.";
-            return false;
-        }
-        if (version >= Version(3, 1))
-        {
-            if (IncludeSameArrayElement(uniqueNames, tfVaryingName))
-            {
-                infoLog << "Two transform feedback varyings include the same array element ("
-                        << tfVaryingName << ").";
-                return false;
-            }
-        }
-        else
-        {
-            if (uniqueNames.count(tfVaryingName) > 0)
-            {
-                infoLog << "Two transform feedback varyings specify the same output variable ("
-                        << tfVaryingName << ").";
-                return false;
-            }
-        }
-        uniqueNames.insert(tfVaryingName);
-    }
-
-    // Validate against program varyings.
-    size_t totalComponents = 0;
-    for (const std::string &tfVaryingName : mState.mTransformFeedbackVaryingNames)
-    {
-        std::vector<unsigned int> subscripts;
-        std::string baseName = ParseResourceName(tfVaryingName, &subscripts);
-
-        const sh::ShaderVariable *var = FindOutputVaryingOrField(varyings, stage, baseName);
-        if (var == nullptr)
-        {
-            infoLog << "Transform feedback varying " << tfVaryingName
-                    << " does not exist in the vertex shader.";
-            return false;
-        }
-
-        // Validate the matching variable.
-        if (var->isStruct())
-        {
-            infoLog << "Struct cannot be captured directly (" << baseName << ").";
-            return false;
-        }
-
-        size_t elementCount   = 0;
-        size_t componentCount = 0;
-
-        if (var->isArray())
-        {
-            if (version < Version(3, 1))
-            {
-                infoLog << "Capture of arrays is undefined and not supported.";
-                return false;
-            }
-
-            // GLSL ES 3.10 section 4.3.6: A vertex output can't be an array of arrays.
-            ASSERT(!var->isArrayOfArrays());
-
-            if (!subscripts.empty() && subscripts[0] >= var->getOutermostArraySize())
-            {
-                infoLog << "Cannot capture outbound array element '" << tfVaryingName << "'.";
-                return false;
-            }
-            elementCount = (subscripts.empty() ? var->getOutermostArraySize() : 1);
-        }
-        else
-        {
-            if (!subscripts.empty())
-            {
-                infoLog << "Varying '" << baseName
-                        << "' is not an array to be captured by element.";
-                return false;
-            }
-            elementCount = 1;
-        }
-
-        // TODO(jmadill): Investigate implementation limits on D3D11
-        componentCount = VariableComponentCount(var->type) * elementCount;
-        if (mState.mExecutable->getTransformFeedbackBufferMode() == GL_SEPARATE_ATTRIBS &&
-            componentCount > static_cast<GLuint>(caps.maxTransformFeedbackSeparateComponents))
-        {
-            infoLog << "Transform feedback varying " << tfVaryingName << " components ("
-                    << componentCount << ") exceed the maximum separate components ("
-                    << caps.maxTransformFeedbackSeparateComponents << ").";
-            return false;
-        }
-
-        totalComponents += componentCount;
-        if (mState.mExecutable->getTransformFeedbackBufferMode() == GL_INTERLEAVED_ATTRIBS &&
-            totalComponents > static_cast<GLuint>(caps.maxTransformFeedbackInterleavedComponents))
-        {
-            infoLog << "Transform feedback varying total components (" << totalComponents
-                    << ") exceed the maximum interleaved components ("
-                    << caps.maxTransformFeedbackInterleavedComponents << ").";
-            return false;
-        }
-    }
-    return true;
-}
-
-void Program::gatherTransformFeedbackVaryings(const ProgramMergedVaryings &varyings,
-                                              ShaderType stage)
-{
-    // Gather the linked varyings that are used for transform feedback, they should all exist.
-    mState.mExecutable->mLinkedTransformFeedbackVaryings.clear();
-    for (const std::string &tfVaryingName : mState.mTransformFeedbackVaryingNames)
-    {
-        std::vector<unsigned int> subscripts;
-        std::string baseName = ParseResourceName(tfVaryingName, &subscripts);
-        size_t subscript     = GL_INVALID_INDEX;
-        if (!subscripts.empty())
-        {
-            subscript = subscripts.back();
-        }
-        for (const ProgramVaryingRef &ref : varyings)
-        {
-            if (ref.frontShaderStage != stage)
-            {
-                continue;
-            }
-
-            const sh::ShaderVariable *varying = ref.get(stage);
-            if (baseName == varying->name)
-            {
-                mState.mExecutable->mLinkedTransformFeedbackVaryings.emplace_back(
-                    *varying, static_cast<GLuint>(subscript));
-                break;
-            }
-            else if (varying->isStruct())
-            {
-                GLuint fieldIndex = 0;
-                const auto *field = varying->findField(tfVaryingName, &fieldIndex);
-                if (field != nullptr)
-                {
-                    mState.mExecutable->mLinkedTransformFeedbackVaryings.emplace_back(*field,
-                                                                                      *varying);
-                    break;
-                }
-            }
-        }
-    }
-}
-
-bool CompareOutputVariable(const sh::ShaderVariable &a, const sh::ShaderVariable &b)
-{
-    return a.getArraySizeProduct() > b.getArraySizeProduct();
-}
-
 int Program::getOutputLocationForLink(const sh::ShaderVariable &outputVariable) const
 {
     if (outputVariable.location != -1)
@@ -5249,7 +4976,7 @@ angle::Result Program::deserialize(const Context *context,
 
     if (!mState.mAttachedShaders[ShaderType::Compute])
     {
-        mState.updateTransformFeedbackStrides();
+        mState.mExecutable->updateTransformFeedbackStrides();
     }
 
     postResolveLink(context);

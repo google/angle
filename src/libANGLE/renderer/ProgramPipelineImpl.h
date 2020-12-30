@@ -25,7 +25,7 @@ class ProgramPipelineImpl : public angle::NonCopyable
 
     virtual angle::Result link(const gl::Context *context,
                                const gl::ProgramMergedVaryings &mergedVaryings,
-                               const gl::VaryingPacking &varyingPacking);
+                               const gl::ProgramVaryingPacking &varyingPacking);
 
     const gl::ProgramPipelineState &getState() const { return mState; }
 

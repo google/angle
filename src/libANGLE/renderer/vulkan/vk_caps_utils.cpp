@@ -915,12 +915,13 @@ void RendererVk::ensureCapsInitialized() const
         vk::HasShaderImageAtomicsSupport(this, mNativeExtensions) ||
         getFeatures().exposeNonConformantExtensionsAndVersions.enabled;
 
-    // Geometry shader is optional.
-    if (mPhysicalDeviceFeatures.geometryShader)
+    // Geometry shaders are required for ES 3.2.
+    // We can't support GS when we are emulating line raster due to the tricky position varying.
+    if (mPhysicalDeviceFeatures.geometryShader && !mFeatures.basicGLLineRasterization.enabled)
     {
         // TODO: geometry shader support is incomplete.  http://anglebug.com/3571
         mNativeExtensions.geometryShader =
-            getFeatures().exposeNonConformantExtensionsAndVersions.enabled;
+            mFeatures.exposeNonConformantExtensionsAndVersions.enabled;
         mNativeCaps.maxFramebufferLayers = LimitToInt(limitsVk.maxFramebufferLayers);
         mNativeCaps.layerProvokingVertex = GL_LAST_VERTEX_CONVENTION_EXT;
 

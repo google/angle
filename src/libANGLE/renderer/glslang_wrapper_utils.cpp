@@ -476,7 +476,7 @@ bool IsFirstRegisterOfVarying(const gl::PackedVaryingRegister &varyingReg, bool 
 // Calculates XFB layout qualifier arguments for each tranform feedback varying.  Stores calculated
 // values for the SPIR-V transformation.
 void GenerateTransformFeedbackExtensionOutputs(const gl::ProgramState &programState,
-                                               const gl::ProgramLinkedResources &resources,
+                                               const gl::VaryingPacking &varyingPacking,
                                                std::string *xfbShaderSource,
                                                uint32_t *locationsUsedForXfbExtensionOut)
 {
@@ -500,8 +500,8 @@ void GenerateTransformFeedbackExtensionOutputs(const gl::ProgramState &programSt
             // clip space and prerotation), so it cannot be captured directly.
             //
             // The rest of the builtins are captured by decorating gl_PerVertex directly.
-            uint32_t xfbVaryingLocation = resources.varyingPacking.getMaxSemanticIndex() +
-                                          ++(*locationsUsedForXfbExtensionOut);
+            uint32_t xfbVaryingLocation =
+                varyingPacking.getMaxSemanticIndex() + ++(*locationsUsedForXfbExtensionOut);
 
             std::string xfbVaryingName = kXfbBuiltInPrefix + tfVaryingName;
 
@@ -664,7 +664,7 @@ void AssignVaryingLocations(const GlslangSourceOptions &options,
     // Add an entry for active builtins varyings.  This will allow inactive builtins, such as
     // gl_PointSize, gl_ClipDistance etc to be removed.
     const gl::ShaderMap<std::vector<std::string>> &activeOutputBuiltIns =
-        varyingPacking.getActiveOutputBuiltIns();
+        varyingPacking.getActiveOutputBuiltInNames();
     for (const std::string &builtInName : activeOutputBuiltIns[shaderType])
     {
         ASSERT(gl::IsBuiltInName(builtInName));
@@ -690,7 +690,7 @@ void AssignVaryingLocations(const GlslangSourceOptions &options,
     }
 
     // Add an entry for gl_PerVertex, for use with transform feedback capture of built-ins.
-    ShaderInterfaceVariableInfo &info = variableInfoMapOut->add(shaderType, "gl_PerVertex");
+    ShaderInterfaceVariableInfo &info = variableInfoMapOut->addOrGet(shaderType, "gl_PerVertex");
     info.activeStages.set(shaderType);
 }
 
@@ -3813,7 +3813,7 @@ void GlslangGenTransformFeedbackEmulationOutputs(const GlslangSourceOptions &opt
 
 void GlslangAssignLocations(const GlslangSourceOptions &options,
                             const gl::ProgramExecutable &programExecutable,
-                            const gl::VaryingPacking &varyingPacking,
+                            const gl::ProgramVaryingPacking &varyingPacking,
                             const gl::ShaderType shaderType,
                             const gl::ShaderType frontShaderType,
                             GlslangProgramInterfaceInfo *programInterfaceInfo,
@@ -3835,16 +3835,27 @@ void GlslangAssignLocations(const GlslangSourceOptions &options,
 
     if (!programExecutable.hasLinkedShaderStage(gl::ShaderType::Compute))
     {
+        const gl::VaryingPacking &inputPacking  = varyingPacking.getInputPacking(shaderType);
+        const gl::VaryingPacking &outputPacking = varyingPacking.getOutputPacking(shaderType);
+
         // Assign varying locations.
-        AssignVaryingLocations(options, varyingPacking, shaderType, frontShaderType,
-                               programInterfaceInfo, variableInfoMapOut);
+        if (shaderType != gl::ShaderType::Vertex)
+        {
+            AssignVaryingLocations(options, inputPacking, shaderType, frontShaderType,
+                                   programInterfaceInfo, variableInfoMapOut);
+        }
+        if (shaderType != gl::ShaderType::Fragment)
+        {
+            AssignVaryingLocations(options, outputPacking, shaderType, frontShaderType,
+                                   programInterfaceInfo, variableInfoMapOut);
+        }
 
         if (!programExecutable.getLinkedTransformFeedbackVaryings().empty() &&
             options.supportsTransformFeedbackExtension &&
             (shaderType == programExecutable.getLinkedTransformFeedbackStage()))
         {
             AssignTransformFeedbackExtensionQualifiers(
-                programExecutable, varyingPacking,
+                programExecutable, outputPacking,
                 programInterfaceInfo->locationsUsedForXfbExtension, shaderType, variableInfoMapOut);
         }
     }
@@ -3881,7 +3892,7 @@ void GlslangGetShaderSource(const GlslangSourceOptions &options,
             if (options.supportsTransformFeedbackExtension)
             {
                 GenerateTransformFeedbackExtensionOutputs(
-                    programState, resources, xfbSource,
+                    programState, resources.varyingPacking.getOutputPacking(xfbStage), xfbSource,
                     &programInterfaceInfo->locationsUsedForXfbExtension);
             }
             else if (options.emulateTransformFeedback)

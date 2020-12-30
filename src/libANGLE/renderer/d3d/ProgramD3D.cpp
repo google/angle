@@ -2112,11 +2112,14 @@ std::unique_ptr<LinkEvent> ProgramD3D::link(const gl::Context *context,
             }
         }
 
-        ProgramD3DMetadata metadata(mRenderer, shadersD3D, context->getClientType());
-        BuiltinVaryingsD3D builtins(metadata, resources.varyingPacking);
+        const gl::VaryingPacking &varyingPacking =
+            resources.varyingPacking.getOutputPacking(gl::ShaderType::Vertex);
 
-        mDynamicHLSL->generateShaderLinkHLSL(context->getCaps(), mState, metadata,
-                                             resources.varyingPacking, builtins, &mShaderHLSL);
+        ProgramD3DMetadata metadata(mRenderer, shadersD3D, context->getClientType());
+        BuiltinVaryingsD3D builtins(metadata, varyingPacking);
+
+        mDynamicHLSL->generateShaderLinkHLSL(context->getCaps(), mState, metadata, varyingPacking,
+                                             builtins, &mShaderHLSL);
 
         const ShaderD3D *vertexShader = shadersD3D[gl::ShaderType::Vertex];
         mUsesPointSize                = vertexShader && vertexShader->usesPointSize();
@@ -2132,7 +2135,7 @@ std::unique_ptr<LinkEvent> ProgramD3D::link(const gl::Context *context,
         if (mRenderer->getMajorShaderModel() >= 4)
         {
             mGeometryShaderPreamble = mDynamicHLSL->generateGeometryShaderPreamble(
-                resources.varyingPacking, builtins, mHasANGLEMultiviewEnabled,
+                varyingPacking, builtins, mHasANGLEMultiviewEnabled,
                 metadata.canSelectViewInVertexShader());
         }
 
@@ -2140,7 +2143,7 @@ std::unique_ptr<LinkEvent> ProgramD3D::link(const gl::Context *context,
 
         defineUniformsAndAssignRegisters();
 
-        gatherTransformFeedbackVaryings(resources.varyingPacking, builtins[gl::ShaderType::Vertex]);
+        gatherTransformFeedbackVaryings(varyingPacking, builtins[gl::ShaderType::Vertex]);
 
         linkResources(resources);
 

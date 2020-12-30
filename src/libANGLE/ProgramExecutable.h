@@ -334,6 +334,26 @@ class ProgramExecutable final : public angle::Subject
     void setSamplerUniformTextureTypeAndFormat(size_t textureUnitIndex,
                                                std::vector<SamplerBinding> &samplerBindings);
 
+    bool linkMergedVaryings(const Context *context,
+                            const HasAttachedShaders &programOrPipeline,
+                            const ProgramMergedVaryings &mergedVaryings,
+                            const std::vector<std::string> &transformFeedbackVaryingNames,
+                            bool isSeparable,
+                            ProgramVaryingPacking *varyingPacking);
+
+    bool linkValidateTransformFeedback(
+        const Context *context,
+        const ProgramMergedVaryings &varyings,
+        ShaderType stage,
+        const std::vector<std::string> &transformFeedbackVaryingNames);
+
+    void gatherTransformFeedbackVaryings(
+        const ProgramMergedVaryings &varyings,
+        ShaderType stage,
+        const std::vector<std::string> &transformFeedbackVaryingNames);
+
+    void updateTransformFeedbackStrides();
+
     InfoLog mInfoLog;
 
     ShaderBitSet mLinkedGraphicsShaderStages;

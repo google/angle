@@ -109,6 +109,32 @@ bool InterfaceVariablesMatch(const sh::ShaderVariable &front, const sh::ShaderVa
     const std::string &frontName = front.isShaderIOBlock ? front.structName : front.name;
     return backName == frontName;
 }
+
+GLint GetMaxShaderInputVectors(const Caps &caps, ShaderType shaderStage)
+{
+    switch (shaderStage)
+    {
+        case ShaderType::Geometry:
+            return caps.maxGeometryInputComponents / 4;
+        case ShaderType::Fragment:
+            return caps.maxFragmentInputComponents / 4;
+        default:
+            return std::numeric_limits<GLint>::max();
+    }
+}
+
+GLint GetMaxShaderOutputVectors(const Caps &caps, ShaderType shaderStage)
+{
+    switch (shaderStage)
+    {
+        case ShaderType::Vertex:
+            return caps.maxVertexOutputComponents / 4;
+        case ShaderType::Geometry:
+            return caps.maxGeometryOutputComponents / 4;
+        default:
+            return std::numeric_limits<GLint>::max();
+    }
+}
 }  // anonymous namespace
 
 // Implementation of VaryingInShaderRef
@@ -719,6 +745,8 @@ void VaryingPacking::collectTFVarying(const std::string &tfVarying,
 bool VaryingPacking::collectAndPackUserVaryings(gl::InfoLog &infoLog,
                                                 GLint maxVaryingVectors,
                                                 PackMode packMode,
+                                                ShaderType frontShaderStage,
+                                                ShaderType backShaderStage,
                                                 const ProgramMergedVaryings &mergedVaryings,
                                                 const std::vector<std::string> &tfVaryings,
                                                 const bool isSeparableProgram)
@@ -731,6 +759,12 @@ bool VaryingPacking::collectAndPackUserVaryings(gl::InfoLog &infoLog,
     {
         const sh::ShaderVariable *input  = ref.frontShader;
         const sh::ShaderVariable *output = ref.backShader;
+
+        if ((input && ref.frontShaderStage != frontShaderStage) ||
+            (output && ref.backShaderStage != backShaderStage))
+        {
+            continue;
+        }
 
         const bool isActiveBuiltInInput  = input && input->isBuiltIn() && input->active;
         const bool isActiveBuiltInOutput = output && output->isBuiltIn() && output->active;
@@ -830,6 +864,111 @@ bool VaryingPacking::packUserVaryings(gl::InfoLog &infoLog,
 
     // Sort the packed register list
     std::sort(mRegisterList.begin(), mRegisterList.end());
+
+    return true;
+}
+
+// ProgramVaryingPacking implementation.
+ProgramVaryingPacking::ProgramVaryingPacking() = default;
+
+ProgramVaryingPacking::~ProgramVaryingPacking() = default;
+
+const VaryingPacking &ProgramVaryingPacking::getInputPacking(ShaderType backShaderStage) const
+{
+    ShaderType frontShaderStage = mBackToFrontStageMap[backShaderStage];
+
+    // If there's a missing shader stage, return the compute shader packing which is always empty.
+    if (frontShaderStage == ShaderType::InvalidEnum)
+    {
+        ASSERT(mVaryingPackings[ShaderType::Compute].getMaxSemanticIndex() == 0);
+        return mVaryingPackings[ShaderType::Compute];
+    }
+
+    return mVaryingPackings[frontShaderStage];
+}
+
+const VaryingPacking &ProgramVaryingPacking::getOutputPacking(ShaderType frontShaderStage) const
+{
+    return mVaryingPackings[frontShaderStage];
+}
+
+bool ProgramVaryingPacking::collectAndPackUserVaryings(InfoLog &infoLog,
+                                                       const Caps &caps,
+                                                       PackMode packMode,
+                                                       const ShaderBitSet &attachedShadersMask,
+                                                       const ProgramMergedVaryings &mergedVaryings,
+                                                       const std::vector<std::string> &tfVaryings,
+                                                       bool isSeparableProgram)
+{
+    mBackToFrontStageMap.fill(ShaderType::InvalidEnum);
+
+    ShaderBitSet attachedShaders = attachedShadersMask;
+
+    ShaderType frontShaderStage       = attachedShaders.first();
+    attachedShaders[frontShaderStage] = false;
+
+    // Special case for start-after-vertex.
+    if (frontShaderStage != ShaderType::Vertex)
+    {
+        ASSERT(isSeparableProgram);
+
+        ShaderType emulatedFrontShaderStage = ShaderType::Vertex;
+        ShaderType backShaderStage          = frontShaderStage;
+
+        if (!mVaryingPackings[emulatedFrontShaderStage].collectAndPackUserVaryings(
+                infoLog, GetMaxShaderInputVectors(caps, backShaderStage), packMode,
+                ShaderType::InvalidEnum, backShaderStage, mergedVaryings, tfVaryings,
+                isSeparableProgram))
+        {
+            return false;
+        }
+        mBackToFrontStageMap[backShaderStage] = emulatedFrontShaderStage;
+    }
+
+    // Process input/output shader pairs.
+    for (ShaderType backShaderStage : attachedShaders)
+    {
+        GLint maxVaryingVectors;
+        if (frontShaderStage == ShaderType::Vertex && backShaderStage == ShaderType::Fragment)
+        {
+            maxVaryingVectors = caps.maxVaryingVectors;
+        }
+        else
+        {
+            GLint outputVaryingsMax = GetMaxShaderOutputVectors(caps, frontShaderStage);
+            GLint inputVaryingsMax  = GetMaxShaderInputVectors(caps, backShaderStage);
+            maxVaryingVectors       = std::min(inputVaryingsMax, outputVaryingsMax);
+        }
+
+        ASSERT(maxVaryingVectors > 0 && maxVaryingVectors < std::numeric_limits<GLint>::max());
+
+        if (!mVaryingPackings[frontShaderStage].collectAndPackUserVaryings(
+                infoLog, maxVaryingVectors, packMode, frontShaderStage, backShaderStage,
+                mergedVaryings, tfVaryings, isSeparableProgram))
+        {
+            return false;
+        }
+
+        mBackToFrontStageMap[backShaderStage] = frontShaderStage;
+        frontShaderStage                      = backShaderStage;
+    }
+
+    // Special case for stop-before-fragment.
+    if (frontShaderStage != ShaderType::Fragment)
+    {
+        ASSERT(isSeparableProgram);
+
+        if (!mVaryingPackings[frontShaderStage].collectAndPackUserVaryings(
+                infoLog, GetMaxShaderOutputVectors(caps, frontShaderStage), packMode,
+                frontShaderStage, ShaderType::InvalidEnum, mergedVaryings, tfVaryings,
+                isSeparableProgram))
+        {
+            return false;
+        }
+
+        ShaderType emulatedBackShaderStage            = ShaderType::Fragment;
+        mBackToFrontStageMap[emulatedBackShaderStage] = frontShaderStage;
+    }
 
     return true;
 }

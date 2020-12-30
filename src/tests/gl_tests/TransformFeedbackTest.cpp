@@ -2657,6 +2657,9 @@ TEST_P(TransformFeedbackTestES32, PrimitivesWrittenAndGenerated)
     ANGLE_SKIP_TEST_IF(IsVulkan() && IsAMD() && IsWindows());
     ANGLE_SKIP_TEST_IF(IsVulkan() && IsNVIDIA() && IsWindows7());
 
+    // http://anglebug.com/5539
+    ANGLE_SKIP_TEST_IF(IsVulkan() && IsLinux());
+
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 

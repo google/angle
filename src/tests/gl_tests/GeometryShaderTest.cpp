@@ -1632,6 +1632,144 @@ void main()
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
+// Tests that varying limits work as expected with geometry shaders.
+TEST_P(GeometryShaderTest, MaxVaryings)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_geometry_shader"));
+
+    // Get appropriate limitations.
+    GLint maxVertexOutputComponents = 0;
+    glGetIntegerv(GL_MAX_VERTEX_OUTPUT_COMPONENTS, &maxVertexOutputComponents);
+    ASSERT_GT(maxVertexOutputComponents, 0);
+
+    GLint maxGeometryInputComponents = 0;
+    glGetIntegerv(GL_MAX_GEOMETRY_INPUT_COMPONENTS, &maxGeometryInputComponents);
+    ASSERT_GT(maxGeometryInputComponents, 0);
+
+    GLint maxGeometryOutputComponents = 0;
+    glGetIntegerv(GL_MAX_GEOMETRY_OUTPUT_COMPONENTS, &maxGeometryOutputComponents);
+    ASSERT_GT(maxGeometryOutputComponents, 0);
+
+    GLint maxFragmentInputComponents = 0;
+    glGetIntegerv(GL_MAX_FRAGMENT_INPUT_COMPONENTS, &maxFragmentInputComponents);
+    ASSERT_GT(maxFragmentInputComponents, 0);
+
+    GLint vertexToGeometryVaryings =
+        std::min(maxVertexOutputComponents, maxGeometryInputComponents) / 4;
+    GLint geometryToFragmentVaryings =
+        std::min(maxGeometryOutputComponents, maxFragmentInputComponents) / 4;
+
+    GLint varyingCount = std::min(vertexToGeometryVaryings, geometryToFragmentVaryings);
+
+    // Reserve gl_Position;
+    varyingCount--;
+
+    // Create a vertex shader with "varyingCount" outputs.
+    std::stringstream vsStream;
+    vsStream << R"(#version 310 es
+uniform vec4 uniOne;
+in vec4 position;
+)";
+
+    for (GLint varyingIndex = 0; varyingIndex < varyingCount; ++varyingIndex)
+    {
+        vsStream << "out vec4 v" << varyingIndex << ";\n";
+    }
+
+    vsStream << R"(
+void main()
+{
+    gl_Position = position;
+)";
+
+    for (GLint varyingIndex = 0; varyingIndex < varyingCount; ++varyingIndex)
+    {
+        vsStream << "    v" << varyingIndex << " = uniOne * " << varyingIndex << ".0;\n";
+    }
+
+    vsStream << "}";
+
+    // Create a GS with "varyingCount" inputs and "varyingCount" outputs.
+    std::stringstream gsStream;
+    gsStream << R"(#version 310 es
+#extension GL_EXT_geometry_shader : require
+layout (triangles) in;
+layout (triangle_strip, max_vertices = 4) out;
+)";
+
+    for (GLint varyingIndex = 0; varyingIndex < varyingCount; ++varyingIndex)
+    {
+        gsStream << "in vec4 v" << varyingIndex << "[];\n";
+    }
+
+    for (GLint varyingIndex = 0; varyingIndex < varyingCount; ++varyingIndex)
+    {
+        gsStream << "out vec4 o" << varyingIndex << ";\n";
+    }
+
+    gsStream << R"(
+void main()
+{
+    for (int n = 0; n < gl_in.length(); n++)
+    {
+        gl_Position = gl_in[n].gl_Position;
+)";
+
+    for (GLint varyingIndex = 0; varyingIndex < varyingCount; ++varyingIndex)
+    {
+        gsStream << "        o" << varyingIndex << " = v" << varyingIndex << "[n];\n";
+    }
+
+    gsStream << R"(
+        EmitVertex();
+    }
+    EndPrimitive();
+}
+)";
+
+    // Create a FS with "varyingCount" inputs.
+    std::stringstream fsStream;
+    fsStream << R"(#version 310 es
+precision mediump float;
+out vec4 color;
+)";
+
+    for (GLint varyingIndex = 0; varyingIndex < varyingCount; ++varyingIndex)
+    {
+        fsStream << "in vec4 o" << varyingIndex << ";\n";
+    }
+
+    fsStream << R"(
+void main()
+{
+    color = vec4(0, 1, 0, 1);
+)";
+
+    for (GLint varyingIndex = 0; varyingIndex < varyingCount; ++varyingIndex)
+    {
+        fsStream << "    if (o" << varyingIndex << " != vec4(" << varyingIndex << ".0))\n"
+                 << "        color = vec4(1, 0, 0, 1);\n";
+    }
+
+    fsStream << "}";
+
+    const std::string vs = vsStream.str();
+    const std::string gs = gsStream.str();
+    const std::string fs = fsStream.str();
+
+    ANGLE_GL_PROGRAM_WITH_GS(program, vs.c_str(), gs.c_str(), fs.c_str());
+    glUseProgram(program);
+
+    GLint uniLoc = glGetUniformLocation(program, "uniOne");
+    ASSERT_NE(-1, uniLoc);
+    glUniform4f(uniLoc, 1.0f, 1.0f, 1.0f, 1.0f);
+
+    drawQuad(program, "position", 0.5f, 1.0f, true);
+    ASSERT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
 ANGLE_INSTANTIATE_TEST_ES3(GeometryShaderTestES3);
 ANGLE_INSTANTIATE_TEST_ES31_AND(GeometryShaderTest,
                                 WithEmulatedPrerotation(ES31_VULKAN(), 90),

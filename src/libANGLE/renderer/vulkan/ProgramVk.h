@@ -165,7 +165,7 @@ class ProgramVk : public ProgramImpl
                            variableInfoMap);
     }
 
-    GlslangProgramInterfaceInfo &getGlslangProgramInterfaceInfo()
+    const GlslangProgramInterfaceInfo &getGlslangProgramInterfaceInfo()
     {
         return mGlslangProgramInterfaceInfo;
     }
