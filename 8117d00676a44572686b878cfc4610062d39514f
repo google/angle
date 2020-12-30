@@ -16,6 +16,40 @@
       "message": "PTAL. Expecting a green run from this one.",
       "revId": "8117d00676a44572686b878cfc4610062d39514f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "64a4026b_cdc8ad36",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-30T01:56:30Z",
+      "side": 1,
+      "message": "Nice cleanup.",
+      "revId": "8117d00676a44572686b878cfc4610062d39514f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b9822dc0_6270539c",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 852,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-30T01:56:30Z",
+      "side": 1,
+      "message": "Do we need this copy still?\n\nIt looks like this member wasn\u0027t used at all before this change, and it\u0027s now only used during Program::linkImpl(), but never referenced again.   Can it be just a local variable in Program::linkImpl()?",
+      "revId": "8117d00676a44572686b878cfc4610062d39514f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
