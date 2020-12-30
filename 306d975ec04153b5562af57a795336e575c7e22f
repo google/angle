@@ -16,6 +16,29 @@
       "message": "PTAL",
       "revId": "306d975ec04153b5562af57a795336e575c7e22f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e66a6955_91294ae0",
+        "filename": "src/libANGLE/renderer/vulkan/vk_format_utils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2020-12-30T02:08:34Z",
+      "side": 1,
+      "message": "I don\u0027t think the \"actual\" part adds much that\u0027s useful to these names.  Instead, I like just having the \"intended\" qualifiers to indicate what the user requested and then the others are just what the values are.\n\nMaybe just an extra comment would help:\n    // User-requested format values\n    angle::FormatID intendedFormatID;\n    GLenum intendedGLFormat;\n\n    // Actual format values that are supported by the Vulkan driver\n    angle::FormatID imageFormatID;\n    VkFormat imageVkFormat;\n    angle::FormatID bufferFormatID;\n    VkFormat bufferVkFormat;\n    angle::FormatID compressedBufferFormatID;\n    VkFormat compressedBufferVkFormat;",
+      "range": {
+        "startLine": 121,
+        "startChar": 0,
+        "endLine": 126,
+        "endChar": 44
+      },
+      "revId": "306d975ec04153b5562af57a795336e575c7e22f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
