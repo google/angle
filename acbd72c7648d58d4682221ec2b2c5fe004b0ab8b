@@ -22,6 +22,30 @@
       },
       "revId": "acbd72c7648d58d4682221ec2b2c5fe004b0ab8b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8a54868d_a55af31b",
+        "filename": "gni/angle.gni",
+        "patchSetId": 2
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1000050
+      },
+      "writtenOn": "2020-12-30T18:06:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "febabf24_1583bf49",
+      "range": {
+        "startLine": 119,
+        "startChar": 21,
+        "endLine": 119,
+        "endChar": 78
+      },
+      "revId": "acbd72c7648d58d4682221ec2b2c5fe004b0ab8b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
