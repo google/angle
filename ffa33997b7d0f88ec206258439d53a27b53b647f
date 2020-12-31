@@ -41,6 +41,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b4556b94_16920952",
+        "filename": "src/tests/gl_tests/BlendMinMaxTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 200,
+      "author": {
+        "id": 1117350
+      },
+      "writtenOn": "2020-12-31T00:07:35Z",
+      "side": 1,
+      "message": "Yeah, this is still the behavior for non-WebGL contexts.",
+      "parentUuid": "f147d2c6_6e568d54",
+      "range": {
+        "startLine": 200,
+        "startChar": 18,
+        "endLine": 200,
+        "endChar": 25
+      },
+      "revId": "ffa33997b7d0f88ec206258439d53a27b53b647f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2be01fd0_ce2b6271",
@@ -54,6 +78,24 @@
       "writtenOn": "2020-12-30T06:29:37Z",
       "side": 1,
       "message": "If we think we might revisit this then please add a TODO(anglebug.com/5491).",
+      "revId": "ffa33997b7d0f88ec206258439d53a27b53b647f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b676c007_ad115200",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2883,
+      "author": {
+        "id": 1117350
+      },
+      "writtenOn": "2020-12-31T00:07:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2be01fd0_ce2b6271",
       "revId": "ffa33997b7d0f88ec206258439d53a27b53b647f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
@@ -75,6 +117,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "36492e64_f9281fd1",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 5024,
+      "author": {
+        "id": 1117350
+      },
+      "writtenOn": "2020-12-31T00:07:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e698fc23_318ae33e",
+      "revId": "ffa33997b7d0f88ec206258439d53a27b53b647f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1678b09a_b74f6b0f",
@@ -88,6 +148,30 @@
       "writtenOn": "2020-12-30T06:29:37Z",
       "side": 1,
       "message": "TODO? Here and below where missing.",
+      "range": {
+        "startLine": 114,
+        "startChar": 26,
+        "endLine": 114,
+        "endChar": 27
+      },
+      "revId": "ffa33997b7d0f88ec206258439d53a27b53b647f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8038e235_0bec01bd",
+        "filename": "src/tests/gl_tests/PackUnpackTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1117350
+      },
+      "writtenOn": "2020-12-31T00:07:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1678b09a_b74f6b0f",
       "range": {
         "startLine": 114,
         "startChar": 26,
@@ -121,6 +205,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2f741483_e55f9ae1",
+        "filename": "src/tests/gl_tests/ProvokingVertexTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1117350
+      },
+      "writtenOn": "2020-12-31T00:07:35Z",
+      "side": 1,
+      "message": "iOS doesn\u0027t support GL_RED_INTEGER for readPixels but I believe this is allowed by the spec, so a test bug not a driver bug. GL_RGBA_INTEGER is guaranteed to be supported.",
+      "parentUuid": "b5b03cc8_6ac3c497",
+      "range": {
+        "startLine": 129,
+        "startChar": 29,
+        "endLine": 129,
+        "endChar": 44
+      },
+      "revId": "ffa33997b7d0f88ec206258439d53a27b53b647f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "44e7f813_5a157796",
@@ -144,6 +252,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d598ea44_18aae57a",
+        "filename": "src/tests/gl_tests/RobustResourceInitTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1119,
+      "author": {
+        "id": 1117350
+      },
+      "writtenOn": "2020-12-31T00:07:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "44e7f813_5a157796",
+      "range": {
+        "startLine": 1119,
+        "startChar": 11,
+        "endLine": 1119,
+        "endChar": 12
+      },
+      "revId": "ffa33997b7d0f88ec206258439d53a27b53b647f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5e3ab787_c446cb36",
@@ -157,6 +289,30 @@
       "writtenOn": "2020-12-30T06:29:37Z",
       "side": 1,
       "message": "TODO, and brief description of what\u0027s going wrong?",
+      "range": {
+        "startLine": 3145,
+        "startChar": 11,
+        "endLine": 3145,
+        "endChar": 12
+      },
+      "revId": "ffa33997b7d0f88ec206258439d53a27b53b647f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b59515a2_b4e1057b",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3145,
+      "author": {
+        "id": 1117350
+      },
+      "writtenOn": "2020-12-31T00:07:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5e3ab787_c446cb36",
       "range": {
         "startLine": 3145,
         "startChar": 11,
