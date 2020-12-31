@@ -1,6 +1,6 @@
 {
   "src/tests/restricted_traces/.gitignore":
-    "86197b3c5733bea4b743355cf7117fe2",
+    "9563bf9ee34d4668ff5eab13626d151b",
   "src/tests/restricted_traces/angry_birds_2_1500.tar.gz.sha1":
     "2b5d6505d6a8b6f3bbfbad2c8405a89d",
   "src/tests/restricted_traces/arena_of_valor.tar.gz.sha1":
@@ -44,13 +44,15 @@
   "src/tests/restricted_traces/real_commando_secret_mission.tar.gz.sha1":
     "4b484dd9c53a79100ec13b6f1c86040d",
   "src/tests/restricted_traces/restricted_traces.json":
-    "391c48a5701b9c3eb3e2636bc86b8f90",
+    "8fcaedb1a53858bc4ba8f323fbd3f757",
   "src/tests/restricted_traces/restricted_traces_autogen.cpp":
-    "c7ada0bd77b7549648770d51c1df982e",
+    "8403cd3e7d45726750ecbb6f48268337",
   "src/tests/restricted_traces/restricted_traces_autogen.gni":
-    "66b05e66d00988139e269fe2c0257480",
+    "64f04587e3b4c68d40187e0e0ec577fb",
   "src/tests/restricted_traces/restricted_traces_autogen.h":
-    "1dee486589dfc619165c21d2d70073d3",
+    "b948f29413ec2fdee7bd9a9241b36ad1",
+  "src/tests/restricted_traces/saint_seiya_awakening.tar.gz.sha1":
+    "c9cde6bdfd9096a44d5f03d905a45a4f",
   "src/tests/restricted_traces/temple_run_300.tar.gz.sha1":
     "0a08ce3df88cb358ccac3ac63ba04955",
   "src/tests/restricted_traces/trex_200.tar.gz.sha1":
