@@ -58,7 +58,7 @@ LinkMismatchError LinkValidateUniforms(const sh::ShaderVariable &uniform1,
 
     // Validate precision match of uniforms iff they are statically used
     bool validatePrecision = uniform1.staticUse && uniform2.staticUse && validatePrecisionFeature;
-    LinkMismatchError linkError = Program::LinkValidateVariablesBase(
+    LinkMismatchError linkError = LinkValidateProgramVariables(
         uniform1, uniform2, validatePrecision, true, mismatchedStructFieldName);
     if (linkError != LinkMismatchError::NO_MISMATCH)
     {
@@ -658,6 +658,129 @@ bool InterfaceBlockInfo::getBlockMemberInfo(const std::string &name,
 
     *infoOut = infoIter->second;
     return true;
+}
+
+void GetFilteredVaryings(const std::vector<sh::ShaderVariable> &varyings,
+                         std::vector<const sh::ShaderVariable *> *filteredVaryingsOut)
+{
+    for (const sh::ShaderVariable &varying : varyings)
+    {
+        // Built-in varyings obey special rules
+        if (varying.isBuiltIn())
+        {
+            continue;
+        }
+
+        filteredVaryingsOut->push_back(&varying);
+    }
+}
+
+LinkMismatchError LinkValidateVaryings(const sh::ShaderVariable &outputVarying,
+                                       const sh::ShaderVariable &inputVarying,
+                                       int shaderVersion,
+                                       bool validateGeometryShaderInputVarying,
+                                       bool isSeparable,
+                                       std::string *mismatchedStructFieldName)
+{
+    if (validateGeometryShaderInputVarying)
+    {
+        // [GL_EXT_geometry_shader] Section 11.1gs.4.3:
+        // The OpenGL ES Shading Language doesn't support multi-dimensional arrays as shader inputs
+        // or outputs.
+        ASSERT(inputVarying.arraySizes.size() == 1u);
+
+        // Geometry shader input varyings are not treated as arrays, so a vertex array output
+        // varying cannot match a geometry shader input varying.
+        // [GL_EXT_geometry_shader] Section 7.4.1:
+        // Geometry shader per-vertex input variables and blocks are required to be declared as
+        // arrays, with each element representing input or output values for a single vertex of a
+        // multi-vertex primitive. For the purposes of interface matching, such variables and blocks
+        // are treated as though they were not declared as arrays.
+        if (outputVarying.isArray())
+        {
+            return LinkMismatchError::ARRAY_SIZE_MISMATCH;
+        }
+    }
+
+    // Skip the validation on the array sizes between a vertex output varying and a geometry input
+    // varying as it has been done before.
+    bool validatePrecision      = isSeparable && (shaderVersion > 100);
+    LinkMismatchError linkError = LinkValidateProgramVariables(
+        outputVarying, inputVarying, validatePrecision, !validateGeometryShaderInputVarying,
+        mismatchedStructFieldName);
+    if (linkError != LinkMismatchError::NO_MISMATCH)
+    {
+        return linkError;
+    }
+
+    // Explicit locations must match if the names match.
+    if (outputVarying.isSameNameAtLinkTime(inputVarying) &&
+        outputVarying.location != inputVarying.location)
+    {
+        return LinkMismatchError::LOCATION_MISMATCH;
+    }
+
+    if (!sh::InterpolationTypesMatch(outputVarying.interpolation, inputVarying.interpolation))
+    {
+        return LinkMismatchError::INTERPOLATION_TYPE_MISMATCH;
+    }
+
+    if (shaderVersion == 100 && outputVarying.isInvariant != inputVarying.isInvariant)
+    {
+        return LinkMismatchError::INVARIANCE_MISMATCH;
+    }
+
+    return LinkMismatchError::NO_MISMATCH;
+}
+
+bool DoShaderVariablesMatch(int outputShaderVersion,
+                            ShaderType outputShaderType,
+                            ShaderType inputShaderType,
+                            const sh::ShaderVariable &input,
+                            const sh::ShaderVariable &output,
+                            bool validateGeometryShaderInputs,
+                            bool isSeparable,
+                            gl::InfoLog &infoLog)
+{
+    bool namesMatch     = input.isSameNameAtLinkTime(output);
+    bool locationsMatch = input.location != -1 && input.location == output.location;
+
+    // An output block is considered to match an input block in the subsequent
+    // shader if the two blocks have the same block name, and the members of the
+    // block match exactly in name, type, qualification, and declaration order.
+    //
+    // - For the purposes of shader interface matching, the gl_PointSize
+    //   member of the intrinsically declared gl_PerVertex shader interface
+    //   block is ignored.
+    // - Output blocks that do not match in name, but have a location and match
+    //   in every other way listed above may be considered to match by some
+    //   implementations, but not all - so this behaviour should not be relied
+    //   upon.
+
+    // An output variable is considered to match an input variable in the subsequent
+    // shader if:
+    //
+    // - the two variables match in name, type, and qualification; or
+    // - the two variables are declared with the same location qualifier and
+    //   match in type and qualification.
+
+    if (namesMatch || locationsMatch)
+    {
+        std::string mismatchedStructFieldName;
+        LinkMismatchError linkError =
+            LinkValidateVaryings(output, input, outputShaderVersion, validateGeometryShaderInputs,
+                                 isSeparable, &mismatchedStructFieldName);
+        if (linkError != LinkMismatchError::NO_MISMATCH)
+        {
+            LogLinkMismatch(infoLog, input.name, "varying", linkError, mismatchedStructFieldName,
+                            outputShaderType, inputShaderType);
+            return false;
+        }
+
+        return true;
+    }
+
+    return false;
 }
 }  // anonymous namespace
 
@@ -1362,4 +1485,336 @@ void ProgramLinkedResourcesLinker::getAtomicCounterBufferSizeMap(
     }
 }
 
+// Note: this is broken for pipelines with modified/discarded shaders. http://anglebug.com/5506
+bool LinkValidateProgramGlobalNames(InfoLog &infoLog, const HasAttachedShaders &programOrPipeline)
+{
+    angle::HashMap<std::string, const sh::ShaderVariable *> uniformMap;
+    using BlockAndFieldPair = std::pair<const sh::InterfaceBlock *, const sh::ShaderVariable *>;
+    angle::HashMap<std::string, std::vector<BlockAndFieldPair>> uniformBlockFieldMap;
+
+    for (ShaderType shaderType : kAllGraphicsShaderTypes)
+    {
+        Shader *shader = programOrPipeline.getAttachedShader(shaderType);
+        if (!shader)
+        {
+            continue;
+        }
+
+        // Build a map of Uniforms
+        const std::vector<sh::ShaderVariable> uniforms = shader->getUniforms();
+        for (const auto &uniform : uniforms)
+        {
+            uniformMap[uniform.name] = &uniform;
+        }
+
+        // Build a map of Uniform Blocks
+        // This will also detect any field name conflicts between Uniform Blocks without instance
+        // names
+        const std::vector<sh::InterfaceBlock> &uniformBlocks = shader->getUniformBlocks();
+        for (const auto &uniformBlock : uniformBlocks)
+        {
+            // Only uniform blocks without an instance name can create a conflict with their field
+            // names
+            if (!uniformBlock.instanceName.empty())
+            {
+                continue;
+            }
+
+            for (const auto &field : uniformBlock.fields)
+            {
+                if (!uniformBlockFieldMap.count(field.name))
+                {
+                    // First time we've seen this uniform block field name, so add the
+                    // (Uniform Block, Field) pair immediately since there can't be a conflict yet
+                    BlockAndFieldPair blockAndFieldPair(&uniformBlock, &field);
+                    std::vector<BlockAndFieldPair> newUniformBlockList;
+                    newUniformBlockList.push_back(blockAndFieldPair);
+                    uniformBlockFieldMap[field.name] = newUniformBlockList;
+                    continue;
+                }
+
+                // We've seen this name before.
+                // We need to check each of the uniform blocks that contain a field with this name
+                // to see if there's a conflict or not.
+                std::vector<BlockAndFieldPair> prevBlockFieldPairs =
+                    uniformBlockFieldMap[field.name];
+                for (const auto &prevBlockFieldPair : prevBlockFieldPairs)
+                {
+                    const sh::InterfaceBlock *prevUniformBlock      = prevBlockFieldPair.first;
+                    const sh::ShaderVariable *prevUniformBlockField = prevBlockFieldPair.second;
+
+                    if (uniformBlock.isSameInterfaceBlockAtLinkTime(*prevUniformBlock))
+                    {
+                        // The same uniform block should, by definition, contain the same field name
+                        continue;
+                    }
+
+                    // The uniform blocks don't match, so check if the necessary field properties
+                    // also match
+                    if ((field.name == prevUniformBlockField->name) &&
+                        (field.type == prevUniformBlockField->type) &&
+                        (field.precision == prevUniformBlockField->precision))
+                    {
+                        infoLog << "Name conflicts between uniform block field names: "
+                                << field.name;
+                        return false;
+                    }
+                }
+
+                // No conflict, so record this pair
+                BlockAndFieldPair blockAndFieldPair(&uniformBlock, &field);
+                uniformBlockFieldMap[field.name].push_back(blockAndFieldPair);
+            }
+        }
+    }
+
+    // Validate no uniform names conflict with attribute names
+    Shader *vertexShader = programOrPipeline.getAttachedShader(ShaderType::Vertex);
+    if (vertexShader)
+    {
+        for (const auto &attrib : vertexShader->getActiveAttributes())
+        {
+            if (uniformMap.count(attrib.name))
+            {
+                infoLog << "Name conflicts between a uniform and an attribute: " << attrib.name;
+                return false;
+            }
+        }
+    }
+
+    // Validate no Uniform Block fields conflict with other Uniforms
+    for (const auto &uniformBlockField : uniformBlockFieldMap)
+    {
+        const std::string &fieldName = uniformBlockField.first;
+        if (uniformMap.count(fieldName))
+        {
+            infoLog << "Name conflicts between a uniform and a uniform block field: " << fieldName;
+            return false;
+        }
+    }
+
+    return true;
+}
+
+// [OpenGL ES 3.2] Chapter 7.4.1 "Shader Interface Matching"
+bool LinkValidateShaderInterfaceMatching(const std::vector<sh::ShaderVariable> &outputVaryings,
+                                         const std::vector<sh::ShaderVariable> &inputVaryings,
+                                         ShaderType outputShaderType,
+                                         ShaderType inputShaderType,
+                                         int outputShaderVersion,
+                                         int inputShaderVersion,
+                                         bool isSeparable,
+                                         gl::InfoLog &infoLog)
+{
+    ASSERT(outputShaderVersion == inputShaderVersion);
+
+    std::vector<const sh::ShaderVariable *> filteredInputVaryings;
+    std::vector<const sh::ShaderVariable *> filteredOutputVaryings;
+    bool validateGeometryShaderInputs = inputShaderType == ShaderType::Geometry;
+
+    GetFilteredVaryings(inputVaryings, &filteredInputVaryings);
+    GetFilteredVaryings(outputVaryings, &filteredOutputVaryings);
+
+    // Separable programs require the number of inputs and outputs match
+    if (isSeparable && filteredInputVaryings.size() < filteredOutputVaryings.size())
+    {
+        infoLog << GetShaderTypeString(inputShaderType)
+                << " does not consume all varyings generated by "
+                << GetShaderTypeString(outputShaderType);
+        return false;
+    }
+    if (isSeparable && filteredInputVaryings.size() > filteredOutputVaryings.size())
+    {
+        infoLog << GetShaderTypeString(outputShaderType)
+                << " does not generate all varyings consumed by "
+                << GetShaderTypeString(inputShaderType);
+        return false;
+    }
+
+    // All inputs must match all outputs
+    for (const sh::ShaderVariable *input : filteredInputVaryings)
+    {
+        bool match = false;
+        for (const sh::ShaderVariable *output : filteredOutputVaryings)
+        {
+            if (DoShaderVariablesMatch(outputShaderVersion, outputShaderType, inputShaderType,
+                                       *input, *output, validateGeometryShaderInputs, isSeparable,
+                                       infoLog))
+            {
+                match = true;
+                break;
+            }
+        }
+
+        // We permit unmatched, unreferenced varyings. Note that this specifically depends on
+        // whether the input is statically used - a statically used input should fail this test even
+        // if it is not active. GLSL ES 3.00.6 section 4.3.10.
+        if (!match && input->staticUse)
+        {
+            const std::string &name = input->isShaderIOBlock ? input->structName : input->name;
+            infoLog << GetShaderTypeString(inputShaderType) << " varying " << name
+                    << " does not match any " << GetShaderTypeString(outputShaderType)
+                    << " varying";
+            return false;
+        }
+    }
+
+    return true;
+}
+
+LinkMismatchError LinkValidateProgramVariables(const sh::ShaderVariable &variable1,
+                                               const sh::ShaderVariable &variable2,
+                                               bool validatePrecision,
+                                               bool validateArraySize,
+                                               std::string *mismatchedStructOrBlockMemberName)
+{
+    if (variable1.type != variable2.type)
+    {
+        return LinkMismatchError::TYPE_MISMATCH;
+    }
+    if (validateArraySize && variable1.arraySizes != variable2.arraySizes)
+    {
+        return LinkMismatchError::ARRAY_SIZE_MISMATCH;
+    }
+    if (validatePrecision && variable1.precision != variable2.precision)
+    {
+        return LinkMismatchError::PRECISION_MISMATCH;
+    }
+    if (!variable1.isShaderIOBlock && !variable2.isShaderIOBlock &&
+        variable1.structName != variable2.structName)
+    {
+        return LinkMismatchError::STRUCT_NAME_MISMATCH;
+    }
+    if (variable1.imageUnitFormat != variable2.imageUnitFormat)
+    {
+        return LinkMismatchError::FORMAT_MISMATCH;
+    }
+
+    if (variable1.fields.size() != variable2.fields.size())
+    {
+        return LinkMismatchError::FIELD_NUMBER_MISMATCH;
+    }
+    const unsigned int numMembers = static_cast<unsigned int>(variable1.fields.size());
+    for (unsigned int memberIndex = 0; memberIndex < numMembers; memberIndex++)
+    {
+        const sh::ShaderVariable &member1 = variable1.fields[memberIndex];
+        const sh::ShaderVariable &member2 = variable2.fields[memberIndex];
+
+        if (member1.name != member2.name)
+        {
+            return LinkMismatchError::FIELD_NAME_MISMATCH;
+        }
+
+        if (member1.interpolation != member2.interpolation)
+        {
+            return LinkMismatchError::INTERPOLATION_TYPE_MISMATCH;
+        }
+
+        if (variable1.isShaderIOBlock && variable2.isShaderIOBlock)
+        {
+            if (member1.location != member2.location)
+            {
+                return LinkMismatchError::FIELD_LOCATION_MISMATCH;
+            }
+
+            if (member1.structName != member2.structName)
+            {
+                return LinkMismatchError::FIELD_STRUCT_NAME_MISMATCH;
+            }
+        }
+
+        LinkMismatchError linkErrorOnField = LinkValidateProgramVariables(
+            member1, member2, validatePrecision, true, mismatchedStructOrBlockMemberName);
+        if (linkErrorOnField != LinkMismatchError::NO_MISMATCH)
+        {
+            AddProgramVariableParentPrefix(member1.name, mismatchedStructOrBlockMemberName);
+            return linkErrorOnField;
+        }
+    }
+
+    return LinkMismatchError::NO_MISMATCH;
+}
+
+void AddProgramVariableParentPrefix(const std::string &parentName, std::string *mismatchedFieldName)
+{
+    ASSERT(mismatchedFieldName);
+    if (mismatchedFieldName->empty())
+    {
+        *mismatchedFieldName = parentName;
+    }
+    else
+    {
+        std::ostringstream stream;
+        stream << parentName << "." << *mismatchedFieldName;
+        *mismatchedFieldName = stream.str();
+    }
+}
+
+bool LinkValidateBuiltInVaryings(const std::vector<sh::ShaderVariable> &vertexVaryings,
+                                 const std::vector<sh::ShaderVariable> &fragmentVaryings,
+                                 int vertexShaderVersion,
+                                 InfoLog &infoLog)
+{
+    if (vertexShaderVersion != 100)
+    {
+        // Only ESSL 1.0 has restrictions on matching input and output invariance
+        return true;
+    }
+
+    bool glPositionIsInvariant   = false;
+    bool glPointSizeIsInvariant  = false;
+    bool glFragCoordIsInvariant  = false;
+    bool glPointCoordIsInvariant = false;
+
+    for (const sh::ShaderVariable &varying : vertexVaryings)
+    {
+        if (!varying.isBuiltIn())
+        {
+            continue;
+        }
+        if (varying.name.compare("gl_Position") == 0)
+        {
+            glPositionIsInvariant = varying.isInvariant;
+        }
+        else if (varying.name.compare("gl_PointSize") == 0)
+        {
+            glPointSizeIsInvariant = varying.isInvariant;
+        }
+    }
+
+    for (const sh::ShaderVariable &varying : fragmentVaryings)
+    {
+        if (!varying.isBuiltIn())
+        {
+            continue;
+        }
+        if (varying.name.compare("gl_FragCoord") == 0)
+        {
+            glFragCoordIsInvariant = varying.isInvariant;
+        }
+        else if (varying.name.compare("gl_PointCoord") == 0)
+        {
+            glPointCoordIsInvariant = varying.isInvariant;
+        }
+    }
+
+    // There is some ambiguity in ESSL 1.00.17 paragraph 4.6.4 interpretation,
+    // for example, https://cvs.khronos.org/bugzilla/show_bug.cgi?id=13842.
+    // Not requiring invariance to match is supported by:
+    // dEQP, WebGL CTS, Nexus 5X GLES
+    if (glFragCoordIsInvariant && !glPositionIsInvariant)
+    {
+        infoLog << "gl_FragCoord can only be declared invariant if and only if gl_Position is "
+                   "declared invariant.";
+        return false;
+    }
+    if (glPointCoordIsInvariant && !glPointSizeIsInvariant)
+    {
+        infoLog << "gl_PointCoord can only be declared invariant if and only if gl_PointSize is "
+                   "declared invariant.";
+        return false;
+    }
+
+    return true;
+}
 }  // namespace gl

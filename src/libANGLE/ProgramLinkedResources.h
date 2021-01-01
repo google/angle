@@ -256,6 +256,26 @@ class ProgramLinkedResourcesLinker final : angle::NonCopyable
     CustomBlockLayoutEncoderFactory *mCustomEncoderFactory;
 };
 
+bool LinkValidateProgramGlobalNames(InfoLog &infoLog, const HasAttachedShaders &programOrPipeline);
+bool LinkValidateShaderInterfaceMatching(const std::vector<sh::ShaderVariable> &outputVaryings,
+                                         const std::vector<sh::ShaderVariable> &inputVaryings,
+                                         ShaderType outputShaderType,
+                                         ShaderType inputShaderType,
+                                         int outputShaderVersion,
+                                         int inputShaderVersion,
+                                         bool isSeparable,
+                                         InfoLog &infoLog);
+bool LinkValidateBuiltInVaryings(const std::vector<sh::ShaderVariable> &vertexVaryings,
+                                 const std::vector<sh::ShaderVariable> &fragmentVaryings,
+                                 int vertexShaderVersion,
+                                 InfoLog &infoLog);
+LinkMismatchError LinkValidateProgramVariables(const sh::ShaderVariable &variable1,
+                                               const sh::ShaderVariable &variable2,
+                                               bool validatePrecision,
+                                               bool validateArraySize,
+                                               std::string *mismatchedStructOrBlockMemberName);
+void AddProgramVariableParentPrefix(const std::string &parentName,
+                                    std::string *mismatchedFieldName);
 }  // namespace gl
 
 #endif  // LIBANGLE_UNIFORMLINKER_H_

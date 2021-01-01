@@ -432,9 +432,7 @@ angle::Result ProgramPipeline::link(const Context *context)
             return angle::Result::Stop;
         }
 
-        gl::ShaderMap<const gl::ProgramState *> programStates;
-        fillProgramStateMap(&programStates);
-        if (!mState.mExecutable->linkValidateGlobalNames(infoLog, programStates))
+        if (!LinkValidateProgramGlobalNames(infoLog, *this))
         {
             return angle::Result::Stop;
         }
@@ -473,7 +471,7 @@ bool ProgramPipeline::linkVaryings(InfoLog &infoLog) const
             ASSERT(previousProgram);
             ProgramExecutable &previousExecutable = previousProgram->getExecutable();
 
-            if (!Program::linkValidateShaderInterfaceMatching(
+            if (!LinkValidateShaderInterfaceMatching(
                     previousExecutable.getLinkedOutputVaryings(previousShaderType),
                     executable.getLinkedInputVaryings(shaderType), previousShaderType, shaderType,
                     previousExecutable.getLinkedShaderVersion(previousShaderType),
@@ -493,7 +491,7 @@ bool ProgramPipeline::linkVaryings(InfoLog &infoLog) const
     }
     ProgramExecutable &vertexExecutable   = vertexProgram->getExecutable();
     ProgramExecutable &fragmentExecutable = fragmentProgram->getExecutable();
-    return Program::linkValidateBuiltInVaryings(
+    return LinkValidateBuiltInVaryings(
         vertexExecutable.getLinkedOutputVaryings(ShaderType::Vertex),
         fragmentExecutable.getLinkedInputVaryings(ShaderType::Fragment),
         vertexExecutable.getLinkedShaderVersion(ShaderType::Vertex), infoLog);
@@ -573,20 +571,6 @@ void ProgramPipeline::onSubjectStateChange(angle::SubjectIndex index, angle::Sub
         default:
             UNREACHABLE();
             break;
-    }
-}
-
-void ProgramPipeline::fillProgramStateMap(ShaderMap<const ProgramState *> *programStatesOut)
-{
-    for (ShaderType shaderType : AllShaderTypes())
-    {
-        (*programStatesOut)[shaderType] = nullptr;
-
-        Program *program = getShaderProgram(shaderType);
-        if (program)
-        {
-            (*programStatesOut)[shaderType] = &program->getState();
-        }
     }
 }
 

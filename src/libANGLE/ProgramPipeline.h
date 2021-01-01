@@ -143,8 +143,6 @@ class ProgramPipeline final : public RefCountObject<ProgramPipelineID>,
     // ObserverInterface implementation.
     void onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMessage message) override;
 
-    void fillProgramStateMap(gl::ShaderMap<const gl::ProgramState *> *programStatesOut);
-
     Shader *getAttachedShader(ShaderType shaderType) const override;
 
   private:
