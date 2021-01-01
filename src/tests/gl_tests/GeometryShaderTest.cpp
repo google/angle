@@ -147,6 +147,9 @@ TEST_P(GeometryShaderTest, GeometryShaderImplementationDependentLimits)
 {
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_geometry_shader"));
 
+    // http://anglebug.com/5510
+    ANGLE_SKIP_TEST_IF(IsIntel() && IsVulkan() && IsLinux());
+
     const std::map<GLenum, int> limits = {{GL_MAX_FRAMEBUFFER_LAYERS_EXT, 256},
                                           {GL_MAX_GEOMETRY_UNIFORM_COMPONENTS_EXT, 1024},
                                           {GL_MAX_GEOMETRY_UNIFORM_BLOCKS_EXT, 12},
