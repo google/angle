@@ -16,6 +16,23 @@
       "message": "PTAL",
       "revId": "e237b815055e0027fc84eda29dc40f535267819d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3d24d0c7_ef275277",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-04T16:16:26Z",
+      "side": 1,
+      "message": "It looks like this messed up WebGL. We could potentially change the WebGL spec, let me ping that group.",
+      "revId": "e237b815055e0027fc84eda29dc40f535267819d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
