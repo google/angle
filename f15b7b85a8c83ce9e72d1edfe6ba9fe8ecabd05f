@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "51445d24_f27dd115",
+        "filename": "src/tests/gl_tests/ProvokingVertexTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-05T05:16:03Z",
+      "side": 1,
+      "message": "What\u0027s the reasoning behind this change? Was GL_RED_INTEGER not valid? I wonder if this is just masking an iOS bug by avoiding testing the feature.",
+      "range": {
+        "startLine": 129,
+        "startChar": 29,
+        "endLine": 129,
+        "endChar": 44
+      },
+      "revId": "f15b7b85a8c83ce9e72d1edfe6ba9fe8ecabd05f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
