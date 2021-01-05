@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "65d28a96_5064bcc5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-01-05T22:22:32Z",
+      "side": 1,
+      "message": "Tim, thanks for putting this together!\n\nScreenshots look good to me.  Also worth doing one pass of comparing ANGLE against the native driver to make sure we\u0027re getting reasonable pixels.  I\u0027ve got some steps you can use here: go/angle-frame-analysis  I\u0027ll include those in a public doc update that captures the current best known steps for this.",
+      "revId": "4da25135d719eb44a51b9c8c3153cacbe0e13ce6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
