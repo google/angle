@@ -323,17 +323,12 @@ std::string SubstituteTransformFeedbackMarkers(const std::string &originalSource
     return result;
 }
 
-std::string GenerateTransformFeedbackVaryingOutput(const gl::TransformFeedbackVarying &varying,
-                                                   const gl::UniformTypeInfo &info,
-                                                   size_t strideBytes,
-                                                   size_t offset,
-                                                   const std::string &bufferIndex)
+void GenerateTransformFeedbackVaryingOutput(const gl::TransformFeedbackVarying &varying,
+                                            const gl::UniformTypeInfo &info,
+                                            size_t offset,
+                                            const std::string &bufferIndex,
+                                            std::ostringstream *xfbOut)
 {
-    std::ostringstream result;
-
-    ASSERT(strideBytes % 4 == 0);
-    size_t stride = strideBytes / 4;
-
     const size_t arrayIndexStart = varying.arrayIndex == GL_INVALID_INDEX ? 0 : varying.arrayIndex;
     const size_t arrayIndexEnd   = arrayIndexStart + varying.size();
 
@@ -343,35 +338,29 @@ std::string GenerateTransformFeedbackVaryingOutput(const gl::TransformFeedbackVa
         {
             for (int row = 0; row < info.rowCount; ++row)
             {
-                result << "xfbOut" << bufferIndex << "[" << sh::vk::kDriverUniformsVarName
-                       << ".xfbBufferOffsets[" << bufferIndex
-                       << "] + (gl_VertexIndex + gl_InstanceIndex * "
-                       << sh::vk::kDriverUniformsVarName << ".xfbVerticesPerDraw) * " << stride
-                       << " + " << offset << "] = " << info.glslAsFloat << "("
-                       << varying.mappedName;
+                *xfbOut << "xfbOut" << bufferIndex << "[xfbOffsets[" << bufferIndex << "] + "
+                        << offset << "] = " << info.glslAsFloat << "(" << varying.mappedName;
 
                 if (varying.isArray())
                 {
-                    result << "[" << arrayIndex << "]";
+                    *xfbOut << "[" << arrayIndex << "]";
                 }
 
                 if (info.columnCount > 1)
                 {
-                    result << "[" << col << "]";
+                    *xfbOut << "[" << col << "]";
                 }
 
                 if (info.rowCount > 1)
                 {
-                    result << "[" << row << "]";
+                    *xfbOut << "[" << row << "]";
                 }
 
-                result << ");\n";
+                *xfbOut << ");\n";
                 ++offset;
             }
         }
     }
-
-    return result.str();
 }
 
 void GenerateTransformFeedbackEmulationOutputs(const GlslangSourceOptions &options,
@@ -387,6 +376,7 @@ void GenerateTransformFeedbackEmulationOutputs(const GlslangSourceOptions &optio
     const bool isInterleaved =
         programState.getTransformFeedbackBufferMode() == GL_INTERLEAVED_ATTRIBS;
     const size_t bufferCount = isInterleaved ? 1 : varyings.size();
+    ASSERT(bufferCount > 0);
 
     const std::string xfbSet = Str(programInterfaceInfo->uniformsAndXfbDescriptorSetIndex);
     std::vector<std::string> xfbIndices(bufferCount);
@@ -411,8 +401,29 @@ void GenerateTransformFeedbackEmulationOutputs(const GlslangSourceOptions &optio
         ++programInterfaceInfo->currentUniformBindingIndex;
     }
 
-    std::string xfbOut =
-        "if (" + std::string(sh::vk::kDriverUniformsVarName) + ".xfbActiveUnpaused != 0)\n{\n";
+    const std::string driverUniforms = std::string(sh::vk::kDriverUniformsVarName);
+    std::ostringstream xfbOut;
+
+    xfbOut << "if (" << driverUniforms
+           << ".xfbActiveUnpaused != 0)\n{\n"
+              "int xfbIndex = gl_VertexIndex + gl_InstanceIndex * int("
+           << driverUniforms << ".xfbVerticesPerDraw);\nivec4 xfbOffsets = " << driverUniforms
+           << ".xfbBufferOffsets + xfbIndex * ivec4(";
+    for (size_t bufferIndex = 0; bufferIndex < bufferCount; ++bufferIndex)
+    {
+        if (bufferIndex > 0)
+        {
+            xfbOut << ", ";
+        }
+
+        ASSERT(bufferStrides[bufferIndex] % 4 == 0);
+        xfbOut << bufferStrides[bufferIndex] / 4;
+    }
+    for (size_t bufferIndex = bufferCount; bufferIndex < 4; ++bufferIndex)
+    {
+        xfbOut << ", 0";
+    }
+    xfbOut << ");\n";
     size_t outputOffset = 0;
     for (size_t varyingIndex = 0; varyingIndex < varyings.size(); ++varyingIndex)
     {
@@ -422,17 +433,17 @@ void GenerateTransformFeedbackEmulationOutputs(const GlslangSourceOptions &optio
         // For every varying, output to the respective buffer packed.  If interleaved, the output is
         // always to the same buffer, but at different offsets.
         const gl::UniformTypeInfo &info = gl::GetUniformTypeInfo(varying.type);
-        xfbOut += GenerateTransformFeedbackVaryingOutput(varying, info, bufferStrides[bufferIndex],
-                                                         outputOffset, xfbIndices[bufferIndex]);
+        GenerateTransformFeedbackVaryingOutput(varying, info, outputOffset, xfbIndices[bufferIndex],
+                                               &xfbOut);
 
         if (isInterleaved)
         {
             outputOffset += info.columnCount * info.rowCount * varying.size();
         }
     }
-    xfbOut += "}\n";
+    xfbOut << "}\n";
 
-    *vertexShader = SubstituteTransformFeedbackMarkers(*vertexShader, xfbDecl, xfbOut);
+    *vertexShader = SubstituteTransformFeedbackMarkers(*vertexShader, xfbDecl, xfbOut.str());
 }
 
 bool IsFirstRegisterOfVarying(const gl::PackedVaryingRegister &varyingReg, bool allowFields)
