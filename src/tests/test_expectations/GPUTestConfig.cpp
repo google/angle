@@ -537,7 +537,9 @@ inline bool IsMetal(const GPUTestConfig::API &api)
 }  // anonymous namespace
 
 // Load all conditions in the constructor since this data will not change during a test set.
-GPUTestConfig::GPUTestConfig()
+GPUTestConfig::GPUTestConfig() : GPUTestConfig(false) {}
+
+GPUTestConfig::GPUTestConfig(bool isSwiftShader)
 {
     mConditions[kConditionNone]            = false;
     mConditions[kConditionWinXP]           = IsWinXP();
@@ -560,24 +562,27 @@ GPUTestConfig::GPUTestConfig()
     mConditions[kConditionIOS]             = IsIOS();
     mConditions[kConditionLinux]           = IsLinux();
     mConditions[kConditionAndroid]         = IsAndroid();
-    mConditions[kConditionNVIDIA]          = IsNVIDIA();
-    mConditions[kConditionAMD]             = IsAMD();
-    mConditions[kConditionIntel]           = IsIntel();
-    mConditions[kConditionVMWare]          = IsVMWare();
-    mConditions[kConditionRelease]         = IsRelease();
-    mConditions[kConditionDebug]           = IsDebug();
-    // If no API provided, pass these conditions by default
-    mConditions[kConditionD3D9]        = true;
-    mConditions[kConditionD3D11]       = true;
-    mConditions[kConditionGLDesktop]   = true;
-    mConditions[kConditionGLES]        = true;
-    mConditions[kConditionVulkan]      = true;
-    mConditions[kConditionSwiftShader] = true;
-    mConditions[kConditionMetal]       = true;
+    // HW vendors are irrelevant if we are running on SW
+    mConditions[kConditionNVIDIA]      = !isSwiftShader && IsNVIDIA();
+    mConditions[kConditionAMD]         = !isSwiftShader && IsAMD();
+    mConditions[kConditionIntel]       = !isSwiftShader && IsIntel();
+    mConditions[kConditionVMWare]      = !isSwiftShader && IsVMWare();
+    mConditions[kConditionSwiftShader] = isSwiftShader;
 
-    mConditions[kConditionNexus5X]          = IsNexus5X();
-    mConditions[kConditionPixel2OrXL]       = IsPixel2() || IsPixel2XL();
-    mConditions[kConditionNVIDIAQuadroP400] = IsNVIDIAQuadroP400();
+    mConditions[kConditionRelease] = IsRelease();
+    mConditions[kConditionDebug]   = IsDebug();
+    // If no API provided, pass these conditions by default
+    mConditions[kConditionD3D9]      = true;
+    mConditions[kConditionD3D11]     = true;
+    mConditions[kConditionGLDesktop] = true;
+    mConditions[kConditionGLES]      = true;
+    mConditions[kConditionVulkan]    = true;
+    mConditions[kConditionMetal]     = true;
+
+    // Devices are irrelevent if we are running on SW
+    mConditions[kConditionNexus5X]          = !isSwiftShader && IsNexus5X();
+    mConditions[kConditionPixel2OrXL]       = !isSwiftShader && (IsPixel2() || IsPixel2XL());
+    mConditions[kConditionNVIDIAQuadroP400] = !isSwiftShader && IsNVIDIAQuadroP400();
 
     mConditions[kConditionPreRotation]    = false;
     mConditions[kConditionPreRotation90]  = false;
@@ -586,15 +591,15 @@ GPUTestConfig::GPUTestConfig()
 }
 
 // If the constructor is passed an API, load those conditions as well
-GPUTestConfig::GPUTestConfig(const API &api, uint32_t preRotation) : GPUTestConfig()
+GPUTestConfig::GPUTestConfig(const API &api, uint32_t preRotation)
+    : GPUTestConfig(IsSwiftShader(api))
 {
-    mConditions[kConditionD3D9]        = IsD3D9(api);
-    mConditions[kConditionD3D11]       = IsD3D11(api);
-    mConditions[kConditionGLDesktop]   = IsGLDesktop(api);
-    mConditions[kConditionGLES]        = IsGLES(api);
-    mConditions[kConditionVulkan]      = IsVulkan(api);
-    mConditions[kConditionSwiftShader] = IsSwiftShader(api);
-    mConditions[kConditionMetal]       = IsMetal(api);
+    mConditions[kConditionD3D9]      = IsD3D9(api);
+    mConditions[kConditionD3D11]     = IsD3D11(api);
+    mConditions[kConditionGLDesktop] = IsGLDesktop(api);
+    mConditions[kConditionGLES]      = IsGLES(api);
+    mConditions[kConditionVulkan]    = IsVulkan(api);
+    mConditions[kConditionMetal]     = IsMetal(api);
 
     switch (preRotation)
     {

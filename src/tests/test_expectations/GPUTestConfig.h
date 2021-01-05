@@ -77,6 +77,7 @@ struct GPUTestConfig
     using ConditionArray = angle::BitSet<GPUTestConfig::kNumberOfConditions>;
 
     GPUTestConfig();
+    GPUTestConfig(bool isSwiftShader);
     GPUTestConfig(const API &api, uint32_t preRotation);
 
     const GPUTestConfig::ConditionArray &getConditions() const;
