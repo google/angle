@@ -87,6 +87,11 @@ std::shared_ptr<WaitableCompileEvent> ShaderVk::compile(const gl::Context *conte
         compileOptions |= SH_ADD_PRE_ROTATION;
     }
 
+    if (contextVk->getFeatures().emulateTransformFeedback.enabled)
+    {
+        compileOptions |= SH_ADD_VULKAN_XFB_EMULATION_SUPPORT_CODE;
+    }
+
     return compileImpl(context, compilerInstance, mState.getSource(), compileOptions | options);
 }
 

@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 247
+#define ANGLE_SH_VERSION 248
 
 enum ShShaderSpec
 {
@@ -347,6 +347,9 @@ const ShCompileOptions SH_FORCE_SHADER_PRECISION_HIGHP_TO_MEDIUMP = UINT64_C(1) 
 
 // Allow compiler to use specialization constant to do pre-rotation and y flip.
 const ShCompileOptions SH_USE_SPECIALIZATION_CONSTANT = UINT64_C(1) << 58;
+
+// Ask compiler to generate transform feedback emulation support code.
+const ShCompileOptions SH_ADD_VULKAN_XFB_EMULATION_SUPPORT_CODE = UINT64_C(1) << 59;
 
 // Defines alternate strategies for implementing array index clamping.
 enum ShArrayIndexClampingStrategy
@@ -869,6 +872,9 @@ extern const char kAtomicCountersBlockName[];
 
 // Line raster emulation varying
 extern const char kLineRasterEmulationPosition[];
+
+// Transform feedback emulation helper function
+extern const char kXfbEmulationGetOffsetsFunctionName[];
 
 }  // namespace vk
 

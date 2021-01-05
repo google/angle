@@ -24,14 +24,14 @@ namespace
 {
 constexpr ImmutableString kEmulatedDepthRangeParams = ImmutableString("ANGLEDepthRangeParams");
 
-constexpr const char kViewport[]             = "viewport";
-constexpr const char kClipDistancesEnabled[] = "clipDistancesEnabled";
-constexpr const char kXfbActiveUnpaused[]    = "xfbActiveUnpaused";
-constexpr const char kXfbVerticesPerDraw[]   = "xfbVerticesPerDraw";
-constexpr const char kXfbBufferOffsets[]     = "xfbBufferOffsets";
-constexpr const char kAcbBufferOffsets[]     = "acbBufferOffsets";
-constexpr const char kDepthRange[]           = "depthRange";
-constexpr const char kNumSamples[]           = "numSamples";
+constexpr const char kViewport[]               = "viewport";
+constexpr const char kClipDistancesEnabled[]   = "clipDistancesEnabled";
+constexpr const char kXfbActiveUnpaused[]      = "xfbActiveUnpaused";
+constexpr const char kXfbVerticesPerInstance[] = "xfbVerticesPerInstance";
+constexpr const char kXfbBufferOffsets[]       = "xfbBufferOffsets";
+constexpr const char kAcbBufferOffsets[]       = "acbBufferOffsets";
+constexpr const char kDepthRange[]             = "depthRange";
+constexpr const char kNumSamples[]             = "numSamples";
 
 constexpr const char kHalfRenderArea[] = "halfRenderArea";
 constexpr const char kFlipXY[]         = "flipXY";
@@ -75,7 +75,7 @@ TFieldList *DriverUniform::createUniformFields(TSymbolTable *symbolTable) const
 {
     constexpr size_t kNumGraphicsDriverUniforms                                                = 8;
     constexpr std::array<const char *, kNumGraphicsDriverUniforms> kGraphicsDriverUniformNames = {
-        {kViewport, kClipDistancesEnabled, kXfbActiveUnpaused, kXfbVerticesPerDraw, kNumSamples,
+        {kViewport, kClipDistancesEnabled, kXfbActiveUnpaused, kXfbVerticesPerInstance, kNumSamples,
          kXfbBufferOffsets, kAcbBufferOffsets, kDepthRange}};
 
     // This field list mirrors the structure of GraphicsDriverUniforms in ContextVk.cpp.
@@ -85,7 +85,7 @@ TFieldList *DriverUniform::createUniformFields(TSymbolTable *symbolTable) const
         new TType(EbtFloat, 4),
         new TType(EbtUInt),  // uint clipDistancesEnabled;  // 32 bits for 32 clip distances max
         new TType(EbtUInt),
-        new TType(EbtUInt),
+        new TType(EbtInt),
         new TType(EbtInt),
         new TType(EbtInt, 4),
         new TType(EbtUInt, 4),
@@ -177,6 +177,16 @@ TIntermBinary *DriverUniform::getViewportRef() const
 TIntermBinary *DriverUniform::getAbcBufferOffsets() const
 {
     return createDriverUniformRef(kAcbBufferOffsets);
+}
+
+TIntermBinary *DriverUniform::getXfbVerticesPerInstance() const
+{
+    return createDriverUniformRef(kXfbVerticesPerInstance);
+}
+
+TIntermBinary *DriverUniform::getXfbBufferOffsets() const
+{
+    return createDriverUniformRef(kXfbBufferOffsets);
 }
 
 TIntermBinary *DriverUniform::getClipDistancesEnabled() const

@@ -792,6 +792,8 @@ const char kAtomicCountersBlockName[] = "ANGLEAtomicCounters";
 
 const char kLineRasterEmulationPosition[] = "ANGLEPosition";
 
+const char kXfbEmulationGetOffsetsFunctionName[] = "ANGLEGetXfbOffsets";
+
 }  // namespace vk
 
 }  // namespace sh

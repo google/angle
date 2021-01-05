@@ -404,11 +404,8 @@ void GenerateTransformFeedbackEmulationOutputs(const GlslangSourceOptions &optio
     const std::string driverUniforms = std::string(sh::vk::kDriverUniformsVarName);
     std::ostringstream xfbOut;
 
-    xfbOut << "if (" << driverUniforms
-           << ".xfbActiveUnpaused != 0)\n{\n"
-              "int xfbIndex = gl_VertexIndex + gl_InstanceIndex * int("
-           << driverUniforms << ".xfbVerticesPerDraw);\nivec4 xfbOffsets = " << driverUniforms
-           << ".xfbBufferOffsets + xfbIndex * ivec4(";
+    xfbOut << "if (" << driverUniforms << ".xfbActiveUnpaused != 0)\n{\nivec4 xfbOffsets = "
+           << sh::vk::kXfbEmulationGetOffsetsFunctionName << "(ivec4(";
     for (size_t bufferIndex = 0; bufferIndex < bufferCount; ++bufferIndex)
     {
         if (bufferIndex > 0)
@@ -423,7 +420,7 @@ void GenerateTransformFeedbackEmulationOutputs(const GlslangSourceOptions &optio
     {
         xfbOut << ", 0";
     }
-    xfbOut << ");\n";
+    xfbOut << "));\n";
     size_t outputOffset = 0;
     for (size_t varyingIndex = 0; varyingIndex < varyings.size(); ++varyingIndex)
     {

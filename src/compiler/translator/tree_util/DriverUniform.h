@@ -34,6 +34,8 @@ class DriverUniform
 
     TIntermBinary *getViewportRef() const;
     TIntermBinary *getAbcBufferOffsets() const;
+    TIntermBinary *getXfbVerticesPerInstance() const;
+    TIntermBinary *getXfbBufferOffsets() const;
     TIntermBinary *getClipDistancesEnabled() const;
     TIntermBinary *getDepthRangeRef() const;
     TIntermBinary *getDepthRangeReservedFieldRef() const;

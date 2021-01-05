@@ -64,7 +64,7 @@ struct GraphicsDriverUniforms
     uint32_t enabledClipPlanes;
 
     uint32_t xfbActiveUnpaused;
-    uint32_t xfbVerticesPerDraw;
+    int32_t xfbVerticesPerInstance;
 
     // Used to replace gl_NumSamples. Because gl_NumSamples cannot be recognized in SPIR-V.
     int32_t numSamples;
@@ -3869,7 +3869,7 @@ angle::Result ContextVk::handleDirtyGraphicsDriverUniforms(const gl::Context *co
          static_cast<float>(glViewport.width), static_cast<float>(glViewport.height)},
         mState.getEnabledClipDistances().bits(),
         xfbActiveUnpaused,
-        mXfbVertexCountPerInstance,
+        static_cast<int32_t>(mXfbVertexCountPerInstance),
         numSamples,
         {},
         {},

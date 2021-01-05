@@ -446,6 +446,72 @@ ANGLE_NO_DISCARD bool AddBresenhamEmulationVS(TCompiler *compiler,
     return compiler->validateAST(root);
 }
 
+ANGLE_NO_DISCARD bool AddXfbEmulationSupport(TCompiler *compiler,
+                                             TIntermBlock *root,
+                                             TSymbolTable *symbolTable,
+                                             const DriverUniform *driverUniforms)
+{
+    // Generate the following function and place it before main().  This function takes a "strides"
+    // parameter that is determined at link time, and calculates for each transform feedback buffer
+    // (of which there are a maximum of four) what the starting index is to write to the output
+    // buffer.
+    //
+    //     ivec4 ANGLEGetXfbOffsets(ivec4 strides)
+    //     {
+    //         int xfbIndex = gl_VertexIndex
+    //                      + gl_InstanceIndex * ANGLEUniforms.xfbVerticesPerInstance;
+    //         return ANGLEUniforms.xfbBufferOffsets + xfbIndex * strides;
+    //     }
+
+    const TType *ivec4Type = StaticType::GetBasic<EbtInt, 4>();
+
+    // Create the parameter variable.
+    TVariable *stridesVar        = new TVariable(symbolTable, ImmutableString("strides"), ivec4Type,
+                                          SymbolType::AngleInternal);
+    TIntermSymbol *stridesSymbol = new TIntermSymbol(stridesVar);
+
+    // Create references to gl_VertexIndex, gl_InstanceIndex, ANGLEUniforms.xfbVerticesPerInstance
+    // and ANGLEUniforms.xfbBufferOffsets.
+    TIntermSymbol *vertexIndex            = new TIntermSymbol(BuiltInVariable::gl_VertexIndex());
+    TIntermSymbol *instanceIndex          = new TIntermSymbol(BuiltInVariable::gl_InstanceIndex());
+    TIntermBinary *xfbVerticesPerInstance = driverUniforms->getXfbVerticesPerInstance();
+    TIntermBinary *xfbBufferOffsets       = driverUniforms->getXfbBufferOffsets();
+
+    // gl_InstanceIndex * ANGLEUniforms.xfbVerticesPerInstance
+    TIntermBinary *xfbInstanceIndex =
+        new TIntermBinary(EOpMul, instanceIndex, xfbVerticesPerInstance);
+
+    // gl_VertexIndex + |xfbInstanceIndex|
+    TIntermBinary *xfbIndex = new TIntermBinary(EOpAdd, vertexIndex, xfbInstanceIndex);
+
+    // |xfbIndex| * |strides|
+    TIntermBinary *xfbStrides = new TIntermBinary(EOpVectorTimesScalar, xfbIndex, stridesSymbol);
+
+    // ANGLEUniforms.xfbBufferOffsets + |xfbStrides|
+    TIntermBinary *xfbOffsets = new TIntermBinary(EOpAdd, xfbBufferOffsets, xfbStrides);
+
+    // Create the function body, which has a single return statement.  Note that the `xfbIndex`
+    // variable declared in the comment at the beginning of this function is simply replaced in the
+    // return statement for brevity.
+    TIntermBlock *body = new TIntermBlock;
+    body->appendStatement(new TIntermBranch(EOpReturn, xfbOffsets));
+
+    // Declare the function
+    TFunction *getOffsetsFunction =
+        new TFunction(symbolTable, ImmutableString(vk::kXfbEmulationGetOffsetsFunctionName),
+                      SymbolType::AngleInternal, ivec4Type, true);
+    getOffsetsFunction->addParameter(stridesVar);
+
+    TIntermFunctionDefinition *functionDef =
+        CreateInternalFunctionDefinitionNode(*getOffsetsFunction, body);
+
+    // Insert the function declaration before main().
+    size_t mainIndex = FindMainIndex(root);
+    root->insertChildNodes(mainIndex, {functionDef});
+
+    return compiler->validateAST(root);
+}
+
 ANGLE_NO_DISCARD bool InsertFragCoordCorrection(TCompiler *compiler,
                                                 ShCompileOptions compileOptions,
                                                 TIntermBlock *root,
@@ -969,6 +1035,17 @@ bool TranslatorVulkan::translateImpl(TIntermBlock *root,
             {
                 if (!AddBresenhamEmulationVS(this, root, &getSymbolTable(), specConst,
                                              driverUniforms))
+                {
+                    return false;
+                }
+            }
+
+            if (compileOptions & SH_ADD_VULKAN_XFB_EMULATION_SUPPORT_CODE)
+            {
+                // Add support code for transform feedback emulation.  Only applies to vertex shader
+                // as tessellation and geometry shader transform feedback capture require
+                // VK_EXT_transform_feedback.
+                if (!AddXfbEmulationSupport(this, root, &getSymbolTable(), driverUniforms))
                 {
                     return false;
                 }

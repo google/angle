@@ -2142,7 +2142,7 @@ angle::Result ContextMtl::fillDriverXFBUniforms(GLint drawCallFirstVertex,
         return angle::Result::Continue;
     }
 
-    mDriverUniforms.xfbVerticesPerDraw = verticesPerInstance;
+    mDriverUniforms.xfbVerticesPerInstance = verticesPerInstance;
 
     TransformFeedbackMtl *transformFeedbackMtl = mtl::GetImpl(transformFeedback);
 
