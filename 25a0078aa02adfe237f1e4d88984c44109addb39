@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "65671044_805a651e",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 704,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-05T02:19:04Z",
+      "side": 1,
+      "message": "Unconditionally adding this to the map simplifies the logic in the transformer in a few places.",
+      "parentUuid": "1f54c33b_b125879b",
+      "range": {
+        "startLine": 701,
+        "startChar": 0,
+        "endLine": 704,
+        "endChar": 39
+      },
+      "revId": "25a0078aa02adfe237f1e4d88984c44109addb39",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "188afe41_f16453b1",
@@ -37,6 +61,24 @@
       "writtenOn": "2020-12-28T17:53:00Z",
       "side": 1,
       "message": "I only see this defined as part of EXT_clip_cull_distance, which we don\u0027t fully support yet.   Probably shouldn\u0027t hurt to include it here though.",
+      "revId": "25a0078aa02adfe237f1e4d88984c44109addb39",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e8304e0c_504e1fc7",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 769,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-05T02:19:04Z",
+      "side": 1,
+      "message": "Ack. Indeed, Mohan is adding support for this, so this makes it readily available.",
+      "parentUuid": "188afe41_f16453b1",
       "revId": "25a0078aa02adfe237f1e4d88984c44109addb39",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
@@ -64,6 +106,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2f34c023_b839fe78",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 788,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-05T02:19:04Z",
+      "side": 1,
+      "message": "I think map of strings would be practically slower. In practice, you would probably only have gl_Position captured, so this shouldn\u0027t loop many times. The hash of strings itself is an unnecessary cost.\n\nFYI, non of our traces capture any builtins (not even gl_Position).",
+      "parentUuid": "716ec206_9d822d8f",
+      "range": {
+        "startLine": 773,
+        "startChar": 0,
+        "endLine": 788,
+        "endChar": 17
+      },
+      "revId": "25a0078aa02adfe237f1e4d88984c44109addb39",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "84ac7398_f33b04ed",
@@ -77,6 +143,24 @@
       "writtenOn": "2020-12-28T17:53:00Z",
       "side": 1,
       "message": "What about GS/TS?",
+      "revId": "25a0078aa02adfe237f1e4d88984c44109addb39",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d07adfa3_cb8de8fe",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramExecutableVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-05T02:19:04Z",
+      "side": 1,
+      "message": "The logic for that is implemented as part of [1], didn\u0027t want to duplicate it here.\n\n[1]: https://chromium-review.googlesource.com/c/angle/angle/+/2598584/5/src/libANGLE/renderer/vulkan/ProgramExecutableVk.cpp#691",
+      "parentUuid": "84ac7398_f33b04ed",
       "revId": "25a0078aa02adfe237f1e4d88984c44109addb39",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
