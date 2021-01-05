@@ -247,6 +247,9 @@ enum class SrgbOverride
 
 ShaderType GetShaderTypeFromBitfield(size_t singleShaderType);
 bool ShaderTypeSupportsTransformFeedback(ShaderType shaderType);
+// Given a set of shader stages, returns the last vertex processing stage.  This is the stage that
+// interfaces the fragment shader.
+ShaderType GetLastPreFragmentStage(ShaderBitSet shaderTypes);
 
 }  // namespace gl
 

@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 248
+#define ANGLE_SH_VERSION 249
 
 enum ShShaderSpec
 {
@@ -875,6 +875,9 @@ extern const char kLineRasterEmulationPosition[];
 
 // Transform feedback emulation helper function
 extern const char kXfbEmulationGetOffsetsFunctionName[];
+extern const char kXfbEmulationBufferBlockName[];
+extern const char kXfbEmulationBufferName[];
+extern const char kXfbEmulationBufferFieldName[];
 
 }  // namespace vk
 

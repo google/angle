@@ -463,7 +463,9 @@ ANGLE_NO_DISCARD bool AddXfbEmulationSupport(TCompiler *compiler,
     //         return ANGLEUniforms.xfbBufferOffsets + xfbIndex * strides;
     //     }
 
-    const TType *ivec4Type = StaticType::GetBasic<EbtInt, 4>();
+    constexpr uint32_t kMaxXfbBuffers = 4;
+
+    const TType *ivec4Type = StaticType::GetBasic<EbtInt, kMaxXfbBuffers>();
 
     // Create the parameter variable.
     TVariable *stridesVar        = new TVariable(symbolTable, ImmutableString("strides"), ivec4Type,
@@ -506,8 +508,48 @@ ANGLE_NO_DISCARD bool AddXfbEmulationSupport(TCompiler *compiler,
         CreateInternalFunctionDefinitionNode(*getOffsetsFunction, body);
 
     // Insert the function declaration before main().
-    size_t mainIndex = FindMainIndex(root);
+    const size_t mainIndex = FindMainIndex(root);
     root->insertChildNodes(mainIndex, {functionDef});
+
+    // Additionally, generate the following storage buffer declarations used to capture transform
+    // feedback output.  Again, there's a maximum of four buffers.
+    //
+    //     buffer ANGLEXfbBuffer0
+    //     {
+    //         float xfbOut[];
+    //     } ANGLEXfb0;
+    //     buffer ANGLEXfbBuffer1
+    //     {
+    //         float xfbOut[];
+    //     } ANGLEXfb1;
+    //     ...
+
+    for (uint32_t bufferIndex = 0; bufferIndex < kMaxXfbBuffers; ++bufferIndex)
+    {
+        TFieldList *fieldList = new TFieldList;
+        TType *xfbOutType     = new TType(EbtFloat);
+        xfbOutType->makeArray(0);
+
+        TField *field = new TField(xfbOutType, ImmutableString(vk::kXfbEmulationBufferFieldName),
+                                   TSourceLoc(), SymbolType::AngleInternal);
+
+        fieldList->push_back(field);
+
+        static_assert(
+            kMaxXfbBuffers < 10,
+            "ImmutableStringBuilder memory size below needs to accomodate the number of buffers");
+
+        ImmutableStringBuilder blockName(strlen(vk::kXfbEmulationBufferBlockName) + 2);
+        blockName << vk::kXfbEmulationBufferBlockName;
+        blockName.appendDecimal(bufferIndex);
+
+        ImmutableStringBuilder varName(strlen(vk::kXfbEmulationBufferName) + 2);
+        varName << vk::kXfbEmulationBufferName;
+        varName.appendDecimal(bufferIndex);
+
+        DeclareInterfaceBlock(root, symbolTable, fieldList, EvqBuffer, TMemoryQualifier::Create(),
+                              0, blockName, varName);
+    }
 
     return compiler->validateAST(root);
 }

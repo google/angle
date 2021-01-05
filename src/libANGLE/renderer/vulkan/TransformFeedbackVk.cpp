@@ -22,7 +22,6 @@
 
 namespace rx
 {
-
 TransformFeedbackVk::TransformFeedbackVk(const gl::TransformFeedbackState &state)
     : TransformFeedbackImpl(state),
       mRebindTransformFeedbackBuffer(false),
@@ -208,7 +207,9 @@ void TransformFeedbackVk::updateDescriptorSetLayout(
     vk::DescriptorSetLayoutDesc *descSetLayoutOut) const
 {
     if (!contextVk->getFeatures().emulateTransformFeedback.enabled)
+    {
         return;
+    }
 
     for (uint32_t bufferIndex = 0; bufferIndex < xfbBufferCount; ++bufferIndex)
     {
@@ -227,7 +228,9 @@ void TransformFeedbackVk::initDescriptorSet(ContextVk *contextVk,
                                             VkDescriptorSet descSet) const
 {
     if (!contextVk->getFeatures().emulateTransformFeedback.enabled)
+    {
         return;
+    }
 
     VkDescriptorBufferInfo *descriptorBufferInfo =
         contextVk->allocDescriptorBufferInfos(xfbBufferCount);
@@ -250,7 +253,9 @@ void TransformFeedbackVk::updateDescriptorSet(ContextVk *contextVk,
                                               VkDescriptorSet descSet) const
 {
     if (!contextVk->getFeatures().emulateTransformFeedback.enabled)
+    {
         return;
+    }
 
     const gl::ProgramExecutable *executable = contextVk->getState().getProgramExecutable();
     ASSERT(executable);
@@ -284,7 +289,9 @@ void TransformFeedbackVk::getBufferOffsets(ContextVk *contextVk,
                                            size_t offsetsSize) const
 {
     if (!contextVk->getFeatures().emulateTransformFeedback.enabled)
+    {
         return;
+    }
 
     GLsizeiptr verticesDrawn = mState.getVerticesDrawn();
     const std::vector<GLsizei> &bufferStrides =
@@ -319,7 +326,7 @@ void TransformFeedbackVk::getBufferOffsets(ContextVk *contextVk,
 void TransformFeedbackVk::writeDescriptorSet(ContextVk *contextVk,
                                              const ShaderInterfaceVariableInfoMap &variableInfoMap,
                                              size_t xfbBufferCount,
-                                             VkDescriptorBufferInfo *pBufferInfo,
+                                             VkDescriptorBufferInfo *bufferInfo,
                                              VkDescriptorSet descSet) const
 {
     ASSERT(contextVk->getFeatures().emulateTransformFeedback.enabled);
@@ -336,7 +343,7 @@ void TransformFeedbackVk::writeDescriptorSet(ContextVk *contextVk,
     writeDescriptorInfo.descriptorCount       = static_cast<uint32_t>(xfbBufferCount);
     writeDescriptorInfo.descriptorType        = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
     writeDescriptorInfo.pImageInfo            = nullptr;
-    writeDescriptorInfo.pBufferInfo           = pBufferInfo;
+    writeDescriptorInfo.pBufferInfo           = bufferInfo;
     writeDescriptorInfo.pTexelBufferView      = nullptr;
 }
 

@@ -56,9 +56,10 @@ angle::Result ProgramPipelineVk::link(const gl::Context *glContext,
                                       const gl::ProgramMergedVaryings &mergedVaryings,
                                       const gl::ProgramVaryingPacking &varyingPacking)
 {
-    ContextVk *contextVk                  = vk::GetImpl(glContext);
-    const gl::State &glState              = glContext->getState();
-    const gl::ProgramPipeline *glPipeline = glState.getProgramPipeline();
+    ContextVk *contextVk                      = vk::GetImpl(glContext);
+    const gl::State &glState                  = glContext->getState();
+    const gl::ProgramPipeline *glPipeline     = glState.getProgramPipeline();
+    const gl::ProgramExecutable &glExecutable = glPipeline->getExecutable();
     GlslangSourceOptions options =
         GlslangWrapperVk::CreateSourceOptions(contextVk->getRenderer()->getFeatures());
     GlslangProgramInterfaceInfo glslangProgramInterfaceInfo;
@@ -68,8 +69,10 @@ angle::Result ProgramPipelineVk::link(const gl::Context *glContext,
 
     // Now that the program pipeline has all of the programs attached, the various descriptor
     // set/binding locations need to be re-assigned to their correct values.
+    const gl::ShaderType linkedTransformFeedbackStage =
+        glExecutable.getLinkedTransformFeedbackStage();
     gl::ShaderType frontShaderType = gl::ShaderType::InvalidEnum;
-    for (const gl::ShaderType shaderType : glPipeline->getExecutable().getLinkedShaderStages())
+    for (const gl::ShaderType shaderType : glExecutable.getLinkedShaderStages())
     {
         gl::Program *glProgram =
             const_cast<gl::Program *>(glPipeline->getShaderProgram(shaderType));
@@ -83,9 +86,13 @@ angle::Result ProgramPipelineVk::link(const gl::Context *glContext,
             glslangProgramInterfaceInfo.locationsUsedForXfbExtension =
                 programProgramInterfaceInfo.locationsUsedForXfbExtension;
 
-            GlslangAssignLocations(options, glProgram->getState().getExecutable(), varyingPacking,
-                                   shaderType, frontShaderType, &glslangProgramInterfaceInfo,
-                                   &mExecutable.mVariableInfoMap);
+            const bool isTransformFeedbackStage =
+                shaderType == linkedTransformFeedbackStage &&
+                !glProgram->getState().getLinkedTransformFeedbackVaryings().empty();
+
+            GlslangAssignLocations(options, glProgram->getState(), varyingPacking, shaderType,
+                                   frontShaderType, isTransformFeedbackStage,
+                                   &glslangProgramInterfaceInfo, &mExecutable.mVariableInfoMap);
             frontShaderType = shaderType;
         }
     }

@@ -1250,32 +1250,24 @@ bool ProgramState::hasAttachedShader() const
 
 ShaderType ProgramState::getFirstAttachedShaderStageType() const
 {
-    if (mExecutable->getLinkedShaderStages().none())
+    const ShaderBitSet linkedStages = mExecutable->getLinkedShaderStages();
+    if (linkedStages.none())
     {
         return ShaderType::InvalidEnum;
     }
 
-    return *mExecutable->getLinkedShaderStages().begin();
+    return linkedStages.first();
 }
 
 ShaderType ProgramState::getLastAttachedShaderStageType() const
 {
-    for (int i = gl::kAllGraphicsShaderTypes.size() - 1; i >= 0; --i)
+    const ShaderBitSet linkedStages = mExecutable->getLinkedShaderStages();
+    if (linkedStages.none())
     {
-        const gl::ShaderType shaderType = gl::kAllGraphicsShaderTypes[i];
-
-        if (mExecutable->hasLinkedShaderStage(shaderType))
-        {
-            return shaderType;
-        }
+        return ShaderType::InvalidEnum;
     }
 
-    if (mExecutable->hasLinkedShaderStage(ShaderType::Compute))
-    {
-        return ShaderType::Compute;
-    }
-
-    return ShaderType::InvalidEnum;
+    return linkedStages.last();
 }
 
 ShaderType ProgramState::getAttachedTransformFeedbackStage() const

@@ -818,14 +818,15 @@ angle::Result ProgramExecutableVk::createPipelineLayout(
                                      gl_vk::kShaderStageMap[shaderType], nullptr);
         mNumDefaultUniformDescriptors++;
     }
-    bool hasVertexShader = glExecutable.hasLinkedShaderStage(gl::ShaderType::Vertex);
+
+    gl::ShaderType linkedTransformFeedbackStage = glExecutable.getLinkedTransformFeedbackStage();
     bool hasXfbVaryings =
-        (programStates[gl::ShaderType::Vertex] &&
-         !programStates[gl::ShaderType::Vertex]->getLinkedTransformFeedbackVaryings().empty());
-    if (hasVertexShader && transformFeedback && hasXfbVaryings)
+        linkedTransformFeedbackStage != gl::ShaderType::InvalidEnum &&
+        !programStates[linkedTransformFeedbackStage]->getLinkedTransformFeedbackVaryings().empty();
+    if (transformFeedback && hasXfbVaryings)
     {
         const gl::ProgramExecutable &executable =
-            programStates[gl::ShaderType::Vertex]->getExecutable();
+            programStates[linkedTransformFeedbackStage]->getExecutable();
         size_t xfbBufferCount                    = executable.getTransformFeedbackBufferCount();
         TransformFeedbackVk *transformFeedbackVk = vk::GetImpl(transformFeedback);
         transformFeedbackVk->updateDescriptorSetLayout(contextVk, mVariableInfoMap, xfbBufferCount,

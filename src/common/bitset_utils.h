@@ -140,6 +140,7 @@ class BitSetT final
     constexpr static BitSetT Zero() { return BitSetT(); }
 
     ParamT first() const;
+    ParamT last() const;
 
   private:
     // Produces a mask of ones up to the "x"th bit.
@@ -457,6 +458,13 @@ ParamT BitSetT<N, BitsT, ParamT>::first() const
 {
     ASSERT(!none());
     return static_cast<ParamT>(gl::ScanForward(mBits));
+}
+
+template <size_t N, typename BitsT, typename ParamT>
+ParamT BitSetT<N, BitsT, ParamT>::last() const
+{
+    ASSERT(!none());
+    return static_cast<ParamT>(gl::ScanReverse(mBits));
 }
 
 template <size_t N, typename BitsT, typename ParamT>
