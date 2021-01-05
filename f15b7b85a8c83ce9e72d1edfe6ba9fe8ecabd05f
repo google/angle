@@ -22,6 +22,30 @@
       },
       "revId": "f15b7b85a8c83ce9e72d1edfe6ba9fe8ecabd05f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b588770e_a3bfb74d",
+        "filename": "src/tests/gl_tests/ProvokingVertexTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1117350
+      },
+      "writtenOn": "2021-01-05T08:21:11Z",
+      "side": 1,
+      "message": "iOS doesn\u0027t support GL_RED_INTEGER for readPixels but I believe this is allowed by the spec, so a test bug not a driver bug. GL_RGBA_INTEGER is guaranteed to be supported.",
+      "parentUuid": "51445d24_f27dd115",
+      "range": {
+        "startLine": 129,
+        "startChar": 29,
+        "endLine": 129,
+        "endChar": 44
+      },
+      "revId": "f15b7b85a8c83ce9e72d1edfe6ba9fe8ecabd05f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
