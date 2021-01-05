@@ -16,6 +16,24 @@
       "message": "Is the opposite possible? Maybe you can just ASSERT this because it looks like only gl_SecondaryFrag*EXT has the decoration, and that is specially handled.",
       "revId": "f84e7b8f910caf749faa278a3b363616a0c68b8d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1c2b92d9_3853c331",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 587,
+      "author": {
+        "id": 1359667
+      },
+      "writtenOn": "2021-01-05T23:31:24Z",
+      "side": 1,
+      "message": "It\u0027s possible when the original shader source specifies the index already (occurs in version 300 es shaders). I put this check in here to reduce a redundant spriv index declaration. If this check is removed, we get the following in the disassembly:\n```\n...\nOpDecorate %12 Binding 1\nOpDecorate %18 RelaxedPrecision\nOpDecorate %18 Index 1\nOpDecorate %18 Location 0\nOpDecorate %18 Index 1\nOpMemberDecorate %25 0 Offset 0\n...\n```",
+      "parentUuid": "8a0e4a18_4ef804e9",
+      "revId": "f84e7b8f910caf749faa278a3b363616a0c68b8d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
