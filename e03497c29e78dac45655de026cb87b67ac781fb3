@@ -24,6 +24,23 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "532d8f6e_cc439e20",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-05T16:46:18Z",
+      "side": 1,
+      "message": "FYI, I did this so I can capture gl_Position rotated and flipped and then reuse the unused parts of the buffer to issue an indirect dispatch call post-render-pass to undo those changes in the final buffer. That may or may not optimize gl_Position capture (probably faster VS vs to some degree concurrent (with next RP) compute call for correction), but would get rid of one reserved varying (and resolve a GS varying limit issue). FYI, non of our traces capture gl_Position, so it looks like applications prefer to capture some custom varying for position instead.\n\nThat said, I don\u0027t have time to pursue that for now, so let\u0027s put this on ice.",
+      "revId": "e03497c29e78dac45655de026cb87b67ac781fb3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "203b224c_2d0763cb",
