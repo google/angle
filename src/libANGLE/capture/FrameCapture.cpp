@@ -33,6 +33,8 @@
 #include "libANGLE/capture/capture_gles_2_0_autogen.h"
 #include "libANGLE/capture/capture_gles_3_0_autogen.h"
 #include "libANGLE/capture/capture_gles_3_1_autogen.h"
+#include "libANGLE/capture/capture_gles_3_2_autogen.h"
+#include "libANGLE/capture/capture_gles_ext_autogen.h"
 #include "libANGLE/capture/frame_capture_utils.h"
 #include "libANGLE/capture/gl_enum_utils.h"
 #include "libANGLE/queryconversions.h"
@@ -2125,6 +2127,11 @@ void CaptureTextureStorage(std::vector<CallCapture> *setupCalls,
                                     desc.size.width, desc.size.height, desc.size.depth));
             break;
         }
+        case gl::TextureType::Buffer:
+        {
+            // Do nothing. This will already be captured as a buffer.
+            break;
+        }
         default:
             UNIMPLEMENTED();
             break;
@@ -2140,6 +2147,28 @@ void CaptureTextureContents(std::vector<CallCapture> *setupCalls,
                             const void *data)
 {
     const gl::InternalFormat &format = *desc.format.info;
+
+    if (index.getType() == gl::TextureType::Buffer)
+    {
+        // Zero binding size indicates full buffer bound
+        if (texture->getBuffer().getSize() == 0)
+        {
+            Capture(setupCalls,
+                    CaptureTexBufferEXT(*replayState, true, index.getType(), format.internalFormat,
+                                        texture->getBuffer().get()->id()));
+        }
+        else
+        {
+            Capture(setupCalls, CaptureTexBufferRangeEXT(*replayState, true, index.getType(),
+                                                         format.internalFormat,
+                                                         texture->getBuffer().get()->id(),
+                                                         texture->getBuffer().getOffset(),
+                                                         texture->getBuffer().getSize()));
+        }
+
+        // For buffers, we're done
+        return;
+    }
 
     bool is3D =
         (index.getType() == gl::TextureType::_3D || index.getType() == gl::TextureType::_2DArray);
@@ -2649,7 +2678,17 @@ void CaptureMidExecutionSetup(const gl::Context *context,
             ASSERT(index.getType() == gl::TextureType::_2D ||
                    index.getType() == gl::TextureType::_3D ||
                    index.getType() == gl::TextureType::_2DArray ||
+                   index.getType() == gl::TextureType::Buffer ||
                    index.getType() == gl::TextureType::CubeMap);
+
+            if (index.getType() == gl::TextureType::Buffer)
+            {
+                // The buffer contents are already backed up, but we need to emit the TexBuffer
+                // binding calls
+                CaptureTextureContents(setupCalls, &replayState, texture, index, desc, 0, 0);
+
+                continue;
+            }
 
             if (format.compressed)
             {
