@@ -16,6 +16,46 @@
       "message": "Excellent, LGTM.",
       "revId": "f8dc8709cc979a72ccfa3e15fbdf6e3970bf2da7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0f606d8c_8cd860f4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-01-05T23:07:46Z",
+      "side": 1,
+      "message": "Thanks Tim!  LGTM with one nit.",
+      "revId": "f8dc8709cc979a72ccfa3e15fbdf6e3970bf2da7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "da9c9f19_89e7f978",
+        "filename": "src/libANGLE/FrameCapture.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2238,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-01-05T23:07:46Z",
+      "side": 1,
+      "message": "Rather than another local helper, can you call Capture() directly, like in the function above?",
+      "range": {
+        "startLine": 2237,
+        "startChar": 4,
+        "endLine": 2238,
+        "endChar": 95
+      },
+      "revId": "f8dc8709cc979a72ccfa3e15fbdf6e3970bf2da7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
