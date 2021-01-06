@@ -33,6 +33,24 @@
       "message": "Why is this code block running only for VS?",
       "revId": "35ec4cc951e3d3d5b3a7ac8718c326536255f968",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "eb08f102_c6452615",
+        "filename": "src/libANGLE/ProgramExecutable.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 493,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-06T15:40:46Z",
+      "side": 1,
+      "message": "Only the VS has attributes.",
+      "parentUuid": "080fe575_1069c1d1",
+      "revId": "35ec4cc951e3d3d5b3a7ac8718c326536255f968",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
