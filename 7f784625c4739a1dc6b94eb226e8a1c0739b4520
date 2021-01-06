@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a99a462a_d9109129",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-06T03:23:35Z",
+      "side": 1,
+      "message": "Sorry I missed this in the review of your change. The shaderType you needed was there all along!",
+      "revId": "7f784625c4739a1dc6b94eb226e8a1c0739b4520",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
