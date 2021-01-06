@@ -62,6 +62,30 @@
       },
       "revId": "eeae963742700ee961bbcbe0374c946835b5c6bd",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3ee1ed56_2e9d6f7f",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 430,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-06T21:25:41Z",
+      "side": 1,
+      "message": "In Vulkan, any vkCmd*Bind remain effective until the command buffer is ended. If we use Vulkan secondary CBs, this means every RP needs to rebind everything. When we use ANGLE\u0027s secondary CBs, there\u0027s no need to rebind everything every time because there\u0027s only one CB and that\u0027s the primary one.\n\nI think mNewGraphicsCommandBufferDirtyBits has all these bits because of the time we used Vulkan secondary CBs, but they are most likely all (or most) unnecessary now. Should we commit to ANGLE\u0027s secondary CBs and drop support for using Vulkan secondary CBs? That would result in some cleanup.",
+      "parentUuid": "c8b26776_695068f1",
+      "range": {
+        "startLine": 429,
+        "startChar": 10,
+        "endLine": 430,
+        "endChar": 16
+      },
+      "revId": "eeae963742700ee961bbcbe0374c946835b5c6bd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
