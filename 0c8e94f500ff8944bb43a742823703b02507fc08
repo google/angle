@@ -16,6 +16,24 @@
       "message": "Hey Quyen! I hope you are doing well and happy new year. I was hoping to get some pointers for this change, if you are available.\n\nI\u0027ve made a change here where the transform feedback buffers are turned into an array of 4 (fixed size), rather than having one buffer declared per attribute. I\u0027m having trouble figuring out what (blindly) change in the metal code to support this. In Vulkan, a buffer array gets a unique binding; my first question is, is that the same with metal? I\u0027m looking at mtl_glslang_utils.mm (BindBuffers), and the logic under `case kGlslangDefaultUniformAndXfbDescSet:` needs to change in ways I can\u0027t really tell how.\n\nBasically I need to replicate these changes in vulkan/ here in metal/, and I\u0027m having a hard time understanding the architecture:\n\n- Have one binding for the xfb buffers array\n- Always bind 4 xfb buffers (use dummy buffers if fewer xfb buffers used)\n  * This touches multiple pieces of code",
       "revId": "0c8e94f500ff8944bb43a742823703b02507fc08",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2241bbaf_e0102e02",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2021-01-06T08:06:02Z",
+      "side": 1,
+      "message": "Hi Shahbaz, hpny to you too.\nBasically mtl_glslang_utils needs to tell spirv-cross to remap TranslatorVulkan\u0027s original xfb buffer bindings to Metal\u0027s linear bindings since Metal doesn\u0027t have concept of descriptor set (every buffer must have a discrete binding). Actually Metal can emulate descriptor set but that is another story.\n\n- mtl_glslang_utils currently uses `GetXfbBufferName(bufferIdx)` to get original binding of each xfb buffer produced by the TranslatorVulkan.\n- Then each xfb buffer is allocated a Metal discrete binding slot starting from max allowed binding slot for buffers. It depends on the order of appearances of the buffers reported by spirv-cross.\n\nFor example (based on current way of generating xfb buffers):\nThe 3 xfb buffers\n```\nlayout (set\u003d1, binding\u003d0) xfbBuffers0;  // this will be remapped to 30\nlayout (set\u003d1, binding\u003d1) xfbBuffers1;  // this will be remapped to 29\nlayout (set\u003d1, binding\u003d2) xfbBuffers2;  // this will be remapped to 28\n```\nwould be re-assigned to Metal buffer slots 30, 29, 28 respectively. This assumes spirv-cross reports \"xfbBuffers0, xfbBuffers1, xfbBuffers2\" variables in that order.\n\n- Finally, I also store the remapped slots in \"xfbBindingRemapOut\" table so that ProgramMtl can know the actual binding slots and bind xfb buffers during render time in ProgramMtl::updateXfbBuffers().\n  \n  \nIt is possible to use array of buffers in Metal. However, that would require changing the way mtl_glslang_utils telling spirv-cross to remap the xfb buffer bindings.\n- Instead of telling spirv-cross to remap each buffer element individually, you could only need to remap the first element in the array to slot 27 (31 - 4). This  remap is done via single spirv_cross::MSLResourceBinding structure and one CompilerMSL ::add_msl_resource_binding() call.\n- Then there are 2 options for storing remapping table \"xfbBindingRemapOut\" used by ProgramMtl.:\n    - Either report each element separately in this table so ProgramMtl doesn\u0027t need to change anything. For unused xfb buffer elements, store value 31 in their respective table entries. For example, if 2 buffers are used, the table would look like this: [0]-\u003e27, [1]-\u003e28, [2]-\u003e31, [3]-\u003e31.\n    - Or store only the first element\u0027s remapped slot and change ProgramMtl to bind 4 consecutive buffers based on this slot (pls see ProgramMtl::updateXfbBuffers() function). 4 could be number of used xfb buffers.\n- Note: 31 is mtl::kMaxShaderBuffers constant.\n  \n  \nI think another simpler method without requiring any change in the metal back-end is still generating 4 xfb buffers separately. I think unused buffers could be removed by SpirvTransformer, isn\u0027t it?",
+      "parentUuid": "c85a94ff_4523534b",
+      "revId": "0c8e94f500ff8944bb43a742823703b02507fc08",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
