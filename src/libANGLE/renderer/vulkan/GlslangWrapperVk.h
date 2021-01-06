@@ -45,7 +45,6 @@ class GlslangWrapperVk
 
     static angle::Result TransformSpirV(vk::Context *context,
                                         const GlslangSpirvOptions &options,
-                                        gl::ShaderType shaderType,
                                         const ShaderInterfaceVariableInfoMap &variableInfoMap,
                                         const SpirvBlob &initialSpirvBlob,
                                         SpirvBlob *shaderCodeOut);

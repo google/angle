@@ -458,8 +458,7 @@ angle::Result GlslangGetShaderSpirvCode(ErrorHandler *context,
 
         angle::Result status = GlslangTransformSpirvCode(
             [context](GlslangError error) { return HandleError(context, error); }, options,
-            shaderType, variableInfoMap, initialSpirvBlobs[shaderType],
-            &(*shaderCodeOut)[shaderType]);
+            variableInfoMap, initialSpirvBlobs[shaderType], &(*shaderCodeOut)[shaderType]);
         if (status != angle::Result::Continue)
         {
             return status;

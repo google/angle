@@ -36,7 +36,7 @@ bool ValidateTransformedSpirV(ContextVk *contextVk,
         options.isTransformFeedbackStage = shaderType == gl::ShaderType::Vertex;
 
         SpirvBlob transformed;
-        if (GlslangWrapperVk::TransformSpirV(contextVk, options, shaderType, variableInfoMap,
+        if (GlslangWrapperVk::TransformSpirV(contextVk, options, variableInfoMap,
                                              spirvBlobs[shaderType],
                                              &transformed) != angle::Result::Continue)
         {
@@ -133,7 +133,7 @@ angle::Result ProgramInfo::initProgram(ContextVk *contextVk,
     options.removeDebugInfo          = !contextVk->getRenderer()->getEnableValidationLayers();
     options.isTransformFeedbackStage = shaderType == gl::ShaderType::Vertex;
 
-    ANGLE_TRY(GlslangWrapperVk::TransformSpirV(contextVk, options, shaderType, variableInfoMap,
+    ANGLE_TRY(GlslangWrapperVk::TransformSpirV(contextVk, options, variableInfoMap,
                                                originalSpirvBlob, &transformedSpirvBlob));
     ANGLE_TRY(vk::InitShaderAndSerial(contextVk, &mShaders[shaderType].get(),
                                       transformedSpirvBlob.data(),

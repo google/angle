@@ -1457,14 +1457,12 @@ class SpirvTransformer final : public SpirvTransformerBase
 {
   public:
     SpirvTransformer(const std::vector<uint32_t> &spirvBlobIn,
-                     gl::ShaderType shaderType,
                      GlslangSpirvOptions options,
                      const ShaderInterfaceVariableInfoMap &variableInfoMap,
                      SpirvBlob *spirvBlobOut)
         : SpirvTransformerBase(spirvBlobIn, variableInfoMap, spirvBlobOut),
           mOptions(options),
           mHasTransformFeedbackOutput(false),
-          mShaderType(shaderType),
           mOutputPerVertex{},
           mInputPerVertex{}
     {}
@@ -1509,8 +1507,6 @@ class SpirvTransformer final : public SpirvTransformerBase
     // Special flags:
     GlslangSpirvOptions mOptions;
     bool mHasTransformFeedbackOutput;
-
-    gl::ShaderType mShaderType;
 
     // Traversal state:
     bool mInsertFunctionVariables = false;
@@ -1823,7 +1819,7 @@ void SpirvTransformer::visitDecorate(const uint32_t *instruction)
         const char *name = mNamesById[id];
         ASSERT(name != nullptr);
 
-        const ShaderInterfaceVariableInfo &info = mVariableInfoMap.get(mShaderType, name);
+        const ShaderInterfaceVariableInfo &info = mVariableInfoMap.get(mOptions.shaderType, name);
         mVariableInfoById[id]                   = &info;
     }
 }
@@ -1871,12 +1867,12 @@ void SpirvTransformer::visitMemberName(const uint32_t *instruction)
         return;
     }
 
-    if (!mVariableInfoMap.contains(mShaderType, name))
+    if (!mVariableInfoMap.contains(mOptions.shaderType, name))
     {
         return;
     }
 
-    const ShaderInterfaceVariableInfo &info = mVariableInfoMap.get(mShaderType, name);
+    const ShaderInterfaceVariableInfo &info = mVariableInfoMap.get(mOptions.shaderType, name);
 
     // Assume output gl_PerVertex is encountered first.  When the storage class of these types are
     // determined, the variables can be swapped if this assumption was incorrect.
@@ -2020,7 +2016,7 @@ void SpirvTransformer::visitVariable(const uint32_t *instruction)
     }
 
     // Every shader interface variable should have an associated data.
-    const ShaderInterfaceVariableInfo &info = mVariableInfoMap.get(mShaderType, name);
+    const ShaderInterfaceVariableInfo &info = mVariableInfoMap.get(mOptions.shaderType, name);
 
     // Associate the id of this name with its info.
     mVariableInfoById[id] = &info;
@@ -3923,7 +3919,6 @@ void GlslangGetShaderSource(const GlslangSourceOptions &options,
 
 angle::Result GlslangTransformSpirvCode(const GlslangErrorCallback &callback,
                                         const GlslangSpirvOptions &options,
-                                        gl::ShaderType shaderType,
                                         const ShaderInterfaceVariableInfoMap &variableInfoMap,
                                         const SpirvBlob &initialSpirvBlob,
                                         SpirvBlob *spirvBlobOut)
@@ -3942,8 +3937,7 @@ angle::Result GlslangTransformSpirvCode(const GlslangErrorCallback &callback,
 #endif  // defined(ANGLE_DEBUG_SPIRV_TRANSFORMER) && ANGLE_DEBUG_SPIRV_TRANSFORMER
 
     // Transform the SPIR-V code by assigning location/set/binding values.
-    SpirvTransformer transformer(initialSpirvBlob, shaderType, options, variableInfoMap,
-                                 spirvBlobOut);
+    SpirvTransformer transformer(initialSpirvBlob, options, variableInfoMap, spirvBlobOut);
     ANGLE_GLSLANG_CHECK(callback, transformer.transform(), GlslangError::InvalidSpirv);
 
     // If there are aliasing vertex attributes, transform the SPIR-V again to remove them.
