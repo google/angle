@@ -89,7 +89,8 @@ class DisplayGLX : public DisplayGL
     // acts as expected.
     void setSwapInterval(glx::Drawable drawable, SwapControlData *data);
 
-    bool isValidWindowVisualId(unsigned long visualId) const;
+    bool isWindowVisualIdSpecified() const;
+    bool isMatchingWindowVisualId(unsigned long visualId) const;
 
     WorkerContext *createWorkerContext(std::string *infoLog);
 

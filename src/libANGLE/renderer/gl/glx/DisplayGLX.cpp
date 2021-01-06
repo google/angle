@@ -166,7 +166,6 @@ egl::Error DisplayGLX::initialize(egl::Display *display)
     if (attribMap.contains(EGL_X11_VISUAL_ID_ANGLE))
     {
         mRequestedVisual = static_cast<EGLint>(attribMap.get(EGL_X11_VISUAL_ID_ANGLE, -1));
-
         // There is no direct way to get the GLXFBConfig matching an X11 visual ID
         // so we have to iterate over all the GLXFBConfigs to find the right one.
         int nConfigs;
@@ -882,9 +881,14 @@ void DisplayGLX::setSwapInterval(glx::Drawable drawable, SwapControlData *data)
     }
 }
 
-bool DisplayGLX::isValidWindowVisualId(unsigned long visualId) const
+bool DisplayGLX::isWindowVisualIdSpecified() const
 {
-    return mRequestedVisual == -1 || static_cast<unsigned long>(mRequestedVisual) == visualId;
+    return mRequestedVisual != -1;
+}
+
+bool DisplayGLX::isMatchingWindowVisualId(unsigned long visualId) const
+{
+    return isWindowVisualIdSpecified() && static_cast<unsigned long>(mRequestedVisual) == visualId;
 }
 
 void DisplayGLX::generateExtensions(egl::DisplayExtensions *outExtensions) const
