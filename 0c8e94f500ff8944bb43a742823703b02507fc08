@@ -34,6 +34,24 @@
       "parentUuid": "c85a94ff_4523534b",
       "revId": "0c8e94f500ff8944bb43a742823703b02507fc08",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "10a45619_6644c791",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2021-01-06T08:16:43Z",
+      "side": 1,
+      "message": "Hi Shahbaz,\none more thing to note is that the reason I assign xfb buffers starting from 30 downward is that if xfb buffers are not used, the slots [27, 28, ... last used xfb buffers) could be used by UBO buffers instead.\nThis is important because the number of available Metal buffer slots for UBO buffers could be less than OpenGL\u0027s max UBO buffer slots. If it is the case, another binding strategy for UBO buffers must be employed (fyi, this makes use of Metal argument buffer).\n\nSo if you are generating an array of 4 xfb buffers anyway, mtl_glslang_utils needs to be changed to reserve 4 xfb buffer slots and prevent UBO buffers from using them.",
+      "parentUuid": "2241bbaf_e0102e02",
+      "revId": "0c8e94f500ff8944bb43a742823703b02507fc08",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
