@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "7764de46_bf35622f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 15
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1000050
+      },
+      "writtenOn": "2021-01-06T17:31:12Z",
+      "side": 1,
+      "message": "6.5 KB\nor 20 KB without https://chromium-review.googlesource.com/c/angle/angle/+/2601341 .",
+      "parentUuid": "f11e7557_874a2e52",
+      "range": {
+        "startLine": 13,
+        "startChar": 21,
+        "endLine": 13,
+        "endChar": 26
+      },
+      "revId": "fb3436775c02fafe4c2ce473ae5a50ed09a3df38",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "91536018_97f50570",
