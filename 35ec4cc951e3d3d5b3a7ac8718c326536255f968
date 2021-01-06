@@ -68,6 +68,29 @@
       "parentUuid": "080fe575_1069c1d1",
       "revId": "35ec4cc951e3d3d5b3a7ac8718c326536255f968",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "94afedb6_51d3db45",
+        "filename": "src/libANGLE/ProgramExecutable.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 522,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-06T16:39:39Z",
+      "side": 1,
+      "message": "depending on what Ken says, we might not need the TODO. maybe we can resolve before landing so we don\u0027t have to go back and remove the TODO.",
+      "range": {
+        "startLine": 522,
+        "startChar": 18,
+        "endLine": 522,
+        "endChar": 74
+      },
+      "revId": "35ec4cc951e3d3d5b3a7ac8718c326536255f968",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
