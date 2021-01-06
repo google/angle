@@ -60,6 +60,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "eb5466ea_fa0a8910",
+        "filename": "BUILD.gn",
+        "patchSetId": 3
+      },
+      "lineNbr": 475,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-06T03:57:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8b54d2bb_041c0bb4",
+      "range": {
+        "startLine": 475,
+        "startChar": 2,
+        "endLine": 475,
+        "endChar": 18
+      },
+      "revId": "ccb40ce16bc65dabea837442a6bb83bb69f03745",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "6b5f02db_72a5b13a",
         "filename": "gni/angle.gni",
         "patchSetId": 3
@@ -71,6 +95,30 @@
       "writtenOn": "2020-12-28T16:27:23Z",
       "side": 1,
       "message": "should we just force enable angle_enable_gl when use_ozone instead? any way is fine, just asking.",
+      "range": {
+        "startLine": 133,
+        "startChar": 0,
+        "endLine": 134,
+        "endChar": 50
+      },
+      "revId": "ccb40ce16bc65dabea837442a6bb83bb69f03745",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "947f5c7d_0f6c4aa9",
+        "filename": "gni/angle.gni",
+        "patchSetId": 3
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-06T03:57:11Z",
+      "side": 1,
+      "message": "I\u0027m not sure, but leaning no. Here are the args linux_angle_ozone_rel_ng uses:\n\n    build_angle_gles1_conform_tests \u003d true\n    build_angle_trace_perf_tests \u003d true\n    dcheck_always_on \u003d true\n    ffmpeg_branding \u003d \"Chrome\"\n    internal_gles2_conform_tests \u003d true\n    is_component_build \u003d false\n    is_debug \u003d false\n    ozone_platform \u003d \"headless\"\n    proprietary_codecs \u003d true\n    symbol_level \u003d 1\n    use_bundled_weston \u003d true\n    use_goma \u003d true\n    use_ozone \u003d true\n    use_system_libdrm \u003d true\n    use_system_minigbm \u003d true\n    use_x11 \u003d false\n    goma_dir \u003d \"/b/s/w/ir/cache/goma/client\"\n\nSee PS#1\u0027s failure on this bot, it looks like these don\u0027t enable `angle_enable_gl`, so enabling it with `use_ozone` is intrusive at least here. `angle_enable_gl` is enabled with `ozone_platform_gbm`, which makes me think the \"headless\" platform here intentionally doesn\u0027t want that backend.",
+      "parentUuid": "6b5f02db_72a5b13a",
       "range": {
         "startLine": 133,
         "startChar": 0,
@@ -94,6 +142,30 @@
       "writtenOn": "2020-12-28T18:18:53Z",
       "side": 1,
       "message": "nit: \"struct is\", to remove the possessive form.",
+      "range": {
+        "startLine": 41,
+        "startChar": 12,
+        "endLine": 41,
+        "endChar": 20
+      },
+      "revId": "ccb40ce16bc65dabea837442a6bb83bb69f03745",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2f03cdc0_623a03d6",
+        "filename": "src/compiler/translator/tree_ops/gl/mac/RegenerateStructNames.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-06T03:57:11Z",
+      "side": 1,
+      "message": "This is just moving code, but done.",
+      "parentUuid": "129d0a08_5bfcc268",
       "range": {
         "startLine": 41,
         "startChar": 12,
@@ -151,6 +223,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "71e3ed9e_0eabc76f",
+        "filename": "src/compiler/translator/tree_ops/gl/mac/RewriteDoWhile.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-06T03:57:11Z",
+      "side": 1,
+      "message": "What Jamie said.",
+      "parentUuid": "0a14391d_46df2da3",
+      "range": {
+        "startLine": 2,
+        "startChar": 3,
+        "endLine": 2,
+        "endChar": 17
+      },
+      "revId": "ccb40ce16bc65dabea837442a6bb83bb69f03745",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "98b89df8_26409f30",
@@ -164,6 +260,30 @@
       "writtenOn": "2020-12-28T18:18:53Z",
       "side": 1,
       "message": "Can you use \u0027is_apple\u0027 here?",
+      "range": {
+        "startLine": 128,
+        "startChar": 8,
+        "endLine": 128,
+        "endChar": 24
+      },
+      "revId": "ccb40ce16bc65dabea837442a6bb83bb69f03745",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5bbee2a3_6a6b77e5",
+        "filename": "src/tests/BUILD.gn",
+        "patchSetId": 3
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-06T03:57:11Z",
+      "side": 1,
+      "message": "Looks like yes, didn\u0027t know it existed.\n\nDone as a separate CL. There are a log of instances where is_mac || is_ios is used.",
+      "parentUuid": "98b89df8_26409f30",
       "range": {
         "startLine": 128,
         "startChar": 8,
