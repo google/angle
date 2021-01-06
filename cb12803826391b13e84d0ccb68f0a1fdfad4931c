@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e25d6d3b_808ca9ca",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-01-06T21:39:04Z",
+      "side": 1,
+      "message": "Shabi, PTAL, seems to work for me locally.",
+      "revId": "cb12803826391b13e84d0ccb68f0a1fdfad4931c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
