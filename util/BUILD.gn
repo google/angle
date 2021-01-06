@@ -193,7 +193,7 @@ foreach(is_shared_library,
       ]
     }
 
-    if (is_mac || is_ios) {
+    if (is_apple) {
       frameworks = [ "QuartzCore.framework" ]
       if (is_mac) {
         frameworks += [ "AppKit.framework" ]
