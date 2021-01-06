@@ -34,6 +34,24 @@
       "parentUuid": "cdbad8ab_21cd3093",
       "revId": "c83d1d7477055ef656f0059c93ff70eed6c6feb1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "600c2fad_702e0eb1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-01-06T17:07:10Z",
+      "side": 1,
+      "message": "Does it make sense to add some notes and just skip these for all VULKAN cases, just to get the bots working again?  That is, we have at least one auto-roller blocked and we may be missing other failures because of this?",
+      "parentUuid": "01257a5e_eeeac00e",
+      "revId": "c83d1d7477055ef656f0059c93ff70eed6c6feb1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
