@@ -211,6 +211,7 @@ IGNORED_INCLUDES = {
     b'libANGLE/renderer/vulkan/win32/DisplayVkWin32.h',
     b'libANGLE/renderer/vulkan/xcb/DisplayVkXcb.h',
     b'loader_cmake_config.h',
+    b'optick.h',
     b'spirv-tools/libspirv.h',
     b'third_party/volk/volk.h',
     b'vk_loader_extensions.c',

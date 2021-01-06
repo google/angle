@@ -20,7 +20,7 @@ template_table_autogen_cpp = """// GENERATED FILE - DO NOT EDIT.
 // the vk.xml file situated at
 // /third_party/vulkan-validation-layers/src/scripts/vk.xml
 //
-// Copyright {copyright_year} The ANGLE Project Authors. All rights reserved.
+// Copyright 2020 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -126,7 +126,6 @@ def main():
     ]
 
     output_cpp = template_table_autogen_cpp.format(
-        copyright_year=date.today().year,
         num_formats=num_formats,
         format_case_data="\n,".join(vk_cases),
         script_name=__file__,
