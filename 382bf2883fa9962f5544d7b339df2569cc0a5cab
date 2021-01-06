@@ -16,6 +16,24 @@
       "message": "Looks like this broke Linux AMD bots:\nhttps://luci-milo.appspot.com/ui/p/chromium/builders/ci/Linux%20FYI%20Release%20(AMD%20R7%20240)/7910/overview\nhttps://luci-milo.appspot.com/ui/p/chromium/builders/ci/Linux%20FYI%20Release%20(AMD%20RX%205500%20XT)/2201/overview\n\nFor some reason it complains about Mac on Linux?\nFATAL: RegenerateStructNames.h:27 (RegenerateStructNames): \t! Unreachable reached: RegenerateStructNames(../../third_party/angle/src/compiler/translator/tree_ops/gl/mac/RegenerateStructNames.h:27)\n",
       "revId": "382bf2883fa9962f5544d7b339df2569cc0a5cab",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f59b9af2_b71c8367",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-06T19:05:11Z",
+      "side": 1,
+      "message": "Ok I think I know what this is. Just yesterday (around the time I submitted this) I discovered that the validating command decoder also runs the translator and with flags based on chromium\u0027s workaround logic.\n\nIf it\u0027s not urgent, I can upload a fix for this quickly",
+      "parentUuid": "75eb48d2_186ad737",
+      "revId": "382bf2883fa9962f5544d7b339df2569cc0a5cab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
