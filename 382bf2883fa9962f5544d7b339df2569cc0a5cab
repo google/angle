@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "75eb48d2_186ad737",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-01-06T18:15:07Z",
+      "side": 1,
+      "message": "Looks like this broke Linux AMD bots:\nhttps://luci-milo.appspot.com/ui/p/chromium/builders/ci/Linux%20FYI%20Release%20(AMD%20R7%20240)/7910/overview\nhttps://luci-milo.appspot.com/ui/p/chromium/builders/ci/Linux%20FYI%20Release%20(AMD%20RX%205500%20XT)/2201/overview\n\nFor some reason it complains about Mac on Linux?\nFATAL: RegenerateStructNames.h:27 (RegenerateStructNames): \t! Unreachable reached: RegenerateStructNames(../../third_party/angle/src/compiler/translator/tree_ops/gl/mac/RegenerateStructNames.h:27)\n",
+      "revId": "382bf2883fa9962f5544d7b339df2569cc0a5cab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
