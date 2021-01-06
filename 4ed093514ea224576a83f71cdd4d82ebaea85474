@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2f933bbb_f5a42262",
+        "filename": "src/libANGLE/renderer/gl/DispatchTableGL_autogen.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-06T15:40:12Z",
+      "side": 1,
+      "message": "nit: I recommend you go into the generator and hard-code the year to 2020 so the generator doesn\u0027t depend on the time of your local machine.",
+      "range": {
+        "startLine": 4,
+        "startChar": 13,
+        "endLine": 4,
+        "endChar": 18
+      },
+      "revId": "4ed093514ea224576a83f71cdd4d82ebaea85474",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
