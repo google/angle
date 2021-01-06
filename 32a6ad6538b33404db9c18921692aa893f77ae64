@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "175b77a5_c5d0588a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2021-01-06T08:33:08Z",
+      "side": 1,
+      "message": "Awesome! It\u0027s cool that direct glsl to metal translator is in the works.\n\nbtw, it seems these changes are based on my very old code before they are merged to the upstream ANGLE repo. If it is the case, I think these changes need to be rebased and re-edited a lot before they can be merged.",
+      "revId": "32a6ad6538b33404db9c18921692aa893f77ae64",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
