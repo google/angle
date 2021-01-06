@@ -52,6 +52,24 @@
       "parentUuid": "2241bbaf_e0102e02",
       "revId": "0c8e94f500ff8944bb43a742823703b02507fc08",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "46f17459_69850f55",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-06T16:45:38Z",
+      "side": 1,
+      "message": "\u003e I think another simpler method without requiring any change in the metal back-end is still generating 4 xfb buffers separately. I think unused buffers could be removed by SpirvTransformer, isn\u0027t it?\n\nYes, I was thinking of doing that too in fact to avoid making changes in metal/, which looks like it also has the added benefit of keeping more UBOs slots available.\n\nThanks a lot for your insights.",
+      "parentUuid": "10a45619_6644c791",
+      "revId": "0c8e94f500ff8944bb43a742823703b02507fc08",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
