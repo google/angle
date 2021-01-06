@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "561f07a5_1ae8abdc",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-01-06T17:50:20Z",
+      "side": 1,
+      "message": "Uploading the changes that have progressed Fortnite so far.  Normally I wait until the capture is complete and ready to upload, but we\u0027ve got multiple people working in the space now, don\u0027t want to duplicate effort.",
+      "revId": "b2576d2e09e028d8964ae1e9e3226b88ca73402c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
