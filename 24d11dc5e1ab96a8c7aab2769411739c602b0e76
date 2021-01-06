@@ -16,6 +16,97 @@
       "message": "all bots green - PTAL",
       "revId": "24d11dc5e1ab96a8c7aab2769411739c602b0e76",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0b90f86f_061286e2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-06T04:53:25Z",
+      "side": 1,
+      "message": "I think this is missing a validation language in the Vulkan spec which will require this CL to go through some redesign.\n\nLook at the validation language for `vkCmdDraw`:\n\n\u003e Every input attachment used by the current subpass must be bound to the pipeline via a descriptor set\n\nWhich means that you can\u0027t decide to bind the input attachments when drawing with the program that uses it, but should rather do it from the very beginning of the subpass. I see two options:\n\n- Defer the binding of the input attachment desc set to the end of RP, accumulate all the necessary inputs during recording and when flushing the RP, bind the desc set right after beginning the subpass. This is probably complicated as the desc set for input attachments is shared with other program-specific stuff.\n- Use multiple subpasses. Instead of `ContextVk::framebufferFetchBarrier`, use `ContextVk::nextSubpass`. Every time you switch between a draw call that uses framebuffer fetch and one that doesn\u0027t (or vice versa), you switch to a new subpass. This is likely much simpler to implement.\n\nI would also ask you to add the following tests:\n\n- In FramebufferFetchTests.cpp: A test that draws with a non-fetch program, then a fetch program, then a non-fetch program and again a fetch program\n- In FramebufferFetchTests.cpp: A test that draws with a fetch program, then a non-fetch program, then a fetch program and again a non-fetch program (the difference with the other is that the RP is started with a fetch program or not)\n- In MultisampledRenderToTextureTest.cpp, add a test that does draw, copy then draw with fetch. You can take drawCopyDrawThenMaskedClearCommon as inspiration for framebuffer setup. The first draw initializes the color attachments, the copy breaks the render pass and the second draw adds an initial subpass for the sake of GL_EXT_multisampled_render_to_texture. This should catch the bug I mentioned below where the subpass self-dependency uses the wrong index. If you go with multiple subpasses, obviously the code changes, but this is still a good regression test for bugs that may appear in the new implementation.",
+      "revId": "24d11dc5e1ab96a8c7aab2769411739c602b0e76",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5ad23624_b1d6a628",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1634,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-06T04:53:25Z",
+      "side": 1,
+      "message": "Maybe also conditional to the executable using framebuffer fetch? Otherwise it\u0027s inefficiency for no reason.",
+      "revId": "24d11dc5e1ab96a8c7aab2769411739c602b0e76",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e4587dd6_9ecdb2bc",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1636,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-06T04:53:25Z",
+      "side": 1,
+      "message": "I suggest keeping `invalidateCurrentShaderResources` private in `ContextVk`, and adding some `onColorAttachmentChange` or something that calls this. It should also check for example that the framebuffer being changed is the draw framebuffer (per glState, not the cached member).",
+      "revId": "24d11dc5e1ab96a8c7aab2769411739c602b0e76",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9e5bd158_67c1f503",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 576,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-06T04:53:25Z",
+      "side": 1,
+      "message": "The application subpass is not necessarily subpass 0. See `hasUnresolveAttachments` below.",
+      "revId": "24d11dc5e1ab96a8c7aab2769411739c602b0e76",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1e17a005_ac9a3809",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 959,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-06T04:53:25Z",
+      "side": 1,
+      "message": "I can\u0027t believe the spec is requiring this.",
+      "range": {
+        "startLine": 959,
+        "startChar": 52,
+        "endLine": 959,
+        "endChar": 75
+      },
+      "revId": "24d11dc5e1ab96a8c7aab2769411739c602b0e76",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
