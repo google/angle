@@ -16,6 +16,57 @@
       "message": "PTAL",
       "revId": "6546a3ed112fc0419192e286b7cfecf265a31c86",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c0b76594_4753bb46",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-06T17:44:27Z",
+      "side": 1,
+      "message": "Awesome. Please try to resolve anglebug.com/4432 too, the suppressed tests in deqp_khr_gles3_test_expectations.txt should pass now (they are not tagged with 4432 unfortunately)",
+      "revId": "6546a3ed112fc0419192e286b7cfecf265a31c86",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2b82e049_3106fbdc",
+        "filename": "src/libANGLE/renderer/renderer_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 649,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-06T17:44:27Z",
+      "side": 1,
+      "message": "Please remove this comment now!",
+      "revId": "6546a3ed112fc0419192e286b7cfecf265a31c86",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "39b7c4c5_d0f81a05",
+        "filename": "src/libANGLE/renderer/renderer_utils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 213,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-06T17:44:27Z",
+      "side": 1,
+      "message": "I suggest adding `gl::SamplerFormat format` to `getIncompleteTexture` and update that everywhere. No need for two functions.",
+      "revId": "6546a3ed112fc0419192e286b7cfecf265a31c86",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
