@@ -16,6 +16,23 @@
       "message": "PTAL",
       "revId": "ccd0ec0762d24728c3550e13838c4c7fc253d9c0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e48b4b32_e49d8f36",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-01-06T19:42:08Z",
+      "side": 1,
+      "message": "LGTM.  Seems like a definite improvement!",
+      "revId": "ccd0ec0762d24728c3550e13838c4c7fc253d9c0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
