@@ -4,8 +4,8 @@
 // found in the LICENSE file.
 //
 
-#ifndef COMPILER_TRANSLATOR_TREEOPS_GL_MAC_REGENERATESTRUCTNAMES_H_
-#define COMPILER_TRANSLATOR_TREEOPS_GL_MAC_REGENERATESTRUCTNAMES_H_
+#ifndef COMPILER_TRANSLATOR_TREEOPS_GL_REGENERATESTRUCTNAMES_H_
+#define COMPILER_TRANSLATOR_TREEOPS_GL_REGENERATESTRUCTNAMES_H_
 
 #include "common/angleutils.h"
 
@@ -15,7 +15,7 @@ class TCompiler;
 class TIntermBlock;
 class TSymbolTable;
 
-#if defined(ANGLE_ENABLE_GLSL) && defined(ANGLE_PLATFORM_APPLE)
+#if defined(ANGLE_ENABLE_GLSL)
 ANGLE_NO_DISCARD bool RegenerateStructNames(TCompiler *compiler,
                                             TIntermBlock *root,
                                             TSymbolTable *symbolTable);
@@ -31,4 +31,4 @@ ANGLE_NO_DISCARD ANGLE_INLINE bool RegenerateStructNames(TCompiler *compiler,
 
 }  // namespace sh
 
-#endif  // COMPILER_TRANSLATOR_TREEOPS_GL_MAC_REGENERATESTRUCTNAMES_H_
+#endif  // COMPILER_TRANSLATOR_TREEOPS_GL_REGENERATESTRUCTNAMES_H_

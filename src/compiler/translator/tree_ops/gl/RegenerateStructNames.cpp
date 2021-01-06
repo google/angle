@@ -4,7 +4,7 @@
 // found in the LICENSE file.
 //
 
-#include "compiler/translator/tree_ops/gl/mac/RegenerateStructNames.h"
+#include "compiler/translator/tree_ops/gl/RegenerateStructNames.h"
 
 #include "common/debug.h"
 #include "compiler/translator/Compiler.h"
