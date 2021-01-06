@@ -16,6 +16,80 @@
       "message": "PTAL",
       "revId": "f0ff0726a3425bae12116de59c974e38f7dedcdb",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "616a2a2f_a260abae",
+        "filename": "src/tests/gl_tests/IncompleteTextureTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-06T17:37:17Z",
+      "side": 1,
+      "message": "maybe \"setupFramebuffer\"?",
+      "range": {
+        "startLine": 77,
+        "startChar": 9,
+        "endLine": 77,
+        "endChar": 32
+      },
+      "revId": "f0ff0726a3425bae12116de59c974e38f7dedcdb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "379e75df_497132c8",
+        "filename": "src/tests/gl_tests/IncompleteTextureTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 273,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-06T17:37:17Z",
+      "side": 1,
+      "message": "Might as well make it something where every channel needs to change, like `10, 20, 30, 40`",
+      "revId": "f0ff0726a3425bae12116de59c974e38f7dedcdb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4f5c37e6_737c535c",
+        "filename": "src/tests/gl_tests/IncompleteTextureTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 287,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-06T17:37:17Z",
+      "side": 1,
+      "message": "Please at least verify all four corners.",
+      "revId": "f0ff0726a3425bae12116de59c974e38f7dedcdb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "46ab2e46_12548c6e",
+        "filename": "src/tests/gl_tests/IncompleteTextureTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 316,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-06T17:37:17Z",
+      "side": 1,
+      "message": "Same",
+      "revId": "f0ff0726a3425bae12116de59c974e38f7dedcdb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
