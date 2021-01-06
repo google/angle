@@ -1,6 +1,29 @@
 {
   "comments": [
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "3ab10fa5_b279d48d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-06T05:17:34Z",
+      "side": 1,
+      "message": "What\u0027s stopping it from working for both extensions?",
+      "range": {
+        "startLine": 11,
+        "startChar": 40,
+        "endLine": 12,
+        "endChar": 41
+      },
+      "revId": "ee0c2d905af880a1c6720a9e54657d215a41ac14",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "a6d73b6a_8979859a",
@@ -14,6 +37,97 @@
       "writtenOn": "2021-01-05T16:58:06Z",
       "side": 1,
       "message": "all bots green - PTAL",
+      "revId": "ee0c2d905af880a1c6720a9e54657d215a41ac14",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7c285603_bc4995df",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1079,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-06T05:17:34Z",
+      "side": 1,
+      "message": "Can\u0027t FS `out` variables be arrays? Shouldn\u0027t then FS `inout` variables be able to be arrays?",
+      "revId": "ee0c2d905af880a1c6720a9e54657d215a41ac14",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f4cb0e85_4724df24",
+        "filename": "src/compiler/translator/ValidateNoncoherentQualifier.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-06T05:17:34Z",
+      "side": 1,
+      "message": "Does this really need an AST transformation? Why doesn\u0027t ParseContext.cpp check this when it encounters gl_LastFragData?",
+      "revId": "ee0c2d905af880a1c6720a9e54657d215a41ac14",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b8fb69f4_369c0ae1",
+        "filename": "src/libANGLE/ProgramExecutable.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 376,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-06T05:17:34Z",
+      "side": 1,
+      "message": "Please add a handful of tests for the combination of subpass input uniforms and the other ones. An uber one with every uniform could do too. So test drawing with a shader that has a sampler, an image, an atomic counter, and a uniform block. (The test should check if image/atomic counter support in FS exists and generate the shader accordingly, though all platforms should support that on Vulkan, so it could also just skip the test if not supported).",
+      "revId": "ee0c2d905af880a1c6720a9e54657d215a41ac14",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6b309069_66da35f7",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 310,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-06T05:17:34Z",
+      "side": 1,
+      "message": "Modify this instead!",
+      "range": {
+        "startLine": 310,
+        "startChar": 61,
+        "endLine": 310,
+        "endChar": 66
+      },
+      "revId": "ee0c2d905af880a1c6720a9e54657d215a41ac14",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "249dc5ef_f255d590",
+        "filename": "src/tests/compiler_tests/EXT_shader_framebuffer_fetch_test.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 232,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-06T05:17:34Z",
+      "side": 1,
+      "message": "Please clump the SH_GLSL_VULKAN_OUTPUT tests together to avoid so many `#if`s.\n\nFor the tests that test both the default and SH_GLSL_VULKAN_OUTPUT, you can use a `std::array` initialized in the class with either `{SH_GLSL_130_OUTPUT}` or `{SH_GLSL_130_OUTPUT, SH_GLSL_VULKAN_OUTPUT}` based on ANGLE_ENABLE_VULKAN, and use a loop.",
       "revId": "ee0c2d905af880a1c6720a9e54657d215a41ac14",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
