@@ -289,9 +289,6 @@ TEST_P(TransformFeedbackTest, SpanMultipleRenderPasses)
     // Fails on Mac GL drivers. http://anglebug.com/4992
     ANGLE_SKIP_TEST_IF(IsOpenGL() && IsOSX());
 
-    // anglebug.com/5428
-    ANGLE_SKIP_TEST_IF(IsLinux() && IsIntel() && IsVulkan());
-
     // anglebug.com/5429
     ANGLE_SKIP_TEST_IF(IsAndroid() && IsOpenGLES());
 
