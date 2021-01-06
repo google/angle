@@ -85,31 +85,24 @@ Chrome with the latest ANGLE changes.
 
 We also use additional auto-rollers to roll third party libraries into ANGLE once per day:
 
- * [SPIRV-Tools into ANGLE](https://autoroll.skia.org/r/spirv-tools-angle-autoroll)
- * [glslang into ANGLE](https://autoroll.skia.org/r/glslang-angle-autoroll)
  * [SwiftShader into ANGLE](https://autoroll.skia.org/r/swiftshader-angle-autoroll)
- * [Vulkan-Tools into ANGLE](https://autoroll.skia.org/r/vulkan-tools-angle-autoroll)
- * [Vulkan-Loader into ANGLE](https://autoroll.skia.org/r/vulkan-loader-angle-autoroll)
- * [Vulkan-Headers into ANGLE](https://autoroll.skia.org/r/vulkan-headers-angle-autoroll)
- * [Vulkan-ValidationLayers into ANGLE](https://autoroll.skia.org/r/vulkan-validation-layers-angle-autoroll)
+ * [vulkan-deps into ANGLE](https://autoroll.skia.org/r/vulkan-deps-angle-autoroll)
  * [VK-GL-CTS into ANGLE](https://autoroll.skia.org/r/vk-gl-cts-angle-autoroll?tab=status)
 
 Please ensure these rollers are also healthy and unblocked. You can trigger manual rolls using the
-dashboards to land high-priority changes.
-
-**NOTE: When Vulkan-Headers roll is broken:**
-
-The Vulkan-Tools, Vulkan-Loader, and Vulkan-ValidationLayers repos all depend on the Vulkan-Headers
-repo. When Vulkan-Headers updates, all of those repos have a roll process managed by LunarG to
-update them for the new Vulkan-Headers. This usually takes 2-3 business days after the
-Vulkan-Headers update. If Vulkan-Headers roll fails, pause the roller with a note that it should be
-re-enabled when the dependent repos have been updated for the latest Vulkan-Headers changes. This
-will require a manual roll if the two repos have to be rolled in unison. To perform a manual roll,
-create a CL that updates the DEPS file with the new SHA1 value from the desired checkout of each
-dependent repo. Once the manual roll lands, re-enable the auto-rollers for the relevant repos.
+dashboards to land high-priority changes. When a roll fails, stop the roller, determine if the root
+cause is a problem with ANGLE or with the upstream repo, and file an issue with an appropriate next
+step.
 
 The autoroller configurations live in the [skia/buildbot repository](https://skia.googlesource.com/buildbot/)
 in the [autoroll/config](https://skia.googlesource.com/buildbot/+/master/autoroll/config) folder.
+
+**NOTE: vulkan-deps consists of several related Vulkan dependencies:**
+
+vulkan-deps houses Vulkan-Tools, Vulkan-Loader, Vulkan-ValidationLayers, Vulkan-Headers and other
+related repos. If the roll fails, you will have to determine the correct upstream repo and file
+an issue upstream. For more info on vulkan-deps see the
+[README](https://chromium.googlesource.com/vulkan-deps/+/refs/heads/master/README.md).
 
 ## Task 4: ANGLE Standalone Testing
 
