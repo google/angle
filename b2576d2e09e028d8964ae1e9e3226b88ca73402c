@@ -33,6 +33,52 @@
       "message": "LGTM. I\u0027m wondering if the uniform type info map is wrong.",
       "revId": "b2576d2e09e028d8964ae1e9e3226b88ca73402c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d6fcfcc2_ca0c21aa",
+        "filename": "src/libANGLE/FrameCapture.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1836,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-01-06T20:34:43Z",
+      "side": 1,
+      "message": "Assuming we can assert that componentCount \u003d\u003d 1, this can be removed.",
+      "range": {
+        "startLine": 1836,
+        "startChar": 69,
+        "endLine": 1836,
+        "endChar": 83
+      },
+      "revId": "b2576d2e09e028d8964ae1e9e3226b88ca73402c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5ac38cbb_e415e1f4",
+        "filename": "src/libANGLE/FrameCapture.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1839,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-01-06T20:34:43Z",
+      "side": 1,
+      "message": "Can you we ASSERT(componentCount \u003d\u003d 1)?",
+      "range": {
+        "startLine": 1839,
+        "startChar": 30,
+        "endLine": 1839,
+        "endChar": 47
+      },
+      "revId": "b2576d2e09e028d8964ae1e9e3226b88ca73402c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
