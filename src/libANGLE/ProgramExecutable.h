@@ -310,6 +310,20 @@ class ProgramExecutable final : public angle::Subject
 
     bool isYUVOutput() const;
 
+    PrimitiveMode getGeometryShaderInputPrimitiveType() const
+    {
+        return mGeometryShaderInputPrimitiveType;
+    }
+
+    PrimitiveMode getGeometryShaderOutputPrimitiveType() const
+    {
+        return mGeometryShaderOutputPrimitiveType;
+    }
+
+    int getGeometryShaderInvocations() const { return mGeometryShaderInvocations; }
+
+    int getGeometryShaderMaxVertices() const { return mGeometryShaderMaxVertices; }
+
   private:
     // TODO(timvp): http://anglebug.com/3570: Investigate removing these friend
     // class declarations and accessing the necessary members with getters/setters.
@@ -406,6 +420,12 @@ class ProgramExecutable final : public angle::Subject
     ShaderMap<std::vector<sh::ShaderVariable>> mLinkedOutputVaryings;
     ShaderMap<std::vector<sh::ShaderVariable>> mLinkedInputVaryings;
     ShaderMap<int> mLinkedShaderVersions;
+
+    // GL_EXT_geometry_shader.
+    PrimitiveMode mGeometryShaderInputPrimitiveType;
+    PrimitiveMode mGeometryShaderOutputPrimitiveType;
+    int mGeometryShaderInvocations;
+    int mGeometryShaderMaxVertices;
 };
 
 }  // namespace gl

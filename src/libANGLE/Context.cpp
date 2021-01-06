@@ -9066,7 +9066,6 @@ void StateCache::setValidDrawModes(bool pointsOK,
 void StateCache::updateValidDrawModes(Context *context)
 {
     const State &state = context->getState();
-    Program *program   = state.getProgram();
 
     if (mCachedTransformFeedbackActiveUnpaused)
     {
@@ -9109,7 +9108,7 @@ void StateCache::updateValidDrawModes(Context *context)
     }
 
     ASSERT(programExecutable->hasLinkedShaderStage(ShaderType::Geometry));
-    PrimitiveMode gsMode = program->getGeometryShaderInputPrimitiveType();
+    PrimitiveMode gsMode = programExecutable->getGeometryShaderInputPrimitiveType();
 
     bool pointsOK  = gsMode == PrimitiveMode::Points;
     bool linesOK   = gsMode == PrimitiveMode::Lines;

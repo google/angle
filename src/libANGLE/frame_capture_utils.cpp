@@ -766,10 +766,6 @@ void SerializeProgramState(gl::BinaryOutputStream *bos, const gl::ProgramState &
     bos->writeBool(programState.isSeparable());
     bos->writeBool(programState.hasEarlyFragmentTestsOptimization());
     bos->writeInt(programState.getNumViews());
-    bos->writeEnum(programState.getGeometryShaderInputPrimitiveType());
-    bos->writeEnum(programState.getGeometryShaderOutputPrimitiveType());
-    bos->writeInt(programState.getGeometryShaderInvocations());
-    bos->writeInt(programState.getGeometryShaderMaxVertices());
     bos->writeInt(programState.getDrawIDLocation());
     bos->writeInt(programState.getBaseVertexLocation());
     bos->writeInt(programState.getBaseInstanceLocation());

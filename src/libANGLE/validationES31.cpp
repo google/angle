@@ -1697,8 +1697,14 @@ bool ValidateUseProgramStagesBase(const Context *context,
 {
     // GL_INVALID_VALUE is generated if shaders contains set bits that are not recognized, and is
     // not the reserved value GL_ALL_SHADER_BITS.
-    const GLbitfield knownShaderBits =
+    GLbitfield knownShaderBits =
         GL_VERTEX_SHADER_BIT | GL_FRAGMENT_SHADER_BIT | GL_COMPUTE_SHADER_BIT;
+
+    if (context->getClientVersion() == ES_3_2 || context->getExtensions().geometryShader)
+    {
+        knownShaderBits |= GL_GEOMETRY_SHADER_BIT;
+    }
+
     if ((stages & ~knownShaderBits) && (stages != GL_ALL_SHADER_BITS))
     {
         context->validationError(GL_INVALID_VALUE, kUnrecognizedShaderStageBit);

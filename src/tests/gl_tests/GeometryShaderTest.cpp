@@ -1489,6 +1489,146 @@ void main()
     EXPECT_PIXEL_RECT_EQ(0, 0, w, h, GLColor::blue);
 }
 
+// Tests separating the VS from the GS/FS and then modifying the shader.
+TEST_P(GeometryShaderTest, RecompileSeparableVSWithVaryings)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_geometry_shader"));
+
+    // Errors in D3D11/GL. No plans to fix this.
+    ANGLE_SKIP_TEST_IF(!IsVulkan());
+
+    // http://anglebug.com/5506
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
+    const char *kVS = R"(#version 310 es
+precision mediump float;
+in vec4 position;
+out vec4 vgVarying;
+uniform vec4 uniVec;
+void main()
+{
+   vgVarying = uniVec;
+   gl_Position = position;
+})";
+
+    const char *kGS = R"(#version 310 es
+#extension GL_EXT_geometry_shader : require
+
+precision mediump float;
+
+layout (triangles) in;
+layout (triangle_strip, max_vertices = 4) out;
+
+in vec4 vgVarying[];
+layout(location = 5) out vec4 gfVarying;
+
+void main()
+{
+    for (int n = 0; n < gl_in.length(); n++)
+    {
+        gl_Position = gl_in[n].gl_Position;
+        gfVarying = vgVarying[n];
+        EmitVertex();
+    }
+    EndPrimitive();
+})";
+
+    const char *kFS = R"(#version 310 es
+precision mediump float;
+
+layout(location = 5) in vec4 gfVarying;
+out vec4 fOut;
+
+void main()
+{
+    fOut = gfVarying;
+})";
+
+    GLShader vertShader(GL_VERTEX_SHADER);
+    glShaderSource(vertShader, 1, &kVS, nullptr);
+    glCompileShader(vertShader);
+
+    GLProgram vertProg;
+    glProgramParameteri(vertProg, GL_PROGRAM_SEPARABLE, GL_TRUE);
+    glAttachShader(vertProg, vertShader);
+    glLinkProgram(vertProg);
+    ASSERT_GL_NO_ERROR();
+
+    GLShader geomShader(GL_GEOMETRY_SHADER);
+    glShaderSource(geomShader, 1, &kGS, nullptr);
+    glCompileShader(geomShader);
+
+    GLShader fragShader(GL_FRAGMENT_SHADER);
+    glShaderSource(fragShader, 1, &kFS, nullptr);
+    glCompileShader(fragShader);
+
+    GLProgram geomFragProg;
+    glProgramParameteri(geomFragProg, GL_PROGRAM_SEPARABLE, GL_TRUE);
+    glAttachShader(geomFragProg, geomShader);
+    glAttachShader(geomFragProg, fragShader);
+    glLinkProgram(geomFragProg);
+    ASSERT_GL_NO_ERROR();
+
+    GLProgramPipeline pipeline;
+    glUseProgramStages(pipeline, GL_VERTEX_SHADER_BIT, vertProg);
+    glUseProgramStages(pipeline, GL_GEOMETRY_SHADER_BIT, geomFragProg);
+    glUseProgramStages(pipeline, GL_FRAGMENT_SHADER_BIT, geomFragProg);
+    glBindProgramPipeline(pipeline);
+
+    glActiveShaderProgram(pipeline, vertProg);
+    GLint uniLoc = glGetUniformLocation(vertProg, "uniVec");
+    ASSERT_NE(-1, uniLoc);
+    glUniform4f(uniLoc, 0, 1, 0, 1);
+    ASSERT_GL_NO_ERROR();
+
+    drawQuadPPO(vertProg, "position", 0.5f, 1.0f);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+    // Do it again with deleted shaders.
+    vertProg.reset();
+    geomFragProg.reset();
+    pipeline.reset();
+
+    glProgramParameteri(vertProg, GL_PROGRAM_SEPARABLE, GL_TRUE);
+    glAttachShader(vertProg, vertShader);
+    glLinkProgram(vertProg);
+
+    // Mess up the VS.
+    const char *otherVS = essl1_shaders::vs::Texture2D();
+    glShaderSource(vertShader, 1, &otherVS, nullptr);
+    glCompileShader(vertShader);
+
+    ASSERT_GL_NO_ERROR();
+
+    glProgramParameteri(geomFragProg, GL_PROGRAM_SEPARABLE, GL_TRUE);
+    glAttachShader(geomFragProg, geomShader);
+    glAttachShader(geomFragProg, fragShader);
+    glLinkProgram(geomFragProg);
+
+    // Mess up the FS.
+    const char *otherFS = essl1_shaders::fs::Texture2D();
+    glShaderSource(fragShader, 1, &otherFS, nullptr);
+    glCompileShader(fragShader);
+
+    ASSERT_GL_NO_ERROR();
+
+    glUseProgramStages(pipeline, GL_VERTEX_SHADER_BIT, vertProg);
+    glUseProgramStages(pipeline, GL_GEOMETRY_SHADER_BIT, geomFragProg);
+    glUseProgramStages(pipeline, GL_FRAGMENT_SHADER_BIT, geomFragProg);
+    glBindProgramPipeline(pipeline);
+
+    glActiveShaderProgram(pipeline, vertProg);
+    uniLoc = glGetUniformLocation(vertProg, "uniVec");
+    ASSERT_NE(-1, uniLoc);
+    glUniform4f(uniLoc, 0, 1, 0, 1);
+    ASSERT_GL_NO_ERROR();
+
+    drawQuadPPO(vertProg, "position", 0.5f, 1.0f);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
 ANGLE_INSTANTIATE_TEST_ES3(GeometryShaderTestES3);
 ANGLE_INSTANTIATE_TEST_ES31_AND(GeometryShaderTest,
                                 WithEmulatedPrerotation(ES31_VULKAN(), 90),

@@ -1203,11 +1203,6 @@ ProgramState::ProgramState()
       mBinaryRetrieveableHint(false),
       mSeparable(false),
       mNumViews(-1),
-      // [GL_EXT_geometry_shader] Table 20.22
-      mGeometryShaderInputPrimitiveType(PrimitiveMode::Triangles),
-      mGeometryShaderOutputPrimitiveType(PrimitiveMode::TriangleStrip),
-      mGeometryShaderInvocations(1),
-      mGeometryShaderMaxVertices(0),
       mDrawIDLocation(-1),
       mBaseVertexLocation(-1),
       mBaseInstanceLocation(-1),
@@ -1939,17 +1934,13 @@ void Program::unlink()
     mState.mYUVOutput = false;
     mState.mActiveOutputVariables.reset();
     mState.mComputeShaderLocalSize.fill(1);
-    mState.mNumViews                          = -1;
-    mState.mGeometryShaderInputPrimitiveType  = PrimitiveMode::Triangles;
-    mState.mGeometryShaderOutputPrimitiveType = PrimitiveMode::TriangleStrip;
-    mState.mGeometryShaderInvocations         = 1;
-    mState.mGeometryShaderMaxVertices         = 0;
-    mState.mDrawIDLocation                    = -1;
-    mState.mBaseVertexLocation                = -1;
-    mState.mBaseInstanceLocation              = -1;
-    mState.mCachedBaseVertex                  = 0;
-    mState.mCachedBaseInstance                = 0;
-    mState.mEarlyFramentTestsOptimization     = false;
+    mState.mNumViews                      = -1;
+    mState.mDrawIDLocation                = -1;
+    mState.mBaseVertexLocation            = -1;
+    mState.mBaseInstanceLocation          = -1;
+    mState.mCachedBaseVertex              = 0;
+    mState.mCachedBaseInstance            = 0;
+    mState.mEarlyFramentTestsOptimization = false;
     mState.mSpecConstUsageBits.reset();
 
     mValidated = false;
@@ -2241,23 +2232,23 @@ const sh::WorkGroupSize &Program::getComputeShaderLocalSize() const
 
 PrimitiveMode Program::getGeometryShaderInputPrimitiveType() const
 {
-    ASSERT(!mLinkingState);
-    return mState.mGeometryShaderInputPrimitiveType;
+    ASSERT(!mLinkingState && mState.mExecutable);
+    return mState.mExecutable->getGeometryShaderInputPrimitiveType();
 }
 PrimitiveMode Program::getGeometryShaderOutputPrimitiveType() const
 {
-    ASSERT(!mLinkingState);
-    return mState.mGeometryShaderOutputPrimitiveType;
+    ASSERT(!mLinkingState && mState.mExecutable);
+    return mState.mExecutable->getGeometryShaderOutputPrimitiveType();
 }
 GLint Program::getGeometryShaderInvocations() const
 {
-    ASSERT(!mLinkingState);
-    return mState.mGeometryShaderInvocations;
+    ASSERT(!mLinkingState && mState.mExecutable);
+    return mState.mExecutable->getGeometryShaderInvocations();
 }
 GLint Program::getGeometryShaderMaxVertices() const
 {
-    ASSERT(!mLinkingState);
-    return mState.mGeometryShaderMaxVertices;
+    ASSERT(!mLinkingState && mState.mExecutable);
+    return mState.mExecutable->getGeometryShaderMaxVertices();
 }
 
 const sh::ShaderVariable &Program::getInputResource(size_t index) const
@@ -3502,10 +3493,11 @@ bool Program::linkValidateShaders(InfoLog &infoLog)
                 return false;
             }
 
-            mState.mGeometryShaderInputPrimitiveType  = inputPrimitive.value();
-            mState.mGeometryShaderOutputPrimitiveType = outputPrimitive.value();
-            mState.mGeometryShaderMaxVertices         = maxVertices.value();
-            mState.mGeometryShaderInvocations = geometryShader->getGeometryShaderInvocations();
+            mState.mExecutable->mGeometryShaderInputPrimitiveType  = inputPrimitive.value();
+            mState.mExecutable->mGeometryShaderOutputPrimitiveType = outputPrimitive.value();
+            mState.mExecutable->mGeometryShaderMaxVertices         = maxVertices.value();
+            mState.mExecutable->mGeometryShaderInvocations =
+                geometryShader->getGeometryShaderInvocations();
         }
     }
 
@@ -5189,12 +5181,6 @@ angle::Result Program::serialize(const Context *context, angle::MemoryBuffer *bi
     stream.writeInt(computeLocalSize[1]);
     stream.writeInt(computeLocalSize[2]);
 
-    ASSERT(mState.mGeometryShaderInvocations >= 1 && mState.mGeometryShaderMaxVertices >= 0);
-    stream.writeEnum(mState.mGeometryShaderInputPrimitiveType);
-    stream.writeEnum(mState.mGeometryShaderOutputPrimitiveType);
-    stream.writeInt(mState.mGeometryShaderInvocations);
-    stream.writeInt(mState.mGeometryShaderMaxVertices);
-
     stream.writeInt(mState.mNumViews);
     stream.writeBool(mState.mEarlyFramentTestsOptimization);
     stream.writeInt(mState.mSpecConstUsageBits.bits());
@@ -5388,11 +5374,6 @@ angle::Result Program::deserialize(const Context *context,
     mState.mComputeShaderLocalSize[0] = stream.readInt<int>();
     mState.mComputeShaderLocalSize[1] = stream.readInt<int>();
     mState.mComputeShaderLocalSize[2] = stream.readInt<int>();
-
-    mState.mGeometryShaderInputPrimitiveType  = stream.readEnum<PrimitiveMode>();
-    mState.mGeometryShaderOutputPrimitiveType = stream.readEnum<PrimitiveMode>();
-    mState.mGeometryShaderInvocations         = stream.readInt<int>();
-    mState.mGeometryShaderMaxVertices         = stream.readInt<int>();
 
     mState.mNumViews                      = stream.readInt<int>();
     mState.mEarlyFramentTestsOptimization = stream.readBool();

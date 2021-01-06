@@ -41,7 +41,12 @@ ProgramExecutable::ProgramExecutable()
       mPipelineHasComputeTextures(false),
       mPipelineHasGraphicsImages(false),
       mPipelineHasComputeImages(false),
-      mIsCompute(false)
+      mIsCompute(false),
+      // [GL_EXT_geometry_shader] Table 20.22
+      mGeometryShaderInputPrimitiveType(PrimitiveMode::Triangles),
+      mGeometryShaderOutputPrimitiveType(PrimitiveMode::TriangleStrip),
+      mGeometryShaderInvocations(1),
+      mGeometryShaderMaxVertices(0)
 {
     reset();
 }
@@ -136,6 +141,11 @@ void ProgramExecutable::reset()
     mPipelineHasComputeDefaultUniforms       = false;
     mPipelineHasGraphicsTextures             = false;
     mPipelineHasComputeTextures              = false;
+
+    mGeometryShaderInputPrimitiveType  = PrimitiveMode::Triangles;
+    mGeometryShaderOutputPrimitiveType = PrimitiveMode::TriangleStrip;
+    mGeometryShaderInvocations         = 1;
+    mGeometryShaderMaxVertices         = 0;
 }
 
 void ProgramExecutable::load(gl::BinaryInputStream *stream)
@@ -162,6 +172,11 @@ void ProgramExecutable::load(gl::BinaryInputStream *stream)
     mPipelineHasComputeDefaultUniforms       = stream->readBool();
     mPipelineHasGraphicsTextures             = stream->readBool();
     mPipelineHasComputeTextures              = stream->readBool();
+
+    mGeometryShaderInputPrimitiveType  = stream->readEnum<PrimitiveMode>();
+    mGeometryShaderOutputPrimitiveType = stream->readEnum<PrimitiveMode>();
+    mGeometryShaderInvocations         = stream->readInt<int>();
+    mGeometryShaderMaxVertices         = stream->readInt<int>();
 }
 
 void ProgramExecutable::save(gl::BinaryOutputStream *stream) const
@@ -187,6 +202,12 @@ void ProgramExecutable::save(gl::BinaryOutputStream *stream) const
     stream->writeBool(mPipelineHasComputeDefaultUniforms);
     stream->writeBool(mPipelineHasGraphicsTextures);
     stream->writeBool(mPipelineHasComputeTextures);
+
+    ASSERT(mGeometryShaderInvocations >= 1 && mGeometryShaderMaxVertices >= 0);
+    stream->writeEnum(mGeometryShaderInputPrimitiveType);
+    stream->writeEnum(mGeometryShaderOutputPrimitiveType);
+    stream->writeInt(mGeometryShaderInvocations);
+    stream->writeInt(mGeometryShaderMaxVertices);
 }
 
 int ProgramExecutable::getInfoLogLength() const

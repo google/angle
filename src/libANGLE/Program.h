@@ -356,20 +356,6 @@ class ProgramState final : angle::NonCopyable
 
     bool isSeparable() const { return mSeparable; }
 
-    PrimitiveMode getGeometryShaderInputPrimitiveType() const
-    {
-        return mGeometryShaderInputPrimitiveType;
-    }
-
-    PrimitiveMode getGeometryShaderOutputPrimitiveType() const
-    {
-        return mGeometryShaderOutputPrimitiveType;
-    }
-
-    int getGeometryShaderInvocations() const { return mGeometryShaderInvocations; }
-
-    int getGeometryShaderMaxVertices() const { return mGeometryShaderMaxVertices; }
-
     int getDrawIDLocation() const { return mDrawIDLocation; }
 
     int getBaseVertexLocation() const { return mBaseVertexLocation; }
@@ -427,12 +413,6 @@ class ProgramState final : angle::NonCopyable
 
     // ANGLE_multiview.
     int mNumViews;
-
-    // GL_EXT_geometry_shader.
-    PrimitiveMode mGeometryShaderInputPrimitiveType;
-    PrimitiveMode mGeometryShaderOutputPrimitiveType;
-    int mGeometryShaderInvocations;
-    int mGeometryShaderMaxVertices;
 
     // GL_ANGLE_multi_draw
     int mDrawIDLocation;
