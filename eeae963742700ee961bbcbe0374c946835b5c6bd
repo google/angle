@@ -86,6 +86,30 @@
       },
       "revId": "eeae963742700ee961bbcbe0374c946835b5c6bd",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d5b9b146_ab22c600",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 430,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-06T21:30:54Z",
+      "side": 1,
+      "message": "Gotcha. I think it would be a good optimization. Although it might impact how/when we can combine the secondaries so I would hesitate before committing to that optimization. For instance we might need to arbitrarily break up primaries on some platforms that have memory limitations.",
+      "parentUuid": "3ee1ed56_2e9d6f7f",
+      "range": {
+        "startLine": 429,
+        "startChar": 10,
+        "endLine": 430,
+        "endChar": 16
+      },
+      "revId": "eeae963742700ee961bbcbe0374c946835b5c6bd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
