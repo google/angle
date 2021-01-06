@@ -16,6 +16,40 @@
       "message": "Shabi, PTAL, seems to work for me locally.",
       "revId": "cb12803826391b13e84d0ccb68f0a1fdfad4931c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a7ce874b_223db00f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-06T21:47:23Z",
+      "side": 1,
+      "message": "LGTM. You may want to take a quick look and remove duplicate suppressions where the same thing is removed both under `VULKAN :` and `SWIFTSHADER :`, as the former now covers the latter. Actually that\u0027s probably not true at the moment. A nice follow up change could be to make `--use-angle\u003dswiftshader` set both VULKAN and SWIFTSHADER, then duplicates can be removed.",
+      "revId": "cb12803826391b13e84d0ccb68f0a1fdfad4931c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "abaee847_a53bc1a1",
+        "filename": "src/tests/test_expectations/GPUTestConfig.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 579,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-06T21:47:23Z",
+      "side": 1,
+      "message": "Should this line move up next to kConditionNVIDIA/AMD/etc?",
+      "revId": "cb12803826391b13e84d0ccb68f0a1fdfad4931c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
