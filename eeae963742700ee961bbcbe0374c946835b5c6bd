@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0acc3e7d_251600ea",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-06T20:09:17Z",
+      "side": 1,
+      "message": "LGTM, I don\u0027t quite follow though.",
+      "revId": "eeae963742700ee961bbcbe0374c946835b5c6bd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2b3c384c_748884b4",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 428,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-06T20:09:17Z",
+      "side": 1,
+      "message": "command buffers begun and ended rather than opened and closed. can we use this terminology?",
+      "range": {
+        "startLine": 428,
+        "startChar": 36,
+        "endLine": 428,
+        "endChar": 42
+      },
+      "revId": "eeae963742700ee961bbcbe0374c946835b5c6bd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c8b26776_695068f1",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 430,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-06T20:09:17Z",
+      "side": 1,
+      "message": "I don\u0027t really understand what you\u0027re saying here. What is \u0027this\u0027?",
+      "range": {
+        "startLine": 429,
+        "startChar": 10,
+        "endLine": 430,
+        "endChar": 16
+      },
+      "revId": "eeae963742700ee961bbcbe0374c946835b5c6bd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
