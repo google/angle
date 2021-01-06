@@ -1,6 +1,29 @@
 {
   "comments": [
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "f11e7557_874a2e52",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 15
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-01-06T17:04:13Z",
+      "side": 1,
+      "message": "Is this 6.5KB or 21.KB?",
+      "range": {
+        "startLine": 13,
+        "startChar": 21,
+        "endLine": 13,
+        "endChar": 26
+      },
+      "revId": "fb3436775c02fafe4c2ce473ae5a50ed09a3df38",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "91536018_97f50570",
@@ -14,6 +37,23 @@
       "writtenOn": "2021-01-06T16:10:22Z",
       "side": 1,
       "message": "Geoff/Jonah/Stephen, any chance of a +2?",
+      "revId": "fb3436775c02fafe4c2ce473ae5a50ed09a3df38",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "74616cbf_f289cd87",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 15
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-01-06T17:04:13Z",
+      "side": 1,
+      "message": "My change is landing and you will likely need to re-run code generation: https://chromium-review.googlesource.com/c/angle/angle/+/2602702",
       "revId": "fb3436775c02fafe4c2ce473ae5a50ed09a3df38",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
