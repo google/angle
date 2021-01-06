@@ -16,6 +16,86 @@
       "message": "all bots green - PTAL",
       "revId": "23c8f1c52a3dc1936d7ee85f7945fe740209ceee",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5d441c4a_44c510d8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 11
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-06T05:31:30Z",
+      "side": 1,
+      "message": "LGTM",
+      "revId": "23c8f1c52a3dc1936d7ee85f7945fe740209ceee",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ef0f2f0c_dbed53eb",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 950,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-06T05:31:30Z",
+      "side": 1,
+      "message": "nit: can probably just use `true`, tess/geom themselves are conditional to this.",
+      "range": {
+        "startLine": 950,
+        "startChar": 12,
+        "endLine": 950,
+        "endChar": 75
+      },
+      "revId": "23c8f1c52a3dc1936d7ee85f7945fe740209ceee",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "757ab3a4_989c477c",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 959,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-06T05:31:30Z",
+      "side": 1,
+      "message": "Same",
+      "range": {
+        "startLine": 959,
+        "startChar": 16,
+        "endLine": 959,
+        "endChar": 79
+      },
+      "revId": "23c8f1c52a3dc1936d7ee85f7945fe740209ceee",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ac2944d2_9c3331f5",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 714,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-06T05:31:30Z",
+      "side": 1,
+      "message": "Comment mismatches code?",
+      "revId": "23c8f1c52a3dc1936d7ee85f7945fe740209ceee",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }

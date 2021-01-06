@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6562a5b7_c12f6876",
+        "filename": "src/compiler/translator/tree_util/ReplaceClipDistanceVariable.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-06T05:31:30Z",
+      "side": 0,
+      "message": "Can you please defer the renaming of this file to a follow up change? Then we can see the diff during review.",
+      "revId": "e91097bf3a24895f23b928ed12087dcbb1d54d7b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
