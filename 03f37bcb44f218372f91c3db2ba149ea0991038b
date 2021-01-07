@@ -16,6 +16,29 @@
       "message": "Please split the autogen stuff so we can land it faster and avoid merge conflicts!",
       "revId": "03f37bcb44f218372f91c3db2ba149ea0991038b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "42c68798_d909ac91",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3214,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-07T18:04:48Z",
+      "side": 1,
+      "message": "you should disable this ext in here since it requires 3.0",
+      "range": {
+        "startLine": 3214,
+        "startChar": 4,
+        "endLine": 3214,
+        "endChar": 36
+      },
+      "revId": "03f37bcb44f218372f91c3db2ba149ea0991038b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
