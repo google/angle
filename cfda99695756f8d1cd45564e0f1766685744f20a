@@ -16,6 +16,115 @@
       "message": "Nice",
       "revId": "cfda99695756f8d1cd45564e0f1766685744f20a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b91b3407_20ce45e2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-01-07T20:15:41Z",
+      "side": 1,
+      "message": "Good cleanup.",
+      "revId": "cfda99695756f8d1cd45564e0f1766685744f20a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "912f4753_7d3ef90b",
+        "filename": "src/libANGLE/Program.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 474,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-01-07T20:15:41Z",
+      "side": 1,
+      "message": "nit: This class sounds like it answers a boolean, not that it actually provides the shaders.   I think just calling this \"GetAttachedShader\" would be better.",
+      "range": {
+        "startLine": 474,
+        "startChar": 6,
+        "endLine": 474,
+        "endChar": 24
+      },
+      "revId": "cfda99695756f8d1cd45564e0f1766685744f20a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "33a3f3d1_e50a80e9",
+        "filename": "src/libANGLE/VaryingPacking.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 838,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-01-07T20:15:41Z",
+      "side": 1,
+      "message": "What does \"define\" mean in this context?   Can you reword this using GL commands?\n\nIf all of the shader stages are separable programs and the varyings and everything line up between the stages, it\u0027s legal to add/remove stages to/from a PPO.   I don\u0027t know how possible that is in practice though, since I don\u0027t know enough about GS/TS input/output requirements and if things could be forced to line up.",
+      "range": {
+        "startLine": 837,
+        "startChar": 0,
+        "endLine": 838,
+        "endChar": 83
+      },
+      "revId": "cfda99695756f8d1cd45564e0f1766685744f20a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7e815ee7_7e491302",
+        "filename": "src/libANGLE/VaryingPacking.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 839,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-01-07T20:15:41Z",
+      "side": 1,
+      "message": "nit: Similar to the other comment, this sounds like a boolean.   Just calling this \"shaders\" is probably better since the underlying program/PPO distinction isn\u0027t very important in the context of this function, they\u0027re just means to the end of getting the shaders within it.",
+      "range": {
+        "startLine": 839,
+        "startChar": 77,
+        "endLine": 839,
+        "endChar": 94
+      },
+      "revId": "cfda99695756f8d1cd45564e0f1766685744f20a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5a7838ef_4ec1758d",
+        "filename": "src/tests/gl_tests/ProgramPipelineTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 583,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-01-07T20:15:41Z",
+      "side": 1,
+      "message": "What\u0027s the failure in this test?   This all looks pretty straightforward, but the bug doesn\u0027t give any specifics about what angle is doing vs the output that\u0027s expected.",
+      "range": {
+        "startLine": 582,
+        "startChar": 0,
+        "endLine": 583,
+        "endChar": 35
+      },
+      "revId": "cfda99695756f8d1cd45564e0f1766685744f20a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
