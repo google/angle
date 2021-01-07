@@ -16,6 +16,24 @@
       "message": "It\u0027s the prior commit (Capture glBindBufferBase during MEC setup)",
       "revId": "6a8a77d88fcf05c365160404f15e85067746379f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9bc37c77_af8f43e2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-01-07T17:35:10Z",
+      "side": 1,
+      "message": "Good find, that was it.   Thanks much.",
+      "parentUuid": "4611ac93_6166e488",
+      "revId": "6a8a77d88fcf05c365160404f15e85067746379f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
