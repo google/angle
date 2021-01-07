@@ -37,6 +37,52 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "916cdc5c_2289cea9",
+        "filename": "src/libANGLE/Program.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 278,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-07T19:46:38Z",
+      "side": 1,
+      "message": "the spec has no mention of input attachments:\n\nhttps://www.khronos.org/registry/OpenGL/extensions/EXT/EXT_shader_framebuffer_fetch.txt\n\nthe word uniform doesn\u0027t occur in the spec at all. what GL concept do these correspond to?",
+      "range": {
+        "startLine": 278,
+        "startChar": 19,
+        "endLine": 278,
+        "endChar": 49
+      },
+      "revId": "24d11dc5e1ab96a8c7aab2769411739c602b0e76",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "562a8d96_7dd4ff8a",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1341,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-07T19:46:38Z",
+      "side": 1,
+      "message": "why a dirty bit? can\u0027t you just enqueue this barrier immediately? the best thing to answer my concern is to tell me what would break if you were to make this immediate in framebufferFetchBarrierl",
+      "range": {
+        "startLine": 1341,
+        "startChar": 25,
+        "endLine": 1341,
+        "endChar": 67
+      },
+      "revId": "24d11dc5e1ab96a8c7aab2769411739c602b0e76",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "5ad23624_b1d6a628",
         "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
         "patchSetId": 8
@@ -65,6 +111,24 @@
       "writtenOn": "2021-01-06T04:53:25Z",
       "side": 1,
       "message": "I suggest keeping `invalidateCurrentShaderResources` private in `ContextVk`, and adding some `onColorAttachmentChange` or something that calls this. It should also check for example that the framebuffer being changed is the draw framebuffer (per glState, not the cached member).",
+      "revId": "24d11dc5e1ab96a8c7aab2769411739c602b0e76",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "28ffd68f_73cdb25b",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1636,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-07T19:46:38Z",
+      "side": 1,
+      "message": "Can it be a part of onFramebufferChange? What breaks if you make this internal to onFramebufferChange?",
+      "parentUuid": "e4587dd6_9ecdb2bc",
       "revId": "24d11dc5e1ab96a8c7aab2769411739c602b0e76",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
