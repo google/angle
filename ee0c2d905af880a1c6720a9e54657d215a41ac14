@@ -43,6 +43,75 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "34ae84e2_3f269e0e",
+        "filename": "src/common/utilities.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-07T19:57:13Z",
+      "side": 1,
+      "message": "gl has no concept of subpasses, subpass inputs, or input attachments. what gl concepts do these correspond to?",
+      "range": {
+        "startLine": 48,
+        "startChar": 5,
+        "endLine": 48,
+        "endChar": 23
+      },
+      "revId": "ee0c2d905af880a1c6720a9e54657d215a41ac14",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fde22f04_d7b813b2",
+        "filename": "src/compiler/translator/BaseTypes.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 946,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-07T19:57:13Z",
+      "side": 1,
+      "message": "example.",
+      "range": {
+        "startLine": 946,
+        "startChar": 4,
+        "endLine": 946,
+        "endChar": 17
+      },
+      "revId": "ee0c2d905af880a1c6720a9e54657d215a41ac14",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9bd750c7_6abc81f5",
+        "filename": "src/compiler/translator/BaseTypes.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 983,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-07T19:57:13Z",
+      "side": 1,
+      "message": "gl_LastFragData is meant to be read-only. for builtins we use a special qualifier, see above.",
+      "range": {
+        "startLine": 983,
+        "startChar": 4,
+        "endLine": 983,
+        "endChar": 20
+      },
+      "revId": "ee0c2d905af880a1c6720a9e54657d215a41ac14",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "7c285603_bc4995df",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 7
@@ -71,6 +140,52 @@
       "writtenOn": "2021-01-06T05:17:34Z",
       "side": 1,
       "message": "Does this really need an AST transformation? Why doesn\u0027t ParseContext.cpp check this when it encounters gl_LastFragData?",
+      "revId": "ee0c2d905af880a1c6720a9e54657d215a41ac14",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "30b67b7a_aca54c5b",
+        "filename": "src/compiler/translator/glslang.l",
+        "patchSetId": 7
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-07T19:57:13Z",
+      "side": 1,
+      "message": "this is simply ES2_extension_2",
+      "range": {
+        "startLine": 105,
+        "startChar": 11,
+        "endLine": 105,
+        "endChar": 38
+      },
+      "revId": "ee0c2d905af880a1c6720a9e54657d215a41ac14",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6ef3350f_d5a68b7e",
+        "filename": "src/compiler/translator/glslang.y",
+        "patchSetId": 7
+      },
+      "lineNbr": 933,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-07T19:57:13Z",
+      "side": 1,
+      "message": "Can you move this into the ParseContext.cpp file please? it\u0027s getting a bit elaborate and this file is harder to maintain.",
+      "range": {
+        "startLine": 927,
+        "startChar": 0,
+        "endLine": 933,
+        "endChar": 9
+      },
       "revId": "ee0c2d905af880a1c6720a9e54657d215a41ac14",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
