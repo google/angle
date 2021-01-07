@@ -16,6 +16,24 @@
       "message": "Looks good, Tim.  Thanks for ensuring there\u0027s some action on the screen. :)\n\nI\u0027ll presume you\u0027re doing comparisons against native with each of these.",
       "revId": "3df8d06eb44ce51386e9e3b6e848717a2cccd8a1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9a88bb57_831995d0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-01-07T18:34:20Z",
+      "side": 1,
+      "message": "I\u0027m inspecting the images visually, but I\u0027m not doing the full imagemagick analysis of QC vs ARM vs Nvidia.\n\nIs there a reason to gate submitting these on imagemagick analysis?   These traces can always be updated, and submitting them gives everyone access to the traces vs trying to pass around tar files and cherrypick CLs.   We also get at least some coverage with the new traces in the meantime.",
+      "parentUuid": "8365390b_7466eb4f",
+      "revId": "3df8d06eb44ce51386e9e3b6e848717a2cccd8a1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
