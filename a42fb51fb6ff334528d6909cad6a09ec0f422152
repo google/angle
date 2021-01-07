@@ -39,6 +39,30 @@
       },
       "revId": "a42fb51fb6ff334528d6909cad6a09ec0f422152",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "edb7d0f1_b36bf7e0",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 6343,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-07T15:22:09Z",
+      "side": 1,
+      "message": "It\u0027s all POD, so I don\u0027t think so. The alternative was three switch-cases, which felt less-understandable and more error-prone.\n\nI don\u0027t have a particular attachment to this though, if you feel the other way is better, I\u0027ll revert to what I had previously.",
+      "parentUuid": "d4e41862_f1eb7839",
+      "range": {
+        "startLine": 6341,
+        "startChar": 0,
+        "endLine": 6343,
+        "endChar": 44
+      },
+      "revId": "a42fb51fb6ff334528d6909cad6a09ec0f422152",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
