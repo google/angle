@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b08bab00_babe5665",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-01-07T19:57:27Z",
+      "side": 1,
+      "message": "LGTM",
+      "revId": "16c2fce521736e181585153514c9527d24ae7e79",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0c221771_b405aad0",
+        "filename": "src/libANGLE/renderer/gl/glx/WindowSurfaceGLX.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-01-07T19:57:27Z",
+      "side": 1,
+      "message": "Maybe a comment that these are only updated if mUseChildWindow is true.",
+      "range": {
+        "startLine": 67,
+        "startChar": 4,
+        "endLine": 67,
+        "endChar": 45
+      },
+      "revId": "16c2fce521736e181585153514c9527d24ae7e79",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
