@@ -5863,6 +5863,9 @@ void ImageHelper::removeSupersededUpdates(ContextVk *contextVk, gl::TexLevelMask
 
         if (isColorOrDepthSuperseded && isStencilSuperseded)
         {
+            ANGLE_PERF_WARNING(contextVk->getDebug(), GL_DEBUG_SEVERITY_LOW,
+                               "Dropped image update that is superseded by an overlapping one");
+
             update.release(renderer);
             return true;
         }
