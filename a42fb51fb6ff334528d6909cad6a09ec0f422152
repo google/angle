@@ -81,6 +81,30 @@
       },
       "revId": "a42fb51fb6ff334528d6909cad6a09ec0f422152",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bea1eaeb_26f268d2",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 6343,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-07T19:04:33Z",
+      "side": 1,
+      "message": "Let\u0027s plug the leak and revisit if this becomes an issue. I suspect the work for anglebug.com/4835 may affect this.",
+      "parentUuid": "edb7d0f1_b36bf7e0",
+      "range": {
+        "startLine": 6341,
+        "startChar": 0,
+        "endLine": 6343,
+        "endChar": 44
+      },
+      "revId": "a42fb51fb6ff334528d6909cad6a09ec0f422152",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
