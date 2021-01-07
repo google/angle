@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1c2bf3ac_fce27a16",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1424723
+      },
+      "writtenOn": "2021-01-07T06:46:42Z",
+      "side": 1,
+      "message": "\nHi Shahbaz,\nthanks, it works by disable the tests when GL disabled.\n\nour args.gn like this:\n{\ntarget_cpu\u003d\"arm64\"\nangle_enable_null\u003dfalse\nangle_enable_gl\u003dfalse\nangle_enable_vulkan\u003dtrue\nangle_enable_vulkan_validation_layers\u003dfalse\nangle_enable_swiftshader\u003dfalse\nuse_x11\u003dfalse\nuse_ozone\u003dfalse\n\nangle_vulkan_display_mode\u003d\"simple\"\n\nis_debug\u003dfalse\n}\n\n",
+      "revId": "5e28054567917c774ff86afef9d1e45a870917cf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
