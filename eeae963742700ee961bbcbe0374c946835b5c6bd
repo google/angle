@@ -41,6 +41,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9ac5d648_c0e793ad",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 428,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-07T05:55:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2b3c384c_748884b4",
+      "range": {
+        "startLine": 428,
+        "startChar": 36,
+        "endLine": 428,
+        "endChar": 42
+      },
+      "revId": "eeae963742700ee961bbcbe0374c946835b5c6bd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c8b26776_695068f1",
@@ -102,6 +126,30 @@
       "side": 1,
       "message": "Gotcha. I think it would be a good optimization. Although it might impact how/when we can combine the secondaries so I would hesitate before committing to that optimization. For instance we might need to arbitrarily break up primaries on some platforms that have memory limitations.",
       "parentUuid": "3ee1ed56_2e9d6f7f",
+      "range": {
+        "startLine": 429,
+        "startChar": 10,
+        "endLine": 430,
+        "endChar": 16
+      },
+      "revId": "eeae963742700ee961bbcbe0374c946835b5c6bd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d22015ec_6e9eb030",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 430,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-07T05:55:57Z",
+      "side": 1,
+      "message": "Reworded the comment.\n\nI don\u0027t plan to pursue that optimization for the time being, I\u0027m sure we\u0027ll end up with cases when we do need to bind some things again because the outsideRP command buffer rebinds it (like the program), or usually UtilsVk (desc sets and pipeline). No intention to go through all that right now!\n\nThat said, these bits would have to be set right after vkQueueSubmit (same way mNewComputeCommandBufferDirtyBits is), so any splitting of the primaries would automatically work.",
+      "parentUuid": "d5b9b146_ab22c600",
       "range": {
         "startLine": 429,
         "startChar": 10,
