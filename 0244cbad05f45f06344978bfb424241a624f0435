@@ -85,6 +85,24 @@
       "parentUuid": "50c7dde1_f923bac8",
       "revId": "0244cbad05f45f06344978bfb424241a624f0435",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "325a04a7_850ef5f7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-07T03:46:36Z",
+      "side": 1,
+      "message": "Ok, I\u0027ll try to specifically disable GLSL support and that should reproduce the issue. I\u0027ll put up a fix soon (hopefully)",
+      "parentUuid": "43bd6919_563762bd",
+      "revId": "0244cbad05f45f06344978bfb424241a624f0435",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
