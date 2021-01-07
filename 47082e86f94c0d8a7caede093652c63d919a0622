@@ -26,6 +26,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "9cb2c0d8_356ed71a",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 3856,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-07T20:38:13Z",
+      "side": 1,
+      "message": "Sure, if it\u0027s not going to take too long.",
+      "parentUuid": "f3116b6a_beea577b",
+      "range": {
+        "startLine": 3856,
+        "startChar": 38,
+        "endLine": 3856,
+        "endChar": 51
+      },
+      "revId": "47082e86f94c0d8a7caede093652c63d919a0622",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "68af4276_aa0c70dd",
         "filename": "src/libANGLE/renderer/vulkan/ProgramPipelineVk.cpp",
         "patchSetId": 5
