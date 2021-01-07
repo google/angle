@@ -16,6 +16,23 @@
       "message": "Hey Jun! Please give this change a shot. Compiler tests are disabled if ESSL/GLSL is disabled. If you want to continue testing these unittests, please add `angle_enable_essl\u003dtrue` and `angle_enable_glsl\u003dtrue` to your args.gn. You could use these args without this change too, as a workaround to the build failure until this lands.",
       "revId": "b3a930c43a622f4398c29c37e7ffc0027389a6af",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e4ea953a_160e2643",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1424723
+      },
+      "writtenOn": "2021-01-07T08:54:07Z",
+      "side": 1,
+      "message": "thanks, it works. ",
+      "revId": "b3a930c43a622f4398c29c37e7ffc0027389a6af",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
