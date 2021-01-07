@@ -80,6 +80,23 @@
       "message": "My change is landing and you will likely need to re-run code generation: https://chromium-review.googlesource.com/c/angle/angle/+/2602702",
       "revId": "fb3436775c02fafe4c2ce473ae5a50ed09a3df38",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f7d0e67d_4db6531e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 15
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1116015
+      },
+      "writtenOn": "2021-01-07T16:04:15Z",
+      "side": 1,
+      "message": "I don\u0027t think I have reviewer permissions, so will defer to Jonah.",
+      "revId": "fb3436775c02fafe4c2ce473ae5a50ed09a3df38",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
