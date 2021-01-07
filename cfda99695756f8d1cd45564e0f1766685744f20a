@@ -35,6 +35,23 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "26d83c91_2ac1be05",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-07T20:21:40Z",
+      "side": 1,
+      "message": "PTAL",
+      "revId": "cfda99695756f8d1cd45564e0f1766685744f20a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "912f4753_7d3ef90b",
@@ -48,6 +65,30 @@
       "writtenOn": "2021-01-07T20:15:41Z",
       "side": 1,
       "message": "nit: This class sounds like it answers a boolean, not that it actually provides the shaders.   I think just calling this \"GetAttachedShader\" would be better.",
+      "range": {
+        "startLine": 474,
+        "startChar": 6,
+        "endLine": 474,
+        "endChar": 24
+      },
+      "revId": "cfda99695756f8d1cd45564e0f1766685744f20a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "394700d3_c2b29d4c",
+        "filename": "src/libANGLE/Program.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 474,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-07T20:21:40Z",
+      "side": 1,
+      "message": "Get is not an adjective. This is a mix-in that describes what the object properties are. e.g. like NoDestructor",
+      "parentUuid": "912f4753_7d3ef90b",
       "range": {
         "startLine": 474,
         "startChar": 6,
@@ -83,6 +124,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "3af9d894_0b5783b6",
+        "filename": "src/libANGLE/VaryingPacking.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 838,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-07T20:21:40Z",
+      "side": 1,
+      "message": "I\u0027ll take out the comment to avoid confusion if that\u0027s good with you.",
+      "parentUuid": "33a3f3d1_e50a80e9",
+      "range": {
+        "startLine": 837,
+        "startChar": 0,
+        "endLine": 838,
+        "endChar": 83
+      },
+      "revId": "cfda99695756f8d1cd45564e0f1766685744f20a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "7e815ee7_7e491302",
         "filename": "src/libANGLE/VaryingPacking.cpp",
         "patchSetId": 6
@@ -106,6 +171,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "3a7f878b_db50d3a8",
+        "filename": "src/libANGLE/VaryingPacking.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 839,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-07T20:21:40Z",
+      "side": 1,
+      "message": "It\u0027s a program or a pipeline. Was planning on leaving it as-is.",
+      "parentUuid": "7e815ee7_7e491302",
+      "range": {
+        "startLine": 839,
+        "startChar": 77,
+        "endLine": 839,
+        "endChar": 94
+      },
+      "revId": "cfda99695756f8d1cd45564e0f1766685744f20a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "5a7838ef_4ec1758d",
         "filename": "src/tests/gl_tests/ProgramPipelineTest.cpp",
         "patchSetId": 6
@@ -117,6 +206,30 @@
       "writtenOn": "2021-01-07T20:15:41Z",
       "side": 1,
       "message": "What\u0027s the failure in this test?   This all looks pretty straightforward, but the bug doesn\u0027t give any specifics about what angle is doing vs the output that\u0027s expected.",
+      "range": {
+        "startLine": 582,
+        "startChar": 0,
+        "endLine": 583,
+        "endChar": 35
+      },
+      "revId": "cfda99695756f8d1cd45564e0f1766685744f20a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "177b1c93_1c18a034",
+        "filename": "src/tests/gl_tests/ProgramPipelineTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 583,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-07T20:21:40Z",
+      "side": 1,
+      "message": "See the bug for more info.",
+      "parentUuid": "5a7838ef_4ec1758d",
       "range": {
         "startLine": 582,
         "startChar": 0,
