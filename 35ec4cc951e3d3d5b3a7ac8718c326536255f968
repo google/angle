@@ -87,6 +87,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "73804147_a23c306d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-07T22:49:02Z",
+      "side": 1,
+      "message": "My bad. You\u0027ll need someone in Chrome to temporarily suppress the WebGL tests. In the meantime can you update  the ANGLE WebGL compatibility tests to expect success instead of failure?",
+      "parentUuid": "0d6a5a1a_4001d7cb",
+      "revId": "35ec4cc951e3d3d5b3a7ac8718c326536255f968",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "080fe575_1069c1d1",
