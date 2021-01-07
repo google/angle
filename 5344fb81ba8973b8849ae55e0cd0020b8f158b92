@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3757edce_e3406a18",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-01-07T16:09:44Z",
+      "side": 1,
+      "message": "PTAL\n\nPresubmit is upset because it thinks the CL needs to be formatted.   However, running \"git cl format\" locally doesn\u0027t change anything.",
+      "revId": "5344fb81ba8973b8849ae55e0cd0020b8f158b92",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
