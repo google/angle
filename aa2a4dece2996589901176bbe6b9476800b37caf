@@ -87,6 +87,24 @@
       "parentUuid": "127a7a7b_0cff9653",
       "revId": "aa2a4dece2996589901176bbe6b9476800b37caf",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "02673e30_63570b43",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-01-07T20:09:30Z",
+      "side": 1,
+      "message": "Sorry, I approached this as a Wrangler (keep the bots green), but tried to avoid a revert by contacting Tim.  Perhaps all that\u0027s needed is for Gold image???",
+      "parentUuid": "5a3dc17e_661beeb6",
+      "revId": "aa2a4dece2996589901176bbe6b9476800b37caf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
