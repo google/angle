@@ -50,6 +50,23 @@
       "message": "Hey, Shahbaz \u0026 Geoff\nThanks for quick founding.\nActually, we also encountered similar build failure with Mali platforms.\n{ \nFAILED: angle_unittests \nerror: undefined symbol: sh::TranslatorGLSL::TranslatorGLSL(unsigned int, ShShaderSpec, ShShaderOutput)\n}\nNot only these kind of build failures but also some other Mali specific test failures/hang, happened occasionally. I wondered if there\u0027s a schedule to add Mali platform into your precommit/postcommit test system in 2021?",
       "revId": "0244cbad05f45f06344978bfb424241a624f0435",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "43bd6919_563762bd",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1424723
+      },
+      "writtenOn": "2021-01-07T03:44:30Z",
+      "side": 1,
+      "message": "BTW, we just tried this commit. it still can\u0027t fix the unittest build fail.\nThe build used locally is enable_vulkan + disable gl + disable ozone.\nso seems the unitest has some dependency with gl or essl?",
+      "revId": "0244cbad05f45f06344978bfb424241a624f0435",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
