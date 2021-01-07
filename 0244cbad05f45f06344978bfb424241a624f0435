@@ -103,6 +103,24 @@
       "parentUuid": "43bd6919_563762bd",
       "revId": "0244cbad05f45f06344978bfb424241a624f0435",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b1413649_8a6927d8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-07T03:54:11Z",
+      "side": 1,
+      "message": "How do you disable ozone? Putting `use_ozone\u003dfalse` in gn args gives me unrelated build errors.",
+      "parentUuid": "325a04a7_850ef5f7",
+      "revId": "0244cbad05f45f06344978bfb424241a624f0435",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
