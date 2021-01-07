@@ -69,6 +69,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0d6a5a1a_4001d7cb",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-01-07T22:21:39Z",
+      "side": 1,
+      "message": "oh, i dont know who ken is. is that what you meant or did you mean just remove the todo and ping you?",
+      "parentUuid": "131dbf87_3056daf7",
+      "revId": "35ec4cc951e3d3d5b3a7ac8718c326536255f968",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "080fe575_1069c1d1",
