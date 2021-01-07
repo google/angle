@@ -1,6 +1,29 @@
 {
   "comments": [
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "e8706525_7335e4af",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-07T20:13:37Z",
+      "side": 1,
+      "message": "also can you take ownership of and tag the bug in the TODO Shabi mentioned",
+      "range": {
+        "startLine": 11,
+        "startChar": 18,
+        "endLine": 11,
+        "endChar": 22
+      },
+      "revId": "6546a3ed112fc0419192e286b7cfecf265a31c86",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "28726604_0d76c3ca",
@@ -35,6 +58,69 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0b46f26a_711715c3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-07T20:13:37Z",
+      "side": 1,
+      "message": "I\u0027m a bit worried about the P2 Vulkan failures. Can you test on the P4? If they fail on the P4 we should check with ARM/IMG to see if this is a QC or ANGLE bug.",
+      "revId": "6546a3ed112fc0419192e286b7cfecf265a31c86",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6eb027e3_5a962733",
+        "filename": "src/libANGLE/renderer/renderer_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 221,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-07T20:13:37Z",
+      "side": 1,
+      "message": "nit: suggest you just expose this as a constexpr anonymous static rather than making an accessor function. Pretty sure packed enum map has the ASSERT already.",
+      "range": {
+        "startLine": 221,
+        "startChar": 8,
+        "endLine": 221,
+        "endChar": 36
+      },
+      "revId": "6546a3ed112fc0419192e286b7cfecf265a31c86",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "67c13164_ce1f111f",
+        "filename": "src/libANGLE/renderer/renderer_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 634,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-07T20:13:37Z",
+      "side": 1,
+      "message": "nit: const \u0026, so no copy",
+      "range": {
+        "startLine": 634,
+        "startChar": 10,
+        "endLine": 634,
+        "endChar": 37
+      },
+      "revId": "6546a3ed112fc0419192e286b7cfecf265a31c86",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2b82e049_3106fbdc",
@@ -65,6 +151,24 @@
       "writtenOn": "2021-01-06T17:44:27Z",
       "side": 1,
       "message": "I suggest adding `gl::SamplerFormat format` to `getIncompleteTexture` and update that everywhere. No need for two functions.",
+      "revId": "6546a3ed112fc0419192e286b7cfecf265a31c86",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2e3d6739_15af8818",
+        "filename": "src/libANGLE/renderer/renderer_utils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 213,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-07T20:13:37Z",
+      "side": 1,
+      "message": "+1",
+      "parentUuid": "39b7c4c5_d0f81a05",
       "revId": "6546a3ed112fc0419192e286b7cfecf265a31c86",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
