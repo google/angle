@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "80e0e597_9fe2251e",
+        "filename": "src/tests/BUILD.gn",
+        "patchSetId": 2
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-01-07T18:01:15Z",
+      "side": 1,
+      "message": "It looks weird that glsl tests would be enabled only if essl is enabled.\nHowever, looks like angle_enable_essl and angle_enable_glsl are enabled on the same condition.\nMaybe these should be merged together?",
+      "range": {
+        "startLine": 128,
+        "startChar": 0,
+        "endLine": 128,
+        "endChar": 49
+      },
+      "revId": "7b712584835a718fc4c9aab65922d1e1a09441b2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
