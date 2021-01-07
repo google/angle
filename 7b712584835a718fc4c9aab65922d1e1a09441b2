@@ -22,6 +22,30 @@
       },
       "revId": "7b712584835a718fc4c9aab65922d1e1a09441b2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f4e6cd7c_a77bd0a1",
+        "filename": "src/tests/BUILD.gn",
+        "patchSetId": 2
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-07T18:29:17Z",
+      "side": 1,
+      "message": "Yes, and it\u0027s not great that most compiler_tests randomly assume GLSL or ESSL output. Those two are enabled with the same condition, but `args.gn` may decide to enable only one or the other. Don\u0027t know if there are users that do this, but that\u0027s beyond the scope of this change.",
+      "parentUuid": "80e0e597_9fe2251e",
+      "range": {
+        "startLine": 128,
+        "startChar": 0,
+        "endLine": 128,
+        "endChar": 49
+      },
+      "revId": "7b712584835a718fc4c9aab65922d1e1a09441b2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
