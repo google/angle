@@ -69,6 +69,24 @@
       "parentUuid": "51dbc730_67e368da",
       "revId": "aa2a4dece2996589901176bbe6b9476800b37caf",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5a3dc17e_661beeb6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-01-07T20:00:30Z",
+      "side": 1,
+      "message": "I have a feeling these aren\u0027t flakes, but Skia Gold is running the test on new platforms for which it doesn\u0027t have a gold yet.  Each of those failures is comparing images across different OS or GPU vendors.",
+      "parentUuid": "127a7a7b_0cff9653",
+      "revId": "aa2a4dece2996589901176bbe6b9476800b37caf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
